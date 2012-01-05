@@ -37,7 +37,9 @@ noinst_HEADERS = \
 	gsm_rlcmac.h
 
 RLCMACTest_SOURCES = RLCMACTest.cpp
-RLCMACTest_LDADD = $(COMMON_LA) 
+RLCMACTest_LDADD = \
+	libgprs.la \
+	$(COMMON_LA) 
 #MOSTLYCLEANFILES += testSource testDestination
 
 
