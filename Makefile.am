@@ -27,19 +27,52 @@ noinst_LTLIBRARIES = libgprs.la
 
 libgprs_la_SOURCES = \
 	csn1.cpp \
-	gsm_rlcmac.cpp
+	gsm_rlcmac.cpp \
+	bssgp.cpp \
+	GPRSSocket.cpp
 
 noinst_PROGRAMS = \
-	RLCMACTest
+	RLCMACTest \
+	RLCMAC
 
 noinst_HEADERS = \
 	csn1.h \
-	gsm_rlcmac.h
+	gsm_rlcmac.h \
+	bssgp.h \
+	GPRSSocket.h
 
 RLCMACTest_SOURCES = RLCMACTest.cpp
 RLCMACTest_LDADD = \
 	libgprs.la \
 	$(COMMON_LA) 
-#MOSTLYCLEANFILES += testSource testDestination
 
+#OPENBSC_DIR = /path to OpenBSC dir
+#OPENGGSN_DIR = /path to OpenGGGSN dir
+
+RLCMAC_SOURCES = RLCMAC.cpp
+RLCMAC_LDADD = \
+	libgprs.la \
+	$(OPENBSC_DIR)/src/libgb/gprs_ns.o \
+	$(OPENBSC_DIR)/src/libgb/gprs_bssgp.o \
+	$(OPENBSC_DIR)/src/libgb/gprs_bssgp_bss.o \
+	$(OPENBSC_DIR)/src/libgb/gprs_bssgp_util.o \
+	$(OPENBSC_DIR)/src/libgb/gprs_ns_frgre.o \
+	$(OPENGGSN_DIR)/gtp/queue.o \
+	$(OPENGGSN_DIR)/gtp/lookupa.o \
+	$(OPENGGSN_DIR)/gtp/pdp.o \
+	$(OPENGGSN_DIR)/gtp/gtpie.o \
+	$(OPENGGSN_DIR)/gtp/gtp.o \
+	$(OPENBSC_DIR)/src/gprs/sgsn_libgtp.o \
+	$(OPENBSC_DIR)/src/gprs/gprs_sndcp.o \
+	$(OPENBSC_DIR)/src/gprs/crc24.o \
+	$(OPENBSC_DIR)/src/gprs/gprs_llc.o \
+	$(OPENBSC_DIR)/src/gprs/gprs_gmm.o \
+	$(OPENBSC_DIR)/src/gprs/gprs_sgsn.o \
+	$(OPENBSC_DIR)/src/libcommon/socket.o \
+	$(OPENBSC_DIR)/src/libcommon/debug.o \
+	-losmocore \
+	-losmogsm \
+	$(COMMON_LA)
+
+#MOSTLYCLEANFILES += testSource testDestination
 
