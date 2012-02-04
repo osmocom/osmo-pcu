@@ -43,6 +43,9 @@
 #define POST_PACKED
 #endif
 
+//TODO Check this number
+#define MAX_NUMBER_LLC_PDU 5
+
 typedef guint8 TFI_t;
 
 typedef guint8 N32_t;
@@ -4946,6 +4949,48 @@ typedef struct
   gint16 NrOfBits;
 } RlcMacUplink_t;
 
+/* < Uplink RLC/MAC data block message > */
+typedef struct
+{
+  guint8 PAYLOAD_TYPE;
+  guint8 CV;
+  guint8 SI;
+  guint8 R;
+  guint8 spare;
+  guint8 PI;
+  guint8 TFI;
+  guint8 TI;
+  guint8 BSN;
+  guint8 E_1;
+  guint8 LENGTH_INDICATOR[MAX_NUMBER_LLC_PDU];
+  guint8 M[MAX_NUMBER_LLC_PDU];
+  guint8 E[MAX_NUMBER_LLC_PDU];
+  guint32 TLLI;
+  guint8 PFI;
+  guint8 E_2;
+  guint8 RLC_DATA[20];
+  guint8 MESSAGE_TYPE;
+} RlcMacUplinkDataBlock_t;
+
+
+/* < Downlink RLC/MAC data block message > */
+typedef struct
+{
+  guint8 PAYLOAD_TYPE;
+  guint8 RRBP;
+  guint8 SP;
+  guint8 USF;
+  guint8 PR;
+  guint8 TFI;
+  guint8 FBI;
+  guint8 BSN;
+  guint8 E_1;
+  guint8 LENGTH_INDICATOR[MAX_NUMBER_LLC_PDU];
+  guint8 M[MAX_NUMBER_LLC_PDU];
+  guint8 E[MAX_NUMBER_LLC_PDU];
+  guint8 RLC_DATA[20];
+  guint8 MESSAGE_TYPE;
+} RlcMacDownlinkDataBlock_t;
 
 void GPRSMSG_Profile(gint16 i);
 
@@ -5080,5 +5125,6 @@ typedef struct
  void decode_gsm_rlcmac_downlink(BitVector * vector, RlcMacDownlink_t * data);
  void encode_gsm_rlcmac_downlink(BitVector * vector, RlcMacDownlink_t * data);
  void encode_gsm_rlcmac_uplink(BitVector * vector, RlcMacUplink_t * data);
+ void decode_gsm_rlcmac_uplink_data(BitVector * vector, RlcMacUplinkDataBlock_t * data);
 
 #endif /* __PACKET_GSM_RLCMAC_H__ */

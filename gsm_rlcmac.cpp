@@ -5294,3 +5294,78 @@ void encode_gsm_rlcmac_downlink(BitVector * vector, RlcMacDownlink_t * data)
       break;
   }
 }
+
+void decode_gsm_rlcmac_uplink_data(BitVector * vector, RlcMacUplinkDataBlock_t * data)
+{
+  size_t readIndex = 0;
+  //unsigned dataLen = 0;
+  guint8 payload_type = vector->readField(readIndex, 2);
+  if (payload_type == PAYLOAD_TYPE_DATA)
+  {
+    readIndex = 0;
+    // MAC header
+    data->PAYLOAD_TYPE = vector->readField(readIndex, 2);
+    data->CV = vector->readField(readIndex, 4);
+    data->SI = vector->readField(readIndex, 1);
+    data->R = vector->readField(readIndex, 1);
+    LOG(INFO) << " PAYLOAD_TYPE = " << (unsigned)(data->PAYLOAD_TYPE);
+    LOG(INFO) << " CV = " << (unsigned)(data->CV);
+    LOG(INFO) << " SI = " << (unsigned)(data->SI);
+    LOG(INFO) << " R = " << (unsigned)(data->R);
+    // Octet 1
+    data->spare = vector->readField(readIndex, 1);
+    data->PI = vector->readField(readIndex, 1);
+    data->TFI = vector->readField(readIndex, 5);
+    data->TI = vector->readField(readIndex, 1);
+    LOG(INFO) << " spare = " << (unsigned)(data->spare);
+    LOG(INFO) << " PI = " << (unsigned)(data->PI);
+    LOG(INFO) << " TFI = " << (unsigned)(data->TFI);
+    LOG(INFO) << " TI = " << (unsigned)(data->TI);
+
+    // Octet 2
+    data->BSN = vector->readField(readIndex, 7);
+    data->E_1 = vector->readField(readIndex, 1);
+    LOG(INFO) << " BSN = " << (unsigned)(data->BSN);
+    LOG(INFO) << " E_1 = " << (unsigned)(data->E_1);
+
+    if(data->E_1 == 0) // Extension octet follows immediately
+    {
+      // Octet 3 (optional)
+      unsigned i = 0;
+      do
+      {
+        data->LENGTH_INDICATOR[i] = vector->readField(readIndex, 6);
+        data->M[i] = vector->readField(readIndex, 1);
+        data->E[i] = vector->readField(readIndex, 1);
+        LOG(INFO) << " LENGTH_INDICATOR[" << i << "] = " << (unsigned)(data->LENGTH_INDICATOR[i]);
+        LOG(INFO) << " M[" << i << "] = " << (unsigned)(data->M[i]);
+        LOG(INFO) << " E[" << i << "] = " << (unsigned)(data->E[i]);
+        i++;
+      } while((data->M[i-1] == 1)&&(data->E[i-1] == 0));
+    }
+    if(data->TI == 1) // TLLI field is present
+    {
+      data->TLLI = vector->readField(readIndex, 32);
+      LOG(INFO) << " TLLI = " << data->TLLI;
+      if (data->PI == 1) // PFI is present if TI field indicates presence of TLLI
+      {
+        data->PFI = vector->readField(readIndex, 7);
+        data->E_2 = vector->readField(readIndex, 1);
+        LOG(INFO) << " PFI = " << (unsigned)(data->PFI);
+        LOG(INFO) << " E_2 = " << (unsigned)(data->E_2);
+      }
+    }
+    unsigned dataLen = 23 - readIndex/8;
+    for (unsigned i = 0; i < dataLen; i++)
+    {
+      data->RLC_DATA[i] = vector->readField(readIndex, 8);
+      LOG(INFO) << " DATA[" << i << "] = " << (unsigned)(data->RLC_DATA[i]);
+    }
+    LOG(INFO) << "\n";
+  }
+  else
+  {
+    LOG(INFO) << "Payload Type: RESERVED (3)";
+    return;
+  }
+}
