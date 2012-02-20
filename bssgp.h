@@ -29,14 +29,14 @@ extern "C" {
 #include <openbsc/gprs_bssgp.h>
 #include <osmocom/core/application.h>
 
-int bssgp_tx_bvc_reset(struct bssgp_bvc_ctx *bctx, struct gprs_nsvc * nsvc, uint16_t bvci, uint8_t cause);
+int bssgp_tx_bvc_reset(struct bssgp_bvc_ctx *bctx, uint16_t bvci, uint8_t cause);
 
 int bssgp_tx_ul_ud(struct bssgp_bvc_ctx *bctx, uint32_t tlli, const uint8_t *qos_profile, struct msgb *llc_pdu);
 
 struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 }
 
-void sendRLC(uint32_t tlli, uint8_t *pdu, unsigned startIndex, unsigned endIndex);
+void sendRLC(uint32_t tlli, uint8_t *pdu, unsigned startIndex, unsigned endIndex, unsigned bsn);
 
 int gprs_bssgp_bss_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx);
 

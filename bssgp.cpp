@@ -20,6 +20,7 @@
 #include <arpa/inet.h>
 #include <Threads.h>
 #include "GPRSSocket.h"
+#include "gsm_rlcmac.h"
 #include "bssgp.h"
 
 // TODO: We should move this parameters to config file.
@@ -39,7 +40,7 @@
 #define NS_HDR_LEN 4
 #define MAX_LEN_PDU 100
 #define IE_PDU 14
-#define BLOCK_DATA_LEN 16
+#define BLOCK_DATA_LEN 19
 
 #define BLOCK_LEN 23
 
@@ -53,12 +54,44 @@ struct sgsn_instance *sgsn;
 void *tall_bsc_ctx;
 
 // Send RLC data to OpenBTS.
-void sendRLC(uint32_t tlli, uint8_t *pdu, unsigned startIndex, unsigned endIndex)
+void sendRLC(uint32_t tlli, uint8_t *pdu, unsigned startIndex, unsigned endIndex, unsigned bsn, unsigned fbi)
 {
-	unsigned wp = 0;
+	unsigned spareLen = 0;
 	BitVector resultVector(BLOCK_LEN*8);
 	resultVector.unhex("2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	// TODO: Encode downlink RLC/MAC data block.
+	RlcMacDownlinkDataBlock_t * dataBlock = (RlcMacDownlinkDataBlock_t *)malloc(sizeof(RlcMacDownlinkDataBlock_t));
+	dataBlock->PAYLOAD_TYPE = 0;
+	dataBlock->RRBP = 0;
+	dataBlock->SP = 1;
+	dataBlock->USF = 1;
+	dataBlock->PR = 0;
+	dataBlock->TFI = 20;
+	dataBlock->FBI = fbi;
+	dataBlock->BSN = bsn;
+	if ((endIndex-startIndex) < 20)
+	{
+		dataBlock->E_1 = 0;
+		dataBlock->LENGTH_INDICATOR[0] = endIndex-startIndex;
+		dataBlock->M[0] = 0;
+		dataBlock->E[0] = 1;
+		spareLen = 19 - dataBlock->LENGTH_INDICATOR[0];
+	}
+	else
+	{
+		dataBlock->E_1 = 1; 
+	}
+	unsigned j = 0;
+	for(unsigned i = startIndex; i < endIndex; i++)
+	{
+		dataBlock->RLC_DATA[j] = pdu[i];
+		j++;
+	}
+	for(unsigned i = j; i < j + spareLen; i++)
+	{
+		dataBlock->RLC_DATA[i] = 0x2b;
+	}
+	encode_gsm_rlcmac_downlink_data(&resultVector, dataBlock);
+	free(dataBlock);
 	sendToOpenBTS(&resultVector);
 }
 
@@ -74,6 +107,7 @@ int gprs_bssgp_bss_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_
 	unsigned i = 0;
 	unsigned j = 0;
 	unsigned pduIndex = 0;
+	unsigned fbi = 0;
 	struct bssgp_ud_hdr *budh;
 
 	/* If traffic is received on a BVC that is marked as blocked, the
@@ -93,7 +127,7 @@ int gprs_bssgp_bss_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_
 		LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP TLLI=0x%08x \n", ntohl(budh->tlli));
 		for (i = 4; i < MAX_LEN_PDU; i++)
 		{
-			LOGP(DBSSGP, LOGL_NOTICE, "SERCH data = -0x%02x\n", budh ->data[i]);
+			//LOGP(DBSSGP, LOGL_NOTICE, "SERCH data = -0x%02x\n", budh ->data[i]);
 			if(budh ->data[i] == IE_PDU)
 			{
 				pduIndex = i+2;
@@ -102,12 +136,13 @@ int gprs_bssgp_bss_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_
 		}
 		for (i = pduIndex; i < pduIndex + (budh->data[pduIndex-1]&0x7f); i++)
 		{
-			LOGP(DBSSGP, LOGL_NOTICE, "-0x%02x\n", budh ->data[i]);
+			//LOGP(DBSSGP, LOGL_NOTICE, "-0x%02x\n", budh ->data[i]);
 			pdu[dataIndex] = budh ->data[i];
 			dataIndex++;
 		}
 		DEBUGP(DBSSGP, "BSSGP Catch from SGSN=%u octets. Send it to OpenBTS.\n", dataIndex);
-		if (dataIndex > BLOCK_DATA_LEN)
+		sendToGSMTAP(pdu,dataIndex);
+		if (dataIndex > BLOCK_DATA_LEN + 1)
 		{
 			int blockDataLen = BLOCK_DATA_LEN;
 			numBlocks = dataIndex/BLOCK_DATA_LEN;
@@ -122,16 +157,20 @@ int gprs_bssgp_bss_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_
 			{
 				if (i == numBlocks-1)
 				{
-					blockDataLen = ost;
+					if (ost > 0)
+					{
+						blockDataLen = ost;
+					}
+					fbi = 1;
 				}
-				endIndex = startIndex+blockDataLen;
-				sendRLC(ntohl(budh->tlli), pdu, startIndex, endIndex);
+				endIndex = startIndex + blockDataLen;
+				sendRLC(ntohl(budh->tlli), pdu, startIndex, endIndex, i, fbi);
 				startIndex += blockDataLen;
 			}
 		}
 		else
 		{
-			sendRLC(ntohl(budh->tlli), pdu,  0, dataIndex);
+			sendRLC(ntohl(budh->tlli), pdu, 0, dataIndex, 0, 1);
 		}
 		break;
 	case BSSGP_PDUT_PAGING_PS:
@@ -356,7 +395,7 @@ void RLCMACServer()
 		osmo_select_main(0);
 		if (i == 7)
 		{
-			bssgp_tx_bvc_reset(bctx, nsvc, bvci, cause);
+			bssgp_tx_bvc_reset(bctx, bvci, cause);
 		}
 		i++;
 	}
