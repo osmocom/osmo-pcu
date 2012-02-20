@@ -21,12 +21,28 @@
 #define GPRSSOCKET_H
 
 #include <BitVector.h>
+#include "gsm_rlcmac.h"
+
+
+enum DataBlockDispatcherState {
+	WaitSequenceStart,
+	WaitNextBlock,
+	WaitNextSequence
+};
+
+void sendToGSMTAP(uint8_t * data, unsigned len);
 
 void sendToOpenBTS(BitVector * vector);
 
 void writePUack(BitVector * dest, uint8_t TFI, uint32_t TLLI, unsigned CV, unsigned BSN);
 
-void RLCMACDispatchMessage(BitVector *vector);
+void RLCMACExtractData(uint8_t* tfi, uint32_t* tlli, RlcMacUplinkDataBlock_t * dataBlock, uint8_t* rlc_data, unsigned* dataIndex);
+
+void sendUplinkAck(uint8_t tfi, uint32_t tlli, RlcMacUplinkDataBlock_t * dataBlock);
+
+void RLCMACDispatchDataBlock(BitVector *vector, uint8_t* tfi, uint32_t* tlli, uint8_t* rlc_data, unsigned* dataIndex);
+
+void RLCMACDispatchBlock(BitVector *vector);
 
 void *RLCMACSocket(void *);
 
