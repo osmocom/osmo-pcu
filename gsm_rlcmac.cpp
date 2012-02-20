@@ -5369,3 +5369,55 @@ void decode_gsm_rlcmac_uplink_data(BitVector * vector, RlcMacUplinkDataBlock_t *
     return;
   }
 }
+
+void encode_gsm_rlcmac_downlink_data(BitVector * vector, RlcMacDownlinkDataBlock_t * data)
+{
+  size_t writeIndex = 0;
+
+  if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_DATA)
+  {
+    // MAC header
+    vector->writeField(writeIndex, data->PAYLOAD_TYPE, 2);
+    vector->writeField(writeIndex, data->RRBP, 2);
+    vector->writeField(writeIndex, data->SP, 1);
+    vector->writeField(writeIndex, data->USF, 3);
+    LOG(INFO) << " PAYLOAD_TYPE = " << (unsigned)(data->PAYLOAD_TYPE);
+    LOG(INFO) << " RRBP = " << (unsigned)(data->RRBP);
+    LOG(INFO) << " SP = " << (unsigned)(data->SP);
+    LOG(INFO) << " USF = " << (unsigned)(data->USF);
+    // Octet 1
+    vector->writeField(writeIndex, data->PR, 2);
+    vector->writeField(writeIndex, data->TFI, 5);
+    vector->writeField(writeIndex, data->FBI, 1);
+    LOG(INFO) << " PR = " << (unsigned)(data->PR);
+    LOG(INFO) << " TFI = " << (unsigned)(data->TFI);
+    LOG(INFO) << " FBI = " << (unsigned)(data->FBI);
+    // Octet 2
+    vector->writeField(writeIndex, data->BSN, 7);
+    vector->writeField(writeIndex, data->E_1, 1);
+    LOG(INFO) << " BSN = " << (unsigned)(data->BSN);
+    LOG(INFO) << " E_1 = " << (unsigned)(data->E_1);
+    // Octet 3 (optional)
+    if(data->E_1 == 0)
+    {
+      unsigned i = 0;
+      do
+      {
+        vector->writeField(writeIndex, data->LENGTH_INDICATOR[i], 6);
+        vector->writeField(writeIndex, data->M[i], 1);
+        vector->writeField(writeIndex, data->E[i], 1);
+        LOG(INFO) << " LENGTH_INDICATOR[" << i << "] = " << (unsigned)(data->LENGTH_INDICATOR[i]);
+        LOG(INFO) << " M[" << i << "] = " << (unsigned)(data->M[i]);
+        LOG(INFO) << " E[" << i << "] = " << (unsigned)(data->E[i]);
+        i++;
+      }
+      while ((data->M[i-1] == 1) && (data->E[i-1] == 0));
+    }
+    unsigned dataNumOctets = 23 - writeIndex/8;
+    for (unsigned i = 0; i < dataNumOctets; i++)
+    {
+      vector->writeField(writeIndex, data->RLC_DATA[i], 8);
+      LOG(INFO) << " DATA[" << i << "] = " << (unsigned)(data->RLC_DATA[i]);
+    }
+  }
+}
