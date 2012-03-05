@@ -28,29 +28,31 @@ noinst_LTLIBRARIES = libgprs.la
 libgprs_la_SOURCES = \
 	csn1.cpp \
 	gsm_rlcmac.cpp \
-	bssgp.cpp \
-	GPRSSocket.cpp
+	gprs_bssgp_pcu.cpp \
+	gprs_rlcmac.cpp \
+	pcu_l1_if.cpp
 
 noinst_PROGRAMS = \
 	RLCMACTest \
-	RLCMAC
+	pcu
 
 noinst_HEADERS = \
 	csn1.h \
 	gsm_rlcmac.h \
-	bssgp.h \
-	GPRSSocket.h
+	gprs_bssgp_pcu.h \
+	gprs_rlcmac.h \
+	pcu_l1_if.h
 
 RLCMACTest_SOURCES = RLCMACTest.cpp
 RLCMACTest_LDADD = \
 	libgprs.la \
 	$(COMMON_LA) 
 
-#OPENBSC_DIR = /path to OpenBSC dir
-#OPENGGSN_DIR = /path to OpenGGGSN dir
+OPENBSC_DIR = /home/ivan/work/openbsc/openbsc/openbsc
+OPENGGSN_DIR = /home/ivan/work/openbsc/openggsn
 
-RLCMAC_SOURCES = RLCMAC.cpp
-RLCMAC_LDADD = \
+pcu_SOURCES = pcu_main.cpp
+pcu_LDADD = \
 	libgprs.la \
 	$(OPENBSC_DIR)/src/libgb/gprs_ns.o \
 	$(OPENBSC_DIR)/src/libgb/gprs_bssgp.o \

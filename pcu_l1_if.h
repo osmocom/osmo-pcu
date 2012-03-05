@@ -1,6 +1,6 @@
-/* RLCMAC.cpp
+/* pcu_l1_if.h
  *
- * Copyright (C) 2011 Ivan Klyuchnikov
+ * Copyright (C) 2012 Ivan Klyuchnikov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,10 +17,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include "bssgp.h"
+#ifndef PCU_L1_IF_H
+#define PCU_L1_IF_H
 
-int main(int argc, char *argv[])
-{
-	// Start RLC/MAC server for communication with OpenBTS and OsmoSGSN.
-	RLCMACServer();
-}
+#include <BitVector.h>
+
+void pcu_l1if_tx(BitVector * block);
+
+void *pcu_l1if_rx(void *);
+
+void gsmtap_send_llc(uint8_t * data, unsigned len);
+
+#endif // PCU_L1_IF_H

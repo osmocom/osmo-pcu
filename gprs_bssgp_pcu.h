@@ -1,6 +1,6 @@
-/* bssgp.h
+/* gprs_bssgp_pcu.h
  *
- * Copyright (C) 2011 Ivan Klyuchnikov
+ * Copyright (C) 2012 Ivan Klyuchnikov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,9 +16,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
- 
-#ifndef BSSGP_H
-#define BSSGP_H
+
+#ifndef GPRS_BSSGP_PCU_H
+#define GPRS_BSSGP_PCU_H
+
 
 extern "C" {
 #include <osmocom/core/talloc.h>
@@ -36,18 +37,32 @@ int bssgp_tx_ul_ud(struct bssgp_bvc_ctx *bctx, uint32_t tlli, const uint8_t *qos
 struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 }
 
-void sendRLC(uint32_t tlli, uint8_t *pdu, unsigned startIndex, unsigned endIndex, unsigned bsn);
+#define BVCI 7
+#define NSEI 3
 
-int gprs_bssgp_bss_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx);
+#define QOS_PROFILE 0
+#define BSSGP_HDR_LEN 20
+#define NS_HDR_LEN 4
+#define MAX_LEN_PDU 60
+#define IE_PDU 14
+#define BLOCK_DATA_LEN 19
+#define BLOCK_LEN 23
 
-int gprs_bssgp_bss_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx);
+#define CELL_ID 3
+#define MNC 55
+#define MCC 905
+#define PCU_LAC 1000
+#define PCU_RAC 1
 
-int gprs_bssgp_bss_rcvmsg(struct msgb *msg);
 
-int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msgb *msg, uint16_t bvci);
+extern struct bssgp_bvc_ctx *bctx;
 
-void sendToSGSN(uint8_t tfi, uint32_t tlli, uint8_t * rlc_data, unsigned dataLen);
+int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg);
 
-void RLCMACServer();
+int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx);
 
-#endif // BSSGP_H
+int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx);
+
+int gprs_bssgp_pcu_rcvmsg(struct msgb *msg);
+
+#endif // GPRS_BSSGP_PCU_H
