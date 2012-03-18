@@ -59,10 +59,9 @@ static struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi)
 	return NULL;
 }
 
-static struct gprs_rlcmac_tbf *tbf_by_tlli(uint8_t tlli)
+static struct gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli)
 {
 	struct gprs_rlcmac_tbf *tbf;
-
 	llist_for_each_entry(tbf, &gprs_rlcmac_tbfs, list) {
 		if ((tbf->tlli == tlli)&&(tbf->direction == GPRS_RLCMAC_UL_TBF))
 			return tbf;
@@ -79,7 +78,6 @@ struct gprs_rlcmac_tbf *tbf_alloc(uint8_t tfi)
 		return NULL;
 
 	tbf->tfi = tfi;
-
 	llist_add(&tbf->list, &gprs_rlcmac_tbfs);
 
 	return tbf;
@@ -315,6 +313,7 @@ int gprs_rlcmac_rcv_data_block(BitVector *rlc_block)
 	if (!tbf) {
 		tbf = tbf_alloc(ul_data_block->TFI);
 		if (tbf) {
+			tbf->tlli = ul_data_block->TLLI;
 			tbf->direction = GPRS_RLCMAC_UL_TBF;
 			tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
 		} else {
@@ -373,21 +372,13 @@ int gprs_rlcmac_rcv_control_block(BitVector *rlc_block)
 	COUT("RLCMAC_CONTROL_BLOCK_END------------------------------");
 
 	//gprs_rlcmac_control_block_get_tfi_tlli(ul_control_block, &tfi, &tlli);
-	tbf = tbf_by_tfi(tfi);
-	if (!tbf) {
-			return 0;
-	}
+	//tbf = tbf_by_tfi(tfi);
+	//if (!tbf) {
+	//		return 0;
+	//}
 
 	switch (ul_control_block->u.MESSAGE_TYPE) {
 	case MT_PACKET_CONTROL_ACK:
-		/*
-		COUT("SEND IA Rest Octets Downlink Assignment>>>>>>>>>>>>>>>>>>");
-		BitVector IARestOctetsDownlinkAssignment(23*8);
-		IARestOctetsDownlinkAssignment.unhex("2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-		writeIARestOctetsDownlinkAssignment(&IARestOctetsDownlinkAssignment, 20, *tlli);
-		sendToOpenBTS(&IARestOctetsDownlinkAssignment);
-		*/
-		//usleep(500000);
 		tlli = ul_control_block->u.Packet_Control_Acknowledgement.TLLI;
 		tbf = tbf_by_tlli(tlli);
 		if (!tbf) {
@@ -402,11 +393,11 @@ int gprs_rlcmac_rcv_control_block(BitVector *rlc_block)
 		if (!tbf) {
 			return 0;
 		}
-		//COUT("SEND PacketUplinkAssignment>>>>>>>>>>>>>>>>>>");
-		//BitVector PacketUplinkAssignment(23*8);
-		//PacketUplinkAssignment.unhex("2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-		//writePUassignment(&PacketUplinkAssignment, tbf->tfi, tbf->tlli);
-		//sendToOpenBTS(&PacketUplinkAssignment);
+		COUT("SEND PacketUplinkAssignment>>>>>>>>>>>>>>>>>>");
+		BitVector packet_uplink_assignment(23*8);
+		packet_uplink_assignment.unhex("2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+		write_packet_uplink_assignment(&packet_uplink_assignment, tbf->tfi, tbf->tlli);
+		pcu_l1if_tx(&packet_uplink_assignment);
 		break;
 	}
 	free(ul_control_block);
@@ -433,7 +424,7 @@ void gprs_rlcmac_rcv_block(BitVector *rlc_block)
 }
 
 // Send RLC data to OpenBTS.
-void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t *pdu, int start_index, int end_index, uint8_t bsn, uint8_t fbi)
+void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t tfi, uint8_t *pdu, int start_index, int end_index, uint8_t bsn, uint8_t fbi)
 {
 	int spare_len = 0;
 	BitVector data_block_vector(BLOCK_LEN*8);
@@ -444,7 +435,7 @@ void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t *pdu, int start_index, 
 	data_block->SP = 1;
 	data_block->USF = 1;
 	data_block->PR = 0;
-	data_block->TFI = 20;
+	data_block->TFI = tfi;
 	data_block->FBI = fbi;
 	data_block->BSN = bsn;
 	if ((end_index - start_index) < 20) {
@@ -499,13 +490,13 @@ int gprs_rlcmac_segment_llc_pdu(struct gprs_rlcmac_tbf *tbf)
 				fbi = 1;
 			}
 			end_index = start_index + block_data_len;
-			gprs_rlcmac_tx_dl_data_block(tbf->tlli, tbf->rlc_data, start_index, end_index, i, fbi);
+			gprs_rlcmac_tx_dl_data_block(tbf->tlli, tbf->tfi, tbf->rlc_data, start_index, end_index, i, fbi);
 			start_index += block_data_len;
 		}
 	}
 	else
 	{
-		gprs_rlcmac_tx_dl_data_block(tbf->tlli, tbf->rlc_data, 0, tbf->data_index, 0, 1);
+		gprs_rlcmac_tx_dl_data_block(tbf->tlli, tbf->tfi, tbf->rlc_data, 0, tbf->data_index, 0, 1);
 	}
 }
 
@@ -519,9 +510,29 @@ void gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 	LOGP(DBSSGP, LOGL_DEBUG, "Data len %u TLLI 0x%08x , TFI 0x%02x", tbf->data_index, tbf->tlli, tbf->tfi);
 	//for (unsigned i = 0; i < dataLen; i++)
 	//	LOGP(DBSSGP, LOGL_DEBUG, " Data[%u] = %u", i, rlc_data[i]);
+	
+	bctx->cell_id = CELL_ID;
+	bctx->nsei = NSEI;
+	bctx->ra_id.mnc = MNC;
+	bctx->ra_id.mcc = MCC;
+	bctx->ra_id.lac = PCU_LAC;
+	bctx->ra_id.rac = PCU_RAC;
+	bctx->bvci = BVCI;
 
 	llc_pdu = msgb_alloc_headroom(msg_len, msg_len,"llc_pdu");
 	msgb_tvlv_push(llc_pdu, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*tbf->data_index, tbf->rlc_data);
 	bssgp_tx_ul_ud(bctx, tbf->tlli, &qos_profile, llc_pdu);
 }
 
+void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf)
+{
+	
+	COUT("SEND IA Rest Octets Downlink Assignment>>>>>>>>>>>>>>>>>>");
+	BitVector ia_rest_octets_downlink_assignment(23*8);
+	ia_rest_octets_downlink_assignment.unhex("2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	write_ia_rest_octets_downlink_assignment(&ia_rest_octets_downlink_assignment, tbf->tfi, tbf->tlli);
+	pcu_l1if_tx(&ia_rest_octets_downlink_assignment);
+	
+	usleep(500000);
+	gprs_rlcmac_segment_llc_pdu(tbf);
+}

@@ -64,7 +64,8 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg)
 	DEBUGP(DBSSGP, "BSSGP Catch from SGSN=%u octets. Send it to OpenBTS.\n", data_index);
 	gsmtap_send_llc(tbf->rlc_data,data_index);
 	tbf->data_index = data_index;
-	gprs_rlcmac_segment_llc_pdu(tbf);
+	
+	gprs_rlcmac_downlink_assignment(tbf);
 }
 
 /* Receive a BSSGP PDU from a BSS on a PTP BVCI */

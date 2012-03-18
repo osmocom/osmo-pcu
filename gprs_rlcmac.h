@@ -79,10 +79,12 @@ int gprs_rlcmac_rcv_control_block(BitVector *rlc_block);
 
 void gprs_rlcmac_rcv_block(BitVector *rlc_block);
 
-void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t *pdu, int start_index, int end_index, uint8_t bsn, uint8_t fbi);
+void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t tfi, uint8_t *pdu, int start_index, int end_index, uint8_t bsn, uint8_t fbi);
 
 int gprs_rlcmac_segment_llc_pdu(struct gprs_rlcmac_tbf *tbf);
 
 void gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
+
+void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf);
 
 #endif // GPRS_RLCMAC_H
