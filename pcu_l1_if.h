@@ -20,11 +20,48 @@
 #ifndef PCU_L1_IF_H
 #define PCU_L1_IF_H
 
+
 #include <BitVector.h>
+#include <gsmL1prim.h>
+extern "C" {
+#include <osmocom/core/write_queue.h>
+#include <osmocom/core/socket.h>
+#include <osmocom/core/timer.h>
+#include <osmocom/gsm/gsm_utils.h>
+}
+
+#define msgb_l1prim(msg)	((GsmL1_Prim_t *)(msg)->l1h)
+
+struct femtol1_hdl {
+	struct gsm_time gsm_time;
+	uint32_t hLayer1;			/* handle to the L1 instance in the DSP */
+	uint32_t dsp_trace_f;
+	uint16_t clk_cal;
+	struct llist_head wlc_list;
+
+	void *priv;			/* user reference */
+
+	struct osmo_timer_list alive_timer;
+	unsigned int alive_prim_cnt;
+
+	struct osmo_fd read_ofd;	/* osmo file descriptors */
+	struct osmo_wqueue write_q;
+};
+
+struct l1fwd_hdl {
+	struct sockaddr_storage remote_sa;
+	socklen_t remote_sa_len;
+
+	struct osmo_wqueue udp_wq;
+
+	struct femtol1_hdl *fl1h;
+};
+
+extern struct l1fwd_hdl *l1fh;
 
 void pcu_l1if_tx(BitVector * block);
 
-void *pcu_l1if_rx(void *);
+int pcu_l1if_handle_l1prim(struct femtol1_hdl *fl1h, struct msgb *msg);
 
 void gsmtap_send_llc(uint8_t * data, unsigned len);
 

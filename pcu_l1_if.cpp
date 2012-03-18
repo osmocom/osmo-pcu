@@ -26,34 +26,99 @@
 #define MAX_UDP_LENGTH 1500
 
 // TODO: We should take ports and IP from config.
-UDPSocket pcu_l1if_socket(5070, "127.0.0.1", 5934);
 UDPSocket pcu_gsmtap_socket(5077, "127.0.0.1", 4729);
+
+
+struct msgb *l1p_msgb_alloc(void)
+{
+	struct msgb *msg = msgb_alloc(sizeof(GsmL1_Prim_t), "l1_prim");
+
+	if (msg)
+		msg->l1h = msgb_put(msg, sizeof(GsmL1_Prim_t));
+
+	return msg;
+}
 
 // Send RLC/MAC block to OpenBTS.
 void pcu_l1if_tx(BitVector * block)
 {
-	char buffer[MAX_UDP_LENGTH];
 	int ofs = 0;
-	block->pack((unsigned char*)&buffer[ofs]);
+	struct msgb *msg = l1p_msgb_alloc();
+	GsmL1_Prim_t *prim = msgb_l1prim(msg);
+	
+	prim->id = GsmL1_PrimId_PhDataReq;
+	block->pack((unsigned char*)&(prim->u.phDataReq.msgUnitParam.u8Buffer[ofs]));
 	ofs += block->size() >> 3;
+	prim->u.phDataReq.msgUnitParam.u8Size = ofs;
+	
 	COUT("Send to OpenBTS: " << *block);
-	pcu_l1if_socket.write(buffer, ofs);
+	osmo_wqueue_enqueue(&l1fh->udp_wq, msg);
 }
 
-// Recieve RLC/MAC block from OpenBTS.
-void *pcu_l1if_rx(void *)
+int pcu_l1if_rx_pdch(GsmL1_PhDataInd_t *data_ind)
 {
 	BitVector *block = new BitVector(23*8);
-	pcu_l1if_socket.nonblocking();
-	while (1) {
-		char buf[MAX_UDP_LENGTH];
-		int count = pcu_l1if_socket.read(buf, 3000);
-		if (count>0) {
-			block->unpack((const unsigned char*)buf);
-			COUT("Recieve from OpenBTS (MS): " << *block);
-			gprs_rlcmac_rcv_block(block);
-		}
+	block->unpack((const unsigned char*)data_ind->msgUnitParam.u8Buffer);
+	COUT("Recieve from OpenBTS (MS): " << *block);
+	
+	gprs_rlcmac_rcv_block(block);
+}
+
+static int handle_ph_data_ind(struct femtol1_hdl *fl1, GsmL1_PhDataInd_t *data_ind,
+			struct msgb *l1p_msg)
+{
+	int rc = 0;
+	switch (data_ind->sapi) {
+	case GsmL1_Sapi_Rach:
+		break;
+	case GsmL1_Sapi_Pdtch:
+	case GsmL1_Sapi_Pacch:
+		pcu_l1if_rx_pdch(data_ind);
+		break;
+	case GsmL1_Sapi_Pbcch:
+	case GsmL1_Sapi_Pagch:
+	case GsmL1_Sapi_Ppch:
+	case GsmL1_Sapi_Pnch:
+	case GsmL1_Sapi_Ptcch:
+	case GsmL1_Sapi_Prach:
+		break;
+	default:
+		//LOGP(DGPRS, LOGL_NOTICE, "Rx PH-DATA.ind for unknown L1 SAPI %u \n", data_ind->sapi);
+		break;
 	}
+
+	return rc;
+}
+
+/* handle any random indication from the L1 */
+int pcu_l1if_handle_l1prim(struct femtol1_hdl *fl1, struct msgb *msg)
+{
+	GsmL1_Prim_t *l1p = msgb_l1prim(msg);
+	int rc = 0;
+
+	switch (l1p->id) {
+	case GsmL1_PrimId_MphTimeInd:
+		break;
+	case GsmL1_PrimId_MphSyncInd:
+		break;
+	case GsmL1_PrimId_PhConnectInd:
+		break;
+	case GsmL1_PrimId_PhReadyToSendInd:
+		break;
+	case GsmL1_PrimId_PhDataInd:
+		rc = handle_ph_data_ind(fl1, &l1p->u.phDataInd, msg);
+		break;
+	case GsmL1_PrimId_PhRaInd:
+		break;
+	default:
+		break;
+	}
+
+	/* Special return value '1' means: do not free */
+	if (rc != 1)
+		msgb_free(msg);
+
+	return rc;
 }
 
 void gsmtap_send_llc(uint8_t * data, unsigned len)
