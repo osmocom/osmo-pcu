@@ -195,7 +195,7 @@ void  write_packet_uplink_assignment(BitVector * dest, uint8_t tfi, uint32_t tll
 
 void write_ia_rest_octets_downlink_assignment(BitVector * dest, uint8_t tfi, uint32_t tlli)
 {
-	// GMS 04.08 10.5.2.37b 10.5.2.16
+	// GMS 04.08 10.5.2.16
 	unsigned wp = 0;
 	dest->writeField(wp, 3, 2);    // "HH"
 	dest->writeField(wp, 1, 2);    // "01" Packet Downlink Assignment
@@ -204,15 +204,15 @@ void write_ia_rest_octets_downlink_assignment(BitVector * dest, uint8_t tfi, uin
 	dest->writeField(wp,tfi,5);   // TFI
 	dest->writeField(wp,0x0,1);   // RLC acknowledged mode
 	dest->writeField(wp,0x0,1);   // ALPHA = present
-	//dest->writeField(wp,0x0,4);   // ALPHA power control parameter
 	dest->writeField(wp,0x0,5);   // GAMMA power control parameter
-	dest->writeField(wp,0x1,1);   // Polling Bit
+	dest->writeField(wp,0x0,1);   // Polling Bit
 	dest->writeField(wp,0x1,1);   // TA_VALID ???
 	dest->writeField(wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
-	dest->writeField(wp,0xC,4);   // TIMING_ADVANCE_INDEX
-	dest->writeField(wp,0x1,1);   // TBF Starting TIME present
-	dest->writeField(wp,0xffff,16); // TBF Starting TIME (we should set it in OpenBTS)
+	dest->writeField(wp,0x0,4);   // TIMING_ADVANCE_INDEX
+	dest->writeField(wp,0x0,1);   // TBF Starting TIME present
 	dest->writeField(wp,0x0,1);   // P0 not present
+	dest->writeField(wp,0x1,1);   // P0 not present
+	dest->writeField(wp,0xb,4);
 }
 
 void write_packet_uplink_ack(BitVector * dest, uint8_t tfi, uint32_t tlli, unsigned cv, unsigned bsn)
