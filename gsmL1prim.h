@@ -408,3 +408,5 @@ struct GsmL1_PhRaInd_t phRaInd;
 
 enum GsmL1_PrimId_t id;
 } GsmL1_Prim_t;
+
+#endif
