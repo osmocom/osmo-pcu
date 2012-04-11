@@ -437,17 +437,23 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
 
           if (no_of_bits <= 32)
           {
-            guint32 ui32 = vector->readField(readIndex, no_of_bits);
-            pui32       = pui32DATA(data, pDescr->offset);
-            *pui32      = ui32;
-            LOG(INFO) << pDescr->sz << " = " << *pui32 << "\n";
+            for(unsigned ib = 0; ib < 4; ib++)
+            {
+              guint8 ui8 = vector->readField(readIndex, 8);
+              pui8      = pui8DATA(data, pDescr->offset+ib);
+              *pui8      = ui8;
+               LOG(INFO) << pDescr->sz <<"[" << ib << "]= " << (unsigned)*pui8 << "\n";
+            }
           }
           else if (no_of_bits <= 64)
           {
-            guint64 ui64 = vector->readField(readIndex, no_of_bits);
-            pui64       = pui64DATA(data, pDescr->offset);
-            *pui64      = ui64;
-            LOG(INFO) << pDescr->sz << " = " << *pui64 << "\n";
+            for(unsigned ib = 0; ib < 8; ib++)
+            {
+              guint8 ui8 = vector->readField(readIndex, 8);
+              pui8      = pui8DATA(data, pDescr->offset+ib);
+              *pui8      = ui8;
+               LOG(INFO) << pDescr->sz <<"[" << ib << "]= " << (unsigned)*pui8 << "\n";
+            }
           }
           else
           {
@@ -1659,15 +1665,21 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
 
           if (no_of_bits <= 32)
           {
-            pui32 = pui32DATA(data, pDescr->offset);
-            vector->writeField(writeIndex, *pui32, no_of_bits);
-	    LOG(INFO) << pDescr->sz << " = " << *pui32 << "\n";
+            for(unsigned ib = 0; ib < 4; ib++)
+            {
+              pui8      = pui8DATA(data, pDescr->offset+ib);
+              vector->writeField(writeIndex, *pui8, 8);
+              LOG(INFO) << pDescr->sz <<"[" << ib << "]= " << (unsigned)*pui8 << "\n";
+            }
           }
           else if (no_of_bits <= 64)
           {
-            pui64 = pui64DATA(data, pDescr->offset);
-            vector->writeField(writeIndex, *pui64, no_of_bits);
-      	    LOG(INFO) << pDescr->sz << " = " << *pui64 << "\n";
+            for(unsigned ib = 0; ib < 8; ib++)
+            {
+              pui8      = pui8DATA(data, pDescr->offset+ib);
+              vector->writeField(writeIndex, *pui8, 8);
+              LOG(INFO) << pDescr->sz <<"[" << ib << "]= " << (unsigned)*pui8 << "\n";
+            }
           }
           else
           {
