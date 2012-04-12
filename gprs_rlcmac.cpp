@@ -22,7 +22,6 @@
 #include <Threads.h>
 #include <gprs_rlcmac.h>
 
-
 LLIST_HEAD(gprs_rlcmac_tbfs);
 void *rlcmac_tall_ctx;
 
@@ -87,6 +86,69 @@ static void tbf_free(struct gprs_rlcmac_tbf *tbf)
 {
 	llist_del(&tbf->list);
 	talloc_free(tbf);
+}
+
+
+static void tbf_timer_cb(void *_tbf)
+{
+	struct gprs_rlcmac_tbf *tbf = (struct gprs_rlcmac_tbf *)_tbf;
+
+	tbf->num_T_exp++;
+
+	switch (tbf->T) {
+	case 1111:
+		// TODO: We should add timers for TBF.
+		break;
+	default:
+		COUT("Timer expired in unknown mode" << tbf->T);
+	}
+}
+
+static void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
+				unsigned int seconds)
+{
+	if (osmo_timer_pending(&tbf->timer))
+		COUT("Starting TBF timer %u while old timer %u pending" << T << tbf->T);
+	tbf->T = T;
+	tbf->num_T_exp = 0;
+
+	/* FIXME: we should do this only once ? */
+	tbf->timer.data = tbf;
+	tbf->timer.cb = &tbf_timer_cb;
+
+	osmo_timer_schedule(&tbf->timer, seconds, 0);
+}
+
+
+static void tbf_gsm_timer_cb(void *_tbf)
+{
+	struct gprs_rlcmac_tbf *tbf = (struct gprs_rlcmac_tbf *)_tbf;
+
+	tbf->num_fT_exp++;
+
+	switch (tbf->fT) {
+	case 0:
+		// This is timer for delay RLC/MAC data sending after Downlink Immediate Assignment on CCCH.
+		gprs_rlcmac_segment_llc_pdu(tbf);
+		break;
+	default:
+		COUT("Timer expired in unknown mode" << tbf->fT);
+	}
+}
+
+static void tbf_gsm_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int fT,
+				int frames)
+{
+	if (osmo_gsm_timer_pending(&tbf->gsm_timer))
+		COUT("Starting TBF timer %u while old timer %u pending" << fT << tbf->fT);
+	tbf->fT = fT;
+	tbf->num_fT_exp = 0;
+
+	/* FIXME: we should do this only once ? */
+	tbf->gsm_timer.data = tbf;
+	tbf->gsm_timer.cb = &tbf_gsm_timer_cb;
+
+	osmo_gsm_timer_schedule(&tbf->gsm_timer, frames);
 }
 
 void  write_packet_downlink_assignment(BitVector * dest, uint8_t tfi, uint32_t tlli)
@@ -526,13 +588,10 @@ void gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 
 void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf)
 {
-	
 	COUT("SEND IA Rest Octets Downlink Assignment>>>>>>>>>>>>>>>>>>");
 	BitVector ia_rest_octets_downlink_assignment(23*8);
 	ia_rest_octets_downlink_assignment.unhex("2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	write_ia_rest_octets_downlink_assignment(&ia_rest_octets_downlink_assignment, tbf->tfi, tbf->tlli);
 	pcu_l1if_tx(&ia_rest_octets_downlink_assignment);
-	
-	usleep(500000);
-	gprs_rlcmac_segment_llc_pdu(tbf);
+	tbf_gsm_timer_start(tbf, 0, 120);
 }

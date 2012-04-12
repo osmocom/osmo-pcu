@@ -21,6 +21,7 @@
 #include <Threads.h>
 #include <Sockets.h>
 #include <pcu_l1_if.h>
+#include <gsm_timer.h>
 
 // TODO: We should move this parameters to config file.
 #define SGSN_IP "127.0.0.1"
@@ -85,7 +86,7 @@ static int udp_write_cb(struct osmo_fd *ofd, struct msgb *msg)
 	int rc;
 	struct l1fwd_hdl *l1fh = (l1fwd_hdl *)ofd->data;
 
-	DEBUGP(DGPRS, "UDP: Writing %u bytes for MQ_L1_WRITE queue\n", msgb_l1len(msg));
+	//DEBUGP(DGPRS, "UDP: Writing %u bytes for MQ_L1_WRITE queue\n", msgb_l1len(msg));
 
 	rc = sendto(ofd->fd, msg->l1h, msgb_l1len(msg), 0,
 			(const struct sockaddr *)&l1fh->remote_sa, l1fh->remote_sa_len);
@@ -114,6 +115,12 @@ int pcu_l1if_open()
 
 	l1fh->fl1h = fl1h;
 	fl1h->priv = l1fh;
+
+	struct osmo_wqueue * queue = &((l1fh->fl1h)->write_q);
+	osmo_wqueue_init(queue, 10);
+	queue->bfd.when |= BSC_FD_READ;
+	queue->bfd.data = l1fh;
+	queue->bfd.priv_nr = 0;
 
 	/* Open UDP */
 	struct osmo_wqueue *wq = &l1fh->udp_wq;
@@ -170,6 +177,10 @@ int main(int argc, char *argv[])
 	unsigned i = 0;
 	while (1) 
 	{
+		osmo_gsm_timers_check();
+		osmo_gsm_timers_prepare();
+		osmo_gsm_timers_update();
+
 		osmo_select_main(0);
 		if (i == 7)
 		{

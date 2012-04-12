@@ -22,9 +22,11 @@
 
 #include <BitVector.h>
 #include <gsm_rlcmac.h>
+#include <gsm_timer.h>
 
 extern "C" {
 #include <osmocom/core/linuxlist.h>
+#include <osmocom/core/timer.h>
 }
 
 enum gprs_rlcmac_tbf_state {
@@ -47,6 +49,14 @@ struct gprs_rlcmac_tbf {
 	uint8_t rlc_data[60];
 	uint16_t data_index;
 	uint8_t bsn;
+	
+	struct osmo_timer_list	timer;
+	unsigned int T; /* Txxxx number */
+	unsigned int num_T_exp; /* number of consecutive T expirations */
+	
+	struct osmo_gsm_timer_list	gsm_timer;
+	unsigned int fT; /* fTxxxx number */
+	unsigned int num_fT_exp; /* number of consecutive fT expirations */
 };
 
 extern struct llist_head gprs_rlcmac_tbfs;
