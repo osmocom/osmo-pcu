@@ -23,6 +23,7 @@
 
 #include <BitVector.h>
 #include <gsmL1prim.h>
+#include <sys/socket.h>
 extern "C" {
 #include <osmocom/core/write_queue.h>
 #include <osmocom/core/socket.h>
@@ -58,6 +59,8 @@ struct l1fwd_hdl {
 };
 
 extern struct l1fwd_hdl *l1fh;
+
+int get_current_fn();
 
 void pcu_l1if_tx(BitVector * block);
 
