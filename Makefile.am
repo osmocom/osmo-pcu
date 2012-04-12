@@ -30,7 +30,8 @@ libgprs_la_SOURCES = \
 	gsm_rlcmac.cpp \
 	gprs_bssgp_pcu.cpp \
 	gprs_rlcmac.cpp \
-	pcu_l1_if.cpp
+	pcu_l1_if.cpp \
+	gsm_timer.cpp
 
 noinst_PROGRAMS = \
 	RLCMACTest \
@@ -41,7 +42,8 @@ noinst_HEADERS = \
 	gsm_rlcmac.h \
 	gprs_bssgp_pcu.h \
 	gprs_rlcmac.h \
-	pcu_l1_if.h
+	pcu_l1_if.h \
+	gsm_timer.h
 
 RLCMACTest_SOURCES = RLCMACTest.cpp
 RLCMACTest_LDADD = \
