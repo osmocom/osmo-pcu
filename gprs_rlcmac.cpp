@@ -322,7 +322,7 @@ void gprs_rlcmac_tx_ul_ack(uint8_t tfi, uint32_t tlli, RlcMacUplinkDataBlock_t *
 	packet_uplink_ack_vec.unhex("2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	write_packet_uplink_ack(&packet_uplink_ack_vec, tfi, tlli, ul_data_block->CV, ul_data_block->BSN);
 	COUT("RLCMAC_CONTROL_BLOCK>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	RlcMacDownlink_t * packet_uplink_ack = (RlcMacDownlink_t *)malloc(sizeof(RlcMacUplink_t));
+	RlcMacDownlink_t * packet_uplink_ack = (RlcMacDownlink_t *)malloc(sizeof(RlcMacDownlink_t));
 	decode_gsm_rlcmac_downlink(&packet_uplink_ack_vec, packet_uplink_ack);
 	free(packet_uplink_ack);
 	COUT("RLCMAC_CONTROL_BLOCK_END------------------------------");
