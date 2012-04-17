@@ -59,6 +59,7 @@ struct msgb *gen_dummy_msg(void)
 	// RLC/MAC filler with USF=1
 	BitVector filler("0100000110010100001010110010101100101011001010110010101100101011001010110010101100101011001010110010101100101011001010110010101100101011001010110010101100101011001010110010101100101011");
 	prim->id = GsmL1_PrimId_PhDataReq;
+	prim->u.phDataReq.sapi = GsmL1_Sapi_Pacch;
 	filler.pack((unsigned char*)&(prim->u.phDataReq.msgUnitParam.u8Buffer[ofs]));
 	ofs += filler.size() >> 3;
 	prim->u.phDataReq.msgUnitParam.u8Size = ofs;
@@ -66,7 +67,7 @@ struct msgb *gen_dummy_msg(void)
 }
 
 // Send RLC/MAC block to OpenBTS.
-void pcu_l1if_tx(BitVector * block)
+void pcu_l1if_tx(BitVector * block, GsmL1_Sapi_t sapi, int len)
 {
 	int ofs = 0;
 	struct msgb *msg = l1p_msgb_alloc();
@@ -75,9 +76,10 @@ void pcu_l1if_tx(BitVector * block)
 	GsmL1_Prim_t *prim = msgb_l1prim(msg);
 	
 	prim->id = GsmL1_PrimId_PhDataReq;
+	prim->u.phDataReq.sapi = sapi;
 	block->pack((unsigned char*)&(prim->u.phDataReq.msgUnitParam.u8Buffer[ofs]));
 	ofs += block->size() >> 3;
-	prim->u.phDataReq.msgUnitParam.u8Size = ofs;
+	prim->u.phDataReq.msgUnitParam.u8Size = len;
 	
 	COUT("Add Block to WRITE QUEUE: " << *block);
 	osmo_wqueue_enqueue(queue, msg);
@@ -90,6 +92,15 @@ int pcu_l1if_rx_pdch(GsmL1_PhDataInd_t *data_ind)
 	COUT("RX: " << *block);
 	
 	gprs_rlcmac_rcv_block(block);
+}
+
+static int handle_ph_connect_ind(struct femtol1_hdl *fl1, GsmL1_PhConnectInd_t *connect_ind)
+{
+	(l1fh->fl1h)->channel_info.arfcn = connect_ind->u16Arfcn;
+	(l1fh->fl1h)->channel_info.tn = connect_ind->u8Tn;
+	(l1fh->fl1h)->channel_info.tsc = connect_ind->u8Tsc;
+	COUT("RX: [ PCU <- BTS ] PhConnectInd: ARFCN: " << connect_ind->u16Arfcn 
+		<<" TN: " << (unsigned)connect_ind->u8Tn << " TSC: " << (unsigned)connect_ind->u8Tsc);
 }
 
 static int handle_ph_readytosend_ind(struct femtol1_hdl *fl1, GsmL1_PhReadyToSendInd_t *readytosend_ind)
@@ -134,6 +145,14 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1, GsmL1_PhDataInd_t *data_i
 	return rc;
 }
 
+static int handle_ph_ra_ind(struct femtol1_hdl *fl1, GsmL1_PhRaInd_t *ra_ind)
+{
+	int rc = 0;
+	(l1fh->fl1h)->channel_info.ta = ra_ind->measParam.i16BurstTiming;
+	rc = gprs_rlcmac_rcv_rach(ra_ind->msgUnitParam.u8Buffer[0], ra_ind->u32Fn, ra_ind->measParam.i16BurstTiming);
+	return rc;
+}
+
 /* handle any random indication from the L1 */
 int pcu_l1if_handle_l1prim(struct femtol1_hdl *fl1, struct msgb *msg)
 {
@@ -142,15 +161,16 @@ int pcu_l1if_handle_l1prim(struct femtol1_hdl *fl1, struct msgb *msg)
 
 	switch (l1p->id) {
 	case GsmL1_PrimId_PhConnectInd:
+		rc = handle_ph_connect_ind(fl1, &l1p->u.phConnectInd);
 		break;
 	case GsmL1_PrimId_PhReadyToSendInd:
 		rc = handle_ph_readytosend_ind(fl1, &l1p->u.phReadyToSendInd);
 		break;
 	case GsmL1_PrimId_PhDataInd:
-		COUT("RX GsmL1_PrimId_PhDataInd ");
 		rc = handle_ph_data_ind(fl1, &l1p->u.phDataInd);
 		break;
 	case GsmL1_PrimId_PhRaInd:
+		rc = handle_ph_ra_ind(fl1, &l1p->u.phRaInd);
 		break;
 	default:
 		break;

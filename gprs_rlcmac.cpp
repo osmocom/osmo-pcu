@@ -21,6 +21,7 @@
 #include <pcu_l1_if.h>
 #include <Threads.h>
 #include <gprs_rlcmac.h>
+#include <gsmL1prim.h>
 
 LLIST_HEAD(gprs_rlcmac_tbfs);
 void *rlcmac_tall_ctx;
@@ -255,9 +256,97 @@ void  write_packet_uplink_assignment(BitVector * dest, uint8_t tfi, uint32_t tll
 //	dest->writeField(wp,0x0,1); // Measurement Mapping struct not present
 }
 
+
+// GSM 04.08 9.1.18 Immediate assignment
+int write_immediate_assignment(BitVector * dest, uint8_t downlink, uint8_t ra, uint32_t fn,
+								uint8_t ta, uint8_t tfi = 0, uint32_t tlli = 0)
+{
+	unsigned wp = 0;
+
+	dest->writeField(wp,0x0,4);  // Skip Indicator
+	dest->writeField(wp,0x6,4);  // Protocol Discriminator
+	dest->writeField(wp,0x3F,8); // Immediate Assignment Message Type
+
+	// 10.5.2.25b Dedicated mode or TBF
+	dest->writeField(wp,0x0,1);      // spare
+	dest->writeField(wp,0x0,1);      // TMA : Two-message assignment: No meaning
+	dest->writeField(wp,downlink,1); // Downlink : Downlink assignment to mobile in packet idle mode
+	dest->writeField(wp,0x1,1);      // T/D : TBF or dedicated mode: this message assigns a Temporary Block Flow (TBF).
+
+	dest->writeField(wp,0x0,4); // Page Mode
+
+	// GSM 04.08 10.5.2.25a Packet Channel Description
+	dest->writeField(wp,0x1,5);                               // Channel type
+	dest->writeField(wp,(l1fh->fl1h)->channel_info.tn,3);     // TN
+	dest->writeField(wp,(l1fh->fl1h)->channel_info.tsc,3);    // TSC
+	dest->writeField(wp,0x0,3);                               // non-hopping RF channel configuraion
+	dest->writeField(wp,(l1fh->fl1h)->channel_info.arfcn,10); // ARFCN
+
+	//10.5.2.30 Request Reference
+	dest->writeField(wp,ra,8);                    // RA
+	dest->writeField(wp,(fn / (26 * 51)) % 32,5); // T1'
+	dest->writeField(wp,fn % 51,6);               // T3
+	dest->writeField(wp,fn % 26,5);               // T2
+
+	// 10.5.2.40 Timing Advance
+	dest->writeField(wp,0x0,2); // spare
+	dest->writeField(wp,ta,6);  // Timing Advance value
+
+	// No mobile allocation in non-hopping systems.
+	// A zero-length LV.  Just write L=0.
+	dest->writeField(wp,0,8);
+
+	if (downlink)
+	{
+		// GSM 04.08 10.5.2.16 IA Rest Octets
+		dest->writeField(wp, 3, 2);   // "HH"
+		dest->writeField(wp, 1, 2);   // "01" Packet Downlink Assignment
+		dest->writeField(wp,tlli,32); // TLLI
+		dest->writeField(wp,0x1,1);   // switch TFI   : on
+		dest->writeField(wp,tfi,5);   // TFI
+		dest->writeField(wp,0x0,1);   // RLC acknowledged mode
+		dest->writeField(wp,0x0,1);   // ALPHA = present
+		dest->writeField(wp,0x0,5);   // GAMMA power control parameter
+		dest->writeField(wp,0x0,1);   // Polling Bit
+		dest->writeField(wp,0x1,1);   // TA_VALID ???
+		dest->writeField(wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
+		dest->writeField(wp,0x0,4);   // TIMING_ADVANCE_INDEX
+		dest->writeField(wp,0x0,1);   // TBF Starting TIME present
+		dest->writeField(wp,0x0,1);   // P0 not present
+		dest->writeField(wp,0x1,1);   // P0 not present
+		dest->writeField(wp,0xb,4);
+	}
+	else
+	{
+		// GMS 04.08 10.5.2.37b 10.5.2.16
+		dest->writeField(wp, 3, 2);    // "HH"
+		dest->writeField(wp, 0, 2);    // "0" Packet Uplink Assignment
+		dest->writeField(wp, 1, 1);    // Block Allocation : Not Single Block Allocation
+		dest->writeField(wp, tfi, 5);  // TFI_ASSIGNMENT Temporary Flow Identity
+		dest->writeField(wp, 0, 1);    // POLLING
+		dest->writeField(wp, 0, 1);    // ALLOCATION_TYPE: dynamic
+		dest->writeField(wp, 1, 3);    // USF
+		dest->writeField(wp, 1, 1);    // USF_GRANULARITY
+		dest->writeField(wp, 0 , 1);   // "0" power control: Not Present
+		dest->writeField(wp, 0, 2);    // CHANNEL_CODING_COMMAND 
+		dest->writeField(wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
+		dest->writeField(wp, 1 , 1);   // "1" Alpha : Present
+		dest->writeField(wp, 0, 4);    // Alpha
+		dest->writeField(wp, 0, 5);    // Gamma
+		dest->writeField(wp, 0, 1);    // TIMING_ADVANCE_INDEX_FLAG
+		dest->writeField(wp, 0, 1);    // TBF_STARTING_TIME_FLAG
+	}
+
+	if (wp%8)
+		return wp/8+1;
+	else
+		return wp/8;
+}
+
+
 void write_ia_rest_octets_downlink_assignment(BitVector * dest, uint8_t tfi, uint32_t tlli)
 {
-	// GMS 04.08 10.5.2.16
+	// GSM 04.08 10.5.2.16
 	unsigned wp = 0;
 	dest->writeField(wp, 3, 2);    // "HH"
 	dest->writeField(wp, 1, 2);    // "01" Packet Downlink Assignment
@@ -326,7 +415,7 @@ void gprs_rlcmac_tx_ul_ack(uint8_t tfi, uint32_t tlli, RlcMacUplinkDataBlock_t *
 	decode_gsm_rlcmac_downlink(&packet_uplink_ack_vec, packet_uplink_ack);
 	free(packet_uplink_ack);
 	COUT("RLCMAC_CONTROL_BLOCK_END------------------------------");
-	pcu_l1if_tx(&packet_uplink_ack_vec);
+	pcu_l1if_tx(&packet_uplink_ack_vec, GsmL1_Sapi_Pacch);
 }
 
 void gprs_rlcmac_data_block_parse(gprs_rlcmac_tbf* tbf, RlcMacUplinkDataBlock_t * ul_data_block)
@@ -373,14 +462,7 @@ int gprs_rlcmac_rcv_data_block(BitVector *rlc_block)
 
 	tbf = tbf_by_tfi(ul_data_block->TFI);
 	if (!tbf) {
-		tbf = tbf_alloc(ul_data_block->TFI);
-		if (tbf) {
-			tbf->tlli = ul_data_block->TLLI;
-			tbf->direction = GPRS_RLCMAC_UL_TBF;
-			tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
-		} else {
-			return 0;
-		}
+		return 0;
 	}
 
 	switch (tbf->state) {
@@ -433,12 +515,6 @@ int gprs_rlcmac_rcv_control_block(BitVector *rlc_block)
 	decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
 	COUT("RLCMAC_CONTROL_BLOCK_END------------------------------");
 
-	//gprs_rlcmac_control_block_get_tfi_tlli(ul_control_block, &tfi, &tlli);
-	//tbf = tbf_by_tfi(tfi);
-	//if (!tbf) {
-	//		return 0;
-	//}
-
 	switch (ul_control_block->u.MESSAGE_TYPE) {
 	case MT_PACKET_CONTROL_ACK:
 		tlli = ul_control_block->u.Packet_Control_Acknowledgement.TLLI;
@@ -459,7 +535,7 @@ int gprs_rlcmac_rcv_control_block(BitVector *rlc_block)
 		BitVector packet_uplink_assignment(23*8);
 		packet_uplink_assignment.unhex("2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 		write_packet_uplink_assignment(&packet_uplink_assignment, tbf->tfi, tbf->tlli);
-		pcu_l1if_tx(&packet_uplink_assignment);
+		pcu_l1if_tx(&packet_uplink_assignment, GsmL1_Sapi_Pacch);
 		break;
 	}
 	free(ul_control_block);
@@ -483,6 +559,27 @@ void gprs_rlcmac_rcv_block(BitVector *rlc_block)
 	default:
 		COUT("Unknown RLCMAC block payload.\n");
 	}
+}
+
+int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, uint16_t ta)
+{
+	struct gprs_rlcmac_tbf *tbf;
+
+	// Create new TBF
+	int tfi = tfi_alloc();
+	if (tfi < 0) {
+		return tfi;
+	}
+	tbf = tbf_alloc(tfi);
+	tbf->direction = GPRS_RLCMAC_UL_TBF;
+	tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
+	COUT("[UPLINK TBF : " << tfi << " ] : START");
+
+	COUT("SEND Immidiate Assignment>>>>>>>>>>>>>>>>>>");
+	BitVector immediate_assignment(23*8);
+	immediate_assignment.unhex("2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	int len = write_immediate_assignment(&immediate_assignment, 0, ra, Fn, ta, tbf->tfi);
+	pcu_l1if_tx(&immediate_assignment, GsmL1_Sapi_Agch, len);
 }
 
 // Send RLC data to OpenBTS.
@@ -521,7 +618,7 @@ void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t tfi, uint8_t *pdu, int 
 	}
 	encode_gsm_rlcmac_downlink_data(&data_block_vector, data_block);
 	free(data_block);
-	pcu_l1if_tx(&data_block_vector);
+	pcu_l1if_tx(&data_block_vector, GsmL1_Sapi_Pdtch);
 }
 
 int gprs_rlcmac_segment_llc_pdu(struct gprs_rlcmac_tbf *tbf)
@@ -589,9 +686,9 @@ void gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf)
 {
 	COUT("SEND IA Rest Octets Downlink Assignment>>>>>>>>>>>>>>>>>>");
-	BitVector ia_rest_octets_downlink_assignment(23*8);
-	ia_rest_octets_downlink_assignment.unhex("2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	write_ia_rest_octets_downlink_assignment(&ia_rest_octets_downlink_assignment, tbf->tfi, tbf->tlli);
-	pcu_l1if_tx(&ia_rest_octets_downlink_assignment);
+	BitVector immediate_assignment(23*8);
+	immediate_assignment.unhex("2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	int len = write_immediate_assignment(&immediate_assignment, 1, 125, get_current_fn(), (l1fh->fl1h)->channel_info.ta, tbf->tfi, tbf->tlli);
+	pcu_l1if_tx(&immediate_assignment, GsmL1_Sapi_Agch, len);
 	tbf_gsm_timer_start(tbf, 0, 120);
 }

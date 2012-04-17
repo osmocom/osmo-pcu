@@ -47,6 +47,14 @@ struct femtol1_hdl {
 
 	struct osmo_fd read_ofd;	/* osmo file descriptors */
 	struct osmo_wqueue write_q;
+
+	struct {
+		uint16_t arfcn;
+		uint8_t tn;
+		uint8_t tsc;
+		uint16_t ta;
+	} channel_info;
+
 };
 
 struct l1fwd_hdl {
@@ -62,7 +70,7 @@ extern struct l1fwd_hdl *l1fh;
 
 int get_current_fn();
 
-void pcu_l1if_tx(BitVector * block);
+void pcu_l1if_tx(BitVector * block, GsmL1_Sapi_t sapi, int len = 23);
 
 int pcu_l1if_handle_l1prim(struct femtol1_hdl *fl1h, struct msgb *msg);
 

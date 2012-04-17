@@ -89,6 +89,8 @@ int gprs_rlcmac_rcv_control_block(BitVector *rlc_block);
 
 void gprs_rlcmac_rcv_block(BitVector *rlc_block);
 
+int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, uint16_t ta);
+
 void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t tfi, uint8_t *pdu, int start_index, int end_index, uint8_t bsn, uint8_t fbi);
 
 int gprs_rlcmac_segment_llc_pdu(struct gprs_rlcmac_tbf *tbf);
