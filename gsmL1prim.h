@@ -352,6 +352,9 @@ struct GsmL1_MsgUnitParam_t msgUnitParam;
 } GsmL1_PhDataReq_t;
 
 typedef struct GsmL1_PhConnectInd_t {
+uint8_t u8Tn;
+uint8_t u8Tsc;
+uint16_t u16Arfcn;
 } GsmL1_PhConnectInd_t;
 
 typedef struct GsmL1_PhReadyToSendInd_t {
