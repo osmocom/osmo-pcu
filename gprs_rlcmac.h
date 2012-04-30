@@ -20,7 +20,7 @@
 #ifndef GPRS_RLCMAC_H
 #define GPRS_RLCMAC_H
 
-#include <BitVector.h>
+#include <bitvector.h>
 #include <gsm_rlcmac.h>
 #include <gsm_timer.h>
 
@@ -83,11 +83,11 @@ void gprs_rlcmac_tx_ul_ack(uint8_t tfi, uint32_t tlli, RlcMacUplinkDataBlock_t *
 
 void gprs_rlcmac_data_block_parse(gprs_rlcmac_tbf* tbf, RlcMacUplinkDataBlock_t * ul_data_block);
 
-int gprs_rlcmac_rcv_data_block(BitVector *rlc_block);
+int gprs_rlcmac_rcv_data_block(bitvec *rlc_block);
 
-int gprs_rlcmac_rcv_control_block(BitVector *rlc_block);
+int gprs_rlcmac_rcv_control_block(bitvec *rlc_block);
 
-void gprs_rlcmac_rcv_block(BitVector *rlc_block);
+void gprs_rlcmac_rcv_block(bitvec *rlc_block);
 
 int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, uint16_t ta);
 

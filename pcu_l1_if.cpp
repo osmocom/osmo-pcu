@@ -53,23 +53,22 @@ struct msgb *l1p_msgb_alloc(void)
 
 struct msgb *gen_dummy_msg(void)
 {
-	int ofs = 0;
 	struct msgb *msg = l1p_msgb_alloc();
 	GsmL1_Prim_t *prim = msgb_l1prim(msg);
 	// RLC/MAC filler with USF=1
-	BitVector filler("0100000110010100001010110010101100101011001010110010101100101011001010110010101100101011001010110010101100101011001010110010101100101011001010110010101100101011001010110010101100101011");
+	bitvec *filler = bitvec_alloc(23);
+	bitvec_unhex(filler, "41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	prim->id = GsmL1_PrimId_PhDataReq;
 	prim->u.phDataReq.sapi = GsmL1_Sapi_Pacch;
-	filler.pack((unsigned char*)&(prim->u.phDataReq.msgUnitParam.u8Buffer[ofs]));
-	ofs += filler.size() >> 3;
-	prim->u.phDataReq.msgUnitParam.u8Size = ofs;
+	bitvec_pack(filler, prim->u.phDataReq.msgUnitParam.u8Buffer);
+	prim->u.phDataReq.msgUnitParam.u8Size = filler->data_len;
+	bitvec_free(filler);
 	return msg;
 }
 
 // Send RLC/MAC block to OpenBTS.
-void pcu_l1if_tx(BitVector * block, GsmL1_Sapi_t sapi, int len)
+void pcu_l1if_tx(bitvec * block, GsmL1_Sapi_t sapi, int len)
 {
-	int ofs = 0;
 	struct msgb *msg = l1p_msgb_alloc();
 	struct osmo_wqueue * queue;
 	queue = &((l1fh->fl1h)->write_q);
@@ -77,21 +76,19 @@ void pcu_l1if_tx(BitVector * block, GsmL1_Sapi_t sapi, int len)
 	
 	prim->id = GsmL1_PrimId_PhDataReq;
 	prim->u.phDataReq.sapi = sapi;
-	block->pack((unsigned char*)&(prim->u.phDataReq.msgUnitParam.u8Buffer[ofs]));
-	ofs += block->size() >> 3;
+	bitvec_pack(block, prim->u.phDataReq.msgUnitParam.u8Buffer);
 	prim->u.phDataReq.msgUnitParam.u8Size = len;
-	
-	COUT("Add Block to WRITE QUEUE: " << *block);
+	//COUT("Add Block to WRITE QUEUE: " << *block);
 	osmo_wqueue_enqueue(queue, msg);
 }
 
 int pcu_l1if_rx_pdch(GsmL1_PhDataInd_t *data_ind)
 {
-	BitVector *block = new BitVector(23*8);
-	block->unpack((const unsigned char*)data_ind->msgUnitParam.u8Buffer);
-	COUT("RX: " << *block);
-	
+	bitvec *block = bitvec_alloc(data_ind->msgUnitParam.u8Size);
+	bitvec_unpack(block, data_ind->msgUnitParam.u8Buffer);
+	//COUT("RX: " << *block);
 	gprs_rlcmac_rcv_block(block);
+	bitvec_free(block);
 }
 
 static int handle_ph_connect_ind(struct femtol1_hdl *fl1, GsmL1_PhConnectInd_t *connect_ind)

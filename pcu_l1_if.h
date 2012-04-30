@@ -21,7 +21,7 @@
 #define PCU_L1_IF_H
 
 
-#include <BitVector.h>
+#include <bitvector.h>
 #include <gsmL1prim.h>
 #include <sys/socket.h>
 extern "C" {
@@ -70,7 +70,7 @@ extern struct l1fwd_hdl *l1fh;
 
 int get_current_fn();
 
-void pcu_l1if_tx(BitVector * block, GsmL1_Sapi_t sapi, int len = 23);
+void pcu_l1if_tx(bitvec * block, GsmL1_Sapi_t sapi, int len = 23);
 
 int pcu_l1if_handle_l1prim(struct femtol1_hdl *fl1h, struct msgb *msg);
 

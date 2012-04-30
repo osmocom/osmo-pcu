@@ -30,6 +30,8 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <assert.h>
+#include <string.h>
 #include "csn1.h"
 
 
@@ -50,7 +52,7 @@ static const unsigned char ixBitsTab[] = {0, 1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4,
 /* Returns no_of_bits (up to 8) masked with 0x2B */
 
 static guint8
-get_masked_bits8( BitVector *vector, size_t& readIndex, gint bit_offset,  const gint no_of_bits)
+get_masked_bits8( bitvec *vector, size_t& readIndex, gint bit_offset,  const gint no_of_bits)
 {
   static const guint8 maskBits[] = {0x00, 0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3F, 0x7F, 0xFF};
   //gint byte_offset = bit_offset >> 3;          /* divide by 8 */
@@ -60,15 +62,15 @@ get_masked_bits8( BitVector *vector, size_t& readIndex, gint bit_offset,  const 
   readIndex -= relative_bit_offset;
   if (bit_shift >= 0)
   {
-    result = (0x2B ^ ((guint8)vector->readField(readIndex, 8))) >> bit_shift;
+    result = (0x2B ^ ((guint8)bitvec_read_field(vector, readIndex, 8))) >> bit_shift;
     readIndex-= bit_shift;
     result &= maskBits[no_of_bits];
   }
   else
   { 
-    guint8 hight_part = (0x2B ^ ((guint8)vector->readField(readIndex, 8))) & maskBits[8 - relative_bit_offset];
+    guint8 hight_part = (0x2B ^ ((guint8)bitvec_read_field(vector, readIndex, 8))) & maskBits[8 - relative_bit_offset];
     hight_part = (guint8) (hight_part << (-bit_shift));
-    result =  (0x2B ^ ((guint8)vector->readField(readIndex, 8))) >> (8 + bit_shift);
+    result =  (0x2B ^ ((guint8)bitvec_read_field(vector, readIndex, 8))) >> (8 + bit_shift);
     readIndex = readIndex - (8 - (-bit_shift));
     result |= hight_part;
   }
@@ -164,9 +166,9 @@ static const char* CSN_DESCR_type[]=
  */
 
 static gboolean
-existNextElement(BitVector *vector, size_t& readIndex, guint8 Tag)
+existNextElement(bitvec *vector, size_t& readIndex, guint8 Tag)
 {
-  guint8 res = vector->readField(readIndex, 1);
+  guint8 res = bitvec_read_field(vector, readIndex, 1);
   //LOG(INFO) << "EXIST TAG = " << (unsigned)res;
   if (Tag == STANDARD_TAG)
   {
@@ -177,7 +179,7 @@ existNextElement(BitVector *vector, size_t& readIndex, guint8 Tag)
 
 
 gint16
-csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, size_t& readIndex, void* data)
+csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, size_t& readIndex, void* data)
 {
   gint  remaining_bits_len = ar->remaining_bits_len;
   gint  bit_offset         = ar->bit_offset;
@@ -201,7 +203,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
         if (remaining_bits_len > 0)
         {
           pui8  = pui8DATA(data, pDescr->offset);
-          *pui8 = vector->readField(readIndex, 1);
+          *pui8 = bitvec_read_field(vector, readIndex, 1);
           LOG(INFO) << pDescr->sz << " = " <<(unsigned)*pui8 << "\n";
           /* end add the bit value to protocol tree */
         }
@@ -230,21 +232,21 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
         {
           if (no_of_bits <= 8)
           {
-            guint8 ui8 = vector->readField(readIndex, no_of_bits);
+            guint8 ui8 = bitvec_read_field(vector, readIndex, no_of_bits);
             pui8      = pui8DATA(data, pDescr->offset);
             *pui8     = ui8;
             LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
           }
           else if (no_of_bits <= 16)
           {
-            guint16 ui16 = vector->readField(readIndex, no_of_bits);
+            guint16 ui16 = bitvec_read_field(vector, readIndex, no_of_bits);
             pui16       = pui16DATA(data, pDescr->offset);
             *pui16      = ui16;
             LOG(INFO) << pDescr->sz << " = " << *pui16 << "\n";;
           }
           else if (no_of_bits <= 32)
           {
-            guint32 ui32 = vector->readField(readIndex, no_of_bits);
+            guint32 ui32 = bitvec_read_field(vector, readIndex, no_of_bits);
             pui32       = pui32DATA(data, pDescr->offset);
             *pui32      = ui32;
             LOG(INFO) << pDescr->sz << " = " << *pui32 << "\n";
@@ -273,21 +275,21 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
         {
           if (no_of_bits <= 8)
           {
-            guint8 ui8 = vector->readField(readIndex, no_of_bits);
+            guint8 ui8 = bitvec_read_field(vector, readIndex, no_of_bits);
             pui8      = pui8DATA(data, pDescr->offset);
             *pui8     = ui8 + (guint8)pDescr->descr.value;
             LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
           }
           else if (no_of_bits <= 16)
           {
-            guint16 ui16 = vector->readField(readIndex, no_of_bits);
+            guint16 ui16 = bitvec_read_field(vector, readIndex, no_of_bits);
             pui16       = pui16DATA(data, pDescr->offset);
             *pui16      = ui16 + (guint16)pDescr->descr.value;
             LOG(INFO) << pDescr->sz << " = " << *pui16 << "\n";;
           }
           else if (no_of_bits <= 32)
           {
-            guint32 ui32 = vector->readField(readIndex, no_of_bits);
+            guint32 ui32 = bitvec_read_field(vector, readIndex, no_of_bits);
             pui32       = pui32DATA(data, pDescr->offset);
             *pui32      = ui32 + (guint16)pDescr->descr.value;
             LOG(INFO) << pDescr->sz << " = " << *pui32 << "\n";
@@ -356,7 +358,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
             pui8 = pui8DATA(data, pDescr->offset);
             do
             {
-              *pui8 = vector->readField(readIndex, no_of_bits);
+              *pui8 = bitvec_read_field(vector, readIndex, no_of_bits);
               LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
               pui8++;
               bit_offset += no_of_bits;
@@ -439,7 +441,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
           {
             for(unsigned ib = 0; ib < 4; ib++)
             {
-              guint8 ui8 = vector->readField(readIndex, 8);
+              guint8 ui8 = bitvec_read_field(vector, readIndex, 8);
               pui8      = pui8DATA(data, pDescr->offset+ib);
               *pui8      = ui8;
                LOG(INFO) << pDescr->sz <<"[" << ib << "]= " << (unsigned)*pui8 << "\n";
@@ -449,7 +451,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
           {
             for(unsigned ib = 0; ib < 8; ib++)
             {
-              guint8 ui8 = vector->readField(readIndex, 8);
+              guint8 ui8 = bitvec_read_field(vector, readIndex, 8);
               pui8      = pui8DATA(data, pDescr->offset+ib);
               *pui8      = ui8;
                LOG(INFO) << pDescr->sz <<"[" << ib << "]= " << (unsigned)*pui8 << "\n";
@@ -502,7 +504,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
         while (count > 0)
         {
           guint8 no_of_bits = pChoice->bits;
-          guint8 value = vector->readField(readIndex, no_of_bits);
+          guint8 value = bitvec_read_field(vector, readIndex, no_of_bits);
           if (value == pChoice->value)
           {
             CSN_DESCR   descr[2];
@@ -549,7 +551,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
         csnStream_t          arT       = *ar;
         gint16               Status    = -1;
 
-        LOG(INFO) << pDescr->sz << " length = " << vector->readField(readIndex, 7) << "\n";
+        LOG(INFO) << pDescr->sz << " length = " << bitvec_read_field(vector, readIndex, 7) << "\n";
         arT.direction = 1;
         bit_offset += 7;
         remaining_bits_len -= 7;
@@ -600,7 +602,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
           }
           else
           {
-            index |= vector->readField(readIndex, 1);
+            index |= bitvec_read_field(vector, readIndex, 1);
           }
           remaining_bits_len--;
           bit_offset++;
@@ -623,7 +625,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
           {
             pui8  = pui8DATA(data, pDescr->offset);
             *pui8 = 0x00;
-            if (vector->readField(readIndex, 1) > 0)
+            if (bitvec_read_field(vector, readIndex, 1) > 0)
             {
               *pui8 = 0x01;
             }
@@ -649,21 +651,21 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
 
               if (no_of_bits <= 8)
               {
-                guint8 ui8 = vector->readField(readIndex,  no_of_bits);
+                guint8 ui8 = bitvec_read_field(vector, readIndex,  no_of_bits);
                 pui8       = pui8DATA(data, pDescr->offset);
                 *pui8      = ui8;
                 LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
               }
               else if (no_of_bits <= 16)
               {
-                guint16 ui16 = vector->readField(readIndex,  no_of_bits);
+                guint16 ui16 = bitvec_read_field(vector, readIndex,  no_of_bits);
                 pui16        = pui16DATA(data, pDescr->offset);
                 *pui16       = ui16;
                 LOG(INFO) << pDescr->sz << " = " << *pui16 << "\n";
               }
               else if (no_of_bits <= 32)
               {
-                guint32 ui32 = vector->readField(readIndex,  no_of_bits);
+                guint32 ui32 = bitvec_read_field(vector, readIndex,  no_of_bits);
                 pui32       = pui32DATA(data, pDescr->offset);
                 *pui32      = ui32;
                 LOG(INFO) << pDescr->sz << " = " << *pui32 << "\n";
@@ -691,21 +693,21 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
             {
               if (no_of_bits <= 8)
               {
-                guint8 ui8 = vector->readField(readIndex,  no_of_bits);
+                guint8 ui8 = bitvec_read_field(vector, readIndex,  no_of_bits);
                 pui8      = pui8DATA(data, pDescr->offset);
                 *pui8     = ui8 + (guint8)pDescr->descr.value;
                 LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
               }
               else if (no_of_bits <= 16)
               {
-                guint16 ui16 = vector->readField(readIndex,  no_of_bits);
+                guint16 ui16 = bitvec_read_field(vector, readIndex,  no_of_bits);
                 pui16       = pui16DATA(data, pDescr->offset);
                 *pui16      = ui16 + (guint16)pDescr->descr.value;
                 LOG(INFO) << pDescr->sz << " = " << *pui16 << "\n";
               }
               else if (no_of_bits <= 32)
               {
-                guint32 ui32 = vector->readField(readIndex,  no_of_bits);
+                guint32 ui32 = bitvec_read_field(vector, readIndex,  no_of_bits);
                 pui32       = pui32DATA(data, pDescr->offset);
                 *pui32      = ui32 + (guint16)pDescr->descr.value;
                 LOG(INFO) << pDescr->sz << " = " << *pui32 << "\n";
@@ -772,7 +774,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
 
                 while (nCount > 0)
                 {
-                  *pui8 = vector->readField(readIndex,  no_of_bits);
+                  *pui8 = bitvec_read_field(vector, readIndex,  no_of_bits);
                   LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
                   pui8++;
                   bit_offset += no_of_bits;
@@ -785,7 +787,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
 
                 while (nCount > 0)
                 {
-                 *pui16 = vector->readField(readIndex,  no_of_bits);
+                 *pui16 = bitvec_read_field(vector, readIndex,  no_of_bits);
                   LOG(INFO) << pDescr->sz << " = " << *pui16 << "\n";
                   pui16++;
                   bit_offset += no_of_bits;
@@ -861,14 +863,14 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
 
               if (no_of_bits <= 32)
               {
-                guint32 ui32 = vector->readField(readIndex, no_of_bits);
+                guint32 ui32 = bitvec_read_field(vector, readIndex, no_of_bits);
                 pui32       = pui32DATA(data, pDescr->offset);
                 *pui32      = ui32;
                 LOG(INFO) << pDescr->sz << " = " << *pui32 << "\n";
               }
               else if (no_of_bits <= 64)
               {
-                guint64 ui64 = vector->readField(readIndex, no_of_bits);
+                guint64 ui64 = bitvec_read_field(vector, readIndex, no_of_bits);
                 pui64       = pui64DATA(data, pDescr->offset);
                 *pui64      = ui64;
                 LOG(INFO) << pDescr->sz << " = " << *pui64 << "\n";
@@ -933,7 +935,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
         }
         else
         {
-          fExist = vector->readField(readIndex, 1);
+          fExist = bitvec_read_field(vector, readIndex, 1);
         }
 
         *pui8 = fExist;
@@ -978,7 +980,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
         /* the "regular" M_NEXT_EXIST description element */
 
         fExist = 0x00;
-        if (vector->readField(readIndex, 1))
+        if (bitvec_read_field(vector, readIndex, 1))
         {
           fExist = 0x01;
         }
@@ -1071,7 +1073,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
 
             if (nB1 > 0)
             { /* take care of the first byte - it will be right aligned */
-              *pui8 = vector->readField(readIndex, nB1);
+              *pui8 = bitvec_read_field(vector, readIndex, nB1);
               LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n" ;
               pui8++;
               no_of_bits  -= nB1;
@@ -1081,7 +1083,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
             /* remaining no_of_bits is a multiple of 8 or 0 */
             while (no_of_bits > 0)
             {
-              *pui8 = vector->readField(readIndex, 8);
+              *pui8 = bitvec_read_field(vector, readIndex, 8);
               LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n" ;
               pui8++;
               no_of_bits -= 8;
@@ -1126,14 +1128,14 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
 
             while (no_of_bits > 0)
             {
-              *pui8 = vector->readField(readIndex, 8);
+              *pui8 = bitvec_read_field(vector, readIndex, 8);
               LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n" ;
               pui8++;
               no_of_bits -= 8;
             }
             if (nB1 > 0)
             { 
-              *pui8 = vector->readField(readIndex, nB1);
+              *pui8 = bitvec_read_field(vector, readIndex, nB1);
               LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n" ;
               pui8++;
               no_of_bits  -= nB1;
@@ -1172,7 +1174,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
           while (count > 0)
           {
             readIndex -= 8;
-            *pui8 = vector->readField(readIndex, 8);
+            *pui8 = bitvec_read_field(vector, readIndex, 8);
             LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
             pui8++;
             bit_offset += 8;
@@ -1205,7 +1207,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
           remaining_bits_len--;
 
           /* extract and store no_of_bits long element from bitstream */
-          *pui8 = vector->readField(readIndex, no_of_bits);
+          *pui8 = bitvec_read_field(vector, readIndex, no_of_bits);
           LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
           pui8++;
           remaining_bits_len -= no_of_bits;
@@ -1219,7 +1221,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
           bit_offset += no_of_bits;
         }
 
-        LOG(INFO) << pDescr->sz << " = " << vector->readField(readIndex, 1) << "\n";
+        LOG(INFO) << pDescr->sz << " = " << bitvec_read_field(vector, readIndex, 1) << "\n";
         /* existNextElement() returned FALSE, 1 bit consumed */
         bit_offset++;
 
@@ -1271,7 +1273,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
           }
         }
 
-        LOG(INFO) << pDescr->sz << " = " << vector->readField(readIndex, 1) << "\n";
+        LOG(INFO) << pDescr->sz << " = " << bitvec_read_field(vector, readIndex, 1) << "\n";
 
         /* existNextElement() returned FALSE, 1 bit consumed */
         bit_offset++;
@@ -1352,7 +1354,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
 
         if (no_of_bits <= 32)
         {
-          ui32 = vector->readField(readIndex, no_of_bits);
+          ui32 = bitvec_read_field(vector, readIndex, no_of_bits);
         }
         else
         {
@@ -1404,7 +1406,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, si
 
 
 
-gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, size_t& writeIndex, void* data)
+gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, size_t& writeIndex, void* data)
 {
   gint  remaining_bits_len = ar->remaining_bits_len;
   gint  bit_offset         = ar->bit_offset;
@@ -1429,7 +1431,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
         if (remaining_bits_len > 0)
         {
           pui8  = pui8DATA(data, pDescr->offset);
-          vector->writeField(writeIndex, *pui8, 1);
+          bitvec_write_field(vector, writeIndex, *pui8, 1);
           LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
           /* end add the bit value to protocol tree */
         }
@@ -1459,19 +1461,19 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
           if (no_of_bits <= 8)
           {
             pui8      = pui8DATA(data, pDescr->offset);
-            vector->writeField(writeIndex, *pui8, no_of_bits);
+            bitvec_write_field(vector, writeIndex, *pui8, no_of_bits);
             LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
           }
           else if (no_of_bits <= 16)
           {
             pui16       = pui16DATA(data, pDescr->offset);
-            vector->writeField(writeIndex, *pui16, no_of_bits);
+            bitvec_write_field(vector, writeIndex, *pui16, no_of_bits);
             LOG(INFO) << pDescr->sz << " = " << *pui16 << "\n";
           }
           else if (no_of_bits <= 32)
           {
             pui32       = pui32DATA(data, pDescr->offset);
-            vector->writeField(writeIndex, *pui32, no_of_bits);
+            bitvec_write_field(vector, writeIndex, *pui32, no_of_bits);
             LOG(INFO) << pDescr->sz << " = " << *pui32 << "\n";
           }
           else
@@ -1499,19 +1501,19 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
           if (no_of_bits <= 8)
           {
             pui8      = pui8DATA(data, pDescr->offset);
-            vector->writeField(writeIndex, *pui8 - (guint8)pDescr->descr.value, no_of_bits);
+            bitvec_write_field(vector, writeIndex, *pui8 - (guint8)pDescr->descr.value, no_of_bits);
             LOG(INFO) << pDescr->sz << " = " << (unsigned)(*pui8 - (guint8)pDescr->descr.value) << "\n";
           }
           else if (no_of_bits <= 16)
           {
             pui16       = pui16DATA(data, pDescr->offset);
-            vector->writeField(writeIndex, *pui16 - (guint16)pDescr->descr.value, no_of_bits);
+            bitvec_write_field(vector, writeIndex, *pui16 - (guint16)pDescr->descr.value, no_of_bits);
             LOG(INFO) << pDescr->sz << " = " << *pui16 - (guint16)pDescr->descr.value << "\n";
           }
           else if (no_of_bits <= 32)
           {
             pui32       = pui32DATA(data, pDescr->offset);
-            vector->writeField(writeIndex, *pui32 - (guint16)pDescr->descr.value, no_of_bits);
+            bitvec_write_field(vector, writeIndex, *pui32 - (guint16)pDescr->descr.value, no_of_bits);
             LOG(INFO) << pDescr->sz << " = " << *pui32 - (guint16)pDescr->descr.value << "\n";
           }
           else
@@ -1540,12 +1542,12 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
           if (no_of_bits <= 8)
           {
             pui8      = pui8DATA(data, pDescr->offset);
-            vector->writeField(writeIndex, *pui8, no_of_bits);
+            bitvec_write_field(vector, writeIndex, *pui8, no_of_bits);
             // TODO : Change get_masked_bits8()
             writeIndex -= no_of_bits;
             guint8 ui8 = get_masked_bits8(vector, writeIndex, bit_offset, no_of_bits);
             writeIndex -= no_of_bits;
-            vector->writeField(writeIndex, ui8, no_of_bits);
+            bitvec_write_field(vector, writeIndex, ui8, no_of_bits);
             LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
 
           }
@@ -1583,7 +1585,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
             pui8 = pui8DATA(data, pDescr->offset);
             do
             {
-	      vector->writeField(writeIndex, *pui8, no_of_bits);
+	      bitvec_write_field(vector, writeIndex, *pui8, no_of_bits);
               LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
               pui8++;
               bit_offset += no_of_bits;
@@ -1668,7 +1670,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
             for(unsigned ib = 0; ib < 4; ib++)
             {
               pui8      = pui8DATA(data, pDescr->offset+ib);
-              vector->writeField(writeIndex, *pui8, 8);
+              bitvec_write_field(vector, writeIndex, *pui8, 8);
               LOG(INFO) << pDescr->sz <<"[" << ib << "]= " << (unsigned)*pui8 << "\n";
             }
           }
@@ -1677,7 +1679,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
             for(unsigned ib = 0; ib < 8; ib++)
             {
               pui8      = pui8DATA(data, pDescr->offset+ib);
-              vector->writeField(writeIndex, *pui8, 8);
+              bitvec_write_field(vector, writeIndex, *pui8, 8);
               LOG(INFO) << pDescr->sz <<"[" << ib << "]= " << (unsigned)*pui8 << "\n";
             }
           }
@@ -1732,7 +1734,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
         guint8 no_of_bits = pChoice->bits;
         guint8 value = pChoice->value;
         LOG(INFO) << pChoice->descr.sz << " = " << (unsigned)value << "\n";
-        vector->writeField(writeIndex, value, no_of_bits);
+        bitvec_write_field(vector, writeIndex, value, no_of_bits);
 
         CSN_DESCR   descr[2];
         gint16      Status;
@@ -1777,7 +1779,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
         csnStreamInit(&arT, bit_offset, remaining_bits_len);
         Status = serialize(&arT, vector, writeIndex, pvDATA(data, pDescr->offset));
 	
-        vector->writeField(lengthIndex, writeIndex-lengthIndex-7, 7);
+        bitvec_write_field(vector, lengthIndex, writeIndex-lengthIndex-7, 7);
         LOG(INFO) << pDescr->sz << " length = " << writeIndex-lengthIndex << "\n";
 
         if (Status >= 0)
@@ -1816,7 +1818,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
         /* Assign UnionType */
         pui8  = pui8DATA(data, pDescr->offset);
 	//read index from data and write to vector
-        vector->writeField(writeIndex, *pui8, Bits);
+        bitvec_write_field(vector, writeIndex, *pui8, Bits);
 
 	//decode index 
         writeIndex -= Bits;
@@ -1831,7 +1833,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
           }
           else
           {
-            index |= vector->readField(writeIndex, 1);
+            index |= bitvec_read_field(vector, writeIndex, 1);
           }
 
           remaining_bits_len--;
@@ -1840,7 +1842,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
         }
 
         writeIndex -= Bits;
-        vector->writeField(writeIndex, index, Bits);
+        bitvec_write_field(vector, writeIndex, index, Bits);
 
 
         /* script index to continue on, limited in case we do not have a power of 2 */
@@ -1853,7 +1855,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
           case CSN_BIT:
           {
             pui8  = pui8DATA(data, pDescr->offset);
-            vector->writeField(writeIndex, *pui8, 1);
+            bitvec_write_field(vector, writeIndex, *pui8, 1);
             LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
             remaining_bits_len -= 1;
             bit_offset++;
@@ -1877,19 +1879,19 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
               if (no_of_bits <= 8)
               {
                 pui8      = pui8DATA(data, pDescr->offset);
-                vector->writeField(writeIndex, *pui8, no_of_bits);
+                bitvec_write_field(vector, writeIndex, *pui8, no_of_bits);
                 LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
               }
               else if (no_of_bits <= 16)
               {
                 pui16       = pui16DATA(data, pDescr->offset);
-                vector->writeField(writeIndex, *pui16, no_of_bits);
+                bitvec_write_field(vector, writeIndex, *pui16, no_of_bits);
                 LOG(INFO) << pDescr->sz << " = " << *pui16 << "\n";
               }
               else if (no_of_bits <= 32)
               {
                 pui32       = pui32DATA(data, pDescr->offset);
-                vector->writeField(writeIndex, *pui32, no_of_bits);
+                bitvec_write_field(vector, writeIndex, *pui32, no_of_bits);
                 LOG(INFO) << pDescr->sz << " = " << *pui32 << "\n";
               }
               else
@@ -1916,19 +1918,19 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
               if (no_of_bits <= 8)
               {
                 pui8      = pui8DATA(data, pDescr->offset);
-                vector->writeField(writeIndex, *pui8 - (guint8)pDescr->descr.value, no_of_bits);
+                bitvec_write_field(vector, writeIndex, *pui8 - (guint8)pDescr->descr.value, no_of_bits);
                 LOG(INFO) << pDescr->sz << " = " << (unsigned)(*pui8 - (guint8)pDescr->descr.value) << "\n";
               }
               else if (no_of_bits <= 16)
               {
                 pui16       = pui16DATA(data, pDescr->offset);
-                vector->writeField(writeIndex, *pui16 - (guint16)pDescr->descr.value, no_of_bits);
+                bitvec_write_field(vector, writeIndex, *pui16 - (guint16)pDescr->descr.value, no_of_bits);
                 LOG(INFO) << pDescr->sz << " = " << *pui16 - (guint16)pDescr->descr.value << "\n";
               }
               else if (no_of_bits <= 32)
               {
                 pui32       = pui32DATA(data, pDescr->offset);
-                vector->writeField(writeIndex, *pui32 - (guint16)pDescr->descr.value, no_of_bits);
+                bitvec_write_field(vector, writeIndex, *pui32 - (guint16)pDescr->descr.value, no_of_bits);
                 LOG(INFO) << pDescr->sz << " = " << *pui32 - (guint16)pDescr->descr.value << "\n";
               }
               else
@@ -1957,12 +1959,12 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
               if (no_of_bits <= 8)
               {
                 pui8      = pui8DATA(data, pDescr->offset);
-                vector->writeField(writeIndex, *pui8, no_of_bits);
+                bitvec_write_field(vector, writeIndex, *pui8, no_of_bits);
                 // TODO : Change get_masked_bits8()
                 writeIndex -= no_of_bits;
                 guint8 ui8 = get_masked_bits8(vector, writeIndex, bit_offset, no_of_bits);
                 writeIndex -= no_of_bits;
-                vector->writeField(writeIndex, ui8, no_of_bits);
+                bitvec_write_field(vector, writeIndex, ui8, no_of_bits);
                 LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
 
               }
@@ -2000,7 +2002,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
                 pui8 = pui8DATA(data, pDescr->offset);
                 do
                 {
-	          vector->writeField(writeIndex, *pui8, no_of_bits);
+	          bitvec_write_field(vector, writeIndex, *pui8, no_of_bits);
                   LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
                   pui8++;
                   bit_offset += no_of_bits;
@@ -2082,13 +2084,13 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
               if (no_of_bits <= 32)
               {
                 pui32 = pui32DATA(data, pDescr->offset);
-                vector->writeField(writeIndex, *pui32, no_of_bits);
+                bitvec_write_field(vector, writeIndex, *pui32, no_of_bits);
                 LOG(INFO) << pDescr->sz << " = " << *pui32 << "\n";
               }
               else if (no_of_bits <= 64)
               {
                 pui64 = pui64DATA(data, pDescr->offset);
-                vector->writeField(writeIndex, *pui64, no_of_bits);
+                bitvec_write_field(vector, writeIndex, *pui64, no_of_bits);
                 LOG(INFO) << pDescr->sz << " = " << *pui64 << "\n";
               }
               else
@@ -2146,7 +2148,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
         unsigned exist = 0;
         pui8  = pui8DATA(data, pDescr->offset);
         exist = *pui8;
-        vector->writeField(writeIndex, *pui8, 1);
+        bitvec_write_field(vector, writeIndex, *pui8, 1);
         writeIndex--;
         if (CSN_EXIST_LH == pDescr->type)
         {
@@ -2154,10 +2156,10 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
         }
         else
         {
-          fExist = vector->readField(writeIndex, 1);
+          fExist = bitvec_read_field(vector, writeIndex, 1);
         }
         writeIndex--;
-        vector->writeField(writeIndex, fExist, 1);
+        bitvec_write_field(vector, writeIndex, fExist, 1);
         LOG(INFO) << pDescr->sz << " = " << (unsigned)fExist << "\n";
         pDescr++;
         remaining_bits_len -= 1;
@@ -2193,7 +2195,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
           break;
         }
 
-        vector->writeField(writeIndex, *pui8, 1);
+        bitvec_write_field(vector, writeIndex, *pui8, 1);
         fExist = *pui8;
         LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n";
         remaining_bits_len -= 1;
@@ -2233,11 +2235,11 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
         }
 
         /* the "regular" M_NEXT_EXIST_LH description element */
-        vector->writeField(writeIndex, *pui8, 1);
+        bitvec_write_field(vector, writeIndex, *pui8, 1);
         writeIndex--;
         fExist = get_masked_bits8(vector,writeIndex, bit_offset, 1);
         writeIndex--;
-        vector->writeField(writeIndex, fExist, 1);
+        bitvec_write_field(vector, writeIndex, fExist, 1);
         pui8++;
         remaining_bits_len -= 1;
 
@@ -2286,7 +2288,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
 
             if (nB1 > 0)
             { /* take care of the first byte - it will be right aligned */
-              vector->writeField(writeIndex, *pui8, nB1);
+              bitvec_write_field(vector, writeIndex, *pui8, nB1);
               LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n" ;
               pui8++;
               no_of_bits  -= nB1;
@@ -2296,7 +2298,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
             /* remaining no_of_bits is a multiple of 8 or 0 */
             while (no_of_bits > 0)
             {
-              vector->writeField(writeIndex, *pui8, 8);
+              bitvec_write_field(vector, writeIndex, *pui8, 8);
               LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n" ;
               pui8++;
               no_of_bits -= 8;
@@ -2342,14 +2344,14 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
 
             while (no_of_bits > 0)
             {
-              vector->writeField(writeIndex, *pui8, 8);
+              bitvec_write_field(vector, writeIndex, *pui8, 8);
               LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n" ;
               pui8++;
               no_of_bits -= 8;
             }
             if (nB1 > 0)
             {
-              vector->writeField(writeIndex, *pui8, nB1);
+              bitvec_write_field(vector, writeIndex, *pui8, nB1);
               LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n" ;
               pui8++;
               no_of_bits  -= nB1;
@@ -2388,7 +2390,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
 
           while (count > 0)
           {
-            vector->writeField(writeIndex, *pui8, 8);
+            bitvec_write_field(vector, writeIndex, *pui8, 8);
             LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n" ;
             pui8++;
             bit_offset += 8;
@@ -2415,13 +2417,13 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
         ElementCount = *pui8DATA(data, (gint16)pDescr->descr.value);
         while (ElementCount > 0)
         { /* tag control shows existence of next list elements */
-          vector->writeField(writeIndex, Tag, 1);
+          bitvec_write_field(vector, writeIndex, Tag, 1);
           LOG(INFO) << pDescr->sz << " = " << (unsigned)Tag << "\n" ;
           bit_offset++;
           remaining_bits_len--;
 
           /* extract and store no_of_bits long element from bitstream */
-          vector->writeField(writeIndex, *pui8, no_of_bits);
+          bitvec_write_field(vector, writeIndex, *pui8, no_of_bits);
           LOG(INFO) << pDescr->sz << " = " << (unsigned)*pui8 << "\n" ;
           pui8++;
           remaining_bits_len -= no_of_bits;
@@ -2435,7 +2437,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
           bit_offset += no_of_bits;
         }
 
-        vector->writeField(writeIndex, !Tag, 1);
+        bitvec_write_field(vector, writeIndex, !Tag, 1);
         LOG(INFO) << pDescr->sz << " = " << (unsigned)(!Tag) << "\n" ;
         bit_offset++;
 
@@ -2456,7 +2458,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
 
         while (ElementCount > 0)
         { /* tag control shows existence of next list elements */
-          vector->writeField(writeIndex, Tag, 1);
+          bitvec_write_field(vector, writeIndex, Tag, 1);
           LOG(INFO) << pDescr->sz << " = " << (unsigned)Tag << "\n" ;
           bit_offset++;
 
@@ -2487,7 +2489,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
           }
         }
 
-        vector->writeField(writeIndex, !Tag, 1);
+        bitvec_write_field(vector, writeIndex, !Tag, 1);
         LOG(INFO) << pDescr->sz << " = " << (unsigned)(!Tag) << "\n" ;
         bit_offset++;
 
@@ -2525,7 +2527,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
         { /* get data element */
           if (ElementCount != ElementNum)
           {
-            vector->writeField(writeIndex, Tag, 1);
+            bitvec_write_field(vector, writeIndex, Tag, 1);
             LOG(INFO) << pDescr->sz << " = " << (unsigned)Tag << "\n" ;
             bit_offset++;
             remaining_bits_len--;
@@ -2552,7 +2554,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
           }
 
         }
-        vector->writeField(writeIndex, !Tag, 1);
+        bitvec_write_field(vector, writeIndex, !Tag, 1);
         bit_offset++;
         Tag = STANDARD_TAG; /* in case it was set to "reversed" */
         pDescr++;
@@ -2562,7 +2564,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vec
       case CSN_FIXED:
       { /* Verify the fixed bits */
         guint8  no_of_bits = (guint8) pDescr->i;
-        vector->writeField(writeIndex, pDescr->offset, no_of_bits);
+        bitvec_write_field(vector, writeIndex, pDescr->offset, no_of_bits);
         LOG(INFO) << pDescr->sz<< " = " << pDescr->offset << "\n"; 
         remaining_bits_len   -= no_of_bits;
         bit_offset += no_of_bits;

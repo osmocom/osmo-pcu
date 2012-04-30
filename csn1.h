@@ -25,7 +25,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include <BitVector.h>
+#include <bitvector.h>
 #include <iostream>
 #include <cstdlib>
 #ifndef _PACKET_CSN1_H_
@@ -82,7 +82,7 @@ typedef struct
   gint  direction;           /* 0 - decode; 1 - encode */
 } csnStream_t;
 
-typedef gint16 (*StreamSerializeFcn_t)(csnStream_t* ar, BitVector *vector, size_t& readIndex, void* data);
+typedef gint16 (*StreamSerializeFcn_t)(csnStream_t* ar, bitvec *vector, size_t& readIndex, void* data);
 typedef enum
 {
   CSN_END = 0,
@@ -223,9 +223,9 @@ void csnStreamInit(csnStream_t* ar,gint BitOffset,gint BitCount);
 * RETURNS:  int  Number of bits left to be unpacked. Negative Error code if failed to unpack all bits
 ******************************************************************************/
 
-gint16 csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, size_t& readIndex, void* data);
+gint16 csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, size_t& readIndex, void* data);
 
-gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, BitVector *vector, size_t& readIndex, void* data);
+gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, size_t& readIndex, void* data);
 
 /* CSN struct macro's */
 #define  CSN_DESCR_BEGIN(_STRUCT)\
