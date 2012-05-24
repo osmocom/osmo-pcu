@@ -26,6 +26,7 @@ AM_CXXFLAGS = -Wall -ldl -pthread
 noinst_LTLIBRARIES = libgprs.la
 
 libgprs_la_SOURCES = \
+	gprs_debug.cpp \
 	csn1.cpp \
 	gsm_rlcmac.cpp \
 	gprs_bssgp_pcu.cpp \
@@ -39,6 +40,7 @@ noinst_PROGRAMS = \
 	pcu
 
 noinst_HEADERS = \
+	gprs_debug.h \
 	csn1.h \
 	gsm_rlcmac.h \
 	gprs_bssgp_pcu.h \
@@ -47,13 +49,15 @@ noinst_HEADERS = \
 	gsm_timer.h \
 	bitvector.h
 
+OPENBSC_DIR = /home/ivan/work/openbsc/openbsc/openbsc
+OPENGGSN_DIR = /home/ivan/work/openbsc/openggsn
+OSMOCORE_DIR = /home/ivan/work/openbsc/libosmocore
+
 RLCMACTest_SOURCES = RLCMACTest.cpp
 RLCMACTest_LDADD = \
 	libgprs.la \
-	$(COMMON_LA) 
-
-OPENBSC_DIR = /home/ivan/work/openbsc/openbsc/openbsc
-OPENGGSN_DIR = /home/ivan/work/openbsc/openggsn
+	-losmocore \
+	$(COMMON_LA)
 
 pcu_SOURCES = pcu_main.cpp
 pcu_LDADD = \
@@ -76,9 +80,10 @@ pcu_LDADD = \
 	$(OPENBSC_DIR)/src/gprs/gprs_sgsn.o \
 	$(OPENBSC_DIR)/src/libcommon/socket.o \
 	$(OPENBSC_DIR)/src/libcommon/debug.o \
+	$(OSMOCORE_DIR)/src/bitvec.o \
+	$(OSMOCORE_DIR)/src/talloc.o \
 	-losmocore \
 	-losmogsm \
 	$(COMMON_LA)
 
 #MOSTLYCLEANFILES += testSource testDestination
-
