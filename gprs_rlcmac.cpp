@@ -131,6 +131,7 @@ static void tbf_gsm_timer_cb(void *_tbf)
 	case 0:
 		// This is timer for delay RLC/MAC data sending after Downlink Immediate Assignment on CCCH.
 		gprs_rlcmac_segment_llc_pdu(tbf);
+		LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
 		break;
 	default:
 		COUT("Timer expired in unknown mode" << tbf->fT);
@@ -410,11 +411,13 @@ void gprs_rlcmac_tx_ul_ack(uint8_t tfi, uint32_t tlli, RlcMacUplinkDataBlock_t *
 	bitvec *packet_uplink_ack_vec = bitvec_alloc(23);
 	bitvec_unhex(packet_uplink_ack_vec, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	write_packet_uplink_ack(packet_uplink_ack_vec, tfi, tlli, ul_data_block->CV, ul_data_block->BSN);
-	COUT("RLCMAC_CONTROL_BLOCK>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] TFI: %u TLLI: 0x%08x Packet Uplink Ack\n", tfi, tlli);
 	RlcMacDownlink_t * packet_uplink_ack = (RlcMacDownlink_t *)malloc(sizeof(RlcMacDownlink_t));
+	LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ TX : Packet Uplink Ack +++++++++++++++++++++++++\n");
 	decode_gsm_rlcmac_downlink(packet_uplink_ack_vec, packet_uplink_ack);
+	LOGPC(DRLCMAC, LOGL_NOTICE, "\n");
+	LOGP(DRLCMAC, LOGL_NOTICE, "------------------------- TX : Packet Uplink Ack -------------------------\n");
 	free(packet_uplink_ack);
-	COUT("RLCMAC_CONTROL_BLOCK_END------------------------------");
 	pcu_l1if_tx(packet_uplink_ack_vec, GsmL1_Sapi_Pacch);
 	bitvec_free(packet_uplink_ack_vec);
 }
@@ -456,11 +459,11 @@ int gprs_rlcmac_rcv_data_block(bitvec *rlc_block)
 {
 	struct gprs_rlcmac_tbf *tbf;
 
-	COUT("RLCMAC_DATA_BLOCK<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+	LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] Uplink Data Block\n");
 	RlcMacUplinkDataBlock_t * ul_data_block = (RlcMacUplinkDataBlock_t *)malloc(sizeof(RlcMacUplinkDataBlock_t));
+	LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ RX : Uplink Data Block +++++++++++++++++++++++++\n");
 	decode_gsm_rlcmac_uplink_data(rlc_block, ul_data_block);
-	COUT("RLCMAC_DATA_BLOCK_END------------------------------");
-
+	LOGP(DRLCMAC, LOGL_NOTICE, "------------------------- RX : Uplink Data Block -------------------------\n");
 	tbf = tbf_by_tfi(ul_data_block->TFI);
 	if (!tbf) {
 		return 0;
@@ -511,11 +514,11 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block)
 	uint32_t tlli = 0;
 	struct gprs_rlcmac_tbf *tbf;
 
-	COUT("RLCMAC_CONTROL_BLOCK<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)malloc(sizeof(RlcMacUplink_t));
+	LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
 	decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
-	COUT("RLCMAC_CONTROL_BLOCK_END------------------------------");
-
+	LOGPC(DRLCMAC, LOGL_NOTICE, "\n");
+	LOGP(DRLCMAC, LOGL_NOTICE, "------------------------- RX : Uplink Control Block -------------------------\n");
 	switch (ul_control_block->u.MESSAGE_TYPE) {
 	case MT_PACKET_CONTROL_ACK:
 		tlli = ul_control_block->u.Packet_Control_Acknowledgement.TLLI;
@@ -532,7 +535,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block)
 		if (!tbf) {
 			return 0;
 		}
-		COUT("SEND PacketUplinkAssignment>>>>>>>>>>>>>>>>>>");
+		LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] TFI: %u TLLI: 0x%08x Packet Uplink Assignment\n", tbf->tfi, tbf->tlli);
 		bitvec *packet_uplink_assignment = bitvec_alloc(23);
 		bitvec_unhex(packet_uplink_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 		write_packet_uplink_assignment(packet_uplink_assignment, tbf->tfi, tbf->tlli);
@@ -575,9 +578,9 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, uint16_t ta)
 	tbf = tbf_alloc(tfi);
 	tbf->direction = GPRS_RLCMAC_UL_TBF;
 	tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
-	COUT("[UPLINK TBF : " << tfi << " ] : START");
-
-	COUT("SEND Immidiate Assignment>>>>>>>>>>>>>>>>>>");
+	LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [UPLINK] START TFI: %u\n", tbf->tfi);
+	LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] TFI: %u RACH\n", tbf->tfi);
+	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] TFI: %u Packet Immidiate Assignment\n", tbf->tfi);
 	bitvec *immediate_assignment = bitvec_alloc(23);
 	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	int len = write_immediate_assignment(immediate_assignment, 0, ra, Fn, ta, tbf->tfi);
@@ -619,7 +622,10 @@ void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t tfi, uint8_t *pdu, int 
 	for(i = j; i < j + spare_len; i++) {
 		data_block->RLC_DATA[i] = 0x2b;
 	}
+	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Downlink Data Block\n");
+	LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ TX : Downlink Data Block +++++++++++++++++++++++++\n");
 	encode_gsm_rlcmac_downlink_data(data_block_vector, data_block);
+	LOGP(DRLCMAC, LOGL_NOTICE, "------------------------- TX : Downlink Data Block -------------------------\n");
 	free(data_block);
 	pcu_l1if_tx(data_block_vector, GsmL1_Sapi_Pdtch);
 	bitvec_free(data_block_vector);
@@ -670,7 +676,7 @@ void gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 	struct msgb *llc_pdu;
 	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + tbf->data_index;
 
-	LOGP(DBSSGP, LOGL_DEBUG, "Data len %u TLLI 0x%08x , TFI 0x%02x", tbf->data_index, tbf->tlli, tbf->tfi);
+	LOGP(DBSSGP, LOGL_DEBUG, "TX: [PCU -> SGSN ] TFI: %u TLLI: 0x%08x DataLen: %u", tbf->tfi, tbf->tlli, tbf->data_index);
 	//for (unsigned i = 0; i < dataLen; i++)
 	//	LOGP(DBSSGP, LOGL_DEBUG, " Data[%u] = %u", i, rlc_data[i]);
 	
@@ -689,7 +695,7 @@ void gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 
 void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf)
 {
-	COUT("SEND IA Rest Octets Downlink Assignment>>>>>>>>>>>>>>>>>>");
+	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] TFI: %u TLLI: 0x%08x Immidiate Assignment (CCCH)\n", tbf->tfi, tbf->tlli);
 	bitvec *immediate_assignment = bitvec_alloc(23);
 	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	int len = write_immediate_assignment(immediate_assignment, 1, 125, get_current_fn(), (l1fh->fl1h)->channel_info.ta, tbf->tfi, tbf->tlli);

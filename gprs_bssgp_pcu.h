@@ -24,7 +24,7 @@
 extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/rate_ctr.h>
-#include <openbsc/debug.h>
+#include <osmocom/core/logging.h>
 #include <openbsc/signal.h>
 #include <openbsc/gprs_ns.h>
 #include <openbsc/gprs_bssgp.h>
@@ -36,6 +36,7 @@ int bssgp_tx_ul_ud(struct bssgp_bvc_ctx *bctx, uint32_t tlli, const uint8_t *qos
 
 struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 }
+#include <gprs_debug.h>
 
 #define BVCI 7
 #define NSEI 3

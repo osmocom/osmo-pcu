@@ -20,8 +20,8 @@
 #include <Sockets.h>
 #include <gsmtap.h>
 #include <gprs_rlcmac.h>
-#include <Threads.h>
 #include <pcu_l1_if.h>
+#include <gprs_debug.h>
 
 #define MAX_UDP_LENGTH 1500
 
@@ -78,7 +78,6 @@ void pcu_l1if_tx(bitvec * block, GsmL1_Sapi_t sapi, int len)
 	prim->u.phDataReq.sapi = sapi;
 	bitvec_pack(block, prim->u.phDataReq.msgUnitParam.u8Buffer);
 	prim->u.phDataReq.msgUnitParam.u8Size = len;
-	//COUT("Add Block to WRITE QUEUE: " << *block);
 	osmo_wqueue_enqueue(queue, msg);
 }
 
@@ -86,7 +85,6 @@ int pcu_l1if_rx_pdch(GsmL1_PhDataInd_t *data_ind)
 {
 	bitvec *block = bitvec_alloc(data_ind->msgUnitParam.u8Size);
 	bitvec_unpack(block, data_ind->msgUnitParam.u8Buffer);
-	//COUT("RX: " << *block);
 	gprs_rlcmac_rcv_block(block);
 	bitvec_free(block);
 }
@@ -96,8 +94,8 @@ static int handle_ph_connect_ind(struct femtol1_hdl *fl1, GsmL1_PhConnectInd_t *
 	(l1fh->fl1h)->channel_info.arfcn = connect_ind->u16Arfcn;
 	(l1fh->fl1h)->channel_info.tn = connect_ind->u8Tn;
 	(l1fh->fl1h)->channel_info.tsc = connect_ind->u8Tsc;
-	COUT("RX: [ PCU <- BTS ] PhConnectInd: ARFCN: " << connect_ind->u16Arfcn 
-		<<" TN: " << (unsigned)connect_ind->u8Tn << " TSC: " << (unsigned)connect_ind->u8Tsc);
+	LOGP(DL1IF, LOGL_NOTICE, "RX: [ PCU <- BTS ] PhConnectInd: ARFCN: %u TN: %u TSC: %u \n",
+	        connect_ind->u16Arfcn, (unsigned)connect_ind->u8Tn, (unsigned)connect_ind->u8Tsc);
 }
 
 static int handle_ph_readytosend_ind(struct femtol1_hdl *fl1, GsmL1_PhReadyToSendInd_t *readytosend_ind)
@@ -135,7 +133,7 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1, GsmL1_PhDataInd_t *data_i
 	case GsmL1_Sapi_Prach:
 		break;
 	default:
-		//LOGP(DGPRS, LOGL_NOTICE, "Rx PH-DATA.ind for unknown L1 SAPI %u \n", data_ind->sapi);
+		LOGP(DL1IF, LOGL_NOTICE, "Rx PH-DATA.ind for unknown L1 SAPI %u \n", data_ind->sapi);
 		break;
 	}
 

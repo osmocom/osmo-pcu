@@ -44,8 +44,9 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg)
 	tbf->direction = GPRS_RLCMAC_DL_TBF;
 	tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
 	tbf->tlli = ntohl(budh->tlli);
+	LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] START TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
 
-	LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP TLLI=0x%08x \n", ntohl(budh->tlli));
+	//LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP TLLI=0x%08x \n", ntohl(budh->tlli));
 	for (i = 4; i < MAX_LEN_PDU; i++)
 	{
 		//LOGP(DBSSGP, LOGL_NOTICE, "SERCH data = -0x%02x\n", budh ->data[i]);
@@ -61,10 +62,9 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg)
 		tbf->rlc_data[data_index] = budh->data[i];
 		data_index++;
 	}
-	DEBUGP(DBSSGP, "BSSGP Catch from SGSN=%u octets. Send it to OpenBTS.\n", data_index);
+	//DEBUGP(DBSSGP, "BSSGP Catch from SGSN=%u octets. Send it to OpenBTS.\n", data_index);
 	gsmtap_send_llc(tbf->rlc_data,data_index);
 	tbf->data_index = data_index;
-	
 	gprs_rlcmac_downlink_assignment(tbf);
 }
 
@@ -87,7 +87,7 @@ int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_
 
 	switch (pdu_type) {
 	case BSSGP_PDUT_DL_UNITDATA:
-		LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_DL_UNITDATA\n");
+		LOGP(DBSSGP, LOGL_NOTICE, "RX: [SGSN->PCU] BSSGP_PDUT_DL_UNITDATA\n");
 		gprs_bssgp_pcu_rx_dl_ud(msg);
 		break;
 	case BSSGP_PDUT_PAGING_PS:

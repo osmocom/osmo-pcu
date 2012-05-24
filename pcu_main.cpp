@@ -18,10 +18,10 @@
  */
 
 #include <gprs_bssgp_pcu.h>
-#include <Threads.h>
-#include <Sockets.h>
+#include <arpa/inet.h>
 #include <pcu_l1_if.h>
 #include <gsm_timer.h>
+#include <gprs_debug.h>
 
 // TODO: We should move this parameters to config file.
 #define SGSN_IP "127.0.0.1"
@@ -40,7 +40,7 @@ int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msgb *msg,
 		rc = gprs_bssgp_pcu_rcvmsg(msg);
 		break;
 	default:
-		LOGP(DGPRS, LOGL_ERROR, "RLCMAC: Unknown event %u from NS\n", event);
+		LOGP(DPCU, LOGL_ERROR, "RLCMAC: Unknown event %u from NS\n", event);
 		if (msg)
 			talloc_free(msg);
 		rc = -EIO;
@@ -91,11 +91,11 @@ static int udp_write_cb(struct osmo_fd *ofd, struct msgb *msg)
 	rc = sendto(ofd->fd, msg->l1h, msgb_l1len(msg), 0,
 			(const struct sockaddr *)&l1fh->remote_sa, l1fh->remote_sa_len);
 	if (rc < 0) {
-		LOGP(DGPRS, LOGL_ERROR, "error writing to L1 msg_queue: %s\n",
+		LOGP(DPCU, LOGL_ERROR, "error writing to L1 msg_queue: %s\n",
 			strerror(errno));
 		return rc;
 	} else if (rc < msgb_l1len(msg)) {
-		LOGP(DGPRS, LOGL_ERROR, "short write to L1 msg_queue: "
+		LOGP(DPCU, LOGL_ERROR, "short write to L1 msg_queue: "
 			"%u < %u\n", rc, msgb_l1len(msg));
 		return -EIO;
 	}
@@ -145,8 +145,7 @@ int main(int argc, char *argv[])
 	uint16_t nsvci = NSVCI;
 	struct gprs_ns_inst *sgsn_nsi;
 	struct gprs_nsvc *nsvc;
-
-	osmo_init_logging(&log_info);
+	osmo_init_logging(&gprs_log_info);
 	pcu_l1if_open();
 
 	sgsn_nsi = gprs_ns_instantiate(&sgsn_ns_cb);
@@ -154,7 +153,7 @@ int main(int argc, char *argv[])
 
 	if (!bssgp_nsi)
 	{
-		LOGP(DGPRS, LOGL_ERROR, "Unable to instantiate NS\n");
+		LOGP(DPCU, LOGL_ERROR, "Unable to instantiate NS\n");
 		exit(1);
 	}
 	bctx = btsctx_alloc(BVCI, NSEI);
