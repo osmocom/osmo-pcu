@@ -603,7 +603,7 @@ void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t tfi, uint8_t *pdu, int 
 	data_block->TFI = tfi;
 	data_block->FBI = fbi;
 	data_block->BSN = bsn;
-	if ((end_index - start_index) < 20) {
+	if ((end_index - start_index) < 19) {
 		data_block->E_1 = 0;
 		data_block->LENGTH_INDICATOR[0] = end_index-start_index;
 		data_block->M[0] = 0;

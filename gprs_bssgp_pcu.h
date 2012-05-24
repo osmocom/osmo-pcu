@@ -46,7 +46,7 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 #define NS_HDR_LEN 4
 #define MAX_LEN_PDU 60
 #define IE_PDU 14
-#define BLOCK_DATA_LEN 19
+#define BLOCK_DATA_LEN 20
 #define BLOCK_LEN 23
 
 #define CELL_ID 3
