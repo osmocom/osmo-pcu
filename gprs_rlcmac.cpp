@@ -153,7 +153,7 @@ static void tbf_gsm_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int fT,
 	osmo_gsm_timer_schedule(&tbf->gsm_timer, frames);
 }
 
-void  write_packet_downlink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli)
+void  write_packet_downlink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli, uint8_t tn, uint8_t ta, uint8_t tsc)
 {
 	// TODO We should use our implementation of encode RLC/MAC Control messages.
 	unsigned wp = 0;
@@ -165,8 +165,9 @@ void  write_packet_downlink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli
 	bitvec_write_field(dest, wp,0x0,2);  // Page Mode
 
 	bitvec_write_field(dest, wp,0x0,1); // switch PERSIST_LEVEL: off
-	bitvec_write_field(dest, wp,0x2,2); // switch TLLI   : on
-	bitvec_write_field(dest, wp,tlli,32); // TLLI
+	bitvec_write_field(dest, wp,0x0,1); // switch TFI : on
+	bitvec_write_field(dest, wp,0x0,1); // switch UPLINK TFI : on
+	bitvec_write_field(dest, wp,tfi-1,5); // TFI
 
 	bitvec_write_field(dest, wp,0x0,1); // Message escape
 	bitvec_write_field(dest, wp,0x0,2); // Medium Access Method: Dynamic Allocation
@@ -174,21 +175,17 @@ void  write_packet_downlink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli
 
 	bitvec_write_field(dest, wp,0x0,1); // the network establishes no new downlink TBF for the mobile station
 	bitvec_write_field(dest, wp,0x1,8); // timeslot 7
-	bitvec_write_field(dest, wp,0x1,8); // TIMING_ADVANCE_INDEX
 
-	bitvec_write_field(dest, wp,0x0,1); // switch TIMING_ADVANCE_VALUE = off
-	bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_INDEX = on
-	bitvec_write_field(dest, wp,0xC,4); // TIMING_ADVANCE_INDEX
-	bitvec_write_field(dest, wp,0x7,3); // TIMING_ADVANCE_TIMESLOT_NUMBER
+	bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
+	bitvec_write_field(dest, wp,ta,6); // TIMING_ADVANCE_VALUE
+	bitvec_write_field(dest, wp,0x0,1); // switch TIMING_ADVANCE_INDEX = off
 
 	bitvec_write_field(dest, wp,0x0,1); // switch POWER CONTROL = off
 	bitvec_write_field(dest, wp,0x1,1); // Frequency Parameters information elements = present
 
-	bitvec_write_field(dest, wp,0x2,3); // Training Sequence Code (TSC) = 2
-	bitvec_write_field(dest, wp,0x1,2); // Indirect encoding struct = present
-	bitvec_write_field(dest, wp,0x0,6); // MAIO
-	bitvec_write_field(dest, wp,0xE,4); // MA_Number
-	bitvec_write_field(dest, wp,0x8,4); // CHANGE_MARK_1 CHANGE_MARK_2
+	bitvec_write_field(dest, wp,tsc,3); // Training Sequence Code (TSC) = 2
+	bitvec_write_field(dest, wp,0x0,2); // ARFCN = present
+	bitvec_write_field(dest, wp,599,10); // ARFCN
 
 	bitvec_write_field(dest, wp,0x1,1); // switch TFI   : on
 	bitvec_write_field(dest, wp,tfi,5);// TFI
@@ -207,6 +204,7 @@ void  write_packet_downlink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli
 
 	bitvec_write_field(dest, wp,0x0,1); // TBF Starting TIME IE not present
 	bitvec_write_field(dest, wp,0x0,1); // Measurement Mapping struct not present
+	bitvec_write_field(dest, wp,0x0,1);
 }
 
 void  write_packet_uplink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli)
@@ -404,6 +402,7 @@ void write_packet_uplink_ack(bitvec * dest, uint8_t tfi, uint32_t tlli, unsigned
 	bitvec_write_field(dest, wp,0x1,1);  // CONTENTION_RESOLUTION_TLLI = present
 	bitvec_write_field(dest, wp,tlli,8*4);
 	bitvec_write_field(dest, wp,0x00,4); //spare
+	bitvec_write_field(dest, wp,0x5,4); //0101
 }
 
 void gprs_rlcmac_tx_ul_ack(uint8_t tfi, uint32_t tlli, RlcMacUplinkDataBlock_t * ul_data_block)
