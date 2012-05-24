@@ -99,4 +99,7 @@ void gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
 void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf);
 
+void gprs_rlcmac_packet_downlink_assignment(gprs_rlcmac_tbf *tbf);
+
+
 #endif // GPRS_RLCMAC_H
