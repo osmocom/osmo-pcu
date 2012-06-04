@@ -426,11 +426,33 @@ void gprs_rlcmac_data_block_parse(gprs_rlcmac_tbf* tbf, RlcMacUplinkDataBlock_t 
 {
 	unsigned block_data_len = 0;
 	unsigned data_octet_num = 0;
-	
 	if (ul_data_block->E_1 == 0) // Extension octet follows immediately
 	{
-		// TODO We should implement case with several LLC PDU in one data block.
 		block_data_len = ul_data_block->LENGTH_INDICATOR[0];
+		// New LLC PDU starts after the current LLC PDU and continues until
+		// the end of the RLC information field, no more extension octets.
+		if ((ul_data_block->M[0] == 1)&&(ul_data_block->E[0] == 1))
+		{
+			for (unsigned i = tbf->data_index;  i < tbf->data_index + block_data_len; i++)
+			{
+				tbf->rlc_data[i] = ul_data_block->RLC_DATA[data_octet_num];
+				data_octet_num++;
+			}
+			tbf->data_index += block_data_len;
+			gsmtap_send_llc(tbf->rlc_data, tbf->data_index);
+			gprs_rlcmac_tx_ul_ud(tbf);
+			tbf->data_index = 0;
+			block_data_len = 19 - block_data_len;
+			if(ul_data_block->TI == 1) // TLLI field is present
+				block_data_len -= 4;
+			for (unsigned i = tbf->data_index;  i < tbf->data_index + block_data_len; i++)
+			{
+				tbf->rlc_data[i] = ul_data_block->RLC_DATA[data_octet_num];
+				data_octet_num++;
+			}
+			tbf->data_index += block_data_len;
+			return;
+		}
 	}
 	else
 	{
@@ -468,7 +490,11 @@ int gprs_rlcmac_rcv_data_block(bitvec *rlc_block)
 	if (!tbf) {
 		return 0;
 	}
-	tbf->tlli = ul_data_block->TLLI;
+
+	if (ul_data_block->TI == 1)
+	{
+		tbf->tlli = ul_data_block->TLLI;
+	}
 
 	switch (tbf->state) {
 	case GPRS_RLCMAC_WAIT_DATA_SEQ_START: 
@@ -479,7 +505,10 @@ int gprs_rlcmac_rcv_data_block(bitvec *rlc_block)
 			if (ul_data_block->CV == 0) {
 				// Recieved last Data Block in this sequence.
 				gsmtap_send_llc(tbf->rlc_data, tbf->data_index);
-				tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_SEQ;
+				if (!((ul_data_block->E_1 == 0)&&(ul_data_block->M[0] == 0)&&(ul_data_block->E[0] == 1)))
+					tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_SEQ;
+				else
+					tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
 				gprs_rlcmac_tx_ul_ud(tbf);
 			} else {
 				tbf->bsn = ul_data_block->BSN;
@@ -494,7 +523,10 @@ int gprs_rlcmac_rcv_data_block(bitvec *rlc_block)
 			if (ul_data_block->CV == 0) {
 				// Recieved last Data Block in this sequence.
 				gsmtap_send_llc(tbf->rlc_data, tbf->data_index);
-				tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_SEQ;
+				if (!((ul_data_block->E_1 == 0)&&(ul_data_block->M[0] == 0)&&(ul_data_block->E[0] == 1)))
+					tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_SEQ;
+				else
+					tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
 				gprs_rlcmac_tx_ul_ud(tbf);
 			} else {
 				tbf->bsn = ul_data_block->BSN;
@@ -684,9 +716,10 @@ void gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 	struct msgb *llc_pdu;
 	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + tbf->data_index;
 
-	LOGP(DBSSGP, LOGL_DEBUG, "TX: [PCU -> SGSN ] TFI: %u TLLI: 0x%08x DataLen: %u", tbf->tfi, tbf->tlli, tbf->data_index);
-	//for (unsigned i = 0; i < dataLen; i++)
-	//	LOGP(DBSSGP, LOGL_DEBUG, " Data[%u] = %u", i, rlc_data[i]);
+	LOGP(DBSSGP, LOGL_NOTICE, "TX: [PCU -> SGSN ] TFI: %u TLLI: 0x%08x DataLen: %u", tbf->tfi, tbf->tlli, tbf->data_index);
+	//LOGP(DBSSGP, LOGL_NOTICE, " Data = ");
+	//for (unsigned i = 0; i < tbf->data_index; i++)
+	//	LOGPC(DBSSGP, LOGL_NOTICE, "%02x ", tbf->rlc_data[i]);
 	
 	bctx->cell_id = CELL_ID;
 	bctx->nsei = NSEI;
