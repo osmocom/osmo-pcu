@@ -29,6 +29,8 @@ extern "C" {
 #include <osmocom/core/timer.h>
 }
 
+#define LLC_MAX_LEN 1543
+
 enum gprs_rlcmac_tbf_state {
 	GPRS_RLCMAC_WAIT_DATA_SEQ_START,
 	GPRS_RLCMAC_WAIT_NEXT_DATA_BLOCK,
@@ -46,7 +48,7 @@ struct gprs_rlcmac_tbf {
 	enum gprs_rlcmac_tbf_direction direction;
 	uint8_t tfi;
 	uint32_t tlli;
-	uint8_t rlc_data[60];
+	uint8_t rlc_data[LLC_MAX_LEN];
 	uint16_t data_index;
 	uint8_t bsn;
 	
