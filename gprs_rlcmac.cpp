@@ -424,56 +424,86 @@ void gprs_rlcmac_tx_ul_ack(uint8_t tfi, uint32_t tlli, RlcMacUplinkDataBlock_t *
 
 void gprs_rlcmac_data_block_parse(gprs_rlcmac_tbf* tbf, RlcMacUplinkDataBlock_t * ul_data_block)
 {
-	unsigned block_data_len = 0;
-	unsigned data_octet_num = 0;
+	// 1. Count the number of octets in header and number of LLC PDU in uplink data block.
+	unsigned data_block_hdr_len = 3; // uplink data block header length: 3 mandatory octets
+	unsigned llc_pdu_num = 0; // number of LLC PDU in data block
+
+	
 	if (ul_data_block->E_1 == 0) // Extension octet follows immediately
 	{
-		block_data_len = ul_data_block->LENGTH_INDICATOR[0];
-		// New LLC PDU starts after the current LLC PDU and continues until
-		// the end of the RLC information field, no more extension octets.
-		if ((ul_data_block->M[0] == 1)&&(ul_data_block->E[0] == 1))
+		unsigned i = -1;
+		do
 		{
-			for (unsigned i = tbf->data_index;  i < tbf->data_index + block_data_len; i++)
+			i++;
+			data_block_hdr_len += 1;
+			llc_pdu_num++;
+			// New LLC PDU starts after the current LLC PDU and continues until
+			// the end of the RLC information field, no more extension octets.
+			if ((ul_data_block->M[i] == 1)&&(ul_data_block->E[i] == 1))
 			{
-				tbf->rlc_data[i] = ul_data_block->RLC_DATA[data_octet_num];
-				data_octet_num++;
+				llc_pdu_num++;
 			}
-			tbf->data_index += block_data_len;
-			gsmtap_send_llc(tbf->rlc_data, tbf->data_index);
-			gprs_rlcmac_tx_ul_ud(tbf);
-			tbf->data_index = 0;
-			block_data_len = 19 - block_data_len;
-			if(ul_data_block->TI == 1) // TLLI field is present
-				block_data_len -= 4;
-			for (unsigned i = tbf->data_index;  i < tbf->data_index + block_data_len; i++)
-			{
-				tbf->rlc_data[i] = ul_data_block->RLC_DATA[data_octet_num];
-				data_octet_num++;
-			}
-			tbf->data_index += block_data_len;
-			return;
-		}
+		} while(ul_data_block->E[i] == 0); // there is another extension octet, which delimits the new LLC PDU
 	}
 	else
 	{
-		block_data_len = 20; // RLC data length without 3 header octets.
-		if(ul_data_block->TI == 1) // TLLI field is present
+		llc_pdu_num++;
+	}
+	if(ul_data_block->TI == 1) // TLLI field is present
+	{
+		tbf->tlli = ul_data_block->TLLI;
+		data_block_hdr_len += 4; // TLLI length : 4 octets
+		if (ul_data_block->PI == 1) // PFI is present if TI field indicates presence of TLLI
 		{
-			tbf->tlli = ul_data_block->TLLI;
-			block_data_len -= 4; // TLLI length
-			if (ul_data_block->PI == 1) // PFI is present if TI field indicates presence of TLLI
+			data_block_hdr_len += 1; // PFI length : 1 octet
+		}
+	}
+	
+	// 2. Extract all LLC PDU from uplink data block and send them to SGSN.
+	unsigned llc_pdu_len = 0;
+	unsigned data_octet_num = 0;
+
+	for (unsigned num = 0; num < llc_pdu_num; num ++)
+	{
+		if (ul_data_block->E_1 == 0) // Extension octet follows immediately
+		{
+			llc_pdu_len = ul_data_block->LENGTH_INDICATOR[num];
+		}
+		else
+		{
+			llc_pdu_len = UL_RLC_DATA_BLOCK_LEN - data_block_hdr_len;
+		}
+		
+		for (unsigned i = tbf->data_index; i < tbf->data_index + llc_pdu_len; i++)
+		{
+			tbf->rlc_data[i] = ul_data_block->RLC_DATA[data_octet_num];
+			data_octet_num++;
+		}
+		tbf->data_index += llc_pdu_len;
+		
+		if (ul_data_block->E_1 == 0) // Extension octet follows immediately
+		{
+			// New LLC PDU starts after the current LLC PDU 
+			if (ul_data_block->M[num] == 1)
 			{
-				block_data_len -= 1; // PFI length
+				gsmtap_send_llc(tbf->rlc_data, tbf->data_index);
+				gprs_rlcmac_tx_ul_ud(tbf);
+				tbf->data_index = 0;
+				// New LLC PDU continues until the end of the RLC information field, no more extension octets.
+				if ((ul_data_block->E[num] == 1))
+				{
+					llc_pdu_len = UL_RLC_DATA_BLOCK_LEN - data_block_hdr_len - data_octet_num;
+					for (unsigned i = tbf->data_index; i < tbf->data_index + llc_pdu_len; i++)
+					{
+						tbf->rlc_data[i] = ul_data_block->RLC_DATA[data_octet_num];
+						data_octet_num++;
+					}
+					tbf->data_index += llc_pdu_len;
+					num++;
+				}
 			}
 		}
 	}
-
-	for (unsigned i = tbf->data_index;  i < tbf->data_index + block_data_len; i++)
-	{
-		tbf->rlc_data[i] = ul_data_block->RLC_DATA[data_octet_num];
-		data_octet_num++;
-	}
-	tbf->data_index += block_data_len;
 }
 
 /* Received Uplink RLC data block. */

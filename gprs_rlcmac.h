@@ -30,6 +30,7 @@ extern "C" {
 }
 
 #define LLC_MAX_LEN 1543
+#define UL_RLC_DATA_BLOCK_LEN 23
 
 enum gprs_rlcmac_tbf_state {
 	GPRS_RLCMAC_WAIT_DATA_SEQ_START,
