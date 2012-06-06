@@ -673,23 +673,41 @@ void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t tfi, uint8_t *pdu, int 
 	data_block->TFI = tfi;
 	data_block->FBI = fbi;
 	data_block->BSN = bsn;
-	if ((end_index - start_index) < 19) {
+	
+	// Last RLC data block of current LLC PDU
+	if (fbi == 1)
+	{
 		data_block->E_1 = 0;
-		data_block->LENGTH_INDICATOR[0] = end_index-start_index;
 		data_block->M[0] = 0;
 		data_block->E[0] = 1;
-		spare_len = 19 - data_block->LENGTH_INDICATOR[0];
-	} else {
+		// Singular case, TS 44.060 10.4.14
+		if ((end_index - start_index) == (BLOCK_LEN - 3))
+		{
+			data_block->FBI = 0;
+			data_block->LENGTH_INDICATOR[0] = 0;
+			spare_len =  0;
+			end_index--;
+		}
+		else
+		 {
+			data_block->LENGTH_INDICATOR[0] = end_index-start_index;
+			spare_len = BLOCK_LEN - 4 - data_block->LENGTH_INDICATOR[0];
+		}
+	}
+	else
+	{
 		data_block->E_1 = 1; 
 	}
-	int j = 0;
+
+	int data_oct_num = 0;  
 	int i = 0;
+	// Pack LLC PDU into RLC data field 
 	for(i = start_index; i < end_index; i++) {
-		data_block->RLC_DATA[j] = pdu[i];
-		j++;
+		data_block->RLC_DATA[data_oct_num] = pdu[i];
+		data_oct_num++;
 	}
-	
-	for(i = j; i < j + spare_len; i++) {
+	// Fill spare bits
+	for(i = data_oct_num; i < data_oct_num + spare_len; i++) {
 		data_block->RLC_DATA[i] = 0x2b;
 	}
 	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Downlink Data Block\n");
@@ -699,28 +717,51 @@ void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t tfi, uint8_t *pdu, int 
 	free(data_block);
 	pcu_l1if_tx(data_block_vector, GsmL1_Sapi_Pdtch);
 	bitvec_free(data_block_vector);
+	
+	// Singular case, TS 44.060 10.4.14
+	if ((fbi == 1)&&((end_index + 1 - start_index) == (BLOCK_LEN - 3)))
+	{
+		gprs_rlcmac_tx_dl_data_block(tlli, tfi, pdu, end_index, end_index+1, bsn+1, fbi);
+	}
 }
 
 int gprs_rlcmac_segment_llc_pdu(struct gprs_rlcmac_tbf *tbf)
 {
 	int fbi = 0;
-	int num_blocks = 0;
-	int i;
+	int bsn = 0;
+	int num_blocks = 0; // number of RLC data blocks necessary for LLC PDU transmission 
 
-	if (tbf->data_index > BLOCK_DATA_LEN + 1)
+
+	// LLC PDU fits into one RLC data block with optional LI field.
+	if (tbf->data_index < BLOCK_LEN - 4)
 	{
-		int block_data_len = BLOCK_DATA_LEN;
-		num_blocks = tbf->data_index/BLOCK_DATA_LEN;
-		int rest_len = tbf->data_index%BLOCK_DATA_LEN;
-		int start_index = 0;
-		int end_index = 0;
-		if (tbf->data_index%BLOCK_DATA_LEN > 0)
+		fbi = 1;
+		gprs_rlcmac_tx_dl_data_block(tbf->tlli, tbf->tfi, tbf->rlc_data, 0, tbf->data_index, bsn, fbi);
+	}
+	// Necessary several RLC data blocks for transmit LLC PDU.
+	else
+	{
+		// length of RLC data field in block (no optional octets)
+		int block_data_len = BLOCK_LEN - 3; 
+		
+		// number of blocks with 20 octets length RLC data field
+		num_blocks = tbf->data_index/block_data_len; 
+		
+		// rest of LLC PDU, which doesn't fit into data blocks with 20 octets RLC data field
+		int rest_len = tbf->data_index%BLOCK_DATA_LEN; 
+		if (rest_len > 0)
 		{
+			// add one block for transmission rest of LLC PDU
 			num_blocks++;
 		}
-		for (i = 0; i < num_blocks; i++)
+
+		int start_index = 0;
+		int end_index = 0;
+
+		// Transmit all RLC data blocks of current LLC PDU to MS
+		for (bsn = 0; bsn < num_blocks; bsn++)
 		{
-			if (i == num_blocks-1)
+			if (bsn == num_blocks-1)
 			{
 				if (rest_len > 0)
 				{
@@ -729,13 +770,9 @@ int gprs_rlcmac_segment_llc_pdu(struct gprs_rlcmac_tbf *tbf)
 				fbi = 1;
 			}
 			end_index = start_index + block_data_len;
-			gprs_rlcmac_tx_dl_data_block(tbf->tlli, tbf->tfi, tbf->rlc_data, start_index, end_index, i, fbi);
+			gprs_rlcmac_tx_dl_data_block(tbf->tlli, tbf->tfi, tbf->rlc_data, start_index, end_index, bsn, fbi);
 			start_index += block_data_len;
 		}
-	}
-	else
-	{
-		gprs_rlcmac_tx_dl_data_block(tbf->tlli, tbf->tfi, tbf->rlc_data, 0, tbf->data_index, 0, 1);
 	}
 }
 
