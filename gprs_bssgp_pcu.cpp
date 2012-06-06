@@ -32,6 +32,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg)
 	int data_index = 0;
 	int i = 0;
 	int pdu_index = 0;
+	int llc_pdu_len = 0;
 
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
 	struct gprs_rlcmac_tbf *tbf;
@@ -46,28 +47,44 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg)
 	tbf->tlli = ntohl(budh->tlli);
 	LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] START TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
 
-	//LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP TLLI=0x%08x \n", ntohl(budh->tlli));
+	// TODO: Implement full parsing of BSSGP DL-UNITDATA (TS 48.018 10.2.1)
 	for (i = 4; i < MAX_LEN_PDU; i++)
 	{
-		//LOGP(DBSSGP, LOGL_NOTICE, "SERCH data = -0x%02x\n", budh ->data[i]);
-		if(budh->data[i] == IE_PDU)
+		// Try to find IE LLC-PDU
+		if(budh->data[i] == IE_LLC_PDU)
 		{
-			pdu_index = i + 2;
+			// Length of LLC-PDU (TS 48.016 10.1.2)
+
+			// one octet length indicator
+			if (budh->data[i+1] & 0x80) 
+			{
+				llc_pdu_len = budh->data[i+1]&0x7f;
+				pdu_index = i + 2;
+			}
+			// two octets length indicator
+			else
+			{
+				llc_pdu_len = (budh->data[i+1] << 8)|budh->data[i+2];
+				pdu_index = i + 3;
+			}
 			break;
 		}
 	}
-	for (i = pdu_index; i < pdu_index + (budh->data[pdu_index-1]&0x7f); i++)
+	//LOGP(DBSSGP, LOGL_NOTICE, "LLC PDU LEN = %d \n", llc_pdu_len);
+	//LOGP(DBSSGP, LOGL_NOTICE, "data = ");
+	for (i = pdu_index; i < pdu_index + llc_pdu_len; i++)
 	{
-		//LOGP(DBSSGP, LOGL_NOTICE, "-0x%02x\n", budh ->data[i]);
+		//LOGPC(DBSSGP, LOGL_NOTICE, "%02x", budh ->data[i]);
 		tbf->rlc_data[data_index] = budh->data[i];
 		data_index++;
 	}
-	//DEBUGP(DBSSGP, "BSSGP Catch from SGSN=%u octets. Send it to OpenBTS.\n", data_index);
+	//LOGPC(DBSSGP, LOGL_NOTICE, "\n");
 	gsmtap_send_llc(tbf->rlc_data,data_index);
 	tbf->data_index = data_index;
+	
 	gprs_rlcmac_packet_downlink_assignment(tbf);
-}
 
+}
 /* Receive a BSSGP PDU from a BSS on a PTP BVCI */
 int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx)
 {
