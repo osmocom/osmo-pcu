@@ -550,10 +550,7 @@ int gprs_rlcmac_rcv_data_block(bitvec *rlc_block)
 			if (ul_data_block->CV == 0) {
 				// Recieved last Data Block in this sequence.
 				gsmtap_send_llc(tbf->rlc_data, tbf->data_index);
-				if (!((ul_data_block->E_1 == 0)&&(ul_data_block->M[0] == 0)&&(ul_data_block->E[0] == 1)))
-					tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_SEQ;
-				else
-					tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
+				tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_SEQ;
 				gprs_rlcmac_tx_ul_ud(tbf);
 			} else {
 				tbf->bsn = ul_data_block->BSN;
@@ -568,10 +565,7 @@ int gprs_rlcmac_rcv_data_block(bitvec *rlc_block)
 			if (ul_data_block->CV == 0) {
 				// Recieved last Data Block in this sequence.
 				gsmtap_send_llc(tbf->rlc_data, tbf->data_index);
-				if (!((ul_data_block->E_1 == 0)&&(ul_data_block->M[0] == 0)&&(ul_data_block->E[0] == 1)))
-					tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_SEQ;
-				else
-					tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
+				tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_SEQ;
 				gprs_rlcmac_tx_ul_ud(tbf);
 			} else {
 				tbf->bsn = ul_data_block->BSN;
