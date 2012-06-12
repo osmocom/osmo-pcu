@@ -58,7 +58,7 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 
 extern struct bssgp_bvc_ctx *bctx;
 
-int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg);
+int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp);
 
 int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx);
 

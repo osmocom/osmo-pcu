@@ -25,14 +25,11 @@ struct sgsn_instance *sgsn;
 void *tall_bsc_ctx;
 struct bssgp_bvc_ctx *bctx = btsctx_alloc(BVCI, NSEI);
 
-int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg)
+int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 {
 	struct bssgp_ud_hdr *budh;
 	int tfi;
-	int data_index = 0;
 	int i = 0;
-	int pdu_index = 0;
-	int llc_pdu_len = 0;
 
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
 	struct gprs_rlcmac_tbf *tbf;
@@ -47,41 +44,39 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg)
 	tbf->tlli = ntohl(budh->tlli);
 	LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] START TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
 
-	// TODO: Implement full parsing of BSSGP DL-UNITDATA (TS 48.018 10.2.1)
-	for (i = 4; i < MAX_LEN_PDU; i++)
+	/* LLC_PDU is mandatory IE */
+	if (!TLVP_PRESENT(tp, BSSGP_IE_LLC_PDU))
 	{
-		// Try to find IE LLC-PDU
-		if(budh->data[i] == IE_LLC_PDU)
-		{
-			// Length of LLC-PDU (TS 48.016 10.1.2)
+		LOGP(DBSSGP, LOGL_ERROR, "BSSGP TLLI=0x%08x Rx UL-UD missing mandatory IE\n", tbf->tlli);
+		return bssgp_tx_status(BSSGP_CAUSE_MISSING_MAND_IE, NULL, msg);
+	}
 
-			// one octet length indicator
-			if (budh->data[i+1] & 0x80) 
-			{
-				llc_pdu_len = budh->data[i+1]&0x7f;
-				pdu_index = i + 2;
-			}
-			// two octets length indicator
-			else
-			{
-				llc_pdu_len = (budh->data[i+1] << 8)|budh->data[i+2];
-				pdu_index = i + 3;
-			}
-			break;
-		}
-	}
-	//LOGP(DBSSGP, LOGL_NOTICE, "LLC PDU LEN = %d \n", llc_pdu_len);
-	//LOGP(DBSSGP, LOGL_NOTICE, "data = ");
-	for (i = pdu_index; i < pdu_index + llc_pdu_len; i++)
-	{
-		//LOGPC(DBSSGP, LOGL_NOTICE, "%02x", budh ->data[i]);
-		tbf->rlc_data[data_index] = budh->data[i];
-		data_index++;
-	}
-	//LOGPC(DBSSGP, LOGL_NOTICE, "\n");
-	gsmtap_send_llc(tbf->rlc_data,data_index);
-	tbf->data_index = data_index;
+	uint8_t *llc_pdu = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_LLC_PDU);
+	tbf->data_index = TLVP_LEN(tp, BSSGP_IE_LLC_PDU);
 	
+	LOGP(DBSSGP, LOGL_NOTICE, "LLC PDU = ");
+	for (i = 0; i < tbf->data_index; i++)
+	{
+		tbf->rlc_data[i] = llc_pdu[i];
+		LOGPC(DBSSGP, LOGL_NOTICE, "%02x", tbf->rlc_data[i]);
+	}
+
+	uint16_t imsi_len = 0;
+	uint8_t *imsi;
+	if (TLVP_PRESENT(tp, BSSGP_IE_IMSI))
+	{
+		imsi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
+		imsi = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_IMSI);
+		
+		LOGPC(DBSSGP, LOGL_NOTICE, " IMSI = ");
+		for (i = 0; i < imsi_len; i++)
+		{
+			LOGPC(DBSSGP, LOGL_NOTICE, "%02x", imsi[i]);
+		}
+		LOGPC(DBSSGP, LOGL_NOTICE, "\n");
+	}
+
+	gsmtap_send_llc(tbf->rlc_data,tbf->data_index);
 	gprs_rlcmac_packet_downlink_assignment(tbf);
 
 }
@@ -105,7 +100,7 @@ int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_
 	switch (pdu_type) {
 	case BSSGP_PDUT_DL_UNITDATA:
 		LOGP(DBSSGP, LOGL_NOTICE, "RX: [SGSN->PCU] BSSGP_PDUT_DL_UNITDATA\n");
-		gprs_bssgp_pcu_rx_dl_ud(msg);
+		gprs_bssgp_pcu_rx_dl_ud(msg, tp);
 		break;
 	case BSSGP_PDUT_PAGING_PS:
 		LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_PAGING_PS\n");
