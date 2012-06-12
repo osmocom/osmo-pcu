@@ -437,6 +437,13 @@ void gprs_rlcmac_data_block_parse(gprs_rlcmac_tbf* tbf, RlcMacUplinkDataBlock_t 
 			i++;
 			data_block_hdr_len += 1;
 			llc_pdu_num++;
+			
+			// Singular case, TS 44.060 10.4.14
+			if (ul_data_block->LENGTH_INDICATOR[i] == 0)
+			{
+				break;
+			}
+			
 			// New LLC PDU starts after the current LLC PDU and continues until
 			// the end of the RLC information field, no more extension octets.
 			if ((ul_data_block->M[i] == 1)&&(ul_data_block->E[i] == 1))
@@ -467,7 +474,15 @@ void gprs_rlcmac_data_block_parse(gprs_rlcmac_tbf* tbf, RlcMacUplinkDataBlock_t 
 	{
 		if (ul_data_block->E_1 == 0) // Extension octet follows immediately
 		{
-			llc_pdu_len = ul_data_block->LENGTH_INDICATOR[num];
+			// Singular case, TS 44.060 10.4.14
+			if (ul_data_block->LENGTH_INDICATOR[num] == 0)
+			{
+				llc_pdu_len = UL_RLC_DATA_BLOCK_LEN - data_block_hdr_len;
+			}
+			else
+			{
+				llc_pdu_len = ul_data_block->LENGTH_INDICATOR[num];
+			}
 		}
 		else
 		{
