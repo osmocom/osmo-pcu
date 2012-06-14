@@ -18,9 +18,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-include $(top_srcdir)/Makefile.common
+# FIXME: This has to go!!
+OPENBSC_DIR = $(top_srcdir)/../openbsc/openbsc
+OPENGGSN_DIR = $(top_srcdir)/../openggsn
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES)
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) -I$(OPENBSC_DIR)/include
 AM_CXXFLAGS = -Wall -ldl -pthread
 
 noinst_LTLIBRARIES = libgprs.la
@@ -49,14 +51,10 @@ noinst_HEADERS = \
 	gsm_timer.h \
 	bitvector.h
 
-OPENBSC_DIR = /home/ivan/work/openbsc/openbsc/openbsc
-OPENGGSN_DIR = /home/ivan/work/openbsc/openggsn
-OSMOCORE_DIR = /home/ivan/work/openbsc/libosmocore
-
 RLCMACTest_SOURCES = RLCMACTest.cpp
 RLCMACTest_LDADD = \
 	libgprs.la \
-	-losmocore \
+	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
 pcu_SOURCES = pcu_main.cpp
@@ -80,10 +78,8 @@ pcu_LDADD = \
 	$(OPENBSC_DIR)/src/gprs/gprs_sgsn.o \
 	$(OPENBSC_DIR)/src/libcommon/socket.o \
 	$(OPENBSC_DIR)/src/libcommon/debug.o \
-	$(OSMOCORE_DIR)/src/bitvec.o \
-	$(OSMOCORE_DIR)/src/talloc.o \
-	-losmocore \
-	-losmogsm \
+	$(LIBOSMOCORE_LIBS) \
+	$(LIBOSMOGSM_LIBS) \
 	$(COMMON_LA)
 
 #MOSTLYCLEANFILES += testSource testDestination
