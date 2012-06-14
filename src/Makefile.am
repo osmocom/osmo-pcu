@@ -65,19 +65,6 @@ pcu_LDADD = \
 	$(OPENBSC_DIR)/src/libgb/gprs_bssgp_bss.o \
 	$(OPENBSC_DIR)/src/libgb/gprs_bssgp_util.o \
 	$(OPENBSC_DIR)/src/libgb/gprs_ns_frgre.o \
-	$(OPENGGSN_DIR)/gtp/queue.o \
-	$(OPENGGSN_DIR)/gtp/lookupa.o \
-	$(OPENGGSN_DIR)/gtp/pdp.o \
-	$(OPENGGSN_DIR)/gtp/gtpie.o \
-	$(OPENGGSN_DIR)/gtp/gtp.o \
-	$(OPENBSC_DIR)/src/gprs/sgsn_libgtp.o \
-	$(OPENBSC_DIR)/src/gprs/gprs_sndcp.o \
-	$(OPENBSC_DIR)/src/gprs/crc24.o \
-	$(OPENBSC_DIR)/src/gprs/gprs_llc.o \
-	$(OPENBSC_DIR)/src/gprs/gprs_gmm.o \
-	$(OPENBSC_DIR)/src/gprs/gprs_sgsn.o \
-	$(OPENBSC_DIR)/src/libcommon/socket.o \
-	$(OPENBSC_DIR)/src/libcommon/debug.o \
 	$(LIBOSMOCORE_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(COMMON_LA)
