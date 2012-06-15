@@ -714,7 +714,7 @@ CSN_DESCR_BEGIN(Receive_N_PDU_Number_t)
   M_UINT       (Receive_N_PDU_Number_t,  value,  8),
 CSN_DESCR_END  (Receive_N_PDU_Number_t)
 
-gint16 Receive_N_PDU_Number_list_Dissector(csnStream_t* ar, bitvec *vector, size_t& readIndex, void* data)
+gint16 Receive_N_PDU_Number_list_Dissector(csnStream_t* ar, bitvec *vector, unsigned& readIndex, void* data)
 {
   if (ar->direction == 0)
   {
@@ -825,7 +825,7 @@ CSN_DESCR_BEGIN       (Content_t)
   M_UINT              (Content_t,  PS_HandoverCapability,  1),
 CSN_DESCR_END         (Content_t)
 
-gint16 Content_Dissector(csnStream_t* ar, bitvec *vector, size_t& readIndex, void* data)
+gint16 Content_Dissector(csnStream_t* ar, bitvec *vector, unsigned& readIndex, void* data)
 {
   if (ar->direction == 0)
     {
@@ -849,7 +849,7 @@ CSN_DESCR_BEGIN       (Additional_access_technologies_t)
   M_REC_TARRAY        (Additional_access_technologies_t, Additional_access_technologies[0], Additional_access_technologies_struct_t, Count_additional_access_technologies),
 CSN_DESCR_END         (Additional_access_technologies_t)
 
-gint16 Additional_access_technologies_Dissector(csnStream_t* ar, bitvec* vector, size_t& readIndex, void* data)
+gint16 Additional_access_technologies_Dissector(csnStream_t* ar, bitvec* vector, unsigned& readIndex, void* data)
 {
   if (ar->direction == 0)
   {
@@ -4719,7 +4719,7 @@ CSN_DESCR_END    (SI6_RestOctet_t)
 void decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
 {
   csnStream_t      ar;
-  size_t readIndex = 0;
+  unsigned readIndex = 0;
   guint8 payload_type = bitvec_read_field(vector, readIndex, 2);
 
   if (payload_type == PAYLOAD_TYPE_DATA)
@@ -4827,7 +4827,7 @@ void decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
   /* See RLC/MAC downlink control block structure in TS 44.060 / 10.3.1 */
   gint bit_offset = 0;
   gint bit_length;
-  size_t readIndex = 0;
+  unsigned readIndex = 0;
   data->PAYLOAD_TYPE = bitvec_read_field(vector, readIndex, 2);
   data->RRBP = bitvec_read_field(vector, readIndex, 2);
   data->SP = bitvec_read_field(vector, readIndex, 1);
@@ -5016,7 +5016,7 @@ void decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
 void encode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
 {
   csnStream_t      ar;
-  size_t writeIndex = 0;
+  unsigned writeIndex = 0;
   data->NrOfBits = (23 - 1) * 8;
   csnStreamInit(&ar, 0, data->NrOfBits);
   writeIndex = 0;
@@ -5111,7 +5111,7 @@ void encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
   /* See RLC/MAC downlink control block structure in TS 44.060 / 10.3.1 */
   gint bit_offset = 0;
   gint bit_length;
-  size_t writeIndex = 0;
+  unsigned writeIndex = 0;
 
   if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_DATA)
   {
@@ -5297,7 +5297,7 @@ void encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
 
 void decode_gsm_rlcmac_uplink_data(bitvec * vector, RlcMacUplinkDataBlock_t * data)
 {
-  size_t readIndex = 0;
+  unsigned readIndex = 0;
   //unsigned dataLen = 0;
   guint8 payload_type = bitvec_read_field(vector, readIndex, 2);
   if (payload_type == PAYLOAD_TYPE_DATA)
@@ -5374,7 +5374,7 @@ void decode_gsm_rlcmac_uplink_data(bitvec * vector, RlcMacUplinkDataBlock_t * da
 
 void encode_gsm_rlcmac_downlink_data(bitvec * vector, RlcMacDownlinkDataBlock_t * data)
 {
-  size_t writeIndex = 0;
+  unsigned writeIndex = 0;
 
   if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_DATA)
   {

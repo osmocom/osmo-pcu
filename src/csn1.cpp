@@ -52,7 +52,7 @@ static const unsigned char ixBitsTab[] = {0, 1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4,
 /* Returns no_of_bits (up to 8) masked with 0x2B */
 
 static guint8
-get_masked_bits8( bitvec *vector, size_t& readIndex, gint bit_offset,  const gint no_of_bits)
+get_masked_bits8( bitvec *vector, unsigned& readIndex, gint bit_offset,  const gint no_of_bits)
 {
   static const guint8 maskBits[] = {0x00, 0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3F, 0x7F, 0xFF};
   //gint byte_offset = bit_offset >> 3;          /* divide by 8 */
@@ -104,7 +104,7 @@ static const char* ErrCodes[] =
 };
 
 static gint16
-ProcessError( size_t readIndex, const char* sz, gint16 err, const CSN_DESCR* pDescr)
+ProcessError( unsigned readIndex, const char* sz, gint16 err, const CSN_DESCR* pDescr)
 {
   gint16 i = MIN(-err, ((gint16) ElementsOf(ErrCodes)-1));
   if (i >= 0)
@@ -166,7 +166,7 @@ static const char* CSN_DESCR_type[]=
  */
 
 static gboolean
-existNextElement(bitvec *vector, size_t& readIndex, guint8 Tag)
+existNextElement(bitvec *vector, unsigned& readIndex, guint8 Tag)
 {
   guint8 res = bitvec_read_field(vector, readIndex, 1);
   if (Tag == STANDARD_TAG)
@@ -178,7 +178,7 @@ existNextElement(bitvec *vector, size_t& readIndex, guint8 Tag)
 
 
 gint16
-csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, size_t& readIndex, void* data)
+csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsigned& readIndex, void* data)
 {
   gint  remaining_bits_len = ar->remaining_bits_len;
   gint  bit_offset         = ar->bit_offset;
@@ -1405,7 +1405,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, size_
 
 
 
-gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, size_t& writeIndex, void* data)
+gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsigned& writeIndex, void* data)
 {
   gint  remaining_bits_len = ar->remaining_bits_len;
   gint  bit_offset         = ar->bit_offset;
@@ -1767,7 +1767,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
         StreamSerializeFcn_t serialize = pDescr->serialize.fcn;
         csnStream_t          arT       = *ar;
         gint16               Status = -1;
-        size_t lengthIndex;
+        unsigned lengthIndex;
 
         // store writeIndex for length value (7 bit)
 	lengthIndex = writeIndex;
