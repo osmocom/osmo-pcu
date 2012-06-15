@@ -76,7 +76,6 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		LOGPC(DBSSGP, LOGL_NOTICE, "\n");
 	}
 
-	gsmtap_send_llc(tbf->rlc_data,tbf->data_index);
 	gprs_rlcmac_packet_downlink_assignment(tbf);
 
 }

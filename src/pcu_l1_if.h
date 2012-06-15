@@ -74,6 +74,4 @@ void pcu_l1if_tx(bitvec * block, GsmL1_Sapi_t sapi, int len = 23);
 
 int pcu_l1if_handle_l1prim(struct femtol1_hdl *fl1h, struct msgb *msg);
 
-void gsmtap_send_llc(uint8_t * data, unsigned len);
-
 #endif // PCU_L1_IF_H

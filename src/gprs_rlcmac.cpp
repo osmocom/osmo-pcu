@@ -19,7 +19,6 @@
  
 #include <gprs_bssgp_pcu.h>
 #include <pcu_l1_if.h>
-#include <Threads.h>
 #include <gprs_rlcmac.h>
 #include <gsmL1prim.h>
 
@@ -101,7 +100,7 @@ static void tbf_timer_cb(void *_tbf)
 		// TODO: We should add timers for TBF.
 		break;
 	default:
-		COUT("Timer expired in unknown mode" << tbf->T);
+		LOGP(DRLCMAC, LOGL_NOTICE, "Timer expired in unknown mode: %u \n", tbf->T);
 	}
 }
 
@@ -109,7 +108,8 @@ static void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
 				unsigned int seconds)
 {
 	if (osmo_timer_pending(&tbf->timer))
-		COUT("Starting TBF timer %u while old timer %u pending" << T << tbf->T);
+		LOGP(DRLCMAC, LOGL_NOTICE, "Starting TBF timer %u while old timer %u pending \n", T, tbf->T);
+
 	tbf->T = T;
 	tbf->num_T_exp = 0;
 
@@ -135,7 +135,7 @@ static void tbf_gsm_timer_cb(void *_tbf)
 		tbf_free(tbf);
 		break;
 	default:
-		COUT("Timer expired in unknown mode" << tbf->fT);
+		LOGP(DRLCMAC, LOGL_NOTICE, "Timer expired in unknown mode: %u \n", tbf->fT);
 	}
 }
 
@@ -143,7 +143,7 @@ static void tbf_gsm_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int fT,
 				int frames)
 {
 	if (osmo_gsm_timer_pending(&tbf->gsm_timer))
-		COUT("Starting TBF timer %u while old timer %u pending" << fT << tbf->fT);
+		LOGP(DRLCMAC, LOGL_NOTICE, "Starting TBF timer %u while old timer %u pending \n", fT, tbf->fT);
 	tbf->fT = fT;
 	tbf->num_fT_exp = 0;
 
@@ -501,7 +501,6 @@ void gprs_rlcmac_data_block_parse(gprs_rlcmac_tbf* tbf, RlcMacUplinkDataBlock_t 
 			// New LLC PDU starts after the current LLC PDU 
 			if (ul_data_block->M[num] == 1)
 			{
-				gsmtap_send_llc(tbf->rlc_data, tbf->data_index);
 				gprs_rlcmac_tx_ul_ud(tbf);
 				tbf->data_index = 0;
 				// New LLC PDU continues until the end of the RLC information field, no more extension octets.
@@ -549,7 +548,6 @@ int gprs_rlcmac_rcv_data_block(bitvec *rlc_block)
 			gprs_rlcmac_tx_ul_ack(tbf->tfi, tbf->tlli, ul_data_block);
 			if (ul_data_block->CV == 0) {
 				// Recieved last Data Block in this sequence.
-				gsmtap_send_llc(tbf->rlc_data, tbf->data_index);
 				tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_SEQ;
 				gprs_rlcmac_tx_ul_ud(tbf);
 			} else {
@@ -564,7 +562,6 @@ int gprs_rlcmac_rcv_data_block(bitvec *rlc_block)
 			gprs_rlcmac_tx_ul_ack(tbf->tfi, tbf->tlli, ul_data_block);
 			if (ul_data_block->CV == 0) {
 				// Recieved last Data Block in this sequence.
-				gsmtap_send_llc(tbf->rlc_data, tbf->data_index);
 				tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_SEQ;
 				gprs_rlcmac_tx_ul_ud(tbf);
 			} else {
@@ -639,9 +636,9 @@ void gprs_rlcmac_rcv_block(bitvec *rlc_block)
 		gprs_rlcmac_rcv_control_block(rlc_block);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK_OPT:
-		COUT("GPRS_RLCMAC_CONTROL_BLOCK_OPT block payload is not supported.\n");
+		LOGP(DRLCMAC, LOGL_NOTICE, "GPRS_RLCMAC_CONTROL_BLOCK_OPT block payload is not supported.\n");
 	default:
-		COUT("Unknown RLCMAC block payload.\n");
+		LOGP(DRLCMAC, LOGL_NOTICE, "Unknown RLCMAC block payload.\n");
 	}
 }
 

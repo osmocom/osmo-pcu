@@ -17,16 +17,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include <Sockets.h>
-#include <gsmtap.h>
 #include <gprs_rlcmac.h>
 #include <pcu_l1_if.h>
 #include <gprs_debug.h>
 
 #define MAX_UDP_LENGTH 1500
-
-// TODO: We should take ports and IP from config.
-UDPSocket pcu_gsmtap_socket(5077, "127.0.0.1", 4729);
 
 // Variable for storage current FN.
 int frame_number;
@@ -176,38 +171,4 @@ int pcu_l1if_handle_l1prim(struct femtol1_hdl *fl1, struct msgb *msg)
 		msgb_free(msg);
 
 	return rc;
-}
-
-void gsmtap_send_llc(uint8_t * data, unsigned len)
-{
-	char buffer[MAX_UDP_LENGTH];
-	int ofs = 0;
-
-	// Build header
-	struct gsmtap_hdr *header = (struct gsmtap_hdr *)buffer;
-	header->version			= 2;
-	header->hdr_len			= sizeof(struct gsmtap_hdr) >> 2;
-	header->type			= 0x08;
-	header->timeslot		= 5;
-	header->arfcn			= 0;
-	header->signal_dbm		= 0;
-	header->snr_db			= 0;
-	header->frame_number	= 0;
-	header->sub_type		= 0;
-	header->antenna_nr		= 0;
-	header->sub_slot		= 0;
-	header->res				= 0;
-
-	ofs += sizeof(*header);
-
-	// Add frame data
-	unsigned j = 0;
-	for (unsigned i = ofs; i < len+ofs; i++)
-	{
-		buffer[i] = (char)data[j];
-		j++;
-	}
-	ofs += len;
-	// Write the GSMTAP packet
-	pcu_gsmtap_socket.write(buffer, ofs);
 }
