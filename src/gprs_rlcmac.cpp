@@ -47,39 +47,25 @@ int tfi_alloc()
 }
 
 /* lookup TBF Entity (by TFI) */
-static struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi)
+static struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, gprs_rlcmac_tbf_direction dir)
 {
 	struct gprs_rlcmac_tbf *tbf;
 
 	llist_for_each_entry(tbf, &gprs_rlcmac_tbfs, list) {
-		if (tbf->tfi == tfi)
+		if ((tbf->tfi == tfi)&&(tbf->direction == dir))
 			return tbf;
 	}
 	return NULL;
 }
 
-static struct gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli)
+static struct gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli, gprs_rlcmac_tbf_direction dir)
 {
 	struct gprs_rlcmac_tbf *tbf;
 	llist_for_each_entry(tbf, &gprs_rlcmac_tbfs, list) {
-		if ((tbf->tlli == tlli)&&(tbf->direction == GPRS_RLCMAC_UL_TBF))
+		if ((tbf->tlli == tlli)&&(tbf->direction == dir))
 			return tbf;
 	}
 	return NULL;
-}
-
-struct gprs_rlcmac_tbf *tbf_alloc(uint8_t tfi)
-{
-	struct gprs_rlcmac_tbf *tbf;
-
-	tbf = talloc_zero(rlcmac_tall_ctx, struct gprs_rlcmac_tbf);
-	if (!tbf)
-		return NULL;
-
-	tbf->tfi = tfi;
-	llist_add(&tbf->list, &gprs_rlcmac_tbfs);
-
-	return tbf;
 }
 
 static void tbf_free(struct gprs_rlcmac_tbf *tbf)
@@ -88,6 +74,389 @@ static void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	talloc_free(tbf);
 }
 
+/* Lookup LLC PDU in TBF list of LLC PDUs by number. */
+static struct tbf_llc_pdu *tbf_llc_pdu_by_num(struct llist_head llc_pdus, uint8_t num)
+{
+	struct tbf_llc_pdu *llc_pdu;
+
+	llist_for_each_entry(llc_pdu, &llc_pdus, list) {
+		if (llc_pdu->num == num)
+			return llc_pdu;
+	}
+	return NULL;
+}
+
+/* Add new LLC PDU to the TBF list of LLC PDUs. */
+int tbf_add_llc_pdu(struct gprs_rlcmac_tbf *tbf, uint8_t *data, uint16_t llc_pdu_len)
+{
+	struct tbf_llc_pdu *llc_pdu;
+
+	llc_pdu = talloc_zero(rlcmac_tall_ctx, struct tbf_llc_pdu);
+	if (!llc_pdu)
+		return 0;
+
+	llc_pdu->num = tbf->llc_pdu_list_len;
+	llc_pdu->len = llc_pdu_len;
+	
+	LOGP(DBSSGP, LOGL_NOTICE, "LLC PDU = ");
+	for (unsigned i = 0; i < llc_pdu_len; i++)
+	{
+		llc_pdu->data[i] = data[i];
+		LOGPC(DBSSGP, LOGL_NOTICE, "%02x", llc_pdu->data[i]);
+	}
+	LOGP(DBSSGP, LOGL_NOTICE, "\n");
+
+	llist_add(&llc_pdu->list, &tbf->llc_pdus);
+	tbf->llc_pdu_list_len++;
+	return 1;
+}
+
+struct gprs_rlcmac_tbf *tbf_alloc(gprs_rlcmac_tbf_direction dir, uint32_t tlli)
+{
+	struct gprs_rlcmac_tbf *exist_tbf;
+	struct gprs_rlcmac_tbf *tbf;
+	uint8_t tfi;
+
+	// Downlink TDF allocation
+	if (dir == GPRS_RLCMAC_DL_TBF)
+	{
+		// Try to find already exist DL TBF
+		exist_tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF);
+		if (exist_tbf)
+		{
+			// if DL TBF is in establish or data transfer state,
+			// send additional LLC PDU during current DL TBF.
+			if (exist_tbf->stage != TBF_RELEASE)
+			{
+				if (exist_tbf->state != FINISH_DATA_TRANSFER)
+				{
+					return exist_tbf;
+				}
+			}
+		}
+		
+		//Try to find already exist UL TBF
+		exist_tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+		if (exist_tbf)
+		{
+			// if UL TBF is in data transfer state,
+			// establish new DL TBF during current UL TBF.
+			if (exist_tbf->stage == TBF_DATA_TRANSFER && !(exist_tbf->next_tbf))
+			{
+				tbf = talloc_zero(rlcmac_tall_ctx, struct gprs_rlcmac_tbf);
+				if (tbf)
+				{
+					// Create new TBF
+					tfi = tfi_alloc();
+					if (tfi < 0) {
+						return NULL;
+					}
+					tbf->tfi = tfi;
+					tbf->llc_pdus = LLIST_HEAD_INIT(tbf->llc_pdus);
+					tbf->llc_pdu_list_len = 0;
+					tbf->direction = GPRS_RLCMAC_DL_TBF;
+					tbf->stage = TBF_ESTABLISH;
+					tbf->state = WAIT_ESTABLISH;
+					tbf->tlli = tlli;
+					llist_add(&tbf->list, &gprs_rlcmac_tbfs);
+					exist_tbf->next_tbf = tbf;
+					return tbf;
+				}
+				else
+				{
+					return NULL;
+				}
+			}
+		}
+		
+		// No UL and DL TBFs for current TLLI are found.
+		if (!exist_tbf)
+		{
+			tbf = talloc_zero(rlcmac_tall_ctx, struct gprs_rlcmac_tbf);
+			if (tbf)
+			{
+				// Create new TBF
+				tfi = tfi_alloc();
+				if (tfi < 0) {
+					return NULL;
+				}
+				tbf->tfi = tfi;
+				tbf->llc_pdus = LLIST_HEAD_INIT(tbf->llc_pdus);
+				tbf->llc_pdu_list_len = 0;
+				tbf->direction = GPRS_RLCMAC_DL_TBF;
+				tbf->stage = TBF_ESTABLISH;
+				tbf->state = CCCH_ESTABLISH;
+				tbf->tlli = tlli;
+				llist_add(&tbf->list, &gprs_rlcmac_tbfs);
+				return tbf;
+			}
+			else
+			{
+				return NULL;
+			}
+		}
+	}
+	else
+	{
+		// Uplink TBF allocation
+		tbf = talloc_zero(rlcmac_tall_ctx, struct gprs_rlcmac_tbf);
+		if (tbf)
+		{
+			// Create new TBF
+			tfi = tfi_alloc();
+			if (tfi < 0) {
+				return NULL;
+			}
+			tbf->tfi = tfi;
+			tbf->llc_pdus = LLIST_HEAD_INIT(tbf->llc_pdus);
+			tbf->llc_pdu_list_len = 0;
+			tbf->direction = GPRS_RLCMAC_UL_TBF;
+			tbf->stage = TBF_ESTABLISH;
+			tbf->state = WAIT_ESTABLISH;
+			tbf->next_tbf = NULL;
+			llist_add(&tbf->list, &gprs_rlcmac_tbfs);
+			return tbf;
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+}
+
+/* Management of uplink TBF establishment. */
+int tbf_ul_establish(struct gprs_rlcmac_tbf *tbf, uint8_t ra, uint32_t Fn, uint16_t ta)
+{
+	if (tbf->direction != GPRS_RLCMAC_UL_TBF)
+	{
+		return -1;
+	}
+	
+	if (tbf->stage == TBF_ESTABLISH)
+	{
+		switch (tbf->state) {
+		case WAIT_ESTABLISH:
+			{
+				LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [UPLINK] START TFI: %u\n", tbf->tfi);
+				LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] TFI: %u RACH\n", tbf->tfi);
+				LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] TFI: %u Packet Immidiate Assignment\n", tbf->tfi);
+				bitvec *immediate_assignment = bitvec_alloc(23);
+				bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+				int len = write_immediate_assignment(immediate_assignment, 0, ra, Fn, ta, tbf->tfi);
+				pcu_l1if_tx(immediate_assignment, GsmL1_Sapi_Agch, len);
+				bitvec_free(immediate_assignment);
+				tbf->state = FINISH_ESTABLISH;
+			}
+			break;
+		default:
+			LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [UPLINK] TFI: %u Unexpected TBF state = %u for stage = %u \n", 
+																			tbf->tfi, tbf->state, tbf->stage);
+			break;
+		}
+	}
+	else
+	{
+		return -1;
+	}
+
+	return 1;
+}
+
+/* Management of downlink TBF establishment. */
+int tbf_dl_establish(struct gprs_rlcmac_tbf *tbf, uint8_t *imsi)
+{
+	if (tbf->direction != GPRS_RLCMAC_DL_TBF)
+	{
+		return -1;
+	}
+	
+	if (tbf->stage == TBF_ESTABLISH)
+	{
+		switch (tbf->state) {
+		case WAIT_ESTABLISH:
+			// Wait while UL TBF establishes DL TBF.
+			LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] TFI: Wait DL TBF establishment by UL TBF", tbf->tfi);
+			break;
+		case CCCH_ESTABLISH:
+			if (imsi)
+			{
+				// Downlink TBF Establishment on CCCH ( Paging procedure )
+				// TODO: Implement paging procedure on CCCH.
+				LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] TFI: Paging procedure on CCCH : Not implemented yet", tbf->tfi);
+			}
+			else
+			{
+				// Downlink TBF Establishment on CCCH ( Immediate Assignment )
+				gprs_rlcmac_downlink_assignment(tbf);
+			}
+			tbf->state = FINISH_ESTABLISH;
+			break;
+		case PACCH_ESTABLISH:
+			// Downlink TBF Establishment on PACCH ( Packet Immediate Assignment )
+			gprs_rlcmac_packet_downlink_assignment(tbf);
+			tbf->state = FINISH_ESTABLISH;
+			break;
+		default:
+			LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] TFI: %u Unexpected TBF state = %u for stage = %u \n", 
+																			tbf->tfi, tbf->state, tbf->stage);
+			break;
+		}
+	}
+	return 1;
+}
+
+/* Management of uplink TBF data transfer. */
+int tbf_ul_data_transfer(struct gprs_rlcmac_tbf *tbf, RlcMacUplinkDataBlock_t * ul_data_block)
+{
+	if ((tbf->stage == TBF_RELEASE)||(tbf->direction != GPRS_RLCMAC_UL_TBF))
+	{
+		return -1;
+	}
+
+	if (tbf->stage == TBF_ESTABLISH)
+	{
+		tbf->stage = TBF_DATA_TRANSFER;
+		tbf->state = WAIT_DATA_TRANSFER;
+	}
+
+	if (ul_data_block->TI == 1)
+	{
+		tbf->tlli = ul_data_block->TLLI;
+		// TODO: Kill all other UL TBFs with this TLLI.
+	}
+
+	switch (tbf->state) {
+	case WAIT_DATA_TRANSFER:
+		if (ul_data_block->BSN == 0)
+		{
+			tbf->data_index = 0;
+			gprs_rlcmac_data_block_parse(tbf, ul_data_block);
+			gprs_rlcmac_tx_ul_ack(tbf->tfi, tbf->tlli, ul_data_block);
+			if (ul_data_block->CV == 0)
+			{
+				// Recieved last Data Block in this sequence.
+				tbf->state = FINISH_DATA_TRANSFER;
+				gprs_rlcmac_tx_ul_ud(tbf);
+			}
+			else
+			{
+				tbf->bsn = ul_data_block->BSN;
+				tbf->state = DATA_TRANSFER;
+			}
+		}
+		break;
+	case DATA_TRANSFER:
+		if (tbf->bsn == (ul_data_block->BSN - 1))
+		{
+			gprs_rlcmac_data_block_parse(tbf, ul_data_block);
+			gprs_rlcmac_tx_ul_ack(tbf->tfi, tbf->tlli, ul_data_block);
+			if (ul_data_block->CV == 0)
+			{
+				// Recieved last Data Block in this sequence.
+				tbf->state = FINISH_DATA_TRANSFER;
+				gprs_rlcmac_tx_ul_ud(tbf);
+			}
+			else
+			{
+				tbf->bsn = ul_data_block->BSN;
+			}
+		}
+		break;
+	case FINISH_DATA_TRANSFER:
+		// Now we just ignore all Data Blocks and wait release of TBF.
+		break;
+	default:
+		LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [UPLINK] TFI: %u Unexpected TBF state = %u for stage = %u \n", 
+																		tbf->tfi, tbf->state, tbf->stage);
+		break;
+	}
+
+	if ((tbf->state == FINISH_DATA_TRANSFER) && (tbf->next_tbf))
+	{
+		// Establish DL TBF, if it is required.
+		if ((tbf->next_tbf)->state == WAIT_ESTABLISH)
+		{
+			(tbf->next_tbf)->state = PACCH_ESTABLISH;
+			tbf_dl_establish(tbf->next_tbf);
+		}
+	}
+
+	return 1;
+}
+
+/* Management of downlink TBF data transfer. */
+int tbf_dl_data_transfer(struct gprs_rlcmac_tbf *tbf, uint8_t *llc_pdu, uint16_t llc_pdu_len)
+{
+	if ((tbf->stage == TBF_RELEASE) || (tbf->direction != GPRS_RLCMAC_DL_TBF))
+	{
+		return -1;
+	}
+	
+	if (llc_pdu_len > 0)
+	{
+		tbf_add_llc_pdu(tbf, llc_pdu, llc_pdu_len);
+	}
+
+	if (tbf->stage == TBF_ESTABLISH)
+	{
+		if (tbf->state == FINISH_ESTABLISH)
+		{
+			tbf->stage = TBF_DATA_TRANSFER;
+			tbf->state = DATA_TRANSFER;
+		}
+	}
+
+	if (tbf->stage == TBF_DATA_TRANSFER)
+	{
+		switch (tbf->state) {
+		case DATA_TRANSFER:
+			gprs_rlcmac_tx_llc_pdus(tbf);
+			tbf->state = FINISH_DATA_TRANSFER;
+			break;
+		default:
+			LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] TFI: %u Unexpected TBF state = %u for stage = %u \n", 
+																			tbf->tfi, tbf->state, tbf->stage);
+			break;
+		}
+	}
+
+	return 1;
+}
+
+/* Management of uplink TBF release. */
+int tbf_ul_release(struct gprs_rlcmac_tbf *tbf)
+{
+	if (tbf->direction != GPRS_RLCMAC_UL_TBF)
+	{
+		return -1;
+	}
+
+	if (tbf->next_tbf)
+	{
+		// UL TBF data transfer is finished, start DL TBF data transfer.
+		tbf_dl_data_transfer(tbf->next_tbf);
+	}
+	tbf->stage = TBF_RELEASE;
+	tbf->state = RELEASE;
+	LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [UPLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+	tbf_free(tbf);
+	return 1;
+}
+
+/* Management of downlink TBF release. */
+int tbf_dl_release(struct gprs_rlcmac_tbf *tbf)
+{
+	if (tbf->direction != GPRS_RLCMAC_DL_TBF)
+	{
+		return -1;
+	}
+
+	tbf->stage = TBF_RELEASE;
+	tbf->state = RELEASE;
+	LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+	tbf_free(tbf);
+	return 1;
+}
 
 static void tbf_timer_cb(void *_tbf)
 {
@@ -109,7 +478,6 @@ static void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
 {
 	if (osmo_timer_pending(&tbf->timer))
 		LOGP(DRLCMAC, LOGL_NOTICE, "Starting TBF timer %u while old timer %u pending \n", T, tbf->T);
-
 	tbf->T = T;
 	tbf->num_T_exp = 0;
 
@@ -128,11 +496,8 @@ static void tbf_gsm_timer_cb(void *_tbf)
 	tbf->num_fT_exp++;
 
 	switch (tbf->fT) {
-	case 0:
-		// This is timer for delay RLC/MAC data sending after Downlink Immediate Assignment on CCCH.
-		gprs_rlcmac_segment_llc_pdu(tbf);
-		LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
-		tbf_free(tbf);
+	case 2:
+		tbf_dl_data_transfer(tbf);
 		break;
 	default:
 		LOGP(DRLCMAC, LOGL_NOTICE, "Timer expired in unknown mode: %u \n", tbf->fT);
@@ -256,10 +621,9 @@ void  write_packet_uplink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli)
 //	bitvec_write_field(dest, wp,0x0,1); // Measurement Mapping struct not present
 }
 
-
 // GSM 04.08 9.1.18 Immediate assignment
 int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, uint32_t fn,
-								uint8_t ta, uint8_t tfi = 0, uint32_t tlli = 0)
+								uint8_t ta, uint8_t tfi, uint32_t tlli)
 {
 	unsigned wp = 0;
 
@@ -524,63 +888,22 @@ void gprs_rlcmac_data_block_parse(gprs_rlcmac_tbf* tbf, RlcMacUplinkDataBlock_t 
 int gprs_rlcmac_rcv_data_block(bitvec *rlc_block)
 {
 	struct gprs_rlcmac_tbf *tbf;
+	int rc = 0;
 
 	LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] Uplink Data Block\n");
 	RlcMacUplinkDataBlock_t * ul_data_block = (RlcMacUplinkDataBlock_t *)malloc(sizeof(RlcMacUplinkDataBlock_t));
 	LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ RX : Uplink Data Block +++++++++++++++++++++++++\n");
 	decode_gsm_rlcmac_uplink_data(rlc_block, ul_data_block);
 	LOGP(DRLCMAC, LOGL_NOTICE, "------------------------- RX : Uplink Data Block -------------------------\n");
-	tbf = tbf_by_tfi(ul_data_block->TFI);
+
+	tbf = tbf_by_tfi(ul_data_block->TFI, GPRS_RLCMAC_UL_TBF);
 	if (!tbf) {
-		return 0;
+		return -1;
 	}
-
-	if (ul_data_block->TI == 1)
-	{
-		tbf->tlli = ul_data_block->TLLI;
-	}
-
-	switch (tbf->state) {
-	case GPRS_RLCMAC_WAIT_DATA_SEQ_START: 
-		if (ul_data_block->BSN == 0) {
-			tbf->data_index = 0;
-			gprs_rlcmac_data_block_parse(tbf, ul_data_block);
-			gprs_rlcmac_tx_ul_ack(tbf->tfi, tbf->tlli, ul_data_block);
-			if (ul_data_block->CV == 0) {
-				// Recieved last Data Block in this sequence.
-				tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_SEQ;
-				gprs_rlcmac_tx_ul_ud(tbf);
-			} else {
-				tbf->bsn = ul_data_block->BSN;
-				tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_BLOCK;
-			}
-		}
-		break;
-	case GPRS_RLCMAC_WAIT_NEXT_DATA_BLOCK:
-		if (tbf->bsn == (ul_data_block->BSN - 1)) {
-			gprs_rlcmac_data_block_parse(tbf, ul_data_block);
-			gprs_rlcmac_tx_ul_ack(tbf->tfi, tbf->tlli, ul_data_block);
-			if (ul_data_block->CV == 0) {
-				// Recieved last Data Block in this sequence.
-				tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_SEQ;
-				gprs_rlcmac_tx_ul_ud(tbf);
-			} else {
-				tbf->bsn = ul_data_block->BSN;
-				tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_BLOCK;
-			}
-		} else {
-			// Recieved Data Block with unexpected BSN.
-			// We should try to find nesessary Data Block. 
-			tbf->state = GPRS_RLCMAC_WAIT_NEXT_DATA_BLOCK;
-		}
-		break;
-	case GPRS_RLCMAC_WAIT_NEXT_DATA_SEQ:
-		// Now we just ignore all Data Blocks and wait next Uplink TBF
-		break;
-	}
-
+	
+	rc = tbf_ul_data_transfer(tbf, ul_data_block);
 	free(ul_data_block);
-	return 1;
+	return rc;
 }
 
 /* Received Uplink RLC control block. */
@@ -589,7 +912,6 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block)
 	uint8_t tfi = 0;
 	uint32_t tlli = 0;
 	struct gprs_rlcmac_tbf *tbf;
-	struct gprs_rlcmac_tbf *ul_tbf;
 
 	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)malloc(sizeof(RlcMacUplink_t));
 	LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
@@ -599,24 +921,21 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block)
 	switch (ul_control_block->u.MESSAGE_TYPE) {
 	case MT_PACKET_CONTROL_ACK:
 		tlli = ul_control_block->u.Packet_Control_Acknowledgement.TLLI;
-		tbf = tbf_by_tlli(tlli);
+		tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
 		if (!tbf) {
 			return 0;
 		}
 		LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Control Ack\n", tbf->tfi, tbf->tlli);
-		LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [UPLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
-		tbf_free(tbf);
+		tbf_ul_release(tbf);
 		break;
 	case MT_PACKET_DOWNLINK_ACK_NACK:
 		tfi = ul_control_block->u.Packet_Downlink_Ack_Nack.DOWNLINK_TFI;
-		tbf = tbf_by_tfi(tfi);
+		tbf = tbf_by_tfi(tfi, GPRS_RLCMAC_DL_TBF);
 		if (!tbf) {
 			return 0;
 		}
 		LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Downlink Ack/Nack\n", tbf->tfi, tbf->tlli);
-		tlli = tbf->tlli;
-		LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
-		tbf_free(tbf);
+		tbf_dl_release(tbf);
 		break;
 	}
 	free(ul_control_block);
@@ -646,139 +965,116 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, uint16_t ta)
 {
 	struct gprs_rlcmac_tbf *tbf;
 
-	// Create new TBF
-	int tfi = tfi_alloc();
-	if (tfi < 0) {
-		return tfi;
+	static uint8_t prev_ra = 0;
+
+	if (prev_ra == ra)
+	{
+		return -1;
 	}
-	tbf = tbf_alloc(tfi);
-	tbf->direction = GPRS_RLCMAC_UL_TBF;
-	tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
-	LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [UPLINK] START TFI: %u\n", tbf->tfi);
-	LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] TFI: %u RACH\n", tbf->tfi);
-	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] TFI: %u Packet Immidiate Assignment\n", tbf->tfi);
-	bitvec *immediate_assignment = bitvec_alloc(23);
-	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	int len = write_immediate_assignment(immediate_assignment, 0, ra, Fn, ta, tbf->tfi);
-	pcu_l1if_tx(immediate_assignment, GsmL1_Sapi_Agch, len);
-	bitvec_free(immediate_assignment);
+
+	tbf = tbf_alloc(GPRS_RLCMAC_UL_TBF);
+
+	return tbf_ul_establish(tbf, ra, Fn, ta);
 }
 
-// Send RLC data to OpenBTS.
-void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t tfi, uint8_t *pdu, int start_index, int end_index, uint8_t bsn, uint8_t fbi)
-{
-	int spare_len = 0;
-	bitvec *data_block_vector = bitvec_alloc(BLOCK_LEN);
-	bitvec_unhex(data_block_vector, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	RlcMacDownlinkDataBlock_t * data_block = (RlcMacDownlinkDataBlock_t *)malloc(sizeof(RlcMacDownlinkDataBlock_t));
-	data_block->PAYLOAD_TYPE = 0;
-	data_block->RRBP = 0;
-	data_block->SP = 1;
-	data_block->USF = 1;
-	data_block->PR = 0;
-	data_block->TFI = tfi;
-	data_block->FBI = fbi;
-	data_block->BSN = bsn;
-	
-	// Last RLC data block of current LLC PDU
-	if (fbi == 1)
-	{
-		data_block->E_1 = 0;
-		data_block->M[0] = 0;
-		data_block->E[0] = 1;
-		// Singular case, TS 44.060 10.4.14
-		if ((end_index - start_index) == (BLOCK_LEN - 3))
-		{
-			data_block->FBI = 0;
-			data_block->LENGTH_INDICATOR[0] = 0;
-			spare_len =  0;
-			end_index--;
-		}
-		else
-		 {
-			data_block->LENGTH_INDICATOR[0] = end_index-start_index;
-			spare_len = BLOCK_LEN - 4 - data_block->LENGTH_INDICATOR[0];
-		}
-	}
-	else
-	{
-		data_block->E_1 = 1; 
-	}
-
-	int data_oct_num = 0;  
-	int i = 0;
-	// Pack LLC PDU into RLC data field 
-	for(i = start_index; i < end_index; i++) {
-		data_block->RLC_DATA[data_oct_num] = pdu[i];
-		data_oct_num++;
-	}
-	// Fill spare bits
-	for(i = data_oct_num; i < data_oct_num + spare_len; i++) {
-		data_block->RLC_DATA[i] = 0x2b;
-	}
-	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Downlink Data Block\n");
-	LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ TX : Downlink Data Block +++++++++++++++++++++++++\n");
-	encode_gsm_rlcmac_downlink_data(data_block_vector, data_block);
-	LOGP(DRLCMAC, LOGL_NOTICE, "------------------------- TX : Downlink Data Block -------------------------\n");
-	free(data_block);
-	pcu_l1if_tx(data_block_vector, GsmL1_Sapi_Pdtch);
-	bitvec_free(data_block_vector);
-	
-	// Singular case, TS 44.060 10.4.14
-	if ((fbi == 1)&&((end_index + 1 - start_index) == (BLOCK_LEN - 3)))
-	{
-		gprs_rlcmac_tx_dl_data_block(tlli, tfi, pdu, end_index, end_index+1, bsn+1, fbi);
-	}
-}
-
-int gprs_rlcmac_segment_llc_pdu(struct gprs_rlcmac_tbf *tbf)
+int gprs_rlcmac_tx_llc_pdus(struct gprs_rlcmac_tbf *tbf)
 {
 	int fbi = 0;
 	int bsn = 0;
-	int num_blocks = 0; // number of RLC data blocks necessary for LLC PDU transmission 
 
 
-	// LLC PDU fits into one RLC data block with optional LI field.
-	if (tbf->data_index < BLOCK_LEN - 4)
+	if (tbf->llc_pdu_list_len == 0)
 	{
-		fbi = 1;
-		gprs_rlcmac_tx_dl_data_block(tbf->tlli, tbf->tfi, tbf->rlc_data, 0, tbf->data_index, bsn, fbi);
+		return -1;
 	}
-	// Necessary several RLC data blocks for transmit LLC PDU.
-	else
+	
+	bitvec *data_block_vector = bitvec_alloc(BLOCK_LEN);
+	bitvec_unhex(data_block_vector, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	RlcMacDownlinkDataBlock_t * data_block = (RlcMacDownlinkDataBlock_t *)malloc(sizeof(RlcMacDownlinkDataBlock_t));
+	
+	struct tbf_llc_pdu *llc_pdu;
+	
+	int data_block_ready = 0;
+	unsigned data_oct_num = 0;
+	int llc_pdu_index;
+	for (unsigned i = 0; i < tbf->llc_pdu_list_len; i++)
 	{
-		// length of RLC data field in block (no optional octets)
-		int block_data_len = BLOCK_LEN - 3; 
-		
-		// number of blocks with 20 octets length RLC data field
-		num_blocks = tbf->data_index/block_data_len; 
-		
-		// rest of LLC PDU, which doesn't fit into data blocks with 20 octets RLC data field
-		int rest_len = tbf->data_index%BLOCK_DATA_LEN; 
-		if (rest_len > 0)
+		llc_pdu = tbf_llc_pdu_by_num(tbf->llc_pdus, i);
+		if (!llc_pdu)
 		{
-			// add one block for transmission rest of LLC PDU
-			num_blocks++;
+			return -1;
 		}
 
-		int start_index = 0;
-		int end_index = 0;
+		llc_pdu_index = 0;
 
-		// Transmit all RLC data blocks of current LLC PDU to MS
-		for (bsn = 0; bsn < num_blocks; bsn++)
+		do
 		{
-			if (bsn == num_blocks-1)
+			data_block->PAYLOAD_TYPE = 0;
+			data_block->RRBP = 0;
+			data_block->SP = 1;
+			data_block->USF = 1;
+			data_block->PR = 0;
+			data_block->TFI = tbf->tfi;
+			data_block->BSN = bsn;
+
+			// Write LLC PDU to Data Block
+			int j;
+			for(j = llc_pdu_index; j < llc_pdu->len; j++)
 			{
-				if (rest_len > 0)
+				data_block->RLC_DATA[data_oct_num] = llc_pdu->data[j];
+				data_oct_num++;
+				llc_pdu_index++;
+				// RLC data field is completely filled.
+				if (data_oct_num == BLOCK_LEN - 3)
 				{
-					block_data_len = rest_len;
+					fbi = 0;
+					data_block->E_1 = 1;
+					data_block_ready = 1;
+					break;
 				}
-				fbi = 1;
 			}
-			end_index = start_index + block_data_len;
-			gprs_rlcmac_tx_dl_data_block(tbf->tlli, tbf->tfi, tbf->rlc_data, start_index, end_index, bsn, fbi);
-			start_index += block_data_len;
+			if(!data_block_ready)
+			{
+				data_block->E_1 = 0;
+				data_block->LENGTH_INDICATOR[0] = data_oct_num;
+				if ((i+1) == tbf->llc_pdu_list_len)
+				{
+					// Current LLC PDU is last in TBF.
+					data_block->M[0] = 0;
+					data_block->E[0] = 1;
+					fbi = 1;
+					for(unsigned k = data_oct_num; k < BLOCK_LEN - 4; k++)
+					{
+						data_block->RLC_DATA[k] = 0x2b;
+					}
+					data_block_ready = 1; 
+				}
+				else
+				{
+					// More LLC PDUs should be transmited in this TBF.
+					data_block->M[0] = 1;
+					data_block->E[0] = 1;
+					data_block_ready = 1;
+					break;
+				}
+			}
+
+			data_block->FBI = fbi;
+
+			if(data_block_ready)
+			{
+				LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Downlink Data Block\n");
+				LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ TX : Downlink Data Block +++++++++++++++++++++++++\n");
+				encode_gsm_rlcmac_downlink_data(data_block_vector, data_block);
+				LOGP(DRLCMAC, LOGL_NOTICE, "------------------------- TX : Downlink Data Block -------------------------\n");
+				pcu_l1if_tx(data_block_vector, GsmL1_Sapi_Pdtch);
+				bitvec_unhex(data_block_vector, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+				bsn++;
+				data_block_ready = 0;
+				data_oct_num = 0;
+			}
 		}
+		while(llc_pdu->len != llc_pdu_index);
 	}
 }
 
@@ -815,7 +1111,6 @@ void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf)
 	int len = write_immediate_assignment(immediate_assignment, 1, 125, get_current_fn(), (l1fh->fl1h)->channel_info.ta, tbf->tfi, tbf->tlli);
 	pcu_l1if_tx(immediate_assignment, GsmL1_Sapi_Agch, len);
 	bitvec_free(immediate_assignment);
-	tbf_gsm_timer_start(tbf, 0, 120);
 }
 
 void gprs_rlcmac_packet_downlink_assignment(gprs_rlcmac_tbf *tbf)
@@ -833,5 +1128,4 @@ void gprs_rlcmac_packet_downlink_assignment(gprs_rlcmac_tbf *tbf)
 	free(packet_downlink_assignment);
 	pcu_l1if_tx(packet_downlink_assignment_vec, GsmL1_Sapi_Pacch);
 	bitvec_free(packet_downlink_assignment_vec);
-	tbf_gsm_timer_start(tbf, 0, 120);
 }

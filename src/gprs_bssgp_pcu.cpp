@@ -28,22 +28,17 @@ struct bssgp_bvc_ctx *bctx = btsctx_alloc(BVCI, NSEI);
 int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 {
 	struct bssgp_ud_hdr *budh;
-	int tfi;
 	int i = 0;
 
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
+	
 	struct gprs_rlcmac_tbf *tbf;
-	// Create new TBF
-	tfi = tfi_alloc();
-	if (tfi < 0) {
-		return tfi;
-	}
-	tbf = tbf_alloc(tfi);
-	tbf->direction = GPRS_RLCMAC_DL_TBF;
-	tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
-	tbf->tlli = ntohl(budh->tlli);
-	LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] START TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+	tbf = tbf_alloc(GPRS_RLCMAC_DL_TBF, ntohl(budh->tlli));
 
+	if (!tbf)
+	{
+		return -1;
+	}
 	/* LLC_PDU is mandatory IE */
 	if (!TLVP_PRESENT(tp, BSSGP_IE_LLC_PDU))
 	{
@@ -51,18 +46,8 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		return bssgp_tx_status(BSSGP_CAUSE_MISSING_MAND_IE, NULL, msg);
 	}
 
-	uint8_t *llc_pdu = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_LLC_PDU);
-	tbf->data_index = TLVP_LEN(tp, BSSGP_IE_LLC_PDU);
-	
-	LOGP(DBSSGP, LOGL_NOTICE, "LLC PDU = ");
-	for (i = 0; i < tbf->data_index; i++)
-	{
-		tbf->rlc_data[i] = llc_pdu[i];
-		LOGPC(DBSSGP, LOGL_NOTICE, "%02x", tbf->rlc_data[i]);
-	}
-
 	uint16_t imsi_len = 0;
-	uint8_t *imsi;
+	uint8_t *imsi = NULL;
 	if (TLVP_PRESENT(tp, BSSGP_IE_IMSI))
 	{
 		imsi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
@@ -73,12 +58,18 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		{
 			LOGPC(DBSSGP, LOGL_NOTICE, "%02x", imsi[i]);
 		}
-		LOGPC(DBSSGP, LOGL_NOTICE, "\n");
+		LOGP(DBSSGP, LOGL_NOTICE, "\n");
 	}
+	
+	tbf_dl_establish(tbf, imsi);
 
-	gprs_rlcmac_packet_downlink_assignment(tbf);
-
+	uint8_t *llc_pdu = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_LLC_PDU);
+	uint16_t llc_pdu_len = TLVP_LEN(tp, BSSGP_IE_LLC_PDU);
+	
+	tbf_dl_data_transfer(tbf, llc_pdu, llc_pdu_len);
 }
+
+
 /* Receive a BSSGP PDU from a BSS on a PTP BVCI */
 int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx)
 {
