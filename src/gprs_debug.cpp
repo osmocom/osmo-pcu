@@ -28,8 +28,6 @@
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/utils.h>
 #include <osmocom/core/logging.h>
-#include <openbsc/gsm_data.h>
-#include <openbsc/gsm_subscriber.h>
 #include <gprs_debug.h>
 
 /* default categories */
@@ -56,13 +54,8 @@ enum {
 static int filter_fn(const struct log_context *ctx,
 		     struct log_target *tar)
 {
-	struct gsm_subscriber *subscr = (struct gsm_subscriber*)ctx->ctx[BSC_CTX_SUBSCR];
 	const struct gprs_nsvc *nsvc = (const struct gprs_nsvc*)ctx->ctx[BSC_CTX_NSVC];
 	const struct gprs_nsvc *bvc = (const struct gprs_nsvc*)ctx->ctx[BSC_CTX_BVC];
-
-	if ((tar->filter_map & (1 << FLT_IMSI)) != 0
-	    && subscr && strcmp(subscr->imsi, (const char*)tar->filter_data[FLT_IMSI]) == 0)
-		return 1;
 
 	/* Filter on the NS Virtual Connection */
 	if ((tar->filter_map & (1 << FLT_NSVC)) != 0

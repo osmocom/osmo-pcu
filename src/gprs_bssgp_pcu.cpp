@@ -279,3 +279,8 @@ int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	}
 	return rc;
 }
+
+int bssgp_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
+{
+	return 0;
+}
