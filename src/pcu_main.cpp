@@ -148,7 +148,7 @@ int main(int argc, char *argv[])
 	osmo_init_logging(&gprs_log_info);
 	pcu_l1if_open();
 
-	sgsn_nsi = gprs_ns_instantiate(&sgsn_ns_cb);
+	sgsn_nsi = gprs_ns_instantiate(&sgsn_ns_cb, NULL);
 	bssgp_nsi = sgsn_nsi;
 
 	if (!bssgp_nsi)
@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
 	dest.sin_port = htons(SGSN_PORT);
 	inet_aton(SGSN_IP, &dest.sin_addr);
 
-	nsvc = nsip_connect(sgsn_nsi, &dest, NSEI, nsvci);
+	nsvc = gprs_ns_nsip_connect(sgsn_nsi, &dest, NSEI, nsvci);
 	unsigned i = 0;
 	while (1) 
 	{

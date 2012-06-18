@@ -25,10 +25,11 @@ extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/rate_ctr.h>
 #include <osmocom/core/logging.h>
-#include <openbsc/signal.h>
-#include <openbsc/gprs_ns.h>
-#include <openbsc/gprs_bssgp.h>
+#include <osmocom/core/signal.h>
 #include <osmocom/core/application.h>
+#include <osmocom/gprs/gprs_ns.h>
+#include <osmocom/gprs/gprs_bssgp.h>
+#include <osmocom/gprs/gprs_msgb.h>
 
 int bssgp_tx_bvc_reset(struct bssgp_bvc_ctx *bctx, uint16_t bvci, uint8_t cause);
 

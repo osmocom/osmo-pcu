@@ -18,11 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# FIXME: This has to go!!
-OPENBSC_DIR = $(top_srcdir)/../openbsc/openbsc
-OPENGGSN_DIR = $(top_srcdir)/../openggsn
-
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) -I$(OPENBSC_DIR)/include
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES)
 AM_CXXFLAGS = -Wall -ldl -pthread
 
 noinst_LTLIBRARIES = libgprs.la
@@ -60,11 +56,7 @@ RLCMACTest_LDADD = \
 pcu_SOURCES = pcu_main.cpp
 pcu_LDADD = \
 	libgprs.la \
-	$(OPENBSC_DIR)/src/libgb/gprs_ns.o \
-	$(OPENBSC_DIR)/src/libgb/gprs_bssgp.o \
-	$(OPENBSC_DIR)/src/libgb/gprs_bssgp_bss.o \
-	$(OPENBSC_DIR)/src/libgb/gprs_bssgp_util.o \
-	$(OPENBSC_DIR)/src/libgb/gprs_ns_frgre.o \
+	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(COMMON_LA)

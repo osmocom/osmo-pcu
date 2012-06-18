@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script
 AC_INIT([osmo-pcu],
 	m4_esyscmd([./git-version-gen .tarball-version]),
-	[osmocom-pcu@lists.openbsc.org])
+	[osmocom-pcu@lists.osmocom.org])
 
 AM_INIT_AUTOMAKE([dist-bzip2])
 
@@ -24,6 +24,7 @@ dnl checks for libraries
 PKG_CHECK_MODULES(LIBOSMOCORE, libosmocore  >= 0.3.9)
 PKG_CHECK_MODULES(LIBOSMOVTY, libosmovty)
 PKG_CHECK_MODULES(LIBOSMOGSM, libosmogsm >= 0.3.3)
+PKG_CHECK_MODULES(LIBOSMOGB, libosmogb >= 0.5.2)
 
 AC_MSG_CHECKING([whether to enable sysmocom-bts hardware support])
 AC_ARG_ENABLE(sysmocom-bts,
