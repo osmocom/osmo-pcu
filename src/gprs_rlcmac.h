@@ -52,6 +52,8 @@ struct gprs_rlcmac_tbf {
 	uint8_t rlc_data[LLC_MAX_LEN];
 	uint16_t data_index;
 	uint8_t bsn;
+	uint8_t trx, ts, tsc;
+	uint16_t arfcn, ta;
 	
 	struct osmo_timer_list	timer;
 	unsigned int T; /* Txxxx number */
@@ -66,13 +68,13 @@ extern struct llist_head gprs_rlcmac_tbfs;
 
 int tfi_alloc();
 
-struct gprs_rlcmac_tbf *tbf_alloc(uint8_t tfi);
+struct gprs_rlcmac_tbf *tbf_alloc(uint8_t tfi, uint8_t trx, uint8_t ts);
 
-static struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi);
+struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi);
 
-static struct gprs_rlcmac_tbf *tbf_by_tlli(uint8_t tlli);
+struct gprs_rlcmac_tbf *tbf_by_tlli(uint8_t tlli);
 
-static void tbf_free(struct gprs_rlcmac_tbf *tbf);
+void tbf_free(struct gprs_rlcmac_tbf *tbf);
 
 /* TS 44.060 Section 10.4.7 Table 10.4.7.1: Payload Type field */
 enum gprs_rlcmac_block_type {
@@ -92,7 +94,10 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block);
 
 void gprs_rlcmac_rcv_block(bitvec *rlc_block);
 
-int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, uint16_t ta);
+void gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn, 
+        uint32_t fn, uint8_t block_nr);
+
+int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta);
 
 void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t tfi, uint8_t *pdu, int start_index, int end_index, uint8_t bsn, uint8_t fbi);
 

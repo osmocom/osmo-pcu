@@ -33,9 +33,16 @@ libgprs_la_SOURCES = \
 	gsm_rlcmac.cpp \
 	gprs_bssgp_pcu.cpp \
 	gprs_rlcmac.cpp \
-	pcu_l1_if.cpp \
 	gsm_timer.cpp \
 	bitvector.cpp
+
+if ENABLE_SYSMOBTS
+libgprs_la_SOURCES += \
+	sysmo_l1_if.cpp
+else
+libgprs_la_SOURCES += \
+	pcu_l1_if.cpp
+endif
 
 noinst_PROGRAMS = \
 	RLCMACTest \

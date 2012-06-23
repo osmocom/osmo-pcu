@@ -38,7 +38,8 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	if (tfi < 0) {
 		return tfi;
 	}
-	tbf = tbf_alloc(tfi);
+	/* FIXME: select right TRX/TS */
+	tbf = tbf_alloc(tfi, 0, 0);
 	tbf->direction = GPRS_RLCMAC_DL_TBF;
 	tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
 	tbf->tlli = ntohl(budh->tlli);
