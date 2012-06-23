@@ -253,7 +253,7 @@ void  write_packet_uplink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli)
 	bitvec_write_field(dest, wp,0x0,1); // Dynamic Allocation
 	bitvec_write_field(dest, wp,0x0,1); // P0 = off
 	
-	bitvec_write_field(dest, wp,0x1,1); // USF_GRANULARITY
+	bitvec_write_field(dest, wp,0x1,0); // USF_GRANULARITY
 	bitvec_write_field(dest, wp,0x1,1); // switch TFI   : on
 	bitvec_write_field(dest, wp,tfi,5);// TFI
 
@@ -338,7 +338,7 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, uint
 		bitvec_write_field(dest, wp, 0, 1);    // POLLING
 		bitvec_write_field(dest, wp, 0, 1);    // ALLOCATION_TYPE: dynamic
 		bitvec_write_field(dest, wp, 1, 3);    // USF
-		bitvec_write_field(dest, wp, 1, 1);    // USF_GRANULARITY
+		bitvec_write_field(dest, wp, 1, 0);    // USF_GRANULARITY
 		bitvec_write_field(dest, wp, 0 , 1);   // "0" power control: Not Present
 		bitvec_write_field(dest, wp, 0, 2);    // CHANNEL_CODING_COMMAND 
 		bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
@@ -654,12 +654,16 @@ void gprs_rlcmac_rcv_block(bitvec *rlc_block)
 	}
 }
 
-struct msgb *gen_dummy_msg(void)
+struct msgb *gen_dummy_msg(uint8_t usf)
 {
 	struct msgb *msg = msgb_alloc(23, "rlcmac_dl_idle");
 	// RLC/MAC filler with USF=1
 	bitvec *filler = bitvec_alloc(23);
-	bitvec_unhex(filler, "41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+#warning HACK
+	if (usf == 1)
+		bitvec_unhex(filler, "41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	else
+		bitvec_unhex(filler, "42942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	bitvec_pack(filler, msgb_put(msg, 23));
 	bitvec_free(filler);
 	return msg;
@@ -673,7 +677,7 @@ void gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 	set_current_fn(fn);
 	msg = msgb_dequeue(&block_queue);
 	if (!msg)
-		msg = gen_dummy_msg();
+		msg = gen_dummy_msg(block_nr ? 2 : 1);
 	pcu_l1if_tx_pdtch(msg, trx, ts, arfcn, fn, block_nr);
 }
 
