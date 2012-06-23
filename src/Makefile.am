@@ -23,7 +23,7 @@ OPENBSC_DIR = $(top_srcdir)/../openbsc/openbsc
 OPENGGSN_DIR = $(top_srcdir)/../openggsn
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) -I$(OPENBSC_DIR)/include
-AM_CXXFLAGS = -Wall -ldl -pthread
+AM_CXXFLAGS = -Wall -ldl -pthread -lgtp
 
 noinst_LTLIBRARIES = libgprs.la
 
@@ -65,6 +65,13 @@ pcu_LDADD = \
 	$(OPENBSC_DIR)/src/libgb/gprs_bssgp_bss.o \
 	$(OPENBSC_DIR)/src/libgb/gprs_bssgp_util.o \
 	$(OPENBSC_DIR)/src/libgb/gprs_ns_frgre.o \
+	$(OPENBSC_DIR)/src/libcommon/socket.o \
+	$(OPENBSC_DIR)/src/gprs/gprs_llc.o \
+	$(OPENBSC_DIR)/src/gprs/gprs_gmm.o \
+	$(OPENBSC_DIR)/src/gprs/gprs_sgsn.o \
+	$(OPENBSC_DIR)/src/gprs/sgsn_libgtp.o \
+	$(OPENBSC_DIR)/src/gprs/gprs_sndcp.o \
+	$(OPENBSC_DIR)/src/gprs/crc24.o \
 	$(LIBOSMOCORE_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(COMMON_LA)
