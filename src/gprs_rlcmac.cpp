@@ -338,10 +338,10 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, uint
 		bitvec_write_field(dest, wp, 0, 1);    // POLLING
 		bitvec_write_field(dest, wp, 0, 1);    // ALLOCATION_TYPE: dynamic
 		bitvec_write_field(dest, wp, 1, 3);    // USF
-		bitvec_write_field(dest, wp, 1, 0);    // USF_GRANULARITY
+		bitvec_write_field(dest, wp, 0, 1);    // USF_GRANULARITY
 		bitvec_write_field(dest, wp, 0 , 1);   // "0" power control: Not Present
 		bitvec_write_field(dest, wp, 0, 2);    // CHANNEL_CODING_COMMAND 
-		bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
+		bitvec_write_field(dest, wp, 0, 1);    // TLLI_BLOCK_CHANNEL_CODING
 		bitvec_write_field(dest, wp, 1 , 1);   // "1" Alpha : Present
 		bitvec_write_field(dest, wp, 0, 4);    // Alpha
 		bitvec_write_field(dest, wp, 0, 5);    // Gamma
