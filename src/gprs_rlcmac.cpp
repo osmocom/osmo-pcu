@@ -166,10 +166,11 @@ static void gprs_rlcmac_enqueue_block(bitvec *block, int len)
 	msgb_enqueue(&block_queue, msg);
 }
 
-void  write_packet_downlink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli, uint8_t tn, uint8_t ta, uint8_t tsc)
+void  write_packet_downlink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli, uint16_t arfcn, uint8_t tn, uint8_t ta, uint8_t tsc)
 {
 	// TODO We should use our implementation of encode RLC/MAC Control messages.
 	unsigned wp = 0;
+	int i;
 	bitvec_write_field(dest, wp,0x1,2);  // Payload Type
 	bitvec_write_field(dest, wp,0x0,2);  // Uplink block with TDMA framenumber
 	bitvec_write_field(dest, wp,0x1,1);  // Suppl/Polling Bit
@@ -187,7 +188,7 @@ void  write_packet_downlink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli
 	bitvec_write_field(dest, wp,0x0,1); // RLC acknowledged mode
 
 	bitvec_write_field(dest, wp,0x0,1); // the network establishes no new downlink TBF for the mobile station
-	bitvec_write_field(dest, wp,0x1,8); // timeslot 7
+	bitvec_write_field(dest, wp,0x80 >> tn,8); // timeslot(s)
 
 	bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
 	bitvec_write_field(dest, wp,ta,6); // TIMING_ADVANCE_VALUE
@@ -198,22 +199,16 @@ void  write_packet_downlink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli
 
 	bitvec_write_field(dest, wp,tsc,3); // Training Sequence Code (TSC) = 2
 	bitvec_write_field(dest, wp,0x0,2); // ARFCN = present
-	bitvec_write_field(dest, wp,599,10); // ARFCN
+	bitvec_write_field(dest, wp,arfcn,10); // ARFCN
 
 	bitvec_write_field(dest, wp,0x1,1); // switch TFI   : on
 	bitvec_write_field(dest, wp,tfi,5);// TFI
 
 	bitvec_write_field(dest, wp,0x1,1); // Power Control Parameters IE = present
 	bitvec_write_field(dest, wp,0x0,4); // ALPHA power control parameter
-	bitvec_write_field(dest, wp,0x0,1); // switch GAMMA_TN0 = off
-	bitvec_write_field(dest, wp,0x0,1); // switch GAMMA_TN1 = off
-	bitvec_write_field(dest, wp,0x0,1); // switch GAMMA_TN2 = off
-	bitvec_write_field(dest, wp,0x0,1); // switch GAMMA_TN3 = off
-	bitvec_write_field(dest, wp,0x0,1); // switch GAMMA_TN4 = off
-	bitvec_write_field(dest, wp,0x0,1); // switch GAMMA_TN5 = off
-	bitvec_write_field(dest, wp,0x0,1); // switch GAMMA_TN6 = off
-	bitvec_write_field(dest, wp,0x1,1); // switch GAMMA_TN7 = on
-	bitvec_write_field(dest, wp,0x0,5); // GAMMA_TN7
+	for (i = 0; i < 8; i++)
+		bitvec_write_field(dest, wp,(tn == i),1); // switch GAMMA_TN[i] = on or off
+	bitvec_write_field(dest, wp,0x0,5); // GAMMA_TN[tn]
 
 	bitvec_write_field(dest, wp,0x0,1); // TBF Starting TIME IE not present
 	bitvec_write_field(dest, wp,0x0,1); // Measurement Mapping struct not present
@@ -894,7 +889,8 @@ void gprs_rlcmac_packet_downlink_assignment(gprs_rlcmac_tbf *tbf)
 	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] TFI: %u TLLI: 0x%08x Packet DL Assignment\n", tbf->tfi, tbf->tlli);
 	bitvec *packet_downlink_assignment_vec = bitvec_alloc(23);
 	bitvec_unhex(packet_downlink_assignment_vec, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	write_packet_downlink_assignment(packet_downlink_assignment_vec, tbf->tfi, tbf->tlli, tbf->ts, tbf->ta, tbf->tsc);
+	printf("tbf->ts %d\n", tbf->ts);
+	write_packet_downlink_assignment(packet_downlink_assignment_vec, tbf->tfi, tbf->tlli, tbf->arfcn, tbf->ts, tbf->ta, tbf->tsc);
 	RlcMacDownlink_t * packet_downlink_assignment = (RlcMacDownlink_t *)malloc(sizeof(RlcMacDownlink_t));
 	LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
 	decode_gsm_rlcmac_downlink(packet_downlink_assignment_vec, packet_downlink_assignment);

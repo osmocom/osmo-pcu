@@ -66,6 +66,8 @@ struct gprs_rlcmac_tbf {
 
 extern struct llist_head gprs_rlcmac_tbfs;
 
+int select_pdch(uint8_t *_trx, uint8_t *_ts);
+
 int tfi_alloc();
 
 struct gprs_rlcmac_tbf *tbf_alloc(uint8_t tfi, uint8_t trx, uint8_t ts);

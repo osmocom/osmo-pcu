@@ -30,6 +30,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	struct bssgp_ud_hdr *budh;
 	int tfi;
 	int i = 0;
+	uint8_t trx, ts;
 
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
 	struct gprs_rlcmac_tbf *tbf;
@@ -38,8 +39,14 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	if (tfi < 0) {
 		return tfi;
 	}
+
 	/* FIXME: select right TRX/TS */
-	tbf = tbf_alloc(tfi, 0, 0);
+	if (select_pdch(&trx, &ts)) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+		/* FIXME: send reject */
+		return -EBUSY;
+	}
+	tbf = tbf_alloc(tfi, trx, ts);
 	tbf->direction = GPRS_RLCMAC_DL_TBF;
 	tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
 	tbf->tlli = ntohl(budh->tlli);
