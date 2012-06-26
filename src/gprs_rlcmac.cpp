@@ -327,9 +327,8 @@ int tbf_dl_establish(struct gprs_rlcmac_tbf *tbf, uint8_t *imsi)
 			else
 			{
 				// Downlink TBF Establishment on CCCH ( Immediate Assignment )
-				gprs_rlcmac_downlink_assignment(tbf);
+				tbf_gsm_timer_start(tbf, 1, 0);
 			}
-			tbf->state = FINISH_ESTABLISH;
 			break;
 		case PACCH_ESTABLISH:
 			// Downlink TBF Establishment on PACCH ( Packet Immediate Assignment )
@@ -537,7 +536,22 @@ static void tbf_gsm_timer_cb(void *_tbf)
 	tbf->num_fT_exp++;
 
 	switch (tbf->fT) {
+	case 1:
+		if (tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF))
+		{
+			// Wait release of UL TBF
+			tbf_gsm_timer_start(tbf, 1, 10);
+		}
+		else
+		{
+			gprs_rlcmac_downlink_assignment(tbf);
+			// FIXME: Remove magic delay!
+			int delay = 50;
+			tbf_gsm_timer_start(tbf, 2, delay);
+		}
+		break;
 	case 2:
+		tbf->state = FINISH_ESTABLISH;
 		tbf_dl_data_transfer(tbf);
 		break;
 	default:
