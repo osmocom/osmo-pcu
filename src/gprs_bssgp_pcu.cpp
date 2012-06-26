@@ -29,10 +29,12 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 {
 	struct bssgp_ud_hdr *budh;
 	int i = 0;
+	uint8_t trx, ts;
 
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
 	
 	struct gprs_rlcmac_tbf *tbf;
+
 	tbf = tbf_alloc(GPRS_RLCMAC_DL_TBF, ntohl(budh->tlli));
 
 	if (!tbf)

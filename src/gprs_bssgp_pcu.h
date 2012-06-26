@@ -50,11 +50,11 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 #define BLOCK_DATA_LEN 20
 #define BLOCK_LEN 23
 
-#define CELL_ID 3
-#define MNC 55
-#define MCC 905
-#define PCU_LAC 1000
-#define PCU_RAC 1
+#define CELL_ID 0
+#define MNC 1
+#define MCC 001
+#define PCU_LAC 1
+#define PCU_RAC 0
 
 
 extern struct bssgp_bvc_ctx *bctx;

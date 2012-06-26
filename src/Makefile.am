@@ -18,8 +18,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES)
-AM_CXXFLAGS = -Wall -ldl -pthread
+# FIXME: This has to go!!
+OPENBSC_DIR = $(top_srcdir)/../openbsc/openbsc
+OPENGGSN_DIR = $(top_srcdir)/../openggsn
+
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) -I$(OPENBSC_DIR)/include
+AM_CXXFLAGS = -Wall -ldl -pthread -lgtp
 
 noinst_LTLIBRARIES = libgprs.la
 
@@ -29,9 +33,16 @@ libgprs_la_SOURCES = \
 	gsm_rlcmac.cpp \
 	gprs_bssgp_pcu.cpp \
 	gprs_rlcmac.cpp \
-	pcu_l1_if.cpp \
 	gsm_timer.cpp \
 	bitvector.cpp
+
+if ENABLE_SYSMOBTS
+libgprs_la_SOURCES += \
+	sysmo_l1_if.cpp
+else
+libgprs_la_SOURCES += \
+	pcu_l1_if.cpp
+endif
 
 noinst_PROGRAMS = \
 	RLCMACTest \

@@ -27,9 +27,6 @@
 #define SGSN_IP "127.0.0.1"
 #define SGSN_PORT 23000
 #define NSVCI 4
-#define PCU_L1_IF_PORT 5944
-
-struct l1fwd_hdl *l1fh = talloc_zero(NULL, struct l1fwd_hdl);
 
 int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msgb *msg, uint16_t bvci)
 {
@@ -47,97 +44,6 @@ int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msgb *msg,
 		break;
 	}
 	return rc;
-}
-
-/* data has arrived on the udp socket */
-static int udp_read_cb(struct osmo_fd *ofd)
-{
-	struct msgb *msg = msgb_alloc_headroom(2048, 128, "udp_rx");
-	struct l1fwd_hdl *l1fh = (l1fwd_hdl *)ofd->data;
-	struct femtol1_hdl *fl1h = l1fh->fl1h;
-	int rc;
-
-	if (!msg)
-		return -ENOMEM;
-
-	msg->l1h = msg->data;
-
-	l1fh->remote_sa_len = sizeof(l1fh->remote_sa);
-	rc = recvfrom(ofd->fd, msg->l1h, msgb_tailroom(msg), 0,
-			(struct sockaddr *) &l1fh->remote_sa, &l1fh->remote_sa_len);
-	if (rc < 0) {
-		perror("read from udp");
-		msgb_free(msg);
-		return rc;
-	} else if (rc == 0) {
-		perror("len=0 read from udp");
-		msgb_free(msg);
-		return rc;
-	}
-	msgb_put(msg, rc);
-
-	rc = pcu_l1if_handle_l1prim(fl1h, msg);
-	return rc;
-}
-
-/* callback when we can write to the UDP socket */
-static int udp_write_cb(struct osmo_fd *ofd, struct msgb *msg)
-{
-	int rc;
-	struct l1fwd_hdl *l1fh = (l1fwd_hdl *)ofd->data;
-
-	//DEBUGP(DGPRS, "UDP: Writing %u bytes for MQ_L1_WRITE queue\n", msgb_l1len(msg));
-
-	rc = sendto(ofd->fd, msg->l1h, msgb_l1len(msg), 0,
-			(const struct sockaddr *)&l1fh->remote_sa, l1fh->remote_sa_len);
-	if (rc < 0) {
-		LOGP(DPCU, LOGL_ERROR, "error writing to L1 msg_queue: %s\n",
-			strerror(errno));
-		return rc;
-	} else if (rc < msgb_l1len(msg)) {
-		LOGP(DPCU, LOGL_ERROR, "short write to L1 msg_queue: "
-			"%u < %u\n", rc, msgb_l1len(msg));
-		return -EIO;
-	}
-
-	return 0;
-}
-
-int pcu_l1if_open()
-{
-	//struct l1fwd_hdl *l1fh;
-	struct femtol1_hdl *fl1h;
-	int rc;
-
-	/* allocate new femtol1_handle */
-	fl1h = talloc_zero(NULL, struct femtol1_hdl);
-	INIT_LLIST_HEAD(&fl1h->wlc_list);
-
-	l1fh->fl1h = fl1h;
-	fl1h->priv = l1fh;
-
-	struct osmo_wqueue * queue = &((l1fh->fl1h)->write_q);
-	osmo_wqueue_init(queue, 10);
-	queue->bfd.when |= BSC_FD_READ;
-	queue->bfd.data = l1fh;
-	queue->bfd.priv_nr = 0;
-
-	/* Open UDP */
-	struct osmo_wqueue *wq = &l1fh->udp_wq;
-
-	osmo_wqueue_init(wq, 10);
-	wq->write_cb = udp_write_cb;
-	wq->read_cb = udp_read_cb;
-	wq->bfd.when |= BSC_FD_READ;
-	wq->bfd.data = l1fh;
-	wq->bfd.priv_nr = 0;
-	rc = osmo_sock_init_ofd(&wq->bfd, AF_UNSPEC, SOCK_DGRAM,
-				IPPROTO_UDP, NULL, PCU_L1_IF_PORT,
-				OSMO_SOCK_F_BIND);
-	if (rc < 0) {
-		perror("sock_init");
-		exit(1);
-	}
 }
 
 int main(int argc, char *argv[])

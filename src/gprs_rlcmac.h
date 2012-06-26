@@ -76,6 +76,8 @@ struct gprs_rlcmac_tbf {
 	uint8_t rlc_data[LLC_MAX_LEN];
 	uint16_t data_index;
 	uint8_t bsn;
+	uint8_t trx, ts, tsc;
+	uint16_t arfcn, ta;
 	
 	struct osmo_timer_list	timer;
 	unsigned int T; /* Txxxx number */
@@ -96,6 +98,8 @@ enum gprs_rlcmac_block_type {
 
 extern struct llist_head gprs_rlcmac_tbfs;
 
+int select_pdch(uint8_t *_trx, uint8_t *_ts);
+
 int tfi_alloc();
 
 static struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, gprs_rlcmac_tbf_direction dir);
@@ -110,7 +114,7 @@ int tbf_add_llc_pdu(struct gprs_rlcmac_tbf *tbf, uint8_t *data, uint16_t llc_pdu
 
 struct gprs_rlcmac_tbf *tbf_alloc(gprs_rlcmac_tbf_direction dir, uint32_t tlli = 0);
 
-int tbf_ul_establish(struct gprs_rlcmac_tbf *tbf, uint8_t ra, uint32_t Fn, uint16_t ta);
+int tbf_ul_establish(struct gprs_rlcmac_tbf *tbf, uint8_t ra, uint32_t Fn, uint16_t qta);
 
 int tbf_dl_establish(struct gprs_rlcmac_tbf *tbf, uint8_t *imsi = NULL);
 
@@ -126,7 +130,7 @@ static void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T, unsigne
 
 static void tbf_gsm_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int fT, int frames);
 
-int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, uint32_t fn, uint8_t ta, uint8_t tfi, uint32_t tlli = 0);
+int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, uint32_t fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc, uint8_t tfi, uint32_t tlli = 0);
 
 void gprs_rlcmac_tx_ul_ack(uint8_t tfi, uint32_t tlli, RlcMacUplinkDataBlock_t * ul_data_block);
 
@@ -138,7 +142,10 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block);
 
 void gprs_rlcmac_rcv_block(bitvec *rlc_block);
 
-int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, uint16_t ta);
+void gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn, 
+        uint32_t fn, uint8_t block_nr);
+
+int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta);
 
 int gprs_rlcmac_tx_llc_pdus(struct gprs_rlcmac_tbf *tbf);
 
