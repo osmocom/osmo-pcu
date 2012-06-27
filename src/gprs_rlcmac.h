@@ -132,7 +132,7 @@ static void tbf_gsm_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int fT, in
 
 int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, uint32_t fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc, uint8_t tfi, uint32_t tlli = 0);
 
-void gprs_rlcmac_tx_ul_ack(uint8_t tfi, uint32_t tlli, RlcMacUplinkDataBlock_t * ul_data_block);
+void gprs_rlcmac_tx_ul_ack(uint8_t tfi, uint32_t tlli, uint8_t ti, uint8_t bsn);
 
 void gprs_rlcmac_data_block_parse(gprs_rlcmac_tbf* tbf, RlcMacUplinkDataBlock_t * ul_data_block);
 

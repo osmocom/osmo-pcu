@@ -370,7 +370,7 @@ int tbf_ul_data_transfer(struct gprs_rlcmac_tbf *tbf, RlcMacUplinkDataBlock_t * 
 		{
 			tbf->data_index = 0;
 			gprs_rlcmac_data_block_parse(tbf, ul_data_block);
-			gprs_rlcmac_tx_ul_ack(tbf->tfi, tbf->tlli, ul_data_block);
+			gprs_rlcmac_tx_ul_ack(tbf->tfi, tbf->tlli, ul_data_block->CV ? 0: 1, ul_data_block->BSN);
 			if (ul_data_block->CV == 0)
 			{
 				// Recieved last Data Block in this sequence.
@@ -391,7 +391,7 @@ int tbf_ul_data_transfer(struct gprs_rlcmac_tbf *tbf, RlcMacUplinkDataBlock_t * 
 			
 			if (ul_data_block->CV == 0)
 			{
-				gprs_rlcmac_tx_ul_ack(tbf->tfi, tbf->tlli, ul_data_block);
+				gprs_rlcmac_tx_ul_ack(tbf->tfi, tbf->tlli, 1, ul_data_block->BSN);
 				// Recieved last Data Block in this sequence.
 				tbf->state = FINISH_DATA_TRANSFER;
 				gprs_rlcmac_tx_ul_ud(tbf);
@@ -581,101 +581,64 @@ static void gprs_rlcmac_enqueue_block(bitvec *block, int len)
 	msgb_enqueue(&block_queue, msg);
 }
 
-void  write_packet_downlink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli, uint16_t arfcn, uint8_t tn, uint8_t ta, uint8_t tsc)
+void write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t tfi, uint16_t arfcn, uint8_t tn, uint8_t ta, uint8_t tsc)
 {
-	// TODO We should use our implementation of encode RLC/MAC Control messages.
-	unsigned wp = 0;
+	// Packet downlink assignment TS 44.060 11.2.7
+
 	int i;
-	bitvec_write_field(dest, wp,0x1,2);  // Payload Type
-	bitvec_write_field(dest, wp,0x0,2);  // Uplink block with TDMA framenumber
-	bitvec_write_field(dest, wp,0x1,1);  // Suppl/Polling Bit
-	bitvec_write_field(dest, wp,0x1,3);  // Uplink state flag
-	bitvec_write_field(dest, wp,0x2,6);  // MESSAGE TYPE
-	bitvec_write_field(dest, wp,0x0,2);  // Page Mode
 
-	bitvec_write_field(dest, wp,0x0,1); // switch PERSIST_LEVEL: off
-	bitvec_write_field(dest, wp,0x0,1); // switch TFI : on
-	bitvec_write_field(dest, wp,0x0,1); // switch UPLINK TFI : on
-	bitvec_write_field(dest, wp,tfi-1,5); // TFI
+	block->PAYLOAD_TYPE = 0x1; // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
+	block->RRBP         = 0x0; // N+13
+	block->SP           = 0x1; // RRBP field is valid
+	block->USF          = 0x1; // Uplink state flag
 
-	bitvec_write_field(dest, wp,0x0,1); // Message escape
-	bitvec_write_field(dest, wp,0x0,2); // Medium Access Method: Dynamic Allocation
-	bitvec_write_field(dest, wp,0x0,1); // RLC acknowledged mode
+	block->u.Packet_Downlink_Assignment.MESSAGE_TYPE = 0x2;  // Packet Downlink Assignment
+	block->u.Packet_Downlink_Assignment.PAGE_MODE    = 0x0;  // Normal Paging
 
-	bitvec_write_field(dest, wp,0x0,1); // the network establishes no new downlink TBF for the mobile station
-	bitvec_write_field(dest, wp,0x80 >> tn,8); // timeslot(s)
+	block->u.Packet_Downlink_Assignment.Exist_PERSISTENCE_LEVEL      = 0x0;   // PERSISTENCE_LEVEL: off
 
-	bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
-	bitvec_write_field(dest, wp,ta,6); // TIMING_ADVANCE_VALUE
-	bitvec_write_field(dest, wp,0x0,1); // switch TIMING_ADVANCE_INDEX = off
+	block->u.Packet_Downlink_Assignment.ID.UnionType                 = 0x0;   // TFI = on
+	block->u.Packet_Downlink_Assignment.ID.u.Global_TFI.UnionType    = 0x0;   // UPLINK TFI = on
+	block->u.Packet_Downlink_Assignment.ID.u.Global_TFI.u.UPLINK_TFI = tfi-1; // TFI
 
-	bitvec_write_field(dest, wp,0x0,1); // switch POWER CONTROL = off
-	bitvec_write_field(dest, wp,0x1,1); // Frequency Parameters information elements = present
+	block->u.Packet_Downlink_Assignment.MAC_MODE            = 0x0; // Dynamic Allocation
+	block->u.Packet_Downlink_Assignment.RLC_MODE            = 0x0; // RLC acknowledged mode
+	block->u.Packet_Downlink_Assignment.CONTROL_ACK         = 0x0; // NW establishes no new DL TBF for the MS with running timer T3192
+	block->u.Packet_Downlink_Assignment.TIMESLOT_ALLOCATION = 0x80 >> tn; // timeslot(s)
 
-	bitvec_write_field(dest, wp,tsc,3); // Training Sequence Code (TSC) = 2
-	bitvec_write_field(dest, wp,0x0,2); // ARFCN = present
-	bitvec_write_field(dest, wp,arfcn,10); // ARFCN
+	block->u.Packet_Downlink_Assignment.Packet_Timing_Advance.Exist_TIMING_ADVANCE_VALUE = 0x1; // TIMING_ADVANCE_VALUE = on
+	block->u.Packet_Downlink_Assignment.Packet_Timing_Advance.TIMING_ADVANCE_VALUE       = ta;  // TIMING_ADVANCE_VALUE
+	block->u.Packet_Downlink_Assignment.Packet_Timing_Advance.Exist_IndexAndtimeSlot     = 0x0; // TIMING_ADVANCE_INDEX = off
 
-	bitvec_write_field(dest, wp,0x1,1); // switch TFI   : on
-	bitvec_write_field(dest, wp,tfi,5);// TFI
+	block->u.Packet_Downlink_Assignment.Exist_P0_and_BTS_PWR_CTRL_MODE = 0x0;   // POWER CONTROL = off
 
-	bitvec_write_field(dest, wp,0x1,1); // Power Control Parameters IE = present
-	bitvec_write_field(dest, wp,0x0,4); // ALPHA power control parameter
+	block->u.Packet_Downlink_Assignment.Exist_Frequency_Parameters     = 0x1;   // Frequency Parameters = on
+	block->u.Packet_Downlink_Assignment.Frequency_Parameters.TSC       = tsc;   // Training Sequence Code (TSC)
+	block->u.Packet_Downlink_Assignment.Frequency_Parameters.UnionType = 0x0;   // ARFCN = on
+	block->u.Packet_Downlink_Assignment.Frequency_Parameters.u.ARFCN   = arfcn; // ARFCN
+
+	block->u.Packet_Downlink_Assignment.Exist_DOWNLINK_TFI_ASSIGNMENT  = 0x1;   // DOWNLINK TFI ASSIGNMENT = on
+	block->u.Packet_Downlink_Assignment.DOWNLINK_TFI_ASSIGNMENT        = tfi;   // TFI
+
+	block->u.Packet_Downlink_Assignment.Exist_Power_Control_Parameters = 0x1;   // Power Control Parameters = on
+	block->u.Packet_Downlink_Assignment.Power_Control_Parameters.ALPHA = 0x0;   // ALPHA
+
 	for (i = 0; i < 8; i++)
-		bitvec_write_field(dest, wp,(tn == i),1); // switch GAMMA_TN[i] = on or off
-	bitvec_write_field(dest, wp,0x0,5); // GAMMA_TN[tn]
+	{
+		if (tn == i)
+		{
+			block->u.Packet_Downlink_Assignment.Power_Control_Parameters.Slot[i].Exist    = 0x1; // Slot[i] = on
+			block->u.Packet_Downlink_Assignment.Power_Control_Parameters.Slot[i].GAMMA_TN = 0x0; // GAMMA_TN
+		}
+		else
+		{
+			block->u.Packet_Downlink_Assignment.Power_Control_Parameters.Slot[i].Exist    = 0x0; // Slot[i] = off
+		}
+	}
 
-	bitvec_write_field(dest, wp,0x0,1); // TBF Starting TIME IE not present
-	bitvec_write_field(dest, wp,0x0,1); // Measurement Mapping struct not present
-	bitvec_write_field(dest, wp,0x0,1);
-}
-
-void  write_packet_uplink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli)
-{
-	// TODO We should use our implementation of encode RLC/MAC Control messages.
-	unsigned wp = 0;
-	bitvec_write_field(dest, wp,0x1,2);  // Payload Type
-	bitvec_write_field(dest, wp,0x0,2);  // Uplink block with TDMA framenumber
-	bitvec_write_field(dest, wp,0x1,1);  // Suppl/Polling Bit
-	bitvec_write_field(dest, wp,0x1,3);  // Uplink state flag
-
-
-	bitvec_write_field(dest, wp,0xa,6);  // MESSAGE TYPE
-
-	bitvec_write_field(dest, wp,0x0,2);  // Page Mode
-
-	bitvec_write_field(dest, wp,0x0,1); // switch PERSIST_LEVEL: off
-	bitvec_write_field(dest, wp,0x2,2); // switch TLLI   : on
-	bitvec_write_field(dest, wp,tlli,32); // TLLI
-
-	bitvec_write_field(dest, wp,0x0,1); // Message escape
-	bitvec_write_field(dest, wp,0x0,2); // CHANNEL_CODING_COMMAND
-	bitvec_write_field(dest, wp,0x0,1); // TLLI_BLOCK_CHANNEL_CODING 
-
-	bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
-	bitvec_write_field(dest, wp,0x0,6); // TIMING_ADVANCE_VALUE
-	bitvec_write_field(dest, wp,0x0,1); // switch TIMING_ADVANCE_INDEX = off
-	
-	bitvec_write_field(dest, wp,0x0,1); // Frequency Parameters = off
-
-	bitvec_write_field(dest, wp,0x1,2); // Dynamic Allocation = off
-	
-	bitvec_write_field(dest, wp,0x0,1); // Dynamic Allocation
-	bitvec_write_field(dest, wp,0x0,1); // P0 = off
-	
-	bitvec_write_field(dest, wp,0x1,0); // USF_GRANULARITY
-	bitvec_write_field(dest, wp,0x1,1); // switch TFI   : on
-	bitvec_write_field(dest, wp,tfi,5);// TFI
-
-	bitvec_write_field(dest, wp,0x0,1); //
-	bitvec_write_field(dest, wp,0x0,1); // TBF Starting Time = off
-	bitvec_write_field(dest, wp,0x0,1); // Timeslot Allocation
-	
-	bitvec_write_field(dest, wp,0x0,5); // USF_TN 0 - 4
-	bitvec_write_field(dest, wp,0x1,1); // USF_TN 5
-	bitvec_write_field(dest, wp,0x1,3); // USF_TN 5
-	bitvec_write_field(dest, wp,0x0,2); // USF_TN 6 - 7
-//	bitvec_write_field(dest, wp,0x0,1); // Measurement Mapping struct not present
+	block->u.Packet_Downlink_Assignment.Exist_TBF_Starting_Time   = 0x0; // TBF Starting TIME = off
+	block->u.Packet_Downlink_Assignment.Exist_Measurement_Mapping = 0x0; // Measurement_Mapping = off
+	block->u.Packet_Downlink_Assignment.Exist_AdditionsR99        = 0x0; // AdditionsR99 = off
 }
 
 // GSM 04.08 9.1.18 Immediate assignment
@@ -764,78 +727,50 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, uint
 		return wp/8;
 }
 
-
-void write_ia_rest_octets_downlink_assignment(bitvec * dest, uint8_t tfi, uint32_t tlli)
+void write_packet_uplink_ack(RlcMacDownlink_t * block, uint8_t tfi, uint32_t tlli, uint8_t fi, uint8_t bsn)
 {
-	// GSM 04.08 10.5.2.16
-	unsigned wp = 0;
-	bitvec_write_field(dest, wp, 3, 2);    // "HH"
-	bitvec_write_field(dest, wp, 1, 2);    // "01" Packet Downlink Assignment
-	bitvec_write_field(dest, wp,tlli,32); // TLLI
-	bitvec_write_field(dest, wp,0x1,1);   // switch TFI   : on
-	bitvec_write_field(dest, wp,tfi,5);   // TFI
-	bitvec_write_field(dest, wp,0x0,1);   // RLC acknowledged mode
-	bitvec_write_field(dest, wp,0x0,1);   // ALPHA = present
-	bitvec_write_field(dest, wp,0x0,5);   // GAMMA power control parameter
-	bitvec_write_field(dest, wp,0x0,1);   // Polling Bit
-	bitvec_write_field(dest, wp,0x1,1);   // TA_VALID ???
-	bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
-	bitvec_write_field(dest, wp,0x0,4);   // TIMING_ADVANCE_INDEX
-	bitvec_write_field(dest, wp,0x0,1);   // TBF Starting TIME present
-	bitvec_write_field(dest, wp,0x0,1);   // P0 not present
-	bitvec_write_field(dest, wp,0x1,1);   // P0 not present
-	bitvec_write_field(dest, wp,0xb,4);
-}
+	// Packet Uplink Ack/Nack  TS 44.060 11.2.28
 
-void write_packet_uplink_ack(bitvec * dest, uint8_t tfi, uint32_t tlli, unsigned cv, unsigned bsn)
-{
-	// TODO We should use our implementation of encode RLC/MAC Control messages.
-	unsigned wp = 0;
-	bitvec_write_field(dest, wp,0x1,2);  // payload
-	bitvec_write_field(dest, wp,0x0,2);  // Uplink block with TDMA framenumber
-	if (cv == 0) bitvec_write_field(dest, wp,0x1,1);  // Suppl/Polling Bit
-	else bitvec_write_field(dest, wp,0x0,1);  //Suppl/Polling Bit
-	bitvec_write_field(dest, wp,0x1,3);  // Uplink state flag
-	
-	//bitvec_write_field(dest, wp,0x0,1);  // Reduced block sequence number
-	//bitvec_write_field(dest, wp,BSN+6,5);  // Radio transaction identifier
-	//bitvec_write_field(dest, wp,0x1,1);  // Final segment
-	//bitvec_write_field(dest, wp,0x1,1);  // Address control
+	int i;
 
-	//bitvec_write_field(dest, wp,0x0,2);  // Power reduction: 0
-	//bitvec_write_field(dest, wp,TFI,5);  // Temporary flow identifier
-	//bitvec_write_field(dest, wp,0x1,1);  // Direction
+	block->PAYLOAD_TYPE = 0x1; // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
+	block->RRBP         = 0x0; // N+13
+	block->SP           = fi;  // RRBP field is valid, if it is final ack
+	block->USF          = 0x1; // Uplink state flag
 
-	bitvec_write_field(dest, wp,0x09,6); // MESSAGE TYPE
-	bitvec_write_field(dest, wp,0x0,2);  // Page Mode
+	block->u.Packet_Uplink_Ack_Nack.MESSAGE_TYPE = 0x9; // Packet Downlink Assignment
+	block->u.Packet_Uplink_Ack_Nack.PAGE_MODE    = 0x0; // Normal Paging
+	block->u.Packet_Uplink_Ack_Nack.UPLINK_TFI   = tfi; // Uplink TFI
 
-	bitvec_write_field(dest, wp,0x0,2);
-	bitvec_write_field(dest, wp,tfi,5); // Uplink TFI
-	bitvec_write_field(dest, wp,0x0,1);
-	
-	bitvec_write_field(dest, wp,0x0,2);  // CS1
-	if (cv == 0) bitvec_write_field(dest, wp,0x1,1);  // FINAL_ACK_INDICATION
-	else bitvec_write_field(dest, wp,0x0,1);  // FINAL_ACK_INDICATION
-	bitvec_write_field(dest, wp,bsn + 1,7); // STARTING_SEQUENCE_NUMBER
-	// RECEIVE_BLOCK_BITMAP
-	for (unsigned i=0; i<8; i++) {
-		bitvec_write_field(dest, wp,0xff,8);
+	block->u.Packet_Uplink_Ack_Nack.UnionType    = 0x0; // PU_AckNack_GPRS = on
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = 0x0;      // CS1
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.FINAL_ACK_INDICATION     = fi;       // FINAL ACK INDICATION
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = bsn + 1;  // STARTING SEQUENCE NUMBER
+	for (i = 0; i < 8; i++)
+	{
+		block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP[i] = 0xff; // RECEIVED BLOCK BITMAP
 	}
-	bitvec_write_field(dest, wp,0x1,1);  // CONTENTION_RESOLUTION_TLLI = present
-	bitvec_write_field(dest, wp,tlli,8*4);
-	bitvec_write_field(dest, wp,0x00,4); //spare
-	bitvec_write_field(dest, wp,0x5,4); //0101
+
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.UnionType            = 0x0; // Fixed Allocation Dummy = on
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.u.FixedAllocationDummy = 0x0; // Fixed Allocation Dummy
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Exist_AdditionsR99   = 0x0; // AdditionsR99 = off
+
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_CONTENTION_RESOLUTION_TLLI = 0x1;
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.CONTENTION_RESOLUTION_TLLI       = tlli;
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_Packet_Timing_Advance      = 0x0;
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_Extension_Bits             = 0x0;
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_Power_Control_Parameters   = 0x0;
 }
 
-void gprs_rlcmac_tx_ul_ack(uint8_t tfi, uint32_t tlli, RlcMacUplinkDataBlock_t * ul_data_block)
+void gprs_rlcmac_tx_ul_ack(uint8_t tfi, uint32_t tlli, uint8_t fi, uint8_t bsn)
 {
 	bitvec *packet_uplink_ack_vec = bitvec_alloc(23);
 	bitvec_unhex(packet_uplink_ack_vec, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	write_packet_uplink_ack(packet_uplink_ack_vec, tfi, tlli, ul_data_block->CV, ul_data_block->BSN);
-	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] TFI: %u TLLI: 0x%08x Packet Uplink Ack\n", tfi, tlli);
 	RlcMacDownlink_t * packet_uplink_ack = (RlcMacDownlink_t *)malloc(sizeof(RlcMacDownlink_t));
+	write_packet_uplink_ack(packet_uplink_ack, tfi, tlli, fi, bsn);
+	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] TFI: %u TLLI: 0x%08x Packet Uplink Ack\n", tfi, tlli);
 	LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ TX : Packet Uplink Ack +++++++++++++++++++++++++\n");
-	decode_gsm_rlcmac_downlink(packet_uplink_ack_vec, packet_uplink_ack);
+	encode_gsm_rlcmac_downlink(packet_uplink_ack_vec, packet_uplink_ack);
 	LOGPC(DRLCMAC, LOGL_NOTICE, "\n");
 	LOGP(DRLCMAC, LOGL_NOTICE, "------------------------- TX : Packet Uplink Ack -------------------------\n");
 	free(packet_uplink_ack);
@@ -1221,10 +1156,10 @@ void gprs_rlcmac_packet_downlink_assignment(gprs_rlcmac_tbf *tbf)
 	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] TFI: %u TLLI: 0x%08x Packet DL Assignment\n", tbf->tfi, tbf->tlli);
 	bitvec *packet_downlink_assignment_vec = bitvec_alloc(23);
 	bitvec_unhex(packet_downlink_assignment_vec, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	write_packet_downlink_assignment(packet_downlink_assignment_vec, tbf->tfi, tbf->tlli, tbf->arfcn, tbf->ts, tbf->ta, tbf->tsc);
 	RlcMacDownlink_t * packet_downlink_assignment = (RlcMacDownlink_t *)malloc(sizeof(RlcMacDownlink_t));
+	write_packet_downlink_assignment(packet_downlink_assignment, tbf->tfi, tbf->arfcn, tbf->ts, tbf->ta, tbf->tsc);
 	LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
-	decode_gsm_rlcmac_downlink(packet_downlink_assignment_vec, packet_downlink_assignment);
+	encode_gsm_rlcmac_downlink(packet_downlink_assignment_vec, packet_downlink_assignment);
 	LOGPC(DRLCMAC, LOGL_NOTICE, "\n");
 	LOGP(DRLCMAC, LOGL_NOTICE, "------------------------- TX : Packet Downlink Assignment -------------------------\n");
 	free(packet_downlink_assignment);
