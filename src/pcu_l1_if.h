@@ -29,22 +29,6 @@ extern "C" {
 #include <osmocom/gsm/gsm_utils.h>
 }
 
-struct pcu_l1if_ts {
-	uint8_t enable;
-	uint8_t tsc;
-};
-
-struct pcu_l1if_trx {
-	uint16_t arfcn;
-	struct pcu_l1if_ts ts[8];
-};
-
-struct pcu_l1if_bts {
-	struct pcu_l1if_trx trx[8];
-};
-
-extern struct pcu_l1if_bts pcu_l1if_bts;
-
 int get_current_fn();
 void set_current_fn(int fn);
 

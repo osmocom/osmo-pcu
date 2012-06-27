@@ -35,20 +35,15 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
 	struct gprs_rlcmac_tbf *tbf;
 	// Create new TBF
-	tfi = tfi_alloc();
+	tfi = tfi_alloc(&trx, &ts);
 	if (tfi < 0) {
-		return tfi;
-	}
-
-	/* FIXME: select right TRX/TS */
-	if (select_pdch(&trx, &ts)) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 		/* FIXME: send reject */
 		return -EBUSY;
 	}
 	tbf = tbf_alloc(tfi, trx, ts);
 	tbf->direction = GPRS_RLCMAC_DL_TBF;
-	tbf->state = GPRS_RLCMAC_WAIT_DATA_SEQ_START;
+	tbf->state = GPRS_RLCMAC_FLOW;
 	tbf->tlli = ntohl(budh->tlli);
 	LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] START TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
 
@@ -60,13 +55,13 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	}
 
 	uint8_t *llc_pdu = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_LLC_PDU);
-	tbf->data_index = TLVP_LEN(tp, BSSGP_IE_LLC_PDU);
+	tbf->llc_index = TLVP_LEN(tp, BSSGP_IE_LLC_PDU);
 	
 	LOGP(DBSSGP, LOGL_NOTICE, "LLC PDU = ");
-	for (i = 0; i < tbf->data_index; i++)
+	for (i = 0; i < tbf->llc_index; i++)
 	{
-		tbf->rlc_data[i] = llc_pdu[i];
-		LOGPC(DBSSGP, LOGL_NOTICE, "%02x", tbf->rlc_data[i]);
+		tbf->llc_frame[i] = llc_pdu[i];
+		LOGPC(DBSSGP, LOGL_NOTICE, "%02x", tbf->llc_frame[i]);
 	}
 
 	uint16_t imsi_len = 0;
@@ -86,6 +81,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 
 	gprs_rlcmac_packet_downlink_assignment(tbf);
 
+	return 0;
 }
 /* Receive a BSSGP PDU from a BSS on a PTP BVCI */
 int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx)

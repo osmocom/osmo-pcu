@@ -50,8 +50,8 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 #define BLOCK_LEN 23
 
 #define CELL_ID 0
-#define MNC 1
-#define MCC 001
+#define MNC 2
+#define MCC 262
 #define PCU_LAC 1
 #define PCU_RAC 0
 

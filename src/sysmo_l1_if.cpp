@@ -39,8 +39,6 @@ extern "C" {
 static int pcu_sock_send(struct msgb *msg);
 static void pcu_sock_timeout(void *_priv);
 
-struct pcu_l1if_bts pcu_l1if_bts;
-
 // Variable for storage current FN.
 int frame_number;
 
@@ -159,7 +157,6 @@ static void pcu_l1if_tx_bcch(uint8_t *data, int len)
 static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 {
 	int rc = 0;
-	bitvec *block;
 
 	LOGP(DL1IF, LOGL_DEBUG, "Data indication received: sapi=%d arfcn=%d "
 		"block=%d data=%s\n", data_ind->sapi,
@@ -168,14 +165,8 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 
 	switch (data_ind->sapi) {
 	case PCU_IF_SAPI_PDTCH:
-		block = bitvec_alloc(data_ind->len);
-		if (!block) {
-			rc = -ENOMEM;
-			break;
-		}
-		bitvec_unpack(block, data_ind->data);
-		gprs_rlcmac_rcv_block(block);
-		bitvec_free(block);
+		rc = gprs_rlcmac_rcv_block(data_ind->data, data_ind->len,
+			data_ind->fn);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data indication with "
@@ -241,8 +232,10 @@ static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
 
 static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 {
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	int rc = 0;
-	int trx, ts;
+	int trx, ts, tfi;
+	struct gprs_rlcmac_tbf *tbf;
 //	uint8_t si13[23];
 
 	LOGP(DL1IF, LOGL_INFO, "Info indication received:\n");
@@ -254,21 +247,27 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 	LOGP(DL1IF, LOGL_INFO, "BTS available\n");
 
 	for (trx = 0; trx < 8; trx++) {
-		pcu_l1if_bts.trx[trx].arfcn = info_ind->trx[trx].arfcn;
+		bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
 		for (ts = 0; ts < 8; ts++) {
 			if ((info_ind->trx[trx].pdch_mask & (1 << ts))) {
 				/* FIXME: activate dynamically at RLCMAC */
-				if (!pcu_l1if_bts.trx[trx].ts[ts].enable)
+				if (!bts->trx[trx].pdch[ts].enable)
 					pcu_tx_act_req(trx, ts, 1);
-				pcu_l1if_bts.trx[trx].ts[ts].enable = 1;
-				pcu_l1if_bts.trx[trx].ts[ts].tsc =
+				bts->trx[trx].pdch[ts].enable = 1;
+				bts->trx[trx].pdch[ts].tsc =
 					info_ind->trx[trx].tsc[ts];
 				LOGP(DL1IF, LOGL_INFO, "PDCH: trx=%d ts=%d\n",
 					trx, ts);
 			} else {
-				if (pcu_l1if_bts.trx[trx].ts[ts].enable)
+				if (bts->trx[trx].pdch[ts].enable)
 					pcu_tx_act_req(trx, ts, 0);
-				pcu_l1if_bts.trx[trx].ts[ts].enable = 0;
+				bts->trx[trx].pdch[ts].enable = 0;
+				/* kick all tbf  FIXME: multislot  */
+				for (tfi = 0; tfi < 32; tfi++) {
+					tbf = bts->trx[trx].pdch[ts].tbf[tfi];
+					if (tbf)
+						tbf_free(tbf);
+				}
 			}
 		}
 	}
@@ -342,6 +341,9 @@ static int pcu_sock_send(struct msgb *msg)
 static void pcu_sock_close(struct pcu_sock_state *state)
 {
 	struct osmo_fd *bfd = &state->conn_bfd;
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_tbf *tbf;
+	uint8_t trx, ts, tfi;
 
 	LOGP(DL1IF, LOGL_NOTICE, "PCU socket has LOST connection\n");
 
@@ -355,8 +357,17 @@ static void pcu_sock_close(struct pcu_sock_state *state)
 		msgb_free(msg);
 	}
 
-	/* disable all slots */
-	memset(&pcu_l1if_bts, 0, sizeof(pcu_l1if_bts));
+	/* disable all slots, kick all TBFs */
+	for (trx = 0; trx < 8; trx++) {
+		for (ts = 0; ts < 8; ts++) {
+			bts->trx[trx].pdch[ts].enable = 0;
+			for (tfi = 0; tfi < 32; tfi++) {
+				tbf = bts->trx[trx].pdch[ts].tbf[tfi];
+				if (tbf)
+					tbf_free(tbf);
+			}
+		}
+	}
 
 	state->timer.cb = pcu_sock_timeout;
 	osmo_timer_schedule(&state->timer, 5, 0);
@@ -469,8 +480,6 @@ int pcu_l1if_open(void)
 	struct sockaddr_un local;
 	unsigned int namelen;
 	int rc;
-
-	memset(&pcu_l1if_bts, 0, sizeof(pcu_l1if_bts));
 
 	state = pcu_sock_state;
 	if (!state) {

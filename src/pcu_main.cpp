@@ -20,8 +20,11 @@
 #include <gprs_bssgp_pcu.h>
 #include <arpa/inet.h>
 #include <pcu_l1_if.h>
+#include <gprs_rlcmac.h>
 #include <gsm_timer.h>
 #include <gprs_debug.h>
+
+struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 
 // TODO: We should move this parameters to config file.
 #define SGSN_IP "127.0.0.1"
@@ -51,6 +54,11 @@ int main(int argc, char *argv[])
 	uint16_t nsvci = NSVCI;
 	struct gprs_ns_inst *sgsn_nsi;
 	struct gprs_nsvc *nsvc;
+
+	gprs_rlcmac_bts = talloc_zero(NULL, struct gprs_rlcmac_bts);
+	if (!gprs_rlcmac_bts)
+		return -ENOMEM;
+
 	osmo_init_logging(&gprs_log_info);
 	pcu_l1if_open();
 
@@ -93,5 +101,7 @@ int main(int argc, char *argv[])
 		}
 		i++;
 	}
+
+	talloc_free(gprs_rlcmac_bts);
 }
 

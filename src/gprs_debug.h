@@ -31,6 +31,7 @@ enum {
 	DL1IF,
 	DRLCMAC,
 	DRLCMACDATA,
+	DRLCMACSCHED,
 	DBSSGP,
 	DPCU,
 	aDebug_LastEntry

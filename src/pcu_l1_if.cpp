@@ -73,8 +73,6 @@ struct l1fwd_hdl {
 
 struct l1fwd_hdl *l1fh = talloc_zero(NULL, struct l1fwd_hdl);
 
-struct pcu_l1if_bts pcu_l1if_bts;
-
 // Variable for storage current FN.
 int frame_number;
 
@@ -127,19 +125,19 @@ void pcu_l1if_tx_agch(bitvec * block, int len)
 
 int pcu_l1if_rx_pdch(GsmL1_PhDataInd_t *data_ind)
 {
-	bitvec *block = bitvec_alloc(data_ind->msgUnitParam.u8Size);
-	bitvec_unpack(block, data_ind->msgUnitParam.u8Buffer);
-	gprs_rlcmac_rcv_block(block);
-	bitvec_free(block);
+	gprs_rlcmac_rcv_block(data_ind->msgUnitParam.u8Buffer,
+		data_ind->msgUnitParam.u8Size, data_ind->u32Fn);
 
 	return 0;
 }
 
 static int handle_ph_connect_ind(struct femtol1_hdl *fl1, GsmL1_PhConnectInd_t *connect_ind)
 {
-	pcu_l1if_bts.trx[0].arfcn = connect_ind->u16Arfcn;
-	pcu_l1if_bts.trx[0].ts[connect_ind->u8Tn].enable = 1;
-	pcu_l1if_bts.trx[0].ts[connect_ind->u8Tn].tsc = connect_ind->u8Tsc;
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	bts->trx[0].arfcn = connect_ind->u16Arfcn;
+	bts->trx[0].pdch[connect_ind->u8Tn].enable = 1;
+	bts->trx[0].pdch[connect_ind->u8Tn].tsc = connect_ind->u8Tsc;
 	(l1fh->fl1h)->channel_info.arfcn = connect_ind->u16Arfcn;
 	(l1fh->fl1h)->channel_info.tn = connect_ind->u8Tn;
 	(l1fh->fl1h)->channel_info.tsc = connect_ind->u8Tsc;
@@ -282,8 +280,6 @@ int pcu_l1if_open()
 	//struct l1fwd_hdl *l1fh;
 	struct femtol1_hdl *fl1h;
 	int rc;
-
-	memset(&pcu_l1if_bts, 0, sizeof(pcu_l1if_bts));
 
 	/* allocate new femtol1_handle */
 	fl1h = talloc_zero(NULL, struct femtol1_hdl);
