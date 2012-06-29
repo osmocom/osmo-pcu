@@ -718,6 +718,35 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, uint
 		return wp/8;
 }
 
+int write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len)
+{
+	unsigned wp = 0;
+
+	bitvec_write_field(dest, wp,0x0,4);  // Skip Indicator
+	bitvec_write_field(dest, wp,0x6,4);  // Protocol Discriminator
+	bitvec_write_field(dest, wp,0x21,8); // Paging Request Message Type
+
+	bitvec_write_field(dest, wp,0x0,4);  // Page Mode
+	bitvec_write_field(dest, wp,0x0,4);  // Channel Needed
+
+	// Mobile Identity
+	bitvec_write_field(dest, wp,ptmsi_len+1,8);  // Mobile Identity length
+	bitvec_write_field(dest, wp,0xf,4);          // unused
+	bitvec_write_field(dest, wp,0x4,4);          // PTMSI type
+	for (int i = 0; i < ptmsi_len; i++)
+	{
+		bitvec_write_field(dest, wp,ptmsi[i],8); // PTMSI
+	}
+	bitvec_write_field(dest, wp,0x0,1); // "L" NLN(PCH) = off
+	bitvec_write_field(dest, wp,0x0,1); // "L" Priority1 = off
+	bitvec_write_field(dest, wp,0x1,1); // "L" Priority2 = off
+	bitvec_write_field(dest, wp,0x0,1); // "L" Group Call information = off
+	bitvec_write_field(dest, wp,0x0,1); // "H" Packet Page Indication 1 = packet paging procedure
+	bitvec_write_field(dest, wp,0x1,1); // "H" Packet Page Indication 2 = packet paging procedure
+	bitvec_write_field(dest, wp,0x3,2); // spare padding
+	return wp/8;
+}
+
 void write_packet_uplink_ack(RlcMacDownlink_t * block, uint8_t tfi, uint32_t tlli, uint8_t fi, uint8_t bsn)
 {
 	// Packet Uplink Ack/Nack  TS 44.060 11.2.28
@@ -1158,3 +1187,12 @@ void gprs_rlcmac_packet_downlink_assignment(gprs_rlcmac_tbf *tbf)
 	bitvec_free(packet_downlink_assignment_vec);
 }
 
+void gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len)
+{
+	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Paging Request (CCCH)\n");
+	bitvec *paging_request = bitvec_alloc(23);
+	bitvec_unhex(paging_request, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	int len = write_paging_request(paging_request, ptmsi, ptmsi_len);
+	pcu_l1if_tx_pch(paging_request, len);
+	bitvec_free(paging_request);
+}

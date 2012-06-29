@@ -56,6 +56,20 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	tbf_dl_data_transfer(tbf, llc_pdu, llc_pdu_len);
 }
 
+int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
+{
+	uint8_t *ptmsi = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_TMSI);
+	uint16_t ptmsi_len = TLVP_LEN(tp, BSSGP_IE_TMSI);
+
+	LOGP(DBSSGP, LOGL_NOTICE, " P-TMSI = ");
+	for (int i = 0; i < ptmsi_len; i++)
+	{
+		LOGPC(DBSSGP, LOGL_NOTICE, "%02x", ptmsi[i]);
+	}
+	LOGPC(DBSSGP, LOGL_NOTICE, "\n");
+
+	gprs_rlcmac_paging_request(ptmsi, ptmsi_len);
+}
 
 /* Receive a BSSGP PDU from a BSS on a PTP BVCI */
 int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx)
@@ -123,7 +137,8 @@ int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp
 			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_BVC_RESET_ACK\n");
 			break;
 		case BSSGP_PDUT_PAGING_PS:
-			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_PAGING_PS\n");
+			LOGP(DBSSGP, LOGL_NOTICE, "RX: [SGSN->PCU] BSSGP_PDUT_PAGING_PS\n");
+			gprs_bssgp_pcu_rx_paging_ps(msg, tp);
 			break;
 		case BSSGP_PDUT_PAGING_CS:
 			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_PAGING_CS\n");

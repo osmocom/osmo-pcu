@@ -125,6 +125,17 @@ void pcu_l1if_tx_agch(bitvec * block, int len)
 	osmo_wqueue_enqueue(&l1fh->udp_wq, msg);
 }
 
+void pcu_l1if_tx_pch(bitvec * block, int len)
+{
+	struct msgb *msg = l1p_msgb_alloc();
+	GsmL1_Prim_t *prim = msgb_l1prim(msg);
+	prim->id = GsmL1_PrimId_PhDataReq;
+	prim->u.phDataReq.sapi = GsmL1_Sapi_Pch;
+	bitvec_pack(block, prim->u.phDataReq.msgUnitParam.u8Buffer);
+	prim->u.phDataReq.msgUnitParam.u8Size = len;
+	osmo_wqueue_enqueue(&l1fh->udp_wq, msg);
+}
+
 int pcu_l1if_rx_pdch(GsmL1_PhDataInd_t *data_ind)
 {
 	bitvec *block = bitvec_alloc(data_ind->msgUnitParam.u8Size);
