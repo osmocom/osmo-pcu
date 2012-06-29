@@ -48,22 +48,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		return bssgp_tx_status(BSSGP_CAUSE_MISSING_MAND_IE, NULL, msg);
 	}
 
-	uint16_t imsi_len = 0;
-	uint8_t *imsi = NULL;
-	if (TLVP_PRESENT(tp, BSSGP_IE_IMSI))
-	{
-		imsi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
-		imsi = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_IMSI);
-		
-		LOGPC(DBSSGP, LOGL_NOTICE, " IMSI = ");
-		for (i = 0; i < imsi_len; i++)
-		{
-			LOGPC(DBSSGP, LOGL_NOTICE, "%02x", imsi[i]);
-		}
-		LOGP(DBSSGP, LOGL_NOTICE, "\n");
-	}
-	
-	tbf_dl_establish(tbf, imsi);
+	tbf_dl_establish(tbf);
 
 	uint8_t *llc_pdu = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_LLC_PDU);
 	uint16_t llc_pdu_len = TLVP_LEN(tp, BSSGP_IE_LLC_PDU);

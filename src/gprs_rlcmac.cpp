@@ -303,7 +303,7 @@ int tbf_ul_establish(struct gprs_rlcmac_tbf *tbf, uint8_t ra, uint32_t Fn, uint1
 }
 
 /* Management of downlink TBF establishment. */
-int tbf_dl_establish(struct gprs_rlcmac_tbf *tbf, uint8_t *imsi)
+int tbf_dl_establish(struct gprs_rlcmac_tbf *tbf)
 {
 	if (tbf->direction != GPRS_RLCMAC_DL_TBF)
 	{
@@ -318,17 +318,8 @@ int tbf_dl_establish(struct gprs_rlcmac_tbf *tbf, uint8_t *imsi)
 			LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] TFI: Wait DL TBF establishment by UL TBF\n", tbf->tfi);
 			break;
 		case CCCH_ESTABLISH:
-			if (imsi)
-			{
-				// Downlink TBF Establishment on CCCH ( Paging procedure )
-				// TODO: Implement paging procedure on CCCH.
-				LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] TFI: Paging procedure on CCCH : Not implemented yet\n", tbf->tfi);
-			}
-			else
-			{
-				// Downlink TBF Establishment on CCCH ( Immediate Assignment )
-				tbf_gsm_timer_start(tbf, 1, 0);
-			}
+			// Downlink TBF Establishment on CCCH ( Immediate Assignment )
+			tbf_gsm_timer_start(tbf, 1, 0);
 			break;
 		case PACCH_ESTABLISH:
 			// Downlink TBF Establishment on PACCH ( Packet Immediate Assignment )
@@ -1166,3 +1157,4 @@ void gprs_rlcmac_packet_downlink_assignment(gprs_rlcmac_tbf *tbf)
 	gprs_rlcmac_enqueue_block(packet_downlink_assignment_vec, 23);
 	bitvec_free(packet_downlink_assignment_vec);
 }
+

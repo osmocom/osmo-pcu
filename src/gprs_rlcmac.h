@@ -116,7 +116,7 @@ struct gprs_rlcmac_tbf *tbf_alloc(gprs_rlcmac_tbf_direction dir, uint32_t tlli =
 
 int tbf_ul_establish(struct gprs_rlcmac_tbf *tbf, uint8_t ra, uint32_t Fn, uint16_t qta);
 
-int tbf_dl_establish(struct gprs_rlcmac_tbf *tbf, uint8_t *imsi = NULL);
+int tbf_dl_establish(struct gprs_rlcmac_tbf *tbf);
 
 int tbf_ul_data_transfer(struct gprs_rlcmac_tbf *tbf, RlcMacUplinkDataBlock_t * ul_data_block);
 
@@ -154,5 +154,4 @@ void gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf);
 
 void gprs_rlcmac_packet_downlink_assignment(gprs_rlcmac_tbf *tbf);
-
 #endif // GPRS_RLCMAC_H
