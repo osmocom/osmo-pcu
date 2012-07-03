@@ -52,6 +52,9 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 		return -EIO;
 	}
 
+	/* store last frame number of RTS */
+	pdch->last_rts_fn = fn;
+
 	/* check uplink ressource for polling */
 	poll_fn = fn + 4;
 	if ((block_nr % 3) == 2)
@@ -75,8 +78,6 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 			"TS=%d FN=%d block_nr=%d scheduling free USF for "
 			"polling at FN=%d of TFI=%d\n", trx, ts, fn, block_nr,
 			poll_fn, tfi);
-		/* reset poll state */
-		tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 		/* use free USF */
 	/* else, we search for uplink ressource */
 	} else {
@@ -91,40 +92,47 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 			if (tbf->direction != GPRS_RLCMAC_UL_TBF)
 				continue;
 			/* no UL ressources needed, go next */
+			/* we don't need to give ressources in FINISHED state,
+			 * because we have received all blocks and only poll
+			 * for packet control ack. */
 			if (tbf->state != GPRS_RLCMAC_FLOW)
 				continue;
-			break;
-		}
-		if (i < 32) {
+
 			/* use this USF */
 			usf = tbf->dir.ul.usf;
 			LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: "
 				"TRX=%d TS=%d FN=%d block_nr=%d scheduling "
 				"USF=%d for required uplink ressource of "
-				"TFB=%d\n", trx, ts, fn, block_nr, usf, tfi);
-			/* next TFB to handle ressource is the next one */
+				"TBF=%d\n", trx, ts, fn, block_nr, usf, tfi);
+			/* next TBF to handle ressource is the next one */
 			pdch->next_ul_tfi = (tfi + 1) & 31;
+			break;
 		}
 	}
 
 	/* Prio 1: select control message */
-	if (!msg) {
-		for (tfi = 0; tfi < 32; tfi++) {
-			tbf = pdch->tbf[tfi];
-			/* no TBF for this tfi, go next */
-			if (!tbf)
-				continue;
-			/* no UL TBF, go next */
-			if (tbf->direction != GPRS_RLCMAC_UL_TBF)
-				continue;
-			if (tbf->dir.ul.substate == GPRS_RLCMAC_UL_SEND_ACK)
-				break;
-		}
-		if (tfi < 32) {
-			LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling control "
-				"message at RTS for TFB=%d\n", tfi);
-			/* generate ack message */
+	for (tfi = 0; tfi < 32; tfi++) {
+		tbf = pdch->tbf[tfi];
+		/* no TBF for this tfi, go next */
+		if (!tbf)
+			continue;
+		/* schedule PACKET DOWNLINK ASSIGNMENT */
+		if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_SEND_ASS)
+			msg = gprs_rlcmac_send_packet_downlink_assignment(tbf,
+				fn);
+		else
+		/* schedule PACKET UPLINK ASSIGNMENT */
+		if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS)
+			msg = gprs_rlcmac_send_packet_uplink_assignment(tbf,
+				fn);
+		else
+		/* schedule PACKET UPLINK ACK */
+		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_SEND_ACK)
 			msg = gprs_rlcmac_send_uplink_ack(tbf, fn);
+		if (msg) {
+			LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling control "
+				"message at RTS for TBF=%d\n", tfi);
+			break;
 		}
 	}
 
@@ -137,22 +145,22 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 			/* no TBF for this tfi, go next */
 			if (!tbf)
 				continue;
-			/* no DD TBF, go next */
+			/* no DL TBF, go next */
 			if (tbf->direction != GPRS_RLCMAC_DL_TBF)
 				continue;
-			/* FIXME: */
-		}
-		if (i < 32) {
+			/* no DL ressources needed, go next */
+			if (tbf->state != GPRS_RLCMAC_FLOW
+			 && tbf->state != GPRS_RLCMAC_FINISHED)
+				continue;
+
 			LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling data "
-				"message at RTS for TFB=%d\n", tfi);
-			/* next TFB to handle ressource is the next one */
+				"message at RTS for TBF=%d\n", tfi);
+			/* next TBF to handle ressource is the next one */
 			pdch->next_dl_tfi = (tfi + 1) & 31;
-			/* generate ack message */
-			/* FIXME: */
+			/* generate DL data block */
+			msg = gprs_rlcmac_send_data_block_acknowledged(tbf, fn);
+			break;
 		}
-/* FIXME: remove that when DL TBF is finished */
-set_current_fn(fn);
-msg = msgb_dequeue(&block_queue);
 	}
 
 	/* Prio 3: send dummy contol message */

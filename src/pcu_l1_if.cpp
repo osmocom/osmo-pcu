@@ -216,6 +216,10 @@ int pcu_l1if_handle_l1prim(struct femtol1_hdl *fl1, struct msgb *msg)
 	return rc;
 }
 
+PCU will currently not work without getting a GSM time or BFI indidication.
+In order to fix this, i will discuss this on the mailing list.
+Andreas
+
 /* OpenBTS socket functions */
 
 // TODO: We should move this parameters to config file.

@@ -20,13 +20,17 @@
  
 #include <gprs_bssgp_pcu.h>
 #include <gprs_rlcmac.h>
+#include <pcu_l1_if.h>
 
 /* After receiving these framess, we send ack/nack. */
 #define ACK_AFTER_FRAMES 20
 
+/* If acknowledgement to uplink/downlin assignmentshould be polled */
+#define POLLING_ASSIGNMENT 0
+
 extern "C" {
 /* TS 04.60  10.2.2 */
-struct rlc_dl_header {
+struct rlc_ul_header {
 	uint8_t	r:1,
 		 si:1,
 		 cv:4,
@@ -39,6 +43,18 @@ struct rlc_dl_header {
 		 bsn:7;
 } __attribute__ ((packed));
 
+struct rlc_dl_header {
+	uint8_t	usf:3,
+		 s_p:1,
+		 rrbp:2,
+		 pt:2;
+	uint8_t	fbi:1,
+		 tfi:5,
+		 pr:2;
+	uint8_t	e:1,
+		 bsn:7;
+} __attribute__ ((packed));
+
 struct rlc_li_field {
 	uint8_t	e:1,
 		 m:1,
@@ -46,10 +62,249 @@ struct rlc_li_field {
 } __attribute__ ((packed));
 }
 
+int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
+{
+	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for TBF=%d\n", tbf->tfi);
+
+	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
+
+	if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Timeout for polling PACKET "
+			"CONTROL ACK for PACKET UPLINK ACK\n");
+		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
+		if (tbf->state == GPRS_RLCMAC_FINISHED) {
+			tbf->dir.ul.n3103++;
+			if (tbf->dir.ul.n3103 == N3103_MAX) {
+				LOGP(DRLCMAC, LOGL_DEBUG, "- N3103 exceeded\n");
+				tbf_new_state(tbf, GPRS_RLCMAC_RELEASING);
+				tbf_timer_start(tbf, 3169, T3169);
+				return 0;
+			}
+			/* reschedule UL ack */
+			tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
+		}
+	} else
+	if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Timeout for polling PACKET "
+			"CONTROL ACK for PACKET UPLINK ASSIGNMENT.\n");
+		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+	} else
+	if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Timeout for polling PACKET "
+			"CONTROL ACK for PACKET DOWNLINK ASSIGNMENT.\n");
+		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+		/* in case out downlink assigment failed: */
+		if (tbf->state == GPRS_RLCMAC_ASSIGN) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Assignment failed\n");
+			tbf_free(tbf);
+		}
+	} else
+	if (tbf->direction == GPRS_RLCMAC_DL_TBF)
+	{
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Timeout for polling PACKET "
+			" DOWNLINK ACK.\n");
+		tbf->dir.dl.n3105++;
+		if (tbf->dir.dl.n3105 == N3105_MAX) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- N3105 exceeded\n");
+			tbf_new_state(tbf, GPRS_RLCMAC_RELEASING);
+			tbf_timer_start(tbf, 3195, T3195);
+			return 0;
+		}
+	}
+
+	return 0;
+}
+
+/* Received Uplink RLC control block. */
+int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint32_t fn)
+{
+	uint8_t tfi = 0;
+	uint32_t tlli = 0;
+	struct gprs_rlcmac_tbf *tbf;
+
+	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)malloc(sizeof(RlcMacUplink_t));
+	LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
+	decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
+	LOGPC(DRLCMAC, LOGL_NOTICE, "\n");
+	LOGP(DRLCMAC, LOGL_NOTICE, "------------------------- RX : Uplink Control Block -------------------------\n");
+	switch (ul_control_block->u.MESSAGE_TYPE) {
+	case MT_PACKET_CONTROL_ACK:
+		tlli = ul_control_block->u.Packet_Control_Acknowledgement.TLLI;
+		tbf = tbf_by_poll_fn(fn);
+		if (!tbf) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
+				"unknown FN=%u TLL=0x%08x\n", fn, tlli);
+			break;
+		}
+		tfi = tbf->tfi;
+		if (tlli != tbf->tlli) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "Phone changed TLLI to "
+				"0x%08x\n", tlli);
+			tbf->tlli = tlli;
+		}
+		LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Control Ack\n", tbf->tfi, tbf->tlli);
+		tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
+
+		/* check if this control ack belongs to packet uplink ack */
+		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [UPLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+			tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
+			tbf_free(tbf);
+			break;
+		}
+		if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [UPLINK] DOWNLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+			tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+			break;
+		}
+		if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] UPLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+			break;
+		}
+		LOGP(DRLCMAC, LOGL_ERROR, "Error: received PACET CONTROL ACK "
+			"at no request\n");
+		break;
+	case MT_PACKET_DOWNLINK_ACK_NACK:
+		tfi = ul_control_block->u.Packet_Downlink_Ack_Nack.DOWNLINK_TFI;
+		tbf = tbf_by_poll_fn(fn);
+		if (!tbf) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
+				"unknown FN=%u TFI=%d\n", fn, tfi);
+			break;
+		}
+		/* reset N3105 */
+		tbf->dir.dl.n3105 = 0;
+		/* stop timer T3191 */
+		tbf_timer_stop(tbf);
+		tlli = tbf->tlli;
+		LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Downlink Ack/Nack\n", tbf->tfi, tbf->tlli);
+		tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
+
+		gprs_rlcmac_downlink_ack(tbf,
+			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.FINAL_ACK_INDICATION,
+			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
+			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
+		/* check for channel request */
+		if (ul_control_block->u.Packet_Downlink_Ack_Nack.Exist_Channel_Request_Description) {
+			uint8_t trx, ts, usf;
+			struct gprs_rlcmac_tbf *ul_tbf;
+
+			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
+				"message, so we provide one:\n");
+uplink_request:
+			/* create new tbf */
+			tfi = tfi_alloc(&trx, &ts);
+			if (tfi < 0) {
+				LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+				/* FIXME: send reject */
+				break;
+			}
+			usf = find_free_usf(trx, ts);
+			if (usf < 0) {
+				LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource for USF\n");
+				/* FIXME: send reject */
+				break;
+			}
+			ul_tbf = tbf_alloc(tfi, trx, ts);
+			ul_tbf->tlli = tbf->tlli;
+			ul_tbf->tlli_valid = 1; /* no content resolution */
+			ul_tbf->ta = tbf->ta; /* use current TA */
+			ul_tbf->direction = GPRS_RLCMAC_UL_TBF;
+			ul_tbf->dir.ul.usf = usf;
+			tbf_new_state(ul_tbf, GPRS_RLCMAC_FLOW);
+			tbf_timer_start(ul_tbf, 3169, T3169);
+			LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [UPLINK] START TFI: %u\n", ul_tbf->tfi);
+			/* schedule uplink assignment */
+			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+		}
+		break;
+	case MT_PACKET_RESOURCE_REQUEST:
+		if (ul_control_block->u.Packet_Resource_Request.ID.UnionType) {
+			tlli = ul_control_block->u.Packet_Resource_Request.ID.u.TLLI;
+			tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+			if (!tbf) {
+				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TLLI=0x%08x\n", tlli);
+				break;
+			}
+			tfi = tbf->tfi;
+		} else {
+			if (ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.UnionType) {
+				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.DOWNLINK_TFI;
+				tbf = tbf_by_tfi(tfi, GPRS_RLCMAC_DL_TBF);
+				if (!tbf) {
+					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TFI=%d\n", tlli);
+					break;
+				}
+			} else {
+				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.UPLINK_TFI;
+				tbf = tbf_by_tfi(tfi, GPRS_RLCMAC_UL_TBF);
+				if (!tbf) {
+					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TFI=%d\n", tlli);
+					break;
+				}
+			}
+			tlli = tbf->tlli;
+		}
+		LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet ressource request\n", tbf->tfi, tbf->tlli);
+#warning FIXME
+puts("FIXME: UL request during UL request");	exit(0);
+
+
+		break;
+	default:
+		LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] unknown control block received\n");
+	}
+	free(ul_control_block);
+	return 1;
+}
+
+
+void tbf_timer_cb(void *_tbf)
+{
+	struct gprs_rlcmac_tbf *tbf = (struct gprs_rlcmac_tbf *)_tbf;
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "TBF=%d timer %u expired.\n", tbf->tfi,
+		tbf->T);
+
+	tbf->num_T_exp++;
+
+	switch (tbf->T) {
+#ifdef DEBUG_DL_ASS_IDLE
+	case 1234:
+		gprs_rlcmac_trigger_downlink_assignment(tbf, 0);
+		break;
+#endif
+	case 0: /* assignment */
+		/* change state to FLOW, so scheduler will start transmission */
+		if (tbf->state == GPRS_RLCMAC_ASSIGN)
+			tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+		else
+			LOGP(DRLCMAC, LOGL_ERROR, "Error: TBF is not in assign "
+				"state\n");
+		break;
+	case 3169:
+	case 3191:
+	case 3193:
+	case 3195:
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF will be freed due to timeout\n");
+		/* free TBF */
+		tbf_free(tbf);
+		break;
+	default:
+		LOGP(DRLCMAC, LOGL_ERROR, "Timer expired in unknown mode: %u\n",
+			tbf->T);
+	}
+}
+
+/*
+ * UL data block flow
+ */
+
 /* get TLLI from received UL data block */
 static int tlli_from_ul_data(uint8_t *data, uint8_t len, uint32_t *tlli)
 {
-	struct rlc_dl_header *rh = (struct rlc_dl_header *)data;
+	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	struct rlc_li_field *li;
 	uint8_t e;
 
@@ -62,7 +317,7 @@ static int tlli_from_ul_data(uint8_t *data, uint8_t len, uint32_t *tlli)
 	/* if E is not set (LI follows) */
 	while (!e) {
 		if (!len) {
-			LOGP(DRLCMACDATA, LOGL_NOTICE, "UL DATA LI extended, "
+			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA LI extended, "
 				"but no more data\n");
 			return -EINVAL;
 		}
@@ -76,7 +331,7 @@ static int tlli_from_ul_data(uint8_t *data, uint8_t len, uint32_t *tlli)
 		len--;
 	}
 	if (len < 4) {
-		LOGP(DRLCMACDATA, LOGL_NOTICE, "UL DATA TLLI out of frame "
+		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TLLI out of frame "
 			"border\n");
 		return -EINVAL;
 	}
@@ -90,13 +345,13 @@ static int tlli_from_ul_data(uint8_t *data, uint8_t len, uint32_t *tlli)
 static int gprs_rlcmac_assemble_llc(struct gprs_rlcmac_tbf *tbf, uint8_t *data,
 	uint8_t len)
 {
-	struct rlc_dl_header *rh = (struct rlc_dl_header *)data;
+	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	uint8_t e, m;
 	struct rlc_li_field *li;
 	uint8_t frame_offset[16], offset = 0, chunk;
 	int i, frames = 0;
 
-	LOGP(DRLCMACDATA, LOGL_DEBUG, "- Assembling frames: (len=%d)\n", len);
+	LOGP(DRLCMACUL, LOGL_DEBUG, "- Assembling frames: (len=%d)\n", len);
 	
 	data += 3;
 	len -= 3;
@@ -106,18 +361,18 @@ static int gprs_rlcmac_assemble_llc(struct gprs_rlcmac_tbf *tbf, uint8_t *data,
 	/* Parse frame offsets from length indicator(s), if any. */
 	while (1) {
 		if (frames == (int)sizeof(frame_offset)) {
-			LOGP(DRLCMACDATA, LOGL_ERROR, "Too many frames in "
+			LOGP(DRLCMACUL, LOGL_ERROR, "Too many frames in "
 				"block\n");
 			return -EINVAL;
 		}
 		frame_offset[frames++] = offset;
-		LOGP(DRLCMACDATA, LOGL_DEBUG, "-- Frame %d starts at offset "
+		LOGP(DRLCMACUL, LOGL_DEBUG, "-- Frame %d starts at offset "
 			"%d\n", frames, offset);
 		if (!len)
 			break;
 		/* M == 0 and E == 0 is not allowed in this version. */
 		if (!m && !e) {
-			LOGP(DRLCMACDATA, LOGL_NOTICE, "UL DATA TFI=%d "
+			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d "
 				"ignored, because M='0' and E='0'.\n",
 				tbf->tfi);
 			return 0;
@@ -129,6 +384,8 @@ static int gprs_rlcmac_assemble_llc(struct gprs_rlcmac_tbf *tbf, uint8_t *data,
 		/* There is a new frame and an LI that delimits it. */
 		if (m) {
 			li = (struct rlc_li_field *)data;
+			LOGP(DRLCMACUL, LOGL_DEBUG, "-- Delimiter len=%d\n",
+				li->li);
 			/* Special case: LI == 0
 			 * If the last segment would fit precisely into the
 			 * rest of the RLC MAC block, there would be no way
@@ -153,16 +410,37 @@ static int gprs_rlcmac_assemble_llc(struct gprs_rlcmac_tbf *tbf, uint8_t *data,
 		}
 	}
 	if (!m) {
-		LOGP(DRLCMACDATA, LOGL_DEBUG, "- Last frame carries spare "
+		LOGP(DRLCMACUL, LOGL_DEBUG, "- Last frame carries spare "
 			"data\n");
 	}
 
-	LOGP(DRLCMACDATA, LOGL_DEBUG, "- Data length after length fields: %d\n",
+	LOGP(DRLCMACUL, LOGL_DEBUG, "- Data length after length fields: %d\n",
 		len);
+	/* TLLI */
 	if (rh->ti) {
+		if (len < 4) {
+			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TLLI out of "
+				"frame border\n");
+			return -EINVAL;
+		}
 		data += 4;
 		len -= 4;
-		LOGP(DRLCMACDATA, LOGL_DEBUG, "- Length after skipping TLLI: "
+		LOGP(DRLCMACUL, LOGL_DEBUG, "- Length after skipping TLLI: "
+			"%d\n", len);
+	}
+
+	/* PFI */
+	if (rh->pi) {
+		LOGP(DRLCMACUL, LOGL_ERROR, "ERROR: PFI not supported, "
+			"please disable in SYSTEM INFORMATION\n");
+		if (len < 1) {
+			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA PFI out of "
+				"frame border\n");
+			return -EINVAL;
+		}
+		data++;
+		len--;
+		LOGP(DRLCMACUL, LOGL_DEBUG, "- Length after skipping PFI: "
 			"%d\n", len);
 	}
 
@@ -174,7 +452,7 @@ static int gprs_rlcmac_assemble_llc(struct gprs_rlcmac_tbf *tbf, uint8_t *data,
 
 	/* Check if last offset would exceed frame. */
 	if (offset > len) {
-		LOGP(DRLCMACDATA, LOGL_NOTICE, "UL DATA TFI=%d ignored, "
+		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d ignored, "
 			"because LI exceeds frame length.\n", tbf->tfi);
 		return -EINVAL;
 	}
@@ -192,83 +470,40 @@ static int gprs_rlcmac_assemble_llc(struct gprs_rlcmac_tbf *tbf, uint8_t *data,
 			/* data until next frame */
 			chunk = frame_offset[i + 1] - frame_offset[i];
 		}
-		LOGP(DRLCMACDATA, LOGL_DEBUG, "-- Appending chunk (len=%d) to "
+		LOGP(DRLCMACUL, LOGL_DEBUG, "-- Appending chunk (len=%d) to "
 			"frame at %d.\n", chunk, tbf->llc_index);
 		if (tbf->llc_index + chunk > LLC_MAX_LEN) {
-			LOGP(DRLCMACDATA, LOGL_NOTICE, "LLC frame exceeds "
+			LOGP(DRLCMACUL, LOGL_NOTICE, "LLC frame exceeds "
 				"maximum size.\n");
 			chunk = LLC_MAX_LEN - tbf->llc_index;
 		}
 		memcpy(tbf->llc_frame + tbf->llc_index, data + frame_offset[i],
 			chunk);
 		tbf->llc_index += chunk;
-		/* not last frame ? */
+		/* not last frame. */
 		if (i != frames - 1) {
 			/* send frame to SGSN */
-			LOGP(DRLCMACDATA, LOGL_INFO, "Complete UL frame for "
+			LOGP(DRLCMACUL, LOGL_INFO, "Complete UL frame for "
 				"TFI=%d: %s\n", tbf->tfi,
 				osmo_hexdump(tbf->llc_frame, tbf->llc_index));
 			gprs_rlcmac_tx_ul_ud(tbf);
-			tbf->llc_index = 0;
+			tbf->llc_index = 0; /* reset frame space */
+		/* also check if CV==0, because the frame may fill up the
+		 * block precisely, then it is also complete. normally the
+		 * frame would be extended into the next block with a 0-length
+		 * delimiter added to this block. */
+		} else if (rh->cv == 0) {
+			/* send frame to SGSN */
+			LOGP(DRLCMACUL, LOGL_INFO, "Complete UL frame for "
+				"TFI=%d that fits precisely in last block: "
+				"%s\n", tbf->tfi,
+				osmo_hexdump(tbf->llc_frame, tbf->llc_index));
+			gprs_rlcmac_tx_ul_ud(tbf);
+			tbf->llc_index = 0; /* reset frame space */
 		}
 	}
 
 	return 0;
-}
-
-/* * generate uplink ack
- */
-void write_packet_uplink_ack(bitvec * dest, struct gprs_rlcmac_tbf *tbf,
-	uint8_t final)
-{
-	// TODO We should use our implementation of encode RLC/MAC Control messages.
-	unsigned wp = 0;
-	uint16_t i, bbn;
-	uint16_t mod_sns_half = (tbf->sns >> 1) - 1;
-	char bit;
-
-	LOGP(DRLCMACDATA, LOGL_DEBUG, "Sending Ack/Nack for TBF=%d "
-		"(final=%d)\n", tbf->tfi, final);
-
-	bitvec_write_field(dest, wp,0x1,2);  // payload
-	bitvec_write_field(dest, wp,0x0,2);  // Uplink block with TDMA framenumber (N+13)
-	bitvec_write_field(dest, wp,final,1);  // Suppl/Polling Bit
-	bitvec_write_field(dest, wp,0x0,3);  // Uplink state flag
-	
-	//bitvec_write_field(dest, wp,0x0,1);  // Reduced block sequence number
-	//bitvec_write_field(dest, wp,BSN+6,5);  // Radio transaction identifier
-	//bitvec_write_field(dest, wp,0x1,1);  // Final segment
-	//bitvec_write_field(dest, wp,0x1,1);  // Address control
-
-	//bitvec_write_field(dest, wp,0x0,2);  // Power reduction: 0
-	//bitvec_write_field(dest, wp,TFI,5);  // Temporary flow identifier
-	//bitvec_write_field(dest, wp,0x1,1);  // Direction
-
-	bitvec_write_field(dest, wp,0x09,6); // MESSAGE TYPE
-	bitvec_write_field(dest, wp,0x0,2);  // Page Mode
-
-	bitvec_write_field(dest, wp,0x0,2);
-	bitvec_write_field(dest, wp,tbf->tfi,5); // Uplink TFI
-	bitvec_write_field(dest, wp,0x0,1);
-	
-	bitvec_write_field(dest, wp,0x0,2);  // CS1
-	bitvec_write_field(dest, wp,final,1);  // FINAL_ACK_INDICATION
-	bitvec_write_field(dest, wp,tbf->dir.ul.v_r,7); // STARTING_SEQUENCE_NUMBER
-	// RECEIVE_BLOCK_BITMAP
-	LOGP(DRLCMACDATA, LOGL_DEBUG, "- ack bitmap: \"");
-	for (i = 0, bbn = (tbf->dir.ul.v_r - 1) & mod_sns_half; i < 64;
-	     i++, bbn = (bbn - 1) & mod_sns_half) {
-	     	bit = tbf->dir.ul.v_n[bbn];
-		if (bit == 0)
-			bit = ' ';
-		LOGPC(DRLCMACDATA, LOGL_DEBUG, "%c", bit);
-		bitvec_write_field(dest, wp,(bit == 'R'),1);
-	}
-		LOGPC(DRLCMACDATA, LOGL_DEBUG, "\"\n");
-	bitvec_write_field(dest, wp,0x1,1);  // CONTENTION_RESOLUTION_TLLI = present
-	bitvec_write_field(dest, wp,tbf->tlli,8*4);
-	bitvec_write_field(dest, wp,0x00,4); //spare
-	bitvec_write_field(dest, wp,0x5,4); //0101
 }
 
 struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
@@ -276,6 +511,13 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 {
 	int final = (tbf->state == GPRS_RLCMAC_FINISHED);
 	struct msgb *msg;
+
+	if (final && tbf->poll_state != GPRS_RLCMAC_POLL_NONE) {
+		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
+			"sheduled for TBF=%d, so we must wait for final uplink "
+			"ack...\n", tbf->tfi);
+			return NULL;
+	}
 
 	msg = msgb_alloc(23, "rlcmac_ul_ack");
 	if (!msg)
@@ -292,14 +534,12 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 	bitvec_free(ack_vec);
 
 	if (final) {
-		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED)
-			LOGP(DRLCMACDATA, LOGL_ERROR, "Polling is already "
-				"sheduled for TBF=%d\n", tbf->tfi);
 		tbf->poll_state = GPRS_RLCMAC_POLL_SCHED;
 		tbf->poll_fn = (fn + 13) % 2715648;
-		tbf->dir.ul.substate = GPRS_RLCMAC_UL_WAIT_POLL;
+		/* waiting for final acknowledge */
+		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_WAIT_ACK;
 	} else
-		tbf->dir.ul.substate = GPRS_RLCMAC_UL_NONE;
+		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
 
 	return msg;
 }
@@ -311,61 +551,61 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t *data, uint8_t len)
 {
 	struct gprs_rlcmac_tbf *tbf;
-	struct rlc_dl_header *rh = (struct rlc_dl_header *)data;
+	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	uint16_t mod_sns, mod_sns_half, offset_v_q, offset_v_r, index;
 	int rc;
 
 	if (len < 23) {
-		LOGP(DRLCMACDATA, LOGL_ERROR, "Dropping short frame "
+		LOGP(DRLCMACUL, LOGL_ERROR, "Dropping short frame "
 			"(len = %d)\n", len);
 		return -EINVAL;
 	}
 
 	/* find TBF inst from given TFI */
-	tbf = tbf_by_tfi(rh->tfi);
+	tbf = tbf_by_tfi(rh->tfi, GPRS_RLCMAC_UL_TBF);
 	if (!tbf) {
-		LOGP(DRLCMACDATA, LOGL_NOTICE, "UL DATA unknown TFI=%d\n",
+		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA unknown TFI=%d\n",
 			rh->tfi);
 		return 0;
 	}
 
 	if (tbf->direction != GPRS_RLCMAC_UL_TBF) {
-		LOGP(DRLCMACDATA, LOGL_NOTICE, "UL DATA TFI=%d not Uplink "
+		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d not Uplink "
 			"tbf\n", rh->tfi);
 		return 0;
 	}
 
-	LOGP(DRLCMACDATA, LOGL_INFO, "UL DATA TFI=%d received (V(Q)=%d .. "
+	LOGP(DRLCMACUL, LOGL_INFO, "UL DATA TFI=%d received (V(Q)=%d .. "
 		"V(R)=%d)\n", rh->tfi, tbf->dir.ul.v_q, tbf->dir.ul.v_r);
 
 	/* get TLLI */
 	if (!tbf->tlli_valid) {
 		/* no TLLI yet */
 		if (!rh->ti) {
-			LOGP(DRLCMACDATA, LOGL_NOTICE, "UL DATA TFI=%d without "
+			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d without "
 				"TLLI, but no TLLI received yet\n", rh->tfi);
 			return 0;
 		}
 		rc = tlli_from_ul_data(data, len, &tbf->tlli);
 		if (rc) {
-			LOGP(DRLCMACDATA, LOGL_NOTICE, "Failed to decode TLLI "
+			LOGP(DRLCMACUL, LOGL_NOTICE, "Failed to decode TLLI "
 				"of UL DATA TFI=%d.\n", rh->tfi);
 			return 0;
 		}
 		tbf->tlli_valid = 1;
-		LOGP(DRLCMACDATA, LOGL_DEBUG, " Decoded premier TLLI=0x%08x of "
+		LOGP(DRLCMACUL, LOGL_DEBUG, " Decoded premier TLLI=0x%08x of "
 			"UL DATA TFI=%d.\n", tbf->tlli, rh->tfi);
 	/* already have TLLI, but we stille get another one */
 	} else if (rh->ti) {
 		uint32_t tlli;
 		rc = tlli_from_ul_data(data, len, &tlli);
 		if (rc) {
-			LOGP(DRLCMACDATA, LOGL_NOTICE, "Failed to decode TLLI "
+			LOGP(DRLCMACUL, LOGL_NOTICE, "Failed to decode TLLI "
 				"of UL DATA TFI=%d.\n", rh->tfi);
 			return 0;
 		}
 		if (tlli != tbf->tlli) {
-			LOGP(DRLCMACDATA, LOGL_NOTICE, "TLLI mismatch on UL "
+			LOGP(DRLCMACUL, LOGL_NOTICE, "TLLI mismatch on UL "
 				"DATA TFI=%d. (Ignoring due to contention "
 				"resolution)\n", rh->tfi);
 			return 0;
@@ -386,7 +626,7 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t *data, uint8_t len)
 	/* If out of window (may happen if blocks below V(Q) are received
 	 * again. */
 	if (offset_v_q >= tbf->ws) {
-		LOGP(DRLCMACDATA, LOGL_DEBUG, "- BSN %d out of window "
+		LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d out of window "
 			"%d..%d (it's normal)\n", rh->bsn, tbf->dir.ul.v_q,
 			(tbf->dir.ul.v_q + tbf->ws - 1) & mod_sns);
 		return 0;
@@ -396,7 +636,7 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t *data, uint8_t len)
 	memcpy(tbf->rlc_block[index], data, len); /* Copy block. */
 	tbf->rlc_block_len[index] = len;
 	tbf->dir.ul.v_n[index] = 'R'; /* Mark received block. */
-	LOGP(DRLCMACDATA, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
+	LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
 		rh->bsn, tbf->dir.ul.v_q,
 		(tbf->dir.ul.v_q + tbf->ws - 1) & mod_sns);
 	/* Raise V(R) to highest received sequence number not received. */
@@ -409,7 +649,7 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t *data, uint8_t len)
 			tbf->dir.ul.v_r = (tbf->dir.ul.v_r + 1) & mod_sns;
 				/* Inc V(R). */
 		}
-		LOGP(DRLCMACDATA, LOGL_DEBUG, "- Raising V(R) to %d\n",
+		LOGP(DRLCMACUL, LOGL_DEBUG, "- Raising V(R) to %d\n",
 			tbf->dir.ul.v_r);
 	}
 
@@ -418,7 +658,7 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t *data, uint8_t len)
 	 * the window is empty.*/
 	while (tbf->dir.ul.v_q != tbf->dir.ul.v_r && tbf->dir.ul.v_n[
 			(index = tbf->dir.ul.v_q & mod_sns_half)] == 'R') {
-		LOGP(DRLCMACDATA, LOGL_DEBUG, "- Taking block %d out, raising "
+		LOGP(DRLCMACUL, LOGL_DEBUG, "- Taking block %d out, raising "
 			"V(Q) to %d\n", tbf->dir.ul.v_q,
 			(tbf->dir.ul.v_q + 1) & mod_sns);
 		/* get LLC data from block */
@@ -431,43 +671,697 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t *data, uint8_t len)
 	/* Check CV of last frame in buffer */
 	if (tbf->state == GPRS_RLCMAC_FLOW /* still in flow state */
 	 && tbf->dir.ul.v_q == tbf->dir.ul.v_r) { /* if complete */
-		struct rlc_dl_header *last_rh = (struct rlc_dl_header *)
+		struct rlc_ul_header *last_rh = (struct rlc_ul_header *)
 			tbf->rlc_block[(tbf->dir.ul.v_r - 1) & mod_sns_half];
-		LOGP(DRLCMACDATA, LOGL_DEBUG, "- No gaps in received block, "
+		LOGP(DRLCMACUL, LOGL_DEBUG, "- No gaps in received block, "
 			"last block: BSN=%d CV=%d\n", last_rh->bsn,
 			last_rh->cv);
 		if (last_rh->cv == 0) {
-			LOGP(DRLCMACDATA, LOGL_DEBUG, "- Finished with UL "
+			LOGP(DRLCMACUL, LOGL_DEBUG, "- Finished with UL "
 				"TBF\n");
-			tbf->state = GPRS_RLCMAC_FINISHED;
-			/* Start special timer instead of N3103 counter.
-			 * If this expires, resend. */
-			tbf_timer_start(tbf, 3103, 1);
+			tbf_new_state(tbf, GPRS_RLCMAC_FINISHED);
+			/* Reset N3103 counter. */
 			tbf->dir.ul.n3103 = 0;
 		}
 	}
 
 	/* If TLLI is included or if we received half of the window, we send
 	 * an ack/nack */
-	if (rh->ti || tbf->state == GPRS_RLCMAC_FINISHED
+	if (rh->si || rh->ti || tbf->state == GPRS_RLCMAC_FINISHED
 	 || (tbf->dir.ul.rx_counter % ACK_AFTER_FRAMES) == 0) {
+		if (rh->si) {
+			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
+				"because MS is stalled.\n");
+		}
 		if (rh->ti) {
-			LOGP(DRLCMACDATA, LOGL_DEBUG, "- Scheduling Ack/Nack, "
+			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
 				"because TLLI is included.\n");
 		}
 		if (tbf->state == GPRS_RLCMAC_FINISHED) {
-			LOGP(DRLCMACDATA, LOGL_DEBUG, "- Scheduling Ack/Nack, "
+			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
 				"because last block has CV==0.\n");
 		}
 		if ((tbf->dir.ul.rx_counter % ACK_AFTER_FRAMES) == 0) {
-			LOGP(DRLCMACDATA, LOGL_DEBUG, "- Scheduling Ack/Nack, "
+			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
 				"because %d frames received.\n",
 				ACK_AFTER_FRAMES);
 		}
-		/* trigger sending at next RTS */
-		tbf->dir.ul.substate = GPRS_RLCMAC_UL_SEND_ACK;
+		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_NONE) {
+			/* trigger sending at next RTS */
+			tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
+		} else {
+			/* already triggered */
+			LOGP(DRLCMACUL, LOGL_DEBUG, "-  Sending Ack/Nack is "
+				"already triggered, don't schedule!\n");
+		}
 	}
 
 	return 0;
 }
+
+struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
+	struct gprs_rlcmac_tbf *tbf, uint32_t fn)
+{
+	struct msgb *msg;
+	struct gprs_rlcmac_tbf *new_tbf;
+
+	if (tbf->poll_state != GPRS_RLCMAC_POLL_NONE) {
+		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
+			"sheduled for TBF=%d, so we must wait for uplink "
+			"assignment...\n", tbf->tfi);
+			return NULL;
+	}
+
+	/* on down TBF we get the uplink TBF to be assigned. */
+	if (tbf->direction == GPRS_RLCMAC_DL_TBF)
+		new_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF);
+	else
+		new_tbf = tbf;
+		
+	if (!new_tbf) {
+		LOGP(DRLCMACUL, LOGL_ERROR, "We have a schedule for uplink "
+			"assignment at downlink TBF=%d, but there is no uplink "
+			"TBF\n", tbf->tfi);
+		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+		return NULL;
+	}
+
+	msg = msgb_alloc(23, "rlcmac_ul_ass");
+	if (!msg)
+		return NULL;
+	bitvec *ass_vec = bitvec_alloc(23);
+	if (!ass_vec) {
+		msgb_free(msg);
+		return NULL;
+	}
+	bitvec_unhex(ass_vec,
+		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	write_packet_uplink_assignment(ass_vec, tbf->tfi,
+		(tbf->direction == GPRS_RLCMAC_DL_TBF), 0, 0, new_tbf->tfi,
+		new_tbf->dir.ul.usf, new_tbf->arfcn, new_tbf->ts, new_tbf->ta,
+		new_tbf->tsc, POLLING_ASSIGNMENT);
+	bitvec_pack(ass_vec, msgb_put(msg, 23));
+	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)malloc(sizeof(RlcMacDownlink_t));
+	LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++\n");
+	decode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
+	LOGPC(DRLCMAC, LOGL_NOTICE, "\n");
+	LOGP(DRLCMAC, LOGL_NOTICE, "------------------------- TX : Packet Uplink Assignment -------------------------\n");
+	bitvec_free(ass_vec);
+
+#if POLLING_ASSIGNMENT == 1
+	FIXME process does not work, also the acknowledgement is not checked.
+	tbf->poll_state = GPRS_RLCMAC_POLL_SCHED;
+	tbf->poll_fn = (fn + 13) % 2715648;
+	tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_WAIT_ACK;
+#else
+	tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+#endif
+
+	return msg;
+}
+
+int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
+{
+	struct gprs_rlcmac_tbf *tbf;
+	uint8_t trx, ts;
+	int tfi, usf; /* must be signed */
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, so we provide "
+		"one:\n");
+	// Create new TBF
+	tfi = tfi_alloc(&trx, &ts);
+	if (tfi < 0) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+		/* FIXME: send reject */
+		return -EBUSY;
+	}
+	usf = find_free_usf(trx, ts);
+	if (usf < 0) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource for USF\n");
+		/* FIXME: send reject */
+		return -EBUSY;
+	}
+	tbf = tbf_alloc(tfi, trx, ts);
+	if (qta < 0)
+		qta = 0;
+	if (qta > 252)
+		qta = 252;
+	tbf->ta = qta >> 2;
+	tbf->direction = GPRS_RLCMAC_UL_TBF;
+	tbf->dir.ul.usf = usf;
+	tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+	tbf_timer_start(tbf, 3169, T3169);
+	LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [UPLINK] START TFI: %u\n", tbf->tfi);
+	LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] TFI: %u RACH qbit-ta=%d ra=%d, Fn=%d (%d,%d,%d)\n", tbf->tfi, qta, ra, Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
+	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] TFI: %u Packet Immidiate Assignment\n", tbf->tfi);
+	bitvec *immediate_assignment = bitvec_alloc(23);
+	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	int len = write_immediate_assignment(immediate_assignment, 0, ra, Fn, tbf->ta, tbf->arfcn, tbf->ts, tbf->tsc, tbf->tfi, usf, 0, 0, 0);
+	pcu_l1if_tx_agch(immediate_assignment, len);
+	bitvec_free(immediate_assignment);
+
+	return 0;
+}
+
+
+/*
+ * DL data block flow
+ */
+
+/* send DL data block
+ *
+ * The messages are fragmented and forwarded as data blocks.
+ */
+struct msgb *gprs_rlcmac_send_data_block_acknowledged(
+	struct gprs_rlcmac_tbf *tbf, uint32_t fn)
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct rlc_dl_header *rh;
+	struct rlc_li_field *li;
+	uint8_t block_length; /* total length of block, including spare bits */
+	uint8_t block_data; /* usable data of block, w/o spare bits, inc. MAC */
+	struct msgb *msg, *dl_msg;
+	uint8_t bsn;
+	uint16_t mod_sns = tbf->sns - 1;
+	uint16_t mod_sns_half = (tbf->sns >> 1) - 1;
+	uint16_t index;
+	uint8_t *delimiter, *data, *e_pointer;
+	uint8_t len;
+	uint16_t space, chunk;
+
+	LOGP(DRLCMACDL, LOGL_INFO, "DL DATA TFI=%d downlink (V(A)==%d .. "
+		"V(S)==%d)\n", tbf->tfi, tbf->dir.dl.v_a, tbf->dir.dl.v_s);
+
+do_resend:
+	/* check if there is a block with negative acknowledgement */
+	for (bsn = tbf->dir.dl.v_a; bsn != tbf->dir.dl.v_s; 
+	     bsn = (bsn + 1) & mod_sns) {
+		index = (bsn & mod_sns_half);
+		if (tbf->dir.dl.v_b[index] == 'N'
+		 || tbf->dir.dl.v_b[index] == 'X') {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d\n",
+				bsn);
+			/* re-send block with negative aknowlegement */
+			tbf->dir.dl.v_b[index] = 'U'; /* unacked */
+			goto tx_block;
+		}
+	}
+
+	/* if the window has stalled, or transfer is complete,
+	 * send an unacknowledged block */
+	if (tbf->state == GPRS_RLCMAC_FINISHED
+	 || ((tbf->dir.dl.v_s - tbf->dir.dl.v_a) & mod_sns) == tbf->ws) {
+	 	int resend = 0;
+
+		if (tbf->state == GPRS_RLCMAC_FINISHED)
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
+				"because all blocks have been transmitted.\n",
+					tbf->dir.dl.v_a);
+		else
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
+				"because all window is stalled.\n",
+					tbf->dir.dl.v_a);
+		/* If V(S) == V(A) and finished state, we would have received
+		 * acknowledgement of all transmitted block. In this case we
+		 * would have transmitted the final block, and received ack
+		 * from MS. But in this case we did not receive the final ack
+		 * indication from MS. This should never happen if MS works
+		 * correctly. */
+		if (tbf->dir.dl.v_s == tbf->dir.dl.v_a) {
+			LOGP(DRLCMACDL, LOGL_ERROR, "- MS acked all block "
+				"(including final block), but did not include "
+				"FINAL_ACK_INDICATION!\n");
+			/* we just send final block again */
+			index = ((tbf->dir.dl.v_s - 1) & mod_sns_half);
+			goto tx_block;
+		}
+		
+		/* cycle through all unacked blocks */
+		for (bsn = tbf->dir.dl.v_a; bsn != tbf->dir.dl.v_s;
+		     bsn = (bsn + 1) & mod_sns) {
+			index = (bsn & mod_sns_half);
+			if (tbf->dir.dl.v_b[index] == 'U') {
+				/* mark to be re-send */
+				tbf->dir.dl.v_b[index] = 'X';
+				resend++;
+			}
+		}
+		/* At this point there should be at leasst one unacked block
+		 * to be resent. If not, this is an software error. */
+		if (resend == 0) {
+			LOGP(DRLCMACDL, LOGL_ERROR, "Software error: "
+				"There are no unacknowledged blocks, but V(A) "
+				" != V(S). PLEASE FIX!\n");
+			/* we just send final block again */
+			index = ((tbf->dir.dl.v_s - 1) & mod_sns_half);
+			goto tx_block;
+		}
+		goto do_resend;
+	}
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d\n",
+		tbf->dir.dl.v_s);
+
+	/* now we still have untransmitted LLC data, so we fill mac block */
+	index = tbf->dir.dl.v_s & mod_sns_half;
+	data = tbf->rlc_block[index];
+	switch (bts->cs) {
+	case 2: /* CS-2 */
+		block_length = 34;
+		block_data = 33;
+		break;
+	case 3: /* CS-3 */
+		block_length = 40;
+		block_data = 39;
+		break;
+	case 4: /* CS-4 */
+		block_length = 54;
+		block_data = 53;
+		break;
+	default: /* CS-1 */
+		block_length = 23;
+		block_data = 23;
+	}
+	memset(data, 0x2b, block_data); /* spare bits will be left 0 */
+	rh = (struct rlc_dl_header *)data;
+	rh->pt = 0; /* Data Block */
+	rh->rrbp = rh->s_p = 0; /* Polling, set later, if required */
+	rh->usf = 7; /* will be set at scheduler */
+	rh->pr = 0; /* FIXME: power reduction */
+	rh->tfi = tbf->tfi; /* TFI */
+	rh->fbi = 0; /* Final Block Indicator, set late, if true */
+	rh->bsn = tbf->dir.dl.v_s; /* Block Sequence Number */
+	rh->e = 0; /* Extension bit, maybe set later */
+	e_pointer = data + 2; /* points to E of current chunk */
+	data += 3;
+	delimiter = data; /* where next length header would be stored */
+	space = block_data - 3;
+	while (1) {
+		chunk = tbf->llc_length - tbf->llc_index;
+		/* if chunk will exceed block limit */
+		if (chunk > space) {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+				"larger than space (%d) left in block: copy "
+				"only remaining space, and we are done\n",
+				chunk, space);
+			/* block is filled, so there is no extension */
+			*e_pointer |= 0x01;
+			/* fill only space */
+			memcpy(data, tbf->llc_frame + tbf->llc_index, space);
+			/* incement index */
+			tbf->llc_index += space;
+			/* return data block as message */
+			break;
+		}
+		/* if FINAL chunk would fit precisely in space left */
+		if (chunk == space && llist_empty(&tbf->llc_queue)) {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+				"would exactly fit into space (%d): because "
+				"this is a final block, we don't add length "
+				"header, and we are done\n", chunk, space);
+			/* block is filled, so there is no extension */
+			*e_pointer |= 0x01;
+			/* fill space */
+			memcpy(data, tbf->llc_frame + tbf->llc_index, space);
+			/* reset LLC frame */
+			tbf->llc_index = tbf->llc_length = 0;
+			/* final block */
+			rh->fbi = 1; /* we indicate final block */
+			tbf_new_state(tbf, GPRS_RLCMAC_FINISHED);
+			/* return data block as message */
+			break;
+		}
+		/* if chunk would fit exactly in space left */
+		if (chunk == space) {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+				"would exactly fit into space (%d): add length "
+				"header with LI=0, to make frame extend to "
+				"next block, and we are done\n", chunk, space);
+			/* make space for delimiter */
+			if (delimiter != data)
+				memcpy(delimiter + 1, delimiter,
+					data - delimiter);
+			data++;
+			space--;
+			/* add LI with 0 length */
+			li = (struct rlc_li_field *)delimiter;
+			li->e = 1; /* not more extension */
+			li->m = 0; /* shall be set to 0, in case of li = 0 */
+			li->li = 0; /* chunk fills the complete space */
+			// no need to set e_pointer nor increase delimiter
+			/* fill only space, which is 1 octet less than chunk */
+			memcpy(data, tbf->llc_frame + tbf->llc_index, space);
+			/* incement index */
+			tbf->llc_index += space;
+			/* return data block as message */
+			break;
+		}
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d is less "
+			"than remaining space (%d): add length header to "
+			"to delimit LLC frame\n", chunk, space);
+		/* the LLC frame chunk ends in this block */
+		/* make space for delimiter */
+		if (delimiter != data)
+			memcpy(delimiter + 1, delimiter, data - delimiter);
+		data++;
+		space--;
+		/* add LI to delimit frame */
+		li = (struct rlc_li_field *)delimiter;
+		li->e = 0; /* Extension bit, maybe set later */
+		li->m = 0; /* will be set later, if there is more LLC data */
+		li->li = chunk; /* length of chunk */
+		e_pointer = delimiter; /* points to E of current delimiter */
+		delimiter++;
+		/* copy (rest of) LLC frame to space */
+		memcpy(data, tbf->llc_frame + tbf->llc_index, chunk);
+		data += chunk;
+		space -= chunk;
+		/* reset LLC frame */
+		tbf->llc_index = tbf->llc_length = 0;
+		/* dequeue next LLC frame, if any */
+		msg = msgb_dequeue(&tbf->llc_queue);
+		if (msg) {
+			LOGP(DRLCMACDL, LOGL_INFO, "- Dequeue next LLC "
+				"(len=%d)\n", msg->len);
+			memcpy(tbf->llc_frame, msg->data, msg->len);
+			tbf->llc_length = msg->len;
+			msgb_free(msg);
+		}
+		/* if we have more data and we have space left */
+		if (space > 0 && tbf->llc_length) {
+			li->m = 1; /* we indicate more frames to follow */
+			continue;
+		}
+		/* if we don't have more LLC frames */
+		if (!tbf->llc_length) {
+			LOGP(DRLCMACDL, LOGL_INFO, "-- Final block, so we "
+				"done.\n");
+			li->e = 1; /* we cannot extend */
+			rh->fbi = 1; /* we indicate final block */
+			tbf_new_state(tbf, GPRS_RLCMAC_FINISHED);
+			break;
+		}
+		/* we have no space left */
+		LOGP(DRLCMACDL, LOGL_INFO, "-- No space left, so we are "
+			"done.\n");
+		li->e = 1; /* we cannot extend */
+		break;
+	}
+	LOGP(DRLCMACDL, LOGL_DEBUG, "data block: %s\n",
+		osmo_hexdump(tbf->rlc_block[index], block_length));
+	tbf->rlc_block_len[index] = block_length;
+	/* raise send state and set ack state array */
+	tbf->dir.dl.v_b[index] = 'U'; /* unacked */
+	tbf->dir.dl.v_s = (tbf->dir.dl.v_s + 1) & mod_sns; /* inc send state */
+
+tx_block:
+	/* from this point on, new block is sent or old block is resent */
+
+	/* get data and header from current block */
+	data = tbf->rlc_block[index];
+	len = tbf->rlc_block_len[index];
+	rh = (struct rlc_dl_header *)data;
+
+	/* Increment TX-counter */
+	tbf->dir.dl.tx_counter++;
+
+	/* Clear Polling, if still set in history buffer */
+	rh->s_p = 0;
+		
+	/* poll after ACK_AFTER_FRAMES frames, or when final block is tx. */
+	if (rh->fbi == 1 || (tbf->dir.dl.tx_counter % ACK_AFTER_FRAMES) == 0) {
+		if (rh->fbi == 1) {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
+				"polling, because final block sent.\n");
+		}
+		if ((tbf->dir.dl.tx_counter % ACK_AFTER_FRAMES) == 0) {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
+				"polling, because %d blocks sent.\n",
+				ACK_AFTER_FRAMES);
+		}
+		if (tbf->poll_state != GPRS_RLCMAC_POLL_NONE)
+			LOGP(DRLCMACDL, LOGL_NOTICE, "Polling is already "
+				"sheduled for TBF=%d, so we must wait for "
+				"requesting downlink ack\n", tbf->tfi);
+		else  {
+			/* start timer whenever we send the final block */
+			if (rh->fbi == 1)
+				tbf_timer_start(tbf, 3191, T3191);
+
+			/* schedule polling */
+			tbf->poll_state = GPRS_RLCMAC_POLL_SCHED;
+			tbf->poll_fn = (fn + 13) % 2715648;
+
+			/* set polling in header */
+			rh->rrbp = 0; /* N+13 */
+			rh->s_p = 1; /* Polling */
+		}
+	}
+
+	/* return data block as message */
+	dl_msg = msgb_alloc(len, "rlcmac_dl_data");
+	if (!dl_msg)
+		return NULL;
+	memcpy(msgb_put(dl_msg, len), data, len);
+
+	return dl_msg;
+}
+
+int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
+	uint8_t ssn, uint8_t *rbb)
+{
+	char show_rbb[65], show_v_b[RLC_MAX_SNS + 1];
+	uint16_t mod_sns = tbf->sns - 1;
+	uint16_t mod_sns_half = (tbf->sns >> 1) - 1;
+	int i; /* must be signed */
+	int16_t dist; /* must be signed */
+	uint8_t bit;
+	uint16_t bsn;
+	struct msgb *msg;
+
+	LOGP(DRLCMACDL, LOGL_INFO, "TFI=%d downlink acknowledge\n",
+		tbf->tfi);
+
+	if (!final) {
+		/* show received array in debug (bit 64..1) */
+		for (i = 63; i >= 0; i--) {
+			bit = (rbb[i >> 3]  >>  (7 - (i&7)))   & 1;
+			show_rbb[i] = (bit) ? '1' : 'o';
+		}
+		show_rbb[64] = '\0';
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- ack:  (BSN=%d)\"%s\""
+			"(BSN=%d)  1=ACK o=NACK\n", ssn - 64, show_rbb,
+			ssn - 1);
+
+		/* apply received array to receive state (SSN-64..SSN-1) */
+		/* calculate distance of ssn from V(S) */
+		dist = (tbf->dir.dl.v_s - ssn) & mod_sns;
+		/* check if distance is less than distance V(A)..V(S) */
+		if (dist < ((tbf->dir.dl.v_s - tbf->dir.dl.v_a) & mod_sns)) {
+			/* SSN - 1 is in range V(A)..V(S)-1 */
+			for (i = 63, bsn = (ssn - 1) & mod_sns;
+			     i >= 0 && bsn != ((tbf->dir.dl.v_a - 1) & mod_sns);
+			     i--, bsn = (bsn - 1) & mod_sns) {
+				bit = (rbb[i >> 3]  >>  (7 - (i&7)))   & 1;
+				if (bit) {
+					LOGP(DRLCMACDL, LOGL_DEBUG, "- got "
+						"ack for BSN=%d\n", bsn);
+					tbf->dir.dl.v_b[bsn & mod_sns_half]
+						= 'A';
+				} else {
+					LOGP(DRLCMACDL, LOGL_DEBUG, "- got "
+						"NACK for BSN=%d\n", bsn);
+					tbf->dir.dl.v_b[bsn & mod_sns_half]
+						= 'N';
+				}
+			}
+		} else {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- ack range is out of "
+				"V(A)..V(S) range\n");
+		}
+
+		/* raise V(A), if possible */
+		for (i = 0, bsn = tbf->dir.dl.v_a; bsn != tbf->dir.dl.v_s;
+		     i++, bsn = (bsn + 1) & mod_sns) {
+			if (tbf->dir.dl.v_b[bsn & mod_sns_half] == 'A') {
+				tbf->dir.dl.v_b[bsn & mod_sns_half] = 'I';
+					/* mark invalid */
+				tbf->dir.dl.v_a = (tbf->dir.dl.v_a + 1)
+								& mod_sns;
+			} else
+				break;
+		}
+
+		/* show receive state array in debug (V(A)..V(S)-1) */
+		for (i = 0, bsn = tbf->dir.dl.v_a; bsn != tbf->dir.dl.v_s;
+		     i++, bsn = (bsn + 1) & mod_sns) {
+			show_v_b[i] = tbf->dir.dl.v_b[bsn & mod_sns_half];
+			if (show_v_b[i] == 0)
+				show_v_b[i] = ' ';
+		}
+		show_v_b[i] = '\0';
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- V(B): (V(A)=%d)\"%s\""
+			"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked "
+			"X=Resend-Unacked\n", tbf->dir.dl.v_a, show_v_b,
+			(tbf->dir.dl.v_s - 1) & mod_sns);
+
+		return 0;
+	}
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
+
+	/* check for LLC PDU in the LLC Queue */
+	msg = msgb_dequeue(&tbf->llc_queue);
+	if (!msg) {
+		struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+		/* no message, start T3193, change state to RELEASE */
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- No new message, so we "
+			"release.\n");
+		/* use T3192 for T3193 */
+		if (bts->t3192_msec)
+			tbf_timer_start(tbf, 3193, bts->t3192_msec / 1000,
+				bts->t3192_msec & 1000);
+		else
+			tbf_timer_start(tbf, 3193, T3193); /* max T3192 */
+		tbf_new_state(tbf, GPRS_RLCMAC_WAIT_RELEASE);
+
+		return 0;
+	}
+	memcpy(tbf->llc_frame, msg->data, msg->len);
+	tbf->llc_length = msg->len;
+	msgb_free(msg);
+
+	/* we have a message, so we trigger downlink assignment, and there
+	 * set the state to ASSIGN. also we set old_downlink, because we
+	 * re-use this tbf. */
+	LOGP(DRLCMAC, LOGL_DEBUG, "Trigger dowlink assignment on PACCH, "
+		"because another LLC PDU has arrived in between\n");
+	memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl)); /* reset RLC states */
+	gprs_rlcmac_trigger_downlink_assignment(tbf, 1);
+
+	return 0;
+}
+
+
+struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
+	struct gprs_rlcmac_tbf *tbf, uint32_t fn)
+{
+	struct msgb *msg;
+	struct gprs_rlcmac_tbf *new_tbf;
+
+	if (tbf->poll_state != GPRS_RLCMAC_POLL_NONE) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "Polling is already "
+			"sheduled for TBF=%d, so we must wait for downlink "
+			"assignment...\n", tbf->tfi);
+			return NULL;
+	}
+
+	/* on uplink TBF we get the downlink TBF to be assigned. */
+	if (tbf->direction == GPRS_RLCMAC_UL_TBF)
+		new_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_DL_TBF);
+	else
+		new_tbf = tbf;
+	if (!new_tbf) {
+		LOGP(DRLCMACDL, LOGL_ERROR, "We have a schedule for downlink "
+			"assignment at uplink TBF=%d, but there is no downlink "
+			"TBF\n", tbf->tfi);
+		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+		return NULL;
+	}
+
+	msg = msgb_alloc(23, "rlcmac_dl_ass");
+	if (!msg)
+		return NULL;
+	bitvec *ass_vec = bitvec_alloc(23);
+	if (!ass_vec) {
+		msgb_free(msg);
+		return NULL;
+	}
+	bitvec_unhex(ass_vec,
+		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	write_packet_downlink_assignment(ass_vec, tbf->tfi,
+		(tbf->direction == GPRS_RLCMAC_DL_TBF), new_tbf->tfi,
+		new_tbf->arfcn, new_tbf->ts, new_tbf->ta, new_tbf->tsc,
+		POLLING_ASSIGNMENT);
+	bitvec_pack(ass_vec, msgb_put(msg, 23));
+	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)malloc(sizeof(RlcMacDownlink_t));
+	LOGP(DRLCMAC, LOGL_NOTICE, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
+	decode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
+	LOGPC(DRLCMAC, LOGL_NOTICE, "\n");
+	LOGP(DRLCMAC, LOGL_NOTICE, "------------------------- TX : Packet Downlink Assignment -------------------------\n");
+	bitvec_free(ass_vec);
+
+#if POLLING_ASSIGNMENT == 1
+	tbf->poll_state = GPRS_RLCMAC_POLL_SCHED;
+	tbf->poll_fn = (fn + 13) % 2715648;
+	tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_WAIT_ACK;
+#else
+	tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+#endif
+
+	return msg;
+}
+
+static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll)
+{
+	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] TFI: %u TLLI: 0x%08x Immidiate Assignment (CCCH)\n", tbf->tfi, tbf->tlli);
+	bitvec *immediate_assignment = bitvec_alloc(23);
+	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	/* use request reference that has maximum distance to current time,
+	 * so the assignment will not conflict with possible RACH requests. */
+	int len = write_immediate_assignment(immediate_assignment, 1, 125, (tbf->pdch->last_rts_fn + 21216) % 2715648, tbf->ta, tbf->arfcn, tbf->ts, tbf->tsc, tbf->tfi, 0, tbf->tlli, poll, tbf->poll_fn);
+	pcu_l1if_tx_agch(immediate_assignment, len);
+	bitvec_free(immediate_assignment);
+}
+
+/* depending on the current TBF, we assign on PACCH or AGCH */
+void gprs_rlcmac_trigger_downlink_assignment(gprs_rlcmac_tbf *tbf,
+	uint8_t old_downlink)
+{
+	gprs_rlcmac_tbf *old_tbf;
+
+#ifdef DEBUG_DL_ASS_IDLE
+	LOGP(DRLCMAC, LOGL_ERROR, "**** DEBUGGING DOWNLINK ASSIGNMENT ****\n");
+#endif
+
+	/* stop pending timer */
+	tbf_timer_stop(tbf);
+
+	/* check for downlink tbf:  */
+	if (old_downlink)
+		old_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_DL_TBF);
+	else
+		old_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF);
+	if (old_tbf) {
+#ifdef DEBUG_DL_ASS_IDLE
+		LOGP(DRLCMAC, LOGL_ERROR, "We must wait for current TBF to be "
+			"released.\n");
+		/* wait one second until assignment */
+		tbf_timer_start(tbf, 1234, 1,0);
+#else
+		LOGP(DRLCMAC, LOGL_DEBUG, "Trigger dowlink assignment on "
+			"PACCH, because %slink TBF=%d exists for TLLI\n",
+			(tbf->direction == GPRS_RLCMAC_DL_TBF) ? "down" : "up",
+			old_tbf->tfi);
+		old_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
+		/* use TA from old TBF */
+		tbf->ta = old_tbf->ta;
+		/* change state */
+		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
+		/* start timer */
+		tbf_timer_start(tbf, 0, Tassign_pacch);
+#endif
+	} else {
+		LOGP(DRLCMAC, LOGL_DEBUG, "Trigger dowlink assignment on AGCH, "
+			"because no uplink/downlink TBF exists for TLLI. "
+			"(providing last timing advance)\n");
+		/* send immediate assignment */
+		gprs_rlcmac_downlink_assignment(tbf, 0);
+		/* change state */
+		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
+		/* start timer */
+		tbf_timer_start(tbf, 0, Tassign_agch);
+	}
+								                }
 

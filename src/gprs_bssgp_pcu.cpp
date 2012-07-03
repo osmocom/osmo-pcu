@@ -29,40 +29,31 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 {
 	struct bssgp_ud_hdr *budh;
 	int tfi;
+	uint32_t tlli;
 	int i = 0;
 	uint8_t trx, ts;
+	uint8_t *data;
+	uint16_t len;
+	struct gprs_rlcmac_tbf *tbf;
 
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
-	struct gprs_rlcmac_tbf *tbf;
-	// Create new TBF
-	tfi = tfi_alloc(&trx, &ts);
-	if (tfi < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
-		/* FIXME: send reject */
-		return -EBUSY;
-	}
-	tbf = tbf_alloc(tfi, trx, ts);
-	tbf->direction = GPRS_RLCMAC_DL_TBF;
-	tbf->state = GPRS_RLCMAC_FLOW;
-	tbf->tlli = ntohl(budh->tlli);
-	LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] START TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+	tlli = ntohl(budh->tlli);
 
 	/* LLC_PDU is mandatory IE */
 	if (!TLVP_PRESENT(tp, BSSGP_IE_LLC_PDU))
 	{
-		LOGP(DBSSGP, LOGL_ERROR, "BSSGP TLLI=0x%08x Rx UL-UD missing mandatory IE\n", tbf->tlli);
+		LOGP(DBSSGP, LOGL_ERROR, "BSSGP TLLI=0x%08x Rx UL-UD missing mandatory IE\n", tlli);
 		return bssgp_tx_status(BSSGP_CAUSE_MISSING_MAND_IE, NULL, msg);
 	}
 
-	uint8_t *llc_pdu = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_LLC_PDU);
-	tbf->llc_index = TLVP_LEN(tp, BSSGP_IE_LLC_PDU);
-	
-	LOGP(DBSSGP, LOGL_NOTICE, "LLC PDU = ");
-	for (i = 0; i < tbf->llc_index; i++)
+	data = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_LLC_PDU);
+	len = TLVP_LEN(tp, BSSGP_IE_LLC_PDU);
+	if (len > sizeof(tbf->llc_frame))
 	{
-		tbf->llc_frame[i] = llc_pdu[i];
-		LOGPC(DBSSGP, LOGL_NOTICE, "%02x", tbf->llc_frame[i]);
+		LOGP(DBSSGP, LOGL_ERROR, "BSSGP TLLI=0x%08x Rx UL-UD IE_LLC_PDU too large\n", tlli);
+		return bssgp_tx_status(BSSGP_CAUSE_COND_IE_ERR, NULL, msg);
 	}
+	LOGP(DBSSGP, LOGL_NOTICE, "LLC PDU = (TLLI=0x%08x) %s\n", tlli, osmo_hexdump(data, len));
 
 	uint16_t imsi_len = 0;
 	uint8_t *imsi;
@@ -79,7 +70,50 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		LOGPC(DBSSGP, LOGL_NOTICE, "\n");
 	}
 
-	gprs_rlcmac_packet_downlink_assignment(tbf);
+	/* check for existing TBF */
+	if ((tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF))) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] APPEND TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+		if (tbf->state == GPRS_RLCMAC_WAIT_RELEASE) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "TBF in WAIT RELEASE state "
+				"(T3193), so reuse TBF\n");
+			memcpy(tbf->llc_frame, data, len);
+			tbf->llc_length = len;
+			memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl)); /* reset
+								rlc states */
+			gprs_rlcmac_trigger_downlink_assignment(tbf, 1);
+		} else {
+			/* the TBF exists, so we must write it in the queue */
+			struct msgb *llc_msg = msgb_alloc(len, "llc_pdu_queue");
+			if (!llc_msg)
+				return -ENOMEM;
+			memcpy(msgb_put(llc_msg, len), data, len);
+			msgb_enqueue(&tbf->llc_queue, llc_msg);
+		}
+	} else {
+		// Create new TBF
+		tfi = tfi_alloc(&trx, &ts);
+		if (tfi < 0) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+			/* FIXME: send reject */
+			return -EBUSY;
+		}
+		tbf = tbf_alloc(tfi, trx, ts);
+		tbf->direction = GPRS_RLCMAC_DL_TBF;
+		tbf->tlli = tlli;
+		tbf->tlli_valid = 1;
+
+		LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] START TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+
+		/* new TBF, so put first frame */
+		memcpy(tbf->llc_frame, data, len);
+		tbf->llc_length = len;
+
+		/* trigger downlink assignment and set state to ASSIGN.
+		 * we don't use old_downlink, so the possible uplink is used
+		 * to trigger downlink assignment. if there is no uplink,
+		 * AGCH is used. */
+		gprs_rlcmac_trigger_downlink_assignment(tbf, 0);
+	}
 
 	return 0;
 }

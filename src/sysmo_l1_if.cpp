@@ -242,6 +242,17 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 
 	if (!(info_ind->flags & PCU_IF_FLAG_ACTIVE)) {
 		LOGP(DL1IF, LOGL_NOTICE, "BTS not available\n");
+		/* free all TBF */
+		for (trx = 0; trx < 8; trx++) {
+			bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
+			for (ts = 0; ts < 8; ts++) {
+				for (tfi = 0; tfi < 32; tfi++) {
+					tbf = bts->trx[trx].pdch[ts].tbf[tfi];
+					if (tbf)
+						tbf_free(tbf);
+				}
+			}
+		}
 		return 0;
 	}
 	LOGP(DL1IF, LOGL_INFO, "BTS available\n");
@@ -280,6 +291,43 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 	return rc;
 }
 
+static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	int trx, ts, tfi;
+	struct gprs_rlcmac_tbf *tbf;
+	uint32_t elapsed;
+	uint8_t fn13 = time_ind->fn % 13;
+
+	/* omit frame numbers not starting at a MAC block */
+	if (fn13 != 0 && fn13 != 4 && fn13 != 8)
+		return 0;
+
+	LOGP(DL1IF, LOGL_DEBUG, "Time indication received: %d\n",
+		time_ind->fn % 52);
+
+	set_current_fn(time_ind->fn);
+
+	/* check for poll timeout */
+	for (trx = 0; trx < 8; trx++) {
+		for (ts = 0; ts < 8; ts++) {
+			for (tfi = 0; tfi < 32; tfi++) {
+				tbf = bts->trx[trx].pdch[ts].tbf[tfi];
+				if (!tbf)
+					continue;
+				if (tbf->poll_state != GPRS_RLCMAC_POLL_SCHED)
+					continue;
+				elapsed = (frame_number - tbf->poll_fn)
+							% 2715648;
+				if (elapsed >= 20 && elapsed < 200)
+					gprs_rlcmac_poll_timeout(tbf);
+			}
+		}
+	}
+
+	return 0;
+}
+
 static int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 {
 	int rc = 0;
@@ -296,6 +344,9 @@ static int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 		break;
 	case PCU_IF_MSG_INFO_IND:
 		rc = pcu_rx_info_ind(&pcu_prim->u.info_ind);
+		break;
+	case PCU_IF_MSG_TIME_IND:
+		rc = pcu_rx_time_ind(&pcu_prim->u.time_ind);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received unknwon PCU msg type %d\n",

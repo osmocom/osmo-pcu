@@ -30,7 +30,6 @@ extern "C" {
 }
 
 int get_current_fn();
-void set_current_fn(int fn);
 
 void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn, 
         uint32_t fn, uint8_t block_nr);

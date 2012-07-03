@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
 	gprs_rlcmac_bts = talloc_zero(NULL, struct gprs_rlcmac_bts);
 	if (!gprs_rlcmac_bts)
 		return -ENOMEM;
+	gprs_rlcmac_bts->cs = 1;
 
 	osmo_init_logging(&gprs_log_info);
 	pcu_l1if_open();

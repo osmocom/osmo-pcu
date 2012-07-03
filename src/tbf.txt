@@ -1,0 +1,111 @@
+This document describes the handling of TBFs
+--------------------------------------------
+
+Notes:
+  TBF
+    Instance for one temporary block flow.
+
+  LLC Frame
+    Current frame to be transmitted or received. If tbf->llc_length is not 0,
+    the frame exists, if 0, the frame does not exist. If tbf->llc_index is not
+    0, parts of the frame have been transmitted or received so far.
+
+  LLC Queue
+    Queue of next frames to be transmitted.
+
+States:
+  GPRS_RLCMAC_ASSIGN
+    After a downlink TBF is created, it resides in this state until the
+    block flow can start. This is required to give the mobile time to listen
+    to connect to downlink PDCH.
+
+   GPRS_RLCMAC_FLOW,
+    During packet flow, this state indicates downlink and uplink TBF block
+    flow.
+
+   GPRS_RLCMAC_FINISHED,
+    Uplink TBF:
+    After final block is received AND all other blocks are completely
+    received, the state is entered. The PACKET CONTROL ACK is still not
+    received. (Counter N3103 is counted on each poll request.)
+    Downlink TBF:
+    All blocks including the final block has been transmitted. Not all
+    downlink blocks are acknowledged yet. (Counter N3015 is counted on each
+    poll request.)
+
+   GPRS_RLCMAC_WAIT_RELEASE,
+    The all blocks on downlink TBF have been acked by mobile. The penalty
+    timer T3192 is running on mobile.
+
+   GPRS_RLCMAC_RELEASING,
+    Wait for TFI/USF to be re-used. This state is entered when a counter
+    reaches it's maximum and T3169 is running.
+
+
+When downlink LLC PDU is received:
+
+  If downlink TBF exists for given TLLI, but not in RELEASING state:
+    If downlink TBF is in FLOW or FINISHED state:
+      Enqueue PDU to LLC Queue of TBF.
+      Done.
+    If downlink TBF is in WAIT RELEASE state:
+      Attach PDU to LLC Frame of TBF.
+      Put TBF back into FLOW state.
+      Done.
+  If dowlink TBF does not exists for given TLLI, or in RELEASING state:
+    Create new downlink TBF.
+    Attach PDU to LLC Frame of TBF.
+    If uplink TBF exists for given TLLI, but not in RELEASING state:
+      Assign packet channel PACCH.
+      Done.
+    If uplink TBF does not exists for given TLLI, or in RELEASING state:
+      Assign packet channel AGCH.
+      Done.
+
+When channel request for uplink TBF is received:
+
+  Create new uplink TBF.
+  If channel request was received on RACH
+    Assign packet channel AGCH.
+    Done
+  If channel request was received on PACCH
+    Assign packet channel PACCH.
+    Done
+
+Handling of LLC Frame of downlink TBF and LLC Queue of downlink TBF:
+
+  If a downlink TBF is created, the LLC PDU is attached to LLC Frame of TBF
+  (downlink flow is assigned to MS).
+
+  If a downlink TBF exists, the LLC PDU is enqueued to LLC Queue of TBF.
+
+  During transfer of downlink blocks, the LLC Queue is dequeued whenever all
+  segments of LLC Frame were used for generation of downlink blocks. (If a
+  block is partly filled with LLC Frame segment, its remaining space is filled
+  with the next LLC Frame from the Queue.)
+
+  If the transfer is finished, no more LLC Frames are dequeued from the LLC
+  Queue, in case a new frame has arrived during lifetime of TBF.
+
+  If the all downlink blocks have been acknowledged, the LLC Queue is
+  dequeued and an existing frame is attached to LLC Frame. If so, the new
+  state is FLOW (downlink flow is assigned to MS), otherwise WAIT RELEASE.
+
+  If a new LLC PDU is attached to LLC Frame during WAIT RELEASE state, the
+  state is changed to FLOW (downlink flow is assigned to MS).
+
+Handling of LLC Frame on uplink TBF:
+
+  Received uplink blocks are appended to LLC Frame of TBF. If the PDU is
+  complete, it is forwarded to the upper layer.
+
+Polling:
+  In order to poll uplink control block from MS, a special poll state and
+  frame number is stored at TBF. The scheduler reads that value and will not
+  assign uplink ressource for other TBFs at that frame number.
+
+  When there is no uplink transmission received on the block, a timeout is
+  indicated by layer 1 interface. There are two ways of checking timeout:
+   - The received frame is bad (BFI).
+   - The GSM indicates that the block should have been already received.
+

@@ -29,6 +29,12 @@ extern "C" {
 #include <osmocom/core/timer.h>
 }
 
+/* This special feature will delay assignment of downlink TBF by one second,
+ * in case there is already a TBF.
+ * This is usefull to debug downlink establishment during packet idle mode.
+ */
+//#define DEBUG_DL_ASS_IDLE
+
 /*
  * PDCH instanc
  */
@@ -41,6 +47,7 @@ struct gprs_rlcmac_pdch {
 	uint8_t next_ul_tfi; /* next uplink TBF/TFI to schedule (0..31) */
 	uint8_t next_dl_tfi; /* next downlink TBF/TFI to schedule (0..31) */
 	struct gprs_rlcmac_tbf *tbf[32]; /* array of TBF pointers, by TFI */
+	uint32_t last_rts_fn; /* store last frame number of RTS */
 };
 
 struct gprs_rlcmac_trx {
@@ -49,6 +56,8 @@ struct gprs_rlcmac_trx {
 };
 
 struct gprs_rlcmac_bts {
+	uint8_t cs; /* block length 1=CS-1, 2=CS-2, 3=CS-3, 4=CS-4 */
+	uint16_t t3192_msec;
 	struct gprs_rlcmac_trx trx[8];
 };
 
@@ -61,16 +70,25 @@ extern struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 #define LLC_MAX_LEN 1543
 #define RLC_MAX_SNS 128 /* GPRS, must be power of 2 */
 #define RLC_MAX_WS  64 /* max window size */
-#define RLC_MAX_LEN 52 /* CS-4 */
-#define UL_RLC_DATA_BLOCK_LEN 23
+#define RLC_MAX_LEN 54 /* CS-4 including spare bits */
 
-#define T3169 6		/* 5 seconds + one second, because we don't use
+#define Tassign_agch 0,500000/* wait for assignment, before transmitting DL */
+#define Tassign_pacch 0,100000/* wait for assignment, before transmitting DL */
+#define T3169 6,0	/* 5 seconds + one second, because we don't use
 			 * counters before starting timer. */
+#define T3191 5,0	/* 5 Seconds */
+#define T3193 2,0	/* >T3192, which can be max 1,5s */
+#define T3195 5,0	/* 5 Seconds */
+//#define N3101_MAX 12	/* how many missed uplink blocks */
 #define N3103_MAX 4	/* how many tries to poll PACKET CONTROL ACK */
+#define N3105_MAX 4	/* how many tries to poll PACKET DOWNLINK ACK */
 
 enum gprs_rlcmac_tbf_state {
+	GPRS_RLCMAC_NULL = 0,	/* new created TBF */
+	GPRS_RLCMAC_ASSIGN,	/* wait for downlink assignment */
 	GPRS_RLCMAC_FLOW,	/* RLC/MAC flow, ressource needed */
 	GPRS_RLCMAC_FINISHED,	/* flow finished, wait for release */
+	GPRS_RLCMAC_WAIT_RELEASE,/* wait for release or restart of DL TBF */
 	GPRS_RLCMAC_RELEASING,	/* releasing, wait to free TBI/USF */
 };
 
@@ -79,10 +97,22 @@ enum gprs_rlcmac_tbf_poll_state {
 	GPRS_RLCMAC_POLL_SCHED, /* a polling was scheduled */
 };
 
-enum gprs_rlcmac_tbf_ul_substate {
-	GPRS_RLCMAC_UL_NONE = 0,
-	GPRS_RLCMAC_UL_SEND_ACK, /* send acknowledge on next RTS */
-	GPRS_RLCMAC_UL_WAIT_POLL, /* wait for PACKET CONTROL ACK */
+enum gprs_rlcmac_tbf_dl_ass_state {
+	GPRS_RLCMAC_DL_ASS_NONE = 0,
+	GPRS_RLCMAC_DL_ASS_SEND_ASS, /* send downlink assignment on next RTS */
+	GPRS_RLCMAC_DL_ASS_WAIT_ACK, /* wait for PACKET CONTROL ACK */
+};
+
+enum gprs_rlcmac_tbf_ul_ass_state {
+	GPRS_RLCMAC_UL_ASS_NONE = 0,
+	GPRS_RLCMAC_UL_ASS_SEND_ASS, /* send uplink assignment on next RTS */
+	GPRS_RLCMAC_UL_ASS_WAIT_ACK, /* wait for PACKET CONTROL ACK */
+};
+
+enum gprs_rlcmac_tbf_ul_ack_state {
+	GPRS_RLCMAC_UL_ACK_NONE = 0,
+	GPRS_RLCMAC_UL_ACK_SEND_ACK, /* send acknowledge on next RTS */
+	GPRS_RLCMAC_UL_ACK_WAIT_ACK, /* wait for PACKET CONTROL ACK */
 };
 
 enum gprs_rlcmac_tbf_direction {
@@ -98,30 +128,45 @@ struct gprs_rlcmac_tbf {
 	uint32_t tlli;
 	uint8_t tlli_valid;
 	uint8_t trx, ts, tsc;
+	struct gprs_rlcmac_pdch *pdch;
 	uint16_t arfcn, ta;
-	uint8_t llc_frame[LLC_MAX_LEN];
-	uint16_t llc_index;
+	uint8_t llc_frame[LLC_MAX_LEN]; /* current DL or UL frame */
+	uint16_t llc_index; /* current write/read position of frame */
+	uint16_t llc_length; /* len of current DL LLC_frame, 0 == no frame */
+	llist_head llc_queue; /* queued LLC DL data */
+
+	enum gprs_rlcmac_tbf_dl_ass_state dl_ass_state;
+	enum gprs_rlcmac_tbf_ul_ass_state ul_ass_state;
+	enum gprs_rlcmac_tbf_ul_ack_state ul_ack_state;
 
 	enum gprs_rlcmac_tbf_poll_state poll_state;
 	uint32_t poll_fn;
 
-	uint16_t bsn;	/* block sequence number */
 	uint16_t ws;	/* window size */
 	uint16_t sns;	/* sequence number space */
+
+	/* Please note that all variables here will be reset when changing
+	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
+	 * All states that need reset must be in this struct, so this is why
+	 * variables are in both (dl and ul) structs and not outside union.
+	 */
 	union {
 		struct {
+			uint16_t bsn;	/* block sequence number */
 			uint16_t v_s;	/* send state */
 			uint16_t v_a;	/* ack state */
 			char v_b[RLC_MAX_SNS/2]; /* acknowledge state array */
+			int32_t tx_counter; /* count all transmitted blocks */
+			uint8_t n3105;	/* N3105 counter */
 		} dl;
 		struct {
+			uint16_t bsn;	/* block sequence number */
 			uint16_t v_r;	/* receive state */
 			uint16_t v_q;	/* receive window state */
 			char v_n[RLC_MAX_SNS/2]; /* receive state array */
 			int32_t rx_counter; /* count all received blocks */
-			enum gprs_rlcmac_tbf_ul_substate substate;
-			uint8_t usf;	/* USF */
 			uint8_t n3103;	/* N3103 counter */
+			uint8_t usf;	/* USF */
 		} ul;
 	} dir;
 	uint8_t rlc_block[RLC_MAX_SNS/2][RLC_MAX_LEN]; /* block history */
@@ -142,14 +187,21 @@ int tfi_alloc(uint8_t *_trx, uint8_t *_ts);
 
 struct gprs_rlcmac_tbf *tbf_alloc(uint8_t tfi, uint8_t trx, uint8_t ts);
 
-struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi);
+struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, int direction);
 
-struct gprs_rlcmac_tbf *tbf_by_tlli(uint8_t tlli);
+struct gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli, int direction);
+
+struct gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn);
+
+int find_free_usf(uint8_t trx, uint8_t ts);
 
 void tbf_free(struct gprs_rlcmac_tbf *tbf);
 
+void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
+        enum gprs_rlcmac_tbf_state state);
+
 void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
-                                unsigned int seconds);
+                        unsigned int seconds, unsigned int microseconds);
 
 void tbf_timer_stop(struct gprs_rlcmac_tbf *tbf);
 
@@ -161,36 +213,56 @@ enum gprs_rlcmac_block_type {
 	GPRS_RLCMAC_RESERVED = 0x3
 };
 
-void gprs_rlcmac_tx_ul_ack(uint8_t tfi, uint32_t tlli, RlcMacUplinkDataBlock_t * ul_data_block);
-
-void gprs_rlcmac_data_block_parse(gprs_rlcmac_tbf* tbf, RlcMacUplinkDataBlock_t * ul_data_block);
-
-int gprs_rlcmac_rcv_data_block(bitvec *rlc_block);
-
-int gprs_rlcmac_rcv_control_block(bitvec *rlc_block);
-
 int gprs_rlcmac_rcv_block(uint8_t *data, uint8_t len, uint32_t fn);
 
-int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn, 
-        uint32_t fn, uint8_t block_nr);
+int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, 
+        uint32_t fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc, 
+        uint8_t tfi, uint8_t usf, uint32_t tlli, uint8_t polling,
+	uint32_t poll_fn);
 
-int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta);
+void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
+        uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli, uint8_t new_tfi,
+        uint8_t usf, uint16_t arfcn, uint8_t tn, uint8_t ta, uint8_t tsc,
+        uint8_t poll);
 
-void gprs_rlcmac_tx_dl_data_block(uint32_t tlli, uint8_t tfi, uint8_t *pdu, int start_index, int end_index, uint8_t bsn, uint8_t fbi);
+void write_packet_downlink_assignment(bitvec * dest, uint8_t old_tfi,
+        uint8_t old_downlink, uint8_t new_tfi, uint16_t arfcn,
+        uint8_t tn, uint8_t ta, uint8_t tsc, uint8_t poll);
 
-int gprs_rlcmac_segment_llc_pdu(struct gprs_rlcmac_tbf *tbf);
+void write_packet_uplink_ack(bitvec * dest, struct gprs_rlcmac_tbf *tbf,
+        uint8_t final);
 
 void gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
-void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf);
+void tbf_timer_cb(void *_tbf);
 
-void gprs_rlcmac_packet_downlink_assignment(gprs_rlcmac_tbf *tbf);
+int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf);
 
-void gprs_rlcmac_enqueue_block(bitvec *block, int len);
+int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta);
+
+int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint32_t fn);
+
+struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
+        struct gprs_rlcmac_tbf *tbf, uint32_t fn);
+
+struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
+        struct gprs_rlcmac_tbf *tbf, uint32_t fn);
+
+void gprs_rlcmac_trigger_downlink_assignment(gprs_rlcmac_tbf *tbf,
+	uint8_t old_downlink);
+
+int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
+        uint8_t ssn, uint8_t *rbb);
 
 int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t *data, uint8_t len);
 
+struct msgb *gprs_rlcmac_send_data_block_acknowledged(
+        struct gprs_rlcmac_tbf *tbf, uint32_t fn);
+
 struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
         uint32_t fn);
+
+int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn, 
+        uint32_t fn, uint8_t block_nr);
 
 #endif // GPRS_RLCMAC_H
