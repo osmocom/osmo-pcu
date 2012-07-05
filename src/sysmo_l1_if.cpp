@@ -140,13 +140,13 @@ void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	msgb_free(msg);
 }
 
-void pcu_l1if_tx_agch(bitvec * block, int len)
+void pcu_l1if_tx_agch(bitvec * block, int plen)
 {
-	uint8_t data[24]; /* prefix PLEN */
+	uint8_t data[23]; /* prefix PLEN */
 	
 	/* FIXME: why does OpenBTS has no PLEN and no fill in message? */
 	bitvec_pack(block, data + 1);
-	data[0] = (len << 2) | 0x01;
+	data[0] = (plen << 2) | 0x01;
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, 23);
 }
 

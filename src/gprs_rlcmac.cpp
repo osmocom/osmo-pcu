@@ -322,6 +322,7 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 	uint8_t polling, uint32_t poll_fn)
 {
 	unsigned wp = 0;
+	uint8_t plen;
 
 	bitvec_write_field(dest, wp,0x0,4);  // Skip Indicator
 	bitvec_write_field(dest, wp,0x6,4);  // Protocol Discriminator
@@ -355,6 +356,13 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 	// No mobile allocation in non-hopping systems.
 	// A zero-length LV.  Just write L=0.
 	bitvec_write_field(dest, wp,0,8);
+
+	if ((wp % 8)) {
+		LOGP(DRLCMACUL, LOGL_ERROR, "Length of IMM.ASS without rest "
+			"octets is not multiple of 8 bits, PLEASE FIX!\n");
+		exit (0);
+	}
+	plen = wp / 8;
 
 	if (downlink)
 	{
@@ -405,10 +413,7 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 		bitvec_write_field(dest, wp, 0, 1);    // TBF_STARTING_TIME_FLAG
 	}
 
-	if (wp%8)
-		return wp/8+1;
-	else
-		return wp/8;
+	return plen;
 }
 
 /* generate uplink assignment */
