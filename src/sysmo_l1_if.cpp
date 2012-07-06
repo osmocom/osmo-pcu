@@ -255,6 +255,7 @@ bssgp_failed:
 				}
 			}
 		}
+		gprs_bssgp_destroy();
 		return 0;
 	}
 	LOGP(DL1IF, LOGL_INFO, "BTS available\n");
@@ -304,6 +305,15 @@ bssgp_failed:
 	LOGP(DL1IF, LOGL_INFO, " local_port=%d\n", info_ind->local_port[0]);
 	LOGP(DL1IF, LOGL_INFO, " remote_port=%d\n", info_ind->remote_port[0]);
 	LOGP(DL1IF, LOGL_INFO, " remote_ip=%d\n", info_ind->remote_ip[0]);
+
+	rc = gprs_bssgp_create(info_ind->remote_ip[0], info_ind->remote_port[0],
+		info_ind->nsei, info_ind->nsvci[0], info_ind->bvci,
+		info_ind->mcc, info_ind->mnc, info_ind->lac, info_ind->rac,
+		info_ind->cell_id);
+	if (rc < 0) {
+		LOGP(DL1IF, LOGL_NOTICE, "SGSN not available\n");
+		goto bssgp_failed;
+	}
 
 	bts->cs1 = !!(info_ind->flags & PCU_IF_FLAG_CS1);
 	bts->cs2 = !!(info_ind->flags & PCU_IF_FLAG_CS2);
@@ -483,6 +493,8 @@ static void pcu_sock_close(struct pcu_sock_state *state)
 			}
 		}
 	}
+
+	gprs_bssgp_destroy();
 
 	state->timer.cb = pcu_sock_timeout;
 	osmo_timer_schedule(&state->timer, 5, 0);

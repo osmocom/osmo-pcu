@@ -20,12 +20,13 @@
 #include <errno.h>
 #include <string.h>
 #include <gprs_rlcmac.h>
+#include <gprs_bssgp_pcu.h>
 #include <pcu_l1_if.h>
 #include <gprs_debug.h>
 #include <bitvector.h>
 #include <gsmL1prim.h>
 #include <sys/socket.h>
-#include <linux/in.h>
+#include <arpa/inet.h>
 extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/write_queue.h>
@@ -279,11 +280,39 @@ static int udp_write_cb(struct osmo_fd *ofd, struct msgb *msg)
 	return 0;
 }
 
+// TODO: We should move this parameters to config file.
+#define SGSN_IP 127.0.0.1
+#define SGSN_PORT 23000
+#define NSEI 3
+#define NSVCI 4
+
+#define BVCI 7
+
+#define MAX_LEN_PDU 60
+#define IE_LLC_PDU 14
+#define BLOCK_DATA_LEN 20
+#define BLOCK_LEN 23
+
+#define CELL_ID 0
+#define MNC 2
+#define MCC 262
+#define PCU_LAC 1
+#define PCU_RAC 0
+
 int pcu_l1if_open()
 {
 	//struct l1fwd_hdl *l1fh;
 	struct femtol1_hdl *fl1h;
 	int rc;
+
+	struct sockaddr_in dest;
+	dest.sin_family = AF_INET;
+	dest.sin_port = htons(SGSN_PORT);
+	inet_aton(SGSN_IP, &dest.sin_addr);
+
+	rc = gprs_bssgp_create(ntohl(dest.sin_addr.s_addr), SGSN_PORT, NSEI, NSVCI, BVCI, MCC, MNC, PCU_LAC, PCU_RAC, CELL_ID);
+	if (rc < 0)
+		return rc;
 
 	/* allocate new femtol1_handle */
 	fl1h = talloc_zero(NULL, struct femtol1_hdl);
@@ -318,3 +347,10 @@ int pcu_l1if_open()
 	return 0;
 }
 
+void pcu_l1if_close(void)
+{
+	gprs_bssgp_destroy();
+
+	/* FIXME: cleanup l1if */
+	talloc_free(fl1h);
+}

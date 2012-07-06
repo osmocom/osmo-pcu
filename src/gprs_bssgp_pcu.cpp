@@ -24,6 +24,8 @@
 struct sgsn_instance *sgsn;
 void *tall_bsc_ctx;
 struct bssgp_bvc_ctx *bctx = btsctx_alloc(BVCI, NSEI);
+struct gprs_nsvc *nsvc = NULL;
+extern uint16_t spoof_mcc, spoof_mnc;
 
 int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 {
@@ -284,3 +286,128 @@ int bssgp_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 {
 	return 0;
 }
+
+static int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msgb *msg, uint16_t bvci)
+{
+	int rc = 0;
+	switch (event) {
+	case GPRS_NS_EVT_UNIT_DATA:
+		/* hand the message into the BSSGP implementation */
+		rc = gprs_bssgp_pcu_rcvmsg(msg);
+		break;
+	default:
+		LOGP(DPCU, LOGL_ERROR, "RLCMAC: Unknown event %u from NS\n", event);
+		if (msg)
+			talloc_free(msg);
+		rc = -EIO;
+		break;
+	}
+	return rc;
+}
+
+static int nsvc_unblocked = 0;
+
+static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
+	void *handler_data, void *signal_data)
+{
+	struct ns_signal_data *nssd;
+
+	if (subsys != SS_L_NS)
+		return -EINVAL;
+
+	nssd = (struct ns_signal_data *)signal_data;
+	if (nssd->nsvc != nsvc) {
+		LOGP(DPCU, LOGL_ERROR, "Signal received of unknown NSVC\n");
+		return -EINVAL;
+	}
+
+	switch (signal) {
+	case S_NS_UNBLOCK:
+		if (!nsvc_unblocked) {
+			nsvc_unblocked = 1;
+			LOGP(DPCU, LOGL_NOTICE, "NS-VC is unblocked.\n");
+			bssgp_tx_bvc_reset(bctx, bctx->bvci,
+				BSSGP_CAUSE_PROTO_ERR_UNSPEC);
+		}
+		break;
+	case S_NS_BLOCK:
+		if (nsvc_unblocked) {
+			nsvc_unblocked = 0;
+			LOGP(DPCU, LOGL_NOTICE, "NS-VC is blocked.\n");
+		}
+		break;
+	}
+
+	return 0;
+}
+
+/* create BSSGP/NS layer instances */
+int gprs_bssgp_create(uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
+	uint16_t nsvci, uint16_t bvci, uint16_t mcc, uint16_t mnc, uint16_t lac,
+	uint16_t rac, uint16_t cell_id)
+{
+	struct sockaddr_in dest;
+
+	if (bctx)
+		return 0; /* if already created, must return 0: no error */
+
+	bssgp_nsi = gprs_ns_instantiate(&sgsn_ns_cb, NULL);
+	if (!bssgp_nsi) {
+		LOGP(DBSSGP, LOGL_NOTICE, "Failed to create NS instance\n");
+		return -EINVAL;
+	}
+	gprs_ns_nsip_listen(bssgp_nsi);
+
+	dest.sin_family = AF_INET;
+	dest.sin_port = htons(sgsn_port);
+	dest.sin_addr.s_addr = htonl(sgsn_ip);
+
+	nsvc = gprs_ns_nsip_connect(bssgp_nsi, &dest, nsei, nsvci);
+	if (!nsvc) {
+		LOGP(DBSSGP, LOGL_NOTICE, "Failed to create NSVCt\n");
+		gprs_ns_destroy(bssgp_nsi);
+		bssgp_nsi = NULL;
+		return -EINVAL;
+	}
+
+	bctx = btsctx_alloc(bvci, nsei);
+	if (!bctx) {
+		LOGP(DBSSGP, LOGL_NOTICE, "Failed to create BSSGP context\n");
+		nsvc = NULL;
+		gprs_ns_destroy(bssgp_nsi);
+		bssgp_nsi = NULL;
+		return -EINVAL;
+	}
+	bctx->ra_id.mcc = spoof_mcc ? : mcc;
+	bctx->ra_id.mnc = spoof_mnc ? : mnc;
+	bctx->ra_id.lac = lac;
+	bctx->ra_id.rac = rac;
+	bctx->cell_id = cell_id;
+
+	osmo_signal_register_handler(SS_L_NS, nsvc_signal_cb, NULL);
+
+//	bssgp_tx_bvc_reset(bctx, bctx->bvci, BSSGP_CAUSE_PROTO_ERR_UNSPEC);
+
+	return 0;
+}
+
+void gprs_bssgp_destroy(void)
+{
+	if (!bssgp_nsi)
+		return;
+
+	osmo_signal_unregister_handler(SS_L_NS, nsvc_signal_cb, NULL);
+
+	nsvc = NULL;
+
+	/* FIXME: move this to libgb: btsctx_free() */
+	llist_del(&bctx->list);
+	talloc_free(bctx);
+	bctx = NULL;
+
+	/* FIXME: blocking... */
+
+	gprs_ns_destroy(bssgp_nsi);
+	bssgp_nsi = NULL;
+}
+
