@@ -48,8 +48,8 @@ static void handle_options(int argc, char **argv)
 		int option_idx = 0, c;
 		static const struct option long_options[] = {
 			{ "help", 0, 0, 'h' },
-			{ "mcc", 0, 0, 'm' },
-			{ "mnc", 0, 0, 'n' },
+			{ "mcc", 1, 0, 'm' },
+			{ "mnc", 1, 0, 'n' },
 			{ 0, 0, 0, 0 }
 		};
 
