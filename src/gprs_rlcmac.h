@@ -56,8 +56,19 @@ struct gprs_rlcmac_trx {
 };
 
 struct gprs_rlcmac_bts {
-	uint8_t cs; /* block length 1=CS-1, 2=CS-2, 3=CS-3, 4=CS-4 */
-	uint16_t t3192_msec;
+	uint8_t cs1;
+	uint8_t cs2;
+	uint8_t cs3;
+	uint8_t cs4;
+	uint8_t initial_cs;
+	uint8_t t3142;
+	uint8_t t3169;
+	uint8_t t3191;
+	uint16_t t3193_msec;
+	uint8_t t3195;
+	uint8_t n3101;
+	uint8_t n3103;
+	uint8_t n3105;
 	struct gprs_rlcmac_trx trx[8];
 };
 

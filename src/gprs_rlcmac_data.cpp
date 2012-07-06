@@ -925,7 +925,7 @@ do_resend:
 	/* now we still have untransmitted LLC data, so we fill mac block */
 	index = tbf->dir.dl.v_s & mod_sns_half;
 	data = tbf->rlc_block[index];
-	switch (bts->cs) {
+	switch (bts->initial_cs) {
 	case 2: /* CS-2 */
 		block_length = 34;
 		block_data = 33;
@@ -1218,12 +1218,8 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 		/* no message, start T3193, change state to RELEASE */
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- No new message, so we "
 			"release.\n");
-		/* use T3192 for T3193 */
-		if (bts->t3192_msec)
-			tbf_timer_start(tbf, 3193, bts->t3192_msec / 1000,
-				bts->t3192_msec & 1000);
-		else
-			tbf_timer_start(tbf, 3193, T3193); /* max T3192 */
+		/* start T3193 */
+		tbf_timer_start(tbf, 3193, T3193);
 		tbf_new_state(tbf, GPRS_RLCMAC_WAIT_RELEASE);
 
 		return 0;

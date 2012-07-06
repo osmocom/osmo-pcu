@@ -34,6 +34,7 @@ extern "C" {
 #include <gprs_rlcmac.h>
 #include <pcu_l1_if.h>
 #include <gprs_debug.h>
+#include <gprs_bssgp_pcu.h>
 #include "../../osmo-bts/include/osmo-bts/pcuif_proto.h"
 
 static int pcu_sock_send(struct msgb *msg);
@@ -236,12 +237,13 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 	int rc = 0;
 	int trx, ts, tfi;
 	struct gprs_rlcmac_tbf *tbf;
-//	uint8_t si13[23];
+	int i;
 
 	LOGP(DL1IF, LOGL_INFO, "Info indication received:\n");
 
 	if (!(info_ind->flags & PCU_IF_FLAG_ACTIVE)) {
 		LOGP(DL1IF, LOGL_NOTICE, "BTS not available\n");
+bssgp_failed:
 		/* free all TBF */
 		for (trx = 0; trx < 8; trx++) {
 			bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
@@ -256,6 +258,73 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 		return 0;
 	}
 	LOGP(DL1IF, LOGL_INFO, "BTS available\n");
+	LOGP(DL1IF, LOGL_INFO, " mcc=%d\n", info_ind->mcc);
+	LOGP(DL1IF, LOGL_INFO, " mnc=%d\n", info_ind->mnc);
+	LOGP(DL1IF, LOGL_INFO, " lac=%d\n", info_ind->lac);
+	LOGP(DL1IF, LOGL_INFO, " rac=%d\n", info_ind->rac);
+	LOGP(DL1IF, LOGL_INFO, " cell_id=%d\n", info_ind->cell_id);
+	LOGP(DL1IF, LOGL_INFO, " nsei=%d\n", info_ind->nsei);
+	LOGP(DL1IF, LOGL_INFO, " nse_timer=%d %d %d %d %d %d %d\n",
+		info_ind->nse_timer[0], info_ind->nse_timer[1],
+		info_ind->nse_timer[2], info_ind->nse_timer[3],
+		info_ind->nse_timer[4], info_ind->nse_timer[5],
+		info_ind->nse_timer[6]);
+	LOGP(DL1IF, LOGL_INFO, " cell_timer=%d %d %d %d %d %d %d %d %d %d %d\n",
+		info_ind->cell_timer[0], info_ind->cell_timer[1],
+		info_ind->cell_timer[2], info_ind->cell_timer[3],
+		info_ind->cell_timer[4], info_ind->cell_timer[5],
+		info_ind->cell_timer[6], info_ind->cell_timer[7],
+		info_ind->cell_timer[8], info_ind->cell_timer[9],
+		info_ind->cell_timer[10]);
+	LOGP(DL1IF, LOGL_INFO, " repeat_time=%d\n", info_ind->repeat_time);
+	LOGP(DL1IF, LOGL_INFO, " repeat_count=%d\n", info_ind->repeat_count);
+	LOGP(DL1IF, LOGL_INFO, " bvci=%d\n", info_ind->bvci);
+	LOGP(DL1IF, LOGL_INFO, " t3142=%d\n", info_ind->t3142);
+	LOGP(DL1IF, LOGL_INFO, " t3169=%d\n", info_ind->t3169);
+	LOGP(DL1IF, LOGL_INFO, " t3191=%d\n", info_ind->t3191);
+	LOGP(DL1IF, LOGL_INFO, " t3193=%d (ms)\n", info_ind->t3193_10ms * 10);
+	LOGP(DL1IF, LOGL_INFO, " t3195=%d\n", info_ind->t3195);
+	LOGP(DL1IF, LOGL_INFO, " n3101=%d\n", info_ind->n3101);
+	LOGP(DL1IF, LOGL_INFO, " n3103=%d\n", info_ind->n3103);
+	LOGP(DL1IF, LOGL_INFO, " n3105=%d\n", info_ind->n3105);
+	LOGP(DL1IF, LOGL_INFO, " cv_countdown=%d\n", info_ind->cv_countdown);
+	LOGP(DL1IF, LOGL_INFO, " dl_tbf_ext=%d\n", info_ind->dl_tbf_ext);
+	LOGP(DL1IF, LOGL_INFO, " ul_tbf_ext=%d\n", info_ind->ul_tbf_ext);
+	for (i = 0; i < 4; i++) {
+		if ((info_ind->flags & (PCU_IF_FLAG_CS1 << i)))
+			LOGP(DL1IF, LOGL_INFO, " Use CS%d\n", i+1);
+	}
+	for (i = 0; i < 9; i++) {
+		if ((info_ind->flags & (PCU_IF_FLAG_MCS1 << i)))
+			LOGP(DL1IF, LOGL_INFO, " Use MCS%d\n", i+1);
+	}
+	LOGP(DL1IF, LOGL_INFO, " initial_cs=%d\n", info_ind->initial_cs);
+	LOGP(DL1IF, LOGL_INFO, " initial_mcs=%d\n", info_ind->initial_mcs);
+	LOGP(DL1IF, LOGL_INFO, " nsvci=%d\n", info_ind->nsvci[0]);
+	LOGP(DL1IF, LOGL_INFO, " local_port=%d\n", info_ind->local_port[0]);
+	LOGP(DL1IF, LOGL_INFO, " remote_port=%d\n", info_ind->remote_port[0]);
+	LOGP(DL1IF, LOGL_INFO, " remote_ip=%d\n", info_ind->remote_ip[0]);
+
+	bts->cs1 = !!(info_ind->flags & PCU_IF_FLAG_CS1);
+	bts->cs2 = !!(info_ind->flags & PCU_IF_FLAG_CS2);
+	bts->cs3 = !!(info_ind->flags & PCU_IF_FLAG_CS3);
+	bts->cs4 = !!(info_ind->flags & PCU_IF_FLAG_CS4);
+	if (!bts->cs1 && !bts->cs2 && !bts->cs3 && !bts->cs4)
+		bts->cs1 = 1;
+	if (info_ind->t3142) { /* if timer values are set */
+		bts->t3142 = info_ind->t3142;
+		bts->t3169 = info_ind->t3169;
+		bts->t3191 = info_ind->t3191;
+		bts->t3193_msec = info_ind->t3193_10ms * 10;
+		bts->t3195 = info_ind->t3195;
+		bts->n3101 = info_ind->n3101;
+		bts->n3103 = info_ind->n3103;
+		bts->n3105 = info_ind->n3105;
+	}
+	if (info_ind->initial_cs < 1 || info_ind->initial_cs > 4)
+		bts->initial_cs = 1;
+	else
+		bts->initial_cs = info_ind->initial_cs;
 
 	for (trx = 0; trx < 8; trx++) {
 		bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
@@ -282,11 +351,6 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 			}
 		}
 	}
-
-#warning FIXME: RAC
-//	rc = generate_si13(si13, 0 /* rac */);
-//	printf("rc=%d\n", rc);
-//	pcu_l1if_tx_bcch(si13, 23);
 
 	return rc;
 }
