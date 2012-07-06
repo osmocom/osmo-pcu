@@ -148,7 +148,7 @@ struct gprs_rlcmac_tbf *tbf_alloc(uint8_t tfi, uint8_t trx, uint8_t ts)
 	struct gprs_rlcmac_pdch *pdch;
 	struct gprs_rlcmac_tbf *tbf;
 
-	LOGP(DRLCMAC, LOGL_INFO, "********** TBF starts here **********\n");
+	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
 	LOGP(DRLCMAC, LOGL_INFO, "Allocating TBF with TFI=%d.\n", tfi);
 
 	if (trx >= 8 || ts >= 8 || tfi >= 32)
@@ -188,7 +188,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	pdch = &bts->trx[tbf->trx].pdch[tbf->ts];
 	pdch->tbf[tbf->tfi] = NULL;
 	llist_del(&tbf->list);
-	LOGP(DRLCMAC, LOGL_INFO, "********** TBF ends here **********\n");
+	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF ends here **********\n");
 	talloc_free(tbf);
 }
 
@@ -204,7 +204,7 @@ const char *tbf_state_name[] = {
 void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
 	enum gprs_rlcmac_tbf_state state)
 {
-	LOGP(DRLCMAC, LOGL_INFO, "TBF=%d changes state from %s to %s\n",
+	LOGP(DRLCMAC, LOGL_DEBUG, "TBF=%d changes state from %s to %s\n",
 		tbf->tfi, tbf_state_name[tbf->state], tbf_state_name[state]);
 	tbf->state = state;
 }
@@ -601,14 +601,11 @@ int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 	struct msgb *llc_pdu;
 	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + tbf->llc_index;
 
-	LOGP(DBSSGP, LOGL_NOTICE, "TX: [PCU -> SGSN ] TFI: %u TLLI: 0x%08x DataLen: %u\n", tbf->tfi, tbf->tlli, tbf->llc_index);
+	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] TFI: %u TLLI: 0x%08x %s\n", tbf->tfi, tbf->tlli, osmo_hexdump(tbf->llc_frame, tbf->llc_index));
 	if (!bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
 		return -EIO;
 	}
-	//LOGP(DBSSGP, LOGL_NOTICE, " Data = ");
-	//for (unsigned i = 0; i < tbf->llc_index; i++)
-	//	LOGPC(DBSSGP, LOGL_NOTICE, "%02x ", tbf->llc_frame[i]);
 	
 	llc_pdu = msgb_alloc_headroom(msg_len, msg_len,"llc_pdu");
 	msgb_tvlv_push(llc_pdu, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*tbf->llc_index, tbf->llc_frame);

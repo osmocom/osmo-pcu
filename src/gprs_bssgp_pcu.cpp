@@ -44,7 +44,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	/* LLC_PDU is mandatory IE */
 	if (!TLVP_PRESENT(tp, BSSGP_IE_LLC_PDU))
 	{
-		LOGP(DBSSGP, LOGL_ERROR, "BSSGP TLLI=0x%08x Rx UL-UD missing mandatory IE\n", tlli);
+		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP TLLI=0x%08x Rx UL-UD missing mandatory IE\n", tlli);
 		return bssgp_tx_status(BSSGP_CAUSE_MISSING_MAND_IE, NULL, msg);
 	}
 
@@ -52,10 +52,10 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	len = TLVP_LEN(tp, BSSGP_IE_LLC_PDU);
 	if (len > sizeof(tbf->llc_frame))
 	{
-		LOGP(DBSSGP, LOGL_ERROR, "BSSGP TLLI=0x%08x Rx UL-UD IE_LLC_PDU too large\n", tlli);
+		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP TLLI=0x%08x Rx UL-UD IE_LLC_PDU too large\n", tlli);
 		return bssgp_tx_status(BSSGP_CAUSE_COND_IE_ERR, NULL, msg);
 	}
-	LOGP(DBSSGP, LOGL_NOTICE, "LLC PDU = (TLLI=0x%08x) %s\n", tlli, osmo_hexdump(data, len));
+	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x %s\n", tlli, osmo_hexdump(data, len));
 
 	uint16_t imsi_len = 0;
 	uint8_t *imsi;
@@ -64,19 +64,19 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		imsi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
 		imsi = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_IMSI);
 		
-		LOGPC(DBSSGP, LOGL_NOTICE, " IMSI = ");
+		LOGPC(DBSSGP, LOGL_DEBUG, " IMSI = ");
 		for (i = 0; i < imsi_len; i++)
 		{
-			LOGPC(DBSSGP, LOGL_NOTICE, "%02x", imsi[i]);
+			LOGPC(DBSSGP, LOGL_DEBUG, "%02x", imsi[i]);
 		}
-		LOGPC(DBSSGP, LOGL_NOTICE, "\n");
+		LOGPC(DBSSGP, LOGL_DEBUG, "\n");
 	}
 
 	/* check for existing TBF */
 	if ((tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF))) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] APPEND TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+		LOGP(DRLCMAC, LOGL_INFO, "TBF: APPEND TFI: %u TLLI: 0x%08x\n", tbf->tfi, tbf->tlli);
 		if (tbf->state == GPRS_RLCMAC_WAIT_RELEASE) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "TBF in WAIT RELEASE state "
+			LOGP(DRLCMAC, LOGL_DEBUG, "TBF in WAIT RELEASE state "
 				"(T3193), so reuse TBF\n");
 			memcpy(tbf->llc_frame, data, len);
 			tbf->llc_length = len;
@@ -104,7 +104,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		tbf->tlli = tlli;
 		tbf->tlli_valid = 1;
 
-		LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] START TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [DOWNLINK] START TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
 
 		/* new TBF, so put first frame */
 		memcpy(tbf->llc_frame, data, len);
@@ -138,26 +138,26 @@ int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_
 
 	switch (pdu_type) {
 	case BSSGP_PDUT_DL_UNITDATA:
-		LOGP(DBSSGP, LOGL_NOTICE, "RX: [SGSN->PCU] BSSGP_PDUT_DL_UNITDATA\n");
+		LOGP(DBSSGP, LOGL_DEBUG, "RX: [SGSN->PCU] BSSGP_PDUT_DL_UNITDATA\n");
 		gprs_bssgp_pcu_rx_dl_ud(msg, tp);
 		break;
 	case BSSGP_PDUT_PAGING_PS:
-		LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_PAGING_PS\n");
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_PAGING_PS\n");
 		break;
 	case BSSGP_PDUT_PAGING_CS:
-		LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_PAGING_CS\n");
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_PAGING_CS\n");
 		break;
 	case BSSGP_PDUT_RA_CAPA_UPDATE_ACK:
-		LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_RA_CAPA_UPDATE_ACK\n");
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_RA_CAPA_UPDATE_ACK\n");
 		break;
 	case BSSGP_PDUT_FLOW_CONTROL_BVC_ACK:
-		LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_FLOW_CONTROL_BVC_ACK\n");
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_FLOW_CONTROL_BVC_ACK\n");
 		break;
 	case BSSGP_PDUT_FLOW_CONTROL_MS_ACK:
-		LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_FLOW_CONTROL_MS_ACK\n");
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_FLOW_CONTROL_MS_ACK\n");
 		break;
 	default:
-		DEBUGP(DBSSGP, "BSSGP BVCI=%u PDU type 0x%02x unknown\n", bctx->bvci, pdu_type);
+		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%u PDU type 0x%02x unknown\n", bctx->bvci, pdu_type);
 		rc = bssgp_tx_status(BSSGP_CAUSE_PROTO_ERR_UNSPEC, NULL, msg);
 		break;
 	}
@@ -176,40 +176,40 @@ int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp
 		/* FIXME: send NM_STATUS.ind to NM */
 		break;
 		case BSSGP_PDUT_SUSPEND_ACK:
-			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_SUSPEND_ACK\n");
+			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SUSPEND_ACK\n");
 			break;
 		case BSSGP_PDUT_SUSPEND_NACK:
-			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_SUSPEND_NACK\n");
+			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SUSPEND_NACK\n");
 			break;
 		case BSSGP_PDUT_BVC_RESET_ACK:
-			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_BVC_RESET_ACK\n");
+			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_BVC_RESET_ACK\n");
 			break;
 		case BSSGP_PDUT_PAGING_PS:
-			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_PAGING_PS\n");
+			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_PAGING_PS\n");
 			break;
 		case BSSGP_PDUT_PAGING_CS:
-			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_PAGING_CS\n");
+			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_PAGING_CS\n");
 			break;
 		case BSSGP_PDUT_RESUME_ACK:
-			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_RESUME_ACK\n");
+			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_RESUME_ACK\n");
 			break;
 		case BSSGP_PDUT_RESUME_NACK:
-			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_RESUME_NACK\n");
+			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_RESUME_NACK\n");
 			break;
 		case BSSGP_PDUT_FLUSH_LL:
-			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_FLUSH_LL\n");
+			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_FLUSH_LL\n");
 			break;
 		case BSSGP_PDUT_BVC_BLOCK_ACK:
-			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_SUSPEND_ACK\n");
+			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SUSPEND_ACK\n");
 			break;
 		case BSSGP_PDUT_BVC_UNBLOCK_ACK:
-			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_BVC_UNBLOCK_ACK\n");
+			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_BVC_UNBLOCK_ACK\n");
 			break;
 		case BSSGP_PDUT_SGSN_INVOKE_TRACE:
-			LOGP(DBSSGP, LOGL_NOTICE, "rx BSSGP_PDUT_SGSN_INVOKE_TRACE\n");
+			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SGSN_INVOKE_TRACE\n");
 			break;
 		default:
-			DEBUGP(DBSSGP, "BSSGP BVCI=%u Rx PDU type 0x%02x unknown\n", bctx->bvci, bgph->pdu_type);
+			LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%u Rx PDU type 0x%02x unknown\n", bctx->bvci, bgph->pdu_type);
 			rc = bssgp_tx_status(BSSGP_CAUSE_PROTO_ERR_UNSPEC, NULL, msg);
 			break;
 	}
@@ -267,17 +267,17 @@ int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 
 	if (ns_bvci == BVCI_SIGNALLING)
 	{
-		LOGP(DBSSGP, LOGL_NOTICE, "rx BVCI_SIGNALLING gprs_bssgp_rx_sign\n");
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BVCI_SIGNALLING gprs_bssgp_rx_sign\n");
 		rc = gprs_bssgp_pcu_rx_sign(msg, &tp, bctx);
 	}
 	else if (ns_bvci == BVCI_PTM)
 	{
-		LOGP(DBSSGP, LOGL_NOTICE, "rx BVCI_PTM bssgp_tx_status\n");
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BVCI_PTM bssgp_tx_status\n");
 		rc = bssgp_tx_status(BSSGP_CAUSE_PDU_INCOMP_FEAT, NULL, msg);
 	}
 	else
 	{
-		LOGP(DBSSGP, LOGL_NOTICE, "rx BVCI_PTP gprs_bssgp_rx_ptp\n");
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BVCI_PTP gprs_bssgp_rx_ptp\n");
 		rc = gprs_bssgp_pcu_rx_ptp(msg, &tp, bctx);
 	}
 	return rc;
@@ -297,7 +297,7 @@ static int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msg
 		rc = gprs_bssgp_pcu_rcvmsg(msg);
 		break;
 	default:
-		LOGP(DPCU, LOGL_ERROR, "RLCMAC: Unknown event %u from NS\n", event);
+		LOGP(DPCU, LOGL_NOTICE, "RLCMAC: Unknown event %u from NS\n", event);
 		if (msg)
 			talloc_free(msg);
 		rc = -EIO;
@@ -354,7 +354,7 @@ int gprs_bssgp_create(uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
 
 	bssgp_nsi = gprs_ns_instantiate(&sgsn_ns_cb, NULL);
 	if (!bssgp_nsi) {
-		LOGP(DBSSGP, LOGL_NOTICE, "Failed to create NS instance\n");
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		return -EINVAL;
 	}
 	gprs_ns_nsip_listen(bssgp_nsi);
@@ -365,7 +365,7 @@ int gprs_bssgp_create(uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
 
 	nsvc = gprs_ns_nsip_connect(bssgp_nsi, &dest, nsei, nsvci);
 	if (!nsvc) {
-		LOGP(DBSSGP, LOGL_NOTICE, "Failed to create NSVCt\n");
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSVCt\n");
 		gprs_ns_destroy(bssgp_nsi);
 		bssgp_nsi = NULL;
 		return -EINVAL;
@@ -373,7 +373,7 @@ int gprs_bssgp_create(uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
 
 	bctx = btsctx_alloc(bvci, nsei);
 	if (!bctx) {
-		LOGP(DBSSGP, LOGL_NOTICE, "Failed to create BSSGP context\n");
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create BSSGP context\n");
 		nsvc = NULL;
 		gprs_ns_destroy(bssgp_nsi);
 		bssgp_nsi = NULL;
