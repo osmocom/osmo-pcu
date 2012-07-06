@@ -385,6 +385,7 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 	}
 	else
 	{
+		struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 		// GMS 04.08 10.5.2.37b 10.5.2.16
 		bitvec_write_field(dest, wp, 3, 2);    // "HH"
 		bitvec_write_field(dest, wp, 0, 2);    // "0" Packet Uplink Assignment
@@ -395,8 +396,8 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 		bitvec_write_field(dest, wp, usf, 3);    // USF
 		bitvec_write_field(dest, wp, 0, 1);    // USF_GRANULARITY
 		bitvec_write_field(dest, wp, 0 , 1);   // "0" power control: Not Present
-		bitvec_write_field(dest, wp, 0, 2);    // CHANNEL_CODING_COMMAND 
-		bitvec_write_field(dest, wp, 0, 1);    // TLLI_BLOCK_CHANNEL_CODING
+		bitvec_write_field(dest, wp, bts->initial_cs-1, 2);    // CHANNEL_CODING_COMMAND 
+		bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
 		bitvec_write_field(dest, wp, 1 , 1);   // "1" Alpha : Present
 		bitvec_write_field(dest, wp, 0, 4);    // Alpha
 		bitvec_write_field(dest, wp, 0, 5);    // Gamma
@@ -417,6 +418,7 @@ void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
 	uint8_t poll)
 {
 	// TODO We should use our implementation of encode RLC/MAC Control messages.
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	unsigned wp = 0;
 	int i;
 
@@ -439,8 +441,8 @@ void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
 	}
 
 	bitvec_write_field(dest, wp,0x0,1); // Message escape
-	bitvec_write_field(dest, wp,0x0,2); // CHANNEL_CODING_COMMAND
-	bitvec_write_field(dest, wp,0x0,1); // TLLI_BLOCK_CHANNEL_CODING 
+	bitvec_write_field(dest, wp, bts->initial_cs-1, 2); // CHANNEL_CODING_COMMAND 
+	bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
 
 	bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
 	bitvec_write_field(dest, wp,ta,6); // TIMING_ADVANCE_VALUE
@@ -448,7 +450,7 @@ void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
 
 #if 1
 	bitvec_write_field(dest, wp,0x1,1); // Frequency Parameters information elements = present
-	bitvec_write_field(dest, wp,tsc,3); // Training Sequence Code (TSC) = 2
+	bitvec_write_field(dest, wp,tsc,3); // Training Sequence Code (TSC)
 	bitvec_write_field(dest, wp,0x0,2); // ARFCN = present
 	bitvec_write_field(dest, wp,arfcn,10); // ARFCN
 #else

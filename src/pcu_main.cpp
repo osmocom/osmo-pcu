@@ -54,11 +54,22 @@ int main(int argc, char *argv[])
 	uint16_t nsvci = NSVCI;
 	struct gprs_ns_inst *sgsn_nsi;
 	struct gprs_nsvc *nsvc;
+	struct gprs_rlcmac_bts *bts;
 
-	gprs_rlcmac_bts = talloc_zero(NULL, struct gprs_rlcmac_bts);
+	bts = gprs_rlcmac_bts = talloc_zero(NULL, struct gprs_rlcmac_bts);
 	if (!gprs_rlcmac_bts)
 		return -ENOMEM;
 	gprs_rlcmac_bts->initial_cs = 1;
+	bts->initial_cs = 1;
+	bts->cs1 = 1;
+	bts->t3142 = 20;
+	bts->t3169 = 5;
+	bts->t3191 = 5;
+	bts->t3193_msec = 100;
+	bts->t3195 = 5;
+	bts->n3101 = 10;
+	bts->n3103 = 4;
+	bts->n3105 = 8;
 
 	osmo_init_logging(&gprs_log_info);
 	pcu_l1if_open();

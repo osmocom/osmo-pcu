@@ -85,14 +85,6 @@ extern struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 
 #define Tassign_agch 0,500000/* wait for assignment, before transmitting DL */
 #define Tassign_pacch 0,100000/* wait for assignment, before transmitting DL */
-#define T3169 6,0	/* 5 seconds + one second, because we don't use
-			 * counters before starting timer. */
-#define T3191 5,0	/* 5 Seconds */
-#define T3193 2,0	/* >T3192, which can be max 1,5s */
-#define T3195 5,0	/* 5 Seconds */
-//#define N3101_MAX 12	/* how many missed uplink blocks */
-#define N3103_MAX 4	/* how many tries to poll PACKET CONTROL ACK */
-#define N3105_MAX 4	/* how many tries to poll PACKET DOWNLINK ACK */
 
 enum gprs_rlcmac_tbf_state {
 	GPRS_RLCMAC_NULL = 0,	/* new created TBF */
