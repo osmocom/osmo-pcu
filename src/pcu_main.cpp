@@ -23,13 +23,63 @@
 #include <gprs_rlcmac.h>
 #include <gsm_timer.h>
 #include <gprs_debug.h>
+#include <unistd.h>
+#include <getopt.h>
 
 struct gprs_rlcmac_bts *gprs_rlcmac_bts;
+uint16_t spoof_mcc = 0, spoof_mnc = 0;
 
 // TODO: We should move this parameters to config file.
 #define SGSN_IP "127.0.0.1"
 #define SGSN_PORT 23000
 #define NSVCI 4
+
+static void print_help()
+{
+	printf( "Some useful options:\n"
+		"  -h	--help		this text\n"
+		"  -m	--mcc MCC	use given MCC instead of value "
+			"provided by BTS\n"
+		"  -n	--mnc MNC	use given MNC instead of value "
+			"provided by BTS\n"
+		);
+}
+
+/* FIXME: finally get some option parsing code into libosmocore */
+static void handle_options(int argc, char **argv)
+{
+	while (1) {
+		int option_idx = 0, c;
+		static const struct option long_options[] = {
+			{ "help", 0, 0, 'h' },
+			{ "mcc", 0, 0, 'm' },
+			{ "mnc", 0, 0, 'n' },
+			{ 0, 0, 0, 0 }
+		};
+
+		c = getopt_long(argc, argv, "hm:n:",
+				long_options, &option_idx);
+		if (c == -1)
+			break;
+
+		switch (c) {
+		case 'h':
+			print_help();
+			exit(0);
+			break;
+		case 'm':
+			spoof_mcc = atoi(optarg);
+			break;
+		case 'n':
+			spoof_mnc = atoi(optarg);
+			break;
+		default:
+			fprintf(stderr, "Unknown option '%c'\n", c);
+			exit(0);
+			break;
+		}
+	}
+}
 
 int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msgb *msg, uint16_t bvci)
 {
@@ -72,6 +122,14 @@ int main(int argc, char *argv[])
 	bts->n3105 = 8;
 
 	osmo_init_logging(&gprs_log_info);
+
+	handle_options(argc, argv);
+	if ((!!spoof_mcc) + (!!spoof_mnc) == 1) {
+		fprintf(stderr, "--mcc and --mnc must be specified "
+			"together.\n");
+		exit(0);
+	}
+
 	pcu_l1if_open();
 
 	sgsn_nsi = gprs_ns_instantiate(&sgsn_ns_cb, NULL);
@@ -85,8 +143,8 @@ int main(int argc, char *argv[])
 	bctx = btsctx_alloc(BVCI, NSEI);
 	bctx->cell_id = CELL_ID;
 	bctx->nsei = NSEI;
-	bctx->ra_id.mnc = MNC;
-	bctx->ra_id.mcc = MCC;
+	bctx->ra_id.mnc = spoof_mcc ? : MNC;
+	bctx->ra_id.mcc = spoof_mnc ? : MCC;
 	bctx->ra_id.lac = PCU_LAC;
 	bctx->ra_id.rac = PCU_RAC;
 	bctx->bvci = BVCI;
