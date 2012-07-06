@@ -235,7 +235,7 @@ void write_packet_downlink_assignment(bitvec * dest, uint8_t old_tfi,
 void write_packet_uplink_ack(bitvec * dest, struct gprs_rlcmac_tbf *tbf,
         uint8_t final);
 
-void gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
+int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
 void tbf_timer_cb(void *_tbf);
 

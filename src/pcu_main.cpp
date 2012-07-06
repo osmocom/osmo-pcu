@@ -27,12 +27,8 @@
 #include <getopt.h>
 
 struct gprs_rlcmac_bts *gprs_rlcmac_bts;
+extern struct gprs_nsvc *nsvc;
 uint16_t spoof_mcc = 0, spoof_mnc = 0;
-
-// TODO: We should move this parameters to config file.
-#define SGSN_IP "127.0.0.1"
-#define SGSN_PORT 23000
-#define NSVCI 4
 
 static void print_help()
 {
@@ -81,30 +77,10 @@ static void handle_options(int argc, char **argv)
 	}
 }
 
-int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msgb *msg, uint16_t bvci)
-{
-	int rc = 0;
-	switch (event) {
-	case GPRS_NS_EVT_UNIT_DATA:
-		/* hand the message into the BSSGP implementation */
-		rc = gprs_bssgp_pcu_rcvmsg(msg);
-		break;
-	default:
-		LOGP(DPCU, LOGL_ERROR, "RLCMAC: Unknown event %u from NS\n", event);
-		if (msg)
-			talloc_free(msg);
-		rc = -EIO;
-		break;
-	}
-	return rc;
-}
-
 int main(int argc, char *argv[])
 {
-	uint16_t nsvci = NSVCI;
-	struct gprs_ns_inst *sgsn_nsi;
-	struct gprs_nsvc *nsvc;
 	struct gprs_rlcmac_bts *bts;
+	int rc;
 
 	bts = gprs_rlcmac_bts = talloc_zero(NULL, struct gprs_rlcmac_bts);
 	if (!gprs_rlcmac_bts)
@@ -130,34 +106,10 @@ int main(int argc, char *argv[])
 		exit(0);
 	}
 
-	pcu_l1if_open();
+	rc = pcu_l1if_open();
+	if (rc < 0)
+		return rc;
 
-	sgsn_nsi = gprs_ns_instantiate(&sgsn_ns_cb, NULL);
-	bssgp_nsi = sgsn_nsi;
-
-	if (!bssgp_nsi)
-	{
-		LOGP(DPCU, LOGL_ERROR, "Unable to instantiate NS\n");
-		exit(1);
-	}
-	bctx = btsctx_alloc(BVCI, NSEI);
-	bctx->cell_id = CELL_ID;
-	bctx->nsei = NSEI;
-	bctx->ra_id.mnc = spoof_mcc ? : MNC;
-	bctx->ra_id.mcc = spoof_mnc ? : MCC;
-	bctx->ra_id.lac = PCU_LAC;
-	bctx->ra_id.rac = PCU_RAC;
-	bctx->bvci = BVCI;
-	uint8_t cause = 39;
-	gprs_ns_nsip_listen(sgsn_nsi);
-
-	struct sockaddr_in dest;
-	dest.sin_family = AF_INET;
-	dest.sin_port = htons(SGSN_PORT);
-	inet_aton(SGSN_IP, &dest.sin_addr);
-
-	nsvc = gprs_ns_nsip_connect(sgsn_nsi, &dest, NSEI, nsvci);
-	unsigned i = 0;
 	while (1) 
 	{
 		osmo_gsm_timers_check();
@@ -165,13 +117,11 @@ int main(int argc, char *argv[])
 		osmo_gsm_timers_update();
 
 		osmo_select_main(0);
-		if (i == 7)
-		{
-			bssgp_tx_bvc_reset(bctx, BVCI, cause);
-		}
-		i++;
 	}
 
+	pcu_l1if_close();
 	talloc_free(gprs_rlcmac_bts);
+
+	return 0;
 }
 

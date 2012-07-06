@@ -39,23 +39,10 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 }
 #include <gprs_debug.h>
 
-#define BVCI 7
-#define NSEI 3
-
 #define QOS_PROFILE 0
 #define BSSGP_HDR_LEN 53
 #define NS_HDR_LEN 4
-#define MAX_LEN_PDU 60
 #define IE_LLC_PDU 14
-#define BLOCK_DATA_LEN 20
-#define BLOCK_LEN 23
-
-#define CELL_ID 0
-#define MNC 2
-#define MCC 262
-#define PCU_LAC 1
-#define PCU_RAC 0
-
 
 extern struct bssgp_bvc_ctx *bctx;
 

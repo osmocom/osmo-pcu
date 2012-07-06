@@ -590,27 +590,25 @@ void write_packet_uplink_ack(bitvec * dest, struct gprs_rlcmac_tbf *tbf,
 }
 
 /* Send Uplink unit-data to SGSN. */
-void gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
+int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 {
 	const uint8_t qos_profile = QOS_PROFILE;
 	struct msgb *llc_pdu;
 	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + tbf->llc_index;
 
 	LOGP(DBSSGP, LOGL_NOTICE, "TX: [PCU -> SGSN ] TFI: %u TLLI: 0x%08x DataLen: %u\n", tbf->tfi, tbf->tlli, tbf->llc_index);
+	if (!bctx) {
+		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
+		return -EIO;
+	}
 	//LOGP(DBSSGP, LOGL_NOTICE, " Data = ");
 	//for (unsigned i = 0; i < tbf->llc_index; i++)
 	//	LOGPC(DBSSGP, LOGL_NOTICE, "%02x ", tbf->llc_frame[i]);
 	
-	bctx->cell_id = CELL_ID;
-	bctx->nsei = NSEI;
-	bctx->ra_id.mnc = MNC;
-	bctx->ra_id.mcc = MCC;
-	bctx->ra_id.lac = PCU_LAC;
-	bctx->ra_id.rac = PCU_RAC;
-	bctx->bvci = BVCI;
-
 	llc_pdu = msgb_alloc_headroom(msg_len, msg_len,"llc_pdu");
 	msgb_tvlv_push(llc_pdu, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*tbf->llc_index, tbf->llc_frame);
 	bssgp_tx_ul_ud(bctx, tbf->tlli, &qos_profile, llc_pdu);
+
+	return 0;
 }
 

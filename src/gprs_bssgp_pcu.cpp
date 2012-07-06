@@ -23,7 +23,7 @@
 
 struct sgsn_instance *sgsn;
 void *tall_bsc_ctx;
-struct bssgp_bvc_ctx *bctx = btsctx_alloc(BVCI, NSEI);
+struct bssgp_bvc_ctx *bctx = NULL;
 struct gprs_nsvc *nsvc = NULL;
 extern uint16_t spoof_mcc, spoof_mnc;
 
@@ -225,6 +225,13 @@ int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	uint16_t ns_bvci = msgb_bvci(msg);
 	int data_len;
 	int rc = 0;
+	struct bssgp_bvc_ctx *bctx;
+
+	if (pdu_type == BSSGP_PDUT_STATUS) {
+		LOGP(DBSSGP, LOGL_NOTICE, "NSEI=%u/BVCI=%u received STATUS\n",
+			msgb_nsei(msg), ns_bvci);
+		return 0;
+	}
 
 	/* Identifiers from DOWN: NSEI, BVCI (both in msg->cb) */
 
@@ -242,12 +249,6 @@ int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 
 	/* look-up or create the BTS context for this BVC */
 	bctx = btsctx_by_bvci_nsei(ns_bvci, msgb_nsei(msg));
-
-	/* Only a RESET PDU can create a new BVC context */
-	if (!bctx)
-	{
-		bctx = btsctx_alloc(ns_bvci, msgb_nsei(msg));
-	}
 
 	if (!bctx && pdu_type != BSSGP_PDUT_BVC_RESET_ACK)
 	{

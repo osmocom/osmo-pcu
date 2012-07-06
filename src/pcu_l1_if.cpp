@@ -288,11 +288,6 @@ static int udp_write_cb(struct osmo_fd *ofd, struct msgb *msg)
 
 #define BVCI 7
 
-#define MAX_LEN_PDU 60
-#define IE_LLC_PDU 14
-#define BLOCK_DATA_LEN 20
-#define BLOCK_LEN 23
-
 #define CELL_ID 0
 #define MNC 2
 #define MCC 262
