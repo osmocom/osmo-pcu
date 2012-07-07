@@ -649,7 +649,7 @@ int pcu_l1if_open(void)
 		bfd->fd = -1;
 		state->timer.cb = pcu_sock_timeout;
 		osmo_timer_schedule(&state->timer, 5, 0);
-		return -1;
+		return 0;
 	}
 
 	bfd->when = BSC_FD_READ;
