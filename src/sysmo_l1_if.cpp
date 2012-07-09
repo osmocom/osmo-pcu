@@ -150,6 +150,23 @@ void pcu_l1if_tx_agch(bitvec * block, int plen)
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, 23);
 }
 
+void pcu_l1if_tx_pch(bitvec * block, int plen, char *imsi)
+{
+	uint8_t data[23+3]; /* prefix PLEN */
+
+	/* paging group */
+	if (!imsi || strlen(imsi) < 3)
+		return;
+	imsi += strlen(imsi) - 3;
+	data[0] = imsi[0];
+	data[1] = imsi[1];
+	data[2] = imsi[2];
+
+	bitvec_pack(block, data + 3+1);
+	data[3] = (plen << 2) | 0x01;
+	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, 23+3);
+}
+
 static void pcu_l1if_tx_bcch(uint8_t *data, int len)
 {
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_BCCH, 0, 0, 0, data, len);

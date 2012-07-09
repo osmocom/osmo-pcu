@@ -32,7 +32,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	struct bssgp_ud_hdr *budh;
 	int tfi;
 	uint32_t tlli;
-	int i = 0;
+	int i, j;
 	uint8_t trx, ts;
 	uint8_t *data;
 	uint16_t len;
@@ -55,22 +55,30 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP TLLI=0x%08x Rx UL-UD IE_LLC_PDU too large\n", tlli);
 		return bssgp_tx_status(BSSGP_CAUSE_COND_IE_ERR, NULL, msg);
 	}
-	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x %s\n", tlli, osmo_hexdump(data, len));
 
-	uint16_t imsi_len = 0;
-	uint8_t *imsi;
+	/* read IMSI. if no IMSI exists, use first paging block (any paging),
+	 * because during attachment the IMSI might not be known, so the MS
+	 * will listen to all paging blocks. */
+	char imsi[16] = "000";
 	if (TLVP_PRESENT(tp, BSSGP_IE_IMSI))
 	{
-		imsi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
-		imsi = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_IMSI);
-		
-		LOGPC(DBSSGP, LOGL_DEBUG, " IMSI = ");
-		for (i = 0; i < imsi_len; i++)
+		uint8_t imsi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
+		uint8_t *bcd_imsi = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_IMSI);
+		if ((bcd_imsi[0] & 0x08))
+			imsi_len = imsi_len * 2 - 1;
+		else
+			imsi_len = (imsi_len - 1) * 2;
+		for (i = 0, j = 0; j < imsi_len && j < 16; j++)
 		{
-			LOGPC(DBSSGP, LOGL_DEBUG, "%02x", imsi[i]);
+			if (!(j & 1)) {
+				imsi[j] = (bcd_imsi[i] >> 4) + '0';
+				i++;
+			} else
+				imsi[j] = (bcd_imsi[i] & 0xf) + '0';
 		}
-		LOGPC(DBSSGP, LOGL_DEBUG, "\n");
+		imsi[j] = '\0';
 	}
+	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x IMSI: %s len: %d\n", tlli, imsi, len);
 
 	/* check for existing TBF */
 	if ((tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF))) {
@@ -82,7 +90,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			tbf->llc_length = len;
 			memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl)); /* reset
 								rlc states */
-			gprs_rlcmac_trigger_downlink_assignment(tbf, 1);
+			gprs_rlcmac_trigger_downlink_assignment(tbf, 1, NULL);
 		} else {
 			/* the TBF exists, so we must write it in the queue */
 			struct msgb *llc_msg = msgb_alloc(len, "llc_pdu_queue");
@@ -114,7 +122,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		 * we don't use old_downlink, so the possible uplink is used
 		 * to trigger downlink assignment. if there is no uplink,
 		 * AGCH is used. */
-		gprs_rlcmac_trigger_downlink_assignment(tbf, 0);
+		gprs_rlcmac_trigger_downlink_assignment(tbf, 0, imsi);
 	}
 
 	return 0;

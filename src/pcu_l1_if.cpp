@@ -120,7 +120,18 @@ void pcu_l1if_tx_agch(bitvec * block, int plen)
 	prim->id = GsmL1_PrimId_PhDataReq;
 	prim->u.phDataReq.sapi = GsmL1_Sapi_Agch;
 	bitvec_pack(block, prim->u.phDataReq.msgUnitParam.u8Buffer);
-#warning Please review, if OpenBTS requires AGCH frame without pseudo length:
+	prim->u.phDataReq.msgUnitParam.u8Size = 22;
+	osmo_wqueue_enqueue(&l1fh->udp_wq, msg);
+}
+
+void pcu_l1if_tx_pch(bitvec * block, int plen, char *imsi)
+{
+	struct msgb *msg = l1p_msgb_alloc();
+	GsmL1_Prim_t *prim = msgb_l1prim(msg);
+	
+	prim->id = GsmL1_PrimId_PhDataReq;
+	prim->u.phDataReq.sapi = GsmL1_Sapi_Pch;
+	bitvec_pack(block, prim->u.phDataReq.msgUnitParam.u8Buffer);
 	prim->u.phDataReq.msgUnitParam.u8Size = 22;
 	osmo_wqueue_enqueue(&l1fh->udp_wq, msg);
 }

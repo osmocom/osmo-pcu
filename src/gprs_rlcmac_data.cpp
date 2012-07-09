@@ -263,6 +263,9 @@ puts("FIXME: UL request during UL request");	exit(0);
 	return 1;
 }
 
+#ifdef DEBUG_DL_ASS_IDLE
+	char debug_imsi[16];
+#endif
 
 void tbf_timer_cb(void *_tbf)
 {
@@ -276,7 +279,7 @@ void tbf_timer_cb(void *_tbf)
 	switch (tbf->T) {
 #ifdef DEBUG_DL_ASS_IDLE
 	case 1234:
-		gprs_rlcmac_trigger_downlink_assignment(tbf, 0);
+		gprs_rlcmac_trigger_downlink_assignment(tbf, 0, debug_imsi);
 		break;
 #endif
 	case 0: /* assignment */
@@ -1268,7 +1271,7 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 	LOGP(DRLCMAC, LOGL_DEBUG, "Trigger dowlink assignment on PACCH, "
 		"because another LLC PDU has arrived in between\n");
 	memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl)); /* reset RLC states */
-	gprs_rlcmac_trigger_downlink_assignment(tbf, 1);
+	gprs_rlcmac_trigger_downlink_assignment(tbf, 1, NULL);
 
 	return 0;
 }
@@ -1334,25 +1337,27 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 	return msg;
 }
 
-static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll)
+static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
+	char *imsi)
 {
-	LOGP(DRLCMAC, LOGL_INFO, "TX: START TFI: %u TLLI: 0x%08x Immediate Assignment Downlink (AGCH)\n", tbf->tfi, tbf->tlli);
+	LOGP(DRLCMAC, LOGL_INFO, "TX: START TFI: %u TLLI: 0x%08x Immediate Assignment Downlink (PCH)\n", tbf->tfi, tbf->tlli);
 	bitvec *immediate_assignment = bitvec_alloc(22); /* without plen */
 	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	/* use request reference that has maximum distance to current time,
 	 * so the assignment will not conflict with possible RACH requests. */
 	int plen = write_immediate_assignment(immediate_assignment, 1, 125, (tbf->pdch->last_rts_fn + 21216) % 2715648, tbf->ta, tbf->arfcn, tbf->ts, tbf->tsc, tbf->tfi, 0, tbf->tlli, poll, tbf->poll_fn);
-	pcu_l1if_tx_agch(immediate_assignment, plen);
+	pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
 	bitvec_free(immediate_assignment);
 }
 
 /* depending on the current TBF, we assign on PACCH or AGCH */
 void gprs_rlcmac_trigger_downlink_assignment(gprs_rlcmac_tbf *tbf,
-	uint8_t old_downlink)
+	uint8_t old_downlink, char *imsi)
 {
 	gprs_rlcmac_tbf *old_tbf;
 
 #ifdef DEBUG_DL_ASS_IDLE
+	strncpy(debug_imsi, imsi);
 	LOGP(DRLCMAC, LOGL_ERROR, "**** DEBUGGING DOWNLINK ASSIGNMENT ****\n");
 #endif
 
@@ -1384,9 +1389,13 @@ void gprs_rlcmac_trigger_downlink_assignment(gprs_rlcmac_tbf *tbf,
 		tbf_timer_start(tbf, 0, Tassign_pacch);
 #endif
 	} else {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for TBF=%d on AGCH, no TBF exist\n", tbf->tfi);
+		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for TBF=%d on PCH, no TBF exist (IMSI=%s)\n", tbf->tfi, imsi);
+		if (!imsi || strlen(imsi) < 3) {
+			LOGP(DRLCMAC, LOGL_ERROR, "No valid IMSI!\n");
+			return;
+		}
 		/* send immediate assignment */
-		gprs_rlcmac_downlink_assignment(tbf, 0);
+		gprs_rlcmac_downlink_assignment(tbf, 0, imsi);
 		/* change state */
 		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
 		/* start timer */
