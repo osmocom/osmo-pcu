@@ -24,7 +24,7 @@ dnl checks for libraries
 PKG_CHECK_MODULES(LIBOSMOCORE, libosmocore  >= 0.3.9)
 PKG_CHECK_MODULES(LIBOSMOVTY, libosmovty)
 PKG_CHECK_MODULES(LIBOSMOGSM, libosmogsm >= 0.3.3)
-PKG_CHECK_MODULES(LIBOSMOGB, libosmogb >= 0.5.2)
+PKG_CHECK_MODULES(LIBOSMOGB, libosmogb >= 0.5.1.4)
 
 AC_MSG_CHECKING([whether to enable sysmocom-bts hardware support])
 AC_ARG_ENABLE(sysmocom-bts,

@@ -33,12 +33,15 @@
 /* default categories */
 
 static const struct log_info_cat default_categories[] = {
-	{"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_NOTICE, 1},
-	{"DL1IF", "\033[1;32m", "GPRS PCU L1 interface (L1IF)", LOGL_NOTICE, 1},
-	{"DRLCMAC", "\033[1;33m", "GPRS RLC/MAC layer (RLCMAC)", LOGL_NOTICE, 1},
-	{"DRLCMACDATA", "\033[1;36m", "GPRS RLC/MAC layer Data (RLCMAC)", LOGL_NOTICE, 1},
-	{"DBSSGP", "\033[1;34m", "GPRS BSS Gateway Protocol (BSSGP)", LOGL_NOTICE , 1},
-	{"DPCU", "\033[1;35m", "GPRS Packet Control Unit (PCU)", LOGL_NOTICE, 1}
+ 	{"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_INFO, 0},
+ 	{"DL1IF", "\033[1;32m", "GPRS PCU L1 interface (L1IF)", LOGL_INFO, 1},
+ 	{"DRLCMAC", "\033[0;33m", "GPRS RLC/MAC layer (RLCMAC)", LOGL_INFO, 1},
+ 	{"DRLCMACDATA", "\033[0;33m", "GPRS RLC/MAC layer Data (RLCMAC)", LOGL_INFO, 1},
+ 	{"DRLCMACDL", "\033[1;33m", "GPRS RLC/MAC layer Data (RLCMAC)", LOGL_INFO, 1},
+ 	{"DRLCMACUL", "\033[1;36m", "GPRS RLC/MAC layer Data (RLCMAC)", LOGL_INFO, 1},
+ 	{"DRLCMACSCHED", "\033[0;36m", "GPRS RLC/MAC layer Data (RLCMAC)", LOGL_INFO, 1},
+ 	{"DBSSGP", "\033[1;34m", "GPRS BSS Gateway Protocol (BSSGP)", LOGL_INFO , 1},
+	{"DPCU", "\033[1;35m", "GPRS Packet Control Unit (PCU)", LOGL_NOTICE, 1},
 };
 
 enum {

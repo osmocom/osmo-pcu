@@ -29,33 +29,19 @@ extern "C" {
 #include <osmocom/gsm/gsm_utils.h>
 }
 
-struct pcu_l1if_ts {
-	uint8_t enable;
-	uint8_t tsc;
-};
-
-struct pcu_l1if_trx {
-	uint16_t arfcn;
-	struct pcu_l1if_ts ts[8];
-};
-
-struct pcu_l1if_bts {
-	struct pcu_l1if_trx trx[8];
-};
-
-extern struct pcu_l1if_bts pcu_l1if_bts;
-
 int get_current_fn();
-void set_current_fn(int fn);
 
 void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn, 
         uint32_t fn, uint8_t block_nr);
 void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn, 
         uint32_t fn, uint8_t block_nr);
 void pcu_l1if_tx_agch(bitvec * block, int len);
-void pcu_l1if_tx_pch(bitvec * block, int len);
+
+void pcu_l1if_tx_pch(bitvec * block, int plen, char *imsi);
 
 int pcu_l1if_open(void);
 void pcu_l1if_close(void);
 
+int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim);
+int pcu_sock_send(struct msgb *msg);
 #endif // PCU_L1_IF_H

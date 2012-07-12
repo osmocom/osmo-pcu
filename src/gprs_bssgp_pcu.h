@@ -39,23 +39,10 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 }
 #include <gprs_debug.h>
 
-#define BVCI 7
-#define NSEI 3
-
 #define QOS_PROFILE 0
 #define BSSGP_HDR_LEN 53
 #define NS_HDR_LEN 4
-#define MAX_LEN_PDU 60
 #define IE_LLC_PDU 14
-#define BLOCK_DATA_LEN 20
-#define BLOCK_LEN 23
-
-#define CELL_ID 0
-#define MNC 1
-#define MCC 001
-#define PCU_LAC 1
-#define PCU_RAC 0
-
 
 extern struct bssgp_bvc_ctx *bctx;
 
@@ -66,5 +53,11 @@ int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_
 int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx);
 
 int gprs_bssgp_pcu_rcvmsg(struct msgb *msg);
+
+int gprs_bssgp_create(uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
+        uint16_t nsvci, uint16_t bvci, uint16_t mcc, uint16_t mnc, uint16_t lac,
+	        uint16_t rac, uint16_t cell_id);
+
+void gprs_bssgp_destroy(void);
 
 #endif // GPRS_BSSGP_PCU_H

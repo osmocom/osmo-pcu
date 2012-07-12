@@ -18,12 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# FIXME: This has to go!!
-OPENBSC_DIR = $(top_srcdir)/../openbsc/openbsc
-OPENGGSN_DIR = $(top_srcdir)/../openggsn
-
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) -I$(OPENBSC_DIR)/include
-AM_CXXFLAGS = -Wall -ldl -pthread -lgtp
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES)
+AM_CXXFLAGS = -Wall -ldl -pthread
 
 noinst_LTLIBRARIES = libgprs.la
 
@@ -33,15 +29,18 @@ libgprs_la_SOURCES = \
 	gsm_rlcmac.cpp \
 	gprs_bssgp_pcu.cpp \
 	gprs_rlcmac.cpp \
+	gprs_rlcmac_data.cpp \
+	gprs_rlcmac_sched.cpp \
 	gsm_timer.cpp \
-	bitvector.cpp
+	bitvector.cpp \
+	pcu_l1_if.cpp
 
 if ENABLE_SYSMOBTS
 libgprs_la_SOURCES += \
-	sysmo_l1_if.cpp
+	sysmo_sock.cpp
 else
 libgprs_la_SOURCES += \
-	pcu_l1_if.cpp
+	openbts_sock.cpp
 endif
 
 noinst_PROGRAMS = \
@@ -54,6 +53,7 @@ noinst_HEADERS = \
 	gsm_rlcmac.h \
 	gprs_bssgp_pcu.h \
 	gprs_rlcmac.h \
+	pcuif_proto.h \
 	pcu_l1_if.h \
 	gsm_timer.h \
 	bitvector.h
