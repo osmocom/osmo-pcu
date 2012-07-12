@@ -33,7 +33,8 @@ libgprs_la_SOURCES = \
 	gprs_rlcmac_sched.cpp \
 	gsm_timer.cpp \
 	bitvector.cpp \
-	pcu_l1_if.cpp
+	pcu_l1_if.cpp \
+	pcu_vty.c
 
 if ENABLE_SYSMOBTS
 libgprs_la_SOURCES += \
@@ -56,7 +57,8 @@ noinst_HEADERS = \
 	pcuif_proto.h \
 	pcu_l1_if.h \
 	gsm_timer.h \
-	bitvector.h
+	bitvector.h \
+	pcu_vty.h
 
 RLCMACTest_SOURCES = RLCMACTest.cpp
 RLCMACTest_LDADD = \
