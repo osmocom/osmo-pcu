@@ -182,8 +182,8 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 
 	switch (data_ind->sapi) {
 	case PCU_IF_SAPI_PDTCH:
-		rc = gprs_rlcmac_rcv_block(data_ind->data, data_ind->len,
-			data_ind->fn);
+		rc = gprs_rlcmac_rcv_block(data_ind->trx_nr, data_ind->ts_nr,
+			data_ind->data, data_ind->len, data_ind->fn);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data indication with "
@@ -265,7 +265,10 @@ bssgp_failed:
 			bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
 			for (ts = 0; ts < 8; ts++) {
 				for (tfi = 0; tfi < 32; tfi++) {
-					tbf = bts->trx[trx].pdch[ts].tbf[tfi];
+				tbf = bts->trx[trx].pdch[ts].ul_tbf[tfi];
+					if (tbf)
+						tbf_free(tbf);
+				tbf = bts->trx[trx].pdch[ts].dl_tbf[tfi];
 					if (tbf)
 						tbf_free(tbf);
 				}
@@ -369,9 +372,12 @@ bssgp_failed:
 				if (bts->trx[trx].pdch[ts].enable)
 					pcu_tx_act_req(trx, ts, 0);
 				bts->trx[trx].pdch[ts].enable = 0;
-				/* kick all tbf  FIXME: multislot  */
+				/* kick all TBF on slot */
 				for (tfi = 0; tfi < 32; tfi++) {
-					tbf = bts->trx[trx].pdch[ts].tbf[tfi];
+				tbf = bts->trx[trx].pdch[ts].ul_tbf[tfi];
+					if (tbf)
+						tbf_free(tbf);
+				tbf = bts->trx[trx].pdch[ts].dl_tbf[tfi];
 					if (tbf)
 						tbf_free(tbf);
 				}
@@ -384,8 +390,6 @@ bssgp_failed:
 
 static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
-	int trx, ts, tfi;
 	struct gprs_rlcmac_tbf *tbf;
 	uint32_t elapsed;
 	uint8_t fn13 = time_ind->fn % 13;
@@ -400,19 +404,18 @@ static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 	set_current_fn(time_ind->fn);
 
 	/* check for poll timeout */
-	for (trx = 0; trx < 8; trx++) {
-		for (ts = 0; ts < 8; ts++) {
-			for (tfi = 0; tfi < 32; tfi++) {
-				tbf = bts->trx[trx].pdch[ts].tbf[tfi];
-				if (!tbf)
-					continue;
-				if (tbf->poll_state != GPRS_RLCMAC_POLL_SCHED)
-					continue;
-				elapsed = (frame_number - tbf->poll_fn)
-							% 2715648;
-				if (elapsed >= 20 && elapsed < 200)
-					gprs_rlcmac_poll_timeout(tbf);
-			}
+	llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
+		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
+			elapsed = (frame_number - tbf->poll_fn) % 2715648;
+			if (elapsed >= 20 && elapsed < 200)
+				gprs_rlcmac_poll_timeout(tbf);
+		}
+	}
+	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
+		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
+			elapsed = (frame_number - tbf->poll_fn) % 2715648;
+			if (elapsed >= 20 && elapsed < 200)
+				gprs_rlcmac_poll_timeout(tbf);
 		}
 	}
 

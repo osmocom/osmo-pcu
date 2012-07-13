@@ -31,10 +31,9 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 {
 	struct bssgp_ud_hdr *budh;
 
-	int tfi;
+	int8_t tfi; /* must be signed */
 	uint32_t tlli;
 	int i, j;
-	uint8_t trx, ts;
 	uint8_t *data;
 	uint16_t len;
 	struct gprs_rlcmac_tbf *tbf;
@@ -101,19 +100,36 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			msgb_enqueue(&tbf->llc_queue, llc_msg);
 		}
 	} else {
-		// Create new TBF
-		tfi = tfi_alloc(&trx, &ts);
+		uint8_t trx, ts, use_trx, first_ts;
+
+		/* check for uplink data, so we copy our informations */
+		if ((tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF))) {
+			use_trx = tbf->trx;
+			first_ts = tbf->first_ts;
+		} else {
+			use_trx = -1;
+			first_ts = -1;
+		}
+
+		// Create new TBF (any TRX)
+		tfi = tfi_alloc(GPRS_RLCMAC_DL_TBF, &trx, &ts, use_trx, first_ts);
 		if (tfi < 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 			/* FIXME: send reject */
 			return -EBUSY;
 		}
-		tbf = tbf_alloc(tfi, trx, ts);
-		tbf->direction = GPRS_RLCMAC_DL_TBF;
+		/* FIXME: set number of downlink slots according to multislot
+		 * class */
+		tbf = tbf_alloc(GPRS_RLCMAC_DL_TBF, tfi, trx, ts, 1);
+		if (!tbf) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+			/* FIXME: send reject */
+			return -EBUSY;
+		}
 		tbf->tlli = tlli;
 		tbf->tlli_valid = 1;
 
-		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [DOWNLINK] START TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [DOWNLINK] START TFI: %d TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
 
 		/* new TBF, so put first frame */
 		memcpy(tbf->llc_frame, data, len);

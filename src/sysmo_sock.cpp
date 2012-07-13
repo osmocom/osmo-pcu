@@ -97,7 +97,10 @@ static void pcu_sock_close(struct pcu_sock_state *state)
 		for (ts = 0; ts < 8; ts++) {
 			bts->trx[trx].pdch[ts].enable = 0;
 			for (tfi = 0; tfi < 32; tfi++) {
-				tbf = bts->trx[trx].pdch[ts].tbf[tfi];
+				tbf = bts->trx[trx].pdch[ts].ul_tbf[tfi];
+				if (tbf)
+					tbf_free(tbf);
+				tbf = bts->trx[trx].pdch[ts].dl_tbf[tfi];
 				if (tbf)
 					tbf_free(tbf);
 			}

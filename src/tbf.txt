@@ -109,3 +109,33 @@ Polling:
    - The received frame is bad (BFI).
    - The GSM indicates that the block should have been already received.
 
+Data structures of TBFs and PDCHs:
+
+  There is a global structure for BTS.
+
+  The BTS structure has 8 TRX structures.
+
+  Each TRX structure has 8 PDCH structures, one for each timeslot.
+
+  There are two linked lists of TBF instances:
+   - uplink TBFs
+   - downlink TBFs
+
+  Each TBF instance also has:
+   - a direction
+   - a TFI of range 0..31
+   - an array of 8 PDCH structures, one for each assigned timeslot
+   - in case of uplink TBF: an array of 8 USFs, one for each assigned timeslot
+
+  Each PDCH structure also has:
+   - an array of 32 uplink TBFs that are assigned to this PDCH
+   - an array of 32 downlink TBFs that are assigned to this PDCH
+
+  On creation of a new TBF, it links to all assigned PDCHs.
+  Each PDCH links to that TBF. The TBF is added to the list of TBFs.
+  In case of uplink TBF: The allocated USFs are stored for each timeslot.
+
+  On release of a TBF, the link to this PDCH is removed from all assigned
+  PDCHs. The TBF is removed from the list of TBFs. The TBF is destroyed.
+
+
