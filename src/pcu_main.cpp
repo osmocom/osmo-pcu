@@ -25,6 +25,7 @@
 #include <gprs_debug.h>
 #include <unistd.h>
 #include <getopt.h>
+#include <signal.h>
 extern "C" {
 #include "pcu_vty.h"
 #include <osmocom/vty/telnet_interface.h>
@@ -38,6 +39,7 @@ static int config_given = 0;
 static const char *config_file = "osmo-pcu.cfg";
 extern struct vty_app_info pcu_vty_info;
 void *tall_pcu_ctx;
+static int quit = 0;
 
 static void print_help()
 {
@@ -93,6 +95,39 @@ static void handle_options(int argc, char **argv)
 	}
 }
 
+void sighandler(int sigset)
+{
+	if (sigset == SIGHUP || sigset == SIGPIPE)
+		return;
+
+	fprintf(stderr, "Signal %d received.\n", sigset);
+
+	switch (sigset) {
+	case SIGINT:
+		/* If another signal is received afterwards, the program
+		 * is terminated without finishing shutdown process.
+		 */
+		signal(SIGINT, SIG_DFL);
+		signal(SIGHUP, SIG_DFL);
+		signal(SIGTERM, SIG_DFL);
+		signal(SIGPIPE, SIG_DFL);
+		signal(SIGABRT, SIG_DFL);
+		signal(SIGUSR1, SIG_DFL);
+		signal(SIGUSR2, SIG_DFL);
+
+		quit = 1;
+		break;
+	case SIGABRT:
+		/* in case of abort, we want to obtain a talloc report
+		 * and then return to the caller, who will abort the process
+		 */
+	case SIGUSR1:
+	case SIGUSR2:
+		talloc_report_full(tall_pcu_ctx, stderr);
+		break;
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	struct gprs_rlcmac_bts *bts;
@@ -117,6 +152,8 @@ int main(int argc, char *argv[])
 	bts->n3101 = 10;
 	bts->n3103 = 4;
 	bts->n3105 = 8;
+
+	msgb_set_talloc_ctx(tall_pcu_ctx);
 
 	osmo_init_logging(&gprs_log_info);
 
@@ -151,8 +188,15 @@ int main(int argc, char *argv[])
 	if (rc < 0)
 		return rc;
 
-	while (1) 
-	{
+	signal(SIGINT, sighandler);
+	signal(SIGHUP, sighandler);
+	signal(SIGTERM, sighandler);
+	signal(SIGPIPE, sighandler);
+	signal(SIGABRT, sighandler);
+	signal(SIGUSR1, sighandler);
+	signal(SIGUSR2, sighandler);
+
+	while (!quit) {
 		osmo_gsm_timers_check();
 		osmo_gsm_timers_prepare();
 		osmo_gsm_timers_update();
@@ -160,8 +204,13 @@ int main(int argc, char *argv[])
 		osmo_select_main(0);
 	}
 
+	telnet_exit();
+
 	pcu_l1if_close();
+
 	talloc_free(gprs_rlcmac_bts);
+
+	talloc_report_full(tall_pcu_ctx, stderr);
 	talloc_free(tall_pcu_ctx);
 
 	return 0;

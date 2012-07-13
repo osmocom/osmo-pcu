@@ -35,6 +35,8 @@ extern "C" {
 #include <pcuif_proto.h>
 }
 
+extern void *tall_pcu_ctx;
+
 struct femtol1_hdl {
 	struct gsm_time gsm_time;
 	uint32_t hLayer1;			/* handle to the L1 instance in the DSP */
@@ -142,7 +144,7 @@ int pcu_l1if_open()
 	int rc;
 
 	/* allocate new femtol1_handle */
-	fl1h = talloc_zero(NULL, struct femtol1_hdl);
+	fl1h = talloc_zero(tall_pcu_ctx, struct femtol1_hdl);
 	INIT_LLIST_HEAD(&fl1h->wlc_list);
 
 	l1fh->fl1h = fl1h;

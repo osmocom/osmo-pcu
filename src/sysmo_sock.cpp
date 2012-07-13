@@ -37,6 +37,7 @@ extern "C" {
 #include <gprs_bssgp_pcu.h>
 #include <pcuif_proto.h>
 
+extern void *tall_pcu_ctx;
 
 /*
  * SYSMO-PCU socket functions
@@ -219,7 +220,7 @@ int pcu_l1if_open(void)
 
 	state = pcu_sock_state;
 	if (!state) {
-		state = talloc_zero(NULL, struct pcu_sock_state);
+		state = talloc_zero(tall_pcu_ctx, struct pcu_sock_state);
 		if (!state)
 			return -ENOMEM;
 		INIT_LLIST_HEAD(&state->upqueue);

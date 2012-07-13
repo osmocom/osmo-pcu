@@ -37,6 +37,8 @@ extern "C" {
 #include <gprs_bssgp_pcu.h>
 #include <pcuif_proto.h>
 
+extern void *tall_pcu_ctx;
+
 // Variable for storage current FN.
 int frame_number;
 
