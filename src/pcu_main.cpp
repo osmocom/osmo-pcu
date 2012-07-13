@@ -183,6 +183,9 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+	if (!bts->alloc_algorithm)
+		bts->alloc_algorithm = alloc_algorithm_a;
+
 	rc = pcu_l1if_open();
 
 	if (rc < 0)

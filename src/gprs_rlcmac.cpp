@@ -176,17 +176,16 @@ struct gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 }
 
 struct gprs_rlcmac_tbf *tbf_alloc(enum gprs_rlcmac_tbf_direction dir,
-	uint8_t tfi, uint8_t trx, uint8_t first_ts, uint8_t num_ts)
+	uint8_t tfi, uint8_t trx, uint8_t first_ts, uint8_t ms_class)
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
-	struct gprs_rlcmac_pdch *pdch;
 	struct gprs_rlcmac_tbf *tbf;
-	uint8_t ts_count, ts;
-	int8_t usf, tsc = -1; /* both must be signed */
+	int rc;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
-	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF with TFI=%d on TRX=%d.\n",
-		(dir == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi, trx);
+	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: TFI=%d TRX=%d "
+		"MS_CLASS=%d\n", (dir == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL",
+		tfi, trx, ms_class);
 
 	if (trx >= 8 || first_ts >= 8 || tfi >= 32)
 		return NULL;
@@ -199,12 +198,34 @@ struct gprs_rlcmac_tbf *tbf_alloc(enum gprs_rlcmac_tbf_direction dir,
 	tbf->tfi = tfi;
 	tbf->trx = trx;
 	tbf->arfcn = bts->trx[trx].arfcn;
-	/* assign free TS to TBF, where TFI is free
-	 * for uplink: assign free USF to each uplink TS
-	 * Note that the first TS must be free, because it was selected by
-	 * tfi_alloc(). */
-	for (ts_count = 0, ts = first_ts; ts < 8; ts++) {
-		pdch = &bts->trx[trx].pdch[ts];
+	tbf->first_ts = first_ts;
+	tbf->ms_class = ms_class;
+	tbf->ws = 64;
+	tbf->sns = 128;
+	/* select algorithm according to multislot class */
+	if (ms_class)
+		rc = bts->alloc_algorithm(tbf);
+	else
+		rc = alloc_algorithm_a(tbf);
+	/* if no ressource */
+	if (rc < 0) {
+		talloc_free(tbf);
+		return NULL;
+	}
+
+	INIT_LLIST_HEAD(&tbf->llc_queue);
+	if (dir == GPRS_RLCMAC_UL_TBF)
+		llist_add(&tbf->list, &gprs_rlcmac_ul_tbfs);
+	else
+		llist_add(&tbf->list, &gprs_rlcmac_dl_tbfs);
+
+	return tbf;
+}
+
+#if 0
+int alloc_algorithm_b(struct gprs_rlcmac_tbf *tbf)
+{
+		pdch = &bts->trx[tbf->trx].pdch[ts];
 		if (!pdch->enable)
 			continue;
 		if (tsc < 0)
@@ -214,55 +235,59 @@ struct gprs_rlcmac_tbf *tbf_alloc(enum gprs_rlcmac_tbf_direction dir,
 				"because it has different TSC than lower TS "
 				"of TRX. In order to allow multislot, all "
 				"slots must be configured with the same TSC!\n",
-				ts, trx);
+				ts, tbf->trx);
 			continue;
 		}
-		if (dir == GPRS_RLCMAC_UL_TBF) {
-			/* if TFI is free on TS */
-			if (!pdch->ul_tbf[tfi]) {
-				/* if USF available */
-				usf = find_free_usf(pdch, ts);
-				if (usf >= 0) {
-					LOGP(DRLCMAC, LOGL_DEBUG, " Assign "
-						"uplink TS=%d USF=%d\n",
-						ts, usf);
-					pdch->ul_tbf[tfi] = tbf;
-					tbf->pdch[ts] = pdch;
-					ts_count++;
-				} else
-					LOGP(DRLCMAC, LOGL_DEBUG, " Skipping "
-						"TS=%d, no USF available\n",
-						ts);
+#endif
+
+int alloc_algorithm_a(struct gprs_rlcmac_tbf *tbf)
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_pdch *pdch;
+	uint8_t ts = tbf->first_ts;
+	int8_t usf; /* must be signed */
+
+	pdch = &bts->trx[tbf->trx].pdch[ts];
+	if (!pdch->enable) {
+		LOGP(DRLCMAC, LOGL_ERROR, "TS=%d not enabled.", ts);
+			return -EIO;
+	}
+	tbf->tsc = pdch->tsc;
+	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
+		/* if TFI is free on TS */
+		if (!pdch->ul_tbf[tbf->tfi]) {
+			/* if USF available */
+			usf = find_free_usf(pdch, ts);
+			if (usf >= 0) {
+				LOGP(DRLCMAC, LOGL_DEBUG, " Assign uplink "
+					"TS=%d USF=%d\n", ts, usf);
+				pdch->ul_tbf[tbf->tfi] = tbf;
+				tbf->pdch[ts] = pdch;
+			} else {
+				LOGP(DRLCMAC, LOGL_NOTICE, " Failed allocating "
+					"TS=%d, no USF available\n", ts);
+				return -EBUSY;
 			}
 		} else {
-			/* if TFI is free on TS */
-			if (!pdch->dl_tbf[tfi]) {
-				LOGP(DRLCMAC, LOGL_DEBUG, " Assign downlink "
-					"TS=%d\n", ts);
-				pdch->dl_tbf[tfi] = tbf;
-				tbf->pdch[ts] = pdch;
-				ts_count++;
-			}
+			LOGP(DRLCMAC, LOGL_NOTICE, " Failed allocating "
+				"TS=%d, TFI is not available\n", ts);
+			return -EBUSY;
 		}
-		if (ts_count == num_ts)
-			break;
-	}
-	if (!ts_count) { /* implies that direction is uplink */
-		LOGP(DRLCMAC, LOGL_NOTICE, "No USF available\n");
-		talloc_free(tbf);
-		return NULL;
+	} else {
+		/* if TFI is free on TS */
+		if (!pdch->dl_tbf[tbf->tfi]) {
+			LOGP(DRLCMAC, LOGL_DEBUG, " Assign downlink TS=%d\n",
+				ts);
+			pdch->dl_tbf[tbf->tfi] = tbf;
+			tbf->pdch[ts] = pdch;
+		} else {
+			LOGP(DRLCMAC, LOGL_NOTICE, " Failed allocating "
+				"TS=%d, TFI is not available\n", ts);
+			return -EBUSY;
+		}
 	}
 
-	tbf->first_ts = first_ts;
-	tbf->ws = 64;
-	tbf->sns = 128;
-	INIT_LLIST_HEAD(&tbf->llc_queue);
-	if (dir == GPRS_RLCMAC_UL_TBF)
-		llist_add(&tbf->list, &gprs_rlcmac_ul_tbfs);
-	else
-		llist_add(&tbf->list, &gprs_rlcmac_dl_tbfs);
-
-	return tbf;
+	return 0;
 }
 
 void tbf_free(struct gprs_rlcmac_tbf *tbf)

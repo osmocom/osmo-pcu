@@ -71,6 +71,7 @@ struct gprs_rlcmac_bts {
 	uint8_t n3103;
 	uint8_t n3105;
 	struct gprs_rlcmac_trx trx[8];
+	int (*alloc_algorithm)(struct gprs_rlcmac_tbf *tbf);
 };
 
 extern struct gprs_rlcmac_bts *gprs_rlcmac_bts;
@@ -135,6 +136,7 @@ struct gprs_rlcmac_tbf {
 	uint16_t arfcn;
 	uint8_t tsc;
 	uint8_t first_ts;
+	uint8_t ms_class;
 	struct gprs_rlcmac_pdch *pdch[8]; /* list of PDCHs allocated to TBF */
 	uint16_t ta;
 	uint8_t llc_frame[LLC_MAX_LEN]; /* current DL or UL frame */
@@ -196,7 +198,9 @@ int tfi_alloc(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, uint8_t *_ts,
 	uint8_t use_trx, uint8_t first_ts);
 
 struct gprs_rlcmac_tbf *tbf_alloc(enum gprs_rlcmac_tbf_direction dir,
-	uint8_t tfi, uint8_t trx, uint8_t first_ts, uint8_t num_ts);
+	uint8_t tfi, uint8_t trx, uint8_t first_ts, uint8_t ms_class);
+
+int alloc_algorithm_a(struct gprs_rlcmac_tbf *tbf);
 
 struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, uint8_t trx, uint8_t ts,
         enum gprs_rlcmac_tbf_direction dir);

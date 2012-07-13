@@ -207,9 +207,9 @@ uplink_request:
 				/* FIXME: send reject */
 				break;
 			}
-			/* FIXME: set number of downlink slots according to
-			 * multislot class */
-			ul_tbf = tbf_alloc(GPRS_RLCMAC_UL_TBF, tfi, trx, ts, 1);
+			/* use multislot class of downlink TBF */
+			ul_tbf = tbf_alloc(GPRS_RLCMAC_UL_TBF, tfi, trx, ts,
+				tbf->ms_class);
 			if (!ul_tbf) {
 				LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 				/* FIXME: send reject */
@@ -825,8 +825,8 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		/* FIXME: send reject */
 		return -EBUSY;
 	}
-	/* select only one TS, since we don't know the multislot class yet */
-	tbf = tbf_alloc(GPRS_RLCMAC_UL_TBF, tfi, trx, ts, 1);
+	/* set class to 0, since we don't know the multislot class yet */
+	tbf = tbf_alloc(GPRS_RLCMAC_UL_TBF, tfi, trx, ts, 0);
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 		/* FIXME: send reject */
