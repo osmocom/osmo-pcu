@@ -78,6 +78,39 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		}
 		imsi[j] = '\0';
 	}
+
+	/* parse ms radio access capability */
+	uint8_t ms_class = 0;
+	if (TLVP_PRESENT(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP))
+	{
+		bitvec *block;
+		uint8_t cap_len = TLVP_LEN(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP);
+		uint8_t *cap = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP);
+		unsigned rp = 0;
+
+		block = bitvec_alloc(cap_len);
+		bitvec_unpack(block, cap);
+		bitvec_read_field(block, rp, 4); // Access Technology Type
+		bitvec_read_field(block, rp, 7); // Length of Access Capabilities
+		bitvec_read_field(block, rp, 3); // RF Power Capability
+		if (bitvec_read_field(block, rp, 1)) // A5 Bits Present
+			bitvec_read_field(block, rp, 7); // A5 Bits
+		bitvec_read_field(block, rp, 1); // ES IND
+		bitvec_read_field(block, rp, 1); // PS
+		bitvec_read_field(block, rp, 1); // VGCS
+		bitvec_read_field(block, rp, 1); // VBS
+		if (bitvec_read_field(block, rp, 1)) { // Multislot Cap Present
+			if (bitvec_read_field(block, rp, 1)) // HSCSD Present
+				bitvec_read_field(block, rp, 5); // Class
+			if (bitvec_read_field(block, rp, 1)) { // GPRS Present
+				ms_class = bitvec_read_field(block, rp, 5); // Class
+				bitvec_read_field(block, rp, 1); // Ext.
+			}
+			if (bitvec_read_field(block, rp, 1)) // SMS Present
+				bitvec_read_field(block, rp, 4); // SMS Value
+				bitvec_read_field(block, rp, 4); // SMS Value
+		}
+	}
 	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x IMSI: %s len: %d\n", tlli, imsi, len);
 
 	/* check for existing TBF */
@@ -118,9 +151,8 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			/* FIXME: send reject */
 			return -EBUSY;
 		}
-		/* FIXME: set number of downlink slots according to multislot
-		 * class */
-		tbf = tbf_alloc(GPRS_RLCMAC_DL_TBF, tfi, trx, ts, 1);
+		/* set number of downlink slots according to multislot class */
+		tbf = tbf_alloc(GPRS_RLCMAC_DL_TBF, tfi, trx, ts, ms_class);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 			/* FIXME: send reject */
