@@ -30,7 +30,6 @@ extern uint16_t spoof_mcc, spoof_mnc;
 int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 {
 	struct bssgp_ud_hdr *budh;
-
 	int tfi;
 	uint32_t tlli;
 	int i, j;
@@ -42,10 +41,6 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
 	tlli = ntohl(budh->tlli);
 
-	if (!tbf)
-	{
-		return -1;
-	}
 	/* LLC_PDU is mandatory IE */
 	if (!TLVP_PRESENT(tp, BSSGP_IE_LLC_PDU))
 	{
