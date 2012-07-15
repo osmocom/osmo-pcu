@@ -219,6 +219,7 @@ uplink_request:
 			}
 			ul_tbf->tlli = tbf->tlli;
 			ul_tbf->tlli_valid = 1; /* no contention resolution */
+			ul_tbf->contention_resolution_done = 1;
 			ul_tbf->ta = tbf->ta; /* use current TA */
 			tbf_new_state(ul_tbf, GPRS_RLCMAC_FLOW);
 			tbf_timer_start(ul_tbf, 3169, bts->t3169, 0);
