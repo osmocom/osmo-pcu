@@ -188,7 +188,7 @@ struct gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli,
 	if (dir == GPRS_RLCMAC_UL_TBF) {
 		llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
 			if (tbf->state != GPRS_RLCMAC_RELEASING
-			 && tbf->tlli == tlli)
+			 && tbf->tlli == tlli && tbf->tlli_valid)
 				return tbf;
 		}
 	} else {
@@ -793,8 +793,7 @@ int tbf_update(struct gprs_rlcmac_tbf *tbf)
 		return -EINVAL;
 	}
 
-	if (tbf->tlli_valid) 
-		ul_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF);
+	ul_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF);
 
 	tbf_unlink_pdch(tbf);
 	rc = bts->alloc_algorithm(ul_tbf, tbf, bts->alloc_algorithm_curst);
