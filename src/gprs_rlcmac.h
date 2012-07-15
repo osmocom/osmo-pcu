@@ -134,6 +134,7 @@ struct gprs_rlcmac_tbf {
 	uint8_t tfi;
 	uint32_t tlli;
 	uint8_t tlli_valid;
+	uint8_t contention_resolution_done; /* set after done */
 	uint8_t trx;
 	uint16_t arfcn;
 	uint8_t tsc;

@@ -69,12 +69,12 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == poll_fn)
 			poll_tbf = tbf;
+		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_SEND_ACK)
+			ul_ack_tbf = tbf;
 		if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_SEND_ASS)
 			dl_ass_tbf = tbf;
 		if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS)
 			ul_ass_tbf = tbf;
-		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_SEND_ACK)
-			ul_ack_tbf = tbf;
 	}
 	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
 		/* this trx, this ts */
@@ -88,8 +88,6 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 			dl_ass_tbf = tbf;
 		if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS)
 			ul_ass_tbf = tbf;
-		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_SEND_ACK)
-			ul_ack_tbf = tbf;
 	}
 
 	/* check uplink ressource for polling */
@@ -134,14 +132,14 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 	if (dl_ass_tbf) {
 		tbf = dl_ass_tbf;
 		msg = gprs_rlcmac_send_packet_downlink_assignment(tbf, fn);
-	} else
+	}
 	/* schedule PACKET UPLINK ASSIGNMENT */
-	if (ul_ass_tbf) {
+	if (!msg && ul_ass_tbf) {
 		tbf = ul_ass_tbf;
 		msg = gprs_rlcmac_send_packet_uplink_assignment(tbf, fn);
-	} else
+	}
 	/* schedule PACKET UPLINK ACK */
-	if (ul_ack_tbf) {
+	if (!msg && ul_ack_tbf) {
 		tbf = ul_ack_tbf;
 		msg = gprs_rlcmac_send_uplink_ack(tbf, fn);
 	}
