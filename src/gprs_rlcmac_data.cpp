@@ -1397,7 +1397,8 @@ void gprs_rlcmac_trigger_downlink_assignment(gprs_rlcmac_tbf *tbf,
 		old_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_DL_TBF);
 	else
 		old_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF);
-	if (old_tbf) {
+	if (old_tbf && (old_tbf->state != GPRS_RLCMAC_FINISHED ||
+		old_tbf->ul_ack_state != GPRS_RLCMAC_UL_ACK_WAIT_ACK)) {
 #ifdef DEBUG_DL_ASS_IDLE
 		LOGP(DRLCMAC, LOGL_ERROR, "We must wait for current TBF to be "
 			"released.\n");
