@@ -124,6 +124,7 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 	uint32_t fn)
 {
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	int8_t tfi = 0; /* must be signed */
 	uint32_t tlli = 0;
 	struct gprs_rlcmac_tbf *tbf;
@@ -197,7 +198,6 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		if (ul_control_block->u.Packet_Downlink_Ack_Nack.Exist_Channel_Request_Description) {
 			uint8_t trx, ts;
 			struct gprs_rlcmac_tbf *ul_tbf;
-			struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 
 			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
 				"message, so we provide one:\n");
@@ -253,11 +253,7 @@ uplink_request:
 			}
 			tlli = tbf->tlli;
 		}
-		LOGP(DRLCMAC, LOGL_INFO, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x Packet ressource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
-#warning FIXME
-puts("FIXME: UL request during UL request");	exit(0);
-
-
+		LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet ressource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
 		break;
 	default:
 		LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] unknown control block received\n");
