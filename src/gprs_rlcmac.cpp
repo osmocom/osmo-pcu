@@ -554,7 +554,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_tbf *old_tbf,
 			if ((rx_window & (1 << ts)))
 				break;
 			rx_win_min = ts + 1;
-			LOGP(DRLCMAC, LOGL_NOTICE, "- TS has been deleted, so "
+			LOGP(DRLCMAC, LOGL_DEBUG, "- TS has been deleted, so "
 				"raising start of DL window to %d\n",
 				rx_win_min);
 		}
@@ -562,7 +562,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_tbf *old_tbf,
 			if ((rx_window & (1 << ts)))
 				break;
 			rx_win_max = ts - 1;
-			LOGP(DRLCMAC, LOGL_NOTICE, "- TS has been deleted, so "
+			LOGP(DRLCMAC, LOGL_DEBUG, "- TS has been deleted, so "
 				"lowering end of DL window to %d\n",
 				rx_win_max);
 		}
@@ -682,6 +682,8 @@ int alloc_algorithm_b(struct gprs_rlcmac_tbf *old_tbf,
 	}
 
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
+		uint8_t slotcount = 0;
+
 		/* assign downlink */
 		if (rx_window == 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No downlink slots "
@@ -695,8 +697,12 @@ int alloc_algorithm_b(struct gprs_rlcmac_tbf *old_tbf,
 				pdch = &bts->trx[tbf->trx].pdch[ts];
 				pdch->dl_tbf[tbf->tfi] = tbf;
 				tbf->pdch[ts] = pdch;
+				slotcount++;
 			}
 		}
+		if (slotcount)
+			LOGP(DRLCMAC, LOGL_INFO, "Using Multislot with %d "
+				"slots DL\n", slotcount);
 	} else {
 		/* assign uplink */
 		if (tx_window == 0) {
@@ -805,10 +811,10 @@ int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 {
 	if (tbf->control_ts == 0xff)
 		LOGP(DRLCMAC, LOGL_DEBUG, "- Setting Control TS %d\n",
-			tbf->control_ts);
+			tbf->first_common_ts);
 	else if (tbf->control_ts != tbf->first_common_ts)
 		LOGP(DRLCMAC, LOGL_DEBUG, "- Changing Control TS %d\n",
-			tbf->control_ts);
+			tbf->first_common_ts);
 	tbf->control_ts = tbf->first_common_ts;
 
 	return 0;
