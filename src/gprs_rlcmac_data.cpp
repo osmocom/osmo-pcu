@@ -1092,6 +1092,8 @@ do_resend:
 				"done.\n");
 			li->e = 1; /* we cannot extend */
 			rh->fbi = 1; /* we indicate final block */
+			tbf->dir.dl.tx_counter = ACK_AFTER_FRAMES + 1;
+				/* + 1 indicates: force polling */
 			tbf_new_state(tbf, GPRS_RLCMAC_FINISHED);
 			break;
 		}
@@ -1116,27 +1118,31 @@ tx_block:
 	len = tbf->rlc_block_len[index];
 	rh = (struct rlc_dl_header *)data;
 
-	/* Increment TX-counter */
-	tbf->dir.dl.tx_counter++;
-
 	/* Clear Polling, if still set in history buffer */
 	rh->s_p = 0;
 		
 	/* poll after ACK_AFTER_FRAMES frames, or when final block is tx. */
-	if (rh->fbi == 1 || (tbf->dir.dl.tx_counter % ACK_AFTER_FRAMES) == 0) {
-		if (rh->fbi == 1) {
+	if (tbf->dir.dl.tx_counter >= ACK_AFTER_FRAMES) {
+		if (tbf->dir.dl.tx_counter > ACK_AFTER_FRAMES) {
+			/* if rx_counter is ACK_AFTER_FRAMES + 1, this
+			 * indicates: poll caused by final ack. */
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
 				"polling, because final block sent.\n");
-		}
-		if ((tbf->dir.dl.tx_counter % ACK_AFTER_FRAMES) == 0) {
+		} else {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
 				"polling, because %d blocks sent.\n",
 				ACK_AFTER_FRAMES);
 		}
+		tbf->dir.dl.tx_counter = 0;
+		/* scheduling not possible, because: */
 		if (tbf->poll_state != GPRS_RLCMAC_POLL_NONE)
-			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling is already "
+			LOGP(DRLCMAC, LOGL_DEBUG, "Polling is already "
 				"sheduled for TBF=%d, so we must wait for "
 				"requesting downlink ack\n", tbf->tfi);
+		else if (tbf->control_ts != ts)
+			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
+				"sheduled in this TS %d, waiting for "
+				"TS %d\n", ts, tbf->control_ts);
 		else  {
 			/* start timer whenever we send the final block */
 			if (rh->fbi == 1)
@@ -1149,7 +1155,13 @@ tx_block:
 			/* set polling in header */
 			rh->rrbp = 0; /* N+13 */
 			rh->s_p = 1; /* Polling */
+
+			/* Increment TX-counter */
+			tbf->dir.dl.tx_counter++;
 		}
+	} else {
+		/* Increment TX-counter */
+		tbf->dir.dl.tx_counter++;
 	}
 
 	/* return data block as message */
