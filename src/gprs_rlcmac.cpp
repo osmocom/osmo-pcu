@@ -1195,6 +1195,7 @@ void write_packet_uplink_ack(RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *t
 
 	char show_v_n[65];
 
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	uint8_t rbb = 0;
 	uint16_t i, bbn;
 	uint16_t mod_sns_half = (tbf->sns >> 1) - 1;
@@ -1213,7 +1214,7 @@ void write_packet_uplink_ack(RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *t
 	block->u.Packet_Uplink_Ack_Nack.UPLINK_TFI   = tbf->tfi; // Uplink TFI
 
 	block->u.Packet_Uplink_Ack_Nack.UnionType    = 0x0;      // PU_AckNack_GPRS = on
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = 0x0;             // CS1
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = bts->initial_cs - 1;             // CS1
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.FINAL_ACK_INDICATION     = final;           // FINAL ACK INDICATION
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->dir.ul.v_r; // STARTING_SEQUENCE_NUMBER
 	// RECEIVE_BLOCK_BITMAP
