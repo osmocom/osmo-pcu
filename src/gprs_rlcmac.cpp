@@ -154,29 +154,30 @@ struct gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli,
 
 struct gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_tbf *tbf;
-	uint8_t tfi;
 
 	/* only one TBF can poll on specific TS/FN, because scheduler can only
 	 * schedule one downlink control block (with polling) at a FN per TS */
-	for (tfi = 0; tfi < 32; tfi++) {
-		tbf = bts->trx[trx].pdch[ts].ul_tbf[tfi];
-		if (tbf && tbf->state != GPRS_RLCMAC_RELEASING
+	llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
+		if (tbf->state != GPRS_RLCMAC_RELEASING
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
-		 && tbf->poll_fn == fn && tbf->poll_ts == ts)
+		 && tbf->poll_fn == fn && tbf->trx == trx
+		 && tbf->control_ts == ts)
 			return tbf;
-		tbf = bts->trx[trx].pdch[ts].dl_tbf[tfi];
-		if (tbf && tbf->state != GPRS_RLCMAC_RELEASING
+	}
+	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
+		if (tbf->state != GPRS_RLCMAC_RELEASING
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
-		 && tbf->poll_fn == fn && tbf->poll_ts == ts)
+		 && tbf->poll_fn == fn && tbf->trx == trx
+		 && tbf->control_ts == ts)
 			return tbf;
 	}
 	return NULL;
 }
 
-struct gprs_rlcmac_tbf *tbf_alloc(enum gprs_rlcmac_tbf_direction dir,
-	uint8_t tfi, uint8_t trx, uint8_t first_ts, uint8_t ms_class)
+struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_tbf *old_tbf,
+	enum gprs_rlcmac_tbf_direction dir, uint8_t tfi, uint8_t trx,
+	uint8_t first_ts, uint8_t ms_class, uint8_t single_slot)
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_tbf *tbf;
@@ -202,11 +203,21 @@ struct gprs_rlcmac_tbf *tbf_alloc(enum gprs_rlcmac_tbf_direction dir,
 	tbf->ms_class = ms_class;
 	tbf->ws = 64;
 	tbf->sns = 128;
-	/* select algorithm according to multislot class */
-	if (ms_class)
-		rc = bts->alloc_algorithm(tbf);
+	/* select algorithm A in case we don't have multislot class info */
+	if (single_slot || ms_class == 0)
+		rc = alloc_algorithm_a(old_tbf, tbf,
+			bts->alloc_algorithm_curst);
 	else
-		rc = alloc_algorithm_a(tbf);
+		rc = bts->alloc_algorithm(old_tbf, tbf,
+			bts->alloc_algorithm_curst);
+	/* if no ressource */
+	if (rc < 0) {
+		talloc_free(tbf);
+		return NULL;
+	}
+	/* assign control ts */
+	tbf->control_ts = 0xff;
+	rc = tbf_assign_control_ts(tbf);
 	/* if no ressource */
 	if (rc < 0) {
 		talloc_free(tbf);
@@ -222,30 +233,20 @@ struct gprs_rlcmac_tbf *tbf_alloc(enum gprs_rlcmac_tbf_direction dir,
 	return tbf;
 }
 
-#if 0
-int alloc_algorithm_b(struct gprs_rlcmac_tbf *tbf)
-{
-		pdch = &bts->trx[tbf->trx].pdch[ts];
-		if (!pdch->enable)
-			continue;
-		if (tsc < 0)
-			tbf->tsc = tsc = pdch->tsc;
-		else if (tsc != pdch->tsc) {
-			LOGP(DRLCMAC, LOGL_ERROR, "Skipping TS=%d of TRX=%d, "
-				"because it has different TSC than lower TS "
-				"of TRX. In order to allow multislot, all "
-				"slots must be configured with the same TSC!\n",
-				ts, tbf->trx);
-			continue;
-		}
-#endif
-
-int alloc_algorithm_a(struct gprs_rlcmac_tbf *tbf)
+/* Slot Allocation: Algorithm A
+ *
+ * Assign single slot for uplink and downlink
+ */
+int alloc_algorithm_a(struct gprs_rlcmac_tbf *old_tbf,
+	struct gprs_rlcmac_tbf *tbf, uint32_t cust)
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_pdch *pdch;
 	uint8_t ts = tbf->first_ts;
 	int8_t usf; /* must be signed */
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm A) for class "
+		"%d\n", tbf->ms_class);
 
 	pdch = &bts->trx[tbf->trx].pdch[ts];
 	if (!pdch->enable) {
@@ -259,42 +260,65 @@ int alloc_algorithm_a(struct gprs_rlcmac_tbf *tbf)
 			/* if USF available */
 			usf = find_free_usf(pdch, ts);
 			if (usf >= 0) {
-				LOGP(DRLCMAC, LOGL_DEBUG, " Assign uplink "
+				LOGP(DRLCMAC, LOGL_DEBUG, "- Assign uplink "
 					"TS=%d USF=%d\n", ts, usf);
 				pdch->ul_tbf[tbf->tfi] = tbf;
 				tbf->pdch[ts] = pdch;
 			} else {
-				LOGP(DRLCMAC, LOGL_NOTICE, " Failed allocating "
-					"TS=%d, no USF available\n", ts);
+				LOGP(DRLCMAC, LOGL_NOTICE, "- Failed "
+					"allocating TS=%d, no USF available\n",
+					ts);
 				return -EBUSY;
 			}
 		} else {
-			LOGP(DRLCMAC, LOGL_NOTICE, " Failed allocating "
+			LOGP(DRLCMAC, LOGL_NOTICE, "- Failed allocating "
 				"TS=%d, TFI is not available\n", ts);
 			return -EBUSY;
 		}
 	} else {
 		/* if TFI is free on TS */
 		if (!pdch->dl_tbf[tbf->tfi]) {
-			LOGP(DRLCMAC, LOGL_DEBUG, " Assign downlink TS=%d\n",
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Assign downlink TS=%d\n",
 				ts);
 			pdch->dl_tbf[tbf->tfi] = tbf;
 			tbf->pdch[ts] = pdch;
 		} else {
-			LOGP(DRLCMAC, LOGL_NOTICE, " Failed allocating "
+			LOGP(DRLCMAC, LOGL_NOTICE, "- Failed allocating "
 				"TS=%d, TFI is not available\n", ts);
 			return -EBUSY;
 		}
 	}
+	/* the only one TS is the common TS */
+	tbf->first_common_ts = ts;
 
 	return 0;
 }
 
-void tbf_free(struct gprs_rlcmac_tbf *tbf)
+static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 {
 	struct gprs_rlcmac_pdch *pdch;
-	struct msgb *msg;
 	int ts;
+
+	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
+		for (ts = 0; ts < 8; ts++) {
+			pdch = tbf->pdch[ts];
+			if (pdch)
+				pdch->ul_tbf[tbf->tfi] = NULL;
+			tbf->pdch[ts] = NULL;
+		}
+	} else {
+		for (ts = 0; ts < 8; ts++) {
+			pdch = tbf->pdch[ts];
+			if (pdch)
+				pdch->dl_tbf[tbf->tfi] = NULL;
+			tbf->pdch[ts] = NULL;
+		}
+	}
+}
+
+void tbf_free(struct gprs_rlcmac_tbf *tbf)
+{
+	struct msgb *msg;
 
 	LOGP(DRLCMAC, LOGL_INFO, "Free %s TBF=%d with TLLI=0x%08x.\n",
 		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
@@ -312,23 +336,55 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	tbf_timer_stop(tbf);
 	while ((msg = msgb_dequeue(&tbf->llc_queue)))
 		msgb_free(msg);
-	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		for (ts = 0; ts < 8; ts++) {
-			pdch = tbf->pdch[ts];
-			if (pdch)
-				pdch->ul_tbf[tbf->tfi] = NULL;
-		}
-	} else {
-		for (ts = 0; ts < 8; ts++) {
-			pdch = tbf->pdch[ts];
-			if (pdch)
-				pdch->dl_tbf[tbf->tfi] = NULL;
-		}
-	}
+	tbf_unlink_pdch(tbf);
 	llist_del(&tbf->list);
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF ends here **********\n");
 	talloc_free(tbf);
 }
+
+int tbf_update(struct gprs_rlcmac_tbf *tbf)
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_tbf *ul_tbf = NULL;
+	int rc;
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF update **********\n");
+
+	if (tbf->direction != GPRS_RLCMAC_DL_TBF)
+		return -EINVAL;
+
+	if (!tbf->ms_class) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Cannot update, no class\n");
+		return -EINVAL;
+	}
+
+	if (tbf->tlli_valid) 
+		ul_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF);
+
+	tbf_unlink_pdch(tbf);
+	rc = bts->alloc_algorithm(ul_tbf, tbf, bts->alloc_algorithm_curst);
+	/* if no ressource */
+	if (rc < 0) {
+		LOGP(DRLCMAC, LOGL_ERROR, "No ressource after update???\n");
+		return -rc;
+	}
+
+	return 0;
+}
+
+int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
+{
+	if (tbf->control_ts == 0xff)
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Setting Control TS %d\n",
+			tbf->control_ts);
+	else if (tbf->control_ts != tbf->first_common_ts)
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Changing Control TS %d\n",
+			tbf->control_ts);
+	tbf->control_ts = tbf->first_common_ts;
+
+	return 0;
+}
+
 
 const char *tbf_state_name[] = {
 	"NULL",

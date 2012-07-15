@@ -139,7 +139,8 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		tbf = tbf_by_poll_fn(fn, trx, ts);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
-				"unknown FN=%u TLL=0x%08x\n", fn, tlli);
+				"unknown FN=%u TLL=0x%08x (TRX %d TS %d)\n",
+				fn, tlli, trx, ts);
 			break;
 		}
 		tfi = tbf->tfi;
@@ -176,7 +177,8 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		tbf = tbf_by_poll_fn(fn, trx, ts);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
-				"unknown FN=%u TBF=%d\n", fn, tfi);
+				"unknown FN=%u TBF=%d (TRX %d TS %d)\n",
+				fn, tfi, trx, ts);
 			break;
 		}
 		/* reset N3105 */
@@ -208,8 +210,8 @@ uplink_request:
 				break;
 			}
 			/* use multislot class of downlink TBF */
-			ul_tbf = tbf_alloc(GPRS_RLCMAC_UL_TBF, tfi, trx, ts,
-				tbf->ms_class);
+			ul_tbf = tbf_alloc(tbf, GPRS_RLCMAC_UL_TBF, tfi, trx,
+				ts, tbf->ms_class, 0);
 			if (!ul_tbf) {
 				LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 				/* FIXME: send reject */
@@ -286,9 +288,10 @@ void tbf_timer_cb(void *_tbf)
 #endif
 	case 0: /* assignment */
 		/* change state to FLOW, so scheduler will start transmission */
-		if (tbf->state == GPRS_RLCMAC_ASSIGN)
+		if (tbf->state == GPRS_RLCMAC_ASSIGN) {
 			tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
-		else
+			tbf_assign_control_ts(tbf);
+		} else
 			LOGP(DRLCMAC, LOGL_ERROR, "Error: TBF is not in assign "
 				"state\n");
 		break;
@@ -550,7 +553,6 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 	if (final) {
 		tbf->poll_state = GPRS_RLCMAC_POLL_SCHED;
 		tbf->poll_fn = (fn + 13) % 2715648;
-		tbf->poll_ts = tbf->first_ts;
 		/* waiting for final acknowledge */
 		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_WAIT_ACK;
 	} else
@@ -800,7 +802,6 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 	FIXME process does not work, also the acknowledgement is not checked.
 	tbf->poll_state = GPRS_RLCMAC_POLL_SCHED;
 	tbf->poll_fn = (fn + 13) % 2715648;
-	tbf->poll_ts = tbf->first_ts;
 	tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_WAIT_ACK;
 #else
 	tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
@@ -826,7 +827,7 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		return -EBUSY;
 	}
 	/* set class to 0, since we don't know the multislot class yet */
-	tbf = tbf_alloc(GPRS_RLCMAC_UL_TBF, tfi, trx, ts, 0);
+	tbf = tbf_alloc(NULL, GPRS_RLCMAC_UL_TBF, tfi, trx, ts, 0, 1);
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 		/* FIXME: send reject */
@@ -861,7 +862,7 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
  * The messages are fragmented and forwarded as data blocks.
  */
 struct msgb *gprs_rlcmac_send_data_block_acknowledged(
-	struct gprs_rlcmac_tbf *tbf, uint32_t fn)
+	struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts)
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct rlc_dl_header *rh;
@@ -1144,7 +1145,6 @@ tx_block:
 			/* schedule polling */
 			tbf->poll_state = GPRS_RLCMAC_POLL_SCHED;
 			tbf->poll_fn = (fn + 13) % 2715648;
-			tbf->poll_ts = tbf->first_ts;
 
 			/* set polling in header */
 			rh->rrbp = 0; /* N+13 */
@@ -1269,6 +1269,7 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 	LOGP(DRLCMAC, LOGL_DEBUG, "Trigger dowlink assignment on PACCH, "
 		"because another LLC PDU has arrived in between\n");
 	memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl)); /* reset RLC states */
+	tbf_update(tbf);
 	gprs_rlcmac_trigger_downlink_assignment(tbf, 1, NULL);
 
 	return 0;
@@ -1329,7 +1330,6 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 #if POLLING_ASSIGNMENT == 1
 	tbf->poll_state = GPRS_RLCMAC_POLL_SCHED;
 	tbf->poll_fn = (fn + 13) % 2715648;
-	tbf->poll_ts = tbf->first_ts;
 	tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_WAIT_ACK;
 #else
 	tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;

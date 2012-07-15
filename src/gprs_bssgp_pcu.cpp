@@ -123,6 +123,9 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			tbf->llc_length = len;
 			memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl)); /* reset
 								rlc states */
+			if (!tbf->ms_class && ms_class)
+				tbf->ms_class = ms_class;
+			tbf_update(tbf);
 			gprs_rlcmac_trigger_downlink_assignment(tbf, 1, NULL);
 		} else {
 			/* the TBF exists, so we must write it in the queue */
@@ -131,17 +134,24 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 				return -ENOMEM;
 			memcpy(msgb_put(llc_msg, len), data, len);
 			msgb_enqueue(&tbf->llc_queue, llc_msg);
+			/* set ms class for updating TBF */
+			if (!tbf->ms_class && ms_class)
+				tbf->ms_class = ms_class;
 		}
 	} else {
-		uint8_t trx, ts, use_trx, first_ts;
+		uint8_t trx, ts, use_trx, first_ts, ta, ss;
 
 		/* check for uplink data, so we copy our informations */
 		if ((tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF))) {
 			use_trx = tbf->trx;
 			first_ts = tbf->first_ts;
+			ta = tbf->ta;
+			ss = 0;
 		} else {
 			use_trx = -1;
 			first_ts = -1;
+			ta = 0; /* FIXME: initial TA */
+			ss = 1; /* PCH assignment only allows one timeslot */
 		}
 
 		// Create new TBF (any TRX)
@@ -152,7 +162,8 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			return -EBUSY;
 		}
 		/* set number of downlink slots according to multislot class */
-		tbf = tbf_alloc(GPRS_RLCMAC_DL_TBF, tfi, trx, ts, ms_class);
+		tbf = tbf_alloc(tbf, GPRS_RLCMAC_DL_TBF, tfi, trx, ts, ms_class,
+			ss);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 			/* FIXME: send reject */
