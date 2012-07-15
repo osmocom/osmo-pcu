@@ -171,6 +171,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		}
 		tbf->tlli = tlli;
 		tbf->tlli_valid = 1;
+		tbf->ta = ta;
 
 		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [DOWNLINK] START TFI: %d TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
 
