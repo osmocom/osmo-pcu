@@ -917,9 +917,8 @@ do_resend:
 		 * indication from MS. This should never happen if MS works
 		 * correctly. */
 		if (tbf->dir.dl.v_s == tbf->dir.dl.v_a) {
-			LOGP(DRLCMACDL, LOGL_ERROR, "- MS acked all block "
-				"(including final block), but did not include "
-				"FINAL_ACK_INDICATION!\n");
+			LOGP(DRLCMACDL, LOGL_ERROR, "- MS acked all block, "
+				"but we still transmitting!\n");
 			/* we just send final block again */
 			index = ((tbf->dir.dl.v_s - 1) & mod_sns_half);
 			goto tx_block;
@@ -1251,7 +1250,12 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 			"X=Resend-Unacked\n", tbf->dir.dl.v_a, show_v_b,
 			(tbf->dir.dl.v_s - 1) & mod_sns);
 
-		return 0;
+		if (tbf->state == GPRS_RLCMAC_FINISHED
+		 && tbf->dir.dl.v_s == tbf->dir.dl.v_a) {
+			LOGP(DRLCMACDL, LOGL_NOTICE, "Received final block, "
+				"bit without final ack inidcation\n");
+		} else
+			return 0;
 	}
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
