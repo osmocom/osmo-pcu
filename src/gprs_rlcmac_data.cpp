@@ -73,7 +73,7 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 
 	if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Timeout for polling PACKET "
+		LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling PACKET "
 			"CONTROL ACK for PACKET UPLINK ACK\n");
 		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
 		if (tbf->state == GPRS_RLCMAC_FINISHED) {
@@ -81,7 +81,8 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 
 			tbf->dir.ul.n3103++;
 			if (tbf->dir.ul.n3103 == bts->n3103) {
-				LOGP(DRLCMAC, LOGL_DEBUG, "- N3103 exceeded\n");
+				LOGP(DRLCMAC, LOGL_NOTICE,
+					"- N3103 exceeded\n");
 				tbf_new_state(tbf, GPRS_RLCMAC_RELEASING);
 				tbf_timer_start(tbf, 3169, bts->t3169, 0);
 				return 0;
@@ -91,17 +92,17 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 		}
 	} else
 	if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Timeout for polling PACKET "
+		LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling PACKET "
 			"CONTROL ACK for PACKET UPLINK ASSIGNMENT.\n");
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
 	} else
 	if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Timeout for polling PACKET "
+		LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling PACKET "
 			"CONTROL ACK for PACKET DOWNLINK ASSIGNMENT.\n");
 		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 		/* in case out downlink assigment failed: */
 		if (tbf->state == GPRS_RLCMAC_ASSIGN) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "- Assignment failed\n");
+			LOGP(DRLCMAC, LOGL_NOTICE, "- Assignment failed\n");
 			tbf_free(tbf);
 		}
 	} else
@@ -109,16 +110,17 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 	{
 		struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Timeout for polling PACKET "
+		LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling PACKET "
 			" DOWNLINK ACK.\n");
 		tbf->dir.dl.n3105++;
 		if (tbf->dir.dl.n3105 == bts->n3105) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "- N3105 exceeded\n");
+			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
 			tbf_new_state(tbf, GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(tbf, 3195, bts->t3195, 0);
 			return 0;
 		}
-	}
+	} else
+		LOGP(DRLCMAC, LOGL_ERROR, "- Poll Timeout, but no event!\n");
 
 	return 0;
 }
@@ -916,7 +918,7 @@ do_resend:
 				"because all blocks have been transmitted.\n",
 					tbf->dir.dl.v_a);
 		else
-			LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
+			LOGP(DRLCMACDL, LOGL_NOTICE, "- Restarting at BSN %d, "
 				"because all window is stalled.\n",
 					tbf->dir.dl.v_a);
 		/* If V(S) == V(A) and finished state, we would have received
@@ -1207,8 +1209,8 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 		}
 		show_rbb[64] = '\0';
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- ack:  (BSN=%d)\"%s\""
-			"(BSN=%d)  1=ACK o=NACK\n", ssn - 64, show_rbb,
-			ssn - 1);
+			"(BSN=%d)  1=ACK o=NACK\n", (ssn - 64) & mod_sns,
+			show_rbb, (ssn - 1) & mod_sns);
 
 		/* apply received array to receive state (SSN-64..SSN-1) */
 		/* calculate distance of ssn from V(S) */
@@ -1272,12 +1274,11 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 		if (tbf->state == GPRS_RLCMAC_FINISHED
 		 && tbf->dir.dl.v_s == tbf->dir.dl.v_a) {
 			LOGP(DRLCMACDL, LOGL_NOTICE, "Received final block, "
-				"bit without final ack inidcation\n");
+				"but without final ack inidcation\n");
 		} else
 			return 0;
-	}
-
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
+	} else
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
 
 	/* check for LLC PDU in the LLC Queue */
 	msg = msgb_dequeue(&tbf->llc_queue);
