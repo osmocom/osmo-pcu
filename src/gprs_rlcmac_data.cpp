@@ -22,8 +22,11 @@
 #include <gprs_rlcmac.h>
 #include <pcu_l1_if.h>
 
-/* After receiving these framess, we send ack/nack. */
-#define ACK_AFTER_FRAMES 20
+/* After receiving these frames, we send ack/nack. */
+#define SEND_ACK_AFTER_FRAMES 20
+
+/* After sending these frames, we poll for ack/nack. */
+#define POLL_ACK_AFTER_FRAMES 10
 
 /* If acknowledgement to uplink/downlin assignmentshould be polled */
 #define POLLING_ASSIGNMENT 0
@@ -717,9 +720,9 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 	/* If TLLI is included or if we received half of the window, we send
 	 * an ack/nack */
 	if (rh->si || rh->ti || tbf->state == GPRS_RLCMAC_FINISHED
-	 || (tbf->dir.ul.rx_counter % ACK_AFTER_FRAMES) == 0) {
+	 || (tbf->dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
 		if (rh->si) {
-			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
+			LOGP(DRLCMACUL, LOGL_NOTICE, "- Scheduling Ack/Nack, "
 				"because MS is stalled.\n");
 		}
 		if (rh->ti) {
@@ -730,10 +733,10 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
 				"because last block has CV==0.\n");
 		}
-		if ((tbf->dir.ul.rx_counter % ACK_AFTER_FRAMES) == 0) {
+		if ((tbf->dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
 				"because %d frames received.\n",
-				ACK_AFTER_FRAMES);
+				SEND_ACK_AFTER_FRAMES);
 		}
 		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_NONE) {
 			/* trigger sending at next RTS */
@@ -1092,8 +1095,8 @@ do_resend:
 				"done.\n");
 			li->e = 1; /* we cannot extend */
 			rh->fbi = 1; /* we indicate final block */
-			tbf->dir.dl.tx_counter = ACK_AFTER_FRAMES + 1;
-				/* + 1 indicates: force polling */
+			tbf->dir.dl.tx_counter = POLL_ACK_AFTER_FRAMES + 1;
+				/* + 1 indicates: first final ack */
 			tbf_new_state(tbf, GPRS_RLCMAC_FINISHED);
 			break;
 		}
@@ -1121,17 +1124,18 @@ tx_block:
 	/* Clear Polling, if still set in history buffer */
 	rh->s_p = 0;
 		
-	/* poll after ACK_AFTER_FRAMES frames, or when final block is tx. */
-	if (tbf->dir.dl.tx_counter >= ACK_AFTER_FRAMES) {
-		if (tbf->dir.dl.tx_counter > ACK_AFTER_FRAMES) {
-			/* if rx_counter is ACK_AFTER_FRAMES + 1, this
+	/* poll after POLL_ACK_AFTER_FRAMES frames, or when final block is tx.
+	 */
+	if (tbf->dir.dl.tx_counter >= POLL_ACK_AFTER_FRAMES) {
+		if (tbf->dir.dl.tx_counter > POLL_ACK_AFTER_FRAMES) {
+			/* if rx_counter is POLL_ACK_AFTER_FRAMES + 1, this
 			 * indicates: poll caused by final ack. */
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
 				"polling, because final block sent.\n");
 		} else {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
 				"polling, because %d blocks sent.\n",
-				ACK_AFTER_FRAMES);
+				POLL_ACK_AFTER_FRAMES);
 		}
 		tbf->dir.dl.tx_counter = 0;
 		/* scheduling not possible, because: */
