@@ -131,6 +131,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 	int8_t tfi = 0; /* must be signed */
 	uint32_t tlli = 0;
 	struct gprs_rlcmac_tbf *tbf;
+	int rc;
 
 	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)malloc(sizeof(RlcMacUplink_t));
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
@@ -193,10 +194,14 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Downlink Ack/Nack\n", tbf->tfi, tbf->tlli);
 		tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 
-		gprs_rlcmac_downlink_ack(tbf,
+		rc = gprs_rlcmac_downlink_ack(tbf,
 			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.FINAL_ACK_INDICATION,
 			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
 			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
+		if (rc == 1) {
+			tbf_free(tbf);
+			break;
+		}
 		/* check for channel request */
 		if (ul_control_block->u.Packet_Downlink_Ack_Nack.Exist_Channel_Request_Description) {
 			uint8_t trx, ts;
@@ -1228,8 +1233,15 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 				}
 			}
 		} else {
-			LOGP(DRLCMACDL, LOGL_DEBUG, "- ack range is out of "
-				"V(A)..V(S) range\n");
+			/* this might happpen, if the downlink assignment
+			 * was not received by ms and the ack refers
+			 * to previous TBF
+			 * FIXME: we should implement polling for
+			 * control ack!*/
+			LOGP(DRLCMACDL, LOGL_NOTICE, "- ack range is out of "
+				"V(A)..V(S) range (DL TBF=%d) Free TFB!\n",
+				tbf->tfi);
+				return 1; /* indicate to free TBF */
 		}
 
 		/* raise V(A), if possible */
