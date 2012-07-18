@@ -1,19 +1,22 @@
 #ifndef _PCUIF_PROTO_H
 #define _PCUIF_PROTO_H
 
+#define PCU_IF_VERSION		0x03
+
 /* msg_type */
 #define PCU_IF_MSG_DATA_REQ	0x00	/* send data to given channel */
 #define PCU_IF_MSG_DATA_IND	0x02	/* receive data from given channel */	
-#define PCU_IF_MSG_RTS_REQ	0x10	/* ready to send data to given chan. */
-#define PCU_IF_MSG_RACH_IND	0x22	/* receive rach */
+#define PCU_IF_MSG_RTS_REQ	0x10	/* ready to send request */
+#define PCU_IF_MSG_RACH_IND	0x22	/* receive RACH */
 #define PCU_IF_MSG_INFO_IND	0x32	/* retrieve BTS info */
 #define PCU_IF_MSG_ACT_REQ	0x40	/* activate/deactivate PDCH */
-#define PCU_IF_MSG_TIME_IND	0x52	/* gsm time indication */
+#define PCU_IF_MSG_TIME_IND	0x52	/* GSM time indication */
+#define PCU_IF_MSG_PAG_REQ	0x60	/* paging request */
 
 /* sapi */
 #define PCU_IF_SAPI_RACH	0x01	/* channel request on CCCH */
-#define PCU_IF_SAPI_AGCH	0x02	/* assignment on CCCH */
-#define PCU_IF_SAPI_PCH		0x03	/* paging request on CCCH */
+#define PCU_IF_SAPI_AGCH	0x02	/* assignment on AGCH */
+#define PCU_IF_SAPI_PCH		0x03	/* paging/assignment on PCH */
 #define PCU_IF_SAPI_BCCH	0x04	/* SI on BCCH */
 #define PCU_IF_SAPI_PDTCH	0x05	/* packet data/control/ccch block */
 #define PCU_IF_SAPI_PRACH	0x06	/* packet random access channel */
@@ -70,11 +73,14 @@ struct gsm_pcu_if_info_trx {
 	uint8_t		pdch_mask;		/* PDCH channels per TS */
 	uint8_t		spare;
 	uint8_t		tsc[8];			/* TSC per channel */
+	uint32_t	hlayer1;
 } __attribute__ ((packed));
 
 struct gsm_pcu_if_info_ind {
+	uint32_t	version;
 	uint32_t	flags;
 	struct gsm_pcu_if_info_trx trx[8];	/* TRX infos per BTS */
+	uint8_t		bsic;
 	/* RAI */
 	uint16_t	mcc, mnc, lac, rac;
 	/* NSE */
@@ -117,6 +123,12 @@ struct gsm_pcu_if_time_ind {
 	uint32_t	fn;
 } __attribute__ ((packed));
 
+struct gsm_pcu_if_pag_req {
+	uint8_t		sapi;
+	uint8_t		chan_needed;
+	uint8_t		identity_lv[9];
+} __attribute__ ((packed));
+
 struct gsm_pcu_if {
 	/* context based information */
 	uint8_t		msg_type;	/* message type */
@@ -131,6 +143,7 @@ struct gsm_pcu_if {
 		struct gsm_pcu_if_info_ind	info_ind;
 		struct gsm_pcu_if_act_req	act_req;
 		struct gsm_pcu_if_time_ind	time_ind;
+		struct gsm_pcu_if_pag_req	pag_req;
 	} u;
 } __attribute__ ((packed));
 

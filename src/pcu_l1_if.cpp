@@ -255,6 +255,13 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 	struct gprs_rlcmac_tbf *tbf;
 	int i;
 
+	if (info_ind->version != PCU_IF_VERSION) {
+		fprintf(stderr, "PCU interface version number of BTS (%d) is "
+			"different (%d).\nPlease re-compile!\n",
+			info_ind->version, PCU_IF_VERSION);
+		exit(-1);
+	}
+
 	LOGP(DL1IF, LOGL_DEBUG, "Info indication received:\n");
 
 	if (!(info_ind->flags & PCU_IF_FLAG_ACTIVE)) {
