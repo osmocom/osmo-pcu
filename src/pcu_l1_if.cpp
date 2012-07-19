@@ -247,12 +247,34 @@ static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
 	return rc;
 }
 
+int flush_pdch(struct gprs_rlcmac_pdch *pdch)
+{
+	uint8_t tfi;
+	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_paging *pag;
+
+	/* kick all TBF on slot */
+	for (tfi = 0; tfi < 32; tfi++) {
+		tbf = pdch->ul_tbf[tfi];
+		if (tbf)
+			tbf_free(tbf);
+		tbf = pdch->dl_tbf[tfi];
+		if (tbf)
+			tbf_free(tbf);
+	}
+	/* flush all pending paging messages */
+	while ((pag = gprs_rlcmac_dequeue_paging(pdch)))
+		talloc_free(pag);
+
+	return 0;
+}
+
 static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_pdch *pdch;
 	int rc = 0;
-	int trx, ts, tfi;
-	struct gprs_rlcmac_tbf *tbf;
+	int trx, ts;
 	int i;
 
 	if (info_ind->version != PCU_IF_VERSION) {
@@ -270,16 +292,8 @@ bssgp_failed:
 		/* free all TBF */
 		for (trx = 0; trx < 8; trx++) {
 			bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
-			for (ts = 0; ts < 8; ts++) {
-				for (tfi = 0; tfi < 32; tfi++) {
-				tbf = bts->trx[trx].pdch[ts].ul_tbf[tfi];
-					if (tbf)
-						tbf_free(tbf);
-				tbf = bts->trx[trx].pdch[ts].dl_tbf[tfi];
-					if (tbf)
-						tbf_free(tbf);
-				}
-			}
+			for (ts = 0; ts < 8; ts++)
+				flush_pdch(&bts->trx[trx].pdch[ts]);
 		}
 		gprs_bssgp_destroy();
 		return 0;
@@ -366,28 +380,21 @@ bssgp_failed:
 	for (trx = 0; trx < 8; trx++) {
 		bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
 		for (ts = 0; ts < 8; ts++) {
+			pdch = &bts->trx[trx].pdch[ts];
 			if ((info_ind->trx[trx].pdch_mask & (1 << ts))) {
 				/* FIXME: activate dynamically at RLCMAC */
-				if (!bts->trx[trx].pdch[ts].enable)
+				if (!pdch->enable)
 					pcu_tx_act_req(trx, ts, 1);
-				bts->trx[trx].pdch[ts].enable = 1;
-				bts->trx[trx].pdch[ts].tsc =
-					info_ind->trx[trx].tsc[ts];
+				pdch->enable = 1;
+				pdch->tsc = info_ind->trx[trx].tsc[ts];
+				INIT_LLIST_HEAD(&pdch->paging_list);
 				LOGP(DL1IF, LOGL_INFO, "PDCH: trx=%d ts=%d\n",
 					trx, ts);
 			} else {
-				if (bts->trx[trx].pdch[ts].enable)
+				if (pdch->enable)
 					pcu_tx_act_req(trx, ts, 0);
-				bts->trx[trx].pdch[ts].enable = 0;
-				/* kick all TBF on slot */
-				for (tfi = 0; tfi < 32; tfi++) {
-				tbf = bts->trx[trx].pdch[ts].ul_tbf[tfi];
-					if (tbf)
-						tbf_free(tbf);
-				tbf = bts->trx[trx].pdch[ts].dl_tbf[tfi];
-					if (tbf)
-						tbf_free(tbf);
-				}
+				pdch->enable = 0;
+				flush_pdch(pdch);
 			}
 		}
 	}
@@ -429,6 +436,15 @@ static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 	return 0;
 }
 
+static int pcu_rx_pag_req(struct gsm_pcu_if_pag_req *pag_req)
+{
+	LOGP(DL1IF, LOGL_DEBUG, "Paging request received: chan_needed=%d "
+		"length=%d\n", pag_req->chan_needed, pag_req->identity_lv[0]);
+
+	return gprs_rlcmac_add_paging(pag_req->chan_needed,
+						pag_req->identity_lv);
+}
+
 int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 {
 	int rc = 0;
@@ -448,6 +464,9 @@ int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 		break;
 	case PCU_IF_MSG_TIME_IND:
 		rc = pcu_rx_time_ind(&pcu_prim->u.time_ind);
+		break;
+	case PCU_IF_MSG_PAG_REQ:
+		rc = pcu_rx_pag_req(&pcu_prim->u.pag_req);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received unknwon PCU msg type %d\n",

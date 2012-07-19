@@ -143,6 +143,10 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 		tbf = ul_ack_tbf;
 		msg = gprs_rlcmac_send_uplink_ack(tbf, fn);
 	}
+	/* schedule PACKET PAGING REQUEST */
+	if (!msg && !llist_empty(&pdch->paging_list)) {
+		msg = gprs_rlcmac_send_packet_paging_request(pdch);
+	}
 	if (msg) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling control "
 			"message at RTS for %s TBF=%d (TRX=%d, TS=%d)\n",

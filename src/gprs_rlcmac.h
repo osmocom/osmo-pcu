@@ -48,6 +48,7 @@ struct gprs_rlcmac_pdch {
 	uint8_t next_dl_tfi; /* next downlink TBF/TFI to schedule (0..31) */
 	struct gprs_rlcmac_tbf *ul_tbf[32]; /* array of UL TBF, by UL TFI */
 	struct gprs_rlcmac_tbf *dl_tbf[32]; /* array of DL TBF, by DL TFI */
+	struct llist_head paging_list; /* list of paging messages */
 	uint32_t last_rts_fn; /* store last frame number of RTS */
 };
 
@@ -199,6 +200,15 @@ struct gprs_rlcmac_tbf {
 extern struct llist_head gprs_rlcmac_ul_tbfs; /* list of uplink TBFs */
 extern struct llist_head gprs_rlcmac_dl_tbfs; /* list of downlink TBFs */
 
+/*
+ * paging entry
+ */
+struct gprs_rlcmac_paging {
+	struct llist_head list;
+	uint8_t chan_needed;
+	uint8_t identity_lv[9];
+};
+
 int tfi_alloc(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, uint8_t *_ts,
 	uint8_t use_trx, uint8_t first_ts);
 
@@ -285,6 +295,11 @@ void gprs_rlcmac_trigger_downlink_assignment(gprs_rlcmac_tbf *tbf,
 int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
         uint8_t ssn, uint8_t *rbb);
 
+unsigned write_packet_paging_request(bitvec * dest);
+
+unsigned write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
+	uint8_t *identity, uint8_t chan_needed);
+
 int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 	uint8_t *data, uint8_t len);
 
@@ -296,5 +311,13 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 
 int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn, 
         uint32_t fn, uint8_t block_nr);
+
+int gprs_rlcmac_add_paging(uint8_t chan_needed, uint8_t *identity_lv);
+
+struct gprs_rlcmac_paging *gprs_rlcmac_dequeue_paging(
+	struct gprs_rlcmac_pdch *pdch);
+
+struct msgb *gprs_rlcmac_send_packet_paging_request(
+	struct gprs_rlcmac_pdch *pdch);
 
 #endif // GPRS_RLCMAC_H

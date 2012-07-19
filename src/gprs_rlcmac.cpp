@@ -73,6 +73,11 @@ struct gprs_ms_multislot_class gprs_ms_multislot_class[32] = {
 
 LLIST_HEAD(gprs_rlcmac_ul_tbfs);
 LLIST_HEAD(gprs_rlcmac_dl_tbfs);
+llist_head *gprs_rlcmac_tbfs_lists[] = {
+	&gprs_rlcmac_ul_tbfs,
+	&gprs_rlcmac_dl_tbfs,
+	NULL
+};
 void *rlcmac_tall_ctx;
 
 /* FIXME: spread ressources over multiple TRX. Also add option to use same
@@ -950,6 +955,172 @@ int gprs_rlcmac_rcv_block(uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
 	return rc;
 }
 
+/* add paging to paging queue(s) */
+int gprs_rlcmac_add_paging(uint8_t chan_needed, uint8_t *identity_lv)
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	uint8_t l, trx, ts, any_tbf = 0;
+	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_paging *pag;
+	uint8_t slot_mask[8];
+	int8_t first_ts; /* must be signed */
+
+	LOGP(DRLCMAC, LOGL_INFO, "Add CS paging\n");
+
+	/* collect slots to page
+	 * Mark slots for every TBF, but only mark one of it.
+	 * Mark only the first slot found.
+	 * Don't mark, if TBF uses a different slot that is already marked. */
+	memset(slot_mask, 0, sizeof(slot_mask));
+	for (l = 0; gprs_rlcmac_tbfs_lists[l]; l++) {
+		llist_for_each_entry(tbf, gprs_rlcmac_tbfs_lists[l], list) {
+			first_ts = -1;
+			for (ts = 0; ts < 8; ts++) {
+				if (tbf->pdch[ts]) {
+					/* remember the first slot found */
+					if (first_ts < 0)
+						first_ts = ts;
+					/* break, if we already marked a slot */
+					if ((slot_mask[tbf->trx] & (1 << ts)))
+						break;
+				}
+			}
+			/* mark first slot found, if none is marked already */
+			if (ts == 8 && first_ts >= 0) {
+				LOGP(DRLCMAC, LOGL_DEBUG, "- %s TBF=%d uses "
+					"TRX=%d TS=%d, so we mark\n",
+					(tbf->direction == GPRS_RLCMAC_UL_TBF)
+						? "UL" : "DL",
+					tbf->tfi, tbf->trx, ts);
+				slot_mask[tbf->trx] |= (1 << first_ts);
+			} else
+				LOGP(DRLCMAC, LOGL_DEBUG, "- %s TBF=%d uses "
+					"already marked TRX=%d TS=%d\n",
+					(tbf->direction == GPRS_RLCMAC_UL_TBF)
+						? "UL" : "DL",
+					tbf->tfi, tbf->trx, ts);
+		}
+	}
+
+	/* Now we have a list of marked slots. Every TBF uses at least one
+	 * of these slots. */
+
+	/* schedule paging to all marked slots */
+	for (trx = 0; trx < 8; trx++) {
+		if (slot_mask[trx] == 0)
+			continue;
+		any_tbf = 1;
+		for (ts = 0; ts < 8; ts++) {
+			if ((slot_mask[trx] & (1 << ts))) {
+				/* schedule */
+				pag = talloc_zero(rlcmac_tall_ctx,
+					struct gprs_rlcmac_paging);
+				if (!pag)
+					return -ENOMEM;
+				pag->chan_needed = chan_needed;
+				memcpy(pag->identity_lv, identity_lv,
+					identity_lv[0] + 1);
+				llist_add(&pag->list,
+					&bts->trx[trx].pdch[ts].paging_list);
+				LOGP(DRLCMAC, LOGL_INFO, "Paging on TRX=%d"
+					"TS=%d\n", trx, ts);
+			}
+		}
+	}
+
+	if (!any_tbf) {
+		LOGP(DRLCMAC, LOGL_INFO, "No paging, because no TBF\n");
+	}
+
+	return 0;
+}
+
+struct gprs_rlcmac_paging *gprs_rlcmac_dequeue_paging(
+	struct gprs_rlcmac_pdch *pdch)
+{
+	struct gprs_rlcmac_paging *pag;
+
+	pag = llist_entry(pdch->paging_list.next,
+		struct gprs_rlcmac_paging, list);
+        llist_del(&pag->list);
+
+	return pag;
+}
+
+struct msgb *gprs_rlcmac_send_packet_paging_request(
+	struct gprs_rlcmac_pdch *pdch)
+{
+	struct gprs_rlcmac_paging *pag;
+	struct msgb *msg;
+	unsigned wp = 0, len;
+
+	/* no paging, no message */
+	pag = gprs_rlcmac_dequeue_paging(pdch);
+	if (!pag)
+		return NULL;
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "Scheduling paging\n");
+
+	/* alloc message */
+	msg = msgb_alloc(23, "pag ctrl block");
+	if (!msg)
+		return NULL;
+	bitvec *pag_vec = bitvec_alloc(23);
+	if (!pag_vec) {
+		msgb_free(msg);
+		return NULL;
+	}
+	wp = write_packet_paging_request(pag_vec);
+
+	/* loop until message is full */
+	while (pag) {
+		/* try to add paging */
+		if ((pag->identity_lv[1] & 0x07) == 4) {
+			/* TMSI */
+			LOGP(DRLCMAC, LOGL_DEBUG, "- TMSI=0x%08x\n",
+				ntohl(*((uint32_t *)(pag->identity_lv + 1))));
+			len = 1 + 1 + 32 + 2 + 1;
+			if (pag->identity_lv[0] != 5) {
+				LOGP(DRLCMAC, LOGL_ERROR, "TMSI paging with "
+					"MI != 5 octets!\n");
+				break;
+			}
+		} else {
+			/* MI */
+			LOGP(DRLCMAC, LOGL_DEBUG, "- MI=%s\n",
+				osmo_hexdump(pag->identity_lv + 1,
+					pag->identity_lv[0]));
+			len = 1 + 1 + 4 + (pag->identity_lv[0] << 3) + 2 + 1;
+			if (pag->identity_lv[0] > 8) {
+				LOGP(DRLCMAC, LOGL_ERROR, "Paging with "
+					"MI > 8 octets!\n");
+				break;
+			}
+		}
+		if (wp + len > 184) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Does not fit, so schedule "
+				"next time\n");
+			/* put back paging record, because does not fit */
+			llist_add_tail(&pag->list, &pdch->paging_list);
+			break;
+		}
+		write_repeated_page_info(pag_vec, wp, pag->identity_lv[0],
+			pag->identity_lv + 1, pag->chan_needed);
+
+		pag = gprs_rlcmac_dequeue_paging(pdch);
+	}
+
+	bitvec_pack(pag_vec, msgb_put(msg, 23));
+	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)malloc(sizeof(RlcMacDownlink_t));
+	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Paging Request +++++++++++++++++++++++++\n");
+	decode_gsm_rlcmac_downlink(pag_vec, mac_control_block);
+	LOGPC(DCSN1, LOGL_NOTICE, "\n");
+	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Paging Request -------------------------\n");
+	bitvec_free(pag_vec);
+
+	return msg;
+}
+
 // GSM 04.08 9.1.18 Immediate assignment
 int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 	uint32_t fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc,
@@ -1246,6 +1417,44 @@ void write_packet_uplink_ack(RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *t
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_Packet_Timing_Advance      = 0x0;
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_Extension_Bits             = 0x0;
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_Power_Control_Parameters   = 0x0;
+}
+
+unsigned write_packet_paging_request(bitvec * dest)
+{
+	unsigned wp = 0;
+
+	bitvec_write_field(dest, wp,0x1,2);  // Payload Type
+	bitvec_write_field(dest, wp,0x0,3);  // No polling
+	bitvec_write_field(dest, wp,0x0,3);  // Uplink state flag
+	bitvec_write_field(dest, wp,0x22,6);  // MESSAGE TYPE
+
+	bitvec_write_field(dest, wp,0x0,1);  // No PERSISTENCE_LEVEL
+	bitvec_write_field(dest, wp,0x0,1);  // No NLN
+
+	return wp;
+}
+
+unsigned write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
+	uint8_t *identity, uint8_t chan_needed)
+{
+	bitvec_write_field(dest, wp,0x1,1);  // RR connection paging
+
+	if ((identity[0] & 0x07) == 4) {
+		bitvec_write_field(dest, wp,0x0,1);  // TMSI
+		identity++;
+		len--;
+	} else {
+		bitvec_write_field(dest, wp,0x0,1);  // MI
+		bitvec_write_field(dest, wp,len,4);  // MI len
+	}
+	while (len) {
+		bitvec_write_field(dest, wp,*identity++,8);  // MI data
+		len--;
+	}
+	bitvec_write_field(dest, wp,chan_needed,2);  // CHANNEL_NEEDED
+	bitvec_write_field(dest, wp,0x0,1);  // No eMLPP_PRIORITY
+
+	return wp;
 }
 
 /* Send Uplink unit-data to SGSN. */
