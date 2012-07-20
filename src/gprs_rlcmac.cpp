@@ -965,7 +965,8 @@ int gprs_rlcmac_add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 	uint8_t slot_mask[8];
 	int8_t first_ts; /* must be signed */
 
-	LOGP(DRLCMAC, LOGL_INFO, "Add CS paging\n");
+	LOGP(DRLCMAC, LOGL_INFO, "Add RR paging: chan-needed=%d MI=%s\n",
+		chan_needed, osmo_hexdump(identity_lv + 1, identity_lv[0]));
 
 	/* collect slots to page
 	 * Mark slots for every TBF, but only mark one of it.
@@ -991,7 +992,7 @@ int gprs_rlcmac_add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 					"TRX=%d TS=%d, so we mark\n",
 					(tbf->direction == GPRS_RLCMAC_UL_TBF)
 						? "UL" : "DL",
-					tbf->tfi, tbf->trx, ts);
+					tbf->tfi, tbf->trx, first_ts);
 				slot_mask[tbf->trx] |= (1 << first_ts);
 			} else
 				LOGP(DRLCMAC, LOGL_DEBUG, "- %s TBF=%d uses "
@@ -1022,15 +1023,14 @@ int gprs_rlcmac_add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 					identity_lv[0] + 1);
 				llist_add(&pag->list,
 					&bts->trx[trx].pdch[ts].paging_list);
-				LOGP(DRLCMAC, LOGL_INFO, "Paging on TRX=%d"
-					"TS=%d\n", trx, ts);
+				LOGP(DRLCMAC, LOGL_INFO, "Paging on PACCH of "
+					"TRX=%d TS=%d\n", trx, ts);
 			}
 		}
 	}
 
-	if (!any_tbf) {
+	if (!any_tbf)
 		LOGP(DRLCMAC, LOGL_INFO, "No paging, because no TBF\n");
-	}
 
 	return 0;
 }
@@ -1040,6 +1040,8 @@ struct gprs_rlcmac_paging *gprs_rlcmac_dequeue_paging(
 {
 	struct gprs_rlcmac_paging *pag;
 
+	if (llist_empty(&pdch->paging_list))
+		return NULL;
 	pag = llist_entry(pdch->paging_list.next,
 		struct gprs_rlcmac_paging, list);
         llist_del(&pag->list);
@@ -1079,7 +1081,7 @@ struct msgb *gprs_rlcmac_send_packet_paging_request(
 			/* TMSI */
 			LOGP(DRLCMAC, LOGL_DEBUG, "- TMSI=0x%08x\n",
 				ntohl(*((uint32_t *)(pag->identity_lv + 1))));
-			len = 1 + 1 + 32 + 2 + 1;
+			len = 1 + 1 + 1 + 32 + 2 + 1;
 			if (pag->identity_lv[0] != 5) {
 				LOGP(DRLCMAC, LOGL_ERROR, "TMSI paging with "
 					"MI != 5 octets!\n");
@@ -1090,7 +1092,7 @@ struct msgb *gprs_rlcmac_send_packet_paging_request(
 			LOGP(DRLCMAC, LOGL_DEBUG, "- MI=%s\n",
 				osmo_hexdump(pag->identity_lv + 1,
 					pag->identity_lv[0]));
-			len = 1 + 1 + 4 + (pag->identity_lv[0] << 3) + 2 + 1;
+			len = 1 + 1 + 1 + 4 + (pag->identity_lv[0]<<3) + 2 + 1;
 			if (pag->identity_lv[0] > 8) {
 				LOGP(DRLCMAC, LOGL_ERROR, "Paging with "
 					"MI > 8 octets!\n");
@@ -1428,6 +1430,8 @@ unsigned write_packet_paging_request(bitvec * dest)
 	bitvec_write_field(dest, wp,0x0,3);  // Uplink state flag
 	bitvec_write_field(dest, wp,0x22,6);  // MESSAGE TYPE
 
+	bitvec_write_field(dest, wp,0x0,2);  // Page Mode
+
 	bitvec_write_field(dest, wp,0x0,1);  // No PERSISTENCE_LEVEL
 	bitvec_write_field(dest, wp,0x0,1);  // No NLN
 
@@ -1437,6 +1441,8 @@ unsigned write_packet_paging_request(bitvec * dest)
 unsigned write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
 	uint8_t *identity, uint8_t chan_needed)
 {
+	bitvec_write_field(dest, wp,0x1,1);  // Repeated Page info exists
+
 	bitvec_write_field(dest, wp,0x1,1);  // RR connection paging
 
 	if ((identity[0] & 0x07) == 4) {

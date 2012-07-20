@@ -292,8 +292,10 @@ bssgp_failed:
 		/* free all TBF */
 		for (trx = 0; trx < 8; trx++) {
 			bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
-			for (ts = 0; ts < 8; ts++)
-				flush_pdch(&bts->trx[trx].pdch[ts]);
+			for (ts = 0; ts < 8; ts++) {
+				if (bts->trx[trx].pdch[ts].enable)
+					flush_pdch(&bts->trx[trx].pdch[ts]);
+			}
 		}
 		gprs_bssgp_destroy();
 		return 0;
@@ -383,18 +385,20 @@ bssgp_failed:
 			pdch = &bts->trx[trx].pdch[ts];
 			if ((info_ind->trx[trx].pdch_mask & (1 << ts))) {
 				/* FIXME: activate dynamically at RLCMAC */
-				if (!pdch->enable)
+				if (!pdch->enable) {
 					pcu_tx_act_req(trx, ts, 1);
-				pdch->enable = 1;
+					INIT_LLIST_HEAD(&pdch->paging_list);
+					pdch->enable = 1;
+				}
 				pdch->tsc = info_ind->trx[trx].tsc[ts];
-				INIT_LLIST_HEAD(&pdch->paging_list);
 				LOGP(DL1IF, LOGL_INFO, "PDCH: trx=%d ts=%d\n",
 					trx, ts);
 			} else {
-				if (pdch->enable)
+				if (pdch->enable) {
 					pcu_tx_act_req(trx, ts, 0);
-				pdch->enable = 0;
-				flush_pdch(pdch);
+					pdch->enable = 0;
+					flush_pdch(pdch);
+				}
 			}
 		}
 	}
