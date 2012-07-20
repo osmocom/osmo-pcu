@@ -374,10 +374,12 @@ bssgp_failed:
 		bts->n3103 = info_ind->n3103;
 		bts->n3105 = info_ind->n3105;
 	}
-	if (info_ind->initial_cs < 1 || info_ind->initial_cs > 4)
-		bts->initial_cs = 1;
-	else
-		bts->initial_cs = info_ind->initial_cs;
+	if (!bts->force_cs) {
+		if (info_ind->initial_cs < 1 || info_ind->initial_cs > 4)
+			bts->initial_cs = 1;
+		else
+			bts->initial_cs = info_ind->initial_cs;
+	}
 
 	for (trx = 0; trx < 8; trx++) {
 		bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;

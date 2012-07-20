@@ -20,6 +20,7 @@
 #ifndef GPRS_RLCMAC_H
 #define GPRS_RLCMAC_H
 
+#ifdef __cplusplus
 #include <bitvector.h>
 #include <gsm_rlcmac.h>
 #include <gsm_timer.h>
@@ -28,6 +29,7 @@ extern "C" {
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/timer.h>
 }
+#endif
 
 /* This special feature will delay assignment of downlink TBF by one second,
  * in case there is already a TBF.
@@ -63,6 +65,7 @@ struct gprs_rlcmac_bts {
 	uint8_t cs3;
 	uint8_t cs4;
 	uint8_t initial_cs;
+	uint8_t force_cs;	/* 0=use from BTS 1=use from VTY */
 	uint8_t t3142;
 	uint8_t t3169;
 	uint8_t t3191;
@@ -79,6 +82,7 @@ struct gprs_rlcmac_bts {
 
 extern struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 
+#ifdef __cplusplus
 /*
  * TBF instance
  */
@@ -149,7 +153,7 @@ struct gprs_rlcmac_tbf {
 	uint8_t llc_frame[LLC_MAX_LEN]; /* current DL or UL frame */
 	uint16_t llc_index; /* current write/read position of frame */
 	uint16_t llc_length; /* len of current DL LLC_frame, 0 == no frame */
-	llist_head llc_queue; /* queued LLC DL data */
+	struct llist_head llc_queue; /* queued LLC DL data */
 
 	enum gprs_rlcmac_tbf_dl_ass_state dl_ass_state;
 	enum gprs_rlcmac_tbf_ul_ass_state ul_ass_state;
@@ -319,5 +323,6 @@ struct gprs_rlcmac_paging *gprs_rlcmac_dequeue_paging(
 
 struct msgb *gprs_rlcmac_send_packet_paging_request(
 	struct gprs_rlcmac_pdch *pdch);
+#endif
 
 #endif // GPRS_RLCMAC_H
