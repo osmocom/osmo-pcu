@@ -111,6 +111,21 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 				bitvec_read_field(block, rp, 4); // SMS Value
 		}
 	}
+	/* get lifetime */
+	uint16_t delay_csec = 0xffff;
+	if (TLVP_PRESENT(tp, BSSGP_IE_PDU_LIFETIME))
+	{
+		uint8_t lt_len = TLVP_LEN(tp, BSSGP_IE_PDU_LIFETIME);
+		uint16_t *lt = (uint16_t *) TLVP_VAL(tp, BSSGP_IE_PDU_LIFETIME);
+		if (lt_len == 2)
+			delay_csec = ntohs(*lt);
+		else
+			LOGP(DBSSGP, LOGL_NOTICE, "BSSGP invalid length of "
+				"PDU_LIFETIME IE\n");
+	} else
+		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP missing mandatory "
+			"PDU_LIFETIME IE\n");
+
 	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x IMSI: %s len: %d\n", tlli, imsi, len);
 
 	/* check for existing TBF */
@@ -128,10 +143,28 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			tbf_update(tbf);
 			gprs_rlcmac_trigger_downlink_assignment(tbf, 1, NULL);
 		} else {
-			/* the TBF exists, so we must write it in the queue */
-			struct msgb *llc_msg = msgb_alloc(len, "llc_pdu_queue");
+			/* the TBF exists, so we must write it in the queue
+			 * we prepend lifetime in front of PDU */
+			struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+			struct timeval *tv;
+			struct msgb *llc_msg = msgb_alloc(len + sizeof(*tv),
+				"llc_pdu_queue");
 			if (!llc_msg)
 				return -ENOMEM;
+			tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
+			if (bts->force_llc_lifetime)
+				delay_csec = bts->force_llc_lifetime;
+			/* keep timestap at 0 for infinite delay */
+			if (delay_csec != 0xffff) {
+				/* calculate timestamp of timeout */
+				gettimeofday(tv, NULL);
+				tv->tv_usec += (delay_csec % 100) * 10000;
+				tv->tv_sec += delay_csec / 100;
+				if (tv->tv_usec > 999999) {
+					tv->tv_usec -= 1000000;
+					tv->tv_sec++;
+				}
+			}
 			memcpy(msgb_put(llc_msg, len), data, len);
 			msgb_enqueue(&tbf->llc_queue, llc_msg);
 			/* set ms class for updating TBF */

@@ -22,6 +22,11 @@
 #include <gprs_rlcmac.h>
 #include <pcu_l1_if.h>
 
+extern "C" {
+int bssgp_tx_llc_discarded(struct bssgp_bvc_ctx *bctx, uint32_t tlli,
+                           uint8_t num_frames, uint32_t num_octets);
+}
+
 /* After receiving these frames, we send ack/nack. */
 #define SEND_ACK_AFTER_FRAMES 20
 
@@ -868,6 +873,44 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
  * DL data block flow
  */
 
+static struct msgb *llc_dequeue(struct gprs_rlcmac_tbf *tbf)
+{
+	struct msgb *msg;
+	struct timeval *tv, tv_now;
+	uint32_t octets = 0, frames = 0;
+
+	gettimeofday(&tv_now, NULL);
+
+	while ((msg = msgb_dequeue(&tbf->llc_queue))) {
+		tv = (struct timeval *)msg->data;
+		msgb_pull(msg, sizeof(*tv));
+		if (tv->tv_sec /* not infinite */
+		 && (tv_now.tv_sec > tv->tv_sec /* and secs expired */
+		  || (tv_now.tv_sec == tv->tv_sec /* .. or if secs equal .. */
+		   && tv_now.tv_usec > tv->tv_usec))) { /* .. usecs expired */
+			LOGP(DRLCMACDL, LOGL_NOTICE, "Discarding LLC PDU of "
+				"DL TBF=%d, because lifetime limit reached\n",
+				tbf->tfi);
+			frames++;
+			octets += msg->len;
+			msgb_free(msg);
+			continue;
+		}
+		break;
+	}
+
+	if (frames) {
+		if (frames > 0xff)
+			frames = 0xff;
+		if (octets > 0xffffff)
+			octets = 0xffffff;
+		bssgp_tx_llc_discarded(bctx, tbf->tlli, frames, octets);
+	}
+
+	return msg;
+}
+
+
 /* send DL data block
  *
  * The messages are fragmented and forwarded as data blocks.
@@ -1083,7 +1126,7 @@ do_resend:
 		/* reset LLC frame */
 		tbf->llc_index = tbf->llc_length = 0;
 		/* dequeue next LLC frame, if any */
-		msg = msgb_dequeue(&tbf->llc_queue);
+		msg = llc_dequeue(tbf);
 		if (msg) {
 			LOGP(DRLCMACDL, LOGL_INFO, "- Dequeue next LLC for "
 				"TBF=%d (len=%d)\n", tbf->tfi, msg->len);
@@ -1281,7 +1324,7 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
 
 	/* check for LLC PDU in the LLC Queue */
-	msg = msgb_dequeue(&tbf->llc_queue);
+	msg = llc_dequeue(tbf);
 	if (!msg) {
 		struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 

@@ -81,6 +81,11 @@ static int config_write_pcu(struct vty *vty)
 	vty_out(vty, "pcu%s", VTY_NEWLINE);
 	if (bts->force_cs)
 		vty_out(vty, " cs %d%s", bts->initial_cs, VTY_NEWLINE);
+	if (bts->force_llc_lifetime == 0xffff)
+		vty_out(vty, " queue lifetime infinite%s", VTY_NEWLINE);
+	else if (bts->force_llc_lifetime)
+		vty_out(vty, " queue lifetime %d%s", bts->force_llc_lifetime,
+			VTY_NEWLINE);
 }
 
 /* per-BTS configuration */
@@ -120,6 +125,48 @@ DEFUN(cfg_pcu_no_cs,
 	return CMD_SUCCESS;
 }
 
+#define QUEUE_STR "Packet queue options\n"
+#define LIFETIME_STR "Set lifetime limit of LLC frame in centi-seconds " \
+	"(overrides the value given by SGSN)\n"
+
+DEFUN(cfg_pcu_queue_lifetime,
+      cfg_pcu_queue_lifetime_cmd,
+      "queue lifetime <1-65534>",
+      QUEUE_STR LIFETIME_STR "Lifetime in centi-seconds")
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	uint8_t csec = atoi(argv[0]);
+
+	bts->force_llc_lifetime = csec;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_queue_lifetime_inf,
+      cfg_pcu_queue_lifetime_inf_cmd,
+      "queue lifetime infinite",
+      QUEUE_STR LIFETIME_STR "Infinite lifetime")
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	bts->force_llc_lifetime = 0xffff;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_queue_lifetime,
+      cfg_pcu_no_queue_lifetime_cmd,
+      "no queue lifetime",
+      NO_STR QUEUE_STR "Disable lifetime limit of LLC frame (use value given "
+      "by SGSN)\n")
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	bts->force_llc_lifetime = 0;
+
+	return CMD_SUCCESS;
+}
+
 static const char pcu_copyright[] =
 	"Copyright (C) 2012 by ...\r\n"
 	"License GNU GPL version 2 or later\r\n"
@@ -145,6 +192,9 @@ int pcu_vty_init(const struct log_info *cat)
 	install_default(PCU_NODE);
 	install_element(PCU_NODE, &cfg_pcu_cs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_cmd);
+	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_cmd);
+	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_inf_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_queue_lifetime_cmd);
 	install_element(PCU_NODE, &ournode_end_cmd);
 
 	return 0;
