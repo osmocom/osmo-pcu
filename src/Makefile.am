@@ -45,7 +45,9 @@ libgprs_la_SOURCES += \
 endif
 
 noinst_PROGRAMS = \
-	RLCMACTest \
+	RLCMACTest
+
+bin_PROGRAMS = \
 	osmo-pcu
 
 noinst_HEADERS = \
