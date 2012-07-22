@@ -46,7 +46,7 @@ endif
 
 noinst_PROGRAMS = \
 	RLCMACTest \
-	pcu
+	osmo-pcu
 
 noinst_HEADERS = \
 	gprs_debug.h \
@@ -66,8 +66,8 @@ RLCMACTest_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
-pcu_SOURCES = pcu_main.cpp
-pcu_LDADD = \
+osmo_pcu_SOURCES = pcu_main.cpp
+osmo_pcu_LDADD = \
 	libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
