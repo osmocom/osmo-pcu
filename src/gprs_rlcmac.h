@@ -221,12 +221,6 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_tbf *old_tbf,
 	enum gprs_rlcmac_tbf_direction dir, uint8_t tfi, uint8_t trx,
 	uint8_t first_ts, uint8_t ms_class, uint8_t single_slot);
 
-int alloc_algorithm_a(struct gprs_rlcmac_tbf *old_tbf,
-	struct gprs_rlcmac_tbf *tbf, uint32_t cust);
-
-int alloc_algorithm_b(struct gprs_rlcmac_tbf *old_tbf,
-	struct gprs_rlcmac_tbf *tbf, uint32_t cust);
-
 struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, uint8_t trx, uint8_t ts,
         enum gprs_rlcmac_tbf_direction dir);
 
@@ -324,6 +318,16 @@ struct gprs_rlcmac_paging *gprs_rlcmac_dequeue_paging(
 
 struct msgb *gprs_rlcmac_send_packet_paging_request(
 	struct gprs_rlcmac_pdch *pdch);
+
+extern "C" {
+#endif
+int alloc_algorithm_a(struct gprs_rlcmac_tbf *old_tbf,
+	struct gprs_rlcmac_tbf *tbf, uint32_t cust);
+
+int alloc_algorithm_b(struct gprs_rlcmac_tbf *old_tbf,
+	struct gprs_rlcmac_tbf *tbf, uint32_t cust);
+#ifdef __cplusplus
+}
 #endif
 
 #endif // GPRS_RLCMAC_H

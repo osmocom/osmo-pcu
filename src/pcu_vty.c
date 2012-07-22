@@ -86,6 +86,11 @@ static int config_write_pcu(struct vty *vty)
 	else if (bts->force_llc_lifetime)
 		vty_out(vty, " queue lifetime %d%s", bts->force_llc_lifetime,
 			VTY_NEWLINE);
+	if (bts->alloc_algorithm == alloc_algorithm_a)
+		vty_out(vty, " alloc-algorithm a%s", VTY_NEWLINE);
+	if (bts->alloc_algorithm == alloc_algorithm_b)
+		vty_out(vty, " alloc-algorithm b%s", VTY_NEWLINE);
+
 }
 
 /* per-BTS configuration */
@@ -167,6 +172,27 @@ DEFUN(cfg_pcu_no_queue_lifetime,
 	return CMD_SUCCESS;
 }
 
+DEFUN(cfg_pcu_alloc,
+      cfg_pcu_alloc_cmd,
+      "alloc-algorithm (a|b)",
+      "Select slot allocation algorithm to use when assigning timeslots on "
+      "PACCH\nSingle slot is assigned only\nMultiple slots are assigned for "
+      "semi-duplex operation")
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	switch (argv[0][0]) {
+	case 'a':
+		bts->alloc_algorithm = alloc_algorithm_a;
+		break;
+	case 'b':
+		bts->alloc_algorithm = alloc_algorithm_b;
+		break;
+	}
+
+	return CMD_SUCCESS;
+}
+
 static const char pcu_copyright[] =
 	"Copyright (C) 2012 by ...\r\n"
 	"License GNU GPL version 2 or later\r\n"
@@ -195,6 +221,7 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_inf_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_queue_lifetime_cmd);
+	install_element(PCU_NODE, &cfg_pcu_alloc_cmd);
 	install_element(PCU_NODE, &ournode_end_cmd);
 
 	return 0;
