@@ -141,7 +141,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			if (!tbf->ms_class && ms_class)
 				tbf->ms_class = ms_class;
 			tbf_update(tbf);
-			gprs_rlcmac_trigger_downlink_assignment(tbf, 1, NULL);
+			gprs_rlcmac_trigger_downlink_assignment(tbf, tbf, NULL);
 		} else {
 			/* the TBF exists, so we must write it in the queue
 			 * we prepend lifetime in front of PDU */
@@ -173,18 +173,24 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		}
 	} else {
 		uint8_t trx, ts, use_trx, first_ts, ta, ss;
+		struct gprs_rlcmac_tbf *old_tbf;
 
 		/* check for uplink data, so we copy our informations */
-		if ((tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF))) {
+		tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+		if (tbf && tbf->contention_resolution_done
+		 && (tbf->state != GPRS_RLCMAC_FINISHED
+		  || tbf->ul_ack_state != GPRS_RLCMAC_UL_ACK_WAIT_ACK)) {
 			use_trx = tbf->trx;
 			first_ts = tbf->first_ts;
 			ta = tbf->ta;
 			ss = 0;
+			old_tbf = tbf;
 		} else {
 			use_trx = -1;
 			first_ts = -1;
 			ta = 0; /* FIXME: initial TA */
 			ss = 1; /* PCH assignment only allows one timeslot */
+			old_tbf = NULL;
 		}
 
 		// Create new TBF (any TRX)
@@ -216,7 +222,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		 * we don't use old_downlink, so the possible uplink is used
 		 * to trigger downlink assignment. if there is no uplink,
 		 * AGCH is used. */
-		gprs_rlcmac_trigger_downlink_assignment(tbf, 0, imsi);
+		gprs_rlcmac_trigger_downlink_assignment(tbf, old_tbf, imsi);
 	}
 
 	return 0;

@@ -315,7 +315,7 @@ void tbf_timer_cb(void *_tbf)
 	switch (tbf->T) {
 #ifdef DEBUG_DL_ASS_IDLE
 	case 1234:
-		gprs_rlcmac_trigger_downlink_assignment(tbf, 0, debug_imsi);
+		gprs_rlcmac_trigger_downlink_assignment(tbf, NULL, debug_imsi);
 		break;
 #endif
 	case 0: /* assignment */
@@ -1380,7 +1380,7 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 		"because another LLC PDU has arrived in between\n");
 	memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl)); /* reset RLC states */
 	tbf_update(tbf);
-	gprs_rlcmac_trigger_downlink_assignment(tbf, 1, NULL);
+	gprs_rlcmac_trigger_downlink_assignment(tbf, tbf, NULL);
 
 	return 0;
 }
@@ -1406,7 +1406,7 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 		/* be sure to check first, if contention resolution is done,
 		 * otherwise we cannot send the assignment yet */
 		if (!tbf->contention_resolution_done) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "Cannot assign DL TBF now, "
+			LOGP(DRLCMAC, LOGL_DEBUG, "Cannot assign DL TBF now, "
 				"because contention resolution is not "
 				"finished.\n");
 			return NULL;
@@ -1472,11 +1472,9 @@ static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
 }
 
 /* depending on the current TBF, we assign on PACCH or AGCH */
-void gprs_rlcmac_trigger_downlink_assignment(gprs_rlcmac_tbf *tbf,
-	uint8_t old_downlink, char *imsi)
+void gprs_rlcmac_trigger_downlink_assignment(struct gprs_rlcmac_tbf *tbf,
+	struct gprs_rlcmac_tbf *old_tbf, char *imsi)
 {
-	gprs_rlcmac_tbf *old_tbf;
-
 #ifdef DEBUG_DL_ASS_IDLE
 	strncpy(debug_imsi, imsi);
 	LOGP(DRLCMAC, LOGL_ERROR, "**** DEBUGGING DOWNLINK ASSIGNMENT ****\n");
@@ -1486,12 +1484,7 @@ void gprs_rlcmac_trigger_downlink_assignment(gprs_rlcmac_tbf *tbf,
 	tbf_timer_stop(tbf);
 
 	/* check for downlink tbf:  */
-	if (old_downlink)
-		old_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_DL_TBF);
-	else
-		old_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF);
-	if (old_tbf && (old_tbf->state != GPRS_RLCMAC_FINISHED ||
-		old_tbf->ul_ack_state != GPRS_RLCMAC_UL_ACK_WAIT_ACK)) {
+	if (old_tbf) {
 #ifdef DEBUG_DL_ASS_IDLE
 		LOGP(DRLCMAC, LOGL_ERROR, "We must wait for current TBF to be "
 			"released.\n");
@@ -1500,8 +1493,8 @@ void gprs_rlcmac_trigger_downlink_assignment(gprs_rlcmac_tbf *tbf,
 #else
 		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment on "
 			"PACCH, because %s TBF=%d exists for TLLI=0x%08x\n",
-			(old_tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL",
-			old_tbf->tfi, old_tbf->tlli);
+			(old_tbf->direction == GPRS_RLCMAC_UL_TBF)
+				? "UL" : "DL", old_tbf->tfi, old_tbf->tlli);
 		old_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
 		/* use TA from old TBF */
 		tbf->ta = old_tbf->ta;
