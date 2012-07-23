@@ -644,6 +644,8 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 
 	/* get TLLI */
 	if (!tbf->tlli_valid) {
+		struct gprs_rlcmac_tbf *dl_tbf;
+
 		/* no TLLI yet */
 		if (!rh->ti) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TBF=%d without "
@@ -659,6 +661,13 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 		tbf->tlli_valid = 1;
 		LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
 			"UL DATA TBF=%d.\n", tbf->tlli, rh->tfi);
+		if ((dl_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_DL_TBF))) {
+			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
+				"TLLI=0x%08x while DL TBF=%d still exists. "
+				"Killing pending DL TBF\n", tbf->tlli,
+				dl_tbf->tfi);
+			tbf_free(dl_tbf);
+		}
 	/* already have TLLI, but we stille get another one */
 	} else if (rh->ti) {
 		uint32_t tlli;
