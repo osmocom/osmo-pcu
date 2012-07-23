@@ -1505,10 +1505,12 @@ void gprs_rlcmac_trigger_downlink_assignment(gprs_rlcmac_tbf *tbf,
 			LOGP(DRLCMAC, LOGL_ERROR, "No valid IMSI!\n");
 			return;
 		}
-		/* send immediate assignment */
-		gprs_rlcmac_downlink_assignment(tbf, 0, imsi);
 		/* change state */
 		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
+		/* send immediate assignment */
+		gprs_rlcmac_downlink_assignment(tbf, 0, imsi);
+		/* send immediate assignment */
+		gprs_rlcmac_downlink_assignment(tbf, 0, imsi);
 		/* start timer */
 		tbf_timer_start(tbf, 0, Tassign_agch);
 	}
