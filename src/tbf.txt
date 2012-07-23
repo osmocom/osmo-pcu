@@ -102,7 +102,7 @@ Handling of LLC Frame on uplink TBF:
 Polling:
   In order to poll uplink control block from MS, a special poll state and
   frame number is stored at TBF. The scheduler reads that value and will not
-  assign uplink ressource for other TBFs at that frame number.
+  assign uplink resource for other TBFs at that frame number.
 
   When there is no uplink transmission received on the block, a timeout is
   indicated by layer 1 interface. There are two ways of checking timeout:

@@ -25,7 +25,7 @@
 LLIST_HEAD(gprs_rlcmac_tbfs);
 void *rlcmac_tall_ctx;
 
-/* FIXME: spread ressources on multiple TRX */
+/* FIXME: spread resources on multiple TRX */
 int tfi_alloc(uint8_t *_trx, uint8_t *_ts)
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;

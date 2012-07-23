@@ -201,13 +201,13 @@ uplink_request:
 			/* create new tbf */
 			tfi = tfi_alloc(&trx, &ts);
 			if (tfi < 0) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+				LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 				/* FIXME: send reject */
 				break;
 			}
 			usf = find_free_usf(trx, ts);
 			if (usf < 0) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource for USF\n");
+				LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource for USF\n");
 				/* FIXME: send reject */
 				break;
 			}
@@ -250,7 +250,7 @@ uplink_request:
 			}
 			tlli = tbf->tlli;
 		}
-		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet ressource request\n", tbf->tfi, tbf->tlli);
+		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet resource request\n", tbf->tfi, tbf->tlli);
 #warning FIXME
 puts("FIXME: UL request during UL request");	exit(0);
 
@@ -823,13 +823,13 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	// Create new TBF
 	tfi = tfi_alloc(&trx, &ts);
 	if (tfi < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */
 		return -EBUSY;
 	}
 	usf = find_free_usf(trx, ts);
 	if (usf < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource for USF\n");
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource for USF\n");
 		/* FIXME: send reject */
 		return -EBUSY;
 	}

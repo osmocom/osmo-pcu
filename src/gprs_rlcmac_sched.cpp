@@ -55,7 +55,7 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 	/* store last frame number of RTS */
 	pdch->last_rts_fn = fn;
 
-	/* check uplink ressource for polling */
+	/* check uplink resource for polling */
 	poll_fn = fn + 4;
 	if ((block_nr % 3) == 2)
 		poll_fn ++;
@@ -79,9 +79,9 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 			"polling at FN=%d of TFI=%d\n", trx, ts, fn, block_nr,
 			poll_fn, tfi);
 		/* use free USF */
-	/* else, we search for uplink ressource */
+	/* else, we search for uplink resource */
 	} else {
-		/* select uplink ressource */
+		/* select uplink resource */
 		for (i = 0, tfi = pdch->next_ul_tfi; i < 32;
 		     i++, tfi = (tfi + 1) & 31) {
 			tbf = pdch->tbf[tfi];
@@ -91,8 +91,8 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 			/* no UL TBF, go next */
 			if (tbf->direction != GPRS_RLCMAC_UL_TBF)
 				continue;
-			/* no UL ressources needed, go next */
-			/* we don't need to give ressources in FINISHED state,
+			/* no UL resources needed, go next */
+			/* we don't need to give resources in FINISHED state,
 			 * because we have received all blocks and only poll
 			 * for packet control ack. */
 			if (tbf->state != GPRS_RLCMAC_FLOW)
@@ -102,9 +102,9 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 			usf = tbf->dir.ul.usf;
 			LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: "
 				"TRX=%d TS=%d FN=%d block_nr=%d scheduling "
-				"USF=%d for required uplink ressource of "
+				"USF=%d for required uplink resource of "
 				"TBF=%d\n", trx, ts, fn, block_nr, usf, tfi);
-			/* next TBF to handle ressource is the next one */
+			/* next TBF to handle resource is the next one */
 			pdch->next_ul_tfi = (tfi + 1) & 31;
 			break;
 		}
@@ -138,7 +138,7 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 
 	/* Prio 2: select data message for downlink */
 	if (!msg) {
-		/* select downlink ressource */
+		/* select downlink resource */
 		for (i = 0, tfi = pdch->next_dl_tfi; i < 32;
 		     i++, tfi = (tfi + 1) & 31) {
 			tbf = pdch->tbf[tfi];
@@ -148,14 +148,14 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 			/* no DL TBF, go next */
 			if (tbf->direction != GPRS_RLCMAC_DL_TBF)
 				continue;
-			/* no DL ressources needed, go next */
+			/* no DL resources needed, go next */
 			if (tbf->state != GPRS_RLCMAC_FLOW
 			 && tbf->state != GPRS_RLCMAC_FINISHED)
 				continue;
 
 			LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling data "
 				"message at RTS for TBF=%d\n", tfi);
-			/* next TBF to handle ressource is the next one */
+			/* next TBF to handle resource is the next one */
 			pdch->next_dl_tfi = (tfi + 1) & 31;
 			/* generate DL data block */
 			msg = gprs_rlcmac_send_data_block_acknowledged(tbf, fn);

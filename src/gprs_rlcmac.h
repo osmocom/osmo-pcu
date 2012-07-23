@@ -89,7 +89,7 @@ extern struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 enum gprs_rlcmac_tbf_state {
 	GPRS_RLCMAC_NULL = 0,	/* new created TBF */
 	GPRS_RLCMAC_ASSIGN,	/* wait for downlink assignment */
-	GPRS_RLCMAC_FLOW,	/* RLC/MAC flow, ressource needed */
+	GPRS_RLCMAC_FLOW,	/* RLC/MAC flow, resource needed */
 	GPRS_RLCMAC_FINISHED,	/* flow finished, wait for release */
 	GPRS_RLCMAC_WAIT_RELEASE,/* wait for release or restart of DL TBF */
 	GPRS_RLCMAC_RELEASING,	/* releasing, wait to free TBI/USF */
