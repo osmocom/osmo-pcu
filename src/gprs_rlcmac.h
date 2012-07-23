@@ -93,8 +93,7 @@ extern struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 #define RLC_MAX_WS  64 /* max window size */
 #define RLC_MAX_LEN 54 /* CS-4 including spare bits */
 
-#define Tassign_agch 0,500000/* wait for assignment, before transmitting DL */
-#define Tassign_pacch 0,100000/* wait for assignment, before transmitting DL */
+#define Tassign_agch 0,800000/* FIXME: we need a confirm from BTS */
 
 enum gprs_rlcmac_tbf_state {
 	GPRS_RLCMAC_NULL = 0,	/* new created TBF */

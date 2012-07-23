@@ -174,11 +174,31 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] DOWNLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
 			tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+			if (tbf->direction == GPRS_RLCMAC_UL_TBF)
+				tbf = tbf_by_tlli(tbf->tlli,
+							GPRS_RLCMAC_DL_TBF);
+			if (!tbf) {
+				LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
+					"TBF is gone\n");
+				break;
+			}
+			tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+			tbf_assign_control_ts(tbf);
 			break;
 		}
 		if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [DOWNLINK] UPLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
 			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+			if (tbf->direction == GPRS_RLCMAC_DL_TBF)
+				tbf = tbf_by_tlli(tbf->tlli,
+							GPRS_RLCMAC_UL_TBF);
+			if (!tbf) {
+				LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
+					"TBF is gone\n");
+				break;
+			}
+			tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+			tbf_assign_control_ts(tbf);
 			break;
 		}
 		LOGP(DRLCMAC, LOGL_ERROR, "Error: received PACET CONTROL ACK "
@@ -236,7 +256,7 @@ uplink_request:
 			ul_tbf->tlli_valid = 1; /* no contention resolution */
 			ul_tbf->contention_resolution_done = 1;
 			ul_tbf->ta = tbf->ta; /* use current TA */
-			tbf_new_state(ul_tbf, GPRS_RLCMAC_FLOW);
+			tbf_new_state(ul_tbf, GPRS_RLCMAC_ASSIGN);
 			tbf_timer_start(ul_tbf, 3169, bts->t3169, 0);
 			/* schedule uplink assignment */
 			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
@@ -821,6 +841,8 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 	tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_WAIT_ACK;
 #else
 	tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+	tbf_new_state(new_tbf, GPRS_RLCMAC_FLOW);
+	tbf_assign_control_ts(new_tbf);
 #endif
 
 	return msg;
@@ -1420,6 +1442,8 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 	tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_WAIT_ACK;
 #else
 	tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+	tbf_new_state(new_tbf, GPRS_RLCMAC_FLOW);
+	tbf_assign_control_ts(new_tbf);
 #endif
 
 	return msg;
@@ -1474,8 +1498,6 @@ void gprs_rlcmac_trigger_downlink_assignment(gprs_rlcmac_tbf *tbf,
 		tbf->ta = old_tbf->ta;
 		/* change state */
 		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
-		/* start timer */
-		tbf_timer_start(tbf, 0, Tassign_pacch);
 #endif
 	} else {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for TBF=%d on PCH, no TBF exist (IMSI=%s)\n", tbf->tfi, imsi);
