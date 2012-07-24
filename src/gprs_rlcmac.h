@@ -199,6 +199,9 @@ struct gprs_rlcmac_tbf {
 	struct osmo_gsm_timer_list	gsm_timer;
 	unsigned int fT; /* fTxxxx number */
 	unsigned int num_fT_exp; /* number of consecutive fT expirations */
+
+	struct timeval bw_tv; /* timestamp for bandwidth calculation */
+	uint32_t bw_octets; /* number of octets transmitted since bw_tv */
 };
 
 extern struct llist_head gprs_rlcmac_ul_tbfs; /* list of uplink TBFs */

@@ -40,6 +40,7 @@ static const struct log_info_cat default_categories[] = {
  	{"DRLCMACDL", "\033[1;33m", "GPRS RLC/MAC layer Data (RLCMAC)", LOGL_INFO, 1},
  	{"DRLCMACUL", "\033[1;36m", "GPRS RLC/MAC layer Data (RLCMAC)", LOGL_INFO, 1},
  	{"DRLCMACSCHED", "\033[0;36m", "GPRS RLC/MAC layer Data (RLCMAC)", LOGL_INFO, 1},
+	{"DRLCMACBW", "\033[1;31m", "GPRS RLC/MAC layer (RLCMAC)", LOGL_INFO, 1},
  	{"DBSSGP", "\033[1;34m", "GPRS BSS Gateway Protocol (BSSGP)", LOGL_INFO , 1},
 	{"DPCU", "\033[1;35m", "GPRS Packet Control Unit (PCU)", LOGL_NOTICE, 1},
 };

@@ -278,6 +278,9 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_tbf *old_tbf,
 		return NULL;
 	}
 
+	/* set timestamp */
+	gettimeofday(&tbf->bw_tv, NULL);
+
 	INIT_LLIST_HEAD(&tbf->llc_queue);
 	if (dir == GPRS_RLCMAC_UL_TBF)
 		llist_add(&tbf->list, &gprs_rlcmac_ul_tbfs);

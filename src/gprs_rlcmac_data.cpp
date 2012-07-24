@@ -941,6 +941,28 @@ static struct msgb *llc_dequeue(struct gprs_rlcmac_tbf *tbf)
 	return msg;
 }
 
+static int gprs_rlcmac_debug_bw(struct gprs_rlcmac_tbf *tbf, uint16_t octets)
+{
+	struct timeval now_tv, *bw_tv = &tbf->bw_tv;
+	uint32_t elapsed;
+
+	tbf->bw_octets += octets;
+
+	gettimeofday(&now_tv, NULL);
+	elapsed = ((now_tv.tv_sec - bw_tv->tv_sec) << 7)
+		+ ((now_tv.tv_usec - bw_tv->tv_usec) << 7) / 1000000;
+	if (elapsed < 128)
+		return 0;
+
+	LOGP(DRLCMACBW, LOGL_DEBUG, "DL Bandwitdh of TLLI=0x%08x: %d KBits/s\n",
+		tbf->tlli, tbf->bw_octets / elapsed);
+
+	/* reset bandwidth values timestamp */
+	memcpy(bw_tv, &now_tv, sizeof(struct timeval));
+	tbf->bw_octets = 0;
+
+	return 0;
+}
 
 /* send DL data block
  *
@@ -1095,6 +1117,7 @@ do_resend:
 			LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for "
 				"TBF=%d that fits precisely in last block: "
 				"len=%d\n", tbf->tfi, tbf->llc_length);
+			gprs_rlcmac_debug_bw(tbf, tbf->llc_length);
 			/* block is filled, so there is no extension */
 			*e_pointer |= 0x01;
 			/* fill space */
@@ -1154,6 +1177,7 @@ do_resend:
 		space -= chunk;
 		LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for TBF=%d: "
 			"len=%d\n", tbf->tfi, tbf->llc_length);
+		gprs_rlcmac_debug_bw(tbf, tbf->llc_length);
 		/* reset LLC frame */
 		tbf->llc_index = tbf->llc_length = 0;
 		/* dequeue next LLC frame, if any */
