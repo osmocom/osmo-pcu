@@ -1,0 +1,22 @@
+This is an implementation of Packet Control Unit (PCU) according to TS 04.60
+
+The PCU is part of BSS, so it connects directly to SGSN.
+
+
+== Current limitations ==
+
+ * No PFC support
+ * No fixed allocation support
+ * No extended dynamic allocation support
+ * No unacknowledged mode operation
+ * No PCCCH/PBCCH support
+ * Only single slot assignment on uplink direction
+ * No half-duplex class support
+ * No two-phase access support
+ * No handover support
+ * No measurement support
+ * No polling for control ack on assignment
+ * No TA loop
+ * No power loop
+ * No CS loop
+ * No EGPRS
