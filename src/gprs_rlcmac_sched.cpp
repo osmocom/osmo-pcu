@@ -23,9 +23,9 @@
 
 uint32_t sched_poll(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
 		    struct gprs_rlcmac_tbf **poll_tbf,
-		    struct gprs_rlcmac_tbf **ul_ack_tbf,
+		    struct gprs_rlcmac_tbf **ul_ass_tbf,
 		    struct gprs_rlcmac_tbf **dl_ass_tbf,
-		    struct gprs_rlcmac_tbf **ul_ass_tbf)
+		    struct gprs_rlcmac_tbf **ul_ack_tbf)
 {
 	struct gprs_rlcmac_tbf *tbf;
 	uint32_t poll_fn;
@@ -104,22 +104,22 @@ uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 
 struct msgb *sched_select_ctrl_msg(uint8_t trx, uint8_t ts, uint32_t fn,
 		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch,
-		    struct gprs_rlcmac_tbf *ul_ack_tbf,
+		    struct gprs_rlcmac_tbf *ul_ass_tbf,
 		    struct gprs_rlcmac_tbf *dl_ass_tbf,
-		    struct gprs_rlcmac_tbf *ul_ass_tbf)
+		    struct gprs_rlcmac_tbf *ul_ack_tbf)
 {
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_tbf *tbf = NULL;
 
-	/* schedule PACKET DOWNLINK ASSIGNMENT */
-	if (dl_ass_tbf) {
-		tbf = dl_ass_tbf;
-		msg = gprs_rlcmac_send_packet_downlink_assignment(tbf, fn);
-	}
-	/* schedule PACKET UPLINK ASSIGNMENT */
-	if (!msg && ul_ass_tbf) {
+	/* schedule PACKET UPLINK ASSIGNMENT (high priority) */
+	if (ul_ass_tbf) {
 		tbf = ul_ass_tbf;
 		msg = gprs_rlcmac_send_packet_uplink_assignment(tbf, fn);
+	}
+	/* schedule PACKET DOWNLINK ASSIGNMENT (low priotiry) */
+	if (!msg && dl_ass_tbf) {
+		tbf = dl_ass_tbf;
+		msg = gprs_rlcmac_send_packet_downlink_assignment(tbf, fn);
 	}
 	/* schedule PACKET UPLINK ACK */
 	if (!msg && ul_ack_tbf) {
@@ -223,8 +223,8 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 	/* store last frame number of RTS */
 	pdch->last_rts_fn = fn;
 
-	poll_fn = sched_poll(trx, ts, fn, block_nr, &poll_tbf, &ul_ack_tbf,
-		&dl_ass_tbf, &ul_ass_tbf);
+	poll_fn = sched_poll(trx, ts, fn, block_nr, &poll_tbf, &ul_ass_tbf,
+		&dl_ass_tbf, &ul_ack_tbf);
 	/* check uplink ressource for polling */
 	if (poll_tbf)
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
@@ -239,8 +239,8 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 		usf = sched_select_uplink(trx, ts, fn, block_nr, pdch);
 
 	/* Prio 1: select control message */
-	msg = sched_select_ctrl_msg(trx, ts, fn, block_nr, pdch, ul_ack_tbf,
-		dl_ass_tbf, ul_ass_tbf);
+	msg = sched_select_ctrl_msg(trx, ts, fn, block_nr, pdch, ul_ass_tbf,
+		dl_ass_tbf, ul_ack_tbf);
 
 	/* Prio 2: select data message for downlink */
 	if (!msg)
