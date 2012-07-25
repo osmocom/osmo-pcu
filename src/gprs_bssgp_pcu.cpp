@@ -235,6 +235,9 @@ int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_
 	uint8_t pdu_type = bgph->pdu_type;
 	unsigned rc = 0;
 
+	if (!bctx)
+		return -EINVAL;
+
 	/* If traffic is received on a BVC that is marked as blocked, the
 	* received PDU shall not be accepted and a STATUS PDU (Cause value:
 	* BVC Blocked) shall be sent to the peer entity on the signalling BVC */

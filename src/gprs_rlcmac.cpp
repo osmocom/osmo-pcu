@@ -370,7 +370,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_tbf *old_tbf,
 	uint8_t tx_win_min, tx_win_max, tx_range;
 	uint8_t rx_window = 0, tx_window = 0;
 	const char *digit[10] = { "0","1","2","3","4","5","6","7","8","9" };
-	uint8_t usf[8];
+	int8_t usf[8] = { -1, -1, -1, -1, -1, -1, -1, -1 }; /* must be signed */
 	int8_t tsc = -1; /* must be signed */
 	uint8_t i, ts;
 
