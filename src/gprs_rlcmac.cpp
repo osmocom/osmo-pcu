@@ -78,7 +78,7 @@ llist_head *gprs_rlcmac_tbfs_lists[] = {
 	&gprs_rlcmac_dl_tbfs,
 	NULL
 };
-void *rlcmac_tall_ctx;
+extern void *tall_pcu_ctx;
 
 /* FIXME: spread ressources over multiple TRX. Also add option to use same
  * TRX in case of existing TBF for TLLI in the other direction. */
@@ -245,7 +245,7 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_tbf *old_tbf,
 	if (trx >= 8 || first_ts >= 8 || tfi >= 32)
 		return NULL;
 
-	tbf = talloc_zero(rlcmac_tall_ctx, struct gprs_rlcmac_tbf);
+	tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_tbf);
 	if (!tbf)
 		return NULL;
 
@@ -1017,7 +1017,7 @@ int gprs_rlcmac_add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 		for (ts = 0; ts < 8; ts++) {
 			if ((slot_mask[trx] & (1 << ts))) {
 				/* schedule */
-				pag = talloc_zero(rlcmac_tall_ctx,
+				pag = talloc_zero(tall_pcu_ctx,
 					struct gprs_rlcmac_paging);
 				if (!pag)
 					return -ENOMEM;
@@ -1116,12 +1116,13 @@ struct msgb *gprs_rlcmac_send_packet_paging_request(
 	}
 
 	bitvec_pack(pag_vec, msgb_put(msg, 23));
-	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)malloc(sizeof(RlcMacDownlink_t));
+	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Paging Request +++++++++++++++++++++++++\n");
 	decode_gsm_rlcmac_downlink(pag_vec, mac_control_block);
 	LOGPC(DCSN1, LOGL_NOTICE, "\n");
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Paging Request -------------------------\n");
 	bitvec_free(pag_vec);
+	talloc_free(mac_control_block);
 
 	return msg;
 }

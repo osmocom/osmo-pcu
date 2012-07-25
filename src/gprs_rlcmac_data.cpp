@@ -22,6 +22,8 @@
 #include <gprs_rlcmac.h>
 #include <pcu_l1_if.h>
 
+extern void *tall_pcu_ctx;
+
 extern "C" {
 int bssgp_tx_llc_discarded(struct bssgp_bvc_ctx *bctx, uint32_t tlli,
                            uint8_t num_frames, uint32_t num_octets);
@@ -140,7 +142,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 	struct gprs_rlcmac_tbf *tbf;
 	int rc;
 
-	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)malloc(sizeof(RlcMacUplink_t));
+	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)talloc_zero(tall_pcu_ctx, RlcMacUplink_t);
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
 	decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
 	LOGPC(DCSN1, LOGL_NOTICE, "\n");
@@ -294,7 +296,7 @@ uplink_request:
 	default:
 		LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] unknown control block received\n");
 	}
-	free(ul_control_block);
+	talloc_free(ul_control_block);
 	return 1;
 }
 
@@ -575,12 +577,12 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 	}
 	bitvec_unhex(ack_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)malloc(sizeof(RlcMacDownlink_t));
+	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	write_packet_uplink_ack(mac_control_block, tbf, final);
 	encode_gsm_rlcmac_downlink(ack_vec, mac_control_block);
 	bitvec_pack(ack_vec, msgb_put(msg, 23));
 	bitvec_free(ack_vec);
-	free(mac_control_block);
+	talloc_free(mac_control_block);
 
 	/* now we must set this flag, so we are allowed to assign downlink
 	 * TBF on PACCH. it is only allowed when TLLI is aknowledged. */
@@ -836,12 +838,13 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 		(tbf->direction == GPRS_RLCMAC_DL_TBF), 0, 0, new_tbf,
 		POLLING_ASSIGNMENT);
 	bitvec_pack(ass_vec, msgb_put(msg, 23));
-	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)malloc(sizeof(RlcMacDownlink_t));
+	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++\n");
 	decode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
 	LOGPC(DCSN1, LOGL_NOTICE, "\n");
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Uplink Assignment -------------------------\n");
 	bitvec_free(ass_vec);
+	talloc_free(mac_control_block);
 
 #if POLLING_ASSIGNMENT == 1
 	FIXME process does not work, also the acknowledgement is not checked.
@@ -1457,7 +1460,7 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 	bitvec_unhex(ass_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	LOGP(DRLCMAC, LOGL_INFO, "TBF: START TFI: %u TLLI: 0x%08x Packet Downlink Assignment (PACCH)\n", new_tbf->tfi, new_tbf->tlli);
-	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)malloc(sizeof(RlcMacDownlink_t));
+	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	write_packet_downlink_assignment(mac_control_block, tbf->tfi,
 		(tbf->direction == GPRS_RLCMAC_DL_TBF), new_tbf,
 		POLLING_ASSIGNMENT);
@@ -1467,7 +1470,7 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Downlink Assignment -------------------------\n");
 	bitvec_pack(ass_vec, msgb_put(msg, 23));
 	bitvec_free(ass_vec);
-	free(mac_control_block);
+	talloc_free(mac_control_block);
 
 #if POLLING_ASSIGNMENT == 1
 	tbf->poll_state = GPRS_RLCMAC_POLL_SCHED;
