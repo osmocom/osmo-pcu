@@ -21,7 +21,6 @@
 #define GPRS_RLCMAC_H
 
 #ifdef __cplusplus
-#include <bitvector.h>
 #include <gsm_rlcmac.h>
 #include <gsm_timer.h>
 
@@ -257,23 +256,6 @@ enum gprs_rlcmac_block_type {
 int gprs_rlcmac_rcv_block(uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
 	uint32_t fn);
 
-int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, 
-        uint32_t fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc, 
-        uint8_t tfi, uint8_t usf, uint32_t tlli, uint8_t polling,
-	uint32_t poll_fn);
-
-void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
-	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli, 
-	struct gprs_rlcmac_tbf *tbf, uint8_t poll);
-
-void write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
-	uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf, uint8_t poll);
-
-
-
-void write_packet_uplink_ack(RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *tbf,
-        uint8_t final);
-
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
 void tbf_timer_cb(void *_tbf);
@@ -282,8 +264,10 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf);
 
 int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta);
 
-int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
-	uint32_t fn);
+int gprs_rlcmac_rcv_control_block(uint8_t trx, uint8_t ts, uint32_t fn,
+        uint8_t *data, uint8_t len);
+
+int gprs_rlcmac_rcv_downlink_ack(uint8_t trx, uint8_t ts, uint32_t fn, uint16_t tfi, uint8_t final, uint8_t ssn, uint8_t *rbb, uint8_t request);
 
 struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
         struct gprs_rlcmac_tbf *tbf, uint32_t fn);
@@ -296,11 +280,6 @@ void gprs_rlcmac_trigger_downlink_assignment(struct gprs_rlcmac_tbf *tbf,
 
 int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
         uint8_t ssn, uint8_t *rbb);
-
-unsigned write_packet_paging_request(bitvec * dest);
-
-unsigned write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
-	uint8_t *identity, uint8_t chan_needed);
 
 int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 	uint8_t *data, uint8_t len);

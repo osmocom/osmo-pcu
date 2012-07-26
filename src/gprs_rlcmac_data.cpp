@@ -20,6 +20,7 @@
  
 #include <gprs_bssgp_pcu.h>
 #include <gprs_rlcmac.h>
+#include <gprs_rlcmac_ctrl.h>
 #include <pcu_l1_if.h>
 
 extern void *tall_pcu_ctx;
@@ -132,172 +133,128 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 	return 0;
 }
 
-/* Received Uplink RLC control block. */
-int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
-	uint32_t fn)
+int gprs_rlcmac_rcv_control_ack(uint8_t trx, uint8_t ts, uint32_t fn,
+	uint32_t tlli)
+{
+	struct gprs_rlcmac_tbf *tbf;
+	uint8_t tfi;
+
+	tbf = tbf_by_poll_fn(fn, trx, ts);
+	if (!tbf) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
+			"unknown FN=%u TLL=0x%08x (TRX %d TS %d)\n",
+			fn, tlli, trx, ts);
+		return -EINVAL;
+	}
+	tfi = tbf->tfi;
+	if (tlli != tbf->tlli) {
+		LOGP(DRLCMAC, LOGL_INFO, "Phone changed TLLI to "
+			"0x%08x\n", tlli);
+		tbf->tlli = tlli;
+	}
+	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Control Ack\n", tbf->tfi, tbf->tlli);
+	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
+
+	/* check if this control ack belongs to packet uplink ack */
+	if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
+		tbf_free(tbf);
+		return 0;
+	}
+	if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] DOWNLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+		if (tbf->direction == GPRS_RLCMAC_UL_TBF)
+			tbf = tbf_by_tlli(tbf->tlli,
+						GPRS_RLCMAC_DL_TBF);
+		if (!tbf) {
+			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
+				"TBF is gone\n");
+			return -EIO;
+		}
+		tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+		tbf_assign_control_ts(tbf);
+		return 0;
+	}
+	if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [DOWNLINK] UPLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+		if (tbf->direction == GPRS_RLCMAC_DL_TBF)
+			tbf = tbf_by_tlli(tbf->tlli,
+						GPRS_RLCMAC_UL_TBF);
+		if (!tbf) {
+			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
+				"TBF is gone\n");
+			return -EIO;
+		}
+		tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+		tbf_assign_control_ts(tbf);
+		return 0;
+	}
+	LOGP(DRLCMAC, LOGL_ERROR, "Error: received PACET CONTROL ACK "
+		"at no request\n");
+	return EINVAL;
+}
+
+int gprs_rlcmac_rcv_downlink_ack(uint8_t trx, uint8_t ts, uint32_t fn, uint16_t tfi, uint8_t final, uint8_t ssn, uint8_t *rbb, uint8_t request)
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
-	int8_t tfi = 0; /* must be signed */
-	uint32_t tlli = 0;
 	struct gprs_rlcmac_tbf *tbf;
 	int rc;
 
-	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)talloc_zero(tall_pcu_ctx, RlcMacUplink_t);
-	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
-	decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
-	LOGPC(DCSN1, LOGL_NOTICE, "\n");
-	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- RX : Uplink Control Block -------------------------\n");
-	switch (ul_control_block->u.MESSAGE_TYPE) {
-	case MT_PACKET_CONTROL_ACK:
-		tlli = ul_control_block->u.Packet_Control_Acknowledgement.TLLI;
-		tbf = tbf_by_poll_fn(fn, trx, ts);
-		if (!tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
-				"unknown FN=%u TLL=0x%08x (TRX %d TS %d)\n",
-				fn, tlli, trx, ts);
-			break;
-		}
-		tfi = tbf->tfi;
-		if (tlli != tbf->tlli) {
-			LOGP(DRLCMAC, LOGL_INFO, "Phone changed TLLI to "
-				"0x%08x\n", tlli);
-			tbf->tlli = tlli;
-		}
-		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Control Ack\n", tbf->tfi, tbf->tlli);
-		tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
-
-		/* check if this control ack belongs to packet uplink ack */
-		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
-			tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
-			tbf_free(tbf);
-			break;
-		}
-		if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] DOWNLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
-			tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-			if (tbf->direction == GPRS_RLCMAC_UL_TBF)
-				tbf = tbf_by_tlli(tbf->tlli,
-							GPRS_RLCMAC_DL_TBF);
-			if (!tbf) {
-				LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
-					"TBF is gone\n");
-				break;
-			}
-			tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
-			tbf_assign_control_ts(tbf);
-			break;
-		}
-		if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [DOWNLINK] UPLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
-			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
-			if (tbf->direction == GPRS_RLCMAC_DL_TBF)
-				tbf = tbf_by_tlli(tbf->tlli,
-							GPRS_RLCMAC_UL_TBF);
-			if (!tbf) {
-				LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
-					"TBF is gone\n");
-				break;
-			}
-			tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
-			tbf_assign_control_ts(tbf);
-			break;
-		}
-		LOGP(DRLCMAC, LOGL_ERROR, "Error: received PACET CONTROL ACK "
-			"at no request\n");
-		break;
-	case MT_PACKET_DOWNLINK_ACK_NACK:
-		tfi = ul_control_block->u.Packet_Downlink_Ack_Nack.DOWNLINK_TFI;
-		tbf = tbf_by_poll_fn(fn, trx, ts);
-		if (!tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
-				"unknown FN=%u TBF=%d (TRX %d TS %d)\n",
-				fn, tfi, trx, ts);
-			break;
-		}
-		/* reset N3105 */
-		tbf->dir.dl.n3105 = 0;
-		/* stop timer T3191 */
-		tbf_timer_stop(tbf);
-		tlli = tbf->tlli;
-		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Downlink Ack/Nack\n", tbf->tfi, tbf->tlli);
-		tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
-
-		rc = gprs_rlcmac_downlink_ack(tbf,
-			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.FINAL_ACK_INDICATION,
-			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
-			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
-		if (rc == 1) {
-			tbf_free(tbf);
-			break;
-		}
-		/* check for channel request */
-		if (ul_control_block->u.Packet_Downlink_Ack_Nack.Exist_Channel_Request_Description) {
-			uint8_t trx, ts;
-			struct gprs_rlcmac_tbf *ul_tbf;
-
-			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
-				"message, so we provide one:\n");
-uplink_request:
-			/* create new TBF, use sme TRX as DL TBF */
-			tfi = tfi_alloc(GPRS_RLCMAC_UL_TBF, &trx, &ts, tbf->trx, tbf->first_ts);
-			if (tfi < 0) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
-				/* FIXME: send reject */
-				break;
-			}
-			/* use multislot class of downlink TBF */
-			ul_tbf = tbf_alloc(tbf, GPRS_RLCMAC_UL_TBF, tfi, trx,
-				ts, tbf->ms_class, 0);
-			if (!ul_tbf) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
-				/* FIXME: send reject */
-				break;
-			}
-			ul_tbf->tlli = tbf->tlli;
-			ul_tbf->tlli_valid = 1; /* no contention resolution */
-			ul_tbf->dir.ul.contention_resolution_done = 1;
-			ul_tbf->ta = tbf->ta; /* use current TA */
-			tbf_new_state(ul_tbf, GPRS_RLCMAC_ASSIGN);
-			tbf_timer_start(ul_tbf, 3169, bts->t3169, 0);
-			/* schedule uplink assignment */
-			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
-		}
-		break;
-	case MT_PACKET_RESOURCE_REQUEST:
-		if (ul_control_block->u.Packet_Resource_Request.ID.UnionType) {
-			tlli = ul_control_block->u.Packet_Resource_Request.ID.u.TLLI;
-			tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
-			if (!tbf) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TLLI=0x%08x\n", tlli);
-				break;
-			}
-			tfi = tbf->tfi;
-		} else {
-			if (ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.UnionType) {
-				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.DOWNLINK_TFI;
-				tbf = tbf_by_tfi(tfi, trx, ts, GPRS_RLCMAC_DL_TBF);
-				if (!tbf) {
-					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TBF=%d\n", tlli);
-					break;
-				}
-			} else {
-				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.UPLINK_TFI;
-				tbf = tbf_by_tfi(tfi, trx, ts, GPRS_RLCMAC_UL_TBF);
-				if (!tbf) {
-					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TBF=%d\n", tlli);
-					break;
-				}
-			}
-			tlli = tbf->tlli;
-		}
-		LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet ressource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
-		break;
-	default:
-		LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] unknown control block received\n");
+	tbf = tbf_by_poll_fn(fn, trx, ts);
+	if (!tbf) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
+			"unknown FN=%u TBF=%d (TRX %d TS %d)\n",
+			fn, tfi, trx, ts);
+		return -EINVAL;
 	}
-	talloc_free(ul_control_block);
-	return 1;
+	/* reset N3105 */
+	tbf->dir.dl.n3105 = 0;
+	/* stop timer T3191 */
+	tbf_timer_stop(tbf);
+	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Downlink Ack/Nack\n", tbf->tfi, tbf->tlli);
+	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
+
+	rc = gprs_rlcmac_downlink_ack(tbf, final, ssn, rbb);
+	if (rc == 1) {
+		tbf_free(tbf);
+		return 0;
+	}
+	/* check for channel request */
+	if (request) {
+		uint8_t trx, ts;
+		struct gprs_rlcmac_tbf *ul_tbf;
+
+		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
+			"message, so we provide one:\n");
+		/* create new TBF, use sme TRX as DL TBF */
+		tfi = tfi_alloc(GPRS_RLCMAC_UL_TBF, &trx, &ts, tbf->trx, tbf->first_ts);
+		if (tfi < 0) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+			/* FIXME: send reject */
+			return -EIO;
+		}
+		/* use multislot class of downlink TBF */
+		ul_tbf = tbf_alloc(tbf, GPRS_RLCMAC_UL_TBF, tfi, trx,
+			ts, tbf->ms_class, 0);
+		if (!ul_tbf) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+			/* FIXME: send reject */
+			return -EIO;
+		}
+		ul_tbf->tlli = tbf->tlli;
+		ul_tbf->tlli_valid = 1; /* no contention resolution */
+		ul_tbf->dir.ul.contention_resolution_done = 1;
+		ul_tbf->ta = tbf->ta; /* use current TA */
+		tbf_new_state(ul_tbf, GPRS_RLCMAC_ASSIGN);
+		tbf_timer_start(ul_tbf, 3169, bts->t3169, 0);
+		/* schedule uplink assignment */
+		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+	}
+
+	return 0;
 }
 
 #ifdef DEBUG_DL_ASS_IDLE
@@ -567,22 +524,9 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 			return NULL;
 	}
 
-	msg = msgb_alloc(23, "rlcmac_ul_ack");
+	msg = write_packet_uplink_ack(tbf, final);
 	if (!msg)
 		return NULL;
-	bitvec *ack_vec = bitvec_alloc(23);
-	if (!ack_vec) {
-		msgb_free(msg);
-		return NULL;
-	}
-	bitvec_unhex(ack_vec,
-		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
-	write_packet_uplink_ack(mac_control_block, tbf, final);
-	encode_gsm_rlcmac_downlink(ack_vec, mac_control_block);
-	bitvec_pack(ack_vec, msgb_put(msg, 23));
-	bitvec_free(ack_vec);
-	talloc_free(mac_control_block);
 
 	/* now we must set this flag, so we are allowed to assign downlink
 	 * TBF on PACCH. it is only allowed when TLLI is aknowledged. */
@@ -824,28 +768,13 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 		return NULL;
 	}
 
-	msg = msgb_alloc(23, "rlcmac_ul_ass");
-	if (!msg)
-		return NULL;
 	LOGP(DRLCMAC, LOGL_INFO, "TBF: START TFI: %u TLLI: 0x%08x Packet Uplink Assignment (PACCH)\n", new_tbf->tfi, new_tbf->tlli);
-	bitvec *ass_vec = bitvec_alloc(23);
-	if (!ass_vec) {
-		msgb_free(msg);
-		return NULL;
-	}
-	bitvec_unhex(ass_vec,
-		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	write_packet_uplink_assignment(ass_vec, tbf->tfi,
+
+	msg = write_packet_uplink_assignment(tbf->tfi,
 		(tbf->direction == GPRS_RLCMAC_DL_TBF), 0, 0, new_tbf,
 		POLLING_ASSIGNMENT);
-	bitvec_pack(ass_vec, msgb_put(msg, 23));
-	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
-	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++\n");
-	decode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
-	LOGPC(DCSN1, LOGL_NOTICE, "\n");
-	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Uplink Assignment -------------------------\n");
-	bitvec_free(ass_vec);
-	talloc_free(mac_control_block);
+	if (!msg)
+		return NULL;
 
 #if POLLING_ASSIGNMENT == 1
 	FIXME process does not work, also the acknowledgement is not checked.
@@ -867,6 +796,8 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	struct gprs_rlcmac_tbf *tbf;
 	uint8_t trx, ts;
 	int8_t tfi; /* must be signed */
+	uint8_t imm_ass[23];
+	int rc;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, so we provide "
 		"one:\n");
@@ -894,12 +825,11 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] START TFI: %u\n", tbf->tfi);
 	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u RACH qbit-ta=%d ra=%d, Fn=%d (%d,%d,%d)\n", tbf->tfi, qta, ra, Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
 	LOGP(DRLCMAC, LOGL_INFO, "TX: START TFI: %u Immediate Assignment Uplink (AGCH)\n", tbf->tfi);
-	bitvec *immediate_assignment = bitvec_alloc(22) /* without plen */;
-	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	int plen = write_immediate_assignment(immediate_assignment, 0, ra, Fn, tbf->ta, tbf->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0);
-	pcu_l1if_tx_agch(immediate_assignment, plen);
-	bitvec_free(immediate_assignment);
+	rc = write_immediate_assignment_uplink(imm_ass, ra, Fn, tbf->ta, tbf->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, tbf->dir.ul.usf[tbf->first_ts], 0, 0);
+	if (rc < 0)
+		return rc;
 
+	pcu_l1if_tx_agch(imm_ass);
 	return 0;
 }
 
@@ -1450,28 +1380,12 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 		return NULL;
 	}
 
-	msg = msgb_alloc(23, "rlcmac_dl_ass");
-	if (!msg)
-		return NULL;
-	bitvec *ass_vec = bitvec_alloc(23);
-	if (!ass_vec) {
-		msgb_free(msg);
-		return NULL;
-	}
-	bitvec_unhex(ass_vec,
-		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	LOGP(DRLCMAC, LOGL_INFO, "TBF: START TFI: %u TLLI: 0x%08x Packet Downlink Assignment (PACCH)\n", new_tbf->tfi, new_tbf->tlli);
-	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
-	write_packet_downlink_assignment(mac_control_block, tbf->tfi,
+	msg = write_packet_downlink_assignment(tbf->tfi,
 		(tbf->direction == GPRS_RLCMAC_DL_TBF), new_tbf,
 		POLLING_ASSIGNMENT);
-	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
-	encode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
-	LOGPC(DCSN1, LOGL_NOTICE, "\n");
-	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Downlink Assignment -------------------------\n");
-	bitvec_pack(ass_vec, msgb_put(msg, 23));
-	bitvec_free(ass_vec);
-	talloc_free(mac_control_block);
+	if (!msg)
+		return NULL;
 
 #if POLLING_ASSIGNMENT == 1
 	tbf->poll_state = GPRS_RLCMAC_POLL_SCHED;
@@ -1489,14 +1403,17 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
 	char *imsi)
 {
+	uint8_t imm_ass[23];
+	int rc;
+
 	LOGP(DRLCMAC, LOGL_INFO, "TX: START TFI: %u TLLI: 0x%08x Immediate Assignment Downlink (PCH)\n", tbf->tfi, tbf->tlli);
-	bitvec *immediate_assignment = bitvec_alloc(22); /* without plen */
-	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	/* use request reference that has maximum distance to current time,
 	 * so the assignment will not conflict with possible RACH requests. */
-	int plen = write_immediate_assignment(immediate_assignment, 1, 125, (tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta, tbf->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, 0, tbf->tlli, poll, tbf->poll_fn);
-	pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
-	bitvec_free(immediate_assignment);
+	rc = write_immediate_assignment_downlink(imm_ass, 125, (tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta, tbf->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, tbf->tlli, poll, tbf->poll_fn);
+	if (rc < 0)
+		return;
+
+	pcu_l1if_tx_pch(imm_ass, imsi);
 }
 
 /* depending on the current TBF, we assign on PACCH or AGCH */

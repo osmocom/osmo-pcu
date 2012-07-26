@@ -35,9 +35,9 @@ void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
         uint32_t fn, uint8_t block_nr);
 void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn, 
         uint32_t fn, uint8_t block_nr);
-void pcu_l1if_tx_agch(bitvec * block, int len);
+void pcu_l1if_tx_agch(uint8_t *data);
 
-void pcu_l1if_tx_pch(bitvec * block, int plen, char *imsi);
+void pcu_l1if_tx_pch(uint8_t *data, char *imsi);
 
 int pcu_l1if_open(void);
 void pcu_l1if_close(void);
