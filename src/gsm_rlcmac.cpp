@@ -34,7 +34,9 @@
 */
 #include <iostream>
 #include <cstdlib>
+extern "C" {
 #include <gprs_debug.h>
+}
 using namespace std;
 
 /* Payload type as defined in TS 44.060 / 10.4.7 */

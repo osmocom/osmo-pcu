@@ -1,4 +1,4 @@
-/* gsm_timer.cpp
+/* gsm_timer.c
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
  *

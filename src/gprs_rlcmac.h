@@ -20,15 +20,8 @@
 #ifndef GPRS_RLCMAC_H
 #define GPRS_RLCMAC_H
 
-#ifdef __cplusplus
-#include <gsm_rlcmac.h>
-#include <gsm_timer.h>
-
-extern "C" {
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/timer.h>
-}
-#endif
 
 /* This special feature will delay assignment of downlink TBF by one second,
  * in case there is already a TBF.
@@ -82,7 +75,6 @@ struct gprs_rlcmac_bts {
 
 extern struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 
-#ifdef __cplusplus
 /*
  * TBF instance
  */
@@ -196,7 +188,7 @@ struct gprs_rlcmac_tbf {
 	unsigned int T; /* Txxxx number */
 	unsigned int num_T_exp; /* number of consecutive T expirations */
 	
-	struct osmo_gsm_timer_list	gsm_timer;
+//	struct osmo_gsm_timer_list	gsm_timer;
 	unsigned int fT; /* fTxxxx number */
 	unsigned int num_fT_exp; /* number of consecutive fT expirations */
 
@@ -256,7 +248,7 @@ enum gprs_rlcmac_block_type {
 int gprs_rlcmac_rcv_block(uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
 	uint32_t fn);
 
-int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
+int gprs_rlcmac_tx_ul_ud(struct gprs_rlcmac_tbf *tbf);
 
 void tbf_timer_cb(void *_tbf);
 
@@ -264,8 +256,8 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf);
 
 int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta);
 
-int gprs_rlcmac_rcv_control_block(uint8_t trx, uint8_t ts, uint32_t fn,
-        uint8_t *data, uint8_t len);
+int gprs_rlcmac_rcv_control_ack(uint8_t trx, uint8_t ts, uint32_t fn,
+	uint32_t tlli);
 
 int gprs_rlcmac_rcv_downlink_ack(uint8_t trx, uint8_t ts, uint32_t fn, uint16_t tfi, uint8_t final, uint8_t ssn, uint8_t *rbb, uint8_t request);
 
@@ -298,18 +290,10 @@ int gprs_rlcmac_add_paging(uint8_t chan_needed, uint8_t *identity_lv);
 struct gprs_rlcmac_paging *gprs_rlcmac_dequeue_paging(
 	struct gprs_rlcmac_pdch *pdch);
 
-struct msgb *gprs_rlcmac_send_packet_paging_request(
-	struct gprs_rlcmac_pdch *pdch);
-
-extern "C" {
-#endif
 int alloc_algorithm_a(struct gprs_rlcmac_tbf *old_tbf,
 	struct gprs_rlcmac_tbf *tbf, uint32_t cust);
 
 int alloc_algorithm_b(struct gprs_rlcmac_tbf *old_tbf,
 	struct gprs_rlcmac_tbf *tbf, uint32_t cust);
-#ifdef __cplusplus
-}
-#endif
 
 #endif // GPRS_RLCMAC_H

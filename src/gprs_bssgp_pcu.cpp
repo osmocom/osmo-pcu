@@ -1,4 +1,4 @@
-/* gprs_bssgp_pcu.cpp
+/* gprs_bssgp_pcu.c
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
  *
@@ -17,9 +17,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#include <stdint.h>
+#include <bitvector.h>
+extern "C" {
 #include <gprs_rlcmac.h>
 #include <gprs_bssgp_pcu.h>
 #include <pcu_l1_if.h>
+}
 
 struct sgsn_instance *sgsn;
 void *tall_bsc_ctx;

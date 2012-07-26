@@ -25,10 +25,8 @@
 
 extern void *tall_pcu_ctx;
 
-extern "C" {
 int bssgp_tx_llc_discarded(struct bssgp_bvc_ctx *bctx, uint32_t tlli,
                            uint8_t num_frames, uint32_t num_octets);
-}
 
 /* After receiving these frames, we send ack/nack. */
 #define SEND_ACK_AFTER_FRAMES 20
@@ -39,7 +37,6 @@ int bssgp_tx_llc_discarded(struct bssgp_bvc_ctx *bctx, uint32_t tlli,
 /* If acknowledgement to uplink/downlin assignmentshould be polled */
 #define POLLING_ASSIGNMENT 0
 
-extern "C" {
 /* TS 04.60  10.2.2 */
 struct rlc_ul_header {
 	uint8_t	r:1,
@@ -71,7 +68,6 @@ struct rlc_li_field {
 		 m:1,
 		 li:6;
 } __attribute__ ((packed));
-}
 
 int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 {
@@ -1400,8 +1396,8 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 	return msg;
 }
 
-static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
-	char *imsi)
+static void gprs_rlcmac_downlink_assignment(struct gprs_rlcmac_tbf *tbf,
+	uint8_t poll, char *imsi)
 {
 	uint8_t imm_ass[23];
 	int rc;

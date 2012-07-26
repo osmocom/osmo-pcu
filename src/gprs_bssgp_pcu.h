@@ -21,7 +21,6 @@
 #define GPRS_BSSGP_PCU_H
 
 
-extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/rate_ctr.h>
 #include <osmocom/core/logging.h>
@@ -36,7 +35,6 @@ int bssgp_tx_bvc_reset(struct bssgp_bvc_ctx *bctx, uint16_t bvci, uint8_t cause)
 int bssgp_tx_ul_ud(struct bssgp_bvc_ctx *bctx, uint32_t tlli, const uint8_t *qos_profile, struct msgb *llc_pdu);
 
 struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
-}
 #include <gprs_debug.h>
 
 #define QOS_PROFILE 0

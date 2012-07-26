@@ -24,25 +24,25 @@ AM_CXXFLAGS = -Wall -ldl -pthread
 noinst_LTLIBRARIES = libgprs.la
 
 libgprs_la_SOURCES = \
-	gprs_debug.cpp \
+	gprs_debug.c \
 	csn1.cpp \
-	gsm_rlcmac.cpp \
+	gsm_rlcmac.c \
 	gprs_bssgp_pcu.cpp \
-	gprs_rlcmac.cpp \
-	gprs_rlcmac_data.cpp \
+	gprs_rlcmac.c \
+	gprs_rlcmac_data.c \
 	gprs_rlcmac_ctrl.cpp \
-	gprs_rlcmac_sched.cpp \
-	gsm_timer.cpp \
+	gprs_rlcmac_sched.c \
+	gsm_timer.c \
 	bitvector.cpp \
-	pcu_l1_if.cpp \
+	pcu_l1_if.c \
 	pcu_vty.c
 
 if ENABLE_SYSMOBTS
 libgprs_la_SOURCES += \
-	sysmo_sock.cpp
+	sysmo_sock.c
 else
 libgprs_la_SOURCES += \
-	openbts_sock.cpp
+	openbts_sock.c
 endif
 
 noinst_PROGRAMS = \
@@ -57,6 +57,7 @@ noinst_HEADERS = \
 	gsm_rlcmac.h \
 	gprs_bssgp_pcu.h \
 	gprs_rlcmac.h \
+	gprs_rlcmac_ctrl.h \
 	pcuif_proto.h \
 	pcu_l1_if.h \
 	gsm_timer.h \

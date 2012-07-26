@@ -21,10 +21,9 @@
 #define GPRS_DEBUG_H
 
 #include <stdio.h>
-extern "C" {
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/logging.h>
-};
+
 /* Debug Areas of the code */
 enum {
 	DCSN1,

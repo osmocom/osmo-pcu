@@ -27,10 +27,8 @@
 #ifndef GSM_TIMER_H
 #define GSM_TIMER_H
 
-extern "C" {
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/linuxrbtree.h>
-}
 /**
  * Timer management:
  *      - Create a struct osmo_gsm_timer_list

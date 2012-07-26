@@ -19,6 +19,7 @@
  
 #include <gprs_bssgp_pcu.h>
 #include <gprs_rlcmac.h>
+#include <gprs_rlcmac_ctrl.h>
 #include <pcu_l1_if.h>
 
 uint32_t sched_poll(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,

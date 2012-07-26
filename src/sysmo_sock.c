@@ -25,11 +25,9 @@
 #include <assert.h>
 #include <sys/socket.h>
 #include <sys/un.h>
-extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/select.h>
 #include <osmocom/core/msgb.h>
-}
 
 #include <gprs_rlcmac.h>
 #include <pcu_l1_if.h>

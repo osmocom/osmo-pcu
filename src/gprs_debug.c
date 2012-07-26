@@ -1,4 +1,4 @@
-/* gprs_debug.cpp
+/* gprs_debug.c
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
  *

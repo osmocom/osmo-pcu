@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+extern "C" {
 #include <gprs_bssgp_pcu.h>
 #include <arpa/inet.h>
 #include <pcu_l1_if.h>
@@ -26,11 +27,9 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <signal.h>
-extern "C" {
 #include "pcu_vty.h"
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
-}
 
 struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 extern struct gprs_nsvc *nsvc;
@@ -127,6 +126,8 @@ void sighandler(int sigset)
 		break;
 	}
 }
+
+} /* extern "C" */
 
 int main(int argc, char *argv[])
 {

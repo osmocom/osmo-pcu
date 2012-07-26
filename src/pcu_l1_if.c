@@ -1,4 +1,4 @@
-/* pcu_l1_if.cpp
+/* pcu_l1_if.c
  *
  * Copyright (C) 2012 Andreas Eversberg <jolly@eversberg.eu>
  *
@@ -25,11 +25,9 @@
 #include <assert.h>
 #include <sys/socket.h>
 #include <sys/un.h>
-extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/select.h>
 #include <osmocom/core/msgb.h>
-}
 
 #include <gprs_rlcmac.h>
 #include <pcu_l1_if.h>
@@ -123,16 +121,16 @@ static int pcu_tx_data_req(uint8_t trx, uint8_t ts, uint8_t sapi,
 	return pcu_sock_send(msg);
 }
 
-void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
-	uint32_t fn, uint8_t block_nr)
+void pcu_l1if_tx_pdtch(struct msgb *msg, uint8_t trx, uint8_t ts,
+	uint16_t arfcn, uint32_t fn, uint8_t block_nr)
 {
 	pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PDTCH, arfcn, fn, block_nr,
 		msg->data, msg->len);
 	msgb_free(msg);
 }
 
-void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
-	uint32_t fn, uint8_t block_nr)
+void pcu_l1if_tx_ptcch(struct msgb *msg, uint8_t trx, uint8_t ts,
+	uint16_t arfcn, uint32_t fn, uint8_t block_nr)
 {
 	pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr,
 		msg->data, msg->len);
@@ -146,18 +144,18 @@ void pcu_l1if_tx_agch(uint8_t *data)
 
 void pcu_l1if_tx_pch(uint8_t *data, char *imsi)
 {
-	uint8_t pch_data[23+3];
+	uint8_t pch_data[3+23];
 
 	/* paging group */
 	if (!imsi || strlen(imsi) < 3)
 		return;
 	imsi += strlen(imsi) - 3;
-	data[0] = imsi[0];
-	data[1] = imsi[1];
-	data[2] = imsi[2];
+	pch_data[0] = imsi[0];
+	pch_data[1] = imsi[1];
+	pch_data[2] = imsi[2];
 
 	memcpy(pch_data + 3, data, 23);
-	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, 23+3);
+	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, pch_data, 23+3);
 }
 
 static void pcu_l1if_tx_bcch(uint8_t *data, int len)

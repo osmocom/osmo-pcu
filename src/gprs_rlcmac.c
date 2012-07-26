@@ -73,7 +73,7 @@ struct gprs_ms_multislot_class gprs_ms_multislot_class[32] = {
 
 LLIST_HEAD(gprs_rlcmac_ul_tbfs);
 LLIST_HEAD(gprs_rlcmac_dl_tbfs);
-llist_head *gprs_rlcmac_tbfs_lists[] = {
+struct llist_head *gprs_rlcmac_tbfs_lists[] = {
 	&gprs_rlcmac_ul_tbfs,
 	&gprs_rlcmac_dl_tbfs,
 	NULL
@@ -1047,7 +1047,7 @@ struct gprs_rlcmac_paging *gprs_rlcmac_dequeue_paging(
 }
 
 /* Send Uplink unit-data to SGSN. */
-int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
+int gprs_rlcmac_tx_ul_ud(struct gprs_rlcmac_tbf *tbf)
 {
 	const uint8_t qos_profile = QOS_PROFILE;
 	struct msgb *llc_pdu;

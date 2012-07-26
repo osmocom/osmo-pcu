@@ -33,7 +33,9 @@
 #include <assert.h>
 #include <string.h>
 #include "csn1.h"
+extern "C" {
 #include <gprs_debug.h>
+}
 
 
 #define pvDATA(_pv, _offset) ((void*) ((unsigned char*)_pv + _offset))
