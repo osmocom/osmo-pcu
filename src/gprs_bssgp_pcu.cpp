@@ -177,9 +177,8 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 
 		/* check for uplink data, so we copy our informations */
 		tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
-		if (tbf && tbf->contention_resolution_done
-		 && (tbf->state != GPRS_RLCMAC_FINISHED
-		  || tbf->ul_ack_state != GPRS_RLCMAC_UL_ACK_WAIT_ACK)) {
+		if (tbf && tbf->dir.ul.contention_resolution_done
+		 && !tbf->dir.ul.final_ack_sent) {
 			use_trx = tbf->trx;
 			first_ts = tbf->first_ts;
 			ta = tbf->ta;

@@ -139,7 +139,6 @@ struct gprs_rlcmac_tbf {
 	uint8_t tfi;
 	uint32_t tlli;
 	uint8_t tlli_valid;
-	uint8_t contention_resolution_done; /* set after done */
 	uint8_t trx;
 	uint16_t arfcn;
 	uint8_t tsc;
@@ -187,6 +186,8 @@ struct gprs_rlcmac_tbf {
 			int32_t rx_counter; /* count all received blocks */
 			uint8_t n3103;	/* N3103 counter */
 			uint8_t usf[8];	/* list USFs per PDCH (timeslot) */
+			uint8_t contention_resolution_done; /* set after done */
+			uint8_t final_ack_sent; /* set if we sent final ack */
 		} ul;
 	} dir;
 	uint8_t rlc_block[RLC_MAX_SNS/2][RLC_MAX_LEN]; /* block history */

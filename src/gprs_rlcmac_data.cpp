@@ -256,7 +256,7 @@ uplink_request:
 			}
 			ul_tbf->tlli = tbf->tlli;
 			ul_tbf->tlli_valid = 1; /* no contention resolution */
-			ul_tbf->contention_resolution_done = 1;
+			ul_tbf->dir.ul.contention_resolution_done = 1;
 			ul_tbf->ta = tbf->ta; /* use current TA */
 			tbf_new_state(ul_tbf, GPRS_RLCMAC_ASSIGN);
 			tbf_timer_start(ul_tbf, 3169, bts->t3169, 0);
@@ -586,13 +586,14 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 
 	/* now we must set this flag, so we are allowed to assign downlink
 	 * TBF on PACCH. it is only allowed when TLLI is aknowledged. */
-	tbf->contention_resolution_done = 1;
+	tbf->dir.ul.contention_resolution_done = 1;
 
 	if (final) {
 		tbf->poll_state = GPRS_RLCMAC_POLL_SCHED;
 		tbf->poll_fn = (fn + 13) % 2715648;
 		/* waiting for final acknowledge */
 		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_WAIT_ACK;
+		tbf->dir.ul.final_ack_sent = 1;
 	} else
 		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
 
@@ -1432,7 +1433,7 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
 		/* be sure to check first, if contention resolution is done,
 		 * otherwise we cannot send the assignment yet */
-		if (!tbf->contention_resolution_done) {
+		if (!tbf->dir.ul.contention_resolution_done) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "Cannot assign DL TBF now, "
 				"because contention resolution is not "
 				"finished.\n");
