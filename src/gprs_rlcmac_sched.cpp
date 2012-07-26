@@ -111,17 +111,17 @@ struct msgb *sched_select_ctrl_msg(uint8_t trx, uint8_t ts, uint32_t fn,
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_tbf *tbf = NULL;
 
-	/* schedule PACKET UPLINK ASSIGNMENT (high priority) */
+	/* schedule PACKET UPLINK ASSIGNMENT (1st priority) */
 	if (ul_ass_tbf) {
 		tbf = ul_ass_tbf;
 		msg = gprs_rlcmac_send_packet_uplink_assignment(tbf, fn);
 	}
-	/* schedule PACKET DOWNLINK ASSIGNMENT (low priotiry) */
+	/* schedule PACKET DOWNLINK ASSIGNMENT (2nd priotiry) */
 	if (!msg && dl_ass_tbf) {
 		tbf = dl_ass_tbf;
 		msg = gprs_rlcmac_send_packet_downlink_assignment(tbf, fn);
 	}
-	/* schedule PACKET UPLINK ACK */
+	/* schedule PACKET UPLINK ACK (3rd priority) */
 	if (!msg && ul_ack_tbf) {
 		tbf = ul_ack_tbf;
 		msg = gprs_rlcmac_send_uplink_ack(tbf, fn);
