@@ -132,9 +132,19 @@ enum gprs_rlcmac_tbf_direction {
 	GPRS_RLCMAC_UL_TBF
 };
 
+#define GPRS_RLCMAC_FLAG_CCCH		0 /* assignment on CCCH */
+#define GPRS_RLCMAC_FLAG_PACCH		1 /* assignment on PACCH */
+#define GPRS_RLCMAC_FLAG_UL_DATA	2 /* uplink data received */
+#define GPRS_RLCMAC_FLAG_DL_ACK		3 /* downlink acknowledge received  */
+#define GPRS_RLCMAC_FLAG_TO_UL_ACK	4
+#define GPRS_RLCMAC_FLAG_TO_DL_ACK	5
+#define GPRS_RLCMAC_FLAG_TO_UL_ASS	6
+#define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
+
 struct gprs_rlcmac_tbf {
 	struct llist_head list;
 	enum gprs_rlcmac_tbf_state state;
+	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
 	uint8_t tfi;
 	uint32_t tlli;
