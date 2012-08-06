@@ -176,7 +176,6 @@ struct gprs_rlcmac_tbf {
 			uint16_t v_a;	/* ack state */
 			char v_b[RLC_MAX_SNS/2]; /* acknowledge state array */
 			int32_t tx_counter; /* count all transmitted blocks */
-			uint8_t n3105;	/* N3105 counter */
 		} dl;
 		struct {
 			uint16_t bsn;	/* block sequence number */
@@ -193,6 +192,8 @@ struct gprs_rlcmac_tbf {
 	uint8_t rlc_block[RLC_MAX_SNS/2][RLC_MAX_LEN]; /* block history */
 	uint8_t rlc_block_len[RLC_MAX_SNS/2]; /* block len  of history */
 	
+	uint8_t n3105;	/* N3105 counter */
+
 	struct osmo_timer_list	timer;
 	unsigned int T; /* Txxxx number */
 	unsigned int num_T_exp; /* number of consecutive T expirations */
