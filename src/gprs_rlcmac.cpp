@@ -879,6 +879,67 @@ void tbf_timer_stop(struct gprs_rlcmac_tbf *tbf)
 	}
 }
 
+/* starting time for assigning single slot
+ * This offset must be a multiple of 13. */
+#define AGCH_START_OFFSET 52
+
+LLIST_HEAD(gprs_rlcmac_sbas);
+
+int sba_alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta)
+{
+
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_pdch *pdch;
+	struct gprs_rlcmac_sba *sba;
+	uint8_t trx, ts;
+	uint32_t fn;
+
+	sba = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_sba);
+	if (!sba)
+		return -ENOMEM;
+
+	for (trx = 0; trx < 8; trx++) {
+		for (ts = 0; ts < 8; ts++) {
+			pdch = &bts->trx[trx].pdch[ts];
+			if (!pdch->enable)
+				continue;
+			break;
+		}
+		if (ts < 8)
+			break;
+	}
+	if (trx == 8) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH available.\n");
+		return -EINVAL;
+	}
+
+	fn = (pdch->last_rts_fn + AGCH_START_OFFSET) % 2715648;
+
+	sba->trx = trx;
+	sba->ts = ts;
+	sba->fn = fn;
+	sba->ta = ta;
+
+	llist_add(&sba->list, &gprs_rlcmac_sbas);
+
+	*_trx = trx;
+	*_ts = ts;
+	*_fn = fn;
+	return 0;
+}
+
+struct gprs_rlcmac_sba *sba_find(uint8_t trx, uint8_t ts, uint32_t fn)
+{
+	struct gprs_rlcmac_sba *sba;
+
+	llist_for_each_entry(sba, &gprs_rlcmac_sbas, list) {
+		if (sba->trx == trx && sba->ts == ts && sba->fn == fn)
+			return sba;
+	}
+
+	return NULL;
+}
+
 #if 0
 static void tbf_gsm_timer_cb(void *_tbf)
 {
@@ -1129,9 +1190,9 @@ struct msgb *gprs_rlcmac_send_packet_paging_request(
 
 // GSM 04.08 9.1.18 Immediate assignment
 int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
-	uint32_t fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc,
+	uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc,
 	uint8_t tfi, uint8_t usf, uint32_t tlli,
-	uint8_t polling, uint32_t poll_fn)
+	uint8_t polling, uint32_t fn, uint8_t single_block)
 {
 	unsigned wp = 0;
 	uint8_t plen;
@@ -1157,9 +1218,9 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 
 	//10.5.2.30 Request Reference
 	bitvec_write_field(dest, wp,ra,8);                    // RA
-	bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
-	bitvec_write_field(dest, wp,fn % 51,6);               // T3
-	bitvec_write_field(dest, wp,fn % 26,5);               // T2
+	bitvec_write_field(dest, wp,(ref_fn / (26 * 51)) % 32,5); // T1'
+	bitvec_write_field(dest, wp,ref_fn % 51,6);               // T3
+	bitvec_write_field(dest, wp,ref_fn % 26,5);               // T2
 
 	// 10.5.2.40 Timing Advance
 	bitvec_write_field(dest, wp,0x0,2); // spare
@@ -1193,9 +1254,9 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 		bitvec_write_field(dest, wp,0x0,4);   // TIMING_ADVANCE_INDEX
 		if (polling) {
 			bitvec_write_field(dest, wp,0x1,1);   // TBF Starting TIME present
-			bitvec_write_field(dest, wp,(poll_fn / (26 * 51)) % 32,5); // T1'
-			bitvec_write_field(dest, wp,poll_fn % 51,6);               // T3
-			bitvec_write_field(dest, wp,poll_fn % 26,5);               // T2
+			bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
+			bitvec_write_field(dest, wp,fn % 51,6);               // T3
+			bitvec_write_field(dest, wp,fn % 26,5);               // T2
 		} else {
 			bitvec_write_field(dest, wp,0x0,1);   // TBF Starting TIME present
 		}
@@ -1209,20 +1270,32 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 		// GMS 04.08 10.5.2.37b 10.5.2.16
 		bitvec_write_field(dest, wp, 3, 2);    // "HH"
 		bitvec_write_field(dest, wp, 0, 2);    // "0" Packet Uplink Assignment
-		bitvec_write_field(dest, wp, 1, 1);    // Block Allocation : Not Single Block Allocation
-		bitvec_write_field(dest, wp, tfi, 5);  // TFI_ASSIGNMENT Temporary Flow Identity
-		bitvec_write_field(dest, wp, 0, 1);    // POLLING
-		bitvec_write_field(dest, wp, 0, 1);    // ALLOCATION_TYPE: dynamic
-		bitvec_write_field(dest, wp, usf, 3);    // USF
-		bitvec_write_field(dest, wp, 0, 1);    // USF_GRANULARITY
-		bitvec_write_field(dest, wp, 0 , 1);   // "0" power control: Not Present
-		bitvec_write_field(dest, wp, bts->initial_cs-1, 2);    // CHANNEL_CODING_COMMAND 
-		bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
-		bitvec_write_field(dest, wp, 1 , 1);   // "1" Alpha : Present
-		bitvec_write_field(dest, wp, 0, 4);    // Alpha
-		bitvec_write_field(dest, wp, 0, 5);    // Gamma
-		bitvec_write_field(dest, wp, 0, 1);    // TIMING_ADVANCE_INDEX_FLAG
-		bitvec_write_field(dest, wp, 0, 1);    // TBF_STARTING_TIME_FLAG
+		if (single_block) {
+			bitvec_write_field(dest, wp, 0, 1);    // Block Allocation : Single Block Allocation
+			bitvec_write_field(dest, wp, 1, 1);   // "1" Alpha : Present
+			bitvec_write_field(dest, wp, 0, 4);    // Alpha
+			bitvec_write_field(dest, wp, 0, 5);    // Gamma
+			bitvec_write_field(dest, wp, 0, 1);    // TIMING_ADVANCE_INDEX_FLAG
+			bitvec_write_field(dest, wp, 1, 1);    // TBF_STARTING_TIME_FLAG
+			bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
+			bitvec_write_field(dest, wp,fn % 51,6);               // T3
+			bitvec_write_field(dest, wp,fn % 26,5);               // T2
+		} else {
+			bitvec_write_field(dest, wp, 1, 1);    // Block Allocation : Not Single Block Allocation
+			bitvec_write_field(dest, wp, tfi, 5);  // TFI_ASSIGNMENT Temporary Flow Identity
+			bitvec_write_field(dest, wp, 0, 1);    // POLLING
+			bitvec_write_field(dest, wp, 0, 1);    // ALLOCATION_TYPE: dynamic
+			bitvec_write_field(dest, wp, usf, 3);    // USF
+			bitvec_write_field(dest, wp, 0, 1);    // USF_GRANULARITY
+			bitvec_write_field(dest, wp, 0, 1);   // "0" power control: Not Present
+			bitvec_write_field(dest, wp, bts->initial_cs-1, 2);    // CHANNEL_CODING_COMMAND 
+			bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
+			bitvec_write_field(dest, wp, 1, 1);   // "1" Alpha : Present
+			bitvec_write_field(dest, wp, 0, 4);    // Alpha
+			bitvec_write_field(dest, wp, 0, 5);    // Gamma
+			bitvec_write_field(dest, wp, 0, 1);    // TIMING_ADVANCE_INDEX_FLAG
+			bitvec_write_field(dest, wp, 0, 1);    // TBF_STARTING_TIME_FLAG
+		}
 	}
 
 	return plen;

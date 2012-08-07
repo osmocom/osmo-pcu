@@ -79,6 +79,7 @@ struct gprs_rlcmac_bts {
 	int (*alloc_algorithm)(struct gprs_rlcmac_tbf *old_tbf,
 		struct gprs_rlcmac_tbf *tbf, uint32_t cust);
 	uint32_t alloc_algorithm_curst; /* options to customize algorithm */
+	uint8_t force_two_phase;
 };
 
 extern struct gprs_rlcmac_bts *gprs_rlcmac_bts;
@@ -219,6 +220,7 @@ struct gprs_rlcmac_tbf {
 
 extern struct llist_head gprs_rlcmac_ul_tbfs; /* list of uplink TBFs */
 extern struct llist_head gprs_rlcmac_dl_tbfs; /* list of downlink TBFs */
+extern struct llist_head gprs_rlcmac_sbas; /* list of single block allocs */
 
 /*
  * paging entry
@@ -228,6 +230,21 @@ struct gprs_rlcmac_paging {
 	uint8_t chan_needed;
 	uint8_t identity_lv[9];
 };
+
+/*
+ * single block allocation entry
+ */
+struct gprs_rlcmac_sba {
+	struct llist_head list;
+	uint8_t trx;
+	uint8_t ts;
+	uint32_t fn;
+	uint8_t ta;
+};
+
+int sba_alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta);
+
+struct gprs_rlcmac_sba *sba_find(uint8_t trx, uint8_t ts, uint32_t fn);
 
 int tfi_alloc(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, uint8_t *_ts,
 	int8_t use_trx, int8_t first_ts);
@@ -270,9 +287,9 @@ int gprs_rlcmac_rcv_block(uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
 	uint32_t fn);
 
 int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, 
-        uint32_t fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc, 
+        uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc, 
         uint8_t tfi, uint8_t usf, uint32_t tlli, uint8_t polling,
-	uint32_t poll_fn);
+	uint32_t fn, uint8_t single_block);
 
 void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
 	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli, 

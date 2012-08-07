@@ -185,11 +185,61 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 	return 0;
 }
 
+static uint8_t get_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
+{
+	int i;
+
+	for (i = 0; i < cap->Count_MS_RA_capability_value; i++) {
+		if (!cap->MS_RA_capability_value[i].u.Content.Exist_Multislot_capability)
+			continue;
+		if (!cap->MS_RA_capability_value[i].u.Content.Multislot_capability.Exist_GPRS_multislot_class)
+			continue;
+		return cap->MS_RA_capability_value[i].u.Content.Multislot_capability.GPRS_multislot_class;
+	}
+
+	return 0;
+}
+
+static struct gprs_rlcmac_tbf *alloc_ul_tbf(int8_t use_trx, int8_t first_ts,
+	uint8_t ms_class, uint32_t tlli, uint8_t ta,
+	struct gprs_rlcmac_tbf *dl_tbf)
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	uint8_t trx, ts;
+	struct gprs_rlcmac_tbf *tbf;
+	uint8_t tfi;
+
+	/* create new TBF, use sme TRX as DL TBF */
+	tfi = tfi_alloc(GPRS_RLCMAC_UL_TBF, &trx, &ts, use_trx, first_ts);
+	if (tfi < 0) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+		/* FIXME: send reject */
+		return NULL;
+	}
+	/* use multislot class of downlink TBF */
+	tbf = tbf_alloc(dl_tbf, GPRS_RLCMAC_UL_TBF, tfi, trx, ts, ms_class, 0);
+	if (!tbf) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+		/* FIXME: send reject */
+		return NULL;
+	}
+	tbf->tlli = tlli;
+	tbf->tlli_valid = 1; /* no contention resolution */
+	tbf->dir.ul.contention_resolution_done = 1;
+	tbf->ta = ta; /* use current TA */
+	tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
+	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
+	tbf_timer_start(tbf, 3169, bts->t3169, 0);
+
+	return tbf;
+}
+
+
+
 /* Received Uplink RLC control block. */
 int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 	uint32_t fn)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	int8_t tfi = 0; /* must be signed */
 	uint32_t tlli = 0;
 	struct gprs_rlcmac_tbf *tbf;
@@ -318,34 +368,10 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		}
 		/* check for channel request */
 		if (ul_control_block->u.Packet_Downlink_Ack_Nack.Exist_Channel_Request_Description) {
-			uint8_t trx, ts;
-			struct gprs_rlcmac_tbf *ul_tbf;
-
 			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
 				"message, so we provide one:\n");
-uplink_request:
-			/* create new TBF, use sme TRX as DL TBF */
-			tfi = tfi_alloc(GPRS_RLCMAC_UL_TBF, &trx, &ts, tbf->trx, tbf->first_ts);
-			if (tfi < 0) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
-				/* FIXME: send reject */
-				break;
-			}
-			/* use multislot class of downlink TBF */
-			ul_tbf = tbf_alloc(tbf, GPRS_RLCMAC_UL_TBF, tfi, trx,
-				ts, tbf->ms_class, 0);
-			if (!ul_tbf) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
-				/* FIXME: send reject */
-				break;
-			}
-			ul_tbf->tlli = tbf->tlli;
-			ul_tbf->tlli_valid = 1; /* no contention resolution */
-			ul_tbf->dir.ul.contention_resolution_done = 1;
-			ul_tbf->ta = tbf->ta; /* use current TA */
-			tbf_new_state(ul_tbf, GPRS_RLCMAC_ASSIGN);
-			ul_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
-			tbf_timer_start(ul_tbf, 3169, bts->t3169, 0);
+
+			alloc_ul_tbf(tbf->trx, tbf->first_ts, tbf->ms_class, tbf->tlli, tbf->ta, tbf);
 			/* schedule uplink assignment */
 			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
 		}
@@ -355,7 +381,23 @@ uplink_request:
 			tlli = ul_control_block->u.Packet_Resource_Request.ID.u.TLLI;
 			tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
 			if (!tbf) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TLLI=0x%08x\n", tlli);
+				uint8_t ms_class = 0;
+				LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
+					"in packet ressource request of single "
+					"block, so we provide one:\n");
+				if (ul_control_block->u.Packet_Resource_Request.Exist_MS_Radio_Access_capability)
+					ms_class = get_ms_class_by_capability(&ul_control_block->u.Packet_Resource_Request.MS_Radio_Access_capability);
+				if (!ms_class)
+					LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");
+				tbf = alloc_ul_tbf(trx, ts, ms_class, tlli, 0, NULL);
+#warning FIXME TA!!!
+				if (!tbf)
+					break;
+				/* set control ts to current MS's TS, until assignment complete */
+				LOGP(DRLCMAC, LOGL_DEBUG, "Change control TS to %d until assinment is complete.\n", ts);
+				tbf->control_ts = ts;
+				/* schedule uplink assignment */
+				tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
 				break;
 			}
 			tfi = tbf->tfi;
@@ -658,11 +700,18 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 	int final = (tbf->state == GPRS_RLCMAC_FINISHED);
 	struct msgb *msg;
 
-	if (final && tbf->poll_state != GPRS_RLCMAC_POLL_NONE) {
-		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-			"sheduled for TBF=%d, so we must wait for final uplink "
-			"ack...\n", tbf->tfi);
+	if (final) {
+		if (tbf->poll_state != GPRS_RLCMAC_POLL_NONE) {
+			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
+				"sheduled for TBF=%d, so we must wait for "
+				"final uplink ack...\n", tbf->tfi);
 			return NULL;
+		}
+		if (sba_find(tbf->trx, tbf->control_ts, (fn + 13) % 2715648)) {
+			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
+				"scheduled for single block allocation...\n");
+			return NULL;
+		}
 	}
 
 	msg = msgb_alloc(23, "rlcmac_ul_ack");
@@ -907,6 +956,11 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 			"assignment...\n", tbf->tfi);
 			return NULL;
 	}
+	if (sba_find(tbf->trx, tbf->control_ts, (fn + 13) % 2715648)) {
+		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already scheduled for "
+			"single block allocation...\n");
+			return NULL;
+	}
 #endif
 
 	/* on down TBF we get the uplink TBF to be assigned. */
@@ -935,8 +989,8 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 	bitvec_unhex(ass_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	write_packet_uplink_assignment(ass_vec, tbf->tfi,
-		(tbf->direction == GPRS_RLCMAC_DL_TBF), 0, 0, new_tbf,
-		POLLING_ASSIGNMENT_UL);
+		(tbf->direction == GPRS_RLCMAC_DL_TBF), tbf->tlli,
+		tbf->tlli_valid, new_tbf, POLLING_ASSIGNMENT_UL);
 	bitvec_pack(ass_vec, msgb_put(msg, 23));
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++\n");
@@ -965,37 +1019,73 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	struct gprs_rlcmac_tbf *tbf;
 	uint8_t trx, ts;
 	int8_t tfi; /* must be signed */
+	uint8_t sb = 0;
+	uint32_t sb_fn = 0;
+	int rc;
+	uint8_t plen;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, so we provide "
 		"one:\n");
-	// Create new TBF
-	tfi = tfi_alloc(GPRS_RLCMAC_UL_TBF, &trx, &ts, -1, -1);
-	if (tfi < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
-		/* FIXME: send reject */
-		return -EBUSY;
-	}
-	/* set class to 0, since we don't know the multislot class yet */
-	tbf = tbf_alloc(NULL, GPRS_RLCMAC_UL_TBF, tfi, trx, ts, 0, 1);
-	if (!tbf) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
-		/* FIXME: send reject */
-		return -EBUSY;
+	if ((ra & 0xf8) == 0x70) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block "
+			"allocation\n");
+		sb = 1;
+	} else if (bts->force_two_phase) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single phase access, "
+			"but we force two phase access\n");
+		sb = 1;
 	}
 	if (qta < 0)
 		qta = 0;
 	if (qta > 252)
 		qta = 252;
-	tbf->ta = qta >> 2;
-	tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
-	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
-	tbf_timer_start(tbf, 3169, bts->t3169, 0);
-	LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] START TFI: %u\n", tbf->tfi);
-	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u RACH qbit-ta=%d ra=%d, Fn=%d (%d,%d,%d)\n", tbf->tfi, qta, ra, Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
-	LOGP(DRLCMAC, LOGL_INFO, "TX: START TFI: %u Immediate Assignment Uplink (AGCH)\n", tbf->tfi);
+	if (sb) {
+		rc = sba_alloc(&trx, &ts, &sb_fn, qta >> 2);
+		if (rc < 0)
+			return rc;
+		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] RACH qbit-ta=%d "
+			"ra=0x%02x, Fn=%d (%d,%d,%d)\n", qta, ra, Fn,
+			(Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
+		LOGP(DRLCMAC, LOGL_INFO, "TX: Immediate Assignment Uplink "
+			"(AGCH)\n");
+	} else {
+		// Create new TBF
+		tfi = tfi_alloc(GPRS_RLCMAC_UL_TBF, &trx, &ts, -1, -1);
+		if (tfi < 0) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+			/* FIXME: send reject */
+			return -EBUSY;
+		}
+		/* set class to 0, since we don't know the multislot class yet */
+		tbf = tbf_alloc(NULL, GPRS_RLCMAC_UL_TBF, tfi, trx, ts, 0, 1);
+		if (!tbf) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+			/* FIXME: send reject */
+			return -EBUSY;
+		}
+		tbf->ta = qta >> 2;
+		tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
+		tbf_timer_start(tbf, 3169, bts->t3169, 0);
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] START TFI: %u\n",
+			tbf->tfi);
+		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u RACH "
+			"qbit-ta=%d ra=0x%02x, Fn=%d (%d,%d,%d)\n", tbf->tfi,
+			qta, ra, Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
+		LOGP(DRLCMAC, LOGL_INFO, "TX: START TFI: %u Immediate "
+			"Assignment Uplink (AGCH)\n", tbf->tfi);
+	}
 	bitvec *immediate_assignment = bitvec_alloc(22) /* without plen */;
-	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	int plen = write_immediate_assignment(immediate_assignment, 0, ra, Fn, tbf->ta, tbf->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0);
+	bitvec_unhex(immediate_assignment,
+		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	if (sb)
+		plen = write_immediate_assignment(immediate_assignment, 0, ra,
+			Fn, qta >> 2, bts->trx[trx].arfcn, ts,
+			bts->trx[trx].pdch[ts].tsc, 0, 0, 0, 0, sb_fn, 1);
+	else
+		plen = write_immediate_assignment(immediate_assignment, 0, ra,
+			Fn, tbf->ta, tbf->arfcn, tbf->first_ts, tbf->tsc,
+			tbf->tfi, tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0, 0);
 	pcu_l1if_tx_agch(immediate_assignment, plen);
 	bitvec_free(immediate_assignment);
 
@@ -1355,6 +1445,10 @@ tx_block:
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
 				"sheduled in this TS %d, waiting for "
 				"TS %d\n", ts, tbf->control_ts);
+		else if (sba_find(tbf->trx, ts, (fn + 13) % 2715648))
+			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
+				"sheduled, because single block alllocation "
+				"already exists\n");
 		else  {
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling sheduled in this "
 				"TS %d\n", ts);
@@ -1534,6 +1628,11 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 				"assignment...\n", tbf->tfi);
 				return NULL;
 		}
+		if (sba_find(tbf->trx, tbf->control_ts, (fn + 13) % 2715648)) {
+			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
+				"scheduled for single block allocation...\n");
+			return NULL;
+		}
 	}
 
 	/* on uplink TBF we get the downlink TBF to be assigned. */
@@ -1604,7 +1703,7 @@ static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
 	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	/* use request reference that has maximum distance to current time,
 	 * so the assignment will not conflict with possible RACH requests. */
-	int plen = write_immediate_assignment(immediate_assignment, 1, 125, (tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta, tbf->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, 0, tbf->tlli, poll, tbf->poll_fn);
+	int plen = write_immediate_assignment(immediate_assignment, 1, 125, (tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta, tbf->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, 0, tbf->tlli, poll, tbf->poll_fn, 0);
 	pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
 	bitvec_free(immediate_assignment);
 }

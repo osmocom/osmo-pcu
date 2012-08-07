@@ -90,6 +90,8 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " alloc-algorithm a%s", VTY_NEWLINE);
 	if (bts->alloc_algorithm == alloc_algorithm_b)
 		vty_out(vty, " alloc-algorithm b%s", VTY_NEWLINE);
+	if (bts->force_two_phase)
+		vty_out(vty, " two-phase-access%s", VTY_NEWLINE);
 
 }
 
@@ -193,6 +195,30 @@ DEFUN(cfg_pcu_alloc,
 	return CMD_SUCCESS;
 }
 
+DEFUN(cfg_pcu_two_phase,
+      cfg_pcu_two_phase_cmd,
+      "two-phase-access",
+      "Force two phase access when MS requests single phase access\n")
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	bts->force_two_phase = 1;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_two_phase,
+      cfg_pcu_no_two_phase_cmd,
+      "no two-phase-access",
+      NO_STR "Only use two phase access when requested my MS\n")
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	bts->force_two_phase = 0;
+
+	return CMD_SUCCESS;
+}
+
 static const char pcu_copyright[] =
 	"Copyright (C) 2012 by ...\r\n"
 	"License GNU GPL version 2 or later\r\n"
@@ -222,6 +248,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_inf_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_queue_lifetime_cmd);
 	install_element(PCU_NODE, &cfg_pcu_alloc_cmd);
+	install_element(PCU_NODE, &cfg_pcu_two_phase_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_two_phase_cmd);
 	install_element(PCU_NODE, &ournode_end_cmd);
 
 	return 0;

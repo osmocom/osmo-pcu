@@ -247,11 +247,12 @@ static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
 	return rc;
 }
 
-int flush_pdch(struct gprs_rlcmac_pdch *pdch)
+int flush_pdch(struct gprs_rlcmac_pdch *pdch, uint8_t trx, uint8_t ts)
 {
 	uint8_t tfi;
 	struct gprs_rlcmac_tbf *tbf;
 	struct gprs_rlcmac_paging *pag;
+	struct gprs_rlcmac_sba *sba, *sba2;
 
 	/* kick all TBF on slot */
 	for (tfi = 0; tfi < 32; tfi++) {
@@ -265,6 +266,13 @@ int flush_pdch(struct gprs_rlcmac_pdch *pdch)
 	/* flush all pending paging messages */
 	while ((pag = gprs_rlcmac_dequeue_paging(pdch)))
 		talloc_free(pag);
+
+	llist_for_each_entry_safe(sba, sba2, &gprs_rlcmac_sbas, list) {
+		if (sba->trx == trx && sba->ts == ts) {
+			llist_del(&sba->list);
+			talloc_free(sba);
+		}
+	}
 
 	return 0;
 }
@@ -294,7 +302,8 @@ bssgp_failed:
 			bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
 			for (ts = 0; ts < 8; ts++) {
 				if (bts->trx[trx].pdch[ts].enable)
-					flush_pdch(&bts->trx[trx].pdch[ts]);
+					flush_pdch(&bts->trx[trx].pdch[ts],
+						trx, ts);
 			}
 		}
 		gprs_bssgp_destroy();
@@ -399,7 +408,7 @@ bssgp_failed:
 				if (pdch->enable) {
 					pcu_tx_act_req(trx, ts, 0);
 					pdch->enable = 0;
-					flush_pdch(pdch);
+					flush_pdch(pdch, trx, ts);
 				}
 			}
 		}

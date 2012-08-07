@@ -67,6 +67,26 @@ uint32_t sched_poll(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
 	return poll_fn;
 }
 
+uint32_t sched_sba(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr)
+{
+	uint32_t sba_fn;
+	struct gprs_rlcmac_sba *sba;
+
+	/* check special TBF for events */
+	sba_fn = fn + 4;
+	if ((block_nr % 3) == 2)
+		sba_fn ++;
+	sba_fn = sba_fn % 2715648;
+	sba = sba_find(trx, ts, sba_fn);
+	if (sba) {
+		llist_del(&sba->list);
+		talloc_free(sba);
+		return sba_fn;
+	}
+
+	return 0xffffffff;
+}
+
 uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 	uint8_t block_nr, struct gprs_rlcmac_pdch *pdch)
 {
@@ -135,14 +155,15 @@ struct msgb *sched_select_ctrl_msg(uint8_t trx, uint8_t ts, uint32_t fn,
 		return msg;
 	}
 	/* schedule PACKET PAGING REQUEST */
-	if (llist_empty(&pdch->paging_list))
-		return NULL;
-	msg = gprs_rlcmac_send_packet_paging_request(pdch);
-	if (msg)
+	if (!llist_empty(&pdch->paging_list))
+		msg = gprs_rlcmac_send_packet_paging_request(pdch);
+	if (msg) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling paging request "
 			"message at RTS for (TRX=%d, TS=%d)\n", trx, ts);
+		return msg;
+	}
 
-	return msg;
+	return NULL;
 }
 
 struct msgb *sched_select_downlink(uint8_t trx, uint8_t ts, uint32_t fn,
@@ -208,7 +229,7 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 		*ul_ass_tbf = NULL, *ul_ack_tbf = NULL;
 	uint8_t usf = 0x7;
 	struct msgb *msg = NULL;
-	uint32_t poll_fn;
+	uint32_t poll_fn, sba_fn;
 
 	if (trx >= 8 || ts >= 8)
 		return -EINVAL;
@@ -233,6 +254,13 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 			block_nr, poll_fn,
 			(poll_tbf->direction == GPRS_RLCMAC_UL_TBF)
 				? "UL" : "DL", poll_tbf->tfi);
+		/* use free USF */
+	/* else. check for sba */
+	else if ((sba_fn = sched_sba(trx, ts, fn, block_nr) != 0xffffffff))
+		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
+			"TS=%d FN=%d block_nr=%d scheduling free USF for "
+			"single block allocation at FN=%d\n", trx, ts, fn,
+			block_nr, sba_fn);
 		/* use free USF */
 	/* else, we search for uplink ressource */
 	else
