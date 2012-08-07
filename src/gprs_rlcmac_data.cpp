@@ -404,14 +404,14 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		} else {
 			if (ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.UnionType) {
 				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.DOWNLINK_TFI;
-				tbf = tbf_by_tfi(tfi, trx, ts, GPRS_RLCMAC_DL_TBF);
+				tbf = tbf_by_tfi(tfi, trx, GPRS_RLCMAC_DL_TBF);
 				if (!tbf) {
 					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TBF=%d\n", tlli);
 					break;
 				}
 			} else {
 				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.UPLINK_TFI;
-				tbf = tbf_by_tfi(tfi, trx, ts, GPRS_RLCMAC_UL_TBF);
+				tbf = tbf_by_tfi(tfi, trx, GPRS_RLCMAC_UL_TBF);
 				if (!tbf) {
 					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TBF=%d\n", tlli);
 					break;
@@ -782,7 +782,7 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 	}
 
 	/* find TBF inst from given TFI */
-	tbf = tbf_by_tfi(rh->tfi, trx, ts, GPRS_RLCMAC_UL_TBF);
+	tbf = tbf_by_tfi(rh->tfi, trx, GPRS_RLCMAC_UL_TBF);
 	if (!tbf) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA unknown TBF=%d\n",
 			rh->tfi);

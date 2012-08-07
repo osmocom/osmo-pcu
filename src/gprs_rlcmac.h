@@ -57,6 +57,8 @@ struct gprs_rlcmac_pdch {
 struct gprs_rlcmac_trx {
 	uint16_t arfcn;
 	struct gprs_rlcmac_pdch pdch[8];
+	struct gprs_rlcmac_tbf *ul_tbf[32]; /* array of UL TBF, by UL TFI */
+	struct gprs_rlcmac_tbf *dl_tbf[32]; /* array of DL TBF, by DL TFI */
 };
 
 struct gprs_rlcmac_bts {
@@ -253,7 +255,7 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_tbf *old_tbf,
 	enum gprs_rlcmac_tbf_direction dir, uint8_t tfi, uint8_t trx,
 	uint8_t first_ts, uint8_t ms_class, uint8_t single_slot);
 
-struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, uint8_t trx, uint8_t ts,
+struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, uint8_t trx,
         enum gprs_rlcmac_tbf_direction dir);
 
 struct gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli,
