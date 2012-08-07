@@ -84,7 +84,7 @@ extern void *tall_pcu_ctx;
  * TRX in case of existing TBF for TLLI in the other direction. */
 /* search for free TFI and return TFI, TRX and first TS */
 int tfi_alloc(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, uint8_t *_ts,
-	uint8_t use_trx, uint8_t first_ts)
+	int8_t use_trx, int8_t first_ts)
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_pdch *pdch;

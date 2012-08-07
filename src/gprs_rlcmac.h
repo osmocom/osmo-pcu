@@ -229,7 +229,7 @@ struct gprs_rlcmac_paging {
 };
 
 int tfi_alloc(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, uint8_t *_ts,
-	uint8_t use_trx, uint8_t first_ts);
+	int8_t use_trx, int8_t first_ts);
 
 struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_tbf *old_tbf,
 	enum gprs_rlcmac_tbf_direction dir, uint8_t tfi, uint8_t trx,
