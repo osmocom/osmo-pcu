@@ -247,6 +247,8 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 				break;
 			}
 			tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+			/* stop pending assignment timer */
+			tbf_timer_stop(tbf);
 			if ((tbf->state_flags &
 				(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS))) {
 				tbf->state_flags &=
@@ -405,13 +407,24 @@ void tbf_timer_cb(void *_tbf)
 		break;
 #endif
 	case 0: /* assignment */
-		/* change state to FLOW, so scheduler will start transmission */
-		if (tbf->state == GPRS_RLCMAC_ASSIGN) {
-			tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
-			tbf_assign_control_ts(tbf);
-		} else
-			LOGP(DRLCMAC, LOGL_ERROR, "Error: TBF is not in assign "
-				"state\n");
+		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
+			if (tbf->state == GPRS_RLCMAC_ASSIGN) {
+				LOGP(DRLCMAC, LOGL_NOTICE, "Releasing due to "
+					"PACCH assignment timeout.\n");
+				tbf_free(tbf);
+			} else
+				LOGP(DRLCMAC, LOGL_ERROR, "Error: TBF is not "
+					"in assign state\n");
+		}
+		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
+			/* change state to FLOW, so scheduler will start transmission */
+			if (tbf->state == GPRS_RLCMAC_ASSIGN) {
+				tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+				tbf_assign_control_ts(tbf);
+			} else
+				LOGP(DRLCMAC, LOGL_ERROR, "Error: TBF is not "
+					"in assign state\n");
+		}
 		break;
 	case 3169:
 	case 3191:
@@ -1575,6 +1588,9 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 		tbf_new_state(new_tbf, GPRS_RLCMAC_FLOW);
 		tbf_assign_control_ts(new_tbf);
+		/* stop pending assignment timer */
+		tbf_timer_stop(new_tbf);
+
 	}
 
 	return msg;
@@ -1623,6 +1639,8 @@ void gprs_rlcmac_trigger_downlink_assignment(struct gprs_rlcmac_tbf *tbf,
 		/* change state */
 		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
+		/* start timer */
+		tbf_timer_start(tbf, 0, Tassign_pacch);
 #endif
 	} else {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for TBF=%d on PCH, no TBF exist (IMSI=%s)\n", tbf->tfi, imsi);
