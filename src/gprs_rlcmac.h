@@ -62,6 +62,7 @@ struct gprs_rlcmac_trx {
 };
 
 struct gprs_rlcmac_bts {
+	uint8_t fc_interval;
 	uint8_t cs1;
 	uint8_t cs2;
 	uint8_t cs3;

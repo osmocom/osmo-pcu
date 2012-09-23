@@ -142,6 +142,7 @@ int main(int argc, char *argv[])
 	if (!gprs_rlcmac_bts)
 		return -ENOMEM;
 	gprs_rlcmac_bts->initial_cs = 1;
+	bts->fc_interval = 1;
 	bts->initial_cs = 1;
 	bts->cs1 = 1;
 	bts->t3142 = 20;

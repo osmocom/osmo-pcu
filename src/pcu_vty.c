@@ -79,6 +79,8 @@ static int config_write_pcu(struct vty *vty)
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 
 	vty_out(vty, "pcu%s", VTY_NEWLINE);
+	vty_out(vty, " flow-control-interval %d%s", bts->fc_interval,
+		VTY_NEWLINE);
 	if (bts->force_cs)
 		vty_out(vty, " cs %d%s", bts->initial_cs, VTY_NEWLINE);
 	if (bts->force_llc_lifetime == 0xffff)
@@ -102,6 +104,19 @@ DEFUN(cfg_pcu,
       "BTS specific configure")
 {
 	vty->node = PCU_NODE;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_fc_interval,
+      cfg_pcu_fc_interval_cmd,
+      "flow-control-interval <1..10>",
+      "Interval between sending subsequent Flow Control PDUs\n"
+      "Tiem in seconds\n")
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	bts->fc_interval = atoi(argv[0]);
 
 	return CMD_SUCCESS;
 }
@@ -242,6 +257,7 @@ int pcu_vty_init(const struct log_info *cat)
 	install_node(&pcu_node, config_write_pcu);
 	install_element(CONFIG_NODE, &cfg_pcu_cmd);
 	install_default(PCU_NODE);
+	install_element(PCU_NODE, &cfg_pcu_no_two_phase_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_cmd);
@@ -249,7 +265,7 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_no_queue_lifetime_cmd);
 	install_element(PCU_NODE, &cfg_pcu_alloc_cmd);
 	install_element(PCU_NODE, &cfg_pcu_two_phase_cmd);
-	install_element(PCU_NODE, &cfg_pcu_no_two_phase_cmd);
+	install_element(PCU_NODE, &cfg_pcu_fc_interval_cmd);
 	install_element(PCU_NODE, &ournode_end_cmd);
 
 	return 0;

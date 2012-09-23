@@ -25,7 +25,12 @@ struct sgsn_instance *sgsn;
 void *tall_bsc_ctx;
 struct bssgp_bvc_ctx *bctx = NULL;
 struct gprs_nsvc *nsvc = NULL;
+static int bvc_sig_reset = 0, bvc_reset = 0, bvc_unblocked = 0;
 extern uint16_t spoof_mcc, spoof_mnc;
+
+struct osmo_timer_list bvc_timer;
+
+static void bvc_timeout(void *_priv);
 
 int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 {
@@ -295,6 +300,11 @@ int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp
 			break;
 		case BSSGP_PDUT_BVC_RESET_ACK:
 			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_BVC_RESET_ACK\n");
+			if (!bvc_sig_reset)
+				bvc_sig_reset = 1;
+			else
+				bvc_reset = 1;
+			bvc_timeout(NULL);
 			break;
 		case BSSGP_PDUT_PAGING_PS:
 			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_PAGING_PS\n");
@@ -316,6 +326,8 @@ int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp
 			break;
 		case BSSGP_PDUT_BVC_UNBLOCK_ACK:
 			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_BVC_UNBLOCK_ACK\n");
+			bvc_unblocked = 1;
+			bvc_timeout(NULL);
 			break;
 		case BSSGP_PDUT_SGSN_INVOKE_TRACE:
 			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SGSN_INVOKE_TRACE\n");
@@ -362,7 +374,9 @@ int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	/* look-up or create the BTS context for this BVC */
 	bctx = btsctx_by_bvci_nsei(ns_bvci, msgb_nsei(msg));
 
-	if (!bctx && pdu_type != BSSGP_PDUT_BVC_RESET_ACK)
+	if (!bctx
+	 && pdu_type != BSSGP_PDUT_BVC_RESET_ACK
+	 && pdu_type != BSSGP_PDUT_BVC_UNBLOCK_ACK)
 	{
 		LOGP(DBSSGP, LOGL_NOTICE, "NSEI=%u/BVCI=%u Rejecting PDU "
 			"type %u for unknown BVCI\n", msgb_nsei(msg), ns_bvci,
@@ -438,20 +452,74 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 	case S_NS_UNBLOCK:
 		if (!nsvc_unblocked) {
 			nsvc_unblocked = 1;
-			LOGP(DPCU, LOGL_NOTICE, "NS-VC is unblocked.\n");
-			bssgp_tx_bvc_reset(bctx, bctx->bvci,
-				BSSGP_CAUSE_PROTO_ERR_UNSPEC);
+			LOGP(DPCU, LOGL_NOTICE, "NS-VC %d is unblocked.\n",
+				nsvc);
+			bvc_sig_reset = 0;
+			bvc_reset = 0;
+			bvc_unblocked = 0;
+			bvc_timeout(NULL);
 		}
 		break;
 	case S_NS_BLOCK:
 		if (nsvc_unblocked) {
 			nsvc_unblocked = 0;
+			if (osmo_timer_pending(&bvc_timer))
+				osmo_timer_del(&bvc_timer);
+			bvc_sig_reset = 0;
+			bvc_reset = 0;
+			bvc_unblocked = 0;
 			LOGP(DPCU, LOGL_NOTICE, "NS-VC is blocked.\n");
 		}
 		break;
 	}
 
 	return 0;
+}
+
+int gprs_bssgp_tx_fc_bvc(void)
+{
+	if (!bctx) {
+		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
+		return -EIO;
+	}
+	/* FIXME: use real values */
+	return bssgp_tx_fc_bvc(bctx, 1, 6553500, 819100, 50000, 50000,
+		NULL, NULL);
+//	return bssgp_tx_fc_bvc(bctx, 1, 84000, 25000, 48000, 45000,
+//		NULL, NULL);
+}
+
+static void bvc_timeout(void *_priv)
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	if (!bvc_sig_reset) {
+		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI 0\n");
+		bssgp_tx_bvc_reset(bctx, 0, BSSGP_CAUSE_OML_INTERV);
+		osmo_timer_schedule(&bvc_timer, 1, 0);
+		return;
+	}
+
+	if (!bvc_reset) {
+		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI %d\n",
+			bctx->bvci);
+		bssgp_tx_bvc_reset(bctx, bctx->bvci, BSSGP_CAUSE_OML_INTERV);
+		osmo_timer_schedule(&bvc_timer, 1, 0);
+		return;
+	}
+
+	if (!bvc_unblocked) {
+		LOGP(DBSSGP, LOGL_INFO, "Sending unblock on BVCI %d\n",
+			bctx->bvci);
+		bssgp_tx_bvc_unblock(bctx);
+		osmo_timer_schedule(&bvc_timer, 1, 0);
+		return;
+	}
+
+	LOGP(DBSSGP, LOGL_DEBUG, "Sending flow control info on BVCI %d\n",
+		bctx->bvci);
+	gprs_bssgp_tx_fc_bvc();
+	osmo_timer_schedule(&bvc_timer, bts->fc_interval, 0);
 }
 
 /* create BSSGP/NS layer instances */
@@ -501,6 +569,9 @@ int gprs_bssgp_create(uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
 
 //	bssgp_tx_bvc_reset(bctx, bctx->bvci, BSSGP_CAUSE_PROTO_ERR_UNSPEC);
 
+	bvc_timer.cb = bvc_timeout;
+
+
 	return 0;
 }
 
@@ -508,6 +579,9 @@ void gprs_bssgp_destroy(void)
 {
 	if (!bssgp_nsi)
 		return;
+
+	if (osmo_timer_pending(&bvc_timer))
+		osmo_timer_del(&bvc_timer);
 
 	osmo_signal_unregister_handler(SS_L_NS, nsvc_signal_cb, NULL);
 
