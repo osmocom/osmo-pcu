@@ -29,17 +29,14 @@ extern "C" {
 #include <osmocom/core/application.h>
 #include <osmocom/gprs/gprs_ns.h>
 #include <osmocom/gprs/gprs_bssgp.h>
+#include <osmocom/gprs/gprs_bssgp_bss.h>
 #include <osmocom/gprs/gprs_msgb.h>
-
-int bssgp_tx_bvc_reset(struct bssgp_bvc_ctx *bctx, uint16_t bvci, uint8_t cause);
-
-int bssgp_tx_ul_ud(struct bssgp_bvc_ctx *bctx, uint32_t tlli, const uint8_t *qos_profile, struct msgb *llc_pdu);
 
 struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 }
 #include <gprs_debug.h>
 
-#define QOS_PROFILE 0
+#define QOS_PROFILE 4
 #define BSSGP_HDR_LEN 53
 #define NS_HDR_LEN 4
 #define IE_LLC_PDU 14
