@@ -529,6 +529,10 @@ int gprs_bssgp_create(uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
 {
 	struct sockaddr_in dest;
 
+	mcc = ((mcc & 0xf00) >> 8) * 100 + ((mcc & 0x0f0) >> 4) * 10 + (mcc & 0x00f);
+	mnc = ((mnc & 0xf00) >> 8) * 100 + ((mnc & 0x0f0) >> 4) * 10 + (mnc & 0x00f);
+	cell_id = ntohs(cell_id);
+
 	if (bctx)
 		return 0; /* if already created, must return 0: no error */
 

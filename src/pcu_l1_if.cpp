@@ -310,11 +310,11 @@ bssgp_failed:
 		return 0;
 	}
 	LOGP(DL1IF, LOGL_INFO, "BTS available\n");
-	LOGP(DL1IF, LOGL_DEBUG, " mcc=%d\n", info_ind->mcc);
-	LOGP(DL1IF, LOGL_DEBUG, " mnc=%d\n", info_ind->mnc);
+	LOGP(DL1IF, LOGL_DEBUG, " mcc=%x\n", info_ind->mcc);
+	LOGP(DL1IF, LOGL_DEBUG, " mnc=%x\n", info_ind->mnc);
 	LOGP(DL1IF, LOGL_DEBUG, " lac=%d\n", info_ind->lac);
 	LOGP(DL1IF, LOGL_DEBUG, " rac=%d\n", info_ind->rac);
-	LOGP(DL1IF, LOGL_DEBUG, " cell_id=%d\n", info_ind->cell_id);
+	LOGP(DL1IF, LOGL_DEBUG, " cell_id=%d\n", ntohs(info_ind->cell_id));
 	LOGP(DL1IF, LOGL_DEBUG, " nsei=%d\n", info_ind->nsei);
 	LOGP(DL1IF, LOGL_DEBUG, " nse_timer=%d %d %d %d %d %d %d\n",
 		info_ind->nse_timer[0], info_ind->nse_timer[1],
