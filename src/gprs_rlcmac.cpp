@@ -1512,7 +1512,7 @@ unsigned write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
 /* Send Uplink unit-data to SGSN. */
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 {
-	const uint8_t qos_profile = QOS_PROFILE;
+	uint8_t qos_profile[3];
 	struct msgb *llc_pdu;
 	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + tbf->llc_index;
 
@@ -1523,8 +1523,12 @@ int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 	}
 	
 	llc_pdu = msgb_alloc_headroom(msg_len, msg_len,"llc_pdu");
-	msgb_tvlv_push(llc_pdu, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*tbf->llc_index, tbf->llc_frame);
-	bssgp_tx_ul_ud(bctx, tbf->tlli, &qos_profile, llc_pdu);
+	uint8_t *buf = msgb_push(llc_pdu, TL16V_GROSS_LEN(sizeof(uint8_t)*tbf->llc_index));
+	tl16v_put(buf, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*tbf->llc_index, tbf->llc_frame);
+	qos_profile[0] = QOS_PROFILE >> 16;
+	qos_profile[1] = QOS_PROFILE >> 8;
+	qos_profile[2] = QOS_PROFILE;
+	bssgp_tx_ul_ud(bctx, tbf->tlli, qos_profile, llc_pdu);
 
 	return 0;
 }
