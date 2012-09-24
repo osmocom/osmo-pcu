@@ -1585,7 +1585,7 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 			"release.\n");
 		/* start T3193 */
 		tbf_timer_start(tbf, 3193, bts->t3193_msec / 1000,
-			bts->t3193_msec & 1000);
+			(bts->t3193_msec % 1000) * 1000);
 		tbf_new_state(tbf, GPRS_RLCMAC_WAIT_RELEASE);
 
 		return 0;
