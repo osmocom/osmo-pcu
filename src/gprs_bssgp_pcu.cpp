@@ -143,7 +143,9 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			tbf->llc_length = len;
 			memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl)); /* reset
 								rlc states */
-			tbf->state_flags = 0;
+			tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK; /* keep
+				to flags */
+			tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
 			if (!tbf->ms_class && ms_class)
 				tbf->ms_class = ms_class;
 			tbf_update(tbf);

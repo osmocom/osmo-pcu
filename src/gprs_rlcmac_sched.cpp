@@ -188,6 +188,10 @@ struct msgb *sched_select_downlink(uint8_t trx, uint8_t ts, uint32_t fn,
 		 && tbf->state != GPRS_RLCMAC_FINISHED)
 			continue;
 
+		/* waiting for CCCH IMM.ASS confirm */
+		if (tbf->dir.dl.wait_confirm)
+			continue;
+
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling data message at "
 			"RTS for DL TBF=%d (TRX=%d, TS=%d)\n", tfi, trx, ts);
 		/* next TBF to handle ressource is the next one */

@@ -98,7 +98,7 @@ extern struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 #define RLC_MAX_WS  64 /* max window size */
 #define RLC_MAX_LEN 54 /* CS-4 including spare bits */
 
-#define Tassign_agch 0,800000	/* FIXME: we need a confirm from BTS */
+#define Tassign_agch 0,200000	/* waiting after IMM.ASS confirm */
 #define Tassign_pacch 2,0	/* timeout for pacch assigment */
 
 enum gprs_rlcmac_tbf_state {
@@ -146,6 +146,7 @@ enum gprs_rlcmac_tbf_direction {
 #define GPRS_RLCMAC_FLAG_TO_DL_ACK	5
 #define GPRS_RLCMAC_FLAG_TO_UL_ASS	6
 #define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
+#define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
 struct gprs_rlcmac_tbf {
 	struct llist_head list;
@@ -192,6 +193,8 @@ struct gprs_rlcmac_tbf {
 			uint16_t v_a;	/* ack state */
 			char v_b[RLC_MAX_SNS/2]; /* acknowledge state array */
 			int32_t tx_counter; /* count all transmitted blocks */
+			char imsi[16]; /* store IMSI for PCH retransmission */
+			uint8_t wait_confirm; /* wait for CCCH IMM.ASS cnf */
 		} dl;
 		struct {
 			uint16_t bsn;	/* block sequence number */
@@ -348,6 +351,8 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 
 int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn, 
         uint32_t fn, uint8_t block_nr);
+
+int gprs_rlcmac_imm_ass_cnf(uint8_t *data, uint32_t fn);
 
 int gprs_rlcmac_add_paging(uint8_t chan_needed, uint8_t *identity_lv);
 

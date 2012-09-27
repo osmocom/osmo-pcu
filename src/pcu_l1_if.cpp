@@ -194,6 +194,26 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 	return rc;
 }
 
+static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
+{
+	int rc = 0;
+
+	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d fn=%d\n",
+		data_cnf->sapi, data_cnf->fn);
+
+	switch (data_cnf->sapi) {
+	case PCU_IF_SAPI_PCH:
+		rc = gprs_rlcmac_imm_ass_cnf(data_cnf->data, data_cnf->fn);
+		break;
+	default:
+		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with "
+			"unsupported sapi %d\n", data_cnf->sapi);
+		rc = -EINVAL;
+	}
+
+	return rc;
+}
+
 static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 {
 	int rc = 0;
@@ -467,6 +487,9 @@ int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 	switch (msg_type) {
 	case PCU_IF_MSG_DATA_IND:
 		rc = pcu_rx_data_ind(&pcu_prim->u.data_ind);
+		break;
+	case PCU_IF_MSG_DATA_CNF:
+		rc = pcu_rx_data_cnf(&pcu_prim->u.data_cnf);
 		break;
 	case PCU_IF_MSG_RTS_REQ:
 		rc = pcu_rx_rts_req(&pcu_prim->u.rts_req);

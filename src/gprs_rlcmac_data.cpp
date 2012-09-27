@@ -73,6 +73,9 @@ struct rlc_li_field {
 } __attribute__ ((packed));
 }
 
+static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
+	char *imsi);
+
 static int gprs_rlcmac_diag(struct gprs_rlcmac_tbf *tbf)
 {
 	if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
@@ -178,6 +181,16 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 			tbf_new_state(tbf, GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(tbf, 3195, bts->t3195, 0);
 			return 0;
+		}
+		/* resend IMM.ASS on CCCH on timeout */
+		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
+		 && !(tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "Re-send dowlink assignment "
+				"for TBF=%d on PCH (IMSI=%s)\n", tbf->tfi,
+				tbf->dir.dl.imsi);
+			/* send immediate assignment */
+			gprs_rlcmac_downlink_assignment(tbf, 0, tbf->dir.dl.imsi);
+			tbf->dir.dl.wait_confirm = 1;
 		}
 	} else
 		LOGP(DRLCMAC, LOGL_ERROR, "- Poll Timeout, but no event!\n");
@@ -477,12 +490,13 @@ void tbf_timer_cb(void *_tbf)
 		}
 		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
 			/* change state to FLOW, so scheduler will start transmission */
+			tbf->dir.dl.wait_confirm = 0;
 			if (tbf->state == GPRS_RLCMAC_ASSIGN) {
 				tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
 				tbf_assign_control_ts(tbf);
 			} else
-				LOGP(DRLCMAC, LOGL_ERROR, "Error: TBF is not "
-					"in assign state\n");
+				LOGP(DRLCMAC, LOGL_NOTICE, "Continue flow after "
+					"IMM.ASS confirm\n");
 		}
 		break;
 	case 3169:
@@ -1621,7 +1635,8 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 	LOGP(DRLCMAC, LOGL_DEBUG, "Trigger dowlink assignment on PACCH, "
 		"because another LLC PDU has arrived in between\n");
 	memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl)); /* reset RLC states */
-	tbf->state_flags = 0;
+	tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK; /* keep TO flags */
+	tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
 	tbf_update(tbf);
 	gprs_rlcmac_trigger_downlink_assignment(tbf, tbf, NULL);
 
@@ -1778,12 +1793,50 @@ void gprs_rlcmac_trigger_downlink_assignment(struct gprs_rlcmac_tbf *tbf,
 		/* change state */
 		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
+		strncpy(tbf->dir.dl.imsi, imsi, sizeof(tbf->dir.dl.imsi));
 		/* send immediate assignment */
 		gprs_rlcmac_downlink_assignment(tbf, 0, imsi);
-		/* send immediate assignment */
-		gprs_rlcmac_downlink_assignment(tbf, 0, imsi);
-		/* start timer */
+		tbf->dir.dl.wait_confirm = 1;
+	}
+}
+
+int gprs_rlcmac_imm_ass_cnf(uint8_t *data, uint32_t fn)
+{
+	struct gprs_rlcmac_tbf *tbf;
+	uint8_t plen;
+	uint32_t tlli;
+
+	/* move to IA Rest Octets */
+	plen = data[0] >> 2;
+	data += 1 + plen;
+
+	if ((*data & 0xf0) != 0xd0) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Got IMM.ASS confirm, but rest "
+			"octets do not start with bit sequence 'HH01' "
+			"(Packet Downlink Assignment)\n");
+		return -EINVAL;
+	}
+
+	/* get TLLI from downlink assignment */
+	tlli = (*data++) << 28;
+	tlli |= (*data++) << 20;
+	tlli |= (*data++) << 12;
+	tlli |= (*data++) << 4;
+	tlli |= (*data++) >> 4;
+
+	tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF);
+	if (!tbf) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Got IMM.ASS confirm, but TLLI=%08x "
+			"does not exit\n", tlli);
+		return -EINVAL;
+	}
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
+
+	if (tbf->dir.dl.wait_confirm) {
 		tbf_timer_start(tbf, 0, Tassign_agch);
 	}
-								                }
+
+	return 0;
+}
 
