@@ -453,7 +453,7 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 		if (!nsvc_unblocked) {
 			nsvc_unblocked = 1;
 			LOGP(DPCU, LOGL_NOTICE, "NS-VC %d is unblocked.\n",
-				nsvc);
+				nsvc->nsvci);
 			bvc_sig_reset = 0;
 			bvc_reset = 0;
 			bvc_unblocked = 0;
