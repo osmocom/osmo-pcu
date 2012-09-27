@@ -94,6 +94,8 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " alloc-algorithm b%s", VTY_NEWLINE);
 	if (bts->force_two_phase)
 		vty_out(vty, " two-phase-access%s", VTY_NEWLINE);
+	vty_out(vty, " alpha %d%s", bts->alpha, VTY_NEWLINE);
+	vty_out(vty, " gamma %d%s", bts->gamma * 2, VTY_NEWLINE);
 
 }
 
@@ -110,9 +112,9 @@ DEFUN(cfg_pcu,
 
 DEFUN(cfg_pcu_fc_interval,
       cfg_pcu_fc_interval_cmd,
-      "flow-control-interval <1..10>",
+      "flow-control-interval <1-10>",
       "Interval between sending subsequent Flow Control PDUs\n"
-      "Tiem in seconds\n")
+      "Interval time in seconds\n")
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 
@@ -234,6 +236,33 @@ DEFUN(cfg_pcu_no_two_phase,
 	return CMD_SUCCESS;
 }
 
+DEFUN(cfg_pcu_alpha,
+      cfg_pcu_alpha_cmd,
+      "alpha <0-10>",
+      "Alpha parameter for MS power control in units of 0.1 (see TS 05.08) "
+      "NOTE: Be sure to set Alpha value at System information 13 too.\n"
+      "Alpha in units of 0.1\n")
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	bts->alpha = atoi(argv[0]);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_gamma,
+      cfg_pcu_gamma_cmd,
+      "gamma <0-62>",
+      "Gamma parameter for MS power control in units of dB (see TS 05.08)\n"
+      "Gamma in even unit of dBs\n")
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	bts->gamma = atoi(argv[0]) / 2;
+
+	return CMD_SUCCESS;
+}
+
 static const char pcu_copyright[] =
 	"Copyright (C) 2012 by ...\r\n"
 	"License GNU GPL version 2 or later\r\n"
@@ -266,6 +295,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_alloc_cmd);
 	install_element(PCU_NODE, &cfg_pcu_two_phase_cmd);
 	install_element(PCU_NODE, &cfg_pcu_fc_interval_cmd);
+	install_element(PCU_NODE, &cfg_pcu_alpha_cmd);
+	install_element(PCU_NODE, &cfg_pcu_gamma_cmd);
 	install_element(PCU_NODE, &ournode_end_cmd);
 
 	return 0;

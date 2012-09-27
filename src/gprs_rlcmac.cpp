@@ -1161,7 +1161,8 @@ struct msgb *gprs_rlcmac_send_packet_paging_request(
 int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 	uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc,
 	uint8_t tfi, uint8_t usf, uint32_t tlli,
-	uint8_t polling, uint32_t fn, uint8_t single_block)
+	uint8_t polling, uint32_t fn, uint8_t single_block, uint8_t alpha,
+	uint8_t gamma)
 {
 	unsigned wp = 0;
 	uint8_t plen;
@@ -1215,8 +1216,13 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 		bitvec_write_field(dest, wp,0x1,1);   // switch TFI   : on
 		bitvec_write_field(dest, wp,tfi,5);   // TFI
 		bitvec_write_field(dest, wp,0x0,1);   // RLC acknowledged mode
-		bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
-		bitvec_write_field(dest, wp,0x0,5);   // GAMMA power control parameter
+		if (alpha) {
+			bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
+			bitvec_write_field(dest, wp,alpha,4);   // ALPHA
+		} else {
+			bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
+		}
+		bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
 		bitvec_write_field(dest, wp,polling,1);   // Polling Bit
 		bitvec_write_field(dest, wp,!polling,1);   // TA_VALID ???
 		bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
@@ -1241,9 +1247,12 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 		bitvec_write_field(dest, wp, 0, 2);    // "0" Packet Uplink Assignment
 		if (single_block) {
 			bitvec_write_field(dest, wp, 0, 1);    // Block Allocation : Single Block Allocation
-			bitvec_write_field(dest, wp, 1, 1);   // "1" Alpha : Present
-			bitvec_write_field(dest, wp, 0, 4);    // Alpha
-			bitvec_write_field(dest, wp, 0, 5);    // Gamma
+			if (alpha) {
+				bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
+				bitvec_write_field(dest, wp,alpha,4);   // ALPHA = present
+			} else
+				bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
+			bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
 			bitvec_write_field(dest, wp, 0, 1);    // TIMING_ADVANCE_INDEX_FLAG
 			bitvec_write_field(dest, wp, 1, 1);    // TBF_STARTING_TIME_FLAG
 			bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
@@ -1259,9 +1268,12 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 			bitvec_write_field(dest, wp, 0, 1);   // "0" power control: Not Present
 			bitvec_write_field(dest, wp, bts->initial_cs-1, 2);    // CHANNEL_CODING_COMMAND 
 			bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
-			bitvec_write_field(dest, wp, 1, 1);   // "1" Alpha : Present
-			bitvec_write_field(dest, wp, 0, 4);    // Alpha
-			bitvec_write_field(dest, wp, 0, 5);    // Gamma
+			if (alpha) {
+				bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
+				bitvec_write_field(dest, wp,alpha,4);   // ALPHA
+			} else
+				bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
+			bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
 			bitvec_write_field(dest, wp, 0, 1);    // TIMING_ADVANCE_INDEX_FLAG
 			bitvec_write_field(dest, wp, 0, 1);    // TBF_STARTING_TIME_FLAG
 		}
@@ -1273,7 +1285,8 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 /* generate uplink assignment */
 void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
 	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
-	struct gprs_rlcmac_tbf *tbf, uint8_t poll)
+	struct gprs_rlcmac_tbf *tbf, uint8_t poll, uint8_t alpha,
+	uint8_t gamma)
 {
 	// TODO We should use our implementation of encode RLC/MAC Control messages.
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
@@ -1326,12 +1339,18 @@ void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
 
 	bitvec_write_field(dest, wp,0x0,1); //
 	bitvec_write_field(dest, wp,0x0,1); // TBF Starting Time = off
-	bitvec_write_field(dest, wp,0x0,1); // Timeslot Allocation
+	if (alpha || gamma) {
+		bitvec_write_field(dest, wp,0x1,1); // Timeslot Allocation with Power Control
+		bitvec_write_field(dest, wp,alpha,4);   // ALPHA
+	} else
+		bitvec_write_field(dest, wp,0x0,1); // Timeslot Allocation
 	
 	for (ts = 0; ts < 8; ts++) {
 		if (tbf->pdch[ts]) {
 			bitvec_write_field(dest, wp,0x1,1); // USF_TN(i): on
 			bitvec_write_field(dest, wp,tbf->dir.ul.usf[ts],3); // USF_TN(i)
+			if (alpha || gamma)
+				bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
 		} else
 			bitvec_write_field(dest, wp,0x0,1); // USF_TN(i): off
 	}
@@ -1341,7 +1360,8 @@ void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
 
 /* generate downlink assignment */
 void write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
-	uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf, uint8_t poll)
+	uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf, uint8_t poll,
+	uint8_t alpha, uint8_t gamma)
 {
 	// Packet downlink assignment TS 44.060 11.2.7
 
@@ -1385,14 +1405,14 @@ void write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
 	block->u.Packet_Downlink_Assignment.DOWNLINK_TFI_ASSIGNMENT        = tbf->tfi; // TFI
 
 	block->u.Packet_Downlink_Assignment.Exist_Power_Control_Parameters = 0x1;   // Power Control Parameters = on
-	block->u.Packet_Downlink_Assignment.Power_Control_Parameters.ALPHA = 0x0;   // ALPHA
+	block->u.Packet_Downlink_Assignment.Power_Control_Parameters.ALPHA = alpha;   // ALPHA
 
 	for (tn = 0; tn < 8; tn++)
 	{
 		if (tbf->pdch[tn])
 		{
 			block->u.Packet_Downlink_Assignment.Power_Control_Parameters.Slot[tn].Exist    = 0x1; // Slot[i] = on
-			block->u.Packet_Downlink_Assignment.Power_Control_Parameters.Slot[tn].GAMMA_TN = 0x0; // GAMMA_TN
+			block->u.Packet_Downlink_Assignment.Power_Control_Parameters.Slot[tn].GAMMA_TN = gamma; // GAMMA_TN
 		}
 		else
 		{

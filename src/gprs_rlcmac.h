@@ -83,6 +83,7 @@ struct gprs_rlcmac_bts {
 		struct gprs_rlcmac_tbf *tbf, uint32_t cust);
 	uint32_t alloc_algorithm_curst; /* options to customize algorithm */
 	uint8_t force_two_phase;
+	uint8_t alpha, gamma;
 };
 
 extern struct gprs_rlcmac_bts *gprs_rlcmac_bts;
@@ -292,14 +293,16 @@ int gprs_rlcmac_rcv_block(uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
 int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, 
         uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc, 
         uint8_t tfi, uint8_t usf, uint32_t tlli, uint8_t polling,
-	uint32_t fn, uint8_t single_block);
+	uint32_t fn, uint8_t single_block, uint8_t alpha, uint8_t gamma);
 
 void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
 	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli, 
-	struct gprs_rlcmac_tbf *tbf, uint8_t poll);
+	struct gprs_rlcmac_tbf *tbf, uint8_t poll, uint8_t alpha,
+	uint8_t gamma);
 
 void write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
-	uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf, uint8_t poll);
+	uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf, uint8_t poll,
+	uint8_t alpha, uint8_t gamma);
 
 
 
