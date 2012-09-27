@@ -380,8 +380,25 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		if (ul_control_block->u.Packet_Resource_Request.ID.UnionType) {
 			tlli = ul_control_block->u.Packet_Resource_Request.ID.u.TLLI;
 			tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+			if (tbf) {
+				LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
+					"TLLI=0x%08x while UL TBF=%d still "
+					"exists. Killing pending DL TBF\n",
+					tlli, tbf->tfi);
+				tbf_free(tbf);
+				tbf = NULL;
+			}
 			if (!tbf) {
 				uint8_t ms_class = 0;
+				struct gprs_rlcmac_tbf *dl_tbf;
+
+				if ((dl_tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF))) {
+					LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
+						"TLLI=0x%08x while DL TBF=%d still exists. "
+						"Killing pending DL TBF\n", tlli,
+						dl_tbf->tfi);
+					tbf_free(dl_tbf);
+				}
 				LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
 					"in packet ressource request of single "
 					"block, so we provide one:\n");
