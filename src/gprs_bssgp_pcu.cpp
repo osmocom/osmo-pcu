@@ -530,6 +530,7 @@ int gprs_bssgp_create(uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
 	uint16_t rac, uint16_t cell_id)
 {
 	struct sockaddr_in dest;
+	int rc;
 
 	mcc = ((mcc & 0xf00) >> 8) * 100 + ((mcc & 0x0f0) >> 4) * 10 + (mcc & 0x00f);
 	mnc = ((mnc & 0xf00) >> 8) * 100 + ((mnc & 0x0f0) >> 4) * 10 + (mnc & 0x00f);
@@ -543,7 +544,13 @@ int gprs_bssgp_create(uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		return -EINVAL;
 	}
-	gprs_ns_nsip_listen(bssgp_nsi);
+	rc = gprs_ns_nsip_listen(bssgp_nsi);
+	if (rc < 0) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create socket\n");
+		gprs_ns_destroy(bssgp_nsi);
+		bssgp_nsi = NULL;
+		return -EINVAL;
+	}
 
 	dest.sin_family = AF_INET;
 	dest.sin_port = htons(sgsn_port);

@@ -73,14 +73,15 @@ int pcu_sock_send(struct msgb *msg)
 	return 0;
 }
 
-static void pcu_sock_close(struct pcu_sock_state *state)
+static void pcu_sock_close(struct pcu_sock_state *state, int lost)
 {
 	struct osmo_fd *bfd = &state->conn_bfd;
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_tbf *tbf;
 	uint8_t trx, ts, tfi;
 
-	LOGP(DL1IF, LOGL_NOTICE, "PCU socket has LOST connection\n");
+	LOGP(DL1IF, LOGL_NOTICE, "PCU socket has %s connection\n",
+		(lost) ? "LOST" : "closed");
 
 	close(bfd->fd);
 	bfd->fd = -1;
@@ -108,8 +109,10 @@ static void pcu_sock_close(struct pcu_sock_state *state)
 
 	gprs_bssgp_destroy();
 
-	state->timer.cb = pcu_sock_timeout;
-	osmo_timer_schedule(&state->timer, 5, 0);
+	if (lost) {
+		state->timer.cb = pcu_sock_timeout;
+		osmo_timer_schedule(&state->timer, 5, 0);
+	}
 }
 
 static int pcu_sock_read(struct osmo_fd *bfd)
@@ -145,7 +148,7 @@ static int pcu_sock_read(struct osmo_fd *bfd)
 
 close:
 	msgb_free(msg);
-	pcu_sock_close(state);
+	pcu_sock_close(state, 1);
 	return -1;
 }
 
@@ -192,7 +195,7 @@ dontsend:
 	return 0;
 
 close:
-	pcu_sock_close(state);
+	pcu_sock_close(state, 1);
 
 	return -1;
 }
@@ -256,6 +259,7 @@ int pcu_l1if_open(void)
 	if (rc != 0) {
 		LOGP(DL1IF, LOGL_ERROR, "Failed to Connect the PCU-SYSMO "
 			"socket, delaying... '%s'\n", local.sun_path);
+		pcu_sock_state = state;
 		close(bfd->fd);
 		bfd->fd = -1;
 		state->timer.cb = pcu_sock_timeout;
@@ -295,7 +299,7 @@ void pcu_l1if_close(void)
 
 	bfd = &state->conn_bfd;
 	if (bfd->fd > 0)
-		pcu_sock_close(state);
+		pcu_sock_close(state, 0);
 	talloc_free(state);
 	pcu_sock_state = NULL;
 }
