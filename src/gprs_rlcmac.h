@@ -223,6 +223,8 @@ struct gprs_rlcmac_tbf {
 
 	struct timeval bw_tv; /* timestamp for bandwidth calculation */
 	uint32_t bw_octets; /* number of octets transmitted since bw_tv */
+
+	uint8_t cs; /* current coding scheme */
 };
 
 extern struct llist_head gprs_rlcmac_ul_tbfs; /* list of uplink TBFs */
@@ -248,6 +250,17 @@ struct gprs_rlcmac_sba {
 	uint32_t fn;
 	uint8_t ta;
 };
+
+/*
+ * coding scheme info
+ */
+struct gprs_rlcmac_cs {
+	uint8_t	block_length;
+	uint8_t block_data;
+	uint8_t block_payload;
+};
+
+extern struct gprs_rlcmac_cs gprs_rlcmac_cs[];
 
 int sba_alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta);
 

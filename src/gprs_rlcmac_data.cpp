@@ -1289,23 +1289,13 @@ do_resend:
 	/* now we still have untransmitted LLC data, so we fill mac block */
 	index = tbf->dir.dl.v_s & mod_sns_half;
 	data = tbf->rlc_block[index];
-	switch (bts->initial_cs) {
-	case 2: /* CS-2 */
-		block_length = 34;
-		block_data = 33;
-		break;
-	case 3: /* CS-3 */
-		block_length = 40;
-		block_data = 39;
-		break;
-	case 4: /* CS-4 */
-		block_length = 54;
-		block_data = 53;
-		break;
-	default: /* CS-1 */
-		block_length = 23;
-		block_data = 23;
+	if (tbf->cs == 0) {
+		tbf->cs = bts->initial_cs;
+		if (tbf->cs < 1 || tbf->cs > 4)
+			tbf->cs = 1;
 	}
+	block_length = gprs_rlcmac_cs[tbf->cs].block_length;
+	block_data = gprs_rlcmac_cs[tbf->cs].block_data;
 	memset(data, 0x2b, block_data); /* spare bits will be left 0 */
 	rh = (struct rlc_dl_header *)data;
 	rh->pt = 0; /* Data Block */

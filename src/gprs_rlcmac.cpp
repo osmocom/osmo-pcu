@@ -71,6 +71,15 @@ struct gprs_ms_multislot_class gprs_ms_multislot_class[32] = {
 /* N/A */	{ MS_NA,MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA },
 };
 
+struct gprs_rlcmac_cs gprs_rlcmac_cs[] = {
+/*	frame length	data block	max payload */
+	{ 0,		0,		0  },
+	{ 23,		23,		20 }, /* CS-1 */
+	{ 34,		33,		30 }, /* CS-2 */
+	{ 40,		39,		36 }, /* CS-3 */
+	{ 54,		53,		50 }, /* CS-4 */
+};
+
 LLIST_HEAD(gprs_rlcmac_ul_tbfs);
 LLIST_HEAD(gprs_rlcmac_dl_tbfs);
 llist_head *gprs_rlcmac_tbfs_lists[] = {
