@@ -82,7 +82,12 @@ static int config_write_pcu(struct vty *vty)
 	vty_out(vty, " flow-control-interval %d%s", bts->fc_interval,
 		VTY_NEWLINE);
 	if (bts->force_cs)
-		vty_out(vty, " cs %d%s", bts->initial_cs, VTY_NEWLINE);
+		if (bts->initial_cs_ul == bts->initial_cs_dl)
+			vty_out(vty, " cs %d%s", bts->initial_cs_dl,
+				VTY_NEWLINE);
+		else
+			vty_out(vty, " cs %d %d%s", bts->initial_cs_dl,
+				bts->initial_cs_ul, VTY_NEWLINE);
 	if (bts->force_llc_lifetime == 0xffff)
 		vty_out(vty, " queue lifetime infinite%s", VTY_NEWLINE);
 	else if (bts->force_llc_lifetime)
@@ -125,14 +130,19 @@ DEFUN(cfg_pcu_fc_interval,
 
 DEFUN(cfg_pcu_cs,
       cfg_pcu_cs_cmd,
-      "cs <1-4>",
-      "Set the Coding Scheme to be used, (overrides BTS config)\n")
+      "cs <1-4> [<1-4>]",
+      "Set the Coding Scheme to be used, (overrides BTS config)\n"
+      "Initial CS used\nAlternative uplink CS")
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	uint8_t cs = atoi(argv[0]);
 
 	bts->force_cs = 1;
-	bts->initial_cs = cs;
+	bts->initial_cs_dl = cs;
+	if (argc > 1)
+		bts->initial_cs_ul = atoi(argv[1]);
+	else
+		bts->initial_cs_ul = cs;
 
 	return CMD_SUCCESS;
 }

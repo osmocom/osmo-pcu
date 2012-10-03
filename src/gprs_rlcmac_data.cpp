@@ -1290,7 +1290,7 @@ do_resend:
 	index = tbf->dir.dl.v_s & mod_sns_half;
 	data = tbf->rlc_block[index];
 	if (tbf->cs == 0) {
-		tbf->cs = bts->initial_cs;
+		tbf->cs = bts->initial_cs_dl;
 		if (tbf->cs < 1 || tbf->cs > 4)
 			tbf->cs = 1;
 	}

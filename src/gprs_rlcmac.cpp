@@ -1275,7 +1275,7 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 			bitvec_write_field(dest, wp, usf, 3);    // USF
 			bitvec_write_field(dest, wp, 0, 1);    // USF_GRANULARITY
 			bitvec_write_field(dest, wp, 0, 1);   // "0" power control: Not Present
-			bitvec_write_field(dest, wp, bts->initial_cs-1, 2);    // CHANNEL_CODING_COMMAND 
+			bitvec_write_field(dest, wp, bts->initial_cs_ul-1, 2);    // CHANNEL_CODING_COMMAND 
 			bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
 			if (alpha) {
 				bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
@@ -1321,7 +1321,7 @@ void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
 	}
 
 	bitvec_write_field(dest, wp,0x0,1); // Message escape
-	bitvec_write_field(dest, wp,bts->initial_cs-1, 2); // CHANNEL_CODING_COMMAND 
+	bitvec_write_field(dest, wp,bts->initial_cs_ul-1, 2); // CHANNEL_CODING_COMMAND 
 	bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
 
 	bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
@@ -1461,7 +1461,7 @@ void write_packet_uplink_ack(RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *t
 	block->u.Packet_Uplink_Ack_Nack.UPLINK_TFI   = tbf->tfi; // Uplink TFI
 
 	block->u.Packet_Uplink_Ack_Nack.UnionType    = 0x0;      // PU_AckNack_GPRS = on
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = bts->initial_cs - 1;             // CS1
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = bts->initial_cs_ul - 1;             // CS1
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.FINAL_ACK_INDICATION     = final;           // FINAL ACK INDICATION
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->dir.ul.v_r; // STARTING_SEQUENCE_NUMBER
 	// RECEIVE_BLOCK_BITMAP

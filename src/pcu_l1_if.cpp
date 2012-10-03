@@ -405,9 +405,10 @@ bssgp_failed:
 	}
 	if (!bts->force_cs) {
 		if (info_ind->initial_cs < 1 || info_ind->initial_cs > 4)
-			bts->initial_cs = 1;
+			bts->initial_cs_dl = 1;
 		else
-			bts->initial_cs = info_ind->initial_cs;
+			bts->initial_cs_dl = info_ind->initial_cs;
+		bts->initial_cs_ul = bts->initial_cs_dl;
 	}
 
 	for (trx = 0; trx < 8; trx++) {
