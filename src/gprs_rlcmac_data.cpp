@@ -33,7 +33,7 @@ int bssgp_tx_llc_discarded(struct bssgp_bvc_ctx *bctx, uint32_t tlli,
 #define SEND_ACK_AFTER_FRAMES 20
 
 /* After sending these frames, we poll for ack/nack. */
-#define POLL_ACK_AFTER_FRAMES 10
+#define POLL_ACK_AFTER_FRAMES 20
 
 /* If acknowledgement to uplink/downlink assignmentshould be polled */
 #define POLLING_ASSIGNMENT_DL 1
@@ -1212,6 +1212,7 @@ struct msgb *gprs_rlcmac_send_data_block_acknowledged(
 	uint8_t *delimiter, *data, *e_pointer;
 	uint8_t len;
 	uint16_t space, chunk;
+	int first_fin_ack;
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "DL DATA TBF=%d downlink (V(A)==%d .. "
 		"V(S)==%d)\n", tbf->tfi, tbf->dir.dl.v_a, tbf->dir.dl.v_s);
@@ -1428,7 +1429,7 @@ do_resend:
 				"done.\n");
 			li->e = 1; /* we cannot extend */
 			rh->fbi = 1; /* we indicate final block */
-			tbf->dir.dl.tx_counter = POLL_ACK_AFTER_FRAMES + 1;
+			first_fin_ack = 1;
 				/* + 1 indicates: first final ack */
 			tbf_new_state(tbf, GPRS_RLCMAC_FINISHED);
 			break;
@@ -1459,18 +1460,15 @@ tx_block:
 		
 	/* poll after POLL_ACK_AFTER_FRAMES frames, or when final block is tx.
 	 */
-	if (tbf->dir.dl.tx_counter >= POLL_ACK_AFTER_FRAMES) {
-		if (tbf->dir.dl.tx_counter > POLL_ACK_AFTER_FRAMES) {
-			/* if rx_counter is POLL_ACK_AFTER_FRAMES + 1, this
-			 * indicates: poll caused by final ack. */
+	if (tbf->dir.dl.tx_counter >= POLL_ACK_AFTER_FRAMES || first_fin_ack) {
+		if (first_fin_ack) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
-				"polling, because final block sent.\n");
+				"polling, because first final block sent.\n");
 		} else {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
 				"polling, because %d blocks sent.\n",
 				POLL_ACK_AFTER_FRAMES);
 		}
-		tbf->dir.dl.tx_counter = 0;
 		/* scheduling not possible, because: */
 		if (tbf->poll_state != GPRS_RLCMAC_POLL_NONE)
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling is already "
@@ -1487,6 +1485,7 @@ tx_block:
 		else  {
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling sheduled in this "
 				"TS %d\n", ts);
+			tbf->dir.dl.tx_counter = 0;
 			/* start timer whenever we send the final block */
 			if (rh->fbi == 1)
 				tbf_timer_start(tbf, 3191, bts->t3191, 0);
