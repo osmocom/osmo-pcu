@@ -34,6 +34,7 @@ enum {
 	DRLCMACDL,
 	DRLCMACUL,
 	DRLCMACSCHED,
+	DRLCMACBW,
 	DBSSGP,
 	DPCU,
 	aDebug_LastEntry

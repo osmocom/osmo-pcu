@@ -94,10 +94,26 @@ Handling of LLC Frame of downlink TBF and LLC Queue of downlink TBF:
   If a new LLC PDU is attached to LLC Frame during WAIT RELEASE state, the
   state is changed to FLOW (downlink flow is assigned to MS).
 
+
 Handling of LLC Frame on uplink TBF:
 
   Received uplink blocks are appended to LLC Frame of TBF. If the PDU is
   complete, it is forwarded to the upper layer.
+
+
+Control TS:
+  On uplink or downlink assignment, it is required to have one timeslot that
+  can be used to receive and transmit. This timeslot is used at uplink TBF
+  to acknowledge and to assign other TBF. This timeslot is used at downlink
+  TBF to poll acknowledgement and to assign other TBF.
+
+  The first common TS (first_common_ts) is calculated when channels are
+  allocated. After creation of TBF or after assignment to different TS layout,
+  the first common TS is used for control TS.
+
+  The first common TS (and so control TS) must not need to be allocated to
+  MS as uplink TBF. (E.g. in case of non-available USF for this slot)
+
 
 Polling:
   In order to poll uplink control block from MS, a special poll state and
@@ -108,4 +124,38 @@ Polling:
   indicated by layer 1 interface. There are two ways of checking timeout:
    - The received frame is bad (BFI).
    - The GSM indicates that the block should have been already received.
+
+  Because polling requires uplink response from MS, the polling must be
+  performed at control TS.
+
+
+Data structures of TBFs and PDCHs:
+
+  There is a global structure for BTS.
+
+  The BTS structure has 8 TRX structures.
+
+  Each TRX structure has 8 PDCH structures, one for each timeslot.
+
+  There are two linked lists of TBF instances:
+   - uplink TBFs
+   - downlink TBFs
+
+  Each TBF instance also has:
+   - a direction
+   - a TFI of range 0..31
+   - an array of 8 PDCH structures, one for each assigned timeslot
+   - in case of uplink TBF: an array of 8 USFs, one for each assigned timeslot
+
+  Each PDCH structure also has:
+   - an array of 32 uplink TBFs that are assigned to this PDCH
+   - an array of 32 downlink TBFs that are assigned to this PDCH
+
+  On creation of a new TBF, it links to all assigned PDCHs.
+  Each PDCH links to that TBF. The TBF is added to the list of TBFs.
+  In case of uplink TBF: The allocated USFs are stored for each timeslot.
+
+  On release of a TBF, the link to this PDCH is removed from all assigned
+  PDCHs. The TBF is removed from the list of TBFs. The TBF is destroyed.
+
 

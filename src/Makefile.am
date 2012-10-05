@@ -33,7 +33,8 @@ libgprs_la_SOURCES = \
 	gprs_rlcmac_sched.cpp \
 	gsm_timer.cpp \
 	bitvector.cpp \
-	pcu_l1_if.cpp
+	pcu_l1_if.cpp \
+	pcu_vty.c
 
 if ENABLE_SYSMOBTS
 libgprs_la_SOURCES += \
@@ -44,8 +45,10 @@ libgprs_la_SOURCES += \
 endif
 
 noinst_PROGRAMS = \
-	RLCMACTest \
-	pcu
+	RLCMACTest
+
+bin_PROGRAMS = \
+	osmo-pcu
 
 noinst_HEADERS = \
 	gprs_debug.h \
@@ -56,7 +59,8 @@ noinst_HEADERS = \
 	pcuif_proto.h \
 	pcu_l1_if.h \
 	gsm_timer.h \
-	bitvector.h
+	bitvector.h \
+	pcu_vty.h
 
 RLCMACTest_SOURCES = RLCMACTest.cpp
 RLCMACTest_LDADD = \
@@ -64,8 +68,8 @@ RLCMACTest_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
-pcu_SOURCES = pcu_main.cpp
-pcu_LDADD = \
+osmo_pcu_SOURCES = pcu_main.cpp
+osmo_pcu_LDADD = \
 	libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
