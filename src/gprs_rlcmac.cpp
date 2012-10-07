@@ -1107,11 +1107,14 @@ struct msgb *gprs_rlcmac_send_packet_paging_request(
 
 	/* alloc message */
 	msg = msgb_alloc(23, "pag ctrl block");
-	if (!msg)
+	if (!msg) {
+		talloc_free(pag);
 		return NULL;
+	}
 	bitvec *pag_vec = bitvec_alloc(23);
 	if (!pag_vec) {
 		msgb_free(msg);
+		talloc_free(pag);
 		return NULL;
 	}
 	wp = write_packet_paging_request(pag_vec);
@@ -1127,7 +1130,7 @@ struct msgb *gprs_rlcmac_send_packet_paging_request(
 			if (pag->identity_lv[0] != 5) {
 				LOGP(DRLCMAC, LOGL_ERROR, "TMSI paging with "
 					"MI != 5 octets!\n");
-				break;
+				goto continue_next;
 			}
 		} else {
 			/* MI */
@@ -1138,7 +1141,7 @@ struct msgb *gprs_rlcmac_send_packet_paging_request(
 			if (pag->identity_lv[0] > 8) {
 				LOGP(DRLCMAC, LOGL_ERROR, "Paging with "
 					"MI > 8 octets!\n");
-				break;
+				goto continue_next;
 			}
 		}
 		if (wp + len > 184) {
@@ -1151,6 +1154,8 @@ struct msgb *gprs_rlcmac_send_packet_paging_request(
 		write_repeated_page_info(pag_vec, wp, pag->identity_lv[0],
 			pag->identity_lv + 1, pag->chan_needed);
 
+continue_next:
+		talloc_free(pag);
 		pag = gprs_rlcmac_dequeue_paging(pdch);
 	}
 
