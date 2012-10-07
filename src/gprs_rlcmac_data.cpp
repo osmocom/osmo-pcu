@@ -1245,7 +1245,7 @@ struct msgb *gprs_rlcmac_send_data_block_acknowledged(
 	uint8_t *delimiter, *data, *e_pointer;
 	uint8_t len;
 	uint16_t space, chunk;
-	int first_fin_ack;
+	int first_fin_ack = 0;
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "DL DATA TBF=%d downlink (V(A)==%d .. "
 		"V(S)==%d)\n", tbf->tfi, tbf->dir.dl.v_a, tbf->dir.dl.v_s);
@@ -1286,8 +1286,8 @@ do_resend:
 		 * indication from MS. This should never happen if MS works
 		 * correctly. */
 		if (tbf->dir.dl.v_s == tbf->dir.dl.v_a) {
-			LOGP(DRLCMACDL, LOGL_ERROR, "- MS acked all block, "
-				"but we still transmitting!\n");
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- MS acked all blocks, "
+				"so we re-transmit final block!\n");
 			/* we just send final block again */
 			index = ((tbf->dir.dl.v_s - 1) & mod_sns_half);
 			goto tx_block;
@@ -1633,14 +1633,15 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 
 		if (tbf->state == GPRS_RLCMAC_FINISHED
 		 && tbf->dir.dl.v_s == tbf->dir.dl.v_a) {
-			LOGP(DRLCMACDL, LOGL_NOTICE, "Received final block, "
-				"but without final ack inidcation\n");
-		} else
-			return 0;
-	} else {
-		LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
-		debug_diagram(tbf->diag, "got Final ACK");
+			LOGP(DRLCMACDL, LOGL_NOTICE, "Received acknowledge of "
+				"all blocks, but without final ack "
+				"inidcation (don't worry)\n");
+		}
+		return 0;
 	}
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
+	debug_diagram(tbf->diag, "got Final ACK");
 
 	/* check for LLC PDU in the LLC Queue */
 	msg = llc_dequeue(tbf);
