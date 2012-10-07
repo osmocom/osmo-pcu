@@ -365,14 +365,20 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		tbf = tbf_by_poll_fn(fn, trx, ts);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
-				"unknown FN=%u TBF=%d (TRX %d TS %d)\n",
+				"unknown FN=%u TFI=%d (TRX %d TS %d)\n",
 				fn, tfi, trx, ts);
+			break;
+		}
+		if (tbf->tfi != tfi) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
+				"wrong TFI=%d, ignoring!\n", tfi);
 			break;
 		}
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
 		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
 			tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
-			LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink ack\n");
+			LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink ack "
+				"for DL TBF=%d\n", tbf->tfi);
 		}
 		/* reset N3105 */
 		tbf->n3105 = 0;
