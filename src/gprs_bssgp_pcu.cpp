@@ -427,8 +427,6 @@ static int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msg
 		break;
 	default:
 		LOGP(DPCU, LOGL_NOTICE, "RLCMAC: Unknown event %u from NS\n", event);
-		if (msg)
-			talloc_free(msg);
 		rc = -EIO;
 		break;
 	}
