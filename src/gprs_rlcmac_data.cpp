@@ -847,7 +847,7 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 
 	/* get TLLI */
 	if (!tbf->tlli_valid) {
-		struct gprs_rlcmac_tbf *dl_tbf;
+		struct gprs_rlcmac_tbf *dl_tbf, *ul_tbf;
 
 		/* no TLLI yet */
 		if (!rh->ti) {
@@ -861,7 +861,6 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 				"of UL DATA TBF=%d.\n", rh->tfi);
 			return 0;
 		}
-		tbf->tlli_valid = 1;
 		LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
 			"UL DATA TBF=%d.\n", tbf->tlli, rh->tfi);
 		if ((dl_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_DL_TBF))) {
@@ -871,6 +870,17 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 				dl_tbf->tfi);
 			tbf_free(dl_tbf);
 		}
+		/* tbf_by_tlli will not find your TLLI, because it is not
+		 * yet marked valid */
+		if ((ul_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF))) {
+			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
+				"TLLI=0x%08x while UL TBF=%d still exists. "
+				"Killing pending UL TBF\n", tbf->tlli,
+				ul_tbf->tfi);
+			tbf_free(ul_tbf);
+		}
+		/* mark TLLI valid now */
+		tbf->tlli_valid = 1;
 	/* already have TLLI, but we stille get another one */
 	} else if (rh->ti) {
 		uint32_t tlli;
