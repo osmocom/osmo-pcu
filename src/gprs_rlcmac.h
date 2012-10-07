@@ -31,6 +31,9 @@ extern "C" {
 }
 #endif
 
+/* generate a diagram for debugging timing issues */
+//#define DEBUG_DIAGRAM
+
 /* This special feature will delay assignment of downlink TBF by one second,
  * in case there is already a TBF.
  * This is usefull to debug downlink establishment during packet idle mode.
@@ -225,6 +228,11 @@ struct gprs_rlcmac_tbf {
 	uint32_t bw_octets; /* number of octets transmitted since bw_tv */
 
 	uint8_t cs; /* current coding scheme */
+
+#ifdef DEBUG_DIAGRAM
+	int diag; /* number where TBF is presented in diagram */
+	int diag_new; /* used to format output of new TBF */
+#endif
 };
 
 extern struct llist_head gprs_rlcmac_ul_tbfs; /* list of uplink TBFs */
@@ -261,6 +269,12 @@ struct gprs_rlcmac_cs {
 };
 
 extern struct gprs_rlcmac_cs gprs_rlcmac_cs[];
+
+#ifdef DEBUG_DIAGRAM
+void debug_diagram(int diag, const char *format, ...);
+#else
+#define debug_diagram(a, b, args...) ;
+#endif
 
 int sba_alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta);
 

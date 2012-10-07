@@ -109,6 +109,7 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
 		}
 		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
+		debug_diagram(tbf->diag, "timeout UL-ACK");
 		if (tbf->state == GPRS_RLCMAC_FINISHED) {
 			struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 
@@ -116,6 +117,7 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 			if (tbf->dir.ul.n3103 == bts->n3103) {
 				LOGP(DRLCMAC, LOGL_NOTICE,
 					"- N3103 exceeded\n");
+				debug_diagram(tbf->diag, "N3103 exceeded");
 				tbf_new_state(tbf, GPRS_RLCMAC_RELEASING);
 				tbf_timer_start(tbf, 3169, bts->t3169, 0);
 				return 0;
@@ -135,9 +137,11 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
 		}
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+		debug_diagram(tbf->diag, "timeout UL-ASS");
 		tbf->n3105++;
 		if (tbf->n3105 == bts->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
+			debug_diagram(tbf->diag, "N3105 exceeded");
 			tbf_new_state(tbf, GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(tbf, 3195, bts->t3195, 0);
 			return 0;
@@ -156,9 +160,11 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
 		}
 		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+		debug_diagram(tbf->diag, "timeout DL-ASS");
 		tbf->n3105++;
 		if (tbf->n3105 == bts->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
+			debug_diagram(tbf->diag, "N3105 exceeded");
 			tbf_new_state(tbf, GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(tbf, 3195, bts->t3195, 0);
 			return 0;
@@ -175,9 +181,11 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 			gprs_rlcmac_diag(tbf);
 			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 		}
+		debug_diagram(tbf->diag, "timeout DL-ACK");
 		tbf->n3105++;
 		if (tbf->n3105 == bts->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
+			debug_diagram(tbf->diag, "N3105 exceeded");
 			tbf_new_state(tbf, GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(tbf, 3195, bts->t3195, 0);
 			return 0;
@@ -286,12 +294,13 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
 			tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
+			debug_diagram(tbf->diag, "got CTL-ACK (fin)");
 			if ((tbf->state_flags &
 				(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK))) {
 				tbf->state_flags &=
 					~(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
 				LOGP(DRLCMAC, LOGL_NOTICE, "Recovered uplink "
-					"ack\n");
+					"ack for UL TBF=%d\n", tbf->tfi);
 			}
 			tbf_free(tbf);
 			break;
@@ -301,6 +310,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 			/* reset N3105 */
 			tbf->n3105 = 0;
 			tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+			debug_diagram(tbf->diag, "got CTL-ACK DL-ASS");
 			if (tbf->direction == GPRS_RLCMAC_UL_TBF)
 				tbf = tbf_by_tlli(tbf->tlli,
 							GPRS_RLCMAC_DL_TBF);
@@ -317,7 +327,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 				tbf->state_flags &=
 					~(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
 				LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink "
-					"assignment\n");
+					"assignment for DL TBF=%d\n", tbf->tfi);
 			}
 			tbf_assign_control_ts(tbf);
 			break;
@@ -327,6 +337,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 			/* reset N3105 */
 			tbf->n3105 = 0;
 			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+			debug_diagram(tbf->diag, "got CTL-AC UL-ASS");
 			if (tbf->direction == GPRS_RLCMAC_DL_TBF)
 				tbf = tbf_by_tlli(tbf->tlli,
 							GPRS_RLCMAC_UL_TBF);
@@ -341,7 +352,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 				tbf->state_flags &=
 					~(1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
 				LOGP(DRLCMAC, LOGL_NOTICE, "Recovered uplink "
-					"assignment\n");
+					"assignment for UL TBF=%d\n", tbf->tfi);
 			}
 			tbf_assign_control_ts(tbf);
 			break;
@@ -370,6 +381,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		tlli = tbf->tlli;
 		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Downlink Ack/Nack\n", tbf->tfi, tbf->tlli);
 		tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
+		debug_diagram(tbf->diag, "got DL-ACK");
 
 		rc = gprs_rlcmac_downlink_ack(tbf,
 			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.FINAL_ACK_INDICATION,
@@ -427,6 +439,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 				tbf->control_ts = ts;
 				/* schedule uplink assignment */
 				tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+				debug_diagram(tbf->diag, "Res. REQ");
 				break;
 			}
 			tfi = tbf->tfi;
@@ -506,6 +519,8 @@ void tbf_timer_cb(void *_tbf)
 		gprs_rlcmac_diag(tbf);
 		/* fall through */
 	case 3193:
+		if (tbf->T == 3193)
+		        debug_diagram(tbf->diag, "T3193 timeout");
 		LOGP(DRLCMAC, LOGL_DEBUG, "TBF will be freed due to timeout\n");
 		/* free TBF */
 		tbf_free(tbf);
@@ -773,6 +788,7 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 		tbf->dir.ul.final_ack_sent = 1;
 	} else
 		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
+	debug_diagram(tbf->diag, "send UL-ACK");
 
 	return msg;
 }
@@ -961,6 +977,17 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 				SEND_ACK_AFTER_FRAMES);
 		}
 		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_NONE) {
+#ifdef DEBUG_DIAGRAM
+			if (rh->si)
+				debug_diagram(tbf->diag, "sched UL-ACK stall");
+			if (rh->ti)
+				debug_diagram(tbf->diag, "sched UL-ACK TLLI");
+			if (tbf->state == GPRS_RLCMAC_FINISHED)
+				debug_diagram(tbf->diag, "sched UL-ACK CV==0");
+			if ((tbf->dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0)
+				debug_diagram(tbf->diag, "sched UL-ACK n=%d",
+					tbf->dir.ul.rx_counter);
+#endif
 			/* trigger sending at next RTS */
 			tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
 		} else {
@@ -1041,6 +1068,7 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 	tbf_new_state(new_tbf, GPRS_RLCMAC_FLOW);
 	tbf_assign_control_ts(new_tbf);
 #endif
+	debug_diagram(tbf->diag, "send UL-ASS");
 
 	return msg;
 }
@@ -1483,6 +1511,14 @@ tx_block:
 			tbf->poll_state = GPRS_RLCMAC_POLL_SCHED;
 			tbf->poll_fn = (fn + 13) % 2715648;
 
+#ifdef DEBUG_DIAGRAM
+			debug_diagram(tbf->diag, "poll DL-ACK");
+			if (first_fin_ack)
+				debug_diagram(tbf->diag, "(is first FINAL)");
+			if (rh->fbi)
+				debug_diagram(tbf->diag, "(FBI is set)");
+#endif
+
 			/* set polling in header */
 			rh->rrbp = 0; /* N+13 */
 			rh->s_p = 1; /* Polling */
@@ -1595,8 +1631,10 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 				"but without final ack inidcation\n");
 		} else
 			return 0;
-	} else
+	} else {
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
+		debug_diagram(tbf->diag, "got Final ACK");
+	}
 
 	/* check for LLC PDU in the LLC Queue */
 	msg = llc_dequeue(tbf);
@@ -1607,6 +1645,7 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- No new message, so we "
 			"release.\n");
 		/* start T3193 */
+		debug_diagram(tbf->diag, "start T3193");
 		tbf_timer_start(tbf, 3193, bts->t3193_msec / 1000,
 			(bts->t3193_msec % 1000) * 1000);
 		tbf_new_state(tbf, GPRS_RLCMAC_WAIT_RELEASE);
@@ -1716,6 +1755,7 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 		tbf_timer_stop(new_tbf);
 
 	}
+	debug_diagram(tbf->diag, "send DL-ASS");
 
 	return msg;
 }
@@ -1726,6 +1766,7 @@ static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	int plen;
 
+	debug_diagram(tbf->diag, "IMM.ASS (PCH)");
 	LOGP(DRLCMAC, LOGL_INFO, "TX: START TFI: %u TLLI: 0x%08x Immediate Assignment Downlink (PCH)\n", tbf->tfi, tbf->tlli);
 	bitvec *immediate_assignment = bitvec_alloc(22); /* without plen */
 	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");

@@ -41,6 +41,10 @@ extern struct vty_app_info pcu_vty_info;
 void *tall_pcu_ctx;
 static int quit = 0;
 
+#ifdef DEBUG_DIAGRAM
+extern struct timeval diagram_time;
+#endif
+
 static void print_help()
 {
 	printf( "Some useful options:\n"
@@ -206,6 +210,9 @@ int main(int argc, char *argv[])
 		osmo_gsm_timers_update();
 
 		osmo_select_main(0);
+#ifdef DEBUG_DIAGRAM
+		gettimeofday(&diagram_time, NULL);
+#endif
 	}
 
 	telnet_exit();

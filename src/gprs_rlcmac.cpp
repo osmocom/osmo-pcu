@@ -89,6 +89,90 @@ llist_head *gprs_rlcmac_tbfs_lists[] = {
 };
 extern void *tall_pcu_ctx;
 
+#ifdef DEBUG_DIAGRAM
+struct timeval diagram_time = {0,0};
+struct timeval diagram_last_tv = {0,0};
+
+void debug_diagram(int diag, const char *format, ...)
+{
+	va_list ap;
+	char debug[128];
+	char line[1024];
+	struct gprs_rlcmac_tbf *tbf, *tbf_a[16];
+	int max_diag = -1, i;
+	uint64_t diff = 0;
+
+	va_start(ap, format);
+	vsnprintf(debug, sizeof(debug) - 1, format, ap);
+	debug[19] = ' ';
+	debug[20] = '\0';
+	va_end(ap);
+
+	memset(tbf_a, 0, sizeof(tbf_a));
+	llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
+		if (tbf->diag < 16) {
+			if (tbf->diag > max_diag)
+				max_diag = tbf->diag;
+			tbf_a[tbf->diag] = tbf;
+		}
+	}
+	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
+		if (tbf->diag < 16) {
+			if (tbf->diag > max_diag)
+				max_diag = tbf->diag;
+			tbf_a[tbf->diag] = tbf;
+		}
+	}
+
+	if (diagram_last_tv.tv_sec) {
+		diff = (uint64_t)(diagram_time.tv_sec -
+					diagram_last_tv.tv_sec) * 1000;
+		diff += diagram_time.tv_usec / 1000;
+		diff -= diagram_last_tv.tv_usec / 1000;
+	}
+	memcpy(&diagram_last_tv, &diagram_time, sizeof(struct timeval));
+
+	if (diff > 0) {
+		if (diff > 99999)
+			strcpy(line, "  ...  : ");
+		else
+			sprintf(line, "%3d.%03d: ", (int)(diff / 1000),
+				(int)(diff % 1000));
+		for (i = 0; i <= max_diag; i++) {
+			if (tbf_a[i] == NULL) {
+				strcat(line, "                    ");
+				continue;
+			}
+			if (tbf_a[i]->diag_new) {
+				strcat(line, "         |          ");
+				continue;
+			}
+			strcat(line, "                    ");
+		}
+		puts(line);
+	}
+	strcpy(line, "       : ");
+	for (i = 0; i <= max_diag; i++) {
+		if (tbf_a[i] == NULL) {
+			strcat(line, "                    ");
+			continue;
+		}
+		if (tbf_a[i]->diag != diag) {
+			strcat(line, "         |          ");
+			continue;
+		}
+		if (strlen(debug) < 19) {
+			strcat(line, "                    ");
+			memcpy(line + strlen(line) - 11 - strlen(debug) / 2,
+				debug, strlen(debug));
+		} else
+			strcat(line, debug);
+		tbf_a[i]->diag_new = 1;
+	}
+	puts(line);
+}
+#endif
+
 /* FIXME: spread ressources over multiple TRX. Also add option to use same
  * TRX in case of existing TBF for TLLI in the other direction. */
 /* search for free TFI and return TFI, TRX and first TS */
@@ -246,6 +330,24 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_tbf *old_tbf,
 	struct gprs_rlcmac_tbf *tbf;
 	int rc;
 
+#ifdef DEBUG_DIAGRAM
+	/* hunt for first free number in diagram */
+	int diagram_num;
+	for (diagram_num = 0; ; diagram_num++) {
+		llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
+			if (tbf->diag == diagram_num)
+				goto next_diagram;
+		}
+		llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
+			if (tbf->diag == diagram_num)
+				goto next_diagram;
+		}
+		break;
+next_diagram:
+		continue;
+	}
+#endif
+
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
 	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: TFI=%d TRX=%d "
 		"MS_CLASS=%d\n", (dir == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL",
@@ -258,6 +360,9 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_tbf *old_tbf,
 	if (!tbf)
 		return NULL;
 
+#ifdef DEBUG_DIAGRAM
+	tbf->diag = diagram_num;
+#endif
 	tbf->direction = dir;
 	tbf->tfi = tfi;
 	tbf->trx = trx;
@@ -295,6 +400,11 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_tbf *old_tbf,
 		llist_add(&tbf->list, &gprs_rlcmac_ul_tbfs);
 	else
 		llist_add(&tbf->list, &gprs_rlcmac_dl_tbfs);
+
+	debug_diagram(tbf->diag, "+-----------------+");
+	debug_diagram(tbf->diag, "|NEW %s TBF TFI=%2d|",
+		(dir == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi);
+	debug_diagram(tbf->diag, "+-----------------+");
 
 	return tbf;
 }
@@ -741,6 +851,9 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 {
 	struct msgb *msg;
 
+	debug_diagram(tbf->diag, "+---------------+");
+	debug_diagram(tbf->diag, "|    THE END    |");
+	debug_diagram(tbf->diag, "+---------------+");
 	LOGP(DRLCMAC, LOGL_INFO, "Free %s TBF=%d with TLLI=0x%08x.\n",
 		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
 		tbf->tlli);
@@ -818,6 +931,7 @@ const char *tbf_state_name[] = {
 void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
 	enum gprs_rlcmac_tbf_state state)
 {
+	debug_diagram(tbf->diag, "->%s", tbf_state_name[state]);
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s TBF=%d changes state from %s to %s\n",
 		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
 		tbf_state_name[tbf->state], tbf_state_name[state]);
