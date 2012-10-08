@@ -32,6 +32,35 @@ struct osmo_timer_list bvc_timer;
 
 static void bvc_timeout(void *_priv);
 
+static int parse_imsi(struct tlv_parsed *tp, char *imsi)
+{
+	uint8_t imsi_len;
+	uint8_t *bcd_imsi;
+	int i, j;
+
+	if (!TLVP_PRESENT(tp, BSSGP_IE_IMSI))
+		return -EINVAL;
+
+	imsi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
+	bcd_imsi = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_IMSI);
+
+	if ((bcd_imsi[0] & 0x08))
+		imsi_len = imsi_len * 2 - 1;
+	else
+		imsi_len = (imsi_len - 1) * 2;
+	for (i = 0, j = 0; j < imsi_len && j < 15; j++)
+	{
+		if (!(j & 1)) {
+			imsi[j] = (bcd_imsi[i] >> 4) + '0';
+			i++;
+		} else
+			imsi[j] = (bcd_imsi[i] & 0xf) + '0';
+	}
+	imsi[j] = '\0';
+
+	return 0;
+}
+
 int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 {
 	struct bssgp_ud_hdr *budh;
@@ -39,10 +68,10 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	int8_t tfi; /* must be signed */
 
 	uint32_t tlli;
-	int i, j;
 	uint8_t *data;
 	uint16_t len;
 	struct gprs_rlcmac_tbf *tbf;
+	char imsi[16] = "000";
 
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
 	tlli = ntohl(budh->tlli);
@@ -65,25 +94,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	/* read IMSI. if no IMSI exists, use first paging block (any paging),
 	 * because during attachment the IMSI might not be known, so the MS
 	 * will listen to all paging blocks. */
-	char imsi[16] = "000";
-	if (TLVP_PRESENT(tp, BSSGP_IE_IMSI))
-	{
-		uint8_t imsi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
-		uint8_t *bcd_imsi = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_IMSI);
-		if ((bcd_imsi[0] & 0x08))
-			imsi_len = imsi_len * 2 - 1;
-		else
-			imsi_len = (imsi_len - 1) * 2;
-		for (i = 0, j = 0; j < imsi_len && j < 16; j++)
-		{
-			if (!(j & 1)) {
-				imsi[j] = (bcd_imsi[i] >> 4) + '0';
-				i++;
-			} else
-				imsi[j] = (bcd_imsi[i] & 0xf) + '0';
-		}
-		imsi[j] = '\0';
-	}
+	parse_imsi(tp, imsi);
 
 	/* parse ms radio access capability */
 	uint8_t ms_class = 0;
