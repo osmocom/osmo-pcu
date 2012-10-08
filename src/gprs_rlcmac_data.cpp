@@ -1699,7 +1699,9 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 	if (poll_ass_dl && tbf->direction == GPRS_RLCMAC_DL_TBF
 	 && tbf->control_ts != tbf->first_common_ts) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "Cannot poll for downlink "
-			"assigment, because MS cannot reply.\n");
+			"assigment, because MS cannot reply. (control TS=%d, "
+			"first common TS=%d)\n", tbf->control_ts,
+			tbf->first_common_ts);
 		poll_ass_dl = 0;
 	}
 	if (poll_ass_dl) {
