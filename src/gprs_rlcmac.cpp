@@ -1573,6 +1573,43 @@ void write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
 	block->u.Packet_Downlink_Assignment.Exist_AdditionsR99        = 0x0; // AdditionsR99 = off
 }
 
+/* generate paging request */
+int write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len)
+{
+	unsigned wp = 0;
+	int plen;
+
+	bitvec_write_field(dest, wp,0x0,4);  // Skip Indicator
+	bitvec_write_field(dest, wp,0x6,4);  // Protocol Discriminator
+	bitvec_write_field(dest, wp,0x21,8); // Paging Request Message Type
+
+	bitvec_write_field(dest, wp,0x0,4);  // Page Mode
+	bitvec_write_field(dest, wp,0x0,4);  // Channel Needed
+
+	// Mobile Identity
+	bitvec_write_field(dest, wp,ptmsi_len+1,8);  // Mobile Identity length
+	bitvec_write_field(dest, wp,0xf,4);          // unused
+	bitvec_write_field(dest, wp,0x4,4);          // PTMSI type
+	for (int i = 0; i < ptmsi_len; i++)
+	{
+		bitvec_write_field(dest, wp,ptmsi[i],8); // PTMSI
+	}
+	if ((wp % 8)) {
+		LOGP(DRLCMACUL, LOGL_ERROR, "Length of PAG.REQ without rest "
+			"octets is not multiple of 8 bits, PLEASE FIX!\n");
+		exit (0);
+	}
+	plen = wp / 8;
+	bitvec_write_field(dest, wp,0x0,1); // "L" NLN(PCH) = off
+	bitvec_write_field(dest, wp,0x0,1); // "L" Priority1 = off
+	bitvec_write_field(dest, wp,0x1,1); // "L" Priority2 = off
+	bitvec_write_field(dest, wp,0x0,1); // "L" Group Call information = off
+	bitvec_write_field(dest, wp,0x0,1); // "H" Packet Page Indication 1 = packet paging procedure
+	bitvec_write_field(dest, wp,0x1,1); // "H" Packet Page Indication 2 = packet paging procedure
+
+	return plen;
+}
+
 /* generate uplink ack */
 void write_packet_uplink_ack(RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *tbf,
 	uint8_t final)
@@ -1697,6 +1734,19 @@ int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 	qos_profile[1] = QOS_PROFILE >> 8;
 	qos_profile[2] = QOS_PROFILE;
 	bssgp_tx_ul_ud(bctx, tbf->tlli, qos_profile, llc_pdu);
+
+	return 0;
+}
+
+int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len,
+	const char *imsi)
+{
+	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Paging Request (CCCH)\n");
+	bitvec *paging_request = bitvec_alloc(23);
+	bitvec_unhex(paging_request, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	int plen = write_paging_request(paging_request, ptmsi, ptmsi_len);
+	pcu_l1if_tx_pch(paging_request, plen, (char *)imsi);
+	bitvec_free(paging_request);
 
 	return 0;
 }

@@ -363,6 +363,9 @@ void gprs_rlcmac_trigger_downlink_assignment(struct gprs_rlcmac_tbf *tbf,
 int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
         uint8_t ssn, uint8_t *rbb);
 
+int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len,
+	const char *imsi);
+
 unsigned write_packet_paging_request(bitvec * dest);
 
 unsigned write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
