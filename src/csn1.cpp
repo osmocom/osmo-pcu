@@ -206,6 +206,12 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
           LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
           /* end add the bit value to protocol tree */
         }
+        else if(pDescr->may_be_null)
+        {
+           pui8  = pui8DATA(data, pDescr->offset);
+           *pui8 = 0;
+           LOGPC(DCSN1, LOGL_NOTICE, "%s = NULL | ", pDescr->sz);
+        }
         else
         {
           return ProcessError(readIndex,"csnStreamDecoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
@@ -254,14 +260,33 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
           {
             return ProcessError(readIndex,"csnStreamDecoder", CSN_ERROR_GENERAL, pDescr);
           }
+          remaining_bits_len -= no_of_bits;
+          bit_offset += no_of_bits;
+        }
+        else if(pDescr->may_be_null)
+        {
+          if (no_of_bits <= 8)
+          {
+            pui8      = pui8DATA(data, pDescr->offset);
+            *pui8     = 0;
+          }
+          else if (no_of_bits <= 16)
+          {
+            pui16      = pui16DATA(data, pDescr->offset);
+            *pui16     = 0;
+          }
+          else if (no_of_bits <= 32)
+          {
+            pui32      = pui32DATA(data, pDescr->offset);
+            *pui32     = 0;
+          }
+          LOGPC(DCSN1, LOGL_NOTICE, "%s = NULL | ", pDescr->sz);
         }
         else
         {
           return ProcessError(readIndex,"csnStreamDecoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
         }
 
-        remaining_bits_len -= no_of_bits;
-        bit_offset += no_of_bits;
         pDescr++;
         break;
       }
@@ -548,20 +573,23 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
       {
         StreamSerializeFcn_t serialize = pDescr->serialize.fcn;
         csnStream_t          arT       = *ar;
+        guint8 length_len              = pDescr->i;
         gint16               Status    = -1;
 
-        LOGPC(DCSN1, LOGL_NOTICE, "%s length = %d | ", pDescr->sz , (int)bitvec_read_field(vector, readIndex, 7));
-        arT.direction = 1;
-        bit_offset += 7;
-        remaining_bits_len -= 7;
+        guint8 length = bitvec_read_field(vector, readIndex, length_len);
 
-        csnStreamInit(&arT, bit_offset, remaining_bits_len);
+        LOGPC(DCSN1, LOGL_NOTICE, "%s length = %d | ", pDescr->sz , (int)length);
+        arT.direction = 1;
+        bit_offset += length_len;
+        remaining_bits_len -= length_len;
+
+        csnStreamInit(&arT, bit_offset, length);
         Status = serialize(&arT, vector, readIndex, pvDATA(data, pDescr->offset));
 
         if (Status >= 0)
         {
-          remaining_bits_len = arT.remaining_bits_len;
-          bit_offset         = arT.bit_offset;
+          remaining_bits_len -= length;
+          bit_offset         += length;
           pDescr++;
         }
         else
@@ -958,17 +986,11 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
         pui8  = pui8DATA(data, pDescr->offset);
 
         /* this if-statement represents the M_NEXT_EXIST_OR_NULL description element */
-        if ((pDescr->descr.ptr != NULL) && (remaining_bits_len == 0))
+        if ((pDescr->may_be_null) && (remaining_bits_len == 0))
         { /* no more bits to decode is fine here - end of message detected and allowed */
 
           /* Skip i entries + this entry */
           pDescr += pDescr->i + 1;
-
-          /* pDescr now must be pointing to a CSN_END entry, if not this is an error */
-          if ( pDescr->type != CSN_END )
-          { /* Substract one more bit from remaining_bits_len to make the "not enough bits" error to be triggered */
-            remaining_bits_len--;
-          }
 
           /* Set the data member to "not exist" */
           *pui8 = 0;
@@ -1143,6 +1165,38 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
         }
 
         /* bitmap was successfully extracted or it was empty */
+        pDescr++;
+        break;
+      }
+
+      case CSN_PADDING_BITS:
+      { /* Padding from here and to the end of message */
+        LOGPC(DCSN1, LOGL_NOTICE, "%s = ", pDescr->sz);
+        if (remaining_bits_len > 0)
+        {
+          while (remaining_bits_len > 0)
+          {
+            guint8 bits_to_handle = remaining_bits_len%8;
+            if (bits_to_handle > 0)
+            {
+              LOGPC(DCSN1, LOGL_NOTICE, "%u|", bitvec_read_field(vector, readIndex, bits_to_handle));
+              remaining_bits_len -= bits_to_handle;
+              bit_offset += bits_to_handle;
+            }
+            else if (bits_to_handle == 0)
+            {
+              LOGPC(DCSN1, LOGL_NOTICE, "%u|", bitvec_read_field(vector, readIndex, 8));
+              remaining_bits_len -= 8;
+              bit_offset += 8;
+            }
+          }
+        }
+        if (remaining_bits_len < 0)
+        {
+          return ProcessError(readIndex,"csnStreamDissector", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
+        }
+
+        /* Padding was successfully extracted or it was empty */
         pDescr++;
         break;
       }
@@ -1434,6 +1488,10 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
           LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
           /* end add the bit value to protocol tree */
         }
+        else if(pDescr->may_be_null)
+        {
+           LOGPC(DCSN1, LOGL_NOTICE, "%s = NULL | ", pDescr->sz);
+        }
         else
         {
           return ProcessError(writeIndex,"csnStreamEncoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
@@ -1479,14 +1537,19 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
           {
             return ProcessError(writeIndex,"csnStreamEncoder", CSN_ERROR_GENERAL, pDescr);
           }
+
+          remaining_bits_len -= no_of_bits;
+          bit_offset += no_of_bits;
+        }
+        else if(pDescr->may_be_null)
+        {
+          LOGPC(DCSN1, LOGL_NOTICE, "%s = NULL | ", pDescr->sz);
         }
         else
         {
           return ProcessError(writeIndex,"csnStreamEncoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
         }
 
-        remaining_bits_len -= no_of_bits;
-        bit_offset += no_of_bits;
         pDescr++;
         break;
       }
@@ -1766,19 +1829,20 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
       {
         StreamSerializeFcn_t serialize = pDescr->serialize.fcn;
         csnStream_t          arT       = *ar;
+        guint8 length_len              = pDescr->i;
         gint16               Status = -1;
         unsigned lengthIndex;
 
         // store writeIndex for length value (7 bit)
-	lengthIndex = writeIndex;
-        writeIndex += 7;
-        bit_offset += 7;
-        remaining_bits_len -= 7;
+        lengthIndex = writeIndex;
+        writeIndex += length_len;
+        bit_offset += length_len;
+        remaining_bits_len -= length_len;
         arT.direction = 0;
         csnStreamInit(&arT, bit_offset, remaining_bits_len);
         Status = serialize(&arT, vector, writeIndex, pvDATA(data, pDescr->offset));
-	
-        bitvec_write_field(vector, lengthIndex, writeIndex-lengthIndex-7, 7);
+
+        bitvec_write_field(vector, lengthIndex, writeIndex-lengthIndex-length_len, length_len);
         LOGPC(DCSN1, LOGL_NOTICE, "%s length = %u | ", pDescr->sz , (unsigned)(writeIndex-lengthIndex));
 
         if (Status >= 0)
@@ -2179,17 +2243,11 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
         pui8  = pui8DATA(data, pDescr->offset);
 
         /* this if-statement represents the M_NEXT_EXIST_OR_NULL description element */
-        if ((pDescr->descr.ptr != NULL) && (remaining_bits_len == 0))
+        if ((pDescr->may_be_null) && (remaining_bits_len == 0))
         { /* no more bits to decode is fine here - end of message detected and allowed */
 
           /* Skip i entries + this entry */
           pDescr += pDescr->i + 1;
-
-          /* pDescr now must be pointing to a CSN_END entry, if not this is an error */
-          if ( pDescr->type != CSN_END )
-          { /* Substract one more bit from remaining_bits_len to make the "not enough bits" error to be triggered */
-            remaining_bits_len--;
-          }
 
           break;
         }
@@ -2361,6 +2419,42 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
         }
 
         /* bitmap was successfully extracted or it was empty */
+        pDescr++;
+        break;
+      }
+
+      case CSN_PADDING_BITS:
+      { /* Padding from here and to the end of message */
+        LOGPC(DCSN1, LOGL_NOTICE, "%s = ", pDescr->sz);
+        guint8 filler = 0x2b;
+        if (remaining_bits_len > 0)
+        {
+          while (remaining_bits_len > 0)
+          {
+            guint8 bits_to_handle = remaining_bits_len%8;
+            if (bits_to_handle > 0)
+            {
+              guint8 fl = filler&(0xff>>(8-bits_to_handle));
+              bitvec_write_field(vector, writeIndex, fl, bits_to_handle);
+              LOGPC(DCSN1, LOGL_NOTICE, "%u|", fl);
+              remaining_bits_len -= bits_to_handle;
+              bit_offset += bits_to_handle;
+            }
+            else if (bits_to_handle == 0)
+            {
+              bitvec_write_field(vector, writeIndex, filler, 8);
+              LOGPC(DCSN1, LOGL_NOTICE, "%u|", filler);
+              remaining_bits_len -= 8;
+              bit_offset += 8;
+            }
+          }
+        }
+        if (remaining_bits_len < 0)
+        {
+          return ProcessError(writeIndex,"csnStreamDissector", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
+        }
+
+        /* Padding was successfully extracted or it was empty */
         pDescr++;
         break;
       }
@@ -2555,6 +2649,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
         }
         bitvec_write_field(vector, writeIndex, !Tag, 1);
         bit_offset++;
+        remaining_bits_len--;
         Tag = STANDARD_TAG; /* in case it was set to "reversed" */
         pDescr++;
         break;
