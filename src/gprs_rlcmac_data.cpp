@@ -547,6 +547,7 @@ static int tlli_from_ul_data(uint8_t *data, uint8_t len, uint32_t *tlli)
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	struct rlc_li_field *li;
 	uint8_t e;
+	uint32_t _tlli;
 
 	if (!rh->ti)
 		return -EINVAL;
@@ -575,7 +576,8 @@ static int tlli_from_ul_data(uint8_t *data, uint8_t len, uint32_t *tlli)
 			"border\n");
 		return -EINVAL;
 	}
-	*tlli = ntohl(*((uint32_t *)data));
+	memcpy(&_tlli, data, 4);
+	*tlli = ntohl(_tlli);
 
 	return 0;
 }
