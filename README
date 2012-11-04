@@ -11,11 +11,9 @@ The PCU is part of BSS, so it connects directly to SGSN.
  * No unacknowledged mode operation
  * No PCCCH/PBCCH support
  * Only single slot assignment on uplink direction
- * No half-duplex class support
- * No two-phase access support
+ * No half-duplex class support (only semi-duplex)
  * No handover support
  * No measurement support
- * No polling for control ack on assignment
  * No TA loop
  * No power loop
  * No CS loop

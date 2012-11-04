@@ -147,7 +147,7 @@ Data structures of TBFs and PDCHs:
    - an array of 8 PDCH structures, one for each assigned timeslot
    - in case of uplink TBF: an array of 8 USFs, one for each assigned timeslot
 
-  Each PDCH structure also has:
+  Each TRX and all it's PDCH structures also have:
    - an array of 32 uplink TBFs that are assigned to this PDCH
    - an array of 32 downlink TBFs that are assigned to this PDCH
 
