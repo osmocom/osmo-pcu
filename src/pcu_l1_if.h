@@ -21,12 +21,15 @@
 #define PCU_L1_IF_H
 
 #include <stdint.h>
+#ifdef __cplusplus
 extern "C" {
+#endif
 #include <osmocom/core/write_queue.h>
 #include <osmocom/core/socket.h>
 #include <osmocom/core/timer.h>
 #include <osmocom/core/bitvec.h>
 #include <osmocom/gsm/gsm_utils.h>
+#ifdef __cplusplus
 }
 
 int get_current_fn();
@@ -44,4 +47,18 @@ void pcu_l1if_close(void);
 
 int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim);
 int pcu_sock_send(struct msgb *msg);
+#endif
+
+#ifdef __cplusplus
+extern "C"
+#endif
+int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts, uint16_t arfcn,
+	uint32_t fn, uint8_t block_nr);
+
+#ifdef __cplusplus
+extern "C"
+#endif
+int pcu_rx_data_ind_pdtch(uint8_t trx, uint8_t ts, uint8_t *data,
+	uint8_t len, uint32_t fn);
+
 #endif // PCU_L1_IF_H

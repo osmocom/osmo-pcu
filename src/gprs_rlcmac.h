@@ -58,6 +58,7 @@ struct gprs_rlcmac_pdch {
 };
 
 struct gprs_rlcmac_trx {
+	void *fl1h;
 	uint16_t arfcn;
 	struct gprs_rlcmac_pdch pdch[8];
 	struct gprs_rlcmac_tbf *ul_tbf[32]; /* array of UL TBF, by UL TFI */
@@ -65,6 +66,7 @@ struct gprs_rlcmac_trx {
 };
 
 struct gprs_rlcmac_bts {
+	uint8_t bsic;
 	uint8_t fc_interval;
 	uint8_t cs1;
 	uint8_t cs2;

@@ -21,10 +21,14 @@
 #define GPRS_DEBUG_H
 
 #include <stdio.h>
+#ifdef __cplusplus
 extern "C" {
+#endif
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/logging.h>
+#ifdef __cplusplus
 };
+#endif
 /* Debug Areas of the code */
 enum {
 	DCSN1,

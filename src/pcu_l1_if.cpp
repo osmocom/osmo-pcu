@@ -37,6 +37,15 @@ extern "C" {
 #include <gprs_bssgp_pcu.h>
 #include <pcuif_proto.h>
 
+// FIXME: move this, when changed from c++ to c.
+extern "C" {
+void *l1if_open_pdch(void *priv, uint32_t hlayer1);
+int l1if_close_pdch(void *obj);
+int l1if_connect_pdch(void *obj, uint8_t ts);
+int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
+        uint16_t arfcn, uint8_t block_nr, uint8_t *data, uint8_t len);
+}
+
 extern void *tall_pcu_ctx;
 
 // Variable for storage current FN.
@@ -126,16 +135,32 @@ static int pcu_tx_data_req(uint8_t trx, uint8_t ts, uint8_t sapi,
 void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr)
 {
-	pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PDTCH, arfcn, fn, block_nr,
-		msg->data, msg->len);
+#ifdef ENABLE_SYSMODSP
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	if (bts->trx[trx].fl1h)
+		l1if_pdch_req(bts->trx[trx].fl1h, ts, 0, fn, arfcn, block_nr,
+			msg->data, msg->len);
+	else
+#endif
+		pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PDTCH, arfcn, fn, block_nr,
+			msg->data, msg->len);
 	msgb_free(msg);
 }
 
 void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr)
 {
-	pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr,
-		msg->data, msg->len);
+#ifdef ENABLE_SYSMODSP
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	if (bts->trx[trx].fl1h)
+		l1if_pdch_req(bts->trx[trx].fl1h, ts, 1, fn, arfcn, block_nr,
+			msg->data, msg->len);
+	else
+#endif
+		pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr,
+			msg->data, msg->len);
 	msgb_free(msg);
 }
 
@@ -166,9 +191,16 @@ void pcu_l1if_tx_pch(bitvec * block, int plen, char *imsi)
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, 23+3);
 }
 
+// FIXME: remove this, when changed from c++ to c.
 static void pcu_l1if_tx_bcch(uint8_t *data, int len)
 {
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_BCCH, 0, 0, 0, data, len);
+}
+
+extern "C" int pcu_rx_data_ind_pdtch(uint8_t trx, uint8_t ts, uint8_t *data,
+	uint8_t len, uint32_t fn)
+{
+	return gprs_rlcmac_rcv_block(trx, ts, data, len, fn);
 }
 
 static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
@@ -182,7 +214,7 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 
 	switch (data_ind->sapi) {
 	case PCU_IF_SAPI_PDTCH:
-		rc = gprs_rlcmac_rcv_block(data_ind->trx_nr, data_ind->ts_nr,
+		rc = pcu_rx_data_ind_pdtch(data_ind->trx_nr, data_ind->ts_nr,
 			data_ind->data, data_ind->len, data_ind->fn);
 		break;
 	default:
@@ -216,6 +248,13 @@ static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 	return rc;
 }
 
+// FIXME: remove this, when changed from c++ to c.
+extern "C" int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts, uint16_t arfcn,
+	uint32_t fn, uint8_t block_nr)
+{
+	return gprs_rlcmac_rcv_rts_block(trx, ts, arfcn, fn, block_nr);
+}
+
 static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 {
 	int rc = 0;
@@ -226,7 +265,7 @@ static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 
 	switch (rts_req->sapi) {
 	case PCU_IF_SAPI_PDTCH:
-		gprs_rlcmac_rcv_rts_block(rts_req->trx_nr, rts_req->ts_nr,
+		pcu_rx_rts_req_pdtch(rts_req->trx_nr, rts_req->ts_nr,
 			rts_req->arfcn, rts_req->fn, rts_req->block_nr);
 		break;
 	case PCU_IF_SAPI_PTCCH:
@@ -337,6 +376,7 @@ bssgp_failed:
 	LOGP(DL1IF, LOGL_DEBUG, " lac=%d\n", info_ind->lac);
 	LOGP(DL1IF, LOGL_DEBUG, " rac=%d\n", info_ind->rac);
 	LOGP(DL1IF, LOGL_DEBUG, " cell_id=%d\n", ntohs(info_ind->cell_id));
+	LOGP(DL1IF, LOGL_DEBUG, " bsic=%d\n", info_ind->bsic);
 	LOGP(DL1IF, LOGL_DEBUG, " nsei=%d\n", info_ind->nsei);
 	LOGP(DL1IF, LOGL_DEBUG, " nse_timer=%d %d %d %d %d %d %d\n",
 		info_ind->nse_timer[0], info_ind->nse_timer[1],
@@ -365,6 +405,7 @@ bssgp_failed:
 	LOGP(DL1IF, LOGL_DEBUG, " cv_countdown=%d\n", info_ind->cv_countdown);
 	LOGP(DL1IF, LOGL_DEBUG, " dl_tbf_ext=%d\n", info_ind->dl_tbf_ext);
 	LOGP(DL1IF, LOGL_DEBUG, " ul_tbf_ext=%d\n", info_ind->ul_tbf_ext);
+	bts->bsic = info_ind->bsic;
 	for (i = 0; i < 4; i++) {
 		if ((info_ind->flags & (PCU_IF_FLAG_CS1 << i)))
 			LOGP(DL1IF, LOGL_DEBUG, " Use CS%d\n", i+1);
@@ -415,11 +456,40 @@ bssgp_failed:
 
 	for (trx = 0; trx < 8; trx++) {
 		bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
+		if ((info_ind->flags & PCU_IF_FLAG_SYSMO)
+		 && info_ind->trx[trx].hlayer1) {
+#ifdef ENABLE_SYSMODSP
+			LOGP(DL1IF, LOGL_DEBUG, " TRX %d hlayer1=%x\n", trx,
+				info_ind->trx[trx].hlayer1);
+				if (!bts->trx[trx].fl1h)
+					bts->trx[trx].fl1h = l1if_open_pdch(
+						(void *)trx,
+						info_ind->trx[trx].hlayer1);
+			if (!bts->trx[trx].fl1h) {
+				LOGP(DL1IF, LOGL_FATAL, "Failed to open direct "
+					"DSP access for PDCH.\n");
+				exit(0);
+			}
+#else
+			LOGP(DL1IF, LOGL_FATAL, "Compiled without direct DSP "
+					"access for PDCH, but enabled at "
+					"BTS. Please deactivate it!\n");
+			exit(0);
+#endif
+#warning close TBD
+		}
+
 		for (ts = 0; ts < 8; ts++) {
 			pdch = &bts->trx[trx].pdch[ts];
 			if ((info_ind->trx[trx].pdch_mask & (1 << ts))) {
 				/* FIXME: activate dynamically at RLCMAC */
 				if (!pdch->enable) {
+#ifdef ENABLE_SYSMODSP
+					if ((info_ind->flags &
+							PCU_IF_FLAG_SYSMO))
+						l1if_connect_pdch(
+							bts->trx[trx].fl1h, ts);
+#endif
 					pcu_tx_act_req(trx, ts, 1);
 					INIT_LLIST_HEAD(&pdch->paging_list);
 					pdch->enable = 1;
@@ -449,9 +519,9 @@ static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 	/* omit frame numbers not starting at a MAC block */
 	if (fn13 != 0 && fn13 != 4 && fn13 != 8)
 		return 0;
-
-	LOGP(DL1IF, LOGL_DEBUG, "Time indication received: %d\n",
-		time_ind->fn % 52);
+#warning uncomment
+//	LOGP(DL1IF, LOGL_DEBUG, "Time indication received: %d\n",
+//		time_ind->fn % 52);
 
 	set_current_fn(time_ind->fn);
 

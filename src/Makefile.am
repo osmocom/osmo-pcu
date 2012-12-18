@@ -19,6 +19,11 @@
 #
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS)
+
+if ENABLE_SYSMODSP
+AM_CPPFLAGS += -DENABLE_SYSMODSP
+endif
+
 AM_CXXFLAGS = -Wall -ldl -pthread
 
 noinst_LTLIBRARIES = libgprs.la
@@ -50,6 +55,11 @@ noinst_PROGRAMS = \
 bin_PROGRAMS = \
 	osmo-pcu
 
+if ENABLE_SYSMODSP
+noinst_PROGRAMS += \
+	osmo-pcu-remote
+endif
+
 noinst_HEADERS = \
 	gprs_debug.h \
 	csn1.h \
@@ -60,7 +70,9 @@ noinst_HEADERS = \
 	pcu_l1_if.h \
 	gsm_timer.h \
 	bitvector.h \
-	pcu_vty.h
+	pcu_vty.h \
+	sysmo_l1_if.h \
+	femtobts.h
 
 RLCMACTest_SOURCES = RLCMACTest.cpp
 RLCMACTest_LDADD = \
@@ -69,11 +81,32 @@ RLCMACTest_LDADD = \
 	$(COMMON_LA)
 
 osmo_pcu_SOURCES = pcu_main.cpp
+
+if ENABLE_SYSMODSP
+osmo_pcu_SOURCES += sysmo_l1_if.c \
+	sysmo_l1_hw.c \
+	femtobts.c
+
+osmo_pcu_remote_SOURCES = pcu_main.cpp \
+	sysmo_l1_if.c \
+	sysmo_l1_fwd.c \
+	femtobts.c
+endif
+
 osmo_pcu_LDADD = \
 	libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(COMMON_LA)
+
+if ENABLE_SYSMODSP
+osmo_pcu_remote_LDADD = \
+	libgprs.la \
+	$(LIBOSMOGB_LIBS) \
+	$(LIBOSMOCORE_LIBS) \
+	$(LIBOSMOGSM_LIBS) \
+	$(COMMON_LA)
+endif
 
 #MOSTLYCLEANFILES += testSource testDestination

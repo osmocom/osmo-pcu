@@ -34,6 +34,14 @@ AC_ARG_ENABLE(sysmocom-bts,
 AC_MSG_RESULT([$enable_sysmocom_bts])
 AM_CONDITIONAL(ENABLE_SYSMOBTS, test "x$enable_sysmocom_bts" = "xyes")
 
+AC_MSG_CHECKING([whether to enable direct DSP access for PDCH of sysmocom-bts])
+AC_ARG_ENABLE(sysmocom-dsp,
+		AC_HELP_STRING([--enable-sysmocom-dsp],
+				[enable code for sysmocom DSP [default=no]]),
+		[enable_sysmocom_dsp="yes"],[enable_sysmocom_dsp="no"])
+AC_MSG_RESULT([$enable_sysmocom_dsp])
+AM_CONDITIONAL(ENABLE_SYSMODSP, test "x$enable_sysmocom_dsp" = "xyes")
+
 AC_OUTPUT(
     src/Makefile
     Makefile)
