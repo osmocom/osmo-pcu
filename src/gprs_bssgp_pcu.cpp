@@ -578,6 +578,7 @@ int gprs_bssgp_create(uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		return -EINVAL;
 	}
+	gprs_ns_vty_init(bssgp_nsi);
 	rc = gprs_ns_nsip_listen(bssgp_nsi);
 	if (rc < 0) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create socket\n");
