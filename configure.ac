@@ -44,4 +44,5 @@ AM_CONDITIONAL(ENABLE_SYSMODSP, test "x$enable_sysmocom_dsp" = "xyes")
 
 AC_OUTPUT(
     src/Makefile
+    examples/Makefile
     Makefile)

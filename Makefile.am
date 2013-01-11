@@ -1,3 +1,3 @@
 AUTOMAKE_OPTIONS = foreign dist-bzip2 1.6
 
-SUBDIRS = src
+SUBDIRS = src examples
