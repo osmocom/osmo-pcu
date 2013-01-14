@@ -25,6 +25,13 @@
 #include <cstring>
 #include "csn1.h"
 #include "gsm_rlcmac.h"
+extern "C" {
+extern const struct log_info gprs_log_info;
+#include "pcu_vty.h"
+#include <osmocom/vty/telnet_interface.h>
+#include <osmocom/vty/logging.h>
+#include <osmocom/core/application.h>
+}
 using namespace std;
 
 void printSizeofRLCMAC()
@@ -198,6 +205,8 @@ void testRlcMacUplink()
 
 int main(int argc, char *argv[])
 {
+	osmo_init_logging(&gprs_log_info);
+
 	//printSizeofRLCMAC();
 	testRlcMacDownlink();
 	testRlcMacUplink();
