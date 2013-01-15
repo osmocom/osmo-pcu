@@ -282,12 +282,12 @@ int sba_alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta);
 
 struct gprs_rlcmac_sba *sba_find(uint8_t trx, uint8_t ts, uint32_t fn);
 
-int tfi_alloc(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, uint8_t *_ts,
-	int8_t use_trx, int8_t first_ts);
+int tfi_alloc(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx,
+	int8_t use_trx);
 
 struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_tbf *old_tbf,
 	enum gprs_rlcmac_tbf_direction dir, uint8_t tfi, uint8_t trx,
-	uint8_t first_ts, uint8_t ms_class, uint8_t single_slot);
+	uint8_t ms_class, uint8_t single_slot);
 
 struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, uint8_t trx,
         enum gprs_rlcmac_tbf_direction dir);

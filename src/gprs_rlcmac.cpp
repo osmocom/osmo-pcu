@@ -175,9 +175,8 @@ void debug_diagram(int diag, const char *format, ...)
 
 /* FIXME: spread ressources over multiple TRX. Also add option to use same
  * TRX in case of existing TBF for TLLI in the other direction. */
-/* search for free TFI and return TFI, TRX and first TS */
-int tfi_alloc(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, uint8_t *_ts,
-	int8_t use_trx, int8_t first_ts)
+/* search for free TFI and return TFI, TRX */
+int tfi_alloc(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx)
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_pdch *pdch;
@@ -190,12 +189,10 @@ int tfi_alloc(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, uint8_t *_ts,
 		trx_from = 0;
 		trx_to = 7;
 	}
-	if (first_ts < 0 || first_ts >= 8)
-		first_ts = 0;
 
 	/* on TRX find first enabled TS */
 	for (trx = trx_from; trx <= trx_to; trx++) {
-		for (ts = first_ts; ts < 8; ts++) {
+		for (ts = 0; ts < 8; ts++) {
 			pdch = &bts->trx[trx].pdch[ts];
 			if (!pdch->enable)
 				continue;
@@ -224,7 +221,6 @@ int tfi_alloc(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, uint8_t *_ts,
 	if (tfi < 32) {
 		LOGP(DRLCMAC, LOGL_DEBUG, " Found TFI=%d.\n", tfi);
 		*_trx = trx;
-		*_ts = ts;
 		return tfi;
 	}
 	LOGP(DRLCMAC, LOGL_NOTICE, "No TFI available.\n");
@@ -324,7 +320,7 @@ struct gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 
 struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_tbf *old_tbf,
 	enum gprs_rlcmac_tbf_direction dir, uint8_t tfi, uint8_t trx,
-	uint8_t first_ts, uint8_t ms_class, uint8_t single_slot)
+	uint8_t ms_class, uint8_t single_slot)
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_tbf *tbf;
@@ -353,7 +349,7 @@ next_diagram:
 		"MS_CLASS=%d\n", (dir == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL",
 		tfi, trx, ms_class);
 
-	if (trx >= 8 || first_ts >= 8 || tfi >= 32)
+	if (trx >= 8 || tfi >= 32)
 		return NULL;
 
 	tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_tbf);
@@ -367,7 +363,6 @@ next_diagram:
 	tbf->tfi = tfi;
 	tbf->trx = trx;
 	tbf->arfcn = bts->trx[trx].arfcn;
-	tbf->first_ts = first_ts;
 	tbf->ms_class = ms_class;
 	tbf->ws = 64;
 	tbf->sns = 128;
@@ -414,17 +409,24 @@ int alloc_algorithm_a(struct gprs_rlcmac_tbf *old_tbf,
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_pdch *pdch;
-	uint8_t ts = tbf->first_ts;
+	uint8_t ts;
 	int8_t usf; /* must be signed */
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm A) for class "
 		"%d\n", tbf->ms_class);
 
-	pdch = &bts->trx[tbf->trx].pdch[ts];
-	if (!pdch->enable) {
-		LOGP(DRLCMAC, LOGL_ERROR, "TS=%d not enabled.", ts);
-			return -EIO;
+	for (ts = 0; ts < 8; ts++) {
+		pdch = &bts->trx[tbf->trx].pdch[ts];
+		if (!pdch->enable) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, because "
+				"not enabled\n", ts);
+			continue;
+		}
+		break;
 	}
+	if (ts == 8)
+		return -EINVAL;
+
 	tbf->tsc = pdch->tsc;
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
 		/* if USF available */
@@ -447,7 +449,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_tbf *old_tbf,
 		tbf->pdch[ts] = pdch;
 	}
 	/* the only one TS is the common TS */
-	tbf->first_common_ts = ts;
+	tbf->first_ts = tbf->first_common_ts = ts;
 
 	return 0;
 }
@@ -467,7 +469,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_tbf *old_tbf,
 	uint8_t Rx, Tx, Sum;	/* Maximum Number of Slots: RX, Tx, Sum Rx+Tx */
 	uint8_t Tta, Ttb, Tra, Trb, Tt, Tr;	/* Minimum Number of Slots */
 	uint8_t Type; /* Type of Mobile */
-	uint8_t rx_win_min, rx_win_max;
+	uint8_t rx_win_min = 0, rx_win_max = 7;
 	uint8_t tx_win_min, tx_win_max, tx_range;
 	uint8_t rx_window = 0, tx_window = 0;
 	const char *digit[10] = { "0","1","2","3","4","5","6","7","8","9" };
@@ -622,7 +624,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_tbf *old_tbf,
 		int j;
 
 		/* calculate mask of colliding slots */
-		for (ts = old_tbf->first_ts; ts < 8; ts++) {
+		for (ts = 0; ts < 8; ts++) {
 			if (old_tbf->pdch[ts]) {
 				ul_usage |= (1 << ts);
 				/* mark bits from TS-t .. TS+r */
