@@ -14,6 +14,8 @@
 #include <gprs_debug.h>
 #include <pcu_l1_if.h>
 
+extern void *tall_pcu_ctx;
+
 uint32_t l1if_ts_to_hLayer2(uint8_t trx, uint8_t ts)
 {
 	return (ts << 16) | (trx << 24);
@@ -320,7 +322,7 @@ void *l1if_open_pdch(void *priv, uint32_t hlayer1)
 	struct femtol1_hdl *fl1h;
 	int rc;
 
-	fl1h = talloc_zero(priv, struct femtol1_hdl);
+	fl1h = talloc_zero(tall_pcu_ctx, struct femtol1_hdl);
 	if (!fl1h)
 		return NULL;
 

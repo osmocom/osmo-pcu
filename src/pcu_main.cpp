@@ -39,6 +39,7 @@ static int config_given = 0;
 static const char *config_file = "osmo-pcu.cfg";
 extern struct vty_app_info pcu_vty_info;
 void *tall_pcu_ctx;
+extern void *bv_tall_ctx;
 static int quit = 0;
 
 #ifdef DEBUG_DIAGRAM
@@ -140,6 +141,7 @@ int main(int argc, char *argv[])
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "Osmo-PCU context");
 	if (!tall_pcu_ctx)
 		return -ENOMEM;
+	bv_tall_ctx = tall_pcu_ctx;
 
 	bts = gprs_rlcmac_bts = talloc_zero(tall_pcu_ctx,
 						struct gprs_rlcmac_bts);
