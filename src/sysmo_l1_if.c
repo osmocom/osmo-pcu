@@ -345,11 +345,12 @@ void *l1if_open_pdch(void *priv, uint32_t hlayer1)
 	return fl1h;
 }
 
-static int l1if_close_pdch(void *obj)
+int l1if_close_pdch(void *obj)
 {
 	struct femtol1_hdl *fl1h = obj;
 	if (fl1h)
 		l1if_transport_close(MQ_PDTCH_WRITE, fl1h);
+	talloc_free(fl1h);
 	return 0;
 }
 

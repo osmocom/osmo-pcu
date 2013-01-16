@@ -39,6 +39,10 @@ extern "C" {
 
 extern void *tall_pcu_ctx;
 
+extern "C" {
+int l1if_close_pdch(void *obj);
+}
+
 /*
  * SYSMO-PCU socket functions
  */
@@ -95,6 +99,10 @@ static void pcu_sock_close(struct pcu_sock_state *state, int lost)
 
 	/* disable all slots, kick all TBFs */
 	for (trx = 0; trx < 8; trx++) {
+		if (bts->trx[trx].fl1h) {
+			l1if_close_pdch(bts->trx[trx].fl1h);
+			bts->trx[trx].fl1h = NULL;
+		}
 		for (ts = 0; ts < 8; ts++)
 			bts->trx[trx].pdch[ts].enable = 0;
 		for (tfi = 0; tfi < 32; tfi++) {
