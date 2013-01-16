@@ -141,6 +141,8 @@ void testRlcMacDownlink()
 		bitvec_free(vector);
 		free(data);
 	}
+
+	bitvec_free(resultVector);
 }
 
 
@@ -201,6 +203,8 @@ void testRlcMacUplink()
 		bitvec_free(vector);
 		free(data);
 	}
+
+	bitvec_free(resultVector);
 }
 
 int main(int argc, char *argv[])

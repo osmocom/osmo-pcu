@@ -127,6 +127,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 				bitvec_read_field(block, rp, 4); // SMS Value
 				bitvec_read_field(block, rp, 4); // SMS Value
 		}
+		bitvec_free(block);
 	}
 	/* get lifetime */
 	uint16_t delay_csec = 0xffff;
