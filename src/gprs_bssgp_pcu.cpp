@@ -22,7 +22,7 @@
 #include <pcu_l1_if.h>
 
 struct sgsn_instance *sgsn;
-void *tall_bsc_ctx;
+extern void *tall_pcu_ctx;
 struct bssgp_bvc_ctx *bctx = NULL;
 struct gprs_nsvc *nsvc = NULL;
 static int bvc_sig_reset = 0, bvc_reset = 0, bvc_unblocked = 0;
@@ -573,7 +573,7 @@ int gprs_bssgp_create(uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
 	if (bctx)
 		return 0; /* if already created, must return 0: no error */
 
-	bssgp_nsi = gprs_ns_instantiate(&sgsn_ns_cb, NULL);
+	bssgp_nsi = gprs_ns_instantiate(&sgsn_ns_cb, tall_pcu_ctx);
 	if (!bssgp_nsi) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		return -EINVAL;
