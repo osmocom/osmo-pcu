@@ -69,10 +69,11 @@ static void handle_options(int argc, char **argv)
 			{ "config-file", 1, 0, 'c' },
 			{ "mcc", 1, 0, 'm' },
 			{ "mnc", 1, 0, 'n' },
+			{ "version", 0, 0, 'V' },
 			{ 0, 0, 0, 0 }
 		};
 
-		c = getopt_long(argc, argv, "hc:m:n:",
+		c = getopt_long(argc, argv, "hc:m:n:V",
 				long_options, &option_idx);
 		if (c == -1)
 			break;
@@ -91,6 +92,10 @@ static void handle_options(int argc, char **argv)
 			break;
 		case 'n':
 			spoof_mnc = atoi(optarg);
+			break;
+		case 'V':
+			print_version(1);
+			exit(0);
 			break;
 		default:
 			fprintf(stderr, "Unknown option '%c'\n", c);
