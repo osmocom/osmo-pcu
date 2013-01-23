@@ -30,7 +30,7 @@ AC_MSG_CHECKING([whether to enable sysmocom-bts hardware support])
 AC_ARG_ENABLE(sysmocom-bts,
 		AC_HELP_STRING([--enable-sysmocom-bts],
 				[enable code for sysmocom femto-bts [default=no]]),
-		[enable_sysmocom_bts="yes"],[enable_sysmocom_bts="no"])
+		[enable_sysmocom_bts="$enableval"],[enable_sysmocom_bts="no"])
 AC_MSG_RESULT([$enable_sysmocom_bts])
 AM_CONDITIONAL(ENABLE_SYSMOBTS, test "x$enable_sysmocom_bts" = "xyes")
 
@@ -38,7 +38,7 @@ AC_MSG_CHECKING([whether to enable direct DSP access for PDCH of sysmocom-bts])
 AC_ARG_ENABLE(sysmocom-dsp,
 		AC_HELP_STRING([--enable-sysmocom-dsp],
 				[enable code for sysmocom DSP [default=no]]),
-		[enable_sysmocom_dsp="yes"],[enable_sysmocom_dsp="no"])
+		[enable_sysmocom_dsp="$enableval"],[enable_sysmocom_dsp="no"])
 AC_MSG_RESULT([$enable_sysmocom_dsp])
 AM_CONDITIONAL(ENABLE_SYSMODSP, test "x$enable_sysmocom_dsp" = "xyes")
 
