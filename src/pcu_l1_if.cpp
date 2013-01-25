@@ -40,7 +40,6 @@ extern "C" {
 // FIXME: move this, when changed from c++ to c.
 extern "C" {
 void *l1if_open_pdch(void *priv, uint32_t hlayer1);
-int l1if_close_pdch(void *obj);
 int l1if_connect_pdch(void *obj, uint8_t ts);
 int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
         uint16_t arfcn, uint8_t block_nr, uint8_t *data, uint8_t len);
@@ -476,7 +475,6 @@ bssgp_failed:
 					"BTS. Please deactivate it!\n");
 			exit(0);
 #endif
-#warning close TBD
 		}
 
 		for (ts = 0; ts < 8; ts++) {
