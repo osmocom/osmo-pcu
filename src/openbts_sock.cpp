@@ -112,6 +112,7 @@ static int udp_read_cb(struct osmo_fd *ofd)
 
 	struct gsm_pcu_if *pcu_prim = (gsm_pcu_if *)(msg->l1h);
 	rc = pcu_rx(pcu_prim->msg_type, pcu_prim);
+	msgb_free(msg);
 	return rc;
 }
 
