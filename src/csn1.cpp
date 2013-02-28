@@ -1305,7 +1305,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
             csnStream_t arT = *ar;
             gint16      Status;
             csnStreamInit(&arT, bit_offset, remaining_bits_len);
-            Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pvDATA(data, pDescr->offset));
+            Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pui8);
 
             if (Status >= 0)
             { /* successful completion */
@@ -1366,7 +1366,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
           LOGPC(DCSN1, LOGL_NOTICE, "%s { | ", pDescr->sz);
           
           csnStreamInit(&arT, bit_offset, remaining_bits_len);
-          Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pvDATA(data, pDescr->offset));
+          Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pui8);
 
           if (Status >= 0)
           { /* successful completion */
@@ -2562,7 +2562,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
             csnStream_t arT = *ar;
             gint16      Status;
             csnStreamInit(&arT, bit_offset, remaining_bits_len);
-            Status = csnStreamEncoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, writeIndex, pvDATA(data, pDescr->offset));
+            Status = csnStreamEncoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, writeIndex, pui8);
 
             if (Status >= 0)
             { /* successful completion */
@@ -2628,7 +2628,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
           ElementCount--;
           LOGPC(DCSN1, LOGL_NOTICE, "%s { | ", pDescr->sz);
           csnStreamInit(&arT, bit_offset, remaining_bits_len);
-          Status = csnStreamEncoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, writeIndex, pvDATA(data, pDescr->offset));
+          Status = csnStreamEncoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, writeIndex, pui8);
           LOGPC(DCSN1, LOGL_NOTICE, "%s } | ", pDescr->sz);
           if (Status >= 0)
           { /* successful completion */
