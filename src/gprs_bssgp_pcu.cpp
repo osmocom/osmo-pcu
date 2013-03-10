@@ -559,9 +559,10 @@ static void bvc_timeout(void *_priv)
 }
 
 /* create BSSGP/NS layer instances */
-int gprs_bssgp_create(uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
-	uint16_t nsvci, uint16_t bvci, uint16_t mcc, uint16_t mnc, uint16_t lac,
-	uint16_t rac, uint16_t cell_id)
+int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip,
+	uint16_t sgsn_port, uint16_t nsei, uint16_t nsvci, uint16_t bvci,
+	uint16_t mcc, uint16_t mnc, uint16_t lac, uint16_t rac,
+	uint16_t cell_id)
 {
 	struct sockaddr_in dest;
 	int rc;
@@ -579,6 +580,7 @@ int gprs_bssgp_create(uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
 		return -EINVAL;
 	}
 	gprs_ns_vty_init(bssgp_nsi);
+	bssgp_nsi->nsip.local_port = local_port;
 	rc = gprs_ns_nsip_listen(bssgp_nsi);
 	if (rc < 0) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create socket\n");
