@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
 	bts->n3101 = 10;
 	bts->n3103 = 4;
 	bts->n3105 = 8;
-	bts->alpha = 10; /* a = 1.0 */
+	bts->alpha = 0; /* a = 0.0 */
 
 	msgb_set_talloc_ctx(tall_pcu_ctx);
 
