@@ -36,6 +36,7 @@ libgprs_la_SOURCES = \
 	gprs_rlcmac.cpp \
 	gprs_rlcmac_data.cpp \
 	gprs_rlcmac_sched.cpp \
+	gprs_rlcmac_meas.cpp \
 	gsm_timer.cpp \
 	bitvector.cpp \
 	pcu_l1_if.cpp \

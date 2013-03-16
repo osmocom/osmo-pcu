@@ -226,8 +226,21 @@ struct gprs_rlcmac_tbf {
 	unsigned int fT; /* fTxxxx number */
 	unsigned int num_fT_exp; /* number of consecutive fT expirations */
 
-	struct timeval bw_tv; /* timestamp for bandwidth calculation */
-	uint32_t bw_octets; /* number of octets transmitted since bw_tv */
+	struct {
+		char imsi[16];
+
+		struct timeval dl_bw_tv; /* timestamp for dl bw calculation */
+		uint32_t dl_bw_octets; /* number of octets since bw_tv */
+
+		struct timeval rssi_tv; /* timestamp for rssi calculation */
+		int32_t rssi_sum; /* sum of rssi values */
+		int rssi_num; /* number of rssi values added since rssi_tv */
+
+		struct timeval dl_loss_tv; /* timestamp for loss calculation */
+		uint16_t dl_loss_lost; /* sum of lost packets */
+		uint16_t dl_loss_received; /* sum of received packets */
+
+	} meas;
 
 	uint8_t cs; /* current coding scheme */
 
@@ -277,6 +290,19 @@ void debug_diagram(int diag, const char *format, ...);
 #else
 #define debug_diagram(a, b, args...) ;
 #endif
+
+int gprs_rlcmac_received_lost(struct gprs_rlcmac_tbf *tbf, uint16_t received,
+	uint16_t lost);
+
+int gprs_rlcmac_lost_rep(struct gprs_rlcmac_tbf *tbf);
+
+int gprs_rlcmac_meas_rep(Packet_Measurement_Report_t *pmr);
+
+int gprs_rlcmac_rssi(struct gprs_rlcmac_tbf *tbf, int8_t rssi);
+
+int gprs_rlcmac_rssi_rep(struct gprs_rlcmac_tbf *tbf);
+
+int gprs_rlcmac_dl_bw(struct gprs_rlcmac_tbf *tbf, uint16_t octets);
 
 int sba_alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta);
 

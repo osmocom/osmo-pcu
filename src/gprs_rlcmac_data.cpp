@@ -468,6 +468,9 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		}
 		LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet ressource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
 		break;
+	case MT_PACKET_MEASUREMENT_REPORT:
+		gprs_rlcmac_meas_rep(&ul_control_block->u.Packet_Measurement_Report);
+		break;
 	default:
 		LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] unknown control block received\n");
 	}
@@ -846,6 +849,9 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 	LOGP(DRLCMACUL, LOGL_DEBUG, "UL DATA TBF=%d received (V(Q)=%d .. "
 		"V(R)=%d)\n", rh->tfi, tbf->dir.ul.v_q, tbf->dir.ul.v_r);
 
+	/* process RSSI */
+	gprs_rlcmac_rssi(tbf, rssi);
+
 	/* get TLLI */
 	if (!tbf->tlli_valid) {
 		struct gprs_rlcmac_tbf *dl_tbf, *ul_tbf;
@@ -1213,29 +1219,6 @@ static struct msgb *llc_dequeue(struct gprs_rlcmac_tbf *tbf)
 	return msg;
 }
 
-static int gprs_rlcmac_debug_bw(struct gprs_rlcmac_tbf *tbf, uint16_t octets)
-{
-	struct timeval now_tv, *bw_tv = &tbf->bw_tv;
-	uint32_t elapsed;
-
-	tbf->bw_octets += octets;
-
-	gettimeofday(&now_tv, NULL);
-	elapsed = ((now_tv.tv_sec - bw_tv->tv_sec) << 7)
-		+ ((now_tv.tv_usec - bw_tv->tv_usec) << 7) / 1000000;
-	if (elapsed < 128)
-		return 0;
-
-	LOGP(DRLCMACBW, LOGL_DEBUG, "DL Bandwitdh of TLLI=0x%08x: %d KBits/s\n",
-		tbf->tlli, tbf->bw_octets / elapsed);
-
-	/* reset bandwidth values timestamp */
-	memcpy(bw_tv, &now_tv, sizeof(struct timeval));
-	tbf->bw_octets = 0;
-
-	return 0;
-}
-
 /* send DL data block
  *
  * The messages are fragmented and forwarded as data blocks.
@@ -1380,7 +1363,7 @@ do_resend:
 			LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for "
 				"TBF=%d that fits precisely in last block: "
 				"len=%d\n", tbf->tfi, tbf->llc_length);
-			gprs_rlcmac_debug_bw(tbf, tbf->llc_length);
+			gprs_rlcmac_dl_bw(tbf, tbf->llc_length);
 			/* block is filled, so there is no extension */
 			*e_pointer |= 0x01;
 			/* fill space */
@@ -1440,7 +1423,7 @@ do_resend:
 		space -= chunk;
 		LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for TBF=%d: "
 			"len=%d\n", tbf->tfi, tbf->llc_length);
-		gprs_rlcmac_debug_bw(tbf, tbf->llc_length);
+		gprs_rlcmac_dl_bw(tbf, tbf->llc_length);
 		/* reset LLC frame */
 		tbf->llc_index = tbf->llc_length = 0;
 		/* dequeue next LLC frame, if any */
@@ -1568,6 +1551,7 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 	uint8_t bit;
 	uint16_t bsn;
 	struct msgb *msg;
+	uint16_t lost = 0, received = 0;
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "TBF=%d downlink acknowledge\n",
 		tbf->tfi);
@@ -1587,25 +1571,7 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 		/* calculate distance of ssn from V(S) */
 		dist = (tbf->dir.dl.v_s - ssn) & mod_sns;
 		/* check if distance is less than distance V(A)..V(S) */
-		if (dist < ((tbf->dir.dl.v_s - tbf->dir.dl.v_a) & mod_sns)) {
-			/* SSN - 1 is in range V(A)..V(S)-1 */
-			for (i = 63, bsn = (ssn - 1) & mod_sns;
-			     i >= 0 && bsn != ((tbf->dir.dl.v_a - 1) & mod_sns);
-			     i--, bsn = (bsn - 1) & mod_sns) {
-				bit = (rbb[i >> 3]  >>  (7 - (i&7)))   & 1;
-				if (bit) {
-					LOGP(DRLCMACDL, LOGL_DEBUG, "- got "
-						"ack for BSN=%d\n", bsn);
-					tbf->dir.dl.v_b[bsn & mod_sns_half]
-						= 'A';
-				} else {
-					LOGP(DRLCMACDL, LOGL_DEBUG, "- got "
-						"NACK for BSN=%d\n", bsn);
-					tbf->dir.dl.v_b[bsn & mod_sns_half]
-						= 'N';
-				}
-			}
-		} else {
+		if (dist >= ((tbf->dir.dl.v_s - tbf->dir.dl.v_a) & mod_sns)) {
 			/* this might happpen, if the downlink assignment
 			 * was not received by ms and the ack refers
 			 * to previous TBF
@@ -1616,6 +1582,27 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 				tbf->tfi);
 				return 1; /* indicate to free TBF */
 		}
+		/* SSN - 1 is in range V(A)..V(S)-1 */
+		for (i = 63, bsn = (ssn - 1) & mod_sns;
+		     i >= 0 && bsn != ((tbf->dir.dl.v_a - 1) & mod_sns);
+		     i--, bsn = (bsn - 1) & mod_sns) {
+			bit = (rbb[i >> 3]  >>  (7 - (i&7)))   & 1;
+			if (bit) {
+				LOGP(DRLCMACDL, LOGL_DEBUG, "- got "
+					"ack for BSN=%d\n", bsn);
+				if (tbf->dir.dl.v_b[bsn & mod_sns_half]
+								!= 'A')
+					received++;
+				tbf->dir.dl.v_b[bsn & mod_sns_half] = 'A';
+			} else {
+				LOGP(DRLCMACDL, LOGL_DEBUG, "- got "
+					"NACK for BSN=%d\n", bsn);
+				tbf->dir.dl.v_b[bsn & mod_sns_half] = 'N';
+				lost++;
+			}
+		}
+		/* report lost and received packets */
+		gprs_rlcmac_received_lost(tbf, received, lost);
 
 		/* raise V(A), if possible */
 		for (i = 0, bsn = tbf->dir.dl.v_a; bsn != tbf->dir.dl.v_s;
@@ -1653,6 +1640,15 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
 	debug_diagram(tbf->diag, "got Final ACK");
+	/* range V(A)..V(S)-1 */
+	for (bsn = tbf->dir.dl.v_a; bsn != tbf->dir.dl.v_s;
+	     bsn = (bsn + 1) & mod_sns) {
+		if (tbf->dir.dl.v_b[bsn & mod_sns_half] != 'A')
+			received++;
+	}
+
+	/* report all outstanding packets as received */
+	gprs_rlcmac_received_lost(tbf, received, lost);
 
 	/* check for LLC PDU in the LLC Queue */
 	msg = llc_dequeue(tbf);

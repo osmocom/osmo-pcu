@@ -384,7 +384,9 @@ next_diagram:
 	}
 
 	/* set timestamp */
-	gettimeofday(&tbf->bw_tv, NULL);
+	gettimeofday(&tbf->meas.dl_bw_tv, NULL);
+	gettimeofday(&tbf->meas.rssi_tv, NULL);
+	gettimeofday(&tbf->meas.dl_loss_tv, NULL);
 
 	INIT_LLIST_HEAD(&tbf->llc_queue);
 	if (dir == GPRS_RLCMAC_UL_TBF)
@@ -913,6 +915,10 @@ static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 void tbf_free(struct gprs_rlcmac_tbf *tbf)
 {
 	struct msgb *msg;
+
+	/* Give final measurement report */
+	gprs_rlcmac_rssi_rep(tbf);
+	gprs_rlcmac_lost_rep(tbf);
 
 	debug_diagram(tbf->diag, "+---------------+");
 	debug_diagram(tbf->diag, "|    THE END    |");

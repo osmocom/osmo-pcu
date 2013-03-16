@@ -244,6 +244,9 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		gprs_rlcmac_trigger_downlink_assignment(tbf, old_tbf, imsi);
 	}
 
+	/* store IMSI for debugging purpose */
+	strncpy(tbf->meas.imsi, imsi, sizeof(tbf->meas.imsi) - 1);
+
 	return 0;
 }
 
