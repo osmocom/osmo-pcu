@@ -197,9 +197,9 @@ static void pcu_l1if_tx_bcch(uint8_t *data, int len)
 }
 
 extern "C" int pcu_rx_data_ind_pdtch(uint8_t trx, uint8_t ts, uint8_t *data,
-	uint8_t len, uint32_t fn)
+	uint8_t len, uint32_t fn, int8_t rssi)
 {
-	return gprs_rlcmac_rcv_block(trx, ts, data, len, fn);
+	return gprs_rlcmac_rcv_block(trx, ts, data, len, fn, rssi);
 }
 
 static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
@@ -214,7 +214,8 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 	switch (data_ind->sapi) {
 	case PCU_IF_SAPI_PDTCH:
 		rc = pcu_rx_data_ind_pdtch(data_ind->trx_nr, data_ind->ts_nr,
-			data_ind->data, data_ind->len, data_ind->fn);
+			data_ind->data, data_ind->len, data_ind->fn,
+			data_ind->rssi);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data indication with "

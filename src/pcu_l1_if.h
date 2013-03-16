@@ -59,6 +59,6 @@ int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts, uint16_t arfcn,
 extern "C"
 #endif
 int pcu_rx_data_ind_pdtch(uint8_t trx, uint8_t ts, uint8_t *data,
-	uint8_t len, uint32_t fn);
+	uint8_t len, uint32_t fn, int8_t rssi);
 
 #endif // PCU_L1_IF_H

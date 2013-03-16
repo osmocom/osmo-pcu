@@ -320,7 +320,7 @@ enum gprs_rlcmac_block_type {
 };
 
 int gprs_rlcmac_rcv_block(uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
-	uint32_t fn);
+	uint32_t fn, int8_t rssi);
 
 int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, 
         uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc, 
@@ -374,7 +374,7 @@ unsigned write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
 	uint8_t *identity, uint8_t chan_needed);
 
 int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
-	uint8_t *data, uint8_t len);
+	uint8_t *data, uint8_t len, int8_t rssi);
 
 struct msgb *gprs_rlcmac_send_data_block_acknowledged(
         struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts);

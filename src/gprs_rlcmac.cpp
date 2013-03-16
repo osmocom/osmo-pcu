@@ -1145,7 +1145,7 @@ void gprs_rlcmac_enqueue_block(bitvec *block, int len)
 
 /* received RLC/MAC block from L1 */
 int gprs_rlcmac_rcv_block(uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
-	uint32_t fn)
+	uint32_t fn, int8_t rssi)
 {
 	unsigned payload = data[0] >> 6;
 	bitvec *block;
@@ -1154,7 +1154,7 @@ int gprs_rlcmac_rcv_block(uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
 	switch (payload) {
 	case GPRS_RLCMAC_DATA_BLOCK:
 		rc = gprs_rlcmac_rcv_data_block_acknowledged(trx, ts, data,
-			len);
+			len, rssi);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK:
 		block = bitvec_alloc(len);
