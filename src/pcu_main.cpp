@@ -114,6 +114,7 @@ void sighandler(int sigset)
 
 	switch (sigset) {
 	case SIGINT:
+	case SIGTERM:
 		/* If another signal is received afterwards, the program
 		 * is terminated without finishing shutdown process.
 		 */
