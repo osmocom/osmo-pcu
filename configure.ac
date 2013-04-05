@@ -42,6 +42,21 @@ AC_ARG_ENABLE(sysmocom-dsp,
 AC_MSG_RESULT([$enable_sysmocom_dsp])
 AM_CONDITIONAL(ENABLE_SYSMODSP, test "x$enable_sysmocom_dsp" = "xyes")
 
+AC_ARG_ENABLE([vty_tests],
+		AC_HELP_STRING([--enable-vty-tests],
+				[Include the VTY tests in make check [default=yes]]),
+		[enable_vty_tests="$enableval"],[enable_vty_tests="yes"])
+if test "x$enable_vty_tests" = "xyes" ; then
+	AM_PATH_PYTHON
+	AC_CHECK_PROG(OSMOTESTVTY_CHECK,osmotestvty.py,yes)
+	 if test "x$OSMOTESTVTY_CHECK" != "xyes" ; then
+		AC_MSG_ERROR([Please install osmocom-python to run the vty tests.])
+	fi
+fi
+AC_MSG_CHECKING([whether to enable VTY tests])
+AC_MSG_RESULT([$enable_vty_tests])
+AM_CONDITIONAL(ENABLE_VTY_TESTS, test "x$enable_vty_tests" = "xyes")
+
 AC_OUTPUT(
     src/Makefile
     examples/Makefile
