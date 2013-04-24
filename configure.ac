@@ -44,8 +44,8 @@ AM_CONDITIONAL(ENABLE_SYSMODSP, test "x$enable_sysmocom_dsp" = "xyes")
 
 AC_ARG_ENABLE([vty_tests],
 		AC_HELP_STRING([--enable-vty-tests],
-				[Include the VTY tests in make check [default=yes]]),
-		[enable_vty_tests="$enableval"],[enable_vty_tests="yes"])
+				[Include the VTY tests in make check [default=no]]),
+		[enable_vty_tests="$enableval"],[enable_vty_tests="no"])
 if test "x$enable_vty_tests" = "xyes" ; then
 	AM_PATH_PYTHON
 	AC_CHECK_PROG(OSMOTESTVTY_CHECK,osmotestvty.py,yes)
