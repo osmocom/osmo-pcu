@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <signal.h>
+#include <sched.h>
 extern "C" {
 #include "pcu_vty.h"
 #include <osmocom/vty/telnet_interface.h>
@@ -41,6 +42,7 @@ extern struct vty_app_info pcu_vty_info;
 void *tall_pcu_ctx;
 extern void *bv_tall_ctx;
 static int quit = 0;
+static int rt_prio = -1;
 
 #ifdef DEBUG_DIAGRAM
 extern struct timeval diagram_time;
@@ -56,6 +58,8 @@ static void print_help()
 			"provided by BTS\n"
 		"  -n	--mnc MNC	use given MNC instead of value "
 			"provided by BTS\n"
+		"  -r   --realtime PRIO Use SCHED_RR with the specified "
+			"priority\n"
 		);
 }
 
@@ -70,10 +74,11 @@ static void handle_options(int argc, char **argv)
 			{ "mcc", 1, 0, 'm' },
 			{ "mnc", 1, 0, 'n' },
 			{ "version", 0, 0, 'V' },
+			{ "realtime", 1, 0, 'r' },
 			{ 0, 0, 0, 0 }
 		};
 
-		c = getopt_long(argc, argv, "hc:m:n:V",
+		c = getopt_long(argc, argv, "hc:m:n:Vr:",
 				long_options, &option_idx);
 		if (c == -1)
 			break;
@@ -96,6 +101,9 @@ static void handle_options(int argc, char **argv)
 		case 'V':
 			print_version(1);
 			exit(0);
+			break;
+		case 'r':
+			rt_prio = atoi(optarg);
 			break;
 		default:
 			fprintf(stderr, "Unknown option '%c'\n", c);
@@ -141,6 +149,7 @@ void sighandler(int sigset)
 
 int main(int argc, char *argv[])
 {
+	struct sched_param param;
 	struct gprs_rlcmac_bts *bts;
 	int rc;
 
@@ -211,6 +220,18 @@ int main(int argc, char *argv[])
 	signal(SIGABRT, sighandler);
 	signal(SIGUSR1, sighandler);
 	signal(SIGUSR2, sighandler);
+
+	/* enable realtime priority for us */
+	if (rt_prio != -1) {
+		memset(&param, 0, sizeof(param));
+		param.sched_priority = rt_prio;
+		rc = sched_setscheduler(getpid(), SCHED_RR, &param);
+		if (rc != 0) {
+			fprintf(stderr, "Setting SCHED_RR priority(%d) failed: %s\n",
+			param.sched_priority, strerror(errno));
+			exit(1);
+		}
+	}
 
 	while (!quit) {
 		osmo_gsm_timers_check();
