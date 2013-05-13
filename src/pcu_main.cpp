@@ -248,6 +248,8 @@ int main(int argc, char *argv[])
 
 	pcu_l1if_close();
 
+	flush_timing_advance();
+
 	talloc_free(gprs_rlcmac_bts);
 
 	talloc_report_full(tall_pcu_ctx, stderr);

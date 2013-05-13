@@ -516,6 +516,7 @@ bssgp_failed:
 static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 {
 	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_sba *sba, *sba2;
 	uint32_t elapsed;
 	uint8_t fn13 = time_ind->fn % 13;
 
@@ -531,16 +532,25 @@ static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 	/* check for poll timeout */
 	llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
 		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
-			elapsed = (frame_number - tbf->poll_fn) % 2715648;
-			if (elapsed >= 20 && elapsed < 200)
+			elapsed = (frame_number + 2715648 - tbf->poll_fn)
+								% 2715648;
+			if (elapsed >= 20 && elapsed < 2715400)
 				gprs_rlcmac_poll_timeout(tbf);
 		}
 	}
 	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
 		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
-			elapsed = (frame_number - tbf->poll_fn) % 2715648;
-			if (elapsed >= 20 && elapsed < 200)
+			elapsed = (frame_number + 2715648 - tbf->poll_fn)
+								% 2715648;
+			if (elapsed >= 20 && elapsed < 2715400)
 				gprs_rlcmac_poll_timeout(tbf);
+		}
+	}
+	llist_for_each_entry_safe(sba, sba2, &gprs_rlcmac_sbas, list) {
+		elapsed = (frame_number + 2715648 - sba->fn) % 2715648;
+		if (elapsed >= 20 && elapsed < 2715400) {
+			/* sba will be freed here */
+			gprs_rlcmac_sba_timeout(sba);
 		}
 	}
 

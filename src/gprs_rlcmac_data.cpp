@@ -206,6 +206,15 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 	return 0;
 }
 
+int gprs_rlcmac_sba_timeout(struct gprs_rlcmac_sba *sba)
+{
+	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for SBA\n");
+	llist_del(&sba->list);
+	talloc_free(sba);
+
+	return 0;
+}
+
 static uint8_t get_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
 {
 	int i;
@@ -263,6 +272,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 	int8_t tfi = 0; /* must be signed */
 	uint32_t tlli = 0;
 	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_sba *sba;
 	int rc;
 
 	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)talloc_zero(tall_pcu_ctx, RlcMacUplink_t);
@@ -420,6 +430,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 			if (!tbf) {
 				uint8_t ms_class = 0;
 				struct gprs_rlcmac_tbf *dl_tbf;
+				uint8_t ta;
 
 				if ((dl_tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF))) {
 					LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
@@ -431,12 +442,28 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 				LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
 					"in packet ressource request of single "
 					"block, so we provide one:\n");
+				sba = sba_find(trx, ts, fn);
+				if (!sba) {
+					LOGP(DRLCMAC, LOGL_NOTICE, "MS requests UL TBF "
+						"in packet ressource request of single "
+						"block, but there is no resource request "
+						"scheduled!\n");
+					rc = recall_timing_advance(tlli);
+					if (rc >= 0)
+						ta = rc;
+					else
+						ta = 0;
+				} else {
+					ta = sba->ta;
+					remember_timing_advance(tlli, ta);
+					llist_del(&sba->list);
+					talloc_free(sba);
+				}
 				if (ul_control_block->u.Packet_Resource_Request.Exist_MS_Radio_Access_capability)
 					ms_class = get_ms_class_by_capability(&ul_control_block->u.Packet_Resource_Request.MS_Radio_Access_capability);
 				if (!ms_class)
 					LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");
-				tbf = alloc_ul_tbf(trx, ms_class, tlli, 0, NULL);
-#warning FIXME TA!!!
+				tbf = alloc_ul_tbf(trx, ms_class, tlli, ta, NULL);
 				if (!tbf)
 					break;
 				/* set control ts to current MS's TS, until assignment complete */
@@ -469,6 +496,17 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet ressource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
 		break;
 	case MT_PACKET_MEASUREMENT_REPORT:
+		sba = sba_find(trx, ts, fn);
+		if (!sba) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
+				"in packet ressource request of single "
+				"block, but there is no resource request "
+				"scheduled!\n");
+		} else {
+			remember_timing_advance(ul_control_block->u.Packet_Measurement_Report.TLLI, sba->ta);
+			llist_del(&sba->list);
+			talloc_free(sba);
+		}
 		gprs_rlcmac_meas_rep(&ul_control_block->u.Packet_Measurement_Report);
 		break;
 	default:
@@ -888,6 +926,8 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 		}
 		/* mark TLLI valid now */
 		tbf->tlli_valid = 1;
+		/* store current timing advance */
+		remember_timing_advance(tbf->tlli, tbf->ta);
 	/* already have TLLI, but we stille get another one */
 	} else if (rh->ti) {
 		uint32_t tlli;

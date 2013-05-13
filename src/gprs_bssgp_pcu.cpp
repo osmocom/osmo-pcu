@@ -196,6 +196,7 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		uint8_t trx, ta, ss;
 		int8_t use_trx;
 		struct gprs_rlcmac_tbf *old_tbf;
+		int rc;
 
 		/* check for uplink data, so we copy our informations */
 		tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
@@ -207,7 +208,19 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			old_tbf = tbf;
 		} else {
 			use_trx = -1;
-			ta = 0; /* FIXME: initial TA */
+			/* we already have an uplink TBF, so we use that TA */
+			if (tbf)
+				ta = tbf->ta;
+			else {
+				/* recall TA */
+				rc = recall_timing_advance(tlli);
+				if (rc < 0) {
+					LOGP(DRLCMAC, LOGL_NOTICE, "TA unknown"
+						", assuming 0\n");
+					ta = 0;
+				} else
+					ta = rc;
+			}
 			ss = 1; /* PCH assignment only allows one timeslot */
 			old_tbf = NULL;
 		}

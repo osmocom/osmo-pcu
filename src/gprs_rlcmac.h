@@ -374,6 +374,8 @@ void tbf_timer_cb(void *_tbf);
 
 int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf);
 
+int gprs_rlcmac_sba_timeout(struct gprs_rlcmac_sba *sba);
+
 int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta);
 
 int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
@@ -420,6 +422,12 @@ struct gprs_rlcmac_paging *gprs_rlcmac_dequeue_paging(
 
 struct msgb *gprs_rlcmac_send_packet_paging_request(
 	struct gprs_rlcmac_pdch *pdch);
+
+int remember_timing_advance(uint32_t tlli, uint8_t ta);
+
+int recall_timing_advance(uint32_t tlli);
+
+int flush_timing_advance(void);
 
 extern "C" {
 #endif
