@@ -88,6 +88,10 @@ static int config_write_pcu(struct vty *vty)
 		else
 			vty_out(vty, " cs %d %d%s", bts->initial_cs_dl,
 				bts->initial_cs_ul, VTY_NEWLINE);
+	if (bts->cs_link_adaptation)
+		vty_out(vty, " cs ci level %f %f %f %f%s", bts->cs1_ci_level,
+			bts->cs2_ci_level, bts->cs3_ci_level, bts->cs4_ci_level,
+			VTY_NEWLINE);
 	if (bts->force_llc_lifetime == 0xffff)
 		vty_out(vty, " queue lifetime infinite%s", VTY_NEWLINE);
 	else if (bts->force_llc_lifetime)
@@ -155,6 +159,45 @@ DEFUN(cfg_pcu_no_cs,
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 
 	bts->force_cs = 0;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_cs_link_adaptation,
+      cfg_pcu_cs_link_adaptation_cmd,
+      "cs link adaptation",
+      NO_STR "Turn on CS link adaptation\n")
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	bts->cs_link_adaptation = 1;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_cs_link_adaptation,
+      cfg_pcu_no_cs_link_adaptation_cmd,
+      "no cs link adaptation",
+      NO_STR "Turn off CS link adaptation\n")
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	bts->cs_link_adaptation = 0;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_cs_ci_level,
+      cfg_pcu_cs_ci_level_cmd,
+      "cs ci level <0-30> <0-30> <0-30> <0-30>",
+      NO_STR "Set maximum C/I level for CS1 CS2 CS3 CS4\n")
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	bts->cs1_ci_level = atoi(argv[0]);
+	bts->cs2_ci_level = atoi(argv[1]);
+	bts->cs3_ci_level = atoi(argv[2]);
+	bts->cs4_ci_level = atoi(argv[3]);
 
 	return CMD_SUCCESS;
 }
@@ -300,6 +343,9 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_no_two_phase_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_cmd);
+	install_element(PCU_NODE, &cfg_pcu_cs_link_adaptation_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_cs_link_adaptation_cmd);
+	install_element(PCU_NODE, &cfg_pcu_cs_ci_level_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_inf_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_queue_lifetime_cmd);

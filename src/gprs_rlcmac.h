@@ -73,6 +73,11 @@ struct gprs_rlcmac_bts {
 	uint8_t cs3;
 	uint8_t cs4;
 	uint8_t initial_cs_dl, initial_cs_ul;
+	uint8_t cs_link_adaptation; /* CS link adaptation */
+	float cs1_ci_level; /* maximum C/I level for CS1 */
+	float cs2_ci_level; /* maximum C/I level for CS2 */
+	float cs3_ci_level; /* maximum C/I level for CS3 */
+	float cs4_ci_level; /* maximum C/I level for CS4 */
 	uint8_t force_cs;	/* 0=use from BTS 1=use from VTY */
 	uint16_t force_llc_lifetime; /* overrides lifetime from SGSN */
 	uint8_t t3142;
@@ -351,7 +356,7 @@ int gprs_rlcmac_rcv_block(uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
 int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra, 
         uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc, 
         uint8_t tfi, uint8_t usf, uint32_t tlli, uint8_t polling,
-	uint32_t fn, uint8_t single_block, uint8_t alpha, uint8_t gamma,
+	uint32_t fn, uint8_t single_block, uint8_t alpha, uint8_t gamma, uint8_t cs,
 	int8_t ta_idx);
 
 void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
@@ -428,6 +433,14 @@ int remember_timing_advance(uint32_t tlli, uint8_t ta);
 int recall_timing_advance(uint32_t tlli);
 
 int flush_timing_advance(void);
+
+int remember_cs(uint32_t tlli, uint8_t cs);
+
+int recall_cs(uint32_t tlli);
+
+int flush_cs(void);
+
+uint8_t link_adaptation(float i_level);
 
 extern "C" {
 #endif

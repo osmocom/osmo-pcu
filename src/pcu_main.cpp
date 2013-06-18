@@ -175,6 +175,14 @@ int main(int argc, char *argv[])
 	bts->n3105 = 8;
 	bts->alpha = 0; /* a = 0.0 */
 
+	/* turn on CS link adaptation */
+	bts->cs_link_adaptation = 1;
+	/* set CS  */
+	bts->cs1_ci_level = 6.5;
+	bts->cs2_ci_level = 9;
+	bts->cs3_ci_level = 16.5;
+	bts->cs4_ci_level = 30;
+
 	msgb_set_talloc_ctx(tall_pcu_ctx);
 
 	osmo_init_logging(&gprs_log_info);
@@ -249,6 +257,8 @@ int main(int argc, char *argv[])
 	pcu_l1if_close();
 
 	flush_timing_advance();
+
+	flush_cs();
 
 	talloc_free(gprs_rlcmac_bts);
 

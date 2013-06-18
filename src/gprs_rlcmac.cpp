@@ -366,6 +366,17 @@ next_diagram:
 	tbf->ms_class = ms_class;
 	tbf->ws = 64;
 	tbf->sns = 128;
+
+	if (old_tbf) {
+		tbf->cs = old_tbf->cs;
+		LOGP(DCS, LOGL_NOTICE, "Allocate new %s TBF set CS = %d from OLD TBF\n",
+		 (dir == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->cs);
+	} else {
+		tbf->cs = bts->initial_cs_dl;
+		LOGP(DCS, LOGL_NOTICE, "Allocate new %s TBF set initial bts CS = %d\n",
+		 (dir == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->cs);
+	}
+
 	/* select algorithm */
 	rc = bts->alloc_algorithm(old_tbf, tbf, bts->alloc_algorithm_curst,
 		single_slot);
@@ -1359,7 +1370,7 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 	uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc,
 	uint8_t tfi, uint8_t usf, uint32_t tlli,
 	uint8_t polling, uint32_t fn, uint8_t single_block, uint8_t alpha,
-	uint8_t gamma, int8_t ta_idx)
+	uint8_t gamma, uint8_t cs, int8_t ta_idx)
 {
 	unsigned wp = 0;
 	uint8_t plen;
@@ -1442,7 +1453,6 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 	}
 	else
 	{
-		struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 		// GMS 04.08 10.5.2.37b 10.5.2.16
 		bitvec_write_field(dest, wp, 3, 2);    // "HH"
 		bitvec_write_field(dest, wp, 0, 2);    // "0" Packet Uplink Assignment
@@ -1472,7 +1482,7 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 			bitvec_write_field(dest, wp, usf, 3);    // USF
 			bitvec_write_field(dest, wp, 0, 1);    // USF_GRANULARITY
 			bitvec_write_field(dest, wp, 0, 1);   // "0" power control: Not Present
-			bitvec_write_field(dest, wp, bts->initial_cs_ul-1, 2);    // CHANNEL_CODING_COMMAND 
+			bitvec_write_field(dest, wp, cs-1, 2);    // CHANNEL_CODING_COMMAND
 			bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
 			if (alpha) {
 				bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
@@ -1496,7 +1506,6 @@ void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
 	uint8_t gamma, int8_t ta_idx)
 {
 	// TODO We should use our implementation of encode RLC/MAC Control messages.
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	unsigned wp = 0;
 	uint8_t ts;
 
@@ -1519,7 +1528,7 @@ void write_packet_uplink_assignment(bitvec * dest, uint8_t old_tfi,
 	}
 
 	bitvec_write_field(dest, wp,0x0,1); // Message escape
-	bitvec_write_field(dest, wp,bts->initial_cs_ul-1, 2); // CHANNEL_CODING_COMMAND 
+	bitvec_write_field(dest, wp,tbf->cs-1, 2); // CHANNEL_CODING_COMMAND
 	bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
 	bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
 	bitvec_write_field(dest, wp,tbf->ta,6); // TIMING_ADVANCE_VALUE
@@ -1687,7 +1696,6 @@ void write_packet_uplink_ack(RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *t
 
 	char show_v_n[65];
 
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	uint8_t rbb = 0;
 	uint16_t i, bbn;
 	uint16_t mod_sns_half = (tbf->sns >> 1) - 1;
@@ -1706,7 +1714,7 @@ void write_packet_uplink_ack(RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *t
 	block->u.Packet_Uplink_Ack_Nack.UPLINK_TFI   = tbf->tfi; // Uplink TFI
 
 	block->u.Packet_Uplink_Ack_Nack.UnionType    = 0x0;      // PU_AckNack_GPRS = on
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = bts->initial_cs_ul - 1;             // CS1
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = tbf->cs - 1;     // CS1
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.FINAL_ACK_INDICATION     = final;           // FINAL ACK INDICATION
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->dir.ul.v_r; // STARTING_SEQUENCE_NUMBER
 	// RECEIVE_BLOCK_BITMAP
@@ -1923,3 +1931,102 @@ int flush_timing_advance(void)
 	return count;
 }
 
+
+/*
+ channel coding schemes memory
+*/
+
+static LLIST_HEAD(gprs_rlcmac_tlli_cs_list);
+static int gprs_rlcmac_tlli_cs_num = 0;
+
+struct gprs_rlcmac_tlli_cs {
+	struct llist_head list;
+	uint32_t tlli;
+	uint8_t cs;
+};
+
+/* remember channel coding scheme of a given TLLI */
+int remember_cs(uint32_t tlli, uint8_t cs)
+{
+	struct gprs_rlcmac_tlli_cs *cs_entry;
+
+	/* check for existing entry */
+	llist_for_each_entry(cs_entry, &gprs_rlcmac_tlli_cs_list, list) {
+		if (cs_entry->tlli == tlli) {
+			cs_entry->cs = cs;
+			/* relink to end of list */
+			llist_del(&cs_entry->list);
+			llist_add_tail(&cs_entry->list, &gprs_rlcmac_tlli_cs_list);
+			return 0;
+		}
+	}
+
+	/* if list is full, remove oldest entry */
+	if (gprs_rlcmac_tlli_cs_num == 30) {
+		cs_entry = llist_entry(gprs_rlcmac_tlli_cs_list.next, struct gprs_rlcmac_tlli_cs, list);
+		llist_del(&cs_entry->list);
+		talloc_free(cs_entry);
+		gprs_rlcmac_tlli_cs_num--;
+	}
+
+	/* create new CS entry */
+	cs_entry = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_tlli_cs);
+	if (!cs_entry)
+		return -ENOMEM;
+
+	cs_entry->tlli = tlli;
+	cs_entry->cs = cs;
+	llist_add_tail(&cs_entry->list, &gprs_rlcmac_tlli_cs_list);
+	gprs_rlcmac_tlli_cs_num++;
+
+	return 0;
+}
+
+int recall_cs(uint32_t tlli)
+{
+	struct gprs_rlcmac_tlli_cs *cs_entry;
+	uint8_t cs;
+
+	llist_for_each_entry(cs_entry, &gprs_rlcmac_tlli_cs_list, list) {
+		if (cs_entry->tlli == tlli) {
+			cs = cs_entry->cs;
+			return cs;
+		}
+	}
+
+	return -EINVAL;
+}
+
+int flush_cs(void)
+{
+	struct gprs_rlcmac_tlli_cs *cs_entry;
+	int count = 0;
+
+	while (!llist_empty(&gprs_rlcmac_tlli_cs_list)) {
+		cs_entry = llist_entry(gprs_rlcmac_tlli_cs_list.next, struct gprs_rlcmac_tlli_cs, list);
+		llist_del(&cs_entry->list);
+		talloc_free(cs_entry);
+		count++;
+	}
+	gprs_rlcmac_tlli_cs_num = 0;
+
+	return count;
+}
+
+uint8_t link_adaptation(float i_level)
+{
+	uint8_t cs = 0;
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+
+	if (i_level*2 <= bts->cs1_ci_level) {
+		cs = 1;
+	} else if (i_level*2 <= bts->cs2_ci_level) {
+		cs = 2;
+	} else if (i_level*2 <= bts->cs3_ci_level) {
+		cs = 3;
+	} else if (i_level*2 <= bts->cs4_ci_level) {
+		cs = 4;
+	}
+
+	return cs;
+}

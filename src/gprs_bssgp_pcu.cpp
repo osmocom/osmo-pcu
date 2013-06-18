@@ -241,6 +241,19 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			return -EBUSY;
 		}
 		tbf->tlli = tlli;
+		struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+		if (bts->cs_link_adaptation) {
+			/* set coding scheme */
+			int cs = recall_cs(tlli);
+			if (cs > 0) {
+				tbf->cs = cs;
+				LOGP(DCS, LOGL_NOTICE, "New DL TBF for tlli = 0x%08x recall CS = %d\n", tbf->tlli, tbf->cs);
+			} else {
+				tbf->cs = bts->initial_cs_dl;
+				remember_cs(tbf->tlli, tbf->cs);
+				LOGP(DCS, LOGL_NOTICE, "New DL TBF for tlli = 0x%08x remember CS = %d\n", tbf->tlli, tbf->cs);
+			}
+		}
 		tbf->tlli_valid = 1;
 		tbf->ta = ta;
 

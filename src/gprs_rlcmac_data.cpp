@@ -256,6 +256,23 @@ static struct gprs_rlcmac_tbf *alloc_ul_tbf(int8_t use_trx, uint8_t ms_class,
 	tbf->tlli_valid = 1; /* no contention resolution */
 	tbf->dir.ul.contention_resolution_done = 1;
 	tbf->ta = ta; /* use current TA */
+
+	if (bts->cs_link_adaptation) {
+		int cs = recall_cs(tlli);
+		if (cs > 0) {
+			tbf->cs = cs;
+			LOGP(DCS, LOGL_NOTICE, "New UL TBF for tlli = 0x%08x recall CS = %d\n", tbf->tlli, tbf->cs);
+		} else {
+			if (dl_tbf) {
+				tbf->cs = dl_tbf->cs;
+			} else {
+				tbf->cs = bts->initial_cs_ul;
+			}
+			remember_cs(tbf->tlli, tbf->cs);
+			LOGP(DCS, LOGL_NOTICE, "New UL TBF for tlli = 0x%08x remember CS = %d\n", tbf->tlli, tbf->cs);
+		}
+	}
+
 	tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
 	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 	tbf_timer_start(tbf, 3169, bts->t3169, 0);
@@ -383,6 +400,42 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 				"wrong TFI=%d, ignoring!\n", tfi);
 			break;
 		}
+
+		{
+			struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+			if (bts->cs_link_adaptation) {
+				LOGP(DCS, LOGL_NOTICE, "PACKET DOWNLINK ACK TFI=%d TS %d\n", tfi, ts);
+				LOGP(DCS, LOGL_NOTICE, "PACKET DOWNLINK ACK C_VALUE =%d TS RXQUAL = %d SIGN_VAR = %d\n",
+					ul_control_block->u.Packet_Downlink_Ack_Nack.Channel_Quality_Report.C_VALUE,
+					ul_control_block->u.Packet_Downlink_Ack_Nack.Channel_Quality_Report.RXQUAL,
+					ul_control_block->u.Packet_Downlink_Ack_Nack.Channel_Quality_Report.SIGN_VAR
+					);
+				uint8_t i_level = 0;
+				uint8_t i_level_detect = 0;
+				for (uint8_t i = 0; i < 8; i++) {
+					if (ul_control_block->u.Packet_Downlink_Ack_Nack.Channel_Quality_Report.Slot[i].Exist) {
+						LOGP(DCS, LOGL_NOTICE, "TS = %d I_LEVEL = %d\n",
+						i, ul_control_block->u.Packet_Downlink_Ack_Nack.Channel_Quality_Report.Slot[i].I_LEVEL_TN);
+						i_level_detect++;
+						i_level += ul_control_block->u.Packet_Downlink_Ack_Nack.Channel_Quality_Report.Slot[i].I_LEVEL_TN;
+					}
+				}
+				if (i_level_detect > 0) {
+					uint8_t cs = link_adaptation(i_level/i_level_detect);
+					LOGP(DCS, LOGL_NOTICE, "Link adaptation for tlli = 0x%08x |"
+					 "i_level_sum = %d | i_level_num = %d | I_LEVEL  = %d dbm | CS = %d \n",
+					 tbf->tlli, i_level, i_level_detect, (i_level/i_level_detect)*2, tbf->cs);
+					if (cs!= tbf->cs) {
+						remember_cs(tbf->tlli, cs);
+						tbf->cs = cs;
+						LOGP(DCS, LOGL_NOTICE, "Change CS for tlli = 0x%08x remember new CS = %d\n", tbf->tlli, tbf->cs);
+					} else {
+						LOGP(DCS, LOGL_NOTICE, "CS for tlli = 0x%08x not changed\n", tbf->tlli);
+					}
+				}
+			}
+		}
+
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
 		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
 			tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
@@ -928,6 +981,17 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 		tbf->tlli_valid = 1;
 		/* store current timing advance */
 		remember_timing_advance(tbf->tlli, tbf->ta);
+		if (bts->cs_link_adaptation) {
+			/* set coding scheme */
+			int cs = recall_cs(tbf->tlli);
+			if (cs > 0) {
+				tbf->cs = cs;
+				LOGP(DCS, LOGL_NOTICE, "UL TBF for tlli = 0x%08x recall CS = %d\n", tbf->tlli, tbf->cs);
+			} else {
+				remember_cs(tbf->tlli, tbf->cs);
+				LOGP(DCS, LOGL_NOTICE, "UL TBF for tlli = 0x%08x remember CS = %d\n", tbf->tlli, tbf->cs);
+			}
+		}
 	/* already have TLLI, but we stille get another one */
 	} else if (rh->ti) {
 		uint32_t tlli;
@@ -1022,6 +1086,14 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 	 * an ack/nack */
 	if (rh->si || rh->ti || tbf->state == GPRS_RLCMAC_FINISHED
 	 || (tbf->dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
+		if (bts->cs_link_adaptation) {
+			/* update coding scheme, if it is necessary */
+			int cs = recall_cs(tbf->tlli);
+			if ((cs > 0)&&(cs != tbf->cs)) {
+				tbf->cs = cs;
+				LOGP(DCS, LOGL_NOTICE, "UL TBF for tlli = 0x%08x update CS = %d\n", tbf->tlli, tbf->cs);
+			}
+		}
 		if (rh->si) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "- Scheduling Ack/Nack, "
 				"because MS is stalled.\n");
@@ -1205,12 +1277,12 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		plen = write_immediate_assignment(immediate_assignment, 0, ra,
 			Fn, qta >> 2, bts->trx[trx].arfcn, ts,
 			bts->trx[trx].pdch[ts].tsc, 0, 0, 0, 0, sb_fn, 1,
-			bts->alpha, bts->gamma, -1);
+			bts->alpha, bts->gamma, bts->initial_cs_ul, -1);
 	else
 		plen = write_immediate_assignment(immediate_assignment, 0, ra,
 			Fn, tbf->ta, tbf->arfcn, tbf->first_ts, tbf->tsc,
 			tbf->tfi, tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0, 0,
-			bts->alpha, bts->gamma, -1);
+			bts->alpha, bts->gamma,bts->initial_cs_ul, -1);
 	pcu_l1if_tx_agch(immediate_assignment, plen);
 	bitvec_free(immediate_assignment);
 
@@ -1831,7 +1903,7 @@ static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
 	plen = write_immediate_assignment(immediate_assignment, 1, 125,
 		(tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta,
 		tbf->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, 0, tbf->tlli, poll,
-		tbf->poll_fn, 0, bts->alpha, bts->gamma, -1);
+		tbf->poll_fn, 0, bts->alpha, bts->gamma, tbf->cs, -1);
 	pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
 	bitvec_free(immediate_assignment);
 }
