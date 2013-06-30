@@ -51,6 +51,8 @@ int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp
 
 int gprs_bssgp_pcu_rcvmsg(struct msgb *msg);
 
+int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msgb *msg, uint16_t bvci);
+
 int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip, uint16_t
 		sgsn_port, uint16_t nsei, uint16_t nsvci, uint16_t bvci,
 		uint16_t mcc, uint16_t mnc, uint16_t lac, uint16_t rac,

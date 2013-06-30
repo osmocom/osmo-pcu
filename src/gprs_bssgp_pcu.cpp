@@ -468,7 +468,7 @@ int bssgp_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 	return 0;
 }
 
-static int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msgb *msg, uint16_t bvci)
+int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msgb *msg, uint16_t bvci)
 {
 	int rc = 0;
 	switch (event) {
@@ -590,18 +590,11 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip,
 	if (bctx)
 		return 0; /* if already created, must return 0: no error */
 
-	bssgp_nsi = gprs_ns_instantiate(&sgsn_ns_cb, tall_pcu_ctx);
-	if (!bssgp_nsi) {
-		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
-		return -EINVAL;
-	}
-	gprs_ns_vty_init(bssgp_nsi);
 	bssgp_nsi->nsip.local_port = local_port;
 	rc = gprs_ns_nsip_listen(bssgp_nsi);
 	if (rc < 0) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create socket\n");
-		gprs_ns_destroy(bssgp_nsi);
-		bssgp_nsi = NULL;
+		gprs_ns_close(bssgp_nsi);
 		return -EINVAL;
 	}
 
@@ -612,17 +605,16 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip,
 	nsvc = gprs_ns_nsip_connect(bssgp_nsi, &dest, nsei, nsvci);
 	if (!nsvc) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSVCt\n");
-		gprs_ns_destroy(bssgp_nsi);
-		bssgp_nsi = NULL;
+		gprs_ns_close(bssgp_nsi);
 		return -EINVAL;
 	}
 
 	bctx = btsctx_alloc(bvci, nsei);
 	if (!bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create BSSGP context\n");
+		gprs_nsvc_delete(nsvc);
 		nsvc = NULL;
-		gprs_ns_destroy(bssgp_nsi);
-		bssgp_nsi = NULL;
+		gprs_ns_close(bssgp_nsi);
 		return -EINVAL;
 	}
 	bctx->ra_id.mcc = spoof_mcc ? : mcc;
@@ -637,13 +629,12 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip,
 
 	bvc_timer.cb = bvc_timeout;
 
-
 	return 0;
 }
 
 void gprs_bssgp_destroy(void)
 {
-	if (!bssgp_nsi)
+	if (!bctx)
 		return;
 
 	if (osmo_timer_pending(&bvc_timer))
@@ -651,6 +642,7 @@ void gprs_bssgp_destroy(void)
 
 	osmo_signal_unregister_handler(SS_L_NS, nsvc_signal_cb, NULL);
 
+	gprs_nsvc_delete(nsvc);
 	nsvc = NULL;
 
 	/* FIXME: move this to libgb: btsctx_free() */
@@ -660,7 +652,6 @@ void gprs_bssgp_destroy(void)
 
 	/* FIXME: blocking... */
 
-	gprs_ns_destroy(bssgp_nsi);
-	bssgp_nsi = NULL;
+	gprs_ns_close(bssgp_nsi);
 }
 

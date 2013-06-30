@@ -184,6 +184,13 @@ int main(int argc, char *argv[])
 	vty_init(&pcu_vty_info);
 	pcu_vty_init(&gprs_log_info);
 
+	bssgp_nsi = gprs_ns_instantiate(&sgsn_ns_cb, tall_pcu_ctx);
+	if (!bssgp_nsi) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
+		return -EINVAL;
+	}
+	gprs_ns_vty_init(bssgp_nsi);
+
 	handle_options(argc, argv);
 	if ((!!spoof_mcc) + (!!spoof_mnc) == 1) {
 		fprintf(stderr, "--mcc and --mnc must be specified "
@@ -249,6 +256,9 @@ int main(int argc, char *argv[])
 	telnet_exit();
 
 	pcu_l1if_close();
+
+	gprs_ns_destroy(bssgp_nsi);
+	bssgp_nsi = NULL;
 
 	flush_timing_advance();
 
