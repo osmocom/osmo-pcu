@@ -39,6 +39,7 @@ enum {
 	DRLCMACUL,
 	DRLCMACSCHED,
 	DRLCMACMEAS,
+	DNS,
 	DBSSGP,
 	DPCU,
 	aDebug_LastEntry
