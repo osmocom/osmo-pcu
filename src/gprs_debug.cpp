@@ -33,7 +33,7 @@
 /* default categories */
 
 static const struct log_info_cat default_categories[] = {
- 	{"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_INFO, 0},
+	{"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_ERROR, 0},
  	{"DL1IF", "\033[1;32m", "GPRS PCU L1 interface (L1IF)", LOGL_INFO, 1},
 	{"DRLCMAC", "\033[0;33m", "GPRS RLC/MAC layer (RLCMAC)", LOGL_NOTICE, 1},
 	{"DRLCMACDATA", "\033[0;33m", "GPRS RLC/MAC layer Data (RLCMAC)", LOGL_NOTICE, 1},
