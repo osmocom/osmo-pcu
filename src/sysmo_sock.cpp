@@ -117,7 +117,7 @@ static void pcu_sock_close(struct pcu_sock_state *state, int lost)
 		}
 	}
 
-	gprs_bssgp_destroy();
+	gprs_bssgp_destroy_or_exit();
 
 	if (lost) {
 		state->timer.cb = pcu_sock_timeout;

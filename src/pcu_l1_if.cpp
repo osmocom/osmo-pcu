@@ -369,7 +369,7 @@ bssgp_failed:
 						trx, ts);
 			}
 		}
-		gprs_bssgp_destroy();
+		gprs_bssgp_destroy_or_exit();
 		return 0;
 	}
 	LOGP(DL1IF, LOGL_INFO, "BTS available\n");

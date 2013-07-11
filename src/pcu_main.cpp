@@ -60,6 +60,7 @@ static void print_help()
 			"provided by BTS\n"
 		"  -r   --realtime PRIO Use SCHED_RR with the specified "
 			"priority\n"
+		"  -e   --exit		Exit the application on disconnect\n"
 		);
 }
 
@@ -75,10 +76,11 @@ static void handle_options(int argc, char **argv)
 			{ "mnc", 1, 0, 'n' },
 			{ "version", 0, 0, 'V' },
 			{ "realtime", 1, 0, 'r' },
+			{ "exit", 0, 0, 'e' },
 			{ 0, 0, 0, 0 }
 		};
 
-		c = getopt_long(argc, argv, "hc:m:n:Vr:",
+		c = getopt_long(argc, argv, "hc:m:n:Vr:e",
 				long_options, &option_idx);
 		if (c == -1)
 			break;
@@ -104,6 +106,9 @@ static void handle_options(int argc, char **argv)
 			break;
 		case 'r':
 			rt_prio = atoi(optarg);
+			break;
+		case 'e':
+			gprs_bssgp_exit_on_destroy();
 			break;
 		default:
 			fprintf(stderr, "Unknown option '%c'\n", c);

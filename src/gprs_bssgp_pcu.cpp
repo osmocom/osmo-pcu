@@ -27,6 +27,7 @@ struct bssgp_bvc_ctx *bctx = NULL;
 struct gprs_nsvc *nsvc = NULL;
 static int bvc_sig_reset = 0, bvc_reset = 0, bvc_unblocked = 0;
 extern uint16_t spoof_mcc, spoof_mnc;
+static int exit_on_destroy = 0;
 
 struct osmo_timer_list bvc_timer;
 
@@ -640,8 +641,13 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip,
 	return 0;
 }
 
-void gprs_bssgp_destroy(void)
+void gprs_bssgp_destroy_or_exit(void)
 {
+	if (exit_on_destroy) {
+		LOGP(DBSSGP, LOGL_NOTICE, "Exiting on BSSGP destruction.\n");
+		exit(0);
+	}
+
 	if (!bssgp_nsi)
 		return;
 
@@ -662,3 +668,8 @@ void gprs_bssgp_destroy(void)
 	bssgp_nsi = NULL;
 }
 
+void gprs_bssgp_exit_on_destroy(void)
+{
+	LOGP(DBSSGP, LOGL_NOTICE, "Going to quit on BSSGP destruction\n");
+	exit_on_destroy = 1;
+}

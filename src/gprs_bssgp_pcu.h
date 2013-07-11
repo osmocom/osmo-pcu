@@ -56,6 +56,7 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip, uint16_t
 		uint16_t mcc, uint16_t mnc, uint16_t lac, uint16_t rac,
 		uint16_t cell_id);
 
-void gprs_bssgp_destroy(void);
+void gprs_bssgp_exit_on_destroy(void);
+void gprs_bssgp_destroy_or_exit(void);
 
 #endif // GPRS_BSSGP_PCU_H
