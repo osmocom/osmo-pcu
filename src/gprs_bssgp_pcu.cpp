@@ -630,6 +630,9 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip,
 
 void gprs_bssgp_destroy(void)
 {
+	LOGP(DBSSGP, LOGL_NOTICE, "Forcing to exit at bssgp destruction\n");
+	exit(0);
+
 	if (!bssgp_nsi)
 		return;
 
