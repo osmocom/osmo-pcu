@@ -21,13 +21,21 @@
 #include <gprs_bssgp_pcu.h>
 #include <pcu_l1_if.h>
 
+struct osmo_pcu {
+	struct gprs_nsvc *nsvc;
+
+	int bvc_sig_reset;
+	int bvc_reset;
+	int bvc_unblocked;
+	int exit_on_destroy;
+};
+
+static struct osmo_pcu the_pcu = { 0, };
+
 struct sgsn_instance *sgsn;
 extern void *tall_pcu_ctx;
 struct bssgp_bvc_ctx *bctx = NULL;
-struct gprs_nsvc *nsvc = NULL;
-static int bvc_sig_reset = 0, bvc_reset = 0, bvc_unblocked = 0;
 extern uint16_t spoof_mcc, spoof_mnc;
-static int exit_on_destroy = 0;
 
 struct osmo_timer_list bvc_timer;
 
@@ -353,10 +361,10 @@ int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp
 			break;
 		case BSSGP_PDUT_BVC_RESET_ACK:
 			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_BVC_RESET_ACK\n");
-			if (!bvc_sig_reset)
-				bvc_sig_reset = 1;
+			if (!the_pcu.bvc_sig_reset)
+				the_pcu.bvc_sig_reset = 1;
 			else
-				bvc_reset = 1;
+				the_pcu.bvc_reset = 1;
 			bvc_timeout(NULL);
 			break;
 		case BSSGP_PDUT_PAGING_PS:
@@ -380,7 +388,7 @@ int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp
 			break;
 		case BSSGP_PDUT_BVC_UNBLOCK_ACK:
 			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_BVC_UNBLOCK_ACK\n");
-			bvc_unblocked = 1;
+			the_pcu.bvc_unblocked = 1;
 			bvc_timeout(NULL);
 			break;
 		case BSSGP_PDUT_SGSN_INVOKE_TRACE:
@@ -496,7 +504,7 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 		return -EINVAL;
 
 	nssd = (struct ns_signal_data *)signal_data;
-	if (nssd->nsvc != nsvc) {
+	if (nssd->nsvc != the_pcu.nsvc) {
 		LOGP(DPCU, LOGL_ERROR, "Signal received of unknown NSVC\n");
 		return -EINVAL;
 	}
@@ -506,10 +514,10 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 		if (!nsvc_unblocked) {
 			nsvc_unblocked = 1;
 			LOGP(DPCU, LOGL_NOTICE, "NS-VC %d is unblocked.\n",
-				nsvc->nsvci);
-			bvc_sig_reset = 0;
-			bvc_reset = 0;
-			bvc_unblocked = 0;
+				the_pcu.nsvc->nsvci);
+			the_pcu.bvc_sig_reset = 0;
+			the_pcu.bvc_reset = 0;
+			the_pcu.bvc_unblocked = 0;
 			bvc_timeout(NULL);
 		}
 		break;
@@ -517,9 +525,9 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 		if (nsvc_unblocked) {
 			nsvc_unblocked = 0;
 			osmo_timer_del(&bvc_timer);
-			bvc_sig_reset = 0;
-			bvc_reset = 0;
-			bvc_unblocked = 0;
+			the_pcu.bvc_sig_reset = 0;
+			the_pcu.bvc_reset = 0;
+			the_pcu.bvc_unblocked = 0;
 			LOGP(DPCU, LOGL_NOTICE, "NS-VC is blocked.\n");
 		}
 		break;
@@ -545,14 +553,14 @@ static void bvc_timeout(void *_priv)
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 
-	if (!bvc_sig_reset) {
+	if (!the_pcu.bvc_sig_reset) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI 0\n");
 		bssgp_tx_bvc_reset(bctx, 0, BSSGP_CAUSE_OML_INTERV);
 		osmo_timer_schedule(&bvc_timer, 1, 0);
 		return;
 	}
 
-	if (!bvc_reset) {
+	if (!the_pcu.bvc_reset) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI %d\n",
 			bctx->bvci);
 		bssgp_tx_bvc_reset(bctx, bctx->bvci, BSSGP_CAUSE_OML_INTERV);
@@ -560,7 +568,7 @@ static void bvc_timeout(void *_priv)
 		return;
 	}
 
-	if (!bvc_unblocked) {
+	if (!the_pcu.bvc_unblocked) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending unblock on BVCI %d\n",
 			bctx->bvci);
 		bssgp_tx_bvc_unblock(bctx);
@@ -609,8 +617,8 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip,
 	dest.sin_port = htons(sgsn_port);
 	dest.sin_addr.s_addr = htonl(sgsn_ip);
 
-	nsvc = gprs_ns_nsip_connect(bssgp_nsi, &dest, nsei, nsvci);
-	if (!nsvc) {
+	the_pcu.nsvc = gprs_ns_nsip_connect(bssgp_nsi, &dest, nsei, nsvci);
+	if (!the_pcu.nsvc) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSVCt\n");
 		gprs_ns_destroy(bssgp_nsi);
 		bssgp_nsi = NULL;
@@ -620,7 +628,7 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip,
 	bctx = btsctx_alloc(bvci, nsei);
 	if (!bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create BSSGP context\n");
-		nsvc = NULL;
+		the_pcu.nsvc = NULL;
 		gprs_ns_destroy(bssgp_nsi);
 		bssgp_nsi = NULL;
 		return -EINVAL;
@@ -643,7 +651,7 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip,
 
 void gprs_bssgp_destroy_or_exit(void)
 {
-	if (exit_on_destroy) {
+	if (the_pcu.exit_on_destroy) {
 		LOGP(DBSSGP, LOGL_NOTICE, "Exiting on BSSGP destruction.\n");
 		exit(0);
 	}
@@ -655,7 +663,7 @@ void gprs_bssgp_destroy_or_exit(void)
 
 	osmo_signal_unregister_handler(SS_L_NS, nsvc_signal_cb, NULL);
 
-	nsvc = NULL;
+	the_pcu.nsvc = NULL;
 
 	/* FIXME: move this to libgb: btsctx_free() */
 	llist_del(&bctx->list);
@@ -671,5 +679,5 @@ void gprs_bssgp_destroy_or_exit(void)
 void gprs_bssgp_exit_on_destroy(void)
 {
 	LOGP(DBSSGP, LOGL_NOTICE, "Going to quit on BSSGP destruction\n");
-	exit_on_destroy = 1;
+	the_pcu.exit_on_destroy = 1;
 }
