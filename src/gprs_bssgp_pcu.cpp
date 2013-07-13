@@ -545,8 +545,6 @@ int gprs_bssgp_tx_fc_bvc(void)
 	/* FIXME: use real values */
 	return bssgp_tx_fc_bvc(the_pcu.bctx, 1, 6553500, 819100, 50000, 50000,
 		NULL, NULL);
-//	return bssgp_tx_fc_bvc(bctx, 1, 84000, 25000, 48000, 45000,
-//		NULL, NULL);
 }
 
 static void bvc_timeout(void *_priv)
@@ -640,8 +638,6 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip,
 	the_pcu.bctx->cell_id = cell_id;
 
 	osmo_signal_register_handler(SS_L_NS, nsvc_signal_cb, NULL);
-
-//	bssgp_tx_bvc_reset(the_pcu.bctx, the_pcu.bctx->bvci, BSSGP_CAUSE_PROTO_ERR_UNSPEC);
 
 	the_pcu.bvc_timer.cb = bvc_timeout;
 
