@@ -71,6 +71,47 @@ static int parse_imsi(struct tlv_parsed *tp, char *imsi)
 	return 0;
 }
 
+static int parse_ra_cap_ms_class(struct tlv_parsed *tp)
+{
+	bitvec *block;
+	unsigned rp = 0;
+	uint8_t ms_class = 0;
+	uint8_t cap_len;
+	uint8_t *cap;
+
+	if (!TLVP_PRESENT(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP))
+		return ms_class;
+
+	cap_len = TLVP_LEN(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP);
+	cap = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP);
+
+	block = bitvec_alloc(cap_len);
+	bitvec_unpack(block, cap);
+	bitvec_read_field(block, rp, 4); // Access Technology Type
+	bitvec_read_field(block, rp, 7); // Length of Access Capabilities
+	bitvec_read_field(block, rp, 3); // RF Power Capability
+	if (bitvec_read_field(block, rp, 1)) // A5 Bits Present
+		bitvec_read_field(block, rp, 7); // A5 Bits
+	bitvec_read_field(block, rp, 1); // ES IND
+	bitvec_read_field(block, rp, 1); // PS
+	bitvec_read_field(block, rp, 1); // VGCS
+	bitvec_read_field(block, rp, 1); // VBS
+	if (bitvec_read_field(block, rp, 1)) { // Multislot Cap Present
+		if (bitvec_read_field(block, rp, 1)) // HSCSD Present
+			bitvec_read_field(block, rp, 5); // Class
+		if (bitvec_read_field(block, rp, 1)) { // GPRS Present
+			ms_class = bitvec_read_field(block, rp, 5); // Class
+			bitvec_read_field(block, rp, 1); // Ext.
+		}
+		if (bitvec_read_field(block, rp, 1)) // SMS Present
+			bitvec_read_field(block, rp, 4); // SMS Value
+			bitvec_read_field(block, rp, 4); // SMS Value
+	}
+
+	bitvec_free(block);
+	return ms_class;
+}
+
 int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 {
 	struct bssgp_ud_hdr *budh;
@@ -107,38 +148,8 @@ int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	parse_imsi(tp, imsi);
 
 	/* parse ms radio access capability */
-	uint8_t ms_class = 0;
-	if (TLVP_PRESENT(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP))
-	{
-		bitvec *block;
-		uint8_t cap_len = TLVP_LEN(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP);
-		uint8_t *cap = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP);
-		unsigned rp = 0;
+	uint8_t ms_class = parse_ra_cap_ms_class(tp);
 
-		block = bitvec_alloc(cap_len);
-		bitvec_unpack(block, cap);
-		bitvec_read_field(block, rp, 4); // Access Technology Type
-		bitvec_read_field(block, rp, 7); // Length of Access Capabilities
-		bitvec_read_field(block, rp, 3); // RF Power Capability
-		if (bitvec_read_field(block, rp, 1)) // A5 Bits Present
-			bitvec_read_field(block, rp, 7); // A5 Bits
-		bitvec_read_field(block, rp, 1); // ES IND
-		bitvec_read_field(block, rp, 1); // PS
-		bitvec_read_field(block, rp, 1); // VGCS
-		bitvec_read_field(block, rp, 1); // VBS
-		if (bitvec_read_field(block, rp, 1)) { // Multislot Cap Present
-			if (bitvec_read_field(block, rp, 1)) // HSCSD Present
-				bitvec_read_field(block, rp, 5); // Class
-			if (bitvec_read_field(block, rp, 1)) { // GPRS Present
-				ms_class = bitvec_read_field(block, rp, 5); // Class
-				bitvec_read_field(block, rp, 1); // Ext.
-			}
-			if (bitvec_read_field(block, rp, 1)) // SMS Present
-				bitvec_read_field(block, rp, 4); // SMS Value
-				bitvec_read_field(block, rp, 4); // SMS Value
-		}
-		bitvec_free(block);
-	}
 	/* get lifetime */
 	uint16_t delay_csec = 0xffff;
 	if (TLVP_PRESENT(tp, BSSGP_IE_PDU_LIFETIME))
