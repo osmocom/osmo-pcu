@@ -671,6 +671,10 @@ void gprs_bssgp_destroy_or_exit(void)
 	the_pcu.bctx = NULL;
 
 	/* FIXME: blocking... */
+	the_pcu.nsvc_unblocked = 0;
+	the_pcu.bvc_sig_reset = 0;
+	the_pcu.bvc_reset = 0;
+	the_pcu.bvc_unblocked = 0;	
 
 	gprs_ns_destroy(bssgp_nsi);
 	bssgp_nsi = NULL;
