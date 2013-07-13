@@ -25,6 +25,8 @@ struct osmo_pcu {
 	struct gprs_nsvc *nsvc;
 	struct bssgp_bvc_ctx *bctx;
 
+	struct osmo_timer_list bvc_timer;
+
 	int bvc_sig_reset;
 	int bvc_reset;
 	int bvc_unblocked;
@@ -35,8 +37,6 @@ static struct osmo_pcu the_pcu = { 0, };
 
 extern void *tall_pcu_ctx;
 extern uint16_t spoof_mcc, spoof_mnc;
-
-struct osmo_timer_list bvc_timer;
 
 static void bvc_timeout(void *_priv);
 
@@ -523,7 +523,7 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 	case S_NS_BLOCK:
 		if (nsvc_unblocked) {
 			nsvc_unblocked = 0;
-			osmo_timer_del(&bvc_timer);
+			osmo_timer_del(&the_pcu.bvc_timer);
 			the_pcu.bvc_sig_reset = 0;
 			the_pcu.bvc_reset = 0;
 			the_pcu.bvc_unblocked = 0;
@@ -555,7 +555,7 @@ static void bvc_timeout(void *_priv)
 	if (!the_pcu.bvc_sig_reset) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI 0\n");
 		bssgp_tx_bvc_reset(the_pcu.bctx, 0, BSSGP_CAUSE_OML_INTERV);
-		osmo_timer_schedule(&bvc_timer, 1, 0);
+		osmo_timer_schedule(&the_pcu.bvc_timer, 1, 0);
 		return;
 	}
 
@@ -563,7 +563,7 @@ static void bvc_timeout(void *_priv)
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI %d\n",
 			the_pcu.bctx->bvci);
 		bssgp_tx_bvc_reset(the_pcu.bctx, the_pcu.bctx->bvci, BSSGP_CAUSE_OML_INTERV);
-		osmo_timer_schedule(&bvc_timer, 1, 0);
+		osmo_timer_schedule(&the_pcu.bvc_timer, 1, 0);
 		return;
 	}
 
@@ -571,14 +571,14 @@ static void bvc_timeout(void *_priv)
 		LOGP(DBSSGP, LOGL_INFO, "Sending unblock on BVCI %d\n",
 			the_pcu.bctx->bvci);
 		bssgp_tx_bvc_unblock(the_pcu.bctx);
-		osmo_timer_schedule(&bvc_timer, 1, 0);
+		osmo_timer_schedule(&the_pcu.bvc_timer, 1, 0);
 		return;
 	}
 
 	LOGP(DBSSGP, LOGL_DEBUG, "Sending flow control info on BVCI %d\n",
 		the_pcu.bctx->bvci);
 	gprs_bssgp_tx_fc_bvc();
-	osmo_timer_schedule(&bvc_timer, bts->fc_interval, 0);
+	osmo_timer_schedule(&the_pcu.bvc_timer, bts->fc_interval, 0);
 }
 
 /* create BSSGP/NS layer instances */
@@ -642,7 +642,7 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip,
 
 //	bssgp_tx_bvc_reset(the_pcu.bctx, the_pcu.bctx->bvci, BSSGP_CAUSE_PROTO_ERR_UNSPEC);
 
-	bvc_timer.cb = bvc_timeout;
+	the_pcu.bvc_timer.cb = bvc_timeout;
 
 
 	return 0;
@@ -658,7 +658,7 @@ void gprs_bssgp_destroy_or_exit(void)
 	if (!bssgp_nsi)
 		return;
 
-	osmo_timer_del(&bvc_timer);
+	osmo_timer_del(&the_pcu.bvc_timer);
 
 	osmo_signal_unregister_handler(SS_L_NS, nsvc_signal_cb, NULL);
 
