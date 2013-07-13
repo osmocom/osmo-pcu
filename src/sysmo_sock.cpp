@@ -304,8 +304,7 @@ void pcu_l1if_close(void)
 	if (!state)
 		return;
 
-	if (osmo_timer_pending(&state->timer))
-		osmo_timer_del(&state->timer);
+	osmo_timer_del(&state->timer);
 
 	bfd = &state->conn_bfd;
 	if (bfd->fd > 0)

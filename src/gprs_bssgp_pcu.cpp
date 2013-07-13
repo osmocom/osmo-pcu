@@ -515,8 +515,7 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 	case S_NS_BLOCK:
 		if (nsvc_unblocked) {
 			nsvc_unblocked = 0;
-			if (osmo_timer_pending(&bvc_timer))
-				osmo_timer_del(&bvc_timer);
+			osmo_timer_del(&bvc_timer);
 			bvc_sig_reset = 0;
 			bvc_reset = 0;
 			bvc_unblocked = 0;
@@ -646,8 +645,7 @@ void gprs_bssgp_destroy(void)
 	if (!bssgp_nsi)
 		return;
 
-	if (osmo_timer_pending(&bvc_timer))
-		osmo_timer_del(&bvc_timer);
+	osmo_timer_del(&bvc_timer);
 
 	osmo_signal_unregister_handler(SS_L_NS, nsvc_signal_cb, NULL);
 
