@@ -41,8 +41,6 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 #define NS_HDR_LEN 4
 #define IE_LLC_PDU 14
 
-extern struct bssgp_bvc_ctx *bctx;
-
 int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp);
 
 int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx);
@@ -58,5 +56,7 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip, uint16_t
 
 void gprs_bssgp_exit_on_destroy(void);
 void gprs_bssgp_destroy_or_exit(void);
+
+struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void);
 
 #endif // GPRS_BSSGP_PCU_H

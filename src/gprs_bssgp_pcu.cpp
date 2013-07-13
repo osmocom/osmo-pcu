@@ -23,6 +23,7 @@
 
 struct osmo_pcu {
 	struct gprs_nsvc *nsvc;
+	struct bssgp_bvc_ctx *bctx;
 
 	int bvc_sig_reset;
 	int bvc_reset;
@@ -34,7 +35,6 @@ static struct osmo_pcu the_pcu = { 0, };
 
 struct sgsn_instance *sgsn;
 extern void *tall_pcu_ctx;
-struct bssgp_bvc_ctx *bctx = NULL;
 extern uint16_t spoof_mcc, spoof_mnc;
 
 struct osmo_timer_list bvc_timer;
@@ -538,12 +538,12 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 
 int gprs_bssgp_tx_fc_bvc(void)
 {
-	if (!bctx) {
+	if (!the_pcu.bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
 		return -EIO;
 	}
 	/* FIXME: use real values */
-	return bssgp_tx_fc_bvc(bctx, 1, 6553500, 819100, 50000, 50000,
+	return bssgp_tx_fc_bvc(the_pcu.bctx, 1, 6553500, 819100, 50000, 50000,
 		NULL, NULL);
 //	return bssgp_tx_fc_bvc(bctx, 1, 84000, 25000, 48000, 45000,
 //		NULL, NULL);
@@ -555,29 +555,29 @@ static void bvc_timeout(void *_priv)
 
 	if (!the_pcu.bvc_sig_reset) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI 0\n");
-		bssgp_tx_bvc_reset(bctx, 0, BSSGP_CAUSE_OML_INTERV);
+		bssgp_tx_bvc_reset(the_pcu.bctx, 0, BSSGP_CAUSE_OML_INTERV);
 		osmo_timer_schedule(&bvc_timer, 1, 0);
 		return;
 	}
 
 	if (!the_pcu.bvc_reset) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI %d\n",
-			bctx->bvci);
-		bssgp_tx_bvc_reset(bctx, bctx->bvci, BSSGP_CAUSE_OML_INTERV);
+			the_pcu.bctx->bvci);
+		bssgp_tx_bvc_reset(the_pcu.bctx, the_pcu.bctx->bvci, BSSGP_CAUSE_OML_INTERV);
 		osmo_timer_schedule(&bvc_timer, 1, 0);
 		return;
 	}
 
 	if (!the_pcu.bvc_unblocked) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending unblock on BVCI %d\n",
-			bctx->bvci);
-		bssgp_tx_bvc_unblock(bctx);
+			the_pcu.bctx->bvci);
+		bssgp_tx_bvc_unblock(the_pcu.bctx);
 		osmo_timer_schedule(&bvc_timer, 1, 0);
 		return;
 	}
 
 	LOGP(DBSSGP, LOGL_DEBUG, "Sending flow control info on BVCI %d\n",
-		bctx->bvci);
+		the_pcu.bctx->bvci);
 	gprs_bssgp_tx_fc_bvc();
 	osmo_timer_schedule(&bvc_timer, bts->fc_interval, 0);
 }
@@ -595,7 +595,7 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip,
 	mnc = ((mnc & 0xf00) >> 8) * 100 + ((mnc & 0x0f0) >> 4) * 10 + (mnc & 0x00f);
 	cell_id = ntohs(cell_id);
 
-	if (bctx)
+	if (the_pcu.bctx)
 		return 0; /* if already created, must return 0: no error */
 
 	bssgp_nsi = gprs_ns_instantiate(&sgsn_ns_cb, tall_pcu_ctx);
@@ -625,23 +625,23 @@ int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip,
 		return -EINVAL;
 	}
 
-	bctx = btsctx_alloc(bvci, nsei);
-	if (!bctx) {
+	the_pcu.bctx = btsctx_alloc(bvci, nsei);
+	if (!the_pcu.bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create BSSGP context\n");
 		the_pcu.nsvc = NULL;
 		gprs_ns_destroy(bssgp_nsi);
 		bssgp_nsi = NULL;
 		return -EINVAL;
 	}
-	bctx->ra_id.mcc = spoof_mcc ? : mcc;
-	bctx->ra_id.mnc = spoof_mnc ? : mnc;
-	bctx->ra_id.lac = lac;
-	bctx->ra_id.rac = rac;
-	bctx->cell_id = cell_id;
+	the_pcu.bctx->ra_id.mcc = spoof_mcc ? : mcc;
+	the_pcu.bctx->ra_id.mnc = spoof_mnc ? : mnc;
+	the_pcu.bctx->ra_id.lac = lac;
+	the_pcu.bctx->ra_id.rac = rac;
+	the_pcu.bctx->cell_id = cell_id;
 
 	osmo_signal_register_handler(SS_L_NS, nsvc_signal_cb, NULL);
 
-//	bssgp_tx_bvc_reset(bctx, bctx->bvci, BSSGP_CAUSE_PROTO_ERR_UNSPEC);
+//	bssgp_tx_bvc_reset(the_pcu.bctx, the_pcu.bctx->bvci, BSSGP_CAUSE_PROTO_ERR_UNSPEC);
 
 	bvc_timer.cb = bvc_timeout;
 
@@ -666,9 +666,9 @@ void gprs_bssgp_destroy_or_exit(void)
 	the_pcu.nsvc = NULL;
 
 	/* FIXME: move this to libgb: btsctx_free() */
-	llist_del(&bctx->list);
-	talloc_free(bctx);
-	bctx = NULL;
+	llist_del(&the_pcu.bctx->list);
+	talloc_free(the_pcu.bctx);
+	the_pcu.bctx = NULL;
 
 	/* FIXME: blocking... */
 
@@ -680,4 +680,9 @@ void gprs_bssgp_exit_on_destroy(void)
 {
 	LOGP(DBSSGP, LOGL_NOTICE, "Going to quit on BSSGP destruction\n");
 	the_pcu.exit_on_destroy = 1;
+}
+
+struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void)
+{
+	return the_pcu.bctx;
 }

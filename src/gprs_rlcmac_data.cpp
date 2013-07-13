@@ -1253,7 +1253,8 @@ static struct msgb *llc_dequeue(struct gprs_rlcmac_tbf *tbf)
 			frames = 0xff;
 		if (octets > 0xffffff)
 			octets = 0xffffff;
-		bssgp_tx_llc_discarded(bctx, tbf->tlli, frames, octets);
+		bssgp_tx_llc_discarded(gprs_bssgp_pcu_current_bctx(),
+					tbf->tlli, frames, octets);
 	}
 
 	return msg;
