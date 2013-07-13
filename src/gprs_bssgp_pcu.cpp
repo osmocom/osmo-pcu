@@ -33,7 +33,6 @@ struct osmo_pcu {
 
 static struct osmo_pcu the_pcu = { 0, };
 
-struct sgsn_instance *sgsn;
 extern void *tall_pcu_ctx;
 extern uint16_t spoof_mcc, spoof_mnc;
 
