@@ -27,6 +27,8 @@ struct osmo_pcu {
 
 	struct osmo_timer_list bvc_timer;
 
+	int nsvc_unblocked;
+
 	int bvc_sig_reset;
 	int bvc_reset;
 	int bvc_unblocked;
@@ -492,7 +494,6 @@ static int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msg
 	return rc;
 }
 
-static int nsvc_unblocked = 0;
 
 static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 	void *handler_data, void *signal_data)
@@ -510,8 +511,8 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 
 	switch (signal) {
 	case S_NS_UNBLOCK:
-		if (!nsvc_unblocked) {
-			nsvc_unblocked = 1;
+		if (!the_pcu.nsvc_unblocked) {
+			the_pcu.nsvc_unblocked = 1;
 			LOGP(DPCU, LOGL_NOTICE, "NS-VC %d is unblocked.\n",
 				the_pcu.nsvc->nsvci);
 			the_pcu.bvc_sig_reset = 0;
@@ -521,8 +522,8 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 		}
 		break;
 	case S_NS_BLOCK:
-		if (nsvc_unblocked) {
-			nsvc_unblocked = 0;
+		if (the_pcu.nsvc_unblocked) {
+			the_pcu.nsvc_unblocked = 0;
 			osmo_timer_del(&the_pcu.bvc_timer);
 			the_pcu.bvc_sig_reset = 0;
 			the_pcu.bvc_reset = 0;
