@@ -60,4 +60,5 @@ AM_CONDITIONAL(ENABLE_VTY_TESTS, test "x$enable_vty_tests" = "xyes")
 AC_OUTPUT(
     src/Makefile
     examples/Makefile
+    tests/Makefile
     Makefile)
