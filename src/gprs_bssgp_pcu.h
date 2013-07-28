@@ -49,7 +49,7 @@ int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp
 
 int gprs_bssgp_pcu_rcvmsg(struct msgb *msg);
 
-int gprs_bssgp_create(uint16_t local_port, uint32_t sgsn_ip, uint16_t
+int gprs_bssgp_create_and_connect(uint16_t local_port, uint32_t sgsn_ip, uint16_t
 		sgsn_port, uint16_t nsei, uint16_t nsvci, uint16_t bvci,
 		uint16_t mcc, uint16_t mnc, uint16_t lac, uint16_t rac,
 		uint16_t cell_id);
