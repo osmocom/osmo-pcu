@@ -1,0 +1,10 @@
+AT_INIT
+AT_BANNER([Regression tests])
+
+
+AT_SETUP([rlcmac])
+AT_KEYWORDS([rlcmac])
+cat $abs_srcdir/rlcmac/RLCMACTest.ok > expout
+cat $abs_srcdir/rlcmac/RLCMACTest.err > experr
+AT_CHECK([$abs_top_builddir/tests/rlcmac/RLCMACTest], [0], [expout], [experr])
+AT_CLEANUP
