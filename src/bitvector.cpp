@@ -47,9 +47,9 @@ void bitvec_free(struct bitvec *bv)
 	talloc_free(bv);
 }
 
-int bitvec_pack(struct bitvec *bv, uint8_t *buffer)
+unsigned int bitvec_pack(struct bitvec *bv, uint8_t *buffer)
 {
-	int i = 0;
+	unsigned int i = 0;
 	for (i = 0; i < bv->data_len; i++)
 	{
 		buffer[i] = bv->data[i];
@@ -57,9 +57,9 @@ int bitvec_pack(struct bitvec *bv, uint8_t *buffer)
 	return i;
 }
 
-int bitvec_unpack(struct bitvec *bv, uint8_t *buffer)
+unsigned int bitvec_unpack(struct bitvec *bv, uint8_t *buffer)
 {
-	int i = 0;
+	unsigned int i = 0;
 	for (i = 0; i < bv->data_len; i++)
 	{
 		bv->data[i] = buffer[i];
@@ -84,7 +84,7 @@ int bitvec_unhex(struct bitvec *bv, const char* src)
 
 uint64_t bitvec_read_field(struct bitvec *bv, unsigned& read_index, unsigned len)
 {
-	int i;
+	unsigned int i;
 	uint64_t ui = 0;
 	bv->cur_bit = read_index;
 
@@ -103,7 +103,8 @@ uint64_t bitvec_read_field(struct bitvec *bv, unsigned& read_index, unsigned len
 
 int bitvec_write_field(struct bitvec *bv, unsigned& write_index, uint64_t val, unsigned len)
 {
-	int i, rc;
+	unsigned int i;
+	int rc;
 	bv->cur_bit = write_index;
 	for (i = 0; i < len; i++) {
 		int bit = 0;
