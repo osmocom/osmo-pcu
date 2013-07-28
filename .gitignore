@@ -27,3 +27,11 @@ osmoappdesc.pyc
 # binaries
 src/osmo-pcu
 src/osmo-pcu-remote
+
+# tests
+tests/atconfig
+tests/package.m4
+tests/rlcmac/.dirstamp
+tests/rlcmac/RLCMACTest
+tests/testsuite
+tests/testsuite.log

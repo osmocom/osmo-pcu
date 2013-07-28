@@ -4,6 +4,7 @@ AC_INIT([osmo-pcu],
 	[osmocom-pcu@lists.osmocom.org])
 
 AM_INIT_AUTOMAKE([dist-bzip2])
+AC_CONFIG_TESTDIR(tests)
 
 dnl kernel style compile messages
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])

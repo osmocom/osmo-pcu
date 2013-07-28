@@ -50,11 +50,10 @@ libgprs_la_SOURCES += \
 	openbts_sock.cpp
 endif
 
-noinst_PROGRAMS = \
-	RLCMACTest
-
 bin_PROGRAMS = \
 	osmo-pcu
+
+noinst_PROGRAMS =
 
 if ENABLE_SYSMODSP
 noinst_PROGRAMS += \
@@ -74,12 +73,6 @@ noinst_HEADERS = \
 	pcu_vty.h \
 	sysmo_l1_if.h \
 	femtobts.h
-
-RLCMACTest_SOURCES = RLCMACTest.cpp
-RLCMACTest_LDADD = \
-	libgprs.la \
-	$(LIBOSMOCORE_LIBS) \
-	$(COMMON_LA)
 
 osmo_pcu_SOURCES = pcu_main.cpp
 
