@@ -32,6 +32,8 @@
 #include <cstdlib>
 #include <assert.h>
 #include <string.h>
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 #include "csn1.h"
 #include <gprs_debug.h>
 
@@ -861,7 +863,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
                 guint64 ui64 = bitvec_read_field(vector, readIndex, no_of_bits);
                 pui64       = pui64DATA(data, pDescr->offset);
                 *pui64      = ui64;
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %d | ", pDescr->sz , *pui64);
+                LOGPC(DCSN1, LOGL_NOTICE, "%s = %lu | ", pDescr->sz , *pui64);
               }
               else
               {
@@ -1141,13 +1143,13 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
             guint8 bits_to_handle = remaining_bits_len%8;
             if (bits_to_handle > 0)
             {
-              LOGPC(DCSN1, LOGL_NOTICE, "%u|", bitvec_read_field(vector, readIndex, bits_to_handle));
+              LOGPC(DCSN1, LOGL_NOTICE, "%"PRIu64"|", bitvec_read_field(vector, readIndex, bits_to_handle));
               remaining_bits_len -= bits_to_handle;
               bit_offset += bits_to_handle;
             }
             else if (bits_to_handle == 0)
             {
-              LOGPC(DCSN1, LOGL_NOTICE, "%u|", bitvec_read_field(vector, readIndex, 8));
+              LOGPC(DCSN1, LOGL_NOTICE, "%"PRIu64"|", bitvec_read_field(vector, readIndex, 8));
               remaining_bits_len -= 8;
               bit_offset += 8;
             }
@@ -2116,7 +2118,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
               {
                 pui64 = pui64DATA(data, pDescr->offset);
                 bitvec_write_field(vector, writeIndex, *pui64, no_of_bits);
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %d | ", pDescr->sz , *pui64);
+                LOGPC(DCSN1, LOGL_NOTICE, "%s = %lu | ", pDescr->sz , *pui64);
               }
               else
               {
