@@ -1,6 +1,7 @@
 *.o
 *.lo
 *.a
+*.sw?
 Makefile.in
 Makefile
 .deps
@@ -22,3 +23,7 @@ core
 core.*
 
 osmoappdesc.pyc
+
+# binaries
+src/osmo-pcu
+src/osmo-pcu-remote
