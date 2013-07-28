@@ -41,14 +41,6 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 #define NS_HDR_LEN 4
 #define IE_LLC_PDU 14
 
-int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp);
-
-int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx);
-
-int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx);
-
-int gprs_bssgp_pcu_rcvmsg(struct msgb *msg);
-
 int gprs_bssgp_create_and_connect(uint16_t local_port, uint32_t sgsn_ip, uint16_t
 		sgsn_port, uint16_t nsei, uint16_t nsvci, uint16_t bvci,
 		uint16_t mcc, uint16_t mnc, uint16_t lac, uint16_t rac,
