@@ -238,19 +238,6 @@ const struct value_string femtobts_tch_pl_names[] = {
 	{ 0, NULL }
 };
 
-const struct value_string femtobts_clksrc_names[] = {
-	{ SuperFemto_ClkSrcId_None,	"None" },
-	{ SuperFemto_ClkSrcId_Ocxo,	"ocxo" },
-	{ SuperFemto_ClkSrcId_Tcxo,	"tcxo" },
-	{ SuperFemto_ClkSrcId_External,	"ext" },
-	{ SuperFemto_ClkSrcId_GpsPps,	"gps" },
-	{ SuperFemto_ClkSrcId_Trx,	"trx" },
-	{ SuperFemto_ClkSrcId_Rx,	"rx" },
-	{ SuperFemto_ClkSrcId_Edge,	"edge" },
-	{ SuperFemto_ClkSrcId_NetList,	"nwl" },
-	{ 0, NULL }
-};
-
 const struct value_string femtobts_dir_names[] = {
 	{ GsmL1_Dir_TxDownlink,	"TxDL" },
 	{ GsmL1_Dir_TxUplink,	"TxUL" },
