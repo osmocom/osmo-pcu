@@ -36,6 +36,8 @@ void *tall_pcu_ctx;
 struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 
+extern void test_replay_gprs_attach(struct gprs_bssgp_pcu *pcu);
+
 struct gprs_rlcmac_bts *create_bts()
 {
 	struct gprs_rlcmac_bts *bts;
@@ -62,9 +64,10 @@ struct gprs_rlcmac_bts *create_bts()
 	return bts;
 }
 
-static void bvci_unblocked(struct gprs_bssgp_pcu *pci)
+static void bvci_unblocked(struct gprs_bssgp_pcu *pcu)
 {
 	printf("BVCI unblocked. We can begin with test cases.\n");
+	test_replay_gprs_attach(pcu);
 }
 
 void create_and_connect_bssgp(struct gprs_rlcmac_bts *bts,
