@@ -118,44 +118,6 @@ ProcessError( unsigned readIndex, const char* sz, gint16 err, const CSN_DESCR* p
   return err;
 }
 
-//#if 0
-static const char* CSN_DESCR_type[]=
-{
-  "CSN_END",
-  "CSN_BIT",
-  "CSN_UINT",
-  "CSN_TYPE",
-  "CSN_CHOICE",
-  "CSN_UNION",
-  "CSN_UNION_LH",
-  "CSN_UINT_ARRAY",
-  "CSN_TYPE_ARRAY",
-  "CSN_BITMAP",
-  "CSN_VARIABLE_BITMAP",
-  "CSN_VARIABLE_BITMAP_1",
-  "CSN_LEFT_ALIGNED_VAR_BMP",
-  "CSN_LEFT_ALIGNED_VAR_BMP_1",
-  "CSN_VARIABLE_ARRAY",
-  "CSN_VARIABLE_TARRAY",
-  "CSN_VARIABLE_TARRAY_OFFSET",
-  "CSN_RECURSIVE_ARRAY",
-  "CSN_RECURSIVE_TARRAY",
-  "CSN_RECURSIVE_TARRAY_1",
-  "CSN_RECURSIVE_TARRAY_2",
-  "CSN_EXIST",
-  "CSN_EXIST_LH",
-  "CSN_NEXT_EXIST",
-  "CSN_NEXT_EXIST_LH",
-  "CSN_NULL",
-  "CSN_FIXED",
-  "CSN_CALLBACK",
-  "CSN_UINT_OFFSET",
-  "CSN_UINT_LH",
-  "CSN_SERIALIZE",
-  "CSN_TRAP_ERROR"
-  "CSN_???"
-};
-//#endif
 
 /**
  * ================================================================================================
