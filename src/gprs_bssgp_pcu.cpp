@@ -365,51 +365,51 @@ int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp
 		DEBUGP(DBSSGP, "BSSGP BVCI=%u Rx BVC STATUS\n", bctx->bvci);
 		/* FIXME: send NM_STATUS.ind to NM */
 		break;
-		case BSSGP_PDUT_SUSPEND_ACK:
-			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SUSPEND_ACK\n");
-			break;
-		case BSSGP_PDUT_SUSPEND_NACK:
-			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SUSPEND_NACK\n");
-			break;
-		case BSSGP_PDUT_BVC_RESET_ACK:
-			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_BVC_RESET_ACK\n");
-			if (!the_pcu.bvc_sig_reset)
-				the_pcu.bvc_sig_reset = 1;
-			else
-				the_pcu.bvc_reset = 1;
-			bvc_timeout(NULL);
-			break;
-		case BSSGP_PDUT_PAGING_PS:
-			LOGP(DBSSGP, LOGL_NOTICE, "RX: [SGSN->PCU] BSSGP_PDUT_PAGING_PS\n");
-			gprs_bssgp_pcu_rx_paging_ps(msg, tp);
-			break;
-		case BSSGP_PDUT_PAGING_CS:
-			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_PAGING_CS\n");
-			break;
-		case BSSGP_PDUT_RESUME_ACK:
-			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_RESUME_ACK\n");
-			break;
-		case BSSGP_PDUT_RESUME_NACK:
-			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_RESUME_NACK\n");
-			break;
-		case BSSGP_PDUT_FLUSH_LL:
-			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_FLUSH_LL\n");
-			break;
-		case BSSGP_PDUT_BVC_BLOCK_ACK:
-			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SUSPEND_ACK\n");
-			break;
-		case BSSGP_PDUT_BVC_UNBLOCK_ACK:
-			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_BVC_UNBLOCK_ACK\n");
-			the_pcu.bvc_unblocked = 1;
-			bvc_timeout(NULL);
-			break;
-		case BSSGP_PDUT_SGSN_INVOKE_TRACE:
-			LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SGSN_INVOKE_TRACE\n");
-			break;
-		default:
-			LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%u Rx PDU type 0x%02x unknown\n", bctx->bvci, bgph->pdu_type);
-			rc = bssgp_tx_status(BSSGP_CAUSE_PROTO_ERR_UNSPEC, NULL, msg);
-			break;
+	case BSSGP_PDUT_SUSPEND_ACK:
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SUSPEND_ACK\n");
+		break;
+	case BSSGP_PDUT_SUSPEND_NACK:
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SUSPEND_NACK\n");
+		break;
+	case BSSGP_PDUT_BVC_RESET_ACK:
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_BVC_RESET_ACK\n");
+		if (!the_pcu.bvc_sig_reset)
+			the_pcu.bvc_sig_reset = 1;
+		else
+			the_pcu.bvc_reset = 1;
+		bvc_timeout(NULL);
+		break;
+	case BSSGP_PDUT_PAGING_PS:
+		LOGP(DBSSGP, LOGL_NOTICE, "RX: [SGSN->PCU] BSSGP_PDUT_PAGING_PS\n");
+		gprs_bssgp_pcu_rx_paging_ps(msg, tp);
+		break;
+	case BSSGP_PDUT_PAGING_CS:
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_PAGING_CS\n");
+		break;
+	case BSSGP_PDUT_RESUME_ACK:
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_RESUME_ACK\n");
+		break;
+	case BSSGP_PDUT_RESUME_NACK:
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_RESUME_NACK\n");
+		break;
+	case BSSGP_PDUT_FLUSH_LL:
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_FLUSH_LL\n");
+		break;
+	case BSSGP_PDUT_BVC_BLOCK_ACK:
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SUSPEND_ACK\n");
+		break;
+	case BSSGP_PDUT_BVC_UNBLOCK_ACK:
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_BVC_UNBLOCK_ACK\n");
+		the_pcu.bvc_unblocked = 1;
+		bvc_timeout(NULL);
+		break;
+	case BSSGP_PDUT_SGSN_INVOKE_TRACE:
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SGSN_INVOKE_TRACE\n");
+		break;
+	default:
+		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%u Rx PDU type 0x%02x unknown\n", bctx->bvci, bgph->pdu_type);
+		rc = bssgp_tx_status(BSSGP_CAUSE_PROTO_ERR_UNSPEC, NULL, msg);
+		break;
 	}
 	return rc;
 }
