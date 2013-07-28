@@ -336,6 +336,7 @@ int flush_pdch(struct gprs_rlcmac_pdch *pdch, uint8_t trx, uint8_t ts)
 static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_bssgp_pcu *pcu;
 	struct gprs_rlcmac_pdch *pdch;
 	struct in_addr ia;
 	int rc = 0;
@@ -418,12 +419,12 @@ bssgp_failed:
 	ia.s_addr = htonl(info_ind->remote_ip[0]);
 	LOGP(DL1IF, LOGL_DEBUG, " remote_ip=%s\n", inet_ntoa(ia));
 
-	rc = gprs_bssgp_create_and_connect(bts, info_ind->local_port[0],
+	pcu = gprs_bssgp_create_and_connect(bts, info_ind->local_port[0],
 		info_ind->remote_ip[0], info_ind->remote_port[0],
 		info_ind->nsei, info_ind->nsvci[0], info_ind->bvci,
 		info_ind->mcc, info_ind->mnc, info_ind->lac, info_ind->rac,
 		info_ind->cell_id);
-	if (rc < 0) {
+	if (!pcu) {
 		LOGP(DL1IF, LOGL_NOTICE, "SGSN not available\n");
 		goto bssgp_failed;
 	}

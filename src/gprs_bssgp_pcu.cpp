@@ -21,23 +21,7 @@
 #include <gprs_bssgp_pcu.h>
 #include <pcu_l1_if.h>
 
-struct osmo_pcu {
-	struct gprs_nsvc *nsvc;
-	struct bssgp_bvc_ctx *bctx;
-
-	struct gprs_rlcmac_bts *bts;
-
-	struct osmo_timer_list bvc_timer;
-
-	int nsvc_unblocked;
-
-	int bvc_sig_reset;
-	int bvc_reset;
-	int bvc_unblocked;
-	int exit_on_destroy;
-};
-
-static struct osmo_pcu the_pcu = { 0, };
+static struct gprs_bssgp_pcu the_pcu = { 0, };
 
 extern void *tall_pcu_ctx;
 extern uint16_t spoof_mcc, spoof_mnc;
@@ -591,7 +575,7 @@ static void bvc_timeout(void *_priv)
 }
 
 /* create BSSGP/NS layer instances */
-int gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts,
+struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts,
 	uint16_t local_port, uint32_t sgsn_ip,
 	uint16_t sgsn_port, uint16_t nsei, uint16_t nsvci, uint16_t bvci,
 	uint16_t mcc, uint16_t mnc, uint16_t lac, uint16_t rac,
@@ -604,15 +588,16 @@ int gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts,
 	mnc = ((mnc & 0xf00) >> 8) * 100 + ((mnc & 0x0f0) >> 4) * 10 + (mnc & 0x00f);
 	cell_id = ntohs(cell_id);
 
+	/* if already created... return the current address */
 	if (the_pcu.bctx)
-		return 0; /* if already created, must return 0: no error */
+		return &the_pcu;
 
 	the_pcu.bts = bts;
 
 	bssgp_nsi = gprs_ns_instantiate(&sgsn_ns_cb, tall_pcu_ctx);
 	if (!bssgp_nsi) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
-		return -EINVAL;
+		return NULL;
 	}
 	gprs_ns_vty_init(bssgp_nsi);
 	bssgp_nsi->nsip.local_port = local_port;
@@ -621,7 +606,7 @@ int gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts,
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create socket\n");
 		gprs_ns_destroy(bssgp_nsi);
 		bssgp_nsi = NULL;
-		return -EINVAL;
+		return NULL;
 	}
 
 	dest.sin_family = AF_INET;
@@ -633,7 +618,7 @@ int gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts,
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSVCt\n");
 		gprs_ns_destroy(bssgp_nsi);
 		bssgp_nsi = NULL;
-		return -EINVAL;
+		return NULL;
 	}
 
 	the_pcu.bctx = btsctx_alloc(bvci, nsei);
@@ -642,7 +627,7 @@ int gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts,
 		the_pcu.nsvc = NULL;
 		gprs_ns_destroy(bssgp_nsi);
 		bssgp_nsi = NULL;
-		return -EINVAL;
+		return NULL;
 	}
 	the_pcu.bctx->ra_id.mcc = spoof_mcc ? : mcc;
 	the_pcu.bctx->ra_id.mnc = spoof_mnc ? : mnc;
@@ -655,7 +640,7 @@ int gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts,
 	the_pcu.bvc_timer.cb = bvc_timeout;
 
 
-	return 0;
+	return &the_pcu;
 }
 
 void gprs_bssgp_destroy_or_exit(void)
