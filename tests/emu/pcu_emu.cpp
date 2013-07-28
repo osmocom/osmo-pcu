@@ -1,0 +1,113 @@
+/* Code for a software PCU to test a SGSN.. */
+
+/* (C) 2013 by Holger Hans Peter Freyther
+ *
+ * All Rights Reserved
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+extern "C" {
+#include <osmocom/core/talloc.h>
+#include <pcu_vty.h>
+}
+
+#include <gprs_bssgp_pcu.h>
+#include <gprs_rlcmac.h>
+
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+
+/* Extern data to please the underlying code */
+void *tall_pcu_ctx;
+struct gprs_rlcmac_bts *gprs_rlcmac_bts;
+int16_t spoof_mnc = 0, spoof_mcc = 0;
+
+struct gprs_rlcmac_bts *create_bts()
+{
+	struct gprs_rlcmac_bts *bts;
+
+	bts = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_bts);
+	if (!bts)
+		return NULL;
+	bts->fc_interval = 100;
+	bts->initial_cs_dl = bts->initial_cs_ul = 1;
+	bts->cs1 = 1;
+	bts->t3142 = 20;
+	bts->t3169 = 5;
+	bts->t3191 = 5;
+	bts->t3193_msec = 100;
+	bts->t3195 = 5;
+	bts->n3101 = 10;
+	bts->n3103 = 4;
+	bts->n3105 = 8;
+	bts->alpha = 0; /* a = 0.0 */
+
+	if (!bts->alloc_algorithm)
+		bts->alloc_algorithm = alloc_algorithm_b;
+
+	return bts;
+}
+
+static void bvci_unblocked(struct gprs_bssgp_pcu *pci)
+{
+	printf("BVCI unblocked. We can begin with test cases.\n");
+}
+
+void create_and_connect_bssgp(struct gprs_rlcmac_bts *bts,
+			uint32_t sgsn_ip, uint16_t sgsn_port)
+{
+	struct gprs_bssgp_pcu *pcu;
+
+	pcu = gprs_bssgp_create_and_connect(bts, 0, sgsn_ip, sgsn_port,
+					20, 20, 20, 0x901, 0x99, 1, 0, 0);
+	pcu->on_unblock_ack = bvci_unblocked;
+}
+
+int main(int argc, char **argv)
+{
+	struct gprs_rlcmac_bts *bts;
+
+	tall_pcu_ctx = talloc_named_const(NULL, 1, "moiji-mobile Emu-PCU context");
+	if (!tall_pcu_ctx)
+		abort();
+
+	msgb_set_talloc_ctx(tall_pcu_ctx);
+	osmo_init_logging(&gprs_log_info);
+	vty_init(&pcu_vty_info);
+	pcu_vty_init(&gprs_log_info);
+
+	gprs_rlcmac_bts = create_bts();
+	if (!gprs_rlcmac_bts)
+		abort();
+
+	create_and_connect_bssgp(gprs_rlcmac_bts, INADDR_LOOPBACK, 23000);
+	
+	for (;;)
+		osmo_select_main(0);
+
+	return EXIT_SUCCESS;
+}
+
+/*
+ * stubs that should not be reached
+ */
+extern "C" {
+void l1if_pdch_req() { abort(); }
+void l1if_connect_pdch() { abort(); }
+void l1if_close_pdch() { abort(); }
+void l1if_open_pdch() { abort(); }
+}

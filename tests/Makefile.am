@@ -1,12 +1,22 @@
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/
 
 check_PROGRAMS = rlcmac/RLCMACTest
+noinst_PROGRAMS = emu/pcu_emu
 
 rlcmac_RLCMACTest_SOURCES = rlcmac/RLCMACTest.cpp
 rlcmac_RLCMACTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
+
+emu_pcu_emu_SOURCES = emu/pcu_emu.cpp
+emu_pcu_emu_LDADD = \
+	$(top_builddir)/src/libgprs.la \
+	$(LIBOSMOGB_LIBS) \
+	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCORE_LIBS) \
+	$(COMMON_LA)
+
 
 # The `:;' works around a Bash 3.2 bug when the output is not writeable.
 $(srcdir)/package.m4: $(top_srcdir)/configure.ac
