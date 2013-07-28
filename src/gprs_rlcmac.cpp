@@ -176,9 +176,9 @@ void debug_diagram(int diag, const char *format, ...)
 /* FIXME: spread ressources over multiple TRX. Also add option to use same
  * TRX in case of existing TBF for TLLI in the other direction. */
 /* search for free TFI and return TFI, TRX */
-int tfi_alloc(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx)
+int tfi_alloc(struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction dir,
+		uint8_t *_trx, int8_t use_trx)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_pdch *pdch;
 	struct gprs_rlcmac_tbf **tbfp;
 	uint8_t trx_from, trx_to, trx, ts, tfi;
@@ -252,11 +252,10 @@ static inline int8_t find_free_usf(struct gprs_rlcmac_pdch *pdch, uint8_t ts)
 }
 
 /* lookup TBF Entity (by TFI) */
-struct gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, uint8_t trx,
-	enum gprs_rlcmac_tbf_direction dir)
+struct gprs_rlcmac_tbf *tbf_by_tfi(struct gprs_rlcmac_bts *bts,
+	uint8_t tfi, uint8_t trx, enum gprs_rlcmac_tbf_direction dir)
 {
 	struct gprs_rlcmac_tbf *tbf;
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 
 	if (tfi >= 32 || trx >= 8)
 		return NULL;
@@ -318,11 +317,11 @@ struct gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 	return NULL;
 }
 
-struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_tbf *old_tbf,
-	enum gprs_rlcmac_tbf_direction dir, uint8_t tfi, uint8_t trx,
+struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
+	struct gprs_rlcmac_tbf *old_tbf, enum gprs_rlcmac_tbf_direction dir,
+	uint8_t tfi, uint8_t trx,
 	uint8_t ms_class, uint8_t single_slot)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_tbf *tbf;
 	int rc;
 
@@ -367,7 +366,7 @@ next_diagram:
 	tbf->ws = 64;
 	tbf->sns = 128;
 	/* select algorithm */
-	rc = bts->alloc_algorithm(old_tbf, tbf, bts->alloc_algorithm_curst,
+	rc = bts->alloc_algorithm(bts, old_tbf, tbf, bts->alloc_algorithm_curst,
 		single_slot);
 	/* if no ressource */
 	if (rc < 0) {
@@ -406,10 +405,10 @@ next_diagram:
  *
  * Assign single slot for uplink and downlink
  */
-int alloc_algorithm_a(struct gprs_rlcmac_tbf *old_tbf,
+int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
+	struct gprs_rlcmac_tbf *old_tbf,
 	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_pdch *pdch;
 	uint8_t ts;
 	int8_t usf; /* must be signed */
@@ -462,10 +461,10 @@ int alloc_algorithm_a(struct gprs_rlcmac_tbf *old_tbf,
  * Assign one uplink slot. (With free USF)
  *
  */
-int alloc_algorithm_b(struct gprs_rlcmac_tbf *old_tbf,
+int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
+	struct gprs_rlcmac_tbf *old_tbf,
 	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_pdch *pdch;
 	struct gprs_ms_multislot_class *ms_class;
 	uint8_t Rx, Tx, Sum;	/* Maximum Number of Slots: RX, Tx, Sum Rx+Tx */
@@ -964,7 +963,7 @@ int tbf_update(struct gprs_rlcmac_tbf *tbf)
 	ul_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF);
 
 	tbf_unlink_pdch(tbf);
-	rc = bts->alloc_algorithm(ul_tbf, tbf, bts->alloc_algorithm_curst, 0);
+	rc = bts->alloc_algorithm(bts, ul_tbf, tbf, bts->alloc_algorithm_curst, 0);
 	/* if no ressource */
 	if (rc < 0) {
 		LOGP(DRLCMAC, LOGL_ERROR, "No ressource after update???\n");

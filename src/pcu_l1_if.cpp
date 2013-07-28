@@ -418,7 +418,7 @@ bssgp_failed:
 	ia.s_addr = htonl(info_ind->remote_ip[0]);
 	LOGP(DL1IF, LOGL_DEBUG, " remote_ip=%s\n", inet_ntoa(ia));
 
-	rc = gprs_bssgp_create_and_connect(info_ind->local_port[0],
+	rc = gprs_bssgp_create_and_connect(bts, info_ind->local_port[0],
 		info_ind->remote_ip[0], info_ind->remote_port[0],
 		info_ind->nsei, info_ind->nsvci[0], info_ind->bvci,
 		info_ind->mcc, info_ind->mnc, info_ind->lac, info_ind->rac,

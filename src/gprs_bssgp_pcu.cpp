@@ -25,6 +25,8 @@ struct osmo_pcu {
 	struct gprs_nsvc *nsvc;
 	struct bssgp_bvc_ctx *bctx;
 
+	struct gprs_rlcmac_bts *bts;
+
 	struct osmo_timer_list bvc_timer;
 
 	int nsvc_unblocked;
@@ -187,15 +189,14 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		} else {
 			/* the TBF exists, so we must write it in the queue
 			 * we prepend lifetime in front of PDU */
-			struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 			struct timeval *tv;
 			struct msgb *llc_msg = msgb_alloc(len + sizeof(*tv),
 				"llc_pdu_queue");
 			if (!llc_msg)
 				return -ENOMEM;
 			tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
-			if (bts->force_llc_lifetime)
-				delay_csec = bts->force_llc_lifetime;
+			if (the_pcu.bts->force_llc_lifetime)
+				delay_csec = the_pcu.bts->force_llc_lifetime;
 			/* keep timestap at 0 for infinite delay */
 			if (delay_csec != 0xffff) {
 				/* calculate timestamp of timeout */
@@ -247,14 +248,14 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		}
 
 		// Create new TBF (any TRX)
-		tfi = tfi_alloc(GPRS_RLCMAC_DL_TBF, &trx, use_trx);
+		tfi = tfi_alloc(the_pcu.bts, GPRS_RLCMAC_DL_TBF, &trx, use_trx);
 		if (tfi < 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 			/* FIXME: send reject */
 			return -EBUSY;
 		}
 		/* set number of downlink slots according to multislot class */
-		tbf = tbf_alloc(tbf, GPRS_RLCMAC_DL_TBF, tfi, trx, ms_class,
+		tbf = tbf_alloc(the_pcu.bts, tbf, GPRS_RLCMAC_DL_TBF, tfi, trx, ms_class,
 			ss);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
@@ -560,8 +561,6 @@ int gprs_bssgp_tx_fc_bvc(void)
 
 static void bvc_timeout(void *_priv)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
-
 	if (!the_pcu.bvc_sig_reset) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI 0\n");
 		bssgp_tx_bvc_reset(the_pcu.bctx, 0, BSSGP_CAUSE_OML_INTERV);
@@ -588,11 +587,12 @@ static void bvc_timeout(void *_priv)
 	LOGP(DBSSGP, LOGL_DEBUG, "Sending flow control info on BVCI %d\n",
 		the_pcu.bctx->bvci);
 	gprs_bssgp_tx_fc_bvc();
-	osmo_timer_schedule(&the_pcu.bvc_timer, bts->fc_interval, 0);
+	osmo_timer_schedule(&the_pcu.bvc_timer, the_pcu.bts->fc_interval, 0);
 }
 
 /* create BSSGP/NS layer instances */
-int gprs_bssgp_create_and_connect(uint16_t local_port, uint32_t sgsn_ip,
+int gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts,
+	uint16_t local_port, uint32_t sgsn_ip,
 	uint16_t sgsn_port, uint16_t nsei, uint16_t nsvci, uint16_t bvci,
 	uint16_t mcc, uint16_t mnc, uint16_t lac, uint16_t rac,
 	uint16_t cell_id)
@@ -606,6 +606,8 @@ int gprs_bssgp_create_and_connect(uint16_t local_port, uint32_t sgsn_ip,
 
 	if (the_pcu.bctx)
 		return 0; /* if already created, must return 0: no error */
+
+	the_pcu.bts = bts;
 
 	bssgp_nsi = gprs_ns_instantiate(&sgsn_ns_cb, tall_pcu_ctx);
 	if (!bssgp_nsi) {

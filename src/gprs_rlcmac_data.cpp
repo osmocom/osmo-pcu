@@ -239,14 +239,14 @@ static struct gprs_rlcmac_tbf *alloc_ul_tbf(int8_t use_trx, uint8_t ms_class,
 	uint8_t tfi;
 
 	/* create new TBF, use sme TRX as DL TBF */
-	tfi = tfi_alloc(GPRS_RLCMAC_UL_TBF, &trx, use_trx);
+	tfi = tfi_alloc(bts, GPRS_RLCMAC_UL_TBF, &trx, use_trx);
 	if (tfi < 0) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 		/* FIXME: send reject */
 		return NULL;
 	}
 	/* use multislot class of downlink TBF */
-	tbf = tbf_alloc(dl_tbf, GPRS_RLCMAC_UL_TBF, tfi, trx, ms_class, 0);
+	tbf = tbf_alloc(bts, dl_tbf, GPRS_RLCMAC_UL_TBF, tfi, trx, ms_class, 0);
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 		/* FIXME: send reject */
@@ -273,6 +273,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 	uint32_t tlli = 0;
 	struct gprs_rlcmac_tbf *tbf;
 	struct gprs_rlcmac_sba *sba;
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	int rc;
 
 	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)talloc_zero(tall_pcu_ctx, RlcMacUplink_t);
@@ -478,14 +479,14 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		} else {
 			if (ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.UnionType) {
 				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.DOWNLINK_TFI;
-				tbf = tbf_by_tfi(tfi, trx, GPRS_RLCMAC_DL_TBF);
+				tbf = tbf_by_tfi(bts, tfi, trx, GPRS_RLCMAC_DL_TBF);
 				if (!tbf) {
 					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TBF=%d\n", tlli);
 					break;
 				}
 			} else {
 				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.UPLINK_TFI;
-				tbf = tbf_by_tfi(tfi, trx, GPRS_RLCMAC_UL_TBF);
+				tbf = tbf_by_tfi(bts, tfi, trx, GPRS_RLCMAC_UL_TBF);
 				if (!tbf) {
 					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TBF=%d\n", tlli);
 					break;
@@ -876,7 +877,7 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 	}
 
 	/* find TBF inst from given TFI */
-	tbf = tbf_by_tfi(rh->tfi, trx, GPRS_RLCMAC_UL_TBF);
+	tbf = tbf_by_tfi(bts, rh->tfi, trx, GPRS_RLCMAC_UL_TBF);
 	if (!tbf) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA unknown TBF=%d\n",
 			rh->tfi);
@@ -1173,14 +1174,14 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 			"(AGCH)\n");
 	} else {
 		// Create new TBF
-		tfi = tfi_alloc(GPRS_RLCMAC_UL_TBF, &trx, -1);
+		tfi = tfi_alloc(bts, GPRS_RLCMAC_UL_TBF, &trx, -1);
 		if (tfi < 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 			/* FIXME: send reject */
 			return -EBUSY;
 		}
 		/* set class to 0, since we don't know the multislot class yet */
-		tbf = tbf_alloc(NULL, GPRS_RLCMAC_UL_TBF, tfi, trx, 0, 1);
+		tbf = tbf_alloc(bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx, 0, 1);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 			/* FIXME: send reject */

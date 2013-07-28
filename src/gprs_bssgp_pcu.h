@@ -41,10 +41,10 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 #define NS_HDR_LEN 4
 #define IE_LLC_PDU 14
 
-int gprs_bssgp_create_and_connect(uint16_t local_port, uint32_t sgsn_ip, uint16_t
-		sgsn_port, uint16_t nsei, uint16_t nsvci, uint16_t bvci,
-		uint16_t mcc, uint16_t mnc, uint16_t lac, uint16_t rac,
-		uint16_t cell_id);
+int gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts, uint16_t local_port,
+		uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
+		uint16_t nsvci, uint16_t bvci, uint16_t mcc, uint16_t mnc,
+		uint16_t lac, uint16_t rac, uint16_t cell_id);
 
 void gprs_bssgp_exit_on_destroy(void);
 void gprs_bssgp_destroy_or_exit(void);
