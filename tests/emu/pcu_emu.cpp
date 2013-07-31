@@ -24,12 +24,17 @@ extern "C" {
 #include <pcu_vty.h>
 }
 
+#include "gprs_tests.h"
+
+
 #include <gprs_bssgp_pcu.h>
 #include <gprs_rlcmac.h>
 
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+
+static int current_test;
 
 /* Extern data to please the underlying code */
 void *tall_pcu_ctx;
@@ -38,6 +43,24 @@ int16_t spoof_mnc = 0, spoof_mcc = 0;
 
 extern void test_replay_gprs_attach(struct gprs_bssgp_pcu *pcu);
 extern void test_replay_gprs_data(struct gprs_bssgp_pcu *, struct msgb *, struct tlv_parsed *);
+
+extern void test_pdp_activation_start(struct gprs_bssgp_pcu *pcu);
+extern void test_pdp_activation_data(struct gprs_bssgp_pcu *, struct msgb *, struct tlv_parsed*);
+
+struct gprs_test all_tests[] = {
+	gprs_test("gprs_attach_with_tmsi",
+			"A simple test that verifies that N(U) is "
+			"increasing across various messages. This makes "
+			"sure that no new LLE/LLME is created on the fly.",
+			test_replay_gprs_attach,
+			test_replay_gprs_data),
+	gprs_test("gprs_full_attach_pdp_activation",
+			"A simple test to do a GPRS attach and open a PDP "
+			"context. Then goes to sleep and waits for you to ping "
+			"the connection and hopefully re-produce a crash.",
+			test_pdp_activation_start,
+			test_pdp_activation_data),
+};
 
 struct gprs_rlcmac_bts *create_bts()
 {
@@ -68,12 +91,12 @@ struct gprs_rlcmac_bts *create_bts()
 static void bvci_unblocked(struct gprs_bssgp_pcu *pcu)
 {
 	printf("BVCI unblocked. We can begin with test cases.\n");
-	test_replay_gprs_attach(pcu);
+	all_tests[current_test].start(pcu);
 }
 
 static void bssgp_data(struct gprs_bssgp_pcu *pcu, struct msgb *msg, struct tlv_parsed *tp)
 {
-	test_replay_gprs_data(pcu, msg, tp);
+	all_tests[current_test].data(pcu, msg, tp);
 }
 
 void create_and_connect_bssgp(struct gprs_rlcmac_bts *bts,
@@ -110,6 +133,21 @@ int main(int argc, char **argv)
 		osmo_select_main(0);
 
 	return EXIT_SUCCESS;
+}
+
+
+/*
+ * Test handling..
+ */
+void gprs_test_success(struct gprs_bssgp_pcu *pcu)
+{
+	current_test += 1;
+	if (current_test >= ARRAY_SIZE(all_tests)) {
+		printf("All tests executed.\n");
+		exit(EXIT_SUCCESS);
+	}
+
+	all_tests[current_test].start(pcu);
 }
 
 /*

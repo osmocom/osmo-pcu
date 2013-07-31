@@ -24,6 +24,7 @@ extern "C" {
 }
 
 #include "openbsc_clone.h"
+#include "gprs_tests.h"
 
 #include <gprs_bssgp_pcu.h>
 
@@ -44,14 +45,6 @@ static const uint8_t gprs_attach_llc[] = {
 };
 
 static int next_wanted_nu;
-
-struct msgb *create_msg(const uint8_t *data, size_t len)
-{
-	struct msgb *msg = msgb_alloc_headroom(4096, 128, "create msg");
-	msg->l3h = msgb_put(msg, len);
-	memcpy(msg->l3h, data, len);
-	return msg;
-}
 
 void test_replay_gprs_attach(struct gprs_bssgp_pcu *pcu)
 {
@@ -88,8 +81,8 @@ void test_replay_gprs_data(struct gprs_bssgp_pcu *pcu, struct msgb *msg, struct 
 	OSMO_ASSERT(ph.seq_tx == next_wanted_nu++);
 
 	/* this test just wants to see messages... no further data is sent */
-	if (next_wanted_nu == 4) {
-		printf("Test done.\n");
-		exit(EXIT_SUCCESS);
+	if (next_wanted_nu == 6) {
+		printf("GPRS attach with increasing N(U) done.\n");
+		gprs_test_success(pcu);
 	}
 }

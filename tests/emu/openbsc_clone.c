@@ -21,6 +21,7 @@
 #include <gprs_debug.h>
 
 #include <osmocom/core/utils.h>
+#include <osmocom/gsm/tlv.h>
 
 #include <errno.h>
 
@@ -214,3 +215,20 @@ int gprs_llc_hdr_parse(struct gprs_llc_hdr_parsed *ghp,
 
 	return 0;
 }
+
+const struct tlv_definition gsm48_gmm_att_tlvdef = {
+	.def = {
+		[GSM48_IE_GMM_CIPH_CKSN]	= { TLV_TYPE_FIXED, 1 },
+		[GSM48_IE_GMM_TIMER_READY]	= { TLV_TYPE_TV, 1 },
+		[GSM48_IE_GMM_ALLOC_PTMSI]	= { TLV_TYPE_TLV, 0 },
+		[GSM48_IE_GMM_PTMSI_SIG]	= { TLV_TYPE_FIXED, 3 },
+		[GSM48_IE_GMM_AUTH_RAND]	= { TLV_TYPE_FIXED, 16 },
+		[GSM48_IE_GMM_AUTH_SRES]	= { TLV_TYPE_FIXED, 4 },
+		[GSM48_IE_GMM_IMEISV]		= { TLV_TYPE_TLV, 0 },
+		[GSM48_IE_GMM_DRX_PARAM]	= { TLV_TYPE_FIXED, 2 },
+		[GSM48_IE_GMM_MS_NET_CAPA]	= { TLV_TYPE_TLV, 0 },
+		[GSM48_IE_GMM_PDP_CTX_STATUS]	= { TLV_TYPE_TLV, 0 },
+		[GSM48_IE_GMM_PS_LCS_CAPA]	= { TLV_TYPE_TLV, 0 },
+		[GSM48_IE_GMM_GMM_MBMS_CTX_ST]	= { TLV_TYPE_TLV, 0 },
+	},
+};
