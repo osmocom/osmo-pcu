@@ -1,4 +1,4 @@
- DOWNLINK
+ DOWNLINK 
 vector1 = 4e8250e3f1a81d882080b2b2b2b2b2b2b2b2b2b2b
 =========Start DECODE===========
 +++++++++Finish DECODE++++++++++
@@ -31,7 +31,7 @@ vector1 = 47283c367513ba33304242b2b2b2b2b2b2b2b2b2b2b2b
 vector1 = 47283c367513ba33304242b2b2b2b2b2b2b2b2b2b2b2b
 vector2 = 47283c367513ba33304242b2b2b2b2b2b2b2b2b2b2b2b
 vector1 == vector2 : TRUE
- UPLINK
+ UPLINK 
 vector1 = 40e1e61d11f2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
 =========Start DECODE===========
 +++++++++Finish DECODE++++++++++
