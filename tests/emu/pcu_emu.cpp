@@ -37,6 +37,7 @@ struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 
 extern void test_replay_gprs_attach(struct gprs_bssgp_pcu *pcu);
+extern void test_replay_gprs_data(struct gprs_bssgp_pcu *, struct msgb *, struct tlv_parsed *);
 
 struct gprs_rlcmac_bts *create_bts()
 {
@@ -70,6 +71,11 @@ static void bvci_unblocked(struct gprs_bssgp_pcu *pcu)
 	test_replay_gprs_attach(pcu);
 }
 
+static void bssgp_data(struct gprs_bssgp_pcu *pcu, struct msgb *msg, struct tlv_parsed *tp)
+{
+	test_replay_gprs_data(pcu, msg, tp);
+}
+
 void create_and_connect_bssgp(struct gprs_rlcmac_bts *bts,
 			uint32_t sgsn_ip, uint16_t sgsn_port)
 {
@@ -78,6 +84,7 @@ void create_and_connect_bssgp(struct gprs_rlcmac_bts *bts,
 	pcu = gprs_bssgp_create_and_connect(bts, 0, sgsn_ip, sgsn_port,
 					20, 20, 20, 0x901, 0x99, 1, 0, 0);
 	pcu->on_unblock_ack = bvci_unblocked;
+	pcu->on_dl_unit_data = bssgp_data;
 }
 
 int main(int argc, char **argv)

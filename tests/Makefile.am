@@ -9,7 +9,8 @@ rlcmac_RLCMACTest_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
-emu_pcu_emu_SOURCES = emu/pcu_emu.cpp emu/test_replay_gprs_attach.cpp
+emu_pcu_emu_SOURCES = emu/pcu_emu.cpp emu/test_replay_gprs_attach.cpp \
+	emu/openbsc_clone.c emu/openbsc_clone.h
 emu_pcu_emu_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \

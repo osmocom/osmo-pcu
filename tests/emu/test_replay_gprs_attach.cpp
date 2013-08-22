@@ -19,13 +19,18 @@
 
 extern "C" {
 #include <osmocom/core/msgb.h>
+#include <osmocom/core/backtrace.h>
+#include <osmocom/gsm/gsm_utils.h>
 }
+
+#include "openbsc_clone.h"
 
 #include <gprs_bssgp_pcu.h>
 
 #include <stdint.h>
 #include <string.h>
 
+/* GPRS attach with a foreign TLLI */
 static const uint8_t gprs_attach_llc[] = {
 	/* LLC-PDU IE */
 	0x0e, 0x00, 0x2e,
@@ -37,6 +42,8 @@ static const uint8_t gprs_attach_llc[] = {
 	0x88, 0x0b, 0x04, 0x20, 0x04, 0x2e, 0x82, 0x30,
 	0x42, 0x00, 0x40, 0xaa, 0xf3, 0x18
 };
+
+static int next_wanted_nu;
 
 struct msgb *create_msg(const uint8_t *data, size_t len)
 {
@@ -51,6 +58,38 @@ void test_replay_gprs_attach(struct gprs_bssgp_pcu *pcu)
 	uint32_t tlli = 0xadf11820;
 	const uint8_t qos_profile[] = { 0x0, 0x0, 0x04 };
 
+	next_wanted_nu = 0;
 	struct msgb *msg = create_msg(gprs_attach_llc, ARRAY_SIZE(gprs_attach_llc));
 	bssgp_tx_ul_ud(pcu->bctx, tlli, qos_profile, msg);
+}
+
+void test_replay_gprs_data(struct gprs_bssgp_pcu *pcu, struct msgb *msg, struct tlv_parsed *tp)
+{
+	struct bssgp_ud_hdr *budh;
+	struct gprs_llc_hdr_parsed ph;
+	uint32_t tlli;
+
+	if (!TLVP_PRESENT(tp, BSSGP_IE_LLC_PDU))
+		return;
+
+
+	gprs_llc_hdr_parse(&ph, TLVP_VAL(tp, BSSGP_IE_LLC_PDU),
+				TLVP_LEN(tp, BSSGP_IE_LLC_PDU));
+
+	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
+	tlli = ntohl(budh->tlli);
+
+	/* all messages we should get, should be for a foreign tlli */
+	OSMO_ASSERT(gprs_tlli_type(tlli) == TLLI_FOREIGN);
+	printf("TLLI(0x%08x) is foreign!\n", tlli);
+
+	OSMO_ASSERT(ph.cmd == GPRS_LLC_UI);
+	OSMO_ASSERT(ph.sapi == 1);
+	OSMO_ASSERT(ph.seq_tx == next_wanted_nu++);
+
+	/* this test just wants to see messages... no further data is sent */
+	if (next_wanted_nu == 4) {
+		printf("Test done.\n");
+		exit(EXIT_SUCCESS);
+	}
 }
