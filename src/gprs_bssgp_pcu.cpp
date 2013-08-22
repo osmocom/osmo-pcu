@@ -1,6 +1,7 @@
 /* gprs_bssgp_pcu.cpp
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
+ * Copyright (C) 2013 by Holger Hans Peter Freyther
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -314,6 +315,8 @@ static int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct
 	switch (pdu_type) {
 	case BSSGP_PDUT_DL_UNITDATA:
 		LOGP(DBSSGP, LOGL_DEBUG, "RX: [SGSN->PCU] BSSGP_PDUT_DL_UNITDATA\n");
+		if (the_pcu.on_dl_unit_data)
+			the_pcu.on_dl_unit_data(&the_pcu, msg, tp);
 		gprs_bssgp_pcu_rx_dl_ud(msg, tp);
 		break;
 	case BSSGP_PDUT_PAGING_PS:

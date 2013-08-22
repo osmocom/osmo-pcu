@@ -61,6 +61,10 @@ struct gprs_bssgp_pcu {
 
 	/* The BSSGP has been unblocked */
 	void (*on_unblock_ack)(struct gprs_bssgp_pcu *pcu);
+
+	/* When BSSGP data arrives. The msgb is not only for reference */
+	void (*on_dl_unit_data)(struct gprs_bssgp_pcu *pcu, struct msgb *msg,
+				struct tlv_parsed *tp);
 };
 
 struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts,
