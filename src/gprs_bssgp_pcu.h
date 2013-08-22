@@ -1,6 +1,7 @@
 /* gprs_bssgp_pcu.h
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
+ * Copyright (C) 2013 by Holger Hans Peter Freyther
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,6 +56,11 @@ struct gprs_bssgp_pcu {
 	int bvc_reset;
 	int bvc_unblocked;
 	int exit_on_destroy;
+
+	/** callbacks below */
+
+	/* The BSSGP has been unblocked */
+	void (*on_unblock_ack)(struct gprs_bssgp_pcu *pcu);
 };
 
 struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts,

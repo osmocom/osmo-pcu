@@ -386,6 +386,8 @@ static int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struc
 	case BSSGP_PDUT_BVC_UNBLOCK_ACK:
 		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_BVC_UNBLOCK_ACK\n");
 		the_pcu.bvc_unblocked = 1;
+		if (the_pcu.on_unblock_ack)
+			the_pcu.on_unblock_ack(&the_pcu);
 		bvc_timeout(NULL);
 		break;
 	case BSSGP_PDUT_SGSN_INVOKE_TRACE:
