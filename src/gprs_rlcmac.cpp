@@ -36,7 +36,7 @@ struct gprs_ms_multislot_class {
 	uint8_t type; /* Type of Mobile */
 };
 
-struct gprs_ms_multislot_class gprs_ms_multislot_class[32] = {
+static const struct gprs_ms_multislot_class gprs_ms_multislot_class[32] = {
 /* M-S Class	  Rx	Tx	Sum	Tta	Ttb	Tra	Trb	Type */
 /* N/A */	{ MS_NA,MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA },
 /* 1 */		{ 1,	1,	2,	3,	2,	4,	2,	1 },
@@ -467,14 +467,14 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single)
 {
 	struct gprs_rlcmac_pdch *pdch;
-	struct gprs_ms_multislot_class *ms_class;
+	const struct gprs_ms_multislot_class *ms_class;
 	uint8_t Rx, Tx, Sum;	/* Maximum Number of Slots: RX, Tx, Sum Rx+Tx */
 	uint8_t Tta, Ttb, Tra, Trb, Tt, Tr;	/* Minimum Number of Slots */
 	uint8_t Type; /* Type of Mobile */
 	uint8_t rx_win_min = 0, rx_win_max = 7;
 	uint8_t tx_win_min, tx_win_max, tx_range;
 	uint8_t rx_window = 0, tx_window = 0;
-	const char *digit[10] = { "0","1","2","3","4","5","6","7","8","9" };
+	static const char *digit[10] = { "0","1","2","3","4","5","6","7","8","9" };
 	int8_t usf[8] = { -1, -1, -1, -1, -1, -1, -1, -1 }; /* must be signed */
 	int8_t tsc = -1; /* must be signed */
 	int8_t first_common_ts = -1;
