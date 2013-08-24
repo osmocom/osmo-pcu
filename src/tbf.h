@@ -22,6 +22,11 @@
 
 struct gprs_rlcmac_bts;
 
+/* dispatch Unitdata.DL messages */
 int tbf_handle(struct gprs_rlcmac_bts *bts,
 		const uint32_t tlli, const char *imsi, const uint8_t ms_class,
 		const uint16_t delay_csec, const uint8_t *data, const uint16_t len);
+
+struct gprs_rlcmac_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
+	int8_t use_trx, uint8_t ms_class,
+	uint32_t tlli, uint8_t ta, struct gprs_rlcmac_tbf *dl_tbf);

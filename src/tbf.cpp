@@ -1,6 +1,7 @@
 /* Copied from gprs_bssgp_pcu.cpp
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
+ * Copyright (C) 2012 Andreas Eversberg <jolly@eversberg.eu>
  * Copyright (C) 2013 by Holger Hans Peter Freyther
  *
  * This program is free software; you can redistribute it and/or
@@ -201,4 +202,38 @@ int tbf_handle(struct gprs_rlcmac_bts *bts,
 	} 
 
 	return tbf_new_dl_assignment(bts, imsi, tlli, ms_class, data, len);
+}
+
+struct gprs_rlcmac_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
+	int8_t use_trx, uint8_t ms_class,
+	uint32_t tlli, uint8_t ta, struct gprs_rlcmac_tbf *dl_tbf)
+{
+	uint8_t trx;
+	struct gprs_rlcmac_tbf *tbf;
+	uint8_t tfi;
+
+#warning "Copy and paste with tbf_new_dl_assignment"
+	/* create new TBF, use sme TRX as DL TBF */
+	tfi = tfi_find_free(bts, GPRS_RLCMAC_UL_TBF, &trx, use_trx);
+	if (tfi < 0) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+		/* FIXME: send reject */
+		return NULL;
+	}
+	/* use multislot class of downlink TBF */
+	tbf = tbf_alloc(bts, dl_tbf, GPRS_RLCMAC_UL_TBF, tfi, trx, ms_class, 0);
+	if (!tbf) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+		/* FIXME: send reject */
+		return NULL;
+	}
+	tbf->tlli = tlli;
+	tbf->tlli_valid = 1; /* no contention resolution */
+	tbf->dir.ul.contention_resolution_done = 1;
+	tbf->ta = ta; /* use current TA */
+	tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
+	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
+	tbf_timer_start(tbf, 3169, bts->t3169, 0);
+
+	return tbf;
 }

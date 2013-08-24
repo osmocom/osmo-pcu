@@ -21,6 +21,7 @@
 #include <gprs_bssgp_pcu.h>
 #include <gprs_rlcmac.h>
 #include <pcu_l1_if.h>
+#include <tbf.h>
 
 extern void *tall_pcu_ctx;
 
@@ -230,42 +231,6 @@ static uint8_t get_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
 	return 0;
 }
 
-static struct gprs_rlcmac_tbf *alloc_ul_tbf(int8_t use_trx, uint8_t ms_class,
-	uint32_t tlli, uint8_t ta, struct gprs_rlcmac_tbf *dl_tbf)
-{
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
-	uint8_t trx;
-	struct gprs_rlcmac_tbf *tbf;
-	uint8_t tfi;
-
-#warning "Copy and paste with tbf_new_dl_assignment"
-	/* create new TBF, use sme TRX as DL TBF */
-	tfi = tfi_find_free(bts, GPRS_RLCMAC_UL_TBF, &trx, use_trx);
-	if (tfi < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
-		/* FIXME: send reject */
-		return NULL;
-	}
-	/* use multislot class of downlink TBF */
-	tbf = tbf_alloc(bts, dl_tbf, GPRS_RLCMAC_UL_TBF, tfi, trx, ms_class, 0);
-	if (!tbf) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
-		/* FIXME: send reject */
-		return NULL;
-	}
-	tbf->tlli = tlli;
-	tbf->tlli_valid = 1; /* no contention resolution */
-	tbf->dir.ul.contention_resolution_done = 1;
-	tbf->ta = ta; /* use current TA */
-	tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
-	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
-	tbf_timer_start(tbf, 3169, bts->t3169, 0);
-
-	return tbf;
-}
-
-
-
 /* Received Uplink RLC control block. */
 int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 	uint32_t fn)
@@ -412,7 +377,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		if (ul_control_block->u.Packet_Downlink_Ack_Nack.Exist_Channel_Request_Description) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
 				"message, so we provide one:\n");
-			alloc_ul_tbf(tbf->trx, tbf->ms_class, tbf->tlli, tbf->ta, tbf);
+			tbf_alloc_ul(bts, tbf->trx, tbf->ms_class, tbf->tlli, tbf->ta, tbf);
 			/* schedule uplink assignment */
 			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
 		}
@@ -465,7 +430,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 					ms_class = get_ms_class_by_capability(&ul_control_block->u.Packet_Resource_Request.MS_Radio_Access_capability);
 				if (!ms_class)
 					LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");
-				tbf = alloc_ul_tbf(trx, ms_class, tlli, ta, NULL);
+				tbf = tbf_alloc_ul(bts, trx, ms_class, tlli, ta, NULL);
 				if (!tbf)
 					break;
 				/* set control ts to current MS's TS, until assignment complete */
