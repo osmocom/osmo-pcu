@@ -1,6 +1,7 @@
 /* gprs_rlcmac.h
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
+ * Copyright (C) 2013 by Holger Hans Peter Freyther
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -309,7 +310,7 @@ int sba_alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta);
 
 struct gprs_rlcmac_sba *sba_find(uint8_t trx, uint8_t ts, uint32_t fn);
 
-int tfi_alloc(struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction dir,
+int tfi_find_free(struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction dir,
 	uint8_t *_trx, int8_t use_trx);
 
 struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,

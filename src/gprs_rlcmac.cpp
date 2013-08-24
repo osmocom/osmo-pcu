@@ -2,6 +2,7 @@
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
  * Copyright (C) 2012 Andreas Eversberg <jolly@eversberg.eu>
+ * Copyright (C) 2013 by Holger Hans Peter Freyther
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -176,7 +177,7 @@ void debug_diagram(int diag, const char *format, ...)
 /* FIXME: spread ressources over multiple TRX. Also add option to use same
  * TRX in case of existing TBF for TLLI in the other direction. */
 /* search for free TFI and return TFI, TRX */
-int tfi_alloc(struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction dir,
+int tfi_find_free(struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction dir,
 		uint8_t *_trx, int8_t use_trx)
 {
 	struct gprs_rlcmac_pdch *pdch;

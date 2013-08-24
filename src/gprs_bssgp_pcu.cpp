@@ -233,7 +233,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		}
 
 		// Create new TBF (any TRX)
-		tfi = tfi_alloc(the_pcu.bts, GPRS_RLCMAC_DL_TBF, &trx, use_trx);
+		tfi = tfi_find_free(the_pcu.bts, GPRS_RLCMAC_DL_TBF, &trx, use_trx);
 		if (tfi < 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 			/* FIXME: send reject */

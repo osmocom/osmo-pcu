@@ -239,7 +239,7 @@ static struct gprs_rlcmac_tbf *alloc_ul_tbf(int8_t use_trx, uint8_t ms_class,
 	uint8_t tfi;
 
 	/* create new TBF, use sme TRX as DL TBF */
-	tfi = tfi_alloc(bts, GPRS_RLCMAC_UL_TBF, &trx, use_trx);
+	tfi = tfi_find_free(bts, GPRS_RLCMAC_UL_TBF, &trx, use_trx);
 	if (tfi < 0) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 		/* FIXME: send reject */
@@ -1174,7 +1174,7 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 			"(AGCH)\n");
 	} else {
 		// Create new TBF
-		tfi = tfi_alloc(bts, GPRS_RLCMAC_UL_TBF, &trx, -1);
+		tfi = tfi_find_free(bts, GPRS_RLCMAC_UL_TBF, &trx, -1);
 		if (tfi < 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 			/* FIXME: send reject */
