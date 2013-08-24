@@ -114,6 +114,8 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	int rc;
 
 	/* check for uplink data, so we copy our informations */
+#warning "Do the same look up for IMSI, TLLI and OLD_TLLI"
+#warning "Refactor the below lines... into a new method"
 	tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
 	if (tbf && tbf->dir.ul.contention_resolution_done
 	 && !tbf->dir.ul.final_ack_sent) {
