@@ -29,6 +29,13 @@ extern "C" {
 #include <errno.h>
 #include <string.h>
 
+static inline void tbf_update_ms_class(struct gprs_rlcmac_tbf *tbf,
+					const uint8_t ms_class)
+{
+	if (!tbf->ms_class && ms_class)
+		tbf->ms_class = ms_class;
+}
+
 static struct gprs_rlcmac_tbf *tbf_lookup_dl(const uint32_t tlli, const char *imsi)
 {
 	/* TODO: look up by IMSI first, then tlli, then old_tlli */
@@ -52,8 +59,7 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 		/* keep to flags */
 		tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
 		tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
-		if (!tbf->ms_class && ms_class)
-			tbf->ms_class = ms_class;
+		tbf_update_ms_class(tbf, ms_class);
 		tbf_update(tbf);
 		gprs_rlcmac_trigger_downlink_assignment(tbf, tbf, NULL);
 	} else {
@@ -84,9 +90,7 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 		}
 		memcpy(msgb_put(llc_msg, len), data, len);
 		msgb_enqueue(&tbf->llc_queue, llc_msg);
-		/* set ms class for updating TBF */
-		if (!tbf->ms_class && ms_class)
-			tbf->ms_class = ms_class;
+		tbf_update_ms_class(tbf, ms_class);
 	}
 
 	return 0;
