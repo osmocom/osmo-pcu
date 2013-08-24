@@ -40,7 +40,8 @@ libgprs_la_SOURCES = \
 	gsm_timer.cpp \
 	bitvector.cpp \
 	pcu_l1_if.cpp \
-	pcu_vty.c
+	pcu_vty.c \
+	tbf.cpp
 
 if ENABLE_SYSMOBTS
 libgprs_la_SOURCES += \
@@ -72,7 +73,8 @@ noinst_HEADERS = \
 	bitvector.h \
 	pcu_vty.h \
 	sysmo_l1_if.h \
-	femtobts.h
+	femtobts.h \
+	tbf.h
 
 osmo_pcu_SOURCES = pcu_main.cpp
 
