@@ -74,7 +74,7 @@ struct rlc_li_field {
 }
 
 static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
-	char *imsi);
+	const char *imsi);
 
 static int gprs_rlcmac_diag(struct gprs_rlcmac_tbf *tbf)
 {
@@ -1819,7 +1819,7 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 }
 
 static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
-	char *imsi)
+	const char *imsi)
 {
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	int plen;
@@ -1840,7 +1840,7 @@ static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
 
 /* depending on the current TBF, we assign on PACCH or AGCH */
 void gprs_rlcmac_trigger_downlink_assignment(struct gprs_rlcmac_tbf *tbf,
-	struct gprs_rlcmac_tbf *old_tbf, char *imsi)
+	struct gprs_rlcmac_tbf *old_tbf, const char *imsi)
 {
 #ifdef DEBUG_DL_ASS_IDLE
 	strncpy(debug_imsi, imsi);

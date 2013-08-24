@@ -174,7 +174,7 @@ void pcu_l1if_tx_agch(bitvec * block, int plen)
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, 23);
 }
 
-void pcu_l1if_tx_pch(bitvec * block, int plen, char *imsi)
+void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi)
 {
 	uint8_t data[23+3]; /* prefix PLEN */
 
