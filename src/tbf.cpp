@@ -141,6 +141,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	}
 
 	// Create new TBF (any TRX)
+#warning "Copy and paste with alloc_ul_tbf"
 	tfi = tfi_find_free(bts, GPRS_RLCMAC_DL_TBF, &trx, use_trx);
 	if (tfi < 0) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");

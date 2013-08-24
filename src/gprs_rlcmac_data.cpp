@@ -238,6 +238,7 @@ static struct gprs_rlcmac_tbf *alloc_ul_tbf(int8_t use_trx, uint8_t ms_class,
 	struct gprs_rlcmac_tbf *tbf;
 	uint8_t tfi;
 
+#warning "Copy and paste with tbf_new_dl_assignment"
 	/* create new TBF, use sme TRX as DL TBF */
 	tfi = tfi_find_free(bts, GPRS_RLCMAC_UL_TBF, &trx, use_trx);
 	if (tfi < 0) {
@@ -1174,6 +1175,7 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 			"(AGCH)\n");
 	} else {
 		// Create new TBF
+		#warning "Copy and pate with other routines.."
 		tfi = tfi_find_free(bts, GPRS_RLCMAC_UL_TBF, &trx, -1);
 		if (tfi < 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
