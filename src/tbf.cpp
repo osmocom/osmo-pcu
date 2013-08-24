@@ -29,66 +29,87 @@ extern "C" {
 #include <errno.h>
 #include <string.h>
 
+static struct gprs_rlcmac_tbf *tbf_lookup_dl(const uint32_t tlli, const char *imsi)
+{
+	/* TODO: look up by IMSI first, then tlli, then old_tlli */
+	return tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF);
+}
+
+static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
+				struct gprs_rlcmac_bts *bts,
+				const uint8_t ms_class,
+				const uint16_t pdu_delay_csec,
+				const uint8_t *data, const uint16_t len)
+{
+	LOGP(DRLCMAC, LOGL_INFO, "TBF: APPEND TFI: %u TLLI: 0x%08x\n", tbf->tfi, tbf->tlli);
+	if (tbf->state == GPRS_RLCMAC_WAIT_RELEASE) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF in WAIT RELEASE state "
+			"(T3193), so reuse TBF\n");
+		memcpy(tbf->llc_frame, data, len);
+		tbf->llc_length = len;
+		/* reset rlc states */
+		memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl));
+		/* keep to flags */
+		tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
+		tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
+		if (!tbf->ms_class && ms_class)
+			tbf->ms_class = ms_class;
+		tbf_update(tbf);
+		gprs_rlcmac_trigger_downlink_assignment(tbf, tbf, NULL);
+	} else {
+		/* the TBF exists, so we must write it in the queue
+		 * we prepend lifetime in front of PDU */
+		struct timeval *tv;
+		struct msgb *llc_msg = msgb_alloc(len + sizeof(*tv),
+			"llc_pdu_queue");
+		if (!llc_msg)
+			return -ENOMEM;
+		tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
+
+		uint16_t delay_csec;
+		if (bts->force_llc_lifetime)
+			delay_csec = bts->force_llc_lifetime;
+		else
+			delay_csec = pdu_delay_csec;
+		/* keep timestap at 0 for infinite delay */
+		if (delay_csec != 0xffff) {
+			/* calculate timestamp of timeout */
+			gettimeofday(tv, NULL);
+			tv->tv_usec += (delay_csec % 100) * 10000;
+			tv->tv_sec += delay_csec / 100;
+			if (tv->tv_usec > 999999) {
+				tv->tv_usec -= 1000000;
+				tv->tv_sec++;
+			}
+		}
+		memcpy(msgb_put(llc_msg, len), data, len);
+		msgb_enqueue(&tbf->llc_queue, llc_msg);
+		/* set ms class for updating TBF */
+		if (!tbf->ms_class && ms_class)
+			tbf->ms_class = ms_class;
+	}
+
+	return 0;
+}
+
 /**
  * TODO: split into unit test-able parts...
  */
 int tbf_handle(struct gprs_rlcmac_bts *bts,
 		const uint32_t tlli, const char *imsi,
-		const uint8_t ms_class, const uint16_t pdu_delay_csec,
+		const uint8_t ms_class, const uint16_t delay_csec,
 		const uint8_t *data, const uint16_t len)
 {
 	struct gprs_rlcmac_tbf *tbf;
 	int8_t tfi; /* must be signed */
 
 	/* check for existing TBF */
-	if ((tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF))) {
-		LOGP(DRLCMAC, LOGL_INFO, "TBF: APPEND TFI: %u TLLI: 0x%08x\n", tbf->tfi, tbf->tlli);
-		if (tbf->state == GPRS_RLCMAC_WAIT_RELEASE) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "TBF in WAIT RELEASE state "
-				"(T3193), so reuse TBF\n");
-			memcpy(tbf->llc_frame, data, len);
-			tbf->llc_length = len;
-			memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl)); /* reset
-								rlc states */
-			tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK; /* keep
-				to flags */
-			tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
-			if (!tbf->ms_class && ms_class)
-				tbf->ms_class = ms_class;
-			tbf_update(tbf);
-			gprs_rlcmac_trigger_downlink_assignment(tbf, tbf, NULL);
-		} else {
-			/* the TBF exists, so we must write it in the queue
-			 * we prepend lifetime in front of PDU */
-			struct timeval *tv;
-			struct msgb *llc_msg = msgb_alloc(len + sizeof(*tv),
-				"llc_pdu_queue");
-			if (!llc_msg)
-				return -ENOMEM;
-			tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
-
-			uint16_t delay_csec;
-			if (bts->force_llc_lifetime)
-				delay_csec = bts->force_llc_lifetime;
-			else
-				delay_csec = pdu_delay_csec;
-			/* keep timestap at 0 for infinite delay */
-			if (delay_csec != 0xffff) {
-				/* calculate timestamp of timeout */
-				gettimeofday(tv, NULL);
-				tv->tv_usec += (delay_csec % 100) * 10000;
-				tv->tv_sec += delay_csec / 100;
-				if (tv->tv_usec > 999999) {
-					tv->tv_usec -= 1000000;
-					tv->tv_sec++;
-				}
-			}
-			memcpy(msgb_put(llc_msg, len), data, len);
-			msgb_enqueue(&tbf->llc_queue, llc_msg);
-			/* set ms class for updating TBF */
-			if (!tbf->ms_class && ms_class)
-				tbf->ms_class = ms_class;
-		}
+	tbf = tbf_lookup_dl(tlli, imsi);
+	if (tbf) {
+		int rc = tbf_append_data(tbf, bts, ms_class,
+						delay_csec, data, len);
+		if (rc < 0)
+			return rc;
 	} else {
 		uint8_t trx, ta, ss;
 		int8_t use_trx;
