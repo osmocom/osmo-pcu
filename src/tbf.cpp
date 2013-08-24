@@ -36,6 +36,12 @@ static inline void tbf_update_ms_class(struct gprs_rlcmac_tbf *tbf,
 		tbf->ms_class = ms_class;
 }
 
+static inline void tbf_assign_imsi(struct gprs_rlcmac_tbf *tbf,
+					const char *imsi)
+{
+	strncpy(tbf->meas.imsi, imsi, sizeof(tbf->meas.imsi) - 1);
+}
+
 static struct gprs_rlcmac_tbf *tbf_lookup_dl(const uint32_t tlli, const char *imsi)
 {
 	/* TODO: look up by IMSI first, then tlli, then old_tlli */
@@ -179,7 +185,7 @@ int tbf_handle(struct gprs_rlcmac_bts *bts,
 		gprs_rlcmac_trigger_downlink_assignment(tbf, old_tbf, imsi);
 	}
 
-	/* store IMSI for debugging purpose */
-	strncpy(tbf->meas.imsi, imsi, sizeof(tbf->meas.imsi) - 1);
+	/* store IMSI for debugging purpose. TODO: it is more than debugging */
+	tbf_assign_imsi(tbf, imsi);
 	return 0;
 }
