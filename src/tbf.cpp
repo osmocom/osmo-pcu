@@ -102,6 +102,81 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 	return 0;
 }
 
+static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
+				const char *imsi,
+				const uint32_t tlli, const uint8_t ms_class,
+				const uint8_t *data, const uint16_t len)
+{
+	uint8_t trx, ta, ss;
+	int8_t use_trx;
+	struct gprs_rlcmac_tbf *old_tbf, *tbf;
+	int8_t tfi; /* must be signed */
+	int rc;
+
+	/* check for uplink data, so we copy our informations */
+	tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+	if (tbf && tbf->dir.ul.contention_resolution_done
+	 && !tbf->dir.ul.final_ack_sent) {
+		use_trx = tbf->trx;
+		ta = tbf->ta;
+		ss = 0;
+		old_tbf = tbf;
+	} else {
+		use_trx = -1;
+		/* we already have an uplink TBF, so we use that TA */
+		if (tbf)
+			ta = tbf->ta;
+		else {
+			/* recall TA */
+			rc = recall_timing_advance(tlli);
+			if (rc < 0) {
+				LOGP(DRLCMAC, LOGL_NOTICE, "TA unknown"
+					", assuming 0\n");
+				ta = 0;
+			} else
+				ta = rc;
+		}
+		ss = 1; /* PCH assignment only allows one timeslot */
+		old_tbf = NULL;
+	}
+
+	// Create new TBF (any TRX)
+	tfi = tfi_find_free(bts, GPRS_RLCMAC_DL_TBF, &trx, use_trx);
+	if (tfi < 0) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
+		/* FIXME: send reject */
+		return -EBUSY;
+	}
+	/* set number of downlink slots according to multislot class */
+	tbf = tbf_alloc(bts, tbf, GPRS_RLCMAC_DL_TBF, tfi, trx, ms_class, ss);
+	if (!tbf) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+		/* FIXME: send reject */
+		return -EBUSY;
+	}
+	tbf->tlli = tlli;
+	tbf->tlli_valid = 1;
+	tbf->ta = ta;
+
+	LOGP(DRLCMAC, LOGL_DEBUG,
+		"TBF: [DOWNLINK] START TFI: %d TLLI: 0x%08x \n",
+		tbf->tfi, tbf->tlli);
+
+	/* new TBF, so put first frame */
+	memcpy(tbf->llc_frame, data, len);
+	tbf->llc_length = len;
+
+	/* trigger downlink assignment and set state to ASSIGN.
+	 * we don't use old_downlink, so the possible uplink is used
+	 * to trigger downlink assignment. if there is no uplink,
+	 * AGCH is used. */
+	gprs_rlcmac_trigger_downlink_assignment(tbf, old_tbf, imsi);
+
+	/* store IMSI for debugging purpose. TODO: it is more than debugging */
+	tbf_assign_imsi(tbf, imsi);
+	return 0;
+}
+
 /**
  * TODO: split into unit test-able parts...
  */
@@ -111,81 +186,16 @@ int tbf_handle(struct gprs_rlcmac_bts *bts,
 		const uint8_t *data, const uint16_t len)
 {
 	struct gprs_rlcmac_tbf *tbf;
-	int8_t tfi; /* must be signed */
 
 	/* check for existing TBF */
 	tbf = tbf_lookup_dl(tlli, imsi);
 	if (tbf) {
 		int rc = tbf_append_data(tbf, bts, ms_class,
 						delay_csec, data, len);
-		if (rc < 0)
-			return rc;
-	} else {
-		uint8_t trx, ta, ss;
-		int8_t use_trx;
-		struct gprs_rlcmac_tbf *old_tbf;
-		int rc;
+		if (rc >= 0)
+			tbf_assign_imsi(tbf, imsi);
+		return rc;
+	} 
 
-		/* check for uplink data, so we copy our informations */
-		tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
-		if (tbf && tbf->dir.ul.contention_resolution_done
-		 && !tbf->dir.ul.final_ack_sent) {
-			use_trx = tbf->trx;
-			ta = tbf->ta;
-			ss = 0;
-			old_tbf = tbf;
-		} else {
-			use_trx = -1;
-			/* we already have an uplink TBF, so we use that TA */
-			if (tbf)
-				ta = tbf->ta;
-			else {
-				/* recall TA */
-				rc = recall_timing_advance(tlli);
-				if (rc < 0) {
-					LOGP(DRLCMAC, LOGL_NOTICE, "TA unknown"
-						", assuming 0\n");
-					ta = 0;
-				} else
-					ta = rc;
-			}
-			ss = 1; /* PCH assignment only allows one timeslot */
-			old_tbf = NULL;
-		}
-
-		// Create new TBF (any TRX)
-		tfi = tfi_find_free(bts, GPRS_RLCMAC_DL_TBF, &trx, use_trx);
-		if (tfi < 0) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-			/* FIXME: send reject */
-			return -EBUSY;
-		}
-		/* set number of downlink slots according to multislot class */
-		tbf = tbf_alloc(bts, tbf, GPRS_RLCMAC_DL_TBF, tfi, trx, ms_class,
-			ss);
-		if (!tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
-			/* FIXME: send reject */
-			return -EBUSY;
-		}
-		tbf->tlli = tlli;
-		tbf->tlli_valid = 1;
-		tbf->ta = ta;
-
-		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [DOWNLINK] START TFI: %d TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
-
-		/* new TBF, so put first frame */
-		memcpy(tbf->llc_frame, data, len);
-		tbf->llc_length = len;
-
-		/* trigger downlink assignment and set state to ASSIGN.
-		 * we don't use old_downlink, so the possible uplink is used
-		 * to trigger downlink assignment. if there is no uplink,
-		 * AGCH is used. */
-		gprs_rlcmac_trigger_downlink_assignment(tbf, old_tbf, imsi);
-	}
-
-	/* store IMSI for debugging purpose. TODO: it is more than debugging */
-	tbf_assign_imsi(tbf, imsi);
-	return 0;
+	return tbf_new_dl_assignment(bts, imsi, tlli, ms_class, data, len);
 }
