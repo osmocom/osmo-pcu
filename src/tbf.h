@@ -103,6 +103,7 @@ struct gprs_rlcmac_tbf {
 	uint8_t tfi;
 	uint32_t tlli;
 	uint8_t tlli_valid;
+	struct gprs_rlcmac_trx *trx;
 	uint8_t trx_no;
 	uint16_t arfcn;
 	uint8_t tsc;
