@@ -303,7 +303,7 @@ int gprs_rlcmac_add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 					if (first_ts < 0)
 						first_ts = ts;
 					/* break, if we already marked a slot */
-					if ((slot_mask[tbf->trx] & (1 << ts)))
+					if ((slot_mask[tbf->trx_no] & (1 << ts)))
 						break;
 				}
 			}
@@ -313,14 +313,14 @@ int gprs_rlcmac_add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 					"TRX=%d TS=%d, so we mark\n",
 					(tbf->direction == GPRS_RLCMAC_UL_TBF)
 						? "UL" : "DL",
-					tbf->tfi, tbf->trx, first_ts);
-				slot_mask[tbf->trx] |= (1 << first_ts);
+					tbf->tfi, tbf->trx_no, first_ts);
+				slot_mask[tbf->trx_no] |= (1 << first_ts);
 			} else
 				LOGP(DRLCMAC, LOGL_DEBUG, "- %s TBF=%d uses "
 					"already marked TRX=%d TS=%d\n",
 					(tbf->direction == GPRS_RLCMAC_UL_TBF)
 						? "UL" : "DL",
-					tbf->tfi, tbf->trx, ts);
+					tbf->tfi, tbf->trx_no, ts);
 		}
 	}
 

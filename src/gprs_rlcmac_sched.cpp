@@ -38,7 +38,7 @@ uint32_t sched_poll(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
 	poll_fn = poll_fn % 2715648;
 	llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
 		/* this trx, this ts */
-		if (tbf->trx != trx || tbf->control_ts != ts)
+		if (tbf->trx_no != trx || tbf->control_ts != ts)
 			continue;
 		/* polling for next uplink block */
 		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
@@ -53,7 +53,7 @@ uint32_t sched_poll(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
 	}
 	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
 		/* this trx, this ts */
-		if (tbf->trx != trx || tbf->control_ts != ts)
+		if (tbf->trx_no != trx || tbf->control_ts != ts)
 			continue;
 		/* polling for next uplink block */
 		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED

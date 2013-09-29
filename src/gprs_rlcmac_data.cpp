@@ -364,7 +364,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		if (ul_control_block->u.Packet_Downlink_Ack_Nack.Exist_Channel_Request_Description) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
 				"message, so we provide one:\n");
-			tbf_alloc_ul(bts, tbf->trx, tbf->ms_class, tbf->tlli, tbf->ta, tbf);
+			tbf_alloc_ul(bts, tbf->trx_no, tbf->ms_class, tbf->tlli, tbf->ta, tbf);
 			/* schedule uplink assignment */
 			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
 		}
@@ -697,7 +697,7 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 				"final uplink ack...\n", tbf->tfi);
 			return NULL;
 		}
-		if (sba_find(tbf->trx, tbf->control_ts, (fn + 13) % 2715648)) {
+		if (sba_find(tbf->trx_no, tbf->control_ts, (fn + 13) % 2715648)) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
 				"scheduled for single block allocation...\n");
 			return NULL;
@@ -974,7 +974,7 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 			"assignment...\n", tbf->tfi);
 			return NULL;
 	}
-	if (sba_find(tbf->trx, tbf->control_ts, (fn + 13) % 2715648)) {
+	if (sba_find(tbf->trx_no, tbf->control_ts, (fn + 13) % 2715648)) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already scheduled for "
 			"single block allocation...\n");
 			return NULL;
@@ -1434,7 +1434,7 @@ tx_block:
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
 				"sheduled in this TS %d, waiting for "
 				"TS %d\n", ts, tbf->control_ts);
-		else if (sba_find(tbf->trx, ts, (fn + 13) % 2715648))
+		else if (sba_find(tbf->trx_no, ts, (fn + 13) % 2715648))
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
 				"sheduled, because single block alllocation "
 				"already exists\n");
@@ -1647,7 +1647,7 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 				"assignment...\n", tbf->tfi);
 				return NULL;
 		}
-		if (sba_find(tbf->trx, tbf->control_ts, (fn + 13) % 2715648)) {
+		if (sba_find(tbf->trx_no, tbf->control_ts, (fn + 13) % 2715648)) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
 				"scheduled for single block allocation...\n");
 			return NULL;
