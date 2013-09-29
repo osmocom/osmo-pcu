@@ -109,6 +109,16 @@ static void assign_uplink_tbf_usf(
 	tbf->dir.ul.usf[ts] = usf;
 }
 
+static void assign_dlink_tbf(
+				struct gprs_rlcmac_pdch *pdch,
+				int ts,
+				struct gprs_rlcmac_tbf *tbf)
+{
+	tbf->trx->dl_tbf[tbf->tfi] = tbf;
+	pdch->dl_tbf[tbf->tfi] = tbf;
+	tbf->pdch[ts] = pdch;
+}
+
 
 /* Slot Allocation: Algorithm A
  *
@@ -151,9 +161,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 		assign_uplink_tbf_usf(pdch, ts, tbf, usf);
 	} else {
 		LOGP(DRLCMAC, LOGL_DEBUG, "- Assign downlink TS=%d\n", ts);
-		tbf->trx->dl_tbf[tbf->tfi] = tbf;
-		pdch->dl_tbf[tbf->tfi] = tbf;
-		tbf->pdch[ts] = pdch;
+		assign_dlink_tbf(pdch, ts, tbf);
 	}
 	/* the only one TS is the common TS */
 	tbf->first_ts = tbf->first_common_ts = ts;
@@ -542,9 +550,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 				LOGP(DRLCMAC, LOGL_DEBUG, "- Assigning DL TS "
 					"%d\n", ts);
 				pdch = &tbf->trx->pdch[ts];
-				tbf->trx->dl_tbf[tbf->tfi] = tbf;
-				pdch->dl_tbf[tbf->tfi] = tbf;
-				tbf->pdch[ts] = pdch;
+				assign_dlink_tbf(pdch, ts, tbf);
 				slotcount++;
 				if (slotcount == 1)
 					tbf->first_ts = ts;
