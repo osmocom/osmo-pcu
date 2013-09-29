@@ -97,6 +97,23 @@ static inline int8_t find_free_usf(struct gprs_rlcmac_pdch *pdch, uint8_t ts)
 	return -1;
 }
 
+static int find_enabled_pdch(struct gprs_rlcmac_trx *trx, const uint8_t start_ts)
+{
+	int ts;
+	for (ts = start_ts; ts < 8; ts++) {
+		struct gprs_rlcmac_pdch *pdch;
+
+		pdch = &trx->pdch[ts];
+		if (!pdch->enable) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, because "
+				"not enabled\n", ts);
+			continue;
+		}
+		return ts;
+	}
+
+	return 8;
+}
 
 static void assign_uplink_tbf_usf(
 				struct gprs_rlcmac_pdch *pdch,
@@ -135,18 +152,11 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm A) for class "
 		"%d\n", tbf->ms_class);
 
-	for (ts = 0; ts < 8; ts++) {
-		pdch = &tbf->trx->pdch[ts];
-		if (!pdch->enable) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, because "
-				"not enabled\n", ts);
-			continue;
-		}
-		break;
-	}
+	ts = find_enabled_pdch(tbf->trx, 0);
 	if (ts == 8)
 		return -EINVAL;
 
+	pdch = &tbf->trx->pdch[ts];
 	tbf->tsc = pdch->tsc;
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
 		/* if USF available */
