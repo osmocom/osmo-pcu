@@ -253,6 +253,17 @@ static inline int8_t find_free_usf(struct gprs_rlcmac_pdch *pdch, uint8_t ts)
 	return -1;
 }
 
+static void assign_uplink_tbf_usf(struct gprs_rlcmac_bts *bts,
+				struct gprs_rlcmac_pdch *pdch,
+				int ts,
+				struct gprs_rlcmac_tbf *tbf, int8_t usf)
+{
+	bts->trx[tbf->trx].ul_tbf[tbf->tfi] = tbf;
+	pdch->ul_tbf[tbf->tfi] = tbf;
+	tbf->pdch[ts] = pdch;
+	tbf->dir.ul.usf[ts] = usf;
+}
+
 /* Slot Allocation: Algorithm A
  *
  * Assign single slot for uplink and downlink
@@ -284,17 +295,14 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
 		/* if USF available */
 		usf = find_free_usf(pdch, ts);
-		if (usf >= 0) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "- Assign uplink "
-				"TS=%d USF=%d\n", ts, usf);
-			bts->trx[tbf->trx].ul_tbf[tbf->tfi] = tbf;
-			pdch->ul_tbf[tbf->tfi] = tbf;
-			tbf->pdch[ts] = pdch;
-		} else {
+		if (usf < 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Failed "
 				"allocating TS=%d, no USF available\n", ts);
 			return -EBUSY;
 		}
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Assign uplink "
+			"TS=%d USF=%d\n", ts, usf);
+		assign_uplink_tbf_usf(bts, pdch, ts, tbf, usf);
 	} else {
 		LOGP(DRLCMAC, LOGL_DEBUG, "- Assign downlink TS=%d\n", ts);
 		bts->trx[tbf->trx].dl_tbf[tbf->tfi] = tbf;
@@ -710,10 +718,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 				LOGP(DRLCMAC, LOGL_DEBUG, "- Assigning UL TS "
 					"%d\n", ts);
 				pdch = &bts->trx[tbf->trx].pdch[ts];
-				bts->trx[tbf->trx].ul_tbf[tbf->tfi] = tbf;
-				pdch->ul_tbf[tbf->tfi] = tbf;
-				tbf->pdch[ts] = pdch;
-				tbf->dir.ul.usf[ts] = usf[ts];
+				assign_uplink_tbf_usf(bts, pdch, ts, tbf, usf[ts]);
 				slotcount++;
 				if (slotcount == 1)
 					tbf->first_ts = ts;
