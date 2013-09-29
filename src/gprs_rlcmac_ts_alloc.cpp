@@ -218,19 +218,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	}
 
 	Rx = ms_class->rx;
-#if 0
-	if (Rx > 4) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Degrading max Rx slots to 4\n");
-		Rx = 4;
-	}
-#endif
 	Tx = ms_class->tx;
-#if 0
-	if (Tx > 4) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Degrading max Tx slots to 4\n");
-		Tx = 4;
-	}
-#endif
 	Sum = ms_class->sum;
 	Tta = ms_class->ta;
 	Ttb = ms_class->tb;
@@ -239,32 +227,14 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	Type = ms_class->type;
 
 	/* Tta and Ttb may depend on hopping or frequency change */
-	if (Ttb == MS_A) {
-		if (/* FIXME: hopping*/ 0)
-			Ttb = 1;
-		else
-			Ttb = 0;
-	}
-	if (Trb == MS_A) {
-		if (/* FIXME: hopping*/ 0)
-			Trb = 1;
-		else
-			Trb = 0;
-	}
-	if (Ttb == MS_B) {
-		/* FIXME: or frequency change */
-		if (/* FIXME: hopping*/ 0)
-			Ttb = 1;
-		else
-			Ttb = 0;
-	}
-	if (Trb == MS_C) {
-		/* FIXME: or frequency change */
-		if (/* FIXME: hopping*/ 0)
-			Trb = 1;
-		else
-			Trb = 0;
-	}
+	if (Ttb == MS_A)
+		Ttb = 0;
+	if (Trb == MS_A)
+		Trb = 0;
+	if (Ttb == MS_B)
+		Ttb = 0;
+	if (Trb == MS_C)
+		Trb = 0;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "- Rx=%d Tx=%d Sum Rx+Tx=%s  Tta=%s Ttb=%d "
 		" Tra=%d Trb=%d Type=%d\n", Rx, Tx,
@@ -272,15 +242,9 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		(Tta == MS_NA) ? "N/A" : digit[Tta], Ttb, Tra, Trb, Type);
 
 	/* select the values for time contraints */
-	if (/* FIXME: monitoring */0) {	
-		/* applicable to type 1 and type 2 */
-		Tt = Ttb;
-		Tr = Tra;
-	} else {
-		/* applicable to type 1 and type 2 */
-		Tt = Ttb;
-		Tr = Trb;
-	}
+	/* applicable to type 1 and type 2 */
+	Tt = Ttb;
+	Tr = Trb;
 
 	/* select a window of Rx slots if available
 	 * The maximum allowed slots depend on RX or the window of available
