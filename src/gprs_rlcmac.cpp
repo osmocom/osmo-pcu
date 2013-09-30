@@ -269,7 +269,7 @@ struct gprs_rlcmac_tbf *tbf_by_tfi(struct gprs_rlcmac_bts *bts,
 		return NULL;
 
 	if (tbf->state != GPRS_RLCMAC_RELEASING)
-			return tbf;
+		return tbf;
 
 	return NULL;
 }
@@ -654,7 +654,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 			((ul_usage & 0x40)) ? 'D' : ((collide & 0x40))?'x':'.',
 			((ul_usage & 0x80)) ? 'D' : ((collide & 0x80))?'x':'.');
 
-		/* apply massk to reduce tx_window (shifted by 3 slots) */
+		/* apply mask to reduce tx_window (shifted by 3 slots) */
 		rx_window &= ~(collide << 3);
 		rx_window &= ~(collide >> 5);
 		LOGP(DRLCMAC, LOGL_DEBUG, "- Remaining slots for RX: "
