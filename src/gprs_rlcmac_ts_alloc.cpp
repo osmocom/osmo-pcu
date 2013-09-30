@@ -147,7 +147,6 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 {
 	struct gprs_rlcmac_pdch *pdch;
 	uint8_t ts;
-	int8_t usf; /* must be signed */
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm A) for class "
 		"%d\n", tbf->ms_class);
@@ -159,6 +158,8 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	pdch = &tbf->trx->pdch[ts];
 	tbf->tsc = pdch->tsc;
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
+		int8_t usf; /* must be signed */
+
 		/* if USF available */
 		usf = find_free_usf(pdch, ts);
 		if (usf < 0) {
