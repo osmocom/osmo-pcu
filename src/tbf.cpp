@@ -25,6 +25,7 @@
 
 extern "C" {
 #include <osmocom/core/msgb.h>
+#include <osmocom/core/talloc.h>
 }
 
 #include <errno.h>
@@ -236,6 +237,158 @@ struct gprs_rlcmac_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	tbf_timer_start(tbf, 3169, bts->t3169, 0);
 
 	return tbf;
+}
+
+static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_pdch *pdch;
+	int ts;
+
+	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
+		bts->trx[tbf->trx].ul_tbf[tbf->tfi] = NULL;
+		for (ts = 0; ts < 8; ts++) {
+			pdch = tbf->pdch[ts];
+			if (pdch)
+				pdch->ul_tbf[tbf->tfi] = NULL;
+			tbf->pdch[ts] = NULL;
+		}
+	} else {
+		bts->trx[tbf->trx].dl_tbf[tbf->tfi] = NULL;
+		for (ts = 0; ts < 8; ts++) {
+			pdch = tbf->pdch[ts];
+			if (pdch)
+				pdch->dl_tbf[tbf->tfi] = NULL;
+			tbf->pdch[ts] = NULL;
+		}
+	}
+}
+
+void tbf_free(struct gprs_rlcmac_tbf *tbf)
+{
+	struct msgb *msg;
+
+	/* Give final measurement report */
+	gprs_rlcmac_rssi_rep(tbf);
+	gprs_rlcmac_lost_rep(tbf);
+
+	debug_diagram(tbf->diag, "+---------------+");
+	debug_diagram(tbf->diag, "|    THE END    |");
+	debug_diagram(tbf->diag, "+---------------+");
+	LOGP(DRLCMAC, LOGL_INFO, "Free %s TBF=%d with TLLI=0x%08x.\n",
+		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
+		tbf->tlli);
+	if (tbf->ul_ass_state != GPRS_RLCMAC_UL_ASS_NONE)
+		LOGP(DRLCMAC, LOGL_ERROR, "Software error: Pending uplink "
+			"assignment. This may not happen, because the "
+			"assignment message never gets transmitted. Please "
+			"be shure not to free in this state. PLEASE FIX!\n");
+	if (tbf->dl_ass_state != GPRS_RLCMAC_DL_ASS_NONE)
+		LOGP(DRLCMAC, LOGL_ERROR, "Software error: Pending downlink "
+			"assignment. This may not happen, because the "
+			"assignment message never gets transmitted. Please "
+			"be shure not to free in this state. PLEASE FIX!\n");
+	tbf_timer_stop(tbf);
+	while ((msg = msgb_dequeue(&tbf->llc_queue)))
+		msgb_free(msg);
+	tbf_unlink_pdch(tbf);
+	llist_del(&tbf->list);
+	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF ends here **********\n");
+	talloc_free(tbf);
+}
+
+int tbf_update(struct gprs_rlcmac_tbf *tbf)
+{
+	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_tbf *ul_tbf = NULL;
+	int rc;
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF update **********\n");
+
+	if (tbf->direction != GPRS_RLCMAC_DL_TBF)
+		return -EINVAL;
+
+	if (!tbf->ms_class) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Cannot update, no class\n");
+		return -EINVAL;
+	}
+
+	ul_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF);
+
+	tbf_unlink_pdch(tbf);
+	rc = bts->alloc_algorithm(bts, ul_tbf, tbf, bts->alloc_algorithm_curst, 0);
+	/* if no ressource */
+	if (rc < 0) {
+		LOGP(DRLCMAC, LOGL_ERROR, "No ressource after update???\n");
+		return -rc;
+	}
+
+	return 0;
+}
+
+int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
+{
+	if (tbf->control_ts == 0xff)
+		LOGP(DRLCMAC, LOGL_INFO, "- Setting Control TS %d\n",
+			tbf->first_common_ts);
+	else if (tbf->control_ts != tbf->first_common_ts)
+		LOGP(DRLCMAC, LOGL_INFO, "- Changing Control TS %d\n",
+			tbf->first_common_ts);
+	tbf->control_ts = tbf->first_common_ts;
+
+	return 0;
+}
+
+static const char *tbf_state_name[] = {
+	"NULL",
+	"ASSIGN",
+	"FLOW",
+	"FINISHED",
+	"WAIT RELEASE",
+	"RELEASING",
+};
+
+void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
+	enum gprs_rlcmac_tbf_state state)
+{
+	debug_diagram(tbf->diag, "->%s", tbf_state_name[state]);
+	LOGP(DRLCMAC, LOGL_DEBUG, "%s TBF=%d changes state from %s to %s\n",
+		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
+		tbf_state_name[tbf->state], tbf_state_name[state]);
+	tbf->state = state;
+}
+
+void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
+			unsigned int seconds, unsigned int microseconds)
+{
+	if (!osmo_timer_pending(&tbf->timer))
+		LOGP(DRLCMAC, LOGL_DEBUG, "Starting %s TBF=%d timer %u.\n",
+			(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL",
+			tbf->tfi, T);
+	else
+		LOGP(DRLCMAC, LOGL_DEBUG, "Restarting %s TBF=%d timer %u "
+			"while old timer %u pending \n",
+			(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL",
+			tbf->tfi, T, tbf->T);
+
+	tbf->T = T;
+	tbf->num_T_exp = 0;
+
+	/* Tunning timers can be safely re-scheduled. */
+	tbf->timer.data = tbf;
+	tbf->timer.cb = &tbf_timer_cb;
+
+	osmo_timer_schedule(&tbf->timer, seconds, microseconds);
+}
+
+void tbf_timer_stop(struct gprs_rlcmac_tbf *tbf)
+{
+	if (osmo_timer_pending(&tbf->timer)) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "Stopping %s TBF=%d timer %u.\n",
+			(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL",
+			tbf->tfi, tbf->T);
+		osmo_timer_del(&tbf->timer);
+	}
 }
 
 void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_trx *trx)
