@@ -97,69 +97,6 @@ extern struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 
 #ifdef __cplusplus
 /*
- * TBF instance
- */
-
-#define LLC_MAX_LEN 1543
-#define RLC_MAX_SNS 128 /* GPRS, must be power of 2 */
-#define RLC_MAX_WS  64 /* max window size */
-#define RLC_MAX_LEN 54 /* CS-4 including spare bits */
-
-#define Tassign_agch 0,200000	/* waiting after IMM.ASS confirm */
-#define Tassign_pacch 2,0	/* timeout for pacch assigment */
-
-enum gprs_rlcmac_tbf_state {
-	GPRS_RLCMAC_NULL = 0,	/* new created TBF */
-	GPRS_RLCMAC_ASSIGN,	/* wait for downlink assignment */
-	GPRS_RLCMAC_FLOW,	/* RLC/MAC flow, resource needed */
-	GPRS_RLCMAC_FINISHED,	/* flow finished, wait for release */
-	GPRS_RLCMAC_WAIT_RELEASE,/* wait for release or restart of DL TBF */
-	GPRS_RLCMAC_RELEASING,	/* releasing, wait to free TBI/USF */
-};
-
-enum gprs_rlcmac_tbf_poll_state {
-	GPRS_RLCMAC_POLL_NONE = 0,
-	GPRS_RLCMAC_POLL_SCHED, /* a polling was scheduled */
-};
-
-enum gprs_rlcmac_tbf_dl_ass_state {
-	GPRS_RLCMAC_DL_ASS_NONE = 0,
-	GPRS_RLCMAC_DL_ASS_SEND_ASS, /* send downlink assignment on next RTS */
-	GPRS_RLCMAC_DL_ASS_WAIT_ACK, /* wait for PACKET CONTROL ACK */
-};
-
-enum gprs_rlcmac_tbf_ul_ass_state {
-	GPRS_RLCMAC_UL_ASS_NONE = 0,
-	GPRS_RLCMAC_UL_ASS_SEND_ASS, /* send uplink assignment on next RTS */
-	GPRS_RLCMAC_UL_ASS_WAIT_ACK, /* wait for PACKET CONTROL ACK */
-};
-
-enum gprs_rlcmac_tbf_ul_ack_state {
-	GPRS_RLCMAC_UL_ACK_NONE = 0,
-	GPRS_RLCMAC_UL_ACK_SEND_ACK, /* send acknowledge on next RTS */
-	GPRS_RLCMAC_UL_ACK_WAIT_ACK, /* wait for PACKET CONTROL ACK */
-};
-
-enum gprs_rlcmac_tbf_direction {
-	GPRS_RLCMAC_DL_TBF,
-	GPRS_RLCMAC_UL_TBF
-};
-
-#define GPRS_RLCMAC_FLAG_CCCH		0 /* assignment on CCCH */
-#define GPRS_RLCMAC_FLAG_PACCH		1 /* assignment on PACCH */
-#define GPRS_RLCMAC_FLAG_UL_DATA	2 /* uplink data received */
-#define GPRS_RLCMAC_FLAG_DL_ACK		3 /* downlink acknowledge received  */
-#define GPRS_RLCMAC_FLAG_TO_UL_ACK	4
-#define GPRS_RLCMAC_FLAG_TO_DL_ACK	5
-#define GPRS_RLCMAC_FLAG_TO_UL_ASS	6
-#define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
-#define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
-
-extern struct llist_head gprs_rlcmac_ul_tbfs; /* list of uplink TBFs */
-extern struct llist_head gprs_rlcmac_dl_tbfs; /* list of downlink TBFs */
-extern struct llist_head gprs_rlcmac_sbas; /* list of single block allocs */
-
-/*
  * paging entry
  */
 struct gprs_rlcmac_paging {
@@ -212,37 +149,6 @@ int gprs_rlcmac_dl_bw(struct gprs_rlcmac_tbf *tbf, uint16_t octets);
 int sba_alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta);
 
 struct gprs_rlcmac_sba *sba_find(uint8_t trx, uint8_t ts, uint32_t fn);
-
-int tfi_find_free(struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction dir,
-	uint8_t *_trx, int8_t use_trx);
-
-struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
-	struct gprs_rlcmac_tbf *old_tbf,
-	enum gprs_rlcmac_tbf_direction dir, uint8_t tfi, uint8_t trx,
-	uint8_t ms_class, uint8_t single_slot);
-
-struct gprs_rlcmac_tbf *tbf_by_tfi(struct gprs_rlcmac_bts *bts,
-	uint8_t tfi, uint8_t trx,
-        enum gprs_rlcmac_tbf_direction dir);
-
-struct gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli,
-	enum gprs_rlcmac_tbf_direction dir);
-
-struct gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
-
-void tbf_free(struct gprs_rlcmac_tbf *tbf);
-
-int tbf_update(struct gprs_rlcmac_tbf *tbf);
-
-int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
-
-void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
-        enum gprs_rlcmac_tbf_state state);
-
-void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
-                        unsigned int seconds, unsigned int microseconds);
-
-void tbf_timer_stop(struct gprs_rlcmac_tbf *tbf);
 
 /* TS 44.060 Section 10.4.7 Table 10.4.7.1: Payload Type field */
 enum gprs_rlcmac_block_type {
