@@ -146,7 +146,7 @@ int gprs_rlcmac_rssi_rep(struct gprs_rlcmac_tbf *tbf);
 
 int gprs_rlcmac_dl_bw(struct gprs_rlcmac_tbf *tbf, uint16_t octets);
 
-int sba_alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta);
+int sba_alloc(struct gprs_rlcmac_bts *bts, uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta);
 
 struct gprs_rlcmac_sba *sba_find(uint8_t trx, uint8_t ts, uint32_t fn);
 

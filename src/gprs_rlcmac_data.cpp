@@ -1060,7 +1060,7 @@ int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	if (qta > 252)
 		qta = 252;
 	if (sb) {
-		rc = sba_alloc(&trx, &ts, &sb_fn, qta >> 2);
+		rc = sba_alloc(bts, &trx, &ts, &sb_fn, qta >> 2);
 		if (rc < 0)
 			return rc;
 		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] RACH qbit-ta=%d "

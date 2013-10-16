@@ -188,10 +188,10 @@ int tfi_find_free(struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction di
 
 LLIST_HEAD(gprs_rlcmac_sbas);
 
-int sba_alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta)
+int sba_alloc(struct gprs_rlcmac_bts *bts,
+		uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta)
 {
 
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_pdch *pdch;
 	struct gprs_rlcmac_sba *sba;
 	uint8_t trx, ts;
