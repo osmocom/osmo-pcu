@@ -1172,6 +1172,7 @@ int gprs_rlcmac_rcv_block(uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK_OPT:
 		LOGP(DRLCMAC, LOGL_NOTICE, "GPRS_RLCMAC_CONTROL_BLOCK_OPT block payload is not supported.\n");
+		break;
 	default:
 		LOGP(DRLCMAC, LOGL_NOTICE, "Unknown RLCMAC block payload.\n");
 		rc = -EINVAL;
