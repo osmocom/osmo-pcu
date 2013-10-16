@@ -1071,6 +1071,7 @@ int sba_alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta)
 	}
 	if (trx == 8) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH available.\n");
+		talloc_free(sba);
 		return -EINVAL;
 	}
 
