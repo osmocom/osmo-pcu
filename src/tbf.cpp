@@ -59,7 +59,7 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 				const uint8_t *data, const uint16_t len)
 {
 	LOGP(DRLCMAC, LOGL_INFO, "TBF: APPEND TFI: %u TLLI: 0x%08x\n", tbf->tfi, tbf->tlli);
-	if (tbf->state == GPRS_RLCMAC_WAIT_RELEASE) {
+	if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE)) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "TBF in WAIT RELEASE state "
 			"(T3193), so reuse TBF\n");
 		memcpy(tbf->llc_frame, data, len);
@@ -357,7 +357,7 @@ void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s TBF=%d changes state from %s to %s\n",
 		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
 		tbf_state_name[tbf->state], tbf_state_name[state]);
-	tbf->state = state;
+	tbf->set_state(state);
 }
 
 void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
@@ -409,7 +409,7 @@ struct gprs_rlcmac_tbf *tbf_by_tfi(struct gprs_rlcmac_bts *bts,
 	if (!tbf)
 		return NULL;
 
-	if (tbf->state != GPRS_RLCMAC_RELEASING)
+	if (tbf->state_is_not(GPRS_RLCMAC_RELEASING))
 		return tbf;
 
 	return NULL;
@@ -422,13 +422,13 @@ struct gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli,
 	struct gprs_rlcmac_tbf *tbf;
 	if (dir == GPRS_RLCMAC_UL_TBF) {
 		llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
-			if (tbf->state != GPRS_RLCMAC_RELEASING
+			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 			 && tbf->tlli == tlli && tbf->tlli_valid)
 				return tbf;
 		}
 	} else {
 		llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
-			if (tbf->state != GPRS_RLCMAC_RELEASING
+			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 			 && tbf->tlli == tlli)
 				return tbf;
 		}
@@ -443,14 +443,14 @@ struct gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 	/* only one TBF can poll on specific TS/FN, because scheduler can only
 	 * schedule one downlink control block (with polling) at a FN per TS */
 	llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
-		if (tbf->state != GPRS_RLCMAC_RELEASING
+		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx == trx
 		 && tbf->control_ts == ts)
 			return tbf;
 	}
 	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
-		if (tbf->state != GPRS_RLCMAC_RELEASING
+		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx == trx
 		 && tbf->control_ts == ts)
@@ -561,7 +561,7 @@ void tbf_timer_cb(void *_tbf)
 #endif
 	case 0: /* assignment */
 		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
-			if (tbf->state == GPRS_RLCMAC_ASSIGN) {
+			if (tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
 				LOGP(DRLCMAC, LOGL_NOTICE, "Releasing due to "
 					"PACCH assignment timeout.\n");
 				tbf_free(tbf);
@@ -572,7 +572,7 @@ void tbf_timer_cb(void *_tbf)
 		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
 			/* change state to FLOW, so scheduler will start transmission */
 			tbf->dir.dl.wait_confirm = 0;
-			if (tbf->state == GPRS_RLCMAC_ASSIGN) {
+			if (tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
 				tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
 				tbf_assign_control_ts(tbf);
 			} else

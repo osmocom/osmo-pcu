@@ -98,7 +98,7 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 		}
 		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
 		debug_diagram(tbf->diag, "timeout UL-ACK");
-		if (tbf->state == GPRS_RLCMAC_FINISHED) {
+		if (tbf->state_is(GPRS_RLCMAC_FINISHED)) {
 			struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 
 			tbf->dir.ul.n3103++;
@@ -687,7 +687,7 @@ static int gprs_rlcmac_assemble_llc(struct gprs_rlcmac_tbf *tbf, uint8_t *data,
 struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 	uint32_t fn)
 {
-	int final = (tbf->state == GPRS_RLCMAC_FINISHED);
+	int final = (tbf->state_is(GPRS_RLCMAC_FINISHED));
 	struct msgb *msg;
 
 	if (final) {
@@ -899,7 +899,7 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 	}
 
 	/* Check CV of last frame in buffer */
-	if (tbf->state == GPRS_RLCMAC_FLOW /* still in flow state */
+	if (tbf->state_is(GPRS_RLCMAC_FLOW) /* still in flow state */
 	 && tbf->dir.ul.v_q == tbf->dir.ul.v_r) { /* if complete */
 		struct rlc_ul_header *last_rh = (struct rlc_ul_header *)
 			tbf->rlc_block[(tbf->dir.ul.v_r - 1) & mod_sns_half];
@@ -917,7 +917,7 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 
 	/* If TLLI is included or if we received half of the window, we send
 	 * an ack/nack */
-	if (rh->si || rh->ti || tbf->state == GPRS_RLCMAC_FINISHED
+	if (rh->si || rh->ti || tbf->state_is(GPRS_RLCMAC_FINISHED)
 	 || (tbf->dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
 		if (rh->si) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "- Scheduling Ack/Nack, "
@@ -927,7 +927,7 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
 				"because TLLI is included.\n");
 		}
-		if (tbf->state == GPRS_RLCMAC_FINISHED) {
+		if (tbf->state_is(GPRS_RLCMAC_FINISHED)) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
 				"because last block has CV==0.\n");
 		}
@@ -942,7 +942,7 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 				debug_diagram(tbf->diag, "sched UL-ACK stall");
 			if (rh->ti)
 				debug_diagram(tbf->diag, "sched UL-ACK TLLI");
-			if (tbf->state == GPRS_RLCMAC_FINISHED)
+			if (tbf->state_is(GPRS_RLCMAC_FINISHED))
 				debug_diagram(tbf->diag, "sched UL-ACK CV==0");
 			if ((tbf->dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0)
 				debug_diagram(tbf->diag, "sched UL-ACK n=%d",
@@ -1200,11 +1200,11 @@ do_resend:
 
 	/* if the window has stalled, or transfer is complete,
 	 * send an unacknowledged block */
-	if (tbf->state == GPRS_RLCMAC_FINISHED
+	if (tbf->state_is(GPRS_RLCMAC_FINISHED)
 	 || ((tbf->dir.dl.v_s - tbf->dir.dl.v_a) & mod_sns) == tbf->ws) {
 	 	int resend = 0;
 
-		if (tbf->state == GPRS_RLCMAC_FINISHED)
+		if (tbf->state_is(GPRS_RLCMAC_FINISHED))
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
 				"because all blocks have been transmitted.\n",
 					tbf->dir.dl.v_a);
@@ -1568,7 +1568,7 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 			"X=Resend-Unacked\n", tbf->dir.dl.v_a, show_v_b,
 			(tbf->dir.dl.v_s - 1) & mod_sns);
 
-		if (tbf->state == GPRS_RLCMAC_FINISHED
+		if (tbf->state_is(GPRS_RLCMAC_FINISHED)
 		 && tbf->dir.dl.v_s == tbf->dir.dl.v_a) {
 			LOGP(DRLCMACDL, LOGL_NOTICE, "Received acknowledge of "
 				"all blocks, but without final ack "

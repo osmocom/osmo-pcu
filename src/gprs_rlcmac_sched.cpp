@@ -103,7 +103,7 @@ uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 		/* we don't need to give resources in FINISHED state,
 		 * because we have received all blocks and only poll
 		 * for packet control ack. */
-		if (tbf->state != GPRS_RLCMAC_FLOW)
+		if (tbf->state_is_not(GPRS_RLCMAC_FLOW))
 			continue;
 
 		/* use this USF */
@@ -182,8 +182,8 @@ struct msgb *sched_select_downlink(uint8_t trx, uint8_t ts, uint32_t fn,
 		if (tbf->direction != GPRS_RLCMAC_DL_TBF)
 			continue;
 		/* no DL resources needed, go next */
-		if (tbf->state != GPRS_RLCMAC_FLOW
-		 && tbf->state != GPRS_RLCMAC_FINISHED)
+		if (tbf->state_is_not(GPRS_RLCMAC_FLOW)
+		 && tbf->state_is_not(GPRS_RLCMAC_FINISHED))
 			continue;
 
 		/* waiting for CCCH IMM.ASS confirm */

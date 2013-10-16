@@ -91,10 +91,13 @@ struct gprs_rlcmac_tbf {
 	static void free_all(struct gprs_rlcmac_trx *trx);
 	static void free_all(struct gprs_rlcmac_pdch *pdch);
 
+	bool state_is(enum gprs_rlcmac_tbf_state rhs) const;
+	bool state_is_not(enum gprs_rlcmac_tbf_state rhs) const;
+	void set_state(enum gprs_rlcmac_tbf_state new_state);
+
 	int rlcmac_diag();
 
 	struct llist_head list;
-	enum gprs_rlcmac_tbf_state state;
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
 	uint8_t tfi;
@@ -187,6 +190,10 @@ struct gprs_rlcmac_tbf {
 	int diag; /* number where TBF is presented in diagram */
 	int diag_new; /* used to format output of new TBF */
 #endif
+
+	/* these should become protected but only after gprs_rlcmac_data.c
+	 * stops to iterate over all tbf in its current form */
+	enum gprs_rlcmac_tbf_state state;
 };
 
 
@@ -232,3 +239,18 @@ void tbf_timer_stop(struct gprs_rlcmac_tbf *tbf);
 
 void tbf_timer_cb(void *_tbf);
 
+
+inline bool gprs_rlcmac_tbf::state_is(enum gprs_rlcmac_tbf_state rhs) const
+{
+	return state == rhs;
+}
+
+inline bool gprs_rlcmac_tbf::state_is_not(enum gprs_rlcmac_tbf_state rhs) const
+{
+	return state != rhs;
+}
+
+inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
+{
+	state = new_state;
+}
