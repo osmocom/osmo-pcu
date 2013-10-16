@@ -183,8 +183,6 @@ void write_packet_uplink_ack(RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *t
 
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
-void tbf_timer_cb(void *_tbf);
-
 int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf);
 
 int gprs_rlcmac_sba_timeout(struct gprs_rlcmac_sba *sba);

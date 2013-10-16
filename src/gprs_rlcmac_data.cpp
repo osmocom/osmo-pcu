@@ -79,20 +79,7 @@ static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
 
 static int gprs_rlcmac_diag(struct gprs_rlcmac_tbf *tbf)
 {
-	if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
-		LOGP(DRLCMAC, LOGL_NOTICE, "- Assignment was on CCCH\n");
-	if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)))
-		LOGP(DRLCMAC, LOGL_NOTICE, "- Assignment was on PACCH\n");
-	if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_UL_DATA)))
-		LOGP(DRLCMAC, LOGL_NOTICE, "- Uplink data was received\n");
-	else if (tbf->direction == GPRS_RLCMAC_UL_TBF)
-		LOGP(DRLCMAC, LOGL_NOTICE, "- No uplink data received yet\n");
-	if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK)))
-		LOGP(DRLCMAC, LOGL_NOTICE, "- Downlink ACK was received\n");
-	else if (tbf->direction == GPRS_RLCMAC_DL_TBF)
-		LOGP(DRLCMAC, LOGL_NOTICE, "- No downlink ACK received yet\n");
-
-	return 0;
+	return tbf->rlcmac_diag();
 }
 
 int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
@@ -486,63 +473,6 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 #ifdef DEBUG_DL_ASS_IDLE
 	char debug_imsi[16];
 #endif
-
-void tbf_timer_cb(void *_tbf)
-{
-	struct gprs_rlcmac_tbf *tbf = (struct gprs_rlcmac_tbf *)_tbf;
-
-	LOGP(DRLCMAC, LOGL_DEBUG, "%s TBF=%d timer %u expired.\n",
-		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
-		tbf->T);
-
-	tbf->num_T_exp++;
-
-	switch (tbf->T) {
-#ifdef DEBUG_DL_ASS_IDLE
-	case 1234:
-		gprs_rlcmac_trigger_downlink_assignment(tbf, NULL, debug_imsi);
-		break;
-#endif
-	case 0: /* assignment */
-		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
-			if (tbf->state == GPRS_RLCMAC_ASSIGN) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "Releasing due to "
-					"PACCH assignment timeout.\n");
-				tbf_free(tbf);
-			} else
-				LOGP(DRLCMAC, LOGL_ERROR, "Error: TBF is not "
-					"in assign state\n");
-		}
-		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
-			/* change state to FLOW, so scheduler will start transmission */
-			tbf->dir.dl.wait_confirm = 0;
-			if (tbf->state == GPRS_RLCMAC_ASSIGN) {
-				tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
-				tbf_assign_control_ts(tbf);
-			} else
-				LOGP(DRLCMAC, LOGL_NOTICE, "Continue flow after "
-					"IMM.ASS confirm\n");
-		}
-		break;
-	case 3169:
-	case 3191:
-	case 3195:
-		LOGP(DRLCMAC, LOGL_NOTICE, "TBF T%d timeout during "
-			"transsmission\n", tbf->T);
-		gprs_rlcmac_diag(tbf);
-		/* fall through */
-	case 3193:
-		if (tbf->T == 3193)
-		        debug_diagram(tbf->diag, "T3193 timeout");
-		LOGP(DRLCMAC, LOGL_DEBUG, "TBF will be freed due to timeout\n");
-		/* free TBF */
-		tbf_free(tbf);
-		break;
-	default:
-		LOGP(DRLCMAC, LOGL_ERROR, "Timer expired in unknown mode: %u\n",
-			tbf->T);
-	}
-}
 
 /*
  * UL data block flow

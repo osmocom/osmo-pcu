@@ -91,6 +91,7 @@ struct gprs_rlcmac_tbf {
 	static void free_all(struct gprs_rlcmac_trx *trx);
 	static void free_all(struct gprs_rlcmac_pdch *pdch);
 
+	int rlcmac_diag();
 
 	struct llist_head list;
 	enum gprs_rlcmac_tbf_state state;
@@ -228,4 +229,6 @@ void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
                         unsigned int seconds, unsigned int microseconds);
 
 void tbf_timer_stop(struct gprs_rlcmac_tbf *tbf);
+
+void tbf_timer_cb(void *_tbf);
 
