@@ -89,6 +89,7 @@ extern struct llist_head gprs_rlcmac_sbas; /* list of single block allocs */
 struct gprs_rlcmac_tbf {
 
 	static void free_all(struct gprs_rlcmac_trx *trx);
+	static void free_all(struct gprs_rlcmac_pdch *pdch);
 
 
 	struct llist_head list;

@@ -251,3 +251,17 @@ void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_trx *trx)
 			tbf_free(tbf);
 	}
 }
+
+void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_pdch *pdch)
+{
+	for (uint8_t tfi = 0; tfi < 32; tfi++) {
+		struct gprs_rlcmac_tbf *tbf;
+
+		tbf = pdch->ul_tbf[tfi];
+		if (tbf)
+			tbf_free(tbf);
+		tbf = pdch->dl_tbf[tfi];
+		if (tbf)
+			tbf_free(tbf);
+	}
+}

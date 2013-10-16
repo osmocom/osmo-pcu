@@ -306,20 +306,12 @@ static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
 
 int flush_pdch(struct gprs_rlcmac_pdch *pdch, uint8_t trx, uint8_t ts)
 {
-	uint8_t tfi;
-	struct gprs_rlcmac_tbf *tbf;
 	struct gprs_rlcmac_paging *pag;
 	struct gprs_rlcmac_sba *sba, *sba2;
 
 	/* kick all TBF on slot */
-	for (tfi = 0; tfi < 32; tfi++) {
-		tbf = pdch->ul_tbf[tfi];
-		if (tbf)
-			tbf_free(tbf);
-		tbf = pdch->dl_tbf[tfi];
-		if (tbf)
-			tbf_free(tbf);
-	}
+	gprs_rlcmac_tbf::free_all(pdch);
+
 	/* flush all pending paging messages */
 	while ((pag = gprs_rlcmac_dequeue_paging(pdch)))
 		talloc_free(pag);
