@@ -1,11 +1,19 @@
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/
 
-check_PROGRAMS = rlcmac/RLCMACTest
+check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest
 noinst_PROGRAMS = emu/pcu_emu
 
 rlcmac_RLCMACTest_SOURCES = rlcmac/RLCMACTest.cpp
 rlcmac_RLCMACTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
+	$(LIBOSMOCORE_LIBS) \
+	$(COMMON_LA)
+
+alloc_AllocTest_SOURCES = alloc/AllocTest.cpp
+alloc_AllocTest_LDADD = \
+	$(top_builddir)/src/libgprs.la \
+	$(LIBOSMOGB_LIBS) \
+	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
@@ -40,7 +48,8 @@ $(srcdir)/package.m4: $(top_srcdir)/configure.ac
 
 EXTRA_DIST = \
 	testsuite.at $(srcdir)/package.m4 $(TESTSUITE)	\
-	rlcmac/RLCMACTest.ok rlcmac/RLCMACTest.err
+	rlcmac/RLCMACTest.ok rlcmac/RLCMACTest.err \
+	alloc/AllocTest.ok alloc/AllocTest.err
 
 DISTCLEANFILES = atconfig
 

@@ -32,6 +32,7 @@ src/osmo-pcu-remote
 .dirstamp
 tests/atconfig
 tests/package.m4
+tests/alloc/AllocTest
 tests/rlcmac/RLCMACTest
 tests/emu/pcu_emu
 tests/testsuite

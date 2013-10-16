@@ -8,3 +8,10 @@ cat $abs_srcdir/rlcmac/RLCMACTest.ok > expout
 cat $abs_srcdir/rlcmac/RLCMACTest.err > experr
 AT_CHECK([$abs_top_builddir/tests/rlcmac/RLCMACTest], [0], [expout], [experr])
 AT_CLEANUP
+
+AT_SETUP([ts_alloc])
+AT_KEYWORDS([ts_alloc])
+cat $abs_srcdir/alloc/AllocTest.ok > expout
+cat $abs_srcdir/alloc/AllocTest.err > experr
+AT_CHECK([$abs_top_builddir/tests/alloc/AllocTest], [0], [expout], [experr])
+AT_CLEANUP
