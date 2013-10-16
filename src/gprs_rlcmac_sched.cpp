@@ -98,8 +98,8 @@ uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 		/* no TBF for this tfi, go next */
 		if (!tbf)
 			continue;
-		/* no UL ressources needed, go next */
-		/* we don't need to give ressources in FINISHED state,
+		/* no UL resources needed, go next */
+		/* we don't need to give resources in FINISHED state,
 		 * because we have received all blocks and only poll
 		 * for packet control ack. */
 		if (tbf->state != GPRS_RLCMAC_FLOW)
@@ -180,7 +180,7 @@ struct msgb *sched_select_downlink(uint8_t trx, uint8_t ts, uint32_t fn,
 		/* no DL TBF, go next */
 		if (tbf->direction != GPRS_RLCMAC_DL_TBF)
 			continue;
-		/* no DL ressources needed, go next */
+		/* no DL resources needed, go next */
 		if (tbf->state != GPRS_RLCMAC_FLOW
 		 && tbf->state != GPRS_RLCMAC_FINISHED)
 			continue;

@@ -174,7 +174,7 @@ void debug_diagram(int diag, const char *format, ...)
 }
 #endif
 
-/* FIXME: spread ressources over multiple TRX. Also add option to use same
+/* FIXME: spread resources over multiple TRX. Also add option to use same
  * TRX in case of existing TBF for TLLI in the other direction. */
 /* search for free TFI and return TFI, TRX */
 int tfi_find_free(struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction dir,
