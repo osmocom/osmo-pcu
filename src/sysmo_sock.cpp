@@ -82,8 +82,7 @@ static void pcu_sock_close(struct pcu_sock_state *state, int lost)
 {
 	struct osmo_fd *bfd = &state->conn_bfd;
 	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
-	struct gprs_rlcmac_tbf *tbf;
-	uint8_t trx, ts, tfi;
+	uint8_t trx, ts;
 
 	LOGP(DL1IF, LOGL_NOTICE, "PCU socket has %s connection\n",
 		(lost) ? "LOST" : "closed");
@@ -108,14 +107,7 @@ static void pcu_sock_close(struct pcu_sock_state *state, int lost)
 #endif
 		for (ts = 0; ts < 8; ts++)
 			bts->trx[trx].pdch[ts].enable = 0;
-		for (tfi = 0; tfi < 32; tfi++) {
-			tbf = bts->trx[trx].ul_tbf[tfi];
-			if (tbf)
-				tbf_free(tbf);
-			tbf = bts->trx[trx].dl_tbf[tfi];
-			if (tbf)
-				tbf_free(tbf);
-		}
+		gprs_rlcmac_tbf::free_all(&bts->trx[trx]);
 	}
 
 	gprs_bssgp_destroy_or_exit();
