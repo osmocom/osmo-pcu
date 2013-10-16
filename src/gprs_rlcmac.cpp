@@ -22,6 +22,7 @@
 #include <gprs_bssgp_pcu.h>
 #include <pcu_l1_if.h>
 #include <gprs_rlcmac.h>
+#include <tbf.h>
 
 /* 3GPP TS 05.02 Annex B.1 */
 
