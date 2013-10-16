@@ -22,7 +22,7 @@
 #include <pcu_l1_if.h>
 #include <tbf.h>
 
-uint32_t sched_poll(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
+static uint32_t sched_poll(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
 		    struct gprs_rlcmac_tbf **poll_tbf,
 		    struct gprs_rlcmac_tbf **ul_ass_tbf,
 		    struct gprs_rlcmac_tbf **dl_ass_tbf,
@@ -50,6 +50,7 @@ uint32_t sched_poll(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
 			*dl_ass_tbf = tbf;
 		if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS)
 			*ul_ass_tbf = tbf;
+#warning "Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all states?"
 	}
 	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
 		/* this trx, this ts */
