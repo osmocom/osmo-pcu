@@ -950,54 +950,6 @@ struct gprs_rlcmac_sba *sba_find(uint8_t trx, uint8_t ts, uint32_t fn)
 	return NULL;
 }
 
-#if 0
-static void tbf_gsm_timer_cb(void *_tbf)
-{
-	struct gprs_rlcmac_tbf *tbf = (struct gprs_rlcmac_tbf *)_tbf;
-
-	tbf->num_fT_exp++;
-
-	switch (tbf->fT) {
-	case 0:
-hier alles berdenken
-		// This is timer for delay RLC/MAC data sending after Downlink Immediate Assignment on CCCH.
-		gprs_rlcmac_segment_llc_pdu(tbf);
-		LOGP(DRLCMAC, LOGL_NOTICE, "TBF: [DOWNLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
-		tbf_free(tbf);
-		break;
-	default:
-		LOGP(DRLCMAC, LOGL_NOTICE, "Timer expired in unknown mode: %u \n", tbf->fT);
-	}
-}
-
-static void tbf_gsm_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int fT,
-				int frames)
-{
-	if (osmo_gsm_timer_pending(&tbf->gsm_timer))
-		LOGP(DRLCMAC, LOGL_NOTICE, "Starting TBF timer %u while old timer %u pending \n", fT, tbf->fT);
-	tbf->fT = fT;
-	tbf->num_fT_exp = 0;
-
-	/* FIXME: we should do this only once ? */
-	tbf->gsm_timer.data = tbf;
-	tbf->gsm_timer.cb = &tbf_gsm_timer_cb;
-
-	osmo_gsm_timer_schedule(&tbf->gsm_timer, frames);
-}
-
-eine stop-funktion, auch im tbf_free aufrufen
-
-#endif
-
-#if 0
-void gprs_rlcmac_enqueue_block(bitvec *block, int len)
-{
-	struct msgb *msg = msgb_alloc(len, "rlcmac_dl");
-	bitvec_pack(block, msgb_put(msg, len));
-	msgb_enqueue(&block_queue, msg);
-}
-#endif
-
 /* received RLC/MAC block from L1 */
 int gprs_rlcmac_rcv_block(uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
 	uint32_t fn, int8_t rssi)
