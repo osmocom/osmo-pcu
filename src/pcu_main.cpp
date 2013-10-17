@@ -34,7 +34,6 @@ extern "C" {
 #include <osmocom/vty/logging.h>
 }
 
-struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 extern struct gprs_nsvc *nsvc;
 uint16_t spoof_mcc = 0, spoof_mnc = 0;
 static int config_given = 0;
@@ -164,10 +163,7 @@ int main(int argc, char *argv[])
 		return -ENOMEM;
 	bv_tall_ctx = tall_pcu_ctx;
 
-	bts = gprs_rlcmac_bts = talloc_zero(tall_pcu_ctx,
-						struct gprs_rlcmac_bts);
-	if (!gprs_rlcmac_bts)
-		return -ENOMEM;
+	bts = bts_main_data();
 	bts->fc_interval = 1;
 	bts->initial_cs_dl = bts->initial_cs_ul = 1;
 	bts->cs1 = 1;
@@ -255,8 +251,6 @@ int main(int argc, char *argv[])
 	pcu_l1if_close();
 
 	flush_timing_advance();
-
-	talloc_free(gprs_rlcmac_bts);
 
 	talloc_report_full(tall_pcu_ctx, stderr);
 	talloc_free(tall_pcu_ctx);

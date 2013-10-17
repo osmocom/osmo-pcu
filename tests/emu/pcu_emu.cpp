@@ -39,7 +39,6 @@ static int current_test;
 
 /* Extern data to please the underlying code */
 void *tall_pcu_ctx;
-struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 
 extern void test_replay_gprs_attach(struct gprs_bssgp_pcu *pcu);
@@ -63,13 +62,9 @@ struct gprs_test all_tests[] = {
 			test_pdp_activation_data),
 };
 
-struct gprs_rlcmac_bts *create_bts()
+static void init_main_bts()
 {
-	struct gprs_rlcmac_bts *bts;
-
-	bts = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_bts);
-	if (!bts)
-		return NULL;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 	bts->fc_interval = 100;
 	bts->initial_cs_dl = bts->initial_cs_ul = 1;
 	bts->cs1 = 1;
@@ -85,8 +80,6 @@ struct gprs_rlcmac_bts *create_bts()
 
 	if (!bts->alloc_algorithm)
 		bts->alloc_algorithm = alloc_algorithm_b;
-
-	return bts;
 }
 
 static void bvci_unblocked(struct gprs_bssgp_pcu *pcu)
@@ -124,11 +117,8 @@ int main(int argc, char **argv)
 	vty_init(&pcu_vty_info);
 	pcu_vty_init(&gprs_log_info);
 
-	gprs_rlcmac_bts = create_bts();
-	if (!gprs_rlcmac_bts)
-		abort();
-
-	create_and_connect_bssgp(gprs_rlcmac_bts, INADDR_LOOPBACK, 23000);
+	init_main_bts();
+	create_and_connect_bssgp(bts_main_data(), INADDR_LOOPBACK, 23000);
 	
 	for (;;)
 		osmo_select_main(0);

@@ -31,6 +31,7 @@ extern "C" {
 #include <stdint.h>
 
 struct gprs_rlcmac_tbf;
+struct BTS;
 
 /*
  * PDCH instance
@@ -54,7 +55,10 @@ struct gprs_rlcmac_trx {
 	struct gprs_rlcmac_tbf *dl_tbf[32]; /* array of DL TBF, by DL TFI */
 };
 
-
+/**
+ * This is the data from C. As soon as our minimal compiler is gcc 4.7
+ * we can start to compile pcu_vty.c with c++ and remove the split.
+ */
 struct gprs_rlcmac_bts {
 	uint8_t bsic;
 	uint8_t fc_interval;
@@ -80,4 +84,37 @@ struct gprs_rlcmac_bts {
 	uint32_t alloc_algorithm_curst; /* options to customize algorithm */
 	uint8_t force_two_phase;
 	uint8_t alpha, gamma;
+
+	/**
+	 * Point back to the C++ object. This is used during the transition
+	 * period.
+	 */
+	struct BTS *bts;
 };
+
+#ifdef __cplusplus
+/**
+ * I represent a GSM BTS. I have one or more TRX, I know the current
+ * GSM time and I have controllers that help with allocating resources
+ * on my TRXs.
+ */
+struct BTS {
+public:
+	BTS();
+
+	static BTS* main_bts();
+
+	struct gprs_rlcmac_bts *bts_data();
+
+private:
+	struct gprs_rlcmac_bts m_bts;
+};
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+	struct gprs_rlcmac_bts *bts_main_data();
+#ifdef __cplusplus
+}
+#endif

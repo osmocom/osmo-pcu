@@ -81,7 +81,7 @@ int pcu_sock_send(struct msgb *msg)
 static void pcu_sock_close(struct pcu_sock_state *state, int lost)
 {
 	struct osmo_fd *bfd = &state->conn_bfd;
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t trx, ts;
 
 	LOGP(DL1IF, LOGL_NOTICE, "PCU socket has %s connection\n",

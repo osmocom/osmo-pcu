@@ -42,7 +42,8 @@ libgprs_la_SOURCES = \
 	bitvector.cpp \
 	pcu_l1_if.cpp \
 	pcu_vty.c \
-	tbf.cpp
+	tbf.cpp \
+	bts.cpp
 
 if ENABLE_SYSMOBTS
 libgprs_la_SOURCES += \

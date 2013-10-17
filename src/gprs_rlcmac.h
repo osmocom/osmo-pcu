@@ -43,8 +43,7 @@ extern "C" {
 
 
 struct gprs_rlcmac_tbf;
-
-extern struct gprs_rlcmac_bts *gprs_rlcmac_bts;
+struct gprs_rlcmac_bts;
 
 #ifdef __cplusplus
 /*
