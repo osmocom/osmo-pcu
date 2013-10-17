@@ -1027,9 +1027,9 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 	return msg;
 }
 
-int gprs_rlcmac_rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
+int gprs_rlcmac_rcv_rach(struct gprs_rlcmac_bts *bts,
+		uint8_t ra, uint32_t Fn, int16_t qta)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_tbf *tbf;
 	uint8_t trx, ts = 0;
 	int8_t tfi; /* must be signed */
