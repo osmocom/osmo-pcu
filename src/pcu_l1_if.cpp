@@ -523,7 +523,7 @@ static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 			elapsed = (frame_number + 2715648 - tbf->poll_fn)
 								% 2715648;
 			if (elapsed >= 20 && elapsed < 2715400)
-				gprs_rlcmac_poll_timeout(tbf);
+				gprs_rlcmac_poll_timeout(gprs_rlcmac_bts, tbf);
 		}
 	}
 	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
@@ -531,7 +531,7 @@ static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 			elapsed = (frame_number + 2715648 - tbf->poll_fn)
 								% 2715648;
 			if (elapsed >= 20 && elapsed < 2715400)
-				gprs_rlcmac_poll_timeout(tbf);
+				gprs_rlcmac_poll_timeout(gprs_rlcmac_bts, tbf);
 		}
 	}
 	llist_for_each_entry_safe(sba, sba2, &gprs_rlcmac_sbas, list) {

@@ -71,7 +71,7 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 		tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
 		tbf_update_ms_class(tbf, ms_class);
 		tbf_update(tbf);
-		gprs_rlcmac_trigger_downlink_assignment(tbf, tbf, NULL);
+		gprs_rlcmac_trigger_downlink_assignment(bts, tbf, tbf, NULL);
 	} else {
 		/* the TBF exists, so we must write it in the queue
 		 * we prepend lifetime in front of PDU */
@@ -177,7 +177,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	 * we don't use old_downlink, so the possible uplink is used
 	 * to trigger downlink assignment. if there is no uplink,
 	 * AGCH is used. */
-	gprs_rlcmac_trigger_downlink_assignment(tbf, old_tbf, imsi);
+	gprs_rlcmac_trigger_downlink_assignment(bts, tbf, old_tbf, imsi);
 
 	/* store IMSI for debugging purpose. TODO: it is more than debugging */
 	tbf_assign_imsi(tbf, imsi);

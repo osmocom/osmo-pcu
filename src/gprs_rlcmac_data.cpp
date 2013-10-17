@@ -74,7 +74,8 @@ struct rlc_li_field {
 } __attribute__ ((packed));
 }
 
-static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
+static void gprs_rlcmac_downlink_assignment(struct gprs_rlcmac_bts *bts,
+	gprs_rlcmac_tbf *tbf, uint8_t poll,
 	const char *imsi);
 
 static int gprs_rlcmac_diag(struct gprs_rlcmac_tbf *tbf)
@@ -82,7 +83,7 @@ static int gprs_rlcmac_diag(struct gprs_rlcmac_tbf *tbf)
 	return tbf->rlcmac_diag();
 }
 
-int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
+int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf)
 {
 	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for %s TBF=%d\n",
 		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi);
@@ -99,8 +100,6 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
 		debug_diagram(tbf->diag, "timeout UL-ACK");
 		if (tbf->state_is(GPRS_RLCMAC_FINISHED)) {
-			struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
-
 			tbf->dir.ul.n3103++;
 			if (tbf->dir.ul.n3103 == bts->n3103) {
 				LOGP(DRLCMAC, LOGL_NOTICE,
@@ -185,7 +184,7 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf)
 				"for TBF=%d on PCH (IMSI=%s)\n", tbf->tfi,
 				tbf->dir.dl.imsi);
 			/* send immediate assignment */
-			gprs_rlcmac_downlink_assignment(tbf, 0, tbf->dir.dl.imsi);
+			gprs_rlcmac_downlink_assignment(bts, tbf, 0, tbf->dir.dl.imsi);
 			tbf->dir.dl.wait_confirm = 1;
 		}
 	} else
@@ -352,7 +351,7 @@ int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
 		tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 		debug_diagram(tbf->diag, "got DL-ACK");
 
-		rc = gprs_rlcmac_downlink_ack(tbf,
+		rc = gprs_rlcmac_downlink_ack(bts, tbf,
 			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.FINAL_ACK_INDICATION,
 			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
 			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
@@ -1479,7 +1478,8 @@ tx_block:
 	return dl_msg;
 }
 
-int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
+int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_bts *bts,
+	struct gprs_rlcmac_tbf *tbf, uint8_t final,
 	uint8_t ssn, uint8_t *rbb)
 {
 	char show_rbb[65], show_v_b[RLC_MAX_SNS + 1];
@@ -1618,7 +1618,7 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
 	tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK; /* keep TO flags */
 	tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
 	tbf_update(tbf);
-	gprs_rlcmac_trigger_downlink_assignment(tbf, tbf, NULL);
+	gprs_rlcmac_trigger_downlink_assignment(bts, tbf, tbf, NULL);
 
 	return 0;
 }
@@ -1715,10 +1715,10 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 	return msg;
 }
 
-static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
+static void gprs_rlcmac_downlink_assignment(struct gprs_rlcmac_bts *bts,
+	gprs_rlcmac_tbf *tbf, uint8_t poll,
 	const char *imsi)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	int plen;
 
 	debug_diagram(tbf->diag, "IMM.ASS (PCH)");
@@ -1736,7 +1736,8 @@ static void gprs_rlcmac_downlink_assignment(gprs_rlcmac_tbf *tbf, uint8_t poll,
 }
 
 /* depending on the current TBF, we assign on PACCH or AGCH */
-void gprs_rlcmac_trigger_downlink_assignment(struct gprs_rlcmac_tbf *tbf,
+void gprs_rlcmac_trigger_downlink_assignment(struct gprs_rlcmac_bts *bts,
+	struct gprs_rlcmac_tbf *tbf,
 	struct gprs_rlcmac_tbf *old_tbf, const char *imsi)
 {
 #ifdef DEBUG_DL_ASS_IDLE
@@ -1779,7 +1780,7 @@ void gprs_rlcmac_trigger_downlink_assignment(struct gprs_rlcmac_tbf *tbf,
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
 		strncpy(tbf->dir.dl.imsi, imsi, sizeof(tbf->dir.dl.imsi));
 		/* send immediate assignment */
-		gprs_rlcmac_downlink_assignment(tbf, 0, imsi);
+		gprs_rlcmac_downlink_assignment(bts, tbf, 0, imsi);
 		tbf->dir.dl.wait_confirm = 1;
 	}
 }

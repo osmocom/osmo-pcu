@@ -183,7 +183,7 @@ void write_packet_uplink_ack(RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *t
 
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
-int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_tbf *tbf);
+int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf);
 
 int gprs_rlcmac_sba_timeout(struct gprs_rlcmac_sba *sba);
 
@@ -198,10 +198,12 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
         struct gprs_rlcmac_tbf *tbf, uint32_t fn);
 
-void gprs_rlcmac_trigger_downlink_assignment(struct gprs_rlcmac_tbf *tbf,
+void gprs_rlcmac_trigger_downlink_assignment(struct gprs_rlcmac_bts *bts,
+	struct gprs_rlcmac_tbf *tbf,
         struct gprs_rlcmac_tbf *old_tbf, const char *imsi);
 
-int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_tbf *tbf, uint8_t final,
+int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_bts *bts,
+	struct gprs_rlcmac_tbf *tbf, uint8_t final,
         uint8_t ssn, uint8_t *rbb);
 
 int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len,
