@@ -1094,12 +1094,12 @@ int gprs_rlcmac_rcv_rach(struct gprs_rlcmac_bts *bts,
 	bitvec_unhex(immediate_assignment,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	if (sb)
-		plen = write_immediate_assignment(immediate_assignment, 0, ra,
+		plen = write_immediate_assignment(bts, immediate_assignment, 0, ra,
 			Fn, qta >> 2, bts->trx[trx].arfcn, ts,
 			bts->trx[trx].pdch[ts].tsc, 0, 0, 0, 0, sb_fn, 1,
 			bts->alpha, bts->gamma, -1);
 	else
-		plen = write_immediate_assignment(immediate_assignment, 0, ra,
+		plen = write_immediate_assignment(bts, immediate_assignment, 0, ra,
 			Fn, tbf->ta, tbf->arfcn, tbf->first_ts, tbf->tsc,
 			tbf->tfi, tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0, 0,
 			bts->alpha, bts->gamma, -1);
@@ -1720,7 +1720,7 @@ static void gprs_rlcmac_downlink_assignment(struct gprs_rlcmac_bts *bts,
 	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	/* use request reference that has maximum distance to current time,
 	 * so the assignment will not conflict with possible RACH requests. */
-	plen = write_immediate_assignment(immediate_assignment, 1, 125,
+	plen = write_immediate_assignment(bts, immediate_assignment, 1, 125,
 		(tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta,
 		tbf->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, 0, tbf->tlli, poll,
 		tbf->poll_fn, 0, bts->alpha, bts->gamma, -1);

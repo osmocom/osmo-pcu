@@ -452,7 +452,9 @@ continue_next:
 }
 
 // GSM 04.08 9.1.18 Immediate assignment
-int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
+int write_immediate_assignment(
+	struct gprs_rlcmac_bts *bts,
+	bitvec * dest, uint8_t downlink, uint8_t ra,
 	uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc,
 	uint8_t tfi, uint8_t usf, uint32_t tlli,
 	uint8_t polling, uint32_t fn, uint8_t single_block, uint8_t alpha,
@@ -539,7 +541,6 @@ int write_immediate_assignment(bitvec * dest, uint8_t downlink, uint8_t ra,
 	}
 	else
 	{
-		struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 		// GMS 04.08 10.5.2.37b 10.5.2.16
 		bitvec_write_field(dest, wp, 3, 2);    // "HH"
 		bitvec_write_field(dest, wp, 0, 2);    // "0" Packet Uplink Assignment
