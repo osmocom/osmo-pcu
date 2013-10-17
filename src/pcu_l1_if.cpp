@@ -50,19 +50,6 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 
 extern void *tall_pcu_ctx;
 
-// Variable for storage current FN.
-int frame_number;
-
-int get_current_fn()
-{
-	return frame_number;
-}
-
-void set_current_fn(int fn)
-{
-	frame_number = fn;
-}
-
 /*
  * PCU messages
  */
@@ -512,6 +499,7 @@ static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 	struct gprs_rlcmac_sba *sba, *sba2;
 	uint32_t elapsed;
 	uint8_t fn13 = time_ind->fn % 13;
+	int frame_number = time_ind->fn;
 
 	/* omit frame numbers not starting at a MAC block */
 	if (fn13 != 0 && fn13 != 4 && fn13 != 8)
@@ -520,7 +508,7 @@ static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 //	LOGP(DL1IF, LOGL_DEBUG, "Time indication received: %d\n",
 //		time_ind->fn % 52);
 
-	set_current_fn(time_ind->fn);
+	BTS::main_bts()->set_current_frame_number(time_ind->fn);
 
 	/* check for poll timeout */
 	llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {

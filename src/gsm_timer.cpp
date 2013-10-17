@@ -33,8 +33,20 @@ static int *nearest_p;
 #include <limits.h>
 #include <gsm_timer.h>
 #include <pcu_l1_if.h>
+#include <bts.h>
+
 
 static struct rb_root timer_root = RB_ROOT;
+
+/*
+ * TODO: make this depend on the BTS. This means that
+ * all time functions schedule based on the BTS they
+ * are scheduled on.
+ */
+static int get_current_fn()
+{
+	return BTS::main_bts()->current_frame_number();
+}
 
 static void __add_gsm_timer(struct osmo_gsm_timer_list *timer)
 {

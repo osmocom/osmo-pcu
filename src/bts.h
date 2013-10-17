@@ -106,9 +106,19 @@ public:
 
 	struct gprs_rlcmac_bts *bts_data();
 
+	/** TODO: change the number to unsigned */
+	void set_current_frame_number(int frame_number);
+	int current_frame_number() const;
+
 private:
+	int m_cur_fn;
 	struct gprs_rlcmac_bts m_bts;
 };
+
+inline int BTS::current_frame_number() const
+{
+	return m_cur_fn;
+}
 #endif
 
 #ifdef __cplusplus
