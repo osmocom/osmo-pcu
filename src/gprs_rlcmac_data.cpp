@@ -1587,8 +1587,6 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_bts *bts,
 	/* check for LLC PDU in the LLC Queue */
 	msg = llc_dequeue(tbf);
 	if (!msg) {
-		struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
-
 		/* no message, start T3193, change state to RELEASE */
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- No new message, so we "
 			"release.\n");
@@ -1620,9 +1618,9 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_bts *bts,
 
 
 struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
+	struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *tbf, uint32_t fn)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct msgb *msg;
 	struct gprs_rlcmac_tbf *new_tbf;
 	int poll_ass_dl = POLLING_ASSIGNMENT_DL;
