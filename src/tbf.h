@@ -226,7 +226,7 @@ struct gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
 
 void tbf_free(struct gprs_rlcmac_tbf *tbf);
 
-int tbf_update(struct gprs_rlcmac_tbf *tbf);
+int tbf_update(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf);
 
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 
