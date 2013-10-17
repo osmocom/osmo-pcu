@@ -1157,9 +1157,9 @@ static struct msgb *llc_dequeue(struct gprs_rlcmac_tbf *tbf)
  * The messages are fragmented and forwarded as data blocks.
  */
 struct msgb *gprs_rlcmac_send_data_block_acknowledged(
+	struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct rlc_dl_header *rh;
 	struct rlc_li_field *li;
 	uint8_t block_length; /* total length of block, including spare bits */

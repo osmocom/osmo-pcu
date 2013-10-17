@@ -166,7 +166,8 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_bts *bts,
 	return NULL;
 }
 
-struct msgb *sched_select_downlink(uint8_t trx, uint8_t ts, uint32_t fn,
+static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
+		    uint8_t trx, uint8_t ts, uint32_t fn,
 		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch)
 {
 	struct msgb *msg = NULL;
@@ -197,7 +198,7 @@ struct msgb *sched_select_downlink(uint8_t trx, uint8_t ts, uint32_t fn,
 		/* next TBF to handle ressource is the next one */
 		pdch->next_dl_tfi = (tfi + 1) & 31;
 		/* generate DL data block */
-		msg = gprs_rlcmac_send_data_block_acknowledged(tbf, fn,
+		msg = gprs_rlcmac_send_data_block_acknowledged(bts, tbf, fn,
 			ts);
 		break;
 	}
@@ -276,7 +277,7 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 
 	/* Prio 2: select data message for downlink */
 	if (!msg)
-		msg = sched_select_downlink(trx, ts, fn, block_nr, pdch);
+		msg = sched_select_downlink(bts, trx, ts, fn, block_nr, pdch);
 
 	/* Prio 3: send dummy contol message */
 	if (!msg)
