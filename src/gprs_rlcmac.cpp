@@ -263,7 +263,7 @@ int gprs_rlcmac_rcv_block(struct gprs_rlcmac_bts *bts,
 		if (!block)
 			return -ENOMEM;
 		bitvec_unpack(block, data);
-		rc = gprs_rlcmac_rcv_control_block(block, trx, ts, fn);
+		rc = gprs_rlcmac_rcv_control_block(bts, block, trx, ts, fn);
 		bitvec_free(block);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK_OPT:

@@ -190,7 +190,8 @@ int gprs_rlcmac_sba_timeout(struct gprs_rlcmac_sba *sba);
 
 int gprs_rlcmac_rcv_rach(struct gprs_rlcmac_bts *bts, uint8_t ra, uint32_t Fn, int16_t qta);
 
-int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
+int gprs_rlcmac_rcv_control_block(struct gprs_rlcmac_bts *bts,
+	bitvec *rlc_block, uint8_t trx, uint8_t ts,
 	uint32_t fn);
 
 struct msgb *gprs_rlcmac_send_packet_uplink_assignment(

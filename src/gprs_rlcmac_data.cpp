@@ -212,14 +212,14 @@ static uint8_t get_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
 }
 
 /* Received Uplink RLC control block. */
-int gprs_rlcmac_rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
+int gprs_rlcmac_rcv_control_block(struct gprs_rlcmac_bts *bts,
+	bitvec *rlc_block, uint8_t trx, uint8_t ts,
 	uint32_t fn)
 {
 	int8_t tfi = 0; /* must be signed */
 	uint32_t tlli = 0;
 	struct gprs_rlcmac_tbf *tbf;
 	struct gprs_rlcmac_sba *sba;
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	int rc;
 
 	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)talloc_zero(tall_pcu_ctx, RlcMacUplink_t);
