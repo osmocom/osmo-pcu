@@ -195,6 +195,7 @@ int gprs_rlcmac_rcv_control_block(struct gprs_rlcmac_bts *bts,
 	uint32_t fn);
 
 struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
+	struct gprs_rlcmac_bts *bts,
         struct gprs_rlcmac_tbf *tbf, uint32_t fn);
 
 struct msgb *gprs_rlcmac_send_packet_downlink_assignment(

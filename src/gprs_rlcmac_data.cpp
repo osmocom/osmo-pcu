@@ -955,9 +955,9 @@ int gprs_rlcmac_rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
 }
 
 struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
+	struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *tbf, uint32_t fn)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct msgb *msg;
 	struct gprs_rlcmac_tbf *new_tbf;
 

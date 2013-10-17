@@ -134,7 +134,7 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_bts *bts,
 	/* schedule PACKET UPLINK ASSIGNMENT (1st priority) */
 	if (ul_ass_tbf) {
 		tbf = ul_ass_tbf;
-		msg = gprs_rlcmac_send_packet_uplink_assignment(tbf, fn);
+		msg = gprs_rlcmac_send_packet_uplink_assignment(bts, tbf, fn);
 	}
 	/* schedule PACKET DOWNLINK ASSIGNMENT (2nd priotiry) */
 	if (!msg && dl_ass_tbf) {
