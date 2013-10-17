@@ -278,9 +278,9 @@ int gprs_rlcmac_rcv_block(struct gprs_rlcmac_bts *bts,
 }
 
 /* add paging to paging queue(s) */
-int gprs_rlcmac_add_paging(uint8_t chan_needed, uint8_t *identity_lv)
+int gprs_rlcmac_add_paging(struct gprs_rlcmac_bts *bts,
+		uint8_t chan_needed, uint8_t *identity_lv)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	uint8_t l, trx, ts, any_tbf = 0;
 	struct gprs_rlcmac_tbf *tbf;
 	struct gprs_rlcmac_paging *pag;

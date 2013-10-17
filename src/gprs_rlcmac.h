@@ -239,7 +239,7 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 
 int gprs_rlcmac_imm_ass_cnf(uint8_t *data, uint32_t fn);
 
-int gprs_rlcmac_add_paging(uint8_t chan_needed, uint8_t *identity_lv);
+int gprs_rlcmac_add_paging(struct gprs_rlcmac_bts *bts, uint8_t chan_needed, uint8_t *identity_lv);
 
 struct gprs_rlcmac_paging *gprs_rlcmac_dequeue_paging(
 	struct gprs_rlcmac_pdch *pdch);
