@@ -26,6 +26,8 @@ extern "C" {
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/timer.h>
 }
+
+#include "poll_controller.h"
 #endif
 
 #include <stdint.h>
@@ -113,6 +115,12 @@ public:
 private:
 	int m_cur_fn;
 	struct gprs_rlcmac_bts m_bts;
+	PollController m_pollController;
+
+private:
+	/* disable copying to avoid slicing */
+	BTS(const BTS&);
+	BTS& operator=(const BTS&);
 };
 
 inline int BTS::current_frame_number() const

@@ -1,4 +1,5 @@
-/*
+/* poll_controller.h
+ *
  * Copyright (C) 2013 by Holger Hans Peter Freyther
  *
  * All Rights Reserved
@@ -18,38 +19,28 @@
  *
  */
 
-#include <bts.h>
-#include <poll_controller.h>
+#pragma once
 
-#include <string.h>
+struct gprs_rlcmac_bts;
 
-static BTS s_bts;
+class BTS;
 
-BTS* BTS::main_bts()
-{
-	return &s_bts;
-}
+/**
+ * I belong to a BTS and I am responsible for finding TBFs and
+ * SBAs that should have been polled and execute the timeout
+ * action on them.
+ */
+class PollController {
+public:
+	PollController(BTS& bts);
 
-struct gprs_rlcmac_bts *BTS::bts_data()
-{
-	return &m_bts;
-}
+	void expireTimedout(int frame_number);
 
-struct gprs_rlcmac_bts *bts_main_data()
-{
-	return BTS::main_bts()->bts_data();
-}
+private:
+	BTS& m_bts;
 
-BTS::BTS()
-	: m_cur_fn(0)
-	, m_pollController(*this)
-{
-	memset(&m_bts, 0, sizeof(m_bts));
-	m_bts.bts = this;
-}
-
-void BTS::set_current_frame_number(int fn)
-{
-	m_cur_fn = fn;
-	m_pollController.expireTimedout(m_cur_fn);
-}
+private:
+	/* disable copying to avoid slicing */
+	PollController(const PollController&);
+	PollController& operator=(const PollController&);
+};
