@@ -245,7 +245,8 @@ struct gprs_rlcmac_sba *sba_find(uint8_t trx, uint8_t ts, uint32_t fn)
 }
 
 /* received RLC/MAC block from L1 */
-int gprs_rlcmac_rcv_block(uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
+int gprs_rlcmac_rcv_block(struct gprs_rlcmac_bts *bts,
+	uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
 	uint32_t fn, int8_t rssi)
 {
 	unsigned payload = data[0] >> 6;
@@ -254,7 +255,7 @@ int gprs_rlcmac_rcv_block(uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
 
 	switch (payload) {
 	case GPRS_RLCMAC_DATA_BLOCK:
-		rc = gprs_rlcmac_rcv_data_block_acknowledged(trx, ts, data,
+		rc = gprs_rlcmac_rcv_data_block_acknowledged(bts, trx, ts, data,
 			len, rssi);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK:

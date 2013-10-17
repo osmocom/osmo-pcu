@@ -736,10 +736,10 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_bts *bts,
  *
  * The blocks are defragmented and forwarded as LLC frames, if complete.
  */
-int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
+int gprs_rlcmac_rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
+	uint8_t trx, uint8_t ts,
 	uint8_t *data, uint8_t len, int8_t rssi)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_tbf *tbf;
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	uint16_t mod_sns, mod_sns_half, offset_v_q, offset_v_r, index;
