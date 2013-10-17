@@ -248,7 +248,7 @@ static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 extern "C" int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr)
 {
-	return gprs_rlcmac_rcv_rts_block(trx, ts, arfcn, fn, block_nr);
+	return gprs_rlcmac_rcv_rts_block(gprs_rlcmac_bts, trx, ts, arfcn, fn, block_nr);
 }
 
 static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)

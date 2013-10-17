@@ -225,10 +225,10 @@ struct msgb *sched_dummy(void)
 	return msg;
 }
 
-int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
+int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
+	uint8_t trx, uint8_t ts, uint16_t arfcn,
         uint32_t fn, uint8_t block_nr)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	struct gprs_rlcmac_pdch *pdch;
 	struct gprs_rlcmac_tbf *poll_tbf = NULL, *dl_ass_tbf = NULL,
 		*ul_ass_tbf = NULL, *ul_ack_tbf = NULL;

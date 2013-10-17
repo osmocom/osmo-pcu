@@ -234,7 +234,8 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *tbf,
         uint32_t fn);
 
-int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn, 
+int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
+	uint8_t trx, uint8_t ts, uint16_t arfcn, 
         uint32_t fn, uint8_t block_nr);
 
 int gprs_rlcmac_imm_ass_cnf(uint8_t *data, uint32_t fn);
