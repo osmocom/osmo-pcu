@@ -121,7 +121,8 @@ uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 	return usf;
 }
 
-struct msgb *sched_select_ctrl_msg(uint8_t trx, uint8_t ts, uint32_t fn,
+static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_bts *bts,
+		    uint8_t trx, uint8_t ts, uint32_t fn,
 		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch,
 		    struct gprs_rlcmac_tbf *ul_ass_tbf,
 		    struct gprs_rlcmac_tbf *dl_ass_tbf,
@@ -143,7 +144,7 @@ struct msgb *sched_select_ctrl_msg(uint8_t trx, uint8_t ts, uint32_t fn,
 	/* schedule PACKET UPLINK ACK (3rd priority) */
 	if (!msg && ul_ack_tbf) {
 		tbf = ul_ack_tbf;
-		msg = gprs_rlcmac_send_uplink_ack(tbf, fn);
+		msg = gprs_rlcmac_send_uplink_ack(bts, tbf, fn);
 	}
 	/* any message */
 	if (msg) {
@@ -270,7 +271,7 @@ int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn,
 		usf = sched_select_uplink(trx, ts, fn, block_nr, pdch);
 
 	/* Prio 1: select control message */
-	msg = sched_select_ctrl_msg(trx, ts, fn, block_nr, pdch, ul_ass_tbf,
+	msg = sched_select_ctrl_msg(bts, trx, ts, fn, block_nr, pdch, ul_ass_tbf,
 		dl_ass_tbf, ul_ack_tbf);
 
 	/* Prio 2: select data message for downlink */

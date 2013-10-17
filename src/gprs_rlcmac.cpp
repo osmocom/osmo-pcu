@@ -776,14 +776,14 @@ int write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len)
 }
 
 /* generate uplink ack */
-void write_packet_uplink_ack(RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *tbf,
+void write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
+	RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *tbf,
 	uint8_t final)
 {
 	// Packet Uplink Ack/Nack  TS 44.060 11.2.28
 
 	char show_v_n[65];
 
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
 	uint8_t rbb = 0;
 	uint16_t i, bbn;
 	uint16_t mod_sns_half = (tbf->sns >> 1) - 1;

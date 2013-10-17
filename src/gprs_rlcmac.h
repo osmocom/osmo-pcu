@@ -178,7 +178,7 @@ void write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
 
 
 
-void write_packet_uplink_ack(RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *tbf,
+void write_packet_uplink_ack(struct gprs_rlcmac_bts *bts, RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *tbf,
         uint8_t final);
 
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
@@ -220,7 +220,8 @@ int gprs_rlcmac_rcv_data_block_acknowledged(uint8_t trx, uint8_t ts,
 struct msgb *gprs_rlcmac_send_data_block_acknowledged(
         struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts);
 
-struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
+struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_bts *bts,
+	struct gprs_rlcmac_tbf *tbf,
         uint32_t fn);
 
 int gprs_rlcmac_rcv_rts_block(uint8_t trx, uint8_t ts, uint16_t arfcn, 

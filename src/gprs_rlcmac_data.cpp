@@ -114,8 +114,6 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf
 		}
 	} else
 	if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
-		struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
-
 		if (!(tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS))) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
 				"PACKET CONTROL ACK for PACKET UPLINK "
@@ -137,8 +135,6 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
 	} else
 	if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
-		struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
-
 		if (!(tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS))) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
 				"PACKET CONTROL ACK for PACKET DOWNLINK "
@@ -160,8 +156,6 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf
 		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
 	} else
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
-		struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
-
 		if (!(tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
 				"PACKET DOWNLINK ACK.\n");
@@ -683,7 +677,8 @@ static int gprs_rlcmac_assemble_llc(struct gprs_rlcmac_tbf *tbf, uint8_t *data,
 	return 0;
 }
 
-struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
+struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_bts *bts,
+	struct gprs_rlcmac_tbf *tbf,
 	uint32_t fn)
 {
 	int final = (tbf->state_is(GPRS_RLCMAC_FINISHED));
@@ -714,7 +709,7 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_tbf *tbf,
 	bitvec_unhex(ack_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
-	write_packet_uplink_ack(mac_control_block, tbf, final);
+	write_packet_uplink_ack(bts, mac_control_block, tbf, final);
 	encode_gsm_rlcmac_downlink(ack_vec, mac_control_block);
 	bitvec_pack(ack_vec, msgb_put(msg, 23));
 	bitvec_free(ack_vec);
