@@ -1,0 +1,7 @@
+* Make the TBF ul/dl list per BTS
+* Make the SBA per BTS
+* Make the tbf point to the BTS so we can kill plenty of parameters
+* Group more into in classes.. remove bts pointers.
+* Change functions with 100 parameters to get a struct as param
+* Move move into the TBF class
+* Replace trx/ts with
