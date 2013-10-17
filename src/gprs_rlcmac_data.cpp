@@ -21,6 +21,7 @@
 #include <gprs_bssgp_pcu.h>
 #include <gprs_rlcmac.h>
 #include <pcu_l1_if.h>
+#include <bts.h>
 #include <tbf.h>
 
 extern void *tall_pcu_ctx;

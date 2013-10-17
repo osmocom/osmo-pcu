@@ -37,6 +37,7 @@ extern "C" {
 #include <gprs_debug.h>
 #include <gprs_bssgp_pcu.h>
 #include <pcuif_proto.h>
+#include <bts.h>
 #include <tbf.h>
 
 // FIXME: move this, when changed from c++ to c.

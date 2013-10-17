@@ -41,57 +41,8 @@ extern "C" {
  */
 //#define DEBUG_DL_ASS_IDLE
 
-/*
- * PDCH instanc
- */
 
 struct gprs_rlcmac_tbf;
-
-struct gprs_rlcmac_pdch {
-	uint8_t enable; /* TS is enabled */
-	uint8_t tsc; /* TSC of this slot */
-	uint8_t next_ul_tfi; /* next uplink TBF/TFI to schedule (0..31) */
-	uint8_t next_dl_tfi; /* next downlink TBF/TFI to schedule (0..31) */
-	struct gprs_rlcmac_tbf *ul_tbf[32]; /* array of UL TBF, by UL TFI */
-	struct gprs_rlcmac_tbf *dl_tbf[32]; /* array of DL TBF, by DL TFI */
-	struct llist_head paging_list; /* list of paging messages */
-	uint32_t last_rts_fn; /* store last frame number of RTS */
-};
-
-struct gprs_rlcmac_trx {
-	void *fl1h;
-	uint16_t arfcn;
-	struct gprs_rlcmac_pdch pdch[8];
-	struct gprs_rlcmac_tbf *ul_tbf[32]; /* array of UL TBF, by UL TFI */
-	struct gprs_rlcmac_tbf *dl_tbf[32]; /* array of DL TBF, by DL TFI */
-};
-
-struct gprs_rlcmac_bts {
-	uint8_t bsic;
-	uint8_t fc_interval;
-	uint8_t cs1;
-	uint8_t cs2;
-	uint8_t cs3;
-	uint8_t cs4;
-	uint8_t initial_cs_dl, initial_cs_ul;
-	uint8_t force_cs;	/* 0=use from BTS 1=use from VTY */
-	uint16_t force_llc_lifetime; /* overrides lifetime from SGSN */
-	uint8_t t3142;
-	uint8_t t3169;
-	uint8_t t3191;
-	uint16_t t3193_msec;
-	uint8_t t3195;
-	uint8_t n3101;
-	uint8_t n3103;
-	uint8_t n3105;
-	struct gprs_rlcmac_trx trx[8];
-	int (*alloc_algorithm)(struct gprs_rlcmac_bts *bts,
-		struct gprs_rlcmac_tbf *old_tbf,
-		struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single);
-	uint32_t alloc_algorithm_curst; /* options to customize algorithm */
-	uint8_t force_two_phase;
-	uint8_t alpha, gamma;
-};
 
 extern struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 

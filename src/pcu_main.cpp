@@ -27,6 +27,7 @@
 #include <getopt.h>
 #include <signal.h>
 #include <sched.h>
+#include <bts.h>
 extern "C" {
 #include "pcu_vty.h"
 #include <osmocom/vty/telnet_interface.h>

@@ -75,7 +75,8 @@ noinst_HEADERS = \
 	pcu_vty.h \
 	sysmo_l1_if.h \
 	femtobts.h \
-	tbf.h
+	tbf.h \
+	bts.h
 
 osmo_pcu_SOURCES = pcu_main.cpp
 

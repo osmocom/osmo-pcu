@@ -20,6 +20,7 @@
 #include <gprs_bssgp_pcu.h>
 #include <gprs_rlcmac.h>
 #include <pcu_l1_if.h>
+#include <bts.h>
 #include <tbf.h>
 
 static uint32_t sched_poll(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,

@@ -19,6 +19,7 @@
 #pragma once
 
 #include "gprs_rlcmac.h"
+#include "bts.h"
 
 #include <stdint.h>
 

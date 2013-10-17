@@ -21,6 +21,7 @@
 #include <gprs_rlcmac.h>
 #include <gprs_bssgp_pcu.h>
 #include <pcu_l1_if.h>
+#include <bts.h>
 #include <tbf.h>
 
 static struct gprs_bssgp_pcu the_pcu = { 0, };

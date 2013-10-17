@@ -29,6 +29,7 @@ extern "C" {
 
 #include <gprs_bssgp_pcu.h>
 #include <gprs_rlcmac.h>
+#include <bts.h>
 
 #include <stdlib.h>
 #include <sys/types.h>

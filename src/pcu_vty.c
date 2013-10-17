@@ -6,6 +6,7 @@
 #include <osmocom/core/linuxlist.h>
 #include "pcu_vty.h"
 #include "gprs_rlcmac.h"
+#include "bts.h"
 
 enum node_type pcu_vty_go_parent(struct vty *vty)
 {
