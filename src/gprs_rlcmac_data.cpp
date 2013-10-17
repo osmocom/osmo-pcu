@@ -1000,7 +1000,7 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 	}
 	bitvec_unhex(ass_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	write_packet_uplink_assignment(ass_vec, tbf->tfi,
+	write_packet_uplink_assignment(bts, ass_vec, tbf->tfi,
 		(tbf->direction == GPRS_RLCMAC_DL_TBF), tbf->tlli,
 		tbf->tlli_valid, new_tbf, POLLING_ASSIGNMENT_UL, bts->alpha,
 		bts->gamma, -1);
