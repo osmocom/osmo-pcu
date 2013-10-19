@@ -20,6 +20,7 @@
 #include "gprs_rlcmac.h"
 #include "gprs_debug.h"
 #include "tbf.h"
+#include "bts.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -39,15 +40,16 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir, const int count)
 {
 	int tfi;
 	uint8_t used_trx;
-	struct gprs_rlcmac_bts bts;
+	BTS the_bts;
+	struct gprs_rlcmac_bts *bts;
 	struct gprs_rlcmac_tbf *tbfs[33] = { 0, };
 
 	printf("Testing alloc_a direction(%d)\n", dir);
 
-	memset(&bts, 0, sizeof(bts));
-	bts.alloc_algorithm = alloc_algorithm_a;
+	bts = the_bts.bts_data();
+	bts->alloc_algorithm = alloc_algorithm_a;
 
-	struct gprs_rlcmac_trx *trx = &bts.trx[0];
+	struct gprs_rlcmac_trx *trx = &bts->trx[0];
 	trx->pdch[2].enable();
 	trx->pdch[3].enable();
 
@@ -60,13 +62,13 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir, const int count)
 	for (int i = 0; i < count; ++i) {
 		struct gprs_rlcmac_tbf *tbf;
 
-		tfi = tfi_find_free(&bts, dir, &used_trx, 0);
+		tfi = tfi_find_free(bts, dir, &used_trx, 0);
 		OSMO_ASSERT(tfi >= 0);
-		tbfs[i] = tbf_alloc(&bts, NULL, dir, tfi, used_trx, 0, 0);
+		tbfs[i] = tbf_alloc(bts, NULL, dir, tfi, used_trx, 0, 0);
 	}
 
 	/* Now check that there are still some TFIs */
-	tfi = tfi_find_free(&bts, dir, &used_trx, 0);
+	tfi = tfi_find_free(bts, dir, &used_trx, 0);
 	switch (dir) {
 	case GPRS_RLCMAC_UL_TBF:
 		OSMO_ASSERT(tfi >= 0);
@@ -75,16 +77,16 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir, const int count)
 		OSMO_ASSERT(tfi < 0);
 		break;
 	}
-	OSMO_ASSERT(!tbf_alloc(&bts, NULL, dir, tfi, used_trx, 0, 0));
+	OSMO_ASSERT(!tbf_alloc(bts, NULL, dir, tfi, used_trx, 0, 0));
 
 	for (int i = 0; i < ARRAY_SIZE(tbfs); ++i)
 		if (tbfs[i])
 			tbf_free(tbfs[i]);
 
-	tfi = tfi_find_free(&bts, dir, &used_trx, 0);
+	tfi = tfi_find_free(bts, dir, &used_trx, 0);
 	OSMO_ASSERT(tfi >= 0);
 
-	tbfs[tfi] = tbf_alloc(&bts, NULL, dir, tfi, used_trx, 0, 0);
+	tbfs[tfi] = tbf_alloc(bts, NULL, dir, tfi, used_trx, 0, 0);
 	OSMO_ASSERT(tbfs[tfi]);
 	tbf_free(tbfs[tfi]);
 }

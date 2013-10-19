@@ -19,7 +19,6 @@
 #pragma once
 
 #include "gprs_rlcmac.h"
-#include "bts.h"
 
 #include <stdint.h>
 
@@ -81,10 +80,6 @@ enum gprs_rlcmac_tbf_direction {
 #define GPRS_RLCMAC_FLAG_TO_UL_ASS	6
 #define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
-
-extern struct llist_head gprs_rlcmac_ul_tbfs; /* list of uplink TBFs */
-extern struct llist_head gprs_rlcmac_dl_tbfs; /* list of downlink TBFs */
-
 
 struct gprs_rlcmac_tbf {
 
@@ -221,11 +216,6 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 struct gprs_rlcmac_tbf *tbf_by_tfi(struct gprs_rlcmac_bts *bts,
 	uint8_t tfi, uint8_t trx,
         enum gprs_rlcmac_tbf_direction dir);
-
-struct gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli,
-	enum gprs_rlcmac_tbf_direction dir);
-
-struct gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
 
 void tbf_free(struct gprs_rlcmac_tbf *tbf);
 

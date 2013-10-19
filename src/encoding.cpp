@@ -21,6 +21,7 @@
 
 #include <encoding.h>
 #include <gprs_rlcmac.h>
+#include <bts.h>
 #include <tbf.h>
 #include <gprs_debug.h>
 

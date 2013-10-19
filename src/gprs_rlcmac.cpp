@@ -36,15 +36,13 @@ struct gprs_rlcmac_cs gprs_rlcmac_cs[] = {
 	{ 54,		53,		50 }, /* CS-4 */
 };
 
-LLIST_HEAD(gprs_rlcmac_ul_tbfs);
-LLIST_HEAD(gprs_rlcmac_dl_tbfs);
 extern void *tall_pcu_ctx;
 
 #ifdef DEBUG_DIAGRAM
 struct timeval diagram_time = {0,0};
 struct timeval diagram_last_tv = {0,0};
 
-void debug_diagram(int diag, const char *format, ...)
+void debug_diagram(BTS *bts, int diag, const char *format, ...)
 {
 	va_list ap;
 	char debug[128];
@@ -60,14 +58,14 @@ void debug_diagram(int diag, const char *format, ...)
 	va_end(ap);
 
 	memset(tbf_a, 0, sizeof(tbf_a));
-	llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
+	llist_for_each_entry(tbf, &bts->bts_data()->ul_tbfs, list) {
 		if (tbf->diag < 16) {
 			if (tbf->diag > max_diag)
 				max_diag = tbf->diag;
 			tbf_a[tbf->diag] = tbf;
 		}
 	}
-	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
+	llist_for_each_entry(tbf, &bts->bts_data()->dl_tbfs, list) {
 		if (tbf->diag < 16) {
 			if (tbf->diag > max_diag)
 				max_diag = tbf->diag;

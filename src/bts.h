@@ -30,11 +30,11 @@ extern "C" {
 #include "poll_controller.h"
 #include "sba.h"
 #include "ta.h"
+#include "tbf.h"
 #endif
 
 #include <stdint.h>
 
-struct gprs_rlcmac_tbf;
 struct BTS;
 
 /*
@@ -104,6 +104,13 @@ struct gprs_rlcmac_bts {
 	uint8_t force_two_phase;
 	uint8_t alpha, gamma;
 
+	/* TBF handling, make private or move into TBFController */
+	/* list of uplink TBFs */
+	struct llist_head ul_tbfs;
+	/* list of downlink TBFs */
+	struct llist_head dl_tbfs;
+
+
 	/**
 	 * Point back to the C++ object. This is used during the transition
 	 * period.
@@ -133,6 +140,9 @@ public:
 
 	/** add paging to paging queue(s) */
 	int add_paging(uint8_t chan_needed, uint8_t *identity_lv);
+
+	gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir);
+	gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
 
 private:
 	int m_cur_fn;

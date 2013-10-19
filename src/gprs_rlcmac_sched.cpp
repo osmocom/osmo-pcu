@@ -23,7 +23,8 @@
 #include <bts.h>
 #include <tbf.h>
 
-static uint32_t sched_poll(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
+static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
+		    uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
 		    struct gprs_rlcmac_tbf **poll_tbf,
 		    struct gprs_rlcmac_tbf **ul_ass_tbf,
 		    struct gprs_rlcmac_tbf **dl_ass_tbf,
@@ -37,7 +38,7 @@ static uint32_t sched_poll(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_n
 	if ((block_nr % 3) == 2)
 		poll_fn ++;
 	poll_fn = poll_fn % 2715648;
-	llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
+	llist_for_each_entry(tbf, &bts->ul_tbfs, list) {
 		/* this trx, this ts */
 		if (tbf->trx_no != trx || tbf->control_ts != ts)
 			continue;
@@ -53,7 +54,7 @@ static uint32_t sched_poll(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_n
 			*ul_ass_tbf = tbf;
 #warning "Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all states?"
 	}
-	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
+	llist_for_each_entry(tbf, &bts->dl_tbfs, list) {
 		/* this trx, this ts */
 		if (tbf->trx_no != trx || tbf->control_ts != ts)
 			continue;
@@ -232,7 +233,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	/* store last frame number of RTS */
 	pdch->last_rts_fn = fn;
 
-	poll_fn = sched_poll(trx, ts, fn, block_nr, &poll_tbf, &ul_ass_tbf,
+	poll_fn = sched_poll(bts, trx, ts, fn, block_nr, &poll_tbf, &ul_ass_tbf,
 		&dl_ass_tbf, &ul_ack_tbf);
 	/* check uplink ressource for polling */
 	if (poll_tbf)

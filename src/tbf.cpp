@@ -47,10 +47,11 @@ static inline void tbf_assign_imsi(struct gprs_rlcmac_tbf *tbf,
 	strncpy(tbf->meas.imsi, imsi, sizeof(tbf->meas.imsi) - 1);
 }
 
-static struct gprs_rlcmac_tbf *tbf_lookup_dl(const uint32_t tlli, const char *imsi)
+static struct gprs_rlcmac_tbf *tbf_lookup_dl(BTS *bts,
+					const uint32_t tlli, const char *imsi)
 {
 	/* TODO: look up by IMSI first, then tlli, then old_tlli */
-	return tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF);
+	return bts->tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF);
 }
 
 static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
@@ -121,7 +122,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	/* check for uplink data, so we copy our informations */
 #warning "Do the same look up for IMSI, TLLI and OLD_TLLI"
 #warning "Refactor the below lines... into a new method"
-	tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+	tbf = bts->bts->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
 	if (tbf && tbf->dir.ul.contention_resolution_done
 	 && !tbf->dir.ul.final_ack_sent) {
 		use_trx = tbf->trx_no;
@@ -196,7 +197,7 @@ int tbf_handle(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *tbf;
 
 	/* check for existing TBF */
-	tbf = tbf_lookup_dl(tlli, imsi);
+	tbf = tbf_lookup_dl(bts->bts, tlli, imsi);
 	if (tbf) {
 		int rc = tbf_append_data(tbf, bts, ms_class,
 						delay_csec, data, len);
@@ -274,9 +275,9 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	gprs_rlcmac_rssi_rep(tbf);
 	gprs_rlcmac_lost_rep(tbf);
 
-	debug_diagram(tbf->diag, "+---------------+");
-	debug_diagram(tbf->diag, "|    THE END    |");
-	debug_diagram(tbf->diag, "+---------------+");
+	debug_diagram(tbf->bts, tbf->diag, "+---------------+");
+	debug_diagram(tbf->bts, tbf->diag, "|    THE END    |");
+	debug_diagram(tbf->bts, tbf->diag, "+---------------+");
 	LOGP(DRLCMAC, LOGL_INFO, "Free %s TBF=%d with TLLI=0x%08x.\n",
 		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
 		tbf->tlli);
@@ -315,7 +316,7 @@ int tbf_update(struct gprs_rlcmac_tbf *tbf)
 		return -EINVAL;
 	}
 
-	ul_tbf = tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF);
+	ul_tbf = bts->bts->tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF);
 
 	tbf_unlink_pdch(tbf);
 	rc = bts->alloc_algorithm(bts, ul_tbf, tbf, bts->alloc_algorithm_curst, 0);
@@ -353,7 +354,7 @@ static const char *tbf_state_name[] = {
 void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
 	enum gprs_rlcmac_tbf_state state)
 {
-	debug_diagram(tbf->diag, "->%s", tbf_state_name[state]);
+	debug_diagram(tbf->bts, tbf->diag, "->%s", tbf_state_name[state]);
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s TBF=%d changes state from %s to %s\n",
 		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
 		tbf_state_name[tbf->state], tbf_state_name[state]);
@@ -415,50 +416,6 @@ struct gprs_rlcmac_tbf *tbf_by_tfi(struct gprs_rlcmac_bts *bts,
 	return NULL;
 }
 
-/* search for active downlink or uplink tbf */
-struct gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli,
-	enum gprs_rlcmac_tbf_direction dir)
-{
-	struct gprs_rlcmac_tbf *tbf;
-	if (dir == GPRS_RLCMAC_UL_TBF) {
-		llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
-			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
-			 && tbf->tlli == tlli && tbf->tlli_valid)
-				return tbf;
-		}
-	} else {
-		llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
-			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
-			 && tbf->tlli == tlli)
-				return tbf;
-		}
-	}
-	return NULL;
-}
-
-struct gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
-{
-	struct gprs_rlcmac_tbf *tbf;
-
-	/* only one TBF can poll on specific TS/FN, because scheduler can only
-	 * schedule one downlink control block (with polling) at a FN per TS */
-	llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
-		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
-		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
-		 && tbf->poll_fn == fn && tbf->trx_no == trx
-		 && tbf->control_ts == ts)
-			return tbf;
-	}
-	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
-		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
-		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
-		 && tbf->poll_fn == fn && tbf->trx_no == trx
-		 && tbf->control_ts == ts)
-			return tbf;
-	}
-	return NULL;
-}
-
 struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *old_tbf, enum gprs_rlcmac_tbf_direction dir,
 	uint8_t tfi, uint8_t trx,
@@ -471,11 +428,11 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 	/* hunt for first free number in diagram */
 	int diagram_num;
 	for (diagram_num = 0; ; diagram_num++) {
-		llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
+		llist_for_each_entry(tbf, &bts->ul_tbfs, list) {
 			if (tbf->diag == diagram_num)
 				goto next_diagram;
 		}
-		llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
+		llist_for_each_entry(tbf, &bts->dl_tbfs, list) {
 			if (tbf->diag == diagram_num)
 				goto next_diagram;
 		}
@@ -533,14 +490,14 @@ next_diagram:
 
 	INIT_LLIST_HEAD(&tbf->llc_queue);
 	if (dir == GPRS_RLCMAC_UL_TBF)
-		llist_add(&tbf->list, &gprs_rlcmac_ul_tbfs);
+		llist_add(&tbf->list, &bts->ul_tbfs);
 	else
-		llist_add(&tbf->list, &gprs_rlcmac_dl_tbfs);
+		llist_add(&tbf->list, &bts->dl_tbfs);
 
-	debug_diagram(tbf->diag, "+-----------------+");
-	debug_diagram(tbf->diag, "|NEW %s TBF TFI=%2d|",
+	debug_diagram(bts->bts, tbf->diag, "+-----------------+");
+	debug_diagram(bts->bts, tbf->diag, "|NEW %s TBF TFI=%2d|",
 		(dir == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi);
-	debug_diagram(tbf->diag, "+-----------------+");
+	debug_diagram(bts->bts, tbf->diag, "+-----------------+");
 
 	return tbf;
 }
@@ -591,7 +548,7 @@ void tbf_timer_cb(void *_tbf)
 		/* fall through */
 	case 3193:
 		if (tbf->T == 3193)
-		        debug_diagram(tbf->diag, "T3193 timeout");
+		        debug_diagram(tbf->bts, tbf->diag, "T3193 timeout");
 		LOGP(DRLCMAC, LOGL_DEBUG, "TBF will be freed due to timeout\n");
 		/* free TBF */
 		tbf_free(tbf);

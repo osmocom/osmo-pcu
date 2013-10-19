@@ -21,6 +21,7 @@
  */
 
 #include <poll_controller.h>
+#include <bts.h>
 #include <tbf.h>
 
 PollController::PollController(BTS& bts)
@@ -35,7 +36,7 @@ void PollController::expireTimedout(int frame_number)
 	uint32_t elapsed;
 
 	/* check for poll timeout */
-	llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
+	llist_for_each_entry(tbf, &bts->ul_tbfs, list) {
 		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
 			elapsed = (frame_number + 2715648 - tbf->poll_fn)
 								% 2715648;
@@ -43,7 +44,7 @@ void PollController::expireTimedout(int frame_number)
 				gprs_rlcmac_poll_timeout(bts, tbf);
 		}
 	}
-	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
+	llist_for_each_entry(tbf, &bts->dl_tbfs, list) {
 		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
 			elapsed = (frame_number + 2715648 - tbf->poll_fn)
 								% 2715648;

@@ -221,8 +221,8 @@ static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 	switch (data_cnf->sapi) {
 	case PCU_IF_SAPI_PCH:
 		if (data_cnf->data[2] == 0x3f)
-			rc = gprs_rlcmac_imm_ass_cnf(data_cnf->data,
-				data_cnf->fn);
+			rc = gprs_rlcmac_imm_ass_cnf(BTS::main_bts(),
+				data_cnf->data, data_cnf->fn);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with "

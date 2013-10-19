@@ -36,6 +36,7 @@ extern "C" {
 #include <gprs_debug.h>
 #include <gprs_bssgp_pcu.h>
 #include <pcuif_proto.h>
+#include <bts.h>
 #include <tbf.h>
 
 extern void *tall_pcu_ctx;

@@ -38,12 +38,6 @@ extern "C" {
 
 extern void *tall_pcu_ctx;
 
-static llist_head *gprs_rlcmac_tbfs_lists[] = {
-	&gprs_rlcmac_ul_tbfs,
-	&gprs_rlcmac_dl_tbfs,
-	NULL
-};
-
 static BTS s_bts;
 
 BTS* BTS::main_bts()
@@ -67,6 +61,8 @@ BTS::BTS()
 	, m_sba(*this)
 {
 	memset(&m_bts, 0, sizeof(m_bts));
+	INIT_LLIST_HEAD(&m_bts.ul_tbfs);
+	INIT_LLIST_HEAD(&m_bts.dl_tbfs);
 	m_bts.bts = this;
 }
 
@@ -84,6 +80,13 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 	uint8_t slot_mask[8];
 	int8_t first_ts; /* must be signed */
 
+	llist_head *tbfs_lists[] = {
+		&m_bts.ul_tbfs,
+		&m_bts.dl_tbfs,
+		NULL
+	};
+
+
 	LOGP(DRLCMAC, LOGL_INFO, "Add RR paging: chan-needed=%d MI=%s\n",
 		chan_needed, osmo_hexdump(identity_lv + 1, identity_lv[0]));
 
@@ -92,8 +95,8 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 	 * Mark only the first slot found.
 	 * Don't mark, if TBF uses a different slot that is already marked. */
 	memset(slot_mask, 0, sizeof(slot_mask));
-	for (l = 0; gprs_rlcmac_tbfs_lists[l]; l++) {
-		llist_for_each_entry(tbf, gprs_rlcmac_tbfs_lists[l], list) {
+	for (l = 0; tbfs_lists[l]; l++) {
+		llist_for_each_entry(tbf, tbfs_lists[l], list) {
 			first_ts = -1;
 			for (ts = 0; ts < 8; ts++) {
 				if (tbf->pdch[ts]) {
@@ -151,6 +154,49 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 		LOGP(DRLCMAC, LOGL_INFO, "No paging, because no TBF\n");
 
 	return 0;
+}
+
+/* search for active downlink or uplink tbf */
+gprs_rlcmac_tbf *BTS::tbf_by_tlli(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
+{
+	struct gprs_rlcmac_tbf *tbf;
+	if (dir == GPRS_RLCMAC_UL_TBF) {
+		llist_for_each_entry(tbf, &m_bts.ul_tbfs, list) {
+			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
+			 && tbf->tlli == tlli && tbf->tlli_valid)
+				return tbf;
+		}
+	} else {
+		llist_for_each_entry(tbf, &m_bts.dl_tbfs, list) {
+			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
+			 && tbf->tlli == tlli)
+				return tbf;
+		}
+	}
+	return NULL;
+}
+
+gprs_rlcmac_tbf *BTS::tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
+{
+	struct gprs_rlcmac_tbf *tbf;
+
+	/* only one TBF can poll on specific TS/FN, because scheduler can only
+	 * schedule one downlink control block (with polling) at a FN per TS */
+	llist_for_each_entry(tbf, &m_bts.ul_tbfs, list) {
+		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
+		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
+		 && tbf->poll_fn == fn && tbf->trx_no == trx
+		 && tbf->control_ts == ts)
+			return tbf;
+	}
+	llist_for_each_entry(tbf, &m_bts.dl_tbfs, list) {
+		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
+		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
+		 && tbf->poll_fn == fn && tbf->trx_no == trx
+		 && tbf->control_ts == ts)
+			return tbf;
+	}
+	return NULL;
 }
 
 void gprs_rlcmac_pdch::enable()

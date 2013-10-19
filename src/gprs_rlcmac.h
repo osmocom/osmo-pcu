@@ -44,6 +44,7 @@ extern "C" {
 
 struct gprs_rlcmac_tbf;
 struct gprs_rlcmac_bts;
+struct BTS;
 
 #ifdef __cplusplus
 /*
@@ -67,9 +68,9 @@ struct gprs_rlcmac_cs {
 extern struct gprs_rlcmac_cs gprs_rlcmac_cs[];
 
 #ifdef DEBUG_DIAGRAM
-void debug_diagram(int diag, const char *format, ...);
+void debug_diagram(BTS *bts, int diag, const char *format, ...);
 #else
-#define debug_diagram(a, b, args...) ;
+#define debug_diagram(a, b, c, args...) ;
 #endif
 
 int gprs_rlcmac_received_lost(struct gprs_rlcmac_tbf *tbf, uint16_t received,
@@ -142,7 +143,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	uint8_t trx, uint8_t ts, uint16_t arfcn, 
         uint32_t fn, uint8_t block_nr);
 
-int gprs_rlcmac_imm_ass_cnf(uint8_t *data, uint32_t fn);
+int gprs_rlcmac_imm_ass_cnf(BTS *bts, uint8_t *data, uint32_t fn);
 
 extern "C" {
 #endif
