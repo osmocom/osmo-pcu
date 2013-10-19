@@ -156,8 +156,7 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_bts *bts,
 		return msg;
 	}
 	/* schedule PACKET PAGING REQUEST */
-	if (!llist_empty(&pdch->paging_list))
-		msg = gprs_rlcmac_send_packet_paging_request(pdch);
+	msg = pdch->packet_paging_request();
 	if (msg) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling paging request "
 			"message at RTS for (TRX=%d, TS=%d)\n", trx, ts);

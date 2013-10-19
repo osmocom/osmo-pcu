@@ -192,12 +192,6 @@ int gprs_rlcmac_imm_ass_cnf(uint8_t *data, uint32_t fn);
 
 int gprs_rlcmac_add_paging(struct gprs_rlcmac_bts *bts, uint8_t chan_needed, uint8_t *identity_lv);
 
-struct gprs_rlcmac_paging *gprs_rlcmac_dequeue_paging(
-	struct gprs_rlcmac_pdch *pdch);
-
-struct msgb *gprs_rlcmac_send_packet_paging_request(
-	struct gprs_rlcmac_pdch *pdch);
-
 int remember_timing_advance(uint32_t tlli, uint8_t ta);
 
 int recall_timing_advance(uint32_t tlli);

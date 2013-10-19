@@ -40,6 +40,10 @@ struct BTS;
  */
 struct gprs_rlcmac_pdch {
 #ifdef __cplusplus
+	struct gprs_rlcmac_paging *dequeue_paging();
+	struct msgb *packet_paging_request();
+
+
 	/* TODO: the PDCH should know the trx/ts it belongs to */
 	void free_resources(uint8_t trx, uint8_t ts);
 
