@@ -136,6 +136,8 @@ void write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
 void write_packet_uplink_ack(struct gprs_rlcmac_bts *bts, RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *tbf,
         uint8_t final);
 
+int write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len);
+
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
 int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf);

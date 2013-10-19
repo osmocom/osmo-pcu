@@ -44,7 +44,8 @@ libgprs_la_SOURCES = \
 	pcu_vty.c \
 	tbf.cpp \
 	bts.cpp \
-	poll_controller.cpp
+	poll_controller.cpp \
+	encoding.cpp
 
 if ENABLE_SYSMOBTS
 libgprs_la_SOURCES += \
