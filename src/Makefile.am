@@ -45,7 +45,8 @@ libgprs_la_SOURCES = \
 	tbf.cpp \
 	bts.cpp \
 	poll_controller.cpp \
-	encoding.cpp
+	encoding.cpp \
+	ta.cpp
 
 if ENABLE_SYSMOBTS
 libgprs_la_SOURCES += \
