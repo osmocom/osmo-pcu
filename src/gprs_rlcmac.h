@@ -161,12 +161,6 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 
 int gprs_rlcmac_imm_ass_cnf(uint8_t *data, uint32_t fn);
 
-int remember_timing_advance(uint32_t tlli, uint8_t ta);
-
-int recall_timing_advance(uint32_t tlli);
-
-int flush_timing_advance(void);
-
 extern "C" {
 #endif
 int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,

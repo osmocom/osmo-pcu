@@ -7,3 +7,4 @@
 * Replace trx/ts with pointers. E.g. a PDCH should know the trx
   it is on... then we can omit trx, ts and parameters and just pass
   the pdch.
+* On global free/reset... also flush the timing advance..

@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#include <ta.h>
 #include <gprs_rlcmac.h>
 
 extern "C" {
@@ -36,22 +37,25 @@ extern void *tall_pcu_ctx;
 /* enable to debug timing advance memory */
 //#define DEBUG_TA
 
-static LLIST_HEAD(gprs_rlcmac_ta_list);
-static int gprs_rlcmac_ta_num = 0;
-
 struct gprs_rlcmac_ta {
 	struct llist_head	list;
 	uint32_t		tlli;
 	uint8_t			ta;
 };
 
+TimingAdvance::TimingAdvance()
+	: m_ta_len(0)
+{
+	INIT_LLIST_HEAD(&m_ta_list);
+}
+
 /* remember timing advance of a given TLLI */
-int remember_timing_advance(uint32_t tlli, uint8_t ta)
+int TimingAdvance::remember(uint32_t tlli, uint8_t ta)
 {
 	struct gprs_rlcmac_ta *ta_entry;
 
 	/* check for existing entry */
-	llist_for_each_entry(ta_entry, &gprs_rlcmac_ta_list, list) {
+	llist_for_each_entry(ta_entry, &m_ta_list, list) {
 		if (ta_entry->tlli == tlli) {
 #ifdef DEBUG_TA
 			fprintf(stderr, "update %08x %d\n", tlli, ta);
@@ -59,7 +63,7 @@ int remember_timing_advance(uint32_t tlli, uint8_t ta)
 			ta_entry->ta = ta;
 			/* relink to end of list */
 			llist_del(&ta_entry->list);
-			llist_add_tail(&ta_entry->list, &gprs_rlcmac_ta_list);
+			llist_add_tail(&ta_entry->list, &m_ta_list);
 			return 0;
 		}
 	}
@@ -68,12 +72,12 @@ int remember_timing_advance(uint32_t tlli, uint8_t ta)
 	fprintf(stderr, "remember %08x %d\n", tlli, ta);
 #endif
 	/* if list is full, remove oldest entry */
-	if (gprs_rlcmac_ta_num == 30) {
-		ta_entry = llist_entry(gprs_rlcmac_ta_list.next,
+	if (m_ta_len == 30) {
+		ta_entry = llist_entry(m_ta_list.next,
 			struct gprs_rlcmac_ta, list);
 	        llist_del(&ta_entry->list);
 		talloc_free(ta_entry);
-		gprs_rlcmac_ta_num--;
+		m_ta_len--;
 	}
 
 	/* create new TA entry */
@@ -83,18 +87,18 @@ int remember_timing_advance(uint32_t tlli, uint8_t ta)
 
 	ta_entry->tlli = tlli;
 	ta_entry->ta = ta;
-	llist_add_tail(&ta_entry->list, &gprs_rlcmac_ta_list);
-	gprs_rlcmac_ta_num++;
+	llist_add_tail(&ta_entry->list, &m_ta_list);
+	m_ta_len++;
 
 	return 0;
 }
 
-int recall_timing_advance(uint32_t tlli)
+int TimingAdvance::recall(uint32_t tlli)
 {
 	struct gprs_rlcmac_ta *ta_entry;
 	uint8_t ta;
 
-	llist_for_each_entry(ta_entry, &gprs_rlcmac_ta_list, list) {
+	llist_for_each_entry(ta_entry, &m_ta_list, list) {
 		if (ta_entry->tlli == tlli) {
 			ta = ta_entry->ta;
 #ifdef DEBUG_TA
@@ -110,13 +114,13 @@ int recall_timing_advance(uint32_t tlli)
 	return -EINVAL;
 }
 
-int flush_timing_advance(void)
+int TimingAdvance::flush()
 {
 	struct gprs_rlcmac_ta *ta_entry;
 	int count = 0;
 
-	while (!llist_empty(&gprs_rlcmac_ta_list)) {
-		ta_entry = llist_entry(gprs_rlcmac_ta_list.next,
+	while (!llist_empty(&m_ta_list)) {
+		ta_entry = llist_entry(m_ta_list.next,
 			struct gprs_rlcmac_ta, list);
 #ifdef DEBUG_TA
 		fprintf(stderr, "flush entry %08x %d\n", ta_entry->tlli,
@@ -126,7 +130,7 @@ int flush_timing_advance(void)
 		talloc_free(ta_entry);
 		count++;
 	}
-	gprs_rlcmac_ta_num = 0;
+	m_ta_len = 0;
 
 	return count;
 }

@@ -28,6 +28,7 @@ extern "C" {
 }
 
 #include "poll_controller.h"
+#include "ta.h"
 #endif
 
 #include <stdint.h>
@@ -122,6 +123,7 @@ public:
 	static BTS* main_bts();
 
 	struct gprs_rlcmac_bts *bts_data();
+	TimingAdvance *timing_advance();
 
 	/** TODO: change the number to unsigned */
 	void set_current_frame_number(int frame_number);
@@ -134,6 +136,7 @@ private:
 	int m_cur_fn;
 	struct gprs_rlcmac_bts m_bts;
 	PollController m_pollController;
+	TimingAdvance m_ta;
 
 private:
 	/* disable copying to avoid slicing */
@@ -144,6 +147,11 @@ private:
 inline int BTS::current_frame_number() const
 {
 	return m_cur_fn;
+}
+
+inline TimingAdvance *BTS::timing_advance()
+{
+	return &m_ta;
 }
 #endif
 

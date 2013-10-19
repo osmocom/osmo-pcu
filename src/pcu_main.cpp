@@ -250,7 +250,7 @@ int main(int argc, char *argv[])
 
 	pcu_l1if_close();
 
-	flush_timing_advance();
+	bts->bts->timing_advance()->flush();
 
 	talloc_report_full(tall_pcu_ctx, stderr);
 	talloc_free(tall_pcu_ctx);

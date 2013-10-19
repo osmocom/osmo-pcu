@@ -397,14 +397,14 @@ int gprs_rlcmac_rcv_control_block(struct gprs_rlcmac_bts *bts,
 						"in packet ressource request of single "
 						"block, but there is no resource request "
 						"scheduled!\n");
-					rc = recall_timing_advance(tlli);
+					rc = bts->bts->timing_advance()->recall(tlli);
 					if (rc >= 0)
 						ta = rc;
 					else
 						ta = 0;
 				} else {
 					ta = sba->ta;
-					remember_timing_advance(tlli, ta);
+					bts->bts->timing_advance()->remember(tlli, ta);
 					llist_del(&sba->list);
 					talloc_free(sba);
 				}
@@ -452,7 +452,7 @@ int gprs_rlcmac_rcv_control_block(struct gprs_rlcmac_bts *bts,
 				"block, but there is no resource request "
 				"scheduled!\n");
 		} else {
-			remember_timing_advance(ul_control_block->u.Packet_Measurement_Report.TLLI, sba->ta);
+			bts->bts->timing_advance()->remember(ul_control_block->u.Packet_Measurement_Report.TLLI, sba->ta);
 			llist_del(&sba->list);
 			talloc_free(sba);
 		}
@@ -820,7 +820,7 @@ int gprs_rlcmac_rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
 		/* mark TLLI valid now */
 		tbf->tlli_valid = 1;
 		/* store current timing advance */
-		remember_timing_advance(tbf->tlli, tbf->ta);
+		bts->bts->timing_advance()->remember(tbf->tlli, tbf->ta);
 	/* already have TLLI, but we stille get another one */
 	} else if (rh->ti) {
 		uint32_t tlli;

@@ -135,7 +135,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 			ta = tbf->ta;
 		else {
 			/* recall TA */
-			rc = recall_timing_advance(tlli);
+			rc = bts->bts->timing_advance()->recall(tlli);
 			if (rc < 0) {
 				LOGP(DRLCMAC, LOGL_NOTICE, "TA unknown"
 					", assuming 0\n");
