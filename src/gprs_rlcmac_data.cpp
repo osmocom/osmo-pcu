@@ -1603,7 +1603,7 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_bts *bts,
 	memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl)); /* reset RLC states */
 	tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK; /* keep TO flags */
 	tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
-	tbf_update(bts, tbf);
+	tbf_update(tbf);
 	gprs_rlcmac_trigger_downlink_assignment(bts, tbf, tbf, NULL);
 
 	return 0;

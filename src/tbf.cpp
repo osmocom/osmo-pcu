@@ -71,7 +71,7 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 		tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
 		tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
 		tbf_update_ms_class(tbf, ms_class);
-		tbf_update(bts, tbf);
+		tbf_update(tbf);
 		gprs_rlcmac_trigger_downlink_assignment(bts, tbf, tbf, NULL);
 	} else {
 		/* the TBF exists, so we must write it in the queue
@@ -299,10 +299,10 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	talloc_free(tbf);
 }
 
-int tbf_update(struct gprs_rlcmac_bts *bts,
-		struct gprs_rlcmac_tbf *tbf)
+int tbf_update(struct gprs_rlcmac_tbf *tbf)
 {
 	struct gprs_rlcmac_tbf *ul_tbf = NULL;
+	gprs_rlcmac_bts *bts = tbf->bts->bts_data();
 	int rc;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF update **********\n");
@@ -497,6 +497,7 @@ next_diagram:
 	if (!tbf)
 		return NULL;
 
+	tbf->bts = bts->bts;
 #ifdef DEBUG_DIAGRAM
 	tbf->diag = diagram_num;
 #endif

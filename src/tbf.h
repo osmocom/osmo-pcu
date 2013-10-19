@@ -195,6 +195,9 @@ struct gprs_rlcmac_tbf {
 	/* these should become protected but only after gprs_rlcmac_data.c
 	 * stops to iterate over all tbf in its current form */
 	enum gprs_rlcmac_tbf_state state;
+
+	/* store the BTS this TBF belongs to */
+	BTS *bts;
 };
 
 
@@ -226,7 +229,7 @@ struct gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
 
 void tbf_free(struct gprs_rlcmac_tbf *tbf);
 
-int tbf_update(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf);
+int tbf_update(struct gprs_rlcmac_tbf *tbf);
 
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 
