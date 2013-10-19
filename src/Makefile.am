@@ -80,7 +80,8 @@ noinst_HEADERS = \
 	femtobts.h \
 	tbf.h \
 	bts.h \
-	poll_controller.h
+	poll_controller.h \
+	encoding.h
 
 osmo_pcu_SOURCES = pcu_main.cpp
 

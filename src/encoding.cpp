@@ -19,12 +19,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#include <encoding.h>
 #include <gprs_rlcmac.h>
 #include <tbf.h>
 #include <gprs_debug.h>
 
 // GSM 04.08 9.1.18 Immediate assignment
-int write_immediate_assignment(
+int Encoding::write_immediate_assignment(
 	struct gprs_rlcmac_bts *bts,
 	bitvec * dest, uint8_t downlink, uint8_t ra,
 	uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc,
@@ -160,7 +161,7 @@ int write_immediate_assignment(
 }
 
 /* generate uplink assignment */
-void write_packet_uplink_assignment(
+void Encoding::write_packet_uplink_assignment(
 	struct gprs_rlcmac_bts *bts,
 	bitvec * dest, uint8_t old_tfi,
 	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
@@ -241,7 +242,7 @@ void write_packet_uplink_assignment(
 
 
 /* generate downlink assignment */
-void write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
+void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
 	uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf, uint8_t poll,
 	uint8_t alpha, uint8_t gamma, int8_t ta_idx, uint8_t ta_ts)
 {
@@ -314,7 +315,7 @@ void write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
 }
 
 /* generate paging request */
-int write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len)
+int Encoding::write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len)
 {
 	unsigned wp = 0;
 	int plen;
@@ -351,7 +352,7 @@ int write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len)
 }
 
 /* generate uplink ack */
-void write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
+void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *tbf,
 	uint8_t final)
 {
@@ -412,7 +413,7 @@ void write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_Power_Control_Parameters   = 0x0;
 }
 
-unsigned write_packet_paging_request(bitvec * dest)
+unsigned Encoding::write_packet_paging_request(bitvec * dest)
 {
 	unsigned wp = 0;
 
@@ -429,7 +430,7 @@ unsigned write_packet_paging_request(bitvec * dest)
 	return wp;
 }
 
-unsigned write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
+unsigned Encoding::write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
 	uint8_t *identity, uint8_t chan_needed)
 {
 	bitvec_write_field(dest, wp,0x1,1);  // Repeated Page info exists

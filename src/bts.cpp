@@ -21,6 +21,7 @@
 #include <bts.h>
 #include <poll_controller.h>
 #include <tbf.h>
+#include <encoding.h>
 
 #include <gprs_rlcmac.h>
 #include <gprs_debug.h>
@@ -225,7 +226,7 @@ struct msgb *gprs_rlcmac_pdch::packet_paging_request()
 		talloc_free(pag);
 		return NULL;
 	}
-	wp = write_packet_paging_request(pag_vec);
+	wp = Encoding::write_packet_paging_request(pag_vec);
 
 	/* loop until message is full */
 	while (pag) {
@@ -259,7 +260,7 @@ struct msgb *gprs_rlcmac_pdch::packet_paging_request()
 			llist_add_tail(&pag->list, &paging_list);
 			break;
 		}
-		write_repeated_page_info(pag_vec, wp, pag->identity_lv[0],
+		Encoding::write_repeated_page_info(pag_vec, wp, pag->identity_lv[0],
 			pag->identity_lv + 1, pag->chan_needed);
 
 continue_next:

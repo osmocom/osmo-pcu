@@ -112,32 +112,6 @@ int gprs_rlcmac_rcv_block(struct gprs_rlcmac_bts *bts,
 	uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
 	uint32_t fn, int8_t rssi);
 
-int write_immediate_assignment(
-	struct gprs_rlcmac_bts *bts,
-	bitvec * dest, uint8_t downlink, uint8_t ra, 
-        uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc, 
-        uint8_t tfi, uint8_t usf, uint32_t tlli, uint8_t polling,
-	uint32_t fn, uint8_t single_block, uint8_t alpha, uint8_t gamma,
-	int8_t ta_idx);
-
-void write_packet_uplink_assignment(
-	struct gprs_rlcmac_bts *bts,
-	bitvec * dest, uint8_t old_tfi,
-	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli, 
-	struct gprs_rlcmac_tbf *tbf, uint8_t poll, uint8_t alpha,
-	uint8_t gamma, int8_t ta_idx);
-
-void write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
-	uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf, uint8_t poll,
-	uint8_t alpha, uint8_t gamma, int8_t ta_idx, uint8_t ta_ts);
-
-
-
-void write_packet_uplink_ack(struct gprs_rlcmac_bts *bts, RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *tbf,
-        uint8_t final);
-
-int write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len);
-
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
 int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf);
@@ -168,11 +142,6 @@ int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_bts *bts,
 
 int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len,
 	const char *imsi);
-
-unsigned write_packet_paging_request(bitvec * dest);
-
-unsigned write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
-	uint8_t *identity, uint8_t chan_needed);
 
 int gprs_rlcmac_rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
 	uint8_t trx, uint8_t ts,

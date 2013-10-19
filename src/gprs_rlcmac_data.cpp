@@ -22,6 +22,7 @@
 #include <gprs_rlcmac.h>
 #include <pcu_l1_if.h>
 #include <bts.h>
+#include <encoding.h>
 #include <tbf.h>
 
 extern void *tall_pcu_ctx;
@@ -710,7 +711,7 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_bts *bts,
 	bitvec_unhex(ack_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
-	write_packet_uplink_ack(bts, mac_control_block, tbf, final);
+	Encoding::write_packet_uplink_ack(bts, mac_control_block, tbf, final);
 	encode_gsm_rlcmac_downlink(ack_vec, mac_control_block);
 	bitvec_pack(ack_vec, msgb_put(msg, 23));
 	bitvec_free(ack_vec);
@@ -1001,7 +1002,7 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 	}
 	bitvec_unhex(ass_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	write_packet_uplink_assignment(bts, ass_vec, tbf->tfi,
+	Encoding::write_packet_uplink_assignment(bts, ass_vec, tbf->tfi,
 		(tbf->direction == GPRS_RLCMAC_DL_TBF), tbf->tlli,
 		tbf->tlli_valid, new_tbf, POLLING_ASSIGNMENT_UL, bts->alpha,
 		bts->gamma, -1);
@@ -1095,12 +1096,12 @@ int gprs_rlcmac_rcv_rach(struct gprs_rlcmac_bts *bts,
 	bitvec_unhex(immediate_assignment,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	if (sb)
-		plen = write_immediate_assignment(bts, immediate_assignment, 0, ra,
+		plen = Encoding::write_immediate_assignment(bts, immediate_assignment, 0, ra,
 			Fn, qta >> 2, bts->trx[trx].arfcn, ts,
 			bts->trx[trx].pdch[ts].tsc, 0, 0, 0, 0, sb_fn, 1,
 			bts->alpha, bts->gamma, -1);
 	else
-		plen = write_immediate_assignment(bts, immediate_assignment, 0, ra,
+		plen = Encoding::write_immediate_assignment(bts, immediate_assignment, 0, ra,
 			Fn, tbf->ta, tbf->arfcn, tbf->first_ts, tbf->tsc,
 			tbf->tfi, tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0, 0,
 			bts->alpha, bts->gamma, -1);
@@ -1681,7 +1682,7 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	LOGP(DRLCMAC, LOGL_INFO, "TBF: START TFI: %u TLLI: 0x%08x Packet Downlink Assignment (PACCH)\n", new_tbf->tfi, new_tbf->tlli);
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
-	write_packet_downlink_assignment(mac_control_block, tbf->tfi,
+	Encoding::write_packet_downlink_assignment(mac_control_block, tbf->tfi,
 		(tbf->direction == GPRS_RLCMAC_DL_TBF), new_tbf,
 		poll_ass_dl, bts->alpha, bts->gamma, -1, 0);
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
@@ -1721,7 +1722,7 @@ static void gprs_rlcmac_downlink_assignment(struct gprs_rlcmac_bts *bts,
 	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	/* use request reference that has maximum distance to current time,
 	 * so the assignment will not conflict with possible RACH requests. */
-	plen = write_immediate_assignment(bts, immediate_assignment, 1, 125,
+	plen = Encoding::write_immediate_assignment(bts, immediate_assignment, 1, 125,
 		(tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta,
 		tbf->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, 0, tbf->tlli, poll,
 		tbf->poll_fn, 0, bts->alpha, bts->gamma, -1);
