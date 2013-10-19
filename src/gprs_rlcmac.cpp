@@ -179,68 +179,6 @@ int tfi_find_free(struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction di
 	return -1;
 }
 
-/* starting time for assigning single slot
- * This offset must be a multiple of 13. */
-#define AGCH_START_OFFSET 52
-
-LLIST_HEAD(gprs_rlcmac_sbas);
-
-int sba_alloc(struct gprs_rlcmac_bts *bts,
-		uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta)
-{
-
-	struct gprs_rlcmac_pdch *pdch;
-	struct gprs_rlcmac_sba *sba;
-	uint8_t trx, ts;
-	uint32_t fn;
-
-	sba = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_sba);
-	if (!sba)
-		return -ENOMEM;
-
-	for (trx = 0; trx < 8; trx++) {
-		for (ts = 0; ts < 8; ts++) {
-			pdch = &bts->trx[trx].pdch[ts];
-			if (!pdch->is_enabled())
-				continue;
-			break;
-		}
-		if (ts < 8)
-			break;
-	}
-	if (trx == 8) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH available.\n");
-		talloc_free(sba);
-		return -EINVAL;
-	}
-
-	fn = (pdch->last_rts_fn + AGCH_START_OFFSET) % 2715648;
-
-	sba->trx = trx;
-	sba->ts = ts;
-	sba->fn = fn;
-	sba->ta = ta;
-
-	llist_add(&sba->list, &gprs_rlcmac_sbas);
-
-	*_trx = trx;
-	*_ts = ts;
-	*_fn = fn;
-	return 0;
-}
-
-struct gprs_rlcmac_sba *sba_find(uint8_t trx, uint8_t ts, uint32_t fn)
-{
-	struct gprs_rlcmac_sba *sba;
-
-	llist_for_each_entry(sba, &gprs_rlcmac_sbas, list) {
-		if (sba->trx == trx && sba->ts == ts && sba->fn == fn)
-			return sba;
-	}
-
-	return NULL;
-}
-
 /* received RLC/MAC block from L1 */
 int gprs_rlcmac_rcv_block(struct gprs_rlcmac_bts *bts,
 	uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,

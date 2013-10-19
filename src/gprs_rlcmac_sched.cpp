@@ -70,23 +70,6 @@ static uint32_t sched_poll(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_n
 	return poll_fn;
 }
 
-uint32_t sched_sba(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr)
-{
-	uint32_t sba_fn;
-	struct gprs_rlcmac_sba *sba;
-
-	/* check special TBF for events */
-	sba_fn = fn + 4;
-	if ((block_nr % 3) == 2)
-		sba_fn ++;
-	sba_fn = sba_fn % 2715648;
-	sba = sba_find(trx, ts, sba_fn);
-	if (sba)
-		return sba_fn;
-
-	return 0xffffffff;
-}
-
 uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 	uint8_t block_nr, struct gprs_rlcmac_pdch *pdch)
 {

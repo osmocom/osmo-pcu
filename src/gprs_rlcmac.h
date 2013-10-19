@@ -100,6 +100,8 @@ int sba_alloc(struct gprs_rlcmac_bts *bts, uint8_t *_trx, uint8_t *_ts, uint32_t
 
 struct gprs_rlcmac_sba *sba_find(uint8_t trx, uint8_t ts, uint32_t fn);
 
+uint32_t sched_sba(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr);
+
 /* TS 44.060 Section 10.4.7 Table 10.4.7.1: Payload Type field */
 enum gprs_rlcmac_block_type {
 	GPRS_RLCMAC_DATA_BLOCK = 0x0,

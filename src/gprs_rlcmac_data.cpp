@@ -189,15 +189,6 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf
 	return 0;
 }
 
-int gprs_rlcmac_sba_timeout(struct gprs_rlcmac_sba *sba)
-{
-	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for SBA\n");
-	llist_del(&sba->list);
-	talloc_free(sba);
-
-	return 0;
-}
-
 static uint8_t get_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
 {
 	int i;
