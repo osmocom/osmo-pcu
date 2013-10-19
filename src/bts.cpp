@@ -32,9 +32,16 @@ extern "C" {
 
 #include <arpa/inet.h>
 
+#include <errno.h>
 #include <string.h>
 
 extern void *tall_pcu_ctx;
+
+static llist_head *gprs_rlcmac_tbfs_lists[] = {
+	&gprs_rlcmac_ul_tbfs,
+	&gprs_rlcmac_dl_tbfs,
+	NULL
+};
 
 static BTS s_bts;
 
@@ -65,6 +72,83 @@ void BTS::set_current_frame_number(int fn)
 {
 	m_cur_fn = fn;
 	m_pollController.expireTimedout(m_cur_fn);
+}
+
+int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
+{
+	uint8_t l, trx, ts, any_tbf = 0;
+	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_paging *pag;
+	uint8_t slot_mask[8];
+	int8_t first_ts; /* must be signed */
+
+	LOGP(DRLCMAC, LOGL_INFO, "Add RR paging: chan-needed=%d MI=%s\n",
+		chan_needed, osmo_hexdump(identity_lv + 1, identity_lv[0]));
+
+	/* collect slots to page
+	 * Mark slots for every TBF, but only mark one of it.
+	 * Mark only the first slot found.
+	 * Don't mark, if TBF uses a different slot that is already marked. */
+	memset(slot_mask, 0, sizeof(slot_mask));
+	for (l = 0; gprs_rlcmac_tbfs_lists[l]; l++) {
+		llist_for_each_entry(tbf, gprs_rlcmac_tbfs_lists[l], list) {
+			first_ts = -1;
+			for (ts = 0; ts < 8; ts++) {
+				if (tbf->pdch[ts]) {
+					/* remember the first slot found */
+					if (first_ts < 0)
+						first_ts = ts;
+					/* break, if we already marked a slot */
+					if ((slot_mask[tbf->trx_no] & (1 << ts)))
+						break;
+				}
+			}
+			/* mark first slot found, if none is marked already */
+			if (ts == 8 && first_ts >= 0) {
+				LOGP(DRLCMAC, LOGL_DEBUG, "- %s TBF=%d uses "
+					"TRX=%d TS=%d, so we mark\n",
+					(tbf->direction == GPRS_RLCMAC_UL_TBF)
+						? "UL" : "DL",
+					tbf->tfi, tbf->trx_no, first_ts);
+				slot_mask[tbf->trx_no] |= (1 << first_ts);
+			} else
+				LOGP(DRLCMAC, LOGL_DEBUG, "- %s TBF=%d uses "
+					"already marked TRX=%d TS=%d\n",
+					(tbf->direction == GPRS_RLCMAC_UL_TBF)
+						? "UL" : "DL",
+					tbf->tfi, tbf->trx_no, ts);
+		}
+	}
+
+	/* Now we have a list of marked slots. Every TBF uses at least one
+	 * of these slots. */
+
+	/* schedule paging to all marked slots */
+	for (trx = 0; trx < 8; trx++) {
+		if (slot_mask[trx] == 0)
+			continue;
+		any_tbf = 1;
+		for (ts = 0; ts < 8; ts++) {
+			if ((slot_mask[trx] & (1 << ts))) {
+				/* schedule */
+				pag = talloc_zero(tall_pcu_ctx,
+					struct gprs_rlcmac_paging);
+				if (!pag)
+					return -ENOMEM;
+				pag->chan_needed = chan_needed;
+				memcpy(pag->identity_lv, identity_lv,
+					identity_lv[0] + 1);
+				m_bts.trx[trx].pdch[ts].add_paging(pag);
+				LOGP(DRLCMAC, LOGL_INFO, "Paging on PACCH of "
+					"TRX=%d TS=%d\n", trx, ts);
+			}
+		}
+	}
+
+	if (!any_tbf)
+		LOGP(DRLCMAC, LOGL_INFO, "No paging, because no TBF\n");
+
+	return 0;
 }
 
 void gprs_rlcmac_pdch::enable()
@@ -195,3 +279,7 @@ continue_next:
 	return msg;
 }
 
+void gprs_rlcmac_pdch::add_paging(struct gprs_rlcmac_paging *pag)
+{
+	llist_add(&pag->list, &paging_list);
+}

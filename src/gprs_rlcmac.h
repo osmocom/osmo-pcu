@@ -190,8 +190,6 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 
 int gprs_rlcmac_imm_ass_cnf(uint8_t *data, uint32_t fn);
 
-int gprs_rlcmac_add_paging(struct gprs_rlcmac_bts *bts, uint8_t chan_needed, uint8_t *identity_lv);
-
 int remember_timing_advance(uint32_t tlli, uint8_t ta);
 
 int recall_timing_advance(uint32_t tlli);

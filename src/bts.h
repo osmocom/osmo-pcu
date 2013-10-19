@@ -43,6 +43,7 @@ struct gprs_rlcmac_pdch {
 	struct gprs_rlcmac_paging *dequeue_paging();
 	struct msgb *packet_paging_request();
 
+	void add_paging(struct gprs_rlcmac_paging *pag);
 
 	/* TODO: the PDCH should know the trx/ts it belongs to */
 	void free_resources(uint8_t trx, uint8_t ts);
@@ -125,6 +126,9 @@ public:
 	/** TODO: change the number to unsigned */
 	void set_current_frame_number(int frame_number);
 	int current_frame_number() const;
+
+	/** add paging to paging queue(s) */
+	int add_paging(uint8_t chan_needed, uint8_t *identity_lv);
 
 private:
 	int m_cur_fn;

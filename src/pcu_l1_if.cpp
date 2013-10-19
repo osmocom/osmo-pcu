@@ -486,7 +486,7 @@ static int pcu_rx_pag_req(struct gsm_pcu_if_pag_req *pag_req)
 	LOGP(DL1IF, LOGL_DEBUG, "Paging request received: chan_needed=%d "
 		"length=%d\n", pag_req->chan_needed, pag_req->identity_lv[0]);
 
-	return gprs_rlcmac_add_paging(bts_main_data(), pag_req->chan_needed,
+	return BTS::main_bts()->add_paging(pag_req->chan_needed,
 						pag_req->identity_lv);
 }
 
