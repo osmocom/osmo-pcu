@@ -149,7 +149,7 @@ int tfi_find_free(struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction di
 	for (trx = trx_from; trx <= trx_to; trx++) {
 		for (ts = 0; ts < 8; ts++) {
 			pdch = &bts->trx[trx].pdch[ts];
-			if (!pdch->enable)
+			if (!pdch->is_enabled())
 				continue;
 			break;
 		}
@@ -205,7 +205,7 @@ int sba_alloc(struct gprs_rlcmac_bts *bts,
 	for (trx = 0; trx < 8; trx++) {
 		for (ts = 0; ts < 8; ts++) {
 			pdch = &bts->trx[trx].pdch[ts];
-			if (!pdch->enable)
+			if (!pdch->is_enabled())
 				continue;
 			break;
 		}

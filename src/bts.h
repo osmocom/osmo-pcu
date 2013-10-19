@@ -39,7 +39,17 @@ struct BTS;
  * PDCH instance
  */
 struct gprs_rlcmac_pdch {
-	uint8_t enable; /* TS is enabled */
+#ifdef __cplusplus
+	/* TODO: the PDCH should know the trx/ts it belongs to */
+	void free_resources(uint8_t trx, uint8_t ts);
+
+	bool is_enabled() const;
+
+	void enable();
+	void disable();
+#endif
+
+	uint8_t m_is_enabled; /* TS is enabled */
 	uint8_t tsc; /* TSC of this slot */
 	uint8_t next_ul_tfi; /* next uplink TBF/TFI to schedule (0..31) */
 	uint8_t next_dl_tfi; /* next downlink TBF/TFI to schedule (0..31) */
@@ -134,5 +144,10 @@ extern "C" {
 #endif
 	struct gprs_rlcmac_bts *bts_main_data();
 #ifdef __cplusplus
+}
+
+inline bool gprs_rlcmac_pdch::is_enabled() const
+{
+	return m_is_enabled;
 }
 #endif

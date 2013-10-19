@@ -48,8 +48,8 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir, const int count)
 	bts.alloc_algorithm = alloc_algorithm_a;
 
 	struct gprs_rlcmac_trx *trx = &bts.trx[0];
-	trx->pdch[2].enable = 1;
-	trx->pdch[3].enable = 1;
+	trx->pdch[2].enable();
+	trx->pdch[3].enable();
 
 	/**
 	 * Currently alloc_a will only allocate from the first

@@ -4,4 +4,6 @@
 * Group more into in classes.. remove bts pointers.
 * Change functions with 100 parameters to get a struct as param
 * Move move into the TBF class
-* Replace trx/ts with
+* Replace trx/ts with pointers. E.g. a PDCH should know the trx
+  it is on... then we can omit trx, ts and parameters and just pass
+  the pdch.

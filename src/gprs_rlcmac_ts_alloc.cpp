@@ -104,7 +104,7 @@ static int find_enabled_pdch(struct gprs_rlcmac_trx *trx, const uint8_t start_ts
 		struct gprs_rlcmac_pdch *pdch;
 
 		pdch = &trx->pdch[ts];
-		if (!pdch->enable) {
+		if (!pdch->is_enabled()) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, because "
 				"not enabled\n", ts);
 			continue;
@@ -265,7 +265,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	for (ts = 0, i = 0; ts < 8; ts++) {
 		pdch = &tbf->trx->pdch[ts];
 		/* check if enabled */
-		if (!pdch->enable) {
+		if (!pdch->is_enabled()) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, because "
 				"not enabled\n", ts);
 			/* increase window for Type 1 */
@@ -421,7 +421,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		for (ts = tx_win_min, i = 0; i < tx_range; ts = (ts + 1) & 7) {
 			pdch = &tbf->trx->pdch[ts];
 			/* check if enabled */
-			if (!pdch->enable) {
+			if (!pdch->is_enabled()) {
 				LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
 					"because not enabled\n", ts);
 				continue;
@@ -493,7 +493,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		for (ts = tx_win_min, i = 0; i < tx_range; ts = (ts + 1) & 7) {
 			pdch = &tbf->trx->pdch[ts];
 			/* check if enabled */
-			if (!pdch->enable) {
+			if (!pdch->is_enabled()) {
 				LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
 					"because not enabled\n", ts);
 				continue;

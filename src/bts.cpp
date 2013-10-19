@@ -20,6 +20,13 @@
 
 #include <bts.h>
 #include <poll_controller.h>
+#include <tbf.h>
+
+#include <gprs_rlcmac.h>
+
+extern "C" {
+	#include <osmocom/core/talloc.h>
+}
 
 #include <string.h>
 
@@ -52,4 +59,41 @@ void BTS::set_current_frame_number(int fn)
 {
 	m_cur_fn = fn;
 	m_pollController.expireTimedout(m_cur_fn);
+}
+
+void gprs_rlcmac_pdch::enable()
+{
+	/* TODO: Check if there are still allocated resources.. */
+	INIT_LLIST_HEAD(&paging_list);
+	m_is_enabled = 1;
+}
+
+void gprs_rlcmac_pdch::disable()
+{
+	/* TODO.. kick free_resources once we know the TRX/TS we are on */
+	m_is_enabled = 0;
+}
+
+void gprs_rlcmac_pdch::free_resources(uint8_t trx, uint8_t ts)
+{
+	struct gprs_rlcmac_paging *pag;
+	struct gprs_rlcmac_sba *sba, *sba2;
+
+	/* we are not enabled. there should be no resources */
+	if (!is_enabled())
+		return;
+
+	/* kick all TBF on slot */
+	gprs_rlcmac_tbf::free_all(this);
+
+	/* flush all pending paging messages */
+	while ((pag = gprs_rlcmac_dequeue_paging(this)))
+		talloc_free(pag);
+
+	llist_for_each_entry_safe(sba, sba2, &gprs_rlcmac_sbas, list) {
+		if (sba->trx == trx && sba->ts == ts) {
+			llist_del(&sba->list);
+			talloc_free(sba);
+		}
+	}
 }
