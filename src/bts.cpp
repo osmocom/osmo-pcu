@@ -127,7 +127,6 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 	for (trx = 0; trx < 8; trx++) {
 		if (slot_mask[trx] == 0)
 			continue;
-		any_tbf = 1;
 		for (ts = 0; ts < 8; ts++) {
 			if ((slot_mask[trx] & (1 << ts))) {
 				/* schedule */
@@ -141,6 +140,7 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 				m_bts.trx[trx].pdch[ts].add_paging(pag);
 				LOGP(DRLCMAC, LOGL_INFO, "Paging on PACCH of "
 					"TRX=%d TS=%d\n", trx, ts);
+				any_tbf = 1;
 			}
 		}
 	}
