@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#include <sba.h>
 #include <gprs_rlcmac.h>
 #include <gprs_debug.h>
 #include <bts.h>
@@ -35,9 +36,13 @@ extern void *tall_pcu_ctx;
  * This offset must be a multiple of 13. */
 #define AGCH_START_OFFSET 52
 
-LLIST_HEAD(gprs_rlcmac_sbas);
+SBAController::SBAController(BTS &bts)
+	: m_bts(bts)
+{
+	INIT_LLIST_HEAD(&m_sbas);
+}
 
-int sba_alloc(struct gprs_rlcmac_bts *bts,
+int SBAController::alloc(
 		uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta)
 {
 
@@ -52,7 +57,7 @@ int sba_alloc(struct gprs_rlcmac_bts *bts,
 
 	for (trx = 0; trx < 8; trx++) {
 		for (ts = 0; ts < 8; ts++) {
-			pdch = &bts->trx[trx].pdch[ts];
+			pdch = &m_bts.bts_data()->trx[trx].pdch[ts];
 			if (!pdch->is_enabled())
 				continue;
 			break;
@@ -73,7 +78,7 @@ int sba_alloc(struct gprs_rlcmac_bts *bts,
 	sba->fn = fn;
 	sba->ta = ta;
 
-	llist_add(&sba->list, &gprs_rlcmac_sbas);
+	llist_add(&sba->list, &m_sbas);
 
 	*_trx = trx;
 	*_ts = ts;
@@ -81,11 +86,11 @@ int sba_alloc(struct gprs_rlcmac_bts *bts,
 	return 0;
 }
 
-struct gprs_rlcmac_sba *sba_find(uint8_t trx, uint8_t ts, uint32_t fn)
+gprs_rlcmac_sba *SBAController::find(uint8_t trx, uint8_t ts, uint32_t fn)
 {
 	struct gprs_rlcmac_sba *sba;
 
-	llist_for_each_entry(sba, &gprs_rlcmac_sbas, list) {
+	llist_for_each_entry(sba, &m_sbas, list) {
 		if (sba->trx == trx && sba->ts == ts && sba->fn == fn)
 			return sba;
 	}
@@ -93,7 +98,7 @@ struct gprs_rlcmac_sba *sba_find(uint8_t trx, uint8_t ts, uint32_t fn)
 	return NULL;
 }
 
-uint32_t sched_sba(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr)
+uint32_t SBAController::sched(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr)
 {
 	uint32_t sba_fn;
 	struct gprs_rlcmac_sba *sba;
@@ -103,14 +108,14 @@ uint32_t sched_sba(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr)
 	if ((block_nr % 3) == 2)
 		sba_fn ++;
 	sba_fn = sba_fn % 2715648;
-	sba = sba_find(trx, ts, sba_fn);
+	sba = find(trx, ts, sba_fn);
 	if (sba)
 		return sba_fn;
 
 	return 0xffffffff;
 }
 
-int gprs_rlcmac_sba_timeout(struct gprs_rlcmac_sba *sba)
+int SBAController::timeout(struct gprs_rlcmac_sba *sba)
 {
 	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for SBA\n");
 	llist_del(&sba->list);
@@ -119,3 +124,14 @@ int gprs_rlcmac_sba_timeout(struct gprs_rlcmac_sba *sba)
 	return 0;
 }
 
+void SBAController::free_resources(uint8_t trx, uint8_t ts)
+{
+	struct gprs_rlcmac_sba *sba, *sba2;
+
+	llist_for_each_entry_safe(sba, sba2, &m_sbas, list) {
+		if (sba->trx == trx && sba->ts == ts) {
+			llist_del(&sba->list);
+			talloc_free(sba);
+		}
+	}
+}

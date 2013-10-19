@@ -244,7 +244,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 				? "UL" : "DL", poll_tbf->tfi);
 		/* use free USF */
 	/* else. check for sba */
-	else if ((sba_fn = sched_sba(trx, ts, fn, block_nr) != 0xffffffff))
+	else if ((sba_fn = bts->bts->sba()->sched(trx, ts, fn, block_nr) != 0xffffffff))
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling free USF for "
 			"single block allocation at FN=%d\n", trx, ts, fn,

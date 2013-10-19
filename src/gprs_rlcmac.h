@@ -56,17 +56,6 @@ struct gprs_rlcmac_paging {
 };
 
 /*
- * single block allocation entry
- */
-struct gprs_rlcmac_sba {
-	struct llist_head list;
-	uint8_t trx;
-	uint8_t ts;
-	uint32_t fn;
-	uint8_t ta;
-};
-
-/*
  * coding scheme info
  */
 struct gprs_rlcmac_cs {
@@ -96,12 +85,6 @@ int gprs_rlcmac_rssi_rep(struct gprs_rlcmac_tbf *tbf);
 
 int gprs_rlcmac_dl_bw(struct gprs_rlcmac_tbf *tbf, uint16_t octets);
 
-int sba_alloc(struct gprs_rlcmac_bts *bts, uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta);
-
-struct gprs_rlcmac_sba *sba_find(uint8_t trx, uint8_t ts, uint32_t fn);
-
-uint32_t sched_sba(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr);
-
 /* TS 44.060 Section 10.4.7 Table 10.4.7.1: Payload Type field */
 enum gprs_rlcmac_block_type {
 	GPRS_RLCMAC_DATA_BLOCK = 0x0,
@@ -117,8 +100,6 @@ int gprs_rlcmac_rcv_block(struct gprs_rlcmac_bts *bts,
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
 int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf);
-
-int gprs_rlcmac_sba_timeout(struct gprs_rlcmac_sba *sba);
 
 int gprs_rlcmac_rcv_rach(struct gprs_rlcmac_bts *bts, uint8_t ra, uint32_t Fn, int16_t qta);
 

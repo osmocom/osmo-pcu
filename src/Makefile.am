@@ -84,7 +84,8 @@ noinst_HEADERS = \
 	bts.h \
 	poll_controller.h \
 	encoding.h \
-	ta.h
+	ta.h \
+	sba.h
 
 osmo_pcu_SOURCES = pcu_main.cpp
 

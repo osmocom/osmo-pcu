@@ -28,6 +28,7 @@ extern "C" {
 }
 
 #include "poll_controller.h"
+#include "sba.h"
 #include "ta.h"
 #endif
 
@@ -47,7 +48,7 @@ struct gprs_rlcmac_pdch {
 	void add_paging(struct gprs_rlcmac_paging *pag);
 
 	/* TODO: the PDCH should know the trx/ts it belongs to */
-	void free_resources(uint8_t trx, uint8_t ts);
+	void free_resources(BTS *bts, uint8_t trx, uint8_t ts);
 
 	bool is_enabled() const;
 
@@ -123,6 +124,7 @@ public:
 	static BTS* main_bts();
 
 	struct gprs_rlcmac_bts *bts_data();
+	SBAController *sba();
 	TimingAdvance *timing_advance();
 
 	/** TODO: change the number to unsigned */
@@ -136,6 +138,7 @@ private:
 	int m_cur_fn;
 	struct gprs_rlcmac_bts m_bts;
 	PollController m_pollController;
+	SBAController m_sba;
 	TimingAdvance m_ta;
 
 private:
@@ -152,6 +155,11 @@ inline int BTS::current_frame_number() const
 inline TimingAdvance *BTS::timing_advance()
 {
 	return &m_ta;
+}
+
+inline SBAController *BTS::sba()
+{
+	return &m_sba;
 }
 #endif
 

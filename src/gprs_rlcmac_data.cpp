@@ -382,7 +382,7 @@ int gprs_rlcmac_rcv_control_block(struct gprs_rlcmac_bts *bts,
 				LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
 					"in packet ressource request of single "
 					"block, so we provide one:\n");
-				sba = sba_find(trx, ts, fn);
+				sba = bts->bts->sba()->find(trx, ts, fn);
 				if (!sba) {
 					LOGP(DRLCMAC, LOGL_NOTICE, "MS requests UL TBF "
 						"in packet ressource request of single "
@@ -436,7 +436,7 @@ int gprs_rlcmac_rcv_control_block(struct gprs_rlcmac_bts *bts,
 		LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet ressource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
 		break;
 	case MT_PACKET_MEASUREMENT_REPORT:
-		sba = sba_find(trx, ts, fn);
+		sba = bts->bts->sba()->find(trx, ts, fn);
 		if (!sba) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
 				"in packet ressource request of single "
@@ -684,7 +684,7 @@ struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_bts *bts,
 				"final uplink ack...\n", tbf->tfi);
 			return NULL;
 		}
-		if (sba_find(tbf->trx_no, tbf->control_ts, (fn + 13) % 2715648)) {
+		if (bts->bts->sba()->find(tbf->trx_no, tbf->control_ts, (fn + 13) % 2715648)) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
 				"scheduled for single block allocation...\n");
 			return NULL;
@@ -961,7 +961,7 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 			"assignment...\n", tbf->tfi);
 			return NULL;
 	}
-	if (sba_find(tbf->trx_no, tbf->control_ts, (fn + 13) % 2715648)) {
+	if (bts->bts->sba()->find(tbf->trx_no, tbf->control_ts, (fn + 13) % 2715648)) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already scheduled for "
 			"single block allocation...\n");
 			return NULL;
@@ -1047,7 +1047,7 @@ int gprs_rlcmac_rcv_rach(struct gprs_rlcmac_bts *bts,
 	if (qta > 252)
 		qta = 252;
 	if (sb) {
-		rc = sba_alloc(bts, &trx, &ts, &sb_fn, qta >> 2);
+		rc = bts->bts->sba()->alloc(&trx, &ts, &sb_fn, qta >> 2);
 		if (rc < 0)
 			return rc;
 		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] RACH qbit-ta=%d "
@@ -1421,7 +1421,7 @@ tx_block:
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
 				"sheduled in this TS %d, waiting for "
 				"TS %d\n", ts, tbf->control_ts);
-		else if (sba_find(tbf->trx_no, ts, (fn + 13) % 2715648))
+		else if (bts->bts->sba()->find(tbf->trx_no, ts, (fn + 13) % 2715648))
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
 				"sheduled, because single block alllocation "
 				"already exists\n");
@@ -1633,7 +1633,7 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 				"assignment...\n", tbf->tfi);
 				return NULL;
 		}
-		if (sba_find(tbf->trx_no, tbf->control_ts, (fn + 13) % 2715648)) {
+		if (bts->bts->sba()->find(tbf->trx_no, tbf->control_ts, (fn + 13) % 2715648)) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
 				"scheduled for single block allocation...\n");
 			return NULL;

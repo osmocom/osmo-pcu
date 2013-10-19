@@ -84,7 +84,6 @@ enum gprs_rlcmac_tbf_direction {
 
 extern struct llist_head gprs_rlcmac_ul_tbfs; /* list of uplink TBFs */
 extern struct llist_head gprs_rlcmac_dl_tbfs; /* list of downlink TBFs */
-extern struct llist_head gprs_rlcmac_sbas; /* list of single block allocs */
 
 
 struct gprs_rlcmac_tbf {

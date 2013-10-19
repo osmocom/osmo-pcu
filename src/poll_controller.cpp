@@ -51,11 +51,11 @@ void PollController::expireTimedout(int frame_number)
 				gprs_rlcmac_poll_timeout(bts, tbf);
 		}
 	}
-	llist_for_each_entry_safe(sba, sba2, &gprs_rlcmac_sbas, list) {
+	llist_for_each_entry_safe(sba, sba2, &m_bts.sba()->m_sbas, list) {
 		elapsed = (frame_number + 2715648 - sba->fn) % 2715648;
 		if (elapsed >= 20 && elapsed < 2715400) {
 			/* sba will be freed here */
-			gprs_rlcmac_sba_timeout(sba);
+			m_bts.sba()->timeout(sba);
 		}
 	}
 

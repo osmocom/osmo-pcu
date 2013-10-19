@@ -64,6 +64,7 @@ struct gprs_rlcmac_bts *bts_main_data()
 BTS::BTS()
 	: m_cur_fn(0)
 	, m_pollController(*this)
+	, m_sba(*this)
 {
 	memset(&m_bts, 0, sizeof(m_bts));
 	m_bts.bts = this;
@@ -165,10 +166,10 @@ void gprs_rlcmac_pdch::disable()
 	m_is_enabled = 0;
 }
 
-void gprs_rlcmac_pdch::free_resources(uint8_t trx, uint8_t ts)
+/* TODO: kill the parameter and make a pdch belong to a trx.. to a bts.. */
+void gprs_rlcmac_pdch::free_resources(BTS *bts, uint8_t trx, uint8_t ts)
 {
 	struct gprs_rlcmac_paging *pag;
-	struct gprs_rlcmac_sba *sba, *sba2;
 
 	/* we are not enabled. there should be no resources */
 	if (!is_enabled())
@@ -181,12 +182,7 @@ void gprs_rlcmac_pdch::free_resources(uint8_t trx, uint8_t ts)
 	while ((pag = dequeue_paging()))
 		talloc_free(pag);
 
-	llist_for_each_entry_safe(sba, sba2, &gprs_rlcmac_sbas, list) {
-		if (sba->trx == trx && sba->ts == ts) {
-			llist_del(&sba->list);
-			talloc_free(sba);
-		}
-	}
+	bts->sba()->free_resources(trx, ts);
 }
 
 struct gprs_rlcmac_paging *gprs_rlcmac_pdch::dequeue_paging()
