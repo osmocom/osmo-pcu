@@ -22,6 +22,8 @@
 
 #include <stdint.h>
 
+struct bssgp_bvc_ctx;
+
 /*
  * TBF instance
  */
@@ -89,6 +91,10 @@ struct gprs_rlcmac_tbf {
 	bool state_is(enum gprs_rlcmac_tbf_state rhs) const;
 	bool state_is_not(enum gprs_rlcmac_tbf_state rhs) const;
 	void set_state(enum gprs_rlcmac_tbf_state new_state);
+
+	/* TODO: add the gettimeofday as parameter */
+	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
+	void update_llc_frame(struct msgb *msg);
 
 	int rlcmac_diag();
 
