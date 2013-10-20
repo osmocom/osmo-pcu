@@ -47,8 +47,7 @@ struct gprs_rlcmac_pdch {
 
 	void add_paging(struct gprs_rlcmac_paging *pag);
 
-	/* TODO: the PDCH should know the trx/ts it belongs to */
-	void free_resources(BTS *bts, uint8_t trx, uint8_t ts);
+	void free_resources();
 
 	bool is_enabled() const;
 

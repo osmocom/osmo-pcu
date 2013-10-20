@@ -35,8 +35,8 @@ struct gprs_rlcmac_sba;
  */
 struct gprs_rlcmac_sba {
 	struct llist_head list;
-	uint8_t trx;
-	uint8_t ts;
+	uint8_t trx_no;
+	uint8_t ts_no;
 	uint32_t fn;
 	uint8_t ta;
 };
@@ -57,7 +57,7 @@ public:
 	uint32_t sched(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr);
 
 	int timeout(struct gprs_rlcmac_sba *sba);
-	void free_resources(uint8_t trx, uint8_t ts);
+	void free_resources(struct gprs_rlcmac_pdch *pdch);
 
 private:
 	BTS &m_bts;

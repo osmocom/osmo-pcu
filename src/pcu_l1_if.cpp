@@ -321,7 +321,7 @@ bssgp_failed:
 		for (trx = 0; trx < 8; trx++) {
 			bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
 			for (ts = 0; ts < 8; ts++)
-				bts->trx[trx].pdch[ts].free_resources(bts->bts, trx, ts);
+				bts->trx[trx].pdch[ts].free_resources();
 		}
 		gprs_bssgp_destroy_or_exit();
 		return 0;
@@ -456,7 +456,7 @@ bssgp_failed:
 			} else {
 				if (pdch->is_enabled()) {
 					pcu_tx_act_req(trx, ts, 0);
-					pdch->free_resources(bts->bts, trx, ts);
+					pdch->free_resources();
 					pdch->disable();
 				}
 			}

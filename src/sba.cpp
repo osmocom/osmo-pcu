@@ -73,8 +73,8 @@ int SBAController::alloc(
 
 	fn = (pdch->last_rts_fn + AGCH_START_OFFSET) % 2715648;
 
-	sba->trx = trx;
-	sba->ts = ts;
+	sba->trx_no = trx;
+	sba->ts_no = ts;
 	sba->fn = fn;
 	sba->ta = ta;
 
@@ -91,7 +91,7 @@ gprs_rlcmac_sba *SBAController::find(uint8_t trx, uint8_t ts, uint32_t fn)
 	struct gprs_rlcmac_sba *sba;
 
 	llist_for_each_entry(sba, &m_sbas, list) {
-		if (sba->trx == trx && sba->ts == ts && sba->fn == fn)
+		if (sba->trx_no == trx && sba->ts_no == ts && sba->fn == fn)
 			return sba;
 	}
 
@@ -124,12 +124,14 @@ int SBAController::timeout(struct gprs_rlcmac_sba *sba)
 	return 0;
 }
 
-void SBAController::free_resources(uint8_t trx, uint8_t ts)
+void SBAController::free_resources(struct gprs_rlcmac_pdch *pdch)
 {
 	struct gprs_rlcmac_sba *sba, *sba2;
+	const uint8_t trx_no = pdch->trx->trx_no;
+	const uint8_t ts_no = pdch->ts_no;
 
 	llist_for_each_entry_safe(sba, sba2, &m_sbas, list) {
-		if (sba->trx == trx && sba->ts == ts) {
+		if (sba->trx_no == trx_no && sba->ts_no == ts_no) {
 			llist_del(&sba->list);
 			talloc_free(sba);
 		}

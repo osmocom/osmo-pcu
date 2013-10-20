@@ -226,7 +226,7 @@ void gprs_rlcmac_pdch::disable()
 }
 
 /* TODO: kill the parameter and make a pdch belong to a trx.. to a bts.. */
-void gprs_rlcmac_pdch::free_resources(BTS *bts, uint8_t trx, uint8_t ts)
+void gprs_rlcmac_pdch::free_resources()
 {
 	struct gprs_rlcmac_paging *pag;
 
@@ -241,7 +241,7 @@ void gprs_rlcmac_pdch::free_resources(BTS *bts, uint8_t trx, uint8_t ts)
 	while ((pag = dequeue_paging()))
 		talloc_free(pag);
 
-	bts->sba()->free_resources(trx, ts);
+	trx->bts->sba()->free_resources(this);
 }
 
 struct gprs_rlcmac_paging *gprs_rlcmac_pdch::dequeue_paging()
