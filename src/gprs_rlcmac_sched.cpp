@@ -220,6 +220,8 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	struct msgb *msg = NULL;
 	uint32_t poll_fn, sba_fn;
 
+#warning "ARFCN... it is already in the TRX..... is it consistent with it?"
+
 	if (trx >= 8 || ts >= 8)
 		return -EINVAL;
 	pdch = &bts->trx[trx].pdch[ts];
