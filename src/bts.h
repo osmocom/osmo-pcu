@@ -64,6 +64,10 @@ struct gprs_rlcmac_pdch {
 	struct gprs_rlcmac_tbf *dl_tbf[32]; /* array of DL TBF, by DL TFI */
 	struct llist_head paging_list; /* list of paging messages */
 	uint32_t last_rts_fn; /* store last frame number of RTS */
+
+	/* back pointers */
+	struct gprs_rlcmac_trx *trx;
+	uint8_t ts_no;
 };
 
 struct gprs_rlcmac_trx {
@@ -72,6 +76,10 @@ struct gprs_rlcmac_trx {
 	struct gprs_rlcmac_pdch pdch[8];
 	struct gprs_rlcmac_tbf *ul_tbf[32]; /* array of UL TBF, by UL TFI */
 	struct gprs_rlcmac_tbf *dl_tbf[32]; /* array of DL TBF, by DL TFI */
+
+	/* back pointers */
+	struct BTS *bts;
+	uint8_t trx_no;
 };
 
 /**

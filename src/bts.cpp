@@ -64,6 +64,19 @@ BTS::BTS()
 	INIT_LLIST_HEAD(&m_bts.ul_tbfs);
 	INIT_LLIST_HEAD(&m_bts.dl_tbfs);
 	m_bts.bts = this;
+
+	/* initialize back pointers */
+	for (size_t trx_no = 0; trx_no < ARRAY_SIZE(m_bts.trx); ++trx_no) {
+		struct gprs_rlcmac_trx *trx = &m_bts.trx[trx_no];
+		trx->trx_no = trx_no;
+		trx->bts = this;
+
+		for (size_t ts_no = 0; ts_no < ARRAY_SIZE(trx->pdch); ++ts_no) {
+			struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
+			pdch->ts_no = ts_no;
+			pdch->trx = trx;
+		}
+	}
 }
 
 void BTS::set_current_frame_number(int fn)
