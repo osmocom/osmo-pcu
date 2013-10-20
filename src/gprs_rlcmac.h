@@ -107,18 +107,16 @@ int gprs_rlcmac_rcv_control_block(struct gprs_rlcmac_bts *bts,
 	uint32_t fn);
 
 struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
-	struct gprs_rlcmac_bts *bts,
         struct gprs_rlcmac_tbf *tbf, uint32_t fn);
 
 struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
-	struct gprs_rlcmac_bts *bts,
         struct gprs_rlcmac_tbf *tbf, uint32_t fn);
 
-void gprs_rlcmac_trigger_downlink_assignment(struct gprs_rlcmac_bts *bts,
+void gprs_rlcmac_trigger_downlink_assignment(
 	struct gprs_rlcmac_tbf *tbf,
         struct gprs_rlcmac_tbf *old_tbf, const char *imsi);
 
-int gprs_rlcmac_downlink_ack(struct gprs_rlcmac_bts *bts,
+int gprs_rlcmac_downlink_ack(
 	struct gprs_rlcmac_tbf *tbf, uint8_t final,
         uint8_t ssn, uint8_t *rbb);
 
@@ -130,10 +128,9 @@ int gprs_rlcmac_rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
 	uint8_t *data, uint8_t len, int8_t rssi);
 
 struct msgb *gprs_rlcmac_send_data_block_acknowledged(
-	struct gprs_rlcmac_bts *bts,
         struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts);
 
-struct msgb *gprs_rlcmac_send_uplink_ack(struct gprs_rlcmac_bts *bts,
+struct msgb *gprs_rlcmac_send_uplink_ack(
 	struct gprs_rlcmac_tbf *tbf,
         uint32_t fn);
 

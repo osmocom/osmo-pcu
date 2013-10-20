@@ -119,17 +119,17 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_bts *bts,
 	/* schedule PACKET UPLINK ASSIGNMENT (1st priority) */
 	if (ul_ass_tbf) {
 		tbf = ul_ass_tbf;
-		msg = gprs_rlcmac_send_packet_uplink_assignment(bts, tbf, fn);
+		msg = gprs_rlcmac_send_packet_uplink_assignment(tbf, fn);
 	}
 	/* schedule PACKET DOWNLINK ASSIGNMENT (2nd priotiry) */
 	if (!msg && dl_ass_tbf) {
 		tbf = dl_ass_tbf;
-		msg = gprs_rlcmac_send_packet_downlink_assignment(bts, tbf, fn);
+		msg = gprs_rlcmac_send_packet_downlink_assignment(tbf, fn);
 	}
 	/* schedule PACKET UPLINK ACK (3rd priority) */
 	if (!msg && ul_ack_tbf) {
 		tbf = ul_ack_tbf;
-		msg = gprs_rlcmac_send_uplink_ack(bts, tbf, fn);
+		msg = gprs_rlcmac_send_uplink_ack(tbf, fn);
 	}
 	/* any message */
 	if (msg) {
@@ -182,8 +182,7 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		/* next TBF to handle ressource is the next one */
 		pdch->next_dl_tfi = (tfi + 1) & 31;
 		/* generate DL data block */
-		msg = gprs_rlcmac_send_data_block_acknowledged(bts, tbf, fn,
-			ts);
+		msg = gprs_rlcmac_send_data_block_acknowledged(tbf, fn, ts);
 		break;
 	}
 
