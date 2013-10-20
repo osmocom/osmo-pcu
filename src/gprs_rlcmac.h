@@ -65,8 +65,6 @@ struct gprs_rlcmac_cs {
 	uint8_t block_payload;
 };
 
-extern struct gprs_rlcmac_cs gprs_rlcmac_cs[];
-
 #ifdef DEBUG_DIAGRAM
 void debug_diagram(BTS *bts, int diag, const char *format, ...);
 #else

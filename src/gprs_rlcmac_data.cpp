@@ -25,6 +25,16 @@
 #include <encoding.h>
 #include <tbf.h>
 
+static struct gprs_rlcmac_cs gprs_rlcmac_cs[] = {
+/*	frame length	data block	max payload */
+	{ 0,		0,		0  },
+	{ 23,		23,		20 }, /* CS-1 */
+	{ 34,		33,		30 }, /* CS-2 */
+	{ 40,		39,		36 }, /* CS-3 */
+	{ 54,		53,		50 }, /* CS-4 */
+};
+
+
 extern void *tall_pcu_ctx;
 
 extern "C" {
