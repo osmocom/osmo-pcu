@@ -299,7 +299,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 			"assignment. This may not happen, because the "
 			"assignment message never gets transmitted. Please "
 			"be shure not to free in this state. PLEASE FIX!\n");
-	tbf_timer_stop(tbf);
+	tbf->stop_timer();
 	while ((msg = msgb_dequeue(&tbf->llc_queue)))
 		msgb_free(msg);
 	tbf_unlink_pdch(tbf);
@@ -392,13 +392,17 @@ void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
 	osmo_timer_schedule(&tbf->timer, seconds, microseconds);
 }
 
-void tbf_timer_stop(struct gprs_rlcmac_tbf *tbf)
+void gprs_rlcmac_tbf::stop_t3191()
 {
-	if (osmo_timer_pending(&tbf->timer)) {
+	return stop_timer();
+}
+
+void gprs_rlcmac_tbf::stop_timer()
+{
+	if (osmo_timer_pending(&timer)) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Stopping %s TBF=%d timer %u.\n",
-			(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL",
-			tbf->tfi, tbf->T);
-		osmo_timer_del(&tbf->timer);
+			(direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi, T);
+		osmo_timer_del(&timer);
 	}
 }
 

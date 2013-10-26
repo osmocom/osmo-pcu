@@ -928,7 +928,7 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 		tbf_new_state(new_tbf, GPRS_RLCMAC_FLOW);
 		tbf_assign_control_ts(new_tbf);
 		/* stop pending assignment timer */
-		tbf_timer_stop(new_tbf);
+		new_tbf->stop_timer();
 
 	}
 	debug_diagram(bts->bts, tbf->diag, "send DL-ASS");
@@ -968,7 +968,7 @@ void gprs_rlcmac_trigger_downlink_assignment(
 #endif
 
 	/* stop pending timer */
-	tbf_timer_stop(tbf);
+	tbf->stop_timer();
 
 	/* check for downlink tbf:  */
 	if (old_tbf) {

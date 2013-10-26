@@ -637,7 +637,7 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 			}
 			tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
 			/* stop pending assignment timer */
-			tbf_timer_stop(tbf);
+			tbf->stop_timer();
 			if ((tbf->state_flags &
 				(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS))) {
 				tbf->state_flags &=
@@ -698,8 +698,7 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 		}
 		/* reset N3105 */
 		tbf->n3105 = 0;
-		/* stop timer T3191 */
-		tbf_timer_stop(tbf);
+		tbf->stop_t3191();
 		tlli = tbf->tlli;
 		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Downlink Ack/Nack\n", tbf->tfi, tbf->tlli);
 		tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
