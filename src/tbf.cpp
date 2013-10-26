@@ -300,6 +300,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 			"assignment message never gets transmitted. Please "
 			"be shure not to free in this state. PLEASE FIX!\n");
 	tbf->stop_timer();
+	#warning "TODO: Could/Should generate  bssgp_tx_llc_discarded"
 	while ((msg = msgb_dequeue(&tbf->llc_queue)))
 		msgb_free(msg);
 	tbf_unlink_pdch(tbf);
