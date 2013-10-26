@@ -745,7 +745,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 				LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
 					"in packet ressource request of single "
 					"block, so we provide one:\n");
-				sba = bts()->sba()->find(trx_no(), ts_no, fn);
+				sba = bts()->sba()->find(this, fn);
 				if (!sba) {
 					LOGP(DRLCMAC, LOGL_NOTICE, "MS requests UL TBF "
 						"in packet ressource request of single "
@@ -799,7 +799,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 		LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet ressource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
 		break;
 	case MT_PACKET_MEASUREMENT_REPORT:
-		sba = bts()->sba()->find(trx_no(), ts_no, fn);
+		sba = bts()->sba()->find(this, fn);
 		if (!sba) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
 				"in packet ressource request of single "

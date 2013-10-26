@@ -98,6 +98,11 @@ gprs_rlcmac_sba *SBAController::find(uint8_t trx, uint8_t ts, uint32_t fn)
 	return NULL;
 }
 
+gprs_rlcmac_sba *SBAController::find(const gprs_rlcmac_pdch *pdch, uint32_t fn)
+{
+	return find(pdch->trx_no(), pdch->ts_no, fn);
+}
+
 uint32_t SBAController::sched(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr)
 {
 	uint32_t sba_fn;

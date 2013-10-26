@@ -29,6 +29,7 @@ extern "C" {
 class BTS;
 class PollController;
 struct gprs_rlcmac_sba;
+struct gprs_rlcmac_pdch;
 
 /*
  * single block allocation entry
@@ -53,6 +54,7 @@ public:
 
 	int alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta);
 	gprs_rlcmac_sba *find(uint8_t trx, uint8_t ts, uint32_t fn);
+	gprs_rlcmac_sba *find(const gprs_rlcmac_pdch *pdch, uint32_t fn);
 
 	uint32_t sched(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr);
 
