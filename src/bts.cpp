@@ -214,6 +214,28 @@ gprs_rlcmac_tbf *BTS::tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 	return NULL;
 }
 
+/* lookup TBF Entity (by TFI) */
+gprs_rlcmac_tbf *BTS::tbf_by_tfi(uint8_t tfi, uint8_t trx,
+				enum gprs_rlcmac_tbf_direction dir)
+{
+	struct gprs_rlcmac_tbf *tbf;
+
+	if (tfi >= 32 || trx >= 8)
+		return NULL;
+
+	if (dir == GPRS_RLCMAC_UL_TBF)
+		tbf = m_bts.trx[trx].ul_tbf[tfi];
+	else
+		tbf = m_bts.trx[trx].dl_tbf[tfi];
+	if (!tbf)
+		return NULL;
+
+	if (tbf->state_is_not(GPRS_RLCMAC_RELEASING))
+		return tbf;
+
+	return NULL;
+}
+
 
 /*
  * PDCH code below. TODO: move to a separate file
@@ -383,7 +405,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 	}
 
 	/* find TBF inst from given TFI */
-	tbf = tbf_by_tfi(bts_data(), rh->tfi, trx_no(), GPRS_RLCMAC_UL_TBF);
+	tbf = bts()->tbf_by_tfi(rh->tfi, trx_no(), GPRS_RLCMAC_UL_TBF);
 	if (!tbf) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA unknown TBF=%d\n",
 			rh->tfi);
@@ -782,14 +804,14 @@ int gprs_rlcmac_pdch::rcv_control_block(
 		} else {
 			if (ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.UnionType) {
 				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.DOWNLINK_TFI;
-				tbf = tbf_by_tfi(bts_data(), tfi, trx_no(), GPRS_RLCMAC_DL_TBF);
+				tbf = bts()->tbf_by_tfi(tfi, trx_no(), GPRS_RLCMAC_DL_TBF);
 				if (!tbf) {
 					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TBF=%d\n", tlli);
 					break;
 				}
 			} else {
 				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.UPLINK_TFI;
-				tbf = tbf_by_tfi(bts_data(), tfi, trx_no(), GPRS_RLCMAC_UL_TBF);
+				tbf = bts()->tbf_by_tfi(tfi, trx_no(), GPRS_RLCMAC_UL_TBF);
 				if (!tbf) {
 					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TBF=%d\n", tlli);
 					break;

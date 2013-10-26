@@ -407,28 +407,6 @@ void gprs_rlcmac_tbf::stop_timer()
 	}
 }
 
-/* lookup TBF Entity (by TFI) */
-struct gprs_rlcmac_tbf *tbf_by_tfi(struct gprs_rlcmac_bts *bts,
-	uint8_t tfi, uint8_t trx, enum gprs_rlcmac_tbf_direction dir)
-{
-	struct gprs_rlcmac_tbf *tbf;
-
-	if (tfi >= 32 || trx >= 8)
-		return NULL;
-
-	if (dir == GPRS_RLCMAC_UL_TBF)
-		tbf = bts->trx[trx].ul_tbf[tfi];
-	else
-		tbf = bts->trx[trx].dl_tbf[tfi];
-	if (!tbf)
-		return NULL;
-
-	if (tbf->state_is_not(GPRS_RLCMAC_RELEASING))
-		return tbf;
-
-	return NULL;
-}
-
 struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *old_tbf, enum gprs_rlcmac_tbf_direction dir,
 	uint8_t tfi, uint8_t trx,
