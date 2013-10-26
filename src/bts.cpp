@@ -331,6 +331,87 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	return 0;
 }
 
+int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
+{
+	struct gprs_rlcmac_tbf *tbf;
+	uint8_t trx, ts = 0;
+	int8_t tfi; /* must be signed */
+	uint8_t sb = 0;
+	uint32_t sb_fn = 0;
+	int rc;
+	uint8_t plen;
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, so we provide "
+		"one:\n");
+	if ((ra & 0xf8) == 0x70) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block "
+			"allocation\n");
+		sb = 1;
+	} else if (m_bts.force_two_phase) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single phase access, "
+			"but we force two phase access\n");
+		sb = 1;
+	}
+	if (qta < 0)
+		qta = 0;
+	if (qta > 252)
+		qta = 252;
+	if (sb) {
+		rc = sba()->alloc(&trx, &ts, &sb_fn, qta >> 2);
+		if (rc < 0)
+			return rc;
+		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] RACH qbit-ta=%d "
+			"ra=0x%02x, Fn=%d (%d,%d,%d)\n", qta, ra, Fn,
+			(Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
+		LOGP(DRLCMAC, LOGL_INFO, "TX: Immediate Assignment Uplink "
+			"(AGCH)\n");
+	} else {
+		// Create new TBF
+		#warning "Copy and pate with other routines.."
+		tfi = tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx, -1);
+		if (tfi < 0) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+			/* FIXME: send reject */
+			return -EBUSY;
+		}
+		/* set class to 0, since we don't know the multislot class yet */
+		tbf = tbf_alloc(&m_bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx, 0, 1);
+		if (!tbf) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+			/* FIXME: send reject */
+			return -EBUSY;
+		}
+		tbf->ta = qta >> 2;
+		tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
+		tbf_timer_start(tbf, 3169, m_bts.t3169, 0);
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] START TFI: %u\n",
+			tbf->tfi);
+		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u RACH "
+			"qbit-ta=%d ra=0x%02x, Fn=%d (%d,%d,%d)\n", tbf->tfi,
+			qta, ra, Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
+		LOGP(DRLCMAC, LOGL_INFO, "TX: START TFI: %u Immediate "
+			"Assignment Uplink (AGCH)\n", tbf->tfi);
+	}
+	bitvec *immediate_assignment = bitvec_alloc(22) /* without plen */;
+	bitvec_unhex(immediate_assignment,
+		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	if (sb)
+		plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
+			Fn, qta >> 2, m_bts.trx[trx].arfcn, ts,
+			m_bts.trx[trx].pdch[ts].tsc, 0, 0, 0, 0, sb_fn, 1,
+			m_bts.alpha, m_bts.gamma, -1);
+	else
+		plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
+			Fn, tbf->ta, tbf->arfcn, tbf->first_ts, tbf->tsc,
+			tbf->tfi, tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0, 0,
+			m_bts.alpha, m_bts.gamma, -1);
+	pcu_l1if_tx_agch(immediate_assignment, plen);
+	bitvec_free(immediate_assignment);
+
+	return 0;
+}
+
 /* depending on the current TBF, we assign on PACCH or AGCH */
 void BTS::trigger_dl_ass(
 	struct gprs_rlcmac_tbf *tbf,

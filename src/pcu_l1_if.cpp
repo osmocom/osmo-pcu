@@ -283,7 +283,7 @@ static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
 
 	switch (rach_ind->sapi) {
 	case PCU_IF_SAPI_RACH:
-		rc = gprs_rlcmac_rcv_rach(bts_main_data(),
+		rc = BTS::main_bts()->rcv_rach(
 			rach_ind->ra, rach_ind->fn,
 			rach_ind->qta);
 		break;
