@@ -92,10 +92,6 @@ enum gprs_rlcmac_block_type {
 	GPRS_RLCMAC_RESERVED = 0x3
 };
 
-int gprs_rlcmac_rcv_block(struct gprs_rlcmac_bts *bts,
-	uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
-	uint32_t fn, int8_t rssi);
-
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
 int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf);

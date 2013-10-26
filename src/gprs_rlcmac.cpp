@@ -168,39 +168,6 @@ int tfi_find_free(struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction di
 	return -1;
 }
 
-/* received RLC/MAC block from L1 */
-int gprs_rlcmac_rcv_block(struct gprs_rlcmac_bts *bts,
-	uint8_t trx, uint8_t ts, uint8_t *data, uint8_t len,
-	uint32_t fn, int8_t rssi)
-{
-	unsigned payload = data[0] >> 6;
-	bitvec *block;
-	int rc = 0;
-
-	switch (payload) {
-	case GPRS_RLCMAC_DATA_BLOCK:
-		rc = gprs_rlcmac_rcv_data_block_acknowledged(bts, trx, ts, data,
-			len, rssi);
-		break;
-	case GPRS_RLCMAC_CONTROL_BLOCK:
-		block = bitvec_alloc(len);
-		if (!block)
-			return -ENOMEM;
-		bitvec_unpack(block, data);
-		rc = gprs_rlcmac_rcv_control_block(bts, block, trx, ts, fn);
-		bitvec_free(block);
-		break;
-	case GPRS_RLCMAC_CONTROL_BLOCK_OPT:
-		LOGP(DRLCMAC, LOGL_NOTICE, "GPRS_RLCMAC_CONTROL_BLOCK_OPT block payload is not supported.\n");
-		break;
-	default:
-		LOGP(DRLCMAC, LOGL_NOTICE, "Unknown RLCMAC block payload(%u).\n", payload);
-		rc = -EINVAL;
-	}
-
-	return rc;
-}
-
 /* Send Uplink unit-data to SGSN. */
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 {

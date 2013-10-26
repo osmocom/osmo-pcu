@@ -340,8 +340,35 @@ void gprs_rlcmac_pdch::add_paging(struct gprs_rlcmac_paging *pag)
 	llist_add(&pag->list, &paging_list);
 }
 
+/* received RLC/MAC block from L1 */
 int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn, int8_t rssi)
 {
-	return gprs_rlcmac_rcv_block(trx->bts->bts_data(),
-					trx->trx_no, ts_no, data, len, fn, rssi);
+	struct gprs_rlcmac_bts *bts = trx->bts->bts_data();
+	unsigned payload = data[0] >> 6;
+	uint8_t trx_no = trx->trx_no;
+	bitvec *block;
+	int rc = 0;
+
+	switch (payload) {
+	case GPRS_RLCMAC_DATA_BLOCK:
+		rc = gprs_rlcmac_rcv_data_block_acknowledged(bts, trx_no, ts_no, data,
+			len, rssi);
+		break;
+	case GPRS_RLCMAC_CONTROL_BLOCK:
+		block = bitvec_alloc(len);
+		if (!block)
+			return -ENOMEM;
+		bitvec_unpack(block, data);
+		rc = gprs_rlcmac_rcv_control_block(bts, block, trx_no, ts_no, fn);
+		bitvec_free(block);
+		break;
+	case GPRS_RLCMAC_CONTROL_BLOCK_OPT:
+		LOGP(DRLCMAC, LOGL_NOTICE, "GPRS_RLCMAC_CONTROL_BLOCK_OPT block payload is not supported.\n");
+		break;
+	default:
+		LOGP(DRLCMAC, LOGL_NOTICE, "Unknown RLCMAC block payload(%u).\n", payload);
+		rc = -EINVAL;
+	}
+
+	return rc;
 }
