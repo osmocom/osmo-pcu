@@ -1010,7 +1010,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ack(uint32_t fn)
 	talloc_free(mac_control_block);
 
 	/* now we must set this flag, so we are allowed to assign downlink
-	 * TBF on PACCH. it is only allowed when TLLI is aknowledged. */
+	 * TBF on PACCH. it is only allowed when TLLI is acknowledged. */
 	dir.ul.contention_resolution_done = 1;
 
 	if (final) {
