@@ -50,11 +50,6 @@ static void gprs_rlcmac_downlink_assignment(
 	gprs_rlcmac_tbf *tbf, uint8_t poll,
 	const char *imsi);
 
-static int gprs_rlcmac_diag(struct gprs_rlcmac_tbf *tbf)
-{
-	return tbf->rlcmac_diag();
-}
-
 int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf)
 {
 	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for %s TBF=%d\n",
@@ -66,7 +61,7 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf
 		if (!(tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK))) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
 				"PACKET CONTROL ACK for PACKET UPLINK ACK\n");
-			gprs_rlcmac_diag(tbf);
+			tbf->rlcmac_diag();
 			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
 		}
 		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
@@ -90,7 +85,7 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
 				"PACKET CONTROL ACK for PACKET UPLINK "
 				"ASSIGNMENT.\n");
-			gprs_rlcmac_diag(tbf);
+			tbf->rlcmac_diag();
 			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
 		}
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
@@ -111,7 +106,7 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
 				"PACKET CONTROL ACK for PACKET DOWNLINK "
 				"ASSIGNMENT.\n");
-			gprs_rlcmac_diag(tbf);
+			tbf->rlcmac_diag();
 			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
 		}
 		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
@@ -131,7 +126,7 @@ int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf
 		if (!(tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
 				"PACKET DOWNLINK ACK.\n");
-			gprs_rlcmac_diag(tbf);
+			tbf->rlcmac_diag();
 			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 		}
 		debug_diagram(bts->bts, tbf->diag, "timeout DL-ACK");
