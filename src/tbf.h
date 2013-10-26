@@ -101,6 +101,8 @@ struct gprs_rlcmac_tbf {
 
 	int rlcmac_diag();
 
+	int update();
+
 	struct llist_head list;
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
@@ -227,8 +229,6 @@ struct gprs_rlcmac_tbf *tbf_by_tfi(struct gprs_rlcmac_bts *bts,
         enum gprs_rlcmac_tbf_direction dir);
 
 void tbf_free(struct gprs_rlcmac_tbf *tbf);
-
-int tbf_update(struct gprs_rlcmac_tbf *tbf);
 
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 

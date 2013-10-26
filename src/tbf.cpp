@@ -78,7 +78,7 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 		tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
 		tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
 		tbf_update_ms_class(tbf, ms_class);
-		tbf_update(tbf);
+		tbf->update();
 		gprs_rlcmac_trigger_downlink_assignment(tbf, tbf, NULL);
 	} else {
 		/* the TBF exists, so we must write it in the queue
@@ -306,26 +306,26 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	talloc_free(tbf);
 }
 
-int tbf_update(struct gprs_rlcmac_tbf *tbf)
+int gprs_rlcmac_tbf::update()
 {
 	struct gprs_rlcmac_tbf *ul_tbf = NULL;
-	gprs_rlcmac_bts *bts = tbf->bts->bts_data();
+	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
 	int rc;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF update **********\n");
 
-	if (tbf->direction != GPRS_RLCMAC_DL_TBF)
+	if (direction != GPRS_RLCMAC_DL_TBF)
 		return -EINVAL;
 
-	if (!tbf->ms_class) {
+	if (!ms_class) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "- Cannot update, no class\n");
 		return -EINVAL;
 	}
 
-	ul_tbf = bts->bts->tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF);
+	ul_tbf = bts->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
 
-	tbf_unlink_pdch(tbf);
-	rc = bts->alloc_algorithm(bts, ul_tbf, tbf, bts->alloc_algorithm_curst, 0);
+	tbf_unlink_pdch(this);
+	rc = bts_data->alloc_algorithm(bts_data, ul_tbf, this, bts_data->alloc_algorithm_curst, 0);
 	/* if no ressource */
 	if (rc < 0) {
 		LOGP(DRLCMAC, LOGL_ERROR, "No ressource after update???\n");
