@@ -129,7 +129,7 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_bts *bts,
 	/* schedule PACKET UPLINK ACK (3rd priority) */
 	if (!msg && ul_ack_tbf) {
 		tbf = ul_ack_tbf;
-		msg = gprs_rlcmac_send_uplink_ack(tbf, fn);
+		msg = tbf->create_ul_ack(fn);
 	}
 	/* any message */
 	if (msg) {

@@ -973,6 +973,59 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 	return msg;
 }
 
+struct msgb *gprs_rlcmac_tbf::create_ul_ack(uint32_t fn)
+{
+	int final = (state_is(GPRS_RLCMAC_FINISHED));
+	struct msgb *msg;
+
+	if (final) {
+		if (poll_state != GPRS_RLCMAC_POLL_NONE) {
+			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
+				"sheduled for TBF=%d, so we must wait for "
+				"final uplink ack...\n", tfi);
+			return NULL;
+		}
+		if (bts->sba()->find(trx_no, control_ts, (fn + 13) % 2715648)) {
+			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
+				"scheduled for single block allocation...\n");
+			return NULL;
+		}
+	}
+
+	msg = msgb_alloc(23, "rlcmac_ul_ack");
+	if (!msg)
+		return NULL;
+	bitvec *ack_vec = bitvec_alloc(23);
+	if (!ack_vec) {
+		msgb_free(msg);
+		return NULL;
+	}
+	bitvec_unhex(ack_vec,
+		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
+	Encoding::write_packet_uplink_ack(bts_data(), mac_control_block, this, final);
+	encode_gsm_rlcmac_downlink(ack_vec, mac_control_block);
+	bitvec_pack(ack_vec, msgb_put(msg, 23));
+	bitvec_free(ack_vec);
+	talloc_free(mac_control_block);
+
+	/* now we must set this flag, so we are allowed to assign downlink
+	 * TBF on PACCH. it is only allowed when TLLI is aknowledged. */
+	dir.ul.contention_resolution_done = 1;
+
+	if (final) {
+		poll_state = GPRS_RLCMAC_POLL_SCHED;
+		poll_fn = (fn + 13) % 2715648;
+		/* waiting for final acknowledge */
+		ul_ack_state = GPRS_RLCMAC_UL_ACK_WAIT_ACK;
+		dir.ul.final_ack_sent = 1;
+	} else
+		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
+	debug_diagram(bts->bts, diag, "send UL-ACK");
+
+	return msg;
+}
+
 void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_trx *trx)
 {
 	for (uint8_t tfi = 0; tfi < 32; tfi++) {
