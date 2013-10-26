@@ -102,10 +102,6 @@ struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
 struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
         struct gprs_rlcmac_tbf *tbf, uint32_t fn);
 
-void gprs_rlcmac_trigger_downlink_assignment(
-	struct gprs_rlcmac_tbf *tbf,
-        struct gprs_rlcmac_tbf *old_tbf, const char *imsi);
-
 int gprs_rlcmac_downlink_ack(
 	struct gprs_rlcmac_tbf *tbf, uint8_t final,
         uint8_t ssn, uint8_t *rbb);

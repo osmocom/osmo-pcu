@@ -170,6 +170,7 @@ public:
 
 	int rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn);
 
+	void trigger_dl_ass(gprs_rlcmac_tbf *tbf, gprs_rlcmac_tbf *old_tbf, const char *imsi);
 	void snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi);
 
 private:
