@@ -62,13 +62,13 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir, const int count)
 	for (int i = 0; i < count; ++i) {
 		struct gprs_rlcmac_tbf *tbf;
 
-		tfi = tfi_find_free(bts, dir, &used_trx, 0);
+		tfi = the_bts.tfi_find_free(dir, &used_trx, 0);
 		OSMO_ASSERT(tfi >= 0);
 		tbfs[i] = tbf_alloc(bts, NULL, dir, tfi, used_trx, 0, 0);
 	}
 
 	/* Now check that there are still some TFIs */
-	tfi = tfi_find_free(bts, dir, &used_trx, 0);
+	tfi = the_bts.tfi_find_free(dir, &used_trx, 0);
 	switch (dir) {
 	case GPRS_RLCMAC_UL_TBF:
 		OSMO_ASSERT(tfi >= 0);
@@ -83,7 +83,7 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir, const int count)
 		if (tbfs[i])
 			tbf_free(tbfs[i]);
 
-	tfi = tfi_find_free(bts, dir, &used_trx, 0);
+	tfi = the_bts.tfi_find_free(dir, &used_trx, 0);
 	OSMO_ASSERT(tfi >= 0);
 
 	tbfs[tfi] = tbf_alloc(bts, NULL, dir, tfi, used_trx, 0, 0);

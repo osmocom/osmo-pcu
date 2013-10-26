@@ -166,6 +166,8 @@ public:
 	gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
 	gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, uint8_t trx, enum gprs_rlcmac_tbf_direction dir);
 
+	int tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx);
+
 private:
 	int m_cur_fn;
 	struct gprs_rlcmac_bts m_bts;

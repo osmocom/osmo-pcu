@@ -113,61 +113,6 @@ void debug_diagram(BTS *bts, int diag, const char *format, ...)
 }
 #endif
 
-/* FIXME: spread resources over multiple TRX. Also add option to use same
- * TRX in case of existing TBF for TLLI in the other direction. */
-/* search for free TFI and return TFI, TRX */
-int tfi_find_free(struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction dir,
-		uint8_t *_trx, int8_t use_trx)
-{
-	struct gprs_rlcmac_pdch *pdch;
-	struct gprs_rlcmac_tbf **tbfp;
-	uint8_t trx_from, trx_to, trx, ts, tfi;
-
-	if (use_trx >= 0 && use_trx < 8)
-		trx_from = trx_to = use_trx;
-	else {
-		trx_from = 0;
-		trx_to = 7;
-	}
-
-	/* on TRX find first enabled TS */
-	for (trx = trx_from; trx <= trx_to; trx++) {
-		for (ts = 0; ts < 8; ts++) {
-			pdch = &bts->trx[trx].pdch[ts];
-			if (!pdch->is_enabled())
-				continue;
-			break;
-		}
-		if (ts < 8)
-			break;
-	}
-	if (trx > trx_to) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH available.\n");
-		return -EINVAL;
-	}
-
-
-	LOGP(DRLCMAC, LOGL_DEBUG, "Searching for first unallocated TFI: "
-		"TRX=%d first TS=%d\n", trx, ts);
-	if (dir == GPRS_RLCMAC_UL_TBF)
-		tbfp = bts->trx[trx].ul_tbf;
-	else
-		tbfp = bts->trx[trx].dl_tbf;
-	for (tfi = 0; tfi < 32; tfi++) {
-		if (!tbfp[tfi])
-			break;
-	}
-	
-	if (tfi < 32) {
-		LOGP(DRLCMAC, LOGL_DEBUG, " Found TFI=%d.\n", tfi);
-		*_trx = trx;
-		return tfi;
-	}
-	LOGP(DRLCMAC, LOGL_NOTICE, "No TFI available.\n");
-
-	return -1;
-}
-
 /* Send Uplink unit-data to SGSN. */
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 {

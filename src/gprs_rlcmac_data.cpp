@@ -334,7 +334,7 @@ int gprs_rlcmac_rcv_rach(struct gprs_rlcmac_bts *bts,
 	} else {
 		// Create new TBF
 		#warning "Copy and pate with other routines.."
-		tfi = tfi_find_free(bts, GPRS_RLCMAC_UL_TBF, &trx, -1);
+		tfi = bts->bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx, -1);
 		if (tfi < 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
 			/* FIXME: send reject */
