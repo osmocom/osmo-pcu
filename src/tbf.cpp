@@ -40,6 +40,8 @@ int bssgp_tx_llc_discarded(struct bssgp_bvc_ctx *bctx, uint32_t tlli,
 
 extern void *tall_pcu_ctx;
 
+static void tbf_timer_cb(void *_tbf);
+
 static inline void tbf_update_ms_class(struct gprs_rlcmac_tbf *tbf,
 					const uint8_t ms_class)
 {
@@ -508,38 +510,41 @@ next_diagram:
 	return tbf;
 }
 
-void tbf_timer_cb(void *_tbf)
+static void tbf_timer_cb(void *_tbf)
 {
 	struct gprs_rlcmac_tbf *tbf = (struct gprs_rlcmac_tbf *)_tbf;
+	tbf->handle_timeout();
+}
 
+void gprs_rlcmac_tbf::handle_timeout()
+{
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s TBF=%d timer %u expired.\n",
-		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
-		tbf->T);
+		(direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi, T);
 
-	tbf->num_T_exp++;
+	num_T_exp++;
 
-	switch (tbf->T) {
+	switch (T) {
 #ifdef DEBUG_DL_ASS_IDLE
 	case 1234:
 		gprs_rlcmac_trigger_downlink_assignment(tbf, NULL, debug_imsi);
 		break;
 #endif
 	case 0: /* assignment */
-		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
-			if (tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
+		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
+			if (state_is(GPRS_RLCMAC_ASSIGN)) {
 				LOGP(DRLCMAC, LOGL_NOTICE, "Releasing due to "
 					"PACCH assignment timeout.\n");
-				tbf_free(tbf);
+				tbf_free(this);
 			} else
 				LOGP(DRLCMAC, LOGL_ERROR, "Error: TBF is not "
 					"in assign state\n");
 		}
-		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
+		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
 			/* change state to FLOW, so scheduler will start transmission */
-			tbf->dir.dl.wait_confirm = 0;
-			if (tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
-				tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
-				tbf_assign_control_ts(tbf);
+			dir.dl.wait_confirm = 0;
+			if (state_is(GPRS_RLCMAC_ASSIGN)) {
+				tbf_new_state(this, GPRS_RLCMAC_FLOW);
+				tbf_assign_control_ts(this);
 			} else
 				LOGP(DRLCMAC, LOGL_NOTICE, "Continue flow after "
 					"IMM.ASS confirm\n");
@@ -549,19 +554,18 @@ void tbf_timer_cb(void *_tbf)
 	case 3191:
 	case 3195:
 		LOGP(DRLCMAC, LOGL_NOTICE, "TBF T%d timeout during "
-			"transsmission\n", tbf->T);
-		tbf->rlcmac_diag();
+			"transsmission\n", T);
+		rlcmac_diag();
 		/* fall through */
 	case 3193:
-		if (tbf->T == 3193)
-		        debug_diagram(tbf->bts, tbf->diag, "T3193 timeout");
+		if (T == 3193)
+		        debug_diagram(bts, diag, "T3193 timeout");
 		LOGP(DRLCMAC, LOGL_DEBUG, "TBF will be freed due to timeout\n");
 		/* free TBF */
-		tbf_free(tbf);
+		tbf_free(this);
 		break;
 	default:
-		LOGP(DRLCMAC, LOGL_ERROR, "Timer expired in unknown mode: %u\n",
-			tbf->T);
+		LOGP(DRLCMAC, LOGL_ERROR, "Timer expired in unknown mode: %u\n", T);
 	}
 }
 

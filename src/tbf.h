@@ -102,6 +102,7 @@ struct gprs_rlcmac_tbf {
 	int rlcmac_diag();
 
 	int update();
+	void handle_timeout();
 
 	struct llist_head list;
 	uint32_t state_flags;
@@ -239,9 +240,6 @@ void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
                         unsigned int seconds, unsigned int microseconds);
 
 void tbf_timer_stop(struct gprs_rlcmac_tbf *tbf);
-
-void tbf_timer_cb(void *_tbf);
-
 
 inline bool gprs_rlcmac_tbf::state_is(enum gprs_rlcmac_tbf_state rhs) const
 {
