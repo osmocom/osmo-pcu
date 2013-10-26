@@ -21,6 +21,7 @@
 
 #include <bts.h>
 #include <tbf.h>
+#include <rlc.h>
 #include <gprs_rlcmac.h>
 #include <gprs_debug.h>
 
@@ -624,6 +625,172 @@ void gprs_rlcmac_tbf::update_llc_frame(struct msgb *msg)
 	/* TODO: bounds check */
 	memcpy(llc_frame, msg->data, msg->len);
 	llc_length = msg->len;
+}
+
+/*
+ * Store received block data in LLC message(s) and forward to SGSN
+ * if complete.
+ */
+int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
+{
+	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
+	uint8_t e, m;
+	struct rlc_li_field *li;
+	uint8_t frame_offset[16], offset = 0, chunk;
+	int i, frames = 0;
+
+	LOGP(DRLCMACUL, LOGL_DEBUG, "- Assembling frames: (len=%d)\n", len);
+
+	data += 3;
+	len -= 3;
+	e = rh->e; /* if extended */
+	m = 1; /* more frames, that means: the first frame */
+
+	/* Parse frame offsets from length indicator(s), if any. */
+	while (1) {
+		if (frames == (int)sizeof(frame_offset)) {
+			LOGP(DRLCMACUL, LOGL_ERROR, "Too many frames in "
+				"block\n");
+			return -EINVAL;
+		}
+		frame_offset[frames++] = offset;
+		LOGP(DRLCMACUL, LOGL_DEBUG, "-- Frame %d starts at offset "
+			"%d\n", frames, offset);
+		if (!len)
+			break;
+		/* M == 0 and E == 0 is not allowed in this version. */
+		if (!m && !e) {
+			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TBF=%d "
+				"ignored, because M='0' and E='0'.\n",
+				this->tfi);
+			return 0;
+		}
+		/* no more frames in this segment */
+		if (e) {
+			break;
+		}
+		/* There is a new frame and an LI that delimits it. */
+		if (m) {
+			li = (struct rlc_li_field *)data;
+			LOGP(DRLCMACUL, LOGL_DEBUG, "-- Delimiter len=%d\n",
+				li->li);
+			/* Special case: LI == 0
+			 * If the last segment would fit precisely into the
+			 * rest of the RLC MAC block, there would be no way
+			 * to delimit that this segment ends and is not
+			 * continued in the next block.
+			 * The special LI (0) is used to force the segment to
+			 * extend into the next block, so it is delimited there.
+			 * This LI must be skipped. Also it is the last LI.
+			 */
+			if (li->li == 0) {
+				data++;
+				len--;
+				m = 1; /* M is ignored, we know there is more */
+				break; /* handle E as '1', so we break! */
+			}
+			e = li->e;
+			m = li->m;
+			offset += li->li;
+			data++;
+			len--;
+			continue;
+		}
+	}
+	if (!m) {
+		LOGP(DRLCMACUL, LOGL_DEBUG, "- Last frame carries spare "
+			"data\n");
+	}
+
+	LOGP(DRLCMACUL, LOGL_DEBUG, "- Data length after length fields: %d\n",
+		len);
+	/* TLLI */
+	if (rh->ti) {
+		if (len < 4) {
+			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TLLI out of "
+				"frame border\n");
+			return -EINVAL;
+		}
+		data += 4;
+		len -= 4;
+		LOGP(DRLCMACUL, LOGL_DEBUG, "- Length after skipping TLLI: "
+			"%d\n", len);
+	}
+
+	/* PFI */
+	if (rh->pi) {
+		LOGP(DRLCMACUL, LOGL_ERROR, "ERROR: PFI not supported, "
+			"please disable in SYSTEM INFORMATION\n");
+		if (len < 1) {
+			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA PFI out of "
+				"frame border\n");
+			return -EINVAL;
+		}
+		data++;
+		len--;
+		LOGP(DRLCMACUL, LOGL_DEBUG, "- Length after skipping PFI: "
+			"%d\n", len);
+	}
+
+	/* Now we have:
+	 * - a list of frames offsets: frame_offset[]
+	 * - number of frames: i
+	 * - m == 0: Last frame carries spare data (end of TBF).
+	 */
+
+	/* Check if last offset would exceed frame. */
+	if (offset > len) {
+		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TBF=%d ignored, "
+			"because LI delimits data that exceeds block size.\n",
+			this->tfi);
+		return -EINVAL;
+	}
+
+	/* create LLC frames */
+	for (i = 0; i < frames; i++) {
+		/* last frame ? */
+		if (i == frames - 1) {
+			/* no more data in last frame */
+			if (!m)
+				break;
+			/* data until end of frame */
+			chunk = len - frame_offset[i];
+		} else {
+			/* data until next frame */
+			chunk = frame_offset[i + 1] - frame_offset[i];
+		}
+		LOGP(DRLCMACUL, LOGL_DEBUG, "-- Appending chunk (len=%d) to "
+			"frame at %d.\n", chunk, this->llc_index);
+		if (this->llc_index + chunk > LLC_MAX_LEN) {
+			LOGP(DRLCMACUL, LOGL_NOTICE, "LLC frame exceeds "
+				"maximum size.\n");
+			chunk = LLC_MAX_LEN - this->llc_index;
+		}
+		memcpy(this->llc_frame + this->llc_index, data + frame_offset[i],
+			chunk);
+		this->llc_index += chunk;
+		/* not last frame. */
+		if (i != frames - 1) {
+			/* send frame to SGSN */
+			LOGP(DRLCMACUL, LOGL_INFO, "Complete UL frame for "
+				"TBF=%d: len=%d\n", this->tfi, this->llc_index);
+			gprs_rlcmac_tx_ul_ud(this);
+			this->llc_index = 0; /* reset frame space */
+		/* also check if CV==0, because the frame may fill up the
+		 * block precisely, then it is also complete. normally the
+		 * frame would be extended into the next block with a 0-length
+		 * delimiter added to this block. */
+		} else if (rh->cv == 0) {
+			/* send frame to SGSN */
+			LOGP(DRLCMACUL, LOGL_INFO, "Complete UL frame for "
+				"TBF=%d that fits precisely in last block: "
+				"len=%d\n", this->tfi, this->llc_index);
+			gprs_rlcmac_tx_ul_ud(this);
+			this->llc_index = 0; /* reset frame space */
+		}
+	}
+
+	return 0;
 }
 
 void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_trx *trx)

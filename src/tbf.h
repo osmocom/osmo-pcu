@@ -96,6 +96,9 @@ struct gprs_rlcmac_tbf {
 	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
 	void update_llc_frame(struct msgb *msg);
 
+	/* TODO: extract LLC class? */
+	int assemble_forward_llc(uint8_t *data, uint8_t len);
+
 	int rlcmac_diag();
 
 	struct llist_head list;

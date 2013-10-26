@@ -47,7 +47,8 @@ libgprs_la_SOURCES = \
 	poll_controller.cpp \
 	encoding.cpp \
 	ta.cpp \
-	sba.cpp
+	sba.cpp \
+	decoding.cpp
 
 if ENABLE_SYSMOBTS
 libgprs_la_SOURCES += \
@@ -85,7 +86,9 @@ noinst_HEADERS = \
 	poll_controller.h \
 	encoding.h \
 	ta.h \
-	sba.h
+	sba.h \
+	rlc.h \
+	decoding.h
 
 osmo_pcu_SOURCES = pcu_main.cpp
 

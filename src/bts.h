@@ -70,6 +70,14 @@ struct gprs_rlcmac_pdch {
 	/* back pointers */
 	struct gprs_rlcmac_trx *trx;
 	uint8_t ts_no;
+
+#ifdef __cplusplus
+private:
+	int rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
+				uint8_t trx, uint8_t ts,
+				uint8_t *data, uint8_t len, int8_t rssi);
+
+#endif
 };
 
 struct gprs_rlcmac_trx {
