@@ -46,114 +46,6 @@ extern void *tall_pcu_ctx;
 #define POLLING_ASSIGNMENT_UL 1
 
 
-static void gprs_rlcmac_downlink_assignment(
-	gprs_rlcmac_tbf *tbf, uint8_t poll,
-	const char *imsi);
-
-int gprs_rlcmac_poll_timeout(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf)
-{
-	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for %s TBF=%d\n",
-		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi);
-
-	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
-
-	if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
-		if (!(tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK))) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
-				"PACKET CONTROL ACK for PACKET UPLINK ACK\n");
-			tbf->rlcmac_diag();
-			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
-		}
-		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
-		debug_diagram(bts->bts, tbf->diag, "timeout UL-ACK");
-		if (tbf->state_is(GPRS_RLCMAC_FINISHED)) {
-			tbf->dir.ul.n3103++;
-			if (tbf->dir.ul.n3103 == bts->n3103) {
-				LOGP(DRLCMAC, LOGL_NOTICE,
-					"- N3103 exceeded\n");
-				debug_diagram(bts->bts, tbf->diag, "N3103 exceeded");
-				tbf_new_state(tbf, GPRS_RLCMAC_RELEASING);
-				tbf_timer_start(tbf, 3169, bts->t3169, 0);
-				return 0;
-			}
-			/* reschedule UL ack */
-			tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
-		}
-	} else
-	if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
-		if (!(tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS))) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
-				"PACKET CONTROL ACK for PACKET UPLINK "
-				"ASSIGNMENT.\n");
-			tbf->rlcmac_diag();
-			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
-		}
-		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
-		debug_diagram(tbf->bts, tbf->diag, "timeout UL-ASS");
-		tbf->n3105++;
-		if (tbf->n3105 == bts->n3105) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
-			debug_diagram(bts->bts, tbf->diag, "N3105 exceeded");
-			tbf_new_state(tbf, GPRS_RLCMAC_RELEASING);
-			tbf_timer_start(tbf, 3195, bts->t3195, 0);
-			return 0;
-		}
-		/* reschedule UL assignment */
-		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
-	} else
-	if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
-		if (!(tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS))) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
-				"PACKET CONTROL ACK for PACKET DOWNLINK "
-				"ASSIGNMENT.\n");
-			tbf->rlcmac_diag();
-			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
-		}
-		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-		debug_diagram(bts->bts, tbf->diag, "timeout DL-ASS");
-		tbf->n3105++;
-		if (tbf->n3105 == bts->n3105) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
-			debug_diagram(bts->bts, tbf->diag, "N3105 exceeded");
-			tbf_new_state(tbf, GPRS_RLCMAC_RELEASING);
-			tbf_timer_start(tbf, 3195, bts->t3195, 0);
-			return 0;
-		}
-		/* reschedule DL assignment */
-		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
-	} else
-	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
-		if (!(tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
-				"PACKET DOWNLINK ACK.\n");
-			tbf->rlcmac_diag();
-			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
-		}
-		debug_diagram(bts->bts, tbf->diag, "timeout DL-ACK");
-		tbf->n3105++;
-		if (tbf->n3105 == bts->n3105) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
-			debug_diagram(bts->bts, tbf->diag, "N3105 exceeded");
-			tbf_new_state(tbf, GPRS_RLCMAC_RELEASING);
-			tbf_timer_start(tbf, 3195, bts->t3195, 0);
-			return 0;
-		}
-		/* resend IMM.ASS on CCCH on timeout */
-		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
-		 && !(tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "Re-send dowlink assignment "
-				"for TBF=%d on PCH (IMSI=%s)\n", tbf->tfi,
-				tbf->dir.dl.imsi);
-			/* send immediate assignment */
-			gprs_rlcmac_downlink_assignment(tbf, 0, tbf->dir.dl.imsi);
-			tbf->dir.dl.wait_confirm = 1;
-		}
-	} else
-		LOGP(DRLCMAC, LOGL_ERROR, "- Poll Timeout, but no event!\n");
-
-	return 0;
-}
-
 #ifdef DEBUG_DL_ASS_IDLE
 	char debug_imsi[16];
 #endif
@@ -931,27 +823,6 @@ struct msgb *gprs_rlcmac_send_packet_downlink_assignment(
 	return msg;
 }
 
-static void gprs_rlcmac_downlink_assignment(
-	gprs_rlcmac_tbf *tbf, uint8_t poll,
-	const char *imsi)
-{
-	gprs_rlcmac_bts *bts = tbf->bts->bts_data();
-	int plen;
-
-	debug_diagram(bts->bts, tbf->diag, "IMM.ASS (PCH)");
-	LOGP(DRLCMAC, LOGL_INFO, "TX: START TFI: %u TLLI: 0x%08x Immediate Assignment Downlink (PCH)\n", tbf->tfi, tbf->tlli);
-	bitvec *immediate_assignment = bitvec_alloc(22); /* without plen */
-	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	/* use request reference that has maximum distance to current time,
-	 * so the assignment will not conflict with possible RACH requests. */
-	plen = Encoding::write_immediate_assignment(bts, immediate_assignment, 1, 125,
-		(tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta,
-		tbf->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, 0, tbf->tlli, poll,
-		tbf->poll_fn, 0, bts->alpha, bts->gamma, -1);
-	pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
-	bitvec_free(immediate_assignment);
-}
-
 /* depending on the current TBF, we assign on PACCH or AGCH */
 void gprs_rlcmac_trigger_downlink_assignment(
 	struct gprs_rlcmac_tbf *tbf,
@@ -997,7 +868,7 @@ void gprs_rlcmac_trigger_downlink_assignment(
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
 		strncpy(tbf->dir.dl.imsi, imsi, sizeof(tbf->dir.dl.imsi));
 		/* send immediate assignment */
-		gprs_rlcmac_downlink_assignment(tbf, 0, imsi);
+		tbf->bts->snd_dl_ass(tbf, 0, imsi);
 		tbf->dir.dl.wait_confirm = 1;
 	}
 }

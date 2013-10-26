@@ -24,6 +24,7 @@
 #include <encoding.h>
 #include <decoding.h>
 #include <rlc.h>
+#include <pcu_l1_if.h>
 
 #include <gprs_rlcmac.h>
 #include <gprs_debug.h>
@@ -328,6 +329,24 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 		tbf_timer_start(tbf, 0, Tassign_agch);
 
 	return 0;
+}
+
+void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
+{
+	int plen;
+
+	debug_diagram(this, tbf->diag, "IMM.ASS (PCH)");
+	LOGP(DRLCMAC, LOGL_INFO, "TX: START TFI: %u TLLI: 0x%08x Immediate Assignment Downlink (PCH)\n", tbf->tfi, tbf->tlli);
+	bitvec *immediate_assignment = bitvec_alloc(22); /* without plen */
+	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	/* use request reference that has maximum distance to current time,
+	 * so the assignment will not conflict with possible RACH requests. */
+	plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 1, 125,
+		(tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta,
+		tbf->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, 0, tbf->tlli, poll,
+		tbf->poll_fn, 0, m_bts.alpha, m_bts.gamma, -1);
+	pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
+	bitvec_free(immediate_assignment);
 }
 
 

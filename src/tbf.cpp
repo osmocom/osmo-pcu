@@ -42,6 +42,11 @@ extern void *tall_pcu_ctx;
 
 static void tbf_timer_cb(void *_tbf);
 
+inline gprs_rlcmac_bts *gprs_rlcmac_tbf::bts_data() const
+{
+	return bts->bts_data();
+}
+
 static inline void tbf_update_ms_class(struct gprs_rlcmac_tbf *tbf,
 					const uint8_t ms_class)
 {
@@ -405,6 +410,105 @@ void gprs_rlcmac_tbf::stop_timer()
 			(direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi, T);
 		osmo_timer_del(&timer);
 	}
+}
+
+void gprs_rlcmac_tbf::poll_timeout()
+{
+	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for %s TBF=%d\n",
+		(direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi);
+
+	poll_state = GPRS_RLCMAC_POLL_NONE;
+
+	if (ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
+		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK))) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
+				"PACKET CONTROL ACK for PACKET UPLINK ACK\n");
+			rlcmac_diag();
+			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
+		}
+		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
+		debug_diagram(bts, this->diag, "timeout UL-ACK");
+		if (state_is(GPRS_RLCMAC_FINISHED)) {
+			dir.ul.n3103++;
+			if (dir.ul.n3103 == bts->bts_data()->n3103) {
+				LOGP(DRLCMAC, LOGL_NOTICE,
+					"- N3103 exceeded\n");
+				debug_diagram(bts, diag, "N3103 exceeded");
+				tbf_new_state(this, GPRS_RLCMAC_RELEASING);
+				tbf_timer_start(this, 3169, bts->bts_data()->t3169, 0);
+				return;
+			}
+			/* reschedule UL ack */
+			ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
+		}
+	} else if (ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
+		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS))) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
+				"PACKET CONTROL ACK for PACKET UPLINK "
+				"ASSIGNMENT.\n");
+			rlcmac_diag();
+			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
+		}
+		ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+		debug_diagram(bts, diag, "timeout UL-ASS");
+		n3105++;
+		if (n3105 == bts_data()->n3105) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
+			debug_diagram(bts, diag, "N3105 exceeded");
+			tbf_new_state(this, GPRS_RLCMAC_RELEASING);
+			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
+			return;
+		}
+		/* reschedule UL assignment */
+		ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+	} else if (dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
+		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS))) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
+				"PACKET CONTROL ACK for PACKET DOWNLINK "
+				"ASSIGNMENT.\n");
+			rlcmac_diag();
+			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
+		}
+		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+		debug_diagram(bts, diag, "timeout DL-ASS");
+		n3105++;
+		if (n3105 == bts->bts_data()->n3105) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
+			debug_diagram(bts, diag, "N3105 exceeded");
+			tbf_new_state(this, GPRS_RLCMAC_RELEASING);
+			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
+			return;
+		}
+		/* reschedule DL assignment */
+		dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
+	} else if (direction == GPRS_RLCMAC_DL_TBF) {
+		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
+				"PACKET DOWNLINK ACK.\n");
+			rlcmac_diag();
+			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
+		}
+		debug_diagram(bts, diag, "timeout DL-ACK");
+		n3105++;
+		if (n3105 == bts->bts_data()->n3105) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
+			debug_diagram(bts, diag, "N3105 exceeded");
+			tbf_new_state(this, GPRS_RLCMAC_RELEASING);
+			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
+			return;
+		}
+		/* resend IMM.ASS on CCCH on timeout */
+		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
+		 && !(state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "Re-send dowlink assignment "
+				"for TBF=%d on PCH (IMSI=%s)\n", tfi,
+				dir.dl.imsi);
+			/* send immediate assignment */
+			bts->snd_dl_ass(this, 0, dir.dl.imsi);
+			dir.dl.wait_confirm = 1;
+		}
+	} else
+		LOGP(DRLCMAC, LOGL_ERROR, "- Poll Timeout, but no event!\n");
 }
 
 struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,

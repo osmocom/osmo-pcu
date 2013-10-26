@@ -106,6 +106,8 @@ struct gprs_rlcmac_tbf {
 	void stop_timer();
 	void stop_t3191();
 
+	void poll_timeout();
+
 	struct llist_head list;
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
@@ -207,6 +209,9 @@ struct gprs_rlcmac_tbf {
 
 	/* store the BTS this TBF belongs to */
 	BTS *bts;
+
+protected:
+	gprs_rlcmac_bts *bts_data() const;
 };
 
 
