@@ -339,3 +339,9 @@ void gprs_rlcmac_pdch::add_paging(struct gprs_rlcmac_paging *pag)
 {
 	llist_add(&pag->list, &paging_list);
 }
+
+int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn, int8_t rssi)
+{
+	return gprs_rlcmac_rcv_block(trx->bts->bts_data(),
+					trx->trx_no, ts_no, data, len, fn, rssi);
+}

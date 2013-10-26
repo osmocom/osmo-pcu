@@ -53,6 +53,9 @@ struct gprs_rlcmac_pdch {
 
 	void enable();
 	void disable();
+
+	/* dispatching of messages */
+	int rcv_block(uint8_t *data, uint8_t len, uint32_t fn, int8_t rssi);
 #endif
 
 	uint8_t m_is_enabled; /* TS is enabled */
