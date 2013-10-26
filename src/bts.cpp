@@ -354,7 +354,7 @@ void gprs_rlcmac_pdch::add_paging(struct gprs_rlcmac_paging *pag)
  *
  * The blocks are defragmented and forwarded as LLC frames, if complete.
  */
-int gprs_rlcmac_pdch::rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
+int gprs_rlcmac_pdch::rcv_data_block_acknowledged(
 	uint8_t trx, uint8_t ts,
 	uint8_t *data, uint8_t len, int8_t rssi)
 {
@@ -385,7 +385,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
 	}
 
 	/* find TBF inst from given TFI */
-	tbf = tbf_by_tfi(bts, rh->tfi, trx, GPRS_RLCMAC_UL_TBF);
+	tbf = tbf_by_tfi(bts_data(), rh->tfi, trx, GPRS_RLCMAC_UL_TBF);
 	if (!tbf) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA unknown TBF=%d\n",
 			rh->tfi);
@@ -417,7 +417,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
 		}
 		LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
 			"UL DATA TBF=%d.\n", tbf->tlli, rh->tfi);
-		if ((dl_tbf = bts->bts->tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_DL_TBF))) {
+		if ((dl_tbf = bts()->tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_DL_TBF))) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 				"TLLI=0x%08x while DL TBF=%d still exists. "
 				"Killing pending DL TBF\n", tbf->tlli,
@@ -426,7 +426,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
 		}
 		/* tbf_by_tlli will not find your TLLI, because it is not
 		 * yet marked valid */
-		if ((ul_tbf = bts->bts->tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF))) {
+		if ((ul_tbf = bts()->tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF))) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 				"TLLI=0x%08x while UL TBF=%d still exists. "
 				"Killing pending UL TBF\n", tbf->tlli,
@@ -436,7 +436,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
 		/* mark TLLI valid now */
 		tbf->tlli_valid = 1;
 		/* store current timing advance */
-		bts->bts->timing_advance()->remember(tbf->tlli, tbf->ta);
+		bts()->timing_advance()->remember(tbf->tlli, tbf->ta);
 	/* already have TLLI, but we stille get another one */
 	} else if (rh->ti) {
 		uint32_t tlli;
@@ -458,7 +458,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
 	mod_sns_half = (tbf->sns >> 1) - 1;
 
 	/* restart T3169 */
-	tbf_timer_start(tbf, 3169, bts->t3169, 0);
+	tbf_timer_start(tbf, 3169, bts_data()->t3169, 0);
 
 	/* Increment RX-counter */
 	tbf->dir.ul.rx_counter++;
@@ -834,7 +834,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn, int8_t 
 
 	switch (payload) {
 	case GPRS_RLCMAC_DATA_BLOCK:
-		rc = rcv_data_block_acknowledged(bts, trx_no, ts_no, data, len, rssi);
+		rc = rcv_data_block_acknowledged(trx_no, ts_no, data, len, rssi);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK:
 		block = bitvec_alloc(len);

@@ -56,6 +56,9 @@ struct gprs_rlcmac_pdch {
 
 	/* dispatching of messages */
 	int rcv_block(uint8_t *data, uint8_t len, uint32_t fn, int8_t rssi);
+
+	gprs_rlcmac_bts *bts_data() const;
+	BTS *bts() const;
 #endif
 
 	uint8_t m_is_enabled; /* TS is enabled */
@@ -73,7 +76,7 @@ struct gprs_rlcmac_pdch {
 
 #ifdef __cplusplus
 private:
-	int rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
+	int rcv_data_block_acknowledged(
 				uint8_t trx, uint8_t ts,
 				uint8_t *data, uint8_t len, int8_t rssi);
 	int rcv_control_block(struct gprs_rlcmac_bts *bts,
@@ -191,6 +194,16 @@ inline TimingAdvance *BTS::timing_advance()
 inline SBAController *BTS::sba()
 {
 	return &m_sba;
+}
+
+inline BTS *gprs_rlcmac_pdch::bts() const
+{
+	return trx->bts;
+}
+
+inline gprs_rlcmac_bts *gprs_rlcmac_pdch::bts_data() const
+{
+	return trx->bts->bts_data();
 }
 #endif
 
