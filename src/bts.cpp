@@ -956,7 +956,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 		tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 		debug_diagram(bts(), tbf->diag, "got DL-ACK");
 
-		rc = gprs_rlcmac_downlink_ack(tbf,
+		rc = tbf->snd_dl_ack(
 			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.FINAL_ACK_INDICATION,
 			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
 			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);

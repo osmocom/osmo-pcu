@@ -94,10 +94,6 @@ enum gprs_rlcmac_block_type {
 
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
-int gprs_rlcmac_downlink_ack(
-	struct gprs_rlcmac_tbf *tbf, uint8_t final,
-        uint8_t ssn, uint8_t *rbb);
-
 int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len,
 	const char *imsi);
 

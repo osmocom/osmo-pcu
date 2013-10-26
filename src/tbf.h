@@ -102,6 +102,7 @@ struct gprs_rlcmac_tbf {
 	struct msgb *create_dl_ass(uint32_t fn);
 	struct msgb *create_ul_ass(uint32_t fn);
 	struct msgb *create_ul_ack(uint32_t fn);
+	int snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
 
 	int rlcmac_diag();
 
