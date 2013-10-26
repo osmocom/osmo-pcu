@@ -572,7 +572,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(
 }
 
 /* Received Uplink RLC control block. */
-int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
+int gprs_rlcmac_pdch::rcv_control_block(
 	bitvec *rlc_block, uint8_t trx, uint8_t ts,
 	uint32_t fn)
 {
@@ -590,7 +590,7 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 	switch (ul_control_block->u.MESSAGE_TYPE) {
 	case MT_PACKET_CONTROL_ACK:
 		tlli = ul_control_block->u.Packet_Control_Acknowledgement.TLLI;
-		tbf = bts->bts->tbf_by_poll_fn(fn, trx, ts);
+		tbf = bts()->tbf_by_poll_fn(fn, trx, ts);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
 				"unknown FN=%u TLL=0x%08x (TRX %d TS %d)\n",
@@ -610,7 +610,7 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
 			tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
-			debug_diagram(bts->bts, tbf->diag, "got CTL-ACK (fin)");
+			debug_diagram(bts(), tbf->diag, "got CTL-ACK (fin)");
 			if ((tbf->state_flags &
 				(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK))) {
 				tbf->state_flags &=
@@ -626,9 +626,9 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 			/* reset N3105 */
 			tbf->n3105 = 0;
 			tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-			debug_diagram(bts->bts, tbf->diag, "got CTL-ACK DL-ASS");
+			debug_diagram(bts(), tbf->diag, "got CTL-ACK DL-ASS");
 			if (tbf->direction == GPRS_RLCMAC_UL_TBF)
-				tbf = bts->bts->tbf_by_tlli(tbf->tlli,
+				tbf = bts()->tbf_by_tlli(tbf->tlli,
 							GPRS_RLCMAC_DL_TBF);
 			if (!tbf) {
 				LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
@@ -653,9 +653,9 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 			/* reset N3105 */
 			tbf->n3105 = 0;
 			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
-			debug_diagram(bts->bts, tbf->diag, "got CTL-AC UL-ASS");
+			debug_diagram(bts(), tbf->diag, "got CTL-AC UL-ASS");
 			if (tbf->direction == GPRS_RLCMAC_DL_TBF)
-				tbf = bts->bts->tbf_by_tlli(tbf->tlli,
+				tbf = bts()->tbf_by_tlli(tbf->tlli,
 							GPRS_RLCMAC_UL_TBF);
 			if (!tbf) {
 				LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
@@ -678,7 +678,7 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 		break;
 	case MT_PACKET_DOWNLINK_ACK_NACK:
 		tfi = ul_control_block->u.Packet_Downlink_Ack_Nack.DOWNLINK_TFI;
-		tbf = bts->bts->tbf_by_poll_fn(fn, trx, ts);
+		tbf = bts()->tbf_by_poll_fn(fn, trx, ts);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
 				"unknown FN=%u TFI=%d (TRX %d TS %d)\n",
@@ -702,7 +702,7 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 		tlli = tbf->tlli;
 		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Downlink Ack/Nack\n", tbf->tfi, tbf->tlli);
 		tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
-		debug_diagram(bts->bts, tbf->diag, "got DL-ACK");
+		debug_diagram(bts(), tbf->diag, "got DL-ACK");
 
 		rc = gprs_rlcmac_downlink_ack(tbf,
 			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.FINAL_ACK_INDICATION,
@@ -716,7 +716,7 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 		if (ul_control_block->u.Packet_Downlink_Ack_Nack.Exist_Channel_Request_Description) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
 				"message, so we provide one:\n");
-			tbf_alloc_ul(bts, tbf->trx_no, tbf->ms_class, tbf->tlli, tbf->ta, tbf);
+			tbf_alloc_ul(bts_data(), tbf->trx_no, tbf->ms_class, tbf->tlli, tbf->ta, tbf);
 			/* schedule uplink assignment */
 			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
 		}
@@ -724,7 +724,7 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 	case MT_PACKET_RESOURCE_REQUEST:
 		if (ul_control_block->u.Packet_Resource_Request.ID.UnionType) {
 			tlli = ul_control_block->u.Packet_Resource_Request.ID.u.TLLI;
-			tbf = bts->bts->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+			tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
 			if (tbf) {
 				LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 					"TLLI=0x%08x while UL TBF=%d still "
@@ -738,7 +738,7 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 				struct gprs_rlcmac_tbf *dl_tbf;
 				uint8_t ta;
 
-				if ((dl_tbf = bts->bts->tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF))) {
+				if ((dl_tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF))) {
 					LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 						"TLLI=0x%08x while DL TBF=%d still exists. "
 						"Killing pending DL TBF\n", tlli,
@@ -748,20 +748,20 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 				LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
 					"in packet ressource request of single "
 					"block, so we provide one:\n");
-				sba = bts->bts->sba()->find(trx, ts, fn);
+				sba = bts()->sba()->find(trx, ts, fn);
 				if (!sba) {
 					LOGP(DRLCMAC, LOGL_NOTICE, "MS requests UL TBF "
 						"in packet ressource request of single "
 						"block, but there is no resource request "
 						"scheduled!\n");
-					rc = bts->bts->timing_advance()->recall(tlli);
+					rc = bts()->timing_advance()->recall(tlli);
 					if (rc >= 0)
 						ta = rc;
 					else
 						ta = 0;
 				} else {
 					ta = sba->ta;
-					bts->bts->timing_advance()->remember(tlli, ta);
+					bts()->timing_advance()->remember(tlli, ta);
 					llist_del(&sba->list);
 					talloc_free(sba);
 				}
@@ -769,7 +769,7 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 					ms_class = Decoding::get_ms_class_by_capability(&ul_control_block->u.Packet_Resource_Request.MS_Radio_Access_capability);
 				if (!ms_class)
 					LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");
-				tbf = tbf_alloc_ul(bts, trx, ms_class, tlli, ta, NULL);
+				tbf = tbf_alloc_ul(bts_data(), trx, ms_class, tlli, ta, NULL);
 				if (!tbf)
 					break;
 				/* set control ts to current MS's TS, until assignment complete */
@@ -784,14 +784,14 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 		} else {
 			if (ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.UnionType) {
 				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.DOWNLINK_TFI;
-				tbf = tbf_by_tfi(bts, tfi, trx, GPRS_RLCMAC_DL_TBF);
+				tbf = tbf_by_tfi(bts_data(), tfi, trx, GPRS_RLCMAC_DL_TBF);
 				if (!tbf) {
 					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TBF=%d\n", tlli);
 					break;
 				}
 			} else {
 				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.UPLINK_TFI;
-				tbf = tbf_by_tfi(bts, tfi, trx, GPRS_RLCMAC_UL_TBF);
+				tbf = tbf_by_tfi(bts_data(), tfi, trx, GPRS_RLCMAC_UL_TBF);
 				if (!tbf) {
 					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TBF=%d\n", tlli);
 					break;
@@ -802,14 +802,14 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 		LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet ressource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
 		break;
 	case MT_PACKET_MEASUREMENT_REPORT:
-		sba = bts->bts->sba()->find(trx, ts, fn);
+		sba = bts()->sba()->find(trx, ts, fn);
 		if (!sba) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
 				"in packet ressource request of single "
 				"block, but there is no resource request "
 				"scheduled!\n");
 		} else {
-			bts->bts->timing_advance()->remember(ul_control_block->u.Packet_Measurement_Report.TLLI, sba->ta);
+			bts()->timing_advance()->remember(ul_control_block->u.Packet_Measurement_Report.TLLI, sba->ta);
 			llist_del(&sba->list);
 			talloc_free(sba);
 		}
@@ -826,7 +826,6 @@ int gprs_rlcmac_pdch::rcv_control_block(struct gprs_rlcmac_bts *bts,
 /* received RLC/MAC block from L1 */
 int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn, int8_t rssi)
 {
-	struct gprs_rlcmac_bts *bts = trx->bts->bts_data();
 	unsigned payload = data[0] >> 6;
 	uint8_t trx_no = trx->trx_no;
 	bitvec *block;
@@ -841,7 +840,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn, int8_t 
 		if (!block)
 			return -ENOMEM;
 		bitvec_unpack(block, data);
-		rc = rcv_control_block(bts, block, trx_no, ts_no, fn);
+		rc = rcv_control_block(block, trx_no, ts_no, fn);
 		bitvec_free(block);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK_OPT:
