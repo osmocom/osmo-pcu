@@ -19,10 +19,13 @@
  */
 #pragma once
 
+#include <gsm_rlcmac.h>
+
 #include <stdint.h>
 
 class Decoding {
 public:
 	static int tlli_from_ul_data(const uint8_t *data, uint8_t len,
 					uint32_t *tlli);
+	static uint8_t get_ms_class_by_capability(MS_Radio_Access_capability_t *cap);
 };

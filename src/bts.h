@@ -76,6 +76,9 @@ private:
 	int rcv_data_block_acknowledged(struct gprs_rlcmac_bts *bts,
 				uint8_t trx, uint8_t ts,
 				uint8_t *data, uint8_t len, int8_t rssi);
+	int rcv_control_block(struct gprs_rlcmac_bts *bts,
+				bitvec *rlc_block, uint8_t trx, uint8_t ts,
+				uint32_t fn);
 
 #endif
 };

@@ -68,3 +68,18 @@ int Decoding::tlli_from_ul_data(const uint8_t *data, uint8_t len,
 	return 0;
 }
 
+uint8_t Decoding::get_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
+{
+	int i;
+
+	for (i = 0; i < cap->Count_MS_RA_capability_value; i++) {
+		if (!cap->MS_RA_capability_value[i].u.Content.Exist_Multislot_capability)
+			continue;
+		if (!cap->MS_RA_capability_value[i].u.Content.Multislot_capability.Exist_GPRS_multislot_class)
+			continue;
+		return cap->MS_RA_capability_value[i].u.Content.Multislot_capability.GPRS_multislot_class;
+	}
+
+	return 0;
+}
+
