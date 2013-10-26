@@ -291,6 +291,45 @@ int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir,
 	return -1;
 }
 
+int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
+{
+	struct gprs_rlcmac_tbf *tbf;
+	uint8_t plen;
+	uint32_t tlli;
+
+	/* move to IA Rest Octets */
+	plen = data[0] >> 2;
+	data += 1 + plen;
+
+	if ((*data & 0xf0) != 0xd0) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Got IMM.ASS confirm, but rest "
+			"octets do not start with bit sequence 'HH01' "
+			"(Packet Downlink Assignment)\n");
+		return -EINVAL;
+	}
+
+	/* get TLLI from downlink assignment */
+	tlli = (*data++) << 28;
+	tlli |= (*data++) << 20;
+	tlli |= (*data++) << 12;
+	tlli |= (*data++) << 4;
+	tlli |= (*data++) >> 4;
+
+	tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF);
+	if (!tbf) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Got IMM.ASS confirm, but TLLI=%08x "
+			"does not exit\n", tlli);
+		return -EINVAL;
+	}
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
+
+	if (tbf->dir.dl.wait_confirm)
+		tbf_timer_start(tbf, 0, Tassign_agch);
+
+	return 0;
+}
+
 
 /*
  * PDCH code below. TODO: move to a separate file

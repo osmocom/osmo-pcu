@@ -126,8 +126,6 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	uint8_t trx, uint8_t ts, uint16_t arfcn, 
         uint32_t fn, uint8_t block_nr);
 
-int gprs_rlcmac_imm_ass_cnf(BTS *bts, uint8_t *data, uint32_t fn);
-
 extern "C" {
 #endif
 int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,

@@ -168,6 +168,8 @@ public:
 
 	int tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx);
 
+	int rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn);
+
 private:
 	int m_cur_fn;
 	struct gprs_rlcmac_bts m_bts;
