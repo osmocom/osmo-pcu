@@ -36,6 +36,7 @@ extern "C" {
 
 /* If acknowledgement to downlink assignment should be polled */
 #define POLLING_ASSIGNMENT_DL 1
+#define POLLING_ASSIGNMENT_UL 1
 
 extern "C" {
 int bssgp_tx_llc_discarded(struct bssgp_bvc_ctx *bctx, uint32_t tlli,
@@ -969,6 +970,78 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 
 	}
 	debug_diagram(bts, diag, "send DL-ASS");
+
+	return msg;
+}
+
+struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
+{
+	struct msgb *msg;
+	struct gprs_rlcmac_tbf *new_tbf;
+
+#if POLLING_ASSIGNMENT_UL == 1
+	if (poll_state != GPRS_RLCMAC_POLL_NONE) {
+		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
+			"sheduled for TBF=%d, so we must wait for uplink "
+			"assignment...\n", tfi);
+			return NULL;
+	}
+	if (bts->sba()->find(trx_no, control_ts, (fn + 13) % 2715648)) {
+		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already scheduled for "
+			"single block allocation...\n");
+			return NULL;
+	}
+#endif
+
+	/* on down TBF we get the uplink TBF to be assigned. */
+#warning "Probably want to find by IMSI too"
+	if (direction == GPRS_RLCMAC_DL_TBF)
+		new_tbf = bts->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+	else
+		new_tbf = this;
+
+	if (!new_tbf) {
+		LOGP(DRLCMACUL, LOGL_ERROR, "We have a schedule for uplink "
+			"assignment at downlink TBF=%d, but there is no uplink "
+			"TBF\n", tfi);
+		ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+		return NULL;
+	}
+
+	msg = msgb_alloc(23, "rlcmac_ul_ass");
+	if (!msg)
+		return NULL;
+	LOGP(DRLCMAC, LOGL_INFO, "TBF: START TFI: %u TLLI: 0x%08x Packet Uplink Assignment (PACCH)\n", new_tbf->tfi, new_tbf->tlli);
+	bitvec *ass_vec = bitvec_alloc(23);
+	if (!ass_vec) {
+		msgb_free(msg);
+		return NULL;
+	}
+	bitvec_unhex(ass_vec,
+		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	Encoding::write_packet_uplink_assignment(bts_data(), ass_vec, tfi,
+		(direction == GPRS_RLCMAC_DL_TBF), tlli,
+		tlli_valid, new_tbf, POLLING_ASSIGNMENT_UL, bts_data()->alpha,
+		bts_data()->gamma, -1);
+	bitvec_pack(ass_vec, msgb_put(msg, 23));
+	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
+	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++\n");
+	decode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
+	LOGPC(DCSN1, LOGL_NOTICE, "\n");
+	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Uplink Assignment -------------------------\n");
+	bitvec_free(ass_vec);
+	talloc_free(mac_control_block);
+
+#if POLLING_ASSIGNMENT_UL == 1
+	poll_state = GPRS_RLCMAC_POLL_SCHED;
+	poll_fn = (fn + 13) % 2715648;
+	ul_ass_state = GPRS_RLCMAC_UL_ASS_WAIT_ACK;
+#else
+	ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+	tbf_new_state(new_tbf, GPRS_RLCMAC_FLOW);
+	tbf_assign_control_ts(new_tbf);
+#endif
+	debug_diagram(bts, diag, "send UL-ASS");
 
 	return msg;
 }

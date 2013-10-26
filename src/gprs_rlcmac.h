@@ -94,9 +94,6 @@ enum gprs_rlcmac_block_type {
 
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
-struct msgb *gprs_rlcmac_send_packet_uplink_assignment(
-        struct gprs_rlcmac_tbf *tbf, uint32_t fn);
-
 int gprs_rlcmac_downlink_ack(
 	struct gprs_rlcmac_tbf *tbf, uint8_t final,
         uint8_t ssn, uint8_t *rbb);
