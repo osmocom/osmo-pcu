@@ -99,6 +99,7 @@ struct gprs_rlcmac_tbf {
 	/* TODO: extract LLC class? */
 	int assemble_forward_llc(uint8_t *data, uint8_t len);
 
+	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
 	struct msgb *create_dl_ass(uint32_t fn);
 	struct msgb *create_ul_ass(uint32_t fn);
 	struct msgb *create_ul_ack(uint32_t fn);

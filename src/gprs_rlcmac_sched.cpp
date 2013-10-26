@@ -182,7 +182,7 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		/* next TBF to handle ressource is the next one */
 		pdch->next_dl_tfi = (tfi + 1) & 31;
 		/* generate DL data block */
-		msg = gprs_rlcmac_send_data_block_acknowledged(tbf, fn, ts);
+		msg = tbf->create_dl_acked_block(fn, ts);
 		break;
 	}
 
