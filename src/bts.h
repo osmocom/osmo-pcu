@@ -59,6 +59,7 @@ struct gprs_rlcmac_pdch {
 
 	gprs_rlcmac_bts *bts_data() const;
 	BTS *bts() const;
+	uint8_t trx_no() const;
 #endif
 
 	uint8_t m_is_enabled; /* TS is enabled */
@@ -76,11 +77,8 @@ struct gprs_rlcmac_pdch {
 
 #ifdef __cplusplus
 private:
-	int rcv_data_block_acknowledged(
-				uint8_t trx, uint8_t ts,
-				uint8_t *data, uint8_t len, int8_t rssi);
-	int rcv_control_block(bitvec *rlc_block, uint8_t trx, uint8_t ts,
-				uint32_t fn);
+	int rcv_data_block_acknowledged(uint8_t *data, uint8_t len, int8_t rssi);
+	int rcv_control_block(bitvec *rlc_block, uint32_t fn);
 
 #endif
 };
@@ -203,6 +201,11 @@ inline BTS *gprs_rlcmac_pdch::bts() const
 inline gprs_rlcmac_bts *gprs_rlcmac_pdch::bts_data() const
 {
 	return trx->bts->bts_data();
+}
+
+inline uint8_t gprs_rlcmac_pdch::trx_no() const
+{
+	return trx->trx_no;
 }
 #endif
 
