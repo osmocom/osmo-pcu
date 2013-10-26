@@ -46,10 +46,6 @@ extern void *tall_pcu_ctx;
 #define POLLING_ASSIGNMENT_UL 1
 
 
-#ifdef DEBUG_DL_ASS_IDLE
-	char debug_imsi[16];
-#endif
-
 /*
  * UL data block flow
  */
@@ -828,22 +824,11 @@ void gprs_rlcmac_trigger_downlink_assignment(
 	struct gprs_rlcmac_tbf *tbf,
 	struct gprs_rlcmac_tbf *old_tbf, const char *imsi)
 {
-#ifdef DEBUG_DL_ASS_IDLE
-	strncpy(debug_imsi, imsi);
-	LOGP(DRLCMAC, LOGL_ERROR, "**** DEBUGGING DOWNLINK ASSIGNMENT ****\n");
-#endif
-
 	/* stop pending timer */
 	tbf->stop_timer();
 
 	/* check for downlink tbf:  */
 	if (old_tbf) {
-#ifdef DEBUG_DL_ASS_IDLE
-		LOGP(DRLCMAC, LOGL_ERROR, "We must wait for current TBF to be "
-			"released.\n");
-		/* wait one second until assignment */
-		tbf_timer_start(tbf, 1234, 1,0);
-#else
 		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment on "
 			"PACCH, because %s TBF=%d exists for TLLI=0x%08x\n",
 			(old_tbf->direction == GPRS_RLCMAC_UL_TBF)
@@ -856,7 +841,6 @@ void gprs_rlcmac_trigger_downlink_assignment(
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 		/* start timer */
 		tbf_timer_start(tbf, 0, Tassign_pacch);
-#endif
 	} else {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for TBF=%d on PCH, no TBF exist (IMSI=%s)\n", tbf->tfi, imsi);
 		if (!imsi || strlen(imsi) < 3) {

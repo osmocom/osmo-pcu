@@ -611,11 +611,6 @@ void gprs_rlcmac_tbf::handle_timeout()
 	num_T_exp++;
 
 	switch (T) {
-#ifdef DEBUG_DL_ASS_IDLE
-	case 1234:
-		gprs_rlcmac_trigger_downlink_assignment(tbf, NULL, debug_imsi);
-		break;
-#endif
 	case 0: /* assignment */
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
 			if (state_is(GPRS_RLCMAC_ASSIGN)) {
