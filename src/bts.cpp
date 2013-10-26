@@ -493,6 +493,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 			tbf->dir.ul.v_r);
 	}
 
+	#warning "Move to TBF and remove the index side effect.."
 	/* Raise V(Q) if possible, and retrieve LLC frames from blocks.
 	 * This is looped until there is a gap (non received block) or
 	 * the window is empty.*/
