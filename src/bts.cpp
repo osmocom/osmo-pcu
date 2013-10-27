@@ -1106,7 +1106,7 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 		LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
 			"in packet resource request of single "
 			"block, but there is no resource request "
-			"scheduled!\n");
+			"scheduled! TLLI=0x%08x\n", report->TLLI);
 	} else {
 		bts()->timing_advance()->remember(report->TLLI, sba->ta);
 		bts()->sba()->free_sba(sba);
