@@ -54,6 +54,9 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "tbf.ul.alloc",		"TBF UL Allocated     "},
 	{ "tbf.ul.freed",		"TBF UL Freed         "},
 	{ "decode.errors",		"Decode Errors        "},
+	{ "sba.allocated",		"SBA Allocated        "},
+	{ "sba.freed",			"SBA Freed            "},
+	{ "sba.timedout",		"SBA Timeout          "},
 };
 
 static const struct rate_ctr_group_desc bts_ctrg_desc = {
@@ -1049,6 +1052,8 @@ int gprs_rlcmac_pdch::rcv_control_block(
 				} else {
 					ta = sba->ta;
 					bts()->timing_advance()->remember(tlli, ta);
+#warning "SBA deleted inline.. enforce capsulation"
+					bts()->sba_freed();
 					llist_del(&sba->list);
 					talloc_free(sba);
 				}
@@ -1096,7 +1101,9 @@ int gprs_rlcmac_pdch::rcv_control_block(
 				"block, but there is no resource request "
 				"scheduled!\n");
 		} else {
+			#warning "SBA deleted inline.. enforce capsulation"
 			bts()->timing_advance()->remember(ul_control_block->u.Packet_Measurement_Report.TLLI, sba->ta);
+			bts()->sba_freed();
 			llist_del(&sba->list);
 			talloc_free(sba);
 		}

@@ -154,6 +154,9 @@ public:
 		CTR_TBF_UL_ALLOCATED,
 		CTR_TBF_UL_FREED,
 		CTR_DECODE_ERRORS,
+		CTR_SBA_ALLOCATED,
+		CTR_SBA_FREED,
+		CTR_SBA_TIMEDOUT,
 	};
 
 	BTS();
@@ -192,6 +195,9 @@ public:
 	void tbf_ul_created();
 	void tbf_ul_freed();
 	void decode_error();
+	void sba_allocated();
+	void sba_freed();
+	void sba_timedout();
 
 	/*
 	 * Below for C interface for the VTY
@@ -237,30 +243,22 @@ inline struct rate_ctr_group *BTS::rate_counters() const
 	return m_ratectrs;
 }
 
-inline void BTS::tbf_dl_created()
-{
-	rate_ctr_inc(&m_ratectrs->ctr[CTR_TBF_DL_ALLOCATED]);
-}
+#define CREATE_COUNT_INLINE(func_name, ctr_name) \
+	inline void BTS::func_name() {\
+		rate_ctr_inc(&m_ratectrs->ctr[ctr_name]); \
+	}
 
-inline void BTS::tbf_dl_freed()
-{
-	rate_ctr_inc(&m_ratectrs->ctr[CTR_TBF_DL_FREED]);
-}
+CREATE_COUNT_INLINE(tbf_dl_created, CTR_TBF_DL_ALLOCATED)
+CREATE_COUNT_INLINE(tbf_dl_freed, CTR_TBF_DL_FREED)
+CREATE_COUNT_INLINE(tbf_ul_created, CTR_TBF_UL_ALLOCATED)
+CREATE_COUNT_INLINE(tbf_ul_freed, CTR_TBF_UL_FREED)
+CREATE_COUNT_INLINE(decode_error, CTR_DECODE_ERRORS)
+CREATE_COUNT_INLINE(sba_allocated, CTR_SBA_ALLOCATED)
+CREATE_COUNT_INLINE(sba_freed, CTR_SBA_FREED)
+CREATE_COUNT_INLINE(sba_timedout, CTR_SBA_TIMEDOUT)
 
-inline void BTS::tbf_ul_created()
-{
-	rate_ctr_inc(&m_ratectrs->ctr[CTR_TBF_UL_ALLOCATED]);
-}
+#undef CREATE_COUNT_INLINE
 
-inline void BTS::tbf_ul_freed()
-{
-	rate_ctr_inc(&m_ratectrs->ctr[CTR_TBF_UL_FREED]);
-}
-
-inline void BTS::decode_error()
-{
-	rate_ctr_inc(&m_ratectrs->ctr[CTR_DECODE_ERRORS]);
-}
 
 inline gprs_rlcmac_bts *gprs_rlcmac_pdch::bts_data() const
 {

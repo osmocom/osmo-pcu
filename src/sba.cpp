@@ -79,6 +79,7 @@ int SBAController::alloc(
 	sba->ta = ta;
 
 	llist_add(&sba->list, &m_sbas);
+	m_bts.sba_allocated();
 
 	*_trx = trx;
 	*_ts = ts;
@@ -124,6 +125,8 @@ int SBAController::timeout(struct gprs_rlcmac_sba *sba)
 {
 	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for SBA\n");
 	llist_del(&sba->list);
+	m_bts.sba_timedout();
+	m_bts.sba_freed();
 	talloc_free(sba);
 
 	return 0;
@@ -138,6 +141,7 @@ void SBAController::free_resources(struct gprs_rlcmac_pdch *pdch)
 	llist_for_each_entry_safe(sba, sba2, &m_sbas, list) {
 		if (sba->trx_no == trx_no && sba->ts_no == ts_no) {
 			llist_del(&sba->list);
+			m_bts.sba_freed();
 			talloc_free(sba);
 		}
 	}
