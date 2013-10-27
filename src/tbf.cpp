@@ -72,10 +72,10 @@ static inline void tbf_update_ms_class(struct gprs_rlcmac_tbf *tbf,
 		tbf->ms_class = ms_class;
 }
 
-static inline void tbf_assign_imsi(struct gprs_rlcmac_tbf *tbf,
-					const char *imsi)
+void gprs_rlcmac_tbf::assign_imsi(const char *imsi)
 {
-	strncpy(tbf->meas.imsi, imsi, sizeof(tbf->meas.imsi) - 1);
+	strncpy(m_imsi, imsi, sizeof(m_imsi));
+	m_imsi[sizeof(m_imsi) - 1] = '\0';
 }
 
 static struct gprs_rlcmac_tbf *tbf_lookup_dl(BTS *bts,
@@ -205,14 +205,14 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	memcpy(tbf->llc_frame, data, len);
 	tbf->llc_length = len;
 
+	/* Store IMSI for later look-up and PCH retransmission */
+	tbf->assign_imsi(imsi);
+
 	/* trigger downlink assignment and set state to ASSIGN.
 	 * we don't use old_downlink, so the possible uplink is used
 	 * to trigger downlink assignment. if there is no uplink,
 	 * AGCH is used. */
 	tbf->bts->trigger_dl_ass(tbf, old_tbf, imsi);
-
-	/* store IMSI for debugging purpose. TODO: it is more than debugging */
-	tbf_assign_imsi(tbf, imsi);
 	return 0;
 }
 
@@ -232,7 +232,7 @@ int tbf_handle(struct gprs_rlcmac_bts *bts,
 		int rc = tbf_append_data(tbf, bts, ms_class,
 						delay_csec, data, len);
 		if (rc >= 0)
-			tbf_assign_imsi(tbf, imsi);
+			tbf->assign_imsi(imsi);
 		return rc;
 	} 
 
@@ -526,9 +526,9 @@ void gprs_rlcmac_tbf::poll_timeout()
 			LOGP(DRLCMAC, LOGL_DEBUG, "Re-send dowlink assignment "
 				"for %s on PCH (IMSI=%s)\n",
 				tbf_name(this),
-				dir.dl.imsi);
+				m_imsi);
 			/* send immediate assignment */
-			bts->snd_dl_ass(this, 0, dir.dl.imsi);
+			bts->snd_dl_ass(this, 0, m_imsi);
 			dir.dl.wait_confirm = 1;
 		}
 	} else

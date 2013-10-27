@@ -122,6 +122,9 @@ struct gprs_rlcmac_tbf {
 
 	uint8_t tfi() const;
 
+	const char *imsi() const;
+	void assign_imsi(const char *imsi);
+
 	struct llist_head list;
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
@@ -161,7 +164,6 @@ struct gprs_rlcmac_tbf {
 			uint16_t v_a;	/* ack state */
 			char v_b[RLC_MAX_SNS/2]; /* acknowledge state array */
 			int32_t tx_counter; /* count all transmitted blocks */
-			char imsi[16]; /* store IMSI for PCH retransmission */
 			uint8_t wait_confirm; /* wait for CCCH IMM.ASS cnf */
 		} dl;
 		struct {
@@ -190,8 +192,6 @@ struct gprs_rlcmac_tbf {
 	unsigned int num_fT_exp; /* number of consecutive fT expirations */
 
 	struct {
-		char imsi[16];
-
 		struct timeval dl_bw_tv; /* timestamp for dl bw calculation */
 		uint32_t dl_bw_octets; /* number of octets since bw_tv */
 
@@ -226,6 +226,9 @@ struct gprs_rlcmac_tbf {
 	uint32_t m_tlli;
 	uint8_t m_tlli_valid;
 	uint8_t m_tfi;
+
+	/* store IMSI for look-up and PCH retransmission */
+	char m_imsi[16];
 
 protected:
 	gprs_rlcmac_bts *bts_data() const;
@@ -285,6 +288,11 @@ inline bool gprs_rlcmac_tbf::is_tlli_valid() const
 inline uint8_t gprs_rlcmac_tbf::tfi() const
 {
 	return m_tfi;
+}
+
+inline const char *gprs_rlcmac_tbf::imsi() const
+{
+	return m_imsi;
 }
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf);

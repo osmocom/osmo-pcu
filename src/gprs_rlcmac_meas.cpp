@@ -154,7 +154,7 @@ int gprs_rlcmac_lost_rep(struct gprs_rlcmac_tbf *tbf)
 		return -EINVAL;
 
 	LOGP(DRLCMACMEAS, LOGL_INFO, "DL packet loss of IMSI=%s / TLLI=0x%08x: "
-		"%d%%\n", tbf->meas.imsi, tbf->tlli(),
+		"%d%%\n", tbf->imsi(), tbf->tlli(),
 		tbf->meas.dl_loss_lost * 100 / sum);
 
 	return 0;
@@ -179,7 +179,7 @@ int gprs_rlcmac_dl_bw(struct gprs_rlcmac_tbf *tbf, uint16_t octets)
 		return 0;
 
 	LOGP(DRLCMACMEAS, LOGL_INFO, "DL Bandwitdh of IMSI=%s / TLLI=0x%08x: "
-		"%d KBits/s\n", tbf->meas.imsi, tbf->tlli(),
+		"%d KBits/s\n", tbf->imsi(), tbf->tlli(),
 		tbf->meas.dl_bw_octets / elapsed);
 
 	/* reset bandwidth values timestamp */

@@ -481,7 +481,7 @@ void BTS::trigger_dl_ass(
 		/* change state */
 		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
-		strncpy(tbf->dir.dl.imsi, imsi, sizeof(tbf->dir.dl.imsi));
+		tbf->assign_imsi(imsi);
 		/* send immediate assignment */
 		tbf->bts->snd_dl_ass(tbf, 0, imsi);
 		tbf->dir.dl.wait_confirm = 1;
