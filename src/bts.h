@@ -82,7 +82,7 @@ private:
 	int rcv_control_block(bitvec *rlc_block, uint32_t fn);
 
 	void rcv_control_ack(RlcMacUplink_t *, uint32_t fn);
-	void rcv_control_dl_ack_nack(RlcMacUplink_t *, uint32_t fn);
+	void rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *, uint32_t fn);
 	void rcv_resource_request(Packet_Resource_Request_t *t, uint32_t fn);
 	void rcv_measurement_report(Packet_Measurement_Report_t *t, uint32_t fn);
 #endif

@@ -960,13 +960,13 @@ void gprs_rlcmac_pdch::rcv_control_ack(RlcMacUplink_t *ul_control_block, uint32_
 		"at no request\n");
 }
 
-void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(RlcMacUplink_t *ul_control_block, uint32_t fn)
+void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_nack, uint32_t fn)
 {
 	int8_t tfi = 0; /* must be signed */
 	struct gprs_rlcmac_tbf *tbf;
 	int rc;
 
-	tfi = ul_control_block->u.Packet_Downlink_Ack_Nack.DOWNLINK_TFI;
+	tfi = ack_nack->DOWNLINK_TFI;
 	tbf = bts()->tbf_by_poll_fn(fn, trx_no(), ts_no);
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
@@ -993,15 +993,15 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(RlcMacUplink_t *ul_control_block,
 	debug_diagram(bts(), tbf->diag, "got DL-ACK");
 
 	rc = tbf->snd_dl_ack(
-		ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.FINAL_ACK_INDICATION,
-		ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
-		ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
+		ack_nack->Ack_Nack_Description.FINAL_ACK_INDICATION,
+		ack_nack->Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
+		ack_nack->Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
 	if (rc == 1) {
 		tbf_free(tbf);
 		return;
 	}
 	/* check for channel request */
-	if (ul_control_block->u.Packet_Downlink_Ack_Nack.Exist_Channel_Request_Description) {
+	if (ack_nack->Exist_Channel_Request_Description) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
 			"message, so we provide one:\n");
 		tbf_alloc_ul(bts_data(), tbf->trx_no, tbf->ms_class, tbf->tlli, tbf->ta, tbf);
@@ -1128,7 +1128,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 		rcv_control_ack(ul_control_block, fn);
 		break;
 	case MT_PACKET_DOWNLINK_ACK_NACK:
-		rcv_control_dl_ack_nack(ul_control_block, fn);
+		rcv_control_dl_ack_nack(&ul_control_block->u.Packet_Downlink_Ack_Nack, fn);
 		break;
 	case MT_PACKET_RESOURCE_REQUEST:
 		rcv_resource_request(&ul_control_block->u.Packet_Resource_Request, fn);
