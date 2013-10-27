@@ -324,8 +324,10 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 			"be sure not to free in this state. PLEASE FIX!\n");
 	tbf->stop_timer();
 	#warning "TODO: Could/Should generate  bssgp_tx_llc_discarded"
-	while ((msg = msgb_dequeue(&tbf->llc_queue)))
+	while ((msg = msgb_dequeue(&tbf->llc_queue))) {
+		tbf->bts->dropped_frame();
 		msgb_free(msg);
+	}
 	tbf_unlink_pdch(tbf);
 	llist_del(&tbf->list);
 
@@ -714,6 +716,7 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 			LOGP(DRLCMACDL, LOGL_NOTICE, "Discarding LLC PDU of "
 				"DL TBF=%d, because lifetime limit reached\n",
 				tfi);
+			bts->timedout_frame();
 			frames++;
 			octets += msg->len;
 			msgb_free(msg);

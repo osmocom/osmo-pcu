@@ -57,6 +57,8 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "sba.allocated",		"SBA Allocated        "},
 	{ "sba.freed",			"SBA Freed            "},
 	{ "sba.timedout",		"SBA Timeout          "},
+	{ "llc.timeout",		"Timedout Frames      "},
+	{ "llc.dropped",		"Dropped Frames       "},
 };
 
 static const struct rate_ctr_group_desc bts_ctrg_desc = {

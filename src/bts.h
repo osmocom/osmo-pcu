@@ -157,6 +157,8 @@ public:
 		CTR_SBA_ALLOCATED,
 		CTR_SBA_FREED,
 		CTR_SBA_TIMEDOUT,
+		CTR_LLC_FRAME_TIMEDOUT,
+		CTR_LLC_FRAME_DROPPED,
 	};
 
 	BTS();
@@ -198,6 +200,8 @@ public:
 	void sba_allocated();
 	void sba_freed();
 	void sba_timedout();
+	void timedout_frame();
+	void dropped_frame();
 
 	/*
 	 * Below for C interface for the VTY
@@ -256,6 +260,8 @@ CREATE_COUNT_INLINE(decode_error, CTR_DECODE_ERRORS)
 CREATE_COUNT_INLINE(sba_allocated, CTR_SBA_ALLOCATED)
 CREATE_COUNT_INLINE(sba_freed, CTR_SBA_FREED)
 CREATE_COUNT_INLINE(sba_timedout, CTR_SBA_TIMEDOUT)
+CREATE_COUNT_INLINE(timedout_frame, CTR_LLC_FRAME_TIMEDOUT);
+CREATE_COUNT_INLINE(dropped_frame, CTR_LLC_FRAME_DROPPED);
 
 #undef CREATE_COUNT_INLINE
 
