@@ -82,6 +82,7 @@ private:
 	int rcv_control_block(bitvec *rlc_block, uint32_t fn);
 
 	void rcv_control_ack(RlcMacUplink_t *, uint32_t fn);
+	void rcv_control_dl_ack_nack(RlcMacUplink_t *, uint32_t fn);
 #endif
 };
 

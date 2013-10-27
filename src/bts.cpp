@@ -960,6 +960,56 @@ void gprs_rlcmac_pdch::rcv_control_ack(RlcMacUplink_t *ul_control_block, uint32_
 		"at no request\n");
 }
 
+void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(RlcMacUplink_t *ul_control_block, uint32_t fn)
+{
+	int8_t tfi = 0; /* must be signed */
+	struct gprs_rlcmac_tbf *tbf;
+	int rc;
+
+	tfi = ul_control_block->u.Packet_Downlink_Ack_Nack.DOWNLINK_TFI;
+	tbf = bts()->tbf_by_poll_fn(fn, trx_no(), ts_no);
+	if (!tbf) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
+			"unknown FN=%u TFI=%d (TRX %d TS %d)\n",
+			fn, tfi, trx_no(), ts_no);
+		return;
+	}
+	if (tbf->tfi != tfi) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
+			"wrong TFI=%d, ignoring!\n", tfi);
+		return;
+	}
+	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
+	if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
+		tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
+		LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink ack "
+			"for DL TBF=%d\n", tbf->tfi);
+	}
+	/* reset N3105 */
+	tbf->n3105 = 0;
+	tbf->stop_t3191();
+	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Downlink Ack/Nack\n", tbf->tfi, tbf->tlli);
+	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
+	debug_diagram(bts(), tbf->diag, "got DL-ACK");
+
+	rc = tbf->snd_dl_ack(
+		ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.FINAL_ACK_INDICATION,
+		ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
+		ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
+	if (rc == 1) {
+		tbf_free(tbf);
+		return;
+	}
+	/* check for channel request */
+	if (ul_control_block->u.Packet_Downlink_Ack_Nack.Exist_Channel_Request_Description) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
+			"message, so we provide one:\n");
+		tbf_alloc_ul(bts_data(), tbf->trx_no, tbf->ms_class, tbf->tlli, tbf->ta, tbf);
+		/* schedule uplink assignment */
+		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+	}
+}
+
 /* Received Uplink RLC control block. */
 int gprs_rlcmac_pdch::rcv_control_block(
 	bitvec *rlc_block, uint32_t fn)
@@ -980,49 +1030,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 		rcv_control_ack(ul_control_block, fn);
 		break;
 	case MT_PACKET_DOWNLINK_ACK_NACK:
-		tfi = ul_control_block->u.Packet_Downlink_Ack_Nack.DOWNLINK_TFI;
-		tbf = bts()->tbf_by_poll_fn(fn, trx_no(), ts_no);
-		if (!tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
-				"unknown FN=%u TFI=%d (TRX %d TS %d)\n",
-				fn, tfi, trx_no(), ts_no);
-			break;
-		}
-		if (tbf->tfi != tfi) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
-				"wrong TFI=%d, ignoring!\n", tfi);
-			break;
-		}
-		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
-		if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
-			tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
-			LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink ack "
-				"for DL TBF=%d\n", tbf->tfi);
-		}
-		/* reset N3105 */
-		tbf->n3105 = 0;
-		tbf->stop_t3191();
-		tlli = tbf->tlli;
-		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Downlink Ack/Nack\n", tbf->tfi, tbf->tlli);
-		tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
-		debug_diagram(bts(), tbf->diag, "got DL-ACK");
-
-		rc = tbf->snd_dl_ack(
-			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.FINAL_ACK_INDICATION,
-			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
-			ul_control_block->u.Packet_Downlink_Ack_Nack.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
-		if (rc == 1) {
-			tbf_free(tbf);
-			break;
-		}
-		/* check for channel request */
-		if (ul_control_block->u.Packet_Downlink_Ack_Nack.Exist_Channel_Request_Description) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
-				"message, so we provide one:\n");
-			tbf_alloc_ul(bts_data(), tbf->trx_no, tbf->ms_class, tbf->tlli, tbf->ta, tbf);
-			/* schedule uplink assignment */
-			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
-		}
+		rcv_control_dl_ack_nack(ul_control_block, fn);
 		break;
 	case MT_PACKET_RESOURCE_REQUEST:
 		if (ul_control_block->u.Packet_Resource_Request.ID.UnionType) {
