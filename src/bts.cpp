@@ -1107,7 +1107,9 @@ int gprs_rlcmac_pdch::rcv_control_block(
 		break;
 	default:
 		bts()->decode_error();
-		LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] unknown control block received\n");
+		LOGP(DRLCMAC, LOGL_NOTICE,
+			"RX: [PCU <- BTS] unknown control block(%d) received\n",
+			ul_control_block->u.MESSAGE_TYPE);
 	}
 	talloc_free(ul_control_block);
 	return 1;
