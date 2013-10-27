@@ -1097,13 +1097,27 @@ void gprs_rlcmac_pdch::rcv_resource_request(RlcMacUplink_t *ul_control_block, ui
 	LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet resource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
 }
 
+void gprs_rlcmac_pdch::rcv_measurement_report(RlcMacUplink_t *ul_control_block, uint32_t fn)
+{
+	struct gprs_rlcmac_sba *sba;
+
+	sba = bts()->sba()->find(this, fn);
+	if (!sba) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
+			"in packet resource request of single "
+			"block, but there is no resource request "
+			"scheduled!\n");
+	} else {
+		bts()->timing_advance()->remember(ul_control_block->u.Packet_Measurement_Report.TLLI, sba->ta);
+		bts()->sba()->free_sba(sba);
+	}
+	gprs_rlcmac_meas_rep(&ul_control_block->u.Packet_Measurement_Report);
+}
+
 /* Received Uplink RLC control block. */
 int gprs_rlcmac_pdch::rcv_control_block(
 	bitvec *rlc_block, uint32_t fn)
 {
-	struct gprs_rlcmac_sba *sba;
-	int rc;
-
 	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)talloc_zero(tall_pcu_ctx, RlcMacUplink_t);
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
 	decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
@@ -1120,17 +1134,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 		rcv_resource_request(ul_control_block, fn);
 		break;
 	case MT_PACKET_MEASUREMENT_REPORT:
-		sba = bts()->sba()->find(this, fn);
-		if (!sba) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
-				"in packet resource request of single "
-				"block, but there is no resource request "
-				"scheduled!\n");
-		} else {
-			bts()->timing_advance()->remember(ul_control_block->u.Packet_Measurement_Report.TLLI, sba->ta);
-			bts()->sba()->free_sba(sba);
-		}
-		gprs_rlcmac_meas_rep(&ul_control_block->u.Packet_Measurement_Report);
+		rcv_measurement_report(ul_control_block, fn);
 		break;
 	case MT_PACKET_UPLINK_DUMMY_CONTROL_BLOCK:
 		/* ignoring it. change the SI to not force sending these? */

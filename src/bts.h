@@ -84,6 +84,7 @@ private:
 	void rcv_control_ack(RlcMacUplink_t *, uint32_t fn);
 	void rcv_control_dl_ack_nack(RlcMacUplink_t *, uint32_t fn);
 	void rcv_resource_request(RlcMacUplink_t *t, uint32_t fn);
+	void rcv_measurement_report(RlcMacUplink_t *t, uint32_t fn);
 #endif
 };
 
