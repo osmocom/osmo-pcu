@@ -703,6 +703,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 				"TLLI, but no TLLI received yet\n", rh->tfi);
 			return 0;
 		}
+#warning "Silent TLLI change possible.. Should update TA.."
 		rc = Decoding::tlli_from_ul_data(data, len, &tbf->tlli);
 		if (rc) {
 			bts()->decode_error();
@@ -883,6 +884,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	if (tlli != tbf->tlli) {
 		LOGP(DRLCMAC, LOGL_INFO, "Phone changed TLLI to "
 			"0x%08x\n", tlli);
+#warning "Silent TLLI changes... update TA.. and other structs"
 		tbf->tlli = tlli;
 	}
 	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Control Ack\n", tbf->tfi, tbf->tlli);
