@@ -912,9 +912,10 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		if (tbf->direction == GPRS_RLCMAC_UL_TBF)
 			tbf = bts()->tbf_by_tlli(tbf->tlli,
 						GPRS_RLCMAC_DL_TBF);
+#warning "TBF is changing on the way... *sigh*"
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
-				"TBF is gone\n");
+				"TBF is gone TLLI=0x%08x\n", tlli);
 			return;
 		}
 		tbf_new_state(tbf, GPRS_RLCMAC_FLOW);

@@ -664,8 +664,8 @@ void gprs_rlcmac_tbf::handle_timeout()
 	case 3169:
 	case 3191:
 	case 3195:
-		LOGP(DRLCMAC, LOGL_NOTICE, "TBF TFI=%d T%d timeout during "
-			"transsmission\n", tfi, T);
+		LOGP(DRLCMAC, LOGL_NOTICE, "TBF TFI=%d TLLI=0x%08x T%d timeout during "
+			"transsmission\n", tfi, tlli, T);
 		rlcmac_diag();
 		/* fall through */
 	case 3193:
