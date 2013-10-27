@@ -309,7 +309,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	debug_diagram(tbf->bts, tbf->diag, "+---------------+");
 	debug_diagram(tbf->bts, tbf->diag, "|    THE END    |");
 	debug_diagram(tbf->bts, tbf->diag, "+---------------+");
-	LOGP(DRLCMAC, LOGL_INFO, "Free %s TBF=%d with TLLI=0x%08x.\n",
+	LOGP(DRLCMAC, LOGL_INFO, "Free %s TFI=%d with TLLI=0x%08x.\n",
 		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
 		tbf->tlli);
 	if (tbf->ul_ass_state != GPRS_RLCMAC_UL_ASS_NONE)
@@ -395,7 +395,7 @@ void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
 	enum gprs_rlcmac_tbf_state state)
 {
 	debug_diagram(tbf->bts, tbf->diag, "->%s", tbf_state_name[state]);
-	LOGP(DRLCMAC, LOGL_DEBUG, "%s TBF=%d changes state from %s to %s\n",
+	LOGP(DRLCMAC, LOGL_DEBUG, "%s TFI=%d changes state from %s to %s\n",
 		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
 		tbf_state_name[tbf->state], tbf_state_name[state]);
 	tbf->set_state(state);
@@ -405,11 +405,11 @@ void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
 			unsigned int seconds, unsigned int microseconds)
 {
 	if (!osmo_timer_pending(&tbf->timer))
-		LOGP(DRLCMAC, LOGL_DEBUG, "Starting %s TBF=%d timer %u.\n",
+		LOGP(DRLCMAC, LOGL_DEBUG, "Starting %s TFI=%d timer %u.\n",
 			(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL",
 			tbf->tfi, T);
 	else
-		LOGP(DRLCMAC, LOGL_DEBUG, "Restarting %s TBF=%d timer %u "
+		LOGP(DRLCMAC, LOGL_DEBUG, "Restarting %s TFI=%d timer %u "
 			"while old timer %u pending \n",
 			(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL",
 			tbf->tfi, T, tbf->T);
@@ -432,7 +432,7 @@ void gprs_rlcmac_tbf::stop_t3191()
 void gprs_rlcmac_tbf::stop_timer()
 {
 	if (osmo_timer_pending(&timer)) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Stopping %s TBF=%d timer %u.\n",
+		LOGP(DRLCMAC, LOGL_DEBUG, "Stopping %s TFI=%d timer %u.\n",
 			(direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi, T);
 		osmo_timer_del(&timer);
 	}
@@ -440,7 +440,7 @@ void gprs_rlcmac_tbf::stop_timer()
 
 void gprs_rlcmac_tbf::poll_timeout()
 {
-	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for %s TBF=%d\n",
+	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for %s TFI=%d\n",
 		(direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi);
 
 	poll_state = GPRS_RLCMAC_POLL_NONE;
@@ -527,7 +527,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
 		 && !(state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "Re-send dowlink assignment "
-				"for TBF=%d on PCH (IMSI=%s)\n", tfi,
+				"for TFI=%d on PCH (IMSI=%s)\n", tfi,
 				dir.dl.imsi);
 			/* send immediate assignment */
 			bts->snd_dl_ass(this, 0, dir.dl.imsi);
@@ -634,7 +634,7 @@ static void tbf_timer_cb(void *_tbf)
 
 void gprs_rlcmac_tbf::handle_timeout()
 {
-	LOGP(DRLCMAC, LOGL_DEBUG, "%s TBF=%d timer %u expired.\n",
+	LOGP(DRLCMAC, LOGL_DEBUG, "%s TFI=%d timer %u expired.\n",
 		(direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi, T);
 
 	num_T_exp++;
@@ -714,7 +714,7 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 		  || (tv_now.tv_sec == tv->tv_sec /* .. or if secs equal .. */
 		   && tv_now.tv_usec > tv->tv_usec))) { /* .. usecs expired */
 			LOGP(DRLCMACDL, LOGL_NOTICE, "Discarding LLC PDU of "
-				"DL TBF=%d, because lifetime limit reached\n",
+				"DL TFI=%d, because lifetime limit reached\n",
 				tfi);
 			bts->timedout_frame();
 			frames++;
@@ -776,7 +776,7 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 			break;
 		/* M == 0 and E == 0 is not allowed in this version. */
 		if (!m && !e) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TBF=%d "
+			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d "
 				"ignored, because M='0' and E='0'.\n",
 				this->tfi);
 			return 0;
@@ -856,7 +856,7 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 
 	/* Check if last offset would exceed frame. */
 	if (offset > len) {
-		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TBF=%d ignored, "
+		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d ignored, "
 			"because LI delimits data that exceeds block size.\n",
 			this->tfi);
 		return -EINVAL;
@@ -889,7 +889,7 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 		if (i != frames - 1) {
 			/* send frame to SGSN */
 			LOGP(DRLCMACUL, LOGL_INFO, "Complete UL frame for "
-				"TBF=%d: len=%d\n", this->tfi, this->llc_index);
+				"TFI=%d: len=%d\n", this->tfi, this->llc_index);
 			gprs_rlcmac_tx_ul_ud(this);
 			this->llc_index = 0; /* reset frame space */
 		/* also check if CV==0, because the frame may fill up the
@@ -899,7 +899,7 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 		} else if (rh->cv == 0) {
 			/* send frame to SGSN */
 			LOGP(DRLCMACUL, LOGL_INFO, "Complete UL frame for "
-				"TBF=%d that fits precisely in last block: "
+				"TFI=%d that fits precisely in last block: "
 				"len=%d\n", this->tfi, this->llc_index);
 			gprs_rlcmac_tx_ul_ud(this);
 			this->llc_index = 0; /* reset frame space */
@@ -929,7 +929,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 	uint16_t space, chunk;
 	int first_fin_ack = 0;
 
-	LOGP(DRLCMACDL, LOGL_DEBUG, "DL DATA TBF=%d downlink (V(A)==%d .. "
+	LOGP(DRLCMACDL, LOGL_DEBUG, "DL DATA TFI=%d downlink (V(A)==%d .. "
 		"V(S)==%d)\n", tfi, dir.dl.v_a, dir.dl.v_s);
 
 do_resend:
@@ -1050,7 +1050,7 @@ do_resend:
 				"this is a final block, we don't add length "
 				"header, and we are done\n", chunk, space);
 			LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for "
-				"TBF=%d that fits precisely in last block: "
+				"TFI=%d that fits precisely in last block: "
 				"len=%d\n", tfi, llc_length);
 			gprs_rlcmac_dl_bw(this, llc_length);
 			/* block is filled, so there is no extension */
@@ -1110,7 +1110,7 @@ do_resend:
 		memcpy(data, llc_frame + llc_index, chunk);
 		data += chunk;
 		space -= chunk;
-		LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for TBF=%d: "
+		LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for TFI=%d: "
 			"len=%d\n", tfi, llc_length);
 		gprs_rlcmac_dl_bw(this, llc_length);
 		/* reset LLC frame */
@@ -1119,7 +1119,7 @@ do_resend:
 		msg = llc_dequeue(gprs_bssgp_pcu_current_bctx());
 		if (msg) {
 			LOGP(DRLCMACDL, LOGL_INFO, "- Dequeue next LLC for "
-				"TBF=%d (len=%d)\n", tfi, msg->len);
+				"TFI=%d (len=%d)\n", tfi, msg->len);
 			update_llc_frame(msg);
 			msgb_free(msg);
 		}
@@ -1177,7 +1177,7 @@ tx_block:
 		/* scheduling not possible, because: */
 		if (poll_state != GPRS_RLCMAC_POLL_NONE)
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling is already "
-				"sheduled for TBF=%d, so we must wait for "
+				"sheduled for TFI=%d, so we must wait for "
 				"requesting downlink ack\n", tfi);
 		else if (control_ts != ts)
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
@@ -1245,7 +1245,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 	if (poll_ass_dl) {
 		if (poll_state != GPRS_RLCMAC_POLL_NONE) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling is already sheduled "
-				"for TBF=%d, so we must wait for downlink "
+				"for TFI=%d, so we must wait for downlink "
 				"assignment...\n", tfi);
 				return NULL;
 		}
@@ -1272,7 +1272,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 		new_tbf = this;
 	if (!new_tbf) {
 		LOGP(DRLCMACDL, LOGL_ERROR, "We have a schedule for downlink "
-			"assignment at uplink TBF=%d, but there is no downlink "
+			"assignment at uplink TFI=%d, but there is no downlink "
 			"TBF\n", tfi);
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 		return NULL;
@@ -1326,7 +1326,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 #if POLLING_ASSIGNMENT_UL == 1
 	if (poll_state != GPRS_RLCMAC_POLL_NONE) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-			"sheduled for TBF=%d, so we must wait for uplink "
+			"sheduled for TFI=%d, so we must wait for uplink "
 			"assignment...\n", tfi);
 			return NULL;
 	}
@@ -1346,7 +1346,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 
 	if (!new_tbf) {
 		LOGP(DRLCMACUL, LOGL_ERROR, "We have a schedule for uplink "
-			"assignment at downlink TBF=%d, but there is no uplink "
+			"assignment at downlink TFI=%d, but there is no uplink "
 			"TBF\n", tfi);
 		ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
 		return NULL;
@@ -1398,7 +1398,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ack(uint32_t fn)
 	if (final) {
 		if (poll_state != GPRS_RLCMAC_POLL_NONE) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-				"sheduled for TBF=%d, so we must wait for "
+				"sheduled for TFI=%d, so we must wait for "
 				"final uplink ack...\n", tfi);
 			return NULL;
 		}
@@ -1455,7 +1455,7 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 	struct msgb *msg;
 	uint16_t lost = 0, received = 0;
 
-	LOGP(DRLCMACDL, LOGL_DEBUG, "TBF=%d downlink acknowledge\n", tfi);
+	LOGP(DRLCMACDL, LOGL_DEBUG, "TFI=%d downlink acknowledge\n", tfi);
 
 	if (!final) {
 		/* show received array in debug (bit 64..1) */
@@ -1479,7 +1479,7 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 			 * FIXME: we should implement polling for
 			 * control ack!*/
 			LOGP(DRLCMACDL, LOGL_NOTICE, "- ack range is out of "
-				"V(A)..V(S) range (DL TBF=%d) Free TFB!\n", tfi);
+				"V(A)..V(S) range (DL TFI=%d) Free TBF!\n", tfi);
 				return 1; /* indicate to free TBF */
 		}
 		/* SSN - 1 is in range V(A)..V(S)-1 */

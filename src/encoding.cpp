@@ -366,7 +366,7 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	uint16_t mod_sns_half = (tbf->sns >> 1) - 1;
 	char bit;
 
-	LOGP(DRLCMACUL, LOGL_DEBUG, "Sending Ack/Nack for TBF=%d "
+	LOGP(DRLCMACUL, LOGL_DEBUG, "Sending Ack/Nack for TFI=%d "
 		"(final=%d)\n", tbf->tfi, final);
 
 	block->PAYLOAD_TYPE = 0x1;   // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header

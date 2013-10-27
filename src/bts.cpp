@@ -165,14 +165,14 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 			}
 			/* mark first slot found, if none is marked already */
 			if (ts == 8 && first_ts >= 0) {
-				LOGP(DRLCMAC, LOGL_DEBUG, "- %s TBF=%d uses "
+				LOGP(DRLCMAC, LOGL_DEBUG, "- %s TFI=%d uses "
 					"TRX=%d TS=%d, so we mark\n",
 					(tbf->direction == GPRS_RLCMAC_UL_TBF)
 						? "UL" : "DL",
 					tbf->tfi, tbf->trx_no, first_ts);
 				slot_mask[tbf->trx_no] |= (1 << first_ts);
 			} else
-				LOGP(DRLCMAC, LOGL_DEBUG, "- %s TBF=%d uses "
+				LOGP(DRLCMAC, LOGL_DEBUG, "- %s TFI=%d uses "
 					"already marked TRX=%d TS=%d\n",
 					(tbf->direction == GPRS_RLCMAC_UL_TBF)
 						? "UL" : "DL",
@@ -464,7 +464,7 @@ void BTS::trigger_dl_ass(
 	/* check for downlink tbf:  */
 	if (old_tbf) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment on "
-			"PACCH, because %s TBF=%d exists for TLLI=0x%08x\n",
+			"PACCH, because %s TFI=%d exists for TLLI=0x%08x\n",
 			(old_tbf->direction == GPRS_RLCMAC_UL_TBF)
 				? "UL" : "DL", old_tbf->tfi, old_tbf->tlli);
 		old_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
@@ -476,7 +476,7 @@ void BTS::trigger_dl_ass(
 		/* start timer */
 		tbf_timer_start(tbf, 0, Tassign_pacch);
 	} else {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for TBF=%d on PCH, no TBF exist (IMSI=%s)\n", tbf->tfi, imsi);
+		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for TFI=%d on PCH, no TBF exist (IMSI=%s)\n", tbf->tfi, imsi);
 		if (!imsi || strlen(imsi) < 3) {
 			LOGP(DRLCMAC, LOGL_ERROR, "No valid IMSI!\n");
 			return;
@@ -681,13 +681,13 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 	/* find TBF inst from given TFI */
 	tbf = bts()->tbf_by_tfi(rh->tfi, trx_no(), GPRS_RLCMAC_UL_TBF);
 	if (!tbf) {
-		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA unknown TBF=%d\n",
+		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA unknown TFI=%d\n",
 			rh->tfi);
 		return 0;
 	}
 	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_UL_DATA);
 
-	LOGP(DRLCMACUL, LOGL_DEBUG, "UL DATA TBF=%d received (V(Q)=%d .. "
+	LOGP(DRLCMACUL, LOGL_DEBUG, "UL DATA TFI=%d received (V(Q)=%d .. "
 		"V(R)=%d)\n", rh->tfi, tbf->dir.ul.v_q, tbf->dir.ul.v_r);
 
 	/* process RSSI */
@@ -699,7 +699,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 
 		/* no TLLI yet */
 		if (!rh->ti) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TBF=%d without "
+			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d without "
 				"TLLI, but no TLLI received yet\n", rh->tfi);
 			return 0;
 		}
@@ -707,14 +707,14 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 		if (rc) {
 			bts()->decode_error();
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Failed to decode TLLI "
-				"of UL DATA TBF=%d.\n", rh->tfi);
+				"of UL DATA TFI=%d.\n", rh->tfi);
 			return 0;
 		}
 		LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
-			"UL DATA TBF=%d.\n", tbf->tlli, rh->tfi);
+			"UL DATA TFI=%d.\n", tbf->tlli, rh->tfi);
 		if ((dl_tbf = bts()->tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_DL_TBF))) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-				"TLLI=0x%08x while DL TBF=%d still exists. "
+				"TLLI=0x%08x while DL TFI=%d still exists. "
 				"Killing pending DL TBF\n", tbf->tlli,
 				dl_tbf->tfi);
 			tbf_free(dl_tbf);
@@ -723,7 +723,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 		 * yet marked valid */
 		if ((ul_tbf = bts()->tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF))) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-				"TLLI=0x%08x while UL TBF=%d still exists. "
+				"TLLI=0x%08x while UL TFI=%d still exists. "
 				"Killing pending UL TBF\n", tbf->tlli,
 				ul_tbf->tfi);
 			tbf_free(ul_tbf);
@@ -738,12 +738,12 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 		rc = Decoding::tlli_from_ul_data(data, len, &tlli);
 		if (rc) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Failed to decode TLLI "
-				"of UL DATA TBF=%d.\n", rh->tfi);
+				"of UL DATA TFI=%d.\n", rh->tfi);
 			return 0;
 		}
 		if (tlli != tbf->tlli) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "TLLI mismatch on UL "
-				"DATA TBF=%d. (Ignoring due to contention "
+				"DATA TFI=%d. (Ignoring due to contention "
 				"resolution)\n", rh->tfi);
 			return 0;
 		}
@@ -876,7 +876,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(RlcMacUplink_t *ul_control_block, uint32_
 	tbf = bts()->tbf_by_poll_fn(fn, trx_no(), ts_no);
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
-			"unknown FN=%u TLL=0x%08x (TRX %d TS %d)\n",
+			"unknown FN=%u TLLI=0x%08x (TRX %d TS %d)\n",
 			fn, tlli, trx_no(), ts_no);
 		return;
 	}
@@ -898,7 +898,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(RlcMacUplink_t *ul_control_block, uint32_
 			tbf->state_flags &=
 				~(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
 				LOGP(DRLCMAC, LOGL_NOTICE, "Recovered uplink "
-					"ack for UL TBF=%d\n", tbf->tfi);
+					"ack for UL TFI=%d\n", tbf->tfi);
 		}
 		tbf_free(tbf);
 		return;
@@ -925,7 +925,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(RlcMacUplink_t *ul_control_block, uint32_
 			tbf->state_flags &=
 				~(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
 			LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink "
-				"assignment for DL TBF=%d\n", tbf->tfi);
+				"assignment for DL TFI=%d\n", tbf->tfi);
 		}
 		tbf_assign_control_ts(tbf);
 		return;
@@ -951,7 +951,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(RlcMacUplink_t *ul_control_block, uint32_
 			tbf->state_flags &=
 				~(1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
 			LOGP(DRLCMAC, LOGL_NOTICE, "Recovered uplink "
-				"assignment for UL TBF=%d\n", tbf->tfi);
+				"assignment for UL TFI=%d\n", tbf->tfi);
 		}
 		tbf_assign_control_ts(tbf);
 		return;
@@ -983,7 +983,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
 		tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 		LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink ack "
-			"for DL TBF=%d\n", tbf->tfi);
+			"for DL TFI=%d\n", tbf->tfi);
 	}
 	/* reset N3105 */
 	tbf->n3105 = 0;
@@ -1023,7 +1023,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
 		if (tbf) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-				"TLLI=0x%08x while UL TBF=%d still "
+				"TLLI=0x%08x while UL TFI=%d still "
 				"exists. Killing pending DL TBF\n",
 				tlli, tbf->tfi);
 			tbf_free(tbf);
@@ -1036,7 +1036,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 
 			if ((dl_tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF))) {
 				LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-						"TLLI=0x%08x while DL TBF=%d still exists. "
+						"TLLI=0x%08x while DL TFI=%d still exists. "
 					"Killing pending DL TBF\n", tlli,
 				dl_tbf->tfi);
 				tbf_free(dl_tbf);
@@ -1081,14 +1081,14 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			tfi = request->ID.u.Global_TFI.u.DOWNLINK_TFI;
 			tbf = bts()->tbf_by_tfi(tfi, trx_no(), GPRS_RLCMAC_DL_TBF);
 			if (!tbf) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TBF=%d\n", tlli);
+				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TLLI=0x%08x\n", tlli);
 				return;
 			}
 		} else {
 			tfi = request->ID.u.Global_TFI.u.UPLINK_TFI;
 			tbf = bts()->tbf_by_tfi(tfi, trx_no(), GPRS_RLCMAC_UL_TBF);
 			if (!tbf) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TBF=%d\n", tlli);
+				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TLLI=%d\n", tlli);
 				return;
 			}
 		}

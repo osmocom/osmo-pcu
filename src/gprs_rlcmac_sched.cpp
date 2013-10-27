@@ -96,7 +96,7 @@ uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 		usf = tbf->dir.ul.usf[ts];
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling USF=%d for "
-			"required uplink resource of UL TBF=%d\n", trx, ts, fn,
+			"required uplink resource of UL TFI=%d\n", trx, ts, fn,
 			block_nr, usf, tfi);
 		/* next TBF to handle resource is the next one */
 		pdch->next_ul_tfi = (tfi + 1) & 31;
@@ -134,7 +134,7 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_bts *bts,
 	/* any message */
 	if (msg) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling control "
-			"message at RTS for %s TBF=%d (TRX=%d, TS=%d)\n",
+			"message at RTS for %s TFI=%d (TRX=%d, TS=%d)\n",
 			(tbf->direction == GPRS_RLCMAC_UL_TBF)
 					? "UL" : "DL", tbf->tfi, trx, ts);
 		return msg;
@@ -178,7 +178,7 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 			continue;
 
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling data message at "
-			"RTS for DL TBF=%d (TRX=%d, TS=%d)\n", tfi, trx, ts);
+			"RTS for DL TFI=%d (TRX=%d, TS=%d)\n", tfi, trx, ts);
 		/* next TBF to handle resource is the next one */
 		pdch->next_dl_tfi = (tfi + 1) & 31;
 		/* generate DL data block */
