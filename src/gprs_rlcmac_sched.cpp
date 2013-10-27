@@ -134,9 +134,8 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_bts *bts,
 	/* any message */
 	if (msg) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling control "
-			"message at RTS for %s TFI=%d (TRX=%d, TS=%d)\n",
-			(tbf->direction == GPRS_RLCMAC_UL_TBF)
-					? "UL" : "DL", tbf->tfi, trx, ts);
+			"message at RTS for %s (TRX=%d, TS=%d)\n",
+			tbf_name(tbf), trx, ts);
 		return msg;
 	}
 	/* schedule PACKET PAGING REQUEST */
@@ -240,10 +239,9 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	if (poll_tbf)
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling free USF for "
-			"polling at FN=%d of %s TFI=%d\n", trx, ts, fn,
+			"polling at FN=%d of %s\n", trx, ts, fn,
 			block_nr, poll_fn,
-			(poll_tbf->direction == GPRS_RLCMAC_UL_TBF)
-				? "UL" : "DL", poll_tbf->tfi);
+			tbf_name(poll_tbf));
 		/* use free USF */
 	/* else. check for sba */
 	else if ((sba_fn = bts->bts->sba()->sched(trx, ts, fn, block_nr) != 0xffffffff))

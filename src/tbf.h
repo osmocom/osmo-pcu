@@ -120,10 +120,11 @@ struct gprs_rlcmac_tbf {
 	bool is_tlli_valid() const;
 	void tlli_mark_valid();
 
+	uint8_t tfi() const;
+
 	struct llist_head list;
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
-	uint8_t tfi;
 	struct gprs_rlcmac_trx *trx;
 	uint8_t tsc;
 	uint8_t first_ts; /* first TS used by TBF */
@@ -224,6 +225,7 @@ struct gprs_rlcmac_tbf {
 	 */
 	uint32_t m_tlli;
 	uint8_t m_tlli_valid;
+	uint8_t m_tfi;
 
 protected:
 	gprs_rlcmac_bts *bts_data() const;
@@ -278,6 +280,11 @@ inline uint32_t gprs_rlcmac_tbf::tlli() const
 inline bool gprs_rlcmac_tbf::is_tlli_valid() const
 {
 	return m_tlli_valid;
+}
+
+inline uint8_t gprs_rlcmac_tbf::tfi() const
+{
+	return m_tfi;
 }
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf);

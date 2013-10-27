@@ -120,8 +120,8 @@ static void assign_uplink_tbf_usf(
 				struct gprs_rlcmac_pdch *pdch,
 				struct gprs_rlcmac_tbf *tbf, int8_t usf)
 {
-	tbf->trx->ul_tbf[tbf->tfi] = tbf;
-	pdch->ul_tbf[tbf->tfi] = tbf;
+	tbf->trx->ul_tbf[tbf->tfi()] = tbf;
+	pdch->ul_tbf[tbf->tfi()] = tbf;
 	tbf->pdch[pdch->ts_no] = pdch;
 	tbf->dir.ul.usf[pdch->ts_no] = usf;
 }
@@ -130,8 +130,8 @@ static void assign_dlink_tbf(
 				struct gprs_rlcmac_pdch *pdch,
 				struct gprs_rlcmac_tbf *tbf)
 {
-	tbf->trx->dl_tbf[tbf->tfi] = tbf;
-	pdch->dl_tbf[tbf->tfi] = tbf;
+	tbf->trx->dl_tbf[tbf->tfi()] = tbf;
+	pdch->dl_tbf[tbf->tfi()] = tbf;
 	tbf->pdch[pdch->ts_no] = pdch;
 }
 

@@ -219,7 +219,7 @@ void Encoding::write_packet_uplink_assignment(
 	
 	bitvec_write_field(dest, wp,0x0,1); // USF_GRANULARITY
 	bitvec_write_field(dest, wp,0x1,1); // switch TFI   : on
-	bitvec_write_field(dest, wp,tbf->tfi,5);// TFI
+	bitvec_write_field(dest, wp,tbf->tfi(),5);// TFI
 
 	bitvec_write_field(dest, wp,0x0,1); //
 	bitvec_write_field(dest, wp,0x0,1); // TBF Starting Time = off
@@ -292,7 +292,7 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_
 	block->u.Packet_Downlink_Assignment.Frequency_Parameters.u.ARFCN   = tbf->trx->arfcn; // ARFCN
 
 	block->u.Packet_Downlink_Assignment.Exist_DOWNLINK_TFI_ASSIGNMENT  = 0x1;     // DOWNLINK TFI ASSIGNMENT = on
-	block->u.Packet_Downlink_Assignment.DOWNLINK_TFI_ASSIGNMENT        = tbf->tfi; // TFI
+	block->u.Packet_Downlink_Assignment.DOWNLINK_TFI_ASSIGNMENT        = tbf->tfi(); // TFI
 
 	block->u.Packet_Downlink_Assignment.Exist_Power_Control_Parameters = 0x1;   // Power Control Parameters = on
 	block->u.Packet_Downlink_Assignment.Power_Control_Parameters.ALPHA = alpha;   // ALPHA
@@ -366,8 +366,8 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	uint16_t mod_sns_half = (tbf->sns >> 1) - 1;
 	char bit;
 
-	LOGP(DRLCMACUL, LOGL_DEBUG, "Sending Ack/Nack for TFI=%d "
-		"(final=%d)\n", tbf->tfi, final);
+	LOGP(DRLCMACUL, LOGL_DEBUG, "Encoding Ack/Nack for %s "
+		"(final=%d)\n", tbf_name(tbf), final);
 
 	block->PAYLOAD_TYPE = 0x1;   // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
 	block->RRBP         = 0x0;   // N+13
@@ -376,7 +376,7 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 
 	block->u.Packet_Uplink_Ack_Nack.MESSAGE_TYPE = 0x9;      // Packet Downlink Assignment
 	block->u.Packet_Uplink_Ack_Nack.PAGE_MODE    = 0x0;      // Normal Paging
-	block->u.Packet_Uplink_Ack_Nack.UPLINK_TFI   = tbf->tfi; // Uplink TFI
+	block->u.Packet_Uplink_Ack_Nack.UPLINK_TFI   = tbf->tfi(); // Uplink TFI
 
 	block->u.Packet_Uplink_Ack_Nack.UnionType    = 0x0;      // PU_AckNack_GPRS = on
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = bts->initial_cs_ul - 1;             // CS1

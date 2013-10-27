@@ -424,13 +424,14 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
 		tbf_timer_start(tbf, 3169, m_bts.t3169, 0);
-		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] START TFI: %u\n",
-			tbf->tfi);
-		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u RACH "
-			"qbit-ta=%d ra=0x%02x, Fn=%d (%d,%d,%d)\n", tbf->tfi,
+		LOGP(DRLCMAC, LOGL_DEBUG, "%s [UPLINK] START\n",
+			tbf_name(tbf));
+		LOGP(DRLCMAC, LOGL_DEBUG, "%s RX: [PCU <- BTS] RACH "
+			"qbit-ta=%d ra=0x%02x, Fn=%d (%d,%d,%d)\n",
+			tbf_name(tbf),
 			qta, ra, Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
-		LOGP(DRLCMAC, LOGL_INFO, "TX: START TFI: %u Immediate "
-			"Assignment Uplink (AGCH)\n", tbf->tfi);
+		LOGP(DRLCMAC, LOGL_INFO, "%s TX: START Immediate "
+			"Assignment Uplink (AGCH)\n", tbf_name(tbf));
 	}
 	bitvec *immediate_assignment = bitvec_alloc(22) /* without plen */;
 	bitvec_unhex(immediate_assignment,
@@ -443,7 +444,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	else
 		plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
 			Fn, tbf->ta, tbf->trx->arfcn, tbf->first_ts, tbf->tsc,
-			tbf->tfi, tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0, 0,
+			tbf->tfi(), tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0, 0,
 			m_bts.alpha, m_bts.gamma, -1);
 	pcu_l1if_tx_agch(immediate_assignment, plen);
 	bitvec_free(immediate_assignment);
@@ -499,7 +500,7 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 	 * so the assignment will not conflict with possible RACH requests. */
 	plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 1, 125,
 		(tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta,
-		tbf->trx->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, 0, tbf->tlli(), poll,
+		tbf->trx->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi(), 0, tbf->tlli(), poll,
 		tbf->poll_fn, 0, m_bts.alpha, m_bts.gamma, -1);
 	pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
 	bitvec_free(immediate_assignment);
@@ -712,9 +713,9 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 			"UL DATA TFI=%d.\n", tbf->tlli(), rh->tfi);
 		if ((dl_tbf = bts()->tbf_by_tlli(tbf->tlli(), GPRS_RLCMAC_DL_TBF))) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-				"TLLI=0x%08x while DL TFI=%d still exists. "
+				"TLLI=0x%08x while %s still exists. "
 				"Killing pending DL TBF\n", tbf->tlli(),
-				dl_tbf->tfi);
+				tbf_name(dl_tbf));
 			tbf_free(dl_tbf);
 		}
 		/* tbf_by_tlli will not find your TLLI, because it is not
@@ -920,7 +921,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 			tbf->state_flags &=
 				~(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
 			LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink "
-				"assignment for DL TFI=%d\n", tbf->tfi);
+				"assignment for %s\n", tbf_name(tbf));
 		}
 		tbf_assign_control_ts(tbf);
 		return;
@@ -969,7 +970,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 			fn, tfi, trx_no(), ts_no);
 		return;
 	}
-	if (tbf->tfi != tfi) {
+	if (tbf->tfi() != tfi) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
 			"wrong TFI=%d, ignoring!\n", tfi);
 		return;
@@ -978,7 +979,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
 		tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 		LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink ack "
-			"for DL TFI=%d\n", tbf->tfi);
+			"for %s\n", tbf_name(tbf));
 	}
 	/* reset N3105 */
 	tbf->n3105 = 0;
@@ -1020,18 +1021,18 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
 		if (tbf) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-				"TLLI=0x%08x while UL TFI=%d still "
+				"TLLI=0x%08x while %s still "
 				"exists. Killing pending DL TBF\n",
-				tlli, tbf->tfi);
+				tlli, tbf_name(tbf));
 			tbf_free(tbf);
 			tbf = NULL;
 		}
 
 		if ((dl_tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF))) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-					"TLLI=0x%08x while DL TFI=%d still exists. "
+				"TLLI=0x%08x while %s still exists. "
 				"Killing pending DL TBF\n", tlli,
-			dl_tbf->tfi);
+				tbf_name(dl_tbf));
 			tbf_free(dl_tbf);
 		}
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
