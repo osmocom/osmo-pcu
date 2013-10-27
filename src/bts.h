@@ -159,6 +159,7 @@ public:
 		CTR_SBA_TIMEDOUT,
 		CTR_LLC_FRAME_TIMEDOUT,
 		CTR_LLC_FRAME_DROPPED,
+		CTR_RACH_REQUESTS,
 	};
 
 	BTS();
@@ -202,6 +203,7 @@ public:
 	void sba_timedout();
 	void timedout_frame();
 	void dropped_frame();
+	void rach_frame();
 
 	/*
 	 * Below for C interface for the VTY
@@ -262,6 +264,7 @@ CREATE_COUNT_INLINE(sba_freed, CTR_SBA_FREED)
 CREATE_COUNT_INLINE(sba_timedout, CTR_SBA_TIMEDOUT)
 CREATE_COUNT_INLINE(timedout_frame, CTR_LLC_FRAME_TIMEDOUT);
 CREATE_COUNT_INLINE(dropped_frame, CTR_LLC_FRAME_DROPPED);
+CREATE_COUNT_INLINE(rach_frame, CTR_RACH_REQUESTS);
 
 #undef CREATE_COUNT_INLINE
 

@@ -59,6 +59,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "sba.timedout",		"SBA Timeout          "},
 	{ "llc.timeout",		"Timedout Frames      "},
 	{ "llc.dropped",		"Dropped Frames       "},
+	{ "rach.requests",		"RACH requests        "},
 };
 
 static const struct rate_ctr_group_desc bts_ctrg_desc = {
@@ -378,6 +379,8 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	uint32_t sb_fn = 0;
 	int rc;
 	uint8_t plen;
+
+	rach_frame();
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, so we provide "
 		"one:\n");
@@ -1104,6 +1107,9 @@ int gprs_rlcmac_pdch::rcv_control_block(
 			bts()->sba()->free_sba(sba);
 		}
 		gprs_rlcmac_meas_rep(&ul_control_block->u.Packet_Measurement_Report);
+		break;
+	case MT_PACKET_UPLINK_DUMMY_CONTROL_BLOCK:
+		/* ignoring it. change the SI to not force sending these? */
 		break;
 	default:
 		bts()->decode_error();
