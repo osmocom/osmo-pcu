@@ -1010,7 +1010,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(RlcMacUplink_t *ul_control_block,
 	}
 }
 
-void gprs_rlcmac_pdch::rcv_resource_request(RlcMacUplink_t *ul_control_block, uint32_t fn)
+void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, uint32_t fn)
 {
 	int8_t tfi = 0; /* must be signed */
 	uint32_t tlli = 0;
@@ -1018,8 +1018,8 @@ void gprs_rlcmac_pdch::rcv_resource_request(RlcMacUplink_t *ul_control_block, ui
 	struct gprs_rlcmac_sba *sba;
 	int rc;
 
-	if (ul_control_block->u.Packet_Resource_Request.ID.UnionType) {
-		tlli = ul_control_block->u.Packet_Resource_Request.ID.u.TLLI;
+	if (request->ID.UnionType) {
+		tlli = request->ID.u.TLLI;
 		tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
 		if (tbf) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
@@ -1060,8 +1060,8 @@ void gprs_rlcmac_pdch::rcv_resource_request(RlcMacUplink_t *ul_control_block, ui
 				bts()->timing_advance()->remember(tlli, ta);
 				bts()->sba()->free_sba(sba);
 			}
-			if (ul_control_block->u.Packet_Resource_Request.Exist_MS_Radio_Access_capability)
-				ms_class = Decoding::get_ms_class_by_capability(&ul_control_block->u.Packet_Resource_Request.MS_Radio_Access_capability);
+			if (request->Exist_MS_Radio_Access_capability)
+				ms_class = Decoding::get_ms_class_by_capability(&request->MS_Radio_Access_capability);
 			if (!ms_class)
 				LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");
 			tbf = tbf_alloc_ul(bts_data(), trx_no(), ms_class, tlli, ta, NULL);
@@ -1077,15 +1077,15 @@ void gprs_rlcmac_pdch::rcv_resource_request(RlcMacUplink_t *ul_control_block, ui
 		}
 		tfi = tbf->tfi;
 	} else {
-		if (ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.UnionType) {
-			tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.DOWNLINK_TFI;
+		if (request->ID.u.Global_TFI.UnionType) {
+			tfi = request->ID.u.Global_TFI.u.DOWNLINK_TFI;
 			tbf = bts()->tbf_by_tfi(tfi, trx_no(), GPRS_RLCMAC_DL_TBF);
 			if (!tbf) {
 				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TBF=%d\n", tlli);
 				return;
 			}
 		} else {
-			tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.UPLINK_TFI;
+			tfi = request->ID.u.Global_TFI.u.UPLINK_TFI;
 			tbf = bts()->tbf_by_tfi(tfi, trx_no(), GPRS_RLCMAC_UL_TBF);
 			if (!tbf) {
 				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TBF=%d\n", tlli);
@@ -1131,7 +1131,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 		rcv_control_dl_ack_nack(ul_control_block, fn);
 		break;
 	case MT_PACKET_RESOURCE_REQUEST:
-		rcv_resource_request(ul_control_block, fn);
+		rcv_resource_request(&ul_control_block->u.Packet_Resource_Request, fn);
 		break;
 	case MT_PACKET_MEASUREMENT_REPORT:
 		rcv_measurement_report(&ul_control_block->u.Packet_Measurement_Report, fn);
