@@ -114,12 +114,16 @@ struct gprs_rlcmac_tbf {
 
 	void poll_timeout();
 
+	/** tlli handling */
+	void update_tlli(uint32_t tlli);
+	uint32_t tlli() const;
+	bool is_tlli_valid() const;
+	void tlli_mark_valid();
+
 	struct llist_head list;
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
 	uint8_t tfi;
-	uint32_t tlli;
-	uint8_t tlli_valid;
 	struct gprs_rlcmac_trx *trx;
 	uint8_t tsc;
 	uint8_t first_ts; /* first TS used by TBF */
@@ -214,8 +218,16 @@ struct gprs_rlcmac_tbf {
 	/* store the BTS this TBF belongs to */
 	BTS *bts;
 
+	/*
+	 * private fields. We can't make it private as it is breaking the
+	 * llist macros.
+	 */
+	uint32_t m_tlli;
+	uint8_t m_tlli_valid;
+
 protected:
 	gprs_rlcmac_bts *bts_data() const;
+
 };
 
 
@@ -256,6 +268,16 @@ inline bool gprs_rlcmac_tbf::state_is_not(enum gprs_rlcmac_tbf_state rhs) const
 inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
 {
 	state = new_state;
+}
+
+inline uint32_t gprs_rlcmac_tbf::tlli() const
+{
+	return m_tlli;
+}
+
+inline bool gprs_rlcmac_tbf::is_tlli_valid() const
+{
+	return m_tlli_valid;
 }
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf);

@@ -133,7 +133,7 @@ int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 	qos_profile[0] = QOS_PROFILE >> 16;
 	qos_profile[1] = QOS_PROFILE >> 8;
 	qos_profile[2] = QOS_PROFILE;
-	bssgp_tx_ul_ud(bctx, tbf->tlli, qos_profile, llc_pdu);
+	bssgp_tx_ul_ud(bctx, tbf->tlli(), qos_profile, llc_pdu);
 
 	return 0;
 }

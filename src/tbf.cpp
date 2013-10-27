@@ -195,8 +195,8 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 		/* FIXME: send reject */
 		return -EBUSY;
 	}
-	tbf->tlli = tlli;
-	tbf->tlli_valid = 1;
+	tbf->m_tlli = tlli;
+	tbf->m_tlli_valid = 1;
 	tbf->ta = ta;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s [DOWNLINK] START\n", tbf_name(tbf));
@@ -262,8 +262,8 @@ struct gprs_rlcmac_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 		/* FIXME: send reject */
 		return NULL;
 	}
-	tbf->tlli = tlli;
-	tbf->tlli_valid = 1; /* no contention resolution */
+	tbf->m_tlli = tlli;
+	tbf->m_tlli_valid = 1; /* no contention resolution */
 	tbf->dir.ul.contention_resolution_done = 1;
 	tbf->ta = ta; /* use current TA */
 	tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
@@ -355,7 +355,7 @@ int gprs_rlcmac_tbf::update()
 		return -EINVAL;
 	}
 
-	ul_tbf = bts->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+	ul_tbf = bts->tbf_by_tlli(m_tlli, GPRS_RLCMAC_UL_TBF);
 
 	tbf_unlink_pdch(this);
 	rc = bts_data->alloc_algorithm(bts_data, ul_tbf, this, bts_data->alloc_algorithm_curst, 0);
@@ -727,7 +727,7 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 			frames = 0xff;
 		if (octets > 0xffffff)
 			octets = 0xffffff;
-		bssgp_tx_llc_discarded(bctx, tlli, frames, octets);
+		bssgp_tx_llc_discarded(bctx, m_tlli, frames, octets);
 	}
 
 	return msg;
@@ -1264,7 +1264,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 			return NULL;
 		}
 		#warning "THIS should probably go over the IMSI too"
-		new_tbf = bts->tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF);
+		new_tbf = bts->tbf_by_tlli(m_tlli, GPRS_RLCMAC_DL_TBF);
 	} else
 		new_tbf = this;
 	if (!new_tbf) {
@@ -1285,7 +1285,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 	}
 	bitvec_unhex(ass_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	LOGP(DRLCMAC, LOGL_INFO, "TBF: START TFI: %u TLLI: 0x%08x Packet Downlink Assignment (PACCH)\n", new_tbf->tfi, new_tbf->tlli);
+	LOGP(DRLCMAC, LOGL_INFO, "%s  start Packet Downlink Assignment (PACCH)\n", tbf_name(new_tbf));
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	Encoding::write_packet_downlink_assignment(mac_control_block, tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), new_tbf,
@@ -1337,7 +1337,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	/* on down TBF we get the uplink TBF to be assigned. */
 #warning "Probably want to find by IMSI too"
 	if (direction == GPRS_RLCMAC_DL_TBF)
-		new_tbf = bts->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+		new_tbf = bts->tbf_by_tlli(m_tlli, GPRS_RLCMAC_UL_TBF);
 	else
 		new_tbf = this;
 
@@ -1352,7 +1352,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	msg = msgb_alloc(23, "rlcmac_ul_ass");
 	if (!msg)
 		return NULL;
-	LOGP(DRLCMAC, LOGL_INFO, "TBF: START TFI: %u TLLI: 0x%08x Packet Uplink Assignment (PACCH)\n", new_tbf->tfi, new_tbf->tlli);
+	LOGP(DRLCMAC, LOGL_INFO, "%ss start Packet Uplink Assignment (PACCH)\n", tbf_name(new_tbf));
 	bitvec *ass_vec = bitvec_alloc(23);
 	if (!ass_vec) {
 		msgb_free(msg);
@@ -1361,8 +1361,8 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	bitvec_unhex(ass_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	Encoding::write_packet_uplink_assignment(bts_data(), ass_vec, tfi,
-		(direction == GPRS_RLCMAC_DL_TBF), tlli,
-		tlli_valid, new_tbf, POLLING_ASSIGNMENT_UL, bts_data()->alpha,
+		(direction == GPRS_RLCMAC_DL_TBF), m_tlli,
+		m_tlli_valid, new_tbf, POLLING_ASSIGNMENT_UL, bts_data()->alpha,
 		bts_data()->gamma, -1);
 	bitvec_pack(ass_vec, msgb_put(msg, 23));
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
@@ -1607,11 +1607,27 @@ void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_pdch *pdch)
 	}
 }
 
+void gprs_rlcmac_tbf::tlli_mark_valid()
+{
+	m_tlli_valid = true;
+}
+
+void gprs_rlcmac_tbf::update_tlli(uint32_t tlli)
+{
+	if (tlli == m_tlli)
+		return;
+
+#warning "TODO.. find the DL/UL opposite and update the TLLI too"
+	LOGP(DRLCMAC, LOGL_NOTICE, "%s changing tlli to TLLI=0x%08x\n",
+		tbf_name(this), tlli);
+	m_tlli = tlli;
+}
+
 const char *tbf_name(gprs_rlcmac_tbf *tbf)
 {
 	static char buf[40];
 	snprintf(buf, sizeof(buf), "TBF(TFI=%d TLLI=0x%08x DIR=%s)",
-			tbf->tfi, tbf->tlli,
+			tbf->tfi, tbf->m_tlli,
 			tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL");
 	buf[sizeof(buf) - 1] = '\0';
 	return buf;

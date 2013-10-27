@@ -216,13 +216,13 @@ gprs_rlcmac_tbf *BTS::tbf_by_tlli(uint32_t tlli, enum gprs_rlcmac_tbf_direction 
 	if (dir == GPRS_RLCMAC_UL_TBF) {
 		llist_for_each_entry(tbf, &m_bts.ul_tbfs, list) {
 			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
-			 && tbf->tlli == tlli && tbf->tlli_valid)
+			 && tbf->tlli() == tlli && tbf->is_tlli_valid())
 				return tbf;
 		}
 	} else {
 		llist_for_each_entry(tbf, &m_bts.dl_tbfs, list) {
 			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
-			 && tbf->tlli == tlli)
+			 && tbf->tlli() == tlli)
 				return tbf;
 		}
 	}
@@ -499,7 +499,7 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 	 * so the assignment will not conflict with possible RACH requests. */
 	plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 1, 125,
 		(tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta,
-		tbf->trx->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, 0, tbf->tlli, poll,
+		tbf->trx->arfcn, tbf->first_ts, tbf->tsc, tbf->tfi, 0, tbf->tlli(), poll,
 		tbf->poll_fn, 0, m_bts.alpha, m_bts.gamma, -1);
 	pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
 	bitvec_free(immediate_assignment);
@@ -690,8 +690,9 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 	gprs_rlcmac_rssi(tbf, rssi);
 
 	/* get TLLI */
-	if (!tbf->tlli_valid) {
+	if (!tbf->is_tlli_valid()) {
 		struct gprs_rlcmac_tbf *dl_tbf, *ul_tbf;
+		uint32_t tlli;
 
 		/* no TLLI yet */
 		if (!rh->ti) {
@@ -699,36 +700,36 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 				"TLLI, but no TLLI received yet\n", rh->tfi);
 			return 0;
 		}
-#warning "Silent TLLI change possible.. Should update TA.."
-		rc = Decoding::tlli_from_ul_data(data, len, &tbf->tlli);
+		rc = Decoding::tlli_from_ul_data(data, len, &tlli);
 		if (rc) {
 			bts()->decode_error();
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Failed to decode TLLI "
 				"of UL DATA TFI=%d.\n", rh->tfi);
 			return 0;
 		}
+		tbf->update_tlli(tlli);
 		LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
-			"UL DATA TFI=%d.\n", tbf->tlli, rh->tfi);
-		if ((dl_tbf = bts()->tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_DL_TBF))) {
+			"UL DATA TFI=%d.\n", tbf->tlli(), rh->tfi);
+		if ((dl_tbf = bts()->tbf_by_tlli(tbf->tlli(), GPRS_RLCMAC_DL_TBF))) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 				"TLLI=0x%08x while DL TFI=%d still exists. "
-				"Killing pending DL TBF\n", tbf->tlli,
+				"Killing pending DL TBF\n", tbf->tlli(),
 				dl_tbf->tfi);
 			tbf_free(dl_tbf);
 		}
 		/* tbf_by_tlli will not find your TLLI, because it is not
 		 * yet marked valid */
-		if ((ul_tbf = bts()->tbf_by_tlli(tbf->tlli, GPRS_RLCMAC_UL_TBF))) {
+		if ((ul_tbf = bts()->tbf_by_tlli(tbf->tlli(), GPRS_RLCMAC_UL_TBF))) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-				"TLLI=0x%08x while UL TFI=%d still exists. "
-				"Killing pending UL TBF\n", tbf->tlli,
-				ul_tbf->tfi);
+				"TLLI=0x%08x while %s still exists. "
+				"Killing pending UL TBF\n", tbf->tlli(),
+				tbf_name(ul_tbf));
 			tbf_free(ul_tbf);
 		}
 		/* mark TLLI valid now */
-		tbf->tlli_valid = 1;
+		tbf->tlli_mark_valid();
 		/* store current timing advance */
-		bts()->timing_advance()->remember(tbf->tlli, tbf->ta);
+		bts()->timing_advance()->remember(tbf->tlli(), tbf->ta);
 	/* already have TLLI, but we stille get another one */
 	} else if (rh->ti) {
 		uint32_t tlli;
@@ -738,7 +739,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 				"of UL DATA TFI=%d.\n", rh->tfi);
 			return 0;
 		}
-		if (tlli != tbf->tlli) {
+		if (tlli != tbf->tlli()) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "TLLI mismatch on UL "
 				"DATA TFI=%d. (Ignoring due to contention "
 				"resolution)\n", rh->tfi);
@@ -877,12 +878,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 			fn, tlli, trx_no(), ts_no);
 		return;
 	}
-	if (tlli != tbf->tlli) {
-		LOGP(DRLCMAC, LOGL_INFO, "Phone changed TLLI to "
-			"0x%08x\n", tlli);
-#warning "Silent TLLI changes... update TA.. and other structs"
-		tbf->tlli = tlli;
-	}
+	tbf->update_tlli(tlli);
 	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] %s Packet Control Ack\n", tbf_name(tbf));
 	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 
@@ -908,7 +904,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 		debug_diagram(bts(), tbf->diag, "got CTL-ACK DL-ASS");
 		if (tbf->direction == GPRS_RLCMAC_UL_TBF)
-			tbf = bts()->tbf_by_tlli(tbf->tlli,
+			tbf = bts()->tbf_by_tlli(tbf->tlli(),
 						GPRS_RLCMAC_DL_TBF);
 #warning "TBF is changing on the way... *sigh*"
 		if (!tbf) {
@@ -937,7 +933,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		debug_diagram(bts(), tbf->diag, "got CTL-AC UL-ASS");
 #warning "TBF is changing on the way... *sigh*"
 		if (tbf->direction == GPRS_RLCMAC_DL_TBF)
-			tbf = bts()->tbf_by_tlli(tbf->tlli,
+			tbf = bts()->tbf_by_tlli(tbf->tlli(),
 						GPRS_RLCMAC_UL_TBF);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
@@ -1003,7 +999,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	if (ack_nack->Exist_Channel_Request_Description) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
 			"message, so we provide one:\n");
-		tbf_alloc_ul(bts_data(), tbf->trx->trx_no, tbf->ms_class, tbf->tlli, tbf->ta, tbf);
+		tbf_alloc_ul(bts_data(), tbf->trx->trx_no, tbf->ms_class, tbf->tlli(), tbf->ta, tbf);
 		/* schedule uplink assignment */
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
 	}
