@@ -237,6 +237,31 @@ inline struct rate_ctr_group *BTS::rate_counters() const
 	return m_ratectrs;
 }
 
+inline void BTS::tbf_dl_created()
+{
+	rate_ctr_inc(&m_ratectrs->ctr[CTR_TBF_DL_ALLOCATED]);
+}
+
+inline void BTS::tbf_dl_freed()
+{
+	rate_ctr_inc(&m_ratectrs->ctr[CTR_TBF_DL_FREED]);
+}
+
+inline void BTS::tbf_ul_created()
+{
+	rate_ctr_inc(&m_ratectrs->ctr[CTR_TBF_UL_ALLOCATED]);
+}
+
+inline void BTS::tbf_ul_freed()
+{
+	rate_ctr_inc(&m_ratectrs->ctr[CTR_TBF_UL_FREED]);
+}
+
+inline void BTS::decode_error()
+{
+	rate_ctr_inc(&m_ratectrs->ctr[CTR_DECODE_ERRORS]);
+}
+
 inline gprs_rlcmac_bts *gprs_rlcmac_pdch::bts_data() const
 {
 	return trx->bts->bts_data();

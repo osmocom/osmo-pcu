@@ -664,6 +664,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 		case 23:
 			break;
 	default:
+		bts()->decode_error();
 		LOGP(DRLCMACUL, LOGL_ERROR, "Dropping data block with invalid"
 			"length: %d)\n", len);
 		return -EINVAL;
@@ -696,6 +697,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 		}
 		rc = Decoding::tlli_from_ul_data(data, len, &tbf->tlli);
 		if (rc) {
+			bts()->decode_error();
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Failed to decode TLLI "
 				"of UL DATA TBF=%d.\n", rh->tfi);
 			return 0;
@@ -1101,6 +1103,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 		gprs_rlcmac_meas_rep(&ul_control_block->u.Packet_Measurement_Report);
 		break;
 	default:
+		bts()->decode_error();
 		LOGP(DRLCMAC, LOGL_NOTICE, "RX: [PCU <- BTS] unknown control block received\n");
 	}
 	talloc_free(ul_control_block);

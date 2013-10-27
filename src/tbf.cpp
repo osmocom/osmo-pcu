@@ -328,6 +328,12 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 		msgb_free(msg);
 	tbf_unlink_pdch(tbf);
 	llist_del(&tbf->list);
+
+	if (tbf->direction == GPRS_RLCMAC_UL_TBF)
+		tbf->bts->tbf_ul_freed();
+	else
+		tbf->bts->tbf_dl_freed();
+
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF ends here **********\n");
 	talloc_free(tbf);
 }
@@ -602,10 +608,13 @@ next_diagram:
 	gettimeofday(&tbf->meas.dl_loss_tv, NULL);
 
 	INIT_LLIST_HEAD(&tbf->llc_queue);
-	if (dir == GPRS_RLCMAC_UL_TBF)
+	if (dir == GPRS_RLCMAC_UL_TBF) {
 		llist_add(&tbf->list, &bts->ul_tbfs);
-	else
+		tbf->bts->tbf_ul_created();
+	} else {
 		llist_add(&tbf->list, &bts->dl_tbfs);
+		tbf->bts->tbf_dl_created();
+	}
 
 	debug_diagram(bts->bts, tbf->diag, "+-----------------+");
 	debug_diagram(bts->bts, tbf->diag, "|NEW %s TBF TFI=%2d|",
