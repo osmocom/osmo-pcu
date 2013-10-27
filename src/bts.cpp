@@ -867,12 +867,12 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 	return 0;
 }
 
-void gprs_rlcmac_pdch::rcv_control_ack(RlcMacUplink_t *ul_control_block, uint32_t fn)
+void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet, uint32_t fn)
 {
 	struct gprs_rlcmac_tbf *tbf;
 	uint32_t tlli = 0;
 
-	tlli = ul_control_block->u.Packet_Control_Acknowledgement.TLLI;
+	tlli = packet->TLLI;
 	tbf = bts()->tbf_by_poll_fn(fn, trx_no(), ts_no);
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
@@ -1125,7 +1125,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- RX : Uplink Control Block -------------------------\n");
 	switch (ul_control_block->u.MESSAGE_TYPE) {
 	case MT_PACKET_CONTROL_ACK:
-		rcv_control_ack(ul_control_block, fn);
+		rcv_control_ack(&ul_control_block->u.Packet_Control_Acknowledgement, fn);
 		break;
 	case MT_PACKET_DOWNLINK_ACK_NACK:
 		rcv_control_dl_ack_nack(&ul_control_block->u.Packet_Downlink_Ack_Nack, fn);
