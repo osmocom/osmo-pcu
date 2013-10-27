@@ -61,6 +61,8 @@ public:
 	int timeout(struct gprs_rlcmac_sba *sba);
 	void free_resources(struct gprs_rlcmac_pdch *pdch);
 
+	void free_sba(gprs_rlcmac_sba *sba);
+
 private:
 	BTS &m_bts;
 	llist_head m_sbas;

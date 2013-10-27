@@ -1052,10 +1052,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 				} else {
 					ta = sba->ta;
 					bts()->timing_advance()->remember(tlli, ta);
-#warning "SBA deleted inline.. enforce capsulation"
-					bts()->sba_freed();
-					llist_del(&sba->list);
-					talloc_free(sba);
+					bts()->sba()->free_sba(sba);
 				}
 				if (ul_control_block->u.Packet_Resource_Request.Exist_MS_Radio_Access_capability)
 					ms_class = Decoding::get_ms_class_by_capability(&ul_control_block->u.Packet_Resource_Request.MS_Radio_Access_capability);
@@ -1101,11 +1098,8 @@ int gprs_rlcmac_pdch::rcv_control_block(
 				"block, but there is no resource request "
 				"scheduled!\n");
 		} else {
-			#warning "SBA deleted inline.. enforce capsulation"
 			bts()->timing_advance()->remember(ul_control_block->u.Packet_Measurement_Report.TLLI, sba->ta);
-			bts()->sba_freed();
-			llist_del(&sba->list);
-			talloc_free(sba);
+			bts()->sba()->free_sba(sba);
 		}
 		gprs_rlcmac_meas_rep(&ul_control_block->u.Packet_Measurement_Report);
 		break;

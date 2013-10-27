@@ -124,12 +124,16 @@ uint32_t SBAController::sched(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t bloc
 int SBAController::timeout(struct gprs_rlcmac_sba *sba)
 {
 	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for SBA\n");
-	llist_del(&sba->list);
 	m_bts.sba_timedout();
-	m_bts.sba_freed();
-	talloc_free(sba);
-
+	free_sba(sba);
 	return 0;
+}
+
+void SBAController::free_sba(gprs_rlcmac_sba *sba)
+{
+	m_bts.sba_freed();
+	llist_del(&sba->list);
+	talloc_free(sba);
 }
 
 void SBAController::free_resources(struct gprs_rlcmac_pdch *pdch)
@@ -139,10 +143,7 @@ void SBAController::free_resources(struct gprs_rlcmac_pdch *pdch)
 	const uint8_t ts_no = pdch->ts_no;
 
 	llist_for_each_entry_safe(sba, sba2, &m_sbas, list) {
-		if (sba->trx_no == trx_no && sba->ts_no == ts_no) {
-			llist_del(&sba->list);
-			m_bts.sba_freed();
-			talloc_free(sba);
-		}
+		if (sba->trx_no == trx_no && sba->ts_no == ts_no)
+			free_sba(sba);
 	}
 }
