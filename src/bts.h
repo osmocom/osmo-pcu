@@ -24,6 +24,7 @@
 #ifdef __cplusplus
 extern "C" {
 #include <osmocom/core/linuxlist.h>
+#include <osmocom/core/rate_ctr.h>
 #include <osmocom/core/timer.h>
 }
 
@@ -147,7 +148,16 @@ struct gprs_rlcmac_bts {
  */
 struct BTS {
 public:
+	enum {
+		CTR_TBF_DL_ALLOCATED,
+		CTR_TBF_DL_FREED,
+		CTR_TBF_UL_ALLOCATED,
+		CTR_TBF_UL_FREED,
+		CTR_DECODE_ERRORS,
+	};
+
 	BTS();
+	~BTS();
 
 	static BTS* main_bts();
 
@@ -174,12 +184,27 @@ public:
 	void trigger_dl_ass(gprs_rlcmac_tbf *tbf, gprs_rlcmac_tbf *old_tbf, const char *imsi);
 	void snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi);
 
+	/*
+	 * Statistics
+	 */
+	void tbf_dl_created();
+	void tbf_dl_freed();
+	void tbf_ul_created();
+	void tbf_ul_freed();
+	void decode_error();
+
+	/*
+	 * Below for C interface for the VTY
+	 */
+	struct rate_ctr_group *rate_counters() const;
+
 private:
 	int m_cur_fn;
 	struct gprs_rlcmac_bts m_bts;
 	PollController m_pollController;
 	SBAController m_sba;
 	TimingAdvance m_ta;
+	struct rate_ctr_group *m_ratectrs;
 
 private:
 	/* disable copying to avoid slicing */
@@ -207,6 +232,11 @@ inline BTS *gprs_rlcmac_pdch::bts() const
 	return trx->bts;
 }
 
+inline struct rate_ctr_group *BTS::rate_counters() const
+{
+	return m_ratectrs;
+}
+
 inline gprs_rlcmac_bts *gprs_rlcmac_pdch::bts_data() const
 {
 	return trx->bts->bts_data();
@@ -222,6 +252,7 @@ inline uint8_t gprs_rlcmac_pdch::trx_no() const
 extern "C" {
 #endif
 	struct gprs_rlcmac_bts *bts_main_data();
+	struct rate_ctr_group *bts_main_data_stats();
 #ifdef __cplusplus
 }
 

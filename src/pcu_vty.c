@@ -274,6 +274,15 @@ DEFUN(cfg_pcu_gamma,
 	return CMD_SUCCESS;
 }
 
+DEFUN(show_bts_stats,
+      show_bts_stats_cmd,
+      "show bts statistics",
+      SHOW_STR "BTS related functionality\nStatistics\n")
+{
+	vty_out_rate_ctr_group(vty, "", bts_main_data_stats());
+	return CMD_SUCCESS;
+} 
+
 static const char pcu_copyright[] =
 	"Copyright (C) 2012 by Ivan Kluchnikov <kluchnikovi@gmail.com> and \r\n"
 	"                      Andreas Eversberg <jolly@eversberg.eu>\r\n"
@@ -310,6 +319,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_alpha_cmd);
 	install_element(PCU_NODE, &cfg_pcu_gamma_cmd);
 	install_element(PCU_NODE, &ournode_end_cmd);
+
+	install_element_ve(&show_bts_stats_cmd);
 
 	return 0;
 }

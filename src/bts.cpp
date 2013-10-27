@@ -43,6 +43,26 @@ extern void *tall_pcu_ctx;
 
 static BTS s_bts;
 
+/**
+ * For gcc-4.4 compat do not use extended initializer list but keep the
+ * order from the enum here. Once we support GCC4.7 and up we can change
+ * the code below.
+ */
+static const struct rate_ctr_desc bts_ctr_description[] = {
+	{ "tbf.dl.alloc",		"TBF DL Allocated     "},
+	{ "tbf.dl.freed",		"TBF DL Freed         "},
+	{ "tbf.ul.alloc",		"TBF UL Allocated     "},
+	{ "tbf.ul.freed",		"TBF UL Freed         "},
+	{ "decode.errors",		"Decode Errors        "},
+};
+
+static const struct rate_ctr_group_desc bts_ctrg_desc = {
+	"bts",
+	"BTS Statistics",
+	ARRAY_SIZE(bts_ctr_description),
+	bts_ctr_description,
+};
+
 BTS* BTS::main_bts()
 {
 	return &s_bts;
@@ -56,6 +76,11 @@ struct gprs_rlcmac_bts *BTS::bts_data()
 struct gprs_rlcmac_bts *bts_main_data()
 {
 	return BTS::main_bts()->bts_data();
+}
+
+struct rate_ctr_group *bts_main_data_stats()
+{
+	return BTS::main_bts()->rate_counters();
 }
 
 BTS::BTS()
@@ -80,7 +105,15 @@ BTS::BTS()
 			pdch->trx = trx;
 		}
 	}
+
+	m_ratectrs = rate_ctr_group_alloc(tall_pcu_ctx, &bts_ctrg_desc, 0);
 }
+
+BTS::~BTS()
+{
+	rate_ctr_group_free(m_ratectrs);
+}
+
 
 void BTS::set_current_frame_number(int fn)
 {
