@@ -280,7 +280,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 				"because it has different TSC than lower TS "
 				"of TRX. In order to allow multislot, all "
 				"slots must be configured with the same "
-				"TSC!\n", ts, tbf->trx_no);
+				"TSC!\n", ts, tbf->trx->trx_no);
 			/* increase window for Type 1 */
 			if (Type == 1 && rx_window)
 				i++;
@@ -434,7 +434,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 					"than lower TS of TRX. In order to "
 					"allow multislot, all slots must be "
 					"configured with the same TSC!\n",
-					ts, tbf->trx_no);
+					ts, tbf->trx->trx_no);
 				/* increase window for Type 1 */
 				if (Type == 1)
 					i++;

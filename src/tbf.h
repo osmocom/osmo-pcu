@@ -121,7 +121,6 @@ struct gprs_rlcmac_tbf {
 	uint32_t tlli;
 	uint8_t tlli_valid;
 	struct gprs_rlcmac_trx *trx;
-	uint8_t trx_no;
 	uint8_t tsc;
 	uint8_t first_ts; /* first TS used by TBF */
 	uint8_t first_common_ts; /* first TS that the phone can send and

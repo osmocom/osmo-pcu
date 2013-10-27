@@ -156,7 +156,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	tbf = bts->bts->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
 	if (tbf && tbf->dir.ul.contention_resolution_done
 	 && !tbf->dir.ul.final_ack_sent) {
-		use_trx = tbf->trx_no;
+		use_trx = tbf->trx->trx_no;
 		ta = tbf->ta;
 		ss = 0;
 		old_tbf = tbf;
@@ -581,7 +581,6 @@ next_diagram:
 #endif
 	tbf->direction = dir;
 	tbf->tfi = tfi;
-	tbf->trx_no = trx;
 	tbf->trx = &bts->trx[trx];
 	tbf->ms_class = ms_class;
 	tbf->ws = 64;
@@ -1184,7 +1183,7 @@ tx_block:
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
 				"sheduled in this TS %d, waiting for "
 				"TS %d\n", ts, control_ts);
-		else if (bts->sba()->find(trx_no, ts, (fn + 13) % 2715648))
+		else if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648))
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
 				"sheduled, because single block alllocation "
 				"already exists\n");
@@ -1250,7 +1249,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 				"assignment...\n", tfi);
 				return NULL;
 		}
-		if (bts->sba()->find(trx_no, control_ts, (fn + 13) % 2715648)) {
+		if (bts->sba()->find(trx->trx_no, control_ts, (fn + 13) % 2715648)) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
 				"scheduled for single block allocation...\n");
 			return NULL;
@@ -1331,7 +1330,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 			"assignment...\n", tfi);
 			return NULL;
 	}
-	if (bts->sba()->find(trx_no, control_ts, (fn + 13) % 2715648)) {
+	if (bts->sba()->find(trx->trx_no, control_ts, (fn + 13) % 2715648)) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already scheduled for "
 			"single block allocation...\n");
 			return NULL;
@@ -1403,7 +1402,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ack(uint32_t fn)
 				"final uplink ack...\n", tfi);
 			return NULL;
 		}
-		if (bts->sba()->find(trx_no, control_ts, (fn + 13) % 2715648)) {
+		if (bts->sba()->find(trx->trx_no, control_ts, (fn + 13) % 2715648)) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
 				"scheduled for single block allocation...\n");
 			return NULL;

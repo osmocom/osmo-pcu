@@ -159,7 +159,7 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 					if (first_ts < 0)
 						first_ts = ts;
 					/* break, if we already marked a slot */
-					if ((slot_mask[tbf->trx_no] & (1 << ts)))
+					if ((slot_mask[tbf->trx->trx_no] & (1 << ts)))
 						break;
 				}
 			}
@@ -169,14 +169,14 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 					"TRX=%d TS=%d, so we mark\n",
 					(tbf->direction == GPRS_RLCMAC_UL_TBF)
 						? "UL" : "DL",
-					tbf->tfi, tbf->trx_no, first_ts);
-				slot_mask[tbf->trx_no] |= (1 << first_ts);
+					tbf->tfi, tbf->trx->trx_no, first_ts);
+				slot_mask[tbf->trx->trx_no] |= (1 << first_ts);
 			} else
 				LOGP(DRLCMAC, LOGL_DEBUG, "- %s TFI=%d uses "
 					"already marked TRX=%d TS=%d\n",
 					(tbf->direction == GPRS_RLCMAC_UL_TBF)
 						? "UL" : "DL",
-					tbf->tfi, tbf->trx_no, ts);
+					tbf->tfi, tbf->trx->trx_no, ts);
 		}
 	}
 
@@ -240,14 +240,14 @@ gprs_rlcmac_tbf *BTS::tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 	llist_for_each_entry(tbf, &m_bts.ul_tbfs, list) {
 		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
-		 && tbf->poll_fn == fn && tbf->trx_no == trx
+		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
 		 && tbf->control_ts == ts)
 			return tbf;
 	}
 	llist_for_each_entry(tbf, &m_bts.dl_tbfs, list) {
 		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
-		 && tbf->poll_fn == fn && tbf->trx_no == trx
+		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
 		 && tbf->control_ts == ts)
 			return tbf;
 	}
@@ -1005,7 +1005,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	if (ack_nack->Exist_Channel_Request_Description) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
 			"message, so we provide one:\n");
-		tbf_alloc_ul(bts_data(), tbf->trx_no, tbf->ms_class, tbf->tlli, tbf->ta, tbf);
+		tbf_alloc_ul(bts_data(), tbf->trx->trx_no, tbf->ms_class, tbf->tlli, tbf->ta, tbf);
 		/* schedule uplink assignment */
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
 	}
