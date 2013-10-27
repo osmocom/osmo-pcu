@@ -643,12 +643,12 @@ void gprs_rlcmac_tbf::handle_timeout()
 	case 0: /* assignment */
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
 			if (state_is(GPRS_RLCMAC_ASSIGN)) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "Releasing due to "
-					"PACCH assignment timeout.\n");
+				LOGP(DRLCMAC, LOGL_NOTICE, "TFI=%d releasing due to "
+					"PACCH assignment timeout.\n", tfi);
 				tbf_free(this);
 			} else
-				LOGP(DRLCMAC, LOGL_ERROR, "Error: TBF is not "
-					"in assign state\n");
+				LOGP(DRLCMAC, LOGL_ERROR, "Error: TBF TFI=%d is not "
+					"in assign state\n", tfi);
 		}
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
 			/* change state to FLOW, so scheduler will start transmission */
@@ -657,26 +657,28 @@ void gprs_rlcmac_tbf::handle_timeout()
 				tbf_new_state(this, GPRS_RLCMAC_FLOW);
 				tbf_assign_control_ts(this);
 			} else
-				LOGP(DRLCMAC, LOGL_NOTICE, "Continue flow after "
-					"IMM.ASS confirm\n");
+				LOGP(DRLCMAC, LOGL_NOTICE, "TFI=%d Continue flow after "
+					"IMM.ASS confirm\n", tfi);
 		}
 		break;
 	case 3169:
 	case 3191:
 	case 3195:
-		LOGP(DRLCMAC, LOGL_NOTICE, "TBF T%d timeout during "
-			"transsmission\n", T);
+		LOGP(DRLCMAC, LOGL_NOTICE, "TBF TFI=%d T%d timeout during "
+			"transsmission\n", tfi, T);
 		rlcmac_diag();
 		/* fall through */
 	case 3193:
 		if (T == 3193)
 		        debug_diagram(bts, diag, "T3193 timeout");
-		LOGP(DRLCMAC, LOGL_DEBUG, "TBF will be freed due to timeout\n");
+		LOGP(DRLCMAC, LOGL_DEBUG,
+			"TBF TFI=%d will be freed due to timeout\n", tfi);
 		/* free TBF */
 		tbf_free(this);
 		break;
 	default:
-		LOGP(DRLCMAC, LOGL_ERROR, "Timer expired in unknown mode: %u\n", T);
+		LOGP(DRLCMAC, LOGL_ERROR,
+			"TFI=%d Timer expired in unknown mode: %u\n", tfi, T);
 	}
 }
 
