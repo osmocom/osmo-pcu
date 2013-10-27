@@ -1013,14 +1013,12 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 
 void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, uint32_t fn)
 {
-	int8_t tfi = 0; /* must be signed */
-	uint32_t tlli = 0;
 	struct gprs_rlcmac_tbf *tbf;
 	struct gprs_rlcmac_sba *sba;
 	int rc;
 
 	if (request->ID.UnionType) {
-		tlli = request->ID.u.TLLI;
+		uint32_t tlli = request->ID.u.TLLI;
 		tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
 		if (tbf) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
@@ -1076,24 +1074,22 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			debug_diagram(bts->bts, tbf->diag, "Res. REQ");
 			return;
 		}
-		tfi = tbf->tfi;
 	} else {
 		if (request->ID.u.Global_TFI.UnionType) {
-			tfi = request->ID.u.Global_TFI.u.DOWNLINK_TFI;
+			int8_t tfi = request->ID.u.Global_TFI.u.DOWNLINK_TFI;
 			tbf = bts()->tbf_by_tfi(tfi, trx_no(), GPRS_RLCMAC_DL_TBF);
 			if (!tbf) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TLLI=0x%08x\n", tlli);
+				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TFI=%d\n", tfi);
 				return;
 			}
 		} else {
-			tfi = request->ID.u.Global_TFI.u.UPLINK_TFI;
+			int8_t tfi = request->ID.u.Global_TFI.u.UPLINK_TFI;
 			tbf = bts()->tbf_by_tfi(tfi, trx_no(), GPRS_RLCMAC_UL_TBF);
 			if (!tbf) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TLLI=%d\n", tlli);
+				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TFI=%d\n", tfi);
 				return;
 			}
 		}
-		tlli = tbf->tlli;
 	}
 	LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet resource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
 }
