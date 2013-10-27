@@ -81,6 +81,7 @@ private:
 	int rcv_data_block_acknowledged(uint8_t *data, uint8_t len, int8_t rssi);
 	int rcv_control_block(bitvec *rlc_block, uint32_t fn);
 
+	void rcv_control_ack(RlcMacUplink_t *, uint32_t fn);
 #endif
 };
 

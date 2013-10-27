@@ -867,6 +867,99 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 	return 0;
 }
 
+void gprs_rlcmac_pdch::rcv_control_ack(RlcMacUplink_t *ul_control_block, uint32_t fn)
+{
+	struct gprs_rlcmac_tbf *tbf;
+	uint32_t tlli = 0;
+
+	tlli = ul_control_block->u.Packet_Control_Acknowledgement.TLLI;
+	tbf = bts()->tbf_by_poll_fn(fn, trx_no(), ts_no);
+	if (!tbf) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
+			"unknown FN=%u TLL=0x%08x (TRX %d TS %d)\n",
+			fn, tlli, trx_no(), ts_no);
+		return;
+	}
+	if (tlli != tbf->tlli) {
+		LOGP(DRLCMAC, LOGL_INFO, "Phone changed TLLI to "
+			"0x%08x\n", tlli);
+		tbf->tlli = tlli;
+	}
+	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Control Ack\n", tbf->tfi, tbf->tlli);
+	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
+
+	/* check if this control ack belongs to packet uplink ack */
+	if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
+		debug_diagram(bts(), tbf->diag, "got CTL-ACK (fin)");
+		if ((tbf->state_flags &
+			(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK))) {
+			tbf->state_flags &=
+				~(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
+				LOGP(DRLCMAC, LOGL_NOTICE, "Recovered uplink "
+					"ack for UL TBF=%d\n", tbf->tfi);
+		}
+		tbf_free(tbf);
+		return;
+	}
+	if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] DOWNLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+		/* reset N3105 */
+		tbf->n3105 = 0;
+		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+		debug_diagram(bts(), tbf->diag, "got CTL-ACK DL-ASS");
+		if (tbf->direction == GPRS_RLCMAC_UL_TBF)
+			tbf = bts()->tbf_by_tlli(tbf->tlli,
+						GPRS_RLCMAC_DL_TBF);
+		if (!tbf) {
+			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
+				"TBF is gone\n");
+			return;
+		}
+		tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+		/* stop pending assignment timer */
+		tbf->stop_timer();
+		if ((tbf->state_flags &
+			(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS))) {
+			tbf->state_flags &=
+				~(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
+			LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink "
+				"assignment for DL TBF=%d\n", tbf->tfi);
+		}
+		tbf_assign_control_ts(tbf);
+		return;
+	}
+	if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [DOWNLINK] UPLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+		/* reset N3105 */
+		tbf->n3105 = 0;
+		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+		debug_diagram(bts(), tbf->diag, "got CTL-AC UL-ASS");
+#warning "TBF is changing on the way... *sigh*"
+		if (tbf->direction == GPRS_RLCMAC_DL_TBF)
+			tbf = bts()->tbf_by_tlli(tbf->tlli,
+						GPRS_RLCMAC_UL_TBF);
+		if (!tbf) {
+			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
+				"TBF is gone\n");
+			return;
+		}
+		tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+		if ((tbf->state_flags &
+			(1 << GPRS_RLCMAC_FLAG_TO_UL_ASS))) {
+			tbf->state_flags &=
+				~(1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
+			LOGP(DRLCMAC, LOGL_NOTICE, "Recovered uplink "
+				"assignment for UL TBF=%d\n", tbf->tfi);
+		}
+		tbf_assign_control_ts(tbf);
+		return;
+	}
+	LOGP(DRLCMAC, LOGL_ERROR, "Error: received PACET CONTROL ACK "
+		"at no request\n");
+}
+
 /* Received Uplink RLC control block. */
 int gprs_rlcmac_pdch::rcv_control_block(
 	bitvec *rlc_block, uint32_t fn)
@@ -884,92 +977,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- RX : Uplink Control Block -------------------------\n");
 	switch (ul_control_block->u.MESSAGE_TYPE) {
 	case MT_PACKET_CONTROL_ACK:
-		tlli = ul_control_block->u.Packet_Control_Acknowledgement.TLLI;
-		tbf = bts()->tbf_by_poll_fn(fn, trx_no(), ts_no);
-		if (!tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
-				"unknown FN=%u TLL=0x%08x (TRX %d TS %d)\n",
-				fn, tlli, trx_no(), ts_no);
-			break;
-		}
-		tfi = tbf->tfi;
-		if (tlli != tbf->tlli) {
-			LOGP(DRLCMAC, LOGL_INFO, "Phone changed TLLI to "
-				"0x%08x\n", tlli);
-			tbf->tlli = tlli;
-		}
-		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Control Ack\n", tbf->tfi, tbf->tlli);
-		tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
-
-		/* check if this control ack belongs to packet uplink ack */
-		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
-			tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
-			debug_diagram(bts(), tbf->diag, "got CTL-ACK (fin)");
-			if ((tbf->state_flags &
-				(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK))) {
-				tbf->state_flags &=
-					~(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
-				LOGP(DRLCMAC, LOGL_NOTICE, "Recovered uplink "
-					"ack for UL TBF=%d\n", tbf->tfi);
-			}
-			tbf_free(tbf);
-			break;
-		}
-		if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] DOWNLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
-			/* reset N3105 */
-			tbf->n3105 = 0;
-			tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-			debug_diagram(bts(), tbf->diag, "got CTL-ACK DL-ASS");
-			if (tbf->direction == GPRS_RLCMAC_UL_TBF)
-				tbf = bts()->tbf_by_tlli(tbf->tlli,
-							GPRS_RLCMAC_DL_TBF);
-			if (!tbf) {
-				LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
-					"TBF is gone\n");
-				break;
-			}
-			tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
-			/* stop pending assignment timer */
-			tbf->stop_timer();
-			if ((tbf->state_flags &
-				(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS))) {
-				tbf->state_flags &=
-					~(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
-				LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink "
-					"assignment for DL TBF=%d\n", tbf->tfi);
-			}
-			tbf_assign_control_ts(tbf);
-			break;
-		}
-		if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [DOWNLINK] UPLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
-			/* reset N3105 */
-			tbf->n3105 = 0;
-			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
-			debug_diagram(bts(), tbf->diag, "got CTL-AC UL-ASS");
-			if (tbf->direction == GPRS_RLCMAC_DL_TBF)
-				tbf = bts()->tbf_by_tlli(tbf->tlli,
-							GPRS_RLCMAC_UL_TBF);
-			if (!tbf) {
-				LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
-					"TBF is gone\n");
-				break;
-			}
-			tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
-			if ((tbf->state_flags &
-				(1 << GPRS_RLCMAC_FLAG_TO_UL_ASS))) {
-				tbf->state_flags &=
-					~(1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
-				LOGP(DRLCMAC, LOGL_NOTICE, "Recovered uplink "
-					"assignment for UL TBF=%d\n", tbf->tfi);
-			}
-			tbf_assign_control_ts(tbf);
-			break;
-		}
-		LOGP(DRLCMAC, LOGL_ERROR, "Error: received PACET CONTROL ACK "
-			"at no request\n");
+		rcv_control_ack(ul_control_block, fn);
 		break;
 	case MT_PACKET_DOWNLINK_ACK_NACK:
 		tfi = ul_control_block->u.Packet_Downlink_Ack_Nack.DOWNLINK_TFI;
