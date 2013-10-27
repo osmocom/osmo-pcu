@@ -1010,13 +1010,97 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(RlcMacUplink_t *ul_control_block,
 	}
 }
 
-/* Received Uplink RLC control block. */
-int gprs_rlcmac_pdch::rcv_control_block(
-	bitvec *rlc_block, uint32_t fn)
+void gprs_rlcmac_pdch::rcv_resource_request(RlcMacUplink_t *ul_control_block, uint32_t fn)
 {
 	int8_t tfi = 0; /* must be signed */
 	uint32_t tlli = 0;
 	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_sba *sba;
+	int rc;
+
+	if (ul_control_block->u.Packet_Resource_Request.ID.UnionType) {
+		tlli = ul_control_block->u.Packet_Resource_Request.ID.u.TLLI;
+		tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+		if (tbf) {
+			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
+				"TLLI=0x%08x while UL TBF=%d still "
+				"exists. Killing pending DL TBF\n",
+				tlli, tbf->tfi);
+			tbf_free(tbf);
+			tbf = NULL;
+		}
+		if (!tbf) {
+			uint8_t ms_class = 0;
+			struct gprs_rlcmac_tbf *dl_tbf;
+			uint8_t ta;
+
+			if ((dl_tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF))) {
+				LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
+						"TLLI=0x%08x while DL TBF=%d still exists. "
+					"Killing pending DL TBF\n", tlli,
+				dl_tbf->tfi);
+				tbf_free(dl_tbf);
+			}
+			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
+				"in packet resource request of single "
+				"block, so we provide one:\n");
+			sba = bts()->sba()->find(this, fn);
+			if (!sba) {
+				LOGP(DRLCMAC, LOGL_NOTICE, "MS requests UL TBF "
+					"in packet resource request of single "
+					"block, but there is no resource request "
+					"scheduled!\n");
+				rc = bts()->timing_advance()->recall(tlli);
+				if (rc >= 0)
+					ta = rc;
+				else
+					ta = 0;
+			} else {
+				ta = sba->ta;
+				bts()->timing_advance()->remember(tlli, ta);
+				bts()->sba()->free_sba(sba);
+			}
+			if (ul_control_block->u.Packet_Resource_Request.Exist_MS_Radio_Access_capability)
+				ms_class = Decoding::get_ms_class_by_capability(&ul_control_block->u.Packet_Resource_Request.MS_Radio_Access_capability);
+			if (!ms_class)
+				LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");
+			tbf = tbf_alloc_ul(bts_data(), trx_no(), ms_class, tlli, ta, NULL);
+			if (!tbf)
+				return;
+			/* set control ts to current MS's TS, until assignment complete */
+			LOGP(DRLCMAC, LOGL_DEBUG, "Change control TS to %d until assinment is complete.\n", ts_no);
+			tbf->control_ts = ts_no;
+			/* schedule uplink assignment */
+			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+			debug_diagram(bts->bts, tbf->diag, "Res. REQ");
+			return;
+		}
+		tfi = tbf->tfi;
+	} else {
+		if (ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.UnionType) {
+			tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.DOWNLINK_TFI;
+			tbf = bts()->tbf_by_tfi(tfi, trx_no(), GPRS_RLCMAC_DL_TBF);
+			if (!tbf) {
+				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TBF=%d\n", tlli);
+				return;
+			}
+		} else {
+			tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.UPLINK_TFI;
+			tbf = bts()->tbf_by_tfi(tfi, trx_no(), GPRS_RLCMAC_UL_TBF);
+			if (!tbf) {
+				LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TBF=%d\n", tlli);
+				return;
+			}
+		}
+		tlli = tbf->tlli;
+	}
+	LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet resource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
+}
+
+/* Received Uplink RLC control block. */
+int gprs_rlcmac_pdch::rcv_control_block(
+	bitvec *rlc_block, uint32_t fn)
+{
 	struct gprs_rlcmac_sba *sba;
 	int rc;
 
@@ -1033,83 +1117,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 		rcv_control_dl_ack_nack(ul_control_block, fn);
 		break;
 	case MT_PACKET_RESOURCE_REQUEST:
-		if (ul_control_block->u.Packet_Resource_Request.ID.UnionType) {
-			tlli = ul_control_block->u.Packet_Resource_Request.ID.u.TLLI;
-			tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
-			if (tbf) {
-				LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-					"TLLI=0x%08x while UL TBF=%d still "
-					"exists. Killing pending DL TBF\n",
-					tlli, tbf->tfi);
-				tbf_free(tbf);
-				tbf = NULL;
-			}
-			if (!tbf) {
-				uint8_t ms_class = 0;
-				struct gprs_rlcmac_tbf *dl_tbf;
-				uint8_t ta;
-
-				if ((dl_tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF))) {
-					LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-						"TLLI=0x%08x while DL TBF=%d still exists. "
-						"Killing pending DL TBF\n", tlli,
-						dl_tbf->tfi);
-					tbf_free(dl_tbf);
-				}
-				LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
-					"in packet resource request of single "
-					"block, so we provide one:\n");
-				sba = bts()->sba()->find(this, fn);
-				if (!sba) {
-					LOGP(DRLCMAC, LOGL_NOTICE, "MS requests UL TBF "
-						"in packet resource request of single "
-						"block, but there is no resource request "
-						"scheduled!\n");
-					rc = bts()->timing_advance()->recall(tlli);
-					if (rc >= 0)
-						ta = rc;
-					else
-						ta = 0;
-				} else {
-					ta = sba->ta;
-					bts()->timing_advance()->remember(tlli, ta);
-					bts()->sba()->free_sba(sba);
-				}
-				if (ul_control_block->u.Packet_Resource_Request.Exist_MS_Radio_Access_capability)
-					ms_class = Decoding::get_ms_class_by_capability(&ul_control_block->u.Packet_Resource_Request.MS_Radio_Access_capability);
-				if (!ms_class)
-					LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");
-				tbf = tbf_alloc_ul(bts_data(), trx_no(), ms_class, tlli, ta, NULL);
-				if (!tbf)
-					break;
-				/* set control ts to current MS's TS, until assignment complete */
-				LOGP(DRLCMAC, LOGL_DEBUG, "Change control TS to %d until assinment is complete.\n", ts_no);
-				tbf->control_ts = ts_no;
-				/* schedule uplink assignment */
-				tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
-				debug_diagram(bts->bts, tbf->diag, "Res. REQ");
-				break;
-			}
-			tfi = tbf->tfi;
-		} else {
-			if (ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.UnionType) {
-				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.DOWNLINK_TFI;
-				tbf = bts()->tbf_by_tfi(tfi, trx_no(), GPRS_RLCMAC_DL_TBF);
-				if (!tbf) {
-					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TBF=%d\n", tlli);
-					break;
-				}
-			} else {
-				tfi = ul_control_block->u.Packet_Resource_Request.ID.u.Global_TFI.u.UPLINK_TFI;
-				tbf = bts()->tbf_by_tfi(tfi, trx_no(), GPRS_RLCMAC_UL_TBF);
-				if (!tbf) {
-					LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TBF=%d\n", tlli);
-					break;
-				}
-			}
-			tlli = tbf->tlli;
-		}
-		LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet resource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
+		rcv_resource_request(ul_control_block, fn);
 		break;
 	case MT_PACKET_MEASUREMENT_REPORT:
 		sba = bts()->sba()->find(this, fn);
