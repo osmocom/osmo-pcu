@@ -583,7 +583,6 @@ next_diagram:
 	tbf->tfi = tfi;
 	tbf->trx_no = trx;
 	tbf->trx = &bts->trx[trx];
-	tbf->arfcn = bts->trx[trx].arfcn;
 	tbf->ms_class = ms_class;
 	tbf->ws = 64;
 	tbf->sns = 128;
