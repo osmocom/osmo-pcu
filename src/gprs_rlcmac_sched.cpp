@@ -78,7 +78,7 @@ uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 	uint8_t usf = 0x07;
 	uint8_t i, tfi;
 
-	/* select uplink ressource */
+	/* select uplink resource */
 	for (i = 0, tfi = pdch->next_ul_tfi; i < 32;
 	     i++, tfi = (tfi + 1) & 31) {
 		tbf = pdch->ul_tbf[tfi];
@@ -96,9 +96,9 @@ uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 		usf = tbf->dir.ul.usf[ts];
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling USF=%d for "
-			"required uplink ressource of UL TBF=%d\n", trx, ts, fn,
+			"required uplink resource of UL TBF=%d\n", trx, ts, fn,
 			block_nr, usf, tfi);
-		/* next TBF to handle ressource is the next one */
+		/* next TBF to handle resource is the next one */
 		pdch->next_ul_tfi = (tfi + 1) & 31;
 		break;
 	}
@@ -158,7 +158,7 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *tbf = NULL;
 	uint8_t i, tfi;
 
-	/* select downlink ressource */
+	/* select downlink resource */
 	for (i = 0, tfi = pdch->next_dl_tfi; i < 32;
 	     i++, tfi = (tfi + 1) & 31) {
 		tbf = pdch->dl_tbf[tfi];
@@ -179,7 +179,7 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling data message at "
 			"RTS for DL TBF=%d (TRX=%d, TS=%d)\n", tfi, trx, ts);
-		/* next TBF to handle ressource is the next one */
+		/* next TBF to handle resource is the next one */
 		pdch->next_dl_tfi = (tfi + 1) & 31;
 		/* generate DL data block */
 		msg = tbf->create_dl_acked_block(fn, ts);
@@ -236,7 +236,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 
 	poll_fn = sched_poll(bts, trx, ts, fn, block_nr, &poll_tbf, &ul_ass_tbf,
 		&dl_ass_tbf, &ul_ack_tbf);
-	/* check uplink ressource for polling */
+	/* check uplink resource for polling */
 	if (poll_tbf)
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling free USF for "
@@ -252,7 +252,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 			"single block allocation at FN=%d\n", trx, ts, fn,
 			block_nr, sba_fn);
 		/* use free USF */
-	/* else, we search for uplink ressource */
+	/* else, we search for uplink resource */
 	else
 		usf = sched_select_uplink(trx, ts, fn, block_nr, pdch);
 

@@ -190,7 +190,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	/* set number of downlink slots according to multislot class */
 	tbf = tbf_alloc(bts, tbf, GPRS_RLCMAC_DL_TBF, tfi, trx, ms_class, ss);
 	if (!tbf) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */
 		return -EBUSY;
 	}
@@ -252,14 +252,14 @@ struct gprs_rlcmac_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	/* create new TBF, use sme TRX as DL TBF */
 	tfi = bts->bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx, use_trx);
 	if (tfi < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */
 		return NULL;
 	}
 	/* use multislot class of downlink TBF */
 	tbf = tbf_alloc(bts, dl_tbf, GPRS_RLCMAC_UL_TBF, tfi, trx, ms_class, 0);
 	if (!tbf) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */
 		return NULL;
 	}
@@ -360,9 +360,9 @@ int gprs_rlcmac_tbf::update()
 
 	tbf_unlink_pdch(this);
 	rc = bts_data->alloc_algorithm(bts_data, ul_tbf, this, bts_data->alloc_algorithm_curst, 0);
-	/* if no ressource */
+	/* if no resource */
 	if (rc < 0) {
-		LOGP(DRLCMAC, LOGL_ERROR, "No ressource after update???\n");
+		LOGP(DRLCMAC, LOGL_ERROR, "No resource after update???\n");
 		return -rc;
 	}
 
@@ -590,7 +590,7 @@ next_diagram:
 	/* select algorithm */
 	rc = bts->alloc_algorithm(bts, old_tbf, tbf, bts->alloc_algorithm_curst,
 		single_slot);
-	/* if no ressource */
+	/* if no resource */
 	if (rc < 0) {
 		talloc_free(tbf);
 		return NULL;
@@ -598,7 +598,7 @@ next_diagram:
 	/* assign control ts */
 	tbf->control_ts = 0xff;
 	rc = tbf_assign_control_ts(tbf);
-	/* if no ressource */
+	/* if no resource */
 	if (rc < 0) {
 		talloc_free(tbf);
 		return NULL;

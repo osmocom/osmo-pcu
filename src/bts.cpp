@@ -408,14 +408,14 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		#warning "Copy and pate with other routines.."
 		tfi = tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx, -1);
 		if (tfi < 0) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 			/* FIXME: send reject */
 			return -EBUSY;
 		}
 		/* set class to 0, since we don't know the multislot class yet */
 		tbf = tbf_alloc(&m_bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx, 0, 1);
 		if (!tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH ressource\n");
+			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 			/* FIXME: send reject */
 			return -EBUSY;
 		}
@@ -1038,12 +1038,12 @@ int gprs_rlcmac_pdch::rcv_control_block(
 					tbf_free(dl_tbf);
 				}
 				LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
-					"in packet ressource request of single "
+					"in packet resource request of single "
 					"block, so we provide one:\n");
 				sba = bts()->sba()->find(this, fn);
 				if (!sba) {
 					LOGP(DRLCMAC, LOGL_NOTICE, "MS requests UL TBF "
-						"in packet ressource request of single "
+						"in packet resource request of single "
 						"block, but there is no resource request "
 						"scheduled!\n");
 					rc = bts()->timing_advance()->recall(tlli);
@@ -1090,13 +1090,13 @@ int gprs_rlcmac_pdch::rcv_control_block(
 			}
 			tlli = tbf->tlli;
 		}
-		LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet ressource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
+		LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet resource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
 		break;
 	case MT_PACKET_MEASUREMENT_REPORT:
 		sba = bts()->sba()->find(this, fn);
 		if (!sba) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
-				"in packet ressource request of single "
+				"in packet resource request of single "
 				"block, but there is no resource request "
 				"scheduled!\n");
 		} else {
