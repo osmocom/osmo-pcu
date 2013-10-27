@@ -121,7 +121,7 @@ int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
 	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + tbf->llc_index;
 	struct bssgp_bvc_ctx *bctx = gprs_bssgp_pcu_current_bctx();
 
-	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] TFI: %u TLLI: 0x%08x len=%d\n", tbf->tfi, tbf->tlli, tbf->llc_index);
+	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] %s len=%d\n", tbf_name(tbf), tbf->llc_index);
 	if (!bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
 		return -EIO;

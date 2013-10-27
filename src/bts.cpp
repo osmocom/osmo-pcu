@@ -165,18 +165,16 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 			}
 			/* mark first slot found, if none is marked already */
 			if (ts == 8 && first_ts >= 0) {
-				LOGP(DRLCMAC, LOGL_DEBUG, "- %s TFI=%d uses "
+				LOGP(DRLCMAC, LOGL_DEBUG, "- %s uses "
 					"TRX=%d TS=%d, so we mark\n",
-					(tbf->direction == GPRS_RLCMAC_UL_TBF)
-						? "UL" : "DL",
-					tbf->tfi, tbf->trx->trx_no, first_ts);
+					tbf_name(tbf),
+					tbf->trx->trx_no, first_ts);
 				slot_mask[tbf->trx->trx_no] |= (1 << first_ts);
 			} else
-				LOGP(DRLCMAC, LOGL_DEBUG, "- %s TFI=%d uses "
+				LOGP(DRLCMAC, LOGL_DEBUG, "- %s uses "
 					"already marked TRX=%d TS=%d\n",
-					(tbf->direction == GPRS_RLCMAC_UL_TBF)
-						? "UL" : "DL",
-					tbf->tfi, tbf->trx->trx_no, ts);
+					tbf_name(tbf),
+					tbf->trx->trx_no, ts);
 		}
 	}
 
@@ -464,9 +462,7 @@ void BTS::trigger_dl_ass(
 	/* check for downlink tbf:  */
 	if (old_tbf) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment on "
-			"PACCH, because %s TFI=%d exists for TLLI=0x%08x\n",
-			(old_tbf->direction == GPRS_RLCMAC_UL_TBF)
-				? "UL" : "DL", old_tbf->tfi, old_tbf->tlli);
+			"PACCH, because %s exists\n", tbf_name(old_tbf));
 		old_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
 		/* use TA from old TBF */
 		tbf->ta = old_tbf->ta;
@@ -476,7 +472,7 @@ void BTS::trigger_dl_ass(
 		/* start timer */
 		tbf_timer_start(tbf, 0, Tassign_pacch);
 	} else {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for TFI=%d on PCH, no TBF exist (IMSI=%s)\n", tbf->tfi, imsi);
+		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for %s on PCH, no TBF exist (IMSI=%s)\n", tbf_name(tbf), imsi);
 		if (!imsi || strlen(imsi) < 3) {
 			LOGP(DRLCMAC, LOGL_ERROR, "No valid IMSI!\n");
 			return;
@@ -496,7 +492,7 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 	int plen;
 
 	debug_diagram(this, tbf->diag, "IMM.ASS (PCH)");
-	LOGP(DRLCMAC, LOGL_INFO, "TX: START TFI: %u TLLI: 0x%08x Immediate Assignment Downlink (PCH)\n", tbf->tfi, tbf->tlli);
+	LOGP(DRLCMAC, LOGL_INFO, "TX: START %s Immediate Assignment Downlink (PCH)\n", tbf_name(tbf));
 	bitvec *immediate_assignment = bitvec_alloc(22); /* without plen */
 	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	/* use request reference that has maximum distance to current time,
@@ -887,12 +883,12 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 #warning "Silent TLLI changes... update TA.. and other structs"
 		tbf->tlli = tlli;
 	}
-	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Control Ack\n", tbf->tfi, tbf->tlli);
+	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] %s Packet Control Ack\n", tbf_name(tbf));
 	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 
 	/* check if this control ack belongs to packet uplink ack */
 	if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] END TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] END %s\n", tbf_name(tbf));
 		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
 		debug_diagram(bts(), tbf->diag, "got CTL-ACK (fin)");
 		if ((tbf->state_flags &
@@ -900,13 +896,13 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 			tbf->state_flags &=
 				~(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
 				LOGP(DRLCMAC, LOGL_NOTICE, "Recovered uplink "
-					"ack for UL TFI=%d\n", tbf->tfi);
+					"ack for UL %s\n", tbf_name(tbf));
 		}
 		tbf_free(tbf);
 		return;
 	}
 	if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] DOWNLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] DOWNLINK ASSIGNED %s\n", tbf_name(tbf));
 		/* reset N3105 */
 		tbf->n3105 = 0;
 		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
@@ -934,7 +930,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		return;
 	}
 	if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [DOWNLINK] UPLINK ASSIGNED TFI: %u TLLI: 0x%08x \n", tbf->tfi, tbf->tlli);
+		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [DOWNLINK] UPLINK ASSIGNED %s\n", tbf_name(tbf));
 		/* reset N3105 */
 		tbf->n3105 = 0;
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
@@ -954,7 +950,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 			tbf->state_flags &=
 				~(1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
 			LOGP(DRLCMAC, LOGL_NOTICE, "Recovered uplink "
-				"assignment for UL TFI=%d\n", tbf->tfi);
+				"assignment for UL %s\n", tbf_name(tbf));
 		}
 		tbf_assign_control_ts(tbf);
 		return;
@@ -991,7 +987,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	/* reset N3105 */
 	tbf->n3105 = 0;
 	tbf->stop_t3191();
-	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] TFI: %u TLLI: 0x%08x Packet Downlink Ack/Nack\n", tbf->tfi, tbf->tlli);
+	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] %s Packet Downlink Ack/Nack\n", tbf_name(tbf));
 	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 	debug_diagram(bts(), tbf->diag, "got DL-ACK");
 
@@ -1093,7 +1089,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		}
 	}
 
-	LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet resource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
+	LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s FIXME: Packet resource request\n", tbf_name(tbf));
 }
 
 void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *report, uint32_t fn)

@@ -91,10 +91,11 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 				const uint16_t pdu_delay_csec,
 				const uint8_t *data, const uint16_t len)
 {
-	LOGP(DRLCMAC, LOGL_INFO, "TBF: APPEND TFI: %u TLLI: 0x%08x\n", tbf->tfi, tbf->tlli);
+	LOGP(DRLCMAC, LOGL_INFO, "%s append\n", tbf_name(tbf));
 	if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE)) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "TBF in WAIT RELEASE state "
-			"(T3193), so reuse TBF\n");
+		LOGP(DRLCMAC, LOGL_DEBUG,
+			"%s in WAIT RELEASE state "
+			"(T3193), so reuse TBF\n", tbf_name(tbf));
 		memcpy(tbf->llc_frame, data, len);
 		tbf->llc_length = len;
 		/* reset rlc states */
@@ -198,9 +199,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	tbf->tlli_valid = 1;
 	tbf->ta = ta;
 
-	LOGP(DRLCMAC, LOGL_DEBUG,
-		"TBF: [DOWNLINK] START TFI: %d TLLI: 0x%08x \n",
-		tbf->tfi, tbf->tlli);
+	LOGP(DRLCMAC, LOGL_DEBUG, "%s [DOWNLINK] START\n", tbf_name(tbf));
 
 	/* new TBF, so put first frame */
 	memcpy(tbf->llc_frame, data, len);
@@ -309,19 +308,19 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	debug_diagram(tbf->bts, tbf->diag, "+---------------+");
 	debug_diagram(tbf->bts, tbf->diag, "|    THE END    |");
 	debug_diagram(tbf->bts, tbf->diag, "+---------------+");
-	LOGP(DRLCMAC, LOGL_INFO, "Free %s TFI=%d with TLLI=0x%08x.\n",
-		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
-		tbf->tlli);
+	LOGP(DRLCMAC, LOGL_INFO, "%s free\n", tbf_name(tbf));
 	if (tbf->ul_ass_state != GPRS_RLCMAC_UL_ASS_NONE)
-		LOGP(DRLCMAC, LOGL_ERROR, "Software error: Pending uplink "
+		LOGP(DRLCMAC, LOGL_ERROR, "%s Software error: Pending uplink "
 			"assignment. This may not happen, because the "
 			"assignment message never gets transmitted. Please "
-			"be sure not to free in this state. PLEASE FIX!\n");
+			"be sure not to free in this state. PLEASE FIX!\n",
+			tbf_name(tbf));
 	if (tbf->dl_ass_state != GPRS_RLCMAC_DL_ASS_NONE)
-		LOGP(DRLCMAC, LOGL_ERROR, "Software error: Pending downlink "
+		LOGP(DRLCMAC, LOGL_ERROR, "%s Software error: Pending downlink "
 			"assignment. This may not happen, because the "
 			"assignment message never gets transmitted. Please "
-			"be sure not to free in this state. PLEASE FIX!\n");
+			"be sure not to free in this state. PLEASE FIX!\n",
+			tbf_name(tbf));
 	tbf->stop_timer();
 	#warning "TODO: Could/Should generate  bssgp_tx_llc_discarded"
 	while ((msg = msgb_dequeue(&tbf->llc_queue))) {
@@ -395,8 +394,8 @@ void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
 	enum gprs_rlcmac_tbf_state state)
 {
 	debug_diagram(tbf->bts, tbf->diag, "->%s", tbf_state_name[state]);
-	LOGP(DRLCMAC, LOGL_DEBUG, "%s TFI=%d changes state from %s to %s\n",
-		(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi,
+	LOGP(DRLCMAC, LOGL_DEBUG, "%s changes state from %s to %s\n",
+		tbf_name(tbf),
 		tbf_state_name[tbf->state], tbf_state_name[state]);
 	tbf->set_state(state);
 }
@@ -405,14 +404,12 @@ void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
 			unsigned int seconds, unsigned int microseconds)
 {
 	if (!osmo_timer_pending(&tbf->timer))
-		LOGP(DRLCMAC, LOGL_DEBUG, "Starting %s TFI=%d timer %u.\n",
-			(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL",
-			tbf->tfi, T);
+		LOGP(DRLCMAC, LOGL_DEBUG, "%s starting timer %u.\n",
+			tbf_name(tbf), T);
 	else
-		LOGP(DRLCMAC, LOGL_DEBUG, "Restarting %s TFI=%d timer %u "
+		LOGP(DRLCMAC, LOGL_DEBUG, "%s restarting timer %u "
 			"while old timer %u pending \n",
-			(tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL",
-			tbf->tfi, T, tbf->T);
+			tbf_name(tbf), T, tbf->T);
 
 	tbf->T = T;
 	tbf->num_T_exp = 0;
@@ -432,16 +429,16 @@ void gprs_rlcmac_tbf::stop_t3191()
 void gprs_rlcmac_tbf::stop_timer()
 {
 	if (osmo_timer_pending(&timer)) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Stopping %s TFI=%d timer %u.\n",
-			(direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi, T);
+		LOGP(DRLCMAC, LOGL_DEBUG, "%s stopping timer %u.\n",
+			tbf_name(this), T);
 		osmo_timer_del(&timer);
 	}
 }
 
 void gprs_rlcmac_tbf::poll_timeout()
 {
-	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for %s TFI=%d\n",
-		(direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi);
+	LOGP(DRLCMAC, LOGL_NOTICE, "%s poll timeout\n",
+		tbf_name(this));
 
 	poll_state = GPRS_RLCMAC_POLL_NONE;
 
@@ -632,8 +629,8 @@ static void tbf_timer_cb(void *_tbf)
 
 void gprs_rlcmac_tbf::handle_timeout()
 {
-	LOGP(DRLCMAC, LOGL_DEBUG, "%s TFI=%d timer %u expired.\n",
-		(direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi, T);
+	LOGP(DRLCMAC, LOGL_DEBUG, "%s timer %u expired.\n",
+		tbf_name(this), T);
 
 	num_T_exp++;
 
@@ -641,12 +638,12 @@ void gprs_rlcmac_tbf::handle_timeout()
 	case 0: /* assignment */
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
 			if (state_is(GPRS_RLCMAC_ASSIGN)) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "TFI=%d releasing due to "
-					"PACCH assignment timeout.\n", tfi);
+				LOGP(DRLCMAC, LOGL_NOTICE, "%s releasing due to "
+					"PACCH assignment timeout.\n", tbf_name(this));
 				tbf_free(this);
 			} else
-				LOGP(DRLCMAC, LOGL_ERROR, "Error: TBF TFI=%d is not "
-					"in assign state\n", tfi);
+				LOGP(DRLCMAC, LOGL_ERROR, "Error: %s is not "
+					"in assign state\n", tbf_name(this));
 		}
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
 			/* change state to FLOW, so scheduler will start transmission */
@@ -655,28 +652,28 @@ void gprs_rlcmac_tbf::handle_timeout()
 				tbf_new_state(this, GPRS_RLCMAC_FLOW);
 				tbf_assign_control_ts(this);
 			} else
-				LOGP(DRLCMAC, LOGL_NOTICE, "TFI=%d Continue flow after "
-					"IMM.ASS confirm\n", tfi);
+				LOGP(DRLCMAC, LOGL_NOTICE, "%s Continue flow after "
+					"IMM.ASS confirm\n", tbf_name(this));
 		}
 		break;
 	case 3169:
 	case 3191:
 	case 3195:
-		LOGP(DRLCMAC, LOGL_NOTICE, "TBF TFI=%d TLLI=0x%08x T%d timeout during "
-			"transsmission\n", tfi, tlli, T);
+		LOGP(DRLCMAC, LOGL_NOTICE, "%s T%d timeout during "
+			"transsmission\n", tbf_name(this), T);
 		rlcmac_diag();
 		/* fall through */
 	case 3193:
 		if (T == 3193)
 		        debug_diagram(bts, diag, "T3193 timeout");
 		LOGP(DRLCMAC, LOGL_DEBUG,
-			"TBF TFI=%d will be freed due to timeout\n", tfi);
+			"%s will be freed due to timeout\n", tbf_name(this));
 		/* free TBF */
 		tbf_free(this);
 		break;
 	default:
 		LOGP(DRLCMAC, LOGL_ERROR,
-			"TFI=%d Timer expired in unknown mode: %u\n", tfi, T);
+			"%s timer expired in unknown mode: %u\n", tbf_name(this), T);
 	}
 }
 
@@ -713,9 +710,9 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 		 && (tv_now.tv_sec > tv->tv_sec /* and secs expired */
 		  || (tv_now.tv_sec == tv->tv_sec /* .. or if secs equal .. */
 		   && tv_now.tv_usec > tv->tv_usec))) { /* .. usecs expired */
-			LOGP(DRLCMACDL, LOGL_NOTICE, "Discarding LLC PDU of "
-				"DL TFI=%d, because lifetime limit reached\n",
-				tfi);
+			LOGP(DRLCMACDL, LOGL_NOTICE, "%s Discarding LLC PDU "
+				"because lifetime limit reached\n",
+				tbf_name(this));
 			bts->timedout_frame();
 			frames++;
 			octets += msg->len;
@@ -765,8 +762,8 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 	/* Parse frame offsets from length indicator(s), if any. */
 	while (1) {
 		if (frames == (int)sizeof(frame_offset)) {
-			LOGP(DRLCMACUL, LOGL_ERROR, "Too many frames in "
-				"block\n");
+			LOGP(DRLCMACUL, LOGL_ERROR, "%s too many frames in "
+				"block\n", tbf_name(this));
 			return -EINVAL;
 		}
 		frame_offset[frames++] = offset;
@@ -776,9 +773,9 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 			break;
 		/* M == 0 and E == 0 is not allowed in this version. */
 		if (!m && !e) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d "
+			LOGP(DRLCMACUL, LOGL_NOTICE, "%s UL DATA "
 				"ignored, because M='0' and E='0'.\n",
-				this->tfi);
+				tbf_name(this));
 			return 0;
 		}
 		/* no more frames in this segment */
@@ -823,8 +820,8 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 	/* TLLI */
 	if (rh->ti) {
 		if (len < 4) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TLLI out of "
-				"frame border\n");
+			LOGP(DRLCMACUL, LOGL_NOTICE, "%s UL DATA TLLI out of "
+				"frame border\n", tbf_name(this));
 			return -EINVAL;
 		}
 		data += 4;
@@ -838,8 +835,8 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 		LOGP(DRLCMACUL, LOGL_ERROR, "ERROR: PFI not supported, "
 			"please disable in SYSTEM INFORMATION\n");
 		if (len < 1) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA PFI out of "
-				"frame border\n");
+			LOGP(DRLCMACUL, LOGL_NOTICE, "%s UL DATA PFI out of "
+				"frame border\n", tbf_name(this));
 			return -EINVAL;
 		}
 		data++;
@@ -856,9 +853,9 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 
 	/* Check if last offset would exceed frame. */
 	if (offset > len) {
-		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d ignored, "
+		LOGP(DRLCMACUL, LOGL_NOTICE, "%s UL DATA ignored, "
 			"because LI delimits data that exceeds block size.\n",
-			this->tfi);
+			tbf_name(this));
 		return -EINVAL;
 	}
 
@@ -878,8 +875,8 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 		LOGP(DRLCMACUL, LOGL_DEBUG, "-- Appending chunk (len=%d) to "
 			"frame at %d.\n", chunk, this->llc_index);
 		if (this->llc_index + chunk > LLC_MAX_LEN) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "LLC frame exceeds "
-				"maximum size.\n");
+			LOGP(DRLCMACUL, LOGL_NOTICE, "%s LLC frame exceeds "
+				"maximum size.\n", tbf_name(this));
 			chunk = LLC_MAX_LEN - this->llc_index;
 		}
 		memcpy(this->llc_frame + this->llc_index, data + frame_offset[i],
@@ -888,8 +885,8 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 		/* not last frame. */
 		if (i != frames - 1) {
 			/* send frame to SGSN */
-			LOGP(DRLCMACUL, LOGL_INFO, "Complete UL frame for "
-				"TFI=%d: len=%d\n", this->tfi, this->llc_index);
+			LOGP(DRLCMACUL, LOGL_INFO, "%s complete UL frame len=%d\n",
+				tbf_name(this) , this->llc_index);
 			gprs_rlcmac_tx_ul_ud(this);
 			this->llc_index = 0; /* reset frame space */
 		/* also check if CV==0, because the frame may fill up the
@@ -898,9 +895,9 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 		 * delimiter added to this block. */
 		} else if (rh->cv == 0) {
 			/* send frame to SGSN */
-			LOGP(DRLCMACUL, LOGL_INFO, "Complete UL frame for "
-				"TFI=%d that fits precisely in last block: "
-				"len=%d\n", this->tfi, this->llc_index);
+			LOGP(DRLCMACUL, LOGL_INFO, "%s complete UL frame "
+				"that fits precisely in last block: "
+				"len=%d\n", tbf_name(this), this->llc_index);
 			gprs_rlcmac_tx_ul_ud(this);
 			this->llc_index = 0; /* reset frame space */
 		}
@@ -1608,4 +1605,14 @@ void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_pdch *pdch)
 		if (tbf)
 			tbf_free(tbf);
 	}
+}
+
+const char *tbf_name(gprs_rlcmac_tbf *tbf)
+{
+	static char buf[40];
+	snprintf(buf, sizeof(buf), "TBF(TFI=%d TLLI=0x%08x DIR=%s)",
+			tbf->tfi, tbf->tlli,
+			tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL");
+	buf[sizeof(buf) - 1] = '\0';
+	return buf;
 }

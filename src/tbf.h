@@ -257,3 +257,5 @@ inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
 {
 	state = new_state;
 }
+
+const char *tbf_name(gprs_rlcmac_tbf *tbf);
