@@ -1097,7 +1097,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(RlcMacUplink_t *ul_control_block, ui
 	LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s TFI: %u TLLI: 0x%08x FIXME: Packet resource request\n", (tbf->direction == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tbf->tfi, tbf->tlli);
 }
 
-void gprs_rlcmac_pdch::rcv_measurement_report(RlcMacUplink_t *ul_control_block, uint32_t fn)
+void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *report, uint32_t fn)
 {
 	struct gprs_rlcmac_sba *sba;
 
@@ -1108,10 +1108,10 @@ void gprs_rlcmac_pdch::rcv_measurement_report(RlcMacUplink_t *ul_control_block, 
 			"block, but there is no resource request "
 			"scheduled!\n");
 	} else {
-		bts()->timing_advance()->remember(ul_control_block->u.Packet_Measurement_Report.TLLI, sba->ta);
+		bts()->timing_advance()->remember(report->TLLI, sba->ta);
 		bts()->sba()->free_sba(sba);
 	}
-	gprs_rlcmac_meas_rep(&ul_control_block->u.Packet_Measurement_Report);
+	gprs_rlcmac_meas_rep(report);
 }
 
 /* Received Uplink RLC control block. */
@@ -1134,7 +1134,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 		rcv_resource_request(ul_control_block, fn);
 		break;
 	case MT_PACKET_MEASUREMENT_REPORT:
-		rcv_measurement_report(ul_control_block, fn);
+		rcv_measurement_report(&ul_control_block->u.Packet_Measurement_Report, fn);
 		break;
 	case MT_PACKET_UPLINK_DUMMY_CONTROL_BLOCK:
 		/* ignoring it. change the SI to not force sending these? */
