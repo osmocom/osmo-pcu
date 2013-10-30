@@ -1,6 +1,6 @@
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/
 
-check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest
+check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest tbf/TbfTest
 noinst_PROGRAMS = emu/pcu_emu
 
 rlcmac_RLCMACTest_SOURCES = rlcmac/RLCMACTest.cpp
@@ -16,6 +16,14 @@ alloc_AllocTest_LDADD = \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
+
+tbf_TbfTest_SOURCES = tbf/TbfTest.cpp
+tbf_TbfTest_LDADD = \
+	$(LIBOSMOGB_LIBS) \
+	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCORE_LIBS) \
+	$(COMMON_LA) \
+	$(top_builddir)/src/libgprs.la
 
 emu_pcu_emu_SOURCES = emu/pcu_emu.cpp emu/test_replay_gprs_attach.cpp \
 	emu/openbsc_clone.c emu/openbsc_clone.h emu/gprs_tests.h \
@@ -49,7 +57,8 @@ $(srcdir)/package.m4: $(top_srcdir)/configure.ac
 EXTRA_DIST = \
 	testsuite.at $(srcdir)/package.m4 $(TESTSUITE)	\
 	rlcmac/RLCMACTest.ok rlcmac/RLCMACTest.err \
-	alloc/AllocTest.ok alloc/AllocTest.err
+	alloc/AllocTest.ok alloc/AllocTest.err \
+	tbf/TbfTest.ok tbf/TbfTest.err
 
 DISTCLEANFILES = atconfig
 

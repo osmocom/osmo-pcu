@@ -15,3 +15,10 @@ cat $abs_srcdir/alloc/AllocTest.ok > expout
 cat $abs_srcdir/alloc/AllocTest.err > experr
 AT_CHECK([$abs_top_builddir/tests/alloc/AllocTest], [0], [expout], [experr])
 AT_CLEANUP
+
+AT_SETUP([tbf])
+AT_KEYWORDS([tbf])
+cat $abs_srcdir/tbf/TbfTest.ok > expout
+cat $abs_srcdir/tbf/TbfTest.err > experr
+AT_CHECK([$abs_top_builddir/tests/tbf/TbfTest], [0], [expout], [experr])
+AT_CLEANUP

@@ -1618,9 +1618,32 @@ void gprs_rlcmac_tbf::update_tlli(uint32_t tlli)
 	if (tlli == m_tlli)
 		return;
 
-#warning "TODO.. find the DL/UL opposite and update the TLLI too"
-	LOGP(DRLCMAC, LOGL_NOTICE, "%s changing tlli to TLLI=0x%08x\n",
-		tbf_name(this), tlli);
+	bool changedUl = false;
+
+	/*
+	 * During a Routing Area Update (due the assignment of a new
+	 * P-TMSI) the tlli can change. We notice this when receiving
+	 * a PACKET CONTROL ACK.
+	 * When we get a TLLI change on the DL we will look if there
+	 * is a UL TBF and change the tlli there as well.
+	 *
+	 * TODO: There could be multiple DL and UL TBFs and we should
+	 * have a proper way to link all the related TBFs so we can do
+	 * a group update.
+	 */
+	if (m_tlli_valid && direction == GPRS_RLCMAC_DL_TBF) {
+		gprs_rlcmac_tbf *ul_tbf;
+		ul_tbf = bts->tbf_by_tlli(m_tlli, GPRS_RLCMAC_UL_TBF);
+
+		if (ul_tbf) {
+			ul_tbf->m_tlli = tlli;
+			changedUl = true;
+		}
+	}
+
+	LOGP(DRLCMAC, LOGL_NOTICE,
+		"%s changing tlli from TLLI=0x%08x TLLI=0x%08x ul_changed=%d\n",
+		tbf_name(this), m_tlli, tlli, changedUl);
 	m_tlli = tlli;
 }
 
