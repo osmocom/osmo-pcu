@@ -1641,6 +1641,9 @@ void gprs_rlcmac_tbf::update_tlli(uint32_t tlli)
 		}
 	}
 
+	/* update the timing advance for the new tlli */
+	bts->timing_advance()->update(m_tlli, tlli, ta);
+
 	LOGP(DRLCMAC, LOGL_NOTICE,
 		"%s changing tlli from TLLI=0x%08x TLLI=0x%08x ul_changed=%d\n",
 		tbf_name(this), m_tlli, tlli, changedUl);

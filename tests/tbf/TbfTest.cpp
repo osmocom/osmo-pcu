@@ -74,6 +74,8 @@ static void test_tbf_tlli_update()
 	
 	OSMO_ASSERT(the_bts.tbf_by_tlli(0x4232, GPRS_RLCMAC_DL_TBF) == dl_tbf);
 	OSMO_ASSERT(the_bts.tbf_by_tlli(0x4232, GPRS_RLCMAC_UL_TBF) == ul_tbf);
+
+	OSMO_ASSERT(the_bts.timing_advance()->recall(0x4232) == 4);
 }
 
 int main(int argc, char **argv)

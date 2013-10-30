@@ -29,6 +29,7 @@ class TimingAdvance {
 public:
 	TimingAdvance();
 
+	int update(uint32_t old_tlli, uint32_t new_tlli, uint8_t ta);
 	int remember(uint32_t tlli, uint8_t ta);
 	int recall(uint32_t tlli);
 	int flush();

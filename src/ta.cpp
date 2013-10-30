@@ -135,3 +135,8 @@ int TimingAdvance::flush()
 	return count;
 }
 
+int TimingAdvance::update(uint32_t, uint32_t new_tlli, uint8_t ta)
+{
+	/* for now just add the new entry and don't bother about the old one */
+	return remember(new_tlli, ta);
+}
