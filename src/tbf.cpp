@@ -100,8 +100,7 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 		LOGP(DRLCMAC, LOGL_DEBUG,
 			"%s in WAIT RELEASE state "
 			"(T3193), so reuse TBF\n", tbf_name(tbf));
-		memcpy(tbf->m_llc.frame, data, len);
-		tbf->m_llc.length = len;
+		tbf->m_llc.put_frame(data, len);
 		/* reset rlc states */
 		memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl));
 		/* keep to flags */
@@ -137,7 +136,7 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 			}
 		}
 		memcpy(msgb_put(llc_msg, len), data, len);
-		msgb_enqueue(&tbf->m_llc.queue, llc_msg);
+		tbf->m_llc.enqueue(llc_msg);
 		tbf_update_ms_class(tbf, ms_class);
 	}
 
@@ -206,8 +205,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s [DOWNLINK] START\n", tbf_name(tbf));
 
 	/* new TBF, so put first frame */
-	memcpy(tbf->m_llc.frame, data, len);
-	tbf->m_llc.length = len;
+	tbf->m_llc.put_frame(data, len);
 
 	/* Store IMSI for later look-up and PCH retransmission */
 	tbf->assign_imsi(imsi);
@@ -303,8 +301,6 @@ static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 
 void tbf_free(struct gprs_rlcmac_tbf *tbf)
 {
-	struct msgb *msg;
-
 	/* Give final measurement report */
 	gprs_rlcmac_rssi_rep(tbf);
 	gprs_rlcmac_lost_rep(tbf);
@@ -327,10 +323,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 			tbf_name(tbf));
 	tbf->stop_timer();
 	#warning "TODO: Could/Should generate  bssgp_tx_llc_discarded"
-	while ((msg = msgb_dequeue(&tbf->m_llc.queue))) {
-		tbf->bts->dropped_frame();
-		msgb_free(msg);
-	}
+	tbf->m_llc.clear(tbf->bts);
 	tbf_unlink_pdch(tbf);
 	llist_del(&tbf->list);
 
@@ -609,7 +602,7 @@ next_diagram:
 	gettimeofday(&tbf->meas.rssi_tv, NULL);
 	gettimeofday(&tbf->meas.dl_loss_tv, NULL);
 
-	INIT_LLIST_HEAD(&tbf->m_llc.queue);
+	tbf->m_llc.init();
 	if (dir == GPRS_RLCMAC_UL_TBF) {
 		llist_add(&tbf->list, &bts->ul_tbfs);
 		tbf->bts->tbf_ul_created();
@@ -708,7 +701,7 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 
 	gettimeofday(&tv_now, NULL);
 
-	while ((msg = msgb_dequeue(&m_llc.queue))) {
+	while ((msg = m_llc.dequeue())) {
 		tv = (struct timeval *)msg->data;
 		msgb_pull(msg, sizeof(*tv));
 		if (tv->tv_sec /* not infinite */
@@ -736,13 +729,6 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 	}
 
 	return msg;
-}
-
-void gprs_rlcmac_tbf::update_llc_frame(struct msgb *msg)
-{
-	/* TODO: bounds check */
-	memcpy(m_llc.frame, msg->data, msg->len);
-	m_llc.length = msg->len;
 }
 
 /*
@@ -1056,8 +1042,7 @@ do_resend:
 			*e_pointer |= 0x01;
 			/* fill space */
 			memcpy(data, m_llc.frame + m_llc.index, space);
-			/* reset LLC frame */
-			m_llc.index = m_llc.length = 0;
+			m_llc.reset();
 			/* final block */
 			rh->fbi = 1; /* we indicate final block */
 			tbf_new_state(this, GPRS_RLCMAC_FINISHED);
@@ -1112,14 +1097,13 @@ do_resend:
 		LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for %s"
 			"len=%d\n", tbf_name(this), m_llc.length);
 		gprs_rlcmac_dl_bw(this, m_llc.length);
-		/* reset LLC frame */
-		m_llc.index = m_llc.length = 0;
+		m_llc.reset();
 		/* dequeue next LLC frame, if any */
 		msg = llc_dequeue(gprs_bssgp_pcu_current_bctx());
 		if (msg) {
 			LOGP(DRLCMACDL, LOGL_INFO, "- Dequeue next LLC for "
 				"%s (len=%d)\n", tbf_name(this), msg->len);
-			update_llc_frame(msg);
+			m_llc.update_frame(msg);
 			msgb_free(msg);
 		}
 		/* if we have more data and we have space left */
@@ -1565,7 +1549,7 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 		return 0;
 	}
 	#warning "Copy and paste on the sender path"
-	update_llc_frame(msg);
+	m_llc.update_frame(msg);
 	msgb_free(msg);
 
 	/* we have a message, so we trigger downlink assignment, and there
@@ -1852,7 +1836,7 @@ int gprs_rlcmac_tbf::snd_ul_ud()
 	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] %s len=%d\n", tbf_name(this), m_llc.index);
 	if (!bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
-		m_llc.index = 0; /* reset frame space */
+		m_llc.reset_frame_space();
 		return -EIO;
 	}
 	
@@ -1864,7 +1848,7 @@ int gprs_rlcmac_tbf::snd_ul_ud()
 	qos_profile[2] = QOS_PROFILE;
 	bssgp_tx_ul_ud(bctx, tlli(), qos_profile, llc_pdu);
 
-	m_llc.index = 0; /* reset frame space */
+	m_llc.reset_frame_space();
 	return 0;
 }
 
@@ -1876,4 +1860,54 @@ const char *tbf_name(gprs_rlcmac_tbf *tbf)
 			tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL");
 	buf[sizeof(buf) - 1] = '\0';
 	return buf;
+}
+
+/* reset LLC frame */
+void gprs_llc::reset()
+{
+	index = 0;
+	length = 0;
+}
+
+void gprs_llc::reset_frame_space()
+{
+	index = 0;
+}
+
+void gprs_llc::enqueue(struct msgb *llc_msg)
+{
+	msgb_enqueue(&queue, llc_msg);
+}
+
+void gprs_llc::put_frame(const uint8_t *data, size_t len)
+{
+	memcpy(frame, data, len);
+	length = len;
+}
+
+void gprs_llc::clear(BTS *bts)
+{
+	struct msgb *msg;
+
+	while ((msg = msgb_dequeue(&queue))) {
+		bts->dropped_frame();
+		msgb_free(msg);
+	}
+}
+
+void gprs_llc::init()
+{
+	INIT_LLIST_HEAD(&queue);
+}
+
+struct msgb *gprs_llc::dequeue()
+{
+	return msgb_dequeue(&queue);
+}
+
+void gprs_llc::update_frame(struct msgb *msg)
+{
+	/* TODO: bounds check */
+	memcpy(frame, msg->data, msg->len);
+	length = msg->len;
 }

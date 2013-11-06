@@ -88,6 +88,17 @@ enum gprs_rlcmac_tbf_direction {
  * I represent the LLC data to a MS
  */
 struct gprs_llc {
+	void init();
+	void reset();
+	void reset_frame_space();
+
+	void enqueue(struct msgb *llc_msg);
+	struct msgb *dequeue();
+
+	void update_frame(struct msgb *msg);
+	void put_frame(const uint8_t *data, size_t len);
+	void clear(BTS *bts);
+
 	uint8_t frame[LLC_MAX_LEN]; /* current DL or UL frame */
 	uint16_t index; /* current write/read position of frame */
 	uint16_t length; /* len of current DL LLC_frame, 0 == no frame */
@@ -105,7 +116,6 @@ struct gprs_rlcmac_tbf {
 
 	/* TODO: add the gettimeofday as parameter */
 	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
-	void update_llc_frame(struct msgb *msg);
 
 	/* TODO: extract LLC class? */
 	int assemble_forward_llc(uint8_t *data, uint8_t len);
