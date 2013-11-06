@@ -23,6 +23,7 @@
 #include <stdint.h>
 
 struct bssgp_bvc_ctx;
+struct rlc_ul_header;
 
 /*
  * TBF instance
@@ -104,6 +105,9 @@ struct gprs_rlcmac_tbf {
 	struct msgb *create_ul_ass(uint32_t fn);
 	struct msgb *create_ul_ack(uint32_t fn);
 	int snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
+
+	/* blocks were acked */
+	int rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi);
 
 	int rlcmac_diag();
 

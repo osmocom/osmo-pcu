@@ -511,9 +511,6 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
  * PDCH code below. TODO: move to a separate file
  */
 
-/* After receiving these frames, we send ack/nack. */
-#define SEND_ACK_AFTER_FRAMES 20
-
 void gprs_rlcmac_pdch::enable()
 {
 	/* TODO: Check if there are still allocated resources.. */
@@ -650,8 +647,6 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 {
 	struct gprs_rlcmac_tbf *tbf;
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
-	uint16_t mod_sns, mod_sns_half, offset_v_q, offset_v_r, index;
-	int rc;
 
 	switch (len) {
 		case 54:
@@ -682,188 +677,8 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 			rh->tfi);
 		return 0;
 	}
-	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_UL_DATA);
 
-	LOGP(DRLCMACUL, LOGL_DEBUG, "UL DATA TFI=%d received (V(Q)=%d .. "
-		"V(R)=%d)\n", rh->tfi, tbf->dir.ul.v_q, tbf->dir.ul.v_r);
-
-	/* process RSSI */
-	gprs_rlcmac_rssi(tbf, rssi);
-
-	/* get TLLI */
-	if (!tbf->is_tlli_valid()) {
-		struct gprs_rlcmac_tbf *dl_tbf, *ul_tbf;
-		uint32_t tlli;
-
-		/* no TLLI yet */
-		if (!rh->ti) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d without "
-				"TLLI, but no TLLI received yet\n", rh->tfi);
-			return 0;
-		}
-		rc = Decoding::tlli_from_ul_data(data, len, &tlli);
-		if (rc) {
-			bts()->decode_error();
-			LOGP(DRLCMACUL, LOGL_NOTICE, "Failed to decode TLLI "
-				"of UL DATA TFI=%d.\n", rh->tfi);
-			return 0;
-		}
-		tbf->update_tlli(tlli);
-		LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
-			"UL DATA TFI=%d.\n", tbf->tlli(), rh->tfi);
-		if ((dl_tbf = bts()->tbf_by_tlli(tbf->tlli(), GPRS_RLCMAC_DL_TBF))) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-				"TLLI=0x%08x while %s still exists. "
-				"Killing pending DL TBF\n", tbf->tlli(),
-				tbf_name(dl_tbf));
-			tbf_free(dl_tbf);
-		}
-		/* tbf_by_tlli will not find your TLLI, because it is not
-		 * yet marked valid */
-		if ((ul_tbf = bts()->tbf_by_tlli(tbf->tlli(), GPRS_RLCMAC_UL_TBF))) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-				"TLLI=0x%08x while %s still exists. "
-				"Killing pending UL TBF\n", tbf->tlli(),
-				tbf_name(ul_tbf));
-			tbf_free(ul_tbf);
-		}
-		/* mark TLLI valid now */
-		tbf->tlli_mark_valid();
-		/* store current timing advance */
-		bts()->timing_advance()->remember(tbf->tlli(), tbf->ta);
-	/* already have TLLI, but we stille get another one */
-	} else if (rh->ti) {
-		uint32_t tlli;
-		rc = Decoding::tlli_from_ul_data(data, len, &tlli);
-		if (rc) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "Failed to decode TLLI "
-				"of UL DATA TFI=%d.\n", rh->tfi);
-			return 0;
-		}
-		if (tlli != tbf->tlli()) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "TLLI mismatch on UL "
-				"DATA TFI=%d. (Ignoring due to contention "
-				"resolution)\n", rh->tfi);
-			return 0;
-		}
-	}
-
-	mod_sns = tbf->sns - 1;
-	mod_sns_half = (tbf->sns >> 1) - 1;
-
-	/* restart T3169 */
-	tbf_timer_start(tbf, 3169, bts_data()->t3169, 0);
-
-	/* Increment RX-counter */
-	tbf->dir.ul.rx_counter++;
-
-	/* current block relative to lowest unreceived block */
-	offset_v_q = (rh->bsn - tbf->dir.ul.v_q) & mod_sns;
-	/* If out of window (may happen if blocks below V(Q) are received
-	 * again. */
-	if (offset_v_q >= tbf->ws) {
-		LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d out of window "
-			"%d..%d (it's normal)\n", rh->bsn, tbf->dir.ul.v_q,
-			(tbf->dir.ul.v_q + tbf->ws - 1) & mod_sns);
-		return 0;
-	}
-	/* Write block to buffer and set receive state array. */
-	index = rh->bsn & mod_sns_half; /* memory index of block */
-	memcpy(tbf->rlc_block[index], data, len); /* Copy block. */
-	tbf->rlc_block_len[index] = len;
-	tbf->dir.ul.v_n[index] = 'R'; /* Mark received block. */
-	LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
-		rh->bsn, tbf->dir.ul.v_q,
-		(tbf->dir.ul.v_q + tbf->ws - 1) & mod_sns);
-	/* Raise V(R) to highest received sequence number not received. */
-	offset_v_r = (rh->bsn + 1 - tbf->dir.ul.v_r) & mod_sns;
-	if (offset_v_r < (tbf->sns >> 1)) { /* Positive offset, so raise. */
-		while (offset_v_r--) {
-			if (offset_v_r) /* all except the received block */
-				tbf->dir.ul.v_n[tbf->dir.ul.v_r & mod_sns_half]
-					= 'N'; /* Mark block as not received */
-			tbf->dir.ul.v_r = (tbf->dir.ul.v_r + 1) & mod_sns;
-				/* Inc V(R). */
-		}
-		LOGP(DRLCMACUL, LOGL_DEBUG, "- Raising V(R) to %d\n",
-			tbf->dir.ul.v_r);
-	}
-
-	#warning "Move to TBF and remove the index side effect.."
-	/* Raise V(Q) if possible, and retrieve LLC frames from blocks.
-	 * This is looped until there is a gap (non received block) or
-	 * the window is empty.*/
-	while (tbf->dir.ul.v_q != tbf->dir.ul.v_r && tbf->dir.ul.v_n[
-			(index = tbf->dir.ul.v_q & mod_sns_half)] == 'R') {
-		LOGP(DRLCMACUL, LOGL_DEBUG, "- Taking block %d out, raising "
-			"V(Q) to %d\n", tbf->dir.ul.v_q,
-			(tbf->dir.ul.v_q + 1) & mod_sns);
-		/* get LLC data from block */
-		tbf->assemble_forward_llc(tbf->rlc_block[index], tbf->rlc_block_len[index]);
-		/* raise V(Q), because block already received */
-		tbf->dir.ul.v_q = (tbf->dir.ul.v_q + 1) & mod_sns;
-	}
-
-	/* Check CV of last frame in buffer */
-	if (tbf->state_is(GPRS_RLCMAC_FLOW) /* still in flow state */
-	 && tbf->dir.ul.v_q == tbf->dir.ul.v_r) { /* if complete */
-		struct rlc_ul_header *last_rh = (struct rlc_ul_header *)
-			tbf->rlc_block[(tbf->dir.ul.v_r - 1) & mod_sns_half];
-		LOGP(DRLCMACUL, LOGL_DEBUG, "- No gaps in received block, "
-			"last block: BSN=%d CV=%d\n", last_rh->bsn,
-			last_rh->cv);
-		if (last_rh->cv == 0) {
-			LOGP(DRLCMACUL, LOGL_DEBUG, "- Finished with UL "
-				"TBF\n");
-			tbf_new_state(tbf, GPRS_RLCMAC_FINISHED);
-			/* Reset N3103 counter. */
-			tbf->dir.ul.n3103 = 0;
-		}
-	}
-
-	/* If TLLI is included or if we received half of the window, we send
-	 * an ack/nack */
-	if (rh->si || rh->ti || tbf->state_is(GPRS_RLCMAC_FINISHED)
-	 || (tbf->dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
-		if (rh->si) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "- Scheduling Ack/Nack, "
-				"because MS is stalled.\n");
-		}
-		if (rh->ti) {
-			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
-				"because TLLI is included.\n");
-		}
-		if (tbf->state_is(GPRS_RLCMAC_FINISHED)) {
-			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
-				"because last block has CV==0.\n");
-		}
-		if ((tbf->dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
-			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
-				"because %d frames received.\n",
-				SEND_ACK_AFTER_FRAMES);
-		}
-		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_NONE) {
-#ifdef DEBUG_DIAGRAM
-			if (rh->si)
-				debug_diagram(bts->bts, tbf->diag, "sched UL-ACK stall");
-			if (rh->ti)
-				debug_diagram(bts->bts, tbf->diag, "sched UL-ACK TLLI");
-			if (tbf->state_is(GPRS_RLCMAC_FINISHED))
-				debug_diagram(bts->bts, tbf->diag, "sched UL-ACK CV==0");
-			if ((tbf->dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0)
-				debug_diagram(bts->bts, tbf->diag, "sched UL-ACK n=%d",
-					tbf->dir.ul.rx_counter);
-#endif
-			/* trigger sending at next RTS */
-			tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
-		} else {
-			/* already triggered */
-			LOGP(DRLCMACUL, LOGL_DEBUG, "-  Sending Ack/Nack is "
-				"already triggered, don't schedule!\n");
-		}
-	}
-
-	return 0;
+	return tbf->rcv_data_block_acknowledged(data, len, rssi);
 }
 
 void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet, uint32_t fn)
