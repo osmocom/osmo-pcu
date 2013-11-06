@@ -84,6 +84,16 @@ enum gprs_rlcmac_tbf_direction {
 #define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
+/**
+ * I represent the LLC data to a MS
+ */
+struct gprs_llc {
+	uint8_t frame[LLC_MAX_LEN]; /* current DL or UL frame */
+	uint16_t index; /* current write/read position of frame */
+	uint16_t length; /* len of current DL LLC_frame, 0 == no frame */
+	struct llist_head queue; /* queued LLC DL data */
+};
+
 struct gprs_rlcmac_tbf {
 
 	static void free_all(struct gprs_rlcmac_trx *trx);
@@ -142,10 +152,8 @@ struct gprs_rlcmac_tbf {
 	uint8_t ms_class;
 	struct gprs_rlcmac_pdch *pdch[8]; /* list of PDCHs allocated to TBF */
 	uint16_t ta;
-	uint8_t llc_frame[LLC_MAX_LEN]; /* current DL or UL frame */
-	uint16_t llc_index; /* current write/read position of frame */
-	uint16_t llc_length; /* len of current DL LLC_frame, 0 == no frame */
-	struct llist_head llc_queue; /* queued LLC DL data */
+
+	gprs_llc m_llc;
 
 	enum gprs_rlcmac_tbf_dl_ass_state dl_ass_state;
 	enum gprs_rlcmac_tbf_ul_ass_state ul_ass_state;

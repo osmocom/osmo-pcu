@@ -100,8 +100,8 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 		LOGP(DRLCMAC, LOGL_DEBUG,
 			"%s in WAIT RELEASE state "
 			"(T3193), so reuse TBF\n", tbf_name(tbf));
-		memcpy(tbf->llc_frame, data, len);
-		tbf->llc_length = len;
+		memcpy(tbf->m_llc.frame, data, len);
+		tbf->m_llc.length = len;
 		/* reset rlc states */
 		memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl));
 		/* keep to flags */
@@ -137,7 +137,7 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 			}
 		}
 		memcpy(msgb_put(llc_msg, len), data, len);
-		msgb_enqueue(&tbf->llc_queue, llc_msg);
+		msgb_enqueue(&tbf->m_llc.queue, llc_msg);
 		tbf_update_ms_class(tbf, ms_class);
 	}
 
@@ -206,8 +206,8 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s [DOWNLINK] START\n", tbf_name(tbf));
 
 	/* new TBF, so put first frame */
-	memcpy(tbf->llc_frame, data, len);
-	tbf->llc_length = len;
+	memcpy(tbf->m_llc.frame, data, len);
+	tbf->m_llc.length = len;
 
 	/* Store IMSI for later look-up and PCH retransmission */
 	tbf->assign_imsi(imsi);
@@ -327,7 +327,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 			tbf_name(tbf));
 	tbf->stop_timer();
 	#warning "TODO: Could/Should generate  bssgp_tx_llc_discarded"
-	while ((msg = msgb_dequeue(&tbf->llc_queue))) {
+	while ((msg = msgb_dequeue(&tbf->m_llc.queue))) {
 		tbf->bts->dropped_frame();
 		msgb_free(msg);
 	}
@@ -609,7 +609,7 @@ next_diagram:
 	gettimeofday(&tbf->meas.rssi_tv, NULL);
 	gettimeofday(&tbf->meas.dl_loss_tv, NULL);
 
-	INIT_LLIST_HEAD(&tbf->llc_queue);
+	INIT_LLIST_HEAD(&tbf->m_llc.queue);
 	if (dir == GPRS_RLCMAC_UL_TBF) {
 		llist_add(&tbf->list, &bts->ul_tbfs);
 		tbf->bts->tbf_ul_created();
@@ -708,7 +708,7 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 
 	gettimeofday(&tv_now, NULL);
 
-	while ((msg = msgb_dequeue(&llc_queue))) {
+	while ((msg = msgb_dequeue(&m_llc.queue))) {
 		tv = (struct timeval *)msg->data;
 		msgb_pull(msg, sizeof(*tv));
 		if (tv->tv_sec /* not infinite */
@@ -741,8 +741,8 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 void gprs_rlcmac_tbf::update_llc_frame(struct msgb *msg)
 {
 	/* TODO: bounds check */
-	memcpy(llc_frame, msg->data, msg->len);
-	llc_length = msg->len;
+	memcpy(m_llc.frame, msg->data, msg->len);
+	m_llc.length = msg->len;
 }
 
 /*
@@ -878,20 +878,19 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 			chunk = frame_offset[i + 1] - frame_offset[i];
 		}
 		LOGP(DRLCMACUL, LOGL_DEBUG, "-- Appending chunk (len=%d) to "
-			"frame at %d.\n", chunk, this->llc_index);
-		if (this->llc_index + chunk > LLC_MAX_LEN) {
+			"frame at %d.\n", chunk, m_llc.index);
+		if (m_llc.index + chunk > LLC_MAX_LEN) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "%s LLC frame exceeds "
 				"maximum size.\n", tbf_name(this));
-			chunk = LLC_MAX_LEN - this->llc_index;
+			chunk = LLC_MAX_LEN - m_llc.index;
 		}
-		memcpy(this->llc_frame + this->llc_index, data + frame_offset[i],
-			chunk);
-		this->llc_index += chunk;
+		memcpy(m_llc.frame + m_llc.index, data + frame_offset[i], chunk);
+		m_llc.index += chunk;
 		/* not last frame. */
 		if (i != frames - 1) {
 			/* send frame to SGSN */
 			LOGP(DRLCMACUL, LOGL_INFO, "%s complete UL frame len=%d\n",
-				tbf_name(this) , this->llc_index);
+				tbf_name(this) , m_llc.index);
 			snd_ul_ud();
 		/* also check if CV==0, because the frame may fill up the
 		 * block precisely, then it is also complete. normally the
@@ -901,7 +900,7 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 			/* send frame to SGSN */
 			LOGP(DRLCMACUL, LOGL_INFO, "%s complete UL frame "
 				"that fits precisely in last block: "
-				"len=%d\n", tbf_name(this), this->llc_index);
+				"len=%d\n", tbf_name(this), m_llc.index);
 			snd_ul_ud();
 		}
 	}
@@ -1027,7 +1026,7 @@ do_resend:
 	delimiter = data; /* where next length header would be stored */
 	space = block_data - 3;
 	while (1) {
-		chunk = llc_length - llc_index;
+		chunk = m_llc.length - m_llc.index;
 		/* if chunk will exceed block limit */
 		if (chunk > space) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
@@ -1037,28 +1036,28 @@ do_resend:
 			/* block is filled, so there is no extension */
 			*e_pointer |= 0x01;
 			/* fill only space */
-			memcpy(data, llc_frame + llc_index, space);
+			memcpy(data, m_llc.frame + m_llc.index, space);
 			/* incement index */
-			llc_index += space;
+			m_llc.index += space;
 			/* return data block as message */
 			break;
 		}
 		/* if FINAL chunk would fit precisely in space left */
-		if (chunk == space && llist_empty(&llc_queue)) {
+		if (chunk == space && llist_empty(&m_llc.queue)) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
 				"would exactly fit into space (%d): because "
 				"this is a final block, we don't add length "
 				"header, and we are done\n", chunk, space);
 			LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for "
 				"%s that fits precisely in last block: "
-				"len=%d\n", tbf_name(this), llc_length);
-			gprs_rlcmac_dl_bw(this, llc_length);
+				"len=%d\n", tbf_name(this), m_llc.length);
+			gprs_rlcmac_dl_bw(this, m_llc.length);
 			/* block is filled, so there is no extension */
 			*e_pointer |= 0x01;
 			/* fill space */
-			memcpy(data, llc_frame + llc_index, space);
+			memcpy(data, m_llc.frame + m_llc.index, space);
 			/* reset LLC frame */
-			llc_index = llc_length = 0;
+			m_llc.index = m_llc.length = 0;
 			/* final block */
 			rh->fbi = 1; /* we indicate final block */
 			tbf_new_state(this, GPRS_RLCMAC_FINISHED);
@@ -1084,9 +1083,9 @@ do_resend:
 			li->li = 0; /* chunk fills the complete space */
 			// no need to set e_pointer nor increase delimiter
 			/* fill only space, which is 1 octet less than chunk */
-			memcpy(data, llc_frame + llc_index, space);
+			memcpy(data, m_llc.frame + m_llc.index, space);
 			/* incement index */
-			llc_index += space;
+			m_llc.index += space;
 			/* return data block as message */
 			break;
 		}
@@ -1107,14 +1106,14 @@ do_resend:
 		e_pointer = delimiter; /* points to E of current delimiter */
 		delimiter++;
 		/* copy (rest of) LLC frame to space */
-		memcpy(data, llc_frame + llc_index, chunk);
+		memcpy(data, m_llc.frame + m_llc.index, chunk);
 		data += chunk;
 		space -= chunk;
 		LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for %s"
-			"len=%d\n", tbf_name(this), llc_length);
-		gprs_rlcmac_dl_bw(this, llc_length);
+			"len=%d\n", tbf_name(this), m_llc.length);
+		gprs_rlcmac_dl_bw(this, m_llc.length);
 		/* reset LLC frame */
-		llc_index = llc_length = 0;
+		m_llc.index = m_llc.length = 0;
 		/* dequeue next LLC frame, if any */
 		msg = llc_dequeue(gprs_bssgp_pcu_current_bctx());
 		if (msg) {
@@ -1124,12 +1123,12 @@ do_resend:
 			msgb_free(msg);
 		}
 		/* if we have more data and we have space left */
-		if (space > 0 && llc_length) {
+		if (space > 0 && m_llc.length) {
 			li->m = 1; /* we indicate more frames to follow */
 			continue;
 		}
 		/* if we don't have more LLC frames */
-		if (!llc_length) {
+		if (!m_llc.length) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
 				"done.\n");
 			li->e = 1; /* we cannot extend */
@@ -1847,25 +1846,25 @@ int gprs_rlcmac_tbf::snd_ul_ud()
 {
 	uint8_t qos_profile[3];
 	struct msgb *llc_pdu;
-	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + llc_index;
+	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + m_llc.index;
 	struct bssgp_bvc_ctx *bctx = gprs_bssgp_pcu_current_bctx();
 
-	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] %s len=%d\n", tbf_name(this), llc_index);
+	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] %s len=%d\n", tbf_name(this), m_llc.index);
 	if (!bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
-		llc_index = 0; /* reset frame space */
+		m_llc.index = 0; /* reset frame space */
 		return -EIO;
 	}
 	
 	llc_pdu = msgb_alloc_headroom(msg_len, msg_len,"llc_pdu");
-	uint8_t *buf = msgb_push(llc_pdu, TL16V_GROSS_LEN(sizeof(uint8_t)*llc_index));
-	tl16v_put(buf, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*llc_index, llc_frame);
+	uint8_t *buf = msgb_push(llc_pdu, TL16V_GROSS_LEN(sizeof(uint8_t)*m_llc.index));
+	tl16v_put(buf, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*m_llc.index, m_llc.frame);
 	qos_profile[0] = QOS_PROFILE >> 16;
 	qos_profile[1] = QOS_PROFILE >> 8;
 	qos_profile[2] = QOS_PROFILE;
 	bssgp_tx_ul_ud(bctx, tlli(), qos_profile, llc_pdu);
 
-	llc_index = 0; /* reset frame space */
+	m_llc.index = 0; /* reset frame space */
 	return 0;
 }
 
