@@ -892,8 +892,7 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 			/* send frame to SGSN */
 			LOGP(DRLCMACUL, LOGL_INFO, "%s complete UL frame len=%d\n",
 				tbf_name(this) , this->llc_index);
-			gprs_rlcmac_tx_ul_ud(this);
-			this->llc_index = 0; /* reset frame space */
+			snd_ul_ud();
 		/* also check if CV==0, because the frame may fill up the
 		 * block precisely, then it is also complete. normally the
 		 * frame would be extended into the next block with a 0-length
@@ -903,8 +902,7 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 			LOGP(DRLCMACUL, LOGL_INFO, "%s complete UL frame "
 				"that fits precisely in last block: "
 				"len=%d\n", tbf_name(this), this->llc_index);
-			gprs_rlcmac_tx_ul_ud(this);
-			this->llc_index = 0; /* reset frame space */
+			snd_ul_ud();
 		}
 	}
 
@@ -1841,6 +1839,33 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 		}
 	}
 
+	return 0;
+}
+
+/* Send Uplink unit-data to SGSN. */
+int gprs_rlcmac_tbf::snd_ul_ud()
+{
+	uint8_t qos_profile[3];
+	struct msgb *llc_pdu;
+	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + llc_index;
+	struct bssgp_bvc_ctx *bctx = gprs_bssgp_pcu_current_bctx();
+
+	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] %s len=%d\n", tbf_name(this), llc_index);
+	if (!bctx) {
+		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
+		llc_index = 0; /* reset frame space */
+		return -EIO;
+	}
+	
+	llc_pdu = msgb_alloc_headroom(msg_len, msg_len,"llc_pdu");
+	uint8_t *buf = msgb_push(llc_pdu, TL16V_GROSS_LEN(sizeof(uint8_t)*llc_index));
+	tl16v_put(buf, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*llc_index, llc_frame);
+	qos_profile[0] = QOS_PROFILE >> 16;
+	qos_profile[1] = QOS_PROFILE >> 8;
+	qos_profile[2] = QOS_PROFILE;
+	bssgp_tx_ul_ud(bctx, tlli(), qos_profile, llc_pdu);
+
+	llc_index = 0; /* reset frame space */
 	return 0;
 }
 

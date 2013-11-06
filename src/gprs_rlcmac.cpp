@@ -113,31 +113,6 @@ void debug_diagram(BTS *bts, int diag, const char *format, ...)
 }
 #endif
 
-/* Send Uplink unit-data to SGSN. */
-int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf)
-{
-	uint8_t qos_profile[3];
-	struct msgb *llc_pdu;
-	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + tbf->llc_index;
-	struct bssgp_bvc_ctx *bctx = gprs_bssgp_pcu_current_bctx();
-
-	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] %s len=%d\n", tbf_name(tbf), tbf->llc_index);
-	if (!bctx) {
-		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
-		return -EIO;
-	}
-	
-	llc_pdu = msgb_alloc_headroom(msg_len, msg_len,"llc_pdu");
-	uint8_t *buf = msgb_push(llc_pdu, TL16V_GROSS_LEN(sizeof(uint8_t)*tbf->llc_index));
-	tl16v_put(buf, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*tbf->llc_index, tbf->llc_frame);
-	qos_profile[0] = QOS_PROFILE >> 16;
-	qos_profile[1] = QOS_PROFILE >> 8;
-	qos_profile[2] = QOS_PROFILE;
-	bssgp_tx_ul_ud(bctx, tbf->tlli(), qos_profile, llc_pdu);
-
-	return 0;
-}
-
 int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len,
 	const char *imsi)
 {
