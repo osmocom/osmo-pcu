@@ -88,7 +88,8 @@ noinst_HEADERS = \
 	ta.h \
 	sba.h \
 	rlc.h \
-	decoding.h
+	decoding.h \
+	llc.h
 
 osmo_pcu_SOURCES = pcu_main.cpp
 

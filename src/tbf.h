@@ -19,6 +19,7 @@
 #pragma once
 
 #include "gprs_rlcmac.h"
+#include "llc.h"
 
 #include <stdint.h>
 
@@ -30,7 +31,6 @@ struct msgb;
  * TBF instance
  */
 
-#define LLC_MAX_LEN 1543
 #define RLC_MAX_SNS 128 /* GPRS, must be power of 2 */
 #define RLC_MAX_WS  64 /* max window size */
 #define RLC_MAX_LEN 54 /* CS-4 including spare bits */
@@ -84,27 +84,6 @@ enum gprs_rlcmac_tbf_direction {
 #define GPRS_RLCMAC_FLAG_TO_UL_ASS	6
 #define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
-
-/**
- * I represent the LLC data to a MS
- */
-struct gprs_llc {
-	void init();
-	void reset();
-	void reset_frame_space();
-
-	void enqueue(struct msgb *llc_msg);
-	struct msgb *dequeue();
-
-	void update_frame(struct msgb *msg);
-	void put_frame(const uint8_t *data, size_t len);
-	void clear(BTS *bts);
-
-	uint8_t frame[LLC_MAX_LEN]; /* current DL or UL frame */
-	uint16_t index; /* current write/read position of frame */
-	uint16_t length; /* len of current DL LLC_frame, 0 == no frame */
-	struct llist_head queue; /* queued LLC DL data */
-};
 
 struct gprs_rlcmac_tbf {
 
