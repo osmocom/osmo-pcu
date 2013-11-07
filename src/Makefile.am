@@ -47,7 +47,8 @@ libgprs_la_SOURCES = \
 	encoding.cpp \
 	ta.cpp \
 	sba.cpp \
-	decoding.cpp
+	decoding.cpp \
+	llc.cpp
 
 if ENABLE_SYSMOBTS
 libgprs_la_SOURCES += \

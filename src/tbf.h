@@ -24,6 +24,7 @@
 
 struct bssgp_bvc_ctx;
 struct rlc_ul_header;
+struct msgb;
 
 /*
  * TBF instance
