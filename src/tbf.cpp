@@ -901,15 +901,14 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 	struct rlc_li_field *li;
 	uint8_t block_length; /* total length of block, including spare bits */
 	uint8_t block_data; /* usable data of block, w/o spare bits, inc. MAC */
-	struct msgb *msg, *dl_msg;
+	struct msgb *msg;
 	uint8_t bsn;
 	uint16_t mod_sns = sns - 1;
 	uint16_t mod_sns_half = (sns >> 1) - 1;
 	uint16_t index;
 	uint8_t *delimiter, *data, *e_pointer;
-	uint8_t len;
 	uint16_t space, chunk;
-	int first_fin_ack = 0;
+	bool first_fin_ack = false;
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink (V(A)==%d .. "
 		"V(S)==%d)\n", tbf_name(this), dir.dl.v_a, dir.dl.v_s);
@@ -925,7 +924,7 @@ do_resend:
 				bsn);
 			/* re-send block with negative aknowlegement */
 			dir.dl.v_b[index] = 'U'; /* unacked */
-			goto tx_block;
+			return create_dl_acked_block(fn, ts, index, first_fin_ack);
 		}
 	}
 
@@ -954,7 +953,7 @@ do_resend:
 				"so we re-transmit final block!\n");
 			/* we just send final block again */
 			index = ((dir.dl.v_s - 1) & mod_sns_half);
-			goto tx_block;
+			return create_dl_acked_block(fn, ts, index, first_fin_ack);
 		}
 		
 		/* cycle through all unacked blocks */
@@ -975,7 +974,7 @@ do_resend:
 				" != V(S). PLEASE FIX!\n");
 			/* we just send final block again */
 			index = ((dir.dl.v_s - 1) & mod_sns_half);
-			goto tx_block;
+			return create_dl_acked_block(fn, ts, index, first_fin_ack);
 		}
 		goto do_resend;
 	}
@@ -1114,7 +1113,7 @@ do_resend:
 				"done.\n");
 			li->e = 1; /* we cannot extend */
 			rh->fbi = 1; /* we indicate final block */
-			first_fin_ack = 1;
+			first_fin_ack = true;
 				/* + 1 indicates: first final ack */
 			tbf_new_state(this, GPRS_RLCMAC_FINISHED);
 			break;
@@ -1132,8 +1131,17 @@ do_resend:
 	dir.dl.v_b[index] = 'U'; /* unacked */
 	dir.dl.v_s = (dir.dl.v_s + 1) & mod_sns; /* inc send state */
 
-tx_block:
-	/* from this point on, new block is sent or old block is resent */
+	return create_dl_acked_block(fn, ts, index, first_fin_ack);
+}
+
+struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(
+				const uint32_t fn, const uint8_t ts,
+				const int index, const bool first_fin_ack)
+{
+	uint8_t *data;
+	struct rlc_dl_header *rh;
+	struct msgb *dl_msg;
+	uint8_t len;
 
 	/* get data and header from current block */
 	data = rlc_block[index];

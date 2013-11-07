@@ -266,6 +266,9 @@ protected:
 	int append_data(const uint8_t ms_class,
 			const uint16_t pdu_delay_csec,
 			const uint8_t *data, const uint16_t len);
+
+	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
+					const int index, const bool fin_first_ack);
 };
 
 
