@@ -19,6 +19,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string.h>
 
 #define LLC_MAX_LEN 1543
 
@@ -35,7 +36,10 @@ struct gprs_llc {
 
 	void update_frame(struct msgb *msg);
 	void put_frame(const uint8_t *data, size_t len);
+	void consume(uint8_t *data, size_t len);
 	void clear(BTS *bts);
+
+	uint16_t chunk_size() const;
 
 	uint8_t frame[LLC_MAX_LEN]; /* current DL or UL frame */
 	uint16_t index; /* current write/read position of frame */
@@ -43,3 +47,14 @@ struct gprs_llc {
 	struct llist_head queue; /* queued LLC DL data */
 };
 
+inline uint16_t gprs_llc::chunk_size() const
+{
+	return length - index;
+}
+
+inline void gprs_llc::consume(uint8_t *data, size_t len)
+{
+	/* copy and increment index */
+	memcpy(data, frame + index, len);
+	index += len;
+}

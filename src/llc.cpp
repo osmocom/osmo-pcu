@@ -22,8 +22,6 @@
 #include <tbf.h>
 #include <bts.h>
 
-#include <string.h>
-
 extern "C" {
 #include <osmocom/core/msgb.h>
 }
@@ -73,6 +71,7 @@ struct msgb *gprs_llc::dequeue()
 
 void gprs_llc::update_frame(struct msgb *msg)
 {
+	/* TODO: assert that index is 0 now */
 	/* TODO: bounds check */
 	memcpy(frame, msg->data, msg->len);
 	length = msg->len;

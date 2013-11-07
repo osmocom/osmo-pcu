@@ -1008,7 +1008,7 @@ do_resend:
 	delimiter = data; /* where next length header would be stored */
 	space = block_data - 3;
 	while (1) {
-		chunk = m_llc.length - m_llc.index;
+		chunk = m_llc.chunk_size();
 		/* if chunk will exceed block limit */
 		if (chunk > space) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
@@ -1018,9 +1018,7 @@ do_resend:
 			/* block is filled, so there is no extension */
 			*e_pointer |= 0x01;
 			/* fill only space */
-			memcpy(data, m_llc.frame + m_llc.index, space);
-			/* incement index */
-			m_llc.index += space;
+			m_llc.consume(data, space);
 			/* return data block as message */
 			break;
 		}
@@ -1037,7 +1035,7 @@ do_resend:
 			/* block is filled, so there is no extension */
 			*e_pointer |= 0x01;
 			/* fill space */
-			memcpy(data, m_llc.frame + m_llc.index, space);
+			m_llc.consume(data, space);
 			m_llc.reset();
 			/* final block */
 			rh->fbi = 1; /* we indicate final block */
@@ -1064,9 +1062,7 @@ do_resend:
 			li->li = 0; /* chunk fills the complete space */
 			// no need to set e_pointer nor increase delimiter
 			/* fill only space, which is 1 octet less than chunk */
-			memcpy(data, m_llc.frame + m_llc.index, space);
-			/* incement index */
-			m_llc.index += space;
+			m_llc.consume(data, space);
 			/* return data block as message */
 			break;
 		}
@@ -1086,8 +1082,8 @@ do_resend:
 		li->li = chunk; /* length of chunk */
 		e_pointer = delimiter; /* points to E of current delimiter */
 		delimiter++;
-		/* copy (rest of) LLC frame to space */
-		memcpy(data, m_llc.frame + m_llc.index, chunk);
+		/* copy (rest of) LLC frame to space and reset later */
+		m_llc.consume(data, chunk);
 		data += chunk;
 		space -= chunk;
 		LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for %s"
