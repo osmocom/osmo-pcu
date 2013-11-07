@@ -131,6 +131,12 @@ struct gprs_rlcmac_tbf {
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi);
 
+	/* dispatch Unitdata.DL messages */
+	static int handle(struct gprs_rlcmac_bts *bts,
+		const uint32_t tlli, const char *imsi, const uint8_t ms_class,
+		const uint16_t delay_csec, const uint8_t *data, const uint16_t len);
+
+
 	int rlcmac_diag();
 
 	int update();
@@ -257,13 +263,11 @@ struct gprs_rlcmac_tbf {
 protected:
 	gprs_rlcmac_bts *bts_data() const;
 
+	int append_data(const uint8_t ms_class,
+			const uint16_t pdu_delay_csec,
+			const uint8_t *data, const uint16_t len);
 };
 
-
-/* dispatch Unitdata.DL messages */
-int tbf_handle(struct gprs_rlcmac_bts *bts,
-		const uint32_t tlli, const char *imsi, const uint8_t ms_class,
-		const uint16_t delay_csec, const uint8_t *data, const uint16_t len);
 
 struct gprs_rlcmac_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	int8_t use_trx, uint8_t ms_class,

@@ -153,7 +153,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 
 	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x IMSI: %s len: %d\n", tlli, imsi, len);
 
-	return tbf_handle(the_pcu.bts, tlli, imsi, ms_class, delay_csec, data, len);
+	return gprs_rlcmac_tbf::handle(the_pcu.bts, tlli, imsi, ms_class, delay_csec, data, len);
 }
 
 int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)

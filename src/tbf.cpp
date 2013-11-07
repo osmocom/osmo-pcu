@@ -89,26 +89,24 @@ static struct gprs_rlcmac_tbf *tbf_lookup_dl(BTS *bts,
 	return bts->tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF);
 }
 
-static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
-				struct gprs_rlcmac_bts *bts,
-				const uint8_t ms_class,
+int gprs_rlcmac_tbf::append_data(const uint8_t ms_class,
 				const uint16_t pdu_delay_csec,
 				const uint8_t *data, const uint16_t len)
 {
-	LOGP(DRLCMAC, LOGL_INFO, "%s append\n", tbf_name(tbf));
-	if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE)) {
+	LOGP(DRLCMAC, LOGL_INFO, "%s append\n", tbf_name(this));
+	if (state_is(GPRS_RLCMAC_WAIT_RELEASE)) {
 		LOGP(DRLCMAC, LOGL_DEBUG,
 			"%s in WAIT RELEASE state "
-			"(T3193), so reuse TBF\n", tbf_name(tbf));
-		tbf->m_llc.put_frame(data, len);
+			"(T3193), so reuse TBF\n", tbf_name(this));
+		m_llc.put_frame(data, len);
 		/* reset rlc states */
-		memset(&tbf->dir.dl, 0, sizeof(tbf->dir.dl));
+		memset(&dir.dl, 0, sizeof(dir.dl));
 		/* keep to flags */
-		tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
-		tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
-		tbf_update_ms_class(tbf, ms_class);
-		tbf->update();
-		tbf->bts->trigger_dl_ass(tbf, tbf, NULL);
+		state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
+		state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
+		tbf_update_ms_class(this, ms_class);
+		update();
+		bts->trigger_dl_ass(this, this, NULL);
 	} else {
 		/* the TBF exists, so we must write it in the queue
 		 * we prepend lifetime in front of PDU */
@@ -120,8 +118,8 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 		tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
 
 		uint16_t delay_csec;
-		if (bts->force_llc_lifetime)
-			delay_csec = bts->force_llc_lifetime;
+		if (bts_data()->force_llc_lifetime)
+			delay_csec = bts_data()->force_llc_lifetime;
 		else
 			delay_csec = pdu_delay_csec;
 		/* keep timestap at 0 for infinite delay */
@@ -136,8 +134,8 @@ static int tbf_append_data(struct gprs_rlcmac_tbf *tbf,
 			}
 		}
 		memcpy(msgb_put(llc_msg, len), data, len);
-		tbf->m_llc.enqueue(llc_msg);
-		tbf_update_ms_class(tbf, ms_class);
+		m_llc.enqueue(llc_msg);
+		tbf_update_ms_class(this, ms_class);
 	}
 
 	return 0;
@@ -221,7 +219,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 /**
  * TODO: split into unit test-able parts...
  */
-int tbf_handle(struct gprs_rlcmac_bts *bts,
+int gprs_rlcmac_tbf::handle(struct gprs_rlcmac_bts *bts,
 		const uint32_t tlli, const char *imsi,
 		const uint8_t ms_class, const uint16_t delay_csec,
 		const uint8_t *data, const uint16_t len)
@@ -231,8 +229,7 @@ int tbf_handle(struct gprs_rlcmac_bts *bts,
 	/* check for existing TBF */
 	tbf = tbf_lookup_dl(bts->bts, tlli, imsi);
 	if (tbf) {
-		int rc = tbf_append_data(tbf, bts, ms_class,
-						delay_csec, data, len);
+		int rc = tbf->append_data(ms_class, delay_csec, data, len);
 		if (rc >= 0)
 			tbf->assign_imsi(imsi);
 		return rc;
