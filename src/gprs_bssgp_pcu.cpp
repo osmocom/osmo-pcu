@@ -94,7 +94,6 @@ static int parse_ra_cap_ms_class(struct tlv_parsed *tp)
 		}
 		if (bitvec_read_field(block, rp, 1)) // SMS Present
 			bitvec_read_field(block, rp, 4); // SMS Value
-			bitvec_read_field(block, rp, 4); // SMS Value
 	}
 
 	bitvec_free(block);
