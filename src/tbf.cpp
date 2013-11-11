@@ -244,7 +244,7 @@ struct gprs_rlcmac_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 {
 	uint8_t trx;
 	struct gprs_rlcmac_tbf *tbf;
-	uint8_t tfi;
+	int8_t tfi; /* must be signed */
 
 #warning "Copy and paste with tbf_new_dl_assignment"
 	/* create new TBF, use sme TRX as DL TBF */
