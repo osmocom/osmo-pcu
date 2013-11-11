@@ -103,6 +103,7 @@ static int config_write_pcu(struct vty *vty)
 	vty_out(vty, " alpha %d%s", bts->alpha, VTY_NEWLINE);
 	vty_out(vty, " gamma %d%s", bts->gamma * 2, VTY_NEWLINE);
 
+	return CMD_SUCCESS;
 }
 
 /* per-BTS configuration */
