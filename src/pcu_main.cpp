@@ -37,7 +37,7 @@ extern "C" {
 extern struct gprs_nsvc *nsvc;
 uint16_t spoof_mcc = 0, spoof_mnc = 0;
 static int config_given = 0;
-static const char *config_file = "osmo-pcu.cfg";
+static char *config_file = strdup("osmo-pcu.cfg");
 extern struct vty_app_info pcu_vty_info;
 void *tall_pcu_ctx;
 extern void *bv_tall_ctx;
@@ -91,6 +91,7 @@ static void handle_options(int argc, char **argv)
 			exit(0);
 			break;
 		case 'c':
+			free(config_file);
 			config_file = strdup(optarg);
 			config_given = 1;
 			break;
