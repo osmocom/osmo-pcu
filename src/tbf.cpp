@@ -1096,7 +1096,7 @@ do_resend:
 		if (msg) {
 			LOGP(DRLCMACDL, LOGL_INFO, "- Dequeue next LLC for "
 				"%s (len=%d)\n", tbf_name(this), msg->len);
-			m_llc.update_frame(msg);
+			m_llc.put_frame(msg->data, msg->len);
 			msgb_free(msg);
 		}
 		/* if we have more data and we have space left */
@@ -1551,7 +1551,7 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 		return 0;
 	}
 	#warning "Copy and paste on the sender path"
-	m_llc.update_frame(msg);
+	m_llc.put_frame(msg->data, msg->len);
 	msgb_free(msg);
 
 	/* we have a message, so we trigger downlink assignment, and there

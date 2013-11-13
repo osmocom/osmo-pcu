@@ -34,7 +34,6 @@ struct gprs_llc {
 	void enqueue(struct msgb *llc_msg);
 	struct msgb *dequeue();
 
-	void update_frame(struct msgb *msg);
 	void put_frame(const uint8_t *data, size_t len);
 	void consume(uint8_t *data, size_t len);
 	void clear(BTS *bts);

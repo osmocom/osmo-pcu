@@ -22,6 +22,8 @@
 #include <tbf.h>
 #include <bts.h>
 
+#include <stdio.h>
+
 extern "C" {
 #include <osmocom/core/msgb.h>
 }
@@ -45,6 +47,10 @@ void gprs_llc::enqueue(struct msgb *llc_msg)
 
 void gprs_llc::put_frame(const uint8_t *data, size_t len)
 {
+	/* only put frames when we are empty */
+	OSMO_ASSERT(index == 0 && length == 0);
+
+	/* TODO: bounds check */
 	memcpy(frame, data, len);
 	length = len;
 }
@@ -67,12 +73,4 @@ void gprs_llc::init()
 struct msgb *gprs_llc::dequeue()
 {
 	return msgb_dequeue(&queue);
-}
-
-void gprs_llc::update_frame(struct msgb *msg)
-{
-	/* TODO: assert that index is 0 now */
-	/* TODO: bounds check */
-	memcpy(frame, msg->data, msg->len);
-	length = msg->len;
 }
