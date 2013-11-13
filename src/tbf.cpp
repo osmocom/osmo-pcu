@@ -687,10 +687,11 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 	while ((msg = m_llc.dequeue())) {
 		tv = (struct timeval *)msg->data;
 		msgb_pull(msg, sizeof(*tv));
-		if (tv->tv_sec /* not infinite */
-		 && (tv_now.tv_sec > tv->tv_sec /* and secs expired */
-		  || (tv_now.tv_sec == tv->tv_sec /* .. or if secs equal .. */
-		   && tv_now.tv_usec > tv->tv_usec))) { /* .. usecs expired */
+
+		/* Timeout is infinite */
+		if (tv->tv_sec == 0 && tv->tv_usec == 0)
+			break;
+		if (timercmp(&tv_now, tv, >)) {
 			LOGP(DRLCMACDL, LOGL_NOTICE, "%s Discarding LLC PDU "
 				"because lifetime limit reached\n",
 				tbf_name(this));
