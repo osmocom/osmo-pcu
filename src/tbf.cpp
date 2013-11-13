@@ -964,7 +964,7 @@ do_resend:
 
 	/* now we still have untransmitted LLC data, so we fill mac block */
 	index = dir.dl.v_s & mod_sns_half;
-	data = m_rlc.block[index];
+	data = m_rlc.blocks[index].block;
 #warning "Selection of the CS doesn't belong here"
 	if (cs == 0) {
 		cs = bts_data()->initial_cs_dl;
@@ -1102,8 +1102,8 @@ do_resend:
 		break;
 	}
 	LOGP(DRLCMACDL, LOGL_DEBUG, "data block: %s\n",
-		osmo_hexdump(m_rlc.block[index], block_length));
-	m_rlc.block_len[index] = block_length;
+		osmo_hexdump(m_rlc.blocks[index].block, block_length));
+	m_rlc.blocks[index].len = block_length;
 	/* raise send state and set ack state array */
 	dir.dl.v_b[index] = 'U'; /* unacked */
 	dir.dl.v_s = (dir.dl.v_s + 1) & mod_sns; /* inc send state */
@@ -1121,8 +1121,8 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(
 	uint8_t len;
 
 	/* get data and header from current block */
-	data = m_rlc.block[index];
-	len = m_rlc.block_len[index];
+	data = m_rlc.blocks[index].block;
+	len = m_rlc.blocks[index].len;
 	rh = (struct rlc_dl_header *)data;
 
 	/* Clear Polling, if still set in history buffer */
@@ -1701,8 +1701,8 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	}
 	/* Write block to buffer and set receive state array. */
 	index = rh->bsn & mod_sns_half; /* memory index of block */
-	memcpy(m_rlc.block[index], data, len); /* Copy block. */
-	m_rlc.block_len[index] = len;
+	memcpy(m_rlc.blocks[index].block, data, len); /* Copy block. */
+	m_rlc.blocks[index].len = len;
 	this->dir.ul.v_n[index] = 'R'; /* Mark received block. */
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
 		rh->bsn, this->dir.ul.v_q,
@@ -1731,7 +1731,7 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 			"V(Q) to %d\n", this->dir.ul.v_q,
 			(this->dir.ul.v_q + 1) & mod_sns);
 		/* get LLC data from block */
-		this->assemble_forward_llc(m_rlc.block[index], m_rlc.block_len[index]);
+		this->assemble_forward_llc(m_rlc.blocks[index].block, m_rlc.blocks[index].len);
 		/* raise V(Q), because block already received */
 		this->dir.ul.v_q = (this->dir.ul.v_q + 1) & mod_sns;
 	}
@@ -1740,7 +1740,7 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	if (this->state_is(GPRS_RLCMAC_FLOW) /* still in flow state */
 	 && this->dir.ul.v_q == this->dir.ul.v_r) { /* if complete */
 		struct rlc_ul_header *last_rh = (struct rlc_ul_header *)
-			m_rlc.block[(this->dir.ul.v_r - 1) & mod_sns_half];
+			m_rlc.blocks[(this->dir.ul.v_r - 1) & mod_sns_half].block;
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- No gaps in received block, "
 			"last block: BSN=%d CV=%d\n", last_rh->bsn,
 			last_rh->cv);
