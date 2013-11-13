@@ -98,7 +98,6 @@ int gprs_rlcmac_tbf::append_data(const uint8_t ms_class,
 		LOGP(DRLCMAC, LOGL_DEBUG,
 			"%s in WAIT RELEASE state "
 			"(T3193), so reuse TBF\n", tbf_name(this));
-#warning "verify that m_llc.index/length is 0... check the state change"
 		bts->tbf_reused();
 		m_llc.put_frame(data, len);
 		bts->llc_frame_sched();
@@ -849,21 +848,21 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 			/* data until next frame */
 			chunk = frame_offset[i + 1] - frame_offset[i];
 		}
-		LOGP(DRLCMACUL, LOGL_DEBUG, "-- Appending chunk (len=%d) to "
-			"frame at %d.\n", chunk, m_llc.index);
-		if (m_llc.index + chunk > LLC_MAX_LEN) {
+		if (!m_llc.fits_in_current_frame(chunk)) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "%s LLC frame exceeds "
-				"maximum size.\n", tbf_name(this));
-			chunk = LLC_MAX_LEN - m_llc.index;
+				"maximum size %u.\n", tbf_name(this),
+				m_llc.remaining_space());
+			chunk = m_llc.remaining_space();
 		}
-		memcpy(m_llc.frame + m_llc.index, data + frame_offset[i], chunk);
-		m_llc.index += chunk;
+		m_llc.append_frame(data + frame_offset[i], chunk);
+		m_llc.consume(chunk);
 		/* not last frame. */
 		if (i != frames - 1) {
 			/* send frame to SGSN */
 			LOGP(DRLCMACUL, LOGL_INFO, "%s complete UL frame len=%d\n",
-				tbf_name(this) , m_llc.index);
+				tbf_name(this) , m_llc.frame_length());
 			snd_ul_ud();
+			m_llc.reset();
 		/* also check if CV==0, because the frame may fill up the
 		 * block precisely, then it is also complete. normally the
 		 * frame would be extended into the next block with a 0-length
@@ -872,8 +871,9 @@ int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
 			/* send frame to SGSN */
 			LOGP(DRLCMACUL, LOGL_INFO, "%s complete UL frame "
 				"that fits precisely in last block: "
-				"len=%d\n", tbf_name(this), m_llc.index);
+				"len=%d\n", tbf_name(this), m_llc.frame_length());
 			snd_ul_ud();
+			m_llc.reset();
 		}
 	}
 
@@ -1019,8 +1019,8 @@ do_resend:
 				"header, and we are done\n", chunk, space);
 			LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for "
 				"%s that fits precisely in last block: "
-				"len=%d\n", tbf_name(this), m_llc.length);
-			gprs_rlcmac_dl_bw(this, m_llc.length);
+				"len=%d\n", tbf_name(this), m_llc.frame_length());
+			gprs_rlcmac_dl_bw(this, m_llc.frame_length());
 			/* block is filled, so there is no extension */
 			*e_pointer |= 0x01;
 			/* fill space */
@@ -1076,8 +1076,8 @@ do_resend:
 		data += chunk;
 		space -= chunk;
 		LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for %s"
-			"len=%d\n", tbf_name(this), m_llc.length);
-		gprs_rlcmac_dl_bw(this, m_llc.length);
+			"len=%d\n", tbf_name(this), m_llc.frame_length());
+		gprs_rlcmac_dl_bw(this, m_llc.frame_length());
 		m_llc.reset();
 		/* dequeue next LLC frame, if any */
 		msg = llc_dequeue(gprs_bssgp_pcu_current_bctx());
@@ -1089,12 +1089,12 @@ do_resend:
 			msgb_free(msg);
 		}
 		/* if we have more data and we have space left */
-		if (space > 0 && m_llc.length) {
+		if (space > 0 && m_llc.frame_length()) {
 			li->m = 1; /* we indicate more frames to follow */
 			continue;
 		}
 		/* if we don't have more LLC frames */
-		if (!m_llc.length) {
+		if (!m_llc.frame_length()) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
 				"done.\n");
 			li->e = 1; /* we cannot extend */
@@ -1822,10 +1822,10 @@ int gprs_rlcmac_tbf::snd_ul_ud()
 {
 	uint8_t qos_profile[3];
 	struct msgb *llc_pdu;
-	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + m_llc.index;
+	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + m_llc.frame_length();
 	struct bssgp_bvc_ctx *bctx = gprs_bssgp_pcu_current_bctx();
 
-	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] %s len=%d\n", tbf_name(this), m_llc.index);
+	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] %s len=%d\n", tbf_name(this), m_llc.frame_length());
 	if (!bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
 		m_llc.reset_frame_space();
@@ -1833,8 +1833,8 @@ int gprs_rlcmac_tbf::snd_ul_ud()
 	}
 	
 	llc_pdu = msgb_alloc_headroom(msg_len, msg_len,"llc_pdu");
-	uint8_t *buf = msgb_push(llc_pdu, TL16V_GROSS_LEN(sizeof(uint8_t)*m_llc.index));
-	tl16v_put(buf, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*m_llc.index, m_llc.frame);
+	uint8_t *buf = msgb_push(llc_pdu, TL16V_GROSS_LEN(sizeof(uint8_t)*m_llc.frame_length()));
+	tl16v_put(buf, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*m_llc.frame_length(), m_llc.frame);
 	qos_profile[0] = QOS_PROFILE >> 16;
 	qos_profile[1] = QOS_PROFILE >> 8;
 	qos_profile[2] = QOS_PROFILE;

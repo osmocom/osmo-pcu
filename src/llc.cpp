@@ -32,7 +32,7 @@ extern "C" {
 void gprs_llc::reset()
 {
 	index = 0;
-	length = 0;
+	m_length = 0;
 }
 
 void gprs_llc::reset_frame_space()
@@ -48,11 +48,15 @@ void gprs_llc::enqueue(struct msgb *llc_msg)
 void gprs_llc::put_frame(const uint8_t *data, size_t len)
 {
 	/* only put frames when we are empty */
-	OSMO_ASSERT(index == 0 && length == 0);
+	OSMO_ASSERT(index == 0 && m_length == 0);
+	append_frame(data, len);
+}
 
+void gprs_llc::append_frame(const uint8_t *data, size_t len)
+{
 	/* TODO: bounds check */
-	memcpy(frame, data, len);
-	length = len;
+	memcpy(frame + index, data, len);
+	m_length += len;
 }
 
 void gprs_llc::clear(BTS *bts)

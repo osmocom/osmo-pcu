@@ -37,20 +37,42 @@ struct gprs_llc {
 	struct msgb *dequeue();
 
 	void put_frame(const uint8_t *data, size_t len);
+	void append_frame(const uint8_t *data, size_t len);
+
+	void consume(size_t len);
 	void consume(uint8_t *data, size_t len);
 	void clear(BTS *bts);
 
 	uint16_t chunk_size() const;
+	uint16_t remaining_space() const;
+	uint16_t frame_length() const;
+
+	bool fits_in_current_frame(uint8_t size) const;
 
 	uint8_t frame[LLC_MAX_LEN]; /* current DL or UL frame */
 	uint16_t index; /* current write/read position of frame */
-	uint16_t length; /* len of current DL LLC_frame, 0 == no frame */
+	uint16_t m_length; /* len of current DL LLC_frame, 0 == no frame */
 	struct llist_head queue; /* queued LLC DL data */
 };
 
 inline uint16_t gprs_llc::chunk_size() const
 {
-	return length - index;
+	return m_length - index;
+}
+
+inline uint16_t gprs_llc::remaining_space() const
+{
+	return LLC_MAX_LEN - index;
+}
+
+inline uint16_t gprs_llc::frame_length() const
+{
+	return m_length;
+}
+
+inline void gprs_llc::consume(size_t len)
+{
+	index += len;
 }
 
 inline void gprs_llc::consume(uint8_t *data, size_t len)
@@ -58,4 +80,9 @@ inline void gprs_llc::consume(uint8_t *data, size_t len)
 	/* copy and increment index */
 	memcpy(data, frame + index, len);
 	index += len;
+}
+
+inline bool gprs_llc::fits_in_current_frame(uint8_t chunk_size) const
+{
+	return index + chunk_size <= LLC_MAX_LEN;
 }
