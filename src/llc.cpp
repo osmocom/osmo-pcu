@@ -85,14 +85,17 @@ void gprs_llc::calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct
 		delay_csec = pdu_delay_csec;
 
 	/* keep timestap at 0 for infinite delay */
-	if (delay_csec != 0xffff) {
-		/* calculate timestamp of timeout */
-		gettimeofday(tv, NULL);
-		tv->tv_usec += (delay_csec % 100) * 10000;
-		tv->tv_sec += delay_csec / 100;
-		if (tv->tv_usec > 999999) {
-			tv->tv_usec -= 1000000;
-			tv->tv_sec++;
-		}
+	if (delay_csec == 0xffff) {
+		memset(tv, 0, sizeof(*tv));
+		return;
+	}
+
+	/* calculate timestamp of timeout */
+	gettimeofday(tv, NULL);
+	tv->tv_usec += (delay_csec % 100) * 10000;
+	tv->tv_sec += delay_csec / 100;
+	if (tv->tv_usec > 999999) {
+		tv->tv_usec -= 1000000;
+		tv->tv_sec++;
 	}
 }
