@@ -158,6 +158,8 @@ public:
 		CTR_TBF_UL_ALLOCATED,
 		CTR_TBF_UL_FREED,
 		CTR_TBF_REUSED,
+		CTR_RLC_SENT,
+		CTR_RLC_RESENT,
 		CTR_DECODE_ERRORS,
 		CTR_SBA_ALLOCATED,
 		CTR_SBA_FREED,
@@ -204,6 +206,8 @@ public:
 	void tbf_ul_created();
 	void tbf_ul_freed();
 	void tbf_reused();
+	void rlc_sent();
+	void rlc_resent();
 	void decode_error();
 	void sba_allocated();
 	void sba_freed();
@@ -267,6 +271,8 @@ CREATE_COUNT_INLINE(tbf_dl_freed, CTR_TBF_DL_FREED)
 CREATE_COUNT_INLINE(tbf_ul_created, CTR_TBF_UL_ALLOCATED)
 CREATE_COUNT_INLINE(tbf_ul_freed, CTR_TBF_UL_FREED)
 CREATE_COUNT_INLINE(tbf_reused, CTR_TBF_REUSED)
+CREATE_COUNT_INLINE(rlc_sent, CTR_RLC_SENT)
+CREATE_COUNT_INLINE(rlc_resent, CTR_RLC_RESENT)
 CREATE_COUNT_INLINE(decode_error, CTR_DECODE_ERRORS)
 CREATE_COUNT_INLINE(sba_allocated, CTR_SBA_ALLOCATED)
 CREATE_COUNT_INLINE(sba_freed, CTR_SBA_FREED)

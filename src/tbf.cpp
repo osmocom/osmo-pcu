@@ -901,6 +901,7 @@ do_resend:
 				bsn);
 			/* re-send block with negative aknowlegement */
 			dir.dl.v_b[index] = 'U'; /* unacked */
+			bts->rlc_resent();
 			return create_dl_acked_block(fn, ts, index, first_fin_ack);
 		}
 	}
@@ -930,6 +931,7 @@ do_resend:
 				"so we re-transmit final block!\n");
 			/* we just send final block again */
 			index = ((dir.dl.v_s - 1) & mod_sns_half);
+			bts->rlc_resent();
 			return create_dl_acked_block(fn, ts, index, first_fin_ack);
 		}
 		
@@ -951,6 +953,7 @@ do_resend:
 				" != V(S). PLEASE FIX!\n");
 			/* we just send final block again */
 			index = ((dir.dl.v_s - 1) & mod_sns_half);
+			bts->rlc_resent();
 			return create_dl_acked_block(fn, ts, index, first_fin_ack);
 		}
 		goto do_resend;
@@ -1186,6 +1189,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(
 	if (!dl_msg)
 		return NULL;
 	memcpy(msgb_put(dl_msg, len), data, len);
+	bts->rlc_sent();
 
 	return dl_msg;
 }
