@@ -1035,7 +1035,7 @@ do_resend:
 				"next block, and we are done\n", chunk, space);
 			/* make space for delimiter */
 			if (delimiter != data)
-				memcpy(delimiter + 1, delimiter,
+				memmove(delimiter + 1, delimiter,
 					data - delimiter);
 			data++;
 			space--;
@@ -1056,7 +1056,7 @@ do_resend:
 		/* the LLC frame chunk ends in this block */
 		/* make space for delimiter */
 		if (delimiter != data)
-			memcpy(delimiter + 1, delimiter, data - delimiter);
+			memmove(delimiter + 1, delimiter, data - delimiter);
 		data++;
 		space--;
 		/* add LI to delimit frame */
