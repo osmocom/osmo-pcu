@@ -113,7 +113,7 @@ struct gprs_rlcmac_tbf {
 	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
 
 	/* TODO: extract LLC class? */
-	int assemble_forward_llc(uint8_t *data, uint8_t len);
+	int assemble_forward_llc(const gprs_rlc_data *data);
 
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
 	struct msgb *create_dl_ass(uint32_t fn);

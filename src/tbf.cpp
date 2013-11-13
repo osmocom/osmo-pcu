@@ -708,9 +708,11 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
  * Store received block data in LLC message(s) and forward to SGSN
  * if complete.
  */
-int gprs_rlcmac_tbf::assemble_forward_llc(uint8_t *data, uint8_t len)
+int gprs_rlcmac_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 {
-	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
+	const uint8_t *data = _data->block;
+	uint8_t len = _data->len;
+	const struct rlc_ul_header *rh = (const struct rlc_ul_header *) data;
 	uint8_t e, m;
 	struct rlc_li_field *li;
 	uint8_t frame_offset[16], offset = 0, chunk;
@@ -1731,7 +1733,7 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 			"V(Q) to %d\n", this->dir.ul.v_q,
 			(this->dir.ul.v_q + 1) & mod_sns);
 		/* get LLC data from block */
-		this->assemble_forward_llc(m_rlc.blocks[index].block, m_rlc.blocks[index].len);
+		this->assemble_forward_llc(&m_rlc.blocks[index]);
 		/* raise V(Q), because block already received */
 		this->dir.ul.v_q = (this->dir.ul.v_q + 1) & mod_sns;
 	}
