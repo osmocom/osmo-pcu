@@ -102,3 +102,12 @@ void gprs_llc::calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct
 
 	timeradd(&now, &csec, tv);
 }
+
+bool gprs_llc::is_frame_expired(struct timeval *tv_now, struct timeval *tv)
+{
+	/* Timeout is infinite */
+	if (tv->tv_sec == 0 && tv->tv_usec == 0)
+		return false;
+
+	return timercmp(tv_now, tv, >);
+}
