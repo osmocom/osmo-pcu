@@ -118,23 +118,7 @@ int gprs_rlcmac_tbf::append_data(const uint8_t ms_class,
 		if (!llc_msg)
 			return -ENOMEM;
 		tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
-
-		uint16_t delay_csec;
-		if (bts_data()->force_llc_lifetime)
-			delay_csec = bts_data()->force_llc_lifetime;
-		else
-			delay_csec = pdu_delay_csec;
-		/* keep timestap at 0 for infinite delay */
-		if (delay_csec != 0xffff) {
-			/* calculate timestamp of timeout */
-			gettimeofday(tv, NULL);
-			tv->tv_usec += (delay_csec % 100) * 10000;
-			tv->tv_sec += delay_csec / 100;
-			if (tv->tv_usec > 999999) {
-				tv->tv_usec -= 1000000;
-				tv->tv_sec++;
-			}
-		}
+		gprs_llc::calc_pdu_lifetime(bts, pdu_delay_csec, tv);
 		memcpy(msgb_put(llc_msg, len), data, len);
 		m_llc.enqueue(llc_msg);
 		tbf_update_ms_class(this, ms_class);

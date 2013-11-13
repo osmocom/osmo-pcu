@@ -74,3 +74,25 @@ struct msgb *gprs_llc::dequeue()
 {
 	return msgb_dequeue(&queue);
 }
+
+
+void gprs_llc::calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct timeval *tv)
+{
+	uint16_t delay_csec;
+	if (bts->bts_data()->force_llc_lifetime)
+		delay_csec = bts->bts_data()->force_llc_lifetime;
+	else
+		delay_csec = pdu_delay_csec;
+
+	/* keep timestap at 0 for infinite delay */
+	if (delay_csec != 0xffff) {
+		/* calculate timestamp of timeout */
+		gettimeofday(tv, NULL);
+		tv->tv_usec += (delay_csec % 100) * 10000;
+		tv->tv_sec += delay_csec / 100;
+		if (tv->tv_usec > 999999) {
+			tv->tv_usec -= 1000000;
+			tv->tv_sec++;
+		}
+	}
+}

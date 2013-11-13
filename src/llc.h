@@ -27,6 +27,8 @@
  * I represent the LLC data to a MS
  */
 struct gprs_llc {
+	static void calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct timeval *tv);
+
 	void init();
 	void reset();
 	void reset_frame_space();
