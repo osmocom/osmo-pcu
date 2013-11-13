@@ -53,6 +53,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "tbf.dl.freed",		"TBF DL Freed         "},
 	{ "tbf.ul.alloc",		"TBF UL Allocated     "},
 	{ "tbf.ul.freed",		"TBF UL Freed         "},
+	{ "tbf.reused",			"TBF Reused           "},
 	{ "decode.errors",		"Decode Errors        "},
 	{ "sba.allocated",		"SBA Allocated        "},
 	{ "sba.freed",			"SBA Freed            "},

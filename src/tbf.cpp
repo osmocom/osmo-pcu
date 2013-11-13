@@ -99,6 +99,7 @@ int gprs_rlcmac_tbf::append_data(const uint8_t ms_class,
 			"%s in WAIT RELEASE state "
 			"(T3193), so reuse TBF\n", tbf_name(this));
 #warning "verify that m_llc.index/length is 0... check the state change"
+		bts->tbf_reused();
 		m_llc.put_frame(data, len);
 		/* reset rlc states */
 		memset(&dir.dl, 0, sizeof(dir.dl));
