@@ -878,8 +878,6 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 {
 	struct rlc_dl_header *rh;
 	struct rlc_li_field *li;
-	uint8_t block_length; /* total length of block, including spare bits */
-	uint8_t block_data; /* usable data of block, w/o spare bits, inc. MAC */
 	struct msgb *msg;
 	uint8_t bsn;
 	uint16_t mod_sns = sns - 1;
@@ -966,18 +964,21 @@ do_resend:
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d\n",
 		dir.dl.v_s);
 
-	/* now we still have untransmitted LLC data, so we fill mac block */
-	index = dir.dl.v_s & mod_sns_half;
-	data = m_rlc.blocks[index].block;
 #warning "Selection of the CS doesn't belong here"
 	if (cs == 0) {
 		cs = bts_data()->initial_cs_dl;
 		if (cs < 1 || cs > 4)
 			cs = 1;
 	}
-	block_length = gprs_rlcmac_cs[cs].block_length;
-	block_data = gprs_rlcmac_cs[cs].block_data;
-	memset(data, 0x2b, block_data); /* spare bits will be left 0 */
+	/* total length of block, including spare bits */
+	const uint8_t block_length = gprs_rlcmac_cs[cs].block_length;
+	/* length of usable data of block, w/o spare bits, inc. MAC */
+	const uint8_t block_data_len = gprs_rlcmac_cs[cs].block_data;
+
+	/* now we still have untransmitted LLC data, so we fill mac block */
+	index = dir.dl.v_s & mod_sns_half;
+	data = m_rlc.blocks[index].prepare(block_data_len);
+
 	rh = (struct rlc_dl_header *)data;
 	rh->pt = 0; /* Data Block */
 	rh->rrbp = rh->s_p = 0; /* Polling, set later, if required */
@@ -988,9 +989,9 @@ do_resend:
 	rh->bsn = dir.dl.v_s; /* Block Sequence Number */
 	rh->e = 0; /* Extension bit, maybe set later */
 	e_pointer = data + 2; /* points to E of current chunk */
-	data += 3;
+	data += sizeof(*rh);
 	delimiter = data; /* where next length header would be stored */
-	space = block_data - 3;
+	space = block_data_len - sizeof(*rh);
 	while (1) {
 		chunk = m_llc.chunk_size();
 		/* if chunk will exceed block limit */
@@ -1107,6 +1108,7 @@ do_resend:
 	}
 	LOGP(DRLCMACDL, LOGL_DEBUG, "data block: %s\n",
 		osmo_hexdump(m_rlc.blocks[index].block, block_length));
+#warning "move this up?"
 	m_rlc.blocks[index].len = block_length;
 	/* raise send state and set ack state array */
 	dir.dl.v_b[index] = 'U'; /* unacked */
@@ -1152,6 +1154,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
 				"sheduled in this TS %d, waiting for "
 				"TS %d\n", ts, control_ts);
+#warning "What happens to the first_fin_ack in case something is already scheduled?"
 		else if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648))
 			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
 				"sheduled, because single block alllocation "

@@ -86,6 +86,8 @@ enum gprs_rlcmac_tbf_direction {
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
 struct gprs_rlc_data {
+	uint8_t *prepare(size_t block_data_length);
+
 	/* block history */
 	uint8_t block[RLC_MAX_LEN];
 	/* block len  of history */
