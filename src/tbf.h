@@ -85,6 +85,15 @@ enum gprs_rlcmac_tbf_direction {
 #define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
+/*
+ * I hold the currently transferred blocks and will provide
+ * the routines to manipulate these arrays.
+ */
+struct gprs_rlc {
+	uint8_t block[RLC_MAX_SNS/2][RLC_MAX_LEN]; /* block history */
+	uint8_t block_len[RLC_MAX_SNS/2]; /* block len  of history */
+};
+
 struct gprs_rlcmac_tbf {
 
 	static void free_all(struct gprs_rlcmac_trx *trx);
@@ -187,8 +196,8 @@ struct gprs_rlcmac_tbf {
 			uint8_t final_ack_sent; /* set if we sent final ack */
 		} ul;
 	} dir;
-	uint8_t rlc_block[RLC_MAX_SNS/2][RLC_MAX_LEN]; /* block history */
-	uint8_t rlc_block_len[RLC_MAX_SNS/2]; /* block len  of history */
+
+	gprs_rlc m_rlc;
 	
 	uint8_t n3105;	/* N3105 counter */
 
