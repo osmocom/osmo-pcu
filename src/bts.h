@@ -164,6 +164,7 @@ public:
 		CTR_SBA_TIMEDOUT,
 		CTR_LLC_FRAME_TIMEDOUT,
 		CTR_LLC_FRAME_DROPPED,
+		CTR_LLC_FRAME_SCHED,
 		CTR_RACH_REQUESTS,
 	};
 
@@ -207,8 +208,9 @@ public:
 	void sba_allocated();
 	void sba_freed();
 	void sba_timedout();
-	void timedout_frame();
-	void dropped_frame();
+	void llc_timedout_frame();
+	void llc_dropped_frame();
+	void llc_frame_sched();
 	void rach_frame();
 
 	/*
@@ -269,8 +271,9 @@ CREATE_COUNT_INLINE(decode_error, CTR_DECODE_ERRORS)
 CREATE_COUNT_INLINE(sba_allocated, CTR_SBA_ALLOCATED)
 CREATE_COUNT_INLINE(sba_freed, CTR_SBA_FREED)
 CREATE_COUNT_INLINE(sba_timedout, CTR_SBA_TIMEDOUT)
-CREATE_COUNT_INLINE(timedout_frame, CTR_LLC_FRAME_TIMEDOUT);
-CREATE_COUNT_INLINE(dropped_frame, CTR_LLC_FRAME_DROPPED);
+CREATE_COUNT_INLINE(llc_timedout_frame, CTR_LLC_FRAME_TIMEDOUT);
+CREATE_COUNT_INLINE(llc_dropped_frame, CTR_LLC_FRAME_DROPPED);
+CREATE_COUNT_INLINE(llc_frame_sched, CTR_LLC_FRAME_SCHED);
 CREATE_COUNT_INLINE(rach_frame, CTR_RACH_REQUESTS);
 
 #undef CREATE_COUNT_INLINE

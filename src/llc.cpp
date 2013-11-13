@@ -60,7 +60,7 @@ void gprs_llc::clear(BTS *bts)
 	struct msgb *msg;
 
 	while ((msg = msgb_dequeue(&queue))) {
-		bts->dropped_frame();
+		bts->llc_dropped_frame();
 		msgb_free(msg);
 	}
 }

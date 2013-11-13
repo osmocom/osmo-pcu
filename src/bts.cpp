@@ -60,6 +60,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "sba.timedout",		"SBA Timeout          "},
 	{ "llc.timeout",		"Timedout Frames      "},
 	{ "llc.dropped",		"Dropped Frames       "},
+	{ "llc.scheduled",		"Scheduled Frames     "},
 	{ "rach.requests",		"RACH requests        "},
 };
 

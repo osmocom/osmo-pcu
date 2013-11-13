@@ -101,6 +101,7 @@ int gprs_rlcmac_tbf::append_data(const uint8_t ms_class,
 #warning "verify that m_llc.index/length is 0... check the state change"
 		bts->tbf_reused();
 		m_llc.put_frame(data, len);
+		bts->llc_frame_sched();
 		/* reset rlc states */
 		memset(&dir.dl, 0, sizeof(dir.dl));
 		/* keep to flags */
@@ -190,6 +191,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 
 	/* new TBF, so put first frame */
 	tbf->m_llc.put_frame(data, len);
+	tbf->bts->llc_frame_sched();
 
 	/* Store IMSI for later look-up and PCH retransmission */
 	tbf->assign_imsi(imsi);
@@ -695,7 +697,7 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 			LOGP(DRLCMACDL, LOGL_NOTICE, "%s Discarding LLC PDU "
 				"because lifetime limit reached\n",
 				tbf_name(this));
-			bts->timedout_frame();
+			bts->llc_timedout_frame();
 			frames++;
 			octets += msg->len;
 			msgb_free(msg);
@@ -1083,6 +1085,7 @@ do_resend:
 			LOGP(DRLCMACDL, LOGL_INFO, "- Dequeue next LLC for "
 				"%s (len=%d)\n", tbf_name(this), msg->len);
 			m_llc.put_frame(msg->data, msg->len);
+			bts->llc_frame_sched();
 			msgb_free(msg);
 		}
 		/* if we have more data and we have space left */
@@ -1538,6 +1541,7 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 	}
 	#warning "Copy and paste on the sender path"
 	m_llc.put_frame(msg->data, msg->len);
+	bts->llc_frame_sched();
 	msgb_free(msg);
 
 	/* we have a message, so we trigger downlink assignment, and there
