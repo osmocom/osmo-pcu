@@ -240,6 +240,7 @@ struct gprs_rlcmac_tbf {
 	char m_imsi[16];
 
 protected:
+	void reuse_tbf(const uint8_t *data, const uint16_t len);
 	gprs_rlcmac_bts *bts_data() const;
 
 	int append_data(const uint8_t ms_class,

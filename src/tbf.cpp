@@ -98,17 +98,8 @@ int gprs_rlcmac_tbf::append_data(const uint8_t ms_class,
 		LOGP(DRLCMAC, LOGL_DEBUG,
 			"%s in WAIT RELEASE state "
 			"(T3193), so reuse TBF\n", tbf_name(this));
-		bts->tbf_reused();
-		m_llc.put_frame(data, len);
-		bts->llc_frame_sched();
-		/* reset rlc states */
-		memset(&dir.dl, 0, sizeof(dir.dl));
-		/* keep to flags */
-		state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
-		state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
 		tbf_update_ms_class(this, ms_class);
-		update();
-		bts->trigger_dl_ass(this, this, NULL);
+		reuse_tbf(data, len);
 	} else {
 		/* the TBF exists, so we must write it in the queue
 		 * we prepend lifetime in front of PDU */
@@ -1536,21 +1527,10 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 
 		return 0;
 	}
-	#warning "Copy and paste on the sender path"
-	m_llc.put_frame(msg->data, msg->len);
-	bts->llc_frame_sched();
-	msgb_free(msg);
 
-	/* we have a message, so we trigger downlink assignment, and there
-	 * set the state to ASSIGN. also we set old_downlink, because we
-	 * re-use this tbf. */
-	LOGP(DRLCMAC, LOGL_DEBUG, "Trigger dowlink assignment on PACCH, "
-		"because another LLC PDU has arrived in between\n");
-	memset(&dir.dl, 0, sizeof(dir.dl)); /* reset RLC states */
-	state_flags &= GPRS_RLCMAC_FLAG_TO_MASK; /* keep TO flags */
-	state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
-	update();
-	bts->trigger_dl_ass(this, this, NULL);
+	/* we have more data so we will re-use this tbf */
+	reuse_tbf(msg->data, msg->len);
+	msgb_free(msg);
 	return 0;
 }
 
@@ -1851,3 +1831,24 @@ const char *tbf_name(gprs_rlcmac_tbf *tbf)
 	return buf;
 }
 
+
+void gprs_rlcmac_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
+{
+	bts->tbf_reused();
+	m_llc.put_frame(data, len);
+	bts->llc_frame_sched();
+
+	/* reset rlc states */
+	memset(&dir.dl, 0, sizeof(dir.dl));
+
+	/* keep to flags */
+	state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
+	state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
+
+	update();
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "%s Trigger dowlink assignment on PACCH, "
+		"because another LLC PDU has arrived in between\n",
+		tbf_name(this));
+	bts->trigger_dl_ass(this, this, NULL);
+}
