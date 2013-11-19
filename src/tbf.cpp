@@ -918,10 +918,12 @@ do_resend:
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
 				"because all blocks have been transmitted.\n",
 					dir.dl.v_a);
-		else
+		else {
 			LOGP(DRLCMACDL, LOGL_NOTICE, "- Restarting at BSN %d, "
 				"because all window is stalled.\n",
 					dir.dl.v_a);
+			bts->rlc_stalled();
+		}
 		/* If V(S) == V(A) and finished state, we would have received
 		 * acknowledgement of all transmitted block. In this case we
 		 * would have transmitted the final block, and received ack
