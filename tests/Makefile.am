@@ -1,6 +1,6 @@
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/
 
-check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest tbf/TbfTest
+check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest tbf/TbfTest types/TypesTest
 noinst_PROGRAMS = emu/pcu_emu
 
 rlcmac_RLCMACTest_SOURCES = rlcmac/RLCMACTest.cpp
@@ -35,6 +35,14 @@ emu_pcu_emu_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
+types_TypesTest_SOURCES = types/TypesTest.cpp
+types_TypesTest_LDADD = \
+	$(LIBOSMOGB_LIBS) \
+	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCORE_LIBS) \
+	$(COMMON_LA) \
+	$(top_builddir)/src/libgprs.la
+
 
 # The `:;' works around a Bash 3.2 bug when the output is not writeable.
 $(srcdir)/package.m4: $(top_srcdir)/configure.ac
@@ -58,7 +66,8 @@ EXTRA_DIST = \
 	testsuite.at $(srcdir)/package.m4 $(TESTSUITE)	\
 	rlcmac/RLCMACTest.ok rlcmac/RLCMACTest.err \
 	alloc/AllocTest.ok alloc/AllocTest.err \
-	tbf/TbfTest.ok tbf/TbfTest.err
+	tbf/TbfTest.ok tbf/TbfTest.err \
+	types/TypesTest.ok types/TypesTest.err
 
 DISTCLEANFILES = atconfig
 

@@ -55,7 +55,7 @@ void gprs_llc::put_frame(const uint8_t *data, size_t len)
 void gprs_llc::append_frame(const uint8_t *data, size_t len)
 {
 	/* TODO: bounds check */
-	memcpy(frame + m_index, data, len);
+	memcpy(frame + m_length, data, len);
 	m_length += len;
 }
 
@@ -72,6 +72,7 @@ void gprs_llc::clear(BTS *bts)
 void gprs_llc::init()
 {
 	INIT_LLIST_HEAD(&queue);
+	reset();
 }
 
 struct msgb *gprs_llc::dequeue()

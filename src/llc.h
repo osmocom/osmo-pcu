@@ -63,7 +63,7 @@ inline uint16_t gprs_llc::chunk_size() const
 
 inline uint16_t gprs_llc::remaining_space() const
 {
-	return LLC_MAX_LEN - m_index;
+	return LLC_MAX_LEN - m_length;
 }
 
 inline uint16_t gprs_llc::frame_length() const
@@ -85,5 +85,5 @@ inline void gprs_llc::consume(uint8_t *data, size_t len)
 
 inline bool gprs_llc::fits_in_current_frame(uint8_t chunk_size) const
 {
-	return m_index + chunk_size <= LLC_MAX_LEN;
+	return m_length + chunk_size <= LLC_MAX_LEN;
 }

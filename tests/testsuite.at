@@ -22,3 +22,10 @@ cat $abs_srcdir/tbf/TbfTest.ok > expout
 cat $abs_srcdir/tbf/TbfTest.err > experr
 AT_CHECK([$abs_top_builddir/tests/tbf/TbfTest], [0], [expout], [experr])
 AT_CLEANUP
+
+AT_SETUP([types])
+AT_KEYWORDS([types])
+cat $abs_srcdir/types/TypesTest.ok > expout
+cat $abs_srcdir/types/TypesTest.err > experr
+AT_CHECK([$abs_top_builddir/tests/types/TypesTest], [0], [expout], [experr])
+AT_CLEANUP

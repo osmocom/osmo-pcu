@@ -35,6 +35,7 @@ tests/package.m4
 tests/alloc/AllocTest
 tests/rlcmac/RLCMACTest
 tests/tbf/TbfTest
+tests/types/TypesTest
 tests/emu/pcu_emu
 tests/testsuite
 tests/testsuite.log
