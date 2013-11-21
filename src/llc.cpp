@@ -89,7 +89,7 @@ void gprs_llc::calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct
 	else
 		delay_csec = pdu_delay_csec;
 
-	/* keep timestap at 0 for infinite delay */
+	/* keep timestamp at 0 for infinite delay */
 	if (delay_csec == 0xffff) {
 		memset(tv, 0, sizeof(*tv));
 		return;
