@@ -90,7 +90,7 @@ struct gprs_rlc_data {
 
 	/* block history */
 	uint8_t block[RLC_MAX_LEN];
-	/* block len  of history */
+	/* block len of history */
 	uint8_t len;
 };
 

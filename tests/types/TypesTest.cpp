@@ -75,10 +75,25 @@ static void test_llc(void)
 	}	
 }
 
+static void test_rlc()
+{
+	{
+		struct gprs_rlc_data rlc = { 0, };
+		memset(rlc.block, 0x23, RLC_MAX_LEN);
+		uint8_t *p = rlc.prepare(20);
+		OSMO_ASSERT(p == rlc.block);
+		for (int i = 0; i < 20; ++i)
+			OSMO_ASSERT(p[i] == 0x2B);
+		for (int i = 20; i < RLC_MAX_LEN; ++i)
+			OSMO_ASSERT(p[i] == 0x0);
+	}
+}
+
 int main(int argc, char **argv)
 {
 	printf("Making some basic type testing.\n");
 	test_llc();
+	test_rlc();
 	return EXIT_SUCCESS;
 }
 
