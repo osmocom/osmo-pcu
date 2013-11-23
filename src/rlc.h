@@ -44,6 +44,10 @@ struct gprs_rlc {
 };
 
 struct gprs_rlc_v_b {
+	int resend_needed(const uint16_t acked, const uint16_t sent,
+			const uint16_t mod_sns, const uint16_t mod_sns_half);
+
+	/* Check for an individual frame */
 	bool is_unacked(int index) const;
 	bool is_nacked(int index) const;
 	bool is_acked(int index) const;
@@ -52,6 +56,7 @@ struct gprs_rlc_v_b {
 
 	char state(int index) const;
 
+	/* Mark a RLC frame for something */
 	void mark_unacked(int index);
 	void mark_nacked(int index);
 	void mark_acked(int index);

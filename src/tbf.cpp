@@ -880,8 +880,8 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 	struct rlc_li_field *li;
 	struct msgb *msg;
 	uint8_t bsn;
-	uint16_t mod_sns = m_sns - 1;
-	uint16_t mod_sns_half = (m_sns >> 1) - 1;
+	const uint16_t mod_sns = m_sns - 1;
+	const uint16_t mod_sns_half = (m_sns >> 1) - 1;
 	uint16_t index;
 	uint8_t *delimiter, *data, *e_pointer;
 	uint16_t space, chunk;
@@ -892,17 +892,16 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 
 do_resend:
 	/* check if there is a block with negative acknowledgement */
-	for (bsn = dir.dl.v_a; bsn != dir.dl.v_s; 
-	     bsn = (bsn + 1) & mod_sns) {
-		index = (bsn & mod_sns_half);
-		if (dir.dl.v_b.is_nacked(index) || dir.dl.v_b.is_resend(index)) {
-			LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d\n",
-				bsn);
-			/* re-send block with negative aknowlegement */
-			dir.dl.v_b.mark_unacked(index);
-			bts->rlc_resent();
-			return create_dl_acked_block(fn, ts, index, first_fin_ack);
-		}
+	int resend_bsn = dir.dl.v_b.resend_needed(dir.dl.v_a, dir.dl.v_s,
+							mod_sns, mod_sns_half);
+	if (resend_bsn >= 0) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d\n", resend_bsn);
+
+		uint16_t index = resend_bsn & mod_sns_half;
+		/* re-send block with negative aknowlegement */
+		dir.dl.v_b.mark_unacked(index);
+		bts->rlc_resent();
+		return create_dl_acked_block(fn, ts, index, first_fin_ack);
 	}
 
 	/* if the window has stalled, or transfer is complete,
