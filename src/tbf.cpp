@@ -1181,19 +1181,17 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(
 			/* set polling in header */
 			rh->rrbp = 0; /* N+13 */
 			rh->s_p = 1; /* Polling */
-
-			/* Increment TX-counter */
-			dir.dl.tx_counter++;
 		}
-	} else {
-		/* Increment TX-counter */
-		dir.dl.tx_counter++;
 	}
 
 	/* return data block as message */
 	dl_msg = msgb_alloc(len, "rlcmac_dl_data");
 	if (!dl_msg)
 		return NULL;
+
+	/* Increment TX-counter */
+	dir.dl.tx_counter++;
+
 	memcpy(msgb_put(dl_msg, len), data, len);
 	bts->rlc_sent();
 
