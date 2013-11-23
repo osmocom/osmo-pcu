@@ -249,6 +249,7 @@ protected:
 
 	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
 					const int index, const bool fin_first_ack);
+	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
 };
 
 

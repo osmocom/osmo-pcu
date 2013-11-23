@@ -876,16 +876,8 @@ int gprs_rlcmac_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
  */
 struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 {
-	struct rlc_dl_header *rh;
-	struct rlc_li_field *li;
-	struct msgb *msg;
-	uint8_t bsn;
 	const uint16_t mod_sns = m_sns - 1;
 	const uint16_t mod_sns_half = (m_sns >> 1) - 1;
-	uint16_t index;
-	uint8_t *delimiter, *data, *e_pointer;
-	uint16_t space, chunk;
-	bool first_fin_ack = false;
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink (V(A)==%d .. "
 		"V(S)==%d)\n", tbf_name(this), dir.dl.v_a, dir.dl.v_s);
@@ -901,7 +893,7 @@ do_resend:
 		/* re-send block with negative aknowlegement */
 		dir.dl.v_b.mark_unacked(index);
 		bts->rlc_resent();
-		return create_dl_acked_block(fn, ts, index, first_fin_ack);
+		return create_dl_acked_block(fn, ts, index, false);
 	}
 
 	/* if the window has stalled, or transfer is complete,
@@ -928,9 +920,9 @@ do_resend:
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- MS acked all blocks, "
 				"so we re-transmit final block!\n");
 			/* we just send final block again */
-			index = ((dir.dl.v_s - 1) & mod_sns_half);
+			int16_t index = (dir.dl.v_s - 1) & mod_sns_half;
 			bts->rlc_resent();
-			return create_dl_acked_block(fn, ts, index, first_fin_ack);
+			return create_dl_acked_block(fn, ts, index, false);
 		}
 		
 		/* cycle through all unacked blocks */
@@ -944,12 +936,28 @@ do_resend:
 				"There are no unacknowledged blocks, but V(A) "
 				" != V(S). PLEASE FIX!\n");
 			/* we just send final block again */
-			index = ((dir.dl.v_s - 1) & mod_sns_half);
+			int16_t index = (dir.dl.v_s - 1) & mod_sns_half;
 			bts->rlc_resent();
-			return create_dl_acked_block(fn, ts, index, first_fin_ack);
+			return create_dl_acked_block(fn, ts, index, false);
 		}
 		goto do_resend;
 	}
+
+	return create_new_bsn(fn, ts);
+}
+
+struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts)
+{
+	struct rlc_dl_header *rh;
+	struct rlc_li_field *li;
+	struct msgb *msg;
+	uint16_t index;
+	uint8_t *delimiter, *data, *e_pointer;
+	uint16_t space, chunk;
+	bool first_fin_ack = false;
+
+	const uint16_t mod_sns = m_sns - 1;
+	const uint16_t mod_sns_half = (m_sns >> 1) - 1;
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d\n",
 		dir.dl.v_s);
