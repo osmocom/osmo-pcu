@@ -102,6 +102,29 @@ struct gprs_rlc {
 	gprs_rlc_data blocks[RLC_MAX_SNS/2];
 };
 
+struct gprs_rlc_v_b {
+	bool is_nacked(int index) const;
+	bool is_acked(int index) const;
+	bool is_unacked(int index) const;
+	bool is_resend(int index) const;
+
+	char state(int index) const;
+
+	void mark_unacked(int index);
+	void mark_nacked(int index);
+	void mark_acked(int index);
+	void mark_resend(int index);
+	void mark_invalid(int index);
+
+	void reset();
+
+private:
+	bool is_state(int index, const char state) const;
+	void mark(int index, const char state);
+
+	char m_v_b[RLC_MAX_SNS/2]; /* acknowledge state array */
+};
+
 struct gprs_rlcmac_tbf {
 
 	static void free_all(struct gprs_rlcmac_trx *trx);
@@ -188,7 +211,7 @@ struct gprs_rlcmac_tbf {
 			uint16_t bsn;	/* block sequence number */
 			uint16_t v_s;	/* send state */
 			uint16_t v_a;	/* ack state */
-			char v_b[RLC_MAX_SNS/2]; /* acknowledge state array */
+			gprs_rlc_v_b v_b;
 			int32_t tx_counter; /* count all transmitted blocks */
 			uint8_t wait_confirm; /* wait for CCCH IMM.ASS cnf */
 		} dl;
@@ -324,3 +347,63 @@ inline const char *gprs_rlcmac_tbf::imsi() const
 }
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf);
+
+inline bool gprs_rlc_v_b::is_state(int index, const char type) const
+{
+	return m_v_b[index] == type;
+}
+
+inline void gprs_rlc_v_b::mark(int index, const char type)
+{
+	m_v_b[index] = type;
+}
+
+inline char gprs_rlc_v_b::state(int index) const
+{
+	return m_v_b[index];
+}
+
+inline bool gprs_rlc_v_b::is_nacked(int index) const
+{
+	return is_state(index, 'N');
+}
+
+inline bool gprs_rlc_v_b::is_acked(int index) const
+{
+	return is_state(index, 'A');
+}
+
+inline bool gprs_rlc_v_b::is_unacked(int index) const
+{
+	return is_state(index, 'U');
+}
+
+inline bool gprs_rlc_v_b::is_resend(int index) const
+{
+	return is_state(index, 'X');
+}
+
+inline void gprs_rlc_v_b::mark_resend(int index)
+{
+	return mark(index, 'X');
+}
+
+inline void gprs_rlc_v_b::mark_unacked(int index)
+{
+	return mark(index, 'U');
+}
+
+inline void gprs_rlc_v_b::mark_acked(int index)
+{
+	return mark(index, 'A');
+}
+
+inline void gprs_rlc_v_b::mark_nacked(int index)
+{
+	return mark(index, 'N');
+}
+
+inline void gprs_rlc_v_b::mark_invalid(int index)
+{
+	return mark(index, 'I');
+}

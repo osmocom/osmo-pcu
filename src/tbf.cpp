@@ -895,12 +895,11 @@ do_resend:
 	for (bsn = dir.dl.v_a; bsn != dir.dl.v_s; 
 	     bsn = (bsn + 1) & mod_sns) {
 		index = (bsn & mod_sns_half);
-		if (dir.dl.v_b[index] == 'N'
-		 || dir.dl.v_b[index] == 'X') {
+		if (dir.dl.v_b.is_nacked(index) || dir.dl.v_b.is_resend(index)) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d\n",
 				bsn);
 			/* re-send block with negative aknowlegement */
-			dir.dl.v_b[index] = 'U'; /* unacked */
+			dir.dl.v_b.mark_unacked(index);
 			bts->rlc_resent();
 			return create_dl_acked_block(fn, ts, index, first_fin_ack);
 		}
@@ -941,9 +940,9 @@ do_resend:
 		for (bsn = dir.dl.v_a; bsn != dir.dl.v_s;
 		     bsn = (bsn + 1) & mod_sns) {
 			index = (bsn & mod_sns_half);
-			if (dir.dl.v_b[index] == 'U') {
+			if (dir.dl.v_b.is_unacked(index)) {
 				/* mark to be re-send */
-				dir.dl.v_b[index] = 'X';
+				dir.dl.v_b.mark_resend(index);
 				resend++;
 			}
 		}
@@ -1111,7 +1110,7 @@ do_resend:
 #warning "move this up?"
 	m_rlc.blocks[index].len = block_length;
 	/* raise send state and set ack state array */
-	dir.dl.v_b[index] = 'U'; /* unacked */
+	dir.dl.v_b.mark_unacked(index);
 	dir.dl.v_s = (dir.dl.v_s + 1) & mod_sns; /* inc send state */
 
 	return create_dl_acked_block(fn, ts, index, first_fin_ack);
@@ -1463,14 +1462,13 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 			if (bit) {
 				LOGP(DRLCMACDL, LOGL_DEBUG, "- got "
 					"ack for BSN=%d\n", bsn);
-				if (dir.dl.v_b[bsn & mod_sns_half]
-								!= 'A')
+				if (!dir.dl.v_b.is_acked(bsn & mod_sns_half))
 					received++;
-				dir.dl.v_b[bsn & mod_sns_half] = 'A';
+				dir.dl.v_b.mark_acked(bsn & mod_sns_half);
 			} else {
 				LOGP(DRLCMACDL, LOGL_DEBUG, "- got "
 					"NACK for BSN=%d\n", bsn);
-				dir.dl.v_b[bsn & mod_sns_half] = 'N';
+				dir.dl.v_b.mark_nacked(bsn & mod_sns_half);
 				bts->rlc_nacked();
 				lost++;
 			}
@@ -1481,11 +1479,9 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 		/* raise V(A), if possible */
 		for (i = 0, bsn = dir.dl.v_a; bsn != dir.dl.v_s;
 		     i++, bsn = (bsn + 1) & mod_sns) {
-			if (dir.dl.v_b[bsn & mod_sns_half] == 'A') {
-				dir.dl.v_b[bsn & mod_sns_half] = 'I';
-					/* mark invalid */
-				dir.dl.v_a = (dir.dl.v_a + 1)
-								& mod_sns;
+			if (dir.dl.v_b.is_acked(bsn & mod_sns_half)) {
+				dir.dl.v_b.mark_invalid(bsn & mod_sns_half);
+				dir.dl.v_a = (dir.dl.v_a + 1) & mod_sns;
 			} else
 				break;
 		}
@@ -1493,7 +1489,7 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 		/* show receive state array in debug (V(A)..V(S)-1) */
 		for (i = 0, bsn = dir.dl.v_a; bsn != dir.dl.v_s;
 		     i++, bsn = (bsn + 1) & mod_sns) {
-			show_v_b[i] = dir.dl.v_b[bsn & mod_sns_half];
+			show_v_b[i] = dir.dl.v_b.state(bsn & mod_sns_half);
 			if (show_v_b[i] == 0)
 				show_v_b[i] = ' ';
 		}
@@ -1517,7 +1513,7 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 	/* range V(A)..V(S)-1 */
 	for (bsn = dir.dl.v_a; bsn != dir.dl.v_s;
 	     bsn = (bsn + 1) & mod_sns) {
-		if (dir.dl.v_b[bsn & mod_sns_half] != 'A')
+		if (!dir.dl.v_b.is_acked(bsn & mod_sns_half))
 			received++;
 	}
 
@@ -1852,6 +1848,7 @@ void gprs_rlcmac_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 
 	/* reset rlc states */
 	memset(&dir.dl, 0, sizeof(dir.dl));
+	dir.dl.v_b.reset();
 
 	/* keep to flags */
 	state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
