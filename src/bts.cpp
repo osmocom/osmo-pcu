@@ -57,6 +57,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "rlc.sent",			"RLC Sent             "},
 	{ "rlc.resent",			"RLC Resent           "},
 	{ "rlc.stalled",		"RLC Stalled          "},
+	{ "rlc.nacked",			"RLC Nacked           "},
 	{ "decode.errors",		"Decode Errors        "},
 	{ "sba.allocated",		"SBA Allocated        "},
 	{ "sba.freed",			"SBA Freed            "},

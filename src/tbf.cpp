@@ -1471,6 +1471,7 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 				LOGP(DRLCMACDL, LOGL_DEBUG, "- got "
 					"NACK for BSN=%d\n", bsn);
 				dir.dl.v_b[bsn & mod_sns_half] = 'N';
+				bts->rlc_nacked();
 				lost++;
 			}
 		}
