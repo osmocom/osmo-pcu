@@ -280,9 +280,6 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	gprs_rlcmac_rssi_rep(tbf);
 	gprs_rlcmac_lost_rep(tbf);
 
-	debug_diagram(tbf->bts, tbf->diag, "+---------------+");
-	debug_diagram(tbf->bts, tbf->diag, "|    THE END    |");
-	debug_diagram(tbf->bts, tbf->diag, "+---------------+");
 	LOGP(DRLCMAC, LOGL_INFO, "%s free\n", tbf_name(tbf));
 	if (tbf->ul_ass_state != GPRS_RLCMAC_UL_ASS_NONE)
 		LOGP(DRLCMAC, LOGL_ERROR, "%s Software error: Pending uplink "
@@ -365,7 +362,6 @@ static const char *tbf_state_name[] = {
 void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
 	enum gprs_rlcmac_tbf_state state)
 {
-	debug_diagram(tbf->bts, tbf->diag, "->%s", tbf_state_name[state]);
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s changes state from %s to %s\n",
 		tbf_name(tbf),
 		tbf_state_name[tbf->state], tbf_state_name[state]);
@@ -422,13 +418,11 @@ void gprs_rlcmac_tbf::poll_timeout()
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
 		}
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
-		debug_diagram(bts, this->diag, "timeout UL-ACK");
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
 			dir.ul.n3103++;
 			if (dir.ul.n3103 == bts->bts_data()->n3103) {
 				LOGP(DRLCMAC, LOGL_NOTICE,
 					"- N3103 exceeded\n");
-				debug_diagram(bts, diag, "N3103 exceeded");
 				tbf_new_state(this, GPRS_RLCMAC_RELEASING);
 				tbf_timer_start(this, 3169, bts->bts_data()->t3169, 0);
 				return;
@@ -445,11 +439,9 @@ void gprs_rlcmac_tbf::poll_timeout()
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
 		}
 		ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
-		debug_diagram(bts, diag, "timeout UL-ASS");
 		n3105++;
 		if (n3105 == bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
-			debug_diagram(bts, diag, "N3105 exceeded");
 			tbf_new_state(this, GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
 			return;
@@ -465,11 +457,9 @@ void gprs_rlcmac_tbf::poll_timeout()
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
 		}
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-		debug_diagram(bts, diag, "timeout DL-ASS");
 		n3105++;
 		if (n3105 == bts->bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
-			debug_diagram(bts, diag, "N3105 exceeded");
 			tbf_new_state(this, GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
 			return;
@@ -483,11 +473,9 @@ void gprs_rlcmac_tbf::poll_timeout()
 			rlcmac_diag();
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 		}
-		debug_diagram(bts, diag, "timeout DL-ACK");
 		n3105++;
 		if (n3105 == bts->bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
-			debug_diagram(bts, diag, "N3105 exceeded");
 			tbf_new_state(this, GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
 			return;
@@ -515,24 +503,6 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *tbf;
 	int rc;
 
-#ifdef DEBUG_DIAGRAM
-	/* hunt for first free number in diagram */
-	int diagram_num;
-	for (diagram_num = 0; ; diagram_num++) {
-		llist_for_each_entry(tbf, &bts->ul_tbfs, list) {
-			if (tbf->diag == diagram_num)
-				goto next_diagram;
-		}
-		llist_for_each_entry(tbf, &bts->dl_tbfs, list) {
-			if (tbf->diag == diagram_num)
-				goto next_diagram;
-		}
-		break;
-next_diagram:
-		continue;
-	}
-#endif
-
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
 	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: TFI=%d TRX=%d "
 		"MS_CLASS=%d\n", (dir == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL",
@@ -546,9 +516,6 @@ next_diagram:
 		return NULL;
 
 	tbf->bts = bts->bts;
-#ifdef DEBUG_DIAGRAM
-	tbf->diag = diagram_num;
-#endif
 	tbf->direction = dir;
 	tbf->m_tfi = tfi;
 	tbf->trx = &bts->trx[trx];
@@ -585,11 +552,6 @@ next_diagram:
 		llist_add(&tbf->list, &bts->dl_tbfs);
 		tbf->bts->tbf_dl_created();
 	}
-
-	debug_diagram(bts->bts, tbf->diag, "+-----------------+");
-	debug_diagram(bts->bts, tbf->diag, "|NEW %s TBF TFI=%2d|",
-		(dir == GPRS_RLCMAC_UL_TBF) ? "UL" : "DL", tfi);
-	debug_diagram(bts->bts, tbf->diag, "+-----------------+");
 
 	return tbf;
 }
@@ -637,8 +599,6 @@ void gprs_rlcmac_tbf::handle_timeout()
 		rlcmac_diag();
 		/* fall through */
 	case 3193:
-		if (T == 3193)
-		        debug_diagram(bts, diag, "T3193 timeout");
 		LOGP(DRLCMAC, LOGL_DEBUG,
 			"%s will be freed due to timeout\n", tbf_name(this));
 		/* free TBF */
@@ -1169,14 +1129,6 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(
 			poll_state = GPRS_RLCMAC_POLL_SCHED;
 			poll_fn = (fn + 13) % 2715648;
 
-#ifdef DEBUG_DIAGRAM
-			debug_diagram(bts, diag, "poll DL-ACK");
-			if (first_fin_ack)
-				debug_diagram(bts, diag, "(is first FINAL)");
-			if (rh->fbi)
-				debug_diagram(bts, diag, "(FBI is set)");
-#endif
-
 			/* set polling in header */
 			rh->rrbp = 0; /* N+13 */
 			rh->s_p = 1; /* Polling */
@@ -1282,7 +1234,6 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 		new_tbf->stop_timer();
 
 	}
-	debug_diagram(bts, diag, "send DL-ASS");
 
 	return msg;
 }
@@ -1354,7 +1305,6 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	tbf_new_state(new_tbf, GPRS_RLCMAC_FLOW);
 	tbf_assign_control_ts(new_tbf);
 #endif
-	debug_diagram(bts, diag, "send UL-ASS");
 
 	return msg;
 }
@@ -1407,7 +1357,6 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ack(uint32_t fn)
 		dir.ul.final_ack_sent = 1;
 	} else
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
-	debug_diagram(bts->bts, diag, "send UL-ACK");
 
 	return msg;
 }
@@ -1506,7 +1455,6 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 	}
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
-	debug_diagram(ts, diag, "got Final ACK");
 	/* range V(A)..V(S)-1 */
 	for (bsn = dir.dl.v_a; bsn != dir.dl.v_s;
 	     bsn = (bsn + 1) & mod_sns) {
@@ -1524,7 +1472,6 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- No new message, so we "
 			"release.\n");
 		/* start T3193 */
-		debug_diagram(bts, diag, "start T3193");
 		tbf_timer_start(this, 3193,
 			bts_data()->t3193_msec / 1000,
 			(bts_data()->t3193_msec % 1000) * 1000);
@@ -1776,17 +1723,6 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 				SEND_ACK_AFTER_FRAMES);
 		}
 		if (this->ul_ack_state == GPRS_RLCMAC_UL_ACK_NONE) {
-#ifdef DEBUG_DIAGRAM
-			if (rh->si)
-				debug_diagram(bts->bts, this->diag, "sched UL-ACK stall");
-			if (rh->ti)
-				debug_diagram(bts->bts, this->diag, "sched UL-ACK TLLI");
-			if (this->state_is(GPRS_RLCMAC_FINISHED))
-				debug_diagram(bts->bts, this->diag, "sched UL-ACK CV==0");
-			if ((this->dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0)
-				debug_diagram(bts->bts, this->diag, "sched UL-ACK n=%d",
-					this->dir.ul.rx_counter);
-#endif
 			/* trigger sending at next RTS */
 			this->ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
 		} else {

@@ -499,7 +499,6 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 {
 	int plen;
 
-	debug_diagram(this, tbf->diag, "IMM.ASS (PCH)");
 	LOGP(DRLCMAC, LOGL_INFO, "TX: START %s Immediate Assignment Downlink (PCH)\n", tbf_name(tbf));
 	bitvec *immediate_assignment = bitvec_alloc(22); /* without plen */
 	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
@@ -709,7 +708,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] END %s\n", tbf_name(tbf));
 		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
-		debug_diagram(bts(), tbf->diag, "got CTL-ACK (fin)");
 		if ((tbf->state_flags &
 			(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK))) {
 			tbf->state_flags &=
@@ -725,7 +723,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		/* reset N3105 */
 		tbf->n3105 = 0;
 		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-		debug_diagram(bts(), tbf->diag, "got CTL-ACK DL-ASS");
 		if (tbf->direction == GPRS_RLCMAC_UL_TBF)
 			tbf = bts()->tbf_by_tlli(tbf->tlli(),
 						GPRS_RLCMAC_DL_TBF);
@@ -753,7 +750,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		/* reset N3105 */
 		tbf->n3105 = 0;
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
-		debug_diagram(bts(), tbf->diag, "got CTL-AC UL-ASS");
 #warning "TBF is changing on the way... *sigh*"
 		if (tbf->direction == GPRS_RLCMAC_DL_TBF)
 			tbf = bts()->tbf_by_tlli(tbf->tlli(),
@@ -808,7 +804,6 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	tbf->stop_t3191();
 	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] %s Packet Downlink Ack/Nack\n", tbf_name(tbf));
 	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
-	debug_diagram(bts(), tbf->diag, "got DL-ACK");
 
 	rc = tbf->snd_dl_ack(
 		ack_nack->Ack_Nack_Description.FINAL_ACK_INDICATION,
@@ -888,7 +883,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		tbf->control_ts = ts_no;
 		/* schedule uplink assignment */
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
-		debug_diagram(bts->bts, tbf->diag, "Res. REQ");
 		return;
 	}
 

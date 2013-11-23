@@ -215,11 +215,6 @@ struct gprs_rlcmac_tbf {
 
 	uint8_t cs; /* current coding scheme */
 
-#ifdef DEBUG_DIAGRAM
-	int diag; /* number where TBF is presented in diagram */
-	int diag_new; /* used to format output of new TBF */
-#endif
-
 	/* these should become protected but only after gprs_rlcmac_data.c
 	 * stops to iterate over all tbf in its current form */
 	enum gprs_rlcmac_tbf_state state;
