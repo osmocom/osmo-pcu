@@ -911,11 +911,12 @@ do_resend:
 	 || ((dir.dl.v_s - dir.dl.v_a) & mod_sns) == m_ws) {
 	 	int resend = 0;
 
-		if (state_is(GPRS_RLCMAC_FINISHED))
+		if (state_is(GPRS_RLCMAC_FINISHED)) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
 				"because all blocks have been transmitted.\n",
 					dir.dl.v_a);
-		else {
+			bts->rlc_restarted();
+		} else {
 			LOGP(DRLCMACDL, LOGL_NOTICE, "- Restarting at BSN %d, "
 				"because all window is stalled.\n",
 					dir.dl.v_a);

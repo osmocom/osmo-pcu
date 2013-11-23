@@ -160,6 +160,7 @@ public:
 		CTR_TBF_REUSED,
 		CTR_RLC_SENT,
 		CTR_RLC_RESENT,
+		CTR_RLC_RESTARTED,
 		CTR_RLC_STALLED,
 		CTR_RLC_NACKED,
 		CTR_DECODE_ERRORS,
@@ -210,6 +211,7 @@ public:
 	void tbf_reused();
 	void rlc_sent();
 	void rlc_resent();
+	void rlc_restarted();
 	void rlc_stalled();
 	void rlc_nacked();
 	void decode_error();
@@ -277,6 +279,7 @@ CREATE_COUNT_INLINE(tbf_ul_freed, CTR_TBF_UL_FREED)
 CREATE_COUNT_INLINE(tbf_reused, CTR_TBF_REUSED)
 CREATE_COUNT_INLINE(rlc_sent, CTR_RLC_SENT)
 CREATE_COUNT_INLINE(rlc_resent, CTR_RLC_RESENT)
+CREATE_COUNT_INLINE(rlc_restarted, CTR_RLC_RESTARTED)
 CREATE_COUNT_INLINE(rlc_stalled, CTR_RLC_STALLED)
 CREATE_COUNT_INLINE(rlc_nacked, CTR_RLC_NACKED)
 CREATE_COUNT_INLINE(decode_error, CTR_DECODE_ERRORS)
