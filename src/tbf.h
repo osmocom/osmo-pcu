@@ -20,6 +20,7 @@
 
 #include "gprs_rlcmac.h"
 #include "llc.h"
+#include "rlc.h"
 
 #include <stdint.h>
 
@@ -30,10 +31,6 @@ struct msgb;
 /*
  * TBF instance
  */
-
-#define RLC_MAX_SNS 128 /* GPRS, must be power of 2 */
-#define RLC_MAX_WS  64 /* max window size */
-#define RLC_MAX_LEN 54 /* CS-4 including spare bits */
 
 #define Tassign_agch 0,200000	/* waiting after IMM.ASS confirm */
 #define Tassign_pacch 2,0	/* timeout for pacch assigment */
@@ -84,46 +81,6 @@ enum gprs_rlcmac_tbf_direction {
 #define GPRS_RLCMAC_FLAG_TO_UL_ASS	6
 #define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
-
-struct gprs_rlc_data {
-	uint8_t *prepare(size_t block_data_length);
-
-	/* block history */
-	uint8_t block[RLC_MAX_LEN];
-	/* block len of history */
-	uint8_t len;
-};
-
-/*
- * I hold the currently transferred blocks and will provide
- * the routines to manipulate these arrays.
- */
-struct gprs_rlc {
-	gprs_rlc_data blocks[RLC_MAX_SNS/2];
-};
-
-struct gprs_rlc_v_b {
-	bool is_nacked(int index) const;
-	bool is_acked(int index) const;
-	bool is_unacked(int index) const;
-	bool is_resend(int index) const;
-
-	char state(int index) const;
-
-	void mark_unacked(int index);
-	void mark_nacked(int index);
-	void mark_acked(int index);
-	void mark_resend(int index);
-	void mark_invalid(int index);
-
-	void reset();
-
-private:
-	bool is_state(int index, const char state) const;
-	void mark(int index, const char state);
-
-	char m_v_b[RLC_MAX_SNS/2]; /* acknowledge state array */
-};
 
 struct gprs_rlcmac_tbf {
 
@@ -348,62 +305,3 @@ inline const char *gprs_rlcmac_tbf::imsi() const
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf);
 
-inline bool gprs_rlc_v_b::is_state(int index, const char type) const
-{
-	return m_v_b[index] == type;
-}
-
-inline void gprs_rlc_v_b::mark(int index, const char type)
-{
-	m_v_b[index] = type;
-}
-
-inline char gprs_rlc_v_b::state(int index) const
-{
-	return m_v_b[index];
-}
-
-inline bool gprs_rlc_v_b::is_nacked(int index) const
-{
-	return is_state(index, 'N');
-}
-
-inline bool gprs_rlc_v_b::is_acked(int index) const
-{
-	return is_state(index, 'A');
-}
-
-inline bool gprs_rlc_v_b::is_unacked(int index) const
-{
-	return is_state(index, 'U');
-}
-
-inline bool gprs_rlc_v_b::is_resend(int index) const
-{
-	return is_state(index, 'X');
-}
-
-inline void gprs_rlc_v_b::mark_resend(int index)
-{
-	return mark(index, 'X');
-}
-
-inline void gprs_rlc_v_b::mark_unacked(int index)
-{
-	return mark(index, 'U');
-}
-
-inline void gprs_rlc_v_b::mark_acked(int index)
-{
-	return mark(index, 'A');
-}
-
-inline void gprs_rlc_v_b::mark_nacked(int index)
-{
-	return mark(index, 'N');
-}
-
-inline void gprs_rlc_v_b::mark_invalid(int index)
-{
-	return mark(index, 'I');
-}
