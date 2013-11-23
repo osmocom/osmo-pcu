@@ -553,8 +553,8 @@ next_diagram:
 	tbf->m_tfi = tfi;
 	tbf->trx = &bts->trx[trx];
 	tbf->ms_class = ms_class;
-	tbf->ws = 64;
-	tbf->sns = 128;
+	tbf->m_ws = 64;
+	tbf->m_sns = 128;
 	/* select algorithm */
 	rc = bts->alloc_algorithm(bts, old_tbf, tbf, bts->alloc_algorithm_curst,
 		single_slot);
@@ -880,8 +880,8 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 	struct rlc_li_field *li;
 	struct msgb *msg;
 	uint8_t bsn;
-	uint16_t mod_sns = sns - 1;
-	uint16_t mod_sns_half = (sns >> 1) - 1;
+	uint16_t mod_sns = m_sns - 1;
+	uint16_t mod_sns_half = (m_sns >> 1) - 1;
 	uint16_t index;
 	uint8_t *delimiter, *data, *e_pointer;
 	uint16_t space, chunk;
@@ -908,7 +908,7 @@ do_resend:
 	/* if the window has stalled, or transfer is complete,
 	 * send an unacknowledged block */
 	if (state_is(GPRS_RLCMAC_FINISHED)
-	 || ((dir.dl.v_s - dir.dl.v_a) & mod_sns) == ws) {
+	 || ((dir.dl.v_s - dir.dl.v_a) & mod_sns) == m_ws) {
 	 	int resend = 0;
 
 		if (state_is(GPRS_RLCMAC_FINISHED))
@@ -1418,8 +1418,8 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ack(uint32_t fn)
 int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 {
 	char show_rbb[65], show_v_b[RLC_MAX_SNS + 1];
-	uint16_t mod_sns = sns - 1;
-	uint16_t mod_sns_half = (sns >> 1) - 1;
+	uint16_t mod_sns = m_sns - 1;
+	uint16_t mod_sns_half = (m_sns >> 1) - 1;
 	int i; /* must be signed */
 	int16_t dist; /* must be signed */
 	uint8_t bit;
@@ -1684,8 +1684,8 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 		}
 	}
 
-	mod_sns = this->sns - 1;
-	mod_sns_half = (this->sns >> 1) - 1;
+	mod_sns = m_sns - 1;
+	mod_sns_half = (m_sns >> 1) - 1;
 
 	/* restart T3169 */
 	tbf_timer_start(this, 3169, bts_data()->t3169, 0);
@@ -1697,10 +1697,10 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	offset_v_q = (rh->bsn - this->dir.ul.v_q) & mod_sns;
 	/* If out of window (may happen if blocks below V(Q) are received
 	 * again. */
-	if (offset_v_q >= this->ws) {
+	if (offset_v_q >= m_ws) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d out of window "
 			"%d..%d (it's normal)\n", rh->bsn, this->dir.ul.v_q,
-			(this->dir.ul.v_q + this->ws - 1) & mod_sns);
+			(this->dir.ul.v_q + m_ws - 1) & mod_sns);
 		return 0;
 	}
 	/* Write block to buffer and set receive state array. */
@@ -1710,10 +1710,10 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	this->dir.ul.v_n[index] = 'R'; /* Mark received block. */
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
 		rh->bsn, this->dir.ul.v_q,
-		(this->dir.ul.v_q + this->ws - 1) & mod_sns);
+		(this->dir.ul.v_q + m_ws - 1) & mod_sns);
 	/* Raise V(R) to highest received sequence number not received. */
 	offset_v_r = (rh->bsn + 1 - this->dir.ul.v_r) & mod_sns;
-	if (offset_v_r < (this->sns >> 1)) { /* Positive offset, so raise. */
+	if (offset_v_r < (m_sns >> 1)) { /* Positive offset, so raise. */
 		while (offset_v_r--) {
 			if (offset_v_r) /* all except the received block */
 				this->dir.ul.v_n[this->dir.ul.v_r & mod_sns_half]

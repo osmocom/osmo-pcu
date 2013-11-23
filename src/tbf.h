@@ -133,6 +133,8 @@ struct gprs_rlcmac_tbf {
 	const char *imsi() const;
 	void assign_imsi(const char *imsi);
 
+	uint16_t sns() const;
+
 	struct llist_head list;
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
@@ -155,8 +157,8 @@ struct gprs_rlcmac_tbf {
 	enum gprs_rlcmac_tbf_poll_state poll_state;
 	uint32_t poll_fn; /* frame number to poll */
 
-	uint16_t ws;	/* window size */
-	uint16_t sns;	/* sequence number space */
+	uint16_t m_ws;	/* window size */
+	uint16_t m_sns;	/* sequence number space */
 
 	/* Please note that all variables here will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
@@ -301,6 +303,11 @@ inline uint8_t gprs_rlcmac_tbf::tfi() const
 inline const char *gprs_rlcmac_tbf::imsi() const
 {
 	return m_imsi;
+}
+
+inline uint16_t gprs_rlcmac_tbf::sns() const
+{
+	return m_sns;
 }
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf);

@@ -363,7 +363,7 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 
 	uint8_t rbb = 0;
 	uint16_t i, bbn;
-	uint16_t mod_sns_half = (tbf->sns >> 1) - 1;
+	uint16_t mod_sns_half = (tbf->sns() >> 1) - 1;
 	char bit;
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Encoding Ack/Nack for %s "
