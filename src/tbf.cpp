@@ -906,8 +906,7 @@ do_resend:
 
 	/* if the window has stalled, or transfer is complete,
 	 * send an unacknowledged block */
-	if (state_is(GPRS_RLCMAC_FINISHED)
-	 || ((dir.dl.v_s - dir.dl.v_a) & mod_sns) == m_ws) {
+	if (state_is(GPRS_RLCMAC_FINISHED) || dl_window_stalled()) {
 	 	int resend = 0;
 
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
@@ -1858,4 +1857,10 @@ void gprs_rlcmac_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 		"because another LLC PDU has arrived in between\n",
 		tbf_name(this));
 	bts->trigger_dl_ass(this, this, NULL);
+}
+
+bool gprs_rlcmac_tbf::dl_window_stalled() const
+{
+	const uint16_t mod_sns = m_sns - 1;
+	return ((dir.dl.v_s - dir.dl.v_a) & mod_sns) == m_ws;
 }

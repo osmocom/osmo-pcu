@@ -241,6 +241,7 @@ struct gprs_rlcmac_tbf {
 protected:
 	void reuse_tbf(const uint8_t *data, const uint16_t len);
 	gprs_rlcmac_bts *bts_data() const;
+	bool dl_window_stalled() const;
 
 	int append_data(const uint8_t ms_class,
 			const uint16_t pdu_delay_csec,
