@@ -44,10 +44,11 @@ struct gprs_rlc {
 };
 
 struct gprs_rlc_v_b {
+	bool is_unacked(int index) const;
 	bool is_nacked(int index) const;
 	bool is_acked(int index) const;
-	bool is_unacked(int index) const;
 	bool is_resend(int index) const;
+	bool is_invalid(int index) const;
 
 	char state(int index) const;
 
@@ -134,6 +135,11 @@ inline bool gprs_rlc_v_b::is_unacked(int index) const
 inline bool gprs_rlc_v_b::is_resend(int index) const
 {
 	return is_state(index, 'X');
+}
+
+inline bool gprs_rlc_v_b::is_invalid(int index) const
+{
+	return is_state(index, 'I');
 }
 
 inline void gprs_rlc_v_b::mark_resend(int index)

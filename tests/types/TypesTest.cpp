@@ -89,11 +89,38 @@ static void test_rlc()
 	}
 }
 
+static void test_rlc_v_b()
+{
+	{
+		gprs_rlc_v_b vb;
+		vb.reset();
+
+		for (size_t i = 0; i < RLC_MAX_SNS/2; ++i)
+			OSMO_ASSERT(vb.is_invalid(i));
+
+		vb.mark_unacked(23);
+		OSMO_ASSERT(vb.is_unacked(23));
+
+		vb.mark_nacked(23);
+		OSMO_ASSERT(vb.is_nacked(23));
+
+		vb.mark_acked(23);
+		OSMO_ASSERT(vb.is_acked(23));
+
+		vb.mark_resend(23);
+		OSMO_ASSERT(vb.is_resend(23));
+
+		vb.mark_invalid(23);
+		OSMO_ASSERT(vb.is_invalid(23));
+	}
+}
+
 int main(int argc, char **argv)
 {
 	printf("Making some basic type testing.\n");
 	test_llc();
 	test_rlc();
+	test_rlc_v_b();
 	return EXIT_SUCCESS;
 }
 
