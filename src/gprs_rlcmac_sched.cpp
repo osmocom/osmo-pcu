@@ -71,7 +71,7 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 	return poll_fn;
 }
 
-uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
+static uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 	uint8_t block_nr, struct gprs_rlcmac_pdch *pdch)
 {
 	struct gprs_rlcmac_tbf *tbf;
@@ -187,7 +187,8 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 
 	return msg;
 }
-static uint8_t rlcmac_dl_idle[23] = {
+
+static const uint8_t rlcmac_dl_idle[23] = {
 	0x47, /* control without optional header octets, no polling, USF=111 */
 	0x94, /* dummy downlink control message, paging mode 00 */
 	0x2b, /* no persistance level, 7 bits spare pattern */
@@ -195,7 +196,7 @@ static uint8_t rlcmac_dl_idle[23] = {
 	0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b
 };
 
-struct msgb *sched_dummy(void)
+static struct msgb *sched_dummy(void)
 {
 	struct msgb *msg;
 
