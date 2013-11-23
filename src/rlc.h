@@ -46,6 +46,8 @@ struct gprs_rlc {
 struct gprs_rlc_v_b {
 	int resend_needed(const uint16_t acked, const uint16_t sent,
 			const uint16_t mod_sns, const uint16_t mod_sns_half);
+	int mark_for_resend(const uint16_t acked, const uint16_t sent,
+			const uint16_t mod_sns, const uint16_t mod_sns_half);
 
 	/* Check for an individual frame */
 	bool is_unacked(int index) const;

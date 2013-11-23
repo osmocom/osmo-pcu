@@ -907,8 +907,6 @@ do_resend:
 	/* if the window has stalled, or transfer is complete,
 	 * send an unacknowledged block */
 	if (state_is(GPRS_RLCMAC_FINISHED) || dl_window_stalled()) {
-	 	int resend = 0;
-
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
 				"because all blocks have been transmitted.\n",
@@ -936,16 +934,10 @@ do_resend:
 		}
 		
 		/* cycle through all unacked blocks */
-		for (bsn = dir.dl.v_a; bsn != dir.dl.v_s;
-		     bsn = (bsn + 1) & mod_sns) {
-			index = (bsn & mod_sns_half);
-			if (dir.dl.v_b.is_unacked(index)) {
-				/* mark to be re-send */
-				dir.dl.v_b.mark_resend(index);
-				resend++;
-			}
-		}
-		/* At this point there should be at leasst one unacked block
+		int resend = dir.dl.v_b.mark_for_resend(dir.dl.v_a, dir.dl.v_s,
+							mod_sns, mod_sns_half);
+
+		/* At this point there should be at least one unacked block
 		 * to be resent. If not, this is an software error. */
 		if (resend == 0) {
 			LOGP(DRLCMACDL, LOGL_ERROR, "Software error: "
