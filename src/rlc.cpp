@@ -44,7 +44,7 @@ int gprs_rlc_v_b::resend_needed(const uint16_t v_a, const uint16_t v_s,
 				const uint16_t mod_sns,
 				const uint16_t mod_sns_half)
 {
-	for (uint8_t bsn = v_a; bsn != v_s; bsn = (bsn + 1) & mod_sns) {
+	for (uint16_t bsn = v_a; bsn != v_s; bsn = (bsn + 1) & mod_sns) {
 		uint16_t index = bsn & mod_sns_half;
 		if (is_nacked(index) || is_resend(index))
 			return bsn;
@@ -59,7 +59,7 @@ int gprs_rlc_v_b::mark_for_resend(const uint16_t v_a, const uint16_t v_s,
 {
 	int resend = 0;
 
-	for (uint8_t bsn = v_a; bsn != v_s; bsn = (bsn + 1) & mod_sns) {
+	for (uint16_t bsn = v_a; bsn != v_s; bsn = (bsn + 1) & mod_sns) {
 		uint16_t index = (bsn & mod_sns_half);
 		if (is_unacked(index)) {
 			/* mark to be re-send */
