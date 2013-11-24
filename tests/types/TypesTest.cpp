@@ -134,6 +134,54 @@ static void test_rlc_v_n()
 	}
 }
 
+static void test_rlc_dl_ul_basic()
+{
+	{
+		gprs_rlc_dl_window dl_win = { 0, };
+		OSMO_ASSERT(dl_win.window_empty());
+		OSMO_ASSERT(!dl_win.window_stalled());
+		OSMO_ASSERT(dl_win.distance() == 0);
+
+		dl_win.increment_send();
+		OSMO_ASSERT(!dl_win.window_empty());
+		OSMO_ASSERT(!dl_win.window_stalled());
+		OSMO_ASSERT(dl_win.distance() == 1);
+
+		for (int i = 1; i < 64; ++i) {
+			dl_win.increment_send();
+			OSMO_ASSERT(!dl_win.window_empty());
+			OSMO_ASSERT(dl_win.distance() == i + 1);
+		}
+
+		OSMO_ASSERT(dl_win.distance() == 64);
+		OSMO_ASSERT(dl_win.window_stalled());
+
+		dl_win.raise(1);
+		OSMO_ASSERT(dl_win.distance() == 63);
+		OSMO_ASSERT(!dl_win.window_stalled());
+		for (int i = 62; i >= 0; --i) {
+			dl_win.raise(1);
+			OSMO_ASSERT(dl_win.distance() == i);
+		}
+
+		OSMO_ASSERT(dl_win.distance() == 0);
+		OSMO_ASSERT(dl_win.window_empty());
+
+		dl_win.increment_send();
+		dl_win.increment_send();
+		dl_win.increment_send();
+		dl_win.increment_send();
+		OSMO_ASSERT(dl_win.distance() == 4);
+
+		for (int i = 0; i < 128; ++i) {
+			dl_win.increment_send();
+			dl_win.increment_send();
+			dl_win.raise(2);
+			OSMO_ASSERT(dl_win.distance() == 4);
+		}
+	}
+}
+
 int main(int argc, char **argv)
 {
 	printf("Making some basic type testing.\n");
@@ -141,6 +189,7 @@ int main(int argc, char **argv)
 	test_rlc();
 	test_rlc_v_b();
 	test_rlc_v_n();
+	test_rlc_dl_ul_basic();
 	return EXIT_SUCCESS;
 }
 
