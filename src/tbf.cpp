@@ -1363,7 +1363,6 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ack(uint32_t fn)
 
 int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 {
-	char show_v_b[RLC_MAX_SNS + 1];
 	uint16_t mod_sns = m_sns - 1;
 	uint16_t mod_sns_half = (m_sns >> 1) - 1;
 	int i; /* must be signed */
@@ -1376,6 +1375,8 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 
 	if (!final) {
 		char show_rbb[65];
+		char show_v_b[RLC_MAX_SNS + 1];
+
 		Decoding::extract_rbb(rbb, show_rbb);
 		/* show received array in debug (bit 64..1) */
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- ack:  (BSN=%d)\"%s\""
@@ -1409,13 +1410,8 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 							mod_sns, mod_sns_half) & mod_sns;
 
 		/* show receive state array in debug (V(A)..V(S)-1) */
-		for (i = 0, bsn = dir.dl.v_a; bsn != dir.dl.v_s;
-		     i++, bsn = (bsn + 1) & mod_sns) {
-			show_v_b[i] = dir.dl.v_b.state(bsn & mod_sns_half);
-			if (show_v_b[i] == 0)
-				show_v_b[i] = ' ';
-		}
-		show_v_b[i] = '\0';
+		dir.dl.v_b.state(show_v_b, dir.dl.v_a, dir.dl.v_s,
+					mod_sns, mod_sns_half);
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- V(B): (V(A)=%d)\"%s\""
 			"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked "
 			"X=Resend-Unacked\n", dir.dl.v_a, show_v_b,

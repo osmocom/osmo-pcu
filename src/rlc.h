@@ -58,6 +58,8 @@ struct gprs_rlc_v_b {
 			uint16_t *lost, uint16_t *received);
 	int move_window(const uint16_t v_a, const uint16_t v_s,
 			const uint16_t mod_sns, const uint16_t mod_sns_half);
+	void state(char *show_rbb, const uint16_t v_a, const uint16_t v_s,
+			const uint16_t mod_sns, const uint16_t mod_sns_half);
 
 	/* Check for an individual frame */
 	bool is_unacked(int index) const;
@@ -65,8 +67,6 @@ struct gprs_rlc_v_b {
 	bool is_acked(int index) const;
 	bool is_resend(int index) const;
 	bool is_invalid(int index) const;
-
-	char state(int index) const;
 
 	/* Mark a RLC frame for something */
 	void mark_unacked(int index);
@@ -127,11 +127,6 @@ inline bool gprs_rlc_v_b::is_state(int index, const char type) const
 inline void gprs_rlc_v_b::mark(int index, const char type)
 {
 	m_v_b[index] = type;
-}
-
-inline char gprs_rlc_v_b::state(int index) const
-{
-	return m_v_b[index];
 }
 
 inline bool gprs_rlc_v_b::is_nacked(int index) const

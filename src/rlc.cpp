@@ -116,3 +116,18 @@ int gprs_rlc_v_b::move_window(const uint16_t v_a, const uint16_t v_s,
 
 	return moved;
 }
+
+void gprs_rlc_v_b::state(char *show_v_b, const uint16_t v_a, const uint16_t v_s,
+			const uint16_t mod_sns, const uint16_t mod_sns_half)
+{
+	int i;
+	uint16_t bsn;
+
+	for (i = 0, bsn = v_a; bsn != v_s; i++, bsn = (bsn + 1) & mod_sns) {
+		uint16_t index = (bsn & mod_sns_half);
+		show_v_b[i] = m_v_b[index];
+		if (show_v_b[i] == 0)
+			show_v_b[i] = ' ';
+	}
+	show_v_b[i] = '\0';
+}
