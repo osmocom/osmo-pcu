@@ -1406,7 +1406,7 @@ int gprs_rlcmac_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 				mod_sns, mod_sns_half);
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- V(B): (V(A)=%d)\"%s\""
 		"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked "
-		"X=Resend-Unacked\n", dir.dl.v_a, show_v_b,
+		"X=Resend-Unacked I=Invalid\n", dir.dl.v_a, show_v_b,
 		(dir.dl.v_s - 1) & mod_sns);
 
 	if (state_is(GPRS_RLCMAC_FINISHED) && dir.dl.v_s == dir.dl.v_a) {
