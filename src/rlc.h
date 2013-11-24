@@ -129,6 +129,16 @@ private:
 	char m_v_b[RLC_MAX_SNS/2]; /* acknowledge state array */
 };
 
+struct gprs_rlc_v_n {
+	void mark_received(int index);
+	void mark_missing(int index);
+
+	bool is_received(int index) const;
+
+	char state(int index) const;
+private:
+	char m_v_n[RLC_MAX_SNS/2]; /* receive state array */
+};
 
 extern "C" {
 /* TS 04.60  10.2.2 */
@@ -328,4 +338,24 @@ inline void gprs_rlc_ul_window::raise(int moves)
 inline void gprs_rlc_ul_window::increment_q(int incr)
 {
 	m_v_q = (m_v_q + incr) & mod_sns();
+}
+
+inline void gprs_rlc_v_n::mark_received(int index)
+{
+	m_v_n[index] = 'R';
+}
+
+inline void gprs_rlc_v_n::mark_missing(int index)
+{
+	m_v_n[index] = 'N';
+}
+
+inline bool gprs_rlc_v_n::is_received(int index) const
+{
+	return m_v_n[index] == 'R';
+}
+
+inline char gprs_rlc_v_n::state(int index) const
+{
+	return m_v_n[index];
 }

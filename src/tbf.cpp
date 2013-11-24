@@ -1616,7 +1616,7 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	index = rh->bsn & mod_sns_half; /* memory index of block */
 	memcpy(m_rlc.blocks[index].block, data, len); /* Copy block. */
 	m_rlc.blocks[index].len = len;
-	this->dir.ul.v_n[index] = 'R'; /* Mark received block. */
+	dir.ul.v_n.mark_received(index);
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
 		rh->bsn, dir.ul.window.v_q(),
 		(dir.ul.window.v_q() + ws - 1) & mod_sns);
@@ -1625,8 +1625,7 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	if (offset_v_r < (sns() >> 1)) { /* Positive offset, so raise. */
 		while (offset_v_r--) {
 			if (offset_v_r) /* all except the received block */
-				dir.ul.v_n[dir.ul.window.v_r() & mod_sns_half]
-					= 'N'; /* Mark block as not received */
+				dir.ul.v_n.mark_missing(dir.ul.window.v_r() & mod_sns_half);
 			this->dir.ul.window.raise(1);
 				/* Inc V(R). */
 		}
@@ -1638,8 +1637,8 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	/* Raise V(Q) if possible, and retrieve LLC frames from blocks.
 	 * This is looped until there is a gap (non received block) or
 	 * the window is empty.*/
-	while (this->dir.ul.window.v_q() != this->dir.ul.window.v_r() && this->dir.ul.v_n[
-			(index = this->dir.ul.window.v_q() & mod_sns_half)] == 'R') {
+	while (this->dir.ul.window.v_q() != this->dir.ul.window.v_r() && this->dir.ul.v_n.
+			is_received(index = this->dir.ul.window.v_q() & mod_sns_half)) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- Taking block %d out, raising "
 			"V(Q) to %d\n", this->dir.ul.window.v_q(),
 			(this->dir.ul.window.v_q() + 1) & mod_sns);
