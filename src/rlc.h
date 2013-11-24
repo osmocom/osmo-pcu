@@ -60,6 +60,8 @@ struct gprs_rlc_v_b {
 			const uint16_t mod_sns, const uint16_t mod_sns_half);
 	void state(char *show_rbb, const uint16_t v_a, const uint16_t v_s,
 			const uint16_t mod_sns, const uint16_t mod_sns_half);
+	int count_unacked(const uint16_t v_a, const uint16_t v_s,
+			const uint16_t mod_sns, const uint16_t mod_sns_half);
 
 	/* Check for an individual frame */
 	bool is_unacked(int index) const;

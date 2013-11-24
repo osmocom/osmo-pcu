@@ -71,6 +71,21 @@ int gprs_rlc_v_b::mark_for_resend(const uint16_t v_a, const uint16_t v_s,
 	return resend;
 }
 
+int gprs_rlc_v_b::count_unacked(const uint16_t v_a, const uint16_t v_s,
+			const uint16_t mod_sns, const uint16_t mod_sns_half)
+{
+	uint16_t unacked = 0;
+	uint16_t bsn;
+
+	for (bsn = v_a; bsn != v_s; bsn = (bsn + 1) & mod_sns) {
+		uint16_t index = bsn & mod_sns_half;
+		if (!is_acked(index))
+			unacked += 1;
+	}
+
+	return unacked;
+}
+
 void gprs_rlc_v_b::update(BTS *bts, char *show_rbb, uint8_t ssn,
 			const uint16_t v_a,
 			const uint16_t mod_sns, const uint16_t mod_sns_half,

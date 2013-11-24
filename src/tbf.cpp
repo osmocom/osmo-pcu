@@ -1422,20 +1422,16 @@ int gprs_rlcmac_tbf::maybe_start_new_window()
 {
 	const uint16_t mod_sns = m_sns - 1;
 	const uint16_t mod_sns_half = (m_sns >> 1) - 1;
-	uint16_t bsn;
 	struct msgb *msg;
-	uint16_t lost = 0, received = 0;
+	uint16_t received;
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
 	/* range V(A)..V(S)-1 */
-	for (bsn = dir.dl.v_a; bsn != dir.dl.v_s;
-	     bsn = (bsn + 1) & mod_sns) {
-		if (!dir.dl.v_b.is_acked(bsn & mod_sns_half))
-			received++;
-	}
+	received = dir.dl.v_b.count_unacked(dir.dl.v_a, dir.dl.v_s,
+						mod_sns, mod_sns_half);
 
 	/* report all outstanding packets as received */
-	gprs_rlcmac_received_lost(this, received, lost);
+	gprs_rlcmac_received_lost(this, received, 0);
 
 	/* check for LLC PDU in the LLC Queue */
 	msg = llc_dequeue(gprs_bssgp_pcu_current_bctx());
