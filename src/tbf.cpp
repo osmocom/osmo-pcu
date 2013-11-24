@@ -1520,7 +1520,7 @@ void gprs_rlcmac_tbf::update_tlli(uint32_t tlli)
 
 int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi)
 {
-	uint16_t offset_v_q, offset_v_r, index;
+	uint16_t offset_v_r, index;
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	int rc;
 
@@ -1601,17 +1601,14 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	/* Increment RX-counter */
 	this->dir.ul.rx_counter++;
 
-	/* current block relative to lowest unreceived block */
-	offset_v_q = (rh->bsn - this->dir.ul.window.v_q()) & mod_sns;
-	/* If out of window (may happen if blocks below V(Q) are received
-	 * again. */
-	if (offset_v_q >= dir.ul.window.ws()) {
+	if (!dir.ul.window.is_in_window(rh->bsn)) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d out of window "
 			"%d..%d (it's normal)\n", rh->bsn,
 			dir.ul.window.v_q(),
 			(dir.ul.window.v_q() + ws - 1) & mod_sns);
 		return 0;
 	}
+
 	/* Write block to buffer and set receive state array. */
 	index = rh->bsn & mod_sns_half; /* memory index of block */
 	memcpy(m_rlc.blocks[index].block, data, len); /* Copy block. */

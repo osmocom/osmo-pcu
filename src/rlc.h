@@ -83,6 +83,8 @@ struct gprs_rlc_ul_window {
 	const uint16_t v_r() const;
 	const uint16_t v_q() const;
 
+	bool is_in_window(uint8_t bsn) const;
+
 	void raise(int moves);
 	void increment_q(int);
 
@@ -298,6 +300,17 @@ inline void gprs_rlc_dl_window::raise(int moves)
 inline const int16_t gprs_rlc_dl_window::distance() const
 {
 	return (m_v_s - m_v_a) & mod_sns();
+}
+
+inline bool gprs_rlc_ul_window::is_in_window(uint8_t bsn) const
+{
+	uint16_t offset_v_q;
+
+	/* current block relative to lowest unreceived block */
+	offset_v_q = (bsn - m_v_q) & mod_sns();
+	/* If out of window (may happen if blocks below V(Q) are received
+	 * again. */
+	return offset_v_q < ws();
 }
 
 inline const uint16_t gprs_rlc_ul_window::sns() const
