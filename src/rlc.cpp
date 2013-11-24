@@ -40,12 +40,10 @@ void gprs_rlc_v_b::reset()
 		mark_invalid(i);
 }
 
-int gprs_rlc_v_b::resend_needed(const uint16_t v_a, const uint16_t v_s,
-				const uint16_t mod_sns,
-				const uint16_t mod_sns_half)
+int gprs_rlc_v_b::resend_needed(const gprs_rlc_dl_window &w)
 {
-	for (uint16_t bsn = v_a; bsn != v_s; bsn = (bsn + 1) & mod_sns) {
-		uint16_t index = bsn & mod_sns_half;
+	for (uint16_t bsn = w.v_a(); bsn != w.v_s(); bsn = (bsn + 1) & w.mod_sns()) {
+		uint16_t index = bsn & w.mod_sns_half();
 		if (is_nacked(index) || is_resend(index))
 			return bsn;
 	}
@@ -53,14 +51,12 @@ int gprs_rlc_v_b::resend_needed(const uint16_t v_a, const uint16_t v_s,
 	return -1;
 }
 
-int gprs_rlc_v_b::mark_for_resend(const uint16_t v_a, const uint16_t v_s,
-				const uint16_t mod_sns,
-				const uint16_t mod_sns_half)
+int gprs_rlc_v_b::mark_for_resend(const gprs_rlc_dl_window &w)
 {
 	int resend = 0;
 
-	for (uint16_t bsn = v_a; bsn != v_s; bsn = (bsn + 1) & mod_sns) {
-		uint16_t index = (bsn & mod_sns_half);
+	for (uint16_t bsn = w.v_a(); bsn != w.v_s(); bsn = (bsn + 1) & w.mod_sns()) {
+		uint16_t index = bsn & w.mod_sns_half();
 		if (is_unacked(index)) {
 			/* mark to be re-send */
 			mark_resend(index);
@@ -71,14 +67,13 @@ int gprs_rlc_v_b::mark_for_resend(const uint16_t v_a, const uint16_t v_s,
 	return resend;
 }
 
-int gprs_rlc_v_b::count_unacked(const uint16_t v_a, const uint16_t v_s,
-			const uint16_t mod_sns, const uint16_t mod_sns_half)
+int gprs_rlc_v_b::count_unacked(const gprs_rlc_dl_window &w)
 {
 	uint16_t unacked = 0;
 	uint16_t bsn;
 
-	for (bsn = v_a; bsn != v_s; bsn = (bsn + 1) & mod_sns) {
-		uint16_t index = bsn & mod_sns_half;
+	for (bsn = w.v_a(); bsn != w.v_s(); bsn = (bsn + 1) & w.mod_sns()) {
+		uint16_t index = bsn & w.mod_sns_half();
 		if (!is_acked(index))
 			unacked += 1;
 	}
@@ -87,41 +82,39 @@ int gprs_rlc_v_b::count_unacked(const uint16_t v_a, const uint16_t v_s,
 }
 
 void gprs_rlc_v_b::update(BTS *bts, char *show_rbb, uint8_t ssn,
-			const uint16_t v_a,
-			const uint16_t mod_sns, const uint16_t mod_sns_half,
+			const gprs_rlc_dl_window &w,
 			uint16_t *lost, uint16_t *received)
 {
 	uint16_t bsn;
 	int i;
 
 	/* SSN - 1 is in range V(A)..V(S)-1 */
-	for (i = 63, bsn = (ssn - 1) & mod_sns;
-	     i >= 0 && bsn != ((v_a - 1) & mod_sns);
-	     i--, bsn = (bsn - 1) & mod_sns) {
+	for (i = 63, bsn = (ssn - 1) & w.mod_sns();
+	     i >= 0 && bsn != ((w.v_a() - 1) & w.mod_sns());
+	     i--, bsn = (bsn - 1) & w.mod_sns()) {
 
 		if (show_rbb[i] == '1') {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- got ack for BSN=%d\n", bsn);
-			if (!is_acked(bsn & mod_sns_half))
+			if (!is_acked(bsn & w.mod_sns_half()))
 				*received += 1;
-			mark_acked(bsn & mod_sns_half);
+			mark_acked(bsn & w.mod_sns_half());
 		} else {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- got NACK for BSN=%d\n", bsn);
-			mark_nacked(bsn & mod_sns_half);
+			mark_nacked(bsn & w.mod_sns_half());
 			bts->rlc_nacked();
 			*lost += 1;
 		}
 	}
 }
 
-int gprs_rlc_v_b::move_window(const uint16_t v_a, const uint16_t v_s,
-				const uint16_t mod_sns, const uint16_t mod_sns_half)
+int gprs_rlc_v_b::move_window(const gprs_rlc_dl_window &w)
 {
 	int i;
 	uint16_t bsn;
 	int moved = 0;
 
-	for (i = 0, bsn = v_a; bsn != v_s; i++, bsn = (bsn + 1) & mod_sns) {
-		uint16_t index = (bsn & mod_sns_half);
+	for (i = 0, bsn = w.v_a(); bsn != w.v_s(); i++, bsn = (bsn + 1) & w.mod_sns()) {
+		uint16_t index = bsn & w.mod_sns_half();
 		if (is_acked(index)) {
 			mark_invalid(index);
 			moved += 1;
@@ -132,14 +125,13 @@ int gprs_rlc_v_b::move_window(const uint16_t v_a, const uint16_t v_s,
 	return moved;
 }
 
-void gprs_rlc_v_b::state(char *show_v_b, const uint16_t v_a, const uint16_t v_s,
-			const uint16_t mod_sns, const uint16_t mod_sns_half)
+void gprs_rlc_v_b::state(char *show_v_b, const gprs_rlc_dl_window &w)
 {
 	int i;
 	uint16_t bsn;
 
-	for (i = 0, bsn = v_a; bsn != v_s; i++, bsn = (bsn + 1) & mod_sns) {
-		uint16_t index = (bsn & mod_sns_half);
+	for (i = 0, bsn = w.v_a(); bsn != w.v_s(); i++, bsn = (bsn + 1) & w.mod_sns()) {
+		uint16_t index = bsn & w.mod_sns_half();
 		show_v_b[i] = m_v_b[index];
 		if (show_v_b[i] == 0)
 			show_v_b[i] = ' ';

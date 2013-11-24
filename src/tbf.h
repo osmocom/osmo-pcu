@@ -157,9 +157,6 @@ struct gprs_rlcmac_tbf {
 	enum gprs_rlcmac_tbf_poll_state poll_state;
 	uint32_t poll_fn; /* frame number to poll */
 
-	uint16_t m_ws;	/* window size */
-	uint16_t m_sns;	/* sequence number space */
-
 	/* Please note that all variables here will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
 	 * All states that need reset must be in this struct, so this is why
@@ -167,17 +164,13 @@ struct gprs_rlcmac_tbf {
 	 */
 	union {
 		struct {
-			uint16_t bsn;	/* block sequence number */
-			uint16_t v_s;	/* send state */
-			uint16_t v_a;	/* ack state */
+			gprs_rlc_dl_window window;
 			gprs_rlc_v_b v_b;
 			int32_t tx_counter; /* count all transmitted blocks */
 			uint8_t wait_confirm; /* wait for CCCH IMM.ASS cnf */
 		} dl;
 		struct {
-			uint16_t bsn;	/* block sequence number */
-			uint16_t v_r;	/* receive state */
-			uint16_t v_q;	/* receive window state */
+			gprs_rlc_ul_window window;
 			char v_n[RLC_MAX_SNS/2]; /* receive state array */
 			int32_t rx_counter; /* count all received blocks */
 			uint8_t n3103;	/* N3103 counter */
@@ -306,7 +299,8 @@ inline const char *gprs_rlcmac_tbf::imsi() const
 
 inline uint16_t gprs_rlcmac_tbf::sns() const
 {
-	return m_sns;
+	/* assume dl/ul do the same thing */
+	return dir.dl.window.sns();
 }
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf);

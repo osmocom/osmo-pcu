@@ -44,24 +44,67 @@ struct gprs_rlc {
 	gprs_rlc_data blocks[RLC_MAX_SNS/2];
 };
 
+
+/**
+ * TODO: The UL/DL code could/should share a baseclass but
+ * we are using llist_for_each_entry for the TBF which
+ * requires everything which creates a requirement for a POD
+ * type and in < C++11 something that is using even if the
+ * most simple form of inheritance is not a POD anymore.
+ */
+struct gprs_rlc_dl_window {
+	const uint16_t mod_sns() const;
+	const uint16_t mod_sns_half() const;
+	const uint16_t sns() const;
+	const uint16_t ws() const;
+
+	bool window_stalled() const;
+	bool window_empty() const;
+
+	void increment_send();
+	void raise(int moves);
+
+	const uint16_t v_s() const;
+	const uint16_t v_s_mod(int offset) const;
+	const uint16_t v_s_mod_half(int offset) const;
+	const uint16_t v_a() const;
+	const int16_t distance() const;
+
+	uint16_t m_bsn;	/* block sequence number */
+	uint16_t m_v_s;	/* send state */
+	uint16_t m_v_a;	/* ack state */
+};
+
+struct gprs_rlc_ul_window {
+	const uint16_t mod_sns() const;
+	const uint16_t mod_sns_half() const;
+	const uint16_t sns() const;
+	const uint16_t ws() const;
+
+	const uint16_t v_r() const;
+	const uint16_t v_q() const;
+
+	void raise(int moves);
+	void increment_q(int);
+
+	uint16_t m_bsn;	/* block sequence number */
+	uint16_t m_v_r;	/* receive state */
+	uint16_t m_v_q;	/* receive window state */
+};
+
 /**
  * TODO: for GPRS/EDGE maybe make sns a template parameter
  * so we create specialized versions...
  */
 struct gprs_rlc_v_b {
-	int resend_needed(const uint16_t acked, const uint16_t sent,
-			const uint16_t mod_sns, const uint16_t mod_sns_half);
-	int mark_for_resend(const uint16_t acked, const uint16_t sent,
-			const uint16_t mod_sns, const uint16_t mod_sns_half);
-	void update(BTS *bts, char *show_rbb, uint8_t ssn, const uint16_t v_a,
-			const uint16_t mod_sns, const uint16_t mod_sns_half,
+	int resend_needed(const gprs_rlc_dl_window& window);
+	int mark_for_resend(const gprs_rlc_dl_window& window);
+	void update(BTS *bts, char *show_rbb, uint8_t ssn,
+			const gprs_rlc_dl_window& window,
 			uint16_t *lost, uint16_t *received);
-	int move_window(const uint16_t v_a, const uint16_t v_s,
-			const uint16_t mod_sns, const uint16_t mod_sns_half);
-	void state(char *show_rbb, const uint16_t v_a, const uint16_t v_s,
-			const uint16_t mod_sns, const uint16_t mod_sns_half);
-	int count_unacked(const uint16_t v_a, const uint16_t v_s,
-			const uint16_t mod_sns, const uint16_t mod_sns_half);
+	int move_window(const gprs_rlc_dl_window& window);
+	void state(char *show_rbb, const gprs_rlc_dl_window& window);
+	int count_unacked(const gprs_rlc_dl_window& window);
 
 	/* Check for an individual frame */
 	bool is_unacked(int index) const;
@@ -179,4 +222,110 @@ inline void gprs_rlc_v_b::mark_nacked(int index)
 inline void gprs_rlc_v_b::mark_invalid(int index)
 {
 	return mark(index, 'I');
+}
+
+
+inline const uint16_t gprs_rlc_dl_window::sns() const
+{
+	return 128;
+}
+
+inline const uint16_t gprs_rlc_dl_window::ws() const
+{
+	return 64;
+}
+
+inline const uint16_t gprs_rlc_dl_window::mod_sns() const
+{
+	return sns() - 1;
+}
+
+inline const uint16_t gprs_rlc_dl_window::mod_sns_half() const
+{
+	return (sns() >> 1) - 1;
+}
+
+inline const uint16_t gprs_rlc_dl_window::v_s() const
+{
+	return m_v_s;
+}
+
+inline const uint16_t gprs_rlc_dl_window::v_s_mod_half(int offset) const
+{
+	return (m_v_s + offset) & mod_sns_half();
+}
+
+inline const uint16_t gprs_rlc_dl_window::v_s_mod(int offset) const
+{
+	return (m_v_s + offset) & mod_sns();
+}
+
+inline const uint16_t gprs_rlc_dl_window::v_a() const
+{
+	return m_v_a;
+}
+
+inline bool gprs_rlc_dl_window::window_stalled() const
+{
+	return ((m_v_s - m_v_a) & mod_sns()) == ws();
+}
+
+inline bool gprs_rlc_dl_window::window_empty() const
+{
+	return m_v_s == m_v_a;
+}
+
+inline void gprs_rlc_dl_window::increment_send()
+{
+	m_v_s = (m_v_s + 1) & mod_sns();
+}
+
+inline void gprs_rlc_dl_window::raise(int moves)
+{
+	m_v_a = (m_v_a + moves) & mod_sns();
+}
+
+inline const int16_t gprs_rlc_dl_window::distance() const
+{
+	return (m_v_s - m_v_a) & mod_sns();
+}
+
+inline const uint16_t gprs_rlc_ul_window::sns() const
+{
+	return 128;
+}
+
+inline const uint16_t gprs_rlc_ul_window::ws() const
+{
+	return 64;
+}
+
+inline const uint16_t gprs_rlc_ul_window::mod_sns() const
+{
+	return sns() - 1;
+}
+
+inline const uint16_t gprs_rlc_ul_window::mod_sns_half() const
+{
+	return (sns() >> 1) - 1;
+}
+
+inline const uint16_t gprs_rlc_ul_window::v_r() const
+{
+	return m_v_r;
+}
+
+inline const uint16_t gprs_rlc_ul_window::v_q() const
+{
+	return m_v_q;
+}
+
+inline void gprs_rlc_ul_window::raise(int moves)
+{
+	m_v_r = (m_v_r + moves) & mod_sns();
+}
+
+inline void gprs_rlc_ul_window::increment_q(int incr)
+{
+	m_v_q = (m_v_q + incr) & mod_sns();
 }

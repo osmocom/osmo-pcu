@@ -520,8 +520,6 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 	tbf->m_tfi = tfi;
 	tbf->trx = &bts->trx[trx];
 	tbf->ms_class = ms_class;
-	tbf->m_ws = 64;
-	tbf->m_sns = 128;
 	/* select algorithm */
 	rc = bts->alloc_algorithm(bts, old_tbf, tbf, bts->alloc_algorithm_curst,
 		single_slot);
@@ -836,20 +834,17 @@ int gprs_rlcmac_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
  */
 struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 {
-	const uint16_t mod_sns = m_sns - 1;
-	const uint16_t mod_sns_half = (m_sns >> 1) - 1;
-
 	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink (V(A)==%d .. "
-		"V(S)==%d)\n", tbf_name(this), dir.dl.v_a, dir.dl.v_s);
+		"V(S)==%d)\n", tbf_name(this),
+		dir.dl.window.v_a(), dir.dl.window.v_s());
 
 do_resend:
 	/* check if there is a block with negative acknowledgement */
-	int resend_bsn = dir.dl.v_b.resend_needed(dir.dl.v_a, dir.dl.v_s,
-							mod_sns, mod_sns_half);
+	int resend_bsn = dir.dl.v_b.resend_needed(dir.dl.window);
 	if (resend_bsn >= 0) {
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d\n", resend_bsn);
 
-		uint16_t index = resend_bsn & mod_sns_half;
+		uint16_t index = resend_bsn & dir.dl.window.mod_sns_half();
 		/* re-send block with negative aknowlegement */
 		dir.dl.v_b.mark_unacked(index);
 		bts->rlc_resent();
@@ -862,12 +857,12 @@ do_resend:
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
 				"because all blocks have been transmitted.\n",
-					dir.dl.v_a);
+					dir.dl.window.v_a());
 			bts->rlc_restarted();
 		} else {
 			LOGP(DRLCMACDL, LOGL_NOTICE, "- Restarting at BSN %d, "
 				"because all window is stalled.\n",
-					dir.dl.v_a);
+					dir.dl.window.v_a());
 			bts->rlc_stalled();
 		}
 		/* If V(S) == V(A) and finished state, we would have received
@@ -876,18 +871,17 @@ do_resend:
 		 * from MS. But in this case we did not receive the final ack
 		 * indication from MS. This should never happen if MS works
 		 * correctly. */
-		if (dir.dl.v_s == dir.dl.v_a) {
+		if (dir.dl.window.window_empty()) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- MS acked all blocks, "
 				"so we re-transmit final block!\n");
 			/* we just send final block again */
-			int16_t index = (dir.dl.v_s - 1) & mod_sns_half;
+			int16_t index = dir.dl.window.v_s_mod_half(-1);
 			bts->rlc_resent();
 			return create_dl_acked_block(fn, ts, index, false);
 		}
 		
 		/* cycle through all unacked blocks */
-		int resend = dir.dl.v_b.mark_for_resend(dir.dl.v_a, dir.dl.v_s,
-							mod_sns, mod_sns_half);
+		int resend = dir.dl.v_b.mark_for_resend(dir.dl.window);
 
 		/* At this point there should be at least one unacked block
 		 * to be resent. If not, this is an software error. */
@@ -896,7 +890,7 @@ do_resend:
 				"There are no unacknowledged blocks, but V(A) "
 				" != V(S). PLEASE FIX!\n");
 			/* we just send final block again */
-			int16_t index = (dir.dl.v_s - 1) & mod_sns_half;
+			int16_t index = dir.dl.window.v_s_mod_half(-1);
 			bts->rlc_resent();
 			return create_dl_acked_block(fn, ts, index, false);
 		}
@@ -916,11 +910,8 @@ struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts
 	uint16_t space, chunk;
 	bool first_fin_ack = false;
 
-	const uint16_t mod_sns = m_sns - 1;
-	const uint16_t mod_sns_half = (m_sns >> 1) - 1;
-
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d\n",
-		dir.dl.v_s);
+		dir.dl.window.v_s());
 
 #warning "Selection of the CS doesn't belong here"
 	if (cs == 0) {
@@ -934,7 +925,7 @@ struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts
 	const uint8_t block_data_len = gprs_rlcmac_cs[cs].block_data;
 
 	/* now we still have untransmitted LLC data, so we fill mac block */
-	index = dir.dl.v_s & mod_sns_half;
+	index = dir.dl.window.v_s_mod_half(0);
 	data = m_rlc.blocks[index].prepare(block_data_len);
 
 	rh = (struct rlc_dl_header *)data;
@@ -944,7 +935,7 @@ struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts
 	rh->pr = 0; /* FIXME: power reduction */
 	rh->tfi = m_tfi; /* TFI */
 	rh->fbi = 0; /* Final Block Indicator, set late, if true */
-	rh->bsn = dir.dl.v_s; /* Block Sequence Number */
+	rh->bsn = dir.dl.window.v_s(); /* Block Sequence Number */
 	rh->e = 0; /* Extension bit, maybe set later */
 	e_pointer = data + 2; /* points to E of current chunk */
 	data += sizeof(*rh);
@@ -1070,7 +1061,7 @@ struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts
 	m_rlc.blocks[index].len = block_length;
 	/* raise send state and set ack state array */
 	dir.dl.v_b.mark_unacked(index);
-	dir.dl.v_s = (dir.dl.v_s + 1) & mod_sns; /* inc send state */
+	dir.dl.window.increment_send();
 
 	return create_dl_acked_block(fn, ts, index, first_fin_ack);
 }
@@ -1365,10 +1356,9 @@ int gprs_rlcmac_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 {
 	int16_t dist; /* must be signed */
 	uint16_t lost = 0, received = 0;
-	const uint16_t mod_sns = m_sns - 1;
-	const uint16_t mod_sns_half = (m_sns >> 1) - 1;
 	char show_rbb[65];
 	char show_v_b[RLC_MAX_SNS + 1];
+	const uint16_t mod_sns = dir.dl.window.mod_sns();
 
 	Decoding::extract_rbb(rbb, show_rbb);
 	/* show received array in debug (bit 64..1) */
@@ -1378,9 +1368,9 @@ int gprs_rlcmac_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 
 	/* apply received array to receive state (SSN-64..SSN-1) */
 	/* calculate distance of ssn from V(S) */
-	dist = (dir.dl.v_s - ssn) & mod_sns;
+	dist = (dir.dl.window.v_s() - ssn) & mod_sns;
 	/* check if distance is less than distance V(A)..V(S) */
-	if (dist >= ((dir.dl.v_s - dir.dl.v_a) & mod_sns)) {
+	if (dist >= dir.dl.window.distance()) {
 		/* this might happpen, if the downlink assignment
 		 * was not received by ms and the ack refers
 		 * to previous TBF
@@ -1391,25 +1381,24 @@ int gprs_rlcmac_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 		return 1; /* indicate to free TBF */
 	}
 
-	dir.dl.v_b.update(bts, show_rbb, ssn, dir.dl.v_a,
-			mod_sns, mod_sns_half, &lost, &received);
+	dir.dl.v_b.update(bts, show_rbb, ssn, dir.dl.window,
+			&lost, &received);
 
 	/* report lost and received packets */
 	gprs_rlcmac_received_lost(this, received, lost);
 
 	/* raise V(A), if possible */
-	dir.dl.v_a += dir.dl.v_b.move_window(dir.dl.v_a, dir.dl.v_s,
-						mod_sns, mod_sns_half) & mod_sns;
+	dir.dl.window.raise(dir.dl.v_b.move_window(dir.dl.window));
 
 	/* show receive state array in debug (V(A)..V(S)-1) */
-	dir.dl.v_b.state(show_v_b, dir.dl.v_a, dir.dl.v_s,
-				mod_sns, mod_sns_half);
+	dir.dl.v_b.state(show_v_b, dir.dl.window);
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- V(B): (V(A)=%d)\"%s\""
 		"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked "
-		"X=Resend-Unacked I=Invalid\n", dir.dl.v_a, show_v_b,
-		(dir.dl.v_s - 1) & mod_sns);
+		"X=Resend-Unacked I=Invalid\n",
+		dir.dl.window.v_a(), show_v_b,
+		dir.dl.window.v_s_mod(-1));
 
-	if (state_is(GPRS_RLCMAC_FINISHED) && dir.dl.v_s == dir.dl.v_a) {
+	if (state_is(GPRS_RLCMAC_FINISHED) && dir.dl.window.window_empty()) {
 		LOGP(DRLCMACDL, LOGL_NOTICE, "Received acknowledge of "
 			"all blocks, but without final ack "
 			"inidcation (don't worry)\n");
@@ -1420,15 +1409,12 @@ int gprs_rlcmac_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 
 int gprs_rlcmac_tbf::maybe_start_new_window()
 {
-	const uint16_t mod_sns = m_sns - 1;
-	const uint16_t mod_sns_half = (m_sns >> 1) - 1;
 	struct msgb *msg;
 	uint16_t received;
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
 	/* range V(A)..V(S)-1 */
-	received = dir.dl.v_b.count_unacked(dir.dl.v_a, dir.dl.v_s,
-						mod_sns, mod_sns_half);
+	received = dir.dl.v_b.count_unacked(dir.dl.window);
 
 	/* report all outstanding packets as received */
 	gprs_rlcmac_received_lost(this, received, 0);
@@ -1534,14 +1520,19 @@ void gprs_rlcmac_tbf::update_tlli(uint32_t tlli)
 
 int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi)
 {
-	uint16_t mod_sns, mod_sns_half, offset_v_q, offset_v_r, index;
+	uint16_t offset_v_q, offset_v_r, index;
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	int rc;
+
+	const uint16_t mod_sns = dir.ul.window.mod_sns();
+	const uint16_t mod_sns_half = dir.ul.window.mod_sns_half();
+	const uint16_t ws = dir.ul.window.ws();
 
 	this->state_flags |= (1 << GPRS_RLCMAC_FLAG_UL_DATA);
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "UL DATA TFI=%d received (V(Q)=%d .. "
-		"V(R)=%d)\n", rh->tfi, this->dir.ul.v_q, this->dir.ul.v_r);
+		"V(R)=%d)\n", rh->tfi, this->dir.ul.window.v_q(),
+		this->dir.ul.window.v_r());
 
 	/* process RSSI */
 	gprs_rlcmac_rssi(this, rssi);
@@ -1604,9 +1595,6 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 		}
 	}
 
-	mod_sns = m_sns - 1;
-	mod_sns_half = (m_sns >> 1) - 1;
-
 	/* restart T3169 */
 	tbf_timer_start(this, 3169, bts_data()->t3169, 0);
 
@@ -1614,13 +1602,14 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	this->dir.ul.rx_counter++;
 
 	/* current block relative to lowest unreceived block */
-	offset_v_q = (rh->bsn - this->dir.ul.v_q) & mod_sns;
+	offset_v_q = (rh->bsn - this->dir.ul.window.v_q()) & mod_sns;
 	/* If out of window (may happen if blocks below V(Q) are received
 	 * again. */
-	if (offset_v_q >= m_ws) {
+	if (offset_v_q >= dir.ul.window.ws()) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d out of window "
-			"%d..%d (it's normal)\n", rh->bsn, this->dir.ul.v_q,
-			(this->dir.ul.v_q + m_ws - 1) & mod_sns);
+			"%d..%d (it's normal)\n", rh->bsn,
+			dir.ul.window.v_q(),
+			(dir.ul.window.v_q() + ws - 1) & mod_sns);
 		return 0;
 	}
 	/* Write block to buffer and set receive state array. */
@@ -1629,42 +1618,42 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	m_rlc.blocks[index].len = len;
 	this->dir.ul.v_n[index] = 'R'; /* Mark received block. */
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
-		rh->bsn, this->dir.ul.v_q,
-		(this->dir.ul.v_q + m_ws - 1) & mod_sns);
+		rh->bsn, dir.ul.window.v_q(),
+		(dir.ul.window.v_q() + ws - 1) & mod_sns);
 	/* Raise V(R) to highest received sequence number not received. */
-	offset_v_r = (rh->bsn + 1 - this->dir.ul.v_r) & mod_sns;
-	if (offset_v_r < (m_sns >> 1)) { /* Positive offset, so raise. */
+	offset_v_r = (rh->bsn + 1 - dir.ul.window.v_r()) & mod_sns;
+	if (offset_v_r < (sns() >> 1)) { /* Positive offset, so raise. */
 		while (offset_v_r--) {
 			if (offset_v_r) /* all except the received block */
-				this->dir.ul.v_n[this->dir.ul.v_r & mod_sns_half]
+				dir.ul.v_n[dir.ul.window.v_r() & mod_sns_half]
 					= 'N'; /* Mark block as not received */
-			this->dir.ul.v_r = (this->dir.ul.v_r + 1) & mod_sns;
+			this->dir.ul.window.raise(1);
 				/* Inc V(R). */
 		}
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- Raising V(R) to %d\n",
-			this->dir.ul.v_r);
+			this->dir.ul.window.v_r());
 	}
 
 	#warning "Move to TBF and remove the index side effect.."
 	/* Raise V(Q) if possible, and retrieve LLC frames from blocks.
 	 * This is looped until there is a gap (non received block) or
 	 * the window is empty.*/
-	while (this->dir.ul.v_q != this->dir.ul.v_r && this->dir.ul.v_n[
-			(index = this->dir.ul.v_q & mod_sns_half)] == 'R') {
+	while (this->dir.ul.window.v_q() != this->dir.ul.window.v_r() && this->dir.ul.v_n[
+			(index = this->dir.ul.window.v_q() & mod_sns_half)] == 'R') {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- Taking block %d out, raising "
-			"V(Q) to %d\n", this->dir.ul.v_q,
-			(this->dir.ul.v_q + 1) & mod_sns);
+			"V(Q) to %d\n", this->dir.ul.window.v_q(),
+			(this->dir.ul.window.v_q() + 1) & mod_sns);
 		/* get LLC data from block */
 		this->assemble_forward_llc(&m_rlc.blocks[index]);
 		/* raise V(Q), because block already received */
-		this->dir.ul.v_q = (this->dir.ul.v_q + 1) & mod_sns;
+		this->dir.ul.window.increment_q(1);
 	}
 
 	/* Check CV of last frame in buffer */
 	if (this->state_is(GPRS_RLCMAC_FLOW) /* still in flow state */
-	 && this->dir.ul.v_q == this->dir.ul.v_r) { /* if complete */
+	 && this->dir.ul.window.v_q() == this->dir.ul.window.v_r()) { /* if complete */
 		struct rlc_ul_header *last_rh = (struct rlc_ul_header *)
-			m_rlc.blocks[(this->dir.ul.v_r - 1) & mod_sns_half].block;
+			m_rlc.blocks[(this->dir.ul.window.v_r() - 1) & mod_sns_half].block;
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- No gaps in received block, "
 			"last block: BSN=%d CV=%d\n", last_rh->bsn,
 			last_rh->cv);
@@ -1773,6 +1762,5 @@ void gprs_rlcmac_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 
 bool gprs_rlcmac_tbf::dl_window_stalled() const
 {
-	const uint16_t mod_sns = m_sns - 1;
-	return ((dir.dl.v_s - dir.dl.v_a) & mod_sns) == m_ws;
+	return dir.dl.window.window_stalled();
 }
