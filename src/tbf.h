@@ -234,6 +234,8 @@ struct gprs_rlcmac_tbf {
 	char m_imsi[16];
 
 protected:
+	int update_window(const uint8_t ssn, const uint8_t *rbb);
+	int maybe_start_new_window();
 	void reuse_tbf(const uint8_t *data, const uint16_t len);
 	gprs_rlcmac_bts *bts_data() const;
 	bool dl_window_stalled() const;
