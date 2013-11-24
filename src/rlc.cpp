@@ -97,3 +97,22 @@ void gprs_rlc_v_b::update(BTS *bts, char *show_rbb, uint8_t ssn,
 		}
 	}
 }
+
+int gprs_rlc_v_b::move_window(const uint16_t v_a, const uint16_t v_s,
+				const uint16_t mod_sns, const uint16_t mod_sns_half)
+{
+	int i;
+	uint16_t bsn;
+	int moved = 0;
+
+	for (i = 0, bsn = v_a; bsn != v_s; i++, bsn = (bsn + 1) & mod_sns) {
+		uint16_t index = (bsn & mod_sns_half);
+		if (is_acked(index)) {
+			mark_invalid(index);
+			moved += 1;
+		} else
+			break;
+	}
+
+	return moved;
+}

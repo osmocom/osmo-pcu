@@ -1405,14 +1405,8 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 		gprs_rlcmac_received_lost(this, received, lost);
 
 		/* raise V(A), if possible */
-		for (i = 0, bsn = dir.dl.v_a; bsn != dir.dl.v_s;
-		     i++, bsn = (bsn + 1) & mod_sns) {
-			if (dir.dl.v_b.is_acked(bsn & mod_sns_half)) {
-				dir.dl.v_b.mark_invalid(bsn & mod_sns_half);
-				dir.dl.v_a = (dir.dl.v_a + 1) & mod_sns;
-			} else
-				break;
-		}
+		dir.dl.v_a += dir.dl.v_b.move_window(dir.dl.v_a, dir.dl.v_s,
+							mod_sns, mod_sns_half) & mod_sns;
 
 		/* show receive state array in debug (V(A)..V(S)-1) */
 		for (i = 0, bsn = dir.dl.v_a; bsn != dir.dl.v_s;

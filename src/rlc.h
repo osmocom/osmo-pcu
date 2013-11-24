@@ -56,6 +56,8 @@ struct gprs_rlc_v_b {
 	void update(BTS *bts, char *show_rbb, uint8_t ssn, const uint16_t v_a,
 			const uint16_t mod_sns, const uint16_t mod_sns_half,
 			uint16_t *lost, uint16_t *received);
+	int move_window(const uint16_t v_a, const uint16_t v_s,
+			const uint16_t mod_sns, const uint16_t mod_sns_half);
 
 	/* Check for an individual frame */
 	bool is_unacked(int index) const;
