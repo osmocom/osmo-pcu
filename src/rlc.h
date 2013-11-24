@@ -70,7 +70,6 @@ struct gprs_rlc_dl_window {
 	const uint16_t v_a() const;
 	const int16_t distance() const;
 
-	uint16_t m_bsn;	/* block sequence number */
 	uint16_t m_v_s;	/* send state */
 	uint16_t m_v_a;	/* ack state */
 };
@@ -87,7 +86,6 @@ struct gprs_rlc_ul_window {
 	void raise(int moves);
 	void increment_q(int);
 
-	uint16_t m_bsn;	/* block sequence number */
 	uint16_t m_v_r;	/* receive state */
 	uint16_t m_v_q;	/* receive window state */
 };
