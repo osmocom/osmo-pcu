@@ -1398,7 +1398,7 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 			 * control ack!*/
 			LOGP(DRLCMACDL, LOGL_NOTICE, "- ack range is out of "
 				"V(A)..V(S) range %s Free TBF!\n", tbf_name(this));
-				return 1; /* indicate to free TBF */
+			return 1; /* indicate to free TBF */
 		}
 		/* SSN - 1 is in range V(A)..V(S)-1 */
 		for (i = 63, bsn = (ssn - 1) & mod_sns;
