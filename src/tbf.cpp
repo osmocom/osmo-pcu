@@ -42,10 +42,6 @@ extern "C" {
 #define SEND_ACK_AFTER_FRAMES 20
 
 
-/* If acknowledgement to downlink assignment should be polled */
-#define POLLING_ASSIGNMENT_DL 1
-#define POLLING_ASSIGNMENT_UL 1
-
 static const struct gprs_rlcmac_cs gprs_rlcmac_cs[] = {
 /*	frame length	data block	max payload */
 	{ 0,		0,		0  },
@@ -1144,10 +1140,9 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 {
 	struct msgb *msg;
 	struct gprs_rlcmac_tbf *new_tbf;
-	int poll_ass_dl = POLLING_ASSIGNMENT_DL;
+	int poll_ass_dl = 1;
 
-	if (poll_ass_dl && direction == GPRS_RLCMAC_DL_TBF
-	 && control_ts != first_common_ts) {
+	if (direction == GPRS_RLCMAC_DL_TBF && control_ts != first_common_ts) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "Cannot poll for downlink "
 			"assigment, because MS cannot reply. (control TS=%d, "
 			"first common TS=%d)\n", control_ts,
@@ -1234,7 +1229,6 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	struct msgb *msg;
 	struct gprs_rlcmac_tbf *new_tbf;
 
-#if POLLING_ASSIGNMENT_UL == 1
 	if (poll_state != GPRS_RLCMAC_POLL_NONE) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
 			"sheduled for %s, so we must wait for uplink "
@@ -1246,7 +1240,6 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 			"single block allocation...\n");
 			return NULL;
 	}
-#endif
 
 	/* on down TBF we get the uplink TBF to be assigned. */
 #warning "Probably want to find by IMSI too"
@@ -1276,7 +1269,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	Encoding::write_packet_uplink_assignment(bts_data(), ass_vec, m_tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), m_tlli,
-		m_tlli_valid, new_tbf, POLLING_ASSIGNMENT_UL, bts_data()->alpha,
+		m_tlli_valid, new_tbf, 1, bts_data()->alpha,
 		bts_data()->gamma, -1);
 	bitvec_pack(ass_vec, msgb_put(msg, 23));
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
@@ -1287,15 +1280,9 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	bitvec_free(ass_vec);
 	talloc_free(mac_control_block);
 
-#if POLLING_ASSIGNMENT_UL == 1
 	poll_state = GPRS_RLCMAC_POLL_SCHED;
 	poll_fn = (fn + 13) % 2715648;
 	ul_ass_state = GPRS_RLCMAC_UL_ASS_WAIT_ACK;
-#else
-	ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
-	tbf_new_state(new_tbf, GPRS_RLCMAC_FLOW);
-	tbf_assign_control_ts(new_tbf);
-#endif
 
 	return msg;
 }
@@ -1617,6 +1604,7 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
 		rh->bsn, dir.ul.window.v_q(),
 		(dir.ul.window.v_q() + ws - 1) & mod_sns);
+
 	/* Raise V(R) to highest received sequence number not received. */
 	offset_v_r = (rh->bsn + 1 - dir.ul.window.v_r()) & mod_sns;
 	if (offset_v_r < (sns() >> 1)) { /* Positive offset, so raise. */
