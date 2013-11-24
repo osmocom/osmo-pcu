@@ -17,6 +17,8 @@
  */
 
 #include "tbf.h"
+#include "bts.h"
+#include "gprs_debug.h"
 
 extern "C" {
 #include <osmocom/core/utils.h>
@@ -67,4 +69,31 @@ int gprs_rlc_v_b::mark_for_resend(const uint16_t v_a, const uint16_t v_s,
 	}
 
 	return resend;
+}
+
+void gprs_rlc_v_b::update(BTS *bts, char *show_rbb, uint8_t ssn,
+			const uint16_t v_a,
+			const uint16_t mod_sns, const uint16_t mod_sns_half,
+			uint16_t *lost, uint16_t *received)
+{
+	uint16_t bsn;
+	int i;
+
+	/* SSN - 1 is in range V(A)..V(S)-1 */
+	for (i = 63, bsn = (ssn - 1) & mod_sns;
+	     i >= 0 && bsn != ((v_a - 1) & mod_sns);
+	     i--, bsn = (bsn - 1) & mod_sns) {
+
+		if (show_rbb[i] == '1') {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- got ack for BSN=%d\n", bsn);
+			if (!is_acked(bsn & mod_sns_half))
+				*received += 1;
+			mark_acked(bsn & mod_sns_half);
+		} else {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- got NACK for BSN=%d\n", bsn);
+			mark_nacked(bsn & mod_sns_half);
+			bts->rlc_nacked();
+			*lost += 1;
+		}
+	}
 }

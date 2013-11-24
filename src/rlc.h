@@ -25,6 +25,7 @@
 #define RLC_MAX_WS  64 /* max window size */
 #define RLC_MAX_LEN 54 /* CS-4 including spare bits */
 
+class BTS;
 
 struct gprs_rlc_data {
 	uint8_t *prepare(size_t block_data_length);
@@ -43,11 +44,18 @@ struct gprs_rlc {
 	gprs_rlc_data blocks[RLC_MAX_SNS/2];
 };
 
+/**
+ * TODO: for GPRS/EDGE maybe make sns a template parameter
+ * so we create specialized versions...
+ */
 struct gprs_rlc_v_b {
 	int resend_needed(const uint16_t acked, const uint16_t sent,
 			const uint16_t mod_sns, const uint16_t mod_sns_half);
 	int mark_for_resend(const uint16_t acked, const uint16_t sent,
 			const uint16_t mod_sns, const uint16_t mod_sns_half);
+	void update(BTS *bts, char *show_rbb, uint8_t ssn, const uint16_t v_a,
+			const uint16_t mod_sns, const uint16_t mod_sns_half,
+			uint16_t *lost, uint16_t *received);
 
 	/* Check for an individual frame */
 	bool is_unacked(int index) const;

@@ -1363,12 +1363,11 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ack(uint32_t fn)
 
 int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 {
-	char show_rbb[65], show_v_b[RLC_MAX_SNS + 1];
+	char show_v_b[RLC_MAX_SNS + 1];
 	uint16_t mod_sns = m_sns - 1;
 	uint16_t mod_sns_half = (m_sns >> 1) - 1;
 	int i; /* must be signed */
 	int16_t dist; /* must be signed */
-	uint8_t bit;
 	uint16_t bsn;
 	struct msgb *msg;
 	uint16_t lost = 0, received = 0;
@@ -1376,12 +1375,9 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink acknowledge\n", tbf_name(this));
 
 	if (!final) {
+		char show_rbb[65];
+		Decoding::extract_rbb(rbb, show_rbb);
 		/* show received array in debug (bit 64..1) */
-		for (i = 63; i >= 0; i--) {
-			bit = (rbb[i >> 3]  >>  (7 - (i&7)))   & 1;
-			show_rbb[i] = (bit) ? '1' : 'o';
-		}
-		show_rbb[64] = '\0';
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- ack:  (BSN=%d)\"%s\""
 			"(BSN=%d)  1=ACK o=NACK\n", (ssn - 64) & mod_sns,
 			show_rbb, (ssn - 1) & mod_sns);
@@ -1400,25 +1396,11 @@ int gprs_rlcmac_tbf::snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb)
 				"V(A)..V(S) range %s Free TBF!\n", tbf_name(this));
 			return 1; /* indicate to free TBF */
 		}
-		/* SSN - 1 is in range V(A)..V(S)-1 */
-		for (i = 63, bsn = (ssn - 1) & mod_sns;
-		     i >= 0 && bsn != ((dir.dl.v_a - 1) & mod_sns);
-		     i--, bsn = (bsn - 1) & mod_sns) {
-			bit = (rbb[i >> 3]  >>  (7 - (i&7)))   & 1;
-			if (bit) {
-				LOGP(DRLCMACDL, LOGL_DEBUG, "- got "
-					"ack for BSN=%d\n", bsn);
-				if (!dir.dl.v_b.is_acked(bsn & mod_sns_half))
-					received++;
-				dir.dl.v_b.mark_acked(bsn & mod_sns_half);
-			} else {
-				LOGP(DRLCMACDL, LOGL_DEBUG, "- got "
-					"NACK for BSN=%d\n", bsn);
-				dir.dl.v_b.mark_nacked(bsn & mod_sns_half);
-				bts->rlc_nacked();
-				lost++;
-			}
-		}
+
+		dir.dl.v_b.update(bts, show_rbb, ssn, dir.dl.v_a,
+				mod_sns, mod_sns_half,
+				&lost, &received);
+
 		/* report lost and received packets */
 		gprs_rlcmac_received_lost(this, received, lost);
 

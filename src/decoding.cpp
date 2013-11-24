@@ -83,3 +83,17 @@ uint8_t Decoding::get_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
 	return 0;
 }
 
+/**
+ * show_rbb needs to be an array with 65 elements
+ */
+void Decoding::extract_rbb(const uint8_t *rbb, char *show_rbb)
+{
+	for (int i = 63; i >= 0; i--) {
+		uint8_t bit;
+
+		bit = (rbb[i >> 3]  >>  (7 - (i&7)))   & 1;
+		show_rbb[i] = bit ? '1' : 'o';
+	}
+
+	show_rbb[64] = '\0';
+}
