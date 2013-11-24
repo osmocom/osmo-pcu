@@ -386,8 +386,6 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	for (i = 0, bbn = (tbf->dir.ul.window.v_r() - 64) & mod_sns_half; i < 64;
 	     i++, bbn = (bbn + 1) & mod_sns_half) {
 		bit = tbf->dir.ul.v_n.state(bbn);
-		if (bit == 0)
-			bit = ' ';
 		show_v_n[i] = bit;
 		if (bit == 'R')
 			rbb = (rbb << 1)|1;

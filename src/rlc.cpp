@@ -138,3 +138,8 @@ void gprs_rlc_v_b::state(char *show_v_b, const gprs_rlc_dl_window &w)
 	}
 	show_v_b[i] = '\0';
 }
+
+void gprs_rlc_v_n::reset()
+{
+	memset(m_v_n, 0x0, sizeof(m_v_n));
+}

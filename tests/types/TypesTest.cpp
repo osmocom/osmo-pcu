@@ -115,12 +115,32 @@ static void test_rlc_v_b()
 	}
 }
 
+static void test_rlc_v_n()
+{
+	{
+		gprs_rlc_v_n vn;
+		vn.reset();
+
+		OSMO_ASSERT(!vn.is_received(0x23));
+		OSMO_ASSERT(vn.state(0x23) == ' ');
+
+		vn.mark_received(0x23);
+		OSMO_ASSERT(vn.is_received(0x23));
+		OSMO_ASSERT(vn.state(0x23) == 'R');
+
+		vn.mark_missing(0x23);
+		OSMO_ASSERT(!vn.is_received(0x23));
+		OSMO_ASSERT(vn.state(0x23) == 'N');
+	}
+}
+
 int main(int argc, char **argv)
 {
 	printf("Making some basic type testing.\n");
 	test_llc();
 	test_rlc();
 	test_rlc_v_b();
+	test_rlc_v_n();
 	return EXIT_SUCCESS;
 }
 

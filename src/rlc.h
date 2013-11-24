@@ -130,6 +130,8 @@ private:
 };
 
 struct gprs_rlc_v_n {
+	void reset();
+
 	void mark_received(int index);
 	void mark_missing(int index);
 
@@ -357,5 +359,8 @@ inline bool gprs_rlc_v_n::is_received(int index) const
 
 inline char gprs_rlc_v_n::state(int index) const
 {
-	return m_v_n[index];
+	char bit = m_v_n[index];
+	if (bit == '\0')
+		return ' ';
+	return bit;
 }
