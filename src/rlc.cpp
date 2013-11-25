@@ -149,3 +149,19 @@ void gprs_rlc_v_n::reset()
 {
 	memset(m_v_n, 0x0, sizeof(m_v_n));
 }
+
+/* Raise V(R) to highest received sequence number not received. */
+void gprs_rlc_ul_window::raise(const uint16_t bsn, gprs_rlc_v_n *v_n)
+{
+	uint16_t offset_v_r;
+	offset_v_r = (bsn + 1 - v_r()) & mod_sns();
+	/* Positive offset, so raise. */
+	if (offset_v_r < (sns() >> 1)) {
+		while (offset_v_r--) {
+			if (offset_v_r) /* all except the received block */
+				v_n->mark_missing(v_r() & mod_sns_half());
+			raise(1);
+		}
+		LOGP(DRLCMACUL, LOGL_DEBUG, "- Raising V(R) to %d\n", v_r());
+	}
+}

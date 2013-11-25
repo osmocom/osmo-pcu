@@ -26,6 +26,7 @@
 #define RLC_MAX_LEN 54 /* CS-4 including spare bits */
 
 class BTS;
+struct gprs_rlc_v_n;
 
 struct gprs_rlc_data {
 	uint8_t *prepare(size_t block_data_length);
@@ -87,6 +88,8 @@ struct gprs_rlc_ul_window {
 	bool is_in_window(uint8_t bsn) const;
 
 	void raise(int moves);
+	void raise(const uint16_t bsn, gprs_rlc_v_n *v_n);
+
 	void increment_q(int);
 
 	uint16_t m_v_r;	/* receive state */

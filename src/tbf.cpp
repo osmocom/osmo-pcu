@@ -1553,7 +1553,7 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 
 int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi)
 {
-	uint16_t offset_v_r, index;
+	uint16_t index;
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	int rc;
 
@@ -1608,23 +1608,12 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	/* Write block to buffer and set receive state array. */
 	index = rh->bsn & mod_sns_half; /* memory index of block */
 	m_rlc.blocks[index].put_data(data, len);
-	dir.ul.v_n.mark_received(index);
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
 		rh->bsn, dir.ul.window.v_q(),
 		(dir.ul.window.v_q() + ws - 1) & mod_sns);
 
-	/* Raise V(R) to highest received sequence number not received. */
-	offset_v_r = (rh->bsn + 1 - dir.ul.window.v_r()) & mod_sns;
-	if (offset_v_r < (sns() >> 1)) { /* Positive offset, so raise. */
-		while (offset_v_r--) {
-			if (offset_v_r) /* all except the received block */
-				dir.ul.v_n.mark_missing(dir.ul.window.v_r() & mod_sns_half);
-			this->dir.ul.window.raise(1);
-				/* Inc V(R). */
-		}
-		LOGP(DRLCMACUL, LOGL_DEBUG, "- Raising V(R) to %d\n",
-			this->dir.ul.window.v_r());
-	}
+	dir.ul.v_n.mark_received(index);
+	dir.ul.window.raise(rh->bsn, &dir.ul.v_n);
 
 	/* Raise V(Q) if possible, and retrieve LLC frames from blocks.
 	 * This is looped until there is a gap (non received block) or
