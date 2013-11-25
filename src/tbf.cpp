@@ -1505,6 +1505,52 @@ void gprs_rlcmac_tbf::update_tlli(uint32_t tlli)
 	m_tlli = tlli;
 }
 
+int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
+{
+	struct gprs_rlcmac_tbf *dl_tbf, *ul_tbf;
+	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
+	uint32_t new_tlli;
+	int rc;
+
+	/* no TLLI yet */
+	if (!rh->ti) {
+		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d without "
+			"TLLI, but no TLLI received yet\n", rh->tfi);
+		return 0;
+	}
+	rc = Decoding::tlli_from_ul_data(data, len, &new_tlli);
+	if (rc) {
+		bts->decode_error();
+		LOGP(DRLCMACUL, LOGL_NOTICE, "Failed to decode TLLI "
+		"of UL DATA TFI=%d.\n", rh->tfi);
+		return 0;
+	}
+	update_tlli(new_tlli);
+	LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
+		"UL DATA TFI=%d.\n", tlli(), rh->tfi);
+	if ((dl_tbf = bts->tbf_by_tlli(tlli(), GPRS_RLCMAC_DL_TBF))) {
+		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
+			"TLLI=0x%08x while %s still exists. "
+			"Killing pending DL TBF\n", tlli(),
+			tbf_name(dl_tbf));
+		tbf_free(dl_tbf);
+	}
+	/* tbf_by_tlli will not find your TLLI, because it is not
+	 * yet marked valid */
+	if ((ul_tbf = bts->tbf_by_tlli(tlli(), GPRS_RLCMAC_UL_TBF))) {
+		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
+			"TLLI=0x%08x while %s still exists. "
+			"Killing pending UL TBF\n", tlli(),
+			tbf_name(ul_tbf));
+		tbf_free(ul_tbf);
+	}
+	/* mark TLLI valid now */
+	tlli_mark_valid();
+	/* store current timing advance */
+	bts->timing_advance()->remember(tlli(), ta);
+	return 1;
+}
+
 int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi)
 {
 	uint16_t offset_v_r, index;
@@ -1526,45 +1572,8 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 
 	/* get TLLI */
 	if (!this->is_tlli_valid()) {
-		struct gprs_rlcmac_tbf *dl_tbf, *ul_tbf;
-		uint32_t tlli;
-
-		/* no TLLI yet */
-		if (!rh->ti) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d without "
-				"TLLI, but no TLLI received yet\n", rh->tfi);
+		if (!extract_tlli(data, len))
 			return 0;
-		}
-		rc = Decoding::tlli_from_ul_data(data, len, &tlli);
-		if (rc) {
-			bts->decode_error();
-			LOGP(DRLCMACUL, LOGL_NOTICE, "Failed to decode TLLI "
-				"of UL DATA TFI=%d.\n", rh->tfi);
-			return 0;
-		}
-		this->update_tlli(tlli);
-		LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
-			"UL DATA TFI=%d.\n", this->tlli(), rh->tfi);
-		if ((dl_tbf = bts->tbf_by_tlli(this->tlli(), GPRS_RLCMAC_DL_TBF))) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-				"TLLI=0x%08x while %s still exists. "
-				"Killing pending DL TBF\n", this->tlli(),
-				tbf_name(dl_tbf));
-			tbf_free(dl_tbf);
-		}
-		/* tbf_by_tlli will not find your TLLI, because it is not
-		 * yet marked valid */
-		if ((ul_tbf = bts->tbf_by_tlli(this->tlli(), GPRS_RLCMAC_UL_TBF))) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-				"TLLI=0x%08x while %s still exists. "
-				"Killing pending UL TBF\n", this->tlli(),
-				tbf_name(ul_tbf));
-			tbf_free(ul_tbf);
-		}
-		/* mark TLLI valid now */
-		this->tlli_mark_valid();
-		/* store current timing advance */
-		bts->timing_advance()->remember(this->tlli(), this->ta);
 	/* already have TLLI, but we stille get another one */
 	} else if (rh->ti) {
 		uint32_t tlli;

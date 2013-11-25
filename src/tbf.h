@@ -233,6 +233,8 @@ protected:
 	gprs_rlcmac_bts *bts_data() const;
 	bool dl_window_stalled() const;
 
+	int extract_tlli(const uint8_t *data, const size_t len);
+
 	int append_data(const uint8_t ms_class,
 			const uint16_t pdu_delay_csec,
 			const uint8_t *data, const uint16_t len);
