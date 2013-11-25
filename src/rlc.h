@@ -87,10 +87,11 @@ struct gprs_rlc_ul_window {
 
 	bool is_in_window(uint8_t bsn) const;
 
-	void raise(int moves);
-	void raise(const uint16_t bsn, gprs_rlc_v_n *v_n);
+	void raise_v_r(int moves);
+	void raise_v_r(const uint16_t bsn, gprs_rlc_v_n *v_n);
+	uint16_t raise_v_q(gprs_rlc_v_n *v_n);
 
-	void increment_q(int);
+	void raise_v_q(int);
 
 	uint16_t m_v_r;	/* receive state */
 	uint16_t m_v_q;	/* receive window state */
@@ -347,12 +348,12 @@ inline const uint16_t gprs_rlc_ul_window::v_q() const
 	return m_v_q;
 }
 
-inline void gprs_rlc_ul_window::raise(int moves)
+inline void gprs_rlc_ul_window::raise_v_r(int moves)
 {
 	m_v_r = (m_v_r + moves) & mod_sns();
 }
 
-inline void gprs_rlc_ul_window::increment_q(int incr)
+inline void gprs_rlc_ul_window::raise_v_q(int incr)
 {
 	m_v_q = (m_v_q + incr) & mod_sns();
 }

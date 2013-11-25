@@ -151,7 +151,7 @@ void gprs_rlc_v_n::reset()
 }
 
 /* Raise V(R) to highest received sequence number not received. */
-void gprs_rlc_ul_window::raise(const uint16_t bsn, gprs_rlc_v_n *v_n)
+void gprs_rlc_ul_window::raise_v_r(const uint16_t bsn, gprs_rlc_v_n *v_n)
 {
 	uint16_t offset_v_r;
 	offset_v_r = (bsn + 1 - v_r()) & mod_sns();
@@ -160,8 +160,29 @@ void gprs_rlc_ul_window::raise(const uint16_t bsn, gprs_rlc_v_n *v_n)
 		while (offset_v_r--) {
 			if (offset_v_r) /* all except the received block */
 				v_n->mark_missing(v_r() & mod_sns_half());
-			raise(1);
+			raise_v_r(1);
 		}
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- Raising V(R) to %d\n", v_r());
 	}
+}
+
+/*
+ * Raise V(Q) if possible. This is looped until there is a gap
+ * (non received block) or the window is empty.
+ */
+uint16_t gprs_rlc_ul_window::raise_v_q(gprs_rlc_v_n *v_n)
+{
+	uint16_t count = 0;
+
+	while (v_q() != v_r()) {
+		uint16_t index = v_q() & mod_sns_half();
+		if (!v_n->is_received(index))
+			break;
+		LOGP(DRLCMACUL, LOGL_DEBUG, "- Taking block %d out, raising "
+			"V(Q) to %d\n", v_q(), (v_q() + 1) & mod_sns());
+		raise_v_q(1);
+		count += 1;
+	}
+
+	return count;
 }

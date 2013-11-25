@@ -1613,22 +1613,18 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 		(dir.ul.window.v_q() + ws - 1) & mod_sns);
 
 	dir.ul.v_n.mark_received(index);
-	dir.ul.window.raise(rh->bsn, &dir.ul.v_n);
+	dir.ul.window.raise_v_r(rh->bsn, &dir.ul.v_n);
 
 	/* Raise V(Q) if possible, and retrieve LLC frames from blocks.
 	 * This is looped until there is a gap (non received block) or
 	 * the window is empty.*/
-	while (this->dir.ul.window.v_q() != this->dir.ul.window.v_r()) {
-		index = dir.ul.window.v_q() & mod_sns_half;
-		if (!dir.ul.v_n.is_received(index))
-			break;
-		LOGP(DRLCMACUL, LOGL_DEBUG, "- Taking block %d out, raising "
-			"V(Q) to %d\n", dir.ul.window.v_q(),
-			(dir.ul.window.v_q() + 1) & mod_sns);
-		/* get LLC data from block */
+	const uint16_t v_q_beg = dir.ul.window.v_q();
+	const uint16_t count = dir.ul.window.raise_v_q(&dir.ul.v_n);
+
+	/* Retrieve LLC frames from blocks that are ready */
+	for (uint16_t i = 0; i < count; ++i) {
+		uint16_t index = (v_q_beg + i) & mod_sns_half;
 		assemble_forward_llc(&m_rlc.blocks[index]);
-		/* raise V(Q), because block already received */
-		dir.ul.window.increment_q(1);
 	}
 
 	/* Check CV of last frame in buffer */
