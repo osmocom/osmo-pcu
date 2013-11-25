@@ -29,6 +29,7 @@ class BTS;
 
 struct gprs_rlc_data {
 	uint8_t *prepare(size_t block_data_length);
+	void put_data(const uint8_t *data, size_t len);
 
 	/* block history */
 	uint8_t block[RLC_MAX_LEN];

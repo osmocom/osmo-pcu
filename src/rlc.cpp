@@ -34,6 +34,12 @@ uint8_t *gprs_rlc_data::prepare(size_t block_data_len)
 	return block;
 }
 
+void gprs_rlc_data::put_data(const uint8_t *data, size_t data_len)
+{
+	memcpy(block, data, data_len);
+	len = data_len;
+}
+
 void gprs_rlc_v_b::reset()
 {
 	for (size_t i = 0; i < ARRAY_SIZE(m_v_b); ++i)

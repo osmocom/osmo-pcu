@@ -1607,8 +1607,7 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 
 	/* Write block to buffer and set receive state array. */
 	index = rh->bsn & mod_sns_half; /* memory index of block */
-	memcpy(m_rlc.blocks[index].block, data, len); /* Copy block. */
-	m_rlc.blocks[index].len = len;
+	m_rlc.blocks[index].put_data(data, len);
 	dir.ul.v_n.mark_received(index);
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
 		rh->bsn, dir.ul.window.v_q(),
