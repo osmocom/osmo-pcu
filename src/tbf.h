@@ -135,6 +135,9 @@ struct gprs_rlcmac_tbf {
 
 	uint16_t sns() const;
 
+	/* attempt to make things a bit more fair */
+	void rotate_in_list();
+
 	struct llist_head list;
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;

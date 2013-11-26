@@ -1742,3 +1742,12 @@ bool gprs_rlcmac_tbf::dl_window_stalled() const
 {
 	return dir.dl.window.window_stalled();
 }
+
+void gprs_rlcmac_tbf::rotate_in_list()
+{
+	llist_del(&list);
+	if (direction == GPRS_RLCMAC_UL_TBF)
+		llist_add(&list, &bts->bts_data()->ul_tbfs);
+	else
+		llist_add(&list, &bts->bts_data()->dl_tbfs);
+}

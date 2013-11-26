@@ -133,6 +133,7 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_bts *bts,
 	}
 	/* any message */
 	if (msg) {
+		tbf->rotate_in_list();
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling control "
 			"message at RTS for %s (TRX=%d, TS=%d)\n",
 			tbf_name(tbf), trx, ts);
