@@ -839,12 +839,10 @@ do_resend:
 	int resend_bsn = dir.dl.v_b.resend_needed(dir.dl.window);
 	if (resend_bsn >= 0) {
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d\n", resend_bsn);
-
-		uint16_t index = resend_bsn & dir.dl.window.mod_sns_half();
 		/* re-send block with negative aknowlegement */
-		dir.dl.v_b.mark_unacked(index);
+		dir.dl.v_b.mark_unacked(resend_bsn);
 		bts->rlc_resent();
-		return create_dl_acked_block(fn, ts, index, false);
+		return create_dl_acked_block(fn, ts, resend_bsn, false);
 	}
 
 	/* if the window has stalled, or transfer is complete,
@@ -871,7 +869,7 @@ do_resend:
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- MS acked all blocks, "
 				"so we re-transmit final block!\n");
 			/* we just send final block again */
-			int16_t index = dir.dl.window.v_s_mod_half(-1);
+			int16_t index = dir.dl.window.v_s_mod(-1);
 			bts->rlc_resent();
 			return create_dl_acked_block(fn, ts, index, false);
 		}
@@ -886,8 +884,7 @@ do_resend:
 				"There are no unacknowledged blocks, but V(A) "
 				" != V(S). PLEASE FIX!\n");
 			/* we just send final block again */
-			int16_t index = dir.dl.window.v_s_mod_half(-1);
-			bts->rlc_resent();
+			int16_t index = dir.dl.window.v_s_mod(-1);
 			return create_dl_acked_block(fn, ts, index, false);
 		}
 		goto do_resend;
@@ -901,10 +898,11 @@ struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts
 	struct rlc_dl_header *rh;
 	struct rlc_li_field *li;
 	struct msgb *msg;
-	uint16_t index;
 	uint8_t *delimiter, *data, *e_pointer;
 	uint16_t space, chunk;
+	gprs_rlc_data *rlc_data;
 	bool first_fin_ack = false;
+	const uint16_t bsn = dir.dl.window.v_s();
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d\n",
 		dir.dl.window.v_s());
@@ -921,8 +919,8 @@ struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts
 	const uint8_t block_data_len = gprs_rlcmac_cs[cs].block_data;
 
 	/* now we still have untransmitted LLC data, so we fill mac block */
-	index = dir.dl.window.v_s_mod_half(0);
-	data = m_rlc.blocks[index].prepare(block_data_len);
+	rlc_data = m_rlc.block(bsn);
+	data = rlc_data->prepare(block_data_len);
 
 	rh = (struct rlc_dl_header *)data;
 	rh->pt = 0; /* Data Block */
@@ -931,7 +929,7 @@ struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts
 	rh->pr = 0; /* FIXME: power reduction */
 	rh->tfi = m_tfi; /* TFI */
 	rh->fbi = 0; /* Final Block Indicator, set late, if true */
-	rh->bsn = dir.dl.window.v_s(); /* Block Sequence Number */
+	rh->bsn = bsn; /* Block Sequence Number */
 	rh->e = 0; /* Extension bit, maybe set later */
 	e_pointer = data + 2; /* points to E of current chunk */
 	data += sizeof(*rh);
@@ -1052,14 +1050,14 @@ struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts
 		break;
 	}
 	LOGP(DRLCMACDL, LOGL_DEBUG, "data block: %s\n",
-		osmo_hexdump(m_rlc.blocks[index].block, block_length));
+		osmo_hexdump(rlc_data->block, block_length));
 #warning "move this up?"
-	m_rlc.blocks[index].len = block_length;
+	rlc_data->len = block_length;
 	/* raise send state and set ack state array */
-	dir.dl.v_b.mark_unacked(index);
+	dir.dl.v_b.mark_unacked(bsn);
 	dir.dl.window.increment_send();
 
-	return create_dl_acked_block(fn, ts, index, first_fin_ack);
+	return create_dl_acked_block(fn, ts, bsn, first_fin_ack);
 }
 
 struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(
@@ -1072,8 +1070,8 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(
 	uint8_t len;
 
 	/* get data and header from current block */
-	data = m_rlc.blocks[index].block;
-	len = m_rlc.blocks[index].len;
+	data = m_rlc.block(index)->block;
+	len = m_rlc.block(index)->len;
 	rh = (struct rlc_dl_header *)data;
 
 	/* Clear Polling, if still set in history buffer */
@@ -1553,12 +1551,10 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 
 int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi)
 {
-	uint16_t index;
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	int rc;
 
 	const uint16_t mod_sns = dir.ul.window.mod_sns();
-	const uint16_t mod_sns_half = dir.ul.window.mod_sns_half();
 	const uint16_t ws = dir.ul.window.ws();
 
 	this->state_flags |= (1 << GPRS_RLCMAC_FLAG_UL_DATA);
@@ -1607,13 +1603,12 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	}
 
 	/* Write block to buffer and set receive state array. */
-	index = rh->bsn & mod_sns_half; /* memory index of block */
-	m_rlc.blocks[index].put_data(data, len);
+	m_rlc.block(rh->bsn)->put_data(data, len);
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
 		rh->bsn, dir.ul.window.v_q(),
 		(dir.ul.window.v_q() + ws - 1) & mod_sns);
 
-	dir.ul.v_n.mark_received(index);
+	dir.ul.v_n.mark_received(rh->bsn);
 	dir.ul.window.raise_v_r(rh->bsn, &dir.ul.v_n);
 
 	/* Raise V(Q) if possible, and retrieve LLC frames from blocks.
@@ -1624,15 +1619,15 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 
 	/* Retrieve LLC frames from blocks that are ready */
 	for (uint16_t i = 0; i < count; ++i) {
-		uint16_t index = (v_q_beg + i) & mod_sns_half;
-		assemble_forward_llc(&m_rlc.blocks[index]);
+		uint16_t index = (v_q_beg + i) & mod_sns;
+		assemble_forward_llc(m_rlc.block(index));
 	}
 
 	/* Check CV of last frame in buffer */
 	if (this->state_is(GPRS_RLCMAC_FLOW) /* still in flow state */
 	 && this->dir.ul.window.v_q() == this->dir.ul.window.v_r()) { /* if complete */
 		struct rlc_ul_header *last_rh = (struct rlc_ul_header *)
-			m_rlc.blocks[(this->dir.ul.window.v_r() - 1) & mod_sns_half].block;
+			m_rlc.block((dir.ul.window.v_r() - 1) & mod_sns)->block;
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- No gaps in received block, "
 			"last block: BSN=%d CV=%d\n", last_rh->bsn,
 			last_rh->cv);

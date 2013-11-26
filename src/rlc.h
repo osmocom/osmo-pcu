@@ -28,6 +28,12 @@
 class BTS;
 struct gprs_rlc_v_n;
 
+
+static inline uint16_t mod_sns_half()
+{
+	return (RLC_MAX_SNS / 2) - 1;
+}
+
 struct gprs_rlc_data {
 	uint8_t *prepare(size_t block_data_length);
 	void put_data(const uint8_t *data, size_t len);
@@ -43,7 +49,8 @@ struct gprs_rlc_data {
  * the routines to manipulate these arrays.
  */
 struct gprs_rlc {
-	gprs_rlc_data blocks[RLC_MAX_SNS/2];
+	gprs_rlc_data *block(int bsn);
+	gprs_rlc_data m_blocks[RLC_MAX_SNS/2];
 };
 
 
@@ -56,7 +63,6 @@ struct gprs_rlc {
  */
 struct gprs_rlc_dl_window {
 	const uint16_t mod_sns() const;
-	const uint16_t mod_sns_half() const;
 	const uint16_t sns() const;
 	const uint16_t ws() const;
 
@@ -68,7 +74,6 @@ struct gprs_rlc_dl_window {
 
 	const uint16_t v_s() const;
 	const uint16_t v_s_mod(int offset) const;
-	const uint16_t v_s_mod_half(int offset) const;
 	const uint16_t v_a() const;
 	const int16_t distance() const;
 
@@ -78,7 +83,6 @@ struct gprs_rlc_dl_window {
 
 struct gprs_rlc_ul_window {
 	const uint16_t mod_sns() const;
-	const uint16_t mod_sns_half() const;
 	const uint16_t sns() const;
 	const uint16_t ws() const;
 
@@ -112,24 +116,24 @@ struct gprs_rlc_v_b {
 	int count_unacked(const gprs_rlc_dl_window& window);
 
 	/* Check for an individual frame */
-	bool is_unacked(int index) const;
-	bool is_nacked(int index) const;
-	bool is_acked(int index) const;
-	bool is_resend(int index) const;
-	bool is_invalid(int index) const;
+	bool is_unacked(int bsn) const;
+	bool is_nacked(int bsn) const;
+	bool is_acked(int bsn) const;
+	bool is_resend(int bsn) const;
+	bool is_invalid(int bsn) const;
 
 	/* Mark a RLC frame for something */
-	void mark_unacked(int index);
-	void mark_nacked(int index);
-	void mark_acked(int index);
-	void mark_resend(int index);
-	void mark_invalid(int index);
+	void mark_unacked(int bsn);
+	void mark_nacked(int bsn);
+	void mark_acked(int bsn);
+	void mark_resend(int bsn);
+	void mark_invalid(int bsn);
 
 	void reset();
 
 private:
-	bool is_state(int index, const char state) const;
-	void mark(int index, const char state);
+	bool is_state(int bsn, const char state) const;
+	void mark(int bsn, const char state);
 
 	char m_v_b[RLC_MAX_SNS/2]; /* acknowledge state array */
 };
@@ -137,13 +141,15 @@ private:
 struct gprs_rlc_v_n {
 	void reset();
 
-	void mark_received(int index);
-	void mark_missing(int index);
+	void mark_received(int bsn);
+	void mark_missing(int bsn);
 
-	bool is_received(int index) const;
+	bool is_received(int bsn) const;
 
-	char state(int index) const;
+	char state(int bsn) const;
 private:
+	bool is_state(int bsn, const char state) const;
+	void mark(int bsn, const char state);
 	char m_v_n[RLC_MAX_SNS/2]; /* receive state array */
 };
 
@@ -181,75 +187,75 @@ struct rlc_li_field {
 } __attribute__ ((packed));
 }
 
-inline bool gprs_rlc_v_b::is_state(int index, const char type) const
+inline bool gprs_rlc_v_b::is_state(int bsn, const char type) const
 {
-	return m_v_b[index] == type;
+	return m_v_b[bsn & mod_sns_half()] == type;
 }
 
-inline void gprs_rlc_v_b::mark(int index, const char type)
+inline void gprs_rlc_v_b::mark(int bsn, const char type)
 {
-	m_v_b[index] = type;
+	m_v_b[bsn & mod_sns_half()] = type;
 }
 
-inline bool gprs_rlc_v_b::is_nacked(int index) const
+inline bool gprs_rlc_v_b::is_nacked(int bsn) const
 {
-	return is_state(index, 'N');
+	return is_state(bsn, 'N');
 }
 
-inline bool gprs_rlc_v_b::is_acked(int index) const
+inline bool gprs_rlc_v_b::is_acked(int bsn) const
 {
-	return is_state(index, 'A');
+	return is_state(bsn, 'A');
 }
 
-inline bool gprs_rlc_v_b::is_unacked(int index) const
+inline bool gprs_rlc_v_b::is_unacked(int bsn) const
 {
-	return is_state(index, 'U');
+	return is_state(bsn, 'U');
 }
 
-inline bool gprs_rlc_v_b::is_resend(int index) const
+inline bool gprs_rlc_v_b::is_resend(int bsn) const
 {
-	return is_state(index, 'X');
+	return is_state(bsn, 'X');
 }
 
-inline bool gprs_rlc_v_b::is_invalid(int index) const
+inline bool gprs_rlc_v_b::is_invalid(int bsn) const
 {
-	return is_state(index, 'I');
+	return is_state(bsn, 'I');
 }
 
-inline void gprs_rlc_v_b::mark_resend(int index)
+inline void gprs_rlc_v_b::mark_resend(int bsn)
 {
-	return mark(index, 'X');
+	return mark(bsn, 'X');
 }
 
-inline void gprs_rlc_v_b::mark_unacked(int index)
+inline void gprs_rlc_v_b::mark_unacked(int bsn)
 {
-	return mark(index, 'U');
+	return mark(bsn, 'U');
 }
 
-inline void gprs_rlc_v_b::mark_acked(int index)
+inline void gprs_rlc_v_b::mark_acked(int bsn)
 {
-	return mark(index, 'A');
+	return mark(bsn, 'A');
 }
 
-inline void gprs_rlc_v_b::mark_nacked(int index)
+inline void gprs_rlc_v_b::mark_nacked(int bsn)
 {
-	return mark(index, 'N');
+	return mark(bsn, 'N');
 }
 
-inline void gprs_rlc_v_b::mark_invalid(int index)
+inline void gprs_rlc_v_b::mark_invalid(int bsn)
 {
-	return mark(index, 'I');
+	return mark(bsn, 'I');
 }
 
 
 inline const uint16_t gprs_rlc_dl_window::sns() const
 {
-	return 128;
+	return RLC_MAX_SNS;
 }
 
 inline const uint16_t gprs_rlc_dl_window::ws() const
 {
-	return 64;
+	return RLC_MAX_WS;
 }
 
 inline const uint16_t gprs_rlc_dl_window::mod_sns() const
@@ -257,19 +263,9 @@ inline const uint16_t gprs_rlc_dl_window::mod_sns() const
 	return sns() - 1;
 }
 
-inline const uint16_t gprs_rlc_dl_window::mod_sns_half() const
-{
-	return (sns() >> 1) - 1;
-}
-
 inline const uint16_t gprs_rlc_dl_window::v_s() const
 {
 	return m_v_s;
-}
-
-inline const uint16_t gprs_rlc_dl_window::v_s_mod_half(int offset) const
-{
-	return (m_v_s + offset) & mod_sns_half();
 }
 
 inline const uint16_t gprs_rlc_dl_window::v_s_mod(int offset) const
@@ -320,22 +316,17 @@ inline bool gprs_rlc_ul_window::is_in_window(uint8_t bsn) const
 
 inline const uint16_t gprs_rlc_ul_window::sns() const
 {
-	return 128;
+	return RLC_MAX_SNS;
 }
 
 inline const uint16_t gprs_rlc_ul_window::ws() const
 {
-	return 64;
+	return RLC_MAX_WS;
 }
 
 inline const uint16_t gprs_rlc_ul_window::mod_sns() const
 {
 	return sns() - 1;
-}
-
-inline const uint16_t gprs_rlc_ul_window::mod_sns_half() const
-{
-	return (sns() >> 1) - 1;
 }
 
 inline const uint16_t gprs_rlc_ul_window::v_r() const
@@ -358,25 +349,40 @@ inline void gprs_rlc_ul_window::raise_v_q(int incr)
 	m_v_q = (m_v_q + incr) & mod_sns();
 }
 
-inline void gprs_rlc_v_n::mark_received(int index)
+inline void gprs_rlc_v_n::mark_received(int bsn)
 {
-	m_v_n[index] = 'R';
+	return mark(bsn, 'R');
 }
 
-inline void gprs_rlc_v_n::mark_missing(int index)
+inline void gprs_rlc_v_n::mark_missing(int bsn)
 {
-	m_v_n[index] = 'N';
+	return mark(bsn, 'N');
 }
 
-inline bool gprs_rlc_v_n::is_received(int index) const
+inline bool gprs_rlc_v_n::is_received(int bsn) const
 {
-	return m_v_n[index] == 'R';
+	return is_state(bsn, 'R');
 }
 
-inline char gprs_rlc_v_n::state(int index) const
+inline bool gprs_rlc_v_n::is_state(int bsn, const char type) const
 {
-	char bit = m_v_n[index];
+	return m_v_n[bsn & mod_sns_half()] == type;
+}
+
+inline void gprs_rlc_v_n::mark(int bsn, const char type)
+{
+	m_v_n[bsn & mod_sns_half()] = type;
+}
+
+inline char gprs_rlc_v_n::state(int bsn) const
+{
+	char bit = m_v_n[bsn & mod_sns_half()];
 	if (bit == '\0')
 		return ' ';
 	return bit;
+}
+
+inline gprs_rlc_data *gprs_rlc::block(int bsn)
+{
+	return &m_blocks[bsn & mod_sns_half()];
 }
