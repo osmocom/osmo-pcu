@@ -180,10 +180,108 @@ static void test_rlc_dl_ul_basic()
 			OSMO_ASSERT(dl_win.distance() == 4);
 		}
 	}
+
+	{
+		gprs_rlc_ul_window ul_win = { 0, };
+		gprs_rlc_v_n v_n;
+		int count;
+
+		v_n.reset();
+
+		OSMO_ASSERT(ul_win.is_in_window(0));
+		OSMO_ASSERT(ul_win.is_in_window(63));
+		OSMO_ASSERT(!ul_win.is_in_window(64));
+
+		OSMO_ASSERT(!v_n.is_received(0));
+
+		/* simulate to have received 0, 1 and 5 */
+		OSMO_ASSERT(ul_win.is_in_window(0));
+		v_n.mark_received(0);
+		ul_win.raise_v_r(0, &v_n);
+		count = ul_win.raise_v_q(&v_n);
+		OSMO_ASSERT(v_n.is_received(0));
+		OSMO_ASSERT(ul_win.v_q() == 1);
+		OSMO_ASSERT(ul_win.v_r() == 1);
+		OSMO_ASSERT(count == 1);
+
+		OSMO_ASSERT(ul_win.is_in_window(1));
+		v_n.mark_received(1);
+		ul_win.raise_v_r(1, &v_n);
+		count = ul_win.raise_v_q(&v_n);
+		OSMO_ASSERT(v_n.is_received(0));
+		OSMO_ASSERT(ul_win.v_q() == 2);
+		OSMO_ASSERT(ul_win.v_r() == 2);
+		OSMO_ASSERT(count == 1);
+
+		OSMO_ASSERT(ul_win.is_in_window(5));
+		v_n.mark_received(5);
+		ul_win.raise_v_r(5, &v_n);
+		count = ul_win.raise_v_q(&v_n);
+		OSMO_ASSERT(v_n.is_received(0));
+		OSMO_ASSERT(ul_win.v_q() == 2);
+		OSMO_ASSERT(ul_win.v_r() == 6);
+		OSMO_ASSERT(count == 0);
+
+		OSMO_ASSERT(ul_win.is_in_window(65));
+		OSMO_ASSERT(ul_win.is_in_window(2));
+		OSMO_ASSERT(v_n.is_received(5));
+		v_n.mark_received(65);
+		ul_win.raise_v_r(65, &v_n);
+		count = ul_win.raise_v_q(&v_n);
+		OSMO_ASSERT(count == 0);
+		OSMO_ASSERT(v_n.is_received(5));
+		OSMO_ASSERT(ul_win.v_q() == 2);
+		OSMO_ASSERT(ul_win.v_r() == 66);
+
+		OSMO_ASSERT(ul_win.is_in_window(2));
+		OSMO_ASSERT(!ul_win.is_in_window(66));
+		v_n.mark_received(2);
+		ul_win.raise_v_r(2, &v_n);
+		count = ul_win.raise_v_q(&v_n);
+		OSMO_ASSERT(count == 1);
+		OSMO_ASSERT(ul_win.v_q() == 3);
+		OSMO_ASSERT(ul_win.v_r() == 66);
+
+		OSMO_ASSERT(ul_win.is_in_window(66));
+		v_n.mark_received(66);
+		ul_win.raise_v_r(66, &v_n);
+		count = ul_win.raise_v_q(&v_n);
+		OSMO_ASSERT(count == 0);
+		OSMO_ASSERT(ul_win.v_q() == 3);
+		OSMO_ASSERT(ul_win.v_r() == 67);
+
+		for (int i = 3; i <= 67; ++i) {
+			v_n.mark_received(i);
+			ul_win.raise_v_r(i, &v_n);
+			ul_win.raise_v_q(&v_n);
+		}
+
+		OSMO_ASSERT(ul_win.v_q() == 68);
+		OSMO_ASSERT(ul_win.v_r() == 68);
+
+		v_n.mark_received(68);
+		ul_win.raise_v_r(68, &v_n);
+		count = ul_win.raise_v_q(&v_n);
+		OSMO_ASSERT(ul_win.v_q() == 69);
+		OSMO_ASSERT(ul_win.v_r() == 69);
+		OSMO_ASSERT(count == 1);
+
+		/* now test the wrapping */
+		OSMO_ASSERT(ul_win.is_in_window(4));
+		OSMO_ASSERT(!ul_win.is_in_window(5));
+		v_n.mark_received(4);
+		ul_win.raise_v_r(4, &v_n);
+		count = ul_win.raise_v_q(&v_n);
+		OSMO_ASSERT(count == 0);
+	}
 }
 
 int main(int argc, char **argv)
 {
+	osmo_init_logging(&gprs_log_info);
+	log_set_use_color(osmo_stderr_target, 0);
+	log_set_print_filename(osmo_stderr_target, 0);
+
 	printf("Making some basic type testing.\n");
 	test_llc();
 	test_rlc();
