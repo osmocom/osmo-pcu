@@ -115,22 +115,30 @@ static struct msgb *sched_select_ctrl_msg(
 {
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_tbf *tbf = NULL;
+	struct gprs_rlcmac_tbf *next_list[3] = { ul_ass_tbf, dl_ass_tbf, ul_ack_tbf };
 
-	/* schedule PACKET UPLINK ASSIGNMENT (1st priority) */
-	if (ul_ass_tbf) {
-		tbf = ul_ass_tbf;
-		msg = tbf->create_ul_ass(fn);
+	for (size_t i = 0; i < ARRAY_SIZE(next_list); ++i) {
+		tbf = next_list[(pdch->next_ctrl_prio + i) % 3];
+		if (!tbf)
+			continue;
+
+		if (tbf == ul_ass_tbf)
+			msg = tbf->create_ul_ass(fn);
+		else if (tbf == dl_ass_tbf)
+			msg = tbf->create_dl_ass(fn);
+		else
+			msg = tbf->create_ul_ack(fn);
+
+		if (!msg) {
+			tbf = NULL;
+			continue;
+		}
+
+		pdch->next_ctrl_prio += i + 1;
+		pdch->next_ctrl_prio %= 3;
+		break;
 	}
-	/* schedule PACKET DOWNLINK ASSIGNMENT (2nd priotiry) */
-	if (!msg && dl_ass_tbf) {
-		tbf = dl_ass_tbf;
-		msg = tbf->create_dl_ass(fn);
-	}
-	/* schedule PACKET UPLINK ACK (3rd priority) */
-	if (!msg && ul_ack_tbf) {
-		tbf = ul_ack_tbf;
-		msg = tbf->create_ul_ack(fn);
-	}
+
 	/* any message */
 	if (msg) {
 		tbf->rotate_in_list();

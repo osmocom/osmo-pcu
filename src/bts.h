@@ -67,6 +67,7 @@ struct gprs_rlcmac_pdch {
 	uint8_t tsc; /* TSC of this slot */
 	uint8_t next_ul_tfi; /* next uplink TBF/TFI to schedule (0..31) */
 	uint8_t next_dl_tfi; /* next downlink TBF/TFI to schedule (0..31) */
+	uint8_t next_ctrl_prio; /* next kind of ctrl message to schedule */
 	struct gprs_rlcmac_tbf *ul_tbf[32]; /* array of UL TBF, by UL TFI */
 	struct gprs_rlcmac_tbf *dl_tbf[32]; /* array of DL TBF, by DL TFI */
 	struct llist_head paging_list; /* list of paging messages */
