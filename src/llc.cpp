@@ -33,6 +33,8 @@ void gprs_llc::reset()
 {
 	m_index = 0;
 	m_length = 0;
+
+	memset(frame, 0x42, sizeof(frame));
 }
 
 void gprs_llc::reset_frame_space()
