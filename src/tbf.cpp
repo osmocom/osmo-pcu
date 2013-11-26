@@ -1602,6 +1602,7 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 			"%d..%d (it's normal)\n", rh->bsn,
 			dir.ul.window.v_q(),
 			(dir.ul.window.v_q() + ws - 1) & mod_sns);
+		maybe_schedule_uplink_acknack(rh);
 		return 0;
 	}
 
@@ -1646,8 +1647,15 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 
 	/* If TLLI is included or if we received half of the window, we send
 	 * an ack/nack */
-	if (rh->si || rh->ti || this->state_is(GPRS_RLCMAC_FINISHED)
-	 || (this->dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
+	maybe_schedule_uplink_acknack(rh);
+
+	return 0;
+}
+
+void gprs_rlcmac_tbf::maybe_schedule_uplink_acknack(const rlc_ul_header *rh)
+{
+	if (rh->si || rh->ti || state_is(GPRS_RLCMAC_FINISHED)
+	 || (dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
 		if (rh->si) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "- Scheduling Ack/Nack, "
 				"because MS is stalled.\n");
@@ -1656,26 +1664,24 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
 				"because TLLI is included.\n");
 		}
-		if (this->state_is(GPRS_RLCMAC_FINISHED)) {
+		if (state_is(GPRS_RLCMAC_FINISHED)) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
 				"because last block has CV==0.\n");
 		}
-		if ((this->dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
+		if ((dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
 				"because %d frames received.\n",
 				SEND_ACK_AFTER_FRAMES);
 		}
-		if (this->ul_ack_state == GPRS_RLCMAC_UL_ACK_NONE) {
+		if (ul_ack_state == GPRS_RLCMAC_UL_ACK_NONE) {
 			/* trigger sending at next RTS */
-			this->ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
+			ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
 		} else {
 			/* already triggered */
 			LOGP(DRLCMACUL, LOGL_DEBUG, "-  Sending Ack/Nack is "
 				"already triggered, don't schedule!\n");
 		}
 	}
-
-	return 0;
 }
 
 /* Send Uplink unit-data to SGSN. */

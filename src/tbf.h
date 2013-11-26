@@ -237,6 +237,7 @@ protected:
 	bool dl_window_stalled() const;
 
 	int extract_tlli(const uint8_t *data, const size_t len);
+	void maybe_schedule_uplink_acknack(const rlc_ul_header *rh);
 
 	int append_data(const uint8_t ms_class,
 			const uint16_t pdu_delay_csec,
