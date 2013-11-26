@@ -363,7 +363,7 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 
 	uint8_t rbb = 0;
 	uint16_t i, bbn;
-	uint16_t mod_sns_half = (tbf->sns() >> 1) - 1;
+	uint16_t mod_sns = (tbf->sns() >> 1);
 	char bit;
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Encoding Ack/Nack for %s "
@@ -383,8 +383,8 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.FINAL_ACK_INDICATION     = final;           // FINAL ACK INDICATION
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->dir.ul.window.v_r(); // STARTING_SEQUENCE_NUMBER
 	// RECEIVE_BLOCK_BITMAP
-	for (i = 0, bbn = (tbf->dir.ul.window.v_r() - 64) & mod_sns_half; i < 64;
-	     i++, bbn = (bbn + 1) & mod_sns_half) {
+	for (i = 0, bbn = (tbf->dir.ul.window.v_r() - 64) & mod_sns; i < 64;
+	     i++, bbn = (bbn + 1) & mod_sns) {
 		bit = tbf->dir.ul.v_n.state(bbn);
 		show_v_n[i] = bit;
 		if (bit == 'R')
