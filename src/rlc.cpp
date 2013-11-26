@@ -28,7 +28,7 @@ extern "C" {
 uint8_t *gprs_rlc_data::prepare(size_t block_data_len)
 {
 	/* todo.. only set it once if it turns out to be a bottleneck */
-	memset(block, 0x0, ARRAY_SIZE(block));
+	memset(block, 0x0, sizeof(block));
 	memset(block, 0x2b, block_data_len);
 
 	return block;
