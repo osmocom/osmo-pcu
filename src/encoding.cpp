@@ -359,12 +359,10 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 {
 	// Packet Uplink Ack/Nack  TS 44.060 11.2.28
 
-	char show_v_n[65];
+	char rbb[65];
+	uint8_t i, rbb_byte;
 
-	uint8_t rbb = 0;
-	uint16_t i, bbn;
-	uint16_t mod_sns = (tbf->sns() - 1);
-	char bit;
+	tbf->dir.ul.window.update_rbb(&tbf->dir.ul.v_n, rbb);
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Encoding Ack/Nack for %s "
 		"(final=%d)\n", tbf_name(tbf), final);
@@ -381,25 +379,25 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	block->u.Packet_Uplink_Ack_Nack.UnionType    = 0x0;      // PU_AckNack_GPRS = on
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = bts->initial_cs_ul - 1;             // CS1
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.FINAL_ACK_INDICATION     = final;           // FINAL ACK INDICATION
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->dir.ul.window.v_r(); // STARTING_SEQUENCE_NUMBER
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->dir.ul.window.ssn(); // STARTING_SEQUENCE_NUMBER
+
+	rbb_byte = 0;
 	// RECEIVE_BLOCK_BITMAP
-	for (i = 0, bbn = (tbf->dir.ul.window.v_r() - 64) & mod_sns; i < 64;
-	     i++, bbn = (bbn + 1) & mod_sns) {
-		bit = tbf->dir.ul.v_n.state(bbn);
-		show_v_n[i] = bit;
-		if (bit == 'R')
-			rbb = (rbb << 1)|1;
-		else
-			rbb = (rbb << 1);
-		if((i%8) == 7)
-		{
-			block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP[i/8] = rbb;
-			rbb = 0;
+	for (i = 0; i < 64; i++) {
+		/* Set bit at the appropriate position (see 3GPP TS 04.60 9.1.8.1) */
+		if (rbb[i] == 'R')
+			rbb_byte |= 1<< (7-(i%8));
+
+		if((i%8) == 7) {
+			block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP[i/8] = rbb_byte;
+			rbb_byte = 0;
 		}
 	}
-	show_v_n[64] = '\0';
+
+	/* rbb is not NULL terminated */
+	rbb[64] = 0;
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- V(N): \"%s\" R=Received "
-		"I=Invalid\n", show_v_n);
+		"I=Invalid\n", rbb);
 
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.UnionType              = 0x0; // Fixed Allocation Dummy = on
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.u.FixedAllocationDummy = 0x0; // Fixed Allocation Dummy
