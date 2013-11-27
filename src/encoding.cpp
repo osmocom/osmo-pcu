@@ -399,7 +399,7 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	}
 	show_v_n[64] = '\0';
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- V(N): \"%s\" R=Received "
-		"N=Not-Received\n", show_v_n);
+		"I=Invalid\n", show_v_n);
 
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.UnionType              = 0x0; // Fixed Allocation Dummy = on
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.u.FixedAllocationDummy = 0x0; // Fixed Allocation Dummy
