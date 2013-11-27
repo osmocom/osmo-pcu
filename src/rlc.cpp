@@ -146,6 +146,18 @@ void gprs_rlc_v_n::reset()
 	memset(m_v_n, 0x0, sizeof(m_v_n));
 }
 
+/* Update the receive block bitmap */
+void gprs_rlc_ul_window::update_rbb(const gprs_rlc_v_n *v_n, char *rbb)
+{
+	int i;
+	for (i=0; i < ws(); i++) {
+		if (v_n->is_received(ssn()-1-i))
+			rbb[ws()-1-i] = 'R';
+		else
+			rbb[ws()-1-i] = 'I';
+	}
+}
+
 /* Raise V(R) to highest received sequence number not received. */
 void gprs_rlc_ul_window::raise_v_r(const uint16_t bsn, gprs_rlc_v_n *v_n)
 {
