@@ -54,6 +54,8 @@ struct gprs_llc {
 	uint16_t m_index; /* current write/read position of frame */
 	uint16_t m_length; /* len of current DL LLC_frame, 0 == no frame */
 	struct llist_head queue; /* queued LLC DL data */
+
+	size_t m_queue_size;
 };
 
 inline uint16_t gprs_llc::chunk_size() const

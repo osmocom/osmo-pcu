@@ -44,6 +44,7 @@ void gprs_llc::reset_frame_space()
 
 void gprs_llc::enqueue(struct msgb *llc_msg)
 {
+	m_queue_size += 1;
 	msgb_enqueue(&queue, llc_msg);
 }
 
@@ -69,16 +70,21 @@ void gprs_llc::clear(BTS *bts)
 		bts->llc_dropped_frame();
 		msgb_free(msg);
 	}
+
+	m_queue_size = 0;
 }
 
 void gprs_llc::init()
 {
 	INIT_LLIST_HEAD(&queue);
+	m_queue_size = 0;
 	reset();
 }
 
 struct msgb *gprs_llc::dequeue()
 {
+	if (m_queue_size > 0)
+		m_queue_size -= 1;
 	return msgb_dequeue(&queue);
 }
 
