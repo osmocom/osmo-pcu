@@ -100,12 +100,14 @@ int gprs_rlcmac_tbf::append_data(const uint8_t ms_class,
 		/* the TBF exists, so we must write it in the queue
 		 * we prepend lifetime in front of PDU */
 		struct timeval *tv;
-		struct msgb *llc_msg = msgb_alloc(len + sizeof(*tv),
+		struct msgb *llc_msg = msgb_alloc(len + sizeof(*tv) * 2,
 			"llc_pdu_queue");
 		if (!llc_msg)
 			return -ENOMEM;
 		tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
 		gprs_llc::calc_pdu_lifetime(bts, pdu_delay_csec, tv);
+		tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
+		gettimeofday(tv, NULL);
 		memcpy(msgb_put(llc_msg, len), data, len);
 		m_llc.enqueue(llc_msg);
 		tbf_update_ms_class(this, ms_class);
@@ -632,6 +634,7 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 
 	while ((msg = m_llc.dequeue())) {
 		tv = (struct timeval *)msg->data;
+		msgb_pull(msg, sizeof(*tv));
 		msgb_pull(msg, sizeof(*tv));
 
 		if (gprs_llc::is_frame_expired(&tv_now, tv)) {
