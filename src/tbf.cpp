@@ -636,8 +636,8 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 
 		if (gprs_llc::is_frame_expired(&tv_now, tv)) {
 			LOGP(DRLCMACDL, LOGL_NOTICE, "%s Discarding LLC PDU "
-				"because lifetime limit reached\n",
-				tbf_name(this));
+				"because lifetime limit reached. Queue size %zu\n",
+				tbf_name(this), m_llc.m_queue_size);
 			bts->llc_timedout_frame();
 			frames++;
 			octets += msg->len;
