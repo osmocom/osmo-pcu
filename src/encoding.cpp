@@ -25,6 +25,10 @@
 #include <tbf.h>
 #include <gprs_debug.h>
 
+extern "C" {
+#include <osmocom/core/utils.h>
+}
+
 // GSM 04.08 9.1.18 Immediate assignment
 int Encoding::write_immediate_assignment(
 	struct gprs_rlcmac_bts *bts,
@@ -385,7 +389,7 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	tbf->dir.ul.window.update_rbb(&tbf->dir.ul.v_n, rbb);
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Encoding Ack/Nack for %s "
-		"(final=%d)\n", tbf_name(tbf), final);
+		"(final=%d) SSN=%u\n", tbf_name(tbf), final, tbf->dir.ul.window.ssn());
 
 	block->PAYLOAD_TYPE = 0x1;   // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
 	block->RRBP         = 0x0;   // N+13
@@ -402,6 +406,8 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->dir.ul.window.ssn(); // STARTING_SEQUENCE_NUMBER
 
 	encode_rbb(rbb, block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
+
+	printf("RBB=%s\n", osmo_hexdump(block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP, ARRAY_SIZE(block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP)));
 
 	/* rbb is not NULL terminated */
 	rbb[64] = 0;

@@ -99,6 +99,16 @@ int gprs_rlcmac_tbf::append_data(const uint8_t ms_class,
 	} else {
 		/* the TBF exists, so we must write it in the queue
 		 * we prepend lifetime in front of PDU */
+
+		/* hack.. honor the force_llc_lifetime.. */
+		if (pdu_delay_csec != 0xffff) {
+			if ((((pdu_delay_csec / 100) * 1000) - 1000) <= m_llc.m_avg_queue_delay) {
+				printf("SILENTLY dropping frame with brute force: %u\n",
+					m_llc.m_avg_queue_delay);
+				return -ENOMEM;
+			}
+		}
+
 		struct timeval *tv;
 		struct msgb *llc_msg = msgb_alloc(len + sizeof(*tv) * 2,
 			"llc_pdu_queue");
@@ -1668,8 +1678,14 @@ void gprs_rlcmac_tbf::maybe_schedule_uplink_acknack(const rlc_ul_header *rh)
 	if (rh->si || rh->ti || state_is(GPRS_RLCMAC_FINISHED)
 	 || (dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
 		if (rh->si) {
+			char rbb[65];
+			dir.ul.window.update_rbb(&dir.ul.v_n, rbb);
+			rbb[64] = '\0';
 			LOGP(DRLCMACUL, LOGL_NOTICE, "- Scheduling Ack/Nack, "
-				"because MS is stalled.\n");
+				"because MS is stalled: V(Q)=%u V(R)=%u\n V(N)=%s",
+				dir.ul.window.v_q(), dir.ul.window.v_r(), rbb);
+		
+			//abort();
 		}
 		if (rh->ti) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "

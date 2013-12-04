@@ -78,6 +78,7 @@ void gprs_llc::init()
 {
 	INIT_LLIST_HEAD(&queue);
 	m_queue_size = 0;
+	m_avg_queue_delay = 0;
 	reset();
 }
 

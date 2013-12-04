@@ -393,6 +393,12 @@ int main(int argc, char **argv)
 	test_rlc_v_b();
 	test_rlc_v_n();
 	test_rlc_dl_ul_basic();
+
+
+	char rbb[65];
+	uint8_t data[8] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f };
+	Decoding::extract_rbb(data, rbb);
+	printf("%s\n", rbb);
 	return EXIT_SUCCESS;
 }
 
