@@ -429,7 +429,8 @@ int gprs_bssgp_tx_fc_bvc(void)
 		return -EIO;
 	}
 	/* FIXME: use real values */
-	return bssgp_tx_fc_bvc(the_pcu.bctx, 1, 6553500, 819100, 50000, 50000,
+	printf("FOR FLOW CONTROL: %zu\n", the_pcu.bts->bts->dl_octets_sent_reset());
+	return bssgp_tx_fc_bvc(the_pcu.bctx, 1, 6553500, 400 / 8, 50000, 400 / 8,
 		NULL, NULL);
 }
 

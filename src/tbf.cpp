@@ -960,6 +960,7 @@ struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts
 				"%s that fits precisely in last block: "
 				"len=%d\n", tbf_name(this), m_llc.frame_length());
 			gprs_rlcmac_dl_bw(this, m_llc.frame_length());
+			bts->dl_octets_sent(m_llc.frame_length());
 			/* block is filled, so there is no extension */
 			*e_pointer |= 0x01;
 			/* fill space */
@@ -1017,6 +1018,7 @@ struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts
 		LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for %s"
 			"len=%d\n", tbf_name(this), m_llc.frame_length());
 		gprs_rlcmac_dl_bw(this, m_llc.frame_length());
+		bts->dl_octets_sent(m_llc.frame_length());
 		m_llc.reset();
 		/* dequeue next LLC frame, if any */
 		msg = llc_dequeue(gprs_bssgp_pcu_current_bctx());
