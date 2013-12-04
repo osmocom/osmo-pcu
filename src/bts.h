@@ -223,6 +223,9 @@ public:
 	void llc_frame_sched();
 	void rach_frame();
 
+	void dl_octets_sent(size_t octets);
+	size_t dl_octets_sent_reset();
+
 	/*
 	 * Below for C interface for the VTY
 	 */
@@ -235,6 +238,7 @@ private:
 	SBAController m_sba;
 	TimingAdvance m_ta;
 	struct rate_ctr_group *m_ratectrs;
+	size_t m_dl_octets_sent;
 
 private:
 	/* disable copying to avoid slicing */

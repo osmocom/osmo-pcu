@@ -100,6 +100,7 @@ BTS::BTS()
 	: m_cur_fn(0)
 	, m_pollController(*this)
 	, m_sba(*this)
+	, m_dl_octets_sent(0)
 {
 	memset(&m_bts, 0, sizeof(m_bts));
 	INIT_LLIST_HEAD(&m_bts.ul_tbfs);
@@ -512,6 +513,22 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 	bitvec_free(immediate_assignment);
 }
 
+/* Counts the number of octets sent over the downlink */
+void BTS::dl_octets_sent(size_t octets)
+{
+	m_dl_octets_sent += octets;
+}
+
+/* Counts the number of octets sent over the downlink */
+size_t BTS::dl_octets_sent_reset()
+{
+	size_t octets;
+
+	octets = m_dl_octets_sent;
+	m_dl_octets_sent = 0;
+
+	return octets;
+}
 
 /*
  * PDCH code below. TODO: move to a separate file
