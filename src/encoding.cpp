@@ -352,6 +352,27 @@ int Encoding::write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi
 	return plen;
 }
 
+/**
+ * The index of the array show_rbb is the bit position inside the rbb
+ * (show_rbb[63] relates to BSN ssn-1)
+ */
+void Encoding::encode_rbb(const char *show_rbb, uint8_t *rbb)
+{
+	uint8_t rbb_byte = 0;
+
+	// RECEIVE_BLOCK_BITMAP
+	for (int i = 0; i < 64; i++) {
+		/* Set bit at the appropriate position (see 3GPP TS 04.60 9.1.8.1) */
+		if (show_rbb[i] == 'R')
+			rbb_byte |= 1<< (7-(i%8));
+
+		if((i%8) == 7) {
+			rbb[i/8] = rbb_byte;
+			rbb_byte = 0;
+		}
+	}
+}
+
 /* generate uplink ack */
 void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *tbf,
@@ -360,7 +381,6 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	// Packet Uplink Ack/Nack  TS 44.060 11.2.28
 
 	char rbb[65];
-	uint8_t i, rbb_byte;
 
 	tbf->dir.ul.window.update_rbb(&tbf->dir.ul.v_n, rbb);
 
@@ -381,18 +401,7 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.FINAL_ACK_INDICATION     = final;           // FINAL ACK INDICATION
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->dir.ul.window.ssn(); // STARTING_SEQUENCE_NUMBER
 
-	rbb_byte = 0;
-	// RECEIVE_BLOCK_BITMAP
-	for (i = 0; i < 64; i++) {
-		/* Set bit at the appropriate position (see 3GPP TS 04.60 9.1.8.1) */
-		if (rbb[i] == 'R')
-			rbb_byte |= 1<< (7-(i%8));
-
-		if((i%8) == 7) {
-			block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP[i/8] = rbb_byte;
-			rbb_byte = 0;
-		}
-	}
+	encode_rbb(rbb, block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
 
 	/* rbb is not NULL terminated */
 	rbb[64] = 0;

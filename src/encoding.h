@@ -54,6 +54,8 @@ public:
 			uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf, uint8_t poll,
 			uint8_t alpha, uint8_t gamma, int8_t ta_idx, uint8_t ta_ts);
 
+	static void encode_rbb(const char *show_rbb, uint8_t *rbb);
+
 	static void write_packet_uplink_ack(struct gprs_rlcmac_bts *bts, RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *tbf,
 		        uint8_t final);
 
