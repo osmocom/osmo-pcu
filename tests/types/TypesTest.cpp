@@ -32,6 +32,16 @@ extern "C" {
 #include <osmocom/core/utils.h>
 }
 
+#define OSMO_ASSERT_MEM_EQ(a, b, size) \
+	do { \
+		if (memcmp(a, b, size)) { \
+			printf("Data mismatch:\nGot:\t%s\n", \
+					osmo_hexdump((const uint8_t *)a, size)); \
+			printf("Want:\t%s\n", osmo_hexdump((const uint8_t *)b, size)); \
+			OSMO_ASSERT(false); \
+		} \
+	} while (0)
+
 #define OSMO_ASSERT_STR_EQ(a, b) \
 	do { \
 		if (strcmp(a, b)) { \
