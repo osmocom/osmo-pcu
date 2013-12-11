@@ -22,6 +22,7 @@
 #include "bts.h"
 #include "tbf.h"
 #include "gprs_debug.h"
+#include "encoding.h"
 
 extern "C" {
 #include <osmocom/core/application.h>
@@ -195,6 +196,7 @@ static void test_rlc_dl_ul_basic()
 		int count;
 		const char *rbb;
 		char win_rbb[65];
+		uint8_t bin_rbb[8];
 		win_rbb[64] = '\0';
 
 		v_n.reset();
@@ -209,6 +211,8 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.ssn() == 0);
 		ul_win.update_rbb(&v_n, win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
+		Encoding::encode_rbb(win_rbb, bin_rbb);
+		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
 
 		/* simulate to have received 0, 1 and 5 */
 		OSMO_ASSERT(ul_win.is_in_window(0));
@@ -224,6 +228,8 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.ssn() == 1);
 		ul_win.update_rbb(&v_n, win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
+		Encoding::encode_rbb(win_rbb, bin_rbb);
+		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
 
 		OSMO_ASSERT(ul_win.is_in_window(1));
 		v_n.mark_received(1);
@@ -238,6 +244,8 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.ssn() == 2);
 		ul_win.update_rbb(&v_n, win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
+		Encoding::encode_rbb(win_rbb, bin_rbb);
+		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
 
 		OSMO_ASSERT(ul_win.is_in_window(5));
 		v_n.mark_received(5);
@@ -252,6 +260,8 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.ssn() == 6);
 		ul_win.update_rbb(&v_n, win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
+		Encoding::encode_rbb(win_rbb, bin_rbb);
+		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
 
 		OSMO_ASSERT(ul_win.is_in_window(65));
 		OSMO_ASSERT(ul_win.is_in_window(2));
@@ -268,6 +278,8 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.ssn() == 66);
 		ul_win.update_rbb(&v_n, win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
+		Encoding::encode_rbb(win_rbb, bin_rbb);
+		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
 
 		OSMO_ASSERT(ul_win.is_in_window(2));
 		OSMO_ASSERT(!ul_win.is_in_window(66));
