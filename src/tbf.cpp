@@ -1553,11 +1553,20 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 
 int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi)
 {
+	static int rx_packets = 0;
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	int rc;
 
 	const uint16_t mod_sns = dir.ul.window.mod_sns();
 	const uint16_t ws = dir.ul.window.ws();
+
+	rx_packets = (rx_packets + 1) % 10;
+	if (0) { //(rx_packets == 0) {
+		LOGP(DRLCMACUL, LOGL_DEBUG, "UL DATA TFI=%d losing (V(Q)=%d .. "
+			"V(R)=%d)\n", rh->tfi, this->dir.ul.window.v_q(),
+			this->dir.ul.window.v_r());
+		return 0;
+	}
 
 	this->state_flags |= (1 << GPRS_RLCMAC_FLAG_UL_DATA);
 
