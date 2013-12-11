@@ -30,6 +30,14 @@ extern "C" {
 #include <osmocom/core/utils.h>
 }
 
+#define OSMO_ASSERT_STR_EQ(a, b) \
+	do { \
+		if (strcmp(a, b)) { \
+			printf("String mismatch:\nGot:\t%s\nWant:\t%s\n", a, b); \
+			OSMO_ASSERT(false); \
+		} \
+	} while (0)
+
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 
@@ -186,7 +194,8 @@ static void test_rlc_dl_ul_basic()
 		gprs_rlc_v_n v_n;
 		int count;
 		const char *rbb;
-		char win_rbb[64];
+		char win_rbb[65];
+		win_rbb[64] = '\0';
 
 		v_n.reset();
 
@@ -199,7 +208,7 @@ static void test_rlc_dl_ul_basic()
 		rbb = "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII";
 		OSMO_ASSERT(ul_win.ssn() == 0);
 		ul_win.update_rbb(&v_n, win_rbb);
-		OSMO_ASSERT(!memcmp(rbb, win_rbb, 64));
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		/* simulate to have received 0, 1 and 5 */
 		OSMO_ASSERT(ul_win.is_in_window(0));
@@ -214,7 +223,7 @@ static void test_rlc_dl_ul_basic()
 		rbb = "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIR";
 		OSMO_ASSERT(ul_win.ssn() == 1);
 		ul_win.update_rbb(&v_n, win_rbb);
-		OSMO_ASSERT(!memcmp(rbb, win_rbb, 64));
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(1));
 		v_n.mark_received(1);
@@ -228,7 +237,7 @@ static void test_rlc_dl_ul_basic()
 		rbb = "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIRR";
 		OSMO_ASSERT(ul_win.ssn() == 2);
 		ul_win.update_rbb(&v_n, win_rbb);
-		OSMO_ASSERT(!memcmp(rbb, win_rbb, 64));
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(5));
 		v_n.mark_received(5);
@@ -242,7 +251,7 @@ static void test_rlc_dl_ul_basic()
 		rbb = "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIRRIIIR";
 		OSMO_ASSERT(ul_win.ssn() == 6);
 		ul_win.update_rbb(&v_n, win_rbb);
-		OSMO_ASSERT(!memcmp(rbb, win_rbb, 64));
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(65));
 		OSMO_ASSERT(ul_win.is_in_window(2));
@@ -258,7 +267,7 @@ static void test_rlc_dl_ul_basic()
 		rbb = "IIIRIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIR";
 		OSMO_ASSERT(ul_win.ssn() == 66);
 		ul_win.update_rbb(&v_n, win_rbb);
-		OSMO_ASSERT(!memcmp(rbb, win_rbb, 64));
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(2));
 		OSMO_ASSERT(!ul_win.is_in_window(66));
