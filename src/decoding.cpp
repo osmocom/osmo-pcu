@@ -92,7 +92,7 @@ void Decoding::extract_rbb(const uint8_t *rbb, char *show_rbb)
 		uint8_t bit;
 
 		bit = (rbb[i >> 3]  >>  (7 - (i&7)))   & 1;
-		show_rbb[i] = bit ? '1' : 'o';
+		show_rbb[i] = bit ? 'R' : 'I';
 	}
 
 	show_rbb[64] = '\0';

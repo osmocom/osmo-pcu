@@ -96,7 +96,7 @@ void gprs_rlc_v_b::update(BTS *bts, char *show_rbb, uint8_t ssn,
 	     i >= 0 && bsn != ((w.v_a() - 1) & w.mod_sns());
 	     i--, bsn = (bsn - 1) & w.mod_sns()) {
 
-		if (show_rbb[i] == '1') {
+		if (show_rbb[i] == 'R') {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- got ack for BSN=%d\n", bsn);
 			if (!is_acked(bsn))
 				*received += 1;
