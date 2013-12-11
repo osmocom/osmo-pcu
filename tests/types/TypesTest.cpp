@@ -333,6 +333,42 @@ static void test_rlc_dl_ul_basic()
 		count = ul_win.raise_v_q(&v_n);
 		OSMO_ASSERT(count == 0);
 	}
+
+	{
+		int count;
+		uint8_t rbb[8];
+		uint16_t lost = 0, recv = 0;
+		char show_rbb[65];
+		BTS dummy_bts;
+		gprs_rlc_dl_window dl_win = { 0, };
+		gprs_rlc_v_b v_b;
+
+		v_b.reset();
+
+		OSMO_ASSERT(dl_win.window_empty());
+		OSMO_ASSERT(!dl_win.window_stalled());
+		OSMO_ASSERT(dl_win.distance() == 0);
+
+		dl_win.increment_send();
+		OSMO_ASSERT(!dl_win.window_empty());
+		OSMO_ASSERT(!dl_win.window_stalled());
+		OSMO_ASSERT(dl_win.distance() == 1);
+
+		for (int i = 0; i < 35; ++i) {
+			dl_win.increment_send();
+			OSMO_ASSERT(!dl_win.window_empty());
+			OSMO_ASSERT(dl_win.distance() == i + 2);
+		}
+
+		uint8_t rbb_cmp[8] = { 0x00, 0x00, 0x00, 0x07, 0xff, 0xff, 0xff, 0xff };
+		Decoding::extract_rbb(rbb_cmp, show_rbb);
+		printf("show_rbb: %s\n", show_rbb);
+
+		v_b.update(&dummy_bts, show_rbb, 35, dl_win, &lost, &recv);
+		OSMO_ASSERT(lost == 0);
+		OSMO_ASSERT(recv == 35);
+
+	}
 }
 
 int main(int argc, char **argv)
