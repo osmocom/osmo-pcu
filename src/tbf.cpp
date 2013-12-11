@@ -1347,6 +1347,8 @@ int gprs_rlcmac_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 
 	Decoding::extract_rbb(rbb, show_rbb);
 	/* show received array in debug (bit 64..1) */
+	LOGP(DRLCMACDL, LOGL_DEBUG, "- rbb:  (SSN=%d) %s\n", (ssn) & mod_sns,
+		osmo_hexdump(rbb, 8));
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- ack:  (BSN=%d)\"%s\""
 		"(BSN=%d)  R=ACK I=NACK\n", (ssn - 64) & mod_sns,
 		show_rbb, (ssn - 1) & mod_sns);
