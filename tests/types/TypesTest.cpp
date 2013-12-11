@@ -23,6 +23,7 @@
 #include "tbf.h"
 #include "gprs_debug.h"
 #include "encoding.h"
+#include "decoding.h"
 
 extern "C" {
 #include <osmocom/core/application.h>
@@ -213,6 +214,8 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 		Encoding::encode_rbb(win_rbb, bin_rbb);
 		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
+		Decoding::extract_rbb(bin_rbb, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		/* simulate to have received 0, 1 and 5 */
 		OSMO_ASSERT(ul_win.is_in_window(0));
@@ -230,6 +233,8 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 		Encoding::encode_rbb(win_rbb, bin_rbb);
 		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
+		Decoding::extract_rbb(bin_rbb, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(1));
 		v_n.mark_received(1);
@@ -246,6 +251,8 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 		Encoding::encode_rbb(win_rbb, bin_rbb);
 		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
+		Decoding::extract_rbb(bin_rbb, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(5));
 		v_n.mark_received(5);
@@ -262,6 +269,8 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 		Encoding::encode_rbb(win_rbb, bin_rbb);
 		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
+		Decoding::extract_rbb(bin_rbb, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(65));
 		OSMO_ASSERT(ul_win.is_in_window(2));
@@ -280,6 +289,8 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 		Encoding::encode_rbb(win_rbb, bin_rbb);
 		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
+		Decoding::extract_rbb(bin_rbb, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(2));
 		OSMO_ASSERT(!ul_win.is_in_window(66));
