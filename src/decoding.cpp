@@ -85,13 +85,15 @@ uint8_t Decoding::get_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
 
 /**
  * show_rbb needs to be an array with 65 elements
+ * The index of the array is the bit position in the rbb
+ * (show_rbb[63] relates to BSN ssn-1)
  */
 void Decoding::extract_rbb(const uint8_t *rbb, char *show_rbb)
 {
-	for (int i = 63; i >= 0; i--) {
+	for (int i = 0; i < 64; i++) {
 		uint8_t bit;
 
-		bit = (rbb[i >> 3]  >>  (7 - (i&7)))   & 1;
+		bit = !!(rbb[i/8] & (1<<(7-i%8)));
 		show_rbb[i] = bit ? 'R' : 'I';
 	}
 
