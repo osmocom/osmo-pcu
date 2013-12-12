@@ -78,7 +78,8 @@ void test_replay_gprs_data(struct gprs_bssgp_pcu *pcu, struct msgb *msg, struct 
 
 	OSMO_ASSERT(ph.cmd == GPRS_LLC_UI);
 	OSMO_ASSERT(ph.sapi == 1);
-	OSMO_ASSERT(ph.seq_tx == next_wanted_nu++);
+	OSMO_ASSERT(ph.seq_tx == next_wanted_nu);
+	next_wanted_nu += 1;
 
 	/* this test just wants to see messages... no further data is sent */
 	if (next_wanted_nu == 6) {
