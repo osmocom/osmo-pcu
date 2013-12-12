@@ -84,19 +84,23 @@ int gprs_rlc_v_b::count_unacked(const gprs_rlc_dl_window &w)
 	return unacked;
 }
 
+static uint16_t bitnum_to_bsn(int bitnum, uint16_t ssn, uint16_t mod_sns)
+{
+	return (ssn - 1 - bitnum) & mod_sns;
+}
+
 void gprs_rlc_v_b::update(BTS *bts, char *show_rbb, uint8_t ssn,
 			const gprs_rlc_dl_window &w,
 			uint16_t *lost, uint16_t *received)
 {
-	uint16_t bsn;
-	int i;
-
 	/* SSN - 1 is in range V(A)..V(S)-1 */
-	for (i = 63, bsn = (ssn - 1) & w.mod_sns();
-	     i >= 0 && bsn != ((w.v_a() - 1) & w.mod_sns());
-	     i--, bsn = (bsn - 1) & w.mod_sns()) {
+	for (int bitpos = 0; bitpos < w.ws(); bitpos++) {
+		uint16_t bsn = bitnum_to_bsn(bitpos, ssn, w.mod_sns());
 
-		if (show_rbb[i] == '1') {
+		if (bsn == ((w.v_a() - 1) & w.mod_sns()))
+			break;
+
+		if (show_rbb[w.ws() - 1 - bitpos] == 'R') {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- got ack for BSN=%d\n", bsn);
 			if (!is_acked(bsn))
 				*received += 1;
@@ -144,6 +148,18 @@ void gprs_rlc_v_b::state(char *show_v_b, const gprs_rlc_dl_window &w)
 void gprs_rlc_v_n::reset()
 {
 	memset(m_v_n, 0x0, sizeof(m_v_n));
+}
+
+/* Update the receive block bitmap */
+void gprs_rlc_ul_window::update_rbb(const gprs_rlc_v_n *v_n, char *rbb)
+{
+	int i;
+	for (i=0; i < ws(); i++) {
+		if (v_n->is_received(ssn()-1-i))
+			rbb[ws()-1-i] = 'R';
+		else
+			rbb[ws()-1-i] = 'I';
+	}
 }
 
 /* Raise V(R) to highest received sequence number not received. */

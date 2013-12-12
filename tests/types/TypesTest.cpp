@@ -22,6 +22,8 @@
 #include "bts.h"
 #include "tbf.h"
 #include "gprs_debug.h"
+#include "encoding.h"
+#include "decoding.h"
 
 extern "C" {
 #include <osmocom/core/application.h>
@@ -29,6 +31,14 @@ extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/utils.h>
 }
+
+#define OSMO_ASSERT_STR_EQ(a, b) \
+	do { \
+		if (strcmp(a, b)) { \
+			printf("String mismatch:\nGot:\t%s\nWant:\t%s\n", a, b); \
+			OSMO_ASSERT(false); \
+		} \
+	} while (0)
 
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
@@ -185,6 +195,10 @@ static void test_rlc_dl_ul_basic()
 		gprs_rlc_ul_window ul_win = { 0, };
 		gprs_rlc_v_n v_n;
 		int count;
+		const char *rbb;
+		char win_rbb[65];
+		uint8_t bin_rbb[8];
+		win_rbb[64] = '\0';
 
 		v_n.reset();
 
@@ -193,6 +207,15 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(!ul_win.is_in_window(64));
 
 		OSMO_ASSERT(!v_n.is_received(0));
+
+		rbb = "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII";
+		OSMO_ASSERT(ul_win.ssn() == 0);
+		ul_win.update_rbb(&v_n, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
+		Encoding::encode_rbb(win_rbb, bin_rbb);
+		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
+		Decoding::extract_rbb(bin_rbb, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		/* simulate to have received 0, 1 and 5 */
 		OSMO_ASSERT(ul_win.is_in_window(0));
@@ -204,6 +227,15 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.v_r() == 1);
 		OSMO_ASSERT(count == 1);
 
+		rbb = "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIR";
+		OSMO_ASSERT(ul_win.ssn() == 1);
+		ul_win.update_rbb(&v_n, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
+		Encoding::encode_rbb(win_rbb, bin_rbb);
+		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
+		Decoding::extract_rbb(bin_rbb, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
+
 		OSMO_ASSERT(ul_win.is_in_window(1));
 		v_n.mark_received(1);
 		ul_win.raise_v_r(1, &v_n);
@@ -213,6 +245,15 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.v_r() == 2);
 		OSMO_ASSERT(count == 1);
 
+		rbb = "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIRR";
+		OSMO_ASSERT(ul_win.ssn() == 2);
+		ul_win.update_rbb(&v_n, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
+		Encoding::encode_rbb(win_rbb, bin_rbb);
+		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
+		Decoding::extract_rbb(bin_rbb, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
+
 		OSMO_ASSERT(ul_win.is_in_window(5));
 		v_n.mark_received(5);
 		ul_win.raise_v_r(5, &v_n);
@@ -221,6 +262,15 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.v_q() == 2);
 		OSMO_ASSERT(ul_win.v_r() == 6);
 		OSMO_ASSERT(count == 0);
+
+		rbb = "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIRRIIIR";
+		OSMO_ASSERT(ul_win.ssn() == 6);
+		ul_win.update_rbb(&v_n, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
+		Encoding::encode_rbb(win_rbb, bin_rbb);
+		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
+		Decoding::extract_rbb(bin_rbb, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(65));
 		OSMO_ASSERT(ul_win.is_in_window(2));
@@ -232,6 +282,15 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(v_n.is_received(5));
 		OSMO_ASSERT(ul_win.v_q() == 2);
 		OSMO_ASSERT(ul_win.v_r() == 66);
+
+		rbb = "IIIRIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIR";
+		OSMO_ASSERT(ul_win.ssn() == 66);
+		ul_win.update_rbb(&v_n, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
+		Encoding::encode_rbb(win_rbb, bin_rbb);
+		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
+		Decoding::extract_rbb(bin_rbb, win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(2));
 		OSMO_ASSERT(!ul_win.is_in_window(66));
@@ -273,6 +332,42 @@ static void test_rlc_dl_ul_basic()
 		ul_win.raise_v_r(4, &v_n);
 		count = ul_win.raise_v_q(&v_n);
 		OSMO_ASSERT(count == 0);
+	}
+
+	{
+		int count;
+		uint8_t rbb[8];
+		uint16_t lost = 0, recv = 0;
+		char show_rbb[65];
+		BTS dummy_bts;
+		gprs_rlc_dl_window dl_win = { 0, };
+		gprs_rlc_v_b v_b;
+
+		v_b.reset();
+
+		OSMO_ASSERT(dl_win.window_empty());
+		OSMO_ASSERT(!dl_win.window_stalled());
+		OSMO_ASSERT(dl_win.distance() == 0);
+
+		dl_win.increment_send();
+		OSMO_ASSERT(!dl_win.window_empty());
+		OSMO_ASSERT(!dl_win.window_stalled());
+		OSMO_ASSERT(dl_win.distance() == 1);
+
+		for (int i = 0; i < 35; ++i) {
+			dl_win.increment_send();
+			OSMO_ASSERT(!dl_win.window_empty());
+			OSMO_ASSERT(dl_win.distance() == i + 2);
+		}
+
+		uint8_t rbb_cmp[8] = { 0x00, 0x00, 0x00, 0x07, 0xff, 0xff, 0xff, 0xff };
+		Decoding::extract_rbb(rbb_cmp, show_rbb);
+		printf("show_rbb: %s\n", show_rbb);
+
+		v_b.update(&dummy_bts, show_rbb, 35, dl_win, &lost, &recv);
+		OSMO_ASSERT(lost == 0);
+		OSMO_ASSERT(recv == 35);
+
 	}
 }
 
