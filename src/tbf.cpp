@@ -317,11 +317,6 @@ int gprs_rlcmac_tbf::update()
 	if (direction != GPRS_RLCMAC_DL_TBF)
 		return -EINVAL;
 
-	if (!ms_class) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Cannot update, no class\n");
-		return -EINVAL;
-	}
-
 	ul_tbf = bts->tbf_by_tlli(m_tlli, GPRS_RLCMAC_UL_TBF);
 
 	tbf_unlink_pdch(this);
