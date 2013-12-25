@@ -10,3 +10,9 @@
 * On global free/reset... also flush the timing advance..
 * tbf/llc window code appears to be duplicated and nested in other
   methods. This needs to be cleaned.
+
+
+* Possible race condition:
+ When scheduling a Downlink Assignment on the UL-TBF we need to make
+ sure that the assignment is sent _before_ the final ack. With my fairness
+ changes it gets more likely that this event is trigerred.
