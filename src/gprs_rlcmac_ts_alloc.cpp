@@ -155,7 +155,6 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 		return -EINVAL;
 
 	pdch = &tbf->trx->pdch[ts];
-	tbf->tsc = pdch->tsc;
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
 		int8_t usf; /* must be signed */
 
@@ -274,7 +273,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		}
 		/* check if TSC changes */
 		if (tsc < 0)
-			tbf->tsc = tsc = pdch->tsc;
+			tsc = pdch->tsc;
 		else if (tsc != pdch->tsc) {
 			LOGP(DRLCMAC, LOGL_ERROR, "Skipping TS %d of TRX=%d, "
 				"because it has different TSC than lower TS "
@@ -427,7 +426,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 			}
 			/* check if TSC changes */
 			if (tsc < 0)
-				tbf->tsc = tsc = pdch->tsc;
+				tsc = pdch->tsc;
 			else if (tsc != pdch->tsc) {
 				LOGP(DRLCMAC, LOGL_ERROR, "Skipping TS %d of "
 					"TRX=%d, because it has different TSC "

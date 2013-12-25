@@ -112,6 +112,7 @@ struct gprs_rlcmac_tbf {
 		const uint32_t tlli, const char *imsi, const uint8_t ms_class,
 		const uint16_t delay_csec, const uint8_t *data, const uint16_t len);
 
+	uint8_t tsc() const;
 
 	int rlcmac_diag();
 
@@ -142,7 +143,6 @@ struct gprs_rlcmac_tbf {
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
 	struct gprs_rlcmac_trx *trx;
-	uint8_t tsc;
 	uint8_t first_ts; /* first TS used by TBF */
 	uint8_t first_common_ts; /* first TS that the phone can send and
 		reveive simultaniously */
