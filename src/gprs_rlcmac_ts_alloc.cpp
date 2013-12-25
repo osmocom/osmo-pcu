@@ -422,6 +422,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 			if (!pdch->is_enabled()) {
 				LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
 					"because not enabled\n", ts);
+				#warning "Why isn't it needed to increase the window?"
 				continue;
 			}
 			/* check if TSC changes */
@@ -435,6 +436,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 					"configured with the same TSC!\n",
 					ts, tbf->trx->trx_no);
 				/* increase window for Type 1 */
+				#warning "Why isn't it needed to check for tx_window"
 				if (Type == 1)
 					i++;
 				continue;
