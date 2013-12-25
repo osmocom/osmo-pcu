@@ -178,6 +178,80 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	return 0;
 }
 
+/*
+ * Select a window of Rx slots if available.
+ * The maximum allowed slots depend on RX or the window of available
+ * slots. This must be done for uplink TBF also, because it is the basis
+ * for calculating control slot and uplink slot(s).
+ */
+static uint8_t select_dl_slots(struct gprs_rlcmac_trx *trx,
+			const int ms_type, const int ms_max_rxslots,
+			uint8_t *out_rx_win_min, uint8_t *out_rx_win_max)
+
+{
+	uint8_t rx_window = 0;
+	int rx_window_size = 0;
+	int8_t last_tsc = -1; /* must be signed */
+	uint8_t rx_win_min = 0, rx_win_max = 0;
+
+	for (int ts_no = 0; ts_no < 8; ts_no++) {
+		struct gprs_rlcmac_pdch *pdch;
+		pdch = &trx->pdch[ts_no];
+
+		/* check if enabled */
+		if (!pdch->is_enabled()) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, because "
+				"not enabled\n", ts_no);
+			if (ms_type == 1 && rx_window)
+				rx_window_size += 1;
+			continue;
+		}
+		/* check if TSC changes */
+		if (last_tsc < 0)
+			last_tsc = pdch->tsc;
+		else if (last_tsc != pdch->tsc) {
+			LOGP(DRLCMAC, LOGL_ERROR, "Skipping TS %d of TRX=%d, "
+				"because it has different TSC than lower TS "
+				"of TRX. In order to allow multislot, all "
+				"slots must be configured with the same "
+				"TSC!\n", ts_no, trx->trx_no);
+			if (ms_type == 1 && rx_window)
+				rx_window_size += 1;
+			continue;
+		}
+
+		if (!rx_window)
+			rx_win_min = ts_no;
+
+		rx_window |= (1 << ts_no);
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Selected DL TS %d\n", ts_no);
+
+		/* range of window (required for Type 1) */
+		rx_win_max = ts_no;
+
+		if (++rx_window_size == ms_max_rxslots) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Done, because slots / "
+				"window reached maximum alowed Rx size\n");
+			break;
+		}
+	}
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "- Selected slots for RX: "
+		"(TS=0)\"%c%c%c%c%c%c%c%c\"(TS=7)\n",
+		((rx_window & 0x01)) ? 'D' : '.',
+		((rx_window & 0x02)) ? 'D' : '.',
+		((rx_window & 0x04)) ? 'D' : '.',
+		((rx_window & 0x08)) ? 'D' : '.',
+		((rx_window & 0x10)) ? 'D' : '.',
+		((rx_window & 0x20)) ? 'D' : '.',
+		((rx_window & 0x40)) ? 'D' : '.',
+		((rx_window & 0x80)) ? 'D' : '.');
+
+	*out_rx_win_min = rx_win_min;
+	*out_rx_win_max = rx_win_max;
+	return rx_window;
+}
+
 /* Slot Allocation: Algorithm B
  *
  * Assign as many downlink slots as possible.
@@ -188,17 +262,15 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *old_tbf,
 	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single)
 {
-	struct gprs_rlcmac_pdch *pdch;
 	const struct gprs_ms_multislot_class *ms_class;
-	uint8_t Rx, Tx, Sum;	/* Maximum Number of Slots: RX, Tx, Sum Rx+Tx */
+	uint8_t Tx, Sum;	/* Maximum Number of Slots: RX, Tx, Sum Rx+Tx */
 	uint8_t Tta, Ttb, Tra, Trb, Tt, Tr;	/* Minimum Number of Slots */
 	uint8_t Type; /* Type of Mobile */
-	uint8_t rx_win_min = 0, rx_win_max = 7;
+	uint8_t rx_window;
 	uint8_t tx_win_min, tx_win_max, tx_range;
-	uint8_t rx_window = 0, tx_window = 0;
+	uint8_t tx_window = 0;
 	static const char *digit[10] = { "0","1","2","3","4","5","6","7","8","9" };
 	int8_t usf[8] = { -1, -1, -1, -1, -1, -1, -1, -1 }; /* must be signed */
-	int8_t tsc = -1; /* must be signed */
 	int8_t first_common_ts = -1;
 	uint8_t i, ts;
 	uint8_t slotcount = 0;
@@ -226,7 +298,6 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		return -EINVAL;
 	}
 
-	Rx = ms_class->rx;
 	Tx = ms_class->tx;
 	Sum = ms_class->sum;
 	Tta = ms_class->ta;
@@ -242,7 +313,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		Trb = 0;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "- Rx=%d Tx=%d Sum Rx+Tx=%s  Tta=%s Ttb=%d "
-		" Tra=%d Trb=%d Type=%d\n", Rx, Tx,
+		" Tra=%d Trb=%d Type=%d\n", ms_class->rx, Tx,
 		(Sum == MS_NA) ? "N/A" : digit[Sum],
 		(Tta == MS_NA) ? "N/A" : digit[Tta], Ttb, Tra, Trb, Type);
 
@@ -251,63 +322,10 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	Tt = Ttb;
 	Tr = Trb;
 
-	/* select a window of Rx slots if available
-	 * The maximum allowed slots depend on RX or the window of available
-	 * slots.
-	 * This must be done for uplink TBF also, because it is the basis
-	 * for calculating control slot and uplink slot(s). */
-	for (ts = 0, i = 0; ts < 8; ts++) {
-		pdch = &tbf->trx->pdch[ts];
-		/* check if enabled */
-		if (!pdch->is_enabled()) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, because "
-				"not enabled\n", ts);
-			/* increase window for Type 1 */
-			if (Type == 1 && rx_window)
-				i++;
-			continue;
-		}
-		/* check if TSC changes */
-		if (tsc < 0)
-			tsc = pdch->tsc;
-		else if (tsc != pdch->tsc) {
-			LOGP(DRLCMAC, LOGL_ERROR, "Skipping TS %d of TRX=%d, "
-				"because it has different TSC than lower TS "
-				"of TRX. In order to allow multislot, all "
-				"slots must be configured with the same "
-				"TSC!\n", ts, tbf->trx->trx_no);
-			/* increase window for Type 1 */
-			if (Type == 1 && rx_window)
-				i++;
-			continue;
-		}
+	uint8_t rx_win_min, rx_win_max;
+	rx_window = select_dl_slots(tbf->trx, ms_class->type, ms_class->rx,
+				&rx_win_min, &rx_win_max);
 
-		if (!rx_window)
-			rx_win_min = ts;
-
-		rx_window |= (1 << ts);
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Selected DL TS %d\n", ts);
-
-		/* range of window (required for Type 1) */
-		rx_win_max = ts;
-
-		if (++i == Rx) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "- Done, because slots / "
-				"window reached maximum alowed Rx size\n");
-			break;
-		}
-	}
-
-	LOGP(DRLCMAC, LOGL_DEBUG, "- Selected slots for RX: "
-		"(TS=0)\"%c%c%c%c%c%c%c%c\"(TS=7)\n",
-		((rx_window & 0x01)) ? 'D' : '.',
-		((rx_window & 0x02)) ? 'D' : '.',
-		((rx_window & 0x04)) ? 'D' : '.',
-		((rx_window & 0x08)) ? 'D' : '.',
-		((rx_window & 0x10)) ? 'D' : '.',
-		((rx_window & 0x20)) ? 'D' : '.',
-		((rx_window & 0x40)) ? 'D' : '.',
-		((rx_window & 0x80)) ? 'D' : '.');
 
 	/* reduce window, if existing uplink slots collide RX window */
 	if (Type == 1 && old_tbf && old_tbf->direction == GPRS_RLCMAC_UL_TBF) {
@@ -412,7 +430,9 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	 * also assign the first common ts, which is used for control or single
 	 * slot. */
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
+		int tsc = -1;
 		for (ts = tx_win_min, i = 0; i < tx_range; ts = (ts + 1) & 7) {
+			struct gprs_rlcmac_pdch *pdch;
 			pdch = &tbf->trx->pdch[ts];
 			/* check if enabled */
 			if (!pdch->is_enabled()) {
@@ -487,6 +507,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		/* assign the first common ts, which is used for control or
 		 * single slot. */
 		for (ts = tx_win_min, i = 0; i < tx_range; ts = (ts + 1) & 7) {
+			struct gprs_rlcmac_pdch *pdch;
 			pdch = &tbf->trx->pdch[ts];
 			/* check if enabled */
 			if (!pdch->is_enabled()) {
@@ -520,8 +541,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 					continue;
 				LOGP(DRLCMAC, LOGL_DEBUG, "- Assigning DL TS "
 					"%d\n", ts);
-				pdch = &tbf->trx->pdch[ts];
-				assign_dlink_tbf(pdch, tbf);
+				assign_dlink_tbf(&tbf->trx->pdch[ts], tbf);
 				slotcount++;
 				if (slotcount == 1)
 					tbf->first_ts = ts;
@@ -540,8 +560,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 			if ((tx_window & (1 << ts))) {
 				LOGP(DRLCMAC, LOGL_DEBUG, "- Assigning UL TS "
 					"%d\n", ts);
-				pdch = &tbf->trx->pdch[ts];
-				assign_uplink_tbf_usf(pdch, tbf, usf[ts]);
+				assign_uplink_tbf_usf(&tbf->trx->pdch[ts], tbf, usf[ts]);
 				slotcount++;
 				if (slotcount == 1)
 					tbf->first_ts = ts;
