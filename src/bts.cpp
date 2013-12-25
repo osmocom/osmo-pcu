@@ -378,7 +378,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 {
 	struct gprs_rlcmac_tbf *tbf;
-	uint8_t trx, ts = 0;
+	uint8_t trx_no, ts_no = 0;
 	int8_t tfi; /* must be signed */
 	uint8_t sb = 0;
 	uint32_t sb_fn = 0;
@@ -403,7 +403,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	if (qta > 252)
 		qta = 252;
 	if (sb) {
-		rc = sba()->alloc(&trx, &ts, &sb_fn, qta >> 2);
+		rc = sba()->alloc(&trx_no, &ts_no, &sb_fn, qta >> 2);
 		if (rc < 0)
 			return rc;
 		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] RACH qbit-ta=%d "
@@ -414,14 +414,14 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	} else {
 		// Create new TBF
 		#warning "Copy and pate with other routines.."
-		tfi = tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx, -1);
+		tfi = tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		if (tfi < 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 			/* FIXME: send reject */
 			return -EBUSY;
 		}
 		/* set class to 0, since we don't know the multislot class yet */
-		tbf = tbf_alloc(&m_bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx, 0, 1);
+		tbf = tbf_alloc(&m_bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx_no, 0, 1);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 			/* FIXME: send reject */
@@ -445,8 +445,8 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	if (sb)
 		plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
-			Fn, qta >> 2, m_bts.trx[trx].arfcn, ts,
-			m_bts.trx[trx].pdch[ts].tsc, 0, 0, 0, 0, sb_fn, 1,
+			Fn, qta >> 2, m_bts.trx[trx_no].arfcn, ts_no,
+			m_bts.trx[trx_no].pdch[ts_no].tsc, 0, 0, 0, 0, sb_fn, 1,
 			m_bts.alpha, m_bts.gamma, -1);
 	else
 		plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
