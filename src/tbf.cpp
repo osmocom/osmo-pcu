@@ -223,7 +223,7 @@ struct gprs_rlcmac_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	int8_t tfi; /* must be signed */
 
 #warning "Copy and paste with tbf_new_dl_assignment"
-	/* create new TBF, use sme TRX as DL TBF */
+	/* create new TBF, use same TRX as DL TBF */
 	tfi = bts->bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx, use_trx);
 	if (tfi < 0) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
