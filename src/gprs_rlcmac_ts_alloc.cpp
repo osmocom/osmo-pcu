@@ -334,6 +334,25 @@ static int reduce_rx_window(const int ms_type, const struct gprs_rlcmac_tbf *old
 	return 0;
 }
 
+/*
+ * reduce window, to allow at least one uplink TX slot
+ * this is only required for Type 1
+ */
+static uint8_t update_rx_win_max(const int ms_type, const int Tt,
+			const int Tr, uint8_t rx_win_min, uint8_t rx_win_max)
+{
+	if (ms_type != 1)
+		return rx_win_max;
+
+	if (rx_win_max - rx_win_min + 1 + Tt + 1 + Tr > 8) {
+		rx_win_max = rx_win_min + 7 - Tt - 1 - Tr;
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Reduce RX window due to time "
+			"contraints to %d slots\n", rx_win_max - rx_win_min + 1);
+	}
+
+	return rx_win_max;
+}
+
 
 /* Slot Allocation: Algorithm B
  *
@@ -415,16 +434,8 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 				&rx_window, &rx_win_min, &rx_win_max);
 	if (rc < 0)
 		return rc;
-
-	/* reduce window, to allow at least one uplink TX slot
-	 * this is only required for Type 1 */
-	if (Type == 1 && rx_win_max - rx_win_min + 1 + Tt + 1 + Tr > 8) {
-		rx_win_max = rx_win_min + 7 - Tt - 1 - Tr;
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Reduce RX window due to time "
-			"contraints to %d slots\n",
-			rx_win_max - rx_win_min + 1);
-	}
-
+	rx_win_max = update_rx_win_max(ms_class->type, Tt, Tr,
+				rx_win_min, rx_win_max);
 	LOGP(DRLCMAC, LOGL_DEBUG, "- RX-Window is: %d..%d\n", rx_win_min,
 		rx_win_max);
 
