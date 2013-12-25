@@ -106,9 +106,9 @@ static void dump_assignment(struct gprs_rlcmac_tbf *tbf, const char *dir)
 	printf("PDCH[%d] is first common for %s\n", tbf->first_common_ts, dir);
 }
 
-static void test_alloc_b()
+static void test_alloc_b(int ms_class)
 {
-	printf("Going to test multislot assignment.\n");
+	printf("Going to test multislot assignment MS_CLASS=%d\n", ms_class);
 	/*
 	 * PDCH is on TS 6,7,8 and we start with a UL allocation and
 	 * then follow two DL allocations (once single, once normal).
@@ -136,16 +136,18 @@ static void test_alloc_b()
 
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
-		ul_tbf = tbf_alloc(bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx_no, 0, 1);
+		ul_tbf = tbf_alloc(bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx_no, ms_class, 1);
 		OSMO_ASSERT(ul_tbf);
 		dump_assignment(ul_tbf, "UL");
 
 		/* assume final ack has not been sent */
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
-		dl_tbf = tbf_alloc(bts, ul_tbf, GPRS_RLCMAC_DL_TBF, tfi, trx_no, 0, 0);
+		dl_tbf = tbf_alloc(bts, ul_tbf, GPRS_RLCMAC_DL_TBF, tfi, trx_no, ms_class, 0);
 		OSMO_ASSERT(dl_tbf);
 		dump_assignment(dl_tbf, "DL");
+
+		OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
 
 		tbf_free(dl_tbf);
 		tbf_free(ul_tbf);
@@ -175,7 +177,7 @@ static void test_alloc_b()
 
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
-		dl_tbf = tbf_alloc(bts, NULL, GPRS_RLCMAC_DL_TBF, tfi, trx_no, 0, 1);
+		dl_tbf = tbf_alloc(bts, NULL, GPRS_RLCMAC_DL_TBF, tfi, trx_no, ms_class, 1);
 		dl_tbf->m_tlli = 0x23;
 		dl_tbf->m_tlli_valid = true;
 		OSMO_ASSERT(dl_tbf);
@@ -183,16 +185,19 @@ static void test_alloc_b()
 
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
-		ul_tbf = tbf_alloc(bts, dl_tbf, GPRS_RLCMAC_UL_TBF, tfi, trx_no, 0, 0);
+		ul_tbf = tbf_alloc(bts, dl_tbf, GPRS_RLCMAC_UL_TBF, tfi, trx_no, ms_class, 0);
 		ul_tbf->m_tlli = 0x23;
 		ul_tbf->m_tlli_valid = true;
 		ul_tbf->dir.ul.contention_resolution_done = 1;
 		OSMO_ASSERT(ul_tbf);
 		dump_assignment(ul_tbf, "UL");
 
+		OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
+
 		/* now update the dl_tbf */
 		dl_tbf->update();
 		dump_assignment(dl_tbf, "DL");
+		OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
 
 		tbf_free(dl_tbf);
 		tbf_free(ul_tbf);
@@ -221,20 +226,28 @@ static void test_alloc_b()
 
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
-		ul_tbf = tbf_alloc(bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx_no, 0, 0);
+		ul_tbf = tbf_alloc(bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx_no, ms_class, 0);
 		OSMO_ASSERT(ul_tbf);
 		dump_assignment(ul_tbf, "UL");
 
 		/* assume final ack has not been sent */
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
-		dl_tbf = tbf_alloc(bts, ul_tbf, GPRS_RLCMAC_DL_TBF, tfi, trx_no, 0, 0);
+		dl_tbf = tbf_alloc(bts, ul_tbf, GPRS_RLCMAC_DL_TBF, tfi, trx_no, ms_class, 0);
 		OSMO_ASSERT(dl_tbf);
 		dump_assignment(dl_tbf, "DL");
+
+		OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
 
 		tbf_free(dl_tbf);
 		tbf_free(ul_tbf);
 	}
+}
+
+static void test_alloc_b()
+{
+	for (int i = 0; i < 30; ++i)
+		test_alloc_b(i);
 }
 
 int main(int argc, char **argv)
