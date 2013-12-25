@@ -252,6 +252,89 @@ static uint8_t select_dl_slots(struct gprs_rlcmac_trx *trx,
 	return rx_window;
 }
 
+static int reduce_rx_window(const int ms_type, const struct gprs_rlcmac_tbf *old_tbf,
+				const int Tt, const int Tr,
+				int *rx_window,
+				uint8_t *rx_win_min, uint8_t *rx_win_max)
+{
+	if (ms_type != 1)
+		return 0;
+	if (!old_tbf)
+		return 0;
+	if (old_tbf->direction != GPRS_RLCMAC_UL_TBF)
+		return 0;
+
+	uint8_t collide = 0, ul_usage = 0;
+
+	/* calculate mask of colliding slots */
+	for (uint8_t ts_no = 0; ts_no < 8; ts_no++) {
+		int j;
+		if (!old_tbf->pdch[ts_no])
+			continue;
+
+		ul_usage |= (1 << ts_no);
+		/* mark bits from TS-t .. TS+r */
+		for (j = ts_no - Tt; j != ((ts_no + Tr + 1) & 7); j = (j + 1) & 7)
+			collide |= (1 << j);
+	}
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "- Not allowed slots due to existing "
+		"UL allocation: (TS=0)\"%c%c%c%c%c%c%c%c\"(TS=7) "
+		" D=downlink  x=not usable\n",
+		((ul_usage & 0x01)) ? 'D' : ((collide & 0x01))?'x':'.',
+		((ul_usage & 0x02)) ? 'D' : ((collide & 0x02))?'x':'.',
+		((ul_usage & 0x04)) ? 'D' : ((collide & 0x04))?'x':'.',
+		((ul_usage & 0x08)) ? 'D' : ((collide & 0x08))?'x':'.',
+		((ul_usage & 0x10)) ? 'D' : ((collide & 0x10))?'x':'.',
+		((ul_usage & 0x20)) ? 'D' : ((collide & 0x20))?'x':'.',
+		((ul_usage & 0x40)) ? 'D' : ((collide & 0x40))?'x':'.',
+		((ul_usage & 0x80)) ? 'D' : ((collide & 0x80))?'x':'.');
+
+	/*
+	 * Uplink/Downlink in GSM is shifted by three timeslots. Make
+	 * sure they don't collide.
+	 */
+	*rx_window &= ~(collide << 3);
+	*rx_window &= ~(collide >> 5);
+	LOGP(DRLCMAC, LOGL_DEBUG, "- Remaining slots for RX: "
+		"(TS=0)\"%c%c%c%c%c%c%c%c\"(TS=7)\n",
+		((*rx_window & 0x01)) ? 'D' : '.',
+		((*rx_window & 0x02)) ? 'D' : '.',
+		((*rx_window & 0x04)) ? 'D' : '.',
+		((*rx_window & 0x08)) ? 'D' : '.',
+		((*rx_window & 0x10)) ? 'D' : '.',
+		((*rx_window & 0x20)) ? 'D' : '.',
+		((*rx_window & 0x40)) ? 'D' : '.',
+		((*rx_window & 0x80)) ? 'D' : '.');
+
+	if (!*rx_window) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No suitable downlink slots "
+			"available with current uplink assignment\n");
+		return -EBUSY;
+	}
+
+	/* calculate new min/max */
+	for (uint8_t ts_no = *rx_win_min; ts_no <= *rx_win_max; ts_no++) {
+		if ((*rx_window & (1 << ts_no)))
+			break;
+		*rx_win_min = ts_no + 1;
+		LOGP(DRLCMAC, LOGL_DEBUG, "- TS has been deleted, so "
+			"raising start of DL window to %d\n",
+			*rx_win_min);
+	}
+	for (uint8_t ts_no = *rx_win_max; ts_no >= *rx_win_min; ts_no--) {
+		if ((*rx_window & (1 << ts_no)))
+			break;
+		*rx_win_max = ts_no - 1;
+		LOGP(DRLCMAC, LOGL_DEBUG, "- TS has been deleted, so "
+			"lowering end of DL window to %d\n",
+			*rx_win_max);
+	}
+
+	return 0;
+}
+
+
 /* Slot Allocation: Algorithm B
  *
  * Assign as many downlink slots as possible.
@@ -266,7 +349,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	uint8_t Tx, Sum;	/* Maximum Number of Slots: RX, Tx, Sum Rx+Tx */
 	uint8_t Tta, Ttb, Tra, Trb, Tt, Tr;	/* Minimum Number of Slots */
 	uint8_t Type; /* Type of Mobile */
-	uint8_t rx_window;
+	int rx_window;
 	uint8_t tx_win_min, tx_win_max, tx_range;
 	uint8_t tx_window = 0;
 	static const char *digit[10] = { "0","1","2","3","4","5","6","7","8","9" };
@@ -328,69 +411,10 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 
 
 	/* reduce window, if existing uplink slots collide RX window */
-	if (Type == 1 && old_tbf && old_tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		uint8_t collide = 0, ul_usage = 0;
-		int j;
-
-		/* calculate mask of colliding slots */
-		for (ts = 0; ts < 8; ts++) {
-			if (old_tbf->pdch[ts]) {
-				ul_usage |= (1 << ts);
-				/* mark bits from TS-t .. TS+r */
-				for (j = ts - Tt; j != ((ts + Tr + 1) & 7);
-				     j = (j + 1) & 7)
-					collide |= (1 << j);
-			}
-		}
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Not allowed slots due to existing "
-			"UL allocation: (TS=0)\"%c%c%c%c%c%c%c%c\"(TS=7) "
-			" D=downlink  x=not usable\n",
-			((ul_usage & 0x01)) ? 'D' : ((collide & 0x01))?'x':'.',
-			((ul_usage & 0x02)) ? 'D' : ((collide & 0x02))?'x':'.',
-			((ul_usage & 0x04)) ? 'D' : ((collide & 0x04))?'x':'.',
-			((ul_usage & 0x08)) ? 'D' : ((collide & 0x08))?'x':'.',
-			((ul_usage & 0x10)) ? 'D' : ((collide & 0x10))?'x':'.',
-			((ul_usage & 0x20)) ? 'D' : ((collide & 0x20))?'x':'.',
-			((ul_usage & 0x40)) ? 'D' : ((collide & 0x40))?'x':'.',
-			((ul_usage & 0x80)) ? 'D' : ((collide & 0x80))?'x':'.');
-
-		/* apply mask to reduce tx_window (shifted by 3 slots) */
-		rx_window &= ~(collide << 3);
-		rx_window &= ~(collide >> 5);
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Remaining slots for RX: "
-			"(TS=0)\"%c%c%c%c%c%c%c%c\"(TS=7)\n",
-			((rx_window & 0x01)) ? 'D' : '.',
-			((rx_window & 0x02)) ? 'D' : '.',
-			((rx_window & 0x04)) ? 'D' : '.',
-			((rx_window & 0x08)) ? 'D' : '.',
-			((rx_window & 0x10)) ? 'D' : '.',
-			((rx_window & 0x20)) ? 'D' : '.',
-			((rx_window & 0x40)) ? 'D' : '.',
-			((rx_window & 0x80)) ? 'D' : '.');
-		if (!rx_window) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No suitable downlink slots "
-				"available with current uplink assignment\n");
-			return -EBUSY;
-		}
-
-		/* calculate new min/max */
-		for (ts = rx_win_min; ts <= rx_win_max; ts++) {
-			if ((rx_window & (1 << ts)))
-				break;
-			rx_win_min = ts + 1;
-			LOGP(DRLCMAC, LOGL_DEBUG, "- TS has been deleted, so "
-				"raising start of DL window to %d\n",
-				rx_win_min);
-		}
-		for (ts = rx_win_max; ts >= rx_win_min; ts--) {
-			if ((rx_window & (1 << ts)))
-				break;
-			rx_win_max = ts - 1;
-			LOGP(DRLCMAC, LOGL_DEBUG, "- TS has been deleted, so "
-				"lowering end of DL window to %d\n",
-				rx_win_max);
-		}
-	}
+	int rc = reduce_rx_window(ms_class->type, old_tbf, Tt, Tr,
+				&rx_window, &rx_win_min, &rx_win_max);
+	if (rc < 0)
+		return rc;
 
 	/* reduce window, to allow at least one uplink TX slot
 	 * this is only required for Type 1 */
