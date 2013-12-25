@@ -205,7 +205,7 @@ void Encoding::write_packet_uplink_assignment(
 
 #if 1
 	bitvec_write_field(dest, wp,0x1,1); // Frequency Parameters information elements = present
-	bitvec_write_field(dest, wp,tbf->tsc,3); // Training Sequence Code (TSC)
+	bitvec_write_field(dest, wp,tbf->tsc(),3); // Training Sequence Code (TSC)
 	bitvec_write_field(dest, wp,0x0,2); // ARFCN = present
 	bitvec_write_field(dest, wp,tbf->trx->arfcn,10); // ARFCN
 #else
@@ -287,7 +287,7 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_
 	block->u.Packet_Downlink_Assignment.Exist_P0_and_BTS_PWR_CTRL_MODE = 0x0;   // POWER CONTROL = off
 
 	block->u.Packet_Downlink_Assignment.Exist_Frequency_Parameters     = 0x1;   // Frequency Parameters = on
-	block->u.Packet_Downlink_Assignment.Frequency_Parameters.TSC       = tbf->tsc;   // Training Sequence Code (TSC)
+	block->u.Packet_Downlink_Assignment.Frequency_Parameters.TSC       = tbf->tsc();   // Training Sequence Code (TSC)
 	block->u.Packet_Downlink_Assignment.Frequency_Parameters.UnionType = 0x0;   // ARFCN = on
 	block->u.Packet_Downlink_Assignment.Frequency_Parameters.u.ARFCN   = tbf->trx->arfcn; // ARFCN
 

@@ -1750,3 +1750,8 @@ void gprs_rlcmac_tbf::rotate_in_list()
 	else
 		llist_add(&list, &bts->bts_data()->dl_tbfs);
 }
+
+uint8_t gprs_rlcmac_tbf::tsc() const
+{
+	return trx->pdch[first_ts].tsc;
+}
