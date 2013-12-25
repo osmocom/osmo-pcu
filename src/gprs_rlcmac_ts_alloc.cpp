@@ -353,6 +353,27 @@ static uint8_t update_rx_win_max(const int ms_type, const int Tt,
 	return rx_win_max;
 }
 
+static void tx_win_from_rx(const int ms_type,
+				uint8_t rx_win_min, uint8_t rx_win_max,
+				int Tt, int Tr,
+				uint8_t *tx_win_min, uint8_t *tx_win_max,
+				uint8_t *tx_range)
+{
+	if (ms_type == 1) {
+		/* calculate TX window (shifted by 3 timeslots)
+		 * it uses the space between tx_win_max and tx_win_min */
+		*tx_win_min = (rx_win_max - 2 + Tt) & 7;
+		*tx_win_max = (rx_win_min + 4 - Tr) & 7;
+	} else {
+		/* TX and RX simultaniously */
+		*tx_win_min = rx_win_min;
+		*tx_win_max = 7;
+	}
+
+	*tx_range = (*tx_win_max - *tx_win_min + 1) & 7;
+	LOGP(DRLCMAC, LOGL_DEBUG, "- TX-Window is: %d..%d\n", *tx_win_min,
+		*tx_win_max);
+}
 
 /* Slot Allocation: Algorithm B
  *
@@ -369,7 +390,6 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	uint8_t Tta, Ttb, Tra, Trb, Tt, Tr;	/* Minimum Number of Slots */
 	uint8_t Type; /* Type of Mobile */
 	int rx_window;
-	uint8_t tx_win_min, tx_win_max, tx_range;
 	uint8_t tx_window = 0;
 	static const char *digit[10] = { "0","1","2","3","4","5","6","7","8","9" };
 	int8_t usf[8] = { -1, -1, -1, -1, -1, -1, -1, -1 }; /* must be signed */
@@ -440,23 +460,9 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		rx_win_max);
 
 	/* calculate TX window */
-	if (Type == 1) {
-		/* calculate TX window (shifted by 3 timeslots)
-		 * it uses the space between tx_win_max and tx_win_min */
-		tx_win_min = (rx_win_max - 2 + Tt) & 7;
-		tx_win_max = (rx_win_min + 4 - Tr) & 7;
-		/* calculate the TX window size (might be larger than Tx) */
-		tx_range = (tx_win_max - tx_win_min + 1) & 7;
-	} else {
-		/* TX and RX simultaniously */
-		tx_win_min = rx_win_min;
-		tx_win_max = 7;
-		/* TX window size (might be larger than Tx) */
-		tx_range = tx_win_max - tx_win_min + 1;
-	}
-
-	LOGP(DRLCMAC, LOGL_DEBUG, "- TX-Window is: %d..%d\n", tx_win_min,
-		tx_win_max);
+	uint8_t tx_win_min, tx_win_max, tx_range;
+	tx_win_from_rx(ms_class->type, rx_win_min, rx_win_max, Tt, Tr,
+				&tx_win_min, &tx_win_max, &tx_range);
 
 	/* select a window of Tx slots if available
 	 * The maximum allowed slots depend on TX or the window of available
