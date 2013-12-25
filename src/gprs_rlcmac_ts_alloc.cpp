@@ -236,13 +236,9 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	Type = ms_class->type;
 
 	/* Tta and Ttb may depend on hopping or frequency change */
-	if (Ttb == MS_A)
+	if (Ttb == MS_A || Ttb == MS_B)
 		Ttb = 0;
-	if (Trb == MS_A)
-		Trb = 0;
-	if (Ttb == MS_B)
-		Ttb = 0;
-	if (Trb == MS_C)
+	if (Trb == MS_A || Trb == MS_C)
 		Trb = 0;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "- Rx=%d Tx=%d Sum Rx+Tx=%s  Tta=%s Ttb=%d "
