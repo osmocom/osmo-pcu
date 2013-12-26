@@ -375,6 +375,28 @@ static void tx_win_from_rx(const int ms_type,
 		*tx_win_max);
 }
 
+/*
+ * Assign the first common ts, which is used for control or
+ * single slot.
+ */
+static int select_first_ts(gprs_rlcmac_trx *trx, uint8_t tx_win_min, uint8_t tx_range)
+{
+	uint8_t ts_no;
+	int i;
+	for (ts_no = tx_win_min, i = 0; i < tx_range; ts_no = (ts_no + 1) & 7) {
+		gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
+		/* check if enabled */
+		if (!pdch->is_enabled()) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
+					"because not enabled\n", ts_no);
+			continue;
+		}
+		return ts_no;
+	}
+
+	return -1;
+}
+
 /* Slot Allocation: Algorithm B
  *
  * Assign as many downlink slots as possible.
@@ -545,20 +567,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 			return -EBUSY;
 		}
 	} else {
-		/* assign the first common ts, which is used for control or
-		 * single slot. */
-		for (ts = tx_win_min, i = 0; i < tx_range; ts = (ts + 1) & 7) {
-			struct gprs_rlcmac_pdch *pdch;
-			pdch = &tbf->trx->pdch[ts];
-			/* check if enabled */
-			if (!pdch->is_enabled()) {
-				LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
-					"because not enabled\n", ts);
-				continue;
-			}
-			first_common_ts = ts;
-			break;
-		}
+		first_common_ts = select_first_ts(tbf->trx, tx_win_min, tx_range);
 	}
 
 	if (first_common_ts < 0) {
