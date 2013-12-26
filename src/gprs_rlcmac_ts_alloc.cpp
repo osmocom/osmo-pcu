@@ -376,6 +376,97 @@ static void tx_win_from_rx(const int ms_type,
 }
 
 /*
+ * Select a window of Tx slots if available.
+ * The maximum allowed slots depend on TX or the window of available
+ * slots.
+ */
+static int select_ul_slots(gprs_rlcmac_trx *trx,
+		const int ms_type, const int ms_max_txslots,
+		uint8_t tx_win_min, uint8_t tx_range,
+		int8_t *usf, int8_t *first_common_ts)
+{
+	int tsc = -1;
+	uint8_t tx_window = 0;
+	int i;
+	uint8_t ts_no;
+
+	for (ts_no = tx_win_min, i = 0; i < tx_range; ts_no = (ts_no + 1) & 7) {
+		gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
+
+		/* check if enabled */
+		if (!pdch->is_enabled()) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
+				"because not enabled\n", ts_no);
+			#warning "Why isn't it needed to increase the window?"
+			continue;
+		}
+		/* check if TSC changes */
+		if (tsc < 0)
+			tsc = pdch->tsc;
+		else if (tsc != pdch->tsc) {
+			LOGP(DRLCMAC, LOGL_ERROR, "Skipping TS %d of "
+				"TRX=%d, because it has different TSC "
+				"than lower TS of TRX. In order to "
+				"allow multislot, all slots must be "
+				"configured with the same TSC!\n",
+				ts_no, trx->trx_no);
+			/* increase window for Type 1 */
+			#warning "Why isn't it needed to check for tx_window"
+			if (ms_type == 1)
+				i++;
+			continue;
+		}
+		/* check for free usf */
+		usf[ts_no] = find_free_usf(pdch);
+		if (usf[ts_no] < 0) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
+			"because no USF available\n", ts_no);
+			/* increase window for Type 1 */
+			if (ms_type == 1)
+				i++;
+			continue;
+		}
+
+		if (!tx_window)
+			*first_common_ts = ts_no;
+
+		tx_window |= (1 << ts_no);
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Selected UL TS %d\n", ts_no);
+
+		if (1 && ms_type == 1) { /* FIXME: multislot UL assignment */
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Done, because "
+				"1 slot assigned\n");
+			break;
+		}
+		if (++i == ms_max_txslots) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Done, because "
+				"slots / window reached maximum "
+				"allowed Tx size\n");
+			break;
+		}
+	}
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "- Selected TX window: "
+		"(TS=0)\"%c%c%c%c%c%c%c%c\"(TS=7)\n",
+		((tx_window & 0x01)) ? 'U' : '.',
+		((tx_window & 0x02)) ? 'U' : '.',
+		((tx_window & 0x04)) ? 'U' : '.',
+		((tx_window & 0x08)) ? 'U' : '.',
+		((tx_window & 0x10)) ? 'U' : '.',
+		((tx_window & 0x20)) ? 'U' : '.',
+		((tx_window & 0x40)) ? 'U' : '.',
+		((tx_window & 0x80)) ? 'U' : '.');
+
+	if (!tx_window) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No suitable uplink slots "
+			"available\n");
+		return -EBUSY;
+	}
+
+	return tx_window;
+}
+
+/*
  * Assign the first common ts, which is used for control or
  * single slot.
  */
@@ -412,11 +503,10 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	uint8_t Tta, Ttb, Tra, Trb, Tt, Tr;	/* Minimum Number of Slots */
 	uint8_t Type; /* Type of Mobile */
 	int rx_window;
-	uint8_t tx_window = 0;
 	static const char *digit[10] = { "0","1","2","3","4","5","6","7","8","9" };
 	int8_t usf[8] = { -1, -1, -1, -1, -1, -1, -1, -1 }; /* must be signed */
 	int8_t first_common_ts = -1;
-	uint8_t i, ts;
+	uint8_t ts;
 	uint8_t slotcount = 0;
 
 
@@ -486,89 +576,18 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	tx_win_from_rx(ms_class->type, rx_win_min, rx_win_max, Tt, Tr,
 				&tx_win_min, &tx_win_max, &tx_range);
 
-	/* select a window of Tx slots if available
-	 * The maximum allowed slots depend on TX or the window of available
-	 * slots.
-	 *
-	 * also assign the first common ts, which is used for control or single
-	 * slot. */
+	/* select UL slots but in both cases assign first_common_ts */
+	uint8_t tx_window = 0;
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		int tsc = -1;
-		for (ts = tx_win_min, i = 0; i < tx_range; ts = (ts + 1) & 7) {
-			struct gprs_rlcmac_pdch *pdch;
-			pdch = &tbf->trx->pdch[ts];
-			/* check if enabled */
-			if (!pdch->is_enabled()) {
-				LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
-					"because not enabled\n", ts);
-				#warning "Why isn't it needed to increase the window?"
-				continue;
-			}
-			/* check if TSC changes */
-			if (tsc < 0)
-				tsc = pdch->tsc;
-			else if (tsc != pdch->tsc) {
-				LOGP(DRLCMAC, LOGL_ERROR, "Skipping TS %d of "
-					"TRX=%d, because it has different TSC "
-					"than lower TS of TRX. In order to "
-					"allow multislot, all slots must be "
-					"configured with the same TSC!\n",
-					ts, tbf->trx->trx_no);
-				/* increase window for Type 1 */
-				#warning "Why isn't it needed to check for tx_window"
-				if (Type == 1)
-					i++;
-				continue;
-			}
-			/* check for free usf */
-			usf[ts] = find_free_usf(pdch);
-			if (usf[ts] < 0) {
-				LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
-					"because no USF available\n", ts);
-				/* increase window for Type 1 */
-				if (Type == 1)
-					i++;
-				continue;
-			}
-
-			if (!tx_window)
-				first_common_ts = ts;
-
-			tx_window |= (1 << ts);
-			LOGP(DRLCMAC, LOGL_DEBUG, "- Selected UL TS %d\n", ts);
-
-			if (1 && Type == 1) { /* FIXME: multislot UL assignment */
-				LOGP(DRLCMAC, LOGL_DEBUG, "- Done, because "
-					"1 slot assigned\n");
-				break;
-			}
-			if (++i == Tx) {
-				LOGP(DRLCMAC, LOGL_DEBUG, "- Done, because "
-					"slots / window reached maximum "
-					"allowed Tx size\n");
-				break;
-			}
-		}
-
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Selected TX window: "
-			"(TS=0)\"%c%c%c%c%c%c%c%c\"(TS=7)\n",
-			((tx_window & 0x01)) ? 'U' : '.',
-			((tx_window & 0x02)) ? 'U' : '.',
-			((tx_window & 0x04)) ? 'U' : '.',
-			((tx_window & 0x08)) ? 'U' : '.',
-			((tx_window & 0x10)) ? 'U' : '.',
-			((tx_window & 0x20)) ? 'U' : '.',
-			((tx_window & 0x40)) ? 'U' : '.',
-			((tx_window & 0x80)) ? 'U' : '.');
-
-		if (!tx_window) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No suitable uplink slots "
-				"available\n");
-			return -EBUSY;
-		}
+		rc = select_ul_slots(tbf->trx, ms_class->type, ms_class->tx,
+					tx_win_min, tx_range, usf, &first_common_ts);
+		if (rc < 0)
+			return rc;
+		tx_window = rc;
 	} else {
 		first_common_ts = select_first_ts(tbf->trx, tx_win_min, tx_range);
 	}
+	#warning "first_common_ts might be different if there was no free USF for the new uplink assignment"
 
 	if (first_common_ts < 0) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No first common slots available\n");
@@ -600,12 +619,6 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 			}
 		}
 	} else {
-		/* assign uplink */
-		if (tx_window == 0) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No uplink slots "
-				"available\n");
-			return -EINVAL;
-		}
 		for (ts = 0; ts < 8; ts++) {
 			if ((tx_window & (1 << ts))) {
 				LOGP(DRLCMAC, LOGL_DEBUG, "- Assigning UL TS "
