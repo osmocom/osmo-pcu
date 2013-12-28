@@ -115,6 +115,8 @@ struct gprs_rlc_ul_window {
 
 	void raise_v_q(int);
 
+	uint16_t receive_bsn(const uint16_t bsn);
+
 	uint16_t m_v_r;	/* receive state */
 	uint16_t m_v_q;	/* receive window state */
 

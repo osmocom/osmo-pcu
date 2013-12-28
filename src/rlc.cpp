@@ -197,3 +197,11 @@ uint16_t gprs_rlc_ul_window::raise_v_q()
 
 	return count;
 }
+
+uint16_t gprs_rlc_ul_window::receive_bsn(const uint16_t bsn)
+{
+	m_v_n.mark_received(bsn);
+	raise_v_r(bsn);
+
+	return raise_v_q();
+}

@@ -218,9 +218,7 @@ static void test_rlc_dl_ul_basic()
 
 		/* simulate to have received 0, 1 and 5 */
 		OSMO_ASSERT(ul_win.is_in_window(0));
-		ul_win.m_v_n.mark_received(0);
-		ul_win.raise_v_r(0);
-		count = ul_win.raise_v_q();
+		count = ul_win.receive_bsn(0);
 		OSMO_ASSERT(ul_win.m_v_n.is_received(0));
 		OSMO_ASSERT(ul_win.v_q() == 1);
 		OSMO_ASSERT(ul_win.v_r() == 1);
@@ -236,9 +234,7 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(1));
-		ul_win.m_v_n.mark_received(1);
-		ul_win.raise_v_r(1);
-		count = ul_win.raise_v_q();
+		count = ul_win.receive_bsn(1);
 		OSMO_ASSERT(ul_win.m_v_n.is_received(0));
 		OSMO_ASSERT(ul_win.v_q() == 2);
 		OSMO_ASSERT(ul_win.v_r() == 2);
@@ -254,9 +250,7 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(5));
-		ul_win.m_v_n.mark_received(5);
-		ul_win.raise_v_r(5);
-		count = ul_win.raise_v_q();
+		count = ul_win.receive_bsn(5);
 		OSMO_ASSERT(ul_win.m_v_n.is_received(0));
 		OSMO_ASSERT(ul_win.v_q() == 2);
 		OSMO_ASSERT(ul_win.v_r() == 6);
@@ -274,9 +268,7 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.is_in_window(65));
 		OSMO_ASSERT(ul_win.is_in_window(2));
 		OSMO_ASSERT(ul_win.m_v_n.is_received(5));
-		ul_win.m_v_n.mark_received(65);
-		ul_win.raise_v_r(65);
-		count = ul_win.raise_v_q();
+		count = ul_win.receive_bsn(65);
 		OSMO_ASSERT(count == 0);
 		OSMO_ASSERT(ul_win.m_v_n.is_received(5));
 		OSMO_ASSERT(ul_win.v_q() == 2);
@@ -293,33 +285,25 @@ static void test_rlc_dl_ul_basic()
 
 		OSMO_ASSERT(ul_win.is_in_window(2));
 		OSMO_ASSERT(!ul_win.is_in_window(66));
-		ul_win.m_v_n.mark_received(2);
-		ul_win.raise_v_r(2);
-		count = ul_win.raise_v_q();
+		count = ul_win.receive_bsn(2);
 		OSMO_ASSERT(count == 1);
 		OSMO_ASSERT(ul_win.v_q() == 3);
 		OSMO_ASSERT(ul_win.v_r() == 66);
 
 		OSMO_ASSERT(ul_win.is_in_window(66));
-		ul_win.m_v_n.mark_received(66);
-		ul_win.raise_v_r(66);
-		count = ul_win.raise_v_q();
+		count = ul_win.receive_bsn(66);
 		OSMO_ASSERT(count == 0);
 		OSMO_ASSERT(ul_win.v_q() == 3);
 		OSMO_ASSERT(ul_win.v_r() == 67);
 
 		for (int i = 3; i <= 67; ++i) {
-			ul_win.m_v_n.mark_received(i);
-			ul_win.raise_v_r(i);
-			ul_win.raise_v_q();
+			ul_win.receive_bsn(i);
 		}
 
 		OSMO_ASSERT(ul_win.v_q() == 68);
 		OSMO_ASSERT(ul_win.v_r() == 68);
 
-		ul_win.m_v_n.mark_received(68);
-		ul_win.raise_v_r(68);
-		count = ul_win.raise_v_q();
+		count = ul_win.receive_bsn(68);
 		OSMO_ASSERT(ul_win.v_q() == 69);
 		OSMO_ASSERT(ul_win.v_r() == 69);
 		OSMO_ASSERT(count == 1);
@@ -327,9 +311,7 @@ static void test_rlc_dl_ul_basic()
 		/* now test the wrapping */
 		OSMO_ASSERT(ul_win.is_in_window(4));
 		OSMO_ASSERT(!ul_win.is_in_window(5));
-		ul_win.m_v_n.mark_received(4);
-		ul_win.raise_v_r(4);
-		count = ul_win.raise_v_q();
+		count = ul_win.receive_bsn(4);
 		OSMO_ASSERT(count == 0);
 	}
 
