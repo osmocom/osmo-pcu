@@ -81,6 +81,21 @@ struct gprs_rlc_dl_window {
 	uint16_t m_v_a;	/* ack state */
 };
 
+struct gprs_rlc_v_n {
+	void reset();
+
+	void mark_received(int bsn);
+	void mark_missing(int bsn);
+
+	bool is_received(int bsn) const;
+
+	char state(int bsn) const;
+private:
+	bool is_state(int bsn, const char state) const;
+	void mark(int bsn, const char state);
+	char m_v_n[RLC_MAX_SNS/2]; /* receive state array */
+};
+
 struct gprs_rlc_ul_window {
 	const uint16_t mod_sns() const;
 	const uint16_t sns() const;
@@ -93,15 +108,17 @@ struct gprs_rlc_ul_window {
 
 	bool is_in_window(uint8_t bsn) const;
 
-	void update_rbb(const gprs_rlc_v_n *v_n, char *rbb);
+	void update_rbb(char *rbb);
 	void raise_v_r_to(int moves);
-	void raise_v_r(const uint16_t bsn, gprs_rlc_v_n *v_n);
-	uint16_t raise_v_q(gprs_rlc_v_n *v_n);
+	void raise_v_r(const uint16_t bsn);
+	uint16_t raise_v_q();
 
 	void raise_v_q(int);
 
 	uint16_t m_v_r;	/* receive state */
 	uint16_t m_v_q;	/* receive window state */
+
+	gprs_rlc_v_n m_v_n;
 };
 
 /**
@@ -139,21 +156,6 @@ private:
 	void mark(int bsn, const char state);
 
 	char m_v_b[RLC_MAX_SNS/2]; /* acknowledge state array */
-};
-
-struct gprs_rlc_v_n {
-	void reset();
-
-	void mark_received(int bsn);
-	void mark_missing(int bsn);
-
-	bool is_received(int bsn) const;
-
-	char state(int bsn) const;
-private:
-	bool is_state(int bsn, const char state) const;
-	void mark(int bsn, const char state);
-	char m_v_n[RLC_MAX_SNS/2]; /* receive state array */
 };
 
 extern "C" {

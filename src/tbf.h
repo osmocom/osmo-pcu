@@ -174,7 +174,6 @@ struct gprs_rlcmac_tbf {
 		} dl;
 		struct {
 			gprs_rlc_ul_window window;
-			gprs_rlc_v_n v_n;
 			int32_t rx_counter; /* count all received blocks */
 			uint8_t n3103;	/* N3103 counter */
 			uint8_t usf[8];	/* list USFs per PDCH (timeslot) */

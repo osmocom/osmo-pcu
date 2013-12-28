@@ -1606,14 +1606,14 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 		rh->bsn, dir.ul.window.v_q(),
 		(dir.ul.window.v_q() + ws - 1) & mod_sns);
 
-	dir.ul.v_n.mark_received(rh->bsn);
-	dir.ul.window.raise_v_r(rh->bsn, &dir.ul.v_n);
+	dir.ul.window.m_v_n.mark_received(rh->bsn);
+	dir.ul.window.raise_v_r(rh->bsn);
 
 	/* Raise V(Q) if possible, and retrieve LLC frames from blocks.
 	 * This is looped until there is a gap (non received block) or
 	 * the window is empty.*/
 	const uint16_t v_q_beg = dir.ul.window.v_q();
-	const uint16_t count = dir.ul.window.raise_v_q(&dir.ul.v_n);
+	const uint16_t count = dir.ul.window.raise_v_q();
 
 	/* Retrieve LLC frames from blocks that are ready */
 	for (uint16_t i = 0; i < count; ++i) {
