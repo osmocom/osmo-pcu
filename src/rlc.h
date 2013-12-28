@@ -53,6 +53,36 @@ struct gprs_rlc {
 	gprs_rlc_data m_blocks[RLC_MAX_SNS/2];
 };
 
+/**
+ * TODO: for GPRS/EDGE maybe make sns a template parameter
+ * so we create specialized versions...
+ */
+struct gprs_rlc_v_b {
+	/* Check for an individual frame */
+	bool is_unacked(int bsn) const;
+	bool is_nacked(int bsn) const;
+	bool is_acked(int bsn) const;
+	bool is_resend(int bsn) const;
+	bool is_invalid(int bsn) const;
+	char get_state(int bsn) const;
+
+	/* Mark a RLC frame for something */
+	void mark_unacked(int bsn);
+	void mark_nacked(int bsn);
+	void mark_acked(int bsn);
+	void mark_resend(int bsn);
+	void mark_invalid(int bsn);
+
+	void reset();
+
+
+private:
+	bool is_state(int bsn, const char state) const;
+	void mark(int bsn, const char state);
+
+	char m_v_b[RLC_MAX_SNS/2]; /* acknowledge state array */
+};
+
 
 /**
  * TODO: The UL/DL code could/should share a baseclass but
@@ -77,8 +107,19 @@ struct gprs_rlc_dl_window {
 	const uint16_t v_a() const;
 	const int16_t distance() const;
 
+	/* Methods to manage reception */
+	int resend_needed();
+	int mark_for_resend();
+	void update(BTS *bts, char *show_rbb, uint8_t ssn,
+			uint16_t *lost, uint16_t *received);
+	int move_window();
+	void state(char *show_rbb);
+	int count_unacked();
+
 	uint16_t m_v_s;	/* send state */
 	uint16_t m_v_a;	/* ack state */
+
+	gprs_rlc_v_b m_v_b;
 };
 
 struct gprs_rlc_v_n {
@@ -121,43 +162,6 @@ struct gprs_rlc_ul_window {
 	uint16_t m_v_q;	/* receive window state */
 
 	gprs_rlc_v_n m_v_n;
-};
-
-/**
- * TODO: for GPRS/EDGE maybe make sns a template parameter
- * so we create specialized versions...
- */
-struct gprs_rlc_v_b {
-	int resend_needed(const gprs_rlc_dl_window& window);
-	int mark_for_resend(const gprs_rlc_dl_window& window);
-	void update(BTS *bts, char *show_rbb, uint8_t ssn,
-			const gprs_rlc_dl_window& window,
-			uint16_t *lost, uint16_t *received);
-	int move_window(const gprs_rlc_dl_window& window);
-	void state(char *show_rbb, const gprs_rlc_dl_window& window);
-	int count_unacked(const gprs_rlc_dl_window& window);
-
-	/* Check for an individual frame */
-	bool is_unacked(int bsn) const;
-	bool is_nacked(int bsn) const;
-	bool is_acked(int bsn) const;
-	bool is_resend(int bsn) const;
-	bool is_invalid(int bsn) const;
-
-	/* Mark a RLC frame for something */
-	void mark_unacked(int bsn);
-	void mark_nacked(int bsn);
-	void mark_acked(int bsn);
-	void mark_resend(int bsn);
-	void mark_invalid(int bsn);
-
-	void reset();
-
-private:
-	bool is_state(int bsn, const char state) const;
-	void mark(int bsn, const char state);
-
-	char m_v_b[RLC_MAX_SNS/2]; /* acknowledge state array */
 };
 
 extern "C" {
@@ -229,6 +233,11 @@ inline bool gprs_rlc_v_b::is_invalid(int bsn) const
 	return is_state(bsn, 'I');
 }
 
+inline char gprs_rlc_v_b::get_state(int bsn) const
+{
+	return m_v_b[bsn & mod_sns_half()];
+}
+
 inline void gprs_rlc_v_b::mark_resend(int bsn)
 {
 	return mark(bsn, 'X');
@@ -253,7 +262,6 @@ inline void gprs_rlc_v_b::mark_invalid(int bsn)
 {
 	return mark(bsn, 'I');
 }
-
 
 inline const uint16_t gprs_rlc_dl_window::sns() const
 {

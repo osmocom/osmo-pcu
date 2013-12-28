@@ -834,11 +834,11 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 
 do_resend:
 	/* check if there is a block with negative acknowledgement */
-	int resend_bsn = dir.dl.v_b.resend_needed(dir.dl.window);
+	int resend_bsn = dir.dl.window.resend_needed();
 	if (resend_bsn >= 0) {
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d\n", resend_bsn);
 		/* re-send block with negative aknowlegement */
-		dir.dl.v_b.mark_unacked(resend_bsn);
+		dir.dl.window.m_v_b.mark_unacked(resend_bsn);
 		bts->rlc_resent();
 		return create_dl_acked_block(fn, ts, resend_bsn, false);
 	}
@@ -873,7 +873,7 @@ do_resend:
 		}
 		
 		/* cycle through all unacked blocks */
-		int resend = dir.dl.v_b.mark_for_resend(dir.dl.window);
+		int resend = dir.dl.window.mark_for_resend();
 
 		/* At this point there should be at least one unacked block
 		 * to be resent. If not, this is an software error. */
@@ -1052,7 +1052,7 @@ struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts
 #warning "move this up?"
 	rlc_data->len = block_length;
 	/* raise send state and set ack state array */
-	dir.dl.v_b.mark_unacked(bsn);
+	dir.dl.window.m_v_b.mark_unacked(bsn);
 	dir.dl.window.increment_send();
 
 	return create_dl_acked_block(fn, ts, bsn, first_fin_ack);
@@ -1364,17 +1364,17 @@ int gprs_rlcmac_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 		return 1; /* indicate to free TBF */
 	}
 
-	dir.dl.v_b.update(bts, show_rbb, ssn, dir.dl.window,
+	dir.dl.window.update(bts, show_rbb, ssn,
 			&lost, &received);
 
 	/* report lost and received packets */
 	gprs_rlcmac_received_lost(this, received, lost);
 
 	/* raise V(A), if possible */
-	dir.dl.window.raise(dir.dl.v_b.move_window(dir.dl.window));
+	dir.dl.window.raise(dir.dl.window.move_window());
 
 	/* show receive state array in debug (V(A)..V(S)-1) */
-	dir.dl.v_b.state(show_v_b, dir.dl.window);
+	dir.dl.window.state(show_v_b);
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- V(B): (V(A)=%d)\"%s\""
 		"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked "
 		"X=Resend-Unacked I=Invalid\n",
@@ -1397,7 +1397,7 @@ int gprs_rlcmac_tbf::maybe_start_new_window()
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
 	/* range V(A)..V(S)-1 */
-	received = dir.dl.v_b.count_unacked(dir.dl.window);
+	received = dir.dl.window.count_unacked();
 
 	/* report all outstanding packets as received */
 	gprs_rlcmac_received_lost(this, received, 0);
@@ -1721,7 +1721,7 @@ void gprs_rlcmac_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 
 	/* reset rlc states */
 	memset(&dir.dl, 0, sizeof(dir.dl));
-	dir.dl.v_b.reset();
+	dir.dl.window.m_v_b.reset();
 
 	/* keep to flags */
 	state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;

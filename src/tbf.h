@@ -168,7 +168,6 @@ struct gprs_rlcmac_tbf {
 	union {
 		struct {
 			gprs_rlc_dl_window window;
-			gprs_rlc_v_b v_b;
 			int32_t tx_counter; /* count all transmitted blocks */
 			uint8_t wait_confirm; /* wait for CCCH IMM.ASS cnf */
 		} dl;

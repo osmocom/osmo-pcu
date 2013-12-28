@@ -322,9 +322,8 @@ static void test_rlc_dl_ul_basic()
 		char show_rbb[65];
 		BTS dummy_bts;
 		gprs_rlc_dl_window dl_win = { 0, };
-		gprs_rlc_v_b v_b;
 
-		v_b.reset();
+		dl_win.m_v_b.reset();
 
 		OSMO_ASSERT(dl_win.window_empty());
 		OSMO_ASSERT(!dl_win.window_stalled());
@@ -345,7 +344,7 @@ static void test_rlc_dl_ul_basic()
 		Decoding::extract_rbb(rbb_cmp, show_rbb);
 		printf("show_rbb: %s\n", show_rbb);
 
-		v_b.update(&dummy_bts, show_rbb, 35, dl_win, &lost, &recv);
+		dl_win.update(&dummy_bts, show_rbb, 35, &lost, &recv);
 		OSMO_ASSERT(lost == 0);
 		OSMO_ASSERT(recv == 35);
 
