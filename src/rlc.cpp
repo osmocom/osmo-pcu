@@ -172,7 +172,7 @@ void gprs_rlc_ul_window::raise_v_r(const uint16_t bsn, gprs_rlc_v_n *v_n)
 		while (offset_v_r--) {
 			if (offset_v_r) /* all except the received block */
 				v_n->mark_missing(v_r());
-			raise_v_r(1);
+			raise_v_r_to(1);
 		}
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- Raising V(R) to %d\n", v_r());
 	}
