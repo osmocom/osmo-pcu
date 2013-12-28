@@ -132,15 +132,15 @@ static void test_rlc_v_n()
 		vn.reset();
 
 		OSMO_ASSERT(!vn.is_received(0x23));
-		OSMO_ASSERT(vn.state(0x23) == ' ');
+		OSMO_ASSERT(vn.state(0x23) == GPRS_RLC_UL_BSN_INVALID);
 
 		vn.mark_received(0x23);
 		OSMO_ASSERT(vn.is_received(0x23));
-		OSMO_ASSERT(vn.state(0x23) == 'R');
+		OSMO_ASSERT(vn.state(0x23) == GPRS_RLC_UL_BSN_RECEIVED);
 
 		vn.mark_missing(0x23);
 		OSMO_ASSERT(!vn.is_received(0x23));
-		OSMO_ASSERT(vn.state(0x23) == 'N');
+		OSMO_ASSERT(vn.state(0x23) == GPRS_RLC_UL_BSN_MISSING);
 	}
 }
 

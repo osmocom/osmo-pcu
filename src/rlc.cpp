@@ -137,16 +137,28 @@ void gprs_rlc_dl_window::state(char *show_v_b)
 
 	for (i = 0, bsn = v_a(); bsn != v_s(); i++, bsn = (bsn + 1) & mod_sns()) {
 		uint16_t index = bsn & mod_sns_half();
-		show_v_b[i] = m_v_b.get_state(index);
-		if (show_v_b[i] == 0)
-			show_v_b[i] = ' ';
+		switch(m_v_b.get_state(index)) {
+		case GPRS_RLC_DL_BSN_INVALID:
+			show_v_b[i] = 'I';
+			break;
+		case GPRS_RLC_DL_BSN_ACKED:
+			show_v_b[i] = 'A';
+			break;
+		case GPRS_RLC_DL_BSN_RESEND:
+			show_v_b[i] = 'X';
+			break;
+		case GPRS_RLC_DL_BSN_NACKED:
+			show_v_b[i] = 'N';
+			break;
+		}
 	}
 	show_v_b[i] = '\0';
 }
 
 void gprs_rlc_v_n::reset()
 {
-	memset(m_v_n, 0x0, sizeof(m_v_n));
+	for (size_t i = 0; i < ARRAY_SIZE(m_v_n); ++i)
+		m_v_n[i] = GPRS_RLC_UL_BSN_INVALID;
 }
 
 /* Update the receive block bitmap */
