@@ -34,6 +34,7 @@
 */
 #include <iostream>
 #include <cstdlib>
+#include <assert.h>
 #include <gprs_debug.h>
 using namespace std;
 
@@ -5436,6 +5437,7 @@ void decode_gsm_rlcmac_uplink_data(bitvec * vector, RlcMacUplinkDataBlock_t * da
     }
     unsigned dataLen = 23 - readIndex/8;
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "DATA[%u] = ", dataLen);
+    assert(dataLen <= 20);
     for (unsigned i = 0; i < dataLen; i++)
     {
       data->RLC_DATA[i] = bitvec_read_field(vector, readIndex, 8);
@@ -5498,6 +5500,7 @@ void encode_gsm_rlcmac_downlink_data(bitvec * vector, RlcMacDownlinkDataBlock_t 
     }
     unsigned dataNumOctets = 23 - writeIndex/8;
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "DATA[%u] = ", dataNumOctets);
+    assert(dataNumOctets <= 20);
     for (unsigned i = 0; i < dataNumOctets; i++)
     {
       bitvec_write_field(vector, writeIndex, data->RLC_DATA[i], 8);

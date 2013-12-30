@@ -89,6 +89,7 @@ csnStreamInit(csnStream_t* ar, gint bit_offset, gint remaining_bits_len)
 {
   ar->remaining_bits_len  = remaining_bits_len;
   ar->bit_offset          = bit_offset;
+  ar->direction           = 0;
 }
 
 static const char* ErrCodes[] =
