@@ -400,7 +400,7 @@ static int select_ul_slots(gprs_rlcmac_trx *trx,
 	int i;
 	uint8_t ts_no;
 
-	for (ts_no = tx_win_min, i = 0; i < tx_range; ts_no = (ts_no + 1) & 7) {
+	for (ts_no = tx_win_min, i = 0; i < tx_range; ts_no = (ts_no + 1) & 7, i++) {
 		gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
 
 		/* check if enabled */
@@ -492,7 +492,7 @@ static int select_first_ts(gprs_rlcmac_trx *trx, uint8_t tx_win_min,
 {
 	uint8_t ts_no;
 	int i;
-	for (ts_no = tx_win_min, i = 0; i < tx_range; ts_no = (ts_no + 1) & 7) {
+	for (ts_no = tx_win_min, i = 0; i < tx_range; ts_no = (ts_no + 1) & 7, i++) {
 		gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
 		/* check if enabled */
 		if (!pdch->is_enabled()) {
