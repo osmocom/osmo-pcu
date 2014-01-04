@@ -378,6 +378,9 @@ static void tx_win_from_rx(const int ms_type,
 	}
 
 	*tx_range = (*tx_win_max - *tx_win_min + 1) & 7;
+	/* if TX window fills complete range */
+	if (*tx_range == 0)
+		*tx_range = 8;
 	LOGP(DRLCMAC, LOGL_DEBUG, "- TX-Window is: %d..%d\n", *tx_win_min,
 		*tx_win_max);
 }
