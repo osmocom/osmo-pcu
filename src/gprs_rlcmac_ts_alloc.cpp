@@ -393,7 +393,7 @@ static void tx_win_from_rx(const int ms_type,
 static int select_ul_slots(gprs_rlcmac_trx *trx,
 		const int ms_type, const int ms_max_txslots,
 		uint8_t tx_win_min, uint8_t tx_range,
-		int8_t *usf, int8_t *first_common_ts)
+		int8_t *usf, int8_t *first_common_ts, uint8_t rx_window)
 {
 	int tsc = -1;
 	uint8_t tx_window = 0;
@@ -407,6 +407,14 @@ static int select_ul_slots(gprs_rlcmac_trx *trx,
 		if (!pdch->is_enabled()) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
 				"because not enabled\n", ts_no);
+			if (ms_type == 1 && tx_window)
+				goto inc_window;
+			continue;
+		}
+		/* check if used as downlink */
+		if (!(rx_window & (1 << ts_no))) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
+				"because not a downlink slot\n", ts_no);
 			if (ms_type == 1 && tx_window)
 				goto inc_window;
 			continue;
@@ -479,7 +487,8 @@ inc_window:
  * Assign the first common ts, which is used for control or
  * single slot.
  */
-static int select_first_ts(gprs_rlcmac_trx *trx, uint8_t tx_win_min, uint8_t tx_range)
+static int select_first_ts(gprs_rlcmac_trx *trx, uint8_t tx_win_min,
+	uint8_t tx_range, uint8_t rx_window)
 {
 	uint8_t ts_no;
 	int i;
@@ -489,6 +498,12 @@ static int select_first_ts(gprs_rlcmac_trx *trx, uint8_t tx_win_min, uint8_t tx_
 		if (!pdch->is_enabled()) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
 					"because not enabled\n", ts_no);
+			continue;
+		}
+		/* check if used as downlink */
+		if (!(rx_window & (1 << ts_no))) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
+				"because not a downlink slot\n", ts_no);
 			continue;
 		}
 		return ts_no;
@@ -589,12 +604,14 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	uint8_t tx_window = 0;
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
 		rc = select_ul_slots(tbf->trx, ms_class->type, ms_class->tx,
-					tx_win_min, tx_range, usf, &first_common_ts);
+					tx_win_min, tx_range, usf,
+					&first_common_ts, rx_window);
 		if (rc < 0)
 			return rc;
 		tx_window = rc;
 	} else {
-		first_common_ts = select_first_ts(tbf->trx, tx_win_min, tx_range);
+		first_common_ts = select_first_ts(tbf->trx, tx_win_min,
+					tx_range, rx_window);
 	}
 	#warning "first_common_ts might be different if there was no free USF for the new uplink assignment"
 
