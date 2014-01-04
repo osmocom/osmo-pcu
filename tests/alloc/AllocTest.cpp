@@ -334,17 +334,17 @@ static void test_alloc_b(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool 
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
 		dl_tbf = tbf_alloc(bts, NULL, GPRS_RLCMAC_DL_TBF, tfi, trx_no, ms_class, 1);
+		OSMO_ASSERT(dl_tbf);
 		dl_tbf->m_tlli = 0x23;
 		dl_tbf->m_tlli_valid = true;
-		OSMO_ASSERT(dl_tbf);
 
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
 		ul_tbf = tbf_alloc(bts, dl_tbf, GPRS_RLCMAC_UL_TBF, tfi, trx_no, ms_class, 0);
+		OSMO_ASSERT(ul_tbf);
 		ul_tbf->m_tlli = 0x23;
 		ul_tbf->m_tlli_valid = true;
 		ul_tbf->dir.ul.contention_resolution_done = 1;
-		OSMO_ASSERT(ul_tbf);
 
 		OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
 
