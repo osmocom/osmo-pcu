@@ -320,25 +320,29 @@ static int reduce_rx_window(const int ms_type, const struct gprs_rlcmac_tbf *old
 		return -EBUSY;
 	}
 
+	return 0;
+}
+
+/* shrink range of rx_win_min and rx_win_max */
+static void shrink_rx_window(uint8_t *rx_win_min, uint8_t *rx_win_max, int rx_window)
+{
 	/* calculate new min/max */
 	for (uint8_t ts_no = *rx_win_min; ts_no <= *rx_win_max; ts_no++) {
-		if ((*rx_window & (1 << ts_no)))
+		if ((rx_window & (1 << ts_no)))
 			break;
 		*rx_win_min = ts_no + 1;
-		LOGP(DRLCMAC, LOGL_DEBUG, "- TS has been deleted, so "
+		LOGP(DRLCMAC, LOGL_DEBUG, "- TS is unused, so "
 			"raising start of DL window to %d\n",
 			*rx_win_min);
 	}
 	for (uint8_t ts_no = *rx_win_max; ts_no >= *rx_win_min; ts_no--) {
-		if ((*rx_window & (1 << ts_no)))
+		if ((rx_window & (1 << ts_no)))
 			break;
 		*rx_win_max = ts_no - 1;
-		LOGP(DRLCMAC, LOGL_DEBUG, "- TS has been deleted, so "
+		LOGP(DRLCMAC, LOGL_DEBUG, "- TS is unused, so "
 			"lowering end of DL window to %d\n",
 			*rx_win_max);
 	}
-
-	return 0;
 }
 
 /*
@@ -590,8 +594,10 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 				&rx_window, &rx_win_min, &rx_win_max);
 	if (rc < 0)
 		return rc;
+	shrink_rx_window(&rx_win_min, &rx_win_max, rx_window);
 	rx_win_max = update_rx_win_max(ms_class->type, Tt, Tr,
 				rx_win_min, rx_win_max);
+	shrink_rx_window(&rx_win_min, &rx_win_max, rx_window);
 	LOGP(DRLCMAC, LOGL_DEBUG, "- RX-Window is: %d..%d\n", rx_win_min,
 		rx_win_max);
 
