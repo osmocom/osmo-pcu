@@ -235,6 +235,12 @@ inc_window:
 				"window reached maximum alowed Rx size\n");
 			break;
 		}
+		if (ms_type == 1 && rx_window_size == 5) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "- Done, because slots / "
+				"window reached maximum supported Rx size of "
+				"this algorithm\n");
+			break;
+		}
 	}
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "- Selected slots for RX: "
