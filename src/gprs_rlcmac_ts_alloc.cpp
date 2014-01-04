@@ -203,7 +203,7 @@ static uint8_t select_dl_slots(struct gprs_rlcmac_trx *trx,
 			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, because "
 				"not enabled\n", ts_no);
 			if (ms_type == 1 && rx_window)
-				rx_window_size += 1;
+				goto inc_window;
 			continue;
 		}
 		/* check if TSC changes */
@@ -216,7 +216,7 @@ static uint8_t select_dl_slots(struct gprs_rlcmac_trx *trx,
 				"slots must be configured with the same "
 				"TSC!\n", ts_no, trx->trx_no);
 			if (ms_type == 1 && rx_window)
-				rx_window_size += 1;
+				goto inc_window;
 			continue;
 		}
 
@@ -229,6 +229,7 @@ static uint8_t select_dl_slots(struct gprs_rlcmac_trx *trx,
 		/* range of window (required for Type 1) */
 		rx_win_max = ts_no;
 
+inc_window:
 		if (++rx_window_size == ms_max_rxslots) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "- Done, because slots / "
 				"window reached maximum alowed Rx size\n");
@@ -397,7 +398,8 @@ static int select_ul_slots(gprs_rlcmac_trx *trx,
 		if (!pdch->is_enabled()) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
 				"because not enabled\n", ts_no);
-			#warning "Why isn't it needed to increase the window?"
+			if (ms_type == 1 && tx_window)
+				goto inc_window;
 			continue;
 		}
 		/* check if TSC changes */
@@ -410,10 +412,8 @@ static int select_ul_slots(gprs_rlcmac_trx *trx,
 				"allow multislot, all slots must be "
 				"configured with the same TSC!\n",
 				ts_no, trx->trx_no);
-			/* increase window for Type 1 */
-			#warning "Why isn't it needed to check for tx_window"
 			if (ms_type == 1)
-				i++;
+				goto inc_window;
 			continue;
 		}
 		/* check for free usf */
@@ -421,9 +421,8 @@ static int select_ul_slots(gprs_rlcmac_trx *trx,
 		if (usf[ts_no] < 0) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "- Skipping TS %d, "
 			"because no USF available\n", ts_no);
-			/* increase window for Type 1 */
 			if (ms_type == 1)
-				i++;
+				goto inc_window;
 			continue;
 		}
 
@@ -433,6 +432,7 @@ static int select_ul_slots(gprs_rlcmac_trx *trx,
 		tx_window |= (1 << ts_no);
 		LOGP(DRLCMAC, LOGL_DEBUG, "- Selected UL TS %d\n", ts_no);
 
+inc_window:
 		if (1 && ms_type == 1) { /* FIXME: multislot UL assignment */
 			LOGP(DRLCMAC, LOGL_DEBUG, "- Done, because "
 				"1 slot assigned\n");
