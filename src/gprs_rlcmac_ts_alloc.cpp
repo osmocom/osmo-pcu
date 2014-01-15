@@ -459,7 +459,7 @@ inc_window:
 				"1 slot assigned\n");
 			break;
 		}
-		if (++i == ms_max_txslots) {
+		if (i+1 == ms_max_txslots) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "- Done, because "
 				"slots / window reached maximum "
 				"allowed Tx size\n");
