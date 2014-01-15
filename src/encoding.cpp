@@ -382,7 +382,7 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 
 	char rbb[65];
 
-	tbf->dir.ul.window.update_rbb(&tbf->dir.ul.v_n, rbb);
+	tbf->dir.ul.window.update_rbb(rbb);
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Encoding Ack/Nack for %s "
 		"(final=%d)\n", tbf_name(tbf), final);
