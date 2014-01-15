@@ -138,6 +138,8 @@ struct gprs_rlcmac_tbf {
 
 	uint16_t sns() const;
 
+	time_t create_ts() const;
+
 	/* attempt to make things a bit more fair */
 	void rotate_in_list();
 
@@ -225,6 +227,7 @@ struct gprs_rlcmac_tbf {
 	uint32_t m_tlli;
 	uint8_t m_tlli_valid;
 	uint8_t m_tfi;
+	time_t m_create_ts;
 
 	/* store IMSI for look-up and PCH retransmission */
 	char m_imsi[16];
@@ -310,6 +313,12 @@ inline uint16_t gprs_rlcmac_tbf::sns() const
 }
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf);
+
+inline time_t gprs_rlcmac_tbf::create_ts() const
+{
+	return m_create_ts;
+}
+
 #endif
 
 #ifdef __cplusplus

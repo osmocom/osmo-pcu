@@ -508,6 +508,7 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 	if (!tbf)
 		return NULL;
 
+	tbf->m_create_ts = time(NULL);
 	tbf->bts = bts->bts;
 	tbf->direction = dir;
 	tbf->m_tfi = tfi;
@@ -1762,10 +1763,11 @@ void tbf_print_vty_info(struct vty *vty, llist_head *ltbf)
 			tbf->tlli(), tbf->is_tlli_valid() ? "valid" : "invalid",
 			tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
 			tbf->imsi(), VTY_NEWLINE);
-	vty_out(vty, " state=%08x 1st_TS=%d 1st_cTS=%d ctrl_TS=%d "
+	vty_out(vty, " created=%lu state=%08x 1st_TS=%d 1st_cTS=%d ctrl_TS=%d "
 			"MS_CLASS=%d%s",
-			tbf->state_flags, tbf->first_ts, tbf->first_common_ts,
-			tbf->control_ts, tbf->ms_class,	VTY_NEWLINE);
+			tbf->create_ts(), tbf->state_flags, tbf->first_ts,
+			tbf->first_common_ts, tbf->control_ts, tbf->ms_class,
+			VTY_NEWLINE);
 	vty_out(vty, " TS_alloc=");
 	for (int i = 0; i < 8; i++) {
 		if (tbf->pdch[i])
