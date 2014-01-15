@@ -1374,7 +1374,7 @@ int gprs_rlcmac_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 	dir.dl.window.raise(dir.dl.window.move_window());
 
 	/* show receive state array in debug (V(A)..V(S)-1) */
-	dir.dl.window.state(show_v_b);
+	dir.dl.window.show_state(show_v_b);
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- V(B): (V(A)=%d)\"%s\""
 		"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked "
 		"X=Resend-Unacked I=Invalid\n",

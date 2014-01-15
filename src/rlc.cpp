@@ -130,7 +130,7 @@ int gprs_rlc_dl_window::move_window()
 	return moved;
 }
 
-void gprs_rlc_dl_window::state(char *show_v_b)
+void gprs_rlc_dl_window::show_state(char *show_v_b)
 {
 	int i;
 	uint16_t bsn;
@@ -150,6 +150,8 @@ void gprs_rlc_dl_window::state(char *show_v_b)
 		case GPRS_RLC_DL_BSN_NACKED:
 			show_v_b[i] = 'N';
 			break;
+		default:
+			show_v_b[i] = '?';
 		}
 	}
 	show_v_b[i] = '\0';
