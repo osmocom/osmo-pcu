@@ -18,6 +18,8 @@
 
 #pragma once
 
+#ifdef __cplusplus
+
 #include "gprs_rlcmac.h"
 #include "llc.h"
 #include "rlc.h"
@@ -308,4 +310,16 @@ inline uint16_t gprs_rlcmac_tbf::sns() const
 }
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf);
+#endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <osmocom/vty/command.h>
+#include <osmocom/vty/vty.h>
+
+
+	void tbf_print_vty_info(struct vty *vty, llist_head *tbf);
+#ifdef __cplusplus
+}
+#endif
