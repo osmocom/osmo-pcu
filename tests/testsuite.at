@@ -6,26 +6,26 @@ AT_SETUP([rlcmac])
 AT_KEYWORDS([rlcmac])
 cat $abs_srcdir/rlcmac/RLCMACTest.ok > expout
 cat $abs_srcdir/rlcmac/RLCMACTest.err > experr
-AT_CHECK([$abs_top_builddir/tests/rlcmac/RLCMACTest], [0], [expout], [experr])
+AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/rlcmac/RLCMACTest], [0], [expout], [experr])
 AT_CLEANUP
 
 AT_SETUP([ts_alloc])
 AT_KEYWORDS([ts_alloc])
 cat $abs_srcdir/alloc/AllocTest.ok > expout
 cat $abs_srcdir/alloc/AllocTest.err > experr
-AT_CHECK([$abs_top_builddir/tests/alloc/AllocTest], [0], [expout], [experr])
+AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/alloc/AllocTest], [0], [expout], [experr])
 AT_CLEANUP
 
 AT_SETUP([tbf])
 AT_KEYWORDS([tbf])
 cat $abs_srcdir/tbf/TbfTest.ok > expout
 cat $abs_srcdir/tbf/TbfTest.err > experr
-AT_CHECK([$abs_top_builddir/tests/tbf/TbfTest], [0], [expout], [experr])
+AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/tbf/TbfTest], [0], [expout], [experr])
 AT_CLEANUP
 
 AT_SETUP([types])
 AT_KEYWORDS([types])
 cat $abs_srcdir/types/TypesTest.ok > expout
 cat $abs_srcdir/types/TypesTest.err > experr
-AT_CHECK([$abs_top_builddir/tests/types/TypesTest], [0], [expout], [experr])
+AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/types/TypesTest], [0], [expout], [experr])
 AT_CLEANUP
