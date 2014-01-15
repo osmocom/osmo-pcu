@@ -544,11 +544,11 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
         guint8 length = bitvec_read_field(vector, readIndex, length_len);
 
         LOGPC(DCSN1, LOGL_NOTICE, "%s length = %d | ", pDescr->sz , (int)length);
-        arT.direction = 1;
         bit_offset += length_len;
         remaining_bits_len -= length_len;
 
         csnStreamInit(&arT, bit_offset, length);
+        arT.direction = 1;
         Status = serialize(&arT, vector, readIndex, pvDATA(data, pDescr->offset));
 
         if (Status >= 0)
