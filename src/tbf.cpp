@@ -1758,7 +1758,7 @@ void tbf_print_vty_info(struct vty *vty, llist_head *ltbf)
 {
 	gprs_rlcmac_tbf *tbf = llist_entry(ltbf, gprs_rlcmac_tbf, list);
 
-	vty_out(vty, "TBF: TFI=%d TLLI=%08x (%s) DIR=%s IMSI=%s%s", tbf->tfi(),
+	vty_out(vty, "TBF: TFI=%d TLLI=0x%08x (%s) DIR=%s IMSI=%s%s", tbf->tfi(),
 			tbf->tlli(), tbf->is_tlli_valid() ? "valid" : "invalid",
 			tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
 			tbf->imsi(), VTY_NEWLINE);
@@ -1771,5 +1771,5 @@ void tbf_print_vty_info(struct vty *vty, llist_head *ltbf)
 		if (tbf->pdch[i])
 			vty_out(vty, "%d ", i);
 	}
-	vty_out(vty, "%s%s", VTY_NEWLINE, VTY_NEWLINE);
+	vty_out(vty, " CS=%d%s%s", tbf->cs, VTY_NEWLINE, VTY_NEWLINE);
 }

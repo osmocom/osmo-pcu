@@ -282,7 +282,28 @@ DEFUN(show_bts_stats,
 {
 	vty_out_rate_ctr_group(vty, "", bts_main_data_stats());
 	return CMD_SUCCESS;
-} 
+}
+
+DEFUN(show_tbf,
+      show_tbf_cmd,
+      "show tbf all",
+      SHOW_STR "information about all current TBFs\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct llist_head *tbf;
+
+	vty_out(vty, "UL TBFs%s", VTY_NEWLINE);
+	llist_for_each(tbf, &bts->ul_tbfs) {
+		tbf_print_vty_info(vty, tbf);
+	}
+
+	vty_out(vty, "%sDL TBFs%s", VTY_NEWLINE, VTY_NEWLINE);
+	llist_for_each(tbf, &bts->dl_tbfs) {
+		tbf_print_vty_info(vty, tbf);
+	}
+
+	return CMD_SUCCESS;
+}
 
 static const char pcu_copyright[] =
 	"Copyright (C) 2012 by Ivan Kluchnikov <kluchnikovi@gmail.com> and \r\n"
@@ -322,6 +343,7 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &ournode_end_cmd);
 
 	install_element_ve(&show_bts_stats_cmd);
+	install_element_ve(&show_tbf_cmd);
 
 	return 0;
 }
