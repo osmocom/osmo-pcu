@@ -508,6 +508,7 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 	if (!tbf)
 		return NULL;
 
+	tbf->m_create_ts = time(NULL);
 	tbf->bts = bts->bts;
 	tbf->direction = dir;
 	tbf->m_tfi = tfi;
@@ -1752,4 +1753,25 @@ void gprs_rlcmac_tbf::rotate_in_list()
 uint8_t gprs_rlcmac_tbf::tsc() const
 {
 	return trx->pdch[first_ts].tsc;
+}
+
+void tbf_print_vty_info(struct vty *vty, llist_head *ltbf)
+{
+	gprs_rlcmac_tbf *tbf = llist_entry(ltbf, gprs_rlcmac_tbf, list);
+
+	vty_out(vty, "TBF: TFI=%d TLLI=0x%08x (%s) DIR=%s IMSI=%s%s", tbf->tfi(),
+			tbf->tlli(), tbf->is_tlli_valid() ? "valid" : "invalid",
+			tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
+			tbf->imsi(), VTY_NEWLINE);
+	vty_out(vty, " created=%lu state=%08x 1st_TS=%d 1st_cTS=%d ctrl_TS=%d "
+			"MS_CLASS=%d%s",
+			tbf->create_ts(), tbf->state_flags, tbf->first_ts,
+			tbf->first_common_ts, tbf->control_ts, tbf->ms_class,
+			VTY_NEWLINE);
+	vty_out(vty, " TS_alloc=");
+	for (int i = 0; i < 8; i++) {
+		if (tbf->pdch[i])
+			vty_out(vty, "%d ", i);
+	}
+	vty_out(vty, " CS=%d%s%s", tbf->cs, VTY_NEWLINE, VTY_NEWLINE);
 }
