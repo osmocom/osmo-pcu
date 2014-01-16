@@ -1091,20 +1091,20 @@ struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(
 		}
 		/* scheduling not possible, because: */
 		if (poll_state != GPRS_RLCMAC_POLL_NONE)
-			LOGP(DRLCMAC, LOGL_DEBUG, "Polling is already "
+			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling is already "
 				"sheduled for %s, so we must wait for "
 				"requesting downlink ack\n", tbf_name(this));
 		else if (control_ts != ts)
-			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
+			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling cannot be "
 				"sheduled in this TS %d, waiting for "
 				"TS %d\n", ts, control_ts);
 #warning "What happens to the first_fin_ack in case something is already scheduled?"
 		else if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648))
-			LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
+			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling cannot be "
 				"sheduled, because single block alllocation "
 				"already exists\n");
 		else  {
-			LOGP(DRLCMAC, LOGL_DEBUG, "Polling sheduled in this "
+			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling sheduled in this "
 				"TS %d\n", ts);
 			dir.dl.tx_counter = 0;
 			/* start timer whenever we send the final block */
