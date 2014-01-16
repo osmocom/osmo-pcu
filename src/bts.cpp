@@ -851,6 +851,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				"Killing pending DL TBF\n", tlli,
 				tbf_name(dl_tbf));
 			tbf_free(dl_tbf);
+			dl_tbf = NULL;
 		}
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
 			"in packet resource request of single "

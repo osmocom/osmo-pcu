@@ -568,6 +568,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 				LOGP(DRLCMAC, LOGL_NOTICE, "%s releasing due to "
 					"PACCH assignment timeout.\n", tbf_name(this));
 				tbf_free(this);
+				return;
 			} else
 				LOGP(DRLCMAC, LOGL_ERROR, "Error: %s is not "
 					"in assign state\n", tbf_name(this));
@@ -595,6 +596,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 			"%s will be freed due to timeout\n", tbf_name(this));
 		/* free TBF */
 		tbf_free(this);
+		return;
 		break;
 	default:
 		LOGP(DRLCMAC, LOGL_ERROR,
@@ -1531,6 +1533,7 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 			"Killing pending DL TBF\n", tlli(),
 			tbf_name(dl_tbf));
 		tbf_free(dl_tbf);
+		dl_tbf = NULL;
 	}
 	/* tbf_by_tlli will not find your TLLI, because it is not
 	 * yet marked valid */
@@ -1540,6 +1543,7 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 			"Killing pending UL TBF\n", tlli(),
 			tbf_name(ul_tbf));
 		tbf_free(ul_tbf);
+		ul_tbf = NULL;
 	}
 	/* mark TLLI valid now */
 	tlli_mark_valid();
