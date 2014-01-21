@@ -3,7 +3,7 @@ Description=sysmocom sysmoPCU
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/osmo-pcu -c /etc/osmocom/osmo-pcu.cfg
+ExecStart=/usr/bin/osmo-pcu -c /etc/osmocom/osmo-pcu.cfg -e
 Restart=always
 RestartSec=5
 
