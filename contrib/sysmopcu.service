@@ -5,7 +5,7 @@ Description=sysmocom sysmoPCU
 Type=simple
 ExecStart=/usr/bin/osmo-pcu -c /etc/osmocom/osmo-pcu.cfg -e
 Restart=always
-RestartSec=5
+RestartSec=2
 
 # The msg queues must be read fast enough
 CPUSchedulingPolicy=rr
