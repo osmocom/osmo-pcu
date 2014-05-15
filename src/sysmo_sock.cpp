@@ -36,6 +36,7 @@ extern "C" {
 #include <gprs_debug.h>
 #include <gprs_bssgp_pcu.h>
 #include <pcuif_proto.h>
+#include <bts.h>
 #include <tbf.h>
 
 extern void *tall_pcu_ctx;
@@ -81,7 +82,7 @@ int pcu_sock_send(struct msgb *msg)
 static void pcu_sock_close(struct pcu_sock_state *state, int lost)
 {
 	struct osmo_fd *bfd = &state->conn_bfd;
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t trx, ts;
 
 	LOGP(DL1IF, LOGL_NOTICE, "PCU socket has %s connection\n",
@@ -106,7 +107,8 @@ static void pcu_sock_close(struct pcu_sock_state *state, int lost)
 		}
 #endif
 		for (ts = 0; ts < 8; ts++)
-			bts->trx[trx].pdch[ts].enable = 0;
+			bts->trx[trx].pdch[ts].disable();
+#warning "NOT ALL RESOURCES are freed in this case... inconsistent with the other code. Share the code with pcu_l1if.c for the reset."
 		gprs_rlcmac_tbf::free_all(&bts->trx[trx]);
 	}
 

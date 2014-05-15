@@ -1,5 +1,4 @@
-/* gprs_rlcmac.cpp
- *
+/*
  * Copyright (C) 2012 Ivan Klyuchnikov
  * Copyright (C) 2012 Andreas Eversberg <jolly@eversberg.eu>
  * Copyright (C) 2013 by Holger Hans Peter Freyther
@@ -18,28 +17,24 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
- 
-#include <gprs_bssgp_pcu.h>
-#include <pcu_l1_if.h>
-#include <gprs_rlcmac.h>
-#include <bts.h>
-#include <encoding.h>
-#include <tbf.h>
+#pragma once
 
-
-extern void *tall_pcu_ctx;
-
-int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len,
-	const char *imsi)
-{
-	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Paging Request (CCCH)\n");
-	bitvec *paging_request = bitvec_alloc(23);
-	bitvec_unhex(paging_request, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	int plen = Encoding::write_paging_request(paging_request, ptmsi, ptmsi_len);
-	pcu_l1if_tx_pch(paging_request, plen, (char *)imsi);
-	bitvec_free(paging_request);
-
-	return 0;
+extern "C" {
+#include <osmocom/core/linuxlist.h>
 }
 
+#include <stdint.h>
 
+class TimingAdvance {
+public:
+	TimingAdvance();
+
+	int update(uint32_t old_tlli, uint32_t new_tlli, uint8_t ta);
+	int remember(uint32_t tlli, uint8_t ta);
+	int recall(uint32_t tlli);
+	int flush();
+
+private:
+	size_t m_ta_len;
+	llist_head m_ta_list;	
+};

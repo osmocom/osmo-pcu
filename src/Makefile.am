@@ -34,14 +34,22 @@ libgprs_la_SOURCES = \
 	gsm_rlcmac.cpp \
 	gprs_bssgp_pcu.cpp \
 	gprs_rlcmac.cpp \
-	gprs_rlcmac_data.cpp \
 	gprs_rlcmac_sched.cpp \
 	gprs_rlcmac_meas.cpp \
+	gprs_rlcmac_ts_alloc.cpp \
 	gsm_timer.cpp \
 	bitvector.cpp \
 	pcu_l1_if.cpp \
 	pcu_vty.c \
-	tbf.cpp
+	tbf.cpp \
+	bts.cpp \
+	poll_controller.cpp \
+	encoding.cpp \
+	ta.cpp \
+	sba.cpp \
+	decoding.cpp \
+	llc.cpp \
+	rlc.cpp
 
 if ENABLE_SYSMOBTS
 libgprs_la_SOURCES += \
@@ -74,7 +82,15 @@ noinst_HEADERS = \
 	pcu_vty.h \
 	sysmo_l1_if.h \
 	femtobts.h \
-	tbf.h
+	tbf.h \
+	bts.h \
+	poll_controller.h \
+	encoding.h \
+	ta.h \
+	sba.h \
+	rlc.h \
+	decoding.h \
+	llc.h
 
 osmo_pcu_SOURCES = pcu_main.cpp
 

@@ -1,0 +1,42 @@
+* Make the TBF ul/dl list per BTS
+* Make the SBA per BTS
+* Make the tbf point to the BTS so we can kill plenty of parameters
+* Group more into in classes.. remove bts pointers.
+* Change functions with 100 parameters to get a struct as param
+* Move move into the TBF class
+* Replace trx/ts with pointers. E.g. a PDCH should know the trx
+  it is on... then we can omit trx, ts and parameters and just pass
+  the pdch.
+* On global free/reset... also flush the timing advance..
+* tbf/llc window code appears to be duplicated and nested in other
+  methods. This needs to be cleaned.
+
+
+* Possible race condition:
+ When scheduling a Downlink Assignment on the UL-TBF we need to make
+ sure that the assignment is sent _before_ the final ack. With my fairness
+ changes it gets more likely that this event is trigerred.
+
+* Optimize:
+After receiving an ACK/NACK.. schedule another one if the window
+is kind of stalled anyway. This way we avoid resending frames that
+might have already arrived. It could increase the throughput..
+
+Do not re-transmit after we got ack/nacked and where in the resending
+mode... and increase the window.
+
+<0004> tbf.cpp:907 - Sending new block at BSN 111
+...
+tbf.cpp:858 - Restarting at BSN 48, because all window is stalled.
+...
+tbf.cpp:1383 - V(B): (V(A)=59)"NNAAAAAAANAAAAANNAAAAAAAAAAAAAAAAAAAXXXXXXXXXXXXXXXXX"(V(S)-1=111)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
+.. retransmitting the nacked.. and then the ones that migh have
+already arrived
+<0004> tbf.cpp:834 TBF(TFI=0 TLLI=0xd7b78810 DIR=DL) downlink (V(A)==59 .. V(S)==112)
+<0004> tbf.cpp:840 - Resending BSN 111
+
+
+Figure out scheduling issue. Why do we reach the 20 re-transmits and
+stil haven't received the ACK/NACK? was it scheduled? The whole
+scheduler could be re-worked to be more determestic.. and answer
+questions like if it has been sent or not

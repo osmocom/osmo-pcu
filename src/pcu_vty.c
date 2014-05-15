@@ -6,6 +6,7 @@
 #include <osmocom/core/linuxlist.h>
 #include "pcu_vty.h"
 #include "gprs_rlcmac.h"
+#include "bts.h"
 
 enum node_type pcu_vty_go_parent(struct vty *vty)
 {
@@ -76,7 +77,7 @@ gDEFUN(ournode_end, ournode_end_cmd, "end",
 
 static int config_write_pcu(struct vty *vty)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	vty_out(vty, "pcu%s", VTY_NEWLINE);
 	vty_out(vty, " flow-control-interval %d%s", bts->fc_interval,
@@ -102,6 +103,7 @@ static int config_write_pcu(struct vty *vty)
 	vty_out(vty, " alpha %d%s", bts->alpha, VTY_NEWLINE);
 	vty_out(vty, " gamma %d%s", bts->gamma * 2, VTY_NEWLINE);
 
+	return CMD_SUCCESS;
 }
 
 /* per-BTS configuration */
@@ -121,7 +123,7 @@ DEFUN(cfg_pcu_fc_interval,
       "Interval between sending subsequent Flow Control PDUs\n"
       "Interval time in seconds\n")
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	bts->fc_interval = atoi(argv[0]);
 
@@ -134,7 +136,7 @@ DEFUN(cfg_pcu_cs,
       "Set the Coding Scheme to be used, (overrides BTS config)\n"
       "Initial CS used\nAlternative uplink CS")
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t cs = atoi(argv[0]);
 
 	bts->force_cs = 1;
@@ -152,7 +154,7 @@ DEFUN(cfg_pcu_no_cs,
       "no cs",
       NO_STR "Don't force given Coding Scheme, (use BTS config)\n")
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	bts->force_cs = 0;
 
@@ -168,7 +170,7 @@ DEFUN(cfg_pcu_queue_lifetime,
       "queue lifetime <1-65534>",
       QUEUE_STR LIFETIME_STR "Lifetime in centi-seconds")
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t csec = atoi(argv[0]);
 
 	bts->force_llc_lifetime = csec;
@@ -181,7 +183,7 @@ DEFUN(cfg_pcu_queue_lifetime_inf,
       "queue lifetime infinite",
       QUEUE_STR LIFETIME_STR "Infinite lifetime")
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	bts->force_llc_lifetime = 0xffff;
 
@@ -194,7 +196,7 @@ DEFUN(cfg_pcu_no_queue_lifetime,
       NO_STR QUEUE_STR "Disable lifetime limit of LLC frame (use value given "
       "by SGSN)\n")
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	bts->force_llc_lifetime = 0;
 
@@ -208,7 +210,7 @@ DEFUN(cfg_pcu_alloc,
       "PACCH\nSingle slot is assigned only\nMultiple slots are assigned for "
       "semi-duplex operation")
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	switch (argv[0][0]) {
 	case 'a':
@@ -227,7 +229,7 @@ DEFUN(cfg_pcu_two_phase,
       "two-phase-access",
       "Force two phase access when MS requests single phase access\n")
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	bts->force_two_phase = 1;
 
@@ -239,7 +241,7 @@ DEFUN(cfg_pcu_no_two_phase,
       "no two-phase-access",
       NO_STR "Only use two phase access when requested my MS\n")
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	bts->force_two_phase = 0;
 
@@ -253,7 +255,7 @@ DEFUN(cfg_pcu_alpha,
       "NOTE: Be sure to set Alpha value at System information 13 too.\n"
       "Alpha in units of 0.1\n")
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	bts->alpha = atoi(argv[0]);
 
@@ -266,9 +268,39 @@ DEFUN(cfg_pcu_gamma,
       "Gamma parameter for MS power control in units of dB (see TS 05.08)\n"
       "Gamma in even unit of dBs\n")
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	bts->gamma = atoi(argv[0]) / 2;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(show_bts_stats,
+      show_bts_stats_cmd,
+      "show bts statistics",
+      SHOW_STR "BTS related functionality\nStatistics\n")
+{
+	vty_out_rate_ctr_group(vty, "", bts_main_data_stats());
+	return CMD_SUCCESS;
+}
+
+DEFUN(show_tbf,
+      show_tbf_cmd,
+      "show tbf all",
+      SHOW_STR "information about all current TBFs\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct llist_head *tbf;
+
+	vty_out(vty, "UL TBFs%s", VTY_NEWLINE);
+	llist_for_each(tbf, &bts->ul_tbfs) {
+		tbf_print_vty_info(vty, tbf);
+	}
+
+	vty_out(vty, "%sDL TBFs%s", VTY_NEWLINE, VTY_NEWLINE);
+	llist_for_each(tbf, &bts->dl_tbfs) {
+		tbf_print_vty_info(vty, tbf);
+	}
 
 	return CMD_SUCCESS;
 }
@@ -309,6 +341,9 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_alpha_cmd);
 	install_element(PCU_NODE, &cfg_pcu_gamma_cmd);
 	install_element(PCU_NODE, &ournode_end_cmd);
+
+	install_element_ve(&show_bts_stats_cmd);
+	install_element_ve(&show_tbf_cmd);
 
 	return 0;
 }

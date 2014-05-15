@@ -27,26 +27,22 @@
 #include <getopt.h>
 #include <signal.h>
 #include <sched.h>
+#include <bts.h>
 extern "C" {
 #include "pcu_vty.h"
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
 }
 
-struct gprs_rlcmac_bts *gprs_rlcmac_bts;
 extern struct gprs_nsvc *nsvc;
 uint16_t spoof_mcc = 0, spoof_mnc = 0;
 static int config_given = 0;
-static const char *config_file = "osmo-pcu.cfg";
+static char *config_file = strdup("osmo-pcu.cfg");
 extern struct vty_app_info pcu_vty_info;
 void *tall_pcu_ctx;
 extern void *bv_tall_ctx;
 static int quit = 0;
 static int rt_prio = -1;
-
-#ifdef DEBUG_DIAGRAM
-extern struct timeval diagram_time;
-#endif
 
 static void print_help()
 {
@@ -91,6 +87,7 @@ static void handle_options(int argc, char **argv)
 			exit(0);
 			break;
 		case 'c':
+			free(config_file);
 			config_file = strdup(optarg);
 			config_given = 1;
 			break;
@@ -163,10 +160,7 @@ int main(int argc, char *argv[])
 		return -ENOMEM;
 	bv_tall_ctx = tall_pcu_ctx;
 
-	bts = gprs_rlcmac_bts = talloc_zero(tall_pcu_ctx,
-						struct gprs_rlcmac_bts);
-	if (!gprs_rlcmac_bts)
-		return -ENOMEM;
+	bts = bts_main_data();
 	bts->fc_interval = 1;
 	bts->initial_cs_dl = bts->initial_cs_ul = 1;
 	bts->cs1 = 1;
@@ -244,18 +238,13 @@ int main(int argc, char *argv[])
 		osmo_gsm_timers_update();
 
 		osmo_select_main(0);
-#ifdef DEBUG_DIAGRAM
-		gettimeofday(&diagram_time, NULL);
-#endif
 	}
 
 	telnet_exit();
 
 	pcu_l1if_close();
 
-	flush_timing_advance();
-
-	talloc_free(gprs_rlcmac_bts);
+	bts->bts->timing_advance()->flush();
 
 	talloc_report_full(tall_pcu_ctx, stderr);
 	talloc_free(tall_pcu_ctx);

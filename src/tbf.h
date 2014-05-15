@@ -18,18 +18,21 @@
 
 #pragma once
 
+#ifdef __cplusplus
+
 #include "gprs_rlcmac.h"
+#include "llc.h"
+#include "rlc.h"
 
 #include <stdint.h>
+
+struct bssgp_bvc_ctx;
+struct rlc_ul_header;
+struct msgb;
 
 /*
  * TBF instance
  */
-
-#define LLC_MAX_LEN 1543
-#define RLC_MAX_SNS 128 /* GPRS, must be power of 2 */
-#define RLC_MAX_WS  64 /* max window size */
-#define RLC_MAX_LEN 54 /* CS-4 including spare bits */
 
 #define Tassign_agch 0,200000	/* waiting after IMM.ASS confirm */
 #define Tassign_pacch 2,0	/* timeout for pacch assigment */
@@ -81,11 +84,6 @@ enum gprs_rlcmac_tbf_direction {
 #define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
-extern struct llist_head gprs_rlcmac_ul_tbfs; /* list of uplink TBFs */
-extern struct llist_head gprs_rlcmac_dl_tbfs; /* list of downlink TBFs */
-extern struct llist_head gprs_rlcmac_sbas; /* list of single block allocs */
-
-
 struct gprs_rlcmac_tbf {
 
 	static void free_all(struct gprs_rlcmac_trx *trx);
@@ -95,17 +93,60 @@ struct gprs_rlcmac_tbf {
 	bool state_is_not(enum gprs_rlcmac_tbf_state rhs) const;
 	void set_state(enum gprs_rlcmac_tbf_state new_state);
 
+	/* TODO: add the gettimeofday as parameter */
+	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
+
+	/* TODO: extract LLC class? */
+	int assemble_forward_llc(const gprs_rlc_data *data);
+
+	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
+	struct msgb *create_dl_ass(uint32_t fn);
+	struct msgb *create_ul_ass(uint32_t fn);
+	struct msgb *create_ul_ack(uint32_t fn);
+	int snd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
+	int snd_ul_ud();
+
+	/* blocks were acked */
+	int rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi);
+
+	/* dispatch Unitdata.DL messages */
+	static int handle(struct gprs_rlcmac_bts *bts,
+		const uint32_t tlli, const char *imsi, const uint8_t ms_class,
+		const uint16_t delay_csec, const uint8_t *data, const uint16_t len);
+
+	uint8_t tsc() const;
+
 	int rlcmac_diag();
+
+	int update();
+	void handle_timeout();
+	void stop_timer();
+	void stop_t3191();
+
+	void poll_timeout();
+
+	/** tlli handling */
+	void update_tlli(uint32_t tlli);
+	uint32_t tlli() const;
+	bool is_tlli_valid() const;
+	void tlli_mark_valid();
+
+	uint8_t tfi() const;
+
+	const char *imsi() const;
+	void assign_imsi(const char *imsi);
+
+	uint16_t sns() const;
+
+	time_t created_ts() const;
+
+	/* attempt to make things a bit more fair */
+	void rotate_in_list();
 
 	struct llist_head list;
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
-	uint8_t tfi;
-	uint32_t tlli;
-	uint8_t tlli_valid;
-	uint8_t trx;
-	uint16_t arfcn;
-	uint8_t tsc;
+	struct gprs_rlcmac_trx *trx;
 	uint8_t first_ts; /* first TS used by TBF */
 	uint8_t first_common_ts; /* first TS that the phone can send and
 		reveive simultaniously */
@@ -113,10 +154,8 @@ struct gprs_rlcmac_tbf {
 	uint8_t ms_class;
 	struct gprs_rlcmac_pdch *pdch[8]; /* list of PDCHs allocated to TBF */
 	uint16_t ta;
-	uint8_t llc_frame[LLC_MAX_LEN]; /* current DL or UL frame */
-	uint16_t llc_index; /* current write/read position of frame */
-	uint16_t llc_length; /* len of current DL LLC_frame, 0 == no frame */
-	struct llist_head llc_queue; /* queued LLC DL data */
+
+	gprs_llc m_llc;
 
 	enum gprs_rlcmac_tbf_dl_ass_state dl_ass_state;
 	enum gprs_rlcmac_tbf_ul_ass_state ul_ass_state;
@@ -125,9 +164,6 @@ struct gprs_rlcmac_tbf {
 	enum gprs_rlcmac_tbf_poll_state poll_state;
 	uint32_t poll_fn; /* frame number to poll */
 
-	uint16_t ws;	/* window size */
-	uint16_t sns;	/* sequence number space */
-
 	/* Please note that all variables here will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
 	 * All states that need reset must be in this struct, so this is why
@@ -135,19 +171,12 @@ struct gprs_rlcmac_tbf {
 	 */
 	union {
 		struct {
-			uint16_t bsn;	/* block sequence number */
-			uint16_t v_s;	/* send state */
-			uint16_t v_a;	/* ack state */
-			char v_b[RLC_MAX_SNS/2]; /* acknowledge state array */
+			gprs_rlc_dl_window window;
 			int32_t tx_counter; /* count all transmitted blocks */
-			char imsi[16]; /* store IMSI for PCH retransmission */
 			uint8_t wait_confirm; /* wait for CCCH IMM.ASS cnf */
 		} dl;
 		struct {
-			uint16_t bsn;	/* block sequence number */
-			uint16_t v_r;	/* receive state */
-			uint16_t v_q;	/* receive window state */
-			char v_n[RLC_MAX_SNS/2]; /* receive state array */
+			gprs_rlc_ul_window window;
 			int32_t rx_counter; /* count all received blocks */
 			uint8_t n3103;	/* N3103 counter */
 			uint8_t usf[8];	/* list USFs per PDCH (timeslot) */
@@ -155,8 +184,8 @@ struct gprs_rlcmac_tbf {
 			uint8_t final_ack_sent; /* set if we sent final ack */
 		} ul;
 	} dir;
-	uint8_t rlc_block[RLC_MAX_SNS/2][RLC_MAX_LEN]; /* block history */
-	uint8_t rlc_block_len[RLC_MAX_SNS/2]; /* block len  of history */
+
+	gprs_rlc m_rlc;
 	
 	uint8_t n3105;	/* N3105 counter */
 
@@ -169,8 +198,6 @@ struct gprs_rlcmac_tbf {
 	unsigned int num_fT_exp; /* number of consecutive fT expirations */
 
 	struct {
-		char imsi[16];
-
 		struct timeval dl_bw_tv; /* timestamp for dl bw calculation */
 		uint32_t dl_bw_octets; /* number of octets since bw_tv */
 
@@ -186,46 +213,55 @@ struct gprs_rlcmac_tbf {
 
 	uint8_t cs; /* current coding scheme */
 
-#ifdef DEBUG_DIAGRAM
-	int diag; /* number where TBF is presented in diagram */
-	int diag_new; /* used to format output of new TBF */
-#endif
-
 	/* these should become protected but only after gprs_rlcmac_data.c
 	 * stops to iterate over all tbf in its current form */
 	enum gprs_rlcmac_tbf_state state;
+
+	/* store the BTS this TBF belongs to */
+	BTS *bts;
+
+	/*
+	 * private fields. We can't make it private as it is breaking the
+	 * llist macros.
+	 */
+	uint32_t m_tlli;
+	uint8_t m_tlli_valid;
+	uint8_t m_tfi;
+	time_t m_created_ts;
+
+	/* store IMSI for look-up and PCH retransmission */
+	char m_imsi[16];
+
+protected:
+	int update_window(const uint8_t ssn, const uint8_t *rbb);
+	int maybe_start_new_window();
+	void reuse_tbf(const uint8_t *data, const uint16_t len);
+	gprs_rlcmac_bts *bts_data() const;
+	bool dl_window_stalled() const;
+
+	int extract_tlli(const uint8_t *data, const size_t len);
+	void maybe_schedule_uplink_acknack(const rlc_ul_header *rh);
+
+	int append_data(const uint8_t ms_class,
+			const uint16_t pdu_delay_csec,
+			const uint8_t *data, const uint16_t len);
+
+	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
+					const int index, const bool fin_first_ack);
+	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
 };
 
-
-/* dispatch Unitdata.DL messages */
-int tbf_handle(struct gprs_rlcmac_bts *bts,
-		const uint32_t tlli, const char *imsi, const uint8_t ms_class,
-		const uint16_t delay_csec, const uint8_t *data, const uint16_t len);
 
 struct gprs_rlcmac_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	int8_t use_trx, uint8_t ms_class,
 	uint32_t tlli, uint8_t ta, struct gprs_rlcmac_tbf *dl_tbf);
-
-int tfi_find_free(struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction dir,
-	uint8_t *_trx, int8_t use_trx);
 
 struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *old_tbf,
 	enum gprs_rlcmac_tbf_direction dir, uint8_t tfi, uint8_t trx,
 	uint8_t ms_class, uint8_t single_slot);
 
-struct gprs_rlcmac_tbf *tbf_by_tfi(struct gprs_rlcmac_bts *bts,
-	uint8_t tfi, uint8_t trx,
-        enum gprs_rlcmac_tbf_direction dir);
-
-struct gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli,
-	enum gprs_rlcmac_tbf_direction dir);
-
-struct gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
-
 void tbf_free(struct gprs_rlcmac_tbf *tbf);
-
-int tbf_update(struct gprs_rlcmac_tbf *tbf);
 
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 
@@ -234,11 +270,6 @@ void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
 
 void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
                         unsigned int seconds, unsigned int microseconds);
-
-void tbf_timer_stop(struct gprs_rlcmac_tbf *tbf);
-
-void tbf_timer_cb(void *_tbf);
-
 
 inline bool gprs_rlcmac_tbf::state_is(enum gprs_rlcmac_tbf_state rhs) const
 {
@@ -254,3 +285,50 @@ inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
 {
 	state = new_state;
 }
+
+inline uint32_t gprs_rlcmac_tbf::tlli() const
+{
+	return m_tlli;
+}
+
+inline bool gprs_rlcmac_tbf::is_tlli_valid() const
+{
+	return m_tlli_valid;
+}
+
+inline uint8_t gprs_rlcmac_tbf::tfi() const
+{
+	return m_tfi;
+}
+
+inline const char *gprs_rlcmac_tbf::imsi() const
+{
+	return m_imsi;
+}
+
+inline uint16_t gprs_rlcmac_tbf::sns() const
+{
+	/* assume dl/ul do the same thing */
+	return dir.dl.window.sns();
+}
+
+const char *tbf_name(gprs_rlcmac_tbf *tbf);
+
+inline time_t gprs_rlcmac_tbf::created_ts() const
+{
+	return m_created_ts;
+}
+
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <osmocom/vty/command.h>
+#include <osmocom/vty/vty.h>
+
+
+	void tbf_print_vty_info(struct vty *vty, llist_head *tbf);
+#ifdef __cplusplus
+}
+#endif

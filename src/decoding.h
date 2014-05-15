@@ -1,8 +1,7 @@
-/* gprs_rlcmac.cpp
+/* decoding
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
  * Copyright (C) 2012 Andreas Eversberg <jolly@eversberg.eu>
- * Copyright (C) 2013 by Holger Hans Peter Freyther
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,28 +17,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
- 
-#include <gprs_bssgp_pcu.h>
-#include <pcu_l1_if.h>
-#include <gprs_rlcmac.h>
-#include <bts.h>
-#include <encoding.h>
-#include <tbf.h>
+#pragma once
 
+#include <gsm_rlcmac.h>
 
-extern void *tall_pcu_ctx;
+#include <stdint.h>
 
-int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len,
-	const char *imsi)
-{
-	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Paging Request (CCCH)\n");
-	bitvec *paging_request = bitvec_alloc(23);
-	bitvec_unhex(paging_request, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	int plen = Encoding::write_paging_request(paging_request, ptmsi, ptmsi_len);
-	pcu_l1if_tx_pch(paging_request, plen, (char *)imsi);
-	bitvec_free(paging_request);
+class Decoding {
+public:
+	static int tlli_from_ul_data(const uint8_t *data, uint8_t len,
+					uint32_t *tlli);
+	static uint8_t get_ms_class_by_capability(MS_Radio_Access_capability_t *cap);
 
-	return 0;
-}
-
-
+	static void extract_rbb(const uint8_t *rbb, char *extracted_rbb);
+};

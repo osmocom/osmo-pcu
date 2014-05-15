@@ -21,6 +21,7 @@
 #include <gprs_rlcmac.h>
 #include <gprs_bssgp_pcu.h>
 #include <pcu_l1_if.h>
+#include <bts.h>
 #include <tbf.h>
 
 static struct gprs_bssgp_pcu the_pcu = { 0, };
@@ -93,7 +94,6 @@ static int parse_ra_cap_ms_class(struct tlv_parsed *tp)
 		}
 		if (bitvec_read_field(block, rp, 1)) // SMS Present
 			bitvec_read_field(block, rp, 4); // SMS Value
-			bitvec_read_field(block, rp, 4); // SMS Value
 	}
 
 	bitvec_free(block);
@@ -121,7 +121,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 
 	data = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_LLC_PDU);
 	len = TLVP_LEN(tp, BSSGP_IE_LLC_PDU);
-	if (len > sizeof(gprs_rlcmac_tbf::llc_frame))
+	if (len > sizeof(gprs_llc::frame))
 	{
 		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP TLLI=0x%08x Rx UL-UD IE_LLC_PDU too large\n", tlli);
 		return bssgp_tx_status(BSSGP_CAUSE_COND_IE_ERR, NULL, msg);
@@ -152,7 +152,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 
 	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x IMSI: %s len: %d\n", tlli, imsi, len);
 
-	return tbf_handle(the_pcu.bts, tlli, imsi, ms_class, delay_csec, data, len);
+	return gprs_rlcmac_tbf::handle(the_pcu.bts, tlli, imsi, ms_class, delay_csec, data, len);
 }
 
 int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)

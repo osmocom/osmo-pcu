@@ -28,6 +28,7 @@
 /*
  * downlink measurement
  */
+#warning "TODO: trigger the measurement report from the pollcontroller and use it for flow control"
 
 /* received Measurement Report */
 int gprs_rlcmac_meas_rep(Packet_Measurement_Report_t *pmr)
@@ -100,7 +101,7 @@ int gprs_rlcmac_rssi_rep(struct gprs_rlcmac_tbf *tbf)
 		return -EINVAL;
 
 	LOGP(DRLCMACMEAS, LOGL_INFO, "UL RSSI of TLLI=0x%08x: %d dBm\n",
-		tbf->tlli, tbf->meas.rssi_sum / tbf->meas.rssi_num);
+		tbf->tlli(), tbf->meas.rssi_sum / tbf->meas.rssi_num);
 
 	return 0;
 }
@@ -123,7 +124,7 @@ int gprs_rlcmac_received_lost(struct gprs_rlcmac_tbf *tbf, uint16_t received,
 		return -EINVAL;
 
 	LOGP(DRLCMACMEAS, LOGL_DEBUG, "DL Loss of TLLI 0x%08x: Received: %4d  "
-		"Lost: %4d  Sum: %4d\n", tbf->tlli, received, lost, sum);
+		"Lost: %4d  Sum: %4d\n", tbf->tlli(), received, lost, sum);
 
 	tbf->meas.dl_loss_received += received;
 	tbf->meas.dl_loss_lost += lost;
@@ -154,7 +155,7 @@ int gprs_rlcmac_lost_rep(struct gprs_rlcmac_tbf *tbf)
 		return -EINVAL;
 
 	LOGP(DRLCMACMEAS, LOGL_INFO, "DL packet loss of IMSI=%s / TLLI=0x%08x: "
-		"%d%%\n", tbf->meas.imsi, tbf->tlli,
+		"%d%%\n", tbf->imsi(), tbf->tlli(),
 		tbf->meas.dl_loss_lost * 100 / sum);
 
 	return 0;
@@ -179,7 +180,7 @@ int gprs_rlcmac_dl_bw(struct gprs_rlcmac_tbf *tbf, uint16_t octets)
 		return 0;
 
 	LOGP(DRLCMACMEAS, LOGL_INFO, "DL Bandwitdh of IMSI=%s / TLLI=0x%08x: "
-		"%d KBits/s\n", tbf->meas.imsi, tbf->tlli,
+		"%d KBits/s\n", tbf->imsi(), tbf->tlli(),
 		tbf->meas.dl_bw_octets / elapsed);
 
 	/* reset bandwidth values timestamp */

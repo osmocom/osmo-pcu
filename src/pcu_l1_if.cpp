@@ -37,6 +37,7 @@ extern "C" {
 #include <gprs_debug.h>
 #include <gprs_bssgp_pcu.h>
 #include <pcuif_proto.h>
+#include <bts.h>
 #include <tbf.h>
 
 // FIXME: move this, when changed from c++ to c.
@@ -48,19 +49,6 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 }
 
 extern void *tall_pcu_ctx;
-
-// Variable for storage current FN.
-int frame_number;
-
-int get_current_fn()
-{
-	return frame_number;
-}
-
-void set_current_fn(int fn)
-{
-	frame_number = fn;
-}
 
 /*
  * PCU messages
@@ -137,7 +125,7 @@ void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr)
 {
 #ifdef ENABLE_SYSMODSP
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	if (bts->trx[trx].fl1h)
 		l1if_pdch_req(bts->trx[trx].fl1h, ts, 0, fn, arfcn, block_nr,
@@ -153,7 +141,7 @@ void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr)
 {
 #ifdef ENABLE_SYSMODSP
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	if (bts->trx[trx].fl1h)
 		l1if_pdch_req(bts->trx[trx].fl1h, ts, 1, fn, arfcn, block_nr,
@@ -192,10 +180,13 @@ void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi)
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, 23+3);
 }
 
-extern "C" int pcu_rx_data_ind_pdtch(uint8_t trx, uint8_t ts, uint8_t *data,
+extern "C" int pcu_rx_data_ind_pdtch(uint8_t trx_no, uint8_t ts_no, uint8_t *data,
 	uint8_t len, uint32_t fn, int8_t rssi)
 {
-	return gprs_rlcmac_rcv_block(trx, ts, data, len, fn, rssi);
+	struct gprs_rlcmac_pdch *pdch;
+
+	pdch = &bts_main_data()->trx[trx_no].pdch[ts_no];
+	return pdch->rcv_block(data, len, fn, rssi);
 }
 
 static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
@@ -232,8 +223,7 @@ static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 	switch (data_cnf->sapi) {
 	case PCU_IF_SAPI_PCH:
 		if (data_cnf->data[2] == 0x3f)
-			rc = gprs_rlcmac_imm_ass_cnf(data_cnf->data,
-				data_cnf->fn);
+			BTS::main_bts()->rcv_imm_ass_cnf(data_cnf->data, data_cnf->fn);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with "
@@ -248,7 +238,8 @@ static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 extern "C" int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr)
 {
-	return gprs_rlcmac_rcv_rts_block(trx, ts, arfcn, fn, block_nr);
+	return gprs_rlcmac_rcv_rts_block(bts_main_data(),
+					trx, ts, arfcn, fn, block_nr);
 }
 
 static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
@@ -292,7 +283,8 @@ static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
 
 	switch (rach_ind->sapi) {
 	case PCU_IF_SAPI_RACH:
-		rc = gprs_rlcmac_rcv_rach(rach_ind->ra, rach_ind->fn,
+		rc = BTS::main_bts()->rcv_rach(
+			rach_ind->ra, rach_ind->fn,
 			rach_ind->qta);
 		break;
 	default:
@@ -304,31 +296,9 @@ static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
 	return rc;
 }
 
-int flush_pdch(struct gprs_rlcmac_pdch *pdch, uint8_t trx, uint8_t ts)
-{
-	struct gprs_rlcmac_paging *pag;
-	struct gprs_rlcmac_sba *sba, *sba2;
-
-	/* kick all TBF on slot */
-	gprs_rlcmac_tbf::free_all(pdch);
-
-	/* flush all pending paging messages */
-	while ((pag = gprs_rlcmac_dequeue_paging(pdch)))
-		talloc_free(pag);
-
-	llist_for_each_entry_safe(sba, sba2, &gprs_rlcmac_sbas, list) {
-		if (sba->trx == trx && sba->ts == ts) {
-			llist_del(&sba->list);
-			talloc_free(sba);
-		}
-	}
-
-	return 0;
-}
-
 static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 {
-	struct gprs_rlcmac_bts *bts = gprs_rlcmac_bts;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 	struct gprs_bssgp_pcu *pcu;
 	struct gprs_rlcmac_pdch *pdch;
 	struct in_addr ia;
@@ -351,11 +321,8 @@ bssgp_failed:
 		/* free all TBF */
 		for (trx = 0; trx < 8; trx++) {
 			bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
-			for (ts = 0; ts < 8; ts++) {
-				if (bts->trx[trx].pdch[ts].enable)
-					flush_pdch(&bts->trx[trx].pdch[ts],
-						trx, ts);
-			}
+			for (ts = 0; ts < 8; ts++)
+				bts->trx[trx].pdch[ts].free_resources();
 		}
 		gprs_bssgp_destroy_or_exit();
 		return 0;
@@ -474,7 +441,7 @@ bssgp_failed:
 			pdch = &bts->trx[trx].pdch[ts];
 			if ((info_ind->trx[trx].pdch_mask & (1 << ts))) {
 				/* FIXME: activate dynamically at RLCMAC */
-				if (!pdch->enable) {
+				if (!pdch->is_enabled()) {
 #ifdef ENABLE_SYSMODSP
 					if ((info_ind->flags &
 							PCU_IF_FLAG_SYSMO))
@@ -482,17 +449,16 @@ bssgp_failed:
 							bts->trx[trx].fl1h, ts);
 #endif
 					pcu_tx_act_req(trx, ts, 1);
-					INIT_LLIST_HEAD(&pdch->paging_list);
-					pdch->enable = 1;
+					pdch->enable();
 				}
 				pdch->tsc = info_ind->trx[trx].tsc[ts];
 				LOGP(DL1IF, LOGL_INFO, "PDCH: trx=%d ts=%d\n",
 					trx, ts);
 			} else {
-				if (pdch->enable) {
+				if (pdch->is_enabled()) {
 					pcu_tx_act_req(trx, ts, 0);
-					pdch->enable = 0;
-					flush_pdch(pdch, trx, ts);
+					pdch->free_resources();
+					pdch->disable();
 				}
 			}
 		}
@@ -503,9 +469,6 @@ bssgp_failed:
 
 static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 {
-	struct gprs_rlcmac_tbf *tbf;
-	struct gprs_rlcmac_sba *sba, *sba2;
-	uint32_t elapsed;
 	uint8_t fn13 = time_ind->fn % 13;
 
 	/* omit frame numbers not starting at a MAC block */
@@ -515,33 +478,7 @@ static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 //	LOGP(DL1IF, LOGL_DEBUG, "Time indication received: %d\n",
 //		time_ind->fn % 52);
 
-	set_current_fn(time_ind->fn);
-
-	/* check for poll timeout */
-	llist_for_each_entry(tbf, &gprs_rlcmac_ul_tbfs, list) {
-		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
-			elapsed = (frame_number + 2715648 - tbf->poll_fn)
-								% 2715648;
-			if (elapsed >= 20 && elapsed < 2715400)
-				gprs_rlcmac_poll_timeout(tbf);
-		}
-	}
-	llist_for_each_entry(tbf, &gprs_rlcmac_dl_tbfs, list) {
-		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
-			elapsed = (frame_number + 2715648 - tbf->poll_fn)
-								% 2715648;
-			if (elapsed >= 20 && elapsed < 2715400)
-				gprs_rlcmac_poll_timeout(tbf);
-		}
-	}
-	llist_for_each_entry_safe(sba, sba2, &gprs_rlcmac_sbas, list) {
-		elapsed = (frame_number + 2715648 - sba->fn) % 2715648;
-		if (elapsed >= 20 && elapsed < 2715400) {
-			/* sba will be freed here */
-			gprs_rlcmac_sba_timeout(sba);
-		}
-	}
-
+	BTS::main_bts()->set_current_frame_number(time_ind->fn);
 	return 0;
 }
 
@@ -550,7 +487,7 @@ static int pcu_rx_pag_req(struct gsm_pcu_if_pag_req *pag_req)
 	LOGP(DL1IF, LOGL_DEBUG, "Paging request received: chan_needed=%d "
 		"length=%d\n", pag_req->chan_needed, pag_req->identity_lv[0]);
 
-	return gprs_rlcmac_add_paging(pag_req->chan_needed,
+	return BTS::main_bts()->add_paging(pag_req->chan_needed,
 						pag_req->identity_lv);
 }
 
