@@ -281,7 +281,7 @@ static int reduce_rx_window(const int ms_type, const struct gprs_rlcmac_tbf *old
 
 		ul_usage |= (1 << ts_no);
 		/* mark bits from TS-t .. TS+r */
-		for (j = ts_no - Tt; j != ((ts_no + Tr + 1) & 7); j = (j + 1) & 7)
+		for (j = (ts_no - Tt) & 7; j != ((ts_no + Tr + 1) & 7); j = (j + 1) & 7)
 			collide |= (1 << j);
 	}
 
