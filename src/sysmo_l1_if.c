@@ -188,7 +188,8 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 			!= GsmL1_PdtchPlType_Full)
 			break;
 		/* PDTCH / PACCH frame handling */
-		pcu_rx_data_ind_pdtch((long)fl1h->priv, data_ind->u8Tn,
+		pcu_rx_data_ind_pdtch(bts_find_pdch((long)fl1h->priv,
+			data_ind->u8Tn, data_ind->u16Arfcn),
 			data_ind->msgUnitParam.u8Buffer + 1,
 			data_ind->msgUnitParam.u8Size - 1,
 			data_ind->u32Fn,

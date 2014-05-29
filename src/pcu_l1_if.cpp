@@ -50,7 +50,8 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 
 extern void *tall_pcu_ctx;
 
-static gprs_rlcmac_pdch *find_pdch(struct gsm_pcu_if_rts_req *req)
+template<typename T>
+static gprs_rlcmac_pdch *find_pdch(T *req)
 {
 	return bts_find_pdch(req->trx_nr, req->ts_nr, req->arfcn);
 }
@@ -182,17 +183,15 @@ void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi)
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, 23+3);
 }
 
-extern "C" int pcu_rx_data_ind_pdtch(uint8_t trx_no, uint8_t ts_no, uint8_t *data,
+extern "C" int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_pdch *pdch, uint8_t *data,
 	uint8_t len, uint32_t fn, int8_t rssi)
 {
-	struct gprs_rlcmac_pdch *pdch;
-
-	pdch = &bts_main_data()->trx[trx_no].pdch[ts_no];
 	return pdch->rcv_block(data, len, fn, rssi);
 }
 
 static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 {
+	gprs_rlcmac_pdch *pdch;
 	int rc = 0;
 
 	LOGP(DL1IF, LOGL_DEBUG, "Data indication received: sapi=%d arfcn=%d "
@@ -200,11 +199,14 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 		data_ind->arfcn, data_ind->block_nr,
 		osmo_hexdump(data_ind->data, data_ind->len));
 
+	pdch = find_pdch(data_ind);
+	if (!pdch)
+		return -EINVAL;
+
 	switch (data_ind->sapi) {
 	case PCU_IF_SAPI_PDTCH:
-		rc = pcu_rx_data_ind_pdtch(data_ind->trx_nr, data_ind->ts_nr,
-			data_ind->data, data_ind->len, data_ind->fn,
-			data_ind->rssi);
+		rc = pcu_rx_data_ind_pdtch(pdch, data_ind->data, data_ind->len,
+			data_ind->fn, data_ind->rssi);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data indication with "
