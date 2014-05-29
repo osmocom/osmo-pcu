@@ -20,6 +20,8 @@
 #ifndef PCU_L1_IF_H
 #define PCU_L1_IF_H
 
+struct gprs_rlcmac_pdch;
+
 #include <stdint.h>
 #ifdef __cplusplus
 extern "C" {
@@ -32,7 +34,7 @@ extern "C" {
 #ifdef __cplusplus
 }
 
-void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn, 
+void pcu_l1if_tx_pdtch(msgb *msg, struct gprs_rlcmac_pdch *pdch, 
         uint32_t fn, uint8_t block_nr);
 void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn, 
         uint32_t fn, uint8_t block_nr);
@@ -50,7 +52,7 @@ int pcu_sock_send(struct msgb *msg);
 #ifdef __cplusplus
 extern "C"
 #endif
-int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts, uint16_t arfcn,
+int pcu_rx_rts_req_pdtch(struct gprs_rlcmac_pdch *pdch,
 	uint32_t fn, uint8_t block_nr);
 
 #ifdef __cplusplus

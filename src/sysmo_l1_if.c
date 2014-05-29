@@ -13,6 +13,7 @@
 #include <sysmo_l1_if.h>
 #include <gprs_debug.h>
 #include <pcu_l1_if.h>
+#include <bts.h>
 
 extern void *tall_pcu_ctx;
 
@@ -152,8 +153,8 @@ static int handle_ph_readytosend_ind(struct femtol1_hdl *fl1h,
 	switch (rts_ind->sapi) {
 	case GsmL1_Sapi_Pdtch:
 	case GsmL1_Sapi_Pacch:
-		rc = pcu_rx_rts_req_pdtch((long)fl1h->priv, rts_ind->u8Tn,
-			rts_ind->u16Arfcn, rts_ind->u32Fn, rts_ind->u8BlockNbr);
+		rc = pcu_rx_rts_req_pdtch(bts_find_pdch((long)fl1h->priv, rts_ind->u8Tn,
+			rts_ind->u16Arfcn), rts_ind->u32Fn, rts_ind->u8BlockNbr);
 	case GsmL1_Sapi_Ptcch:
 		// FIXME
 	default:

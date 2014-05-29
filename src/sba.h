@@ -56,7 +56,7 @@ public:
 	gprs_rlcmac_sba *find(uint8_t trx, uint8_t ts, uint32_t fn);
 	gprs_rlcmac_sba *find(const gprs_rlcmac_pdch *pdch, uint32_t fn);
 
-	uint32_t sched(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr);
+	uint32_t sched(gprs_rlcmac_pdch *pdch, uint32_t fn, uint8_t block_nr);
 
 	int timeout(struct gprs_rlcmac_sba *sba);
 	void free_resources(struct gprs_rlcmac_pdch *pdch);

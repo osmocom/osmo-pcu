@@ -96,6 +96,19 @@ struct rate_ctr_group *bts_main_data_stats()
 	return BTS::main_bts()->rate_counters();
 }
 
+gprs_rlcmac_pdch *bts_find_pdch(uint8_t trx_nr, uint8_t ts_nr, uint16_t arfcn)
+{
+	if (trx_nr >= 8 || ts_nr >= 8)
+		return 0;
+
+	gprs_rlcmac_trx *trx = &bts_main_data()->trx[trx_nr];
+	gprs_rlcmac_pdch *pdch = &trx->pdch[ts_nr];
+
+	/* verify we talk about the same thing */
+	OSMO_ASSERT(trx->arfcn == arfcn);
+	return pdch;
+}
+
 BTS::BTS()
 	: m_cur_fn(0)
 	, m_pollController(*this)

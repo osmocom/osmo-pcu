@@ -313,6 +313,7 @@ extern "C" {
 #endif
 	struct gprs_rlcmac_bts *bts_main_data();
 	struct rate_ctr_group *bts_main_data_stats();
+	struct gprs_rlcmac_pdch *bts_find_pdch(uint8_t trx, uint8_t ts, uint16_t arfcn);
 #ifdef __cplusplus
 }
 

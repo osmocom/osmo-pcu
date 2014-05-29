@@ -88,8 +88,7 @@ int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len,
 	const char *imsi);
 
-int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
-	uint8_t trx, uint8_t ts, uint16_t arfcn, 
+int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_pdch *pdch,
         uint32_t fn, uint8_t block_nr);
 
 extern "C" {

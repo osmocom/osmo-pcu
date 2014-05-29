@@ -104,7 +104,7 @@ gprs_rlcmac_sba *SBAController::find(const gprs_rlcmac_pdch *pdch, uint32_t fn)
 	return find(pdch->trx_no(), pdch->ts_no, fn);
 }
 
-uint32_t SBAController::sched(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr)
+uint32_t SBAController::sched(gprs_rlcmac_pdch *pdch, uint32_t fn, uint8_t block_nr)
 {
 	uint32_t sba_fn;
 	struct gprs_rlcmac_sba *sba;
@@ -114,7 +114,7 @@ uint32_t SBAController::sched(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t bloc
 	if ((block_nr % 3) == 2)
 		sba_fn ++;
 	sba_fn = sba_fn % 2715648;
-	sba = find(trx, ts, sba_fn);
+	sba = find(pdch->trx->trx_no, pdch->ts_no, sba_fn);
 	if (sba)
 		return sba_fn;
 

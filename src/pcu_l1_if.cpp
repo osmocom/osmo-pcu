@@ -50,6 +50,11 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 
 extern void *tall_pcu_ctx;
 
+static gprs_rlcmac_pdch *find_pdch(struct gsm_pcu_if_rts_req *req)
+{
+	return bts_find_pdch(req->trx_nr, req->ts_nr, req->arfcn);
+}
+
 /*
  * PCU messages
  */
@@ -121,34 +126,31 @@ static int pcu_tx_data_req(uint8_t trx, uint8_t ts, uint8_t sapi,
 	return pcu_sock_send(msg);
 }
 
-void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
+void pcu_l1if_tx_pdtch(msgb *msg, struct gprs_rlcmac_pdch *pdch,
 	uint32_t fn, uint8_t block_nr)
 {
 #ifdef ENABLE_SYSMODSP
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	if (bts->trx[trx].fl1h)
-		l1if_pdch_req(bts->trx[trx].fl1h, ts, 0, fn, arfcn, block_nr,
-			msg->data, msg->len);
+	if (pdch->trx->fl1h)
+		l1if_pdch_req(pdch->trx->fl1h, pdch->ts_no, 0, fn,
+			pdch->trx->arfcn, block_nr, msg->data, msg->len);
 	else
 #endif
-		pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PDTCH, arfcn, fn, block_nr,
-			msg->data, msg->len);
+		pcu_tx_data_req(pdch->trx->trx_no, pdch->ts_no, PCU_IF_SAPI_PDTCH,
+			pdch->trx->arfcn, fn, block_nr, msg->data, msg->len);
 	msgb_free(msg);
 }
 
-void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
+void pcu_l1if_tx_ptcch(msgb *msg, gprs_rlcmac_pdch *pdch,
 	uint32_t fn, uint8_t block_nr)
 {
 #ifdef ENABLE_SYSMODSP
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	if (bts->trx[trx].fl1h)
-		l1if_pdch_req(bts->trx[trx].fl1h, ts, 1, fn, arfcn, block_nr,
-			msg->data, msg->len);
+	if (pdch->trx->fl1h)
+		l1if_pdch_req(pdch->trx->fl1h, pdch->ts_no, 1, fn,
+			pdch->trx->arfcn, block_nr, msg->data, msg->len);
 	else
 #endif
-		pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr,
+		pcu_tx_data_req(pdch->trx->trx_no, pdch->ts_no, PCU_IF_SAPI_PTCCH,
+			pdch->trx->arfcn, fn, block_nr,
 			msg->data, msg->len);
 	msgb_free(msg);
 }
@@ -235,33 +237,35 @@ static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 }
 
 // FIXME: remove this, when changed from c++ to c.
-extern "C" int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts, uint16_t arfcn,
+extern "C" int pcu_rx_rts_req_pdtch(struct gprs_rlcmac_pdch *pdch,
 	uint32_t fn, uint8_t block_nr)
 {
-	return gprs_rlcmac_rcv_rts_block(bts_main_data(),
-					trx, ts, arfcn, fn, block_nr);
+	return gprs_rlcmac_rcv_rts_block(pdch, fn, block_nr);
 }
 
 static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 {
+	gprs_rlcmac_pdch *pdch;
 	int rc = 0;
 
 	LOGP(DL1IF, LOGL_DEBUG, "RTS request received: trx=%d ts=%d sapi=%d "
 		"arfcn=%d fn=%d block=%d\n", rts_req->trx_nr, rts_req->ts_nr,
 		rts_req->sapi, rts_req->arfcn, rts_req->fn, rts_req->block_nr);
 
+	pdch = find_pdch(rts_req);
+	if (!pdch)
+		return -EINVAL;
+
 	switch (rts_req->sapi) {
 	case PCU_IF_SAPI_PDTCH:
-		pcu_rx_rts_req_pdtch(rts_req->trx_nr, rts_req->ts_nr,
-			rts_req->arfcn, rts_req->fn, rts_req->block_nr);
+		pcu_rx_rts_req_pdtch(pdch, rts_req->fn, rts_req->block_nr);
 		break;
 	case PCU_IF_SAPI_PTCCH:
 		/* FIXME */
 		{
 			struct msgb *msg = msgb_alloc(23, "l1_prim");
 			memset(msgb_put(msg, 23), 0x2b, 23);
-			pcu_l1if_tx_ptcch(msg, rts_req->trx_nr, rts_req->ts_nr,
-				rts_req->arfcn, rts_req->fn, rts_req->block_nr);
+			pcu_l1if_tx_ptcch(msg, pdch, rts_req->fn, rts_req->block_nr);
 		}
 		break;
 	default:
