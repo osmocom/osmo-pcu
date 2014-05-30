@@ -221,6 +221,9 @@ struct gprs_rlcmac_tbf {
 	 * schedule a new dl assignment */
 	uint8_t was_releasing;
 
+	/* Can/should we upgrade this tbf to use multiple slots? */
+	uint8_t upgrade_to_multislot;
+
 	/* store the BTS this TBF belongs to */
 	BTS *bts;
 

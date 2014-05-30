@@ -175,6 +175,8 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	/* the only one TS is the common TS */
 	tbf->first_ts = tbf->first_common_ts = ts;
 
+	tbf->upgrade_to_multislot = 0;
+
 	return 0;
 }
 
@@ -665,10 +667,17 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		}
 	}
 	if (single && slotcount) {
+		uint8_t ts_count = 0;
+		for (ts = 0; ts < 8; ts++)
+			if ((tx_window & (1 << ts)))
+				ts_count++;
+
+		tbf->upgrade_to_multislot = (ts_count > 1);
 		LOGP(DRLCMAC, LOGL_INFO, "Using single slot at TS %d for %s\n",
 			tbf->first_ts,
 			(tbf->direction == GPRS_RLCMAC_DL_TBF) ? "DL" : "UL");
 	} else {
+		tbf->upgrade_to_multislot = 0;
 		LOGP(DRLCMAC, LOGL_INFO, "Using %d slots for %s\n", slotcount,
 			(tbf->direction == GPRS_RLCMAC_DL_TBF) ? "DL" : "UL");
 	}

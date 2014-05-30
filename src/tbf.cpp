@@ -574,11 +574,29 @@ void gprs_rlcmac_tbf::handle_timeout()
 					"in assign state\n", tbf_name(this));
 		}
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
-			/* change state to FLOW, so scheduler will start transmission */
 			dir.dl.wait_confirm = 0;
 			if (state_is(GPRS_RLCMAC_ASSIGN)) {
-				tbf_new_state(this, GPRS_RLCMAC_FLOW);
 				tbf_assign_control_ts(this);
+
+				if (!upgrade_to_multislot) {
+					/* change state to FLOW, so scheduler
+					 * will start transmission */
+					tbf_new_state(this, GPRS_RLCMAC_FLOW);
+					break;
+				}
+
+				/* This tbf can be upgraded to use multiple DL
+				 * timeslots and now that there is already one
+				 * slot assigned send another DL assignment via
+				 * PDCH. */
+
+				/* keep to flags */
+				state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
+				state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
+
+				update();
+
+				bts->trigger_dl_ass(this, this, NULL);
 			} else
 				LOGP(DRLCMAC, LOGL_NOTICE, "%s Continue flow after "
 					"IMM.ASS confirm\n", tbf_name(this));
