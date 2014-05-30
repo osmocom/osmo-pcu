@@ -805,7 +805,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] %s Packet Downlink Ack/Nack\n", tbf_name(tbf));
 	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 
-	rc = tbf->snd_dl_ack(
+	rc = tbf->rcvd_dl_ack(
 		ack_nack->Ack_Nack_Description.FINAL_ACK_INDICATION,
 		ack_nack->Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
 		ack_nack->Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
