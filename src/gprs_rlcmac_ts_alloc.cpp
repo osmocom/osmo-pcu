@@ -83,7 +83,7 @@ static inline int8_t find_free_usf(struct gprs_rlcmac_pdch *pdch)
 
 	/* make map of used USF */
 	for (tfi = 0; tfi < 32; tfi++) {
-		tbf = pdch->ul_tbf[tfi];
+		tbf = pdch->ul_tbf_by_tfi(tfi);
 		if (!tbf)
 			continue;
 		usf_map |= (1 << tbf->dir.ul.usf[pdch->ts_no]);
@@ -121,7 +121,6 @@ static void assign_uplink_tbf_usf(
 				struct gprs_rlcmac_tbf *tbf, int8_t usf)
 {
 	tbf->trx->ul_tbf[tbf->tfi()] = tbf;
-	pdch->ul_tbf[tbf->tfi()] = tbf;
 	tbf->pdch[pdch->ts_no] = pdch;
 	tbf->dir.ul.usf[pdch->ts_no] = usf;
 }
@@ -131,7 +130,6 @@ static void assign_dlink_tbf(
 				struct gprs_rlcmac_tbf *tbf)
 {
 	tbf->trx->dl_tbf[tbf->tfi()] = tbf;
-	pdch->dl_tbf[tbf->tfi()] = tbf;
 	tbf->pdch[pdch->ts_no] = pdch;
 }
 

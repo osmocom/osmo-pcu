@@ -991,16 +991,25 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn, int8_t 
 	return rc;
 }
 
+struct gprs_rlcmac_tbf *gprs_rlcmac_pdch::tbf_from_list_by_tfi(struct llist_head *tbf_list, uint8_t tfi)
+{
+	struct gprs_rlcmac_tbf *tbf;
+
+	llist_for_each_entry(tbf, tbf_list, list) {
+		if (tbf->tfi() != tfi)
+			continue;
+		if (!tbf->pdch[this->ts_no])
+			continue;
+		return tbf;
+	}
+	return NULL;
+}
 struct gprs_rlcmac_tbf *gprs_rlcmac_pdch::ul_tbf_by_tfi(uint8_t tfi)
 {
-	if (tfi >= ARRAY_SIZE(this->ul_tbf))
-		return NULL;
-	return this->ul_tbf[tfi];
+	return this->tbf_from_list_by_tfi(&bts_main_data()->ul_tbfs, tfi);
 }
 
 struct gprs_rlcmac_tbf *gprs_rlcmac_pdch::dl_tbf_by_tfi(uint8_t tfi)
 {
-	if (tfi >= ARRAY_SIZE(this->dl_tbf))
-		return NULL;
-	return this->dl_tbf[tfi];
+	return this->tbf_from_list_by_tfi(&bts_main_data()->dl_tbfs, tfi);
 }

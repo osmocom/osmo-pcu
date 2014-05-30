@@ -71,8 +71,6 @@ struct gprs_rlcmac_pdch {
 	uint8_t next_ul_tfi; /* next uplink TBF/TFI to schedule (0..31) */
 	uint8_t next_dl_tfi; /* next downlink TBF/TFI to schedule (0..31) */
 	uint8_t next_ctrl_prio; /* next kind of ctrl message to schedule */
-	struct gprs_rlcmac_tbf *ul_tbf[32]; /* array of UL TBF, by UL TFI */
-	struct gprs_rlcmac_tbf *dl_tbf[32]; /* array of DL TBF, by DL TFI */
 	struct llist_head paging_list; /* list of paging messages */
 	uint32_t last_rts_fn; /* store last frame number of RTS */
 
@@ -89,6 +87,7 @@ private:
 	void rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *, uint32_t fn);
 	void rcv_resource_request(Packet_Resource_Request_t *t, uint32_t fn);
 	void rcv_measurement_report(Packet_Measurement_Report_t *t, uint32_t fn);
+	struct gprs_rlcmac_tbf *tbf_from_list_by_tfi(struct llist_head *tbf_list, uint8_t tfi);
 #endif
 };
 
