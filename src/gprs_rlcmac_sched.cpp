@@ -81,7 +81,7 @@ static uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 	/* select uplink resource */
 	for (i = 0, tfi = pdch->next_ul_tfi; i < 32;
 	     i++, tfi = (tfi + 1) & 31) {
-		tbf = pdch->ul_tbf[tfi];
+		tbf = pdch->ul_tbf_by_tfi(tfi);
 		/* no TBF for this tfi, go next */
 		if (!tbf)
 			continue;
@@ -169,7 +169,7 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 	/* select downlink resource */
 	for (i = 0, tfi = pdch->next_dl_tfi; i < 32;
 	     i++, tfi = (tfi + 1) & 31) {
-		tbf = pdch->dl_tbf[tfi];
+		tbf = pdch->dl_tbf_by_tfi(tfi);
 		/* no TBF for this tfi, go next */
 		if (!tbf)
 			continue;
