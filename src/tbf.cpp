@@ -250,25 +250,16 @@ struct gprs_rlcmac_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 
 static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 {
-	struct gprs_rlcmac_pdch *pdch;
 	int ts;
 
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
 		tbf->trx->ul_tbf[tbf->tfi()] = NULL;
-		for (ts = 0; ts < 8; ts++) {
-			pdch = tbf->pdch[ts];
-			if (pdch)
-				pdch->ul_tbf[tbf->tfi()] = NULL;
+		for (ts = 0; ts < 8; ts++)
 			tbf->pdch[ts] = NULL;
-		}
 	} else {
 		tbf->trx->dl_tbf[tbf->tfi()] = NULL;
-		for (ts = 0; ts < 8; ts++) {
-			pdch = tbf->pdch[ts];
-			if (pdch)
-				pdch->dl_tbf[tbf->tfi()] = NULL;
+		for (ts = 0; ts < 8; ts++)
 			tbf->pdch[ts] = NULL;
-		}
 	}
 }
 
@@ -1472,10 +1463,10 @@ void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_pdch *pdch)
 	for (uint8_t tfi = 0; tfi < 32; tfi++) {
 		struct gprs_rlcmac_tbf *tbf;
 
-		tbf = pdch->ul_tbf[tfi];
+		tbf = pdch->ul_tbf_by_tfi(tfi);
 		if (tbf)
 			tbf_free(tbf);
-		tbf = pdch->dl_tbf[tfi];
+		tbf = pdch->dl_tbf_by_tfi(tfi);
 		if (tbf)
 			tbf_free(tbf);
 	}

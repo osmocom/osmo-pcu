@@ -991,16 +991,26 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn, int8_t 
 	return rc;
 }
 
-struct gprs_rlcmac_tbf *gprs_rlcmac_pdch::ul_tbf_by_tfi(uint8_t tfi)
+gprs_rlcmac_tbf *gprs_rlcmac_pdch::tbf_from_list_by_tfi(struct llist_head *tbf_list, uint8_t tfi)
 {
-	if (tfi >= ARRAY_SIZE(ul_tbf))
-		return NULL;
-	return ul_tbf[tfi];
+	gprs_rlcmac_tbf *tbf;
+
+	llist_for_each_entry(tbf, tbf_list, list) {
+		if (tbf->tfi() != tfi)
+			continue;
+		if (!tbf->pdch[ts_no])
+			continue;
+		return tbf;
+	}
+	return NULL;
 }
 
-struct gprs_rlcmac_tbf *gprs_rlcmac_pdch::dl_tbf_by_tfi(uint8_t tfi)
+gprs_rlcmac_tbf *gprs_rlcmac_pdch::ul_tbf_by_tfi(uint8_t tfi)
 {
-	if (tfi >= ARRAY_SIZE(dl_tbf))
-		return NULL;
-	return dl_tbf[tfi];
+	return tbf_from_list_by_tfi(&bts_data()->ul_tbfs, tfi);
+}
+
+gprs_rlcmac_tbf *gprs_rlcmac_pdch::dl_tbf_by_tfi(uint8_t tfi)
+{
+	return tbf_from_list_by_tfi(&bts_data()->dl_tbfs, tfi);
 }
