@@ -106,6 +106,8 @@ gprs_rlcmac_pdch *bts_find_pdch(uint8_t trx_nr, uint8_t ts_nr, uint16_t arfcn)
 
 	/* verify we talk about the same thing */
 	OSMO_ASSERT(trx->arfcn == arfcn);
+	OSMO_ASSERT(pdch->ts_no == ts_nr);
+	OSMO_ASSERT(pdch->trx->trx_no == trx_nr);
 	return pdch;
 }
 
