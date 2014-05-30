@@ -1405,6 +1405,8 @@ int gprs_rlcmac_tbf::maybe_start_new_window()
 	/* report all outstanding packets as received */
 	gprs_rlcmac_received_lost(this, received, 0);
 
+	tbf_new_state(this, GPRS_RLCMAC_WAIT_RELEASE);
+
 	/* check for LLC PDU in the LLC Queue */
 	msg = llc_dequeue(gprs_bssgp_pcu_current_bctx());
 	if (!msg) {
@@ -1414,7 +1416,6 @@ int gprs_rlcmac_tbf::maybe_start_new_window()
 		tbf_timer_start(this, 3193,
 			bts_data()->t3193_msec / 1000,
 			(bts_data()->t3193_msec % 1000) * 1000);
-		tbf_new_state(this, GPRS_RLCMAC_WAIT_RELEASE);
 
 		return 0;
 	}

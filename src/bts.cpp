@@ -474,6 +474,7 @@ void BTS::trigger_dl_ass(
 		old_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
 		/* use TA from old TBF */
 		tbf->ta = old_tbf->ta;
+		tbf->was_releasing = tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 		/* change state */
 		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
@@ -485,6 +486,7 @@ void BTS::trigger_dl_ass(
 			LOGP(DRLCMAC, LOGL_ERROR, "No valid IMSI!\n");
 			return;
 		}
+		tbf->was_releasing = tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 		/* change state */
 		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);

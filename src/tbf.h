@@ -217,6 +217,10 @@ struct gprs_rlcmac_tbf {
 	 * stops to iterate over all tbf in its current form */
 	enum gprs_rlcmac_tbf_state state;
 
+	/* Remember if the tbf was in wait_release state when we want to
+	 * schedule a new dl assignment */
+	uint8_t was_releasing;
+
 	/* store the BTS this TBF belongs to */
 	BTS *bts;
 
