@@ -1144,13 +1144,13 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
             guint8 bits_to_handle = remaining_bits_len%8;
             if (bits_to_handle > 0)
             {
-              LOGPC(DCSN1, LOGL_NOTICE, "%"PRIu64"|", bitvec_read_field(vector, readIndex, bits_to_handle));
+              LOGPC(DCSN1, LOGL_NOTICE, "%" PRIu64 "|", bitvec_read_field(vector, readIndex, bits_to_handle));
               remaining_bits_len -= bits_to_handle;
               bit_offset += bits_to_handle;
             }
             else if (bits_to_handle == 0)
             {
-              LOGPC(DCSN1, LOGL_NOTICE, "%"PRIu64"|", bitvec_read_field(vector, readIndex, 8));
+              LOGPC(DCSN1, LOGL_NOTICE, "%" PRIu64 "|", bitvec_read_field(vector, readIndex, 8));
               remaining_bits_len -= 8;
               bit_offset += 8;
             }
