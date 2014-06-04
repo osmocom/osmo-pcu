@@ -532,7 +532,6 @@ void gprs_rlcmac_pdch::disable()
 	m_is_enabled = 0;
 }
 
-/* TODO: kill the parameter and make a pdch belong to a trx.. to a bts.. */
 void gprs_rlcmac_pdch::free_resources()
 {
 	struct gprs_rlcmac_paging *pag;
