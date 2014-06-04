@@ -61,6 +61,9 @@ struct gprs_rlcmac_pdch {
 	gprs_rlcmac_bts *bts_data() const;
 	BTS *bts() const;
 	uint8_t trx_no() const;
+
+	struct gprs_rlcmac_tbf *ul_tbf_by_tfi(uint8_t tfi);
+	struct gprs_rlcmac_tbf *dl_tbf_by_tfi(uint8_t tfi);
 #endif
 
 	uint8_t m_is_enabled; /* TS is enabled */

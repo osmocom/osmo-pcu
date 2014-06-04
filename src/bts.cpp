@@ -990,3 +990,17 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn, int8_t 
 
 	return rc;
 }
+
+struct gprs_rlcmac_tbf *gprs_rlcmac_pdch::ul_tbf_by_tfi(uint8_t tfi)
+{
+	if (tfi >= ARRAY_SIZE(ul_tbf))
+		return NULL;
+	return ul_tbf[tfi];
+}
+
+struct gprs_rlcmac_tbf *gprs_rlcmac_pdch::dl_tbf_by_tfi(uint8_t tfi)
+{
+	if (tfi >= ARRAY_SIZE(dl_tbf))
+		return NULL;
+	return dl_tbf[tfi];
+}
