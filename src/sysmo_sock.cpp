@@ -112,12 +112,8 @@ static void pcu_sock_close(struct pcu_sock_state *state, int lost)
 		gprs_rlcmac_tbf::free_all(&bts->trx[trx]);
 	}
 
-	gprs_bssgp_destroy_or_exit();
-
-	if (lost) {
-		state->timer.cb = pcu_sock_timeout;
-		osmo_timer_schedule(&state->timer, 5, 0);
-	}
+	gprs_bssgp_destroy();
+	exit(0);
 }
 
 static int pcu_sock_read(struct osmo_fd *bfd)

@@ -179,8 +179,10 @@ int pcu_l1if_open()
 
 void pcu_l1if_close(void)
 {
-	gprs_bssgp_destroy_or_exit();
+	gprs_bssgp_destroy();
 
 	/* FIXME: cleanup l1if */
 	talloc_free(l1fh->fl1h);
+
+	exit(0);
 }

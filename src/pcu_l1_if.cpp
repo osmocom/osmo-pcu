@@ -324,8 +324,8 @@ bssgp_failed:
 			for (ts = 0; ts < 8; ts++)
 				bts->trx[trx].pdch[ts].free_resources();
 		}
-		gprs_bssgp_destroy_or_exit();
-		return 0;
+		gprs_bssgp_destroy();
+		exit(0);
 	}
 	LOGP(DL1IF, LOGL_INFO, "BTS available\n");
 	LOGP(DL1IF, LOGL_DEBUG, " mcc=%x\n", info_ind->mcc);

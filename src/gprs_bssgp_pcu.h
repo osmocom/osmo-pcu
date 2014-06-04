@@ -57,7 +57,6 @@ struct gprs_bssgp_pcu {
 	int bvc_sig_reset;
 	int bvc_reset;
 	int bvc_unblocked;
-	int exit_on_destroy;
 
 	/** callbacks below */
 
@@ -75,8 +74,7 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 		uint16_t nsvci, uint16_t bvci, uint16_t mcc, uint16_t mnc,
 		uint16_t lac, uint16_t rac, uint16_t cell_id);
 
-void gprs_bssgp_exit_on_destroy(void);
-void gprs_bssgp_destroy_or_exit(void);
+void gprs_bssgp_destroy(void);
 
 struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void);
 

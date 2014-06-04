@@ -56,7 +56,6 @@ static void print_help()
 			"provided by BTS\n"
 		"  -r   --realtime PRIO Use SCHED_RR with the specified "
 			"priority\n"
-		"  -e   --exit		Exit the application on disconnect\n"
 		);
 }
 
@@ -105,7 +104,7 @@ static void handle_options(int argc, char **argv)
 			rt_prio = atoi(optarg);
 			break;
 		case 'e':
-			gprs_bssgp_exit_on_destroy();
+			fprintf(stderr, "Warning: Option '-e' is deprecated!\n");
 			break;
 		default:
 			fprintf(stderr, "Unknown option '%c'\n", c);

@@ -533,13 +533,8 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 	return &the_pcu;
 }
 
-void gprs_bssgp_destroy_or_exit(void)
+void gprs_bssgp_destroy(void)
 {
-	if (the_pcu.exit_on_destroy) {
-		LOGP(DBSSGP, LOGL_NOTICE, "Exiting on BSSGP destruction.\n");
-		exit(0);
-	}
-
 	if (!bssgp_nsi)
 		return;
 
@@ -562,12 +557,6 @@ void gprs_bssgp_destroy_or_exit(void)
 
 	gprs_ns_destroy(bssgp_nsi);
 	bssgp_nsi = NULL;
-}
-
-void gprs_bssgp_exit_on_destroy(void)
-{
-	LOGP(DBSSGP, LOGL_NOTICE, "Going to quit on BSSGP destruction\n");
-	the_pcu.exit_on_destroy = 1;
 }
 
 struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void)
