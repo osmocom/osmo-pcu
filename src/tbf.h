@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 by Holger Hans Peter Freyther
+ * Copyright (C) 2013-2014 by Holger Hans Peter Freyther
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -88,6 +88,8 @@ struct gprs_rlcmac_tbf {
 
 	static void free_all(struct gprs_rlcmac_trx *trx);
 	static void free_all(struct gprs_rlcmac_pdch *pdch);
+
+	static gprs_rlcmac_tbf *allocate(BTS *bts, gprs_rlcmac_tbf *tbf, enum gprs_rlcmac_tbf_direction, int use_trx, int ms_class, int single_slot);
 
 	bool state_is(enum gprs_rlcmac_tbf_state rhs) const;
 	bool state_is_not(enum gprs_rlcmac_tbf_state rhs) const;

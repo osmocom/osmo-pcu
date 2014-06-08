@@ -414,19 +414,9 @@ bool BTS::rcv_rach_sba(uint8_t ra, uint32_t Fn, int16_t qta, bitvec *immediate_a
 bool BTS::rcv_rach_tbf(uint8_t ra, uint32_t Fn, int16_t qta, bitvec *immediate_assignment, uint8_t *plen)
 {
 	struct gprs_rlcmac_tbf *tbf;
-	uint8_t trx_no;
-	int8_t tfi; /* must be signed */
 
-	// Create new TBF
-	#warning "Copy and pate with other routines.."
-	tfi = tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
-	if (tfi < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-		/* FIXME: send reject */
-		return false;
-	}
-	/* set class to 0, since we don't know the multislot class yet */
-	tbf = tbf_alloc(&m_bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx_no, 0, 1);
+	// Create new TBF with unknown ms class
+	tbf = gprs_rlcmac_tbf::allocate(this, NULL, GPRS_RLCMAC_UL_TBF, -1, 0, 1);
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */

@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
  * Copyright (C) 2012 Andreas Eversberg <jolly@eversberg.eu>
- * Copyright (C) 2013 by Holger Hans Peter Freyther
+ * Copyright (C) 2013-2014 by Holger Hans Peter Freyther
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -121,10 +121,9 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 				const uint32_t tlli, const uint8_t ms_class,
 				const uint8_t *data, const uint16_t len)
 {
-	uint8_t trx, ta, ss;
+	uint8_t ta, ss;
 	int8_t use_trx;
 	struct gprs_rlcmac_tbf *old_tbf, *tbf;
-	int8_t tfi; /* must be signed */
 	int rc;
 
 	/* check for uplink data, so we copy our informations */
@@ -157,15 +156,8 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	}
 
 	// Create new TBF (any TRX)
-#warning "Copy and paste with alloc_ul_tbf"
-	tfi = bts->bts->tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx, use_trx);
-	if (tfi < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-		/* FIXME: send reject */
-		return -EBUSY;
-	}
-	/* set number of downlink slots according to multislot class */
-	tbf = tbf_alloc(bts, tbf, GPRS_RLCMAC_DL_TBF, tfi, trx, ms_class, ss);
+	tbf = gprs_rlcmac_tbf::allocate(bts->bts, tbf, GPRS_RLCMAC_DL_TBF,
+					use_trx, ms_class, ss);
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */
@@ -1793,4 +1785,20 @@ void tbf_print_vty_info(struct vty *vty, llist_head *ltbf)
 			vty_out(vty, "%d ", i);
 	}
 	vty_out(vty, " CS=%d%s%s", tbf->cs, VTY_NEWLINE, VTY_NEWLINE);
+}
+
+gprs_rlcmac_tbf *gprs_rlcmac_tbf::allocate(BTS *bts, gprs_rlcmac_tbf *old_tbf,
+					enum gprs_rlcmac_tbf_direction dir, int use_trx,
+					int ms_class, int single_slot)
+{
+	uint8_t trx_no;
+	int8_t tfi;
+
+	tfi = bts->tfi_find_free(dir, &trx_no, use_trx);
+	if (tfi < 0) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
+		return 0;
+	}
+
+	return tbf_alloc(bts->bts_data(), old_tbf, dir, tfi, trx_no, ms_class, single_slot);
 }
