@@ -41,8 +41,7 @@ public:
 			bitvec * dest, uint8_t downlink, uint8_t ra, 
 		        uint32_t ref_fn, uint8_t ta, gprs_rlcmac_pdch *pdch,
 		        uint8_t tfi, uint8_t usf, uint32_t tlli, uint8_t polling,
-			uint32_t fn, uint8_t single_block, uint8_t alpha, uint8_t gamma,
-			int8_t ta_idx);
+			uint32_t fn, uint8_t single_block, uint8_t alpha, uint8_t gamma);
 
 	static void write_packet_uplink_assignment(
 			struct gprs_rlcmac_bts *bts,

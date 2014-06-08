@@ -32,7 +32,7 @@ int Encoding::write_immediate_assignment(
 	uint32_t ref_fn, uint8_t ta, gprs_rlcmac_pdch *pdch,
 	uint8_t tfi, uint8_t usf, uint32_t tlli,
 	uint8_t polling, uint32_t fn, uint8_t single_block, uint8_t alpha,
-	uint8_t gamma, int8_t ta_idx)
+	uint8_t gamma)
 {
 	unsigned wp = 0;
 	uint8_t plen;
@@ -95,12 +95,9 @@ int Encoding::write_immediate_assignment(
 		bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
 		bitvec_write_field(dest, wp,polling,1);   // Polling Bit
 		bitvec_write_field(dest, wp,!polling,1);   // TA_VALID ???
-		if (ta_idx < 0) {
-			bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
-		} else {
-			bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
-			bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
-		}
+
+		bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
+
 		if (polling) {
 			bitvec_write_field(dest, wp,0x1,1);   // TBF Starting TIME present
 			bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
@@ -126,12 +123,8 @@ int Encoding::write_immediate_assignment(
 			} else
 				bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
 			bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
-			if (ta_idx < 0) {
-				bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
-			} else {
-				bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
-				bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
-			}
+
+			bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
 			bitvec_write_field(dest, wp, 1, 1);    // TBF_STARTING_TIME_FLAG
 			bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
 			bitvec_write_field(dest, wp,fn % 51,6);               // T3
