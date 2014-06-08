@@ -407,8 +407,7 @@ bool BTS::rcv_rach_sba(uint8_t ra, uint32_t Fn, int16_t qta, bitvec *immediate_a
 		"(AGCH)\n");
 
 	*plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
-		Fn, qta >> 2, m_bts.trx[trx_no].arfcn, ts_no,
-		m_bts.trx[trx_no].pdch[ts_no].tsc, 0, 0, 0, 0, sb_fn, 1,
+		Fn, qta >> 2, &m_bts.trx[trx_no].pdch[ts_no], 0, 0, 0, 0, sb_fn, 1,
 		m_bts.alpha, m_bts.gamma, -1);
 	return true;
 }
@@ -446,7 +445,7 @@ bool BTS::rcv_rach_tbf(uint8_t ra, uint32_t Fn, int16_t qta, bitvec *immediate_a
 		tbf_name(tbf));
 
 	*plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
-		Fn, tbf->ta, tbf->trx->arfcn, tbf->first_ts, tbf->tsc(),
+		Fn, tbf->ta, tbf->first_pdch(),
 		tbf->tfi(), tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0, 0,
 		m_bts.alpha, m_bts.gamma, -1);
 	return true;
@@ -543,7 +542,7 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 	 * so the assignment will not conflict with possible RACH requests. */
 	plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 1, 125,
 		(tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta,
-		tbf->trx->arfcn, tbf->first_ts, tbf->tsc(), tbf->tfi(), 0, tbf->tlli(), poll,
+		tbf->first_pdch(), tbf->tfi(), 0, tbf->tlli(), poll,
 		tbf->poll_fn, 0, m_bts.alpha, m_bts.gamma, -1);
 	pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
 	bitvec_free(immediate_assignment);

@@ -1764,9 +1764,14 @@ void gprs_rlcmac_tbf::rotate_in_list()
 		llist_add(&list, &bts->bts_data()->dl_tbfs);
 }
 
+gprs_rlcmac_pdch *gprs_rlcmac_tbf::first_pdch() const
+{
+	return &trx->pdch[first_ts];
+}
+
 uint8_t gprs_rlcmac_tbf::tsc() const
 {
-	return trx->pdch[first_ts].tsc;
+	return first_pdch()->tsc;
 }
 
 void tbf_print_vty_info(struct vty *vty, llist_head *ltbf)

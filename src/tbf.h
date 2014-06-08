@@ -140,6 +140,8 @@ struct gprs_rlcmac_tbf {
 
 	time_t created_ts() const;
 
+	gprs_rlcmac_pdch *first_pdch() const;
+
 	/* attempt to make things a bit more fair */
 	void rotate_in_list();
 

@@ -29,7 +29,7 @@
 int Encoding::write_immediate_assignment(
 	struct gprs_rlcmac_bts *bts,
 	bitvec * dest, uint8_t downlink, uint8_t ra,
-	uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc,
+	uint32_t ref_fn, uint8_t ta, gprs_rlcmac_pdch *pdch,
 	uint8_t tfi, uint8_t usf, uint32_t tlli,
 	uint8_t polling, uint32_t fn, uint8_t single_block, uint8_t alpha,
 	uint8_t gamma, int8_t ta_idx)
@@ -51,10 +51,10 @@ int Encoding::write_immediate_assignment(
 
 	// GSM 04.08 10.5.2.25a Packet Channel Description
 	bitvec_write_field(dest, wp,0x1,5);                               // Channel type
-	bitvec_write_field(dest, wp,ts,3);     // TN
-	bitvec_write_field(dest, wp,tsc,3);    // TSC
+	bitvec_write_field(dest, wp,pdch->ts_no,3);     // TN
+	bitvec_write_field(dest, wp,pdch->tsc,3);    // TSC
 	bitvec_write_field(dest, wp,0x0,3);                               // non-hopping RF channel configuraion
-	bitvec_write_field(dest, wp,arfcn,10); // ARFCN
+	bitvec_write_field(dest, wp, pdch->trx->arfcn,10); // ARFCN
 
 	//10.5.2.30 Request Reference
 	bitvec_write_field(dest, wp,ra,8);                    // RA
