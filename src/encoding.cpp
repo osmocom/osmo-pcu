@@ -31,11 +31,12 @@ int Encoding::write_immediate_assignment(
 	bitvec * dest, uint8_t downlink, uint8_t ra,
 	uint32_t ref_fn, uint8_t ta, gprs_rlcmac_pdch *pdch,
 	uint8_t tfi, uint8_t usf, uint32_t tlli,
-	uint8_t polling, uint32_t fn, uint8_t single_block, uint8_t alpha,
-	uint8_t gamma)
+	uint8_t polling, uint32_t fn, uint8_t single_block)
 {
 	unsigned wp = 0;
 	uint8_t plen;
+	const uint8_t alpha = pdch->bts_data()->alpha;
+	const uint8_t gamma = pdch->bts_data()->gamma;
 
 	bitvec_write_field(dest, wp,0x0,4);  // Skip Indicator
 	bitvec_write_field(dest, wp,0x6,4);  // Protocol Discriminator
