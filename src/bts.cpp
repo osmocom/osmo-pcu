@@ -390,14 +390,71 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	return 0;
 }
 
-int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
+bool BTS::rcv_rach_sba(uint8_t ra, uint32_t Fn, int16_t qta, bitvec *immediate_assignment, uint8_t *plen)
+{
+	int rc;
+	uint8_t trx_no, ts_no;
+	uint32_t sb_fn = 0;
+
+	rc = sba()->alloc(&trx_no, &ts_no, &sb_fn, qta >> 2);
+	if (rc < 0)
+		return false;
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] RACH qbit-ta=%d "
+		"ra=0x%02x, Fn=%d (%d,%d,%d)\n", qta, ra, Fn,
+		(Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
+	LOGP(DRLCMAC, LOGL_INFO, "TX: Immediate Assignment Uplink "
+		"(AGCH)\n");
+
+	*plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
+		Fn, qta >> 2, m_bts.trx[trx_no].arfcn, ts_no,
+		m_bts.trx[trx_no].pdch[ts_no].tsc, 0, 0, 0, 0, sb_fn, 1,
+		m_bts.alpha, m_bts.gamma, -1);
+	return true;
+}
+
+bool BTS::rcv_rach_tbf(uint8_t ra, uint32_t Fn, int16_t qta, bitvec *immediate_assignment, uint8_t *plen)
 {
 	struct gprs_rlcmac_tbf *tbf;
-	uint8_t trx_no, ts_no = 0;
+	uint8_t trx_no;
 	int8_t tfi; /* must be signed */
-	uint8_t sb = 0;
-	uint32_t sb_fn = 0;
-	int rc;
+
+	// Create new TBF
+	#warning "Copy and pate with other routines.."
+	tfi = tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
+	if (tfi < 0) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
+		/* FIXME: send reject */
+		return false;
+	}
+	/* set class to 0, since we don't know the multislot class yet */
+	tbf = tbf_alloc(&m_bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx_no, 0, 1);
+	if (!tbf) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
+		/* FIXME: send reject */
+		return false;
+	}
+	tbf->ta = qta >> 2;
+	tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
+	tbf_timer_start(tbf, 3169, m_bts.t3169, 0);
+	LOGP(DRLCMAC, LOGL_DEBUG, "%s [UPLINK] START\n", tbf_name(tbf));
+	LOGP(DRLCMAC, LOGL_DEBUG, "%s RX: [PCU <- BTS] RACH "
+		"qbit-ta=%d ra=0x%02x, Fn=%d (%d,%d,%d)\n",
+		tbf_name(tbf), qta, ra, Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
+	LOGP(DRLCMAC, LOGL_INFO, "%s TX: START Immediate Assignment Uplink (AGCH)\n",
+		tbf_name(tbf));
+
+	*plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
+		Fn, tbf->ta, tbf->trx->arfcn, tbf->first_ts, tbf->tsc(),
+		tbf->tfi(), tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0, 0,
+		m_bts.alpha, m_bts.gamma, -1);
+	return true;
+}
+
+int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
+{
+	bool sb = false;
 	uint8_t plen;
 
 	rach_frame();
@@ -417,58 +474,21 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		qta = 0;
 	if (qta > 252)
 		qta = 252;
-	if (sb) {
-		rc = sba()->alloc(&trx_no, &ts_no, &sb_fn, qta >> 2);
-		if (rc < 0)
-			return rc;
-		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] RACH qbit-ta=%d "
-			"ra=0x%02x, Fn=%d (%d,%d,%d)\n", qta, ra, Fn,
-			(Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
-		LOGP(DRLCMAC, LOGL_INFO, "TX: Immediate Assignment Uplink "
-			"(AGCH)\n");
-	} else {
-		// Create new TBF
-		#warning "Copy and pate with other routines.."
-		tfi = tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
-		if (tfi < 0) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-			/* FIXME: send reject */
-			return -EBUSY;
-		}
-		/* set class to 0, since we don't know the multislot class yet */
-		tbf = tbf_alloc(&m_bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx_no, 0, 1);
-		if (!tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-			/* FIXME: send reject */
-			return -EBUSY;
-		}
-		tbf->ta = qta >> 2;
-		tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
-		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
-		tbf_timer_start(tbf, 3169, m_bts.t3169, 0);
-		LOGP(DRLCMAC, LOGL_DEBUG, "%s [UPLINK] START\n",
-			tbf_name(tbf));
-		LOGP(DRLCMAC, LOGL_DEBUG, "%s RX: [PCU <- BTS] RACH "
-			"qbit-ta=%d ra=0x%02x, Fn=%d (%d,%d,%d)\n",
-			tbf_name(tbf),
-			qta, ra, Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
-		LOGP(DRLCMAC, LOGL_INFO, "%s TX: START Immediate "
-			"Assignment Uplink (AGCH)\n", tbf_name(tbf));
-	}
+
 	bitvec *immediate_assignment = bitvec_alloc(22) /* without plen */;
-	bitvec_unhex(immediate_assignment,
-		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	if (sb)
-		plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
-			Fn, qta >> 2, m_bts.trx[trx_no].arfcn, ts_no,
-			m_bts.trx[trx_no].pdch[ts_no].tsc, 0, 0, 0, 0, sb_fn, 1,
-			m_bts.alpha, m_bts.gamma, -1);
-	else
-		plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
-			Fn, tbf->ta, tbf->trx->arfcn, tbf->first_ts, tbf->tsc(),
-			tbf->tfi(), tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0, 0,
-			m_bts.alpha, m_bts.gamma, -1);
+	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+
+	if (sb) {
+		if (!rcv_rach_sba(ra, Fn, qta, immediate_assignment, &plen))
+			goto error;
+	} else {
+		if (!rcv_rach_tbf(ra, Fn, qta, immediate_assignment, &plen))
+			goto error;
+	}
+
 	pcu_l1if_tx_agch(immediate_assignment, plen);
+
+error:
 	bitvec_free(immediate_assignment);
 
 	return 0;

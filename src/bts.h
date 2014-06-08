@@ -232,6 +232,10 @@ public:
 	struct rate_ctr_group *rate_counters() const;
 
 private:
+	bool rcv_rach_sba(uint8_t ra, uint32_t Fn, int16_t qta, bitvec *, uint8_t *plen);
+	bool rcv_rach_tbf(uint8_t ra, uint32_t Fn, int16_t qta, bitvec *, uint8_t *plen);
+
+private:
 	int m_cur_fn;
 	struct gprs_rlcmac_bts m_bts;
 	PollController m_pollController;
