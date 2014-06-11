@@ -1,3 +1,17 @@
+********** TBF starts here **********
+Allocating DL TBF: TFI=0 TRX=0 MS_CLASS=0
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Assign downlink TS=2
+- Setting Control TS 2
 TBF(TFI=0 TLLI=0x00000000 DIR=DL) changing tlli from TLLI=0x00000000 TLLI=0x00002342 ul_changed=0
+********** TBF starts here **********
+Allocating UL TBF: TFI=0 TRX=0 MS_CLASS=0
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Assign uplink TS=2 USF=0
+- Setting Control TS 2
 TBF(TFI=0 TLLI=0x00000000 DIR=UL) changing tlli from TLLI=0x00000000 TLLI=0x00002342 ul_changed=0
 TBF(TFI=0 TLLI=0x00002342 DIR=DL) changing tlli from TLLI=0x00002342 TLLI=0x00004232 ul_changed=1
