@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <osmocom/vty/logging.h>
 #include <osmocom/core/linuxlist.h>
+#include <osmocom/core/rate_ctr.h>
 #include "pcu_vty.h"
 #include "gprs_rlcmac.h"
 #include "bts.h"
