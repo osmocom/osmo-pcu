@@ -82,13 +82,14 @@ static int config_write_pcu(struct vty *vty)
 	vty_out(vty, "pcu%s", VTY_NEWLINE);
 	vty_out(vty, " flow-control-interval %d%s", bts->fc_interval,
 		VTY_NEWLINE);
-	if (bts->force_cs)
+	if (bts->force_cs) {
 		if (bts->initial_cs_ul == bts->initial_cs_dl)
 			vty_out(vty, " cs %d%s", bts->initial_cs_dl,
 				VTY_NEWLINE);
 		else
 			vty_out(vty, " cs %d %d%s", bts->initial_cs_dl,
 				bts->initial_cs_ul, VTY_NEWLINE);
+	}
 	if (bts->force_llc_lifetime == 0xffff)
 		vty_out(vty, " queue lifetime infinite%s", VTY_NEWLINE);
 	else if (bts->force_llc_lifetime)
