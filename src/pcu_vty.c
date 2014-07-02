@@ -2,6 +2,7 @@
 
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <osmocom/vty/logging.h>
 #include <osmocom/core/linuxlist.h>
 #include "pcu_vty.h"
