@@ -82,7 +82,7 @@ static struct gprs_rlcmac_tbf *tbf_lookup_dl(BTS *bts,
 					const uint32_t tlli, const char *imsi)
 {
 	/* TODO: look up by IMSI first, then tlli, then old_tlli */
-	return bts->tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF);
+	return bts->dl_tbf_by_tlli(tlli);
 }
 
 int gprs_rlcmac_tbf::append_data(const uint8_t ms_class,
@@ -130,7 +130,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	/* check for uplink data, so we copy our informations */
 #warning "Do the same look up for IMSI, TLLI and OLD_TLLI"
 #warning "Refactor the below lines... into a new method"
-	tbf = bts->bts->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+	tbf = bts->bts->ul_tbf_by_tlli(tlli);
 	if (tbf && tbf->dir.ul.contention_resolution_done
 	 && !tbf->dir.ul.final_ack_sent) {
 		use_trx = tbf->trx->trx_no;
@@ -308,7 +308,7 @@ int gprs_rlcmac_tbf::update()
 	if (direction != GPRS_RLCMAC_DL_TBF)
 		return -EINVAL;
 
-	ul_tbf = bts->tbf_by_tlli(m_tlli, GPRS_RLCMAC_UL_TBF);
+	ul_tbf = bts->ul_tbf_by_tlli(m_tlli);
 
 	tbf_unlink_pdch(this);
 	rc = bts_data->alloc_algorithm(bts_data, ul_tbf, this, bts_data->alloc_algorithm_curst, 0);
@@ -1182,7 +1182,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 			return NULL;
 		}
 		#warning "THIS should probably go over the IMSI too"
-		new_tbf = bts->tbf_by_tlli(m_tlli, GPRS_RLCMAC_DL_TBF);
+		new_tbf = bts->dl_tbf_by_tlli(m_tlli);
 	} else
 		new_tbf = this;
 	if (!new_tbf) {
@@ -1252,7 +1252,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	/* on down TBF we get the uplink TBF to be assigned. */
 #warning "Probably want to find by IMSI too"
 	if (direction == GPRS_RLCMAC_DL_TBF)
-		new_tbf = bts->tbf_by_tlli(m_tlli, GPRS_RLCMAC_UL_TBF);
+		new_tbf = bts->ul_tbf_by_tlli(m_tlli);
 	else
 		new_tbf = this;
 
@@ -1497,7 +1497,7 @@ void gprs_rlcmac_tbf::update_tlli(uint32_t tlli)
 	 */
 	if (m_tlli_valid && direction == GPRS_RLCMAC_DL_TBF) {
 		gprs_rlcmac_tbf *ul_tbf;
-		ul_tbf = bts->tbf_by_tlli(m_tlli, GPRS_RLCMAC_UL_TBF);
+		ul_tbf = bts->ul_tbf_by_tlli(m_tlli);
 
 		if (ul_tbf) {
 			ul_tbf->m_tlli = tlli;
@@ -1537,7 +1537,7 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 	update_tlli(new_tlli);
 	LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
 		"UL DATA TFI=%d.\n", tlli(), rh->tfi);
-	if ((dl_tbf = bts->tbf_by_tlli(tlli(), GPRS_RLCMAC_DL_TBF))) {
+	if ((dl_tbf = bts->dl_tbf_by_tlli(tlli()))) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 			"TLLI=0x%08x while %s still exists. "
 			"Killing pending DL TBF\n", tlli(),
@@ -1545,9 +1545,9 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 		tbf_free(dl_tbf);
 		dl_tbf = NULL;
 	}
-	/* tbf_by_tlli will not find your TLLI, because it is not
+	/* ul_tbf_by_tlli will not find your TLLI, because it is not
 	 * yet marked valid */
-	if ((ul_tbf = bts->tbf_by_tlli(tlli(), GPRS_RLCMAC_UL_TBF))) {
+	if ((ul_tbf = bts->ul_tbf_by_tlli(tlli()))) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 			"TLLI=0x%08x while %s still exists. "
 			"Killing pending UL TBF\n", tlli(),

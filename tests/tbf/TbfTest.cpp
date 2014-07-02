@@ -59,8 +59,8 @@ static void test_tbf_tlli_update()
 	ul_tbf->tlli_mark_valid();
 	
 
-	OSMO_ASSERT(the_bts.tbf_by_tlli(0x2342, GPRS_RLCMAC_DL_TBF) == dl_tbf);
-	OSMO_ASSERT(the_bts.tbf_by_tlli(0x2342, GPRS_RLCMAC_UL_TBF) == ul_tbf);
+	OSMO_ASSERT(the_bts.dl_tbf_by_tlli(0x2342) == dl_tbf);
+	OSMO_ASSERT(the_bts.ul_tbf_by_tlli(0x2342) == ul_tbf);
 
 
 	/*
@@ -68,12 +68,12 @@ static void test_tbf_tlli_update()
 	 * has changed.
 	 */
 	dl_tbf->update_tlli(0x4232);
-	OSMO_ASSERT(!the_bts.tbf_by_tlli(0x2342, GPRS_RLCMAC_DL_TBF));
-	OSMO_ASSERT(!the_bts.tbf_by_tlli(0x2342, GPRS_RLCMAC_UL_TBF));
+	OSMO_ASSERT(!the_bts.dl_tbf_by_tlli(0x2342));
+	OSMO_ASSERT(!the_bts.ul_tbf_by_tlli(0x2342));
 
 	
-	OSMO_ASSERT(the_bts.tbf_by_tlli(0x4232, GPRS_RLCMAC_DL_TBF) == dl_tbf);
-	OSMO_ASSERT(the_bts.tbf_by_tlli(0x4232, GPRS_RLCMAC_UL_TBF) == ul_tbf);
+	OSMO_ASSERT(the_bts.dl_tbf_by_tlli(0x4232) == dl_tbf);
+	OSMO_ASSERT(the_bts.ul_tbf_by_tlli(0x4232) == ul_tbf);
 
 	OSMO_ASSERT(the_bts.timing_advance()->recall(0x4232) == 4);
 }

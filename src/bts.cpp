@@ -216,6 +216,18 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 	return 0;
 }
 
+/* search for active downlink tbf */
+gprs_rlcmac_tbf *BTS::dl_tbf_by_tlli(uint32_t tlli)
+{
+	return tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF);
+}
+
+/* search for active uplink tbf */
+gprs_rlcmac_tbf *BTS::ul_tbf_by_tlli(uint32_t tlli)
+{
+	return tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+}
+
 /* search for active downlink or uplink tbf */
 gprs_rlcmac_tbf *BTS::tbf_by_tlli(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
 {
@@ -360,7 +372,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	tlli |= (*data++) << 4;
 	tlli |= (*data++) >> 4;
 
-	tbf = tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF);
+	tbf = dl_tbf_by_tlli(tlli);
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_ERROR, "Got IMM.ASS confirm, but TLLI=%08x "
 			"does not exit\n", tlli);
@@ -725,8 +737,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		tbf->n3105 = 0;
 		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 		if (tbf->direction == GPRS_RLCMAC_UL_TBF)
-			tbf = bts()->tbf_by_tlli(tbf->tlli(),
-						GPRS_RLCMAC_DL_TBF);
+			tbf = bts()->dl_tbf_by_tlli(tbf->tlli());
 #warning "TBF is changing on the way... *sigh*"
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
@@ -753,8 +764,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
 #warning "TBF is changing on the way... *sigh*"
 		if (tbf->direction == GPRS_RLCMAC_DL_TBF)
-			tbf = bts()->tbf_by_tlli(tbf->tlli(),
-						GPRS_RLCMAC_UL_TBF);
+			tbf = bts()->ul_tbf_by_tlli(tbf->tlli());
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
 				"TBF is gone TLLI=0x%08x\n", tlli);
@@ -836,7 +846,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		struct gprs_rlcmac_tbf *dl_tbf;
 		uint8_t ta;
 
-		tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF);
+		tbf = bts()->ul_tbf_by_tlli(tlli);
 		if (tbf) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 				"TLLI=0x%08x while %s still "
@@ -846,7 +856,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			tbf = NULL;
 		}
 
-		if ((dl_tbf = bts()->tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF))) {
+		if ((dl_tbf = bts()->dl_tbf_by_tlli(tlli))) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 				"TLLI=0x%08x while %s still exists. "
 				"Killing pending DL TBF\n", tlli,
