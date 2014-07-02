@@ -195,7 +195,8 @@ public:
 	gprs_rlcmac_tbf *dl_tbf_by_tlli(uint32_t tlli);
 	gprs_rlcmac_tbf *ul_tbf_by_tlli(uint32_t tlli);
 	gprs_rlcmac_tbf *tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
-	gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, uint8_t trx, enum gprs_rlcmac_tbf_direction dir);
+	gprs_rlcmac_tbf *dl_tbf_by_tfi(uint8_t tfi, uint8_t trx);
+	gprs_rlcmac_tbf *ul_tbf_by_tfi(uint8_t tfi, uint8_t trx);
 
 	int tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx);
 
@@ -240,6 +241,7 @@ private:
 	TimingAdvance m_ta;
 	struct rate_ctr_group *m_ratectrs;
 	gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir);
+	gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, uint8_t trx, enum gprs_rlcmac_tbf_direction dir);
 
 private:
 	/* disable copying to avoid slicing */
