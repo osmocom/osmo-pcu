@@ -25,7 +25,7 @@
 #define RLC_MAX_WS  64 /* max window size */
 #define RLC_MAX_LEN 54 /* CS-4 including spare bits */
 
-class BTS;
+struct BTS;
 struct gprs_rlc_v_n;
 
 /* The state of a BSN in the send/receive window */

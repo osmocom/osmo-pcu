@@ -23,7 +23,7 @@
 
 struct gprs_rlcmac_bts;
 
-class BTS;
+struct BTS;
 
 /**
  * I belong to a BTS and I am responsible for finding TBFs and
