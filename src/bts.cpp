@@ -248,20 +248,28 @@ gprs_rlcmac_tbf *BTS::tbf_by_tlli(uint32_t tlli, enum gprs_rlcmac_tbf_direction 
 	return NULL;
 }
 
-gprs_rlcmac_tbf *BTS::tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
+gprs_rlcmac_tbf *BTS::dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 {
 	struct gprs_rlcmac_tbf *tbf;
 
 	/* only one TBF can poll on specific TS/FN, because scheduler can only
 	 * schedule one downlink control block (with polling) at a FN per TS */
-	llist_for_each_entry(tbf, &m_bts.ul_tbfs, list) {
+	llist_for_each_entry(tbf, &m_bts.dl_tbfs, list) {
 		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
 		 && tbf->control_ts == ts)
 			return tbf;
 	}
-	llist_for_each_entry(tbf, &m_bts.dl_tbfs, list) {
+	return NULL;
+}
+gprs_rlcmac_tbf *BTS::ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
+{
+	struct gprs_rlcmac_tbf *tbf;
+
+	/* only one TBF can poll on specific TS/FN, because scheduler can only
+	 * schedule one downlink control block (with polling) at a FN per TS */
+	llist_for_each_entry(tbf, &m_bts.ul_tbfs, list) {
 		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
@@ -718,7 +726,10 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	uint32_t tlli = 0;
 
 	tlli = packet->TLLI;
-	tbf = bts()->tbf_by_poll_fn(fn, trx_no(), ts_no);
+	tbf = bts()->ul_tbf_by_poll_fn(fn, trx_no(), ts_no);
+	if (!tbf)
+		tbf = bts()->dl_tbf_by_poll_fn(fn, trx_no(), ts_no);
+
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
 			"unknown FN=%u TLLI=0x%08x (TRX %d TS %d)\n",
@@ -804,7 +815,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	int rc;
 
 	tfi = ack_nack->DOWNLINK_TFI;
-	tbf = bts()->tbf_by_poll_fn(fn, trx_no(), ts_no);
+	tbf = bts()->dl_tbf_by_poll_fn(fn, trx_no(), ts_no);
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
 			"unknown FN=%u TFI=%d (TRX %d TS %d)\n",
