@@ -495,7 +495,11 @@ struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 	if (trx >= 8 || tfi >= 32)
 		return NULL;
 
-	tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_tbf);
+	if (dir == GPRS_RLCMAC_UL_TBF)
+		tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
+	else
+		tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
+
 	if (!tbf)
 		return NULL;
 

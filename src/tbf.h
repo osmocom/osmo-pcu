@@ -326,6 +326,12 @@ inline time_t gprs_rlcmac_tbf::created_ts() const
 	return m_created_ts;
 }
 
+struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
+};
+
+struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
+};
+
 #endif
 
 #ifdef __cplusplus
