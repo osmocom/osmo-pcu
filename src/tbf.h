@@ -259,7 +259,7 @@ protected:
 };
 
 
-struct gprs_rlcmac_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
+struct gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	int8_t use_trx, uint8_t ms_class,
 	uint32_t tlli, uint8_t ta, struct gprs_rlcmac_tbf *dl_tbf);
 

@@ -417,7 +417,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 
 int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 {
-	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_ul_tbf *tbf;
 	uint8_t trx_no, ts_no = 0;
 	int8_t tfi; /* must be signed */
 	uint8_t sb = 0;
@@ -461,7 +461,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 			return -EBUSY;
 		}
 		/* set class to 0, since we don't know the multislot class yet */
-		tbf = tbf_alloc(&m_bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx_no, 0, 1);
+		tbf = (gprs_rlcmac_ul_tbf *)tbf_alloc(&m_bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx_no, 0, 1);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 			/* FIXME: send reject */
@@ -692,7 +692,7 @@ void gprs_rlcmac_pdch::add_paging(struct gprs_rlcmac_paging *pag)
  */
 int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, int8_t rssi)
 {
-	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_ul_tbf *tbf;
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 
 	switch (len) {
@@ -867,24 +867,24 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 
 void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, uint32_t fn)
 {
-	struct gprs_rlcmac_tbf *tbf;
 	struct gprs_rlcmac_sba *sba;
 	int rc;
 
 	if (request->ID.UnionType) {
+		struct gprs_rlcmac_ul_tbf *ul_tbf;
+		struct gprs_rlcmac_dl_tbf *dl_tbf;
 		uint32_t tlli = request->ID.u.TLLI;
 		uint8_t ms_class = 0;
-		struct gprs_rlcmac_tbf *dl_tbf;
 		uint8_t ta;
 
-		tbf = bts()->ul_tbf_by_tlli(tlli);
-		if (tbf) {
+		ul_tbf = bts()->ul_tbf_by_tlli(tlli);
+		if (ul_tbf) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 				"TLLI=0x%08x while %s still "
 				"exists. Killing pending DL TBF\n",
-				tlli, tbf_name(tbf));
-			tbf_free(tbf);
-			tbf = NULL;
+				tlli, tbf_name(ul_tbf));
+			tbf_free(ul_tbf);
+			ul_tbf = NULL;
 		}
 
 		if ((dl_tbf = bts()->dl_tbf_by_tlli(tlli))) {
@@ -918,34 +918,41 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			ms_class = Decoding::get_ms_class_by_capability(&request->MS_Radio_Access_capability);
 		if (!ms_class)
 			LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");
-		tbf = tbf_alloc_ul(bts_data(), trx_no(), ms_class, tlli, ta, NULL);
-		if (!tbf)
+		ul_tbf = tbf_alloc_ul(bts_data(), trx_no(), ms_class, tlli, ta, NULL);
+		if (!ul_tbf)
 			return;
 		/* set control ts to current MS's TS, until assignment complete */
 		LOGP(DRLCMAC, LOGL_DEBUG, "Change control TS to %d until assinment is complete.\n", ts_no);
-		tbf->control_ts = ts_no;
+		ul_tbf->control_ts = ts_no;
 		/* schedule uplink assignment */
-		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+		ul_tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
 		return;
 	}
 
 	if (request->ID.u.Global_TFI.UnionType) {
+		struct gprs_rlcmac_dl_tbf *dl_tbf;
 		int8_t tfi = request->ID.u.Global_TFI.u.DOWNLINK_TFI;
-		tbf = bts()->dl_tbf_by_tfi(tfi, trx_no());
-		if (!tbf) {
+		dl_tbf = bts()->dl_tbf_by_tfi(tfi, trx_no());
+		if (!dl_tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TFI=%d\n", tfi);
 			return;
 		}
+		LOGP(DRLCMAC, LOGL_ERROR,
+			"RX: [PCU <- BTS] %s FIXME: Packet resource request\n",
+			tbf_name(dl_tbf));
 	} else {
+		struct gprs_rlcmac_ul_tbf *ul_tbf;
 		int8_t tfi = request->ID.u.Global_TFI.u.UPLINK_TFI;
-		tbf = bts()->ul_tbf_by_tfi(tfi, trx_no());
-		if (!tbf) {
+		ul_tbf = bts()->ul_tbf_by_tfi(tfi, trx_no());
+		if (!ul_tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TFI=%d\n", tfi);
 			return;
 		}
+		LOGP(DRLCMAC, LOGL_ERROR,
+			"RX: [PCU <- BTS] %s FIXME: Packet resource request\n",
+			tbf_name(ul_tbf));
 	}
 
-	LOGP(DRLCMAC, LOGL_ERROR, "RX: [PCU <- BTS] %s FIXME: Packet resource request\n", tbf_name(tbf));
 }
 
 void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *report, uint32_t fn)
