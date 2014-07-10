@@ -62,8 +62,8 @@ struct gprs_rlcmac_pdch {
 	BTS *bts() const;
 	uint8_t trx_no() const;
 
-	struct gprs_rlcmac_tbf *ul_tbf_by_tfi(uint8_t tfi);
-	struct gprs_rlcmac_tbf *dl_tbf_by_tfi(uint8_t tfi);
+	struct gprs_rlcmac_ul_tbf *ul_tbf_by_tfi(uint8_t tfi);
+	struct gprs_rlcmac_dl_tbf *dl_tbf_by_tfi(uint8_t tfi);
 #endif
 
 	uint8_t m_is_enabled; /* TS is enabled */
@@ -193,12 +193,12 @@ public:
 	/** add paging to paging queue(s) */
 	int add_paging(uint8_t chan_needed, uint8_t *identity_lv);
 
-	gprs_rlcmac_tbf *dl_tbf_by_tlli(uint32_t tlli);
-	gprs_rlcmac_tbf *ul_tbf_by_tlli(uint32_t tlli);
-	gprs_rlcmac_tbf *dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
-	gprs_rlcmac_tbf *ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
-	gprs_rlcmac_tbf *dl_tbf_by_tfi(uint8_t tfi, uint8_t trx);
-	gprs_rlcmac_tbf *ul_tbf_by_tfi(uint8_t tfi, uint8_t trx);
+	gprs_rlcmac_dl_tbf *dl_tbf_by_tlli(uint32_t tlli);
+	gprs_rlcmac_ul_tbf *ul_tbf_by_tlli(uint32_t tlli);
+	gprs_rlcmac_dl_tbf *dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
+	gprs_rlcmac_ul_tbf *ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
+	gprs_rlcmac_dl_tbf *dl_tbf_by_tfi(uint8_t tfi, uint8_t trx);
+	gprs_rlcmac_ul_tbf *ul_tbf_by_tfi(uint8_t tfi, uint8_t trx);
 
 	int tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx);
 
