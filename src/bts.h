@@ -87,7 +87,8 @@ private:
 	void rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *, uint32_t fn);
 	void rcv_resource_request(Packet_Resource_Request_t *t, uint32_t fn);
 	void rcv_measurement_report(Packet_Measurement_Report_t *t, uint32_t fn);
-	gprs_rlcmac_tbf *tbf_from_list_by_tfi(struct llist_head *tbf_list, uint8_t tfi);
+	gprs_rlcmac_tbf *tbf_from_list_by_tfi(struct llist_head *tbf_list, uint8_t tfi,
+		enum gprs_rlcmac_tbf_direction dir);
 #endif
 };
 
