@@ -263,9 +263,14 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	int8_t use_trx, uint8_t ms_class,
 	uint32_t tlli, uint8_t ta, struct gprs_rlcmac_tbf *dl_tbf);
 
-struct gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
+struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *old_tbf,
-	enum gprs_rlcmac_tbf_direction dir, uint8_t tfi, uint8_t trx,
+	uint8_t tfi, uint8_t trx,
+	uint8_t ms_class, uint8_t single_slot);
+
+struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
+	struct gprs_rlcmac_tbf *old_tbf,
+	uint8_t tfi, uint8_t trx,
 	uint8_t ms_class, uint8_t single_slot);
 
 void tbf_free(struct gprs_rlcmac_tbf *tbf);

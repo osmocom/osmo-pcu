@@ -44,16 +44,16 @@ static void test_tbf_tlli_update()
 	/*
 	 * Make a uplink and downlink allocation
 	 */
-	gprs_rlcmac_tbf *dl_tbf = tbf_alloc(the_bts.bts_data(),
-						NULL, GPRS_RLCMAC_DL_TBF, 0,
+	gprs_rlcmac_tbf *dl_tbf = tbf_alloc_dl_tbf(the_bts.bts_data(),
+						NULL, 0,
 						0, 0, 0);
 	dl_tbf->update_tlli(0x2342);
 	dl_tbf->tlli_mark_valid();
 	dl_tbf->ta = 4;
 	the_bts.timing_advance()->remember(0x2342, dl_tbf->ta);
 
-	gprs_rlcmac_tbf *ul_tbf = tbf_alloc(the_bts.bts_data(),
-						ul_tbf, GPRS_RLCMAC_UL_TBF, 0,
+	gprs_rlcmac_tbf *ul_tbf = tbf_alloc_ul_tbf(the_bts.bts_data(),
+						ul_tbf, 0,
 						0, 0, 0);
 	ul_tbf->update_tlli(0x2342);
 	ul_tbf->tlli_mark_valid();

@@ -461,7 +461,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 			return -EBUSY;
 		}
 		/* set class to 0, since we don't know the multislot class yet */
-		tbf = (gprs_rlcmac_ul_tbf *)tbf_alloc(&m_bts, NULL, GPRS_RLCMAC_UL_TBF, tfi, trx_no, 0, 1);
+		tbf = tbf_alloc_ul_tbf(&m_bts, NULL, tfi, trx_no, 0, 1);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 			/* FIXME: send reject */
