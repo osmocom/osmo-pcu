@@ -78,7 +78,7 @@ void gprs_rlcmac_tbf::assign_imsi(const char *imsi)
 	m_imsi[sizeof(m_imsi) - 1] = '\0';
 }
 
-static struct gprs_rlcmac_tbf *tbf_lookup_dl(BTS *bts,
+static struct gprs_rlcmac_dl_tbf *tbf_lookup_dl(BTS *bts,
 					const uint32_t tlli, const char *imsi)
 {
 	/* TODO: look up by IMSI first, then tlli, then old_tlli */
@@ -200,14 +200,14 @@ int gprs_rlcmac_tbf::handle(struct gprs_rlcmac_bts *bts,
 		const uint8_t ms_class, const uint16_t delay_csec,
 		const uint8_t *data, const uint16_t len)
 {
-	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
 
 	/* check for existing TBF */
-	tbf = tbf_lookup_dl(bts->bts, tlli, imsi);
-	if (tbf) {
-		int rc = tbf->append_data(ms_class, delay_csec, data, len);
+	dl_tbf = tbf_lookup_dl(bts->bts, tlli, imsi);
+	if (dl_tbf) {
+		int rc = dl_tbf->append_data(ms_class, delay_csec, data, len);
 		if (rc >= 0)
-			tbf->assign_imsi(imsi);
+			dl_tbf->assign_imsi(imsi);
 		return rc;
 	} 
 
