@@ -271,10 +271,6 @@ protected:
 	int extract_tlli(const uint8_t *data, const size_t len);
 	void maybe_schedule_uplink_acknack(const rlc_ul_header *rh);
 
-	int append_data(const uint8_t ms_class,
-			const uint16_t pdu_delay_csec,
-			const uint8_t *data, const uint16_t len);
-
 	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
 					const int index, const bool fin_first_ack);
 	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
@@ -354,6 +350,10 @@ inline time_t gprs_rlcmac_tbf::created_ts() const
 }
 
 struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
+	int append_data(const uint8_t ms_class,
+			const uint16_t pdu_delay_csec,
+			const uint8_t *data, const uint16_t len);
+
 };
 
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {

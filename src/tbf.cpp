@@ -85,7 +85,7 @@ static struct gprs_rlcmac_dl_tbf *tbf_lookup_dl(BTS *bts,
 	return bts->dl_tbf_by_tlli(tlli);
 }
 
-int gprs_rlcmac_tbf::append_data(const uint8_t ms_class,
+int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 				const uint16_t pdu_delay_csec,
 				const uint8_t *data, const uint16_t len)
 {
