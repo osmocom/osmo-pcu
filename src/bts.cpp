@@ -236,14 +236,12 @@ gprs_rlcmac_tbf *BTS::tbf_by_tlli(uint32_t tlli, enum gprs_rlcmac_tbf_direction 
 	struct llist_pods *lpods;
 	if (dir == GPRS_RLCMAC_UL_TBF) {
 		llist_pods_for_each_entry(tbf, &m_bts.ul_tbfs, list, lpods) {
-			OSMO_ASSERT(tbf->direction == dir);
 			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 			 && tbf->tlli() == tlli && tbf->is_tlli_valid())
 				return tbf;
 		}
 	} else {
 		llist_pods_for_each_entry(tbf, &m_bts.dl_tbfs, list, lpods) {
-			OSMO_ASSERT(tbf->direction == dir);
 			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 			 && tbf->tlli() == tlli)
 				return tbf;
@@ -264,7 +262,6 @@ gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
 		 && tbf->control_ts == ts) {
-			OSMO_ASSERT(tbf->direction == GPRS_RLCMAC_DL_TBF);
 			return static_cast<gprs_rlcmac_dl_tbf *>(tbf);
 		}
 	}
@@ -282,7 +279,6 @@ gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
 		 && tbf->control_ts == ts) {
-			OSMO_ASSERT(tbf->direction == GPRS_RLCMAC_UL_TBF);
 			return static_cast<gprs_rlcmac_ul_tbf *>(tbf);
 		}
 	}
@@ -318,7 +314,6 @@ gprs_rlcmac_tbf *BTS::tbf_by_tfi(uint8_t tfi, uint8_t trx,
 		return NULL;
 
 	if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)) {
-		OSMO_ASSERT(tbf->direction == dir);
 		return tbf;
 	}
 
@@ -1049,7 +1044,6 @@ gprs_rlcmac_tbf *gprs_rlcmac_pdch::tbf_from_list_by_tfi(struct llist_head *tbf_l
 	struct llist_pods *lpods;
 
 	llist_pods_for_each_entry(tbf, tbf_list, list, lpods) {
-		OSMO_ASSERT(tbf->direction == dir);
 		if (tbf->tfi() != tfi)
 			continue;
 		if (!tbf->pdch[ts_no])
