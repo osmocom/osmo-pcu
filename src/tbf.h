@@ -125,7 +125,6 @@ struct gprs_rlcmac_tbf {
 	struct msgb *create_dl_ass(uint32_t fn);
 	struct msgb *create_ul_ass(uint32_t fn);
 	struct msgb *create_ul_ack(uint32_t fn);
-	int rcvd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
 	int snd_ul_ud();
 
 	/* blocks were acked */
@@ -354,6 +353,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 			const uint16_t pdu_delay_csec,
 			const uint8_t *data, const uint16_t len);
 
+	int rcvd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
 };
 
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {

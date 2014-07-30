@@ -818,7 +818,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_nack, uint32_t fn)
 {
 	int8_t tfi = 0; /* must be signed */
-	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;
 
 	tfi = ack_nack->DOWNLINK_TFI;

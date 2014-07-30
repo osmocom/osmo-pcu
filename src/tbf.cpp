@@ -1486,7 +1486,7 @@ int gprs_rlcmac_tbf::maybe_start_new_window()
 	return 0;
 }
 
-int gprs_rlcmac_tbf::rcvd_dl_ack(uint8_t final_ack, uint8_t ssn, uint8_t *rbb)
+int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, uint8_t ssn, uint8_t *rbb)
 {
 	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink acknowledge\n", tbf_name(this));
 
