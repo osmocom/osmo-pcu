@@ -84,6 +84,28 @@ enum gprs_rlcmac_tbf_direction {
 #define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
+struct llist_pods {
+	struct llist_head list;
+	void *back;
+};
+
+#define llist_pods_entry(ptr, type) \
+	((type *)(container_of(ptr, struct llist_pods, list)->back))
+
+/**
+ * llist_pods_for_each_entry - like llist_for_each_entry, but uses
+ * struct llist_pods ->back to access the entry.
+ * This is necessary for non-PODS classes because container_of is
+ * not guaranteed to work anymore. */
+#define llist_pods_for_each_entry(pos, head, member, lpods)			\
+	for (lpods = llist_entry((head)->next, typeof(struct llist_pods), list), \
+		     pos = ((typeof(pos))lpods->back),	\
+		     prefetch(pos->member.list.next);				\
+	     &lpods->list != (head);					\
+	     lpods = llist_entry(lpods->list.next, typeof(struct llist_pods), list), \
+		     pos = ((typeof(pos))lpods->back),\
+		     prefetch(pos->member.list.next))
+
 struct gprs_rlcmac_tbf {
 
 	static void free_all(struct gprs_rlcmac_trx *trx);
@@ -143,7 +165,7 @@ struct gprs_rlcmac_tbf {
 	/* attempt to make things a bit more fair */
 	void rotate_in_list();
 
-	struct llist_head list;
+	struct llist_pods list;
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
 	struct gprs_rlcmac_trx *trx;

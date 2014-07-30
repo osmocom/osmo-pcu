@@ -31,6 +31,7 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 		    struct gprs_rlcmac_tbf **ul_ack_tbf)
 {
 	struct gprs_rlcmac_tbf *tbf;
+	struct llist_pods *lpods;
 	uint32_t poll_fn;
 
 	/* check special TBF for events */
@@ -38,7 +39,7 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 	if ((block_nr % 3) == 2)
 		poll_fn ++;
 	poll_fn = poll_fn % 2715648;
-	llist_for_each_entry(tbf, &bts->ul_tbfs, list) {
+	llist_pods_for_each_entry(tbf, &bts->ul_tbfs, list, lpods) {
 		/* this trx, this ts */
 		if (tbf->trx->trx_no != trx || tbf->control_ts != ts)
 			continue;
@@ -54,7 +55,7 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 			*ul_ass_tbf = tbf;
 #warning "Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all states?"
 	}
-	llist_for_each_entry(tbf, &bts->dl_tbfs, list) {
+	llist_pods_for_each_entry(tbf, &bts->dl_tbfs, list, lpods) {
 		/* this trx, this ts */
 		if (tbf->trx->trx_no != trx || tbf->control_ts != ts)
 			continue;

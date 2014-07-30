@@ -286,7 +286,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	#warning "TODO: Could/Should generate  bssgp_tx_llc_discarded"
 	tbf->m_llc.clear(tbf->bts);
 	tbf_unlink_pdch(tbf);
-	llist_del(&tbf->list);
+	llist_del(&tbf->list.list);
 
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF)
 		tbf->bts->tbf_ul_freed();
@@ -491,6 +491,9 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
 	if (!tbf)
 		return -1;
 
+	/* Back pointer for PODS llist compatibility */
+	tbf->list.back = tbf;
+
 	tbf->m_created_ts = time(NULL);
 	tbf->bts = bts->bts;
 	tbf->m_tfi = tfi;
@@ -548,7 +551,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 		return NULL;
 	}
 
-	llist_add(&tbf->list, &bts->ul_tbfs);
+	llist_add(&tbf->list.list, &bts->ul_tbfs);
 	tbf->bts->tbf_ul_created();
 
 	return tbf;
@@ -581,7 +584,7 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 		return NULL;
 	}
 
-	llist_add(&tbf->list, &bts->dl_tbfs);
+	llist_add(&tbf->list.list, &bts->dl_tbfs);
 	tbf->bts->tbf_dl_created();
 
 	return tbf;
@@ -1805,11 +1808,11 @@ bool gprs_rlcmac_tbf::dl_window_stalled() const
 
 void gprs_rlcmac_tbf::rotate_in_list()
 {
-	llist_del(&list);
+	llist_del(&list.list);
 	if (direction == GPRS_RLCMAC_UL_TBF)
-		llist_add(&list, &bts->bts_data()->ul_tbfs);
+		llist_add(&list.list, &bts->bts_data()->ul_tbfs);
 	else
-		llist_add(&list, &bts->bts_data()->dl_tbfs);
+		llist_add(&list.list, &bts->bts_data()->dl_tbfs);
 }
 
 uint8_t gprs_rlcmac_tbf::tsc() const
@@ -1819,7 +1822,7 @@ uint8_t gprs_rlcmac_tbf::tsc() const
 
 void tbf_print_vty_info(struct vty *vty, llist_head *ltbf)
 {
-	gprs_rlcmac_tbf *tbf = llist_entry(ltbf, gprs_rlcmac_tbf, list);
+	gprs_rlcmac_tbf *tbf = llist_pods_entry(ltbf, gprs_rlcmac_tbf);
 
 	vty_out(vty, "TBF: TFI=%d TLLI=0x%08x (%s) DIR=%s IMSI=%s%s", tbf->tfi(),
 			tbf->tlli(), tbf->is_tlli_valid() ? "valid" : "invalid",
