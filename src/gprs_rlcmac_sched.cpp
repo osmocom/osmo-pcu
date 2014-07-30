@@ -164,7 +164,7 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch)
 {
 	struct msgb *msg = NULL;
-	struct gprs_rlcmac_tbf *tbf = NULL;
+	struct gprs_rlcmac_dl_tbf *tbf = NULL;
 	uint8_t i, tfi;
 
 	/* select downlink resource */

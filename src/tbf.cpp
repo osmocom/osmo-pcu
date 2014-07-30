@@ -889,7 +889,7 @@ int gprs_rlcmac_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
  * Create DL data block
  * The messages are fragmented and forwarded as data blocks.
  */
-struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
+struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 {
 	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink (V(A)==%d .. "
 		"V(S)==%d)\n", tbf_name(this),
@@ -954,7 +954,7 @@ do_resend:
 	return create_new_bsn(fn, ts);
 }
 
-struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts)
+struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts)
 {
 	struct rlc_dl_header *rh;
 	struct rlc_li_field *li;
@@ -1121,7 +1121,7 @@ struct msgb *gprs_rlcmac_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts
 	return create_dl_acked_block(fn, ts, bsn, first_fin_ack);
 }
 
-struct msgb *gprs_rlcmac_tbf::create_dl_acked_block(
+struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				const uint32_t fn, const uint8_t ts,
 				const int index, const bool first_fin_ack)
 {

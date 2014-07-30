@@ -121,7 +121,6 @@ struct gprs_rlcmac_tbf {
 	/* TODO: extract LLC class? */
 	int assemble_forward_llc(const gprs_rlc_data *data);
 
-	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
 	struct msgb *create_dl_ass(uint32_t fn);
 	struct msgb *create_ul_ass(uint32_t fn);
 	struct msgb *create_ul_ack(uint32_t fn);
@@ -270,9 +269,6 @@ protected:
 	int extract_tlli(const uint8_t *data, const size_t len);
 	void maybe_schedule_uplink_acknack(const rlc_ul_header *rh);
 
-	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
-					const int index, const bool fin_first_ack);
-	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
 };
 
 
@@ -354,6 +350,12 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 			const uint8_t *data, const uint16_t len);
 
 	int rcvd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
+	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
+
+protected:
+	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
+	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
+					const int index, const bool fin_first_ack);
 };
 
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
