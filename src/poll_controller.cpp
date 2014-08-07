@@ -31,26 +31,27 @@ PollController::PollController(BTS& bts)
 void PollController::expireTimedout(int frame_number)
 {
 	struct gprs_rlcmac_bts *bts = m_bts.bts_data();
-	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_sba *sba, *sba2;
 	struct llist_pods *lpods;
 	uint32_t elapsed;
 
 	/* check for poll timeout */
-	llist_pods_for_each_entry(tbf, &bts->ul_tbfs, list, lpods) {
-		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
-			elapsed = (frame_number + 2715648 - tbf->poll_fn)
+	llist_pods_for_each_entry(ul_tbf, &bts->ul_tbfs, list, lpods) {
+		if (ul_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
+			elapsed = (frame_number + 2715648 - ul_tbf->poll_fn)
 								% 2715648;
 			if (elapsed >= 20 && elapsed < 2715400)
-				tbf->poll_timeout();
+				ul_tbf->poll_timeout();
 		}
 	}
-	llist_pods_for_each_entry(tbf, &bts->dl_tbfs, list, lpods) {
-		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
-			elapsed = (frame_number + 2715648 - tbf->poll_fn)
+	llist_pods_for_each_entry(dl_tbf, &bts->dl_tbfs, list, lpods) {
+		if (dl_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
+			elapsed = (frame_number + 2715648 - dl_tbf->poll_fn)
 								% 2715648;
 			if (elapsed >= 20 && elapsed < 2715400)
-				tbf->poll_timeout();
+				dl_tbf->poll_timeout();
 		}
 	}
 	llist_for_each_entry_safe(sba, sba2, &m_bts.sba()->m_sbas, list) {
