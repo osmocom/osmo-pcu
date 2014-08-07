@@ -687,7 +687,7 @@ int gprs_rlcmac_tbf::rlcmac_diag()
 	return 0;
 }
 
-struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
+struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 {
 	struct msgb *msg;
 	struct timeval *tv, tv_now;

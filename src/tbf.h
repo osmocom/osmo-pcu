@@ -115,9 +115,6 @@ struct gprs_rlcmac_tbf {
 	bool state_is_not(enum gprs_rlcmac_tbf_state rhs) const;
 	void set_state(enum gprs_rlcmac_tbf_state new_state);
 
-	/* TODO: add the gettimeofday as parameter */
-	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
-
 	struct msgb *create_dl_ass(uint32_t fn);
 	struct msgb *create_ul_ass(uint32_t fn);
 
@@ -309,6 +306,9 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 
 	int rcvd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
+
+	/* TODO: add the gettimeofday as parameter */
+	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
 
 	/* Please note that all variables here will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
