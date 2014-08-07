@@ -377,7 +377,7 @@ int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir,
 
 int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 {
-	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	uint8_t plen;
 	uint32_t tlli;
 
@@ -399,8 +399,8 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	tlli |= (*data++) << 4;
 	tlli |= (*data++) >> 4;
 
-	tbf = dl_tbf_by_tlli(tlli);
-	if (!tbf) {
+	dl_tbf = dl_tbf_by_tlli(tlli);
+	if (!dl_tbf) {
 		LOGP(DRLCMAC, LOGL_ERROR, "Got IMM.ASS confirm, but TLLI=%08x "
 			"does not exit\n", tlli);
 		return -EINVAL;
@@ -408,8 +408,8 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
 
-	if (tbf->dir.dl.wait_confirm)
-		tbf_timer_start(tbf, 0, Tassign_agch);
+	if (dl_tbf->dir.dl.wait_confirm)
+		tbf_timer_start(dl_tbf, 0, Tassign_agch);
 
 	return 0;
 }
