@@ -166,7 +166,7 @@ void Encoding::write_packet_uplink_assignment(
 	struct gprs_rlcmac_bts *bts,
 	bitvec * dest, uint8_t old_tfi,
 	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
-	struct gprs_rlcmac_tbf *tbf, uint8_t poll, uint8_t alpha,
+	struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t alpha,
 	uint8_t gamma, int8_t ta_idx)
 {
 	// TODO We should use our implementation of encode RLC/MAC Control messages.
@@ -375,7 +375,7 @@ void Encoding::encode_rbb(const char *show_rbb, uint8_t *rbb)
 
 /* generate uplink ack */
 void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
-	RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *tbf,
+	RlcMacDownlink_t * block, struct gprs_rlcmac_ul_tbf *tbf,
 	uint8_t final)
 {
 	// Packet Uplink Ack/Nack  TS 44.060 11.2.28
