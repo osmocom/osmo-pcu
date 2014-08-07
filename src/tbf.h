@@ -147,8 +147,6 @@ struct gprs_rlcmac_tbf {
 	const char *imsi() const;
 	void assign_imsi(const char *imsi);
 
-	uint16_t sns() const;
-
 	time_t created_ts() const;
 
 	/* attempt to make things a bit more fair */
@@ -315,12 +313,6 @@ inline uint8_t gprs_rlcmac_tbf::tfi() const
 inline const char *gprs_rlcmac_tbf::imsi() const
 {
 	return m_imsi;
-}
-
-inline uint16_t gprs_rlcmac_tbf::sns() const
-{
-	/* assume dl/ul do the same thing */
-	return dir.dl.window.sns();
 }
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf);
