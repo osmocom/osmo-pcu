@@ -123,25 +123,26 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 {
 	uint8_t trx, ta, ss;
 	int8_t use_trx;
-	struct gprs_rlcmac_tbf *old_tbf, *tbf;
+	struct gprs_rlcmac_ul_tbf *ul_tbf, *old_ul_tbf;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	int8_t tfi; /* must be signed */
 	int rc;
 
 	/* check for uplink data, so we copy our informations */
 #warning "Do the same look up for IMSI, TLLI and OLD_TLLI"
 #warning "Refactor the below lines... into a new method"
-	tbf = bts->bts->ul_tbf_by_tlli(tlli);
-	if (tbf && tbf->dir.ul.contention_resolution_done
-	 && !tbf->dir.ul.final_ack_sent) {
-		use_trx = tbf->trx->trx_no;
-		ta = tbf->ta;
+	ul_tbf = bts->bts->ul_tbf_by_tlli(tlli);
+	if (ul_tbf && ul_tbf->dir.ul.contention_resolution_done
+	 && !ul_tbf->dir.ul.final_ack_sent) {
+		use_trx = ul_tbf->trx->trx_no;
+		ta = ul_tbf->ta;
 		ss = 0;
-		old_tbf = tbf;
+		old_ul_tbf = ul_tbf;
 	} else {
 		use_trx = -1;
 		/* we already have an uplink TBF, so we use that TA */
-		if (tbf)
-			ta = tbf->ta;
+		if (ul_tbf)
+			ta = ul_tbf->ta;
 		else {
 			/* recall TA */
 			rc = bts->bts->timing_advance()->recall(tlli);
@@ -153,7 +154,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 				ta = rc;
 		}
 		ss = 1; /* PCH assignment only allows one timeslot */
-		old_tbf = NULL;
+		old_ul_tbf = NULL;
 	}
 
 	// Create new TBF (any TRX)
@@ -165,30 +166,30 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 		return -EBUSY;
 	}
 	/* set number of downlink slots according to multislot class */
-	tbf = tbf_alloc_dl_tbf(bts, tbf, tfi, trx, ms_class, ss);
-	if (!tbf) {
+	dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf, tfi, trx, ms_class, ss);
+	if (!dl_tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */
 		return -EBUSY;
 	}
-	tbf->m_tlli = tlli;
-	tbf->m_tlli_valid = 1;
-	tbf->ta = ta;
+	dl_tbf->m_tlli = tlli;
+	dl_tbf->m_tlli_valid = 1;
+	dl_tbf->ta = ta;
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "%s [DOWNLINK] START\n", tbf_name(tbf));
+	LOGP(DRLCMAC, LOGL_DEBUG, "%s [DOWNLINK] START\n", tbf_name(dl_tbf));
 
 	/* new TBF, so put first frame */
-	tbf->m_llc.put_frame(data, len);
-	tbf->bts->llc_frame_sched();
+	dl_tbf->m_llc.put_frame(data, len);
+	dl_tbf->bts->llc_frame_sched();
 
 	/* Store IMSI for later look-up and PCH retransmission */
-	tbf->assign_imsi(imsi);
+	dl_tbf->assign_imsi(imsi);
 
 	/* trigger downlink assignment and set state to ASSIGN.
 	 * we don't use old_downlink, so the possible uplink is used
 	 * to trigger downlink assignment. if there is no uplink,
 	 * AGCH is used. */
-	tbf->bts->trigger_dl_ass(tbf, old_tbf, imsi);
+	dl_tbf->bts->trigger_dl_ass(dl_tbf, old_ul_tbf, imsi);
 	return 0;
 }
 
@@ -616,14 +617,15 @@ void gprs_rlcmac_tbf::handle_timeout()
 					"in assign state\n", tbf_name(this));
 		}
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
-			dir.dl.wait_confirm = 0;
-			if (state_is(GPRS_RLCMAC_ASSIGN)) {
-				tbf_assign_control_ts(this);
+			gprs_rlcmac_dl_tbf *dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(this);
+			dl_tbf->dir.dl.wait_confirm = 0;
+			if (dl_tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
+				tbf_assign_control_ts(dl_tbf);
 
-				if (!upgrade_to_multislot) {
+				if (!dl_tbf->upgrade_to_multislot) {
 					/* change state to FLOW, so scheduler
 					 * will start transmission */
-					tbf_new_state(this, GPRS_RLCMAC_FLOW);
+					tbf_new_state(dl_tbf, GPRS_RLCMAC_FLOW);
 					break;
 				}
 
@@ -633,15 +635,15 @@ void gprs_rlcmac_tbf::handle_timeout()
 				 * PDCH. */
 
 				/* keep to flags */
-				state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
-				state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
+				dl_tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
+				dl_tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
 
-				update();
+				dl_tbf->update();
 
-				bts->trigger_dl_ass(this, this, NULL);
+				dl_tbf->bts->trigger_dl_ass(dl_tbf, dl_tbf, NULL);
 			} else
 				LOGP(DRLCMAC, LOGL_NOTICE, "%s Continue flow after "
-					"IMM.ASS confirm\n", tbf_name(this));
+					"IMM.ASS confirm\n", tbf_name(dl_tbf));
 		}
 		break;
 	case 3169:

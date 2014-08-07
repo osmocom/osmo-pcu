@@ -500,11 +500,11 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 
 /* depending on the current TBF, we assign on PACCH or AGCH */
 void BTS::trigger_dl_ass(
-	struct gprs_rlcmac_tbf *tbf,
+	struct gprs_rlcmac_dl_tbf *dl_tbf,
 	struct gprs_rlcmac_tbf *old_tbf, const char *imsi)
 {
 	/* stop pending timer */
-	tbf->stop_timer();
+	dl_tbf->stop_timer();
 
 	/* check for downlink tbf:  */
 	if (old_tbf) {
@@ -512,27 +512,27 @@ void BTS::trigger_dl_ass(
 			"PACCH, because %s exists\n", tbf_name(old_tbf));
 		old_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
 		/* use TA from old TBF */
-		tbf->ta = old_tbf->ta;
-		tbf->was_releasing = tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
+		dl_tbf->ta = old_tbf->ta;
+		dl_tbf->was_releasing = dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 		/* change state */
-		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
-		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
+		tbf_new_state(dl_tbf, GPRS_RLCMAC_ASSIGN);
+		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 		/* start timer */
-		tbf_timer_start(tbf, 0, Tassign_pacch);
+		tbf_timer_start(dl_tbf, 0, Tassign_pacch);
 	} else {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for %s on PCH, no TBF exist (IMSI=%s)\n", tbf_name(tbf), imsi);
+		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for %s on PCH, no TBF exist (IMSI=%s)\n", tbf_name(dl_tbf), imsi);
 		if (!imsi || strlen(imsi) < 3) {
 			LOGP(DRLCMAC, LOGL_ERROR, "No valid IMSI!\n");
 			return;
 		}
-		tbf->was_releasing = tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
+		dl_tbf->was_releasing = dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 		/* change state */
-		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
-		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
-		tbf->assign_imsi(imsi);
+		tbf_new_state(dl_tbf, GPRS_RLCMAC_ASSIGN);
+		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
+		dl_tbf->assign_imsi(imsi);
 		/* send immediate assignment */
-		tbf->bts->snd_dl_ass(tbf, 0, imsi);
-		tbf->dir.dl.wait_confirm = 1;
+		dl_tbf->bts->snd_dl_ass(dl_tbf, 0, imsi);
+		dl_tbf->dir.dl.wait_confirm = 1;
 	}
 }
 
