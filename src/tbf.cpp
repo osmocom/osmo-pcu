@@ -196,7 +196,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 /**
  * TODO: split into unit test-able parts...
  */
-int gprs_rlcmac_tbf::handle(struct gprs_rlcmac_bts *bts,
+int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 		const uint32_t tlli, const char *imsi,
 		const uint8_t ms_class, const uint16_t delay_csec,
 		const uint8_t *data, const uint16_t len)
@@ -1400,7 +1400,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ack(uint32_t fn)
 	return msg;
 }
 
-int gprs_rlcmac_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
+int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 {
 	int16_t dist; /* must be signed */
 	uint16_t lost = 0, received = 0;
@@ -1455,7 +1455,7 @@ int gprs_rlcmac_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 }
 
 
-int gprs_rlcmac_tbf::maybe_start_new_window()
+int gprs_rlcmac_dl_tbf::maybe_start_new_window()
 {
 	struct msgb *msg;
 	uint16_t received;
@@ -1781,7 +1781,7 @@ const char *tbf_name(gprs_rlcmac_tbf *tbf)
 }
 
 
-void gprs_rlcmac_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
+void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 {
 	bts->tbf_reused();
 	m_llc.put_frame(data, len);
@@ -1803,7 +1803,7 @@ void gprs_rlcmac_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 	bts->trigger_dl_ass(this, this, NULL);
 }
 
-bool gprs_rlcmac_tbf::dl_window_stalled() const
+bool gprs_rlcmac_dl_tbf::dl_window_stalled() const
 {
 	return dir.dl.window.window_stalled();
 }

@@ -128,12 +128,6 @@ struct gprs_rlcmac_tbf {
 
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi);
-
-	/* dispatch Unitdata.DL messages */
-	static int handle(struct gprs_rlcmac_bts *bts,
-		const uint32_t tlli, const char *imsi, const uint8_t ms_class,
-		const uint16_t delay_csec, const uint8_t *data, const uint16_t len);
-
 	uint8_t tsc() const;
 
 	int rlcmac_diag();
@@ -260,11 +254,7 @@ struct gprs_rlcmac_tbf {
 	char m_imsi[16];
 
 protected:
-	int update_window(const uint8_t ssn, const uint8_t *rbb);
-	int maybe_start_new_window();
-	void reuse_tbf(const uint8_t *data, const uint16_t len);
 	gprs_rlcmac_bts *bts_data() const;
-	bool dl_window_stalled() const;
 
 	int extract_tlli(const uint8_t *data, const size_t len);
 	void maybe_schedule_uplink_acknack(const rlc_ul_header *rh);
@@ -345,6 +335,11 @@ inline time_t gprs_rlcmac_tbf::created_ts() const
 }
 
 struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
+	/* dispatch Unitdata.DL messages */
+	static int handle(struct gprs_rlcmac_bts *bts,
+		const uint32_t tlli, const char *imsi, const uint8_t ms_class,
+		const uint16_t delay_csec, const uint8_t *data, const uint16_t len);
+
 	int append_data(const uint8_t ms_class,
 			const uint16_t pdu_delay_csec,
 			const uint8_t *data, const uint16_t len);
@@ -356,6 +351,10 @@ protected:
 	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
 	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
 					const int index, const bool fin_first_ack);
+	int update_window(const uint8_t ssn, const uint8_t *rbb);
+	int maybe_start_new_window();
+	bool dl_window_stalled() const;
+	void reuse_tbf(const uint8_t *data, const uint16_t len);
 };
 
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
