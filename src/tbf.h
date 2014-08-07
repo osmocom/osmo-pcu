@@ -123,11 +123,8 @@ struct gprs_rlcmac_tbf {
 
 	struct msgb *create_dl_ass(uint32_t fn);
 	struct msgb *create_ul_ass(uint32_t fn);
-	struct msgb *create_ul_ack(uint32_t fn);
 	int snd_ul_ud();
 
-	/* blocks were acked */
-	int rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi);
 	uint8_t tsc() const;
 
 	int rlcmac_diag();
@@ -257,7 +254,6 @@ protected:
 	gprs_rlcmac_bts *bts_data() const;
 
 	int extract_tlli(const uint8_t *data, const size_t len);
-	void maybe_schedule_uplink_acknack(const rlc_ul_header *rh);
 
 };
 
@@ -358,6 +354,13 @@ protected:
 };
 
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
+	struct msgb *create_ul_ack(uint32_t fn);
+
+	/* blocks were acked */
+	int rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi);
+
+protected:
+	void maybe_schedule_uplink_acknack(const rlc_ul_header *rh);
 };
 
 #endif

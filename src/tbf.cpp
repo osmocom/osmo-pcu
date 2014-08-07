@@ -1293,7 +1293,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 {
 	struct msgb *msg;
-	struct gprs_rlcmac_tbf *new_tbf;
+	struct gprs_rlcmac_ul_tbf *new_tbf;
 
 	if (poll_state != GPRS_RLCMAC_POLL_NONE) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
@@ -1312,7 +1312,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	if (direction == GPRS_RLCMAC_DL_TBF)
 		new_tbf = bts->ul_tbf_by_tlli(m_tlli);
 	else
-		new_tbf = this;
+		new_tbf = static_cast<gprs_rlcmac_ul_tbf *>(this);
 
 	if (!new_tbf) {
 		LOGP(DRLCMACUL, LOGL_ERROR, "We have a schedule for uplink "
@@ -1353,7 +1353,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	return msg;
 }
 
-struct msgb *gprs_rlcmac_tbf::create_ul_ack(uint32_t fn)
+struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn)
 {
 	int final = (state_is(GPRS_RLCMAC_FINISHED));
 	struct msgb *msg;
@@ -1620,7 +1620,7 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 	return 1;
 }
 
-int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi)
+int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi)
 {
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	int rc;
@@ -1716,7 +1716,7 @@ int gprs_rlcmac_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len
 	return 0;
 }
 
-void gprs_rlcmac_tbf::maybe_schedule_uplink_acknack(const rlc_ul_header *rh)
+void gprs_rlcmac_ul_tbf::maybe_schedule_uplink_acknack(const rlc_ul_header *rh)
 {
 	if (rh->si || rh->ti || state_is(GPRS_RLCMAC_FINISHED)
 	 || (dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
