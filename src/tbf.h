@@ -118,12 +118,8 @@ struct gprs_rlcmac_tbf {
 	/* TODO: add the gettimeofday as parameter */
 	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
 
-	/* TODO: extract LLC class? */
-	int assemble_forward_llc(const gprs_rlc_data *data);
-
 	struct msgb *create_dl_ass(uint32_t fn);
 	struct msgb *create_ul_ass(uint32_t fn);
-	int snd_ul_ud();
 
 	uint8_t tsc() const;
 
@@ -338,6 +334,10 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi);
+
+	/* TODO: extract LLC class? */
+	int assemble_forward_llc(const gprs_rlc_data *data);
+	int snd_ul_ud();
 
 	/* Please note that all variables here will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).

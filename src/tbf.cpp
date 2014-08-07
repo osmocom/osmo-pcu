@@ -728,7 +728,7 @@ struct msgb *gprs_rlcmac_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
  * Store received block data in LLC message(s) and forward to SGSN
  * if complete.
  */
-int gprs_rlcmac_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
+int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 {
 	const uint8_t *data = _data->block;
 	uint8_t len = _data->len;
@@ -1749,7 +1749,7 @@ void gprs_rlcmac_ul_tbf::maybe_schedule_uplink_acknack(const rlc_ul_header *rh)
 }
 
 /* Send Uplink unit-data to SGSN. */
-int gprs_rlcmac_tbf::snd_ul_ud()
+int gprs_rlcmac_ul_tbf::snd_ul_ud()
 {
 	uint8_t qos_profile[3];
 	struct msgb *llc_pdu;
