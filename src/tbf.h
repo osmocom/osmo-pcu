@@ -173,27 +173,6 @@ struct gprs_rlcmac_tbf {
 	enum gprs_rlcmac_tbf_poll_state poll_state;
 	uint32_t poll_fn; /* frame number to poll */
 
-	/* Please note that all variables here will be reset when changing
-	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
-	 * All states that need reset must be in this struct, so this is why
-	 * variables are in both (dl and ul) structs and not outside union.
-	 */
-	union {
-		struct {
-			gprs_rlc_dl_window window;
-			int32_t tx_counter; /* count all transmitted blocks */
-			uint8_t wait_confirm; /* wait for CCCH IMM.ASS cnf */
-		} dl;
-		struct {
-			gprs_rlc_ul_window window;
-			int32_t rx_counter; /* count all received blocks */
-			uint8_t n3103;	/* N3103 counter */
-			uint8_t usf[8];	/* list USFs per PDCH (timeslot) */
-			uint8_t contention_resolution_done; /* set after done */
-			uint8_t final_ack_sent; /* set if we sent final ack */
-		} ul;
-	} dir;
-
 	gprs_rlc m_rlc;
 	
 	uint8_t n3105;	/* N3105 counter */
@@ -335,6 +314,19 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int rcvd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
 
+	/* Please note that all variables here will be reset when changing
+	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
+	 * All states that need reset must be in this struct, so this is why
+	 * variables are in both (dl and ul) structs and not outside union.
+	 */
+	union {
+		struct {
+			gprs_rlc_dl_window window;
+			int32_t tx_counter; /* count all transmitted blocks */
+			uint8_t wait_confirm; /* wait for CCCH IMM.ASS cnf */
+		} dl;
+	} dir;
+
 protected:
 	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
 	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
@@ -350,6 +342,22 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi);
+
+	/* Please note that all variables here will be reset when changing
+	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
+	 * All states that need reset must be in this struct, so this is why
+	 * variables are in both (dl and ul) structs and not outside union.
+	 */
+	union {
+		struct {
+			gprs_rlc_ul_window window;
+			int32_t rx_counter; /* count all received blocks */
+			uint8_t n3103;	/* N3103 counter */
+			uint8_t usf[8];	/* list USFs per PDCH (timeslot) */
+			uint8_t contention_resolution_done; /* set after done */
+			uint8_t final_ack_sent; /* set if we sent final ack */
+		} ul;
+	} dir;
 
 protected:
 	void maybe_schedule_uplink_acknack(const rlc_ul_header *rh);
