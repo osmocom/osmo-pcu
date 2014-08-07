@@ -404,16 +404,17 @@ void gprs_rlcmac_tbf::poll_timeout()
 		}
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
-			dir.ul.n3103++;
-			if (dir.ul.n3103 == bts->bts_data()->n3103) {
+			gprs_rlcmac_ul_tbf *ul_tbf = static_cast<gprs_rlcmac_ul_tbf *>(this);
+			ul_tbf->dir.ul.n3103++;
+			if (ul_tbf->dir.ul.n3103 == ul_tbf->bts->bts_data()->n3103) {
 				LOGP(DRLCMAC, LOGL_NOTICE,
 					"- N3103 exceeded\n");
-				tbf_new_state(this, GPRS_RLCMAC_RELEASING);
-				tbf_timer_start(this, 3169, bts->bts_data()->t3169, 0);
+				tbf_new_state(ul_tbf, GPRS_RLCMAC_RELEASING);
+				tbf_timer_start(ul_tbf, 3169, ul_tbf->bts->bts_data()->t3169, 0);
 				return;
 			}
 			/* reschedule UL ack */
-			ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
+			ul_tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
 		}
 	} else if (ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
 		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS))) {
@@ -452,29 +453,31 @@ void gprs_rlcmac_tbf::poll_timeout()
 		/* reschedule DL assignment */
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
 	} else if (direction == GPRS_RLCMAC_DL_TBF) {
-		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
+		gprs_rlcmac_dl_tbf *dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(this);
+
+		if (!(dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
 				"PACKET DOWNLINK ACK.\n");
-			rlcmac_diag();
-			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
+			dl_tbf->rlcmac_diag();
+			dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 		}
-		n3105++;
-		if (n3105 == bts->bts_data()->n3105) {
+		dl_tbf->n3105++;
+		if (dl_tbf->n3105 == dl_tbf->bts->bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
-			tbf_new_state(this, GPRS_RLCMAC_RELEASING);
-			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
+			tbf_new_state(dl_tbf, GPRS_RLCMAC_RELEASING);
+			tbf_timer_start(dl_tbf, 3195, dl_tbf->bts_data()->t3195, 0);
 			return;
 		}
 		/* resend IMM.ASS on CCCH on timeout */
-		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
-		 && !(state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))) {
+		if ((dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
+		 && !(dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "Re-send dowlink assignment "
 				"for %s on PCH (IMSI=%s)\n",
-				tbf_name(this),
+				tbf_name(dl_tbf),
 				m_imsi);
 			/* send immediate assignment */
-			bts->snd_dl_ass(this, 0, m_imsi);
-			dir.dl.wait_confirm = 1;
+			dl_tbf->bts->snd_dl_ass(dl_tbf, 0, m_imsi);
+			dl_tbf->dir.dl.wait_confirm = 1;
 		}
 	} else
 		LOGP(DRLCMAC, LOGL_ERROR, "- Poll Timeout, but no event!\n");
