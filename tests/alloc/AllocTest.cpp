@@ -200,7 +200,7 @@ static void test_alloc_b(int ms_class)
 		ul_tbf = tbf_alloc_ul_tbf(bts, dl_tbf, tfi, trx_no, ms_class, 0);
 		ul_tbf->m_tlli = 0x23;
 		ul_tbf->m_tlli_valid = true;
-		ul_tbf->dir.ul.contention_resolution_done = 1;
+		ul_tbf->m_contention_resolution_done = 1;
 		OSMO_ASSERT(ul_tbf);
 		dump_assignment(ul_tbf, "UL");
 
@@ -357,7 +357,7 @@ static void test_alloc_b(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool 
 		OSMO_ASSERT(ul_tbf);
 		ul_tbf->m_tlli = 0x23;
 		ul_tbf->m_tlli_valid = true;
-		ul_tbf->dir.ul.contention_resolution_done = 1;
+		ul_tbf->m_contention_resolution_done = 1;
 
 		OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
 

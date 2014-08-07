@@ -408,7 +408,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
 
-	if (dl_tbf->dir.dl.wait_confirm)
+	if (dl_tbf->m_wait_confirm)
 		tbf_timer_start(dl_tbf, 0, Tassign_agch);
 
 	return 0;
@@ -490,7 +490,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	else
 		plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
 			Fn, tbf->ta, tbf->trx->arfcn, tbf->first_ts, tbf->tsc(),
-			tbf->tfi(), tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0, 0,
+			tbf->tfi(), tbf->m_usf[tbf->first_ts], 0, 0, 0, 0,
 			m_bts.alpha, m_bts.gamma, -1);
 	pcu_l1if_tx_agch(immediate_assignment, plen);
 	bitvec_free(immediate_assignment);
@@ -532,7 +532,7 @@ void BTS::trigger_dl_ass(
 		dl_tbf->assign_imsi(imsi);
 		/* send immediate assignment */
 		dl_tbf->bts->snd_dl_ass(dl_tbf, 0, imsi);
-		dl_tbf->dir.dl.wait_confirm = 1;
+		dl_tbf->m_wait_confirm = 1;
 	}
 }
 

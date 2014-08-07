@@ -46,6 +46,13 @@ void gprs_rlc_v_b::reset()
 		mark_invalid(i);
 }
 
+void gprs_rlc_dl_window::reset()
+{
+	m_v_s = 0;
+	m_v_a = 0;
+	m_v_b.reset();
+}
+
 int gprs_rlc_dl_window::resend_needed()
 {
 	for (uint16_t bsn = v_a(); bsn != v_s(); bsn = (bsn + 1) & mod_sns()) {

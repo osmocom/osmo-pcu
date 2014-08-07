@@ -319,13 +319,9 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	 * All states that need reset must be in this struct, so this is why
 	 * variables are in both (dl and ul) structs and not outside union.
 	 */
-	union {
-		struct {
-			gprs_rlc_dl_window window;
-			int32_t tx_counter; /* count all transmitted blocks */
-			uint8_t wait_confirm; /* wait for CCCH IMM.ASS cnf */
-		} dl;
-	} dir;
+	gprs_rlc_dl_window m_window;
+	int32_t m_tx_counter; /* count all transmitted blocks */
+	uint8_t m_wait_confirm; /* wait for CCCH IMM.ASS cnf */
 
 protected:
 	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
@@ -348,16 +344,12 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	 * All states that need reset must be in this struct, so this is why
 	 * variables are in both (dl and ul) structs and not outside union.
 	 */
-	union {
-		struct {
-			gprs_rlc_ul_window window;
-			int32_t rx_counter; /* count all received blocks */
-			uint8_t n3103;	/* N3103 counter */
-			uint8_t usf[8];	/* list USFs per PDCH (timeslot) */
-			uint8_t contention_resolution_done; /* set after done */
-			uint8_t final_ack_sent; /* set if we sent final ack */
-		} ul;
-	} dir;
+	gprs_rlc_ul_window m_window;
+	int32_t m_rx_counter; /* count all received blocks */
+	uint8_t m_n3103;	/* N3103 counter */
+	uint8_t m_usf[8];	/* list USFs per PDCH (timeslot) */
+	uint8_t m_contention_resolution_done; /* set after done */
+	uint8_t m_final_ack_sent; /* set if we sent final ack */
 
 protected:
 	void maybe_schedule_uplink_acknack(const rlc_ul_header *rh);

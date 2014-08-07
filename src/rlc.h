@@ -109,6 +109,7 @@ private:
  * most simple form of inheritance is not a POD anymore.
  */
 struct gprs_rlc_dl_window {
+	void reset();
 	const uint16_t mod_sns() const;
 	const uint16_t sns() const;
 	const uint16_t ws() const;

@@ -95,7 +95,7 @@ static uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 			continue;
 
 		/* use this USF */
-		usf = tbf->dir.ul.usf[ts];
+		usf = tbf->m_usf[ts];
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling USF=%d for "
 			"required uplink resource of UL TFI=%d\n", trx, ts, fn,
@@ -186,7 +186,7 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 			continue;
 
 		/* waiting for CCCH IMM.ASS confirm */
-		if (tbf->dir.dl.wait_confirm)
+		if (tbf->m_wait_confirm)
 			continue;
 
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling data message at "

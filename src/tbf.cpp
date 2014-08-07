@@ -132,8 +132,8 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 #warning "Do the same look up for IMSI, TLLI and OLD_TLLI"
 #warning "Refactor the below lines... into a new method"
 	ul_tbf = bts->bts->ul_tbf_by_tlli(tlli);
-	if (ul_tbf && ul_tbf->dir.ul.contention_resolution_done
-	 && !ul_tbf->dir.ul.final_ack_sent) {
+	if (ul_tbf && ul_tbf->m_contention_resolution_done
+	 && !ul_tbf->m_final_ack_sent) {
 		use_trx = ul_tbf->trx->trx_no;
 		ta = ul_tbf->ta;
 		ss = 0;
@@ -240,7 +240,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	}
 	tbf->m_tlli = tlli;
 	tbf->m_tlli_valid = 1; /* no contention resolution */
-	tbf->dir.ul.contention_resolution_done = 1;
+	tbf->m_contention_resolution_done = 1;
 	tbf->ta = ta; /* use current TA */
 	tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
 	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
@@ -405,8 +405,8 @@ void gprs_rlcmac_tbf::poll_timeout()
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
 			gprs_rlcmac_ul_tbf *ul_tbf = static_cast<gprs_rlcmac_ul_tbf *>(this);
-			ul_tbf->dir.ul.n3103++;
-			if (ul_tbf->dir.ul.n3103 == ul_tbf->bts->bts_data()->n3103) {
+			ul_tbf->m_n3103++;
+			if (ul_tbf->m_n3103 == ul_tbf->bts->bts_data()->n3103) {
 				LOGP(DRLCMAC, LOGL_NOTICE,
 					"- N3103 exceeded\n");
 				tbf_new_state(ul_tbf, GPRS_RLCMAC_RELEASING);
@@ -477,7 +477,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 				m_imsi);
 			/* send immediate assignment */
 			dl_tbf->bts->snd_dl_ass(dl_tbf, 0, m_imsi);
-			dl_tbf->dir.dl.wait_confirm = 1;
+			dl_tbf->m_wait_confirm = 1;
 		}
 	} else
 		LOGP(DRLCMAC, LOGL_ERROR, "- Poll Timeout, but no event!\n");
@@ -621,7 +621,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 		}
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
 			gprs_rlcmac_dl_tbf *dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(this);
-			dl_tbf->dir.dl.wait_confirm = 0;
+			dl_tbf->m_wait_confirm = 0;
 			if (dl_tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
 				tbf_assign_control_ts(dl_tbf);
 
@@ -898,15 +898,15 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 {
 	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink (V(A)==%d .. "
 		"V(S)==%d)\n", tbf_name(this),
-		dir.dl.window.v_a(), dir.dl.window.v_s());
+		m_window.v_a(), m_window.v_s());
 
 do_resend:
 	/* check if there is a block with negative acknowledgement */
-	int resend_bsn = dir.dl.window.resend_needed();
+	int resend_bsn = m_window.resend_needed();
 	if (resend_bsn >= 0) {
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d\n", resend_bsn);
 		/* re-send block with negative aknowlegement */
-		dir.dl.window.m_v_b.mark_unacked(resend_bsn);
+		m_window.m_v_b.mark_unacked(resend_bsn);
 		bts->rlc_resent();
 		return create_dl_acked_block(fn, ts, resend_bsn, false);
 	}
@@ -917,12 +917,12 @@ do_resend:
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
 				"because all blocks have been transmitted.\n",
-					dir.dl.window.v_a());
+					m_window.v_a());
 			bts->rlc_restarted();
 		} else {
 			LOGP(DRLCMACDL, LOGL_NOTICE, "- Restarting at BSN %d, "
 				"because all window is stalled.\n",
-					dir.dl.window.v_a());
+					m_window.v_a());
 			bts->rlc_stalled();
 		}
 		/* If V(S) == V(A) and finished state, we would have received
@@ -931,17 +931,17 @@ do_resend:
 		 * from MS. But in this case we did not receive the final ack
 		 * indication from MS. This should never happen if MS works
 		 * correctly. */
-		if (dir.dl.window.window_empty()) {
+		if (m_window.window_empty()) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- MS acked all blocks, "
 				"so we re-transmit final block!\n");
 			/* we just send final block again */
-			int16_t index = dir.dl.window.v_s_mod(-1);
+			int16_t index = m_window.v_s_mod(-1);
 			bts->rlc_resent();
 			return create_dl_acked_block(fn, ts, index, false);
 		}
 		
 		/* cycle through all unacked blocks */
-		int resend = dir.dl.window.mark_for_resend();
+		int resend = m_window.mark_for_resend();
 
 		/* At this point there should be at least one unacked block
 		 * to be resent. If not, this is an software error. */
@@ -950,7 +950,7 @@ do_resend:
 				"There are no unacknowledged blocks, but V(A) "
 				" != V(S). PLEASE FIX!\n");
 			/* we just send final block again */
-			int16_t index = dir.dl.window.v_s_mod(-1);
+			int16_t index = m_window.v_s_mod(-1);
 			return create_dl_acked_block(fn, ts, index, false);
 		}
 		goto do_resend;
@@ -968,10 +968,10 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 	uint16_t space, chunk;
 	gprs_rlc_data *rlc_data;
 	bool first_fin_ack = false;
-	const uint16_t bsn = dir.dl.window.v_s();
+	const uint16_t bsn = m_window.v_s();
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d\n",
-		dir.dl.window.v_s());
+		m_window.v_s());
 
 #warning "Selection of the CS doesn't belong here"
 	if (cs == 0) {
@@ -1120,8 +1120,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 #warning "move this up?"
 	rlc_data->len = block_length;
 	/* raise send state and set ack state array */
-	dir.dl.window.m_v_b.mark_unacked(bsn);
-	dir.dl.window.increment_send();
+	m_window.m_v_b.mark_unacked(bsn);
+	m_window.increment_send();
 
 	return create_dl_acked_block(fn, ts, bsn, first_fin_ack);
 }
@@ -1145,7 +1145,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		
 	/* poll after POLL_ACK_AFTER_FRAMES frames, or when final block is tx.
 	 */
-	if (dir.dl.tx_counter >= POLL_ACK_AFTER_FRAMES || first_fin_ack) {
+	if (m_tx_counter >= POLL_ACK_AFTER_FRAMES || first_fin_ack) {
 		if (first_fin_ack) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
 				"polling, because first final block sent.\n");
@@ -1171,7 +1171,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		else  {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling sheduled in this "
 				"TS %d\n", ts);
-			dir.dl.tx_counter = 0;
+			m_tx_counter = 0;
 			/* start timer whenever we send the final block */
 			if (rh->fbi == 1)
 				tbf_timer_start(this, 3191, bts_data()->t3191, 0);
@@ -1192,7 +1192,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		return NULL;
 
 	/* Increment TX-counter */
-	dir.dl.tx_counter++;
+	m_tx_counter++;
 
 	memcpy(msgb_put(dl_msg, len), data, len);
 	bts->rlc_sent();
@@ -1233,7 +1233,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 
 		/* be sure to check first, if contention resolution is done,
 		 * otherwise we cannot send the assignment yet */
-		if (!ul_tbf->dir.ul.contention_resolution_done) {
+		if (!ul_tbf->m_contention_resolution_done) {
 			LOGP(DRLCMAC, LOGL_DEBUG, "Cannot assign DL TBF now, "
 				"because contention resolution is not "
 				"finished.\n");
@@ -1391,14 +1391,14 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn)
 
 	/* now we must set this flag, so we are allowed to assign downlink
 	 * TBF on PACCH. it is only allowed when TLLI is acknowledged. */
-	dir.ul.contention_resolution_done = 1;
+	m_contention_resolution_done = 1;
 
 	if (final) {
 		poll_state = GPRS_RLCMAC_POLL_SCHED;
 		poll_fn = (fn + 13) % 2715648;
 		/* waiting for final acknowledge */
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_WAIT_ACK;
-		dir.ul.final_ack_sent = 1;
+		m_final_ack_sent = 1;
 	} else
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
 
@@ -1411,7 +1411,7 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 	uint16_t lost = 0, received = 0;
 	char show_rbb[65];
 	char show_v_b[RLC_MAX_SNS + 1];
-	const uint16_t mod_sns = dir.dl.window.mod_sns();
+	const uint16_t mod_sns = m_window.mod_sns();
 
 	Decoding::extract_rbb(rbb, show_rbb);
 	/* show received array in debug (bit 64..1) */
@@ -1421,9 +1421,9 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 
 	/* apply received array to receive state (SSN-64..SSN-1) */
 	/* calculate distance of ssn from V(S) */
-	dist = (dir.dl.window.v_s() - ssn) & mod_sns;
+	dist = (m_window.v_s() - ssn) & mod_sns;
 	/* check if distance is less than distance V(A)..V(S) */
-	if (dist >= dir.dl.window.distance()) {
+	if (dist >= m_window.distance()) {
 		/* this might happpen, if the downlink assignment
 		 * was not received by ms and the ack refers
 		 * to previous TBF
@@ -1434,24 +1434,24 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 		return 1; /* indicate to free TBF */
 	}
 
-	dir.dl.window.update(bts, show_rbb, ssn,
+	m_window.update(bts, show_rbb, ssn,
 			&lost, &received);
 
 	/* report lost and received packets */
 	gprs_rlcmac_received_lost(this, received, lost);
 
 	/* raise V(A), if possible */
-	dir.dl.window.raise(dir.dl.window.move_window());
+	m_window.raise(m_window.move_window());
 
 	/* show receive state array in debug (V(A)..V(S)-1) */
-	dir.dl.window.show_state(show_v_b);
+	m_window.show_state(show_v_b);
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- V(B): (V(A)=%d)\"%s\""
 		"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked "
 		"X=Resend-Unacked I=Invalid\n",
-		dir.dl.window.v_a(), show_v_b,
-		dir.dl.window.v_s_mod(-1));
+		m_window.v_a(), show_v_b,
+		m_window.v_s_mod(-1));
 
-	if (state_is(GPRS_RLCMAC_FINISHED) && dir.dl.window.window_empty()) {
+	if (state_is(GPRS_RLCMAC_FINISHED) && m_window.window_empty()) {
 		LOGP(DRLCMACDL, LOGL_NOTICE, "Received acknowledge of "
 			"all blocks, but without final ack "
 			"inidcation (don't worry)\n");
@@ -1467,7 +1467,7 @@ int gprs_rlcmac_dl_tbf::maybe_start_new_window()
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
 	/* range V(A)..V(S)-1 */
-	received = dir.dl.window.count_unacked();
+	received = m_window.count_unacked();
 
 	/* report all outstanding packets as received */
 	gprs_rlcmac_received_lost(this, received, 0);
@@ -1625,14 +1625,14 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t 
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	int rc;
 
-	const uint16_t mod_sns = dir.ul.window.mod_sns();
-	const uint16_t ws = dir.ul.window.ws();
+	const uint16_t mod_sns = m_window.mod_sns();
+	const uint16_t ws = m_window.ws();
 
 	this->state_flags |= (1 << GPRS_RLCMAC_FLAG_UL_DATA);
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "UL DATA TFI=%d received (V(Q)=%d .. "
-		"V(R)=%d)\n", rh->tfi, this->dir.ul.window.v_q(),
-		this->dir.ul.window.v_r());
+		"V(R)=%d)\n", rh->tfi, this->m_window.v_q(),
+		this->m_window.v_r());
 
 	/* process RSSI */
 	gprs_rlcmac_rssi(this, rssi);
@@ -1662,13 +1662,13 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t 
 	tbf_timer_start(this, 3169, bts_data()->t3169, 0);
 
 	/* Increment RX-counter */
-	this->dir.ul.rx_counter++;
+	this->m_rx_counter++;
 
-	if (!dir.ul.window.is_in_window(rh->bsn)) {
+	if (!m_window.is_in_window(rh->bsn)) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d out of window "
 			"%d..%d (it's normal)\n", rh->bsn,
-			dir.ul.window.v_q(),
-			(dir.ul.window.v_q() + ws - 1) & mod_sns);
+			m_window.v_q(),
+			(m_window.v_q() + ws - 1) & mod_sns);
 		maybe_schedule_uplink_acknack(rh);
 		return 0;
 	}
@@ -1676,15 +1676,15 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t 
 	/* Write block to buffer and set receive state array. */
 	m_rlc.block(rh->bsn)->put_data(data, len);
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
-		rh->bsn, dir.ul.window.v_q(),
-		(dir.ul.window.v_q() + ws - 1) & mod_sns);
+		rh->bsn, m_window.v_q(),
+		(m_window.v_q() + ws - 1) & mod_sns);
 
 	/* Raise V(Q) if possible, and retrieve LLC frames from blocks.
 	 * This is looped until there is a gap (non received block) or
 	 * the window is empty.*/
-	const uint16_t v_q_beg = dir.ul.window.v_q();
+	const uint16_t v_q_beg = m_window.v_q();
 
-	const uint16_t count = dir.ul.window.receive_bsn(rh->bsn);
+	const uint16_t count = m_window.receive_bsn(rh->bsn);
 
 	/* Retrieve LLC frames from blocks that are ready */
 	for (uint16_t i = 0; i < count; ++i) {
@@ -1694,9 +1694,9 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t 
 
 	/* Check CV of last frame in buffer */
 	if (this->state_is(GPRS_RLCMAC_FLOW) /* still in flow state */
-	 && this->dir.ul.window.v_q() == this->dir.ul.window.v_r()) { /* if complete */
+	 && this->m_window.v_q() == this->m_window.v_r()) { /* if complete */
 		struct rlc_ul_header *last_rh = (struct rlc_ul_header *)
-			m_rlc.block((dir.ul.window.v_r() - 1) & mod_sns)->block;
+			m_rlc.block((m_window.v_r() - 1) & mod_sns)->block;
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- No gaps in received block, "
 			"last block: BSN=%d CV=%d\n", last_rh->bsn,
 			last_rh->cv);
@@ -1705,7 +1705,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t 
 				"TBF\n");
 			tbf_new_state(this, GPRS_RLCMAC_FINISHED);
 			/* Reset N3103 counter. */
-			this->dir.ul.n3103 = 0;
+			this->m_n3103 = 0;
 		}
 	}
 
@@ -1719,7 +1719,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t 
 void gprs_rlcmac_ul_tbf::maybe_schedule_uplink_acknack(const rlc_ul_header *rh)
 {
 	if (rh->si || rh->ti || state_is(GPRS_RLCMAC_FINISHED)
-	 || (dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
+	 || (m_rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
 		if (rh->si) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "- Scheduling Ack/Nack, "
 				"because MS is stalled.\n");
@@ -1732,7 +1732,7 @@ void gprs_rlcmac_ul_tbf::maybe_schedule_uplink_acknack(const rlc_ul_header *rh)
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
 				"because last block has CV==0.\n");
 		}
-		if ((dir.ul.rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
+		if ((m_rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
 				"because %d frames received.\n",
 				SEND_ACK_AFTER_FRAMES);
@@ -1793,8 +1793,9 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 	bts->llc_frame_sched();
 
 	/* reset rlc states */
-	memset(&dir.dl, 0, sizeof(dir.dl));
-	dir.dl.window.m_v_b.reset();
+	m_tx_counter = 0;
+	m_wait_confirm = 0;
+	m_window.reset();
 
 	/* keep to flags */
 	state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
@@ -1810,7 +1811,7 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 
 bool gprs_rlcmac_dl_tbf::dl_window_stalled() const
 {
-	return dir.dl.window.window_stalled();
+	return m_window.window_stalled();
 }
 
 void gprs_rlcmac_tbf::rotate_in_list()
