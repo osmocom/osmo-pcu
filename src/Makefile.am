@@ -42,6 +42,8 @@ libgprs_la_SOURCES = \
 	pcu_l1_if.cpp \
 	pcu_vty.c \
 	tbf.cpp \
+	tbf_ul.cpp \
+	tbf_dl.cpp \
 	bts.cpp \
 	poll_controller.cpp \
 	encoding.cpp \
