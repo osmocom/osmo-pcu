@@ -242,7 +242,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	tbf->m_tlli_valid = 1; /* no contention resolution */
 	tbf->m_contention_resolution_done = 1;
 	tbf->ta = ta; /* use current TA */
-	tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
+	tbf->set_state(GPRS_RLCMAC_ASSIGN);
 	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 	tbf_timer_start(tbf, 3169, bts->t3169, 0);
 
@@ -338,7 +338,7 @@ int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 	return 0;
 }
 
-static const char *tbf_state_name[] = {
+const char *gprs_rlcmac_tbf::tbf_state_name[] = {
 	"NULL",
 	"ASSIGN",
 	"FLOW",
@@ -346,15 +346,6 @@ static const char *tbf_state_name[] = {
 	"WAIT RELEASE",
 	"RELEASING",
 };
-
-void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
-	enum gprs_rlcmac_tbf_state state)
-{
-	LOGP(DRLCMAC, LOGL_DEBUG, "%s changes state from %s to %s\n",
-		tbf_name(tbf),
-		tbf_state_name[tbf->state], tbf_state_name[state]);
-	tbf->set_state(state);
-}
 
 void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
 			unsigned int seconds, unsigned int microseconds)
@@ -412,7 +403,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 			if (ul_tbf->m_n3103 == ul_tbf->bts->bts_data()->n3103) {
 				LOGP(DRLCMAC, LOGL_NOTICE,
 					"- N3103 exceeded\n");
-				tbf_new_state(ul_tbf, GPRS_RLCMAC_RELEASING);
+				ul_tbf->set_state(GPRS_RLCMAC_RELEASING);
 				tbf_timer_start(ul_tbf, 3169, ul_tbf->bts->bts_data()->t3169, 0);
 				return;
 			}
@@ -431,7 +422,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		n3105++;
 		if (n3105 == bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
-			tbf_new_state(this, GPRS_RLCMAC_RELEASING);
+			set_state(GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
 			return;
 		}
@@ -449,7 +440,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		n3105++;
 		if (n3105 == bts->bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
-			tbf_new_state(this, GPRS_RLCMAC_RELEASING);
+			set_state(GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
 			return;
 		}
@@ -467,7 +458,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		dl_tbf->n3105++;
 		if (dl_tbf->n3105 == dl_tbf->bts->bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
-			tbf_new_state(dl_tbf, GPRS_RLCMAC_RELEASING);
+			dl_tbf->set_state(GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(dl_tbf, 3195, dl_tbf->bts_data()->t3195, 0);
 			return;
 		}
@@ -632,7 +623,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 				if (!dl_tbf->upgrade_to_multislot) {
 					/* change state to FLOW, so scheduler
 					 * will start transmission */
-					tbf_new_state(dl_tbf, GPRS_RLCMAC_FLOW);
+					dl_tbf->set_state(GPRS_RLCMAC_FLOW);
 					break;
 				}
 
@@ -1037,7 +1028,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 			m_llc.reset();
 			/* final block */
 			rh->fbi = 1; /* we indicate final block */
-			tbf_new_state(this, GPRS_RLCMAC_FINISHED);
+			set_state(GPRS_RLCMAC_FINISHED);
 			/* return data block as message */
 			break;
 		}
@@ -1110,7 +1101,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 			rh->fbi = 1; /* we indicate final block */
 			first_fin_ack = true;
 				/* + 1 indicates: first final ack */
-			tbf_new_state(this, GPRS_RLCMAC_FINISHED);
+			set_state(GPRS_RLCMAC_FINISHED);
 			break;
 		}
 		/* we have no space left */
@@ -1284,7 +1275,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_WAIT_ACK;
 	} else {
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-		tbf_new_state(new_dl_tbf, GPRS_RLCMAC_FLOW);
+		new_dl_tbf->set_state(GPRS_RLCMAC_FLOW);
 		tbf_assign_control_ts(new_dl_tbf);
 		/* stop pending assignment timer */
 		new_dl_tbf->stop_timer();
@@ -1476,7 +1467,7 @@ int gprs_rlcmac_dl_tbf::maybe_start_new_window()
 	/* report all outstanding packets as received */
 	gprs_rlcmac_received_lost(this, received, 0);
 
-	tbf_new_state(this, GPRS_RLCMAC_WAIT_RELEASE);
+	set_state(GPRS_RLCMAC_WAIT_RELEASE);
 
 	/* check for LLC PDU in the LLC Queue */
 	msg = llc_dequeue(gprs_bssgp_pcu_current_bctx());
@@ -1707,7 +1698,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t 
 		if (last_rh->cv == 0) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- Finished with UL "
 				"TBF\n");
-			tbf_new_state(this, GPRS_RLCMAC_FINISHED);
+			set_state(GPRS_RLCMAC_FINISHED);
 			/* Reset N3103 counter. */
 			this->m_n3103 = 0;
 		}

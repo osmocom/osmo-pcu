@@ -23,6 +23,7 @@
 #include "gprs_rlcmac.h"
 #include "llc.h"
 #include "rlc.h"
+#include <gprs_debug.h>
 
 #include <stdint.h>
 
@@ -217,6 +218,7 @@ protected:
 
 	int extract_tlli(const uint8_t *data, const size_t len);
 
+	static const char *tbf_state_name[6];
 };
 
 
@@ -238,9 +240,6 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf);
 
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 
-void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
-        enum gprs_rlcmac_tbf_state state);
-
 void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
                         unsigned int seconds, unsigned int microseconds);
 
@@ -254,8 +253,13 @@ inline bool gprs_rlcmac_tbf::state_is_not(enum gprs_rlcmac_tbf_state rhs) const
 	return state != rhs;
 }
 
+const char *tbf_name(gprs_rlcmac_tbf *tbf);
+
 inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
 {
+	LOGP(DRLCMAC, LOGL_DEBUG, "%s changes state from %s to %s\n",
+		tbf_name(this),
+		tbf_state_name[state], tbf_state_name[new_state]);
 	state = new_state;
 }
 
@@ -278,8 +282,6 @@ inline const char *gprs_rlcmac_tbf::imsi() const
 {
 	return m_imsi;
 }
-
-const char *tbf_name(gprs_rlcmac_tbf *tbf);
 
 inline time_t gprs_rlcmac_tbf::created_ts() const
 {

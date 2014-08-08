@@ -467,7 +467,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 			return -EBUSY;
 		}
 		tbf->ta = qta >> 2;
-		tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+		tbf->set_state(GPRS_RLCMAC_FLOW);
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
 		tbf_timer_start(tbf, 3169, m_bts.t3169, 0);
 		LOGP(DRLCMAC, LOGL_DEBUG, "%s [UPLINK] START\n",
@@ -515,7 +515,7 @@ void BTS::trigger_dl_ass(
 		dl_tbf->ta = old_tbf->ta;
 		dl_tbf->was_releasing = dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 		/* change state */
-		tbf_new_state(dl_tbf, GPRS_RLCMAC_ASSIGN);
+		dl_tbf->set_state(GPRS_RLCMAC_ASSIGN);
 		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 		/* start timer */
 		tbf_timer_start(dl_tbf, 0, Tassign_pacch);
@@ -527,7 +527,7 @@ void BTS::trigger_dl_ass(
 		}
 		dl_tbf->was_releasing = dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 		/* change state */
-		tbf_new_state(dl_tbf, GPRS_RLCMAC_ASSIGN);
+		dl_tbf->set_state(GPRS_RLCMAC_ASSIGN);
 		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
 		dl_tbf->assign_imsi(imsi);
 		/* send immediate assignment */
@@ -774,7 +774,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				"TBF is gone TLLI=0x%08x\n", tlli);
 			return;
 		}
-		tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+		tbf->set_state(GPRS_RLCMAC_FLOW);
 		/* stop pending assignment timer */
 		tbf->stop_timer();
 		if ((tbf->state_flags &
@@ -800,7 +800,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				"TBF is gone TLLI=0x%08x\n", tlli);
 			return;
 		}
-		tbf_new_state(tbf, GPRS_RLCMAC_FLOW);
+		tbf->set_state(GPRS_RLCMAC_FLOW);
 		if ((tbf->state_flags &
 			(1 << GPRS_RLCMAC_FLAG_TO_UL_ASS))) {
 			tbf->state_flags &=
