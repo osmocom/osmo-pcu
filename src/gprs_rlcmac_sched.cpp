@@ -28,9 +28,10 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 		    struct gprs_rlcmac_tbf **poll_tbf,
 		    struct gprs_rlcmac_tbf **ul_ass_tbf,
 		    struct gprs_rlcmac_tbf **dl_ass_tbf,
-		    struct gprs_rlcmac_tbf **ul_ack_tbf)
+		    struct gprs_rlcmac_ul_tbf **ul_ack_tbf)
 {
-	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_ul_tbf *ul_tbf;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	struct llist_pods *lpods;
 	uint32_t poll_fn;
 
@@ -39,34 +40,34 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 	if ((block_nr % 3) == 2)
 		poll_fn ++;
 	poll_fn = poll_fn % 2715648;
-	llist_pods_for_each_entry(tbf, &bts->ul_tbfs, list, lpods) {
+	llist_pods_for_each_entry(ul_tbf, &bts->ul_tbfs, list, lpods) {
 		/* this trx, this ts */
-		if (tbf->trx->trx_no != trx || tbf->control_ts != ts)
+		if (ul_tbf->trx->trx_no != trx || ul_tbf->control_ts != ts)
 			continue;
 		/* polling for next uplink block */
-		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
-		 && tbf->poll_fn == poll_fn)
-			*poll_tbf = tbf;
-		if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_SEND_ACK)
-			*ul_ack_tbf = tbf;
-		if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_SEND_ASS)
-			*dl_ass_tbf = tbf;
-		if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS)
-			*ul_ass_tbf = tbf;
+		if (ul_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
+		 && ul_tbf->poll_fn == poll_fn)
+			*poll_tbf = ul_tbf;
+		if (ul_tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_SEND_ACK)
+			*ul_ack_tbf = ul_tbf;
+		if (ul_tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_SEND_ASS)
+			*dl_ass_tbf = ul_tbf;
+		if (ul_tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS)
+			*ul_ass_tbf = ul_tbf;
 #warning "Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all states?"
 	}
-	llist_pods_for_each_entry(tbf, &bts->dl_tbfs, list, lpods) {
+	llist_pods_for_each_entry(dl_tbf, &bts->dl_tbfs, list, lpods) {
 		/* this trx, this ts */
-		if (tbf->trx->trx_no != trx || tbf->control_ts != ts)
+		if (dl_tbf->trx->trx_no != trx || dl_tbf->control_ts != ts)
 			continue;
 		/* polling for next uplink block */
-		if (tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
-		 && tbf->poll_fn == poll_fn)
-			*poll_tbf = tbf;
-		if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_SEND_ASS)
-			*dl_ass_tbf = tbf;
-		if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS)
-			*ul_ass_tbf = tbf;
+		if (dl_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
+		 && dl_tbf->poll_fn == poll_fn)
+			*poll_tbf = dl_tbf;
+		if (dl_tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_SEND_ASS)
+			*dl_ass_tbf = dl_tbf;
+		if (dl_tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS)
+			*ul_ass_tbf = dl_tbf;
 	}
 
 	return poll_fn;
@@ -75,7 +76,7 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 static uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 	uint8_t block_nr, struct gprs_rlcmac_pdch *pdch)
 {
-	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_ul_tbf *tbf;
 	uint8_t usf = 0x07;
 	uint8_t i, tfi;
 
@@ -94,7 +95,7 @@ static uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 			continue;
 
 		/* use this USF */
-		usf = tbf->dir.ul.usf[ts];
+		usf = tbf->m_usf[ts];
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling USF=%d for "
 			"required uplink resource of UL TFI=%d\n", trx, ts, fn,
@@ -112,7 +113,7 @@ static struct msgb *sched_select_ctrl_msg(
 		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch,
 		    struct gprs_rlcmac_tbf *ul_ass_tbf,
 		    struct gprs_rlcmac_tbf *dl_ass_tbf,
-		    struct gprs_rlcmac_tbf *ul_ack_tbf)
+		    struct gprs_rlcmac_ul_tbf *ul_ack_tbf)
 {
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_tbf *tbf = NULL;
@@ -124,11 +125,13 @@ static struct msgb *sched_select_ctrl_msg(
 			continue;
 
 		if (tbf == ul_ass_tbf)
-			msg = tbf->create_ul_ass(fn);
+			msg = ul_ass_tbf->create_ul_ass(fn);
 		else if (tbf == dl_ass_tbf)
-			msg = tbf->create_dl_ass(fn);
+			msg = dl_ass_tbf->create_dl_ass(fn);
+		else if (tbf == ul_ack_tbf)
+			msg = ul_ack_tbf->create_ul_ack(fn);
 		else
-			msg = tbf->create_ul_ack(fn);
+			abort();
 
 		if (!msg) {
 			tbf = NULL;
@@ -164,7 +167,7 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch)
 {
 	struct msgb *msg = NULL;
-	struct gprs_rlcmac_tbf *tbf = NULL;
+	struct gprs_rlcmac_dl_tbf *tbf = NULL;
 	uint8_t i, tfi;
 
 	/* select downlink resource */
@@ -183,7 +186,7 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 			continue;
 
 		/* waiting for CCCH IMM.ASS confirm */
-		if (tbf->dir.dl.wait_confirm)
+		if (tbf->m_wait_confirm)
 			continue;
 
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling data message at "
@@ -224,7 +227,8 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 {
 	struct gprs_rlcmac_pdch *pdch;
 	struct gprs_rlcmac_tbf *poll_tbf = NULL, *dl_ass_tbf = NULL,
-		*ul_ass_tbf = NULL, *ul_ack_tbf = NULL;
+		*ul_ass_tbf = NULL;
+	struct gprs_rlcmac_ul_tbf *ul_ack_tbf = NULL;
 	uint8_t usf = 0x7;
 	struct msgb *msg = NULL;
 	uint32_t poll_fn, sba_fn;

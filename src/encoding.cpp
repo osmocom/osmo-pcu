@@ -166,7 +166,7 @@ void Encoding::write_packet_uplink_assignment(
 	struct gprs_rlcmac_bts *bts,
 	bitvec * dest, uint8_t old_tfi,
 	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
-	struct gprs_rlcmac_tbf *tbf, uint8_t poll, uint8_t alpha,
+	struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t alpha,
 	uint8_t gamma, int8_t ta_idx)
 {
 	// TODO We should use our implementation of encode RLC/MAC Control messages.
@@ -232,7 +232,7 @@ void Encoding::write_packet_uplink_assignment(
 	for (ts = 0; ts < 8; ts++) {
 		if (tbf->pdch[ts]) {
 			bitvec_write_field(dest, wp,0x1,1); // USF_TN(i): on
-			bitvec_write_field(dest, wp,tbf->dir.ul.usf[ts],3); // USF_TN(i)
+			bitvec_write_field(dest, wp,tbf->m_usf[ts],3); // USF_TN(i)
 			if (alpha || gamma)
 				bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
 		} else
@@ -375,14 +375,14 @@ void Encoding::encode_rbb(const char *show_rbb, uint8_t *rbb)
 
 /* generate uplink ack */
 void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
-	RlcMacDownlink_t * block, struct gprs_rlcmac_tbf *tbf,
+	RlcMacDownlink_t * block, struct gprs_rlcmac_ul_tbf *tbf,
 	uint8_t final)
 {
 	// Packet Uplink Ack/Nack  TS 44.060 11.2.28
 
 	char rbb[65];
 
-	tbf->dir.ul.window.update_rbb(rbb);
+	tbf->m_window.update_rbb(rbb);
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Encoding Ack/Nack for %s "
 		"(final=%d)\n", tbf_name(tbf), final);
@@ -399,7 +399,7 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	block->u.Packet_Uplink_Ack_Nack.UnionType    = 0x0;      // PU_AckNack_GPRS = on
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = bts->initial_cs_ul - 1;             // CS1
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.FINAL_ACK_INDICATION     = final;           // FINAL ACK INDICATION
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->dir.ul.window.ssn(); // STARTING_SEQUENCE_NUMBER
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->m_window.ssn(); // STARTING_SEQUENCE_NUMBER
 
 	encode_rbb(rbb, block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
 

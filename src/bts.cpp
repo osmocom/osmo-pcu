@@ -236,14 +236,12 @@ gprs_rlcmac_tbf *BTS::tbf_by_tlli(uint32_t tlli, enum gprs_rlcmac_tbf_direction 
 	struct llist_pods *lpods;
 	if (dir == GPRS_RLCMAC_UL_TBF) {
 		llist_pods_for_each_entry(tbf, &m_bts.ul_tbfs, list, lpods) {
-			OSMO_ASSERT(tbf->direction == dir);
 			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 			 && tbf->tlli() == tlli && tbf->is_tlli_valid())
 				return tbf;
 		}
 	} else {
 		llist_pods_for_each_entry(tbf, &m_bts.dl_tbfs, list, lpods) {
-			OSMO_ASSERT(tbf->direction == dir);
 			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 			 && tbf->tlli() == tlli)
 				return tbf;
@@ -264,7 +262,6 @@ gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
 		 && tbf->control_ts == ts) {
-			OSMO_ASSERT(tbf->direction == GPRS_RLCMAC_DL_TBF);
 			return static_cast<gprs_rlcmac_dl_tbf *>(tbf);
 		}
 	}
@@ -282,7 +279,6 @@ gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
 		 && tbf->control_ts == ts) {
-			OSMO_ASSERT(tbf->direction == GPRS_RLCMAC_UL_TBF);
 			return static_cast<gprs_rlcmac_ul_tbf *>(tbf);
 		}
 	}
@@ -318,7 +314,6 @@ gprs_rlcmac_tbf *BTS::tbf_by_tfi(uint8_t tfi, uint8_t trx,
 		return NULL;
 
 	if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)) {
-		OSMO_ASSERT(tbf->direction == dir);
 		return tbf;
 	}
 
@@ -382,7 +377,7 @@ int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir,
 
 int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 {
-	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	uint8_t plen;
 	uint32_t tlli;
 
@@ -404,8 +399,8 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	tlli |= (*data++) << 4;
 	tlli |= (*data++) >> 4;
 
-	tbf = dl_tbf_by_tlli(tlli);
-	if (!tbf) {
+	dl_tbf = dl_tbf_by_tlli(tlli);
+	if (!dl_tbf) {
 		LOGP(DRLCMAC, LOGL_ERROR, "Got IMM.ASS confirm, but TLLI=%08x "
 			"does not exit\n", tlli);
 		return -EINVAL;
@@ -413,8 +408,8 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
 
-	if (tbf->dir.dl.wait_confirm)
-		tbf_timer_start(tbf, 0, Tassign_agch);
+	if (dl_tbf->m_wait_confirm)
+		tbf_timer_start(dl_tbf, 0, Tassign_agch);
 
 	return 0;
 }
@@ -495,7 +490,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	else
 		plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
 			Fn, tbf->ta, tbf->trx->arfcn, tbf->first_ts, tbf->tsc(),
-			tbf->tfi(), tbf->dir.ul.usf[tbf->first_ts], 0, 0, 0, 0,
+			tbf->tfi(), tbf->m_usf[tbf->first_ts], 0, 0, 0, 0,
 			m_bts.alpha, m_bts.gamma, -1);
 	pcu_l1if_tx_agch(immediate_assignment, plen);
 	bitvec_free(immediate_assignment);
@@ -505,11 +500,11 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 
 /* depending on the current TBF, we assign on PACCH or AGCH */
 void BTS::trigger_dl_ass(
-	struct gprs_rlcmac_tbf *tbf,
+	struct gprs_rlcmac_dl_tbf *dl_tbf,
 	struct gprs_rlcmac_tbf *old_tbf, const char *imsi)
 {
 	/* stop pending timer */
-	tbf->stop_timer();
+	dl_tbf->stop_timer();
 
 	/* check for downlink tbf:  */
 	if (old_tbf) {
@@ -517,27 +512,27 @@ void BTS::trigger_dl_ass(
 			"PACCH, because %s exists\n", tbf_name(old_tbf));
 		old_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
 		/* use TA from old TBF */
-		tbf->ta = old_tbf->ta;
-		tbf->was_releasing = tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
+		dl_tbf->ta = old_tbf->ta;
+		dl_tbf->was_releasing = dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 		/* change state */
-		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
-		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
+		tbf_new_state(dl_tbf, GPRS_RLCMAC_ASSIGN);
+		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 		/* start timer */
-		tbf_timer_start(tbf, 0, Tassign_pacch);
+		tbf_timer_start(dl_tbf, 0, Tassign_pacch);
 	} else {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for %s on PCH, no TBF exist (IMSI=%s)\n", tbf_name(tbf), imsi);
+		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for %s on PCH, no TBF exist (IMSI=%s)\n", tbf_name(dl_tbf), imsi);
 		if (!imsi || strlen(imsi) < 3) {
 			LOGP(DRLCMAC, LOGL_ERROR, "No valid IMSI!\n");
 			return;
 		}
-		tbf->was_releasing = tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
+		dl_tbf->was_releasing = dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 		/* change state */
-		tbf_new_state(tbf, GPRS_RLCMAC_ASSIGN);
-		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
-		tbf->assign_imsi(imsi);
+		tbf_new_state(dl_tbf, GPRS_RLCMAC_ASSIGN);
+		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
+		dl_tbf->assign_imsi(imsi);
 		/* send immediate assignment */
-		tbf->bts->snd_dl_ass(tbf, 0, imsi);
-		tbf->dir.dl.wait_confirm = 1;
+		dl_tbf->bts->snd_dl_ass(dl_tbf, 0, imsi);
+		dl_tbf->m_wait_confirm = 1;
 	}
 }
 
@@ -823,7 +818,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_nack, uint32_t fn)
 {
 	int8_t tfi = 0; /* must be signed */
-	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;
 
 	tfi = ack_nack->DOWNLINK_TFI;
@@ -1049,7 +1044,6 @@ gprs_rlcmac_tbf *gprs_rlcmac_pdch::tbf_from_list_by_tfi(struct llist_head *tbf_l
 	struct llist_pods *lpods;
 
 	llist_pods_for_each_entry(tbf, tbf_list, list, lpods) {
-		OSMO_ASSERT(tbf->direction == dir);
 		if (tbf->tfi() != tfi)
 			continue;
 		if (!tbf->pdch[ts_no])

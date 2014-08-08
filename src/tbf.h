@@ -121,20 +121,9 @@ struct gprs_rlcmac_tbf {
 	/* TODO: extract LLC class? */
 	int assemble_forward_llc(const gprs_rlc_data *data);
 
-	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
 	struct msgb *create_dl_ass(uint32_t fn);
 	struct msgb *create_ul_ass(uint32_t fn);
-	struct msgb *create_ul_ack(uint32_t fn);
-	int rcvd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
 	int snd_ul_ud();
-
-	/* blocks were acked */
-	int rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi);
-
-	/* dispatch Unitdata.DL messages */
-	static int handle(struct gprs_rlcmac_bts *bts,
-		const uint32_t tlli, const char *imsi, const uint8_t ms_class,
-		const uint16_t delay_csec, const uint8_t *data, const uint16_t len);
 
 	uint8_t tsc() const;
 
@@ -157,8 +146,6 @@ struct gprs_rlcmac_tbf {
 
 	const char *imsi() const;
 	void assign_imsi(const char *imsi);
-
-	uint16_t sns() const;
 
 	time_t created_ts() const;
 
@@ -185,27 +172,6 @@ struct gprs_rlcmac_tbf {
 
 	enum gprs_rlcmac_tbf_poll_state poll_state;
 	uint32_t poll_fn; /* frame number to poll */
-
-	/* Please note that all variables here will be reset when changing
-	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
-	 * All states that need reset must be in this struct, so this is why
-	 * variables are in both (dl and ul) structs and not outside union.
-	 */
-	union {
-		struct {
-			gprs_rlc_dl_window window;
-			int32_t tx_counter; /* count all transmitted blocks */
-			uint8_t wait_confirm; /* wait for CCCH IMM.ASS cnf */
-		} dl;
-		struct {
-			gprs_rlc_ul_window window;
-			int32_t rx_counter; /* count all received blocks */
-			uint8_t n3103;	/* N3103 counter */
-			uint8_t usf[8];	/* list USFs per PDCH (timeslot) */
-			uint8_t contention_resolution_done; /* set after done */
-			uint8_t final_ack_sent; /* set if we sent final ack */
-		} ul;
-	} dir;
 
 	gprs_rlc m_rlc;
 	
@@ -262,22 +228,10 @@ struct gprs_rlcmac_tbf {
 	char m_imsi[16];
 
 protected:
-	int update_window(const uint8_t ssn, const uint8_t *rbb);
-	int maybe_start_new_window();
-	void reuse_tbf(const uint8_t *data, const uint16_t len);
 	gprs_rlcmac_bts *bts_data() const;
-	bool dl_window_stalled() const;
 
 	int extract_tlli(const uint8_t *data, const size_t len);
-	void maybe_schedule_uplink_acknack(const rlc_ul_header *rh);
 
-	int append_data(const uint8_t ms_class,
-			const uint16_t pdu_delay_csec,
-			const uint8_t *data, const uint16_t len);
-
-	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
-					const int index, const bool fin_first_ack);
-	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
 };
 
 
@@ -340,12 +294,6 @@ inline const char *gprs_rlcmac_tbf::imsi() const
 	return m_imsi;
 }
 
-inline uint16_t gprs_rlcmac_tbf::sns() const
-{
-	/* assume dl/ul do the same thing */
-	return dir.dl.window.sns();
-}
-
 const char *tbf_name(gprs_rlcmac_tbf *tbf);
 
 inline time_t gprs_rlcmac_tbf::created_ts() const
@@ -354,9 +302,57 @@ inline time_t gprs_rlcmac_tbf::created_ts() const
 }
 
 struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
+	/* dispatch Unitdata.DL messages */
+	static int handle(struct gprs_rlcmac_bts *bts,
+		const uint32_t tlli, const char *imsi, const uint8_t ms_class,
+		const uint16_t delay_csec, const uint8_t *data, const uint16_t len);
+
+	int append_data(const uint8_t ms_class,
+			const uint16_t pdu_delay_csec,
+			const uint8_t *data, const uint16_t len);
+
+	int rcvd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
+	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
+
+	/* Please note that all variables here will be reset when changing
+	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
+	 * All states that need reset must be in this struct, so this is why
+	 * variables are in both (dl and ul) structs and not outside union.
+	 */
+	gprs_rlc_dl_window m_window;
+	int32_t m_tx_counter; /* count all transmitted blocks */
+	uint8_t m_wait_confirm; /* wait for CCCH IMM.ASS cnf */
+
+protected:
+	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
+	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
+					const int index, const bool fin_first_ack);
+	int update_window(const uint8_t ssn, const uint8_t *rbb);
+	int maybe_start_new_window();
+	bool dl_window_stalled() const;
+	void reuse_tbf(const uint8_t *data, const uint16_t len);
 };
 
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
+	struct msgb *create_ul_ack(uint32_t fn);
+
+	/* blocks were acked */
+	int rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi);
+
+	/* Please note that all variables here will be reset when changing
+	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
+	 * All states that need reset must be in this struct, so this is why
+	 * variables are in both (dl and ul) structs and not outside union.
+	 */
+	gprs_rlc_ul_window m_window;
+	int32_t m_rx_counter; /* count all received blocks */
+	uint8_t m_n3103;	/* N3103 counter */
+	uint8_t m_usf[8];	/* list USFs per PDCH (timeslot) */
+	uint8_t m_contention_resolution_done; /* set after done */
+	uint8_t m_final_ack_sent; /* set if we sent final ack */
+
+protected:
+	void maybe_schedule_uplink_acknack(const rlc_ul_header *rh);
 };
 
 #endif
