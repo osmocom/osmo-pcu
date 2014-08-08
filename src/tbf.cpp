@@ -268,7 +268,10 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 {
 	/* Give final measurement report */
 	gprs_rlcmac_rssi_rep(tbf);
-	gprs_rlcmac_lost_rep(tbf);
+	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
+		gprs_rlcmac_dl_tbf *dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(tbf);
+		gprs_rlcmac_lost_rep(dl_tbf);
+	}
 
 	LOGP(DRLCMAC, LOGL_INFO, "%s free\n", tbf_name(tbf));
 	if (tbf->ul_ass_state != GPRS_RLCMAC_UL_ASS_NONE)
@@ -519,9 +522,7 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
 	}
 
 	/* set timestamp */
-	gettimeofday(&tbf->meas.dl_bw_tv, NULL);
 	gettimeofday(&tbf->meas.rssi_tv, NULL);
-	gettimeofday(&tbf->meas.dl_loss_tv, NULL);
 
 	tbf->m_llc.init();
 	return 0;
@@ -590,6 +591,9 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 
 	llist_add(&tbf->list.list, &bts->dl_tbfs);
 	tbf->bts->tbf_dl_created();
+
+	gettimeofday(&tbf->m_bw.dl_bw_tv, NULL);
+	gettimeofday(&tbf->m_bw.dl_loss_tv, NULL);
 
 	return tbf;
 }

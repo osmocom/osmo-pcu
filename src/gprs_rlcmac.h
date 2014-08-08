@@ -62,10 +62,10 @@ struct gprs_rlcmac_cs {
 	uint8_t block_payload;
 };
 
-int gprs_rlcmac_received_lost(struct gprs_rlcmac_tbf *tbf, uint16_t received,
+int gprs_rlcmac_received_lost(struct gprs_rlcmac_dl_tbf *tbf, uint16_t received,
 	uint16_t lost);
 
-int gprs_rlcmac_lost_rep(struct gprs_rlcmac_tbf *tbf);
+int gprs_rlcmac_lost_rep(struct gprs_rlcmac_dl_tbf *tbf);
 
 int gprs_rlcmac_meas_rep(Packet_Measurement_Report_t *pmr);
 
@@ -73,7 +73,7 @@ int gprs_rlcmac_rssi(struct gprs_rlcmac_tbf *tbf, int8_t rssi);
 
 int gprs_rlcmac_rssi_rep(struct gprs_rlcmac_tbf *tbf);
 
-int gprs_rlcmac_dl_bw(struct gprs_rlcmac_tbf *tbf, uint16_t octets);
+int gprs_rlcmac_dl_bw(struct gprs_rlcmac_dl_tbf *tbf, uint16_t octets);
 
 /* TS 44.060 Section 10.4.7 Table 10.4.7.1: Payload Type field */
 enum gprs_rlcmac_block_type {

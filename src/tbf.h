@@ -179,17 +179,9 @@ struct gprs_rlcmac_tbf {
 	unsigned int num_fT_exp; /* number of consecutive fT expirations */
 
 	struct {
-		struct timeval dl_bw_tv; /* timestamp for dl bw calculation */
-		uint32_t dl_bw_octets; /* number of octets since bw_tv */
-
 		struct timeval rssi_tv; /* timestamp for rssi calculation */
 		int32_t rssi_sum; /* sum of rssi values */
 		int rssi_num; /* number of rssi values added since rssi_tv */
-
-		struct timeval dl_loss_tv; /* timestamp for loss calculation */
-		uint16_t dl_loss_lost; /* sum of lost packets */
-		uint16_t dl_loss_received; /* sum of received packets */
-
 	} meas;
 
 	uint8_t cs; /* current coding scheme */
@@ -318,6 +310,15 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlc_dl_window m_window;
 	int32_t m_tx_counter; /* count all transmitted blocks */
 	uint8_t m_wait_confirm; /* wait for CCCH IMM.ASS cnf */
+
+	struct {
+		struct timeval dl_bw_tv; /* timestamp for dl bw calculation */
+		uint32_t dl_bw_octets; /* number of octets since bw_tv */
+
+		struct timeval dl_loss_tv; /* timestamp for loss calculation */
+		uint16_t dl_loss_lost; /* sum of lost packets */
+		uint16_t dl_loss_received; /* sum of received packets */
+	} m_bw;
 
 protected:
 	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
