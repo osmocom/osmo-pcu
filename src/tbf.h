@@ -23,6 +23,7 @@
 #include "gprs_rlcmac.h"
 #include "llc.h"
 #include "rlc.h"
+#include <gprs_debug.h>
 
 #include <stdint.h>
 
@@ -115,15 +116,8 @@ struct gprs_rlcmac_tbf {
 	bool state_is_not(enum gprs_rlcmac_tbf_state rhs) const;
 	void set_state(enum gprs_rlcmac_tbf_state new_state);
 
-	/* TODO: add the gettimeofday as parameter */
-	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
-
-	/* TODO: extract LLC class? */
-	int assemble_forward_llc(const gprs_rlc_data *data);
-
 	struct msgb *create_dl_ass(uint32_t fn);
 	struct msgb *create_ul_ass(uint32_t fn);
-	int snd_ul_ud();
 
 	uint8_t tsc() const;
 
@@ -186,17 +180,9 @@ struct gprs_rlcmac_tbf {
 	unsigned int num_fT_exp; /* number of consecutive fT expirations */
 
 	struct {
-		struct timeval dl_bw_tv; /* timestamp for dl bw calculation */
-		uint32_t dl_bw_octets; /* number of octets since bw_tv */
-
 		struct timeval rssi_tv; /* timestamp for rssi calculation */
 		int32_t rssi_sum; /* sum of rssi values */
 		int rssi_num; /* number of rssi values added since rssi_tv */
-
-		struct timeval dl_loss_tv; /* timestamp for loss calculation */
-		uint16_t dl_loss_lost; /* sum of lost packets */
-		uint16_t dl_loss_received; /* sum of received packets */
-
 	} meas;
 
 	uint8_t cs; /* current coding scheme */
@@ -232,6 +218,7 @@ protected:
 
 	int extract_tlli(const uint8_t *data, const size_t len);
 
+	static const char *tbf_state_name[6];
 };
 
 
@@ -253,9 +240,6 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf);
 
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 
-void tbf_new_state(struct gprs_rlcmac_tbf *tbf,
-        enum gprs_rlcmac_tbf_state state);
-
 void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
                         unsigned int seconds, unsigned int microseconds);
 
@@ -269,8 +253,13 @@ inline bool gprs_rlcmac_tbf::state_is_not(enum gprs_rlcmac_tbf_state rhs) const
 	return state != rhs;
 }
 
+const char *tbf_name(gprs_rlcmac_tbf *tbf);
+
 inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
 {
+	LOGP(DRLCMAC, LOGL_DEBUG, "%s changes state from %s to %s\n",
+		tbf_name(this),
+		tbf_state_name[state], tbf_state_name[new_state]);
 	state = new_state;
 }
 
@@ -294,8 +283,6 @@ inline const char *gprs_rlcmac_tbf::imsi() const
 	return m_imsi;
 }
 
-const char *tbf_name(gprs_rlcmac_tbf *tbf);
-
 inline time_t gprs_rlcmac_tbf::created_ts() const
 {
 	return m_created_ts;
@@ -314,6 +301,9 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int rcvd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
 
+	/* TODO: add the gettimeofday as parameter */
+	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
+
 	/* Please note that all variables here will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
 	 * All states that need reset must be in this struct, so this is why
@@ -322,6 +312,15 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlc_dl_window m_window;
 	int32_t m_tx_counter; /* count all transmitted blocks */
 	uint8_t m_wait_confirm; /* wait for CCCH IMM.ASS cnf */
+
+	struct {
+		struct timeval dl_bw_tv; /* timestamp for dl bw calculation */
+		uint32_t dl_bw_octets; /* number of octets since bw_tv */
+
+		struct timeval dl_loss_tv; /* timestamp for loss calculation */
+		uint16_t dl_loss_lost; /* sum of lost packets */
+		uint16_t dl_loss_received; /* sum of received packets */
+	} m_bw;
 
 protected:
 	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
@@ -338,6 +337,10 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi);
+
+	/* TODO: extract LLC class? */
+	int assemble_forward_llc(const gprs_rlc_data *data);
+	int snd_ul_ud();
 
 	/* Please note that all variables here will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).

@@ -112,10 +112,10 @@ int gprs_rlcmac_rssi_rep(struct gprs_rlcmac_tbf *tbf)
  */
 
 /* Lost frames reported from RLCMAC layer */
-int gprs_rlcmac_received_lost(struct gprs_rlcmac_tbf *tbf, uint16_t received,
+int gprs_rlcmac_received_lost(struct gprs_rlcmac_dl_tbf *tbf, uint16_t received,
 	uint16_t lost)
 {
-	struct timeval now_tv, *loss_tv = &tbf->meas.dl_loss_tv;
+	struct timeval now_tv, *loss_tv = &tbf->m_bw.dl_loss_tv;
 	uint32_t elapsed;
 	uint16_t sum = received + lost;
 
@@ -126,8 +126,8 @@ int gprs_rlcmac_received_lost(struct gprs_rlcmac_tbf *tbf, uint16_t received,
 	LOGP(DRLCMACMEAS, LOGL_DEBUG, "DL Loss of TLLI 0x%08x: Received: %4d  "
 		"Lost: %4d  Sum: %4d\n", tbf->tlli(), received, lost, sum);
 
-	tbf->meas.dl_loss_received += received;
-	tbf->meas.dl_loss_lost += lost;
+	tbf->m_bw.dl_loss_received += received;
+	tbf->m_bw.dl_loss_lost += lost;
 
 	gettimeofday(&now_tv, NULL);
 	elapsed = ((now_tv.tv_sec - loss_tv->tv_sec) << 7)
@@ -139,16 +139,16 @@ int gprs_rlcmac_received_lost(struct gprs_rlcmac_tbf *tbf, uint16_t received,
 
 	/* reset lost values and timestamp */
 	memcpy(loss_tv, &now_tv, sizeof(struct timeval));
-	tbf->meas.dl_loss_received = 0;
-	tbf->meas.dl_loss_lost = 0;
+	tbf->m_bw.dl_loss_received = 0;
+	tbf->m_bw.dl_loss_lost = 0;
 
 	return 0;
 }
 
 /* Give Lost report */
-int gprs_rlcmac_lost_rep(struct gprs_rlcmac_tbf *tbf)
+int gprs_rlcmac_lost_rep(struct gprs_rlcmac_dl_tbf *tbf)
 {
-	uint16_t sum = tbf->meas.dl_loss_lost + tbf->meas.dl_loss_received;
+	uint16_t sum = tbf->m_bw.dl_loss_lost + tbf->m_bw.dl_loss_received;
 
 	/* No measurement values */
 	if (!sum)
@@ -156,7 +156,7 @@ int gprs_rlcmac_lost_rep(struct gprs_rlcmac_tbf *tbf)
 
 	LOGP(DRLCMACMEAS, LOGL_INFO, "DL packet loss of IMSI=%s / TLLI=0x%08x: "
 		"%d%%\n", tbf->imsi(), tbf->tlli(),
-		tbf->meas.dl_loss_lost * 100 / sum);
+		tbf->m_bw.dl_loss_lost * 100 / sum);
 
 	return 0;
 }
@@ -166,12 +166,12 @@ int gprs_rlcmac_lost_rep(struct gprs_rlcmac_tbf *tbf)
  * downlink bandwidth
  */
 
-int gprs_rlcmac_dl_bw(struct gprs_rlcmac_tbf *tbf, uint16_t octets)
+int gprs_rlcmac_dl_bw(struct gprs_rlcmac_dl_tbf *tbf, uint16_t octets)
 {
-	struct timeval now_tv, *bw_tv = &tbf->meas.dl_bw_tv;
+	struct timeval now_tv, *bw_tv = &tbf->m_bw.dl_bw_tv;
 	uint32_t elapsed;
 
-	tbf->meas.dl_bw_octets += octets;
+	tbf->m_bw.dl_bw_octets += octets;
 
 	gettimeofday(&now_tv, NULL);
 	elapsed = ((now_tv.tv_sec - bw_tv->tv_sec) << 7)
@@ -181,11 +181,11 @@ int gprs_rlcmac_dl_bw(struct gprs_rlcmac_tbf *tbf, uint16_t octets)
 
 	LOGP(DRLCMACMEAS, LOGL_INFO, "DL Bandwitdh of IMSI=%s / TLLI=0x%08x: "
 		"%d KBits/s\n", tbf->imsi(), tbf->tlli(),
-		tbf->meas.dl_bw_octets / elapsed);
+		tbf->m_bw.dl_bw_octets / elapsed);
 
 	/* reset bandwidth values timestamp */
 	memcpy(bw_tv, &now_tv, sizeof(struct timeval));
-	tbf->meas.dl_bw_octets = 0;
+	tbf->m_bw.dl_bw_octets = 0;
 
 	return 0;
 }
