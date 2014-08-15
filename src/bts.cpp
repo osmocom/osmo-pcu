@@ -511,9 +511,12 @@ void BTS::trigger_dl_ass(
 		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment on "
 			"PACCH, because %s exists\n", tbf_name(old_tbf));
 		old_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
+
+		old_tbf->set_new_tbf(dl_tbf);
+		old_tbf->was_releasing = old_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
+
 		/* use TA from old TBF */
 		dl_tbf->ta = old_tbf->ta;
-		dl_tbf->was_releasing = dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 		/* change state */
 		dl_tbf->set_state(GPRS_RLCMAC_ASSIGN);
 		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
@@ -530,6 +533,7 @@ void BTS::trigger_dl_ass(
 		dl_tbf->set_state(GPRS_RLCMAC_ASSIGN);
 		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
 		dl_tbf->assign_imsi(imsi);
+		dl_tbf->set_new_tbf(dl_tbf);
 		/* send immediate assignment */
 		dl_tbf->bts->snd_dl_ass(dl_tbf, 0, imsi);
 		dl_tbf->m_wait_confirm = 1;
@@ -729,7 +733,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len, in
 
 void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet, uint32_t fn)
 {
-	struct gprs_rlcmac_tbf *tbf;
+	struct gprs_rlcmac_tbf *tbf, *new_tbf;
 	uint32_t tlli = 0;
 
 	tlli = packet->TLLI;
@@ -766,25 +770,27 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		/* reset N3105 */
 		tbf->n3105 = 0;
 		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-		if (tbf->direction == GPRS_RLCMAC_UL_TBF)
-			tbf = bts()->dl_tbf_by_tlli(tbf->tlli());
-#warning "TBF is changing on the way... *sigh*"
-		if (!tbf) {
+
+		new_tbf = tbf->new_tbf();
+		if (!new_tbf) {
 			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
 				"TBF is gone TLLI=0x%08x\n", tlli);
 			return;
 		}
-		tbf->set_state(GPRS_RLCMAC_FLOW);
+		if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE))
+			tbf_free(tbf);
+
+		new_tbf->set_state(GPRS_RLCMAC_FLOW);
 		/* stop pending assignment timer */
-		tbf->stop_timer();
-		if ((tbf->state_flags &
+		new_tbf->stop_timer();
+		if ((new_tbf->state_flags &
 			(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS))) {
-			tbf->state_flags &=
+			new_tbf->state_flags &=
 				~(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
 			LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink "
-				"assignment for %s\n", tbf_name(tbf));
+				"assignment for %s\n", tbf_name(new_tbf));
 		}
-		tbf_assign_control_ts(tbf);
+		tbf_assign_control_ts(new_tbf);
 		return;
 	}
 	if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
@@ -792,23 +798,25 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		/* reset N3105 */
 		tbf->n3105 = 0;
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
-#warning "TBF is changing on the way... *sigh*"
-		if (tbf->direction == GPRS_RLCMAC_DL_TBF)
-			tbf = bts()->ul_tbf_by_tlli(tbf->tlli());
-		if (!tbf) {
+
+		new_tbf = tbf->new_tbf();
+		if (!new_tbf) {
 			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
 				"TBF is gone TLLI=0x%08x\n", tlli);
 			return;
 		}
-		tbf->set_state(GPRS_RLCMAC_FLOW);
-		if ((tbf->state_flags &
+		if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE))
+			tbf_free(tbf);
+
+		new_tbf->set_state(GPRS_RLCMAC_FLOW);
+		if ((new_tbf->state_flags &
 			(1 << GPRS_RLCMAC_FLAG_TO_UL_ASS))) {
-			tbf->state_flags &=
+			new_tbf->state_flags &=
 				~(1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
 			LOGP(DRLCMAC, LOGL_NOTICE, "Recovered uplink "
-				"assignment for UL %s\n", tbf_name(tbf));
+				"assignment for UL %s\n", tbf_name(new_tbf));
 		}
-		tbf_assign_control_ts(tbf);
+		tbf_assign_control_ts(new_tbf);
 		return;
 	}
 	LOGP(DRLCMAC, LOGL_ERROR, "Error: received PACET CONTROL ACK "
@@ -858,7 +866,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	if (ack_nack->Exist_Channel_Request_Description) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
 			"message, so we provide one:\n");
-		tbf_alloc_ul(bts_data(), tbf->trx->trx_no, tbf->ms_class, tbf->tlli(), tbf->ta, tbf);
+		tbf->set_new_tbf(tbf_alloc_ul(bts_data(), tbf->trx->trx_no, tbf->ms_class, tbf->tlli(), tbf->ta, tbf));
 		/* schedule uplink assignment */
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
 	}
@@ -920,6 +928,8 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		ul_tbf = tbf_alloc_ul(bts_data(), trx_no(), ms_class, tlli, ta, NULL);
 		if (!ul_tbf)
 			return;
+
+		ul_tbf->set_new_tbf(ul_tbf);
 		/* set control ts to current MS's TS, until assignment complete */
 		LOGP(DRLCMAC, LOGL_DEBUG, "Change control TS to %d until assinment is complete.\n", ts_no);
 		ul_tbf->control_ts = ts_no;

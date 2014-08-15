@@ -142,6 +142,9 @@ struct gprs_rlcmac_tbf {
 	const char *imsi() const;
 	void assign_imsi(const char *imsi);
 
+	void set_new_tbf(gprs_rlcmac_tbf *tbf);
+	gprs_rlcmac_tbf *new_tbf() const;
+
 	time_t created_ts() const;
 
 	/* attempt to make things a bit more fair */
@@ -164,6 +167,8 @@ struct gprs_rlcmac_tbf {
 	enum gprs_rlcmac_tbf_dl_ass_state dl_ass_state;
 	enum gprs_rlcmac_tbf_ul_ass_state ul_ass_state;
 	enum gprs_rlcmac_tbf_ul_ack_state ul_ack_state;
+
+	gprs_rlcmac_tbf *m_new_tbf;
 
 	enum gprs_rlcmac_tbf_poll_state poll_state;
 	uint32_t poll_fn; /* frame number to poll */
@@ -287,6 +292,11 @@ inline uint8_t gprs_rlcmac_tbf::tfi() const
 inline const char *gprs_rlcmac_tbf::imsi() const
 {
 	return m_imsi;
+}
+
+inline gprs_rlcmac_tbf *gprs_rlcmac_tbf::new_tbf() const
+{
+	return m_new_tbf;
 }
 
 inline time_t gprs_rlcmac_tbf::created_ts() const

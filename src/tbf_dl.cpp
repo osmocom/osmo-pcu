@@ -643,9 +643,38 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, uint8_t ssn, uint8_t *rbb
 
 void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 {
+	uint8_t trx;
+	struct gprs_rlcmac_dl_tbf *new_tbf;
+	int8_t tfi; /* must be signed */
+	int rc;
+	struct msgb *msg;
+
 	bts->tbf_reused();
-	m_llc.put_frame(data, len);
+
+	tfi = bts->tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx, this->trx->trx_no);
+	if (tfi < 0) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
+		/* FIXME: send reject */
+		return;
+	}
+	new_tbf = tbf_alloc_dl_tbf(bts->bts_data(), NULL, tfi, trx, ms_class, 0);
+	if (!new_tbf) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
+		/* FIXME: send reject */
+		return;
+	}
+
+	new_tbf->m_tlli = m_tlli;
+	new_tbf->m_tlli_valid = m_tlli_valid;
+	new_tbf->ta = ta;
+	new_tbf->assign_imsi(m_imsi);
+
+	/* Copy over all data to the new TBF */
+	new_tbf->m_llc.put_frame(data, len);
 	bts->llc_frame_sched();
+
+	while ((msg = m_llc.dequeue()))
+		new_tbf->m_llc.enqueue(msg);
 
 	/* reset rlc states */
 	m_tx_counter = 0;
@@ -661,7 +690,7 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s Trigger dowlink assignment on PACCH, "
 		"because another LLC PDU has arrived in between\n",
 		tbf_name(this));
-	bts->trigger_dl_ass(this, this, NULL);
+	bts->trigger_dl_ass(new_tbf, this, NULL);
 }
 
 bool gprs_rlcmac_dl_tbf::dl_window_stalled() const
