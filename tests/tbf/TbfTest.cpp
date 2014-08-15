@@ -78,6 +78,84 @@ static void test_tbf_tlli_update()
 	OSMO_ASSERT(the_bts.timing_advance()->recall(0x4232) == 4);
 }
 
+static uint8_t llc_data[200];
+
+int pcu_sock_send(struct msgb *msg)
+{
+	return 0;
+}
+
+static void test_tbf_final_ack()
+{
+	BTS the_bts;
+	gprs_rlcmac_bts *bts;
+	gprs_rlcmac_trx *trx;
+	gprs_rlcmac_pdch * pdch;
+	int tfi, i;
+	uint8_t ts_no, trx_no;
+	uint8_t ms_class = 45;
+	uint32_t fn;
+
+	uint8_t rbb[64/8];
+
+	struct msgb *dl_msg;
+	gprs_rlcmac_dl_tbf *dl_tbf;
+	gprs_rlcmac_tbf *new_tbf;
+
+	bts = the_bts.bts_data();
+	bts->alloc_algorithm = alloc_algorithm_a;
+	trx = &bts->trx[0];
+
+	ts_no = 4;
+	trx->pdch[ts_no].enable();
+	pdch = &trx->pdch[ts_no];
+
+	tfi = the_bts.tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx_no, -1);
+	OSMO_ASSERT(tfi >= 0);
+	dl_tbf = tbf_alloc_dl_tbf(bts, NULL, tfi, trx_no, ms_class, 1);
+	OSMO_ASSERT(dl_tbf);
+
+	/* "Establish" the DL TBF */
+	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
+	dl_tbf->set_state(GPRS_RLCMAC_FLOW);
+	dl_tbf->m_wait_confirm = 0;
+	dl_tbf->set_new_tbf(dl_tbf);
+
+	for (i = 0; i < sizeof(llc_data); i++)
+		llc_data[i] = i%256;
+
+	/* Schedule two blocks */
+	dl_msg = msgb_alloc(sizeof(llc_data), "llc data");
+	memcpy(msgb_put(dl_msg, sizeof(llc_data)), llc_data, sizeof(llc_data));
+	dl_tbf->m_llc.enqueue(dl_msg);
+
+	dl_msg = msgb_alloc(sizeof(llc_data), "llc data");
+	memcpy(msgb_put(dl_msg, sizeof(llc_data)), llc_data, sizeof(llc_data));
+	dl_tbf->m_llc.enqueue(dl_msg);
+
+
+	/* FIXME: Need correct frame number here? */
+	fn = 0;
+	for (; fn < 3; fn++) {
+		/* Request to send one block */
+		gprs_rlcmac_rcv_rts_block(bts, trx_no, ts_no, 0, fn, 0);
+	}
+
+	/* Queue a final ACK */
+	memset(rbb, 0, sizeof(rbb));
+	/* Receive a final ACK */
+	dl_tbf->rcvd_dl_ack(1, 1, rbb);
+
+	/* Clean up and ensure tbfs are in the correct state */
+	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
+	new_tbf = dl_tbf->new_tbf();
+	OSMO_ASSERT(new_tbf != dl_tbf);
+	OSMO_ASSERT(new_tbf->tfi() == 1);
+	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+	tbf_free(dl_tbf);
+	tbf_free(new_tbf);
+}
+
 static const struct log_info_cat default_categories[] = {
         {"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_INFO, 0},
         {"DL1IF", "\033[1;32m", "GPRS PCU L1 interface (L1IF)", LOGL_DEBUG, 1},
@@ -115,6 +193,7 @@ int main(int argc, char **argv)
 	log_set_print_filename(osmo_stderr_target, 0);
 
 	test_tbf_tlli_update();
+	test_tbf_final_ack();
 	return EXIT_SUCCESS;
 }
 

@@ -15,3 +15,66 @@ Slot Allocation (Algorithm A) for class 0
 - Setting Control TS 2
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changing tlli from TLLI=0x00000000 TLLI=0x00002342 ul_changed=0
 TBF(TFI=0 TLLI=0x00002342 DIR=DL STATE=NULL) changing tlli from TLLI=0x00002342 TLLI=0x00004232 ul_changed=1
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: TFI=0 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW)  start Packet Downlink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Downlink Assignment -------------------------
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) (TRX=0, TS=4)
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4)
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0)
+- Sending new block at BSN 0
+-- Chunk with length 0 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW)len=0
+- Dequeue next LLC for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) (len=168)
+-- Chunk with length 168 larger than space (19) left in block: copy only remaining space, and we are done
+data block: 07 00 00 03 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=1 block=0 data=07 00 00 03 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4)
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1)
+- Sending new block at BSN 1
+-- Chunk with length 149 larger than space (20) left in block: copy only remaining space, and we are done
+data block: 07 00 03 33 34 35 36 37 38 39 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=2 block=0 data=07 00 03 33 34 35 36 37 38 39 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) changes state from FLOW to WAIT RELEASE
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=1.
+********** TBF starts here **********
+Allocating DL TBF: TFI=1 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+********** TBF update **********
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
+Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) exists
+TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) starting timer 0.
+DL packet loss of IMSI= / TLLI=0x00000000: 0%
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free
+********** TBF ends here **********
+TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) free
+TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) stopping timer 0.
+********** TBF ends here **********
