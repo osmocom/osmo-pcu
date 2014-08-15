@@ -115,6 +115,7 @@ struct gprs_rlcmac_tbf {
 	bool state_is(enum gprs_rlcmac_tbf_state rhs) const;
 	bool state_is_not(enum gprs_rlcmac_tbf_state rhs) const;
 	void set_state(enum gprs_rlcmac_tbf_state new_state);
+	const char *state_name() const;
 
 	struct msgb *create_dl_ass(uint32_t fn);
 	struct msgb *create_ul_ass(uint32_t fn);
@@ -254,6 +255,11 @@ inline bool gprs_rlcmac_tbf::state_is_not(enum gprs_rlcmac_tbf_state rhs) const
 }
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf);
+
+inline const char *gprs_rlcmac_tbf::state_name() const
+{
+	return tbf_state_name[state];
+}
 
 inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
 {
