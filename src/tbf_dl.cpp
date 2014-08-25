@@ -478,21 +478,28 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	struct rlc_dl_header *rh;
 	struct msgb *dl_msg;
 	uint8_t len;
+	bool need_poll;
 
 	/* get data and header from current block */
 	data = m_rlc.block(index)->block;
 	len = m_rlc.block(index)->len;
 	rh = (struct rlc_dl_header *)data;
 
+	need_poll = state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 	/* Clear Polling, if still set in history buffer */
 	rh->s_p = 0;
 		
 	/* poll after POLL_ACK_AFTER_FRAMES frames, or when final block is tx.
 	 */
-	if (m_tx_counter >= POLL_ACK_AFTER_FRAMES || first_fin_ack) {
+	if (m_tx_counter >= POLL_ACK_AFTER_FRAMES || first_fin_ack ||
+			need_poll) {
 		if (first_fin_ack) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
 				"polling, because first final block sent.\n");
+		} else if (need_poll) {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
+				"polling, because polling timed out.\n",
+				POLL_ACK_AFTER_FRAMES);
 		} else {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
 				"polling, because %d blocks sent.\n",
@@ -523,6 +530,9 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			/* schedule polling */
 			poll_state = GPRS_RLCMAC_POLL_SCHED;
 			poll_fn = (fn + 13) % 2715648;
+
+			/* Clear poll timeout flag */
+			state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 
 			/* set polling in header */
 			rh->rrbp = 0; /* N+13 */
