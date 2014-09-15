@@ -525,7 +525,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			m_tx_counter = 0;
 			/* start timer whenever we send the final block */
 			if (rh->fbi == 1)
-				tbf_timer_start(this, 3191, bts_data()->t3191, 0);
+				tbf_timer_start(this, GPRS_RLCMAC_T3191, bts_data()->t3191, 0);
 
 			/* schedule polling */
 			poll_state = GPRS_RLCMAC_POLL_SCHED;
@@ -629,7 +629,7 @@ int gprs_rlcmac_dl_tbf::maybe_start_new_window()
 		/* no message, start T3193, change state to RELEASE */
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- No new message, so we release.\n");
 		/* start T3193 */
-		tbf_timer_start(this, 3193,
+		tbf_timer_start(this, GPRS_RLCMAC_T3193,
 			bts_data()->t3193_msec / 1000,
 			(bts_data()->t3193_msec % 1000) * 1000);
 

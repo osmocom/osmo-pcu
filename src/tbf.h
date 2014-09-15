@@ -75,6 +75,17 @@ enum gprs_rlcmac_tbf_direction {
 	GPRS_RLCMAC_UL_TBF
 };
 
+enum gprs_rlcmac_tbf_timer_type {
+	GPRS_RLCMAC_TASSIGN,
+	GPRS_RLCMAC_T3169,
+	GPRS_RLCMAC_T3191,
+	GPRS_RLCMAC_T3193,
+	GPRS_RLCMAC_T3195,
+	GPRS_RLCMAC_T3197,
+	GPRS_RLCMAC_T3199,
+	GPRS_RLCMAC_TMAX
+};
+
 #define GPRS_RLCMAC_FLAG_CCCH		0 /* assignment on CCCH */
 #define GPRS_RLCMAC_FLAG_PACCH		1 /* assignment on PACCH */
 #define GPRS_RLCMAC_FLAG_UL_DATA	2 /* uplink data received */
@@ -125,8 +136,10 @@ struct gprs_rlcmac_tbf {
 	int rlcmac_diag();
 
 	int update();
-	void handle_timeout();
-	void stop_timer();
+	void handle_timeout(enum gprs_rlcmac_tbf_timer_type type);
+	void handle_assignment_timeout();
+	void stop_timer(enum gprs_rlcmac_tbf_timer_type type);
+	void stop_timers();
 	void stop_t3191();
 
 	void poll_timeout();
@@ -177,9 +190,8 @@ struct gprs_rlcmac_tbf {
 	
 	uint8_t n3105;	/* N3105 counter */
 
-	struct osmo_timer_list	timer;
-	unsigned int T; /* Txxxx number */
-	unsigned int num_T_exp; /* number of consecutive T expirations */
+	struct osmo_timer_list	timer[GPRS_RLCMAC_TMAX];
+	unsigned int num_T_exp[GPRS_RLCMAC_TMAX]; /* number of consecutive T expirations */
 	
 	struct osmo_gsm_timer_list	gsm_timer;
 	unsigned int fT; /* fTxxxx number */
@@ -246,7 +258,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf);
 
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 
-void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
+void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, enum gprs_rlcmac_tbf_timer_type type,
                         unsigned int seconds, unsigned int microseconds);
 
 inline bool gprs_rlcmac_tbf::state_is(enum gprs_rlcmac_tbf_state rhs) const

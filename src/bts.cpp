@@ -409,7 +409,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
 
 	if (dl_tbf->m_wait_confirm)
-		tbf_timer_start(dl_tbf, 0, Tassign_agch);
+		tbf_timer_start(dl_tbf, GPRS_RLCMAC_TASSIGN, Tassign_agch);
 
 	return 0;
 }
@@ -469,7 +469,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		tbf->ta = qta >> 2;
 		tbf->set_state(GPRS_RLCMAC_FLOW);
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
-		tbf_timer_start(tbf, 3169, m_bts.t3169, 0);
+		tbf_timer_start(tbf, GPRS_RLCMAC_T3169, m_bts.t3169, 0);
 		LOGP(DRLCMAC, LOGL_DEBUG, "%s [UPLINK] START\n",
 			tbf_name(tbf));
 		LOGP(DRLCMAC, LOGL_DEBUG, "%s RX: [PCU <- BTS] RACH "
@@ -504,7 +504,7 @@ void BTS::trigger_dl_ass(
 	struct gprs_rlcmac_tbf *old_tbf, const char *imsi)
 {
 	/* stop pending timer */
-	dl_tbf->stop_timer();
+	dl_tbf->stop_timers();
 
 	/* check for downlink tbf:  */
 	if (old_tbf) {
@@ -521,7 +521,7 @@ void BTS::trigger_dl_ass(
 		dl_tbf->set_state(GPRS_RLCMAC_ASSIGN);
 		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 		/* start timer */
-		tbf_timer_start(dl_tbf, 0, Tassign_pacch);
+		tbf_timer_start(dl_tbf, GPRS_RLCMAC_TASSIGN, Tassign_pacch);
 	} else {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for %s on PCH, no TBF exist (IMSI=%s)\n", tbf_name(dl_tbf), imsi);
 		if (!imsi || strlen(imsi) < 3) {
@@ -782,7 +782,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 
 		new_tbf->set_state(GPRS_RLCMAC_FLOW);
 		/* stop pending assignment timer */
-		new_tbf->stop_timer();
+		new_tbf->stop_timer(GPRS_RLCMAC_TASSIGN);
 		if ((new_tbf->state_flags &
 			(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS))) {
 			new_tbf->state_flags &=

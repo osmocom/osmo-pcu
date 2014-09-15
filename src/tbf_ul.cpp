@@ -300,7 +300,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t 
 	}
 
 	/* restart T3169 */
-	tbf_timer_start(this, 3169, bts_data()->t3169, 0);
+	tbf_timer_start(this, GPRS_RLCMAC_T3169, bts_data()->t3169, 0);
 
 	/* Increment RX-counter */
 	this->m_rx_counter++;
