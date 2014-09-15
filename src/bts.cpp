@@ -1012,6 +1012,13 @@ int gprs_rlcmac_pdch::rcv_control_block(
 			"RX: [PCU <- BTS] unknown control block(%d) received\n",
 			ul_control_block->u.MESSAGE_TYPE);
 	}
+	/* We requested a DL ACK, but got something else - re-request */
+	if (ul_control_block->u.MESSAGE_TYPE != MT_PACKET_DOWNLINK_ACK_NACK) {
+		gprs_rlcmac_dl_tbf *dl_tbf;
+		dl_tbf = bts()->dl_tbf_by_poll_fn(fn, trx_no(), ts_no);
+		if (dl_tbf)
+			dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
+	}
 	talloc_free(ul_control_block);
 	return 1;
 }
