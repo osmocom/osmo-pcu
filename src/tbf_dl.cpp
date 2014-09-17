@@ -498,8 +498,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				"polling, because first final block sent.\n");
 		} else if (need_poll) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
-				"polling, because polling timed out.\n",
-				POLL_ACK_AFTER_FRAMES);
+				"polling, because polling timed out.\n");
 		} else {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
 				"polling, because %d blocks sent.\n",
@@ -656,7 +655,6 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 	uint8_t trx;
 	struct gprs_rlcmac_dl_tbf *new_tbf;
 	int8_t tfi; /* must be signed */
-	int rc;
 	struct msgb *msg;
 
 	bts->tbf_reused();
