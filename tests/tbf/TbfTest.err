@@ -27,6 +27,8 @@ Slot Allocation (Algorithm A) for class 45
 - Assign downlink TS=4
 - Setting Control TS 4
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) append
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) append
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW)  start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -37,16 +39,16 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0)
 - Sending new block at BSN 0
 -- Chunk with length 0 is less than remaining space (20): add length header to to delimit LLC frame
 Complete DL frame for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW)len=0
-- Dequeue next LLC for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) (len=168)
--- Chunk with length 168 larger than space (19) left in block: copy only remaining space, and we are done
-data block: 07 00 00 03 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=1 block=0 data=07 00 00 03 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 
+- Dequeue next LLC for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) (len=200)
+-- Chunk with length 200 larger than space (19) left in block: copy only remaining space, and we are done
+data block: 07 00 00 03 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=1 block=0 data=07 00 00 03 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1)
 - Sending new block at BSN 1
--- Chunk with length 149 larger than space (20) left in block: copy only remaining space, and we are done
-data block: 07 00 03 33 34 35 36 37 38 39 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=2 block=0 data=07 00 03 33 34 35 36 37 38 39 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 
+-- Chunk with length 181 larger than space (20) left in block: copy only remaining space, and we are done
+data block: 07 00 03 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=2 block=0 data=07 00 03 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) downlink acknowledge
 - Final ACK received.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=FLOW) changes state from FLOW to WAIT RELEASE

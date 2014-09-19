@@ -125,13 +125,8 @@ static void test_tbf_final_ack()
 		llc_data[i] = i%256;
 
 	/* Schedule two blocks */
-	dl_msg = msgb_alloc(sizeof(llc_data), "llc data");
-	memcpy(msgb_put(dl_msg, sizeof(llc_data)), llc_data, sizeof(llc_data));
-	dl_tbf->m_llc.enqueue(dl_msg);
-
-	dl_msg = msgb_alloc(sizeof(llc_data), "llc data");
-	memcpy(msgb_put(dl_msg, sizeof(llc_data)), llc_data, sizeof(llc_data));
-	dl_tbf->m_llc.enqueue(dl_msg);
+	dl_tbf->append_data(ms_class, 1000, llc_data, sizeof(llc_data));
+	dl_tbf->append_data(ms_class, 1000, llc_data, sizeof(llc_data));
 
 
 	/* FIXME: Need correct frame number here? */
