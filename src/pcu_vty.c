@@ -290,7 +290,7 @@ DEFUN(show_bts_stats,
 DEFUN(show_tbf,
       show_tbf_cmd,
       "show tbf all",
-      SHOW_STR "information about all current TBFs\n")
+      SHOW_STR "information about TBFs\n" "All TBFs\n")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	struct llist_head *tbf;
