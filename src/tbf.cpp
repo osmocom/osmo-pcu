@@ -565,7 +565,6 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 	}
 
 	new_dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(m_new_tbf);
-	new_dl_tbf->was_releasing = was_releasing;
 	if (!new_dl_tbf) {
 		LOGP(DRLCMACDL, LOGL_ERROR, "We have a schedule for downlink "
 			"assignment at uplink %s, but there is no downlink "
@@ -574,6 +573,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 		return NULL;
 	}
 
+	new_dl_tbf->was_releasing = was_releasing;
 	msg = msgb_alloc(23, "rlcmac_dl_ass");
 	if (!msg)
 		return NULL;
