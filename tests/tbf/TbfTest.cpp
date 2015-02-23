@@ -85,7 +85,12 @@ int pcu_sock_send(struct msgb *msg)
 	return 0;
 }
 
-static void test_tbf_final_ack()
+enum test_tbf_final_ack_mode {
+	TEST_MODE_STANDARD,
+	TEST_MODE_REVERSE_FREE
+};
+
+static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 {
 	BTS the_bts;
 	gprs_rlcmac_bts *bts;
@@ -147,8 +152,18 @@ static void test_tbf_final_ack()
 	OSMO_ASSERT(new_tbf != dl_tbf);
 	OSMO_ASSERT(new_tbf->tfi() == 1);
 	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-	tbf_free(dl_tbf);
-	tbf_free(new_tbf);
+	if (test_mode == TEST_MODE_REVERSE_FREE) {
+		tbf_free(new_tbf);
+		if (dl_tbf->m_new_tbf == new_tbf)
+			fprintf(stderr, "dangling m_new_tbf pointer in dl_tbf "
+				"(known bug)\n");
+		/* OSMO_ASSERT(dl_tbf->m_new_tbf != new_tbf); */
+		tbf_free(dl_tbf);
+	} else {
+		tbf_free(dl_tbf);
+		OSMO_ASSERT(new_tbf->m_new_tbf != dl_tbf);
+		tbf_free(new_tbf);
+	}
 }
 
 static const struct log_info_cat default_categories[] = {
@@ -188,7 +203,8 @@ int main(int argc, char **argv)
 	log_set_print_filename(osmo_stderr_target, 0);
 
 	test_tbf_tlli_update();
-	test_tbf_final_ack();
+	test_tbf_final_ack(TEST_MODE_STANDARD);
+	test_tbf_final_ack(TEST_MODE_REVERSE_FREE);
 	return EXIT_SUCCESS;
 }
 
