@@ -34,6 +34,13 @@ extern "C" {
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 
+static void check_tbf(gprs_rlcmac_tbf *tbf)
+{
+	OSMO_ASSERT(tbf);
+	OSMO_ASSERT(tbf->m_new_tbf == NULL || tbf->m_new_tbf->m_old_tbf == tbf);
+	OSMO_ASSERT(tbf->m_old_tbf == NULL || tbf->m_old_tbf->m_new_tbf == tbf);
+}
+
 static void test_tbf_tlli_update()
 {
 	BTS the_bts;
@@ -118,13 +125,15 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	tfi = the_bts.tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx_no, -1);
 	OSMO_ASSERT(tfi >= 0);
 	dl_tbf = tbf_alloc_dl_tbf(bts, NULL, tfi, trx_no, ms_class, 1);
-	OSMO_ASSERT(dl_tbf);
+	check_tbf(dl_tbf);
+
 
 	/* "Establish" the DL TBF */
 	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
 	dl_tbf->set_state(GPRS_RLCMAC_FLOW);
 	dl_tbf->m_wait_confirm = 0;
 	dl_tbf->set_new_tbf(dl_tbf);
+	check_tbf(dl_tbf);
 
 	for (i = 0; i < sizeof(llc_data); i++)
 		llc_data[i] = i%256;
@@ -149,19 +158,20 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
 	new_tbf = dl_tbf->new_tbf();
+	check_tbf(new_tbf);
 	OSMO_ASSERT(new_tbf != dl_tbf);
 	OSMO_ASSERT(new_tbf->tfi() == 1);
+	check_tbf(dl_tbf);
 	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 	if (test_mode == TEST_MODE_REVERSE_FREE) {
 		tbf_free(new_tbf);
-		if (dl_tbf->m_new_tbf == new_tbf)
-			fprintf(stderr, "dangling m_new_tbf pointer in dl_tbf "
-				"(known bug)\n");
-		/* OSMO_ASSERT(dl_tbf->m_new_tbf != new_tbf); */
+		OSMO_ASSERT(dl_tbf->m_new_tbf != new_tbf);
+		check_tbf(dl_tbf);
 		tbf_free(dl_tbf);
 	} else {
 		tbf_free(dl_tbf);
 		OSMO_ASSERT(new_tbf->m_new_tbf != dl_tbf);
+		check_tbf(new_tbf);
 		tbf_free(new_tbf);
 	}
 }

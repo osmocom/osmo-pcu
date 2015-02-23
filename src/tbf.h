@@ -169,6 +169,7 @@ struct gprs_rlcmac_tbf {
 	enum gprs_rlcmac_tbf_ul_ack_state ul_ack_state;
 
 	gprs_rlcmac_tbf *m_new_tbf;
+	gprs_rlcmac_tbf *m_old_tbf; /* reverse pointer for m_new_tbf */
 
 	enum gprs_rlcmac_tbf_poll_state poll_state;
 	uint32_t poll_fn; /* frame number to poll */
