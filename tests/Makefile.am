@@ -19,11 +19,11 @@ alloc_AllocTest_LDADD = \
 
 tbf_TbfTest_SOURCES = tbf/TbfTest.cpp
 tbf_TbfTest_LDADD = \
+	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
-	$(COMMON_LA) \
-	$(top_builddir)/src/libgprs.la
+	$(COMMON_LA)
 
 emu_pcu_emu_SOURCES = emu/pcu_emu.cpp emu/test_replay_gprs_attach.cpp \
 	emu/openbsc_clone.c emu/openbsc_clone.h emu/gprs_tests.h \
@@ -37,11 +37,11 @@ emu_pcu_emu_LDADD = \
 
 types_TypesTest_SOURCES = types/TypesTest.cpp
 types_TypesTest_LDADD = \
+	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
-	$(COMMON_LA) \
-	$(top_builddir)/src/libgprs.la
+	$(COMMON_LA)
 
 
 # The `:;' works around a Bash 3.2 bug when the output is not writeable.
