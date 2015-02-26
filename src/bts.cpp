@@ -243,7 +243,7 @@ gprs_rlcmac_tbf *BTS::tbf_by_tlli(uint32_t tlli, enum gprs_rlcmac_tbf_direction 
 	} else {
 		llist_pods_for_each_entry(tbf, &m_bts.dl_tbfs, list, lpods) {
 			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
-			 && tbf->tlli() == tlli)
+			 && tbf->tlli() == tlli && tbf->is_tlli_valid())
 				return tbf;
 		}
 	}

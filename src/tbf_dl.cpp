@@ -689,6 +689,9 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 	m_wait_confirm = 0;
 	m_window.reset();
 
+	/* mark TLLI as invalid */
+	m_tlli_valid = 0;
+
 	/* keep to flags */
 	state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
 	state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
