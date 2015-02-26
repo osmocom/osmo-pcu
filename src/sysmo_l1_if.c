@@ -168,7 +168,7 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 {
 	int rc = 0;
 
-	DEBUGP(DL1IF, "Rx PH-DATA.ind %s (hL2 %08x): %s",
+	DEBUGP(DL1IF, "Rx PH-DATA.ind %s (hL2 %08x): %s\n",
 		get_value_string(femtobts_l1sapi_names, data_ind->sapi),
 		data_ind->hLayer2,
 		osmo_hexdump(data_ind->msgUnitParam.u8Buffer,
