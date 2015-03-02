@@ -72,7 +72,6 @@ Slot Allocation (Algorithm A) for class 45
 - Assign downlink TS=4
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
 Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) exists
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) m_new_tbf is already assigned to TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), overwriting the old value with TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) starting timer 0.
 DL packet loss of IMSI= / TLLI=0x00000000: 0%
@@ -139,7 +138,6 @@ Slot Allocation (Algorithm A) for class 45
 - Assign downlink TS=4
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
 Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) exists
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) m_new_tbf is already assigned to TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), overwriting the old value with TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) starting timer 0.
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) free

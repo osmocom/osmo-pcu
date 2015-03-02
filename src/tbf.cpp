@@ -55,15 +55,16 @@ void gprs_rlcmac_tbf::set_new_tbf(gprs_rlcmac_tbf *tbf)
 {
 	if (m_new_tbf) {
 		if (m_new_tbf == tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE,
+			LOGP(DRLCMAC, LOGL_INFO,
 				"%s reassigning %s to m_new_tbf\n",
 				tbf_name(this), tbf_name(tbf));
 			return;
 		}
-		LOGP(DRLCMAC, LOGL_NOTICE,
-			"%s m_new_tbf is already assigned to %s, "
-			"overwriting the old value with %s\n",
-			tbf_name(this), tbf_name(m_new_tbf), tbf_name(tbf));
+		if (m_new_tbf != this)
+			LOGP(DRLCMAC, LOGL_NOTICE,
+				"%s m_new_tbf is already assigned to %s, "
+				"overwriting the old value with %s\n",
+				tbf_name(this), tbf_name(m_new_tbf), tbf_name(tbf));
 		/* Detach from other TBF */
 		m_new_tbf->m_old_tbf = NULL;
 	}
@@ -154,25 +155,33 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 		tbf->bts->tbf_dl_freed();
 
 	if (tbf->m_old_tbf) {
-		LOGP(DRLCMAC, LOGL_INFO, "%s Old TBF %s still exists, detaching\n",
-			tbf_name(tbf), tbf_name(tbf->m_old_tbf));
-		if (tbf->m_old_tbf->m_new_tbf == tbf)
+		if (tbf->m_old_tbf == tbf) {
+			/* points to itself, ignore */
+		} else if (tbf->m_old_tbf->m_new_tbf == tbf) {
+			LOGP(DRLCMAC, LOGL_INFO,
+				"%s Old TBF %s still exists, detaching\n",
+				tbf_name(tbf), tbf_name(tbf->m_old_tbf));
 			tbf->m_old_tbf->m_new_tbf = NULL;
-		else
+		} else {
 			LOGP(DRLCMAC, LOGL_ERROR, "%s Software error: "
 				"tbf->m_old_tbf->m_new_tbf != tbf\n",
 				tbf_name(tbf));
+		}
 	}
 
 	if (tbf->m_new_tbf) {
-		LOGP(DRLCMAC, LOGL_INFO, "%s New TBF %s still exists, detaching\n",
-			tbf_name(tbf), tbf_name(tbf->m_new_tbf));
-		if (tbf->m_new_tbf->m_old_tbf == tbf)
+		if (tbf->m_new_tbf == tbf) {
+			/* points to itself, ignore */
+		} else if (tbf->m_new_tbf->m_old_tbf == tbf) {
+			LOGP(DRLCMAC, LOGL_INFO,
+				"%s New TBF %s still exists, detaching\n",
+				tbf_name(tbf), tbf_name(tbf->m_new_tbf));
 			tbf->m_new_tbf->m_old_tbf = NULL;
-		else
+		} else {
 			LOGP(DRLCMAC, LOGL_ERROR, "%s Software error: "
 				"tbf->m_new_tbf->m_old_tbf != tbf\n",
 				tbf_name(tbf));
+		}
 	}
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF ends here **********\n");
