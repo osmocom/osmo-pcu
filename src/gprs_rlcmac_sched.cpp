@@ -167,8 +167,9 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch)
 {
 	struct msgb *msg = NULL;
-	struct gprs_rlcmac_dl_tbf *tbf = NULL;
-	uint8_t i, tfi;
+	struct gprs_rlcmac_dl_tbf *tbf, *prio_tbf = NULL;
+	int prio, max_prio = -1;
+	uint8_t i, tfi, prio_tfi;
 
 	/* select downlink resource */
 	for (i = 0, tfi = pdch->next_dl_tfi; i < 32;
@@ -189,13 +190,29 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		if (tbf->m_wait_confirm)
 			continue;
 
+		/* compute priority */
+		if (tbf->state_is(GPRS_RLCMAC_FINISHED) &&
+			tbf->m_window.resend_needed() < 0)
+			/* would re-retransmit blocks */
+			prio = 1;
+		else
+			prio = 2;
+
+		/* get the TBF with the highest priority */
+		if (prio > max_prio) {
+			prio_tfi = tfi;
+			prio_tbf = tbf;
+			max_prio = prio;
+		}
+	}
+
+	if (prio_tbf) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling data message at "
-			"RTS for DL TFI=%d (TRX=%d, TS=%d)\n", tfi, trx, ts);
+			"RTS for DL TFI=%d (TRX=%d, TS=%d)\n", prio_tfi, trx, ts);
 		/* next TBF to handle resource is the next one */
-		pdch->next_dl_tfi = (tfi + 1) & 31;
+		pdch->next_dl_tfi = (prio_tfi + 1) & 31;
 		/* generate DL data block */
-		msg = tbf->create_dl_acked_block(fn, ts);
-		break;
+		msg = prio_tbf->create_dl_acked_block(fn, ts);
 	}
 
 	return msg;
