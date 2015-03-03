@@ -117,6 +117,8 @@ struct gprs_rlcmac_tbf {
 	void set_state(enum gprs_rlcmac_tbf_state new_state);
 	const char *state_name() const;
 
+	const char *name() const;
+
 	struct msgb *create_dl_ass(uint32_t fn);
 	struct msgb *create_ul_ass(uint32_t fn);
 
@@ -226,6 +228,9 @@ protected:
 	int extract_tlli(const uint8_t *data, const size_t len);
 
 	static const char *tbf_state_name[6];
+
+private:
+	mutable char m_name_buf[60];
 };
 
 

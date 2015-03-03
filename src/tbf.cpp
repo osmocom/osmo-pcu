@@ -827,14 +827,19 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf)
 {
-	static char buf[60];
-	snprintf(buf, sizeof(buf), "TBF(TFI=%d TLLI=0x%08x DIR=%s STATE=%s)",
-			tbf->m_tfi, tbf->m_tlli,
-			tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
-			tbf->state_name()
-			);
-	buf[sizeof(buf) - 1] = '\0';
-	return buf;
+	return tbf->name();
+}
+
+const char *gprs_rlcmac_tbf::name() const
+{
+	snprintf(m_name_buf, sizeof(m_name_buf) - 1,
+		"TBF(TFI=%d TLLI=0x%08x DIR=%s STATE=%s)",
+		m_tfi, m_tlli,
+		direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
+		state_name()
+		);
+	m_name_buf[sizeof(m_name_buf) - 1] = '\0';
+	return m_name_buf;
 }
 
 void gprs_rlcmac_tbf::rotate_in_list()
