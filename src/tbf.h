@@ -322,6 +322,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 
 	int rcvd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
+	void request_dl_ack();
 
 	/* TODO: add the gettimeofday as parameter */
 	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
@@ -334,6 +335,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlc_dl_window m_window;
 	int32_t m_tx_counter; /* count all transmitted blocks */
 	uint8_t m_wait_confirm; /* wait for CCCH IMM.ASS cnf */
+	bool m_dl_ack_requested;
 
 	struct {
 		struct timeval dl_bw_tv; /* timestamp for dl bw calculation */
@@ -347,7 +349,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 protected:
 	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
 	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
-					const int index, const bool fin_first_ack);
+					const int index);
 	int update_window(const uint8_t ssn, const uint8_t *rbb);
 	int maybe_start_new_window();
 	bool dl_window_stalled() const;

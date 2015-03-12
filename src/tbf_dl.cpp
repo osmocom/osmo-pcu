@@ -252,7 +252,7 @@ do_resend:
 		/* re-send block with negative aknowlegement */
 		m_window.m_v_b.mark_unacked(resend_bsn);
 		bts->rlc_resent();
-		return create_dl_acked_block(fn, ts, resend_bsn, false);
+		return create_dl_acked_block(fn, ts, resend_bsn);
 	}
 
 	/* if the window has stalled, or transfer is complete,
@@ -281,7 +281,7 @@ do_resend:
 			/* we just send final block again */
 			int16_t index = m_window.v_s_mod(-1);
 			bts->rlc_resent();
-			return create_dl_acked_block(fn, ts, index, false);
+			return create_dl_acked_block(fn, ts, index);
 		}
 		
 		/* cycle through all unacked blocks */
@@ -295,7 +295,7 @@ do_resend:
 				" != V(S). PLEASE FIX!\n");
 			/* we just send final block again */
 			int16_t index = m_window.v_s_mod(-1);
-			return create_dl_acked_block(fn, ts, index, false);
+			return create_dl_acked_block(fn, ts, index);
 		}
 		goto do_resend;
 	}
@@ -311,7 +311,6 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 	uint8_t *delimiter, *data, *e_pointer;
 	uint16_t space, chunk;
 	gprs_rlc_data *rlc_data;
-	bool first_fin_ack = false;
 	const uint16_t bsn = m_window.v_s();
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d\n",
@@ -377,6 +376,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 			m_llc.reset();
 			/* final block */
 			rh->fbi = 1; /* we indicate final block */
+			request_dl_ack();
 			set_state(GPRS_RLCMAC_FINISHED);
 			/* return data block as message */
 			break;
@@ -448,8 +448,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 				"done.\n");
 			li->e = 1; /* we cannot extend */
 			rh->fbi = 1; /* we indicate final block */
-			first_fin_ack = true;
-				/* + 1 indicates: first final ack */
+			request_dl_ack();
 			set_state(GPRS_RLCMAC_FINISHED);
 			break;
 		}
@@ -467,12 +466,17 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 	m_window.m_v_b.mark_unacked(bsn);
 	m_window.increment_send();
 
-	return create_dl_acked_block(fn, ts, bsn, first_fin_ack);
+	return create_dl_acked_block(fn, ts, bsn);
+}
+
+void gprs_rlcmac_dl_tbf::request_dl_ack()
+{
+	m_dl_ack_requested = true;
 }
 
 struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				const uint32_t fn, const uint8_t ts,
-				const int index, const bool first_fin_ack)
+				const int index)
 {
 	uint8_t *data;
 	struct rlc_dl_header *rh;
@@ -491,11 +495,12 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		
 	/* poll after POLL_ACK_AFTER_FRAMES frames, or when final block is tx.
 	 */
-	if (m_tx_counter >= POLL_ACK_AFTER_FRAMES || first_fin_ack ||
+	if (m_tx_counter >= POLL_ACK_AFTER_FRAMES || m_dl_ack_requested ||
 			need_poll) {
-		if (first_fin_ack) {
+		if (m_dl_ack_requested) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
-				"polling, because first final block sent.\n");
+				"polling, because is was requested explicitly "
+				"(e.g. first final block sent).\n");
 		} else if (need_poll) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
 				"polling, because polling timed out.\n");
@@ -513,7 +518,6 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling cannot be "
 				"sheduled in this TS %d, waiting for "
 				"TS %d\n", ts, control_ts);
-#warning "What happens to the first_fin_ack in case something is already scheduled?"
 		else if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648))
 			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling cannot be "
 				"sheduled, because single block alllocation "
@@ -532,6 +536,9 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 
 			/* Clear poll timeout flag */
 			state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
+
+			/* Clear request flag */
+			m_dl_ack_requested = false;
 
 			/* set polling in header */
 			rh->rrbp = 0; /* N+13 */
