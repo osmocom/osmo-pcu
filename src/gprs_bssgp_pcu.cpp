@@ -303,11 +303,10 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	int rc = 0;
 	struct bssgp_bvc_ctx *bctx;
 
-	if (pdu_type == BSSGP_PDUT_STATUS) {
-		LOGP(DBSSGP, LOGL_NOTICE, "NSEI=%u/BVCI=%u received STATUS\n",
-			msgb_nsei(msg), ns_bvci);
-		return 0;
-	}
+	if (pdu_type == BSSGP_PDUT_STATUS)
+		/* Pass the message to the generic BSSGP parser, which handles
+		 * STATUS message in either direction. */
+		return bssgp_rcvmsg(msg);
 
 	/* Identifiers from DOWN: NSEI, BVCI (both in msg->cb) */
 
@@ -362,8 +361,66 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	return rc;
 }
 
+static void handle_nm_status(struct osmo_bssgp_prim *bp)
+{
+	enum gprs_bssgp_cause cause;
+
+	LOGP(DPCU, LOGL_DEBUG,
+		"Got NM-STATUS.ind, BVCI=%d, NSEI=%d\n",
+		bp->bvci, bp->nsei);
+
+	if (!TLVP_PRESENT(bp->tp, BSSGP_IE_CAUSE))
+		return;
+
+	cause = (enum gprs_bssgp_cause)*TLVP_VAL(bp->tp, BSSGP_IE_CAUSE);
+
+	if (cause != BSSGP_CAUSE_BVCI_BLOCKED &&
+		cause != BSSGP_CAUSE_UNKNOWN_BVCI)
+		return;
+
+	if (!TLVP_PRESENT(bp->tp, BSSGP_IE_BVCI))
+		return;
+
+	if (gprs_bssgp_pcu_current_bctx()->bvci != bp->bvci) {
+		LOGP(DPCU, LOGL_NOTICE,
+			"Received BSSGP STATUS message for an unknown BVCI (%d), "
+			"ignored\n",
+			bp->bvci);
+		return;
+	}
+
+	switch (cause) {
+	case BSSGP_CAUSE_BVCI_BLOCKED:
+		if (the_pcu.bvc_unblocked) {
+			the_pcu.bvc_unblocked = 0;
+			bvc_timeout(NULL);
+		}
+		break;
+
+	case BSSGP_CAUSE_UNKNOWN_BVCI:
+		if (the_pcu.bvc_reset) {
+			the_pcu.bvc_reset = 0;
+			bvc_timeout(NULL);
+		}
+		break;
+	default:
+		break;
+	}
+}
+
 int bssgp_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 {
+	struct osmo_bssgp_prim *bp;
+	bp = container_of(oph, struct osmo_bssgp_prim, oph);
+
+	switch (oph->sap) {
+	case SAP_BSSGP_NM:
+		if (oph->primitive == PRIM_NM_STATUS)
+			handle_nm_status(bp);
+		break;
+	default:
+		break;
+	}
 	return 0;
 }
 
