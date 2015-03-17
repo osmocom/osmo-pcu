@@ -24,6 +24,9 @@
 #include <bts.h>
 #include <tbf.h>
 
+#define BSSGP_TIMER_T1	30	/* Guards the (un)blocking procedures */
+#define BSSGP_TIMER_T2	30	/* Guards the reset procedure */
+
 static struct gprs_bssgp_pcu the_pcu = { 0, };
 
 extern void *tall_pcu_ctx;
@@ -438,7 +441,7 @@ static void bvc_timeout(void *_priv)
 	if (!the_pcu.bvc_sig_reset) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI 0\n");
 		bssgp_tx_bvc_reset(the_pcu.bctx, 0, BSSGP_CAUSE_OML_INTERV);
-		osmo_timer_schedule(&the_pcu.bvc_timer, 1, 0);
+		osmo_timer_schedule(&the_pcu.bvc_timer, BSSGP_TIMER_T2, 0);
 		return;
 	}
 
@@ -446,7 +449,7 @@ static void bvc_timeout(void *_priv)
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI %d\n",
 			the_pcu.bctx->bvci);
 		bssgp_tx_bvc_reset(the_pcu.bctx, the_pcu.bctx->bvci, BSSGP_CAUSE_OML_INTERV);
-		osmo_timer_schedule(&the_pcu.bvc_timer, 1, 0);
+		osmo_timer_schedule(&the_pcu.bvc_timer, BSSGP_TIMER_T2, 0);
 		return;
 	}
 
@@ -454,7 +457,7 @@ static void bvc_timeout(void *_priv)
 		LOGP(DBSSGP, LOGL_INFO, "Sending unblock on BVCI %d\n",
 			the_pcu.bctx->bvci);
 		bssgp_tx_bvc_unblock(the_pcu.bctx);
-		osmo_timer_schedule(&the_pcu.bvc_timer, 1, 0);
+		osmo_timer_schedule(&the_pcu.bvc_timer, BSSGP_TIMER_T1, 0);
 		return;
 	}
 
