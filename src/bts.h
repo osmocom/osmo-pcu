@@ -133,6 +133,7 @@ struct gprs_rlcmac_bts {
 	uint32_t alloc_algorithm_curst; /* options to customize algorithm */
 	uint8_t force_two_phase;
 	uint8_t alpha, gamma;
+	uint32_t dl_tbf_idle_msec; /* hold time for idle DL TBFs */
 
 	/* TBF handling, make private or move into TBFController */
 	/* list of uplink TBFs */

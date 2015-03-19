@@ -27,6 +27,8 @@
 #include <gprs_bssgp_pcu.h>
 #include <decoding.h>
 
+#include "pcu_utils.h"
+
 extern "C" {
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/talloc.h>
@@ -74,6 +76,8 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 	} else if (!have_data()) {
 		m_llc.put_frame(data, len);
 		bts->llc_frame_sched();
+		/* it is no longer drained */
+		m_last_dl_drained_fn = -1;
 		tbf_update_ms_class(this, ms_class);
 	} else {
 		/* the TBF exists, so we must write it in the queue
@@ -354,14 +358,19 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 			 * space-1 octets */
 			m_llc.put_dummy_frame(space - 1);
 
+			/* The data just drained, store the current fn */
+			if (m_last_dl_drained_fn < 0)
+				m_last_dl_drained_fn = fn;
+
 			/* It is not clear, when the next real data will
 			 * arrive, so request a DL ack/nack now */
 			request_dl_ack();
 
 			LOGP(DRLCMACDL, LOGL_DEBUG,
 				"-- Empty chunk, "
-				"added LLC dummy command of size %d\n",
-				m_llc.frame_length());
+				"added LLC dummy command of size %d, "
+				"drained_since=%d\n",
+				m_llc.frame_length(), frames_since_last_drain(fn));
 		}
 
 		chunk = m_llc.chunk_size();
@@ -380,7 +389,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 			break;
 		}
 		/* if FINAL chunk would fit precisely in space left */
-		if (chunk == space && llist_empty(&m_llc.queue)) {
+		if (chunk == space && llist_empty(&m_llc.queue) && !keep_open(fn))
+		{
 			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
 				"would exactly fit into space (%d): because "
 				"this is a final block, we don't add length "
@@ -424,6 +434,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 			/* return data block as message */
 			break;
 		}
+
 		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d is less "
 			"than remaining space (%d): add length header to "
 			"to delimit LLC frame\n", chunk, space);
@@ -456,17 +467,19 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 			m_llc.put_frame(msg->data, msg->len);
 			bts->llc_frame_sched();
 			msgb_free(msg);
+			m_last_dl_drained_fn = -1;
 		}
 		/* if we have more data and we have space left */
-		if (space > 0 && m_llc.frame_length()) {
+		if (space > 0 && (m_llc.frame_length() || keep_open(fn))) {
 			li->m = 1; /* we indicate more frames to follow */
 			continue;
 		}
 		/* if we don't have more LLC frames */
-		if (!m_llc.frame_length()) {
+		if (!m_llc.frame_length() && !keep_open(fn)) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
 				"done.\n");
 			li->e = 1; /* we cannot extend */
+
 			rh->fbi = 1; /* we indicate final block */
 			request_dl_ack();
 			set_state(GPRS_RLCMAC_FINISHED);
@@ -771,3 +784,26 @@ int gprs_rlcmac_dl_tbf::frames_since_last_poll(unsigned fn) const
 		return wrapped - 2715648;
 }
 
+int gprs_rlcmac_dl_tbf::frames_since_last_drain(unsigned fn) const
+{
+	unsigned wrapped;
+	if (m_last_dl_drained_fn < 0)
+		return -1;
+
+	wrapped = (fn + 2715648 - m_last_dl_drained_fn) % 2715648;
+	if (wrapped < 2715648/2)
+		return wrapped;
+	else
+		return wrapped - 2715648;
+}
+
+bool gprs_rlcmac_dl_tbf::keep_open(unsigned fn) const
+{
+	int keep_time_frames;
+
+	if (bts_data()->dl_tbf_idle_msec <= 0)
+		return false;
+
+	keep_time_frames = msecs_to_frames(bts_data()->dl_tbf_idle_msec);
+	return frames_since_last_drain(fn) <= keep_time_frames;
+}

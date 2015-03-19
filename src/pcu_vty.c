@@ -105,6 +105,9 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " two-phase-access%s", VTY_NEWLINE);
 	vty_out(vty, " alpha %d%s", bts->alpha, VTY_NEWLINE);
 	vty_out(vty, " gamma %d%s", bts->gamma * 2, VTY_NEWLINE);
+	if (bts->dl_tbf_idle_msec)
+		vty_out(vty, " dl-tbf-idle-time %d%s", bts->dl_tbf_idle_msec,
+			VTY_NEWLINE);
 
 	return CMD_SUCCESS;
 }
@@ -287,6 +290,31 @@ DEFUN(show_bts_stats,
 	return CMD_SUCCESS;
 }
 
+#define IDLE_TIME_STR "keep an idle DL TBF alive for the time given\n"
+DEFUN(cfg_pcu_dl_tbf_idle_time,
+      cfg_pcu_dl_tbf_idle_time_cmd,
+      "dl-tbf-idle-time <1-5000>",
+      IDLE_TIME_STR "idle time in msec")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->dl_tbf_idle_msec = atoi(argv[0]);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_dl_tbf_idle_time,
+      cfg_pcu_no_dl_tbf_idle_time_cmd,
+      "no dl-tbf-idle-time",
+      NO_STR IDLE_TIME_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->dl_tbf_idle_msec = 0;
+
+	return CMD_SUCCESS;
+}
+
 DEFUN(show_tbf,
       show_tbf_cmd,
       "show tbf all",
@@ -343,6 +371,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_fc_interval_cmd);
 	install_element(PCU_NODE, &cfg_pcu_alpha_cmd);
 	install_element(PCU_NODE, &cfg_pcu_gamma_cmd);
+	install_element(PCU_NODE, &cfg_pcu_dl_tbf_idle_time_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_dl_tbf_idle_time_cmd);
 	install_element(PCU_NODE, &ournode_end_cmd);
 
 	install_element_ve(&show_bts_stats_cmd);
