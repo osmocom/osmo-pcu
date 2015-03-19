@@ -275,8 +275,16 @@ do_resend:
 			"because all window is stalled.\n",
 			m_window.v_a());
 		bts->rlc_stalled();
+	} else if (have_data()) {
+		/* New blocks may be send */
+		return create_new_bsn(fn, ts);
+	} else if (!m_window.window_empty()) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
+			"because all blocks have been transmitted (FLOW).\n",
+			m_window.v_a());
+		bts->rlc_restarted();
 	} else {
-		/* No blocks are left */
+		/* Nothing left to send, create dummy LLC commands */
 		return create_new_bsn(fn, ts);
 	}
 
