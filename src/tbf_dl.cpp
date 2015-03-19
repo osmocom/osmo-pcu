@@ -257,50 +257,50 @@ do_resend:
 
 	/* if the window has stalled, or transfer is complete,
 	 * send an unacknowledged block */
-	if (state_is(GPRS_RLCMAC_FINISHED) || dl_window_stalled()) {
-		if (state_is(GPRS_RLCMAC_FINISHED)) {
-			LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
-				"because all blocks have been transmitted.\n",
-					m_window.v_a());
-			bts->rlc_restarted();
-		} else {
-			LOGP(DRLCMACDL, LOGL_NOTICE, "- Restarting at BSN %d, "
-				"because all window is stalled.\n",
-					m_window.v_a());
-			bts->rlc_stalled();
-		}
-		/* If V(S) == V(A) and finished state, we would have received
-		 * acknowledgement of all transmitted block. In this case we
-		 * would have transmitted the final block, and received ack
-		 * from MS. But in this case we did not receive the final ack
-		 * indication from MS. This should never happen if MS works
-		 * correctly. */
-		if (m_window.window_empty()) {
-			LOGP(DRLCMACDL, LOGL_DEBUG, "- MS acked all blocks, "
-				"so we re-transmit final block!\n");
-			/* we just send final block again */
-			int16_t index = m_window.v_s_mod(-1);
-			bts->rlc_resent();
-			return create_dl_acked_block(fn, ts, index);
-		}
-		
-		/* cycle through all unacked blocks */
-		int resend = m_window.mark_for_resend();
-
-		/* At this point there should be at least one unacked block
-		 * to be resent. If not, this is an software error. */
-		if (resend == 0) {
-			LOGP(DRLCMACDL, LOGL_ERROR, "Software error: "
-				"There are no unacknowledged blocks, but V(A) "
-				" != V(S). PLEASE FIX!\n");
-			/* we just send final block again */
-			int16_t index = m_window.v_s_mod(-1);
-			return create_dl_acked_block(fn, ts, index);
-		}
-		goto do_resend;
+	if (state_is(GPRS_RLCMAC_FINISHED)) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
+			"because all blocks have been transmitted.\n",
+			m_window.v_a());
+		bts->rlc_restarted();
+	} else if (dl_window_stalled()) {
+		LOGP(DRLCMACDL, LOGL_NOTICE, "- Restarting at BSN %d, "
+			"because all window is stalled.\n",
+			m_window.v_a());
+		bts->rlc_stalled();
+	} else {
+		/* No blocks are left */
+		return create_new_bsn(fn, ts);
 	}
 
-	return create_new_bsn(fn, ts);
+	/* If V(S) == V(A) and finished state, we would have received
+	 * acknowledgement of all transmitted block. In this case we
+	 * would have transmitted the final block, and received ack
+	 * from MS. But in this case we did not receive the final ack
+	 * indication from MS. This should never happen if MS works
+	 * correctly. */
+	if (m_window.window_empty()) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- MS acked all blocks, "
+			"so we re-transmit final block!\n");
+		/* we just send final block again */
+		int16_t index = m_window.v_s_mod(-1);
+		bts->rlc_resent();
+		return create_dl_acked_block(fn, ts, index);
+	}
+
+	/* cycle through all unacked blocks */
+	int resend = m_window.mark_for_resend();
+
+	/* At this point there should be at least one unacked block
+	 * to be resent. If not, this is an software error. */
+	if (resend == 0) {
+		LOGP(DRLCMACDL, LOGL_ERROR, "Software error: "
+			"There are no unacknowledged blocks, but V(A) "
+			" != V(S). PLEASE FIX!\n");
+		/* we just send final block again */
+		int16_t index = m_window.v_s_mod(-1);
+		return create_dl_acked_block(fn, ts, index);
+	}
+	goto do_resend;
 }
 
 struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts)
