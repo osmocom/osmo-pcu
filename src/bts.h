@@ -178,6 +178,10 @@ public:
 		CTR_RACH_REQUESTS,
 	};
 
+	enum {
+		TIMER_T3190_MSEC = 5000,
+	};
+
 	BTS();
 	~BTS();
 
