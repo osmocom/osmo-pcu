@@ -48,6 +48,26 @@ void gprs_llc::enqueue(struct msgb *llc_msg)
 	msgb_enqueue(&queue, llc_msg);
 }
 
+/* Put an Unconfirmed Information (UI) Dummy command, see GSM 44.064, 6.4.2.2 */
+void gprs_llc::put_dummy_frame(size_t req_len)
+{
+	/* The shortest dummy command (the spec requests at least 6 octets) */
+	static const uint8_t llc_dummy_command[] = {
+		0x43, 0xc0, 0x01, 0x2b, 0x2b, 0x2b
+	};
+	static const int max_dummy_command_len = 79;
+
+	put_frame(llc_dummy_command, sizeof(llc_dummy_command));
+
+	if (req_len > max_dummy_command_len)
+		req_len = max_dummy_command_len;
+
+	/* Add further stuffing, if the requested length exceeds the minimum
+	 * dummy command length */
+	while (m_length < req_len)
+		frame[m_length++] = 0x2b;
+}
+
 void gprs_llc::put_frame(const uint8_t *data, size_t len)
 {
 	/* only put frames when we are empty */
