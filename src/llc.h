@@ -29,6 +29,7 @@
 struct gprs_llc {
 	static void calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct timeval *tv);
 	static bool is_frame_expired(struct timeval *now, struct timeval *tv);
+	static bool is_user_data_frame(uint8_t *data, size_t len);
 
 	void init();
 	void reset();

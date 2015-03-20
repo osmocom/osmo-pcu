@@ -160,3 +160,18 @@ bool gprs_llc::is_frame_expired(struct timeval *tv_now, struct timeval *tv)
 
 	return timercmp(tv_now, tv, >);
 }
+
+bool gprs_llc::is_user_data_frame(uint8_t *data, size_t len)
+{
+	if (len < 2)
+		return false;
+
+	if ((data[0] & 0x0f) == 1 /* GPRS_SAPI_GMM */)
+		return false;
+
+	if ((data[0] & 0x0e) != 0xc0 /* LLC UI */)
+		/* It is not an LLC UI frame */
+		return false;
+
+	return true;
+}

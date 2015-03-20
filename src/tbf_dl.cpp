@@ -209,30 +209,58 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 {
 	struct msgb *msg;
-	struct timeval *tv, tv_now;
+	struct timeval *tv, tv_now, tv_now2;
 	uint32_t octets = 0, frames = 0;
+	struct timeval hyst_delta = {0, 0};
+	const unsigned keep_small_thresh = 60;
+
+	if (bts_data()->llc_discard_csec)
+		csecs_to_timeval(bts_data()->llc_discard_csec, &hyst_delta);
 
 	gettimeofday(&tv_now, NULL);
+	timeradd(&tv_now, &hyst_delta, &tv_now2);
 
 	while ((msg = m_llc.dequeue())) {
 		tv = (struct timeval *)msg->data;
 		msgb_pull(msg, sizeof(*tv));
 		msgb_pull(msg, sizeof(*tv));
 
-		if (gprs_llc::is_frame_expired(&tv_now, tv)) {
-			LOGP(DRLCMACDL, LOGL_NOTICE, "%s Discarding LLC PDU "
-				"because lifetime limit reached. Queue size %zu\n",
-				tbf_name(this), m_llc.m_queue_size);
-			bts->llc_timedout_frame();
-			frames++;
-			octets += msg->len;
-			msgb_free(msg);
-			continue;
+		/* Is the age below the low water mark? */
+		if (!gprs_llc::is_frame_expired(&tv_now2, tv))
+			break;
+
+		/* Is the age below the high water mark */
+		if (!gprs_llc::is_frame_expired(&tv_now, tv)) {
+			/* Has the previous message not been dropped? */
+			if (frames == 0)
+				break;
+
+			/* Hysteresis mode, try to discard LLC messages until
+			 * the low water mark has been reached */
+
+			/* Check whether to abort the hysteresis mode */
+
+			/* Is the frame small, perhaps only a TCP ACK? */
+			if (msg->len <= keep_small_thresh)
+				break;
+
+			/* Is it a GMM message? */
+			if (!gprs_llc::is_user_data_frame(msg->data, msg->len))
+				break;
 		}
-		break;
+
+		bts->llc_timedout_frame();
+		frames++;
+		octets += msg->len;
+		msgb_free(msg);
+		continue;
 	}
 
 	if (frames) {
+		LOGP(DRLCMACDL, LOGL_NOTICE, "%s Discarding LLC PDU "
+			"because lifetime limit reached, "
+			"count=%u new_queue_size=%zu\n",
+			tbf_name(this), frames, m_llc.m_queue_size);
 		if (frames > 0xff)
 			frames = 0xff;
 		if (octets > 0xffffff)

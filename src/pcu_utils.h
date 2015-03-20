@@ -19,3 +19,8 @@
 inline int msecs_to_frames(int msecs) {
 	return (msecs * (1024 * 1000 / 4615)) / 1024;
 }
+
+inline void csecs_to_timeval(unsigned csecs, struct timeval *tv) {
+	tv->tv_sec  = csecs / 100;
+	tv->tv_usec = (csecs % 100) * 10000;
+}

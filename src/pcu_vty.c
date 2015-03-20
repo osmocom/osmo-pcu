@@ -97,6 +97,9 @@ static int config_write_pcu(struct vty *vty)
 	else if (bts->force_llc_lifetime)
 		vty_out(vty, " queue lifetime %d%s", bts->force_llc_lifetime,
 			VTY_NEWLINE);
+	if (bts->llc_discard_csec)
+		vty_out(vty, " queue hysteresis %d%s", bts->llc_discard_csec,
+			VTY_NEWLINE);
 	if (bts->alloc_algorithm == alloc_algorithm_a)
 		vty_out(vty, " alloc-algorithm a%s", VTY_NEWLINE);
 	if (bts->alloc_algorithm == alloc_algorithm_b)
@@ -208,6 +211,35 @@ DEFUN(cfg_pcu_no_queue_lifetime,
 
 	return CMD_SUCCESS;
 }
+
+#define QUEUE_HYSTERESIS_STR "Set lifetime hysteresis of LLC frame in centi-seconds " \
+	"(continue discarding until lifetime-hysteresis is reached)\n"
+
+DEFUN(cfg_pcu_queue_hysteresis,
+      cfg_pcu_queue_hysteresis_cmd,
+      "queue hysteresis <1-65534>",
+      QUEUE_STR QUEUE_HYSTERESIS_STR "Hysteresis in centi-seconds")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	uint8_t csec = atoi(argv[0]);
+
+	bts->llc_discard_csec = csec;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_queue_hysteresis,
+      cfg_pcu_no_queue_hysteresis_cmd,
+      "no queue hysteresis",
+      NO_STR QUEUE_STR QUEUE_HYSTERESIS_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->llc_discard_csec = 0;
+
+	return CMD_SUCCESS;
+}
+
 
 DEFUN(cfg_pcu_alloc,
       cfg_pcu_alloc_cmd,
@@ -366,6 +398,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_inf_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_queue_lifetime_cmd);
+	install_element(PCU_NODE, &cfg_pcu_queue_hysteresis_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_queue_hysteresis_cmd);
 	install_element(PCU_NODE, &cfg_pcu_alloc_cmd);
 	install_element(PCU_NODE, &cfg_pcu_two_phase_cmd);
 	install_element(PCU_NODE, &cfg_pcu_fc_interval_cmd);
