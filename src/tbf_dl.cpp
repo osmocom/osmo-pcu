@@ -469,11 +469,6 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 	return create_dl_acked_block(fn, ts, bsn);
 }
 
-void gprs_rlcmac_dl_tbf::request_dl_ack()
-{
-	m_dl_ack_requested = true;
-}
-
 struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				const uint32_t fn, const uint8_t ts,
 				const int index)
@@ -716,3 +711,22 @@ bool gprs_rlcmac_dl_tbf::dl_window_stalled() const
 	return m_window.window_stalled();
 }
 
+void gprs_rlcmac_dl_tbf::request_dl_ack()
+{
+	m_dl_ack_requested = true;
+}
+
+bool gprs_rlcmac_dl_tbf::need_control_ts() const
+{
+	if (poll_state != GPRS_RLCMAC_POLL_NONE)
+		return false;
+
+	return state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK) ||
+		m_tx_counter >= POLL_ACK_AFTER_FRAMES ||
+		m_dl_ack_requested;
+}
+
+bool gprs_rlcmac_dl_tbf::have_data() const
+{
+	return m_llc.chunk_size() > 0 || !llist_empty(&m_llc.queue);
+}
