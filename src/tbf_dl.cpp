@@ -484,6 +484,11 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	len = m_rlc.block(index)->len;
 	rh = (struct rlc_dl_header *)data;
 
+	/* If the TBF has just started, relate frames_since_last_poll to the
+	 * current fn */
+	if (m_last_dl_poll_fn < 0)
+		m_last_dl_poll_fn = fn;
+
 	need_poll = state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 	/* Clear Polling, if still set in history buffer */
 	rh->s_p = 0;
@@ -538,6 +543,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			/* set polling in header */
 			rh->rrbp = 0; /* N+13 */
 			rh->s_p = 1; /* Polling */
+
+			m_last_dl_poll_fn = poll_fn;
 		}
 	}
 
@@ -730,3 +737,17 @@ bool gprs_rlcmac_dl_tbf::have_data() const
 {
 	return m_llc.chunk_size() > 0 || !llist_empty(&m_llc.queue);
 }
+
+int gprs_rlcmac_dl_tbf::frames_since_last_poll(unsigned fn) const
+{
+	unsigned wrapped;
+	if (m_last_dl_poll_fn < 0)
+		return -1;
+
+	wrapped = (fn + 2715648 - m_last_dl_poll_fn) % 2715648;
+	if (wrapped < 2715648/2)
+		return wrapped;
+	else
+		return wrapped - 2715648;
+}
+

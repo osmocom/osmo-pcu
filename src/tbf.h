@@ -325,6 +325,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	void request_dl_ack();
 	bool need_control_ts() const;
 	bool have_data() const;
+	int frames_since_last_poll(unsigned fn) const;
 
 	bool is_control_ts(uint8_t ts) const {
 		return ts == control_ts;
@@ -342,6 +343,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int32_t m_tx_counter; /* count all transmitted blocks */
 	uint8_t m_wait_confirm; /* wait for CCCH IMM.ASS cnf */
 	bool m_dl_ack_requested;
+	int32_t m_last_dl_poll_fn;
 
 	struct {
 		struct timeval dl_bw_tv; /* timestamp for dl bw calculation */

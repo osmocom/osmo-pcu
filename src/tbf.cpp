@@ -470,6 +470,8 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	llist_add(&tbf->list.list, &bts->dl_tbfs);
 	tbf->bts->tbf_dl_created();
 
+	tbf->m_last_dl_poll_fn = -1;
+
 	gettimeofday(&tbf->m_bw.dl_bw_tv, NULL);
 	gettimeofday(&tbf->m_bw.dl_loss_tv, NULL);
 
