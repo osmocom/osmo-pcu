@@ -71,6 +71,10 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 			"(T3193), so reuse TBF\n", tbf_name(this));
 		tbf_update_ms_class(this, ms_class);
 		reuse_tbf(data, len);
+	} else if (!have_data()) {
+		m_llc.put_frame(data, len);
+		bts->llc_frame_sched();
+		tbf_update_ms_class(this, ms_class);
 	} else {
 		/* the TBF exists, so we must write it in the queue
 		 * we prepend lifetime in front of PDU */
