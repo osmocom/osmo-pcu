@@ -132,6 +132,17 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(BTS *the_bts, uint8_t ms_class,
 	return dl_tbf;
 }
 
+static void send_rlc_block(struct gprs_rlcmac_bts *bts,
+	uint8_t trx_no, uint8_t ts_no, uint16_t arfcn,
+	uint32_t *fn, uint8_t *block_nr)
+{
+	gprs_rlcmac_rcv_rts_block(bts, trx_no, ts_no, 0, *fn, *block_nr);
+	*fn += 4;
+	if ((*fn % 13) == 12)
+		*fn += 1;
+	*block_nr += 1;
+}
+
 enum test_tbf_final_ack_mode {
 	TEST_MODE_STANDARD,
 	TEST_MODE_REVERSE_FREE
@@ -145,6 +156,7 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	unsigned i;
 	uint8_t ms_class = 45;
 	uint32_t fn;
+	uint8_t block_nr;
 	uint8_t trx_no;
 
 	uint8_t rbb[64/8];
@@ -160,17 +172,20 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	for (i = 0; i < sizeof(llc_data); i++)
 		llc_data[i] = i%256;
 
-	/* Schedule two blocks */
+	/* Schedule two LLC frames */
 	dl_tbf->append_data(ms_class, 1000, llc_data, sizeof(llc_data));
 	dl_tbf->append_data(ms_class, 1000, llc_data, sizeof(llc_data));
 
 
-	/* FIXME: Need correct frame number here? */
+	/* Send only a few RLC/MAC blocks */
 	fn = 0;
-	for (; fn < 3; fn++) {
+	block_nr = 0;
+	while (block_nr < 3) {
 		/* Request to send one block */
-		gprs_rlcmac_rcv_rts_block(bts, trx_no, ts_no, 0, fn, 0);
+		send_rlc_block(bts, trx_no, ts_no, 0, &fn, &block_nr);
 	}
+	OSMO_ASSERT(dl_tbf->have_data());
+	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
 
 	/* Queue a final ACK */
 	memset(rbb, 0, sizeof(rbb));
