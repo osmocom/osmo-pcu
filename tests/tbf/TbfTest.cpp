@@ -92,6 +92,46 @@ int pcu_sock_send(struct msgb *msg)
 	return 0;
 }
 
+static void setup_bts(BTS *the_bts, uint8_t ts_no)
+{
+	gprs_rlcmac_bts *bts;
+	gprs_rlcmac_trx *trx;
+
+	bts = the_bts->bts_data();
+	bts->alloc_algorithm = alloc_algorithm_a;
+	trx = &bts->trx[0];
+
+	trx->pdch[ts_no].enable();
+}
+
+static gprs_rlcmac_dl_tbf *create_dl_tbf(BTS *the_bts, uint8_t ms_class,
+	uint8_t *trx_no_)
+{
+	gprs_rlcmac_bts *bts;
+	int tfi;
+	uint8_t trx_no;
+
+	gprs_rlcmac_dl_tbf *dl_tbf;
+
+	bts = the_bts->bts_data();
+
+	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx_no, -1);
+	OSMO_ASSERT(tfi >= 0);
+	dl_tbf = tbf_alloc_dl_tbf(bts, NULL, tfi, trx_no, ms_class, 1);
+	check_tbf(dl_tbf);
+
+	/* "Establish" the DL TBF */
+	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
+	dl_tbf->set_state(GPRS_RLCMAC_FLOW);
+	dl_tbf->m_wait_confirm = 0;
+	dl_tbf->set_new_tbf(dl_tbf);
+	check_tbf(dl_tbf);
+
+	*trx_no_ = trx_no;
+
+	return dl_tbf;
+}
+
 enum test_tbf_final_ack_mode {
 	TEST_MODE_STANDARD,
 	TEST_MODE_REVERSE_FREE
@@ -101,39 +141,21 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 {
 	BTS the_bts;
 	gprs_rlcmac_bts *bts;
-	gprs_rlcmac_trx *trx;
-	gprs_rlcmac_pdch * pdch;
-	int tfi, i;
-	uint8_t ts_no, trx_no;
+	uint8_t ts_no = 4;
+	unsigned i;
 	uint8_t ms_class = 45;
 	uint32_t fn;
+	uint8_t trx_no;
 
 	uint8_t rbb[64/8];
 
-	struct msgb *dl_msg;
 	gprs_rlcmac_dl_tbf *dl_tbf;
 	gprs_rlcmac_tbf *new_tbf;
 
 	bts = the_bts.bts_data();
-	bts->alloc_algorithm = alloc_algorithm_a;
-	trx = &bts->trx[0];
 
-	ts_no = 4;
-	trx->pdch[ts_no].enable();
-	pdch = &trx->pdch[ts_no];
-
-	tfi = the_bts.tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx_no, -1);
-	OSMO_ASSERT(tfi >= 0);
-	dl_tbf = tbf_alloc_dl_tbf(bts, NULL, tfi, trx_no, ms_class, 1);
-	check_tbf(dl_tbf);
-
-
-	/* "Establish" the DL TBF */
-	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
-	dl_tbf->set_state(GPRS_RLCMAC_FLOW);
-	dl_tbf->m_wait_confirm = 0;
-	dl_tbf->set_new_tbf(dl_tbf);
-	check_tbf(dl_tbf);
+	setup_bts(&the_bts, ts_no);
+	dl_tbf = create_dl_tbf(&the_bts, ms_class, &trx_no);
 
 	for (i = 0; i < sizeof(llc_data); i++)
 		llc_data[i] = i%256;
