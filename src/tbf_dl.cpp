@@ -349,7 +349,23 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 	delimiter = data; /* where next length header would be stored */
 	space = block_data_len - sizeof(*rh);
 	while (1) {
+		if (m_llc.frame_length() == 0) {
+			/* A header will need to by added, so we just need
+			 * space-1 octets */
+			m_llc.put_dummy_frame(space - 1);
+
+			/* It is not clear, when the next real data will
+			 * arrive, so request a DL ack/nack now */
+			request_dl_ack();
+
+			LOGP(DRLCMACDL, LOGL_DEBUG,
+				"-- Empty chunk, "
+				"added LLC dummy command of size %d\n",
+				m_llc.frame_length());
+		}
+
 		chunk = m_llc.chunk_size();
+
 		/* if chunk will exceed block limit */
 		if (chunk > space) {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
