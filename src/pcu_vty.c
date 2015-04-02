@@ -100,6 +100,9 @@ static int config_write_pcu(struct vty *vty)
 	if (bts->llc_discard_csec)
 		vty_out(vty, " queue hysteresis %d%s", bts->llc_discard_csec,
 			VTY_NEWLINE);
+	if (bts->llc_idle_ack_csec)
+		vty_out(vty, " queue idle-ack-delay %d%s", bts->llc_idle_ack_csec,
+			VTY_NEWLINE);
 	if (bts->alloc_algorithm == alloc_algorithm_a)
 		vty_out(vty, " alloc-algorithm a%s", VTY_NEWLINE);
 	if (bts->alloc_algorithm == alloc_algorithm_b)
@@ -217,7 +220,7 @@ DEFUN(cfg_pcu_no_queue_lifetime,
 
 DEFUN(cfg_pcu_queue_hysteresis,
       cfg_pcu_queue_hysteresis_cmd,
-      "queue hysteresis <1-65534>",
+      "queue hysteresis <1-65535>",
       QUEUE_STR QUEUE_HYSTERESIS_STR "Hysteresis in centi-seconds")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
@@ -236,6 +239,33 @@ DEFUN(cfg_pcu_no_queue_hysteresis,
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	bts->llc_discard_csec = 0;
+
+	return CMD_SUCCESS;
+}
+
+#define QUEUE_IDLE_ACK_STR "Request an ACK after the last DL LLC frame in centi-seconds\n"
+
+DEFUN(cfg_pcu_queue_idle_ack_delay,
+      cfg_pcu_queue_idle_ack_delay_cmd,
+      "queue idle-ack-delay <1-65535>",
+      QUEUE_STR QUEUE_IDLE_ACK_STR "Idle ACK delay in centi-seconds")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	uint8_t csec = atoi(argv[0]);
+
+	bts->llc_idle_ack_csec = csec;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_queue_idle_ack_delay,
+      cfg_pcu_no_queue_idle_ack_delay_cmd,
+      "no queue idle-ack-delay",
+      NO_STR QUEUE_STR QUEUE_IDLE_ACK_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->llc_idle_ack_csec = 0;
 
 	return CMD_SUCCESS;
 }
@@ -400,6 +430,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_no_queue_lifetime_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_hysteresis_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_queue_hysteresis_cmd);
+	install_element(PCU_NODE, &cfg_pcu_queue_idle_ack_delay_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_queue_idle_ack_delay_cmd);
 	install_element(PCU_NODE, &cfg_pcu_alloc_cmd);
 	install_element(PCU_NODE, &cfg_pcu_two_phase_cmd);
 	install_element(PCU_NODE, &cfg_pcu_fc_interval_cmd);

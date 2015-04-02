@@ -311,6 +311,8 @@ inline time_t gprs_rlcmac_tbf::created_ts() const
 }
 
 struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
+	void cleanup();
+
 	/* dispatch Unitdata.DL messages */
 	static int handle(struct gprs_rlcmac_bts *bts,
 		const uint32_t tlli, const char *imsi, const uint8_t ms_class,
@@ -365,6 +367,9 @@ protected:
 	int maybe_start_new_window();
 	bool dl_window_stalled() const;
 	void reuse_tbf(const uint8_t *data, const uint16_t len);
+	void start_llc_timer();
+
+	struct osmo_timer_list m_llc_timer;
 };
 
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {

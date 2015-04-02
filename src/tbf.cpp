@@ -128,6 +128,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
 		gprs_rlcmac_dl_tbf *dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(tbf);
 		gprs_rlcmac_lost_rep(dl_tbf);
+		dl_tbf->cleanup();
 	}
 
 	LOGP(DRLCMAC, LOGL_INFO, "%s free\n", tbf_name(tbf));

@@ -62,6 +62,38 @@ static inline void tbf_update_ms_class(struct gprs_rlcmac_tbf *tbf,
 		tbf->ms_class = ms_class;
 }
 
+static void llc_timer_cb(void *_tbf)
+{
+	struct gprs_rlcmac_dl_tbf *tbf = (struct gprs_rlcmac_dl_tbf *)_tbf;
+
+	if (tbf->state_is_not(GPRS_RLCMAC_FLOW))
+		return;
+
+	LOGP(DRLCMAC, LOGL_DEBUG,
+		"%s LLC receive timeout, requesting DL ACK\n", tbf_name(tbf));
+
+	tbf->request_dl_ack();
+}
+
+void gprs_rlcmac_dl_tbf::cleanup()
+{
+	osmo_timer_del(&m_llc_timer);
+}
+
+void gprs_rlcmac_dl_tbf::start_llc_timer()
+{
+	if (bts_data()->llc_idle_ack_csec > 0) {
+		struct timeval tv;
+
+		/* TODO: this ought to be within a constructor */
+		m_llc_timer.data = this;
+		m_llc_timer.cb = &llc_timer_cb;
+
+		csecs_to_timeval(bts_data()->llc_idle_ack_csec, &tv);
+		osmo_timer_schedule(&m_llc_timer, tv.tv_sec, tv.tv_usec);
+	}
+}
+
 int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 				const uint16_t pdu_delay_csec,
 				const uint8_t *data, const uint16_t len)
@@ -80,7 +112,9 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 		/* it is no longer drained */
 		m_last_dl_drained_fn = -1;
 		tbf_update_ms_class(this, ms_class);
+		start_llc_timer();
 	} else {
+		/* TODO: put this path into an llc_enqueue method */
 		/* the TBF exists, so we must write it in the queue
 		 * we prepend lifetime in front of PDU */
 		struct timeval *tv;
@@ -95,6 +129,7 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 		memcpy(msgb_put(llc_msg, len), data, len);
 		m_llc.enqueue(llc_msg);
 		tbf_update_ms_class(this, ms_class);
+		start_llc_timer();
 	}
 
 	return 0;
