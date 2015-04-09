@@ -907,3 +907,4 @@ TA unknown, assuming 0
 Searching for first unallocated TFI: TRX=0 first TS=4
 No TFI available.
 No PDCH resource
+BSSGP (BVCI=1234) Tx LLC-DISCARDED TLLI=0xc0000020, FRAMES=1, OCTETS=256

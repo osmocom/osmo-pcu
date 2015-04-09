@@ -150,7 +150,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	uint8_t trx, ta, ss;
 	int8_t use_trx;
 	struct gprs_rlcmac_ul_tbf *ul_tbf, *old_ul_tbf;
-	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 	int8_t tfi; /* must be signed */
 	int rc;
 
@@ -186,16 +186,14 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	// Create new TBF (any TRX)
 #warning "Copy and paste with alloc_ul_tbf"
 	tfi = bts->bts->tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx, use_trx);
-	if (tfi < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-		/* FIXME: send reject */
-		return -EBUSY;
-	}
-	/* set number of downlink slots according to multislot class */
-	dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf, tfi, trx, ms_class, ss);
+	if (tfi >= 0)
+		/* set number of downlink slots according to multislot class */
+		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf, tfi, trx, ms_class, ss);
+
 	if (!dl_tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-		/* FIXME: send reject */
+		bssgp_tx_llc_discarded(gprs_bssgp_pcu_current_bctx(), tlli,
+			1, len);
 		return -EBUSY;
 	}
 	dl_tbf->m_tlli = tlli;
@@ -767,22 +765,21 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, uint8_t ssn, uint8_t *rbb
 void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 {
 	uint8_t trx;
-	struct gprs_rlcmac_dl_tbf *new_tbf;
+	struct gprs_rlcmac_dl_tbf *new_tbf = NULL;
 	int8_t tfi; /* must be signed */
 	struct msgb *msg;
 
 	bts->tbf_reused();
 
 	tfi = bts->tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx, this->trx->trx_no);
-	if (tfi < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-		/* FIXME: send reject */
-		return;
-	}
-	new_tbf = tbf_alloc_dl_tbf(bts->bts_data(), NULL, tfi, trx, ms_class, 0);
+	if (tfi >= 0)
+		new_tbf = tbf_alloc_dl_tbf(bts->bts_data(), NULL, tfi, trx,
+			ms_class, 0);
+
 	if (!new_tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-		/* FIXME: send reject */
+		bssgp_tx_llc_discarded(gprs_bssgp_pcu_current_bctx(), m_tlli,
+			1, len);
 		return;
 	}
 
