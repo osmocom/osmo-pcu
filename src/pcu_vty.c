@@ -40,42 +40,9 @@ int pcu_vty_is_config_node(struct vty *vty, int node)
 
 static struct cmd_node pcu_node = {
 	(enum node_type) PCU_NODE,
-	"%s(pcu)#",
+	"%s(config-pcu)# ",
 	1,
 };
-
-gDEFUN(ournode_exit, ournode_exit_cmd, "exit",
-	"Exit current node, go down to provious node")
-{
-	switch (vty->node) {
-#if 0
-	case TRXV_NODE:
-		vty->node = PCU_NODE;
-		{
-			struct gsm_bts_trx *trx = vty->index;
-			vty->index = trx->bts;
-		}
-		break;
-#endif
-	default:
-		break;
-	}
-	return CMD_SUCCESS;
-}
-
-gDEFUN(ournode_end, ournode_end_cmd, "end",
-	"End current mode and change to enable mode")
-{
-	switch (vty->node) {
-	default:
-		vty_config_unlock(vty);
-		vty->node = ENABLE_NODE;
-		vty->index = NULL;
-		vty->index_sub = NULL;
-		break;
-	}
-	return CMD_SUCCESS;
-}
 
 static int config_write_pcu(struct vty *vty)
 {
@@ -421,7 +388,7 @@ int pcu_vty_init(const struct log_info *cat)
 
 	install_node(&pcu_node, config_write_pcu);
 	install_element(CONFIG_NODE, &cfg_pcu_cmd);
-	install_default(PCU_NODE);
+	vty_install_default(PCU_NODE);
 	install_element(PCU_NODE, &cfg_pcu_no_two_phase_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_cmd);
@@ -439,7 +406,6 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_gamma_cmd);
 	install_element(PCU_NODE, &cfg_pcu_dl_tbf_idle_time_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_dl_tbf_idle_time_cmd);
-	install_element(PCU_NODE, &ournode_end_cmd);
 
 	install_element_ve(&show_bts_stats_cmd);
 	install_element_ve(&show_tbf_cmd);
