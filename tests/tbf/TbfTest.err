@@ -359,3 +359,551 @@ DL packet loss of IMSI= / TLLI=0x00000000: 0%
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
 ********** TBF ends here **********
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: TFI=0 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
+TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 20 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 08 00 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=1.
+********** TBF starts here **********
+Allocating DL TBF: TFI=1 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
+TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 20 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 18 40 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=2.
+********** TBF starts here **********
+Allocating DL TBF: TFI=2 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
+TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 20 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 28 80 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=3.
+********** TBF starts here **********
+Allocating DL TBF: TFI=3 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
+TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 20 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 38 c0 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=4.
+********** TBF starts here **********
+Allocating DL TBF: TFI=4 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
+TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 20 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 49 00 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=5.
+********** TBF starts here **********
+Allocating DL TBF: TFI=5 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
+TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 20 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 59 40 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=6.
+********** TBF starts here **********
+Allocating DL TBF: TFI=6 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
+TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 20 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 69 80 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=7.
+********** TBF starts here **********
+Allocating DL TBF: TFI=7 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
+TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 20 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 79 c0 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=8.
+********** TBF starts here **********
+Allocating DL TBF: TFI=8 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
+TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 20 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 8a 00 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=9.
+********** TBF starts here **********
+Allocating DL TBF: TFI=9 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
+TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 20 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 9a 40 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=10.
+********** TBF starts here **********
+Allocating DL TBF: TFI=10 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
+TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 aa 80 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=11.
+********** TBF starts here **********
+Allocating DL TBF: TFI=11 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
+TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 ba c0 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=12.
+********** TBF starts here **********
+Allocating DL TBF: TFI=12 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
+TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 cb 00 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=13.
+********** TBF starts here **********
+Allocating DL TBF: TFI=13 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
+TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 db 40 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=14.
+********** TBF starts here **********
+Allocating DL TBF: TFI=14 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
+TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 eb 80 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=15.
+********** TBF starts here **********
+Allocating DL TBF: TFI=15 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
+TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 fb c0 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=16.
+********** TBF starts here **********
+Allocating DL TBF: TFI=16 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
+TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 0c 00 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=17.
+********** TBF starts here **********
+Allocating DL TBF: TFI=17 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
+TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 1c 40 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=18.
+********** TBF starts here **********
+Allocating DL TBF: TFI=18 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
+TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 2c 80 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=19.
+********** TBF starts here **********
+Allocating DL TBF: TFI=19 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
+TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 3c c0 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=20.
+********** TBF starts here **********
+Allocating DL TBF: TFI=20 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
+TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 4d 00 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=21.
+********** TBF starts here **********
+Allocating DL TBF: TFI=21 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
+TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 5d 40 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=22.
+********** TBF starts here **********
+Allocating DL TBF: TFI=22 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
+TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 6d 80 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=23.
+********** TBF starts here **********
+Allocating DL TBF: TFI=23 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
+TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 7d c0 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=24.
+********** TBF starts here **********
+Allocating DL TBF: TFI=24 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
+TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 8e 00 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=25.
+********** TBF starts here **********
+Allocating DL TBF: TFI=25 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
+TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 9e 40 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=26.
+********** TBF starts here **********
+Allocating DL TBF: TFI=26 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
+TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 ae 80 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=27.
+********** TBF starts here **********
+Allocating DL TBF: TFI=27 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
+TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 be c0 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=28.
+********** TBF starts here **********
+Allocating DL TBF: TFI=28 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
+TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 cf 00 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=29.
+********** TBF starts here **********
+Allocating DL TBF: TFI=29 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
+TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 df 40 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=30.
+********** TBF starts here **********
+Allocating DL TBF: TFI=30 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       3)
+TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 33 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 ef 80 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=31.
+********** TBF starts here **********
+Allocating DL TBF: TFI=31 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       3)
+TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=20 20 33 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 ff c0 23 2b 2b 2b 2b 
+TA unknown, assuming 0
+Searching for first unallocated TFI: TRX=0 first TS=4
+No TFI available.
+No PDCH resource

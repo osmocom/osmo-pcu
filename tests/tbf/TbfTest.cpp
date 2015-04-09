@@ -24,13 +24,19 @@
 #include "tbf.h"
 #include "gprs_debug.h"
 #include "pcu_utils.h"
+#include "gprs_bssgp_pcu.h"
 
 extern "C" {
+#include "pcu_vty.h"
+
 #include <osmocom/core/application.h>
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/utils.h>
+#include <osmocom/vty/vty.h>
 }
+
+#include <errno.h>
 
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
@@ -287,6 +293,44 @@ static void test_tbf_delayed_release()
 	printf("=== end %s ===\n", __func__);
 }
 
+static void test_tbf_exhaustion()
+{
+	BTS the_bts;
+	gprs_rlcmac_bts *bts;
+	unsigned i;
+	uint8_t ts_no = 4;
+	uint8_t ms_class = 45;
+	int rc = 0;
+
+	uint8_t buf[256] = {0};
+
+	printf("=== start %s ===\n", __func__);
+
+	bts = the_bts.bts_data();
+	setup_bts(&the_bts, ts_no);
+	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001,
+		1234, 1234, 1234, 1, 1, 0, 0, 0);
+
+	for (i = 0; i < 1024; i++) {
+		uint32_t tlli = 0xc0000000 + i;
+		char imsi[16] = {0};
+		unsigned delay_csec = 1000;
+
+		snprintf(imsi, sizeof(imsi)-1, "001001%9d", i);
+
+		rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, imsi, ms_class,
+			delay_csec, buf, sizeof(buf));
+
+		if (rc < 0)
+			break;
+	}
+
+	OSMO_ASSERT(rc == -EBUSY);
+	printf("=== end %s ===\n", __func__);
+
+	gprs_bssgp_destroy();
+}
+
 static const struct log_info_cat default_categories[] = {
         {"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_INFO, 0},
         {"DL1IF", "\033[1;32m", "GPRS PCU L1 interface (L1IF)", LOGL_DEBUG, 1},
@@ -314,6 +358,8 @@ const struct log_info debug_log_info = {
 
 int main(int argc, char **argv)
 {
+	struct vty_app_info pcu_vty_info = {0};
+
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "moiji-mobile TbfTest context");
 	if (!tall_pcu_ctx)
 		abort();
@@ -322,11 +368,16 @@ int main(int argc, char **argv)
 	osmo_init_logging(&debug_log_info);
 	log_set_use_color(osmo_stderr_target, 0);
 	log_set_print_filename(osmo_stderr_target, 0);
+	bssgp_set_log_ss(DBSSGP);
+
+	vty_init(&pcu_vty_info);
+	pcu_vty_init(&debug_log_info);
 
 	test_tbf_tlli_update();
 	test_tbf_final_ack(TEST_MODE_STANDARD);
 	test_tbf_final_ack(TEST_MODE_REVERSE_FREE);
 	test_tbf_delayed_release();
+	test_tbf_exhaustion();
 	return EXIT_SUCCESS;
 }
 
