@@ -111,6 +111,10 @@ struct gprs_rlcmac_trx {
 struct gprs_rlcmac_bts {
 	uint8_t bsic;
 	uint8_t fc_interval;
+	uint32_t fc_bvc_bucket_size;
+	uint32_t fc_bvc_leak_rate;
+	uint32_t fc_ms_bucket_size;
+	uint32_t fc_ms_leak_rate;
 	uint8_t cs1;
 	uint8_t cs2;
 	uint8_t cs3;

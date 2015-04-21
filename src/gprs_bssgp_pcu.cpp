@@ -484,12 +484,20 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 
 int gprs_bssgp_tx_fc_bvc(void)
 {
+	struct gprs_rlcmac_bts *bts;
+
 	if (!the_pcu.bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
 		return -EIO;
 	}
+	bts = bts_main_data();
+
 	/* FIXME: use real values */
-	return bssgp_tx_fc_bvc(the_pcu.bctx, 1, 6553500, 819100, 50000, 50000,
+	return bssgp_tx_fc_bvc(the_pcu.bctx, 1,
+		bts->fc_bvc_bucket_size ? bts->fc_bvc_bucket_size : 6553500,
+		bts->fc_bvc_leak_rate   ? bts->fc_bvc_leak_rate   : 819100,
+		bts->fc_ms_bucket_size  ? bts->fc_ms_bucket_size  : 50000,
+		bts->fc_ms_leak_rate    ? bts->fc_ms_leak_rate    : 50000,
 		NULL, NULL);
 }
 

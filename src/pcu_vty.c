@@ -53,6 +53,18 @@ static int config_write_pcu(struct vty *vty)
 	vty_out(vty, "pcu%s", VTY_NEWLINE);
 	vty_out(vty, " flow-control-interval %d%s", bts->fc_interval,
 		VTY_NEWLINE);
+	if (bts->fc_bvc_bucket_size)
+		vty_out(vty, " flow-control force-bvc-bucket-size %d%s",
+			bts->fc_bvc_bucket_size, VTY_NEWLINE);
+	if (bts->fc_bvc_leak_rate)
+		vty_out(vty, " flow-control force-bvc-leak-rate %d%s",
+			bts->fc_bvc_leak_rate, VTY_NEWLINE);
+	if (bts->fc_ms_bucket_size)
+		vty_out(vty, " flow-control force-ms-bucket-size %d%s",
+			bts->fc_ms_bucket_size, VTY_NEWLINE);
+	if (bts->fc_ms_leak_rate)
+		vty_out(vty, " flow-control force-ms-leak-rate %d%s",
+			bts->fc_ms_leak_rate, VTY_NEWLINE);
 	if (bts->force_cs) {
 		if (bts->initial_cs_ul == bts->initial_cs_dl)
 			vty_out(vty, " cs %d%s", bts->initial_cs_dl,
@@ -107,6 +119,105 @@ DEFUN(cfg_pcu_fc_interval,
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	bts->fc_interval = atoi(argv[0]);
+
+	return CMD_SUCCESS;
+}
+#define FC_STR "BSSGP Flow Control configuration\n"
+#define FC_BMAX_STR(who) "Force a fixed value for the " who " bucket size\n"
+#define FC_LR_STR(who) "Force a fixed value for the " who " leak rate\n"
+
+DEFUN(cfg_pcu_fc_bvc_bucket_size,
+      cfg_pcu_fc_bvc_bucket_size_cmd,
+      "flow-control force-bvc-bucket-size <1-6553500>",
+      FC_STR FC_BMAX_STR("BVC") "Bucket size in octets\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->fc_bvc_bucket_size = atoi(argv[0]);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_fc_bvc_bucket_size,
+      cfg_pcu_no_fc_bvc_bucket_size_cmd,
+      "no flow-control force-bvc-bucket-size",
+      NO_STR FC_STR FC_BMAX_STR("BVC"))
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->fc_bvc_bucket_size = 0;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_fc_bvc_leak_rate,
+      cfg_pcu_fc_bvc_leak_rate_cmd,
+      "flow-control force-bvc-leak-rate <1-6553500>",
+      FC_STR FC_LR_STR("BVC") "Leak rate in bit/s\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->fc_bvc_leak_rate = atoi(argv[0]);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_fc_bvc_leak_rate,
+      cfg_pcu_no_fc_bvc_leak_rate_cmd,
+      "no flow-control force-bvc-leak-rate",
+      NO_STR FC_STR FC_LR_STR("BVC"))
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->fc_bvc_leak_rate = 0;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_fc_ms_bucket_size,
+      cfg_pcu_fc_ms_bucket_size_cmd,
+      "flow-control force-ms-bucket-size <1-6553500>",
+      FC_STR FC_BMAX_STR("default MS") "Bucket size in octets\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->fc_ms_bucket_size = atoi(argv[0]);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_fc_ms_bucket_size,
+      cfg_pcu_no_fc_ms_bucket_size_cmd,
+      "no flow-control force-ms-bucket-size",
+      NO_STR FC_STR FC_BMAX_STR("default MS"))
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->fc_ms_bucket_size = 0;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_fc_ms_leak_rate,
+      cfg_pcu_fc_ms_leak_rate_cmd,
+      "flow-control force-ms-leak-rate <1-6553500>",
+      FC_STR FC_LR_STR("default MS") "Leak rate in bit/s\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->fc_ms_leak_rate = atoi(argv[0]);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_fc_ms_leak_rate,
+      cfg_pcu_no_fc_ms_leak_rate_cmd,
+      "no flow-control force-ms-leak-rate",
+      NO_STR FC_STR FC_LR_STR("default MS"))
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->fc_ms_leak_rate = 0;
 
 	return CMD_SUCCESS;
 }
@@ -404,6 +515,14 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_alloc_cmd);
 	install_element(PCU_NODE, &cfg_pcu_two_phase_cmd);
 	install_element(PCU_NODE, &cfg_pcu_fc_interval_cmd);
+	install_element(PCU_NODE, &cfg_pcu_fc_bvc_bucket_size_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_fc_bvc_bucket_size_cmd);
+	install_element(PCU_NODE, &cfg_pcu_fc_bvc_leak_rate_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_fc_bvc_leak_rate_cmd);
+	install_element(PCU_NODE, &cfg_pcu_fc_ms_bucket_size_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_fc_ms_bucket_size_cmd);
+	install_element(PCU_NODE, &cfg_pcu_fc_ms_leak_rate_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_fc_ms_leak_rate_cmd);
 	install_element(PCU_NODE, &cfg_pcu_alpha_cmd);
 	install_element(PCU_NODE, &cfg_pcu_gamma_cmd);
 	install_element(PCU_NODE, &cfg_pcu_dl_tbf_idle_time_cmd);
