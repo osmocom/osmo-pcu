@@ -107,7 +107,6 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 		reuse_tbf(data, len);
 	} else if (!have_data()) {
 		m_llc.put_frame(data, len);
-		m_last_dl_drained_fn = -1;
 		bts->llc_frame_sched();
 		/* it is no longer drained */
 		m_last_dl_drained_fn = -1;
