@@ -193,6 +193,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		bssgp_tx_llc_discarded(gprs_bssgp_pcu_current_bctx(), tlli,
 			1, len);
+		bts->bts->llc_dropped_frame();
 		return -EBUSY;
 	}
 	dl_tbf->m_tlli = tlli;
@@ -285,6 +286,7 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 		frames++;
 		octets += msg->len;
 		msgb_free(msg);
+		bts->llc_dropped_frame();
 		continue;
 	}
 
@@ -779,6 +781,7 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		bssgp_tx_llc_discarded(gprs_bssgp_pcu_current_bctx(), m_tlli,
 			1, len);
+		bts->llc_dropped_frame();
 		return;
 	}
 
