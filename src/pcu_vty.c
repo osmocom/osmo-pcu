@@ -152,7 +152,7 @@ DEFUN(cfg_pcu_queue_lifetime,
       QUEUE_STR LIFETIME_STR "Lifetime in centi-seconds")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	uint8_t csec = atoi(argv[0]);
+	uint16_t csec = atoi(argv[0]);
 
 	bts->force_llc_lifetime = csec;
 
@@ -193,7 +193,7 @@ DEFUN(cfg_pcu_queue_hysteresis,
       QUEUE_STR QUEUE_HYSTERESIS_STR "Hysteresis in centi-seconds")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	uint8_t csec = atoi(argv[0]);
+	uint16_t csec = atoi(argv[0]);
 
 	bts->llc_discard_csec = csec;
 
@@ -220,7 +220,7 @@ DEFUN(cfg_pcu_queue_idle_ack_delay,
       QUEUE_STR QUEUE_IDLE_ACK_STR "Idle ACK delay in centi-seconds")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	uint8_t csec = atoi(argv[0]);
+	uint16_t csec = atoi(argv[0]);
 
 	bts->llc_idle_ack_csec = csec;
 
