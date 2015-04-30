@@ -406,8 +406,7 @@ extern "C" {
 #include <osmocom/vty/command.h>
 #include <osmocom/vty/vty.h>
 
-
-	void tbf_print_vty_info(struct vty *vty, llist_head *tbf);
+	void tbf_print_vty_info(struct vty *vty, struct llist_head *tbf);
 #ifdef __cplusplus
 }
 #endif

@@ -4,11 +4,13 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <osmocom/vty/logging.h>
+#include <osmocom/vty/misc.h>
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/rate_ctr.h>
 #include "pcu_vty.h"
 #include "gprs_rlcmac.h"
 #include "bts.h"
+#include "tbf.h"
 
 enum node_type pcu_vty_go_parent(struct vty *vty)
 {

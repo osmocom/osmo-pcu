@@ -869,7 +869,7 @@ uint8_t gprs_rlcmac_tbf::tsc() const
 	return trx->pdch[first_ts].tsc;
 }
 
-void tbf_print_vty_info(struct vty *vty, llist_head *ltbf)
+void tbf_print_vty_info(struct vty *vty, struct llist_head *ltbf)
 {
 	gprs_rlcmac_tbf *tbf = llist_pods_entry(ltbf, gprs_rlcmac_tbf);
 
