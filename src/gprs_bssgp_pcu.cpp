@@ -27,6 +27,16 @@
 #define BSSGP_TIMER_T1	30	/* Guards the (un)blocking procedures */
 #define BSSGP_TIMER_T2	30	/* Guards the reset procedure */
 
+/* Tuning parameters for BSSGP flow control */
+#define FC_DEFAULT_LIFE_TIME_SECS 10		/* experimental value, 10s */
+#define FC_MS_BUCKET_SIZE_BY_BMAX(bmax) ((bmax) / 2 + 500) /* experimental */
+#define FC_FALLBACK_BVC_BUCKET_SIZE 2000	/* e.g. on R = 0, value taken from PCAP files */
+#define FC_MS_MAX_RX_SLOTS 4			/* limit MS default R to 4 TS per MS */
+
+/* Constants for BSSGP flow control */
+#define FC_MAX_BUCKET_LEAK_RATE (6553500 / 8)	/* Byte/s */
+#define FC_MAX_BUCKET_SIZE 6553500		/* Octets */
+
 static struct gprs_bssgp_pcu the_pcu = { 0, };
 
 extern void *tall_pcu_ctx;
@@ -482,9 +492,71 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 	return 0;
 }
 
+static unsigned count_pdch(const struct gprs_rlcmac_bts *bts)
+{
+	size_t trx_no, ts_no;
+	unsigned num_pdch = 0;
+
+	for (trx_no = 0; trx_no < ARRAY_SIZE(bts->trx); ++trx_no) {
+		const struct gprs_rlcmac_trx *trx = &bts->trx[trx_no];
+
+		for (ts_no = 0; ts_no < ARRAY_SIZE(trx->pdch); ++ts_no) {
+			const struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
+
+			if (pdch->is_enabled())
+				num_pdch += 1;
+		}
+	}
+
+	return num_pdch;
+}
+
+static uint32_t gprs_bssgp_max_leak_rate(unsigned cs, int num_pdch)
+{
+	static const uint32_t max_lr_per_ts[4] = {
+		20 * (1000 / 20), /* CS-1: 20 byte payload per 20ms */
+		30 * (1000 / 20), /* CS-2: 30 byte payload per 20ms */
+		36 * (1000 / 20), /* CS-3: 36 byte payload per 20ms */
+		50 * (1000 / 20), /* CS-4: 50 byte payload per 20ms */
+	};
+
+	if (cs > ARRAY_SIZE(max_lr_per_ts))
+		cs = 1;
+
+	return max_lr_per_ts[cs-1] * num_pdch;
+}
+
+static uint32_t compute_bucket_size(struct gprs_rlcmac_bts *bts,
+	uint32_t leak_rate, uint32_t fallback)
+{
+	uint32_t bucket_size = 0;
+
+	if (bts->force_llc_lifetime == 0xffff)
+		bucket_size = FC_MAX_BUCKET_SIZE;
+
+	if (bucket_size == 0 && bts->force_llc_lifetime && leak_rate)
+		bucket_size = (uint64_t)leak_rate * bts->force_llc_lifetime / 100;
+
+	if (bucket_size == 0 && leak_rate)
+		bucket_size = leak_rate * FC_DEFAULT_LIFE_TIME_SECS;
+
+	if (bucket_size == 0)
+		bucket_size = fallback;
+
+	if (bucket_size > FC_MAX_BUCKET_SIZE)
+		bucket_size = FC_MAX_BUCKET_SIZE;
+
+	return bucket_size;
+}
+
 int gprs_bssgp_tx_fc_bvc(void)
 {
 	struct gprs_rlcmac_bts *bts;
+	uint32_t bucket_size; /* oct */
+	uint32_t ms_bucket_size; /* oct */
+	uint32_t leak_rate; /* oct/s */
+	uint32_t ms_leak_rate; /* oct/s */
+	int num_pdch = -1;
 
 	if (!the_pcu.bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
@@ -492,12 +564,68 @@ int gprs_bssgp_tx_fc_bvc(void)
 	}
 	bts = bts_main_data();
 
-	/* FIXME: use real values */
+	bucket_size = bts->fc_bvc_bucket_size;
+	leak_rate = bts->fc_bvc_leak_rate;
+	ms_bucket_size = bts->fc_ms_bucket_size;
+	ms_leak_rate = bts->fc_ms_leak_rate;
+
+	if (leak_rate == 0) {
+		if (num_pdch < 0)
+			num_pdch = count_pdch(bts);
+
+		leak_rate = gprs_bssgp_max_leak_rate(bts->initial_cs_dl, num_pdch);
+
+		LOGP(DBSSGP, LOGL_DEBUG,
+			"Computed BVC leak rate = %d, num_pdch = %d, cs = %d\n",
+			leak_rate, num_pdch, bts->initial_cs_dl);
+	};
+
+	if (ms_leak_rate == 0) {
+		int ms_num_pdch;
+
+		if (num_pdch < 0)
+			num_pdch = count_pdch(bts);
+
+		ms_num_pdch = num_pdch;
+		if (ms_num_pdch > FC_MS_MAX_RX_SLOTS)
+			ms_num_pdch = FC_MS_MAX_RX_SLOTS;
+
+		ms_leak_rate = gprs_bssgp_max_leak_rate(bts->initial_cs_dl,
+			ms_num_pdch);
+
+		/* TODO: To properly support multiple TRX, the per MS leak rate
+		 * should be derived from the max number of PDCH TS per TRX.
+		 */
+		LOGP(DBSSGP, LOGL_DEBUG,
+			"Computed MS default leak rate = %d, ms_num_pdch = %d, cs = %d\n",
+			ms_leak_rate, ms_num_pdch, bts->initial_cs_dl);
+	};
+
+	/* TODO: Force leak_rate to 0 on buffer bloat */
+
+	if (bucket_size == 0)
+		bucket_size = compute_bucket_size(bts, leak_rate,
+			FC_FALLBACK_BVC_BUCKET_SIZE);
+
+	if (ms_bucket_size == 0)
+		ms_bucket_size = compute_bucket_size(bts, ms_leak_rate,
+			FC_MS_BUCKET_SIZE_BY_BMAX(bucket_size));
+
+	if (leak_rate > FC_MAX_BUCKET_LEAK_RATE)
+		leak_rate = FC_MAX_BUCKET_LEAK_RATE;
+
+	if (ms_leak_rate > FC_MAX_BUCKET_LEAK_RATE)
+		ms_leak_rate = FC_MAX_BUCKET_LEAK_RATE;
+
+	/* TODO: Implement avg queue delay monitoring */
+
+	LOGP(DBSSGP, LOGL_DEBUG,
+		"Sending FLOW CONTROL BVC, Bmax = %d, R = %d, Bmax_MS = %d, R_MS = %d\n",
+		bucket_size, leak_rate, ms_bucket_size, ms_leak_rate);
+
 	return bssgp_tx_fc_bvc(the_pcu.bctx, 1,
-		bts->fc_bvc_bucket_size ? bts->fc_bvc_bucket_size : 6553500,
-		bts->fc_bvc_leak_rate   ? bts->fc_bvc_leak_rate   : 819100,
-		bts->fc_ms_bucket_size  ? bts->fc_ms_bucket_size  : 50000,
-		bts->fc_ms_leak_rate    ? bts->fc_ms_leak_rate    : 50000,
+		bucket_size, leak_rate,
+		ms_bucket_size, ms_leak_rate,
 		NULL, NULL);
 }
 
