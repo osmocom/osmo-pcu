@@ -316,8 +316,6 @@ static void test_rlc_dl_ul_basic()
 	}
 
 	{
-		int count;
-		uint8_t rbb[8];
 		uint16_t lost = 0, recv = 0;
 		char show_rbb[65];
 		BTS dummy_bts;

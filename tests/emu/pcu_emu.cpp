@@ -106,8 +106,6 @@ void create_and_connect_bssgp(struct gprs_rlcmac_bts *bts,
 
 int main(int argc, char **argv)
 {
-	struct gprs_rlcmac_bts *bts;
-
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "moiji-mobile Emu-PCU context");
 	if (!tall_pcu_ctx)
 		abort();

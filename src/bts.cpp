@@ -416,7 +416,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 
 int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 {
-	struct gprs_rlcmac_ul_tbf *tbf;
+	struct gprs_rlcmac_ul_tbf *tbf = NULL;
 	uint8_t trx_no, ts_no = 0;
 	int8_t tfi; /* must be signed */
 	uint8_t sb = 0;

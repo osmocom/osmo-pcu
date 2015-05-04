@@ -44,7 +44,7 @@ static const uint8_t gprs_attach_llc[] = {
 	0x42, 0x00, 0x40, 0xaa, 0xf3, 0x18
 };
 
-static int next_wanted_nu;
+static uint32_t next_wanted_nu;
 
 void test_replay_gprs_attach(struct gprs_bssgp_pcu *pcu)
 {

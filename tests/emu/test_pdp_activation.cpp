@@ -92,10 +92,8 @@ static enum state current_state = Test_Start;
 static void extract_tmsi_and_generate_tlli(struct msgb *msg, struct tlv_parsed *tp)
 {
 	uint32_t tmsi;
-	struct bssgp_ud_hdr *budh;
 	struct gprs_llc_hdr_parsed hp;
 	struct tlv_parsed ack_tp;
-	int rc;
 
 	gprs_llc_hdr_parse(&hp, TLVP_VAL(tp, BSSGP_IE_LLC_PDU),
 				TLVP_LEN(tp, BSSGP_IE_LLC_PDU));
@@ -105,7 +103,7 @@ static void extract_tmsi_and_generate_tlli(struct msgb *msg, struct tlv_parsed *
 
 	OSMO_ASSERT(gh->msg_type == GSM48_MT_GMM_ATTACH_ACK);
 	struct gsm48_attach_ack *ack = (struct gsm48_attach_ack *) gh->data;
-	rc = tlv_parse(&ack_tp, &gsm48_gmm_att_tlvdef, ack->data,
+	tlv_parse(&ack_tp, &gsm48_gmm_att_tlvdef, ack->data,
 			(msg->data + msg->len) - ack->data, 0, 0);
 
 

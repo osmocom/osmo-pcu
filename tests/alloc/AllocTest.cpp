@@ -71,8 +71,6 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir, const int count)
 	 * least this part is working okay.
 	 */
 	for (int i = 0; i < count; ++i) {
-		struct gprs_rlcmac_tbf *tbf;
-
 		tfi = the_bts.tfi_find_free(dir, &used_trx, 0);
 		OSMO_ASSERT(tfi >= 0);
 		tbfs[i] = tbf_alloc(bts, NULL, dir, tfi, used_trx, 0, 0);
@@ -90,7 +88,7 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir, const int count)
 	}
 	OSMO_ASSERT(!tbf_alloc(bts, NULL, dir, tfi, used_trx, 0, 0));
 
-	for (int i = 0; i < ARRAY_SIZE(tbfs); ++i)
+	for (size_t i = 0; i < ARRAY_SIZE(tbfs); ++i)
 		if (tbfs[i])
 			tbf_free(tbfs[i]);
 
@@ -110,7 +108,7 @@ static void test_alloc_a()
 
 static void dump_assignment(struct gprs_rlcmac_tbf *tbf, const char *dir)
 {
-	for (int i = 0; i < ARRAY_SIZE(tbf->pdch); ++i)
+	for (size_t i = 0; i < ARRAY_SIZE(tbf->pdch); ++i)
 		if (tbf->pdch[i])
 			printf("PDCH[%d] is used for %s\n", i, dir);
 	printf("PDCH[%d] is control_ts for %s\n", tbf->control_ts, dir);
@@ -131,7 +129,7 @@ static void test_alloc_b(int ms_class)
 		struct gprs_rlcmac_bts *bts;
 		struct gprs_rlcmac_trx *trx;
 		int tfi;
-		uint8_t ts_no, trx_no;
+		uint8_t trx_no;
 
 		gprs_rlcmac_tbf *ul_tbf, *dl_tbf;
 
@@ -172,7 +170,7 @@ static void test_alloc_b(int ms_class)
 		struct gprs_rlcmac_bts *bts;
 		struct gprs_rlcmac_trx *trx;
 		int tfi;
-		uint8_t ts_no, trx_no;
+		uint8_t trx_no;
 
 		gprs_rlcmac_ul_tbf *ul_tbf;
 		gprs_rlcmac_dl_tbf *dl_tbf;
@@ -221,7 +219,7 @@ static void test_alloc_b(int ms_class)
 		struct gprs_rlcmac_bts *bts;
 		struct gprs_rlcmac_trx *trx;
 		int tfi;
-		uint8_t ts_no, trx_no;
+		uint8_t trx_no;
 
 		gprs_rlcmac_tbf *ul_tbf, *dl_tbf;
 
@@ -282,7 +280,7 @@ static void test_alloc_b(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool 
 		struct gprs_rlcmac_bts *bts;
 		struct gprs_rlcmac_trx *trx;
 		int tfi;
-		uint8_t ts_no, trx_no;
+		uint8_t trx_no;
 
 		gprs_rlcmac_tbf *ul_tbf, *dl_tbf;
 
@@ -326,7 +324,7 @@ static void test_alloc_b(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool 
 		struct gprs_rlcmac_bts *bts;
 		struct gprs_rlcmac_trx *trx;
 		int tfi;
-		uint8_t ts_no, trx_no;
+		uint8_t trx_no;
 
 		gprs_rlcmac_ul_tbf *ul_tbf;
 		gprs_rlcmac_dl_tbf *dl_tbf;
