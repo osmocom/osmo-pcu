@@ -35,7 +35,7 @@ extern "C" {
 #include <sys/types.h>
 #include <sys/socket.h>
 
-static int current_test;
+static size_t current_test;
 
 /* Extern data to please the underlying code */
 void *tall_pcu_ctx;
@@ -114,6 +114,8 @@ int main(int argc, char **argv)
 	osmo_init_logging(&gprs_log_info);
 	vty_init(&pcu_vty_info);
 	pcu_vty_init(&gprs_log_info);
+
+	current_test = 0;
 
 	init_main_bts();
 	create_and_connect_bssgp(bts_main_data(), INADDR_LOOPBACK, 23000);
