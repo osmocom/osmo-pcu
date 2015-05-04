@@ -67,7 +67,7 @@ static void test_tbf_tlli_update()
 	the_bts.timing_advance()->remember(0x2342, dl_tbf->ta);
 
 	gprs_rlcmac_tbf *ul_tbf = tbf_alloc_ul_tbf(the_bts.bts_data(),
-						ul_tbf, 0,
+						dl_tbf, 0,
 						0, 0, 0);
 	ul_tbf->update_tlli(0x2342);
 	ul_tbf->tlli_mark_valid();
