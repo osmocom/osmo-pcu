@@ -73,9 +73,19 @@ struct msgb *sysp_msgb_alloc(void);
 uint32_t l1if_lchan_to_hLayer2(struct gsm_lchan *lchan);
 struct gsm_lchan *l1if_hLayer2_to_lchan(struct gsm_bts_trx *trx, uint32_t hLayer2);
 
+int l1if_handle_sysprim(struct femtol1_hdl *fl1h, struct msgb *msg);
+int l1if_handle_l1prim(int wq, struct femtol1_hdl *fl1h, struct msgb *msg);
+
 /* tch.c */
 int l1if_tch_rx(struct gsm_lchan *lchan, struct msgb *l1p_msg);
 int l1if_tch_fill(struct gsm_lchan *lchan, uint8_t *l1_buffer);
 struct msgb *gen_empty_tch_msg(struct gsm_lchan *lchan);
+
+/*
+ * The implementation of these functions is selected by either compiling and
+ * linking sysmo_l1_hw.c or sysmo_l1_fwd.c
+ */
+int l1if_transport_open(int q, struct femtol1_hdl *hdl);
+int l1if_transport_close(int q, struct femtol1_hdl *hdl);
 
 #endif /* _SYSMO_L1_IF_H */
