@@ -242,7 +242,8 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 {
 	struct msgb *msg;
-	struct timeval *tv, tv_now, tv_now2;
+	struct timeval *tv_recv, *tv_disc;
+	struct timeval tv_now, tv_now2;
 	uint32_t octets = 0, frames = 0;
 	struct timeval hyst_delta = {0, 0};
 	const unsigned keep_small_thresh = 60;
@@ -254,16 +255,19 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 	timeradd(&tv_now, &hyst_delta, &tv_now2);
 
 	while ((msg = m_llc.dequeue())) {
-		tv = (struct timeval *)msg->data;
-		msgb_pull(msg, sizeof(*tv));
-		msgb_pull(msg, sizeof(*tv));
+		tv_disc = (struct timeval *)msg->data;
+		msgb_pull(msg, sizeof(*tv_disc));
+		tv_recv = (struct timeval *)msg->data;
+		msgb_pull(msg, sizeof(*tv_recv));
+
+		gprs_bssgp_update_queue_delay(tv_recv, &tv_now);
 
 		/* Is the age below the low water mark? */
-		if (!gprs_llc::is_frame_expired(&tv_now2, tv))
+		if (!gprs_llc::is_frame_expired(&tv_now2, tv_disc))
 			break;
 
 		/* Is the age below the high water mark */
-		if (!gprs_llc::is_frame_expired(&tv_now, tv)) {
+		if (!gprs_llc::is_frame_expired(&tv_now, tv_disc)) {
 			/* Has the previous message not been dropped? */
 			if (frames == 0)
 				break;

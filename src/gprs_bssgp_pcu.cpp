@@ -553,6 +553,23 @@ static uint32_t compute_bucket_size(struct gprs_rlcmac_bts *bts,
 	return bucket_size;
 }
 
+static uint32_t get_and_reset_avg_queue_delay(void)
+{
+	struct timeval *delay_sum = &the_pcu.queue_delay_sum;
+	uint64_t delay_sum_ms = delay_sum->tv_sec * 1000 +
+			delay_sum->tv_usec / 1000000;
+	uint32_t avg_delay_ms = 0;
+
+	if (the_pcu.queue_delay_count > 0)
+		avg_delay_ms = delay_sum_ms / the_pcu.queue_delay_count;
+
+	/* Reset accumulator */
+	delay_sum->tv_sec = delay_sum->tv_usec = 0;
+	the_pcu.queue_delay_count = 0;
+
+	return avg_delay_ms;
+}
+
 int gprs_bssgp_tx_fc_bvc(void)
 {
 	struct gprs_rlcmac_bts *bts;
@@ -560,6 +577,7 @@ int gprs_bssgp_tx_fc_bvc(void)
 	uint32_t ms_bucket_size; /* oct */
 	uint32_t leak_rate; /* oct/s */
 	uint32_t ms_leak_rate; /* oct/s */
+	uint32_t avg_delay_ms;
 	int num_pdch = -1;
 
 	if (!the_pcu.bctx) {
@@ -621,16 +639,19 @@ int gprs_bssgp_tx_fc_bvc(void)
 	if (ms_leak_rate > FC_MAX_BUCKET_LEAK_RATE)
 		ms_leak_rate = FC_MAX_BUCKET_LEAK_RATE;
 
-	/* TODO: Implement avg queue delay monitoring */
+	/* Avg queue delay monitoring */
+	avg_delay_ms = get_and_reset_avg_queue_delay();
 
 	LOGP(DBSSGP, LOGL_DEBUG,
-		"Sending FLOW CONTROL BVC, Bmax = %d, R = %d, Bmax_MS = %d, R_MS = %d\n",
-		bucket_size, leak_rate, ms_bucket_size, ms_leak_rate);
+		"Sending FLOW CONTROL BVC, Bmax = %d, R = %d, Bmax_MS = %d, "
+		"R_MS = %d, avg_dly = %d\n",
+		bucket_size, leak_rate, ms_bucket_size, ms_leak_rate,
+		avg_delay_ms);
 
 	return bssgp_tx_fc_bvc(the_pcu.bctx, 1,
 		bucket_size, leak_rate,
 		ms_bucket_size, ms_leak_rate,
-		NULL, NULL);
+		NULL, &avg_delay_ms);
 }
 
 static void bvc_timeout(void *_priv)
@@ -762,4 +783,16 @@ void gprs_bssgp_destroy(void)
 struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void)
 {
 	return the_pcu.bctx;
+}
+
+void gprs_bssgp_update_queue_delay(struct timeval *tv_recv,
+	struct timeval *tv_now)
+{
+	struct timeval *delay_sum = &the_pcu.queue_delay_sum;
+	struct timeval tv_delay;
+
+	timersub(tv_now, tv_recv, &tv_delay);
+	timeradd(delay_sum, &tv_delay, delay_sum);
+
+	the_pcu.queue_delay_count += 1;
 }

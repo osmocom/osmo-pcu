@@ -58,6 +58,10 @@ struct gprs_bssgp_pcu {
 	int bvc_reset;
 	int bvc_unblocked;
 
+	/* Flow control */
+	struct timeval queue_delay_sum;
+	unsigned queue_delay_count;
+
 	/** callbacks below */
 
 	/* The BSSGP has been unblocked */
@@ -77,5 +81,8 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 void gprs_bssgp_destroy(void);
 
 struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void);
+
+void gprs_bssgp_update_queue_delay(struct timeval *tv_recv,
+		struct timeval *tv_now);
 
 #endif // GPRS_BSSGP_PCU_H
