@@ -222,6 +222,32 @@ DEFUN(cfg_pcu_no_fc_ms_leak_rate,
 	return CMD_SUCCESS;
 }
 
+#define FC_BTIME_STR "Set target downlink maximum queueing time (only affects the advertised bucket size)\n"
+DEFUN(cfg_pcu_fc_bucket_time,
+      cfg_pcu_fc_bucket_time_cmd,
+      "flow-control bucket-time <1-65534>",
+      FC_STR FC_BTIME_STR "Time in centi-seconds\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->fc_bucket_time = atoi(argv[0]);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_fc_bucket_time,
+      cfg_pcu_no_fc_bucket_time_cmd,
+      "no flow-control bucket-time",
+      NO_STR FC_STR FC_BTIME_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->fc_bucket_time = 0;
+
+	return CMD_SUCCESS;
+}
+
+
 DEFUN(cfg_pcu_cs,
       cfg_pcu_cs_cmd,
       "cs <1-4> [<1-4>]",
@@ -515,6 +541,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_alloc_cmd);
 	install_element(PCU_NODE, &cfg_pcu_two_phase_cmd);
 	install_element(PCU_NODE, &cfg_pcu_fc_interval_cmd);
+	install_element(PCU_NODE, &cfg_pcu_fc_bucket_time_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_fc_bucket_time_cmd);
 	install_element(PCU_NODE, &cfg_pcu_fc_bvc_bucket_size_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_fc_bvc_bucket_size_cmd);
 	install_element(PCU_NODE, &cfg_pcu_fc_bvc_leak_rate_cmd);

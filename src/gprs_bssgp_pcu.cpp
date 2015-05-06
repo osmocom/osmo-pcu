@@ -530,12 +530,16 @@ static uint32_t compute_bucket_size(struct gprs_rlcmac_bts *bts,
 	uint32_t leak_rate, uint32_t fallback)
 {
 	uint32_t bucket_size = 0;
+	uint16_t bucket_time = bts->fc_bucket_time;
 
-	if (bts->force_llc_lifetime == 0xffff)
+	if (bucket_time == 0)
+		bucket_time = bts->force_llc_lifetime;
+
+	if (bucket_time == 0xffff)
 		bucket_size = FC_MAX_BUCKET_SIZE;
 
-	if (bucket_size == 0 && bts->force_llc_lifetime && leak_rate)
-		bucket_size = (uint64_t)leak_rate * bts->force_llc_lifetime / 100;
+	if (bucket_size == 0 && bucket_time && leak_rate)
+		bucket_size = (uint64_t)leak_rate * bucket_time / 100;
 
 	if (bucket_size == 0 && leak_rate)
 		bucket_size = leak_rate * FC_DEFAULT_LIFE_TIME_SECS;
