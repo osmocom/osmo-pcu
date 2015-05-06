@@ -61,6 +61,7 @@ struct gprs_bssgp_pcu {
 	/* Flow control */
 	struct timeval queue_delay_sum;
 	unsigned queue_delay_count;
+	uint8_t fc_tag;
 
 	/** callbacks below */
 

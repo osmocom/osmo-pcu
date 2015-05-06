@@ -642,13 +642,16 @@ int gprs_bssgp_tx_fc_bvc(void)
 	/* Avg queue delay monitoring */
 	avg_delay_ms = get_and_reset_avg_queue_delay();
 
+	/* Update tag */
+	the_pcu.fc_tag += 1;
+
 	LOGP(DBSSGP, LOGL_DEBUG,
 		"Sending FLOW CONTROL BVC, Bmax = %d, R = %d, Bmax_MS = %d, "
 		"R_MS = %d, avg_dly = %d\n",
 		bucket_size, leak_rate, ms_bucket_size, ms_leak_rate,
 		avg_delay_ms);
 
-	return bssgp_tx_fc_bvc(the_pcu.bctx, 1,
+	return bssgp_tx_fc_bvc(the_pcu.bctx, the_pcu.fc_tag,
 		bucket_size, leak_rate,
 		ms_bucket_size, ms_leak_rate,
 		NULL, &avg_delay_ms);
