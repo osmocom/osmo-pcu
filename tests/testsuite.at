@@ -29,3 +29,10 @@ cat $abs_srcdir/types/TypesTest.ok > expout
 cat $abs_srcdir/types/TypesTest.err > experr
 AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/types/TypesTest], [0], [expout], [experr])
 AT_CLEANUP
+
+AT_SETUP([ms])
+AT_KEYWORDS([ms])
+cat $abs_srcdir/ms/MsTest.ok > expout
+cat $abs_srcdir/ms/MsTest.err > experr
+AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/ms/MsTest], [0], [expout], [experr])
+AT_CLEANUP

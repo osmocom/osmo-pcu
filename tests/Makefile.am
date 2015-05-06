@@ -1,6 +1,6 @@
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/
 
-check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest tbf/TbfTest types/TypesTest
+check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest tbf/TbfTest types/TypesTest ms/MsTest
 noinst_PROGRAMS = emu/pcu_emu
 
 rlcmac_RLCMACTest_SOURCES = rlcmac/RLCMACTest.cpp
@@ -43,6 +43,16 @@ types_TypesTest_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
+ms_MsTest_SOURCES = ms/MsTest.cpp
+ms_MsTest_LDADD = \
+	$(top_builddir)/src/libgprs.la \
+	$(LIBOSMOGB_LIBS) \
+	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCORE_LIBS) \
+	$(COMMON_LA)
+
+ms_MsTest_LDFLAGS = \
+	-Wl,-u,bssgp_prim_cb
 
 # The `:;' works around a Bash 3.2 bug when the output is not writeable.
 $(srcdir)/package.m4: $(top_srcdir)/configure.ac
@@ -67,7 +77,8 @@ EXTRA_DIST = \
 	rlcmac/RLCMACTest.ok rlcmac/RLCMACTest.err \
 	alloc/AllocTest.ok alloc/AllocTest.err \
 	tbf/TbfTest.ok tbf/TbfTest.err \
-	types/TypesTest.ok types/TypesTest.err
+	types/TypesTest.ok types/TypesTest.err \
+	ms/MsTest.ok ms/MsTest.err
 
 DISTCLEANFILES = atconfig
 
