@@ -26,6 +26,7 @@
 #include <gprs_rlcmac.h>
 #include <gprs_debug.h>
 #include <gprs_bssgp_pcu.h>
+#include <gprs_ms.h>
 #include <decoding.h>
 
 extern "C" {
@@ -60,16 +61,43 @@ void gprs_rlcmac_tbf::set_new_tbf(gprs_rlcmac_tbf *tbf)
 				tbf_name(this), tbf_name(tbf));
 			return;
 		}
-		if (m_new_tbf != this)
+		if (m_new_tbf != this) {
 			LOGP(DRLCMAC, LOGL_NOTICE,
 				"%s m_new_tbf is already assigned to %s, "
 				"overwriting the old value with %s\n",
 				tbf_name(this), tbf_name(m_new_tbf), tbf_name(tbf));
+		}
 		/* Detach from other TBF */
 		m_new_tbf->m_old_tbf = NULL;
 	}
 	m_new_tbf = tbf;
 	tbf->m_old_tbf = this;
+
+	if (!tbf->ms())
+		tbf->set_ms(ms());
+}
+
+void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
+{
+	if (m_ms == ms)
+		return;
+
+	if (m_ms)
+		m_ms->detach_tbf(this);
+
+	m_ms = ms;
+
+	if (m_ms)
+		m_ms->attach_tbf(this);
+}
+
+void gprs_rlcmac_tbf::update_ms(uint32_t tlli)
+{
+	if (!ms())
+		/* TODO: access the container instead when that is implemented */
+		set_ms(new GprsMs(tlli));
+	else
+		ms()->set_tlli(tlli);
 }
 
 gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
@@ -102,6 +130,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	tbf->set_state(GPRS_RLCMAC_ASSIGN);
 	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 	tbf_timer_start(tbf, 3169, bts->t3169, 0);
+	tbf->update_ms(tlli);
 
 	return tbf;
 }
@@ -168,6 +197,8 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 				"tbf->m_old_tbf->m_new_tbf != tbf\n",
 				tbf_name(tbf));
 		}
+
+		tbf->m_old_tbf = NULL;
 	}
 
 	if (tbf->m_new_tbf) {
@@ -183,7 +214,12 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 				"tbf->m_new_tbf->m_old_tbf != tbf\n",
 				tbf_name(tbf));
 		}
+
+		tbf->m_new_tbf = NULL;
 	}
+
+	if (tbf->ms())
+		tbf->set_ms(NULL);
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF ends here **********\n");
 	talloc_free(tbf);
@@ -438,6 +474,12 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	llist_add(&tbf->list.list, &bts->ul_tbfs);
 	tbf->bts->tbf_ul_created();
 
+	if (old_tbf && old_tbf->ms())
+		tbf->set_ms(old_tbf->ms());
+
+	if (tbf->ms())
+		tbf->ms()->attach_ul_tbf(tbf);
+
 	return tbf;
 }
 
@@ -476,6 +518,12 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 
 	gettimeofday(&tbf->m_bw.dl_bw_tv, NULL);
 	gettimeofday(&tbf->m_bw.dl_loss_tv, NULL);
+
+	if (old_tbf && old_tbf->ms())
+		tbf->set_ms(old_tbf->ms());
+
+	if (tbf->ms())
+		tbf->ms()->attach_dl_tbf(tbf);
 
 	return tbf;
 }
@@ -811,6 +859,7 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 		return 0;
 	}
 	update_tlli(new_tlli);
+	update_ms(new_tlli);
 	LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
 		"UL DATA TFI=%d.\n", tlli(), rh->tfi);
 	if ((dl_tbf = bts->dl_tbf_by_tlli(tlli()))) {

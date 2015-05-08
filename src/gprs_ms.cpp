@@ -67,6 +67,16 @@ GprsMs::GprsMs(uint32_t tlli) :
 GprsMs::~GprsMs()
 {
 	LOGP(DRLCMAC, LOGL_INFO, "Destroying MS object, TLLI = 0x%08x\n", tlli());
+
+	if (m_ul_tbf) {
+		m_ul_tbf->set_ms(NULL);
+		m_ul_tbf = NULL;
+	}
+
+	if (m_dl_tbf) {
+		m_dl_tbf->set_ms(NULL);
+		m_dl_tbf = NULL;
+	}
 }
 
 void* GprsMs::operator new(size_t size)
@@ -147,6 +157,9 @@ void GprsMs::detach_tbf(gprs_rlcmac_tbf *tbf)
 
 	LOGP(DRLCMAC, LOGL_INFO, "Detaching TBF from MS object, TLLI = 0x%08x, TBF = %s\n",
 		tlli(), tbf->name());
+
+	if (tbf->ms() == this)
+		tbf->set_ms(NULL);
 
 	update_status();
 }

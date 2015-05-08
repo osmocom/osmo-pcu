@@ -61,6 +61,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 ********** TBF update **********
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
@@ -78,6 +80,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) New TBF TBF(TFI=1 TLLI=0x00
 ********** TBF ends here **********
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) free
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) stopping timer 0.
+Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN)
+Destroying MS object, TLLI = 0x00000000
 ********** TBF ends here **********
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=0.
@@ -125,6 +129,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 ********** TBF update **********
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
@@ -139,6 +145,8 @@ TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) starting timer 0.
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) free
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) stopping timer 0.
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) Old TBF TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) still exists, detaching
+Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN)
+Destroying MS object, TLLI = 0x00000000
 ********** TBF ends here **********
 DL packet loss of IMSI= / TLLI=0x00000000: 0%
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free
@@ -371,6 +379,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000000
+Attaching TBF to MS object, TLLI = 0xc0000000, TBF = TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -388,6 +398,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000001
+Attaching TBF to MS object, TLLI = 0xc0000001, TBF = TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL)
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -405,6 +417,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000002
+Attaching TBF to MS object, TLLI = 0xc0000002, TBF = TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL)
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -422,6 +436,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000003
+Attaching TBF to MS object, TLLI = 0xc0000003, TBF = TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL)
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -439,6 +455,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000004
+Attaching TBF to MS object, TLLI = 0xc0000004, TBF = TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL)
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -456,6 +474,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000005
+Attaching TBF to MS object, TLLI = 0xc0000005, TBF = TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL)
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -473,6 +493,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000006
+Attaching TBF to MS object, TLLI = 0xc0000006, TBF = TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL)
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -490,6 +512,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000007
+Attaching TBF to MS object, TLLI = 0xc0000007, TBF = TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL)
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -507,6 +531,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000008
+Attaching TBF to MS object, TLLI = 0xc0000008, TBF = TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL)
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -524,6 +550,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000009
+Attaching TBF to MS object, TLLI = 0xc0000009, TBF = TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL)
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001        )
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -541,6 +569,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc000000a
+Attaching TBF to MS object, TLLI = 0xc000000a, TBF = TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL)
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -558,6 +588,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc000000b
+Attaching TBF to MS object, TLLI = 0xc000000b, TBF = TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL)
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -575,6 +607,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc000000c
+Attaching TBF to MS object, TLLI = 0xc000000c, TBF = TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL)
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -592,6 +626,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc000000d
+Attaching TBF to MS object, TLLI = 0xc000000d, TBF = TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL)
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -609,6 +645,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc000000e
+Attaching TBF to MS object, TLLI = 0xc000000e, TBF = TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL)
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -626,6 +664,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc000000f
+Attaching TBF to MS object, TLLI = 0xc000000f, TBF = TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL)
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -643,6 +683,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000010
+Attaching TBF to MS object, TLLI = 0xc0000010, TBF = TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL)
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -660,6 +702,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000011
+Attaching TBF to MS object, TLLI = 0xc0000011, TBF = TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL)
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -677,6 +721,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000012
+Attaching TBF to MS object, TLLI = 0xc0000012, TBF = TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL)
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -694,6 +740,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000013
+Attaching TBF to MS object, TLLI = 0xc0000013, TBF = TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL)
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       1)
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -711,6 +759,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000014
+Attaching TBF to MS object, TLLI = 0xc0000014, TBF = TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL)
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -728,6 +778,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000015
+Attaching TBF to MS object, TLLI = 0xc0000015, TBF = TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL)
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -745,6 +797,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000016
+Attaching TBF to MS object, TLLI = 0xc0000016, TBF = TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL)
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -762,6 +816,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000017
+Attaching TBF to MS object, TLLI = 0xc0000017, TBF = TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL)
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -779,6 +835,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000018
+Attaching TBF to MS object, TLLI = 0xc0000018, TBF = TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL)
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -796,6 +854,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc0000019
+Attaching TBF to MS object, TLLI = 0xc0000019, TBF = TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL)
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -813,6 +873,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc000001a
+Attaching TBF to MS object, TLLI = 0xc000001a, TBF = TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL)
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -830,6 +892,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc000001b
+Attaching TBF to MS object, TLLI = 0xc000001b, TBF = TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL)
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -847,6 +911,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc000001c
+Attaching TBF to MS object, TLLI = 0xc000001c, TBF = TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL)
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -864,6 +930,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc000001d
+Attaching TBF to MS object, TLLI = 0xc000001d, TBF = TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL)
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       2)
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -881,6 +949,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc000001e
+Attaching TBF to MS object, TLLI = 0xc000001e, TBF = TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL)
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       3)
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -898,6 +968,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Creating MS object, TLLI = 0xc000001f
+Attaching TBF to MS object, TLLI = 0xc000001f, TBF = TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL)
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) [DOWNLINK] START
 Send dowlink assignment for TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001       3)
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) changes state from NULL to ASSIGN

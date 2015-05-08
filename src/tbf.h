@@ -30,6 +30,7 @@
 struct bssgp_bvc_ctx;
 struct rlc_ul_header;
 struct msgb;
+class GprsMs;
 
 /*
  * TBF instance
@@ -122,6 +123,9 @@ struct gprs_rlcmac_tbf {
 	struct msgb *create_dl_ass(uint32_t fn);
 	struct msgb *create_ul_ass(uint32_t fn);
 
+	GprsMs *ms();
+	void set_ms(GprsMs *ms);
+
 	uint8_t tsc() const;
 
 	int rlcmac_diag();
@@ -138,6 +142,9 @@ struct gprs_rlcmac_tbf {
 	uint32_t tlli() const;
 	bool is_tlli_valid() const;
 	void tlli_mark_valid();
+
+	/** MS updating */
+	void update_ms(uint32_t tlli);
 
 	uint8_t tfi() const;
 
@@ -229,6 +236,7 @@ protected:
 
 	static const char *tbf_state_name[6];
 
+	class GprsMs *m_ms;
 private:
 	mutable char m_name_buf[60];
 };
@@ -278,6 +286,11 @@ inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
 		tbf_name(this),
 		tbf_state_name[state], tbf_state_name[new_state]);
 	state = new_state;
+}
+
+inline GprsMs *gprs_rlcmac_tbf::ms()
+{
+	return m_ms;
 }
 
 inline uint32_t gprs_rlcmac_tbf::tlli() const
