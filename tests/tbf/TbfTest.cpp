@@ -378,6 +378,9 @@ int main(int argc, char **argv)
 	test_tbf_final_ack(TEST_MODE_REVERSE_FREE);
 	test_tbf_delayed_release();
 	test_tbf_exhaustion();
+
+	if (getenv("TALLOC_REPORT_FULL"))
+		talloc_report_full(tall_pcu_ctx, stderr);
 	return EXIT_SUCCESS;
 }
 
