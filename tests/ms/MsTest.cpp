@@ -231,7 +231,6 @@ static void test_ms_replace_tbf()
 	printf("=== end %s ===\n", __func__);
 }
 
-
 static const struct log_info_cat default_categories[] = {
 	{"DPCU", "", "GPRS Packet Control Unit (PCU)", LOGL_INFO, 1},
 };

@@ -95,7 +95,8 @@ noinst_HEADERS = \
 	rlc.h \
 	decoding.h \
 	llc.h \
-	pcu_utils.h
+	pcu_utils.h \
+	cxx_linuxlist.h
 
 osmo_pcu_SOURCES = pcu_main.cpp
 
