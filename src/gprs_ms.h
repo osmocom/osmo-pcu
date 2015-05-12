@@ -24,6 +24,7 @@ struct gprs_rlcmac_tbf;
 struct gprs_rlcmac_dl_tbf;
 struct gprs_rlcmac_ul_tbf;
 
+#include "cxx_linuxlist.h"
 #include <stdint.h>
 #include <stddef.h>
 
@@ -64,6 +65,9 @@ public:
 	void* operator new(size_t num);
 	void operator delete(void* p);
 
+	LListHead<GprsMs>& list() {return this->m_list;}
+	const LListHead<GprsMs>& list() const {return this->m_list;}
+
 protected:
 	void update_status();
 	void ref();
@@ -76,4 +80,5 @@ private:
 	uint32_t m_tlli;
 	bool m_is_idle;
 	int m_ref;
+	LListHead<GprsMs> m_list;
 };

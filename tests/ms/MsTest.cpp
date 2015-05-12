@@ -23,6 +23,7 @@
 #include "tbf.h"
 #include "gprs_debug.h"
 #include "gprs_ms.h"
+#include "gprs_ms_storage.h"
 
 extern "C" {
 #include "pcu_vty.h"
@@ -231,6 +232,58 @@ static void test_ms_replace_tbf()
 	printf("=== end %s ===\n", __func__);
 }
 
+static void test_ms_storage()
+{
+	uint32_t tlli = 0xffeeddbb;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	GprsMs *ms;
+	GprsMsStorage store;
+
+	printf("=== start %s ===\n", __func__);
+
+	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
+	ul_tbf->direction = GPRS_RLCMAC_UL_TBF;
+
+	ms = store.get_ms(tlli + 0);
+	OSMO_ASSERT(ms == NULL);
+
+	ms = store.get_or_create_ms(tlli + 0);
+	OSMO_ASSERT(ms->tlli() == tlli + 0);
+
+	ms = store.get_ms(tlli + 0);
+	OSMO_ASSERT(ms != NULL);
+	OSMO_ASSERT(ms->tlli() == tlli + 0);
+
+	ms = store.get_or_create_ms(tlli + 1);
+	OSMO_ASSERT(ms->tlli() == tlli + 1);
+
+	ms = store.get_ms(tlli + 1);
+	OSMO_ASSERT(ms != NULL);
+	OSMO_ASSERT(ms->tlli() == tlli + 1);
+
+	/* delete ms */
+	ms = store.get_ms(tlli + 0);
+	OSMO_ASSERT(ms != NULL);
+	ms->attach_tbf(ul_tbf);
+	ms->detach_tbf(ul_tbf);
+	ms = store.get_ms(tlli + 0);
+	OSMO_ASSERT(ms == NULL);
+	ms = store.get_ms(tlli + 1);
+	OSMO_ASSERT(ms != NULL);
+
+	/* delete ms */
+	ms = store.get_ms(tlli + 1);
+	OSMO_ASSERT(ms != NULL);
+	ms->attach_tbf(ul_tbf);
+	ms->detach_tbf(ul_tbf);
+	ms = store.get_ms(tlli + 1);
+	OSMO_ASSERT(ms == NULL);
+
+	talloc_free(ul_tbf);
+
+	printf("=== end %s ===\n", __func__);
+}
+
 static const struct log_info_cat default_categories[] = {
 	{"DPCU", "", "GPRS Packet Control Unit (PCU)", LOGL_INFO, 1},
 };
@@ -267,6 +320,7 @@ int main(int argc, char **argv)
 	test_ms_state();
 	test_ms_callback();
 	test_ms_replace_tbf();
+	test_ms_storage();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
