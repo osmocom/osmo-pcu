@@ -32,6 +32,7 @@ extern "C" {
 #include "sba.h"
 #include "ta.h"
 #include "tbf.h"
+#include "gprs_ms_storage.h"
 #endif
 
 #include <stdint.h>
@@ -220,6 +221,9 @@ public:
 	void trigger_dl_ass(gprs_rlcmac_dl_tbf *tbf, gprs_rlcmac_tbf *old_tbf, const char *imsi);
 	void snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi);
 
+	GprsMsStorage &ms_store();
+	GprsMs *ms_by_tlli(uint32_t tlli, uint32_t old_tlli = 0);
+
 	/*
 	 * Statistics
 	 */
@@ -257,6 +261,8 @@ private:
 	gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir);
 	gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, uint8_t trx, enum gprs_rlcmac_tbf_direction dir);
 
+	GprsMsStorage m_ms_store;
+
 private:
 	/* disable copying to avoid slicing */
 	BTS(const BTS&);
@@ -276,6 +282,16 @@ inline TimingAdvance *BTS::timing_advance()
 inline SBAController *BTS::sba()
 {
 	return &m_sba;
+}
+
+inline GprsMsStorage &BTS::ms_store()
+{
+	return m_ms_store;
+}
+
+inline GprsMs *BTS::ms_by_tlli(uint32_t tlli, uint32_t old_tlli)
+{
+	return ms_store().get_ms(tlli, old_tlli);
 }
 
 inline BTS *gprs_rlcmac_pdch::bts() const

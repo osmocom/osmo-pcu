@@ -137,8 +137,11 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 static struct gprs_rlcmac_dl_tbf *tbf_lookup_dl(BTS *bts,
 					const uint32_t tlli, const char *imsi)
 {
-	/* TODO: look up by IMSI first, then tlli, then old_tlli */
-	return bts->dl_tbf_by_tlli(tlli);
+	GprsMs *ms = bts->ms_store().get_ms(tlli, 0, imsi);
+	if (!ms)
+		return NULL;
+
+	return ms->dl_tbf();
 }
 
 static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
@@ -148,15 +151,19 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 {
 	uint8_t trx, ta, ss;
 	int8_t use_trx;
-	struct gprs_rlcmac_ul_tbf *ul_tbf, *old_ul_tbf;
+	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL, *old_ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 	int8_t tfi; /* must be signed */
 	int rc;
+	GprsMs *ms;
 
 	/* check for uplink data, so we copy our informations */
 #warning "Do the same look up for IMSI, TLLI and OLD_TLLI"
 #warning "Refactor the below lines... into a new method"
-	ul_tbf = bts->bts->ul_tbf_by_tlli(tlli);
+	ms = bts->bts->ms_store().get_ms(tlli, 0, imsi);
+	if (ms)
+		ul_tbf = ms->ul_tbf();
+
 	if (ul_tbf && ul_tbf->m_contention_resolution_done
 	 && !ul_tbf->m_final_ack_sent) {
 		use_trx = ul_tbf->trx->trx_no;

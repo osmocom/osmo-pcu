@@ -884,13 +884,21 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 	int rc;
 
 	if (request->ID.UnionType) {
-		struct gprs_rlcmac_ul_tbf *ul_tbf;
-		struct gprs_rlcmac_dl_tbf *dl_tbf;
+		struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
+		struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 		uint32_t tlli = request->ID.u.TLLI;
 		uint8_t ms_class = 0;
 		uint8_t ta;
 
-		ul_tbf = bts()->ul_tbf_by_tlli(tlli);
+		GprsMs *ms = bts()->ms_by_tlli(tlli);
+		/* Keep the ms, even if it gets idle temporarily */
+		GprsMs::Guard guard(ms);
+
+		if (ms) {
+			ul_tbf = ms->ul_tbf();
+			dl_tbf = ms->dl_tbf();
+		}
+
 		if (ul_tbf) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 				"TLLI=0x%08x while %s still "
@@ -900,7 +908,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			ul_tbf = NULL;
 		}
 
-		if ((dl_tbf = bts()->dl_tbf_by_tlli(tlli))) {
+		if (dl_tbf) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 				"TLLI=0x%08x while %s still exists. "
 				"Killing pending DL TBF\n", tlli,

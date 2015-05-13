@@ -94,8 +94,7 @@ void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 void gprs_rlcmac_tbf::update_ms(uint32_t tlli)
 {
 	if (!ms())
-		/* TODO: access the container instead when that is implemented */
-		set_ms(new GprsMs(tlli));
+		set_ms(bts->ms_store().get_or_create_ms(tlli));
 	else
 		ms()->set_tlli(tlli);
 }
@@ -236,7 +235,14 @@ int gprs_rlcmac_tbf::update()
 	if (direction != GPRS_RLCMAC_DL_TBF)
 		return -EINVAL;
 
-	ul_tbf = bts->ul_tbf_by_tlli(m_tlli);
+	if (ms()) {
+		ul_tbf = ms()->ul_tbf();
+	} else if (is_tlli_valid()) {
+		LOGP(DRLCMAC, LOGL_NOTICE,
+			"Using ul_tbf_by_tlli() since there is no MS object for "
+			"TLLI 0x%08x\n", m_tlli);
+		ul_tbf = bts->ul_tbf_by_tlli(m_tlli);
+	}
 
 	tbf_unlink_pdch(this);
 	rc = bts_data->alloc_algorithm(bts_data, ul_tbf, this, bts_data->alloc_algorithm_curst, 0);
@@ -840,10 +846,12 @@ void gprs_rlcmac_tbf::update_tlli(uint32_t tlli)
 
 int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 {
-	struct gprs_rlcmac_tbf *dl_tbf, *ul_tbf;
+	struct gprs_rlcmac_tbf *dl_tbf = NULL;
+	struct gprs_rlcmac_tbf *ul_tbf = NULL;
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	uint32_t new_tlli;
 	int rc;
+	GprsMs *old_ms;
 
 	/* no TLLI yet */
 	if (!rh->ti) {
@@ -858,11 +866,21 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 		"of UL DATA TFI=%d.\n", rh->tfi);
 		return 0;
 	}
+
+	old_ms = bts->ms_by_tlli(new_tlli);
+	if (old_ms) {
+		/* Get them before calling set_ms() */
+		dl_tbf = old_ms->dl_tbf();
+		ul_tbf = old_ms->ul_tbf();
+
+		set_ms(old_ms);
+	}
+
 	update_tlli(new_tlli);
 	update_ms(new_tlli);
 	LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
 		"UL DATA TFI=%d.\n", tlli(), rh->tfi);
-	if ((dl_tbf = bts->dl_tbf_by_tlli(tlli()))) {
+	if (dl_tbf) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 			"TLLI=0x%08x while %s still exists. "
 			"Killing pending DL TBF\n", tlli(),
@@ -870,9 +888,7 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 		tbf_free(dl_tbf);
 		dl_tbf = NULL;
 	}
-	/* ul_tbf_by_tlli will not find your TLLI, because it is not
-	 * yet marked valid */
-	if ((ul_tbf = bts->ul_tbf_by_tlli(tlli()))) {
+	if (ul_tbf) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 			"TLLI=0x%08x while %s still exists. "
 			"Killing pending UL TBF\n", tlli(),
