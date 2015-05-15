@@ -95,8 +95,10 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli)
 {
 	if (!ms())
 		set_ms(bts->ms_store().get_or_create_ms(tlli));
-	else
+	else if (direction == GPRS_RLCMAC_UL_TBF)
 		ms()->set_tlli(tlli);
+	else
+		ms()->confirm_tlli(tlli);
 }
 
 gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
@@ -813,27 +815,6 @@ void gprs_rlcmac_tbf::update_tlli(uint32_t tlli)
 		return;
 
 	bool changedUl = false;
-
-	/*
-	 * During a Routing Area Update (due the assignment of a new
-	 * P-TMSI) the tlli can change. We notice this when receiving
-	 * a PACKET CONTROL ACK.
-	 * When we get a TLLI change on the DL we will look if there
-	 * is a UL TBF and change the tlli there as well.
-	 *
-	 * TODO: There could be multiple DL and UL TBFs and we should
-	 * have a proper way to link all the related TBFs so we can do
-	 * a group update.
-	 */
-	if (m_tlli_valid && direction == GPRS_RLCMAC_DL_TBF) {
-		gprs_rlcmac_tbf *ul_tbf;
-		ul_tbf = bts->ul_tbf_by_tlli(m_tlli);
-
-		if (ul_tbf) {
-			ul_tbf->m_tlli = tlli;
-			changedUl = true;
-		}
-	}
 
 	/* update the timing advance for the new tlli */
 	bts->timing_advance()->update(m_tlli, tlli, ta);

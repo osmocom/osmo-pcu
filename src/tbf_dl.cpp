@@ -135,9 +135,10 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 }
 
 static struct gprs_rlcmac_dl_tbf *tbf_lookup_dl(BTS *bts,
-					const uint32_t tlli, const char *imsi)
+					const uint32_t tlli, const uint32_t tlli_old, 
+					const char *imsi)
 {
-	GprsMs *ms = bts->ms_store().get_ms(tlli, 0, imsi);
+	GprsMs *ms = bts->ms_store().get_ms(tlli, tlli_old, imsi);
 	if (!ms)
 		return NULL;
 
@@ -146,7 +147,8 @@ static struct gprs_rlcmac_dl_tbf *tbf_lookup_dl(BTS *bts,
 
 static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 				const char *imsi,
-				const uint32_t tlli, const uint8_t ms_class,
+				const uint32_t tlli, const uint32_t tlli_old,
+				const uint8_t ms_class,
 				const uint8_t *data, const uint16_t len)
 {
 	uint8_t trx, ta, ss;
@@ -160,7 +162,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	/* check for uplink data, so we copy our informations */
 #warning "Do the same look up for IMSI, TLLI and OLD_TLLI"
 #warning "Refactor the below lines... into a new method"
-	ms = bts->bts->ms_store().get_ms(tlli, 0, imsi);
+	ms = bts->bts->ms_store().get_ms(tlli, tlli_old, imsi);
 	if (ms)
 		ul_tbf = ms->ul_tbf();
 
@@ -229,22 +231,25 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
  * TODO: split into unit test-able parts...
  */
 int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
-		const uint32_t tlli, const char *imsi,
+		const uint32_t tlli, const uint32_t tlli_old, const char *imsi,
 		const uint8_t ms_class, const uint16_t delay_csec,
 		const uint8_t *data, const uint16_t len)
 {
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
 
 	/* check for existing TBF */
-	dl_tbf = tbf_lookup_dl(bts->bts, tlli, imsi);
+	dl_tbf = tbf_lookup_dl(bts->bts, tlli, tlli_old, imsi);
 	if (dl_tbf) {
 		int rc = dl_tbf->append_data(ms_class, delay_csec, data, len);
 		if (rc >= 0)
 			dl_tbf->assign_imsi(imsi);
+
+		if (dl_tbf->ms())
+			dl_tbf->ms()->confirm_tlli(tlli);
 		return rc;
 	} 
 
-	return tbf_new_dl_assignment(bts, imsi, tlli, ms_class, data, len);
+	return tbf_new_dl_assignment(bts, imsi, tlli, tlli_old, ms_class, data, len);
 }
 
 struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)

@@ -58,9 +58,9 @@ GprsMs *GprsMsStorage::get_ms(uint32_t tlli, uint32_t old_tlli, const char *imsi
 
 	llist_for_each(pos, &m_list) {
 		ms = pos->entry();
-		if (tlli && ms->tlli() == tlli)
+		if (ms->check_tlli(tlli))
 			break;
-		if (old_tlli && ms->tlli() == old_tlli)
+		if (ms->check_tlli(old_tlli))
 			break;
 		/* TODO: Check for IMSI */
 

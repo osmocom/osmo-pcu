@@ -51,8 +51,10 @@ public:
 
 	gprs_rlcmac_ul_tbf *ul_tbf() const {return m_ul_tbf;}
 	gprs_rlcmac_dl_tbf *dl_tbf() const {return m_dl_tbf;}
-	uint32_t tlli() const {return m_tlli;}
+	uint32_t tlli() const;
 	void set_tlli(uint32_t tlli);
+	bool confirm_tlli(uint32_t tlli);
+	bool check_tlli(uint32_t tlli);
 
 	void attach_tbf(gprs_rlcmac_tbf *tbf);
 	void attach_ul_tbf(gprs_rlcmac_ul_tbf *tbf);
@@ -78,7 +80,20 @@ private:
 	gprs_rlcmac_ul_tbf *m_ul_tbf;
 	gprs_rlcmac_dl_tbf *m_dl_tbf;
 	uint32_t m_tlli;
+	uint32_t m_new_ul_tlli;
+	uint32_t m_new_dl_tlli;
 	bool m_is_idle;
 	int m_ref;
 	LListHead<GprsMs> m_list;
 };
+
+inline uint32_t GprsMs::tlli() const
+{
+	return m_new_ul_tlli ? m_new_ul_tlli : m_tlli;
+}
+
+inline bool GprsMs::check_tlli(uint32_t tlli)
+{
+	return tlli != 0 &&
+		(tlli == m_tlli || tlli == m_new_ul_tlli || tlli == m_new_dl_tlli);
+}

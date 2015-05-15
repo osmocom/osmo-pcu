@@ -58,6 +58,8 @@ GprsMs::GprsMs(uint32_t tlli) :
 	m_ul_tbf(NULL),
 	m_dl_tbf(NULL),
 	m_tlli(tlli),
+	m_new_ul_tlli(0),
+	m_new_dl_tlli(0),
 	m_is_idle(true),
 	m_ref(0),
 	m_list(this)
@@ -185,12 +187,52 @@ void GprsMs::update_status()
 
 void GprsMs::set_tlli(uint32_t tlli)
 {
-	if (tlli == m_tlli)
+	if (tlli == m_tlli || tlli == m_new_ul_tlli)
 		return;
 
+	if (tlli != m_new_dl_tlli) {
+		LOGP(DRLCMAC, LOGL_INFO,
+			"Modifying MS object, UL TLLI: 0x%08x -> 0x%08x, "
+			"not yet confirmed\n",
+			this->tlli(), tlli);
+		m_new_ul_tlli = tlli;
+		return;
+	}
+
 	LOGP(DRLCMAC, LOGL_INFO,
-		"Modifying MS object, TLLI: 0x%08x -> 0x%08x\n",
+		"Modifying MS object, TLLI: 0x%08x -> 0x%08x, "
+		"already confirmed partly\n",
 		m_tlli, tlli);
 
 	m_tlli = tlli;
+	m_new_dl_tlli = 0;
+	m_new_ul_tlli = 0;
+}
+
+bool GprsMs::confirm_tlli(uint32_t tlli)
+{
+	if (tlli == m_tlli || tlli == m_new_dl_tlli)
+		return false;
+
+	if (tlli != m_new_ul_tlli) {
+		/* The MS has not sent a message with the new TLLI, which may
+		 * happen according to the spec [TODO: add reference]. */
+
+		LOGP(DRLCMAC, LOGL_INFO,
+			"The MS object cannot fully confirm an unexpected TLLI: 0x%08x, "
+			"partly confirmed\n", tlli);
+		/* Use the network's idea of TLLI as candidate, this does not
+		 * change the result value of tlli() */
+		m_new_dl_tlli = tlli;
+		return false;
+	}
+
+	LOGP(DRLCMAC, LOGL_INFO,
+		"Modifying MS object, TLLI: 0x%08x confirmed\n", tlli);
+
+	m_tlli = tlli;
+	m_new_dl_tlli = 0;
+	m_new_ul_tlli = 0;
+
+	return true;
 }

@@ -51,6 +51,8 @@ static void check_tbf(gprs_rlcmac_tbf *tbf)
 static void test_tbf_tlli_update()
 {
 	BTS the_bts;
+	GprsMs *ms, *ms_new;
+
 	the_bts.bts_data()->alloc_algorithm = alloc_algorithm_a;
 	the_bts.bts_data()->trx[0].pdch[2].enable();
 	the_bts.bts_data()->trx[0].pdch[3].enable();
@@ -63,6 +65,7 @@ static void test_tbf_tlli_update()
 						0, 0, 0);
 	dl_tbf->update_tlli(0x2342);
 	dl_tbf->tlli_mark_valid();
+	dl_tbf->update_ms(0x2342);
 	dl_tbf->ta = 4;
 	the_bts.timing_advance()->remember(0x2342, dl_tbf->ta);
 
@@ -71,23 +74,33 @@ static void test_tbf_tlli_update()
 						0, 0, 0);
 	ul_tbf->update_tlli(0x2342);
 	ul_tbf->tlli_mark_valid();
-	
 
-	OSMO_ASSERT(the_bts.dl_tbf_by_tlli(0x2342) == dl_tbf);
-	OSMO_ASSERT(the_bts.ul_tbf_by_tlli(0x2342) == ul_tbf);
+	ms = the_bts.ms_by_tlli(0x2342);
 
+	OSMO_ASSERT(ms != NULL);
+	OSMO_ASSERT(ms->dl_tbf() == dl_tbf);
+	OSMO_ASSERT(ms->ul_tbf() == ul_tbf);
 
 	/*
 	 * Now check.. that DL changes and that the timing advance
 	 * has changed.
 	 */
 	dl_tbf->update_tlli(0x4232);
-	OSMO_ASSERT(!the_bts.dl_tbf_by_tlli(0x2342));
-	OSMO_ASSERT(!the_bts.ul_tbf_by_tlli(0x2342));
+	ms->confirm_tlli(0x4232);
 
-	
-	OSMO_ASSERT(the_bts.dl_tbf_by_tlli(0x4232) == dl_tbf);
-	OSMO_ASSERT(the_bts.ul_tbf_by_tlli(0x4232) == ul_tbf);
+	/* It is still there, since the new TLLI has not been used for UL yet */
+	ms_new = the_bts.ms_by_tlli(0x2342);
+	OSMO_ASSERT(ms == ms_new);
+
+	ms_new = the_bts.ms_by_tlli(0x4232);
+	OSMO_ASSERT(ms == ms_new);
+	OSMO_ASSERT(ms->dl_tbf() == dl_tbf);
+	OSMO_ASSERT(ms->ul_tbf() == ul_tbf);
+
+	/* Now use the new TLLI for UL */
+	ms->set_tlli(0x4232);
+	ms_new = the_bts.ms_by_tlli(0x2342);
+	OSMO_ASSERT(ms_new == NULL);
 
 	OSMO_ASSERT(the_bts.timing_advance()->recall(0x4232) == 4);
 }
@@ -318,7 +331,7 @@ static void test_tbf_exhaustion()
 
 		snprintf(imsi, sizeof(imsi)-1, "001001%9d", i);
 
-		rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, imsi, ms_class,
+		rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class,
 			delay_csec, buf, sizeof(buf));
 
 		if (rc < 0)

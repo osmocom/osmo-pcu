@@ -232,6 +232,99 @@ static void test_ms_replace_tbf()
 	printf("=== end %s ===\n", __func__);
 }
 
+static void test_ms_change_tlli()
+{
+	uint32_t start_tlli = 0xaa000000;
+	uint32_t new_ms_tlli = 0xff001111;
+	uint32_t other_sgsn_tlli = 0xff00eeee;
+	GprsMs *ms;
+
+	printf("=== start %s ===\n", __func__);
+
+	ms = new GprsMs(start_tlli);
+
+	OSMO_ASSERT(ms->is_idle());
+
+	/* MS announces TLLI, SGSN uses it immediately */
+	ms->set_tlli(new_ms_tlli);
+	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
+	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
+	OSMO_ASSERT(ms->check_tlli(start_tlli));
+
+	ms->confirm_tlli(new_ms_tlli);
+	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
+	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
+	OSMO_ASSERT(!ms->check_tlli(start_tlli));
+
+	/* MS announces TLLI, SGSN uses it later */
+	ms->set_tlli(start_tlli);
+	ms->confirm_tlli(start_tlli);
+
+	ms->set_tlli(new_ms_tlli);
+	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
+	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
+	OSMO_ASSERT(ms->check_tlli(start_tlli));
+
+	ms->confirm_tlli(start_tlli);
+	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
+	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
+	OSMO_ASSERT(ms->check_tlli(start_tlli));
+
+	ms->set_tlli(new_ms_tlli);
+	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
+	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
+	OSMO_ASSERT(ms->check_tlli(start_tlli));
+
+	ms->confirm_tlli(new_ms_tlli);
+	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
+	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
+	OSMO_ASSERT(!ms->check_tlli(start_tlli));
+
+	/* MS announces TLLI, SGSN uses it later after another new TLLI */
+	ms->set_tlli(start_tlli);
+	ms->confirm_tlli(start_tlli);
+
+	ms->set_tlli(new_ms_tlli);
+	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
+	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
+	OSMO_ASSERT(ms->check_tlli(start_tlli));
+
+	ms->confirm_tlli(other_sgsn_tlli);
+	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
+	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
+	OSMO_ASSERT(ms->check_tlli(other_sgsn_tlli));
+
+	ms->set_tlli(new_ms_tlli);
+	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
+	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
+	OSMO_ASSERT(ms->check_tlli(other_sgsn_tlli));
+
+	ms->confirm_tlli(new_ms_tlli);
+	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
+	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
+	OSMO_ASSERT(!ms->check_tlli(start_tlli));
+	OSMO_ASSERT(!ms->check_tlli(other_sgsn_tlli));
+
+	/* SGSN uses the new TLLI before it is announced by the MS (shouldn't
+	 * happen in normal use) */
+	ms->set_tlli(start_tlli);
+	ms->confirm_tlli(start_tlli);
+
+	ms->confirm_tlli(new_ms_tlli);
+	OSMO_ASSERT(ms->tlli() == start_tlli);
+	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
+	OSMO_ASSERT(ms->check_tlli(start_tlli));
+
+	ms->set_tlli(new_ms_tlli);
+	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
+	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
+	OSMO_ASSERT(!ms->check_tlli(start_tlli));
+
+	delete ms;
+
+	printf("=== end %s ===\n", __func__);
+}
+
 static void test_ms_storage()
 {
 	uint32_t tlli = 0xffeeddbb;
@@ -320,6 +413,7 @@ int main(int argc, char **argv)
 	test_ms_state();
 	test_ms_callback();
 	test_ms_replace_tbf();
+	test_ms_change_tlli();
 	test_ms_storage();
 
 	if (getenv("TALLOC_REPORT_FULL"))

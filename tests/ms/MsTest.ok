@@ -8,5 +8,7 @@
   ms_active() was called
   ms_idle() was called
 === end test_ms_replace_tbf ===
+=== start test_ms_change_tlli ===
+=== end test_ms_change_tlli ===
 === start test_ms_storage ===
 === end test_ms_storage ===

@@ -118,6 +118,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	struct bssgp_ud_hdr *budh;
 
 	uint32_t tlli;
+	uint32_t tlli_old = 0;
 	uint8_t *data;
 	uint16_t len;
 	char imsi[16] = "000";
@@ -163,9 +164,22 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP missing mandatory "
 			"PDU_LIFETIME IE\n");
 
+	/* get optional TLLI old */
+	if (TLVP_PRESENT(tp, BSSGP_IE_TLLI))
+	{
+		uint8_t tlli_len = TLVP_LEN(tp, BSSGP_IE_PDU_LIFETIME);
+		uint16_t *e_tlli_old = (uint16_t *) TLVP_VAL(tp, BSSGP_IE_TLLI);
+		if (tlli_len == 2)
+			tlli_old = ntohs(*e_tlli_old);
+		else
+			LOGP(DBSSGP, LOGL_NOTICE, "BSSGP invalid length of "
+				"TLLI (old) IE\n");
+	}
+
 	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x IMSI: %s len: %d\n", tlli, imsi, len);
 
-	return gprs_rlcmac_dl_tbf::handle(the_pcu.bts, tlli, imsi, ms_class, delay_csec, data, len);
+	return gprs_rlcmac_dl_tbf::handle(the_pcu.bts, tlli, tlli_old, imsi,
+			ms_class, delay_csec, data, len);
 }
 
 int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
