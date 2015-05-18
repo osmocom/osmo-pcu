@@ -65,7 +65,7 @@ static void test_tbf_tlli_update()
 						0, 0, 0);
 	dl_tbf->update_tlli(0x2342);
 	dl_tbf->tlli_mark_valid();
-	dl_tbf->update_ms(0x2342);
+	dl_tbf->update_ms(0x2342, GPRS_RLCMAC_DL_TBF);
 	dl_tbf->ta = 4;
 	the_bts.timing_advance()->remember(0x2342, dl_tbf->ta);
 

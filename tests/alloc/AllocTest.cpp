@@ -190,7 +190,7 @@ static void test_alloc_b(int ms_class)
 		dl_tbf = tbf_alloc_dl_tbf(bts, NULL, tfi, trx_no, ms_class, 1);
 		dl_tbf->m_tlli = 0x23;
 		dl_tbf->m_tlli_valid = true;
-		dl_tbf->update_ms(dl_tbf->m_tlli);
+		dl_tbf->update_ms(dl_tbf->m_tlli, GPRS_RLCMAC_DL_TBF);
 		OSMO_ASSERT(dl_tbf);
 		dump_assignment(dl_tbf, "DL");
 
@@ -199,7 +199,7 @@ static void test_alloc_b(int ms_class)
 		ul_tbf = tbf_alloc_ul_tbf(bts, dl_tbf, tfi, trx_no, ms_class, 0);
 		ul_tbf->m_tlli = 0x23;
 		ul_tbf->m_tlli_valid = true;
-		ul_tbf->update_ms(ul_tbf->m_tlli);
+		ul_tbf->update_ms(ul_tbf->m_tlli, GPRS_RLCMAC_UL_TBF);
 		ul_tbf->m_contention_resolution_done = 1;
 		OSMO_ASSERT(ul_tbf);
 		dump_assignment(ul_tbf, "UL");
@@ -350,7 +350,7 @@ static void test_alloc_b(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool 
 		OSMO_ASSERT(dl_tbf);
 		dl_tbf->m_tlli = 0x23;
 		dl_tbf->m_tlli_valid = true;
-		dl_tbf->update_ms(dl_tbf->m_tlli);
+		dl_tbf->update_ms(dl_tbf->m_tlli, GPRS_RLCMAC_DL_TBF);
 
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
@@ -358,7 +358,7 @@ static void test_alloc_b(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool 
 		OSMO_ASSERT(ul_tbf);
 		ul_tbf->m_tlli = 0x23;
 		ul_tbf->m_tlli_valid = true;
-		ul_tbf->update_ms(ul_tbf->m_tlli);
+		ul_tbf->update_ms(ul_tbf->m_tlli, GPRS_RLCMAC_UL_TBF);
 		ul_tbf->m_contention_resolution_done = 1;
 
 		OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);

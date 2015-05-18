@@ -208,7 +208,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	dl_tbf->m_tlli = tlli;
 	dl_tbf->m_tlli_valid = 1;
 	dl_tbf->ta = ta;
-	dl_tbf->update_ms(tlli);
+	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s [DOWNLINK] START\n", tbf_name(dl_tbf));
 
@@ -806,7 +806,7 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 	new_tbf->m_tlli_valid = m_tlli_valid;
 	new_tbf->ta = ta;
 	new_tbf->assign_imsi(m_imsi);
-	new_tbf->update_ms(m_tlli);
+	new_tbf->update_ms(m_tlli, GPRS_RLCMAC_DL_TBF);
 
 	/* Copy over all data to the new TBF */
 	new_tbf->m_llc.put_frame(data, len);

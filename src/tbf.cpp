@@ -96,11 +96,11 @@ void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 		m_ms->attach_tbf(this);
 }
 
-void gprs_rlcmac_tbf::update_ms(uint32_t tlli)
+void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
 {
 	if (!ms())
 		set_ms(bts->ms_store().get_or_create_ms(tlli));
-	else if (direction == GPRS_RLCMAC_UL_TBF)
+	else if (dir == GPRS_RLCMAC_UL_TBF)
 		ms()->set_tlli(tlli);
 	else
 		ms()->confirm_tlli(tlli);
@@ -136,7 +136,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	tbf->set_state(GPRS_RLCMAC_ASSIGN);
 	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 	tbf_timer_start(tbf, 3169, bts->t3169, 0);
-	tbf->update_ms(tlli);
+	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 
 	return tbf;
 }
@@ -863,7 +863,8 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 	}
 
 	update_tlli(new_tlli);
-	update_ms(new_tlli);
+	/* The TLLI has been taken from an UL message */
+	update_ms(new_tlli, GPRS_RLCMAC_UL_TBF);
 	LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
 		"UL DATA TFI=%d.\n", tlli(), rh->tfi);
 	if (dl_tbf) {

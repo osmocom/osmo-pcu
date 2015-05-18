@@ -750,9 +750,9 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	tbf->update_tlli(tlli);
 
 	if (tbf->new_tbf())
-		tbf->new_tbf()->update_ms(tlli);
+		tbf->new_tbf()->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 	else
-		tbf->update_ms(tlli);
+		tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] %s Packet Control Ack\n", tbf_name(tbf));
 	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
