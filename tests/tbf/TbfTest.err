@@ -66,8 +66,6 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 ********** TBF update **********
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
@@ -85,8 +83,6 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) New TBF TBF(TFI=1 TLLI=0x00
 ********** TBF ends here **********
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) free
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) stopping timer 0.
-Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN)
-Destroying MS object, TLLI = 0x00000000
 ********** TBF ends here **********
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=0.
@@ -134,8 +130,6 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 ********** TBF update **********
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
@@ -150,8 +144,6 @@ TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) starting timer 0.
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) free
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) stopping timer 0.
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN) Old TBF TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) still exists, detaching
-Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=ASSIGN)
-Destroying MS object, TLLI = 0x00000000
 ********** TBF ends here **********
 DL packet loss of IMSI= / TLLI=0x00000000: 0%
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free

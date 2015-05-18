@@ -802,11 +802,11 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 		return;
 	}
 
+	new_tbf->set_ms(ms());
 	new_tbf->m_tlli = m_tlli;
 	new_tbf->m_tlli_valid = m_tlli_valid;
 	new_tbf->ta = ta;
 	new_tbf->assign_imsi(m_imsi);
-	new_tbf->update_ms(m_tlli, GPRS_RLCMAC_DL_TBF);
 
 	/* Copy over all data to the new TBF */
 	new_tbf->m_llc.put_frame(data, len);
