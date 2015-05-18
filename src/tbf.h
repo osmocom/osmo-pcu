@@ -293,11 +293,6 @@ inline GprsMs *gprs_rlcmac_tbf::ms()
 	return m_ms;
 }
 
-inline uint32_t gprs_rlcmac_tbf::tlli() const
-{
-	return m_tlli;
-}
-
 inline bool gprs_rlcmac_tbf::is_tlli_valid() const
 {
 	return m_tlli_valid;

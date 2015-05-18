@@ -46,6 +46,11 @@ gprs_rlcmac_bts *gprs_rlcmac_tbf::bts_data() const
 	return bts->bts_data();
 }
 
+uint32_t gprs_rlcmac_tbf::tlli() const
+{
+	return m_ms ? m_ms->tlli() : m_tlli;
+}
+
 void gprs_rlcmac_tbf::assign_imsi(const char *imsi)
 {
 	strncpy(m_imsi, imsi, sizeof(m_imsi));
