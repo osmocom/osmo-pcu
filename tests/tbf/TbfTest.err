@@ -5,7 +5,6 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 1, because not enabled
 - Assign downlink TS=2
 - Setting Control TS 2
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changing tlli from TLLI=0x00000000 TLLI=0x00002342 ul_changed=0
 Creating MS object, TLLI = 0x00002342
 Attaching TBF to MS object, TLLI = 0x00002342, TBF = TBF(TFI=0 TLLI=0x00002342 DIR=DL STATE=NULL)
 ********** TBF starts here **********
@@ -15,9 +14,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 1, because not enabled
 - Assign uplink TS=2 USF=0
 - Setting Control TS 2
-Attaching TBF to MS object, TLLI = 0x00002342, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changing tlli from TLLI=0x00000000 TLLI=0x00002342 ul_changed=0
-TBF(TFI=0 TLLI=0x00002342 DIR=DL STATE=NULL) changing tlli from TLLI=0x00002342 TLLI=0x00004232 ul_changed=0
+Attaching TBF to MS object, TLLI = 0x00002342, TBF = TBF(TFI=0 TLLI=0x00002342 DIR=UL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0x00004232, partly confirmed
 Modifying MS object, TLLI: 0x00002342 -> 0x00004232, already confirmed partly
 Searching for first unallocated TFI: TRX=0 first TS=4

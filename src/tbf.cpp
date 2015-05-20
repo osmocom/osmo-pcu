@@ -48,7 +48,7 @@ gprs_rlcmac_bts *gprs_rlcmac_tbf::bts_data() const
 
 uint32_t gprs_rlcmac_tbf::tlli() const
 {
-	return m_ms ? m_ms->tlli() : m_tlli;
+	return m_ms ? m_ms->tlli() : 0;
 }
 
 void gprs_rlcmac_tbf::assign_imsi(const char *imsi)
@@ -129,8 +129,6 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 		/* FIXME: send reject */
 		return NULL;
 	}
-	tbf->m_tlli = tlli;
-	tbf->m_tlli_valid = 1; /* no contention resolution */
 	tbf->m_contention_resolution_done = 1;
 	tbf->ta = ta; /* use current TA */
 	tbf->set_state(GPRS_RLCMAC_ASSIGN);
@@ -242,14 +240,8 @@ int gprs_rlcmac_tbf::update()
 	if (direction != GPRS_RLCMAC_DL_TBF)
 		return -EINVAL;
 
-	if (ms()) {
+	if (ms())
 		ul_tbf = ms()->ul_tbf();
-	} else if (is_tlli_valid()) {
-		LOGP(DRLCMAC, LOGL_NOTICE,
-			"Using ul_tbf_by_tlli() since there is no MS object for "
-			"TLLI 0x%08x\n", m_tlli);
-		ul_tbf = bts->ul_tbf_by_tlli(m_tlli);
-	}
 
 	tbf_unlink_pdch(this);
 	rc = bts_data->alloc_algorithm(bts_data, ul_tbf, this, bts_data->alloc_algorithm_curst, 0);
@@ -762,8 +754,8 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	bitvec_unhex(ass_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	Encoding::write_packet_uplink_assignment(bts_data(), ass_vec, m_tfi,
-		(direction == GPRS_RLCMAC_DL_TBF), m_tlli,
-		m_tlli_valid, new_tbf, 1, bts_data()->alpha,
+		(direction == GPRS_RLCMAC_DL_TBF), tlli(),
+		is_tlli_valid(), new_tbf, 1, bts_data()->alpha,
 		bts_data()->gamma, -1);
 	bitvec_pack(ass_vec, msgb_put(msg, 23));
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
@@ -809,25 +801,10 @@ void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_pdch *pdch)
 	}
 }
 
-void gprs_rlcmac_tbf::tlli_mark_valid()
-{
-	m_tlli_valid = true;
-}
-
 void gprs_rlcmac_tbf::update_tlli(uint32_t tlli)
 {
-	if (tlli == m_tlli)
-		return;
-
-	bool changedUl = false;
-
 	/* update the timing advance for the new tlli */
-	bts->timing_advance()->update(m_tlli, tlli, ta);
-
-	LOGP(DRLCMAC, LOGL_NOTICE,
-		"%s changing tlli from TLLI=0x%08x TLLI=0x%08x ul_changed=%d\n",
-		tbf_name(this), m_tlli, tlli, changedUl);
-	m_tlli = tlli;
+	bts->timing_advance()->update(0, tlli, ta);
 }
 
 int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
@@ -883,8 +860,6 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 		tbf_free(ul_tbf);
 		ul_tbf = NULL;
 	}
-	/* mark TLLI valid now */
-	tlli_mark_valid();
 	/* store current timing advance */
 	bts->timing_advance()->remember(tlli(), ta);
 	return 1;
@@ -899,7 +874,7 @@ const char *gprs_rlcmac_tbf::name() const
 {
 	snprintf(m_name_buf, sizeof(m_name_buf) - 1,
 		"TBF(TFI=%d TLLI=0x%08x DIR=%s STATE=%s)",
-		m_tfi, m_tlli,
+		m_tfi, tlli(),
 		direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
 		state_name()
 		);

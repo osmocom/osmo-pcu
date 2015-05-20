@@ -141,7 +141,6 @@ struct gprs_rlcmac_tbf {
 	void update_tlli(uint32_t tlli);
 	uint32_t tlli() const;
 	bool is_tlli_valid() const;
-	void tlli_mark_valid();
 
 	/** MS updating */
 	void update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction);
@@ -221,8 +220,6 @@ struct gprs_rlcmac_tbf {
 	 * private fields. We can't make it private as it is breaking the
 	 * llist macros.
 	 */
-	uint32_t m_tlli;
-	uint8_t m_tlli_valid;
 	uint8_t m_tfi;
 	time_t m_created_ts;
 
@@ -295,7 +292,7 @@ inline GprsMs *gprs_rlcmac_tbf::ms()
 
 inline bool gprs_rlcmac_tbf::is_tlli_valid() const
 {
-	return m_tlli_valid;
+	return tlli() != 0;
 }
 
 inline uint8_t gprs_rlcmac_tbf::tfi() const

@@ -205,8 +205,6 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 		bts->bts->llc_dropped_frame();
 		return -EBUSY;
 	}
-	dl_tbf->m_tlli = tlli;
-	dl_tbf->m_tlli_valid = 1;
 	dl_tbf->ta = ta;
 	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
 
@@ -316,7 +314,7 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 			frames = 0xff;
 		if (octets > 0xffffff)
 			octets = 0xffffff;
-		bssgp_tx_llc_discarded(bctx, m_tlli, frames, octets);
+		bssgp_tx_llc_discarded(bctx, tlli(), frames, octets);
 	}
 
 	return msg;
@@ -796,15 +794,13 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 
 	if (!new_tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-		bssgp_tx_llc_discarded(gprs_bssgp_pcu_current_bctx(), m_tlli,
+		bssgp_tx_llc_discarded(gprs_bssgp_pcu_current_bctx(), tlli(),
 			1, len);
 		bts->llc_dropped_frame();
 		return;
 	}
 
 	new_tbf->set_ms(ms());
-	new_tbf->m_tlli = m_tlli;
-	new_tbf->m_tlli_valid = m_tlli_valid;
 	new_tbf->ta = ta;
 	new_tbf->assign_imsi(m_imsi);
 
@@ -819,9 +815,6 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 	m_tx_counter = 0;
 	m_wait_confirm = 0;
 	m_window.reset();
-
-	/* mark TLLI as invalid */
-	m_tlli_valid = 0;
 
 	/* keep to flags */
 	state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;

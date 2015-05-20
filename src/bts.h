@@ -206,8 +206,6 @@ public:
 	/** add paging to paging queue(s) */
 	int add_paging(uint8_t chan_needed, uint8_t *identity_lv);
 
-	gprs_rlcmac_dl_tbf *dl_tbf_by_tlli(uint32_t tlli);
-	gprs_rlcmac_ul_tbf *ul_tbf_by_tlli(uint32_t tlli);
 	gprs_rlcmac_dl_tbf *dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
 	gprs_rlcmac_ul_tbf *ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
 	gprs_rlcmac_dl_tbf *dl_tbf_by_tfi(uint8_t tfi, uint8_t trx);
@@ -258,7 +256,6 @@ private:
 	SBAController m_sba;
 	TimingAdvance m_ta;
 	struct rate_ctr_group *m_ratectrs;
-	gprs_rlcmac_tbf *tbf_by_tlli(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir);
 	gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, uint8_t trx, enum gprs_rlcmac_tbf_direction dir);
 
 	GprsMsStorage m_ms_store;

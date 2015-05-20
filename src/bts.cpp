@@ -217,39 +217,6 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 	return 0;
 }
 
-/* search for active downlink tbf */
-gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_tlli(uint32_t tlli)
-{
-	return static_cast<gprs_rlcmac_dl_tbf *>(tbf_by_tlli(tlli, GPRS_RLCMAC_DL_TBF));
-}
-
-/* search for active uplink tbf */
-gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_tlli(uint32_t tlli)
-{
-	return static_cast<gprs_rlcmac_ul_tbf *>(tbf_by_tlli(tlli, GPRS_RLCMAC_UL_TBF));
-}
-
-/* search for active downlink or uplink tbf */
-gprs_rlcmac_tbf *BTS::tbf_by_tlli(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
-{
-	struct gprs_rlcmac_tbf *tbf;
-	struct llist_pods *lpods;
-	if (dir == GPRS_RLCMAC_UL_TBF) {
-		llist_pods_for_each_entry(tbf, &m_bts.ul_tbfs, list, lpods) {
-			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
-			 && tbf->tlli() == tlli && tbf->is_tlli_valid())
-				return tbf;
-		}
-	} else {
-		llist_pods_for_each_entry(tbf, &m_bts.dl_tbfs, list, lpods) {
-			if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
-			 && tbf->tlli() == tlli && tbf->is_tlli_valid())
-				return tbf;
-		}
-	}
-	return NULL;
-}
-
 gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 {
 	struct gprs_rlcmac_dl_tbf *tbf;
@@ -377,9 +344,10 @@ int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir,
 
 int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 {
-	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 	uint8_t plen;
 	uint32_t tlli;
+	GprsMs *ms;
 
 	/* move to IA Rest Octets */
 	plen = data[0] >> 2;
@@ -399,7 +367,9 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	tlli |= (*data++) << 4;
 	tlli |= (*data++) >> 4;
 
-	dl_tbf = dl_tbf_by_tlli(tlli);
+	ms = ms_by_tlli(tlli);
+	if (ms)
+		dl_tbf = ms->dl_tbf();
 	if (!dl_tbf) {
 		LOGP(DRLCMAC, LOGL_ERROR, "Got IMM.ASS confirm, but TLLI=%08x "
 			"does not exit\n", tlli);
