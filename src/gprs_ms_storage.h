@@ -22,6 +22,7 @@
 
 #include "gprs_ms.h"
 #include "cxx_linuxlist.h"
+#include "tbf.h"
 #include <stdint.h>
 #include <stddef.h>
 
@@ -34,7 +35,7 @@ public:
 	virtual void ms_active(class GprsMs *);
 
 	GprsMs *get_ms(uint32_t tlli, uint32_t old_tlli = 0, const char *imsi = 0) const;
-	GprsMs *get_or_create_ms(uint32_t tlli, uint32_t old_tlli = 0, const char *imsi = 0);
+	GprsMs *create_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir);
 
 private:
 	LListHead<GprsMs> m_list;

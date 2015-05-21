@@ -329,7 +329,7 @@ static void test_ms_storage()
 {
 	uint32_t tlli = 0xffeeddbb;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	GprsMs *ms;
+	GprsMs *ms, *ms_tmp;
 	GprsMsStorage store;
 
 	printf("=== start %s ===\n", __func__);
@@ -340,18 +340,20 @@ static void test_ms_storage()
 	ms = store.get_ms(tlli + 0);
 	OSMO_ASSERT(ms == NULL);
 
-	ms = store.get_or_create_ms(tlli + 0);
-	OSMO_ASSERT(ms->tlli() == tlli + 0);
-
-	ms = store.get_ms(tlli + 0);
+	ms = store.create_ms(tlli + 0, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms->tlli() == tlli + 0);
 
-	ms = store.get_or_create_ms(tlli + 1);
+	ms_tmp = store.get_ms(tlli + 0);
+	OSMO_ASSERT(ms == ms_tmp);
+	OSMO_ASSERT(ms->tlli() == tlli + 0);
+
+	ms = store.create_ms(tlli + 1, GPRS_RLCMAC_UL_TBF);
+	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms->tlli() == tlli + 1);
 
-	ms = store.get_ms(tlli + 1);
-	OSMO_ASSERT(ms != NULL);
+	ms_tmp = store.get_ms(tlli + 1);
+	OSMO_ASSERT(ms == ms_tmp);
 	OSMO_ASSERT(ms->tlli() == tlli + 1);
 
 	/* delete ms */

@@ -89,7 +89,9 @@ private:
 
 inline uint32_t GprsMs::tlli() const
 {
-	return m_new_ul_tlli ? m_new_ul_tlli : m_tlli;
+	return m_new_ul_tlli ? m_new_ul_tlli :
+	       m_tlli        ? m_tlli :
+			       m_new_dl_tlli;
 }
 
 inline bool GprsMs::check_tlli(uint32_t tlli)

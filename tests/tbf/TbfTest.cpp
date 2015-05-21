@@ -72,6 +72,7 @@ static void test_tbf_tlli_update()
 						dl_tbf, 0,
 						0, 0, 0);
 	ul_tbf->update_tlli(0x2342);
+	ul_tbf->update_ms(0x2342, GPRS_RLCMAC_UL_TBF);
 
 	ms = the_bts.ms_by_tlli(0x2342);
 
@@ -84,7 +85,7 @@ static void test_tbf_tlli_update()
 	 * has changed.
 	 */
 	dl_tbf->update_tlli(0x4232);
-	ms->confirm_tlli(0x4232);
+	dl_tbf->update_ms(0x4232, GPRS_RLCMAC_DL_TBF);
 
 	/* It is still there, since the new TLLI has not been used for UL yet */
 	ms_new = the_bts.ms_by_tlli(0x2342);
@@ -96,7 +97,7 @@ static void test_tbf_tlli_update()
 	OSMO_ASSERT(ms->ul_tbf() == ul_tbf);
 
 	/* Now use the new TLLI for UL */
-	ms->set_tlli(0x4232);
+	ul_tbf->update_ms(0x4232, GPRS_RLCMAC_UL_TBF);
 	ms_new = the_bts.ms_by_tlli(0x2342);
 	OSMO_ASSERT(ms_new == NULL);
 

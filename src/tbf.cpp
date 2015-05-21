@@ -98,9 +98,16 @@ void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 
 void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
 {
-	if (!ms())
-		set_ms(bts->ms_store().get_or_create_ms(tlli));
-	else if (dir == GPRS_RLCMAC_UL_TBF)
+	if (!ms()) {
+		GprsMs *new_ms = bts->ms_store().get_ms(tlli);
+		if (!new_ms)
+			new_ms = bts->ms_store().create_ms(tlli, dir);
+
+		set_ms(new_ms);
+		return;
+	}
+
+	if (dir == GPRS_RLCMAC_UL_TBF)
 		ms()->set_tlli(tlli);
 	else
 		ms()->confirm_tlli(tlli);
