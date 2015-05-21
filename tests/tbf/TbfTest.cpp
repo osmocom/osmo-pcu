@@ -305,6 +305,59 @@ static void test_tbf_delayed_release()
 	printf("=== end %s ===\n", __func__);
 }
 
+static void test_tbf_imsi()
+{
+	BTS the_bts;
+	uint8_t ts_no = 4;
+	uint8_t ms_class = 45;
+	uint8_t trx_no;
+	GprsMs *ms1, *ms2;
+
+	gprs_rlcmac_dl_tbf *dl_tbf[2];
+
+	printf("=== start %s ===\n", __func__);
+
+	setup_bts(&the_bts, ts_no);
+
+	dl_tbf[0] = create_dl_tbf(&the_bts, ms_class, &trx_no);
+	dl_tbf[1] = create_dl_tbf(&the_bts, ms_class, &trx_no);
+
+	dl_tbf[0]->update_ms(0xf1000001, GPRS_RLCMAC_DL_TBF);
+	dl_tbf[1]->update_ms(0xf1000002, GPRS_RLCMAC_DL_TBF);
+
+	dl_tbf[0]->assign_imsi("001001000000001");
+	ms1 = the_bts.ms_store().get_ms(0, 0, "001001000000001");
+	/* OSMO_ASSERT(ms1 != NULL); */
+	ms2 = the_bts.ms_store().get_ms(0xf1000001);
+	OSMO_ASSERT(ms2 != NULL);
+	OSMO_ASSERT(strcmp(ms2->imsi(), "001001000000001") == 0);
+	/* OSMO_ASSERT(ms1 == ms2); */
+
+	/* change the IMSI on TBF 0 */
+	dl_tbf[0]->assign_imsi("001001000000002");
+	ms1 = the_bts.ms_store().get_ms(0, 0, "001001000000001");
+	OSMO_ASSERT(ms1 == NULL);
+	ms1 = the_bts.ms_store().get_ms(0, 0, "001001000000002");
+	/* OSMO_ASSERT(ms1 != NULL); */
+	OSMO_ASSERT(strcmp(ms2->imsi(), "001001000000002") == 0);
+	/* OSMO_ASSERT(ms1 == ms2); */
+
+	/* use the same IMSI on TBF 2 */
+	dl_tbf[1]->assign_imsi("001001000000002");
+	ms1 = the_bts.ms_store().get_ms(0, 0, "001001000000002");
+	/* OSMO_ASSERT(ms1 != NULL); */
+	OSMO_ASSERT(ms1 != ms2);
+	/* OSMO_ASSERT(strcmp(ms1->imsi(), "001001000000002") == 0); */
+	/* OSMO_ASSERT(strcmp(ms2->imsi(), "") == 0); */
+
+	tbf_free(dl_tbf[1]);
+	ms1 = the_bts.ms_store().get_ms(0, 0, "001001000000002");
+	OSMO_ASSERT(ms1 == NULL);
+
+	tbf_free(dl_tbf[0]);
+	printf("=== end %s ===\n", __func__);
+}
+
 static void test_tbf_exhaustion()
 {
 	BTS the_bts;
@@ -389,6 +442,7 @@ int main(int argc, char **argv)
 	test_tbf_final_ack(TEST_MODE_STANDARD);
 	test_tbf_final_ack(TEST_MODE_REVERSE_FREE);
 	test_tbf_delayed_release();
+	test_tbf_imsi();
 	test_tbf_exhaustion();
 
 	if (getenv("TALLOC_REPORT_FULL"))

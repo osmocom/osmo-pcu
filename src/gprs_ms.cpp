@@ -65,6 +65,8 @@ GprsMs::GprsMs(uint32_t tlli) :
 	m_list(this)
 {
 	LOGP(DRLCMAC, LOGL_INFO, "Creating MS object, TLLI = 0x%08x\n", tlli);
+
+	m_imsi[0] = 0;
 }
 
 GprsMs::~GprsMs()
@@ -236,3 +238,28 @@ bool GprsMs::confirm_tlli(uint32_t tlli)
 
 	return true;
 }
+
+void GprsMs::set_imsi(const char *imsi)
+{
+	if (!imsi) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Expected IMSI!\n");
+		return;
+	}
+
+	if (imsi[0] && strlen(imsi) < 3) {
+		LOGP(DRLCMAC, LOGL_ERROR, "No valid IMSI '%s'!\n",
+			imsi);
+		return;
+	}
+
+	if (strcmp(imsi, m_imsi) == 0)
+		return;
+
+	LOGP(DRLCMAC, LOGL_INFO,
+		"Modifying MS object, TLLI = 0x%08x, IMSI '%s' -> '%s'\n",
+		tlli(), m_imsi, imsi);
+
+	strncpy(m_imsi, imsi, sizeof(m_imsi));
+	m_imsi[sizeof(m_imsi) - 1] = '\0';
+}
+

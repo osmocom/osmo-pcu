@@ -363,6 +363,49 @@ DL packet loss of IMSI= / TLLI=0x00000000: 0%
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
 ********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: TFI=0 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=1.
+********** TBF starts here **********
+Allocating DL TBF: TFI=1 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
+Creating MS object, TLLI = 0x00000000
+The MS object cannot fully confirm an unexpected TLLI: 0xf1000001, partly confirmed
+Attaching TBF to MS object, TLLI = 0xf1000001, TBF = TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW)
+Creating MS object, TLLI = 0x00000000
+The MS object cannot fully confirm an unexpected TLLI: 0xf1000002, partly confirmed
+Attaching TBF to MS object, TLLI = 0xf1000002, TBF = TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW)
+Modifying MS object, TLLI = 0xf1000001, IMSI '' -> '001001000000001'
+Modifying MS object, TLLI = 0xf1000001, IMSI '001001000000001' -> '001001000000002'
+Modifying MS object, TLLI = 0xf1000002, IMSI '' -> '001001000000002'
+TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) free
+TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) Software error: Pending downlink assignment. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
+Detaching TBF from MS object, TLLI = 0xf1000002, TBF = TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW)
+Destroying MS object, TLLI = 0xf1000002
+********** TBF ends here **********
+TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW) free
+TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW) Software error: Pending downlink assignment. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
+Detaching TBF from MS object, TLLI = 0xf1000001, TBF = TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW)
+Destroying MS object, TLLI = 0xf1000001
+********** TBF ends here **********
 TA unknown, assuming 0
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=0.
@@ -379,6 +422,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000000, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000000, TBF = TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000000, IMSI '' -> '001001000000000'
 Send dowlink assignment for TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000000)
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -399,6 +443,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000001, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000001, TBF = TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL)
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000001, IMSI '' -> '001001000000001'
 Send dowlink assignment for TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000001)
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -419,6 +464,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000002, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000002, TBF = TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL)
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000002, IMSI '' -> '001001000000002'
 Send dowlink assignment for TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000002)
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -439,6 +485,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000003, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000003, TBF = TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL)
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000003, IMSI '' -> '001001000000003'
 Send dowlink assignment for TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000003)
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -459,6 +506,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000004, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000004, TBF = TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL)
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000004, IMSI '' -> '001001000000004'
 Send dowlink assignment for TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000004)
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -479,6 +527,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000005, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000005, TBF = TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL)
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000005, IMSI '' -> '001001000000005'
 Send dowlink assignment for TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000005)
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -499,6 +548,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000006, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000006, TBF = TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL)
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000006, IMSI '' -> '001001000000006'
 Send dowlink assignment for TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000006)
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -519,6 +569,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000007, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000007, TBF = TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL)
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000007, IMSI '' -> '001001000000007'
 Send dowlink assignment for TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000007)
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -539,6 +590,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000008, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000008, TBF = TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL)
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000008, IMSI '' -> '001001000000008'
 Send dowlink assignment for TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000008)
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -559,6 +611,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000009, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000009, TBF = TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL)
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000009, IMSI '' -> '001001000000009'
 Send dowlink assignment for TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000009)
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -579,6 +632,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000a, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc000000a, TBF = TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL)
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc000000a, IMSI '' -> '001001000000010'
 Send dowlink assignment for TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000010)
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -599,6 +653,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000b, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc000000b, TBF = TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL)
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc000000b, IMSI '' -> '001001000000011'
 Send dowlink assignment for TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000011)
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -619,6 +674,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000c, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc000000c, TBF = TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL)
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc000000c, IMSI '' -> '001001000000012'
 Send dowlink assignment for TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000012)
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -639,6 +695,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000d, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc000000d, TBF = TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL)
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc000000d, IMSI '' -> '001001000000013'
 Send dowlink assignment for TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000013)
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -659,6 +716,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000e, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc000000e, TBF = TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL)
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc000000e, IMSI '' -> '001001000000014'
 Send dowlink assignment for TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000014)
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -679,6 +737,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000f, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc000000f, TBF = TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL)
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc000000f, IMSI '' -> '001001000000015'
 Send dowlink assignment for TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000015)
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -699,6 +758,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000010, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000010, TBF = TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL)
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000010, IMSI '' -> '001001000000016'
 Send dowlink assignment for TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000016)
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -719,6 +779,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000011, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000011, TBF = TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL)
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000011, IMSI '' -> '001001000000017'
 Send dowlink assignment for TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000017)
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -739,6 +800,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000012, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000012, TBF = TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL)
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000012, IMSI '' -> '001001000000018'
 Send dowlink assignment for TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000018)
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -759,6 +821,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000013, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000013, TBF = TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL)
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000013, IMSI '' -> '001001000000019'
 Send dowlink assignment for TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000019)
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -779,6 +842,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000014, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000014, TBF = TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL)
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000014, IMSI '' -> '001001000000020'
 Send dowlink assignment for TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000020)
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -799,6 +863,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000015, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000015, TBF = TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL)
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000015, IMSI '' -> '001001000000021'
 Send dowlink assignment for TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000021)
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -819,6 +884,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000016, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000016, TBF = TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL)
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000016, IMSI '' -> '001001000000022'
 Send dowlink assignment for TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000022)
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -839,6 +905,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000017, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000017, TBF = TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL)
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000017, IMSI '' -> '001001000000023'
 Send dowlink assignment for TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000023)
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -859,6 +926,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000018, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000018, TBF = TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL)
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000018, IMSI '' -> '001001000000024'
 Send dowlink assignment for TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000024)
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -879,6 +947,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000019, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc0000019, TBF = TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL)
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0000019, IMSI '' -> '001001000000025'
 Send dowlink assignment for TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000025)
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -899,6 +968,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001a, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc000001a, TBF = TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL)
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc000001a, IMSI '' -> '001001000000026'
 Send dowlink assignment for TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000026)
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -919,6 +989,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001b, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc000001b, TBF = TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL)
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc000001b, IMSI '' -> '001001000000027'
 Send dowlink assignment for TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000027)
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -939,6 +1010,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001c, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc000001c, TBF = TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL)
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc000001c, IMSI '' -> '001001000000028'
 Send dowlink assignment for TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000028)
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -959,6 +1031,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001d, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc000001d, TBF = TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL)
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc000001d, IMSI '' -> '001001000000029'
 Send dowlink assignment for TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000029)
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -979,6 +1052,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001e, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc000001e, TBF = TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL)
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc000001e, IMSI '' -> '001001000000030'
 Send dowlink assignment for TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000030)
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
@@ -999,6 +1073,7 @@ Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001f, partly confirmed
 Attaching TBF to MS object, TLLI = 0xc000001f, TBF = TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL)
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc000001f, IMSI '' -> '001001000000031'
 Send dowlink assignment for TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000031)
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)

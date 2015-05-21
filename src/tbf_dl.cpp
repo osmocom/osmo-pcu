@@ -802,7 +802,6 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 
 	new_tbf->set_ms(ms());
 	new_tbf->ta = ta;
-	new_tbf->assign_imsi(m_imsi);
 
 	/* Copy over all data to the new TBF */
 	new_tbf->m_llc.put_frame(data, len);

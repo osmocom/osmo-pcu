@@ -223,9 +223,6 @@ struct gprs_rlcmac_tbf {
 	uint8_t m_tfi;
 	time_t m_created_ts;
 
-	/* store IMSI for look-up and PCH retransmission */
-	char m_imsi[16];
-
 protected:
 	gprs_rlcmac_bts *bts_data() const;
 
@@ -298,11 +295,6 @@ inline bool gprs_rlcmac_tbf::is_tlli_valid() const
 inline uint8_t gprs_rlcmac_tbf::tfi() const
 {
 	return m_tfi;
-}
-
-inline const char *gprs_rlcmac_tbf::imsi() const
-{
-	return m_imsi;
 }
 
 inline gprs_rlcmac_tbf *gprs_rlcmac_tbf::new_tbf() const

@@ -51,10 +51,42 @@ uint32_t gprs_rlcmac_tbf::tlli() const
 	return m_ms ? m_ms->tlli() : 0;
 }
 
-void gprs_rlcmac_tbf::assign_imsi(const char *imsi)
+const char *gprs_rlcmac_tbf::imsi() const
 {
-	strncpy(m_imsi, imsi, sizeof(m_imsi));
-	m_imsi[sizeof(m_imsi) - 1] = '\0';
+	static const char nullc = 0;
+	return m_ms ? m_ms->imsi() : &nullc;
+}
+
+void gprs_rlcmac_tbf::assign_imsi(const char *imsi_)
+{
+	GprsMs *old_ms;
+
+	if (!imsi_ || !m_ms) {
+		LOGP(DRLCMAC, LOGL_ERROR,
+			"%s failed to assign IMSI: missing IMSI or MS object\n",
+			name());
+		return;
+	}
+
+	if (strcmp(imsi_, imsi()) == 0)
+		return;
+
+	/* really change the IMSI */
+
+	old_ms = bts->ms_store().get_ms(0, 0, imsi_);
+	if (old_ms) {
+		/* We cannot find m_ms by IMSI since we know that it has a
+		 * different IMSI */
+		OSMO_ASSERT(old_ms != m_ms);
+
+		LOGP(DRLCMAC, LOGL_INFO,
+			"%s the IMSI '%s' was already assigned to another "
+			"MS object: TLLI = 0x%08x, that IMSI will be removed\n",
+			name(), imsi_, old_ms->tlli());
+		old_ms->set_imsi("");
+	}
+
+	m_ms->set_imsi(imsi_);
 }
 
 void gprs_rlcmac_tbf::set_new_tbf(gprs_rlcmac_tbf *tbf)
@@ -404,9 +436,9 @@ void gprs_rlcmac_tbf::poll_timeout()
 			LOGP(DRLCMAC, LOGL_DEBUG, "Re-send dowlink assignment "
 				"for %s on PCH (IMSI=%s)\n",
 				tbf_name(dl_tbf),
-				m_imsi);
+				imsi());
 			/* send immediate assignment */
-			dl_tbf->bts->snd_dl_ass(dl_tbf, 0, m_imsi);
+			dl_tbf->bts->snd_dl_ass(dl_tbf, 0, imsi());
 			dl_tbf->m_wait_confirm = 1;
 		}
 	} else
