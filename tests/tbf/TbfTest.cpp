@@ -328,7 +328,7 @@ static void test_tbf_exhaustion()
 		char imsi[16] = {0};
 		unsigned delay_csec = 1000;
 
-		snprintf(imsi, sizeof(imsi)-1, "001001%9d", i);
+		snprintf(imsi, sizeof(imsi), "001001%09d", i);
 
 		rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class,
 			delay_csec, buf, sizeof(buf));
