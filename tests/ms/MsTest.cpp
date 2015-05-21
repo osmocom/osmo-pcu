@@ -328,6 +328,9 @@ static void test_ms_change_tlli()
 static void test_ms_storage()
 {
 	uint32_t tlli = 0xffeeddbb;
+	const char *imsi1 = "001001987654321";
+	const char *imsi2 = "001001987654322";
+
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	GprsMs *ms, *ms_tmp;
 	GprsMsStorage store;
@@ -343,18 +346,35 @@ static void test_ms_storage()
 	ms = store.create_ms(tlli + 0, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms->tlli() == tlli + 0);
+	ms->set_imsi(imsi1);
+	OSMO_ASSERT(strcmp(ms->imsi(), imsi1) == 0);
 
 	ms_tmp = store.get_ms(tlli + 0);
 	OSMO_ASSERT(ms == ms_tmp);
 	OSMO_ASSERT(ms->tlli() == tlli + 0);
 
+	ms_tmp = store.get_ms(0, 0, imsi1);
+	OSMO_ASSERT(ms == ms_tmp);
+	OSMO_ASSERT(strcmp(ms->imsi(), imsi1) == 0);
+	ms_tmp = store.get_ms(0, 0, imsi2);
+	OSMO_ASSERT(ms_tmp == NULL);
+
 	ms = store.create_ms(tlli + 1, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms->tlli() == tlli + 1);
+	ms->set_imsi(imsi2);
+	OSMO_ASSERT(strcmp(ms->imsi(), imsi2) == 0);
 
 	ms_tmp = store.get_ms(tlli + 1);
 	OSMO_ASSERT(ms == ms_tmp);
 	OSMO_ASSERT(ms->tlli() == tlli + 1);
+
+	ms_tmp = store.get_ms(0, 0, imsi1);
+	OSMO_ASSERT(ms_tmp != NULL);
+	OSMO_ASSERT(ms_tmp != ms);
+	ms_tmp = store.get_ms(0, 0, imsi2);
+	OSMO_ASSERT(ms == ms_tmp);
+	OSMO_ASSERT(strcmp(ms->imsi(), imsi2) == 0);
 
 	/* delete ms */
 	ms = store.get_ms(tlli + 0);

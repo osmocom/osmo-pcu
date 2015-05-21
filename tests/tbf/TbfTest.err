@@ -395,6 +395,8 @@ The MS object cannot fully confirm an unexpected TLLI: 0xf1000002, partly confir
 Attaching TBF to MS object, TLLI = 0xf1000002, TBF = TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW)
 Modifying MS object, TLLI = 0xf1000001, IMSI '' -> '001001000000001'
 Modifying MS object, TLLI = 0xf1000001, IMSI '001001000000001' -> '001001000000002'
+TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) the IMSI '001001000000002' was already assigned to another MS object: TLLI = 0xf1000001, that IMSI will be removed
+Modifying MS object, TLLI = 0xf1000001, IMSI '001001000000002' -> ''
 Modifying MS object, TLLI = 0xf1000002, IMSI '' -> '001001000000002'
 TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) free
 TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) Software error: Pending downlink assignment. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!

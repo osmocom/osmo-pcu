@@ -53,22 +53,30 @@ void GprsMsStorage::ms_active(class GprsMs *ms)
 
 GprsMs *GprsMsStorage::get_ms(uint32_t tlli, uint32_t old_tlli, const char *imsi) const
 {
-	GprsMs *ms = NULL;
+	GprsMs *ms;
 	LListHead<GprsMs> *pos;
 
-	llist_for_each(pos, &m_list) {
-		ms = pos->entry();
-		if (ms->check_tlli(tlli))
-			break;
-		if (ms->check_tlli(old_tlli))
-			break;
-		/* TODO: Check for IMSI */
-
-		/* not found */
-		ms = NULL;
+	if (tlli || old_tlli) {
+		llist_for_each(pos, &m_list) {
+			ms = pos->entry();
+			if (ms->check_tlli(tlli))
+				return ms;
+			if (ms->check_tlli(old_tlli))
+				return ms;
+		}
 	}
 
-	return ms;
+	/* not found by TLLI */
+
+	if (imsi && imsi[0]) {
+		llist_for_each(pos, &m_list) {
+			ms = pos->entry();
+			if (strcmp(imsi, ms->imsi()) == 0)
+				return ms;
+		}
+	}
+
+	return NULL;
 }
 
 GprsMs *GprsMsStorage::create_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
