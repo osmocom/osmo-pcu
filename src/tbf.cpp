@@ -621,7 +621,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 
 				dl_tbf->update();
 
-				dl_tbf->bts->trigger_dl_ass(dl_tbf, dl_tbf, NULL);
+				dl_tbf->bts->trigger_dl_ass(dl_tbf, dl_tbf);
 			} else
 				LOGP(DRLCMAC, LOGL_NOTICE, "%s Continue flow after "
 					"IMM.ASS confirm\n", tbf_name(dl_tbf));

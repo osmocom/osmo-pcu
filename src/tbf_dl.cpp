@@ -221,7 +221,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	 * we don't use old_downlink, so the possible uplink is used
 	 * to trigger downlink assignment. if there is no uplink,
 	 * AGCH is used. */
-	dl_tbf->bts->trigger_dl_ass(dl_tbf, old_ul_tbf, imsi);
+	dl_tbf->bts->trigger_dl_ass(dl_tbf, old_ul_tbf);
 	return 0;
 }
 
@@ -824,7 +824,7 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s Trigger dowlink assignment on PACCH, "
 		"because another LLC PDU has arrived in between\n",
 		tbf_name(this));
-	bts->trigger_dl_ass(new_tbf, this, NULL);
+	bts->trigger_dl_ass(new_tbf, this);
 }
 
 bool gprs_rlcmac_dl_tbf::dl_window_stalled() const

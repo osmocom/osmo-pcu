@@ -471,7 +471,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 /* depending on the current TBF, we assign on PACCH or AGCH */
 void BTS::trigger_dl_ass(
 	struct gprs_rlcmac_dl_tbf *dl_tbf,
-	struct gprs_rlcmac_tbf *old_tbf, const char *imsi)
+	struct gprs_rlcmac_tbf *old_tbf)
 {
 	/* stop pending timer */
 	dl_tbf->stop_timer();
@@ -493,19 +493,14 @@ void BTS::trigger_dl_ass(
 		/* start timer */
 		tbf_timer_start(dl_tbf, 0, Tassign_pacch);
 	} else {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for %s on PCH, no TBF exist (IMSI=%s)\n", tbf_name(dl_tbf), imsi);
-		if (!imsi || strlen(imsi) < 3) {
-			LOGP(DRLCMAC, LOGL_ERROR, "No valid IMSI!\n");
-			return;
-		}
+		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for %s on PCH, no TBF exist (IMSI=%s)\n", tbf_name(dl_tbf), dl_tbf->imsi());
 		dl_tbf->was_releasing = dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 		/* change state */
 		dl_tbf->set_state(GPRS_RLCMAC_ASSIGN);
 		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
-		dl_tbf->assign_imsi(imsi);
 		dl_tbf->set_new_tbf(dl_tbf);
 		/* send immediate assignment */
-		dl_tbf->bts->snd_dl_ass(dl_tbf, 0, imsi);
+		dl_tbf->bts->snd_dl_ass(dl_tbf, 0, dl_tbf->imsi());
 		dl_tbf->m_wait_confirm = 1;
 	}
 }
