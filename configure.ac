@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script
 AC_INIT([osmo-pcu],
 	m4_esyscmd([./git-version-gen .tarball-version]),
-	[osmocom-pcu@lists.osmocom.org])
+	[osmocom-net-gprs@lists.osmocom.org])
 
 AM_INIT_AUTOMAKE([dist-bzip2])
 AC_CONFIG_TESTDIR(tests)
