@@ -79,7 +79,10 @@ struct l1fwd_hdl *l1fh = talloc_zero(NULL, struct l1fwd_hdl);
 
 int pcu_sock_send(struct msgb *msg)
 {
-	osmo_wqueue_enqueue(&l1fh->udp_wq, msg);
+	if (osmo_wqueue_enqueue(&l1fh->udp_wq, msg) != 0) {
+		LOGP(DPCU, LOGL_ERROR, "PCU write queue full. Dropping message.\n");
+		msgb_free(msg);
+	}
 	return 0;
 }
 

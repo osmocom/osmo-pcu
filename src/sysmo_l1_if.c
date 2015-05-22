@@ -36,7 +36,10 @@ static int l1if_req_pdch(struct femtol1_hdl *fl1h, struct msgb *msg)
 {
 	struct osmo_wqueue *wqueue = &fl1h->write_q[MQ_PDTCH_WRITE];
 
-	osmo_wqueue_enqueue(wqueue, msg);
+	if (osmo_wqueue_enqueue(wqueue, msg) != 0) {
+		LOGP(DL1IF, LOGL_ERROR, "PDTCH queue full. dropping message.\n");
+		msgb_free(msg);
+	}
 
 	return 0;
 }
@@ -324,7 +327,10 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 
 
 	/* transmit */
-	osmo_wqueue_enqueue(&fl1h->write_q[MQ_PDTCH_WRITE], msg);
+	if (osmo_wqueue_enqueue(&fl1h->write_q[MQ_PDTCH_WRITE], msg) != 0) {
+		LOGP(DL1IF, LOGL_ERROR, "PDTCH queue full. dropping message.\n");
+		msgb_free(msg);
+	}
 
 	return 0;
 }
