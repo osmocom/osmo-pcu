@@ -177,6 +177,7 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	uint32_t fn;
 	uint8_t block_nr;
 	uint8_t trx_no;
+	uint32_t tlli = 0xffeeddcc;
 
 	uint8_t rbb[64/8];
 
@@ -187,6 +188,7 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 
 	setup_bts(&the_bts, ts_no);
 	dl_tbf = create_dl_tbf(&the_bts, ms_class, &trx_no);
+	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
 
 	for (i = 0; i < sizeof(llc_data); i++)
 		llc_data[i] = i%256;
@@ -242,6 +244,7 @@ static void test_tbf_delayed_release()
 	uint32_t fn = 0;
 	uint8_t block_nr = 0;
 	uint8_t trx_no;
+	uint32_t tlli = 0xffeeddcc;
 
 	uint8_t rbb[64/8];
 
@@ -255,6 +258,7 @@ static void test_tbf_delayed_release()
 	bts->dl_tbf_idle_msec = 200;
 
 	dl_tbf = create_dl_tbf(&the_bts, ms_class, &trx_no);
+	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
 
 	for (i = 0; i < sizeof(llc_data); i++)
 		llc_data[i] = i%256;
