@@ -56,9 +56,6 @@ ms_MsTest_LDFLAGS = \
 
 llist_LListTest_SOURCES = llist/LListTest.cpp
 llist_LListTest_LDADD = \
-	$(top_builddir)/src/libgprs.la \
-	$(LIBOSMOGB_LIBS) \
-	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
