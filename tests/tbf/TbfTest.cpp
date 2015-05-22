@@ -78,8 +78,7 @@ static void test_tbf_tlli_update()
 						0, 0, 0);
 	dl_tbf->update_tlli(0x2342);
 	dl_tbf->update_ms(0x2342, GPRS_RLCMAC_DL_TBF);
-	dl_tbf->ta = 4;
-	the_bts.timing_advance()->remember(0x2342, dl_tbf->ta);
+	dl_tbf->set_ta(4);
 
 	gprs_rlcmac_tbf *ul_tbf = tbf_alloc_ul_tbf(the_bts.bts_data(),
 						dl_tbf, 0,
@@ -114,7 +113,17 @@ static void test_tbf_tlli_update()
 	ms_new = the_bts.ms_by_tlli(0x2342);
 	OSMO_ASSERT(ms_new == NULL);
 
-	OSMO_ASSERT(the_bts.timing_advance()->recall(0x4232) == 4);
+	ms_new = the_bts.ms_by_tlli(0x4232);
+	OSMO_ASSERT(ms_new != NULL);
+	OSMO_ASSERT(ms_new->ta() == 4);
+
+	OSMO_ASSERT(ul_tbf->ta() == 4);
+	OSMO_ASSERT(dl_tbf->ta() == 4);
+
+	ul_tbf->set_ta(6);
+
+	OSMO_ASSERT(ul_tbf->ta() == 6);
+	OSMO_ASSERT(dl_tbf->ta() == 6);
 }
 
 static uint8_t llc_data[200];
@@ -439,9 +448,9 @@ static void test_tbf_single_phase()
 	OSMO_ASSERT(ul_tbf != NULL);
 
 	fprintf(stderr, "Got '%s', TA=%d\n",
-		ul_tbf->name(), ul_tbf->ta);
+		ul_tbf->name(), ul_tbf->ta());
 
-	OSMO_ASSERT(ul_tbf->ta == qta / 4);
+	OSMO_ASSERT(ul_tbf->ta() == qta / 4);
 
 	uint8_t data_msg[23] = {
 		0x00, /* GPRS_RLCMAC_DATA_BLOCK << 6 */
@@ -455,7 +464,8 @@ static void test_tbf_single_phase()
 
 	ms = the_bts.ms_by_tlli(0xf1223344);
 	OSMO_ASSERT(ms != NULL);
-	fprintf(stderr, "Got MS: TLLI = 0x%08x\n", ms->tlli());
+	fprintf(stderr, "Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
+	OSMO_ASSERT(ms->ta() == qta/4);
 
 	printf("=== end %s ===\n", __func__);
 }
@@ -515,9 +525,9 @@ static void test_tbf_two_phase()
 	OSMO_ASSERT(ul_tbf != NULL);
 
 	fprintf(stderr, "Got '%s', TA=%d\n",
-		ul_tbf->name(), ul_tbf->ta);
+		ul_tbf->name(), ul_tbf->ta());
 
-	OSMO_ASSERT(ul_tbf->ta == qta / 4);
+	OSMO_ASSERT(ul_tbf->ta() == qta / 4);
 
 	/* send packet uplink assignment */
 	rts_fn += 52;
@@ -535,7 +545,8 @@ static void test_tbf_two_phase()
 
 	ms = the_bts.ms_by_tlli(0xf1223344);
 	OSMO_ASSERT(ms != NULL);
-	fprintf(stderr, "Got MS: TLLI = 0x%08x\n", ms->tlli());
+	fprintf(stderr, "Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
+	OSMO_ASSERT(ms->ta() == qta/4);
 
 	printf("=== end %s ===\n", __func__);
 }

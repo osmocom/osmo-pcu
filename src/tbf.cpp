@@ -89,13 +89,32 @@ void gprs_rlcmac_tbf::assign_imsi(const char *imsi_)
 	m_ms->set_imsi(imsi_);
 }
 
+uint8_t gprs_rlcmac_tbf::ta() const
+{
+	return m_ms ? m_ms->ta() : m_ta;
+}
+
+void gprs_rlcmac_tbf::set_ta(uint8_t ta)
+{
+	if (ms())
+		ms()->set_ta(ta);
+
+	m_ta = ta;
+}
+
 void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 {
 	if (m_ms == ms)
 		return;
 
-	if (m_ms)
+	if (m_ms) {
+		/* Save the TA locally. This will also be called, if the MS
+		 * object detaches itself from the TBF, for instance if
+		 * attach_tbf() is called */
+		m_ta = m_ms->ta();
+
 		m_ms->detach_tbf(this);
+	}
 
 	m_ms = ms;
 
@@ -109,6 +128,9 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction di
 		GprsMs *new_ms = bts->ms_store().get_ms(tlli);
 		if (!new_ms)
 			new_ms = bts->ms_store().create_ms(tlli, dir);
+
+		if (dir == GPRS_RLCMAC_UL_TBF)
+			new_ms->set_ta(m_ta);
 
 		set_ms(new_ms);
 		return;
@@ -144,11 +166,13 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 		return NULL;
 	}
 	tbf->m_contention_resolution_done = 1;
-	tbf->ta = ta; /* use current TA */
 	tbf->set_state(GPRS_RLCMAC_ASSIGN);
 	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 	tbf_timer_start(tbf, 3169, bts->t3169, 0);
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
+	OSMO_ASSERT(tbf->ms());
+
+	tbf->ms()->set_ta(ta);
 
 	return tbf;
 }
@@ -786,8 +810,6 @@ void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_pdch *pdch)
 
 void gprs_rlcmac_tbf::update_tlli(uint32_t tlli)
 {
-	/* update the timing advance for the new tlli */
-	bts->timing_advance()->update(0, tlli, ta);
 }
 
 int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
@@ -843,8 +865,6 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 		tbf_free(ul_tbf);
 		ul_tbf = NULL;
 	}
-	/* store current timing advance */
-	bts->timing_advance()->remember(tlli(), ta);
 	return 1;
 }
 

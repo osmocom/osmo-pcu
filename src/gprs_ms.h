@@ -59,6 +59,9 @@ public:
 	const char *imsi() const;
 	void set_imsi(const char *imsi);
 
+	uint8_t ta() const;
+	void set_ta(uint8_t ta);
+
 	void attach_tbf(gprs_rlcmac_tbf *tbf);
 	void attach_ul_tbf(gprs_rlcmac_ul_tbf *tbf);
 	void attach_dl_tbf(gprs_rlcmac_dl_tbf *tbf);
@@ -88,6 +91,7 @@ private:
 
 	/* store IMSI for look-up and PCH retransmission */
 	char m_imsi[16];
+	uint8_t m_ta;
 
 	bool m_is_idle;
 	int m_ref;
@@ -110,4 +114,9 @@ inline bool GprsMs::check_tlli(uint32_t tlli)
 inline const char *GprsMs::imsi() const
 {
 	return m_imsi;
+}
+
+inline uint8_t GprsMs::ta() const
+{
+	return m_ta;
 }

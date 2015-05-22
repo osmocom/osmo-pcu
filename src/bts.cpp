@@ -438,7 +438,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 			/* FIXME: send reject */
 			return -EBUSY;
 		}
-		tbf->ta = qta >> 2;
+		tbf->set_ta(qta >> 2);
 		tbf->set_state(GPRS_RLCMAC_FLOW);
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
 		tbf_timer_start(tbf, 3169, m_bts.t3169, 0);
@@ -461,7 +461,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 			m_bts.alpha, m_bts.gamma, -1);
 	else
 		plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
-			Fn, tbf->ta, tbf->trx->arfcn, tbf->first_ts, tbf->tsc(),
+			Fn, tbf->ta(), tbf->trx->arfcn, tbf->first_ts, tbf->tsc(),
 			tbf->tfi(), tbf->m_usf[tbf->first_ts], 0, 0, 0, 0,
 			m_bts.alpha, m_bts.gamma, -1);
 	pcu_l1if_tx_agch(immediate_assignment, plen);
@@ -486,8 +486,6 @@ void BTS::trigger_dl_ass(
 
 		old_tbf->was_releasing = old_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 
-		/* use TA from old TBF */
-		dl_tbf->ta = old_tbf->ta;
 		/* change state */
 		dl_tbf->set_state(GPRS_RLCMAC_ASSIGN);
 		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
@@ -515,7 +513,7 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 	/* use request reference that has maximum distance to current time,
 	 * so the assignment will not conflict with possible RACH requests. */
 	plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 1, 125,
-		(tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta,
+		(tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta(),
 		tbf->trx->arfcn, tbf->first_ts, tbf->tsc(), tbf->tfi(), 0, tbf->tlli(), poll,
 		tbf->poll_fn, 0, m_bts.alpha, m_bts.gamma, -1);
 	pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
@@ -836,7 +834,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 
 		/* This call will register the new TBF with the MS on success */
 		tbf_alloc_ul(bts_data(), tbf->trx->trx_no, tbf->ms_class,
-			tbf->tlli(), tbf->ta, tbf);
+			tbf->tlli(), tbf->ta(), tbf);
 
 		/* schedule uplink assignment */
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
@@ -846,14 +844,13 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, uint32_t fn)
 {
 	struct gprs_rlcmac_sba *sba;
-	int rc;
 
 	if (request->ID.UnionType) {
 		struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
 		struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 		uint32_t tlli = request->ID.u.TLLI;
 		uint8_t ms_class = 0;
-		uint8_t ta;
+		uint8_t ta = 0;
 
 		GprsMs *ms = bts()->ms_by_tlli(tlli);
 		/* Keep the ms, even if it gets idle temporarily */
@@ -862,6 +859,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		if (ms) {
 			ul_tbf = ms->ul_tbf();
 			dl_tbf = ms->dl_tbf();
+			ta = ms->ta();
 		}
 
 		if (ul_tbf) {
@@ -890,14 +888,8 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				"in packet resource request of single "
 				"block, but there is no resource request "
 				"scheduled!\n");
-			rc = bts()->timing_advance()->recall(tlli);
-			if (rc >= 0)
-				ta = rc;
-			else
-				ta = 0;
 		} else {
 			ta = sba->ta;
-			bts()->timing_advance()->remember(tlli, ta);
 			bts()->sba()->free_sba(sba);
 		}
 		if (request->Exist_MS_Radio_Access_capability)

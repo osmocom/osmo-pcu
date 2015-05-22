@@ -60,6 +60,7 @@ GprsMs::GprsMs(uint32_t tlli) :
 	m_tlli(tlli),
 	m_new_ul_tlli(0),
 	m_new_dl_tlli(0),
+	m_ta(0),
 	m_is_idle(true),
 	m_ref(0),
 	m_list(this)
@@ -261,5 +262,17 @@ void GprsMs::set_imsi(const char *imsi)
 
 	strncpy(m_imsi, imsi, sizeof(m_imsi));
 	m_imsi[sizeof(m_imsi) - 1] = '\0';
+}
+
+void GprsMs::set_ta(uint8_t ta_)
+{
+	if (ta_ == m_ta)
+		return;
+
+	LOGP(DRLCMAC, LOGL_INFO,
+		"Modifying MS object, TLLI = 0x%08x, TA %d -> %d\n",
+		tlli(), m_ta, ta_);
+
+	m_ta = ta_;
 }
 

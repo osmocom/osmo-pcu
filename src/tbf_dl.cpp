@@ -151,42 +151,30 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 				const uint8_t ms_class,
 				const uint8_t *data, const uint16_t len)
 {
-	uint8_t trx, ta, ss;
+	uint8_t trx, ss;
 	int8_t use_trx;
+	uint16_t ta = 0;
 	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL, *old_ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 	int8_t tfi; /* must be signed */
-	int rc;
 	GprsMs *ms;
 
 	/* check for uplink data, so we copy our informations */
 #warning "Do the same look up for IMSI, TLLI and OLD_TLLI"
 #warning "Refactor the below lines... into a new method"
 	ms = bts->bts->ms_store().get_ms(tlli, tlli_old, imsi);
-	if (ms)
+	if (ms) {
 		ul_tbf = ms->ul_tbf();
+		ta = ms->ta();
+	}
 
 	if (ul_tbf && ul_tbf->m_contention_resolution_done
 	 && !ul_tbf->m_final_ack_sent) {
 		use_trx = ul_tbf->trx->trx_no;
-		ta = ul_tbf->ta;
 		ss = 0;
 		old_ul_tbf = ul_tbf;
 	} else {
 		use_trx = -1;
-		/* we already have an uplink TBF, so we use that TA */
-		if (ul_tbf)
-			ta = ul_tbf->ta;
-		else {
-			/* recall TA */
-			rc = bts->bts->timing_advance()->recall(tlli);
-			if (rc < 0) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "TA unknown"
-					", assuming 0\n");
-				ta = 0;
-			} else
-				ta = rc;
-		}
 		ss = 1; /* PCH assignment only allows one timeslot */
 		old_ul_tbf = NULL;
 	}
@@ -205,8 +193,8 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 		bts->bts->llc_dropped_frame();
 		return -EBUSY;
 	}
-	dl_tbf->ta = ta;
 	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
+	dl_tbf->ms()->set_ta(ta);
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s [DOWNLINK] START\n", tbf_name(dl_tbf));
 
@@ -801,7 +789,6 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 	}
 
 	new_tbf->set_ms(ms());
-	new_tbf->ta = ta;
 
 	/* Copy over all data to the new TBF */
 	new_tbf->m_llc.put_frame(data, len);

@@ -149,6 +149,8 @@ struct gprs_rlcmac_tbf {
 
 	const char *imsi() const;
 	void assign_imsi(const char *imsi);
+	uint8_t ta() const;
+	void set_ta(uint8_t);
 
 	time_t created_ts() const;
 
@@ -165,7 +167,6 @@ struct gprs_rlcmac_tbf {
 	uint8_t control_ts; /* timeslot control messages and polling */
 	uint8_t ms_class;
 	struct gprs_rlcmac_pdch *pdch[8]; /* list of PDCHs allocated to TBF */
-	uint16_t ta;
 
 	gprs_llc m_llc;
 
@@ -225,6 +226,9 @@ protected:
 	static const char *tbf_state_name[6];
 
 	class GprsMs *m_ms;
+
+	/* Field to take the TA value if no MS is associated */
+	uint8_t m_ta;
 private:
 	mutable char m_name_buf[60];
 };

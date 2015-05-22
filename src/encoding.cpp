@@ -195,7 +195,7 @@ void Encoding::write_packet_uplink_assignment(
 	bitvec_write_field(dest, wp,bts->initial_cs_ul-1, 2); // CHANNEL_CODING_COMMAND 
 	bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
 	bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
-	bitvec_write_field(dest, wp,tbf->ta,6); // TIMING_ADVANCE_VALUE
+	bitvec_write_field(dest, wp,tbf->ta(),6); // TIMING_ADVANCE_VALUE
 	if (ta_idx < 0) {
 		bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
 	} else {
@@ -275,7 +275,7 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_
 	}
 
 	block->u.Packet_Downlink_Assignment.Packet_Timing_Advance.Exist_TIMING_ADVANCE_VALUE = 0x1; // TIMING_ADVANCE_VALUE = on
-	block->u.Packet_Downlink_Assignment.Packet_Timing_Advance.TIMING_ADVANCE_VALUE       = tbf->ta;  // TIMING_ADVANCE_VALUE
+	block->u.Packet_Downlink_Assignment.Packet_Timing_Advance.TIMING_ADVANCE_VALUE       = tbf->ta();  // TIMING_ADVANCE_VALUE
 	if (ta_idx < 0) {
 		block->u.Packet_Downlink_Assignment.Packet_Timing_Advance.Exist_IndexAndtimeSlot     = 0x0; // TIMING_ADVANCE_INDEX = off
 	} else {
