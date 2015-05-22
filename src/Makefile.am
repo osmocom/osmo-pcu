@@ -49,7 +49,6 @@ libgprs_la_SOURCES = \
 	bts.cpp \
 	poll_controller.cpp \
 	encoding.cpp \
-	ta.cpp \
 	sba.cpp \
 	decoding.cpp \
 	llc.cpp \
@@ -92,7 +91,6 @@ noinst_HEADERS = \
 	bts.h \
 	poll_controller.h \
 	encoding.h \
-	ta.h \
 	sba.h \
 	rlc.h \
 	decoding.h \

@@ -30,7 +30,6 @@ extern "C" {
 
 #include "poll_controller.h"
 #include "sba.h"
-#include "ta.h"
 #include "tbf.h"
 #include "gprs_ms_storage.h"
 #endif
@@ -197,7 +196,6 @@ public:
 
 	struct gprs_rlcmac_bts *bts_data();
 	SBAController *sba();
-	TimingAdvance *timing_advance();
 
 	/** TODO: change the number to unsigned */
 	void set_current_frame_number(int frame_number);
@@ -254,7 +252,6 @@ private:
 	struct gprs_rlcmac_bts m_bts;
 	PollController m_pollController;
 	SBAController m_sba;
-	TimingAdvance m_ta;
 	struct rate_ctr_group *m_ratectrs;
 	gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, uint8_t trx, enum gprs_rlcmac_tbf_direction dir);
 
@@ -269,11 +266,6 @@ private:
 inline int BTS::current_frame_number() const
 {
 	return m_cur_fn;
-}
-
-inline TimingAdvance *BTS::timing_advance()
-{
-	return &m_ta;
 }
 
 inline SBAController *BTS::sba()

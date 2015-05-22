@@ -945,7 +945,13 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 			"block, but there is no resource request "
 			"scheduled! TLLI=0x%08x\n", report->TLLI);
 	} else {
-		bts()->timing_advance()->remember(report->TLLI, sba->ta);
+		GprsMs *ms = bts()->ms_store().get_ms(report->TLLI);
+		if (!ms)
+			LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
+				"but TLLI 0x%08x is unknown\n", report->TLLI);
+		else
+			ms->set_ta(sba->ta);
+
 		bts()->sba()->free_sba(sba);
 	}
 	gprs_rlcmac_meas_rep(report);
