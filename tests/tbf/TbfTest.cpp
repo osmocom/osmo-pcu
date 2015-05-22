@@ -44,8 +44,6 @@ int16_t spoof_mnc = 0, spoof_mcc = 0;
 static void check_tbf(gprs_rlcmac_tbf *tbf)
 {
 	OSMO_ASSERT(tbf);
-	OSMO_ASSERT(tbf->m_new_tbf == NULL || tbf->m_new_tbf->m_old_tbf == tbf);
-	OSMO_ASSERT(tbf->m_old_tbf == NULL || tbf->m_old_tbf->m_new_tbf == tbf);
 }
 
 static void test_tbf_tlli_update()
@@ -143,7 +141,6 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(BTS *the_bts, uint8_t ms_class,
 	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
 	dl_tbf->set_state(GPRS_RLCMAC_FLOW);
 	dl_tbf->m_wait_confirm = 0;
-	dl_tbf->set_new_tbf(dl_tbf);
 	check_tbf(dl_tbf);
 
 	*trx_no_ = trx_no;
@@ -177,6 +174,7 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	uint32_t fn;
 	uint8_t block_nr;
 	uint8_t trx_no;
+	GprsMs *ms;
 	uint32_t tlli = 0xffeeddcc;
 
 	uint8_t rbb[64/8];
@@ -189,6 +187,7 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	setup_bts(&the_bts, ts_no);
 	dl_tbf = create_dl_tbf(&the_bts, ms_class, &trx_no);
 	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
+	ms = dl_tbf->ms();
 
 	for (i = 0; i < sizeof(llc_data); i++)
 		llc_data[i] = i%256;
@@ -215,22 +214,25 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
-	new_tbf = dl_tbf->new_tbf();
+	new_tbf = ms->dl_tbf();
 	check_tbf(new_tbf);
 	OSMO_ASSERT(new_tbf != dl_tbf);
 	OSMO_ASSERT(new_tbf->tfi() == 1);
 	check_tbf(dl_tbf);
 	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 	if (test_mode == TEST_MODE_REVERSE_FREE) {
+		GprsMs::Guard guard(ms);
 		tbf_free(new_tbf);
-		OSMO_ASSERT(dl_tbf->m_new_tbf != new_tbf);
+		OSMO_ASSERT(ms->dl_tbf() == NULL);
 		check_tbf(dl_tbf);
 		tbf_free(dl_tbf);
 	} else {
+		GprsMs::Guard guard(ms);
 		tbf_free(dl_tbf);
-		OSMO_ASSERT(new_tbf->m_new_tbf != dl_tbf);
+		OSMO_ASSERT(ms->dl_tbf() == new_tbf);
 		check_tbf(new_tbf);
 		tbf_free(new_tbf);
+		OSMO_ASSERT(ms->dl_tbf() == NULL);
 	}
 }
 
@@ -302,7 +304,6 @@ static void test_tbf_delayed_release()
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
-	OSMO_ASSERT(dl_tbf->new_tbf() == dl_tbf);
 	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 	check_tbf(dl_tbf);
 	tbf_free(dl_tbf);

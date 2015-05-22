@@ -83,13 +83,12 @@ TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer 0.
 DL packet loss of IMSI= / TLLI=0x00000000: 0%
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) New TBF TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) still exists, detaching
 ********** TBF ends here **********
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer 0.
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
-Destroying MS object, TLLI = 0xffeeddcc
 ********** TBF ends here **********
+Destroying MS object, TLLI = 0xffeeddcc
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=0.
 ********** TBF starts here **********
@@ -154,13 +153,12 @@ TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer 0.
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer 0.
-TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) Old TBF TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) still exists, detaching
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
-Destroying MS object, TLLI = 0xffeeddcc
 ********** TBF ends here **********
 DL packet loss of IMSI= / TLLI=0x00000000: 0%
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free
 ********** TBF ends here **********
+Destroying MS object, TLLI = 0xffeeddcc
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=0.
 ********** TBF starts here **********

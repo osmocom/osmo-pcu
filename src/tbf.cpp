@@ -89,31 +89,6 @@ void gprs_rlcmac_tbf::assign_imsi(const char *imsi_)
 	m_ms->set_imsi(imsi_);
 }
 
-void gprs_rlcmac_tbf::set_new_tbf(gprs_rlcmac_tbf *tbf)
-{
-	if (m_new_tbf) {
-		if (m_new_tbf == tbf) {
-			LOGP(DRLCMAC, LOGL_INFO,
-				"%s reassigning %s to m_new_tbf\n",
-				tbf_name(this), tbf_name(tbf));
-			return;
-		}
-		if (m_new_tbf != this) {
-			LOGP(DRLCMAC, LOGL_NOTICE,
-				"%s m_new_tbf is already assigned to %s, "
-				"overwriting the old value with %s\n",
-				tbf_name(this), tbf_name(m_new_tbf), tbf_name(tbf));
-		}
-		/* Detach from other TBF */
-		m_new_tbf->m_old_tbf = NULL;
-	}
-	m_new_tbf = tbf;
-	tbf->m_old_tbf = this;
-
-	if (!tbf->ms())
-		tbf->set_ms(ms());
-}
-
 void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 {
 	if (m_ms == ms)
@@ -226,40 +201,6 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 		tbf->bts->tbf_ul_freed();
 	else
 		tbf->bts->tbf_dl_freed();
-
-	if (tbf->m_old_tbf) {
-		if (tbf->m_old_tbf == tbf) {
-			/* points to itself, ignore */
-		} else if (tbf->m_old_tbf->m_new_tbf == tbf) {
-			LOGP(DRLCMAC, LOGL_INFO,
-				"%s Old TBF %s still exists, detaching\n",
-				tbf_name(tbf), tbf_name(tbf->m_old_tbf));
-			tbf->m_old_tbf->m_new_tbf = NULL;
-		} else {
-			LOGP(DRLCMAC, LOGL_ERROR, "%s Software error: "
-				"tbf->m_old_tbf->m_new_tbf != tbf\n",
-				tbf_name(tbf));
-		}
-
-		tbf->m_old_tbf = NULL;
-	}
-
-	if (tbf->m_new_tbf) {
-		if (tbf->m_new_tbf == tbf) {
-			/* points to itself, ignore */
-		} else if (tbf->m_new_tbf->m_old_tbf == tbf) {
-			LOGP(DRLCMAC, LOGL_INFO,
-				"%s New TBF %s still exists, detaching\n",
-				tbf_name(tbf), tbf_name(tbf->m_new_tbf));
-			tbf->m_new_tbf->m_old_tbf = NULL;
-		} else {
-			LOGP(DRLCMAC, LOGL_ERROR, "%s Software error: "
-				"tbf->m_new_tbf->m_old_tbf != tbf\n",
-				tbf_name(tbf));
-		}
-
-		tbf->m_new_tbf = NULL;
-	}
 
 	if (tbf->ms())
 		tbf->set_ms(NULL);
@@ -668,7 +609,7 @@ int gprs_rlcmac_tbf::rlcmac_diag()
 struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 {
 	struct msgb *msg;
-	struct gprs_rlcmac_dl_tbf *new_dl_tbf;
+	struct gprs_rlcmac_dl_tbf *new_dl_tbf = NULL;
 	int poll_ass_dl = 1;
 
 	if (direction == GPRS_RLCMAC_DL_TBF && control_ts != first_common_ts) {
@@ -706,7 +647,9 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 		}
 	}
 
-	new_dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(m_new_tbf);
+	if (ms())
+		new_dl_tbf = ms()->dl_tbf();
+
 	if (!new_dl_tbf) {
 		LOGP(DRLCMACDL, LOGL_ERROR, "We have a schedule for downlink "
 			"assignment at uplink %s, but there is no downlink "
@@ -758,7 +701,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 {
 	struct msgb *msg;
-	struct gprs_rlcmac_ul_tbf *new_tbf;
+	struct gprs_rlcmac_ul_tbf *new_tbf = NULL;
 
 	if (poll_state != GPRS_RLCMAC_POLL_NONE) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
@@ -772,7 +715,8 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 			return NULL;
 	}
 
-	new_tbf = static_cast<gprs_rlcmac_ul_tbf *>(m_new_tbf);
+	if (ms())
+		new_tbf = ms()->ul_tbf();
 	if (!new_tbf) {
 		LOGP(DRLCMACUL, LOGL_ERROR, "We have a schedule for uplink "
 			"assignment at downlink %s, but there is no uplink "
