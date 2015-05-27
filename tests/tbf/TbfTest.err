@@ -1102,3 +1102,99 @@ Searching for first unallocated TFI: TRX=0 first TS=4
 No TFI available.
 No PDCH resource
 BSSGP (BVCI=1234) Tx LLC-DISCARDED TLLI=0xc0000020, FRAMES=1, OCTETS=256
+Searching for first unallocated TFI: TRX=0 first TS=7
+ Found TFI=0.
+MS requests UL TBF on RACH, so we provide one:
+Searching for first unallocated TFI: TRX=0 first TS=7
+ Found TFI=0.
+********** TBF starts here **********
+Allocating UL TBF: TFI=0 TRX=0 MS_CLASS=0
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 4, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Assign uplink TS=7 USF=0
+- Setting Control TS 7
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer 3169.
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x03, Fn=2654167 (17,25,9)
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
+Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 03 8b 29 07 00 c8 00 70 0b 2b 2b 2b 2b 2b 2b 2b 
+Got 'TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW)', TA=7
+UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+Decoded premier TLLI=0xf1223344 of UL DATA TFI=0.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
+- BSN 0 storing in window (0..63)
+- Raising V(R) to 1
+- Taking block 0 out, raising V(Q) to 1
+- Assembling frames: (len=23)
+-- Frame 1 starts at offset 0
+- Data length after length fields: 20
+- Length after skipping TLLI: 16
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) complete UL frame that fits precisely in last block: len=16
+LLC [PCU -> SGSN] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) len=16
+No bctx
+- No gaps in received block, last block: BSN=0 CV=0
+- Finished with UL TBF
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes state from FLOW to FINISHED
+- Scheduling Ack/Nack, because TLLI is included.
+- Scheduling Ack/Nack, because last block has CV==0.
+Got MS: TLLI = 0xf1223344
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+MS requests UL TBF on RACH, so we provide one:
+MS requests single block allocation
+RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
+TX: Immediate Assignment Uplink (AGCH)
+Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
+Searching for first unallocated TFI: TRX=0 first TS=7
+ Found TFI=0.
++++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+------------------------- RX : Uplink Control Block -------------------------
+MS requests UL TBF in packet resource request of single block, so we provide one:
+MS does not give us a class.
+Searching for first unallocated TFI: TRX=0 first TS=7
+ Found TFI=0.
+********** TBF starts here **********
+Allocating UL TBF: TFI=0 TRX=0 MS_CLASS=0
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 4, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Assign uplink TS=7 USF=0
+- Setting Control TS 7
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer 3169.
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
+Change control TS to 7 until assinment is complete.
+Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)', TA=7
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Uplink Assignment -------------------------
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654275 block=21 data=4f 28 5e 24 46 68 8f 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) restarting timer 3169 while old timer 3169 pending 
+- BSN 0 storing in window (0..63)
+- Raising V(R) to 1
+- Taking block 0 out, raising V(Q) to 1
+- Assembling frames: (len=23)
+-- Frame 1 starts at offset 0
+- Data length after length fields: 20
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) complete UL frame that fits precisely in last block: len=20
+LLC [PCU -> SGSN] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) len=20
+No bctx
+Got MS: TLLI = 0xf1223344

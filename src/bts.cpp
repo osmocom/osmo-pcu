@@ -416,8 +416,10 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		if (rc < 0)
 			return rc;
 		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] RACH qbit-ta=%d "
-			"ra=0x%02x, Fn=%d (%d,%d,%d)\n", qta, ra, Fn,
-			(Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
+			"ra=0x%02x, Fn=%d (%d,%d,%d), SBFn=%d\n",
+			qta, ra,
+			Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26,
+			sb_fn);
 		LOGP(DRLCMAC, LOGL_INFO, "TX: Immediate Assignment Uplink "
 			"(AGCH)\n");
 	} else {

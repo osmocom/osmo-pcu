@@ -25,6 +25,7 @@
 #include "gprs_debug.h"
 #include "pcu_utils.h"
 #include "gprs_bssgp_pcu.h"
+#include "pcu_l1_if.h"
 
 extern "C" {
 #include "pcu_vty.h"
@@ -45,6 +46,20 @@ static void check_tbf(gprs_rlcmac_tbf *tbf)
 {
 	OSMO_ASSERT(tbf);
 }
+
+/*
+static unsigned inc_fn(fn)
+{
+	unsigned next_fn;
+
+	next_fn = fn + 4;
+	if ((block_nr % 3) == 2)
+		next_fn ++;
+	next_fn = next_fn % 2715648;
+
+	return next_fn;
+}
+*/
 
 static void test_tbf_tlli_update()
 {
@@ -401,6 +416,131 @@ static void test_tbf_exhaustion()
 	gprs_bssgp_destroy();
 }
 
+static void test_tbf_single_phase()
+{
+	BTS the_bts;
+	GprsMs *ms;
+	int ts_no = 7;
+	uint32_t fn = 2654167; /* 17,25,9 */
+	uint16_t qta = 31;
+	uint8_t trx_no = 0;
+	int tfi = 0;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	struct gprs_rlcmac_pdch *pdch;
+
+	printf("=== start %s ===\n", __func__);
+
+	setup_bts(&the_bts, ts_no);
+	tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
+
+	the_bts.rcv_rach(0x03, fn, qta);
+
+	ul_tbf = the_bts.ul_tbf_by_tfi(tfi, trx_no);
+	OSMO_ASSERT(ul_tbf != NULL);
+
+	fprintf(stderr, "Got '%s', TA=%d\n",
+		ul_tbf->name(), ul_tbf->ta);
+
+	OSMO_ASSERT(ul_tbf->ta == qta / 4);
+
+	uint8_t data_msg[23] = {
+		0x00, /* GPRS_RLCMAC_DATA_BLOCK << 6 */
+		uint8_t(1 | (tfi << 2)),
+		uint8_t(1), /* BSN:7, E:1 */
+		0xf1, 0x22, 0x33, 0x44, /* TLLI */
+	};
+
+	pdch = &the_bts.bts_data()->trx[trx_no].pdch[ts_no];
+	pdch->rcv_block(&data_msg[0], sizeof(data_msg), fn, 0);
+
+	ms = the_bts.ms_by_tlli(0xf1223344);
+	OSMO_ASSERT(ms != NULL);
+	fprintf(stderr, "Got MS: TLLI = 0x%08x\n", ms->tlli());
+
+	printf("=== end %s ===\n", __func__);
+}
+
+static void test_tbf_two_phase()
+{
+	BTS the_bts;
+	GprsMs *ms;
+	int ts_no = 7;
+	uint32_t rach_fn = 2654167; /* 17,25,9 */
+	uint32_t rts_fn = 2654218;
+	uint8_t rts_bn = 8;
+	uint16_t qta = 31;
+	uint8_t trx_no = 0;
+	int tfi = 0;
+	const uint32_t tlli = 0xf1223344;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	struct gprs_rlcmac_pdch *pdch;
+	gprs_rlcmac_bts *bts;
+	RlcMacUplink_t ulreq = {0};
+	bitvec *rlc_block;
+	uint8_t buf[64];
+	int num_bytes;
+
+	printf("=== start %s ===\n", __func__);
+
+	setup_bts(&the_bts, ts_no);
+	bts = the_bts.bts_data();
+
+	/* needed to set last_rts_fn in the PDCH object */
+	send_rlc_block(bts, trx_no, ts_no, 0, &rts_fn, &rts_bn);
+
+	/* simulate RACH, this sends an Immediate Assignment Uplink on the AGCH */
+	the_bts.rcv_rach(0x73, rach_fn, qta);
+
+	/* get next free TFI */
+	tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
+
+	/* fake a resource request */
+	rlc_block = bitvec_alloc(23);
+
+	ulreq.u.MESSAGE_TYPE = MT_PACKET_RESOURCE_REQUEST;
+	ulreq.u.Packet_Resource_Request.PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
+	ulreq.u.Packet_Resource_Request.ID.UnionType = 1; /* != 0 */
+	ulreq.u.Packet_Resource_Request.ID.u.TLLI = tlli;
+
+	encode_gsm_rlcmac_uplink(rlc_block, &ulreq);
+	num_bytes = bitvec_pack(rlc_block, &buf[0]);
+	OSMO_ASSERT(size_t(num_bytes) < sizeof(buf));
+	bitvec_free(rlc_block);
+
+	pdch = &the_bts.bts_data()->trx[trx_no].pdch[ts_no];
+	pdch->rcv_block(&buf[0], num_bytes, 2654270, 31);
+
+	/* check the TBF */
+	ul_tbf = the_bts.ul_tbf_by_tfi(tfi, trx_no);
+	OSMO_ASSERT(ul_tbf != NULL);
+
+	fprintf(stderr, "Got '%s', TA=%d\n",
+		ul_tbf->name(), ul_tbf->ta);
+
+	OSMO_ASSERT(ul_tbf->ta == qta / 4);
+
+	/* send packet uplink assignment */
+	rts_fn += 52;
+	rts_bn += 12;
+	send_rlc_block(bts, trx_no, ts_no, 0, &rts_fn, &rts_bn);
+
+	/* send fake data */
+	uint8_t data_msg[23] = {
+		0x00, /* GPRS_RLCMAC_DATA_BLOCK << 6 */
+		uint8_t(0 | (tfi << 2)),
+		uint8_t(1), /* BSN:7, E:1 */
+	};
+
+	pdch->rcv_block(&data_msg[0], sizeof(data_msg), rts_fn, 31);
+
+	ms = the_bts.ms_by_tlli(0xf1223344);
+	OSMO_ASSERT(ms != NULL);
+	fprintf(stderr, "Got MS: TLLI = 0x%08x\n", ms->tlli());
+
+	printf("=== end %s ===\n", __func__);
+}
+
+
 static const struct log_info_cat default_categories[] = {
         {"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_INFO, 0},
         {"DL1IF", "\033[1;32m", "GPRS PCU L1 interface (L1IF)", LOGL_DEBUG, 1},
@@ -449,6 +589,8 @@ int main(int argc, char **argv)
 	test_tbf_delayed_release();
 	test_tbf_imsi();
 	test_tbf_exhaustion();
+	test_tbf_single_phase();
+	test_tbf_two_phase();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);

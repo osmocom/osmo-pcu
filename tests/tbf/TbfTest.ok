@@ -4,3 +4,7 @@
 === end test_tbf_imsi ===
 === start test_tbf_exhaustion ===
 === end test_tbf_exhaustion ===
+=== start test_tbf_single_phase ===
+=== end test_tbf_single_phase ===
+=== start test_tbf_two_phase ===
+=== end test_tbf_two_phase ===
