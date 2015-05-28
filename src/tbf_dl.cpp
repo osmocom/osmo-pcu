@@ -771,7 +771,6 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 	uint8_t trx;
 	struct gprs_rlcmac_dl_tbf *new_tbf = NULL;
 	int8_t tfi; /* must be signed */
-	struct msgb *msg;
 
 	bts->tbf_reused();
 
@@ -790,12 +789,9 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 
 	new_tbf->set_ms(ms());
 
-	/* Copy over all data to the new TBF */
+	/* Start with the passed frame */
 	new_tbf->m_llc.put_frame(data, len);
 	bts->llc_frame_sched();
-
-	while ((msg = llc_queue()->dequeue()))
-		new_tbf->llc_queue()->enqueue(msg);
 
 	/* reset rlc states */
 	m_tx_counter = 0;
@@ -836,7 +832,8 @@ bool gprs_rlcmac_dl_tbf::need_control_ts() const
 
 bool gprs_rlcmac_dl_tbf::have_data() const
 {
-	return m_llc.chunk_size() > 0 || llc_queue()->size() > 0;
+	return m_llc.chunk_size() > 0 ||
+		(llc_queue() && llc_queue()->size() > 0);
 }
 
 int gprs_rlcmac_dl_tbf::frames_since_last_poll(unsigned fn) const

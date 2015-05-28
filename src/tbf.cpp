@@ -102,6 +102,16 @@ void gprs_rlcmac_tbf::set_ta(uint8_t ta)
 	m_ta = ta;
 }
 
+gprs_llc_queue *gprs_rlcmac_tbf::llc_queue()
+{
+	return m_ms ? m_ms->llc_queue() : NULL;
+}
+
+const gprs_llc_queue *gprs_rlcmac_tbf::llc_queue() const
+{
+	return m_ms ? m_ms->llc_queue() : NULL;
+}
+
 void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 {
 	if (m_ms == ms)
@@ -219,7 +229,6 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 			tbf_name(tbf));
 	tbf->stop_timer();
 	#warning "TODO: Could/Should generate  bssgp_tx_llc_discarded"
-	tbf->llc_queue()->clear(tbf->bts);
 	tbf_unlink_pdch(tbf);
 	llist_del(&tbf->list.list);
 
@@ -451,7 +460,6 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
 	gettimeofday(&tbf->meas.rssi_tv, NULL);
 
 	tbf->m_llc.init();
-	tbf->llc_queue()->init();
 	return 0;
 }
 

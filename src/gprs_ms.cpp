@@ -81,6 +81,7 @@ GprsMs::GprsMs(uint32_t tlli) :
 	m_imsi[0] = 0;
 	memset(&m_timer, 0, sizeof(m_timer));
 	m_timer.cb = GprsMs::timeout;
+	m_llc_queue.init();
 }
 
 GprsMs::~GprsMs()
@@ -99,6 +100,7 @@ GprsMs::~GprsMs()
 		m_dl_tbf->set_ms(NULL);
 		m_dl_tbf = NULL;
 	}
+	m_llc_queue.clear(NULL);
 }
 
 void* GprsMs::operator new(size_t size)

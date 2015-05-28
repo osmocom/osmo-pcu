@@ -232,7 +232,6 @@ protected:
 	/* Field to take the TA value if no MS is associated */
 	uint8_t m_ta;
 
-	gprs_llc_queue m_llc_queue;
 private:
 	mutable char m_name_buf[60];
 };
@@ -287,16 +286,6 @@ inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
 inline GprsMs *gprs_rlcmac_tbf::ms() const
 {
 	return m_ms;
-}
-
-inline gprs_llc_queue *gprs_rlcmac_tbf::llc_queue()
-{
-	return &m_llc_queue;
-}
-
-inline const gprs_llc_queue *gprs_rlcmac_tbf::llc_queue() const
-{
-	return &m_llc_queue;
 }
 
 inline bool gprs_rlcmac_tbf::is_tlli_valid() const

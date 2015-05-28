@@ -25,6 +25,7 @@ struct gprs_rlcmac_dl_tbf;
 struct gprs_rlcmac_ul_tbf;
 
 #include "cxx_linuxlist.h"
+#include "llc.h"
 
 extern "C" {
 	#include <osmocom/core/timer.h>
@@ -67,6 +68,9 @@ public:
 	uint8_t ta() const;
 	void set_ta(uint8_t ta);
 
+	gprs_llc_queue *llc_queue();
+	const gprs_llc_queue *llc_queue() const;
+
 	void set_timeout(unsigned secs);
 
 	void attach_tbf(gprs_rlcmac_tbf *tbf);
@@ -104,6 +108,7 @@ private:
 	/* store IMSI for look-up and PCH retransmission */
 	char m_imsi[16];
 	uint8_t m_ta;
+	gprs_llc_queue m_llc_queue;
 
 	bool m_is_idle;
 	int m_ref;
@@ -139,3 +144,14 @@ inline void GprsMs::set_timeout(unsigned secs)
 {
 	m_delay = secs;
 }
+
+inline gprs_llc_queue *GprsMs::llc_queue()
+{
+	return &m_llc_queue;
+}
+
+inline const gprs_llc_queue *GprsMs::llc_queue() const
+{
+	return &m_llc_queue;
+}
+
