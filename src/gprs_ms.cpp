@@ -40,17 +40,28 @@ struct GprsMsDefaultCallback: public GprsMs::Callback {
 
 static GprsMsDefaultCallback gprs_default_cb;
 
-
-GprsMs::Guard::Guard(GprsMs *ms) : m_ms(ms)
+GprsMs::Guard::Guard(GprsMs *ms) :
+	m_ms(ms ? ms->ref() : NULL)
 {
-	if (m_ms)
-		m_ms->ref();
 }
 
 GprsMs::Guard::~Guard()
 {
 	if (m_ms)
 		m_ms->unref();
+}
+
+void GprsMs::timeout(void *priv_)
+{
+	GprsMs *ms = static_cast<GprsMs *>(priv_);
+
+	LOGP(DRLCMAC, LOGL_INFO, "Timeout for MS object, TLLI = 0x%08x\n",
+		ms->tlli());
+
+	if (ms->m_timer.data) {
+		ms->m_timer.data = NULL;
+		ms->unref();
+	}
 }
 
 GprsMs::GprsMs(uint32_t tlli) :
@@ -68,11 +79,16 @@ GprsMs::GprsMs(uint32_t tlli) :
 	LOGP(DRLCMAC, LOGL_INFO, "Creating MS object, TLLI = 0x%08x\n", tlli);
 
 	m_imsi[0] = 0;
+	memset(&m_timer, 0, sizeof(m_timer));
+	m_timer.cb = GprsMs::timeout;
 }
 
 GprsMs::~GprsMs()
 {
 	LOGP(DRLCMAC, LOGL_INFO, "Destroying MS object, TLLI = 0x%08x\n", tlli());
+
+	if (osmo_timer_pending(&m_timer))
+		osmo_timer_del(&m_timer);
 
 	if (m_ul_tbf) {
 		m_ul_tbf->set_ms(NULL);
@@ -99,9 +115,10 @@ void GprsMs::operator delete(void* p)
 	talloc_free(p);
 }
 
-void GprsMs::ref()
+GprsMs *GprsMs::ref()
 {
 	m_ref += 1;
+	return this;
 }
 
 void GprsMs::unref()
@@ -110,6 +127,27 @@ void GprsMs::unref()
 	m_ref -= 1;
 	if (m_ref == 0)
 		update_status();
+}
+
+void GprsMs::start_timer()
+{
+	if (m_delay == 0)
+		return;
+
+	if (!m_timer.data)
+		m_timer.data = ref();
+
+	osmo_timer_schedule(&m_timer, m_delay, 0);
+}
+
+void GprsMs::stop_timer()
+{
+	if (!m_timer.data)
+		return;
+
+	osmo_timer_del(&m_timer);
+	m_timer.data = NULL;
+	unref();
 }
 
 void GprsMs::attach_tbf(struct gprs_rlcmac_tbf *tbf)
@@ -134,6 +172,9 @@ void GprsMs::attach_ul_tbf(struct gprs_rlcmac_ul_tbf *tbf)
 		detach_tbf(m_ul_tbf);
 
 	m_ul_tbf = tbf;
+
+	if (tbf)
+		stop_timer();
 }
 
 void GprsMs::attach_dl_tbf(struct gprs_rlcmac_dl_tbf *tbf)
@@ -150,6 +191,9 @@ void GprsMs::attach_dl_tbf(struct gprs_rlcmac_dl_tbf *tbf)
 		detach_tbf(m_dl_tbf);
 
 	m_dl_tbf = tbf;
+
+	if (tbf)
+		stop_timer();
 }
 
 void GprsMs::detach_tbf(gprs_rlcmac_tbf *tbf)
@@ -166,6 +210,9 @@ void GprsMs::detach_tbf(gprs_rlcmac_tbf *tbf)
 
 	if (tbf->ms() == this)
 		tbf->set_ms(NULL);
+
+	if (!m_dl_tbf && !m_dl_tbf)
+		start_timer();
 
 	update_status();
 }

@@ -36,6 +36,7 @@ extern "C" {
 }
 
 #include <errno.h>
+#include <unistd.h>
 
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
@@ -399,6 +400,74 @@ static void test_ms_storage()
 	printf("=== end %s ===\n", __func__);
 }
 
+static void test_ms_timeout()
+{
+	uint32_t tlli = 0xffeeddbb;
+	gprs_rlcmac_dl_tbf *dl_tbf;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	GprsMs *ms;
+	static enum {UNKNOWN, IS_IDLE, IS_ACTIVE} last_cb = UNKNOWN;
+
+	struct MyCallback: public GprsMs::Callback {
+		virtual void ms_idle(class GprsMs *ms) {
+			OSMO_ASSERT(ms->is_idle());
+			printf("  ms_idle() was called\n");
+			last_cb = IS_IDLE;
+		}
+		virtual void ms_active(class GprsMs *ms) {
+			OSMO_ASSERT(!ms->is_idle());
+			printf("  ms_active() was called\n");
+			last_cb = IS_ACTIVE;
+		}
+	} cb;
+
+	printf("=== start %s ===\n", __func__);
+
+	ms = new GprsMs(tlli);
+	ms->set_callback(&cb);
+	ms->set_timeout(1);
+
+	OSMO_ASSERT(ms->is_idle());
+
+	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
+	dl_tbf->direction = GPRS_RLCMAC_DL_TBF;
+	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
+	ul_tbf->direction = GPRS_RLCMAC_UL_TBF;
+
+	OSMO_ASSERT(last_cb == UNKNOWN);
+
+	ms->attach_tbf(ul_tbf);
+	OSMO_ASSERT(!ms->is_idle());
+	OSMO_ASSERT(last_cb == IS_ACTIVE);
+
+	last_cb = UNKNOWN;
+
+	ms->attach_tbf(dl_tbf);
+	OSMO_ASSERT(!ms->is_idle());
+	OSMO_ASSERT(last_cb == UNKNOWN);
+
+	ms->detach_tbf(ul_tbf);
+	OSMO_ASSERT(!ms->is_idle());
+	OSMO_ASSERT(last_cb == UNKNOWN);
+
+	ms->detach_tbf(dl_tbf);
+	OSMO_ASSERT(!ms->is_idle());
+	OSMO_ASSERT(last_cb == UNKNOWN);
+
+	usleep(1100000);
+	osmo_timers_update();
+
+	OSMO_ASSERT(ms->is_idle());
+	OSMO_ASSERT(last_cb == IS_IDLE);
+
+	last_cb = UNKNOWN;
+	delete ms;
+	talloc_free(dl_tbf);
+	talloc_free(ul_tbf);
+
+	printf("=== end %s ===\n", __func__);
+}
+
 static const struct log_info_cat default_categories[] = {
 	{"DPCU", "", "GPRS Packet Control Unit (PCU)", LOGL_INFO, 1},
 };
@@ -437,6 +506,7 @@ int main(int argc, char **argv)
 	test_ms_replace_tbf();
 	test_ms_change_tlli();
 	test_ms_storage();
+	test_ms_timeout();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);

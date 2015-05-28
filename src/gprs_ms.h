@@ -25,6 +25,11 @@ struct gprs_rlcmac_dl_tbf;
 struct gprs_rlcmac_ul_tbf;
 
 #include "cxx_linuxlist.h"
+
+extern "C" {
+	#include <osmocom/core/timer.h>
+}
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -62,6 +67,8 @@ public:
 	uint8_t ta() const;
 	void set_ta(uint8_t ta);
 
+	void set_timeout(unsigned secs);
+
 	void attach_tbf(gprs_rlcmac_tbf *tbf);
 	void attach_ul_tbf(gprs_rlcmac_ul_tbf *tbf);
 	void attach_dl_tbf(gprs_rlcmac_dl_tbf *tbf);
@@ -76,10 +83,15 @@ public:
 	LListHead<GprsMs>& list() {return this->m_list;}
 	const LListHead<GprsMs>& list() const {return this->m_list;}
 
+	/* internal use */
+	static void timeout(void *priv_);
+
 protected:
 	void update_status();
-	void ref();
+	GprsMs *ref();
 	void unref();
+	void start_timer();
+	void stop_timer();
 
 private:
 	Callback * m_cb;
@@ -96,6 +108,8 @@ private:
 	bool m_is_idle;
 	int m_ref;
 	LListHead<GprsMs> m_list;
+	struct osmo_timer_list m_timer;
+	unsigned m_delay;
 };
 
 inline uint32_t GprsMs::tlli() const
@@ -119,4 +133,9 @@ inline const char *GprsMs::imsi() const
 inline uint8_t GprsMs::ta() const
 {
 	return m_ta;
+}
+
+inline void GprsMs::set_timeout(unsigned secs)
+{
+	m_delay = secs;
 }
