@@ -483,6 +483,31 @@ DEFUN(cfg_pcu_no_dl_tbf_idle_time,
 	return CMD_SUCCESS;
 }
 
+#define MS_IDLE_TIME_STR "keep an idle MS object alive for the time given\n"
+DEFUN(cfg_pcu_ms_idle_time,
+      cfg_pcu_ms_idle_time_cmd,
+      "ms-idle-time <1-7200>",
+      MS_IDLE_TIME_STR "idle time in sec")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->ms_idle_sec = atoi(argv[0]);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_ms_idle_time,
+      cfg_pcu_no_ms_idle_time_cmd,
+      "no ms-idle-time",
+      NO_STR MS_IDLE_TIME_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->ms_idle_sec = 0;
+
+	return CMD_SUCCESS;
+}
+
 DEFUN(show_tbf,
       show_tbf_cmd,
       "show tbf all",
@@ -555,6 +580,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_gamma_cmd);
 	install_element(PCU_NODE, &cfg_pcu_dl_tbf_idle_time_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_dl_tbf_idle_time_cmd);
+	install_element(PCU_NODE, &cfg_pcu_ms_idle_time_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_ms_idle_time_cmd);
 
 	install_element_ve(&show_bts_stats_cmd);
 	install_element_ve(&show_tbf_cmd);
