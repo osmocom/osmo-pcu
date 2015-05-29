@@ -27,16 +27,11 @@
  * I represent the LLC data to a MS
  */
 struct gprs_llc {
-	static void calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct timeval *tv);
-	static bool is_frame_expired(struct timeval *now, struct timeval *tv);
 	static bool is_user_data_frame(uint8_t *data, size_t len);
 
 	void init();
 	void reset();
 	void reset_frame_space();
-
-	void enqueue(struct msgb *llc_msg);
-	struct msgb *dequeue();
 
 	void put_frame(const uint8_t *data, size_t len);
 	void put_dummy_frame(size_t req_len);
@@ -44,7 +39,6 @@ struct gprs_llc {
 
 	void consume(size_t len);
 	void consume(uint8_t *data, size_t len);
-	void clear(BTS *bts);
 
 	uint16_t chunk_size() const;
 	uint16_t remaining_space() const;
@@ -55,11 +49,30 @@ struct gprs_llc {
 	uint8_t frame[LLC_MAX_LEN]; /* current DL or UL frame */
 	uint16_t m_index; /* current write/read position of frame */
 	uint16_t m_length; /* len of current DL LLC_frame, 0 == no frame */
-	struct llist_head queue; /* queued LLC DL data */
+};
 
+/**
+ * I store the LLC frames that come from the SGSN.
+ */
+struct gprs_llc_queue {
+	static void calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct timeval *tv);
+	static bool is_frame_expired(struct timeval *now, struct timeval *tv);
+	static bool is_user_data_frame(uint8_t *data, size_t len);
+
+	void init();
+
+	void enqueue(struct msgb *llc_msg);
+	struct msgb *dequeue();
+	void clear(BTS *bts);
+	size_t size() const;
+
+private:
 	uint32_t m_avg_queue_delay; /* Average delay of data going through the queue */
 	size_t m_queue_size;
+	struct llist_head m_queue; /* queued LLC DL data */
+
 };
+
 
 inline uint16_t gprs_llc::chunk_size() const
 {
@@ -91,4 +104,9 @@ inline void gprs_llc::consume(uint8_t *data, size_t len)
 inline bool gprs_llc::fits_in_current_frame(uint8_t chunk_size) const
 {
 	return m_length + chunk_size <= LLC_MAX_LEN;
+}
+
+inline size_t gprs_llc_queue::size() const
+{
+	return this ? m_queue_size : 0;
 }

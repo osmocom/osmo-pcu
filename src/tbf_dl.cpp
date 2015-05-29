@@ -122,11 +122,11 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 		if (!llc_msg)
 			return -ENOMEM;
 		tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
-		gprs_llc::calc_pdu_lifetime(bts, pdu_delay_csec, tv);
+		gprs_llc_queue::calc_pdu_lifetime(bts, pdu_delay_csec, tv);
 		tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
 		gettimeofday(tv, NULL);
 		memcpy(msgb_put(llc_msg, len), data, len);
-		m_llc.enqueue(llc_msg);
+		llc_queue()->enqueue(llc_msg);
 		tbf_update_ms_class(this, ms_class);
 		start_llc_timer();
 	}
@@ -253,7 +253,7 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 	gettimeofday(&tv_now, NULL);
 	timeradd(&tv_now, &hyst_delta, &tv_now2);
 
-	while ((msg = m_llc.dequeue())) {
+	while ((msg = llc_queue()->dequeue())) {
 		tv_disc = (struct timeval *)msg->data;
 		msgb_pull(msg, sizeof(*tv_disc));
 		tv_recv = (struct timeval *)msg->data;
@@ -262,11 +262,11 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 		gprs_bssgp_update_queue_delay(tv_recv, &tv_now);
 
 		/* Is the age below the low water mark? */
-		if (!gprs_llc::is_frame_expired(&tv_now2, tv_disc))
+		if (!gprs_llc_queue::is_frame_expired(&tv_now2, tv_disc))
 			break;
 
 		/* Is the age below the high water mark */
-		if (!gprs_llc::is_frame_expired(&tv_now, tv_disc)) {
+		if (!gprs_llc_queue::is_frame_expired(&tv_now, tv_disc)) {
 			/* Has the previous message not been dropped? */
 			if (frames == 0)
 				break;
@@ -297,7 +297,7 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 		LOGP(DRLCMACDL, LOGL_NOTICE, "%s Discarding LLC PDU "
 			"because lifetime limit reached, "
 			"count=%u new_queue_size=%zu\n",
-			tbf_name(this), frames, m_llc.m_queue_size);
+			tbf_name(this), frames, llc_queue()->size());
 		if (frames > 0xff)
 			frames = 0xff;
 		if (octets > 0xffffff)
@@ -463,7 +463,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 			break;
 		}
 		/* if FINAL chunk would fit precisely in space left */
-		if (chunk == space && llist_empty(&m_llc.queue) && !keep_open(fn))
+		if (chunk == space && llc_queue()->size() == 0 && !keep_open(fn))
 		{
 			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
 				"would exactly fit into space (%d): because "
@@ -794,8 +794,8 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 	new_tbf->m_llc.put_frame(data, len);
 	bts->llc_frame_sched();
 
-	while ((msg = m_llc.dequeue()))
-		new_tbf->m_llc.enqueue(msg);
+	while ((msg = llc_queue()->dequeue()))
+		new_tbf->llc_queue()->enqueue(msg);
 
 	/* reset rlc states */
 	m_tx_counter = 0;
@@ -836,7 +836,7 @@ bool gprs_rlcmac_dl_tbf::need_control_ts() const
 
 bool gprs_rlcmac_dl_tbf::have_data() const
 {
-	return m_llc.chunk_size() > 0 || !llist_empty(&m_llc.queue);
+	return m_llc.chunk_size() > 0 || llc_queue()->size() > 0;
 }
 
 int gprs_rlcmac_dl_tbf::frames_since_last_poll(unsigned fn) const

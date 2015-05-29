@@ -42,12 +42,6 @@ void gprs_llc::reset_frame_space()
 	m_index = 0;
 }
 
-void gprs_llc::enqueue(struct msgb *llc_msg)
-{
-	m_queue_size += 1;
-	msgb_enqueue(&queue, llc_msg);
-}
-
 /* Put an Unconfirmed Information (UI) Dummy command, see GSM 44.064, 6.4.2.2 */
 void gprs_llc::put_dummy_frame(size_t req_len)
 {
@@ -82,36 +76,62 @@ void gprs_llc::append_frame(const uint8_t *data, size_t len)
 	m_length += len;
 }
 
-void gprs_llc::clear(BTS *bts)
+void gprs_llc::init()
+{
+	reset();
+}
+
+bool gprs_llc::is_user_data_frame(uint8_t *data, size_t len)
+{
+	if (len < 2)
+		return false;
+
+	if ((data[0] & 0x0f) == 1 /* GPRS_SAPI_GMM */)
+		return false;
+
+	if ((data[0] & 0x0e) != 0xc0 /* LLC UI */)
+		/* It is not an LLC UI frame */
+		return false;
+
+	return true;
+}
+
+void gprs_llc_queue::init()
+{
+	INIT_LLIST_HEAD(&m_queue);
+	m_queue_size = 0;
+	m_avg_queue_delay = 0;
+}
+
+void gprs_llc_queue::enqueue(struct msgb *llc_msg)
+{
+	m_queue_size += 1;
+	msgb_enqueue(&m_queue, llc_msg);
+}
+
+void gprs_llc_queue::clear(BTS *bts)
 {
 	struct msgb *msg;
 
-	while ((msg = msgb_dequeue(&queue))) {
-		bts->llc_dropped_frame();
+	while ((msg = msgb_dequeue(&m_queue))) {
+		if (bts)
+			bts->llc_dropped_frame();
 		msgb_free(msg);
 	}
 
 	m_queue_size = 0;
 }
 
-void gprs_llc::init()
-{
-	INIT_LLIST_HEAD(&queue);
-	m_queue_size = 0;
-	m_avg_queue_delay = 0;
-	reset();
-}
-
 #define ALPHA 0.5f
 
-struct msgb *gprs_llc::dequeue()
+struct msgb *gprs_llc_queue::dequeue()
 {
 	struct msgb *msg;
 	struct timeval *tv, tv_now, tv_result;
 	uint32_t lifetime;
 
 
-	msg = msgb_dequeue(&queue);
+	msg = msgb_dequeue(&m_queue);
 	if (!msg)
 		return NULL;
 
@@ -128,8 +148,7 @@ struct msgb *gprs_llc::dequeue()
 	return msg;
 }
 
-
-void gprs_llc::calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct timeval *tv)
+void gprs_llc_queue::calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct timeval *tv)
 {
 	uint16_t delay_csec;
 	if (bts->bts_data()->force_llc_lifetime)
@@ -152,26 +171,11 @@ void gprs_llc::calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct
 	timeradd(&now, &csec, tv);
 }
 
-bool gprs_llc::is_frame_expired(struct timeval *tv_now, struct timeval *tv)
+bool gprs_llc_queue::is_frame_expired(struct timeval *tv_now, struct timeval *tv)
 {
 	/* Timeout is infinite */
 	if (tv->tv_sec == 0 && tv->tv_usec == 0)
 		return false;
 
 	return timercmp(tv_now, tv, >);
-}
-
-bool gprs_llc::is_user_data_frame(uint8_t *data, size_t len)
-{
-	if (len < 2)
-		return false;
-
-	if ((data[0] & 0x0f) == 1 /* GPRS_SAPI_GMM */)
-		return false;
-
-	if ((data[0] & 0x0e) != 0xc0 /* LLC UI */)
-		/* It is not an LLC UI frame */
-		return false;
-
-	return true;
 }
