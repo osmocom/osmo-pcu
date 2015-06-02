@@ -23,6 +23,10 @@
 
 #define LLC_MAX_LEN 1543
 
+struct BTS;
+struct timeval;
+struct msgb;
+
 /**
  * I represent the LLC data to a MS
  */
