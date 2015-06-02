@@ -123,7 +123,7 @@ struct gprs_rlcmac_tbf {
 	struct msgb *create_dl_ass(uint32_t fn);
 	struct msgb *create_ul_ass(uint32_t fn);
 
-	GprsMs *ms();
+	GprsMs *ms() const;
 	void set_ms(GprsMs *ms);
 
 	uint8_t tsc() const;
@@ -284,7 +284,7 @@ inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
 	state = new_state;
 }
 
-inline GprsMs *gprs_rlcmac_tbf::ms()
+inline GprsMs *gprs_rlcmac_tbf::ms() const
 {
 	return m_ms;
 }
