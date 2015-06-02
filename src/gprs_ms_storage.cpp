@@ -24,7 +24,8 @@
 #include "tbf.h"
 #include "gprs_debug.h"
 
-GprsMsStorage::GprsMsStorage()
+GprsMsStorage::GprsMsStorage(BTS *bts) :
+	m_bts(bts)
 {
 }
 
@@ -86,7 +87,7 @@ GprsMs *GprsMsStorage::create_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction d
 	if (ms)
 		return ms;
 
-	ms = new GprsMs(0);
+	ms = new GprsMs(m_bts, 0);
 
 	if (dir == GPRS_RLCMAC_UL_TBF)
 		ms->set_tlli(tlli);

@@ -50,7 +50,7 @@ static void test_ms_state()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = new GprsMs(tlli);
+	ms = new GprsMs(NULL, tlli);
 	OSMO_ASSERT(ms->is_idle());
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
@@ -106,7 +106,7 @@ static void test_ms_callback()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = new GprsMs(tlli);
+	ms = new GprsMs(NULL, tlli);
 	ms->set_callback(&cb);
 
 	OSMO_ASSERT(ms->is_idle());
@@ -175,7 +175,7 @@ static void test_ms_replace_tbf()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = new GprsMs(tlli);
+	ms = new GprsMs(NULL, tlli);
 	ms->set_callback(&cb);
 
 	OSMO_ASSERT(ms->is_idle());
@@ -242,7 +242,7 @@ static void test_ms_change_tlli()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = new GprsMs(start_tlli);
+	ms = new GprsMs(NULL, start_tlli);
 
 	OSMO_ASSERT(ms->is_idle());
 
@@ -334,7 +334,7 @@ static void test_ms_storage()
 
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	GprsMs *ms, *ms_tmp;
-	GprsMsStorage store;
+	GprsMsStorage store(NULL);
 
 	printf("=== start %s ===\n", __func__);
 
@@ -423,7 +423,7 @@ static void test_ms_timeout()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = new GprsMs(tlli);
+	ms = new GprsMs(NULL, tlli);
 	ms->set_callback(&cb);
 	ms->set_timeout(1);
 

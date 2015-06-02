@@ -64,7 +64,8 @@ void GprsMs::timeout(void *priv_)
 	}
 }
 
-GprsMs::GprsMs(uint32_t tlli) :
+GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
+	m_bts(bts),
 	m_cb(&gprs_default_cb),
 	m_ul_tbf(NULL),
 	m_dl_tbf(NULL),
@@ -101,7 +102,7 @@ GprsMs::~GprsMs()
 		m_dl_tbf->set_ms(NULL);
 		m_dl_tbf = NULL;
 	}
-	m_llc_queue.clear(NULL);
+	m_llc_queue.clear(m_bts);
 }
 
 void* GprsMs::operator new(size_t size)

@@ -26,9 +26,11 @@
 #include <stdint.h>
 #include <stddef.h>
 
+struct BTS;
+
 class GprsMsStorage : public GprsMs::Callback {
 public:
-	GprsMsStorage();
+	GprsMsStorage(BTS *bts);
 	~GprsMsStorage();
 
 	virtual void ms_idle(class GprsMs *);
@@ -38,5 +40,6 @@ public:
 	GprsMs *create_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir);
 
 private:
+	BTS *m_bts;
 	LListHead<GprsMs> m_list;
 };

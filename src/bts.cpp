@@ -100,6 +100,7 @@ BTS::BTS()
 	: m_cur_fn(0)
 	, m_pollController(*this)
 	, m_sba(*this)
+	, m_ms_store(this)
 {
 	memset(&m_bts, 0, sizeof(m_bts));
 	INIT_LLIST_HEAD(&m_bts.ul_tbfs);

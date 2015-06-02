@@ -34,6 +34,8 @@ extern "C" {
 #include <stdint.h>
 #include <stddef.h>
 
+struct BTS;
+
 class GprsMs {
 public:
 	struct Callback {
@@ -50,7 +52,7 @@ public:
 		GprsMs * const m_ms;
 	};
 
-	GprsMs(uint32_t tlli);
+	GprsMs(BTS *bts, uint32_t tlli);
 	~GprsMs();
 
 	void set_callback(Callback *cb) {m_cb = cb;}
@@ -100,6 +102,7 @@ protected:
 	void stop_timer();
 
 private:
+	BTS *m_bts;
 	Callback * m_cb;
 	gprs_rlcmac_ul_tbf *m_ul_tbf;
 	gprs_rlcmac_dl_tbf *m_dl_tbf;
