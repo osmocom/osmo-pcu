@@ -394,16 +394,16 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 	uint16_t space, chunk;
 	gprs_rlc_data *rlc_data;
 	const uint16_t bsn = m_window.v_s();
+	uint8_t cs = 1;
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d\n",
 		m_window.v_s());
 
-#warning "Selection of the CS doesn't belong here"
-	if (cs == 0) {
-		cs = bts_data()->initial_cs_dl;
-		if (cs < 1 || cs > 4)
-			cs = 1;
-	}
+	cs = current_cs();
+
+	OSMO_ASSERT(cs >= 1);
+	OSMO_ASSERT(cs <= 4);
+
 	/* total length of block, including spare bits */
 	const uint8_t block_length = gprs_rlcmac_cs[cs].block_length;
 	/* length of usable data of block, w/o spare bits, inc. MAC */

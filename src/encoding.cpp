@@ -192,7 +192,7 @@ void Encoding::write_packet_uplink_assignment(
 	}
 
 	bitvec_write_field(dest, wp,0x0,1); // Message escape
-	bitvec_write_field(dest, wp,bts->initial_cs_ul-1, 2); // CHANNEL_CODING_COMMAND 
+	bitvec_write_field(dest, wp,tbf->current_cs()-1, 2); // CHANNEL_CODING_COMMAND 
 	bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
 	bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
 	bitvec_write_field(dest, wp,tbf->ta(),6); // TIMING_ADVANCE_VALUE
@@ -397,7 +397,7 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	block->u.Packet_Uplink_Ack_Nack.UPLINK_TFI   = tbf->tfi(); // Uplink TFI
 
 	block->u.Packet_Uplink_Ack_Nack.UnionType    = 0x0;      // PU_AckNack_GPRS = on
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = bts->initial_cs_ul - 1;             // CS1
+	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = tbf->current_cs() - 1;             // CS1
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.FINAL_ACK_INDICATION     = final;           // FINAL ACK INDICATION
 	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->m_window.ssn(); // STARTING_SEQUENCE_NUMBER
 

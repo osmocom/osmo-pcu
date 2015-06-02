@@ -115,6 +115,17 @@ void gprs_rlcmac_tbf::set_ms_class(uint8_t ms_class_)
 	m_ms_class = ms_class_;
 }
 
+uint8_t gprs_rlcmac_tbf::current_cs() const
+{
+	uint8_t cs;
+	if (direction == GPRS_RLCMAC_UL_TBF)
+		cs = m_ms ? m_ms->current_cs_ul() : bts->bts_data()->initial_cs_ul;
+	else
+		cs = m_ms ? m_ms->current_cs_dl() : bts->bts_data()->initial_cs_dl;
+
+	return cs < 1 ? 1 : cs;
+}
+
 gprs_llc_queue *gprs_rlcmac_tbf::llc_queue()
 {
 	return m_ms ? m_ms->llc_queue() : NULL;
@@ -945,5 +956,6 @@ void tbf_print_vty_info(struct vty *vty, struct llist_head *ltbf)
 		if (tbf->pdch[i])
 			vty_out(vty, "%d ", i);
 	}
-	vty_out(vty, " CS=%d%s%s", tbf->cs, VTY_NEWLINE, VTY_NEWLINE);
+	vty_out(vty, " CS=%d%s%s", tbf->ms() ? tbf->ms()->current_cs_dl() : 1,
+		VTY_NEWLINE, VTY_NEWLINE);
 }

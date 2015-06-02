@@ -133,13 +133,15 @@ int pcu_sock_send(struct msgb *msg)
 	return 0;
 }
 
-static void setup_bts(BTS *the_bts, uint8_t ts_no)
+static void setup_bts(BTS *the_bts, uint8_t ts_no, uint8_t cs = 1)
 {
 	gprs_rlcmac_bts *bts;
 	gprs_rlcmac_trx *trx;
 
 	bts = the_bts->bts_data();
 	bts->alloc_algorithm = alloc_algorithm_a;
+	bts->initial_cs_dl = cs;
+	bts->initial_cs_ul = cs;
 	trx = &bts->trx[0];
 
 	trx->pdch[ts_no].enable();
@@ -492,7 +494,7 @@ static void test_tbf_two_phase()
 
 	printf("=== start %s ===\n", __func__);
 
-	setup_bts(&the_bts, ts_no);
+	setup_bts(&the_bts, ts_no, 4);
 	bts = the_bts.bts_data();
 
 	/* needed to set last_rts_fn in the PDCH object */
@@ -524,8 +526,8 @@ static void test_tbf_two_phase()
 	ul_tbf = the_bts.ul_tbf_by_tfi(tfi, trx_no);
 	OSMO_ASSERT(ul_tbf != NULL);
 
-	fprintf(stderr, "Got '%s', TA=%d\n",
-		ul_tbf->name(), ul_tbf->ta());
+	fprintf(stderr, "Got '%s', TA=%d, CS=%d\n",
+		ul_tbf->name(), ul_tbf->ta(), ul_tbf->current_cs());
 
 	OSMO_ASSERT(ul_tbf->ta() == qta / 4);
 

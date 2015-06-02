@@ -153,6 +153,7 @@ struct gprs_rlcmac_tbf {
 	void set_ta(uint8_t);
 	uint8_t ms_class() const;
 	void set_ms_class(uint8_t);
+	uint8_t current_cs() const;
 	gprs_llc_queue *llc_queue();
 	const gprs_llc_queue *llc_queue() const;
 
@@ -197,8 +198,6 @@ struct gprs_rlcmac_tbf {
 		int32_t rssi_sum; /* sum of rssi values */
 		int rssi_num; /* number of rssi values added since rssi_tv */
 	} meas;
-
-	uint8_t cs; /* current coding scheme */
 
 	/* these should become protected but only after gprs_rlcmac_data.c
 	 * stops to iterate over all tbf in its current form */

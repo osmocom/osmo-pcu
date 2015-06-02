@@ -21,6 +21,7 @@
 
 #include "gprs_ms.h"
 
+#include "bts.h"
 #include "tbf.h"
 #include "gprs_debug.h"
 
@@ -74,6 +75,8 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	m_new_dl_tlli(0),
 	m_ta(0),
 	m_ms_class(0),
+	m_current_cs_ul(1),
+	m_current_cs_dl(1),
 	m_is_idle(true),
 	m_ref(0),
 	m_list(this)
@@ -84,6 +87,15 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	memset(&m_timer, 0, sizeof(m_timer));
 	m_timer.cb = GprsMs::timeout;
 	m_llc_queue.init();
+	if (m_bts) {
+		m_current_cs_ul = m_bts->bts_data()->initial_cs_ul;
+		if (m_current_cs_ul < 1)
+			m_current_cs_ul = 1;
+
+		m_current_cs_dl = m_bts->bts_data()->initial_cs_dl;
+		if (m_current_cs_dl < 1)
+			m_current_cs_dl = 1;
+	}
 }
 
 GprsMs::~GprsMs()
