@@ -102,6 +102,19 @@ void gprs_rlcmac_tbf::set_ta(uint8_t ta)
 	m_ta = ta;
 }
 
+uint8_t gprs_rlcmac_tbf::ms_class() const
+{
+	return m_ms ? m_ms->ms_class() : m_ms_class;
+}
+
+void gprs_rlcmac_tbf::set_ms_class(uint8_t ms_class_)
+{
+	if (ms())
+		ms()->set_ms_class(ms_class_);
+
+	m_ms_class = ms_class_;
+}
+
 gprs_llc_queue *gprs_rlcmac_tbf::llc_queue()
 {
 	return m_ms ? m_ms->llc_queue() : NULL;
@@ -141,8 +154,12 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction di
 			new_ms->set_timeout(bts->bts_data()->ms_idle_sec);
 		}
 
-		if (dir == GPRS_RLCMAC_UL_TBF)
+		if (dir == GPRS_RLCMAC_UL_TBF) {
 			new_ms->set_ta(m_ta);
+		}
+
+		if (m_ms_class)
+			new_ms->set_ms_class(m_ms_class);
 
 		set_ms(new_ms);
 		return;
@@ -440,7 +457,7 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
 	tbf->bts = bts->bts;
 	tbf->m_tfi = tfi;
 	tbf->trx = &bts->trx[trx];
-	tbf->ms_class = ms_class;
+	tbf->set_ms_class(ms_class);
 	/* select algorithm */
 	rc = bts->alloc_algorithm(bts, old_tbf, tbf, bts->alloc_algorithm_curst,
 		single_slot);
@@ -921,7 +938,7 @@ void tbf_print_vty_info(struct vty *vty, struct llist_head *ltbf)
 	vty_out(vty, " created=%lu state=%08x 1st_TS=%d 1st_cTS=%d ctrl_TS=%d "
 			"MS_CLASS=%d%s",
 			tbf->created_ts(), tbf->state_flags, tbf->first_ts,
-			tbf->first_common_ts, tbf->control_ts, tbf->ms_class,
+			tbf->first_common_ts, tbf->control_ts, tbf->ms_class(),
 			VTY_NEWLINE);
 	vty_out(vty, " TS_alloc=");
 	for (int i = 0; i < 8; i++) {

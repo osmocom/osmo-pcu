@@ -146,7 +146,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	uint8_t ts;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm A) for class "
-		"%d\n", tbf->ms_class);
+		"%d\n", tbf->ms_class());
 
 	ts = find_enabled_pdch(tbf->trx, 0);
 	if (ts == 8)
@@ -540,16 +540,16 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	uint8_t slotcount = 0;
 
 
-	if (tbf->ms_class >= 32) {
+	if (tbf->ms_class() >= 32) {
 		LOGP(DRLCMAC, LOGL_ERROR, "Multislot class %d out of range.\n",
-			tbf->ms_class);
+			tbf->ms_class());
 		return -EINVAL;
 	}
 
-	if (tbf->ms_class) {
-		ms_class = &gprs_ms_multislot_class[tbf->ms_class];
+	if (tbf->ms_class()) {
+		ms_class = &gprs_ms_multislot_class[tbf->ms_class()];
 		LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm B) for "
-			"class %d\n", tbf->ms_class);
+			"class %d\n", tbf->ms_class());
 	} else {
 		ms_class = &gprs_ms_multislot_class[12];
 		LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm B) for "
@@ -558,7 +558,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 
 	if (ms_class->tx == MS_NA) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "Multislot class %d not "
-			"applicable.\n", tbf->ms_class);
+			"applicable.\n", tbf->ms_class());
 		return -EINVAL;
 	}
 

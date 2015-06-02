@@ -833,7 +833,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 			"message, so we provide one:\n");
 
 		/* This call will register the new TBF with the MS on success */
-		tbf_alloc_ul(bts_data(), tbf->trx->trx_no, tbf->ms_class,
+		tbf_alloc_ul(bts_data(), tbf->trx->trx_no, tbf->ms_class(),
 			tbf->tlli(), tbf->ta(), tbf);
 
 		/* schedule uplink assignment */

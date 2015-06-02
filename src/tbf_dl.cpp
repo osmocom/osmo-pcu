@@ -58,8 +58,8 @@ int bssgp_tx_llc_discarded(struct bssgp_bvc_ctx *bctx, uint32_t tlli,
 static inline void tbf_update_ms_class(struct gprs_rlcmac_tbf *tbf,
 					const uint8_t ms_class)
 {
-	if (!tbf->ms_class && ms_class)
-		tbf->ms_class = ms_class;
+	if (!tbf->ms_class() && ms_class)
+		tbf->set_ms_class(ms_class);
 }
 
 static void llc_timer_cb(void *_tbf)
@@ -777,7 +777,7 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 	tfi = bts->tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx, this->trx->trx_no);
 	if (tfi >= 0)
 		new_tbf = tbf_alloc_dl_tbf(bts->bts_data(), NULL, tfi, trx,
-			ms_class, 0);
+			ms_class(), 0);
 
 	if (!new_tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");

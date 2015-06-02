@@ -151,6 +151,8 @@ struct gprs_rlcmac_tbf {
 	void assign_imsi(const char *imsi);
 	uint8_t ta() const;
 	void set_ta(uint8_t);
+	uint8_t ms_class() const;
+	void set_ms_class(uint8_t);
 	gprs_llc_queue *llc_queue();
 	const gprs_llc_queue *llc_queue() const;
 
@@ -167,7 +169,6 @@ struct gprs_rlcmac_tbf {
 	uint8_t first_common_ts; /* first TS that the phone can send and
 		reveive simultaniously */
 	uint8_t control_ts; /* timeslot control messages and polling */
-	uint8_t ms_class;
 	struct gprs_rlcmac_pdch *pdch[8]; /* list of PDCHs allocated to TBF */
 
 	gprs_llc m_llc;
@@ -229,8 +230,9 @@ protected:
 
 	class GprsMs *m_ms;
 
-	/* Field to take the TA value if no MS is associated */
+	/* Fields to take the TA/MS class values if no MS is associated */
 	uint8_t m_ta;
+	uint8_t m_ms_class;
 
 private:
 	mutable char m_name_buf[60];

@@ -67,6 +67,8 @@ public:
 
 	uint8_t ta() const;
 	void set_ta(uint8_t ta);
+	uint8_t ms_class() const;
+	void set_ms_class(uint8_t ms_class);
 
 	gprs_llc_queue *llc_queue();
 	const gprs_llc_queue *llc_queue() const;
@@ -108,6 +110,7 @@ private:
 	/* store IMSI for look-up and PCH retransmission */
 	char m_imsi[16];
 	uint8_t m_ta;
+	uint8_t m_ms_class;
 	gprs_llc_queue m_llc_queue;
 
 	bool m_is_idle;
@@ -138,6 +141,11 @@ inline const char *GprsMs::imsi() const
 inline uint8_t GprsMs::ta() const
 {
 	return m_ta;
+}
+
+inline uint8_t GprsMs::ms_class() const
+{
+	return m_ms_class;
 }
 
 inline void GprsMs::set_timeout(unsigned secs)

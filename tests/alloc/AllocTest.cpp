@@ -359,6 +359,9 @@ static void test_alloc_b(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool 
 		dl_tbf->update();
 		OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
 
+		OSMO_ASSERT(ul_tbf->ms_class() == ms_class);
+		OSMO_ASSERT(dl_tbf->ms_class() == ms_class);
+
 		tbf_free(dl_tbf);
 		tbf_free(ul_tbf);
 	}
