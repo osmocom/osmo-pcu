@@ -43,6 +43,7 @@ libgprs_la_SOURCES = \
 	bitvector.cpp \
 	pcu_l1_if.cpp \
 	pcu_vty.c \
+	pcu_vty_functions.cpp \
 	tbf.cpp \
 	tbf_ul.cpp \
 	tbf_dl.cpp \
@@ -85,6 +86,7 @@ noinst_HEADERS = \
 	gsm_timer.h \
 	bitvector.h \
 	pcu_vty.h \
+	pcu_vty_functions.h \
 	sysmo_l1_if.h \
 	femtobts.h \
 	tbf.h \

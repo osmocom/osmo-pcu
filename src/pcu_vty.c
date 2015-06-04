@@ -12,6 +12,8 @@
 #include "bts.h"
 #include "tbf.h"
 
+#include "pcu_vty_functions.h"
+
 enum node_type pcu_vty_go_parent(struct vty *vty)
 {
 	switch (vty->node) {
@@ -96,7 +98,7 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " dl-tbf-idle-time %d%s", bts->dl_tbf_idle_msec,
 			VTY_NEWLINE);
 
-	return CMD_SUCCESS;
+	return pcu_vty_config_write_pcu_ext(vty);
 }
 
 /* per-BTS configuration */
