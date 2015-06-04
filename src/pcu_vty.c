@@ -531,6 +531,15 @@ DEFUN(show_tbf,
 	return CMD_SUCCESS;
 }
 
+DEFUN(show_ms_all,
+      show_ms_all_cmd,
+      "show ms all",
+      SHOW_STR "information about MSs\n" "All TBFs\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	return pcu_vty_show_ms_all(vty, bts);
+}
+
 static const char pcu_copyright[] =
 	"Copyright (C) 2012 by Ivan Kluchnikov <kluchnikovi@gmail.com> and \r\n"
 	"                      Andreas Eversberg <jolly@eversberg.eu>\r\n"
@@ -587,6 +596,7 @@ int pcu_vty_init(const struct log_info *cat)
 
 	install_element_ve(&show_bts_stats_cmd);
 	install_element_ve(&show_tbf_cmd);
+	install_element_ve(&show_ms_all_cmd);
 
 	return 0;
 }
