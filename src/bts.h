@@ -142,6 +142,9 @@ struct gprs_rlcmac_bts {
 	uint8_t alpha, gamma;
 	uint32_t dl_tbf_idle_msec; /* hold time for idle DL TBFs */
 	uint32_t ms_idle_sec;
+	uint8_t cs_adj_enabled;
+	uint8_t cs_adj_upper_limit;
+	uint8_t cs_adj_lower_limit;
 
 	/* TBF handling, make private or move into TBFController */
 	/* list of uplink TBFs */

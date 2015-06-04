@@ -351,3 +351,39 @@ void GprsMs::set_ms_class(uint8_t ms_class_)
 	m_ms_class = ms_class_;
 }
 
+void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
+{
+	struct gprs_rlcmac_bts *bts_data;
+
+	OSMO_ASSERT(m_bts != NULL);
+	bts_data = m_bts->bts_data();
+
+	if (error_rate < 0)
+		return;
+
+	/* TODO: Support different CS values for UL and DL */
+
+	if (error_rate > bts_data->cs_adj_upper_limit) {
+		if (m_current_cs_dl > 1) {
+			m_current_cs_dl -= 1;
+			m_current_cs_ul = m_current_cs_dl;
+			LOGP(DRLCMACDL, LOGL_INFO,
+				"MS (IMSI %s): High error rate %d%%, "
+				"reducing CS level to %d\n",
+				imsi(), error_rate, m_current_cs_dl);
+		}
+	} else if (error_rate < bts_data->cs_adj_lower_limit) {
+		if (m_current_cs_dl < 4) {
+			m_current_cs_dl += 1;
+			m_current_cs_ul = m_current_cs_dl;
+			LOGP(DRLCMACDL, LOGL_INFO,
+				"MS (IMSI %s): Low error rate %d%%, "
+				"increasing CS level to %d\n",
+				imsi(), error_rate, m_current_cs_dl);
+		}
+	} else {
+		LOGP(DRLCMACDL, LOGL_DEBUG,
+			"MS (IMSI %s): Medium error rate %d%%, ignored\n",
+			imsi(), error_rate);
+	}
+}

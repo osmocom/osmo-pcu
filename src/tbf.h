@@ -363,6 +363,7 @@ protected:
 	bool dl_window_stalled() const;
 	void reuse_tbf(const uint8_t *data, const uint16_t len);
 	void start_llc_timer();
+	int analyse_errors(char *show_rbb, uint8_t ssn);
 
 	struct osmo_timer_list m_llc_timer;
 };

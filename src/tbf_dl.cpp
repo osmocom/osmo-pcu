@@ -412,6 +412,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 	/* now we still have untransmitted LLC data, so we fill mac block */
 	rlc_data = m_rlc.block(bsn);
 	data = rlc_data->prepare(block_data_len);
+	rlc_data->cs = cs;
 
 	rh = (struct rlc_dl_header *)data;
 	rh->pt = 0; /* Data Block */
@@ -669,6 +670,53 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	return dl_msg;
 }
 
+static uint16_t bitnum_to_bsn(int bitnum, uint16_t ssn, uint16_t mod_sns)
+{
+	return (ssn - 1 - bitnum) & mod_sns;
+}
+
+int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn)
+{
+	gprs_rlc_data *rlc_data;
+	uint16_t lost = 0, received = 0, skipped = 0;
+
+	/* SSN - 1 is in range V(A)..V(S)-1 */
+	for (int bitpos = 0; bitpos < m_window.ws(); bitpos++) {
+		uint16_t bsn = bitnum_to_bsn(bitpos, ssn, m_window.mod_sns());
+
+		if (bsn == ((m_window.v_a() - 1) & m_window.mod_sns()))
+			break;
+
+		rlc_data = m_rlc.block(bsn);
+		if (!rlc_data)
+			continue;
+
+		if (rlc_data->cs != current_cs()) {
+			/* This block has already been encoded with a different
+			 * CS, so it doesn't help us to decide, whether the
+			 * current CS is ok. Ignore it. */
+			skipped += 1;
+			continue;
+		}
+
+		if (show_rbb[m_window.ws() - 1 - bitpos] == 'R') {
+			if (!m_window.m_v_b.is_acked(bsn))
+				received += 1;
+		} else {
+			lost += 1;
+		}
+	}
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "%s DL analysis, range=%d:%d, lost=%d, recv=%d, skipped=%d\n",
+		name(), m_window.v_a(), m_window.v_s(), lost, received, skipped);
+
+	if (lost + received == 0)
+		return -1;
+
+	return lost * 100 / (lost + received);
+}
+
+
 int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 {
 	int16_t dist; /* must be signed */
@@ -676,6 +724,7 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 	char show_rbb[65];
 	char show_v_b[RLC_MAX_SNS + 1];
 	const uint16_t mod_sns = m_window.mod_sns();
+	int error_rate;
 
 	Decoding::extract_rbb(rbb, show_rbb);
 	/* show received array in debug (bit 64..1) */
@@ -696,6 +745,11 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 		LOGP(DRLCMACDL, LOGL_NOTICE, "- ack range is out of "
 			"V(A)..V(S) range %s Free TBF!\n", tbf_name(this));
 		return 1; /* indicate to free TBF */
+	}
+
+	if (bts_data()->cs_adj_enabled && ms()) {
+		error_rate = analyse_errors(show_rbb, ssn);
+		ms()->update_error_rate(this, error_rate);
 	}
 
 	m_window.update(bts, show_rbb, ssn,

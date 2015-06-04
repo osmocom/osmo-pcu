@@ -86,6 +86,8 @@ public:
 
 	void detach_tbf(gprs_rlcmac_tbf *tbf);
 
+	void update_error_rate(gprs_rlcmac_tbf *tbf, int percent);
+
 	bool is_idle() const {return !m_ul_tbf && !m_dl_tbf && !m_ref;}
 
 	void* operator new(size_t num);
