@@ -172,6 +172,7 @@ int main(int argc, char *argv[])
 	bts->n3103 = 4;
 	bts->n3105 = 8;
 	bts->alpha = 0; /* a = 0.0 */
+	bts->ms_idle_sec = 60; /* slightly above T3314 (default 44s, 24.008, 11.2.2) */
 
 	msgb_set_talloc_ctx(tall_pcu_ctx);
 
