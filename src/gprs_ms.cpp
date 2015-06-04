@@ -25,12 +25,22 @@
 #include "tbf.h"
 #include "gprs_debug.h"
 
+#include <time.h>
+
 extern "C" {
 	#include <osmocom/core/talloc.h>
 	#include <osmocom/core/utils.h>
 }
 
 extern void *tall_pcu_ctx;
+
+static int64_t now_msec()
+{
+	struct timespec ts;
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+
+	return int64_t(ts.tv_sec) * 1000 + ts.tv_nsec / 1000000;
+}
 
 struct GprsMsDefaultCallback: public GprsMs::Callback {
 	virtual void ms_idle(class GprsMs *ms) {
@@ -96,6 +106,7 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 		if (m_current_cs_dl < 1)
 			m_current_cs_dl = 1;
 	}
+	m_last_cs_not_low = now_msec();
 }
 
 GprsMs::~GprsMs()
@@ -354,12 +365,15 @@ void GprsMs::set_ms_class(uint8_t ms_class_)
 void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 {
 	struct gprs_rlcmac_bts *bts_data;
+	int64_t now;
 
 	OSMO_ASSERT(m_bts != NULL);
 	bts_data = m_bts->bts_data();
 
 	if (error_rate < 0)
 		return;
+
+	now = now_msec();
 
 	/* TODO: Support different CS values for UL and DL */
 
@@ -371,19 +385,29 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 				"MS (IMSI %s): High error rate %d%%, "
 				"reducing CS level to %d\n",
 				imsi(), error_rate, m_current_cs_dl);
+			m_last_cs_not_low = now;
 		}
 	} else if (error_rate < bts_data->cs_adj_lower_limit) {
 		if (m_current_cs_dl < 4) {
-			m_current_cs_dl += 1;
-			m_current_cs_ul = m_current_cs_dl;
-			LOGP(DRLCMACDL, LOGL_INFO,
-				"MS (IMSI %s): Low error rate %d%%, "
-				"increasing CS level to %d\n",
-				imsi(), error_rate, m_current_cs_dl);
+		       if (now - m_last_cs_not_low > 1000) {
+			       m_current_cs_dl += 1;
+			       m_current_cs_ul = m_current_cs_dl;
+			       LOGP(DRLCMACDL, LOGL_INFO,
+				       "MS (IMSI %s): Low error rate %d%%, "
+				       "increasing CS level to %d\n",
+				       imsi(), error_rate, m_current_cs_dl);
+			       m_last_cs_not_low = now;
+		       } else {
+			       LOGP(DRLCMACDL, LOGL_DEBUG,
+				       "MS (IMSI %s): Low error rate %d%%, "
+				       "ignored (within blocking period)\n",
+				       imsi(), error_rate);
+		       }
 		}
 	} else {
 		LOGP(DRLCMACDL, LOGL_DEBUG,
 			"MS (IMSI %s): Medium error rate %d%%, ignored\n",
 			imsi(), error_rate);
+		m_last_cs_not_low = now;
 	}
 }

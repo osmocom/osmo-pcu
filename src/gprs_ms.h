@@ -130,6 +130,8 @@ private:
 	LListHead<GprsMs> m_list;
 	struct osmo_timer_list m_timer;
 	unsigned m_delay;
+
+	int64_t m_last_cs_not_low;
 };
 
 inline uint32_t GprsMs::tlli() const
