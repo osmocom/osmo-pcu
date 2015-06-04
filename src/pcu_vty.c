@@ -75,6 +75,13 @@ static int config_write_pcu(struct vty *vty)
 			vty_out(vty, " cs %d %d%s", bts->initial_cs_dl,
 				bts->initial_cs_ul, VTY_NEWLINE);
 	}
+	if (bts->cs_adj_enabled)
+		vty_out(vty, " cs threshold %d %d%s",
+			bts->cs_adj_lower_limit, bts->cs_adj_upper_limit,
+			VTY_NEWLINE);
+	else
+		vty_out(vty, " no cs threshold%s", VTY_NEWLINE);
+
 	if (bts->force_llc_lifetime == 0xffff)
 		vty_out(vty, " queue lifetime infinite%s", VTY_NEWLINE);
 	else if (bts->force_llc_lifetime)
@@ -249,12 +256,14 @@ DEFUN(cfg_pcu_no_fc_bucket_time,
 	return CMD_SUCCESS;
 }
 
+#define CS_STR "Coding Scheme configuration\n"
 
 DEFUN(cfg_pcu_cs,
       cfg_pcu_cs_cmd,
       "cs <1-4> [<1-4>]",
-      "Set the Coding Scheme to be used, (overrides BTS config)\n"
-      "Initial CS used\nAlternative uplink CS")
+      CS_STR
+      "Initial CS value to be used (overrides BTS config)\n"
+      "Use a different initial CS value for the uplink")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t cs = atoi(argv[0]);
@@ -510,6 +519,45 @@ DEFUN(cfg_pcu_no_ms_idle_time,
 	return CMD_SUCCESS;
 }
 
+#define CS_ERR_LIMITS_STR "set limits for error rate based CS adjustment\n"
+DEFUN(cfg_pcu_cs_err_limits,
+      cfg_pcu_cs_err_limits_cmd,
+      "cs limits <0-100> <0-100>",
+      CS_STR CS_ERR_LIMITS_STR "lower limit in %\n" "upper limit in %\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	uint8_t lower_limit = atoi(argv[0]);
+	uint8_t upper_limit = atoi(argv[1]);
+
+	if (lower_limit > upper_limit) {
+		vty_out(vty,
+			"The lower limit must be less than or equal to the "
+			"upper limit.%s", VTY_NEWLINE);
+		return CMD_WARNING;
+	}
+
+	bts->cs_adj_enabled = 1;
+	bts->cs_adj_upper_limit = upper_limit;
+	bts->cs_adj_lower_limit = lower_limit;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_cs_err_limits,
+      cfg_pcu_no_cs_err_limits_cmd,
+      "no cs limits",
+      NO_STR CS_STR CS_ERR_LIMITS_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->cs_adj_enabled = 0;
+	bts->cs_adj_upper_limit = 100;
+	bts->cs_adj_lower_limit = 0;
+
+	return CMD_SUCCESS;
+}
+
 DEFUN(show_tbf,
       show_tbf_cmd,
       "show tbf all",
@@ -567,6 +615,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_no_two_phase_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_cmd);
+	install_element(PCU_NODE, &cfg_pcu_cs_err_limits_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_cs_err_limits_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_inf_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_queue_lifetime_cmd);
