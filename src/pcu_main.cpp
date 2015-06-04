@@ -176,6 +176,8 @@ int main(int argc, char *argv[])
 	bts->cs_adj_enabled = 1;
 	bts->cs_adj_upper_limit = 33; /* Decrease CS if the error rate is above */
 	bts->cs_adj_lower_limit = 10; /* Increase CS if the error rate is below */
+	bts->max_cs_ul = 4;
+	bts->max_cs_dl = 4;
 
 	msgb_set_talloc_ctx(tall_pcu_ctx);
 

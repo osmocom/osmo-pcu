@@ -366,6 +366,7 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 {
 	struct gprs_rlcmac_bts *bts_data;
 	int64_t now;
+	uint8_t max_cs_ul = 4, max_cs_dl = 4;
 
 	OSMO_ASSERT(m_bts != NULL);
 	bts_data = m_bts->bts_data();
@@ -374,6 +375,12 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 		return;
 
 	now = now_msec();
+
+	if (bts_data->max_cs_ul)
+		max_cs_ul = bts_data->max_cs_ul;
+
+	if (bts_data->max_cs_dl)
+		max_cs_dl = bts_data->max_cs_dl;
 
 	/* TODO: Support different CS values for UL and DL */
 
@@ -388,10 +395,12 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 			m_last_cs_not_low = now;
 		}
 	} else if (error_rate < bts_data->cs_adj_lower_limit) {
-		if (m_current_cs_dl < 4) {
+		if (m_current_cs_dl < max_cs_dl) {
 		       if (now - m_last_cs_not_low > 1000) {
 			       m_current_cs_dl += 1;
-			       m_current_cs_ul = m_current_cs_dl;
+			       if (m_current_cs_dl <= max_cs_ul)
+				       m_current_cs_ul = m_current_cs_dl;
+
 			       LOGP(DRLCMACDL, LOGL_INFO,
 				       "MS (IMSI %s): Low error rate %d%%, "
 				       "increasing CS level to %d\n",

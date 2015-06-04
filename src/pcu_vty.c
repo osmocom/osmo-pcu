@@ -75,6 +75,14 @@ static int config_write_pcu(struct vty *vty)
 			vty_out(vty, " cs %d %d%s", bts->initial_cs_dl,
 				bts->initial_cs_ul, VTY_NEWLINE);
 	}
+	if (bts->max_cs_dl && bts->max_cs_ul) {
+		if (bts->max_cs_ul == bts->max_cs_dl)
+			vty_out(vty, " cs max %d%s", bts->max_cs_dl,
+				VTY_NEWLINE);
+		else
+			vty_out(vty, " cs max %d %d%s", bts->max_cs_dl,
+				bts->max_cs_ul, VTY_NEWLINE);
+	}
 	if (bts->cs_adj_enabled)
 		vty_out(vty, " cs threshold %d %d%s",
 			bts->cs_adj_lower_limit, bts->cs_adj_upper_limit,
@@ -281,11 +289,45 @@ DEFUN(cfg_pcu_cs,
 DEFUN(cfg_pcu_no_cs,
       cfg_pcu_no_cs_cmd,
       "no cs",
-      NO_STR "Don't force given Coding Scheme, (use BTS config)\n")
+      NO_STR CS_STR)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	bts->force_cs = 0;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_cs_max,
+      cfg_pcu_cs_max_cmd,
+      "cs max <1-4> [<1-4>]",
+      CS_STR
+      "Set maximum values for adaptive CS selection (overrides BTS config)\n"
+      "Maximum CS value to be used\n"
+      "Use a different maximum CS value for the uplink")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	uint8_t cs = atoi(argv[0]);
+
+	bts->max_cs_dl = cs;
+	if (argc > 1)
+		bts->max_cs_ul = atoi(argv[1]);
+	else
+		bts->max_cs_ul = cs;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_cs_max,
+      cfg_pcu_no_cs_max_cmd,
+      "no cs max",
+      NO_STR CS_STR
+      "Set maximum values for adaptive CS selection (overrides BTS config)\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->max_cs_dl = 0;
+	bts->max_cs_ul = 0;
 
 	return CMD_SUCCESS;
 }
@@ -519,10 +561,10 @@ DEFUN(cfg_pcu_no_ms_idle_time,
 	return CMD_SUCCESS;
 }
 
-#define CS_ERR_LIMITS_STR "set limits for error rate based CS adjustment\n"
+#define CS_ERR_LIMITS_STR "set thresholds for error rate based CS adjustment\n"
 DEFUN(cfg_pcu_cs_err_limits,
       cfg_pcu_cs_err_limits_cmd,
-      "cs limits <0-100> <0-100>",
+      "cs threshold <0-100> <0-100>",
       CS_STR CS_ERR_LIMITS_STR "lower limit in %\n" "upper limit in %\n")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
@@ -546,7 +588,7 @@ DEFUN(cfg_pcu_cs_err_limits,
 
 DEFUN(cfg_pcu_no_cs_err_limits,
       cfg_pcu_no_cs_err_limits_cmd,
-      "no cs limits",
+      "no cs threshold",
       NO_STR CS_STR CS_ERR_LIMITS_STR)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
@@ -615,6 +657,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_no_two_phase_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_cmd);
+	install_element(PCU_NODE, &cfg_pcu_cs_max_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_cs_max_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_err_limits_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_err_limits_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_cmd);

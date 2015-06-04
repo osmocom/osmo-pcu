@@ -121,6 +121,7 @@ struct gprs_rlcmac_bts {
 	uint8_t cs3;
 	uint8_t cs4;
 	uint8_t initial_cs_dl, initial_cs_ul;
+	uint8_t max_cs_dl, max_cs_ul;
 	uint8_t force_cs;	/* 0=use from BTS 1=use from VTY */
 	uint16_t force_llc_lifetime; /* overrides lifetime from SGSN */
 	uint32_t llc_discard_csec;
