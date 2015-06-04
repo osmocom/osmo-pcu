@@ -679,36 +679,52 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn)
 {
 	gprs_rlc_data *rlc_data;
 	uint16_t lost = 0, received = 0, skipped = 0;
+	char info[65];
+	memset(info, '.', sizeof(info));
+	info[64] = 0;
+	uint16_t bsn = 0;
 
 	/* SSN - 1 is in range V(A)..V(S)-1 */
 	for (int bitpos = 0; bitpos < m_window.ws(); bitpos++) {
-		uint16_t bsn = bitnum_to_bsn(bitpos, ssn, m_window.mod_sns());
+		bsn = bitnum_to_bsn(bitpos, ssn, m_window.mod_sns());
 
-		if (bsn == ((m_window.v_a() - 1) & m_window.mod_sns()))
+		if (bsn == ((m_window.v_a() - 1) & m_window.mod_sns())) {
+			info[bitpos] = '$';
 			break;
+		}
 
 		rlc_data = m_rlc.block(bsn);
-		if (!rlc_data)
+		if (!rlc_data) {
+			info[bitpos] = '0';
 			continue;
+		}
 
 		if (rlc_data->cs != current_cs()) {
 			/* This block has already been encoded with a different
 			 * CS, so it doesn't help us to decide, whether the
 			 * current CS is ok. Ignore it. */
+			info[bitpos] = 'x';
 			skipped += 1;
 			continue;
 		}
 
 		if (show_rbb[m_window.ws() - 1 - bitpos] == 'R') {
-			if (!m_window.m_v_b.is_acked(bsn))
+			if (!m_window.m_v_b.is_acked(bsn)) {
 				received += 1;
+				info[bitpos] = 'R';
+			} else {
+				info[bitpos] = 'r';
+			}
 		} else {
+			info[bitpos] = 'L';
 			lost += 1;
 		}
 	}
 
-	LOGP(DRLCMACDL, LOGL_DEBUG, "%s DL analysis, range=%d:%d, lost=%d, recv=%d, skipped=%d\n",
-		name(), m_window.v_a(), m_window.v_s(), lost, received, skipped);
+	LOGP(DRLCMACDL, LOGL_DEBUG, "%s DL analysis, range=%d:%d, lost=%d, recv=%d, "
+		"skipped=%d, bsn=%d, info='%s'\n",
+		name(), m_window.v_a(), m_window.v_s(), lost, received,
+		skipped, bsn, info);
 
 	if (lost + received == 0)
 		return -1;
