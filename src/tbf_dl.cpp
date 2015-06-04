@@ -726,7 +726,7 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn)
 		name(), m_window.v_a(), m_window.v_s(), lost, received,
 		skipped, bsn, info);
 
-	if (lost + received == 0)
+	if (lost + received <= 1)
 		return -1;
 
 	return lost * 100 / (lost + received);
