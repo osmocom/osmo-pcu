@@ -29,6 +29,10 @@ struct gprs_rlcmac_bts;
 
 int pcu_vty_config_write_pcu_ext(struct vty *vty);
 int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data);
+int pcu_vty_show_ms_by_tlli(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
+	uint32_t tlli);
+int pcu_vty_show_ms_by_imsi(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
+	const char *imsi);
 
 #ifdef __cplusplus
 }

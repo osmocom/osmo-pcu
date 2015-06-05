@@ -630,6 +630,30 @@ DEFUN(show_ms_all,
 	return pcu_vty_show_ms_all(vty, bts);
 }
 
+DEFUN(show_ms_tlli,
+      show_ms_tlli_cmd,
+      "show ms tlli TLLI",
+      SHOW_STR "information about MSs\n" "Select MS by TLLI\n" "TLLI as hex\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	char *endp = NULL;
+	unsigned long long tlli = strtoll(argv[0], &endp, 16);
+	if ((endp != NULL && *endp != 0) || tlli > 0xffffffffULL) {
+		vty_out(vty, "Invalid TLLI.%s", VTY_NEWLINE);
+		return CMD_WARNING;
+	}
+	return pcu_vty_show_ms_by_tlli(vty, bts, (uint32_t)tlli);
+}
+
+DEFUN(show_ms_imsi,
+      show_ms_imsi_cmd,
+      "show ms imsi IMSI",
+      SHOW_STR "information about MSs\n" "Select MS by IMSI\n" "IMSI\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	return pcu_vty_show_ms_by_imsi(vty, bts, argv[0]);
+}
+
 static const char pcu_copyright[] =
 	"Copyright (C) 2012 by Ivan Kluchnikov <kluchnikovi@gmail.com> and \r\n"
 	"                      Andreas Eversberg <jolly@eversberg.eu>\r\n"
@@ -691,6 +715,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element_ve(&show_bts_stats_cmd);
 	install_element_ve(&show_tbf_cmd);
 	install_element_ve(&show_ms_all_cmd);
+	install_element_ve(&show_ms_tlli_cmd);
+	install_element_ve(&show_ms_imsi_cmd);
 
 	return 0;
 }

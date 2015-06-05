@@ -55,3 +55,54 @@ int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
 	}
 	return CMD_SUCCESS;
 }
+
+static int show_ms(struct vty *vty, GprsMs *ms)
+{
+	vty_out(vty, "MS TLLI=%08x, IMSI=%s%s", ms->tlli(), ms->imsi(), VTY_NEWLINE);
+	vty_out(vty, "  Timing advance (TA):    %d%s", ms->ta(), VTY_NEWLINE);
+	vty_out(vty, "  Coding scheme uplink:   CS-%d%s", ms->current_cs_ul(),
+		VTY_NEWLINE);
+	vty_out(vty, "  Coding scheme downlink: CS-%d%s", ms->current_cs_dl(),
+		VTY_NEWLINE);
+	vty_out(vty, "  MS class:               %d%s", ms->ms_class(), VTY_NEWLINE);
+	vty_out(vty, "  LLC queue length:       %d%s", ms->llc_queue()->size(),
+		VTY_NEWLINE);
+	if (ms->ul_tbf())
+		vty_out(vty, "  Uplink TBF:             TFI=%d, state=%s%s",
+			ms->ul_tbf()->tfi(),
+			ms->ul_tbf()->state_name(),
+			VTY_NEWLINE);
+	if (ms->dl_tbf())
+		vty_out(vty, "  Downlink TBF:           TFI=%d, state=%s%s",
+			ms->dl_tbf()->tfi(),
+			ms->dl_tbf()->state_name(),
+			VTY_NEWLINE);
+
+	return CMD_SUCCESS;
+}
+
+int pcu_vty_show_ms_by_tlli(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
+	uint32_t tlli)
+{
+	BTS *bts = bts_data->bts;
+	GprsMs *ms = bts->ms_store().get_ms(tlli);
+	if (!ms) {
+		vty_out(vty, "Unknown TLLI %08x.%s", tlli, VTY_NEWLINE);
+		return CMD_WARNING;
+	}
+
+	return show_ms(vty, ms);
+}
+
+int pcu_vty_show_ms_by_imsi(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
+	const char *imsi)
+{
+	BTS *bts = bts_data->bts;
+	GprsMs *ms = bts->ms_store().get_ms(0, 0, imsi);
+	if (!ms) {
+		vty_out(vty, "Unknown IMSI '%s'.%s", imsi, VTY_NEWLINE);
+		return CMD_WARNING;
+	}
+
+	return show_ms(vty, ms);
+}
