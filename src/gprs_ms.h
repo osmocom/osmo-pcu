@@ -26,6 +26,7 @@ struct gprs_rlcmac_ul_tbf;
 
 #include "cxx_linuxlist.h"
 #include "llc.h"
+#include "pcu_l1_if.h"
 
 extern "C" {
 	#include <osmocom/core/timer.h>
@@ -96,6 +97,9 @@ public:
 	LListHead<GprsMs>& list() {return this->m_list;}
 	const LListHead<GprsMs>& list() const {return this->m_list;}
 
+	void update_l1_meas(const pcu_l1_meas *meas);
+	const pcu_l1_meas* l1_meas() const {return &m_l1_meas;};
+
 	/* internal use */
 	static void timeout(void *priv_);
 
@@ -132,6 +136,8 @@ private:
 	unsigned m_delay;
 
 	int64_t m_last_cs_not_low;
+
+	pcu_l1_meas m_l1_meas;
 };
 
 inline uint32_t GprsMs::tlli() const

@@ -281,6 +281,10 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(const uint8_t *data,
 	/* process RSSI */
 	gprs_rlcmac_rssi(this, rssi);
 
+	/* store measurement values */
+	if (ms())
+		ms()->update_l1_meas(meas);
+
 	/* get TLLI */
 	if (!this->is_tlli_valid()) {
 		if (!extract_tlli(data, len))

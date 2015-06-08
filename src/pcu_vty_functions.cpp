@@ -67,6 +67,18 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 	vty_out(vty, "  MS class:               %d%s", ms->ms_class(), VTY_NEWLINE);
 	vty_out(vty, "  LLC queue length:       %d%s", ms->llc_queue()->size(),
 		VTY_NEWLINE);
+	if (ms->l1_meas()->have_rssi)
+		vty_out(vty, "  RSSI:                   %d dBm%s",
+			ms->l1_meas()->rssi, VTY_NEWLINE);
+	if (ms->l1_meas()->have_ber)
+		vty_out(vty, "  Bit error rate:         %d %%%s",
+			ms->l1_meas()->ber, VTY_NEWLINE);
+	if (ms->l1_meas()->have_link_qual)
+		vty_out(vty, "  Link quality:           %d dB%s",
+			ms->l1_meas()->link_qual, VTY_NEWLINE);
+	if (ms->l1_meas()->have_bto)
+		vty_out(vty, "  Burst timing offset:    %d/4 bit%s",
+			ms->l1_meas()->bto, VTY_NEWLINE);
 	if (ms->ul_tbf())
 		vty_out(vty, "  Uplink TBF:             TFI=%d, state=%s%s",
 			ms->ul_tbf()->tfi(),
