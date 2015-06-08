@@ -30,6 +30,7 @@
 struct bssgp_bvc_ctx;
 struct rlc_ul_header;
 struct msgb;
+struct pcu_l1_meas;
 class GprsMs;
 
 /*
@@ -372,7 +373,8 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	struct msgb *create_ul_ack(uint32_t fn);
 
 	/* blocks were acked */
-	int rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi);
+	int rcv_data_block_acknowledged(const uint8_t *data, size_t len,
+		struct pcu_l1_meas *meas);
 
 	/* TODO: extract LLC class? */
 	int assemble_forward_llc(const gprs_rlc_data *data);

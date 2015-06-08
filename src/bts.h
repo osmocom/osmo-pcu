@@ -56,7 +56,8 @@ struct gprs_rlcmac_pdch {
 	void disable();
 
 	/* dispatching of messages */
-	int rcv_block(uint8_t *data, uint8_t len, uint32_t fn, int8_t rssi);
+	int rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
+		struct pcu_l1_meas *meas);
 
 	gprs_rlcmac_bts *bts_data() const;
 	BTS *bts() const;
@@ -80,7 +81,8 @@ struct gprs_rlcmac_pdch {
 
 #ifdef __cplusplus
 private:
-	int rcv_data_block_acknowledged(uint8_t *data, uint8_t len, int8_t rssi);
+	int rcv_data_block_acknowledged(uint8_t *data, uint8_t len,
+		struct pcu_l1_meas *meas);
 	int rcv_control_block(bitvec *rlc_block, uint32_t fn);
 
 	void rcv_control_ack(Packet_Control_Acknowledgement_t *, uint32_t fn);

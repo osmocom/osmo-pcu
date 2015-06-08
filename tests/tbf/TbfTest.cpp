@@ -438,6 +438,7 @@ static void test_tbf_single_phase()
 	int tfi = 0;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_pdch *pdch;
+	struct pcu_l1_meas meas;
 
 	printf("=== start %s ===\n", __func__);
 
@@ -462,7 +463,7 @@ static void test_tbf_single_phase()
 	};
 
 	pdch = &the_bts.bts_data()->trx[trx_no].pdch[ts_no];
-	pdch->rcv_block(&data_msg[0], sizeof(data_msg), fn, 0);
+	pdch->rcv_block(&data_msg[0], sizeof(data_msg), fn, &meas);
 
 	ms = the_bts.ms_by_tlli(0xf1223344);
 	OSMO_ASSERT(ms != NULL);
@@ -491,6 +492,8 @@ static void test_tbf_two_phase()
 	bitvec *rlc_block;
 	uint8_t buf[64];
 	int num_bytes;
+	struct pcu_l1_meas meas;
+	meas.set_rssi(31);
 
 	printf("=== start %s ===\n", __func__);
 
@@ -520,7 +523,7 @@ static void test_tbf_two_phase()
 	bitvec_free(rlc_block);
 
 	pdch = &the_bts.bts_data()->trx[trx_no].pdch[ts_no];
-	pdch->rcv_block(&buf[0], num_bytes, 2654270, 31);
+	pdch->rcv_block(&buf[0], num_bytes, 2654270, &meas);
 
 	/* check the TBF */
 	ul_tbf = the_bts.ul_tbf_by_tfi(tfi, trx_no);
@@ -543,7 +546,7 @@ static void test_tbf_two_phase()
 		uint8_t(1), /* BSN:7, E:1 */
 	};
 
-	pdch->rcv_block(&data_msg[0], sizeof(data_msg), rts_fn, 31);
+	pdch->rcv_block(&data_msg[0], sizeof(data_msg), rts_fn, &meas);
 
 	ms = the_bts.ms_by_tlli(0xf1223344);
 	OSMO_ASSERT(ms != NULL);

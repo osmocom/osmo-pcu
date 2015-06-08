@@ -27,6 +27,7 @@
 #include <gprs_debug.h>
 #include <gprs_bssgp_pcu.h>
 #include <decoding.h>
+#include <pcu_l1_if.h>
 
 extern "C" {
 #include <osmocom/core/msgb.h>
@@ -261,10 +262,12 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn)
 	return msg;
 }
 
-int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(const uint8_t *data, size_t len, int8_t rssi)
+int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(const uint8_t *data,
+	size_t len, struct pcu_l1_meas *meas)
 {
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 	int rc;
+	int8_t rssi = meas->have_rssi ? meas->rssi : 0;
 
 	const uint16_t mod_sns = m_window.mod_sns();
 	const uint16_t ws = m_window.ws();

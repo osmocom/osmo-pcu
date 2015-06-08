@@ -31,7 +31,39 @@ extern "C" {
 #include <osmocom/gsm/gsm_utils.h>
 #ifdef __cplusplus
 }
+#endif
 
+/*
+ * L1 Measurement values
+ */
+
+struct pcu_l1_meas {
+	unsigned have_rssi:1;
+	unsigned have_ber:1;
+	unsigned have_bto:1;
+	unsigned have_link_qual:1;
+
+	int8_t rssi; /* RSSI in dBm */
+	uint8_t ber; /* Bit error rate in % */
+	int16_t bto; /* Burst timing offset in quarter bits */
+	int16_t link_qual; /* Link quality in db */
+#ifdef __cplusplus
+	pcu_l1_meas& set_rssi(int8_t v) { rssi = v; have_rssi = 1; return *this;}
+	pcu_l1_meas& set_ber(uint8_t v) { ber = v; have_ber = 1; return *this;}
+	pcu_l1_meas& set_bto(int16_t v) { bto = v; have_bto = 1; return *this;}
+	pcu_l1_meas& set_link_qual(int16_t v) {
+		link_qual = v; have_link_qual = 1; return *this;
+	}
+	pcu_l1_meas() :
+		have_rssi(0),
+		have_ber(0),
+		have_bto(0),
+		have_link_qual(0)
+	{}
+#endif
+};
+
+#ifdef __cplusplus
 void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn, 
         uint32_t fn, uint8_t block_nr);
 void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn, 
@@ -57,6 +89,6 @@ int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts, uint16_t arfcn,
 extern "C"
 #endif
 int pcu_rx_data_ind_pdtch(uint8_t trx, uint8_t ts, uint8_t *data,
-	uint8_t len, uint32_t fn, int8_t rssi);
+	uint8_t len, uint32_t fn, struct pcu_l1_meas *meas);
 
 #endif // PCU_L1_IF_H

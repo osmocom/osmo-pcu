@@ -166,10 +166,23 @@ static int handle_ph_readytosend_ind(struct femtol1_hdl *fl1h,
 	return rc;
 }
 
+static void get_meas(struct pcu_l1_meas *meas, const GsmL1_MeasParam_t *l1_meas)
+{
+	meas->rssi = (int8_t) (l1_meas->fRssi);
+	meas->have_rssi = 1;
+	meas->ber  = (uint8_t) (l1_meas->fBer * 100);
+	meas->have_ber = 1;
+	meas->bto  = (int16_t) (l1_meas->i16BurstTiming);
+	meas->have_bto = 1;
+	meas->link_qual  = (int16_t) (l1_meas->fLinkQuality);
+	meas->have_link_qual = 1;
+}
+
 static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 	GsmL1_PhDataInd_t *data_ind, struct msgb *l1p_msg)
 {
 	int rc = 0;
+	struct pcu_l1_meas meas = {0};
 
 	DEBUGP(DL1IF, "Rx PH-DATA.ind %s (hL2 %08x): %s\n",
 		get_value_string(femtobts_l1sapi_names, data_ind->sapi),
@@ -190,8 +203,7 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 			data_ind->u32Fn, 0, 0, data_ind->msgUnitParam.u8Buffer+1,
 			data_ind->msgUnitParam.u8Size-1);
 
-
-
+	get_meas(&meas, &data_ind->measParam);
 
 	switch (data_ind->sapi) {
 	case GsmL1_Sapi_Pdtch:
@@ -205,7 +217,7 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 			data_ind->msgUnitParam.u8Buffer + 1,
 			data_ind->msgUnitParam.u8Size - 1,
 			data_ind->u32Fn,
-			(int8_t) (data_ind->measParam.fRssi));
+			&meas);
 		break;
 	case GsmL1_Sapi_Ptcch:
 		// FIXME
