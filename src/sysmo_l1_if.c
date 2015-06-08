@@ -235,6 +235,12 @@ static int handle_ph_ra_ind(struct femtol1_hdl *fl1h, GsmL1_PhRaInd_t *ra_ind)
 		acc_delay = 0;
 	else
 		acc_delay = ra_ind->measParam.i16BurstTiming >> 2;
+
+	LOGP(DL1IF, LOGL_NOTICE, "got (P)RACH request, TA = %u (ignored)\n",
+		acc_delay);
+
+#warning "The (P)RACH request is just dropped here"
+
 #if 0
 	if (acc_delay > bts->max_ta) {
 		LOGP(DL1C, LOGL_INFO, "ignoring RACH request %u > max_ta(%u)\n",
