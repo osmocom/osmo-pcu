@@ -181,17 +181,19 @@ void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi)
 }
 
 extern "C" int pcu_rx_data_ind_pdtch(uint8_t trx_no, uint8_t ts_no, uint8_t *data,
-	uint8_t len, uint32_t fn, int8_t rssi)
+	uint8_t len, uint32_t fn, struct pcu_l1_meas *meas)
 {
 	struct gprs_rlcmac_pdch *pdch;
 
 	pdch = &bts_main_data()->trx[trx_no].pdch[ts_no];
-	return pdch->rcv_block(data, len, fn, rssi);
+	return pdch->rcv_block(data, len, fn, meas);
 }
 
 static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 {
 	int rc = 0;
+	pcu_l1_meas meas;
+	meas.set_rssi(data_ind->rssi);
 
 	LOGP(DL1IF, LOGL_DEBUG, "Data indication received: sapi=%d arfcn=%d "
 		"block=%d data=%s\n", data_ind->sapi,
@@ -202,7 +204,7 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 	case PCU_IF_SAPI_PDTCH:
 		rc = pcu_rx_data_ind_pdtch(data_ind->trx_nr, data_ind->ts_nr,
 			data_ind->data, data_ind->len, data_ind->fn,
-			data_ind->rssi);
+			&meas);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data indication with "
