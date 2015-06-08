@@ -421,3 +421,15 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 		m_last_cs_not_low = now;
 	}
 }
+
+void GprsMs::update_l1_meas(const pcu_l1_meas *meas)
+{
+	if (meas->have_rssi)
+		m_l1_meas.set_rssi(meas->rssi);
+	if (meas->have_bto)
+		m_l1_meas.set_bto(meas->bto);
+	if (meas->have_ber)
+		m_l1_meas.set_ber(meas->ber);
+	if (meas->have_link_qual)
+		m_l1_meas.set_link_qual(meas->link_qual);
+}
