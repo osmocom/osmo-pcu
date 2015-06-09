@@ -178,6 +178,15 @@ int main(int argc, char *argv[])
 	bts->cs_adj_lower_limit = 10; /* Increase CS if the error rate is below */
 	bts->max_cs_ul = 4;
 	bts->max_cs_dl = 4;
+	/* CS-1 to CS-4 */
+	bts->cs_lqual_ranges[0].low = -256;
+	bts->cs_lqual_ranges[0].high = 6;
+	bts->cs_lqual_ranges[1].low = 5;
+	bts->cs_lqual_ranges[1].high = 8;
+	bts->cs_lqual_ranges[2].low = 7;
+	bts->cs_lqual_ranges[2].high = 13;
+	bts->cs_lqual_ranges[3].low = 12;
+	bts->cs_lqual_ranges[3].high = 256;
 
 	msgb_set_talloc_ctx(tall_pcu_ctx);
 

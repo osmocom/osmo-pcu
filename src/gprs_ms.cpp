@@ -367,7 +367,7 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 {
 	struct gprs_rlcmac_bts *bts_data;
 	int64_t now;
-	uint8_t max_cs_ul = 4, max_cs_dl = 4;
+	uint8_t max_cs_dl = 4;
 
 	OSMO_ASSERT(m_bts != NULL);
 	bts_data = m_bts->bts_data();
@@ -377,18 +377,15 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 
 	now = now_msec();
 
-	if (bts_data->max_cs_ul)
-		max_cs_ul = bts_data->max_cs_ul;
-
 	if (bts_data->max_cs_dl)
 		max_cs_dl = bts_data->max_cs_dl;
 
+	/* TODO: Check for TBF direction */
 	/* TODO: Support different CS values for UL and DL */
 
 	if (error_rate > bts_data->cs_adj_upper_limit) {
 		if (m_current_cs_dl > 1) {
 			m_current_cs_dl -= 1;
-			m_current_cs_ul = m_current_cs_dl;
 			LOGP(DRLCMACDL, LOGL_INFO,
 				"MS (IMSI %s): High error rate %d%%, "
 				"reducing CS level to %d\n",
@@ -399,12 +396,10 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 		if (m_current_cs_dl < max_cs_dl) {
 		       if (now - m_last_cs_not_low > 1000) {
 			       m_current_cs_dl += 1;
-			       if (m_current_cs_dl <= max_cs_ul)
-				       m_current_cs_ul = m_current_cs_dl;
 
 			       LOGP(DRLCMACDL, LOGL_INFO,
 				       "MS (IMSI %s): Low error rate %d%%, "
-				       "increasing CS level to %d\n",
+				       "increasing DL CS level to %d\n",
 				       imsi(), error_rate, m_current_cs_dl);
 			       m_last_cs_not_low = now;
 		       } else {
@@ -424,6 +419,43 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 
 void GprsMs::update_l1_meas(const pcu_l1_meas *meas)
 {
+	struct gprs_rlcmac_bts *bts_data;
+	uint8_t max_cs_ul = 4;
+
+	OSMO_ASSERT(m_bts != NULL);
+	bts_data = m_bts->bts_data();
+
+	if (bts_data->max_cs_ul)
+		max_cs_ul = bts_data->max_cs_ul;
+
+	if (meas->have_link_qual) {
+		int old_link_qual = meas->link_qual;
+		int low  = bts_data->cs_lqual_ranges[current_cs_ul()-1].low;
+		int high  = bts_data->cs_lqual_ranges[current_cs_ul()-1].high;
+		uint8_t new_cs_ul = m_current_cs_ul;
+
+		if (m_l1_meas.have_link_qual)
+		       old_link_qual = m_l1_meas.link_qual;
+
+		if (meas->link_qual < low &&  old_link_qual < low)
+			new_cs_ul = m_current_cs_ul - 1;
+		else if (meas->link_qual > high &&  old_link_qual > high &&
+			m_current_cs_ul < max_cs_ul)
+			new_cs_ul = m_current_cs_ul + 1;
+
+		if (m_current_cs_ul != new_cs_ul) {
+			LOGP(DRLCMACDL, LOGL_INFO,
+				"MS (IMSI %s): "
+				"Link quality %ddB (%ddB) left window [%d, %d], "
+				"modifying uplink CS level: %d -> %d\n",
+				imsi(), meas->link_qual, old_link_qual,
+				low, high,
+				m_current_cs_ul, new_cs_ul);
+
+			m_current_cs_ul = new_cs_ul;
+		}
+	}
+
 	if (meas->have_rssi)
 		m_l1_meas.set_rssi(meas->rssi);
 	if (meas->have_bto)

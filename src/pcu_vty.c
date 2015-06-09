@@ -90,6 +90,15 @@ static int config_write_pcu(struct vty *vty)
 	else
 		vty_out(vty, " no cs threshold%s", VTY_NEWLINE);
 
+	vty_out(vty, " cs link-quality-ranges cs1 %d cs2 %d %d cs3 %d %d cs4 %d%s",
+		bts->cs_lqual_ranges[0].high,
+		bts->cs_lqual_ranges[1].low,
+		bts->cs_lqual_ranges[1].high,
+		bts->cs_lqual_ranges[2].low,
+		bts->cs_lqual_ranges[2].high,
+		bts->cs_lqual_ranges[3].low,
+		VTY_NEWLINE);
+
 	if (bts->force_llc_lifetime == 0xffff)
 		vty_out(vty, " queue lifetime infinite%s", VTY_NEWLINE);
 	else if (bts->force_llc_lifetime)
@@ -600,6 +609,41 @@ DEFUN(cfg_pcu_no_cs_err_limits,
 	return CMD_SUCCESS;
 }
 
+DEFUN(cfg_pcu_cs_lqual_ranges,
+      cfg_pcu_cs_lqual_ranges_cmd,
+      "cs link-quality-ranges cs1 <0-35> cs2 <0-35> <0-35> cs3 <0-35> <0-35> cs4 <0-35>",
+      CS_STR "Set link quality ranges\n"
+      "Set quality range for CS-1 (high value only)\n"
+      "CS-1 high (dB)\n"
+      "Set quality range for CS-2\n"
+      "CS-2 low (dB)\n"
+      "CS-2 high (dB)\n"
+      "Set quality range for CS-3\n"
+      "CS-3 low (dB)\n"
+      "CS-3 high (dB)\n"
+      "Set quality range for CS-4 (low value only)\n"
+      "CS-4 low (dB)\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	uint8_t cs1_high = atoi(argv[0]);
+	uint8_t cs2_low = atoi(argv[1]);
+	uint8_t cs2_high = atoi(argv[2]);
+	uint8_t cs3_low = atoi(argv[3]);
+	uint8_t cs3_high = atoi(argv[4]);
+	uint8_t cs4_low = atoi(argv[5]);
+
+	bts->cs_lqual_ranges[0].high = cs1_high;
+	bts->cs_lqual_ranges[1].low  = cs2_low;
+	bts->cs_lqual_ranges[1].high = cs2_high;
+	bts->cs_lqual_ranges[2].low  = cs3_low;
+	bts->cs_lqual_ranges[2].high = cs3_high;
+	bts->cs_lqual_ranges[3].low  = cs4_low;
+
+	return CMD_SUCCESS;
+}
+
+
 DEFUN(show_tbf,
       show_tbf_cmd,
       "show tbf all",
@@ -685,6 +729,7 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_no_cs_max_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_err_limits_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_err_limits_cmd);
+	install_element(PCU_NODE, &cfg_pcu_cs_lqual_ranges_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_inf_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_queue_lifetime_cmd);
