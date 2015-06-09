@@ -148,6 +148,7 @@ struct gprs_rlcmac_bts {
 	uint8_t cs_adj_enabled;
 	uint8_t cs_adj_upper_limit;
 	uint8_t cs_adj_lower_limit;
+	struct {int16_t low; int16_t high;} cs_lqual_ranges[4];
 
 	/* TBF handling, make private or move into TBFController */
 	/* list of uplink TBFs */
