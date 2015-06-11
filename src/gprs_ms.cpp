@@ -89,7 +89,8 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	m_current_cs_dl(1),
 	m_is_idle(true),
 	m_ref(0),
-	m_list(this)
+	m_list(this),
+	m_delay(0)
 {
 	LOGP(DRLCMAC, LOGL_INFO, "Creating MS object, TLLI = 0x%08x\n", tlli);
 
