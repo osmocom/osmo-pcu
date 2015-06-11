@@ -819,8 +819,12 @@ static void get_meas(struct pcu_l1_meas *meas,
 
 	for (i = 0; i < OSMO_MIN(ARRAY_SIZE(qr->Slot), ARRAY_SIZE(meas->ts)); i++)
 	{
-		if (qr->Slot[i].Exist)
+		if (qr->Slot[i].Exist) {
+			LOGP(DRLCMAC, LOGL_INFO,
+				"Packet resource request: i_level[%d] = %d\n",
+				i, qr->Slot[i].I_LEVEL);
 			meas->set_ms_i_level(i, -2 * qr->Slot[i].I_LEVEL);
+		}
 	}
 }
 
@@ -835,8 +839,12 @@ static void get_meas(struct pcu_l1_meas *meas,
 
 	for (i = 0; i < OSMO_MIN(ARRAY_SIZE(qr->Slot), ARRAY_SIZE(meas->ts)); i++)
 	{
-		if (qr->Slot[i].Exist)
+		if (qr->Slot[i].Exist) {
+			LOGP(DRLCMAC, LOGL_INFO,
+				"Channel quality report: i_level[%d] = %d\n",
+				i, qr->Slot[i].I_LEVEL_TN);
 			meas->set_ms_i_level(i, -2 * qr->Slot[i].I_LEVEL_TN);
+		}
 	}
 }
 
