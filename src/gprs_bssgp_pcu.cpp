@@ -572,7 +572,7 @@ static uint32_t compute_bucket_size(struct gprs_rlcmac_bts *bts,
 static uint32_t get_and_reset_avg_queue_delay(void)
 {
 	struct timeval *delay_sum = &the_pcu.queue_delay_sum;
-	uint64_t delay_sum_ms = delay_sum->tv_sec * 1000 +
+	uint32_t delay_sum_ms = delay_sum->tv_sec * 1000 +
 			delay_sum->tv_usec / 1000000;
 	uint32_t avg_delay_ms = 0;
 
