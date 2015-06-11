@@ -259,10 +259,11 @@ static int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struc
 {
 	struct bssgp_normal_hdr *bgph = (struct bssgp_normal_hdr *) msgb_bssgph(msg);
 	int rc = 0;
+	int bvci = bctx ? bctx->bvci : -1;
 	switch (bgph->pdu_type) {
 	case BSSGP_PDUT_STATUS:
 		/* Some exception has occurred */
-		DEBUGP(DBSSGP, "BSSGP BVCI=%u Rx BVC STATUS\n", bctx->bvci);
+		DEBUGP(DBSSGP, "BSSGP BVCI=%d Rx BVC STATUS\n", bvci);
 		/* FIXME: send NM_STATUS.ind to NM */
 		break;
 	case BSSGP_PDUT_SUSPEND_ACK:
@@ -309,7 +310,8 @@ static int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struc
 		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SGSN_INVOKE_TRACE\n");
 		break;
 	default:
-		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%u Rx PDU type 0x%02x unknown\n", bctx->bvci, bgph->pdu_type);
+		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%d Rx PDU type 0x%02x unknown\n",
+			bvci, bgph->pdu_type);
 		rc = bssgp_tx_status(BSSGP_CAUSE_PROTO_ERR_UNSPEC, NULL, msg);
 		break;
 	}
