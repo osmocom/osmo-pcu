@@ -239,7 +239,7 @@ void GprsMs::detach_tbf(gprs_rlcmac_tbf *tbf)
 	if (tbf->ms() == this)
 		tbf->set_ms(NULL);
 
-	if (!m_dl_tbf && !m_dl_tbf)
+	if (!m_dl_tbf && !m_ul_tbf)
 		start_timer();
 
 	update_status();
