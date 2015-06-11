@@ -421,6 +421,7 @@ void GprsMs::update_l1_meas(const pcu_l1_meas *meas)
 {
 	struct gprs_rlcmac_bts *bts_data;
 	uint8_t max_cs_ul = 4;
+	unsigned i;
 
 	OSMO_ASSERT(m_bts != NULL);
 	bts_data = m_bts->bts_data();
@@ -464,4 +465,20 @@ void GprsMs::update_l1_meas(const pcu_l1_meas *meas)
 		m_l1_meas.set_ber(meas->ber);
 	if (meas->have_link_qual)
 		m_l1_meas.set_link_qual(meas->link_qual);
+
+	if (meas->have_ms_rx_qual)
+		m_l1_meas.set_ms_rx_qual(meas->ms_rx_qual);
+	if (meas->have_ms_c_value)
+		m_l1_meas.set_ms_c_value(meas->ms_c_value);
+	if (meas->have_ms_sign_var)
+		m_l1_meas.set_ms_sign_var(meas->ms_sign_var);
+
+	if (meas->have_ms_i_level) {
+		for (i = 0; i < ARRAY_SIZE(meas->ts); ++i) {
+			if (meas->ts[i].have_ms_i_level)
+				m_l1_meas.set_ms_i_level(i, meas->ts[i].ms_i_level);
+			else
+				m_l1_meas.ts[i].have_ms_i_level = 0;
+		}
+	}
 }

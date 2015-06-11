@@ -37,16 +37,42 @@ extern "C" {
  * L1 Measurement values
  */
 
+struct pcu_l1_meas_ts {
+	unsigned have_ms_i_level:1;
+
+	int16_t ms_i_level; /* I_LEVEL in dB */
+
+#ifdef __cplusplus
+	pcu_l1_meas_ts& set_ms_i_level(int16_t v) {
+		ms_i_level = v; have_ms_i_level = 1; return *this;
+	}
+
+	pcu_l1_meas_ts() :
+		have_ms_i_level(0)
+	{}
+#endif
+};
+
 struct pcu_l1_meas {
 	unsigned have_rssi:1;
 	unsigned have_ber:1;
 	unsigned have_bto:1;
 	unsigned have_link_qual:1;
+	unsigned have_ms_rx_qual:1;
+	unsigned have_ms_c_value:1;
+	unsigned have_ms_sign_var:1;
+	unsigned have_ms_i_level:1;
 
 	int8_t rssi; /* RSSI in dBm */
 	uint8_t ber; /* Bit error rate in % */
 	int16_t bto; /* Burst timing offset in quarter bits */
-	int16_t link_qual; /* Link quality in db */
+	int16_t link_qual; /* Link quality in dB */
+	int16_t ms_rx_qual; /* MS RXQUAL value in % */
+	int16_t ms_c_value; /* C value in dB */
+	int16_t ms_sign_var; /* SIGN_VAR in dB */
+
+	struct pcu_l1_meas_ts ts[8];
+
 #ifdef __cplusplus
 	pcu_l1_meas& set_rssi(int8_t v) { rssi = v; have_rssi = 1; return *this;}
 	pcu_l1_meas& set_ber(uint8_t v) { ber = v; have_ber = 1; return *this;}
@@ -54,11 +80,27 @@ struct pcu_l1_meas {
 	pcu_l1_meas& set_link_qual(int16_t v) {
 		link_qual = v; have_link_qual = 1; return *this;
 	}
+	pcu_l1_meas& set_ms_rx_qual(int16_t v) {
+		ms_rx_qual = v; have_ms_rx_qual = 1; return *this;
+	}
+	pcu_l1_meas& set_ms_c_value(int16_t v) {
+		ms_c_value = v; have_ms_c_value = 1; return *this;
+	}
+	pcu_l1_meas& set_ms_sign_var(int16_t v) {
+		ms_sign_var = v; have_ms_sign_var = 1; return *this;
+	}
+	pcu_l1_meas& set_ms_i_level(size_t idx, int16_t v) {
+		ts[idx].set_ms_i_level(v); have_ms_i_level = 1; return *this;
+	}
 	pcu_l1_meas() :
 		have_rssi(0),
 		have_ber(0),
 		have_bto(0),
-		have_link_qual(0)
+		have_link_qual(0),
+		have_ms_rx_qual(0),
+		have_ms_c_value(0),
+		have_ms_sign_var(0),
+		have_ms_i_level(0)
 	{}
 #endif
 };

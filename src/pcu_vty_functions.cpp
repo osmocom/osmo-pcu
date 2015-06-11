@@ -58,6 +58,8 @@ int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
 
 static int show_ms(struct vty *vty, GprsMs *ms)
 {
+	unsigned i;
+
 	vty_out(vty, "MS TLLI=%08x, IMSI=%s%s", ms->tlli(), ms->imsi(), VTY_NEWLINE);
 	vty_out(vty, "  Timing advance (TA):    %d%s", ms->ta(), VTY_NEWLINE);
 	vty_out(vty, "  Coding scheme uplink:   CS-%d%s", ms->current_cs_ul(),
@@ -79,6 +81,20 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 	if (ms->l1_meas()->have_bto)
 		vty_out(vty, "  Burst timing offset:    %d/4 bit%s",
 			ms->l1_meas()->bto, VTY_NEWLINE);
+	if (ms->l1_meas()->have_ms_rx_qual)
+		vty_out(vty, "  MS RX quality:          %d %%%s",
+			ms->l1_meas()->ms_rx_qual, VTY_NEWLINE);
+	if (ms->l1_meas()->have_ms_c_value)
+		vty_out(vty, "  MS C value:             %d dB%s",
+			ms->l1_meas()->ms_c_value, VTY_NEWLINE);
+	if (ms->l1_meas()->have_ms_sign_var)
+		vty_out(vty, "  MS SIGN variance:       %d dB%s",
+			ms->l1_meas()->ms_sign_var, VTY_NEWLINE);
+	for (i = 0; i < ARRAY_SIZE(ms->l1_meas()->ts); ++i) {
+		if (ms->l1_meas()->ts[i].have_ms_i_level)
+			vty_out(vty, "  MS I level (slot %d):    %d dB%s",
+				i, ms->l1_meas()->ts[i].ms_i_level, VTY_NEWLINE);
+	}
 	if (ms->ul_tbf())
 		vty_out(vty, "  Uplink TBF:             TFI=%d, state=%s%s",
 			ms->ul_tbf()->tfi(),

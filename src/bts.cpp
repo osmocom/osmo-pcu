@@ -790,11 +790,62 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		"at no request\n");
 }
 
+static void get_rx_qual_meas(struct pcu_l1_meas *meas, uint8_t rx_qual_enc)
+{
+	static const int16_t rx_qual_map[] = {
+		0, /* 0,14 % */
+		0, /* 0,28 % */
+		1, /* 0,57 % */
+		1, /* 1,13 % */
+		2, /* 2,26 % */
+		5, /* 4,53 % */
+		9, /* 9,05 % */
+		18, /* 18,10 % */
+	};
+
+	meas->set_ms_rx_qual(rx_qual_map[
+		OSMO_MIN(rx_qual_enc, ARRAY_SIZE(rx_qual_map)-1)
+		]);
+}
+
+static void get_meas(struct pcu_l1_meas *meas,
+	const Packet_Resource_Request_t *qr)
+{
+	unsigned i;
+
+	meas->set_ms_c_value(qr->C_VALUE);
+	if (qr->Exist_SIGN_VAR)
+		meas->set_ms_sign_var((qr->SIGN_VAR + 2) / 4); /* SIGN_VAR * 0.25 dB */
+
+	for (i = 0; i < OSMO_MIN(ARRAY_SIZE(qr->Slot), ARRAY_SIZE(meas->ts)); i++)
+	{
+		if (qr->Slot[i].Exist)
+			meas->set_ms_i_level(i, -2 * qr->Slot[i].I_LEVEL);
+	}
+}
+
+static void get_meas(struct pcu_l1_meas *meas,
+	const Channel_Quality_Report_t *qr)
+{
+	unsigned i;
+
+	get_rx_qual_meas(meas, qr->RXQUAL);
+	meas->set_ms_c_value(qr->C_VALUE);
+	meas->set_ms_sign_var((qr->SIGN_VAR + 2) / 4); /* SIGN_VAR * 0.25 dB */
+
+	for (i = 0; i < OSMO_MIN(ARRAY_SIZE(qr->Slot), ARRAY_SIZE(meas->ts)); i++)
+	{
+		if (qr->Slot[i].Exist)
+			meas->set_ms_i_level(i, -2 * qr->Slot[i].I_LEVEL_TN);
+	}
+}
+
 void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_nack, uint32_t fn)
 {
 	int8_t tfi = 0; /* must be signed */
 	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;
+	struct pcu_l1_meas meas;
 
 	tfi = ack_nack->DOWNLINK_TFI;
 	tbf = bts()->dl_tbf_by_poll_fn(fn, trx_no(), ts_no);
@@ -841,6 +892,11 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 		/* schedule uplink assignment */
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
 	}
+	/* get measurements */
+	if (tbf->ms()) {
+		get_meas(&meas, &ack_nack->Channel_Quality_Report);
+		tbf->ms()->update_l1_meas(&meas);
+	}
 }
 
 void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, uint32_t fn)
@@ -853,6 +909,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		uint32_t tlli = request->ID.u.TLLI;
 		uint8_t ms_class = 0;
 		uint8_t ta = 0;
+		struct pcu_l1_meas meas;
 
 		GprsMs *ms = bts()->ms_by_tlli(tlli);
 		/* Keep the ms, even if it gets idle temporarily */
@@ -907,6 +964,12 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		ul_tbf->control_ts = ts_no;
 		/* schedule uplink assignment */
 		ul_tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+
+		/* get measurements */
+		if (ul_tbf->ms()) {
+			get_meas(&meas, request);
+			ul_tbf->ms()->update_l1_meas(&meas);
+		}
 		return;
 	}
 
@@ -933,7 +996,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			"RX: [PCU <- BTS] %s FIXME: Packet resource request\n",
 			tbf_name(ul_tbf));
 	}
-
 }
 
 void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *report, uint32_t fn)
