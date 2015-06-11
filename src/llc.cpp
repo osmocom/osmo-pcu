@@ -89,8 +89,8 @@ bool gprs_llc::is_user_data_frame(uint8_t *data, size_t len)
 	if ((data[0] & 0x0f) == 1 /* GPRS_SAPI_GMM */)
 		return false;
 
-	if ((data[0] & 0x0e) != 0xc0 /* LLC UI */)
-		/* It is not an LLC UI frame */
+	if ((data[0] & 0xe0) != 0xc0 /* LLC UI */)
+		/* It is not an LLC UI frame, see TS 44.064, 6.3 */
 		return false;
 
 	return true;
