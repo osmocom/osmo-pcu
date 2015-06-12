@@ -99,36 +99,29 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 				const uint8_t *data, const uint16_t len)
 {
 	LOGP(DRLCMAC, LOGL_INFO, "%s append\n", tbf_name(this));
+	/* TODO: put this path into an llc_enqueue method */
+	/* the TBF exists, so we must write it in the queue
+	 * we prepend lifetime in front of PDU */
+	struct timeval *tv;
+	struct msgb *llc_msg = msgb_alloc(len + sizeof(*tv) * 2,
+		"llc_pdu_queue");
+	if (!llc_msg)
+		return -ENOMEM;
+	tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
+	gprs_llc_queue::calc_pdu_lifetime(bts, pdu_delay_csec, tv);
+	tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
+	gettimeofday(tv, NULL);
+	memcpy(msgb_put(llc_msg, len), data, len);
+	llc_queue()->enqueue(llc_msg);
+	tbf_update_ms_class(this, ms_class);
+	start_llc_timer();
+
 	if (state_is(GPRS_RLCMAC_WAIT_RELEASE)) {
 		LOGP(DRLCMAC, LOGL_DEBUG,
 			"%s in WAIT RELEASE state "
 			"(T3193), so reuse TBF\n", tbf_name(this));
 		tbf_update_ms_class(this, ms_class);
-		reuse_tbf(data, len);
-	} else if (!have_data()) {
-		m_llc.put_frame(data, len);
-		bts->llc_frame_sched();
-		/* it is no longer drained */
-		m_last_dl_drained_fn = -1;
-		tbf_update_ms_class(this, ms_class);
-		start_llc_timer();
-	} else {
-		/* TODO: put this path into an llc_enqueue method */
-		/* the TBF exists, so we must write it in the queue
-		 * we prepend lifetime in front of PDU */
-		struct timeval *tv;
-		struct msgb *llc_msg = msgb_alloc(len + sizeof(*tv) * 2,
-			"llc_pdu_queue");
-		if (!llc_msg)
-			return -ENOMEM;
-		tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
-		gprs_llc_queue::calc_pdu_lifetime(bts, pdu_delay_csec, tv);
-		tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
-		gettimeofday(tv, NULL);
-		memcpy(msgb_put(llc_msg, len), data, len);
-		llc_queue()->enqueue(llc_msg);
-		tbf_update_ms_class(this, ms_class);
-		start_llc_timer();
+		reuse_tbf();
 	}
 
 	return 0;
@@ -149,7 +142,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 				const char *imsi,
 				const uint32_t tlli, const uint32_t tlli_old,
 				const uint8_t ms_class,
-				const uint8_t *data, const uint16_t len)
+				struct gprs_rlcmac_dl_tbf **tbf)
 {
 	uint8_t trx, ss;
 	int8_t use_trx;
@@ -188,19 +181,12 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 
 	if (!dl_tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-		bssgp_tx_llc_discarded(gprs_bssgp_pcu_current_bctx(), tlli,
-			1, len);
-		bts->bts->llc_dropped_frame();
 		return -EBUSY;
 	}
 	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
 	dl_tbf->ms()->set_ta(ta);
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s [DOWNLINK] START\n", tbf_name(dl_tbf));
-
-	/* new TBF, so put first frame */
-	dl_tbf->m_llc.put_frame(data, len);
-	dl_tbf->bts->llc_frame_sched();
 
 	/* Store IMSI for later look-up and PCH retransmission */
 	dl_tbf->assign_imsi(imsi);
@@ -210,6 +196,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	 * to trigger downlink assignment. if there is no uplink,
 	 * AGCH is used. */
 	dl_tbf->bts->trigger_dl_ass(dl_tbf, old_ul_tbf);
+	*tbf = dl_tbf;
 	return 0;
 }
 
@@ -222,20 +209,30 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 		const uint8_t *data, const uint16_t len)
 {
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	int rc;
+	GprsMs *ms;
 
 	/* check for existing TBF */
 	dl_tbf = tbf_lookup_dl(bts->bts, tlli, tlli_old, imsi);
-	if (dl_tbf) {
-		int rc = dl_tbf->append_data(ms_class, delay_csec, data, len);
-		if (rc >= 0)
-			dl_tbf->assign_imsi(imsi);
+	if (!dl_tbf) {
+		rc = tbf_new_dl_assignment(bts, imsi, tlli, tlli_old, ms_class,
+			&dl_tbf);
+		if (rc < 0)
+			return rc;
+	}
 
-		if (dl_tbf->ms())
-			dl_tbf->ms()->confirm_tlli(tlli);
-		return rc;
-	} 
+	OSMO_ASSERT(dl_tbf->ms() != NULL);
+	ms = dl_tbf->ms();
+	GprsMs::Guard guard(ms);
 
-	return tbf_new_dl_assignment(bts, imsi, tlli, tlli_old, ms_class, data, len);
+	rc = dl_tbf->append_data(ms_class, delay_csec, data, len);
+
+	dl_tbf = ms->dl_tbf();
+
+	dl_tbf->assign_imsi(imsi);
+	ms->confirm_tlli(tlli);
+
+	return rc;
 }
 
 struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
@@ -385,16 +382,40 @@ do_resend:
 	goto do_resend;
 }
 
+void gprs_rlcmac_dl_tbf::schedule_next_frame()
+{
+	struct msgb *msg;
+
+	if (m_llc.frame_length() != 0)
+		return;
+
+	/* dequeue next LLC frame, if any */
+	msg = llc_dequeue(gprs_bssgp_pcu_current_bctx());
+	if (!msg)
+		return;
+
+	LOGP(DRLCMACDL, LOGL_INFO,
+		"- Dequeue next LLC for %s (len=%d)\n",
+		tbf_name(this), msg->len);
+
+	m_llc.put_frame(msg->data, msg->len);
+	bts->llc_frame_sched();
+	msgb_free(msg);
+	m_last_dl_drained_fn = -1;
+}
+
 struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts)
 {
 	struct rlc_dl_header *rh;
 	struct rlc_li_field *li;
-	struct msgb *msg;
 	uint8_t *delimiter, *data, *e_pointer;
 	uint16_t space, chunk;
 	gprs_rlc_data *rlc_data;
 	const uint16_t bsn = m_window.v_s();
 	uint8_t cs = 1;
+
+	if (m_llc.frame_length() == 0)
+		schedule_next_frame();
 
 	cs = current_cs();
 
@@ -535,15 +556,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 		gprs_rlcmac_dl_bw(this, m_llc.frame_length());
 		m_llc.reset();
 		/* dequeue next LLC frame, if any */
-		msg = llc_dequeue(gprs_bssgp_pcu_current_bctx());
-		if (msg) {
-			LOGP(DRLCMACDL, LOGL_INFO, "- Dequeue next LLC for "
-				"%s (len=%d)\n", tbf_name(this), msg->len);
-			m_llc.put_frame(msg->data, msg->len);
-			bts->llc_frame_sched();
-			msgb_free(msg);
-			m_last_dl_drained_fn = -1;
-		}
+		schedule_next_frame();
 		/* if we have more data and we have space left */
 		if (space > 0 && (m_llc.frame_length() || keep_open(fn))) {
 			li->m = 1; /* we indicate more frames to follow */
@@ -796,7 +809,6 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 
 int gprs_rlcmac_dl_tbf::maybe_start_new_window()
 {
-	struct msgb *msg;
 	uint16_t received;
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
@@ -809,8 +821,7 @@ int gprs_rlcmac_dl_tbf::maybe_start_new_window()
 	set_state(GPRS_RLCMAC_WAIT_RELEASE);
 
 	/* check for LLC PDU in the LLC Queue */
-	msg = llc_dequeue(gprs_bssgp_pcu_current_bctx());
-	if (!msg) {
+	if (!have_data()) {
 		/* no message, start T3193, change state to RELEASE */
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- No new message, so we release.\n");
 		/* start T3193 */
@@ -822,8 +833,7 @@ int gprs_rlcmac_dl_tbf::maybe_start_new_window()
 	}
 
 	/* we have more data so we will re-use this tbf */
-	reuse_tbf(msg->data, msg->len);
-	msgb_free(msg);
+	reuse_tbf();
 	return 0;
 }
 
@@ -836,7 +846,7 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, uint8_t ssn, uint8_t *rbb
 	return maybe_start_new_window();
 }
 
-void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
+void gprs_rlcmac_dl_tbf::reuse_tbf()
 {
 	uint8_t trx;
 	struct gprs_rlcmac_dl_tbf *new_tbf = NULL;
@@ -851,17 +861,10 @@ void gprs_rlcmac_dl_tbf::reuse_tbf(const uint8_t *data, const uint16_t len)
 
 	if (!new_tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-		bssgp_tx_llc_discarded(gprs_bssgp_pcu_current_bctx(), tlli(),
-			1, len);
-		bts->llc_dropped_frame();
 		return;
 	}
 
 	new_tbf->set_ms(ms());
-
-	/* Start with the passed frame */
-	new_tbf->m_llc.put_frame(data, len);
-	bts->llc_frame_sched();
 
 	/* reset rlc states */
 	m_tx_counter = 0;

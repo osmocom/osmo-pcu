@@ -46,6 +46,7 @@ Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLO
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) (len=200)
 - Sending new block at BSN 0, CS=1
 -- Chunk with length 200 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
@@ -117,6 +118,7 @@ Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLO
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) (len=200)
 - Sending new block at BSN 0, CS=1
 -- Chunk with length 200 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
@@ -188,6 +190,7 @@ Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLO
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) (len=200)
 - Sending new block at BSN 0, CS=1
 -- Chunk with length 200 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
@@ -453,6 +456,7 @@ Send dowlink assignment for TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) on PCH,
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 30 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 08 00 23 2b 2b 2b 2b 
+TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=1.
 ********** TBF starts here **********
@@ -474,6 +478,7 @@ Send dowlink assignment for TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) on PCH,
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 18 40 23 2b 2b 2b 2b 
+TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=2.
 ********** TBF starts here **********
@@ -495,6 +500,7 @@ Send dowlink assignment for TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) on PCH,
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 28 80 23 2b 2b 2b 2b 
+TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=3.
 ********** TBF starts here **********
@@ -516,6 +522,7 @@ Send dowlink assignment for TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) on PCH,
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 33 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 38 c0 23 2b 2b 2b 2b 
+TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=4.
 ********** TBF starts here **********
@@ -537,6 +544,7 @@ Send dowlink assignment for TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) on PCH,
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 34 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 49 00 23 2b 2b 2b 2b 
+TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=5.
 ********** TBF starts here **********
@@ -558,6 +566,7 @@ Send dowlink assignment for TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) on PCH,
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 35 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 59 40 23 2b 2b 2b 2b 
+TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=6.
 ********** TBF starts here **********
@@ -579,6 +588,7 @@ Send dowlink assignment for TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) on PCH,
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 69 80 23 2b 2b 2b 2b 
+TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=7.
 ********** TBF starts here **********
@@ -600,6 +610,7 @@ Send dowlink assignment for TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) on PCH,
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 37 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 79 c0 23 2b 2b 2b 2b 
+TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=8.
 ********** TBF starts here **********
@@ -621,6 +632,7 @@ Send dowlink assignment for TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) on PCH,
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 38 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 8a 00 23 2b 2b 2b 2b 
+TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=9.
 ********** TBF starts here **********
@@ -642,6 +654,7 @@ Send dowlink assignment for TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) on PCH,
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 39 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 9a 40 23 2b 2b 2b 2b 
+TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=10.
 ********** TBF starts here **********
@@ -663,6 +676,7 @@ Send dowlink assignment for TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) on PCH
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 30 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 aa 80 23 2b 2b 2b 2b 
+TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=11.
 ********** TBF starts here **********
@@ -684,6 +698,7 @@ Send dowlink assignment for TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) on PCH
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 ba c0 23 2b 2b 2b 2b 
+TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=12.
 ********** TBF starts here **********
@@ -705,6 +720,7 @@ Send dowlink assignment for TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) on PCH
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 cb 00 23 2b 2b 2b 2b 
+TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=13.
 ********** TBF starts here **********
@@ -726,6 +742,7 @@ Send dowlink assignment for TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) on PCH
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 33 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 db 40 23 2b 2b 2b 2b 
+TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=14.
 ********** TBF starts here **********
@@ -747,6 +764,7 @@ Send dowlink assignment for TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) on PCH
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 34 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 eb 80 23 2b 2b 2b 2b 
+TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=15.
 ********** TBF starts here **********
@@ -768,6 +786,7 @@ Send dowlink assignment for TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) on PCH
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 35 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 fb c0 23 2b 2b 2b 2b 
+TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=16.
 ********** TBF starts here **********
@@ -789,6 +808,7 @@ Send dowlink assignment for TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) on PCH
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 0c 00 23 2b 2b 2b 2b 
+TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=17.
 ********** TBF starts here **********
@@ -810,6 +830,7 @@ Send dowlink assignment for TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) on PCH
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 37 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 1c 40 23 2b 2b 2b 2b 
+TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=18.
 ********** TBF starts here **********
@@ -831,6 +852,7 @@ Send dowlink assignment for TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) on PCH
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 38 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 2c 80 23 2b 2b 2b 2b 
+TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=19.
 ********** TBF starts here **********
@@ -852,6 +874,7 @@ Send dowlink assignment for TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) on PCH
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 39 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 3c c0 23 2b 2b 2b 2b 
+TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=20.
 ********** TBF starts here **********
@@ -873,6 +896,7 @@ Send dowlink assignment for TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) on PCH
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 30 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 4d 00 23 2b 2b 2b 2b 
+TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=21.
 ********** TBF starts here **********
@@ -894,6 +918,7 @@ Send dowlink assignment for TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) on PCH
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 5d 40 23 2b 2b 2b 2b 
+TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=22.
 ********** TBF starts here **********
@@ -915,6 +940,7 @@ Send dowlink assignment for TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) on PCH
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 6d 80 23 2b 2b 2b 2b 
+TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=23.
 ********** TBF starts here **********
@@ -936,6 +962,7 @@ Send dowlink assignment for TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) on PCH
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 33 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 7d c0 23 2b 2b 2b 2b 
+TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=24.
 ********** TBF starts here **********
@@ -957,6 +984,7 @@ Send dowlink assignment for TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) on PCH
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 34 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 8e 00 23 2b 2b 2b 2b 
+TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=25.
 ********** TBF starts here **********
@@ -978,6 +1006,7 @@ Send dowlink assignment for TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) on PCH
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 35 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 9e 40 23 2b 2b 2b 2b 
+TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=26.
 ********** TBF starts here **********
@@ -999,6 +1028,7 @@ Send dowlink assignment for TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) on PCH
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 ae 80 23 2b 2b 2b 2b 
+TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=27.
 ********** TBF starts here **********
@@ -1020,6 +1050,7 @@ Send dowlink assignment for TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) on PCH
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 37 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 be c0 23 2b 2b 2b 2b 
+TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=28.
 ********** TBF starts here **********
@@ -1041,6 +1072,7 @@ Send dowlink assignment for TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) on PCH
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 38 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 cf 00 23 2b 2b 2b 2b 
+TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=29.
 ********** TBF starts here **********
@@ -1062,6 +1094,7 @@ Send dowlink assignment for TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) on PCH
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 39 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 df 40 23 2b 2b 2b 2b 
+TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=30.
 ********** TBF starts here **********
@@ -1083,6 +1116,7 @@ Send dowlink assignment for TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) on PCH
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 33 30 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 ef 80 23 2b 2b 2b 2b 
+TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=31.
 ********** TBF starts here **********
@@ -1104,10 +1138,10 @@ Send dowlink assignment for TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) on PCH
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 33 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 ff c0 23 2b 2b 2b 2b 
+TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) append
 Searching for first unallocated TFI: TRX=0 first TS=4
 No TFI available.
 No PDCH resource
-BSSGP (BVCI=1234) Tx LLC-DISCARDED TLLI=0xc0000020, FRAMES=1, OCTETS=256
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=0.
 ********** TBF starts here **********
@@ -1130,6 +1164,7 @@ TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 01 23 45 68 00 23 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) append
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) append
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) free
 Detaching TBF from MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)
 ********** TBF ends here **********
@@ -1150,24 +1185,34 @@ Send dowlink assignment for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) on PCH,
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 01 23 45 68 00 23 2b 2b 2b 2b 
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) append
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) (len=19)
 - Sending new block at BSN 0, CS=1
 -- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
 Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)len=19
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) (len=19)
 -- No space left, so we are done.
-data block: 07 00 00 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
-MSG = 07 00 00 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
+data block: 07 00 00 4d 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+MSG = 07 00 00 4d 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) downlink (V(A)==0 .. V(S)==1)
 - Sending new block at BSN 1, CS=1
 -- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
 Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)len=19
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) (len=19)
+-- No space left, so we are done.
+data block: 07 00 02 4d 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 
+MSG = 07 00 02 4d 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) downlink (V(A)==0 .. V(S)==2)
+- Sending new block at BSN 2, CS=1
+-- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)len=19
 -- Final block, so we done.
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FINISHED
-data block: 07 01 02 4d 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 
+data block: 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
 Polling cannot be sheduled in this TS 7, waiting for TS 4
-MSG = 07 01 02 4d 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 
+MSG = 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
 Searching for first unallocated TFI: TRX=0 first TS=7
  Found TFI=0.
 MS requests UL TBF on RACH, so we provide one:
