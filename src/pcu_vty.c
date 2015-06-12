@@ -90,6 +90,12 @@ static int config_write_pcu(struct vty *vty)
 	else
 		vty_out(vty, " no cs threshold%s", VTY_NEWLINE);
 
+	if (bts->cs_downgrade_threshold)
+		vty_out(vty, " cs downgrade-threshold %d%s",
+			bts->cs_downgrade_threshold, VTY_NEWLINE);
+	else
+		vty_out(vty, " no cs downgrade-threshold%s", VTY_NEWLINE);
+
 	vty_out(vty, " cs link-quality-ranges cs1 %d cs2 %d %d cs3 %d %d cs4 %d%s",
 		bts->cs_lqual_ranges[0].high,
 		bts->cs_lqual_ranges[1].low,
@@ -609,6 +615,32 @@ DEFUN(cfg_pcu_no_cs_err_limits,
 	return CMD_SUCCESS;
 }
 
+#define CS_DOWNGRADE_STR "set threshold for data size based CS downgrade\n"
+DEFUN(cfg_pcu_cs_downgrade_thrsh,
+      cfg_pcu_cs_downgrade_thrsh_cmd,
+      "cs downgrade-threshold <1-10000>",
+      CS_STR CS_DOWNGRADE_STR "downgrade if less octets left\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->cs_downgrade_threshold = atoi(argv[0]);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_cs_downgrade_thrsh,
+      cfg_pcu_no_cs_downgrade_thrsh_cmd,
+      "no cs downgrade-threshold",
+      CS_STR CS_DOWNGRADE_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->cs_downgrade_threshold = 0;
+
+	return CMD_SUCCESS;
+}
+
+
 DEFUN(cfg_pcu_cs_lqual_ranges,
       cfg_pcu_cs_lqual_ranges_cmd,
       "cs link-quality-ranges cs1 <0-35> cs2 <0-35> <0-35> cs3 <0-35> <0-35> cs4 <0-35>",
@@ -729,6 +761,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_no_cs_max_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_err_limits_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_err_limits_cmd);
+	install_element(PCU_NODE, &cfg_pcu_cs_downgrade_thrsh_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_cs_downgrade_thrsh_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_lqual_ranges_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_inf_cmd);

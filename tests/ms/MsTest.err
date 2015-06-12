@@ -54,3 +54,5 @@ Detaching TBF from MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0x00000000
 Detaching TBF from MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Timeout for MS object, TLLI = 0xffeeddbb
 Destroying MS object, TLLI = 0xffeeddbb
+Creating MS object, TLLI = 0xffeeddbb
+Attaching TBF to MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)

@@ -170,11 +170,6 @@ inline uint8_t GprsMs::ms_class() const
 	return m_ms_class;
 }
 
-inline uint8_t GprsMs::current_cs_dl() const
-{
-	return m_current_cs_dl;
-}
-
 inline uint8_t GprsMs::current_cs_ul() const
 {
 	return m_current_cs_ul;

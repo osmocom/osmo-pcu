@@ -187,6 +187,7 @@ int main(int argc, char *argv[])
 	bts->cs_lqual_ranges[2].high = 13;
 	bts->cs_lqual_ranges[3].low = 12;
 	bts->cs_lqual_ranges[3].high = 256;
+	bts->cs_downgrade_threshold = 200;
 
 	msgb_set_talloc_ctx(tall_pcu_ctx);
 
