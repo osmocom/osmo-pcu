@@ -82,6 +82,9 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 		vty_out(vty, "  Burst timing offset:    %d/4 bit%s",
 			ms->l1_meas()->bto, VTY_NEWLINE);
 	if (ms->l1_meas()->have_ms_rx_qual)
+		vty_out(vty, "  Downlink NACK rate:     %d %%%s",
+			ms->nack_rate_dl(), VTY_NEWLINE);
+	if (ms->l1_meas()->have_ms_rx_qual)
 		vty_out(vty, "  MS RX quality:          %d %%%s",
 			ms->l1_meas()->ms_rx_qual, VTY_NEWLINE);
 	if (ms->l1_meas()->have_ms_c_value)
