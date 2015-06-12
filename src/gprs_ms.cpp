@@ -485,3 +485,36 @@ void GprsMs::update_l1_meas(const pcu_l1_meas *meas)
 		}
 	}
 }
+
+uint8_t GprsMs::current_cs_dl() const
+{
+	uint8_t cs = m_current_cs_dl;
+	size_t unencoded_octets;
+
+	if (!m_bts)
+		return cs;
+
+	unencoded_octets = m_llc_queue.octets();
+
+	/* If the DL TBF is active, add number of unencoded chunk octets */
+	if (m_dl_tbf)
+		unencoded_octets = m_dl_tbf->m_llc.chunk_size();
+
+	/* There are many unencoded octets, don't reduce */
+	if (unencoded_octets >= m_bts->bts_data()->cs_downgrade_threshold)
+		return cs;
+
+	/* RF conditions are good, don't reduce */
+	if (m_nack_rate_dl < m_bts->bts_data()->cs_adj_lower_limit)
+		return cs;
+
+	/* The throughput would probably be better if the CS level was reduced */
+	cs -= 1;
+
+	/* CS-2 doesn't gain throughput with small packets, further reduce to CS-1 */
+	if (cs == 2)
+		cs -= 1;
+
+	return cs;
+}
+

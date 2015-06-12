@@ -24,6 +24,7 @@
 #include "gprs_debug.h"
 #include "gprs_ms.h"
 #include "gprs_ms_storage.h"
+#include "bts.h"
 
 extern "C" {
 #include "pcu_vty.h"
@@ -468,6 +469,42 @@ static void test_ms_timeout()
 	printf("=== end %s ===\n", __func__);
 }
 
+static void test_ms_cs_selection()
+{
+	BTS the_bts;
+	gprs_rlcmac_bts *bts = the_bts.bts_data();
+	uint32_t tlli = 0xffeeddbb;
+
+	gprs_rlcmac_dl_tbf *dl_tbf;
+	GprsMs *ms;
+
+	printf("=== start %s ===\n", __func__);
+
+	bts->initial_cs_dl = 4;
+	bts->initial_cs_ul = 1;
+	bts->cs_downgrade_threshold = 0;
+
+	ms = new GprsMs(&the_bts, tlli);
+
+	OSMO_ASSERT(ms->is_idle());
+
+	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
+	dl_tbf->direction = GPRS_RLCMAC_DL_TBF;
+
+	dl_tbf->set_ms(ms);
+	OSMO_ASSERT(!ms->is_idle());
+
+	OSMO_ASSERT(ms->current_cs_dl() == 4);
+
+	bts->cs_downgrade_threshold = 200;
+
+	OSMO_ASSERT(ms->current_cs_dl() == 3);
+
+	talloc_free(dl_tbf);
+
+	printf("=== end %s ===\n", __func__);
+}
+
 static const struct log_info_cat default_categories[] = {
 	{"DPCU", "", "GPRS Packet Control Unit (PCU)", LOGL_INFO, 1},
 };
@@ -507,6 +544,7 @@ int main(int argc, char **argv)
 	test_ms_change_tlli();
 	test_ms_storage();
 	test_ms_timeout();
+	test_ms_cs_selection();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
