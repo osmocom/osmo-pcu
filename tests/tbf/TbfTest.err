@@ -46,14 +46,14 @@ Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLO
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0)
-- Sending new block at BSN 0
+- Sending new block at BSN 0, CS=1
 -- Chunk with length 200 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=4 block=1 data=07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1)
-- Sending new block at BSN 1
+- Sending new block at BSN 1, CS=1
 -- Chunk with length 180 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
@@ -117,14 +117,14 @@ Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLO
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0)
-- Sending new block at BSN 0
+- Sending new block at BSN 0, CS=1
 -- Chunk with length 200 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=4 block=1 data=07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1)
-- Sending new block at BSN 1
+- Sending new block at BSN 1, CS=1
 -- Chunk with length 180 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
@@ -188,68 +188,68 @@ Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLO
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0)
-- Sending new block at BSN 0
+- Sending new block at BSN 0, CS=1
 -- Chunk with length 200 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=4 block=1 data=07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1)
-- Sending new block at BSN 1
+- Sending new block at BSN 1, CS=1
 -- Chunk with length 180 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==2)
-- Sending new block at BSN 2
+- Sending new block at BSN 2, CS=1
 -- Chunk with length 160 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 05 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 3a 3b 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=13 block=3 data=07 00 05 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 3a 3b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==3)
-- Sending new block at BSN 3
+- Sending new block at BSN 3, CS=1
 -- Chunk with length 140 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 07 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=17 block=4 data=07 00 07 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==4)
-- Sending new block at BSN 4
+- Sending new block at BSN 4, CS=1
 -- Chunk with length 120 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 09 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=21 block=5 data=07 00 09 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==5)
-- Sending new block at BSN 5
+- Sending new block at BSN 5, CS=1
 -- Chunk with length 100 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 0b 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 76 77 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=26 block=6 data=07 00 0b 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 76 77 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==6)
-- Sending new block at BSN 6
+- Sending new block at BSN 6, CS=1
 -- Chunk with length 80 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 0d 78 79 7a 7b 7c 7d 7e 7f 80 81 82 83 84 85 86 87 88 89 8a 8b 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=30 block=7 data=07 00 0d 78 79 7a 7b 7c 7d 7e 7f 80 81 82 83 84 85 86 87 88 89 8a 8b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==7)
-- Sending new block at BSN 7
+- Sending new block at BSN 7, CS=1
 -- Chunk with length 60 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 0f 8c 8d 8e 8f 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 9e 9f 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=34 block=8 data=07 00 0f 8c 8d 8e 8f 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 9e 9f 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==8)
-- Sending new block at BSN 8
+- Sending new block at BSN 8, CS=1
 -- Chunk with length 40 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 11 a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af b0 b1 b2 b3 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=39 block=9 data=07 00 11 a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af b0 b1 b2 b3 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==9)
-- Sending new block at BSN 9
+- Sending new block at BSN 9, CS=1
 -- Chunk with length 20 would exactly fit into space (20): add length header with LI=0, to make frame extend to next block, and we are done
 data block: 07 00 12 01 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 c6 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=43 block=10 data=07 00 12 01 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 c6 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==10)
-- Sending new block at BSN 10
+- Sending new block at BSN 10, CS=1
 -- Chunk with length 1 is less than remaining space (20): add length header to to delimit LLC frame
 Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)len=200
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) (len=200)
@@ -258,61 +258,61 @@ data block: 07 00 14 07 c7 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=47 block=11 data=07 00 14 07 c7 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==11)
-- Sending new block at BSN 11
+- Sending new block at BSN 11, CS=1
 -- Chunk with length 182 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 17 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=52 block=12 data=07 00 17 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==12)
-- Sending new block at BSN 12
+- Sending new block at BSN 12, CS=1
 -- Chunk with length 162 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 19 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=56 block=13 data=07 00 19 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==13)
-- Sending new block at BSN 13
+- Sending new block at BSN 13, CS=1
 -- Chunk with length 142 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 1b 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=60 block=14 data=07 00 1b 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==14)
-- Sending new block at BSN 14
+- Sending new block at BSN 14, CS=1
 -- Chunk with length 122 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 1d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=65 block=15 data=07 00 1d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==15)
-- Sending new block at BSN 15
+- Sending new block at BSN 15, CS=1
 -- Chunk with length 102 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 1f 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=69 block=16 data=07 00 1f 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==16)
-- Sending new block at BSN 16
+- Sending new block at BSN 16, CS=1
 -- Chunk with length 82 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 21 76 77 78 79 7a 7b 7c 7d 7e 7f 80 81 82 83 84 85 86 87 88 89 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=73 block=17 data=07 00 21 76 77 78 79 7a 7b 7c 7d 7e 7f 80 81 82 83 84 85 86 87 88 89 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==17)
-- Sending new block at BSN 17
+- Sending new block at BSN 17, CS=1
 -- Chunk with length 62 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 23 8a 8b 8c 8d 8e 8f 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=78 block=18 data=07 00 23 8a 8b 8c 8d 8e 8f 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==18)
-- Sending new block at BSN 18
+- Sending new block at BSN 18, CS=1
 -- Chunk with length 42 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 25 9e 9f a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af b0 b1 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=82 block=19 data=07 00 25 9e 9f a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af b0 b1 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==19)
-- Sending new block at BSN 19
+- Sending new block at BSN 19, CS=1
 -- Chunk with length 22 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 27 b2 b3 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=86 block=20 data=07 00 27 b2 b3 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==20)
-- Sending new block at BSN 20
+- Sending new block at BSN 20, CS=1
 -- Chunk with length 2 is less than remaining space (20): add length header to to delimit LLC frame
 Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)len=200
 -- Empty chunk, added LLC dummy command of size 16, drained_since=0
@@ -349,7 +349,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 - V(B): (V(A)=21)""(V(S)-1=20)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==21 .. V(S)==21)
-- Sending new block at BSN 21
+- Sending new block at BSN 21, CS=1
 -- Empty chunk, added LLC dummy command of size 19, drained_since=4
 -- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
 Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)len=19
@@ -364,7 +364,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 - V(B): (V(A)=22)""(V(S)-1=21)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==22 .. V(S)==22)
-- Sending new block at BSN 22
+- Sending new block at BSN 22, CS=1
 -- Empty chunk, added LLC dummy command of size 19, drained_since=112
 -- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
 Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)len=19
