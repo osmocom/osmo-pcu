@@ -396,10 +396,10 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 	const uint16_t bsn = m_window.v_s();
 	uint8_t cs = 1;
 
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d\n",
-		m_window.v_s());
-
 	cs = current_cs();
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d, CS=%d\n",
+		m_window.v_s(), cs);
 
 	OSMO_ASSERT(cs >= 1);
 	OSMO_ASSERT(cs <= 4);
