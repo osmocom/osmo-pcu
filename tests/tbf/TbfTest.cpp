@@ -427,6 +427,75 @@ static void test_tbf_exhaustion()
 	gprs_bssgp_destroy();
 }
 
+static void test_tbf_dl_llc_loss()
+{
+	BTS the_bts;
+	gprs_rlcmac_bts *bts;
+	uint8_t ts_no = 4;
+	uint8_t ms_class = 45;
+	int rc = 0;
+	uint32_t tlli = 0xc0123456;
+	const char *imsi = "001001000123456";
+	unsigned delay_csec = 1000;
+	GprsMs *ms;
+
+	uint8_t buf[19];
+
+	printf("=== start %s ===\n", __func__);
+
+	bts = the_bts.bts_data();
+	setup_bts(&the_bts, ts_no);
+	bts->ms_idle_sec = 10; /* keep the MS object */
+
+	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001,
+		1234, 1234, 1234, 1, 1, 0, 0, 0);
+
+	/* Handle LLC frame 1 */
+	memset(buf, 1, sizeof(buf));
+	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class,
+		delay_csec, buf, sizeof(buf));
+	OSMO_ASSERT(rc >= 0);
+
+	ms = the_bts.ms_store().get_ms(0, 0, imsi);
+	OSMO_ASSERT(ms != NULL);
+	OSMO_ASSERT(ms->dl_tbf() != NULL);
+
+	/* Handle LLC frame 2 */
+	memset(buf, 2, sizeof(buf));
+	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class,
+		delay_csec, buf, sizeof(buf));
+	OSMO_ASSERT(rc >= 0);
+
+	/* TBF establishment fails (timeout) */
+	tbf_free(ms->dl_tbf());
+
+	/* Handle LLC frame 3 */
+	memset(buf, 3, sizeof(buf));
+	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class,
+		delay_csec, buf, sizeof(buf));
+	OSMO_ASSERT(rc >= 0);
+
+	OSMO_ASSERT(ms->dl_tbf() != NULL);
+
+	/* Get first BSN */
+	struct msgb *msg;
+	int fn = 0;
+	uint8_t expected_data = 1;
+
+	while (ms->dl_tbf()->have_data()) {
+		msg = ms->dl_tbf()->create_dl_acked_block(fn += 4, 7);
+		fprintf(stderr, "MSG = %s\n", msgb_hexdump(msg));
+		OSMO_ASSERT(msgb_length(msg) == 23);
+		/* OSMO_ASSERT(msgb_data(msg)[10] == expected_data); */
+		expected_data += 1;
+	}
+	/* OSMO_ASSERT(expected_data-1 == 3); */
+
+	printf("=== end %s ===\n", __func__);
+
+	gprs_bssgp_destroy();
+}
+
 static void test_tbf_single_phase()
 {
 	BTS the_bts;
@@ -605,6 +674,7 @@ int main(int argc, char **argv)
 	test_tbf_delayed_release();
 	test_tbf_imsi();
 	test_tbf_exhaustion();
+	test_tbf_dl_llc_loss();
 	test_tbf_single_phase();
 	test_tbf_two_phase();
 
