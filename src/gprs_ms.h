@@ -99,6 +99,7 @@ public:
 
 	void update_l1_meas(const pcu_l1_meas *meas);
 	const pcu_l1_meas* l1_meas() const {return &m_l1_meas;};
+	unsigned nack_rate_dl() const;
 
 	/* internal use */
 	static void timeout(void *priv_);
@@ -138,6 +139,7 @@ private:
 	int64_t m_last_cs_not_low;
 
 	pcu_l1_meas m_l1_meas;
+	unsigned m_nack_rate_dl;
 };
 
 inline uint32_t GprsMs::tlli() const
@@ -191,5 +193,10 @@ inline gprs_llc_queue *GprsMs::llc_queue()
 inline const gprs_llc_queue *GprsMs::llc_queue() const
 {
 	return &m_llc_queue;
+}
+
+inline unsigned GprsMs::nack_rate_dl() const
+{
+	return m_nack_rate_dl;
 }
 

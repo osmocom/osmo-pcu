@@ -90,7 +90,8 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	m_is_idle(true),
 	m_ref(0),
 	m_list(this),
-	m_delay(0)
+	m_delay(0),
+	m_nack_rate_dl(0)
 {
 	LOGP(DRLCMAC, LOGL_INFO, "Creating MS object, TLLI = 0x%08x\n", tlli);
 
@@ -382,6 +383,8 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 
 	/* TODO: Check for TBF direction */
 	/* TODO: Support different CS values for UL and DL */
+
+	m_nack_rate_dl = error_rate;
 
 	if (error_rate > bts_data->cs_adj_upper_limit) {
 		if (m_current_cs_dl > 1) {
