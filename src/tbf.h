@@ -362,9 +362,10 @@ protected:
 	int update_window(const uint8_t ssn, const uint8_t *rbb);
 	int maybe_start_new_window();
 	bool dl_window_stalled() const;
-	void reuse_tbf(const uint8_t *data, const uint16_t len);
+	void reuse_tbf();
 	void start_llc_timer();
 	int analyse_errors(char *show_rbb, uint8_t ssn);
+	void schedule_next_frame();
 
 	struct osmo_timer_list m_llc_timer;
 };

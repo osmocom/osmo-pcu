@@ -486,10 +486,10 @@ static void test_tbf_dl_llc_loss()
 		msg = ms->dl_tbf()->create_dl_acked_block(fn += 4, 7);
 		fprintf(stderr, "MSG = %s\n", msgb_hexdump(msg));
 		OSMO_ASSERT(msgb_length(msg) == 23);
-		/* OSMO_ASSERT(msgb_data(msg)[10] == expected_data); */
+		OSMO_ASSERT(msgb_data(msg)[10] == expected_data);
 		expected_data += 1;
 	}
-	/* OSMO_ASSERT(expected_data-1 == 3); */
+	OSMO_ASSERT(expected_data-1 == 3);
 
 	printf("=== end %s ===\n", __func__);
 
