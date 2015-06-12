@@ -1108,6 +1108,66 @@ Searching for first unallocated TFI: TRX=0 first TS=4
 No TFI available.
 No PDCH resource
 BSSGP (BVCI=1234) Tx LLC-DISCARDED TLLI=0xc0000020, FRAMES=1, OCTETS=256
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: TFI=0 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+Creating MS object, TLLI = 0x00000000
+The MS object cannot fully confirm an unexpected TLLI: 0xc0123456, partly confirmed
+Modifying MS object, TLLI = 0xc0123456, MS class 0 -> 45
+Attaching TBF to MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL)
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) [DOWNLINK] START
+Modifying MS object, TLLI = 0xc0123456, IMSI '' -> '001001000123456'
+Send dowlink assignment for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000123456)
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 01 23 45 68 00 23 2b 2b 2b 2b 
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) append
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) free
+Detaching TBF from MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0 first TS=4
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: TFI=0 TRX=0 MS_CLASS=45
+Slot Allocation (Algorithm A) for class 45
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Assign downlink TS=4
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL)
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) [DOWNLINK] START
+Send dowlink assignment for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000123456)
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TX: START TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 01 23 45 68 00 23 2b 2b 2b 2b 
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) downlink (V(A)==0 .. V(S)==0)
+- Sending new block at BSN 0, CS=1
+-- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)len=19
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) (len=19)
+-- No space left, so we are done.
+data block: 07 00 00 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
+MSG = 07 00 00 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) downlink (V(A)==0 .. V(S)==1)
+- Sending new block at BSN 1, CS=1
+-- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)len=19
+-- Final block, so we done.
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FINISHED
+data block: 07 01 02 4d 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling cannot be sheduled in this TS 7, waiting for TS 4
+MSG = 07 01 02 4d 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 
 Searching for first unallocated TFI: TRX=0 first TS=7
  Found TFI=0.
 MS requests UL TBF on RACH, so we provide one:
