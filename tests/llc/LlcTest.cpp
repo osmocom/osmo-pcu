@@ -41,57 +41,56 @@ extern "C" {
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 
-static void enqueue_data(gprs_llc_queue *queue, const uint8_t *data, size_t len)
+static void enqueue_data(gprs_llc_queue *queue, const uint8_t *data, size_t len,
+	gprs_llc_queue::MetaInfo *info = 0)
 {
 	struct timeval *tv;
 	uint8_t *msg_data;
 	struct msgb *llc_msg = msgb_alloc(len + sizeof(*tv) * 2,
 		"llc_pdu_queue");
 
-	tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
-	memset(tv, 0, sizeof(*tv));
-	tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
-	memset(tv, 0, sizeof(*tv));
 	msg_data = (uint8_t *)msgb_put(llc_msg, len);
 
 	memcpy(msg_data, data, len);
 
-	queue->enqueue(llc_msg);
+	queue->enqueue(llc_msg, info);
 }
 
-static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data, size_t len)
+static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
+	size_t len, const gprs_llc_queue::MetaInfo *exp_info = 0)
 {
 	struct msgb *llc_msg;
 	uint8_t *msg_data;
+	const gprs_llc_queue::MetaInfo *info_res;
 
-	llc_msg = queue->dequeue();
+	llc_msg = queue->dequeue(&info_res);
 	OSMO_ASSERT(llc_msg != NULL);
 
-	fprintf(stderr, "dequeued msg, length %d, data %s\n",
-		msgb_length(llc_msg), msgb_hexdump(llc_msg));
-
-	OSMO_ASSERT(msgb_length(llc_msg) >= 2*sizeof(struct timeval));
-	msgb_pull(llc_msg, sizeof(struct timeval));
-	msgb_pull(llc_msg, sizeof(struct timeval));
-
-	fprintf(stderr, "LLC message, length %d (expected %d)\n",
-		msgb_length(llc_msg), len);
+	fprintf(stderr, "dequeued msg, length %d (expected %d), data %s\n",
+		msgb_length(llc_msg), len, msgb_hexdump(llc_msg));
 
 	OSMO_ASSERT(msgb_length(llc_msg) == len);
 	msg_data = msgb_data(llc_msg);
 
 	OSMO_ASSERT(memcmp(msg_data, exp_data, len) == 0);
+
+	if (exp_info)
+		OSMO_ASSERT(memcmp(exp_info, info_res, sizeof(*exp_info)) == 0);
+
 	msgb_free(llc_msg);
 }
 
-static void enqueue_data(gprs_llc_queue *queue, const char *message)
+static void enqueue_data(gprs_llc_queue *queue, const char *message,
+	gprs_llc_queue::MetaInfo *info = 0)
 {
-	enqueue_data(queue, (uint8_t *)(message), strlen(message));
+	enqueue_data(queue, (uint8_t *)(message), strlen(message), info);
 }
 
-static void dequeue_and_check(gprs_llc_queue *queue, const char *exp_message)
+static void dequeue_and_check(gprs_llc_queue *queue, const char *exp_message,
+	const gprs_llc_queue::MetaInfo *exp_info = 0)
 {
-	dequeue_and_check(queue, (uint8_t *)(exp_message), strlen(exp_message));
+	dequeue_and_check(queue,
+		(uint8_t *)(exp_message), strlen(exp_message), exp_info);
 }
 
 static void test_llc_queue()
@@ -123,6 +122,37 @@ static void test_llc_queue()
 	enqueue_data(&queue, "LLC");
 	OSMO_ASSERT(queue.size() == 1);
 	OSMO_ASSERT(queue.octets() == 3);
+
+	queue.clear(NULL);
+	OSMO_ASSERT(queue.size() == 0);
+	OSMO_ASSERT(queue.octets() == 0);
+
+	printf("=== end %s ===\n", __func__);
+}
+
+static void test_llc_meta()
+{
+	gprs_llc_queue queue;
+	gprs_llc_queue::MetaInfo info1 = {
+		.recv_time = {123456777, 123456},
+		.expire_time = {123456789, 987654},
+	};
+	gprs_llc_queue::MetaInfo info2 = {
+		.recv_time = {987654321, 547352},
+		.expire_time = {987654327, 867252},
+	};
+
+	printf("=== start %s ===\n", __func__);
+
+	queue.init();
+	OSMO_ASSERT(queue.size() == 0);
+	OSMO_ASSERT(queue.octets() == 0);
+
+	enqueue_data(&queue, "LLC message 1", &info1);
+	enqueue_data(&queue, "LLC message 2", &info2);
+
+	dequeue_and_check(&queue, "LLC message 1", &info1);
+	dequeue_and_check(&queue, "LLC message 2", &info2);
 
 	queue.clear(NULL);
 	OSMO_ASSERT(queue.size() == 0);
@@ -165,6 +195,7 @@ int main(int argc, char **argv)
 	pcu_vty_init(&debug_log_info);
 
 	test_llc_queue();
+	test_llc_meta();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);

@@ -99,20 +99,15 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 				const uint8_t *data, const uint16_t len)
 {
 	LOGP(DRLCMAC, LOGL_INFO, "%s append\n", tbf_name(this));
-	/* TODO: put this path into an llc_enqueue method */
-	/* the TBF exists, so we must write it in the queue
-	 * we prepend lifetime in front of PDU */
-	struct timeval *tv;
-	struct msgb *llc_msg = msgb_alloc(len + sizeof(*tv) * 2,
-		"llc_pdu_queue");
+	gprs_llc_queue::MetaInfo info;
+	struct msgb *llc_msg = msgb_alloc(len, "llc_pdu_queue");
 	if (!llc_msg)
 		return -ENOMEM;
-	tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
-	gprs_llc_queue::calc_pdu_lifetime(bts, pdu_delay_csec, tv);
-	tv = (struct timeval *)msgb_put(llc_msg, sizeof(*tv));
-	gettimeofday(tv, NULL);
+
+	gprs_llc_queue::calc_pdu_lifetime(bts, pdu_delay_csec, &info.expire_time);
+	gettimeofday(&info.recv_time, NULL);
 	memcpy(msgb_put(llc_msg, len), data, len);
-	llc_queue()->enqueue(llc_msg);
+	llc_queue()->enqueue(llc_msg, &info);
 	tbf_update_ms_class(this, ms_class);
 	start_llc_timer();
 
@@ -238,11 +233,11 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 {
 	struct msgb *msg;
-	struct timeval *tv_recv, *tv_disc;
 	struct timeval tv_now, tv_now2;
 	uint32_t octets = 0, frames = 0;
 	struct timeval hyst_delta = {0, 0};
 	const unsigned keep_small_thresh = 60;
+	const gprs_llc_queue::MetaInfo *info;
 
 	if (bts_data()->llc_discard_csec)
 		csecs_to_timeval(bts_data()->llc_discard_csec, &hyst_delta);
@@ -250,11 +245,9 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 	gettimeofday(&tv_now, NULL);
 	timeradd(&tv_now, &hyst_delta, &tv_now2);
 
-	while ((msg = llc_queue()->dequeue())) {
-		tv_disc = (struct timeval *)msg->data;
-		msgb_pull(msg, sizeof(*tv_disc));
-		tv_recv = (struct timeval *)msg->data;
-		msgb_pull(msg, sizeof(*tv_recv));
+	while ((msg = llc_queue()->dequeue(&info))) {
+		const struct timeval *tv_disc = &info->expire_time;
+		const struct timeval *tv_recv = &info->recv_time;
 
 		gprs_bssgp_update_queue_delay(tv_recv, &tv_now);
 

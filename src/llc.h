@@ -24,6 +24,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <string.h>
+#include <time.h>
 
 #define LLC_MAX_LEN 1543
 
@@ -63,6 +64,11 @@ struct gprs_llc {
  * I store the LLC frames that come from the SGSN.
  */
 struct gprs_llc_queue {
+	struct MetaInfo {
+		struct timeval recv_time;
+		struct timeval expire_time;
+	};
+
 	static void calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec,
 		struct timeval *tv);
 	static bool is_frame_expired(const struct timeval *now,
@@ -71,8 +77,8 @@ struct gprs_llc_queue {
 
 	void init();
 
-	void enqueue(struct msgb *llc_msg);
-	struct msgb *dequeue();
+	void enqueue(struct msgb *llc_msg, const MetaInfo *info = 0);
+	struct msgb *dequeue(const MetaInfo **info = 0);
 	void clear(BTS *bts);
 	size_t size() const;
 	size_t octets() const;
