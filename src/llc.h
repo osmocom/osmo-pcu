@@ -73,10 +73,12 @@ struct gprs_llc_queue {
 	struct msgb *dequeue();
 	void clear(BTS *bts);
 	size_t size() const;
+	size_t octets() const;
 
 private:
 	uint32_t m_avg_queue_delay; /* Average delay of data going through the queue */
 	size_t m_queue_size;
+	size_t m_queue_octets;
 	struct llist_head m_queue; /* queued LLC DL data */
 
 };
@@ -117,4 +119,9 @@ inline bool gprs_llc::fits_in_current_frame(uint8_t chunk_size) const
 inline size_t gprs_llc_queue::size() const
 {
 	return this ? m_queue_size : 0;
+}
+
+inline size_t gprs_llc_queue::octets() const
+{
+	return this ? m_queue_octets : 0;
 }

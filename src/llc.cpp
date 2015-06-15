@@ -100,12 +100,14 @@ void gprs_llc_queue::init()
 {
 	INIT_LLIST_HEAD(&m_queue);
 	m_queue_size = 0;
+	m_queue_octets = 0;
 	m_avg_queue_delay = 0;
 }
 
 void gprs_llc_queue::enqueue(struct msgb *llc_msg)
 {
 	m_queue_size += 1;
+	m_queue_octets += msgb_length(llc_msg) - 2*sizeof(struct timeval);
 	msgb_enqueue(&m_queue, llc_msg);
 }
 
@@ -120,6 +122,7 @@ void gprs_llc_queue::clear(BTS *bts)
 	}
 
 	m_queue_size = 0;
+	m_queue_octets = 0;
 }
 
 #define ALPHA 0.5f
@@ -136,6 +139,7 @@ struct msgb *gprs_llc_queue::dequeue()
 		return NULL;
 
 	m_queue_size -= 1;
+	m_queue_octets -= msgb_length(msg) - 2*sizeof(struct timeval);
 
 	/* take the second time */
 	gettimeofday(&tv_now, NULL);
