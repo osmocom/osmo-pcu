@@ -18,6 +18,10 @@
 
 #pragma once
 
+extern "C" {
+	#include <osmocom/core/linuxlist.h>
+}
+
 #include <stdint.h>
 #include <string.h>
 
