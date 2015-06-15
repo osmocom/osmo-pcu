@@ -104,10 +104,19 @@ void gprs_llc_queue::init()
 	m_avg_queue_delay = 0;
 }
 
-void gprs_llc_queue::enqueue(struct msgb *llc_msg)
+void gprs_llc_queue::enqueue(struct msgb *llc_msg, const MetaInfo *info)
 {
+	static const MetaInfo def_meta = {{0}};
+	MetaInfo *meta_storage;
+
+	osmo_static_assert(sizeof(*info) <= sizeof(llc_msg->cb), info_does_not_fit);
+
 	m_queue_size += 1;
-	m_queue_octets += msgb_length(llc_msg) - 2*sizeof(struct timeval);
+	m_queue_octets += msgb_length(llc_msg);
+
+	meta_storage = (MetaInfo *)&llc_msg->cb[0];
+	*meta_storage = info ? *info : def_meta;
+
 	msgb_enqueue(&m_queue, llc_msg);
 }
 
@@ -127,24 +136,29 @@ void gprs_llc_queue::clear(BTS *bts)
 
 #define ALPHA 0.5f
 
-struct msgb *gprs_llc_queue::dequeue()
+struct msgb *gprs_llc_queue::dequeue(const MetaInfo **info)
 {
 	struct msgb *msg;
 	struct timeval *tv, tv_now, tv_result;
 	uint32_t lifetime;
-
+	const MetaInfo *meta_storage;
 
 	msg = msgb_dequeue(&m_queue);
 	if (!msg)
 		return NULL;
 
+	meta_storage = (MetaInfo *)&msg->cb[0];
+
+	if (info)
+		*info = meta_storage;
+
 	m_queue_size -= 1;
-	m_queue_octets -= msgb_length(msg) - 2*sizeof(struct timeval);
+	m_queue_octets -= msgb_length(msg);
 
 	/* take the second time */
 	gettimeofday(&tv_now, NULL);
 	tv = (struct timeval *)&msg->data[sizeof(*tv)];
-	timersub(&tv_now, tv, &tv_result);
+	timersub(&tv_now, &meta_storage->recv_time, &tv_result);
 
 	lifetime = tv_result.tv_sec*1000 + tv_result.tv_usec/1000;
 	m_avg_queue_delay = m_avg_queue_delay * ALPHA + lifetime * (1-ALPHA);
