@@ -1,7 +1,7 @@
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/
 AM_LDFLAGS = -lrt
 
-check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest tbf/TbfTest types/TypesTest ms/MsTest llist/LListTest
+check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest tbf/TbfTest types/TypesTest ms/MsTest llist/LListTest llc/LlcTest
 noinst_PROGRAMS = emu/pcu_emu
 
 rlcmac_RLCMACTest_SOURCES = rlcmac/RLCMACTest.cpp
@@ -55,6 +55,17 @@ ms_MsTest_LDADD = \
 ms_MsTest_LDFLAGS = \
 	-Wl,-u,bssgp_prim_cb
 
+llc_LlcTest_SOURCES = llc/LlcTest.cpp
+llc_LlcTest_LDADD = \
+	$(top_builddir)/src/libgprs.la \
+	$(LIBOSMOGB_LIBS) \
+	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCORE_LIBS) \
+	$(COMMON_LA)
+
+llc_LlcTest_LDFLAGS = \
+	-Wl,-u,bssgp_prim_cb
+
 llist_LListTest_SOURCES = llist/LListTest.cpp
 llist_LListTest_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
@@ -85,6 +96,7 @@ EXTRA_DIST = \
 	tbf/TbfTest.ok tbf/TbfTest.err \
 	types/TypesTest.ok types/TypesTest.err \
 	ms/MsTest.ok ms/MsTest.err \
+	llc/LlcTest.ok llc/LlcTest.err \
 	llist/LListTest.ok llist/LListTest.err
 
 DISTCLEANFILES = atconfig

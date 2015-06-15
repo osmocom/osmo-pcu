@@ -37,6 +37,13 @@ cat $abs_srcdir/ms/MsTest.err > experr
 AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/ms/MsTest], [0], [expout], [experr])
 AT_CLEANUP
 
+AT_SETUP([llc])
+AT_KEYWORDS([llc])
+cat $abs_srcdir/llc/LlcTest.ok > expout
+cat $abs_srcdir/llc/LlcTest.err > experr
+AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/llc/LlcTest], [0], [expout], [experr])
+AT_CLEANUP
+
 AT_SETUP([llist])
 AT_KEYWORDS([llist])
 cat $abs_srcdir/llist/LListTest.ok > expout
