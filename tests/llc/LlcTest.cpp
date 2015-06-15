@@ -102,24 +102,31 @@ static void test_llc_queue()
 
 	queue.init();
 	OSMO_ASSERT(queue.size() == 0);
+	OSMO_ASSERT(queue.octets() == 0);
 
 	enqueue_data(&queue, "LLC message");
 	OSMO_ASSERT(queue.size() == 1);
+	OSMO_ASSERT(queue.octets() == 11);
 
 	enqueue_data(&queue, "other LLC message");
 	OSMO_ASSERT(queue.size() == 2);
+	OSMO_ASSERT(queue.octets() == 28);
 
 	dequeue_and_check(&queue, "LLC message");
 	OSMO_ASSERT(queue.size() == 1);
+	OSMO_ASSERT(queue.octets() == 17);
 
 	dequeue_and_check(&queue, "other LLC message");
 	OSMO_ASSERT(queue.size() == 0);
+	OSMO_ASSERT(queue.octets() == 0);
 
 	enqueue_data(&queue, "LLC");
 	OSMO_ASSERT(queue.size() == 1);
+	OSMO_ASSERT(queue.octets() == 3);
 
 	queue.clear(NULL);
 	OSMO_ASSERT(queue.size() == 0);
+	OSMO_ASSERT(queue.octets() == 0);
 
 	printf("=== end %s ===\n", __func__);
 }
