@@ -1,0 +1,4 @@
+dequeued msg, length 27, data 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 4c 4c 43 20 6d 65 73 73 61 67 65 
+LLC message, length 11 (expected 11)
+dequeued msg, length 33, data 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 6f 74 68 65 72 20 4c 4c 43 20 6d 65 73 73 61 67 65 
+LLC message, length 17 (expected 17)
