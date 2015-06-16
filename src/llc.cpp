@@ -175,7 +175,8 @@ void gprs_llc_queue::calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, 
 	timeradd(&now, &csec, tv);
 }
 
-bool gprs_llc_queue::is_frame_expired(struct timeval *tv_now, struct timeval *tv)
+bool gprs_llc_queue::is_frame_expired(const struct timeval *tv_now,
+	const struct timeval *tv)
 {
 	/* Timeout is infinite */
 	if (tv->tv_sec == 0 && tv->tv_usec == 0)

@@ -63,8 +63,10 @@ struct gprs_llc {
  * I store the LLC frames that come from the SGSN.
  */
 struct gprs_llc_queue {
-	static void calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct timeval *tv);
-	static bool is_frame_expired(struct timeval *now, struct timeval *tv);
+	static void calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec,
+		struct timeval *tv);
+	static bool is_frame_expired(const struct timeval *now,
+		const struct timeval *tv);
 	static bool is_user_data_frame(uint8_t *data, size_t len);
 
 	void init();

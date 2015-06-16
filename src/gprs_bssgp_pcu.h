@@ -83,7 +83,7 @@ void gprs_bssgp_destroy(void);
 
 struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void);
 
-void gprs_bssgp_update_queue_delay(struct timeval *tv_recv,
-		struct timeval *tv_now);
+void gprs_bssgp_update_queue_delay(const struct timeval *tv_recv,
+		const struct timeval *tv_now);
 
 #endif // GPRS_BSSGP_PCU_H
