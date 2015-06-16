@@ -804,8 +804,8 @@ struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void)
 	return the_pcu.bctx;
 }
 
-void gprs_bssgp_update_queue_delay(struct timeval *tv_recv,
-	struct timeval *tv_now)
+void gprs_bssgp_update_queue_delay(const struct timeval *tv_recv,
+	const struct timeval *tv_now)
 {
 	struct timeval *delay_sum = &the_pcu.queue_delay_sum;
 	struct timeval tv_delay;
