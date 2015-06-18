@@ -894,7 +894,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 
 		/* This call will register the new TBF with the MS on success */
 		tbf_alloc_ul(bts_data(), tbf->trx->trx_no, tbf->ms_class(),
-			tbf->tlli(), tbf->ta(), tbf);
+			tbf->tlli(), tbf->ta(), tbf->ms());
 
 		/* schedule uplink assignment */
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;

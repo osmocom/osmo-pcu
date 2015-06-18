@@ -184,7 +184,7 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction di
 
 gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	int8_t use_trx, uint8_t ms_class,
-	uint32_t tlli, uint8_t ta, struct gprs_rlcmac_tbf *dl_tbf)
+	uint32_t tlli, uint8_t ta, GprsMs *ms)
 {
 	uint8_t trx;
 	struct gprs_rlcmac_ul_tbf *tbf;
@@ -199,7 +199,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 		return NULL;
 	}
 	/* use multislot class of downlink TBF */
-	tbf = tbf_alloc_ul_tbf(bts, dl_tbf, tfi, trx, ms_class, 0);
+	tbf = tbf_alloc_ul_tbf(bts, ms, tfi, trx, ms_class, 0);
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */
@@ -274,7 +274,6 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 
 int gprs_rlcmac_tbf::update()
 {
-	struct gprs_rlcmac_tbf *ul_tbf = NULL;
 	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
 	int rc;
 
@@ -283,11 +282,8 @@ int gprs_rlcmac_tbf::update()
 	if (direction != GPRS_RLCMAC_DL_TBF)
 		return -EINVAL;
 
-	if (ms())
-		ul_tbf = ms()->ul_tbf();
-
 	tbf_unlink_pdch(this);
-	rc = bts_data->alloc_algorithm(bts_data, ul_tbf, this, bts_data->alloc_algorithm_curst, 0);
+	rc = bts_data->alloc_algorithm(bts_data, ms(), this, bts_data->alloc_algorithm_curst, 0);
 	/* if no resource */
 	if (rc < 0) {
 		LOGP(DRLCMAC, LOGL_ERROR, "No resource after update???\n");
@@ -450,7 +446,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 }
 
 static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
-	struct gprs_rlcmac_tbf *old_tbf, uint8_t tfi, uint8_t trx,
+	GprsMs *ms, uint8_t tfi, uint8_t trx,
 	uint8_t ms_class, uint8_t single_slot)
 {
 	int rc;
@@ -470,7 +466,7 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
 	tbf->trx = &bts->trx[trx];
 	tbf->set_ms_class(ms_class);
 	/* select algorithm */
-	rc = bts->alloc_algorithm(bts, old_tbf, tbf, bts->alloc_algorithm_curst,
+	rc = bts->alloc_algorithm(bts, ms, tbf, bts->alloc_algorithm_curst,
 		single_slot);
 	/* if no resource */
 	if (rc < 0) {
@@ -493,7 +489,7 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
 
 
 struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
-	struct gprs_rlcmac_tbf *old_tbf, uint8_t tfi, uint8_t trx,
+	GprsMs *ms, uint8_t tfi, uint8_t trx,
 	uint8_t ms_class, uint8_t single_slot)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
@@ -512,7 +508,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 		return NULL;
 
 	tbf->direction = GPRS_RLCMAC_UL_TBF;
-	rc = setup_tbf(tbf, bts, old_tbf, tfi, trx, ms_class, single_slot);
+	rc = setup_tbf(tbf, bts, ms, tfi, trx, ms_class, single_slot);
 	/* if no resource */
 	if (rc < 0) {
 		talloc_free(tbf);
@@ -522,8 +518,8 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	llist_add(&tbf->list.list, &bts->ul_tbfs);
 	tbf->bts->tbf_ul_created();
 
-	if (old_tbf && old_tbf->ms())
-		tbf->set_ms(old_tbf->ms());
+	if (ms)
+		tbf->set_ms(ms);
 
 	if (tbf->ms())
 		tbf->ms()->attach_ul_tbf(tbf);
@@ -532,7 +528,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 }
 
 struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
-	struct gprs_rlcmac_tbf *old_tbf, uint8_t tfi, uint8_t trx,
+	GprsMs *ms, uint8_t tfi, uint8_t trx,
 	uint8_t ms_class, uint8_t single_slot)
 {
 	struct gprs_rlcmac_dl_tbf *tbf;
@@ -551,7 +547,7 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 		return NULL;
 
 	tbf->direction = GPRS_RLCMAC_DL_TBF;
-	rc = setup_tbf(tbf, bts, old_tbf, tfi, trx, ms_class, single_slot);
+	rc = setup_tbf(tbf, bts, ms, tfi, trx, ms_class, single_slot);
 	/* if no resource */
 	if (rc < 0) {
 		talloc_free(tbf);
@@ -567,8 +563,7 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	gettimeofday(&tbf->m_bw.dl_bw_tv, NULL);
 	gettimeofday(&tbf->m_bw.dl_loss_tv, NULL);
 
-	if (old_tbf && old_tbf->ms())
-		tbf->set_ms(old_tbf->ms());
+	tbf->set_ms(ms);
 
 	if (tbf->ms())
 		tbf->ms()->attach_dl_tbf(tbf);

@@ -42,6 +42,7 @@ extern "C" {
 struct gprs_rlcmac_tbf;
 struct gprs_rlcmac_bts;
 struct BTS;
+struct GprsMs;
 
 #ifdef __cplusplus
 /*
@@ -95,11 +96,11 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 extern "C" {
 #endif
 int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
-	struct gprs_rlcmac_tbf *old_tbf,
+	struct GprsMs *ms,
 	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single);
 
 int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
-	struct gprs_rlcmac_tbf *old_tbf,
+	struct GprsMs *ms,
 	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single);
 #ifdef __cplusplus
 }

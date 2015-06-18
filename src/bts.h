@@ -37,6 +37,7 @@ extern "C" {
 #include <stdint.h>
 
 struct BTS;
+struct GprsMs;
 
 /*
  * PDCH instance
@@ -138,7 +139,7 @@ struct gprs_rlcmac_bts {
 	uint8_t n3105;
 	struct gprs_rlcmac_trx trx[8];
 	int (*alloc_algorithm)(struct gprs_rlcmac_bts *bts,
-		struct gprs_rlcmac_tbf *old_tbf,
+		struct GprsMs *ms,
 		struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single);
 	uint32_t alloc_algorithm_curst; /* options to customize algorithm */
 	uint8_t force_two_phase;
