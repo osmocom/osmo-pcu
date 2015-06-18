@@ -139,7 +139,6 @@ struct gprs_rlcmac_tbf {
 	void poll_timeout();
 
 	/** tlli handling */
-	void update_tlli(uint32_t tlli);
 	uint32_t tlli() const;
 	bool is_tlli_valid() const;
 

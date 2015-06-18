@@ -712,7 +712,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 			fn, tlli, trx_no(), ts_no);
 		return;
 	}
-	tbf->update_tlli(tlli);
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] %s Packet Control Ack\n", tbf_name(tbf));
