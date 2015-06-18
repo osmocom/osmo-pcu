@@ -847,10 +847,6 @@ void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_pdch *pdch)
 	}
 }
 
-void gprs_rlcmac_tbf::update_tlli(uint32_t tlli)
-{
-}
-
 int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 {
 	struct gprs_rlcmac_tbf *dl_tbf = NULL;
@@ -883,7 +879,6 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 		set_ms(old_ms);
 	}
 
-	update_tlli(new_tlli);
 	/* The TLLI has been taken from an UL message */
 	update_ms(new_tlli, GPRS_RLCMAC_UL_TBF);
 	LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "

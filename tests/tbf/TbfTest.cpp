@@ -76,14 +76,12 @@ static void test_tbf_tlli_update()
 	gprs_rlcmac_tbf *dl_tbf = tbf_alloc_dl_tbf(the_bts.bts_data(),
 						NULL, 0,
 						0, 0, 0);
-	dl_tbf->update_tlli(0x2342);
 	dl_tbf->update_ms(0x2342, GPRS_RLCMAC_DL_TBF);
 	dl_tbf->set_ta(4);
 
 	gprs_rlcmac_tbf *ul_tbf = tbf_alloc_ul_tbf(the_bts.bts_data(),
 						dl_tbf, 0,
 						0, 0, 0);
-	ul_tbf->update_tlli(0x2342);
 	ul_tbf->update_ms(0x2342, GPRS_RLCMAC_UL_TBF);
 
 	ms = the_bts.ms_by_tlli(0x2342);
@@ -96,7 +94,6 @@ static void test_tbf_tlli_update()
 	 * Now check.. that DL changes and that the timing advance
 	 * has changed.
 	 */
-	dl_tbf->update_tlli(0x4232);
 	dl_tbf->update_ms(0x4232, GPRS_RLCMAC_DL_TBF);
 
 	/* It is still there, since the new TLLI has not been used for UL yet */
