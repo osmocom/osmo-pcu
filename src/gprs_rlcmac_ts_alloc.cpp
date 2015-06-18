@@ -23,6 +23,7 @@
 #include <gprs_debug.h>
 #include <bts.h>
 #include <tbf.h>
+#include <gprs_ms.h>
 
 #include <errno.h>
 
@@ -139,7 +140,7 @@ static void assign_dlink_tbf(
  * Assign single slot for uplink and downlink
  */
 int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
-	struct gprs_rlcmac_tbf *old_tbf,
+	GprsMs *ms,
 	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single)
 {
 	struct gprs_rlcmac_pdch *pdch;
@@ -261,16 +262,21 @@ inc_window:
 	return rx_window;
 }
 
-static int reduce_rx_window(const int ms_type, const struct gprs_rlcmac_tbf *old_tbf,
+static int reduce_rx_window(const int ms_type, const GprsMs *ms,
 				const int Tt, const int Tr,
 				int *rx_window,
 				uint8_t *rx_win_min, uint8_t *rx_win_max)
 {
+	gprs_rlcmac_ul_tbf *ul_tbf;
+
 	if (ms_type != 1)
 		return 0;
-	if (!old_tbf)
+	if (!ms)
 		return 0;
-	if (old_tbf->direction != GPRS_RLCMAC_UL_TBF)
+
+	ul_tbf = ms->ul_tbf();
+
+	if (!ul_tbf)
 		return 0;
 
 	uint8_t collide = 0, ul_usage = 0;
@@ -278,7 +284,7 @@ static int reduce_rx_window(const int ms_type, const struct gprs_rlcmac_tbf *old
 	/* calculate mask of colliding slots */
 	for (uint8_t ts_no = 0; ts_no < 8; ts_no++) {
 		int j;
-		if (!old_tbf->pdch[ts_no])
+		if (!ul_tbf->pdch[ts_no])
 			continue;
 
 		ul_usage |= (1 << ts_no);
@@ -525,7 +531,7 @@ static int select_first_ts(gprs_rlcmac_trx *trx, uint8_t tx_win_min,
  *
  */
 int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
-	struct gprs_rlcmac_tbf *old_tbf,
+	GprsMs *ms,
 	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single)
 {
 	const struct gprs_ms_multislot_class *ms_class;
@@ -592,7 +598,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 
 
 	/* reduce window, if existing uplink slots collide RX window */
-	int rc = reduce_rx_window(ms_class->type, old_tbf, Tt, Tr,
+	int rc = reduce_rx_window(ms_class->type, ms, Tt, Tr,
 				&rx_window, &rx_win_min, &rx_win_max);
 	if (rc < 0)
 		return rc;

@@ -37,14 +37,14 @@ void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 
 static gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
-		struct gprs_rlcmac_tbf *old_tbf, gprs_rlcmac_tbf_direction dir,
+		GprsMs *ms, gprs_rlcmac_tbf_direction dir,
 		uint8_t tfi, uint8_t trx,
 		uint8_t ms_class, uint8_t single_slot)
 {
 	if (dir == GPRS_RLCMAC_UL_TBF)
-		return tbf_alloc_ul_tbf(bts, old_tbf, tfi, trx, ms_class, single_slot);
+		return tbf_alloc_ul_tbf(bts, ms, tfi, trx, ms_class, single_slot);
 	else
-		return tbf_alloc_dl_tbf(bts, old_tbf, tfi, trx, ms_class, single_slot);
+		return tbf_alloc_dl_tbf(bts, ms, tfi, trx, ms_class, single_slot);
 }
 
 static void test_alloc_a(gprs_rlcmac_tbf_direction dir, const int count)
@@ -152,7 +152,7 @@ static void test_alloc_b(int ms_class)
 		/* assume final ack has not been sent */
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
-		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf, tfi, trx_no, ms_class, 0);
+		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), tfi, trx_no, ms_class, 0);
 		OSMO_ASSERT(dl_tbf);
 		dump_assignment(dl_tbf, "DL");
 
@@ -194,7 +194,7 @@ static void test_alloc_b(int ms_class)
 
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
-		ul_tbf = tbf_alloc_ul_tbf(bts, dl_tbf, tfi, trx_no, ms_class, 0);
+		ul_tbf = tbf_alloc_ul_tbf(bts, dl_tbf->ms(), tfi, trx_no, ms_class, 0);
 		ul_tbf->update_ms(0x23, GPRS_RLCMAC_UL_TBF);
 		ul_tbf->m_contention_resolution_done = 1;
 		OSMO_ASSERT(ul_tbf);
@@ -241,7 +241,7 @@ static void test_alloc_b(int ms_class)
 		/* assume final ack has not been sent */
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
-		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf, tfi, trx_no, ms_class, 0);
+		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), tfi, trx_no, ms_class, 0);
 		OSMO_ASSERT(dl_tbf);
 		dump_assignment(dl_tbf, "DL");
 
@@ -304,7 +304,7 @@ static void test_alloc_b(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool 
 		/* assume final ack has not been sent */
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
-		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf, tfi, trx_no, ms_class, 0);
+		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), tfi, trx_no, ms_class, 0);
 		OSMO_ASSERT(dl_tbf);
 
 		/* verify that both are on the same ts */
@@ -348,7 +348,7 @@ static void test_alloc_b(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool 
 
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
-		ul_tbf = tbf_alloc_ul_tbf(bts, dl_tbf, tfi, trx_no, ms_class, 0);
+		ul_tbf = tbf_alloc_ul_tbf(bts, dl_tbf->ms(), tfi, trx_no, ms_class, 0);
 		OSMO_ASSERT(ul_tbf);
 		ul_tbf->update_ms(0x23, GPRS_RLCMAC_UL_TBF);
 		ul_tbf->m_contention_resolution_done = 1;

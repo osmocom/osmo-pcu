@@ -155,6 +155,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 		ul_tbf = ms->ul_tbf();
 		ta = ms->ta();
 	}
+	/* TODO: if (!ms) create MS before tbf_alloc is called? */
 
 	if (ul_tbf && ul_tbf->m_contention_resolution_done
 	 && !ul_tbf->m_final_ack_sent) {
@@ -172,7 +173,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	tfi = bts->bts->tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx, use_trx);
 	if (tfi >= 0)
 		/* set number of downlink slots according to multislot class */
-		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf, tfi, trx, ms_class, ss);
+		dl_tbf = tbf_alloc_dl_tbf(bts, ms, tfi, trx, ms_class, ss);
 
 	if (!dl_tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");

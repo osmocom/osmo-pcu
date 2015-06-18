@@ -80,7 +80,7 @@ static void test_tbf_tlli_update()
 	dl_tbf->set_ta(4);
 
 	gprs_rlcmac_tbf *ul_tbf = tbf_alloc_ul_tbf(the_bts.bts_data(),
-						dl_tbf, 0,
+						dl_tbf->ms(), 0,
 						0, 0, 0);
 	ul_tbf->update_ms(0x2342, GPRS_RLCMAC_UL_TBF);
 
