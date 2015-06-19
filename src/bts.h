@@ -229,6 +229,7 @@ public:
 
 	GprsMsStorage &ms_store();
 	GprsMs *ms_by_tlli(uint32_t tlli, uint32_t old_tlli = 0);
+	GprsMs *ms_alloc(uint8_t ms_class);
 
 	/*
 	 * Statistics

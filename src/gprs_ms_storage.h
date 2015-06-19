@@ -38,6 +38,7 @@ public:
 
 	GprsMs *get_ms(uint32_t tlli, uint32_t old_tlli = 0, const char *imsi = 0) const;
 	GprsMs *create_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir);
+	GprsMs *create_ms();
 
 	const LListHead<GprsMs>& ms_list() const {return m_list;}
 private:

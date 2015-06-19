@@ -522,6 +522,17 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 }
 
 
+GprsMs *BTS::ms_alloc(uint8_t ms_class)
+{
+	GprsMs *ms;
+	ms = ms_store().create_ms();
+
+	ms->set_timeout(m_bts.ms_idle_sec);
+	ms->set_ms_class(ms_class);
+
+	return ms;
+}
+
 /*
  * PDCH code below. TODO: move to a separate file
  */
