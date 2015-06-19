@@ -80,6 +80,18 @@ GprsMs *GprsMsStorage::get_ms(uint32_t tlli, uint32_t old_tlli, const char *imsi
 	return NULL;
 }
 
+GprsMs *GprsMsStorage::create_ms()
+{
+	GprsMs *ms;
+
+	ms = new GprsMs(m_bts, 0);
+
+	ms->set_callback(this);
+	llist_add(&ms->list(), &m_list);
+
+	return ms;
+}
+
 GprsMs *GprsMsStorage::create_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
 {
 	GprsMs *ms = get_ms(tlli);
@@ -87,15 +99,12 @@ GprsMs *GprsMsStorage::create_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction d
 	if (ms)
 		return ms;
 
-	ms = new GprsMs(m_bts, 0);
+	ms = create_ms();
 
 	if (dir == GPRS_RLCMAC_UL_TBF)
 		ms->set_tlli(tlli);
 	else
 		ms->confirm_tlli(tlli);
-
-	ms->set_callback(this);
-	llist_add(&ms->list(), &m_list);
 
 	return ms;
 }

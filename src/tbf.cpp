@@ -499,11 +499,8 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 
 	tbf->direction = GPRS_RLCMAC_UL_TBF;
 
-	if (!ms) {
-		ms = bts->bts->ms_store().create_ms(0, tbf->direction);
-		ms->set_timeout(bts->ms_idle_sec);
-		ms->set_ms_class(ms_class);
-	}
+	if (!ms)
+		ms = bts->bts->ms_alloc(ms_class);
 
 	rc = setup_tbf(tbf, bts, ms, tfi, trx, ms_class, single_slot);
 	/* if no resource */
@@ -539,11 +536,8 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 
 	tbf->direction = GPRS_RLCMAC_DL_TBF;
 
-	if (!ms) {
-		ms = bts->bts->ms_store().create_ms(0, tbf->direction);
-		ms->set_timeout(bts->ms_idle_sec);
-		ms->set_ms_class(ms_class);
-	}
+	if (!ms)
+		ms = bts->bts->ms_alloc(ms_class);
 
 	rc = setup_tbf(tbf, bts, ms, tfi, trx, ms_class, single_slot);
 	/* if no resource */
