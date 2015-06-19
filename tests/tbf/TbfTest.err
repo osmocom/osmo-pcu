@@ -1,13 +1,13 @@
 ********** TBF starts here **********
 Allocating DL TBF: TFI=0 TRX=0 MS_CLASS=0
+Creating MS object, TLLI = 0x00000000
 Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Assign downlink TS=2
 - Setting Control TS 2
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0x00002342, partly confirmed
-Attaching TBF to MS object, TLLI = 0x00002342, TBF = TBF(TFI=0 TLLI=0x00002342 DIR=DL STATE=NULL)
 Modifying MS object, TLLI = 0x00002342, TA 0 -> 4
 ********** TBF starts here **********
 Allocating UL TBF: TFI=0 TRX=0 MS_CLASS=0
@@ -25,6 +25,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=0.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=0 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -32,11 +34,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
-Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-Modifying MS object, TLLI = 0xffeeddcc, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)  start Packet Downlink Assignment (PACCH)
@@ -65,6 +65,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=1.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=1 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -72,6 +74,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
+Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
+Destroying MS object, TLLI = 0x00000000
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE)
 ********** TBF update **********
@@ -97,6 +102,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=0.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=0 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -104,11 +111,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
-Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-Modifying MS object, TLLI = 0xffeeddcc, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)  start Packet Downlink Assignment (PACCH)
@@ -137,6 +142,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=1.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=1 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -144,6 +151,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
+Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
+Destroying MS object, TLLI = 0x00000000
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE)
 ********** TBF update **********
@@ -169,6 +179,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=0.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=0 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -176,11 +188,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
-Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-Modifying MS object, TLLI = 0xffeeddcc, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)  start Packet Downlink Assignment (PACCH)
@@ -392,6 +402,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=0.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=0 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -399,11 +411,14 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
 Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=1.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=1 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -411,15 +426,10 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
-Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xf1000001, partly confirmed
-Modifying MS object, TLLI = 0xf1000001, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xf1000001, TBF = TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW)
-Creating MS object, TLLI = 0x00000000
 The MS object cannot fully confirm an unexpected TLLI: 0xf1000002, partly confirmed
-Modifying MS object, TLLI = 0xf1000002, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xf1000002, TBF = TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW)
 Modifying MS object, TLLI = 0xf1000001, IMSI '' -> '001001000000001'
 Modifying MS object, TLLI = 0xf1000001, IMSI '001001000000001' -> '001001000000002'
 TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) the IMSI '001001000000002' was already assigned to another MS object: TLLI = 0xf1000001, that IMSI will be removed
@@ -439,6 +449,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=0.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=0 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -446,10 +458,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000000, partly confirmed
-Modifying MS object, TLLI = 0xc0000000, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000000, TBF = TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000000, IMSI '' -> '001001000000000'
 Send dowlink assignment for TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000000)
@@ -461,6 +471,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=1.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=1 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -468,10 +480,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000001, partly confirmed
-Modifying MS object, TLLI = 0xc0000001, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000001, TBF = TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL)
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000001, IMSI '' -> '001001000000001'
 Send dowlink assignment for TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000001)
@@ -483,6 +493,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=2.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=2 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -490,10 +502,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000002, partly confirmed
-Modifying MS object, TLLI = 0xc0000002, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000002, TBF = TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL)
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000002, IMSI '' -> '001001000000002'
 Send dowlink assignment for TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000002)
@@ -505,6 +515,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=3.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=3 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -512,10 +524,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000003, partly confirmed
-Modifying MS object, TLLI = 0xc0000003, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000003, TBF = TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL)
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000003, IMSI '' -> '001001000000003'
 Send dowlink assignment for TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000003)
@@ -527,6 +537,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=4.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=4 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -534,10 +546,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000004, partly confirmed
-Modifying MS object, TLLI = 0xc0000004, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000004, TBF = TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL)
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000004, IMSI '' -> '001001000000004'
 Send dowlink assignment for TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000004)
@@ -549,6 +559,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=5.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=5 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -556,10 +568,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000005, partly confirmed
-Modifying MS object, TLLI = 0xc0000005, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000005, TBF = TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL)
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000005, IMSI '' -> '001001000000005'
 Send dowlink assignment for TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000005)
@@ -571,6 +581,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=6.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=6 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -578,10 +590,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000006, partly confirmed
-Modifying MS object, TLLI = 0xc0000006, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000006, TBF = TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL)
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000006, IMSI '' -> '001001000000006'
 Send dowlink assignment for TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000006)
@@ -593,6 +603,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=7.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=7 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -600,10 +612,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000007, partly confirmed
-Modifying MS object, TLLI = 0xc0000007, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000007, TBF = TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL)
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000007, IMSI '' -> '001001000000007'
 Send dowlink assignment for TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000007)
@@ -615,6 +625,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=8.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=8 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -622,10 +634,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000008, partly confirmed
-Modifying MS object, TLLI = 0xc0000008, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000008, TBF = TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL)
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000008, IMSI '' -> '001001000000008'
 Send dowlink assignment for TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000008)
@@ -637,6 +647,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=9.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=9 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -644,10 +656,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000009, partly confirmed
-Modifying MS object, TLLI = 0xc0000009, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000009, TBF = TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL)
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000009, IMSI '' -> '001001000000009'
 Send dowlink assignment for TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000009)
@@ -659,6 +669,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=10.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=10 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -666,10 +678,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000a, partly confirmed
-Modifying MS object, TLLI = 0xc000000a, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc000000a, TBF = TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL)
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000000a, IMSI '' -> '001001000000010'
 Send dowlink assignment for TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000010)
@@ -681,6 +691,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=11.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=11 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -688,10 +700,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000b, partly confirmed
-Modifying MS object, TLLI = 0xc000000b, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc000000b, TBF = TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL)
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000000b, IMSI '' -> '001001000000011'
 Send dowlink assignment for TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000011)
@@ -703,6 +713,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=12.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=12 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -710,10 +722,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000c, partly confirmed
-Modifying MS object, TLLI = 0xc000000c, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc000000c, TBF = TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL)
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000000c, IMSI '' -> '001001000000012'
 Send dowlink assignment for TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000012)
@@ -725,6 +735,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=13.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=13 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -732,10 +744,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000d, partly confirmed
-Modifying MS object, TLLI = 0xc000000d, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc000000d, TBF = TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL)
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000000d, IMSI '' -> '001001000000013'
 Send dowlink assignment for TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000013)
@@ -747,6 +757,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=14.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=14 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -754,10 +766,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000e, partly confirmed
-Modifying MS object, TLLI = 0xc000000e, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc000000e, TBF = TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL)
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000000e, IMSI '' -> '001001000000014'
 Send dowlink assignment for TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000014)
@@ -769,6 +779,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=15.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=15 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -776,10 +788,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000f, partly confirmed
-Modifying MS object, TLLI = 0xc000000f, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc000000f, TBF = TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL)
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000000f, IMSI '' -> '001001000000015'
 Send dowlink assignment for TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000015)
@@ -791,6 +801,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=16.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=16 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -798,10 +810,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000010, partly confirmed
-Modifying MS object, TLLI = 0xc0000010, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000010, TBF = TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL)
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000010, IMSI '' -> '001001000000016'
 Send dowlink assignment for TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000016)
@@ -813,6 +823,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=17.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=17 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -820,10 +832,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000011, partly confirmed
-Modifying MS object, TLLI = 0xc0000011, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000011, TBF = TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL)
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000011, IMSI '' -> '001001000000017'
 Send dowlink assignment for TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000017)
@@ -835,6 +845,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=18.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=18 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -842,10 +854,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000012, partly confirmed
-Modifying MS object, TLLI = 0xc0000012, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000012, TBF = TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL)
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000012, IMSI '' -> '001001000000018'
 Send dowlink assignment for TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000018)
@@ -857,6 +867,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=19.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=19 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -864,10 +876,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000013, partly confirmed
-Modifying MS object, TLLI = 0xc0000013, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000013, TBF = TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL)
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000013, IMSI '' -> '001001000000019'
 Send dowlink assignment for TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000019)
@@ -879,6 +889,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=20.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=20 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -886,10 +898,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000014, partly confirmed
-Modifying MS object, TLLI = 0xc0000014, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000014, TBF = TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL)
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000014, IMSI '' -> '001001000000020'
 Send dowlink assignment for TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000020)
@@ -901,6 +911,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=21.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=21 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -908,10 +920,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000015, partly confirmed
-Modifying MS object, TLLI = 0xc0000015, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000015, TBF = TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL)
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000015, IMSI '' -> '001001000000021'
 Send dowlink assignment for TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000021)
@@ -923,6 +933,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=22.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=22 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -930,10 +942,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000016, partly confirmed
-Modifying MS object, TLLI = 0xc0000016, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000016, TBF = TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL)
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000016, IMSI '' -> '001001000000022'
 Send dowlink assignment for TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000022)
@@ -945,6 +955,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=23.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=23 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -952,10 +964,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000017, partly confirmed
-Modifying MS object, TLLI = 0xc0000017, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000017, TBF = TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL)
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000017, IMSI '' -> '001001000000023'
 Send dowlink assignment for TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000023)
@@ -967,6 +977,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=24.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=24 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -974,10 +986,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000018, partly confirmed
-Modifying MS object, TLLI = 0xc0000018, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000018, TBF = TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL)
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000018, IMSI '' -> '001001000000024'
 Send dowlink assignment for TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000024)
@@ -989,6 +999,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=25.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=25 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -996,10 +1008,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000019, partly confirmed
-Modifying MS object, TLLI = 0xc0000019, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0000019, TBF = TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL)
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000019, IMSI '' -> '001001000000025'
 Send dowlink assignment for TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000025)
@@ -1011,6 +1021,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=26.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=26 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1018,10 +1030,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001a, partly confirmed
-Modifying MS object, TLLI = 0xc000001a, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc000001a, TBF = TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL)
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000001a, IMSI '' -> '001001000000026'
 Send dowlink assignment for TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000026)
@@ -1033,6 +1043,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=27.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=27 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1040,10 +1052,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001b, partly confirmed
-Modifying MS object, TLLI = 0xc000001b, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc000001b, TBF = TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL)
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000001b, IMSI '' -> '001001000000027'
 Send dowlink assignment for TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000027)
@@ -1055,6 +1065,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=28.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=28 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1062,10 +1074,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001c, partly confirmed
-Modifying MS object, TLLI = 0xc000001c, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc000001c, TBF = TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL)
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000001c, IMSI '' -> '001001000000028'
 Send dowlink assignment for TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000028)
@@ -1077,6 +1087,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=29.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=29 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1084,10 +1096,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001d, partly confirmed
-Modifying MS object, TLLI = 0xc000001d, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc000001d, TBF = TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL)
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000001d, IMSI '' -> '001001000000029'
 Send dowlink assignment for TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000029)
@@ -1099,6 +1109,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=30.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=30 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1106,10 +1118,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001e, partly confirmed
-Modifying MS object, TLLI = 0xc000001e, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc000001e, TBF = TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL)
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000001e, IMSI '' -> '001001000000030'
 Send dowlink assignment for TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000030)
@@ -1121,6 +1131,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=31.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=31 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1128,10 +1140,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001f, partly confirmed
-Modifying MS object, TLLI = 0xc000001f, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc000001f, TBF = TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL)
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000001f, IMSI '' -> '001001000000031'
 Send dowlink assignment for TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000031)
@@ -1146,6 +1156,8 @@ Searching for first unallocated TFI: TRX=0 first TS=4
  Found TFI=0.
 ********** TBF starts here **********
 Allocating DL TBF: TFI=0 TRX=0 MS_CLASS=45
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1153,10 +1165,8 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
 - Setting Control TS 4
-Creating MS object, TLLI = 0x00000000
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0123456, partly confirmed
-Modifying MS object, TLLI = 0xc0123456, MS class 0 -> 45
-Attaching TBF to MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0123456, IMSI '' -> '001001000123456'
 Send dowlink assignment for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000123456)
@@ -1220,6 +1230,7 @@ Searching for first unallocated TFI: TRX=0 first TS=7
  Found TFI=0.
 ********** TBF starts here **********
 Allocating UL TBF: TFI=0 TRX=0 MS_CLASS=0
+Creating MS object, TLLI = 0x00000000
 Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1230,6 +1241,8 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 6, because not enabled
 - Assign uplink TS=7 USF=0
 - Setting Control TS 7
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
+Modifying MS object, TLLI = 0x00000000, TA 0 -> 7
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer 3169.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
@@ -1238,10 +1251,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Upli
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 03 8b 29 07 00 c8 00 10 0b 2b 2b 2b 2b 2b 2b 2b 
 Got 'TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW)', TA=7
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-Creating MS object, TLLI = 0x00000000
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
-Modifying MS object, TLLI = 0xf1223344, TA 0 -> 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 Decoded premier TLLI=0xf1223344 of UL DATA TFI=0.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 - BSN 0 storing in window (0..63)
@@ -1276,6 +1286,7 @@ Searching for first unallocated TFI: TRX=0 first TS=7
  Found TFI=0.
 ********** TBF starts here **********
 Allocating UL TBF: TFI=0 TRX=0 MS_CLASS=0
+Creating MS object, TLLI = 0x00000000
 Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1286,11 +1297,10 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 6, because not enabled
 - Assign uplink TS=7 USF=0
 - Setting Control TS 7
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer 3169.
-Creating MS object, TLLI = 0x00000000
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 Modifying MS object, TLLI = 0xf1223344, TA 0 -> 7
 Change control TS to 7 until assinment is complete.
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)', TA=7, CS=4
