@@ -26,6 +26,7 @@
 #include <gprs_ms.h>
 
 #include <errno.h>
+#include <values.h>
 
 /* 3GPP TS 05.02 Annex B.1 */
 
@@ -99,10 +100,13 @@ static inline int8_t find_free_usf(struct gprs_rlcmac_pdch *pdch)
 	return -1;
 }
 
-static int find_enabled_pdch(struct gprs_rlcmac_trx *trx, const uint8_t start_ts)
+static int find_possible_pdchs(struct gprs_rlcmac_trx *trx,
+	uint8_t mask, const char *mask_reason = NULL)
 {
-	int ts;
-	for (ts = start_ts; ts < 8; ts++) {
+	unsigned ts;
+	int valid_ts_set = 0;
+
+	for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
 		struct gprs_rlcmac_pdch *pdch;
 
 		pdch = &trx->pdch[ts];
@@ -111,10 +115,75 @@ static int find_enabled_pdch(struct gprs_rlcmac_trx *trx, const uint8_t start_ts
 				"not enabled\n", ts);
 			continue;
 		}
-		return ts;
+
+		if (((1 << ts) & mask) == 0) {
+			if (mask_reason)
+				LOGP(DRLCMAC, LOGL_DEBUG,
+					"- Skipping TS %d, because %s\n",
+					ts, mask_reason);
+			continue;
+		}
+
+		valid_ts_set |= 1 << ts;
 	}
 
-	return 8;
+	return valid_ts_set;
+}
+
+static int find_least_busy_pdch(struct gprs_rlcmac_trx *trx,
+	enum gprs_rlcmac_tbf_direction dir,
+	uint8_t mask,
+	int *free_usf = 0)
+{
+	unsigned ts;
+	int min_used = INT_MAX;
+	int min_ts = -1;
+	int min_usf = -1;
+
+	for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
+		struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts];
+		int num_tbfs;
+		int usf = -1; /* must be signed */
+
+		if (((1 << ts) & mask) == 0)
+			continue;
+
+		num_tbfs = pdch->num_tbfs(dir);
+		if (num_tbfs < min_used) {
+			/* We have found a candidate */
+			/* Make sure that an USF is available */
+			if (dir == GPRS_RLCMAC_UL_TBF) {
+				usf = find_free_usf(pdch);
+				if (usf < 0) {
+					LOGP(DRLCMAC, LOGL_DEBUG,
+						"- Skipping TS %d, because "
+						"no USF available\n", ts);
+					continue;
+				}
+			}
+			if (min_ts >= 0)
+				LOGP(DRLCMAC, LOGL_DEBUG,
+					"- Skipping TS %d, because "
+					"num TBFs %d > %d\n",
+					min_ts, min_used, num_tbfs);
+			min_used = num_tbfs;
+			min_ts = ts;
+			min_usf = usf;
+		} else {
+			LOGP(DRLCMAC, LOGL_DEBUG,
+				"- Skipping TS %d, because "
+				"num TBFs %d >= %d\n",
+				ts, num_tbfs, min_used);
+		}
+	}
+
+	if (min_ts < 0)
+		return -1;
+
+	if (free_usf)
+		*free_usf = min_usf;
+
+	return min_ts;
 }
 
 static void attach_tbf_to_pdch(struct gprs_rlcmac_pdch *pdch,
@@ -154,29 +223,54 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single)
 {
 	struct gprs_rlcmac_pdch *pdch;
-	uint8_t ts;
+	int ts = -1;
+	int usf = -1;
+	int mask = 0xff;
+	const char *mask_reason = NULL;
+	struct gprs_rlcmac_tbf *ref_tbf;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm A) for class "
 		"%d\n", tbf->ms_class());
 
-	ts = find_enabled_pdch(tbf->trx, 0);
-	if (ts == 8)
+	if ((ref_tbf = ms->tbf(tbf->direction)))
+		mask_reason = "need to reuse TS";
+	else if ((ref_tbf = ms->tbf(reverse(tbf->direction))))
+		mask_reason = ref_tbf->direction == GPRS_RLCMAC_UL_TBF ?
+			"not an uplink TBF" : "not a downlink TBF";
+
+	if (ref_tbf)
+		ts = ref_tbf->first_common_ts;
+
+	if (ts >= 0)
+		mask = 1 << ts;
+
+	mask = find_possible_pdchs(tbf->trx, mask, mask_reason);
+	if (!mask)
 		return -EINVAL;
+
+	ts = find_least_busy_pdch(tbf->trx, tbf->direction, mask, &usf);
+
+	if (ts < 0) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "- Failed "
+			"to allocate a TS, no USF available\n");
+		return -EBUSY;
+	}
 
 	pdch = &tbf->trx->pdch[ts];
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		int8_t usf; /* must be signed */
 		struct gprs_rlcmac_ul_tbf *ul_tbf = static_cast<gprs_rlcmac_ul_tbf *>(tbf);
 
-		/* if USF available */
-		usf = find_free_usf(pdch);
+		if (usf < 0)
+			usf = find_free_usf(pdch);
+
 		if (usf < 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Failed "
 				"allocating TS=%d, no USF available\n", ts);
 			return -EBUSY;
 		}
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Assign uplink "
-			"TS=%d USF=%d\n", ts, usf);
+
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Assign uplink TS=%d USF=%d\n",
+			ts, usf);
 		assign_uplink_tbf_usf(pdch, ul_tbf, usf);
 	} else {
 		struct gprs_rlcmac_dl_tbf *dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(tbf);

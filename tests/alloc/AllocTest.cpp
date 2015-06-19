@@ -110,11 +110,11 @@ static void test_alloc_a()
 {
 	/* slots 2 - 3 */
 	test_alloc_a(GPRS_RLCMAC_DL_TBF, 0x0c, 32);
-	test_alloc_a(GPRS_RLCMAC_UL_TBF, 0x0c, 7);
+	test_alloc_a(GPRS_RLCMAC_UL_TBF, 0x0c, 14);
 
 	/* slots 1 - 5 */
 	test_alloc_a(GPRS_RLCMAC_DL_TBF, 0x1e, 32);
-	test_alloc_a(GPRS_RLCMAC_UL_TBF, 0x1e, 7);
+	test_alloc_a(GPRS_RLCMAC_UL_TBF, 0x1e, 28);
 }
 
 static void dump_assignment(struct gprs_rlcmac_tbf *tbf, const char *dir)
@@ -557,13 +557,13 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 	}
 
 	printf("  Successfully allocated %d UL TBFs\n", counter);
-	OSMO_ASSERT(counter >= expect_num);
+	OSMO_ASSERT(counter == expect_num);
 }
 
 static void test_successive_allocation()
 {
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_AND_DL,
-		7, "algorithm A (UL and DL)");
+		32, "algorithm A (UL and DL)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_AND_DL,
 		7, "algorithm B class 10 (UL and DL)");
 	test_successive_allocation(alloc_algorithm_b, 12, 12, TEST_MODE_UL_AND_DL,
@@ -574,29 +574,29 @@ static void test_successive_allocation()
 		18, "algorithm B class 1-29 (UL and DL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_DL_AND_UL,
-		7, "algorithm A (DL and UL)");
+		32, "algorithm A (DL and UL)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_DL_AND_UL,
 		7, "algorithm B class 10 (DL and UL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_DL_AFTER_UL,
-		7, "algorithm A (DL after UL)");
+		32, "algorithm A (DL after UL)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_DL_AFTER_UL,
-		7, "algorithm B class 10 (DL after UL)");
+		32, "algorithm B class 10 (DL after UL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_AFTER_DL,
-		7, "algorithm A (UL after DL)");
+		32, "algorithm A (UL after DL)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_AFTER_DL,
 		7, "algorithm B class 10 (UL after DL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_ONLY,
-		7, "algorithm A (UL only)");
+		32, "algorithm A (UL only)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_ONLY,
 		7, "algorithm B class 10 (UL only)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_DL_ONLY,
-		7, "algorithm A (DL ONLY)");
+		32, "algorithm A (DL ONLY)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_DL_ONLY,
-		7, "algorithm B class 10 (DL ONLY)");
+		32, "algorithm B class 10 (DL ONLY)");
 }
 
 int main(int argc, char **argv)
