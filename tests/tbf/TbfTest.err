@@ -4,6 +4,11 @@ Creating MS object, TLLI = 0x00000000
 Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
+- Skipping TS 4, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Skipping TS 3, because num TBFs 0 >= 0
 - Assign downlink TS=2
 PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 2
@@ -15,6 +20,11 @@ Allocating UL TBF: TFI=0 TRX=0 MS_CLASS=0
 Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
+- Skipping TS 3, because not a downlink TBF
+- Skipping TS 4, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign uplink TS=2 USF=0
 PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs.
 - Setting Control TS 2
@@ -34,6 +44,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4
@@ -75,6 +88,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs.
 - Setting Control TS 4
@@ -90,6 +106,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL), 2 TBFs.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
@@ -117,6 +136,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4
@@ -158,6 +180,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs.
 - Setting Control TS 4
@@ -173,6 +198,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL), 2 TBFs.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
@@ -200,6 +228,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4
@@ -425,6 +456,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4
@@ -441,6 +475,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs.
 - Setting Control TS 4
@@ -476,6 +513,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4
@@ -499,6 +539,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs.
 - Setting Control TS 4
@@ -522,6 +565,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL), 3 TBFs.
 - Setting Control TS 4
@@ -545,6 +591,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL), 4 TBFs.
 - Setting Control TS 4
@@ -568,6 +617,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL), 5 TBFs.
 - Setting Control TS 4
@@ -591,6 +643,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL), 6 TBFs.
 - Setting Control TS 4
@@ -614,6 +669,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL), 7 TBFs.
 - Setting Control TS 4
@@ -637,6 +695,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL), 8 TBFs.
 - Setting Control TS 4
@@ -660,6 +721,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL), 9 TBFs.
 - Setting Control TS 4
@@ -683,6 +747,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL), 10 TBFs.
 - Setting Control TS 4
@@ -706,6 +773,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL), 11 TBFs.
 - Setting Control TS 4
@@ -729,6 +799,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL), 12 TBFs.
 - Setting Control TS 4
@@ -752,6 +825,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL), 13 TBFs.
 - Setting Control TS 4
@@ -775,6 +851,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL), 14 TBFs.
 - Setting Control TS 4
@@ -798,6 +877,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL), 15 TBFs.
 - Setting Control TS 4
@@ -821,6 +903,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL), 16 TBFs.
 - Setting Control TS 4
@@ -844,6 +929,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL), 17 TBFs.
 - Setting Control TS 4
@@ -867,6 +955,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL), 18 TBFs.
 - Setting Control TS 4
@@ -890,6 +981,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL), 19 TBFs.
 - Setting Control TS 4
@@ -913,6 +1007,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL), 20 TBFs.
 - Setting Control TS 4
@@ -936,6 +1033,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL), 21 TBFs.
 - Setting Control TS 4
@@ -959,6 +1059,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL), 22 TBFs.
 - Setting Control TS 4
@@ -982,6 +1085,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL), 23 TBFs.
 - Setting Control TS 4
@@ -1005,6 +1111,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL), 24 TBFs.
 - Setting Control TS 4
@@ -1028,6 +1137,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL), 25 TBFs.
 - Setting Control TS 4
@@ -1051,6 +1163,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL), 26 TBFs.
 - Setting Control TS 4
@@ -1074,6 +1189,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL), 27 TBFs.
 - Setting Control TS 4
@@ -1097,6 +1215,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL), 28 TBFs.
 - Setting Control TS 4
@@ -1120,6 +1241,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL), 29 TBFs.
 - Setting Control TS 4
@@ -1143,6 +1267,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL), 30 TBFs.
 - Setting Control TS 4
@@ -1166,6 +1293,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL), 31 TBFs.
 - Setting Control TS 4
@@ -1189,6 +1319,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL), 32 TBFs.
 - Setting Control TS 4
@@ -1215,6 +1348,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4
@@ -1241,6 +1377,9 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
 - Assign downlink TS=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4

@@ -110,11 +110,11 @@ static void test_alloc_a()
 {
 	/* slots 2 - 3 */
 	test_alloc_a(GPRS_RLCMAC_DL_TBF, 0x0c, 32);
-	test_alloc_a(GPRS_RLCMAC_UL_TBF, 0x0c, 7);
+	test_alloc_a(GPRS_RLCMAC_UL_TBF, 0x0c, 14);
 
 	/* slots 1 - 5 */
 	test_alloc_a(GPRS_RLCMAC_DL_TBF, 0x1e, 32);
-	test_alloc_a(GPRS_RLCMAC_UL_TBF, 0x1e, 7);
+	test_alloc_a(GPRS_RLCMAC_UL_TBF, 0x1e, 28);
 }
 
 static void dump_assignment(struct gprs_rlcmac_tbf *tbf, const char *dir)
@@ -493,7 +493,7 @@ int main(int argc, char **argv)
 
 	test_alloc_a();
 	test_alloc_b();
-	test_successive_allocation(alloc_algorithm_a, 1, 1, 7, "algorithm A");
+	test_successive_allocation(alloc_algorithm_a, 1, 1, 32, "algorithm A");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, 7, "algorithm B class 10");
 	test_successive_allocation(alloc_algorithm_b, 12, 12, 7, "algorithm B class 12");
 	test_successive_allocation(alloc_algorithm_b, 1, 12, 14, "algorithm B class 1-12");
