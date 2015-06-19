@@ -158,23 +158,11 @@ void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 
 void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
 {
-	if (!ms()) {
-		GprsMs *new_ms = bts->ms_store().get_ms(tlli);
-		if (!new_ms) {
-			new_ms = bts->ms_store().create_ms(tlli, dir);
-			new_ms->set_timeout(bts->bts_data()->ms_idle_sec);
-		}
-
-		if (dir == GPRS_RLCMAC_UL_TBF) {
-			new_ms->set_ta(m_ta);
-		}
-
-		if (m_ms_class)
-			new_ms->set_ms_class(m_ms_class);
-
-		set_ms(new_ms);
+	if (!ms())
 		return;
-	}
+
+	if (!tlli)
+		return;
 
 	if (dir == GPRS_RLCMAC_UL_TBF)
 		ms()->set_tlli(tlli);
@@ -484,6 +472,8 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
 	gettimeofday(&tbf->meas.rssi_tv, NULL);
 
 	tbf->m_llc.init();
+	tbf->set_ms(ms);
+
 	return 0;
 }
 
@@ -508,6 +498,13 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 		return NULL;
 
 	tbf->direction = GPRS_RLCMAC_UL_TBF;
+
+	if (!ms) {
+		ms = bts->bts->ms_store().create_ms(0, tbf->direction);
+		ms->set_timeout(bts->ms_idle_sec);
+		ms->set_ms_class(ms_class);
+	}
+
 	rc = setup_tbf(tbf, bts, ms, tfi, trx, ms_class, single_slot);
 	/* if no resource */
 	if (rc < 0) {
@@ -517,12 +514,6 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 
 	llist_add(&tbf->list.list, &bts->ul_tbfs);
 	tbf->bts->tbf_ul_created();
-
-	if (ms)
-		tbf->set_ms(ms);
-
-	if (tbf->ms())
-		tbf->ms()->attach_ul_tbf(tbf);
 
 	return tbf;
 }
@@ -547,6 +538,13 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 		return NULL;
 
 	tbf->direction = GPRS_RLCMAC_DL_TBF;
+
+	if (!ms) {
+		ms = bts->bts->ms_store().create_ms(0, tbf->direction);
+		ms->set_timeout(bts->ms_idle_sec);
+		ms->set_ms_class(ms_class);
+	}
+
 	rc = setup_tbf(tbf, bts, ms, tfi, trx, ms_class, single_slot);
 	/* if no resource */
 	if (rc < 0) {
@@ -562,11 +560,6 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 
 	gettimeofday(&tbf->m_bw.dl_bw_tv, NULL);
 	gettimeofday(&tbf->m_bw.dl_loss_tv, NULL);
-
-	tbf->set_ms(ms);
-
-	if (tbf->ms())
-		tbf->ms()->attach_dl_tbf(tbf);
 
 	return tbf;
 }
@@ -851,6 +844,8 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 	int rc;
 	GprsMs *old_ms;
 
+	OSMO_ASSERT(direction == GPRS_RLCMAC_UL_TBF);
+
 	/* no TLLI yet */
 	if (!rh->ti) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d without "
@@ -871,14 +866,20 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 		dl_tbf = old_ms->dl_tbf();
 		ul_tbf = old_ms->ul_tbf();
 
-		set_ms(old_ms);
+		if (!ms())
+			set_ms(old_ms);
+
+		/* there might be an active and valid downlink TBF */
+		if (!ms()->dl_tbf() && dl_tbf)
+			/* Move it to the current MS */
+			dl_tbf->set_ms(ms());
 	}
 
 	/* The TLLI has been taken from an UL message */
 	update_ms(new_tlli, GPRS_RLCMAC_UL_TBF);
 	LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
 		"UL DATA TFI=%d.\n", tlli(), rh->tfi);
-	if (dl_tbf) {
+	if (dl_tbf && dl_tbf->ms() != ms()) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 			"TLLI=0x%08x while %s still exists. "
 			"Killing pending DL TBF\n", tlli(),
@@ -886,7 +887,7 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 		tbf_free(dl_tbf);
 		dl_tbf = NULL;
 	}
-	if (ul_tbf) {
+	if (ul_tbf && ul_tbf->ms() != ms()) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 			"TLLI=0x%08x while %s still exists. "
 			"Killing pending UL TBF\n", tlli(),

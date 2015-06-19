@@ -962,7 +962,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			ms_class = Decoding::get_ms_class_by_capability(&request->MS_Radio_Access_capability);
 		if (!ms_class)
 			LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");
-		ul_tbf = tbf_alloc_ul(bts_data(), trx_no(), ms_class, tlli, ta, NULL);
+		ul_tbf = tbf_alloc_ul(bts_data(), trx_no(), ms_class, tlli, ta, ms);
 		if (!ul_tbf)
 			return;
 
