@@ -25,6 +25,7 @@ AM_CPPFLAGS += -DENABLE_SYSMODSP
 endif
 
 AM_CXXFLAGS = -Wall -ldl -pthread
+AM_LDFLAGS = -lrt
 
 noinst_LTLIBRARIES = libgprs.la
 
