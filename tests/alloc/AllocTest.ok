@@ -410,8 +410,6 @@ PDCH[5] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 PDCH[5] is used for UL
-PDCH[6] is used for UL
-PDCH[7] is used for UL
 PDCH[5] is control_ts for UL
 PDCH[5] is first common for UL
 PDCH[5] is used for DL
@@ -421,8 +419,6 @@ PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 Testing jolly example
 PDCH[1] is used for UL
-PDCH[2] is used for UL
-PDCH[3] is used for UL
 PDCH[1] is control_ts for UL
 PDCH[1] is first common for UL
 PDCH[1] is used for DL
@@ -445,8 +441,6 @@ PDCH[5] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 PDCH[5] is used for UL
-PDCH[6] is used for UL
-PDCH[7] is used for UL
 PDCH[5] is control_ts for UL
 PDCH[5] is first common for UL
 PDCH[5] is used for DL
@@ -455,18 +449,15 @@ PDCH[7] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 Testing jolly example
-PDCH[1] is used for UL
 PDCH[2] is used for UL
-PDCH[3] is used for UL
-PDCH[4] is used for UL
-PDCH[1] is control_ts for UL
-PDCH[1] is first common for UL
+PDCH[2] is control_ts for UL
+PDCH[2] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[1] is control_ts for DL
-PDCH[1] is first common for DL
+PDCH[2] is control_ts for DL
+PDCH[2] is first common for DL
 Going to test multislot assignment MS_CLASS=15
 Testing UL then DL assignment.
 PDCH[5] is used for UL
@@ -482,8 +473,6 @@ PDCH[5] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 PDCH[5] is used for UL
-PDCH[6] is used for UL
-PDCH[7] is used for UL
 PDCH[5] is control_ts for UL
 PDCH[5] is first common for UL
 PDCH[5] is used for DL
@@ -492,18 +481,15 @@ PDCH[7] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 Testing jolly example
-PDCH[1] is used for UL
 PDCH[2] is used for UL
-PDCH[3] is used for UL
-PDCH[4] is used for UL
-PDCH[1] is control_ts for UL
-PDCH[1] is first common for UL
+PDCH[2] is control_ts for UL
+PDCH[2] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[1] is control_ts for DL
-PDCH[1] is first common for DL
+PDCH[2] is control_ts for DL
+PDCH[2] is first common for DL
 Going to test multislot assignment MS_CLASS=16
 Testing UL then DL assignment.
 PDCH[5] is used for UL
@@ -519,8 +505,6 @@ PDCH[5] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 PDCH[5] is used for UL
-PDCH[6] is used for UL
-PDCH[7] is used for UL
 PDCH[5] is control_ts for UL
 PDCH[5] is first common for UL
 PDCH[5] is used for DL
@@ -529,18 +513,15 @@ PDCH[7] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 Testing jolly example
-PDCH[1] is used for UL
 PDCH[2] is used for UL
-PDCH[3] is used for UL
-PDCH[4] is used for UL
-PDCH[1] is control_ts for UL
-PDCH[1] is first common for UL
+PDCH[2] is control_ts for UL
+PDCH[2] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[1] is control_ts for DL
-PDCH[1] is first common for DL
+PDCH[2] is control_ts for DL
+PDCH[2] is first common for DL
 Going to test multislot assignment MS_CLASS=17
 Testing UL then DL assignment.
 PDCH[5] is used for UL
@@ -556,8 +537,6 @@ PDCH[5] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 PDCH[5] is used for UL
-PDCH[6] is used for UL
-PDCH[7] is used for UL
 PDCH[5] is control_ts for UL
 PDCH[5] is first common for UL
 PDCH[5] is used for DL
@@ -566,18 +545,15 @@ PDCH[7] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 Testing jolly example
-PDCH[1] is used for UL
 PDCH[2] is used for UL
-PDCH[3] is used for UL
-PDCH[4] is used for UL
-PDCH[1] is control_ts for UL
-PDCH[1] is first common for UL
+PDCH[2] is control_ts for UL
+PDCH[2] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[1] is control_ts for DL
-PDCH[1] is first common for DL
+PDCH[2] is control_ts for DL
+PDCH[2] is first common for DL
 Going to test multislot assignment MS_CLASS=18
 Testing UL then DL assignment.
 PDCH[5] is used for UL
@@ -593,8 +569,6 @@ PDCH[5] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 PDCH[5] is used for UL
-PDCH[6] is used for UL
-PDCH[7] is used for UL
 PDCH[5] is control_ts for UL
 PDCH[5] is first common for UL
 PDCH[5] is used for DL
@@ -603,18 +577,15 @@ PDCH[7] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 Testing jolly example
-PDCH[1] is used for UL
 PDCH[2] is used for UL
-PDCH[3] is used for UL
-PDCH[4] is used for UL
-PDCH[1] is control_ts for UL
-PDCH[1] is first common for UL
+PDCH[2] is control_ts for UL
+PDCH[2] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[1] is control_ts for DL
-PDCH[1] is first common for DL
+PDCH[2] is control_ts for DL
+PDCH[2] is first common for DL
 Going to test multislot assignment MS_CLASS=19
 Testing UL then DL assignment.
 PDCH[5] is used for UL
@@ -8653,58 +8624,128 @@ Going to test assignment with many TBF, algorithm A (UL and DL)
   Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm B class 10 (UL and DL)
  TBF[0] class 10 reserves ...DDCD.
- TBF[1] class 10 reserves ...DDCD.
- TBF[2] class 10 reserves ...DDCD.
- TBF[3] class 10 reserves ...DDCD.
- TBF[4] class 10 reserves ...DDCD.
- TBF[5] class 10 reserves ...DDCD.
- TBF[6] class 10 reserves ...DDCD.
-  Successfully allocated 7 UL TBFs
+ TBF[1] class 10 reserves .....DCD
+ TBF[2] class 10 reserves ...DCD..
+ TBF[3] class 10 reserves .....DDC
+ TBF[4] class 10 reserves ...DCD..
+ TBF[5] class 10 reserves .....DCD
+ TBF[6] class 10 reserves ...DDC..
+ TBF[7] class 10 reserves .....DDC
+ TBF[8] class 10 reserves ...DCD..
+ TBF[9] class 10 reserves .....DCD
+ TBF[10] class 10 reserves ...DDC..
+ TBF[11] class 10 reserves .....DDC
+ TBF[12] class 10 reserves ...DCD..
+ TBF[13] class 10 reserves .....DCD
+ TBF[14] class 10 reserves ...DDC..
+ TBF[15] class 10 reserves .....DDC
+ TBF[16] class 10 reserves ...DCD..
+ TBF[17] class 10 reserves .....DCD
+ TBF[18] class 10 reserves ...DDC..
+ TBF[19] class 10 reserves .....DDC
+ TBF[20] class 10 reserves ...DCD..
+ TBF[21] class 10 reserves .....DCD
+ TBF[22] class 10 reserves ...CD...
+ TBF[23] class 10 reserves .....DDC
+ TBF[24] class 10 reserves ...CD...
+ TBF[25] class 10 reserves ...CD...
+ TBF[26] class 10 reserves .....DCD
+ TBF[27] class 10 reserves ...CD...
+ TBF[28] class 10 reserves ....DCD.
+ TBF[29] class 10 reserves .....DDC
+ TBF[30] class 10 reserves ...CD...
+ TBF[31] class 10 reserves ...CD...
+  Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm B class 12 (UL and DL)
  TBF[0] class 12 reserves ...DDCD.
- TBF[1] class 12 reserves ...DDCD.
- TBF[2] class 12 reserves ...DDCD.
- TBF[3] class 12 reserves ...DDCD.
- TBF[4] class 12 reserves ...DDCD.
- TBF[5] class 12 reserves ...DDCD.
- TBF[6] class 12 reserves ...DDCD.
-  Successfully allocated 7 UL TBFs
+ TBF[1] class 12 reserves .....DCD
+ TBF[2] class 12 reserves ...CD...
+ TBF[3] class 12 reserves .....DDC
+ TBF[4] class 12 reserves ...DC...
+ TBF[5] class 12 reserves .....DCD
+ TBF[6] class 12 reserves ...CD...
+ TBF[7] class 12 reserves .....DDC
+ TBF[8] class 12 reserves ...DC...
+ TBF[9] class 12 reserves .....DCD
+ TBF[10] class 12 reserves ...CD...
+ TBF[11] class 12 reserves .....DDC
+ TBF[12] class 12 reserves ...DC...
+ TBF[13] class 12 reserves .....DCD
+ TBF[14] class 12 reserves ...CD...
+ TBF[15] class 12 reserves .....DDC
+ TBF[16] class 12 reserves ...DC...
+ TBF[17] class 12 reserves .....DCD
+ TBF[18] class 12 reserves ...CD...
+ TBF[19] class 12 reserves .....DDC
+ TBF[20] class 12 reserves ...DC...
+ TBF[21] class 12 reserves .....DCD
+ TBF[22] class 12 reserves ...CD...
+ TBF[23] class 12 reserves .....DDC
+ TBF[24] class 12 reserves ...DC...
+ TBF[25] class 12 reserves .....DCD
+ TBF[26] class 12 reserves ...CD...
+ TBF[27] class 12 reserves .....DDC
+ TBF[28] class 12 reserves ...DC...
+  Successfully allocated 29 UL TBFs
 Going to test assignment with many TBF, algorithm B class 1-12 (UL and DL)
  TBF[0] class 1 reserves ...C....
- TBF[1] class 2 reserves ...DC...
- TBF[2] class 3 reserves ...DC...
+ TBF[1] class 2 reserves ....DC..
+ TBF[2] class 3 reserves ......DC
  TBF[3] class 4 reserves ...DCD..
- TBF[4] class 5 reserves ...CD...
- TBF[5] class 6 reserves ...DCD..
- TBF[6] class 7 reserves ...DCD..
- TBF[7] class 8 reserves ...DDCD.
+ TBF[4] class 5 reserves ......CD
+ TBF[5] class 6 reserves ...CD...
+ TBF[6] class 7 reserves .....CD.
+ TBF[7] class 8 reserves ....DDCD
  TBF[8] class 9 reserves ...DCD..
- TBF[9] class 10 reserves ...DDCD.
- TBF[10] class 11 reserves ...DDCD.
- TBF[11] class 12 reserves ...DDCD.
- TBF[12] class 1 reserves ...C....
- TBF[13] class 2 reserves ...DC...
-  Successfully allocated 14 UL TBFs
+ TBF[9] class 10 reserves .....DDC
+ TBF[10] class 11 reserves ...CD...
+ TBF[11] class 12 reserves ...C....
+ TBF[12] class 1 reserves .......C
+ TBF[13] class 2 reserves ......DC
+ TBF[14] class 3 reserves ...C....
+ TBF[15] class 4 reserves ....DCD.
+ TBF[16] class 5 reserves ......CD
+ TBF[17] class 6 reserves ...DC...
+ TBF[18] class 7 reserves .....C..
+ TBF[19] class 8 reserves ....DDCD
+ TBF[20] class 9 reserves .....DCD
+ TBF[21] class 10 reserves ...DCD..
+ TBF[22] class 11 reserves ...DC...
+ TBF[23] class 12 reserves ...C....
+ TBF[24] class 1 reserves .......C
+ TBF[25] class 2 reserves ......DC
+ TBF[26] class 3 reserves ...C....
+ TBF[27] class 4 reserves ....DCD.
+ TBF[28] class 5 reserves ......CD
+ TBF[29] class 6 reserves ...DC...
+ TBF[30] class 7 reserves ......C.
+  Successfully allocated 31 UL TBFs
 Going to test assignment with many TBF, algorithm B class 1-29 (UL and DL)
  TBF[0] class 1 reserves ...C....
- TBF[1] class 2 reserves ...DC...
- TBF[2] class 3 reserves ...DC...
+ TBF[1] class 2 reserves ....DC..
+ TBF[2] class 3 reserves ......DC
  TBF[3] class 4 reserves ...DCD..
- TBF[4] class 5 reserves ...CD...
- TBF[5] class 6 reserves ...DCD..
- TBF[6] class 7 reserves ...DCD..
- TBF[7] class 8 reserves ...DDCD.
+ TBF[4] class 5 reserves ......CD
+ TBF[5] class 6 reserves ...CD...
+ TBF[6] class 7 reserves .....CD.
+ TBF[7] class 8 reserves ....DDCD
  TBF[8] class 9 reserves ...DCD..
- TBF[9] class 10 reserves ...DDCD.
- TBF[10] class 11 reserves ...DDCD.
- TBF[11] class 12 reserves ...DDCD.
- TBF[12] class 13 reserves ...CDD..
- TBF[13] class 14 reserves ...CDDD.
- TBF[14] class 15 reserves ...CDDDD
- TBF[15] class 16 reserves ...CDDDD
- TBF[16] class 17 reserves ...CDDDD
- TBF[17] class 18 reserves ...DDDCD
-  Successfully allocated 18 UL TBFs
+ TBF[9] class 10 reserves .....DDC
+ TBF[10] class 11 reserves ...CD...
+ TBF[11] class 12 reserves ...C....
+ TBF[12] class 13 reserves .....CDD
+ TBF[13] class 14 reserves ....DDCD
+ TBF[14] class 15 reserves ...DCD..
+ TBF[15] class 16 reserves ...DCD..
+ TBF[16] class 17 reserves ...DDDDC
+ TBF[17] class 18 reserves ...DDC..
+ TBF[18] class 19 reserves ...DDCDD
+ TBF[19] class 20 reserves ...DDCDD
+ TBF[20] class 21 reserves ....CD..
+ TBF[21] class 22 reserves .....DC.
+ TBF[22] class 23 reserves ...C....
+ TBF[23] class 24 reserves ...DDCDD
+  Successfully allocated 24 UL TBFs
 Going to test assignment with many TBF, algorithm A (DL and UL)
  TBF[0] class 1 reserves ...C....
  TBF[1] class 1 reserves ....C...
@@ -8741,13 +8782,21 @@ Going to test assignment with many TBF, algorithm A (DL and UL)
   Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm B class 10 (DL and UL)
  TBF[0] class 10 reserves ...DDCD.
- TBF[1] class 10 reserves ...DDCD.
- TBF[2] class 10 reserves ...DDCD.
- TBF[3] class 10 reserves ...DDCD.
- TBF[4] class 10 reserves ...DDCD.
- TBF[5] class 10 reserves ...DDCD.
- TBF[6] class 10 reserves ...DDCD.
-  Successfully allocated 7 UL TBFs
+ TBF[1] class 10 reserves .....DCD
+ TBF[2] class 10 reserves ...DCD..
+ TBF[3] class 10 reserves .....DCD
+ TBF[4] class 10 reserves ...DCD..
+ TBF[5] class 10 reserves .....DCD
+ TBF[6] class 10 reserves ...DCD..
+ TBF[7] class 10 reserves .....DCD
+ TBF[8] class 10 reserves ...DCD..
+ TBF[9] class 10 reserves .....DCD
+ TBF[10] class 10 reserves ...DCD..
+ TBF[11] class 10 reserves .....DCD
+ TBF[12] class 10 reserves ...DCD..
+ TBF[13] class 10 reserves .....DCD
+ TBF[14] class 10 reserves ...DCD..
+  Successfully allocated 15 UL TBFs
 Going to test assignment with many TBF, algorithm A (DL after UL)
  TBF[0] class 1 reserves ...C....
  TBF[1] class 1 reserves ....C...
@@ -8784,37 +8833,37 @@ Going to test assignment with many TBF, algorithm A (DL after UL)
   Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm B class 10 (DL after UL)
  TBF[0] class 10 reserves ...DDCD.
- TBF[1] class 10 reserves ...DDCD.
- TBF[2] class 10 reserves ...DDCD.
- TBF[3] class 10 reserves ...DDCD.
- TBF[4] class 10 reserves ...DDCD.
- TBF[5] class 10 reserves ...DDCD.
- TBF[6] class 10 reserves ...DDCD.
- TBF[7] class 10 reserves ...DDCD.
- TBF[8] class 10 reserves ...DDCD.
- TBF[9] class 10 reserves ...DDCD.
- TBF[10] class 10 reserves ...DDCD.
- TBF[11] class 10 reserves ...DDCD.
- TBF[12] class 10 reserves ...DDCD.
- TBF[13] class 10 reserves ...DDCD.
- TBF[14] class 10 reserves ...DDCD.
- TBF[15] class 10 reserves ...DDCD.
- TBF[16] class 10 reserves ...DDCD.
- TBF[17] class 10 reserves ...DDCD.
- TBF[18] class 10 reserves ...DDCD.
- TBF[19] class 10 reserves ...DDCD.
- TBF[20] class 10 reserves ...DDCD.
- TBF[21] class 10 reserves ...DDCD.
- TBF[22] class 10 reserves ...DDCD.
- TBF[23] class 10 reserves ...DDCD.
- TBF[24] class 10 reserves ...DDCD.
- TBF[25] class 10 reserves ...DDCD.
- TBF[26] class 10 reserves ...DDCD.
- TBF[27] class 10 reserves ...DDCD.
- TBF[28] class 10 reserves ...DDCD.
- TBF[29] class 10 reserves ...DDCD.
- TBF[30] class 10 reserves ...DDCD.
- TBF[31] class 10 reserves ...DDCD.
+ TBF[1] class 10 reserves .....DCD
+ TBF[2] class 10 reserves ...DCD..
+ TBF[3] class 10 reserves .....DCD
+ TBF[4] class 10 reserves ...DCD..
+ TBF[5] class 10 reserves .....DCD
+ TBF[6] class 10 reserves ...DCD..
+ TBF[7] class 10 reserves .....DCD
+ TBF[8] class 10 reserves ...DCD..
+ TBF[9] class 10 reserves .....DCD
+ TBF[10] class 10 reserves ...DCD..
+ TBF[11] class 10 reserves .....DCD
+ TBF[12] class 10 reserves ...DCD..
+ TBF[13] class 10 reserves .....DCD
+ TBF[14] class 10 reserves ...DCD..
+ TBF[15] class 10 reserves .....DCD
+ TBF[16] class 10 reserves ...DCD..
+ TBF[17] class 10 reserves .....DCD
+ TBF[18] class 10 reserves ...DCD..
+ TBF[19] class 10 reserves .....DCD
+ TBF[20] class 10 reserves ...DCD..
+ TBF[21] class 10 reserves .....DCD
+ TBF[22] class 10 reserves ...CD...
+ TBF[23] class 10 reserves .....DCD
+ TBF[24] class 10 reserves ...CD...
+ TBF[25] class 10 reserves ...CD...
+ TBF[26] class 10 reserves .....DCD
+ TBF[27] class 10 reserves ...CD...
+ TBF[28] class 10 reserves ....DCD.
+ TBF[29] class 10 reserves .....DCD
+ TBF[30] class 10 reserves ...CD...
+ TBF[31] class 10 reserves ...CD...
   Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm A (UL after DL)
  TBF[0] class 1 reserves ...U....
@@ -8852,13 +8901,38 @@ Going to test assignment with many TBF, algorithm A (UL after DL)
   Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm B class 10 (UL after DL)
  TBF[0] class 10 reserves .....U..
- TBF[1] class 10 reserves .....U..
- TBF[2] class 10 reserves .....U..
- TBF[3] class 10 reserves .....U..
- TBF[4] class 10 reserves .....U..
- TBF[5] class 10 reserves .....U..
+ TBF[1] class 10 reserves ......U.
+ TBF[2] class 10 reserves ....U...
+ TBF[3] class 10 reserves .......U
+ TBF[4] class 10 reserves ....U...
+ TBF[5] class 10 reserves ......U.
  TBF[6] class 10 reserves .....U..
-  Successfully allocated 7 UL TBFs
+ TBF[7] class 10 reserves .......U
+ TBF[8] class 10 reserves ....U...
+ TBF[9] class 10 reserves ......U.
+ TBF[10] class 10 reserves .....U..
+ TBF[11] class 10 reserves .......U
+ TBF[12] class 10 reserves ....U...
+ TBF[13] class 10 reserves ......U.
+ TBF[14] class 10 reserves .....U..
+ TBF[15] class 10 reserves .......U
+ TBF[16] class 10 reserves ....U...
+ TBF[17] class 10 reserves ......U.
+ TBF[18] class 10 reserves .....U..
+ TBF[19] class 10 reserves .......U
+ TBF[20] class 10 reserves ....U...
+ TBF[21] class 10 reserves ......U.
+ TBF[22] class 10 reserves ...U....
+ TBF[23] class 10 reserves .......U
+ TBF[24] class 10 reserves ...U....
+ TBF[25] class 10 reserves ...U....
+ TBF[26] class 10 reserves ......U.
+ TBF[27] class 10 reserves ...U....
+ TBF[28] class 10 reserves .....U..
+ TBF[29] class 10 reserves .......U
+ TBF[30] class 10 reserves ...U....
+ TBF[31] class 10 reserves ...U....
+  Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm A (UL only)
  TBF[0] class 1 reserves ...U....
  TBF[1] class 1 reserves ....U...
@@ -8895,13 +8969,38 @@ Going to test assignment with many TBF, algorithm A (UL only)
   Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm B class 10 (UL only)
  TBF[0] class 10 reserves .....U..
- TBF[1] class 10 reserves .....U..
- TBF[2] class 10 reserves .....U..
- TBF[3] class 10 reserves .....U..
- TBF[4] class 10 reserves .....U..
- TBF[5] class 10 reserves .....U..
+ TBF[1] class 10 reserves ......U.
+ TBF[2] class 10 reserves ....U...
+ TBF[3] class 10 reserves .......U
+ TBF[4] class 10 reserves ....U...
+ TBF[5] class 10 reserves ......U.
  TBF[6] class 10 reserves .....U..
-  Successfully allocated 7 UL TBFs
+ TBF[7] class 10 reserves .......U
+ TBF[8] class 10 reserves ....U...
+ TBF[9] class 10 reserves ......U.
+ TBF[10] class 10 reserves .....U..
+ TBF[11] class 10 reserves .......U
+ TBF[12] class 10 reserves ....U...
+ TBF[13] class 10 reserves ......U.
+ TBF[14] class 10 reserves .....U..
+ TBF[15] class 10 reserves .......U
+ TBF[16] class 10 reserves ....U...
+ TBF[17] class 10 reserves ......U.
+ TBF[18] class 10 reserves .....U..
+ TBF[19] class 10 reserves .......U
+ TBF[20] class 10 reserves ....U...
+ TBF[21] class 10 reserves ......U.
+ TBF[22] class 10 reserves ...U....
+ TBF[23] class 10 reserves .......U
+ TBF[24] class 10 reserves ...U....
+ TBF[25] class 10 reserves ...U....
+ TBF[26] class 10 reserves ......U.
+ TBF[27] class 10 reserves ...U....
+ TBF[28] class 10 reserves .....U..
+ TBF[29] class 10 reserves .......U
+ TBF[30] class 10 reserves ...U....
+ TBF[31] class 10 reserves ...U....
+  Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm A (DL ONLY)
  TBF[0] class 1 reserves ...C....
  TBF[1] class 1 reserves ....C...
@@ -8938,35 +9037,35 @@ Going to test assignment with many TBF, algorithm A (DL ONLY)
   Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm B class 10 (DL ONLY)
  TBF[0] class 10 reserves ...DDCD.
- TBF[1] class 10 reserves ...DDCD.
- TBF[2] class 10 reserves ...DDCD.
- TBF[3] class 10 reserves ...DDCD.
- TBF[4] class 10 reserves ...DDCD.
- TBF[5] class 10 reserves ...DDCD.
- TBF[6] class 10 reserves ...DDCD.
- TBF[7] class 10 reserves ...DDCD.
- TBF[8] class 10 reserves ...DDCD.
- TBF[9] class 10 reserves ...DDCD.
- TBF[10] class 10 reserves ...DDCD.
- TBF[11] class 10 reserves ...DDCD.
- TBF[12] class 10 reserves ...DDCD.
- TBF[13] class 10 reserves ...DDCD.
- TBF[14] class 10 reserves ...DDCD.
- TBF[15] class 10 reserves ...DDCD.
- TBF[16] class 10 reserves ...DDCD.
- TBF[17] class 10 reserves ...DDCD.
- TBF[18] class 10 reserves ...DDCD.
- TBF[19] class 10 reserves ...DDCD.
- TBF[20] class 10 reserves ...DDCD.
- TBF[21] class 10 reserves ...DDCD.
- TBF[22] class 10 reserves ...DDCD.
- TBF[23] class 10 reserves ...DDCD.
- TBF[24] class 10 reserves ...DDCD.
- TBF[25] class 10 reserves ...DDCD.
- TBF[26] class 10 reserves ...DDCD.
- TBF[27] class 10 reserves ...DDCD.
- TBF[28] class 10 reserves ...DDCD.
- TBF[29] class 10 reserves ...DDCD.
- TBF[30] class 10 reserves ...DDCD.
- TBF[31] class 10 reserves ...DDCD.
+ TBF[1] class 10 reserves .....DCD
+ TBF[2] class 10 reserves ...DCD..
+ TBF[3] class 10 reserves .....DCD
+ TBF[4] class 10 reserves ...DCD..
+ TBF[5] class 10 reserves .....DCD
+ TBF[6] class 10 reserves ...DCD..
+ TBF[7] class 10 reserves .....DCD
+ TBF[8] class 10 reserves ...DCD..
+ TBF[9] class 10 reserves .....DCD
+ TBF[10] class 10 reserves ...DCD..
+ TBF[11] class 10 reserves .....DCD
+ TBF[12] class 10 reserves ...DCD..
+ TBF[13] class 10 reserves .....DCD
+ TBF[14] class 10 reserves ...DCD..
+ TBF[15] class 10 reserves .....DCD
+ TBF[16] class 10 reserves ...DCD..
+ TBF[17] class 10 reserves .....DCD
+ TBF[18] class 10 reserves ...DCD..
+ TBF[19] class 10 reserves .....DCD
+ TBF[20] class 10 reserves ...DCD..
+ TBF[21] class 10 reserves .....DCD
+ TBF[22] class 10 reserves ...CD...
+ TBF[23] class 10 reserves .....DCD
+ TBF[24] class 10 reserves ...CD...
+ TBF[25] class 10 reserves ...CD...
+ TBF[26] class 10 reserves .....DCD
+ TBF[27] class 10 reserves ...CD...
+ TBF[28] class 10 reserves ....DCD.
+ TBF[29] class 10 reserves .....DCD
+ TBF[30] class 10 reserves ...CD...
+ TBF[31] class 10 reserves ...CD...
   Successfully allocated 32 UL TBFs
