@@ -390,6 +390,83 @@ static void test_alloc_b()
 	test_all_alloc_b();
 }
 
+typedef int (*algo_t)(struct gprs_rlcmac_bts *bts,
+		struct GprsMs *ms,
+		struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single);
+
+static char get_dir_char(uint8_t mask, uint8_t tx, uint8_t rx)
+{
+	return (mask & tx & rx) ? 'C' :
+		(mask & tx)     ? 'U' :
+		(mask & rx)     ? 'D' :
+				  '.';
+}
+
+static void test_successive_allocation(algo_t algo, unsigned min_class,
+	unsigned max_class, unsigned expect_num, const char *text)
+{
+	BTS the_bts;
+	struct gprs_rlcmac_bts *bts;
+	struct gprs_rlcmac_trx *trx;
+	int tfi;
+	uint8_t trx_no;
+	unsigned counter;
+	unsigned ms_class = min_class;
+
+	printf("Going to test assignment with many TBF, %s\n", text);
+
+	bts = the_bts.bts_data();
+	bts->alloc_algorithm = algo;
+
+	trx = &bts->trx[0];
+	trx->pdch[3].enable();
+	trx->pdch[4].enable();
+	trx->pdch[5].enable();
+	trx->pdch[6].enable();
+	trx->pdch[7].enable();
+
+	for (counter = 0; 1; counter += 1) {
+		gprs_rlcmac_tbf *ul_tbf, *dl_tbf;
+		uint8_t ul_slots;
+		uint8_t dl_slots;
+		unsigned i;
+
+		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
+		if (tfi < 0)
+			break;
+		ul_tbf = tbf_alloc_ul_tbf(bts, NULL, tfi, trx_no, ms_class, 0);
+		if (ul_tbf == NULL)
+			break;
+		OSMO_ASSERT(ul_tbf->ms());
+		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), tfi, trx_no, ms_class, 0);
+		OSMO_ASSERT(dl_tbf);
+
+		ul_slots = 1 << ul_tbf->first_common_ts;
+		dl_slots = 0;
+		for (i = 0; i < ARRAY_SIZE(dl_tbf->pdch); i += 1)
+			if (dl_tbf->pdch[i])
+				dl_slots |= 1 << i;
+
+		printf(" TBF[%d] class %d reserves %c%c%c%c%c%c%c%c\n",
+			tfi, ms_class,
+			get_dir_char(0x01, ul_slots, dl_slots),
+			get_dir_char(0x02, ul_slots, dl_slots),
+			get_dir_char(0x04, ul_slots, dl_slots),
+			get_dir_char(0x08, ul_slots, dl_slots),
+			get_dir_char(0x10, ul_slots, dl_slots),
+			get_dir_char(0x20, ul_slots, dl_slots),
+			get_dir_char(0x40, ul_slots, dl_slots),
+			get_dir_char(0x80, ul_slots, dl_slots));
+
+		ms_class += 1;
+		if (ms_class > max_class)
+			ms_class = min_class;
+	}
+
+	printf("  Successfully allocated %d UL TBFs\n", counter);
+	OSMO_ASSERT(counter >= expect_num);
+}
+
 int main(int argc, char **argv)
 {
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "moiji-mobile AllocTest context");
@@ -403,6 +480,11 @@ int main(int argc, char **argv)
 
 	test_alloc_a();
 	test_alloc_b();
+	test_successive_allocation(alloc_algorithm_a, 1, 1, 7, "algorithm A");
+	test_successive_allocation(alloc_algorithm_b, 10, 10, 7, "algorithm B class 10");
+	test_successive_allocation(alloc_algorithm_b, 12, 12, 7, "algorithm B class 12");
+	test_successive_allocation(alloc_algorithm_b, 1, 12, 14, "algorithm B class 1-12");
+	test_successive_allocation(alloc_algorithm_b, 1, 29, 18, "algorithm B class 1-29");
 	return EXIT_SUCCESS;
 }
 
