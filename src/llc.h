@@ -24,7 +24,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <string.h>
-#include <time.h>
+#include <sys/time.h>
 
 #define LLC_MAX_LEN 1543
 
