@@ -26,6 +26,7 @@ struct gprs_rlcmac_ul_tbf;
 
 #include "cxx_linuxlist.h"
 #include "llc.h"
+#include "tbf.h"
 #include "pcu_l1_if.h"
 
 extern "C" {
@@ -60,6 +61,7 @@ public:
 
 	gprs_rlcmac_ul_tbf *ul_tbf() const {return m_ul_tbf;}
 	gprs_rlcmac_dl_tbf *dl_tbf() const {return m_dl_tbf;}
+	gprs_rlcmac_tbf *tbf(enum gprs_rlcmac_tbf_direction dir) const;
 	uint32_t tlli() const;
 	void set_tlli(uint32_t tlli);
 	bool confirm_tlli(uint32_t tlli);

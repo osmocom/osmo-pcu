@@ -69,6 +69,9 @@ static void test_ms_state()
 	OSMO_ASSERT(ms->ul_tbf() == ul_tbf);
 	OSMO_ASSERT(ms->dl_tbf() == dl_tbf);
 
+	OSMO_ASSERT(ms->tbf(GPRS_RLCMAC_UL_TBF) == ul_tbf);
+	OSMO_ASSERT(ms->tbf(GPRS_RLCMAC_DL_TBF) == dl_tbf);
+
 	ms->detach_tbf(ul_tbf);
 	OSMO_ASSERT(!ms->is_idle());
 	OSMO_ASSERT(ms->ul_tbf() == NULL);

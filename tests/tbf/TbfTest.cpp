@@ -61,6 +61,17 @@ static unsigned inc_fn(fn)
 }
 */
 
+static void test_tbf_base()
+{
+
+	printf("=== start %s ===\n", __func__);
+
+	OSMO_ASSERT(GPRS_RLCMAC_DL_TBF == reverse(GPRS_RLCMAC_UL_TBF));
+	OSMO_ASSERT(GPRS_RLCMAC_UL_TBF == reverse(GPRS_RLCMAC_DL_TBF));
+
+	printf("=== end %s ===\n", __func__);
+}
+
 static void test_tbf_tlli_update()
 {
 	BTS the_bts;
@@ -667,6 +678,7 @@ int main(int argc, char **argv)
 	vty_init(&pcu_vty_info);
 	pcu_vty_init(&debug_log_info);
 
+	test_tbf_base();
 	test_tbf_tlli_update();
 	test_tbf_final_ack(TEST_MODE_STANDARD);
 	test_tbf_final_ack(TEST_MODE_REVERSE_FREE);
