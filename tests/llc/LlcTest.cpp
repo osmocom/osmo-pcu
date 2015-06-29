@@ -133,14 +133,18 @@ static void test_llc_queue()
 static void test_llc_meta()
 {
 	gprs_llc_queue queue;
-	gprs_llc_queue::MetaInfo info1 = {
-		.recv_time = {123456777, 123456},
-		.expire_time = {123456789, 987654},
-	};
-	gprs_llc_queue::MetaInfo info2 = {
-		.recv_time = {987654321, 547352},
-		.expire_time = {987654327, 867252},
-	};
+	gprs_llc_queue::MetaInfo info1;
+	gprs_llc_queue::MetaInfo info2;
+
+	info1.recv_time.tv_sec    = 123456777;
+	info1.recv_time.tv_usec   = 123456;
+	info1.expire_time.tv_sec  = 123456789;
+	info1.expire_time.tv_usec = 987654;
+
+	info2.recv_time.tv_sec    = 987654321;
+	info2.recv_time.tv_usec   = 547352;
+	info2.expire_time.tv_sec  = 987654327;
+	info2.expire_time.tv_usec = 867252;
 
 	printf("=== start %s ===\n", __func__);
 
