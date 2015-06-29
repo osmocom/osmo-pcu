@@ -66,10 +66,6 @@ llc_LlcTest_LDADD = \
 llc_LlcTest_LDFLAGS = \
 	-Wl,-u,bssgp_prim_cb
 
-# Compatibility with Debian Squeeze
-llc_LlcTest_CXXFLAGS = \
-	-std=gnu++0x
-
 llist_LListTest_SOURCES = llist/LListTest.cpp
 llist_LListTest_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
