@@ -529,3 +529,12 @@ int GprsMs::first_common_ts() const
 	return -1;
 }
 
+gprs_rlcmac_tbf *GprsMs::tbf(enum gprs_rlcmac_tbf_direction dir) const
+{
+	switch (dir) {
+	case GPRS_RLCMAC_DL_TBF: return m_dl_tbf;
+	case GPRS_RLCMAC_UL_TBF: return m_ul_tbf;
+	}
+
+	return NULL;
+}

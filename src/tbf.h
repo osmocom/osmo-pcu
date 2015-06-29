@@ -395,6 +395,11 @@ protected:
 	void maybe_schedule_uplink_acknack(const rlc_ul_header *rh);
 };
 
+inline enum gprs_rlcmac_tbf_direction reverse(enum gprs_rlcmac_tbf_direction dir)
+{
+	return (enum gprs_rlcmac_tbf_direction)
+		((int)GPRS_RLCMAC_UL_TBF - (int)dir + (int)GPRS_RLCMAC_DL_TBF);
+}
 #endif
 
 #ifdef __cplusplus
