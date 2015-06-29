@@ -631,7 +631,7 @@ DEFUN(cfg_pcu_cs_downgrade_thrsh,
 DEFUN(cfg_pcu_no_cs_downgrade_thrsh,
       cfg_pcu_no_cs_downgrade_thrsh_cmd,
       "no cs downgrade-threshold",
-      CS_STR CS_DOWNGRADE_STR)
+      NO_STR CS_STR CS_DOWNGRADE_STR)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
