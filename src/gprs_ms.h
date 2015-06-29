@@ -76,6 +76,8 @@ public:
 	uint8_t current_cs_ul() const;
 	uint8_t current_cs_dl() const;
 
+	int first_common_ts() const;
+
 	gprs_llc_queue *llc_queue();
 	const gprs_llc_queue *llc_queue() const;
 
