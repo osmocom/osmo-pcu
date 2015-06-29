@@ -117,12 +117,22 @@ static int find_enabled_pdch(struct gprs_rlcmac_trx *trx, const uint8_t start_ts
 	return 8;
 }
 
+static void attach_tbf_to_pdch(struct gprs_rlcmac_pdch *pdch,
+	struct gprs_rlcmac_tbf *tbf)
+{
+	if (tbf->pdch[pdch->ts_no])
+		tbf->pdch[pdch->ts_no]->detach_tbf(tbf);
+
+	tbf->pdch[pdch->ts_no] = pdch;
+	pdch->attach_tbf(tbf);
+}
+
 static void assign_uplink_tbf_usf(
 				struct gprs_rlcmac_pdch *pdch,
 				struct gprs_rlcmac_ul_tbf *tbf, int8_t usf)
 {
 	tbf->trx->ul_tbf[tbf->tfi()] = tbf;
-	tbf->pdch[pdch->ts_no] = pdch;
+	attach_tbf_to_pdch(pdch, tbf);
 	tbf->m_usf[pdch->ts_no] = usf;
 }
 
@@ -131,7 +141,7 @@ static void assign_dlink_tbf(
 				struct gprs_rlcmac_dl_tbf *tbf)
 {
 	tbf->trx->dl_tbf[tbf->tfi()] = tbf;
-	tbf->pdch[pdch->ts_no] = pdch;
+	attach_tbf_to_pdch(pdch, tbf);
 }
 
 
