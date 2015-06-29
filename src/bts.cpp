@@ -1131,3 +1131,19 @@ gprs_rlcmac_dl_tbf *gprs_rlcmac_pdch::dl_tbf_by_tfi(uint8_t tfi)
 {
 	return static_cast<gprs_rlcmac_dl_tbf *>(tbf_from_list_by_tfi(&bts_data()->dl_tbfs, tfi, GPRS_RLCMAC_DL_TBF));
 }
+
+void gprs_rlcmac_pdch::attach_tbf(gprs_rlcmac_tbf *tbf)
+{
+	m_num_tbfs[tbf->direction] += 1;
+	LOGP(DRLCMAC, LOGL_INFO, "PDCH(TS %d, TRX %d): Attaching %s, %d TBFs.\n",
+		ts_no, trx_no(), tbf->name(), m_num_tbfs[tbf->direction]);
+}
+
+void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
+{
+	OSMO_ASSERT(m_num_tbfs[tbf->direction] > 0);
+
+	m_num_tbfs[tbf->direction] -= 1;
+	LOGP(DRLCMAC, LOGL_INFO, "PDCH(TS %d, TRX %d): Detaching %s, %d TBFs.\n",
+		ts_no, trx_no(), tbf->name(), m_num_tbfs[tbf->direction]);
+}

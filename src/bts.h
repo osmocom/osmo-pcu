@@ -66,6 +66,11 @@ struct gprs_rlcmac_pdch {
 
 	struct gprs_rlcmac_ul_tbf *ul_tbf_by_tfi(uint8_t tfi);
 	struct gprs_rlcmac_dl_tbf *dl_tbf_by_tfi(uint8_t tfi);
+
+	void attach_tbf(gprs_rlcmac_tbf *tbf);
+	void detach_tbf(gprs_rlcmac_tbf *tbf);
+
+	unsigned num_tbfs(enum gprs_rlcmac_tbf_direction dir) const;
 #endif
 
 	uint8_t m_is_enabled; /* TS is enabled */
@@ -93,6 +98,8 @@ private:
 	gprs_rlcmac_tbf *tbf_from_list_by_tfi(struct llist_head *tbf_list, uint8_t tfi,
 		enum gprs_rlcmac_tbf_direction dir);
 #endif
+
+	uint8_t m_num_tbfs[2];
 };
 
 struct gprs_rlcmac_trx {
@@ -297,6 +304,11 @@ inline GprsMs *BTS::ms_by_tlli(uint32_t tlli, uint32_t old_tlli)
 inline BTS *gprs_rlcmac_pdch::bts() const
 {
 	return trx->bts;
+}
+
+inline unsigned gprs_rlcmac_pdch::num_tbfs(enum gprs_rlcmac_tbf_direction dir) const
+{
+	return m_num_tbfs[dir];
 }
 
 inline struct rate_ctr_group *BTS::rate_counters() const

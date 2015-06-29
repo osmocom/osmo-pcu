@@ -209,14 +209,17 @@ static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 {
 	int ts;
 
-	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
+	if (tbf->direction == GPRS_RLCMAC_UL_TBF)
 		tbf->trx->ul_tbf[tbf->tfi()] = NULL;
-		for (ts = 0; ts < 8; ts++)
-			tbf->pdch[ts] = NULL;
-	} else {
+	else
 		tbf->trx->dl_tbf[tbf->tfi()] = NULL;
-		for (ts = 0; ts < 8; ts++)
-			tbf->pdch[ts] = NULL;
+
+	for (ts = 0; ts < 8; ts++) {
+		if (!tbf->pdch[ts])
+			continue;
+
+		tbf->pdch[ts]->detach_tbf(tbf);
+		tbf->pdch[ts] = NULL;
 	}
 }
 

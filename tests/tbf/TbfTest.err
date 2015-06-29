@@ -5,6 +5,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Assign downlink TS=2
+PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 2
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0x00002342, partly confirmed
@@ -15,6 +16,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Assign uplink TS=2 USF=0
+PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs.
 - Setting Control TS 2
 Attaching TBF to MS object, TLLI = 0x00002342, TBF = TBF(TFI=0 TLLI=0x00002342 DIR=UL STATE=NULL)
 Modifying MS object, TLLI: 0x00000000 -> 0x00002342, already confirmed partly
@@ -33,6 +35,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
@@ -73,6 +76,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -80,21 +84,25 @@ Destroying MS object, TLLI = 0x00000000
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE)
 ********** TBF update **********
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), 1 TBFs.
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), 2 TBFs.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
 Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) exists
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer 0.
 DL packet loss of IMSI= / TLLI=0x00000000: 0%
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), 1 TBFs.
 ********** TBF ends here **********
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer 0.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN), 0 TBFs.
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
 ********** TBF ends here **********
 Destroying MS object, TLLI = 0xffeeddcc
@@ -110,6 +118,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
@@ -150,6 +159,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -157,22 +167,26 @@ Destroying MS object, TLLI = 0x00000000
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE)
 ********** TBF update **********
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), 1 TBFs.
 Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), 2 TBFs.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
 Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) exists
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer 0.
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer 0.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN), 1 TBFs.
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
 ********** TBF ends here **********
 DL packet loss of IMSI= / TLLI=0x00000000: 0%
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), 0 TBFs.
 ********** TBF ends here **********
 Destroying MS object, TLLI = 0xffeeddcc
 Searching for first unallocated TFI: TRX=0 first TS=4
@@ -187,6 +201,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
@@ -395,6 +410,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer 3193.
 DL packet loss of IMSI= / TLLI=0xffeeddcc: 0%
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE), 0 TBFs.
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** TBF ends here **********
@@ -410,6 +426,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
@@ -425,6 +442,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
@@ -437,11 +455,13 @@ Modifying MS object, TLLI = 0xf1000001, IMSI '001001000000002' -> ''
 Modifying MS object, TLLI = 0xf1000002, IMSI '' -> '001001000000002'
 TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) free
 TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) Software error: Pending downlink assignment. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW), 1 TBFs.
 Detaching TBF from MS object, TLLI = 0xf1000002, TBF = TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW)
 Destroying MS object, TLLI = 0xf1000002
 ********** TBF ends here **********
 TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW) free
 TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW) Software error: Pending downlink assignment. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW), 0 TBFs.
 Detaching TBF from MS object, TLLI = 0xf1000001, TBF = TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW)
 Destroying MS object, TLLI = 0xf1000001
 ********** TBF ends here **********
@@ -457,6 +477,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000000, partly confirmed
@@ -479,6 +500,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000001, partly confirmed
@@ -501,6 +523,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL), 3 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000002, partly confirmed
@@ -523,6 +546,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL), 4 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000003, partly confirmed
@@ -545,6 +569,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL), 5 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000004, partly confirmed
@@ -567,6 +592,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL), 6 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000005, partly confirmed
@@ -589,6 +615,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL), 7 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000006, partly confirmed
@@ -611,6 +638,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL), 8 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000007, partly confirmed
@@ -633,6 +661,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL), 9 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000008, partly confirmed
@@ -655,6 +684,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL), 10 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000009, partly confirmed
@@ -677,6 +707,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL), 11 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000a, partly confirmed
@@ -699,6 +730,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL), 12 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000b, partly confirmed
@@ -721,6 +753,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL), 13 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000c, partly confirmed
@@ -743,6 +776,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL), 14 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000d, partly confirmed
@@ -765,6 +799,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL), 15 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000e, partly confirmed
@@ -787,6 +822,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL), 16 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000f, partly confirmed
@@ -809,6 +845,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL), 17 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000010, partly confirmed
@@ -831,6 +868,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL), 18 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000011, partly confirmed
@@ -853,6 +891,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL), 19 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000012, partly confirmed
@@ -875,6 +914,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL), 20 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000013, partly confirmed
@@ -897,6 +937,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL), 21 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000014, partly confirmed
@@ -919,6 +960,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL), 22 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000015, partly confirmed
@@ -941,6 +983,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL), 23 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000016, partly confirmed
@@ -963,6 +1006,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL), 24 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000017, partly confirmed
@@ -985,6 +1029,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL), 25 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000018, partly confirmed
@@ -1007,6 +1052,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL), 26 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000019, partly confirmed
@@ -1029,6 +1075,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL), 27 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001a, partly confirmed
@@ -1051,6 +1098,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL), 28 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001b, partly confirmed
@@ -1073,6 +1121,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL), 29 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001c, partly confirmed
@@ -1095,6 +1144,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL), 30 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001d, partly confirmed
@@ -1117,6 +1167,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL), 31 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001e, partly confirmed
@@ -1139,6 +1190,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL), 32 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001f, partly confirmed
@@ -1164,6 +1216,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0123456, partly confirmed
@@ -1176,6 +1229,7 @@ Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) append
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) append
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) free
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN), 0 TBFs.
 Detaching TBF from MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)
 ********** TBF ends here **********
 Searching for first unallocated TFI: TRX=0 first TS=4
@@ -1188,6 +1242,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 2, because not enabled
 - Skipping TS 3, because not enabled
 - Assign downlink TS=4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) [DOWNLINK] START
@@ -1240,6 +1295,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Assign uplink TS=7 USF=0
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs.
 - Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 0 -> 7
@@ -1296,6 +1352,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Assign uplink TS=7 USF=0
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs.
 - Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
