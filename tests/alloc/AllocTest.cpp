@@ -47,9 +47,11 @@ static gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 		return tbf_alloc_dl_tbf(bts, ms, tfi, trx, ms_class, single_slot);
 }
 
-static void test_alloc_a(gprs_rlcmac_tbf_direction dir, const int count)
+static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
+	uint8_t slots, const int count)
 {
 	int tfi;
+	int i;
 	uint8_t used_trx;
 	BTS the_bts;
 	struct gprs_rlcmac_bts *bts;
@@ -61,8 +63,11 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir, const int count)
 	bts->alloc_algorithm = alloc_algorithm_a;
 
 	struct gprs_rlcmac_trx *trx = &bts->trx[0];
-	trx->pdch[2].enable();
-	trx->pdch[3].enable();
+	for (i = 0; i < 8; i += 1)
+		if (slots & (1 << i))
+			trx->pdch[i].enable();
+
+	OSMO_ASSERT(count >= 0 && count <= (int)ARRAY_SIZE(tbfs));
 
 	/**
 	 * Currently alloc_a will only allocate from the first
@@ -74,6 +79,7 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir, const int count)
 		tfi = the_bts.tfi_find_free(dir, &used_trx, 0);
 		OSMO_ASSERT(tfi >= 0);
 		tbfs[i] = tbf_alloc(bts, NULL, dir, tfi, used_trx, 0, 0);
+		OSMO_ASSERT(tbfs[i] != NULL);
 	}
 
 	/* Now check that there are still some TFIs */
@@ -102,8 +108,13 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir, const int count)
 
 static void test_alloc_a()
 {
-	test_alloc_a(GPRS_RLCMAC_DL_TBF, 32);
-	test_alloc_a(GPRS_RLCMAC_UL_TBF, 7);
+	/* slots 2 - 3 */
+	test_alloc_a(GPRS_RLCMAC_DL_TBF, 0x0c, 32);
+	test_alloc_a(GPRS_RLCMAC_UL_TBF, 0x0c, 7);
+
+	/* slots 1 - 5 */
+	test_alloc_a(GPRS_RLCMAC_DL_TBF, 0x1e, 32);
+	test_alloc_a(GPRS_RLCMAC_UL_TBF, 0x1e, 7);
 }
 
 static void dump_assignment(struct gprs_rlcmac_tbf *tbf, const char *dir)

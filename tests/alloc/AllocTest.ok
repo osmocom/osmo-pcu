@@ -1,5 +1,7 @@
 Testing alloc_a direction(0)
 Testing alloc_a direction(1)
+Testing alloc_a direction(0)
+Testing alloc_a direction(1)
 Going to test multislot assignment MS_CLASS=0
 Testing UL then DL assignment.
 PDCH[6] is used for UL
