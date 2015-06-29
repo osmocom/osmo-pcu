@@ -518,3 +518,14 @@ uint8_t GprsMs::current_cs_dl() const
 	return cs;
 }
 
+int GprsMs::first_common_ts() const
+{
+	if (m_dl_tbf)
+		return m_dl_tbf->first_common_ts;
+
+	if (m_ul_tbf)
+		return m_ul_tbf->first_common_ts;
+
+	return -1;
+}
+
