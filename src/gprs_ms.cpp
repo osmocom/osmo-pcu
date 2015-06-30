@@ -536,6 +536,32 @@ int GprsMs::first_common_ts() const
 	return -1;
 }
 
+uint8_t GprsMs::dl_slots() const
+{
+	uint8_t slots = 0;
+
+	if (m_dl_tbf)
+		slots |= m_dl_tbf->dl_slots();
+
+	if (m_ul_tbf)
+		slots |= m_ul_tbf->dl_slots();
+
+	return slots;
+}
+
+uint8_t GprsMs::ul_slots() const
+{
+	uint8_t slots = 0;
+
+	if (m_dl_tbf)
+		slots |= m_dl_tbf->ul_slots();
+
+	if (m_ul_tbf)
+		slots |= m_ul_tbf->ul_slots();
+
+	return slots;
+}
+
 void GprsMs::set_reserved_slots(gprs_rlcmac_trx *trx,
 	uint8_t ul_slots, uint8_t dl_slots)
 {
