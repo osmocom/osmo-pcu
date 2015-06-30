@@ -254,8 +254,8 @@ static void assign_uplink_tbf_usf(
 				struct gprs_rlcmac_ul_tbf *tbf, int8_t usf)
 {
 	tbf->trx->ul_tbf[tbf->tfi()] = tbf;
-	attach_tbf_to_pdch(pdch, tbf);
 	tbf->m_usf[pdch->ts_no] = usf;
+	attach_tbf_to_pdch(pdch, tbf);
 }
 
 static void assign_dlink_tbf(
