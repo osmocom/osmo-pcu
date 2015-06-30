@@ -8649,11 +8649,13 @@ Going to test assignment with many TBF, algorithm B class 10
  TBF[23] class 10 reserves .....DDC
  TBF[24] class 10 reserves ...DCD..
  TBF[25] class 10 reserves .....DCD
- TBF[26] class 10 reserves ...CD...
- TBF[27] class 10 reserves .....DDC
- TBF[28] class 10 reserves ...CD...
- TBF[29] class 10 reserves ...DDC..
-  Successfully allocated 30 UL TBFs
+ TBF[26] class 10 reserves ...DDCD.
+ TBF[27] class 10 reserves ...CD...
+ TBF[28] class 10 reserves .....DDC
+ TBF[29] class 10 reserves ...CD...
+ TBF[30] class 10 reserves ...CD...
+ TBF[31] class 10 reserves ...CD...
+  Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm B class 12
  TBF[0] class 12 reserves ...DDCD.
  TBF[1] class 12 reserves .....DCD
@@ -8681,11 +8683,13 @@ Going to test assignment with many TBF, algorithm B class 12
  TBF[23] class 12 reserves .....DDC
  TBF[24] class 12 reserves ...DCD..
  TBF[25] class 12 reserves .....DCD
- TBF[26] class 12 reserves ...CD...
- TBF[27] class 12 reserves .....DDC
+ TBF[26] class 12 reserves ...DDCD.
+ TBF[27] class 12 reserves ....DDDC
  TBF[28] class 12 reserves ...CD...
- TBF[29] class 12 reserves ...DDC..
-  Successfully allocated 30 UL TBFs
+ TBF[29] class 12 reserves ...CD...
+ TBF[30] class 12 reserves ...CD...
+ TBF[31] class 12 reserves ...CD...
+  Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm B class 1-12
  TBF[0] class 1 reserves ...C....
  TBF[1] class 2 reserves ....DC..
@@ -8748,4 +8752,9 @@ Going to test assignment with many TBF, algorithm B class 1-29
  TBF[24] class 25 reserves ....DDCD
  TBF[25] class 26 reserves ...DCDD.
  TBF[26] class 27 reserves ....DCDD
-  Successfully allocated 27 UL TBFs
+ TBF[27] class 28 reserves ...DDDDC
+ TBF[28] class 29 reserves ...DDDDC
+ TBF[29] class 1 reserves ...C....
+ TBF[30] class 2 reserves ......DC
+ TBF[31] class 3 reserves ...C....
+  Successfully allocated 32 UL TBFs

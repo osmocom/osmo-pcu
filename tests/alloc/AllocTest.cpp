@@ -494,10 +494,10 @@ int main(int argc, char **argv)
 	test_alloc_a();
 	test_alloc_b();
 	test_successive_allocation(alloc_algorithm_a, 1, 1, 32, "algorithm A");
-	test_successive_allocation(alloc_algorithm_b, 10, 10, 30, "algorithm B class 10");
-	test_successive_allocation(alloc_algorithm_b, 12, 12, 30, "algorithm B class 12");
+	test_successive_allocation(alloc_algorithm_b, 10, 10, 32, "algorithm B class 10");
+	test_successive_allocation(alloc_algorithm_b, 12, 12, 32, "algorithm B class 12");
 	test_successive_allocation(alloc_algorithm_b, 1, 12, 32, "algorithm B class 1-12");
-	test_successive_allocation(alloc_algorithm_b, 1, 29, 27, "algorithm B class 1-29");
+	test_successive_allocation(alloc_algorithm_b, 1, 29, 32, "algorithm B class 1-29");
 	return EXIT_SUCCESS;
 }
 
