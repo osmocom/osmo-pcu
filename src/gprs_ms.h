@@ -37,6 +37,7 @@ extern "C" {
 #include <stddef.h>
 
 struct BTS;
+struct gprs_rlcmac_trx;
 
 class GprsMs {
 public:
@@ -79,6 +80,11 @@ public:
 	uint8_t current_cs_dl() const;
 
 	int first_common_ts() const;
+	uint8_t reserved_dl_slots() const;
+	uint8_t reserved_ul_slots() const;
+	gprs_rlcmac_trx *current_trx() const;
+	void set_reserved_slots(gprs_rlcmac_trx *trx,
+		uint8_t ul_slots, uint8_t dl_slots);
 
 	gprs_llc_queue *llc_queue();
 	const gprs_llc_queue *llc_queue() const;
@@ -144,6 +150,9 @@ private:
 
 	pcu_l1_meas m_l1_meas;
 	unsigned m_nack_rate_dl;
+	uint8_t m_reserved_dl_slots;
+	uint8_t m_reserved_ul_slots;
+	gprs_rlcmac_trx *m_current_trx;
 };
 
 inline uint32_t GprsMs::tlli() const
@@ -199,3 +208,17 @@ inline unsigned GprsMs::nack_rate_dl() const
 	return m_nack_rate_dl;
 }
 
+inline uint8_t GprsMs::reserved_dl_slots() const
+{
+	return m_reserved_dl_slots;
+}
+
+inline uint8_t GprsMs::reserved_ul_slots() const
+{
+	return m_reserved_ul_slots;
+}
+
+inline gprs_rlcmac_trx *GprsMs::current_trx() const
+{
+	return m_current_trx;
+}

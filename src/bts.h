@@ -71,6 +71,10 @@ struct gprs_rlcmac_pdch {
 	void detach_tbf(gprs_rlcmac_tbf *tbf);
 
 	unsigned num_tbfs(enum gprs_rlcmac_tbf_direction dir) const;
+
+	void reserve(enum gprs_rlcmac_tbf_direction dir);
+	void unreserve(enum gprs_rlcmac_tbf_direction dir);
+	unsigned num_reserved(enum gprs_rlcmac_tbf_direction dir) const;
 #endif
 
 	uint8_t m_is_enabled; /* TS is enabled */
@@ -100,6 +104,7 @@ private:
 #endif
 
 	uint8_t m_num_tbfs[2];
+	uint8_t m_num_reserved[2];
 };
 
 struct gprs_rlcmac_trx {
@@ -112,6 +117,11 @@ struct gprs_rlcmac_trx {
 	/* back pointers */
 	struct BTS *bts;
 	uint8_t trx_no;
+
+#ifdef __cplusplus
+	void reserve_slots(enum gprs_rlcmac_tbf_direction dir, uint8_t slots);
+	void unreserve_slots(enum gprs_rlcmac_tbf_direction dir, uint8_t slots);
+#endif
 };
 
 /**
@@ -309,6 +319,12 @@ inline BTS *gprs_rlcmac_pdch::bts() const
 inline unsigned gprs_rlcmac_pdch::num_tbfs(enum gprs_rlcmac_tbf_direction dir) const
 {
 	return m_num_tbfs[dir];
+}
+
+inline unsigned gprs_rlcmac_pdch::num_reserved(
+	enum gprs_rlcmac_tbf_direction dir) const
+{
+	return gprs_rlcmac_pdch::m_num_reserved[dir];
 }
 
 inline struct rate_ctr_group *BTS::rate_counters() const
