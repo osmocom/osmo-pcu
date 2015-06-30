@@ -75,6 +75,9 @@ struct gprs_rlcmac_pdch {
 	void reserve(enum gprs_rlcmac_tbf_direction dir);
 	void unreserve(enum gprs_rlcmac_tbf_direction dir);
 	unsigned num_reserved(enum gprs_rlcmac_tbf_direction dir) const;
+
+	uint8_t assigned_usf() const;
+	uint32_t assigned_tfi() const;
 #endif
 
 	uint8_t m_is_enabled; /* TS is enabled */
@@ -105,6 +108,8 @@ private:
 
 	uint8_t m_num_tbfs[2];
 	uint8_t m_num_reserved[2];
+	uint8_t m_assigned_usf; /* bit set */
+	uint32_t m_assigned_tfi; /* bit set */
 };
 
 struct gprs_rlcmac_trx {
@@ -331,6 +336,16 @@ inline unsigned gprs_rlcmac_pdch::num_reserved(
 	enum gprs_rlcmac_tbf_direction dir) const
 {
 	return gprs_rlcmac_pdch::m_num_reserved[dir];
+}
+
+inline uint8_t gprs_rlcmac_pdch::assigned_usf() const
+{
+	return m_assigned_usf;
+}
+
+inline uint32_t gprs_rlcmac_pdch::assigned_tfi() const
+{
+	return m_assigned_tfi;
 }
 
 inline struct rate_ctr_group *BTS::rate_counters() const
