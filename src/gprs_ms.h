@@ -80,6 +80,8 @@ public:
 	uint8_t current_cs_dl() const;
 
 	int first_common_ts() const;
+	uint8_t dl_slots() const;
+	uint8_t ul_slots() const;
 	uint8_t reserved_dl_slots() const;
 	uint8_t reserved_ul_slots() const;
 	gprs_rlcmac_trx *current_trx() const;

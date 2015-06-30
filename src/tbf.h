@@ -158,6 +158,8 @@ struct gprs_rlcmac_tbf {
 	const gprs_llc_queue *llc_queue() const;
 
 	time_t created_ts() const;
+	uint8_t dl_slots() const;
+	uint8_t ul_slots() const;
 
 	/* attempt to make things a bit more fair */
 	void rotate_in_list();

@@ -935,6 +935,42 @@ uint8_t gprs_rlcmac_tbf::tsc() const
 	return trx->pdch[first_ts].tsc;
 }
 
+uint8_t gprs_rlcmac_tbf::dl_slots() const
+{
+	uint8_t slots = 0;
+	size_t i;
+
+	if (direction == GPRS_RLCMAC_UL_TBF)
+		return 0;
+
+	for (i = 0; i < ARRAY_SIZE(pdch); i += 1)
+		if (pdch[i])
+			slots |= 1 << i;
+
+	return slots;
+}
+
+uint8_t gprs_rlcmac_tbf::ul_slots() const
+{
+	uint8_t slots = 0;
+	size_t i;
+
+	if (direction == GPRS_RLCMAC_DL_TBF) {
+		if (control_ts < 8)
+			slots |= 1 << control_ts;
+		if (first_common_ts < 8)
+			slots |= 1 << first_common_ts;
+
+		return slots;
+	}
+
+	for (i = 0; i < ARRAY_SIZE(pdch); i += 1)
+		if (pdch[i])
+			slots |= 1 << i;
+
+	return slots;
+}
+
 void tbf_print_vty_info(struct vty *vty, struct llist_head *ltbf)
 {
 	gprs_rlcmac_tbf *tbf = llist_pods_entry(ltbf, gprs_rlcmac_tbf);
