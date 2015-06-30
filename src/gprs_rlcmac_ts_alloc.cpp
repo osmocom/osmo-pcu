@@ -501,12 +501,14 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 #endif
 
 		if (!rx_good) {
+#ifdef ENABLE_TS_ALLOC_DEBUG
 			LOGP(DRLCMAC, LOGL_DEBUG,
 				"- Skipping DL/UL slots: (TS=0)\"%s\"(TS=7), "
 				"no DL slots available\n",
 				set_flag_chars(set_flag_chars(slot_info,
 						rx_bad, 'x', '.'),
 						tx_window, 'U'));
+#endif
 			continue;
 		}
 
@@ -520,16 +522,18 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 			req_common_slots = OSMO_MIN(req_common_slots, 2);
 
 		if (req_common_slots != common_slot_count) {
-		LOGP(DRLCMAC, LOGL_DEBUG,
-			"- Skipping DL/UL slots: (TS=0)\"%s\"(TS=7), "
-			"invalid number of common TS: %d (expected %d)\n",
-			set_flag_chars(set_flag_chars(set_flag_chars(
-					slot_info,
-					rx_bad, 'x', '.'),
-					rx_window, 'D'),
+#ifdef ENABLE_TS_ALLOC_DEBUG
+			LOGP(DRLCMAC, LOGL_DEBUG,
+				"- Skipping DL/UL slots: (TS=0)\"%s\"(TS=7), "
+				"invalid number of common TS: %d (expected %d)\n",
+				set_flag_chars(set_flag_chars(set_flag_chars(
+							slot_info,
+							rx_bad, 'x', '.'),
+						rx_window, 'D'),
 					tx_window, 'U'),
-			common_slot_count,
-			req_common_slots);
+				common_slot_count,
+				req_common_slots);
+#endif
 			continue;
 		}
 
@@ -554,6 +558,7 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 			}
 		}
 
+#ifdef ENABLE_TS_ALLOC_DEBUG
 		LOGP(DRLCMAC, LOGL_DEBUG,
 			"- Considering DL/UL slots: (TS=0)\"%s\"(TS=7), "
 			"capacity = %d\n",
@@ -564,6 +569,7 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 					tx_window, 'U'),
 					rx_window & tx_window, 'C'),
 			capacity);
+#endif
 
 		if (capacity <= max_capacity)
 			continue;
