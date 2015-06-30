@@ -20,7 +20,7 @@ Allocating UL TBF: TFI=0 TRX=0 MS_CLASS=0
 Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
-- Skipping TS 3, because not a downlink TBF
+- Skipping TS 3, because need to reuse TS
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled

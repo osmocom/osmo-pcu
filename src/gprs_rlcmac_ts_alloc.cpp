@@ -241,25 +241,26 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 {
 	struct gprs_rlcmac_pdch *pdch;
 	int ts = -1;
+	uint8_t ul_slots, dl_slots;
 	int usf = -1;
 	int mask = 0xff;
 	const char *mask_reason = NULL;
-	struct gprs_rlcmac_tbf *ref_tbf;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm A) for class "
 		"%d\n", tbf->ms_class());
 
-	if ((ref_tbf = ms->tbf(tbf->direction)))
+	dl_slots = ms->reserved_dl_slots();
+	ul_slots = ms->reserved_ul_slots();
+
+	ts = ms->first_common_ts();
+
+	if (ts >= 0) {
 		mask_reason = "need to reuse TS";
-	else if ((ref_tbf = ms->tbf(reverse(tbf->direction))))
-		mask_reason = ref_tbf->direction == GPRS_RLCMAC_UL_TBF ?
-			"not an uplink TBF" : "not a downlink TBF";
-
-	if (ref_tbf)
-		ts = ref_tbf->first_common_ts;
-
-	if (ts >= 0)
 		mask = 1 << ts;
+	} else if (dl_slots || ul_slots) {
+		mask_reason = "need to use a reserved common TS";
+		mask = dl_slots & ul_slots;
+	}
 
 	mask = find_possible_pdchs(tbf->trx, 1, mask, mask_reason);
 	if (!mask)
@@ -296,6 +297,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	}
 	/* the only one TS is the common TS */
 	tbf->first_ts = tbf->first_common_ts = ts;
+	ms->set_reserved_slots(tbf->trx, 1 << ts, 1 << ts);
 
 	tbf->upgrade_to_multislot = 0;
 
