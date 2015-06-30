@@ -101,10 +101,12 @@ static inline int8_t find_free_usf(struct gprs_rlcmac_pdch *pdch)
 }
 
 static int find_possible_pdchs(struct gprs_rlcmac_trx *trx,
+	size_t max_slots,
 	uint8_t mask, const char *mask_reason = NULL)
 {
 	unsigned ts;
 	int valid_ts_set = 0;
+	int8_t last_tsc = -1; /* must be signed */
 
 	for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
 		struct gprs_rlcmac_pdch *pdch;
@@ -122,6 +124,21 @@ static int find_possible_pdchs(struct gprs_rlcmac_trx *trx,
 					"- Skipping TS %d, because %s\n",
 					ts, mask_reason);
 			continue;
+		}
+
+		if (max_slots > 1) {
+			/* check if TSC changes, see TS 45.002, 6.4.2 */
+			if (last_tsc < 0)
+				last_tsc = pdch->tsc;
+			else if (last_tsc != pdch->tsc) {
+				LOGP(DRLCMAC, LOGL_ERROR,
+					"Skipping TS %d of TRX=%d, because it "
+					"has different TSC than lower TS of TRX. "
+					"In order to allow multislot, all "
+					"slots must be configured with the same "
+					"TSC!\n", ts, trx->trx_no);
+				continue;
+			}
 		}
 
 		valid_ts_set |= 1 << ts;
@@ -244,7 +261,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	if (ts >= 0)
 		mask = 1 << ts;
 
-	mask = find_possible_pdchs(tbf->trx, mask, mask_reason);
+	mask = find_possible_pdchs(tbf->trx, 1, mask, mask_reason);
 	if (!mask)
 		return -EINVAL;
 
