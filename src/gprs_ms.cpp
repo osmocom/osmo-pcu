@@ -91,7 +91,10 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	m_ref(0),
 	m_list(this),
 	m_delay(0),
-	m_nack_rate_dl(0)
+	m_nack_rate_dl(0),
+	m_reserved_dl_slots(0),
+	m_reserved_ul_slots(0),
+	m_current_trx(NULL)
 {
 	LOGP(DRLCMAC, LOGL_INFO, "Creating MS object, TLLI = 0x%08x\n", tlli);
 
@@ -240,8 +243,12 @@ void GprsMs::detach_tbf(gprs_rlcmac_tbf *tbf)
 	if (tbf->ms() == this)
 		tbf->set_ms(NULL);
 
-	if (!m_dl_tbf && !m_ul_tbf && tlli() != 0)
-		start_timer();
+	if (!m_dl_tbf && !m_ul_tbf) {
+		set_reserved_slots(NULL, 0, 0);
+
+		if (tlli() != 0)
+			start_timer();
+	}
 
 	update_status();
 }
@@ -527,6 +534,28 @@ int GprsMs::first_common_ts() const
 		return m_ul_tbf->first_common_ts;
 
 	return -1;
+}
+
+void GprsMs::set_reserved_slots(gprs_rlcmac_trx *trx,
+	uint8_t ul_slots, uint8_t dl_slots)
+{
+	if (m_current_trx) {
+		m_current_trx->unreserve_slots(GPRS_RLCMAC_DL_TBF,
+			m_reserved_dl_slots);
+		m_current_trx->unreserve_slots(GPRS_RLCMAC_UL_TBF,
+			m_reserved_ul_slots);
+		m_reserved_dl_slots = 0;
+		m_reserved_ul_slots = 0;
+	}
+	m_current_trx = trx;
+	if (trx) {
+		m_reserved_dl_slots = dl_slots;
+		m_reserved_ul_slots = ul_slots;
+		m_current_trx->reserve_slots(GPRS_RLCMAC_DL_TBF,
+			m_reserved_dl_slots);
+		m_current_trx->reserve_slots(GPRS_RLCMAC_UL_TBF,
+			m_reserved_ul_slots);
+	}
 }
 
 gprs_rlcmac_tbf *GprsMs::tbf(enum gprs_rlcmac_tbf_direction dir) const

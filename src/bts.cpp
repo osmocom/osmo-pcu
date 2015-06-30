@@ -1147,3 +1147,32 @@ void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
 	LOGP(DRLCMAC, LOGL_INFO, "PDCH(TS %d, TRX %d): Detaching %s, %d TBFs.\n",
 		ts_no, trx_no(), tbf->name(), m_num_tbfs[tbf->direction]);
 }
+
+void gprs_rlcmac_pdch::reserve(enum gprs_rlcmac_tbf_direction dir)
+{
+	m_num_reserved[dir] += 1;
+}
+
+void gprs_rlcmac_pdch::unreserve(enum gprs_rlcmac_tbf_direction dir)
+{
+	OSMO_ASSERT(m_num_reserved[dir] > 0);
+	m_num_reserved[dir] -= 1;
+}
+
+void gprs_rlcmac_trx::reserve_slots(enum gprs_rlcmac_tbf_direction dir,
+	uint8_t slots)
+{
+	unsigned i;
+	for (i = 0; i < ARRAY_SIZE(pdch); i += 1)
+		if (slots & (1 << i))
+			pdch[i].reserve(dir);
+}
+
+void gprs_rlcmac_trx::unreserve_slots(enum gprs_rlcmac_tbf_direction dir,
+	uint8_t slots)
+{
+	unsigned i;
+	for (i = 0; i < ARRAY_SIZE(pdch); i += 1)
+		if (slots & (1 << i))
+			pdch[i].unreserve(dir);
+}
