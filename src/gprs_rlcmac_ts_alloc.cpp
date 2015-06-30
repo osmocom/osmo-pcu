@@ -115,17 +115,12 @@ static bool test_and_set_bit(uint32_t *bits, size_t elem)
 
 static inline int8_t find_free_usf(struct gprs_rlcmac_pdch *pdch)
 {
-	struct gprs_rlcmac_ul_tbf *tbf;
 	uint8_t usf_map = 0;
-	uint8_t tfi, usf;
+	uint8_t usf;
 
-	/* make map of used USF */
-	for (tfi = 0; tfi < 32; tfi++) {
-		tbf = pdch->ul_tbf_by_tfi(tfi);
-		if (!tbf)
-			continue;
-		usf_map |= (1 << tbf->m_usf[pdch->ts_no]);
-	}
+	usf_map = pdch->assigned_usf();
+	if (usf_map == (1 << 7) - 1)
+		return -1;
 
 	/* look for USF, don't use USF=7 */
 	for (usf = 0; usf < 7; usf++) {
