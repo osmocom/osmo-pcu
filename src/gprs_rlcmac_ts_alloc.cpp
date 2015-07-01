@@ -732,6 +732,11 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		slotcount++;
 		ul_tbf->first_ts = ts;
 
+		/* We will stick to that single UL slot, unreserve the others */
+		if (ul_slots != ms->reserved_ul_slots())
+			ms->set_reserved_slots(tbf->trx,
+				ul_slots, ms->reserved_dl_slots());
+
 		avail_count = bitcount(ms->reserved_ul_slots());
 #if 0 /* This code assigns multiple slots for UL (and wastes USFs that way) */
 		for (ts = 0; ts < 8; ts++) {
