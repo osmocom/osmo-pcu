@@ -546,11 +546,13 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 			struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts];
 			if (rx_window & (1 << ts)) {
 				c = 32 - pdch->num_reserved(GPRS_RLCMAC_DL_TBF);
+				c = OSMO_MAX(c, 1);
 				capacity += c;
 			}
 			/* Only consider common slots for UL */
 			if (tx_window & rx_window & (1 << ts)) {
 				c = 32 - pdch->num_reserved(GPRS_RLCMAC_UL_TBF);
+				c = OSMO_MAX(c, 1);
 				capacity += c;
 			}
 		}
