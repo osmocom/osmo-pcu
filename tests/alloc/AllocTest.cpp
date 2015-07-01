@@ -567,11 +567,11 @@ static void test_successive_allocation()
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_AND_DL,
 		32, "algorithm B class 10 (UL and DL)");
 	test_successive_allocation(alloc_algorithm_b, 12, 12, TEST_MODE_UL_AND_DL,
-		29, "algorithm B class 12 (UL and DL)");
+		32, "algorithm B class 12 (UL and DL)");
 	test_successive_allocation(alloc_algorithm_b, 1, 12, TEST_MODE_UL_AND_DL,
-		31, "algorithm B class 1-12 (UL and DL)");
+		32, "algorithm B class 1-12 (UL and DL)");
 	test_successive_allocation(alloc_algorithm_b, 1, 29, TEST_MODE_UL_AND_DL,
-		24, "algorithm B class 1-29 (UL and DL)");
+		31, "algorithm B class 1-29 (UL and DL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_DL_AND_UL,
 		32, "algorithm A (DL and UL)");
