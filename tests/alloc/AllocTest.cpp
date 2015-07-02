@@ -586,7 +586,7 @@ static void test_successive_allocation()
 		32, "algorithm B class 10 (DL after UL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_AFTER_DL,
-		7, "algorithm A (UL after DL)");
+		32, "algorithm A (UL after DL)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_AFTER_DL,
 		32, "algorithm B class 10 (UL after DL)");
 
