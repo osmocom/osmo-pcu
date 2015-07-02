@@ -234,6 +234,65 @@ static int find_least_busy_pdch(struct gprs_rlcmac_trx *trx,
 	return min_ts;
 }
 
+static int find_least_reserved_pdch(struct gprs_rlcmac_trx *trx,
+	enum gprs_rlcmac_tbf_direction dir,
+	uint8_t mask,
+	int *free_usf = 0)
+{
+	unsigned ts;
+	int min_used = INT_MAX;
+	int min_ts = -1;
+	int min_usf = -1;
+
+	for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
+		struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts];
+		int num_tbfs;
+		int usf = -1; /* must be signed */
+
+		if (((1 << ts) & mask) == 0)
+			continue;
+
+		num_tbfs =
+			pdch->num_reserved(GPRS_RLCMAC_DL_TBF) +
+			pdch->num_reserved(GPRS_RLCMAC_UL_TBF);
+
+		if (num_tbfs < min_used) {
+			/* We have found a candidate */
+			/* Make sure that an USF is available */
+			if (dir == GPRS_RLCMAC_UL_TBF) {
+				usf = find_free_usf(pdch);
+				if (usf < 0) {
+					LOGP(DRLCMAC, LOGL_DEBUG,
+						"- Skipping TS %d, because "
+						"no USF available\n", ts);
+					continue;
+				}
+			}
+			if (min_ts >= 0)
+				LOGP(DRLCMAC, LOGL_DEBUG,
+					"- Skipping TS %d, because "
+					"num TBFs %d > %d\n",
+					min_ts, min_used, num_tbfs);
+			min_used = num_tbfs;
+			min_ts = ts;
+			min_usf = usf;
+		} else {
+			LOGP(DRLCMAC, LOGL_DEBUG,
+				"- Skipping TS %d, because "
+				"num TBFs %d >= %d\n",
+				ts, num_tbfs, min_used);
+		}
+	}
+
+	if (min_ts < 0)
+		return -1;
+
+	if (free_usf)
+		*free_usf = min_usf;
+
+	return min_ts;
+}
+
 static void attach_tbf_to_pdch(struct gprs_rlcmac_pdch *pdch,
 	struct gprs_rlcmac_tbf *tbf)
 {
@@ -297,7 +356,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	if (!mask)
 		return -EINVAL;
 
-	ts = find_least_busy_pdch(tbf->trx, tbf->direction, mask, &usf);
+	ts = find_least_reserved_pdch(tbf->trx, tbf->direction, mask, &usf);
 
 	if (ts < 0) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "- Failed "
