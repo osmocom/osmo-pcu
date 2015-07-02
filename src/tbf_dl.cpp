@@ -869,8 +869,6 @@ void gprs_rlcmac_dl_tbf::reuse_tbf()
 	state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
 	state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
 
-	new_tbf->update();
-
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s Trigger dowlink assignment on PACCH, "
 		"because another LLC PDU has arrived in between\n",
 		tbf_name(this));
