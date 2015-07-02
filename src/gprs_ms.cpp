@@ -118,6 +118,8 @@ GprsMs::~GprsMs()
 {
 	LOGP(DRLCMAC, LOGL_INFO, "Destroying MS object, TLLI = 0x%08x\n", tlli());
 
+	set_reserved_slots(NULL, 0, 0);
+
 	if (osmo_timer_pending(&m_timer))
 		osmo_timer_del(&m_timer);
 
