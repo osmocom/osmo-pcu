@@ -246,6 +246,8 @@ void GprsMs::detach_tbf(gprs_rlcmac_tbf *tbf)
 		tbf->set_ms(NULL);
 
 	if (!m_dl_tbf && !m_ul_tbf) {
+		set_reserved_slots(NULL, 0, 0);
+
 		if (tlli() != 0)
 			start_timer();
 	}
@@ -259,7 +261,6 @@ void GprsMs::update_status()
 		return;
 
 	if (is_idle() && !m_is_idle) {
-		set_reserved_slots(NULL, 0, 0);
 		m_is_idle = true;
 		m_cb->ms_idle(this);
 		/* this can be deleted by now, do not access it */
