@@ -850,15 +850,13 @@ void gprs_rlcmac_dl_tbf::reuse_tbf()
 
 	tfi = bts->tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx, this->trx->trx_no);
 	if (tfi >= 0)
-		new_tbf = tbf_alloc_dl_tbf(bts->bts_data(), NULL, tfi, trx,
+		new_tbf = tbf_alloc_dl_tbf(bts->bts_data(), ms(), tfi, trx,
 			ms_class(), 0);
 
 	if (!new_tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		return;
 	}
-
-	new_tbf->set_ms(ms());
 
 	/* reset rlc states */
 	m_tx_counter = 0;
