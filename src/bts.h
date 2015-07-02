@@ -215,6 +215,7 @@ public:
 		CTR_LLC_FRAME_DROPPED,
 		CTR_LLC_FRAME_SCHED,
 		CTR_RACH_REQUESTS,
+		CTR_POLL_TIMEDOUT,
 	};
 
 	enum {
@@ -274,6 +275,7 @@ public:
 	void llc_dropped_frame();
 	void llc_frame_sched();
 	void rach_frame();
+	void poll_timedout();
 
 	/*
 	 * Below for C interface for the VTY
@@ -370,6 +372,7 @@ CREATE_COUNT_INLINE(llc_timedout_frame, CTR_LLC_FRAME_TIMEDOUT);
 CREATE_COUNT_INLINE(llc_dropped_frame, CTR_LLC_FRAME_DROPPED);
 CREATE_COUNT_INLINE(llc_frame_sched, CTR_LLC_FRAME_SCHED);
 CREATE_COUNT_INLINE(rach_frame, CTR_RACH_REQUESTS);
+CREATE_COUNT_INLINE(poll_timedout, CTR_POLL_TIMEDOUT);
 
 #undef CREATE_COUNT_INLINE
 

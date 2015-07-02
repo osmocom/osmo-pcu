@@ -346,6 +346,8 @@ void gprs_rlcmac_tbf::poll_timeout()
 	LOGP(DRLCMAC, LOGL_NOTICE, "%s poll timeout\n",
 		tbf_name(this));
 
+	bts->poll_timedout();
+
 	poll_state = GPRS_RLCMAC_POLL_NONE;
 
 	if (ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {

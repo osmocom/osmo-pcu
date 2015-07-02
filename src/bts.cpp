@@ -67,6 +67,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "llc.dropped",		"Dropped Frames       "},
 	{ "llc.scheduled",		"Scheduled Frames     "},
 	{ "rach.requests",		"RACH requests        "},
+	{ "poll.timedout",		"Poll Timeout         "},
 };
 
 static const struct rate_ctr_group_desc bts_ctrg_desc = {
