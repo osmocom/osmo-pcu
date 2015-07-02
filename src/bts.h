@@ -207,6 +207,9 @@ public:
 		CTR_RLC_RESTARTED,
 		CTR_RLC_STALLED,
 		CTR_RLC_NACKED,
+		CTR_RLC_ASS_TIMEDOUT,
+		CTR_RLC_ACK_TIMEDOUT,
+		CTR_RLC_REL_TIMEDOUT,
 		CTR_DECODE_ERRORS,
 		CTR_SBA_ALLOCATED,
 		CTR_SBA_FREED,
@@ -215,7 +218,6 @@ public:
 		CTR_LLC_FRAME_DROPPED,
 		CTR_LLC_FRAME_SCHED,
 		CTR_RACH_REQUESTS,
-		CTR_POLL_TIMEDOUT,
 	};
 
 	enum {
@@ -267,6 +269,9 @@ public:
 	void rlc_restarted();
 	void rlc_stalled();
 	void rlc_nacked();
+	void rlc_ass_timedout();
+	void rlc_ack_timedout();
+	void rlc_rel_timedout();
 	void decode_error();
 	void sba_allocated();
 	void sba_freed();
@@ -275,7 +280,6 @@ public:
 	void llc_dropped_frame();
 	void llc_frame_sched();
 	void rach_frame();
-	void poll_timedout();
 
 	/*
 	 * Below for C interface for the VTY
@@ -364,6 +368,9 @@ CREATE_COUNT_INLINE(rlc_resent, CTR_RLC_RESENT)
 CREATE_COUNT_INLINE(rlc_restarted, CTR_RLC_RESTARTED)
 CREATE_COUNT_INLINE(rlc_stalled, CTR_RLC_STALLED)
 CREATE_COUNT_INLINE(rlc_nacked, CTR_RLC_NACKED)
+CREATE_COUNT_INLINE(rlc_ass_timedout, CTR_RLC_ASS_TIMEDOUT);
+CREATE_COUNT_INLINE(rlc_ack_timedout, CTR_RLC_ACK_TIMEDOUT);
+CREATE_COUNT_INLINE(rlc_rel_timedout, CTR_RLC_REL_TIMEDOUT);
 CREATE_COUNT_INLINE(decode_error, CTR_DECODE_ERRORS)
 CREATE_COUNT_INLINE(sba_allocated, CTR_SBA_ALLOCATED)
 CREATE_COUNT_INLINE(sba_freed, CTR_SBA_FREED)
@@ -372,7 +379,6 @@ CREATE_COUNT_INLINE(llc_timedout_frame, CTR_LLC_FRAME_TIMEDOUT);
 CREATE_COUNT_INLINE(llc_dropped_frame, CTR_LLC_FRAME_DROPPED);
 CREATE_COUNT_INLINE(llc_frame_sched, CTR_LLC_FRAME_SCHED);
 CREATE_COUNT_INLINE(rach_frame, CTR_RACH_REQUESTS);
-CREATE_COUNT_INLINE(poll_timedout, CTR_POLL_TIMEDOUT);
 
 #undef CREATE_COUNT_INLINE
 

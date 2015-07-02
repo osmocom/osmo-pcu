@@ -59,6 +59,9 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "rlc.restarted",		"RLC Restarted        "},
 	{ "rlc.stalled",		"RLC Stalled          "},
 	{ "rlc.nacked",			"RLC Nacked           "},
+	{ "rlc.ass.timedout",		"RLC Assign Timeout   "},
+	{ "rlc.ack.timedout",		"RLC Ack Timeout      "},
+	{ "rlc.rel.timedout",		"RLC Release Timeout  "},
 	{ "decode.errors",		"Decode Errors        "},
 	{ "sba.allocated",		"SBA Allocated        "},
 	{ "sba.freed",			"SBA Freed            "},
@@ -67,7 +70,6 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "llc.dropped",		"Dropped Frames       "},
 	{ "llc.scheduled",		"Scheduled Frames     "},
 	{ "rach.requests",		"RACH requests        "},
-	{ "poll.timedout",		"Poll Timeout         "},
 };
 
 static const struct rate_ctr_group_desc bts_ctrg_desc = {
