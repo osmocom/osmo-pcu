@@ -48,7 +48,7 @@ int SBAController::alloc(
 
 	struct gprs_rlcmac_pdch *pdch;
 	struct gprs_rlcmac_sba *sba;
-	uint8_t trx, ts;
+	int8_t trx, ts;
 	uint32_t fn;
 
 	sba = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_sba);
@@ -56,7 +56,7 @@ int SBAController::alloc(
 		return -ENOMEM;
 
 	for (trx = 0; trx < 8; trx++) {
-		for (ts = 0; ts < 8; ts++) {
+		for (ts = 7; ts >= 0; ts--) {
 			pdch = &m_bts.bts_data()->trx[trx].pdch[ts];
 			if (!pdch->is_enabled())
 				continue;
