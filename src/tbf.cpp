@@ -263,18 +263,24 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	talloc_free(tbf);
 }
 
-int gprs_rlcmac_tbf::update()
+int gprs_rlcmac_tbf::update(GprsMs *ms_)
 {
 	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
-	int rc;
+	int rc = -EINVAL;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF update **********\n");
 
 	if (direction != GPRS_RLCMAC_DL_TBF)
 		return -EINVAL;
 
+	if (!ms_)
+		ms_ = ms();
+
+	if (!ms_)
+		return -EINVAL;
+
 	tbf_unlink_pdch(this);
-	rc = bts_data->alloc_algorithm(bts_data, ms(), this, bts_data->alloc_algorithm_curst, 0);
+	rc = bts_data->alloc_algorithm(bts_data, ms_, this, bts_data->alloc_algorithm_curst, 0);
 	/* if no resource */
 	if (rc < 0) {
 		LOGP(DRLCMAC, LOGL_ERROR, "No resource after update???\n");
