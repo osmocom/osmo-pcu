@@ -99,7 +99,7 @@ void create_and_connect_bssgp(struct gprs_rlcmac_bts *bts,
 	struct gprs_bssgp_pcu *pcu;
 
 	pcu = gprs_bssgp_create_and_connect(bts, 0, sgsn_ip, sgsn_port,
-					20, 20, 20, 0x901, 0x99, 1, 0, 0);
+					20, 20, 20, 0x901, gsm48_str_to_mnc("99"), 1, 0, 0);
 	pcu->on_unblock_ack = bvci_unblocked;
 	pcu->on_dl_unit_data = bssgp_data;
 }

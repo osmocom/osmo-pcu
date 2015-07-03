@@ -329,7 +329,8 @@ bssgp_failed:
 	}
 	LOGP(DL1IF, LOGL_INFO, "BTS available\n");
 	LOGP(DL1IF, LOGL_DEBUG, " mcc=%x\n", info_ind->mcc);
-	LOGP(DL1IF, LOGL_DEBUG, " mnc=%x\n", info_ind->mnc);
+	LOGP(DL1IF, LOGL_DEBUG, " mnc=%0*u\n",
+		 info_ind->mnc.two_digits ? 2 : 3, info_ind->mnc.network_code);
 	LOGP(DL1IF, LOGL_DEBUG, " lac=%d\n", info_ind->lac);
 	LOGP(DL1IF, LOGL_DEBUG, " rac=%d\n", info_ind->rac);
 	LOGP(DL1IF, LOGL_DEBUG, " cell_id=%d\n", ntohs(info_ind->cell_id));

@@ -35,7 +35,8 @@ extern "C" {
 }
 
 extern struct gprs_nsvc *nsvc;
-uint16_t spoof_mcc = 0, spoof_mnc = 0;
+uint16_t spoof_mcc = 0;
+gsm_mnc_t spoof_mnc = { 0, false };
 static int config_given = 0;
 static char *config_file = strdup("osmo-pcu.cfg");
 extern struct vty_app_info pcu_vty_info;
@@ -94,7 +95,7 @@ static void handle_options(int argc, char **argv)
 			spoof_mcc = atoi(optarg);
 			break;
 		case 'n':
-			spoof_mnc = atoi(optarg);
+			spoof_mnc = gsm48_str_to_mnc(optarg);
 			break;
 		case 'V':
 			print_version(1);
@@ -181,7 +182,7 @@ int main(int argc, char *argv[])
 	pcu_vty_init(&gprs_log_info);
 
 	handle_options(argc, argv);
-	if ((!!spoof_mcc) + (!!spoof_mnc) == 1) {
+	if ((!!spoof_mcc) + (!!spoof_mnc.network_code) == 1) {
 		fprintf(stderr, "--mcc and --mnc must be specified "
 			"together.\n");
 		exit(0);
