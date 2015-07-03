@@ -131,7 +131,7 @@ struct gprs_rlcmac_tbf {
 
 	int rlcmac_diag();
 
-	int update(GprsMs *ms = NULL);
+	int update();
 	void handle_timeout();
 	void stop_timer();
 	void stop_t3191();
