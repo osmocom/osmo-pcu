@@ -505,19 +505,54 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 		 * testing */
 
 		rx_window = rx_good & rx_valid_win;
+		rx_slot_count = bitcount(rx_window);
+
+#if 0
+		LOGP(DRLCMAC, LOGL_DEBUG, "n_tx=%d, n_rx=%d, mask_sel=%d, "
+			"tx=%02x, rx=%02x, mask=%02x, bad=%02x, good=%02x, "
+			"ul=%02x, dl=%02x\n",
+			tx_slot_count, rx_slot_count, mask_sel,
+			tx_window, rx_window, rx_mask[mask_sel], rx_bad, rx_good,
+			*ul_slots, *dl_slots);
+#endif
+
+		/* Check compliance with TS 45.002, table 6.4.2.2.1 */
+		/* Whether to skip this round doesn not only depend on the bit
+		 * sets but also on mask_sel. Therefore this check must be done
+		 * before doing the test_and_set_bit shortcut. */
+		if (ms_class->type == 1) {
+			unsigned slot_sum = rx_slot_count + tx_slot_count;
+			/* Assume down+up/dynamic.
+			 * TODO: For ext-dynamic, down only, up only add more
+			 *       cases.
+			 */
+			if (slot_sum <= 6 && tx_slot_count < 3) {
+			       if (mask_sel != MASK_TR)
+				       /* Skip Tta */
+				       continue;
+			} else if (slot_sum > 6 && tx_slot_count < 3) {
+				if (mask_sel != MASK_TT)
+					/* Skip Tra */
+					continue;
+			} else {
+				/* No supported row in table 6.4.2.2.1. */
+#ifdef ENABLE_TS_ALLOC_DEBUG
+				LOGP(DRLCMAC, LOGL_DEBUG,
+					"- Skipping DL/UL slots: (TS=0)\"%s\"(TS=7), "
+					"combination not supported\n",
+					set_flag_chars(set_flag_chars(set_flag_chars(
+								slot_info,
+								rx_bad, 'x', '.'),
+							rx_window, 'D'),
+						tx_window, 'U'));
+#endif
+				continue;
+			}
+		}
 
 		/* Avoid repeated RX combination check */
 		if (test_and_set_bit(checked_rx, rx_window))
 			continue;
-
-		rx_slot_count = bitcount(rx_window);
-
-#if 0
-		LOGP(DRLCMAC, LOGL_DEBUG, "n_tx=%d, n_rx=%d, "
-			"tx=%02x, rx=%02x, mask=%02x, bad=%02x, good=%02x, ul=%02x, dl=%02x\n",
-			tx_slot_count, rx_slot_count,
-			tx_window, rx_window, rx_mask[mask_sel], rx_bad, rx_good, *ul_slots, *dl_slots);
-#endif
 
 		if (!rx_good) {
 #ifdef ENABLE_TS_ALLOC_DEBUG
