@@ -412,6 +412,7 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 
 	unsigned ul_ts, dl_ts;
 	unsigned num_tx;
+	enum {MASK_TT, MASK_TR};
 
 	uint32_t checked_tx[256/32] = {0};
 
@@ -486,13 +487,26 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 	for (num_tx = 1; num_tx <= ms_class->tx; num_tx += 1) {
 		uint16_t tx_valid_win = (1 << num_tx) - 1;
 
-		uint8_t rx_mask[2]; /* 0: Tt*, 1: Tr* */
-		rx_mask[0] = (0x100 >> OSMO_MAX(Ttb, Tta)) - 1;
-		rx_mask[0] &= ~((1 << (Trb + num_tx)) - 1);
-		rx_mask[0] = rx_mask[0] << 3 | rx_mask[0] >> 5;
-		rx_mask[1] = (0x100 >> Ttb) - 1;
-		rx_mask[1] &= ~((1 << (OSMO_MAX(Trb, Tra) + num_tx)) - 1);
-		rx_mask[1] = rx_mask[1] << 3 | rx_mask[1] >> 5;
+		uint8_t rx_mask[MASK_TR+1];
+		if (ms_class->type == 1) {
+			rx_mask[MASK_TT] = (0x100 >> OSMO_MAX(Ttb, Tta)) - 1;
+			rx_mask[MASK_TT] &= ~((1 << (Trb + num_tx)) - 1);
+			rx_mask[MASK_TR] = (0x100 >> Ttb) - 1;
+			rx_mask[MASK_TR] &=
+				~((1 << (OSMO_MAX(Trb, Tra) + num_tx)) - 1);
+		} else {
+			/* Class type 2 MS have independant RX and TX */
+			rx_mask[MASK_TT] = 0xff;
+			rx_mask[MASK_TR] = 0xff;
+		}
+		LOGP(DRLCMAC, LOGL_DEBUG, "rx_mask[TT] = %02x, rx_mask[TR] = %02x, num_tx = %d, Tta = %d, Ttb = %d, Tra = %d, Trb = %d\n",
+			rx_mask[MASK_TT], rx_mask[MASK_TR], num_tx, Tta, Ttb, Tra, Trb);
+
+		rx_mask[MASK_TT] = (rx_mask[MASK_TT] << 3) | (rx_mask[MASK_TT] >> 5);
+		rx_mask[MASK_TR] = (rx_mask[MASK_TR] << 3) | (rx_mask[MASK_TR] >> 5);
+
+		LOGP(DRLCMAC, LOGL_DEBUG, "rotated rx_mask[TT] = %02x, rx_mask[TR] = %02x\n",
+			rx_mask[MASK_TT], rx_mask[MASK_TR]);
 
 	/* Rotate group of TX slots: UUU-----, -UUU----, ..., UU-----U */
 	for (ul_ts = 0; ul_ts < 8; ul_ts += 1, tx_valid_win <<= 1) {
@@ -527,7 +541,7 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 		rx_valid_win = (rx_valid_win | rx_valid_win >> 8) & 0xff;
 
 	/* Validate with both Tta/Ttb/Trb and Ttb/Tra/Trb */
-	for (unsigned m_idx = 0; m_idx < ARRAY_SIZE(rx_mask); m_idx += 1) {
+	for (unsigned m_idx = MASK_TT; m_idx <= MASK_TR; m_idx += 1) {
 		unsigned common_slot_count;
 		unsigned req_common_slots;
 		unsigned rx_slot_count;
@@ -545,19 +559,52 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 		 * testing */
 
 		rx_window = rx_good & rx_valid_win;
-
-		/* Avoid repeated RX combination check */
-		if (test_and_set_bit(checked_rx, rx_window))
-			continue;
-
 		rx_slot_count = bitcount(rx_window);
 
-#if 0
-		LOGP(DRLCMAC, LOGL_DEBUG, "n_tx=%d, n_rx=%d, "
+#if 1
+		LOGP(DRLCMAC, LOGL_DEBUG, "n_tx=%d, n_rx=%d, m_idx=%d, "
 			"tx=%02x, rx=%02x, mask=%02x, bad=%02x, good=%02x, ul=%02x, dl=%02x\n",
-			tx_slot_count, rx_slot_count,
+			tx_slot_count, rx_slot_count, m_idx,
 			tx_window, rx_window, rx_mask[m_idx], rx_bad, rx_good, *ul_slots, *dl_slots);
 #endif
+
+		/* Check compliance with TS 45.002, table 6.4.2.2.1 */
+		/* Whether to skip this round doesn not only depend on the bit
+		 * sets but also on m_idx. Therefore this check must be done
+		 * before doing the test_and_set_bit shortcut. */
+		if (ms_class->type == 1) {
+			unsigned slot_sum = rx_slot_count + tx_slot_count;
+			/* Assume down+up/dynamic.
+			 * TODO: For ext-dynamic, down only, up only add more
+			 *       cases.
+			 */
+
+			/* FIXME: this is broken, the test case fails with "No
+			 * valid UL/DL slot combination found" */
+			if (slot_sum <= 6 && tx_slot_count < 3) {
+			       if (m_idx != MASK_TR) {
+				       /* Skip Tta */
+				       LOGP(DRLCMAC, LOGL_DEBUG, "Tra is not applied\n");
+				       continue;
+			       }
+			} else if (slot_sum > 6 && tx_slot_count < 3) {
+				if (m_idx != MASK_TT) {
+					/* Skip Tra */
+				       LOGP(DRLCMAC, LOGL_DEBUG, "Tta is not applied\n");
+					continue;
+				}
+			} else {
+				/* No supported row in table 6.4.2.2.1. */
+				LOGP(DRLCMAC, LOGL_DEBUG, "Not supported\n");
+				continue;
+			}
+		}
+
+		/* Avoid repeated RX combination check */
+		if (test_and_set_bit(checked_rx, rx_window)) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "Already checked\n");
+			continue;
+		}
 
 		if (!rx_good) {
 #ifdef ENABLE_TS_ALLOC_DEBUG
