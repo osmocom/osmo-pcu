@@ -49,7 +49,7 @@ void gprs_llc::put_dummy_frame(size_t req_len)
 	static const uint8_t llc_dummy_command[] = {
 		0x43, 0xc0, 0x01, 0x2b, 0x2b, 0x2b
 	};
-	static const int max_dummy_command_len = 79;
+	static const size_t max_dummy_command_len = 79;
 
 	put_frame(llc_dummy_command, sizeof(llc_dummy_command));
 
