@@ -461,6 +461,24 @@ static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, unsigned ms_class,
 
 	GprsMs::Guard guard(ms);
 
+	/* Continue with what is needed next */
+	switch (mode) {
+	case TEST_MODE_UL_ONLY:
+	case TEST_MODE_DL_ONLY:
+		/* We are done */
+		break;
+
+	case TEST_MODE_DL_AFTER_UL:
+	case TEST_MODE_UL_AND_DL:
+		ms = alloc_tbfs(the_bts, ms, ms_class, TEST_MODE_DL_ONLY);
+		break;
+
+	case TEST_MODE_UL_AFTER_DL:
+	case TEST_MODE_DL_AND_UL:
+		ms = alloc_tbfs(the_bts, ms, ms_class, TEST_MODE_UL_ONLY);
+		break;
+	}
+
 	/* Optionally delete the TBF */
 	switch (mode) {
 	case TEST_MODE_DL_AFTER_UL:
@@ -472,23 +490,7 @@ static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, unsigned ms_class,
 		break;
 	}
 
-	/* Continue with what is needed next */
-	switch (mode) {
-	case TEST_MODE_UL_ONLY:
-	case TEST_MODE_DL_ONLY:
-		/* We are done */
-		return ms;
-
-	case TEST_MODE_DL_AFTER_UL:
-	case TEST_MODE_UL_AND_DL:
-		return alloc_tbfs(the_bts, ms, ms_class, TEST_MODE_DL_ONLY);
-
-	case TEST_MODE_UL_AFTER_DL:
-	case TEST_MODE_DL_AND_UL:
-		return alloc_tbfs(the_bts, ms, ms_class, TEST_MODE_UL_ONLY);
-	}
-
-	return  NULL;
+	return  ms;
 }
 
 static void test_successive_allocation(algo_t algo, unsigned min_class,
@@ -584,7 +586,7 @@ static void test_successive_allocation()
 		32, "algorithm B class 10 (DL after UL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_AFTER_DL,
-		32, "algorithm A (UL after DL)");
+		7, "algorithm A (UL after DL)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_AFTER_DL,
 		32, "algorithm B class 10 (UL after DL)");
 
