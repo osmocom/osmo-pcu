@@ -405,12 +405,20 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 	Trb = ms_class->rb;
 	Type = ms_class->type;
 
-	/* Tta and Ttb may depend on hopping or frequency change */
-	/* TODO: Set them to 1  */
-	if (Ttb == MS_A || Ttb == MS_B)
+	/* MS_A maps to 0 if frequency hopping is disabled */
+	/* TODO: Set it to 1 if FH is implemented and enabled */
+	if (Ttb == MS_A)
 		Ttb = 0;
-	if (Trb == MS_A || Trb == MS_C)
+	if (Trb == MS_A)
 		Trb = 0;
+
+	/* MS_A and MS_B are 0 iff FH is disabled and there is no Tx/Rx change.
+	 * This is never the case with the current implementation, so 1 will
+	 * always be used. */
+	if (Ttb == MS_B)
+		Ttb = 1;
+	if (Trb == MS_C)
+		Trb = 1;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "- Rx=%d Tx=%d Sum Rx+Tx=%s  Tta=%s Ttb=%d "
 		" Tra=%d Trb=%d Type=%d\n", ms_class->rx, Tx,

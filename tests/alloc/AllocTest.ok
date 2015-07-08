@@ -588,356 +588,356 @@ PDCH[1] is control_ts for DL
 PDCH[1] is first common for DL
 Going to test multislot assignment MS_CLASS=19
 Testing UL then DL assignment.
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing DL then UL assignment followed by update
-PDCH[5] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[3] is used for UL
+PDCH[3] is control_ts for UL
+PDCH[3] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[3] is control_ts for DL
+PDCH[3] is first common for DL
 Going to test multislot assignment MS_CLASS=20
 Testing UL then DL assignment.
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing DL then UL assignment followed by update
-PDCH[5] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[3] is used for UL
+PDCH[3] is control_ts for UL
+PDCH[3] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[3] is control_ts for DL
+PDCH[3] is first common for DL
 Going to test multislot assignment MS_CLASS=21
 Testing UL then DL assignment.
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing DL then UL assignment followed by update
-PDCH[5] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[3] is used for UL
+PDCH[3] is control_ts for UL
+PDCH[3] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[3] is control_ts for DL
+PDCH[3] is first common for DL
 Going to test multislot assignment MS_CLASS=22
 Testing UL then DL assignment.
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing DL then UL assignment followed by update
-PDCH[5] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[3] is used for UL
+PDCH[3] is control_ts for UL
+PDCH[3] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[3] is control_ts for DL
+PDCH[3] is first common for DL
 Going to test multislot assignment MS_CLASS=23
 Testing UL then DL assignment.
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing DL then UL assignment followed by update
-PDCH[5] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[3] is used for UL
+PDCH[3] is control_ts for UL
+PDCH[3] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[3] is control_ts for DL
+PDCH[3] is first common for DL
 Going to test multislot assignment MS_CLASS=24
 Testing UL then DL assignment.
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing DL then UL assignment followed by update
-PDCH[5] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[3] is used for UL
+PDCH[3] is control_ts for UL
+PDCH[3] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[3] is control_ts for DL
+PDCH[3] is first common for DL
 Going to test multislot assignment MS_CLASS=25
 Testing UL then DL assignment.
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing DL then UL assignment followed by update
-PDCH[5] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[3] is used for UL
+PDCH[3] is control_ts for UL
+PDCH[3] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[3] is control_ts for DL
+PDCH[3] is first common for DL
 Going to test multislot assignment MS_CLASS=26
 Testing UL then DL assignment.
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing DL then UL assignment followed by update
-PDCH[5] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[3] is used for UL
+PDCH[3] is control_ts for UL
+PDCH[3] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[3] is control_ts for DL
+PDCH[3] is first common for DL
 Going to test multislot assignment MS_CLASS=27
 Testing UL then DL assignment.
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing DL then UL assignment followed by update
-PDCH[5] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[3] is used for UL
+PDCH[3] is control_ts for UL
+PDCH[3] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[3] is control_ts for DL
+PDCH[3] is first common for DL
 Going to test multislot assignment MS_CLASS=28
 Testing UL then DL assignment.
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing DL then UL assignment followed by update
-PDCH[5] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[3] is used for UL
+PDCH[3] is control_ts for UL
+PDCH[3] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[3] is control_ts for DL
+PDCH[3] is first common for DL
 Going to test multislot assignment MS_CLASS=29
 Testing UL then DL assignment.
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing DL then UL assignment followed by update
-PDCH[5] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
-PDCH[5] is used for UL
-PDCH[5] is control_ts for UL
-PDCH[5] is first common for UL
+PDCH[6] is used for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
+PDCH[6] is used for UL
+PDCH[6] is control_ts for UL
+PDCH[6] is first common for UL
 PDCH[5] is used for DL
 PDCH[6] is used for DL
 PDCH[7] is used for DL
-PDCH[5] is control_ts for DL
-PDCH[5] is first common for DL
+PDCH[6] is control_ts for DL
+PDCH[6] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[3] is used for UL
+PDCH[3] is control_ts for UL
+PDCH[3] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[3] is control_ts for DL
+PDCH[3] is first common for DL
 Mass test: TS0(xxxxxxxO)TS7 MS_Class=0
 Mass test: TS0(xxxxxxxO)TS7 MS_Class=1
 Mass test: TS0(xxxxxxxO)TS7 MS_Class=2
@@ -8743,20 +8743,20 @@ Going to test assignment with many TBF, algorithm B class 1-29 (UL and DL)
  TBF[15] class 16 reserves ...CDDDD
  TBF[16] class 17 reserves ...DCDDD
  TBF[17] class 18 reserves ...DDCDD
- TBF[18] class 19 reserves ....DDCD
- TBF[19] class 20 reserves ...DCDD.
- TBF[20] class 21 reserves ....DCDD
- TBF[21] class 22 reserves ...DCDD.
- TBF[22] class 23 reserves ....DDCD
- TBF[23] class 24 reserves ...DDCD.
- TBF[24] class 25 reserves ....DDCD
- TBF[25] class 26 reserves ...DCDD.
- TBF[26] class 27 reserves ....DCDD
- TBF[27] class 28 reserves .....DDC
+ TBF[18] class 19 reserves .....DCD
+ TBF[19] class 20 reserves ...DCD..
+ TBF[20] class 21 reserves .....DDC
+ TBF[21] class 22 reserves ...DDC..
+ TBF[22] class 23 reserves .....DCD
+ TBF[23] class 24 reserves ...DCD..
+ TBF[24] class 25 reserves .....DDC
+ TBF[25] class 26 reserves ...DDC..
+ TBF[26] class 27 reserves .....DCD
+ TBF[27] class 28 reserves ...DCD..
  TBF[28] class 29 reserves .....DDC
  TBF[29] class 1 reserves ...C....
  TBF[30] class 2 reserves ......DC
- TBF[31] class 3 reserves ......DC
+ TBF[31] class 3 reserves ....DC..
   Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm A (DL and UL)
  TBF[0] class 1 reserves ...C....
