@@ -97,9 +97,8 @@ static void check_tfi_usage(BTS *the_bts)
 							tbf->trx->trx_no) == tbf);
 				}
 				*tbf_var = tbf;
-				if (!(pdch->assigned_tfi() & (1 << tbf->tfi())))
-					fprintf(stderr, "ERROR: "
-						"TFI not marked as used in PDCH\n");
+				OSMO_ASSERT(pdch->assigned_tfi(tbf->direction) &
+					(1 << tbf->tfi()));
 			}
 		}
 	}

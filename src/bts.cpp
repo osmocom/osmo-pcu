@@ -1144,12 +1144,12 @@ void gprs_rlcmac_pdch::attach_tbf(gprs_rlcmac_tbf *tbf)
 		ul_tbf = static_cast<gprs_rlcmac_ul_tbf *>(tbf);
 		m_assigned_usf |= 1 << ul_tbf->m_usf[ts_no];
 	}
-	m_assigned_tfi |= 1UL << tbf->tfi();
+	m_assigned_tfi[tbf->direction] |= 1UL << tbf->tfi();
 
 	LOGP(DRLCMAC, LOGL_INFO, "PDCH(TS %d, TRX %d): Attaching %s, %d TBFs, "
 		"USFs = %02x, TFIs = %08x.\n",
 		ts_no, trx_no(), tbf->name(), m_num_tbfs[tbf->direction],
-		m_assigned_usf, m_assigned_tfi);
+		m_assigned_usf, m_assigned_tfi[tbf->direction]);
 }
 
 void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
@@ -1163,12 +1163,12 @@ void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
 		ul_tbf = static_cast<gprs_rlcmac_ul_tbf *>(tbf);
 		m_assigned_usf &= ~(1 << ul_tbf->m_usf[ts_no]);
 	}
-	m_assigned_tfi &= ~(1UL << tbf->tfi());
+	m_assigned_tfi[tbf->direction] &= ~(1UL << tbf->tfi());
 
 	LOGP(DRLCMAC, LOGL_INFO, "PDCH(TS %d, TRX %d): Detaching %s, %d TBFs, "
 		"USFs = %02x, TFIs = %08x.\n",
 		ts_no, trx_no(), tbf->name(), m_num_tbfs[tbf->direction],
-		m_assigned_usf, m_assigned_tfi);
+		m_assigned_usf, m_assigned_tfi[tbf->direction]);
 }
 
 void gprs_rlcmac_pdch::reserve(enum gprs_rlcmac_tbf_direction dir)
