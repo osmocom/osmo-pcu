@@ -370,6 +370,8 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 
 	unsigned ul_ts, dl_ts;
 	unsigned num_tx;
+	enum {MASK_TT, MASK_TR};
+	unsigned mask_sel;
 
 	uint32_t checked_tx[256/32] = {0};
 
@@ -444,13 +446,13 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 	for (num_tx = 1; num_tx <= ms_class->tx; num_tx += 1) {
 		uint16_t tx_valid_win = (1 << num_tx) - 1;
 
-		uint8_t rx_mask[2]; /* 0: Tt*, 1: Tr* */
-		rx_mask[0] = (0x100 >> OSMO_MAX(Ttb, Tta)) - 1;
-		rx_mask[0] &= ~((1 << (Trb + num_tx)) - 1);
-		rx_mask[0] = rx_mask[0] << 3 | rx_mask[0] >> 5;
-		rx_mask[1] = (0x100 >> Ttb) - 1;
-		rx_mask[1] &= ~((1 << (OSMO_MAX(Trb, Tra) + num_tx)) - 1);
-		rx_mask[1] = rx_mask[1] << 3 | rx_mask[1] >> 5;
+		uint8_t rx_mask[MASK_TR+1];
+		rx_mask[MASK_TT] = (0x100 >> OSMO_MAX(Ttb, Tta)) - 1;
+		rx_mask[MASK_TT] &= ~((1 << (Trb + num_tx)) - 1);
+		rx_mask[MASK_TT] = (rx_mask[MASK_TT] << 3) | (rx_mask[MASK_TT] >> 5);
+		rx_mask[MASK_TR] = (0x100 >> Ttb) - 1;
+		rx_mask[MASK_TR] &= ~((1 << (OSMO_MAX(Trb, Tra) + num_tx)) - 1);
+		rx_mask[MASK_TR] = (rx_mask[MASK_TR] << 3) | (rx_mask[MASK_TR] >> 5);
 
 	/* Rotate group of TX slots: UUU-----, -UUU----, ..., UU-----U */
 	for (ul_ts = 0; ul_ts < 8; ul_ts += 1, tx_valid_win <<= 1) {
@@ -485,7 +487,7 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 		rx_valid_win = (rx_valid_win | rx_valid_win >> 8) & 0xff;
 
 	/* Validate with both Tta/Ttb/Trb and Ttb/Tra/Trb */
-	for (unsigned m_idx = 0; m_idx < ARRAY_SIZE(rx_mask); m_idx += 1) {
+	for (mask_sel = MASK_TT; mask_sel <= MASK_TR; mask_sel += 1) {
 		unsigned common_slot_count;
 		unsigned req_common_slots;
 		unsigned rx_slot_count;
@@ -495,7 +497,7 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 		int capacity;
 
 		/* Filter out bad slots */
-		rx_bad = (uint16_t)(0xff & ~rx_mask[m_idx]) << ul_ts;
+		rx_bad = (uint16_t)(0xff & ~rx_mask[mask_sel]) << ul_ts;
 		rx_bad = (rx_bad | (rx_bad >> 8)) & 0xff;
 		rx_good = *dl_slots & ~rx_bad;
 
@@ -514,7 +516,7 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 		LOGP(DRLCMAC, LOGL_DEBUG, "n_tx=%d, n_rx=%d, "
 			"tx=%02x, rx=%02x, mask=%02x, bad=%02x, good=%02x, ul=%02x, dl=%02x\n",
 			tx_slot_count, rx_slot_count,
-			tx_window, rx_window, rx_mask[m_idx], rx_bad, rx_good, *ul_slots, *dl_slots);
+			tx_window, rx_window, rx_mask[mask_sel], rx_bad, rx_good, *ul_slots, *dl_slots);
 #endif
 
 		if (!rx_good) {
