@@ -449,15 +449,15 @@ PDCH[7] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[1] is used for UL
+PDCH[1] is control_ts for UL
+PDCH[1] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[1] is control_ts for DL
+PDCH[1] is first common for DL
 Going to test multislot assignment MS_CLASS=15
 Testing UL then DL assignment.
 PDCH[5] is used for UL
@@ -481,15 +481,15 @@ PDCH[7] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[1] is used for UL
+PDCH[1] is control_ts for UL
+PDCH[1] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[1] is control_ts for DL
+PDCH[1] is first common for DL
 Going to test multislot assignment MS_CLASS=16
 Testing UL then DL assignment.
 PDCH[5] is used for UL
@@ -513,15 +513,15 @@ PDCH[7] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[1] is used for UL
+PDCH[1] is control_ts for UL
+PDCH[1] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[1] is control_ts for DL
+PDCH[1] is first common for DL
 Going to test multislot assignment MS_CLASS=17
 Testing UL then DL assignment.
 PDCH[5] is used for UL
@@ -545,15 +545,15 @@ PDCH[7] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[1] is used for UL
+PDCH[1] is control_ts for UL
+PDCH[1] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[1] is control_ts for DL
+PDCH[1] is first common for DL
 Going to test multislot assignment MS_CLASS=18
 Testing UL then DL assignment.
 PDCH[5] is used for UL
@@ -577,15 +577,15 @@ PDCH[7] is used for DL
 PDCH[5] is control_ts for DL
 PDCH[5] is first common for DL
 Testing jolly example
-PDCH[2] is used for UL
-PDCH[2] is control_ts for UL
-PDCH[2] is first common for UL
+PDCH[1] is used for UL
+PDCH[1] is control_ts for UL
+PDCH[1] is first common for UL
 PDCH[1] is used for DL
 PDCH[2] is used for DL
 PDCH[3] is used for DL
 PDCH[4] is used for DL
-PDCH[2] is control_ts for DL
-PDCH[2] is first common for DL
+PDCH[1] is control_ts for DL
+PDCH[1] is first common for DL
 Going to test multislot assignment MS_CLASS=19
 Testing UL then DL assignment.
 PDCH[5] is used for UL
@@ -8740,15 +8740,15 @@ Going to test assignment with many TBF, algorithm B class 1-29 (UL and DL)
  TBF[12] class 13 reserves ...CDD..
  TBF[13] class 14 reserves ....DCDD
  TBF[14] class 15 reserves ...DDDDC
- TBF[15] class 16 reserves ...DDCDD
- TBF[16] class 17 reserves ...DDDCD
- TBF[17] class 18 reserves ...DDDDC
- TBF[18] class 19 reserves ...DCDD.
- TBF[19] class 20 reserves ....DCDD
- TBF[20] class 21 reserves ...DCDD.
- TBF[21] class 22 reserves ....DDCD
- TBF[22] class 23 reserves ...DCDD.
- TBF[23] class 24 reserves ....DCDD
+ TBF[15] class 16 reserves ...CDDDD
+ TBF[16] class 17 reserves ...DCDDD
+ TBF[17] class 18 reserves ...DDCDD
+ TBF[18] class 19 reserves ....DDCD
+ TBF[19] class 20 reserves ...DCDD.
+ TBF[20] class 21 reserves ....DCDD
+ TBF[21] class 22 reserves ...DCDD.
+ TBF[22] class 23 reserves ....DDCD
+ TBF[23] class 24 reserves ...DDCD.
  TBF[24] class 25 reserves ....DDCD
  TBF[25] class 26 reserves ...DCDD.
  TBF[26] class 27 reserves ....DCDD
@@ -8756,7 +8756,7 @@ Going to test assignment with many TBF, algorithm B class 1-29 (UL and DL)
  TBF[28] class 29 reserves .....DDC
  TBF[29] class 1 reserves ...C....
  TBF[30] class 2 reserves ......DC
- TBF[31] class 3 reserves ...C....
+ TBF[31] class 3 reserves ......DC
   Successfully allocated 32 UL TBFs
 Going to test assignment with many TBF, algorithm A (DL and UL)
  TBF[0] class 1 reserves ...C....

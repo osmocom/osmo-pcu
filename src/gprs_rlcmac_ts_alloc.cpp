@@ -447,11 +447,19 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 		uint16_t tx_valid_win = (1 << num_tx) - 1;
 
 		uint8_t rx_mask[MASK_TR+1];
-		rx_mask[MASK_TT] = (0x100 >> OSMO_MAX(Ttb, Tta)) - 1;
-		rx_mask[MASK_TT] &= ~((1 << (Trb + num_tx)) - 1);
+		if (ms_class->type == 1) {
+			rx_mask[MASK_TT] = (0x100 >> OSMO_MAX(Ttb, Tta)) - 1;
+			rx_mask[MASK_TT] &= ~((1 << (Trb + num_tx)) - 1);
+			rx_mask[MASK_TR] = (0x100 >> Ttb) - 1;
+			rx_mask[MASK_TR] &=
+				~((1 << (OSMO_MAX(Trb, Tra) + num_tx)) - 1);
+		} else {
+			/* Class type 2 MS have independant RX and TX */
+			rx_mask[MASK_TT] = 0xff;
+			rx_mask[MASK_TR] = 0xff;
+		}
+
 		rx_mask[MASK_TT] = (rx_mask[MASK_TT] << 3) | (rx_mask[MASK_TT] >> 5);
-		rx_mask[MASK_TR] = (0x100 >> Ttb) - 1;
-		rx_mask[MASK_TR] &= ~((1 << (OSMO_MAX(Trb, Tra) + num_tx)) - 1);
 		rx_mask[MASK_TR] = (rx_mask[MASK_TR] << 3) | (rx_mask[MASK_TR] >> 5);
 
 	/* Rotate group of TX slots: UUU-----, -UUU----, ..., UU-----U */
