@@ -47,12 +47,70 @@ static gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 		return tbf_alloc_dl_tbf(bts, ms, tfi, trx, ms_class, single_slot);
 }
 
+static void check_tfi_usage(BTS *the_bts)
+{
+	int pdch_no;
+	struct gprs_rlcmac_bts *bts = the_bts->bts_data();
+
+	struct gprs_rlcmac_tbf *tfi_usage[8][8][2][32] = {{{{NULL}}}};
+	struct llist_head *tbf_lists[2] = {
+		&bts->ul_tbfs,
+		&bts->dl_tbfs
+	};
+
+	gprs_rlcmac_tbf *tbf;
+	struct llist_pods *lpods;
+	unsigned list_idx;
+	struct gprs_rlcmac_tbf **tbf_var;
+
+	for (list_idx = 0; list_idx < ARRAY_SIZE(tbf_lists); list_idx += 1)
+	{
+
+		llist_pods_for_each_entry(tbf, tbf_lists[list_idx], list, lpods) {
+			for (pdch_no = 0; pdch_no < 8; pdch_no += 1) {
+				struct gprs_rlcmac_pdch *pdch = tbf->pdch[pdch_no];
+				if (pdch == NULL)
+					continue;
+
+				tbf_var = &tfi_usage
+					[tbf->trx->trx_no]
+					[pdch_no]
+					[tbf->direction]
+					[tbf->tfi()];
+
+				OSMO_ASSERT(*tbf_var == NULL);
+				if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
+					OSMO_ASSERT(pdch->dl_tbf_by_tfi(
+							tbf->tfi()) == tbf);
+					/* This assertion cannot hold with the
+					 * current API and shared TFI */
+					OSMO_ASSERT(the_bts->dl_tbf_by_tfi(
+							tbf->tfi(),
+							tbf->trx->trx_no) == tbf);
+				} else {
+					OSMO_ASSERT(pdch->ul_tbf_by_tfi(
+							tbf->tfi()) == tbf);
+					/* This assertion cannot hold with the
+					 * current API and shared TFI */
+					OSMO_ASSERT(the_bts->ul_tbf_by_tfi(
+							tbf->tfi(),
+							tbf->trx->trx_no) == tbf);
+				}
+				*tbf_var = tbf;
+				if (!(pdch->assigned_tfi() & (1 << tbf->tfi())))
+					fprintf(stderr, "ERROR: "
+						"TFI not marked as used in PDCH\n");
+			}
+		}
+	}
+}
+
 static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 	uint8_t slots, const int count)
 {
 	int tfi;
 	int i;
-	uint8_t used_trx;
+	uint8_t used_trx, tmp_trx;
 	BTS the_bts;
 	struct gprs_rlcmac_bts *bts;
 	struct gprs_rlcmac_tbf *tbfs[33] = { 0, };
@@ -80,6 +138,8 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 		OSMO_ASSERT(tfi >= 0);
 		tbfs[i] = tbf_alloc(bts, NULL, dir, tfi, used_trx, 0, 0);
 		OSMO_ASSERT(tbfs[i] != NULL);
+		tfi = the_bts.tfi_find_free(dir, &tmp_trx, used_trx);
+		OSMO_ASSERT(tbfs[i]->tfi() != tfi);
 	}
 
 	/* Now check that there are still some TFIs */
@@ -169,6 +229,8 @@ static void test_alloc_b(int ms_class)
 
 		OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
 
+		check_tfi_usage(&the_bts);
+
 		tbf_free(dl_tbf);
 		tbf_free(ul_tbf);
 	}
@@ -218,6 +280,8 @@ static void test_alloc_b(int ms_class)
 		dump_assignment(dl_tbf, "DL");
 		OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
 
+		check_tfi_usage(&the_bts);
+
 		tbf_free(dl_tbf);
 		tbf_free(ul_tbf);
 	}
@@ -257,6 +321,8 @@ static void test_alloc_b(int ms_class)
 		dump_assignment(dl_tbf, "DL");
 
 		OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
+
+		check_tfi_usage(&the_bts);
 
 		tbf_free(dl_tbf);
 		tbf_free(ul_tbf);
@@ -321,6 +387,8 @@ static void test_alloc_b(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool 
 		/* verify that both are on the same ts */
 		OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
 
+		check_tfi_usage(&the_bts);
+
 		tbf_free(dl_tbf);
 		tbf_free(ul_tbf);
 	}
@@ -372,6 +440,8 @@ static void test_alloc_b(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool 
 
 		OSMO_ASSERT(ul_tbf->ms_class() == ms_class);
 		OSMO_ASSERT(dl_tbf->ms_class() == ms_class);
+
+		check_tfi_usage(&the_bts);
 
 		tbf_free(dl_tbf);
 		tbf_free(ul_tbf);
@@ -521,7 +591,10 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 		uint8_t dl_slots = 0;
 		unsigned i;
 		int tfi = -1;
+		int tfi2;
+		uint8_t trx2;
 		GprsMs *ms;
+		enum gprs_rlcmac_tbf_direction dir;
 
 		ms = alloc_tbfs(&the_bts, NULL, ms_class, mode);
 		if (!ms)
@@ -533,9 +606,11 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 		if (ul_tbf) {
 			ul_slots = 1 << ul_tbf->first_common_ts;
 			tfi = ul_tbf->tfi();
+			dir = GPRS_RLCMAC_UL_TBF;
 		} else if (dl_tbf) {
 			ul_slots = 1 << dl_tbf->first_common_ts;
 			tfi = dl_tbf->tfi();
+			dir = GPRS_RLCMAC_DL_TBF;
 		}
 
 		for (i = 0; dl_tbf && i < ARRAY_SIZE(dl_tbf->pdch); i += 1)
@@ -553,10 +628,20 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 			get_dir_char(0x40, ul_slots, dl_slots),
 			get_dir_char(0x80, ul_slots, dl_slots));
 
+		if (tfi >= 0) {
+			OSMO_ASSERT(ms->current_trx());
+			tfi2 = the_bts.tfi_find_free(dir, &trx2,
+				ms->current_trx()->trx_no);
+			OSMO_ASSERT(tfi != tfi2);
+			OSMO_ASSERT(trx2 == ms->current_trx()->trx_no);
+		}
+
 		ms_class += 1;
 		if (ms_class > max_class)
 			ms_class = min_class;
 	}
+
+	check_tfi_usage(&the_bts);
 
 	printf("  Successfully allocated %d UL TBFs\n", counter);
 	OSMO_ASSERT(counter == expect_num);
