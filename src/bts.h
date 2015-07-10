@@ -104,20 +104,21 @@ private:
 	void rcv_measurement_report(Packet_Measurement_Report_t *t, uint32_t fn);
 	gprs_rlcmac_tbf *tbf_from_list_by_tfi(struct llist_head *tbf_list, uint8_t tfi,
 		enum gprs_rlcmac_tbf_direction dir);
+	gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi,
+		enum gprs_rlcmac_tbf_direction dir);
 #endif
 
 	uint8_t m_num_tbfs[2];
 	uint8_t m_num_reserved[2];
 	uint8_t m_assigned_usf; /* bit set */
 	uint32_t m_assigned_tfi[2]; /* bit set */
+	struct gprs_rlcmac_tbf *m_tbfs[2][32];
 };
 
 struct gprs_rlcmac_trx {
 	void *fl1h;
 	uint16_t arfcn;
 	struct gprs_rlcmac_pdch pdch[8];
-	struct gprs_rlcmac_tbf *ul_tbf[32]; /* array of UL TBF, by UL TFI */
-	struct gprs_rlcmac_tbf *dl_tbf[32]; /* array of DL TBF, by DL TFI */
 
 	/* back pointers */
 	struct BTS *bts;
@@ -242,8 +243,8 @@ public:
 
 	gprs_rlcmac_dl_tbf *dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
 	gprs_rlcmac_ul_tbf *ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
-	gprs_rlcmac_dl_tbf *dl_tbf_by_tfi(uint8_t tfi, uint8_t trx);
-	gprs_rlcmac_ul_tbf *ul_tbf_by_tfi(uint8_t tfi, uint8_t trx);
+	gprs_rlcmac_dl_tbf *dl_tbf_by_tfi(uint8_t tfi, uint8_t trx, uint8_t ts);
+	gprs_rlcmac_ul_tbf *ul_tbf_by_tfi(uint8_t tfi, uint8_t trx, uint8_t ts);
 
 	int tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx);
 
@@ -293,7 +294,6 @@ private:
 	PollController m_pollController;
 	SBAController m_sba;
 	struct rate_ctr_group *m_ratectrs;
-	gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi, uint8_t trx, enum gprs_rlcmac_tbf_direction dir);
 
 	GprsMsStorage m_ms_store;
 

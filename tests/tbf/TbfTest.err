@@ -35,7 +35,7 @@ Modifying MS object, TLLI: 0x00000000 -> 0x00002342, already confirmed partly
 The MS object cannot fully confirm an unexpected TLLI: 0x00004232, partly confirmed
 Modifying MS object, TLLI: 0x00002342 -> 0x00004232, already confirmed partly
 Modifying MS object, TLLI = 0x00004232, TA 4 -> 6
-Searching for first unallocated TFI: TRX=0 first TS=4
+Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45
@@ -110,7 +110,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN), 0 T
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
 ********** TBF ends here **********
 Destroying MS object, TLLI = 0xffeeddcc
-Searching for first unallocated TFI: TRX=0 first TS=4
+Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45
@@ -185,7 +185,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free
 PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), 0 TBFs, USFs = 00, TFIs = 00000000.
 ********** TBF ends here **********
 Destroying MS object, TLLI = 0xffeeddcc
-Searching for first unallocated TFI: TRX=0 first TS=4
+Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45
@@ -414,7 +414,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** TBF ends here **********
-Searching for first unallocated TFI: TRX=0 first TS=4
+Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45
@@ -434,7 +434,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBF
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
-Searching for first unallocated TFI: TRX=0 first TS=4
+Searching for first unallocated TFI: TRX=0
  Found TFI=1.
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45
@@ -1359,7 +1359,7 @@ data block: 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
 Polling cannot be sheduled in this TS 7, waiting for TS 4
 MSG = 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
-Searching for first unallocated TFI: TRX=0 first TS=7
+Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 MS requests UL TBF on RACH, so we provide one:
 ********** TBF starts here **********
@@ -1412,7 +1412,7 @@ MS requests single block allocation
 RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
-Searching for first unallocated TFI: TRX=0 first TS=7
+Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------

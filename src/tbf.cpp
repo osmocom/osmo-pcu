@@ -201,11 +201,6 @@ static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 {
 	int ts;
 
-	if (tbf->direction == GPRS_RLCMAC_UL_TBF)
-		tbf->trx->ul_tbf[tbf->tfi()] = NULL;
-	else
-		tbf->trx->dl_tbf[tbf->tfi()] = NULL;
-
 	for (ts = 0; ts < 8; ts++) {
 		if (!tbf->pdch[ts])
 			continue;
@@ -800,16 +795,8 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 
 void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_trx *trx)
 {
-	for (uint8_t tfi = 0; tfi < 32; tfi++) {
-		struct gprs_rlcmac_tbf *tbf;
-
-		tbf = trx->ul_tbf[tfi];
-		if (tbf)
-			tbf_free(tbf);
-		tbf = trx->dl_tbf[tfi];
-		if (tbf)
-			tbf_free(tbf);
-	}
+	for (uint8_t ts = 0; ts < 8; ts++)
+		free_all(&trx->pdch[ts]);
 }
 
 void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_pdch *pdch)

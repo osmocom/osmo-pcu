@@ -82,23 +82,17 @@ static void check_tfi_usage(BTS *the_bts)
 				if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
 					OSMO_ASSERT(pdch->dl_tbf_by_tfi(
 							tbf->tfi()) == tbf);
-					/* This assertion cannot hold with the
-					 * current API and shared TFI */
-#if 0
 					OSMO_ASSERT(the_bts->dl_tbf_by_tfi(
 							tbf->tfi(),
-							tbf->trx->trx_no) == tbf);
-#endif
+							tbf->trx->trx_no,
+							pdch_no) == tbf);
 				} else {
 					OSMO_ASSERT(pdch->ul_tbf_by_tfi(
 							tbf->tfi()) == tbf);
-					/* This assertion cannot hold with the
-					 * current API and shared TFI */
-#if 0
 					OSMO_ASSERT(the_bts->ul_tbf_by_tfi(
 							tbf->tfi(),
-							tbf->trx->trx_no) == tbf);
-#endif
+							tbf->trx->trx_no,
+							pdch_no) == tbf);
 				}
 				*tbf_var = tbf;
 				OSMO_ASSERT(pdch->assigned_tfi(tbf->direction) &

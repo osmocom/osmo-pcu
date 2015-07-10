@@ -526,7 +526,7 @@ static void test_tbf_single_phase()
 
 	the_bts.rcv_rach(0x03, fn, qta);
 
-	ul_tbf = the_bts.ul_tbf_by_tfi(tfi, trx_no);
+	ul_tbf = the_bts.ul_tbf_by_tfi(tfi, trx_no, ts_no);
 	OSMO_ASSERT(ul_tbf != NULL);
 
 	fprintf(stderr, "Got '%s', TA=%d\n",
@@ -605,7 +605,7 @@ static void test_tbf_two_phase()
 	pdch->rcv_block(&buf[0], num_bytes, 2654270, &meas);
 
 	/* check the TBF */
-	ul_tbf = the_bts.ul_tbf_by_tfi(tfi, trx_no);
+	ul_tbf = the_bts.ul_tbf_by_tfi(tfi, trx_no, ts_no);
 	OSMO_ASSERT(ul_tbf != NULL);
 
 	fprintf(stderr, "Got '%s', TA=%d, CS=%d\n",

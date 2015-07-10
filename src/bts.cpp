@@ -257,48 +257,35 @@ gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 }
 
 /* lookup downlink TBF Entity (by TFI) */
-gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_tfi(uint8_t tfi, uint8_t trx)
+gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_tfi(uint8_t tfi, uint8_t trx, uint8_t ts)
 {
-	return static_cast<gprs_rlcmac_dl_tbf *>(tbf_by_tfi(tfi, trx, GPRS_RLCMAC_DL_TBF));
+	if (trx >= 8 || ts >= 8)
+		return NULL;
+
+	return m_bts.trx[trx].pdch[ts].dl_tbf_by_tfi(tfi);
 }
 
 /* lookup uplink TBF Entity (by TFI) */
-gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_tfi(uint8_t tfi, uint8_t trx)
+gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_tfi(uint8_t tfi, uint8_t trx, uint8_t ts)
 {
-	return static_cast<gprs_rlcmac_ul_tbf *>(tbf_by_tfi(tfi, trx, GPRS_RLCMAC_UL_TBF));
-}
-
-/* lookup TBF Entity (by TFI) */
-gprs_rlcmac_tbf *BTS::tbf_by_tfi(uint8_t tfi, uint8_t trx,
-				enum gprs_rlcmac_tbf_direction dir)
-{
-	struct gprs_rlcmac_tbf *tbf;
-
-	if (tfi >= 32 || trx >= 8)
+	if (trx >= 8 || ts >= 8)
 		return NULL;
 
-	if (dir == GPRS_RLCMAC_UL_TBF)
-		tbf = m_bts.trx[trx].ul_tbf[tfi];
-	else
-		tbf = m_bts.trx[trx].dl_tbf[tfi];
-	if (!tbf)
-		return NULL;
-
-	if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)) {
-		return tbf;
-	}
-
-	return NULL;
+	return m_bts.trx[trx].pdch[ts].ul_tbf_by_tfi(tfi);
 }
 
-/* FIXME: spread resources over multiple TRX. Also add option to use same
- * TRX in case of existing TBF for TLLI in the other direction. */
-/* search for free TFI and return TFI, TRX */
+/*
+ * Search for free TFI and return TFI, TRX.
+ * This method returns the first TFI that is currently not used in any PDCH of
+ * a TRX. The first TRX that contains such an TFI is returned. Negative values
+ * indicate errors.
+ */
 int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir,
 		uint8_t *_trx, int8_t use_trx)
 {
 	struct gprs_rlcmac_pdch *pdch;
-	struct gprs_rlcmac_tbf **tbfp;
+	uint32_t free_tfis;
+	bool has_pdch = false;
 	uint8_t trx_from, trx_to, trx, ts, tfi;
 
 	if (use_trx >= 0 && use_trx < 8)
@@ -308,42 +295,50 @@ int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir,
 		trx_to = 7;
 	}
 
-	/* on TRX find first enabled TS */
+	/* find a TFI that is unused on all PDCH */
 	for (trx = trx_from; trx <= trx_to; trx++) {
+		bool trx_has_pdch = false;
+
+		free_tfis = 0xffffffff;
+
 		for (ts = 0; ts < 8; ts++) {
 			pdch = &m_bts.trx[trx].pdch[ts];
 			if (!pdch->is_enabled())
 				continue;
-			break;
+			free_tfis &= ~pdch->assigned_tfi(dir);
+			trx_has_pdch = true;
+			has_pdch = true;
 		}
-		if (ts < 8)
+		if (trx_has_pdch && free_tfis)
 			break;
+
+		free_tfis = 0;
 	}
-	if (trx > trx_to) {
+	if (!has_pdch) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH available.\n");
 		return -EINVAL;
 	}
 
+	if (!free_tfis) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No TFI available.\n");
+		return -EBUSY;
+	}
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "Searching for first unallocated TFI: "
-		"TRX=%d first TS=%d\n", trx, ts);
-	if (dir == GPRS_RLCMAC_UL_TBF)
-		tbfp = m_bts.trx[trx].ul_tbf;
-	else
-		tbfp = m_bts.trx[trx].dl_tbf;
+
+	LOGP(DRLCMAC, LOGL_DEBUG,
+		"Searching for first unallocated TFI: TRX=%d\n", trx);
+
+	/* find the first */
 	for (tfi = 0; tfi < 32; tfi++) {
-		if (!tbfp[tfi])
+		if (free_tfis & 1 << tfi)
 			break;
 	}
 
-	if (tfi < 32) {
-		LOGP(DRLCMAC, LOGL_DEBUG, " Found TFI=%d.\n", tfi);
-		*_trx = trx;
-		return tfi;
-	}
-	LOGP(DRLCMAC, LOGL_NOTICE, "No TFI available.\n");
+	OSMO_ASSERT(tfi < 32);
 
-	return -1;
+	LOGP(DRLCMAC, LOGL_DEBUG, " Found TFI=%d.\n", tfi);
+	*_trx = trx;
+	return tfi;
 }
 
 int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
@@ -693,7 +688,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len,
 	}
 
 	/* find TBF inst from given TFI */
-	tbf = bts()->ul_tbf_by_tfi(rh->tfi, trx_no());
+	tbf = ul_tbf_by_tfi(rh->tfi);
 	if (!tbf) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA unknown TFI=%d\n",
 			rh->tfi);
@@ -990,7 +985,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 	if (request->ID.u.Global_TFI.UnionType) {
 		struct gprs_rlcmac_dl_tbf *dl_tbf;
 		int8_t tfi = request->ID.u.Global_TFI.u.DOWNLINK_TFI;
-		dl_tbf = bts()->dl_tbf_by_tfi(tfi, trx_no());
+		dl_tbf = bts()->dl_tbf_by_tfi(tfi, trx_no(), ts_no);
 		if (!dl_tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TFI=%d\n", tfi);
 			return;
@@ -1001,7 +996,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 	} else {
 		struct gprs_rlcmac_ul_tbf *ul_tbf;
 		int8_t tfi = request->ID.u.Global_TFI.u.UPLINK_TFI;
-		ul_tbf = bts()->ul_tbf_by_tfi(tfi, trx_no());
+		ul_tbf = bts()->ul_tbf_by_tfi(tfi, trx_no(), ts_no);
 		if (!ul_tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TFI=%d\n", tfi);
 			return;
@@ -1120,17 +1115,46 @@ gprs_rlcmac_tbf *gprs_rlcmac_pdch::tbf_from_list_by_tfi(struct llist_head *tbf_l
 
 gprs_rlcmac_ul_tbf *gprs_rlcmac_pdch::ul_tbf_by_tfi(uint8_t tfi)
 {
-	return static_cast<gprs_rlcmac_ul_tbf *>(tbf_from_list_by_tfi(&bts_data()->ul_tbfs, tfi, GPRS_RLCMAC_UL_TBF));
+	return static_cast<gprs_rlcmac_ul_tbf *>(
+		tbf_by_tfi(tfi, GPRS_RLCMAC_UL_TBF));
 }
 
 gprs_rlcmac_dl_tbf *gprs_rlcmac_pdch::dl_tbf_by_tfi(uint8_t tfi)
 {
-	return static_cast<gprs_rlcmac_dl_tbf *>(tbf_from_list_by_tfi(&bts_data()->dl_tbfs, tfi, GPRS_RLCMAC_DL_TBF));
+	return static_cast<gprs_rlcmac_dl_tbf *>(
+		tbf_by_tfi(tfi, GPRS_RLCMAC_DL_TBF));
+}
+
+/* lookup TBF Entity (by TFI) */
+gprs_rlcmac_tbf *gprs_rlcmac_pdch::tbf_by_tfi(uint8_t tfi,
+	enum gprs_rlcmac_tbf_direction dir)
+{
+	struct gprs_rlcmac_tbf *tbf;
+
+	if (tfi >= 32)
+		return NULL;
+
+	tbf = m_tbfs[dir][tfi];
+
+	if (!tbf)
+		return NULL;
+
+	if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)) {
+		return tbf;
+	}
+
+	return NULL;
 }
 
 void gprs_rlcmac_pdch::attach_tbf(gprs_rlcmac_tbf *tbf)
 {
 	gprs_rlcmac_ul_tbf *ul_tbf;
+
+	if (m_tbfs[tbf->direction][tbf->tfi()])
+		LOGP(DRLCMAC, LOGL_ERROR, "PDCH(TS %d, TRX %d): "
+			"%s has not been detached, overwriting it\n",
+			ts_no, trx_no(),
+			m_tbfs[tbf->direction][tbf->tfi()]->name());
 
 	m_num_tbfs[tbf->direction] += 1;
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
@@ -1138,6 +1162,7 @@ void gprs_rlcmac_pdch::attach_tbf(gprs_rlcmac_tbf *tbf)
 		m_assigned_usf |= 1 << ul_tbf->m_usf[ts_no];
 	}
 	m_assigned_tfi[tbf->direction] |= 1UL << tbf->tfi();
+	m_tbfs[tbf->direction][tbf->tfi()] = tbf;
 
 	LOGP(DRLCMAC, LOGL_INFO, "PDCH(TS %d, TRX %d): Attaching %s, %d TBFs, "
 		"USFs = %02x, TFIs = %08x.\n",
@@ -1157,6 +1182,7 @@ void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
 		m_assigned_usf &= ~(1 << ul_tbf->m_usf[ts_no]);
 	}
 	m_assigned_tfi[tbf->direction] &= ~(1UL << tbf->tfi());
+	m_tbfs[tbf->direction][tbf->tfi()] = NULL;
 
 	LOGP(DRLCMAC, LOGL_INFO, "PDCH(TS %d, TRX %d): Detaching %s, %d TBFs, "
 		"USFs = %02x, TFIs = %08x.\n",
