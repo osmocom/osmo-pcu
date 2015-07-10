@@ -131,6 +131,25 @@ static inline int8_t find_free_usf(struct gprs_rlcmac_pdch *pdch)
 	return -1;
 }
 
+static inline int8_t find_free_tfi(struct gprs_rlcmac_pdch *pdch,
+	enum gprs_rlcmac_tbf_direction dir)
+{
+	uint32_t tfi_map = 0;
+	int8_t tfi;
+
+	tfi_map = pdch->assigned_tfi(dir);
+	if (tfi_map == 0xffffffffUL)
+		return -1;
+
+	/* look for USF, don't use USF=7 */
+	for (tfi = 0; tfi < 32; tfi++) {
+		if (!(tfi_map & (1 << tfi)))
+			return tfi;
+	}
+
+	return -1;
+}
+
 static int find_possible_pdchs(struct gprs_rlcmac_trx *trx,
 	size_t max_slots,
 	uint8_t mask, const char *mask_reason = NULL)
@@ -196,17 +215,19 @@ static int find_least_busy_pdch(struct gprs_rlcmac_trx *trx,
 	enum gprs_rlcmac_tbf_direction dir,
 	uint8_t mask,
 	int (*fn)(struct gprs_rlcmac_pdch *, enum gprs_rlcmac_tbf_direction dir),
-	int *free_usf = 0)
+	int *free_tfi = 0, int *free_usf = 0)
 {
 	unsigned ts;
 	int min_used = INT_MAX;
 	int min_ts = -1;
+	int min_tfi = -1;
 	int min_usf = -1;
 
 	for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
 		struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts];
 		int num_tbfs;
 		int usf = -1; /* must be signed */
+		int tfi = -1;
 
 		if (((1 << ts) & mask) == 0)
 			continue;
@@ -215,6 +236,16 @@ static int find_least_busy_pdch(struct gprs_rlcmac_trx *trx,
 
 		if (num_tbfs < min_used) {
 			/* We have found a candidate */
+			/* Make sure that a TFI is available */
+			if (free_tfi) {
+				tfi = find_free_tfi(pdch, dir);
+				if (tfi < 0) {
+					LOGP(DRLCMAC, LOGL_DEBUG,
+						"- Skipping TS %d, because "
+						"no TFI available\n", ts);
+					continue;
+				}
+			}
 			/* Make sure that an USF is available */
 			if (dir == GPRS_RLCMAC_UL_TBF) {
 				usf = find_free_usf(pdch);
@@ -232,6 +263,7 @@ static int find_least_busy_pdch(struct gprs_rlcmac_trx *trx,
 					min_ts, min_used, num_tbfs);
 			min_used = num_tbfs;
 			min_ts = ts;
+			min_tfi = tfi;
 			min_usf = usf;
 		} else {
 			LOGP(DRLCMAC, LOGL_DEBUG,
@@ -244,6 +276,8 @@ static int find_least_busy_pdch(struct gprs_rlcmac_trx *trx,
 	if (min_ts < 0)
 		return -1;
 
+	if (free_tfi)
+		*free_tfi = min_tfi;
 	if (free_usf)
 		*free_usf = min_usf;
 
@@ -262,8 +296,10 @@ static void attach_tbf_to_pdch(struct gprs_rlcmac_pdch *pdch,
 
 static void assign_uplink_tbf_usf(
 				struct gprs_rlcmac_pdch *pdch,
-				struct gprs_rlcmac_ul_tbf *tbf, int8_t usf)
+				struct gprs_rlcmac_ul_tbf *tbf,
+				int tfi, int8_t usf)
 {
+	tbf->m_tfi = tfi;
 	tbf->trx->ul_tbf[tbf->tfi()] = tbf;
 	tbf->m_usf[pdch->ts_no] = usf;
 	attach_tbf_to_pdch(pdch, tbf);
@@ -271,10 +307,46 @@ static void assign_uplink_tbf_usf(
 
 static void assign_dlink_tbf(
 				struct gprs_rlcmac_pdch *pdch,
-				struct gprs_rlcmac_dl_tbf *tbf)
+				struct gprs_rlcmac_dl_tbf *tbf,
+				int tfi)
 {
+	tbf->m_tfi = tfi;
 	tbf->trx->dl_tbf[tbf->tfi()] = tbf;
 	attach_tbf_to_pdch(pdch, tbf);
+}
+
+static int find_trx(BTS *bts, GprsMs *ms, int use_trx)
+{
+	unsigned trx_no;
+	unsigned ts;
+	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
+
+	/* We must use the TRX currently actively used by an MS */
+	if (ms && ms->current_trx())
+		return ms->current_trx()->trx_no;
+
+	if (use_trx >= 0 && use_trx < 8)
+		return use_trx;
+
+	/* Find the first TRX that has a PDCH with a free UL and DL TFI */
+	for (trx_no = 0; trx_no < ARRAY_SIZE(bts_data->trx); trx_no += 1) {
+		struct gprs_rlcmac_trx *trx = &bts_data->trx[trx_no];
+		for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
+			struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts];
+			if (!pdch->is_enabled())
+				continue;
+
+			if (pdch->assigned_tfi(GPRS_RLCMAC_UL_TBF) == 0xffffffff)
+				continue;
+
+			if (pdch->assigned_tfi(GPRS_RLCMAC_DL_TBF) == 0xffffffff)
+				continue;
+
+			return trx_no;
+		}
+	}
+
+	return -EBUSY;
 }
 
 static int tfi_find_free(BTS *bts, GprsMs *ms, enum gprs_rlcmac_tbf_direction dir,
@@ -309,7 +381,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	int ts = -1;
 	uint8_t ul_slots, dl_slots;
 	int trx_no;
-	int rc;
+	int tfi = -1;
 	int usf = -1;
 	int mask = 0xff;
 	const char *mask_reason = NULL;
@@ -317,12 +389,12 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm A) for class "
 		"%d\n", tbf->ms_class());
 
-	rc = tfi_find_free(bts->bts, ms, tbf->direction, use_trx, &trx_no);
-	if (rc < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "- Failed to allocate a TFI\n");
-		return rc;
+	trx_no = find_trx(bts->bts, ms, use_trx);
+	if (trx_no < 0) {
+		LOGP(DRLCMAC, LOGL_NOTICE,
+			"- Failed to find a usable TRX (TFI exhausted)\n");
+		return trx_no;
 	}
-	tbf->m_tfi = rc;
 	tbf->trx = &bts->trx[trx_no];
 
 	dl_slots = ms->reserved_dl_slots();
@@ -343,11 +415,12 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 		return -EINVAL;
 
 	ts = find_least_busy_pdch(tbf->trx, tbf->direction, mask,
-		compute_usage_by_reservation, &usf);
+		compute_usage_by_reservation,
+		&tfi, &usf);
 
 	if (ts < 0) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "- Failed "
-			"to allocate a TS, no USF available\n");
+			"to allocate a TS, no TFI or USF available\n");
 		return -EBUSY;
 	}
 
@@ -364,13 +437,14 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 			return -EBUSY;
 		}
 
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Assign uplink TS=%d USF=%d\n",
-			ts, usf);
-		assign_uplink_tbf_usf(pdch, ul_tbf, usf);
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Assign uplink TS=%d TFI=%d USF=%d\n",
+			ts, tfi, usf);
+		assign_uplink_tbf_usf(pdch, ul_tbf, tfi, usf);
 	} else {
 		struct gprs_rlcmac_dl_tbf *dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(tbf);
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Assign downlink TS=%d\n", ts);
-		assign_dlink_tbf(pdch, dl_tbf);
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Assign downlink TS=%d TFI=%d\n",
+			ts, tfi);
+		assign_dlink_tbf(pdch, dl_tbf, tfi);
 	}
 	/* the only one TS is the common TS */
 	tbf->first_ts = tbf->first_common_ts = ts;
@@ -751,7 +825,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		if (ts < 0)
 			ts = find_least_busy_pdch(tbf->trx, tbf->direction,
 				dl_slots & ul_slots, compute_usage_by_num_tbfs,
-				NULL);
+				NULL, NULL);
 		if (ts < 0)
 			ul_slots = dl_slots = lsb(dl_slots & ul_slots);
 		else
@@ -807,7 +881,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 
 			LOGP(DRLCMAC, LOGL_DEBUG, "- Assigning DL TS "
 				"%d\n", ts);
-			assign_dlink_tbf(&tbf->trx->pdch[ts], dl_tbf);
+			assign_dlink_tbf(&tbf->trx->pdch[ts], dl_tbf, tbf->tfi());
 			slotcount++;
 			if (slotcount == 1)
 				dl_tbf->first_ts = ts;
@@ -825,7 +899,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 
 		ts = find_least_busy_pdch(tbf->trx, GPRS_RLCMAC_UL_TBF,
 			ul_slots, compute_usage_by_num_tbfs,
-			&free_usf);
+			NULL, &free_usf);
 
 		if (free_usf < 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No USF available\n");
@@ -840,7 +914,8 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 					ul_slots, 'U'),
 			single ? ", single" : "");
 
-		assign_uplink_tbf_usf(&tbf->trx->pdch[ts], ul_tbf, free_usf);
+		assign_uplink_tbf_usf(&tbf->trx->pdch[ts], ul_tbf,
+			tbf->tfi(), free_usf);
 		slotcount++;
 		ul_tbf->first_ts = ts;
 

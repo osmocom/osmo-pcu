@@ -84,17 +84,21 @@ static void check_tfi_usage(BTS *the_bts)
 							tbf->tfi()) == tbf);
 					/* This assertion cannot hold with the
 					 * current API and shared TFI */
+#if 0
 					OSMO_ASSERT(the_bts->dl_tbf_by_tfi(
 							tbf->tfi(),
 							tbf->trx->trx_no) == tbf);
+#endif
 				} else {
 					OSMO_ASSERT(pdch->ul_tbf_by_tfi(
 							tbf->tfi()) == tbf);
 					/* This assertion cannot hold with the
 					 * current API and shared TFI */
+#if 0
 					OSMO_ASSERT(the_bts->ul_tbf_by_tfi(
 							tbf->tfi(),
 							tbf->trx->trx_no) == tbf);
+#endif
 				}
 				*tbf_var = tbf;
 				OSMO_ASSERT(pdch->assigned_tfi(tbf->direction) &
@@ -112,7 +116,7 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 	uint8_t used_trx, tmp_trx;
 	BTS the_bts;
 	struct gprs_rlcmac_bts *bts;
-	struct gprs_rlcmac_tbf *tbfs[33] = { 0, };
+	struct gprs_rlcmac_tbf *tbfs[32*8+1] = { 0, };
 
 	printf("Testing alloc_a direction(%d)\n", dir);
 
@@ -132,26 +136,21 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 	 * we are out of tfi's. Observe this and make sure that at
 	 * least this part is working okay.
 	 */
-	for (int i = 0; i < count; ++i) {
+	for (i = 0; i < (int)ARRAY_SIZE(tbfs); ++i) {
 		tbfs[i] = tbf_alloc(bts, NULL, dir, -1, 0, 0);
-		OSMO_ASSERT(tbfs[i] != NULL);
+		if (tbfs[i] == NULL)
+			break;
+
+		used_trx = tbfs[i]->trx->trx_no;
 		tfi = the_bts.tfi_find_free(dir, &tmp_trx, used_trx);
 		OSMO_ASSERT(tbfs[i]->tfi() != tfi);
 	}
 
-	/* Now check that there are still some TFIs */
-	tfi = the_bts.tfi_find_free(dir, &used_trx, 0);
-	switch (dir) {
-	case GPRS_RLCMAC_UL_TBF:
-		OSMO_ASSERT(tfi >= 0);
-		break;
-	case GPRS_RLCMAC_DL_TBF:
-		OSMO_ASSERT(tfi < 0);
-		break;
-	}
-	OSMO_ASSERT(!tbf_alloc(bts, NULL, dir, -1, 0, 0));
+	check_tfi_usage(&the_bts);
 
-	for (size_t i = 0; i < ARRAY_SIZE(tbfs); ++i)
+	OSMO_ASSERT(i == count);
+
+	for (i = 0; i < count; ++i)
 		if (tbfs[i])
 			tbf_free(tbfs[i]);
 
@@ -163,11 +162,11 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 static void test_alloc_a()
 {
 	/* slots 2 - 3 */
-	test_alloc_a(GPRS_RLCMAC_DL_TBF, 0x0c, 32);
+	test_alloc_a(GPRS_RLCMAC_DL_TBF, 0x0c, 32*2);
 	test_alloc_a(GPRS_RLCMAC_UL_TBF, 0x0c, 14);
 
 	/* slots 1 - 5 */
-	test_alloc_a(GPRS_RLCMAC_DL_TBF, 0x1e, 32);
+	test_alloc_a(GPRS_RLCMAC_DL_TBF, 0x1e, 32*4);
 	test_alloc_a(GPRS_RLCMAC_UL_TBF, 0x1e, 28);
 }
 
@@ -626,16 +625,16 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 			ms_class = min_class;
 	}
 
-	check_tfi_usage(&the_bts);
-
 	printf("  Successfully allocated %d UL TBFs\n", counter);
 	OSMO_ASSERT(counter == expect_num);
+
+	check_tfi_usage(&the_bts);
 }
 
 static void test_successive_allocation()
 {
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_AND_DL,
-		32, "algorithm A (UL and DL)");
+		35, "algorithm A (UL and DL)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_AND_DL,
 		32, "algorithm B class 10 (UL and DL)");
 	test_successive_allocation(alloc_algorithm_b, 12, 12, TEST_MODE_UL_AND_DL,
@@ -646,27 +645,27 @@ static void test_successive_allocation()
 		32, "algorithm B class 1-29 (UL and DL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_DL_AND_UL,
-		32, "algorithm A (DL and UL)");
+		35, "algorithm A (DL and UL)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_DL_AND_UL,
 		32, "algorithm B class 10 (DL and UL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_DL_AFTER_UL,
-		32, "algorithm A (DL after UL)");
+		160, "algorithm A (DL after UL)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_DL_AFTER_UL,
 		32, "algorithm B class 10 (DL after UL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_AFTER_DL,
-		32, "algorithm A (UL after DL)");
+		35, "algorithm A (UL after DL)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_AFTER_DL,
 		32, "algorithm B class 10 (UL after DL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_ONLY,
-		32, "algorithm A (UL only)");
+		35, "algorithm A (UL only)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_ONLY,
 		32, "algorithm B class 10 (UL only)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_DL_ONLY,
-		32, "algorithm A (DL ONLY)");
+		160, "algorithm A (DL ONLY)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_DL_ONLY,
 		32, "algorithm B class 10 (DL ONLY)");
 }
