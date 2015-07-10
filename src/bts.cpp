@@ -392,7 +392,6 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 {
 	struct gprs_rlcmac_ul_tbf *tbf = NULL;
 	uint8_t trx_no, ts_no = 0;
-	int8_t tfi; /* must be signed */
 	uint8_t sb = 0;
 	uint32_t sb_fn = 0;
 	int rc;
@@ -429,14 +428,8 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	} else {
 		// Create new TBF
 		#warning "Copy and pate with other routines.."
-		tfi = tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
-		if (tfi < 0) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-			/* FIXME: send reject */
-			return -EBUSY;
-		}
 		/* set class to 0, since we don't know the multislot class yet */
-		tbf = tbf_alloc_ul_tbf(&m_bts, NULL, tfi, trx_no, 0, 1);
+		tbf = tbf_alloc_ul_tbf(&m_bts, NULL, -1, 0, 1);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 			/* FIXME: send reject */

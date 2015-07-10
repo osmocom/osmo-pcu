@@ -139,12 +139,11 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 				const uint8_t ms_class,
 				struct gprs_rlcmac_dl_tbf **tbf)
 {
-	uint8_t trx, ss;
+	uint8_t ss;
 	int8_t use_trx;
 	uint16_t ta = 0;
 	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL, *old_ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
-	int8_t tfi; /* must be signed */
 	GprsMs *ms;
 
 	/* check for uplink data, so we copy our informations */
@@ -170,10 +169,8 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 
 	// Create new TBF (any TRX)
 #warning "Copy and paste with alloc_ul_tbf"
-	tfi = bts->bts->tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx, use_trx);
-	if (tfi >= 0)
-		/* set number of downlink slots according to multislot class */
-		dl_tbf = tbf_alloc_dl_tbf(bts, ms, tfi, trx, ms_class, ss);
+	/* set number of downlink slots according to multislot class */
+	dl_tbf = tbf_alloc_dl_tbf(bts, ms, use_trx, ms_class, ss);
 
 	if (!dl_tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
@@ -842,16 +839,12 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, uint8_t ssn, uint8_t *rbb
 
 void gprs_rlcmac_dl_tbf::reuse_tbf()
 {
-	uint8_t trx;
 	struct gprs_rlcmac_dl_tbf *new_tbf = NULL;
-	int8_t tfi; /* must be signed */
 
 	bts->tbf_reused();
 
-	tfi = bts->tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx, this->trx->trx_no);
-	if (tfi >= 0)
-		new_tbf = tbf_alloc_dl_tbf(bts->bts_data(), ms(), tfi, trx,
-			ms_class(), 0);
+	new_tbf = tbf_alloc_dl_tbf(bts->bts_data(), ms(),
+		this->trx->trx_no, ms_class(), 0);
 
 	if (!new_tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");

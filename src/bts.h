@@ -162,7 +162,8 @@ struct gprs_rlcmac_bts {
 	struct gprs_rlcmac_trx trx[8];
 	int (*alloc_algorithm)(struct gprs_rlcmac_bts *bts,
 		struct GprsMs *ms,
-		struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single);
+		struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single,
+		int use_tbf);
 	uint32_t alloc_algorithm_curst; /* options to customize algorithm */
 	uint8_t force_two_phase;
 	uint8_t alpha, gamma;

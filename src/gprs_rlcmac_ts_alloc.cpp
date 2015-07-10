@@ -277,6 +277,24 @@ static void assign_dlink_tbf(
 	attach_tbf_to_pdch(pdch, tbf);
 }
 
+static int tfi_find_free(BTS *bts, GprsMs *ms, enum gprs_rlcmac_tbf_direction dir,
+	int use_trx, int *trx_no_)
+{
+	int tfi;
+	uint8_t trx_no;
+
+	if (use_trx == -1 && ms->current_trx())
+		use_trx = ms->current_trx()->trx_no;
+
+	tfi = bts->tfi_find_free(dir, &trx_no, use_trx);
+	if (tfi < 0)
+		return -EBUSY;
+
+	if (trx_no_)
+		*trx_no_ = trx_no;
+
+	return tfi;
+}
 
 /* Slot Allocation: Algorithm A
  *
@@ -284,17 +302,28 @@ static void assign_dlink_tbf(
  */
 int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	GprsMs *ms,
-	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single)
+	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single,
+	int use_trx)
 {
 	struct gprs_rlcmac_pdch *pdch;
 	int ts = -1;
 	uint8_t ul_slots, dl_slots;
+	int trx_no;
+	int rc;
 	int usf = -1;
 	int mask = 0xff;
 	const char *mask_reason = NULL;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm A) for class "
 		"%d\n", tbf->ms_class());
+
+	rc = tfi_find_free(bts->bts, ms, tbf->direction, use_trx, &trx_no);
+	if (rc < 0) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "- Failed to allocate a TFI\n");
+		return rc;
+	}
+	tbf->m_tfi = rc;
+	tbf->trx = &bts->trx[trx_no];
 
 	dl_slots = ms->reserved_dl_slots();
 	ul_slots = ms->reserved_ul_slots();
@@ -348,7 +377,6 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	ms->set_reserved_slots(tbf->trx, 1 << ts, 1 << ts);
 
 	tbf->upgrade_to_multislot = 0;
-
 	return 0;
 }
 
@@ -669,7 +697,7 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
  */
 int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	GprsMs *ms,
-	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single)
+	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single, int use_trx)
 {
 	uint8_t dl_slots = 0;
 	uint8_t ul_slots = 0;
@@ -679,6 +707,15 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	char slot_info[9] = {0};
 	int ts;
 	int rc;
+	int trx_no;
+
+	rc = tfi_find_free(bts->bts, ms, tbf->direction, use_trx, &trx_no);
+	if (rc < 0) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "- Failed to allocate a TFI\n");
+		return rc;
+	}
+	tbf->m_tfi = rc;
+	tbf->trx = &bts->trx[trx_no];
 
 	if (!ms) {
 		LOGP(DRLCMAC, LOGL_ERROR, "MS not set\n");

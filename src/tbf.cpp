@@ -174,20 +174,12 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	int8_t use_trx, uint8_t ms_class,
 	uint32_t tlli, uint8_t ta, GprsMs *ms)
 {
-	uint8_t trx;
 	struct gprs_rlcmac_ul_tbf *tbf;
-	int8_t tfi; /* must be signed */
 
 #warning "Copy and paste with tbf_new_dl_assignment"
 	/* create new TBF, use same TRX as DL TBF */
-	tfi = bts->bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx, use_trx);
-	if (tfi < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-		/* FIXME: send reject */
-		return NULL;
-	}
 	/* use multislot class of downlink TBF */
-	tbf = tbf_alloc_ul_tbf(bts, ms, tfi, trx, ms_class, 0);
+	tbf = tbf_alloc_ul_tbf(bts, ms, use_trx, ms_class, 0);
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */
@@ -274,7 +266,8 @@ int gprs_rlcmac_tbf::update()
 		return -EINVAL;
 
 	tbf_unlink_pdch(this);
-	rc = bts_data->alloc_algorithm(bts_data, ms(), this, bts_data->alloc_algorithm_curst, 0);
+	rc = bts_data->alloc_algorithm(bts_data, ms(), this,
+		bts_data->alloc_algorithm_curst, 0, -1);
 	/* if no resource */
 	if (rc < 0) {
 		LOGP(DRLCMAC, LOGL_ERROR, "No resource after update???\n");
@@ -445,13 +438,10 @@ void gprs_rlcmac_tbf::poll_timeout()
 }
 
 static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
-	GprsMs *ms, uint8_t tfi, uint8_t trx,
+	GprsMs *ms, int8_t use_trx,
 	uint8_t ms_class, uint8_t single_slot)
 {
 	int rc;
-
-	if (trx >= 8 || tfi >= 32)
-		return -1;
 
 	if (!tbf)
 		return -1;
@@ -461,12 +451,10 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
 
 	tbf->m_created_ts = time(NULL);
 	tbf->bts = bts->bts;
-	tbf->m_tfi = tfi;
-	tbf->trx = &bts->trx[trx];
 	tbf->set_ms_class(ms_class);
 	/* select algorithm */
 	rc = bts->alloc_algorithm(bts, ms, tbf, bts->alloc_algorithm_curst,
-		single_slot);
+		single_slot, use_trx);
 	/* if no resource */
 	if (rc < 0) {
 		return -1;
@@ -485,23 +473,24 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
 	tbf->m_llc.init();
 	tbf->set_ms(ms);
 
+	LOGP(DRLCMAC, LOGL_INFO,
+		"Allocated %s: trx = %d, ul_slots = %02x, dl_slots = %02x\n",
+		tbf->name(), tbf->trx->trx_no, tbf->ul_slots(), tbf->dl_slots());
+
 	return 0;
 }
 
 
 struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
-	GprsMs *ms, uint8_t tfi, uint8_t trx,
+	GprsMs *ms, int8_t use_trx,
 	uint8_t ms_class, uint8_t single_slot)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
 	int rc;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
-	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: TFI=%d TRX=%d "
-		"MS_CLASS=%d\n", "UL", tfi, trx, ms_class);
-
-	if (trx >= 8 || tfi >= 32)
-		return NULL;
+	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d\n",
+		"UL", ms_class);
 
 	tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 
@@ -513,7 +502,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	if (!ms)
 		ms = bts->bts->ms_alloc(ms_class);
 
-	rc = setup_tbf(tbf, bts, ms, tfi, trx, ms_class, single_slot);
+	rc = setup_tbf(tbf, bts, ms, use_trx, ms_class, single_slot);
 	/* if no resource */
 	if (rc < 0) {
 		talloc_free(tbf);
@@ -527,18 +516,15 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 }
 
 struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
-	GprsMs *ms, uint8_t tfi, uint8_t trx,
+	GprsMs *ms, int8_t use_trx,
 	uint8_t ms_class, uint8_t single_slot)
 {
 	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
-	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: TFI=%d TRX=%d "
-		"MS_CLASS=%d\n", "DL", tfi, trx, ms_class);
-
-	if (trx >= 8 || tfi >= 32)
-		return NULL;
+	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d\n",
+		"DL", ms_class);
 
 	tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
 
@@ -550,7 +536,7 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	if (!ms)
 		ms = bts->bts->ms_alloc(ms_class);
 
-	rc = setup_tbf(tbf, bts, ms, tfi, trx, ms_class, single_slot);
+	rc = setup_tbf(tbf, bts, ms, use_trx, ms_class, single_slot);
 	/* if no resource */
 	if (rc < 0) {
 		talloc_free(tbf);
