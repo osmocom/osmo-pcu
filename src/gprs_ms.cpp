@@ -62,6 +62,14 @@ GprsMs::Guard::~Guard()
 		m_ms->unref();
 }
 
+bool GprsMs::Guard::is_idle() const
+{
+	if (!m_ms)
+		return true;
+
+	return !m_ms->m_ul_tbf && !m_ms->m_dl_tbf && m_ms->m_ref == 1;
+}
+
 void GprsMs::timeout(void *priv_)
 {
 	GprsMs *ms = static_cast<GprsMs *>(priv_);

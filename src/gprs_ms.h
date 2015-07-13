@@ -51,6 +51,8 @@ public:
 		Guard(GprsMs *ms);
 		~Guard();
 
+		bool is_idle() const;
+
 		private:
 		GprsMs * const m_ms;
 	};
