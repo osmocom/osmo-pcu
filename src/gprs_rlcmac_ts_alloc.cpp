@@ -828,23 +828,6 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 			ul_slots = dl_slots = lsb(dl_slots & ul_slots);
 		else
 			ul_slots = dl_slots = (dl_slots & ul_slots) & (1<<ts);
-	} else if (first_common_ts > 0) {
-		/* Make sure to keep the common TBF */
-		uint8_t disable_dl_slots;
-
-		/* Mark all slots below the common TBF, e.g. cTS=4 -> xxx----- */
-		disable_dl_slots = (1 << (first_common_ts - 1)) - 1;
-
-		/* Only disable common slots in that set */
-		disable_dl_slots &= (dl_slots & ul_slots);
-
-		/* Remove them from the uplink set */
-		ul_slots &= ~disable_dl_slots;
-
-		/* The disabled UL slots will not be used again for subsequent
-		 * TBF, do not reserve them anymore */
-		if (disable_dl_slots)
-			ms->set_reserved_slots(tbf->trx, ul_slots, dl_slots);
 	}
 
 	if (dl_slots == 0) {
