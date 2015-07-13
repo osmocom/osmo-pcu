@@ -485,11 +485,15 @@ static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, unsigned ms_class,
 	if (ms && ms->current_trx())
 		trx_no = ms->current_trx()->trx_no;
 
+	GprsMs::Guard guard1(ms);
+
 	/* Allocate what is needed first */
 	switch (mode) {
 	case TEST_MODE_UL_ONLY:
 	case TEST_MODE_DL_AFTER_UL:
 	case TEST_MODE_UL_AND_DL:
+		if (ms && ms->ul_tbf())
+			tbf_free(ms->ul_tbf());
 		tbf = tbf_alloc_ul_tbf(bts, ms, trx_no, ms_class, 0);
 		if (tbf == NULL)
 			return NULL;
@@ -497,6 +501,8 @@ static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, unsigned ms_class,
 	case TEST_MODE_DL_ONLY:
 	case TEST_MODE_UL_AFTER_DL:
 	case TEST_MODE_DL_AND_UL:
+		if (ms && ms->dl_tbf())
+			tbf_free(ms->dl_tbf());
 		tbf = tbf_alloc_dl_tbf(bts, ms, trx_no, ms_class, 0);
 		if (tbf == NULL)
 			return NULL;
@@ -507,7 +513,7 @@ static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, unsigned ms_class,
 	OSMO_ASSERT(ms == NULL || ms == tbf->ms());
 	ms = tbf->ms();
 
-	GprsMs::Guard guard(ms);
+	GprsMs::Guard guard2(ms);
 
 	/* Continue with what is needed next */
 	switch (mode) {
@@ -538,30 +544,14 @@ static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, unsigned ms_class,
 		break;
 	}
 
-	return  ms;
+	return  guard2.is_idle() ? NULL : ms;
 }
 
-static void test_successive_allocation(algo_t algo, unsigned min_class,
-	unsigned max_class, enum test_mode mode,
-	unsigned expect_num, const char *text)
+static unsigned alloc_many_tbfs(BTS *the_bts, unsigned min_class,
+	unsigned max_class, enum test_mode mode)
 {
-	BTS the_bts;
-	struct gprs_rlcmac_bts *bts;
-	struct gprs_rlcmac_trx *trx;
 	unsigned counter;
 	unsigned ms_class = min_class;
-
-	printf("Going to test assignment with many TBF, %s\n", text);
-
-	bts = the_bts.bts_data();
-	bts->alloc_algorithm = algo;
-
-	trx = &bts->trx[0];
-	trx->pdch[3].enable();
-	trx->pdch[4].enable();
-	trx->pdch[5].enable();
-	trx->pdch[6].enable();
-	trx->pdch[7].enable();
 
 	for (counter = 0; 1; counter += 1) {
 		gprs_rlcmac_tbf *ul_tbf, *dl_tbf;
@@ -573,10 +563,15 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 		uint8_t trx2;
 		GprsMs *ms;
 		enum gprs_rlcmac_tbf_direction dir;
+		uint32_t tlli = counter + 0xc0000000;
 
-		ms = alloc_tbfs(&the_bts, NULL, ms_class, mode);
+		ms = the_bts->ms_by_tlli(tlli);
+
+		ms = alloc_tbfs(the_bts, ms, ms_class, mode);
 		if (!ms)
 			break;
+
+		ms->set_tlli(tlli);
 
 		ul_tbf = ms->ul_tbf();
 		dl_tbf = ms->dl_tbf();
@@ -608,7 +603,7 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 
 		if (tfi >= 0) {
 			OSMO_ASSERT(ms->current_trx());
-			tfi2 = the_bts.tfi_find_free(dir, &trx2,
+			tfi2 = the_bts->tfi_find_free(dir, &trx2,
 				ms->current_trx()->trx_no);
 			OSMO_ASSERT(tfi != tfi2);
 			OSMO_ASSERT(trx2 == ms->current_trx()->trx_no);
@@ -618,6 +613,32 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 		if (ms_class > max_class)
 			ms_class = min_class;
 	}
+
+	return counter;
+}
+
+static void test_successive_allocation(algo_t algo, unsigned min_class,
+	unsigned max_class, enum test_mode mode,
+	unsigned expect_num, const char *text)
+{
+	BTS the_bts;
+	struct gprs_rlcmac_bts *bts;
+	struct gprs_rlcmac_trx *trx;
+	unsigned counter;
+
+	printf("Going to test assignment with many TBF, %s\n", text);
+
+	bts = the_bts.bts_data();
+	bts->alloc_algorithm = algo;
+
+	trx = &bts->trx[0];
+	trx->pdch[3].enable();
+	trx->pdch[4].enable();
+	trx->pdch[5].enable();
+	trx->pdch[6].enable();
+	trx->pdch[7].enable();
+
+	counter = alloc_many_tbfs(&the_bts, min_class, max_class, mode);
 
 	printf("  Successfully allocated %d UL TBFs\n", counter);
 	OSMO_ASSERT(counter == expect_num);
