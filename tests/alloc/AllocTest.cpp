@@ -646,6 +646,55 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 	check_tfi_usage(&the_bts);
 }
 
+static void test_many_connections(algo_t algo, unsigned expect_num,
+	const char *text)
+{
+	BTS the_bts;
+	struct gprs_rlcmac_bts *bts;
+	struct gprs_rlcmac_trx *trx;
+	int counter1, counter2 = -1;
+	unsigned i;
+	enum test_mode mode_seq[] = {
+		TEST_MODE_DL_AFTER_UL,
+		TEST_MODE_UL_ONLY,
+		TEST_MODE_DL_AFTER_UL,
+		TEST_MODE_DL_ONLY,
+	};
+
+	printf("Going to test assignment with many connections, %s\n", text);
+
+	bts = the_bts.bts_data();
+	bts->alloc_algorithm = algo;
+
+	trx = &bts->trx[0];
+	trx->pdch[3].enable();
+	trx->pdch[4].enable();
+	trx->pdch[5].enable();
+	trx->pdch[6].enable();
+	trx->pdch[7].enable();
+
+	for (i = 0; i < ARRAY_SIZE(mode_seq); i += 1) {
+		counter1 = alloc_many_tbfs(&the_bts, 1, 29, mode_seq[i]);
+		fprintf(stderr, "  Allocated %d TBFs (previously %d)\n",
+			counter1, counter2);
+
+		check_tfi_usage(&the_bts);
+
+		/* This will stop earlier due to USF shortage */
+		if (mode_seq[i] == TEST_MODE_UL_ONLY)
+			continue;
+
+		if (counter2 >= 0)
+			OSMO_ASSERT(counter1 >= counter2);
+
+		counter2 = counter1;
+	}
+
+	printf("  Successfully allocated %d TBFs\n", counter1);
+
+	OSMO_ASSERT(expect_num == (unsigned)counter1);
+}
+
 static void test_successive_allocation()
 {
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_AND_DL,
@@ -685,6 +734,12 @@ static void test_successive_allocation()
 		32, "algorithm B class 10 (DL ONLY)");
 }
 
+static void test_many_connections()
+{
+	test_many_connections(alloc_algorithm_a, 160, "algorithm A");
+	test_many_connections(alloc_algorithm_b, 32, "algorithm B");
+}
+
 int main(int argc, char **argv)
 {
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "moiji-mobile AllocTest context");
@@ -701,6 +756,7 @@ int main(int argc, char **argv)
 	test_alloc_a();
 	test_alloc_b();
 	test_successive_allocation();
+	test_many_connections();
 	return EXIT_SUCCESS;
 }
 
