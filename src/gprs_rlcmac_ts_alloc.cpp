@@ -918,27 +918,6 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		reserved_ul_slots = ul_slots;
 
 		avail_count = bitcount(reserved_ul_slots);
-#if 0 /* This code assigns multiple slots for UL (and wastes USFs that way) */
-		for (ts = 0; ts < 8; ts++) {
-			if (!(ul_slots & (1 << ts)))
-				continue;
-
-			free_usf = find_free_usf(&tbf->trx->pdch[ts]);
-			if (free_usf < 0) {
-				LOGP(DRLCMAC, LOGL_DEBUG,
-					"- Skipping TS %d, because "
-					"no USF available\n", ts);
-				continue;
-			}
-
-			LOGP(DRLCMAC, LOGL_DEBUG, "- Assigning UL TS "
-				"%d\n", ts);
-			assign_uplink_tbf_usf(&tbf->trx->pdch[ts], ul_tbf, free_usf);
-			slotcount++;
-			if (slotcount == 1)
-				ul_tbf->first_ts = ts;
-		}
-#endif
 	}
 
 	first_common_ts = ffs(dl_slots & ul_slots) - 1;
