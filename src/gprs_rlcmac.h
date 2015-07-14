@@ -104,6 +104,11 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	struct GprsMs *ms,
 	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single,
 	int use_trx);
+
+int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts,
+	struct GprsMs *ms,
+	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single,
+	int use_trx);
 #ifdef __cplusplus
 }
 #endif

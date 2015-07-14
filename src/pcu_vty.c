@@ -120,6 +120,8 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " alloc-algorithm a%s", VTY_NEWLINE);
 	if (bts->alloc_algorithm == alloc_algorithm_b)
 		vty_out(vty, " alloc-algorithm b%s", VTY_NEWLINE);
+	if (bts->alloc_algorithm == alloc_algorithm_dynamic)
+		vty_out(vty, " alloc-algorithm dynamic%s", VTY_NEWLINE);
 	if (bts->force_two_phase)
 		vty_out(vty, " two-phase-access%s", VTY_NEWLINE);
 	vty_out(vty, " alpha %d%s", bts->alpha, VTY_NEWLINE);
@@ -447,10 +449,12 @@ DEFUN(cfg_pcu_no_queue_idle_ack_delay,
 
 DEFUN(cfg_pcu_alloc,
       cfg_pcu_alloc_cmd,
-      "alloc-algorithm (a|b)",
+      "alloc-algorithm (a|b|dynamic)",
       "Select slot allocation algorithm to use when assigning timeslots on "
-      "PACCH\nSingle slot is assigned only\nMultiple slots are assigned for "
-      "semi-duplex operation")
+      "PACCH\n"
+      "Single slot is assigned only\n"
+      "Multiple slots are assigned for semi-duplex operation\n"
+      "Dynamically select the algorithm based on the system state\n")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -460,6 +464,9 @@ DEFUN(cfg_pcu_alloc,
 		break;
 	case 'b':
 		bts->alloc_algorithm = alloc_algorithm_b;
+		break;
+	default:
+		bts->alloc_algorithm = alloc_algorithm_dynamic;
 		break;
 	}
 

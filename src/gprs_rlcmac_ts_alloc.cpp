@@ -996,3 +996,26 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 
 	return 0;
 }
+
+/* Slot Allocation: Algorithm dynamic
+ *
+ * This meta algorithm automatically selects on of the other algorithms based
+ * on the current system state.
+ *
+ * The goal is to support as many MS and TBF as possible. On low usage, the
+ * goal is to provide the highest possible bandwidth per MS.
+ *
+ */
+int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts,
+	GprsMs *ms_, struct gprs_rlcmac_tbf *tbf_,
+	uint32_t cust, uint8_t single, int use_trx)
+{
+	int rc;
+
+	rc = alloc_algorithm_b(bts, ms_, tbf_, cust, single, use_trx);
+	if (rc >= 0)
+		return rc;
+
+	rc = alloc_algorithm_a(bts, ms_, tbf_, cust, single, use_trx);
+	return rc;
+}

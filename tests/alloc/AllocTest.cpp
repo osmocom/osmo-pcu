@@ -707,37 +707,50 @@ static void test_successive_allocation()
 		32, "algorithm B class 1-12 (UL and DL)");
 	test_successive_allocation(alloc_algorithm_b, 1, 29, TEST_MODE_UL_AND_DL,
 		32, "algorithm B class 1-29 (UL and DL)");
+	test_successive_allocation(alloc_algorithm_dynamic, 1, 29, TEST_MODE_UL_AND_DL,
+		35, "algorithm dynamic class 1-29 (UL and DL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_DL_AND_UL,
 		35, "algorithm A (DL and UL)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_DL_AND_UL,
 		32, "algorithm B class 10 (DL and UL)");
+	test_successive_allocation(alloc_algorithm_dynamic, 10, 10, TEST_MODE_DL_AND_UL,
+		32, "algorithm dynamic class 10 (DL and UL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_DL_AFTER_UL,
 		160, "algorithm A (DL after UL)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_DL_AFTER_UL,
 		32, "algorithm B class 10 (DL after UL)");
+	test_successive_allocation(alloc_algorithm_dynamic, 10, 10, TEST_MODE_DL_AFTER_UL,
+		63, "algorithm dynamic class 10 (DL after UL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_AFTER_DL,
 		35, "algorithm A (UL after DL)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_AFTER_DL,
 		32, "algorithm B class 10 (UL after DL)");
+	test_successive_allocation(alloc_algorithm_dynamic, 10, 10, TEST_MODE_UL_AFTER_DL,
+		35, "algorithm dynamic class 10 (UL after DL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_ONLY,
 		35, "algorithm A (UL only)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_ONLY,
 		32, "algorithm B class 10 (UL only)");
+	test_successive_allocation(alloc_algorithm_dynamic, 10, 10, TEST_MODE_UL_ONLY,
+		35, "algorithm dynamic class 10 (UL only)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_DL_ONLY,
 		160, "algorithm A (DL ONLY)");
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_DL_ONLY,
 		32, "algorithm B class 10 (DL ONLY)");
+	test_successive_allocation(alloc_algorithm_dynamic, 10, 10, TEST_MODE_DL_ONLY,
+		101, "algorithm dynamic class 10 (DL ONLY)");
 }
 
 static void test_many_connections()
 {
 	test_many_connections(alloc_algorithm_a, 160, "algorithm A");
 	test_many_connections(alloc_algorithm_b, 32, "algorithm B");
+	test_many_connections(alloc_algorithm_dynamic, 121, "algorithm dynamic");
 }
 
 int main(int argc, char **argv)
