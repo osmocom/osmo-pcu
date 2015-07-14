@@ -505,7 +505,8 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 
 static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_trx *trx,
-	const GprsMs *ms, uint8_t *ul_slots, uint8_t *dl_slots)
+	const GprsMs *ms, uint8_t *ul_slots, uint8_t *dl_slots,
+	int first_common_ts)
 {
 	const struct gprs_ms_multislot_class *ms_class;
 	uint8_t Tx, Sum;	/* Maximum Number of Slots: RX, Tx, Sum Rx+Tx */
@@ -523,6 +524,8 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 	unsigned num_tx;
 	enum {MASK_TT, MASK_TR};
 	unsigned mask_sel;
+	uint8_t common_mask = 0;
+	uint8_t common_req = 0;
 
 	if (ms->ms_class() >= 32) {
 		LOGP(DRLCMAC, LOGL_ERROR, "Multislot class %d out of range.\n",
@@ -598,6 +601,11 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 	max_capacity = -1;
 	max_ul_slots = 0;
 	max_dl_slots = 0;
+
+	if (first_common_ts >= 0) {
+		common_req = 1 << first_common_ts;
+		common_mask = (common_req << 1) - 1;
+	}
 
 	/* Iterate through possible numbers of TX slots */
 	for (num_tx = 1; num_tx <= ms_class->tx; num_tx += 1) {
@@ -734,6 +742,15 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 
 		if (!rx_window)
 			continue;
+
+		/* Check required common slots */
+		if (((tx_window & rx_window) & common_mask) != common_req) {
+			LOGP(DRLCMAC, LOGL_INFO,
+				"Common slot pre-selection mismatch: "
+				"%02x %02x %02x %02x\n",
+				tx_window, rx_window, common_mask, common_req);
+			continue;
+		}
 
 		/* Check number of common slots according to TS 54.002, 6.4.2.2 */
 		common_slot_count = bitcount(tx_window & rx_window);
@@ -873,7 +890,8 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		trx = &bts->trx[trx_no];
 
 	if (!dl_slots || !ul_slots) {
-		rc = find_multi_slots(bts, trx, ms, &ul_slots, &dl_slots);
+		rc = find_multi_slots(bts, trx, ms, &ul_slots, &dl_slots,
+			first_common_ts);
 		if (rc < 0)
 			return rc;
 
