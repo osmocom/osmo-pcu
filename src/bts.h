@@ -204,6 +204,8 @@ public:
 		CTR_TBF_UL_ALLOCATED,
 		CTR_TBF_UL_FREED,
 		CTR_TBF_REUSED,
+		CTR_TBF_ALLOC_ALGO_A,
+		CTR_TBF_ALLOC_ALGO_B,
 		CTR_RLC_SENT,
 		CTR_RLC_RESENT,
 		CTR_RLC_RESTARTED,
@@ -266,6 +268,8 @@ public:
 	void tbf_ul_created();
 	void tbf_ul_freed();
 	void tbf_reused();
+	void tbf_alloc_algo_a();
+	void tbf_alloc_algo_b();
 	void rlc_sent();
 	void rlc_resent();
 	void rlc_restarted();
@@ -365,6 +369,8 @@ CREATE_COUNT_INLINE(tbf_dl_freed, CTR_TBF_DL_FREED)
 CREATE_COUNT_INLINE(tbf_ul_created, CTR_TBF_UL_ALLOCATED)
 CREATE_COUNT_INLINE(tbf_ul_freed, CTR_TBF_UL_FREED)
 CREATE_COUNT_INLINE(tbf_reused, CTR_TBF_REUSED)
+CREATE_COUNT_INLINE(tbf_alloc_algo_a, CTR_TBF_ALLOC_ALGO_A)
+CREATE_COUNT_INLINE(tbf_alloc_algo_b, CTR_TBF_ALLOC_ALGO_B)
 CREATE_COUNT_INLINE(rlc_sent, CTR_RLC_SENT)
 CREATE_COUNT_INLINE(rlc_resent, CTR_RLC_RESENT)
 CREATE_COUNT_INLINE(rlc_restarted, CTR_RLC_RESTARTED)

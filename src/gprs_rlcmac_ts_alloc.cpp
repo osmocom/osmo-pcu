@@ -456,6 +456,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	ms_->set_reserved_slots(trx, 1 << ts, 1 << ts);
 
 	tbf_->upgrade_to_multislot = 0;
+	bts->bts->tbf_alloc_algo_a();
 	return 0;
 }
 
@@ -993,6 +994,8 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 				tfi, usf[ts]);
 		}
 	}
+
+	bts->bts->tbf_alloc_algo_b();
 
 	return 0;
 }
