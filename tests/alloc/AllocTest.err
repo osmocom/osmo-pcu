@@ -1,14 +1,14 @@
 No TFI available.
 No TFI available.
 - Failed to find a usable TRX (TFI exhausted)
-- Failed to allocate a TS, no TFI or USF available
+- Failed to allocate a TS, no USF available
 No TFI available.
 No TFI available.
 No TFI available.
 No TFI available.
 - Failed to find a usable TRX (TFI exhausted)
-- Failed to allocate a TS, no TFI or USF available
-- Failed to allocate a TS, no TFI or USF available
+- Failed to allocate a TS, no USF available
+- Failed to allocate a TS, no USF available
 No TFI available.
 No TFI available.
 - Failed to allocate a TFI
@@ -21,7 +21,7 @@ No TFI available.
 No TFI available.
 No TFI available.
 - Failed to allocate a TFI
-- Failed to allocate a TS, no TFI or USF available
+- Failed to allocate a TS, no USF available
 No TFI available.
 No TFI available.
 - Failed to allocate a TFI
@@ -34,11 +34,11 @@ No TFI available.
 No TFI available.
 No TFI available.
 - Failed to allocate a TFI
-- Failed to allocate a TS, no TFI or USF available
+- Failed to allocate a TS, no USF available
 No TFI available.
 No TFI available.
 - Failed to allocate a TFI
-- Failed to allocate a TS, no TFI or USF available
+- Failed to allocate a TS, no USF available
 No TFI available.
 No TFI available.
 - Failed to allocate a TFI
@@ -58,7 +58,7 @@ No TFI available.
 No TFI available.
 - Failed to find a usable TRX (TFI exhausted)
   Allocated 160 TBFs (previously -1)
-- Failed to allocate a TS, no TFI or USF available
+- Failed to allocate a TS, no USF available
   Allocated 35 TBFs (previously 160)
 No TFI available.
 No TFI available.
