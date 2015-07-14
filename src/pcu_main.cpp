@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
 	}
 
 	if (!bts->alloc_algorithm)
-		bts->alloc_algorithm = alloc_algorithm_b;
+		bts->alloc_algorithm = alloc_algorithm_dynamic;
 
 	rc = pcu_l1if_open();
 
