@@ -62,7 +62,7 @@ int SBAController::alloc(
 				continue;
 			break;
 		}
-		if (ts < 8)
+		if (ts >= 0)
 			break;
 	}
 	if (trx == 8) {
