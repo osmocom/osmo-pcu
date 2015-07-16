@@ -539,11 +539,15 @@ static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, unsigned ms_class,
 	case TEST_MODE_DL_AFTER_UL:
 	case TEST_MODE_UL_AFTER_DL:
 		tbf_free(tbf);
+		tbf = NULL;
 		break;
 
 	default:
 		break;
 	}
+
+	if (!ms && tbf)
+		tbf_free(tbf);
 
 	return  guard2.is_idle() ? NULL : ms;
 }
