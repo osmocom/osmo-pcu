@@ -182,6 +182,8 @@ struct gprs_rlcmac_bts {
 	/* list of downlink TBFs */
 	struct llist_head dl_tbfs;
 
+	/* State for dynamic algorithm selection */
+	int multislot_disabled;
 
 	/**
 	 * Point back to the C++ object. This is used during the transition

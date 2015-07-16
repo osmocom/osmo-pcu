@@ -759,7 +759,7 @@ static void test_successive_allocation()
 	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_DL_AFTER_UL,
 		32, "algorithm B class 10 (DL after UL)");
 	test_successive_allocation(alloc_algorithm_dynamic, 10, 10, TEST_MODE_DL_AFTER_UL,
-		63, "algorithm dynamic class 10 (DL after UL)");
+		95, "algorithm dynamic class 10 (DL after UL)");
 
 	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_AFTER_DL,
 		35, "algorithm A (UL after DL)");
@@ -787,7 +787,7 @@ static void test_many_connections()
 {
 	test_many_connections(alloc_algorithm_a, 160, "algorithm A");
 	test_many_connections(alloc_algorithm_b, 32, "algorithm B");
-	test_many_connections(alloc_algorithm_dynamic, 121, "algorithm dynamic");
+	test_many_connections(alloc_algorithm_dynamic, 160, "algorithm dynamic");
 }
 
 int main(int argc, char **argv)

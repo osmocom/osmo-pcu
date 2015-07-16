@@ -28,6 +28,9 @@
 #include <errno.h>
 #include <values.h>
 
+/* Consider a PDCH as idle if has at most this number of TBFs assigned to it */
+#define PDCH_IDLE_TBF_THRESH	1
+
 /* 3GPP TS 05.02 Annex B.1 */
 
 #define MS_NA	255 /* N/A */
@@ -361,6 +364,30 @@ static int find_trx(BTS *bts, const GprsMs *ms, int use_trx)
 	}
 
 	return -EBUSY;
+}
+
+static struct gprs_rlcmac_pdch * find_idle_pdch(BTS *bts)
+{
+	unsigned trx_no;
+	unsigned ts;
+	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
+
+	/* Find the first PDCH with an unused DL TS */
+	for (trx_no = 0; trx_no < ARRAY_SIZE(bts_data->trx); trx_no += 1) {
+		struct gprs_rlcmac_trx *trx = &bts_data->trx[trx_no];
+		for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
+			struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts];
+			if (!pdch->is_enabled())
+				continue;
+
+			if (pdch->num_tbfs(GPRS_RLCMAC_DL_TBF) > PDCH_IDLE_TBF_THRESH)
+				continue;
+
+			return pdch;
+		}
+	}
+
+	return NULL;
 }
 
 static int tfi_find_free(BTS *bts, const GprsMs *ms,
@@ -1030,9 +1057,22 @@ int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts,
 {
 	int rc;
 
-	rc = alloc_algorithm_b(bts, ms_, tbf_, cust, single, use_trx);
-	if (rc >= 0)
-		return rc;
+	/* Reset load_is_high if there is at least one idle PDCH */
+	if (bts->multislot_disabled) {
+		bts->multislot_disabled = find_idle_pdch(bts->bts) == NULL;
+		if (!bts->multislot_disabled)
+			LOGP(DRLCMAC, LOGL_DEBUG, "Enabling algorithm B\n");
+	}
+
+	if (!bts->multislot_disabled) {
+		rc = alloc_algorithm_b(bts, ms_, tbf_, cust, single, use_trx);
+		if (rc >= 0)
+			return rc;
+
+		if (!bts->multislot_disabled)
+			LOGP(DRLCMAC, LOGL_DEBUG, "Disabling algorithm B\n");
+		bts->multislot_disabled = 1;
+	}
 
 	rc = alloc_algorithm_a(bts, ms_, tbf_, cust, single, use_trx);
 	return rc;
