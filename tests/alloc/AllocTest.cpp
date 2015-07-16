@@ -641,6 +641,9 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 	counter = alloc_many_tbfs(&the_bts, min_class, max_class, mode);
 
 	printf("  Successfully allocated %d UL TBFs\n", counter);
+	if (counter != expect_num)
+		fprintf(stderr, "  Expected %d TBFs for %s\n", expect_num, text);
+
 	OSMO_ASSERT(counter == expect_num);
 
 	check_tfi_usage(&the_bts);
@@ -684,13 +687,19 @@ static void test_many_connections(algo_t algo, unsigned expect_num,
 		if (mode_seq[i] == TEST_MODE_UL_ONLY)
 			continue;
 
-		if (counter2 >= 0)
+		if (counter2 >= 0) {
+			if (counter1 < counter2)
+				fprintf(stderr, "  Expected %d >= %d in %s\n",
+					counter1, counter2, text);
 			OSMO_ASSERT(counter1 >= counter2);
+		}
 
 		counter2 = counter1;
 	}
 
 	printf("  Successfully allocated %d TBFs\n", counter1);
+	if (counter1 != (int)expect_num)
+		fprintf(stderr, "  Expected %d TBFs for %s\n", expect_num, text);
 
 	OSMO_ASSERT(expect_num == (unsigned)counter1);
 }
