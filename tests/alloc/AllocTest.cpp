@@ -633,7 +633,8 @@ static unsigned alloc_many_tbfs(BTS *the_bts, unsigned min_class,
 			tfi2 = the_bts->tfi_find_free(dir, &trx_no2,
 				ms->current_trx()->trx_no);
 			OSMO_ASSERT(tfi != tfi2);
-			OSMO_ASSERT(trx_no2 == ms->current_trx()->trx_no);
+			OSMO_ASSERT(tfi2 < 0 ||
+				trx_no2 == ms->current_trx()->trx_no);
 		}
 
 		ms_class += 1;
