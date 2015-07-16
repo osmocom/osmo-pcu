@@ -455,11 +455,12 @@ typedef int (*algo_t)(struct gprs_rlcmac_bts *bts,
 		struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single,
 		int use_trx);
 
-static char get_dir_char(uint8_t mask, uint8_t tx, uint8_t rx)
+static char get_dir_char(uint8_t mask, uint8_t tx, uint8_t rx, uint8_t busy)
 {
-	return (mask & tx & rx) ? 'C' :
-		(mask & tx)     ? 'U' :
-		(mask & rx)     ? 'D' :
+	int offs = busy ? 32 : 0;
+	return (mask & tx & rx) ? 'C' + offs :
+		(mask & tx)     ? 'U' + offs :
+		(mask & rx)     ? 'D' + offs :
 				  '.';
 }
 
@@ -557,10 +558,12 @@ static unsigned alloc_many_tbfs(BTS *the_bts, unsigned min_class,
 		gprs_rlcmac_tbf *ul_tbf, *dl_tbf;
 		uint8_t ul_slots = 0;
 		uint8_t dl_slots = 0;
+		uint8_t busy_slots = 0;
 		unsigned i;
 		int tfi = -1;
 		int tfi2;
-		uint8_t trx2;
+		uint8_t trx_no2;
+		struct gprs_rlcmac_trx *trx;
 		GprsMs *ms;
 		enum gprs_rlcmac_tbf_direction dir;
 		uint32_t tlli = counter + 0xc0000000;
@@ -575,12 +578,15 @@ static unsigned alloc_many_tbfs(BTS *the_bts, unsigned min_class,
 
 		ul_tbf = ms->ul_tbf();
 		dl_tbf = ms->dl_tbf();
+		trx = ms->current_trx();
+
+		OSMO_ASSERT(ul_tbf || dl_tbf);
 
 		if (ul_tbf) {
 			ul_slots = 1 << ul_tbf->first_common_ts;
 			tfi = ul_tbf->tfi();
 			dir = GPRS_RLCMAC_UL_TBF;
-		} else if (dl_tbf) {
+		} else {
 			ul_slots = 1 << dl_tbf->first_common_ts;
 			tfi = dl_tbf->tfi();
 			dir = GPRS_RLCMAC_DL_TBF;
@@ -590,23 +596,40 @@ static unsigned alloc_many_tbfs(BTS *the_bts, unsigned min_class,
 			if (dl_tbf->pdch[i])
 				dl_slots |= 1 << i;
 
+		for (i = 0; trx && i < ARRAY_SIZE(trx->pdch); i += 1) {
+			struct gprs_rlcmac_pdch *pdch = &trx->pdch[i];
+
+			if (ul_tbf && dl_tbf)
+				continue;
+
+			if (ul_tbf &&
+				pdch->assigned_tfi(GPRS_RLCMAC_DL_TBF) != 0xffffffff)
+				continue;
+
+			if (dl_tbf &&
+				pdch->assigned_tfi(GPRS_RLCMAC_UL_TBF) != 0xffffffff)
+				continue;
+
+			busy_slots |= 1 << i;
+		}
+
 		printf(" TBF[%d] class %d reserves %c%c%c%c%c%c%c%c\n",
 			tfi, ms_class,
-			get_dir_char(0x01, ul_slots, dl_slots),
-			get_dir_char(0x02, ul_slots, dl_slots),
-			get_dir_char(0x04, ul_slots, dl_slots),
-			get_dir_char(0x08, ul_slots, dl_slots),
-			get_dir_char(0x10, ul_slots, dl_slots),
-			get_dir_char(0x20, ul_slots, dl_slots),
-			get_dir_char(0x40, ul_slots, dl_slots),
-			get_dir_char(0x80, ul_slots, dl_slots));
+			get_dir_char(0x01, ul_slots, dl_slots, busy_slots),
+			get_dir_char(0x02, ul_slots, dl_slots, busy_slots),
+			get_dir_char(0x04, ul_slots, dl_slots, busy_slots),
+			get_dir_char(0x08, ul_slots, dl_slots, busy_slots),
+			get_dir_char(0x10, ul_slots, dl_slots, busy_slots),
+			get_dir_char(0x20, ul_slots, dl_slots, busy_slots),
+			get_dir_char(0x40, ul_slots, dl_slots, busy_slots),
+			get_dir_char(0x80, ul_slots, dl_slots, busy_slots));
 
 		if (tfi >= 0) {
 			OSMO_ASSERT(ms->current_trx());
-			tfi2 = the_bts->tfi_find_free(dir, &trx2,
+			tfi2 = the_bts->tfi_find_free(dir, &trx_no2,
 				ms->current_trx()->trx_no);
 			OSMO_ASSERT(tfi != tfi2);
-			OSMO_ASSERT(trx2 == ms->current_trx()->trx_no);
+			OSMO_ASSERT(trx_no2 == ms->current_trx()->trx_no);
 		}
 
 		ms_class += 1;
