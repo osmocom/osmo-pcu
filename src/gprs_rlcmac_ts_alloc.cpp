@@ -211,6 +211,22 @@ static int compute_usage_by_reservation(struct gprs_rlcmac_pdch *pdch,
 		pdch->num_reserved(GPRS_RLCMAC_UL_TBF);
 }
 
+static int compute_usage_for_algo_a(struct gprs_rlcmac_pdch *pdch,
+	enum gprs_rlcmac_tbf_direction dir)
+{
+	int usage =
+		pdch->num_tbfs(GPRS_RLCMAC_DL_TBF) +
+		pdch->num_tbfs(GPRS_RLCMAC_UL_TBF) +
+		compute_usage_by_reservation(pdch, dir);
+
+	if (pdch->assigned_tfi(reverse(dir)) == 0xffffffff)
+		/* No TFI in the opposite direction, avoid it */
+		usage += 32;
+
+	return usage;
+
+}
+
 static int find_least_busy_pdch(struct gprs_rlcmac_trx *trx,
 	enum gprs_rlcmac_tbf_direction dir,
 	uint8_t mask,
@@ -417,7 +433,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 		return -EINVAL;
 
 	ts = find_least_busy_pdch(trx, tbf->direction, mask,
-		compute_usage_by_reservation,
+		compute_usage_for_algo_a,
 		&tfi, &usf);
 
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF && usf < 0) {
