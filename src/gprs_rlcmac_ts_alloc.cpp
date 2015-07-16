@@ -481,8 +481,6 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 	enum {MASK_TT, MASK_TR};
 	unsigned mask_sel;
 
-	uint32_t checked_tx[256/32] = {0};
-
 	if (ms->ms_class() >= 32) {
 		LOGP(DRLCMAC, LOGL_ERROR, "Multislot class %d out of range.\n",
 			ms->ms_class());
@@ -593,11 +591,12 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 		/* Filter out unavailable slots */
 		tx_window &= *ul_slots;
 
-		/* Avoid repeated TX combination check */
-		if (test_and_set_bit(checked_tx, tx_window))
+		/* Skip if the the first TS (ul_ts) is not in the set */
+		if ((tx_window & (1 << ul_ts)) == 0)
 			continue;
 
-		if (!tx_window)
+		/* Skip if the the last TS (ul_ts+num_tx-1) is not in the set */
+		if ((tx_window & (1 << ((ul_ts+num_tx-1) % 8))) == 0)
 			continue;
 
 		tx_slot_count = bitcount(tx_window);
