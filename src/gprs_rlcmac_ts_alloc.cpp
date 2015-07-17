@@ -1077,3 +1077,24 @@ int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts,
 	rc = alloc_algorithm_a(bts, ms_, tbf_, cust, single, use_trx);
 	return rc;
 }
+
+int gprs_alloc_max_dl_slots_per_ms(struct gprs_rlcmac_bts *bts, uint8_t ms_class)
+{
+	int rx;
+
+	if (ms_class >= ARRAY_SIZE(gprs_ms_multislot_class))
+		ms_class = 0;
+
+	rx = gprs_ms_multislot_class[ms_class].rx;
+
+	if (rx == MS_NA)
+		rx = 4;
+
+	if (bts->alloc_algorithm == alloc_algorithm_a)
+		return 1;
+
+	if (bts->multislot_disabled)
+		return 1;
+
+	return rx;
+}

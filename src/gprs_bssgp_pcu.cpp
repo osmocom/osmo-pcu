@@ -620,13 +620,16 @@ int gprs_bssgp_tx_fc_bvc(void)
 
 	if (ms_leak_rate == 0) {
 		int ms_num_pdch;
+		int max_pdch = gprs_alloc_max_dl_slots_per_ms(bts);
 
 		if (num_pdch < 0)
 			num_pdch = count_pdch(bts);
 
 		ms_num_pdch = num_pdch;
-		if (ms_num_pdch > FC_MS_MAX_RX_SLOTS)
-			ms_num_pdch = FC_MS_MAX_RX_SLOTS;
+		if (max_pdch > FC_MS_MAX_RX_SLOTS)
+			max_pdch = FC_MS_MAX_RX_SLOTS;
+		if (ms_num_pdch > max_pdch)
+			ms_num_pdch = max_pdch;
 
 		ms_leak_rate = gprs_bssgp_max_leak_rate(bts->initial_cs_dl,
 			ms_num_pdch);
