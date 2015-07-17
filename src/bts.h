@@ -36,6 +36,9 @@ extern "C" {
 
 #include <stdint.h>
 
+#define LLC_CODEL_DISABLE 0
+#define LLC_CODEL_USE_DEFAULT (-1)
+
 struct BTS;
 struct GprsMs;
 
@@ -152,6 +155,7 @@ struct gprs_rlcmac_bts {
 	uint16_t force_llc_lifetime; /* overrides lifetime from SGSN */
 	uint32_t llc_discard_csec;
 	uint32_t llc_idle_ack_csec;
+	uint32_t llc_codel_interval_msec; /* 0=disabled, -1=use default interval */
 	uint8_t t3142;
 	uint8_t t3169;
 	uint8_t t3191;

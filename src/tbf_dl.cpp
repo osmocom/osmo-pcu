@@ -25,6 +25,7 @@
 #include <gprs_rlcmac.h>
 #include <gprs_debug.h>
 #include <gprs_bssgp_pcu.h>
+#include <gprs_codel.h>
 #include <decoding.h>
 
 #include "pcu_utils.h"
@@ -36,6 +37,7 @@ extern "C" {
 
 #include <errno.h>
 #include <string.h>
+#include <math.h>
 
 /* After sending these frames, we poll for ack/nack. */
 #define POLL_ACK_AFTER_FRAMES 20
@@ -249,6 +251,13 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 
 		gprs_bssgp_update_queue_delay(tv_recv, &tv_now);
 
+		if (ms() && ms()->codel_state()) {
+			int bytes = llc_queue()->octets();
+			if (gprs_codel_control(ms()->codel_state(),
+					tv_recv, &tv_now, bytes))
+				goto drop_frame;
+		}
+
 		/* Is the age below the low water mark? */
 		if (!gprs_llc_queue::is_frame_expired(&tv_now2, tv_disc))
 			break;
@@ -274,6 +283,7 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 		}
 
 		bts->llc_timedout_frame();
+drop_frame:
 		frames++;
 		octets += msg->len;
 		msgb_free(msg);

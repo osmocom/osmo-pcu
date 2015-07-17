@@ -24,6 +24,7 @@
 #include "bts.h"
 #include "tbf.h"
 #include "gprs_debug.h"
+#include "gprs_codel.h"
 
 #include <time.h>
 
@@ -31,6 +32,8 @@ extern "C" {
 	#include <osmocom/core/talloc.h>
 	#include <osmocom/core/utils.h>
 }
+
+#define GPRS_CODEL_SLOW_INTERVAL_MS 2000
 
 extern void *tall_pcu_ctx;
 
@@ -102,8 +105,11 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	m_nack_rate_dl(0),
 	m_reserved_dl_slots(0),
 	m_reserved_ul_slots(0),
-	m_current_trx(NULL)
+	m_current_trx(NULL),
+	m_codel_state(NULL)
 {
+	int codel_interval = LLC_CODEL_USE_DEFAULT;
+
 	LOGP(DRLCMAC, LOGL_INFO, "Creating MS object, TLLI = 0x%08x\n", tlli);
 
 	m_imsi[0] = 0;
@@ -118,6 +124,16 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 		m_current_cs_dl = m_bts->bts_data()->initial_cs_dl;
 		if (m_current_cs_dl < 1)
 			m_current_cs_dl = 1;
+
+		codel_interval = m_bts->bts_data()->llc_codel_interval_msec;
+	}
+
+	if (codel_interval) {
+		if (codel_interval == LLC_CODEL_USE_DEFAULT)
+			codel_interval = GPRS_CODEL_SLOW_INTERVAL_MS;
+		m_codel_state = talloc(this, struct gprs_codel);
+		gprs_codel_init(m_codel_state);
+		gprs_codel_set_interval(m_codel_state, codel_interval);
 	}
 	m_last_cs_not_low = now_msec();
 }

@@ -116,6 +116,14 @@ static int config_write_pcu(struct vty *vty)
 	if (bts->llc_idle_ack_csec)
 		vty_out(vty, " queue idle-ack-delay %d%s", bts->llc_idle_ack_csec,
 			VTY_NEWLINE);
+	if (bts->llc_codel_interval_msec == LLC_CODEL_USE_DEFAULT)
+		vty_out(vty, " queue codel%s", VTY_NEWLINE);
+	else if (bts->llc_codel_interval_msec == LLC_CODEL_DISABLE)
+		vty_out(vty, " no queue codel%s", VTY_NEWLINE);
+	else
+		vty_out(vty, " queue codel interval %d%s",
+			bts->llc_codel_interval_msec/10, VTY_NEWLINE);
+
 	if (bts->alloc_algorithm == alloc_algorithm_a)
 		vty_out(vty, " alloc-algorithm a%s", VTY_NEWLINE);
 	if (bts->alloc_algorithm == alloc_algorithm_b)
@@ -418,6 +426,46 @@ DEFUN(cfg_pcu_no_queue_hysteresis,
 
 	return CMD_SUCCESS;
 }
+
+#define QUEUE_CODEL_STR "Set CoDel queue management\n"
+
+DEFUN(cfg_pcu_queue_codel,
+      cfg_pcu_queue_codel_cmd,
+      "queue codel",
+      QUEUE_STR QUEUE_CODEL_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_queue_codel_interval,
+      cfg_pcu_queue_codel_interval_cmd,
+      "queue codel interval <1-1000>",
+      QUEUE_STR QUEUE_CODEL_STR "Specify interval\n" "Interval in centi-seconds")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	uint16_t csec = atoi(argv[0]);
+
+	bts->llc_codel_interval_msec = 10*csec;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_queue_codel,
+      cfg_pcu_no_queue_codel_cmd,
+      "no queue codel",
+      NO_STR QUEUE_STR QUEUE_CODEL_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->llc_codel_interval_msec = LLC_CODEL_DISABLE;
+
+	return CMD_SUCCESS;
+}
+
 
 #define QUEUE_IDLE_ACK_STR "Request an ACK after the last DL LLC frame in centi-seconds\n"
 
@@ -776,6 +824,9 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_no_queue_lifetime_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_hysteresis_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_queue_hysteresis_cmd);
+	install_element(PCU_NODE, &cfg_pcu_queue_codel_cmd);
+	install_element(PCU_NODE, &cfg_pcu_queue_codel_interval_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_queue_codel_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_idle_ack_delay_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_queue_idle_ack_delay_cmd);
 	install_element(PCU_NODE, &cfg_pcu_alloc_cmd);

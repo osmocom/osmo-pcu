@@ -23,6 +23,7 @@
 struct gprs_rlcmac_tbf;
 struct gprs_rlcmac_dl_tbf;
 struct gprs_rlcmac_ul_tbf;
+struct gprs_codel;
 
 #include "cxx_linuxlist.h"
 #include "llc.h"
@@ -92,6 +93,7 @@ public:
 
 	gprs_llc_queue *llc_queue();
 	const gprs_llc_queue *llc_queue() const;
+	gprs_codel *codel_state() const;
 
 	void set_timeout(unsigned secs);
 
@@ -157,6 +159,8 @@ private:
 	uint8_t m_reserved_dl_slots;
 	uint8_t m_reserved_ul_slots;
 	gprs_rlcmac_trx *m_current_trx;
+
+	struct gprs_codel *m_codel_state;
 };
 
 inline uint32_t GprsMs::tlli() const
@@ -205,6 +209,11 @@ inline gprs_llc_queue *GprsMs::llc_queue()
 inline const gprs_llc_queue *GprsMs::llc_queue() const
 {
 	return &m_llc_queue;
+}
+
+inline gprs_codel *GprsMs::codel_state() const
+{
+	return m_codel_state;
 }
 
 inline unsigned GprsMs::nack_rate_dl() const
