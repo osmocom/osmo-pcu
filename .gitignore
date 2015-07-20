@@ -38,6 +38,7 @@ tests/tbf/TbfTest
 tests/types/TypesTest
 tests/ms/MsTest
 tests/llist/LListTest
+tests/codel/codel_test
 tests/emu/pcu_emu
 tests/testsuite
 tests/testsuite.log

@@ -1,0 +1,29 @@
+===== CoDel test START
+----- test_codel START
+Dropped 0 packets
+Dropping packet 21, recv = 0.105, now = 0.210, codel.count = 1
+Dropping packet 32, recv = 0.160, now = 0.310, codel.count = 2
+Dropping packet 41, recv = 0.210, now = 0.390, codel.count = 3
+Dropping packet 47, recv = 0.270, now = 0.440, codel.count = 4
+Dropping packet 53, recv = 0.330, now = 0.490, codel.count = 5
+Dropping packet 59, recv = 0.390, now = 0.540, codel.count = 6
+Dropping packet 64, recv = 0.440, now = 0.580, codel.count = 7
+Dropping packet 69, recv = 0.490, now = 0.620, codel.count = 8
+Dropping packet 73, recv = 0.530, now = 0.650, codel.count = 9
+Dropping packet 77, recv = 0.570, now = 0.680, codel.count = 10
+Dropping packet 81, recv = 0.610, now = 0.710, codel.count = 11
+Dropping packet 86, recv = 0.660, now = 0.750, codel.count = 12
+Dropping packet 89, recv = 0.690, now = 0.770, codel.count = 13
+Dropping packet 93, recv = 0.730, now = 0.800, codel.count = 14
+Dropping packet 97, recv = 0.770, now = 0.830, codel.count = 15
+Dropping packet 100, recv = 0.800, now = 0.850, codel.count = 16
+Dropping packet 104, recv = 0.840, now = 0.880, codel.count = 17
+Dropping packet 107, recv = 0.870, now = 0.900, codel.count = 18
+Dropping packet 111, recv = 0.910, now = 0.930, codel.count = 19
+Dropping packet 114, recv = 0.940, now = 0.950, codel.count = 20
+Dropping packet 186, recv = 1.555, now = 1.660, codel.count = 1
+Dropping packet 197, recv = 1.610, now = 1.760, codel.count = 2
+Dropped 22 packets
+----- test_codel END
+===== CoDel test END
+

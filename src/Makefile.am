@@ -54,7 +54,8 @@ libgprs_la_SOURCES = \
 	sba.cpp \
 	decoding.cpp \
 	llc.cpp \
-	rlc.cpp
+	rlc.cpp \
+	gprs_codel.c
 
 if ENABLE_SYSMOBTS
 libgprs_la_SOURCES += \
@@ -99,7 +100,8 @@ noinst_HEADERS = \
 	decoding.h \
 	llc.h \
 	pcu_utils.h \
-	cxx_linuxlist.h
+	cxx_linuxlist.h \
+	gprs_codel.h
 
 osmo_pcu_SOURCES = pcu_main.cpp
 

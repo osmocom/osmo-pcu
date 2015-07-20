@@ -50,3 +50,9 @@ cat $abs_srcdir/llist/LListTest.ok > expout
 cat $abs_srcdir/llist/LListTest.err > experr
 AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/llist/LListTest], [0], [expout], [experr])
 AT_CLEANUP
+
+AT_SETUP([codel])
+AT_KEYWORDS([codel])
+cat $abs_srcdir/codel/codel_test.ok > expout
+AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/codel/codel_test], [0], [expout], [ignore])
+AT_CLEANUP
