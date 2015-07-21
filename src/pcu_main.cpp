@@ -189,6 +189,8 @@ int main(int argc, char *argv[])
 	bts->cs_lqual_ranges[3].high = 256;
 	bts->cs_downgrade_threshold = 200;
 
+	bts->llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
+
 	msgb_set_talloc_ctx(tall_pcu_ctx);
 
 	osmo_init_logging(&gprs_log_info);
