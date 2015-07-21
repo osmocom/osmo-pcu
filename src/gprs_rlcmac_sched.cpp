@@ -321,6 +321,10 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	if (!msg)
 		msg = sched_select_downlink(bts, trx, ts, fn, block_nr, pdch);
 
+	/* Used to calculate the net leak rate, must not include dummy messages */
+	if (msg)
+		gprs_bssgp_update_frames_sent();
+
 	/* Prio 3: send dummy contol message */
 	if (!msg)
 		msg = sched_dummy();

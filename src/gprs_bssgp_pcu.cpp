@@ -586,6 +586,23 @@ static uint32_t get_and_reset_avg_queue_delay(void)
 	return avg_delay_ms;
 }
 
+static int get_and_reset_measured_leak_rate(int num_pdch)
+{
+	int rate; /* byte per second */
+
+	if (the_pcu.queue_frames_sent == 0)
+		return -1;
+
+	/* 20ms/num_pdch is the average RLC block duration */
+	rate = the_pcu.queue_bytes_recv * 1000 * num_pdch /
+		(20 * the_pcu.queue_frames_sent);
+
+	the_pcu.queue_frames_sent = 0;
+	the_pcu.queue_bytes_recv = 0;
+
+	return rate;
+}
+
 int gprs_bssgp_tx_fc_bvc(void)
 {
 	struct gprs_rlcmac_bts *bts;
@@ -623,6 +640,20 @@ int gprs_bssgp_tx_fc_bvc(void)
 	leak_rate = bts->fc_bvc_leak_rate;
 	ms_bucket_size = bts->fc_ms_bucket_size;
 	ms_leak_rate = bts->fc_ms_leak_rate;
+
+	if (leak_rate == 0) {
+		int meas_rate;
+
+		if (num_pdch < 0)
+			num_pdch = count_pdch(bts);
+
+		meas_rate = get_and_reset_measured_leak_rate(num_pdch);
+		if (meas_rate > 0) {
+			leak_rate = meas_rate;
+			LOGP(DBSSGP, LOGL_DEBUG,
+				"Measured BVC leak rate = %d\n", leak_rate);
+		}
+	}
 
 	if (leak_rate == 0) {
 		if (num_pdch < 0)
@@ -821,6 +852,16 @@ void gprs_bssgp_destroy(void)
 struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void)
 {
 	return the_pcu.bctx;
+}
+
+void gprs_bssgp_update_frames_sent()
+{
+	the_pcu.queue_frames_sent += 1;
+}
+
+void gprs_bssgp_update_bytes_received(unsigned bytes_recv)
+{
+	the_pcu.queue_bytes_recv += bytes_recv;
 }
 
 void gprs_bssgp_update_queue_delay(const struct timeval *tv_recv,

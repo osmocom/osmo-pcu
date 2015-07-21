@@ -355,6 +355,13 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	} m_bw;
 
 protected:
+	struct ana_result {
+		unsigned received_packets;
+		unsigned lost_packets;
+		unsigned received_bytes;
+		unsigned lost_bytes;
+	};
+
 	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
 	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
 					const int index);
@@ -363,7 +370,7 @@ protected:
 	bool dl_window_stalled() const;
 	void reuse_tbf();
 	void start_llc_timer();
-	int analyse_errors(char *show_rbb, uint8_t ssn);
+	int analyse_errors(char *show_rbb, uint8_t ssn, ana_result *res);
 	void schedule_next_frame();
 
 	struct osmo_timer_list m_llc_timer;

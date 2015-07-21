@@ -689,7 +689,8 @@ static uint16_t bitnum_to_bsn(int bitnum, uint16_t ssn, uint16_t mod_sns)
 	return (ssn - 1 - bitnum) & mod_sns;
 }
 
-int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn)
+int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
+	ana_result *res)
 {
 	gprs_rlc_data *rlc_data;
 	uint16_t lost = 0, received = 0, skipped = 0;
@@ -697,9 +698,13 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn)
 	memset(info, '.', sizeof(info));
 	info[64] = 0;
 	uint16_t bsn = 0;
+	unsigned received_bytes = 0, lost_bytes = 0;
+	unsigned received_packets = 0, lost_packets = 0;
 
 	/* SSN - 1 is in range V(A)..V(S)-1 */
 	for (int bitpos = 0; bitpos < m_window.ws(); bitpos++) {
+		bool is_received = show_rbb[m_window.ws() - 1 - bitpos] == 'R';
+
 		bsn = bitnum_to_bsn(bitpos, ssn, m_window.mod_sns());
 
 		if (bsn == ((m_window.v_a() - 1) & m_window.mod_sns())) {
@@ -713,6 +718,17 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn)
 			continue;
 		}
 
+		/* Get general statistics */
+		if (is_received && !m_window.m_v_b.is_acked(bsn)) {
+			received_packets += 1;
+			received_bytes += rlc_data->len;
+		} else if (!is_received) {
+			lost_packets += 1;
+			lost_bytes += rlc_data->len;
+		}
+
+		/* Get statistics for current CS */
+
 		if (rlc_data->cs != current_cs()) {
 			/* This block has already been encoded with a different
 			 * CS, so it doesn't help us to decide, whether the
@@ -722,7 +738,7 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn)
 			continue;
 		}
 
-		if (show_rbb[m_window.ws() - 1 - bitpos] == 'R') {
+		if (is_received) {
 			if (!m_window.m_v_b.is_acked(bsn)) {
 				received += 1;
 				info[bitpos] = 'R';
@@ -740,6 +756,11 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn)
 		name(), m_window.v_a(), m_window.v_s(), lost, received,
 		skipped, bsn, info);
 
+	res->received_packets = received_packets;
+	res->lost_packets = lost_packets;
+	res->received_bytes = received_bytes;
+	res->lost_bytes = lost_bytes;
+
 	if (lost + received <= 1)
 		return -1;
 
@@ -755,6 +776,7 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 	char show_v_b[RLC_MAX_SNS + 1];
 	const uint16_t mod_sns = m_window.mod_sns();
 	int error_rate;
+	struct ana_result ana_res;
 
 	Decoding::extract_rbb(rbb, show_rbb);
 	/* show received array in debug (bit 64..1) */
@@ -777,16 +799,19 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 		return 1; /* indicate to free TBF */
 	}
 
-	if (bts_data()->cs_adj_enabled && ms()) {
-		error_rate = analyse_errors(show_rbb, ssn);
+	error_rate = analyse_errors(show_rbb, ssn, &ana_res);
+
+	if (bts_data()->cs_adj_enabled && ms())
 		ms()->update_error_rate(this, error_rate);
-	}
 
 	m_window.update(bts, show_rbb, ssn,
 			&lost, &received);
 
 	/* report lost and received packets */
 	gprs_rlcmac_received_lost(this, received, lost);
+
+	/* Used to calculate the net leak rate */
+	gprs_bssgp_update_bytes_received(ana_res.received_bytes);
 
 	/* raise V(A), if possible */
 	m_window.raise(m_window.move_window());
