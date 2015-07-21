@@ -595,12 +595,29 @@ int gprs_bssgp_tx_fc_bvc(void)
 	uint32_t ms_leak_rate; /* oct/s */
 	uint32_t avg_delay_ms;
 	int num_pdch = -1;
+	int max_cs_dl;
 
 	if (!the_pcu.bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
 		return -EIO;
 	}
 	bts = bts_main_data();
+
+	if (bts->cs_adj_enabled) {
+		max_cs_dl = bts->max_cs_dl;
+		if (!max_cs_dl) {
+			if (bts->cs4)
+				max_cs_dl = 4;
+			else if (bts->cs3)
+				max_cs_dl = 3;
+			else if (bts->cs2)
+				max_cs_dl = 2;
+			else
+				max_cs_dl = 1;
+		}
+	} else {
+		max_cs_dl = bts->initial_cs_dl;
+	}
 
 	bucket_size = bts->fc_bvc_bucket_size;
 	leak_rate = bts->fc_bvc_leak_rate;
@@ -611,11 +628,11 @@ int gprs_bssgp_tx_fc_bvc(void)
 		if (num_pdch < 0)
 			num_pdch = count_pdch(bts);
 
-		leak_rate = gprs_bssgp_max_leak_rate(bts->initial_cs_dl, num_pdch);
+		leak_rate = gprs_bssgp_max_leak_rate(max_cs_dl, num_pdch);
 
 		LOGP(DBSSGP, LOGL_DEBUG,
 			"Computed BVC leak rate = %d, num_pdch = %d, cs = %d\n",
-			leak_rate, num_pdch, bts->initial_cs_dl);
+			leak_rate, num_pdch, max_cs_dl);
 	};
 
 	if (ms_leak_rate == 0) {
@@ -631,15 +648,14 @@ int gprs_bssgp_tx_fc_bvc(void)
 		if (ms_num_pdch > max_pdch)
 			ms_num_pdch = max_pdch;
 
-		ms_leak_rate = gprs_bssgp_max_leak_rate(bts->initial_cs_dl,
-			ms_num_pdch);
+		ms_leak_rate = gprs_bssgp_max_leak_rate(max_cs_dl, ms_num_pdch);
 
 		/* TODO: To properly support multiple TRX, the per MS leak rate
 		 * should be derived from the max number of PDCH TS per TRX.
 		 */
 		LOGP(DBSSGP, LOGL_DEBUG,
 			"Computed MS default leak rate = %d, ms_num_pdch = %d, cs = %d\n",
-			ms_leak_rate, ms_num_pdch, bts->initial_cs_dl);
+			ms_leak_rate, ms_num_pdch, max_cs_dl);
 	};
 
 	/* TODO: Force leak_rate to 0 on buffer bloat */
