@@ -80,6 +80,7 @@ Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 00 03 14 15
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer 3193.
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45
 Slot Allocation (Algorithm A) for class 45
@@ -102,6 +103,7 @@ TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer 0.
 DL packet loss of IMSI= / TLLI=0x00000000: 0%
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
 PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), 1 TBFs, USFs = 00, TFIs = 00000002.
 ********** TBF ends here **********
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
@@ -155,6 +157,7 @@ Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 00 03 14 15
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer 3193.
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45
 Slot Allocation (Algorithm A) for class 45
@@ -182,6 +185,7 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc
 ********** TBF ends here **********
 DL packet loss of IMSI= / TLLI=0x00000000: 0%
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
 PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), 0 TBFs, USFs = 00, TFIs = 00000000.
 ********** TBF ends here **********
 Destroying MS object, TLLI = 0xffeeddcc
@@ -405,7 +409,6 @@ Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=203 block=23 data=07 01 2c 4d
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) downlink acknowledge
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) changes state from FINISHED to WAIT RELEASE
-- No new message, so we release.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer 3193.
 DL packet loss of IMSI= / TLLI=0xffeeddcc: 0%
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) free

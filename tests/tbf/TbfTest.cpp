@@ -45,6 +45,10 @@ int16_t spoof_mnc = 0, spoof_mcc = 0;
 static void check_tbf(gprs_rlcmac_tbf *tbf)
 {
 	OSMO_ASSERT(tbf);
+	if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE))
+		OSMO_ASSERT(tbf->T == 3191 || tbf->T == 3193);
+	if (tbf->state_is(GPRS_RLCMAC_RELEASING))
+		OSMO_ASSERT(tbf->T != 0);
 }
 
 /*

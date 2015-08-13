@@ -821,20 +821,16 @@ int gprs_rlcmac_dl_tbf::maybe_start_new_window()
 
 	set_state(GPRS_RLCMAC_WAIT_RELEASE);
 
+	/* start T3193 */
+	tbf_timer_start(this, 3193,
+		bts_data()->t3193_msec / 1000,
+		(bts_data()->t3193_msec % 1000) * 1000);
+
 	/* check for LLC PDU in the LLC Queue */
-	if (!have_data()) {
-		/* no message, start T3193, change state to RELEASE */
-		LOGP(DRLCMACDL, LOGL_DEBUG, "- No new message, so we release.\n");
-		/* start T3193 */
-		tbf_timer_start(this, 3193,
-			bts_data()->t3193_msec / 1000,
-			(bts_data()->t3193_msec % 1000) * 1000);
+	if (have_data())
+		/* we have more data so we will re-use this tbf */
+		reuse_tbf();
 
-		return 0;
-	}
-
-	/* we have more data so we will re-use this tbf */
-	reuse_tbf();
 	return 0;
 }
 
