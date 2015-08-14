@@ -33,7 +33,7 @@ extern "C" {
 	#include <osmocom/core/utils.h>
 }
 
-#define GPRS_CODEL_SLOW_INTERVAL_MS 2000
+#define GPRS_CODEL_SLOW_INTERVAL_MS 4000
 
 extern void *tall_pcu_ctx;
 
