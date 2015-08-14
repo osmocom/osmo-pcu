@@ -124,17 +124,6 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 	return 0;
 }
 
-static struct gprs_rlcmac_dl_tbf *tbf_lookup_dl(BTS *bts,
-					const uint32_t tlli, const uint32_t tlli_old, 
-					const char *imsi)
-{
-	GprsMs *ms = bts->ms_store().get_ms(tlli, tlli_old, imsi);
-	if (!ms)
-		return NULL;
-
-	return ms->dl_tbf();
-}
-
 static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 				const char *imsi,
 				const uint32_t tlli, const uint32_t tlli_old,
@@ -203,12 +192,48 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 		const uint8_t ms_class, const uint16_t delay_csec,
 		const uint8_t *data, const uint16_t len)
 {
-	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 	int rc;
-	GprsMs *ms;
+	GprsMs *ms, *ms_old;
 
 	/* check for existing TBF */
-	dl_tbf = tbf_lookup_dl(bts->bts, tlli, tlli_old, imsi);
+	ms = bts->bts->ms_store().get_ms(tlli, tlli_old, imsi);
+	if (ms)
+		dl_tbf = ms->dl_tbf();
+
+	if (ms && strlen(ms->imsi()) == 0) {
+		ms_old = bts->bts->ms_store().get_ms(0, 0, imsi);
+		if (ms_old && ms_old != ms) {
+			/* The TLLI has changed (RAU), so there are two MS
+			 * objects for the same MS */
+			LOGP(DRLCMAC, LOGL_NOTICE,
+				"There is a new MS object for the same MS: "
+				"(0x%08x, '%s') -> (0x%08x, '%s')\n",
+				ms_old->tlli(), ms_old->imsi(),
+				ms->tlli(), ms->imsi());
+
+			GprsMs::Guard guard_old(ms_old);
+
+			if (!dl_tbf && ms_old->dl_tbf()) {
+				LOGP(DRLCMAC, LOGL_NOTICE,
+					"%s IMSI %s: "
+					"moving DL TBF to new MS object\n",
+					dl_tbf->name(), imsi);
+				dl_tbf = ms_old->dl_tbf();
+				/* Move the DL TBF to the new MS */
+				dl_tbf->set_ms(ms);
+			}
+			/* Clean up the old MS object */
+			/* TODO: Put this into a separate function, use timer? */
+			if (ms_old->ul_tbf() && ms_old->ul_tbf()->T == 0)
+				tbf_free(ms_old->ul_tbf());
+			if (ms_old->dl_tbf() && ms_old->dl_tbf()->T == 0)
+				tbf_free(ms_old->dl_tbf());
+
+			ms_old->reset();
+		}
+	}
+
 	if (!dl_tbf) {
 		rc = tbf_new_dl_assignment(bts, imsi, tlli, tlli_old, ms_class,
 			&dl_tbf);
@@ -221,11 +246,8 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 	GprsMs::Guard guard(ms);
 
 	rc = dl_tbf->append_data(ms_class, delay_csec, data, len);
-
-	dl_tbf = ms->dl_tbf();
-
-	dl_tbf->assign_imsi(imsi);
 	ms->confirm_tlli(tlli);
+	dl_tbf->assign_imsi(imsi);
 
 	return rc;
 }

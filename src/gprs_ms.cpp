@@ -297,6 +297,20 @@ void GprsMs::update_status()
 	}
 }
 
+void GprsMs::reset()
+{
+	LOGP(DRLCMAC, LOGL_INFO,
+		"Clearing MS object, TLLI: 0x%08x, IMSI: '%s'\n",
+		tlli(), imsi());
+
+	stop_timer();
+
+	m_tlli = 0;
+	m_new_dl_tlli = 0;
+	m_new_ul_tlli = 0;
+	m_imsi[0] = '\0';
+}
+
 void GprsMs::set_tlli(uint32_t tlli)
 {
 	if (tlli == m_tlli || tlli == m_new_ul_tlli)

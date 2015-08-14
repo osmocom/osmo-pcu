@@ -71,6 +71,8 @@ public:
 	bool confirm_tlli(uint32_t tlli);
 	bool check_tlli(uint32_t tlli);
 
+	void reset();
+
 	const char *imsi() const;
 	void set_imsi(const char *imsi);
 
