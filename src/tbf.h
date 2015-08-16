@@ -226,6 +226,7 @@ protected:
 	gprs_rlcmac_bts *bts_data() const;
 
 	int extract_tlli(const uint8_t *data, const size_t len);
+	void merge_and_clear_ms(GprsMs *old_ms);
 
 	static const char *tbf_state_name[6];
 

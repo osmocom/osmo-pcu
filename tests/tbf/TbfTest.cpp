@@ -388,18 +388,23 @@ static void test_tbf_imsi()
 	OSMO_ASSERT(ms1 == ms2);
 
 	/* use the same IMSI on TBF 2 */
-	dl_tbf[1]->assign_imsi("001001000000002");
-	ms1 = the_bts.ms_store().get_ms(0, 0, "001001000000002");
-	OSMO_ASSERT(ms1 != NULL);
-	OSMO_ASSERT(ms1 != ms2);
-	OSMO_ASSERT(strcmp(ms1->imsi(), "001001000000002") == 0);
-	OSMO_ASSERT(strcmp(ms2->imsi(), "") == 0);
+	{
+		GprsMs::Guard guard(ms2);
+		dl_tbf[1]->assign_imsi("001001000000002");
+		ms1 = the_bts.ms_store().get_ms(0, 0, "001001000000002");
+		OSMO_ASSERT(ms1 != NULL);
+		OSMO_ASSERT(ms1 != ms2);
+		OSMO_ASSERT(strcmp(ms1->imsi(), "001001000000002") == 0);
+		OSMO_ASSERT(strcmp(ms2->imsi(), "") == 0);
+	}
+
+	ms2 = the_bts.ms_store().get_ms(0xf1000001);
+	OSMO_ASSERT(ms2 == NULL);
 
 	tbf_free(dl_tbf[1]);
 	ms1 = the_bts.ms_store().get_ms(0, 0, "001001000000002");
 	OSMO_ASSERT(ms1 == NULL);
 
-	tbf_free(dl_tbf[0]);
 	printf("=== end %s ===\n", __func__);
 }
 

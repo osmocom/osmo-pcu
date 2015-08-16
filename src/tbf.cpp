@@ -83,7 +83,8 @@ void gprs_rlcmac_tbf::assign_imsi(const char *imsi_)
 			"%s the IMSI '%s' was already assigned to another "
 			"MS object: TLLI = 0x%08x, that IMSI will be removed\n",
 			name(), imsi_, old_ms->tlli());
-		old_ms->set_imsi("");
+
+		merge_and_clear_ms(old_ms);
 	}
 
 	m_ms->set_imsi(imsi_);
@@ -156,6 +157,49 @@ void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 		m_ms->attach_tbf(this);
 }
 
+void gprs_rlcmac_tbf::merge_and_clear_ms(GprsMs *old_ms)
+{
+	if (old_ms == ms())
+		return;
+
+	GprsMs::Guard guard_old(old_ms);
+
+	if (strlen(ms()->imsi()) == 0 && strlen(old_ms->imsi()) != 0) {
+		ms()->set_imsi(old_ms->imsi());
+		old_ms->set_imsi("");
+	}
+
+	if (!ms()->ms_class() && old_ms->ms_class())
+		ms()->set_ms_class(old_ms->ms_class());
+
+	/* Clean up the old MS object */
+	/* TODO: Use timer? */
+	if (old_ms->ul_tbf() && old_ms->ul_tbf()->T == 0) {
+		if (old_ms->ul_tbf() == this) {
+			LOGP(DRLCMAC, LOGL_ERROR,
+				"%s is referred by the old MS "
+				"and will not be deleted\n",
+				name());
+			set_ms(NULL);
+		} else {
+			tbf_free(old_ms->ul_tbf());
+		}
+	}
+	if (old_ms->dl_tbf() && old_ms->dl_tbf()->T == 0) {
+		if (old_ms->dl_tbf() == this) {
+			LOGP(DRLCMAC, LOGL_ERROR,
+				"%s is referred by the old MS "
+				"and will not be deleted\n",
+				name());
+			set_ms(NULL);
+		} else {
+			tbf_free(old_ms->dl_tbf());
+		}
+	}
+
+	old_ms->reset();
+}
+
 void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
 {
 	if (!ms())
@@ -163,6 +207,18 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction di
 
 	if (!tlli)
 		return;
+
+	/* TODO: When the TLLI does not match the ms, check if there is another
+	 * MS object that belongs to that TLLI and if yes make sure one of them
+	 * gets deleted. This is the same problem that can arise with
+	 * assign_imsi() so there should be a unified solution */
+	if (!ms()->check_tlli(tlli)) {
+		GprsMs *old_ms;
+
+		old_ms = bts->ms_store().get_ms(tlli, 0, NULL);
+		if (old_ms)
+			merge_and_clear_ms(old_ms);
+	}
 
 	if (dir == GPRS_RLCMAC_UL_TBF)
 		ms()->set_tlli(tlli);
