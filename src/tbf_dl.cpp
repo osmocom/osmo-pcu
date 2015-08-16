@@ -241,12 +241,8 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 			return rc;
 	}
 
-	OSMO_ASSERT(dl_tbf->ms() != NULL);
-	ms = dl_tbf->ms();
-	GprsMs::Guard guard(ms);
-
 	rc = dl_tbf->append_data(ms_class, delay_csec, data, len);
-	ms->confirm_tlli(tlli);
+	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
 	dl_tbf->assign_imsi(imsi);
 
 	return rc;
