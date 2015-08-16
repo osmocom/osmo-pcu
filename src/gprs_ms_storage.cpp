@@ -24,6 +24,8 @@
 #include "tbf.h"
 #include "gprs_debug.h"
 
+#define GPRS_UNDEFINED_IMSI "000"
+
 GprsMsStorage::GprsMsStorage(BTS *bts) :
 	m_bts(bts)
 {
@@ -69,7 +71,7 @@ GprsMs *GprsMsStorage::get_ms(uint32_t tlli, uint32_t old_tlli, const char *imsi
 
 	/* not found by TLLI */
 
-	if (imsi && imsi[0]) {
+	if (imsi && imsi[0] && strcmp(imsi, GPRS_UNDEFINED_IMSI) != 0) {
 		llist_for_each(pos, &m_list) {
 			ms = pos->entry();
 			if (strcmp(imsi, ms->imsi()) == 0)
