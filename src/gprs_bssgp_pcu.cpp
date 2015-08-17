@@ -503,6 +503,11 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 			LOGP(DPCU, LOGL_NOTICE, "NS-VC is blocked.\n");
 		}
 		break;
+	case S_NS_ALIVE_EXP:
+		LOGP(DPCU, LOGL_NOTICE, "Tns alive expired too often, "
+			"re-starting RESET procedure\n");
+		gprs_ns_reconnect(nssd->nsvc);
+		break;
 	}
 
 	return 0;
@@ -721,6 +726,31 @@ static void bvc_timeout(void *_priv)
 		the_pcu.bctx->bvci);
 	gprs_bssgp_tx_fc_bvc();
 	osmo_timer_schedule(&the_pcu.bvc_timer, the_pcu.bts->fc_interval, 0);
+}
+
+int gprs_ns_reconnect(struct gprs_nsvc *nsvc)
+{
+	struct gprs_nsvc *nsvc2;
+
+	if (!bssgp_nsi) {
+		LOGP(DBSSGP, LOGL_ERROR, "NS instance does not exist\n");
+		return -EINVAL;
+	}
+
+	if (nsvc != the_pcu.nsvc) {
+		LOGP(DBSSGP, LOGL_ERROR, "NSVC is invalid\n");
+		return -EBADF;
+	}
+
+	nsvc2 = gprs_ns_nsip_connect(bssgp_nsi, &nsvc->ip.bts_addr,
+		nsvc->nsei, nsvc->nsvci);
+
+	if (!nsvc2) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to reconnect NSVC\n");
+		return -EIO;
+	}
+
+	return 0;
 }
 
 /* create BSSGP/NS layer instances */
