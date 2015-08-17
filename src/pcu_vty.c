@@ -14,7 +14,7 @@
 
 #include "pcu_vty_functions.h"
 
-enum node_type pcu_vty_go_parent(struct vty *vty)
+int pcu_vty_go_parent(struct vty *vty)
 {
 	switch (vty->node) {
 #if 0
