@@ -194,6 +194,7 @@ int main(int argc, char *argv[])
 	msgb_set_talloc_ctx(tall_pcu_ctx);
 
 	osmo_init_logging(&gprs_log_info);
+	gprs_ns_set_log_ss(DNS);
 	bssgp_set_log_ss(DBSSGP);
 
 	vty_init(&pcu_vty_info);
