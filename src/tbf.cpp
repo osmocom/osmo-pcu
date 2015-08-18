@@ -164,14 +164,6 @@ void gprs_rlcmac_tbf::merge_and_clear_ms(GprsMs *old_ms)
 
 	GprsMs::Guard guard_old(old_ms);
 
-	if (strlen(ms()->imsi()) == 0 && strlen(old_ms->imsi()) != 0) {
-		ms()->set_imsi(old_ms->imsi());
-		old_ms->set_imsi("");
-	}
-
-	if (!ms()->ms_class() && old_ms->ms_class())
-		ms()->set_ms_class(old_ms->ms_class());
-
 	/* Clean up the old MS object */
 	/* TODO: Use timer? */
 	if (old_ms->ul_tbf() && old_ms->ul_tbf()->T == 0) {
@@ -197,7 +189,7 @@ void gprs_rlcmac_tbf::merge_and_clear_ms(GprsMs *old_ms)
 		}
 	}
 
-	old_ms->reset();
+	ms()->merge_old_ms(old_ms);
 }
 
 void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)

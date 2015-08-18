@@ -63,6 +63,8 @@ public:
 
 	void set_callback(Callback *cb) {m_cb = cb;}
 
+	void merge_old_ms(GprsMs *old_ms);
+
 	gprs_rlcmac_ul_tbf *ul_tbf() const {return m_ul_tbf;}
 	gprs_rlcmac_dl_tbf *dl_tbf() const {return m_dl_tbf;}
 	gprs_rlcmac_tbf *tbf(enum gprs_rlcmac_tbf_direction dir) const;

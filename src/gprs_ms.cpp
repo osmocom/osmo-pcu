@@ -311,6 +311,20 @@ void GprsMs::reset()
 	m_imsi[0] = '\0';
 }
 
+void GprsMs::merge_old_ms(GprsMs *old_ms)
+{
+	if (old_ms == this)
+		return;
+
+	if (strlen(imsi()) == 0 && strlen(old_ms->imsi()) != 0)
+		set_imsi(old_ms->imsi());
+
+	if (!ms_class() && old_ms->ms_class())
+		set_ms_class(old_ms->ms_class());
+
+	old_ms->reset();
+}
+
 void GprsMs::set_tlli(uint32_t tlli)
 {
 	if (tlli == m_tlli || tlli == m_new_ul_tlli)

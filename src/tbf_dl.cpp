@@ -230,7 +230,7 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 			if (ms_old->dl_tbf() && ms_old->dl_tbf()->T == 0)
 				tbf_free(ms_old->dl_tbf());
 
-			ms_old->reset();
+			ms->merge_old_ms(ms_old);
 		}
 	}
 
