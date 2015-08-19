@@ -1388,7 +1388,6 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x03, Fn=2654167 (17,25,9)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 03 8b 29 07 00 c8 00 10 0b 2b 2b 2b 2b 2b 2b 2b 
-Got 'TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW)', TA=7
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Decoded premier TLLI=0xf1223344 of UL DATA TFI=0.
@@ -1408,6 +1407,7 @@ No bctx
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes state from FLOW to FINISHED
 - Scheduling Ack/Nack, because TLLI is included.
 - Scheduling Ack/Nack, because last block has CV==0.
+Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 MS requests UL TBF on RACH, so we provide one:
@@ -1442,12 +1442,11 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer 3169.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Modifying MS object, TLLI = 0xf1223344, TA 0 -> 7
 Change control TS to 7 until assinment is complete.
-Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)', TA=7, CS=4
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
-Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654275 block=21 data=4f 28 5e 24 46 68 8f 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 8f 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) restarting timer 3169 while old timer 3169 pending 
 - BSN 0 storing in window (0..63)
@@ -1459,4 +1458,5 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) restarting timer 3169 while old t
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) complete UL frame that fits precisely in last block: len=20
 LLC [PCU -> SGSN] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) len=20
 No bctx
+Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
