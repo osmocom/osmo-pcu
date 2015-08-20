@@ -532,6 +532,26 @@ static void test_tbf_dl_llc_loss()
 	gprs_bssgp_destroy();
 }
 
+#if 0
+static void send_ul_data(BTS *the_bts,
+	uint8_t ts_no, uint32_t tlli, uint32_t *fn,
+	const uint8_t *data, unsigned data_size)
+{
+	// TODO: Request USF
+
+	uint8_t data_msg[23] = {
+		0x00, /* GPRS_RLCMAC_DATA_BLOCK << 6 */
+		uint8_t(0 | (tfi << 1)),
+		uint8_t(1), /* BSN:7, E:1 */
+		uint8_t(tlli >> 24), uint8_t(tlli >> 16),
+		uint8_t(tlli >> 8), uint8_t(tlli), /* TLLI */
+	};
+
+	pdch = &the_bts->bts_data()->trx[trx_no].pdch[ts_no];
+	pdch->rcv_block(&data_msg[0], sizeof(data_msg), *fn, &meas);
+}
+#endif
+
 static gprs_rlcmac_ul_tbf *establish_ul_tbf_single_phase(BTS *the_bts,
 	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta)
 {
