@@ -562,6 +562,28 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_single_phase(BTS *the_bts,
 	return ul_tbf;
 }
 
+static void send_ul_mac_block(BTS *the_bts, unsigned trx_no, unsigned ts_no,
+	RlcMacUplink_t *ulreq, unsigned fn)
+{
+	bitvec *rlc_block;
+	uint8_t buf[64];
+	int num_bytes;
+	struct gprs_rlcmac_pdch *pdch;
+	struct pcu_l1_meas meas;
+
+	meas.set_rssi(31);
+
+	rlc_block = bitvec_alloc(23);
+
+	encode_gsm_rlcmac_uplink(rlc_block, ulreq);
+	num_bytes = bitvec_pack(rlc_block, &buf[0]);
+	OSMO_ASSERT(size_t(num_bytes) < sizeof(buf));
+	bitvec_free(rlc_block);
+
+	pdch = &the_bts->bts_data()->trx[trx_no].pdch[ts_no];
+	pdch->rcv_block(&buf[0], num_bytes, fn, &meas);
+}
+
 static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
 	uint8_t ms_class)
@@ -576,9 +598,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	struct gprs_rlcmac_pdch *pdch;
 	gprs_rlcmac_bts *bts;
 	RlcMacUplink_t ulreq = {0};
-	bitvec *rlc_block;
-	uint8_t buf[64];
-	int num_bytes;
 	struct pcu_l1_meas meas;
 	meas.set_rssi(31);
 
@@ -594,8 +613,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 
 	/* fake a resource request */
-	rlc_block = bitvec_alloc(23);
-
 	ulreq.u.MESSAGE_TYPE = MT_PACKET_RESOURCE_REQUEST;
 	ulreq.u.Packet_Resource_Request.PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
 	ulreq.u.Packet_Resource_Request.ID.UnionType = 1; /* != 0 */
@@ -612,13 +629,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 		MS_RA_capability_value[0].u.Content.Multislot_capability.
 		GPRS_multislot_class = ms_class;
 
-	encode_gsm_rlcmac_uplink(rlc_block, &ulreq);
-	num_bytes = bitvec_pack(rlc_block, &buf[0]);
-	OSMO_ASSERT(size_t(num_bytes) < sizeof(buf));
-	bitvec_free(rlc_block);
-
-	pdch = &the_bts->bts_data()->trx[trx_no].pdch[ts_no];
-	pdch->rcv_block(&buf[0], num_bytes, sba_fn, &meas);
+	send_ul_mac_block(the_bts, trx_no, ts_no, &ulreq, sba_fn);
 
 	/* check the TBF */
 	ul_tbf = the_bts->ul_tbf_by_tfi(tfi, trx_no, ts_no);
@@ -645,6 +656,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 		uint8_t(1), /* BSN:7, E:1 */
 	};
 
+	pdch = &the_bts->bts_data()->trx[trx_no].pdch[ts_no];
 	pdch->rcv_block(&data_msg[0], sizeof(data_msg), *fn, &meas);
 
 	ms = the_bts->ms_by_tlli(tlli);
