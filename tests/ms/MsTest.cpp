@@ -55,9 +55,9 @@ static void test_ms_state()
 	OSMO_ASSERT(ms->is_idle());
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	dl_tbf->direction = GPRS_RLCMAC_DL_TBF;
+	new (dl_tbf) gprs_rlcmac_dl_tbf();
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	ul_tbf->direction = GPRS_RLCMAC_UL_TBF;
+	new (ul_tbf) gprs_rlcmac_ul_tbf();
 
 	ms->attach_tbf(ul_tbf);
 	OSMO_ASSERT(!ms->is_idle());
@@ -116,9 +116,9 @@ static void test_ms_callback()
 	OSMO_ASSERT(ms->is_idle());
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	dl_tbf->direction = GPRS_RLCMAC_DL_TBF;
+	new (dl_tbf) gprs_rlcmac_dl_tbf();
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	ul_tbf->direction = GPRS_RLCMAC_UL_TBF;
+	new (ul_tbf) gprs_rlcmac_ul_tbf();
 
 	OSMO_ASSERT(last_cb == UNKNOWN);
 
@@ -186,11 +186,11 @@ static void test_ms_replace_tbf()
 	was_idle = false;
 
 	dl_tbf[0] = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	dl_tbf[0]->direction = GPRS_RLCMAC_DL_TBF;
+	new (dl_tbf[0]) gprs_rlcmac_dl_tbf();
 	dl_tbf[1] = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	dl_tbf[1]->direction = GPRS_RLCMAC_DL_TBF;
+	new (dl_tbf[1]) gprs_rlcmac_dl_tbf();
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	ul_tbf->direction = GPRS_RLCMAC_UL_TBF;
+	new (ul_tbf) gprs_rlcmac_ul_tbf();
 
 	ms->attach_tbf(dl_tbf[0]);
 	OSMO_ASSERT(!ms->is_idle());
@@ -343,7 +343,7 @@ static void test_ms_storage()
 	printf("=== start %s ===\n", __func__);
 
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	ul_tbf->direction = GPRS_RLCMAC_UL_TBF;
+	new (ul_tbf) gprs_rlcmac_ul_tbf();
 
 	ms = store.get_ms(tlli + 0);
 	OSMO_ASSERT(ms == NULL);
@@ -434,9 +434,9 @@ static void test_ms_timeout()
 	OSMO_ASSERT(ms->is_idle());
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	dl_tbf->direction = GPRS_RLCMAC_DL_TBF;
+	new (dl_tbf) gprs_rlcmac_dl_tbf();
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	ul_tbf->direction = GPRS_RLCMAC_UL_TBF;
+	new (ul_tbf) gprs_rlcmac_ul_tbf();
 
 	OSMO_ASSERT(last_cb == UNKNOWN);
 
@@ -492,7 +492,7 @@ static void test_ms_cs_selection()
 	OSMO_ASSERT(ms->is_idle());
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	dl_tbf->direction = GPRS_RLCMAC_DL_TBF;
+	new (dl_tbf) gprs_rlcmac_dl_tbf();
 
 	dl_tbf->set_ms(ms);
 	OSMO_ASSERT(!ms->is_idle());

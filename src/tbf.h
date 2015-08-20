@@ -110,6 +110,7 @@ struct llist_pods {
 		     prefetch(pos->member.list.next))
 
 struct gprs_rlcmac_tbf {
+	gprs_rlcmac_tbf(gprs_rlcmac_tbf_direction dir);
 
 	static void free_all(struct gprs_rlcmac_trx *trx);
 	static void free_all(struct gprs_rlcmac_pdch *pdch);
@@ -306,6 +307,8 @@ inline time_t gprs_rlcmac_tbf::created_ts() const
 }
 
 struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
+	gprs_rlcmac_dl_tbf();
+
 	void cleanup();
 
 	/* dispatch Unitdata.DL messages */
@@ -371,6 +374,8 @@ protected:
 };
 
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
+	gprs_rlcmac_ul_tbf();
+
 	struct msgb *create_ul_ack(uint32_t fn);
 
 	/* blocks were acked */

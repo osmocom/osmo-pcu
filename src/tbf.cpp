@@ -41,6 +41,11 @@ extern void *tall_pcu_ctx;
 
 static void tbf_timer_cb(void *_tbf);
 
+gprs_rlcmac_tbf::gprs_rlcmac_tbf(gprs_rlcmac_tbf_direction dir) :
+	direction(dir)
+{
+}
+
 gprs_rlcmac_bts *gprs_rlcmac_tbf::bts_data() const
 {
 	return bts->bts_data();
@@ -523,6 +528,17 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
 	return 0;
 }
 
+gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf() :
+	gprs_rlcmac_tbf(GPRS_RLCMAC_UL_TBF)
+{
+};
+
+static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
+{
+	tbf->~gprs_rlcmac_ul_tbf();
+	return 0;
+}
+
 
 struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	GprsMs *ms, int8_t use_trx,
@@ -540,7 +556,8 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	if (!tbf)
 		return NULL;
 
-	tbf->direction = GPRS_RLCMAC_UL_TBF;
+	talloc_set_destructor(tbf, ul_tbf_dtor);
+	new (tbf) gprs_rlcmac_ul_tbf();
 
 	if (!ms)
 		ms = bts->bts->ms_alloc(ms_class);
@@ -556,6 +573,17 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	tbf->bts->tbf_ul_created();
 
 	return tbf;
+}
+
+gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf() :
+	gprs_rlcmac_tbf(GPRS_RLCMAC_DL_TBF)
+{
+};
+
+static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
+{
+	tbf->~gprs_rlcmac_dl_tbf();
+	return 0;
 }
 
 struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
@@ -574,7 +602,8 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	if (!tbf)
 		return NULL;
 
-	tbf->direction = GPRS_RLCMAC_DL_TBF;
+	talloc_set_destructor(tbf, dl_tbf_dtor);
+	new (tbf) gprs_rlcmac_dl_tbf();
 
 	if (!ms)
 		ms = bts->bts->ms_alloc(ms_class);
