@@ -80,6 +80,7 @@ struct gprs_llc_queue {
 	void enqueue(struct msgb *llc_msg, const MetaInfo *info = 0);
 	struct msgb *dequeue(const MetaInfo **info = 0);
 	void clear(BTS *bts);
+	void move_and_merge(gprs_llc_queue *o);
 	size_t size() const;
 	size_t octets() const;
 

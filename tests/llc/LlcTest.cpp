@@ -165,6 +165,56 @@ static void test_llc_meta()
 	printf("=== end %s ===\n", __func__);
 }
 
+static void test_llc_merge()
+{
+	gprs_llc_queue queue1;
+	gprs_llc_queue queue2;
+	gprs_llc_queue::MetaInfo info = {0};
+
+	printf("=== start %s ===\n", __func__);
+
+	queue1.init();
+	queue2.init();
+
+	info.recv_time.tv_sec += 1;
+	enqueue_data(&queue1, "*A*", &info);
+
+	info.recv_time.tv_sec += 1;
+	enqueue_data(&queue1, "*B*", &info);
+
+	info.recv_time.tv_sec += 1;
+	enqueue_data(&queue2, "*C*", &info);
+
+	info.recv_time.tv_sec += 1;
+	enqueue_data(&queue1, "*D*", &info);
+
+	info.recv_time.tv_sec += 1;
+	enqueue_data(&queue2, "*E*", &info);
+
+	OSMO_ASSERT(queue1.size() == 3);
+	OSMO_ASSERT(queue1.octets() == 9);
+	OSMO_ASSERT(queue2.size() == 2);
+	OSMO_ASSERT(queue2.octets() == 6);
+
+	queue2.move_and_merge(&queue1);
+
+	OSMO_ASSERT(queue1.size() == 0);
+	OSMO_ASSERT(queue1.octets() == 0);
+	OSMO_ASSERT(queue2.size() == 5);
+	OSMO_ASSERT(queue2.octets() == 15);
+
+	dequeue_and_check(&queue2, "*A*");
+	dequeue_and_check(&queue2, "*B*");
+	dequeue_and_check(&queue2, "*C*");
+	dequeue_and_check(&queue2, "*D*");
+	dequeue_and_check(&queue2, "*E*");
+
+	OSMO_ASSERT(queue2.size() == 0);
+	OSMO_ASSERT(queue2.octets() == 0);
+
+	printf("=== end %s ===\n", __func__);
+}
+
 static const struct log_info_cat default_categories[] = {
 	{"DPCU", "", "GPRS Packet Control Unit (PCU)", LOGL_INFO, 1},
 };
@@ -200,6 +250,7 @@ int main(int argc, char **argv)
 
 	test_llc_queue();
 	test_llc_meta();
+	test_llc_merge();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);

@@ -134,6 +134,59 @@ void gprs_llc_queue::clear(BTS *bts)
 	m_queue_octets = 0;
 }
 
+void gprs_llc_queue::move_and_merge(gprs_llc_queue *o)
+{
+	struct msgb *msg, *msg1 = NULL, *msg2 = NULL;
+	struct llist_head new_queue;
+	size_t queue_size = 0;
+	size_t queue_octets = 0;
+	INIT_LLIST_HEAD(&new_queue);
+
+	while (1) {
+		if (msg1 == NULL)
+			msg1 = msgb_dequeue(&m_queue);
+
+		if (msg2 == NULL)
+			msg2 = msgb_dequeue(&o->m_queue);
+
+		if (msg1 == NULL && msg2 == NULL)
+			break;
+
+		if (msg1 == NULL) {
+			msg = msg2;
+			msg2 = NULL;
+		} else if (msg2 == NULL) {
+			msg = msg1;
+			msg1 = NULL;
+		} else {
+			const MetaInfo *mi1 = (MetaInfo *)&msg1->cb[0];
+			const MetaInfo *mi2 = (MetaInfo *)&msg2->cb[0];
+
+			if (timercmp(&mi2->recv_time, &mi1->recv_time, >)) {
+				msg = msg1;
+				msg1 = NULL;
+			} else {
+				msg = msg2;
+				msg2 = NULL;
+			}
+		}
+
+		msgb_enqueue(&new_queue, msg);
+		queue_size += 1;
+		queue_octets += msgb_length(msg);
+	}
+
+	OSMO_ASSERT(llist_empty(&m_queue));
+	OSMO_ASSERT(llist_empty(&o->m_queue));
+
+	o->m_queue_size = 0;
+	o->m_queue_octets = 0;
+
+	llist_splice_init(&new_queue, &m_queue);
+	m_queue_size = queue_size;
+	m_queue_octets = queue_octets;
+}
+
 #define ALPHA 0.5f
 
 struct msgb *gprs_llc_queue::dequeue(const MetaInfo **info)

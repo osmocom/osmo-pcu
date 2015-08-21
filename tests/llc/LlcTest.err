@@ -2,3 +2,8 @@ dequeued msg, length 11 (expected 11), data 4c 4c 43 20 6d 65 73 73 61 67 65
 dequeued msg, length 17 (expected 17), data 6f 74 68 65 72 20 4c 4c 43 20 6d 65 73 73 61 67 65 
 dequeued msg, length 13 (expected 13), data 4c 4c 43 20 6d 65 73 73 61 67 65 20 31 
 dequeued msg, length 13 (expected 13), data 4c 4c 43 20 6d 65 73 73 61 67 65 20 32 
+dequeued msg, length 3 (expected 3), data 2a 41 2a 
+dequeued msg, length 3 (expected 3), data 2a 42 2a 
+dequeued msg, length 3 (expected 3), data 2a 43 2a 
+dequeued msg, length 3 (expected 3), data 2a 44 2a 
+dequeued msg, length 3 (expected 3), data 2a 45 2a 
