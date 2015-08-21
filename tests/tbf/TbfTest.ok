@@ -18,3 +18,5 @@
 === end test_tbf_dl_flow_and_rach_two_phase ===
 === start test_tbf_dl_flow_and_rach_single_phase ===
 === end test_tbf_dl_flow_and_rach_single_phase ===
+=== start test_tbf_dl_reuse ===
+=== end test_tbf_dl_reuse ===

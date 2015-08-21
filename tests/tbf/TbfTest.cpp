@@ -964,6 +964,106 @@ static void test_tbf_dl_flow_and_rach_single_phase()
 	printf("=== end %s ===\n", __func__);
 }
 
+static void test_tbf_dl_reuse()
+{
+	BTS the_bts;
+	int ts_no = 7;
+	uint32_t fn = 2654218;
+	uint16_t qta = 31;
+	uint32_t tlli1 = 0xf1223344;
+	const char *imsi = "0011223344";
+	uint8_t ms_class = 1;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	gprs_rlcmac_dl_tbf *dl_tbf1, *dl_tbf2;
+	GprsMs *ms1, *ms2;
+	unsigned i;
+	RlcMacUplink_t ulreq = {0};
+
+	printf("=== start %s ===\n", __func__);
+
+	setup_bts(&the_bts, ts_no, 1);
+
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta, ms_class);
+
+	ms1 = ul_tbf->ms();
+	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
+
+	/* Send some LLC frames */
+	for (i = 0; i < 40; i++) {
+		char buf[32];
+		int rc;
+
+		rc = snprintf(buf, sizeof(buf), "LLC PACKET %02i", i);
+		OSMO_ASSERT(rc > 0);
+
+		send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)buf, rc);
+	}
+
+	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
+
+	/* Send Packet Downlink Assignment to MS */
+	request_dl_rlc_block(ul_tbf, &fn);
+
+	/* Ack it */
+	send_control_ack(ul_tbf);
+
+	/* Transmit all data */
+	transmit_dl_data(&the_bts, tlli1, &fn);
+	OSMO_ASSERT(ms1->llc_queue()->size() == 0);
+	OSMO_ASSERT(ms1->dl_tbf());
+	OSMO_ASSERT(ms1->dl_tbf()->state_is(GPRS_RLCMAC_FINISHED));
+
+	dl_tbf1 = ms1->dl_tbf();
+
+	/* Send some LLC frames */
+	for (i = 0; i < 10; i++) {
+		char buf[32];
+		int rc;
+
+		rc = snprintf(buf, sizeof(buf), "LLC PACKET %02i (TBF 2)", i);
+		OSMO_ASSERT(rc > 0);
+
+		send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)buf, rc);
+	}
+
+	/* Fake Final DL Ack/Nack */
+	ulreq.u.MESSAGE_TYPE = MT_PACKET_DOWNLINK_ACK_NACK;
+	Packet_Downlink_Ack_Nack_t *ack = &ulreq.u.Packet_Downlink_Ack_Nack;
+
+	ack->PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
+	ack->DOWNLINK_TFI = dl_tbf1->tfi();
+	ack->Ack_Nack_Description.FINAL_ACK_INDICATION = 1;
+
+	send_ul_mac_block(&the_bts, 0, ts_no, &ulreq, dl_tbf1->poll_fn);
+
+	OSMO_ASSERT(dl_tbf1->state_is(GPRS_RLCMAC_WAIT_RELEASE));
+
+	request_dl_rlc_block(dl_tbf1, &fn);
+
+	ms2 = the_bts.ms_by_tlli(tlli1);
+	OSMO_ASSERT(ms2 == ms1);
+	OSMO_ASSERT(ms2->dl_tbf());
+	OSMO_ASSERT(ms2->dl_tbf()->state_is(GPRS_RLCMAC_ASSIGN));
+
+	dl_tbf2 = ms2->dl_tbf();
+
+	OSMO_ASSERT(dl_tbf1 != dl_tbf2);
+
+	send_control_ack(dl_tbf1);
+	/* OSMO_ASSERT(dl_tbf2->state_is(GPRS_RLCMAC_FLOW)); */
+
+	/* Transmit all data */
+	/* TODO: This blocks with the current implementation, enable when fixed
+	transmit_dl_data(&the_bts, tlli1, &fn);
+	OSMO_ASSERT(ms2->llc_queue()->size() == 0);
+	OSMO_ASSERT(ms2->dl_tbf());
+	OSMO_ASSERT(ms2->dl_tbf()->state_is(GPRS_RLCMAC_FINISHED));
+	*/
+
+	printf("=== end %s ===\n", __func__);
+}
+
 
 static const struct log_info_cat default_categories[] = {
         {"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_INFO, 0},
@@ -1021,6 +1121,7 @@ int main(int argc, char **argv)
 	test_tbf_ra_update_rach();
 	test_tbf_dl_flow_and_rach_two_phase();
 	test_tbf_dl_flow_and_rach_single_phase();
+	test_tbf_dl_reuse();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
