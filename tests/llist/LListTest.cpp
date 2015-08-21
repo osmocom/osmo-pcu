@@ -48,9 +48,13 @@ static void test_linux_list()
 
 	printf("=== start %s ===\n", __func__);
 
+	OSMO_ASSERT(llist_empty(&elems));
+
 	llist_add_tail(&elem1.list, &elems);
 	llist_add_tail(&elem2.list, &elems);
 	llist_add_tail(&elem3.list, &elems);
+
+	OSMO_ASSERT(!llist_empty(&elems));
 
 	llist_for_each(pos, &elems) {
 		count += 1;

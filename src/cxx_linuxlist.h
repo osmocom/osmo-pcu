@@ -45,7 +45,7 @@ struct LListHead {
 		return *static_cast<llist_head *>(static_cast<void *>(this));
 	}
 	const llist_head &llist() const {
-		return *static_cast<llist_head *>(static_cast<void *>(this));
+		return *static_cast<const llist_head *>(static_cast<const void *>(this));
 	}
 
 private:
