@@ -935,7 +935,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		if (ul_tbf) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 				"TLLI=0x%08x while %s still "
-				"exists. Killing pending DL TBF\n",
+				"exists. Killing pending UL TBF\n",
 				tlli, tbf_name(ul_tbf));
 			tbf_free(ul_tbf);
 			ul_tbf = NULL;

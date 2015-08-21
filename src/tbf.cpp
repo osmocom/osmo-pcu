@@ -737,7 +737,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 
 	if (!new_dl_tbf) {
 		LOGP(DRLCMACDL, LOGL_ERROR, "We have a schedule for downlink "
-			"assignment at uplink %s, but there is no downlink "
+			"assignment at %s, but there is no downlink "
 			"TBF\n", tbf_name(this));
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 		return NULL;
