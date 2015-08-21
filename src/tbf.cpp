@@ -42,7 +42,8 @@ extern void *tall_pcu_ctx;
 static void tbf_timer_cb(void *_tbf);
 
 gprs_rlcmac_tbf::gprs_rlcmac_tbf(gprs_rlcmac_tbf_direction dir) :
-	direction(dir)
+	direction(dir),
+	m_ms_list(this)
 {
 }
 

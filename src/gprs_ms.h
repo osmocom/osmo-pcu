@@ -109,13 +109,14 @@ public:
 
 	void update_error_rate(gprs_rlcmac_tbf *tbf, int percent);
 
-	bool is_idle() const {return !m_ul_tbf && !m_dl_tbf && !m_ref;}
+	bool is_idle() const;
 
 	void* operator new(size_t num);
 	void operator delete(void* p);
 
 	LListHead<GprsMs>& list() {return this->m_list;}
 	const LListHead<GprsMs>& list() const {return this->m_list;}
+	const LListHead<gprs_rlcmac_tbf>& old_tbfs() const {return m_old_tbfs;}
 
 	void update_l1_meas(const pcu_l1_meas *meas);
 	const pcu_l1_meas* l1_meas() const {return &m_l1_meas;};
@@ -136,6 +137,8 @@ private:
 	Callback * m_cb;
 	gprs_rlcmac_ul_tbf *m_ul_tbf;
 	gprs_rlcmac_dl_tbf *m_dl_tbf;
+	LListHead<gprs_rlcmac_tbf> m_old_tbfs;
+
 	uint32_t m_tlli;
 	uint32_t m_new_ul_tlli;
 	uint32_t m_new_dl_tlli;
@@ -166,6 +169,11 @@ private:
 
 	struct gprs_codel *m_codel_state;
 };
+
+inline bool GprsMs::is_idle() const
+{
+	return !m_ul_tbf && !m_dl_tbf && !m_ref && llist_empty(&m_old_tbfs);
+}
 
 inline uint32_t GprsMs::tlli() const
 {

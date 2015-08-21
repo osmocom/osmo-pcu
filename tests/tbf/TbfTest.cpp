@@ -1051,15 +1051,13 @@ static void test_tbf_dl_reuse()
 	OSMO_ASSERT(dl_tbf1 != dl_tbf2);
 
 	send_control_ack(dl_tbf1);
-	/* OSMO_ASSERT(dl_tbf2->state_is(GPRS_RLCMAC_FLOW)); */
+	OSMO_ASSERT(dl_tbf2->state_is(GPRS_RLCMAC_FLOW));
 
 	/* Transmit all data */
-	/* TODO: This blocks with the current implementation, enable when fixed
 	transmit_dl_data(&the_bts, tlli1, &fn);
 	OSMO_ASSERT(ms2->llc_queue()->size() == 0);
 	OSMO_ASSERT(ms2->dl_tbf());
 	OSMO_ASSERT(ms2->dl_tbf()->state_is(GPRS_RLCMAC_FINISHED));
-	*/
 
 	printf("=== end %s ===\n", __func__);
 }

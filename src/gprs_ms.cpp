@@ -140,6 +140,8 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 
 GprsMs::~GprsMs()
 {
+	LListHead<gprs_rlcmac_tbf> *pos, *tmp;
+
 	LOGP(DRLCMAC, LOGL_INFO, "Destroying MS object, TLLI = 0x%08x\n", tlli());
 
 	set_reserved_slots(NULL, 0, 0);
@@ -156,6 +158,10 @@ GprsMs::~GprsMs()
 		m_dl_tbf->set_ms(NULL);
 		m_dl_tbf = NULL;
 	}
+
+	llist_for_each_safe(pos, tmp, &m_old_tbfs)
+		pos->entry()->set_ms(NULL);
+
 	m_llc_queue.clear(m_bts);
 }
 
@@ -227,7 +233,7 @@ void GprsMs::attach_ul_tbf(struct gprs_rlcmac_ul_tbf *tbf)
 	Guard guard(this);
 
 	if (m_ul_tbf)
-		detach_tbf(m_ul_tbf);
+		llist_add_tail(&m_ul_tbf->ms_list(), &m_old_tbfs);
 
 	m_ul_tbf = tbf;
 
@@ -246,7 +252,7 @@ void GprsMs::attach_dl_tbf(struct gprs_rlcmac_dl_tbf *tbf)
 	Guard guard(this);
 
 	if (m_dl_tbf)
-		detach_tbf(m_dl_tbf);
+		llist_add_tail(&m_dl_tbf->ms_list(), &m_old_tbfs);
 
 	m_dl_tbf = tbf;
 
@@ -256,12 +262,26 @@ void GprsMs::attach_dl_tbf(struct gprs_rlcmac_dl_tbf *tbf)
 
 void GprsMs::detach_tbf(gprs_rlcmac_tbf *tbf)
 {
-	if (m_ul_tbf && tbf == static_cast<gprs_rlcmac_tbf *>(m_ul_tbf))
+	if (tbf == static_cast<gprs_rlcmac_tbf *>(m_ul_tbf)) {
 		m_ul_tbf = NULL;
-	else if (m_dl_tbf && tbf == static_cast<gprs_rlcmac_tbf *>(m_dl_tbf))
+	} else if (tbf == static_cast<gprs_rlcmac_tbf *>(m_dl_tbf)) {
 		m_dl_tbf = NULL;
-	else
-		return;
+	} else {
+		bool found = false;
+
+		LListHead<gprs_rlcmac_tbf> *pos, *tmp;
+		llist_for_each_safe(pos, tmp, &m_old_tbfs) {
+			if (pos->entry() == tbf) {
+				llist_del(pos);
+				found = true;
+				break;
+			}
+		}
+
+		/* Protect against recursive calls via set_ms() */
+		if (!found)
+			return;
+	}
 
 	LOGP(DRLCMAC, LOGL_INFO, "Detaching TBF from MS object, TLLI = 0x%08x, TBF = %s\n",
 		tlli(), tbf->name());

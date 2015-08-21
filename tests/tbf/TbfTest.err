@@ -95,16 +95,16 @@ Slot Allocation (Algorithm A) for class 45
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
-Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE)
 Allocated TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL): trx = 0, ul_slots = 10, dl_slots = 10
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
-Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) exists
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
+Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) exists
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer 0.
-DL packet loss of IMSI= / TLLI=0x00000000: 0%
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), 1 TBFs, USFs = 00, TFIs = 00000002.
+DL packet loss of IMSI= / TLLI=0xffeeddcc: 0%
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE), 1 TBFs, USFs = 00, TFIs = 00000002.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE)
 ********** TBF ends here **********
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer 0.
@@ -172,10 +172,9 @@ Slot Allocation (Algorithm A) for class 45
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
-Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE)
 Allocated TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL): trx = 0, ul_slots = 10, dl_slots = 10
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
-Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) exists
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
+Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) exists
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer 0.
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
@@ -183,10 +182,11 @@ TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer 0.
 PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN), 1 TBFs, USFs = 00, TFIs = 00000001.
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
 ********** TBF ends here **********
-DL packet loss of IMSI= / TLLI=0x00000000: 0%
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) free
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), 0 TBFs, USFs = 00, TFIs = 00000000.
+DL packet loss of IMSI= / TLLI=0xffeeddcc: 0%
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE)
 ********** TBF ends here **********
 Destroying MS object, TLLI = 0xffeeddcc
 Searching for first unallocated TFI: TRX=0
@@ -2630,15 +2630,214 @@ Slot Allocation (Algorithm A) for class 1
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 01, TFIs = 00000003.
 - Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL)
-Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE)
 Allocated TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL): trx = 0, ul_slots = 80, dl_slots = 80
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
-Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE) exists
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
+Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) exists
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer 0.
 Received RTS for PDCH: TRX=0 TS=7 FN=2654400 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
-We have a schedule for downlink assignment at TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=WAIT RELEASE), but there is no downlink TBF
-Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654400 block=2 data=40 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)  start Packet Downlink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Downlink Assignment -------------------------
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) (TRX=0, TS=7)
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654400 block=2 data=48 08 20 08 0c 72 00 02 18 00 80 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
-PACKET CONTROL ACK with unknown FN=2654379 TLLI=0x00000000 (TRX 0 TS 7)
+RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) Packet Control Ack
+TBF: [UPLINK] DOWNLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE)
+DL packet loss of IMSI=0011223344 / TLLI=0xf1223344: 0%
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) free
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
+PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE), 1 TBFs, USFs = 01, TFIs = 00000002.
+Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE)
+********** TBF ends here **********
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FLOW
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer 0.
+Received RTS on disabled PDCH: TRX=0 TS=0
+Received RTS on disabled PDCH: TRX=0 TS=1
+Received RTS on disabled PDCH: TRX=0 TS=2
+Received RTS on disabled PDCH: TRX=0 TS=3
+Received RTS on disabled PDCH: TRX=0 TS=4
+Received RTS on disabled PDCH: TRX=0 TS=5
+Received RTS on disabled PDCH: TRX=0 TS=6
+Received RTS for PDCH: TRX=0 TS=7 FN=2654405 block_nr=3 scheduling USF=0 for required uplink resource of UL TFI=0
+Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=21)
+- Sending new block at BSN 0, CS=1
+-- Chunk with length 21 larger than space (20) left in block: copy only remaining space, and we are done
+data block: 07 02 01 4c 4c 43 20 50 41 43 4b 45 54 20 30 30 20 28 54 42 46 20 32 
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654405 block=3 data=00 02 01 4c 4c 43 20 50 41 43 4b 45 54 20 30 30 20 28 54 42 46 20 32 
+Received RTS on disabled PDCH: TRX=0 TS=0
+Received RTS on disabled PDCH: TRX=0 TS=1
+Received RTS on disabled PDCH: TRX=0 TS=2
+Received RTS on disabled PDCH: TRX=0 TS=3
+Received RTS on disabled PDCH: TRX=0 TS=4
+Received RTS on disabled PDCH: TRX=0 TS=5
+Received RTS on disabled PDCH: TRX=0 TS=6
+Received RTS for PDCH: TRX=0 TS=7 FN=2654409 block_nr=4 scheduling USF=0 for required uplink resource of UL TFI=0
+Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1)
+- Sending new block at BSN 1, CS=1
+-- Chunk with length 1 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=21
+- Dequeue next LLC for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=21)
+-- Chunk with length 21 larger than space (18) left in block: copy only remaining space, and we are done
+data block: 07 02 02 07 29 4c 4c 43 20 50 41 43 4b 45 54 20 30 31 20 28 54 42 46 
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654409 block=4 data=00 02 02 07 29 4c 4c 43 20 50 41 43 4b 45 54 20 30 31 20 28 54 42 46 
+Received RTS on disabled PDCH: TRX=0 TS=0
+Received RTS on disabled PDCH: TRX=0 TS=1
+Received RTS on disabled PDCH: TRX=0 TS=2
+Received RTS on disabled PDCH: TRX=0 TS=3
+Received RTS on disabled PDCH: TRX=0 TS=4
+Received RTS on disabled PDCH: TRX=0 TS=5
+Received RTS on disabled PDCH: TRX=0 TS=6
+Received RTS for PDCH: TRX=0 TS=7 FN=2654413 block_nr=5 scheduling USF=0 for required uplink resource of UL TFI=0
+Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==2)
+- Sending new block at BSN 2, CS=1
+-- Chunk with length 3 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=21
+- Dequeue next LLC for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=21)
+-- Chunk with length 21 larger than space (16) left in block: copy only remaining space, and we are done
+data block: 07 02 04 0f 20 32 29 4c 4c 43 20 50 41 43 4b 45 54 20 30 32 20 28 54 
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654413 block=5 data=00 02 04 0f 20 32 29 4c 4c 43 20 50 41 43 4b 45 54 20 30 32 20 28 54 
+Received RTS on disabled PDCH: TRX=0 TS=0
+Received RTS on disabled PDCH: TRX=0 TS=1
+Received RTS on disabled PDCH: TRX=0 TS=2
+Received RTS on disabled PDCH: TRX=0 TS=3
+Received RTS on disabled PDCH: TRX=0 TS=4
+Received RTS on disabled PDCH: TRX=0 TS=5
+Received RTS on disabled PDCH: TRX=0 TS=6
+Received RTS for PDCH: TRX=0 TS=7 FN=2654418 block_nr=6 scheduling USF=0 for required uplink resource of UL TFI=0
+Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==3)
+- Sending new block at BSN 3, CS=1
+-- Chunk with length 5 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=21
+- Dequeue next LLC for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=21)
+-- Chunk with length 21 larger than space (14) left in block: copy only remaining space, and we are done
+data block: 07 02 06 17 42 46 20 32 29 4c 4c 43 20 50 41 43 4b 45 54 20 30 33 20 
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654418 block=6 data=00 02 06 17 42 46 20 32 29 4c 4c 43 20 50 41 43 4b 45 54 20 30 33 20 
+Received RTS on disabled PDCH: TRX=0 TS=0
+Received RTS on disabled PDCH: TRX=0 TS=1
+Received RTS on disabled PDCH: TRX=0 TS=2
+Received RTS on disabled PDCH: TRX=0 TS=3
+Received RTS on disabled PDCH: TRX=0 TS=4
+Received RTS on disabled PDCH: TRX=0 TS=5
+Received RTS on disabled PDCH: TRX=0 TS=6
+Received RTS for PDCH: TRX=0 TS=7 FN=2654422 block_nr=7 scheduling USF=0 for required uplink resource of UL TFI=0
+Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==4)
+- Sending new block at BSN 4, CS=1
+-- Chunk with length 7 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=21
+- Dequeue next LLC for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=21)
+-- Chunk with length 21 larger than space (12) left in block: copy only remaining space, and we are done
+data block: 07 02 08 1f 28 54 42 46 20 32 29 4c 4c 43 20 50 41 43 4b 45 54 20 30 
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654422 block=7 data=00 02 08 1f 28 54 42 46 20 32 29 4c 4c 43 20 50 41 43 4b 45 54 20 30 
+Received RTS on disabled PDCH: TRX=0 TS=0
+Received RTS on disabled PDCH: TRX=0 TS=1
+Received RTS on disabled PDCH: TRX=0 TS=2
+Received RTS on disabled PDCH: TRX=0 TS=3
+Received RTS on disabled PDCH: TRX=0 TS=4
+Received RTS on disabled PDCH: TRX=0 TS=5
+Received RTS on disabled PDCH: TRX=0 TS=6
+Received RTS for PDCH: TRX=0 TS=7 FN=2654426 block_nr=8 scheduling USF=0 for required uplink resource of UL TFI=0
+Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==5)
+- Sending new block at BSN 5, CS=1
+-- Chunk with length 9 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=21
+- Dequeue next LLC for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=21)
+-- Chunk with length 21 larger than space (10) left in block: copy only remaining space, and we are done
+data block: 07 02 0a 27 34 20 28 54 42 46 20 32 29 4c 4c 43 20 50 41 43 4b 45 54 
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654426 block=8 data=00 02 0a 27 34 20 28 54 42 46 20 32 29 4c 4c 43 20 50 41 43 4b 45 54 
+Received RTS on disabled PDCH: TRX=0 TS=0
+Received RTS on disabled PDCH: TRX=0 TS=1
+Received RTS on disabled PDCH: TRX=0 TS=2
+Received RTS on disabled PDCH: TRX=0 TS=3
+Received RTS on disabled PDCH: TRX=0 TS=4
+Received RTS on disabled PDCH: TRX=0 TS=5
+Received RTS on disabled PDCH: TRX=0 TS=6
+Received RTS for PDCH: TRX=0 TS=7 FN=2654431 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
+Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==6)
+- Sending new block at BSN 6, CS=1
+-- Chunk with length 11 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=21
+- Dequeue next LLC for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=21)
+-- Chunk with length 21 larger than space (8) left in block: copy only remaining space, and we are done
+data block: 07 02 0c 2f 20 30 35 20 28 54 42 46 20 32 29 4c 4c 43 20 50 41 43 4b 
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654431 block=9 data=00 02 0c 2f 20 30 35 20 28 54 42 46 20 32 29 4c 4c 43 20 50 41 43 4b 
+Received RTS on disabled PDCH: TRX=0 TS=0
+Received RTS on disabled PDCH: TRX=0 TS=1
+Received RTS on disabled PDCH: TRX=0 TS=2
+Received RTS on disabled PDCH: TRX=0 TS=3
+Received RTS on disabled PDCH: TRX=0 TS=4
+Received RTS on disabled PDCH: TRX=0 TS=5
+Received RTS on disabled PDCH: TRX=0 TS=6
+Received RTS for PDCH: TRX=0 TS=7 FN=2654435 block_nr=10 scheduling USF=0 for required uplink resource of UL TFI=0
+Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==7)
+- Sending new block at BSN 7, CS=1
+-- Chunk with length 13 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=21
+- Dequeue next LLC for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=21)
+-- Chunk with length 21 larger than space (6) left in block: copy only remaining space, and we are done
+data block: 07 02 0e 37 45 54 20 30 36 20 28 54 42 46 20 32 29 4c 4c 43 20 50 41 
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654435 block=10 data=00 02 0e 37 45 54 20 30 36 20 28 54 42 46 20 32 29 4c 4c 43 20 50 41 
+Received RTS on disabled PDCH: TRX=0 TS=0
+Received RTS on disabled PDCH: TRX=0 TS=1
+Received RTS on disabled PDCH: TRX=0 TS=2
+Received RTS on disabled PDCH: TRX=0 TS=3
+Received RTS on disabled PDCH: TRX=0 TS=4
+Received RTS on disabled PDCH: TRX=0 TS=5
+Received RTS on disabled PDCH: TRX=0 TS=6
+Received RTS for PDCH: TRX=0 TS=7 FN=2654439 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
+Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==8)
+- Sending new block at BSN 8, CS=1
+-- Chunk with length 15 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=21
+- Dequeue next LLC for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=21)
+-- Chunk with length 21 larger than space (4) left in block: copy only remaining space, and we are done
+data block: 07 02 10 3f 43 4b 45 54 20 30 37 20 28 54 42 46 20 32 29 4c 4c 43 20 
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654439 block=11 data=00 02 10 3f 43 4b 45 54 20 30 37 20 28 54 42 46 20 32 29 4c 4c 43 20 
+Received RTS on disabled PDCH: TRX=0 TS=0
+Received RTS on disabled PDCH: TRX=0 TS=1
+Received RTS on disabled PDCH: TRX=0 TS=2
+Received RTS on disabled PDCH: TRX=0 TS=3
+Received RTS on disabled PDCH: TRX=0 TS=4
+Received RTS on disabled PDCH: TRX=0 TS=5
+Received RTS on disabled PDCH: TRX=0 TS=6
+Received RTS for PDCH: TRX=0 TS=7 FN=2654444 block_nr=0 scheduling USF=0 for required uplink resource of UL TFI=0
+Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==9)
+- Sending new block at BSN 9, CS=1
+-- Chunk with length 17 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=21
+- Dequeue next LLC for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=21)
+-- Chunk with length 21 larger than space (2) left in block: copy only remaining space, and we are done
+data block: 07 02 12 47 50 41 43 4b 45 54 20 30 38 20 28 54 42 46 20 32 29 4c 4c 
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654444 block=0 data=00 02 12 47 50 41 43 4b 45 54 20 30 38 20 28 54 42 46 20 32 29 4c 4c 
+Received RTS on disabled PDCH: TRX=0 TS=0
+Received RTS on disabled PDCH: TRX=0 TS=1
+Received RTS on disabled PDCH: TRX=0 TS=2
+Received RTS on disabled PDCH: TRX=0 TS=3
+Received RTS on disabled PDCH: TRX=0 TS=4
+Received RTS on disabled PDCH: TRX=0 TS=5
+Received RTS on disabled PDCH: TRX=0 TS=6
+Received RTS for PDCH: TRX=0 TS=7 FN=2654448 block_nr=1 scheduling USF=0 for required uplink resource of UL TFI=0
+Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==10)
+- Sending new block at BSN 10, CS=1
+-- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=21
+-- Final block, so we done.
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) changes state from FLOW to FINISHED
+data block: 07 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling sheduled in this TS 7
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer 3191.
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654448 block=1 data=08 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 

@@ -196,36 +196,42 @@ static void test_ms_replace_tbf()
 	OSMO_ASSERT(!ms->is_idle());
 	OSMO_ASSERT(ms->ul_tbf() == NULL);
 	OSMO_ASSERT(ms->dl_tbf() == dl_tbf[0]);
+	OSMO_ASSERT(llist_empty(&ms->old_tbfs()));
 	OSMO_ASSERT(!was_idle);
 
 	ms->attach_tbf(dl_tbf[1]);
 	OSMO_ASSERT(!ms->is_idle());
 	OSMO_ASSERT(ms->ul_tbf() == NULL);
 	OSMO_ASSERT(ms->dl_tbf() == dl_tbf[1]);
+	OSMO_ASSERT(!llist_empty(&ms->old_tbfs()));
 	OSMO_ASSERT(!was_idle);
 
 	ms->attach_tbf(ul_tbf);
 	OSMO_ASSERT(!ms->is_idle());
 	OSMO_ASSERT(ms->ul_tbf() == ul_tbf);
 	OSMO_ASSERT(ms->dl_tbf() == dl_tbf[1]);
+	OSMO_ASSERT(!llist_empty(&ms->old_tbfs()));
 	OSMO_ASSERT(!was_idle);
 
 	ms->detach_tbf(ul_tbf);
 	OSMO_ASSERT(!ms->is_idle());
 	OSMO_ASSERT(ms->ul_tbf() == NULL);
 	OSMO_ASSERT(ms->dl_tbf() == dl_tbf[1]);
+	OSMO_ASSERT(!llist_empty(&ms->old_tbfs()));
 	OSMO_ASSERT(!was_idle);
 
 	ms->detach_tbf(dl_tbf[0]);
 	OSMO_ASSERT(!ms->is_idle());
 	OSMO_ASSERT(ms->ul_tbf() == NULL);
 	OSMO_ASSERT(ms->dl_tbf() == dl_tbf[1]);
+	OSMO_ASSERT(llist_empty(&ms->old_tbfs()));
 	OSMO_ASSERT(!was_idle);
 
 	ms->detach_tbf(dl_tbf[1]);
 	OSMO_ASSERT(ms->is_idle());
 	OSMO_ASSERT(ms->ul_tbf() == NULL);
 	OSMO_ASSERT(ms->dl_tbf() == NULL);
+	OSMO_ASSERT(llist_empty(&ms->old_tbfs()));
 	OSMO_ASSERT(was_idle);
 
 	delete ms;

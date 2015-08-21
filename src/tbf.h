@@ -23,6 +23,7 @@
 #include "gprs_rlcmac.h"
 #include "llc.h"
 #include "rlc.h"
+#include "cxx_linuxlist.h"
 #include <gprs_debug.h>
 
 #include <stdint.h>
@@ -165,6 +166,9 @@ struct gprs_rlcmac_tbf {
 	/* attempt to make things a bit more fair */
 	void rotate_in_list();
 
+	LListHead<gprs_rlcmac_tbf>& ms_list() {return this->m_ms_list;}
+	const LListHead<gprs_rlcmac_tbf>& ms_list() const {return this->m_ms_list;}
+
 	struct llist_pods list;
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
@@ -238,6 +242,8 @@ protected:
 	uint8_t m_ms_class;
 
 private:
+	LListHead<gprs_rlcmac_tbf> m_ms_list;
+
 	mutable char m_name_buf[60];
 };
 

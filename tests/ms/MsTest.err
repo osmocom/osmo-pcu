@@ -13,9 +13,9 @@ Destroying MS object, TLLI = 0xffeeddbb
 Creating MS object, TLLI = 0xffeeddbb
 Attaching TBF to MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Attaching TBF to MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
-Detaching TBF from MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Attaching TBF to MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 Detaching TBF from MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
+Detaching TBF from MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Detaching TBF from MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Destroying MS object, TLLI = 0xffeeddbb
 Creating MS object, TLLI = 0xaa000000
