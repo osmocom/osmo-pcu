@@ -936,7 +936,7 @@ static void test_tbf_dl_flow_and_rach_single_phase()
 	OSMO_ASSERT(ms->dl_tbf() == dl_tbf);
 
 	/* No queued packets should be lost */
-	/* OSMO_ASSERT(ms->llc_queue()->size() == 2); */
+	OSMO_ASSERT(ms->llc_queue()->size() == 2);
 
 	printf("=== end %s ===\n", __func__);
 }

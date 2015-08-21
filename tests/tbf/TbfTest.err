@@ -1932,4 +1932,4 @@ No bctx
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes state from FLOW to FINISHED
 - Scheduling Ack/Nack, because TLLI is included.
 - Scheduling Ack/Nack, because last block has CV==0.
-New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 0
+New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2

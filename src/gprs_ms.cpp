@@ -322,6 +322,8 @@ void GprsMs::merge_old_ms(GprsMs *old_ms)
 	if (!ms_class() && old_ms->ms_class())
 		set_ms_class(old_ms->ms_class());
 
+	m_llc_queue.move_and_merge(&old_ms->m_llc_queue);
+
 	old_ms->reset();
 }
 
