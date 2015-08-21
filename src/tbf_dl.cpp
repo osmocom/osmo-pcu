@@ -318,7 +318,8 @@ drop_frame:
 			frames = 0xff;
 		if (octets > 0xffffff)
 			octets = 0xffffff;
-		bssgp_tx_llc_discarded(bctx, tlli(), frames, octets);
+		if (bctx)
+			bssgp_tx_llc_discarded(bctx, tlli(), frames, octets);
 	}
 
 	return msg;
