@@ -687,6 +687,27 @@ static void send_dl_data(BTS *the_bts, uint32_t tlli, const char *imsi,
 	}
 }
 
+static void transmit_dl_data(BTS *the_bts, uint32_t tlli, uint32_t *fn)
+{
+	gprs_rlcmac_dl_tbf *dl_tbf;
+	GprsMs *ms;
+	unsigned ts_no;
+
+	ms = the_bts->ms_by_tlli(tlli);
+	OSMO_ASSERT(ms);
+	dl_tbf = ms->dl_tbf();
+	OSMO_ASSERT(dl_tbf);
+
+	while (dl_tbf->have_data()) {
+		uint8_t bn = fn2bn(*fn);
+		for (ts_no = 0 ; ts_no < 8; ts_no += 1)
+			gprs_rlcmac_rcv_rts_block(the_bts->bts_data(),
+				dl_tbf->trx->trx_no, ts_no, 0,
+				*fn, bn);
+		*fn = fn_add_blocks(*fn, 1);
+	}
+}
+
 static void test_tbf_single_phase()
 {
 	BTS the_bts;
@@ -736,6 +757,186 @@ static void test_tbf_two_phase()
 	fprintf(stderr, "Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
 
 	send_dl_data(&the_bts, tlli, imsi, (const uint8_t *)"TEST", 4);
+
+	printf("=== end %s ===\n", __func__);
+}
+
+static void test_tbf_ra_update_rach()
+{
+	BTS the_bts;
+	int ts_no = 7;
+	uint32_t fn = 2654218;
+	uint16_t qta = 31;
+	uint32_t tlli1 = 0xf1223344;
+	uint32_t tlli2 = 0xf5667788;
+	const char *imsi = "0011223344";
+	uint8_t ms_class = 1;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	GprsMs *ms, *ms1, *ms2;
+
+	printf("=== start %s ===\n", __func__);
+
+	setup_bts(&the_bts, ts_no, 4);
+
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta, ms_class);
+
+	ms1 = ul_tbf->ms();
+	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
+
+	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"RAU_ACCEPT", 10);
+	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
+
+	/* Make sure the RAU Accept gets sent to the MS */
+	OSMO_ASSERT(ms1->llc_queue()->size() == 1);
+	transmit_dl_data(&the_bts, tlli1, &fn);
+	OSMO_ASSERT(ms1->llc_queue()->size() == 0);
+
+	/* Now establish a new TBF for the RA UPDATE COMPLETE (new TLLI) */
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli2, &fn, qta, ms_class);
+
+	ms2 = ul_tbf->ms();
+
+	/* The PCU cannot know yet, that both TBF belong to the same MS */
+	OSMO_ASSERT(ms1 != ms2);
+
+	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
+
+	/* Send some downlink data along with the new TLLI and the IMSI so that
+	 * the PCU can see, that both MS objects belong to same MS */
+	send_dl_data(&the_bts, tlli2, imsi, (const uint8_t *)"DATA", 4);
+
+	ms = the_bts.ms_by_imsi(imsi);
+	OSMO_ASSERT(ms == ms2);
+
+	fprintf(stderr, "New MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+		ms2->tlli(), ms2->ta(), ms2->imsi(), ms2->llc_queue()->size());
+
+	ms = the_bts.ms_by_tlli(tlli1);
+	OSMO_ASSERT(ms == NULL);
+	ms = the_bts.ms_by_tlli(tlli2);
+	OSMO_ASSERT(ms == ms2);
+
+	printf("=== end %s ===\n", __func__);
+}
+
+static void test_tbf_dl_flow_and_rach_two_phase()
+{
+	BTS the_bts;
+	int ts_no = 7;
+	uint32_t fn = 2654218;
+	uint16_t qta = 31;
+	uint32_t tlli1 = 0xf1223344;
+	const char *imsi = "0011223344";
+	uint8_t ms_class = 1;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	gprs_rlcmac_dl_tbf *dl_tbf;
+	GprsMs *ms, *ms1, *ms2;
+
+	printf("=== start %s ===\n", __func__);
+
+	setup_bts(&the_bts, ts_no, 1);
+
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta, ms_class);
+
+	ms1 = ul_tbf->ms();
+	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
+
+	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"DATA 1 *************", 20);
+	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"DATA 2 *************", 20);
+	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
+
+	OSMO_ASSERT(ms1->llc_queue()->size() == 2);
+	dl_tbf = ms1->dl_tbf();
+	OSMO_ASSERT(dl_tbf != NULL);
+
+	/* Get rid of old UL TBF */
+	tbf_free(ul_tbf);
+	ms = the_bts.ms_by_tlli(tlli1);
+	OSMO_ASSERT(ms1 == ms);
+
+	/* Now establish a new UL TBF, this will consume one LLC packet */
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta, ms_class);
+
+	ms2 = ul_tbf->ms();
+	fprintf(stderr, "New MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+		ms2->tlli(), ms2->ta(), ms2->imsi(), ms2->llc_queue()->size());
+
+	/* This should be the same MS object */
+	OSMO_ASSERT(ms2 == ms1);
+
+	ms = the_bts.ms_by_tlli(tlli1);
+	OSMO_ASSERT(ms2 == ms);
+
+	/* DL TBF should be the same */
+	/* OSMO_ASSERT(ms->dl_tbf()); */
+	/* OSMO_ASSERT(ms->dl_tbf() == dl_tbf); */
+
+	/* No queued packets should be lost */
+	/* OSMO_ASSERT(ms->llc_queue()->size() == 1); */
+
+	printf("=== end %s ===\n", __func__);
+}
+
+
+static void test_tbf_dl_flow_and_rach_single_phase()
+{
+	BTS the_bts;
+	int ts_no = 7;
+	uint32_t fn = 2654218;
+	uint16_t qta = 31;
+	uint32_t tlli1 = 0xf1223344;
+	const char *imsi = "0011223344";
+	uint8_t ms_class = 1;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	gprs_rlcmac_dl_tbf *dl_tbf;
+	GprsMs *ms, *ms1, *ms2;
+
+	printf("=== start %s ===\n", __func__);
+
+	setup_bts(&the_bts, ts_no, 1);
+
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta, ms_class);
+
+	ms1 = ul_tbf->ms();
+	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
+
+	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"DATA 1 *************", 20);
+	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"DATA 2 *************", 20);
+	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
+
+	OSMO_ASSERT(ms1->llc_queue()->size() == 2);
+	dl_tbf = ms1->dl_tbf();
+	OSMO_ASSERT(dl_tbf != NULL);
+
+	/* Get rid of old UL TBF */
+	tbf_free(ul_tbf);
+	ms = the_bts.ms_by_tlli(tlli1);
+	OSMO_ASSERT(ms1 == ms);
+
+	/* Now establish a new UL TBF */
+	ul_tbf = establish_ul_tbf_single_phase(&the_bts, ts_no, tlli1, &fn, qta);
+
+	ms2 = ul_tbf->ms();
+	fprintf(stderr, "New MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+		ms2->tlli(), ms2->ta(), ms2->imsi(), ms2->llc_queue()->size());
+
+	/* There should be a different MS object */
+	OSMO_ASSERT(ms2 != ms1);
+
+	ms = the_bts.ms_by_tlli(tlli1);
+	OSMO_ASSERT(ms2 == ms);
+	OSMO_ASSERT(ms1 != ms);
+
+	/* DL TBF should be the same */
+	OSMO_ASSERT(ms->dl_tbf());
+	OSMO_ASSERT(ms->dl_tbf() == dl_tbf);
+
+	/* No queued packets should be lost */
+	/* OSMO_ASSERT(ms->llc_queue()->size() == 2); */
 
 	printf("=== end %s ===\n", __func__);
 }
@@ -794,6 +995,9 @@ int main(int argc, char **argv)
 	test_tbf_dl_llc_loss();
 	test_tbf_single_phase();
 	test_tbf_two_phase();
+	test_tbf_ra_update_rach();
+	test_tbf_dl_flow_and_rach_two_phase();
+	test_tbf_dl_flow_and_rach_single_phase();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
