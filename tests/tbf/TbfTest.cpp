@@ -590,6 +590,22 @@ static void send_ul_mac_block(BTS *the_bts, unsigned trx_no, unsigned ts_no,
 	pdch->rcv_block(&buf[0], num_bytes, fn, &meas);
 }
 
+static void send_control_ack(gprs_rlcmac_tbf *tbf)
+{
+	RlcMacUplink_t ulreq = {0};
+
+	OSMO_ASSERT(tbf->poll_fn != 0);
+
+	ulreq.u.MESSAGE_TYPE = MT_PACKET_CONTROL_ACK;
+	Packet_Control_Acknowledgement_t *ctrl_ack =
+		&ulreq.u.Packet_Control_Acknowledgement;
+
+	ctrl_ack->PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
+	ctrl_ack->TLLI = tbf->tlli();
+	send_ul_mac_block(tbf->bts, tbf->trx->trx_no, tbf->control_ts,
+		&ulreq, tbf->poll_fn);
+}
+
 static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
 	uint8_t ms_class)
@@ -645,12 +661,9 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	*fn = sba_fn;
 	request_dl_rlc_block(ul_tbf, fn);
 
-	/* TODO: send real acknowledgement */
-	/* Fake acknowledgement */
-	OSMO_ASSERT(ul_tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK);
-	ul_tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
-	ul_tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
-	ul_tbf->set_state(GPRS_RLCMAC_FLOW);
+	/* send real acknowledgement */
+	send_control_ack(ul_tbf);
+
 	check_tbf(ul_tbf);
 
 	/* send fake data */
@@ -675,11 +688,8 @@ static void send_dl_data(BTS *the_bts, uint32_t tlli, const char *imsi,
 	const uint8_t *data, unsigned data_size)
 {
 	GprsMs *ms, *ms2;
-	gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 
 	ms = the_bts->ms_store().get_ms(tlli, 0, imsi);
-	if (ms)
-		dl_tbf = ms->dl_tbf();
 
 	gprs_rlcmac_dl_tbf::handle(the_bts->bts_data(), tlli, 0, imsi, 0,
 		1000, data, data_size);
@@ -687,19 +697,10 @@ static void send_dl_data(BTS *the_bts, uint32_t tlli, const char *imsi,
 	ms = the_bts->ms_by_imsi(imsi);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms->dl_tbf() != NULL);
-	dl_tbf = ms->dl_tbf();
 
 	if (imsi[0] && strcmp(imsi, "000") != 0) {
 		ms2 = the_bts->ms_by_tlli(tlli);
 		OSMO_ASSERT(ms == ms2);
-	}
-
-	if (dl_tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
-		/* The DL TBF is new, fake establishment */
-		dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-		dl_tbf->set_state(GPRS_RLCMAC_FLOW);
-		dl_tbf->m_wait_confirm = 0;
-		check_tbf(dl_tbf);
 	}
 }
 
@@ -803,6 +804,12 @@ static void test_tbf_ra_update_rach()
 	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
 		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
 
+	/* Send Packet Downlink Assignment to MS */
+	request_dl_rlc_block(ul_tbf, &fn);
+
+	/* Ack it */
+	send_control_ack(ul_tbf);
+
 	/* Make sure the RAU Accept gets sent to the MS */
 	OSMO_ASSERT(ms1->llc_queue()->size() == 1);
 	transmit_dl_data(&the_bts, tlli1, &fn);
@@ -891,7 +898,7 @@ static void test_tbf_dl_flow_and_rach_two_phase()
 	OSMO_ASSERT(ms->dl_tbf() == dl_tbf);
 
 	/* No queued packets should be lost */
-	OSMO_ASSERT(ms->llc_queue()->size() == 1);
+	OSMO_ASSERT(ms->llc_queue()->size() == 2);
 
 	printf("=== end %s ===\n", __func__);
 }
