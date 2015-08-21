@@ -59,6 +59,7 @@ int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
 static int show_ms(struct vty *vty, GprsMs *ms)
 {
 	unsigned i;
+	LListHead<gprs_rlcmac_tbf> *i_tbf;
 
 	vty_out(vty, "MS TLLI=%08x, IMSI=%s%s", ms->tlli(), ms->imsi(), VTY_NEWLINE);
 	vty_out(vty, "  Timing advance (TA):    %d%s", ms->ta(), VTY_NEWLINE);
@@ -107,6 +108,14 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 		vty_out(vty, "  Downlink TBF:           TFI=%d, state=%s%s",
 			ms->dl_tbf()->tfi(),
 			ms->dl_tbf()->state_name(),
+			VTY_NEWLINE);
+
+	llist_for_each(i_tbf, &ms->old_tbfs())
+		vty_out(vty, "  Old %-19s TFI=%d, state=%s%s",
+			i_tbf->entry()->direction == GPRS_RLCMAC_UL_TBF ?
+			"Uplink TBF:" : "Downlink TBF:",
+			i_tbf->entry()->tfi(),
+			i_tbf->entry()->state_name(),
 			VTY_NEWLINE);
 
 	return CMD_SUCCESS;
