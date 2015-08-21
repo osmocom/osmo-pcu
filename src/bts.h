@@ -264,6 +264,7 @@ public:
 
 	GprsMsStorage &ms_store();
 	GprsMs *ms_by_tlli(uint32_t tlli, uint32_t old_tlli = 0);
+	GprsMs *ms_by_imsi(const char *imsi);
 	GprsMs *ms_alloc(uint8_t ms_class);
 
 	/*
@@ -331,6 +332,11 @@ inline GprsMsStorage &BTS::ms_store()
 inline GprsMs *BTS::ms_by_tlli(uint32_t tlli, uint32_t old_tlli)
 {
 	return ms_store().get_ms(tlli, old_tlli);
+}
+
+inline GprsMs *BTS::ms_by_imsi(const char *imsi)
+{
+	return ms_store().get_ms(0, 0, imsi);
 }
 
 inline BTS *gprs_rlcmac_pdch::bts() const

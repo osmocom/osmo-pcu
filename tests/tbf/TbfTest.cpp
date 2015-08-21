@@ -205,7 +205,7 @@ static void send_rlc_block(struct gprs_rlcmac_bts *bts,
 	uint8_t trx_no, uint8_t ts_no, uint16_t arfcn,
 	uint32_t *fn, uint8_t *block_nr)
 {
-	gprs_rlcmac_rcv_rts_block(bts, trx_no, ts_no, 0, *fn, *block_nr);
+	gprs_rlcmac_rcv_rts_block(bts, trx_no, ts_no, arfcn, *fn, *block_nr);
 	*fn = fn_add_blocks(*fn, 1);
 	*block_nr += 1;
 }
@@ -600,6 +600,17 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	ulreq.u.Packet_Resource_Request.PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
 	ulreq.u.Packet_Resource_Request.ID.UnionType = 1; /* != 0 */
 	ulreq.u.Packet_Resource_Request.ID.u.TLLI = tlli;
+	ulreq.u.Packet_Resource_Request.Exist_MS_Radio_Access_capability = 1;
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		Count_MS_RA_capability_value = 1;
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		MS_RA_capability_value[0].u.Content.Exist_Multislot_capability = 1;
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		MS_RA_capability_value[0].u.Content.Multislot_capability.
+		Exist_GPRS_multislot_class = 1;
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		MS_RA_capability_value[0].u.Content.Multislot_capability.
+		GPRS_multislot_class = ms_class;
 
 	encode_gsm_rlcmac_uplink(rlc_block, &ulreq);
 	num_bytes = bitvec_pack(rlc_block, &buf[0]);
@@ -619,10 +630,18 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	rts_bn = fn2bn(*fn);
 	send_rlc_block(bts, trx_no, ts_no, 0, fn, &rts_bn);
 
+	/* TODO: send real acknowledgement */
+	/* Fake acknowledgement */
+	OSMO_ASSERT(ul_tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK);
+	ul_tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+	ul_tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
+	ul_tbf->set_state(GPRS_RLCMAC_FLOW);
+	check_tbf(ul_tbf);
+
 	/* send fake data */
 	uint8_t data_msg[23] = {
-		0x00, /* GPRS_RLCMAC_DATA_BLOCK << 6 */
-		uint8_t(0 | (tfi << 2)),
+		0x00 | 0xf << 2, /* GPRS_RLCMAC_DATA_BLOCK << 6, CV = 15 */
+		uint8_t(0 | (tfi << 1)),
 		uint8_t(1), /* BSN:7, E:1 */
 	};
 
@@ -636,12 +655,45 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	return ul_tbf;
 }
 
+static void send_dl_data(BTS *the_bts, uint32_t tlli, const char *imsi,
+	const uint8_t *data, unsigned data_size)
+{
+	GprsMs *ms, *ms2;
+	gprs_rlcmac_dl_tbf *dl_tbf = NULL;
+
+	ms = the_bts->ms_store().get_ms(tlli, 0, imsi);
+	if (ms)
+		dl_tbf = ms->dl_tbf();
+
+	gprs_rlcmac_dl_tbf::handle(the_bts->bts_data(), tlli, 0, imsi, 0,
+		1000, data, data_size);
+
+	ms = the_bts->ms_by_imsi(imsi);
+	OSMO_ASSERT(ms != NULL);
+	OSMO_ASSERT(ms->dl_tbf() != NULL);
+	dl_tbf = ms->dl_tbf();
+
+	if (imsi[0] && strcmp(imsi, "000") != 0) {
+		ms2 = the_bts->ms_by_tlli(tlli);
+		OSMO_ASSERT(ms == ms2);
+	}
+
+	if (dl_tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
+		/* The DL TBF is new, fake establishment */
+		dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+		dl_tbf->set_state(GPRS_RLCMAC_FLOW);
+		dl_tbf->m_wait_confirm = 0;
+		check_tbf(dl_tbf);
+	}
+}
+
 static void test_tbf_single_phase()
 {
 	BTS the_bts;
 	int ts_no = 7;
 	uint32_t fn = 2654167; /* 17,25,9 */
 	uint32_t tlli = 0xf1223344;
+	const char *imsi = "0011223344";
 	uint16_t qta = 31;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	GprsMs *ms;
@@ -656,6 +708,8 @@ static void test_tbf_single_phase()
 	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
 	fprintf(stderr, "Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
 
+	send_dl_data(&the_bts, tlli, imsi, (const uint8_t *)"TEST", 4);
+
 	printf("=== end %s ===\n", __func__);
 }
 
@@ -666,6 +720,7 @@ static void test_tbf_two_phase()
 	uint32_t fn = 2654218;
 	uint16_t qta = 31;
 	uint32_t tlli = 0xf1223344;
+	const char *imsi = "0011223344";
 	uint8_t ms_class = 1;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	GprsMs *ms;
@@ -679,6 +734,8 @@ static void test_tbf_two_phase()
 	ms = ul_tbf->ms();
 	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
 	fprintf(stderr, "Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
+
+	send_dl_data(&the_bts, tlli, imsi, (const uint8_t *)"TEST", 4);
 
 	printf("=== end %s ===\n", __func__);
 }
