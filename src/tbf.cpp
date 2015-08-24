@@ -430,8 +430,8 @@ void gprs_rlcmac_tbf::stop_timer()
 
 void gprs_rlcmac_tbf::poll_timeout()
 {
-	LOGP(DRLCMAC, LOGL_NOTICE, "%s poll timeout\n",
-		tbf_name(this));
+	LOGP(DRLCMAC, LOGL_NOTICE, "%s poll timeout for FN=%d (curr FN %d)\n",
+		tbf_name(this), poll_fn, bts->current_frame_number());
 
 	poll_state = GPRS_RLCMAC_POLL_NONE;
 
@@ -864,6 +864,9 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 		poll_state = GPRS_RLCMAC_POLL_SCHED;
 		poll_fn = (fn + 13) % 2715648;
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_WAIT_ACK;
+		LOGP(DRLCMACDL, LOGL_INFO,
+			"%s Scheduled DL Assignment polling on FN=%d\n",
+			name(), poll_fn);
 	} else {
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 		new_dl_tbf->set_state(GPRS_RLCMAC_FLOW);
@@ -930,6 +933,9 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	poll_state = GPRS_RLCMAC_POLL_SCHED;
 	poll_fn = (fn + 13) % 2715648;
 	ul_ass_state = GPRS_RLCMAC_UL_ASS_WAIT_ACK;
+	LOGP(DRLCMACDL, LOGL_INFO,
+		"%s Scheduled UL Assignment polling on FN=%d\n",
+		name(), poll_fn);
 
 	return msg;
 }

@@ -61,6 +61,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)  start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Scheduled DL Assignment polling on FN=13
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) (TRX=0, TS=4)
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
@@ -138,6 +139,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)  start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Scheduled DL Assignment polling on FN=13
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) (TRX=0, TS=4)
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
@@ -215,6 +217,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)  start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Scheduled DL Assignment polling on FN=13
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) (TRX=0, TS=4)
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
@@ -1468,6 +1471,7 @@ Change control TS to 7 until assinment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 8f 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -1544,6 +1548,7 @@ Change control TS to 7 until assinment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 8f 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -1588,6 +1593,7 @@ Received RTS for PDCH: TRX=0 TS=7 FN=2654275 block_nr=9 scheduling USF=0 for req
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)  start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on FN=2654288
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654275 block=9 data=48 08 00 00 0c 72 00 02 08 00 80 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -1616,6 +1622,7 @@ data block: 07 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
 Polling sheduled in this TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer 3191.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654292, TS=7
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654279 block=10 data=08 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 00 
 Received RTS for PDCH: TRX=0 TS=7 FN=2654283 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=1
@@ -1659,6 +1666,7 @@ Received RTS for PDCH: TRX=0 TS=7 FN=2654335 block_nr=11 scheduling USF=0 for re
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654348
 Scheduling control message at RTS for TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654335 block=11 data=48 28 5e ac ce f1 0f 1d 00 00 88 40 09 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -1721,6 +1729,7 @@ Change control TS to 7 until assinment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 83 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -1802,6 +1811,7 @@ Change control TS to 7 until assinment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654340
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654327 block=9 data=4f 28 5e 24 46 68 83 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -1855,6 +1865,7 @@ Change control TS to 7 until assinment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 83 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -1991,6 +2002,7 @@ Change control TS to 7 until assinment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 83 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -2074,6 +2086,7 @@ Received RTS for PDCH: TRX=0 TS=7 FN=2654275 block_nr=9 scheduling USF=0 for req
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)  start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on FN=2654288
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654275 block=9 data=48 08 00 00 0c 72 00 02 08 00 80 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -2468,6 +2481,7 @@ Complete DL frame for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=13
 data block: 07 00 28 16 35 45 54 20 32 38 4c 4c 43 20 50 41 43 4b 45 54 20 32 39 
 - Scheduling Ack/Nack polling, because 20 blocks sent.
 Polling sheduled in this TS 7
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Scheduled Ack/Nack polling on FN=2654379, TS=7
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654366 block=6 data=08 00 28 16 35 45 54 20 32 38 4c 4c 43 20 50 41 43 4b 45 54 20 32 39 
 Received RTS on disabled PDCH: TRX=0 TS=0
 Received RTS on disabled PDCH: TRX=0 TS=1
@@ -2639,6 +2653,7 @@ Received RTS for PDCH: TRX=0 TS=7 FN=2654400 block_nr=2 scheduling USF=0 for req
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)  start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) Scheduled DL Assignment polling on FN=2654413
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654400 block=2 data=48 08 20 08 0c 72 00 02 18 00 80 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -2840,4 +2855,5 @@ data block: 07 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
 Polling sheduled in this TS 7
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer 3191.
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654461, TS=7
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654448 block=1 data=08 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 
