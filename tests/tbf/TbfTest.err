@@ -293,55 +293,55 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==11)
 - Sending new block at BSN 11, CS=1
 -- Chunk with length 182 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 17 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=52 block=12 data=07 00 17 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=52 block=0 data=07 00 17 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==12)
 - Sending new block at BSN 12, CS=1
 -- Chunk with length 162 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 19 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=56 block=13 data=07 00 19 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=56 block=1 data=07 00 19 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==13)
 - Sending new block at BSN 13, CS=1
 -- Chunk with length 142 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 1b 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=60 block=14 data=07 00 1b 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=60 block=2 data=07 00 1b 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==14)
 - Sending new block at BSN 14, CS=1
 -- Chunk with length 122 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 1d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=65 block=15 data=07 00 1d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=65 block=3 data=07 00 1d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==15)
 - Sending new block at BSN 15, CS=1
 -- Chunk with length 102 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 1f 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=69 block=16 data=07 00 1f 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=69 block=4 data=07 00 1f 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==16)
 - Sending new block at BSN 16, CS=1
 -- Chunk with length 82 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 21 76 77 78 79 7a 7b 7c 7d 7e 7f 80 81 82 83 84 85 86 87 88 89 
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=73 block=17 data=07 00 21 76 77 78 79 7a 7b 7c 7d 7e 7f 80 81 82 83 84 85 86 87 88 89 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=73 block=5 data=07 00 21 76 77 78 79 7a 7b 7c 7d 7e 7f 80 81 82 83 84 85 86 87 88 89 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==17)
 - Sending new block at BSN 17, CS=1
 -- Chunk with length 62 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 23 8a 8b 8c 8d 8e 8f 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=78 block=18 data=07 00 23 8a 8b 8c 8d 8e 8f 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=78 block=6 data=07 00 23 8a 8b 8c 8d 8e 8f 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==18)
 - Sending new block at BSN 18, CS=1
 -- Chunk with length 42 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 25 9e 9f a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af b0 b1 
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=82 block=19 data=07 00 25 9e 9f a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af b0 b1 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=82 block=7 data=07 00 25 9e 9f a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af b0 b1 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==19)
 - Sending new block at BSN 19, CS=1
 -- Chunk with length 22 larger than space (20) left in block: copy only remaining space, and we are done
 data block: 07 00 27 b2 b3 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=86 block=20 data=07 00 27 b2 b3 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=86 block=8 data=07 00 27 b2 b3 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==20)
 - Sending new block at BSN 20, CS=1
@@ -354,7 +354,7 @@ Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)len=16
 data block: 07 00 28 0a 41 c6 c7 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
 Polling is already sheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW), so we must wait for requesting downlink ack
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=91 block=21 data=07 00 28 0a 41 c6 c7 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=91 block=9 data=07 00 28 0a 41 c6 c7 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 - ack:  (BSN=85)"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=20)  R=ACK I=NACK
 - got ack for BSN=20
@@ -389,7 +389,7 @@ Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)len=19
 data block: 07 00 2a 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
 Polling is already sheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW), so we must wait for requesting downlink ack
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=95 block=22 data=07 00 2a 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=95 block=10 data=07 00 2a 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 - ack:  (BSN=86)"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=21)  R=ACK I=NACK
 - got ack for BSN=21
@@ -405,7 +405,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) changes state from FLOW to FINISHED
 data block: 07 01 2c 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
 Polling is already sheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED), so we must wait for requesting downlink ack
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=203 block=23 data=07 01 2c 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=203 block=11 data=07 01 2c 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) downlink acknowledge
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) changes state from FINISHED to WAIT RELEASE
