@@ -103,6 +103,7 @@ struct rate_ctr_group *bts_main_data_stats()
 
 BTS::BTS()
 	: m_cur_fn(0)
+	, m_cur_blk_fn(-1)
 	, m_pollController(*this)
 	, m_sba(*this)
 	, m_ms_store(this)
@@ -149,6 +150,38 @@ void BTS::set_current_frame_number(int fn)
 
 	m_cur_fn = fn;
 	m_pollController.expireTimedout(m_cur_fn, max_delay);
+}
+
+void BTS::set_current_block_frame_number(int fn)
+{
+	int delay = 0;
+	const int late_block_delay_thresh = 13;
+	const int fn_update_ok_min_delay = -500;
+	const int fn_update_ok_max_delay = 0;
+
+	/* frame numbers in the received blocks are assumed to be strongly
+	 * monotonic. */
+	if (m_cur_blk_fn >= 0) {
+		int delta = (fn + 2715648 * 3 / 2 - m_cur_blk_fn) % 2715648 - 2715648/2;
+		if (delta <= 0)
+			return;
+	}
+
+	/* Check block delay vs. the current frame number */
+	if (current_frame_number() != 0)
+		delay = (fn + 2715648 * 3 / 2 - current_frame_number()) % 2715648
+			- 2715648/2;
+	if (delay <= -late_block_delay_thresh)
+		LOGP(DRLCMAC, LOGL_NOTICE,
+			"Late RLC block, FN delta: %d FN: %d curFN: %d\n",
+			delay, fn, current_frame_number());
+
+	m_cur_blk_fn = fn;
+	if (delay < fn_update_ok_min_delay || delay > fn_update_ok_max_delay ||
+		current_frame_number() == 0)
+		m_cur_fn = fn;
+
+	m_pollController.expireTimedout(fn, 0);
 }
 
 int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
@@ -1083,6 +1116,8 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	unsigned payload = data[0] >> 6;
 	bitvec *block;
 	int rc = 0;
+
+	bts()->set_current_block_frame_number(fn);
 
 	switch (payload) {
 	case GPRS_RLCMAC_DATA_BLOCK:

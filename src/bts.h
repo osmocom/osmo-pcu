@@ -244,6 +244,7 @@ public:
 
 	/** TODO: change the number to unsigned */
 	void set_current_frame_number(int frame_number);
+	void set_current_block_frame_number(int frame_number);
 	int current_frame_number() const;
 
 	/** add paging to paging queue(s) */
@@ -301,6 +302,7 @@ public:
 
 private:
 	int m_cur_fn;
+	int m_cur_blk_fn;
 	struct gprs_rlcmac_bts m_bts;
 	PollController m_pollController;
 	SBAController m_sba;

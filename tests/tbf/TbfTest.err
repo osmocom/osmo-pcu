@@ -1637,6 +1637,10 @@ TX: Immediate Assignment Uplink (AGCH)
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8c f6 07 00 c0 0c 68 ab 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=1.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654292 (curr FN 2654335)
+- Timeout for polling PACKET DOWNLINK ACK.
+- Assignment was on PACCH
+- No downlink ACK received yet
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
