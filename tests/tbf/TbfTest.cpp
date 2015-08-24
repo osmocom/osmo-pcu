@@ -210,6 +210,13 @@ static void send_rlc_block(struct gprs_rlcmac_bts *bts,
 	*block_nr += 1;
 }
 
+static void send_rlc_block(struct gprs_rlcmac_tbf *tbf,
+	uint32_t *fn, uint8_t *block_nr)
+{
+	send_rlc_block(tbf->bts->bts_data(), tbf->trx->trx_no,
+		tbf->control_ts, tbf->trx->arfcn, fn, block_nr);
+}
+
 enum test_tbf_final_ack_mode {
 	TEST_MODE_STANDARD,
 	TEST_MODE_REVERSE_FREE
@@ -218,7 +225,6 @@ enum test_tbf_final_ack_mode {
 static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 {
 	BTS the_bts;
-	gprs_rlcmac_bts *bts;
 	uint8_t ts_no = 4;
 	unsigned i;
 	uint8_t ms_class = 45;
@@ -232,8 +238,6 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 
 	gprs_rlcmac_dl_tbf *dl_tbf;
 	gprs_rlcmac_tbf *new_tbf;
-
-	bts = the_bts.bts_data();
 
 	setup_bts(&the_bts, ts_no);
 	dl_tbf = create_dl_tbf(&the_bts, ms_class, &trx_no);
@@ -251,10 +255,10 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	/* Send only a few RLC/MAC blocks */
 	fn = 0;
 	block_nr = 0;
-	while (block_nr < 3) {
+	while (block_nr < 3)
 		/* Request to send one block */
-		send_rlc_block(bts, trx_no, ts_no, 0, &fn, &block_nr);
-	}
+		send_rlc_block(dl_tbf, &fn, &block_nr);
+
 	OSMO_ASSERT(dl_tbf->have_data());
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
 
@@ -327,7 +331,7 @@ static void test_tbf_delayed_release()
 	/* Drain the queue */
 	while (dl_tbf->have_data())
 		/* Request to send one RLC/MAC block */
-		send_rlc_block(bts, trx_no, ts_no, 0, &fn, &block_nr);
+		send_rlc_block(dl_tbf, &fn, &block_nr);
 
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
 
@@ -338,7 +342,7 @@ static void test_tbf_delayed_release()
 	OSMO_ASSERT(dl_tbf->m_window.window_empty());
 
 	/* Force sending of a single block containing an LLC dummy command */
-	send_rlc_block(bts, trx_no, ts_no, 0, &fn, &block_nr);
+	send_rlc_block(dl_tbf, &fn, &block_nr);
 
 	/* Receive an ACK */
 	dl_tbf->rcvd_dl_ack(0, dl_tbf->m_window.v_s(), rbb);
@@ -346,7 +350,7 @@ static void test_tbf_delayed_release()
 
 	/* Timeout (make sure fn % 52 remains valid) */
 	fn += 52 * ((msecs_to_frames(bts->dl_tbf_idle_msec + 100) + 51)/ 52);
-	send_rlc_block(bts, trx_no, ts_no, 0, &fn, &block_nr);
+	send_rlc_block(dl_tbf, &fn, &block_nr);
 
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FINISHED));
 
@@ -639,7 +643,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	/* send packet uplink assignment */
 	*fn = sba_fn;
 	rts_bn = fn2bn(*fn);
-	send_rlc_block(bts, trx_no, ts_no, 0, fn, &rts_bn);
+	send_rlc_block(ul_tbf, fn, &rts_bn);
 
 	/* TODO: send real acknowledgement */
 	/* Fake acknowledgement */
