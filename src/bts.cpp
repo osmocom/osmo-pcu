@@ -64,6 +64,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "rlc.ass.timedout",		"RLC Assign Timeout   "},
 	{ "rlc.ack.timedout",		"RLC Ack Timeout      "},
 	{ "rlc.rel.timedout",		"RLC Release Timeout  "},
+	{ "rlc.late-block",		"RLC Late Block       "},
 	{ "decode.errors",		"Decode Errors        "},
 	{ "sba.allocated",		"SBA Allocated        "},
 	{ "sba.freed",			"SBA Freed            "},
@@ -171,10 +172,12 @@ void BTS::set_current_block_frame_number(int fn)
 	if (current_frame_number() != 0)
 		delay = (fn + 2715648 * 3 / 2 - current_frame_number()) % 2715648
 			- 2715648/2;
-	if (delay <= -late_block_delay_thresh)
+	if (delay <= -late_block_delay_thresh) {
 		LOGP(DRLCMAC, LOGL_NOTICE,
 			"Late RLC block, FN delta: %d FN: %d curFN: %d\n",
 			delay, fn, current_frame_number());
+		rlc_late_block();
+	}
 
 	m_cur_blk_fn = fn;
 	if (delay < fn_update_ok_min_delay || delay > fn_update_ok_max_delay ||

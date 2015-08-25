@@ -220,6 +220,7 @@ public:
 		CTR_RLC_ASS_TIMEDOUT,
 		CTR_RLC_ACK_TIMEDOUT,
 		CTR_RLC_REL_TIMEDOUT,
+		CTR_RLC_LATE_BLOCK,
 		CTR_DECODE_ERRORS,
 		CTR_SBA_ALLOCATED,
 		CTR_SBA_FREED,
@@ -286,6 +287,7 @@ public:
 	void rlc_ass_timedout();
 	void rlc_ack_timedout();
 	void rlc_rel_timedout();
+	void rlc_late_block();
 	void decode_error();
 	void sba_allocated();
 	void sba_freed();
@@ -393,6 +395,7 @@ CREATE_COUNT_INLINE(rlc_nacked, CTR_RLC_NACKED)
 CREATE_COUNT_INLINE(rlc_ass_timedout, CTR_RLC_ASS_TIMEDOUT);
 CREATE_COUNT_INLINE(rlc_ack_timedout, CTR_RLC_ACK_TIMEDOUT);
 CREATE_COUNT_INLINE(rlc_rel_timedout, CTR_RLC_REL_TIMEDOUT);
+CREATE_COUNT_INLINE(rlc_late_block, CTR_RLC_LATE_BLOCK);
 CREATE_COUNT_INLINE(decode_error, CTR_DECODE_ERRORS)
 CREATE_COUNT_INLINE(sba_allocated, CTR_SBA_ALLOCATED)
 CREATE_COUNT_INLINE(sba_freed, CTR_SBA_FREED)
