@@ -190,6 +190,8 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 		osmo_hexdump(data_ind->msgUnitParam.u8Buffer,
 			     data_ind->msgUnitParam.u8Size));
 
+	pcu_rx_block_time(data_ind->u16Arfcn, data_ind->u32Fn, data_ind->u8Tn);
+
 	/*
 	 * TODO: Add proper bad frame handling here. This could be used
 	 * to switch the used CS. Avoid a crash with the PCU right now
@@ -236,6 +238,8 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 static int handle_ph_ra_ind(struct femtol1_hdl *fl1h, GsmL1_PhRaInd_t *ra_ind)
 {
 	uint8_t acc_delay;
+
+	pcu_rx_ra_time(ra_ind->u16Arfcn, ra_ind->u32Fn, ra_ind->u8Tn);
 
 	if (ra_ind->measParam.fLinkQuality < MIN_QUAL_RACH)
 		return 0;

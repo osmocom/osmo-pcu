@@ -122,15 +122,18 @@ int pcu_sock_send(struct msgb *msg);
 #endif
 
 #ifdef __cplusplus
-extern "C"
+extern "C" {
 #endif
 int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr);
 
-#ifdef __cplusplus
-extern "C"
-#endif
 int pcu_rx_data_ind_pdtch(uint8_t trx, uint8_t ts, uint8_t *data,
 	uint8_t len, uint32_t fn, struct pcu_l1_meas *meas);
 
+void pcu_rx_block_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no);
+void pcu_rx_ra_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no);
+
+#ifdef __cplusplus
+}
+#endif
 #endif // PCU_L1_IF_H

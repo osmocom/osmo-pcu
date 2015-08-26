@@ -245,7 +245,7 @@ public:
 
 	/** TODO: change the number to unsigned */
 	void set_current_frame_number(int frame_number);
-	void set_current_block_frame_number(int frame_number);
+	void set_current_block_frame_number(int frame_number, unsigned max_delay);
 	int current_frame_number() const;
 
 	/** add paging to paging queue(s) */

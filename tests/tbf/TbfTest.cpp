@@ -586,6 +586,8 @@ static void send_ul_mac_block(BTS *the_bts, unsigned trx_no, unsigned ts_no,
 	OSMO_ASSERT(size_t(num_bytes) < sizeof(buf));
 	bitvec_free(rlc_block);
 
+	the_bts->set_current_block_frame_number(fn, 0);
+
 	pdch = &the_bts->bts_data()->trx[trx_no].pdch[ts_no];
 	pdch->rcv_block(&buf[0], num_bytes, fn, &meas);
 }

@@ -180,6 +180,17 @@ void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi)
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, 23+3);
 }
 
+extern "C" void pcu_rx_block_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no)
+{
+	BTS::main_bts()->set_current_block_frame_number(fn, 0);
+}
+
+extern "C" void pcu_rx_ra_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no)
+{
+	/* access bursts may arrive some bursts earlier */
+	BTS::main_bts()->set_current_block_frame_number(fn, 5);
+}
+
 extern "C" int pcu_rx_data_ind_pdtch(uint8_t trx_no, uint8_t ts_no, uint8_t *data,
 	uint8_t len, uint32_t fn, struct pcu_l1_meas *meas)
 {

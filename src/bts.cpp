@@ -153,7 +153,7 @@ void BTS::set_current_frame_number(int fn)
 	m_pollController.expireTimedout(m_cur_fn, max_delay);
 }
 
-void BTS::set_current_block_frame_number(int fn)
+void BTS::set_current_block_frame_number(int fn, unsigned max_delay)
 {
 	int delay = 0;
 	const int late_block_delay_thresh = 13;
@@ -184,7 +184,7 @@ void BTS::set_current_block_frame_number(int fn)
 		current_frame_number() == 0)
 		m_cur_fn = fn;
 
-	m_pollController.expireTimedout(fn, 0);
+	m_pollController.expireTimedout(fn, max_delay);
 }
 
 int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
@@ -1119,8 +1119,6 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	unsigned payload = data[0] >> 6;
 	bitvec *block;
 	int rc = 0;
-
-	bts()->set_current_block_frame_number(fn);
 
 	switch (payload) {
 	case GPRS_RLCMAC_DATA_BLOCK:
