@@ -190,6 +190,12 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 		osmo_hexdump(data_ind->msgUnitParam.u8Buffer,
 			     data_ind->msgUnitParam.u8Size));
 
+	LOGP(DL1IF, LOGL_INFO,
+		"Rx PH-DATA.ind SAPI %d, size %d, lq %f, timing %d, FN %d, TN %d\n",
+		data_ind->sapi, data_ind->msgUnitParam.u8Size,
+		data_ind->measParam.fLinkQuality, data_ind->measParam.i16BurstTiming,
+		data_ind->u32Fn, data_ind->u8Tn);
+
 	pcu_rx_block_time(data_ind->u16Arfcn, data_ind->u32Fn, data_ind->u8Tn);
 
 	/*
@@ -238,6 +244,11 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 static int handle_ph_ra_ind(struct femtol1_hdl *fl1h, GsmL1_PhRaInd_t *ra_ind)
 {
 	uint8_t acc_delay;
+
+	LOGP(DL1IF, LOGL_INFO, "Rx PH-RA.ind SAPI %d, lq %f, timing %d, FN %d, TN %d\n",
+		ra_ind->sapi,
+		ra_ind->measParam.fLinkQuality, ra_ind->measParam.i16BurstTiming,
+		ra_ind->u32Fn, ra_ind->u8Tn);
 
 	pcu_rx_ra_time(ra_ind->u16Arfcn, ra_ind->u32Fn, ra_ind->u8Tn);
 
