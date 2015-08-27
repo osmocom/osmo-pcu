@@ -28,7 +28,7 @@ PollController::PollController(BTS& bts)
 	: m_bts(bts)
 {}
 
-void PollController::expireTimedout(int frame_number)
+void PollController::expireTimedout(int frame_number, unsigned max_delay)
 {
 	struct gprs_rlcmac_bts *bts = m_bts.bts_data();
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
@@ -37,18 +37,11 @@ void PollController::expireTimedout(int frame_number)
 	struct llist_pods *lpods;
 	uint32_t elapsed;
 
-	/* check for poll timeout
-	 * The UL frame numbers lag 3 behind the DL frames and the data
-	 * indication is only sent after all 4 frames of the block have been
-	 * received. Sometimes there is an idle frame between the end of one
-	 * and start of another frame (every 3 blocks).  So the timeout should
-	 * definitely be there if we're more than 8 frames past poll_fn. Let's
-	 * stay on the safe side and say 13 or more. */
 	llist_pods_for_each_entry(ul_tbf, &bts->ul_tbfs, list, lpods) {
 		if (ul_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
 			elapsed = (frame_number + 2715648 - ul_tbf->poll_fn)
 								% 2715648;
-			if (elapsed >= 13 && elapsed < 2715400)
+			if (elapsed > max_delay && elapsed < 2715400)
 				ul_tbf->poll_timeout();
 		}
 	}
@@ -56,13 +49,13 @@ void PollController::expireTimedout(int frame_number)
 		if (dl_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
 			elapsed = (frame_number + 2715648 - dl_tbf->poll_fn)
 								% 2715648;
-			if (elapsed >= 13 && elapsed < 2715400)
+			if (elapsed > max_delay && elapsed < 2715400)
 				dl_tbf->poll_timeout();
 		}
 	}
 	llist_for_each_entry_safe(sba, sba2, &m_bts.sba()->m_sbas, list) {
 		elapsed = (frame_number + 2715648 - sba->fn) % 2715648;
-		if (elapsed >= 13 && elapsed < 2715400) {
+		if (elapsed > max_delay && elapsed < 2715400) {
 			/* sba will be freed here */
 			m_bts.sba()->timeout(sba);
 		}

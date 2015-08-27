@@ -136,8 +136,16 @@ BTS::~BTS()
 
 void BTS::set_current_frame_number(int fn)
 {
+	/* The UL frame numbers lag 3 behind the DL frames and the data
+	 * indication is only sent after all 4 frames of the block have been
+	 * received. Sometimes there is an idle frame between the end of one
+	 * and start of another frame (every 3 blocks).  So the timeout should
+	 * definitely be there if we're more than 8 frames past poll_fn. Let's
+	 * stay on the safe side and say 13 or more. */
+	const static int max_delay = 13;
+
 	m_cur_fn = fn;
-	m_pollController.expireTimedout(m_cur_fn);
+	m_pollController.expireTimedout(m_cur_fn, max_delay);
 }
 
 int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)

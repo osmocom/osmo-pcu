@@ -34,7 +34,8 @@ class PollController {
 public:
 	PollController(BTS& bts);
 
-	void expireTimedout(int frame_number);
+	/* check for poll timeout */
+	void expireTimedout(int frame_number, unsigned max_delay);
 
 private:
 	BTS& m_bts;
