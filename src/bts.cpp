@@ -141,8 +141,11 @@ void BTS::set_current_frame_number(int fn)
 	 * received. Sometimes there is an idle frame between the end of one
 	 * and start of another frame (every 3 blocks).  So the timeout should
 	 * definitely be there if we're more than 8 frames past poll_fn. Let's
-	 * stay on the safe side and say 13 or more. */
-	const static int max_delay = 13;
+	 * stay on the safe side and say 13 or more. An additional delay can
+	 * happen due to the block processing time in the DSP, so the delay of
+	 * decoded blocks relative to the timing clock can be much larger.
+	 * Values up to 50 frames have been observed under load. */
+	const static int max_delay = 60;
 
 	m_cur_fn = fn;
 	m_pollController.expireTimedout(m_cur_fn, max_delay);
