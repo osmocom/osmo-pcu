@@ -91,7 +91,6 @@ static int udp_read_cb(struct osmo_fd *ofd)
 {
 	struct msgb *msg = msgb_alloc_headroom(2048, 128, "udp_rx");
 	struct l1fwd_hdl *l1fh = (l1fwd_hdl *)ofd->data;
-	struct femtol1_hdl *fl1h = l1fh->fl1h;
 	int rc;
 
 	if (!msg)
