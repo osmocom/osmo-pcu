@@ -111,7 +111,7 @@ struct llist_pods {
 		     prefetch(pos->member.list.next))
 
 struct gprs_rlcmac_tbf {
-	gprs_rlcmac_tbf(gprs_rlcmac_tbf_direction dir);
+	gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir);
 
 	static void free_all(struct gprs_rlcmac_trx *trx);
 	static void free_all(struct gprs_rlcmac_pdch *pdch);
@@ -200,10 +200,12 @@ struct gprs_rlcmac_tbf {
 	unsigned int fT; /* fTxxxx number */
 	unsigned int num_fT_exp; /* number of consecutive fT expirations */
 
-	struct {
+	struct Meas {
 		struct timeval rssi_tv; /* timestamp for rssi calculation */
 		int32_t rssi_sum; /* sum of rssi values */
 		int rssi_num; /* number of rssi values added since rssi_tv */
+
+		Meas();
 	} meas;
 
 	/* these should become protected but only after gprs_rlcmac_data.c
@@ -313,7 +315,7 @@ inline time_t gprs_rlcmac_tbf::created_ts() const
 }
 
 struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
-	gprs_rlcmac_dl_tbf();
+	gprs_rlcmac_dl_tbf(BTS *bts);
 
 	void cleanup();
 
@@ -355,13 +357,15 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int32_t m_last_dl_poll_fn;
 	int32_t m_last_dl_drained_fn;
 
-	struct {
+	struct BandWidth {
 		struct timeval dl_bw_tv; /* timestamp for dl bw calculation */
 		uint32_t dl_bw_octets; /* number of octets since bw_tv */
 
 		struct timeval dl_loss_tv; /* timestamp for loss calculation */
 		uint16_t dl_loss_lost; /* sum of lost packets */
 		uint16_t dl_loss_received; /* sum of received packets */
+
+		BandWidth();
 	} m_bw;
 
 protected:
@@ -380,7 +384,7 @@ protected:
 };
 
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
-	gprs_rlcmac_ul_tbf();
+	gprs_rlcmac_ul_tbf(BTS *bts);
 
 	struct msgb *create_ul_ack(uint32_t fn);
 

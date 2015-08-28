@@ -41,10 +41,55 @@ extern void *tall_pcu_ctx;
 
 static void tbf_timer_cb(void *_tbf);
 
-gprs_rlcmac_tbf::gprs_rlcmac_tbf(gprs_rlcmac_tbf_direction dir) :
+gprs_rlcmac_tbf::Meas::Meas() :
+	rssi_sum(0),
+	rssi_num(0)
+{
+	timerclear(&rssi_tv);
+}
+
+gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
+	state_flags(0),
 	direction(dir),
+	trx(NULL),
+	first_ts(0),
+	first_common_ts(0),
+	control_ts(0xff),
+	dl_ass_state(GPRS_RLCMAC_DL_ASS_NONE),
+	ul_ass_state(GPRS_RLCMAC_UL_ASS_NONE),
+	ul_ack_state(GPRS_RLCMAC_UL_ACK_NONE),
+	poll_state(GPRS_RLCMAC_POLL_NONE),
+	poll_fn(0),
+	n3105(0),
+	T(0),
+	num_T_exp(0),
+	fT(0),
+	num_fT_exp(0),
+	state(GPRS_RLCMAC_NULL),
+	was_releasing(0),
+	upgrade_to_multislot(0),
+	bts(bts_),
+	m_tfi(0),
+	m_created_ts(0),
+	m_ms(NULL),
+	m_ta(0),
+	m_ms_class(0),
 	m_ms_list(this)
 {
+	/* The classes of these members do not have proper constructors yet.
+	 * Just set them to 0 like talloc_zero did */
+	memset(&list, 0, sizeof(list));
+	memset(&pdch, 0, sizeof(pdch));
+	memset(&timer, 0, sizeof(timer));
+	memset(&m_rlc, 0, sizeof(m_rlc));
+	memset(&gsm_timer, 0, sizeof(gsm_timer));
+
+	m_llc.init();
+
+	m_name_buf[0] = '\0';
+
+	/* Back pointer for PODS llist compatibility */
+	list.back = this;
 }
 
 gprs_rlcmac_bts *gprs_rlcmac_tbf::bts_data() const
@@ -486,20 +531,18 @@ void gprs_rlcmac_tbf::poll_timeout()
 		LOGP(DRLCMAC, LOGL_ERROR, "- Poll Timeout, but no event!\n");
 }
 
-static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
+static int setup_tbf(struct gprs_rlcmac_tbf *tbf,
 	GprsMs *ms, int8_t use_trx,
 	uint8_t ms_class, uint8_t single_slot)
 {
 	int rc;
-
+	struct gprs_rlcmac_bts *bts;
 	if (!tbf)
 		return -1;
 
-	/* Back pointer for PODS llist compatibility */
-	tbf->list.back = tbf;
+	bts = tbf->bts->bts_data();
 
 	tbf->m_created_ts = time(NULL);
-	tbf->bts = bts->bts;
 	tbf->set_ms_class(ms_class);
 	/* select algorithm */
 	rc = bts->alloc_algorithm(bts, ms, tbf, bts->alloc_algorithm_curst,
@@ -509,7 +552,6 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
 		return -1;
 	}
 	/* assign control ts */
-	tbf->control_ts = 0xff;
 	rc = tbf_assign_control_ts(tbf);
 	/* if no resource */
 	if (rc < 0) {
@@ -519,7 +561,6 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
 	/* set timestamp */
 	gettimeofday(&tbf->meas.rssi_tv, NULL);
 
-	tbf->m_llc.init();
 	tbf->set_ms(ms);
 
 	LOGP(DRLCMAC, LOGL_INFO,
@@ -529,10 +570,16 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_bts *bts,
 	return 0;
 }
 
-gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf() :
-	gprs_rlcmac_tbf(GPRS_RLCMAC_UL_TBF)
+gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(BTS *bts_) :
+	gprs_rlcmac_tbf(bts_, GPRS_RLCMAC_UL_TBF),
+	m_rx_counter(0),
+	m_n3103(0),
+	m_contention_resolution_done(0),
+	m_final_ack_sent(0)
 {
-};
+	memset(&m_window, 0, sizeof(m_window));
+	memset(&m_usf, 0, sizeof(m_usf));
+}
 
 static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
 {
@@ -552,18 +599,18 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d\n",
 		"UL", ms_class);
 
-	tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
+	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 
 	if (!tbf)
 		return NULL;
 
 	talloc_set_destructor(tbf, ul_tbf_dtor);
-	new (tbf) gprs_rlcmac_ul_tbf();
+	new (tbf) gprs_rlcmac_ul_tbf(bts->bts);
 
 	if (!ms)
 		ms = bts->bts->ms_alloc(ms_class);
 
-	rc = setup_tbf(tbf, bts, ms, use_trx, ms_class, single_slot);
+	rc = setup_tbf(tbf, ms, use_trx, ms_class, single_slot);
 	/* if no resource */
 	if (rc < 0) {
 		talloc_free(tbf);
@@ -576,10 +623,26 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	return tbf;
 }
 
-gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf() :
-	gprs_rlcmac_tbf(GPRS_RLCMAC_DL_TBF)
+gprs_rlcmac_dl_tbf::BandWidth::BandWidth() :
+	dl_bw_octets(0),
+	dl_loss_lost(0),
+	dl_loss_received(0)
 {
-};
+	timerclear(&dl_bw_tv);
+	timerclear(&dl_loss_tv);
+}
+
+gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(BTS *bts_) :
+	gprs_rlcmac_tbf(bts_, GPRS_RLCMAC_DL_TBF),
+	m_tx_counter(0),
+	m_wait_confirm(0),
+	m_dl_ack_requested(false),
+	m_last_dl_poll_fn(0),
+	m_last_dl_drained_fn(0)
+{
+	memset(&m_window, 0, sizeof(m_window));
+	memset(&m_llc_timer, 0, sizeof(m_llc_timer));
+}
 
 static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
 {
@@ -598,18 +661,18 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d\n",
 		"DL", ms_class);
 
-	tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
+	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
 
 	if (!tbf)
 		return NULL;
 
 	talloc_set_destructor(tbf, dl_tbf_dtor);
-	new (tbf) gprs_rlcmac_dl_tbf();
+	new (tbf) gprs_rlcmac_dl_tbf(bts->bts);
 
 	if (!ms)
 		ms = bts->bts->ms_alloc(ms_class);
 
-	rc = setup_tbf(tbf, bts, ms, use_trx, ms_class, single_slot);
+	rc = setup_tbf(tbf, ms, use_trx, ms_class, single_slot);
 	/* if no resource */
 	if (rc < 0) {
 		talloc_free(tbf);
