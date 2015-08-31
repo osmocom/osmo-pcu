@@ -986,8 +986,6 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 	}
 
 	old_ms = bts->ms_by_tlli(new_tlli);
-	/* Keep the old MS object for the update_ms() */
-	GprsMs::Guard guard(old_ms);
 	if (old_ms) {
 		/* Get them before calling set_ms() */
 		dl_tbf = old_ms->dl_tbf();
@@ -998,7 +996,7 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 
 		/* there might be an active and valid downlink TBF */
 		if (!ms()->dl_tbf() && dl_tbf)
-			/* Move it to the current MS (see the guard above) */
+			/* Move it to the current MS */
 			dl_tbf->set_ms(ms());
 	}
 
