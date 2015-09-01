@@ -895,9 +895,8 @@ static void test_tbf_dl_flow_and_rach_two_phase()
 	ms = the_bts.ms_by_tlli(tlli1);
 	OSMO_ASSERT(ms2 == ms);
 
-	/* DL TBF should be the same */
-	/* OSMO_ASSERT(ms->dl_tbf()); */
-	/* OSMO_ASSERT(ms->dl_tbf() == dl_tbf); */
+	/* A DL TBF should still exist */
+	OSMO_ASSERT(ms->dl_tbf());
 
 	/* No queued packets should be lost */
 	OSMO_ASSERT(ms->llc_queue()->size() == 2);

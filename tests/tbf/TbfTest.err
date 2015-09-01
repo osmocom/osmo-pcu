@@ -1825,6 +1825,25 @@ Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654327 block=9 data=4f 28 5e
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control Ack
 TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=1
+Slot Allocation (Algorithm A) for class 1
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 4, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Assign downlink TS=7 TFI=1
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 01, TFIs = 00000003.
+- Setting Control TS 7
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL)
+Allocated TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL): trx = 0, ul_slots = 80, dl_slots = 80
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Trigger downlink assignment on PACCH
+Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer 0.
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 - BSN 0 storing in window (0..63)

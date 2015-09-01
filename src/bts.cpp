@@ -834,6 +834,12 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				"assignment for UL %s\n", tbf_name(new_tbf));
 		}
 		tbf_assign_control_ts(new_tbf);
+		/* there might be LLC packets waiting in the queue, but the DL
+		 * TBF might have been released while the UL TBF has been
+		 * established */
+		if (new_tbf->ms()->need_dl_tbf())
+			new_tbf->establish_dl_tbf_on_pacch();
+
 		return;
 	}
 	LOGP(DRLCMAC, LOGL_ERROR, "Error: received PACET CONTROL ACK "

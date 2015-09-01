@@ -110,6 +110,7 @@ public:
 	void update_error_rate(gprs_rlcmac_tbf *tbf, int percent);
 
 	bool is_idle() const;
+	bool need_dl_tbf() const;
 
 	void* operator new(size_t num);
 	void operator delete(void* p);
@@ -173,6 +174,14 @@ private:
 inline bool GprsMs::is_idle() const
 {
 	return !m_ul_tbf && !m_dl_tbf && !m_ref && llist_empty(&m_old_tbfs);
+}
+
+inline bool GprsMs::need_dl_tbf() const
+{
+	if (dl_tbf() != NULL && dl_tbf()->state_is_not(GPRS_RLCMAC_WAIT_RELEASE))
+		return false;
+
+	return llc_queue()->size() > 0;
 }
 
 inline uint32_t GprsMs::tlli() const
