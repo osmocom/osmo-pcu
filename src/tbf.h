@@ -137,6 +137,7 @@ struct gprs_rlcmac_tbf {
 	void handle_timeout();
 	void stop_timer();
 	void stop_t3191();
+	int establish_dl_tbf_on_pacch();
 
 	void poll_timeout();
 
@@ -337,6 +338,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int frames_since_last_poll(unsigned fn) const;
 	int frames_since_last_drain(unsigned fn) const;
 	bool keep_open(unsigned fn) const;
+	int release();
 
 	bool is_control_ts(uint8_t ts) const {
 		return ts == control_ts;

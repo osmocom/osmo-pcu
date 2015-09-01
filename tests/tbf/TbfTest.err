@@ -97,7 +97,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBF
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
 Allocated TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL): trx = 0, ul_slots = 10, dl_slots = 10
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) Trigger downlink assignment on PACCH
 Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) exists
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer 0.
@@ -175,7 +175,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBF
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
 Allocated TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL): trx = 0, ul_slots = 10, dl_slots = 10
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) Trigger downlink assignment on PACCH
 Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) exists
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer 0.
@@ -1951,10 +1951,13 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Upli
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 03 8b ed 07 00 c8 00 10 0b 2b 2b 2b 2b 2b 2b 2b 
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
-Destroying MS object, TLLI = 0xf1223344
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=ASSIGN)
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '0011223344'
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Clearing MS object, TLLI: 0xf1223344, IMSI: '0011223344'
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Decoded premier TLLI=0xf1223344 of UL DATA TFI=0.
+Destroying MS object, TLLI = 0x00000000
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 - BSN 0 storing in window (0..63)
 - Raising V(R) to 1
@@ -1971,7 +1974,7 @@ No bctx
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes state from FLOW to FINISHED
 - Scheduling Ack/Nack, because TLLI is included.
 - Scheduling Ack/Nack, because last block has CV==0.
-New MS: TLLI = 0xf1223344, TA = 7, IMSI = , LLC = 0
+New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 MS requests UL TBF on RACH, so we provide one:
 MS requests single block allocation
@@ -2651,7 +2654,7 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBF
 - Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL)
 Allocated TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL): trx = 0, ul_slots = 80, dl_slots = 80
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) Trigger dowlink assignment on PACCH, because another LLC PDU has arrived in between
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) Trigger downlink assignment on PACCH
 Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) exists
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer 0.

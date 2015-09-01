@@ -118,7 +118,7 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 			"%s in WAIT RELEASE state "
 			"(T3193), so reuse TBF\n", tbf_name(this));
 		tbf_update_ms_class(this, ms_class);
-		reuse_tbf();
+		establish_dl_tbf_on_pacch();
 	}
 
 	return 0;
@@ -833,9 +833,20 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 
 int gprs_rlcmac_dl_tbf::maybe_start_new_window()
 {
+	release();
+
+	/* check for LLC PDU in the LLC Queue */
+	if (llc_queue()->size() > 0)
+		/* we have more data so we will re-use this tbf */
+		establish_dl_tbf_on_pacch();
+
+	return 0;
+}
+
+int gprs_rlcmac_dl_tbf::release()
+{
 	uint16_t received;
 
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
 	/* range V(A)..V(S)-1 */
 	received = m_window.count_unacked();
 
@@ -849,37 +860,6 @@ int gprs_rlcmac_dl_tbf::maybe_start_new_window()
 		bts_data()->t3193_msec / 1000,
 		(bts_data()->t3193_msec % 1000) * 1000);
 
-	/* check for LLC PDU in the LLC Queue */
-	if (have_data())
-		/* we have more data so we will re-use this tbf */
-		reuse_tbf();
-
-	return 0;
-}
-
-int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, uint8_t ssn, uint8_t *rbb)
-{
-	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink acknowledge\n", tbf_name(this));
-
-	if (!final_ack)
-		return update_window(ssn, rbb);
-	return maybe_start_new_window();
-}
-
-void gprs_rlcmac_dl_tbf::reuse_tbf()
-{
-	struct gprs_rlcmac_dl_tbf *new_tbf = NULL;
-
-	bts->tbf_reused();
-
-	new_tbf = tbf_alloc_dl_tbf(bts->bts_data(), ms(),
-		this->trx->trx_no, ms_class(), 0);
-
-	if (!new_tbf) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-		return;
-	}
-
 	/* reset rlc states */
 	m_tx_counter = 0;
 	m_wait_confirm = 0;
@@ -889,10 +869,19 @@ void gprs_rlcmac_dl_tbf::reuse_tbf()
 	state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
 	state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "%s Trigger dowlink assignment on PACCH, "
-		"because another LLC PDU has arrived in between\n",
-		tbf_name(this));
-	bts->trigger_dl_ass(new_tbf, this);
+	return 0;
+}
+
+
+int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, uint8_t ssn, uint8_t *rbb)
+{
+	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink acknowledge\n", tbf_name(this));
+
+	if (!final_ack)
+		return update_window(ssn, rbb);
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
+	return maybe_start_new_window();
 }
 
 bool gprs_rlcmac_dl_tbf::dl_window_stalled() const
