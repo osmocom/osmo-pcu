@@ -1792,12 +1792,9 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
-Got RACH from TLLI=0xf1223344 while TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) still exists. Killing pending DL TBF
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) free
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) stopping timer 0.
-PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN), 0 TBFs, USFs = 00, TFIs = 00000000.
-Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
-********** TBF ends here **********
+Got RACH from TLLI=0xf1223344 while TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) still exists. Release pending DL TBF
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT RELEASE
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) restarting timer 3193 while old timer 0 pending 
 MS requests UL TBF in packet resource request of single block, so we provide one:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=1
