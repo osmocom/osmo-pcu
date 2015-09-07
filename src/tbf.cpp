@@ -473,6 +473,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
 			set_state(GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
+			bts->rlc_ass_failed();
 			return;
 		}
 		/* reschedule UL assignment */
@@ -492,6 +493,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
 			set_state(GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
+			bts->rlc_ass_failed();
 			return;
 		}
 		/* reschedule DL assignment */
@@ -514,6 +516,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
 			dl_tbf->set_state(GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(dl_tbf, 3195, dl_tbf->bts_data()->t3195, 0);
+			bts->rlc_ack_failed();
 			return;
 		}
 		/* resend IMM.ASS on CCCH on timeout */

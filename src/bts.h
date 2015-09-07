@@ -218,7 +218,9 @@ public:
 		CTR_RLC_STALLED,
 		CTR_RLC_NACKED,
 		CTR_RLC_ASS_TIMEDOUT,
+		CTR_RLC_ASS_FAILED,
 		CTR_RLC_ACK_TIMEDOUT,
+		CTR_RLC_ACK_FAILED,
 		CTR_RLC_REL_TIMEDOUT,
 		CTR_RLC_LATE_BLOCK,
 		CTR_DECODE_ERRORS,
@@ -285,7 +287,9 @@ public:
 	void rlc_stalled();
 	void rlc_nacked();
 	void rlc_ass_timedout();
+	void rlc_ass_failed();
 	void rlc_ack_timedout();
+	void rlc_ack_failed();
 	void rlc_rel_timedout();
 	void rlc_late_block();
 	void decode_error();
@@ -393,7 +397,9 @@ CREATE_COUNT_INLINE(rlc_restarted, CTR_RLC_RESTARTED)
 CREATE_COUNT_INLINE(rlc_stalled, CTR_RLC_STALLED)
 CREATE_COUNT_INLINE(rlc_nacked, CTR_RLC_NACKED)
 CREATE_COUNT_INLINE(rlc_ass_timedout, CTR_RLC_ASS_TIMEDOUT);
+CREATE_COUNT_INLINE(rlc_ass_failed, CTR_RLC_ASS_FAILED);
 CREATE_COUNT_INLINE(rlc_ack_timedout, CTR_RLC_ACK_TIMEDOUT);
+CREATE_COUNT_INLINE(rlc_ack_failed, CTR_RLC_ACK_FAILED);
 CREATE_COUNT_INLINE(rlc_rel_timedout, CTR_RLC_REL_TIMEDOUT);
 CREATE_COUNT_INLINE(rlc_late_block, CTR_RLC_LATE_BLOCK);
 CREATE_COUNT_INLINE(decode_error, CTR_DECODE_ERRORS)
