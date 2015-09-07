@@ -332,6 +332,9 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	/* set USF */
 	msg->data[0] = (msg->data[0] & 0xf8) | usf;
 
+	/* Used to measure the leak rate, count all blocks */
+	gprs_bssgp_update_frames_sent();
+
 	/* send PDTCH/PACCH to L1 */
 	pcu_l1if_tx_pdtch(msg, trx, ts, arfcn, fn, block_nr);
 

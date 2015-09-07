@@ -360,6 +360,7 @@ Polling is already sheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW), so
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=91 block=9 data=07 00 28 0a 41 c6 c7 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 - ack:  (BSN=85)"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=20)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=0:21, lost=0, recv=21, skipped=0, bsn=127, info='RRRRRRRRRRRRRRRRRRRRR$..........................................'
 - got ack for BSN=20
 - got ack for BSN=19
 - got ack for BSN=18
@@ -395,6 +396,7 @@ Polling is already sheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW), so
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=95 block=10 data=07 00 2a 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 - ack:  (BSN=86)"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=21)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=21:22, lost=0, recv=1, skipped=0, bsn=20, info='R$..............................................................'
 - got ack for BSN=21
 - V(B): (V(A)=22)""(V(S)-1=21)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4

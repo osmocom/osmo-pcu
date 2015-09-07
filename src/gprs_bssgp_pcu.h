@@ -62,6 +62,9 @@ struct gprs_bssgp_pcu {
 	struct timeval queue_delay_sum;
 	unsigned queue_delay_count;
 	uint8_t fc_tag;
+	unsigned queue_frames_sent;
+	unsigned queue_bytes_recv;
+	unsigned queue_frames_recv;
 
 	/** callbacks below */
 
@@ -86,5 +89,7 @@ struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void);
 
 void gprs_bssgp_update_queue_delay(const struct timeval *tv_recv,
 		const struct timeval *tv_now);
+void gprs_bssgp_update_frames_sent();
+void gprs_bssgp_update_bytes_received(unsigned bytes_recv, unsigned frames_recv);
 
 #endif // GPRS_BSSGP_PCU_H
