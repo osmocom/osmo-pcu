@@ -48,7 +48,7 @@ public:
 			bitvec * dest, uint8_t old_tfi,
 			uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli, 
 			struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t alpha,
-			uint8_t gamma, int8_t ta_idx);
+			uint8_t gamma, int8_t ta_idx, int8_t use_egprs);
 
 	static void write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
 			uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf, uint8_t poll,

@@ -923,7 +923,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	Encoding::write_packet_uplink_assignment(bts_data(), ass_vec, m_tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), tlli(),
 		is_tlli_valid(), new_tbf, 1, bts_data()->alpha,
-		bts_data()->gamma, -1);
+		bts_data()->gamma, -1, 0);
 	bitvec_pack(ass_vec, msgb_put(msg, 23));
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++\n");

@@ -167,7 +167,7 @@ void Encoding::write_packet_uplink_assignment(
 	bitvec * dest, uint8_t old_tfi,
 	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
 	struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t alpha,
-	uint8_t gamma, int8_t ta_idx)
+	uint8_t gamma, int8_t ta_idx, int8_t use_egprs)
 {
 	// TODO We should use our implementation of encode RLC/MAC Control messages.
 	unsigned wp = 0;
@@ -191,16 +191,42 @@ void Encoding::write_packet_uplink_assignment(
 		bitvec_write_field(dest, wp,old_tfi,5); // TFI
 	}
 
-	bitvec_write_field(dest, wp,0x0,1); // Message escape
-	bitvec_write_field(dest, wp,tbf->current_cs()-1, 2); // CHANNEL_CODING_COMMAND 
-	bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
-	bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
-	bitvec_write_field(dest, wp,tbf->ta(),6); // TIMING_ADVANCE_VALUE
-	if (ta_idx < 0) {
-		bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
-	} else {
-		bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
-		bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
+	if (!use_egprs) {
+		bitvec_write_field(dest, wp,0x0,1); // Message escape
+		bitvec_write_field(dest, wp,tbf->current_cs()-1, 2); // CHANNEL_CODING_COMMAND 
+		bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
+		bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
+		bitvec_write_field(dest, wp,tbf->ta(),6); // TIMING_ADVANCE_VALUE
+		if (ta_idx < 0) {
+			bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
+		} else {
+			bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
+			bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
+		}
+
+	} else { /* EPGRS */
+		bitvec_write_field(dest, wp,0x1,1); // Message escape
+		bitvec_write_field(dest, wp,0x0,2); // EGPRS message contents
+		bitvec_write_field(dest, wp,0x0,1); // No CONTENTION_RESOLUTION_TLLI
+		bitvec_write_field(dest, wp,0x0,1); // No COMPACT reduced MA
+		bitvec_write_field(dest, wp,tbf->current_cs()-1, 4); // EGPRS Modulation and Coding IE
+		bitvec_write_field(dest, wp,0x0,1); // No RESEGMENT
+		bitvec_write_field(dest, wp,0x0,5); // EGPRS Window Size = 64
+		bitvec_write_field(dest, wp,0x0,1); // No Access Technologies Request
+		bitvec_write_field(dest, wp,0x0,1); // No ARAC RETRANSMISSION REQUEST
+		bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
+		bitvec_write_field(dest, wp,0x0,1); // No BEP_PERIOD2
+
+		bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
+		bitvec_write_field(dest, wp,tbf->ta(),6); // TIMING_ADVANCE_VALUE
+		if (ta_idx < 0) {
+			bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
+		} else {
+			bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
+			bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
+		}
+
+		bitvec_write_field(dest, wp,0x0,1); // No Packet Extended Timing Advance
 	}
 
 #if 1
