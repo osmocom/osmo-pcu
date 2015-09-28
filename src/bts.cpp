@@ -990,6 +990,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 		uint32_t tlli = request->ID.u.TLLI;
 		uint8_t ms_class = 0;
+		uint8_t egprs_ms_class = 0;
 		uint8_t ta = 0;
 		struct pcu_l1_meas meas;
 
@@ -1039,10 +1040,19 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			ta = sba->ta;
 			bts()->sba()->free_sba(sba);
 		}
-		if (request->Exist_MS_Radio_Access_capability)
-			ms_class = Decoding::get_ms_class_by_capability(&request->MS_Radio_Access_capability);
+		if (request->Exist_MS_Radio_Access_capability) {
+			ms_class = Decoding::get_ms_class_by_capability(
+				&request->MS_Radio_Access_capability);
+			egprs_ms_class =
+				Decoding::get_egprs_ms_class_by_capability(
+					&request->MS_Radio_Access_capability);
+		}
 		if (!ms_class)
 			LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");
+		if (egprs_ms_class)
+			LOGP(DRLCMAC, LOGL_NOTICE,
+				"MS supports EGPRS multislot class %d.\n",
+				egprs_ms_class);
 		ul_tbf = tbf_alloc_ul(bts_data(), trx_no(), ms_class, tlli, ta, ms);
 		if (!ul_tbf)
 			return;
@@ -1052,6 +1062,10 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		ul_tbf->control_ts = ts_no;
 		/* schedule uplink assignment */
 		ul_tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+
+		/* get capabilities */
+		if (ul_tbf->ms())
+			ul_tbf->ms()->set_egprs_ms_class(egprs_ms_class);
 
 		/* get measurements */
 		if (ul_tbf->ms()) {

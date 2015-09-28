@@ -81,7 +81,9 @@ public:
 	uint8_t ta() const;
 	void set_ta(uint8_t ta);
 	uint8_t ms_class() const;
+	uint8_t egprs_ms_class() const;
 	void set_ms_class(uint8_t ms_class);
+	void set_egprs_ms_class(uint8_t ms_class);
 
 	uint8_t current_cs_ul() const;
 	uint8_t current_cs_dl() const;
@@ -148,6 +150,7 @@ private:
 	char m_imsi[16];
 	uint8_t m_ta;
 	uint8_t m_ms_class;
+	uint8_t m_egprs_ms_class;
 	/* current coding scheme */
 	uint8_t m_current_cs_ul;
 	uint8_t m_current_cs_dl;
@@ -210,6 +213,11 @@ inline uint8_t GprsMs::ta() const
 inline uint8_t GprsMs::ms_class() const
 {
 	return m_ms_class;
+}
+
+inline uint8_t GprsMs::egprs_ms_class() const
+{
+	return m_egprs_ms_class;
 }
 
 inline uint8_t GprsMs::current_cs_ul() const

@@ -70,6 +70,7 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 	vty_out(vty, "  Coding scheme downlink: CS-%d%s", ms->current_cs_dl(),
 		VTY_NEWLINE);
 	vty_out(vty, "  MS class:               %d%s", ms->ms_class(), VTY_NEWLINE);
+	vty_out(vty, "  EGPRS MS class:         %d%s", ms->egprs_ms_class(), VTY_NEWLINE);
 	vty_out(vty, "  LLC queue length:       %d%s", ms->llc_queue()->size(),
 		VTY_NEWLINE);
 	vty_out(vty, "  LLC queue octets:       %d%s", ms->llc_queue()->octets(),

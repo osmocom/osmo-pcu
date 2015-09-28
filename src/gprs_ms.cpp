@@ -96,6 +96,7 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	m_new_dl_tlli(0),
 	m_ta(0),
 	m_ms_class(0),
+	m_egprs_ms_class(0),
 	m_current_cs_ul(1),
 	m_current_cs_dl(1),
 	m_is_idle(true),
@@ -445,6 +446,18 @@ void GprsMs::set_ms_class(uint8_t ms_class_)
 		tlli(), m_ms_class, ms_class_);
 
 	m_ms_class = ms_class_;
+}
+
+void GprsMs::set_egprs_ms_class(uint8_t ms_class_)
+{
+	if (ms_class_ == m_egprs_ms_class)
+		return;
+
+	LOGP(DRLCMAC, LOGL_INFO,
+		"Modifying MS object, TLLI = 0x%08x, EGPRS MS class %d -> %d\n",
+		tlli(), m_egprs_ms_class, ms_class_);
+
+	m_egprs_ms_class = ms_class_;
 }
 
 void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
