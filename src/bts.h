@@ -173,6 +173,7 @@ struct gprs_rlcmac_bts {
 	uint32_t alloc_algorithm_curst; /* options to customize algorithm */
 	uint8_t force_two_phase;
 	uint8_t alpha, gamma;
+	uint8_t egprs_enabled;
 	uint32_t dl_tbf_idle_msec; /* hold time for idle DL TBFs */
 	uint32_t ms_idle_sec;
 	uint8_t cs_adj_enabled;

@@ -54,6 +54,11 @@ static int config_write_pcu(struct vty *vty)
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	vty_out(vty, "pcu%s", VTY_NEWLINE);
+	if (bts->egprs_enabled)
+		vty_out(vty, " egprs%s", VTY_NEWLINE);
+	else
+		vty_out(vty, " no egprs%s", VTY_NEWLINE);
+
 	vty_out(vty, " flow-control-interval %d%s", bts->fc_interval,
 		VTY_NEWLINE);
 	if (bts->fc_bvc_bucket_size)
@@ -149,6 +154,35 @@ DEFUN(cfg_pcu,
       "BTS specific configure")
 {
 	vty->node = PCU_NODE;
+
+	return CMD_SUCCESS;
+}
+
+#define EGPRS_STR "EGPRS configuration\n"
+
+DEFUN(cfg_pcu_egprs,
+      cfg_pcu_egprs_cmd,
+      "egprs",
+      EGPRS_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->egprs_enabled = 1;
+
+	vty_out(vty, "%%Note that EGPRS support is in an experimental state. "
+		"Do not use this in production!%s", VTY_NEWLINE);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_egprs,
+      cfg_pcu_no_egprs_cmd,
+      "no egprs",
+      NO_STR EGPRS_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->egprs_enabled = 0;
 
 	return CMD_SUCCESS;
 }
@@ -811,6 +845,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_node(&pcu_node, config_write_pcu);
 	install_element(CONFIG_NODE, &cfg_pcu_cmd);
 	vty_install_default(PCU_NODE);
+	install_element(PCU_NODE, &cfg_pcu_egprs_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_egprs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_two_phase_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_cmd);
