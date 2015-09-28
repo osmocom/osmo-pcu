@@ -546,6 +546,12 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf,
 
 	bts = tbf->bts->bts_data();
 
+	if (egprs_ms_class > 0 && bts->egprs_enabled) {
+		/* TODO: only for 8PSK, otherwise the GPRS MS class has to be used */
+		ms_class = egprs_ms_class;
+		tbf->enable_egprs();
+	}
+
 	tbf->m_created_ts = time(NULL);
 	tbf->set_ms_class(ms_class);
 	/* select algorithm */
@@ -924,7 +930,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	Encoding::write_packet_uplink_assignment(bts_data(), ass_vec, m_tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), tlli(),
 		is_tlli_valid(), new_tbf, 1, bts_data()->alpha,
-		bts_data()->gamma, -1, 0);
+		bts_data()->gamma, -1, is_egprs_enabled());
 	bitvec_pack(ass_vec, msgb_put(msg, 23));
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++\n");
