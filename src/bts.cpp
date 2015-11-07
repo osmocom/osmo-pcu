@@ -80,6 +80,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 static const struct rate_ctr_group_desc bts_ctrg_desc = {
 	"bts",
 	"BTS Statistics",
+	OSMO_STATS_CLASS_GLOBAL,
 	ARRAY_SIZE(bts_ctr_description),
 	bts_ctr_description,
 };
