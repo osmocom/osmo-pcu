@@ -32,6 +32,7 @@
 extern "C" {
 	#include <osmocom/core/talloc.h>
 	#include <osmocom/core/msgb.h>
+	#include <osmocom/core/stats.h>
 }
 
 #include <arpa/inet.h>
