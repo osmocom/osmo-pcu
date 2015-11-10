@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <osmocom/vty/logging.h>
+#include <osmocom/vty/stats.h>
 #include <osmocom/vty/misc.h>
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/rate_ctr.h>
@@ -805,6 +806,7 @@ int pcu_vty_init(const struct log_info *cat)
 //	install_element_ve(&show_pcu_cmd);
 
 	logging_vty_add_cmds(cat);
+	osmo_stats_vty_add_cmds(cat);
 
 	install_node(&pcu_node, config_write_pcu);
 	install_element(CONFIG_NODE, &cfg_pcu_cmd);

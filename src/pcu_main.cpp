@@ -32,6 +32,7 @@ extern "C" {
 #include "pcu_vty.h"
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
+#include <osmocom/core/stats.h>
 }
 
 extern struct gprs_nsvc *nsvc;
@@ -194,6 +195,7 @@ int main(int argc, char *argv[])
 	msgb_set_talloc_ctx(tall_pcu_ctx);
 
 	osmo_init_logging(&gprs_log_info);
+	osmo_stats_init(tall_pcu_ctx);
 	gprs_ns_set_log_ss(DNS);
 	bssgp_set_log_ss(DBSSGP);
 
