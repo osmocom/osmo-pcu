@@ -57,9 +57,9 @@ libgprs_la_SOURCES = \
 	rlc.cpp \
 	gprs_codel.c
 
-if ENABLE_SYSMOBTS
+if ENABLE_OSMOBTS
 libgprs_la_SOURCES += \
-	sysmo_sock.cpp
+	osmobts_sock.cpp
 else
 libgprs_la_SOURCES += \
 	openbts_sock.cpp

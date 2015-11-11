@@ -1,4 +1,4 @@
-/* sysmo_sock.cpp
+/* osmobts_sock.cpp
  *
  * Copyright (C) 2012 Andreas Eversberg <jolly@eversberg.eu>
  *
@@ -46,7 +46,7 @@ int l1if_close_pdch(void *obj);
 }
 
 /*
- * SYSMO-PCU socket functions
+ * osmo-bts PCU socket functions
  */
 
 struct pcu_sock_state {
@@ -236,7 +236,7 @@ int pcu_l1if_open(void)
 
 	bfd->fd = socket(AF_UNIX, SOCK_SEQPACKET, 0);
 	if (bfd->fd < 0) {
-		LOGP(DL1IF, LOGL_ERROR, "Failed to create PCU-SYSMO socket.\n");
+		LOGP(DL1IF, LOGL_ERROR, "Failed to create PCU socket.\n");
 		talloc_free(state);
 		return -1;
 	}
@@ -258,8 +258,8 @@ int pcu_l1if_open(void)
 #endif
 	rc = connect(bfd->fd, (struct sockaddr *) &local, namelen);
 	if (rc != 0) {
-		LOGP(DL1IF, LOGL_ERROR, "Failed to Connect the PCU-SYSMO "
-			"socket, delaying... '%s'\n", local.sun_path);
+		LOGP(DL1IF, LOGL_ERROR, "Failed to connect to the osmo-bts"
+			"PCU socket, delaying... '%s'\n", local.sun_path);
 		pcu_sock_state = state;
 		close(bfd->fd);
 		bfd->fd = -1;
@@ -280,7 +280,7 @@ int pcu_l1if_open(void)
 		return rc;
 	}
 
-	LOGP(DL1IF, LOGL_NOTICE, "PCU-SYSMO socket has been connected\n");
+	LOGP(DL1IF, LOGL_NOTICE, "osmo-bts PCU socket has been connected\n");
 
 	pcu_sock_state = state;
 
