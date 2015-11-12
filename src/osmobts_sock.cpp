@@ -261,7 +261,7 @@ int pcu_l1if_open(void)
 	rc = connect(bfd->fd, (struct sockaddr *) &local, namelen);
 	if (rc != 0) {
 		LOGP(DL1IF, LOGL_ERROR, "Failed to connect to the osmo-bts"
-			"PCU socket, delaying... '%s'\n", local.sun_path);
+			" PCU socket, delaying... '%s'\n", local.sun_path);
 		pcu_sock_state = state;
 		close(bfd->fd);
 		bfd->fd = -1;
