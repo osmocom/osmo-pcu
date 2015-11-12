@@ -224,6 +224,8 @@ int pcu_l1if_open(void)
 	unsigned int namelen;
 	int rc;
 
+	LOGP(DL1IF, LOGL_INFO, "Opening OsmoPCU L1 interface to OsmoBTS\n");
+
 	state = pcu_sock_state;
 	if (!state) {
 		state = talloc_zero(tall_pcu_ctx, struct pcu_sock_state);

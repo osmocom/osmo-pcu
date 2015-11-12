@@ -146,6 +146,8 @@ int pcu_l1if_open()
 	struct femtol1_hdl *fl1h;
 	int rc;
 
+	LOGP(DL1IF, LOGL_INFO, "Opening OsmoPCU L1 interface to OpenBTS\n");
+
 	/* allocate new femtol1_handle */
 	fl1h = talloc_zero(tall_pcu_ctx, struct femtol1_hdl);
 	INIT_LLIST_HEAD(&fl1h->wlc_list);
