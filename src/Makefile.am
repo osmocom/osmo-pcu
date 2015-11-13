@@ -55,15 +55,8 @@ libgprs_la_SOURCES = \
 	decoding.cpp \
 	llc.cpp \
 	rlc.cpp \
+	osmobts_sock.cpp \
 	gprs_codel.c
-
-if ENABLE_OSMOBTS
-libgprs_la_SOURCES += \
-	osmobts_sock.cpp
-else
-libgprs_la_SOURCES += \
-	openbts_sock.cpp
-endif
 
 bin_PROGRAMS = \
 	osmo-pcu

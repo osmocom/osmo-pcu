@@ -27,14 +27,6 @@ PKG_CHECK_MODULES(LIBOSMOVTY, libosmovty)
 PKG_CHECK_MODULES(LIBOSMOGSM, libosmogsm >= 0.3.3)
 PKG_CHECK_MODULES(LIBOSMOGB, libosmogb >= 0.5.1.4)
 
-AC_MSG_CHECKING([whether to enable support for the osmo-bts layer 1 support])
-AC_ARG_ENABLE(osmo-bts,
-		AC_HELP_STRING([--enable-osmo-bts],
-				[enable support for osmo-bts L1 if [default=no]]),
-		[enable_osmo_bts="$enableval"],[enable_osmo_bts="no"])
-AC_MSG_RESULT([$enable_osmo_bts])
-AM_CONDITIONAL(ENABLE_OSMOBTS, test "x$enable_osmo_bts" = "xyes")
-
 AC_MSG_CHECKING([whether to enable direct DSP access for PDCH of sysmocom-bts])
 AC_ARG_ENABLE(sysmocom-dsp,
 		AC_HELP_STRING([--enable-sysmocom-dsp],
