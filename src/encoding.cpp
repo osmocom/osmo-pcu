@@ -213,10 +213,10 @@ void Encoding::write_packet_uplink_assignment(
 #endif
 
 	bitvec_write_field(dest, wp,0x1,2); // Dynamic Allocation
-	
+
 	bitvec_write_field(dest, wp,0x0,1); // Extended Dynamic Allocation = off
 	bitvec_write_field(dest, wp,0x0,1); // P0 = off
-	
+
 	bitvec_write_field(dest, wp,0x0,1); // USF_GRANULARITY
 	bitvec_write_field(dest, wp,0x1,1); // switch TFI   : on
 	bitvec_write_field(dest, wp,tbf->tfi(),5);// TFI
@@ -228,7 +228,7 @@ void Encoding::write_packet_uplink_assignment(
 		bitvec_write_field(dest, wp,alpha,4);   // ALPHA
 	} else
 		bitvec_write_field(dest, wp,0x0,1); // Timeslot Allocation
-	
+
 	for (ts = 0; ts < 8; ts++) {
 		if (tbf->pdch[ts]) {
 			bitvec_write_field(dest, wp,0x1,1); // USF_TN(i): on
@@ -238,7 +238,7 @@ void Encoding::write_packet_uplink_assignment(
 		} else
 			bitvec_write_field(dest, wp,0x0,1); // USF_TN(i): off
 	}
-//	bitvec_write_field(dest, wp,0x0,1); // Measurement Mapping struct not present
+	//	bitvec_write_field(dest, wp,0x0,1); // Measurement Mapping struct not present
 }
 
 
