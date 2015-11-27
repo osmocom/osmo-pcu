@@ -450,7 +450,7 @@ static void test_tbf_exhaustion()
 
 		snprintf(imsi, sizeof(imsi), "001001%09d", i);
 
-		rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class,
+		rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class, 0,
 			delay_csec, buf, sizeof(buf));
 
 		if (rc < 0)
@@ -488,7 +488,7 @@ static void test_tbf_dl_llc_loss()
 
 	/* Handle LLC frame 1 */
 	memset(buf, 1, sizeof(buf));
-	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class,
+	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class, 0,
 		delay_csec, buf, sizeof(buf));
 	OSMO_ASSERT(rc >= 0);
 
@@ -498,7 +498,7 @@ static void test_tbf_dl_llc_loss()
 
 	/* Handle LLC frame 2 */
 	memset(buf, 2, sizeof(buf));
-	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class,
+	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class, 0,
 		delay_csec, buf, sizeof(buf));
 	OSMO_ASSERT(rc >= 0);
 
@@ -507,7 +507,7 @@ static void test_tbf_dl_llc_loss()
 
 	/* Handle LLC frame 3 */
 	memset(buf, 3, sizeof(buf));
-	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class,
+	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class, 0,
 		delay_csec, buf, sizeof(buf));
 	OSMO_ASSERT(rc >= 0);
 
@@ -693,7 +693,7 @@ static void send_dl_data(BTS *the_bts, uint32_t tlli, const char *imsi,
 
 	ms = the_bts->ms_store().get_ms(tlli, 0, imsi);
 
-	gprs_rlcmac_dl_tbf::handle(the_bts->bts_data(), tlli, 0, imsi, 0,
+	gprs_rlcmac_dl_tbf::handle(the_bts->bts_data(), tlli, 0, imsi, 0, 0,
 		1000, data, data_size);
 
 	ms = the_bts->ms_by_imsi(imsi);

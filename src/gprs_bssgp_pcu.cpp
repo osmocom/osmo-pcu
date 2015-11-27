@@ -148,6 +148,8 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 
 	/* parse ms radio access capability */
 	uint8_t ms_class = parse_ra_cap_ms_class(tp);
+	/* TODO: Get the EGPRS class from the CSN.1 RA capability */
+	uint8_t egprs_ms_class = 0;
 
 	/* get lifetime */
 	uint16_t delay_csec = 0xffff;
@@ -179,7 +181,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x IMSI: %s len: %d\n", tlli, imsi, len);
 
 	return gprs_rlcmac_dl_tbf::handle(the_pcu.bts, tlli, tlli_old, imsi,
-			ms_class, delay_csec, data, len);
+			ms_class, egprs_ms_class, delay_csec, data, len);
 }
 
 int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)

@@ -190,7 +190,8 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
  */
 int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 		const uint32_t tlli, const uint32_t tlli_old, const char *imsi,
-		const uint8_t ms_class, const uint16_t delay_csec,
+		const uint8_t ms_class, const uint8_t egprs_ms_class,
+		const uint16_t delay_csec,
 		const uint8_t *data, const uint16_t len)
 {
 	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
@@ -237,11 +238,12 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 
 	if (!dl_tbf) {
 		rc = tbf_new_dl_assignment(bts, imsi, tlli, tlli_old,
-			ms_class, 0, &dl_tbf);
+			ms_class, egprs_ms_class, &dl_tbf);
 		if (rc < 0)
 			return rc;
 	}
 
+	/* TODO: ms_class vs. egprs_ms_class is not handled here */
 	rc = dl_tbf->append_data(ms_class, delay_csec, data, len);
 	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
 	dl_tbf->assign_imsi(imsi);
