@@ -86,6 +86,19 @@ static const struct rate_ctr_group_desc bts_ctrg_desc = {
 	bts_ctr_description,
 };
 
+static const struct osmo_stat_item_desc bts_stat_item_description[] = {
+	{ "ms.present",		"MS Present           ",
+		OSMO_STAT_ITEM_NO_UNIT, 4, 0},
+};
+
+static const struct osmo_stat_item_group_desc bts_statg_desc = {
+	"bts",
+	"BTS Statistics",
+	OSMO_STATS_CLASS_GLOBAL,
+	ARRAY_SIZE(bts_stat_item_description),
+	bts_stat_item_description,
+};
+
 BTS* BTS::main_bts()
 {
 	return &s_bts;
@@ -132,6 +145,7 @@ BTS::BTS()
 	}
 
 	m_ratectrs = rate_ctr_group_alloc(tall_pcu_ctx, &bts_ctrg_desc, 0);
+	m_statg = osmo_stat_item_group_alloc(tall_pcu_ctx, &bts_statg_desc, 0);
 }
 
 BTS::~BTS()

@@ -22,6 +22,7 @@
 #include "gprs_ms_storage.h"
 
 #include "tbf.h"
+#include "bts.h"
 #include "gprs_debug.h"
 
 #define GPRS_UNDEFINED_IMSI "000"
@@ -45,6 +46,8 @@ GprsMsStorage::~GprsMsStorage()
 void GprsMsStorage::ms_idle(class GprsMs *ms)
 {
 	llist_del(&ms->list());
+	if (m_bts)
+		m_bts->ms_present(m_bts->ms_present_get() - 1);
 	if (ms->is_idle())
 		delete ms;
 }
@@ -90,6 +93,8 @@ GprsMs *GprsMsStorage::create_ms()
 
 	ms->set_callback(this);
 	llist_add(&ms->list(), &m_list);
+	if (m_bts)
+		m_bts->ms_present(m_bts->ms_present_get() + 1);
 
 	return ms;
 }

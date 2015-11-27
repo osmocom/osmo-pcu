@@ -25,6 +25,7 @@
 extern "C" {
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/rate_ctr.h>
+#include <osmocom/core/stat_item.h>
 #include <osmocom/core/timer.h>
 }
 
@@ -234,6 +235,10 @@ public:
 	};
 
 	enum {
+		STAT_MS_PRESENT,
+	};
+
+	enum {
 		TIMER_T3190_MSEC = 5000,
 	};
 
@@ -301,10 +306,14 @@ public:
 	void llc_frame_sched();
 	void rach_frame();
 
+	void ms_present(int32_t n);
+	int32_t ms_present_get();
+
 	/*
 	 * Below for C interface for the VTY
 	 */
 	struct rate_ctr_group *rate_counters() const;
+	struct osmo_stat_item_group *stat_items() const;
 
 private:
 	int m_cur_fn;
@@ -313,6 +322,7 @@ private:
 	PollController m_pollController;
 	SBAController m_sba;
 	struct rate_ctr_group *m_ratectrs;
+	struct osmo_stat_item_group *m_statg;
 
 	GprsMsStorage m_ms_store;
 
@@ -379,6 +389,11 @@ inline struct rate_ctr_group *BTS::rate_counters() const
 	return m_ratectrs;
 }
 
+inline struct osmo_stat_item_group *BTS::stat_items() const
+{
+	return m_statg;
+}
+
 #define CREATE_COUNT_INLINE(func_name, ctr_name) \
 	inline void BTS::func_name() {\
 		rate_ctr_inc(&m_ratectrs->ctr[ctr_name]); \
@@ -413,6 +428,17 @@ CREATE_COUNT_INLINE(rach_frame, CTR_RACH_REQUESTS);
 
 #undef CREATE_COUNT_INLINE
 
+#define CREATE_STAT_INLINE(func_name, func_name_get, stat_name) \
+	inline void BTS::func_name(int32_t val) {\
+		osmo_stat_item_set(m_statg->items[stat_name], val); \
+	} \
+	inline int32_t BTS::func_name_get() {\
+		return osmo_stat_item_get_last(m_statg->items[stat_name]); \
+	}
+
+CREATE_STAT_INLINE(ms_present, ms_present_get, STAT_MS_PRESENT);
+
+#undef CREATE_STAT_INLINE
 
 inline gprs_rlcmac_bts *gprs_rlcmac_pdch::bts_data() const
 {
@@ -430,6 +456,7 @@ extern "C" {
 #endif
 	struct gprs_rlcmac_bts *bts_main_data();
 	struct rate_ctr_group *bts_main_data_stats();
+	struct osmo_stat_item_group *bts_main_data_stat_items();
 #ifdef __cplusplus
 }
 
