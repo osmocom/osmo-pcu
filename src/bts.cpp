@@ -491,7 +491,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		// Create new TBF
 		#warning "Copy and pate with other routines.."
 		/* set class to 0, since we don't know the multislot class yet */
-		tbf = tbf_alloc_ul_tbf(&m_bts, NULL, -1, 0, 1);
+		tbf = tbf_alloc_ul_tbf(&m_bts, NULL, -1, 0, 0, 1);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 			/* FIXME: send reject */
@@ -580,13 +580,14 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 }
 
 
-GprsMs *BTS::ms_alloc(uint8_t ms_class)
+GprsMs *BTS::ms_alloc(uint8_t ms_class, uint8_t egprs_ms_class)
 {
 	GprsMs *ms;
 	ms = ms_store().create_ms();
 
 	ms->set_timeout(m_bts.ms_idle_sec);
 	ms->set_ms_class(ms_class);
+	ms->set_egprs_ms_class(egprs_ms_class);
 
 	return ms;
 }
@@ -968,7 +969,8 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 			"message, so we provide one:\n");
 
 		/* This call will register the new TBF with the MS on success */
-		tbf_alloc_ul(bts_data(), tbf->trx->trx_no, tbf->ms_class(),
+		tbf_alloc_ul(bts_data(), tbf->trx->trx_no,
+			tbf->ms_class(), tbf->ms()->egprs_ms_class(),
 			tbf->tlli(), tbf->ta(), tbf->ms());
 
 		/* schedule uplink assignment */
@@ -1053,7 +1055,8 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			LOGP(DRLCMAC, LOGL_NOTICE,
 				"MS supports EGPRS multislot class %d.\n",
 				egprs_ms_class);
-		ul_tbf = tbf_alloc_ul(bts_data(), trx_no(), ms_class, tlli, ta, ms);
+		ul_tbf = tbf_alloc_ul(bts_data(), trx_no(), ms_class,
+			egprs_ms_class, tlli, ta, ms);
 		if (!ul_tbf)
 			return;
 

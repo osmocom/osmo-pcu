@@ -39,12 +39,14 @@ int16_t spoof_mnc = 0, spoof_mcc = 0;
 static gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 		GprsMs *ms, gprs_rlcmac_tbf_direction dir,
 		uint8_t use_trx,
-		uint8_t ms_class, uint8_t single_slot)
+		uint8_t ms_class, uint8_t egprs_ms_class, uint8_t single_slot)
 {
 	if (dir == GPRS_RLCMAC_UL_TBF)
-		return tbf_alloc_ul_tbf(bts, ms, use_trx, ms_class, single_slot);
+		return tbf_alloc_ul_tbf(bts, ms, use_trx,
+			ms_class, egprs_ms_class, single_slot);
 	else
-		return tbf_alloc_dl_tbf(bts, ms, use_trx, ms_class, single_slot);
+		return tbf_alloc_dl_tbf(bts, ms, use_trx,
+			ms_class, egprs_ms_class, single_slot);
 }
 
 static void check_tfi_usage(BTS *the_bts)
@@ -131,7 +133,7 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 	 * least this part is working okay.
 	 */
 	for (i = 0; i < (int)ARRAY_SIZE(tbfs); ++i) {
-		tbfs[i] = tbf_alloc(bts, NULL, dir, -1, 0, 0);
+		tbfs[i] = tbf_alloc(bts, NULL, dir, -1, 0, 0, 0);
 		if (tbfs[i] == NULL)
 			break;
 
@@ -148,7 +150,7 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 		if (tbfs[i])
 			tbf_free(tbfs[i]);
 
-	tbfs[tfi] = tbf_alloc(bts, NULL, dir, -1, 0, 0);
+	tbfs[tfi] = tbf_alloc(bts, NULL, dir, -1, 0, 0, 0);
 	OSMO_ASSERT(tbfs[tfi]);
 	tbf_free(tbfs[tfi]);
 }
@@ -200,7 +202,7 @@ static void test_alloc_b(int ms_class)
 		trx->pdch[6].enable();
 		trx->pdch[7].enable();
 
-		ul_tbf = tbf_alloc_ul_tbf(bts, NULL, -1, ms_class, 1);
+		ul_tbf = tbf_alloc_ul_tbf(bts, NULL, -1, ms_class, 0, 1);
 		OSMO_ASSERT(ul_tbf);
 		OSMO_ASSERT(ul_tbf->ms());
 		OSMO_ASSERT(ul_tbf->ms()->current_trx());
@@ -208,7 +210,7 @@ static void test_alloc_b(int ms_class)
 		dump_assignment(ul_tbf, "UL");
 
 		/* assume final ack has not been sent */
-		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), trx_no, ms_class, 0);
+		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), trx_no, ms_class, 0, 0);
 		OSMO_ASSERT(dl_tbf);
 		dump_assignment(dl_tbf, "DL");
 
@@ -242,7 +244,7 @@ static void test_alloc_b(int ms_class)
 		trx->pdch[6].enable();
 		trx->pdch[7].enable();
 
-		dl_tbf = tbf_alloc_dl_tbf(bts, NULL, -1, ms_class, 1);
+		dl_tbf = tbf_alloc_dl_tbf(bts, NULL, -1, ms_class, 0, 1);
 		dl_tbf->update_ms(0x23, GPRS_RLCMAC_DL_TBF);
 		OSMO_ASSERT(dl_tbf);
 		OSMO_ASSERT(dl_tbf->ms());
@@ -250,7 +252,7 @@ static void test_alloc_b(int ms_class)
 		trx_no = dl_tbf->ms()->current_trx()->trx_no;
 		dump_assignment(dl_tbf, "DL");
 
-		ul_tbf = tbf_alloc_ul_tbf(bts, dl_tbf->ms(), trx_no, ms_class, 0);
+		ul_tbf = tbf_alloc_ul_tbf(bts, dl_tbf->ms(), trx_no, ms_class, 0, 0);
 		ul_tbf->update_ms(0x23, GPRS_RLCMAC_UL_TBF);
 		ul_tbf->m_contention_resolution_done = 1;
 		OSMO_ASSERT(ul_tbf);
@@ -292,7 +294,7 @@ static void test_alloc_b(int ms_class)
 
 		tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 		OSMO_ASSERT(tfi >= 0);
-		ul_tbf = tbf_alloc_ul_tbf(bts, NULL, .1, ms_class, 0);
+		ul_tbf = tbf_alloc_ul_tbf(bts, NULL, .1, ms_class, 0, 0);
 		OSMO_ASSERT(ul_tbf);
 		OSMO_ASSERT(ul_tbf->ms());
 		OSMO_ASSERT(ul_tbf->ms()->current_trx());
@@ -300,7 +302,7 @@ static void test_alloc_b(int ms_class)
 		dump_assignment(ul_tbf, "UL");
 
 		/* assume final ack has not been sent */
-		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), trx_no, ms_class, 0);
+		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), trx_no, ms_class, 0, 0);
 		OSMO_ASSERT(dl_tbf);
 		dump_assignment(dl_tbf, "DL");
 
@@ -355,14 +357,14 @@ static void test_alloc_b(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool 
 		ENABLE_PDCH(6, ts6, trx);
 		ENABLE_PDCH(7, ts7, trx);
 
-		ul_tbf = tbf_alloc_ul_tbf(bts, NULL, -1, ms_class, 1);
+		ul_tbf = tbf_alloc_ul_tbf(bts, NULL, -1, ms_class, 0, 1);
 		OSMO_ASSERT(ul_tbf->ms());
 		OSMO_ASSERT(ul_tbf->ms()->current_trx());
 		trx_no = ul_tbf->ms()->current_trx()->trx_no;
 		OSMO_ASSERT(ul_tbf);
 
 		/* assume final ack has not been sent */
-		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), trx_no, ms_class, 0);
+		dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), trx_no, ms_class, 0, 0);
 		OSMO_ASSERT(dl_tbf);
 
 		/* verify that both are on the same ts */
@@ -399,14 +401,14 @@ static void test_alloc_b(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool 
 		ENABLE_PDCH(6, ts6, trx);
 		ENABLE_PDCH(7, ts7, trx);
 
-		dl_tbf = tbf_alloc_dl_tbf(bts, NULL, -1, ms_class, 1);
+		dl_tbf = tbf_alloc_dl_tbf(bts, NULL, -1, ms_class, 0, 1);
 		OSMO_ASSERT(dl_tbf);
 		OSMO_ASSERT(dl_tbf->ms());
 		OSMO_ASSERT(dl_tbf->ms()->current_trx());
 		trx_no = dl_tbf->ms()->current_trx()->trx_no;
 		dl_tbf->update_ms(0x23, GPRS_RLCMAC_DL_TBF);
 
-		ul_tbf = tbf_alloc_ul_tbf(bts, dl_tbf->ms(), trx_no, ms_class, 0);
+		ul_tbf = tbf_alloc_ul_tbf(bts, dl_tbf->ms(), trx_no, ms_class, 0, 0);
 		OSMO_ASSERT(ul_tbf);
 		ul_tbf->update_ms(0x23, GPRS_RLCMAC_UL_TBF);
 		ul_tbf->m_contention_resolution_done = 1;
@@ -495,7 +497,7 @@ static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, unsigned ms_class,
 	case TEST_MODE_UL_AND_DL:
 		if (ms && ms->ul_tbf())
 			tbf_free(ms->ul_tbf());
-		tbf = tbf_alloc_ul_tbf(bts, ms, trx_no, ms_class, 0);
+		tbf = tbf_alloc_ul_tbf(bts, ms, trx_no, ms_class, 0, 0);
 		if (tbf == NULL)
 			return NULL;
 		break;
@@ -504,7 +506,7 @@ static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, unsigned ms_class,
 	case TEST_MODE_DL_AND_UL:
 		if (ms && ms->dl_tbf())
 			tbf_free(ms->dl_tbf());
-		tbf = tbf_alloc_dl_tbf(bts, ms, trx_no, ms_class, 0);
+		tbf = tbf_alloc_dl_tbf(bts, ms, trx_no, ms_class, 0, 0);
 		if (tbf == NULL)
 			return NULL;
 	}

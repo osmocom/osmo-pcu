@@ -17,7 +17,7 @@ Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL): trx = 0, ul_slots = 04, 
 The MS object cannot fully confirm an unexpected TLLI: 0x00002342, partly confirmed
 Modifying MS object, TLLI = 0x00002342, TA 0 -> 4
 ********** TBF starts here **********
-Allocating UL TBF: MS_CLASS=0
+Allocating UL TBF: MS_CLASS=0/0
 Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1371,7 +1371,7 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 MS requests UL TBF on RACH, so we provide one:
 ********** TBF starts here **********
-Allocating UL TBF: MS_CLASS=0
+Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
 Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -1449,7 +1449,7 @@ Searching for first unallocated TFI: TRX=0
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
 ********** TBF starts here **********
-Allocating UL TBF: MS_CLASS=1
+Allocating UL TBF: MS_CLASS=1/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Slot Allocation (Algorithm A) for class 1
@@ -1526,7 +1526,7 @@ Searching for first unallocated TFI: TRX=0
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
 ********** TBF starts here **********
-Allocating UL TBF: MS_CLASS=1
+Allocating UL TBF: MS_CLASS=1/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Slot Allocation (Algorithm A) for class 1
@@ -1647,7 +1647,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654292 (cu
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
 ********** TBF starts here **********
-Allocating UL TBF: MS_CLASS=1
+Allocating UL TBF: MS_CLASS=1/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Slot Allocation (Algorithm A) for class 1
@@ -1711,7 +1711,7 @@ Searching for first unallocated TFI: TRX=0
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
 ********** TBF starts here **********
-Allocating UL TBF: MS_CLASS=1
+Allocating UL TBF: MS_CLASS=1/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Slot Allocation (Algorithm A) for class 1
@@ -1799,7 +1799,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) restarting timer 3193 while old timer 0 pending 
 MS requests UL TBF in packet resource request of single block, so we provide one:
 ********** TBF starts here **********
-Allocating UL TBF: MS_CLASS=1
+Allocating UL TBF: MS_CLASS=1/0
 Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1868,7 +1868,7 @@ Searching for first unallocated TFI: TRX=0
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
 ********** TBF starts here **********
-Allocating UL TBF: MS_CLASS=1
+Allocating UL TBF: MS_CLASS=1/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Slot Allocation (Algorithm A) for class 1
@@ -1945,7 +1945,7 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 MS requests UL TBF on RACH, so we provide one:
 ********** TBF starts here **********
-Allocating UL TBF: MS_CLASS=0
+Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
 Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -2005,7 +2005,7 @@ Searching for first unallocated TFI: TRX=0
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
 ********** TBF starts here **********
-Allocating UL TBF: MS_CLASS=1
+Allocating UL TBF: MS_CLASS=1/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Slot Allocation (Algorithm A) for class 1

@@ -128,6 +128,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 				const char *imsi,
 				const uint32_t tlli, const uint32_t tlli_old,
 				const uint8_t ms_class,
+				const uint8_t egprs_ms_class,
 				struct gprs_rlcmac_dl_tbf **tbf)
 {
 	uint8_t ss;
@@ -161,7 +162,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	// Create new TBF (any TRX)
 #warning "Copy and paste with alloc_ul_tbf"
 	/* set number of downlink slots according to multislot class */
-	dl_tbf = tbf_alloc_dl_tbf(bts, ms, use_trx, ms_class, ss);
+	dl_tbf = tbf_alloc_dl_tbf(bts, ms, use_trx, ms_class, egprs_ms_class, ss);
 
 	if (!dl_tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
@@ -235,8 +236,8 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 	}
 
 	if (!dl_tbf) {
-		rc = tbf_new_dl_assignment(bts, imsi, tlli, tlli_old, ms_class,
-			&dl_tbf);
+		rc = tbf_new_dl_assignment(bts, imsi, tlli, tlli_old,
+			ms_class, 0, &dl_tbf);
 		if (rc < 0)
 			return rc;
 	}

@@ -271,7 +271,7 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction di
 }
 
 gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
-	int8_t use_trx, uint8_t ms_class,
+	int8_t use_trx, uint8_t ms_class, uint8_t egprs_ms_class,
 	uint32_t tlli, uint8_t ta, GprsMs *ms)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
@@ -279,7 +279,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 #warning "Copy and paste with tbf_new_dl_assignment"
 	/* create new TBF, use same TRX as DL TBF */
 	/* use multislot class of downlink TBF */
-	tbf = tbf_alloc_ul_tbf(bts, ms, use_trx, ms_class, 0);
+	tbf = tbf_alloc_ul_tbf(bts, ms, use_trx, ms_class, egprs_ms_class, 0);
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */
@@ -537,7 +537,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 
 static int setup_tbf(struct gprs_rlcmac_tbf *tbf,
 	GprsMs *ms, int8_t use_trx,
-	uint8_t ms_class, uint8_t single_slot)
+	uint8_t ms_class, uint8_t egprs_ms_class, uint8_t single_slot)
 {
 	int rc;
 	struct gprs_rlcmac_bts *bts;
@@ -594,14 +594,14 @@ static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
 
 struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	GprsMs *ms, int8_t use_trx,
-	uint8_t ms_class, uint8_t single_slot)
+	uint8_t ms_class, uint8_t egprs_ms_class, uint8_t single_slot)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
 	int rc;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
-	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d\n",
-		"UL", ms_class);
+	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d/%d\n",
+		"UL", ms_class, egprs_ms_class);
 
 	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 
@@ -612,9 +612,9 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	new (tbf) gprs_rlcmac_ul_tbf(bts->bts);
 
 	if (!ms)
-		ms = bts->bts->ms_alloc(ms_class);
+		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class);
 
-	rc = setup_tbf(tbf, ms, use_trx, ms_class, single_slot);
+	rc = setup_tbf(tbf, ms, use_trx, ms_class, egprs_ms_class, single_slot);
 	/* if no resource */
 	if (rc < 0) {
 		talloc_free(tbf);
@@ -656,7 +656,7 @@ static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
 
 struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	GprsMs *ms, int8_t use_trx,
-	uint8_t ms_class, uint8_t single_slot)
+	uint8_t ms_class, uint8_t egprs_ms_class, uint8_t single_slot)
 {
 	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;
@@ -674,9 +674,9 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	new (tbf) gprs_rlcmac_dl_tbf(bts->bts);
 
 	if (!ms)
-		ms = bts->bts->ms_alloc(ms_class);
+		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class);
 
-	rc = setup_tbf(tbf, ms, use_trx, ms_class, single_slot);
+	rc = setup_tbf(tbf, ms, use_trx, ms_class, 0, single_slot);
 	/* if no resource */
 	if (rc < 0) {
 		talloc_free(tbf);
@@ -971,7 +971,8 @@ int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
 	bts->tbf_reused();
 
 	new_tbf = tbf_alloc_dl_tbf(bts->bts_data(), ms(),
-		this->trx->trx_no, ms_class(), 0);
+		this->trx->trx_no, ms_class(),
+		ms() ?  ms()->egprs_ms_class() : 0, 0);
 
 	if (!new_tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");

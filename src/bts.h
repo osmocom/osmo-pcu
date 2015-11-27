@@ -275,7 +275,7 @@ public:
 	GprsMsStorage &ms_store();
 	GprsMs *ms_by_tlli(uint32_t tlli, uint32_t old_tlli = 0);
 	GprsMs *ms_by_imsi(const char *imsi);
-	GprsMs *ms_alloc(uint8_t ms_class);
+	GprsMs *ms_alloc(uint8_t ms_class, uint8_t egprs_ms_class = 0);
 
 	/*
 	 * Statistics
