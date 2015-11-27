@@ -164,6 +164,11 @@ struct gprs_rlcmac_tbf {
 	uint8_t dl_slots() const;
 	uint8_t ul_slots() const;
 
+	/* EGPRS */
+	bool is_egprs_enabled() const;
+	void enable_egprs();
+	void disable_egprs();
+
 	/* attempt to make things a bit more fair */
 	void rotate_in_list();
 
@@ -246,6 +251,7 @@ protected:
 
 private:
 	LListHead<gprs_rlcmac_tbf> m_ms_list;
+	bool m_egprs_enabled;
 
 	mutable char m_name_buf[60];
 };
@@ -315,6 +321,21 @@ inline time_t gprs_rlcmac_tbf::created_ts() const
 	return m_created_ts;
 }
 
+inline bool gprs_rlcmac_tbf::is_egprs_enabled() const
+{
+	return m_egprs_enabled;
+}
+
+inline void gprs_rlcmac_tbf::enable_egprs()
+{
+	m_egprs_enabled = true;
+}
+
+inline void gprs_rlcmac_tbf::disable_egprs()
+{
+	m_egprs_enabled = false;
+}
+
 struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_dl_tbf(BTS *bts);
 
@@ -339,6 +360,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int frames_since_last_drain(unsigned fn) const;
 	bool keep_open(unsigned fn) const;
 	int release();
+	void enable_egprs();
 
 	bool is_control_ts(uint8_t ts) const {
 		return ts == control_ts;

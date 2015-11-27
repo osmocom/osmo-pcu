@@ -74,7 +74,8 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	m_ms(NULL),
 	m_ta(0),
 	m_ms_class(0),
-	m_ms_list(this)
+	m_ms_list(this),
+	m_egprs_enabled(false)
 {
 	/* The classes of these members do not have proper constructors yet.
 	 * Just set them to 0 like talloc_zero did */
@@ -1060,10 +1061,11 @@ const char *gprs_rlcmac_tbf::name() const
 		return "(no TBF)";
 
 	snprintf(m_name_buf, sizeof(m_name_buf) - 1,
-		"TBF(TFI=%d TLLI=0x%08x DIR=%s STATE=%s)",
+		"TBF(TFI=%d TLLI=0x%08x DIR=%s STATE=%s%s)",
 		m_tfi, tlli(),
 		direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
-		state_name()
+		state_name(),
+		is_egprs_enabled() ? " EGPRS" : ""
 		);
 	m_name_buf[sizeof(m_name_buf) - 1] = '\0';
 	return m_name_buf;
