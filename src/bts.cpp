@@ -1158,9 +1158,37 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	if (cs.isGprs())
 		return rcv_block_gprs(data, fn, meas, cs);
 
+	if (cs.isEgprs())
+		return rcv_block_egprs(data, fn, meas, cs);
+
 	bts()->decode_error();
 	LOGP(DRLCMACUL, LOGL_ERROR, "Unsupported coding scheme %s\n",
 		cs.name());
+	return -EINVAL;
+}
+
+int gprs_rlcmac_pdch::rcv_block_egprs(uint8_t *data, uint32_t fn,
+	struct pcu_l1_meas *meas, GprsCodingScheme cs)
+{
+	if (!bts()->bts_data()->egprs_enabled) {
+		LOGP(DRLCMACUL, LOGL_ERROR,
+			"Got %s RLC block but EGPRS is not enabled\n",
+			cs.name());
+		return -EINVAL;
+	}
+
+	if (!cs.isEgprsGmsk()) {
+		LOGP(DRLCMACUL, LOGL_ERROR,
+			"Got %s RLC block but EGPRS is not implemented for 8PSK yet\n",
+			cs.name());
+		bts()->decode_error();
+		return -EINVAL;
+	}
+
+	LOGP(DRLCMACUL, LOGL_ERROR,
+		"Got %s RLC block but EGPRS decoding is not implemented yet\n",
+		cs.name());
+	bts()->decode_error();
 	return -EINVAL;
 }
 
