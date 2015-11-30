@@ -191,6 +191,8 @@ int main(int argc, char *argv[])
 	bts->cs_downgrade_threshold = 200;
 
 	bts->llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
+	bts->dl_tbf_idle_msec = 2000;
+	bts->llc_idle_ack_csec = 10;
 
 	msgb_set_talloc_ctx(tall_pcu_ctx);
 
