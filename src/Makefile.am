@@ -56,7 +56,8 @@ libgprs_la_SOURCES = \
 	llc.cpp \
 	rlc.cpp \
 	osmobts_sock.cpp \
-	gprs_codel.c
+	gprs_codel.c \
+	gprs_coding_scheme.cpp
 
 bin_PROGRAMS = \
 	osmo-pcu
@@ -94,7 +95,8 @@ noinst_HEADERS = \
 	llc.h \
 	pcu_utils.h \
 	cxx_linuxlist.h \
-	gprs_codel.h
+	gprs_codel.h \
+	gprs_coding_scheme.h
 
 osmo_pcu_SOURCES = pcu_main.cpp
 
