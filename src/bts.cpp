@@ -727,7 +727,7 @@ void gprs_rlcmac_pdch::add_paging(struct gprs_rlcmac_paging *pag)
  *
  * The blocks are defragmented and forwarded as LLC frames, if complete.
  */
-int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len,
+int gprs_rlcmac_pdch::rcv_data_block_acknowledged_gprs(uint8_t *data, uint8_t len,
 	struct pcu_l1_meas *meas)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
@@ -741,7 +741,7 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len,
 		return 0;
 	}
 
-	return tbf->rcv_data_block_acknowledged(data, len, meas);
+	return tbf->rcv_data_block_acknowledged_gprs(data, len, meas);
 }
 
 void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet, uint32_t fn)
@@ -1202,7 +1202,7 @@ int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint32_t fn,
 
 	switch (payload) {
 	case GPRS_RLCMAC_DATA_BLOCK:
-		rc = rcv_data_block_acknowledged(data, len, meas);
+		rc = rcv_data_block_acknowledged_gprs(data, len, meas);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK:
 		block = bitvec_alloc(len);

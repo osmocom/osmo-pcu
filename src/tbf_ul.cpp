@@ -262,7 +262,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn)
 	return msg;
 }
 
-int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(const uint8_t *data,
+int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged_gprs(const uint8_t *data,
 	size_t len, struct pcu_l1_meas *meas)
 {
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;

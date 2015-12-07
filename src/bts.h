@@ -103,7 +103,7 @@ struct gprs_rlcmac_pdch {
 
 #ifdef __cplusplus
 private:
-	int rcv_data_block_acknowledged(uint8_t *data, uint8_t len,
+	int rcv_data_block_acknowledged_gprs(uint8_t *data, uint8_t len,
 		struct pcu_l1_meas *meas);
 	int rcv_control_block(bitvec *rlc_block, uint32_t fn);
 
