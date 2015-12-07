@@ -1,7 +1,7 @@
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/
 AM_LDFLAGS = -lrt
 
-check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest tbf/TbfTest types/TypesTest ms/MsTest llist/LListTest llc/LlcTest codel/codel_test
+check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest tbf/TbfTest types/TypesTest ms/MsTest llist/LListTest llc/LlcTest codel/codel_test edge/EdgeTest
 noinst_PROGRAMS = emu/pcu_emu
 
 rlcmac_RLCMACTest_SOURCES = rlcmac/RLCMACTest.cpp
@@ -20,6 +20,14 @@ alloc_AllocTest_LDADD = \
 
 tbf_TbfTest_SOURCES = tbf/TbfTest.cpp
 tbf_TbfTest_LDADD = \
+	$(top_builddir)/src/libgprs.la \
+	$(LIBOSMOGB_LIBS) \
+	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCORE_LIBS) \
+	$(COMMON_LA)
+
+edge_EdgeTest_SOURCES = edge/EdgeTest.cpp
+edge_EdgeTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
@@ -104,7 +112,8 @@ EXTRA_DIST = \
 	ms/MsTest.ok ms/MsTest.err \
 	llc/LlcTest.ok llc/LlcTest.err \
 	llist/LListTest.ok llist/LListTest.err \
-	codel/codel_test.ok
+	codel/codel_test.ok \
+	edge/EdgeTest.ok
 
 DISTCLEANFILES = atconfig
 
