@@ -1170,6 +1170,14 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 int gprs_rlcmac_pdch::rcv_block_egprs(uint8_t *data, uint32_t fn,
 	struct pcu_l1_meas *meas, GprsCodingScheme cs)
 {
+	int rc;
+	struct gprs_rlc_ul_header_egprs rlc_dec;
+	struct gprs_rlcmac_ul_tbf *tbf;
+	unsigned len = cs.maxBytesUL();
+
+	/* These are always data blocks, since EGPRS still uses CS-1 for
+	 * control blocks (see 44.060, section 10.3, 1st par.)
+	 */
 	if (!bts()->bts_data()->egprs_enabled) {
 		LOGP(DRLCMACUL, LOGL_ERROR,
 			"Got %s RLC block but EGPRS is not enabled\n",
@@ -1185,11 +1193,32 @@ int gprs_rlcmac_pdch::rcv_block_egprs(uint8_t *data, uint32_t fn,
 		return -EINVAL;
 	}
 
-	LOGP(DRLCMACUL, LOGL_ERROR,
-		"Got %s RLC block but EGPRS decoding is not implemented yet\n",
-		cs.name());
-	bts()->decode_error();
-	return -EINVAL;
+	rc = Decoding::rlc_parse_ul_data_header(&rlc_dec, data, cs);
+	if (rc < 0) {
+		LOGP(DRLCMACUL, LOGL_ERROR,
+			"Got %s RLC block but header parsing has failed\n",
+			cs.name());
+		bts()->decode_error();
+		return rc;
+	}
+
+	LOGP(DRLCMACUL, LOGL_INFO,
+		"Got %s RLC block: "
+		"R=%d, SI=%d, TFI=%d, CPS=%d, RSB=%d, "
+		"rc=%d\n",
+		cs.name(),
+		rlc_dec.r, rlc_dec.si, rlc_dec.tfi, rlc_dec.cps, rlc_dec.rsb,
+		rc);
+
+	/* find TBF inst from given TFI */
+	tbf = ul_tbf_by_tfi(rlc_dec.tfi);
+	if (!tbf) {
+		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA unknown TFI=%d\n",
+			rlc_dec.tfi);
+		return 0;
+	}
+
+	return tbf->rcv_data_block_acknowledged(&rlc_dec, data, len, meas);
 }
 
 int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint32_t fn,
