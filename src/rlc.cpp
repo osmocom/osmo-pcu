@@ -20,6 +20,8 @@
 #include "bts.h"
 #include "gprs_debug.h"
 
+#include <errno.h>
+
 extern "C" {
 #include <osmocom/core/utils.h>
 }

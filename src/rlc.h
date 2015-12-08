@@ -19,6 +19,8 @@
  */
 #pragma once
 
+#include "gprs_coding_scheme.h"
+
 #include <osmocom/core/endian.h>
 
 #include <stdint.h>
@@ -52,6 +54,28 @@ static inline uint16_t mod_sns_half()
 {
 	return (RLC_MAX_SNS / 2) - 1;
 }
+
+struct gprs_rlc_ul_data_block_info {
+	unsigned int data_len; /* EGPRS: N2, GPRS: N2-2, N-2 */
+	unsigned int bsn;
+	unsigned int ti;
+	unsigned int e;
+	unsigned int cv;
+	unsigned int pi;
+	unsigned int spb;
+};
+
+struct gprs_rlc_ul_header_egprs {
+	GprsCodingScheme cs;
+	unsigned int r;
+	unsigned int si;
+	unsigned int tfi;
+	unsigned int cps;
+	unsigned int rsb;
+	unsigned int num_data_blocks;
+	unsigned int data_offs_bits[2];
+	struct gprs_rlc_ul_data_block_info block_info[2];
+};
 
 struct gprs_rlc_data {
 	uint8_t *prepare(size_t block_data_length);
@@ -218,6 +242,28 @@ struct rlc_li_field {
 	uint8_t	e:1,
 		 m:1,
 		 li:6;
+} __attribute__ ((packed));
+
+struct rlc_li_field_egprs {
+	uint8_t	e:1,
+		 li:7;
+} __attribute__ ((packed));
+
+struct gprs_rlc_ul_header_egprs_3 {
+	uint8_t r:1,
+		si:1,
+		cv:4,
+		tfi_a:2;
+	uint8_t tfi_b:3,
+		bsn1_a:5;
+	uint8_t bsn1_b:6,
+		cps_a:2;
+	uint8_t cps_b:2,
+		spb:2,
+		rsb:1,
+		pi:1,
+		spare:1,
+		dummy:1;
 } __attribute__ ((packed));
 #else
 #  error "Only little endian headers are supported yet. TODO: add missing structs"
