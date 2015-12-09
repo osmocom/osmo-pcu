@@ -66,7 +66,7 @@ struct gprs_rlcmac_pdch {
 		struct pcu_l1_meas *meas);
 	int rcv_block_gprs(uint8_t *data, uint32_t fn,
 		struct pcu_l1_meas *meas, GprsCodingScheme cs);
-	int rcv_block_egprs(uint8_t *data, uint32_t fn,
+	int rcv_data_block(uint8_t *data, uint32_t fn,
 		struct pcu_l1_meas *meas, GprsCodingScheme cs);
 
 	gprs_rlcmac_bts *bts_data() const;

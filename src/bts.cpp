@@ -1159,7 +1159,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 		return rcv_block_gprs(data, fn, meas, cs);
 
 	if (cs.isEgprs())
-		return rcv_block_egprs(data, fn, meas, cs);
+		return rcv_data_block(data, fn, meas, cs);
 
 	bts()->decode_error();
 	LOGP(DRLCMACUL, LOGL_ERROR, "Unsupported coding scheme %s\n",
@@ -1167,7 +1167,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	return -EINVAL;
 }
 
-int gprs_rlcmac_pdch::rcv_block_egprs(uint8_t *data, uint32_t fn,
+int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint32_t fn,
 	struct pcu_l1_meas *meas, GprsCodingScheme cs)
 {
 	int rc;
@@ -1178,19 +1178,22 @@ int gprs_rlcmac_pdch::rcv_block_egprs(uint8_t *data, uint32_t fn,
 	/* These are always data blocks, since EGPRS still uses CS-1 for
 	 * control blocks (see 44.060, section 10.3, 1st par.)
 	 */
-	if (!bts()->bts_data()->egprs_enabled) {
-		LOGP(DRLCMACUL, LOGL_ERROR,
-			"Got %s RLC block but EGPRS is not enabled\n",
-			cs.name());
-		return -EINVAL;
-	}
+	if (cs.isEgprs()) {
+		if (!bts()->bts_data()->egprs_enabled) {
+			LOGP(DRLCMACUL, LOGL_ERROR,
+				"Got %s RLC block but EGPRS is not enabled\n",
+				cs.name());
+			return -EINVAL;
+		}
 
-	if (!cs.isEgprsGmsk()) {
-		LOGP(DRLCMACUL, LOGL_ERROR,
-			"Got %s RLC block but EGPRS is not implemented for 8PSK yet\n",
-			cs.name());
-		bts()->decode_error();
-		return -EINVAL;
+		if (!cs.isEgprsGmsk()) {
+			LOGP(DRLCMACUL, LOGL_ERROR,
+				"Got %s RLC block but EGPRS is not implemented "
+				"for 8PSK yet\n",
+				cs.name());
+			bts()->decode_error();
+			return -EINVAL;
+		}
 	}
 
 	rc = Decoding::rlc_parse_ul_data_header(&rlc_dec, data, cs);
@@ -1231,7 +1234,7 @@ int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint32_t fn,
 
 	switch (payload) {
 	case GPRS_RLCMAC_DATA_BLOCK:
-		rc = rcv_data_block_acknowledged_gprs(data, len, meas);
+		rc = rcv_data_block(data, fn, meas, cs);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK:
 		block = bitvec_alloc(len);
