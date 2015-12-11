@@ -1394,11 +1394,13 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 03 8b 29 07 00 c8 00 10 0b 2b 2b 2b 2b 2b 2b 2b 
 Got RLC block, coding scheme: CS-1, length: 23 (23))
+  UL data: 00 01 01 f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=0, BSN=0, SPB=0, PI=0, E=1, TI=1, bitoffs=24
 - BSN 0 storing in window (0..63)
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): data_length=20, data=f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Decoded premier TLLI=0x00000000 of UL DATA TFI=0.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 - Raising V(R) to 1
@@ -1485,11 +1487,13 @@ RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control A
 TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
 Got RLC block, coding scheme: CS-1, length: 23 (23))
+  UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 - Raising V(R) to 1
 - Taking block 0 out, raising V(Q) to 1
 - Assembling frames: (len=20)
@@ -1566,11 +1570,13 @@ RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control A
 TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
 Got RLC block, coding scheme: CS-1, length: 23 (23))
+  UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 - Raising V(R) to 1
 - Taking block 0 out, raising V(Q) to 1
 - Assembling frames: (len=20)
@@ -1693,11 +1699,13 @@ RX: [PCU <- BTS] TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) Packet Control A
 TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN)
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
 Got RLC block, coding scheme: CS-1, length: 23 (23))
+  UL data: 3c 02 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=1, CPS=0, RSB=0, rc=184
 UL DATA TFI=1 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 - Raising V(R) to 1
 - Taking block 0 out, raising V(Q) to 1
 - Assembling frames: (len=20)
@@ -1760,11 +1768,13 @@ RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control A
 TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
 Got RLC block, coding scheme: CS-1, length: 23 (23))
+  UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 - Raising V(R) to 1
 - Taking block 0 out, raising V(Q) to 1
 - Assembling frames: (len=20)
@@ -1867,11 +1877,13 @@ Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer 0.
 Got RLC block, coding scheme: CS-1, length: 23 (23))
+  UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 - Raising V(R) to 1
 - Taking block 0 out, raising V(Q) to 1
 - Assembling frames: (len=20)
@@ -1925,11 +1937,13 @@ RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control A
 TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
 Got RLC block, coding scheme: CS-1, length: 23 (23))
+  UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 - Raising V(R) to 1
 - Taking block 0 out, raising V(Q) to 1
 - Assembling frames: (len=20)
@@ -1994,11 +2008,13 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 03 8b ed 07 00 c8 00 10 0b 2b 2b 2b 2b 2b 2b 2b 
 Got RLC block, coding scheme: CS-1, length: 23 (23))
+  UL data: 00 01 01 f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=0, BSN=0, SPB=0, PI=0, E=1, TI=1, bitoffs=24
 - BSN 0 storing in window (0..63)
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): data_length=20, data=f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Decoded premier TLLI=0x00000000 of UL DATA TFI=0.
 Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=ASSIGN)
@@ -2067,11 +2083,13 @@ RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control A
 TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
 Got RLC block, coding scheme: CS-1, length: 23 (23))
+  UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 - Raising V(R) to 1
 - Taking block 0 out, raising V(Q) to 1
 - Assembling frames: (len=20)

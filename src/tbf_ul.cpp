@@ -242,6 +242,9 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 			Decoding::rlc_copy_to_aligned_buffer(rlc, block_idx, data,
 				rlc_data);
 
+		LOGP(DRLCMACUL, LOGL_DEBUG,
+			"%s: data_length=%d, data=%s\n",
+			name(), block->len, osmo_hexdump(rlc_data, block->len));
 
 		/* TODO: Handle SPB != 0 -> set state to partly received
 		 * (upper/lower) and continue with the loop, unless the other

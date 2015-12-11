@@ -1180,6 +1180,8 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint32_t fn,
 		}
 	}
 
+	LOGP(DRLCMACUL, LOGL_DEBUG, "  UL data: %s\n", osmo_hexdump(data, len));
+
 	rc = Decoding::rlc_parse_ul_data_header(&rlc_dec, data, cs);
 	if (rc < 0) {
 		LOGP(DRLCMACUL, LOGL_ERROR,
