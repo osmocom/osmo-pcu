@@ -140,7 +140,7 @@ static struct msgb *sched_select_ctrl_msg(
 			continue;
 		}
 
-		pdch->next_ctrl_prio += i + 1;
+		pdch->next_ctrl_prio += 1;
 		pdch->next_ctrl_prio %= 3;
 		break;
 	}
