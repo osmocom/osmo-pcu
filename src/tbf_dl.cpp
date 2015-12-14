@@ -42,16 +42,6 @@ extern "C" {
 /* After sending these frames, we poll for ack/nack. */
 #define POLL_ACK_AFTER_FRAMES 20
 
-
-static const struct gprs_rlcmac_cs gprs_rlcmac_cs[] = {
-/*	frame length	data block	max payload */
-	{ 0,		0,		0  },
-	{ 23,		23,		20 }, /* CS-1 */
-	{ 34,		33,		30 }, /* CS-2 */
-	{ 40,		39,		36 }, /* CS-3 */
-	{ 54,		53,		50 }, /* CS-4 */
-};
-
 extern "C" {
 int bssgp_tx_llc_discarded(struct bssgp_bvc_ctx *bctx, uint32_t tlli,
                            uint8_t num_frames, uint32_t num_octets);
@@ -435,23 +425,26 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 	uint16_t space, chunk;
 	gprs_rlc_data *rlc_data;
 	const uint16_t bsn = m_window.v_s();
-	uint8_t cs = 1;
+	uint8_t cs_n = 1;
 
 	if (m_llc.frame_length() == 0)
 		schedule_next_frame();
 
-	cs = current_cs();
+	cs_n = current_cs();
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d, CS=%d\n",
-		m_window.v_s(), cs);
+		m_window.v_s(), cs_n);
 
-	OSMO_ASSERT(cs >= 1);
-	OSMO_ASSERT(cs <= 4);
+	OSMO_ASSERT(cs_n >= 1);
+	OSMO_ASSERT(cs_n <= 4);
+
+	/* TODO: Use GprsCodingScheme everywhere and remove cast */
+	GprsCodingScheme cs((GprsCodingScheme::Scheme)cs_n);
 
 	/* total length of block, including spare bits */
-	const uint8_t block_length = gprs_rlcmac_cs[cs].block_length;
+	const uint8_t block_length = cs.sizeDL();
 	/* length of usable data of block, w/o spare bits, inc. MAC */
-	const uint8_t block_data_len = gprs_rlcmac_cs[cs].block_data;
+	const uint8_t block_data_len = cs.maxBytesDL();
 
 	/* now we still have untransmitted LLC data, so we fill mac block */
 	rlc_data = m_rlc.block(bsn);
@@ -755,7 +748,8 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 
 		/* Get statistics for current CS */
 
-		if (rlc_data->cs != current_cs()) {
+		/* TODO: Use GprsCodingScheme everywhere and remove cast */
+		if (rlc_data->cs != (GprsCodingScheme::Scheme)current_cs()) {
 			/* This block has already been encoded with a different
 			 * CS, so it doesn't help us to decide, whether the
 			 * current CS is ok. Ignore it. */
