@@ -992,30 +992,13 @@ int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
 	return 0;
 }
 
-int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
+int gprs_rlcmac_tbf::set_tlli_from_ul(uint32_t new_tlli)
 {
 	struct gprs_rlcmac_tbf *dl_tbf = NULL;
 	struct gprs_rlcmac_tbf *ul_tbf = NULL;
-	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
-	uint32_t new_tlli;
-	int rc;
 	GprsMs *old_ms;
 
 	OSMO_ASSERT(direction == GPRS_RLCMAC_UL_TBF);
-
-	/* no TLLI yet */
-	if (!rh->ti) {
-		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d without "
-			"TLLI, but no TLLI received yet\n", rh->tfi);
-		return 0;
-	}
-	rc = Decoding::tlli_from_ul_data(data, len, &new_tlli);
-	if (rc) {
-		bts->decode_error();
-		LOGP(DRLCMACUL, LOGL_NOTICE, "Failed to decode TLLI "
-		"of UL DATA TFI=%d.\n", rh->tfi);
-		return 0;
-	}
 
 	old_ms = bts->ms_by_tlli(new_tlli);
 	/* Keep the old MS object for the update_ms() */
@@ -1036,8 +1019,6 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 
 	/* The TLLI has been taken from an UL message */
 	update_ms(new_tlli, GPRS_RLCMAC_UL_TBF);
-	LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
-		"UL DATA TFI=%d.\n", tlli(), rh->tfi);
 	if (dl_tbf && dl_tbf->ms() != ms()) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 			"TLLI=0x%08x while %s still exists. "
@@ -1055,6 +1036,33 @@ int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
 		ul_tbf = NULL;
 	}
 	return 1;
+}
+
+int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
+{
+	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
+	uint32_t new_tlli;
+	int rc;
+
+	OSMO_ASSERT(direction == GPRS_RLCMAC_UL_TBF);
+
+	/* no TLLI yet */
+	if (!rh->ti) {
+		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d without "
+			"TLLI, but no TLLI received yet\n", rh->tfi);
+		return 0;
+	}
+	rc = Decoding::tlli_from_ul_data(data, len, &new_tlli);
+	if (rc) {
+		bts->decode_error();
+		LOGP(DRLCMACUL, LOGL_NOTICE, "Failed to decode TLLI "
+		"of UL DATA TFI=%d.\n", rh->tfi);
+		return 0;
+	}
+	LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
+		"UL DATA TFI=%d.\n", new_tlli, rh->tfi);
+
+	return set_tlli_from_ul(new_tlli);
 }
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf)
