@@ -424,8 +424,13 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	/* blocks were acked */
 	int rcv_data_block_acknowledged_gprs(const uint8_t *data, size_t len,
 		struct pcu_l1_meas *meas);
+	int rcv_data_block_acknowledged(
+		const struct gprs_rlc_ul_header_egprs *rlc,
+		uint8_t *data, uint8_t len, struct pcu_l1_meas *meas);
+
 
 	/* TODO: extract LLC class? */
+	int assemble_forward_llc_gprs(const gprs_rlc_data *data);
 	int assemble_forward_llc(const gprs_rlc_data *data);
 	int snd_ul_ud();
 
@@ -443,6 +448,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 
 protected:
 	void maybe_schedule_uplink_acknack(const rlc_ul_header *rh);
+	void maybe_schedule_uplink_acknack(const gprs_rlc_ul_header_egprs *rlc);
 };
 
 inline enum gprs_rlcmac_tbf_direction reverse(enum gprs_rlcmac_tbf_direction dir)

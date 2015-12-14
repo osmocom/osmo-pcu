@@ -86,6 +86,7 @@ struct gprs_rlc_data {
 	/* block len of history */
 	uint8_t len;
 
+	struct gprs_rlc_ul_data_block_info block_info;
 	GprsCodingScheme cs;
 };
 
