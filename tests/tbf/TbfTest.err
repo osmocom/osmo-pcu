@@ -1393,6 +1393,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x03, Fn=2654167 (17,25,9)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 03 8b 29 07 00 c8 00 10 0b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Decoded premier TLLI=0xf1223344 of UL DATA TFI=0.
@@ -1445,6 +1446,7 @@ TX: Immediate Assignment Uplink (AGCH)
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -1476,11 +1478,13 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 8f 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control Ack
 TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 - BSN 0 storing in window (0..63)
@@ -1522,6 +1526,7 @@ TX: Immediate Assignment Uplink (AGCH)
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -1553,11 +1558,13 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 8f 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control Ack
 TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 - BSN 0 storing in window (0..63)
@@ -1598,6 +1605,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)  start Packet Downlink Assignment
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on FN=2654288
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654275 block=9 data=48 08 00 00 0c 72 00 02 08 00 80 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Packet Control Ack
@@ -1643,6 +1651,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654292 (cu
 - Timeout for polling PACKET DOWNLINK ACK.
 - Assignment was on PACCH
 - No downlink ACK received yet
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -1675,11 +1684,13 @@ TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654348
 Scheduling control message at RTS for TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654335 block=11 data=48 28 5e ac ce f1 0f 1d 00 00 88 40 09 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) Packet Control Ack
 TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN)
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 UL DATA TFI=1 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 - BSN 0 storing in window (0..63)
@@ -1707,6 +1718,7 @@ TX: Immediate Assignment Uplink (AGCH)
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -1738,11 +1750,13 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 83 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control Ack
 TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 - BSN 0 storing in window (0..63)
@@ -1792,6 +1806,7 @@ TX: Immediate Assignment Uplink (AGCH)
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b ee 07 00 c0 0c 60 6b 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Got RACH from TLLI=0xf1223344 while TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) still exists. Release pending DL TBF
@@ -1822,6 +1837,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654340
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654327 block=9 data=4f 28 5e 24 46 68 83 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control Ack
@@ -1846,6 +1862,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Trigger downlink assignment on PACC
 Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer 0.
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 - BSN 0 storing in window (0..63)
@@ -1864,6 +1881,7 @@ TX: Immediate Assignment Uplink (AGCH)
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -1895,11 +1913,13 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 83 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control Ack
 TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 - BSN 0 storing in window (0..63)
@@ -1967,6 +1987,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x03, Fn=2654275 (17,31,13)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 03 8b ed 07 00 c8 00 10 0b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=ASSIGN)
@@ -2001,6 +2022,7 @@ TX: Immediate Assignment Uplink (AGCH)
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -2032,11 +2054,13 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 83 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control Ack
 TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
 - BSN 0 storing in window (0..63)
@@ -2116,6 +2140,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)  start Packet Downlink Assignment
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on FN=2654288
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654275 block=9 data=48 08 00 00 0c 72 00 02 08 00 80 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Packet Control Ack
@@ -2650,6 +2675,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) append
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) append
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) append
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) append
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Packet Downlink Ack/Nack
@@ -2683,6 +2709,7 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)  start Packet Downlink Assignment
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) Scheduled DL Assignment polling on FN=2654413
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654400 block=2 data=48 08 20 08 0c 72 00 02 18 00 80 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) Packet Control Ack

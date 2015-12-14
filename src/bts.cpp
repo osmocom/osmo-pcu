@@ -733,28 +733,6 @@ int gprs_rlcmac_pdch::rcv_data_block_acknowledged(uint8_t *data, uint8_t len,
 	struct gprs_rlcmac_ul_tbf *tbf;
 	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
 
-	switch (len) {
-		case 54:
-			/* omitting spare bits */
-			len = 53;
-			break;
-		case 40:
-			/* omitting spare bits */
-			len = 39;
-			break;
-		case 34:
-			/* omitting spare bits */
-			len = 33;
-			break;
-		case 23:
-			break;
-	default:
-		bts()->decode_error();
-		LOGP(DRLCMACUL, LOGL_ERROR, "Dropping data block with invalid"
-			"length: %d)\n", len);
-		return -EINVAL;
-	}
-
 	/* find TBF inst from given TFI */
 	tbf = ul_tbf_by_tfi(rh->tfi);
 	if (!tbf) {
@@ -1166,9 +1144,33 @@ int gprs_rlcmac_pdch::rcv_control_block(
 int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	struct pcu_l1_meas *meas)
 {
+	GprsCodingScheme cs = GprsCodingScheme::getBySizeUL(len);
+	if (!cs) {
+		bts()->decode_error();
+		LOGP(DRLCMACUL, LOGL_ERROR, "Dropping data block with invalid"
+			"length: %d)\n", len);
+		return -EINVAL;
+	}
+
+	LOGP(DRLCMACUL, LOGL_DEBUG, "Got RLC block, coding scheme: %s, "
+		"length: %d (%d))\n", cs.name(), len, cs.maxBytesUL());
+
+	if (cs.isGprs())
+		return rcv_block_gprs(data, fn, meas, cs);
+
+	bts()->decode_error();
+	LOGP(DRLCMACUL, LOGL_ERROR, "Unsupported coding scheme %s\n",
+		cs.name());
+	return -EINVAL;
+}
+
+int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint32_t fn,
+	struct pcu_l1_meas *meas, GprsCodingScheme cs)
+{
 	unsigned payload = data[0] >> 6;
 	bitvec *block;
 	int rc = 0;
+	unsigned len = cs.maxBytesUL();
 
 	switch (payload) {
 	case GPRS_RLCMAC_DATA_BLOCK:

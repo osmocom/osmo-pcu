@@ -33,6 +33,7 @@ extern "C" {
 #include "sba.h"
 #include "tbf.h"
 #include "gprs_ms_storage.h"
+#include "gprs_coding_scheme.h"
 #endif
 
 #include <stdint.h>
@@ -63,6 +64,8 @@ struct gprs_rlcmac_pdch {
 	/* dispatching of messages */
 	int rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 		struct pcu_l1_meas *meas);
+	int rcv_block_gprs(uint8_t *data, uint32_t fn,
+		struct pcu_l1_meas *meas, GprsCodingScheme cs);
 
 	gprs_rlcmac_bts *bts_data() const;
 	BTS *bts() const;
