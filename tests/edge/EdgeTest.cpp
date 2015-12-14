@@ -59,6 +59,10 @@ static void check_coding_scheme(GprsCodingScheme& cs, GprsCodingScheme::Mode mod
 		expected_size += 1;
 	OSMO_ASSERT(expected_size == cs.sizeDL());
 
+	/* Check data block sizes */
+	OSMO_ASSERT(cs.maxDataBlockBytes() * cs.numDataBlocks() < cs.maxBytesDL());
+	OSMO_ASSERT(cs.maxDataBlockBytes() * cs.numDataBlocks() < cs.maxBytesUL());
+
 	/* Check inc/dec */
 	new_cs = cs;
 	new_cs.inc(mode);

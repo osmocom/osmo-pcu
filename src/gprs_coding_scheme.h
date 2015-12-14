@@ -70,6 +70,8 @@ public:
 	unsigned int maxBytesDL() const;
 	unsigned int spareBitsUL() const;
 	unsigned int spareBitsDL() const;
+	unsigned int maxDataBlockBytes() const;
+	unsigned int numDataBlocks() const;
 	const char *name() const;
 	HeaderType headerTypeData() const;
 	HeaderType headerTypeControl() const;
