@@ -19,6 +19,8 @@
  */
 #pragma once
 
+#include <osmocom/core/endian.h>
+
 #include <stdint.h>
 
 #define RLC_MAX_SNS 128 /* GPRS, must be power of 2 */
@@ -186,6 +188,7 @@ struct gprs_rlc_ul_window {
 
 extern "C" {
 /* TS 04.60  10.2.2 */
+#if OSMO_IS_LITTLE_ENDIAN
 struct rlc_ul_header {
 	uint8_t	r:1,
 		 si:1,
@@ -216,6 +219,9 @@ struct rlc_li_field {
 		 m:1,
 		 li:6;
 } __attribute__ ((packed));
+#else
+#  error "Only little endian headers are supported yet. TODO: add missing structs"
+#endif
 }
 
 inline bool gprs_rlc_v_b::is_state(int bsn, const gprs_rlc_dl_bsn_state type) const
