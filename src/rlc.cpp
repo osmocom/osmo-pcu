@@ -224,5 +224,12 @@ void gprs_rlc_ul_window::receive_bsn(const uint16_t bsn)
 {
 	m_v_n.mark_received(bsn);
 	raise_v_r(bsn);
+}
 
+bool gprs_rlc_ul_window::invalidate_bsn(const uint16_t bsn)
+{
+	bool was_valid = m_v_n.is_received(bsn);
+	m_v_n.mark_missing(bsn);
+
+	return was_valid;
 }
