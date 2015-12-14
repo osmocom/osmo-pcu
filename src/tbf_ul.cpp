@@ -332,7 +332,8 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged_gprs(const uint8_t *data,
 	 * the window is empty.*/
 	const uint16_t v_q_beg = m_window.v_q();
 
-	const uint16_t count = m_window.receive_bsn(rh->bsn);
+	m_window.receive_bsn(rh->bsn);
+	const uint16_t count = m_window.raise_v_q();
 
 	/* Retrieve LLC frames from blocks that are ready */
 	for (uint16_t i = 0; i < count; ++i) {
