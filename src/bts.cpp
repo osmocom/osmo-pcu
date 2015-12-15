@@ -723,27 +723,6 @@ void gprs_rlcmac_pdch::add_paging(struct gprs_rlcmac_paging *pag)
 	llist_add(&pag->list, &paging_list);
 }
 
-/* receive UL data block
- *
- * The blocks are defragmented and forwarded as LLC frames, if complete.
- */
-int gprs_rlcmac_pdch::rcv_data_block_acknowledged_gprs(uint8_t *data, uint8_t len,
-	struct pcu_l1_meas *meas)
-{
-	struct gprs_rlcmac_ul_tbf *tbf;
-	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
-
-	/* find TBF inst from given TFI */
-	tbf = ul_tbf_by_tfi(rh->tfi);
-	if (!tbf) {
-		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA unknown TFI=%d\n",
-			rh->tfi);
-		return 0;
-	}
-
-	return tbf->rcv_data_block_acknowledged_gprs(data, len, meas);
-}
-
 void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet, uint32_t fn)
 {
 	struct gprs_rlcmac_tbf *tbf, *new_tbf;
