@@ -431,6 +431,54 @@ static void write_packet_uplink_ack_gprs(struct gprs_rlcmac_bts *bts,
 	acknack_data->Exist_Power_Control_Parameters   = 0x0;
 }
 
+static void write_packet_uplink_ack_egprs(struct gprs_rlcmac_bts *bts,
+	PU_AckNack_EGPRS_00_t *acknack, struct gprs_rlcmac_ul_tbf *tbf,
+	int is_final)
+{
+	Common_Uplink_Ack_Nack_Data_t *acknack_data =
+		&acknack->Common_Uplink_Ack_Nack_Data;
+	char rbb[65];
+
+	int bow = 1;
+	int eow = 1;
+	int ssn = (tbf->m_window.v_q() + 1) & tbf->m_window.mod_sns();
+
+	tbf->m_window.update_rbb(rbb);
+
+	/* rbb is not NULL terminated */
+	rbb[64] = 0;
+	LOGP(DRLCMACUL, LOGL_DEBUG, "- V(N): \"%s\" R=Received "
+		"I=Invalid\n", rbb);
+
+	/* TODO: Use tbf->current_cs() when it supports EGPRS */
+	acknack->EGPRS_ChannelCodingCommand  = 2;  /* MCS-3 */
+	acknack->RESEGMENT = 0; /* NYI */
+	acknack->PRE_EMPTIVE_TRANSMISSION = 1; /* TODO: This resembles GPRS, change it? */
+	acknack->PRR_RETRANSMISSION_REQUEST = 0; /* TODO: Needs clarification */
+	acknack->ARAC_RETRANSMISSION_REQUEST = 0; /* TODO: Needs clarification */
+
+	acknack_data->Exist_CONTENTION_RESOLUTION_TLLI = 0x1;
+	acknack_data->CONTENTION_RESOLUTION_TLLI       = tbf->tlli();
+
+	acknack->TBF_EST = 1; /* Enable RR on PACCH */
+
+	acknack_data->Exist_Packet_Timing_Advance      = 0x0;
+	acknack->Exist_Packet_Extended_Timing_Advance  = 0x0;
+	acknack_data->Exist_Power_Control_Parameters   = 0x0;
+	acknack_data->Exist_Extension_Bits             = 0x0;
+
+	acknack->EGPRS_AckNack.UnionType = 0;
+
+	acknack->EGPRS_AckNack.Desc.FINAL_ACK_INDICATION = is_final;
+	acknack->EGPRS_AckNack.Desc.BEGINNING_OF_WINDOW = eow;
+	acknack->EGPRS_AckNack.Desc.END_OF_WINDOW = bow;
+	acknack->EGPRS_AckNack.Desc.STARTING_SEQUENCE_NUMBER = ssn;
+	acknack->EGPRS_AckNack.Desc.Exist_CRBB = 0;  /* TODO: Implement compressed bitmaps */
+	acknack->EGPRS_AckNack.Desc.URBB_LENGTH = 64;
+
+	Encoding::encode_rbb(rbb, acknack->EGPRS_AckNack.Desc.URBB);
+}
+
 /* generate uplink ack */
 void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	RlcMacDownlink_t * block, struct gprs_rlcmac_ul_tbf *tbf,
@@ -453,10 +501,19 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	acknack->PAGE_MODE    = 0x0;      // Normal Paging
 	acknack->UPLINK_TFI   = tbf->tfi(); // Uplink TFI
 
-	/* PU_AckNack_GPRS = on */
-	acknack->UnionType    = 0x0;
-	write_packet_uplink_ack_gprs(bts,
-		&acknack->u.PU_AckNack_GPRS_Struct, tbf, final);
+	if (tbf->is_egprs_enabled()) {
+		/* PU_AckNack_EGPRS = on */
+		acknack->UnionType    = 0x1;
+		acknack->u.PU_AckNack_EGPRS_Struct.UnionType = 0x0;
+		write_packet_uplink_ack_egprs(bts,
+			&acknack->u.PU_AckNack_EGPRS_Struct.u.PU_AckNack_EGPRS_00,
+			tbf, final);
+	} else {
+		/* PU_AckNack_GPRS = on */
+		acknack->UnionType    = 0x0;
+		write_packet_uplink_ack_gprs(bts,
+			&acknack->u.PU_AckNack_GPRS_Struct, tbf, final);
+	}
 }
 
 unsigned Encoding::write_packet_paging_request(bitvec * dest)
