@@ -437,6 +437,7 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	uint8_t final)
 {
 	// Packet Uplink Ack/Nack  TS 44.060 11.2.28
+	Packet_Uplink_Ack_Nack_t *acknack;
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Encoding Ack/Nack for %s "
 		"(final=%d)\n", tbf_name(tbf), final);
@@ -446,14 +447,16 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	block->SP           = final; // RRBP field is valid, if it is final ack
 	block->USF          = 0x0;   // Uplink state flag
 
-	block->u.Packet_Uplink_Ack_Nack.MESSAGE_TYPE = 0x9;      // Packet Downlink Assignment
-	block->u.Packet_Uplink_Ack_Nack.PAGE_MODE    = 0x0;      // Normal Paging
-	block->u.Packet_Uplink_Ack_Nack.UPLINK_TFI   = tbf->tfi(); // Uplink TFI
+	acknack = &block->u.Packet_Uplink_Ack_Nack;
 
-	block->u.Packet_Uplink_Ack_Nack.UnionType    = 0x0;      // PU_AckNack_GPRS = on
+	acknack->MESSAGE_TYPE = 0x9;      // Packet Downlink Assignment
+	acknack->PAGE_MODE    = 0x0;      // Normal Paging
+	acknack->UPLINK_TFI   = tbf->tfi(); // Uplink TFI
+
+	/* PU_AckNack_GPRS = on */
+	acknack->UnionType    = 0x0;
 	write_packet_uplink_ack_gprs(bts,
-		&block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct,
-		tbf, final);
+		&acknack->u.PU_AckNack_GPRS_Struct, tbf, final);
 }
 
 unsigned Encoding::write_packet_paging_request(bitvec * dest)
