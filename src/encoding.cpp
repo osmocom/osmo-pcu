@@ -399,16 +399,44 @@ void Encoding::encode_rbb(const char *show_rbb, uint8_t *rbb)
 	}
 }
 
+static void write_packet_uplink_ack_gprs(struct gprs_rlcmac_bts *bts,
+	PU_AckNack_GPRS_t *acknack, struct gprs_rlcmac_ul_tbf *tbf,
+	int is_final)
+{
+	Common_Uplink_Ack_Nack_Data_t *acknack_data =
+		&acknack->Common_Uplink_Ack_Nack_Data;
+	char rbb[65];
+
+	tbf->m_window.update_rbb(rbb);
+
+	acknack->CHANNEL_CODING_COMMAND                = tbf->current_cs() - 1;
+	acknack->Ack_Nack_Description.FINAL_ACK_INDICATION     = is_final;
+	acknack->Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->m_window.ssn();
+
+	Encoding::encode_rbb(rbb, acknack->Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
+
+	/* rbb is not NULL terminated */
+	rbb[64] = 0;
+	LOGP(DRLCMACUL, LOGL_DEBUG, "- V(N): \"%s\" R=Received "
+		"I=Invalid\n", rbb);
+
+	acknack->UnionType              = 0x0; /* Fixed Allocation Dummy = on */
+	acknack->u.FixedAllocationDummy = 0x0; /* Fixed Allocation Dummy */
+	acknack->Exist_AdditionsR99     = 0x0; /* AdditionsR99 = off */
+
+	acknack_data->Exist_CONTENTION_RESOLUTION_TLLI = 0x1;
+	acknack_data->CONTENTION_RESOLUTION_TLLI       = tbf->tlli();
+	acknack_data->Exist_Packet_Timing_Advance      = 0x0;
+	acknack_data->Exist_Extension_Bits             = 0x0;
+	acknack_data->Exist_Power_Control_Parameters   = 0x0;
+}
+
 /* generate uplink ack */
 void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	RlcMacDownlink_t * block, struct gprs_rlcmac_ul_tbf *tbf,
 	uint8_t final)
 {
 	// Packet Uplink Ack/Nack  TS 44.060 11.2.28
-
-	char rbb[65];
-
-	tbf->m_window.update_rbb(rbb);
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Encoding Ack/Nack for %s "
 		"(final=%d)\n", tbf_name(tbf), final);
@@ -423,26 +451,9 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	block->u.Packet_Uplink_Ack_Nack.UPLINK_TFI   = tbf->tfi(); // Uplink TFI
 
 	block->u.Packet_Uplink_Ack_Nack.UnionType    = 0x0;      // PU_AckNack_GPRS = on
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = tbf->current_cs() - 1;             // CS1
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.FINAL_ACK_INDICATION     = final;           // FINAL ACK INDICATION
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->m_window.ssn(); // STARTING_SEQUENCE_NUMBER
-
-	encode_rbb(rbb, block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
-
-	/* rbb is not NULL terminated */
-	rbb[64] = 0;
-	LOGP(DRLCMACUL, LOGL_DEBUG, "- V(N): \"%s\" R=Received "
-		"I=Invalid\n", rbb);
-
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.UnionType              = 0x0; // Fixed Allocation Dummy = on
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.u.FixedAllocationDummy = 0x0; // Fixed Allocation Dummy
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Exist_AdditionsR99     = 0x0; // AdditionsR99 = off
-
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_CONTENTION_RESOLUTION_TLLI = 0x1;
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.CONTENTION_RESOLUTION_TLLI       = tbf->tlli();
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_Packet_Timing_Advance      = 0x0;
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_Extension_Bits             = 0x0;
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_Power_Control_Parameters   = 0x0;
+	write_packet_uplink_ack_gprs(bts,
+		&block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct,
+		tbf, final);
 }
 
 unsigned Encoding::write_packet_paging_request(bitvec * dest)
