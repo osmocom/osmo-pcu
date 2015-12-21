@@ -189,6 +189,33 @@ static void test_coding_scheme()
 	printf("=== end %s ===\n", __func__);
 }
 
+static void test_rlc_decoder()
+{
+	struct gprs_rlc_data_block_info rdbi = {0};
+	GprsCodingScheme cs;
+	uint8_t data[74];
+	Decoding::RlcData chunks[16];
+	volatile int num_chunks = 0;
+	uint32_t tlli, tlli2;
+	unsigned int offs;
+
+	/*
+	bts.cpp:1156 Got RLC block, coding scheme: CS-4, length : 54 (53))
+bts.cpp:1200   UL data: 3c 02 02 33 0a ed 5d fe d8 00 8f 18 33 2c 16 45 03 c0 68 75 00 00 16 45 00 03 c5 62 29 40 00 45 06 4e b6 c0 a8 00 02 c0 a8 00 01 86 74 1f 91 17 ac 35 ee 33 5e 
+bts.cpp:1217 Got CS-4 RLC block: R=0, SI=0, TFI=1, CPS=0, RSB=0, rc=424
+tbf_ul.cpp:323 UL DATA TFI=1 received (V(Q)=1 .. V(R)=1)
+tbf.cpp:406 TBF(TFI=1 TLLI=0xdf1781e3 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
+tbf_ul.cpp:357 TBF(TFI=1 TLLI=0xdf1781e3 DIR=UL STATE=FLOW): Got CS-4 RLC data block: CV=15, BSN=1, SPB=0, PI=0, E=0, TI=0, bitoffs=24
+tbf_ul.cpp:390 - BSN 1 storing in window (1..64)
+tbf_ul.cpp:415 TBF(TFI=1 TLLI=0xdf1781e3 DIR=UL STATE=FLOW): data_length=50, data=33 0a ed 5d fe d8 00 8f 18 33 2c 16 45 03 c0 68 75 00 00 16 45 00 03 c5 62 29 40 00 45 06 4e b6 c0 a8 00 02 c0 a8 00 01 86 74 1f 91 17 ac 35 ee 33 5e
+	 */
+
+
+	printf("=== start %s ===\n", __func__);
+
+	printf("=== end %s ===\n", __func__);
+}
+
 static void test_rlc_unit_decoder()
 {
 	struct gprs_rlc_data_block_info rdbi = {0};
@@ -1119,6 +1146,7 @@ int main(int argc, char **argv)
 
 	test_coding_scheme();
 	test_rlc_info_init();
+	test_rlc_decoder();
 	test_rlc_unit_decoder();
 	test_rlc_unaligned_copy();
 	test_rlc_unit_encoder();
