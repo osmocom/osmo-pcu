@@ -516,6 +516,182 @@ void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
 	}
 }
 
+static void write_packet_ack_nack_desc_gprs(
+	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
+	gprs_rlc_ul_window *window, bool is_final)
+{
+	char rbb[65];
+
+	window->update_rbb(rbb);
+
+	rbb[64] = 0;
+	LOGP(DRLCMACUL, LOGL_DEBUG, "- V(N): \"%s\" R=Received "
+		"I=Invalid\n", rbb);
+
+	bitvec_write_field(dest, wp, is_final, 1); // FINAL_ACK_INDICATION
+	bitvec_write_field(dest, wp, window->ssn(), 7); // STARTING_SEQUENCE_NUMBER
+
+	for (int i = 0; i < 64; i++) {
+		/* Set bit at the appropriate position (see 3GPP TS 04.60 9.1.8.1) */
+		bool is_ack = (rbb[i] == 'R');
+		bitvec_write_field(dest, wp, is_ack, 1);
+	}
+}
+
+static void write_packet_uplink_ack_gprs(
+	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
+	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
+{
+
+	bitvec_write_field(dest, wp, tbf->current_cs() - 1, 2); // CHANNEL_CODING_COMMAND
+	write_packet_ack_nack_desc_gprs(bts, dest, wp, &tbf->m_window, is_final);
+
+	bitvec_write_field(dest, wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
+	bitvec_write_field(dest, wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
+
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Packet Timing Advance
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Power Control Parameters
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Extension Bits
+	bitvec_write_field(dest, wp, 0, 1); // fixed 0
+	bitvec_write_field(dest, wp, 1, 1); // 1: have Additions R99
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Packet Extended Timing Advance
+	bitvec_write_field(dest, wp, 1, 1); // TBF_EST (enabled)
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have REL 5
+};
+
+static void write_packet_ack_nack_desc_egprs(
+	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
+	gprs_rlc_ul_window *window, bool is_final)
+{
+	int urbb_len = 0;
+	int crbb_len = 0;
+	int len;
+	bool bow = true;
+	bool eow = true;
+	int ssn = window->mod_sns(window->v_q() + 1);
+	int num_blocks = window->mod_sns(window->v_r() - window->v_q());
+	int esn_crbb = window->mod_sns(ssn - 1);
+	int rest_bits = dest->data_len * 8 - wp;
+
+	if (num_blocks > 0)
+		/* V(Q) is NACK and omitted -> SSN = V(Q) + 1 */
+		num_blocks -= 1;
+
+	if (num_blocks > window->ws())
+		num_blocks = window->ws();
+
+	if (num_blocks > rest_bits) {
+		eow = false;
+		urbb_len = rest_bits;
+		/* TODO: use compression, start encoding bits and stop when the
+		 * space is exhausted. Use the first combination that encodes
+		 * all bits. If there is none, use the combination that encodes
+		 * the largest number of bits (e.g. by setting num_blocks to the
+		 * max and repeating the construction).
+		 */
+	} else if (num_blocks > rest_bits - 9) {
+		/* union bit and length field take 9 bits */
+		eow = false;
+		urbb_len = rest_bits - 9;
+		/* TODO: use compression (see above) */
+	}
+
+	if (urbb_len + crbb_len == rest_bits)
+		len = -1;
+	else if (crbb_len == 0)
+		len = urbb_len + 15;
+	else
+		len = urbb_len + crbb_len + 23;
+
+	/* EGPRS Ack/Nack Description IE */
+	if (len < 0) {
+		bitvec_write_field(dest, wp, 0, 1); // 0: don't have length
+	} else {
+		bitvec_write_field(dest, wp, 1, 1); // 1: have length
+		bitvec_write_field(dest, wp, len, 8); // length
+	}
+
+	bitvec_write_field(dest, wp, is_final, 1); // FINAL_ACK_INDICATION
+	bitvec_write_field(dest, wp, bow, 1); // BEGINNING_OF_WINDOW
+	bitvec_write_field(dest, wp, eow, 1); // END_OF_WINDOW
+	bitvec_write_field(dest, wp, ssn, 11); // STARTING_SEQUENCE_NUMBER
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have CRBB
+
+	/* TODO: Add CRBB support */
+
+	LOGP(DRLCMACUL, LOGL_DEBUG,
+		" - EGPRS URBB, len = %d, SSN = %d, ESN_CRBB = %d, "
+		"SNS = %d, WS = %d, V(Q) = %d, V(R) = %d%s%s\n",
+		urbb_len, ssn, esn_crbb,
+		window->sns(), window->ws(), window->v_q(), window->v_r(),
+		bow ? ", BOW" : "", eow ? ", EOW" : "");
+	for (int i = urbb_len; i > 0; i--) {
+		/* Set bit at the appropriate position (see 3GPP TS 04.60 12.3.1) */
+		bool is_ack = window->m_v_n.is_received(esn_crbb + i);
+		bitvec_write_field(dest, wp, is_ack, 1);
+	}
+}
+
+static void write_packet_uplink_ack_egprs(
+	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
+	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
+{
+	bitvec_write_field(dest, wp, 0, 2); // fixed 00
+	bitvec_write_field(dest, wp, 2, 4); // CHANNEL_CODING_COMMAND: MCS-3
+	// bitvec_write_field(dest, wp, tbf->current_cs() - 1, 4); // CHANNEL_CODING_COMMAND
+	bitvec_write_field(dest, wp, 0, 1); // 0: no RESEGMENT (nyi)
+	bitvec_write_field(dest, wp, 1, 1); // PRE_EMPTIVE_TRANSMISSION, TODO: This resembles GPRS, change it?
+	bitvec_write_field(dest, wp, 0, 1); // 0: no PRR_RETRANSMISSION_REQUEST, TODO: clarify
+	bitvec_write_field(dest, wp, 0, 1); // 0: no ARAC_RETRANSMISSION_REQUEST, TODO: clarify
+	bitvec_write_field(dest, wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
+	bitvec_write_field(dest, wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
+	bitvec_write_field(dest, wp, 1, 1); // TBF_EST (enabled)
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Packet Timing Advance
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Packet Extended Timing Advance
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Power Control Parameters
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Extension Bits
+
+	write_packet_ack_nack_desc_egprs(bts, dest, wp, &tbf->m_window, is_final);
+
+	bitvec_write_field(dest, wp, 0, 1); // fixed 0
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have REL 5
+};
+
+void Encoding::write_packet_uplink_ack(
+	struct gprs_rlcmac_bts *bts, bitvec * dest,
+	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
+{
+	unsigned wp = 0;
+
+	LOGP(DRLCMACUL, LOGL_DEBUG, "Encoding Ack/Nack for %s "
+		"(final=%d)\n", tbf_name(tbf), is_final);
+
+	bitvec_write_field(dest, wp, 0x1, 2);  // Payload Type
+	bitvec_write_field(dest, wp, 0x0, 2);  // Uplink block with TDMA framenumber (N+13)
+	bitvec_write_field(dest, wp, is_final, 1);  // Suppl/Polling Bit
+	bitvec_write_field(dest, wp, 0x0, 3);  // Uplink state flag
+	bitvec_write_field(dest, wp, 0x9, 6);  // MESSAGE TYPE Uplink Ack/Nack
+	bitvec_write_field(dest, wp, 0x0, 2);  // Page Mode
+
+	bitvec_write_field(dest, wp, 0x0, 2);  // fixed 00
+	bitvec_write_field(dest, wp, tbf->tfi(), 5);  // Uplink TFI
+
+	if (tbf->is_egprs_enabled()) {
+		/* PU_AckNack_EGPRS = on */
+		bitvec_write_field(dest, wp, 1, 1);  // 1: EGPRS
+		write_packet_uplink_ack_egprs(bts, dest, wp, tbf, is_final);
+	} else {
+		/* PU_AckNack_GPRS = on */
+		bitvec_write_field(dest, wp, 0, 1);  // 0: GPRS
+		write_packet_uplink_ack_gprs(bts, dest, wp, tbf, is_final);
+	}
+
+	LOGP(DRLCMACUL, LOGL_DEBUG,
+		"Uplink Ack/Nack bit count %d, max %d, message = %s\n",
+		wp, dest->data_len * 8,
+		osmo_hexdump(dest->data, dest->data_len));
+}
+
 unsigned Encoding::write_packet_paging_request(bitvec * dest)
 {
 	unsigned wp = 0;

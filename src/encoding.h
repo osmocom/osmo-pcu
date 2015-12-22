@@ -58,6 +58,9 @@ public:
 
 	static void write_packet_uplink_ack(struct gprs_rlcmac_bts *bts, RlcMacDownlink_t * block, struct gprs_rlcmac_ul_tbf *tbf,
 		        uint8_t final);
+	static void write_packet_uplink_ack(
+			struct gprs_rlcmac_bts *bts, bitvec * dest,
+			struct gprs_rlcmac_ul_tbf *tbf, bool is_final);
 
 	static int write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len);
 
