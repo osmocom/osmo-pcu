@@ -116,12 +116,17 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn)
 	}
 	bitvec_unhex(ack_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	/*
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	Encoding::write_packet_uplink_ack(bts_data(), mac_control_block, this, final);
 	encode_gsm_rlcmac_downlink(ack_vec, mac_control_block);
+	*/
+	Encoding::write_packet_uplink_ack(bts_data(), ack_vec, this, final);
 	bitvec_pack(ack_vec, msgb_put(msg, 23));
 	bitvec_free(ack_vec);
+	/*
 	talloc_free(mac_control_block);
+	*/
 
 	/* now we must set this flag, so we are allowed to assign downlink
 	 * TBF on PACCH. it is only allowed when TLLI is acknowledged. */
