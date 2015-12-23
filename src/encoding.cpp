@@ -441,7 +441,7 @@ static void write_packet_uplink_ack_egprs(struct gprs_rlcmac_bts *bts,
 
 	int bow = 1;
 	int eow = 1;
-	int ssn = (tbf->m_window.v_q() + 1) & tbf->m_window.mod_sns();
+	int ssn = tbf->m_window.mod_sns(tbf->m_window.v_q() + 1);
 
 	tbf->m_window.update_rbb(rbb);
 

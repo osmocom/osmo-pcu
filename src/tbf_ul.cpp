@@ -145,7 +145,6 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 {
 	int8_t rssi = meas->have_rssi ? meas->rssi : 0;
 
-	const uint16_t mod_sns = m_window.mod_sns();
 	const uint16_t ws = m_window.ws();
 
 	this->state_flags |= (1 << GPRS_RLCMAC_FLAG_UL_DATA);
@@ -194,7 +193,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d out of window "
 				"%d..%d (it's normal)\n", rdbi->bsn,
 				m_window.v_q(),
-				(m_window.v_q() + ws - 1) & mod_sns);
+				m_window.mod_sns(m_window.v_q() + ws - 1));
 		} else if (m_window.is_received(rdbi->bsn)) {
 			LOGP(DRLCMACUL, LOGL_DEBUG,
 				"- BSN %d already received\n", rdbi->bsn);
@@ -219,7 +218,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
 			rdbi->bsn, m_window.v_q(),
-			(m_window.v_q() + ws - 1) & mod_sns);
+			m_window.mod_sns(m_window.v_q() + ws - 1));
 		block = m_rlc.block(rdbi->bsn);
 		block->block_info = *rdbi;
 		block->cs = rlc->cs;
@@ -296,7 +295,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 	/* Retrieve LLC frames from blocks that are ready */
 	for (uint16_t i = 0; i < count; ++i) {
-		uint16_t index = (v_q_beg + i) & mod_sns;
+		uint16_t index = m_window.mod_sns(v_q_beg + i);
 		assemble_forward_llc(m_rlc.block(index));
 	}
 
@@ -304,7 +303,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	if (this->state_is(GPRS_RLCMAC_FLOW) /* still in flow state */
 	 && this->m_window.v_q() == this->m_window.v_r()) { /* if complete */
 		struct gprs_rlc_data *block =
-			m_rlc.block((m_window.v_r() - 1) & mod_sns);
+			m_rlc.block(m_window.mod_sns(m_window.v_r() - 1));
 		const struct gprs_rlc_ul_data_block_info *rdbi =
 			&block->block_info;
 

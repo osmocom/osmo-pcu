@@ -703,9 +703,9 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	return dl_msg;
 }
 
-static uint16_t bitnum_to_bsn(int bitnum, uint16_t ssn, uint16_t mod_sns)
+static uint16_t bitnum_to_bsn(int bitnum, uint16_t ssn)
 {
-	return (ssn - 1 - bitnum) & mod_sns;
+	return ssn - 1 - bitnum;
 }
 
 int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
@@ -724,9 +724,9 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 	for (int bitpos = 0; bitpos < m_window.ws(); bitpos++) {
 		bool is_received = show_rbb[m_window.ws() - 1 - bitpos] == 'R';
 
-		bsn = bitnum_to_bsn(bitpos, ssn, m_window.mod_sns());
+		bsn = m_window.mod_sns(bitnum_to_bsn(bitpos, ssn));
 
-		if (bsn == ((m_window.v_a() - 1) & m_window.mod_sns())) {
+		if (bsn == m_window.mod_sns(m_window.v_a() - 1)) {
 			info[bitpos] = '$';
 			break;
 		}
@@ -794,19 +794,18 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 	uint16_t lost = 0, received = 0;
 	char show_rbb[65];
 	char show_v_b[RLC_MAX_SNS + 1];
-	const uint16_t mod_sns = m_window.mod_sns();
 	int error_rate;
 	struct ana_result ana_res;
 
 	Decoding::extract_rbb(rbb, show_rbb);
 	/* show received array in debug (bit 64..1) */
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- ack:  (BSN=%d)\"%s\""
-		"(BSN=%d)  R=ACK I=NACK\n", (ssn - 64) & mod_sns,
-		show_rbb, (ssn - 1) & mod_sns);
+		"(BSN=%d)  R=ACK I=NACK\n", m_window.mod_sns(ssn - 64),
+		show_rbb, m_window.mod_sns(ssn - 1));
 
 	/* apply received array to receive state (SSN-64..SSN-1) */
 	/* calculate distance of ssn from V(S) */
-	dist = (m_window.v_s() - ssn) & mod_sns;
+	dist = m_window.mod_sns(m_window.v_s() - ssn);
 	/* check if distance is less than distance V(A)..V(S) */
 	if (dist >= m_window.distance()) {
 		/* this might happpen, if the downlink assignment

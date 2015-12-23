@@ -140,6 +140,7 @@ private:
 struct gprs_rlc_dl_window {
 	void reset();
 	const uint16_t mod_sns() const;
+	const uint16_t mod_sns(uint16_t bsn) const;
 	const uint16_t sns() const;
 	const uint16_t ws() const;
 
@@ -186,6 +187,7 @@ private:
 
 struct gprs_rlc_ul_window {
 	const uint16_t mod_sns() const;
+	const uint16_t mod_sns(uint16_t bsn) const;
 	const uint16_t sns() const;
 	const uint16_t ws() const;
 
@@ -353,6 +355,11 @@ inline const uint16_t gprs_rlc_dl_window::mod_sns() const
 	return sns() - 1;
 }
 
+inline const uint16_t gprs_rlc_dl_window::mod_sns(uint16_t bsn) const
+{
+	return bsn & mod_sns();
+}
+
 inline const uint16_t gprs_rlc_dl_window::v_s() const
 {
 	return m_v_s;
@@ -360,7 +367,7 @@ inline const uint16_t gprs_rlc_dl_window::v_s() const
 
 inline const uint16_t gprs_rlc_dl_window::v_s_mod(int offset) const
 {
-	return (m_v_s + offset) & mod_sns();
+	return mod_sns(m_v_s + offset);
 }
 
 inline const uint16_t gprs_rlc_dl_window::v_a() const
@@ -370,7 +377,7 @@ inline const uint16_t gprs_rlc_dl_window::v_a() const
 
 inline bool gprs_rlc_dl_window::window_stalled() const
 {
-	return ((m_v_s - m_v_a) & mod_sns()) == ws();
+	return (mod_sns(m_v_s - m_v_a)) == ws();
 }
 
 inline bool gprs_rlc_dl_window::window_empty() const
@@ -428,6 +435,11 @@ inline const uint16_t gprs_rlc_ul_window::mod_sns() const
 	return sns() - 1;
 }
 
+inline const uint16_t gprs_rlc_ul_window::mod_sns(uint16_t bsn) const
+{
+	return bsn & mod_sns();
+}
+
 inline const uint16_t gprs_rlc_ul_window::v_r() const
 {
 	return m_v_r;
@@ -445,12 +457,12 @@ inline const uint16_t gprs_rlc_ul_window::ssn() const
 
 inline void gprs_rlc_ul_window::raise_v_r_to(int moves)
 {
-	m_v_r = (m_v_r + moves) & mod_sns();
+	m_v_r = mod_sns(m_v_r + moves);
 }
 
 inline void gprs_rlc_ul_window::raise_v_q(int incr)
 {
-	m_v_q = (m_v_q + incr) & mod_sns();
+	m_v_q = mod_sns(m_v_q + incr);
 }
 
 inline void gprs_rlc_v_n::mark_received(int bsn)

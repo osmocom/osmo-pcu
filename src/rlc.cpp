@@ -57,7 +57,7 @@ void gprs_rlc_dl_window::reset()
 
 int gprs_rlc_dl_window::resend_needed()
 {
-	for (uint16_t bsn = v_a(); bsn != v_s(); bsn = (bsn + 1) & mod_sns()) {
+	for (uint16_t bsn = v_a(); bsn != v_s(); bsn = mod_sns(bsn + 1)) {
 		if (m_v_b.is_nacked(bsn) || m_v_b.is_resend(bsn))
 			return bsn;
 	}
@@ -69,7 +69,7 @@ int gprs_rlc_dl_window::mark_for_resend()
 {
 	int resend = 0;
 
-	for (uint16_t bsn = v_a(); bsn != v_s(); bsn = (bsn + 1) & mod_sns()) {
+	for (uint16_t bsn = v_a(); bsn != v_s(); bsn = mod_sns(bsn + 1)) {
 		if (m_v_b.is_unacked(bsn)) {
 			/* mark to be re-send */
 			m_v_b.mark_resend(bsn);
@@ -85,7 +85,7 @@ int gprs_rlc_dl_window::count_unacked()
 	uint16_t unacked = 0;
 	uint16_t bsn;
 
-	for (bsn = v_a(); bsn != v_s(); bsn = (bsn + 1) & mod_sns()) {
+	for (bsn = v_a(); bsn != v_s(); bsn = mod_sns(bsn + 1)) {
 		if (!m_v_b.is_acked(bsn))
 			unacked += 1;
 	}
@@ -93,9 +93,9 @@ int gprs_rlc_dl_window::count_unacked()
 	return unacked;
 }
 
-static uint16_t bitnum_to_bsn(int bitnum, uint16_t ssn, uint16_t mod_sns)
+static uint16_t bitnum_to_bsn(int bitnum, uint16_t ssn)
 {
-	return (ssn - 1 - bitnum) & mod_sns;
+	return (ssn - 1 - bitnum);
 }
 
 void gprs_rlc_dl_window::update(BTS *bts, char *show_rbb, uint8_t ssn,
@@ -103,9 +103,9 @@ void gprs_rlc_dl_window::update(BTS *bts, char *show_rbb, uint8_t ssn,
 {
 	/* SSN - 1 is in range V(A)..V(S)-1 */
 	for (int bitpos = 0; bitpos < ws(); bitpos++) {
-		uint16_t bsn = bitnum_to_bsn(bitpos, ssn, mod_sns());
+		uint16_t bsn = mod_sns(bitnum_to_bsn(bitpos, ssn));
 
-		if (bsn == ((v_a() - 1) & mod_sns()))
+		if (bsn == mod_sns(v_a() - 1))
 			break;
 
 		if (show_rbb[ws() - 1 - bitpos] == 'R') {
@@ -128,7 +128,7 @@ int gprs_rlc_dl_window::move_window()
 	uint16_t bsn;
 	int moved = 0;
 
-	for (i = 0, bsn = v_a(); bsn != v_s(); i++, bsn = (bsn + 1) & mod_sns()) {
+	for (i = 0, bsn = v_a(); bsn != v_s(); i++, bsn = mod_sns(bsn + 1)) {
 		if (m_v_b.is_acked(bsn)) {
 			m_v_b.mark_invalid(bsn);
 			moved += 1;
@@ -144,7 +144,7 @@ void gprs_rlc_dl_window::show_state(char *show_v_b)
 	int i;
 	uint16_t bsn;
 
-	for (i = 0, bsn = v_a(); bsn != v_s(); i++, bsn = (bsn + 1) & mod_sns()) {
+	for (i = 0, bsn = v_a(); bsn != v_s(); i++, bsn = mod_sns(bsn + 1)) {
 		uint16_t index = bsn & mod_sns_half();
 		switch(m_v_b.get_state(index)) {
 		case GPRS_RLC_DL_BSN_INVALID:
@@ -188,7 +188,7 @@ void gprs_rlc_ul_window::update_rbb(char *rbb)
 void gprs_rlc_ul_window::raise_v_r(const uint16_t bsn)
 {
 	uint16_t offset_v_r;
-	offset_v_r = (bsn + 1 - v_r()) & mod_sns();
+	offset_v_r = mod_sns(bsn + 1 - v_r());
 	/* Positive offset, so raise. */
 	if (offset_v_r < (sns() >> 1)) {
 		while (offset_v_r--) {
@@ -212,7 +212,7 @@ uint16_t gprs_rlc_ul_window::raise_v_q()
 		if (!m_v_n.is_received(v_q()))
 			break;
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- Taking block %d out, raising "
-			"V(Q) to %d\n", v_q(), (v_q() + 1) & mod_sns());
+			"V(Q) to %d\n", v_q(), mod_sns(v_q() + 1));
 		raise_v_q(1);
 		count += 1;
 	}
