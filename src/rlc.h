@@ -158,7 +158,7 @@ struct gprs_rlc_dl_window {
 	/* Methods to manage reception */
 	int resend_needed();
 	int mark_for_resend();
-	void update(BTS *bts, char *show_rbb, uint8_t ssn,
+	void update(BTS *bts, char *show_rbb, uint16_t ssn,
 			uint16_t *lost, uint16_t *received);
 	int move_window();
 	void show_state(char *show_rbb);
@@ -196,8 +196,8 @@ struct gprs_rlc_ul_window {
 
 	const uint16_t ssn() const;
 
-	bool is_in_window(uint8_t bsn) const;
-	bool is_received(uint8_t bsn) const;
+	bool is_in_window(uint16_t bsn) const;
+	bool is_received(uint16_t bsn) const;
 
 	void update_rbb(char *rbb);
 	void raise_v_r_to(int moves);
@@ -400,7 +400,7 @@ inline const int16_t gprs_rlc_dl_window::distance() const
 	return (m_v_s - m_v_a) & mod_sns();
 }
 
-inline bool gprs_rlc_ul_window::is_in_window(uint8_t bsn) const
+inline bool gprs_rlc_ul_window::is_in_window(uint16_t bsn) const
 {
 	uint16_t offset_v_q;
 
@@ -411,7 +411,7 @@ inline bool gprs_rlc_ul_window::is_in_window(uint8_t bsn) const
 	return offset_v_q < ws();
 }
 
-inline bool gprs_rlc_ul_window::is_received(uint8_t bsn) const
+inline bool gprs_rlc_ul_window::is_received(uint16_t bsn) const
 {
 	uint16_t offset_v_r;
 

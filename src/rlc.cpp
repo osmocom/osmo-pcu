@@ -98,7 +98,7 @@ static uint16_t bitnum_to_bsn(int bitnum, uint16_t ssn)
 	return (ssn - 1 - bitnum);
 }
 
-void gprs_rlc_dl_window::update(BTS *bts, char *show_rbb, uint8_t ssn,
+void gprs_rlc_dl_window::update(BTS *bts, char *show_rbb, uint16_t ssn,
 			uint16_t *lost, uint16_t *received)
 {
 	/* SSN - 1 is in range V(A)..V(S)-1 */
