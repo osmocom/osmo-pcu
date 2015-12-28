@@ -39,6 +39,27 @@ int pcu_vty_config_write_pcu_ext(struct vty *vty)
 	return CMD_SUCCESS;
 }
 
+void tbf_print_vty_info(struct vty *vty, struct llist_head *ltbf)
+{
+	gprs_rlcmac_tbf *tbf = llist_pods_entry(ltbf, gprs_rlcmac_tbf);
+	vty_out(vty, "TBF: TFI=%d TLLI=0x%08x (%s) DIR=%s IMSI=%s%s", tbf->tfi(),
+			tbf->tlli(), tbf->is_tlli_valid() ? "valid" : "invalid",
+			tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
+			tbf->imsi(), VTY_NEWLINE);
+	vty_out(vty, " created=%lu state=%08x 1st_TS=%d 1st_cTS=%d ctrl_TS=%d "
+			"MS_CLASS=%d%s",
+			tbf->created_ts(), tbf->state_flags, tbf->first_ts,
+			tbf->first_common_ts, tbf->control_ts, tbf->ms_class(),
+			VTY_NEWLINE);
+	vty_out(vty, " TS_alloc=");
+	for (int i = 0; i < 8; i++) {
+		if (tbf->pdch[i])
+			vty_out(vty, "%d ", i);
+	}
+	vty_out(vty, " CS=%d%s%s", tbf->ms() ? tbf->ms()->current_cs_dl() : 1,
+		VTY_NEWLINE, VTY_NEWLINE);
+}
+
 int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
 {
 	BTS *bts = bts_data->bts;

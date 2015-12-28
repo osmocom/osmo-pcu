@@ -34,6 +34,8 @@ int pcu_vty_show_ms_by_tlli(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
 int pcu_vty_show_ms_by_imsi(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
 	const char *imsi);
 
+void tbf_print_vty_info(struct vty *vty, struct llist_head *tbf);
+
 #ifdef __cplusplus
 }
 #endif

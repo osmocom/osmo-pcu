@@ -470,14 +470,3 @@ inline gprs_rlcmac_dl_tbf *as_dl_tbf(gprs_rlcmac_tbf *tbf)
 }
 
 #endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include <osmocom/vty/command.h>
-#include <osmocom/vty/vty.h>
-
-	void tbf_print_vty_info(struct vty *vty, struct llist_head *tbf);
-#ifdef __cplusplus
-}
-#endif
