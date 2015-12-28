@@ -168,6 +168,8 @@ struct gprs_rlc_dl_window {
 	uint16_t m_v_a;	/* ack state */
 
 	gprs_rlc_v_b m_v_b;
+
+	gprs_rlc_dl_window();
 };
 
 struct gprs_rlc_v_n {
@@ -213,6 +215,8 @@ struct gprs_rlc_ul_window {
 	uint16_t m_v_q;	/* receive window state */
 
 	gprs_rlc_v_n m_v_n;
+
+	gprs_rlc_ul_window();
 };
 
 extern "C" {
@@ -340,6 +344,12 @@ inline void gprs_rlc_v_b::mark_invalid(int bsn)
 	return mark(bsn, GPRS_RLC_DL_BSN_INVALID);
 }
 
+inline gprs_rlc_dl_window::gprs_rlc_dl_window()
+	: m_v_s(0)
+	, m_v_a(0)
+{
+}
+
 inline const uint16_t gprs_rlc_dl_window::sns() const
 {
 	return RLC_MAX_SNS;
@@ -398,6 +408,12 @@ inline void gprs_rlc_dl_window::raise(int moves)
 inline const int16_t gprs_rlc_dl_window::distance() const
 {
 	return (m_v_s - m_v_a) & mod_sns();
+}
+
+inline gprs_rlc_ul_window::gprs_rlc_ul_window()
+	: m_v_r(0)
+	, m_v_q(0)
+{
 }
 
 inline bool gprs_rlc_ul_window::is_in_window(uint16_t bsn) const

@@ -147,7 +147,7 @@ static void test_rlc_v_n()
 static void test_rlc_dl_ul_basic()
 {
 	{
-		gprs_rlc_dl_window dl_win = { 0, };
+		gprs_rlc_dl_window dl_win;
 		OSMO_ASSERT(dl_win.window_empty());
 		OSMO_ASSERT(!dl_win.window_stalled());
 		OSMO_ASSERT(dl_win.distance() == 0);
@@ -192,7 +192,7 @@ static void test_rlc_dl_ul_basic()
 	}
 
 	{
-		gprs_rlc_ul_window ul_win = { 0, };
+		gprs_rlc_ul_window ul_win;
 		int count;
 		const char *rbb;
 		char win_rbb[65];
@@ -328,7 +328,7 @@ static void test_rlc_dl_ul_basic()
 		uint16_t lost = 0, recv = 0;
 		char show_rbb[65];
 		BTS dummy_bts;
-		gprs_rlc_dl_window dl_win = { 0, };
+		gprs_rlc_dl_window dl_win;
 
 		dl_win.m_v_b.reset();
 

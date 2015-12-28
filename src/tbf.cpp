@@ -587,7 +587,6 @@ gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(BTS *bts_) :
 	m_contention_resolution_done(0),
 	m_final_ack_sent(0)
 {
-	memset(&m_window, 0, sizeof(m_window));
 	memset(&m_usf, 0, sizeof(m_usf));
 }
 
@@ -650,7 +649,6 @@ gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(BTS *bts_) :
 	m_last_dl_poll_fn(0),
 	m_last_dl_drained_fn(0)
 {
-	memset(&m_window, 0, sizeof(m_window));
 	memset(&m_llc_timer, 0, sizeof(m_llc_timer));
 }
 
