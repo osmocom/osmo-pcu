@@ -330,6 +330,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	/* msg is now available */
 
 	/* set USF */
+	OSMO_ASSERT(msgb_length(msg) > 0);
 	msg->data[0] = (msg->data[0] & 0xf8) | usf;
 
 	/* Used to measure the leak rate, count all blocks */
