@@ -546,10 +546,9 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf,
 
 	bts = tbf->bts->bts_data();
 
-	if (egprs_ms_class > 0 && bts->egprs_enabled) {
+	if (tbf->is_egprs_enabled()) {
 		/* TODO: only for 8PSK, otherwise the GPRS MS class has to be used */
 		ms_class = egprs_ms_class;
-		tbf->enable_egprs();
 	}
 
 	tbf->m_created_ts = time(NULL);
@@ -618,6 +617,12 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 
 	if (!ms)
 		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class);
+
+	if (egprs_ms_class > 0 && bts->egprs_enabled) {
+		/* TODO: only for 8PSK, otherwise the GPRS MS class has to be used */
+		ms_class = egprs_ms_class;
+		tbf->enable_egprs();
+	}
 
 	rc = setup_tbf(tbf, ms, use_trx, ms_class, egprs_ms_class, single_slot);
 	/* if no resource */
