@@ -127,8 +127,6 @@ BTS::BTS()
 	, m_ms_store(this)
 {
 	memset(&m_bts, 0, sizeof(m_bts));
-	INIT_LLIST_HEAD(&m_bts.ul_tbfs);
-	INIT_LLIST_HEAD(&m_bts.dl_tbfs);
 	m_bts.bts = this;
 
 	/* initialize back pointers */
@@ -214,14 +212,14 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 {
 	uint8_t l, trx, ts, any_tbf = 0;
 	struct gprs_rlcmac_tbf *tbf;
-	struct llist_pods *lpods;
+	LListHead<gprs_rlcmac_tbf> *pos;
 	struct gprs_rlcmac_paging *pag;
 	uint8_t slot_mask[8];
 	int8_t first_ts; /* must be signed */
 
-	llist_head *tbfs_lists[] = {
-		&m_bts.ul_tbfs,
-		&m_bts.dl_tbfs,
+	LListHead<gprs_rlcmac_tbf> *tbfs_lists[] = {
+		&m_ul_tbfs,
+		&m_dl_tbfs,
 		NULL
 	};
 
@@ -235,7 +233,8 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 	 * Don't mark, if TBF uses a different slot that is already marked. */
 	memset(slot_mask, 0, sizeof(slot_mask));
 	for (l = 0; tbfs_lists[l]; l++) {
-		llist_pods_for_each_entry(tbf, tbfs_lists[l], list, lpods) {
+		llist_for_each(pos, tbfs_lists[l]) {
+			tbf = pos->entry();
 			first_ts = -1;
 			for (ts = 0; ts < 8; ts++) {
 				if (tbf->pdch[ts]) {
@@ -296,11 +295,12 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 {
 	struct gprs_rlcmac_dl_tbf *tbf;
-	struct llist_pods *lpods;
+	LListHead<gprs_rlcmac_tbf> *pos;
 
 	/* only one TBF can poll on specific TS/FN, because scheduler can only
 	 * schedule one downlink control block (with polling) at a FN per TS */
-	llist_pods_for_each_entry(tbf, &m_bts.dl_tbfs, list, lpods) {
+	llist_for_each(pos, &m_dl_tbfs) {
+		tbf = as_dl_tbf(pos->entry());
 		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
@@ -313,11 +313,12 @@ gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
-	struct llist_pods *lpods;
+	LListHead<gprs_rlcmac_tbf> *pos;
 
 	/* only one TBF can poll on specific TS/FN, because scheduler can only
 	 * schedule one downlink control block (with polling) at a FN per TS */
-	llist_pods_for_each_entry(tbf, &m_bts.ul_tbfs, list, lpods) {
+	llist_for_each(pos, &m_ul_tbfs) {
+		tbf = as_ul_tbf(pos->entry());
 		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
@@ -1241,13 +1242,15 @@ int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint32_t fn,
 	return rc;
 }
 
-gprs_rlcmac_tbf *gprs_rlcmac_pdch::tbf_from_list_by_tfi(struct llist_head *tbf_list, uint8_t tfi,
+gprs_rlcmac_tbf *gprs_rlcmac_pdch::tbf_from_list_by_tfi(
+		LListHead<gprs_rlcmac_tbf> *tbf_list, uint8_t tfi,
 		enum gprs_rlcmac_tbf_direction dir)
 {
 	gprs_rlcmac_tbf *tbf;
-	struct llist_pods *lpods;
+	LListHead<gprs_rlcmac_tbf> *pos;
 
-	llist_pods_for_each_entry(tbf, tbf_list, list, lpods) {
+	llist_for_each(pos, tbf_list) {
+		tbf = pos->entry();
 		if (tbf->tfi() != tfi)
 			continue;
 		if (!tbf->pdch[ts_no])

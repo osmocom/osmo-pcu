@@ -88,28 +88,6 @@ enum gprs_rlcmac_tbf_direction {
 #define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
-struct llist_pods {
-	struct llist_head list;
-	void *back;
-};
-
-#define llist_pods_entry(ptr, type) \
-	((type *)(container_of(ptr, struct llist_pods, list)->back))
-
-/**
- * llist_pods_for_each_entry - like llist_for_each_entry, but uses
- * struct llist_pods ->back to access the entry.
- * This is necessary for non-PODS classes because container_of is
- * not guaranteed to work anymore. */
-#define llist_pods_for_each_entry(pos, head, member, lpods)			\
-	for (lpods = llist_entry((head)->next, typeof(struct llist_pods), list), \
-		     pos = ((typeof(pos))lpods->back),	\
-		     prefetch(pos->member.list.next);				\
-	     &lpods->list != (head);					\
-	     lpods = llist_entry(lpods->list.next, typeof(struct llist_pods), list), \
-		     pos = ((typeof(pos))lpods->back),\
-		     prefetch(pos->member.list.next))
-
 struct gprs_rlcmac_tbf {
 	gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir);
 
@@ -175,7 +153,9 @@ struct gprs_rlcmac_tbf {
 	LListHead<gprs_rlcmac_tbf>& ms_list() {return this->m_ms_list;}
 	const LListHead<gprs_rlcmac_tbf>& ms_list() const {return this->m_ms_list;}
 
-	struct llist_pods list;
+	LListHead<gprs_rlcmac_tbf>& list();
+	const LListHead<gprs_rlcmac_tbf>& list() const;
+
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
 	struct gprs_rlcmac_trx *trx;
@@ -251,6 +231,7 @@ protected:
 	uint8_t m_ms_class;
 
 private:
+	LListHead<gprs_rlcmac_tbf> m_list;
 	LListHead<gprs_rlcmac_tbf> m_ms_list;
 	bool m_egprs_enabled;
 
@@ -300,6 +281,16 @@ inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
 		tbf_name(this),
 		tbf_state_name[state], tbf_state_name[new_state]);
 	state = new_state;
+}
+
+inline LListHead<gprs_rlcmac_tbf>& gprs_rlcmac_tbf::list()
+{
+	return this->m_list;
+}
+
+inline const LListHead<gprs_rlcmac_tbf>& gprs_rlcmac_tbf::list() const
+{
+	return this->m_list;
 }
 
 inline GprsMs *gprs_rlcmac_tbf::ms() const

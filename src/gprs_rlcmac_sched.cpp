@@ -25,7 +25,7 @@
 
 #include "pcu_utils.h"
 
-static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
+static uint32_t sched_poll(BTS *bts,
 		    uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
 		    struct gprs_rlcmac_tbf **poll_tbf,
 		    struct gprs_rlcmac_tbf **ul_ass_tbf,
@@ -34,7 +34,7 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 {
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
-	struct llist_pods *lpods;
+	LListHead<gprs_rlcmac_tbf> *pos;
 	uint32_t poll_fn;
 
 	/* check special TBF for events */
@@ -42,7 +42,9 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 	if ((block_nr % 3) == 2)
 		poll_fn ++;
 	poll_fn = poll_fn % 2715648;
-	llist_pods_for_each_entry(ul_tbf, &bts->ul_tbfs, list, lpods) {
+	llist_for_each(pos, &bts->ul_tbfs()) {
+		ul_tbf = as_ul_tbf(pos->entry());
+		OSMO_ASSERT(ul_tbf);
 		/* this trx, this ts */
 		if (ul_tbf->trx->trx_no != trx || ul_tbf->control_ts != ts)
 			continue;
@@ -58,7 +60,9 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 			*ul_ass_tbf = ul_tbf;
 #warning "Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all states?"
 	}
-	llist_pods_for_each_entry(dl_tbf, &bts->dl_tbfs, list, lpods) {
+	llist_for_each(pos, &bts->dl_tbfs()) {
+		dl_tbf = as_dl_tbf(pos->entry());
+		OSMO_ASSERT(dl_tbf);
 		/* this trx, this ts */
 		if (dl_tbf->trx->trx_no != trx || dl_tbf->control_ts != ts)
 			continue;
@@ -292,7 +296,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	/* store last frame number of RTS */
 	pdch->last_rts_fn = fn;
 
-	poll_fn = sched_poll(bts, trx, ts, fn, block_nr, &poll_tbf, &ul_ass_tbf,
+	poll_fn = sched_poll(bts->bts, trx, ts, fn, block_nr, &poll_tbf, &ul_ass_tbf,
 		&dl_ass_tbf, &ul_ack_tbf);
 	/* check uplink resource for polling */
 	if (poll_tbf)

@@ -52,23 +52,23 @@ static gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 static void check_tfi_usage(BTS *the_bts)
 {
 	int pdch_no;
-	struct gprs_rlcmac_bts *bts = the_bts->bts_data();
 
 	struct gprs_rlcmac_tbf *tfi_usage[8][8][2][32] = {{{{NULL}}}};
-	struct llist_head *tbf_lists[2] = {
-		&bts->ul_tbfs,
-		&bts->dl_tbfs
+	LListHead<gprs_rlcmac_tbf> *tbf_lists[2] = {
+		&the_bts->ul_tbfs(),
+		&the_bts->dl_tbfs()
 	};
 
+	LListHead<gprs_rlcmac_tbf> *pos;
 	gprs_rlcmac_tbf *tbf;
-	struct llist_pods *lpods;
 	unsigned list_idx;
 	struct gprs_rlcmac_tbf **tbf_var;
 
 	for (list_idx = 0; list_idx < ARRAY_SIZE(tbf_lists); list_idx += 1)
 	{
 
-		llist_pods_for_each_entry(tbf, tbf_lists[list_idx], list, lpods) {
+		llist_for_each(pos, tbf_lists[list_idx]) {
+			tbf = pos->entry();
 			for (pdch_no = 0; pdch_no < 8; pdch_no += 1) {
 				struct gprs_rlcmac_pdch *pdch = tbf->pdch[pdch_no];
 				if (pdch == NULL)

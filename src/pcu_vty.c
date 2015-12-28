@@ -775,19 +775,7 @@ DEFUN(show_tbf,
       SHOW_STR "information about TBFs\n" "All TBFs\n")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	struct llist_head *tbf;
-
-	vty_out(vty, "UL TBFs%s", VTY_NEWLINE);
-	llist_for_each(tbf, &bts->ul_tbfs) {
-		tbf_print_vty_info(vty, tbf);
-	}
-
-	vty_out(vty, "%sDL TBFs%s", VTY_NEWLINE, VTY_NEWLINE);
-	llist_for_each(tbf, &bts->dl_tbfs) {
-		tbf_print_vty_info(vty, tbf);
-	}
-
-	return CMD_SUCCESS;
+	return pcu_vty_show_tbf_all(vty, bts);
 }
 
 DEFUN(show_ms_all,

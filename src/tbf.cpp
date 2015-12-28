@@ -74,12 +74,12 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	m_ms(NULL),
 	m_ta(0),
 	m_ms_class(0),
+	m_list(this),
 	m_ms_list(this),
 	m_egprs_enabled(false)
 {
 	/* The classes of these members do not have proper constructors yet.
 	 * Just set them to 0 like talloc_zero did */
-	memset(&list, 0, sizeof(list));
 	memset(&pdch, 0, sizeof(pdch));
 	memset(&timer, 0, sizeof(timer));
 	memset(&m_rlc, 0, sizeof(m_rlc));
@@ -88,9 +88,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	m_llc.init();
 
 	m_name_buf[0] = '\0';
-
-	/* Back pointer for PODS llist compatibility */
-	list.back = this;
 }
 
 gprs_rlcmac_bts *gprs_rlcmac_tbf::bts_data() const
@@ -336,7 +333,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	tbf->stop_timer();
 	#warning "TODO: Could/Should generate  bssgp_tx_llc_discarded"
 	tbf_unlink_pdch(tbf);
-	llist_del(&tbf->list.list);
+	llist_del(&tbf->list());
 
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF)
 		tbf->bts->tbf_ul_freed();
@@ -633,7 +630,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 		return NULL;
 	}
 
-	llist_add(&tbf->list.list, &bts->ul_tbfs);
+	llist_add(&tbf->list(), &bts->bts->ul_tbfs());
 	tbf->bts->tbf_ul_created();
 
 	return tbf;
@@ -694,7 +691,7 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 		return NULL;
 	}
 
-	llist_add(&tbf->list.list, &bts->dl_tbfs);
+	llist_add(&tbf->list(), &bts->bts->dl_tbfs());
 	tbf->bts->tbf_dl_created();
 
 	tbf->m_last_dl_poll_fn = -1;
@@ -1093,11 +1090,11 @@ const char *gprs_rlcmac_tbf::name() const
 
 void gprs_rlcmac_tbf::rotate_in_list()
 {
-	llist_del(&list.list);
+	llist_del(&list());
 	if (direction == GPRS_RLCMAC_UL_TBF)
-		llist_add(&list.list, &bts->bts_data()->ul_tbfs);
+		llist_add(&list(), &bts->ul_tbfs());
 	else
-		llist_add(&list.list, &bts->bts_data()->dl_tbfs);
+		llist_add(&list(), &bts->dl_tbfs());
 }
 
 uint8_t gprs_rlcmac_tbf::tsc() const

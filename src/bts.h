@@ -109,7 +109,8 @@ private:
 	void rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *, uint32_t fn);
 	void rcv_resource_request(Packet_Resource_Request_t *t, uint32_t fn);
 	void rcv_measurement_report(Packet_Measurement_Report_t *t, uint32_t fn);
-	gprs_rlcmac_tbf *tbf_from_list_by_tfi(struct llist_head *tbf_list, uint8_t tfi,
+	gprs_rlcmac_tbf *tbf_from_list_by_tfi(
+		LListHead<gprs_rlcmac_tbf> *tbf_list, uint8_t tfi,
 		enum gprs_rlcmac_tbf_direction dir);
 	gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi,
 		enum gprs_rlcmac_tbf_direction dir);
@@ -184,12 +185,6 @@ struct gprs_rlcmac_bts {
 	uint8_t cs_adj_lower_limit;
 	struct {int16_t low; int16_t high;} cs_lqual_ranges[4];
 	uint16_t cs_downgrade_threshold; /* downgrade if less packets left (DL) */
-
-	/* TBF handling, make private or move into TBFController */
-	/* list of uplink TBFs */
-	struct llist_head ul_tbfs;
-	/* list of downlink TBFs */
-	struct llist_head dl_tbfs;
 
 	/* State for dynamic algorithm selection */
 	int multislot_disabled;
@@ -319,6 +314,8 @@ public:
 	struct rate_ctr_group *rate_counters() const;
 	struct osmo_stat_item_group *stat_items() const;
 
+	LListHead<gprs_rlcmac_tbf>& ul_tbfs();
+	LListHead<gprs_rlcmac_tbf>& dl_tbfs();
 private:
 	int m_cur_fn;
 	int m_cur_blk_fn;
@@ -329,6 +326,11 @@ private:
 	struct osmo_stat_item_group *m_statg;
 
 	GprsMsStorage m_ms_store;
+
+	/* list of uplink TBFs */
+	LListHead<gprs_rlcmac_tbf> m_ul_tbfs;
+	/* list of downlink TBFs */
+	LListHead<gprs_rlcmac_tbf> m_dl_tbfs;
 
 private:
 	/* disable copying to avoid slicing */
@@ -359,6 +361,16 @@ inline GprsMs *BTS::ms_by_tlli(uint32_t tlli, uint32_t old_tlli)
 inline GprsMs *BTS::ms_by_imsi(const char *imsi)
 {
 	return ms_store().get_ms(0, 0, imsi);
+}
+
+inline LListHead<gprs_rlcmac_tbf>& BTS::ul_tbfs()
+{
+	return m_ul_tbfs;
+}
+
+inline LListHead<gprs_rlcmac_tbf>& BTS::dl_tbfs()
+{
+	return m_dl_tbfs;
 }
 
 inline BTS *gprs_rlcmac_pdch::bts() const

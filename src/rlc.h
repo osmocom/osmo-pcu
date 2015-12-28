@@ -136,11 +136,7 @@ private:
 
 
 /**
- * TODO: The UL/DL code could/should share a baseclass but
- * we are using llist_for_each_entry for the TBF which
- * requires everything which creates a requirement for a POD
- * type and in < C++11 something that is using even if the
- * most simple form of inheritance is not a POD anymore.
+ * TODO: The UL/DL code could/should share a base class.
  */
 struct gprs_rlc_dl_window {
 	void reset();
