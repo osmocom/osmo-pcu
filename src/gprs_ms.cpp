@@ -218,9 +218,9 @@ void GprsMs::stop_timer()
 void GprsMs::attach_tbf(struct gprs_rlcmac_tbf *tbf)
 {
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF)
-		attach_dl_tbf(static_cast<gprs_rlcmac_dl_tbf *>(tbf));
+		attach_dl_tbf(as_dl_tbf(tbf));
 	else
-		attach_ul_tbf(static_cast<gprs_rlcmac_ul_tbf *>(tbf));
+		attach_ul_tbf(as_ul_tbf(tbf));
 }
 
 void GprsMs::attach_ul_tbf(struct gprs_rlcmac_ul_tbf *tbf)

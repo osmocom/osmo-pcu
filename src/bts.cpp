@@ -305,7 +305,7 @@ gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
 		 && tbf->control_ts == ts) {
-			return static_cast<gprs_rlcmac_dl_tbf *>(tbf);
+			return tbf;
 		}
 	}
 	return NULL;
@@ -322,7 +322,7 @@ gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
 		 && tbf->control_ts == ts) {
-			return static_cast<gprs_rlcmac_ul_tbf *>(tbf);
+			return tbf;
 		}
 	}
 	return NULL;
@@ -1259,14 +1259,12 @@ gprs_rlcmac_tbf *gprs_rlcmac_pdch::tbf_from_list_by_tfi(struct llist_head *tbf_l
 
 gprs_rlcmac_ul_tbf *gprs_rlcmac_pdch::ul_tbf_by_tfi(uint8_t tfi)
 {
-	return static_cast<gprs_rlcmac_ul_tbf *>(
-		tbf_by_tfi(tfi, GPRS_RLCMAC_UL_TBF));
+	return as_ul_tbf(tbf_by_tfi(tfi, GPRS_RLCMAC_UL_TBF));
 }
 
 gprs_rlcmac_dl_tbf *gprs_rlcmac_pdch::dl_tbf_by_tfi(uint8_t tfi)
 {
-	return static_cast<gprs_rlcmac_dl_tbf *>(
-		tbf_by_tfi(tfi, GPRS_RLCMAC_DL_TBF));
+	return as_dl_tbf(tbf_by_tfi(tfi, GPRS_RLCMAC_DL_TBF));
 }
 
 /* lookup TBF Entity (by TFI) */
@@ -1302,7 +1300,7 @@ void gprs_rlcmac_pdch::attach_tbf(gprs_rlcmac_tbf *tbf)
 
 	m_num_tbfs[tbf->direction] += 1;
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		ul_tbf = static_cast<gprs_rlcmac_ul_tbf *>(tbf);
+		ul_tbf = as_ul_tbf(tbf);
 		m_assigned_usf |= 1 << ul_tbf->m_usf[ts_no];
 	}
 	m_assigned_tfi[tbf->direction] |= 1UL << tbf->tfi();
@@ -1322,7 +1320,7 @@ void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
 
 	m_num_tbfs[tbf->direction] -= 1;
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		ul_tbf = static_cast<gprs_rlcmac_ul_tbf *>(tbf);
+		ul_tbf = as_ul_tbf(tbf);
 		m_assigned_usf &= ~(1 << ul_tbf->m_usf[ts_no]);
 	}
 	m_assigned_tfi[tbf->direction] &= ~(1UL << tbf->tfi());

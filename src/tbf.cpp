@@ -315,7 +315,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	/* Give final measurement report */
 	gprs_rlcmac_rssi_rep(tbf);
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
-		gprs_rlcmac_dl_tbf *dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(tbf);
+		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
 		gprs_rlcmac_lost_rep(dl_tbf);
 		dl_tbf->cleanup();
 	}
@@ -446,7 +446,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
 		bts->rlc_ack_timedout();
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
-			gprs_rlcmac_ul_tbf *ul_tbf = static_cast<gprs_rlcmac_ul_tbf *>(this);
+			gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
 			ul_tbf->m_n3103++;
 			if (ul_tbf->m_n3103 == ul_tbf->bts->bts_data()->n3103) {
 				LOGP(DRLCMAC, LOGL_NOTICE,
@@ -500,7 +500,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		/* reschedule DL assignment */
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
 	} else if (direction == GPRS_RLCMAC_DL_TBF) {
-		gprs_rlcmac_dl_tbf *dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(this);
+		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
 
 		if (!(dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
@@ -732,7 +732,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 					"in assign state\n", tbf_name(this));
 		}
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
-			gprs_rlcmac_dl_tbf *dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(this);
+			gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
 			dl_tbf->m_wait_confirm = 0;
 			if (dl_tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
 				tbf_assign_control_ts(dl_tbf);
@@ -828,7 +828,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 
 	/* on uplink TBF we get the downlink TBF to be assigned. */
 	if (direction == GPRS_RLCMAC_UL_TBF) {
-		gprs_rlcmac_ul_tbf *ul_tbf = static_cast<gprs_rlcmac_ul_tbf *>(this);
+		gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
 
 		/* be sure to check first, if contention resolution is done,
 		 * otherwise we cannot send the assignment yet */

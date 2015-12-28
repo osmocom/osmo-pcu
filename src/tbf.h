@@ -452,6 +452,23 @@ inline enum gprs_rlcmac_tbf_direction reverse(enum gprs_rlcmac_tbf_direction dir
 	return (enum gprs_rlcmac_tbf_direction)
 		((int)GPRS_RLCMAC_UL_TBF - (int)dir + (int)GPRS_RLCMAC_DL_TBF);
 }
+
+inline gprs_rlcmac_ul_tbf *as_ul_tbf(gprs_rlcmac_tbf *tbf)
+{
+	if (tbf && tbf->direction == GPRS_RLCMAC_UL_TBF)
+		return static_cast<gprs_rlcmac_ul_tbf *>(tbf);
+	else
+		return NULL;
+}
+
+inline gprs_rlcmac_dl_tbf *as_dl_tbf(gprs_rlcmac_tbf *tbf)
+{
+	if (tbf && tbf->direction == GPRS_RLCMAC_DL_TBF)
+		return static_cast<gprs_rlcmac_dl_tbf *>(tbf);
+	else
+		return NULL;
+}
+
 #endif
 
 #ifdef __cplusplus
