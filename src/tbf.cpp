@@ -622,6 +622,8 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 		/* TODO: only for 8PSK, otherwise the GPRS MS class has to be used */
 		ms_class = egprs_ms_class;
 		tbf->enable_egprs();
+		tbf->m_window.set_sns(RLC_EGPRS_SNS);
+		tbf->m_window.set_ws(RLC_EGPRS_MIN_WS);
 	}
 
 	rc = setup_tbf(tbf, ms, use_trx, ms_class, egprs_ms_class, single_slot);
