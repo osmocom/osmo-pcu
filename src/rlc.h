@@ -25,9 +25,14 @@
 
 #include <stdint.h>
 
-#define RLC_MAX_SNS 128 /* GPRS, must be power of 2 */
-#define RLC_MAX_WS  64 /* max window size */
-#define RLC_MAX_LEN 54 /* CS-4 including spare bits */
+#define RLC_GPRS_SNS 128 /* GPRS, must be power of 2 */
+#define RLC_GPRS_WS  64 /* max window size */
+#define RLC_EGPRS_SNS 2048 /* EGPRS, must be power of 2 */
+#define RLC_EGPRS_MIN_WS 64 /* min window size */
+#define RLC_EGPRS_MAX_WS 1024 /* min window size */
+#define RLC_EGPRS_SNS 2048 /* EGPRS, must be power of 2 */
+#define RLC_MAX_SNS  RLC_EGPRS_SNS
+#define RLC_MAX_LEN 74 /* MCS-9 data unit */
 
 struct BTS;
 struct gprs_rlc_v_n;
@@ -169,7 +174,13 @@ struct gprs_rlc_dl_window {
 
 	gprs_rlc_v_b m_v_b;
 
+	void set_sns(uint16_t sns);
+	void set_ws(uint16_t ws);
+
 	gprs_rlc_dl_window();
+private:
+	uint16_t m_sns;
+	uint16_t m_ws;
 };
 
 struct gprs_rlc_v_n {
@@ -216,7 +227,13 @@ struct gprs_rlc_ul_window {
 
 	gprs_rlc_v_n m_v_n;
 
+	void set_sns(uint16_t sns);
+	void set_ws(uint16_t ws);
+
 	gprs_rlc_ul_window();
+private:
+	uint16_t m_sns;
+	uint16_t m_ws;
 };
 
 extern "C" {
@@ -347,17 +364,19 @@ inline void gprs_rlc_v_b::mark_invalid(int bsn)
 inline gprs_rlc_dl_window::gprs_rlc_dl_window()
 	: m_v_s(0)
 	, m_v_a(0)
+	, m_sns(RLC_GPRS_SNS)
+	, m_ws(RLC_GPRS_WS)
 {
 }
 
 inline const uint16_t gprs_rlc_dl_window::sns() const
 {
-	return RLC_MAX_SNS;
+	return m_sns;
 }
 
 inline const uint16_t gprs_rlc_dl_window::ws() const
 {
-	return RLC_MAX_WS;
+	return m_ws;
 }
 
 inline const uint16_t gprs_rlc_dl_window::mod_sns() const
@@ -413,6 +432,8 @@ inline const int16_t gprs_rlc_dl_window::distance() const
 inline gprs_rlc_ul_window::gprs_rlc_ul_window()
 	: m_v_r(0)
 	, m_v_q(0)
+	, m_sns(RLC_GPRS_SNS)
+	, m_ws(RLC_GPRS_WS)
 {
 }
 
@@ -438,12 +459,12 @@ inline bool gprs_rlc_ul_window::is_received(uint16_t bsn) const
 
 inline const uint16_t gprs_rlc_ul_window::sns() const
 {
-	return RLC_MAX_SNS;
+	return m_sns;
 }
 
 inline const uint16_t gprs_rlc_ul_window::ws() const
 {
-	return RLC_MAX_WS;
+	return m_ws;
 }
 
 inline const uint16_t gprs_rlc_ul_window::mod_sns() const
