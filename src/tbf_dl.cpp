@@ -749,7 +749,7 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 		/* Get statistics for current CS */
 
 		/* TODO: Use GprsCodingScheme everywhere and remove cast */
-		if (rlc_data->cs != (GprsCodingScheme::Scheme)current_cs()) {
+		if (rlc_data->cs != GprsCodingScheme((GprsCodingScheme::Scheme)current_cs())) {
 			/* This block has already been encoded with a different
 			 * CS, so it doesn't help us to decide, whether the
 			 * current CS is ok. Ignore it. */

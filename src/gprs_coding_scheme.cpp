@@ -120,3 +120,59 @@ GprsCodingScheme::HeaderType GprsCodingScheme::headerTypeData() const
 {
 	return mcs_info[m_scheme].data_hdr;
 }
+
+void GprsCodingScheme::inc(Mode mode)
+{
+	if (!isCompatible(mode))
+		/* This should not happen. TODO: Use assert? */
+		return;
+
+	Scheme new_cs(Scheme(m_scheme + 1));
+	if (!GprsCodingScheme(new_cs).isCompatible(mode))
+		/* Clipping, do not change the value */
+		return;
+
+	m_scheme = new_cs;
+}
+
+void GprsCodingScheme::dec(Mode mode)
+{
+	if (!isCompatible(mode))
+		/* This should not happen. TODO: Use assert? */
+		return;
+
+	Scheme new_cs(Scheme(m_scheme - 1));
+	if (!GprsCodingScheme(new_cs).isCompatible(mode))
+		/* Clipping, do not change the value */
+		return;
+
+	m_scheme = new_cs;
+}
+
+void GprsCodingScheme::inc()
+{
+	if (isGprs() && m_scheme == CS4)
+		return;
+
+	if (isEgprs() && m_scheme == MCS9)
+		return;
+
+	if (!isValid())
+		return;
+
+	m_scheme = Scheme(m_scheme + 1);
+}
+
+void GprsCodingScheme::dec()
+{
+	if (isGprs() && m_scheme == CS1)
+		return;
+
+	if (isEgprs() && m_scheme == MCS1)
+		return;
+
+	if (!isValid())
+		return;
+
+	m_scheme = Scheme(m_scheme - 1);
+}

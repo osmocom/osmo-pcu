@@ -53,16 +53,23 @@ public:
 
 	operator bool() const {return m_scheme != UNKNOWN;}
 	operator int()  const {return (int)m_scheme;}
-	void operator =(Scheme s);
-	void operator =(GprsCodingScheme o);
+	operator Scheme() const {return m_scheme;}
+	unsigned int to_num() const;
+
+	GprsCodingScheme& operator =(Scheme s);
+	GprsCodingScheme& operator =(GprsCodingScheme o);
+
 	bool isValid()   const {return UNKNOWN <= m_scheme && m_scheme <= MCS9;}
 	bool isGprs()   const {return CS1 <= m_scheme && m_scheme <= CS4;}
 	bool isEgprs()  const {return m_scheme >= MCS1;}
 	bool isEgprsGmsk()  const {return isEgprs() && m_scheme <= MCS4;}
 	bool isCompatible(Mode mode) const;
+	bool isCompatible(GprsCodingScheme o) const;
 
 	void inc(Mode mode);
 	void dec(Mode mode);
+	void inc();
+	void dec();
 
 	unsigned int sizeUL() const;
 	unsigned int sizeDL() const;
@@ -77,10 +84,23 @@ public:
 	HeaderType headerTypeControl() const;
 
 	static GprsCodingScheme getBySizeUL(unsigned size);
+	static GprsCodingScheme getGprsByNum(unsigned num);
+	static GprsCodingScheme getEgprsByNum(unsigned num);
 
 private:
 	enum Scheme m_scheme;
 };
+
+inline unsigned int GprsCodingScheme::to_num() const
+{
+	if (isGprs())
+		return (m_scheme - CS1) + 1;
+
+	if (isEgprs())
+		return (m_scheme - MCS1) + 1;
+
+	return 0;
+}
 
 inline bool GprsCodingScheme::isCompatible(Mode mode) const
 {
@@ -93,32 +113,9 @@ inline bool GprsCodingScheme::isCompatible(Mode mode) const
 	return false;
 }
 
-inline void GprsCodingScheme::inc(Mode mode)
+inline bool GprsCodingScheme::isCompatible(GprsCodingScheme o) const
 {
-	if (!isCompatible(mode))
-		/* This should not happen. TODO: Use assert? */
-		return;
-
-	Scheme new_cs(Scheme(m_scheme + 1));
-	if (!GprsCodingScheme(new_cs).isCompatible(mode))
-		/* Clipping, do not change the value */
-		return;
-
-	m_scheme = new_cs;
-}
-
-inline void GprsCodingScheme::dec(Mode mode)
-{
-	if (!isCompatible(mode))
-		/* This should not happen. TODO: Use assert? */
-		return;
-
-	Scheme new_cs(Scheme(m_scheme - 1));
-	if (!GprsCodingScheme(new_cs).isCompatible(mode))
-		/* Clipping, do not change the value */
-		return;
-
-	m_scheme = new_cs;
+	return (isGprs() && o.isGprs()) || (isEgprs() && o.isEgprs());
 }
 
 inline GprsCodingScheme::HeaderType GprsCodingScheme::headerTypeControl() const
@@ -133,15 +130,66 @@ inline GprsCodingScheme::GprsCodingScheme(Scheme s)
 		m_scheme = UNKNOWN;
 }
 
-inline void GprsCodingScheme::operator =(Scheme s)
+inline GprsCodingScheme& GprsCodingScheme::operator =(Scheme s)
 {
 	m_scheme = s;
 
 	if (!isValid())
 		m_scheme = UNKNOWN;
+
+	return *this;
 }
 
-inline void GprsCodingScheme::operator =(GprsCodingScheme o)
+inline GprsCodingScheme& GprsCodingScheme::operator =(GprsCodingScheme o)
 {
 	m_scheme = o.m_scheme;
+	return *this;
 }
+
+inline GprsCodingScheme GprsCodingScheme::getGprsByNum(unsigned num)
+{
+	if (num < 1 || num > 4)
+		return GprsCodingScheme();
+
+	return GprsCodingScheme(Scheme(CS1 + (num - 1)));
+}
+
+inline GprsCodingScheme GprsCodingScheme::getEgprsByNum(unsigned num)
+{
+	if (num < 1 || num > 9)
+		return GprsCodingScheme();
+
+	return GprsCodingScheme(Scheme(MCS1 + (num - 1)));
+}
+
+/* The coding schemes form a partial ordering */
+inline bool operator ==(GprsCodingScheme a, GprsCodingScheme b)
+{
+	return int(a) == int(b);
+}
+
+inline bool operator !=(GprsCodingScheme a, GprsCodingScheme b)
+{
+	return !(a == b);
+}
+
+inline bool operator <(GprsCodingScheme a, GprsCodingScheme b)
+{
+	return a.isCompatible(b) && int(a) < int(b);
+}
+
+inline bool operator >(GprsCodingScheme a, GprsCodingScheme b)
+{
+	return a.isCompatible(b) && int(a) > int(b);
+}
+
+inline bool operator <=(GprsCodingScheme a, GprsCodingScheme b)
+{
+	return a == b || a < b;
+}
+
+inline bool operator >=(GprsCodingScheme a, GprsCodingScheme b)
+{
+	return a == b || a > b;
+}
+

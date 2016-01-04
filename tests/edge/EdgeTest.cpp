@@ -113,7 +113,8 @@ static void test_coding_scheme()
 
 	GprsCodingScheme cs;
 	OSMO_ASSERT(!cs);
-	OSMO_ASSERT(cs == GprsCodingScheme::UNKNOWN);
+	OSMO_ASSERT(GprsCodingScheme::Scheme(cs) == GprsCodingScheme::UNKNOWN);
+	OSMO_ASSERT(cs == GprsCodingScheme(GprsCodingScheme::UNKNOWN));
 	OSMO_ASSERT(!cs.isCompatible(GprsCodingScheme::GPRS));
 	OSMO_ASSERT(!cs.isCompatible(GprsCodingScheme::EGPRS_GMSK));
 	OSMO_ASSERT(!cs.isCompatible(GprsCodingScheme::EGPRS));
@@ -126,7 +127,7 @@ static void test_coding_scheme()
 		OSMO_ASSERT(current_cs.isGprs());
 		OSMO_ASSERT(!current_cs.isEgprs());
 		OSMO_ASSERT(!current_cs.isEgprsGmsk());
-		OSMO_ASSERT(current_cs == gprs_schemes[i]);
+		OSMO_ASSERT(GprsCodingScheme::Scheme(current_cs) == gprs_schemes[i]);
 		OSMO_ASSERT(current_cs == GprsCodingScheme(gprs_schemes[i]));
 
 		/* Check strong monotonicity */
@@ -153,7 +154,7 @@ static void test_coding_scheme()
 		OSMO_ASSERT(!current_cs.isGprs());
 		OSMO_ASSERT(current_cs.isEgprs());
 		OSMO_ASSERT(!!current_cs.isEgprsGmsk() == !!egprs_schemes[i].is_gmsk);
-		OSMO_ASSERT(current_cs == egprs_schemes[i].s);
+		OSMO_ASSERT(GprsCodingScheme::Scheme(current_cs) == egprs_schemes[i].s);
 		OSMO_ASSERT(current_cs == GprsCodingScheme(egprs_schemes[i].s));
 
 		/* Check strong monotonicity */
