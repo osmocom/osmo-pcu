@@ -165,15 +165,15 @@ void gprs_rlcmac_tbf::set_ms_class(uint8_t ms_class_)
 	m_ms_class = ms_class_;
 }
 
-uint8_t gprs_rlcmac_tbf::current_cs() const
+GprsCodingScheme gprs_rlcmac_tbf::current_cs() const
 {
-	uint8_t cs;
+	GprsCodingScheme cs;
 	if (direction == GPRS_RLCMAC_UL_TBF)
-		cs = m_ms ? m_ms->current_cs_ul() : bts->bts_data()->initial_cs_ul;
+		cs = m_ms ? m_ms->current_cs_ul() : GprsCodingScheme();
 	else
-		cs = m_ms ? m_ms->current_cs_dl() : bts->bts_data()->initial_cs_dl;
+		cs = m_ms ? m_ms->current_cs_dl() : GprsCodingScheme();
 
-	return cs < 1 ? 1 : cs;
+	return cs;
 }
 
 gprs_llc_queue *gprs_rlcmac_tbf::llc_queue()
@@ -543,10 +543,8 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf,
 
 	bts = tbf->bts->bts_data();
 
-	if (tbf->is_egprs_enabled()) {
-		/* TODO: only for 8PSK, otherwise the GPRS MS class has to be used */
+	if (ms->mode() == GprsCodingScheme::EGPRS)
 		ms_class = egprs_ms_class;
-	}
 
 	tbf->m_created_ts = time(NULL);
 	tbf->set_ms_class(ms_class);
@@ -592,6 +590,17 @@ static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
 	return 0;
 }
 
+static void setup_egprs_mode(gprs_rlcmac_bts *bts, GprsMs *ms)
+{
+	if (GprsCodingScheme::getEgprsByNum(bts->max_mcs_ul).isEgprsGmsk() &&
+		GprsCodingScheme::getEgprsByNum(bts->max_mcs_dl).isEgprsGmsk() &&
+		ms->mode() != GprsCodingScheme::EGPRS)
+	{
+		ms->set_mode(GprsCodingScheme::EGPRS_GMSK);
+	} else {
+		ms->set_mode(GprsCodingScheme::EGPRS);
+	}
+}
 
 struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	GprsMs *ms, int8_t use_trx,
@@ -616,11 +625,10 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class);
 
 	if (egprs_ms_class > 0 && bts->egprs_enabled) {
-		/* TODO: only for 8PSK, otherwise the GPRS MS class has to be used */
-		ms_class = egprs_ms_class;
 		tbf->enable_egprs();
 		tbf->m_window.set_sns(RLC_EGPRS_SNS);
 		tbf->m_window.set_ws(RLC_EGPRS_MIN_WS);
+		setup_egprs_mode(bts, ms);
 	}
 
 	rc = setup_tbf(tbf, ms, use_trx, ms_class, egprs_ms_class, single_slot);

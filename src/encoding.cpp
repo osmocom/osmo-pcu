@@ -193,7 +193,7 @@ void Encoding::write_packet_uplink_assignment(
 
 	if (!use_egprs) {
 		bitvec_write_field(dest, wp,0x0,1); // Message escape
-		bitvec_write_field(dest, wp,tbf->current_cs()-1, 2); // CHANNEL_CODING_COMMAND 
+		bitvec_write_field(dest, wp,tbf->current_cs().to_num()-1, 2); // CHANNEL_CODING_COMMAND 
 		bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
 		bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
 		bitvec_write_field(dest, wp,tbf->ta(),6); // TIMING_ADVANCE_VALUE
@@ -209,7 +209,7 @@ void Encoding::write_packet_uplink_assignment(
 		bitvec_write_field(dest, wp,0x0,2); // EGPRS message contents
 		bitvec_write_field(dest, wp,0x0,1); // No CONTENTION_RESOLUTION_TLLI
 		bitvec_write_field(dest, wp,0x0,1); // No COMPACT reduced MA
-		bitvec_write_field(dest, wp,tbf->current_cs()-1, 4); // EGPRS Modulation and Coding IE
+		bitvec_write_field(dest, wp,tbf->current_cs().to_num()-1, 4); // EGPRS Modulation and Coding IE
 		bitvec_write_field(dest, wp,0x0,1); // No RESEGMENT
 		bitvec_write_field(dest, wp,0x0,5); // EGPRS Window Size = 64
 		bitvec_write_field(dest, wp,0x0,1); // No Access Technologies Request
@@ -426,7 +426,7 @@ static void write_packet_uplink_ack_gprs(
 	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
 {
 
-	bitvec_write_field(dest, wp, tbf->current_cs() - 1, 2); // CHANNEL_CODING_COMMAND
+	bitvec_write_field(dest, wp, tbf->current_cs().to_num() - 1, 2); // CHANNEL_CODING_COMMAND
 	write_packet_ack_nack_desc_gprs(bts, dest, wp, &tbf->m_window, is_final);
 
 	bitvec_write_field(dest, wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI

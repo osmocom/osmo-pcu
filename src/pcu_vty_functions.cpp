@@ -55,7 +55,8 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 		if (tbf->pdch[i])
 			vty_out(vty, "%d ", i);
 	}
-	vty_out(vty, " CS=%d%s%s", tbf->ms() ? tbf->ms()->current_cs_dl() : 1,
+	vty_out(vty, " CS=%s%s%s",
+		tbf->ms() ? tbf->ms()->current_cs_dl().name() : "???",
 		VTY_NEWLINE, VTY_NEWLINE);
 }
 
@@ -83,10 +84,11 @@ int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
 	llist_for_each(ms_iter, &bts->ms_store().ms_list()) {
 		GprsMs *ms = ms_iter->entry();
 
-		vty_out(vty, "MS TLLI=%08x, TA=%d, CS-UL=%d, CS-DL=%d, LLC=%d, "
+		vty_out(vty, "MS TLLI=%08x, TA=%d, CS-UL=%s, CS-DL=%s, LLC=%d, "
 			"IMSI=%s%s",
 			ms->tlli(),
-			ms->ta(), ms->current_cs_ul(), ms->current_cs_dl(),
+			ms->ta(), ms->current_cs_ul().name(),
+			ms->current_cs_dl().name(),
 			ms->llc_queue()->size(),
 			ms->imsi(),
 			VTY_NEWLINE);
@@ -101,9 +103,9 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 
 	vty_out(vty, "MS TLLI=%08x, IMSI=%s%s", ms->tlli(), ms->imsi(), VTY_NEWLINE);
 	vty_out(vty, "  Timing advance (TA):    %d%s", ms->ta(), VTY_NEWLINE);
-	vty_out(vty, "  Coding scheme uplink:   CS-%d%s", ms->current_cs_ul(),
+	vty_out(vty, "  Coding scheme uplink:   %s%s", ms->current_cs_ul().name(),
 		VTY_NEWLINE);
-	vty_out(vty, "  Coding scheme downlink: CS-%d%s", ms->current_cs_dl(),
+	vty_out(vty, "  Coding scheme downlink: %s%s", ms->current_cs_dl().name(),
 		VTY_NEWLINE);
 	vty_out(vty, "  MS class:               %d%s", ms->ms_class(), VTY_NEWLINE);
 	vty_out(vty, "  EGPRS MS class:         %d%s", ms->egprs_ms_class(), VTY_NEWLINE);

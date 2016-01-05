@@ -425,21 +425,15 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 	uint16_t space, chunk;
 	gprs_rlc_data *rlc_data;
 	const uint16_t bsn = m_window.v_s();
-	uint8_t cs_n = 1;
+	GprsCodingScheme cs = current_cs();
 
 	if (m_llc.frame_length() == 0)
 		schedule_next_frame();
 
-	cs_n = current_cs();
+	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d, CS=%s\n",
+		m_window.v_s(), cs.name());
 
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d, CS=%d\n",
-		m_window.v_s(), cs_n);
-
-	OSMO_ASSERT(cs_n >= 1);
-	OSMO_ASSERT(cs_n <= 4);
-
-	/* TODO: Use GprsCodingScheme everywhere and remove cast */
-	GprsCodingScheme cs((GprsCodingScheme::Scheme)cs_n);
+	OSMO_ASSERT(cs.isValid());
 
 	/* total length of block, including spare bits */
 	const uint8_t block_length = cs.sizeDL();
@@ -748,8 +742,7 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 
 		/* Get statistics for current CS */
 
-		/* TODO: Use GprsCodingScheme everywhere and remove cast */
-		if (rlc_data->cs != GprsCodingScheme((GprsCodingScheme::Scheme)current_cs())) {
+		if (rlc_data->cs != current_cs()) {
 			/* This block has already been encoded with a different
 			 * CS, so it doesn't help us to decide, whether the
 			 * current CS is ok. Ignore it. */

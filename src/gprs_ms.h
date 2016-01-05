@@ -74,6 +74,8 @@ public:
 	bool check_tlli(uint32_t tlli);
 
 	void reset();
+	GprsCodingScheme::Mode mode() const;
+	void set_mode(GprsCodingScheme::Mode mode);
 
 	const char *imsi() const;
 	void set_imsi(const char *imsi);
@@ -85,8 +87,10 @@ public:
 	void set_ms_class(uint8_t ms_class);
 	void set_egprs_ms_class(uint8_t ms_class);
 
-	uint8_t current_cs_ul() const;
-	uint8_t current_cs_dl() const;
+	GprsCodingScheme current_cs_ul() const;
+	GprsCodingScheme current_cs_dl() const;
+	GprsCodingScheme max_cs_ul() const;
+	GprsCodingScheme max_cs_dl() const;
 
 	int first_common_ts() const;
 	uint8_t dl_slots() const;
@@ -134,6 +138,7 @@ protected:
 	void unref();
 	void start_timer();
 	void stop_timer();
+	void update_cs_ul(const pcu_l1_meas*);
 
 private:
 	BTS *m_bts;
@@ -152,8 +157,8 @@ private:
 	uint8_t m_ms_class;
 	uint8_t m_egprs_ms_class;
 	/* current coding scheme */
-	uint8_t m_current_cs_ul;
-	uint8_t m_current_cs_dl;
+	GprsCodingScheme m_current_cs_ul;
+	GprsCodingScheme m_current_cs_dl;
 
 	gprs_llc_queue m_llc_queue;
 
@@ -172,6 +177,7 @@ private:
 	gprs_rlcmac_trx *m_current_trx;
 
 	struct gprs_codel *m_codel_state;
+	GprsCodingScheme::Mode m_mode;
 };
 
 inline bool GprsMs::is_idle() const
@@ -220,9 +226,14 @@ inline uint8_t GprsMs::egprs_ms_class() const
 	return m_egprs_ms_class;
 }
 
-inline uint8_t GprsMs::current_cs_ul() const
+inline GprsCodingScheme GprsMs::current_cs_ul() const
 {
 	return m_current_cs_ul;
+}
+
+inline GprsCodingScheme::Mode GprsMs::mode() const
+{
+	return m_mode;
 }
 
 inline void GprsMs::set_timeout(unsigned secs)
