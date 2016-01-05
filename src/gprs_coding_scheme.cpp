@@ -176,3 +176,13 @@ void GprsCodingScheme::dec()
 
 	m_scheme = Scheme(m_scheme - 1);
 }
+
+const char *GprsCodingScheme::modeName(Mode mode)
+{
+	switch (mode) {
+	case GPRS:       return "GPRS";
+	case EGPRS_GMSK: return "EGPRS_GMSK-only";
+	case EGPRS:      return "EGPRS";
+	default:         return "???";
+	}
+}

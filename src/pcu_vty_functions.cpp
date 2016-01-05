@@ -107,6 +107,8 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 		VTY_NEWLINE);
 	vty_out(vty, "  Coding scheme downlink: %s%s", ms->current_cs_dl().name(),
 		VTY_NEWLINE);
+	vty_out(vty, "  Mode:                   %s%s",
+		GprsCodingScheme::modeName(ms->mode()), VTY_NEWLINE);
 	vty_out(vty, "  MS class:               %d%s", ms->ms_class(), VTY_NEWLINE);
 	vty_out(vty, "  EGPRS MS class:         %d%s", ms->egprs_ms_class(), VTY_NEWLINE);
 	vty_out(vty, "  LLC queue length:       %d%s", ms->llc_queue()->size(),

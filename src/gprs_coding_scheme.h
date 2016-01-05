@@ -87,6 +87,7 @@ public:
 	static GprsCodingScheme getGprsByNum(unsigned num);
 	static GprsCodingScheme getEgprsByNum(unsigned num);
 
+	static const char *modeName(Mode mode);
 private:
 	enum Scheme m_scheme;
 };
