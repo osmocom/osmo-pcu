@@ -353,7 +353,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int frames_since_last_drain(unsigned fn) const;
 	bool keep_open(unsigned fn) const;
 	int release();
-	void enable_egprs();
 
 	bool is_control_ts(uint8_t ts) const {
 		return ts == control_ts;
