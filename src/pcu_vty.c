@@ -111,6 +111,15 @@ static int config_write_pcu(struct vty *vty)
 		bts->cs_lqual_ranges[3].low,
 		VTY_NEWLINE);
 
+	if (bts->max_mcs_dl && bts->max_mcs_ul) {
+		if (bts->max_mcs_ul == bts->max_mcs_dl)
+			vty_out(vty, " mcs max %d%s", bts->max_mcs_dl,
+				VTY_NEWLINE);
+		else
+			vty_out(vty, " mcs max %d %d%s", bts->max_mcs_dl,
+				bts->max_mcs_ul, VTY_NEWLINE);
+	}
+
 	if (bts->force_llc_lifetime == 0xffff)
 		vty_out(vty, " queue lifetime infinite%s", VTY_NEWLINE);
 	else if (bts->force_llc_lifetime)
@@ -361,11 +370,12 @@ DEFUN(cfg_pcu_no_cs,
 	return CMD_SUCCESS;
 }
 
+#define CS_MAX_STR "Set maximum values for adaptive CS selection (overrides BTS config)\n"
 DEFUN(cfg_pcu_cs_max,
       cfg_pcu_cs_max_cmd,
       "cs max <1-4> [<1-4>]",
       CS_STR
-      "Set maximum values for adaptive CS selection (overrides BTS config)\n"
+      CS_MAX_STR
       "Maximum CS value to be used\n"
       "Use a different maximum CS value for the uplink")
 {
@@ -384,13 +394,47 @@ DEFUN(cfg_pcu_cs_max,
 DEFUN(cfg_pcu_no_cs_max,
       cfg_pcu_no_cs_max_cmd,
       "no cs max",
-      NO_STR CS_STR
-      "Set maximum values for adaptive CS selection (overrides BTS config)\n")
+      NO_STR CS_STR CS_MAX_STR)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	bts->max_cs_dl = 0;
 	bts->max_cs_ul = 0;
+
+	return CMD_SUCCESS;
+}
+
+#define MCS_STR "Modulation and Coding Scheme configuration (EGPRS)\n"
+
+DEFUN(cfg_pcu_mcs_max,
+      cfg_pcu_mcs_max_cmd,
+      "mcs max <1-4> [<1-4>]",
+      MCS_STR
+      CS_MAX_STR
+      "Maximum MCS value to be used\n"
+      "Use a different maximum MCS value for the uplink")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	uint8_t mcs = atoi(argv[0]);
+
+	bts->max_mcs_dl = mcs;
+	if (argc > 1)
+		bts->max_mcs_ul = atoi(argv[1]);
+	else
+		bts->max_mcs_ul = mcs;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_mcs_max,
+      cfg_pcu_no_mcs_max_cmd,
+      "no mcs max",
+      NO_STR MCS_STR CS_MAX_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->max_mcs_dl = 0;
+	bts->max_mcs_ul = 0;
 
 	return CMD_SUCCESS;
 }
@@ -848,6 +892,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_cs_downgrade_thrsh_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_downgrade_thrsh_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_lqual_ranges_cmd);
+	install_element(PCU_NODE, &cfg_pcu_mcs_max_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_mcs_max_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_inf_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_queue_lifetime_cmd);
