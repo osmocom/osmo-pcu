@@ -180,7 +180,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
  */
 int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 		const uint32_t tlli, const uint32_t tlli_old, const char *imsi,
-		const uint8_t ms_class, const uint8_t egprs_ms_class,
+		const uint8_t ms_class, uint8_t egprs_ms_class,
 		const uint16_t delay_csec,
 		const uint8_t *data, const uint16_t len)
 {
@@ -192,6 +192,10 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 	ms = bts->bts->ms_store().get_ms(tlli, tlli_old, imsi);
 	if (ms)
 		dl_tbf = ms->dl_tbf();
+
+	/* Work-around to get EGPRS MS class */
+	if (ms && !egprs_ms_class)
+		egprs_ms_class = ms->egprs_ms_class();
 
 	if (ms && strlen(ms->imsi()) == 0) {
 		ms_old = bts->bts->ms_store().get_ms(0, 0, imsi);
