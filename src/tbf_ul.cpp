@@ -50,7 +50,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 {
 	const uint8_t *data = _data->block;
 	uint8_t len = _data->len;
-	const struct gprs_rlc_ul_data_block_info *rdbi = &_data->block_info;
+	const struct gprs_rlc_data_block_info *rdbi = &_data->block_info;
 	GprsCodingScheme cs = _data->cs;
 
 	Decoding::RlcData frames[16], *frame;
@@ -137,7 +137,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn)
 }
 
 int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
-	const struct gprs_rlc_ul_header_egprs *rlc,
+	const struct gprs_rlc_data_info *rlc,
 	uint8_t *data, uint8_t len, struct pcu_l1_meas *meas)
 {
 	int8_t rssi = meas->have_rssi ? meas->rssi : 0;
@@ -170,7 +170,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	for (block_idx = 0; block_idx < rlc->num_data_blocks; block_idx++) {
 		int num_chunks;
 		uint8_t *rlc_data;
-		const struct gprs_rlc_ul_data_block_info *rdbi =
+		const struct gprs_rlc_data_block_info *rdbi =
 			&rlc->block_info[block_idx];
 		bool need_rlc_data = false;
 		struct gprs_rlc_data *block;
@@ -301,7 +301,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	 && this->m_window.v_q() == this->m_window.v_r()) { /* if complete */
 		struct gprs_rlc_data *block =
 			m_rlc.block(m_window.mod_sns(m_window.v_r() - 1));
-		const struct gprs_rlc_ul_data_block_info *rdbi =
+		const struct gprs_rlc_data_block_info *rdbi =
 			&block->block_info;
 
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- No gaps in received block, "
@@ -324,7 +324,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 }
 
 void gprs_rlcmac_ul_tbf::maybe_schedule_uplink_acknack(
-	const gprs_rlc_ul_header_egprs *rlc)
+	const gprs_rlc_data_info *rlc)
 {
 	bool have_ti = rlc->block_info[0].ti ||
 		(rlc->num_data_blocks > 1 && rlc->block_info[1].ti);
