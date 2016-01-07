@@ -52,7 +52,6 @@ public:
 	GprsCodingScheme(Scheme s = UNKNOWN);
 
 	operator bool() const {return m_scheme != UNKNOWN;}
-	operator int()  const {return (int)m_scheme;}
 	operator Scheme() const {return m_scheme;}
 	unsigned int to_num() const;
 
@@ -89,6 +88,8 @@ public:
 
 	static const char *modeName(Mode mode);
 private:
+	GprsCodingScheme(int s); /* fail on use */
+	GprsCodingScheme& operator =(int s); /* fail on use */
 	enum Scheme m_scheme;
 };
 
@@ -166,7 +167,7 @@ inline GprsCodingScheme GprsCodingScheme::getEgprsByNum(unsigned num)
 /* The coding schemes form a partial ordering */
 inline bool operator ==(GprsCodingScheme a, GprsCodingScheme b)
 {
-	return int(a) == int(b);
+	return GprsCodingScheme::Scheme(a) == GprsCodingScheme::Scheme(b);
 }
 
 inline bool operator !=(GprsCodingScheme a, GprsCodingScheme b)
@@ -176,12 +177,13 @@ inline bool operator !=(GprsCodingScheme a, GprsCodingScheme b)
 
 inline bool operator <(GprsCodingScheme a, GprsCodingScheme b)
 {
-	return a.isCompatible(b) && int(a) < int(b);
+	return a.isCompatible(b) &&
+		GprsCodingScheme::Scheme(a) < GprsCodingScheme::Scheme(b);
 }
 
 inline bool operator >(GprsCodingScheme a, GprsCodingScheme b)
 {
-	return a.isCompatible(b) && int(a) > int(b);
+	return b < a;
 }
 
 inline bool operator <=(GprsCodingScheme a, GprsCodingScheme b)
