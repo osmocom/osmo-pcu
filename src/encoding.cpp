@@ -269,11 +269,14 @@ void Encoding::write_packet_uplink_assignment(
 
 
 /* generate downlink assignment */
-void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
-	uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf, uint8_t poll,
-	uint8_t alpha, uint8_t gamma, int8_t ta_idx, uint8_t ta_ts)
+void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
+	uint8_t old_tfi, uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf,
+	uint8_t poll, uint8_t alpha, uint8_t gamma, int8_t ta_idx, uint8_t ta_ts,
+	bool use_egprs)
 {
 	// Packet downlink assignment TS 44.060 11.2.7
+
+	PDA_AdditionsR99_t *pda_r99;
 
 	uint8_t tn;
 
@@ -338,7 +341,18 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_
 
 	block->u.Packet_Downlink_Assignment.Exist_TBF_Starting_Time   = 0x0; // TBF Starting TIME = off
 	block->u.Packet_Downlink_Assignment.Exist_Measurement_Mapping = 0x0; // Measurement_Mapping = off
-	block->u.Packet_Downlink_Assignment.Exist_AdditionsR99        = 0x0; // AdditionsR99 = off
+	if (!use_egprs) {
+		block->u.Packet_Downlink_Assignment.Exist_AdditionsR99        = 0x0; // AdditionsR99 = off
+		return;
+	}
+	block->u.Packet_Downlink_Assignment.Exist_AdditionsR99        = 0x1; // AdditionsR99 = on
+	pda_r99 = &block->u.Packet_Downlink_Assignment.AdditionsR99;
+	pda_r99->Exist_EGPRS_Params = 1;
+	pda_r99->EGPRS_WindowSize = 0; /* 64, see TS 44.060, table 12.5.2.1 */
+	pda_r99->LINK_QUALITY_MEASUREMENT_MODE = 0x0; /* no meas, see TS 44.060, table 11.2.7.2 */
+	pda_r99->Exist_BEP_PERIOD2 = 0; /* No extra EGPRS BEP PERIOD */
+	pda_r99->Exist_Packet_Extended_Timing_Advance = 0;
+	pda_r99->Exist_COMPACT_ReducedMA = 0;
 }
 
 /* generate paging request */

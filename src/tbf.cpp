@@ -871,7 +871,8 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	Encoding::write_packet_downlink_assignment(mac_control_block, m_tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), new_dl_tbf,
-		poll_ass_dl, bts_data()->alpha, bts_data()->gamma, -1, 0);
+		poll_ass_dl, bts_data()->alpha, bts_data()->gamma, -1, 0,
+		is_egprs_enabled());
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
 	encode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
 	LOGPC(DCSN1, LOGL_NOTICE, "\n");
