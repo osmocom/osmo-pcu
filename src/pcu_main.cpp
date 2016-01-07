@@ -163,6 +163,7 @@ int main(int argc, char *argv[])
 	bts = bts_main_data();
 	bts->fc_interval = 1;
 	bts->initial_cs_dl = bts->initial_cs_ul = 1;
+	bts->initial_mcs_dl = bts->initial_mcs_ul = 1;
 	bts->cs1 = 1;
 	bts->t3142 = 20;
 	bts->t3169 = 5;
