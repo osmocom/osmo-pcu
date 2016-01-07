@@ -629,6 +629,8 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 		tbf->m_window.set_sns(RLC_EGPRS_SNS);
 		tbf->m_window.set_ws(RLC_EGPRS_MIN_WS);
 		setup_egprs_mode(bts, ms);
+		LOGP(DRLCMAC, LOGL_INFO, "Enabled EGPRS for %s, mode %s\n",
+			tbf->name(), GprsCodingScheme::modeName(ms->mode()));
 	}
 
 	rc = setup_tbf(tbf, ms, use_trx, ms_class, egprs_ms_class, single_slot);
@@ -678,8 +680,8 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	int rc;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
-	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d\n",
-		"DL", ms_class);
+	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d/%d\n",
+		"DL", ms_class, egprs_ms_class);
 
 	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
 
@@ -691,6 +693,15 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 
 	if (!ms)
 		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class);
+
+	if (egprs_ms_class > 0 && bts->egprs_enabled) {
+		tbf->enable_egprs();
+		tbf->m_window.set_sns(RLC_EGPRS_SNS);
+		tbf->m_window.set_ws(RLC_EGPRS_MIN_WS);
+		setup_egprs_mode(bts, ms);
+		LOGP(DRLCMAC, LOGL_INFO, "Enabled EGPRS for %s, mode %s\n",
+			tbf->name(), GprsCodingScheme::modeName(ms->mode()));
+	}
 
 	rc = setup_tbf(tbf, ms, use_trx, ms_class, 0, single_slot);
 	/* if no resource */
