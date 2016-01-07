@@ -413,7 +413,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(
-		const struct gprs_rlc_ul_header_egprs *rlc,
+		const struct gprs_rlc_data_info *rlc,
 		uint8_t *data, uint8_t len, struct pcu_l1_meas *meas);
 
 
@@ -434,7 +434,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	uint8_t m_final_ack_sent; /* set if we sent final ack */
 
 protected:
-	void maybe_schedule_uplink_acknack(const gprs_rlc_ul_header_egprs *rlc);
+	void maybe_schedule_uplink_acknack(const gprs_rlc_data_info *rlc);
 };
 
 inline enum gprs_rlcmac_tbf_direction reverse(enum gprs_rlcmac_tbf_direction dir)

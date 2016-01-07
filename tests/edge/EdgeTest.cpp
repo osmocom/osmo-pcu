@@ -174,7 +174,7 @@ static void test_coding_scheme()
 
 static void test_rlc_unit_decoder()
 {
-	struct gprs_rlc_ul_data_block_info rdbi = {0};
+	struct gprs_rlc_data_block_info rdbi = {0};
 	GprsCodingScheme cs;
 	uint8_t data[74];
 	Decoding::RlcData chunks[16];

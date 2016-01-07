@@ -180,7 +180,7 @@ static int parse_extensions_gprs(const uint8_t *data, unsigned int data_len,
 }
 
 int Decoding::rlc_data_from_ul_data(
-	const struct gprs_rlc_ul_data_block_info *rdbi, GprsCodingScheme cs,
+	const struct gprs_rlc_data_block_info *rdbi, GprsCodingScheme cs,
 	const uint8_t *data, RlcData *chunks, unsigned int chunks_size,
 	uint32_t *tlli)
 {
@@ -369,7 +369,7 @@ void Decoding::extract_rbb(const uint8_t *rbb, char *show_rbb)
 	show_rbb[64] = '\0';
 }
 
-int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_ul_header_egprs *rlc,
+int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 	const uint8_t *data, GprsCodingScheme cs)
 {
 	const struct gprs_rlc_ul_header_egprs_3 *egprs3;
@@ -464,7 +464,7 @@ int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_ul_header_egprs *rlc,
  * \returns  the number of bytes copied
  */
 unsigned int Decoding::rlc_copy_to_aligned_buffer(
-	const struct gprs_rlc_ul_header_egprs *rlc,
+	const struct gprs_rlc_data_info *rlc,
 	unsigned int data_block_idx,
 	const uint8_t *src, uint8_t *buffer)
 {
@@ -474,7 +474,7 @@ unsigned int Decoding::rlc_copy_to_aligned_buffer(
 
 	uint8_t c, last_c;
 	uint8_t *dst;
-	const struct gprs_rlc_ul_data_block_info *rdbi;
+	const struct gprs_rlc_data_block_info *rdbi;
 
 	OSMO_ASSERT(data_block_idx < rlc->num_data_blocks);
 	rdbi = &rlc->block_info[data_block_idx];
@@ -514,7 +514,7 @@ unsigned int Decoding::rlc_copy_to_aligned_buffer(
  *          buffer otherwise.
  */
 const uint8_t *Decoding::rlc_get_data_aligned(
-	const struct gprs_rlc_ul_header_egprs *rlc,
+	const struct gprs_rlc_data_info *rlc,
 	unsigned int data_block_idx,
 	const uint8_t *src, uint8_t *buffer)
 {

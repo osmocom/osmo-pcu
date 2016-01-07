@@ -60,7 +60,7 @@ static inline uint16_t mod_sns_half()
 	return (RLC_MAX_SNS / 2) - 1;
 }
 
-struct gprs_rlc_ul_data_block_info {
+struct gprs_rlc_data_block_info {
 	unsigned int data_len; /* EGPRS: N2, GPRS: N2-2, N-2 */
 	unsigned int bsn;
 	unsigned int ti;
@@ -70,7 +70,7 @@ struct gprs_rlc_ul_data_block_info {
 	unsigned int spb;
 };
 
-struct gprs_rlc_ul_header_egprs {
+struct gprs_rlc_data_info {
 	GprsCodingScheme cs;
 	unsigned int r;
 	unsigned int si;
@@ -79,7 +79,7 @@ struct gprs_rlc_ul_header_egprs {
 	unsigned int rsb;
 	unsigned int num_data_blocks;
 	unsigned int data_offs_bits[2];
-	struct gprs_rlc_ul_data_block_info block_info[2];
+	struct gprs_rlc_data_block_info block_info[2];
 };
 
 struct gprs_rlc_data {
@@ -91,7 +91,7 @@ struct gprs_rlc_data {
 	/* block len of history */
 	uint8_t len;
 
-	struct gprs_rlc_ul_data_block_info block_info;
+	struct gprs_rlc_data_block_info block_info;
 	GprsCodingScheme cs;
 };
 

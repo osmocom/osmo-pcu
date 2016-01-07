@@ -1156,7 +1156,7 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint32_t fn,
 	struct pcu_l1_meas *meas, GprsCodingScheme cs)
 {
 	int rc;
-	struct gprs_rlc_ul_header_egprs rlc_dec;
+	struct gprs_rlc_data_info rlc_dec;
 	struct gprs_rlcmac_ul_tbf *tbf;
 	unsigned len = cs.maxBytesUL();
 
