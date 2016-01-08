@@ -23,6 +23,7 @@
 #include "gprs_debug.h"
 #include "gprs_coding_scheme.h"
 #include "decoding.h"
+#include "encoding.h"
 #include "rlc.h"
 
 extern "C" {
@@ -36,6 +37,7 @@ extern "C" {
 }
 
 #include <errno.h>
+#include <string.h>
 
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
@@ -481,6 +483,73 @@ static void test_rlc_unit_decoder()
 	printf("=== end %s ===\n", __func__);
 }
 
+static void test_rlc_unaligned_copy()
+{
+	uint8_t bits[256];
+	uint8_t saved_block[256];
+	uint8_t test_block[256];
+	uint8_t out_block[256];
+	GprsCodingScheme::Scheme scheme;
+	int pattern;
+	volatile unsigned int block_idx, i;
+
+	for (scheme = GprsCodingScheme::CS1;
+		scheme < GprsCodingScheme::NUM_SCHEMES;
+		scheme = GprsCodingScheme::Scheme(scheme + 1))
+	{
+		GprsCodingScheme cs(scheme);
+
+		for (pattern = 0; pattern <= 0xff; pattern += 0xff) {
+			/* prepare test block */
+			test_block[0] = pattern ^ 0xff;
+			for (i = 1; i + 1 < cs.maxDataBlockBytes(); i++)
+				test_block[i] = i;
+			test_block[cs.maxDataBlockBytes()-1] = pattern ^ 0xff;
+
+			for (block_idx = 0;
+				block_idx < cs.numDataBlocks();
+				block_idx++)
+			{
+				struct gprs_rlc_data_info rlc;
+				gprs_rlc_data_info_init_dl(&rlc, cs);
+
+				memset(bits, pattern, sizeof(bits));
+				Decoding::rlc_copy_to_aligned_buffer(
+					&rlc, block_idx, bits, saved_block);
+
+				fprintf(stderr,
+					"Test data block: %s\n",
+					osmo_hexdump(test_block, cs.maxDataBlockBytes()));
+
+				Encoding::rlc_copy_from_aligned_buffer(
+					&rlc, block_idx, bits, test_block);
+
+				fprintf(stderr,
+					"Encoded message block, %s, idx %d, "
+					"pattern %02x: %s\n",
+					rlc.cs.name(), block_idx, pattern,
+					osmo_hexdump(bits, cs.sizeDL()));
+
+				Decoding::rlc_copy_to_aligned_buffer(
+					&rlc, block_idx, bits, out_block);
+
+				fprintf(stderr,
+					"Out data block: %s\n",
+					osmo_hexdump(out_block, cs.maxDataBlockBytes()));
+				/* restore original bits */
+				Encoding::rlc_copy_from_aligned_buffer(
+					&rlc, block_idx, bits, saved_block);
+
+				OSMO_ASSERT(memcmp(test_block, out_block,
+						rlc.cs.maxDataBlockBytes()) == 0);
+
+				for (i = 0; i < sizeof(bits); i++)
+					OSMO_ASSERT(bits[i] == pattern);
+			}
+		}
+	}
+}
+
 static void test_rlc_info_init()
 {
 	struct gprs_rlc_data_info rlc;
@@ -544,6 +613,7 @@ int main(int argc, char **argv)
 	test_coding_scheme();
 	test_rlc_info_init();
 	test_rlc_unit_decoder();
+	test_rlc_unaligned_copy();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
