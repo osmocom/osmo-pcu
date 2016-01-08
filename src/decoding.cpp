@@ -194,7 +194,7 @@ int Decoding::rlc_data_from_ul_data(
 {
 	uint8_t e;
 	unsigned int data_len = rdbi->data_len;
-	unsigned int num_chunks = 0, i;
+	int num_chunks = 0, i;
 	unsigned int offs = 0;
 	bool is_last_block = (rdbi->cv == 0);
 
@@ -224,6 +224,9 @@ int Decoding::rlc_data_from_ul_data(
 			is_last_block,
 			chunks, chunks_size);
 	}
+
+	if (num_chunks < 0)
+		return num_chunks;
 
 	/* TLLI */
 	if (rdbi->ti) {
@@ -257,6 +260,9 @@ int Decoding::rlc_data_from_ul_data(
 
 		/* TODO: Skip all extensions with E=0 (see TS 44.060, 10.4.11 */
 	}
+
+	if (chunks_size == 0)
+		return num_chunks;
 
 	/* LLC */
 	for (i = 0; i < num_chunks; i++) {
