@@ -298,6 +298,21 @@ struct gprs_rlc_ul_header_egprs_3 {
 		spare:1,
 		dummy:1;
 } __attribute__ ((packed));
+
+struct gprs_rlc_dl_header_egprs_3 {
+	uint8_t usf:3,
+		es_p:2,
+		rrbp:2,
+		tfi_a:1;
+	uint8_t tfi_b:4,
+		pr:2,
+		bsn1_a:2;
+	uint8_t bsn1_b:8;
+	uint8_t bsn1_c:1,
+		cps:4,
+		spb:2,
+		dummy:1;
+} __attribute__ ((packed));
 #else
 #  error "Only little endian headers are supported yet. TODO: add missing structs"
 #endif

@@ -25,6 +25,9 @@
 #include <tbf.h>
 #include <gprs_debug.h>
 
+#include <errno.h>
+#include <string.h>
+
 // GSM 04.08 9.1.18 Immediate assignment
 int Encoding::write_immediate_assignment(
 	struct gprs_rlcmac_bts *bts,
@@ -631,3 +634,120 @@ unsigned Encoding::write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t
 	return wp;
 }
 
+int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
+	uint8_t *data)
+{
+	struct gprs_rlc_dl_header_egprs_3 *egprs3;
+	struct rlc_dl_header *gprs;
+	unsigned int e_fbi_header;
+	GprsCodingScheme cs = rlc->cs;
+
+	switch(cs.headerTypeData()) {
+	case GprsCodingScheme::HEADER_GPRS_DATA:
+		gprs = static_cast<struct rlc_dl_header *>
+			((void *)data);
+
+		gprs->usf   = rlc->usf;
+		gprs->s_p   = rlc->es_p != 0 ? 1 : 0;
+		gprs->rrbp  = rlc->rrbp;
+		gprs->pt    = 0;
+		gprs->tfi   = rlc->tfi;
+		gprs->pr    = rlc->pr;
+
+		gprs->fbi   = rlc->block_info[0].cv == 0;
+		gprs->e     = rlc->block_info[0].e;
+		gprs->bsn   = rlc->block_info[0].bsn;
+		break;
+
+	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3:
+		egprs3 = static_cast<struct gprs_rlc_dl_header_egprs_3 *>
+			((void *)data);
+
+		egprs3->usf    = rlc->usf;
+		egprs3->es_p   = rlc->es_p;
+		egprs3->rrbp   = rlc->rrbp;
+		egprs3->tfi_a  = rlc->tfi >> 0; /* 1 bit LSB */
+		egprs3->tfi_b  = rlc->tfi >> 1; /* 4 bits */
+		egprs3->pr     = rlc->pr;
+		egprs3->cps    = rlc->cps;
+
+		egprs3->bsn1_a = rlc->block_info[0].bsn >> 0; /* 2 bits LSB */
+		egprs3->bsn1_b = rlc->block_info[0].bsn >> 2; /* 8 bits */
+		egprs3->bsn1_c = rlc->block_info[0].bsn >> 10; /* 1 bit */
+
+		egprs3->spb    = rlc->block_info[0].spb;
+
+		e_fbi_header   = rlc->block_info[0].e       ? 0x01 : 0;
+		e_fbi_header  |= rlc->block_info[0].cv == 0 ? 0x02 : 0; /* FBI */
+		e_fbi_header <<= 7;
+		data[3] = (data[3] & 0b01111111) | (e_fbi_header >> 0);
+		data[4] = (data[4] & 0b11111110) | (e_fbi_header >> 8);
+		break;
+
+	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1:
+	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2:
+		/* TODO: Support both header types */
+		/* fall through */
+	default:
+		LOGP(DRLCMACDL, LOGL_ERROR,
+			"Encoding of uplink %s data blocks not yet supported.\n",
+			cs.name());
+		return -ENOTSUP;
+	};
+
+	return 0;
+}
+
+/**
+ * \brief Copy LSB bitstream RLC data block from byte aligned buffer.
+ *
+ * Note that the bitstream is encoded in LSB first order, so the two octets
+ * 654321xx xxxxxx87 contain the octet 87654321 starting at bit position 3
+ * (LSB has bit position 1). This is a different order than the one used by
+ * CSN.1.
+ *
+ * \param data_block_idx  The block index, 0..1 for header type 1, 0 otherwise
+ * \param src     A pointer to the start of the RLC block (incl. the header)
+ * \param buffer  A data area of a least the size of the RLC block
+ * \returns  the number of bytes copied
+ */
+unsigned int Encoding::rlc_copy_from_aligned_buffer(
+	const struct gprs_rlc_data_info *rlc,
+	unsigned int data_block_idx,
+	uint8_t *dst, const uint8_t *buffer)
+{
+	unsigned int hdr_bytes;
+	unsigned int extra_bits;
+	unsigned int i;
+
+	uint8_t c, last_c;
+	const uint8_t *src;
+	const struct gprs_rlc_data_block_info *rdbi;
+
+	OSMO_ASSERT(data_block_idx < rlc->num_data_blocks);
+	rdbi = &rlc->block_info[data_block_idx];
+
+	hdr_bytes = rlc->data_offs_bits[data_block_idx] / 8;
+	extra_bits = (rlc->data_offs_bits[data_block_idx] % 8);
+
+	if (extra_bits == 0) {
+		/* It is aligned already */
+		memmove(dst + hdr_bytes, buffer, rdbi->data_len);
+		return rdbi->data_len;
+	}
+
+	src = buffer;
+	dst = dst + hdr_bytes;
+	last_c = *dst << (8 - extra_bits);
+
+	for (i = 0; i < rdbi->data_len; i++) {
+		c = src[i];
+		*(dst++) = (last_c >> (8 - extra_bits)) | (c << extra_bits);
+		last_c = c;
+	}
+
+	/* overwrite the lower extra_bits */
+	*dst = (*dst & (0xff << extra_bits)) | (last_c >> (8 - extra_bits));
+
+	return rdbi->data_len;
+}

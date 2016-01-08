@@ -68,4 +68,12 @@ public:
 			uint8_t *identity, uint8_t chan_needed);
 
 	static unsigned write_packet_paging_request(bitvec * dest);
+
+	static int rlc_write_dl_data_header(
+			const struct gprs_rlc_data_info *rlc,
+			uint8_t *data);
+	static unsigned int rlc_copy_from_aligned_buffer(
+			const struct gprs_rlc_data_info *rlc,
+			unsigned int data_block_idx,
+			uint8_t *dst, const uint8_t *buffer);
 };
