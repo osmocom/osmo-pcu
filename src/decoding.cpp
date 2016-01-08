@@ -43,7 +43,6 @@ static int parse_extensions_egprs(const uint8_t *data, unsigned int data_len,
 	const struct rlc_li_field_egprs *li;
 	uint8_t e;
 	unsigned int num_chunks = 0;
-	// unsigned int data_area = 0;
 
 	e = 0;
 	while (!e) {
@@ -72,7 +71,6 @@ static int parse_extensions_egprs(const uint8_t *data, unsigned int data_len,
 			chunks[num_chunks].is_complete = true;
 		} else if (li->li == 0 && num_chunks == 0 && li->e == 1) {
 			/* TS 44.060, table 10.4.14a.1, row 4 */
-			// chunks[num_chunks].length = data_len - *offs - data_area;
 			chunks[num_chunks].length = LENGTH_TO_END;
 			chunks[num_chunks].is_complete = is_last_block;
 		} else if (li->li == 127 && li->e == 1) {
@@ -101,10 +99,8 @@ static int parse_extensions_egprs(const uint8_t *data, unsigned int data_len,
 				return -ENOSPC;
 			}
 
-			// chunks[num_chunks].length = data_len - *offs - data_area;
 			chunks[num_chunks].length = LENGTH_TO_END;
 			chunks[num_chunks].is_complete = is_last_block;
-			// data_area += chunks[num_chunks].length;
 			num_chunks += 1;
 		}
 	}
@@ -120,7 +116,6 @@ static int parse_extensions_gprs(const uint8_t *data, unsigned int data_len,
 	const struct rlc_li_field *li;
 	uint8_t m, e;
 	unsigned int num_chunks = 0;
-	// unsigned int data_area = 0;
 
 	e = 0;
 	while (!e) {
@@ -160,14 +155,12 @@ static int parse_extensions_gprs(const uint8_t *data, unsigned int data_len,
 
 		if (li->li == 0)
 			/* e is 1 here */
-			// chunks[num_chunks].length = data_len - *offs - data_area;
 			chunks[num_chunks].length = LENGTH_TO_END;
 		else
 			chunks[num_chunks].length = li->li;
 
 		chunks[num_chunks].is_complete = li->li || is_last_block;
 
-		// data_area += chunks[num_chunks].length;
 		num_chunks += 1;
 
 		if (e == 1 && m == 1) {
@@ -177,7 +170,6 @@ static int parse_extensions_gprs(const uint8_t *data, unsigned int data_len,
 				return -ENOSPC;
 			}
 			/* TS 44.060, 10.4.13.1, row 4 */
-			// chunks[num_chunks].length = data_len - *offs - data_area;
 			chunks[num_chunks].length = LENGTH_TO_END;
 			chunks[num_chunks].is_complete = is_last_block;
 			num_chunks += 1;
