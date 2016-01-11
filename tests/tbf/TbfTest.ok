@@ -1,5 +1,7 @@
 === start test_tbf_base ===
 === end test_tbf_base ===
+=== start test_tbf_tlli_update ===
+=== end test_tbf_tlli_update ===
 === start test_tbf_delayed_release ===
 === end test_tbf_delayed_release ===
 === start test_tbf_imsi ===

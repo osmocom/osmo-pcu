@@ -81,6 +81,8 @@ static void test_tbf_tlli_update()
 	BTS the_bts;
 	GprsMs *ms, *ms_new;
 
+	printf("=== start %s ===\n", __func__);
+
 	the_bts.bts_data()->alloc_algorithm = alloc_algorithm_a;
 	the_bts.bts_data()->trx[0].pdch[2].enable();
 	the_bts.bts_data()->trx[0].pdch[3].enable();
@@ -138,6 +140,8 @@ static void test_tbf_tlli_update()
 
 	OSMO_ASSERT(ul_tbf->ta() == 6);
 	OSMO_ASSERT(dl_tbf->ta() == 6);
+
+	printf("=== end %s ===\n", __func__);
 }
 
 static uint8_t llc_data[200];
