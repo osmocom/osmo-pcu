@@ -441,7 +441,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 
 	/* total length of block, including spare bits */
 	const uint8_t block_length = cs.sizeDL();
-	/* length of usable data of block, w/o spare bits, inc. MAC */
+	/* length of usable data of block, w/o spare bits (GPRS), inc. MAC */
 	const uint8_t block_data_len = cs.maxBytesDL();
 
 	/* now we still have untransmitted LLC data, so we fill mac block */

@@ -73,7 +73,15 @@ GprsCodingScheme GprsCodingScheme::getBySizeUL(unsigned size)
 
 unsigned int GprsCodingScheme::sizeUL() const
 {
-	return maxBytesUL() + (spareBitsUL() ? 1 : 0);
+	return mcs_info[m_scheme].uplink.bytes + (spareBitsUL() ? 1 : 0);
+}
+
+unsigned int GprsCodingScheme::usedSizeUL() const
+{
+	if (mcs_info[m_scheme].data_hdr == HEADER_GPRS_DATA)
+		return mcs_info[m_scheme].uplink.bytes;
+	else
+		return sizeUL();
 }
 
 unsigned int GprsCodingScheme::maxBytesUL() const
@@ -88,7 +96,15 @@ unsigned int GprsCodingScheme::spareBitsUL() const
 
 unsigned int GprsCodingScheme::sizeDL() const
 {
-	return maxBytesDL() + (spareBitsDL() ? 1 : 0);
+	return mcs_info[m_scheme].downlink.bytes + (spareBitsDL() ? 1 : 0);
+}
+
+unsigned int GprsCodingScheme::usedSizeDL() const
+{
+	if (mcs_info[m_scheme].data_hdr == HEADER_GPRS_DATA)
+		return mcs_info[m_scheme].downlink.bytes;
+	else
+		return sizeDL();
 }
 
 unsigned int GprsCodingScheme::maxBytesDL() const

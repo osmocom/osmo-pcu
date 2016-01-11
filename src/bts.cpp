@@ -1138,7 +1138,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	}
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Got RLC block, coding scheme: %s, "
-		"length: %d (%d))\n", cs.name(), len, cs.maxBytesUL());
+		"length: %d (%d))\n", cs.name(), len, cs.usedSizeUL());
 
 	if (cs.isGprs())
 		return rcv_block_gprs(data, fn, meas, cs);
@@ -1158,7 +1158,7 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint32_t fn,
 	int rc;
 	struct gprs_rlc_data_info rlc_dec;
 	struct gprs_rlcmac_ul_tbf *tbf;
-	unsigned len = cs.maxBytesUL();
+	unsigned len = cs.sizeUL();
 
 	/* These are always data blocks, since EGPRS still uses CS-1 for
 	 * control blocks (see 44.060, section 10.3, 1st par.)
@@ -1208,7 +1208,7 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint32_t fn,
 		return 0;
 	}
 
-	return tbf->rcv_data_block_acknowledged(&rlc_dec, data, len, meas);
+	return tbf->rcv_data_block_acknowledged(&rlc_dec, data, meas);
 }
 
 int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint32_t fn,
