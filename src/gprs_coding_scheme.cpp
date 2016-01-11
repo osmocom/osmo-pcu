@@ -25,30 +25,45 @@ static struct {
 	struct {
 		unsigned int bytes;
 		unsigned int ext_bits;
+		unsigned int data_header_bits;
 	} uplink, downlink;
 	unsigned int data_bytes;
-	unsigned int num_blocks;
 	const char *name;
 	GprsCodingScheme::HeaderType data_hdr;
 } mcs_info[GprsCodingScheme::NUM_SCHEMES] = {
-	{{0, 0},    {0, 0},    0, 0, "UNKNOWN", GprsCodingScheme::HEADER_INVALID},
-	{{23, 0},   {23, 0},  20, 1, "CS-1", GprsCodingScheme::HEADER_GPRS_DATA},
-	{{33, 7},   {33, 7},  30, 1, "CS-2", GprsCodingScheme::HEADER_GPRS_DATA},
-	{{39, 3},   {39, 3},  36, 1, "CS-3", GprsCodingScheme::HEADER_GPRS_DATA},
-	{{53, 7},   {53, 7},  50, 1, "CS-4", GprsCodingScheme::HEADER_GPRS_DATA},
+	{{0, 0},   {0, 0},    0, "UNKNOWN", GprsCodingScheme::HEADER_INVALID},
+	{{23, 0},  {23, 0},  20, "CS-1", GprsCodingScheme::HEADER_GPRS_DATA},
+	{{33, 7},  {33, 7},  30, "CS-2", GprsCodingScheme::HEADER_GPRS_DATA},
+	{{39, 3},  {39, 3},  36, "CS-3", GprsCodingScheme::HEADER_GPRS_DATA},
+	{{53, 7},  {53, 7},  50, "CS-4", GprsCodingScheme::HEADER_GPRS_DATA},
 
-	{{26, 1},   {26, 1},  22, 1, "MCS-1", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3},
-	{{32, 1},   {32, 1},  28, 1, "MCS-2", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3},
-	{{41, 1},   {41, 1},  37, 1, "MCS-3", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3},
-	{{48, 1},   {48, 1},  44, 1, "MCS-4", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3},
+	{{26, 1},  {26, 1},  22, "MCS-1", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3},
+	{{32, 1},  {32, 1},  28, "MCS-2", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3},
+	{{41, 1},  {41, 1},  37, "MCS-3", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3},
+	{{48, 1},  {48, 1},  44, "MCS-4", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3},
 
-	{{60, 7},   {59, 6},  56, 1, "MCS-5", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2},
-	{{78, 7},   {77, 6},  74, 1, "MCS-6", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2},
-	{{118, 2},  {117, 4}, 56, 2, "MCS-7", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1},
-	{{142, 2},  {141, 4}, 68, 2, "MCS-8", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1},
-	{{154, 2},  {153, 4}, 74, 2, "MCS-9", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1},
+	{{60, 7},  {59, 6},  56, "MCS-5", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2},
+	{{78, 7},  {77, 6},  74, "MCS-6", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2},
+	{{118, 2}, {117, 4}, 56, "MCS-7", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1},
+	{{142, 2}, {141, 4}, 68, "MCS-8", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1},
+	{{154, 2}, {153, 4}, 74, "MCS-9", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1},
 };
 
+static struct {
+	struct {
+		int data_header_bits;
+	} uplink, downlink;
+	unsigned int data_block_header_bits;
+	unsigned int num_blocks;
+	const char *name;
+} hdr_type_info[GprsCodingScheme::NUM_HEADER_TYPES] = {
+	{{0},       {0},       0, 0, "INVALID"},
+	{{1*8 + 0}, {1*8 + 0}, 0, 0, "CONTROL"},
+	{{3*8 + 0}, {3*8 + 0}, 0, 1, "GPRS_DATA"},
+	{{5*8 + 6}, {5*8 + 0}, 2, 2, "EGPRS_DATA_TYPE1"},
+	{{4*8 + 5}, {3*8 + 4}, 2, 1, "EGPRS_DATA_TYPE2"},
+	{{3*8 + 7}, {3*8 + 7}, 2, 1, "EGPRS_DATA_TYPE3"},
+};
 
 GprsCodingScheme GprsCodingScheme::getBySizeUL(unsigned size)
 {
@@ -124,7 +139,22 @@ unsigned int GprsCodingScheme::maxDataBlockBytes() const
 
 unsigned int GprsCodingScheme::numDataBlocks() const
 {
-	return mcs_info[m_scheme].num_blocks;
+	return hdr_type_info[headerTypeData()].num_blocks;
+}
+
+unsigned int GprsCodingScheme::numDataHeaderBitsUL() const
+{
+	return hdr_type_info[headerTypeData()].uplink.data_header_bits;
+}
+
+unsigned int GprsCodingScheme::numDataHeaderBitsDL() const
+{
+	return hdr_type_info[headerTypeData()].downlink.data_header_bits;
+}
+
+unsigned int GprsCodingScheme::numDataBlockHeaderBits() const
+{
+	return hdr_type_info[headerTypeData()].data_block_header_bits;
 }
 
 const char *GprsCodingScheme::name() const
