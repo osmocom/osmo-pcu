@@ -47,6 +47,7 @@ public:
 		HEADER_EGPRS_DATA_TYPE_1,
 		HEADER_EGPRS_DATA_TYPE_2,
 		HEADER_EGPRS_DATA_TYPE_3,
+		NUM_HEADER_TYPES
 	};
 
 	GprsCodingScheme(Scheme s = UNKNOWN);
@@ -80,6 +81,9 @@ public:
 	unsigned int spareBitsDL() const;
 	unsigned int maxDataBlockBytes() const;
 	unsigned int numDataBlocks() const;
+	unsigned int numDataHeaderBitsUL() const;
+	unsigned int numDataHeaderBitsDL() const;
+	unsigned int numDataBlockHeaderBits() const;
 	const char *name() const;
 	HeaderType headerTypeData() const;
 	HeaderType headerTypeControl() const;
