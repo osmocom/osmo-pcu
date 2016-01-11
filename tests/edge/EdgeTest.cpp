@@ -481,7 +481,6 @@ static void test_rlc_unit_decoder()
 	printf("=== end %s ===\n", __func__);
 }
 
-
 static const struct log_info_cat default_categories[] = {
 	{"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_INFO, 0},
 	{"DL1IF", "\033[1;32m", "GPRS PCU L1 interface (L1IF)", LOGL_DEBUG, 1},

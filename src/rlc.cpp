@@ -265,3 +265,49 @@ bool gprs_rlc_ul_window::invalidate_bsn(const uint16_t bsn)
 
 	return was_valid;
 }
+
+static void gprs_rlc_data_header_init(struct gprs_rlc_data_info *rlc,
+	GprsCodingScheme cs, unsigned int header_bits)
+{
+	unsigned int i;
+
+	memset(rlc, 0, sizeof(*rlc));
+
+	rlc->cs = cs;
+	rlc->num_data_blocks = cs.numDataBlocks();
+
+	OSMO_ASSERT(rlc->num_data_blocks <= ARRAY_SIZE(rlc->block_info));
+
+	for (i = 0; i < rlc->num_data_blocks; i++) {
+		gprs_rlc_data_block_info_init(&rlc->block_info[i], cs);
+
+		rlc->data_offs_bits[i] =
+			header_bits +
+			(i+1) * cs.numDataBlockHeaderBits() +
+			i * 8 * rlc->block_info[0].data_len;
+	}
+}
+
+void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,
+	GprsCodingScheme cs)
+{
+	return gprs_rlc_data_header_init(rlc, cs, cs.numDataHeaderBitsDL());
+}
+
+void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
+	GprsCodingScheme cs)
+{
+	return gprs_rlc_data_header_init(rlc, cs, cs.numDataHeaderBitsUL());
+}
+
+void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
+	GprsCodingScheme cs)
+{
+	rdbi->data_len = cs.maxDataBlockBytes();
+	rdbi->bsn = 0;
+	rdbi->ti  = 0;
+	rdbi->e   = 1;
+	rdbi->cv  = 15;
+	rdbi->pi  = 0;
+	rdbi->spb = 0;
+}
