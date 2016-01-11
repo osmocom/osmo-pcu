@@ -65,7 +65,7 @@ struct gprs_rlc_data_block_info {
 	unsigned int bsn;
 	unsigned int ti;
 	unsigned int e;
-	unsigned int cv;
+	unsigned int cv; /* FBI == 1 <=> CV == 0 */
 	unsigned int pi;
 	unsigned int spb;
 };
@@ -77,6 +77,10 @@ struct gprs_rlc_data_info {
 	unsigned int tfi;
 	unsigned int cps;
 	unsigned int rsb;
+	unsigned int usf;
+	unsigned int es_p;
+	unsigned int rrbp;
+	unsigned int pr;
 	unsigned int num_data_blocks;
 	unsigned int data_offs_bits[2];
 	struct gprs_rlc_data_block_info block_info[2];
