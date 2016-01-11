@@ -99,6 +99,13 @@ struct gprs_rlc_data {
 	GprsCodingScheme cs;
 };
 
+void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,
+	GprsCodingScheme cs);
+void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
+	GprsCodingScheme cs);
+void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
+	GprsCodingScheme cs);
+
 /*
  * I hold the currently transferred blocks and will provide
  * the routines to manipulate these arrays.
