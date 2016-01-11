@@ -32,8 +32,6 @@ public:
 		bool	is_complete;
 	};
 
-	static int tlli_from_ul_data(const uint8_t *data, uint8_t len,
-					uint32_t *tlli);
 	static int rlc_data_from_ul_data(
 		const struct gprs_rlc_data_block_info *rdbi,
 		GprsCodingScheme cs, const uint8_t *data, RlcData *chunks,

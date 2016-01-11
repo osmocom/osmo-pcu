@@ -218,7 +218,6 @@ struct gprs_rlcmac_tbf {
 protected:
 	gprs_rlcmac_bts *bts_data() const;
 
-	int extract_tlli(const uint8_t *data, const size_t len);
 	int set_tlli_from_ul(uint32_t new_tlli);
 	void merge_and_clear_ms(GprsMs *old_ms);
 
