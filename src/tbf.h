@@ -414,7 +414,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(
 		const struct gprs_rlc_data_info *rlc,
-		uint8_t *data, uint8_t len, struct pcu_l1_meas *meas);
+		uint8_t *data, struct pcu_l1_meas *meas);
 
 
 	/* TODO: extract LLC class? */

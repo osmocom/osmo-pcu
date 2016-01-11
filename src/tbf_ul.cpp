@@ -138,7 +138,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn)
 
 int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	const struct gprs_rlc_data_info *rlc,
-	uint8_t *data, uint8_t len, struct pcu_l1_meas *meas)
+	uint8_t *data, struct pcu_l1_meas *meas)
 {
 	int8_t rssi = meas->have_rssi ? meas->rssi : 0;
 

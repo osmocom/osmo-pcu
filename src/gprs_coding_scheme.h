@@ -72,6 +72,8 @@ public:
 
 	unsigned int sizeUL() const;
 	unsigned int sizeDL() const;
+	unsigned int usedSizeUL() const;
+	unsigned int usedSizeDL() const;
 	unsigned int maxBytesUL() const;
 	unsigned int maxBytesDL() const;
 	unsigned int spareBitsUL() const;

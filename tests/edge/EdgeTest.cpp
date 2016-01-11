@@ -49,15 +49,15 @@ static void check_coding_scheme(GprsCodingScheme& cs, GprsCodingScheme::Mode mod
 	OSMO_ASSERT(cs.isCompatible(mode));
 
 	/* Check static getBySizeUL() */
-	expected_size = cs.maxBytesUL();
-	if (cs.spareBitsUL() > 0)
+	expected_size = cs.usedSizeUL();
+	if (cs.spareBitsUL() > 0 && cs.isGprs())
 		expected_size += 1;
 	OSMO_ASSERT(expected_size == cs.sizeUL());
 	OSMO_ASSERT(cs == GprsCodingScheme::getBySizeUL(expected_size));
 
 	/* Check static sizeUL() */
-	expected_size = cs.maxBytesDL();
-	if (cs.spareBitsDL() > 0)
+	expected_size = cs.usedSizeDL();
+	if (cs.spareBitsDL() > 0 && cs.isGprs())
 		expected_size += 1;
 	OSMO_ASSERT(expected_size == cs.sizeDL());
 
