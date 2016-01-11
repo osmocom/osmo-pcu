@@ -27,6 +27,7 @@
 #include <gprs_bssgp_pcu.h>
 #include <gprs_codel.h>
 #include <decoding.h>
+#include <encoding.h>
 
 #include "pcu_utils.h"
 
@@ -423,13 +424,13 @@ void gprs_rlcmac_dl_tbf::schedule_next_frame()
 
 struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts)
 {
-	struct rlc_dl_header *rh;
 	struct rlc_li_field *li;
 	uint8_t *delimiter, *data, *e_pointer;
 	uint16_t space, chunk;
 	gprs_rlc_data *rlc_data;
 	const uint16_t bsn = m_window.v_s();
 	GprsCodingScheme cs = current_cs();
+	gprs_rlc_data_block_info *rdbi;
 
 	if (m_llc.frame_length() == 0)
 		schedule_next_frame();
@@ -439,29 +440,27 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 
 	OSMO_ASSERT(cs.isValid());
 
-	/* total length of block, including spare bits */
-	const uint8_t block_length = cs.sizeDL();
-	/* length of usable data of block, w/o spare bits (GPRS), inc. MAC */
-	const uint8_t block_data_len = cs.maxBytesDL();
+	/* length of usable data block (single data unit w/o header) */
+	const uint8_t block_data_len = cs.maxDataBlockBytes();
 
 	/* now we still have untransmitted LLC data, so we fill mac block */
 	rlc_data = m_rlc.block(bsn);
 	data = rlc_data->prepare(block_data_len);
 	rlc_data->cs = cs;
+	rlc_data->len = block_data_len;
 
-	rh = (struct rlc_dl_header *)data;
-	rh->pt = 0; /* Data Block */
-	rh->rrbp = rh->s_p = 0; /* Polling, set later, if required */
-	rh->usf = 7; /* will be set at scheduler */
-	rh->pr = 0; /* FIXME: power reduction */
-	rh->tfi = m_tfi; /* TFI */
-	rh->fbi = 0; /* Final Block Indicator, set late, if true */
-	rh->bsn = bsn; /* Block Sequence Number */
-	rh->e = 0; /* Extension bit, maybe set later */
-	e_pointer = data + 2; /* points to E of current chunk */
-	data += sizeof(*rh);
+	rdbi = &(rlc_data->block_info);
+	memset(rdbi, 0, sizeof(*rdbi));
+	rdbi->data_len = block_data_len;
+
+	rdbi->cv = 15; /* Final Block Indicator, set late, if true */
+	rdbi->bsn = bsn; /* Block Sequence Number */
+	rdbi->e = 1; /* Extension bit, maybe set later (1: no extension) */
+
+	e_pointer = NULL; /* points to E of current chunk if it is stored in an
+			     extension byte */
 	delimiter = data; /* where next length header would be stored */
-	space = block_data_len - sizeof(*rh);
+	space = block_data_len;
 	while (1) {
 		if (m_llc.frame_length() == 0) {
 			/* A header will need to by added, so we just need
@@ -492,7 +491,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 				"only remaining space, and we are done\n",
 				chunk, space);
 			/* block is filled, so there is no extension */
-			*e_pointer |= 0x01;
+			if (e_pointer)
+				*e_pointer |= 0x01;
 			/* fill only space */
 			m_llc.consume(data, space);
 			/* return data block as message */
@@ -510,12 +510,13 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 				"len=%d\n", tbf_name(this), m_llc.frame_length());
 			gprs_rlcmac_dl_bw(this, m_llc.frame_length());
 			/* block is filled, so there is no extension */
-			*e_pointer |= 0x01;
+			if (e_pointer)
+				*e_pointer |= 0x01;
 			/* fill space */
 			m_llc.consume(data, space);
 			m_llc.reset();
 			/* final block */
-			rh->fbi = 1; /* we indicate final block */
+			rdbi->cv = 0; /* we indicate final block */
 			request_dl_ack();
 			set_state(GPRS_RLCMAC_FINISHED);
 			/* return data block as message */
@@ -559,6 +560,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 		li->e = 0; /* Extension bit, maybe set later */
 		li->m = 0; /* will be set later, if there is more LLC data */
 		li->li = chunk; /* length of chunk */
+		rdbi->e = 0; /* 0: extensions present */
 		e_pointer = delimiter; /* points to E of current delimiter */
 		delimiter++;
 		/* copy (rest of) LLC frame to space and reset later */
@@ -582,7 +584,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 				"done.\n");
 			li->e = 1; /* we cannot extend */
 
-			rh->fbi = 1; /* we indicate final block */
+			rdbi->cv = 0; /* we indicate final block */
 			request_dl_ack();
 			set_state(GPRS_RLCMAC_FINISHED);
 			break;
@@ -593,10 +595,9 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 		li->e = 1; /* we cannot extend */
 		break;
 	}
-	LOGP(DRLCMACDL, LOGL_DEBUG, "data block: %s\n",
-		osmo_hexdump(rlc_data->block, block_length));
-#warning "move this up?"
-	rlc_data->len = block_length;
+	LOGP(DRLCMACDL, LOGL_DEBUG, "data block (BSN %d, %s): %s\n",
+		bsn, rlc_data->cs.name(),
+		osmo_hexdump(rlc_data->block, block_data_len));
 	/* raise send state and set ack state array */
 	m_window.m_v_b.mark_unacked(bsn);
 	m_window.increment_send();
@@ -608,16 +609,30 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				const uint32_t fn, const uint8_t ts,
 				const int index)
 {
-	uint8_t *data;
-	struct rlc_dl_header *rh;
+	uint8_t *block_data, *msg_data;
 	struct msgb *dl_msg;
-	uint8_t len;
+	unsigned msg_len;
 	bool need_poll;
+	/* TODO: support MCS-7 - MCS-9, where data_block_idx can be 1 */
+	unsigned int data_block_idx = 0;
+
+	gprs_rlc_data_info rlc;
+	GprsCodingScheme cs;
+	gprs_rlc_data_block_info *rdbi;
 
 	/* get data and header from current block */
-	data = m_rlc.block(index)->block;
-	len = m_rlc.block(index)->len;
-	rh = (struct rlc_dl_header *)data;
+	block_data = m_rlc.block(index)->block;
+
+	cs = m_rlc.block(index)->cs;
+
+	gprs_rlc_data_info_init_dl(&rlc, cs);
+
+	rlc.usf = 7; /* will be set at scheduler */
+	rlc.pr = 0; /* FIXME: power reduction */
+	rlc.tfi = m_tfi; /* TFI */
+
+	rlc.block_info[data_block_idx] = m_rlc.block(index)->block_info;
+	rdbi = &rlc.block_info[data_block_idx];
 
 	/* If the TBF has just started, relate frames_since_last_poll to the
 	 * current fn */
@@ -625,9 +640,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		m_last_dl_poll_fn = fn;
 
 	need_poll = state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
-	/* Clear Polling, if still set in history buffer */
-	rh->s_p = 0;
-		
+
 	/* poll after POLL_ACK_AFTER_FRAMES frames, or when final block is tx.
 	 */
 	if (m_tx_counter >= POLL_ACK_AFTER_FRAMES || m_dl_ack_requested ||
@@ -662,7 +675,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				"TS %d\n", ts);
 			m_tx_counter = 0;
 			/* start timer whenever we send the final block */
-			if (rh->fbi == 1)
+			if (rdbi->cv == 0)
 				tbf_timer_start(this, 3191, bts_data()->t3191, 0);
 
 			/* schedule polling */
@@ -676,8 +689,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			m_dl_ack_requested = false;
 
 			/* set polling in header */
-			rh->rrbp = 0; /* N+13 */
-			rh->s_p = 1; /* Polling */
+			rlc.rrbp = 0; /* N+13 */
+			rlc.es_p = 1; /* Polling */
 
 			m_last_dl_poll_fn = poll_fn;
 
@@ -687,15 +700,25 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		}
 	}
 
+	msg_len = cs.sizeDL();
+
 	/* return data block as message */
-	dl_msg = msgb_alloc(len, "rlcmac_dl_data");
+	dl_msg = msgb_alloc(msg_len, "rlcmac_dl_data");
 	if (!dl_msg)
 		return NULL;
+
+	msg_data = msgb_put(dl_msg, msg_len);
+	Encoding::rlc_write_dl_data_header(&rlc, msg_data);
+	Encoding::rlc_copy_from_aligned_buffer(&rlc, data_block_idx, msg_data,
+		block_data);
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "msg block (BSN %d, %s): %s\n",
+		index, cs.name(),
+		msgb_hexdump(dl_msg));
 
 	/* Increment TX-counter */
 	m_tx_counter++;
 
-	memcpy(msgb_put(dl_msg, len), data, len);
 	bts->rlc_sent();
 
 	return dl_msg;
