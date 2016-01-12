@@ -294,8 +294,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==9)
 - Sending new block at BSN 9, CS=CS-1
 -- Chunk with length 20 would exactly fit into space (20): add length header with LI=0, to make frame extend to next block, and we are done
 data block (BSN 9, CS-1): 01 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 c6 
-msg block (BSN 9, CS-1): 07 00 13 01 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 c6 
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=43 block=10 data=07 00 13 01 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 c6 
+msg block (BSN 9, CS-1): 07 00 12 01 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 c6 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=43 block=10 data=07 00 12 01 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 c6 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==10)
 - Sending new block at BSN 10, CS=CS-1
@@ -376,8 +376,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==20)
 Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)len=200
 -- Empty chunk, added LLC dummy command of size 16, drained_since=0
 -- Chunk with length 16 is less than remaining space (17): add length header to to delimit LLC frame
-Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)len=16
 -- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)len=16
 data block (BSN 20, CS-1): 0a 41 c6 c7 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
 Polling is already sheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW), so we must wait for requesting downlink ack
@@ -413,8 +413,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==21 .. V(S)==21)
 - Sending new block at BSN 21, CS=CS-1
 -- Empty chunk, added LLC dummy command of size 19, drained_since=4
 -- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
-Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)len=19
 -- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)len=19
 data block (BSN 21, CS-1): 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
 Polling is already sheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW), so we must wait for requesting downlink ack
@@ -430,8 +430,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==22 .. V(S)==22)
 - Sending new block at BSN 22, CS=CS-1
 -- Empty chunk, added LLC dummy command of size 19, drained_since=112
 -- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
-Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)len=19
 -- Final block, so we done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)len=19
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) changes state from FLOW to FINISHED
 data block (BSN 22, CS-1): 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
@@ -1371,26 +1371,26 @@ TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) downlink (V(A)==0 .. V(S)==0)
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) (len=19)
 - Sending new block at BSN 0, CS=CS-1
 -- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
+-- No space left, so we are done.
 Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)len=19
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) (len=19)
--- No space left, so we are done.
 data block (BSN 0, CS-1): 4d 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
 msg block (BSN 0, CS-1): 07 00 00 4d 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
 MSG = 07 00 00 4d 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) downlink (V(A)==0 .. V(S)==1)
 - Sending new block at BSN 1, CS=CS-1
 -- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
+-- No space left, so we are done.
 Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)len=19
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) (len=19)
--- No space left, so we are done.
 data block (BSN 1, CS-1): 4d 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 
 msg block (BSN 1, CS-1): 07 00 02 4d 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 
 MSG = 07 00 02 4d 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) downlink (V(A)==0 .. V(S)==2)
 - Sending new block at BSN 2, CS=CS-1
 -- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
-Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)len=19
 -- Final block, so we done.
+Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)len=19
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FINISHED
 data block (BSN 2, CS-1): 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
@@ -1663,8 +1663,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0)
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=10)
 - Sending new block at BSN 0, CS=CS-4
 -- Chunk with length 10 is less than remaining space (50): add length header to to delimit LLC frame
-Complete DL frame for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=10
 -- Final block, so we done.
+Complete DL frame for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=10
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) changes state from FLOW to FINISHED
 data block (BSN 0, CS-4): 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
@@ -2334,9 +2334,9 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==6)
 Complete DL frame for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=13
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=13)
 -- Chunk with length 13 is less than remaining space (14): add length header to to delimit LLC frame
+-- No space left, so we are done.
 Complete DL frame for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=13
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=13)
--- No space left, so we are done.
 data block (BSN 6, CS-1): 16 35 45 54 20 30 38 4c 4c 43 20 50 41 43 4b 45 54 20 30 39 
 msg block (BSN 6, CS-1): 07 00 0c 16 35 45 54 20 30 38 4c 4c 43 20 50 41 43 4b 45 54 20 30 39 
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654305 block=4 data=00 00 0c 16 35 45 54 20 30 38 4c 4c 43 20 50 41 43 4b 45 54 20 30 39 
@@ -2469,9 +2469,9 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==13)
 Complete DL frame for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=13
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=13)
 -- Chunk with length 13 is less than remaining space (14): add length header to to delimit LLC frame
+-- No space left, so we are done.
 Complete DL frame for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=13
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=13)
--- No space left, so we are done.
 data block (BSN 13, CS-1): 16 35 45 54 20 31 38 4c 4c 43 20 50 41 43 4b 45 54 20 31 39 
 msg block (BSN 13, CS-1): 07 00 1a 16 35 45 54 20 31 38 4c 4c 43 20 50 41 43 4b 45 54 20 31 39 
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654335 block=11 data=00 00 1a 16 35 45 54 20 31 38 4c 4c 43 20 50 41 43 4b 45 54 20 31 39 
@@ -2604,9 +2604,9 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==20)
 Complete DL frame for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=13
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=13)
 -- Chunk with length 13 is less than remaining space (14): add length header to to delimit LLC frame
+-- No space left, so we are done.
 Complete DL frame for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=13
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=13)
--- No space left, so we are done.
 data block (BSN 20, CS-1): 16 35 45 54 20 32 38 4c 4c 43 20 50 41 43 4b 45 54 20 32 39 
 - Scheduling Ack/Nack polling, because 20 blocks sent.
 Polling sheduled in this TS 7
@@ -2742,8 +2742,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==27)
 Complete DL frame for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=13
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) (len=13)
 -- Chunk with length 13 is less than remaining space (14): add length header to to delimit LLC frame
-Complete DL frame for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=13
 -- Final block, so we done.
+Complete DL frame for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=13
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) changes state from FLOW to FINISHED
 data block (BSN 27, CS-1): 16 35 45 54 20 33 38 4c 4c 43 20 50 41 43 4b 45 54 20 33 39 
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
@@ -2997,8 +2997,8 @@ Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==10)
 - Sending new block at BSN 10, CS=CS-1
 -- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
-Complete DL frame for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=21
 -- Final block, so we done.
+Complete DL frame for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW)len=21
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) changes state from FLOW to FINISHED
 data block (BSN 10, CS-1): 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
