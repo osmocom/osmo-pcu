@@ -25,6 +25,7 @@
 #include "decoding.h"
 #include "encoding.h"
 #include "rlc.h"
+#include "llc.h"
 
 extern "C" {
 #include "pcu_vty.h"
@@ -483,6 +484,255 @@ static void test_rlc_unit_decoder()
 	printf("=== end %s ===\n", __func__);
 }
 
+static void test_rlc_unit_encoder()
+{
+	struct gprs_rlc_data_block_info rdbi = {0};
+	GprsCodingScheme cs;
+	uint8_t data[74];
+	uint8_t llc_data[1500] = {0,};
+	int num_chunks = 0;
+	int write_offset;
+	struct gprs_llc llc;
+	Encoding::AppendResult ar;
+
+	printf("=== start %s ===\n", __func__);
+
+	llc.init();
+
+	/* TS 44.060, B.1 */
+	cs = GprsCodingScheme::CS4;
+	gprs_rlc_data_block_info_init(&rdbi, cs);
+	num_chunks = 0;
+	write_offset = 0;
+	memset(data, 0, sizeof(data));
+
+	llc.reset();
+	llc.put_frame(llc_data, 11);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+		&llc, &write_offset, &num_chunks, data, false);
+
+	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_SPACE_LEFT);
+	OSMO_ASSERT(rdbi.e == 0);
+	OSMO_ASSERT(write_offset == 1 + 11);
+	OSMO_ASSERT(num_chunks == 1);
+
+	llc.reset();
+	llc.put_frame(llc_data, 26);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+		&llc, &write_offset, &num_chunks, data, false);
+
+	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_SPACE_LEFT);
+	OSMO_ASSERT(rdbi.e == 0);
+	OSMO_ASSERT(write_offset == 2 + 11 + 26);
+	OSMO_ASSERT(num_chunks == 2);
+
+	llc.reset();
+	llc.put_frame(llc_data, 99);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+		&llc, &write_offset, &num_chunks, data, false);
+
+	OSMO_ASSERT(ar == Encoding::AR_NEED_MORE_BLOCKS);
+	OSMO_ASSERT(rdbi.e == 0);
+	OSMO_ASSERT(rdbi.cv != 0);
+	OSMO_ASSERT(write_offset == (int)rdbi.data_len);
+	OSMO_ASSERT(num_chunks == 3);
+
+	OSMO_ASSERT(data[0] == ((11 << 2) | (1 << 1) | (0 << 0)));
+	OSMO_ASSERT(data[1] == ((26 << 2) | (1 << 1) | (1 << 0)));
+	OSMO_ASSERT(data[2] == 0);
+
+	/* TS 44.060, B.2 */
+	cs = GprsCodingScheme::CS1;
+
+	/* Block 1 */
+	gprs_rlc_data_block_info_init(&rdbi, cs);
+	num_chunks = 0;
+	write_offset = 0;
+	memset(data, 0, sizeof(data));
+
+	llc.reset();
+	llc.put_frame(llc_data, 20);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+		&llc, &write_offset, &num_chunks, data, false);
+
+	OSMO_ASSERT(ar == Encoding::AR_NEED_MORE_BLOCKS);
+	OSMO_ASSERT(rdbi.e == 0);
+	OSMO_ASSERT(write_offset == 1 + 19);
+	OSMO_ASSERT(num_chunks == 1);
+
+	OSMO_ASSERT(data[0] == ((0 << 2) | (0 << 1) | (1 << 0)));
+	OSMO_ASSERT(data[1] == 0);
+
+	/* Block 2 */
+	gprs_rlc_data_block_info_init(&rdbi, cs);
+	num_chunks = 0;
+	write_offset = 0;
+	memset(data, 0, sizeof(data));
+
+	OSMO_ASSERT(llc.chunk_size() == 1);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+		&llc, &write_offset, &num_chunks, data, false);
+
+	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_SPACE_LEFT);
+	OSMO_ASSERT(rdbi.e == 0);
+	OSMO_ASSERT(write_offset == 1 + 1);
+	OSMO_ASSERT(num_chunks == 1);
+
+	llc.reset();
+	llc.put_frame(llc_data, 99);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+		&llc, &write_offset, &num_chunks, data, false);
+
+	OSMO_ASSERT(ar == Encoding::AR_NEED_MORE_BLOCKS);
+	OSMO_ASSERT(rdbi.e == 0);
+	OSMO_ASSERT(write_offset == 1 + 1 + 18);
+	OSMO_ASSERT(num_chunks == 2);
+
+	OSMO_ASSERT(data[0] == ((1 << 2) | (1 << 1) | (1 << 0)));
+	OSMO_ASSERT(data[1] == 0);
+
+	/* TS 44.060, B.3 */
+	cs = GprsCodingScheme::CS1;
+
+	/* Block 1 */
+	gprs_rlc_data_block_info_init(&rdbi, cs);
+	num_chunks = 0;
+	write_offset = 0;
+	memset(data, 0, sizeof(data));
+
+	llc.reset();
+	llc.put_frame(llc_data, 7);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+		&llc, &write_offset, &num_chunks, data, false);
+
+	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_SPACE_LEFT);
+	OSMO_ASSERT(rdbi.e == 0);
+	OSMO_ASSERT(write_offset == 1 + 7);
+	OSMO_ASSERT(num_chunks == 1);
+
+	llc.reset();
+	llc.put_frame(llc_data, 11);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+		&llc, &write_offset, &num_chunks, data, false);
+
+	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_BLOCK_FILLED);
+	OSMO_ASSERT(rdbi.e == 0);
+	OSMO_ASSERT(write_offset == 2 + 7 + 11);
+	OSMO_ASSERT(num_chunks == 2);
+
+	OSMO_ASSERT(data[0] == ((7 << 2) | (1 << 1) | (0 << 0)));
+	OSMO_ASSERT(data[1] == ((11 << 2) | (0 << 1) | (1 << 0)));
+	OSMO_ASSERT(data[2] == 0);
+
+	/* TS 44.060, B.4 */
+	cs = GprsCodingScheme::CS1;
+
+	/* Block 1 */
+	gprs_rlc_data_block_info_init(&rdbi, cs);
+	num_chunks = 0;
+	write_offset = 0;
+	memset(data, 0, sizeof(data));
+
+	llc.reset();
+	llc.put_frame(llc_data, 99);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+		&llc, &write_offset, &num_chunks, data, false);
+
+	OSMO_ASSERT(ar == Encoding::AR_NEED_MORE_BLOCKS);
+	OSMO_ASSERT(rdbi.e == 1);
+	OSMO_ASSERT(write_offset == 20);
+	OSMO_ASSERT(num_chunks == 1);
+	OSMO_ASSERT(rdbi.cv != 0);
+
+	OSMO_ASSERT(data[0] == 0);
+
+	/* TS 44.060, B.5 */
+	cs = GprsCodingScheme::CS1;
+
+	/* Block 1 */
+	gprs_rlc_data_block_info_init(&rdbi, cs);
+	num_chunks = 0;
+	write_offset = 0;
+	memset(data, 0, sizeof(data));
+
+	llc.reset();
+	llc.put_frame(llc_data, 20);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+		&llc, &write_offset, &num_chunks, data, true);
+
+	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_BLOCK_FILLED);
+	OSMO_ASSERT(rdbi.e == 1);
+	OSMO_ASSERT(write_offset == 20);
+	OSMO_ASSERT(num_chunks == 1);
+	OSMO_ASSERT(rdbi.cv == 0);
+
+	OSMO_ASSERT(data[0] == 0);
+
+	/* TS 44.060, B.7 */
+	cs = GprsCodingScheme::CS1;
+
+	/* Block 1 */
+	gprs_rlc_data_block_info_init(&rdbi, cs);
+	num_chunks = 0;
+	write_offset = 0;
+	memset(data, 0, sizeof(data));
+
+	llc.reset();
+	llc.put_frame(llc_data, 30);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+		&llc, &write_offset, &num_chunks, data, false);
+
+	OSMO_ASSERT(ar == Encoding::AR_NEED_MORE_BLOCKS);
+	OSMO_ASSERT(rdbi.e == 1);
+	OSMO_ASSERT(write_offset == 20);
+	OSMO_ASSERT(num_chunks == 1);
+
+	OSMO_ASSERT(data[0] == 0);
+
+	/* Block 2 */
+	gprs_rlc_data_block_info_init(&rdbi, cs);
+	num_chunks = 0;
+	write_offset = 0;
+	memset(data, 0, sizeof(data));
+
+	OSMO_ASSERT(llc.chunk_size() == 10);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+		&llc, &write_offset, &num_chunks, data, false);
+
+	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_SPACE_LEFT);
+	OSMO_ASSERT(rdbi.e == 0);
+	OSMO_ASSERT(write_offset == 1 + 10);
+	OSMO_ASSERT(num_chunks == 1);
+
+	llc.reset();
+	llc.put_frame(llc_data, 99);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+		&llc, &write_offset, &num_chunks, data, false);
+
+	OSMO_ASSERT(ar == Encoding::AR_NEED_MORE_BLOCKS);
+	OSMO_ASSERT(rdbi.e == 0);
+	OSMO_ASSERT(write_offset == 1 + 10 + 9);
+	OSMO_ASSERT(num_chunks == 2);
+
+	OSMO_ASSERT(data[0] == ((10 << 2) | (1 << 1) | (1 << 0)));
+	OSMO_ASSERT(data[1] == 0);
+
+	printf("=== end %s ===\n", __func__);
+}
+
 static void test_rlc_unaligned_copy()
 {
 	uint8_t bits[256];
@@ -595,6 +845,7 @@ int main(int argc, char **argv)
 	test_coding_scheme();
 	test_rlc_unit_decoder();
 	test_rlc_unaligned_copy();
+	test_rlc_unit_encoder();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);

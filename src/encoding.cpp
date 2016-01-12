@@ -751,3 +751,124 @@ unsigned int Encoding::rlc_copy_from_aligned_buffer(
 
 	return rdbi->data_len;
 }
+
+Encoding::AppendResult Encoding::rlc_data_to_dl_append(
+	struct gprs_rlc_data_block_info *rdbi,
+	gprs_llc *llc, int *offset, int *num_chunks,
+	uint8_t *data_block,
+	bool is_final)
+{
+	int chunk;
+	int space;
+	struct rlc_li_field *li;
+	uint8_t *delimiter, *data, *e_pointer;
+
+	data = data_block + *offset;
+	delimiter = data_block + *num_chunks;
+	e_pointer = (*num_chunks ? delimiter - 1 : NULL);
+
+	chunk = llc->chunk_size();
+	space = rdbi->data_len - *offset;
+
+	/* if chunk will exceed block limit */
+	if (chunk > space) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+			"larger than space (%d) left in block: copy "
+			"only remaining space, and we are done\n",
+			chunk, space);
+		/* block is filled, so there is no extension */
+		if (e_pointer)
+			*e_pointer |= 0x01;
+		/* fill only space */
+		llc->consume(data, space);
+		/* return data block as message */
+		*offset = rdbi->data_len;
+		(*num_chunks)++;
+		return AR_NEED_MORE_BLOCKS;
+	}
+	/* if FINAL chunk would fit precisely in space left */
+	if (chunk == space && is_final)
+	{
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+			"would exactly fit into space (%d): because "
+			"this is a final block, we don't add length "
+			"header, and we are done\n", chunk, space);
+		/* block is filled, so there is no extension */
+		if (e_pointer)
+			*e_pointer |= 0x01;
+		/* fill space */
+		llc->consume(data, space);
+		*offset = rdbi->data_len;
+		(*num_chunks)++;
+		rdbi->cv = 0;
+		return AR_COMPLETED_BLOCK_FILLED;
+	}
+	/* if chunk would fit exactly in space left */
+	if (chunk == space) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+			"would exactly fit into space (%d): add length "
+			"header with LI=0, to make frame extend to "
+			"next block, and we are done\n", chunk, space);
+		/* make space for delimiter */
+		if (delimiter != data)
+			memmove(delimiter + 1, delimiter,
+				data - delimiter);
+		data++;
+		(*offset)++;
+		space--;
+		/* add LI with 0 length */
+		li = (struct rlc_li_field *)delimiter;
+		li->e = 1; /* not more extension */
+		li->m = 0; /* shall be set to 0, in case of li = 0 */
+		li->li = 0; /* chunk fills the complete space */
+		rdbi->e = 0; /* 0: extensions present */
+		// no need to set e_pointer nor increase delimiter
+		/* fill only space, which is 1 octet less than chunk */
+		llc->consume(data, space);
+		/* return data block as message */
+		*offset = rdbi->data_len;
+		(*num_chunks)++;
+		return AR_NEED_MORE_BLOCKS;
+	}
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d is less "
+		"than remaining space (%d): add length header to "
+		"to delimit LLC frame\n", chunk, space);
+	/* the LLC frame chunk ends in this block */
+	/* make space for delimiter */
+	if (delimiter != data)
+		memmove(delimiter + 1, delimiter, data - delimiter);
+	data++;
+	(*offset)++;
+	space--;
+	/* add LI to delimit frame */
+	li = (struct rlc_li_field *)delimiter;
+	li->e = 0; /* Extension bit, maybe set later */
+	li->m = 0; /* will be set later, if there is more LLC data */
+	li->li = chunk; /* length of chunk */
+	rdbi->e = 0; /* 0: extensions present */
+	(*num_chunks)++;
+	/* copy (rest of) LLC frame to space and reset later */
+	llc->consume(data, chunk);
+	data += chunk;
+	space -= chunk;
+	(*offset) += chunk;
+	/* if we have more data and we have space left */
+	if (space > 0 && !is_final) {
+		li->m = 1; /* we indicate more frames to follow */
+		return AR_COMPLETED_SPACE_LEFT;
+	}
+	/* if we don't have more LLC frames */
+	if (is_final) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
+			"done.\n");
+		li->e = 1; /* we cannot extend */
+		rdbi->cv = 0;
+		return AR_COMPLETED_BLOCK_FILLED;
+	}
+	/* we have no space left */
+	LOGP(DRLCMACDL, LOGL_DEBUG, "-- No space left, so we are "
+		"done.\n");
+	li->e = 1; /* we cannot extend */
+	return AR_COMPLETED_BLOCK_FILLED;
+}
