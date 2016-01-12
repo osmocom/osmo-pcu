@@ -424,13 +424,14 @@ void gprs_rlcmac_dl_tbf::schedule_next_frame()
 
 struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts)
 {
-	struct rlc_li_field *li;
-	uint8_t *delimiter, *data, *e_pointer;
-	uint16_t space, chunk;
+	uint8_t *data;
 	gprs_rlc_data *rlc_data;
 	const uint16_t bsn = m_window.v_s();
 	GprsCodingScheme cs = current_cs();
 	gprs_rlc_data_block_info *rdbi;
+	int num_chunks = 0;
+	int write_offset = 0;
+	Encoding::AppendResult ar;
 
 	if (m_llc.frame_length() == 0)
 		schedule_next_frame();
@@ -457,12 +458,11 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 	rdbi->bsn = bsn; /* Block Sequence Number */
 	rdbi->e = 1; /* Extension bit, maybe set later (1: no extension) */
 
-	e_pointer = NULL; /* points to E of current chunk if it is stored in an
-			     extension byte */
-	delimiter = data; /* where next length header would be stored */
-	space = block_data_len;
-	while (1) {
+	do {
+		bool is_final;
+
 		if (m_llc.frame_length() == 0) {
+			int space = block_data_len - write_offset;
 			/* A header will need to by added, so we just need
 			 * space-1 octets */
 			m_llc.put_dummy_frame(space - 1);
@@ -482,119 +482,28 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 				m_llc.frame_length(), frames_since_last_drain(fn));
 		}
 
-		chunk = m_llc.chunk_size();
+		is_final = llc_queue()->size() == 0 && !keep_open(fn);
 
-		/* if chunk will exceed block limit */
-		if (chunk > space) {
-			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
-				"larger than space (%d) left in block: copy "
-				"only remaining space, and we are done\n",
-				chunk, space);
-			/* block is filled, so there is no extension */
-			if (e_pointer)
-				*e_pointer |= 0x01;
-			/* fill only space */
-			m_llc.consume(data, space);
-			/* return data block as message */
-			break;
-		}
-		/* if FINAL chunk would fit precisely in space left */
-		if (chunk == space && llc_queue()->size() == 0 && !keep_open(fn))
-		{
-			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
-				"would exactly fit into space (%d): because "
-				"this is a final block, we don't add length "
-				"header, and we are done\n", chunk, space);
-			LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for "
-				"%s that fits precisely in last block: "
-				"len=%d\n", tbf_name(this), m_llc.frame_length());
-			gprs_rlcmac_dl_bw(this, m_llc.frame_length());
-			/* block is filled, so there is no extension */
-			if (e_pointer)
-				*e_pointer |= 0x01;
-			/* fill space */
-			m_llc.consume(data, space);
-			m_llc.reset();
-			/* final block */
-			rdbi->cv = 0; /* we indicate final block */
-			request_dl_ack();
-			set_state(GPRS_RLCMAC_FINISHED);
-			/* return data block as message */
-			break;
-		}
-		/* if chunk would fit exactly in space left */
-		if (chunk == space) {
-			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
-				"would exactly fit into space (%d): add length "
-				"header with LI=0, to make frame extend to "
-				"next block, and we are done\n", chunk, space);
-			/* make space for delimiter */
-			if (delimiter != data)
-				memmove(delimiter + 1, delimiter,
-					data - delimiter);
-			data++;
-			space--;
-			/* add LI with 0 length */
-			li = (struct rlc_li_field *)delimiter;
-			li->e = 1; /* not more extension */
-			li->m = 0; /* shall be set to 0, in case of li = 0 */
-			li->li = 0; /* chunk fills the complete space */
-			// no need to set e_pointer nor increase delimiter
-			/* fill only space, which is 1 octet less than chunk */
-			m_llc.consume(data, space);
-			/* return data block as message */
-			break;
-		}
+		ar = Encoding::rlc_data_to_dl_append(rdbi,
+			&m_llc, &write_offset, &num_chunks, data, is_final);
 
-		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d is less "
-			"than remaining space (%d): add length header to "
-			"to delimit LLC frame\n", chunk, space);
-		/* the LLC frame chunk ends in this block */
-		/* make space for delimiter */
-		if (delimiter != data)
-			memmove(delimiter + 1, delimiter, data - delimiter);
-		data++;
-		space--;
-		/* add LI to delimit frame */
-		li = (struct rlc_li_field *)delimiter;
-		li->e = 0; /* Extension bit, maybe set later */
-		li->m = 0; /* will be set later, if there is more LLC data */
-		li->li = chunk; /* length of chunk */
-		rdbi->e = 0; /* 0: extensions present */
-		e_pointer = delimiter; /* points to E of current delimiter */
-		delimiter++;
-		/* copy (rest of) LLC frame to space and reset later */
-		m_llc.consume(data, chunk);
-		data += chunk;
-		space -= chunk;
+		if (ar == Encoding::AR_NEED_MORE_BLOCKS)
+			break;
+
 		LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for %s"
 			"len=%d\n", tbf_name(this), m_llc.frame_length());
 		gprs_rlcmac_dl_bw(this, m_llc.frame_length());
 		m_llc.reset();
-		/* dequeue next LLC frame, if any */
-		schedule_next_frame();
-		/* if we have more data and we have space left */
-		if (space > 0 && (m_llc.frame_length() || keep_open(fn))) {
-			li->m = 1; /* we indicate more frames to follow */
-			continue;
-		}
-		/* if we don't have more LLC frames */
-		if (!m_llc.frame_length() && !keep_open(fn)) {
-			LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
-				"done.\n");
-			li->e = 1; /* we cannot extend */
 
-			rdbi->cv = 0; /* we indicate final block */
+		if (is_final) {
 			request_dl_ack();
 			set_state(GPRS_RLCMAC_FINISHED);
-			break;
 		}
-		/* we have no space left */
-		LOGP(DRLCMACDL, LOGL_DEBUG, "-- No space left, so we are "
-			"done.\n");
-		li->e = 1; /* we cannot extend */
-		break;
-	}
+
+		/* dequeue next LLC frame, if any */
+		schedule_next_frame();
+	} while (ar == Encoding::AR_COMPLETED_SPACE_LEFT);
+
 	LOGP(DRLCMACDL, LOGL_DEBUG, "data block (BSN %d, %s): %s\n",
 		bsn, rlc_data->cs.name(),
 		osmo_hexdump(rlc_data->block, block_data_len));
