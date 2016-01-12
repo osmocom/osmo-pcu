@@ -26,6 +26,8 @@
 struct gprs_rlcmac_bts;
 struct gprs_rlcmac_tbf;
 struct bitvec;
+struct gprs_llc;
+struct gprs_rlc_data_block_info;
 
 /**
  * I help with encoding data into CSN1 messages.
@@ -76,4 +78,16 @@ public:
 			const struct gprs_rlc_data_info *rlc,
 			unsigned int data_block_idx,
 			uint8_t *dst, const uint8_t *buffer);
+
+	enum AppendResult {
+		AR_NEED_MORE_BLOCKS,
+		AR_COMPLETED_SPACE_LEFT,
+		AR_COMPLETED_BLOCK_FILLED,
+	};
+
+	static AppendResult rlc_data_to_dl_append(
+		struct gprs_rlc_data_block_info *rdbi,
+		gprs_llc *llc, int *offset, int *num_chunks,
+		uint8_t *data,
+		bool is_final);
 };
