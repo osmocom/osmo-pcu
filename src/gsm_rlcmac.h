@@ -476,7 +476,7 @@ typedef struct
 
 typedef struct
 {
-  guint8   LENGTH;
+  /* guint8   LENGTH; */
   EGPRS_AckNack_Desc_t Desc;
 } EGPRS_AckNack_w_len_t;
 
