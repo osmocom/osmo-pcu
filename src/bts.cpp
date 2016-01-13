@@ -982,7 +982,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "EGPRS ACK/NACK: "
 		"ut: %d, final: %d, bow: %d, eow: %d, ssn: %d, have_crbb: %d, "
-		"urbb_len:%d, %p, %p, %d, %d, win: %d-%d, %s\n",
+		"urbb_len:%d, %p, %p, %d, %d, win: %d-%d, urbb: %s\n",
 		(int)ack_nack->EGPRS_AckNack.UnionType,
 		(int)ack_nack->EGPRS_AckNack.Desc.FINAL_ACK_INDICATION,
 		(int)ack_nack->EGPRS_AckNack.Desc.BEGINNING_OF_WINDOW,
@@ -996,7 +996,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 		(int)offsetof(EGPRS_AckNack_w_len_t, Desc),
 		tbf->m_window.v_a(),
 		tbf->m_window.v_s(),
-		osmo_hexdump((const uint8_t *)&ack_nack->EGPRS_AckNack, sizeof(ack_nack->EGPRS_AckNack)));
+		osmo_hexdump((const uint8_t *)&ack_nack->EGPRS_AckNack.Desc.URBB, sizeof(ack_nack->EGPRS_AckNack.Desc.URBB)));
 
 #if 0
 	rc = tbf->rcvd_dl_ack(
