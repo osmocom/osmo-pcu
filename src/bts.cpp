@@ -981,14 +981,20 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 
 	// m_window.v_s()
 	LOGP(DRLCMAC, LOGL_DEBUG, "EGPRS ACK/NACK: "
-		"final: %d, bow: %d, eow: %d, ssn: %d, have_crbb: %d, "
-		"urbb_len:%d\n",
-		ack_nack->EGPRS_AckNack.Desc.FINAL_ACK_INDICATION,
-		ack_nack->EGPRS_AckNack.Desc.BEGINNING_OF_WINDOW,
-		ack_nack->EGPRS_AckNack.Desc.END_OF_WINDOW,
-		ack_nack->EGPRS_AckNack.Desc.STARTING_SEQUENCE_NUMBER,
-		ack_nack->EGPRS_AckNack.Desc.Exist_CRBB,
-		ack_nack->EGPRS_AckNack.Desc.URBB_LENGTH);
+		"ut: %d, final: %d, bow: %d, eow: %d, ssn: %d, have_crbb: %d, "
+		"urbb_len:%d, %p, %p, %d, %d, %s\n",
+		(int)ack_nack->EGPRS_AckNack.UnionType,
+		(int)ack_nack->EGPRS_AckNack.Desc.FINAL_ACK_INDICATION,
+		(int)ack_nack->EGPRS_AckNack.Desc.BEGINNING_OF_WINDOW,
+		(int)ack_nack->EGPRS_AckNack.Desc.END_OF_WINDOW,
+		(int)ack_nack->EGPRS_AckNack.Desc.STARTING_SEQUENCE_NUMBER,
+		(int)ack_nack->EGPRS_AckNack.Desc.Exist_CRBB,
+		(int)ack_nack->EGPRS_AckNack.Desc.URBB_LENGTH,
+		(void *)&ack_nack->EGPRS_AckNack.UnionType,
+		(void *)&ack_nack->EGPRS_AckNack.Desc,
+		(int)offsetof(EGPRS_AckNack_t, Desc),
+		(int)offsetof(EGPRS_AckNack_w_len_t, Desc),
+		osmo_hexdump((const uint8_t *)&ack_nack->EGPRS_AckNack, sizeof(ack_nack->EGPRS_AckNack)));
 
 #if 0
 	rc = tbf->rcvd_dl_ack(
