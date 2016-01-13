@@ -311,3 +311,18 @@ void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
 	rdbi->pi  = 0;
 	rdbi->spb = 0;
 }
+
+unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, int punct, int with_padding)
+{
+	switch (GprsCodingScheme::Scheme(cs)) {
+	case GprsCodingScheme::MCS1: return 0b1011 + punct % 2;
+	case GprsCodingScheme::MCS2: return 0b1001 + punct % 2;
+	case GprsCodingScheme::MCS3: return (with_padding ? 0b0110 : 0b0011) +
+					    punct % 3;
+	case GprsCodingScheme::MCS4: return 0b0000 + punct % 3;
+	/* TODO: Add missing MCS */
+	default: ;
+	}
+
+	return -1;
+}
