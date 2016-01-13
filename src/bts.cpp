@@ -951,6 +951,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 	int8_t tfi = 0; /* must be signed */
 	struct gprs_rlcmac_dl_tbf *tbf;
 	struct pcu_l1_meas meas;
+	int rc;
 
 	tfi = ack_nack->DOWNLINK_TFI;
 	tbf = bts()->dl_tbf_by_poll_fn(fn, trx_no(), ts_no);
@@ -979,7 +980,6 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 		tbf_name(tbf));
 	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 
-	// m_window.v_s()
 	LOGP(DRLCMAC, LOGL_DEBUG, "EGPRS ACK/NACK: "
 		"ut: %d, final: %d, bow: %d, eow: %d, ssn: %d, have_crbb: %d, "
 		"urbb_len:%d, %p, %p, %d, %d, %s\n",
@@ -1006,6 +1006,24 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 		return;
 	}
 #endif
+	if (ack_nack->EGPRS_AckNack.Desc.URBB_LENGTH == 0 &&
+		!ack_nack->EGPRS_AckNack.Desc.Exist_CRBB)
+	{
+		/* Everything has been received successfully */
+		/* Fake a GPRS type ack */
+		uint64_t fake_map = -1;
+
+		rc = tbf->rcvd_dl_ack(
+			ack_nack->EGPRS_AckNack.Desc.FINAL_ACK_INDICATION,
+			tbf->m_window.v_s(),
+			(uint8_t *)&fake_map);
+
+		if (rc == 1) {
+			tbf_free(tbf);
+			return;
+		}
+	}
+
 	/* check for channel request */
 	if (ack_nack->Exist_ChannelRequestDescription) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
