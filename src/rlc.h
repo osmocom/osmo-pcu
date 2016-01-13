@@ -105,6 +105,7 @@ void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
 	GprsCodingScheme cs);
 void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
 	GprsCodingScheme cs);
+unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, int punct, int with_padding);
 
 /*
  * I hold the currently transferred blocks and will provide

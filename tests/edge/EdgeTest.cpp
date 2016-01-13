@@ -992,6 +992,24 @@ static void test_rlc_unaligned_copy()
 	}
 }
 
+static void test_rlc_info_init()
+{
+	struct gprs_rlc_data_info rlc;
+
+	printf("=== start %s ===\n", __func__);
+	gprs_rlc_data_info_init_dl(&rlc, GprsCodingScheme(GprsCodingScheme::CS1));
+	OSMO_ASSERT(rlc.num_data_blocks == 1);
+	OSMO_ASSERT(rlc.data_offs_bits[0] == 24);
+	OSMO_ASSERT(rlc.block_info[0].data_len == 20);
+
+	gprs_rlc_data_info_init_dl(&rlc, GprsCodingScheme(GprsCodingScheme::MCS1));
+	OSMO_ASSERT(rlc.num_data_blocks == 1);
+	OSMO_ASSERT(rlc.data_offs_bits[0] == 33);
+	OSMO_ASSERT(rlc.block_info[0].data_len == 22);
+
+	printf("=== end %s ===\n", __func__);
+}
+
 static const struct log_info_cat default_categories[] = {
 	{"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_INFO, 0},
 	{"DL1IF", "\033[1;32m", "GPRS PCU L1 interface (L1IF)", LOGL_DEBUG, 1},
@@ -1035,6 +1053,7 @@ int main(int argc, char **argv)
 	pcu_vty_init(&debug_log_info);
 
 	test_coding_scheme();
+	test_rlc_info_init();
 	test_rlc_unit_decoder();
 	test_rlc_unaligned_copy();
 	test_rlc_unit_encoder();

@@ -1,5 +1,7 @@
 === start test_coding_scheme ===
 === end test_coding_scheme ===
+=== start test_rlc_info_init ===
+=== end test_rlc_info_init ===
 === start test_rlc_unit_decoder ===
 === end test_rlc_unit_decoder ===
 === start test_rlc_unit_encoder ===

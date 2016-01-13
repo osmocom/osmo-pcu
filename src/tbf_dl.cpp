@@ -539,6 +539,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	rlc.usf = 7; /* will be set at scheduler */
 	rlc.pr = 0; /* FIXME: power reduction */
 	rlc.tfi = m_tfi; /* TFI */
+	rlc.cps = gprs_rlc_mcs_cps(cs, 0, 0);
 
 	rlc.block_info[data_block_idx] = m_rlc.block(index)->block_info;
 	rdbi = &rlc.block_info[data_block_idx];
