@@ -873,6 +873,148 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 	return Encoding::AR_COMPLETED_BLOCK_FILLED;
 }
 
+static Encoding::AppendResult rlc_data_to_dl_append_egprs(
+	struct gprs_rlc_data_block_info *rdbi,
+	gprs_llc *llc, int *offset, int *num_chunks,
+	uint8_t *data_block,
+	bool is_final)
+{
+	int chunk;
+	int space;
+	struct rlc_li_field_egprs *li;
+	struct rlc_li_field_egprs *prev_li;
+	uint8_t *delimiter, *data;
+
+	data = data_block + *offset;
+	delimiter = data_block + *num_chunks;
+	prev_li = (struct rlc_li_field_egprs *)
+		(*num_chunks ? delimiter - 1 : NULL);
+
+	chunk = llc->chunk_size();
+	space = rdbi->data_len - *offset;
+
+	/* if chunk will exceed block limit */
+	if (chunk > space) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+			"larger than space (%d) left in block: copy "
+			"only remaining space, and we are done\n",
+			chunk, space);
+		/* fill only space */
+		llc->consume(data, space);
+		/* return data block as message */
+		*offset = rdbi->data_len;
+		(*num_chunks)++;
+		return Encoding::AR_NEED_MORE_BLOCKS;
+	}
+	/* if FINAL chunk would fit precisely in space left */
+	if (chunk == space && is_final)
+	{
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+			"would exactly fit into space (%d): because "
+			"this is a final block, we don't add length "
+			"header, and we are done\n", chunk, space);
+		/* fill space */
+		llc->consume(data, space);
+		*offset = rdbi->data_len;
+		(*num_chunks)++;
+		rdbi->cv = 0;
+		return Encoding::AR_COMPLETED_BLOCK_FILLED;
+	}
+	/* if chunk would fit exactly in space left */
+	if (chunk == space) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+			"would exactly fit into space (%d): just copy "
+			"it, and we are done. The next block will have "
+			"to start with an empty chunk\n",
+			chunk, space);
+		/* fill space */
+		llc->consume(data, space);
+		*offset = rdbi->data_len;
+		(*num_chunks)++;
+		return Encoding::AR_NEED_MORE_BLOCKS;
+	}
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d is less "
+		"than remaining space (%d): add length header to "
+		"to delimit LLC frame\n", chunk, space);
+	/* the LLC frame chunk ends in this block */
+	/* make space for delimiter */
+
+	if (delimiter != data)
+		memmove(delimiter + 1, delimiter, data - delimiter);
+
+	data      += 1;
+	(*offset) += 1;
+	space     -= 1;
+	/* add LI to delimit frame */
+	li = (struct rlc_li_field_egprs *)delimiter;
+	li->e = 1; /* Extension bit, maybe set later */
+	li->li = chunk; /* length of chunk */
+	/* tell previous extension header about the new one */
+	if (prev_li)
+		prev_li->e = 0;
+	rdbi->e = 0; /* 0: extensions present */
+	delimiter++;
+	prev_li = li;
+	(*num_chunks)++;
+	/* copy (rest of) LLC frame to space and reset later */
+	llc->consume(data, chunk);
+	data += chunk;
+	space -= chunk;
+	(*offset) += chunk;
+	/* if we have more data and we have space left */
+	if (space > 0) {
+		if (!is_final)
+			return Encoding::AR_COMPLETED_SPACE_LEFT;
+
+		/* we don't have more LLC frames */
+		/* We will have to add another chunk with filling octets */
+		LOGP(DRLCMACDL, LOGL_DEBUG,
+			"-- There is remaining space (%d): add filling byte chunk\n",
+			space);
+
+		if (delimiter != data)
+			memmove(delimiter + 1, delimiter, data - delimiter);
+
+		data      += 1;
+		(*offset) += 1;
+		space     -= 1;
+
+		/* set filling bytes extension */
+		li = (struct rlc_li_field_egprs *)delimiter;
+		li->e = 1;
+		li->li = 127;
+
+		/* tell previous extension header about the new one */
+		if (prev_li)
+			prev_li->e = 0;
+
+		delimiter++;
+		(*num_chunks)++;
+
+		rdbi->cv = 0;
+
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
+			"are done.\n");
+
+		*offset = rdbi->data_len;
+		return Encoding::AR_COMPLETED_BLOCK_FILLED;
+	}
+
+	if (is_final) {
+		/* we don't have more LLC frames */
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
+			"are done.\n");
+		rdbi->cv = 0;
+		return Encoding::AR_COMPLETED_BLOCK_FILLED;
+	}
+
+	/* we have no space left */
+	LOGP(DRLCMACDL, LOGL_DEBUG, "-- No space left, so we are "
+		"done.\n");
+	return Encoding::AR_COMPLETED_BLOCK_FILLED;
+}
+
 Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 	struct gprs_rlc_data_block_info *rdbi, GprsCodingScheme cs,
 	gprs_llc *llc, int *offset, int *num_chunks,
@@ -881,6 +1023,10 @@ Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 {
 	if (cs.isGprs())
 		return rlc_data_to_dl_append_gprs(rdbi,
+			llc, offset, num_chunks, data_block, is_final);
+
+	if (cs.isEgprs())
+		return rlc_data_to_dl_append_egprs(rdbi,
 			llc, offset, num_chunks, data_block, is_final);
 
 	LOGP(DRLCMACDL, LOGL_ERROR, "%s data block encoding not implemented\n",
