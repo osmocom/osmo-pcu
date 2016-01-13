@@ -1017,7 +1017,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 
 		rc = tbf->rcvd_dl_ack(
 			ack_nack->EGPRS_AckNack.Desc.FINAL_ACK_INDICATION,
-			ack_nack->EGPRS_AckNack.Desc.STARTING_SEQUENCE_NUMBER,
+			tbf->m_window.mod_sns(ack_nack->EGPRS_AckNack.Desc.STARTING_SEQUENCE_NUMBER-1),
 			(uint8_t *)&fake_map);
 
 		if (rc == 1) {
