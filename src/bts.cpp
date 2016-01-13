@@ -946,6 +946,123 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	}
 }
 
+void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nack, uint32_t fn)
+{
+	int8_t tfi = 0; /* must be signed */
+	struct gprs_rlcmac_dl_tbf *tbf;
+	struct pcu_l1_meas meas;
+	int rc;
+	int num_blocks;
+	uint8_t bits_data[RLC_EGPRS_MAX_WS/8];
+	char show_bits[RLC_EGPRS_MAX_WS + 1];
+	bitvec bits;
+	int bsn_begin, bsn_end;
+
+	tfi = ack_nack->DOWNLINK_TFI;
+	tbf = bts()->dl_tbf_by_poll_fn(fn, trx_no(), ts_no);
+	if (!tbf) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "EGPRS PACKET DOWNLINK ACK with "
+			"unknown FN=%u TFI=%d (TRX %d TS %d)\n",
+			fn, tfi, trx_no(), ts_no);
+		return;
+	}
+	if (tbf->tfi() != tfi) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "EGPRS PACKET DOWNLINK ACK with "
+			"wrong TFI=%d, ignoring!\n", tfi);
+		return;
+	}
+	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
+	if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
+		tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
+		LOGP(DRLCMAC, LOGL_NOTICE, "Recovered EGPRS downlink ack "
+			"for %s\n", tbf_name(tbf));
+	}
+	/* reset N3105 */
+	tbf->n3105 = 0;
+	tbf->stop_t3191();
+	LOGP(DRLCMAC, LOGL_DEBUG,
+		"RX: [PCU <- BTS] %s EGPRS Packet Downlink Ack/Nack\n",
+		tbf_name(tbf));
+	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "EGPRS ACK/NACK: "
+		"ut: %d, final: %d, bow: %d, eow: %d, ssn: %d, have_crbb: %d, "
+		"urbb_len:%d, %p, %p, %d, %d, win: %d-%d, urbb: %s\n",
+		(int)ack_nack->EGPRS_AckNack.UnionType,
+		(int)ack_nack->EGPRS_AckNack.Desc.FINAL_ACK_INDICATION,
+		(int)ack_nack->EGPRS_AckNack.Desc.BEGINNING_OF_WINDOW,
+		(int)ack_nack->EGPRS_AckNack.Desc.END_OF_WINDOW,
+		(int)ack_nack->EGPRS_AckNack.Desc.STARTING_SEQUENCE_NUMBER,
+		(int)ack_nack->EGPRS_AckNack.Desc.Exist_CRBB,
+		(int)ack_nack->EGPRS_AckNack.Desc.URBB_LENGTH,
+		(void *)&ack_nack->EGPRS_AckNack.UnionType,
+		(void *)&ack_nack->EGPRS_AckNack.Desc,
+		(int)offsetof(EGPRS_AckNack_t, Desc),
+		(int)offsetof(EGPRS_AckNack_w_len_t, Desc),
+		tbf->m_window.v_a(),
+		tbf->m_window.v_s(),
+		osmo_hexdump((const uint8_t *)&ack_nack->EGPRS_AckNack.Desc.URBB,
+			sizeof(ack_nack->EGPRS_AckNack.Desc.URBB)));
+
+	bits.data = bits_data;
+	bits.data_len = sizeof(bits_data);
+	bits.cur_bit = 0;
+
+	num_blocks = Decoding::decode_egprs_acknack_bits(
+		&ack_nack->EGPRS_AckNack.Desc, &bits,
+		&bsn_begin, &bsn_end, &tbf->m_window);
+
+	for (int i = 0; i < num_blocks; i++) {
+		show_bits[i] = bitvec_get_bit_pos(&bits, i) ? 'R' : 'I';
+	}
+	show_bits[num_blocks] = 0;
+
+	LOGP(DRLCMAC, LOGL_DEBUG,
+		"EGPRS DL ACK bitmap: BSN %d to %d - 1 (%d blocks): %s\n",
+		bsn_begin, bsn_end, num_blocks, show_bits);
+
+	if (ack_nack->EGPRS_AckNack.Desc.URBB_LENGTH == 0 &&
+		!ack_nack->EGPRS_AckNack.Desc.Exist_CRBB)
+	{
+		/* Everything has been received successfully */
+		/* Fake a GPRS type ack */
+		uint64_t fake_map = -1;
+
+		rc = tbf->rcvd_dl_ack(
+			ack_nack->EGPRS_AckNack.Desc.FINAL_ACK_INDICATION,
+			tbf->m_window.mod_sns(ack_nack->EGPRS_AckNack.Desc.STARTING_SEQUENCE_NUMBER-1),
+			(uint8_t *)&fake_map);
+
+		if (rc == 1) {
+			tbf_free(tbf);
+			return;
+		}
+	}
+
+	/* check for channel request */
+	if (ack_nack->Exist_ChannelRequestDescription) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
+			"message, so we provide one:\n");
+
+		/* This call will register the new TBF with the MS on success */
+		tbf_alloc_ul(bts_data(), tbf->trx->trx_no,
+			tbf->ms_class(), tbf->ms()->egprs_ms_class(),
+			tbf->tlli(), tbf->ta(), tbf->ms());
+
+		/* schedule uplink assignment */
+		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+	}
+
+	/* get measurements */
+	if (tbf->ms()) {
+		/* TODO: Implement Measurements parsing for EGPRS */
+		/*
+		get_meas(&meas, &ack_nack->Channel_Quality_Report);
+		tbf->ms()->update_l1_meas(&meas);
+		*/
+	}
+}
+
 void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, uint32_t fn)
 {
 	struct gprs_rlcmac_sba *sba;
@@ -1104,6 +1221,9 @@ int gprs_rlcmac_pdch::rcv_control_block(
 		break;
 	case MT_PACKET_DOWNLINK_ACK_NACK:
 		rcv_control_dl_ack_nack(&ul_control_block->u.Packet_Downlink_Ack_Nack, fn);
+		break;
+	case MT_EGPRS_PACKET_DOWNLINK_ACK_NACK:
+		rcv_control_egprs_dl_ack_nack(&ul_control_block->u.Egprs_Packet_Downlink_Ack_Nack, fn);
 		break;
 	case MT_PACKET_RESOURCE_REQUEST:
 		rcv_resource_request(&ul_control_block->u.Packet_Resource_Request, fn);

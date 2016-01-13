@@ -549,6 +549,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
 
         csnStreamInit(&arT, bit_offset, length);
         arT.direction = 1;
+        LOGPC(DCSN1, LOGL_NOTICE, "ptr = %p | offset = %d | ", (void *)data, (int)pDescr->offset);
         Status = serialize(&arT, vector, readIndex, pvDATA(data, pDescr->offset));
 
         if (Status >= 0)

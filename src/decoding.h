@@ -24,6 +24,8 @@
 
 #include <stdint.h>
 
+struct bitvec;
+
 class Decoding {
 public:
 	struct RlcData {
@@ -51,4 +53,8 @@ public:
 		const struct gprs_rlc_data_info *rlc,
 		unsigned int data_block_idx,
 		const uint8_t *src, uint8_t *buffer);
+	static int decode_egprs_acknack_bits(
+		const EGPRS_AckNack_Desc_t *desc,
+		struct bitvec *bits, int *bsn_begin, int *bsn_end,
+		struct gprs_rlc_dl_window *window);
 };
