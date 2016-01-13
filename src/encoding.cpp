@@ -752,7 +752,7 @@ unsigned int Encoding::rlc_copy_from_aligned_buffer(
 	return rdbi->data_len;
 }
 
-Encoding::AppendResult Encoding::rlc_data_to_dl_append(
+static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 	struct gprs_rlc_data_block_info *rdbi,
 	gprs_llc *llc, int *offset, int *num_chunks,
 	uint8_t *data_block,
@@ -784,7 +784,7 @@ Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 		/* return data block as message */
 		*offset = rdbi->data_len;
 		(*num_chunks)++;
-		return AR_NEED_MORE_BLOCKS;
+		return Encoding::AR_NEED_MORE_BLOCKS;
 	}
 	/* if FINAL chunk would fit precisely in space left */
 	if (chunk == space && is_final)
@@ -801,7 +801,7 @@ Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 		*offset = rdbi->data_len;
 		(*num_chunks)++;
 		rdbi->cv = 0;
-		return AR_COMPLETED_BLOCK_FILLED;
+		return Encoding::AR_COMPLETED_BLOCK_FILLED;
 	}
 	/* if chunk would fit exactly in space left */
 	if (chunk == space) {
@@ -828,7 +828,7 @@ Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 		/* return data block as message */
 		*offset = rdbi->data_len;
 		(*num_chunks)++;
-		return AR_NEED_MORE_BLOCKS;
+		return Encoding::AR_NEED_MORE_BLOCKS;
 	}
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d is less "
@@ -856,7 +856,7 @@ Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 	/* if we have more data and we have space left */
 	if (space > 0 && !is_final) {
 		li->m = 1; /* we indicate more frames to follow */
-		return AR_COMPLETED_SPACE_LEFT;
+		return Encoding::AR_COMPLETED_SPACE_LEFT;
 	}
 	/* if we don't have more LLC frames */
 	if (is_final) {
@@ -864,11 +864,27 @@ Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 			"done.\n");
 		li->e = 1; /* we cannot extend */
 		rdbi->cv = 0;
-		return AR_COMPLETED_BLOCK_FILLED;
+		return Encoding::AR_COMPLETED_BLOCK_FILLED;
 	}
 	/* we have no space left */
 	LOGP(DRLCMACDL, LOGL_DEBUG, "-- No space left, so we are "
 		"done.\n");
 	li->e = 1; /* we cannot extend */
-	return AR_COMPLETED_BLOCK_FILLED;
+	return Encoding::AR_COMPLETED_BLOCK_FILLED;
+}
+
+Encoding::AppendResult Encoding::rlc_data_to_dl_append(
+	struct gprs_rlc_data_block_info *rdbi, GprsCodingScheme cs,
+	gprs_llc *llc, int *offset, int *num_chunks,
+	uint8_t *data_block,
+	bool is_final)
+{
+	if (cs.isGprs())
+		return rlc_data_to_dl_append_gprs(rdbi,
+			llc, offset, num_chunks, data_block, is_final);
+
+	LOGP(DRLCMACDL, LOGL_ERROR, "%s data block encoding not implemented\n",
+		cs.name());
+
+	return AR_NEED_MORE_BLOCKS;
 }

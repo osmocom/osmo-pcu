@@ -509,7 +509,7 @@ static void test_rlc_unit_encoder()
 	llc.reset();
 	llc.put_frame(llc_data, 11);
 
-	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
 		&llc, &write_offset, &num_chunks, data, false);
 
 	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_SPACE_LEFT);
@@ -520,7 +520,7 @@ static void test_rlc_unit_encoder()
 	llc.reset();
 	llc.put_frame(llc_data, 26);
 
-	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
 		&llc, &write_offset, &num_chunks, data, false);
 
 	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_SPACE_LEFT);
@@ -531,7 +531,7 @@ static void test_rlc_unit_encoder()
 	llc.reset();
 	llc.put_frame(llc_data, 99);
 
-	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
 		&llc, &write_offset, &num_chunks, data, false);
 
 	OSMO_ASSERT(ar == Encoding::AR_NEED_MORE_BLOCKS);
@@ -556,7 +556,7 @@ static void test_rlc_unit_encoder()
 	llc.reset();
 	llc.put_frame(llc_data, 20);
 
-	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
 		&llc, &write_offset, &num_chunks, data, false);
 
 	OSMO_ASSERT(ar == Encoding::AR_NEED_MORE_BLOCKS);
@@ -575,7 +575,7 @@ static void test_rlc_unit_encoder()
 
 	OSMO_ASSERT(llc.chunk_size() == 1);
 
-	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
 		&llc, &write_offset, &num_chunks, data, false);
 
 	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_SPACE_LEFT);
@@ -586,7 +586,7 @@ static void test_rlc_unit_encoder()
 	llc.reset();
 	llc.put_frame(llc_data, 99);
 
-	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
 		&llc, &write_offset, &num_chunks, data, false);
 
 	OSMO_ASSERT(ar == Encoding::AR_NEED_MORE_BLOCKS);
@@ -609,7 +609,7 @@ static void test_rlc_unit_encoder()
 	llc.reset();
 	llc.put_frame(llc_data, 7);
 
-	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
 		&llc, &write_offset, &num_chunks, data, false);
 
 	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_SPACE_LEFT);
@@ -620,7 +620,7 @@ static void test_rlc_unit_encoder()
 	llc.reset();
 	llc.put_frame(llc_data, 11);
 
-	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
 		&llc, &write_offset, &num_chunks, data, false);
 
 	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_BLOCK_FILLED);
@@ -644,7 +644,7 @@ static void test_rlc_unit_encoder()
 	llc.reset();
 	llc.put_frame(llc_data, 99);
 
-	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
 		&llc, &write_offset, &num_chunks, data, false);
 
 	OSMO_ASSERT(ar == Encoding::AR_NEED_MORE_BLOCKS);
@@ -667,7 +667,7 @@ static void test_rlc_unit_encoder()
 	llc.reset();
 	llc.put_frame(llc_data, 20);
 
-	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
 		&llc, &write_offset, &num_chunks, data, true);
 
 	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_BLOCK_FILLED);
@@ -690,7 +690,7 @@ static void test_rlc_unit_encoder()
 	llc.reset();
 	llc.put_frame(llc_data, 30);
 
-	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
 		&llc, &write_offset, &num_chunks, data, false);
 
 	OSMO_ASSERT(ar == Encoding::AR_NEED_MORE_BLOCKS);
@@ -708,7 +708,7 @@ static void test_rlc_unit_encoder()
 
 	OSMO_ASSERT(llc.chunk_size() == 10);
 
-	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
 		&llc, &write_offset, &num_chunks, data, false);
 
 	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_SPACE_LEFT);
@@ -719,7 +719,7 @@ static void test_rlc_unit_encoder()
 	llc.reset();
 	llc.put_frame(llc_data, 99);
 
-	ar = Encoding::rlc_data_to_dl_append(&rdbi,
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
 		&llc, &write_offset, &num_chunks, data, false);
 
 	OSMO_ASSERT(ar == Encoding::AR_NEED_MORE_BLOCKS);

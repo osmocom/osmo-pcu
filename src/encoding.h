@@ -22,6 +22,7 @@
 
 #include <stdint.h>
 #include <gsm_rlcmac.h>
+#include <gprs_coding_scheme.h>
 
 struct gprs_rlcmac_bts;
 struct gprs_rlcmac_tbf;
@@ -86,7 +87,7 @@ public:
 	};
 
 	static AppendResult rlc_data_to_dl_append(
-		struct gprs_rlc_data_block_info *rdbi,
+		struct gprs_rlc_data_block_info *rdbi, GprsCodingScheme cs,
 		gprs_llc *llc, int *offset, int *num_chunks,
 		uint8_t *data,
 		bool is_final);
