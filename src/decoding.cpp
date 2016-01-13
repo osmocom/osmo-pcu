@@ -493,3 +493,51 @@ const uint8_t *Decoding::rlc_get_data_aligned(
 	Decoding::rlc_copy_to_aligned_buffer(rlc, data_block_idx, src, buffer);
 	return buffer;
 }
+
+int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
+	bitvec *bits, int *bsn_begin, int *bsn_end, gprs_rlc_dl_window *window)
+{
+	int urbb_len = desc->URBB_LENGTH;
+	int crbb_len = 0;
+	int num_blocks;
+	struct bitvec urbb;
+
+	if (desc->Exist_CRBB)
+		crbb_len = desc->CRBB_LENGTH;
+
+	num_blocks = urbb_len + crbb_len;
+
+	if (num_blocks == 0) {
+		*bsn_begin = desc->STARTING_SEQUENCE_NUMBER;
+		*bsn_end = window->mod_sns(*bsn_begin - 1);
+
+		return num_blocks;
+	}
+
+
+	/* first bit refers to V(Q) and thus is always zero (and not
+	 * transmitted) */
+	bitvec_set_bit(bits, ZERO);
+	num_blocks += 1;
+
+	*bsn_begin = window->mod_sns(desc->STARTING_SEQUENCE_NUMBER - 1);
+	*bsn_end   = window->mod_sns(*bsn_begin + num_blocks);
+
+	if (crbb_len > 0) {
+		/*
+		decode_t4_rle(bits, desc->CRBB, desc->CRBB_LENGTH, desc->CRBB_STARTING_COLOR_CODE);
+		*/
+	}
+
+	urbb.cur_bit = 0;
+	urbb.data = (uint8_t *)desc->URBB;
+	urbb.data_len = sizeof(desc->URBB);
+
+	for (int i = urbb_len; i > 0; i--) {
+		/* Set bit at the appropriate position (see 3GPP TS 04.60 12.3.1) */
+		int is_ack = bitvec_get_bit_pos(&urbb, i-1);
+		bitvec_set_bit(bits, is_ack ? ONE : ZERO);
+	}
+
+	return num_blocks;
+}

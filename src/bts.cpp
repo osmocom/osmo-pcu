@@ -1008,6 +1008,30 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 		return;
 	}
 #endif
+	int num_blocks;
+	uint8_t bits_data[RLC_EGPRS_MAX_WS/8];
+	char show_bits[RLC_EGPRS_MAX_WS + 1];
+
+	bitvec bits;
+	int bsn_begin, bsn_end;
+
+	bits.data = bits_data;
+	bits.data_len = sizeof(bits_data);
+	bits.cur_bit = 0;
+
+	num_blocks = Decoding::decode_egprs_acknack_bits(
+		&ack_nack->EGPRS_AckNack.Desc, &bits,
+		&bsn_begin, &bsn_end, &tbf->m_window);
+
+	for (int i = 0; i < num_blocks; i++) {
+		show_bits[i] = bitvec_get_bit_pos(&bits, i) ? 'R' : 'I';
+	}
+	show_bits[num_blocks] = 0;
+
+	LOGP(DRLCMAC, LOGL_DEBUG,
+		"EGPRS DL ACK bitmap: BSN %d to %d - 1 (%d blocks): %s\n",
+		bsn_begin, bsn_end, num_blocks, show_bits);
+
 	if (ack_nack->EGPRS_AckNack.Desc.URBB_LENGTH == 0 &&
 		!ack_nack->EGPRS_AckNack.Desc.Exist_CRBB)
 	{
