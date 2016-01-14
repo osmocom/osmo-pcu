@@ -739,19 +739,21 @@ int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 		"(BSN=%d)  R=ACK I=NACK\n", first_bsn,
 		show_rbb, m_window.mod_sns(behind_last_bsn - 1));
 
-	/* apply received array to receive state (SSN-64..SSN-1) */
-	/* calculate distance of ssn from V(S) */
-	dist = m_window.mod_sns(m_window.v_s() - behind_last_bsn);
-	/* check if distance is less than distance V(A)..V(S) */
-	if (dist >= m_window.distance()) {
-		/* this might happpen, if the downlink assignment
-		 * was not received by ms and the ack refers
-		 * to previous TBF
-		 * FIXME: we should implement polling for
-		 * control ack!*/
-		LOGP(DRLCMACDL, LOGL_NOTICE, "- ack range is out of "
-			"V(A)..V(S) range %s Free TBF!\n", tbf_name(this));
-		return 1; /* indicate to free TBF */
+	/* apply received array to receive state (first_bsn..behind_last_bsn-1) */
+	if (num_blocks > 0) {
+		/* calculate distance of ssn from V(S) */
+		dist = m_window.mod_sns(m_window.v_s() - behind_last_bsn);
+		/* check if distance is less than distance V(A)..V(S) */
+		if (dist >= m_window.distance()) {
+			/* this might happpen, if the downlink assignment
+			 * was not received by ms and the ack refers
+			 * to previous TBF
+			 * FIXME: we should implement polling for
+			 * control ack!*/
+			LOGP(DRLCMACDL, LOGL_NOTICE, "- ack range is out of "
+				"V(A)..V(S) range %s Free TBF!\n", tbf_name(this));
+			return 1; /* indicate to free TBF */
+		}
 	}
 
 	error_rate = analyse_errors(show_rbb, behind_last_bsn, &ana_res);
