@@ -566,7 +566,7 @@ int Decoding::decode_gprs_acknack_bits(const Ack_Nack_Description_t *desc,
 	*bsn_end   = desc->STARTING_SEQUENCE_NUMBER;
 	*bsn_begin = window->v_a();
 
-	num_blocks = *bsn_end - *bsn_begin;
+	num_blocks = window->mod_sns(*bsn_end - *bsn_begin);
 
 	urbb.cur_bit = 0;
 	urbb.data = (uint8_t *)desc->RECEIVED_BLOCK_BITMAP;
