@@ -564,13 +564,15 @@ int Decoding::decode_gprs_acknack_bits(const Ack_Nack_Description_t *desc,
 	num_blocks = urbb_len;
 
 	*bsn_end   = desc->STARTING_SEQUENCE_NUMBER;
-	*bsn_begin = window->mod_sns(*bsn_end - RLC_GPRS_WS);
+	*bsn_begin = window->v_a();
+
+	num_blocks = *bsn_end - *bsn_begin;
 
 	urbb.cur_bit = 0;
 	urbb.data = (uint8_t *)desc->RECEIVED_BLOCK_BITMAP;
 	urbb.data_len = sizeof(desc->RECEIVED_BLOCK_BITMAP);
 
-	for (int i = urbb_len; i > 0; i--) {
+	for (int i = urbb_len; i > urbb_len - num_blocks; i--) {
 		/* Set bit at the appropriate position (see 3GPP TS 44.060 12.3) */
 		int is_ack = bitvec_get_bit_pos(&urbb, i-1);
 		bitvec_set_bit(bits, is_ack == 1 ? ONE : ZERO);
