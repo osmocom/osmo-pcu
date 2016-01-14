@@ -521,7 +521,7 @@ int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
 
 	if (num_blocks == 0) {
 		*bsn_begin = desc->STARTING_SEQUENCE_NUMBER;
-		*bsn_end = window->mod_sns(*bsn_begin - 1);
+		*bsn_end = *bsn_begin;
 
 		return num_blocks;
 	}
@@ -568,13 +568,31 @@ int Decoding::decode_gprs_acknack_bits(const Ack_Nack_Description_t *desc,
 
 	num_blocks = window->mod_sns(*bsn_end - *bsn_begin);
 
+	if (num_blocks < 0 || num_blocks > urbb_len) {
+		*bsn_end  = *bsn_begin;
+		LOGP(DRLCMACUL, LOGL_NOTICE,
+			"Invalid GPRS Ack/Nack window %d:%d (length %d)\n",
+			*bsn_begin, *bsn_end, num_blocks);
+		return -EINVAL;
+	}
+
 	urbb.cur_bit = 0;
 	urbb.data = (uint8_t *)desc->RECEIVED_BLOCK_BITMAP;
 	urbb.data_len = sizeof(desc->RECEIVED_BLOCK_BITMAP);
 
-	for (int i = urbb_len - num_blocks; i < urbb_len; i++) {
-		/* Get bit from the appropriate position (see 3GPP TS 44.060 12.3) */
-		int is_ack = bitvec_get_bit_pos(&urbb, i);
+	/*
+	 * TS 44.060, 12.3:
+	 * BSN = (SSN - bit_number) modulo 128, for bit_number = 1 to 64.
+	 * The BSN values represented range from (SSN - 1) mod 128 to (SSN - 64) mod 128.
+	 *
+	 * We are only interested in the range from V(A) to SSN-1 which is
+	 * num_blocks large. The RBB is laid out as
+	 *   [SSN-1] [SSN-2] ... [V(A)] ... [SSN-64]
+	 * so we want to start with [V(A)] and go backwards until we reach
+	 * [SSN-1] to get the needed BSNs in an increasing order.
+	 */
+	for (int i = num_blocks; i > 0; i--) {
+		int is_ack = bitvec_get_bit_pos(&urbb, i-1);
 		bitvec_set_bit(bits, is_ack == 1 ? ONE : ZERO);
 	}
 
