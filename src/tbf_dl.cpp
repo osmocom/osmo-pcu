@@ -650,10 +650,14 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 	uint16_t bsn = 0;
 	unsigned received_bytes = 0, lost_bytes = 0;
 	unsigned received_packets = 0, lost_packets = 0;
+	unsigned num_blocks = strlen(show_rbb);
 
 	/* SSN - 1 is in range V(A)..V(S)-1 */
 	for (int bitpos = 0; bitpos < m_window.ws(); bitpos++) {
-		bool is_received = show_rbb[m_window.ws() - 1 - bitpos] == 'R';
+		bool is_received;
+		int index = num_blocks - 1 - bitpos;
+
+		is_received = (index >= 0 && show_rbb[index] == 'R');
 
 		bsn = m_window.mod_sns(bitnum_to_bsn(bitpos, ssn));
 
