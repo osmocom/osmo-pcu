@@ -1019,16 +1019,6 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 		tbf->m_window.v_s(),
 		osmo_hexdump((const uint8_t *)&ack_nack->EGPRS_AckNack.Desc.URBB, sizeof(ack_nack->EGPRS_AckNack.Desc.URBB)));
 
-#if 0
-	rc = tbf->rcvd_dl_ack(
-		ack_nack->EGPRS_AckNackAck_Nack_Description.FINAL_ACK_INDICATION,
-		ack_nack->Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
-		ack_nack->Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
-	if (rc == 1) {
-		tbf_free(tbf);
-		return;
-	}
-#endif
 	int num_blocks;
 	uint8_t bits_data[RLC_EGPRS_MAX_WS/8];
 	char show_bits[RLC_EGPRS_MAX_WS + 1];
@@ -1044,31 +1034,23 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 		&ack_nack->EGPRS_AckNack.Desc, &bits,
 		&bsn_begin, &bsn_end, &tbf->m_window);
 
-	for (int i = 0; i < num_blocks; i++) {
-		show_bits[i] = bitvec_get_bit_pos(&bits, i) ? 'R' : 'I';
-	}
-	show_bits[num_blocks] = 0;
-
 	LOGP(DRLCMAC, LOGL_DEBUG,
-		"EGPRS DL ACK bitmap: BSN %d to %d - 1 (%d blocks): %s\n",
-		bsn_begin, bsn_end, num_blocks, show_bits);
+		"Got EGPRS DL ACK bitmap: SSN: %d, BSN %d to %d - 1 (%d blocks), "
+		"<%s> (%s:%d)\n",
+		ack_nack->EGPRS_AckNack.Desc.STARTING_SEQUENCE_NUMBER,
+		bsn_begin, bsn_end, num_blocks,
+		(Decoding::extract_rbb(&bits, show_bits), show_bits),
+		osmo_hexdump(ack_nack->EGPRS_AckNack.Desc.URBB,
+			sizeof(ack_nack->EGPRS_AckNack.Desc.URBB)),
+		ack_nack->EGPRS_AckNack.Desc.URBB_LENGTH
+	    );
 
-	if (ack_nack->EGPRS_AckNack.Desc.URBB_LENGTH == 0 &&
-		!ack_nack->EGPRS_AckNack.Desc.Exist_CRBB)
-	{
-		/* Everything has been received successfully */
-		/* Fake a GPRS type ack */
-		uint64_t fake_map = -1;
-
-		rc = tbf->rcvd_dl_ack(
-			ack_nack->EGPRS_AckNack.Desc.FINAL_ACK_INDICATION,
-			tbf->m_window.mod_sns(ack_nack->EGPRS_AckNack.Desc.STARTING_SEQUENCE_NUMBER-1),
-			(uint8_t *)&fake_map);
-
-		if (rc == 1) {
-			tbf_free(tbf);
-			return;
-		}
+	rc = tbf->rcvd_dl_ack(
+		ack_nack->EGPRS_AckNack.Desc.FINAL_ACK_INDICATION,
+		bsn_begin, &bits);
+	if (rc == 1) {
+		tbf_free(tbf);
+		return;
 	}
 
 	/* check for channel request */
@@ -1084,7 +1066,8 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 		/* schedule uplink assignment */
 		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
 	}
-#if 0
+
+#if 0   /* TODO: Adapt this to EGPRS */
 	/* get measurements */
 	if (tbf->ms()) {
 		get_meas(&meas, &ack_nack->Channel_Quality_Report);
