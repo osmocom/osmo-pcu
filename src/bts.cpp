@@ -892,6 +892,11 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;
 	struct pcu_l1_meas meas;
+	int num_blocks;
+	uint8_t bits_data[RLC_GPRS_WS/8];
+	bitvec bits;
+	int bsn_begin, bsn_end;
+	char show_bits[RLC_GPRS_WS + 1];
 
 	tfi = ack_nack->DOWNLINK_TFI;
 	tbf = bts()->dl_tbf_by_poll_fn(fn, trx_no(), ts_no);
@@ -918,10 +923,24 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] %s Packet Downlink Ack/Nack\n", tbf_name(tbf));
 	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 
+	bits.data = bits_data;
+	bits.data_len = sizeof(bits_data);
+	bits.cur_bit = 0;
+
+	num_blocks = Decoding::decode_gprs_acknack_bits(
+		&ack_nack->Ack_Nack_Description, &bits,
+		&bsn_begin, &bsn_end, &tbf->m_window);
+
+	LOGP(DRLCMAC, LOGL_DEBUG,
+		"Got GPRS DL ACK bitmap: SSN: %d, BSN %d to %d - 1 (%d blocks), "
+		"\"%s\"\n",
+		ack_nack->Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
+		bsn_begin, bsn_end, num_blocks,
+		(Decoding::extract_rbb(&bits, show_bits), show_bits));
+
 	rc = tbf->rcvd_dl_ack(
 		ack_nack->Ack_Nack_Description.FINAL_ACK_INDICATION,
-		ack_nack->Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
-		ack_nack->Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
+		bsn_begin, &bits);
 	if (rc == 1) {
 		tbf_free(tbf);
 		return;

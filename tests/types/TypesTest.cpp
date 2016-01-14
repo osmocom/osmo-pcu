@@ -327,8 +327,12 @@ static void test_rlc_dl_ul_basic()
 	{
 		uint16_t lost = 0, recv = 0;
 		char show_rbb[65];
+		uint8_t bits_data[8];
 		BTS dummy_bts;
 		gprs_rlc_dl_window dl_win;
+		bitvec bits;
+		int bsn_begin, bsn_end, num_blocks;
+		Ack_Nack_Description_t desc;
 
 		dl_win.m_v_b.reset();
 
@@ -348,13 +352,61 @@ static void test_rlc_dl_ul_basic()
 		}
 
 		uint8_t rbb_cmp[8] = { 0x00, 0x00, 0x00, 0x07, 0xff, 0xff, 0xff, 0xff };
-		Decoding::extract_rbb(rbb_cmp, show_rbb);
+		bits.data = bits_data;
+		bits.data_len = sizeof(bits_data);
+		bits.cur_bit = 0;
+
+		memcpy(desc.RECEIVED_BLOCK_BITMAP, rbb_cmp,
+			sizeof(desc.RECEIVED_BLOCK_BITMAP));
+		desc.FINAL_ACK_INDICATION = 0;
+		desc.STARTING_SEQUENCE_NUMBER = 35;
+
+		num_blocks = Decoding::decode_gprs_acknack_bits(
+			&desc, &bits,
+			&bsn_begin, &bsn_end, &dl_win);
+		Decoding::extract_rbb(&bits, show_rbb);
 		printf("show_rbb: %s\n", show_rbb);
 
-		dl_win.update(&dummy_bts, show_rbb, 35, &lost, &recv);
+		dl_win.update(&dummy_bts, &bits, 0, &lost, &recv);
 		OSMO_ASSERT(lost == 0);
 		OSMO_ASSERT(recv == 35);
+		OSMO_ASSERT(bsn_begin == 0);
+		OSMO_ASSERT(bsn_end == 35);
+		OSMO_ASSERT(num_blocks == 35);
 
+		dl_win.raise(dl_win.move_window());
+
+		for (int i = 0; i < 8; ++i) {
+			dl_win.increment_send();
+			OSMO_ASSERT(!dl_win.window_empty());
+			OSMO_ASSERT(dl_win.distance() == 2 + i);
+		}
+
+		uint8_t rbb_cmp2[8] = { 0x00, 0x00, 0x07, 0xff, 0xff, 0xff, 0xff, 0x31 };
+		bits.data = bits_data;
+		bits.data_len = sizeof(bits_data);
+		bits.cur_bit = 0;
+
+		memcpy(desc.RECEIVED_BLOCK_BITMAP, rbb_cmp2,
+			sizeof(desc.RECEIVED_BLOCK_BITMAP));
+		desc.FINAL_ACK_INDICATION = 0;
+		desc.STARTING_SEQUENCE_NUMBER = 35 + 8;
+
+		num_blocks = Decoding::decode_gprs_acknack_bits(
+			&desc, &bits,
+			&bsn_begin, &bsn_end, &dl_win);
+		Decoding::extract_rbb(&bits, show_rbb);
+		printf("show_rbb: %s\n", show_rbb);
+
+		lost = recv = 0;
+		dl_win.update(&dummy_bts, &bits, 0, &lost, &recv);
+		OSMO_ASSERT(lost == 5);
+		OSMO_ASSERT(recv == 3);
+		OSMO_ASSERT(bitvec_get_bit_pos(&bits, 0) == 0);
+		OSMO_ASSERT(bitvec_get_bit_pos(&bits, 7) == 1);
+		OSMO_ASSERT(bsn_begin == 35);
+		OSMO_ASSERT(bsn_end == 43);
+		OSMO_ASSERT(num_blocks == 8);
 	}
 }
 
