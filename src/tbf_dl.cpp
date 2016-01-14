@@ -758,8 +758,6 @@ int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 
 	error_rate = analyse_errors(show_rbb, behind_last_bsn, &ana_res);
 
-	return 0; // FIXME TODO REMOVEME
-
 	if (bts_data()->cs_adj_enabled && ms())
 		ms()->update_error_rate(this, error_rate);
 
@@ -907,7 +905,6 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, unsigned first_bsn,
 		return update_window(first_bsn, rbb);
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
-	return 0; // FIXME TODO REMOVEME
 	return maybe_start_new_window();
 }
 

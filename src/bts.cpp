@@ -943,12 +943,6 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	rc = tbf->rcvd_dl_ack(
 		ack_nack->Ack_Nack_Description.FINAL_ACK_INDICATION,
 		bsn_begin, &bits);
-
-	rc = tbf->rcvd_dl_ack(
-		ack_nack->Ack_Nack_Description.FINAL_ACK_INDICATION,
-		ack_nack->Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
-		ack_nack->Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
-
 	if (rc == 1) {
 		tbf_free(tbf);
 		return;
