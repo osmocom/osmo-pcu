@@ -328,6 +328,18 @@ void Decoding::extract_rbb(const uint8_t *rbb, char *show_rbb)
 	show_rbb[64] = '\0';
 }
 
+void Decoding::extract_rbb(const struct bitvec *rbb, char *show_rbb)
+{
+	unsigned int i;
+	for (i = 0; i < rbb->cur_bit; i++) {
+		uint8_t bit;
+		bit = bitvec_get_bit_pos(rbb, i);
+		show_rbb[i] = bit == 1 ? 'R' : 'I';
+	}
+
+	show_rbb[i] = '\0';
+}
+
 int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 	const uint8_t *data, GprsCodingScheme cs)
 {
@@ -534,9 +546,34 @@ int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
 	urbb.data_len = sizeof(desc->URBB);
 
 	for (int i = urbb_len; i > 0; i--) {
-		/* Set bit at the appropriate position (see 3GPP TS 04.60 12.3.1) */
+		/* Set bit at the appropriate position (see 3GPP TS 44.060 12.3.1) */
 		int is_ack = bitvec_get_bit_pos(&urbb, i-1);
-		bitvec_set_bit(bits, is_ack ? ONE : ZERO);
+		bitvec_set_bit(bits, is_ack == 1 ? ONE : ZERO);
+	}
+
+	return num_blocks;
+}
+
+int Decoding::decode_gprs_acknack_bits(const Ack_Nack_Description_t *desc,
+	bitvec *bits, int *bsn_begin, int *bsn_end, gprs_rlc_dl_window *window)
+{
+	int urbb_len = RLC_GPRS_WS;
+	int num_blocks;
+	struct bitvec urbb;
+
+	num_blocks = urbb_len;
+
+	*bsn_end   = desc->STARTING_SEQUENCE_NUMBER;
+	*bsn_begin = window->mod_sns(*bsn_end - RLC_GPRS_WS);
+
+	urbb.cur_bit = 0;
+	urbb.data = (uint8_t *)desc->RECEIVED_BLOCK_BITMAP;
+	urbb.data_len = sizeof(desc->RECEIVED_BLOCK_BITMAP);
+
+	for (int i = urbb_len; i > 0; i--) {
+		/* Set bit at the appropriate position (see 3GPP TS 44.060 12.3) */
+		int is_ack = bitvec_get_bit_pos(&urbb, i-1);
+		bitvec_set_bit(bits, is_ack == 1 ? ONE : ZERO);
 	}
 
 	return num_blocks;

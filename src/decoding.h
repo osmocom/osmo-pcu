@@ -42,6 +42,7 @@ public:
 	static uint8_t get_egprs_ms_class_by_capability(MS_Radio_Access_capability_t *cap);
 
 	static void extract_rbb(const uint8_t *rbb, char *extracted_rbb);
+	static void extract_rbb(const struct bitvec *rbb, char *show_rbb);
 
 	static int rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 		const uint8_t *data, GprsCodingScheme cs);
@@ -57,4 +58,8 @@ public:
 		const EGPRS_AckNack_Desc_t *desc,
 		struct bitvec *bits, int *bsn_begin, int *bsn_end,
 		struct gprs_rlc_dl_window *window);
+	static int decode_gprs_acknack_bits(
+		const Ack_Nack_Description_t *desc,
+		bitvec *bits, int *bsn_begin, int *bsn_end,
+		gprs_rlc_dl_window *window);
 };

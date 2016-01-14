@@ -114,6 +114,45 @@ static uint16_t bitnum_to_bsn(int bitnum, uint16_t ssn)
 	return (ssn - 1 - bitnum);
 }
 
+void gprs_rlc_dl_window::update(BTS *bts, const struct bitvec *rbb,
+			uint16_t first_bsn, uint16_t *lost,
+			uint16_t *received)
+{
+	unsigned num_blocks = rbb->cur_bit;
+	unsigned bsn;
+
+	/* first_bsn is in range V(A)..V(S) */
+
+	/* All BSN before first_bsn are implicitly acknowledged */
+	for (bsn = v_a(); bsn != first_bsn; bsn = mod_sns(bsn + 1)) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- got implicit ack for BSN=%d\n", bsn);
+		if (!m_v_b.is_acked(bsn))
+			*received += 1;
+		m_v_b.mark_acked(bsn);
+	}
+
+	for (unsigned int bitpos = 0; bitpos < num_blocks; bitpos++) {
+		bool is_ack;
+		bsn = mod_sns(first_bsn + bitpos);
+		if (bsn == mod_sns(v_a() - 1))
+			break;
+
+		is_ack = bitvec_get_bit_pos(rbb, bitpos) == 1;
+
+		if (is_ack) {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- got ack for BSN=%d\n", bsn);
+			if (!m_v_b.is_acked(bsn))
+				*received += 1;
+			m_v_b.mark_acked(bsn);
+		} else {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- got NACK for BSN=%d\n", bsn);
+			m_v_b.mark_nacked(bsn);
+			bts->rlc_nacked();
+			*lost += 1;
+		}
+	}
+}
+
 void gprs_rlc_dl_window::update(BTS *bts, char *show_rbb, uint16_t ssn,
 			uint16_t *lost, uint16_t *received)
 {

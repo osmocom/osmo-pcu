@@ -644,9 +644,9 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 {
 	gprs_rlc_data *rlc_data;
 	uint16_t lost = 0, received = 0, skipped = 0;
-	char info[65];
-	memset(info, '.', sizeof(info));
-	info[64] = 0;
+	char info[RLC_MAX_WS + 1];
+	memset(info, '.', m_window.ws());
+	info[m_window.ws()] = 0;
 	uint16_t bsn = 0;
 	unsigned received_bytes = 0, lost_bytes = 0;
 	unsigned received_packets = 0, lost_packets = 0;
@@ -717,6 +717,71 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 	return lost * 100 / (lost + received);
 }
 
+int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
+	const struct bitvec *rbb)
+{
+	int16_t dist; /* must be signed */
+	uint16_t lost = 0, received = 0;
+	char show_v_b[RLC_MAX_SNS + 1];
+	char show_rbb[RLC_MAX_SNS + 1];
+	int error_rate;
+	struct ana_result ana_res;
+	unsigned num_blocks = rbb->cur_bit;
+	unsigned behind_last_bsn = m_window.mod_sns(first_bsn + num_blocks);
+
+	Decoding::extract_rbb(rbb, show_rbb);
+	/* show received array in debug */
+	LOGP(DRLCMACDL, LOGL_DEBUG, "- ack:  (BSN=%d)\"%s\""
+		"(BSN=%d)  R=ACK I=NACK\n", first_bsn,
+		show_rbb, m_window.mod_sns(behind_last_bsn - 1));
+
+	/* apply received array to receive state (SSN-64..SSN-1) */
+	/* calculate distance of ssn from V(S) */
+	dist = m_window.mod_sns(m_window.v_s() - behind_last_bsn);
+	/* check if distance is less than distance V(A)..V(S) */
+	if (dist >= m_window.distance()) {
+		/* this might happpen, if the downlink assignment
+		 * was not received by ms and the ack refers
+		 * to previous TBF
+		 * FIXME: we should implement polling for
+		 * control ack!*/
+		LOGP(DRLCMACDL, LOGL_NOTICE, "- ack range is out of "
+			"V(A)..V(S) range %s Free TBF!\n", tbf_name(this));
+		return 1; /* indicate to free TBF */
+	}
+
+	error_rate = analyse_errors(show_rbb, behind_last_bsn, &ana_res);
+
+	if (bts_data()->cs_adj_enabled && ms())
+		ms()->update_error_rate(this, error_rate);
+
+	m_window.update(bts, rbb, first_bsn, &lost, &received);
+
+	/* report lost and received packets */
+	gprs_rlcmac_received_lost(this, received, lost);
+
+	/* Used to measure the leak rate */
+	gprs_bssgp_update_bytes_received(ana_res.received_bytes,
+		ana_res.received_packets + ana_res.lost_packets);
+
+	/* raise V(A), if possible */
+	m_window.raise(m_window.move_window());
+
+	/* show receive state array in debug (V(A)..V(S)-1) */
+	m_window.show_state(show_v_b);
+	LOGP(DRLCMACDL, LOGL_DEBUG, "- V(B): (V(A)=%d)\"%s\""
+		"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked "
+		"X=Resend-Unacked I=Invalid\n",
+		m_window.v_a(), show_v_b,
+		m_window.v_s_mod(-1));
+
+	if (state_is(GPRS_RLCMAC_FINISHED) && m_window.window_empty()) {
+		LOGP(DRLCMACDL, LOGL_NOTICE, "Received acknowledge of "
+			"all blocks, but without final ack "
+			"inidcation (don't worry)\n");
+	}
+	return 0;
+}
 
 int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 {
@@ -824,6 +889,18 @@ int gprs_rlcmac_dl_tbf::release()
 	return 0;
 }
 
+
+int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, unsigned first_bsn,
+	struct bitvec *rbb)
+{
+	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink acknowledge\n", tbf_name(this));
+
+	if (!final_ack)
+		return update_window(first_bsn, rbb);
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
+	return maybe_start_new_window();
+}
 
 int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, uint8_t ssn, uint8_t *rbb)
 {

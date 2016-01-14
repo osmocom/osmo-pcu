@@ -32,6 +32,7 @@
 #define RLC_EGPRS_MAX_WS 1024 /* min window size */
 #define RLC_EGPRS_SNS 2048 /* EGPRS, must be power of 2 */
 #define RLC_MAX_SNS  RLC_EGPRS_SNS
+#define RLC_MAX_WS   RLC_EGPRS_MAX_WS
 #define RLC_MAX_LEN 74 /* MCS-9 data unit */
 
 struct BTS;
@@ -173,6 +174,9 @@ struct gprs_rlc_dl_window {
 	int mark_for_resend();
 	void update(BTS *bts, char *show_rbb, uint16_t ssn,
 			uint16_t *lost, uint16_t *received);
+	void update(BTS *bts, const struct bitvec *rbb,
+			uint16_t first_bsn, uint16_t *lost,
+			uint16_t *received);
 	int move_window();
 	void show_state(char *show_rbb);
 	int count_unacked();
