@@ -572,9 +572,9 @@ int Decoding::decode_gprs_acknack_bits(const Ack_Nack_Description_t *desc,
 	urbb.data = (uint8_t *)desc->RECEIVED_BLOCK_BITMAP;
 	urbb.data_len = sizeof(desc->RECEIVED_BLOCK_BITMAP);
 
-	for (int i = urbb_len; i > urbb_len - num_blocks; i--) {
+	for (int i = num_blocks; i > 0; i--) {
 		/* Set bit at the appropriate position (see 3GPP TS 44.060 12.3) */
-		int is_ack = bitvec_get_bit_pos(&urbb, i-1);
+		int is_ack = bitvec_get_bit_pos(&urbb, i - 1);
 		bitvec_set_bit(bits, is_ack == 1 ? ONE : ZERO);
 	}
 
