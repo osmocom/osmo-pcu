@@ -934,11 +934,10 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 
 	LOGP(DRLCMAC, LOGL_DEBUG,
 		"Got GPRS DL ACK bitmap: SSN: %d, BSN %d to %d - 1 (%d blocks), "
-		"%s (%s)\n",
+		"\"%s\"\n",
 		ack_nack->Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
 		bsn_begin, bsn_end, num_blocks,
-		(Decoding::extract_rbb(&bits, show_bits), show_bits),
-		osmo_hexdump(ack_nack->Ack_Nack_Description.RECEIVED_BLOCK_BITMAP, RLC_GPRS_WS/8));
+		(Decoding::extract_rbb(&bits, show_bits), show_bits));
 
 	rc = tbf->rcvd_dl_ack(
 		ack_nack->Ack_Nack_Description.FINAL_ACK_INDICATION,
@@ -1036,13 +1035,10 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 
 	LOGP(DRLCMAC, LOGL_DEBUG,
 		"Got EGPRS DL ACK bitmap: SSN: %d, BSN %d to %d - 1 (%d blocks), "
-		"<%s> (%s:%d)\n",
+		"\"%s\"\n",
 		ack_nack->EGPRS_AckNack.Desc.STARTING_SEQUENCE_NUMBER,
 		bsn_begin, bsn_end, num_blocks,
-		(Decoding::extract_rbb(&bits, show_bits), show_bits),
-		osmo_hexdump(ack_nack->EGPRS_AckNack.Desc.URBB,
-			sizeof(ack_nack->EGPRS_AckNack.Desc.URBB)),
-		ack_nack->EGPRS_AckNack.Desc.URBB_LENGTH
+		(Decoding::extract_rbb(&bits, show_bits), show_bits)
 	    );
 
 	rc = tbf->rcvd_dl_ack(
