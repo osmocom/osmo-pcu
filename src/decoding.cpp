@@ -506,6 +506,20 @@ const uint8_t *Decoding::rlc_get_data_aligned(
 	return buffer;
 }
 
+static int handle_final_ack(bitvec *bits, int *bsn_begin, int *bsn_end,
+	gprs_rlc_dl_window *window)
+{
+	int num_blocks, i;
+
+	num_blocks = window->mod_sns(window->v_s() - window->v_a());
+	for (i = 0; i < num_blocks; i++)
+		bitvec_set_bit(bits, ONE);
+
+	*bsn_begin = window->v_a();
+	*bsn_end   = window->mod_sns(*bsn_begin + num_blocks);
+	return num_blocks;
+}
+
 int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
 	bitvec *bits, int *bsn_begin, int *bsn_end, gprs_rlc_dl_window *window)
 {
@@ -518,15 +532,8 @@ int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
 	int implicitly_acked_blocks;
 	int ssn = desc->STARTING_SEQUENCE_NUMBER;
 
-	if (desc->FINAL_ACK_INDICATION) {
-		num_blocks = window->mod_sns(window->v_s() - window->v_a());
-		for (i = 0; i < num_blocks; i++)
-			bitvec_set_bit(bits, ONE);
-
-		*bsn_begin = window->v_a();
-		*bsn_end   = window->mod_sns(*bsn_begin + num_blocks);
-		return num_blocks;
-	}
+	if (desc->FINAL_ACK_INDICATION)
+		return handle_final_ack(bits, bsn_begin, bsn_end, window);
 
 	if (desc->Exist_CRBB)
 		crbb_len = desc->CRBB_LENGTH;
@@ -597,10 +604,11 @@ int Decoding::decode_gprs_acknack_bits(const Ack_Nack_Description_t *desc,
 	int num_blocks;
 	struct bitvec urbb;
 
-	num_blocks = urbb_len;
+	if (desc->FINAL_ACK_INDICATION)
+		return handle_final_ack(bits, bsn_begin, bsn_end, window);
 
-	*bsn_end   = desc->STARTING_SEQUENCE_NUMBER;
 	*bsn_begin = window->v_a();
+	*bsn_end   = desc->STARTING_SEQUENCE_NUMBER;
 
 	num_blocks = window->mod_sns(*bsn_end - *bsn_begin);
 

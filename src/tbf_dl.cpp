@@ -780,12 +780,6 @@ int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 		"X=Resend-Unacked I=Invalid\n",
 		m_window.v_a(), show_v_b,
 		m_window.v_s_mod(-1));
-
-	if (state_is(GPRS_RLCMAC_FINISHED) && m_window.window_empty()) {
-		LOGP(DRLCMACDL, LOGL_NOTICE, "Received acknowledge of "
-			"all blocks, but without final ack "
-			"inidcation (don't worry)\n");
-	}
 	return 0;
 }
 
@@ -899,13 +893,21 @@ int gprs_rlcmac_dl_tbf::release()
 int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, unsigned first_bsn,
 	struct bitvec *rbb)
 {
+	int rc;
 	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink acknowledge\n", tbf_name(this));
 
-	if (!final_ack)
-		return update_window(first_bsn, rbb);
+	rc = update_window(first_bsn, rbb);
 
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
-	return maybe_start_new_window();
+	if (final_ack) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
+		rc = maybe_start_new_window();
+	} else if (state_is(GPRS_RLCMAC_FINISHED) && m_window.window_empty()) {
+		LOGP(DRLCMACDL, LOGL_NOTICE, "Received acknowledge of "
+			"all blocks, but without final ack "
+			"indication (don't worry)\n");
+	}
+
+	return rc;
 }
 
 int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, uint8_t ssn, uint8_t *rbb)
