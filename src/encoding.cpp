@@ -881,7 +881,6 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 {
 	int chunk;
 	int space;
-	int needed_extension_space;
 	struct rlc_li_field_egprs *li;
 	struct rlc_li_field_egprs *prev_li;
 	uint8_t *delimiter, *data;
@@ -900,9 +899,6 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 			"larger than space (%d) left in block: copy "
 			"only remaining space, and we are done\n",
 			chunk, space);
-		/* block is filled, so there is no extension */
-		if (prev_li)
-			prev_li->e = 1;
 		/* fill only space */
 		llc->consume(data, space);
 		/* return data block as message */
@@ -917,9 +913,6 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 			"would exactly fit into space (%d): because "
 			"this is a final block, we don't add length "
 			"header, and we are done\n", chunk, space);
-		/* block is filled, so there is no extension */
-		if (prev_li)
-			prev_li->e = 1;
 		/* fill space */
 		llc->consume(data, space);
 		*offset = rdbi->data_len;
@@ -934,9 +927,6 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 			"it, and we are done. The next block will have "
 			"to start with an empty chunk\n",
 			chunk, space);
-		/* block is filled, so there is no extension */
-		if (prev_li)
-			prev_li->e = 1;
 		/* fill space */
 		llc->consume(data, space);
 		*offset = rdbi->data_len;
@@ -949,22 +939,23 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 		"to delimit LLC frame\n", chunk, space);
 	/* the LLC frame chunk ends in this block */
 	/* make space for delimiter */
-	/* If final, we will have to add another chunk with filling octets */
-	needed_extension_space = is_final ? 2 : 1;
 
 	if (delimiter != data)
-		memmove(delimiter + needed_extension_space,
-			delimiter, data - delimiter);
+		memmove(delimiter + 1, delimiter, data - delimiter);
 
-	data      += needed_extension_space;
-	(*offset) += needed_extension_space;
-	space     -= needed_extension_space;
+	data      += 1;
+	(*offset) += 1;
+	space     -= 1;
 	/* add LI to delimit frame */
 	li = (struct rlc_li_field_egprs *)delimiter;
-	li->e = 0; /* Extension bit, maybe set later */
+	li->e = 1; /* Extension bit, maybe set later */
 	li->li = chunk; /* length of chunk */
+	/* tell previous extension header about the new one */
+	if (prev_li)
+		prev_li->e = 0;
 	rdbi->e = 0; /* 0: extensions present */
 	delimiter++;
+	prev_li = li;
 	(*num_chunks)++;
 	/* copy (rest of) LLC frame to space and reset later */
 	llc->consume(data, chunk);
@@ -972,27 +963,55 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 	space -= chunk;
 	(*offset) += chunk;
 	/* if we have more data and we have space left */
-	if (space > 0 && !is_final)
-		return Encoding::AR_COMPLETED_SPACE_LEFT;
-	/* if we don't have more LLC frames */
-	if (is_final) {
-		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
-			"are done.\n");
+	if (space > 0) {
+		if (!is_final)
+			return Encoding::AR_COMPLETED_SPACE_LEFT;
+
+		/* we don't have more LLC frames */
+		/* We will have to add another chunk with filling octets */
+		LOGP(DRLCMACDL, LOGL_DEBUG,
+			"-- There is remaining space (%d): add filling byte chunk\n",
+			space);
+
+		if (delimiter != data)
+			memmove(delimiter + 1, delimiter, data - delimiter);
+
+		data      += 1;
+		(*offset) += 1;
+		space     -= 1;
 
 		/* set filling bytes extension */
 		li = (struct rlc_li_field_egprs *)delimiter;
 		li->e = 1;
 		li->li = 127;
 
-		rdbi->cv = 0;
-		*offset = rdbi->data_len;
+		/* tell previous extension header about the new one */
+		if (prev_li)
+			prev_li->e = 0;
+
+		delimiter++;
 		(*num_chunks)++;
+
+		rdbi->cv = 0;
+
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
+			"are done.\n");
+
+		*offset = rdbi->data_len;
 		return Encoding::AR_COMPLETED_BLOCK_FILLED;
 	}
+
+	if (is_final) {
+		/* we don't have more LLC frames */
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
+			"are done.\n");
+		rdbi->cv = 0;
+		return Encoding::AR_COMPLETED_BLOCK_FILLED;
+	}
+
 	/* we have no space left */
 	LOGP(DRLCMACDL, LOGL_DEBUG, "-- No space left, so we are "
 		"done.\n");
-	li->e = 1; /* we cannot extend */
 	return Encoding::AR_COMPLETED_BLOCK_FILLED;
 }
 

@@ -922,6 +922,57 @@ static void test_rlc_unit_encoder()
 
 	OSMO_ASSERT(data[0] == 0);
 
+	/* Final block with an LLC of size data_len-1 */
+
+	cs = GprsCodingScheme::MCS2;
+
+	/* Block 1 */
+	gprs_rlc_data_block_info_init(&rdbi, cs);
+	num_chunks = 0;
+	write_offset = 0;
+	memset(data, 0, sizeof(data));
+
+	llc.reset();
+	llc.put_frame(llc_data, rdbi.data_len - 1);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
+		&llc, &write_offset, &num_chunks, data, true);
+
+	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_BLOCK_FILLED);
+	OSMO_ASSERT(rdbi.e == 0);
+	OSMO_ASSERT(rdbi.cv == 0);
+	OSMO_ASSERT(write_offset == (int)rdbi.data_len);
+	OSMO_ASSERT(num_chunks == 1);
+
+	OSMO_ASSERT(data[0] == (((rdbi.data_len-1) << 1) | (1 << 0)));
+	OSMO_ASSERT(data[1] == 0);
+
+	/* Final block with an LLC of size data_len-2 */
+
+	cs = GprsCodingScheme::MCS2;
+
+	/* Block 1 */
+	gprs_rlc_data_block_info_init(&rdbi, cs);
+	num_chunks = 0;
+	write_offset = 0;
+	memset(data, 0, sizeof(data));
+
+	llc.reset();
+	llc.put_frame(llc_data, rdbi.data_len - 2);
+
+	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
+		&llc, &write_offset, &num_chunks, data, true);
+
+	OSMO_ASSERT(ar == Encoding::AR_COMPLETED_BLOCK_FILLED);
+	OSMO_ASSERT(rdbi.e == 0);
+	OSMO_ASSERT(rdbi.cv == 0);
+	OSMO_ASSERT(write_offset == (int)rdbi.data_len);
+	OSMO_ASSERT(num_chunks == 2);
+
+	OSMO_ASSERT(data[0] == (((rdbi.data_len-2) << 1) | (0 << 0)));
+	OSMO_ASSERT(data[1] == ((127 << 1) | (1 << 0)));
+	OSMO_ASSERT(data[2] == 0);
+
 	printf("=== end %s ===\n", __func__);
 }
 
