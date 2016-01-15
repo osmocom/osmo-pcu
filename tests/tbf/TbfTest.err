@@ -2766,6 +2766,37 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Packet Downlink Ack/Nack
 Got GPRS DL ACK bitmap: SSN: 0, BSN 0 to 28 - 1 (28 blocks), "RRRRRRRRRRRRRRRRRRRRRRRRRRRR"
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) downlink acknowledge
+- ack:  (BSN=0)"RRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=27)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) DL analysis, range=0:28, lost=0, recv=28, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRRRRRRRRRR....................................'
+- got ack for BSN=0
+- got ack for BSN=1
+- got ack for BSN=2
+- got ack for BSN=3
+- got ack for BSN=4
+- got ack for BSN=5
+- got ack for BSN=6
+- got ack for BSN=7
+- got ack for BSN=8
+- got ack for BSN=9
+- got ack for BSN=10
+- got ack for BSN=11
+- got ack for BSN=12
+- got ack for BSN=13
+- got ack for BSN=14
+- got ack for BSN=15
+- got ack for BSN=16
+- got ack for BSN=17
+- got ack for BSN=18
+- got ack for BSN=19
+- got ack for BSN=20
+- got ack for BSN=21
+- got ack for BSN=22
+- got ack for BSN=23
+- got ack for BSN=24
+- got ack for BSN=25
+- got ack for BSN=26
+- got ack for BSN=27
+- V(B): (V(A)=28)""(V(S)-1=27)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 - Final ACK received.
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) changes state from FINISHED to WAIT RELEASE
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) starting timer 3193.
