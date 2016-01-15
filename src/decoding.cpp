@@ -518,6 +518,16 @@ int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
 	int implicitly_acked_blocks;
 	int ssn = desc->STARTING_SEQUENCE_NUMBER;
 
+	if (desc->FINAL_ACK_INDICATION) {
+		num_blocks = window->mod_sns(window->v_s() - window->v_a());
+		for (i = 0; i < num_blocks; i++)
+			bitvec_set_bit(bits, ONE);
+
+		*bsn_begin = window->v_a();
+		*bsn_end   = window->mod_sns(*bsn_begin + num_blocks);
+		return num_blocks;
+	}
+
 	if (desc->Exist_CRBB)
 		crbb_len = desc->CRBB_LENGTH;
 
