@@ -123,14 +123,6 @@ void gprs_rlc_dl_window::update(BTS *bts, const struct bitvec *rbb,
 
 	/* first_bsn is in range V(A)..V(S) */
 
-	/* All BSN before first_bsn are implicitly acknowledged */
-	for (bsn = v_a(); bsn != first_bsn; bsn = mod_sns(bsn + 1)) {
-		LOGP(DRLCMACDL, LOGL_DEBUG, "- got implicit ack for BSN=%d\n", bsn);
-		if (!m_v_b.is_acked(bsn))
-			*received += 1;
-		m_v_b.mark_acked(bsn);
-	}
-
 	for (unsigned int bitpos = 0; bitpos < num_blocks; bitpos++) {
 		bool is_ack;
 		bsn = mod_sns(first_bsn + bitpos);

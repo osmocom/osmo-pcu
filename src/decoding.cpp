@@ -511,45 +511,71 @@ int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
 {
 	int urbb_len = desc->URBB_LENGTH;
 	int crbb_len = 0;
-	int num_blocks;
+	int num_blocks = 0;
 	struct bitvec urbb;
+	int i;
+	bool have_bitmap;
+	int implicitly_acked_blocks;
+	int ssn = desc->STARTING_SEQUENCE_NUMBER;
 
 	if (desc->Exist_CRBB)
 		crbb_len = desc->CRBB_LENGTH;
 
-	num_blocks = urbb_len + crbb_len;
+	have_bitmap = (urbb_len + crbb_len > 0);
 
-	if (num_blocks == 0) {
-		*bsn_begin = desc->STARTING_SEQUENCE_NUMBER;
-		*bsn_end = *bsn_begin;
+	/*
+	 * bow & bitmap present:
+	 *   V(A)-> [ 11111...11111 0 SSN-> BBBBB...BBBBB ] (SSN+Nbits) .... V(S)
+	 * bow & not bitmap present:
+	 *   V(A)-> [ 11111...11111 ] . SSN .... V(S)
+	 * not bow & bitmap present:
+	 *   V(A)-> ... [ 0 SSN-> BBBBB...BBBBB ](SSN+N) .... V(S)
+	 * not bow & not bitmap present:
+	 *   V(A)-> ... [] . SSN .... V(S)
+	 */
 
-		return num_blocks;
+	if (desc->BEGINNING_OF_WINDOW) {
+		implicitly_acked_blocks = window->mod_sns(ssn - 1 - window->v_a());
+
+		for (i = 0; i < implicitly_acked_blocks; i++)
+			bitvec_set_bit(bits, ONE);
+
+		num_blocks += implicitly_acked_blocks;
 	}
 
+	if (have_bitmap) {
+		/* next bit refers to V(Q) and thus is always zero (and not
+		 * transmitted) */
+		bitvec_set_bit(bits, ZERO);
+		num_blocks += 1;
 
-	/* first bit refers to V(Q) and thus is always zero (and not
-	 * transmitted) */
-	bitvec_set_bit(bits, ZERO);
-	num_blocks += 1;
+		if (crbb_len > 0) {
+			int old_len = bits->cur_bit;
+			/*
+			decode_t4_rle(bits, desc->CRBB, desc->CRBB_LENGTH,
+					desc->CRBB_STARTING_COLOR_CODE);
+			 */
 
-	*bsn_begin = window->mod_sns(desc->STARTING_SEQUENCE_NUMBER - 1);
+			num_blocks += (bits->cur_bit - old_len);
+		}
+
+		urbb.cur_bit = 0;
+		urbb.data = (uint8_t *)desc->URBB;
+		urbb.data_len = sizeof(desc->URBB);
+
+		for (i = urbb_len; i > 0; i--) {
+			/*
+			 * Set bit at the appropriate position (see 3GPP TS
+			 * 44.060 12.3.1)
+			 */
+			int is_ack = bitvec_get_bit_pos(&urbb, i-1);
+			bitvec_set_bit(bits, is_ack == 1 ? ONE : ZERO);
+		}
+		num_blocks += urbb_len;
+	}
+
+	*bsn_begin = window->v_a();
 	*bsn_end   = window->mod_sns(*bsn_begin + num_blocks);
-
-	if (crbb_len > 0) {
-		/*
-		decode_t4_rle(bits, desc->CRBB, desc->CRBB_LENGTH, desc->CRBB_STARTING_COLOR_CODE);
-		*/
-	}
-
-	urbb.cur_bit = 0;
-	urbb.data = (uint8_t *)desc->URBB;
-	urbb.data_len = sizeof(desc->URBB);
-
-	for (int i = urbb_len; i > 0; i--) {
-		/* Set bit at the appropriate position (see 3GPP TS 44.060 12.3.1) */
-		int is_ack = bitvec_get_bit_pos(&urbb, i-1);
-		bitvec_set_bit(bits, is_ack == 1 ? ONE : ZERO);
-	}
 
 	return num_blocks;
 }
