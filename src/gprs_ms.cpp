@@ -212,34 +212,39 @@ void GprsMs::set_mode(GprsCodingScheme::Mode mode)
 {
 	m_mode = mode;
 
+	if (!m_bts)
+		return;
+
 	switch (m_mode) {
 	case GprsCodingScheme::GPRS:
-		if (m_bts) {
+		if (!m_current_cs_ul.isGprs()) {
 			m_current_cs_ul = GprsCodingScheme::getGprsByNum(
 				m_bts->bts_data()->initial_cs_ul);
+			if (!m_current_cs_ul.isValid())
+				m_current_cs_ul = GprsCodingScheme::CS1;
+		}
+		if (!m_current_cs_dl.isGprs()) {
 			m_current_cs_dl = GprsCodingScheme::getGprsByNum(
 				m_bts->bts_data()->initial_cs_dl);
+			if (!m_current_cs_dl.isValid())
+				m_current_cs_dl = GprsCodingScheme::CS1;
 		}
-		if (!m_current_cs_ul.isGprs())
-			m_current_cs_ul = GprsCodingScheme::CS1;
-		if (!m_current_cs_dl.isGprs())
-			m_current_cs_dl = GprsCodingScheme::CS1;
-
 		break;
 
 	case GprsCodingScheme::EGPRS_GMSK:
 	case GprsCodingScheme::EGPRS:
-		if (m_bts) {
+		if (!m_current_cs_ul.isEgprs()) {
 			m_current_cs_ul = GprsCodingScheme::getEgprsByNum(
 				m_bts->bts_data()->initial_mcs_ul);
+			if (!m_current_cs_dl.isValid())
+				m_current_cs_ul = GprsCodingScheme::MCS1;
+		}
+		if (!m_current_cs_dl.isEgprs()) {
 			m_current_cs_dl = GprsCodingScheme::getEgprsByNum(
 				m_bts->bts_data()->initial_mcs_dl);
+			if (!m_current_cs_dl.isValid())
+				m_current_cs_dl = GprsCodingScheme::MCS1;
 		}
-		if (!m_current_cs_ul.isEgprs())
-			m_current_cs_ul = GprsCodingScheme::MCS1;
-		if (!m_current_cs_dl.isEgprs())
-			m_current_cs_dl = GprsCodingScheme::MCS1;
-
 		break;
 	}
 }
