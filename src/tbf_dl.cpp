@@ -653,7 +653,7 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 	unsigned num_blocks = strlen(show_rbb);
 
 	/* SSN - 1 is in range V(A)..V(S)-1 */
-	for (int bitpos = 0; bitpos < m_window.ws(); bitpos++) {
+	for (unsigned int bitpos = 0; bitpos < num_blocks; bitpos++) {
 		bool is_received;
 		int index = num_blocks - 1 - bitpos;
 

@@ -2767,7 +2767,7 @@ RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Packet Downlin
 Got GPRS DL ACK bitmap: SSN: 0, BSN 0 to 28 - 1 (28 blocks), "RRRRRRRRRRRRRRRRRRRRRRRRRRRR"
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) downlink acknowledge
 - ack:  (BSN=0)"RRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=27)  R=ACK I=NACK
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) DL analysis, range=0:28, lost=0, recv=28, skipped=0, bsn=127, info='RRRRRRRRRRRRRRRRRRRRRRRRRRRR$...................................'
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) DL analysis, range=0:28, lost=0, recv=28, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRRRRRRRRRR....................................'
 - got ack for BSN=0
 - got ack for BSN=1
 - got ack for BSN=2
