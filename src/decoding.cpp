@@ -23,6 +23,9 @@
 
 extern "C" {
 #include <osmocom/core/utils.h>
+#if WITH_CRBB_DECODING
+#include <osmocom/core/bitcomp.h>
+#endif
 }
 
 #include <arpa/inet.h>
@@ -548,37 +551,74 @@ int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
 		num_blocks += implicitly_acked_blocks;
 	}
 
-	if (have_bitmap) {
-		/* next bit refers to V(Q) and thus is always zero (and not
-		 * transmitted) */
-		bitvec_set_bit(bits, ZERO);
-		num_blocks += 1;
+	if (!have_bitmap)
+		goto aborted;
 
-		if (crbb_len > 0) {
-			int old_len = bits->cur_bit;
-			/*
-			decode_t4_rle(bits, desc->CRBB, desc->CRBB_LENGTH,
-					desc->CRBB_STARTING_COLOR_CODE);
-			 */
+	/* next bit refers to V(Q) and thus is always zero (and not
+	 * transmitted) */
+	bitvec_set_bit(bits, ZERO);
+	num_blocks += 1;
 
-			num_blocks += (bits->cur_bit - old_len);
+	if (crbb_len > 0) {
+		int old_len = bits->cur_bit;
+#if WITH_CRBB_DECODING
+#warning "Experimental CRBB decoding enabled"
+		struct bitvec crbb;
+		int rc;
+
+		crbb.data = (uint8_t *)desc->CRBB;
+		crbb.data_len = sizeof(desc->CRBB);
+		crbb.cur_bit = desc->CRBB_LENGTH;
+
+		rc = osmo_t4_decode(&crbb, desc->CRBB_STARTING_COLOR_CODE,
+			bits);
+
+		if (rc < 0) {
+			LOGP(DRLCMACUL, LOGL_NOTICE,
+				"Failed to decode CRBB: "
+				"length %d, data '%s'\n",
+				desc->CRBB_LENGTH,
+				osmo_hexdump(crbb.data, crbb.data_len));
+			/* We don't know the SSN offset for the URBB,
+			 * return what we have so far and assume the
+			 * bitmap has stopped here */
+			goto aborted;
 		}
+#else
+		LOGP(DRLCMACUL, LOGL_ERROR, "ERROR: CRBB not supported, "
+			"please set window size to 64\n");
 
-		urbb.cur_bit = 0;
-		urbb.data = (uint8_t *)desc->URBB;
-		urbb.data_len = sizeof(desc->URBB);
+		/* We don't know the SSN offset for the URBB, return
+		 * what we have so far and assume the bitmap has
+		 * stopped here */
+		goto aborted;
+#endif
+		LOGP(DRLCMACDL, LOGL_DEBUG,
+			"CRBB len: %d, decoded len: %d, cc: %d, crbb: '%s'\n",
+			desc->CRBB_LENGTH, bits->cur_bit - old_len,
+			desc->CRBB_STARTING_COLOR_CODE,
+			osmo_hexdump(
+				desc->CRBB, (desc->CRBB_LENGTH + 7)/8)
+		    );
 
-		for (i = urbb_len; i > 0; i--) {
-			/*
-			 * Set bit at the appropriate position (see 3GPP TS
-			 * 44.060 12.3.1)
-			 */
-			int is_ack = bitvec_get_bit_pos(&urbb, i-1);
-			bitvec_set_bit(bits, is_ack == 1 ? ONE : ZERO);
-		}
-		num_blocks += urbb_len;
+		num_blocks += (bits->cur_bit - old_len);
 	}
 
+	urbb.cur_bit = 0;
+	urbb.data = (uint8_t *)desc->URBB;
+	urbb.data_len = sizeof(desc->URBB);
+
+	for (i = urbb_len; i > 0; i--) {
+		/*
+		 * Set bit at the appropriate position (see 3GPP TS
+		 * 44.060 12.3.1)
+		 */
+		int is_ack = bitvec_get_bit_pos(&urbb, i-1);
+		bitvec_set_bit(bits, is_ack == 1 ? ONE : ZERO);
+	}
+	num_blocks += urbb_len;
+
+aborted:
 	*bsn_begin = window->v_a();
 	*bsn_end   = window->mod_sns(*bsn_begin + num_blocks);
 
