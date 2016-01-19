@@ -41,6 +41,9 @@ int pcu_vty_config_write_pcu_ext(struct vty *vty)
 
 static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 {
+	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
+	gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
+
 	vty_out(vty, "TBF: TFI=%d TLLI=0x%08x (%s) DIR=%s IMSI=%s%s", tbf->tfi(),
 			tbf->tlli(), tbf->is_tlli_valid() ? "valid" : "invalid",
 			tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
@@ -56,9 +59,21 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 		if (tbf->pdch[i])
 			vty_out(vty, "%d ", i);
 	}
-	vty_out(vty, " CS=%s WS=%d%s%s",
-		tbf->current_cs().name(), tbf->window()->ws(),
-		VTY_NEWLINE, VTY_NEWLINE);
+	vty_out(vty, " CS=%s WS=%d",
+		tbf->current_cs().name(), tbf->window()->ws());
+
+	if (ul_tbf) {
+		gprs_rlc_ul_window *win = &ul_tbf->m_window;
+		vty_out(vty, " V(Q)=%d V(R)=%d",
+			win->v_q(), win->v_r());
+	}
+	if (dl_tbf) {
+		gprs_rlc_dl_window *win = &dl_tbf->m_window;
+		vty_out(vty, " V(A)=%d V(S)=%d nBSN=%d%s",
+			win->v_a(), win->v_s(), win->resend_needed(),
+			win->window_stalled() ? " STALLED" : "");
+	}
+	vty_out(vty, "%s%s", VTY_NEWLINE, VTY_NEWLINE);
 }
 
 int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
