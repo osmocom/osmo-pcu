@@ -46,17 +46,17 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 			tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
 			tbf->imsi(), VTY_NEWLINE);
 	vty_out(vty, " created=%lu state=%08x 1st_TS=%d 1st_cTS=%d ctrl_TS=%d "
-			"MS_CLASS=%d%s",
+			"MS_CLASS=%d/%d%s",
 			tbf->created_ts(), tbf->state_flags, tbf->first_ts,
 			tbf->first_common_ts, tbf->control_ts, tbf->ms_class(),
+			tbf->ms() ? tbf->ms()->egprs_ms_class() : -1,
 			VTY_NEWLINE);
 	vty_out(vty, " TS_alloc=");
 	for (int i = 0; i < 8; i++) {
 		if (tbf->pdch[i])
 			vty_out(vty, "%d ", i);
 	}
-	vty_out(vty, " CS=%s%s%s",
-		tbf->ms() ? tbf->ms()->current_cs_dl().name() : "???",
+	vty_out(vty, " CS=%s%s%s", tbf->current_cs().name(),
 		VTY_NEWLINE, VTY_NEWLINE);
 }
 
