@@ -55,22 +55,6 @@ void gprs_rlc_dl_window::reset()
 	m_v_b.reset();
 }
 
-void gprs_rlc_dl_window::set_sns(uint16_t sns)
-{
-	OSMO_ASSERT(sns >= RLC_GPRS_SNS);
-	OSMO_ASSERT(sns <= RLC_MAX_SNS);
-	/* check for 2^n */
-	OSMO_ASSERT((sns & (-sns)) == sns);
-	m_sns = sns;
-}
-
-void gprs_rlc_dl_window::set_ws(uint16_t ws)
-{
-	OSMO_ASSERT(ws >= RLC_GPRS_SNS/2);
-	OSMO_ASSERT(ws <= RLC_MAX_SNS/2);
-	m_ws = ws;
-}
-
 int gprs_rlc_dl_window::resend_needed()
 {
 	for (uint16_t bsn = v_a(); bsn != v_s(); bsn = mod_sns(bsn + 1)) {
@@ -219,7 +203,7 @@ void gprs_rlc_v_n::reset()
 		m_v_n[i] = GPRS_RLC_UL_BSN_INVALID;
 }
 
-void gprs_rlc_ul_window::set_sns(uint16_t sns)
+void gprs_rlc_window::set_sns(uint16_t sns)
 {
 	OSMO_ASSERT(sns >= RLC_GPRS_SNS);
 	OSMO_ASSERT(sns <= RLC_MAX_SNS);
@@ -228,7 +212,7 @@ void gprs_rlc_ul_window::set_sns(uint16_t sns)
 	m_sns = sns;
 }
 
-void gprs_rlc_ul_window::set_ws(uint16_t ws)
+void gprs_rlc_window::set_ws(uint16_t ws)
 {
 	OSMO_ASSERT(ws >= RLC_GPRS_SNS/2);
 	OSMO_ASSERT(ws <= RLC_MAX_SNS/2);
