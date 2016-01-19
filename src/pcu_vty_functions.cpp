@@ -56,7 +56,8 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 		if (tbf->pdch[i])
 			vty_out(vty, "%d ", i);
 	}
-	vty_out(vty, " CS=%s%s%s", tbf->current_cs().name(),
+	vty_out(vty, " CS=%s WS=%d%s%s",
+		tbf->current_cs().name(), tbf->window()->ws(),
 		VTY_NEWLINE, VTY_NEWLINE);
 }
 

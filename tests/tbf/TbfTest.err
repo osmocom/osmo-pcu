@@ -3041,3 +3041,78 @@ msg block (BSN 10, CS-1): 0f 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654448 block=1 data=08 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 
 Not accepting non-EGPRS phone in EGPRS-only mode
 No PDCH resource
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=12/0
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 12
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+Slot Allocation (Algorithm B) for class 12
+- Rx=4 Tx=4 Sum Rx+Tx=5  Tta=2 Ttb=1  Tra=2 Trb=1 Type=1
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Possible DL/UL slots: (TS=0)"..CCCC.."(TS=7)
+- Selected DL slots: (TS=0)"..DDDD.."(TS=7)
+Using 4 slots for DL
+- Reserved DL/UL slots: (TS=0)"..DDCD.."(TS=7)
+- Assigning DL TS 2
+PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Assigning DL TS 3
+PDCH(TS 3, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Assigning DL TS 4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Assigning DL TS 5
+PDCH(TS 5, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL): trx = 0, ul_slots = 10, dl_slots = 3c
+DL TBF slots: 0x3c, N: 4, WS: 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) free
+PDCH(TS 2, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 3, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 5, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
+Destroying MS object, TLLI = 0x00000000
+********** TBF ends here **********
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=12/12
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 12
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 12
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+Slot Allocation (Algorithm B) for class 12
+- Rx=4 Tx=4 Sum Rx+Tx=5  Tta=2 Ttb=1  Tra=2 Trb=1 Type=1
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Possible DL/UL slots: (TS=0)"..CCCC.."(TS=7)
+- Selected DL slots: (TS=0)"..DDDD.."(TS=7)
+Using 4 slots for DL
+- Reserved DL/UL slots: (TS=0)"..DDCD.."(TS=7)
+- Assigning DL TS 2
+PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Assigning DL TS 3
+PDCH(TS 3, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Assigning DL TS 4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Assigning DL TS 5
+PDCH(TS 5, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 3c
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 384
+DL TBF slots: 0x3c, N: 4, WS: 384
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) free
+PDCH(TS 2, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 3, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 5, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Destroying MS object, TLLI = 0x00000000
+********** TBF ends here **********

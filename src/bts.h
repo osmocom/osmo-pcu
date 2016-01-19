@@ -188,8 +188,8 @@ struct gprs_rlcmac_bts {
 	uint8_t cs_adj_lower_limit;
 	struct {int16_t low; int16_t high;} cs_lqual_ranges[4];
 	uint16_t cs_downgrade_threshold; /* downgrade if less packets left (DL) */
-	uint16_t egprs_ws_base;
-	uint16_t egprs_ws_lin;
+	uint16_t ws_base;
+	uint16_t ws_pdch; /* increase WS by this value per PDCH */
 
 	/* State for dynamic algorithm selection */
 	int multislot_disabled;

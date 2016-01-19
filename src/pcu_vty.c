@@ -118,6 +118,9 @@ static int config_write_pcu(struct vty *vty)
 				bts->max_mcs_ul, VTY_NEWLINE);
 	}
 
+	vty_out(vty, " window-size %d %d%s", bts->ws_base, bts->ws_pdch,
+		VTY_NEWLINE);
+
 	if (bts->force_llc_lifetime == 0xffff)
 		vty_out(vty, " queue lifetime infinite%s", VTY_NEWLINE);
 	else if (bts->force_llc_lifetime)
@@ -436,6 +439,26 @@ DEFUN(cfg_pcu_no_mcs_max,
 
 	return CMD_SUCCESS;
 }
+
+DEFUN(cfg_pcu_window_size,
+      cfg_pcu_window_size_cmd,
+      "window-size <0-1024> [<0-256>]",
+      "Window size configuration (b + N_PDCH * f)\n"
+      "Base value (b)\n"
+      "Factor for number of PDCH (f)")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	uint16_t b = atoi(argv[0]);
+
+	bts->ws_base = b;
+	if (argc > 1) {
+		uint16_t f = atoi(argv[1]);
+		bts->ws_pdch = f;
+	}
+
+	return CMD_SUCCESS;
+}
+
 
 #define QUEUE_STR "Packet queue options\n"
 #define LIFETIME_STR "Set lifetime limit of LLC frame in centi-seconds " \
@@ -892,6 +915,7 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_cs_lqual_ranges_cmd);
 	install_element(PCU_NODE, &cfg_pcu_mcs_max_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_mcs_max_cmd);
+	install_element(PCU_NODE, &cfg_pcu_window_size_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_inf_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_queue_lifetime_cmd);
