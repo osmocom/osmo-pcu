@@ -24,3 +24,19 @@ inline void csecs_to_timeval(unsigned csecs, struct timeval *tv) {
 	tv->tv_sec  = csecs / 100;
 	tv->tv_usec = (csecs % 100) * 10000;
 }
+
+template <typename T>
+inline unsigned int pcu_bitcount(T x)
+{
+	unsigned int count = 0;
+	for (count = 0; x; count += 1)
+		x &= x - 1;
+
+	return count;
+}
+
+template <typename T>
+inline T pcu_lsb(T x)
+{
+	return x & -x;
+}
