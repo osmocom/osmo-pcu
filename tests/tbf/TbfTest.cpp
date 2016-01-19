@@ -1067,6 +1067,39 @@ static void test_tbf_dl_reuse()
 	printf("=== end %s ===\n", __func__);
 }
 
+static void test_tbf_gprs_egprs()
+{
+	BTS the_bts;
+	gprs_rlcmac_bts *bts;
+	uint8_t ts_no = 4;
+	uint8_t ms_class = 45;
+	int rc = 0;
+	uint32_t tlli = 0xc0006789;
+	const char *imsi = "001001123456789";
+	unsigned delay_csec = 1000;
+
+	uint8_t buf[256] = {0};
+
+	printf("=== start %s ===\n", __func__);
+
+	bts = the_bts.bts_data();
+	setup_bts(&the_bts, ts_no);
+
+	/* EGPRS-only */
+	bts->egprs_enabled = 1;
+
+	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001,
+		1234, 1234, 1234, 1, 1, 0, 0, 0);
+
+	/* Does not support EGPRS */
+	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class, 0,
+		delay_csec, buf, sizeof(buf));
+
+	OSMO_ASSERT(rc == -EBUSY);
+	printf("=== end %s ===\n", __func__);
+
+	gprs_bssgp_destroy();
+}
 
 static const struct log_info_cat default_categories[] = {
         {"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_INFO, 0},
@@ -1125,6 +1158,7 @@ int main(int argc, char **argv)
 	test_tbf_dl_flow_and_rach_two_phase();
 	test_tbf_dl_flow_and_rach_single_phase();
 	test_tbf_dl_reuse();
+	test_tbf_gprs_egprs();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);

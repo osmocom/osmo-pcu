@@ -3039,3 +3039,5 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer 3191.
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654461, TS=7
 msg block (BSN 10, CS-1): 0f 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654448 block=1 data=08 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 
+Not accepting non-EGPRS phone in EGPRS-only mode
+No PDCH resource

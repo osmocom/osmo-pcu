@@ -55,9 +55,7 @@ static int config_write_pcu(struct vty *vty)
 
 	vty_out(vty, "pcu%s", VTY_NEWLINE);
 	if (bts->egprs_enabled)
-		vty_out(vty, " egprs%s", VTY_NEWLINE);
-	else
-		vty_out(vty, " no egprs%s", VTY_NEWLINE);
+		vty_out(vty, " egprs only%s", VTY_NEWLINE);
 
 	vty_out(vty, " flow-control-interval %d%s", bts->fc_interval,
 		VTY_NEWLINE);
@@ -171,8 +169,8 @@ DEFUN(cfg_pcu,
 
 DEFUN(cfg_pcu_egprs,
       cfg_pcu_egprs_cmd,
-      "egprs",
-      EGPRS_STR)
+      "egprs only",
+      EGPRS_STR "Use EGPRS and disable plain GPRS\n")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
