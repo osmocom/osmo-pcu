@@ -26,3 +26,5 @@
 === end test_tbf_dl_flow_and_rach_single_phase ===
 === start test_tbf_dl_reuse ===
 === end test_tbf_dl_reuse ===
+=== start test_tbf_gprs_egprs ===
+=== end test_tbf_gprs_egprs ===

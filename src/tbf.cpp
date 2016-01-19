@@ -609,6 +609,13 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_ul_tbf *tbf;
 	int rc;
 
+	if (egprs_ms_class == 0 && bts->egprs_enabled) {
+		LOGP(DRLCMAC, LOGL_NOTICE,
+			"Not accepting non-EGPRS phone in EGPRS-only mode\n");
+		bts->bts->tbf_failed_egprs_only();
+		return NULL;
+	}
+
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
 	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d/%d\n",
 		"UL", ms_class, egprs_ms_class);
@@ -678,6 +685,13 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 {
 	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;
+
+	if (egprs_ms_class == 0 && bts->egprs_enabled) {
+		LOGP(DRLCMAC, LOGL_NOTICE,
+			"Not accepting non-EGPRS phone in EGPRS-only mode\n");
+		bts->bts->tbf_failed_egprs_only();
+		return NULL;
+	}
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
 	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d/%d\n",
