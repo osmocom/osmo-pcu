@@ -408,7 +408,7 @@ DEFUN(cfg_pcu_no_cs_max,
 
 DEFUN(cfg_pcu_mcs_max,
       cfg_pcu_mcs_max_cmd,
-      "mcs max <1-4> [<1-4>]",
+      "mcs max <1-9> [<1-9>]",
       MCS_STR
       CS_MAX_STR
       "Maximum MCS value to be used\n"
