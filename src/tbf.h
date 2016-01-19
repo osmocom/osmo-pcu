@@ -107,6 +107,8 @@ struct gprs_rlcmac_tbf {
 	GprsMs *ms() const;
 	void set_ms(GprsMs *ms);
 
+	gprs_rlc_window *window();
+
 	uint8_t tsc() const;
 
 	int rlcmac_diag();
@@ -458,6 +460,16 @@ inline gprs_rlcmac_dl_tbf *as_dl_tbf(gprs_rlcmac_tbf *tbf)
 		return static_cast<gprs_rlcmac_dl_tbf *>(tbf);
 	else
 		return NULL;
+}
+
+inline gprs_rlc_window *gprs_rlcmac_tbf::window()
+{
+	switch (direction)
+	{
+	case GPRS_RLCMAC_UL_TBF: return &as_ul_tbf(this)->m_window;
+	case GPRS_RLCMAC_DL_TBF: return &as_dl_tbf(this)->m_window;
+	}
+	return NULL;
 }
 
 #endif
