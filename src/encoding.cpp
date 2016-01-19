@@ -208,13 +208,14 @@ void Encoding::write_packet_uplink_assignment(
 		}
 
 	} else { /* EPGRS */
+		unsigned int ws_enc = (tbf->m_window.ws() - 64) / 32;
 		bitvec_write_field(dest, wp,0x1,1); // Message escape
 		bitvec_write_field(dest, wp,0x0,2); // EGPRS message contents
 		bitvec_write_field(dest, wp,0x0,1); // No CONTENTION_RESOLUTION_TLLI
 		bitvec_write_field(dest, wp,0x0,1); // No COMPACT reduced MA
 		bitvec_write_field(dest, wp,tbf->current_cs().to_num()-1, 4); // EGPRS Modulation and Coding IE
 		bitvec_write_field(dest, wp,0x0,1); // No RESEGMENT
-		bitvec_write_field(dest, wp,0x0,5); // EGPRS Window Size = 64
+		bitvec_write_field(dest, wp,ws_enc,5); // EGPRS Window Size
 		bitvec_write_field(dest, wp,0x0,1); // No Access Technologies Request
 		bitvec_write_field(dest, wp,0x0,1); // No ARAC RETRANSMISSION REQUEST
 		bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
@@ -282,6 +283,7 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 	PDA_AdditionsR99_t *pda_r99;
 
 	uint8_t tn;
+	unsigned int ws_enc;
 
 	block->PAYLOAD_TYPE = 0x1;  // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
 	block->RRBP         = 0x0;  // N+13
@@ -348,10 +350,13 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 		block->u.Packet_Downlink_Assignment.Exist_AdditionsR99        = 0x0; // AdditionsR99 = off
 		return;
 	}
+
+	ws_enc = (tbf->window()->ws() - 64) / 32;
+
 	block->u.Packet_Downlink_Assignment.Exist_AdditionsR99        = 0x1; // AdditionsR99 = on
 	pda_r99 = &block->u.Packet_Downlink_Assignment.AdditionsR99;
 	pda_r99->Exist_EGPRS_Params = 1;
-	pda_r99->EGPRS_WindowSize = 0; /* 64, see TS 44.060, table 12.5.2.1 */
+	pda_r99->EGPRS_WindowSize = ws_enc; /* see TS 44.060, table 12.5.2.1 */
 	pda_r99->LINK_QUALITY_MEASUREMENT_MODE = 0x0; /* no meas, see TS 44.060, table 11.2.7.2 */
 	pda_r99->Exist_BEP_PERIOD2 = 0; /* No extra EGPRS BEP PERIOD */
 	pda_r99->Exist_Packet_Extended_Timing_Advance = 0;

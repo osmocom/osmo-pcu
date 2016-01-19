@@ -28,6 +28,7 @@
 #include <gprs_bssgp_pcu.h>
 #include <gprs_ms.h>
 #include <decoding.h>
+#include <pcu_utils.h>
 
 extern "C" {
 #include <osmocom/core/msgb.h>
@@ -634,6 +635,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	if (egprs_ms_class > 0 && bts->egprs_enabled) {
 		tbf->enable_egprs();
 		tbf->m_window.set_sns(RLC_EGPRS_SNS);
+		/* TODO: Allow bigger UL windows when CRBB encoding is supported */
 		tbf->m_window.set_ws(RLC_EGPRS_MIN_WS);
 		setup_egprs_mode(bts, ms);
 		LOGP(DRLCMAC, LOGL_INFO, "Enabled EGPRS for %s, mode %s\n",
@@ -714,7 +716,6 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	if (egprs_ms_class > 0 && bts->egprs_enabled) {
 		tbf->enable_egprs();
 		tbf->m_window.set_sns(RLC_EGPRS_SNS);
-		tbf->m_window.set_ws(RLC_EGPRS_MIN_WS);
 		setup_egprs_mode(bts, ms);
 		LOGP(DRLCMAC, LOGL_INFO, "Enabled EGPRS for %s, mode %s\n",
 			tbf->name(), GprsCodingScheme::modeName(ms->mode()));
@@ -725,6 +726,21 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	if (rc < 0) {
 		talloc_free(tbf);
 		return NULL;
+	}
+
+	if (tbf->is_egprs_enabled()) {
+		unsigned int num_pdch = pcu_bitcount(tbf->dl_slots());
+		unsigned int ws = bts->ws_base + num_pdch * bts->ws_pdch;
+		ws = (ws / 32) * 32;
+		ws = OSMO_MAX(64, ws);
+		if (num_pdch == 1)
+			ws = OSMO_MIN(192, ws);
+		else
+			ws = OSMO_MIN(128 * num_pdch, ws);
+
+		LOGP(DRLCMAC, LOGL_INFO, "%s: Setting EGPRS window size to %d\n",
+			tbf->name(), ws);
+		tbf->m_window.set_ws(ws);
 	}
 
 	llist_add(&tbf->list(), &bts->bts->dl_tbfs());
