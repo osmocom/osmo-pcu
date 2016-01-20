@@ -525,7 +525,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		LOGP(DRLCMAC, LOGL_INFO, "%s TX: START Immediate "
 			"Assignment Uplink (AGCH)\n", tbf_name(tbf));
 		trx_no = tbf->trx->trx_no;
-		ts_no = tbf->control_ts;
+		ts_no = tbf->first_ts;
 		tfi = tbf->tfi();
 		usf = tbf->m_usf[ts_no];
 		tsc = tbf->tsc();
