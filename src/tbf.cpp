@@ -687,10 +687,13 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	int rc;
 
 	if (egprs_ms_class == 0 && bts->egprs_enabled) {
-		LOGP(DRLCMAC, LOGL_NOTICE,
-			"Not accepting non-EGPRS phone in EGPRS-only mode\n");
-		bts->bts->tbf_failed_egprs_only();
-		return NULL;
+		if (ms_class > 0) {
+			LOGP(DRLCMAC, LOGL_NOTICE,
+				"Not accepting non-EGPRS phone in EGPRS-only mode\n");
+			bts->bts->tbf_failed_egprs_only();
+			return NULL;
+		}
+		egprs_ms_class = 1;
 	}
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
