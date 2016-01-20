@@ -23,6 +23,7 @@
 #include <pcu_l1_if.h>
 #include <bts.h>
 #include <tbf.h>
+#include <decoding.h>
 
 #define BSSGP_TIMER_T1	30	/* Guards the (un)blocking procedures */
 #define BSSGP_TIMER_T2	30	/* Guards the reset procedure */
@@ -73,44 +74,30 @@ static int parse_imsi(struct tlv_parsed *tp, char *imsi)
 	return 0;
 }
 
-static int parse_ra_cap_ms_class(struct tlv_parsed *tp)
+static int parse_ra_cap(struct tlv_parsed *tp, MS_Radio_Access_capability_t *rac)
 {
 	bitvec *block;
-	unsigned rp = 0;
-	uint8_t ms_class = 0;
 	uint8_t cap_len;
 	uint8_t *cap;
 
+	memset(rac, 0, sizeof(*rac));
+
 	if (!TLVP_PRESENT(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP))
-		return ms_class;
+		return -EINVAL;
 
 	cap_len = TLVP_LEN(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP);
 	cap = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP);
 
+	LOGP(DBSSGP, LOGL_DEBUG, "Got BSSGP RA Capability of size %d\n", cap_len);
+
 	block = bitvec_alloc(cap_len);
 	bitvec_unpack(block, cap);
-	bitvec_read_field(block, rp, 4); // Access Technology Type
-	bitvec_read_field(block, rp, 7); // Length of Access Capabilities
-	bitvec_read_field(block, rp, 3); // RF Power Capability
-	if (bitvec_read_field(block, rp, 1)) // A5 Bits Present
-		bitvec_read_field(block, rp, 7); // A5 Bits
-	bitvec_read_field(block, rp, 1); // ES IND
-	bitvec_read_field(block, rp, 1); // PS
-	bitvec_read_field(block, rp, 1); // VGCS
-	bitvec_read_field(block, rp, 1); // VBS
-	if (bitvec_read_field(block, rp, 1)) { // Multislot Cap Present
-		if (bitvec_read_field(block, rp, 1)) // HSCSD Present
-			bitvec_read_field(block, rp, 5); // Class
-		if (bitvec_read_field(block, rp, 1)) { // GPRS Present
-			ms_class = bitvec_read_field(block, rp, 5); // Class
-			bitvec_read_field(block, rp, 1); // Ext.
-		}
-		if (bitvec_read_field(block, rp, 1)) // SMS Present
-			bitvec_read_field(block, rp, 4); // SMS Value
-	}
+
+	/* TS 24.008, 10.5.5.12a */
+	decode_gsm_ra_cap(block, rac);
 
 	bitvec_free(block);
-	return ms_class;
+	return 0;
 }
 
 static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
@@ -122,6 +109,9 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	uint8_t *data;
 	uint16_t len;
 	char imsi[16] = "000";
+	uint8_t ms_class = 0;
+	uint8_t egprs_ms_class = 0;
+	MS_Radio_Access_capability_t rac;
 
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
 	tlli = ntohl(budh->tlli);
@@ -147,9 +137,14 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	parse_imsi(tp, imsi);
 
 	/* parse ms radio access capability */
-	uint8_t ms_class = parse_ra_cap_ms_class(tp);
-	/* TODO: Get the EGPRS class from the CSN.1 RA capability */
-	uint8_t egprs_ms_class = 0;
+	if (parse_ra_cap(tp, &rac) >= 0) {
+		/* Get the EGPRS class from the RA capability */
+		ms_class = Decoding::get_ms_class_by_capability(&rac);
+		egprs_ms_class =
+			Decoding::get_egprs_ms_class_by_capability(&rac);
+		LOGP(DBSSGP, LOGL_DEBUG, "Got downlink MS class %d/%d\n",
+			ms_class, egprs_ms_class);
+	}
 
 	/* get lifetime */
 	uint16_t delay_csec = 0xffff;
