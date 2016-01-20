@@ -465,6 +465,10 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	uint32_t sb_fn = 0;
 	int rc;
 	uint8_t plen;
+	uint8_t tfi = 0;
+	uint8_t usf = 7;
+	uint8_t tsc;
+	uint16_t ta;
 
 	rach_frame();
 
@@ -483,8 +487,11 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		qta = 0;
 	if (qta > 252)
 		qta = 252;
+
+	ta = qta >> 2;
+
 	if (sb) {
-		rc = sba()->alloc(&trx_no, &ts_no, &sb_fn, qta >> 2);
+		rc = sba()->alloc(&trx_no, &ts_no, &sb_fn, ta);
 		if (rc < 0)
 			return rc;
 		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] RACH qbit-ta=%d "
@@ -494,6 +501,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 			sb_fn);
 		LOGP(DRLCMAC, LOGL_INFO, "TX: Immediate Assignment Uplink "
 			"(AGCH)\n");
+		tsc = m_bts.trx[trx_no].pdch[ts_no].tsc;
 	} else {
 		// Create new TBF
 		#warning "Copy and pate with other routines.."
@@ -504,7 +512,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 			/* FIXME: send reject */
 			return -EBUSY;
 		}
-		tbf->set_ta(qta >> 2);
+		tbf->set_ta(ta);
 		tbf->set_state(GPRS_RLCMAC_FLOW);
 		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
 		tbf_timer_start(tbf, 3169, m_bts.t3169, 0);
@@ -516,20 +524,25 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 			qta, ra, Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
 		LOGP(DRLCMAC, LOGL_INFO, "%s TX: START Immediate "
 			"Assignment Uplink (AGCH)\n", tbf_name(tbf));
+		trx_no = tbf->trx->trx_no;
+		ts_no = tbf->first_ts;
+		tfi = tbf->tfi();
+		usf = tbf->m_usf[ts_no];
+		tsc = tbf->tsc();
 	}
 	bitvec *immediate_assignment = bitvec_alloc(22) /* without plen */;
 	bitvec_unhex(immediate_assignment,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	if (sb)
-		plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
-			Fn, qta >> 2, m_bts.trx[trx_no].arfcn, ts_no,
-			m_bts.trx[trx_no].pdch[ts_no].tsc, 0, 0, 0, 0, sb_fn, 1,
-			m_bts.alpha, m_bts.gamma, -1);
-	else
-		plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 0, ra,
-			Fn, tbf->ta(), tbf->trx->arfcn, tbf->first_ts, tbf->tsc(),
-			tbf->tfi(), tbf->m_usf[tbf->first_ts], 0, 0, 0, 0,
-			m_bts.alpha, m_bts.gamma, -1);
+
+	LOGP(DRLCMAC, LOGL_DEBUG,
+		" - TRX=%d (%d) TS=%d TA=%d TSC=%d TFI=%d USF=%d\n",
+		trx_no, m_bts.trx[trx_no].arfcn, ts_no, ta, tsc, tfi, usf);
+
+	plen = Encoding::write_immediate_assignment(
+		&m_bts, immediate_assignment, 0, ra, Fn, ta,
+		m_bts.trx[trx_no].arfcn, ts_no, tsc, tfi, usf, 0, 0, sb_fn, sb,
+		m_bts.alpha, m_bts.gamma, -1);
+
 	pcu_l1if_tx_agch(immediate_assignment, plen);
 	bitvec_free(immediate_assignment);
 
@@ -572,15 +585,19 @@ void BTS::trigger_dl_ass(
 void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 {
 	int plen;
+	unsigned int ts = tbf->first_ts;
 
 	LOGP(DRLCMAC, LOGL_INFO, "TX: START %s Immediate Assignment Downlink (PCH)\n", tbf_name(tbf));
 	bitvec *immediate_assignment = bitvec_alloc(22); /* without plen */
 	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	/* use request reference that has maximum distance to current time,
 	 * so the assignment will not conflict with possible RACH requests. */
+	LOGP(DRLCMAC, LOGL_DEBUG, " - TRX=%d (%d) TS=%d TA=%d pollFN=%d\n",
+		tbf->trx->trx_no, tbf->trx->arfcn,
+		ts, tbf->ta(), poll ? tbf->poll_fn : -1);
 	plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 1, 125,
-		(tbf->pdch[tbf->first_ts]->last_rts_fn + 21216) % 2715648, tbf->ta(),
-		tbf->trx->arfcn, tbf->first_ts, tbf->tsc(), tbf->tfi(), 0, tbf->tlli(), poll,
+		(tbf->pdch[ts]->last_rts_fn + 21216) % 2715648, tbf->ta(),
+		tbf->trx->arfcn, ts, tbf->tsc(), tbf->tfi(), 7, tbf->tlli(), poll,
 		tbf->poll_fn, 0, m_bts.alpha, m_bts.gamma, -1);
 	pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
 	bitvec_free(immediate_assignment);
