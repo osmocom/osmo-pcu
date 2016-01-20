@@ -23,9 +23,7 @@
 
 extern "C" {
 #include <osmocom/core/utils.h>
-#if WITH_CRBB_DECODING
 #include <osmocom/core/bitcomp.h>
-#endif
 }
 
 #include <arpa/inet.h>
@@ -522,6 +520,7 @@ int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
 	bool have_bitmap;
 	int implicitly_acked_blocks;
 	int ssn = desc->STARTING_SEQUENCE_NUMBER;
+	int rc;
 
 	if (desc->FINAL_ACK_INDICATION)
 		return handle_final_ack(bits, bsn_begin, bsn_end, window);
@@ -561,10 +560,7 @@ int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
 
 	if (crbb_len > 0) {
 		int old_len = bits->cur_bit;
-#if WITH_CRBB_DECODING
-#warning "Experimental CRBB decoding enabled"
 		struct bitvec crbb;
-		int rc;
 
 		crbb.data = (uint8_t *)desc->CRBB;
 		crbb.data_len = sizeof(desc->CRBB);
@@ -584,15 +580,7 @@ int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
 			 * bitmap has stopped here */
 			goto aborted;
 		}
-#else
-		LOGP(DRLCMACUL, LOGL_ERROR, "ERROR: CRBB not supported, "
-			"please set window size to 64\n");
 
-		/* We don't know the SSN offset for the URBB, return
-		 * what we have so far and assume the bitmap has
-		 * stopped here */
-		goto aborted;
-#endif
 		LOGP(DRLCMACDL, LOGL_DEBUG,
 			"CRBB len: %d, decoded len: %d, cc: %d, crbb: '%s'\n",
 			desc->CRBB_LENGTH, bits->cur_bit - old_len,
