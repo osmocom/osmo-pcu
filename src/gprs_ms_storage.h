@@ -33,6 +33,8 @@ public:
 	GprsMsStorage(BTS *bts);
 	~GprsMsStorage();
 
+	void cleanup();
+
 	virtual void ms_idle(class GprsMs *);
 	virtual void ms_active(class GprsMs *);
 

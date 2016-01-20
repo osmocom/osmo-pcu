@@ -872,8 +872,11 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 
 void gprs_bssgp_destroy(void)
 {
-	if (!bssgp_nsi)
+	struct gprs_ns_inst *nsi = bssgp_nsi;
+	if (!nsi)
 		return;
+
+	bssgp_nsi = NULL;
 
 	osmo_timer_del(&the_pcu.bvc_timer);
 
@@ -881,19 +884,21 @@ void gprs_bssgp_destroy(void)
 
 	the_pcu.nsvc = NULL;
 
-	/* FIXME: move this to libgb: btsctx_free() */
-	llist_del(&the_pcu.bctx->list);
-	talloc_free(the_pcu.bctx);
-	the_pcu.bctx = NULL;
-
 	/* FIXME: blocking... */
 	the_pcu.nsvc_unblocked = 0;
 	the_pcu.bvc_sig_reset = 0;
 	the_pcu.bvc_reset = 0;
 	the_pcu.bvc_unblocked = 0;	
 
-	gprs_ns_destroy(bssgp_nsi);
-	bssgp_nsi = NULL;
+	gprs_ns_destroy(nsi);
+
+	/* FIXME: move this to libgb: btsctx_free() */
+	llist_del(&the_pcu.bctx->list);
+#warning "This causes ASAN to complain. It is not critical for normal operation but should be fixed nevertheless"
+#if 0
+	talloc_free(the_pcu.bctx);
+#endif
+	the_pcu.bctx = NULL;
 }
 
 struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void)

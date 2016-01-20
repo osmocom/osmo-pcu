@@ -150,7 +150,12 @@ BTS::BTS()
 
 BTS::~BTS()
 {
+	/* this can cause counter updates and must not be left to the
+	 * m_ms_store's destructor */
+	m_ms_store.cleanup();
+
 	rate_ctr_group_free(m_ratectrs);
+	osmo_stat_item_group_free(m_statg);
 }
 
 

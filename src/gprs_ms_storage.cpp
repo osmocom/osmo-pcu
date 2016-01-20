@@ -34,6 +34,11 @@ GprsMsStorage::GprsMsStorage(BTS *bts) :
 
 GprsMsStorage::~GprsMsStorage()
 {
+	cleanup();
+}
+
+void GprsMsStorage::cleanup()
+{
 	LListHead<GprsMs> *pos, *tmp;
 
 	llist_for_each_safe(pos, tmp, &m_list) {
