@@ -1532,8 +1532,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 0
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 ********** TBF starts here **********
-Allocating DL TBF: MS_CLASS=0/0
-Slot Allocation (Algorithm A) for class 0
+Allocating DL TBF: MS_CLASS=1/0
+Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1614,8 +1614,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 0
 - No gaps in received block, last block: BSN=0 CV=15
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 ********** TBF starts here **********
-Allocating DL TBF: MS_CLASS=0/0
-Slot Allocation (Algorithm A) for class 0
+Allocating DL TBF: MS_CLASS=1/0
+Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1814,8 +1814,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 0
 - No gaps in received block, last block: BSN=0 CV=15
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 ********** TBF starts here **********
-Allocating DL TBF: MS_CLASS=0/0
-Slot Allocation (Algorithm A) for class 0
+Allocating DL TBF: MS_CLASS=1/0
+Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1983,8 +1983,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 0
 - No gaps in received block, last block: BSN=0 CV=15
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 ********** TBF starts here **********
-Allocating DL TBF: MS_CLASS=0/0
-Slot Allocation (Algorithm A) for class 0
+Allocating DL TBF: MS_CLASS=1/0
+Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -2129,8 +2129,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 0
 - No gaps in received block, last block: BSN=0 CV=15
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 ********** TBF starts here **********
-Allocating DL TBF: MS_CLASS=0/0
-Slot Allocation (Algorithm A) for class 0
+Allocating DL TBF: MS_CLASS=1/0
+Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
