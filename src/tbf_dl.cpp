@@ -892,6 +892,33 @@ int gprs_rlcmac_dl_tbf::release()
 	return 0;
 }
 
+int gprs_rlcmac_dl_tbf::abort()
+{
+	uint16_t lost;
+
+	if (state_is(GPRS_RLCMAC_FLOW)) {
+		/* range V(A)..V(S)-1 */
+		lost = m_window.count_unacked();
+
+		/* report all outstanding packets as lost */
+		gprs_rlcmac_received_lost(this, 0, lost);
+		gprs_rlcmac_lost_rep(this);
+
+		/* TODO: Reschedule all LLC frames starting with the one that is
+		 * (partly) encoded in chunk 1 of block V(A). (optional) */
+	}
+
+	set_state(GPRS_RLCMAC_RELEASING);
+
+	/* reset rlc states */
+	m_window.reset();
+
+	/* keep to flags */
+	state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
+	state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
+
+	return 0;
+}
 
 int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, unsigned first_bsn,
 	struct bitvec *rbb)

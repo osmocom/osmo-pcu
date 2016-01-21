@@ -325,7 +325,8 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	gprs_rlcmac_rssi_rep(tbf);
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
 		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
-		gprs_rlcmac_lost_rep(dl_tbf);
+
+		dl_tbf->abort();
 		dl_tbf->cleanup();
 	}
 
