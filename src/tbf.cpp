@@ -1072,11 +1072,6 @@ int gprs_rlcmac_tbf::set_tlli_from_ul(uint32_t new_tlli)
 
 		if (!ms())
 			set_ms(old_ms);
-
-		/* there might be an active and valid downlink TBF */
-		if (!ms()->dl_tbf() && dl_tbf)
-			/* Move it to the current MS (see the guard above) */
-			dl_tbf->set_ms(ms());
 	}
 
 	/* The TLLI has been taken from an UL message */
