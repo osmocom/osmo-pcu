@@ -1092,6 +1092,9 @@ int gprs_rlcmac_tbf::set_tlli_from_ul(uint32_t new_tlli)
 		tbf_free(ul_tbf);
 		ul_tbf = NULL;
 	}
+
+	if (ms()->need_dl_tbf())
+		establish_dl_tbf_on_pacch();
 	return 1;
 }
 
