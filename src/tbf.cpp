@@ -310,6 +310,17 @@ static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 
 void tbf_free(struct gprs_rlcmac_tbf *tbf)
 {
+	/* update counters */
+	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
+		tbf->bts->tbf_ul_freed();
+		if (tbf->state_is(GPRS_RLCMAC_FLOW))
+			tbf->bts->tbf_ul_aborted();
+	} else {
+		tbf->bts->tbf_dl_freed();
+		if (tbf->state_is(GPRS_RLCMAC_FLOW))
+			tbf->bts->tbf_dl_aborted();
+	}
+
 	/* Give final measurement report */
 	gprs_rlcmac_rssi_rep(tbf);
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
@@ -335,11 +346,6 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	#warning "TODO: Could/Should generate  bssgp_tx_llc_discarded"
 	tbf_unlink_pdch(tbf);
 	llist_del(&tbf->list());
-
-	if (tbf->direction == GPRS_RLCMAC_UL_TBF)
-		tbf->bts->tbf_ul_freed();
-	else
-		tbf->bts->tbf_dl_freed();
 
 	if (tbf->ms())
 		tbf->set_ms(NULL);

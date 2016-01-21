@@ -52,8 +52,10 @@ static BTS s_bts;
 static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "tbf.dl.alloc",		"TBF DL Allocated     "},
 	{ "tbf.dl.freed",		"TBF DL Freed         "},
+	{ "tbf.dl.aborted",		"TBF DL Aborted       "},
 	{ "tbf.ul.alloc",		"TBF UL Allocated     "},
 	{ "tbf.ul.freed",		"TBF UL Freed         "},
+	{ "tbf.ul.aborted",		"TBF UL Aborted       "},
 	{ "tbf.reused",			"TBF Reused           "},
 	{ "tbf.alloc.algo-a",		"TBF Alloc Algo A     "},
 	{ "tbf.alloc.algo-b",		"TBF Alloc Algo B     "},

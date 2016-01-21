@@ -212,8 +212,10 @@ public:
 	enum {
 		CTR_TBF_DL_ALLOCATED,
 		CTR_TBF_DL_FREED,
+		CTR_TBF_DL_ABORTED,
 		CTR_TBF_UL_ALLOCATED,
 		CTR_TBF_UL_FREED,
+		CTR_TBF_UL_ABORTED,
 		CTR_TBF_REUSED,
 		CTR_TBF_ALLOC_ALGO_A,
 		CTR_TBF_ALLOC_ALGO_B,
@@ -286,8 +288,10 @@ public:
 	 */
 	void tbf_dl_created();
 	void tbf_dl_freed();
+	void tbf_dl_aborted();
 	void tbf_ul_created();
 	void tbf_ul_freed();
+	void tbf_ul_aborted();
 	void tbf_reused();
 	void tbf_alloc_algo_a();
 	void tbf_alloc_algo_b();
@@ -424,8 +428,10 @@ inline struct osmo_stat_item_group *BTS::stat_items() const
 
 CREATE_COUNT_INLINE(tbf_dl_created, CTR_TBF_DL_ALLOCATED)
 CREATE_COUNT_INLINE(tbf_dl_freed, CTR_TBF_DL_FREED)
+CREATE_COUNT_INLINE(tbf_dl_aborted, CTR_TBF_DL_ABORTED)
 CREATE_COUNT_INLINE(tbf_ul_created, CTR_TBF_UL_ALLOCATED)
 CREATE_COUNT_INLINE(tbf_ul_freed, CTR_TBF_UL_FREED)
+CREATE_COUNT_INLINE(tbf_ul_aborted, CTR_TBF_UL_ABORTED)
 CREATE_COUNT_INLINE(tbf_reused, CTR_TBF_REUSED)
 CREATE_COUNT_INLINE(tbf_alloc_algo_a, CTR_TBF_ALLOC_ALGO_A)
 CREATE_COUNT_INLINE(tbf_alloc_algo_b, CTR_TBF_ALLOC_ALGO_B)
