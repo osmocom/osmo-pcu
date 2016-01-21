@@ -1114,28 +1114,24 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			ta = ms->ta();
 		}
 
+		/* We got a RACH so the MS was in packet idle mode and thus
+		 * didn't have any active TBFs */
 		if (ul_tbf) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 				"TLLI=0x%08x while %s still "
 				"exists. Killing pending UL TBF\n",
 				tlli, tbf_name(ul_tbf));
-			/* The MS will not use the old TBF again, so we can
-			 * safely throw it away immediately */
 			tbf_free(ul_tbf);
 			ul_tbf = NULL;
 		}
 
 		if (dl_tbf) {
-			/* TODO: There a chance that releasing dl_tbf can be
-			 * avoided if this PDCH is the control TS of dl_tbf,
-			 * but this needs to be checked with the spec. If an MS
-			 * losed the DL TBF because of PDCH mismatches only,
-			 * this check would make sense. */
 			LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 				"TLLI=0x%08x while %s still exists. "
 				"Release pending DL TBF\n", tlli,
 				tbf_name(dl_tbf));
-			dl_tbf->release();
+			tbf_free(dl_tbf);
+			dl_tbf = NULL;
 		}
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
 			"in packet resource request of single "
