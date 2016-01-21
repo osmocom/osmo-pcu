@@ -103,16 +103,17 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) Trigger downlink assignment
 Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) exists
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer 0.
-DL packet loss of IMSI= / TLLI=0xffeeddcc: 0%
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE), 1 TBFs, USFs = 00, TFIs = 00000002.
-Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING), 1 TBFs, USFs = 00, TFIs = 00000002.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING)
 ********** TBF ends here **********
-TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
-TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer 0.
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN), 0 TBFs, USFs = 00, TFIs = 00000000.
-Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) changes state from ASSIGN to RELEASING
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) free
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) stopping timer 0.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING)
 ********** TBF ends here **********
 Destroying MS object, TLLI = 0xffeeddcc
 Searching for first unallocated TFI: TRX=0
@@ -183,16 +184,17 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) Trigger downlink assignment
 Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) exists
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer 0.
-TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
-TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer 0.
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN), 1 TBFs, USFs = 00, TFIs = 00000001.
-Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) changes state from ASSIGN to RELEASING
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) free
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) stopping timer 0.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING), 1 TBFs, USFs = 00, TFIs = 00000001.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING)
 ********** TBF ends here **********
-DL packet loss of IMSI= / TLLI=0xffeeddcc: 0%
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE), 0 TBFs, USFs = 00, TFIs = 00000000.
-Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING)
 ********** TBF ends here **********
 Destroying MS object, TLLI = 0xffeeddcc
 Searching for first unallocated TFI: TRX=0
@@ -442,11 +444,11 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) downlink acknowledge
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) changes state from FINISHED to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer 3193.
-DL packet loss of IMSI= / TLLI=0xffeeddcc: 0%
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE), 0 TBFs, USFs = 00, TFIs = 00000000.
-Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** TBF ends here **********
 Searching for first unallocated TFI: TRX=0
@@ -494,18 +496,20 @@ The MS object cannot fully confirm an unexpected TLLI: 0xf1000002, partly confir
 Modifying MS object, TLLI = 0xf1000001, IMSI '' -> '001001000000001'
 Modifying MS object, TLLI = 0xf1000001, IMSI '001001000000001' -> '001001000000002'
 TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) the IMSI '001001000000002' was already assigned to another MS object: TLLI = 0xf1000001, that IMSI will be removed
-TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW) free
-TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW) Software error: Pending downlink assignment. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW), 1 TBFs, USFs = 00, TFIs = 00000002.
-Detaching TBF from MS object, TLLI = 0xf1000001, TBF = TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW) changes state from FLOW to RELEASING
+TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING) free
+TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING) Software error: Pending downlink assignment. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING), 1 TBFs, USFs = 00, TFIs = 00000002.
+Detaching TBF from MS object, TLLI = 0xf1000001, TBF = TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING)
 ********** TBF ends here **********
 Modifying MS object, TLLI = 0xf1000002, IMSI '' -> '001001000000002'
 Clearing MS object, TLLI: 0xf1000001, IMSI: '001001000000002'
 Destroying MS object, TLLI = 0x00000000
-TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) free
-TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) Software error: Pending downlink assignment. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW), 0 TBFs, USFs = 00, TFIs = 00000000.
-Detaching TBF from MS object, TLLI = 0xf1000002, TBF = TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW)
+TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) changes state from FLOW to RELEASING
+TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=RELEASING) free
+TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=RELEASING) Software error: Pending downlink assignment. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xf1000002, TBF = TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=RELEASING)
 Destroying MS object, TLLI = 0xf1000002
 ********** TBF ends here **********
 ********** TBF starts here **********
@@ -1375,9 +1379,10 @@ TX: START TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) Immediate Assignment Do
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 01 23 45 68 00 23 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) append
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) append
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) free
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN), 0 TBFs, USFs = 00, TFIs = 00000000.
-Detaching TBF from MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) changes state from ASSIGN to RELEASING
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING) free
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING)
 ********** TBF ends here **********
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -2875,11 +2880,11 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) Packet Control Ack
 TBF: [UPLINK] DOWNLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE)
-DL packet loss of IMSI=0011223344 / TLLI=0xf1223344: 0%
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) free
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) stopping timer 3193.
-PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE), 1 TBFs, USFs = 01, TFIs = 00000002.
-Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) free
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) stopping timer 3193.
+PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING), 1 TBFs, USFs = 01, TFIs = 00000002.
+Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING)
 ********** TBF ends here **********
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FLOW
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer 0.
@@ -3113,12 +3118,13 @@ PDCH(TS 5, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBF
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL): trx = 0, ul_slots = 10, dl_slots = 3c
 DL TBF slots: 0x3c, N: 4, WS: 64
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) free
-PDCH(TS 2, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(TS 3, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(TS 5, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 0 TBFs, USFs = 00, TFIs = 00000000.
-Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to RELEASING
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING) free
+PDCH(TS 2, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 3, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 5, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING)
 Destroying MS object, TLLI = 0x00000000
 ********** TBF ends here **********
 ********** TBF starts here **********
@@ -3152,11 +3158,12 @@ Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 D
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 3c
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 384
 DL TBF slots: 0x3c, N: 4, WS: 384
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) free
-PDCH(TS 2, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(TS 3, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(TS 5, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to RELEASING
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS) free
+PDCH(TS 2, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 3, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 5, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0x00000000
 ********** TBF ends here **********
