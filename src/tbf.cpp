@@ -445,7 +445,7 @@ int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 	if (!is_control_ts(ts)) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
 			"scheduled in this TS %d (first control TS %d)\n",
-			ts, control_ts);
+			ts, first_control_ts());
 		return -EINVAL;
 	}
 	if (poll_state != GPRS_RLCMAC_POLL_NONE) {
@@ -1255,4 +1255,18 @@ uint8_t gprs_rlcmac_tbf::ul_slots() const
 bool gprs_rlcmac_tbf::is_control_ts(uint8_t ts) const
 {
 	return ts == control_ts;
+}
+
+uint8_t gprs_rlcmac_tbf::first_control_ts() const
+{
+	if (!m_ms)
+		return first_ts;
+
+	if (m_ms->dl_tbf() && m_ms->dl_tbf() != this)
+		return first_common_ts;
+
+	if (m_ms->ul_tbf() && m_ms->ul_tbf() != this)
+		return first_common_ts;
+
+	return first_ts;
 }
