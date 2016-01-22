@@ -307,7 +307,7 @@ gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
-		 && tbf->control_ts == ts) {
+		 && tbf->poll_ts == ts) {
 			return tbf;
 		}
 	}
@@ -325,7 +325,7 @@ gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
 		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
-		 && tbf->control_ts == ts) {
+		 && tbf->poll_ts == ts) {
 			return tbf;
 		}
 	}

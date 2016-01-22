@@ -594,6 +594,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			/* schedule polling */
 			poll_state = GPRS_RLCMAC_POLL_SCHED;
 			poll_fn = (fn + 13) % 2715648;
+			poll_ts = ts;
 
 			/* Clear poll timeout flag */
 			state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
@@ -609,7 +610,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 
 			LOGP(DRLCMACDL, LOGL_INFO,
 				"%s Scheduled Ack/Nack polling on FN=%d, TS=%d\n",
-				name(), poll_fn, ts);
+				name(), poll_fn, poll_ts);
 		}
 	}
 

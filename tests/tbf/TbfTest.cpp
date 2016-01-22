@@ -605,6 +605,7 @@ static void send_control_ack(gprs_rlcmac_tbf *tbf)
 	RlcMacUplink_t ulreq = {0};
 
 	OSMO_ASSERT(tbf->poll_fn != 0);
+	OSMO_ASSERT(tbf->is_control_ts(tbf->poll_ts));
 
 	ulreq.u.MESSAGE_TYPE = MT_PACKET_CONTROL_ACK;
 	Packet_Control_Acknowledgement_t *ctrl_ack =
@@ -612,7 +613,7 @@ static void send_control_ack(gprs_rlcmac_tbf *tbf)
 
 	ctrl_ack->PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
 	ctrl_ack->TLLI = tbf->tlli();
-	send_ul_mac_block(tbf->bts, tbf->trx->trx_no, tbf->control_ts,
+	send_ul_mac_block(tbf->bts, tbf->trx->trx_no, tbf->poll_ts,
 		&ulreq, tbf->poll_fn);
 }
 
@@ -1043,7 +1044,7 @@ static void test_tbf_dl_reuse()
 	ack->DOWNLINK_TFI = dl_tbf1->tfi();
 	ack->Ack_Nack_Description.FINAL_ACK_INDICATION = 1;
 
-	send_ul_mac_block(&the_bts, 0, ts_no, &ulreq, dl_tbf1->poll_fn);
+	send_ul_mac_block(&the_bts, 0, dl_tbf1->poll_ts, &ulreq, dl_tbf1->poll_fn);
 
 	OSMO_ASSERT(dl_tbf1->state_is(GPRS_RLCMAC_WAIT_RELEASE));
 
