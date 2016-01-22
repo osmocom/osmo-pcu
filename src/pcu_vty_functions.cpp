@@ -118,6 +118,7 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 {
 	unsigned i;
 	LListHead<gprs_rlcmac_tbf> *i_tbf;
+	uint8_t slots;
 
 	vty_out(vty, "MS TLLI=%08x, IMSI=%s%s", ms->tlli(), ms->imsi(), VTY_NEWLINE);
 	vty_out(vty, "  Timing advance (TA):    %d%s", ms->ta(), VTY_NEWLINE);
@@ -129,6 +130,12 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 		GprsCodingScheme::modeName(ms->mode()), VTY_NEWLINE);
 	vty_out(vty, "  MS class:               %d%s", ms->ms_class(), VTY_NEWLINE);
 	vty_out(vty, "  EGPRS MS class:         %d%s", ms->egprs_ms_class(), VTY_NEWLINE);
+	vty_out(vty, "  PACCH:                  ");
+	slots = ms->current_pacch_slots();
+	for (int i = 0; i < 8; i++)
+		if (slots & (1 << i))
+			vty_out(vty, "%d ", i);
+	vty_out(vty, "%s", VTY_NEWLINE);
 	vty_out(vty, "  LLC queue length:       %d%s", ms->llc_queue()->size(),
 		VTY_NEWLINE);
 	vty_out(vty, "  LLC queue octets:       %d%s", ms->llc_queue()->octets(),

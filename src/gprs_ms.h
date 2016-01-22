@@ -97,6 +97,7 @@ public:
 	uint8_t ul_slots() const;
 	uint8_t reserved_dl_slots() const;
 	uint8_t reserved_ul_slots() const;
+	uint8_t current_pacch_slots() const;
 	gprs_rlcmac_trx *current_trx() const;
 	void set_reserved_slots(gprs_rlcmac_trx *trx,
 		uint8_t ul_slots, uint8_t dl_slots);
