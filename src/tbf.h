@@ -202,7 +202,7 @@ struct gprs_rlcmac_tbf {
 	unsigned int T; /* Txxxx number */
 	unsigned int num_T_exp; /* number of consecutive T expirations */
 	
-	struct osmo_gsm_timer_list	gsm_timer;
+	struct osmo_timer_list	gsm_timer;
 	unsigned int fT; /* fTxxxx number */
 	unsigned int num_fT_exp; /* number of consecutive fT expirations */
 

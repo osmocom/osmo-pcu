@@ -40,7 +40,6 @@ libgprs_la_SOURCES = \
 	gprs_rlcmac_ts_alloc.cpp \
 	gprs_ms.cpp \
 	gprs_ms_storage.cpp \
-	gsm_timer.cpp \
 	bitvector.cpp \
 	pcu_l1_if.cpp \
 	pcu_vty.c \
@@ -79,7 +78,6 @@ noinst_HEADERS = \
 	gprs_ms_storage.h \
 	pcuif_proto.h \
 	pcu_l1_if.h \
-	gsm_timer.h \
 	bitvector.h \
 	pcu_vty.h \
 	pcu_vty_functions.h \

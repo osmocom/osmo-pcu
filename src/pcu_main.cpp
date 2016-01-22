@@ -21,7 +21,6 @@
 #include <arpa/inet.h>
 #include <pcu_l1_if.h>
 #include <gprs_rlcmac.h>
-#include <gsm_timer.h>
 #include <gprs_debug.h>
 #include <unistd.h>
 #include <getopt.h>
@@ -33,6 +32,7 @@ extern "C" {
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
 #include <osmocom/core/stats.h>
+#include <osmocom/core/timer.h>
 }
 
 extern struct gprs_nsvc *nsvc;
@@ -256,9 +256,9 @@ int main(int argc, char *argv[])
 	}
 
 	while (!quit) {
-		osmo_gsm_timers_check();
-		osmo_gsm_timers_prepare();
-		osmo_gsm_timers_update();
+		osmo_timers_check();
+		osmo_timers_prepare();
+		osmo_timers_update();
 
 		osmo_select_main(0);
 	}

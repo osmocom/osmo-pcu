@@ -24,7 +24,6 @@
 #ifdef __cplusplus
 #include <bitvector.h>
 #include <gsm_rlcmac.h>
-#include <gsm_timer.h>
 
 extern "C" {
 #include <osmocom/core/linuxlist.h>
