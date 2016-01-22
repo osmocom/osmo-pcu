@@ -101,8 +101,8 @@ struct gprs_rlcmac_tbf {
 
 	const char *name() const;
 
-	struct msgb *create_dl_ass(uint32_t fn);
-	struct msgb *create_ul_ass(uint32_t fn);
+	struct msgb *create_dl_ass(uint32_t fn, uint8_t ts);
+	struct msgb *create_ul_ass(uint32_t fn, uint8_t ts);
 
 	GprsMs *ms() const;
 	void set_ms(GprsMs *ms);
@@ -413,7 +413,7 @@ protected:
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_ul_tbf(BTS *bts);
 
-	struct msgb *create_ul_ack(uint32_t fn);
+	struct msgb *create_ul_ack(uint32_t fn, uint8_t ts);
 
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(

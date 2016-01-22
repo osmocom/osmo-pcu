@@ -131,11 +131,11 @@ static struct msgb *sched_select_ctrl_msg(
 			continue;
 
 		if (tbf == ul_ass_tbf)
-			msg = ul_ass_tbf->create_ul_ass(fn);
+			msg = ul_ass_tbf->create_ul_ass(fn, ts);
 		else if (tbf == dl_ass_tbf)
-			msg = dl_ass_tbf->create_dl_ass(fn);
+			msg = dl_ass_tbf->create_dl_ass(fn, ts);
 		else if (tbf == ul_ack_tbf)
-			msg = ul_ack_tbf->create_ul_ack(fn);
+			msg = ul_ack_tbf->create_ul_ack(fn, ts);
 		else
 			abort();
 
