@@ -87,7 +87,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 }
 
 
-struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn)
+struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 {
 	int final = (state_is(GPRS_RLCMAC_FINISHED));
 	struct msgb *msg;
@@ -99,7 +99,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn)
 				"final uplink ack...\n", tbf_name(this));
 			return NULL;
 		}
-		if (bts->sba()->find(trx->trx_no, control_ts, (fn + 13) % 2715648)) {
+		if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648)) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
 				"scheduled for single block allocation...\n");
 			return NULL;

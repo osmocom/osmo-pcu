@@ -855,16 +855,16 @@ int gprs_rlcmac_tbf::rlcmac_diag()
 	return 0;
 }
 
-struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
+struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 {
 	struct msgb *msg;
 	struct gprs_rlcmac_dl_tbf *new_dl_tbf = NULL;
 	int poll_ass_dl = 1;
 
-	if (direction == GPRS_RLCMAC_DL_TBF && control_ts != first_common_ts) {
+	if (direction == GPRS_RLCMAC_DL_TBF && ts != first_common_ts) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "Cannot poll for downlink "
-			"assigment, because MS cannot reply. (control TS=%d, "
-			"first common TS=%d)\n", control_ts,
+			"assigment, because MS cannot reply. (TS=%d, "
+			"first common TS=%d)\n", ts,
 			first_common_ts);
 		poll_ass_dl = 0;
 	}
@@ -875,7 +875,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 				"assignment...\n", tbf_name(this));
 				return NULL;
 		}
-		if (bts->sba()->find(trx->trx_no, control_ts, (fn + 13) % 2715648)) {
+		if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648)) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
 				"scheduled for single block allocation...\n");
 			return NULL;
@@ -951,7 +951,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 	return msg;
 }
 
-struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
+struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 {
 	struct msgb *msg;
 	struct gprs_rlcmac_ul_tbf *new_tbf = NULL;
@@ -962,7 +962,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 			"assignment...\n", tbf_name(this));
 			return NULL;
 	}
-	if (bts->sba()->find(trx->trx_no, control_ts, (fn + 13) % 2715648)) {
+	if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648)) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already scheduled for "
 			"single block allocation...\n");
 			return NULL;
