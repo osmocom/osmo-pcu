@@ -527,7 +527,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		LOGP(DRLCMAC, LOGL_INFO, "%s TX: START Immediate "
 			"Assignment Uplink (AGCH)\n", tbf_name(tbf));
 		trx_no = tbf->trx->trx_no;
-		ts_no = tbf->control_ts;
+		ts_no = tbf->first_control_ts();
 		tfi = tbf->tfi();
 		usf = tbf->m_usf[ts_no];
 		tsc = tbf->tsc();
@@ -587,7 +587,7 @@ void BTS::trigger_dl_ass(
 void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 {
 	int plen;
-	unsigned int ts = tbf->control_ts;
+	unsigned int ts = tbf->first_control_ts();
 
 	LOGP(DRLCMAC, LOGL_INFO, "TX: START %s Immediate Assignment Downlink (PCH)\n", tbf_name(tbf));
 	bitvec *immediate_assignment = bitvec_alloc(22); /* without plen */

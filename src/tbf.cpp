@@ -1178,3 +1178,8 @@ bool gprs_rlcmac_tbf::is_control_ts(uint8_t ts) const
 {
 	return ts == control_ts;
 }
+
+uint8_t gprs_rlcmac_tbf::first_control_ts() const
+{
+	return first_ts;
+}

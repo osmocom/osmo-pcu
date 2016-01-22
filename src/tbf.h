@@ -145,6 +145,7 @@ struct gprs_rlcmac_tbf {
 	uint8_t ul_slots() const;
 
 	bool is_control_ts(uint8_t ts) const;
+	uint8_t first_control_ts() const;
 
 	/* EGPRS */
 	bool is_egprs_enabled() const;
