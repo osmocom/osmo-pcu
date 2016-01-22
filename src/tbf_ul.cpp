@@ -127,6 +127,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 	if (final) {
 		poll_state = GPRS_RLCMAC_POLL_SCHED;
 		poll_fn = (fn + 13) % 2715648;
+		poll_ts = ts;
 		/* waiting for final acknowledge */
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_WAIT_ACK;
 		m_final_ack_sent = 1;

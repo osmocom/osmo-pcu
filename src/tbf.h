@@ -177,6 +177,7 @@ struct gprs_rlcmac_tbf {
 
 	enum gprs_rlcmac_tbf_poll_state poll_state;
 	uint32_t poll_fn; /* frame number to poll */
+	uint8_t poll_ts; /* TS to poll */
 
 	gprs_rlc m_rlc;
 	
