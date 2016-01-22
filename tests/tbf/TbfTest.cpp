@@ -959,9 +959,8 @@ static void test_tbf_dl_flow_and_rach_single_phase()
 	OSMO_ASSERT(ms2 == ms);
 	OSMO_ASSERT(ms1 != ms);
 
-	/* DL TBF should be the same */
-	OSMO_ASSERT(ms->dl_tbf());
-	OSMO_ASSERT(ms->dl_tbf() == dl_tbf);
+	/* DL TBF should be removed */
+	OSMO_ASSERT(!ms->dl_tbf());
 
 	/* No queued packets should be lost */
 	OSMO_ASSERT(ms->llc_queue()->size() == 2);

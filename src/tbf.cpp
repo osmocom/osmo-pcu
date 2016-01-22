@@ -1074,8 +1074,6 @@ int gprs_rlcmac_tbf::set_tlli_from_ul(uint32_t new_tlli)
 			set_ms(old_ms);
 	}
 
-	/* The TLLI has been taken from an UL message */
-	update_ms(new_tlli, GPRS_RLCMAC_UL_TBF);
 	if (dl_tbf && dl_tbf->ms() != ms()) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 			"TLLI=0x%08x while %s still exists. "
@@ -1093,8 +1091,12 @@ int gprs_rlcmac_tbf::set_tlli_from_ul(uint32_t new_tlli)
 		ul_tbf = NULL;
 	}
 
+	/* The TLLI has been taken from an UL message */
+	update_ms(new_tlli, GPRS_RLCMAC_UL_TBF);
+#if 0 /* REMOVEME ??? */
 	if (ms()->need_dl_tbf())
 		establish_dl_tbf_on_pacch();
+#endif
 	return 1;
 }
 

@@ -1902,8 +1902,12 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Got RACH from TLLI=0xf1223344 while TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) still exists. Release pending DL TBF
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT RELEASE
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) restarting timer 3193 while old timer 0 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to RELEASING
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) free
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) stopping timer 0.
+PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING)
+********** TBF ends here **********
 MS requests UL TBF in packet resource request of single block, so we provide one:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
@@ -1945,15 +1949,15 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=1
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 01, TFIs = 00000003.
+- Assign downlink TS=7 TFI=0
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 - Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL)
-Allocated TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL): trx = 0, ul_slots = 80, dl_slots = 80
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
+Allocated TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL): trx = 0, ul_slots = 80, dl_slots = 80
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Trigger downlink assignment on PACCH
 Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer 0.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer 0.
 Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -2096,8 +2100,13 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=0, BSN
 - BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): data_length=20, data=f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Decoded premier TLLI=0x00000000 of UL DATA TFI=0.
-Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=ASSIGN)
+Got RACH from TLLI=0x00000000 while TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) still exists. Killing pending DL TBF
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to RELEASING
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) free
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) stopping timer 0.
+PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 01, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING)
+********** TBF ends here **********
 Modifying MS object, TLLI = 0x00000000, IMSI '' -> '0011223344'
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Clearing MS object, TLLI: 0xf1223344, IMSI: '0011223344'
