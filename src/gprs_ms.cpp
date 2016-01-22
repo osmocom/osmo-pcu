@@ -25,6 +25,7 @@
 #include "tbf.h"
 #include "gprs_debug.h"
 #include "gprs_codel.h"
+#include "pcu_utils.h"
 
 #include <time.h>
 
@@ -758,6 +759,28 @@ uint8_t GprsMs::ul_slots() const
 
 	if (m_ul_tbf)
 		slots |= m_ul_tbf->ul_slots();
+
+	return slots;
+}
+
+uint8_t GprsMs::current_pacch_slots() const
+{
+	uint8_t slots = 0;
+
+	if (!m_dl_tbf && !m_ul_tbf)
+		return 0;
+
+	/* see TS 44.060, 8.1.1.2.2 */
+	if (m_dl_tbf && !m_ul_tbf)
+		slots =  m_dl_tbf->dl_slots();
+	else if (!m_dl_tbf && m_ul_tbf)
+		slots =  m_ul_tbf->ul_slots();
+	else
+		slots =  m_ul_tbf->ul_slots() & m_dl_tbf->dl_slots();
+
+	/* Assume a multislot class 1 device */
+	/* TODO: For class 2 devices, this could be removed */
+	slots = pcu_lsb(slots);
 
 	return slots;
 }
