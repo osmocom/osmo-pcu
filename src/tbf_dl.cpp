@@ -575,7 +575,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling is already "
 				"sheduled for %s, so we must wait for "
 				"requesting downlink ack\n", tbf_name(this));
-		else if (control_ts != ts)
+		else if (!is_control_ts(ts))
 			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling cannot be "
 				"sheduled in this TS %d, waiting for "
 				"TS %d\n", ts, control_ts);

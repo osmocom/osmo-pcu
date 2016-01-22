@@ -46,7 +46,7 @@ static uint32_t sched_poll(BTS *bts,
 		ul_tbf = as_ul_tbf(pos->entry());
 		OSMO_ASSERT(ul_tbf);
 		/* this trx, this ts */
-		if (ul_tbf->trx->trx_no != trx || ul_tbf->control_ts != ts)
+		if (ul_tbf->trx->trx_no != trx || !ul_tbf->is_control_ts(ts))
 			continue;
 		/* polling for next uplink block */
 		if (ul_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
@@ -64,7 +64,7 @@ static uint32_t sched_poll(BTS *bts,
 		dl_tbf = as_dl_tbf(pos->entry());
 		OSMO_ASSERT(dl_tbf);
 		/* this trx, this ts */
-		if (dl_tbf->trx->trx_no != trx || dl_tbf->control_ts != ts)
+		if (dl_tbf->trx->trx_no != trx || !dl_tbf->is_control_ts(ts))
 			continue;
 		/* polling for next uplink block */
 		if (dl_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED

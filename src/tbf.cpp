@@ -861,7 +861,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	struct gprs_rlcmac_dl_tbf *new_dl_tbf = NULL;
 	int poll_ass_dl = 1;
 
-	if (direction == GPRS_RLCMAC_DL_TBF && ts != first_common_ts) {
+	if (direction == GPRS_RLCMAC_DL_TBF && !is_control_ts(ts)) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "Cannot poll for downlink "
 			"assigment, because MS cannot reply. (TS=%d, "
 			"first common TS=%d)\n", ts,
@@ -1169,4 +1169,9 @@ uint8_t gprs_rlcmac_tbf::ul_slots() const
 			slots |= 1 << i;
 
 	return slots;
+}
+
+bool gprs_rlcmac_tbf::is_control_ts(uint8_t ts) const
+{
+	return ts == control_ts;
 }

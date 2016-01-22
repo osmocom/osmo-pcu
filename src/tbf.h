@@ -144,6 +144,8 @@ struct gprs_rlcmac_tbf {
 	uint8_t dl_slots() const;
 	uint8_t ul_slots() const;
 
+	bool is_control_ts(uint8_t ts) const;
+
 	/* EGPRS */
 	bool is_egprs_enabled() const;
 	void enable_egprs();
@@ -356,10 +358,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	bool keep_open(unsigned fn) const;
 	int release();
 	int abort();
-
-	bool is_control_ts(uint8_t ts) const {
-		return ts == control_ts;
-	}
 
 	/* TODO: add the gettimeofday as parameter */
 	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
