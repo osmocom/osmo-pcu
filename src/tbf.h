@@ -119,6 +119,9 @@ struct gprs_rlcmac_tbf {
 	void stop_t3191();
 	int establish_dl_tbf_on_pacch();
 
+	int check_polling(uint32_t fn, uint8_t ts,
+		uint32_t *poll_fn, unsigned int *rrbp);
+	void set_polling(uint32_t poll_fn, uint8_t ts);
 	void poll_timeout();
 
 	/** tlli handling */

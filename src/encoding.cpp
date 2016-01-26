@@ -169,7 +169,7 @@ void Encoding::write_packet_uplink_assignment(
 	struct gprs_rlcmac_bts *bts,
 	bitvec * dest, uint8_t old_tfi,
 	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
-	struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t alpha,
+	struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t rrbp, uint8_t alpha,
 	uint8_t gamma, int8_t ta_idx, int8_t use_egprs)
 {
 	// TODO We should use our implementation of encode RLC/MAC Control messages.
@@ -275,8 +275,8 @@ void Encoding::write_packet_uplink_assignment(
 /* generate downlink assignment */
 void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 	uint8_t old_tfi, uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf,
-	uint8_t poll, uint8_t alpha, uint8_t gamma, int8_t ta_idx, uint8_t ta_ts,
-	bool use_egprs)
+	uint8_t poll, uint8_t rrbp, uint8_t alpha, uint8_t gamma, int8_t ta_idx,
+	uint8_t ta_ts, bool use_egprs)
 {
 	// Packet downlink assignment TS 44.060 11.2.7
 
@@ -286,7 +286,7 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 	unsigned int ws_enc;
 
 	block->PAYLOAD_TYPE = 0x1;  // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
-	block->RRBP         = 0x0;  // N+13
+	block->RRBP         = rrbp;  // 0: N+13
 	block->SP           = poll; // RRBP field is valid
 	block->USF          = 0x0;  // Uplink state flag
 
@@ -564,7 +564,8 @@ static void write_packet_uplink_ack_egprs(
 
 void Encoding::write_packet_uplink_ack(
 	struct gprs_rlcmac_bts *bts, bitvec * dest,
-	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
+	struct gprs_rlcmac_ul_tbf *tbf, bool is_final,
+	uint8_t rrbp)
 {
 	unsigned wp = 0;
 
@@ -572,7 +573,7 @@ void Encoding::write_packet_uplink_ack(
 		"(final=%d)\n", tbf_name(tbf), is_final);
 
 	bitvec_write_field(dest, wp, 0x1, 2);  // Payload Type
-	bitvec_write_field(dest, wp, 0x0, 2);  // Uplink block with TDMA framenumber (N+13)
+	bitvec_write_field(dest, wp, rrbp, 2);  // Uplink block with TDMA framenumber
 	bitvec_write_field(dest, wp, is_final, 1);  // Suppl/Polling Bit
 	bitvec_write_field(dest, wp, 0x0, 3);  // Uplink state flag
 	bitvec_write_field(dest, wp, 0x9, 6);  // MESSAGE TYPE Uplink Ack/Nack

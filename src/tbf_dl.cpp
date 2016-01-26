@@ -527,6 +527,9 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	bool need_poll;
 	/* TODO: support MCS-7 - MCS-9, where data_block_idx can be 1 */
 	unsigned int data_block_idx = 0;
+	unsigned int rrbp;
+	uint32_t new_poll_fn;
+	int rc;
 
 	gprs_rlc_data_info rlc;
 	GprsCodingScheme cs;
@@ -570,31 +573,17 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				"polling, because %d blocks sent.\n",
 				POLL_ACK_AFTER_FRAMES);
 		}
-		/* scheduling not possible, because: */
-		if (poll_state != GPRS_RLCMAC_POLL_NONE)
-			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling is already "
-				"sheduled for %s, so we must wait for "
-				"requesting downlink ack\n", tbf_name(this));
-		else if (!is_control_ts(ts))
-			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling cannot be "
-				"sheduled in this TS %d, waiting for "
-				"TS %d\n", ts, control_ts);
-		else if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648))
-			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling cannot be "
-				"sheduled, because single block alllocation "
-				"already exists\n");
-		else  {
-			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling sheduled in this "
+
+		rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
+		if (rc >= 0) {
+			set_polling(new_poll_fn, ts);
+
+			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling scheduled in this "
 				"TS %d\n", ts);
 			m_tx_counter = 0;
 			/* start timer whenever we send the final block */
 			if (rdbi->cv == 0)
 				tbf_timer_start(this, 3191, bts_data()->t3191, 0);
-
-			/* schedule polling */
-			poll_state = GPRS_RLCMAC_POLL_SCHED;
-			poll_fn = (fn + 13) % 2715648;
-			poll_ts = ts;
 
 			/* Clear poll timeout flag */
 			state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
@@ -603,7 +592,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			m_dl_ack_requested = false;
 
 			/* set polling in header */
-			rlc.rrbp = 0; /* N+13 */
+			rlc.rrbp = rrbp;
 			rlc.es_p = 1; /* Polling */
 
 			m_last_dl_poll_fn = poll_fn;
