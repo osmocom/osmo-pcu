@@ -49,21 +49,23 @@ public:
 	static void write_packet_uplink_assignment(
 			struct gprs_rlcmac_bts *bts,
 			bitvec * dest, uint8_t old_tfi,
-			uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli, 
-			struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t alpha,
-			uint8_t gamma, int8_t ta_idx, int8_t use_egprs);
+			uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
+			struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t rrbp,
+			uint8_t alpha, uint8_t gamma, int8_t ta_idx,
+			int8_t use_egprs);
 
 	static void write_packet_downlink_assignment(RlcMacDownlink_t * block,
 			uint8_t old_tfi, uint8_t old_downlink,
-			struct gprs_rlcmac_tbf *tbf, uint8_t poll, uint8_t alpha,
-			uint8_t gamma, int8_t ta_idx, uint8_t ta_ts,
-			bool use_egprs);
+			struct gprs_rlcmac_tbf *tbf, uint8_t poll, uint8_t rrbp,
+			uint8_t alpha, uint8_t gamma,
+			int8_t ta_idx, uint8_t ta_ts, bool use_egprs);
 
 	static void encode_rbb(const char *show_rbb, uint8_t *rbb);
 
 	static void write_packet_uplink_ack(
 			struct gprs_rlcmac_bts *bts, bitvec * dest,
-			struct gprs_rlcmac_ul_tbf *tbf, bool is_final);
+			struct gprs_rlcmac_ul_tbf *tbf, bool is_final,
+			uint8_t rrbp);
 
 	static int write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len);
 

@@ -91,19 +91,22 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 {
 	int final = (state_is(GPRS_RLCMAC_FINISHED));
 	struct msgb *msg;
+	int rc;
+	unsigned int rrbp = 0;
+	uint32_t new_poll_fn = 0;
 
 	if (final) {
-		if (poll_state != GPRS_RLCMAC_POLL_NONE) {
+		if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
+			ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-				"sheduled for %s, so we must wait for "
-				"final uplink ack...\n", tbf_name(this));
+				"scheduled for %s, so we must wait for "
+				"the final uplink ack...\n", tbf_name(this));
 			return NULL;
 		}
-		if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648)) {
-			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-				"scheduled for single block allocation...\n");
+
+		rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
+		if (rc < 0)
 			return NULL;
-		}
 	}
 
 	msg = msgb_alloc(23, "rlcmac_ul_ack");
@@ -116,7 +119,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 	}
 	bitvec_unhex(ack_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	Encoding::write_packet_uplink_ack(bts_data(), ack_vec, this, final);
+	Encoding::write_packet_uplink_ack(bts_data(), ack_vec, this, final, rrbp);
 	bitvec_pack(ack_vec, msgb_put(msg, 23));
 	bitvec_free(ack_vec);
 
@@ -125,9 +128,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 	m_contention_resolution_done = 1;
 
 	if (final) {
-		poll_state = GPRS_RLCMAC_POLL_SCHED;
-		poll_fn = (fn + 13) % 2715648;
-		poll_ts = ts;
+		set_polling(new_poll_fn, ts);
 		/* waiting for final acknowledge */
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_WAIT_ACK;
 		m_final_ack_sent = 1;

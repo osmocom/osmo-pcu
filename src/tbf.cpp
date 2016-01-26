@@ -435,6 +435,49 @@ void gprs_rlcmac_tbf::stop_timer()
 	}
 }
 
+int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
+	uint32_t *poll_fn_, unsigned int *rrbp_)
+{
+	uint32_t fn_offs = 13;
+	uint32_t new_poll_fn = (fn + fn_offs) % 2715648;
+
+	if (!is_control_ts(ts)) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
+			"scheduled in this TS %d (first control TS %d)\n",
+			ts, control_ts);
+		return -EINVAL;
+	}
+	if (poll_state != GPRS_RLCMAC_POLL_NONE) {
+		LOGP(DRLCMAC, LOGL_DEBUG,
+			"Polling is already scheduled for %s\n",
+			name());
+		return -EBUSY;
+	}
+	if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648)) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "%s: Polling is already scheduled "
+			"for single block allocation at FN %d TS %d ...\n",
+			name(), new_poll_fn, ts);
+		return -EBUSY;
+	}
+
+	*poll_fn_ = new_poll_fn;
+	*rrbp_ = 0;
+
+	return 0;
+}
+
+void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts)
+{
+	LOGP(DRLCMAC, LOGL_DEBUG,
+		"%s: Scheduling polling at FN %d TS %d\n",
+		name(), new_poll_fn, ts);
+
+	/* schedule polling */
+	poll_state = GPRS_RLCMAC_POLL_SCHED;
+	poll_fn = new_poll_fn;
+	poll_ts = ts;
+}
+
 void gprs_rlcmac_tbf::poll_timeout()
 {
 	LOGP(DRLCMAC, LOGL_NOTICE, "%s poll timeout for FN=%d, TS=%d (curr FN %d)\n",
@@ -861,6 +904,9 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	struct msgb *msg;
 	struct gprs_rlcmac_dl_tbf *new_dl_tbf = NULL;
 	int poll_ass_dl = 1;
+	unsigned int rrbp = 0;
+	uint32_t new_poll_fn = 0;
+	int rc;
 
 	if (direction == GPRS_RLCMAC_DL_TBF && !is_control_ts(ts)) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "Cannot poll for downlink "
@@ -870,17 +916,17 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 		poll_ass_dl = 0;
 	}
 	if (poll_ass_dl) {
-		if (poll_state != GPRS_RLCMAC_POLL_NONE) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "Polling is already sheduled "
-				"for %s, so we must wait for downlink "
-				"assignment...\n", tbf_name(this));
-				return NULL;
-		}
-		if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648)) {
+		if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
+			ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK)
+		{
 			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-				"scheduled for single block allocation...\n");
+				"scheduled for %s, so we must wait for the uplink "
+				"assignment...\n", tbf_name(this));
 			return NULL;
 		}
+		rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
+		if (rc < 0)
+			return NULL;
 	}
 
 	/* on uplink TBF we get the downlink TBF to be assigned. */
@@ -923,7 +969,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	Encoding::write_packet_downlink_assignment(mac_control_block, m_tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), new_dl_tbf,
-		poll_ass_dl, bts_data()->alpha, bts_data()->gamma, -1, 0,
+		poll_ass_dl, rrbp, bts_data()->alpha, bts_data()->gamma, -1, 0,
 		is_egprs_enabled());
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
 	encode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
@@ -934,9 +980,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	talloc_free(mac_control_block);
 
 	if (poll_ass_dl) {
-		poll_state = GPRS_RLCMAC_POLL_SCHED;
-		poll_fn = (fn + 13) % 2715648;
-		poll_ts = ts;
+		set_polling(new_poll_fn, ts);
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_WAIT_ACK;
 		LOGP(DRLCMACDL, LOGL_INFO,
 			"%s Scheduled DL Assignment polling on FN=%d, TS=%d\n",
@@ -957,18 +1001,21 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 {
 	struct msgb *msg;
 	struct gprs_rlcmac_ul_tbf *new_tbf = NULL;
+	int rc;
+	unsigned int rrbp;
+	uint32_t new_poll_fn;
 
-	if (poll_state != GPRS_RLCMAC_POLL_NONE) {
+	if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
+		ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-			"sheduled for %s, so we must wait for uplink "
+			"scheduled for %s, so we must wait for the uplink "
 			"assignment...\n", tbf_name(this));
 			return NULL;
 	}
-	if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648)) {
-		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already scheduled for "
-			"single block allocation...\n");
-			return NULL;
-	}
+
+	rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
+	if (rc < 0)
+		return NULL;
 
 	if (ms())
 		new_tbf = ms()->ul_tbf();
@@ -993,7 +1040,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	Encoding::write_packet_uplink_assignment(bts_data(), ass_vec, m_tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), tlli(),
-		is_tlli_valid(), new_tbf, 1, bts_data()->alpha,
+		is_tlli_valid(), new_tbf, 1, rrbp, bts_data()->alpha,
 		bts_data()->gamma, -1, is_egprs_enabled());
 	bitvec_pack(ass_vec, msgb_put(msg, 23));
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
@@ -1004,9 +1051,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 	bitvec_free(ass_vec);
 	talloc_free(mac_control_block);
 
-	poll_state = GPRS_RLCMAC_POLL_SCHED;
-	poll_fn = (fn + 13) % 2715648;
-	poll_ts = ts;
+	set_polling(new_poll_fn, ts);
 	ul_ass_state = GPRS_RLCMAC_UL_ASS_WAIT_ACK;
 	LOGP(DRLCMACDL, LOGL_INFO,
 		"%s Scheduled UL Assignment polling on FN=%d, TS=%d\n",
