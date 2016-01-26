@@ -436,7 +436,8 @@ bssgp_failed:
 				if (!bts->trx[trx].fl1h)
 					bts->trx[trx].fl1h = l1if_open_pdch(
 						(void *)trx,
-						info_ind->trx[trx].hlayer1);
+						info_ind->trx[trx].hlayer1,
+						gsmtapaddr);
 			if (!bts->trx[trx].fl1h) {
 				LOGP(DL1IF, LOGL_FATAL, "Failed to open direct "
 					"DSP access for PDCH.\n");

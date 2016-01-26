@@ -44,6 +44,7 @@ void *tall_pcu_ctx;
 extern void *bv_tall_ctx;
 static int quit = 0;
 static int rt_prio = -1;
+static char *gsmtap_ip = 0;
 
 static void print_help()
 {
@@ -57,6 +58,7 @@ static void print_help()
 			"provided by BTS\n"
 		"  -r   --realtime PRIO Use SCHED_RR with the specified "
 			"priority\n"
+		"  -i	--gsmtap-ip	The destination IP used for GSMTAP.\n"
 		);
 }
 
@@ -73,6 +75,7 @@ static void handle_options(int argc, char **argv)
 			{ "version", 0, 0, 'V' },
 			{ "realtime", 1, 0, 'r' },
 			{ "exit", 0, 0, 'e' },
+			{ "gsmtap-ip", 1, 0, 'i' },
 			{ 0, 0, 0, 0 }
 		};
 
@@ -100,6 +103,9 @@ static void handle_options(int argc, char **argv)
 		case 'V':
 			print_version(1);
 			exit(0);
+			break;
+		case 'i':
+			gsmtap_ip = optarg;
 			break;
 		case 'r':
 			rt_prio = atoi(optarg);
