@@ -378,6 +378,7 @@ int gprs_rlcmac_tbf::update()
 	return 0;
 }
 
+/* TODO: Remove me */
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 {
 	if (tbf->control_ts == 0xff)
@@ -925,10 +926,11 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	if (direction == GPRS_RLCMAC_DL_TBF && !is_control_ts(ts)) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "Cannot poll for downlink "
 			"assigment, because MS cannot reply. (TS=%d, "
-			"first common TS=%d)\n", ts,
-			first_common_ts);
+			"first control TS=%d)\n", ts,
+			first_control_ts());
 		poll_ass_dl = 0;
 	}
+
 	if (poll_ass_dl) {
 		if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
 			ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK)
@@ -1237,11 +1239,12 @@ uint8_t gprs_rlcmac_tbf::ul_slots() const
 	size_t i;
 
 	if (direction == GPRS_RLCMAC_DL_TBF) {
+#if 0 /* This depends on the existence of an concurrent TBF */
 		if (control_ts < 8)
 			slots |= 1 << control_ts;
 		if (first_common_ts < 8)
 			slots |= 1 << first_common_ts;
-
+#endif
 		return slots;
 	}
 
@@ -1254,19 +1257,25 @@ uint8_t gprs_rlcmac_tbf::ul_slots() const
 
 bool gprs_rlcmac_tbf::is_control_ts(uint8_t ts) const
 {
-	return ts == control_ts;
+	if (!ms())
+		return ts == control_ts;
+
+	return ms()->current_pacch_slots() & (1 << ts);
 }
 
 uint8_t gprs_rlcmac_tbf::first_control_ts() const
 {
-	if (!m_ms)
+	uint8_t bitnum;
+
+	if (!ms())
 		return first_ts;
 
-	if (m_ms->dl_tbf() && m_ms->dl_tbf() != this)
-		return first_common_ts;
+	bitnum = ffs(ms()->current_pacch_slots());
 
-	if (m_ms->ul_tbf() && m_ms->ul_tbf() != this)
-		return first_common_ts;
+	if (bitnum == 0) {
+		LOGP(DRLCMAC, LOGL_ERROR, "%s: No valid PACCH slot\n", name());
+		return first_ts;
+	}
 
-	return first_ts;
+	return bitnum - 1;
 }
