@@ -56,8 +56,9 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 			VTY_NEWLINE);
 	vty_out(vty, " TS_alloc=");
 	for (int i = 0; i < 8; i++) {
+		bool is_ctrl = tbf->is_control_ts(i);
 		if (tbf->pdch[i])
-			vty_out(vty, "%d ", i);
+			vty_out(vty, "%d%s ", i, is_ctrl ? "!" : "");
 	}
 	vty_out(vty, " CS=%s WS=%d",
 		tbf->current_cs().name(), tbf->window()->ws());
