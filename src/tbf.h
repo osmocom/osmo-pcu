@@ -132,6 +132,7 @@ struct gprs_rlcmac_tbf {
 	void update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction);
 
 	uint8_t tfi() const;
+	bool is_tfi_assigned() const;
 
 	const char *imsi() const;
 	void assign_imsi(const char *imsi);
@@ -309,6 +310,16 @@ inline GprsMs *gprs_rlcmac_tbf::ms() const
 inline bool gprs_rlcmac_tbf::is_tlli_valid() const
 {
 	return tlli() != 0;
+}
+
+inline bool gprs_rlcmac_tbf::is_tfi_assigned() const
+{
+	/* The TBF is established or has been assigned by a IMM.ASS for
+	 * download */
+	return state > GPRS_RLCMAC_ASSIGN ||
+		(direction == GPRS_RLCMAC_DL_TBF &&
+		 state == GPRS_RLCMAC_ASSIGN &&
+		 (state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)));
 }
 
 inline uint8_t gprs_rlcmac_tbf::tfi() const

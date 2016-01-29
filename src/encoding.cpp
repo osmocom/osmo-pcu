@@ -274,8 +274,9 @@ void Encoding::write_packet_uplink_assignment(
 
 /* generate downlink assignment */
 void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
-	uint8_t old_tfi, uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf,
-	uint8_t poll, uint8_t rrbp, uint8_t alpha, uint8_t gamma, int8_t ta_idx,
+	bool old_tfi_is_valid, uint8_t old_tfi, uint8_t old_downlink,
+	struct gprs_rlcmac_tbf *tbf, uint8_t poll, uint8_t rrbp,
+	uint8_t alpha, uint8_t gamma, int8_t ta_idx,
 	uint8_t ta_ts, bool use_egprs)
 {
 	// Packet downlink assignment TS 44.060 11.2.7
@@ -295,9 +296,14 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 
 	block->u.Packet_Downlink_Assignment.Exist_PERSISTENCE_LEVEL      = 0x0;          // PERSISTENCE_LEVEL: off
 
-	block->u.Packet_Downlink_Assignment.ID.UnionType                 = 0x0;          // TFI = on
-	block->u.Packet_Downlink_Assignment.ID.u.Global_TFI.UnionType    = old_downlink; // 0=UPLINK TFI, 1=DL TFI
-	block->u.Packet_Downlink_Assignment.ID.u.Global_TFI.u.UPLINK_TFI = old_tfi;      // TFI
+	if (old_tfi_is_valid) {
+		block->u.Packet_Downlink_Assignment.ID.UnionType                 = 0x0;          // TFI = on
+		block->u.Packet_Downlink_Assignment.ID.u.Global_TFI.UnionType    = old_downlink; // 0=UPLINK TFI, 1=DL TFI
+		block->u.Packet_Downlink_Assignment.ID.u.Global_TFI.u.UPLINK_TFI = old_tfi;      // TFI
+	} else {
+		block->u.Packet_Downlink_Assignment.ID.UnionType                 = 0x1;          // TLLI
+		block->u.Packet_Downlink_Assignment.ID.u.TLLI                    = tbf->tlli();
+	}
 
 	block->u.Packet_Downlink_Assignment.MAC_MODE            = 0x0;          // Dynamic Allocation
 	block->u.Packet_Downlink_Assignment.RLC_MODE            = 0x0;          // RLC acknowledged mode
