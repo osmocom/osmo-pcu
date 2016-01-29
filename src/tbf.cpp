@@ -851,7 +851,6 @@ void gprs_rlcmac_tbf::handle_timeout()
 
 				/* keep to flags */
 				dl_tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
-				dl_tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
 
 				dl_tbf->update();
 
