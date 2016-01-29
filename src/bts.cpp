@@ -569,7 +569,8 @@ void BTS::trigger_dl_ass(
 
 		/* change state */
 		dl_tbf->set_state(GPRS_RLCMAC_ASSIGN);
-		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
+		if (!(dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
+			dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 		/* start timer */
 		tbf_timer_start(dl_tbf, 0, Tassign_pacch);
 	} else {
@@ -799,6 +800,15 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE))
 			tbf_free(tbf);
 
+		if ((new_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
+			/* We now know that the PACCH really existed */
+			LOGP(DRLCMAC, LOGL_INFO,
+				"The TBF has been confirmed on the PACCH, "
+				"changed type from CCCH to PACCH for %s\n",
+				tbf_name(new_tbf));
+			new_tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
+			new_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
+		}
 		new_tbf->set_state(GPRS_RLCMAC_FLOW);
 		/* stop pending assignment timer */
 		new_tbf->stop_timer();
