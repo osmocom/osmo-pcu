@@ -58,6 +58,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
+New and old TBF are the same TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)  start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -140,6 +141,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
+New and old TBF are the same TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)  start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -222,6 +224,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
+New and old TBF are the same TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)  start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------

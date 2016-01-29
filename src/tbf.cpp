@@ -907,6 +907,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	unsigned int rrbp = 0;
 	uint32_t new_poll_fn = 0;
 	int rc;
+	bool old_tfi_is_valid = is_tfi_assigned();
 
 	if (direction == GPRS_RLCMAC_DL_TBF && !is_control_ts(ts)) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "Cannot poll for downlink "
@@ -954,6 +955,19 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 		return NULL;
 	}
 
+	if (new_dl_tbf == as_dl_tbf(this))
+		LOGP(DRLCMAC, LOGL_DEBUG,
+			"New and old TBF are the same %s\n", name());
+
+	if (old_tfi_is_valid && !new_dl_tbf->is_tlli_valid()) {
+		LOGP(DRLCMACDL, LOGL_ERROR,
+			"The old TFI is not assigned and there is no "
+			"TLLI. Old TBF %s, new TBF %s\n",
+			name(), new_dl_tbf->name());
+		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+		return NULL;
+	}
+
 	new_dl_tbf->was_releasing = was_releasing;
 	msg = msgb_alloc(23, "rlcmac_dl_ass");
 	if (!msg)
@@ -967,9 +981,10 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	LOGP(DRLCMAC, LOGL_INFO, "%s  start Packet Downlink Assignment (PACCH)\n", tbf_name(new_dl_tbf));
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
-	Encoding::write_packet_downlink_assignment(mac_control_block, m_tfi,
-		(direction == GPRS_RLCMAC_DL_TBF), new_dl_tbf,
-		poll_ass_dl, rrbp, bts_data()->alpha, bts_data()->gamma, -1, 0,
+	Encoding::write_packet_downlink_assignment(mac_control_block,
+		old_tfi_is_valid, m_tfi, (direction == GPRS_RLCMAC_DL_TBF),
+		new_dl_tbf, poll_ass_dl, rrbp,
+		bts_data()->alpha, bts_data()->gamma, -1, 0,
 		is_egprs_enabled());
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
 	encode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
