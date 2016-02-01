@@ -72,6 +72,14 @@ static int write_ia_rest_downlink(
 	bitvec_write_field(dest, wp,0x0,1);   // P0 not present
 	//		bitvec_write_field(dest, wp,0x1,1);   // P0 not present
 	//		bitvec_write_field(dest, wp,0xb,4);
+	if (tbf->is_egprs_enabled()) {
+		/* see GMS 44.018, 10.5.2.16 */
+		unsigned int ws_enc = (tbf->m_window.ws() - 64) / 32;
+		bitvec_write_field_lh(dest, wp, 1, 1);  // "H"
+		bitvec_write_field(dest, wp, ws_enc,5); // EGPRS Window Size
+		bitvec_write_field(dest, wp, 0x0,2);    // LINK_QUALITY_MEASUREMENT_MODE
+		bitvec_write_field(dest, wp, 0,1);      // BEP_PERIOD2 not present
+	}
 
 	return 0;
 }
@@ -82,6 +90,8 @@ static int write_ia_rest_uplink(
 	uint8_t usf, uint32_t fn,
 	uint8_t alpha, uint8_t gamma, int8_t ta_idx)
 {
+	OSMO_ASSERT(!tbf || !tbf->is_egprs_enabled());
+
 	// GMS 04.08 10.5.2.37b 10.5.2.16
 	bitvec_write_field_lh(dest, wp, 3, 2);    // "HH"
 	bitvec_write_field(dest, wp, 0, 2);    // "0" Packet Uplink Assignment
@@ -124,6 +134,17 @@ static int write_ia_rest_uplink(
 		bitvec_write_field(dest, wp, 0, 1);    // TBF_STARTING_TIME_FLAG
 	}
 	return 0;
+}
+
+static int write_ia_rest_egprs_uplink(
+	gprs_rlcmac_ul_tbf *tbf,
+	bitvec * dest, unsigned& wp,
+	uint8_t usf, uint32_t fn,
+	uint8_t alpha, uint8_t gamma, int8_t ta_idx)
+{
+	LOGP(DRLCMACUL, LOGL_ERROR,
+		"EGPRS Packet Uplink Assignment is not yet implemented\n");
+	return -EINVAL;
 }
 
 /*
@@ -184,6 +205,10 @@ int Encoding::write_immediate_assignment(
 	if (downlink)
 		rc = write_ia_rest_downlink(as_dl_tbf(tbf), dest, wp,
 			polling, fn,
+			alpha, gamma, ta_idx);
+	else if (as_ul_tbf(tbf) && as_ul_tbf(tbf)->is_egprs_enabled())
+		rc = write_ia_rest_egprs_uplink(as_ul_tbf(tbf), dest, wp,
+			usf, fn,
 			alpha, gamma, ta_idx);
 	else
 		rc = write_ia_rest_uplink(as_ul_tbf(tbf), dest, wp,
