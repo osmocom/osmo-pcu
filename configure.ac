@@ -3,7 +3,7 @@ AC_INIT([osmo-pcu],
 	m4_esyscmd([./git-version-gen .tarball-version]),
 	[osmocom-net-gprs@lists.osmocom.org])
 
-AM_INIT_AUTOMAKE([dist-bzip2])
+AM_INIT_AUTOMAKE([dist-bzip2 subdir-objects])
 AC_CONFIG_TESTDIR(tests)
 
 dnl kernel style compile messages

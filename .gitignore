@@ -16,7 +16,8 @@ configure
 depcomp
 install-sh
 missing
-libtool
+*libtool
+compile
 ltmain.sh
 
 core
