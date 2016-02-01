@@ -28,7 +28,98 @@
 #include <errno.h>
 #include <string.h>
 
-// GSM 04.08 9.1.18 Immediate assignment
+static void write_ia_rest_downlink(
+	bitvec * dest, unsigned& wp,
+	uint8_t tfi, uint32_t tlli, uint8_t polling,
+	uint32_t fn, uint8_t alpha, uint8_t gamma, int8_t ta_idx)
+{
+	// GSM 04.08 10.5.2.16 IA Rest Octets
+	bitvec_write_field_lh(dest, wp, 3, 2);   // "HH"
+	bitvec_write_field(dest, wp, 1, 2);   // "01" Packet Downlink Assignment
+	bitvec_write_field(dest, wp,tlli,32); // TLLI
+	bitvec_write_field(dest, wp,0x1,1);   // switch TFI   : on
+	bitvec_write_field(dest, wp,tfi,5);   // TFI
+	bitvec_write_field(dest, wp,0x0,1);   // RLC acknowledged mode
+	if (alpha) {
+		bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
+		bitvec_write_field(dest, wp,alpha,4);   // ALPHA
+	} else {
+		bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
+	}
+	bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
+	bitvec_write_field(dest, wp,polling,1);   // Polling Bit
+	bitvec_write_field(dest, wp,!polling,1);   // TA_VALID ???
+	if (ta_idx < 0) {
+		bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
+	} else {
+		bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
+		bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
+	}
+	if (polling) {
+		bitvec_write_field(dest, wp,0x1,1);   // TBF Starting TIME present
+		bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
+		bitvec_write_field(dest, wp,fn % 51,6);               // T3
+		bitvec_write_field(dest, wp,fn % 26,5);               // T2
+	} else {
+		bitvec_write_field(dest, wp,0x0,1);   // TBF Starting TIME present
+	}
+	bitvec_write_field(dest, wp,0x0,1);   // P0 not present
+	//		bitvec_write_field(dest, wp,0x1,1);   // P0 not present
+	//		bitvec_write_field(dest, wp,0xb,4);
+}
+
+static void write_ia_rest_uplink(
+	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
+	uint8_t tfi, uint8_t usf, uint32_t fn, uint8_t single_block,
+	uint8_t alpha, uint8_t gamma, int8_t ta_idx)
+{
+	// GMS 04.08 10.5.2.37b 10.5.2.16
+	bitvec_write_field_lh(dest, wp, 3, 2);    // "HH"
+	bitvec_write_field(dest, wp, 0, 2);    // "0" Packet Uplink Assignment
+	if (single_block) {
+		bitvec_write_field(dest, wp, 0, 1);    // Block Allocation : Single Block Allocation
+		if (alpha) {
+			bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
+			bitvec_write_field(dest, wp,alpha,4);   // ALPHA = present
+		} else
+			bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
+		bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
+		if (ta_idx < 0) {
+			bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
+		} else {
+			bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
+			bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
+		}
+		bitvec_write_field(dest, wp, 1, 1);    // TBF_STARTING_TIME_FLAG
+		bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
+		bitvec_write_field(dest, wp,fn % 51,6);               // T3
+		bitvec_write_field(dest, wp,fn % 26,5);               // T2
+	} else {
+		bitvec_write_field(dest, wp, 1, 1);    // Block Allocation : Not Single Block Allocation
+		bitvec_write_field(dest, wp, tfi, 5);  // TFI_ASSIGNMENT Temporary Flow Identity
+		bitvec_write_field(dest, wp, 0, 1);    // POLLING
+		bitvec_write_field(dest, wp, 0, 1);    // ALLOCATION_TYPE: dynamic
+		bitvec_write_field(dest, wp, usf, 3);    // USF
+		bitvec_write_field(dest, wp, 0, 1);    // USF_GRANULARITY
+		bitvec_write_field(dest, wp, 0, 1);   // "0" power control: Not Present
+		bitvec_write_field(dest, wp, bts->initial_cs_ul-1, 2);    // CHANNEL_CODING_COMMAND 
+		bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
+		if (alpha) {
+			bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
+			bitvec_write_field(dest, wp,alpha,4);   // ALPHA
+		} else
+			bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
+		bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
+		/* note: there is no choise for TAI and no starting time */
+		bitvec_write_field(dest, wp, 0, 1);   // switch TIMING_ADVANCE_INDEX = off
+		bitvec_write_field(dest, wp, 0, 1);    // TBF_STARTING_TIME_FLAG
+	}
+}
+
+/*
+ * Immediate assignment, sent on the CCCH/AGCH
+ * see GSM 04.08, 9.1.18 and GSM 44.018, 9.1.18 + 10.5.2.16
+ */
 int Encoding::write_immediate_assignment(
 	struct gprs_rlcmac_bts *bts,
 	bitvec * dest, uint8_t downlink, uint8_t ra,
@@ -81,85 +172,13 @@ int Encoding::write_immediate_assignment(
 	plen = wp / 8;
 
 	if (downlink)
-	{
-		// GSM 04.08 10.5.2.16 IA Rest Octets
-		bitvec_write_field_lh(dest, wp, 3, 2);   // "HH"
-		bitvec_write_field(dest, wp, 1, 2);   // "01" Packet Downlink Assignment
-		bitvec_write_field(dest, wp,tlli,32); // TLLI
-		bitvec_write_field(dest, wp,0x1,1);   // switch TFI   : on
-		bitvec_write_field(dest, wp,tfi,5);   // TFI
-		bitvec_write_field(dest, wp,0x0,1);   // RLC acknowledged mode
-		if (alpha) {
-			bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
-			bitvec_write_field(dest, wp,alpha,4);   // ALPHA
-		} else {
-			bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
-		}
-		bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
-		bitvec_write_field(dest, wp,polling,1);   // Polling Bit
-		bitvec_write_field(dest, wp,!polling,1);   // TA_VALID ???
-		if (ta_idx < 0) {
-			bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
-		} else {
-			bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
-			bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
-		}
-		if (polling) {
-			bitvec_write_field(dest, wp,0x1,1);   // TBF Starting TIME present
-			bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
-			bitvec_write_field(dest, wp,fn % 51,6);               // T3
-			bitvec_write_field(dest, wp,fn % 26,5);               // T2
-		} else {
-			bitvec_write_field(dest, wp,0x0,1);   // TBF Starting TIME present
-		}
-		bitvec_write_field(dest, wp,0x0,1);   // P0 not present
-//		bitvec_write_field(dest, wp,0x1,1);   // P0 not present
-//		bitvec_write_field(dest, wp,0xb,4);
-	}
+		write_ia_rest_downlink(dest, wp,
+			tfi, tlli, polling, fn,
+			alpha, gamma, ta_idx);
 	else
-	{
-		// GMS 04.08 10.5.2.37b 10.5.2.16
-		bitvec_write_field_lh(dest, wp, 3, 2);    // "HH"
-		bitvec_write_field(dest, wp, 0, 2);    // "0" Packet Uplink Assignment
-		if (single_block) {
-			bitvec_write_field(dest, wp, 0, 1);    // Block Allocation : Single Block Allocation
-			if (alpha) {
-				bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
-				bitvec_write_field(dest, wp,alpha,4);   // ALPHA = present
-			} else
-				bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
-			bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
-			if (ta_idx < 0) {
-				bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
-			} else {
-				bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
-				bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
-			}
-			bitvec_write_field(dest, wp, 1, 1);    // TBF_STARTING_TIME_FLAG
-			bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
-			bitvec_write_field(dest, wp,fn % 51,6);               // T3
-			bitvec_write_field(dest, wp,fn % 26,5);               // T2
-		} else {
-			bitvec_write_field(dest, wp, 1, 1);    // Block Allocation : Not Single Block Allocation
-			bitvec_write_field(dest, wp, tfi, 5);  // TFI_ASSIGNMENT Temporary Flow Identity
-			bitvec_write_field(dest, wp, 0, 1);    // POLLING
-			bitvec_write_field(dest, wp, 0, 1);    // ALLOCATION_TYPE: dynamic
-			bitvec_write_field(dest, wp, usf, 3);    // USF
-			bitvec_write_field(dest, wp, 0, 1);    // USF_GRANULARITY
-			bitvec_write_field(dest, wp, 0, 1);   // "0" power control: Not Present
-			bitvec_write_field(dest, wp, bts->initial_cs_ul-1, 2);    // CHANNEL_CODING_COMMAND 
-			bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
-			if (alpha) {
-				bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
-				bitvec_write_field(dest, wp,alpha,4);   // ALPHA
-			} else
-				bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
-			bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
-			/* note: there is no choise for TAI and no starting time */
-			bitvec_write_field(dest, wp, 0, 1);   // switch TIMING_ADVANCE_INDEX = off
-			bitvec_write_field(dest, wp, 0, 1);    // TBF_STARTING_TIME_FLAG
-		}
-	}
+		write_ia_rest_uplink(bts, dest, wp,
+			tfi, usf, fn, single_block,
+			alpha, gamma, ta_idx);
 
 	return plen;
 }
