@@ -394,6 +394,7 @@ int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 const char *gprs_rlcmac_tbf::tbf_state_name[] = {
 	"NULL",
 	"ASSIGN",
+	"ASSIGNING",
 	"FLOW",
 	"FINISHED",
 	"WAIT RELEASE",
@@ -824,6 +825,12 @@ void gprs_rlcmac_tbf::handle_timeout()
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
 			if (state_is(GPRS_RLCMAC_ASSIGN)) {
 				LOGP(DRLCMAC, LOGL_NOTICE, "%s releasing due to "
+					"PACCH assignment timeout (not yet sent).\n",
+					tbf_name(this));
+				tbf_free(this);
+				return;
+			} else if (state_is(GPRS_RLCMAC_ASSIGNING)) {
+				LOGP(DRLCMAC, LOGL_NOTICE, "%s releasing due to "
 					"PACCH assignment timeout.\n", tbf_name(this));
 				tbf_free(this);
 				return;
@@ -834,7 +841,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
 			gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
 			dl_tbf->m_wait_confirm = 0;
-			if (dl_tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
+			if (dl_tbf->state_is(GPRS_RLCMAC_ASSIGNING)) {
 				tbf_assign_control_ts(dl_tbf);
 
 				if (!dl_tbf->upgrade_to_multislot) {
@@ -995,6 +1002,8 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 
 	if (poll_ass_dl) {
 		set_polling(new_poll_fn, ts);
+		if (new_dl_tbf->state_is(GPRS_RLCMAC_ASSIGN))
+			new_dl_tbf->set_state(GPRS_RLCMAC_ASSIGNING);
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_WAIT_ACK;
 		LOGP(DRLCMACDL, LOGL_INFO,
 			"%s Scheduled DL Assignment polling on FN=%d, TS=%d\n",
@@ -1067,6 +1076,8 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 
 	set_polling(new_poll_fn, ts);
 	ul_ass_state = GPRS_RLCMAC_UL_ASS_WAIT_ACK;
+	if (new_tbf->state_is(GPRS_RLCMAC_ASSIGN))
+		new_tbf->set_state(GPRS_RLCMAC_ASSIGNING);
 	LOGP(DRLCMACDL, LOGL_INFO,
 		"%s Scheduled UL Assignment polling on FN=%d, TS=%d\n",
 		name(), poll_fn, poll_ts);

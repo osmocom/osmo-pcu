@@ -1049,7 +1049,7 @@ static void test_tbf_dl_reuse()
 	ms2 = the_bts.ms_by_tlli(tlli1);
 	OSMO_ASSERT(ms2 == ms1);
 	OSMO_ASSERT(ms2->dl_tbf());
-	OSMO_ASSERT(ms2->dl_tbf()->state_is(GPRS_RLCMAC_ASSIGN));
+	OSMO_ASSERT(ms2->dl_tbf()->state_is(GPRS_RLCMAC_ASSIGNING));
 
 	dl_tbf2 = ms2->dl_tbf();
 
