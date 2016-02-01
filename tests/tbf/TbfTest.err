@@ -1522,7 +1522,7 @@ MS requests UL TBF on RACH, so we provide one:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=7
+ - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
@@ -1607,7 +1607,7 @@ MS requests UL TBF on RACH, so we provide one:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=7
+ - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
@@ -1737,7 +1737,7 @@ MS requests UL TBF on RACH, so we provide one:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x73, Fn=2654232 (17,39,22), SBFn=2654335
 TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=7
+ - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8c f6 07 00 c0 0c 68 ab 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=1.
@@ -1813,7 +1813,7 @@ MS requests UL TBF on RACH, so we provide one:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=7
+ - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
@@ -1906,7 +1906,7 @@ MS requests UL TBF on RACH, so we provide one:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x73, Fn=2654224 (17,31,14), SBFn=2654327
 TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=7
+ - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b ee 07 00 c0 0c 60 6b 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
@@ -1990,7 +1990,7 @@ MS requests UL TBF on RACH, so we provide one:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=7
+ - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
@@ -2144,7 +2144,7 @@ MS requests UL TBF on RACH, so we provide one:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=7
+ - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
