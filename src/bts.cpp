@@ -544,8 +544,11 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		m_bts.trx[trx_no].arfcn, ts_no, tsc, usf, 0, sb_fn,
 		m_bts.alpha, m_bts.gamma, -1);
 
-	if (plen >= 0)
+	if (plen >= 0) {
 		pcu_l1if_tx_agch(immediate_assignment, plen);
+		if (tbf)
+			tbf->set_state(GPRS_RLCMAC_WAIT_ASSIGN);
+	}
 
 	bitvec_free(immediate_assignment);
 
@@ -603,8 +606,10 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 		(tbf->pdch[ts]->last_rts_fn + 21216) % 2715648, tbf->ta(),
 		tbf->trx->arfcn, ts, tbf->tsc(), 7, poll,
 		tbf->poll_fn, m_bts.alpha, m_bts.gamma, -1);
-	if (plen >= 0)
+	if (plen >= 0) {
 		pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
+		tbf->set_state(GPRS_RLCMAC_WAIT_ASSIGN);
+	}
 	bitvec_free(immediate_assignment);
 }
 

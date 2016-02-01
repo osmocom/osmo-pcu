@@ -543,7 +543,8 @@ TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 30 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 08 00 23 2b 2b 2b 2b 
-TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) append
+TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -569,7 +570,8 @@ TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 18 40 23 2b 2b 2b 2b 
-TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) append
+TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -595,7 +597,8 @@ TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 28 80 23 2b 2b 2b 2b 
-TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) append
+TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -621,7 +624,8 @@ TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 33 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 38 c0 23 2b 2b 2b 2b 
-TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) append
+TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -647,7 +651,8 @@ TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 34 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 49 00 23 2b 2b 2b 2b 
-TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) append
+TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -673,7 +678,8 @@ TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 35 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 59 40 23 2b 2b 2b 2b 
-TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) append
+TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -699,7 +705,8 @@ TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 69 80 23 2b 2b 2b 2b 
-TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) append
+TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -725,7 +732,8 @@ TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 37 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 79 c0 23 2b 2b 2b 2b 
-TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) append
+TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -751,7 +759,8 @@ TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 38 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 8a 00 23 2b 2b 2b 2b 
-TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) append
+TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -777,7 +786,8 @@ TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 39 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 9a 40 23 2b 2b 2b 2b 
-TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) append
+TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -803,7 +813,8 @@ TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 30 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 aa 80 23 2b 2b 2b 2b 
-TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) append
+TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -829,7 +840,8 @@ TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 ba c0 23 2b 2b 2b 2b 
-TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) append
+TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -855,7 +867,8 @@ TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 cb 00 23 2b 2b 2b 2b 
-TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) append
+TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -881,7 +894,8 @@ TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 33 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 db 40 23 2b 2b 2b 2b 
-TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) append
+TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -907,7 +921,8 @@ TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 34 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 eb 80 23 2b 2b 2b 2b 
-TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) append
+TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -933,7 +948,8 @@ TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 35 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 fb c0 23 2b 2b 2b 2b 
-TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) append
+TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -959,7 +975,8 @@ TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 0c 00 23 2b 2b 2b 2b 
-TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) append
+TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -985,7 +1002,8 @@ TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 37 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 1c 40 23 2b 2b 2b 2b 
-TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) append
+TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1011,7 +1029,8 @@ TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 38 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 2c 80 23 2b 2b 2b 2b 
-TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) append
+TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1037,7 +1056,8 @@ TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 39 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 3c c0 23 2b 2b 2b 2b 
-TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) append
+TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1063,7 +1083,8 @@ TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 30 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 4d 00 23 2b 2b 2b 2b 
-TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) append
+TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1089,7 +1110,8 @@ TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 5d 40 23 2b 2b 2b 2b 
-TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) append
+TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1115,7 +1137,8 @@ TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 6d 80 23 2b 2b 2b 2b 
-TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) append
+TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1141,7 +1164,8 @@ TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 33 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 7d c0 23 2b 2b 2b 2b 
-TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) append
+TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1167,7 +1191,8 @@ TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 34 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 8e 00 23 2b 2b 2b 2b 
-TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) append
+TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1193,7 +1218,8 @@ TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 35 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 9e 40 23 2b 2b 2b 2b 
-TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) append
+TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1219,7 +1245,8 @@ TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 ae 80 23 2b 2b 2b 2b 
-TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) append
+TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1245,7 +1272,8 @@ TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 37 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 be c0 23 2b 2b 2b 2b 
-TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) append
+TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1271,7 +1299,8 @@ TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 38 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 cf 00 23 2b 2b 2b 2b 
-TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) append
+TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1297,7 +1326,8 @@ TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 39 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 df 40 23 2b 2b 2b 2b 
-TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) append
+TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1323,7 +1353,8 @@ TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 33 30 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 ef 80 23 2b 2b 2b 2b 
-TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) append
+TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1349,7 +1380,8 @@ TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 33 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 ff c0 23 2b 2b 2b 2b 
-TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) append
+TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1383,9 +1415,10 @@ TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 01 23 45 68 00 23 2b 2b 2b 2b 
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) append
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) append
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) changes state from ASSIGN to RELEASING
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) append
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) append
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) changes state from WAIT ASSIGN to RELEASING
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING) free
 PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
 Detaching TBF from MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING)
@@ -1411,32 +1444,33 @@ TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 01 23 45 68 00 23 2b 2b 2b 2b 
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) append
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) downlink (V(A)==0 .. V(S)==0)
-- Dequeue next LLC for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) (len=19)
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) append
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) (len=19)
 - Sending new block at BSN 0, CS=CS-1
 -- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
 -- No space left, so we are done.
-Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)len=19
-- Dequeue next LLC for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) (len=19)
+Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN)len=19
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) (len=19)
 data block (BSN 0, CS-1): 4d 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
 msg block (BSN 0, CS-1): 07 00 00 4d 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
 MSG = 07 00 00 4d 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) downlink (V(A)==0 .. V(S)==1)
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) downlink (V(A)==0 .. V(S)==1)
 - Sending new block at BSN 1, CS=CS-1
 -- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
 -- No space left, so we are done.
-Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)len=19
-- Dequeue next LLC for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) (len=19)
+Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN)len=19
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) (len=19)
 data block (BSN 1, CS-1): 4d 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 
 msg block (BSN 1, CS-1): 07 00 02 4d 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 
 MSG = 07 00 02 4d 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) downlink (V(A)==0 .. V(S)==2)
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) downlink (V(A)==0 .. V(S)==2)
 - Sending new block at BSN 2, CS=CS-1
 -- Chunk with length 19 is less than remaining space (20): add length header to to delimit LLC frame
 -- Final block, so we done.
-Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)len=19
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FINISHED
+Complete DL frame for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN)len=19
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) changes state from WAIT ASSIGN to FINISHED
 data block (BSN 2, CS-1): 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
 - Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
 Polling cannot be scheduled in this TS 7 (first control TS 4)
@@ -1469,29 +1503,26 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 03 8b 29 07 00 c8 00 10 0b 2b 2b 2b 2b 2b 2b 2b 
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) changes state from FLOW to WAIT ASSIGN
 Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 00 01 01 f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=0, BSN=0, SPB=0, PI=0, E=1, TI=1, bitoffs=24
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=WAIT ASSIGN) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=WAIT ASSIGN): Got CS-1 RLC data block: CV=0, BSN=0, SPB=0, PI=0, E=1, TI=1, bitoffs=24
 - BSN 0 storing in window (0..63)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): data_length=20, data=f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=WAIT ASSIGN): data_length=20, data=f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Decoded premier TLLI=0x00000000 of UL DATA TFI=0.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 - Raising V(R) to 1
 - Taking block 0 out, raising V(Q) to 1
 - Assembling frames: (len=20)
 -- Frame 1 starts at offset 4, length=16, is_complete=1
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) complete UL frame len=16
-LLC [PCU -> SGSN] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) len=16
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) complete UL frame len=16
+LLC [PCU -> SGSN] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) len=16
 No bctx
-- No gaps in received block, last block: BSN=0 CV=0
-- Finished with UL TBF
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes state from FLOW to FINISHED
 - Scheduling Ack/Nack, because TLLI is included.
-- Scheduling Ack/Nack, because last block has CV==0.
-Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)', TA=7
+Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=0/0
@@ -1516,7 +1547,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=7 TA=7 pollFN=-1
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=33 34 34 2d 06 3f 30 0f 00 00 7d 80 00 07 00 df 12 23 34 48 00 23 2b 2b 2b 2b 
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) append
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT ASSIGN) append
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 MS requests UL TBF on RACH, so we provide one:
 MS requests single block allocation
@@ -1556,15 +1588,16 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN): Scheduling polling at FN 2654283 TS 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283, TS=7
-Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) Scheduled UL Assignment polling on FN=2654283, TS=7
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 8f 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
-RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control Ack
-TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) Packet Control Ack
+TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) changes state from WAIT ASSIGN to FLOW
 Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -1641,15 +1674,16 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN): Scheduling polling at FN 2654283 TS 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283, TS=7
-Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) Scheduled UL Assignment polling on FN=2654283, TS=7
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 8f 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
-RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control Ack
-TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) Packet Control Ack
+TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) changes state from WAIT ASSIGN to FLOW
 Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -1692,6 +1726,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)  start Packet Downlink Assignment
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Scheduling polling at FN 2654288 TS 7
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on FN=2654288, TS=7
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654275 block=9 data=48 08 00 00 0c 72 00 02 08 00 80 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
@@ -1700,7 +1735,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Packet Control Ack
 TBF: [UPLINK] DOWNLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FLOW
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT ASSIGN) changes state from WAIT ASSIGN to FLOW
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer 0.
 Received RTS on disabled PDCH: TRX=0 TS=0
 Received RTS on disabled PDCH: TRX=0 TS=1
@@ -1776,15 +1811,16 @@ TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN): Scheduling polling at FN 2654348 TS 7
-TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654348, TS=7
-Scheduling control message at RTS for TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=WAIT ASSIGN) Scheduled UL Assignment polling on FN=2654348, TS=7
+Scheduling control message at RTS for TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=WAIT ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654335 block=11 data=48 28 5e ac ce f1 0f 1d 00 00 88 40 09 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
-RX: [PCU <- BTS] TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) Packet Control Ack
-TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN)
-TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+RX: [PCU <- BTS] TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=WAIT ASSIGN) Packet Control Ack
+TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=WAIT ASSIGN)
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=WAIT ASSIGN) changes state from WAIT ASSIGN to FLOW
 Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 02 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=1, CPS=0, RSB=0, rc=184
@@ -1847,15 +1883,16 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN): Scheduling polling at FN 2654283 TS 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283, TS=7
-Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) Scheduled UL Assignment polling on FN=2654283, TS=7
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 83 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
-RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control Ack
-TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) Packet Control Ack
+TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) changes state from WAIT ASSIGN to FLOW
 Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -1943,15 +1980,16 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN): Scheduling polling at FN 2654340 TS 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654340, TS=7
-Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) Scheduled UL Assignment polling on FN=2654340, TS=7
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654327 block=9 data=4f 28 5e 24 46 68 83 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
-RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control Ack
-TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) Packet Control Ack
+TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) changes state from WAIT ASSIGN to FLOW
 ********** TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
 Slot Allocation (Algorithm A) for class 1
@@ -2024,15 +2062,16 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN): Scheduling polling at FN 2654283 TS 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283, TS=7
-Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) Scheduled UL Assignment polling on FN=2654283, TS=7
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 83 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
-RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control Ack
-TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) Packet Control Ack
+TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) changes state from WAIT ASSIGN to FLOW
 Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -2105,14 +2144,15 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 03 8b ed 07 00 c8 00 10 0b 2b 2b 2b 2b 2b 2b 2b 
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) changes state from FLOW to WAIT ASSIGN
 Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 00 01 01 f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=0, BSN=0, SPB=0, PI=0, E=1, TI=1, bitoffs=24
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=WAIT ASSIGN) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=WAIT ASSIGN): Got CS-1 RLC data block: CV=0, BSN=0, SPB=0, PI=0, E=1, TI=1, bitoffs=24
 - BSN 0 storing in window (0..63)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): data_length=20, data=f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=WAIT ASSIGN): data_length=20, data=f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Decoded premier TLLI=0x00000000 of UL DATA TFI=0.
 Got RACH from TLLI=0x00000000 while TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) still exists. Killing pending DL TBF
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to RELEASING
@@ -2130,14 +2170,10 @@ Destroying MS object, TLLI = 0x00000000
 - Taking block 0 out, raising V(Q) to 1
 - Assembling frames: (len=20)
 -- Frame 1 starts at offset 4, length=16, is_complete=1
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) complete UL frame len=16
-LLC [PCU -> SGSN] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) len=16
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) complete UL frame len=16
+LLC [PCU -> SGSN] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) len=16
 No bctx
-- No gaps in received block, last block: BSN=0 CV=0
-- Finished with UL TBF
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes state from FLOW to FINISHED
 - Scheduling Ack/Nack, because TLLI is included.
-- Scheduling Ack/Nack, because last block has CV==0.
 New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 MS requests UL TBF on RACH, so we provide one:
@@ -2178,15 +2214,16 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN): Scheduling polling at FN 2654283 TS 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on FN=2654283, TS=7
-Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) Scheduled UL Assignment polling on FN=2654283, TS=7
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 83 1d 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Got RLC block, coding scheme: CS-1, length: 23 (23))
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
-RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Packet Control Ack
-TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) Packet Control Ack
+TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN) changes state from WAIT ASSIGN to FLOW
 Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -2268,6 +2305,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)  start Packet Downlink Assignment
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Scheduling polling at FN 2654288 TS 7
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on FN=2654288, TS=7
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654275 block=9 data=48 08 00 00 0c 72 00 02 08 00 80 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
@@ -2276,7 +2314,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
 ------------------------- RX : Uplink Control Block -------------------------
 RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Packet Control Ack
 TBF: [UPLINK] DOWNLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FLOW
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT ASSIGN) changes state from WAIT ASSIGN to FLOW
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer 0.
 Received RTS on disabled PDCH: TRX=0 TS=0
 Received RTS on disabled PDCH: TRX=0 TS=1
@@ -2899,6 +2937,7 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)  start Packet Downlink Assignment
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE): Scheduling polling at FN 2654413 TS 7
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) Scheduled DL Assignment polling on FN=2654413, TS=7
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) (TRX=0, TS=7)
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654400 block=2 data=48 08 20 08 0c 72 00 02 18 00 80 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
@@ -2913,7 +2952,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) stopping timer 3193.
 PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING), 1 TBFs, USFs = 01, TFIs = 00000002.
 Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING)
 ********** TBF ends here **********
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FLOW
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=WAIT ASSIGN) changes state from WAIT ASSIGN to FLOW
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer 0.
 Received RTS on disabled PDCH: TRX=0 TS=0
 Received RTS on disabled PDCH: TRX=0 TS=1
