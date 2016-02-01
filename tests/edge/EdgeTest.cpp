@@ -171,7 +171,7 @@ static void test_coding_scheme()
 	printf("=== end %s ===\n", __func__);
 }
 
-static void test_rlc_decoder()
+static void test_rlc_unit_decoder()
 {
 	struct gprs_rlc_ul_data_block_info rdbi = {0};
 	GprsCodingScheme cs;
@@ -524,7 +524,7 @@ int main(int argc, char **argv)
 	pcu_vty_init(&debug_log_info);
 
 	test_coding_scheme();
-	test_rlc_decoder();
+	test_rlc_unit_decoder();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
