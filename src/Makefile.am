@@ -64,11 +64,6 @@ bin_PROGRAMS = \
 
 noinst_PROGRAMS =
 
-if ENABLE_SYSMODSP
-noinst_PROGRAMS += \
-	osmo-pcu-remote
-endif
-
 noinst_HEADERS = \
 	gprs_debug.h \
 	csn1.h \
@@ -83,8 +78,6 @@ noinst_HEADERS = \
 	bitvector.h \
 	pcu_vty.h \
 	pcu_vty_functions.h \
-	sysmo_l1_if.h \
-	femtobts.h \
 	tbf.h \
 	bts.h \
 	poll_controller.h \
@@ -101,14 +94,39 @@ noinst_HEADERS = \
 osmo_pcu_SOURCES = pcu_main.cpp
 
 if ENABLE_SYSMODSP
-osmo_pcu_SOURCES += sysmo_l1_if.c \
-	sysmo_l1_hw.c \
-	femtobts.c
+AM_CPPFLAGS += -I$(srcdir)/osmo-bts-sysmo
 
-osmo_pcu_remote_SOURCES = pcu_main.cpp \
-	sysmo_l1_if.c \
-	sysmo_l1_fwd.c \
-	femtobts.c
+EXTRA_DIST = \
+	osmo-bts-sysmo/sysmo_l1_if.c \
+        osmo-bts-sysmo/sysmo_l1_if.h \
+        osmo-bts-sysmo/sysmo_l1_hw.c \
+        osmo-bts-sysmo/femtobts.c \
+        osmo-bts-sysmo/femtobts.h
+
+noinst_HEADERS += \
+        osmo-bts-sysmo/sysmo_l1_if.h \
+        osmo-bts-sysmo/femtobts.h
+
+noinst_PROGRAMS += \
+	osmo-pcu-remote
+
+osmo_pcu_SOURCES += \
+	osmo-bts-sysmo/sysmo_l1_if.c \
+	osmo-bts-sysmo/sysmo_l1_hw.c \
+	osmo-bts-sysmo/femtobts.c
+
+osmo_pcu_remote_SOURCES = \
+	pcu_main.cpp \
+	osmo-bts-sysmo/sysmo_l1_if.c \
+	osmo-bts-sysmo/sysmo_l1_fwd.c \
+	osmo-bts-sysmo/femtobts.c
+
+osmo_pcu_remote_LDADD = \
+	libgprs.la \
+	$(LIBOSMOGB_LIBS) \
+	$(LIBOSMOCORE_LIBS) \
+	$(LIBOSMOGSM_LIBS) \
+	$(COMMON_LA)
 endif
 
 osmo_pcu_LDADD = \
@@ -117,14 +135,5 @@ osmo_pcu_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(COMMON_LA)
-
-if ENABLE_SYSMODSP
-osmo_pcu_remote_LDADD = \
-	libgprs.la \
-	$(LIBOSMOGB_LIBS) \
-	$(LIBOSMOCORE_LIBS) \
-	$(LIBOSMOGSM_LIBS) \
-	$(COMMON_LA)
-endif
 
 #MOSTLYCLEANFILES += testSource testDestination
