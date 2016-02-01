@@ -83,7 +83,7 @@ int Encoding::write_immediate_assignment(
 	if (downlink)
 	{
 		// GSM 04.08 10.5.2.16 IA Rest Octets
-		bitvec_write_field(dest, wp, 3, 2);   // "HH"
+		bitvec_write_field_lh(dest, wp, 3, 2);   // "HH"
 		bitvec_write_field(dest, wp, 1, 2);   // "01" Packet Downlink Assignment
 		bitvec_write_field(dest, wp,tlli,32); // TLLI
 		bitvec_write_field(dest, wp,0x1,1);   // switch TFI   : on
@@ -119,7 +119,7 @@ int Encoding::write_immediate_assignment(
 	else
 	{
 		// GMS 04.08 10.5.2.37b 10.5.2.16
-		bitvec_write_field(dest, wp, 3, 2);    // "HH"
+		bitvec_write_field_lh(dest, wp, 3, 2);    // "HH"
 		bitvec_write_field(dest, wp, 0, 2);    // "0" Packet Uplink Assignment
 		if (single_block) {
 			bitvec_write_field(dest, wp, 0, 1);    // Block Allocation : Single Block Allocation
