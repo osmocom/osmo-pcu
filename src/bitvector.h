@@ -39,6 +39,7 @@ unsigned int bitvec_pack(struct bitvec *bv, uint8_t *buffer);
 unsigned int bitvec_unpack(struct bitvec *bv, uint8_t *buffer);
 uint64_t bitvec_read_field(struct bitvec *bv, unsigned& read_index, unsigned len);
 int bitvec_write_field(struct bitvec *bv, unsigned& write_index, uint64_t val, unsigned len);
+int bitvec_write_field_lh(struct bitvec *bv, unsigned& write_index, uint64_t val, unsigned len);
 
 /*! }@ */
 
