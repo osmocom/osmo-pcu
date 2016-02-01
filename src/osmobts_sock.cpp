@@ -100,7 +100,7 @@ static void pcu_sock_close(struct pcu_sock_state *state, int lost)
 
 	/* disable all slots, kick all TBFs */
 	for (trx = 0; trx < 8; trx++) {
-#ifdef ENABLE_SYSMODSP
+#ifdef ENABLE_DIRECT_PHY
 		if (bts->trx[trx].fl1h) {
 			l1if_close_pdch(bts->trx[trx].fl1h);
 			bts->trx[trx].fl1h = NULL;

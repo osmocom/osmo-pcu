@@ -124,7 +124,7 @@ static int pcu_tx_data_req(uint8_t trx, uint8_t ts, uint8_t sapi,
 void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr)
 {
-#ifdef ENABLE_SYSMODSP
+#ifdef ENABLE_DIRECT_PHY
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	if (bts->trx[trx].fl1h)
@@ -140,7 +140,7 @@ void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr)
 {
-#ifdef ENABLE_SYSMODSP
+#ifdef ENABLE_DIRECT_PHY
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	if (bts->trx[trx].fl1h)
@@ -430,7 +430,7 @@ bssgp_failed:
 		bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
 		if ((info_ind->flags & PCU_IF_FLAG_SYSMO)
 		 && info_ind->trx[trx].hlayer1) {
-#ifdef ENABLE_SYSMODSP
+#ifdef ENABLE_DIRECT_PHY
 			LOGP(DL1IF, LOGL_DEBUG, " TRX %d hlayer1=%x\n", trx,
 				info_ind->trx[trx].hlayer1);
 				if (!bts->trx[trx].fl1h)
@@ -455,7 +455,7 @@ bssgp_failed:
 			if ((info_ind->trx[trx].pdch_mask & (1 << ts))) {
 				/* FIXME: activate dynamically at RLCMAC */
 				if (!pdch->is_enabled()) {
-#ifdef ENABLE_SYSMODSP
+#ifdef ENABLE_DIRECT_PHY
 					if ((info_ind->flags &
 							PCU_IF_FLAG_SYSMO))
 						l1if_connect_pdch(
