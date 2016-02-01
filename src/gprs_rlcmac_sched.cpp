@@ -130,14 +130,18 @@ static struct msgb *sched_select_ctrl_msg(
 		if (!tbf)
 			continue;
 
-		if (tbf == ul_ass_tbf)
+		/*
+		 * Assignments for the same direction have lower precedence,
+		 * because they may kill the TBF when the CONTOL ACK is
+		 * received, thus preventing the others from being processed.
+		 */
+
+		if (tbf == ul_ass_tbf && tbf->direction == GPRS_RLCMAC_DL_TBF)
 			msg = ul_ass_tbf->create_ul_ass(fn, ts);
-		else if (tbf == dl_ass_tbf)
+		else if (tbf == dl_ass_tbf && tbf->direction == GPRS_RLCMAC_UL_TBF)
 			msg = dl_ass_tbf->create_dl_ass(fn, ts);
 		else if (tbf == ul_ack_tbf)
 			msg = ul_ack_tbf->create_ul_ack(fn, ts);
-		else
-			abort();
 
 		if (!msg) {
 			tbf = NULL;
@@ -147,6 +151,21 @@ static struct msgb *sched_select_ctrl_msg(
 		pdch->next_ctrl_prio += 1;
 		pdch->next_ctrl_prio %= 3;
 		break;
+	}
+
+	if (!msg) {
+		/*
+		 * If one of these is left, the response (CONTROL ACK) from the
+		 * MS will kill the current TBF, only one of them can be
+		 * non-NULL
+		 */
+		if (dl_ass_tbf) {
+			tbf = dl_ass_tbf;
+			msg = dl_ass_tbf->create_dl_ass(fn, ts);
+		} else if (ul_ass_tbf) {
+			tbf = ul_ass_tbf;
+			msg = ul_ass_tbf->create_ul_ass(fn, ts);
+		}
 	}
 
 	/* any message */
