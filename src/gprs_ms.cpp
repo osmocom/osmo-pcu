@@ -767,13 +767,16 @@ uint8_t GprsMs::current_pacch_slots() const
 {
 	uint8_t slots = 0;
 
-	if (!m_dl_tbf && !m_ul_tbf)
+	bool is_dl_active = m_dl_tbf && m_dl_tbf->is_tfi_assigned();
+	bool is_ul_active = m_ul_tbf && m_ul_tbf->is_tfi_assigned();
+
+	if (!is_dl_active && !is_ul_active)
 		return 0;
 
 	/* see TS 44.060, 8.1.1.2.2 */
-	if (m_dl_tbf && !m_ul_tbf)
+	if (is_dl_active && !is_ul_active)
 		slots =  m_dl_tbf->dl_slots();
-	else if (!m_dl_tbf && m_ul_tbf)
+	else if (!is_dl_active && is_ul_active)
 		slots =  m_ul_tbf->ul_slots();
 	else
 		slots =  m_ul_tbf->ul_slots() & m_dl_tbf->dl_slots();

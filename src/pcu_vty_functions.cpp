@@ -133,7 +133,7 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 	vty_out(vty, "  PACCH:                  ");
 	slots = ms->current_pacch_slots();
 	for (int i = 0; i < 8; i++)
-		if (slots && (1 << i))
+		if (slots & (1 << i))
 			vty_out(vty, "%d ", i);
 	vty_out(vty, "%s", VTY_NEWLINE);
 	vty_out(vty, "  LLC queue length:       %d%s", ms->llc_queue()->size(),
