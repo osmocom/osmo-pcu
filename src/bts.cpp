@@ -799,7 +799,8 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				"TBF is gone TLLI=0x%08x\n", tlli);
 			return;
 		}
-		if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE))
+		if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE) &&
+				tbf->direction == new_tbf->direction)
 			tbf_free(tbf);
 
 		if ((new_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
@@ -836,7 +837,8 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				"TBF is gone TLLI=0x%08x\n", tlli);
 			return;
 		}
-		if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE))
+		if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE) &&
+				tbf->direction == new_tbf->direction)
 			tbf_free(tbf);
 
 		new_tbf->set_state(GPRS_RLCMAC_FLOW);
