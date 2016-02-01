@@ -42,7 +42,7 @@ extern "C" {
 
 // FIXME: move this, when changed from c++ to c.
 extern "C" {
-void *l1if_open_pdch(void *priv, uint32_t hlayer1);
+void *l1if_open_pdch(uint8_t trx, uint32_t hlayer1);
 int l1if_connect_pdch(void *obj, uint8_t ts);
 int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
         uint16_t arfcn, uint8_t block_nr, uint8_t *data, uint8_t len);
@@ -315,9 +315,8 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 	struct gprs_bssgp_pcu *pcu;
 	struct gprs_rlcmac_pdch *pdch;
 	struct in_addr ia;
-	int rc = 0;
-	int trx, ts;
-	int i;
+	int rc = 0, ts, i;
+	uint8_t trx;
 
 	if (info_ind->version != PCU_IF_VERSION) {
 		fprintf(stderr, "PCU interface version number of BTS (%d) is "
@@ -435,7 +434,7 @@ bssgp_failed:
 				info_ind->trx[trx].hlayer1);
 				if (!bts->trx[trx].fl1h)
 					bts->trx[trx].fl1h = l1if_open_pdch(
-						(void *)trx,
+						trx,
 						info_ind->trx[trx].hlayer1);
 			if (!bts->trx[trx].fl1h) {
 				LOGP(DL1IF, LOGL_FATAL, "Failed to open direct "
