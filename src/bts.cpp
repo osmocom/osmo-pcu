@@ -466,8 +466,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	uint8_t sb = 0;
 	uint32_t sb_fn = 0;
 	int rc;
-	uint8_t plen;
-	uint8_t tfi = 0;
+	int plen;
 	uint8_t usf = 7;
 	uint8_t tsc;
 	uint16_t ta;
@@ -528,7 +527,6 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 			"Assignment Uplink (AGCH)\n", tbf_name(tbf));
 		trx_no = tbf->trx->trx_no;
 		ts_no = tbf->first_control_ts();
-		tfi = tbf->tfi();
 		usf = tbf->m_usf[ts_no];
 		tsc = tbf->tsc();
 	}
@@ -538,14 +536,17 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 
 	LOGP(DRLCMAC, LOGL_DEBUG,
 		" - TRX=%d (%d) TS=%d TA=%d TSC=%d TFI=%d USF=%d\n",
-		trx_no, m_bts.trx[trx_no].arfcn, ts_no, ta, tsc, tfi, usf);
+		trx_no, m_bts.trx[trx_no].arfcn, ts_no, ta, tsc,
+		tbf ? tbf->tfi() : -1, usf);
 
 	plen = Encoding::write_immediate_assignment(
-		&m_bts, immediate_assignment, 0, ra, Fn, ta,
-		m_bts.trx[trx_no].arfcn, ts_no, tsc, tfi, usf, 0, 0, sb_fn, sb,
+		tbf, immediate_assignment, 0, ra, Fn, ta,
+		m_bts.trx[trx_no].arfcn, ts_no, tsc, usf, 0, sb_fn,
 		m_bts.alpha, m_bts.gamma, -1);
 
-	pcu_l1if_tx_agch(immediate_assignment, plen);
+	if (plen >= 0)
+		pcu_l1if_tx_agch(immediate_assignment, plen);
+
 	bitvec_free(immediate_assignment);
 
 	return 0;
@@ -598,11 +599,12 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 	LOGP(DRLCMAC, LOGL_DEBUG, " - TRX=%d (%d) TS=%d TA=%d pollFN=%d\n",
 		tbf->trx->trx_no, tbf->trx->arfcn,
 		ts, tbf->ta(), poll ? tbf->poll_fn : -1);
-	plen = Encoding::write_immediate_assignment(&m_bts, immediate_assignment, 1, 125,
+	plen = Encoding::write_immediate_assignment(tbf, immediate_assignment, 1, 125,
 		(tbf->pdch[ts]->last_rts_fn + 21216) % 2715648, tbf->ta(),
-		tbf->trx->arfcn, ts, tbf->tsc(), tbf->tfi(), 7, tbf->tlli(), poll,
-		tbf->poll_fn, 0, m_bts.alpha, m_bts.gamma, -1);
-	pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
+		tbf->trx->arfcn, ts, tbf->tsc(), 7, poll,
+		tbf->poll_fn, m_bts.alpha, m_bts.gamma, -1);
+	if (plen >= 0)
+		pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
 	bitvec_free(immediate_assignment);
 }
 

@@ -28,17 +28,23 @@
 #include <errno.h>
 #include <string.h>
 
-static void write_ia_rest_downlink(
+static int write_ia_rest_downlink(
+	gprs_rlcmac_dl_tbf *tbf,
 	bitvec * dest, unsigned& wp,
-	uint8_t tfi, uint32_t tlli, uint8_t polling,
-	uint32_t fn, uint8_t alpha, uint8_t gamma, int8_t ta_idx)
+	uint8_t polling, uint32_t fn,
+	uint8_t alpha, uint8_t gamma, int8_t ta_idx)
 {
+	if (!tbf) {
+		LOGP(DRLCMACDL, LOGL_ERROR,
+			"Cannot encode DL IMMEDIATE ASSIGNMENT without TBF\n");
+		return -EINVAL;
+	}
 	// GSM 04.08 10.5.2.16 IA Rest Octets
 	bitvec_write_field_lh(dest, wp, 3, 2);   // "HH"
 	bitvec_write_field(dest, wp, 1, 2);   // "01" Packet Downlink Assignment
-	bitvec_write_field(dest, wp,tlli,32); // TLLI
+	bitvec_write_field(dest, wp,tbf->tlli(),32); // TLLI
 	bitvec_write_field(dest, wp,0x1,1);   // switch TFI   : on
-	bitvec_write_field(dest, wp,tfi,5);   // TFI
+	bitvec_write_field(dest, wp,tbf->tfi(),5);   // TFI
 	bitvec_write_field(dest, wp,0x0,1);   // RLC acknowledged mode
 	if (alpha) {
 		bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
@@ -66,17 +72,20 @@ static void write_ia_rest_downlink(
 	bitvec_write_field(dest, wp,0x0,1);   // P0 not present
 	//		bitvec_write_field(dest, wp,0x1,1);   // P0 not present
 	//		bitvec_write_field(dest, wp,0xb,4);
+
+	return 0;
 }
 
-static void write_ia_rest_uplink(
-	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
-	uint8_t tfi, uint8_t usf, uint32_t fn, uint8_t single_block,
+static int write_ia_rest_uplink(
+	gprs_rlcmac_ul_tbf *tbf,
+	bitvec * dest, unsigned& wp,
+	uint8_t usf, uint32_t fn,
 	uint8_t alpha, uint8_t gamma, int8_t ta_idx)
 {
 	// GMS 04.08 10.5.2.37b 10.5.2.16
 	bitvec_write_field_lh(dest, wp, 3, 2);    // "HH"
 	bitvec_write_field(dest, wp, 0, 2);    // "0" Packet Uplink Assignment
-	if (single_block) {
+	if (tbf == NULL) {
 		bitvec_write_field(dest, wp, 0, 1);    // Block Allocation : Single Block Allocation
 		if (alpha) {
 			bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
@@ -96,13 +105,13 @@ static void write_ia_rest_uplink(
 		bitvec_write_field(dest, wp,fn % 26,5);               // T2
 	} else {
 		bitvec_write_field(dest, wp, 1, 1);    // Block Allocation : Not Single Block Allocation
-		bitvec_write_field(dest, wp, tfi, 5);  // TFI_ASSIGNMENT Temporary Flow Identity
+		bitvec_write_field(dest, wp, tbf->tfi(), 5);  // TFI_ASSIGNMENT Temporary Flow Identity
 		bitvec_write_field(dest, wp, 0, 1);    // POLLING
 		bitvec_write_field(dest, wp, 0, 1);    // ALLOCATION_TYPE: dynamic
 		bitvec_write_field(dest, wp, usf, 3);    // USF
 		bitvec_write_field(dest, wp, 0, 1);    // USF_GRANULARITY
 		bitvec_write_field(dest, wp, 0, 1);   // "0" power control: Not Present
-		bitvec_write_field(dest, wp, bts->initial_cs_ul-1, 2);    // CHANNEL_CODING_COMMAND 
+		bitvec_write_field(dest, wp, tbf->current_cs().to_num()-1, 2);    // CHANNEL_CODING_COMMAND 
 		bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
 		if (alpha) {
 			bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
@@ -114,6 +123,7 @@ static void write_ia_rest_uplink(
 		bitvec_write_field(dest, wp, 0, 1);   // switch TIMING_ADVANCE_INDEX = off
 		bitvec_write_field(dest, wp, 0, 1);    // TBF_STARTING_TIME_FLAG
 	}
+	return 0;
 }
 
 /*
@@ -121,15 +131,15 @@ static void write_ia_rest_uplink(
  * see GSM 04.08, 9.1.18 and GSM 44.018, 9.1.18 + 10.5.2.16
  */
 int Encoding::write_immediate_assignment(
-	struct gprs_rlcmac_bts *bts,
+	struct gprs_rlcmac_tbf *tbf,
 	bitvec * dest, uint8_t downlink, uint8_t ra,
 	uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc,
-	uint8_t tfi, uint8_t usf, uint32_t tlli,
-	uint8_t polling, uint32_t fn, uint8_t single_block, uint8_t alpha,
+	uint8_t usf, uint8_t polling, uint32_t fn, uint8_t alpha,
 	uint8_t gamma, int8_t ta_idx)
 {
 	unsigned wp = 0;
-	uint8_t plen;
+	int plen;
+	int rc;
 
 	bitvec_write_field(dest, wp,0x0,4);  // Skip Indicator
 	bitvec_write_field(dest, wp,0x6,4);  // Protocol Discriminator
@@ -172,13 +182,21 @@ int Encoding::write_immediate_assignment(
 	plen = wp / 8;
 
 	if (downlink)
-		write_ia_rest_downlink(dest, wp,
-			tfi, tlli, polling, fn,
+		rc = write_ia_rest_downlink(as_dl_tbf(tbf), dest, wp,
+			polling, fn,
 			alpha, gamma, ta_idx);
 	else
-		write_ia_rest_uplink(bts, dest, wp,
-			tfi, usf, fn, single_block,
+		rc = write_ia_rest_uplink(as_ul_tbf(tbf), dest, wp,
+			usf, fn,
 			alpha, gamma, ta_idx);
+
+	if (rc < 0) {
+		LOGP(DRLCMAC, LOGL_ERROR,
+			"Failed to create IMMEDIATE ASSIGMENT (%s) for %s\n",
+			downlink ? "downlink" : "uplink",
+			tbf ? tbf->name() : "single block allocation");
+		return rc;
+	}
 
 	return plen;
 }

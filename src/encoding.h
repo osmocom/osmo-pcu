@@ -39,11 +39,11 @@ struct gprs_rlc_data_block_info;
 class Encoding {
 public:
 	static int write_immediate_assignment(
-			struct gprs_rlcmac_bts *bts,
-			bitvec * dest, uint8_t downlink, uint8_t ra, 
-		        uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc, 
-		        uint8_t tfi, uint8_t usf, uint32_t tlli, uint8_t polling,
-			uint32_t fn, uint8_t single_block, uint8_t alpha, uint8_t gamma,
+			struct gprs_rlcmac_tbf *tbf,
+			bitvec * dest, uint8_t downlink, uint8_t ra,
+			uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts,
+			uint8_t tsc, uint8_t usf, uint8_t polling,
+			uint32_t fn, uint8_t alpha, uint8_t gamma,
 			int8_t ta_idx);
 
 	static void write_packet_uplink_assignment(
