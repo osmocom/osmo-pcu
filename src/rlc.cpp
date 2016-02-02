@@ -341,7 +341,7 @@ unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, int punct, int punct2,
 					    punct % 2;
 	case GprsCodingScheme::MCS7: return 0b10100 + 3 * (punct % 3) + punct2 % 3;
 	case GprsCodingScheme::MCS8: return 0b01011 + 3 * (punct % 3) + punct2 % 3;
-	case GprsCodingScheme::MCS9: return 0b00000 + 3 * (punct % 3) + punct2 % 3;
+	case GprsCodingScheme::MCS9: return 0b00000 + 4 * (punct % 3) + punct2 % 3;
 	default: ;
 	}
 
