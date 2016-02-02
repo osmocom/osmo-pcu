@@ -340,11 +340,22 @@ do_resend:
 	/* check if there is a block with negative acknowledgement */
 	int resend_bsn = m_window.resend_needed();
 	if (resend_bsn >= 0) {
+		int resend_bsn2 = -1;
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d\n", resend_bsn);
 		/* re-send block with negative aknowlegement */
 		m_window.m_v_b.mark_unacked(resend_bsn);
 		bts->rlc_resent();
-		return create_dl_acked_block(fn, ts, resend_bsn);
+		if (m_rlc.block(resend_bsn)->cs.headerTypeData() == GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1)
+		{
+			resend_bsn2 = m_window.resend_needed();
+			if (resend_bsn >= 0) {
+				LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d (second)\n", resend_bsn2);
+				/* re-send block with negative aknowlegement */
+				m_window.m_v_b.mark_unacked(resend_bsn2);
+				bts->rlc_resent();
+			}
+		}
+		return create_dl_acked_block(fn, ts, resend_bsn, resend_bsn2);
 	}
 
 	/* if the window has stalled, or transfer is complete,
@@ -361,7 +372,9 @@ do_resend:
 		bts->rlc_stalled();
 	} else if (have_data()) {
 		/* New blocks may be send */
-		return create_new_bsn(fn, ts);
+		int bsn = create_new_bsn(fn, ts);
+		if (have_data() && m_rlc.block(bsn)->cs.headerTypeData() == GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1)
+			create_new_bsn(fn, ts);
 	} else if (!m_window.window_empty()) {
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
 			"because all blocks have been transmitted (FLOW).\n",
@@ -369,7 +382,7 @@ do_resend:
 		bts->rlc_restarted();
 	} else {
 		/* Nothing left to send, create dummy LLC commands */
-		return create_new_bsn(fn, ts);
+		create_new_bsn(fn, ts);
 	}
 
 	/* If V(S) == V(A) and finished state, we would have received
@@ -425,7 +438,7 @@ void gprs_rlcmac_dl_tbf::schedule_next_frame()
 	m_last_dl_drained_fn = -1;
 }
 
-struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts)
+int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts)
 {
 	uint8_t *data;
 	gprs_rlc_data *rlc_data;
@@ -514,12 +527,12 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 	m_window.m_v_b.mark_unacked(bsn);
 	m_window.increment_send();
 
-	return create_dl_acked_block(fn, ts, bsn);
+	return bsn;
 }
 
 struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				const uint32_t fn, const uint8_t ts,
-				const int index)
+				int index, int index2)
 {
 	uint8_t *msg_data;
 	struct msgb *dl_msg;
@@ -548,6 +561,11 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	cs = m_rlc.block(index)->cs;
 	bsns[0] = index;
 	num_bsns = 1;
+
+	if (index2 >= 0) {
+		bsns[num_bsns] = index;
+		num_bsns += 1;
+	}
 
 	gprs_rlc_data_info_init_dl(&rlc, cs);
 
