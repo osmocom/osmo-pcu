@@ -521,7 +521,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				const uint32_t fn, const uint8_t ts,
 				const int index)
 {
-	uint8_t *block_data, *msg_data;
+	uint8_t *msg_data;
 	struct msgb *dl_msg;
 	unsigned msg_len;
 	bool need_poll;
@@ -530,26 +530,72 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	unsigned int rrbp;
 	uint32_t new_poll_fn;
 	int rc;
-
+	bool is_final = false;
 	gprs_rlc_data_info rlc;
 	GprsCodingScheme cs;
-	gprs_rlc_data_block_info *rdbi;
+	int bsns[ARRAY_SIZE(rlc.block_info)];
+	unsigned num_bsns;
+	int punct[ARRAY_SIZE(rlc.block_info)];
 
-	/* get data and header from current block */
-	block_data = m_rlc.block(index)->block;
-
+	/*
+	 * TODO: This is an experimental work-around to put 2 BSN into
+	 * MSC-7 to MCS-9 encoded messages. It just sends the same BSN
+	 * twice in the block. The cs should be derived from the TBF's
+	 * current CS such that both BSNs (that must be compatible) can
+	 * be put into the data area, even if the resulting CS is higher than
+	 * the current limit.
+	 */
 	cs = m_rlc.block(index)->cs;
+	bsns[0] = index;
+	num_bsns = 1;
 
 	gprs_rlc_data_info_init_dl(&rlc, cs);
 
 	rlc.usf = 7; /* will be set at scheduler */
 	rlc.pr = 0; /* FIXME: power reduction */
 	rlc.tfi = m_tfi; /* TFI */
-	/* TODO: Use real puncturing values */
-	rlc.cps = gprs_rlc_mcs_cps(cs, 0, 0, 0);
 
-	rlc.block_info[data_block_idx] = m_rlc.block(index)->block_info;
-	rdbi = &rlc.block_info[data_block_idx];
+	/* return data block(s) as message */
+	msg_len = cs.sizeDL();
+	dl_msg = msgb_alloc(msg_len, "rlcmac_dl_data");
+	if (!dl_msg)
+		return NULL;
+
+	msg_data = msgb_put(dl_msg, msg_len);
+
+	/* Copy block(s) to RLC message */
+	for (data_block_idx = 0; data_block_idx < rlc.num_data_blocks;
+		data_block_idx++)
+	{
+		int bsn;
+		GprsCodingScheme cs_enc;
+		uint8_t *block_data;
+		gprs_rlc_data_block_info *rdbi;
+
+		/* Check if there are more blocks than BSNs */
+		if (data_block_idx < num_bsns)
+			bsn = bsns[data_block_idx];
+		else
+			bsn = bsns[0];
+
+		cs_enc = m_rlc.block(bsn)->cs;
+
+		/* get data and header from current block */
+		block_data = m_rlc.block(bsn)->block;
+
+		/* TODO: Use real puncturing values */
+		punct[data_block_idx] = data_block_idx;
+
+		rlc.block_info[data_block_idx] = m_rlc.block(index)->block_info;
+		rdbi = &rlc.block_info[data_block_idx];
+		is_final = is_final || rdbi->cv == 0;
+
+		Encoding::rlc_copy_from_aligned_buffer(&rlc, data_block_idx,
+			msg_data, block_data);
+	}
+
+	OSMO_ASSERT(ARRAY_SIZE(punct) >= 2);
+	rlc.cps = gprs_rlc_mcs_cps(cs, punct[0], punct[1], 0);
 
 	/* If the TBF has just started, relate frames_since_last_poll to the
 	 * current fn */
@@ -583,7 +629,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				"TS %d\n", ts);
 			m_tx_counter = 0;
 			/* start timer whenever we send the final block */
-			if (rdbi->cv == 0)
+			if (is_final)
 				tbf_timer_start(this, 3191, bts_data()->t3191, 0);
 
 			/* Clear poll timeout flag */
@@ -604,17 +650,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		}
 	}
 
-	msg_len = cs.sizeDL();
-
-	/* return data block as message */
-	dl_msg = msgb_alloc(msg_len, "rlcmac_dl_data");
-	if (!dl_msg)
-		return NULL;
-
-	msg_data = msgb_put(dl_msg, msg_len);
 	Encoding::rlc_write_dl_data_header(&rlc, msg_data);
-	Encoding::rlc_copy_from_aligned_buffer(&rlc, data_block_idx, msg_data,
-		block_data);
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "msg block (BSN %d, %s): %s\n",
 		index, cs.name(),
