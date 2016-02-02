@@ -109,6 +109,14 @@ static int config_write_pcu(struct vty *vty)
 		bts->cs_lqual_ranges[3].low,
 		VTY_NEWLINE);
 
+	if (bts->initial_mcs_dl != 1 && bts->initial_mcs_ul != 1) {
+		if (bts->initial_mcs_ul == bts->initial_mcs_dl)
+			vty_out(vty, " mcs %d%s", bts->initial_mcs_dl,
+				VTY_NEWLINE);
+		else
+			vty_out(vty, " mcs %d %d%s", bts->initial_mcs_dl,
+				bts->initial_mcs_ul, VTY_NEWLINE);
+	}
 	if (bts->max_mcs_dl && bts->max_mcs_ul) {
 		if (bts->max_mcs_ul == bts->max_mcs_dl)
 			vty_out(vty, " mcs max %d%s", bts->max_mcs_dl,
@@ -406,6 +414,38 @@ DEFUN(cfg_pcu_no_cs_max,
 }
 
 #define MCS_STR "Modulation and Coding Scheme configuration (EGPRS)\n"
+
+DEFUN(cfg_pcu_mcs,
+      cfg_pcu_mcs_cmd,
+      "mcs <1-9> [<1-9>]",
+      MCS_STR
+      "Initial MCS value to be used (default 1)\n"
+      "Use a different initial MCS value for the uplink")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	uint8_t cs = atoi(argv[0]);
+
+	bts->initial_mcs_dl = cs;
+	if (argc > 1)
+		bts->initial_mcs_ul = atoi(argv[1]);
+	else
+		bts->initial_mcs_ul = cs;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_mcs,
+      cfg_pcu_no_mcs_cmd,
+      "no mcs",
+      NO_STR MCS_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->initial_mcs_dl = 1;
+	bts->initial_mcs_ul = 1;
+
+	return CMD_SUCCESS;
+}
 
 DEFUN(cfg_pcu_mcs_max,
       cfg_pcu_mcs_max_cmd,
@@ -913,6 +953,8 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_cs_downgrade_thrsh_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_downgrade_thrsh_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_lqual_ranges_cmd);
+	install_element(PCU_NODE, &cfg_pcu_mcs_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_mcs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_mcs_max_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_mcs_max_cmd);
 	install_element(PCU_NODE, &cfg_pcu_window_size_cmd);
