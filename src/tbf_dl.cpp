@@ -326,65 +326,17 @@ drop_frame:
 	return msg;
 }
 
-/*
- * Create DL data block
- * The messages are fragmented and forwarded as data blocks.
- */
-struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
+bool gprs_rlcmac_dl_tbf::restart_bsn_cycle()
 {
-	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink (V(A)==%d .. "
-		"V(S)==%d)\n", tbf_name(this),
-		m_window.v_a(), m_window.v_s());
-
-do_resend:
-	/* check if there is a block with negative acknowledgement */
-	int resend_bsn = m_window.resend_needed();
-	if (resend_bsn >= 0) {
-		LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d\n", resend_bsn);
-		/* re-send block with negative aknowlegement */
-		m_window.m_v_b.mark_unacked(resend_bsn);
-		bts->rlc_resent();
-		return create_dl_acked_block(fn, ts, resend_bsn);
-	}
-
-	/* if the window has stalled, or transfer is complete,
-	 * send an unacknowledged block */
-	if (state_is(GPRS_RLCMAC_FINISHED)) {
-		LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
-			"because all blocks have been transmitted.\n",
-			m_window.v_a());
-		bts->rlc_restarted();
-	} else if (dl_window_stalled()) {
-		LOGP(DRLCMACDL, LOGL_NOTICE, "- Restarting at BSN %d, "
-			"because all window is stalled.\n",
-			m_window.v_a());
-		bts->rlc_stalled();
-	} else if (have_data()) {
-		/* New blocks may be send */
-		return create_new_bsn(fn, ts);
-	} else if (!m_window.window_empty()) {
-		LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
-			"because all blocks have been transmitted (FLOW).\n",
-			m_window.v_a());
-		bts->rlc_restarted();
-	} else {
-		/* Nothing left to send, create dummy LLC commands */
-		return create_new_bsn(fn, ts);
-	}
-
 	/* If V(S) == V(A) and finished state, we would have received
-	 * acknowledgement of all transmitted block. In this case we
-	 * would have transmitted the final block, and received ack
-	 * from MS. But in this case we did not receive the final ack
-	 * indication from MS. This should never happen if MS works
-	 * correctly. */
+	 * acknowledgement of all transmitted block.  In this case we would
+	 * have transmitted the final block, and received ack from MS. But in
+	 * this case we did not receive the final ack indication from MS.  This
+	 * should never happen if MS works correctly.
+	 */
 	if (m_window.window_empty()) {
-		LOGP(DRLCMACDL, LOGL_DEBUG, "- MS acked all blocks, "
-			"so we re-transmit final block!\n");
-		/* we just send final block again */
-		int16_t index = m_window.v_s_mod(-1);
-		bts->rlc_resent();
-		return create_dl_acked_block(fn, ts, index);
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- MS acked all blocks\n");
+		return false;
 	}
 
 	/* cycle through all unacked blocks */
@@ -396,11 +348,114 @@ do_resend:
 		LOGP(DRLCMACDL, LOGL_ERROR, "Software error: "
 			"There are no unacknowledged blocks, but V(A) "
 			" != V(S). PLEASE FIX!\n");
-		/* we just send final block again */
-		int16_t index = m_window.v_s_mod(-1);
-		return create_dl_acked_block(fn, ts, index);
+		return false;
 	}
-	goto do_resend;
+
+	return true;
+}
+
+int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
+	int previous_bsn, GprsCodingScheme *next_cs)
+{
+	int bsn;
+	GprsCodingScheme cs2;
+	GprsCodingScheme force_cs;
+
+	bsn = m_window.resend_needed();
+
+	if (previous_bsn >= 0) {
+		force_cs = m_rlc.block(previous_bsn)->cs;
+		if (!force_cs.isEgprs())
+			return -1;
+	}
+
+	if (bsn >= 0) {
+		if (previous_bsn == bsn)
+			return -1;
+
+		if (previous_bsn >= 0 &&
+			m_window.mod_sns(bsn - previous_bsn) > RLC_EGPRS_MAX_BSN_DELTA)
+			return -1;
+
+		cs2 = m_rlc.block(bsn)->cs;
+		if (force_cs && !cs2.isCombinable(force_cs))
+			return -1;
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d\n", bsn);
+		/* re-send block with negative aknowlegement */
+		m_window.m_v_b.mark_unacked(bsn);
+		bts->rlc_resent();
+	} else if (state_is(GPRS_RLCMAC_FINISHED)) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
+			"because all blocks have been transmitted.\n",
+			m_window.v_a());
+		bts->rlc_restarted();
+		if (restart_bsn_cycle())
+			return take_next_bsn(fn, previous_bsn, next_cs);
+	} else if (dl_window_stalled()) {
+		LOGP(DRLCMACDL, LOGL_NOTICE, "- Restarting at BSN %d, "
+			"because the window is stalled.\n",
+			m_window.v_a());
+		bts->rlc_stalled();
+		if (restart_bsn_cycle())
+			return take_next_bsn(fn, previous_bsn, next_cs);
+	} else if (have_data()) {
+		/* New blocks may be send */
+		cs2 = force_cs ? force_cs : current_cs();
+		LOGP(DRLCMACDL, LOGL_DEBUG,
+			"- Sending new block at BSN %d, CS=%s\n",
+			m_window.v_s(), cs2.name());
+
+		bsn = create_new_bsn(fn, cs2);
+	} else if (!m_window.window_empty()) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
+			"because all blocks have been transmitted (FLOW).\n",
+			m_window.v_a());
+		bts->rlc_restarted();
+		if (restart_bsn_cycle())
+			return take_next_bsn(fn, previous_bsn, next_cs);
+	} else {
+		/* Nothing left to send, create dummy LLC commands */
+		LOGP(DRLCMACDL, LOGL_DEBUG,
+			"- Sending new dummy block at BSN %d, CS=%s\n",
+			m_window.v_s(), current_cs().name());
+		bsn = create_new_bsn(fn, current_cs());
+		/* Don't send a second block */
+	}
+
+	if (bsn < 0) {
+		/* we just send final block again */
+		LOGP(DRLCMACDL, LOGL_DEBUG,
+			"- Nothing else to send, Re-transmit final block!\n");
+		bsn = m_window.v_s_mod(-1);
+		bts->rlc_resent();
+	}
+
+	*next_cs = cs2;
+
+	return bsn;
+}
+
+/*
+ * Create DL data block
+ * The messages are fragmented and forwarded as data blocks.
+ */
+struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
+{
+	int bsn, bsn2 = -1;
+	GprsCodingScheme cs, next_cs;
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink (V(A)==%d .. "
+		"V(S)==%d)\n", tbf_name(this),
+		m_window.v_a(), m_window.v_s());
+
+	bsn = take_next_bsn(fn, -1, &next_cs);
+	if (bsn < 0)
+		return NULL;
+
+	if (next_cs.numDataBlocks() > 1)
+		bsn2 = take_next_bsn(fn, bsn, &next_cs);
+
+	return create_dl_acked_block(fn, ts, bsn, bsn2);
 }
 
 void gprs_rlcmac_dl_tbf::schedule_next_frame()
@@ -425,12 +480,11 @@ void gprs_rlcmac_dl_tbf::schedule_next_frame()
 	m_last_dl_drained_fn = -1;
 }
 
-struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t ts)
+int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 {
 	uint8_t *data;
 	gprs_rlc_data *rlc_data;
 	const uint16_t bsn = m_window.v_s();
-	GprsCodingScheme cs = current_cs();
 	gprs_rlc_data_block_info *rdbi;
 	int num_chunks = 0;
 	int write_offset = 0;
@@ -438,9 +492,6 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 
 	if (m_llc.frame_length() == 0)
 		schedule_next_frame();
-
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- Sending new block at BSN %d, CS=%s\n",
-		m_window.v_s(), cs.name());
 
 	OSMO_ASSERT(cs.isValid());
 
@@ -514,7 +565,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, const uint8_t
 	m_window.m_v_b.mark_unacked(bsn);
 	m_window.increment_send();
 
-	return create_dl_acked_block(fn, ts, bsn);
+	return bsn;
 }
 
 struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(

@@ -31,6 +31,7 @@
 #define RLC_EGPRS_MIN_WS 64 /* min window size */
 #define RLC_EGPRS_MAX_WS 1024 /* min window size */
 #define RLC_EGPRS_SNS 2048 /* EGPRS, must be power of 2 */
+#define RLC_EGPRS_MAX_BSN_DELTA 512
 #define RLC_MAX_SNS  RLC_EGPRS_SNS
 #define RLC_MAX_WS   RLC_EGPRS_MAX_WS
 #define RLC_MAX_LEN 74 /* MCS-9 data unit */
