@@ -718,6 +718,7 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 	unsigned int e_fbi_header;
 	GprsCodingScheme cs = rlc->cs;
 	unsigned int offs;
+	unsigned int bsn_delta;
 
 	switch(cs.headerTypeData()) {
 	case GprsCodingScheme::HEADER_GPRS_DATA:
@@ -752,8 +753,11 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 		egprs1->bsn1_b = rlc->block_info[0].bsn >> 2; /* 8 bits */
 		egprs1->bsn1_c = rlc->block_info[0].bsn >> 10; /* 1 bit */
 
-		egprs1->bsn2_a = rlc->block_info[1].bsn >> 0; /* 7 bits LSB */
-		egprs1->bsn2_b = rlc->block_info[1].bsn >> 7; /* 3 bits */
+		bsn_delta = (rlc->block_info[1].bsn - rlc->block_info[0].bsn) &
+			(RLC_EGPRS_SNS - 1);
+
+		egprs1->bsn2_a = bsn_delta >> 0; /* 7 bits LSB */
+		egprs1->bsn2_b = bsn_delta >> 7; /* 3 bits */
 
 		/* first FBI/E header */
 		e_fbi_header   = rlc->block_info[0].e       ? 0x01 : 0;
