@@ -408,7 +408,7 @@ protected:
 
 	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
 	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
-					const int index);
+					int index, int index2 = -1);
 	int update_window(const uint8_t ssn, const uint8_t *rbb);
 	int update_window(unsigned first_bsn, const struct bitvec *rbb);
 	int maybe_start_new_window();
