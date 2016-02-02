@@ -711,10 +711,14 @@ unsigned Encoding::write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t
 int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 	uint8_t *data)
 {
+	struct gprs_rlc_dl_header_egprs_1 *egprs1;
+	struct gprs_rlc_dl_header_egprs_2 *egprs2;
 	struct gprs_rlc_dl_header_egprs_3 *egprs3;
 	struct rlc_dl_header *gprs;
 	unsigned int e_fbi_header;
 	GprsCodingScheme cs = rlc->cs;
+	unsigned int offs;
+	unsigned int bsn_delta;
 
 	switch(cs.headerTypeData()) {
 	case GprsCodingScheme::HEADER_GPRS_DATA:
@@ -731,6 +735,65 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 		gprs->fbi   = rlc->block_info[0].cv == 0;
 		gprs->e     = rlc->block_info[0].e;
 		gprs->bsn   = rlc->block_info[0].bsn;
+		break;
+
+	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1:
+		egprs1 = static_cast<struct gprs_rlc_dl_header_egprs_1 *>
+			((void *)data);
+
+		egprs1->usf    = rlc->usf;
+		egprs1->es_p   = rlc->es_p;
+		egprs1->rrbp   = rlc->rrbp;
+		egprs1->tfi_a  = rlc->tfi >> 0; /* 1 bit LSB */
+		egprs1->tfi_b  = rlc->tfi >> 1; /* 4 bits */
+		egprs1->pr     = rlc->pr;
+		egprs1->cps    = rlc->cps;
+
+		egprs1->bsn1_a = rlc->block_info[0].bsn >> 0; /* 2 bits LSB */
+		egprs1->bsn1_b = rlc->block_info[0].bsn >> 2; /* 8 bits */
+		egprs1->bsn1_c = rlc->block_info[0].bsn >> 10; /* 1 bit */
+
+		bsn_delta = (rlc->block_info[1].bsn - rlc->block_info[0].bsn) &
+			(RLC_EGPRS_SNS - 1);
+
+		egprs1->bsn2_a = bsn_delta >> 0; /* 7 bits LSB */
+		egprs1->bsn2_b = bsn_delta >> 7; /* 3 bits */
+
+		/* first FBI/E header */
+		e_fbi_header   = rlc->block_info[0].e       ? 0x01 : 0;
+		e_fbi_header  |= rlc->block_info[0].cv == 0 ? 0x02 : 0; /* FBI */
+		e_fbi_header <<= 0;
+		data[5] = (data[5] & 0b11111100) | e_fbi_header;
+
+		/* second FBI/E header */
+		e_fbi_header   = rlc->block_info[1].e       ? 0x01 : 0;
+		e_fbi_header  |= rlc->block_info[1].cv == 0 ? 0x02 : 0; /* FBI */
+		offs = rlc->data_offs_bits[1] / 8;
+		OSMO_ASSERT(rlc->data_offs_bits[1] % 8 == 4);
+		e_fbi_header <<= 2;
+		data[offs] = (data[offs] & 0b11110011) | e_fbi_header;
+		break;
+
+	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2:
+		egprs2 = static_cast<struct gprs_rlc_dl_header_egprs_2 *>
+			((void *)data);
+
+		egprs2->usf    = rlc->usf;
+		egprs2->es_p   = rlc->es_p;
+		egprs2->rrbp   = rlc->rrbp;
+		egprs2->tfi_a  = rlc->tfi >> 0; /* 1 bit LSB */
+		egprs2->tfi_b  = rlc->tfi >> 1; /* 4 bits */
+		egprs2->pr     = rlc->pr;
+		egprs2->cps    = rlc->cps;
+
+		egprs2->bsn1_a = rlc->block_info[0].bsn >> 0; /* 2 bits LSB */
+		egprs2->bsn1_b = rlc->block_info[0].bsn >> 2; /* 8 bits */
+		egprs2->bsn1_c = rlc->block_info[0].bsn >> 10; /* 1 bit */
+
+		e_fbi_header   = rlc->block_info[0].e       ? 0x01 : 0;
+		e_fbi_header  |= rlc->block_info[0].cv == 0 ? 0x02 : 0; /* FBI */
+		e_fbi_header <<= 4;
+		data[3] = (data[3] & 0b11001111) | e_fbi_header;
 		break;
 
 	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3:
@@ -758,10 +821,6 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 		data[4] = (data[4] & 0b11111110) | (e_fbi_header >> 8);
 		break;
 
-	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1:
-	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2:
-		/* TODO: Support both header types */
-		/* fall through */
 	default:
 		LOGP(DRLCMACDL, LOGL_ERROR,
 			"Encoding of uplink %s data blocks not yet supported.\n",

@@ -106,7 +106,8 @@ void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
 	GprsCodingScheme cs);
 void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
 	GprsCodingScheme cs);
-unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, int punct, int with_padding);
+unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, int punct, int punct2,
+	int with_padding);
 
 /*
  * I hold the currently transferred blocks and will provide
@@ -298,6 +299,35 @@ struct gprs_rlc_ul_header_egprs_3 {
 		pi:1,
 		spare:1,
 		dummy:1;
+} __attribute__ ((packed));
+
+struct gprs_rlc_dl_header_egprs_1 {
+	uint8_t usf:3,
+		es_p:2,
+		rrbp:2,
+		tfi_a:1;
+	uint8_t tfi_b:4,
+		pr:2,
+		bsn1_a:2;
+	uint8_t bsn1_b:8;
+	uint8_t bsn1_c:1,
+		bsn2_a:7;
+	uint8_t bsn2_b:3,
+		cps:5;
+} __attribute__ ((packed));
+
+struct gprs_rlc_dl_header_egprs_2 {
+	uint8_t usf:3,
+		es_p:2,
+		rrbp:2,
+		tfi_a:1;
+	uint8_t tfi_b:4,
+		pr:2,
+		bsn1_a:2;
+	uint8_t bsn1_b:8;
+	uint8_t bsn1_c:1,
+		cps:3,
+		dummy:4;
 } __attribute__ ((packed));
 
 struct gprs_rlc_dl_header_egprs_3 {
