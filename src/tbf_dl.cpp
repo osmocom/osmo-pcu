@@ -647,6 +647,9 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		rdbi = &rlc.block_info[data_block_idx];
 		is_final = is_final || rdbi->cv == 0;
 
+		LOGP(DRLCMACDL, LOGL_DEBUG, "- Copying data unit %d (BSN %d)\n",
+			data_block_idx, bsn);
+
 		Encoding::rlc_copy_from_aligned_buffer(&rlc, data_block_idx,
 			msg_data, block_data);
 	}
