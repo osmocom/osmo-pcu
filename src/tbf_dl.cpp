@@ -584,6 +584,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	int bsns[ARRAY_SIZE(rlc.block_info)];
 	unsigned num_bsns;
 	int punct[ARRAY_SIZE(rlc.block_info)];
+	bool need_padding = false;
 
 	/*
 	 * TODO: This is an experimental work-around to put 2 BSN into
@@ -602,7 +603,10 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		num_bsns += 1;
 	}
 
-	gprs_rlc_data_info_init_dl(&rlc, cs);
+	if (num_bsns == 1)
+		cs.decToSingleBlock(&need_padding);
+
+	gprs_rlc_data_info_init_dl(&rlc, cs, need_padding);
 
 	rlc.usf = 7; /* will be set at scheduler */
 	rlc.pr = 0; /* FIXME: power reduction */
@@ -648,7 +652,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	}
 
 	OSMO_ASSERT(ARRAY_SIZE(punct) >= 2);
-	rlc.cps = gprs_rlc_mcs_cps(cs, punct[0], punct[1], 0);
+	rlc.cps = gprs_rlc_mcs_cps(cs, punct[0], punct[1], need_padding);
 
 	/* If the TBF has just started, relate frames_since_last_poll to the
 	 * current fn */
