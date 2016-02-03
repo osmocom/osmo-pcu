@@ -94,6 +94,7 @@ public:
 	unsigned int numDataHeaderBitsUL() const;
 	unsigned int numDataHeaderBitsDL() const;
 	unsigned int numDataBlockHeaderBits() const;
+	unsigned int optionalPaddingBits() const;
 	const char *name() const;
 	HeaderType headerTypeData() const;
 	HeaderType headerTypeControl() const;

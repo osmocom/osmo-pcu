@@ -92,7 +92,8 @@ static void check_coding_scheme(GprsCodingScheme& cs, GprsCodingScheme::Mode mod
 	OSMO_ASSERT(cs.isFamilyCompatible(new_cs));
 	OSMO_ASSERT(cs.isCompatible(new_cs));
 	if (need_padding) {
-		OSMO_ASSERT(new_cs.maxDataBlockBytes() > cs.maxDataBlockBytes());
+		OSMO_ASSERT(new_cs.maxDataBlockBytes() ==
+			new_cs.optionalPaddingBits()/8 + cs.maxDataBlockBytes());
 	} else {
 		OSMO_ASSERT(new_cs.maxDataBlockBytes() == cs.maxDataBlockBytes());
 	}
