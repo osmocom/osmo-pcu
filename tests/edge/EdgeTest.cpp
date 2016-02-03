@@ -46,6 +46,7 @@ int16_t spoof_mnc = 0, spoof_mcc = 0;
 static void check_coding_scheme(GprsCodingScheme& cs, GprsCodingScheme::Mode mode)
 {
 	volatile unsigned expected_size;
+	bool need_padding;
 	GprsCodingScheme new_cs;
 
 	OSMO_ASSERT(cs.isValid());
@@ -84,6 +85,18 @@ static void check_coding_scheme(GprsCodingScheme& cs, GprsCodingScheme::Mode mod
 		OSMO_ASSERT(new_cs.isCompatible(mode));
 		OSMO_ASSERT(new_cs == cs);
 	}
+
+	new_cs = cs;
+	new_cs.decToSingleBlock(&need_padding);
+	OSMO_ASSERT(new_cs.isFamilyCompatible(cs));
+	OSMO_ASSERT(cs.isFamilyCompatible(new_cs));
+	OSMO_ASSERT(cs.isCompatible(new_cs));
+	if (need_padding) {
+		OSMO_ASSERT(new_cs.maxDataBlockBytes() > cs.maxDataBlockBytes());
+	} else {
+		OSMO_ASSERT(new_cs.maxDataBlockBytes() == cs.maxDataBlockBytes());
+	}
+
 }
 
 static void test_coding_scheme()
