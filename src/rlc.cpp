@@ -356,3 +356,32 @@ unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, int punct, int punct2,
 
 	return -1;
 }
+
+void gprs_rlc_mcs_cps_decode(unsigned int cps,
+	GprsCodingScheme cs, int *punct, int *punct2, int *with_padding)
+{
+	*punct2 = -1;
+	*with_padding = 0;
+
+	switch (GprsCodingScheme::Scheme(cs)) {
+	case GprsCodingScheme::MCS1:
+		cps -= 0b1011; *punct = cps % 2; break;
+	case GprsCodingScheme::MCS2:
+		cps -= 0b1001; *punct = cps % 2; break;
+	case GprsCodingScheme::MCS3:
+		cps -= 0b0011; *punct = cps % 3; *with_padding = cps >= 3; break;
+	case GprsCodingScheme::MCS4:
+		cps -= 0b0000; *punct = cps % 3; break;
+	case GprsCodingScheme::MCS5:
+		cps -= 0b100; *punct = cps % 2; break;
+	case GprsCodingScheme::MCS6:
+		cps -= 0b000; *punct = cps % 2; *with_padding = cps >= 2; break;
+	case GprsCodingScheme::MCS7:
+		cps -= 0b10100; *punct = cps / 3; *punct2 = cps % 3; break;
+	case GprsCodingScheme::MCS8:
+		cps -= 0b01011; *punct = cps / 3; *punct2 = cps % 3; break;
+	case GprsCodingScheme::MCS9:
+		cps -= 0b00000; *punct = cps / 4; *punct2 = cps % 3; break;
+	default: ;
+	}
+}
