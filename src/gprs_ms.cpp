@@ -706,7 +706,7 @@ GprsCodingScheme GprsMs::current_cs_dl() const
 
 	/* If the DL TBF is active, add number of unencoded chunk octets */
 	if (m_dl_tbf)
-		unencoded_octets = m_dl_tbf->m_llc.chunk_size();
+		unencoded_octets += m_dl_tbf->m_llc.chunk_size();
 
 	/* There are many unencoded octets, don't reduce */
 	if (unencoded_octets >= m_bts->bts_data()->cs_downgrade_threshold)
