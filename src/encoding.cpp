@@ -762,8 +762,10 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 		/* first FBI/E header */
 		e_fbi_header   = rlc->block_info[0].e       ? 0x01 : 0;
 		e_fbi_header  |= rlc->block_info[0].cv == 0 ? 0x02 : 0; /* FBI */
+		offs = rlc->data_offs_bits[0] / 8;
+		OSMO_ASSERT(rlc->data_offs_bits[0] % 8 == 2);
 		e_fbi_header <<= 0;
-		data[5] = (data[5] & 0b11111100) | e_fbi_header;
+		data[offs] = (data[offs] & 0b11111100) | e_fbi_header;
 
 		/* second FBI/E header */
 		e_fbi_header   = rlc->block_info[1].e       ? 0x01 : 0;
@@ -792,8 +794,10 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 
 		e_fbi_header   = rlc->block_info[0].e       ? 0x01 : 0;
 		e_fbi_header  |= rlc->block_info[0].cv == 0 ? 0x02 : 0; /* FBI */
+		offs = rlc->data_offs_bits[0] / 8;
+		OSMO_ASSERT(rlc->data_offs_bits[0] % 8 == 6);
 		e_fbi_header <<= 4;
-		data[3] = (data[3] & 0b11001111) | e_fbi_header;
+		data[offs] = (data[offs] & 0b11001111) | e_fbi_header;
 		break;
 
 	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3:
@@ -816,9 +820,11 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 
 		e_fbi_header   = rlc->block_info[0].e       ? 0x01 : 0;
 		e_fbi_header  |= rlc->block_info[0].cv == 0 ? 0x02 : 0; /* FBI */
+		offs = rlc->data_offs_bits[0] / 8;
+		OSMO_ASSERT(rlc->data_offs_bits[0] % 8 == 1);
 		e_fbi_header <<= 7;
-		data[3] = (data[3] & 0b01111111) | (e_fbi_header >> 0);
-		data[4] = (data[4] & 0b11111110) | (e_fbi_header >> 8);
+		data[offs-1] = (data[offs-1] & 0b01111111) | (e_fbi_header >> 0);
+		data[offs]   = (data[offs]   & 0b11111110) | (e_fbi_header >> 8);
 		break;
 
 	default:
