@@ -606,8 +606,10 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		num_bsns += 1;
 	}
 
+#if 0
 	if (num_bsns == 1)
 		cs.decToSingleBlock(&need_padding);
+#endif
 
 	gprs_rlc_data_info_init_dl(&rlc, cs, need_padding);
 
