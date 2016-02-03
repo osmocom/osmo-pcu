@@ -50,6 +50,13 @@ public:
 		NUM_HEADER_TYPES
 	};
 
+	enum Family {
+		FAMILY_INVALID,
+		FAMILY_A,
+		FAMILY_B,
+		FAMILY_C,
+	};
+
 	GprsCodingScheme(Scheme s = UNKNOWN);
 
 	operator bool() const {return m_scheme != UNKNOWN;}
@@ -65,11 +72,14 @@ public:
 	bool isEgprsGmsk()  const {return isEgprs() && m_scheme <= MCS4;}
 	bool isCompatible(Mode mode) const;
 	bool isCompatible(GprsCodingScheme o) const;
+	bool isFamilyCompatible(GprsCodingScheme o) const;
+	bool isCombinable(GprsCodingScheme o) const;
 
 	void inc(Mode mode);
 	void dec(Mode mode);
 	void inc();
 	void dec();
+	void decToSingleBlock(bool *needStuffing);
 
 	unsigned int sizeUL() const;
 	unsigned int sizeDL() const;
@@ -87,6 +97,7 @@ public:
 	const char *name() const;
 	HeaderType headerTypeData() const;
 	HeaderType headerTypeControl() const;
+	Family family() const;
 
 	static GprsCodingScheme getBySizeUL(unsigned size);
 	static GprsCodingScheme getGprsByNum(unsigned num);
