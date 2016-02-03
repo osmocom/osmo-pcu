@@ -712,8 +712,9 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 
 	Encoding::rlc_write_dl_data_header(&rlc, msg_data);
 
-	LOGP(DRLCMACDL, LOGL_DEBUG, "msg block (BSN %d, %s): %s\n",
+	LOGP(DRLCMACDL, LOGL_DEBUG, "msg block (BSN %d, %s%s): %s\n",
 		index, cs.name(),
+		with_padding ? ", padded" : "",
 		msgb_hexdump(dl_msg));
 
 	/* Increment TX-counter */
