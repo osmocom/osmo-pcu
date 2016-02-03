@@ -83,6 +83,7 @@ struct gprs_rlc_data_info {
 	unsigned int rrbp;
 	unsigned int pr;
 	unsigned int num_data_blocks;
+	unsigned int with_padding;
 	unsigned int data_offs_bits[2];
 	struct gprs_rlc_data_block_info block_info[2];
 };
@@ -101,11 +102,11 @@ struct gprs_rlc_data {
 };
 
 void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,
-	GprsCodingScheme cs);
+	GprsCodingScheme cs, bool with_padding);
 void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
-	GprsCodingScheme cs);
+	GprsCodingScheme cs, bool with_padding);
 void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
-	GprsCodingScheme cs);
+	GprsCodingScheme cs, bool with_padding);
 unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, int punct, int punct2,
 	int with_padding);
 

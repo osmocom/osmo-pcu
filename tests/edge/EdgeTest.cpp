@@ -515,7 +515,7 @@ static void test_rlc_unit_encoder()
 
 	/* TS 44.060, B.1 */
 	cs = GprsCodingScheme::CS4;
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -562,7 +562,7 @@ static void test_rlc_unit_encoder()
 	cs = GprsCodingScheme::CS1;
 
 	/* Block 1 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -582,7 +582,7 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(data[1] == 0);
 
 	/* Block 2 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -615,7 +615,7 @@ static void test_rlc_unit_encoder()
 	cs = GprsCodingScheme::CS1;
 
 	/* Block 1 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -650,7 +650,7 @@ static void test_rlc_unit_encoder()
 	cs = GprsCodingScheme::CS1;
 
 	/* Block 1 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -673,7 +673,7 @@ static void test_rlc_unit_encoder()
 	cs = GprsCodingScheme::CS1;
 
 	/* Block 1 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -696,7 +696,7 @@ static void test_rlc_unit_encoder()
 	cs = GprsCodingScheme::CS1;
 
 	/* Block 1 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -715,7 +715,7 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(data[0] == 0);
 
 	/* Block 2 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -748,7 +748,7 @@ static void test_rlc_unit_encoder()
 	cs = GprsCodingScheme::MCS4;
 
 	/* Block 1 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -800,7 +800,7 @@ static void test_rlc_unit_encoder()
 	cs = GprsCodingScheme::MCS2;
 
 	/* Block 1 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -832,7 +832,7 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(data[1] == 0);
 
 	/* Block 2 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -877,7 +877,7 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(data[3] == 0);
 
 	/* Block 3 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -917,7 +917,7 @@ static void test_rlc_unit_encoder()
 	cs = GprsCodingScheme::MCS2;
 
 	/* Block 1 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -941,7 +941,7 @@ static void test_rlc_unit_encoder()
 	cs = GprsCodingScheme::MCS2;
 
 	/* Block 1 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -966,7 +966,7 @@ static void test_rlc_unit_encoder()
 	cs = GprsCodingScheme::MCS2;
 
 	/* Block 1 */
-	gprs_rlc_data_block_info_init(&rdbi, cs);
+	gprs_rlc_data_block_info_init(&rdbi, cs, false);
 	num_chunks = 0;
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
@@ -1018,7 +1018,7 @@ static void test_rlc_unaligned_copy()
 				block_idx++)
 			{
 				struct gprs_rlc_data_info rlc;
-				gprs_rlc_data_info_init_dl(&rlc, cs);
+				gprs_rlc_data_info_init_dl(&rlc, cs, false);
 
 				memset(bits, pattern, sizeof(bits));
 				Decoding::rlc_copy_to_aligned_buffer(
@@ -1062,12 +1062,12 @@ static void test_rlc_info_init()
 	struct gprs_rlc_data_info rlc;
 
 	printf("=== start %s ===\n", __func__);
-	gprs_rlc_data_info_init_dl(&rlc, GprsCodingScheme(GprsCodingScheme::CS1));
+	gprs_rlc_data_info_init_dl(&rlc, GprsCodingScheme(GprsCodingScheme::CS1), false);
 	OSMO_ASSERT(rlc.num_data_blocks == 1);
 	OSMO_ASSERT(rlc.data_offs_bits[0] == 24);
 	OSMO_ASSERT(rlc.block_info[0].data_len == 20);
 
-	gprs_rlc_data_info_init_dl(&rlc, GprsCodingScheme(GprsCodingScheme::MCS1));
+	gprs_rlc_data_info_init_dl(&rlc, GprsCodingScheme(GprsCodingScheme::MCS1), false);
 	OSMO_ASSERT(rlc.num_data_blocks == 1);
 	OSMO_ASSERT(rlc.data_offs_bits[0] == 33);
 	OSMO_ASSERT(rlc.block_info[0].data_len == 22);
