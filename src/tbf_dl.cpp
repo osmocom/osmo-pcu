@@ -370,6 +370,9 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 	}
 
 	if (bsn >= 0) {
+		if (previous_bsn == bsn)
+			return -1;
+
 		if (previous_bsn >= 0 &&
 			m_window.mod_sns(bsn - previous_bsn) > RLC_EGPRS_MAX_BSN_DELTA)
 			return -1;
@@ -449,7 +452,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 	if (bsn < 0)
 		return NULL;
 
-	if (next_cs && next_cs.numDataBlocks() > 1)
+	if (next_cs.numDataBlocks() > 1)
 		bsn2 = take_next_bsn(fn, bsn, &next_cs);
 
 	return create_dl_acked_block(fn, ts, bsn, bsn2);
