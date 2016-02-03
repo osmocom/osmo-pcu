@@ -602,7 +602,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	num_bsns = 1;
 
 	if (index2 >= 0) {
-		bsns[num_bsns] = index;
+		bsns[num_bsns] = index2;
 		num_bsns += 1;
 	}
 
