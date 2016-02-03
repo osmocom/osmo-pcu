@@ -348,16 +348,16 @@ int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 	const struct rlc_ul_header *gprs;
 	unsigned int e_ti_header;
 	unsigned int cur_bit = 0;
-	unsigned int data_len = 0;
-
-	rlc->cs = cs;
-
-	data_len = cs.maxDataBlockBytes();
+	int punct, punct2, with_padding, cps;
+	unsigned int offs;
 
 	switch(cs.headerTypeData()) {
 	case GprsCodingScheme::HEADER_GPRS_DATA:
 		gprs = static_cast<struct rlc_ul_header *>
 			((void *)data);
+
+		gprs_rlc_data_info_init_ul(rlc, cs, false);
+
 		rlc->r      = gprs->r;
 		rlc->si     = gprs->si;
 		rlc->tfi    = gprs->tfi;
@@ -372,20 +372,23 @@ int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 		rlc->block_info[0].ti  = gprs->ti;
 		rlc->block_info[0].spb = 0;
 
-		cur_bit += 3 * 8;
+		cur_bit += rlc->data_offs_bits[0];
 
-		rlc->data_offs_bits[0] = cur_bit;
-		rlc->block_info[0].data_len = data_len;
-		cur_bit += data_len * 8;
-
+		/* skip data area */
+		cur_bit += cs.maxDataBlockBytes() * 8;
 		break;
 	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3:
 		egprs3 = static_cast<struct gprs_rlc_ul_header_egprs_3 *>
 			((void *)data);
+
+		cps    = (egprs3->cps_a << 0)  | (egprs3->cps_b << 2);
+		gprs_rlc_mcs_cps_decode(cps, cs, &punct, &punct2, &with_padding);
+		gprs_rlc_data_info_init_ul(rlc, cs, with_padding);
+
 		rlc->r      = egprs3->r;
 		rlc->si     = egprs3->si;
 		rlc->tfi    = (egprs3->tfi_a << 0)  | (egprs3->tfi_b << 2);
-		rlc->cps    = (egprs3->cps_a << 0)  | (egprs3->cps_b << 2);
+		rlc->cps    = cps;
 		rlc->rsb    = egprs3->rsb;
 
 		rlc->num_data_blocks = 1;
@@ -395,17 +398,18 @@ int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 		rlc->block_info[0].bsn =
 			(egprs3->bsn1_a << 0) | (egprs3->bsn1_b << 5);
 
-		cur_bit += 3 * 8 + 7;
+		cur_bit += rlc->data_offs_bits[0] - 2;
 
-		e_ti_header = (data[3] + (data[4] << 8)) >> 7;
+		offs = rlc->data_offs_bits[0] / 8;
+		OSMO_ASSERT(rlc->data_offs_bits[0] % 8 == 1);
+
+		e_ti_header = (data[offs-1] + (data[offs] << 8)) >> 7;
 		rlc->block_info[0].e   = !!(e_ti_header & 0x01);
 		rlc->block_info[0].ti  = !!(e_ti_header & 0x02);
 		cur_bit += 2;
 
-		rlc->data_offs_bits[0] = cur_bit;
-		rlc->block_info[0].data_len = data_len;
-		cur_bit += data_len * 8;
-
+		/* skip data area */
+		cur_bit += cs.maxDataBlockBytes() * 8;
 		break;
 
 	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1:
