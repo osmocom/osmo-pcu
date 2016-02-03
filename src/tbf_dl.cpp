@@ -648,8 +648,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		/* TODO: Use real puncturing values */
 		punct[data_block_idx] = data_block_idx;
 
-		rlc.block_info[data_block_idx] = m_rlc.block(index)->block_info;
 		rdbi = &rlc.block_info[data_block_idx];
+		*rdbi = m_rlc.block(bsn)->block_info;
 		is_final = is_final || rdbi->cv == 0;
 
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- Copying data unit %d (BSN %d)\n",
