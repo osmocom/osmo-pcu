@@ -609,10 +609,12 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		num_bsns += 1;
 	}
 
-#if 0
-	if (num_bsns == 1)
-		cs.decToSingleBlock(&need_padding);
-#endif
+	if (num_bsns == 1) {
+		/* TODO: remove the conditional when MCS-6 padding isn't
+		 * failing to be decoded by MEs anymore */
+		if (cs != GprsCodingScheme(GprsCodingScheme::MCS8))
+			cs.decToSingleBlock(&need_padding);
+	}
 
 	gprs_rlc_data_info_init_dl(&rlc, cs, need_padding);
 
