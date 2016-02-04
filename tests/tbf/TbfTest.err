@@ -3234,3 +3234,1734 @@ PDCH(TS 5, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0x00000000
 ********** TBF ends here **********
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+MS requests UL TBF on RACH, so we provide one:
+MS requests single block allocation
+RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
+TX: Immediate Assignment Uplink (AGCH)
+ - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+Got RLC block, coding scheme: CS-1, length: 23 (23))
++++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+------------------------- RX : Uplink Control Block -------------------------
+MS requests UL TBF in packet resource request of single block, so we provide one:
+MS supports EGPRS multislot class 1.
+********** TBF starts here **********
+Allocating UL TBF: MS_CLASS=1/1
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 1
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 4, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Assign uplink TS=7 TFI=0 USF=0
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+- Setting Control TS 7
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS): trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer 3169.
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+Modifying MS object, TLLI = 0xf1223344, TA 0 -> 7
+Change control TS to 7 until assinment is complete.
+max_cs_ul cannot be derived (current UL CS: UNKNOWN)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)s start Packet Uplink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS): Scheduling polling at FN 2654283 TS 7
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN EGPRS) Scheduled UL Assignment polling on FN=2654283, TS=7
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN EGPRS) (TRX=0, TS=7)
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 90 f0 0a 39 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
++++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+------------------------- RX : Uplink Control Block -------------------------
+RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN EGPRS) Packet Control Ack
+TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN EGPRS)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN EGPRS) changes state from WAIT ASSIGN to FLOW
+Got RLC block, coding scheme: CS-1, length: 23 (23))
+  UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
+UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
+max_cs_ul cannot be derived (current UL CS: UNKNOWN)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
+- BSN 0 storing in window (0..63)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+- Raising V(R) to 1
+- Taking block 0 out, raising V(Q) to 1
+- Assembling frames: (len=20)
+-- Frame 1 starts at offset 0, length=20, is_complete=0
+- No gaps in received block, last block: BSN=0 CV=15
+Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
+Got MS: TLLI = 0xf1223344, TA = 7
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=1/1
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 4, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Assign downlink TS=7 TFI=0
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+- Setting Control TS 7
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 80, dl_slots = 80
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI: 0xf1223344 confirmed
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) exists
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer 0.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) append
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+New and old TBF are the same TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=10)
+- Sending new block at BSN 0, CS=MCS-1
+-- Chunk with length 10 is less than remaining space (22): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=10
+-- Empty chunk, added LLC dummy command of size 10, drained_since=0
+-- Chunk with length 10 is less than remaining space (11): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=10
+data block (BSN 0, MCS-1): 14 15 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 0, MCS-1): 07 00 00 16 28 2a 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=4 block=1 data=07 00 00 16 28 2a 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=512)
+- Sending new block at BSN 1, CS=MCS-1
+-- Chunk with length 512 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 1, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 1, MCS-1): 07 40 00 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 40 00 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- Sending new block at BSN 2, CS=MCS-1
+-- Chunk with length 490 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 2, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 2, MCS-1): 07 80 00 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=13 block=3 data=07 80 00 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3)
+- Sending new block at BSN 3, CS=MCS-1
+-- Chunk with length 468 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 3, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 3, MCS-1): 07 c0 00 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=17 block=4 data=07 c0 00 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4)
+- Sending new block at BSN 4, CS=MCS-1
+-- Chunk with length 446 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 4, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 4, MCS-1): 07 00 01 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=21 block=5 data=07 00 01 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5)
+- Sending new block at BSN 5, CS=MCS-1
+-- Chunk with length 424 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 5, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 5, MCS-1): 07 40 01 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=26 block=6 data=07 40 01 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6)
+- Sending new block at BSN 6, CS=MCS-1
+-- Chunk with length 402 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 6, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 6, MCS-1): 07 80 01 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=30 block=7 data=07 80 01 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7)
+- Sending new block at BSN 7, CS=MCS-1
+-- Chunk with length 380 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 7, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 7, MCS-1): 07 c0 01 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=34 block=8 data=07 c0 01 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8)
+- Sending new block at BSN 8, CS=MCS-1
+-- Chunk with length 358 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 8, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 8, MCS-1): 07 00 02 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=39 block=9 data=07 00 02 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==9)
+- Sending new block at BSN 9, CS=MCS-1
+-- Chunk with length 336 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 9, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 9, MCS-1): 07 40 02 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=43 block=10 data=07 40 02 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==10)
+- Sending new block at BSN 10, CS=MCS-1
+-- Chunk with length 314 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 10, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 10, MCS-1): 07 80 02 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=47 block=11 data=07 80 02 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==11)
+- Sending new block at BSN 11, CS=MCS-1
+-- Chunk with length 292 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 11, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 11, MCS-1): 07 c0 02 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=52 block=0 data=07 c0 02 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==12)
+- Sending new block at BSN 12, CS=MCS-1
+-- Chunk with length 270 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 12, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 12, MCS-1): 07 00 03 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=56 block=1 data=07 00 03 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==13)
+- Sending new block at BSN 13, CS=MCS-1
+-- Chunk with length 248 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 13, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 13, MCS-1): 07 40 03 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=60 block=2 data=07 40 03 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==14)
+- Sending new block at BSN 14, CS=MCS-1
+-- Chunk with length 226 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 14, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 14, MCS-1): 07 80 03 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=65 block=3 data=07 80 03 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==15)
+- Sending new block at BSN 15, CS=MCS-1
+-- Chunk with length 204 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 15, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 15, MCS-1): 07 c0 03 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=69 block=4 data=07 c0 03 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==16)
+- Sending new block at BSN 16, CS=MCS-1
+-- Chunk with length 182 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 16, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 16, MCS-1): 07 00 04 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=73 block=5 data=07 00 04 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==17)
+- Sending new block at BSN 17, CS=MCS-1
+-- Chunk with length 160 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 17, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 17, MCS-1): 07 40 04 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=78 block=6 data=07 40 04 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==18)
+- Sending new block at BSN 18, CS=MCS-1
+-- Chunk with length 138 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 18, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 18, MCS-1): 07 80 04 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=82 block=7 data=07 80 04 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==19)
+- Sending new block at BSN 19, CS=MCS-1
+-- Chunk with length 116 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 19, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 19, MCS-1): 07 c0 04 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=86 block=8 data=07 c0 04 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==20)
+- Sending new block at BSN 20, CS=MCS-1
+-- Chunk with length 94 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 20, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 20, MCS-1): 07 00 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=91 block=9 data=07 00 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==21)
+- Sending new block at BSN 21, CS=MCS-1
+-- Chunk with length 72 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 21, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 21, MCS-1): 07 40 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=95 block=10 data=07 40 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==22)
+- Sending new block at BSN 22, CS=MCS-1
+-- Chunk with length 50 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 22, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 22, MCS-1): 07 80 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=99 block=11 data=07 80 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==23)
+- Sending new block at BSN 23, CS=MCS-1
+-- Chunk with length 28 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 23, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 23, MCS-1): 07 c0 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=104 block=0 data=07 c0 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==24)
+- Sending new block at BSN 24, CS=MCS-1
+-- Chunk with length 6 is less than remaining space (22): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=512
+-- Empty chunk, added LLC dummy command of size 14, drained_since=0
+-- Chunk with length 14 is less than remaining space (15): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=14
+data block (BSN 24, MCS-1): 0c 1d 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 24, MCS-1): 07 00 06 16 18 3a 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=108 block=1 data=07 00 06 16 18 3a 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+New and old TBF are the same TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=10)
+- Sending new block at BSN 0, CS=MCS-2
+-- Chunk with length 10 is less than remaining space (28): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=10
+-- Empty chunk, added LLC dummy command of size 16, drained_since=0
+-- Chunk with length 16 is less than remaining space (17): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=16
+data block (BSN 0, MCS-2): 14 21 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 0, MCS-2): 07 00 00 12 28 42 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=4 block=1 data=07 00 00 12 28 42 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=512)
+- Sending new block at BSN 1, CS=MCS-2
+-- Chunk with length 512 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 1, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 1, MCS-2): 07 40 00 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 40 00 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- Sending new block at BSN 2, CS=MCS-2
+-- Chunk with length 484 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 2, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 2, MCS-2): 07 80 00 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=13 block=3 data=07 80 00 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3)
+- Sending new block at BSN 3, CS=MCS-2
+-- Chunk with length 456 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 3, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 3, MCS-2): 07 c0 00 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=17 block=4 data=07 c0 00 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4)
+- Sending new block at BSN 4, CS=MCS-2
+-- Chunk with length 428 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 4, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 4, MCS-2): 07 00 01 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=21 block=5 data=07 00 01 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5)
+- Sending new block at BSN 5, CS=MCS-2
+-- Chunk with length 400 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 5, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 5, MCS-2): 07 40 01 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=26 block=6 data=07 40 01 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6)
+- Sending new block at BSN 6, CS=MCS-2
+-- Chunk with length 372 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 6, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 6, MCS-2): 07 80 01 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=30 block=7 data=07 80 01 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7)
+- Sending new block at BSN 7, CS=MCS-2
+-- Chunk with length 344 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 7, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 7, MCS-2): 07 c0 01 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=34 block=8 data=07 c0 01 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8)
+- Sending new block at BSN 8, CS=MCS-2
+-- Chunk with length 316 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 8, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 8, MCS-2): 07 00 02 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=39 block=9 data=07 00 02 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==9)
+- Sending new block at BSN 9, CS=MCS-2
+-- Chunk with length 288 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 9, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 9, MCS-2): 07 40 02 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=43 block=10 data=07 40 02 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==10)
+- Sending new block at BSN 10, CS=MCS-2
+-- Chunk with length 260 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 10, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 10, MCS-2): 07 80 02 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=47 block=11 data=07 80 02 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==11)
+- Sending new block at BSN 11, CS=MCS-2
+-- Chunk with length 232 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 11, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 11, MCS-2): 07 c0 02 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=52 block=0 data=07 c0 02 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==12)
+- Sending new block at BSN 12, CS=MCS-2
+-- Chunk with length 204 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 12, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 12, MCS-2): 07 00 03 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=56 block=1 data=07 00 03 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==13)
+- Sending new block at BSN 13, CS=MCS-2
+-- Chunk with length 176 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 13, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 13, MCS-2): 07 40 03 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=60 block=2 data=07 40 03 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==14)
+- Sending new block at BSN 14, CS=MCS-2
+-- Chunk with length 148 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 14, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 14, MCS-2): 07 80 03 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=65 block=3 data=07 80 03 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==15)
+- Sending new block at BSN 15, CS=MCS-2
+-- Chunk with length 120 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 15, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 15, MCS-2): 07 c0 03 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=69 block=4 data=07 c0 03 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==16)
+- Sending new block at BSN 16, CS=MCS-2
+-- Chunk with length 92 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 16, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 16, MCS-2): 07 00 04 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=73 block=5 data=07 00 04 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==17)
+- Sending new block at BSN 17, CS=MCS-2
+-- Chunk with length 64 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 17, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 17, MCS-2): 07 40 04 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=78 block=6 data=07 40 04 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==18)
+- Sending new block at BSN 18, CS=MCS-2
+-- Chunk with length 36 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 18, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 18, MCS-2): 07 80 04 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=82 block=7 data=07 80 04 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==19)
+- Sending new block at BSN 19, CS=MCS-2
+-- Chunk with length 8 is less than remaining space (28): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=512
+-- Empty chunk, added LLC dummy command of size 18, drained_since=0
+-- Chunk with length 18 is less than remaining space (19): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=18
+data block (BSN 19, MCS-2): 10 25 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 19, MCS-2): 07 c0 04 12 20 4a 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=86 block=8 data=07 c0 04 12 20 4a 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+New and old TBF are the same TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=10)
+- Sending new block at BSN 0, CS=MCS-3
+-- Chunk with length 10 is less than remaining space (37): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=10
+-- Empty chunk, added LLC dummy command of size 25, drained_since=0
+-- Chunk with length 25 is less than remaining space (26): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=25
+data block (BSN 0, MCS-3): 14 33 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 0, MCS-3): 07 00 00 06 28 66 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=4 block=1 data=07 00 00 06 28 66 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=512)
+- Sending new block at BSN 1, CS=MCS-3
+-- Chunk with length 512 larger than space (37) left in block: copy only remaining space, and we are done
+data block (BSN 1, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 1, MCS-3): 07 40 00 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 40 00 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- Sending new block at BSN 2, CS=MCS-3
+-- Chunk with length 475 larger than space (37) left in block: copy only remaining space, and we are done
+data block (BSN 2, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 2, MCS-3): 07 80 00 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=13 block=3 data=07 80 00 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3)
+- Sending new block at BSN 3, CS=MCS-3
+-- Chunk with length 438 larger than space (37) left in block: copy only remaining space, and we are done
+data block (BSN 3, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 3, MCS-3): 07 c0 00 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=17 block=4 data=07 c0 00 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4)
+- Sending new block at BSN 4, CS=MCS-3
+-- Chunk with length 401 larger than space (37) left in block: copy only remaining space, and we are done
+data block (BSN 4, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 4, MCS-3): 07 00 01 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=21 block=5 data=07 00 01 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5)
+- Sending new block at BSN 5, CS=MCS-3
+-- Chunk with length 364 larger than space (37) left in block: copy only remaining space, and we are done
+data block (BSN 5, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 5, MCS-3): 07 40 01 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=26 block=6 data=07 40 01 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6)
+- Sending new block at BSN 6, CS=MCS-3
+-- Chunk with length 327 larger than space (37) left in block: copy only remaining space, and we are done
+data block (BSN 6, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 6, MCS-3): 07 80 01 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=30 block=7 data=07 80 01 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7)
+- Sending new block at BSN 7, CS=MCS-3
+-- Chunk with length 290 larger than space (37) left in block: copy only remaining space, and we are done
+data block (BSN 7, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 7, MCS-3): 07 c0 01 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=34 block=8 data=07 c0 01 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8)
+- Sending new block at BSN 8, CS=MCS-3
+-- Chunk with length 253 larger than space (37) left in block: copy only remaining space, and we are done
+data block (BSN 8, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 8, MCS-3): 07 00 02 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=39 block=9 data=07 00 02 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==9)
+- Sending new block at BSN 9, CS=MCS-3
+-- Chunk with length 216 larger than space (37) left in block: copy only remaining space, and we are done
+data block (BSN 9, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 9, MCS-3): 07 40 02 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=43 block=10 data=07 40 02 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==10)
+- Sending new block at BSN 10, CS=MCS-3
+-- Chunk with length 179 larger than space (37) left in block: copy only remaining space, and we are done
+data block (BSN 10, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 10, MCS-3): 07 80 02 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=47 block=11 data=07 80 02 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==11)
+- Sending new block at BSN 11, CS=MCS-3
+-- Chunk with length 142 larger than space (37) left in block: copy only remaining space, and we are done
+data block (BSN 11, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 11, MCS-3): 07 c0 02 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=52 block=0 data=07 c0 02 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==12)
+- Sending new block at BSN 12, CS=MCS-3
+-- Chunk with length 105 larger than space (37) left in block: copy only remaining space, and we are done
+data block (BSN 12, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 12, MCS-3): 07 00 03 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=56 block=1 data=07 00 03 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==13)
+- Sending new block at BSN 13, CS=MCS-3
+-- Chunk with length 68 larger than space (37) left in block: copy only remaining space, and we are done
+data block (BSN 13, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 13, MCS-3): 07 40 03 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=60 block=2 data=07 40 03 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==14)
+- Sending new block at BSN 14, CS=MCS-3
+-- Chunk with length 31 is less than remaining space (37): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=512
+-- Empty chunk, added LLC dummy command of size 6, drained_since=0
+-- Chunk with length 6 larger than space (5) left in block: copy only remaining space, and we are done
+data block (BSN 14, MCS-3): 3f 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 14, MCS-3): 07 80 03 06 7e 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=65 block=3 data=07 80 03 06 7e 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==15)
+- Sending new block at BSN 15, CS=MCS-3
+-- Chunk with length 1 is less than remaining space (37): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=6
+-- Empty chunk, added LLC dummy command of size 34, drained_since=4
+-- Chunk with length 34 is less than remaining space (35): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=34
+data block (BSN 15, MCS-3): 02 45 2b 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 15, MCS-3): 07 c0 03 06 04 8a 56 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=69 block=4 data=07 c0 03 06 04 8a 56 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+New and old TBF are the same TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=10)
+- Sending new block at BSN 0, CS=MCS-4
+-- Chunk with length 10 is less than remaining space (44): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=10
+-- Empty chunk, added LLC dummy command of size 32, drained_since=0
+-- Chunk with length 32 is less than remaining space (33): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=32
+data block (BSN 0, MCS-4): 14 41 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 0, MCS-4): 07 00 00 00 28 82 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=4 block=1 data=07 00 00 00 28 82 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=512)
+- Sending new block at BSN 1, CS=MCS-4
+-- Chunk with length 512 larger than space (44) left in block: copy only remaining space, and we are done
+data block (BSN 1, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 1, MCS-4): 07 40 00 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 40 00 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- Sending new block at BSN 2, CS=MCS-4
+-- Chunk with length 468 larger than space (44) left in block: copy only remaining space, and we are done
+data block (BSN 2, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 2, MCS-4): 07 80 00 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=13 block=3 data=07 80 00 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3)
+- Sending new block at BSN 3, CS=MCS-4
+-- Chunk with length 424 larger than space (44) left in block: copy only remaining space, and we are done
+data block (BSN 3, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 3, MCS-4): 07 c0 00 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=17 block=4 data=07 c0 00 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4)
+- Sending new block at BSN 4, CS=MCS-4
+-- Chunk with length 380 larger than space (44) left in block: copy only remaining space, and we are done
+data block (BSN 4, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 4, MCS-4): 07 00 01 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=21 block=5 data=07 00 01 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5)
+- Sending new block at BSN 5, CS=MCS-4
+-- Chunk with length 336 larger than space (44) left in block: copy only remaining space, and we are done
+data block (BSN 5, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 5, MCS-4): 07 40 01 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=26 block=6 data=07 40 01 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6)
+- Sending new block at BSN 6, CS=MCS-4
+-- Chunk with length 292 larger than space (44) left in block: copy only remaining space, and we are done
+data block (BSN 6, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 6, MCS-4): 07 80 01 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=30 block=7 data=07 80 01 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7)
+- Sending new block at BSN 7, CS=MCS-4
+-- Chunk with length 248 larger than space (44) left in block: copy only remaining space, and we are done
+data block (BSN 7, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 7, MCS-4): 07 c0 01 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=34 block=8 data=07 c0 01 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8)
+- Sending new block at BSN 8, CS=MCS-4
+-- Chunk with length 204 larger than space (44) left in block: copy only remaining space, and we are done
+data block (BSN 8, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 8, MCS-4): 07 00 02 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=39 block=9 data=07 00 02 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==9)
+- Sending new block at BSN 9, CS=MCS-4
+-- Chunk with length 160 larger than space (44) left in block: copy only remaining space, and we are done
+data block (BSN 9, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 9, MCS-4): 07 40 02 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=43 block=10 data=07 40 02 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==10)
+- Sending new block at BSN 10, CS=MCS-4
+-- Chunk with length 116 larger than space (44) left in block: copy only remaining space, and we are done
+data block (BSN 10, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 10, MCS-4): 07 80 02 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=47 block=11 data=07 80 02 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==11)
+- Sending new block at BSN 11, CS=MCS-4
+-- Chunk with length 72 larger than space (44) left in block: copy only remaining space, and we are done
+data block (BSN 11, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 11, MCS-4): 07 c0 02 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=52 block=0 data=07 c0 02 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==12)
+- Sending new block at BSN 12, CS=MCS-4
+-- Chunk with length 28 is less than remaining space (44): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=512
+-- Empty chunk, added LLC dummy command of size 14, drained_since=0
+-- Chunk with length 14 is less than remaining space (15): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=14
+data block (BSN 12, MCS-4): 38 1d 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 12, MCS-4): 07 00 03 00 70 3a 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=56 block=1 data=07 00 03 00 70 3a 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+New and old TBF are the same TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=10)
+- Sending new block at BSN 0, CS=MCS-5
+-- Chunk with length 10 is less than remaining space (56): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=10
+-- Empty chunk, added LLC dummy command of size 44, drained_since=0
+-- Chunk with length 44 is less than remaining space (45): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=44
+data block (BSN 0, MCS-5): 14 59 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 0, MCS-5): 07 00 00 08 45 56 40 40 40 40 40 40 40 40 40 c0 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=4 block=1 data=07 00 00 08 45 56 40 40 40 40 40 40 40 40 40 c0 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=512)
+- Sending new block at BSN 1, CS=MCS-5
+-- Chunk with length 512 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 1, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 1, MCS-5): 07 40 00 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 40 00 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- Sending new block at BSN 2, CS=MCS-5
+-- Chunk with length 456 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 2, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 2, MCS-5): 07 80 00 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=13 block=3 data=07 80 00 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3)
+- Sending new block at BSN 3, CS=MCS-5
+-- Chunk with length 400 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 3, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 3, MCS-5): 07 c0 00 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=17 block=4 data=07 c0 00 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4)
+- Sending new block at BSN 4, CS=MCS-5
+-- Chunk with length 344 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 4, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 4, MCS-5): 07 00 01 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=21 block=5 data=07 00 01 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5)
+- Sending new block at BSN 5, CS=MCS-5
+-- Chunk with length 288 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 5, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 5, MCS-5): 07 40 01 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=26 block=6 data=07 40 01 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6)
+- Sending new block at BSN 6, CS=MCS-5
+-- Chunk with length 232 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 6, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 6, MCS-5): 07 80 01 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=30 block=7 data=07 80 01 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7)
+- Sending new block at BSN 7, CS=MCS-5
+-- Chunk with length 176 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 7, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 7, MCS-5): 07 c0 01 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=34 block=8 data=07 c0 01 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8)
+- Sending new block at BSN 8, CS=MCS-5
+-- Chunk with length 120 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 8, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 8, MCS-5): 07 00 02 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=39 block=9 data=07 00 02 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==9)
+- Sending new block at BSN 9, CS=MCS-5
+-- Chunk with length 64 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 9, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 9, MCS-5): 07 40 02 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=43 block=10 data=07 40 02 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==10)
+- Sending new block at BSN 10, CS=MCS-5
+-- Chunk with length 8 is less than remaining space (56): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=512
+-- Empty chunk, added LLC dummy command of size 46, drained_since=0
+-- Chunk with length 46 is less than remaining space (47): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=46
+data block (BSN 10, MCS-5): 10 5d 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 10, MCS-5): 07 80 02 08 44 57 40 40 40 40 40 40 40 c0 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=47 block=11 data=07 80 02 08 44 57 40 40 40 40 40 40 40 c0 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+New and old TBF are the same TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=10)
+- Sending new block at BSN 0, CS=MCS-6
+-- Chunk with length 10 is less than remaining space (74): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=10
+-- Empty chunk, added LLC dummy command of size 62, drained_since=0
+-- Chunk with length 62 is less than remaining space (63): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=62
+data block (BSN 0, MCS-6): 14 7d 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 0, MCS-6): 07 00 00 00 45 5f 40 40 40 40 40 40 40 40 40 c0 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=4 block=1 data=07 00 00 00 45 5f 40 40 40 40 40 40 40 40 40 c0 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=512)
+- Sending new block at BSN 1, CS=MCS-6
+-- Chunk with length 512 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 1, MCS-6): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 1, MCS-6): 07 40 00 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 40 00 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- Sending new block at BSN 2, CS=MCS-6
+-- Chunk with length 438 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 2, MCS-6): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 2, MCS-6): 07 80 00 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=13 block=3 data=07 80 00 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3)
+- Sending new block at BSN 3, CS=MCS-6
+-- Chunk with length 364 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 3, MCS-6): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 3, MCS-6): 07 c0 00 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=17 block=4 data=07 c0 00 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4)
+- Sending new block at BSN 4, CS=MCS-6
+-- Chunk with length 290 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 4, MCS-6): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 4, MCS-6): 07 00 01 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=21 block=5 data=07 00 01 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5)
+- Sending new block at BSN 5, CS=MCS-6
+-- Chunk with length 216 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 5, MCS-6): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 5, MCS-6): 07 40 01 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=26 block=6 data=07 40 01 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6)
+- Sending new block at BSN 6, CS=MCS-6
+-- Chunk with length 142 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 6, MCS-6): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 6, MCS-6): 07 80 01 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=30 block=7 data=07 80 01 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7)
+- Sending new block at BSN 7, CS=MCS-6
+-- Chunk with length 68 is less than remaining space (74): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=512
+-- Empty chunk, added LLC dummy command of size 6, drained_since=0
+-- Chunk with length 6 larger than space (5) left in block: copy only remaining space, and we are done
+data block (BSN 7, MCS-6): 89 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 7, MCS-6): 07 c0 01 40 62 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 c0 10 70 c0 ca 0a 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=34 block=8 data=07 c0 01 40 62 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 c0 10 70 c0 ca 0a 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8)
+- Sending new block at BSN 8, CS=MCS-6
+-- Chunk with length 1 is less than remaining space (74): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=6
+-- Empty chunk, added LLC dummy command of size 71, drained_since=5
+-- Chunk with length 71 is less than remaining space (72): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=71
+data block (BSN 8, MCS-6): 02 8f 2b 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 8, MCS-6): 07 00 02 80 c0 e3 ca 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=39 block=9 data=07 00 02 80 c0 e3 ca 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+New and old TBF are the same TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=10)
+- Sending new block at BSN 0, CS=MCS-7
+-- Chunk with length 10 is less than remaining space (56): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=10
+-- Empty chunk, added LLC dummy command of size 44, drained_since=0
+-- Chunk with length 44 is less than remaining space (45): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=44
+data block (BSN 0, MCS-7): 14 59 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 0, MCS-7): 07 00 00 00 a0 50 64 05 04 04 04 04 04 04 04 04 04 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=4 block=1 data=07 00 00 00 a0 50 64 05 04 04 04 04 04 04 04 04 04 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=512)
+- Sending new block at BSN 1, CS=MCS-7
+-- Chunk with length 512 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 1, MCS-7): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 1, MCS-7): 07 40 00 fe a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 40 00 fe a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- Sending new block at BSN 2, CS=MCS-7
+-- Chunk with length 456 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 2, MCS-7): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 2, MCS-7): 07 80 00 fc a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=13 block=3 data=07 80 00 fc a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3)
+- Sending new block at BSN 3, CS=MCS-7
+-- Chunk with length 400 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 3, MCS-7): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 3, MCS-7): 07 c0 00 fa a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=17 block=4 data=07 c0 00 fa a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4)
+- Sending new block at BSN 4, CS=MCS-7
+-- Chunk with length 344 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 4, MCS-7): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 4, MCS-7): 07 00 01 f8 a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=21 block=5 data=07 00 01 f8 a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5)
+- Sending new block at BSN 5, CS=MCS-7
+-- Chunk with length 288 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 5, MCS-7): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 5, MCS-7): 07 40 01 f6 a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=26 block=6 data=07 40 01 f6 a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6)
+- Sending new block at BSN 6, CS=MCS-7
+-- Chunk with length 232 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 6, MCS-7): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 6, MCS-7): 07 80 01 f4 a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=30 block=7 data=07 80 01 f4 a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7)
+- Sending new block at BSN 7, CS=MCS-7
+-- Chunk with length 176 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 7, MCS-7): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 7, MCS-7): 07 c0 01 f2 a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=34 block=8 data=07 c0 01 f2 a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8)
+- Sending new block at BSN 8, CS=MCS-7
+-- Chunk with length 120 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 8, MCS-7): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 8, MCS-7): 07 00 02 f0 a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=39 block=9 data=07 00 02 f0 a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==9)
+- Sending new block at BSN 9, CS=MCS-7
+-- Chunk with length 64 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 9, MCS-7): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 9, MCS-7): 07 40 02 ee a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=43 block=10 data=07 40 02 ee a7 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==10)
+- Sending new block at BSN 10, CS=MCS-7
+-- Chunk with length 8 is less than remaining space (56): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=512
+-- Empty chunk, added LLC dummy command of size 46, drained_since=0
+-- Chunk with length 46 is less than remaining space (47): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=46
+data block (BSN 10, MCS-7): 10 5d 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 10, MCS-7): 07 80 02 ec a7 40 74 05 04 04 04 04 04 04 04 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=47 block=11 data=07 80 02 ec a7 40 74 05 04 04 04 04 04 04 04 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+New and old TBF are the same TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=10)
+- Sending new block at BSN 0, CS=MCS-8
+-- Chunk with length 10 is less than remaining space (68): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=10
+-- Empty chunk, added LLC dummy command of size 56, drained_since=0
+-- Chunk with length 56 is less than remaining space (57): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=56
+data block (BSN 0, MCS-8): 14 71 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 0, MCS-8): 07 00 00 00 58 50 c4 05 04 04 04 04 04 04 04 04 04 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=4 block=1 data=07 00 00 00 58 50 c4 05 04 04 04 04 04 04 04 04 04 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=512)
+- Sending new block at BSN 1, CS=MCS-8
+-- Chunk with length 512 larger than space (68) left in block: copy only remaining space, and we are done
+data block (BSN 1, MCS-8): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 1, MCS-8): 07 40 00 fe 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 40 00 fe 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- Sending new block at BSN 2, CS=MCS-8
+-- Chunk with length 444 larger than space (68) left in block: copy only remaining space, and we are done
+data block (BSN 2, MCS-8): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 2, MCS-8): 07 80 00 fc 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=13 block=3 data=07 80 00 fc 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3)
+- Sending new block at BSN 3, CS=MCS-8
+-- Chunk with length 376 larger than space (68) left in block: copy only remaining space, and we are done
+data block (BSN 3, MCS-8): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 3, MCS-8): 07 c0 00 fa 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=17 block=4 data=07 c0 00 fa 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4)
+- Sending new block at BSN 4, CS=MCS-8
+-- Chunk with length 308 larger than space (68) left in block: copy only remaining space, and we are done
+data block (BSN 4, MCS-8): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 4, MCS-8): 07 00 01 f8 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=21 block=5 data=07 00 01 f8 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5)
+- Sending new block at BSN 5, CS=MCS-8
+-- Chunk with length 240 larger than space (68) left in block: copy only remaining space, and we are done
+data block (BSN 5, MCS-8): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 5, MCS-8): 07 40 01 f6 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=26 block=6 data=07 40 01 f6 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6)
+- Sending new block at BSN 6, CS=MCS-8
+-- Chunk with length 172 larger than space (68) left in block: copy only remaining space, and we are done
+data block (BSN 6, MCS-8): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 6, MCS-8): 07 80 01 f4 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=30 block=7 data=07 80 01 f4 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7)
+- Sending new block at BSN 7, CS=MCS-8
+-- Chunk with length 104 larger than space (68) left in block: copy only remaining space, and we are done
+data block (BSN 7, MCS-8): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 7, MCS-8): 07 c0 01 f2 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=34 block=8 data=07 c0 01 f2 5f 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8)
+- Sending new block at BSN 8, CS=MCS-8
+-- Chunk with length 36 is less than remaining space (68): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=512
+-- Empty chunk, added LLC dummy command of size 30, drained_since=0
+-- Chunk with length 30 is less than remaining space (31): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=30
+data block (BSN 8, MCS-8): 48 3d 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 8, MCS-8): 07 00 02 f0 5f 20 f5 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=39 block=9 data=07 00 02 f0 5f 20 f5 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+New and old TBF are the same TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=10)
+- Sending new block at BSN 0, CS=MCS-9
+-- Chunk with length 10 is less than remaining space (74): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=10
+-- Empty chunk, added LLC dummy command of size 62, drained_since=0
+-- Chunk with length 62 is less than remaining space (63): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=62
+data block (BSN 0, MCS-9): 14 7d 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 0, MCS-9): 07 00 00 00 00 50 f4 05 04 04 04 04 04 04 04 04 04 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=4 block=1 data=07 00 00 00 00 50 f4 05 04 04 04 04 04 04 04 04 04 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=512)
+- Sending new block at BSN 1, CS=MCS-9
+-- Chunk with length 512 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 1, MCS-9): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 1, MCS-9): 07 40 00 fe 07 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 40 00 fe 07 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- Sending new block at BSN 2, CS=MCS-9
+-- Chunk with length 438 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 2, MCS-9): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 2, MCS-9): 07 80 00 fc 07 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=13 block=3 data=07 80 00 fc 07 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3)
+- Sending new block at BSN 3, CS=MCS-9
+-- Chunk with length 364 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 3, MCS-9): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 3, MCS-9): 07 c0 00 fa 07 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=17 block=4 data=07 c0 00 fa 07 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4)
+- Sending new block at BSN 4, CS=MCS-9
+-- Chunk with length 290 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 4, MCS-9): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 4, MCS-9): 07 00 01 f8 07 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=21 block=5 data=07 00 01 f8 07 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5)
+- Sending new block at BSN 5, CS=MCS-9
+-- Chunk with length 216 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 5, MCS-9): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 5, MCS-9): 07 40 01 f6 07 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=26 block=6 data=07 40 01 f6 07 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6)
+- Sending new block at BSN 6, CS=MCS-9
+-- Chunk with length 142 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 6, MCS-9): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 6, MCS-9): 07 80 01 f4 07 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=30 block=7 data=07 80 01 f4 07 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7)
+- Sending new block at BSN 7, CS=MCS-9
+-- Chunk with length 68 is less than remaining space (74): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=512
+-- Empty chunk, added LLC dummy command of size 6, drained_since=0
+-- Chunk with length 6 larger than space (5) left in block: copy only remaining space, and we are done
+data block (BSN 7, MCS-9): 89 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 43 c0 01 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 7, MCS-9): 07 c0 01 f2 07 24 06 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 0c 01 07 ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=34 block=8 data=07 c0 01 f2 07 24 06 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 0c 01 07 ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8)
+- Sending new block at BSN 8, CS=MCS-9
+-- Chunk with length 1 is less than remaining space (74): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=6
+-- Empty chunk, added LLC dummy command of size 71, drained_since=5
+-- Chunk with length 71 is less than remaining space (72): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=71
+data block (BSN 8, MCS-9): 02 8f 2b 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+msg block (BSN 8, MCS-9): 07 00 02 f0 07 08 3c ae 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=39 block=9 data=07 00 02 f0 07 08 3c ae 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
