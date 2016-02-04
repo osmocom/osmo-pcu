@@ -651,7 +651,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		rdbi = &rlc.block_info[data_block_idx];
 		OSMO_ASSERT(rdbi->data_len == m_rlc.block(bsn)->block_info.data_len);
 		OSMO_ASSERT(sizeof(*rdbi) == sizeof(m_rlc.block(bsn)->block_info));
-		memcpy(rdbi, &m_rlc.block(bsn)->block_info, sizeof(*rdbi));;
+		rlc.block_info[data_block_idx] = m_rlc.block(bsn)->block_info;
 		is_final = is_final || rdbi->cv == 0;
 
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- Copying data unit %d (BSN %d)\n",
