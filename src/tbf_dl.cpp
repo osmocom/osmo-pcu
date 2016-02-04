@@ -649,6 +649,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		punct[data_block_idx] = data_block_idx;
 
 		rdbi = &rlc.block_info[data_block_idx];
+		OSMO_ASSERT(data_block_idx < ARRAY_SIZE(rlc.block_info));
 		OSMO_ASSERT(rdbi->data_len == m_rlc.block(bsn)->block_info.data_len);
 		OSMO_ASSERT(sizeof(*rdbi) == sizeof(m_rlc.block(bsn)->block_info));
 		rlc.block_info[data_block_idx] = m_rlc.block(bsn)->block_info;
