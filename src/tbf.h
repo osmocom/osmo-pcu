@@ -408,7 +408,7 @@ protected:
 	};
 
 	int take_next_bsn(uint32_t fn, int previous_bsn,
-		GprsCodingScheme *next_cs);
+		bool *may_combine);
 	bool restart_bsn_cycle();
 	int create_new_bsn(const uint32_t fn, GprsCodingScheme cs);
 	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
