@@ -632,7 +632,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		int bsn;
 		GprsCodingScheme cs_enc;
 		uint8_t *block_data;
-		gprs_rlc_data_block_info *rdbi;
+		gprs_rlc_data_block_info *rdbi, *block_info;
 
 		/* Check if there are more blocks than BSNs */
 		if (data_block_idx < num_bsns)
@@ -649,10 +649,14 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		punct[data_block_idx] = data_block_idx;
 
 		rdbi = &rlc.block_info[data_block_idx];
+		block_info = &m_rlc.block(bsn)->block_info;
+
 		OSMO_ASSERT(data_block_idx < ARRAY_SIZE(rlc.block_info));
 		OSMO_ASSERT(rdbi->data_len == m_rlc.block(bsn)->block_info.data_len);
 		OSMO_ASSERT(sizeof(*rdbi) == sizeof(m_rlc.block(bsn)->block_info));
-		rlc.block_info[data_block_idx] = m_rlc.block(bsn)->block_info;
+		rdbi->e   = block_info->e;
+		rdbi->cv  = block_info->cv;
+		rdbi->bsn = bsn;
 		is_final = is_final || rdbi->cv == 0;
 
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- Copying data unit %d (BSN %d)\n",
