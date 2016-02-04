@@ -166,7 +166,7 @@ static void setup_bts(BTS *the_bts, uint8_t ts_no, uint8_t cs = 1)
 }
 
 static gprs_rlcmac_dl_tbf *create_dl_tbf(BTS *the_bts, uint8_t ms_class,
-	uint8_t *trx_no_)
+	uint8_t egprs_ms_class, uint8_t *trx_no_)
 {
 	gprs_rlcmac_bts *bts;
 	int tfi;
@@ -178,7 +178,7 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(BTS *the_bts, uint8_t ms_class,
 
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx_no, -1);
 	OSMO_ASSERT(tfi >= 0);
-	dl_tbf = tbf_alloc_dl_tbf(bts, NULL, trx_no, ms_class, 0, 1);
+	dl_tbf = tbf_alloc_dl_tbf(bts, NULL, trx_no, ms_class, egprs_ms_class, 1);
 	check_tbf(dl_tbf);
 
 	/* "Establish" the DL TBF */
@@ -247,7 +247,7 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	gprs_rlcmac_tbf *new_tbf;
 
 	setup_bts(&the_bts, ts_no);
-	dl_tbf = create_dl_tbf(&the_bts, ms_class, &trx_no);
+	dl_tbf = create_dl_tbf(&the_bts, ms_class, 0, &trx_no);
 	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
 	ms = dl_tbf->ms();
 
@@ -320,7 +320,7 @@ static void test_tbf_delayed_release()
 	setup_bts(&the_bts, ts_no);
 	bts->dl_tbf_idle_msec = 200;
 
-	dl_tbf = create_dl_tbf(&the_bts, ms_class, &trx_no);
+	dl_tbf = create_dl_tbf(&the_bts, ms_class, 0, &trx_no);
 	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
 
 	for (i = 0; i < sizeof(llc_data); i++)
@@ -385,8 +385,8 @@ static void test_tbf_imsi()
 
 	setup_bts(&the_bts, ts_no);
 
-	dl_tbf[0] = create_dl_tbf(&the_bts, ms_class, &trx_no);
-	dl_tbf[1] = create_dl_tbf(&the_bts, ms_class, &trx_no);
+	dl_tbf[0] = create_dl_tbf(&the_bts, ms_class, 0, &trx_no);
+	dl_tbf[1] = create_dl_tbf(&the_bts, ms_class, 0, &trx_no);
 
 	dl_tbf[0]->update_ms(0xf1000001, GPRS_RLCMAC_DL_TBF);
 	dl_tbf[1]->update_ms(0xf1000002, GPRS_RLCMAC_DL_TBF);
@@ -615,7 +615,7 @@ static void send_control_ack(gprs_rlcmac_tbf *tbf)
 
 static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
-	uint8_t ms_class)
+	uint8_t ms_class, uint8_t egprs_ms_class)
 {
 	GprsMs *ms;
 	uint32_t rach_fn = *fn - 51;
@@ -656,6 +656,14 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
 		MS_RA_capability_value[0].u.Content.Multislot_capability.
 		GPRS_multislot_class = ms_class;
+	if (egprs_ms_class) {
+		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+			MS_RA_capability_value[0].u.Content.Multislot_capability.
+			Exist_EGPRS_multislot_class = 1;
+		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+			MS_RA_capability_value[0].u.Content.Multislot_capability.
+			EGPRS_multislot_class = ms_class;
+	}
 
 	send_ul_mac_block(the_bts, trx_no, ts_no, &ulreq, sba_fn);
 
@@ -711,7 +719,8 @@ static void send_dl_data(BTS *the_bts, uint32_t tlli, const char *imsi,
 	}
 }
 
-static void transmit_dl_data(BTS *the_bts, uint32_t tlli, uint32_t *fn)
+static void transmit_dl_data(BTS *the_bts, uint32_t tlli, uint32_t *fn,
+	uint8_t slots = 0xff)
 {
 	gprs_rlcmac_dl_tbf *dl_tbf;
 	GprsMs *ms;
@@ -724,10 +733,13 @@ static void transmit_dl_data(BTS *the_bts, uint32_t tlli, uint32_t *fn)
 
 	while (dl_tbf->have_data()) {
 		uint8_t bn = fn2bn(*fn);
-		for (ts_no = 0 ; ts_no < 8; ts_no += 1)
+		for (ts_no = 0 ; ts_no < 8; ts_no += 1) {
+			if (!(slots & (1 << ts_no)))
+				continue;
 			gprs_rlcmac_rcv_rts_block(the_bts->bts_data(),
 				dl_tbf->trx->trx_no, ts_no, 0,
 				*fn, bn);
+		}
 		*fn = fn_add_blocks(*fn, 1);
 	}
 }
@@ -774,7 +786,8 @@ static void test_tbf_two_phase()
 
 	setup_bts(&the_bts, ts_no, 4);
 
-	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli, &fn, qta, ms_class);
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli, &fn, qta,
+		ms_class, 0);
 
 	ms = ul_tbf->ms();
 	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
@@ -802,7 +815,8 @@ static void test_tbf_ra_update_rach()
 
 	setup_bts(&the_bts, ts_no, 4);
 
-	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta, ms_class);
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta,
+		ms_class, 0);
 
 	ms1 = ul_tbf->ms();
 	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
@@ -823,7 +837,8 @@ static void test_tbf_ra_update_rach()
 	OSMO_ASSERT(ms1->llc_queue()->size() == 0);
 
 	/* Now establish a new TBF for the RA UPDATE COMPLETE (new TLLI) */
-	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli2, &fn, qta, ms_class);
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli2, &fn, qta,
+		ms_class, 0);
 
 	ms2 = ul_tbf->ms();
 
@@ -868,7 +883,8 @@ static void test_tbf_dl_flow_and_rach_two_phase()
 
 	setup_bts(&the_bts, ts_no, 1);
 
-	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta, ms_class);
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta,
+		ms_class, 0);
 
 	ms1 = ul_tbf->ms();
 	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
@@ -888,7 +904,8 @@ static void test_tbf_dl_flow_and_rach_two_phase()
 	OSMO_ASSERT(ms1 == ms);
 
 	/* Now establish a new UL TBF, this will consume one LLC packet */
-	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta, ms_class);
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta,
+		ms_class, 0);
 
 	ms2 = ul_tbf->ms();
 	fprintf(stderr, "New MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
@@ -927,7 +944,8 @@ static void test_tbf_dl_flow_and_rach_single_phase()
 
 	setup_bts(&the_bts, ts_no, 1);
 
-	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta, ms_class);
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta,
+		ms_class, 0);
 
 	ms1 = ul_tbf->ms();
 	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
@@ -988,7 +1006,8 @@ static void test_tbf_dl_reuse()
 
 	setup_bts(&the_bts, ts_no, 1);
 
-	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta, ms_class);
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli1, &fn, qta,
+		ms_class, 0);
 
 	ms1 = ul_tbf->ms();
 	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
@@ -1156,6 +1175,122 @@ static void test_tbf_ws()
 	gprs_bssgp_destroy();
 }
 
+static void test_tbf_egprs_two_phase()
+{
+	BTS the_bts;
+	int ts_no = 7;
+	uint32_t fn = 2654218;
+	uint16_t qta = 31;
+	uint32_t tlli = 0xf1223344;
+	const char *imsi = "0011223344";
+	uint8_t ms_class = 1;
+	uint8_t egprs_ms_class = 1;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	GprsMs *ms;
+	uint8_t test_data[256];
+
+	printf("=== start %s ===\n", __func__);
+
+	memset(test_data, 1, sizeof(test_data));
+
+	setup_bts(&the_bts, ts_no, 4);
+	the_bts.bts_data()->initial_mcs_dl = 9;
+	the_bts.bts_data()->egprs_enabled = 1;
+
+	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli, &fn, qta,
+		ms_class, egprs_ms_class);
+
+	ms = ul_tbf->ms();
+	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
+	fprintf(stderr, "Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
+
+	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
+
+	printf("=== end %s ===\n", __func__);
+}
+
+static void establish_and_use_egprs_dl_tbf(BTS *the_bts, int mcs)
+{
+	unsigned i;
+	uint8_t ms_class = 11;
+	uint8_t egprs_ms_class = 11;
+	uint32_t fn = 0;
+	uint8_t trx_no;
+	uint32_t tlli = 0xffeeddcc;
+	uint8_t test_data[512];
+
+	uint8_t rbb[64/8];
+
+	gprs_rlcmac_dl_tbf *dl_tbf;
+
+	printf("Testing MCS-%d\n", mcs);
+
+	memset(test_data, 1, sizeof(test_data));
+	the_bts->bts_data()->initial_mcs_dl = mcs;
+
+	dl_tbf = create_dl_tbf(the_bts, ms_class, egprs_ms_class, &trx_no);
+	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
+
+	for (i = 0; i < sizeof(llc_data); i++)
+		llc_data[i] = i%256;
+
+	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+
+	/* Schedule a small LLC frame */
+	dl_tbf->append_data(ms_class, 1000, test_data, 10);
+
+	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+
+	/* Drain the queue */
+	while (dl_tbf->have_data())
+		/* Request to send one RLC/MAC block */
+		request_dl_rlc_block(dl_tbf, &fn);
+
+	/* Schedule a large LLC frame */
+	dl_tbf->append_data(ms_class, 1000, test_data, sizeof(test_data));
+
+	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+
+	/* Drain the queue */
+	while (dl_tbf->have_data())
+		/* Request to send one RLC/MAC block */
+		request_dl_rlc_block(dl_tbf, &fn);
+
+	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+
+	/* Receive a final ACK */
+	dl_tbf->rcvd_dl_ack(1, dl_tbf->m_window.v_s(), rbb);
+
+	/* Clean up and ensure tbfs are in the correct state */
+	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
+	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+	check_tbf(dl_tbf);
+	tbf_free(dl_tbf);
+}
+
+static void test_tbf_egprs_dl()
+{
+	BTS the_bts;
+	gprs_rlcmac_bts *bts;
+	uint8_t ts_no = 4;
+	int i;
+
+	printf("=== start %s ===\n", __func__);
+
+	bts = the_bts.bts_data();
+
+	setup_bts(&the_bts, ts_no);
+	bts->dl_tbf_idle_msec = 200;
+	bts->egprs_enabled = 1;
+
+	for (i = 1; i <= 9; i++)
+		establish_and_use_egprs_dl_tbf(&the_bts, i);
+
+	printf("=== end %s ===\n", __func__);
+}
+
+
+
 static const struct log_info_cat default_categories[] = {
         {"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_INFO, 0},
         {"DL1IF", "\033[1;32m", "GPRS PCU L1 interface (L1IF)", LOGL_DEBUG, 1},
@@ -1215,6 +1350,8 @@ int main(int argc, char **argv)
 	test_tbf_dl_reuse();
 	test_tbf_gprs_egprs();
 	test_tbf_ws();
+	test_tbf_egprs_two_phase();
+	test_tbf_egprs_dl();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
