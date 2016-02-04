@@ -355,9 +355,10 @@ bool gprs_rlcmac_dl_tbf::restart_bsn_cycle()
 }
 
 int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
-	int previous_bsn, GprsCodingScheme *next_cs)
+	int previous_bsn, bool *may_combine)
 {
 	int bsn;
+	int data_len2, force_data_len = -1;
 	GprsCodingScheme cs2;
 	GprsCodingScheme force_cs;
 
@@ -367,6 +368,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		force_cs = m_rlc.block(previous_bsn)->cs;
 		if (!force_cs.isEgprs())
 			return -1;
+		force_data_len = m_rlc.block(previous_bsn)->len;
 	}
 
 	if (bsn >= 0) {
@@ -378,7 +380,8 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			return -1;
 
 		cs2 = m_rlc.block(bsn)->cs;
-		if (force_cs && !cs2.isCombinable(force_cs))
+		data_len2 = m_rlc.block(bsn)->len;
+		if (force_data_len > 0 && force_data_len != data_len2)
 			return -1;
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d\n", bsn);
 		/* re-send block with negative aknowlegement */
@@ -390,14 +393,14 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			m_window.v_a());
 		bts->rlc_restarted();
 		if (restart_bsn_cycle())
-			return take_next_bsn(fn, previous_bsn, next_cs);
+			return take_next_bsn(fn, previous_bsn, may_combine);
 	} else if (dl_window_stalled()) {
 		LOGP(DRLCMACDL, LOGL_NOTICE, "- Restarting at BSN %d, "
 			"because the window is stalled.\n",
 			m_window.v_a());
 		bts->rlc_stalled();
 		if (restart_bsn_cycle())
-			return take_next_bsn(fn, previous_bsn, next_cs);
+			return take_next_bsn(fn, previous_bsn, may_combine);
 	} else if (have_data()) {
 		/* New blocks may be send */
 		cs2 = force_cs ? force_cs : current_cs();
@@ -412,14 +415,14 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			m_window.v_a());
 		bts->rlc_restarted();
 		if (restart_bsn_cycle())
-			return take_next_bsn(fn, previous_bsn, next_cs);
+			return take_next_bsn(fn, previous_bsn, may_combine);
 	} else {
 		/* Nothing left to send, create dummy LLC commands */
 		LOGP(DRLCMACDL, LOGL_DEBUG,
 			"- Sending new dummy block at BSN %d, CS=%s\n",
 			m_window.v_s(), current_cs().name());
 		bsn = create_new_bsn(fn, current_cs());
-		/* Don't send a second block */
+		/* Don't send a second block, so don't set cs2 */
 	}
 
 	if (bsn < 0) {
@@ -430,7 +433,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		bts->rlc_resent();
 	}
 
-	*next_cs = cs2;
+	*may_combine = cs2.numDataBlocks() > 1;
 
 	return bsn;
 }
@@ -442,18 +445,18 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 {
 	int bsn, bsn2 = -1;
-	GprsCodingScheme cs, next_cs;
+	bool may_combine;
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink (V(A)==%d .. "
 		"V(S)==%d)\n", tbf_name(this),
 		m_window.v_a(), m_window.v_s());
 
-	bsn = take_next_bsn(fn, -1, &next_cs);
+	bsn = take_next_bsn(fn, -1, &may_combine);
 	if (bsn < 0)
 		return NULL;
 
-	if (next_cs.numDataBlocks() > 1)
-		bsn2 = take_next_bsn(fn, bsn, &next_cs);
+	if (may_combine)
+		bsn2 = take_next_bsn(fn, bsn, &may_combine);
 
 	return create_dl_acked_block(fn, ts, bsn, bsn2);
 }
