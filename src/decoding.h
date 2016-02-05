@@ -42,6 +42,7 @@ public:
 	static uint8_t get_egprs_ms_class_by_capability(MS_Radio_Access_capability_t *cap);
 
 	static void extract_rbb(const uint8_t *rbb, char *extracted_rbb);
+	static void extract_rbb(const struct bitvec *rbb, char *show_rbb);
 
 	static int rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 		const uint8_t *data, GprsCodingScheme cs);

@@ -329,6 +329,18 @@ void Decoding::extract_rbb(const uint8_t *rbb, char *show_rbb)
 	show_rbb[64] = '\0';
 }
 
+void Decoding::extract_rbb(const struct bitvec *rbb, char *show_rbb)
+{
+	unsigned int i;
+	for (i = 0; i < rbb->cur_bit; i++) {
+		uint8_t bit;
+		bit = bitvec_get_bit_pos(rbb, i);
+		show_rbb[i] = bit == 1 ? 'R' : 'I';
+	}
+
+	show_rbb[i] = '\0';
+}
+
 int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 	const uint8_t *data, GprsCodingScheme cs)
 {
