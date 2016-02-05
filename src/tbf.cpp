@@ -881,6 +881,13 @@ void gprs_rlcmac_tbf::handle_timeout()
 		tbf_free(this);
 		return;
 		break;
+	case 3141:
+		LOGP(DRLCMAC, LOGL_NOTICE, "%s T%d timeout after "
+			"requesting an immediate assignment\n", tbf_name(this), T);
+		rlcmac_diag();
+		/* free TBF */
+		tbf_free(this);
+		return;
 	default:
 		LOGP(DRLCMAC, LOGL_ERROR,
 			"%s timer expired in unknown mode: %u\n", tbf_name(this), T);

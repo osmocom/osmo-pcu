@@ -38,6 +38,14 @@ class GprsMs;
  * TBF instance
  */
 
+/*
+ * TODO: T3141 might not be the correct timer name, since TS 44.018 says, that
+ * T3141 is started, when the IMM.ASS is sent to the MS. Here it is assumed,
+ * that this is the time the request is passed to the BTS. Make these values
+ * configurable.
+ */
+#define T3141_pch    10,0	/* waiting after queuing IMM.ASS to PCH */
+#define T3141_agch   5,0	/* waiting after queuing IMM.ASS to AGCH */
 #define Tassign_agch 0,200000	/* waiting after IMM.ASS confirm */
 #define Tassign_pacch 2,0	/* timeout for pacch assigment */
 
