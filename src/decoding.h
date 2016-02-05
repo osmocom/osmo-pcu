@@ -57,4 +57,8 @@ public:
 		const EGPRS_AckNack_Desc_t *desc,
 		struct bitvec *bits, int *bsn_begin, int *bsn_end,
 		struct gprs_rlc_dl_window *window);
+	static int decode_gprs_acknack_bits(
+		const Ack_Nack_Description_t *desc,
+		bitvec *bits, int *bsn_begin, int *bsn_end,
+		gprs_rlc_dl_window *window);
 };
