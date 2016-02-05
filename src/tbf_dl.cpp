@@ -644,16 +644,20 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 {
 	gprs_rlc_data *rlc_data;
 	uint16_t lost = 0, received = 0, skipped = 0;
-	char info[65];
-	memset(info, '.', sizeof(info));
-	info[64] = 0;
+	char info[RLC_MAX_WS + 1];
+	memset(info, '.', m_window.ws());
+	info[m_window.ws()] = 0;
 	uint16_t bsn = 0;
 	unsigned received_bytes = 0, lost_bytes = 0;
 	unsigned received_packets = 0, lost_packets = 0;
+	unsigned num_blocks = strlen(show_rbb);
 
 	/* SSN - 1 is in range V(A)..V(S)-1 */
-	for (int bitpos = 0; bitpos < m_window.ws(); bitpos++) {
-		bool is_received = show_rbb[m_window.ws() - 1 - bitpos] == 'R';
+	for (unsigned int bitpos = 0; bitpos < num_blocks; bitpos++) {
+		bool is_received;
+		int index = num_blocks - 1 - bitpos;
+
+		is_received = (index >= 0 && show_rbb[index] == 'R');
 
 		bsn = m_window.mod_sns(bitnum_to_bsn(bitpos, ssn));
 
