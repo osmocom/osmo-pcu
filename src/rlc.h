@@ -190,8 +190,6 @@ struct gprs_rlc_dl_window: public gprs_rlc_window {
 	/* Methods to manage reception */
 	int resend_needed();
 	int mark_for_resend();
-	void update(BTS *bts, char *show_rbb, uint16_t ssn,
-			uint16_t *lost, uint16_t *received);
 	void update(BTS *bts, const struct bitvec *rbb,
 			uint16_t first_bsn, uint16_t *lost,
 			uint16_t *received);

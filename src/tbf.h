@@ -360,7 +360,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 			const uint16_t pdu_delay_csec,
 			const uint8_t *data, const uint16_t len);
 
-	int rcvd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
 	int rcvd_dl_ack(uint8_t final_ack, unsigned first_bsn, struct bitvec *rbb);
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
 	void request_dl_ack();
@@ -412,7 +411,6 @@ protected:
 	int create_new_bsn(const uint32_t fn, GprsCodingScheme cs);
 	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
 					int index, int index2 = -1);
-	int update_window(const uint8_t ssn, const uint8_t *rbb);
 	int update_window(unsigned first_bsn, const struct bitvec *rbb);
 	int maybe_start_new_window();
 	bool dl_window_stalled() const;

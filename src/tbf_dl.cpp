@@ -898,71 +898,6 @@ int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 	return 0;
 }
 
-int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
-{
-	int16_t dist; /* must be signed */
-	uint16_t lost = 0, received = 0;
-	char show_rbb[65];
-	char show_v_b[RLC_MAX_SNS + 1];
-	int error_rate;
-	struct ana_result ana_res;
-
-	Decoding::extract_rbb(rbb, show_rbb);
-	/* show received array in debug (bit 64..1) */
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- ack:  (BSN=%d)\"%s\""
-		"(BSN=%d)  R=ACK I=NACK\n", m_window.mod_sns(ssn - 64),
-		show_rbb, m_window.mod_sns(ssn - 1));
-
-	/* apply received array to receive state (SSN-64..SSN-1) */
-	/* calculate distance of ssn from V(S) */
-	dist = m_window.mod_sns(m_window.v_s() - ssn);
-	/* check if distance is less than distance V(A)..V(S) */
-	if (dist >= m_window.distance()) {
-		/* this might happpen, if the downlink assignment
-		 * was not received by ms and the ack refers
-		 * to previous TBF
-		 * FIXME: we should implement polling for
-		 * control ack!*/
-		LOGP(DRLCMACDL, LOGL_NOTICE, "- ack range is out of "
-			"V(A)..V(S) range %s Free TBF!\n", tbf_name(this));
-		return 1; /* indicate to free TBF */
-	}
-
-	error_rate = analyse_errors(show_rbb, ssn, &ana_res);
-
-	if (bts_data()->cs_adj_enabled && ms())
-		ms()->update_error_rate(this, error_rate);
-
-	m_window.update(bts, show_rbb, ssn,
-			&lost, &received);
-
-	/* report lost and received packets */
-	gprs_rlcmac_received_lost(this, received, lost);
-
-	/* Used to measure the leak rate */
-	gprs_bssgp_update_bytes_received(ana_res.received_bytes,
-		ana_res.received_packets + ana_res.lost_packets);
-
-	/* raise V(A), if possible */
-	m_window.raise(m_window.move_window());
-
-	/* show receive state array in debug (V(A)..V(S)-1) */
-	m_window.show_state(show_v_b);
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- V(B): (V(A)=%d)\"%s\""
-		"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked "
-		"X=Resend-Unacked I=Invalid\n",
-		m_window.v_a(), show_v_b,
-		m_window.v_s_mod(-1));
-
-	if (state_is(GPRS_RLCMAC_FINISHED) && m_window.window_empty()) {
-		LOGP(DRLCMACDL, LOGL_NOTICE, "Received acknowledge of "
-			"all blocks, but without final ack "
-			"inidcation (don't worry)\n");
-	}
-	return 0;
-}
-
-
 int gprs_rlcmac_dl_tbf::maybe_start_new_window()
 {
 	release();
@@ -1050,17 +985,6 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, unsigned first_bsn,
 	}
 
 	return rc;
-}
-
-int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, uint8_t ssn, uint8_t *rbb)
-{
-	LOGP(DRLCMACDL, LOGL_DEBUG, "%s downlink acknowledge\n", tbf_name(this));
-
-	if (!final_ack)
-		return update_window(ssn, rbb);
-
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
-	return maybe_start_new_window();
 }
 
 bool gprs_rlcmac_dl_tbf::dl_window_stalled() const

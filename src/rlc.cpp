@@ -129,30 +129,6 @@ void gprs_rlc_dl_window::update(BTS *bts, const struct bitvec *rbb,
 	}
 }
 
-void gprs_rlc_dl_window::update(BTS *bts, char *show_rbb, uint16_t ssn,
-			uint16_t *lost, uint16_t *received)
-{
-	/* SSN - 1 is in range V(A)..V(S)-1 */
-	for (int bitpos = 0; bitpos < ws(); bitpos++) {
-		uint16_t bsn = mod_sns(bitnum_to_bsn(bitpos, ssn));
-
-		if (bsn == mod_sns(v_a() - 1))
-			break;
-
-		if (show_rbb[ws() - 1 - bitpos] == 'R') {
-			LOGP(DRLCMACDL, LOGL_DEBUG, "- got ack for BSN=%d\n", bsn);
-			if (!m_v_b.is_acked(bsn))
-				*received += 1;
-			m_v_b.mark_acked(bsn);
-		} else {
-			LOGP(DRLCMACDL, LOGL_DEBUG, "- got NACK for BSN=%d\n", bsn);
-			m_v_b.mark_nacked(bsn);
-			bts->rlc_nacked();
-			*lost += 1;
-		}
-	}
-}
-
 int gprs_rlc_dl_window::move_window()
 {
 	int i;

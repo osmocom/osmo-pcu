@@ -85,6 +85,11 @@ data block (BSN 1, CS-1): 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 
 msg block (BSN 1, CS-1): 07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
+- ack:  (BSN=0)"RR"(BSN=1)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=0:2, lost=0, recv=2, skipped=0, bsn=0, info='RR..............................................................'
+- got ack for BSN=0
+- got ack for BSN=1
+- V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) changes state from FLOW to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer 3193.
@@ -170,6 +175,11 @@ data block (BSN 1, CS-1): 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 
 msg block (BSN 1, CS-1): 07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=8 block=2 data=07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
+- ack:  (BSN=0)"RR"(BSN=1)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=0:2, lost=0, recv=2, skipped=0, bsn=0, info='RR..............................................................'
+- got ack for BSN=0
+- got ack for BSN=1
+- V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) changes state from FLOW to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer 3193.
@@ -417,29 +427,29 @@ Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 msg block (BSN 20, CS-1): 07 00 28 0a 41 c6 c7 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=91 block=9 data=07 00 28 0a 41 c6 c7 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
-- ack:  (BSN=85)"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=20)  R=ACK I=NACK
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=0:21, lost=0, recv=21, skipped=0, bsn=127, info='RRRRRRRRRRRRRRRRRRRRR$..........................................'
-- got ack for BSN=20
-- got ack for BSN=19
-- got ack for BSN=18
-- got ack for BSN=17
-- got ack for BSN=16
-- got ack for BSN=15
-- got ack for BSN=14
-- got ack for BSN=13
-- got ack for BSN=12
-- got ack for BSN=11
-- got ack for BSN=10
-- got ack for BSN=9
-- got ack for BSN=8
-- got ack for BSN=7
-- got ack for BSN=6
-- got ack for BSN=5
-- got ack for BSN=4
-- got ack for BSN=3
-- got ack for BSN=2
-- got ack for BSN=1
+- ack:  (BSN=0)"RRRRRRRRRRRRRRRRRRRRR"(BSN=20)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=0:21, lost=0, recv=21, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRRR...........................................'
 - got ack for BSN=0
+- got ack for BSN=1
+- got ack for BSN=2
+- got ack for BSN=3
+- got ack for BSN=4
+- got ack for BSN=5
+- got ack for BSN=6
+- got ack for BSN=7
+- got ack for BSN=8
+- got ack for BSN=9
+- got ack for BSN=10
+- got ack for BSN=11
+- got ack for BSN=12
+- got ack for BSN=13
+- got ack for BSN=14
+- got ack for BSN=15
+- got ack for BSN=16
+- got ack for BSN=17
+- got ack for BSN=18
+- got ack for BSN=19
+- got ack for BSN=20
 - V(B): (V(A)=21)""(V(S)-1=20)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==21 .. V(S)==21)
@@ -455,8 +465,8 @@ Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 msg block (BSN 21, CS-1): 07 00 2a 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=95 block=10 data=07 00 2a 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
-- ack:  (BSN=86)"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=21)  R=ACK I=NACK
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=21:22, lost=0, recv=1, skipped=0, bsn=20, info='R$..............................................................'
+- ack:  (BSN=21)"R"(BSN=21)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=21:22, lost=0, recv=1, skipped=0, bsn=21, info='R...............................................................'
 - got ack for BSN=21
 - V(B): (V(A)=22)""(V(S)-1=21)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
@@ -474,6 +484,10 @@ Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED
 msg block (BSN 22, CS-1): 07 01 2c 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=203 block=11 data=07 01 2c 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) downlink acknowledge
+- ack:  (BSN=22)"R"(BSN=22)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) DL analysis, range=22:23, lost=0, recv=1, skipped=0, bsn=22, info='R...............................................................'
+- got ack for BSN=22
+- V(B): (V(A)=23)""(V(S)-1=22)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) changes state from FINISHED to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer 3193.
@@ -3696,6 +3710,34 @@ Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGP
 msg block (BSN 24, MCS-1): 07 00 06 16 18 3a 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 00 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=108 block=1 data=07 00 06 16 18 3a 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- ack:  (BSN=0)"RRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=24)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:25, lost=0, recv=25, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRRRRRRR.......................................'
+- got ack for BSN=0
+- got ack for BSN=1
+- got ack for BSN=2
+- got ack for BSN=3
+- got ack for BSN=4
+- got ack for BSN=5
+- got ack for BSN=6
+- got ack for BSN=7
+- got ack for BSN=8
+- got ack for BSN=9
+- got ack for BSN=10
+- got ack for BSN=11
+- got ack for BSN=12
+- got ack for BSN=13
+- got ack for BSN=14
+- got ack for BSN=15
+- got ack for BSN=16
+- got ack for BSN=17
+- got ack for BSN=18
+- got ack for BSN=19
+- got ack for BSN=20
+- got ack for BSN=21
+- got ack for BSN=22
+- got ack for BSN=23
+- got ack for BSN=24
+- V(B): (V(A)=25)""(V(S)-1=24)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
@@ -3954,6 +3996,29 @@ Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGP
 msg block (BSN 19, MCS-2): 07 c0 04 12 20 4a 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=86 block=8 data=07 c0 04 12 20 4a 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- ack:  (BSN=0)"RRRRRRRRRRRRRRRRRRRR"(BSN=19)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:20, lost=0, recv=20, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRR............................................'
+- got ack for BSN=0
+- got ack for BSN=1
+- got ack for BSN=2
+- got ack for BSN=3
+- got ack for BSN=4
+- got ack for BSN=5
+- got ack for BSN=6
+- got ack for BSN=7
+- got ack for BSN=8
+- got ack for BSN=9
+- got ack for BSN=10
+- got ack for BSN=11
+- got ack for BSN=12
+- got ack for BSN=13
+- got ack for BSN=14
+- got ack for BSN=15
+- got ack for BSN=16
+- got ack for BSN=17
+- got ack for BSN=18
+- got ack for BSN=19
+- V(B): (V(A)=20)""(V(S)-1=19)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
@@ -4175,6 +4240,25 @@ Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGP
 msg block (BSN 15, MCS-3): 07 c0 03 06 04 8a 56 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=69 block=4 data=07 c0 03 06 04 8a 56 86 80 03 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- ack:  (BSN=0)"RRRRRRRRRRRRRRRR"(BSN=15)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:16, lost=0, recv=16, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRR................................................'
+- got ack for BSN=0
+- got ack for BSN=1
+- got ack for BSN=2
+- got ack for BSN=3
+- got ack for BSN=4
+- got ack for BSN=5
+- got ack for BSN=6
+- got ack for BSN=7
+- got ack for BSN=8
+- got ack for BSN=9
+- got ack for BSN=10
+- got ack for BSN=11
+- got ack for BSN=12
+- got ack for BSN=13
+- got ack for BSN=14
+- got ack for BSN=15
+- V(B): (V(A)=16)""(V(S)-1=15)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
@@ -4363,6 +4447,22 @@ Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGP
 msg block (BSN 12, MCS-4): 07 00 03 00 70 3a 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 00 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=56 block=1 data=07 00 03 00 70 3a 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 86 80 03 56 56 56 56 56 56 56 56 56 56 56 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- ack:  (BSN=0)"RRRRRRRRRRRRR"(BSN=12)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:13, lost=0, recv=13, skipped=0, bsn=0, info='RRRRRRRRRRRRR...................................................'
+- got ack for BSN=0
+- got ack for BSN=1
+- got ack for BSN=2
+- got ack for BSN=3
+- got ack for BSN=4
+- got ack for BSN=5
+- got ack for BSN=6
+- got ack for BSN=7
+- got ack for BSN=8
+- got ack for BSN=9
+- got ack for BSN=10
+- got ack for BSN=11
+- got ack for BSN=12
+- V(B): (V(A)=13)""(V(S)-1=12)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
@@ -4531,6 +4631,20 @@ Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGP
 msg block (BSN 10, MCS-5): 07 80 02 08 44 57 40 40 40 40 40 40 40 c0 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=47 block=11 data=07 80 02 08 44 57 40 40 40 40 40 40 40 c0 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- ack:  (BSN=0)"RRRRRRRRRRR"(BSN=10)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:11, lost=0, recv=11, skipped=0, bsn=0, info='RRRRRRRRRRR.....................................................'
+- got ack for BSN=0
+- got ack for BSN=1
+- got ack for BSN=2
+- got ack for BSN=3
+- got ack for BSN=4
+- got ack for BSN=5
+- got ack for BSN=6
+- got ack for BSN=7
+- got ack for BSN=8
+- got ack for BSN=9
+- got ack for BSN=10
+- V(B): (V(A)=11)""(V(S)-1=10)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
@@ -4682,6 +4796,18 @@ Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGP
 msg block (BSN 8, MCS-6): 07 00 02 80 c0 e3 ca 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=39 block=9 data=07 00 02 80 c0 e3 ca 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- ack:  (BSN=0)"RRRRRRRRR"(BSN=8)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:9, lost=0, recv=9, skipped=0, bsn=0, info='RRRRRRRRR.......................................................'
+- got ack for BSN=0
+- got ack for BSN=1
+- got ack for BSN=2
+- got ack for BSN=3
+- got ack for BSN=4
+- got ack for BSN=5
+- got ack for BSN=6
+- got ack for BSN=7
+- got ack for BSN=8
+- V(B): (V(A)=9)""(V(S)-1=8)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
@@ -4830,6 +4956,20 @@ Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGP
 msg block (BSN 10, MCS-5): 07 80 02 08 44 57 40 40 40 40 40 40 40 c0 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=30 block=7 data=07 80 02 08 44 57 40 40 40 40 40 40 40 c0 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- ack:  (BSN=0)"RRRRRRRRRRR"(BSN=10)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:11, lost=0, recv=11, skipped=0, bsn=0, info='RRRRRRRRRRR.....................................................'
+- got ack for BSN=0
+- got ack for BSN=1
+- got ack for BSN=2
+- got ack for BSN=3
+- got ack for BSN=4
+- got ack for BSN=5
+- got ack for BSN=6
+- got ack for BSN=7
+- got ack for BSN=8
+- got ack for BSN=9
+- got ack for BSN=10
+- V(B): (V(A)=11)""(V(S)-1=10)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
@@ -4966,6 +5106,18 @@ Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGP
 msg block (BSN 8, MCS-8): 07 00 02 00 60 20 f5 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 80 d4 13 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 30 04 1c b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=26 block=6 data=07 00 02 00 60 20 f5 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 0c 01 07 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 80 d4 13 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 30 04 1c b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- ack:  (BSN=0)"RRRRRRRRR"(BSN=8)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:9, lost=0, recv=9, skipped=0, bsn=0, info='RRRRRRRRR.......................................................'
+- got ack for BSN=0
+- got ack for BSN=1
+- got ack for BSN=2
+- got ack for BSN=3
+- got ack for BSN=4
+- got ack for BSN=5
+- got ack for BSN=6
+- got ack for BSN=7
+- got ack for BSN=8
+- V(B): (V(A)=9)""(V(S)-1=8)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
@@ -5103,6 +5255,18 @@ Polling is already scheduled for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGP
 msg block (BSN 8, MCS-6): 07 00 02 80 c0 e3 ca 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=26 block=6 data=07 00 02 80 c0 e3 ca 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- ack:  (BSN=0)"RRRRRRRRR"(BSN=8)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:9, lost=0, recv=9, skipped=0, bsn=0, info='RRRRRRRRR.......................................................'
+- got ack for BSN=0
+- got ack for BSN=1
+- got ack for BSN=2
+- got ack for BSN=3
+- got ack for BSN=4
+- got ack for BSN=5
+- got ack for BSN=6
+- got ack for BSN=7
+- got ack for BSN=8
+- V(B): (V(A)=9)""(V(S)-1=8)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 - Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
