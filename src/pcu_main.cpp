@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
 	bts->max_cs_ul = 4;
 	bts->max_cs_dl = 4;
 	bts->max_mcs_ul = 4;
-	bts->max_mcs_dl = 4;
+	bts->max_mcs_dl = 9;
 	/* CS-1 to CS-4 */
 	bts->cs_lqual_ranges[0].low = -256;
 	bts->cs_lqual_ranges[0].high = 6;

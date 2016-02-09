@@ -596,7 +596,7 @@ GprsCodingScheme GprsMs::max_cs_dl() const
 	else if (bts_data->max_cs_dl)
 		return GprsCodingScheme::getEgprsByNum(bts_data->max_cs_dl);
 
-	return GprsCodingScheme(GprsCodingScheme::MCS4);
+	return GprsCodingScheme(GprsCodingScheme::MCS9);
 }
 
 void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
