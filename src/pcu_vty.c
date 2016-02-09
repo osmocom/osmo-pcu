@@ -187,12 +187,6 @@ DEFUN(cfg_pcu_egprs,
 
 	bts->egprs_enabled = 1;
 
-	vty_out(vty, "%%Note that EGPRS support is in an experimental state "
-		"and the PCU will currently fail to use a TBF if the MS is capable "
-		"to do EGPRS. You may want to disable this feature by entering "
-		"the \"no egprs\" command. "
-		"Do not use this in production!%s", VTY_NEWLINE);
-
 	return CMD_SUCCESS;
 }
 
