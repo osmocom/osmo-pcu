@@ -464,6 +464,16 @@ DEFUN(cfg_pcu_mcs_max,
 	else
 		bts->max_mcs_ul = mcs;
 
+	/* TODO: Remove this restriction when MCS-5 and above are supported by
+	 * the implementation */
+	if (bts->max_mcs_ul > 4) {
+		vty_out(vty,
+			"Limiting the uplink coding scheme to MCS-4, since MCS-5 "
+			"and above are not yet supported in updalink direction.%s",
+			VTY_NEWLINE);
+		bts->max_mcs_ul = 4;
+	}
+
 	return CMD_SUCCESS;
 }
 
