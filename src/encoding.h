@@ -60,6 +60,10 @@ public:
 			uint8_t alpha, uint8_t gamma,
 			int8_t ta_idx, uint8_t ta_ts, bool use_egprs);
 
+	static void write_packet_ts_reconfigure(RlcMacDownlink_t * block,
+						struct gprs_rlcmac_tbf *tbf, uint8_t poll, uint8_t rrbp,
+						uint8_t alpha, uint8_t gamma, bool use_egprs);
+
 	static void encode_rbb(const char *show_rbb, uint8_t *rbb);
 
 	static void write_packet_uplink_ack(

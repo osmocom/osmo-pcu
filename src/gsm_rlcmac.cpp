@@ -2261,7 +2261,7 @@ CSN_DESCR_BEGIN(Packet_Timeslot_Reconfigure_t)
   M_UINT       (Packet_Timeslot_Reconfigure_t,  MESSAGE_TYPE,  6),
   M_UINT       (Packet_Timeslot_Reconfigure_t,  PAGE_MODE,  2),
 
-  M_FIXED      (Packet_Timeslot_Reconfigure_t, 1, 0x00),
+  M_FIXED      (Packet_Timeslot_Reconfigure_t, 1, 0x00), // BUG? escaping should be after TFI according to spec
   M_TYPE       (Packet_Timeslot_Reconfigure_t, Global_TFI, Global_TFI_t),
 
   M_UNION      (Packet_Timeslot_Reconfigure_t, 2),

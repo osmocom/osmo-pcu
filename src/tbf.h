@@ -49,6 +49,7 @@ enum gprs_rlcmac_tbf_state {
 	GPRS_RLCMAC_FINISHED,	/* flow finished, wait for release */
 	GPRS_RLCMAC_WAIT_RELEASE,/* wait for release or restart of DL TBF */
 	GPRS_RLCMAC_RELEASING,	/* releasing, wait to free TBI/USF */
+	GPRS_RLCMAC_RECONFIGURING, // TS RECON. scheduled
 };
 
 enum gprs_rlcmac_tbf_poll_state {
@@ -103,8 +104,9 @@ struct gprs_rlcmac_tbf {
 	const char *name() const;
 
 	struct msgb *create_dl_ass(uint32_t fn, uint8_t ts);
-	struct msgb *create_ul_ass(uint32_t fn, uint8_t ts);
-
+        struct msgb *create_ul_ass(uint32_t fn, uint8_t ts);
+        struct msgb *create_dl_ts_recon(uint32_t fn, uint8_t ts);
+    
 	GprsMs *ms() const;
 	void set_ms(GprsMs *ms);
 

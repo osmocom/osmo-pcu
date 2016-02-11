@@ -196,13 +196,13 @@ void BTS::set_current_block_frame_number(int fn, unsigned max_delay)
 	if (current_frame_number() != 0)
 		delay = (fn + 2715648 * 3 / 2 - current_frame_number()) % 2715648
 			- 2715648/2;
-	if (delay <= -late_block_delay_thresh) {
+/*	if (delay <= -late_block_delay_thresh) {
 		LOGP(DRLCMAC, LOGL_NOTICE,
 			"Late RLC block, FN delta: %d FN: %d curFN: %d\n",
 			delay, fn, current_frame_number());
 		rlc_late_block();
 	}
-
+FIXME - enable back before committing*/
 	m_cur_blk_fn = fn;
 	if (delay < fn_update_ok_min_delay || delay > fn_update_ok_max_delay ||
 		current_frame_number() == 0)
@@ -555,6 +555,20 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	return 0;
 }
 
+void BTS::trigger_dl_ts_recon(gprs_rlcmac_dl_tbf *dl_tbf)//FIXME: no actual sending, just schedule trigger via state change
+{
+	/* stop pending timer */
+	dl_tbf->stop_timer();
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "Send TS RECONFIGURE for %s on PCH (IMSI=%s)\n", tbf_name(dl_tbf), dl_tbf->imsi());
+
+	/* change state */
+	dl_tbf->set_state(GPRS_RLCMAC_RECONFIGURING); // FIXME - more flags?
+
+	/* "send" PACKET TS RECON. */
+	dl_tbf->m_wait_confirm = 1; // FIXME - do we have to wait for ACK from phone?
+}
+
 /* depending on the current TBF, we assign on PACCH or AGCH */
 void BTS::trigger_dl_ass(
 	struct gprs_rlcmac_dl_tbf *dl_tbf,
@@ -577,6 +591,9 @@ void BTS::trigger_dl_ass(
 			dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 		/* start timer */
 		tbf_timer_start(dl_tbf, 0, Tassign_pacch);
+
+		// actual assignment creation happens in the scheduler code
+		
 	} else {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for %s on PCH, no TBF exist (IMSI=%s)\n", tbf_name(dl_tbf), dl_tbf->imsi());
 		dl_tbf->was_releasing = dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);

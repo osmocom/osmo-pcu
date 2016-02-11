@@ -333,7 +333,236 @@ void Encoding::write_packet_uplink_assignment(
 	//	bitvec_write_field(dest, wp,0x0,1); // Measurement Mapping struct not present
 }
 
+/*
+CSN_DESCR_BEGIN(Packet_Timeslot_Reconfigure_t)
+  M_UINT       (Packet_Timeslot_Reconfigure_t,  MESSAGE_TYPE,  6),
+  M_UINT       (Packet_Timeslot_Reconfigure_t,  PAGE_MODE,  2),
 
+  M_FIXED      (Packet_Timeslot_Reconfigure_t, 1, 0x00), 
+  M_TYPE       (Packet_Timeslot_Reconfigure_t, Global_TFI, Global_TFI_t),
+
+  M_UNION      (Packet_Timeslot_Reconfigure_t, 2),
+  M_TYPE       (Packet_Timeslot_Reconfigure_t, u.PTR_GPRS_Struct, PTR_GPRS_t),
+  M_TYPE       (Packet_Timeslot_Reconfigure_t, u.PTR_EGPRS_Struct, PTR_EGPRS_t),
+
+  M_PADDING_BITS(Packet_Timeslot_Reconfigure_t),
+CSN_DESCR_END  (Packet_Timeslot_Reconfigure_t)
+
+CSN_DESCR_BEGIN       (PTR_GPRS_t)
+  M_UINT              (PTR_GPRS_t,  CHANNEL_CODING_COMMAND,  2),
+  M_TYPE              (PTR_GPRS_t, Common_Timeslot_Reconfigure_Data.Global_Packet_Timing_Advance, Global_Packet_Timing_Advance_t),
+  M_UINT              (PTR_GPRS_t,  Common_Timeslot_Reconfigure_Data.DOWNLINK_RLC_MODE,  1),
+  M_UINT              (PTR_GPRS_t,  Common_Timeslot_Reconfigure_Data.CONTROL_ACK,  1),
+
+  M_NEXT_EXIST        (PTR_GPRS_t, Common_Timeslot_Reconfigure_Data.Exist_DOWNLINK_TFI_ASSIGNMENT, 1),
+  M_UINT              (PTR_GPRS_t,  Common_Timeslot_Reconfigure_Data.DOWNLINK_TFI_ASSIGNMENT,  5),
+
+  M_NEXT_EXIST        (PTR_GPRS_t, Common_Timeslot_Reconfigure_Data.Exist_UPLINK_TFI_ASSIGNMENT, 1),
+  M_UINT              (PTR_GPRS_t,  Common_Timeslot_Reconfigure_Data.UPLINK_TFI_ASSIGNMENT,  5),
+
+  M_UINT              (PTR_GPRS_t,  Common_Timeslot_Reconfigure_Data.DOWNLINK_TIMESLOT_ALLOCATION,  8),
+
+  M_NEXT_EXIST        (PTR_GPRS_t, Common_Timeslot_Reconfigure_Data.Exist_Frequency_Parameters, 1),
+  M_TYPE              (PTR_GPRS_t, Common_Timeslot_Reconfigure_Data.Frequency_Parameters, Frequency_Parameters_t),
+
+  M_UNION             (PTR_GPRS_t, 2),
+  M_TYPE              (PTR_GPRS_t, u.Dynamic_Allocation, TRDynamic_Allocation_t),
+  CSN_ERROR           (PTR_GPRS_t, "1 - Fixed Allocation was removed", CSN_ERROR_STREAM_NOT_SUPPORTED),
+
+  M_NEXT_EXIST_OR_NULL(PTR_GPRS_t, Exist_AdditionsR99, 1),
+  M_TYPE              (PTR_GPRS_t, AdditionsR99, PTR_GPRS_AdditionsR99_t),
+CSN_DESCR_END         (PTR_GPRS_t)
+
+CSN_DESCR_BEGIN(PTR_EGPRS_t)
+  M_UNION      (PTR_EGPRS_t, 4),
+  M_TYPE       (PTR_EGPRS_t, u.PTR_EGPRS_00, PTR_EGPRS_00_t), // COMPACT reduced MA, sub-clause 12.29
+  CSN_ERROR    (PTR_EGPRS_t, "01 <PTR_EGPRS>", CSN_ERROR_STREAM_NOT_SUPPORTED),
+  CSN_ERROR    (PTR_EGPRS_t, "10 <PTR_EGPRS>", CSN_ERROR_STREAM_NOT_SUPPORTED),
+  CSN_ERROR    (PTR_EGPRS_t, "11 <PTR_EGPRS>", CSN_ERROR_STREAM_NOT_SUPPORTED),
+CSN_DESCR_END  (PTR_EGPRS_t)
+
+CSN_DESCR_BEGIN(PTR_EGPRS_00_t)
+  M_NEXT_EXIST (PTR_EGPRS_00_t, Exist_COMPACT_ReducedMA, 1),
+  M_TYPE       (PTR_EGPRS_00_t, COMPACT_ReducedMA, COMPACT_ReducedMA_t),
+
+  M_UINT       (PTR_EGPRS_00_t,  EGPRS_ChannelCodingCommand,  4),
+  M_UINT       (PTR_EGPRS_00_t,  RESEGMENT,  1),
+
+  M_NEXT_EXIST (PTR_EGPRS_00_t, Exist_DOWNLINK_EGPRS_WindowSize, 1),
+  M_UINT       (PTR_EGPRS_00_t,  DOWNLINK_EGPRS_WindowSize,  5),
+
+  M_NEXT_EXIST (PTR_EGPRS_00_t, Exist_UPLINK_EGPRS_WindowSize, 1),
+  M_UINT       (PTR_EGPRS_00_t,  UPLINK_EGPRS_WindowSize,  5),
+
+  M_UINT       (PTR_EGPRS_00_t,  LINK_QUALITY_MEASUREMENT_MODE,  2), // BEP_PERIOD?
+
+  M_TYPE       (PTR_EGPRS_00_t, Common_Timeslot_Reconfigure_Data.Global_Packet_Timing_Advance, Global_Packet_Timing_Advance_t),
+
+  M_NEXT_EXIST (PTR_EGPRS_00_t, Exist_Packet_Extended_Timing_Advance, 1),
+  M_UINT       (PTR_EGPRS_00_t,  Packet_Extended_Timing_Advance,  2),
+
+  M_UINT       (PTR_EGPRS_00_t,  Common_Timeslot_Reconfigure_Data.DOWNLINK_RLC_MODE,  1),
+  M_UINT       (PTR_EGPRS_00_t,  Common_Timeslot_Reconfigure_Data.CONTROL_ACK,  1),
+
+  M_NEXT_EXIST (PTR_EGPRS_00_t, Common_Timeslot_Reconfigure_Data.Exist_DOWNLINK_TFI_ASSIGNMENT, 1),
+  M_UINT       (PTR_EGPRS_00_t,  Common_Timeslot_Reconfigure_Data.DOWNLINK_TFI_ASSIGNMENT,  5),
+
+  M_NEXT_EXIST (PTR_EGPRS_00_t, Common_Timeslot_Reconfigure_Data.Exist_UPLINK_TFI_ASSIGNMENT, 1),
+  M_UINT       (PTR_EGPRS_00_t,  Common_Timeslot_Reconfigure_Data.UPLINK_TFI_ASSIGNMENT,  5),
+
+  M_UINT       (PTR_EGPRS_00_t,  Common_Timeslot_Reconfigure_Data.DOWNLINK_TIMESLOT_ALLOCATION,  8),
+
+  M_NEXT_EXIST (PTR_EGPRS_00_t, Common_Timeslot_Reconfigure_Data.Exist_Frequency_Parameters, 1),
+  M_TYPE       (PTR_EGPRS_00_t, Common_Timeslot_Reconfigure_Data.Frequency_Parameters, Frequency_Parameters_t),
+
+  M_UNION      (PTR_EGPRS_00_t, 2),
+  M_TYPE       (PTR_EGPRS_00_t, u.Dynamic_Allocation, TRDynamic_Allocation_t),
+  CSN_ERROR    (PTR_EGPRS_00_t, "1 <Fixed Allocation>", CSN_ERROR_STREAM_NOT_SUPPORTED),
+CSN_DESCR_END  (PTR_EGPRS_00_t)
+
+CSN_DESCR_BEGIN(TRDynamic_Allocation_t)
+  M_UINT       (TRDynamic_Allocation_t,  Extended_Dynamic_Allocation,  1),
+
+  M_NEXT_EXIST (TRDynamic_Allocation_t, Exist_P0, 2),
+  M_UINT       (TRDynamic_Allocation_t,  P0,  4),
+  M_UINT       (TRDynamic_Allocation_t,  PR_MODE,  1),
+
+  M_UINT       (TRDynamic_Allocation_t,  USF_GRANULARITY,  1),
+
+  M_NEXT_EXIST (TRDynamic_Allocation_t, Exist_RLC_DATA_BLOCKS_GRANTED, 1),
+  M_UINT       (TRDynamic_Allocation_t,  RLC_DATA_BLOCKS_GRANTED,  8),
+
+  M_NEXT_EXIST (TRDynamic_Allocation_t, Exist_TBF_Starting_Time, 1),
+  M_TYPE       (TRDynamic_Allocation_t, TBF_Starting_Time, Starting_Frame_Number_t),
+
+  M_UNION      (TRDynamic_Allocation_t, 2),
+  M_TYPE_ARRAY (TRDynamic_Allocation_t, u.Timeslot_Allocation, Timeslot_Allocation_t, 8),
+  M_TYPE       (TRDynamic_Allocation_t, u.Timeslot_Allocation_Power_Ctrl_Param, Timeslot_Allocation_Power_Ctrl_Param_t),
+CSN_DESCR_END  (TRDynamic_Allocation_t)
+*/
+/*
+ * PACKET TIMESLOT RECONFIGURE, sent on PACCH
+ * see TS 04 60, 11.2.31 and Table 9.1.9.2.1 (for WS coding)
+ */
+void Encoding::write_packet_ts_reconfigure(RlcMacDownlink_t * block,
+	struct gprs_rlcmac_tbf *tbf, uint8_t poll, uint8_t rrbp,
+	uint8_t alpha, uint8_t gamma, bool use_egprs)
+{
+	block->PAYLOAD_TYPE = 1;     // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
+	block->RRBP         = rrbp; // 0: N + 13
+	block->SP           = poll;// RRBP field is valid
+	block->USF          = 0;  // Uplink state flag
+
+	block->u.Packet_Timeslot_Reconfigure.MESSAGE_TYPE = 6;  // PTR
+	block->u.Packet_Timeslot_Reconfigure.PAGE_MODE    = 2;
+
+	if (GPRS_RLCMAC_UL_TBF == tbf->direction) {
+		block->u.Packet_Timeslot_Reconfigure.Global_TFI.u.UPLINK_TFI = tbf->tfi();
+	}
+	else {
+		block->u.Packet_Timeslot_Reconfigure.Global_TFI.u.DOWNLINK_TFI = tbf->tfi();
+	}
+
+	if (use_egprs) {
+		PTR_EGPRS_t *e;
+		e = &block->u.Packet_Timeslot_Reconfigure.u.PTR_EGPRS_Struct;
+		PTR_EGPRS_00_t *e00 = &e->u.PTR_EGPRS_00; // 01-11 variants are not implemented in CSN
+		e00->Exist_COMPACT_ReducedMA = 0; // no compact reducedMA
+		e00->EGPRS_ChannelCodingCommand = tbf->current_cs().to_num() - 1; // coding scheme
+		e00->RESEGMENT = 0; // no resegment
+		e00->Exist_DOWNLINK_EGPRS_WindowSize = 0;
+		e00->Exist_UPLINK_EGPRS_WindowSize = 0;
+		e00->LINK_QUALITY_MEASUREMENT_MODE = 0; /* no meas, see TS 44.060, table 11.2.7.2 */
+
+		Global_Packet_Timing_Advance_t *gta = &e00->Common_Timeslot_Reconfigure_Data.Global_Packet_Timing_Advance;
+		gta->Exist_TIMING_ADVANCE_VALUE = 1;
+		gta->TIMING_ADVANCE_VALUE = tbf->ta();
+		gta->Exist_UPLINK_TIMING_ADVANCE = 0;
+		gta->Exist_DOWNLINK_TIMING_ADVANCE = 0;
+		
+		e00->Exist_Packet_Extended_Timing_Advance = 0; // no extended TA
+		e00->Common_Timeslot_Reconfigure_Data.DOWNLINK_RLC_MODE = 0; //RLC acknowledged mode
+		e00->Common_Timeslot_Reconfigure_Data.CONTROL_ACK = 0; // not a new TBF
+		e00->Common_Timeslot_Reconfigure_Data.Exist_DOWNLINK_TFI_ASSIGNMENT = 0; // no DL. TFI ASS.
+		e00->Common_Timeslot_Reconfigure_Data.Exist_UPLINK_TFI_ASSIGNMENT = 0; // no UL. TFI ASS.
+		e00->Common_Timeslot_Reconfigure_Data.DOWNLINK_TIMESLOT_ALLOCATION = 0;
+		uint8_t tn;
+		for (tn = 0; tn < 8; tn++) { // FIXME: factor into separate function for both reconf. and dl_ass packets
+			if (tbf->pdch[tn])
+				block->u.Packet_Downlink_Assignment.TIMESLOT_ALLOCATION |= 0x80 >> tn;   // timeslot(s)
+		}
+		
+		e00->Common_Timeslot_Reconfigure_Data.Exist_Frequency_Parameters = 0; // no Freq. Param.
+
+		TRDynamic_Allocation_t *da = &e00->u.Dynamic_Allocation; // fixed alloc. not supported in CSN
+		da->Extended_Dynamic_Allocation = 0; // no extended DA
+		da->Exist_P0 = 0;
+		da->USF_GRANULARITY = 0; // 1 RLC/MAC block instead of 4 consecutive
+		da->Exist_RLC_DATA_BLOCKS_GRANTED = 0;
+		da->Exist_TBF_Starting_Time = 0;
+		Timeslot_Allocation_Power_Ctrl_Param_t *pp = &da->u.Timeslot_Allocation_Power_Ctrl_Param;
+		pp->ALPHA = alpha;
+		for (tn = 0; tn < 8; tn++) // FIXME: factor into separate function for both reconf. and dl_ass packets
+		{
+			if (tbf->pdch[tn]) {
+				pp->Slot[tn].Exist = 1; // Slot[i] = on
+				pp->Slot[tn].USF_TN = tbf->pdch[tn]->assigned_usf(); // tbf->m_usf[tn] - for uplink only
+				pp->Slot[tn].GAMMA_TN = gamma; // GAMMA_TN
+			}
+			else {
+				pp->Slot[tn].Exist = 0; // Slot[i] = off
+			}
+		}
+	} else {
+		PTR_GPRS_t *g;
+		g = &block->u.Packet_Timeslot_Reconfigure.u.PTR_GPRS_Struct;
+		
+	}
+}
+/*
+CSN_DESCR_BEGIN       (Packet_Downlink_Assignment_t)
+  M_UINT              (Packet_Downlink_Assignment_t,  MESSAGE_TYPE,  6),
+  M_UINT              (Packet_Downlink_Assignment_t,  PAGE_MODE,  2),
+
+  M_NEXT_EXIST        (Packet_Downlink_Assignment_t, Exist_PERSISTENCE_LEVEL, 1),
+  M_UINT_ARRAY        (Packet_Downlink_Assignment_t, PERSISTENCE_LEVEL, 4, 4),
+
+  M_TYPE              (Packet_Downlink_Assignment_t, ID, PacketDownlinkID_t),
+
+  M_FIXED             (Packet_Downlink_Assignment_t, 1, 0x00),//-- Message escape 
+
+  M_UINT              (Packet_Downlink_Assignment_t,  MAC_MODE,  2),
+  M_BIT               (Packet_Downlink_Assignment_t,  RLC_MODE),
+  M_BIT               (Packet_Downlink_Assignment_t,  CONTROL_ACK),
+  M_UINT              (Packet_Downlink_Assignment_t,  TIMESLOT_ALLOCATION,  8),
+  M_TYPE              (Packet_Downlink_Assignment_t, Packet_Timing_Advance, Packet_Timing_Advance_t),
+
+  M_NEXT_EXIST        (Packet_Downlink_Assignment_t, Exist_P0_and_BTS_PWR_CTRL_MODE, 3),
+  M_UINT              (Packet_Downlink_Assignment_t,  P0,  4),
+  M_BIT               (Packet_Downlink_Assignment_t,  BTS_PWR_CTRL_MODE),
+  M_UINT              (Packet_Downlink_Assignment_t,  PR_MODE,  1),
+
+  M_NEXT_EXIST        (Packet_Downlink_Assignment_t, Exist_Frequency_Parameters, 1),
+  M_TYPE              (Packet_Downlink_Assignment_t, Frequency_Parameters, Frequency_Parameters_t),
+
+  M_NEXT_EXIST        (Packet_Downlink_Assignment_t, Exist_DOWNLINK_TFI_ASSIGNMENT, 1),
+  M_UINT              (Packet_Downlink_Assignment_t,  DOWNLINK_TFI_ASSIGNMENT,  5),
+
+  M_NEXT_EXIST        (Packet_Downlink_Assignment_t, Exist_Power_Control_Parameters, 1),
+  M_TYPE              (Packet_Downlink_Assignment_t, Power_Control_Parameters, Power_Control_Parameters_t),
+
+  M_NEXT_EXIST        (Packet_Downlink_Assignment_t, Exist_TBF_Starting_Time, 1),
+  M_TYPE              (Packet_Downlink_Assignment_t, TBF_Starting_Time, Starting_Frame_Number_t),
+
+  M_NEXT_EXIST        (Packet_Downlink_Assignment_t, Exist_Measurement_Mapping, 1),
+  M_TYPE              (Packet_Downlink_Assignment_t, Measurement_Mapping, Measurement_Mapping_struct_t),
+
+  M_NEXT_EXIST_OR_NULL(Packet_Downlink_Assignment_t, Exist_AdditionsR99, 1),
+  M_TYPE              (Packet_Downlink_Assignment_t, AdditionsR99, PDA_AdditionsR99_t),
+
+  M_PADDING_BITS    (Packet_Downlink_Assignment_t),
+CSN_DESCR_END         (Packet_Downlink_Assignment_t)
+*/
 /* generate downlink assignment */
 void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 	bool old_tfi_is_valid, uint8_t old_tfi, uint8_t old_downlink,

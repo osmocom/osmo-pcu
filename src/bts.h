@@ -276,6 +276,7 @@ public:
 	int rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta);
 
 	void trigger_dl_ass(gprs_rlcmac_dl_tbf *tbf, gprs_rlcmac_tbf *old_tbf);
+	void trigger_dl_ts_recon(gprs_rlcmac_dl_tbf *tbf);
 	void snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi);
 
 	GprsMsStorage &ms_store();

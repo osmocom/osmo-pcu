@@ -961,12 +961,12 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 
 	if (single && slotcount) {
 		tbf_->upgrade_to_multislot = (avail_count > slotcount);
-		LOGP(DRLCMAC, LOGL_INFO, "Using single slot at TS %d for %s\n",
+		LOGP(DRLCMAC, LOGL_INFO, "Using single slot at TS %d for %s, multislot = %d\n",
 			first_ts,
-			(tbf->direction == GPRS_RLCMAC_DL_TBF) ? "DL" : "UL");
+			 (tbf->direction == GPRS_RLCMAC_DL_TBF) ? "DL" : "UL", tbf_->upgrade_to_multislot);
 	} else {
 		tbf_->upgrade_to_multislot = 0;
-		LOGP(DRLCMAC, LOGL_INFO, "Using %d slots for %s\n", slotcount,
+		LOGP(DRLCMAC, LOGL_INFO, "Using %d slots for %s, multislot = 0\n", slotcount,
 			(tbf->direction == GPRS_RLCMAC_DL_TBF) ? "DL" : "UL");
 	}
 

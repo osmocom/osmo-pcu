@@ -168,6 +168,12 @@ static struct msgb *sched_select_ctrl_msg(
 		}
 	}
 
+	if (!msg) {
+	    // create PACKET RS RECONFIGURE (check for state)
+	    tbf = dl_ass_tbf;
+	    msg = dl_ass_tbf->create_dl_ts_recon(fn, ts);
+	}
+	
 	/* any message */
 	if (msg) {
 		tbf->rotate_in_list();
