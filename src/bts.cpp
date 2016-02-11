@@ -560,13 +560,18 @@ void BTS::trigger_dl_ts_recon(gprs_rlcmac_dl_tbf *dl_tbf)//FIXME: no actual send
 	/* stop pending timer */
 	dl_tbf->stop_timer();
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "Send TS RECONFIGURE for %s on PCH (IMSI=%s)\n", tbf_name(dl_tbf), dl_tbf->imsi());
+	LOGP(DRLCMAC, LOGL_DEBUG, "PTSR: Send TS RECONFIGURE for %s on PCH (IMSI=%s)\n", tbf_name(dl_tbf), dl_tbf->imsi());
 
-	/* change state */
+	// FIXME: change state - dl_ass_state vs tbf->state vs state_flags
 	dl_tbf->set_state(GPRS_RLCMAC_RECONFIGURING); // FIXME - more flags?
+	if (!(dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) // FIXME: are we doing it right here?
+		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 
+	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
+	//tbf->was_releasing = tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE); // what's was_releasing for?
+	
 	/* "send" PACKET TS RECON. */
-	dl_tbf->m_wait_confirm = 1; // FIXME - do we have to wait for ACK from phone?
+	tbf_timer_start(dl_tbf, 0, Tassign_pacch); // FIXME - do we have to wait for ACK from phone?
 }
 
 /* depending on the current TBF, we assign on PACCH or AGCH */

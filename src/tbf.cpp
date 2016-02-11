@@ -864,7 +864,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 //				dl_tbf->bts->trigger_dl_ass(dl_tbf, dl_tbf); // FIXME: use write_packet_ts_reconfigure()
 				// [state/flags change] -> 
 				//LOGP(DRLCMAC, LOGL_NOTICE, "DL. ASS. for multislot\n");
-				LOGP(DRLCMAC, LOGL_NOTICE, "P. TS. R. for multislot\n");
+				LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: trigger for multislot\n");
 				dl_tbf->bts->trigger_dl_ts_recon(dl_tbf);
 //				abort(); // CRASH!
 			} else
@@ -917,38 +917,38 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ts_recon(uint32_t fn, uint8_t ts)
 //		LOGP(DRLCMAC, LOGL_NOTICE, "TS. R. -- ignoring due to incompatible state\n");
 		return NULL;
 	}
-	LOGP(DRLCMAC, LOGL_NOTICE, "TS. R. -- GPRS_RLCMAC_RECONFIGURING: preparing msg\n");
+	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: GPRS_RLCMAC_RECONFIGURING: preparing msg\n");
 	unsigned int rrbp = 0;
 	uint32_t new_poll_fn = 0;
 	struct msgb *msg;
 	
 	int rc = this->check_polling(fn, ts, &new_poll_fn, &rrbp);
 	if (rc < 0) {
-		LOGP(DRLCMAC, LOGL_ERROR, "check polling failed!\n");
+		LOGP(DRLCMAC, LOGL_ERROR, "PTSR: check polling failed!\n");
 		return NULL;
 	}
 		
  	msg = msgb_alloc(23, "rlcmac_pack_ts_recon");
 	if (!msg) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "TS. R. -- msg alloc failed\n");
+		LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: msg alloc failed\n");
 		return NULL;
 	}
 	bitvec *recon_vec = bitvec_alloc(123);
 	if (!recon_vec) {
 		msgb_free(msg);
-		LOGP(DRLCMAC, LOGL_NOTICE, "TS. R. -- bitvec alloc failed\n");
+		LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: bitvec alloc failed\n");
 		return NULL;
 	}
 	
 	bitvec_unhex(recon_vec,	"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	
-	LOGP(DRLCMAC, LOGL_INFO, "%s start Packet TS Reconfigure (PACCH)\n", tbf_name(this));
+	LOGP(DRLCMAC, LOGL_INFO, "PTSR: %s start Packet TS Reconfigure (PACCH)\n", tbf_name(this));
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	Encoding::write_packet_ts_reconfigure(mac_control_block, this, new_poll_fn, rrbp, bts_data()->alpha, bts_data()->gamma, this->is_egprs_enabled());
-	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet TS Reconfigure +++++++++++++++++++++++++\n");
+	LOGP(DRLCMAC, LOGL_DEBUG, "PTSR: +++++++++++++++++++++++++ TX : Packet TS Reconfigure +++++++++++++++++++++++++\n");
 	encode_gsm_rlcmac_downlink(recon_vec, mac_control_block);
 	LOGPC(DCSN1, LOGL_NOTICE, "\n");
-	LOGP(DRLCMAC, LOGL_DEBUG, "_________________________ TX : Packet TS Reconfigure _________________________\n");
+	LOGP(DRLCMAC, LOGL_DEBUG, "PTSR: _________________________ TX : Packet TS Reconfigure _________________________\n");
 	bitvec_pack(recon_vec, msgb_put(msg, 23)); // FIXME - size?
 	bitvec_free(recon_vec);
 	talloc_free(mac_control_block);

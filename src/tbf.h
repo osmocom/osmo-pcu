@@ -59,7 +59,7 @@ enum gprs_rlcmac_tbf_poll_state {
 
 enum gprs_rlcmac_tbf_dl_ass_state {
 	GPRS_RLCMAC_DL_ASS_NONE = 0,
-	GPRS_RLCMAC_DL_ASS_SEND_ASS, /* send downlink assignment on next RTS */
+	GPRS_RLCMAC_DL_ASS_SEND_ASS, /* send downlink assignment on next RTS */	
 	GPRS_RLCMAC_DL_ASS_WAIT_ACK, /* wait for PACKET CONTROL ACK */
 };
 
