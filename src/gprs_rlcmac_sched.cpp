@@ -130,6 +130,19 @@ static struct msgb *sched_select_ctrl_msg(
 		if (!tbf)
 			continue;
 
+		// schedule PTSR if necessary
+		if (tbf->direction == GPRS_RLCMAC_DL_TBF && tbf->state_is(GPRS_RLCMAC_RECONFIGURING)) {
+		    //tbf = dl_ass_tbf;
+		    //msg = tbf->create_dl_ts_recon(fn, ts);
+		    if (tbf == dl_ass_tbf) {
+			LOGP(DRLCMACSCHED, LOGL_NOTICE, "PTSR: scheduling on %s\n", tbf_name(dl_ass_tbf));
+			msg = dl_ass_tbf->create_dl_ts_recon(fn, ts);
+			if (msg)
+			    break;
+		    } else
+			LOGP(DRLCMACSCHED, LOGL_NOTICE, "PTSR: FIXME - scheduling PTSR on non-DL TBF\n");
+		}
+		
 		/*
 		 * Assignments for the same direction have lower precedence,
 		 * because they may kill the TBF when the CONTOL ACK is
@@ -152,7 +165,7 @@ static struct msgb *sched_select_ctrl_msg(
 		pdch->next_ctrl_prio %= 3;
 		break;
 	}
-
+	
 	if (!msg) {
 		/*
 		 * If one of these is left, the response (CONTROL ACK) from the
@@ -166,12 +179,6 @@ static struct msgb *sched_select_ctrl_msg(
 			tbf = ul_ass_tbf;
 			msg = ul_ass_tbf->create_ul_ass(fn, ts);
 		}
-	}
-
-	if (!msg) {
-	    // create PACKET RS RECONFIGURE (check for state)
-	    tbf = dl_ass_tbf;
-	    msg = dl_ass_tbf->create_dl_ts_recon(fn, ts);
 	}
 	
 	/* any message */

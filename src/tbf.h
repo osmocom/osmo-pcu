@@ -57,6 +57,12 @@ enum gprs_rlcmac_tbf_poll_state {
 	GPRS_RLCMAC_POLL_SCHED, /* a polling was scheduled */
 };
 
+enum gprs_rlcmac_tbf_dl_ts_recon_state {
+	GPRS_RLCMAC_DL_TS_RECON_NONE = 0,
+	GPRS_RLCMAC_DL_TS_RECON_SEND, /* send PTSR on next RTS */	
+	GPRS_RLCMAC_DL_TS_RECON_WAIT_ACK, /* wait for PACKET CONTROL ACK */
+};
+
 enum gprs_rlcmac_tbf_dl_ass_state {
 	GPRS_RLCMAC_DL_ASS_NONE = 0,
 	GPRS_RLCMAC_DL_ASS_SEND_ASS, /* send downlink assignment on next RTS */	
@@ -105,8 +111,8 @@ struct gprs_rlcmac_tbf {
 
 	struct msgb *create_dl_ass(uint32_t fn, uint8_t ts);
         struct msgb *create_ul_ass(uint32_t fn, uint8_t ts);
+        struct msgb *create_dl_ts_recon_exp(uint32_t fn, uint8_t ts);
         struct msgb *create_dl_ts_recon(uint32_t fn, uint8_t ts);
-    
 	GprsMs *ms() const;
 	void set_ms(GprsMs *ms);
 
