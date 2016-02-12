@@ -47,7 +47,7 @@ static uint32_t sched_poll(BTS *bts,
 		OSMO_ASSERT(ul_tbf);
 		/* this trx, this ts */
 		if (ul_tbf->trx->trx_no != trx || !ul_tbf->is_control_ts(ts))
-			continue;
+		    continue;
 		/* polling for next uplink block */
 		if (ul_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && ul_tbf->poll_fn == poll_fn)
@@ -66,6 +66,10 @@ static uint32_t sched_poll(BTS *bts,
 		/* this trx, this ts */
 		if (dl_tbf->trx->trx_no != trx || !dl_tbf->is_control_ts(ts))
 			continue;
+
+// FIXME: add _state and scheduling here for PTSR
+
+		
 		/* polling for next uplink block */
 		if (dl_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && dl_tbf->poll_fn == poll_fn)
@@ -119,7 +123,7 @@ static struct msgb *sched_select_ctrl_msg(
 		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch,
 		    struct gprs_rlcmac_tbf *ul_ass_tbf,
 		    struct gprs_rlcmac_tbf *dl_ass_tbf,
-		    struct gprs_rlcmac_ul_tbf *ul_ack_tbf)
+		    struct gprs_rlcmac_ul_tbf *ul_ack_tbf) // FIXME: add one more parameter and corresponding logic for PTSR
 {
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_tbf *tbf = NULL;
