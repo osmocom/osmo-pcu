@@ -55,6 +55,7 @@ static void print_help()
 			"provided by BTS\n"
 		"  -n	--mnc MNC	use given MNC instead of value "
 			"provided by BTS\n"
+		"  -V   --version	print version\n"
 		"  -r   --realtime PRIO Use SCHED_RR with the specified "
 			"priority\n"
 		);
