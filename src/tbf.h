@@ -59,13 +59,13 @@ enum gprs_rlcmac_tbf_poll_state {
 
 enum gprs_rlcmac_tbf_dl_ts_recon_state {
 	GPRS_RLCMAC_DL_TS_RECON_NONE = 0,
-	GPRS_RLCMAC_DL_TS_RECON_SEND, /* send PTSR on next RTS */	
+	GPRS_RLCMAC_DL_TS_RECON_SEND, /* send PTSR on next RTS */
 	GPRS_RLCMAC_DL_TS_RECON_WAIT_ACK, /* wait for PACKET CONTROL ACK */
 };
 
 enum gprs_rlcmac_tbf_dl_ass_state {
 	GPRS_RLCMAC_DL_ASS_NONE = 0,
-	GPRS_RLCMAC_DL_ASS_SEND_ASS, /* send downlink assignment on next RTS */	
+	GPRS_RLCMAC_DL_ASS_SEND_ASS, /* send downlink assignment on next RTS */
 	GPRS_RLCMAC_DL_ASS_WAIT_ACK, /* wait for PACKET CONTROL ACK */
 };
 
@@ -110,9 +110,8 @@ struct gprs_rlcmac_tbf {
 	const char *name() const;
 
 	struct msgb *create_dl_ass(uint32_t fn, uint8_t ts);
-        struct msgb *create_ul_ass(uint32_t fn, uint8_t ts);
-        struct msgb *create_dl_ts_recon_exp(uint32_t fn, uint8_t ts);
-        struct msgb *create_dl_ts_recon(uint32_t fn, uint8_t ts);
+	struct msgb *create_ul_ass(uint32_t fn, uint8_t ts);
+
 	GprsMs *ms() const;
 	void set_ms(GprsMs *ms);
 
@@ -239,7 +238,7 @@ protected:
 	int set_tlli_from_ul(uint32_t new_tlli);
 	void merge_and_clear_ms(GprsMs *old_ms);
 
-	static const char *tbf_state_name[7];
+    static const char *tbf_state_name[8];
 
 	class GprsMs *m_ms;
 
@@ -380,6 +379,10 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int release();
 	int abort();
 
+    bool needs_recon_to_be_scheduled() const;
+    void reconfigure_for_multislot();
+    msgb *create_recon(uint32_t fn, uint8_t ts);
+
 	/* TODO: add the gettimeofday as parameter */
 	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
 
@@ -407,6 +410,8 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	} m_bw;
 
 protected:
+    enum gprs_rlcmac_tbf_dl_ts_recon_state m_recon_state;
+
 	struct ana_result {
 		unsigned received_packets;
 		unsigned lost_packets;
@@ -493,6 +498,11 @@ inline gprs_rlc_window *gprs_rlcmac_tbf::window()
 	case GPRS_RLCMAC_DL_TBF: return &as_dl_tbf(this)->m_window;
 	}
 	return NULL;
+}
+
+inline bool gprs_rlcmac_dl_tbf::needs_recon_to_be_scheduled() const
+{
+    return m_recon_state == GPRS_RLCMAC_DL_TS_RECON_SEND;
 }
 
 #endif

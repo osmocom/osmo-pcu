@@ -25,12 +25,14 @@
 
 #include "pcu_utils.h"
 
+#warning pass the parameters by struct???
 static uint32_t sched_poll(BTS *bts,
 		    uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
 		    struct gprs_rlcmac_tbf **poll_tbf,
 		    struct gprs_rlcmac_tbf **ul_ass_tbf,
 		    struct gprs_rlcmac_tbf **dl_ass_tbf,
-		    struct gprs_rlcmac_ul_tbf **ul_ack_tbf)
+            struct gprs_rlcmac_ul_tbf **ul_ack_tbf,
+            struct gprs_rlcmac_dl_tbf **dl_recon_tbf)
 {
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
@@ -47,7 +49,7 @@ static uint32_t sched_poll(BTS *bts,
 		OSMO_ASSERT(ul_tbf);
 		/* this trx, this ts */
 		if (ul_tbf->trx->trx_no != trx || !ul_tbf->is_control_ts(ts))
-		    continue;
+			continue;
 		/* polling for next uplink block */
 		if (ul_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && ul_tbf->poll_fn == poll_fn)
@@ -66,10 +68,6 @@ static uint32_t sched_poll(BTS *bts,
 		/* this trx, this ts */
 		if (dl_tbf->trx->trx_no != trx || !dl_tbf->is_control_ts(ts))
 			continue;
-
-// FIXME: add _state and scheduling here for PTSR
-
-		
 		/* polling for next uplink block */
 		if (dl_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && dl_tbf->poll_fn == poll_fn)
@@ -78,6 +76,10 @@ static uint32_t sched_poll(BTS *bts,
 			*dl_ass_tbf = dl_tbf;
 		if (dl_tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS)
 			*ul_ass_tbf = dl_tbf;
+		if (dl_tbf->needs_recon_to_be_scheduled()) {
+		    *dl_recon_tbf = dl_tbf;
+		    printf("PTSR! %s:%d\n", __func__, __LINE__);
+		}
 	}
 
 	return poll_fn;
@@ -123,30 +125,18 @@ static struct msgb *sched_select_ctrl_msg(
 		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch,
 		    struct gprs_rlcmac_tbf *ul_ass_tbf,
 		    struct gprs_rlcmac_tbf *dl_ass_tbf,
-		    struct gprs_rlcmac_ul_tbf *ul_ack_tbf) // FIXME: add one more parameter and corresponding logic for PTSR
+            struct gprs_rlcmac_ul_tbf *ul_ack_tbf,
+            struct gprs_rlcmac_dl_tbf *dl_recon_tbf)
 {
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_tbf *tbf = NULL;
-	struct gprs_rlcmac_tbf *next_list[3] = { ul_ass_tbf, dl_ass_tbf, ul_ack_tbf };
+    struct gprs_rlcmac_tbf *next_list[] = { ul_ass_tbf, dl_ass_tbf, ul_ack_tbf, dl_recon_tbf };
 
 	for (size_t i = 0; i < ARRAY_SIZE(next_list); ++i) {
-		tbf = next_list[(pdch->next_ctrl_prio + i) % 3];
+		tbf = next_list[(pdch->next_ctrl_prio + i) % 4];
 		if (!tbf)
 			continue;
 
-		// schedule PTSR if necessary
-		if (tbf->direction == GPRS_RLCMAC_DL_TBF && tbf->state_is(GPRS_RLCMAC_RECONFIGURING)) {
-		    //tbf = dl_ass_tbf;
-		    //msg = tbf->create_dl_ts_recon(fn, ts);
-		    if (tbf == dl_ass_tbf) {
-			LOGP(DRLCMACSCHED, LOGL_NOTICE, "PTSR: scheduling on %s\n", tbf_name(dl_ass_tbf));
-			msg = dl_ass_tbf->create_dl_ts_recon(fn, ts);
-			if (msg)
-			    break;
-		    } else
-			LOGP(DRLCMACSCHED, LOGL_NOTICE, "PTSR: FIXME - scheduling PTSR on non-DL TBF\n");
-		}
-		
 		/*
 		 * Assignments for the same direction have lower precedence,
 		 * because they may kill the TBF when the CONTOL ACK is
@@ -159,17 +149,20 @@ static struct msgb *sched_select_ctrl_msg(
 			msg = dl_ass_tbf->create_dl_ass(fn, ts);
 		else if (tbf == ul_ack_tbf)
 			msg = ul_ack_tbf->create_ul_ack(fn, ts);
-
+		else if (tbf == dl_recon_tbf) {
+		    msg = dl_recon_tbf->create_recon(fn, ts);
+		    printf("PTSR! %s:%d %s\n", __func__, __LINE__, msgb_hexdump(msg));
+		}
 		if (!msg) {
 			tbf = NULL;
 			continue;
 		}
 
 		pdch->next_ctrl_prio += 1;
-		pdch->next_ctrl_prio %= 3;
+		pdch->next_ctrl_prio %= 4;
 		break;
 	}
-	
+
 	if (!msg) {
 		/*
 		 * If one of these is left, the response (CONTROL ACK) from the
@@ -184,7 +177,7 @@ static struct msgb *sched_select_ctrl_msg(
 			msg = ul_ass_tbf->create_ul_ass(fn, ts);
 		}
 	}
-	
+
 	/* any message */
 	if (msg) {
 		tbf->rotate_in_list();
@@ -311,8 +304,9 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 {
 	struct gprs_rlcmac_pdch *pdch;
 	struct gprs_rlcmac_tbf *poll_tbf = NULL, *dl_ass_tbf = NULL,
-		*ul_ass_tbf = NULL;
+        *ul_ass_tbf = NULL;
 	struct gprs_rlcmac_ul_tbf *ul_ack_tbf = NULL;
+    struct gprs_rlcmac_dl_tbf *dl_recon_tbf = NULL;
 	uint8_t usf = 0x7;
 	struct msgb *msg = NULL;
 	uint32_t poll_fn, sba_fn;
@@ -333,14 +327,16 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	pdch->last_rts_fn = fn;
 
 	poll_fn = sched_poll(bts->bts, trx, ts, fn, block_nr, &poll_tbf, &ul_ass_tbf,
-		&dl_ass_tbf, &ul_ack_tbf);
+        &dl_ass_tbf, &ul_ack_tbf, &dl_recon_tbf);
 	/* check uplink resource for polling */
-	if (poll_tbf)
+	if (poll_tbf){
+	    printf("TBF=%s, FN=%d, POLL_FN=%d\n", tbf_name(poll_tbf), fn, poll_fn);
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling free USF for "
 			"polling at FN=%d of %s\n", trx, ts, fn,
 			block_nr, poll_fn,
 			tbf_name(poll_tbf));
+	}
 		/* use free USF */
 	/* else. check for sba */
 	else if ((sba_fn = bts->bts->sba()->sched(trx, ts, fn, block_nr) != 0xffffffff))
@@ -355,7 +351,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 
 	/* Prio 1: select control message */
 	msg = sched_select_ctrl_msg(trx, ts, fn, block_nr, pdch, ul_ass_tbf,
-		dl_ass_tbf, ul_ack_tbf);
+        dl_ass_tbf, ul_ack_tbf, dl_recon_tbf);
 
 	/* Prio 2: select data message for downlink */
 	if (!msg)

@@ -555,26 +555,6 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 	return 0;
 }
 
-void BTS::trigger_dl_ts_recon(gprs_rlcmac_dl_tbf *dl_tbf)//FIXME: no actual sending, just schedule trigger via state change
-{
-	/* stop pending timer */
-	dl_tbf->stop_timer();
-
-	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: Send TS RECONFIGURE for %s on PCH (IMSI=%s)\n", tbf_name(dl_tbf), dl_tbf->imsi());
-
-	// FIXME: change state - dl_ass_state vs tbf->state vs state_flags
-		/* change state */
-	dl_tbf->set_state(GPRS_RLCMAC_RECONFIGURING); // FIXME - more flags?
-	if (!(dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) // FIXME: are we doing it right here?
-		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
-
-	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS; // FIXME: use dedicated state and enum
-	dl_tbf->was_releasing = dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE); // what's was_releasing for?
-
-	/* "send" PACKET TS RECON. */
-	tbf_timer_start(dl_tbf, 0, Tassign_pacch); // FIXME - do we have to time this?
-}
-
 /* depending on the current TBF, we assign on PACCH or AGCH */
 void BTS::trigger_dl_ass(
 	struct gprs_rlcmac_dl_tbf *dl_tbf,
@@ -597,9 +577,6 @@ void BTS::trigger_dl_ass(
 			dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 		/* start timer */
 		tbf_timer_start(dl_tbf, 0, Tassign_pacch);
-
-		// actual assignment creation happens in the scheduler code
-		
 	} else {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for %s on PCH, no TBF exist (IMSI=%s)\n", tbf_name(dl_tbf), dl_tbf->imsi());
 		dl_tbf->was_releasing = dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
@@ -1418,7 +1395,7 @@ int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint32_t fn,
 		bitvec_free(block);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK_OPT:
-		LOGP(DRLCMAC, LOGL_NOTICE, "GPRS_RLCMAC_CONTROL_BLOCK_OPT block payload is not supported.\n");
+	  LOGP(DRLCMAC, LOGL_NOTICE, "GPRS_RLCMAC_CONTROL_BLOCK_OPT on FN %d with payload %s is not supported.\n", fn, osmo_hexdump((const unsigned char *)payload, len));
 		break;
 	default:
 		LOGP(DRLCMAC, LOGL_NOTICE, "Unknown RLCMAC block payload(%u).\n", payload);

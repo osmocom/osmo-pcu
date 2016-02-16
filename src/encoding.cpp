@@ -439,38 +439,77 @@ CSN_DESCR_BEGIN(TRDynamic_Allocation_t)
   M_TYPE_ARRAY (TRDynamic_Allocation_t, u.Timeslot_Allocation, Timeslot_Allocation_t, 8),
   M_TYPE       (TRDynamic_Allocation_t, u.Timeslot_Allocation_Power_Ctrl_Param, Timeslot_Allocation_Power_Ctrl_Param_t),
 CSN_DESCR_END  (TRDynamic_Allocation_t)
+
+CSN_DESCR_BEGIN(Timeslot_Allocation_Power_Ctrl_Param_t)
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  ALPHA,  4),
+
+  M_NEXT_EXIST (Timeslot_Allocation_Power_Ctrl_Param_t, Slot[0].Exist, 2),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[0].USF_TN,  3),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[0].GAMMA_TN,  5),
+
+  M_NEXT_EXIST (Timeslot_Allocation_Power_Ctrl_Param_t, Slot[1].Exist, 2),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[1].USF_TN,  3),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[1].GAMMA_TN,  5),
+
+  M_NEXT_EXIST (Timeslot_Allocation_Power_Ctrl_Param_t, Slot[2].Exist, 2),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[2].USF_TN,  3),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[2].GAMMA_TN,  5),
+
+  M_NEXT_EXIST (Timeslot_Allocation_Power_Ctrl_Param_t, Slot[3].Exist, 2),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[3].USF_TN,  3),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[3].GAMMA_TN,  5),
+
+  M_NEXT_EXIST (Timeslot_Allocation_Power_Ctrl_Param_t, Slot[4].Exist, 2),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[4].USF_TN,  3),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[4].GAMMA_TN,  5),
+
+  M_NEXT_EXIST (Timeslot_Allocation_Power_Ctrl_Param_t, Slot[5].Exist, 2),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[5].USF_TN,  3),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[5].GAMMA_TN,  5),
+
+  M_NEXT_EXIST (Timeslot_Allocation_Power_Ctrl_Param_t, Slot[6].Exist, 2),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[6].USF_TN,  3),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[6].GAMMA_TN,  5),
+
+  M_NEXT_EXIST (Timeslot_Allocation_Power_Ctrl_Param_t, Slot[7].Exist, 2),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[7].USF_TN,  3),
+  M_UINT       (Timeslot_Allocation_Power_Ctrl_Param_t,  Slot[7].GAMMA_TN,  5),
+CSN_DESCR_END  (Timeslot_Allocation_Power_Ctrl_Param_t)
+
+
+CSN_DESCR_BEGIN(Timeslot_Allocation_t)
+  M_NEXT_EXIST (Timeslot_Allocation_t, Exist, 1),
+  M_UINT       (Timeslot_Allocation_t,  USF_TN,  3),
+CSN_DESCR_END  (Timeslot_Allocation_t)
 */
 /*
  * PACKET TIMESLOT RECONFIGURE, sent on PACCH
  * see TS 04 60, 11.2.31 and Table 9.1.9.2.1 (for WS coding)
  */
 void Encoding::write_packet_ts_reconfigure(RlcMacDownlink_t * block,
-	struct gprs_rlcmac_tbf *tbf, uint8_t poll, uint8_t rrbp,
-	uint8_t alpha, uint8_t gamma, bool use_egprs)
+	struct gprs_rlcmac_dl_tbf *tbf, uint8_t poll, uint8_t rrbp,
+					   uint8_t alpha, uint8_t gamma, bool use_egprs, bool use_power_ctrl)
 {
 	block->PAYLOAD_TYPE = 1;     // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
 	block->RRBP         = rrbp; // 0: N + 13
-	block->SP           = poll;// RRBP field is valid
+	block->SP           = poll;// RRBP field is valid?
 	block->USF          = 0;  // Uplink state flag
 
-	block->u.Packet_Timeslot_Reconfigure.MESSAGE_TYPE = 6;  // PTR
-	block->u.Packet_Timeslot_Reconfigure.PAGE_MODE    = 2;
+	block->u.Packet_Timeslot_Reconfigure.MESSAGE_TYPE = 7;  // PTR
+	block->u.Packet_Timeslot_Reconfigure.PAGE_MODE    = 3; // same as before
 
-	if (GPRS_RLCMAC_UL_TBF == tbf->direction) {
-		block->u.Packet_Timeslot_Reconfigure.Global_TFI.u.UPLINK_TFI = tbf->tfi();
-	}
-	else {
-		block->u.Packet_Timeslot_Reconfigure.Global_TFI.u.DOWNLINK_TFI = tbf->tfi();
-	}
+	block->u.Packet_Timeslot_Reconfigure.Global_TFI.u.DOWNLINK_TFI = tbf->tfi();
 
 	if (use_egprs) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: EDGE for TFI %d\n", tbf->tfi());
+		block->u.Packet_Timeslot_Reconfigure.UnionType = 1; // EGPRS
 		PTR_EGPRS_t *e;
 		e = &block->u.Packet_Timeslot_Reconfigure.u.PTR_EGPRS_Struct;
 		PTR_EGPRS_00_t *e00 = &e->u.PTR_EGPRS_00; // 01-11 variants are not implemented in CSN
 		e00->Exist_COMPACT_ReducedMA = 0; // no compact reducedMA
 		e00->EGPRS_ChannelCodingCommand = tbf->current_cs().to_num() - 1; // coding scheme
 		e00->RESEGMENT = 0; // no resegment
-		e00->Exist_DOWNLINK_EGPRS_WindowSize = 0;
+		e00->Exist_DOWNLINK_EGPRS_WindowSize = 0; // FIXME: configure window size at the same time?
 		e00->Exist_UPLINK_EGPRS_WindowSize = 0;
 		e00->LINK_QUALITY_MEASUREMENT_MODE = 0; /* no meas, see TS 44.060, table 11.2.7.2 */
 
@@ -485,13 +524,14 @@ void Encoding::write_packet_ts_reconfigure(RlcMacDownlink_t * block,
 		e00->Common_Timeslot_Reconfigure_Data.CONTROL_ACK = 0; // not a new TBF
 		e00->Common_Timeslot_Reconfigure_Data.Exist_DOWNLINK_TFI_ASSIGNMENT = 0; // no DL. TFI ASS.
 		e00->Common_Timeslot_Reconfigure_Data.Exist_UPLINK_TFI_ASSIGNMENT = 0; // no UL. TFI ASS.
+	
 		e00->Common_Timeslot_Reconfigure_Data.DOWNLINK_TIMESLOT_ALLOCATION = 0;
 		uint8_t tn;
 		for (tn = 0; tn < 8; tn++) { // FIXME: factor into separate function for both reconf. and dl_ass packets
 			if (tbf->pdch[tn])
-				block->u.Packet_Downlink_Assignment.TIMESLOT_ALLOCATION |= 0x80 >> tn;   // timeslot(s)
+			  e00->Common_Timeslot_Reconfigure_Data.DOWNLINK_TIMESLOT_ALLOCATION |= 0x80 >> tn;
 		}
-		
+		printf("PTSR TBF_TSA=%d\n", e00->Common_Timeslot_Reconfigure_Data.DOWNLINK_TIMESLOT_ALLOCATION);
 		e00->Common_Timeslot_Reconfigure_Data.Exist_Frequency_Parameters = 0; // no Freq. Param.
 
 		TRDynamic_Allocation_t *da = &e00->u.Dynamic_Allocation; // fixed alloc. not supported in CSN
@@ -500,24 +540,44 @@ void Encoding::write_packet_ts_reconfigure(RlcMacDownlink_t * block,
 		da->USF_GRANULARITY = 0; // 1 RLC/MAC block instead of 4 consecutive
 		da->Exist_RLC_DATA_BLOCKS_GRANTED = 0;
 		da->Exist_TBF_Starting_Time = 0;
-		Timeslot_Allocation_Power_Ctrl_Param_t *pp = &da->u.Timeslot_Allocation_Power_Ctrl_Param;
-		pp->ALPHA = alpha;
-		for (tn = 0; tn < 8; tn++) // FIXME: factor into separate function for both reconf. and dl_ass packets
-		{
-			if (tbf->pdch[tn]) {
-				pp->Slot[tn].Exist = 1; // Slot[i] = on
-				pp->Slot[tn].USF_TN = tbf->pdch[tn]->assigned_usf(); // tbf->m_usf[tn] - for uplink only
-				pp->Slot[tn].GAMMA_TN = gamma; // GAMMA_TN
-			}
-			else {
-				pp->Slot[tn].Exist = 0; // Slot[i] = off
-			}
+		
+		if (use_power_ctrl) {
+		  Timeslot_Allocation_Power_Ctrl_Param_t *pp = &da->u.Timeslot_Allocation_Power_Ctrl_Param;
+		  pp->ALPHA = alpha;
+		  for (tn = 0; tn < 8; tn++) // FIXME: factor into separate function for both reconf. and dl_ass packets
+		    {
+		      printf("tbf... %d\n", tbf->pdch[tn]);
+		      if (tbf->pdch[tn]) {
+			pp->Slot[tn].Exist = 1; // Slot[i] = on
+			pp->Slot[tn].USF_TN = tbf->pdch[tn]->assigned_usf(); // tbf->m_usf[tn] - for uplink only
+			pp->Slot[tn].GAMMA_TN = gamma; // GAMMA_TN
+		      }
+		      else {
+			pp->Slot[tn].Exist = 0; // Slot[i] = off
+		      }
+		    }
+		} else {
+		  
+		  for (tn = 0; tn < 8; tn++) // FIXME: factor into separate function for both reconf. and dl_ass packets
+		    {
+		      if (tbf->pdch[tn]) {
+		    (&da->u.Timeslot_Allocation[tn])->Exist = 1;
+		    (&da->u.Timeslot_Allocation[tn])->USF_TN = tbf->pdch[tn]->assigned_usf();//tbf->m_usf[ts] equivalent for DL?
+		    //(&da->u.Timeslot_Allocation[tn])->USF_TN = tbf->m_usf[tn];
+		    LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: TN %d assigned USF %d\n", tn, (&da->u.Timeslot_Allocation[tn])->USF_TN);
+		      } else {
+			LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: TN %d not used\n", tn);   
+			(&da->u.Timeslot_Allocation[tn])->Exist = 0;
+		      }
+		    }
 		}
 	} else {
+		LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: GPRS for TFI %d\n", tbf->tfi());
 		PTR_GPRS_t *g;
 		g = &block->u.Packet_Timeslot_Reconfigure.u.PTR_GPRS_Struct;
 		
 	}
+	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: encoding complete\n");
 }
 /*
 CSN_DESCR_BEGIN       (Packet_Downlink_Assignment_t)

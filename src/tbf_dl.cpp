@@ -43,6 +43,8 @@ extern "C" {
 /* After sending these frames, we poll for ack/nack. */
 #define POLL_ACK_AFTER_FRAMES 20
 
+extern void *tall_pcu_ctx;
+
 extern "C" {
 int bssgp_tx_llc_discarded(struct bssgp_bvc_ctx *bctx, uint32_t tlli,
                            uint8_t num_frames, uint32_t num_octets);
@@ -1124,4 +1126,86 @@ bool gprs_rlcmac_dl_tbf::keep_open(unsigned fn) const
 
 	keep_time_frames = msecs_to_frames(bts_data()->dl_tbf_idle_msec);
 	return frames_since_last_drain(fn) <= keep_time_frames;
+}
+
+void gprs_rlcmac_dl_tbf::reconfigure_for_multislot()
+{
+  printf("PTSR! %s:%d\n", __func__, __LINE__);
+    /* Clear old state */
+    state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
+
+    /* Trigger a multislot assignment by updating this tbf */
+    update();
+
+    /* Schedule this to be sent to the MS */
+    stop_timer();
+    m_recon_state = GPRS_RLCMAC_DL_TS_RECON_SEND;
+    set_state(GPRS_RLCMAC_RECONFIGURING);
+    /* ??? */
+    if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
+        state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
+    /* TODO... start a timer */
+}
+
+msgb *gprs_rlcmac_dl_tbf::create_recon(uint32_t fn, uint8_t ts)
+{
+    msgb *msg;
+    unsigned int rrbp = 0, should_poll;
+    uint32_t new_poll_fn = 0;
+
+    //    OSMO_ASSERT(needs_recon_to_be_scheduled()); // makes tests unnecessary hard
+    //	printf("PTSR! %s:%d for FN=%d, TS=%d\n", __func__, __LINE__, fn, ts);
+
+	if (!is_control_ts(ts)) {
+	  //  LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: Cannot poll because MS cannot reply. (TS=%d, first common TS=%d)\n", ts, first_common_ts);
+	  printf("PTSR: Cannot poll because MS cannot reply. (TS=%d, first common TS=%d)\n", ts, first_common_ts);
+	  should_poll = 0;
+	} else {
+	  // LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: we should poll on TS=%d\n", ts);
+	  printf("PTSR: we should poll on TS=%d\n", ts);
+	  should_poll = 1;
+	  int rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
+	  if (rc < 0) {
+	    printf("PTSR! %s:%d\n", __func__, __LINE__);
+	    return NULL;
+	  }
+	}
+
+    msg = msgb_alloc(23, "rlcmac_pack_ts_recon");
+    if (!msg) {
+        LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: msg alloc failed\n");
+        return NULL;
+    }
+    bitvec *recon_vec = bitvec_alloc(23);
+    if (!recon_vec) {
+        msgb_free(msg);
+        LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: bitvec alloc failed\n");
+        return NULL;
+    }
+
+    LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: bitvec alloc ok\n");
+    LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: %s start Packet TS Reconfigure (PACCH)\n", tbf_name(this));
+    bitvec_unhex(recon_vec, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+    RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
+
+    Encoding::write_packet_ts_reconfigure(mac_control_block, this, should_poll, rrbp, bts_data()->alpha, bts_data()->gamma, this->is_egprs_enabled(), 1);
+    LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: +++++++++++++++++++++++++ TX : Packet TS Reconfigure +++++++++++++++++++++++++\n");
+    encode_gsm_rlcmac_downlink(recon_vec, mac_control_block);
+    LOGPC(DCSN1, LOGL_NOTICE, "\n");
+    LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: _________________________ TX : Packet TS Reconfigure _________________________\n");
+
+    bitvec_pack(recon_vec, msgb_put(msg, 23)); // FIXME - size?
+    bitvec_free(recon_vec);
+    talloc_free(mac_control_block);
+
+    if (should_poll) {
+      set_polling(new_poll_fn, ts);
+    }
+    // FIXME: adjust state according to polling status
+    m_recon_state = GPRS_RLCMAC_DL_TS_RECON_WAIT_ACK;
+
+    /* update the control_ts after the ack? */
+    //tbf_assign_control_ts(this); // already assigned?
+
+    return msg;
 }

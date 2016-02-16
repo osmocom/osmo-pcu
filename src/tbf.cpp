@@ -399,6 +399,7 @@ const char *gprs_rlcmac_tbf::tbf_state_name[] = {
 	"FINISHED",
 	"WAIT RELEASE",
 	"RELEASING",
+    "RECONFIGURING",
 };
 
 void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
@@ -854,19 +855,14 @@ void gprs_rlcmac_tbf::handle_timeout()
 				/* This tbf can be upgraded to use multiple DL
 				 * timeslots and now that there is already one
 				 * slot assigned send another DL assignment via
-				 * PDCH. */
+                 * PDCH.
+                 * We have decided it is worthwhile to upgrade this
+                 * TBF to multislot and we do it by scheduling the
+                 * TS Downlink reconfigure message
+                 */
 
 				/* keep to flags */
-				dl_tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
-
-				dl_tbf->update(); // do the MSLOT assignment
-
-//				dl_tbf->bts->trigger_dl_ass(dl_tbf, dl_tbf); // FIXME: use write_packet_ts_reconfigure()
-				//LOGP(DRLCMAC, LOGL_NOTICE, "DL. ASS. for multislot\n");
-				LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: trigger for multislot\n");
-				dl_tbf->bts->trigger_dl_ts_recon(dl_tbf);
-				LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: trigger set\n");
-//				abort(); // CRASH!
+                dl_tbf->reconfigure_for_multislot();
 			} else
 				LOGP(DRLCMAC, LOGL_NOTICE, "%s Continue flow after "
 					"IMM.ASS confirm\n", tbf_name(dl_tbf));
@@ -908,196 +904,6 @@ int gprs_rlcmac_tbf::rlcmac_diag()
 		LOGP(DRLCMAC, LOGL_NOTICE, "- No downlink ACK received yet\n");
 
 	return 0;
-}
-
-struct msgb *gprs_rlcmac_tbf::create_dl_ts_recon_exp(uint32_t fn, uint8_t ts)
-{
-	// FIXME - check appropriate flags?
-
-	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: GPRS_RLCMAC_RECONFIGURING: preparing msg\n");
-	unsigned int rrbp = 0;
-	uint32_t new_poll_fn = 0;
-	struct msgb *msg;
-	
-	int rc = this->check_polling(fn, ts, &new_poll_fn, &rrbp);
-	if (rc < 0) {
-		LOGP(DRLCMAC, LOGL_ERROR, "PTSR: check polling failed!\n");
-		return NULL;
-	}
-//	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: polling checked\n");
- 	msg = msgb_alloc(23, "rlcmac_pack_ts_recon");
-	if (!msg) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: msg alloc failed\n");
-		return NULL;
-	}
-//	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: msg alloc ok\n");
-	bitvec *recon_vec = bitvec_alloc(123);
-	if (!recon_vec) {
-		msgb_free(msg);
-		LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: bitvec alloc failed\n");
-		return NULL;
-	}
-	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: bitvec alloc ok\n");
-	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: %s start Packet TS Reconfigure (PACCH)\n", tbf_name(this)); // abort()?
-	bitvec_unhex(recon_vec,	"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
-
-	Encoding::write_packet_ts_reconfigure(mac_control_block, this, new_poll_fn, rrbp, bts_data()->alpha, bts_data()->gamma, this->is_egprs_enabled());
-	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: +++++++++++++++++++++++++ TX : Packet TS Reconfigure +++++++++++++++++++++++++\n");
-	encode_gsm_rlcmac_downlink(recon_vec, mac_control_block);
-	LOGPC(DCSN1, LOGL_NOTICE, "\n");
-	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: _________________________ TX : Packet TS Reconfigure _________________________\n");
-
-	bitvec_pack(recon_vec, msgb_put(msg, 23)); // FIXME - size?
-	bitvec_free(recon_vec);
-	talloc_free(mac_control_block);
-
-// FIXME: change to proper state before returning
-//	if (poll_ass_dl) {
-		set_polling(new_poll_fn, ts);
-		//	if (new_dl_tbf->state_is(GPRS_RLCMAC_ASSIGN))
-			this->set_state(GPRS_RLCMAC_WAIT_ASSIGN);
-		dl_ass_state = GPRS_RLCMAC_DL_ASS_WAIT_ACK;
-		LOGP(DRLCMACDL, LOGL_INFO,
-			"%s Scheduled PTSR polling on FN=%d, TS=%d\n",
-			name(), poll_fn, poll_ts);
-/*	} else {
-		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-		new_dl_tbf->set_state(GPRS_RLCMAC_FLOW);
-		tbf_assign_control_ts(new_dl_tbf);
-		// stop pending assignment timer 
-		new_dl_tbf->stop_timer();
-	}
-*/
-		LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: msg assembled ok\n");
-	return msg;
-}
-
-struct msgb *gprs_rlcmac_tbf::create_dl_ts_recon(uint32_t fn, uint8_t ts)
-{
-	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: GPRS_RLCMAC_RECONFIGURING: preparing msg\n");
-	struct msgb *msg;
-	struct gprs_rlcmac_dl_tbf *new_dl_tbf = NULL;
-	int poll_ass_dl = 1;
-	unsigned int rrbp = 0;
-	uint32_t new_poll_fn = 0;
-	int rc;
-	bool old_tfi_is_valid = is_tfi_assigned();
-
-	if (direction == GPRS_RLCMAC_DL_TBF && !is_control_ts(ts)) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: Cannot poll for downlink "
-			"assigment, because MS cannot reply. (TS=%d, "
-			"first common TS=%d)\n", ts,
-			first_common_ts);
-		poll_ass_dl = 0;
-	}
-	if (poll_ass_dl) {
-		if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
-			ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK)
-		{
-			LOGP(DRLCMACUL, LOGL_DEBUG, "PTSR: Polling is already "
-				"scheduled for %s, so we must wait for the uplink "
-				"assignment...\n", tbf_name(this));
-			return NULL;
-		}
-		rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
-		if (rc < 0) {
-			LOGP(DRLCMAC, LOGL_ERROR, "PTSR: check polling failed!\n");
-			return NULL;
-		}
-	}
-
-	/* on uplink TBF we get the downlink TBF to be assigned. */
-	if (direction == GPRS_RLCMAC_UL_TBF) {
-		gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
-
-		/* be sure to check first, if contention resolution is done,
-		 * otherwise we cannot send the assignment yet */
-		if (!ul_tbf->m_contention_resolution_done) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "PTSR: Cannot assign DL TBF now, "
-				"because contention resolution is not "
-				"finished.\n");
-			return NULL;
-		}
-	}
-
-	if (ms())
-		new_dl_tbf = ms()->dl_tbf();
-
-	if (!new_dl_tbf) {
-		LOGP(DRLCMACDL, LOGL_ERROR, "PTSR: We have a schedule for downlink "
-			"assignment at %s, but there is no downlink "
-			"TBF\n", tbf_name(this));
-		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-		return NULL;
-	}
-
-	if (new_dl_tbf == as_dl_tbf(this))
-		LOGP(DRLCMAC, LOGL_DEBUG,
-			"PTSR: New and old TBF are the same %s\n", name());
-
-	if (old_tfi_is_valid && !new_dl_tbf->is_tlli_valid()) {
-		LOGP(DRLCMACDL, LOGL_ERROR,
-			"PTSR: The old TFI is not assigned and there is no "
-			"TLLI. Old TBF %s, new TBF %s\n",
-			name(), new_dl_tbf->name());
-		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-		return NULL;
-	}
-
-	new_dl_tbf->was_releasing = was_releasing;
-	msg = msgb_alloc(23, "rlcmac_dl_ts_rec");
-	if (!msg)
-		return NULL;
-	bitvec *ass_vec = bitvec_alloc(23);
-	if (!ass_vec) {
-		msgb_free(msg);
-		return NULL;
-	}
-	bitvec_unhex(ass_vec,
-		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	LOGP(DRLCMAC, LOGL_INFO, "PTSR: %s  start Packet Downlink Assignment (PACCH)\n", tbf_name(new_dl_tbf));
-	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
-/*
-	Encoding::write_packet_downlink_assignment(mac_control_block,
-		old_tfi_is_valid, m_tfi, (direction == GPRS_RLCMAC_DL_TBF),
-		new_dl_tbf, poll_ass_dl, rrbp,
-		bts_data()->alpha, bts_data()->gamma, -1, 0,
-		is_egprs_enabled());
-	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
-	encode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
-	LOGPC(DCSN1, LOGL_NOTICE, "\n");
-	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Downlink Assignment -------------------------\n");
-*/
-	Encoding::write_packet_ts_reconfigure(mac_control_block, new_dl_tbf, new_poll_fn, rrbp, bts_data()->alpha, bts_data()->gamma, is_egprs_enabled());
-	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: +++++++++++++++++++++++++ TX : Packet TS Reconfigure +++++++++++++++++++++++++\n");
-	encode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
-	LOGPC(DCSN1, LOGL_NOTICE, "\n");
-	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: _________________________ TX : Packet TS Reconfigure _________________________\n");
-	/*end diff*/
-	
-	bitvec_pack(ass_vec, msgb_put(msg, 23));
-	bitvec_free(ass_vec);
-	talloc_free(mac_control_block);
-
-	if (poll_ass_dl) {
-		set_polling(new_poll_fn, ts);
-		if (new_dl_tbf->state_is(GPRS_RLCMAC_ASSIGN))
-			new_dl_tbf->set_state(GPRS_RLCMAC_WAIT_ASSIGN);
-		dl_ass_state = GPRS_RLCMAC_DL_ASS_WAIT_ACK;
-		LOGP(DRLCMACDL, LOGL_INFO,
-			"PTSR: %s Scheduled DL Assignment polling on FN=%d, TS=%d\n",
-			name(), poll_fn, poll_ts);
-	} else {
-		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-		new_dl_tbf->set_state(GPRS_RLCMAC_FLOW);
-		tbf_assign_control_ts(new_dl_tbf);
-		/* stop pending assignment timer */
-		new_dl_tbf->stop_timer();
-
-	}
-	LOGP(DRLCMAC, LOGL_NOTICE, "PTSR: msgb=%s\n", msgb_hexdump(msg));
-	return msg;
 }
 
 struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
