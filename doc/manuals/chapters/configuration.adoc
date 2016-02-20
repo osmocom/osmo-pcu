@@ -1,0 +1,205 @@
+== Configuring OsmoPCU
+
+Contrary to other network elements (like OsmoBSC, OsmoNITB), the
+OsmoPCU has a relatively simple minimum configuration.
+
+This is primarily because most of the PCU configuration happens
+indirectly from the BSC, who passes the configuation over A-bis OML via
+OsmoBTS and its PCU socket into OsmoPCU.
+
+A minimal OsmoPCU configuration file is provided below for your reference:
+
+.Example: Minimal OsmoPCU configuration file (`osmo-pcu.cfg`)
+----
+pcu
+ flow-control-interval 10 <1>
+ cs 2 <2>
+ alloc-algorithm dynamic <3>
+ alpha 0 <4>
+ gamma 0
+----
+<1> send a BSSGP flow-control PDU every 10 seconds
+<2> start a TBF with the initial coding scheme 2
+<3> dynamically chose between single-slot or multi-slot TBF allocations
+    depending on system load
+<4> disable MS power control loop
+
+However, there are plenty of tuning parameters for people interested to
+optimize PCU throughput or latency according to their requirements.
+
+=== Configuring the Coding Schemes and Rate Adaption
+
+The BSC includes a bit-mask of permitted [E]GPRS coding schemes as part
+of the A-bis OML configuration.  This is passed from the BTS via the PCU
+socket into OsmoPCU.
+
+Some additional parameters can be set as described below.
+
+==== Initial Coding Scheme
+
+You can use the `cs <1-4> [<1-4>]` command at the `pcu` VTY config node
+to set the initial GPRS coding scheme to be used.  The optional second
+value allows to specify a different initial coding scheme for uplink.
+
+==== Maximum Coding Scheme
+
+You can use the `cs max <1-4> [<1-4>]` command at the `pcu` VTY config
+node to set the maximum coding scheme that should be used as part of the
+rate adaption.
+
+==== Rate Adaption Error Thresholds
+
+You can use the `cs threshold <0-100> <0-100>` command at the `pcu` VTY
+config node to determine the upper and lower limit for the error rate
+percentage to use in the rate adaption.  If the upper threshold is
+reached, a lower coding sheme is chosen, and if the lower threshold is
+reached, a higher coding scheme is chosen.
+
+==== Rate Adation Link Quality Thresholds
+
+You can use the `cs link-quality-ranges cs1 <0-35> cs2 <0-35> <0-35> cs3
+<0-35> <0-35> cs4 <0-35>` command at the `pcu` VTY config node to tune
+the link quality ranges for the respecive coding schemes.
+
+==== Data Size based CS downgrade Threshold
+
+You can use the `cs downgrade-threshold <1-10000>` command at the `pcu`
+VTY config node to ask the PCU to down-grade the coding scheme if less
+than the specified number of octets are left to be transmitted.
+
+=== Miscellaneous Configuration / Tuning Parameters
+
+==== Downlink TBF idle time
+
+After a down-link TBF is idle (all data in the current LLC downlink
+queue for thi MS has been transmitted), we can keep the TBF established
+for a configurable time.  This avoids having to go through a new one or
+two phase TBF establishment once the next data for downlink arrives.
+
+You can use the `dl-tbf-idle-time <1-5000>` to specify that time in
+units of milli-seconds.  The default is 2 seconds.
+
+==== MS idle time
+
+Using the `ms-idle-time <1-7200>` command at the `pcu` VTY config node
+you can configure the number of seconds for which the PCU should keep
+the MS data structure alive before releasing it if there are no active
+TBF for this MS.
+
+The OsmoPCU default value is 60 seconds, which is slightly more than
+what 3GPP TS 24.008 recommends for T3314 (44s).
+
+The MS data structure only consumes memory in the PCU and does not
+require any resources of the air interface.
+
+==== Forcing two-phase access
+
+If the MS is using for a single-phase access, you can still force it to
+use a two-phase access using the `two-phase-access` VTY configuration
+command at the `pcu` VTY config node.
+
+=== Configuring BSSGP flow control
+
+BSSGP between SGSN and PCU contains a two-level nested flow control
+mechanism:
+
+. one global flow control instance for the overall (downlink) traffic
+  from the SGSN to this PCU
+. a per-MS flow control instance for each individual MS served by this
+  PCU
+
+Each of the flow control instance is implemented as a TBF (token bucket
+filter).
+
+==== Normal BSSGP Flow Control Tuning parameters
+
+You can use the following commands at the `pcu` VTY config node to tune
+the the BSSGP flow control parameters:
+
+`flow-control-interval <1-10>`::
+	configure the interval (in seconds) between subsequent flow
+	control PDUs from PCU to SGSN
+`flow-control bucket-time <1-65534>`::
+	set the target downlink maximum queueing time in centi-seconds.
+	The PCU will attempt to adjust the advertised bucket size to match this
+	target.
+
+==== Extended BSSGP Flow Control Tuning parameters
+
+There are some extended flow control related parameters at the `pcu` VTY
+config node that override the automatic flow control as specified in the
+BSSGP specification.  Use them with care!
+
+`flow-control force-bvc-bucket-size <1-6553500>`::
+	force the BVC (global) bucket size to the given number of octets
+`flow-control force-bvc-leak-rate <1-6553500>`::
+	force the BVC (global) bucket leak rate to the given number of bits/s
+`flow-control force-ms-bucket-size <1-6553500>`::
+	force the per-MS bucket size to the given number of octets
+`flow-control force-ms-leak-rate <1-6553500>`::
+	force the per-MS bucket leak rate to the given number of bits/s
+
+
+=== Configuring LLC queue
+
+The downlink LLC queue in the PCU towards the MS can be tuned with a
+variety of parameters at the `pcu` VTY config node, depending on your
+needs.
+
+`queue lifetime <1-65534>`::
+	Each downlink LLC PDU is assigned a lifetime by the SGSN, which
+	is respected by the PDU *unless* you use this command to
+	override the PDU lifetime with a larger value (in centi-seconds)
+`queue lifetime infinite`::
+	Never drop LLC PDUs, i.e. give them an unlimited lifetime.
+`queue hysteresis <1-65535>`::
+	When the downlink LLC queue is full, the PCU starts dropping
+	packets.  Using this parameter, we can set the lifetime
+	hysteresis in centi-seconds, i.e. it will continue discarding
+	until "lifetime - hysteresis" is reached.
+`queue codel`::
+	Use the 'CoDel' (Controlled Delay) scheduling algorithm, which
+	is designed to overcome buffer bloat.  It will use a default
+	interval of 4 seconds.
+`queue codel interval <1-1000>`::
+	Use the 'CoDel' (Controlled Delay) scheduling algorithm, which
+	is designed to overcome buffer bloat.  Use the specified
+	interval in centi-seconds.
+`queue idle-ack-delay <1-65535>`::
+	Delay the request for an ACK after the last downlink LLC frame
+	by the specified amount of centi-seconds.
+
+
+=== Configuring MS power control
+
+GPRS MS power control works completely different than the close MS power
+control loop in circuit-switched GSM.
+
+Rather than instructing the MS constantly about which transmit power to
+use, some parameters are provided to the MS by which the MS-based power
+control algorithm is tuned.
+
+See 3GPP TS 05.08 for further information on the algorithm and the
+parameters.
+
+You can set those parameters at the `pcu` VTY config node as follows:
+
+`alpha <0-10>`::
+	Alpha parameter for MS power contrl in units of 0.1.
+	Make sure to set the alpha value at System Information 13 (in
+	the BSC), too!
+`gamma <0-62>`::
+	Set the gamma parameter for MS power control in units of dB.
+
+
+=== Enabling EGPRS
+
+If you would like to test the currently (experimental) EGPRS support of
+OsmoPCU, you can enable it using the `egprs` command at the `pcu` VTY
+config  node.
+
+WARNING: EPGRS functionality is highly experimental at the time of this
+writing.  Please only use if you actively would like to participate in
+the OsmoPCU EGPRS development and/or testing.  You will also need an
+EGPRS capable OsmoBTS+PHY, which means `osmo-bts-sysmo` or
+`osmo-bts-litecell15` with their associated PHY.

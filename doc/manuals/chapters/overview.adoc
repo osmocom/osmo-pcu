@@ -1,0 +1,67 @@
+== Overview
+
+=== About OsmoPCU
+
+OsmoPCU is the Osmocom implementation of the GPRS PCU (Packet Control
+Unit) element inside the GPRS network.
+
+The OsmoPCU is co-located within the BTS and connects to OsmoBTS via its
+PCU socket inteface.
+
+On the other side, OsmoPCU is connected via the Gb interface to the
+SGSN.
+
+[[fig-gprs-pcubts]]
+.GPRS network architecture with PCU in BTS
+[graphviz]
+----
+digraph G {
+	rankdir=LR;
+	MS0 [label="MS"]
+	MS1 [label="MS"]
+	MS0->BTS [label="Um"]
+	MS1->BTS [label="Um"]
+	BTS->BSC [label="Abis"]
+	BSC->MSC [label="A"]
+	BTS->PCU [label="pcu_sock"]
+	PCU->SGSN [label="Gb"]
+	SGSN->GGSN [label="GTP"]
+}
+----
+
+=== Software Components
+
+OsmoPCU consists of a variety of components, including
+
+* Gb interface (NS/BSSGP protocol)
+* `pcu_sock` interface towards OsmoBTS
+* TBF management for uplink and downlink TBF
+* RLC/MAC protocol implementation
+* per-MS context for each MS currently served
+* CSN.1 encoding/decoding routines
+
+==== Gb Implementation
+
+OsmoPCU implements the ETSI/3GPP specified Gb interface, including TS
+08.16 (NS), TS 08.18 (BSSGP) protocols. As transport layer for NS, it
+supports NS/IP (NS encapsulated in UDP/IP).
+
+The actual Gb Implementation is part of the libosmogb library, which is
+in turn part of the libosmocore software package.  This allows the same
+Gb implementation to be used from OsmoPCU, OsmoGbProxy as well as
+OsmoSGSN.
+
+==== `pcu_sock` Interface to OsmoBTS
+
+The interface towards OsmoBTS is called 'pcu_sock' and implemented as a
+set of non-standardized primitives over a unix domain socket.  The
+default file system path for this socket is `/tmp/pcu_bts`.
+
+The PCU socket can be changed on both OmsoBTS and OsmoPCU to a different
+file/path name, primarily to permit running multiple independent BTS+PCU
+pairs on a single Linux machine without having to use filesystem
+namespaces or other complex configurations.
+
+NOTE: If you change the PCU socket path on OsmoBTS by means of the
+`pcu-socket` VTY configuration command, you must ensure to make the
+identical change on the OsmoPCU side.

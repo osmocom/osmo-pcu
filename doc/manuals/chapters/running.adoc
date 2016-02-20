@@ -1,0 +1,33 @@
+== Running OsmoPCU
+
+The OsmoPCU executable (`osmo-pcu`) offers the following command-line
+options:
+
+
+=== SYNOPSIS
+
+*osmo-pcu* [-h|-V] [-D] [-c 'CONFIGFILE'] [-r 'PRIO'] [-m 'MCC'] [-n 'MNC']
+
+
+=== OPTIONS
+
+*-h, --help*::
+	Print a short help message about the supported options
+*-V, --version*::
+	Print the compile-time version number of the OsmoBTS program
+//*-D, --daemonize*::
+//	Fork the process as a daemon into background.
+*-c, --config-file 'CONFIGFILE'*::
+	Specify the file and path name of the configuration file to be
+	used. If none is specified, use `osmo-pcu.cfg` in the current
+	working directory.
+*-r, --realtime 'PRIO'*::
+	Enable use of the Linux kernel realtime priority scheduler with
+	the specified priority.
+	It is recommended you use this option on low-performance
+	embedded systems or systems that encounter high non-GSM/GPRS
+	load.
+*-m, --mcc 'MCC'*::
+	Use the given MCC instead of that provided by BTS via PCU socket
+*-n, --mnc 'MNC'*::
+	Use the given MNC instead of that provided by BTS via PCU socket
