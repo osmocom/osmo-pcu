@@ -24,6 +24,7 @@
 #include <bts.h>
 #include <tbf.h>
 #include <gprs_ms.h>
+#include <pcu_utils.h>
 
 #include <errno.h>
 #include <values.h>
@@ -79,20 +80,6 @@ static const struct gprs_ms_multislot_class gprs_ms_multislot_class[32] = {
 /* N/A */	{ MS_NA,MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA },
 /* N/A */	{ MS_NA,MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA },
 };
-
-static unsigned lsb(unsigned x)
-{
-	return x & -x;
-}
-
-static unsigned bitcount(unsigned x)
-{
-	unsigned count = 0;
-	for (count = 0; x; count += 1)
-		x &= x - 1;
-
-	return count;
-}
 
 static char *set_flag_chars(char *buf, uint8_t val, char set_char, char unset_char = 0)
 {
@@ -480,14 +467,12 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	/* The allocation will be successful, so the system state and tbf_/ms_
 	 * may be modified from now on. */
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		struct gprs_rlcmac_ul_tbf *ul_tbf =
-			static_cast<gprs_rlcmac_ul_tbf *>(tbf_);
+		struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf_);
 		LOGP(DRLCMAC, LOGL_DEBUG, "- Assign uplink TS=%d TFI=%d USF=%d\n",
 			ts, tfi, usf);
 		assign_uplink_tbf_usf(pdch, ul_tbf, tfi, usf);
 	} else {
-		struct gprs_rlcmac_dl_tbf *dl_tbf =
-			static_cast<gprs_rlcmac_dl_tbf *>(tbf_);
+		struct gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf_);
 		LOGP(DRLCMAC, LOGL_DEBUG, "- Assign downlink TS=%d TFI=%d\n",
 			ts, tfi);
 		assign_dlink_tbf(pdch, dl_tbf, tfi);
@@ -642,7 +627,7 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 		if ((tx_window & (1 << ((ul_ts+num_tx-1) % 8))) == 0)
 			continue;
 
-		tx_slot_count = bitcount(tx_window);
+		tx_slot_count = pcu_bitcount(tx_window);
 
 		max_rx = OSMO_MIN(ms_class->rx, ms_class->sum - num_tx);
 		rx_valid_win = (1 << max_rx) - 1;
@@ -671,7 +656,7 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 		 * testing */
 
 		rx_window = rx_good & rx_valid_win;
-		rx_slot_count = bitcount(rx_window);
+		rx_slot_count = pcu_bitcount(rx_window);
 
 #if 0
 		LOGP(DRLCMAC, LOGL_DEBUG, "n_tx=%d, n_rx=%d, mask_sel=%d, "
@@ -736,7 +721,7 @@ static int find_multi_slots(struct gprs_rlcmac_bts *bts,
 			continue;
 
 		/* Check number of common slots according to TS 54.002, 6.4.2.2 */
-		common_slot_count = bitcount(tx_window & rx_window);
+		common_slot_count = pcu_bitcount(tx_window & rx_window);
 		req_common_slots = OSMO_MIN(tx_slot_count, rx_slot_count);
 		if (ms_class->type == 1)
 			req_common_slots = OSMO_MIN(req_common_slots, 2);
@@ -893,7 +878,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 				dl_slots & ul_slots, compute_usage_by_num_tbfs,
 				NULL, NULL);
 		if (ts < 0)
-			ul_slots = dl_slots = lsb(dl_slots & ul_slots);
+			ul_slots = dl_slots = pcu_lsb(dl_slots & ul_slots);
 		else
 			ul_slots = dl_slots = (dl_slots & ul_slots) & (1<<ts);
 	}
@@ -922,9 +907,9 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 				"available\n");
 			return -EINVAL;
 		}
-		slotcount = bitcount(dl_slots);
+		slotcount = pcu_bitcount(dl_slots);
 		first_ts = ffs(dl_slots) - 1;
-		avail_count = bitcount(reserved_dl_slots);
+		avail_count = pcu_bitcount(reserved_dl_slots);
 
 	} else {
 		int free_usf = -1;
@@ -960,7 +945,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		/* We will stick to that single UL slot, unreserve the others */
 		reserved_ul_slots = ul_slots;
 
-		avail_count = bitcount(reserved_ul_slots);
+		avail_count = pcu_bitcount(reserved_ul_slots);
 	}
 
 	first_common_ts = ffs(dl_slots & ul_slots) - 1;
@@ -1010,8 +995,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 	tbf_->first_ts = first_ts;
 
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
-		struct gprs_rlcmac_dl_tbf *dl_tbf =
-			static_cast<gprs_rlcmac_dl_tbf *>(tbf_);
+		struct gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf_);
 		for (ts = 0; ts < 8; ts++) {
 			if (!(dl_slots & (1 << ts)))
 				continue;
@@ -1021,8 +1005,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 			assign_dlink_tbf(&trx->pdch[ts], dl_tbf, tfi);
 		}
 	} else {
-		struct gprs_rlcmac_ul_tbf *ul_tbf =
-			static_cast<gprs_rlcmac_ul_tbf *>(tbf_);
+		struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf_);
 
 		for (ts = 0; ts < 8; ts++) {
 			if (!(ul_slots & (1 << ts)))

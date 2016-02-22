@@ -50,7 +50,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 {
 	const uint8_t *data = _data->block;
 	uint8_t len = _data->len;
-	const struct gprs_rlc_ul_data_block_info *rdbi = &_data->block_info;
+	const struct gprs_rlc_data_block_info *rdbi = &_data->block_info;
 	GprsCodingScheme cs = _data->cs;
 
 	Decoding::RlcData frames[16], *frame;
@@ -87,23 +87,26 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 }
 
 
-struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn)
+struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 {
 	int final = (state_is(GPRS_RLCMAC_FINISHED));
 	struct msgb *msg;
+	int rc;
+	unsigned int rrbp = 0;
+	uint32_t new_poll_fn = 0;
 
 	if (final) {
-		if (poll_state != GPRS_RLCMAC_POLL_NONE) {
+		if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
+			ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-				"sheduled for %s, so we must wait for "
-				"final uplink ack...\n", tbf_name(this));
+				"scheduled for %s, so we must wait for "
+				"the final uplink ack...\n", tbf_name(this));
 			return NULL;
 		}
-		if (bts->sba()->find(trx->trx_no, control_ts, (fn + 13) % 2715648)) {
-			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-				"scheduled for single block allocation...\n");
+
+		rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
+		if (rc < 0)
 			return NULL;
-		}
 	}
 
 	msg = msgb_alloc(23, "rlcmac_ul_ack");
@@ -116,20 +119,16 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn)
 	}
 	bitvec_unhex(ack_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
-	Encoding::write_packet_uplink_ack(bts_data(), mac_control_block, this, final);
-	encode_gsm_rlcmac_downlink(ack_vec, mac_control_block);
+	Encoding::write_packet_uplink_ack(bts_data(), ack_vec, this, final, rrbp);
 	bitvec_pack(ack_vec, msgb_put(msg, 23));
 	bitvec_free(ack_vec);
-	talloc_free(mac_control_block);
 
 	/* now we must set this flag, so we are allowed to assign downlink
 	 * TBF on PACCH. it is only allowed when TLLI is acknowledged. */
 	m_contention_resolution_done = 1;
 
 	if (final) {
-		poll_state = GPRS_RLCMAC_POLL_SCHED;
-		poll_fn = (fn + 13) % 2715648;
+		set_polling(new_poll_fn, ts);
 		/* waiting for final acknowledge */
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_WAIT_ACK;
 		m_final_ack_sent = 1;
@@ -140,12 +139,11 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn)
 }
 
 int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
-	const struct gprs_rlc_ul_header_egprs *rlc,
-	uint8_t *data, uint8_t len, struct pcu_l1_meas *meas)
+	const struct gprs_rlc_data_info *rlc,
+	uint8_t *data, struct pcu_l1_meas *meas)
 {
 	int8_t rssi = meas->have_rssi ? meas->rssi : 0;
 
-	const uint16_t mod_sns = m_window.mod_sns();
 	const uint16_t ws = m_window.ws();
 
 	this->state_flags |= (1 << GPRS_RLCMAC_FLAG_UL_DATA);
@@ -174,7 +172,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	for (block_idx = 0; block_idx < rlc->num_data_blocks; block_idx++) {
 		int num_chunks;
 		uint8_t *rlc_data;
-		const struct gprs_rlc_ul_data_block_info *rdbi =
+		const struct gprs_rlc_data_block_info *rdbi =
 			&rlc->block_info[block_idx];
 		bool need_rlc_data = false;
 		struct gprs_rlc_data *block;
@@ -194,7 +192,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d out of window "
 				"%d..%d (it's normal)\n", rdbi->bsn,
 				m_window.v_q(),
-				(m_window.v_q() + ws - 1) & mod_sns);
+				m_window.mod_sns(m_window.v_q() + ws - 1));
 		} else if (m_window.is_received(rdbi->bsn)) {
 			LOGP(DRLCMACUL, LOGL_DEBUG,
 				"- BSN %d already received\n", rdbi->bsn);
@@ -219,7 +217,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
 			rdbi->bsn, m_window.v_q(),
-			(m_window.v_q() + ws - 1) & mod_sns);
+			m_window.mod_sns(m_window.v_q() + ws - 1));
 		block = m_rlc.block(rdbi->bsn);
 		block->block_info = *rdbi;
 		block->cs = rlc->cs;
@@ -242,6 +240,9 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 			Decoding::rlc_copy_to_aligned_buffer(rlc, block_idx, data,
 				rlc_data);
 
+		LOGP(DRLCMACUL, LOGL_DEBUG,
+			"%s: data_length=%d, data=%s\n",
+			name(), block->len, osmo_hexdump(rlc_data, block->len));
 
 		/* TODO: Handle SPB != 0 -> set state to partly received
 		 * (upper/lower) and continue with the loop, unless the other
@@ -293,7 +294,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 	/* Retrieve LLC frames from blocks that are ready */
 	for (uint16_t i = 0; i < count; ++i) {
-		uint16_t index = (v_q_beg + i) & mod_sns;
+		uint16_t index = m_window.mod_sns(v_q_beg + i);
 		assemble_forward_llc(m_rlc.block(index));
 	}
 
@@ -301,8 +302,8 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	if (this->state_is(GPRS_RLCMAC_FLOW) /* still in flow state */
 	 && this->m_window.v_q() == this->m_window.v_r()) { /* if complete */
 		struct gprs_rlc_data *block =
-			m_rlc.block((m_window.v_r() - 1) & mod_sns);
-		const struct gprs_rlc_ul_data_block_info *rdbi =
+			m_rlc.block(m_window.mod_sns(m_window.v_r() - 1));
+		const struct gprs_rlc_data_block_info *rdbi =
 			&block->block_info;
 
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- No gaps in received block, "
@@ -325,7 +326,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 }
 
 void gprs_rlcmac_ul_tbf::maybe_schedule_uplink_acknack(
-	const gprs_rlc_ul_header_egprs *rlc)
+	const gprs_rlc_data_info *rlc)
 {
 	bool have_ti = rlc->block_info[0].ti ||
 		(rlc->num_data_blocks > 1 && rlc->block_info[1].ti);

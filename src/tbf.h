@@ -43,7 +43,8 @@ class GprsMs;
 
 enum gprs_rlcmac_tbf_state {
 	GPRS_RLCMAC_NULL = 0,	/* new created TBF */
-	GPRS_RLCMAC_ASSIGN,	/* wait for downlink assignment */
+	GPRS_RLCMAC_ASSIGN,     /* wait for DL transmission */
+	GPRS_RLCMAC_WAIT_ASSIGN,/* wait for confirmation */
 	GPRS_RLCMAC_FLOW,	/* RLC/MAC flow, resource needed */
 	GPRS_RLCMAC_FINISHED,	/* flow finished, wait for release */
 	GPRS_RLCMAC_WAIT_RELEASE,/* wait for release or restart of DL TBF */
@@ -88,28 +89,6 @@ enum gprs_rlcmac_tbf_direction {
 #define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
-struct llist_pods {
-	struct llist_head list;
-	void *back;
-};
-
-#define llist_pods_entry(ptr, type) \
-	((type *)(container_of(ptr, struct llist_pods, list)->back))
-
-/**
- * llist_pods_for_each_entry - like llist_for_each_entry, but uses
- * struct llist_pods ->back to access the entry.
- * This is necessary for non-PODS classes because container_of is
- * not guaranteed to work anymore. */
-#define llist_pods_for_each_entry(pos, head, member, lpods)			\
-	for (lpods = llist_entry((head)->next, typeof(struct llist_pods), list), \
-		     pos = ((typeof(pos))lpods->back),	\
-		     prefetch(pos->member.list.next);				\
-	     &lpods->list != (head);					\
-	     lpods = llist_entry(lpods->list.next, typeof(struct llist_pods), list), \
-		     pos = ((typeof(pos))lpods->back),\
-		     prefetch(pos->member.list.next))
-
 struct gprs_rlcmac_tbf {
 	gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir);
 
@@ -123,11 +102,13 @@ struct gprs_rlcmac_tbf {
 
 	const char *name() const;
 
-	struct msgb *create_dl_ass(uint32_t fn);
-	struct msgb *create_ul_ass(uint32_t fn);
+	struct msgb *create_dl_ass(uint32_t fn, uint8_t ts);
+	struct msgb *create_ul_ass(uint32_t fn, uint8_t ts);
 
 	GprsMs *ms() const;
 	void set_ms(GprsMs *ms);
+
+	gprs_rlc_window *window();
 
 	uint8_t tsc() const;
 
@@ -139,6 +120,9 @@ struct gprs_rlcmac_tbf {
 	void stop_t3191();
 	int establish_dl_tbf_on_pacch();
 
+	int check_polling(uint32_t fn, uint8_t ts,
+		uint32_t *poll_fn, unsigned int *rrbp);
+	void set_polling(uint32_t poll_fn, uint8_t ts);
 	void poll_timeout();
 
 	/** tlli handling */
@@ -149,6 +133,7 @@ struct gprs_rlcmac_tbf {
 	void update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction);
 
 	uint8_t tfi() const;
+	bool is_tfi_assigned() const;
 
 	const char *imsi() const;
 	void assign_imsi(const char *imsi);
@@ -156,13 +141,15 @@ struct gprs_rlcmac_tbf {
 	void set_ta(uint8_t);
 	uint8_t ms_class() const;
 	void set_ms_class(uint8_t);
-	uint8_t current_cs() const;
+	GprsCodingScheme current_cs() const;
 	gprs_llc_queue *llc_queue();
 	const gprs_llc_queue *llc_queue() const;
 
 	time_t created_ts() const;
 	uint8_t dl_slots() const;
 	uint8_t ul_slots() const;
+
+	bool is_control_ts(uint8_t ts) const;
 
 	/* EGPRS */
 	bool is_egprs_enabled() const;
@@ -175,7 +162,9 @@ struct gprs_rlcmac_tbf {
 	LListHead<gprs_rlcmac_tbf>& ms_list() {return this->m_ms_list;}
 	const LListHead<gprs_rlcmac_tbf>& ms_list() const {return this->m_ms_list;}
 
-	struct llist_pods list;
+	LListHead<gprs_rlcmac_tbf>& list();
+	const LListHead<gprs_rlcmac_tbf>& list() const;
+
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
 	struct gprs_rlcmac_trx *trx;
@@ -193,6 +182,7 @@ struct gprs_rlcmac_tbf {
 
 	enum gprs_rlcmac_tbf_poll_state poll_state;
 	uint32_t poll_fn; /* frame number to poll */
+	uint8_t poll_ts; /* TS to poll */
 
 	gprs_rlc m_rlc;
 	
@@ -238,11 +228,10 @@ struct gprs_rlcmac_tbf {
 protected:
 	gprs_rlcmac_bts *bts_data() const;
 
-	int extract_tlli(const uint8_t *data, const size_t len);
 	int set_tlli_from_ul(uint32_t new_tlli);
 	void merge_and_clear_ms(GprsMs *old_ms);
 
-	static const char *tbf_state_name[6];
+	static const char *tbf_state_name[7];
 
 	class GprsMs *m_ms;
 
@@ -251,6 +240,7 @@ protected:
 	uint8_t m_ms_class;
 
 private:
+	LListHead<gprs_rlcmac_tbf> m_list;
 	LListHead<gprs_rlcmac_tbf> m_ms_list;
 	bool m_egprs_enabled;
 
@@ -302,6 +292,16 @@ inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
 	state = new_state;
 }
 
+inline LListHead<gprs_rlcmac_tbf>& gprs_rlcmac_tbf::list()
+{
+	return this->m_list;
+}
+
+inline const LListHead<gprs_rlcmac_tbf>& gprs_rlcmac_tbf::list() const
+{
+	return this->m_list;
+}
+
 inline GprsMs *gprs_rlcmac_tbf::ms() const
 {
 	return m_ms;
@@ -310,6 +310,13 @@ inline GprsMs *gprs_rlcmac_tbf::ms() const
 inline bool gprs_rlcmac_tbf::is_tlli_valid() const
 {
 	return tlli() != 0;
+}
+
+inline bool gprs_rlcmac_tbf::is_tfi_assigned() const
+{
+	/* The TBF is established or has been assigned by a IMM.ASS for
+	 * download */
+	return state > GPRS_RLCMAC_ASSIGN;
 }
 
 inline uint8_t gprs_rlcmac_tbf::tfi() const
@@ -354,6 +361,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 			const uint8_t *data, const uint16_t len);
 
 	int rcvd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
+	int rcvd_dl_ack(uint8_t final_ack, unsigned first_bsn, struct bitvec *rbb);
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
 	void request_dl_ack();
 	bool need_control_ts() const;
@@ -362,11 +370,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int frames_since_last_drain(unsigned fn) const;
 	bool keep_open(unsigned fn) const;
 	int release();
-	void enable_egprs();
-
-	bool is_control_ts(uint8_t ts) const {
-		return ts == control_ts;
-	}
+	int abort();
 
 	/* TODO: add the gettimeofday as parameter */
 	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
@@ -402,10 +406,14 @@ protected:
 		unsigned lost_bytes;
 	};
 
-	struct msgb *create_new_bsn(const uint32_t fn, const uint8_t ts);
+	int take_next_bsn(uint32_t fn, int previous_bsn,
+		bool *may_combine);
+	bool restart_bsn_cycle();
+	int create_new_bsn(const uint32_t fn, GprsCodingScheme cs);
 	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
-					const int index);
+					int index, int index2 = -1);
 	int update_window(const uint8_t ssn, const uint8_t *rbb);
+	int update_window(unsigned first_bsn, const struct bitvec *rbb);
 	int maybe_start_new_window();
 	bool dl_window_stalled() const;
 	void reuse_tbf();
@@ -419,12 +427,12 @@ protected:
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_ul_tbf(BTS *bts);
 
-	struct msgb *create_ul_ack(uint32_t fn);
+	struct msgb *create_ul_ack(uint32_t fn, uint8_t ts);
 
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(
-		const struct gprs_rlc_ul_header_egprs *rlc,
-		uint8_t *data, uint8_t len, struct pcu_l1_meas *meas);
+		const struct gprs_rlc_data_info *rlc,
+		uint8_t *data, struct pcu_l1_meas *meas);
 
 
 	/* TODO: extract LLC class? */
@@ -444,7 +452,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	uint8_t m_final_ack_sent; /* set if we sent final ack */
 
 protected:
-	void maybe_schedule_uplink_acknack(const gprs_rlc_ul_header_egprs *rlc);
+	void maybe_schedule_uplink_acknack(const gprs_rlc_data_info *rlc);
 };
 
 inline enum gprs_rlcmac_tbf_direction reverse(enum gprs_rlcmac_tbf_direction dir)
@@ -452,15 +460,31 @@ inline enum gprs_rlcmac_tbf_direction reverse(enum gprs_rlcmac_tbf_direction dir
 	return (enum gprs_rlcmac_tbf_direction)
 		((int)GPRS_RLCMAC_UL_TBF - (int)dir + (int)GPRS_RLCMAC_DL_TBF);
 }
-#endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include <osmocom/vty/command.h>
-#include <osmocom/vty/vty.h>
-
-	void tbf_print_vty_info(struct vty *vty, struct llist_head *tbf);
-#ifdef __cplusplus
+inline gprs_rlcmac_ul_tbf *as_ul_tbf(gprs_rlcmac_tbf *tbf)
+{
+	if (tbf && tbf->direction == GPRS_RLCMAC_UL_TBF)
+		return static_cast<gprs_rlcmac_ul_tbf *>(tbf);
+	else
+		return NULL;
 }
+
+inline gprs_rlcmac_dl_tbf *as_dl_tbf(gprs_rlcmac_tbf *tbf)
+{
+	if (tbf && tbf->direction == GPRS_RLCMAC_DL_TBF)
+		return static_cast<gprs_rlcmac_dl_tbf *>(tbf);
+	else
+		return NULL;
+}
+
+inline gprs_rlc_window *gprs_rlcmac_tbf::window()
+{
+	switch (direction)
+	{
+	case GPRS_RLCMAC_UL_TBF: return &as_ul_tbf(this)->m_window;
+	case GPRS_RLCMAC_DL_TBF: return &as_dl_tbf(this)->m_window;
+	}
+	return NULL;
+}
+
 #endif

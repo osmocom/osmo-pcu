@@ -57,7 +57,7 @@ void gprs_rlc_dl_window::reset()
 
 int gprs_rlc_dl_window::resend_needed()
 {
-	for (uint16_t bsn = v_a(); bsn != v_s(); bsn = (bsn + 1) & mod_sns()) {
+	for (uint16_t bsn = v_a(); bsn != v_s(); bsn = mod_sns(bsn + 1)) {
 		if (m_v_b.is_nacked(bsn) || m_v_b.is_resend(bsn))
 			return bsn;
 	}
@@ -69,7 +69,7 @@ int gprs_rlc_dl_window::mark_for_resend()
 {
 	int resend = 0;
 
-	for (uint16_t bsn = v_a(); bsn != v_s(); bsn = (bsn + 1) & mod_sns()) {
+	for (uint16_t bsn = v_a(); bsn != v_s(); bsn = mod_sns(bsn + 1)) {
 		if (m_v_b.is_unacked(bsn)) {
 			/* mark to be re-send */
 			m_v_b.mark_resend(bsn);
@@ -85,7 +85,7 @@ int gprs_rlc_dl_window::count_unacked()
 	uint16_t unacked = 0;
 	uint16_t bsn;
 
-	for (bsn = v_a(); bsn != v_s(); bsn = (bsn + 1) & mod_sns()) {
+	for (bsn = v_a(); bsn != v_s(); bsn = mod_sns(bsn + 1)) {
 		if (!m_v_b.is_acked(bsn))
 			unacked += 1;
 	}
@@ -93,19 +93,50 @@ int gprs_rlc_dl_window::count_unacked()
 	return unacked;
 }
 
-static uint16_t bitnum_to_bsn(int bitnum, uint16_t ssn, uint16_t mod_sns)
+static uint16_t bitnum_to_bsn(int bitnum, uint16_t ssn)
 {
-	return (ssn - 1 - bitnum) & mod_sns;
+	return (ssn - 1 - bitnum);
 }
 
-void gprs_rlc_dl_window::update(BTS *bts, char *show_rbb, uint8_t ssn,
+void gprs_rlc_dl_window::update(BTS *bts, const struct bitvec *rbb,
+			uint16_t first_bsn, uint16_t *lost,
+			uint16_t *received)
+{
+	unsigned num_blocks = rbb->cur_bit;
+	unsigned bsn;
+
+	/* first_bsn is in range V(A)..V(S) */
+
+	for (unsigned int bitpos = 0; bitpos < num_blocks; bitpos++) {
+		bool is_ack;
+		bsn = mod_sns(first_bsn + bitpos);
+		if (bsn == mod_sns(v_a() - 1))
+			break;
+
+		is_ack = bitvec_get_bit_pos(rbb, bitpos) == 1;
+
+		if (is_ack) {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- got ack for BSN=%d\n", bsn);
+			if (!m_v_b.is_acked(bsn))
+				*received += 1;
+			m_v_b.mark_acked(bsn);
+		} else {
+			LOGP(DRLCMACDL, LOGL_DEBUG, "- got NACK for BSN=%d\n", bsn);
+			m_v_b.mark_nacked(bsn);
+			bts->rlc_nacked();
+			*lost += 1;
+		}
+	}
+}
+
+void gprs_rlc_dl_window::update(BTS *bts, char *show_rbb, uint16_t ssn,
 			uint16_t *lost, uint16_t *received)
 {
 	/* SSN - 1 is in range V(A)..V(S)-1 */
 	for (int bitpos = 0; bitpos < ws(); bitpos++) {
-		uint16_t bsn = bitnum_to_bsn(bitpos, ssn, mod_sns());
+		uint16_t bsn = mod_sns(bitnum_to_bsn(bitpos, ssn));
 
-		if (bsn == ((v_a() - 1) & mod_sns()))
+		if (bsn == mod_sns(v_a() - 1))
 			break;
 
 		if (show_rbb[ws() - 1 - bitpos] == 'R') {
@@ -128,7 +159,7 @@ int gprs_rlc_dl_window::move_window()
 	uint16_t bsn;
 	int moved = 0;
 
-	for (i = 0, bsn = v_a(); bsn != v_s(); i++, bsn = (bsn + 1) & mod_sns()) {
+	for (i = 0, bsn = v_a(); bsn != v_s(); i++, bsn = mod_sns(bsn + 1)) {
 		if (m_v_b.is_acked(bsn)) {
 			m_v_b.mark_invalid(bsn);
 			moved += 1;
@@ -144,7 +175,7 @@ void gprs_rlc_dl_window::show_state(char *show_v_b)
 	int i;
 	uint16_t bsn;
 
-	for (i = 0, bsn = v_a(); bsn != v_s(); i++, bsn = (bsn + 1) & mod_sns()) {
+	for (i = 0, bsn = v_a(); bsn != v_s(); i++, bsn = mod_sns(bsn + 1)) {
 		uint16_t index = bsn & mod_sns_half();
 		switch(m_v_b.get_state(index)) {
 		case GPRS_RLC_DL_BSN_INVALID:
@@ -172,6 +203,22 @@ void gprs_rlc_v_n::reset()
 		m_v_n[i] = GPRS_RLC_UL_BSN_INVALID;
 }
 
+void gprs_rlc_window::set_sns(uint16_t sns)
+{
+	OSMO_ASSERT(sns >= RLC_GPRS_SNS);
+	OSMO_ASSERT(sns <= RLC_MAX_SNS);
+	/* check for 2^n */
+	OSMO_ASSERT((sns & (-sns)) == sns);
+	m_sns = sns;
+}
+
+void gprs_rlc_window::set_ws(uint16_t ws)
+{
+	OSMO_ASSERT(ws >= RLC_GPRS_SNS/2);
+	OSMO_ASSERT(ws <= RLC_MAX_SNS/2);
+	m_ws = ws;
+}
+
 /* Update the receive block bitmap */
 void gprs_rlc_ul_window::update_rbb(char *rbb)
 {
@@ -188,7 +235,7 @@ void gprs_rlc_ul_window::update_rbb(char *rbb)
 void gprs_rlc_ul_window::raise_v_r(const uint16_t bsn)
 {
 	uint16_t offset_v_r;
-	offset_v_r = (bsn + 1 - v_r()) & mod_sns();
+	offset_v_r = mod_sns(bsn + 1 - v_r());
 	/* Positive offset, so raise. */
 	if (offset_v_r < (sns() >> 1)) {
 		while (offset_v_r--) {
@@ -212,7 +259,7 @@ uint16_t gprs_rlc_ul_window::raise_v_q()
 		if (!m_v_n.is_received(v_q()))
 			break;
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- Taking block %d out, raising "
-			"V(Q) to %d\n", v_q(), (v_q() + 1) & mod_sns());
+			"V(Q) to %d\n", v_q(), mod_sns(v_q() + 1));
 		raise_v_q(1);
 		count += 1;
 	}
@@ -232,4 +279,109 @@ bool gprs_rlc_ul_window::invalidate_bsn(const uint16_t bsn)
 	m_v_n.mark_missing(bsn);
 
 	return was_valid;
+}
+
+static void gprs_rlc_data_header_init(struct gprs_rlc_data_info *rlc,
+	GprsCodingScheme cs, bool with_padding, unsigned int header_bits)
+{
+	unsigned int i;
+	unsigned int padding_bits = with_padding ? cs.optionalPaddingBits() : 0;
+
+	memset(rlc, 0, sizeof(*rlc));
+
+	rlc->cs = cs;
+	rlc->with_padding = with_padding;
+	rlc->num_data_blocks = cs.numDataBlocks();
+
+	OSMO_ASSERT(rlc->num_data_blocks <= ARRAY_SIZE(rlc->block_info));
+
+	for (i = 0; i < rlc->num_data_blocks; i++) {
+		gprs_rlc_data_block_info_init(&rlc->block_info[i], cs,
+			with_padding);
+
+		rlc->data_offs_bits[i] =
+			header_bits + padding_bits +
+			(i+1) * cs.numDataBlockHeaderBits() +
+			i * 8 * rlc->block_info[0].data_len;
+	}
+}
+
+void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,
+	GprsCodingScheme cs, bool with_padding)
+{
+	return gprs_rlc_data_header_init(rlc, cs, with_padding,
+		cs.numDataHeaderBitsDL());
+}
+
+void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
+	GprsCodingScheme cs, bool with_padding)
+{
+	return gprs_rlc_data_header_init(rlc, cs, with_padding,
+		cs.numDataHeaderBitsUL());
+}
+
+void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
+	GprsCodingScheme cs, bool with_padding)
+{
+	unsigned int data_len = cs.maxDataBlockBytes();
+	if (with_padding)
+		data_len -= cs.optionalPaddingBits() / 8;
+
+	rdbi->data_len = data_len;
+	rdbi->bsn = 0;
+	rdbi->ti  = 0;
+	rdbi->e   = 1;
+	rdbi->cv  = 15;
+	rdbi->pi  = 0;
+	rdbi->spb = 0;
+}
+
+unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, int punct, int punct2,
+	int with_padding)
+{
+	switch (GprsCodingScheme::Scheme(cs)) {
+	case GprsCodingScheme::MCS1: return 0b1011 + punct % 2;
+	case GprsCodingScheme::MCS2: return 0b1001 + punct % 2;
+	case GprsCodingScheme::MCS3: return (with_padding ? 0b0110 : 0b0011) +
+					    punct % 3;
+	case GprsCodingScheme::MCS4: return 0b0000 + punct % 3;
+	case GprsCodingScheme::MCS5: return  0b100 + punct % 2;
+	case GprsCodingScheme::MCS6: return (with_padding ? 0b010 : 0b000) +
+					    punct % 2;
+	case GprsCodingScheme::MCS7: return 0b10100 + 3 * (punct % 3) + punct2 % 3;
+	case GprsCodingScheme::MCS8: return 0b01011 + 3 * (punct % 3) + punct2 % 3;
+	case GprsCodingScheme::MCS9: return 0b00000 + 4 * (punct % 3) + punct2 % 3;
+	default: ;
+	}
+
+	return -1;
+}
+
+void gprs_rlc_mcs_cps_decode(unsigned int cps,
+	GprsCodingScheme cs, int *punct, int *punct2, int *with_padding)
+{
+	*punct2 = -1;
+	*with_padding = 0;
+
+	switch (GprsCodingScheme::Scheme(cs)) {
+	case GprsCodingScheme::MCS1:
+		cps -= 0b1011; *punct = cps % 2; break;
+	case GprsCodingScheme::MCS2:
+		cps -= 0b1001; *punct = cps % 2; break;
+	case GprsCodingScheme::MCS3:
+		cps -= 0b0011; *punct = cps % 3; *with_padding = cps >= 3; break;
+	case GprsCodingScheme::MCS4:
+		cps -= 0b0000; *punct = cps % 3; break;
+	case GprsCodingScheme::MCS5:
+		cps -= 0b100; *punct = cps % 2; break;
+	case GprsCodingScheme::MCS6:
+		cps -= 0b000; *punct = cps % 2; *with_padding = cps >= 2; break;
+	case GprsCodingScheme::MCS7:
+		cps -= 0b10100; *punct = cps / 3; *punct2 = cps % 3; break;
+	case GprsCodingScheme::MCS8:
+		cps -= 0b01011; *punct = cps / 3; *punct2 = cps % 3; break;
+	case GprsCodingScheme::MCS9:
+		cps -= 0b00000; *punct = cps / 4; *punct2 = cps % 3; break;
+	default: ;
+	}
 }

@@ -25,17 +25,142 @@
 #include <tbf.h>
 #include <gprs_debug.h>
 
-// GSM 04.08 9.1.18 Immediate assignment
+#include <errno.h>
+#include <string.h>
+
+static int write_ia_rest_downlink(
+	gprs_rlcmac_dl_tbf *tbf,
+	bitvec * dest, unsigned& wp,
+	uint8_t polling, uint32_t fn,
+	uint8_t alpha, uint8_t gamma, int8_t ta_idx)
+{
+	if (!tbf) {
+		LOGP(DRLCMACDL, LOGL_ERROR,
+			"Cannot encode DL IMMEDIATE ASSIGNMENT without TBF\n");
+		return -EINVAL;
+	}
+	// GSM 04.08 10.5.2.16 IA Rest Octets
+	bitvec_write_field_lh(dest, wp, 3, 2);   // "HH"
+	bitvec_write_field(dest, wp, 1, 2);   // "01" Packet Downlink Assignment
+	bitvec_write_field(dest, wp,tbf->tlli(),32); // TLLI
+	bitvec_write_field(dest, wp,0x1,1);   // switch TFI   : on
+	bitvec_write_field(dest, wp,tbf->tfi(),5);   // TFI
+	bitvec_write_field(dest, wp,0x0,1);   // RLC acknowledged mode
+	if (alpha) {
+		bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
+		bitvec_write_field(dest, wp,alpha,4);   // ALPHA
+	} else {
+		bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
+	}
+	bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
+	bitvec_write_field(dest, wp,polling,1);   // Polling Bit
+	bitvec_write_field(dest, wp,!polling,1);   // TA_VALID ???
+	if (ta_idx < 0) {
+		bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
+	} else {
+		bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
+		bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
+	}
+	if (polling) {
+		bitvec_write_field(dest, wp,0x1,1);   // TBF Starting TIME present
+		bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
+		bitvec_write_field(dest, wp,fn % 51,6);               // T3
+		bitvec_write_field(dest, wp,fn % 26,5);               // T2
+	} else {
+		bitvec_write_field(dest, wp,0x0,1);   // TBF Starting TIME present
+	}
+	bitvec_write_field(dest, wp,0x0,1);   // P0 not present
+	//		bitvec_write_field(dest, wp,0x1,1);   // P0 not present
+	//		bitvec_write_field(dest, wp,0xb,4);
+	if (tbf->is_egprs_enabled()) {
+		/* see GMS 44.018, 10.5.2.16 */
+		unsigned int ws_enc = (tbf->m_window.ws() - 64) / 32;
+		bitvec_write_field_lh(dest, wp, 1, 1);  // "H"
+		bitvec_write_field(dest, wp, ws_enc,5); // EGPRS Window Size
+		bitvec_write_field(dest, wp, 0x0,2);    // LINK_QUALITY_MEASUREMENT_MODE
+		bitvec_write_field(dest, wp, 0,1);      // BEP_PERIOD2 not present
+	}
+
+	return 0;
+}
+
+static int write_ia_rest_uplink(
+	gprs_rlcmac_ul_tbf *tbf,
+	bitvec * dest, unsigned& wp,
+	uint8_t usf, uint32_t fn,
+	uint8_t alpha, uint8_t gamma, int8_t ta_idx)
+{
+	OSMO_ASSERT(!tbf || !tbf->is_egprs_enabled());
+
+	// GMS 04.08 10.5.2.37b 10.5.2.16
+	bitvec_write_field_lh(dest, wp, 3, 2);    // "HH"
+	bitvec_write_field(dest, wp, 0, 2);    // "0" Packet Uplink Assignment
+	if (tbf == NULL) {
+		bitvec_write_field(dest, wp, 0, 1);    // Block Allocation : Single Block Allocation
+		if (alpha) {
+			bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
+			bitvec_write_field(dest, wp,alpha,4);   // ALPHA = present
+		} else
+			bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
+		bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
+		if (ta_idx < 0) {
+			bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
+		} else {
+			bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
+			bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
+		}
+		bitvec_write_field(dest, wp, 1, 1);    // TBF_STARTING_TIME_FLAG
+		bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
+		bitvec_write_field(dest, wp,fn % 51,6);               // T3
+		bitvec_write_field(dest, wp,fn % 26,5);               // T2
+	} else {
+		bitvec_write_field(dest, wp, 1, 1);    // Block Allocation : Not Single Block Allocation
+		bitvec_write_field(dest, wp, tbf->tfi(), 5);  // TFI_ASSIGNMENT Temporary Flow Identity
+		bitvec_write_field(dest, wp, 0, 1);    // POLLING
+		bitvec_write_field(dest, wp, 0, 1);    // ALLOCATION_TYPE: dynamic
+		bitvec_write_field(dest, wp, usf, 3);    // USF
+		bitvec_write_field(dest, wp, 0, 1);    // USF_GRANULARITY
+		bitvec_write_field(dest, wp, 0, 1);   // "0" power control: Not Present
+		bitvec_write_field(dest, wp, tbf->current_cs().to_num()-1, 2);    // CHANNEL_CODING_COMMAND 
+		bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
+		if (alpha) {
+			bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
+			bitvec_write_field(dest, wp,alpha,4);   // ALPHA
+		} else
+			bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
+		bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
+		/* note: there is no choise for TAI and no starting time */
+		bitvec_write_field(dest, wp, 0, 1);   // switch TIMING_ADVANCE_INDEX = off
+		bitvec_write_field(dest, wp, 0, 1);    // TBF_STARTING_TIME_FLAG
+	}
+	return 0;
+}
+
+static int write_ia_rest_egprs_uplink(
+	gprs_rlcmac_ul_tbf *tbf,
+	bitvec * dest, unsigned& wp,
+	uint8_t usf, uint32_t fn,
+	uint8_t alpha, uint8_t gamma, int8_t ta_idx)
+{
+	LOGP(DRLCMACUL, LOGL_ERROR,
+		"EGPRS Packet Uplink Assignment is not yet implemented\n");
+	return -EINVAL;
+}
+
+/*
+ * Immediate assignment, sent on the CCCH/AGCH
+ * see GSM 04.08, 9.1.18 and GSM 44.018, 9.1.18 + 10.5.2.16
+ */
 int Encoding::write_immediate_assignment(
-	struct gprs_rlcmac_bts *bts,
+	struct gprs_rlcmac_tbf *tbf,
 	bitvec * dest, uint8_t downlink, uint8_t ra,
 	uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc,
-	uint8_t tfi, uint8_t usf, uint32_t tlli,
-	uint8_t polling, uint32_t fn, uint8_t single_block, uint8_t alpha,
+	uint8_t usf, uint8_t polling, uint32_t fn, uint8_t alpha,
 	uint8_t gamma, int8_t ta_idx)
 {
 	unsigned wp = 0;
-	uint8_t plen;
+	int plen;
+	int rc;
 
 	bitvec_write_field(dest, wp,0x0,4);  // Skip Indicator
 	bitvec_write_field(dest, wp,0x6,4);  // Protocol Discriminator
@@ -78,84 +203,24 @@ int Encoding::write_immediate_assignment(
 	plen = wp / 8;
 
 	if (downlink)
-	{
-		// GSM 04.08 10.5.2.16 IA Rest Octets
-		bitvec_write_field(dest, wp, 3, 2);   // "HH"
-		bitvec_write_field(dest, wp, 1, 2);   // "01" Packet Downlink Assignment
-		bitvec_write_field(dest, wp,tlli,32); // TLLI
-		bitvec_write_field(dest, wp,0x1,1);   // switch TFI   : on
-		bitvec_write_field(dest, wp,tfi,5);   // TFI
-		bitvec_write_field(dest, wp,0x0,1);   // RLC acknowledged mode
-		if (alpha) {
-			bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
-			bitvec_write_field(dest, wp,alpha,4);   // ALPHA
-		} else {
-			bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
-		}
-		bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
-		bitvec_write_field(dest, wp,polling,1);   // Polling Bit
-		bitvec_write_field(dest, wp,!polling,1);   // TA_VALID ???
-		if (ta_idx < 0) {
-			bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
-		} else {
-			bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
-			bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
-		}
-		if (polling) {
-			bitvec_write_field(dest, wp,0x1,1);   // TBF Starting TIME present
-			bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
-			bitvec_write_field(dest, wp,fn % 51,6);               // T3
-			bitvec_write_field(dest, wp,fn % 26,5);               // T2
-		} else {
-			bitvec_write_field(dest, wp,0x0,1);   // TBF Starting TIME present
-		}
-		bitvec_write_field(dest, wp,0x0,1);   // P0 not present
-//		bitvec_write_field(dest, wp,0x1,1);   // P0 not present
-//		bitvec_write_field(dest, wp,0xb,4);
-	}
+		rc = write_ia_rest_downlink(as_dl_tbf(tbf), dest, wp,
+			polling, fn,
+			alpha, gamma, ta_idx);
+	else if (as_ul_tbf(tbf) && as_ul_tbf(tbf)->is_egprs_enabled())
+		rc = write_ia_rest_egprs_uplink(as_ul_tbf(tbf), dest, wp,
+			usf, fn,
+			alpha, gamma, ta_idx);
 	else
-	{
-		// GMS 04.08 10.5.2.37b 10.5.2.16
-		bitvec_write_field(dest, wp, 3, 2);    // "HH"
-		bitvec_write_field(dest, wp, 0, 2);    // "0" Packet Uplink Assignment
-		if (single_block) {
-			bitvec_write_field(dest, wp, 0, 1);    // Block Allocation : Single Block Allocation
-			if (alpha) {
-				bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
-				bitvec_write_field(dest, wp,alpha,4);   // ALPHA = present
-			} else
-				bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
-			bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
-			if (ta_idx < 0) {
-				bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
-			} else {
-				bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
-				bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
-			}
-			bitvec_write_field(dest, wp, 1, 1);    // TBF_STARTING_TIME_FLAG
-			bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
-			bitvec_write_field(dest, wp,fn % 51,6);               // T3
-			bitvec_write_field(dest, wp,fn % 26,5);               // T2
-		} else {
-			bitvec_write_field(dest, wp, 1, 1);    // Block Allocation : Not Single Block Allocation
-			bitvec_write_field(dest, wp, tfi, 5);  // TFI_ASSIGNMENT Temporary Flow Identity
-			bitvec_write_field(dest, wp, 0, 1);    // POLLING
-			bitvec_write_field(dest, wp, 0, 1);    // ALLOCATION_TYPE: dynamic
-			bitvec_write_field(dest, wp, usf, 3);    // USF
-			bitvec_write_field(dest, wp, 0, 1);    // USF_GRANULARITY
-			bitvec_write_field(dest, wp, 0, 1);   // "0" power control: Not Present
-			bitvec_write_field(dest, wp, bts->initial_cs_ul-1, 2);    // CHANNEL_CODING_COMMAND 
-			bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
-			if (alpha) {
-				bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
-				bitvec_write_field(dest, wp,alpha,4);   // ALPHA
-			} else
-				bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
-			bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
-			/* note: there is no choise for TAI and no starting time */
-			bitvec_write_field(dest, wp, 0, 1);   // switch TIMING_ADVANCE_INDEX = off
-			bitvec_write_field(dest, wp, 0, 1);    // TBF_STARTING_TIME_FLAG
-		}
+		rc = write_ia_rest_uplink(as_ul_tbf(tbf), dest, wp,
+			usf, fn,
+			alpha, gamma, ta_idx);
+
+	if (rc < 0) {
+		LOGP(DRLCMAC, LOGL_ERROR,
+			"Failed to create IMMEDIATE ASSIGMENT (%s) for %s\n",
+			downlink ? "downlink" : "uplink",
+			tbf ? tbf->name() : "single block allocation");
+		return rc;
 	}
 
 	return plen;
@@ -166,7 +231,7 @@ void Encoding::write_packet_uplink_assignment(
 	struct gprs_rlcmac_bts *bts,
 	bitvec * dest, uint8_t old_tfi,
 	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
-	struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t alpha,
+	struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t rrbp, uint8_t alpha,
 	uint8_t gamma, int8_t ta_idx, int8_t use_egprs)
 {
 	// TODO We should use our implementation of encode RLC/MAC Control messages.
@@ -193,7 +258,7 @@ void Encoding::write_packet_uplink_assignment(
 
 	if (!use_egprs) {
 		bitvec_write_field(dest, wp,0x0,1); // Message escape
-		bitvec_write_field(dest, wp,tbf->current_cs()-1, 2); // CHANNEL_CODING_COMMAND 
+		bitvec_write_field(dest, wp,tbf->current_cs().to_num()-1, 2); // CHANNEL_CODING_COMMAND 
 		bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
 		bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
 		bitvec_write_field(dest, wp,tbf->ta(),6); // TIMING_ADVANCE_VALUE
@@ -205,13 +270,14 @@ void Encoding::write_packet_uplink_assignment(
 		}
 
 	} else { /* EPGRS */
+		unsigned int ws_enc = (tbf->m_window.ws() - 64) / 32;
 		bitvec_write_field(dest, wp,0x1,1); // Message escape
 		bitvec_write_field(dest, wp,0x0,2); // EGPRS message contents
 		bitvec_write_field(dest, wp,0x0,1); // No CONTENTION_RESOLUTION_TLLI
 		bitvec_write_field(dest, wp,0x0,1); // No COMPACT reduced MA
-		bitvec_write_field(dest, wp,tbf->current_cs()-1, 4); // EGPRS Modulation and Coding IE
+		bitvec_write_field(dest, wp,tbf->current_cs().to_num()-1, 4); // EGPRS Modulation and Coding IE
 		bitvec_write_field(dest, wp,0x0,1); // No RESEGMENT
-		bitvec_write_field(dest, wp,0x0,5); // EGPRS Window Size = 64
+		bitvec_write_field(dest, wp,ws_enc,5); // EGPRS Window Size
 		bitvec_write_field(dest, wp,0x0,1); // No Access Technologies Request
 		bitvec_write_field(dest, wp,0x0,1); // No ARAC RETRANSMISSION REQUEST
 		bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
@@ -269,16 +335,21 @@ void Encoding::write_packet_uplink_assignment(
 
 
 /* generate downlink assignment */
-void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_t old_tfi,
-	uint8_t old_downlink, struct gprs_rlcmac_tbf *tbf, uint8_t poll,
-	uint8_t alpha, uint8_t gamma, int8_t ta_idx, uint8_t ta_ts)
+void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
+	bool old_tfi_is_valid, uint8_t old_tfi, uint8_t old_downlink,
+	struct gprs_rlcmac_tbf *tbf, uint8_t poll, uint8_t rrbp,
+	uint8_t alpha, uint8_t gamma, int8_t ta_idx,
+	uint8_t ta_ts, bool use_egprs)
 {
 	// Packet downlink assignment TS 44.060 11.2.7
 
+	PDA_AdditionsR99_t *pda_r99;
+
 	uint8_t tn;
+	unsigned int ws_enc;
 
 	block->PAYLOAD_TYPE = 0x1;  // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
-	block->RRBP         = 0x0;  // N+13
+	block->RRBP         = rrbp;  // 0: N+13
 	block->SP           = poll; // RRBP field is valid
 	block->USF          = 0x0;  // Uplink state flag
 
@@ -287,9 +358,14 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_
 
 	block->u.Packet_Downlink_Assignment.Exist_PERSISTENCE_LEVEL      = 0x0;          // PERSISTENCE_LEVEL: off
 
-	block->u.Packet_Downlink_Assignment.ID.UnionType                 = 0x0;          // TFI = on
-	block->u.Packet_Downlink_Assignment.ID.u.Global_TFI.UnionType    = old_downlink; // 0=UPLINK TFI, 1=DL TFI
-	block->u.Packet_Downlink_Assignment.ID.u.Global_TFI.u.UPLINK_TFI = old_tfi;      // TFI
+	if (old_tfi_is_valid) {
+		block->u.Packet_Downlink_Assignment.ID.UnionType                 = 0x0;          // TFI = on
+		block->u.Packet_Downlink_Assignment.ID.u.Global_TFI.UnionType    = old_downlink; // 0=UPLINK TFI, 1=DL TFI
+		block->u.Packet_Downlink_Assignment.ID.u.Global_TFI.u.UPLINK_TFI = old_tfi;      // TFI
+	} else {
+		block->u.Packet_Downlink_Assignment.ID.UnionType                 = 0x1;          // TLLI
+		block->u.Packet_Downlink_Assignment.ID.u.TLLI                    = tbf->tlli();
+	}
 
 	block->u.Packet_Downlink_Assignment.MAC_MODE            = 0x0;          // Dynamic Allocation
 	block->u.Packet_Downlink_Assignment.RLC_MODE            = 0x0;          // RLC acknowledged mode
@@ -338,7 +414,21 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block, uint8_
 
 	block->u.Packet_Downlink_Assignment.Exist_TBF_Starting_Time   = 0x0; // TBF Starting TIME = off
 	block->u.Packet_Downlink_Assignment.Exist_Measurement_Mapping = 0x0; // Measurement_Mapping = off
-	block->u.Packet_Downlink_Assignment.Exist_AdditionsR99        = 0x0; // AdditionsR99 = off
+	if (!use_egprs) {
+		block->u.Packet_Downlink_Assignment.Exist_AdditionsR99        = 0x0; // AdditionsR99 = off
+		return;
+	}
+
+	ws_enc = (tbf->window()->ws() - 64) / 32;
+
+	block->u.Packet_Downlink_Assignment.Exist_AdditionsR99        = 0x1; // AdditionsR99 = on
+	pda_r99 = &block->u.Packet_Downlink_Assignment.AdditionsR99;
+	pda_r99->Exist_EGPRS_Params = 1;
+	pda_r99->EGPRS_WindowSize = ws_enc; /* see TS 44.060, table 12.5.2.1 */
+	pda_r99->LINK_QUALITY_MEASUREMENT_MODE = 0x0; /* no meas, see TS 44.060, table 11.2.7.2 */
+	pda_r99->Exist_BEP_PERIOD2 = 0; /* No extra EGPRS BEP PERIOD */
+	pda_r99->Exist_Packet_Extended_Timing_Advance = 0;
+	pda_r99->Exist_COMPACT_ReducedMA = 0;
 }
 
 /* generate paging request */
@@ -399,50 +489,181 @@ void Encoding::encode_rbb(const char *show_rbb, uint8_t *rbb)
 	}
 }
 
-/* generate uplink ack */
-void Encoding::write_packet_uplink_ack(struct gprs_rlcmac_bts *bts,
-	RlcMacDownlink_t * block, struct gprs_rlcmac_ul_tbf *tbf,
-	uint8_t final)
+static void write_packet_ack_nack_desc_gprs(
+	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
+	gprs_rlc_ul_window *window, bool is_final)
 {
-	// Packet Uplink Ack/Nack  TS 44.060 11.2.28
-
 	char rbb[65];
 
-	tbf->m_window.update_rbb(rbb);
+	window->update_rbb(rbb);
 
-	LOGP(DRLCMACUL, LOGL_DEBUG, "Encoding Ack/Nack for %s "
-		"(final=%d)\n", tbf_name(tbf), final);
-
-	block->PAYLOAD_TYPE = 0x1;   // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
-	block->RRBP         = 0x0;   // N+13
-	block->SP           = final; // RRBP field is valid, if it is final ack
-	block->USF          = 0x0;   // Uplink state flag
-
-	block->u.Packet_Uplink_Ack_Nack.MESSAGE_TYPE = 0x9;      // Packet Downlink Assignment
-	block->u.Packet_Uplink_Ack_Nack.PAGE_MODE    = 0x0;      // Normal Paging
-	block->u.Packet_Uplink_Ack_Nack.UPLINK_TFI   = tbf->tfi(); // Uplink TFI
-
-	block->u.Packet_Uplink_Ack_Nack.UnionType    = 0x0;      // PU_AckNack_GPRS = on
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.CHANNEL_CODING_COMMAND                        = tbf->current_cs() - 1;             // CS1
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.FINAL_ACK_INDICATION     = final;           // FINAL ACK INDICATION
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.STARTING_SEQUENCE_NUMBER = tbf->m_window.ssn(); // STARTING_SEQUENCE_NUMBER
-
-	encode_rbb(rbb, block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Ack_Nack_Description.RECEIVED_BLOCK_BITMAP);
-
-	/* rbb is not NULL terminated */
 	rbb[64] = 0;
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- V(N): \"%s\" R=Received "
 		"I=Invalid\n", rbb);
 
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.UnionType              = 0x0; // Fixed Allocation Dummy = on
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.u.FixedAllocationDummy = 0x0; // Fixed Allocation Dummy
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Exist_AdditionsR99     = 0x0; // AdditionsR99 = off
+	bitvec_write_field(dest, wp, is_final, 1); // FINAL_ACK_INDICATION
+	bitvec_write_field(dest, wp, window->ssn(), 7); // STARTING_SEQUENCE_NUMBER
 
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_CONTENTION_RESOLUTION_TLLI = 0x1;
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.CONTENTION_RESOLUTION_TLLI       = tbf->tlli();
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_Packet_Timing_Advance      = 0x0;
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_Extension_Bits             = 0x0;
-	block->u.Packet_Uplink_Ack_Nack.u.PU_AckNack_GPRS_Struct.Common_Uplink_Ack_Nack_Data.Exist_Power_Control_Parameters   = 0x0;
+	for (int i = 0; i < 64; i++) {
+		/* Set bit at the appropriate position (see 3GPP TS 04.60 9.1.8.1) */
+		bool is_ack = (rbb[i] == 'R');
+		bitvec_write_field(dest, wp, is_ack, 1);
+	}
+}
+
+static void write_packet_uplink_ack_gprs(
+	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
+	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
+{
+
+	bitvec_write_field(dest, wp, tbf->current_cs().to_num() - 1, 2); // CHANNEL_CODING_COMMAND
+	write_packet_ack_nack_desc_gprs(bts, dest, wp, &tbf->m_window, is_final);
+
+	bitvec_write_field(dest, wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
+	bitvec_write_field(dest, wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
+
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Packet Timing Advance
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Power Control Parameters
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Extension Bits
+	bitvec_write_field(dest, wp, 0, 1); // fixed 0
+	bitvec_write_field(dest, wp, 1, 1); // 1: have Additions R99
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Packet Extended Timing Advance
+	bitvec_write_field(dest, wp, 1, 1); // TBF_EST (enabled)
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have REL 5
+};
+
+static void write_packet_ack_nack_desc_egprs(
+	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
+	gprs_rlc_ul_window *window, bool is_final)
+{
+	int urbb_len = 0;
+	int crbb_len = 0;
+	int len;
+	bool bow = true;
+	bool eow = true;
+	int ssn = window->mod_sns(window->v_q() + 1);
+	int num_blocks = window->mod_sns(window->v_r() - window->v_q());
+	int esn_crbb = window->mod_sns(ssn - 1);
+	int rest_bits = dest->data_len * 8 - wp;
+
+	if (num_blocks > 0)
+		/* V(Q) is NACK and omitted -> SSN = V(Q) + 1 */
+		num_blocks -= 1;
+
+	if (num_blocks > window->ws())
+		num_blocks = window->ws();
+
+	if (num_blocks > rest_bits) {
+		eow = false;
+		urbb_len = rest_bits;
+		/* TODO: use compression, start encoding bits and stop when the
+		 * space is exhausted. Use the first combination that encodes
+		 * all bits. If there is none, use the combination that encodes
+		 * the largest number of bits (e.g. by setting num_blocks to the
+		 * max and repeating the construction).
+		 */
+	} else if (num_blocks > rest_bits - 9) {
+		/* union bit and length field take 9 bits */
+		eow = false;
+		urbb_len = rest_bits - 9;
+		/* TODO: use compression (see above) */
+	}
+
+	if (urbb_len + crbb_len == rest_bits)
+		len = -1;
+	else if (crbb_len == 0)
+		len = urbb_len + 15;
+	else
+		len = urbb_len + crbb_len + 23;
+
+	/* EGPRS Ack/Nack Description IE */
+	if (len < 0) {
+		bitvec_write_field(dest, wp, 0, 1); // 0: don't have length
+	} else {
+		bitvec_write_field(dest, wp, 1, 1); // 1: have length
+		bitvec_write_field(dest, wp, len, 8); // length
+	}
+
+	bitvec_write_field(dest, wp, is_final, 1); // FINAL_ACK_INDICATION
+	bitvec_write_field(dest, wp, bow, 1); // BEGINNING_OF_WINDOW
+	bitvec_write_field(dest, wp, eow, 1); // END_OF_WINDOW
+	bitvec_write_field(dest, wp, ssn, 11); // STARTING_SEQUENCE_NUMBER
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have CRBB
+
+	/* TODO: Add CRBB support */
+
+	LOGP(DRLCMACUL, LOGL_DEBUG,
+		" - EGPRS URBB, len = %d, SSN = %d, ESN_CRBB = %d, "
+		"SNS = %d, WS = %d, V(Q) = %d, V(R) = %d%s%s\n",
+		urbb_len, ssn, esn_crbb,
+		window->sns(), window->ws(), window->v_q(), window->v_r(),
+		bow ? ", BOW" : "", eow ? ", EOW" : "");
+	for (int i = urbb_len; i > 0; i--) {
+		/* Set bit at the appropriate position (see 3GPP TS 04.60 12.3.1) */
+		bool is_ack = window->m_v_n.is_received(esn_crbb + i);
+		bitvec_write_field(dest, wp, is_ack, 1);
+	}
+}
+
+static void write_packet_uplink_ack_egprs(
+	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
+	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
+{
+	bitvec_write_field(dest, wp, 0, 2); // fixed 00
+	bitvec_write_field(dest, wp, 2, 4); // CHANNEL_CODING_COMMAND: MCS-3
+	// bitvec_write_field(dest, wp, tbf->current_cs() - 1, 4); // CHANNEL_CODING_COMMAND
+	bitvec_write_field(dest, wp, 0, 1); // 0: no RESEGMENT (nyi)
+	bitvec_write_field(dest, wp, 1, 1); // PRE_EMPTIVE_TRANSMISSION, TODO: This resembles GPRS, change it?
+	bitvec_write_field(dest, wp, 0, 1); // 0: no PRR_RETRANSMISSION_REQUEST, TODO: clarify
+	bitvec_write_field(dest, wp, 0, 1); // 0: no ARAC_RETRANSMISSION_REQUEST, TODO: clarify
+	bitvec_write_field(dest, wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
+	bitvec_write_field(dest, wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
+	bitvec_write_field(dest, wp, 1, 1); // TBF_EST (enabled)
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Packet Timing Advance
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Packet Extended Timing Advance
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Power Control Parameters
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Extension Bits
+
+	write_packet_ack_nack_desc_egprs(bts, dest, wp, &tbf->m_window, is_final);
+
+	bitvec_write_field(dest, wp, 0, 1); // fixed 0
+	bitvec_write_field(dest, wp, 0, 1); // 0: don't have REL 5
+};
+
+void Encoding::write_packet_uplink_ack(
+	struct gprs_rlcmac_bts *bts, bitvec * dest,
+	struct gprs_rlcmac_ul_tbf *tbf, bool is_final,
+	uint8_t rrbp)
+{
+	unsigned wp = 0;
+
+	LOGP(DRLCMACUL, LOGL_DEBUG, "Encoding Ack/Nack for %s "
+		"(final=%d)\n", tbf_name(tbf), is_final);
+
+	bitvec_write_field(dest, wp, 0x1, 2);  // Payload Type
+	bitvec_write_field(dest, wp, rrbp, 2);  // Uplink block with TDMA framenumber
+	bitvec_write_field(dest, wp, is_final, 1);  // Suppl/Polling Bit
+	bitvec_write_field(dest, wp, 0x0, 3);  // Uplink state flag
+	bitvec_write_field(dest, wp, 0x9, 6);  // MESSAGE TYPE Uplink Ack/Nack
+	bitvec_write_field(dest, wp, 0x0, 2);  // Page Mode
+
+	bitvec_write_field(dest, wp, 0x0, 2);  // fixed 00
+	bitvec_write_field(dest, wp, tbf->tfi(), 5);  // Uplink TFI
+
+	if (tbf->is_egprs_enabled()) {
+		/* PU_AckNack_EGPRS = on */
+		bitvec_write_field(dest, wp, 1, 1);  // 1: EGPRS
+		write_packet_uplink_ack_egprs(bts, dest, wp, tbf, is_final);
+	} else {
+		/* PU_AckNack_GPRS = on */
+		bitvec_write_field(dest, wp, 0, 1);  // 0: GPRS
+		write_packet_uplink_ack_gprs(bts, dest, wp, tbf, is_final);
+	}
+
+	LOGP(DRLCMACUL, LOGL_DEBUG,
+		"Uplink Ack/Nack bit count %d, max %d, message = %s\n",
+		wp, dest->data_len * 8,
+		osmo_hexdump(dest->data, dest->data_len));
 }
 
 unsigned Encoding::write_packet_paging_request(bitvec * dest)
@@ -487,3 +708,468 @@ unsigned Encoding::write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t
 	return wp;
 }
 
+int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
+	uint8_t *data)
+{
+	struct gprs_rlc_dl_header_egprs_1 *egprs1;
+	struct gprs_rlc_dl_header_egprs_2 *egprs2;
+	struct gprs_rlc_dl_header_egprs_3 *egprs3;
+	struct rlc_dl_header *gprs;
+	unsigned int e_fbi_header;
+	GprsCodingScheme cs = rlc->cs;
+	unsigned int offs;
+	unsigned int bsn_delta;
+
+	switch(cs.headerTypeData()) {
+	case GprsCodingScheme::HEADER_GPRS_DATA:
+		gprs = static_cast<struct rlc_dl_header *>
+			((void *)data);
+
+		gprs->usf   = rlc->usf;
+		gprs->s_p   = rlc->es_p != 0 ? 1 : 0;
+		gprs->rrbp  = rlc->rrbp;
+		gprs->pt    = 0;
+		gprs->tfi   = rlc->tfi;
+		gprs->pr    = rlc->pr;
+
+		gprs->fbi   = rlc->block_info[0].cv == 0;
+		gprs->e     = rlc->block_info[0].e;
+		gprs->bsn   = rlc->block_info[0].bsn;
+		break;
+
+	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1:
+		egprs1 = static_cast<struct gprs_rlc_dl_header_egprs_1 *>
+			((void *)data);
+
+		egprs1->usf    = rlc->usf;
+		egprs1->es_p   = rlc->es_p;
+		egprs1->rrbp   = rlc->rrbp;
+		egprs1->tfi_a  = rlc->tfi >> 0; /* 1 bit LSB */
+		egprs1->tfi_b  = rlc->tfi >> 1; /* 4 bits */
+		egprs1->pr     = rlc->pr;
+		egprs1->cps    = rlc->cps;
+
+		egprs1->bsn1_a = rlc->block_info[0].bsn >> 0; /* 2 bits LSB */
+		egprs1->bsn1_b = rlc->block_info[0].bsn >> 2; /* 8 bits */
+		egprs1->bsn1_c = rlc->block_info[0].bsn >> 10; /* 1 bit */
+
+		bsn_delta = (rlc->block_info[1].bsn - rlc->block_info[0].bsn) &
+			(RLC_EGPRS_SNS - 1);
+
+		egprs1->bsn2_a = bsn_delta >> 0; /* 7 bits LSB */
+		egprs1->bsn2_b = bsn_delta >> 7; /* 3 bits */
+
+		/* first FBI/E header */
+		e_fbi_header   = rlc->block_info[0].e       ? 0x01 : 0;
+		e_fbi_header  |= rlc->block_info[0].cv == 0 ? 0x02 : 0; /* FBI */
+		offs = rlc->data_offs_bits[0] / 8;
+		OSMO_ASSERT(rlc->data_offs_bits[0] % 8 == 2);
+		e_fbi_header <<= 0;
+		data[offs] = (data[offs] & 0b11111100) | e_fbi_header;
+
+		/* second FBI/E header */
+		e_fbi_header   = rlc->block_info[1].e       ? 0x01 : 0;
+		e_fbi_header  |= rlc->block_info[1].cv == 0 ? 0x02 : 0; /* FBI */
+		offs = rlc->data_offs_bits[1] / 8;
+		OSMO_ASSERT(rlc->data_offs_bits[1] % 8 == 4);
+		e_fbi_header <<= 2;
+		data[offs] = (data[offs] & 0b11110011) | e_fbi_header;
+		break;
+
+	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2:
+		egprs2 = static_cast<struct gprs_rlc_dl_header_egprs_2 *>
+			((void *)data);
+
+		egprs2->usf    = rlc->usf;
+		egprs2->es_p   = rlc->es_p;
+		egprs2->rrbp   = rlc->rrbp;
+		egprs2->tfi_a  = rlc->tfi >> 0; /* 1 bit LSB */
+		egprs2->tfi_b  = rlc->tfi >> 1; /* 4 bits */
+		egprs2->pr     = rlc->pr;
+		egprs2->cps    = rlc->cps;
+
+		egprs2->bsn1_a = rlc->block_info[0].bsn >> 0; /* 2 bits LSB */
+		egprs2->bsn1_b = rlc->block_info[0].bsn >> 2; /* 8 bits */
+		egprs2->bsn1_c = rlc->block_info[0].bsn >> 10; /* 1 bit */
+
+		e_fbi_header   = rlc->block_info[0].e       ? 0x01 : 0;
+		e_fbi_header  |= rlc->block_info[0].cv == 0 ? 0x02 : 0; /* FBI */
+		offs = rlc->data_offs_bits[0] / 8;
+		OSMO_ASSERT(rlc->data_offs_bits[0] % 8 == 6);
+		e_fbi_header <<= 4;
+		data[offs] = (data[offs] & 0b11001111) | e_fbi_header;
+		break;
+
+	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3:
+		egprs3 = static_cast<struct gprs_rlc_dl_header_egprs_3 *>
+			((void *)data);
+
+		egprs3->usf    = rlc->usf;
+		egprs3->es_p   = rlc->es_p;
+		egprs3->rrbp   = rlc->rrbp;
+		egprs3->tfi_a  = rlc->tfi >> 0; /* 1 bit LSB */
+		egprs3->tfi_b  = rlc->tfi >> 1; /* 4 bits */
+		egprs3->pr     = rlc->pr;
+		egprs3->cps    = rlc->cps;
+
+		egprs3->bsn1_a = rlc->block_info[0].bsn >> 0; /* 2 bits LSB */
+		egprs3->bsn1_b = rlc->block_info[0].bsn >> 2; /* 8 bits */
+		egprs3->bsn1_c = rlc->block_info[0].bsn >> 10; /* 1 bit */
+
+		egprs3->spb    = rlc->block_info[0].spb;
+
+		e_fbi_header   = rlc->block_info[0].e       ? 0x01 : 0;
+		e_fbi_header  |= rlc->block_info[0].cv == 0 ? 0x02 : 0; /* FBI */
+		offs = rlc->data_offs_bits[0] / 8;
+		OSMO_ASSERT(rlc->data_offs_bits[0] % 8 == 1);
+		e_fbi_header <<= 7;
+		data[offs-1] = (data[offs-1] & 0b01111111) | (e_fbi_header >> 0);
+		data[offs]   = (data[offs]   & 0b11111110) | (e_fbi_header >> 8);
+		break;
+
+	default:
+		LOGP(DRLCMACDL, LOGL_ERROR,
+			"Encoding of uplink %s data blocks not yet supported.\n",
+			cs.name());
+		return -ENOTSUP;
+	};
+
+	return 0;
+}
+
+/**
+ * \brief Copy LSB bitstream RLC data block from byte aligned buffer.
+ *
+ * Note that the bitstream is encoded in LSB first order, so the two octets
+ * 654321xx xxxxxx87 contain the octet 87654321 starting at bit position 3
+ * (LSB has bit position 1). This is a different order than the one used by
+ * CSN.1.
+ *
+ * \param data_block_idx  The block index, 0..1 for header type 1, 0 otherwise
+ * \param src     A pointer to the start of the RLC block (incl. the header)
+ * \param buffer  A data area of a least the size of the RLC block
+ * \returns  the number of bytes copied
+ */
+unsigned int Encoding::rlc_copy_from_aligned_buffer(
+	const struct gprs_rlc_data_info *rlc,
+	unsigned int data_block_idx,
+	uint8_t *dst, const uint8_t *buffer)
+{
+	unsigned int hdr_bytes;
+	unsigned int extra_bits;
+	unsigned int i;
+
+	uint8_t c, last_c;
+	const uint8_t *src;
+	const struct gprs_rlc_data_block_info *rdbi;
+
+	OSMO_ASSERT(data_block_idx < rlc->num_data_blocks);
+	rdbi = &rlc->block_info[data_block_idx];
+
+	hdr_bytes = rlc->data_offs_bits[data_block_idx] / 8;
+	extra_bits = (rlc->data_offs_bits[data_block_idx] % 8);
+
+	if (extra_bits == 0) {
+		/* It is aligned already */
+		memmove(dst + hdr_bytes, buffer, rdbi->data_len);
+		return rdbi->data_len;
+	}
+
+	src = buffer;
+	dst = dst + hdr_bytes;
+	last_c = *dst << (8 - extra_bits);
+
+	for (i = 0; i < rdbi->data_len; i++) {
+		c = src[i];
+		*(dst++) = (last_c >> (8 - extra_bits)) | (c << extra_bits);
+		last_c = c;
+	}
+
+	/* overwrite the lower extra_bits */
+	*dst = (*dst & (0xff << extra_bits)) | (last_c >> (8 - extra_bits));
+
+	return rdbi->data_len;
+}
+
+static Encoding::AppendResult rlc_data_to_dl_append_gprs(
+	struct gprs_rlc_data_block_info *rdbi,
+	gprs_llc *llc, int *offset, int *num_chunks,
+	uint8_t *data_block,
+	bool is_final)
+{
+	int chunk;
+	int space;
+	struct rlc_li_field *li;
+	uint8_t *delimiter, *data, *e_pointer;
+
+	data = data_block + *offset;
+	delimiter = data_block + *num_chunks;
+	e_pointer = (*num_chunks ? delimiter - 1 : NULL);
+
+	chunk = llc->chunk_size();
+	space = rdbi->data_len - *offset;
+
+	/* if chunk will exceed block limit */
+	if (chunk > space) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+			"larger than space (%d) left in block: copy "
+			"only remaining space, and we are done\n",
+			chunk, space);
+		/* block is filled, so there is no extension */
+		if (e_pointer)
+			*e_pointer |= 0x01;
+		/* fill only space */
+		llc->consume(data, space);
+		/* return data block as message */
+		*offset = rdbi->data_len;
+		(*num_chunks)++;
+		return Encoding::AR_NEED_MORE_BLOCKS;
+	}
+	/* if FINAL chunk would fit precisely in space left */
+	if (chunk == space && is_final)
+	{
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+			"would exactly fit into space (%d): because "
+			"this is a final block, we don't add length "
+			"header, and we are done\n", chunk, space);
+		/* block is filled, so there is no extension */
+		if (e_pointer)
+			*e_pointer |= 0x01;
+		/* fill space */
+		llc->consume(data, space);
+		*offset = rdbi->data_len;
+		(*num_chunks)++;
+		rdbi->cv = 0;
+		return Encoding::AR_COMPLETED_BLOCK_FILLED;
+	}
+	/* if chunk would fit exactly in space left */
+	if (chunk == space) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+			"would exactly fit into space (%d): add length "
+			"header with LI=0, to make frame extend to "
+			"next block, and we are done\n", chunk, space);
+		/* make space for delimiter */
+		if (delimiter != data)
+			memmove(delimiter + 1, delimiter,
+				data - delimiter);
+		data++;
+		(*offset)++;
+		space--;
+		/* add LI with 0 length */
+		li = (struct rlc_li_field *)delimiter;
+		li->e = 1; /* not more extension */
+		li->m = 0; /* shall be set to 0, in case of li = 0 */
+		li->li = 0; /* chunk fills the complete space */
+		rdbi->e = 0; /* 0: extensions present */
+		// no need to set e_pointer nor increase delimiter
+		/* fill only space, which is 1 octet less than chunk */
+		llc->consume(data, space);
+		/* return data block as message */
+		*offset = rdbi->data_len;
+		(*num_chunks)++;
+		return Encoding::AR_NEED_MORE_BLOCKS;
+	}
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d is less "
+		"than remaining space (%d): add length header to "
+		"to delimit LLC frame\n", chunk, space);
+	/* the LLC frame chunk ends in this block */
+	/* make space for delimiter */
+	if (delimiter != data)
+		memmove(delimiter + 1, delimiter, data - delimiter);
+	data++;
+	(*offset)++;
+	space--;
+	/* add LI to delimit frame */
+	li = (struct rlc_li_field *)delimiter;
+	li->e = 0; /* Extension bit, maybe set later */
+	li->m = 0; /* will be set later, if there is more LLC data */
+	li->li = chunk; /* length of chunk */
+	rdbi->e = 0; /* 0: extensions present */
+	(*num_chunks)++;
+	/* copy (rest of) LLC frame to space and reset later */
+	llc->consume(data, chunk);
+	data += chunk;
+	space -= chunk;
+	(*offset) += chunk;
+	/* if we have more data and we have space left */
+	if (space > 0 && !is_final) {
+		li->m = 1; /* we indicate more frames to follow */
+		return Encoding::AR_COMPLETED_SPACE_LEFT;
+	}
+	/* if we don't have more LLC frames */
+	if (is_final) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
+			"done.\n");
+		li->e = 1; /* we cannot extend */
+		rdbi->cv = 0;
+		return Encoding::AR_COMPLETED_BLOCK_FILLED;
+	}
+	/* we have no space left */
+	LOGP(DRLCMACDL, LOGL_DEBUG, "-- No space left, so we are "
+		"done.\n");
+	li->e = 1; /* we cannot extend */
+	return Encoding::AR_COMPLETED_BLOCK_FILLED;
+}
+
+static Encoding::AppendResult rlc_data_to_dl_append_egprs(
+	struct gprs_rlc_data_block_info *rdbi,
+	gprs_llc *llc, int *offset, int *num_chunks,
+	uint8_t *data_block,
+	bool is_final)
+{
+	int chunk;
+	int space;
+	struct rlc_li_field_egprs *li;
+	struct rlc_li_field_egprs *prev_li;
+	uint8_t *delimiter, *data;
+
+	data = data_block + *offset;
+	delimiter = data_block + *num_chunks;
+	prev_li = (struct rlc_li_field_egprs *)
+		(*num_chunks ? delimiter - 1 : NULL);
+
+	chunk = llc->chunk_size();
+	space = rdbi->data_len - *offset;
+
+	/* if chunk will exceed block limit */
+	if (chunk > space) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+			"larger than space (%d) left in block: copy "
+			"only remaining space, and we are done\n",
+			chunk, space);
+		/* fill only space */
+		llc->consume(data, space);
+		/* return data block as message */
+		*offset = rdbi->data_len;
+		(*num_chunks)++;
+		return Encoding::AR_NEED_MORE_BLOCKS;
+	}
+	/* if FINAL chunk would fit precisely in space left */
+	if (chunk == space && is_final)
+	{
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+			"would exactly fit into space (%d): because "
+			"this is a final block, we don't add length "
+			"header, and we are done\n", chunk, space);
+		/* fill space */
+		llc->consume(data, space);
+		*offset = rdbi->data_len;
+		(*num_chunks)++;
+		rdbi->cv = 0;
+		return Encoding::AR_COMPLETED_BLOCK_FILLED;
+	}
+	/* if chunk would fit exactly in space left */
+	if (chunk == space) {
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d "
+			"would exactly fit into space (%d): just copy "
+			"it, and we are done. The next block will have "
+			"to start with an empty chunk\n",
+			chunk, space);
+		/* fill space */
+		llc->consume(data, space);
+		*offset = rdbi->data_len;
+		(*num_chunks)++;
+		return Encoding::AR_NEED_MORE_BLOCKS;
+	}
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d is less "
+		"than remaining space (%d): add length header to "
+		"to delimit LLC frame\n", chunk, space);
+	/* the LLC frame chunk ends in this block */
+	/* make space for delimiter */
+
+	if (delimiter != data)
+		memmove(delimiter + 1, delimiter, data - delimiter);
+
+	data      += 1;
+	(*offset) += 1;
+	space     -= 1;
+	/* add LI to delimit frame */
+	li = (struct rlc_li_field_egprs *)delimiter;
+	li->e = 1; /* Extension bit, maybe set later */
+	li->li = chunk; /* length of chunk */
+	/* tell previous extension header about the new one */
+	if (prev_li)
+		prev_li->e = 0;
+	rdbi->e = 0; /* 0: extensions present */
+	delimiter++;
+	prev_li = li;
+	(*num_chunks)++;
+	/* copy (rest of) LLC frame to space and reset later */
+	llc->consume(data, chunk);
+	data += chunk;
+	space -= chunk;
+	(*offset) += chunk;
+	/* if we have more data and we have space left */
+	if (space > 0) {
+		if (!is_final)
+			return Encoding::AR_COMPLETED_SPACE_LEFT;
+
+		/* we don't have more LLC frames */
+		/* We will have to add another chunk with filling octets */
+		LOGP(DRLCMACDL, LOGL_DEBUG,
+			"-- There is remaining space (%d): add filling byte chunk\n",
+			space);
+
+		if (delimiter != data)
+			memmove(delimiter + 1, delimiter, data - delimiter);
+
+		data      += 1;
+		(*offset) += 1;
+		space     -= 1;
+
+		/* set filling bytes extension */
+		li = (struct rlc_li_field_egprs *)delimiter;
+		li->e = 1;
+		li->li = 127;
+
+		/* tell previous extension header about the new one */
+		if (prev_li)
+			prev_li->e = 0;
+
+		delimiter++;
+		(*num_chunks)++;
+
+		rdbi->cv = 0;
+
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
+			"are done.\n");
+
+		*offset = rdbi->data_len;
+		return Encoding::AR_COMPLETED_BLOCK_FILLED;
+	}
+
+	if (is_final) {
+		/* we don't have more LLC frames */
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
+			"are done.\n");
+		rdbi->cv = 0;
+		return Encoding::AR_COMPLETED_BLOCK_FILLED;
+	}
+
+	/* we have no space left */
+	LOGP(DRLCMACDL, LOGL_DEBUG, "-- No space left, so we are "
+		"done.\n");
+	return Encoding::AR_COMPLETED_BLOCK_FILLED;
+}
+
+Encoding::AppendResult Encoding::rlc_data_to_dl_append(
+	struct gprs_rlc_data_block_info *rdbi, GprsCodingScheme cs,
+	gprs_llc *llc, int *offset, int *num_chunks,
+	uint8_t *data_block,
+	bool is_final)
+{
+	if (cs.isGprs())
+		return rlc_data_to_dl_append_gprs(rdbi,
+			llc, offset, num_chunks, data_block, is_final);
+
+	if (cs.isEgprs())
+		return rlc_data_to_dl_append_egprs(rdbi,
+			llc, offset, num_chunks, data_block, is_final);
+
+	LOGP(DRLCMACDL, LOGL_ERROR, "%s data block encoding not implemented\n",
+		cs.name());
+
+	return AR_NEED_MORE_BLOCKS;
+}

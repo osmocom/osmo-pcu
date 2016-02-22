@@ -25,6 +25,7 @@
 #include "tbf.h"
 #include "gprs_debug.h"
 #include "gprs_codel.h"
+#include "pcu_utils.h"
 
 #include <time.h>
 
@@ -97,8 +98,6 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	m_ta(0),
 	m_ms_class(0),
 	m_egprs_ms_class(0),
-	m_current_cs_ul(1),
-	m_current_cs_dl(1),
 	m_is_idle(true),
 	m_ref(0),
 	m_list(this),
@@ -107,7 +106,8 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	m_reserved_dl_slots(0),
 	m_reserved_ul_slots(0),
 	m_current_trx(NULL),
-	m_codel_state(NULL)
+	m_codel_state(NULL),
+	m_mode(GprsCodingScheme::GPRS)
 {
 	int codel_interval = LLC_CODEL_USE_DEFAULT;
 
@@ -117,17 +117,11 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	memset(&m_timer, 0, sizeof(m_timer));
 	m_timer.cb = GprsMs::timeout;
 	m_llc_queue.init();
-	if (m_bts) {
-		m_current_cs_ul = m_bts->bts_data()->initial_cs_ul;
-		if (m_current_cs_ul < 1)
-			m_current_cs_ul = 1;
 
-		m_current_cs_dl = m_bts->bts_data()->initial_cs_dl;
-		if (m_current_cs_dl < 1)
-			m_current_cs_dl = 1;
+	set_mode(m_mode);
 
+	if (m_bts)
 		codel_interval = m_bts->bts_data()->llc_codel_interval_msec;
-	}
 
 	if (codel_interval) {
 		if (codel_interval == LLC_CODEL_USE_DEFAULT)
@@ -215,12 +209,53 @@ void GprsMs::stop_timer()
 	unref();
 }
 
+void GprsMs::set_mode(GprsCodingScheme::Mode mode)
+{
+	m_mode = mode;
+
+	if (!m_bts)
+		return;
+
+	switch (m_mode) {
+	case GprsCodingScheme::GPRS:
+		if (!m_current_cs_ul.isGprs()) {
+			m_current_cs_ul = GprsCodingScheme::getGprsByNum(
+				m_bts->bts_data()->initial_cs_ul);
+			if (!m_current_cs_ul.isValid())
+				m_current_cs_ul = GprsCodingScheme::CS1;
+		}
+		if (!m_current_cs_dl.isGprs()) {
+			m_current_cs_dl = GprsCodingScheme::getGprsByNum(
+				m_bts->bts_data()->initial_cs_dl);
+			if (!m_current_cs_dl.isValid())
+				m_current_cs_dl = GprsCodingScheme::CS1;
+		}
+		break;
+
+	case GprsCodingScheme::EGPRS_GMSK:
+	case GprsCodingScheme::EGPRS:
+		if (!m_current_cs_ul.isEgprs()) {
+			m_current_cs_ul = GprsCodingScheme::getEgprsByNum(
+				m_bts->bts_data()->initial_mcs_ul);
+			if (!m_current_cs_dl.isValid())
+				m_current_cs_ul = GprsCodingScheme::MCS1;
+		}
+		if (!m_current_cs_dl.isEgprs()) {
+			m_current_cs_dl = GprsCodingScheme::getEgprsByNum(
+				m_bts->bts_data()->initial_mcs_dl);
+			if (!m_current_cs_dl.isValid())
+				m_current_cs_dl = GprsCodingScheme::MCS1;
+		}
+		break;
+	}
+}
+
 void GprsMs::attach_tbf(struct gprs_rlcmac_tbf *tbf)
 {
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF)
-		attach_dl_tbf(static_cast<gprs_rlcmac_dl_tbf *>(tbf));
+		attach_dl_tbf(as_dl_tbf(tbf));
 	else
-		attach_ul_tbf(static_cast<gprs_rlcmac_ul_tbf *>(tbf));
+		attach_ul_tbf(as_ul_tbf(tbf));
 }
 
 void GprsMs::attach_ul_tbf(struct gprs_rlcmac_ul_tbf *tbf)
@@ -464,9 +499,9 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 {
 	struct gprs_rlcmac_bts *bts_data;
 	int64_t now;
-	uint8_t max_cs_dl = 4;
+	GprsCodingScheme max_cs_dl = this->max_cs_dl();
 
-	OSMO_ASSERT(m_bts != NULL);
+	OSMO_ASSERT(max_cs_dl);
 	bts_data = m_bts->bts_data();
 
 	if (error_rate < 0)
@@ -474,32 +509,30 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 
 	now = now_msec();
 
-	if (bts_data->max_cs_dl)
-		max_cs_dl = bts_data->max_cs_dl;
-
 	/* TODO: Check for TBF direction */
 	/* TODO: Support different CS values for UL and DL */
 
 	m_nack_rate_dl = error_rate;
 
 	if (error_rate > bts_data->cs_adj_upper_limit) {
-		if (m_current_cs_dl > 1) {
-			m_current_cs_dl -= 1;
+		if (m_current_cs_dl.to_num() > 1) {
+			m_current_cs_dl.dec(mode());
 			LOGP(DRLCMACDL, LOGL_INFO,
 				"MS (IMSI %s): High error rate %d%%, "
-				"reducing CS level to %d\n",
-				imsi(), error_rate, m_current_cs_dl);
+				"reducing CS level to %s\n",
+				imsi(), error_rate, m_current_cs_dl.name());
 			m_last_cs_not_low = now;
 		}
 	} else if (error_rate < bts_data->cs_adj_lower_limit) {
 		if (m_current_cs_dl < max_cs_dl) {
 		       if (now - m_last_cs_not_low > 1000) {
-			       m_current_cs_dl += 1;
+			       m_current_cs_dl.inc(mode());
 
 			       LOGP(DRLCMACDL, LOGL_INFO,
 				       "MS (IMSI %s): Low error rate %d%%, "
-				       "increasing DL CS level to %d\n",
-				       imsi(), error_rate, m_current_cs_dl);
+				       "increasing DL CS level to %s\n",
+				       imsi(), error_rate,
+				       m_current_cs_dl.name());
 			       m_last_cs_not_low = now;
 		       } else {
 			       LOGP(DRLCMACDL, LOGL_DEBUG,
@@ -516,45 +549,124 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 	}
 }
 
-void GprsMs::update_l1_meas(const pcu_l1_meas *meas)
+GprsCodingScheme GprsMs::max_cs_ul() const
 {
 	struct gprs_rlcmac_bts *bts_data;
-	uint8_t max_cs_ul = 4;
-	unsigned i;
 
 	OSMO_ASSERT(m_bts != NULL);
 	bts_data = m_bts->bts_data();
 
-	if (bts_data->max_cs_ul)
-		max_cs_ul = bts_data->max_cs_ul;
+	if (m_current_cs_ul.isGprs()) {
+		if (!bts_data->max_cs_ul)
+			return GprsCodingScheme(GprsCodingScheme::CS4);
 
-	if (meas->have_link_qual) {
-		int old_link_qual = meas->link_qual;
-		int low  = bts_data->cs_lqual_ranges[current_cs_ul()-1].low;
-		int high  = bts_data->cs_lqual_ranges[current_cs_ul()-1].high;
-		uint8_t new_cs_ul = m_current_cs_ul;
-
-		if (m_l1_meas.have_link_qual)
-		       old_link_qual = m_l1_meas.link_qual;
-
-		if (meas->link_qual < low &&  old_link_qual < low)
-			new_cs_ul = m_current_cs_ul - 1;
-		else if (meas->link_qual > high &&  old_link_qual > high &&
-			m_current_cs_ul < max_cs_ul)
-			new_cs_ul = m_current_cs_ul + 1;
-
-		if (m_current_cs_ul != new_cs_ul) {
-			LOGP(DRLCMACDL, LOGL_INFO,
-				"MS (IMSI %s): "
-				"Link quality %ddB (%ddB) left window [%d, %d], "
-				"modifying uplink CS level: %d -> %d\n",
-				imsi(), meas->link_qual, old_link_qual,
-				low, high,
-				m_current_cs_ul, new_cs_ul);
-
-			m_current_cs_ul = new_cs_ul;
-		}
+		return GprsCodingScheme::getGprsByNum(bts_data->max_cs_ul);
 	}
+
+	if (!m_current_cs_ul.isEgprs())
+		return GprsCodingScheme(); /* UNKNOWN */
+
+	if (bts_data->max_mcs_ul)
+		return GprsCodingScheme::getEgprsByNum(bts_data->max_mcs_ul);
+	else if (bts_data->max_cs_ul)
+		return GprsCodingScheme::getEgprsByNum(bts_data->max_cs_ul);
+
+	return GprsCodingScheme(GprsCodingScheme::MCS4);
+}
+
+GprsCodingScheme GprsMs::max_cs_dl() const
+{
+	struct gprs_rlcmac_bts *bts_data;
+
+	OSMO_ASSERT(m_bts != NULL);
+	bts_data = m_bts->bts_data();
+
+	if (m_current_cs_dl.isGprs()) {
+		if (!bts_data->max_cs_dl)
+			return GprsCodingScheme(GprsCodingScheme::CS4);
+
+		return GprsCodingScheme::getGprsByNum(bts_data->max_cs_dl);
+	}
+
+	if (!m_current_cs_dl.isEgprs())
+		return GprsCodingScheme(); /* UNKNOWN */
+
+	if (bts_data->max_mcs_dl)
+		return GprsCodingScheme::getEgprsByNum(bts_data->max_mcs_dl);
+	else if (bts_data->max_cs_dl)
+		return GprsCodingScheme::getEgprsByNum(bts_data->max_cs_dl);
+
+	return GprsCodingScheme(GprsCodingScheme::MCS4);
+}
+
+void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
+{
+	struct gprs_rlcmac_bts *bts_data;
+	GprsCodingScheme max_cs_ul = this->max_cs_ul();
+
+	int old_link_qual;
+	int low;
+	int high;
+	GprsCodingScheme new_cs_ul = m_current_cs_ul;
+	unsigned current_cs_num = m_current_cs_ul.to_num();
+
+	bts_data = m_bts->bts_data();
+
+	if (!max_cs_ul) {
+		LOGP(DRLCMACDL, LOGL_ERROR,
+			"max_cs_ul cannot be derived (current UL CS: %s)\n",
+			m_current_cs_ul.name());
+		return;
+	}
+
+	if (!m_current_cs_ul)
+		return;
+
+	if (!meas->have_link_qual)
+		return;
+
+	old_link_qual = meas->link_qual;
+
+	if (m_current_cs_ul.isGprs()) {
+		low  = bts_data->cs_lqual_ranges[current_cs_num-1].low;
+		high = bts_data->cs_lqual_ranges[current_cs_num-1].high;
+	} else if (m_current_cs_ul.isEgprs()) {
+		/* TODO, use separate table */
+		if (current_cs_num > 4)
+			current_cs_num = 4;
+		low  = bts_data->cs_lqual_ranges[current_cs_num-1].low;
+		high = bts_data->cs_lqual_ranges[current_cs_num-1].high;
+	} else {
+		return;
+	}
+
+	if (m_l1_meas.have_link_qual)
+		old_link_qual = m_l1_meas.link_qual;
+
+	if (meas->link_qual < low &&  old_link_qual < low)
+		new_cs_ul.dec(mode());
+	else if (meas->link_qual > high &&  old_link_qual > high &&
+		m_current_cs_ul < max_cs_ul)
+		new_cs_ul.inc(mode());
+
+	if (m_current_cs_ul != new_cs_ul) {
+		LOGP(DRLCMACDL, LOGL_INFO,
+			"MS (IMSI %s): "
+			"Link quality %ddB (%ddB) left window [%d, %d], "
+			"modifying uplink CS level: %s -> %s\n",
+			imsi(), meas->link_qual, old_link_qual,
+			low, high,
+			m_current_cs_ul.name(), new_cs_ul.name());
+
+		m_current_cs_ul = new_cs_ul;
+	}
+}
+
+void GprsMs::update_l1_meas(const pcu_l1_meas *meas)
+{
+	unsigned i;
+
+	update_cs_ul(meas);
 
 	if (meas->have_rssi)
 		m_l1_meas.set_rssi(meas->rssi);
@@ -582,9 +694,9 @@ void GprsMs::update_l1_meas(const pcu_l1_meas *meas)
 	}
 }
 
-uint8_t GprsMs::current_cs_dl() const
+GprsCodingScheme GprsMs::current_cs_dl() const
 {
-	uint8_t cs = m_current_cs_dl;
+	GprsCodingScheme cs = m_current_cs_dl;
 	size_t unencoded_octets;
 
 	if (!m_bts)
@@ -594,7 +706,7 @@ uint8_t GprsMs::current_cs_dl() const
 
 	/* If the DL TBF is active, add number of unencoded chunk octets */
 	if (m_dl_tbf)
-		unencoded_octets = m_dl_tbf->m_llc.chunk_size();
+		unencoded_octets += m_dl_tbf->m_llc.chunk_size();
 
 	/* There are many unencoded octets, don't reduce */
 	if (unencoded_octets >= m_bts->bts_data()->cs_downgrade_threshold)
@@ -605,11 +717,11 @@ uint8_t GprsMs::current_cs_dl() const
 		return cs;
 
 	/* The throughput would probably be better if the CS level was reduced */
-	cs -= 1;
+	cs.dec(mode());
 
 	/* CS-2 doesn't gain throughput with small packets, further reduce to CS-1 */
-	if (cs == 2)
-		cs -= 1;
+	if (cs == GprsCodingScheme(GprsCodingScheme::CS2))
+		cs.dec(mode());
 
 	return cs;
 }
@@ -647,6 +759,31 @@ uint8_t GprsMs::ul_slots() const
 
 	if (m_ul_tbf)
 		slots |= m_ul_tbf->ul_slots();
+
+	return slots;
+}
+
+uint8_t GprsMs::current_pacch_slots() const
+{
+	uint8_t slots = 0;
+
+	bool is_dl_active = m_dl_tbf && m_dl_tbf->is_tfi_assigned();
+	bool is_ul_active = m_ul_tbf && m_ul_tbf->is_tfi_assigned();
+
+	if (!is_dl_active && !is_ul_active)
+		return 0;
+
+	/* see TS 44.060, 8.1.1.2.2 */
+	if (is_dl_active && !is_ul_active)
+		slots =  m_dl_tbf->dl_slots();
+	else if (!is_dl_active && is_ul_active)
+		slots =  m_ul_tbf->ul_slots();
+	else
+		slots =  m_ul_tbf->ul_slots() & m_dl_tbf->dl_slots();
+
+	/* Assume a multislot class 1 device */
+	/* TODO: For class 2 devices, this could be removed */
+	slots = pcu_lsb(slots);
 
 	return slots;
 }

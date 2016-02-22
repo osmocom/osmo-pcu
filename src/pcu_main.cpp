@@ -164,6 +164,7 @@ int main(int argc, char *argv[])
 	bts = bts_main_data();
 	bts->fc_interval = 1;
 	bts->initial_cs_dl = bts->initial_cs_ul = 1;
+	bts->initial_mcs_dl = bts->initial_mcs_ul = 1;
 	bts->cs1 = 1;
 	bts->t3142 = 20;
 	bts->t3169 = 5;
@@ -180,6 +181,8 @@ int main(int argc, char *argv[])
 	bts->cs_adj_lower_limit = 10; /* Increase CS if the error rate is below */
 	bts->max_cs_ul = 4;
 	bts->max_cs_dl = 4;
+	bts->max_mcs_ul = 4;
+	bts->max_mcs_dl = 4;
 	/* CS-1 to CS-4 */
 	bts->cs_lqual_ranges[0].low = -256;
 	bts->cs_lqual_ranges[0].high = 6;
@@ -190,6 +193,10 @@ int main(int argc, char *argv[])
 	bts->cs_lqual_ranges[3].low = 12;
 	bts->cs_lqual_ranges[3].high = 256;
 	bts->cs_downgrade_threshold = 200;
+
+	/* TODO: increase them when CRBB decoding is implemented */
+	bts->ws_base = 64;
+	bts->ws_pdch = 0;
 
 	bts->llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
 	bts->dl_tbf_idle_msec = 2000;

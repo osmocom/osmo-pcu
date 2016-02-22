@@ -39,6 +39,61 @@ int pcu_vty_config_write_pcu_ext(struct vty *vty)
 	return CMD_SUCCESS;
 }
 
+static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
+{
+	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
+	gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
+
+	vty_out(vty, "TBF: TFI=%d TLLI=0x%08x (%s) DIR=%s IMSI=%s%s", tbf->tfi(),
+			tbf->tlli(), tbf->is_tlli_valid() ? "valid" : "invalid",
+			tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
+			tbf->imsi(), VTY_NEWLINE);
+	vty_out(vty, " created=%lu state=%08x 1st_TS=%d 1st_cTS=%d ctrl_TS=%d "
+			"MS_CLASS=%d/%d%s",
+			tbf->created_ts(), tbf->state_flags, tbf->first_ts,
+			tbf->first_common_ts, tbf->control_ts,
+			tbf->ms_class(),
+			tbf->ms() ? tbf->ms()->egprs_ms_class() : -1,
+			VTY_NEWLINE);
+	vty_out(vty, " TS_alloc=");
+	for (int i = 0; i < 8; i++) {
+		bool is_ctrl = tbf->is_control_ts(i);
+		if (tbf->pdch[i])
+			vty_out(vty, "%d%s ", i, is_ctrl ? "!" : "");
+	}
+	vty_out(vty, " CS=%s WS=%d",
+		tbf->current_cs().name(), tbf->window()->ws());
+
+	if (ul_tbf) {
+		gprs_rlc_ul_window *win = &ul_tbf->m_window;
+		vty_out(vty, " V(Q)=%d V(R)=%d",
+			win->v_q(), win->v_r());
+	}
+	if (dl_tbf) {
+		gprs_rlc_dl_window *win = &dl_tbf->m_window;
+		vty_out(vty, " V(A)=%d V(S)=%d nBSN=%d%s",
+			win->v_a(), win->v_s(), win->resend_needed(),
+			win->window_stalled() ? " STALLED" : "");
+	}
+	vty_out(vty, "%s%s", VTY_NEWLINE, VTY_NEWLINE);
+}
+
+int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
+{
+	BTS *bts = bts_data->bts;
+	LListHead<gprs_rlcmac_tbf> *ms_iter;
+
+	vty_out(vty, "UL TBFs%s", VTY_NEWLINE);
+	llist_for_each(ms_iter, &bts->ul_tbfs())
+		tbf_print_vty_info(vty, ms_iter->entry());
+
+	vty_out(vty, "%sDL TBFs%s", VTY_NEWLINE, VTY_NEWLINE);
+	llist_for_each(ms_iter, &bts->dl_tbfs())
+		tbf_print_vty_info(vty, ms_iter->entry());
+
+	return CMD_SUCCESS;
+}
+
 int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
 {
 	BTS *bts = bts_data->bts;
@@ -47,10 +102,11 @@ int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
 	llist_for_each(ms_iter, &bts->ms_store().ms_list()) {
 		GprsMs *ms = ms_iter->entry();
 
-		vty_out(vty, "MS TLLI=%08x, TA=%d, CS-UL=%d, CS-DL=%d, LLC=%d, "
+		vty_out(vty, "MS TLLI=%08x, TA=%d, CS-UL=%s, CS-DL=%s, LLC=%d, "
 			"IMSI=%s%s",
 			ms->tlli(),
-			ms->ta(), ms->current_cs_ul(), ms->current_cs_dl(),
+			ms->ta(), ms->current_cs_ul().name(),
+			ms->current_cs_dl().name(),
 			ms->llc_queue()->size(),
 			ms->imsi(),
 			VTY_NEWLINE);
@@ -62,15 +118,24 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 {
 	unsigned i;
 	LListHead<gprs_rlcmac_tbf> *i_tbf;
+	uint8_t slots;
 
 	vty_out(vty, "MS TLLI=%08x, IMSI=%s%s", ms->tlli(), ms->imsi(), VTY_NEWLINE);
 	vty_out(vty, "  Timing advance (TA):    %d%s", ms->ta(), VTY_NEWLINE);
-	vty_out(vty, "  Coding scheme uplink:   CS-%d%s", ms->current_cs_ul(),
+	vty_out(vty, "  Coding scheme uplink:   %s%s", ms->current_cs_ul().name(),
 		VTY_NEWLINE);
-	vty_out(vty, "  Coding scheme downlink: CS-%d%s", ms->current_cs_dl(),
+	vty_out(vty, "  Coding scheme downlink: %s%s", ms->current_cs_dl().name(),
 		VTY_NEWLINE);
+	vty_out(vty, "  Mode:                   %s%s",
+		GprsCodingScheme::modeName(ms->mode()), VTY_NEWLINE);
 	vty_out(vty, "  MS class:               %d%s", ms->ms_class(), VTY_NEWLINE);
 	vty_out(vty, "  EGPRS MS class:         %d%s", ms->egprs_ms_class(), VTY_NEWLINE);
+	vty_out(vty, "  PACCH:                  ");
+	slots = ms->current_pacch_slots();
+	for (int i = 0; i < 8; i++)
+		if (slots & (1 << i))
+			vty_out(vty, "%d ", i);
+	vty_out(vty, "%s", VTY_NEWLINE);
 	vty_out(vty, "  LLC queue length:       %d%s", ms->llc_queue()->size(),
 		VTY_NEWLINE);
 	vty_out(vty, "  LLC queue octets:       %d%s", ms->llc_queue()->octets(),

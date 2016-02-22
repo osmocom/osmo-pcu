@@ -25,9 +25,16 @@
 
 #include <stdint.h>
 
-#define RLC_MAX_SNS 128 /* GPRS, must be power of 2 */
-#define RLC_MAX_WS  64 /* max window size */
-#define RLC_MAX_LEN 54 /* CS-4 including spare bits */
+#define RLC_GPRS_SNS 128 /* GPRS, must be power of 2 */
+#define RLC_GPRS_WS  64 /* max window size */
+#define RLC_EGPRS_SNS 2048 /* EGPRS, must be power of 2 */
+#define RLC_EGPRS_MIN_WS 64 /* min window size */
+#define RLC_EGPRS_MAX_WS 1024 /* min window size */
+#define RLC_EGPRS_SNS 2048 /* EGPRS, must be power of 2 */
+#define RLC_EGPRS_MAX_BSN_DELTA 512
+#define RLC_MAX_SNS  RLC_EGPRS_SNS
+#define RLC_MAX_WS   RLC_EGPRS_MAX_WS
+#define RLC_MAX_LEN 74 /* MCS-9 data unit */
 
 struct BTS;
 struct gprs_rlc_v_n;
@@ -55,26 +62,31 @@ static inline uint16_t mod_sns_half()
 	return (RLC_MAX_SNS / 2) - 1;
 }
 
-struct gprs_rlc_ul_data_block_info {
+struct gprs_rlc_data_block_info {
 	unsigned int data_len; /* EGPRS: N2, GPRS: N2-2, N-2 */
 	unsigned int bsn;
 	unsigned int ti;
 	unsigned int e;
-	unsigned int cv;
+	unsigned int cv; /* FBI == 1 <=> CV == 0 */
 	unsigned int pi;
 	unsigned int spb;
 };
 
-struct gprs_rlc_ul_header_egprs {
+struct gprs_rlc_data_info {
 	GprsCodingScheme cs;
 	unsigned int r;
 	unsigned int si;
 	unsigned int tfi;
 	unsigned int cps;
 	unsigned int rsb;
+	unsigned int usf;
+	unsigned int es_p;
+	unsigned int rrbp;
+	unsigned int pr;
 	unsigned int num_data_blocks;
+	unsigned int with_padding;
 	unsigned int data_offs_bits[2];
-	struct gprs_rlc_ul_data_block_info block_info[2];
+	struct gprs_rlc_data_block_info block_info[2];
 };
 
 struct gprs_rlc_data {
@@ -86,9 +98,20 @@ struct gprs_rlc_data {
 	/* block len of history */
 	uint8_t len;
 
-	struct gprs_rlc_ul_data_block_info block_info;
+	struct gprs_rlc_data_block_info block_info;
 	GprsCodingScheme cs;
 };
+
+void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,
+	GprsCodingScheme cs, bool with_padding);
+void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
+	GprsCodingScheme cs, bool with_padding);
+void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
+	GprsCodingScheme cs, bool with_padding);
+unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, int punct, int punct2,
+	int with_padding);
+void gprs_rlc_mcs_cps_decode(unsigned int cps, GprsCodingScheme cs,
+	int *punct, int *punct2, int *with_padding);
 
 /*
  * I hold the currently transferred blocks and will provide
@@ -131,17 +154,27 @@ private:
 
 
 /**
- * TODO: The UL/DL code could/should share a baseclass but
- * we are using llist_for_each_entry for the TBF which
- * requires everything which creates a requirement for a POD
- * type and in < C++11 something that is using even if the
- * most simple form of inheritance is not a POD anymore.
+ * TODO: The UL/DL code could/should share a base class.
  */
-struct gprs_rlc_dl_window {
-	void reset();
+class gprs_rlc_window {
+public:
+	gprs_rlc_window();
+
 	const uint16_t mod_sns() const;
+	const uint16_t mod_sns(uint16_t bsn) const;
 	const uint16_t sns() const;
 	const uint16_t ws() const;
+
+	void set_sns(uint16_t sns);
+	void set_ws(uint16_t ws);
+
+protected:
+	uint16_t m_sns;
+	uint16_t m_ws;
+};
+
+struct gprs_rlc_dl_window: public gprs_rlc_window {
+	void reset();
 
 	bool window_stalled() const;
 	bool window_empty() const;
@@ -157,8 +190,11 @@ struct gprs_rlc_dl_window {
 	/* Methods to manage reception */
 	int resend_needed();
 	int mark_for_resend();
-	void update(BTS *bts, char *show_rbb, uint8_t ssn,
+	void update(BTS *bts, char *show_rbb, uint16_t ssn,
 			uint16_t *lost, uint16_t *received);
+	void update(BTS *bts, const struct bitvec *rbb,
+			uint16_t first_bsn, uint16_t *lost,
+			uint16_t *received);
 	int move_window();
 	void show_state(char *show_rbb);
 	int count_unacked();
@@ -167,6 +203,8 @@ struct gprs_rlc_dl_window {
 	uint16_t m_v_a;	/* ack state */
 
 	gprs_rlc_v_b m_v_b;
+
+	gprs_rlc_dl_window();
 };
 
 struct gprs_rlc_v_n {
@@ -184,18 +222,14 @@ private:
 	gprs_rlc_ul_bsn_state m_v_n[RLC_MAX_SNS/2]; /* receive state array */
 };
 
-struct gprs_rlc_ul_window {
-	const uint16_t mod_sns() const;
-	const uint16_t sns() const;
-	const uint16_t ws() const;
-
+struct gprs_rlc_ul_window: public gprs_rlc_window {
 	const uint16_t v_r() const;
 	const uint16_t v_q() const;
 
 	const uint16_t ssn() const;
 
-	bool is_in_window(uint8_t bsn) const;
-	bool is_received(uint8_t bsn) const;
+	bool is_in_window(uint16_t bsn) const;
+	bool is_received(uint16_t bsn) const;
 
 	void update_rbb(char *rbb);
 	void raise_v_r_to(int moves);
@@ -211,6 +245,8 @@ struct gprs_rlc_ul_window {
 	uint16_t m_v_q;	/* receive window state */
 
 	gprs_rlc_v_n m_v_n;
+
+	gprs_rlc_ul_window();
 };
 
 extern "C" {
@@ -266,6 +302,50 @@ struct gprs_rlc_ul_header_egprs_3 {
 		rsb:1,
 		pi:1,
 		spare:1,
+		dummy:1;
+} __attribute__ ((packed));
+
+struct gprs_rlc_dl_header_egprs_1 {
+	uint8_t usf:3,
+		es_p:2,
+		rrbp:2,
+		tfi_a:1;
+	uint8_t tfi_b:4,
+		pr:2,
+		bsn1_a:2;
+	uint8_t bsn1_b:8;
+	uint8_t bsn1_c:1,
+		bsn2_a:7;
+	uint8_t bsn2_b:3,
+		cps:5;
+} __attribute__ ((packed));
+
+struct gprs_rlc_dl_header_egprs_2 {
+	uint8_t usf:3,
+		es_p:2,
+		rrbp:2,
+		tfi_a:1;
+	uint8_t tfi_b:4,
+		pr:2,
+		bsn1_a:2;
+	uint8_t bsn1_b:8;
+	uint8_t bsn1_c:1,
+		cps:3,
+		dummy:4;
+} __attribute__ ((packed));
+
+struct gprs_rlc_dl_header_egprs_3 {
+	uint8_t usf:3,
+		es_p:2,
+		rrbp:2,
+		tfi_a:1;
+	uint8_t tfi_b:4,
+		pr:2,
+		bsn1_a:2;
+	uint8_t bsn1_b:8;
+	uint8_t bsn1_c:1,
+		cps:4,
+		spb:2,
 		dummy:1;
 } __attribute__ ((packed));
 #else
@@ -338,19 +418,36 @@ inline void gprs_rlc_v_b::mark_invalid(int bsn)
 	return mark(bsn, GPRS_RLC_DL_BSN_INVALID);
 }
 
-inline const uint16_t gprs_rlc_dl_window::sns() const
+inline gprs_rlc_window::gprs_rlc_window()
+	: m_sns(RLC_GPRS_SNS)
+	, m_ws(RLC_GPRS_WS)
 {
-	return RLC_MAX_SNS;
 }
 
-inline const uint16_t gprs_rlc_dl_window::ws() const
+inline const uint16_t gprs_rlc_window::sns() const
 {
-	return RLC_MAX_WS;
+	return m_sns;
 }
 
-inline const uint16_t gprs_rlc_dl_window::mod_sns() const
+inline const uint16_t gprs_rlc_window::ws() const
+{
+	return m_ws;
+}
+
+inline const uint16_t gprs_rlc_window::mod_sns() const
 {
 	return sns() - 1;
+}
+
+inline const uint16_t gprs_rlc_window::mod_sns(uint16_t bsn) const
+{
+	return bsn & mod_sns();
+}
+
+inline gprs_rlc_dl_window::gprs_rlc_dl_window()
+	: m_v_s(0)
+	, m_v_a(0)
+{
 }
 
 inline const uint16_t gprs_rlc_dl_window::v_s() const
@@ -360,7 +457,7 @@ inline const uint16_t gprs_rlc_dl_window::v_s() const
 
 inline const uint16_t gprs_rlc_dl_window::v_s_mod(int offset) const
 {
-	return (m_v_s + offset) & mod_sns();
+	return mod_sns(m_v_s + offset);
 }
 
 inline const uint16_t gprs_rlc_dl_window::v_a() const
@@ -370,7 +467,7 @@ inline const uint16_t gprs_rlc_dl_window::v_a() const
 
 inline bool gprs_rlc_dl_window::window_stalled() const
 {
-	return ((m_v_s - m_v_a) & mod_sns()) == ws();
+	return (mod_sns(m_v_s - m_v_a)) == ws();
 }
 
 inline bool gprs_rlc_dl_window::window_empty() const
@@ -393,7 +490,13 @@ inline const int16_t gprs_rlc_dl_window::distance() const
 	return (m_v_s - m_v_a) & mod_sns();
 }
 
-inline bool gprs_rlc_ul_window::is_in_window(uint8_t bsn) const
+inline gprs_rlc_ul_window::gprs_rlc_ul_window()
+	: m_v_r(0)
+	, m_v_q(0)
+{
+}
+
+inline bool gprs_rlc_ul_window::is_in_window(uint16_t bsn) const
 {
 	uint16_t offset_v_q;
 
@@ -404,28 +507,13 @@ inline bool gprs_rlc_ul_window::is_in_window(uint8_t bsn) const
 	return offset_v_q < ws();
 }
 
-inline bool gprs_rlc_ul_window::is_received(uint8_t bsn) const
+inline bool gprs_rlc_ul_window::is_received(uint16_t bsn) const
 {
 	uint16_t offset_v_r;
 
 	/* Offset to the end of the received window */
 	offset_v_r = (m_v_r - 1 - bsn) & mod_sns();
 	return is_in_window(bsn) && m_v_n.is_received(bsn) && offset_v_r < ws();
-}
-
-inline const uint16_t gprs_rlc_ul_window::sns() const
-{
-	return RLC_MAX_SNS;
-}
-
-inline const uint16_t gprs_rlc_ul_window::ws() const
-{
-	return RLC_MAX_WS;
-}
-
-inline const uint16_t gprs_rlc_ul_window::mod_sns() const
-{
-	return sns() - 1;
 }
 
 inline const uint16_t gprs_rlc_ul_window::v_r() const
@@ -445,12 +533,12 @@ inline const uint16_t gprs_rlc_ul_window::ssn() const
 
 inline void gprs_rlc_ul_window::raise_v_r_to(int moves)
 {
-	m_v_r = (m_v_r + moves) & mod_sns();
+	m_v_r = mod_sns(m_v_r + moves);
 }
 
 inline void gprs_rlc_ul_window::raise_v_q(int incr)
 {
-	m_v_q = (m_v_q + incr) & mod_sns();
+	m_v_q = mod_sns(m_v_q + incr);
 }
 
 inline void gprs_rlc_v_n::mark_received(int bsn)

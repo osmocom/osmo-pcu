@@ -23,6 +23,7 @@
 #include <pcu_l1_if.h>
 #include <bts.h>
 #include <tbf.h>
+#include <decoding.h>
 
 #define BSSGP_TIMER_T1	30	/* Guards the (un)blocking procedures */
 #define BSSGP_TIMER_T2	30	/* Guards the reset procedure */
@@ -73,44 +74,30 @@ static int parse_imsi(struct tlv_parsed *tp, char *imsi)
 	return 0;
 }
 
-static int parse_ra_cap_ms_class(struct tlv_parsed *tp)
+static int parse_ra_cap(struct tlv_parsed *tp, MS_Radio_Access_capability_t *rac)
 {
 	bitvec *block;
-	unsigned rp = 0;
-	uint8_t ms_class = 0;
 	uint8_t cap_len;
 	uint8_t *cap;
 
+	memset(rac, 0, sizeof(*rac));
+
 	if (!TLVP_PRESENT(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP))
-		return ms_class;
+		return -EINVAL;
 
 	cap_len = TLVP_LEN(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP);
 	cap = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_MS_RADIO_ACCESS_CAP);
 
+	LOGP(DBSSGP, LOGL_DEBUG, "Got BSSGP RA Capability of size %d\n", cap_len);
+
 	block = bitvec_alloc(cap_len);
 	bitvec_unpack(block, cap);
-	bitvec_read_field(block, rp, 4); // Access Technology Type
-	bitvec_read_field(block, rp, 7); // Length of Access Capabilities
-	bitvec_read_field(block, rp, 3); // RF Power Capability
-	if (bitvec_read_field(block, rp, 1)) // A5 Bits Present
-		bitvec_read_field(block, rp, 7); // A5 Bits
-	bitvec_read_field(block, rp, 1); // ES IND
-	bitvec_read_field(block, rp, 1); // PS
-	bitvec_read_field(block, rp, 1); // VGCS
-	bitvec_read_field(block, rp, 1); // VBS
-	if (bitvec_read_field(block, rp, 1)) { // Multislot Cap Present
-		if (bitvec_read_field(block, rp, 1)) // HSCSD Present
-			bitvec_read_field(block, rp, 5); // Class
-		if (bitvec_read_field(block, rp, 1)) { // GPRS Present
-			ms_class = bitvec_read_field(block, rp, 5); // Class
-			bitvec_read_field(block, rp, 1); // Ext.
-		}
-		if (bitvec_read_field(block, rp, 1)) // SMS Present
-			bitvec_read_field(block, rp, 4); // SMS Value
-	}
+
+	/* TS 24.008, 10.5.5.12a */
+	decode_gsm_ra_cap(block, rac);
 
 	bitvec_free(block);
-	return ms_class;
+	return 0;
 }
 
 static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
@@ -122,6 +109,11 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	uint8_t *data;
 	uint16_t len;
 	char imsi[16] = "000";
+	uint8_t ms_class = 0;
+	uint8_t egprs_ms_class = 0;
+#if 0
+	MS_Radio_Access_capability_t rac;
+#endif
 
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
 	tlli = ntohl(budh->tlli);
@@ -146,10 +138,17 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	 * will listen to all paging blocks. */
 	parse_imsi(tp, imsi);
 
+#if 0 /* Do not rely on this IE. TODO: make this configurable */
 	/* parse ms radio access capability */
-	uint8_t ms_class = parse_ra_cap_ms_class(tp);
-	/* TODO: Get the EGPRS class from the CSN.1 RA capability */
-	uint8_t egprs_ms_class = 0;
+	if (parse_ra_cap(tp, &rac) >= 0) {
+		/* Get the EGPRS class from the RA capability */
+		ms_class = Decoding::get_ms_class_by_capability(&rac);
+		egprs_ms_class =
+			Decoding::get_egprs_ms_class_by_capability(&rac);
+		LOGP(DBSSGP, LOGL_DEBUG, "Got downlink MS class %d/%d\n",
+			ms_class, egprs_ms_class);
+	}
+#endif
 
 	/* get lifetime */
 	uint16_t delay_csec = 0xffff;
@@ -534,19 +533,12 @@ static unsigned count_pdch(const struct gprs_rlcmac_bts *bts)
 	return num_pdch;
 }
 
-static uint32_t gprs_bssgp_max_leak_rate(unsigned cs, int num_pdch)
+static uint32_t gprs_bssgp_max_leak_rate(GprsCodingScheme cs, int num_pdch)
 {
-	static const uint32_t max_lr_per_ts[4] = {
-		20 * (1000 / 20), /* CS-1: 20 byte payload per 20ms */
-		30 * (1000 / 20), /* CS-2: 30 byte payload per 20ms */
-		36 * (1000 / 20), /* CS-3: 36 byte payload per 20ms */
-		50 * (1000 / 20), /* CS-4: 50 byte payload per 20ms */
-	};
+	int bytes_per_rlc_block = cs.maxDataBlockBytes() * cs.numDataBlocks();
 
-	if (cs > ARRAY_SIZE(max_lr_per_ts))
-		cs = 1;
-
-	return max_lr_per_ts[cs-1] * num_pdch;
+	/* n byte payload per 20ms */
+	return bytes_per_rlc_block * (1000 / 20) * num_pdch;
 }
 
 static uint32_t compute_bucket_size(struct gprs_rlcmac_bts *bts,
@@ -619,6 +611,45 @@ static int get_and_reset_measured_leak_rate(int *usage_by_1000, unsigned num_pdc
 	return rate;
 }
 
+static GprsCodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
+{
+	int num;
+
+	if (bts->egprs_enabled) {
+		if (!bts->cs_adj_enabled) {
+			if (bts->initial_mcs_dl)
+				num = bts->initial_mcs_dl;
+			else
+				num = 1;
+		} else if (bts->max_mcs_dl) {
+			num = bts->max_mcs_dl;
+		} else {
+			num = 9;
+		}
+
+		return GprsCodingScheme::getEgprsByNum(num);
+	}
+
+	if (!bts->cs_adj_enabled) {
+		if (bts->initial_cs_dl)
+			num = bts->initial_cs_dl;
+		else if (bts->cs4)
+			num = 4;
+		else if (bts->cs3)
+			num = 3;
+		else if (bts->cs2)
+			num = 2;
+		else
+			num = 1;
+	} else if (bts->max_cs_dl) {
+		num = bts->max_cs_dl;
+	} else {
+		num = 4;
+	}
+
+	return GprsCodingScheme::getGprsByNum(num);
+}
+
 int gprs_bssgp_tx_fc_bvc(void)
 {
 	struct gprs_rlcmac_bts *bts;
@@ -628,7 +659,7 @@ int gprs_bssgp_tx_fc_bvc(void)
 	uint32_t ms_leak_rate; /* oct/s */
 	uint32_t avg_delay_ms;
 	int num_pdch = -1;
-	int max_cs_dl;
+	GprsCodingScheme max_cs_dl;
 
 	if (!the_pcu.bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
@@ -636,21 +667,7 @@ int gprs_bssgp_tx_fc_bvc(void)
 	}
 	bts = bts_main_data();
 
-	if (bts->cs_adj_enabled) {
-		max_cs_dl = bts->max_cs_dl;
-		if (!max_cs_dl) {
-			if (bts->cs4)
-				max_cs_dl = 4;
-			else if (bts->cs3)
-				max_cs_dl = 3;
-			else if (bts->cs2)
-				max_cs_dl = 2;
-			else
-				max_cs_dl = 1;
-		}
-	} else {
-		max_cs_dl = bts->initial_cs_dl;
-	}
+	max_cs_dl = max_coding_scheme_dl(bts);
 
 	bucket_size = bts->fc_bvc_bucket_size;
 	leak_rate = bts->fc_bvc_leak_rate;
@@ -684,8 +701,8 @@ int gprs_bssgp_tx_fc_bvc(void)
 		leak_rate = gprs_bssgp_max_leak_rate(max_cs_dl, num_pdch);
 
 		LOGP(DBSSGP, LOGL_DEBUG,
-			"Computed BVC leak rate = %d, num_pdch = %d, cs = %d\n",
-			leak_rate, num_pdch, max_cs_dl);
+			"Computed BVC leak rate = %d, num_pdch = %d, cs = %s\n",
+			leak_rate, num_pdch, max_cs_dl.name());
 	};
 
 	if (ms_leak_rate == 0) {
@@ -707,8 +724,9 @@ int gprs_bssgp_tx_fc_bvc(void)
 		 * should be derived from the max number of PDCH TS per TRX.
 		 */
 		LOGP(DBSSGP, LOGL_DEBUG,
-			"Computed MS default leak rate = %d, ms_num_pdch = %d, cs = %d\n",
-			ms_leak_rate, ms_num_pdch, max_cs_dl);
+			"Computed MS default leak rate = %d, ms_num_pdch = %d, "
+			"cs = %s\n",
+			ms_leak_rate, ms_num_pdch, max_cs_dl.name());
 	};
 
 	/* TODO: Force leak_rate to 0 on buffer bloat */

@@ -1,5 +1,11 @@
 === start test_tbf_base ===
 === end test_tbf_base ===
+=== start test_tbf_tlli_update ===
+=== end test_tbf_tlli_update ===
+=== start test_tbf_final_ack ===
+=== end test_tbf_final_ack ===
+=== start test_tbf_final_ack ===
+=== end test_tbf_final_ack ===
 === start test_tbf_delayed_release ===
 === end test_tbf_delayed_release ===
 === start test_tbf_imsi ===
@@ -20,3 +26,20 @@
 === end test_tbf_dl_flow_and_rach_single_phase ===
 === start test_tbf_dl_reuse ===
 === end test_tbf_dl_reuse ===
+=== start test_tbf_gprs_egprs ===
+=== end test_tbf_gprs_egprs ===
+=== start test_tbf_ws ===
+=== end test_tbf_ws ===
+=== start test_tbf_egprs_two_phase ===
+=== end test_tbf_egprs_two_phase ===
+=== start test_tbf_egprs_dl ===
+Testing MCS-1
+Testing MCS-2
+Testing MCS-3
+Testing MCS-4
+Testing MCS-5
+Testing MCS-6
+Testing MCS-7
+Testing MCS-8
+Testing MCS-9
+=== end test_tbf_egprs_dl ===

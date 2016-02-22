@@ -55,9 +55,7 @@ static int config_write_pcu(struct vty *vty)
 
 	vty_out(vty, "pcu%s", VTY_NEWLINE);
 	if (bts->egprs_enabled)
-		vty_out(vty, " egprs%s", VTY_NEWLINE);
-	else
-		vty_out(vty, " no egprs%s", VTY_NEWLINE);
+		vty_out(vty, " egprs only%s", VTY_NEWLINE);
 
 	vty_out(vty, " flow-control-interval %d%s", bts->fc_interval,
 		VTY_NEWLINE);
@@ -111,6 +109,26 @@ static int config_write_pcu(struct vty *vty)
 		bts->cs_lqual_ranges[3].low,
 		VTY_NEWLINE);
 
+	if (bts->initial_mcs_dl != 1 && bts->initial_mcs_ul != 1) {
+		if (bts->initial_mcs_ul == bts->initial_mcs_dl)
+			vty_out(vty, " mcs %d%s", bts->initial_mcs_dl,
+				VTY_NEWLINE);
+		else
+			vty_out(vty, " mcs %d %d%s", bts->initial_mcs_dl,
+				bts->initial_mcs_ul, VTY_NEWLINE);
+	}
+	if (bts->max_mcs_dl && bts->max_mcs_ul) {
+		if (bts->max_mcs_ul == bts->max_mcs_dl)
+			vty_out(vty, " mcs max %d%s", bts->max_mcs_dl,
+				VTY_NEWLINE);
+		else
+			vty_out(vty, " mcs max %d %d%s", bts->max_mcs_dl,
+				bts->max_mcs_ul, VTY_NEWLINE);
+	}
+
+	vty_out(vty, " window-size %d %d%s", bts->ws_base, bts->ws_pdch,
+		VTY_NEWLINE);
+
 	if (bts->force_llc_lifetime == 0xffff)
 		vty_out(vty, " queue lifetime infinite%s", VTY_NEWLINE);
 	else if (bts->force_llc_lifetime)
@@ -162,8 +180,8 @@ DEFUN(cfg_pcu,
 
 DEFUN(cfg_pcu_egprs,
       cfg_pcu_egprs_cmd,
-      "egprs",
-      EGPRS_STR)
+      "egprs only",
+      EGPRS_STR "Use EGPRS and disable plain GPRS\n")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -361,11 +379,12 @@ DEFUN(cfg_pcu_no_cs,
 	return CMD_SUCCESS;
 }
 
+#define CS_MAX_STR "Set maximum values for adaptive CS selection (overrides BTS config)\n"
 DEFUN(cfg_pcu_cs_max,
       cfg_pcu_cs_max_cmd,
       "cs max <1-4> [<1-4>]",
       CS_STR
-      "Set maximum values for adaptive CS selection (overrides BTS config)\n"
+      CS_MAX_STR
       "Maximum CS value to be used\n"
       "Use a different maximum CS value for the uplink")
 {
@@ -384,8 +403,7 @@ DEFUN(cfg_pcu_cs_max,
 DEFUN(cfg_pcu_no_cs_max,
       cfg_pcu_no_cs_max_cmd,
       "no cs max",
-      NO_STR CS_STR
-      "Set maximum values for adaptive CS selection (overrides BTS config)\n")
+      NO_STR CS_STR CS_MAX_STR)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -394,6 +412,93 @@ DEFUN(cfg_pcu_no_cs_max,
 
 	return CMD_SUCCESS;
 }
+
+#define MCS_STR "Modulation and Coding Scheme configuration (EGPRS)\n"
+
+DEFUN(cfg_pcu_mcs,
+      cfg_pcu_mcs_cmd,
+      "mcs <1-9> [<1-9>]",
+      MCS_STR
+      "Initial MCS value to be used (default 1)\n"
+      "Use a different initial MCS value for the uplink")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	uint8_t cs = atoi(argv[0]);
+
+	bts->initial_mcs_dl = cs;
+	if (argc > 1)
+		bts->initial_mcs_ul = atoi(argv[1]);
+	else
+		bts->initial_mcs_ul = cs;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_mcs,
+      cfg_pcu_no_mcs_cmd,
+      "no mcs",
+      NO_STR MCS_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->initial_mcs_dl = 1;
+	bts->initial_mcs_ul = 1;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_mcs_max,
+      cfg_pcu_mcs_max_cmd,
+      "mcs max <1-9> [<1-9>]",
+      MCS_STR
+      CS_MAX_STR
+      "Maximum MCS value to be used\n"
+      "Use a different maximum MCS value for the uplink")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	uint8_t mcs = atoi(argv[0]);
+
+	bts->max_mcs_dl = mcs;
+	if (argc > 1)
+		bts->max_mcs_ul = atoi(argv[1]);
+	else
+		bts->max_mcs_ul = mcs;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_mcs_max,
+      cfg_pcu_no_mcs_max_cmd,
+      "no mcs max",
+      NO_STR MCS_STR CS_MAX_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->max_mcs_dl = 0;
+	bts->max_mcs_ul = 0;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_window_size,
+      cfg_pcu_window_size_cmd,
+      "window-size <0-1024> [<0-256>]",
+      "Window size configuration (b + N_PDCH * f)\n"
+      "Base value (b)\n"
+      "Factor for number of PDCH (f)")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	uint16_t b = atoi(argv[0]);
+
+	bts->ws_base = b;
+	if (argc > 1) {
+		uint16_t f = atoi(argv[1]);
+		bts->ws_pdch = f;
+	}
+
+	return CMD_SUCCESS;
+}
+
 
 #define QUEUE_STR "Packet queue options\n"
 #define LIFETIME_STR "Set lifetime limit of LLC frame in centi-seconds " \
@@ -775,19 +880,7 @@ DEFUN(show_tbf,
       SHOW_STR "information about TBFs\n" "All TBFs\n")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	struct llist_head *tbf;
-
-	vty_out(vty, "UL TBFs%s", VTY_NEWLINE);
-	llist_for_each(tbf, &bts->ul_tbfs) {
-		tbf_print_vty_info(vty, tbf);
-	}
-
-	vty_out(vty, "%sDL TBFs%s", VTY_NEWLINE, VTY_NEWLINE);
-	llist_for_each(tbf, &bts->dl_tbfs) {
-		tbf_print_vty_info(vty, tbf);
-	}
-
-	return CMD_SUCCESS;
+	return pcu_vty_show_tbf_all(vty, bts);
 }
 
 DEFUN(show_ms_all,
@@ -860,6 +953,11 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_cs_downgrade_thrsh_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_downgrade_thrsh_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_lqual_ranges_cmd);
+	install_element(PCU_NODE, &cfg_pcu_mcs_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_mcs_cmd);
+	install_element(PCU_NODE, &cfg_pcu_mcs_max_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_mcs_max_cmd);
+	install_element(PCU_NODE, &cfg_pcu_window_size_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_cmd);
 	install_element(PCU_NODE, &cfg_pcu_queue_lifetime_inf_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_queue_lifetime_cmd);

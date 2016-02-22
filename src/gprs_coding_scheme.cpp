@@ -25,30 +25,61 @@ static struct {
 	struct {
 		unsigned int bytes;
 		unsigned int ext_bits;
+		unsigned int data_header_bits;
 	} uplink, downlink;
 	unsigned int data_bytes;
-	unsigned int num_blocks;
+	unsigned int optional_padding_bits;
 	const char *name;
 	GprsCodingScheme::HeaderType data_hdr;
+	GprsCodingScheme::Family family;
 } mcs_info[GprsCodingScheme::NUM_SCHEMES] = {
-	{{0, 0},    {0, 0},    0, 0, "UNKNOWN", GprsCodingScheme::HEADER_INVALID},
-	{{23, 0},   {23, 0},  20, 1, "CS-1", GprsCodingScheme::HEADER_GPRS_DATA},
-	{{33, 7},   {33, 7},  30, 1, "CS-2", GprsCodingScheme::HEADER_GPRS_DATA},
-	{{39, 3},   {39, 3},  36, 1, "CS-3", GprsCodingScheme::HEADER_GPRS_DATA},
-	{{53, 7},   {53, 7},  50, 1, "CS-4", GprsCodingScheme::HEADER_GPRS_DATA},
+	{{0, 0},   {0, 0},    0,  0, "UNKNOWN",
+		GprsCodingScheme::HEADER_INVALID, GprsCodingScheme::FAMILY_INVALID},
+	{{23, 0},  {23, 0},  20,  0, "CS-1",
+		GprsCodingScheme::HEADER_GPRS_DATA, GprsCodingScheme::FAMILY_INVALID},
+	{{33, 7},  {33, 7},  30,  0, "CS-2",
+		GprsCodingScheme::HEADER_GPRS_DATA, GprsCodingScheme::FAMILY_INVALID},
+	{{39, 3},  {39, 3},  36,  0, "CS-3",
+		GprsCodingScheme::HEADER_GPRS_DATA, GprsCodingScheme::FAMILY_INVALID},
+	{{53, 7},  {53, 7},  50,  0, "CS-4",
+		GprsCodingScheme::HEADER_GPRS_DATA, GprsCodingScheme::FAMILY_INVALID},
 
-	{{26, 1},   {26, 1},  22, 1, "MCS-1", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3},
-	{{32, 1},   {32, 1},  28, 1, "MCS-2", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3},
-	{{41, 1},   {41, 1},  37, 1, "MCS-3", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3},
-	{{48, 1},   {48, 1},  44, 1, "MCS-4", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3},
+	{{26, 1},  {26, 1},  22,  0, "MCS-1",
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, GprsCodingScheme::FAMILY_C},
+	{{32, 1},  {32, 1},  28,  0, "MCS-2",
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, GprsCodingScheme::FAMILY_B},
+	{{41, 1},  {41, 1},  37, 48, "MCS-3",
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, GprsCodingScheme::FAMILY_A},
+	{{48, 1},  {48, 1},  44,  0, "MCS-4",
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, GprsCodingScheme::FAMILY_C},
 
-	{{60, 7},   {59, 6},  56, 1, "MCS-5", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2},
-	{{78, 7},   {77, 6},  74, 1, "MCS-6", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2},
-	{{118, 2},  {117, 4}, 56, 2, "MCS-7", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1},
-	{{142, 2},  {141, 4}, 68, 2, "MCS-8", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1},
-	{{154, 2},  {153, 4}, 74, 2, "MCS-9", GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1},
+	{{60, 7},  {59, 6},  56,  0, "MCS-5",
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2, GprsCodingScheme::FAMILY_B},
+	{{78, 7},  {77, 6},  74, 48, "MCS-6",
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2, GprsCodingScheme::FAMILY_A},
+	{{118, 2}, {117, 4}, 56,  0, "MCS-7",
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1, GprsCodingScheme::FAMILY_B},
+	{{142, 2}, {141, 4}, 68,  0, "MCS-8",
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1, GprsCodingScheme::FAMILY_A},
+	{{154, 2}, {153, 4}, 74,  0, "MCS-9",
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1, GprsCodingScheme::FAMILY_A},
 };
 
+static struct {
+	struct {
+		int data_header_bits;
+	} uplink, downlink;
+	unsigned int data_block_header_bits;
+	unsigned int num_blocks;
+	const char *name;
+} hdr_type_info[GprsCodingScheme::NUM_HEADER_TYPES] = {
+	{{0},       {0},       0, 0, "INVALID"},
+	{{1*8 + 0}, {1*8 + 0}, 0, 0, "CONTROL"},
+	{{3*8 + 0}, {3*8 + 0}, 0, 1, "GPRS_DATA"},
+	{{5*8 + 6}, {5*8 + 0}, 2, 2, "EGPRS_DATA_TYPE1"},
+	{{4*8 + 5}, {3*8 + 4}, 2, 1, "EGPRS_DATA_TYPE2"},
+	{{3*8 + 7}, {3*8 + 7}, 2, 1, "EGPRS_DATA_TYPE3"},
+};
 
 GprsCodingScheme GprsCodingScheme::getBySizeUL(unsigned size)
 {
@@ -73,7 +104,15 @@ GprsCodingScheme GprsCodingScheme::getBySizeUL(unsigned size)
 
 unsigned int GprsCodingScheme::sizeUL() const
 {
-	return maxBytesUL() + (spareBitsUL() ? 1 : 0);
+	return mcs_info[m_scheme].uplink.bytes + (spareBitsUL() ? 1 : 0);
+}
+
+unsigned int GprsCodingScheme::usedSizeUL() const
+{
+	if (mcs_info[m_scheme].data_hdr == HEADER_GPRS_DATA)
+		return mcs_info[m_scheme].uplink.bytes;
+	else
+		return sizeUL();
 }
 
 unsigned int GprsCodingScheme::maxBytesUL() const
@@ -88,7 +127,15 @@ unsigned int GprsCodingScheme::spareBitsUL() const
 
 unsigned int GprsCodingScheme::sizeDL() const
 {
-	return maxBytesDL() + (spareBitsDL() ? 1 : 0);
+	return mcs_info[m_scheme].downlink.bytes + (spareBitsDL() ? 1 : 0);
+}
+
+unsigned int GprsCodingScheme::usedSizeDL() const
+{
+	if (mcs_info[m_scheme].data_hdr == HEADER_GPRS_DATA)
+		return mcs_info[m_scheme].downlink.bytes;
+	else
+		return sizeDL();
 }
 
 unsigned int GprsCodingScheme::maxBytesDL() const
@@ -106,9 +153,29 @@ unsigned int GprsCodingScheme::maxDataBlockBytes() const
 	return mcs_info[m_scheme].data_bytes;
 }
 
+unsigned int GprsCodingScheme::optionalPaddingBits() const
+{
+	return mcs_info[m_scheme].optional_padding_bits;
+}
+
 unsigned int GprsCodingScheme::numDataBlocks() const
 {
-	return mcs_info[m_scheme].num_blocks;
+	return hdr_type_info[headerTypeData()].num_blocks;
+}
+
+unsigned int GprsCodingScheme::numDataHeaderBitsUL() const
+{
+	return hdr_type_info[headerTypeData()].uplink.data_header_bits;
+}
+
+unsigned int GprsCodingScheme::numDataHeaderBitsDL() const
+{
+	return hdr_type_info[headerTypeData()].downlink.data_header_bits;
+}
+
+unsigned int GprsCodingScheme::numDataBlockHeaderBits() const
+{
+	return hdr_type_info[headerTypeData()].data_block_header_bits;
 }
 
 const char *GprsCodingScheme::name() const
@@ -119,4 +186,101 @@ const char *GprsCodingScheme::name() const
 GprsCodingScheme::HeaderType GprsCodingScheme::headerTypeData() const
 {
 	return mcs_info[m_scheme].data_hdr;
+}
+
+GprsCodingScheme::Family GprsCodingScheme::family() const
+{
+	return mcs_info[m_scheme].family;
+}
+
+void GprsCodingScheme::inc(Mode mode)
+{
+	if (!isCompatible(mode))
+		/* This should not happen. TODO: Use assert? */
+		return;
+
+	Scheme new_cs(Scheme(m_scheme + 1));
+	if (!GprsCodingScheme(new_cs).isCompatible(mode))
+		/* Clipping, do not change the value */
+		return;
+
+	m_scheme = new_cs;
+}
+
+void GprsCodingScheme::dec(Mode mode)
+{
+	if (!isCompatible(mode))
+		/* This should not happen. TODO: Use assert? */
+		return;
+
+	Scheme new_cs(Scheme(m_scheme - 1));
+	if (!GprsCodingScheme(new_cs).isCompatible(mode))
+		/* Clipping, do not change the value */
+		return;
+
+	m_scheme = new_cs;
+}
+
+void GprsCodingScheme::inc()
+{
+	if (isGprs() && m_scheme == CS4)
+		return;
+
+	if (isEgprs() && m_scheme == MCS9)
+		return;
+
+	if (!isValid())
+		return;
+
+	m_scheme = Scheme(m_scheme + 1);
+}
+
+void GprsCodingScheme::dec()
+{
+	if (isGprs() && m_scheme == CS1)
+		return;
+
+	if (isEgprs() && m_scheme == MCS1)
+		return;
+
+	if (!isValid())
+		return;
+
+	m_scheme = Scheme(m_scheme - 1);
+}
+
+const char *GprsCodingScheme::modeName(Mode mode)
+{
+	switch (mode) {
+	case GPRS:       return "GPRS";
+	case EGPRS_GMSK: return "EGPRS_GMSK-only";
+	case EGPRS:      return "EGPRS";
+	default:         return "???";
+	}
+}
+
+bool GprsCodingScheme::isFamilyCompatible(GprsCodingScheme o) const
+{
+	if (*this == o)
+		return true;
+
+	if (family() == FAMILY_INVALID)
+		return false;
+
+	return family() == o.family();
+}
+
+bool GprsCodingScheme::isCombinable(GprsCodingScheme o) const
+{
+	return numDataBlocks() == o.numDataBlocks();
+}
+
+void GprsCodingScheme::decToSingleBlock(bool *needStuffing)
+{
+	switch (m_scheme) {
+	case MCS7: *needStuffing = false; m_scheme = MCS5; break;
+	case MCS8: *needStuffing =  true; m_scheme = MCS6; break;
+	case MCS9: *needStuffing = false; m_scheme = MCS6; break;
+	default:   *needStuffing = false; break;
+	}
 }

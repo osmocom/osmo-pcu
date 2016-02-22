@@ -107,9 +107,11 @@ private:
 
 	void rcv_control_ack(Packet_Control_Acknowledgement_t *, uint32_t fn);
 	void rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *, uint32_t fn);
+	void rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *, uint32_t fn);
 	void rcv_resource_request(Packet_Resource_Request_t *t, uint32_t fn);
 	void rcv_measurement_report(Packet_Measurement_Report_t *t, uint32_t fn);
-	gprs_rlcmac_tbf *tbf_from_list_by_tfi(struct llist_head *tbf_list, uint8_t tfi,
+	gprs_rlcmac_tbf *tbf_from_list_by_tfi(
+		LListHead<gprs_rlcmac_tbf> *tbf_list, uint8_t tfi,
 		enum gprs_rlcmac_tbf_direction dir);
 	gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi,
 		enum gprs_rlcmac_tbf_direction dir);
@@ -154,7 +156,9 @@ struct gprs_rlcmac_bts {
 	uint8_t cs3;
 	uint8_t cs4;
 	uint8_t initial_cs_dl, initial_cs_ul;
+	uint8_t initial_mcs_dl, initial_mcs_ul;
 	uint8_t max_cs_dl, max_cs_ul;
+	uint8_t max_mcs_dl, max_mcs_ul;
 	uint8_t force_cs;	/* 0=use from BTS 1=use from VTY */
 	uint16_t force_llc_lifetime; /* overrides lifetime from SGSN */
 	uint32_t llc_discard_csec;
@@ -184,12 +188,8 @@ struct gprs_rlcmac_bts {
 	uint8_t cs_adj_lower_limit;
 	struct {int16_t low; int16_t high;} cs_lqual_ranges[4];
 	uint16_t cs_downgrade_threshold; /* downgrade if less packets left (DL) */
-
-	/* TBF handling, make private or move into TBFController */
-	/* list of uplink TBFs */
-	struct llist_head ul_tbfs;
-	/* list of downlink TBFs */
-	struct llist_head dl_tbfs;
+	uint16_t ws_base;
+	uint16_t ws_pdch; /* increase WS by this value per PDCH */
 
 	/* State for dynamic algorithm selection */
 	int multislot_disabled;
@@ -212,11 +212,14 @@ public:
 	enum {
 		CTR_TBF_DL_ALLOCATED,
 		CTR_TBF_DL_FREED,
+		CTR_TBF_DL_ABORTED,
 		CTR_TBF_UL_ALLOCATED,
 		CTR_TBF_UL_FREED,
+		CTR_TBF_UL_ABORTED,
 		CTR_TBF_REUSED,
 		CTR_TBF_ALLOC_ALGO_A,
 		CTR_TBF_ALLOC_ALGO_B,
+		CTR_TBF_FAILED_EGPRS_ONLY,
 		CTR_RLC_SENT,
 		CTR_RLC_RESENT,
 		CTR_RLC_RESTARTED,
@@ -285,11 +288,14 @@ public:
 	 */
 	void tbf_dl_created();
 	void tbf_dl_freed();
+	void tbf_dl_aborted();
 	void tbf_ul_created();
 	void tbf_ul_freed();
+	void tbf_ul_aborted();
 	void tbf_reused();
 	void tbf_alloc_algo_a();
 	void tbf_alloc_algo_b();
+	void tbf_failed_egprs_only();
 	void rlc_sent();
 	void rlc_resent();
 	void rlc_restarted();
@@ -319,6 +325,8 @@ public:
 	struct rate_ctr_group *rate_counters() const;
 	struct osmo_stat_item_group *stat_items() const;
 
+	LListHead<gprs_rlcmac_tbf>& ul_tbfs();
+	LListHead<gprs_rlcmac_tbf>& dl_tbfs();
 private:
 	int m_cur_fn;
 	int m_cur_blk_fn;
@@ -329,6 +337,11 @@ private:
 	struct osmo_stat_item_group *m_statg;
 
 	GprsMsStorage m_ms_store;
+
+	/* list of uplink TBFs */
+	LListHead<gprs_rlcmac_tbf> m_ul_tbfs;
+	/* list of downlink TBFs */
+	LListHead<gprs_rlcmac_tbf> m_dl_tbfs;
 
 private:
 	/* disable copying to avoid slicing */
@@ -359,6 +372,16 @@ inline GprsMs *BTS::ms_by_tlli(uint32_t tlli, uint32_t old_tlli)
 inline GprsMs *BTS::ms_by_imsi(const char *imsi)
 {
 	return ms_store().get_ms(0, 0, imsi);
+}
+
+inline LListHead<gprs_rlcmac_tbf>& BTS::ul_tbfs()
+{
+	return m_ul_tbfs;
+}
+
+inline LListHead<gprs_rlcmac_tbf>& BTS::dl_tbfs()
+{
+	return m_dl_tbfs;
 }
 
 inline BTS *gprs_rlcmac_pdch::bts() const
@@ -405,11 +428,14 @@ inline struct osmo_stat_item_group *BTS::stat_items() const
 
 CREATE_COUNT_INLINE(tbf_dl_created, CTR_TBF_DL_ALLOCATED)
 CREATE_COUNT_INLINE(tbf_dl_freed, CTR_TBF_DL_FREED)
+CREATE_COUNT_INLINE(tbf_dl_aborted, CTR_TBF_DL_ABORTED)
 CREATE_COUNT_INLINE(tbf_ul_created, CTR_TBF_UL_ALLOCATED)
 CREATE_COUNT_INLINE(tbf_ul_freed, CTR_TBF_UL_FREED)
+CREATE_COUNT_INLINE(tbf_ul_aborted, CTR_TBF_UL_ABORTED)
 CREATE_COUNT_INLINE(tbf_reused, CTR_TBF_REUSED)
 CREATE_COUNT_INLINE(tbf_alloc_algo_a, CTR_TBF_ALLOC_ALGO_A)
 CREATE_COUNT_INLINE(tbf_alloc_algo_b, CTR_TBF_ALLOC_ALGO_B)
+CREATE_COUNT_INLINE(tbf_failed_egprs_only, CTR_TBF_FAILED_EGPRS_ONLY)
 CREATE_COUNT_INLINE(rlc_sent, CTR_RLC_SENT)
 CREATE_COUNT_INLINE(rlc_resent, CTR_RLC_RESENT)
 CREATE_COUNT_INLINE(rlc_restarted, CTR_RLC_RESTARTED)

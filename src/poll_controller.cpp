@@ -30,14 +30,14 @@ PollController::PollController(BTS& bts)
 
 void PollController::expireTimedout(int frame_number, unsigned max_delay)
 {
-	struct gprs_rlcmac_bts *bts = m_bts.bts_data();
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_sba *sba, *sba2;
-	struct llist_pods *lpods;
+	LListHead<gprs_rlcmac_tbf> *pos;
 	uint32_t elapsed;
 
-	llist_pods_for_each_entry(ul_tbf, &bts->ul_tbfs, list, lpods) {
+	llist_for_each(pos, &m_bts.ul_tbfs()) {
+		ul_tbf = as_ul_tbf(pos->entry());
 		if (ul_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
 			elapsed = (frame_number + 2715648 - ul_tbf->poll_fn)
 								% 2715648;
@@ -45,7 +45,8 @@ void PollController::expireTimedout(int frame_number, unsigned max_delay)
 				ul_tbf->poll_timeout();
 		}
 	}
-	llist_pods_for_each_entry(dl_tbf, &bts->dl_tbfs, list, lpods) {
+	llist_for_each(pos, &m_bts.dl_tbfs()) {
+		dl_tbf = as_dl_tbf(pos->entry());
 		if (dl_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
 			elapsed = (frame_number + 2715648 - dl_tbf->poll_fn)
 								% 2715648;

@@ -476,7 +476,7 @@ typedef struct
 
 typedef struct
 {
-  guint8   LENGTH;
+  /* guint8   LENGTH; */
   EGPRS_AckNack_Desc_t Desc;
 } EGPRS_AckNack_w_len_t;
 
@@ -5136,4 +5136,5 @@ typedef struct
  void encode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data);
  void decode_gsm_rlcmac_uplink_data(bitvec * vector, RlcMacUplinkDataBlock_t * data);
  void encode_gsm_rlcmac_downlink_data(bitvec * vector, RlcMacDownlinkDataBlock_t * data);
+ void decode_gsm_ra_cap(bitvec * vector, MS_Radio_Access_capability_t * data);
 #endif /* __PACKET_GSM_RLCMAC_H__ */

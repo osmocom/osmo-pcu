@@ -28,6 +28,7 @@
 #include <gprs_bssgp_pcu.h>
 #include <gprs_ms.h>
 #include <decoding.h>
+#include <pcu_utils.h>
 
 extern "C" {
 #include <osmocom/core/msgb.h>
@@ -60,6 +61,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	ul_ack_state(GPRS_RLCMAC_UL_ACK_NONE),
 	poll_state(GPRS_RLCMAC_POLL_NONE),
 	poll_fn(0),
+	poll_ts(0),
 	n3105(0),
 	T(0),
 	num_T_exp(0),
@@ -74,12 +76,12 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	m_ms(NULL),
 	m_ta(0),
 	m_ms_class(0),
+	m_list(this),
 	m_ms_list(this),
 	m_egprs_enabled(false)
 {
 	/* The classes of these members do not have proper constructors yet.
 	 * Just set them to 0 like talloc_zero did */
-	memset(&list, 0, sizeof(list));
 	memset(&pdch, 0, sizeof(pdch));
 	memset(&timer, 0, sizeof(timer));
 	memset(&m_rlc, 0, sizeof(m_rlc));
@@ -88,9 +90,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	m_llc.init();
 
 	m_name_buf[0] = '\0';
-
-	/* Back pointer for PODS llist compatibility */
-	list.back = this;
 }
 
 gprs_rlcmac_bts *gprs_rlcmac_tbf::bts_data() const
@@ -168,15 +167,15 @@ void gprs_rlcmac_tbf::set_ms_class(uint8_t ms_class_)
 	m_ms_class = ms_class_;
 }
 
-uint8_t gprs_rlcmac_tbf::current_cs() const
+GprsCodingScheme gprs_rlcmac_tbf::current_cs() const
 {
-	uint8_t cs;
+	GprsCodingScheme cs;
 	if (direction == GPRS_RLCMAC_UL_TBF)
-		cs = m_ms ? m_ms->current_cs_ul() : bts->bts_data()->initial_cs_ul;
+		cs = m_ms ? m_ms->current_cs_ul() : GprsCodingScheme();
 	else
-		cs = m_ms ? m_ms->current_cs_dl() : bts->bts_data()->initial_cs_dl;
+		cs = m_ms ? m_ms->current_cs_dl() : GprsCodingScheme();
 
-	return cs < 1 ? 1 : cs;
+	return cs;
 }
 
 gprs_llc_queue *gprs_rlcmac_tbf::llc_queue()
@@ -312,11 +311,23 @@ static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 
 void tbf_free(struct gprs_rlcmac_tbf *tbf)
 {
+	/* update counters */
+	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
+		tbf->bts->tbf_ul_freed();
+		if (tbf->state_is(GPRS_RLCMAC_FLOW))
+			tbf->bts->tbf_ul_aborted();
+	} else {
+		tbf->bts->tbf_dl_freed();
+		if (tbf->state_is(GPRS_RLCMAC_FLOW))
+			tbf->bts->tbf_dl_aborted();
+	}
+
 	/* Give final measurement report */
 	gprs_rlcmac_rssi_rep(tbf);
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
-		gprs_rlcmac_dl_tbf *dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(tbf);
-		gprs_rlcmac_lost_rep(dl_tbf);
+		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
+
+		dl_tbf->abort();
 		dl_tbf->cleanup();
 	}
 
@@ -336,12 +347,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	tbf->stop_timer();
 	#warning "TODO: Could/Should generate  bssgp_tx_llc_discarded"
 	tbf_unlink_pdch(tbf);
-	llist_del(&tbf->list.list);
-
-	if (tbf->direction == GPRS_RLCMAC_UL_TBF)
-		tbf->bts->tbf_ul_freed();
-	else
-		tbf->bts->tbf_dl_freed();
+	llist_del(&tbf->list());
 
 	if (tbf->ms())
 		tbf->set_ms(NULL);
@@ -388,6 +394,7 @@ int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 const char *gprs_rlcmac_tbf::tbf_state_name[] = {
 	"NULL",
 	"ASSIGN",
+	"WAIT ASSIGN",
 	"FLOW",
 	"FINISHED",
 	"WAIT RELEASE",
@@ -429,10 +436,53 @@ void gprs_rlcmac_tbf::stop_timer()
 	}
 }
 
+int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
+	uint32_t *poll_fn_, unsigned int *rrbp_)
+{
+	uint32_t fn_offs = 13;
+	uint32_t new_poll_fn = (fn + fn_offs) % 2715648;
+
+	if (!is_control_ts(ts)) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
+			"scheduled in this TS %d (first control TS %d)\n",
+			ts, control_ts);
+		return -EINVAL;
+	}
+	if (poll_state != GPRS_RLCMAC_POLL_NONE) {
+		LOGP(DRLCMAC, LOGL_DEBUG,
+			"Polling is already scheduled for %s\n",
+			name());
+		return -EBUSY;
+	}
+	if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648)) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "%s: Polling is already scheduled "
+			"for single block allocation at FN %d TS %d ...\n",
+			name(), new_poll_fn, ts);
+		return -EBUSY;
+	}
+
+	*poll_fn_ = new_poll_fn;
+	*rrbp_ = 0;
+
+	return 0;
+}
+
+void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts)
+{
+	LOGP(DRLCMAC, LOGL_DEBUG,
+		"%s: Scheduling polling at FN %d TS %d\n",
+		name(), new_poll_fn, ts);
+
+	/* schedule polling */
+	poll_state = GPRS_RLCMAC_POLL_SCHED;
+	poll_fn = new_poll_fn;
+	poll_ts = ts;
+}
+
 void gprs_rlcmac_tbf::poll_timeout()
 {
-	LOGP(DRLCMAC, LOGL_NOTICE, "%s poll timeout for FN=%d (curr FN %d)\n",
-		tbf_name(this), poll_fn, bts->current_frame_number());
+	LOGP(DRLCMAC, LOGL_NOTICE, "%s poll timeout for FN=%d, TS=%d (curr FN %d)\n",
+		tbf_name(this), poll_fn, poll_ts, bts->current_frame_number());
 
 	poll_state = GPRS_RLCMAC_POLL_NONE;
 
@@ -446,7 +496,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
 		bts->rlc_ack_timedout();
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
-			gprs_rlcmac_ul_tbf *ul_tbf = static_cast<gprs_rlcmac_ul_tbf *>(this);
+			gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
 			ul_tbf->m_n3103++;
 			if (ul_tbf->m_n3103 == ul_tbf->bts->bts_data()->n3103) {
 				LOGP(DRLCMAC, LOGL_NOTICE,
@@ -500,7 +550,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		/* reschedule DL assignment */
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
 	} else if (direction == GPRS_RLCMAC_DL_TBF) {
-		gprs_rlcmac_dl_tbf *dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(this);
+		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
 
 		if (!(dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
@@ -546,11 +596,8 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf,
 
 	bts = tbf->bts->bts_data();
 
-	if (egprs_ms_class > 0 && bts->egprs_enabled) {
-		/* TODO: only for 8PSK, otherwise the GPRS MS class has to be used */
+	if (ms->mode() == GprsCodingScheme::EGPRS)
 		ms_class = egprs_ms_class;
-		tbf->enable_egprs();
-	}
 
 	tbf->m_created_ts = time(NULL);
 	tbf->set_ms_class(ms_class);
@@ -587,7 +634,6 @@ gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(BTS *bts_) :
 	m_contention_resolution_done(0),
 	m_final_ack_sent(0)
 {
-	memset(&m_window, 0, sizeof(m_window));
 	memset(&m_usf, 0, sizeof(m_usf));
 }
 
@@ -597,6 +643,17 @@ static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
 	return 0;
 }
 
+static void setup_egprs_mode(gprs_rlcmac_bts *bts, GprsMs *ms)
+{
+	if (GprsCodingScheme::getEgprsByNum(bts->max_mcs_ul).isEgprsGmsk() &&
+		GprsCodingScheme::getEgprsByNum(bts->max_mcs_dl).isEgprsGmsk() &&
+		ms->mode() != GprsCodingScheme::EGPRS)
+	{
+		ms->set_mode(GprsCodingScheme::EGPRS_GMSK);
+	} else {
+		ms->set_mode(GprsCodingScheme::EGPRS);
+	}
+}
 
 struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	GprsMs *ms, int8_t use_trx,
@@ -604,6 +661,13 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
 	int rc;
+
+	if (egprs_ms_class == 0 && bts->egprs_enabled) {
+		LOGP(DRLCMAC, LOGL_NOTICE,
+			"Not accepting non-EGPRS phone in EGPRS-only mode\n");
+		bts->bts->tbf_failed_egprs_only();
+		return NULL;
+	}
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
 	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d/%d\n",
@@ -620,6 +684,16 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	if (!ms)
 		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class);
 
+	if (egprs_ms_class > 0 && bts->egprs_enabled) {
+		tbf->enable_egprs();
+		tbf->m_window.set_sns(RLC_EGPRS_SNS);
+		/* TODO: Allow bigger UL windows when CRBB encoding is supported */
+		tbf->m_window.set_ws(RLC_EGPRS_MIN_WS);
+		setup_egprs_mode(bts, ms);
+		LOGP(DRLCMAC, LOGL_INFO, "Enabled EGPRS for %s, mode %s\n",
+			tbf->name(), GprsCodingScheme::modeName(ms->mode()));
+	}
+
 	rc = setup_tbf(tbf, ms, use_trx, ms_class, egprs_ms_class, single_slot);
 	/* if no resource */
 	if (rc < 0) {
@@ -627,7 +701,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 		return NULL;
 	}
 
-	llist_add(&tbf->list.list, &bts->ul_tbfs);
+	llist_add(&tbf->list(), &bts->bts->ul_tbfs());
 	tbf->bts->tbf_ul_created();
 
 	return tbf;
@@ -650,7 +724,6 @@ gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(BTS *bts_) :
 	m_last_dl_poll_fn(0),
 	m_last_dl_drained_fn(0)
 {
-	memset(&m_window, 0, sizeof(m_window));
 	memset(&m_llc_timer, 0, sizeof(m_llc_timer));
 }
 
@@ -667,9 +740,19 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;
 
+	if (egprs_ms_class == 0 && bts->egprs_enabled) {
+		if (ms_class > 0) {
+			LOGP(DRLCMAC, LOGL_NOTICE,
+				"Not accepting non-EGPRS phone in EGPRS-only mode\n");
+			bts->bts->tbf_failed_egprs_only();
+			return NULL;
+		}
+		egprs_ms_class = 1;
+	}
+
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
-	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d\n",
-		"DL", ms_class);
+	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d/%d\n",
+		"DL", ms_class, egprs_ms_class);
 
 	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
 
@@ -682,6 +765,14 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	if (!ms)
 		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class);
 
+	if (egprs_ms_class > 0 && bts->egprs_enabled) {
+		tbf->enable_egprs();
+		tbf->m_window.set_sns(RLC_EGPRS_SNS);
+		setup_egprs_mode(bts, ms);
+		LOGP(DRLCMAC, LOGL_INFO, "Enabled EGPRS for %s, mode %s\n",
+			tbf->name(), GprsCodingScheme::modeName(ms->mode()));
+	}
+
 	rc = setup_tbf(tbf, ms, use_trx, ms_class, 0, single_slot);
 	/* if no resource */
 	if (rc < 0) {
@@ -689,7 +780,22 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 		return NULL;
 	}
 
-	llist_add(&tbf->list.list, &bts->dl_tbfs);
+	if (tbf->is_egprs_enabled()) {
+		unsigned int num_pdch = pcu_bitcount(tbf->dl_slots());
+		unsigned int ws = bts->ws_base + num_pdch * bts->ws_pdch;
+		ws = (ws / 32) * 32;
+		ws = OSMO_MAX(64, ws);
+		if (num_pdch == 1)
+			ws = OSMO_MIN(192, ws);
+		else
+			ws = OSMO_MIN(128 * num_pdch, ws);
+
+		LOGP(DRLCMAC, LOGL_INFO, "%s: Setting EGPRS window size to %d\n",
+			tbf->name(), ws);
+		tbf->m_window.set_ws(ws);
+	}
+
+	llist_add(&tbf->list(), &bts->bts->dl_tbfs());
 	tbf->bts->tbf_dl_created();
 
 	tbf->m_last_dl_poll_fn = -1;
@@ -719,6 +825,12 @@ void gprs_rlcmac_tbf::handle_timeout()
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
 			if (state_is(GPRS_RLCMAC_ASSIGN)) {
 				LOGP(DRLCMAC, LOGL_NOTICE, "%s releasing due to "
+					"PACCH assignment timeout (not yet sent).\n",
+					tbf_name(this));
+				tbf_free(this);
+				return;
+			} else if (state_is(GPRS_RLCMAC_WAIT_ASSIGN)) {
+				LOGP(DRLCMAC, LOGL_NOTICE, "%s releasing due to "
 					"PACCH assignment timeout.\n", tbf_name(this));
 				tbf_free(this);
 				return;
@@ -727,9 +839,9 @@ void gprs_rlcmac_tbf::handle_timeout()
 					"in assign state\n", tbf_name(this));
 		}
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
-			gprs_rlcmac_dl_tbf *dl_tbf = static_cast<gprs_rlcmac_dl_tbf *>(this);
+			gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
 			dl_tbf->m_wait_confirm = 0;
-			if (dl_tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
+			if (dl_tbf->state_is(GPRS_RLCMAC_WAIT_ASSIGN)) {
 				tbf_assign_control_ts(dl_tbf);
 
 				if (!dl_tbf->upgrade_to_multislot) {
@@ -746,7 +858,6 @@ void gprs_rlcmac_tbf::handle_timeout()
 
 				/* keep to flags */
 				dl_tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
-				dl_tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
 
 				dl_tbf->update();
 
@@ -794,36 +905,40 @@ int gprs_rlcmac_tbf::rlcmac_diag()
 	return 0;
 }
 
-struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
+struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 {
 	struct msgb *msg;
 	struct gprs_rlcmac_dl_tbf *new_dl_tbf = NULL;
 	int poll_ass_dl = 1;
+	unsigned int rrbp = 0;
+	uint32_t new_poll_fn = 0;
+	int rc;
+	bool old_tfi_is_valid = is_tfi_assigned();
 
-	if (direction == GPRS_RLCMAC_DL_TBF && control_ts != first_common_ts) {
+	if (direction == GPRS_RLCMAC_DL_TBF && !is_control_ts(ts)) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "Cannot poll for downlink "
-			"assigment, because MS cannot reply. (control TS=%d, "
-			"first common TS=%d)\n", control_ts,
+			"assigment, because MS cannot reply. (TS=%d, "
+			"first common TS=%d)\n", ts,
 			first_common_ts);
 		poll_ass_dl = 0;
 	}
 	if (poll_ass_dl) {
-		if (poll_state != GPRS_RLCMAC_POLL_NONE) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "Polling is already sheduled "
-				"for %s, so we must wait for downlink "
-				"assignment...\n", tbf_name(this));
-				return NULL;
-		}
-		if (bts->sba()->find(trx->trx_no, control_ts, (fn + 13) % 2715648)) {
+		if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
+			ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK)
+		{
 			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-				"scheduled for single block allocation...\n");
+				"scheduled for %s, so we must wait for the uplink "
+				"assignment...\n", tbf_name(this));
 			return NULL;
 		}
+		rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
+		if (rc < 0)
+			return NULL;
 	}
 
 	/* on uplink TBF we get the downlink TBF to be assigned. */
 	if (direction == GPRS_RLCMAC_UL_TBF) {
-		gprs_rlcmac_ul_tbf *ul_tbf = static_cast<gprs_rlcmac_ul_tbf *>(this);
+		gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
 
 		/* be sure to check first, if contention resolution is done,
 		 * otherwise we cannot send the assignment yet */
@@ -846,6 +961,19 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 		return NULL;
 	}
 
+	if (new_dl_tbf == as_dl_tbf(this))
+		LOGP(DRLCMAC, LOGL_DEBUG,
+			"New and old TBF are the same %s\n", name());
+
+	if (old_tfi_is_valid && !new_dl_tbf->is_tlli_valid()) {
+		LOGP(DRLCMACDL, LOGL_ERROR,
+			"The old TFI is not assigned and there is no "
+			"TLLI. Old TBF %s, new TBF %s\n",
+			name(), new_dl_tbf->name());
+		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+		return NULL;
+	}
+
 	new_dl_tbf->was_releasing = was_releasing;
 	msg = msgb_alloc(23, "rlcmac_dl_ass");
 	if (!msg)
@@ -859,9 +987,11 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	LOGP(DRLCMAC, LOGL_INFO, "%s  start Packet Downlink Assignment (PACCH)\n", tbf_name(new_dl_tbf));
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
-	Encoding::write_packet_downlink_assignment(mac_control_block, m_tfi,
-		(direction == GPRS_RLCMAC_DL_TBF), new_dl_tbf,
-		poll_ass_dl, bts_data()->alpha, bts_data()->gamma, -1, 0);
+	Encoding::write_packet_downlink_assignment(mac_control_block,
+		old_tfi_is_valid, m_tfi, (direction == GPRS_RLCMAC_DL_TBF),
+		new_dl_tbf, poll_ass_dl, rrbp,
+		bts_data()->alpha, bts_data()->gamma, -1, 0,
+		is_egprs_enabled());
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
 	encode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
 	LOGPC(DCSN1, LOGL_NOTICE, "\n");
@@ -871,12 +1001,13 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 	talloc_free(mac_control_block);
 
 	if (poll_ass_dl) {
-		poll_state = GPRS_RLCMAC_POLL_SCHED;
-		poll_fn = (fn + 13) % 2715648;
+		set_polling(new_poll_fn, ts);
+		if (new_dl_tbf->state_is(GPRS_RLCMAC_ASSIGN))
+			new_dl_tbf->set_state(GPRS_RLCMAC_WAIT_ASSIGN);
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_WAIT_ACK;
 		LOGP(DRLCMACDL, LOGL_INFO,
-			"%s Scheduled DL Assignment polling on FN=%d\n",
-			name(), poll_fn);
+			"%s Scheduled DL Assignment polling on FN=%d, TS=%d\n",
+			name(), poll_fn, poll_ts);
 	} else {
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 		new_dl_tbf->set_state(GPRS_RLCMAC_FLOW);
@@ -889,22 +1020,25 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn)
 	return msg;
 }
 
-struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
+struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 {
 	struct msgb *msg;
 	struct gprs_rlcmac_ul_tbf *new_tbf = NULL;
+	int rc;
+	unsigned int rrbp;
+	uint32_t new_poll_fn;
 
-	if (poll_state != GPRS_RLCMAC_POLL_NONE) {
+	if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
+		ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
 		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-			"sheduled for %s, so we must wait for uplink "
+			"scheduled for %s, so we must wait for the uplink "
 			"assignment...\n", tbf_name(this));
 			return NULL;
 	}
-	if (bts->sba()->find(trx->trx_no, control_ts, (fn + 13) % 2715648)) {
-		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already scheduled for "
-			"single block allocation...\n");
-			return NULL;
-	}
+
+	rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
+	if (rc < 0)
+		return NULL;
 
 	if (ms())
 		new_tbf = ms()->ul_tbf();
@@ -929,7 +1063,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	Encoding::write_packet_uplink_assignment(bts_data(), ass_vec, m_tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), tlli(),
-		is_tlli_valid(), new_tbf, 1, bts_data()->alpha,
+		is_tlli_valid(), new_tbf, 1, rrbp, bts_data()->alpha,
 		bts_data()->gamma, -1, is_egprs_enabled());
 	bitvec_pack(ass_vec, msgb_put(msg, 23));
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
@@ -940,12 +1074,13 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn)
 	bitvec_free(ass_vec);
 	talloc_free(mac_control_block);
 
-	poll_state = GPRS_RLCMAC_POLL_SCHED;
-	poll_fn = (fn + 13) % 2715648;
+	set_polling(new_poll_fn, ts);
 	ul_ass_state = GPRS_RLCMAC_UL_ASS_WAIT_ACK;
+	if (new_tbf->state_is(GPRS_RLCMAC_ASSIGN))
+		new_tbf->set_state(GPRS_RLCMAC_WAIT_ASSIGN);
 	LOGP(DRLCMACDL, LOGL_INFO,
-		"%s Scheduled UL Assignment polling on FN=%d\n",
-		name(), poll_fn);
+		"%s Scheduled UL Assignment polling on FN=%d, TS=%d\n",
+		name(), poll_fn, poll_ts);
 
 	return msg;
 }
@@ -1010,15 +1145,8 @@ int gprs_rlcmac_tbf::set_tlli_from_ul(uint32_t new_tlli)
 
 		if (!ms())
 			set_ms(old_ms);
-
-		/* there might be an active and valid downlink TBF */
-		if (!ms()->dl_tbf() && dl_tbf)
-			/* Move it to the current MS (see the guard above) */
-			dl_tbf->set_ms(ms());
 	}
 
-	/* The TLLI has been taken from an UL message */
-	update_ms(new_tlli, GPRS_RLCMAC_UL_TBF);
 	if (dl_tbf && dl_tbf->ms() != ms()) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 			"TLLI=0x%08x while %s still exists. "
@@ -1035,34 +1163,15 @@ int gprs_rlcmac_tbf::set_tlli_from_ul(uint32_t new_tlli)
 		tbf_free(ul_tbf);
 		ul_tbf = NULL;
 	}
+
+	/* The TLLI has been taken from an UL message */
+	update_ms(new_tlli, GPRS_RLCMAC_UL_TBF);
+
+#if 0 /* REMOVEME ??? */
+	if (ms()->need_dl_tbf())
+		establish_dl_tbf_on_pacch();
+#endif
 	return 1;
-}
-
-int gprs_rlcmac_tbf::extract_tlli(const uint8_t *data, const size_t len)
-{
-	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
-	uint32_t new_tlli;
-	int rc;
-
-	OSMO_ASSERT(direction == GPRS_RLCMAC_UL_TBF);
-
-	/* no TLLI yet */
-	if (!rh->ti) {
-		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TFI=%d without "
-			"TLLI, but no TLLI received yet\n", rh->tfi);
-		return 0;
-	}
-	rc = Decoding::tlli_from_ul_data(data, len, &new_tlli);
-	if (rc) {
-		bts->decode_error();
-		LOGP(DRLCMACUL, LOGL_NOTICE, "Failed to decode TLLI "
-		"of UL DATA TFI=%d.\n", rh->tfi);
-		return 0;
-	}
-	LOGP(DRLCMACUL, LOGL_INFO, "Decoded premier TLLI=0x%08x of "
-		"UL DATA TFI=%d.\n", new_tlli, rh->tfi);
-
-	return set_tlli_from_ul(new_tlli);
 }
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf)
@@ -1088,11 +1197,11 @@ const char *gprs_rlcmac_tbf::name() const
 
 void gprs_rlcmac_tbf::rotate_in_list()
 {
-	llist_del(&list.list);
+	llist_del(&list());
 	if (direction == GPRS_RLCMAC_UL_TBF)
-		llist_add(&list.list, &bts->bts_data()->ul_tbfs);
+		llist_add(&list(), &bts->ul_tbfs());
 	else
-		llist_add(&list.list, &bts->bts_data()->dl_tbfs);
+		llist_add(&list(), &bts->dl_tbfs());
 }
 
 uint8_t gprs_rlcmac_tbf::tsc() const
@@ -1136,24 +1245,7 @@ uint8_t gprs_rlcmac_tbf::ul_slots() const
 	return slots;
 }
 
-void tbf_print_vty_info(struct vty *vty, struct llist_head *ltbf)
+bool gprs_rlcmac_tbf::is_control_ts(uint8_t ts) const
 {
-	gprs_rlcmac_tbf *tbf = llist_pods_entry(ltbf, gprs_rlcmac_tbf);
-
-	vty_out(vty, "TBF: TFI=%d TLLI=0x%08x (%s) DIR=%s IMSI=%s%s", tbf->tfi(),
-			tbf->tlli(), tbf->is_tlli_valid() ? "valid" : "invalid",
-			tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
-			tbf->imsi(), VTY_NEWLINE);
-	vty_out(vty, " created=%lu state=%08x 1st_TS=%d 1st_cTS=%d ctrl_TS=%d "
-			"MS_CLASS=%d%s",
-			tbf->created_ts(), tbf->state_flags, tbf->first_ts,
-			tbf->first_common_ts, tbf->control_ts, tbf->ms_class(),
-			VTY_NEWLINE);
-	vty_out(vty, " TS_alloc=");
-	for (int i = 0; i < 8; i++) {
-		if (tbf->pdch[i])
-			vty_out(vty, "%d ", i);
-	}
-	vty_out(vty, " CS=%d%s%s", tbf->ms() ? tbf->ms()->current_cs_dl() : 1,
-		VTY_NEWLINE, VTY_NEWLINE);
+	return ts == control_ts;
 }

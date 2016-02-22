@@ -23,6 +23,7 @@
 
 extern "C" {
 #include <osmocom/core/utils.h>
+#include <osmocom/core/bitcomp.h>
 }
 
 #include <arpa/inet.h>
@@ -180,7 +181,7 @@ static int parse_extensions_gprs(const uint8_t *data, unsigned int data_len,
 }
 
 int Decoding::rlc_data_from_ul_data(
-	const struct gprs_rlc_ul_data_block_info *rdbi, GprsCodingScheme cs,
+	const struct gprs_rlc_data_block_info *rdbi, GprsCodingScheme cs,
 	const uint8_t *data, RlcData *chunks, unsigned int chunks_size,
 	uint32_t *tlli)
 {
@@ -281,47 +282,6 @@ int Decoding::rlc_data_from_ul_data(
 	return num_chunks;
 }
 
-int Decoding::tlli_from_ul_data(const uint8_t *data, uint8_t len,
-					uint32_t *tlli)
-{
-	struct rlc_ul_header *rh = (struct rlc_ul_header *)data;
-	struct rlc_li_field *li;
-	uint8_t e;
-	uint32_t _tlli;
-
-	if (!rh->ti)
-		return -EINVAL;
-	
-	data += 3;
-	len -= 3;
-	e = rh->e;
-	/* if E is not set (LI follows) */
-	while (!e) {
-		if (!len) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA LI extended, "
-				"but no more data\n");
-			return -EINVAL;
-		}
-		/* get new E */
-		li = (struct rlc_li_field *)data;
-		if (li->e == 0) /* if LI==0, E is interpreted as '1' */
-			e = 1;
-		else
-			e = li->e;
-		data++;
-		len--;
-	}
-	if (len < 4) {
-		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA TLLI out of frame "
-			"border\n");
-		return -EINVAL;
-	}
-	memcpy(&_tlli, data, 4);
-	*tlli = ntohl(_tlli);
-
-	return 0;
-}
-
 uint8_t Decoding::get_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
 {
 	int i;
@@ -369,23 +329,35 @@ void Decoding::extract_rbb(const uint8_t *rbb, char *show_rbb)
 	show_rbb[64] = '\0';
 }
 
-int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_ul_header_egprs *rlc,
+void Decoding::extract_rbb(const struct bitvec *rbb, char *show_rbb)
+{
+	unsigned int i;
+	for (i = 0; i < rbb->cur_bit; i++) {
+		uint8_t bit;
+		bit = bitvec_get_bit_pos(rbb, i);
+		show_rbb[i] = bit == 1 ? 'R' : 'I';
+	}
+
+	show_rbb[i] = '\0';
+}
+
+int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 	const uint8_t *data, GprsCodingScheme cs)
 {
 	const struct gprs_rlc_ul_header_egprs_3 *egprs3;
 	const struct rlc_ul_header *gprs;
 	unsigned int e_ti_header;
 	unsigned int cur_bit = 0;
-	unsigned int data_len = 0;
-
-	rlc->cs = cs;
-
-	data_len = cs.maxDataBlockBytes();
+	int punct, punct2, with_padding, cps;
+	unsigned int offs;
 
 	switch(cs.headerTypeData()) {
 	case GprsCodingScheme::HEADER_GPRS_DATA:
 		gprs = static_cast<struct rlc_ul_header *>
 			((void *)data);
+
+		gprs_rlc_data_info_init_ul(rlc, cs, false);
+
 		rlc->r      = gprs->r;
 		rlc->si     = gprs->si;
 		rlc->tfi    = gprs->tfi;
@@ -400,20 +372,23 @@ int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_ul_header_egprs *rlc,
 		rlc->block_info[0].ti  = gprs->ti;
 		rlc->block_info[0].spb = 0;
 
-		cur_bit += 3 * 8;
+		cur_bit += rlc->data_offs_bits[0];
 
-		rlc->data_offs_bits[0] = cur_bit;
-		rlc->block_info[0].data_len = data_len;
-		cur_bit += data_len * 8;
-
+		/* skip data area */
+		cur_bit += cs.maxDataBlockBytes() * 8;
 		break;
 	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3:
 		egprs3 = static_cast<struct gprs_rlc_ul_header_egprs_3 *>
 			((void *)data);
+
+		cps    = (egprs3->cps_a << 0)  | (egprs3->cps_b << 2);
+		gprs_rlc_mcs_cps_decode(cps, cs, &punct, &punct2, &with_padding);
+		gprs_rlc_data_info_init_ul(rlc, cs, with_padding);
+
 		rlc->r      = egprs3->r;
 		rlc->si     = egprs3->si;
 		rlc->tfi    = (egprs3->tfi_a << 0)  | (egprs3->tfi_b << 2);
-		rlc->cps    = (egprs3->cps_a << 0)  | (egprs3->cps_b << 2);
+		rlc->cps    = cps;
 		rlc->rsb    = egprs3->rsb;
 
 		rlc->num_data_blocks = 1;
@@ -423,17 +398,18 @@ int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_ul_header_egprs *rlc,
 		rlc->block_info[0].bsn =
 			(egprs3->bsn1_a << 0) | (egprs3->bsn1_b << 5);
 
-		cur_bit += 3 * 8 + 7;
+		cur_bit += rlc->data_offs_bits[0] - 2;
 
-		e_ti_header = (data[3] + (data[4] << 8)) >> 7;
+		offs = rlc->data_offs_bits[0] / 8;
+		OSMO_ASSERT(rlc->data_offs_bits[0] % 8 == 1);
+
+		e_ti_header = (data[offs-1] + (data[offs] << 8)) >> 7;
 		rlc->block_info[0].e   = !!(e_ti_header & 0x01);
 		rlc->block_info[0].ti  = !!(e_ti_header & 0x02);
 		cur_bit += 2;
 
-		rlc->data_offs_bits[0] = cur_bit;
-		rlc->block_info[0].data_len = data_len;
-		cur_bit += data_len * 8;
-
+		/* skip data area */
+		cur_bit += cs.maxDataBlockBytes() * 8;
 		break;
 
 	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1:
@@ -464,7 +440,7 @@ int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_ul_header_egprs *rlc,
  * \returns  the number of bytes copied
  */
 unsigned int Decoding::rlc_copy_to_aligned_buffer(
-	const struct gprs_rlc_ul_header_egprs *rlc,
+	const struct gprs_rlc_data_info *rlc,
 	unsigned int data_block_idx,
 	const uint8_t *src, uint8_t *buffer)
 {
@@ -474,7 +450,7 @@ unsigned int Decoding::rlc_copy_to_aligned_buffer(
 
 	uint8_t c, last_c;
 	uint8_t *dst;
-	const struct gprs_rlc_ul_data_block_info *rdbi;
+	const struct gprs_rlc_data_block_info *rdbi;
 
 	OSMO_ASSERT(data_block_idx < rlc->num_data_blocks);
 	rdbi = &rlc->block_info[data_block_idx];
@@ -514,7 +490,7 @@ unsigned int Decoding::rlc_copy_to_aligned_buffer(
  *          buffer otherwise.
  */
 const uint8_t *Decoding::rlc_get_data_aligned(
-	const struct gprs_rlc_ul_header_egprs *rlc,
+	const struct gprs_rlc_data_info *rlc,
 	unsigned int data_block_idx,
 	const uint8_t *src, uint8_t *buffer)
 {
@@ -533,4 +509,169 @@ const uint8_t *Decoding::rlc_get_data_aligned(
 
 	Decoding::rlc_copy_to_aligned_buffer(rlc, data_block_idx, src, buffer);
 	return buffer;
+}
+
+static int handle_final_ack(bitvec *bits, int *bsn_begin, int *bsn_end,
+	gprs_rlc_dl_window *window)
+{
+	int num_blocks, i;
+
+	num_blocks = window->mod_sns(window->v_s() - window->v_a());
+	for (i = 0; i < num_blocks; i++)
+		bitvec_set_bit(bits, ONE);
+
+	*bsn_begin = window->v_a();
+	*bsn_end   = window->mod_sns(*bsn_begin + num_blocks);
+	return num_blocks;
+}
+
+int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
+	bitvec *bits, int *bsn_begin, int *bsn_end, gprs_rlc_dl_window *window)
+{
+	int urbb_len = desc->URBB_LENGTH;
+	int crbb_len = 0;
+	int num_blocks = 0;
+	struct bitvec urbb;
+	int i;
+	bool have_bitmap;
+	int implicitly_acked_blocks;
+	int ssn = desc->STARTING_SEQUENCE_NUMBER;
+	int rc;
+
+	if (desc->FINAL_ACK_INDICATION)
+		return handle_final_ack(bits, bsn_begin, bsn_end, window);
+
+	if (desc->Exist_CRBB)
+		crbb_len = desc->CRBB_LENGTH;
+
+	have_bitmap = (urbb_len + crbb_len) > 0;
+
+	/*
+	 * bow & bitmap present:
+	 *   V(A)-> [ 11111...11111 0 SSN-> BBBBB...BBBBB ] (SSN+Nbits) .... V(S)
+	 * bow & not bitmap present:
+	 *   V(A)-> [ 11111...11111 ] . SSN .... V(S)
+	 * not bow & bitmap present:
+	 *   V(A)-> ... [ 0 SSN-> BBBBB...BBBBB ](SSN+N) .... V(S)
+	 * not bow & not bitmap present:
+	 *   V(A)-> ... [] . SSN .... V(S)
+	 */
+
+	if (desc->BEGINNING_OF_WINDOW) {
+		implicitly_acked_blocks = window->mod_sns(ssn - 1 - window->v_a());
+
+		for (i = 0; i < implicitly_acked_blocks; i++)
+			bitvec_set_bit(bits, ONE);
+
+		num_blocks += implicitly_acked_blocks;
+	}
+
+	if (!have_bitmap)
+		goto aborted;
+
+	/* next bit refers to V(Q) and thus is always zero (and not
+	 * transmitted) */
+	bitvec_set_bit(bits, ZERO);
+	num_blocks += 1;
+
+	if (crbb_len > 0) {
+		int old_len = bits->cur_bit;
+		struct bitvec crbb;
+
+		crbb.data = (uint8_t *)desc->CRBB;
+		crbb.data_len = sizeof(desc->CRBB);
+		crbb.cur_bit = desc->CRBB_LENGTH;
+
+		rc = osmo_t4_decode(&crbb, desc->CRBB_STARTING_COLOR_CODE,
+			bits);
+
+		if (rc < 0) {
+			LOGP(DRLCMACUL, LOGL_NOTICE,
+				"Failed to decode CRBB: "
+				"length %d, data '%s'\n",
+				desc->CRBB_LENGTH,
+				osmo_hexdump(crbb.data, crbb.data_len));
+			/* We don't know the SSN offset for the URBB,
+			 * return what we have so far and assume the
+			 * bitmap has stopped here */
+			goto aborted;
+		}
+
+		LOGP(DRLCMACDL, LOGL_DEBUG,
+			"CRBB len: %d, decoded len: %d, cc: %d, crbb: '%s'\n",
+			desc->CRBB_LENGTH, bits->cur_bit - old_len,
+			desc->CRBB_STARTING_COLOR_CODE,
+			osmo_hexdump(
+				desc->CRBB, (desc->CRBB_LENGTH + 7)/8)
+		    );
+
+		num_blocks += (bits->cur_bit - old_len);
+	}
+
+	urbb.cur_bit = 0;
+	urbb.data = (uint8_t *)desc->URBB;
+	urbb.data_len = sizeof(desc->URBB);
+
+	for (i = urbb_len; i > 0; i--) {
+		/*
+		 * Set bit at the appropriate position (see 3GPP TS
+		 * 44.060 12.3.1)
+		 */
+		int is_ack = bitvec_get_bit_pos(&urbb, i-1);
+		bitvec_set_bit(bits, is_ack == 1 ? ONE : ZERO);
+	}
+	num_blocks += urbb_len;
+
+aborted:
+	*bsn_begin = window->v_a();
+	*bsn_end   = window->mod_sns(*bsn_begin + num_blocks);
+
+	return num_blocks;
+}
+
+int Decoding::decode_gprs_acknack_bits(const Ack_Nack_Description_t *desc,
+	bitvec *bits, int *bsn_begin, int *bsn_end, gprs_rlc_dl_window *window)
+{
+	int urbb_len = RLC_GPRS_WS;
+	int num_blocks;
+	struct bitvec urbb;
+
+	if (desc->FINAL_ACK_INDICATION)
+		return handle_final_ack(bits, bsn_begin, bsn_end, window);
+
+	*bsn_begin = window->v_a();
+	*bsn_end   = desc->STARTING_SEQUENCE_NUMBER;
+
+	num_blocks = window->mod_sns(*bsn_end - *bsn_begin);
+
+	if (num_blocks < 0 || num_blocks > urbb_len) {
+		*bsn_end  = *bsn_begin;
+		LOGP(DRLCMACUL, LOGL_NOTICE,
+			"Invalid GPRS Ack/Nack window %d:%d (length %d)\n",
+			*bsn_begin, *bsn_end, num_blocks);
+		return -EINVAL;
+	}
+
+	urbb.cur_bit = 0;
+	urbb.data = (uint8_t *)desc->RECEIVED_BLOCK_BITMAP;
+	urbb.data_len = sizeof(desc->RECEIVED_BLOCK_BITMAP);
+
+	/*
+	 * TS 44.060, 12.3:
+	 * BSN = (SSN - bit_number) modulo 128, for bit_number = 1 to 64.
+	 * The BSN values represented range from (SSN - 1) mod 128 to (SSN - 64) mod 128.
+	 *
+	 * We are only interested in the range from V(A) to SSN-1 which is
+	 * num_blocks large. The RBB is laid out as
+	 *   [SSN-1] [SSN-2] ... [V(A)] ... [SSN-64]
+	 * so we want to start with [V(A)] and go backwards until we reach
+	 * [SSN-1] to get the needed BSNs in an increasing order. Note that
+	 * the bit numbers are counted from the end of the buffer.
+	 */
+	for (int i = num_blocks; i > 0; i--) {
+		int is_ack = bitvec_get_bit_pos(&urbb, urbb_len - i);
+		bitvec_set_bit(bits, is_ack == 1 ? ONE : ZERO);
+	}
+
+	return num_blocks;
 }

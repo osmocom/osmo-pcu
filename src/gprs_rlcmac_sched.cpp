@@ -25,7 +25,7 @@
 
 #include "pcu_utils.h"
 
-static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
+static uint32_t sched_poll(BTS *bts,
 		    uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
 		    struct gprs_rlcmac_tbf **poll_tbf,
 		    struct gprs_rlcmac_tbf **ul_ass_tbf,
@@ -34,7 +34,7 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 {
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
-	struct llist_pods *lpods;
+	LListHead<gprs_rlcmac_tbf> *pos;
 	uint32_t poll_fn;
 
 	/* check special TBF for events */
@@ -42,9 +42,11 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 	if ((block_nr % 3) == 2)
 		poll_fn ++;
 	poll_fn = poll_fn % 2715648;
-	llist_pods_for_each_entry(ul_tbf, &bts->ul_tbfs, list, lpods) {
+	llist_for_each(pos, &bts->ul_tbfs()) {
+		ul_tbf = as_ul_tbf(pos->entry());
+		OSMO_ASSERT(ul_tbf);
 		/* this trx, this ts */
-		if (ul_tbf->trx->trx_no != trx || ul_tbf->control_ts != ts)
+		if (ul_tbf->trx->trx_no != trx || !ul_tbf->is_control_ts(ts))
 			continue;
 		/* polling for next uplink block */
 		if (ul_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
@@ -58,9 +60,11 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 			*ul_ass_tbf = ul_tbf;
 #warning "Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all states?"
 	}
-	llist_pods_for_each_entry(dl_tbf, &bts->dl_tbfs, list, lpods) {
+	llist_for_each(pos, &bts->dl_tbfs()) {
+		dl_tbf = as_dl_tbf(pos->entry());
+		OSMO_ASSERT(dl_tbf);
 		/* this trx, this ts */
-		if (dl_tbf->trx->trx_no != trx || dl_tbf->control_ts != ts)
+		if (dl_tbf->trx->trx_no != trx || !dl_tbf->is_control_ts(ts))
 			continue;
 		/* polling for next uplink block */
 		if (dl_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
@@ -126,14 +130,18 @@ static struct msgb *sched_select_ctrl_msg(
 		if (!tbf)
 			continue;
 
-		if (tbf == ul_ass_tbf)
-			msg = ul_ass_tbf->create_ul_ass(fn);
-		else if (tbf == dl_ass_tbf)
-			msg = dl_ass_tbf->create_dl_ass(fn);
+		/*
+		 * Assignments for the same direction have lower precedence,
+		 * because they may kill the TBF when the CONTOL ACK is
+		 * received, thus preventing the others from being processed.
+		 */
+
+		if (tbf == ul_ass_tbf && tbf->direction == GPRS_RLCMAC_DL_TBF)
+			msg = ul_ass_tbf->create_ul_ass(fn, ts);
+		else if (tbf == dl_ass_tbf && tbf->direction == GPRS_RLCMAC_UL_TBF)
+			msg = dl_ass_tbf->create_dl_ass(fn, ts);
 		else if (tbf == ul_ack_tbf)
-			msg = ul_ack_tbf->create_ul_ack(fn);
-		else
-			abort();
+			msg = ul_ack_tbf->create_ul_ack(fn, ts);
 
 		if (!msg) {
 			tbf = NULL;
@@ -143,6 +151,21 @@ static struct msgb *sched_select_ctrl_msg(
 		pdch->next_ctrl_prio += 1;
 		pdch->next_ctrl_prio %= 3;
 		break;
+	}
+
+	if (!msg) {
+		/*
+		 * If one of these is left, the response (CONTROL ACK) from the
+		 * MS will kill the current TBF, only one of them can be
+		 * non-NULL
+		 */
+		if (dl_ass_tbf) {
+			tbf = dl_ass_tbf;
+			msg = dl_ass_tbf->create_dl_ass(fn, ts);
+		} else if (ul_ass_tbf) {
+			tbf = ul_ass_tbf;
+			msg = ul_ass_tbf->create_ul_ass(fn, ts);
+		}
 	}
 
 	/* any message */
@@ -292,7 +315,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	/* store last frame number of RTS */
 	pdch->last_rts_fn = fn;
 
-	poll_fn = sched_poll(bts, trx, ts, fn, block_nr, &poll_tbf, &ul_ass_tbf,
+	poll_fn = sched_poll(bts->bts, trx, ts, fn, block_nr, &poll_tbf, &ul_ass_tbf,
 		&dl_ass_tbf, &ul_ack_tbf);
 	/* check uplink resource for polling */
 	if (poll_tbf)
@@ -330,6 +353,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	/* msg is now available */
 
 	/* set USF */
+	OSMO_ASSERT(msgb_length(msg) > 0);
 	msg->data[0] = (msg->data[0] & 0xf8) | usf;
 
 	/* Used to measure the leak rate, count all blocks */

@@ -24,6 +24,8 @@
 
 #include <stdint.h>
 
+struct bitvec;
+
 class Decoding {
 public:
 	struct RlcData {
@@ -32,25 +34,32 @@ public:
 		bool	is_complete;
 	};
 
-	static int tlli_from_ul_data(const uint8_t *data, uint8_t len,
-					uint32_t *tlli);
 	static int rlc_data_from_ul_data(
-		const struct gprs_rlc_ul_data_block_info *rdbi,
+		const struct gprs_rlc_data_block_info *rdbi,
 		GprsCodingScheme cs, const uint8_t *data, RlcData *chunks,
 		unsigned int chunks_size, uint32_t *tlli);
 	static uint8_t get_ms_class_by_capability(MS_Radio_Access_capability_t *cap);
 	static uint8_t get_egprs_ms_class_by_capability(MS_Radio_Access_capability_t *cap);
 
 	static void extract_rbb(const uint8_t *rbb, char *extracted_rbb);
+	static void extract_rbb(const struct bitvec *rbb, char *show_rbb);
 
-	static int rlc_parse_ul_data_header(struct gprs_rlc_ul_header_egprs *rlc,
+	static int rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 		const uint8_t *data, GprsCodingScheme cs);
 	static unsigned int rlc_copy_to_aligned_buffer(
-		const struct gprs_rlc_ul_header_egprs *rlc,
+		const struct gprs_rlc_data_info *rlc,
 		unsigned int data_block_idx,
 		const uint8_t *src, uint8_t *buffer);
 	static const uint8_t *rlc_get_data_aligned(
-		const struct gprs_rlc_ul_header_egprs *rlc,
+		const struct gprs_rlc_data_info *rlc,
 		unsigned int data_block_idx,
 		const uint8_t *src, uint8_t *buffer);
+	static int decode_egprs_acknack_bits(
+		const EGPRS_AckNack_Desc_t *desc,
+		struct bitvec *bits, int *bsn_begin, int *bsn_end,
+		struct gprs_rlc_dl_window *window);
+	static int decode_gprs_acknack_bits(
+		const Ack_Nack_Description_t *desc,
+		bitvec *bits, int *bsn_begin, int *bsn_end,
+		gprs_rlc_dl_window *window);
 };
