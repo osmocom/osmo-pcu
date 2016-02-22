@@ -30,6 +30,8 @@ extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/select.h>
 #include <osmocom/core/msgb.h>
+#include <osmocom/core/gsmtap_util.h>
+#include <osmocom/core/gsmtap.h>
 }
 
 #include <gprs_rlcmac.h>
@@ -124,15 +126,18 @@ static int pcu_tx_data_req(uint8_t trx, uint8_t ts, uint8_t sapi,
 void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr)
 {
-#ifdef ENABLE_SYSMODSP
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	if (bts->trx[trx].fl1h)
+#ifdef ENABLE_SYSMODSP
+	if (bts->trx[trx].fl1h) {
 		l1if_pdch_req(bts->trx[trx].fl1h, ts, 0, fn, arfcn, block_nr,
 			msg->data, msg->len);
-	else
+		msgb_free(msg);
+		return;
+	}
 #endif
-		pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PDTCH, arfcn, fn, block_nr,
+	gsmtap_send(bts->gsmtap, arfcn, ts, GSMTAP_CHANNEL_PACCH, 0, fn, 0, 0, msg->data, msg->len);
+	pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PDTCH, arfcn, fn, block_nr,
 			msg->data, msg->len);
 	msgb_free(msg);
 }
@@ -140,15 +145,18 @@ void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr)
 {
-#ifdef ENABLE_SYSMODSP
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	if (bts->trx[trx].fl1h)
+#ifdef ENABLE_SYSMODSP
+	if (bts->trx[trx].fl1h) {
 		l1if_pdch_req(bts->trx[trx].fl1h, ts, 1, fn, arfcn, block_nr,
 			msg->data, msg->len);
-	else
+		msgb_free(msg);
+		return;
+	}
 #endif
-		pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr,
+	gsmtap_send(bts->gsmtap, arfcn, ts, GSMTAP_CHANNEL_PACCH, 0, fn, 0, 0, msg->data, msg->len);
+	pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr,
 			msg->data, msg->len);
 	msgb_free(msg);
 }
@@ -200,9 +208,9 @@ extern "C" int pcu_rx_data_ind_pdtch(uint8_t trx_no, uint8_t ts_no, uint8_t *dat
 	return pdch->rcv_block(data, len, fn, meas);
 }
 
-static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
+static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind, struct gsmtap_inst *gsmtap)
 {
-	int rc = 0;
+	int rc;
 	pcu_l1_meas meas;
 	meas.set_rssi(data_ind->rssi);
 
@@ -210,6 +218,13 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 		"block=%d data=%s\n", data_ind->sapi,
 		data_ind->arfcn, data_ind->block_nr,
 		osmo_hexdump(data_ind->data, data_ind->len));
+
+	rc = gsmtap_send(gsmtap, data_ind->arfcn | GSMTAP_ARFCN_F_UPLINK, data_ind->ts_nr,
+			 GSMTAP_CHANNEL_PACCH, 0, data_ind->fn, 0, 0, data_ind->data, data_ind->len);
+	if (rc < 0)
+	    LOGP(DL1IF, LOGL_ERROR, "Sending RX data via GSMTAP failed: %d\n", rc);
+
+	rc = 0;
 
 	switch (data_ind->sapi) {
 	case PCU_IF_SAPI_PDTCH:
@@ -508,10 +523,11 @@ static int pcu_rx_pag_req(struct gsm_pcu_if_pag_req *pag_req)
 int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 {
 	int rc = 0;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	switch (msg_type) {
 	case PCU_IF_MSG_DATA_IND:
-		rc = pcu_rx_data_ind(&pcu_prim->u.data_ind);
+		rc = pcu_rx_data_ind(&pcu_prim->u.data_ind, bts->gsmtap);
 		break;
 	case PCU_IF_MSG_DATA_CNF:
 		rc = pcu_rx_data_cnf(&pcu_prim->u.data_cnf);
