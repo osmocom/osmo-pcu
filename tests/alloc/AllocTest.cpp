@@ -150,9 +150,9 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 		if (tbfs[i])
 			tbf_free(tbfs[i]);
 
-	tbfs[tfi] = tbf_alloc(bts, NULL, dir, -1, 0, 0, 0);
-	OSMO_ASSERT(tbfs[tfi]);
-	tbf_free(tbfs[tfi]);
+	tbfs[0] = tbf_alloc(bts, NULL, dir, -1, 0, 0, 0);
+	OSMO_ASSERT(tbfs[0]);
+	tbf_free(tbfs[0]);
 }
 
 static void test_alloc_a()
