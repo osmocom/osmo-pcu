@@ -42,7 +42,7 @@ extern "C" {
 
 // FIXME: move this, when changed from c++ to c.
 extern "C" {
-void *l1if_open_pdch(void *priv, uint32_t hlayer1);
+void *l1if_open_pdch(void *priv, uint32_t hlayer1, struct gsmtap_inst *gsmtap);
 int l1if_connect_pdch(void *obj, uint8_t ts);
 int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
         uint16_t arfcn, uint8_t block_nr, uint8_t *data, uint8_t len);
@@ -436,7 +436,8 @@ bssgp_failed:
 				if (!bts->trx[trx].fl1h)
 					bts->trx[trx].fl1h = l1if_open_pdch(
 						(void *)trx,
-						info_ind->trx[trx].hlayer1);
+						info_ind->trx[trx].hlayer1,
+						bts->gsmtap);
 			if (!bts->trx[trx].fl1h) {
 				LOGP(DL1IF, LOGL_FATAL, "Failed to open direct "
 					"DSP access for PDCH.\n");

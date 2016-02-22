@@ -27,6 +27,7 @@ extern "C" {
 #include <osmocom/core/rate_ctr.h>
 #include <osmocom/core/stat_item.h>
 #include <osmocom/core/timer.h>
+#include <osmocom/core/gsmtap.h>
 }
 
 #include "poll_controller.h"
@@ -172,6 +173,7 @@ struct gprs_rlcmac_bts {
 	uint8_t n3101;
 	uint8_t n3103;
 	uint8_t n3105;
+	struct gsmtap_inst *gsmtap;
 	struct gprs_rlcmac_trx trx[8];
 	int (*alloc_algorithm)(struct gprs_rlcmac_bts *bts,
 		struct GprsMs *ms,

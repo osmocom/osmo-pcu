@@ -357,7 +357,7 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 	return 0;
 }
 
-void *l1if_open_pdch(void *priv, uint32_t hlayer1)
+void *l1if_open_pdch(void *priv, uint32_t hlayer1, struct gsmtap_inst *gsmtap)
 {
 	struct femtol1_hdl *fl1h;
 	int rc;
@@ -378,9 +378,7 @@ void *l1if_open_pdch(void *priv, uint32_t hlayer1)
 		return NULL;
 	}
 
-	fl1h->gsmtap = gsmtap_source_init("localhost", GSMTAP_UDP_PORT, 1);
-	if (fl1h->gsmtap)
-		gsmtap_source_add_sink(fl1h->gsmtap);
+	fl1h->gsmtap = gsmtap;
 
 	return fl1h;
 }

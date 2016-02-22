@@ -33,6 +33,8 @@ extern "C" {
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
 #include <osmocom/core/stats.h>
+#include <osmocom/core/gsmtap.h>
+#include <osmocom/core/gsmtap_util.h>
 }
 
 extern struct gprs_nsvc *nsvc;
@@ -44,6 +46,7 @@ void *tall_pcu_ctx;
 extern void *bv_tall_ctx;
 static int quit = 0;
 static int rt_prio = -1;
+static char *gsmtap_addr = "localhost"; // FIXME: use gengetopt's default value instead
 
 static void print_help()
 {
@@ -58,6 +61,7 @@ static void print_help()
 		"  -V   --version	print version\n"
 		"  -r   --realtime PRIO Use SCHED_RR with the specified "
 			"priority\n"
+		"  -i	--gsmtap-ip	The destination IP used for GSMTAP.\n"
 		);
 }
 
@@ -74,10 +78,11 @@ static void handle_options(int argc, char **argv)
 			{ "version", 0, 0, 'V' },
 			{ "realtime", 1, 0, 'r' },
 			{ "exit", 0, 0, 'e' },
+			{ "gsmtap-ip", 1, 0, 'i' },
 			{ 0, 0, 0, 0 }
 		};
 
-		c = getopt_long(argc, argv, "hc:m:n:Vr:e",
+		c = getopt_long(argc, argv, "hc:m:n:Vr:e:i:",
 				long_options, &option_idx);
 		if (c == -1)
 			break;
@@ -101,6 +106,9 @@ static void handle_options(int argc, char **argv)
 		case 'V':
 			print_version(1);
 			exit(0);
+			break;
+		case 'i':
+			gsmtap_addr = optarg;
 			break;
 		case 'r':
 			rt_prio = atoi(optarg);
@@ -218,6 +226,13 @@ int main(int argc, char *argv[])
 			"together.\n");
 		exit(0);
 	}
+
+	bts->gsmtap = gsmtap_source_init(gsmtap_addr, GSMTAP_UDP_PORT, 1);
+
+	if (bts->gsmtap)
+		gsmtap_source_add_sink(bts->gsmtap);
+	else
+		fprintf(stderr, "Failed to initialize GSMTAP for %s\n", gsmtap_addr);
 
 	rc = vty_read_config_file(config_file, NULL);
 	if (rc < 0 && config_given) {
