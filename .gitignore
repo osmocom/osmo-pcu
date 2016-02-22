@@ -5,6 +5,7 @@
 Makefile.in
 Makefile
 .deps
+src/cscope*
 
 aclocal.m4
 autom4te.cache
