@@ -209,45 +209,46 @@ void GprsMs::stop_timer()
 	unref();
 }
 
+inline static GprsCodingScheme assign_cs(GprsCodingScheme current, BTS *bts, bool uplink, GprsCodingScheme::Mode mode)
+{
+	GprsCodingScheme tmp = GprsCodingScheme::UNKNOWN;
+	struct gprs_rlcmac_bts * b = bts->bts_data();
+
+	if (GprsCodingScheme::GPRS == mode) {
+		if (!current.isGprs()) {
+			tmp = GprsCodingScheme::getGprsByNum(uplink ? b->initial_cs_ul : b->initial_cs_dl);
+			if (!tmp.isValid())
+				return GprsCodingScheme::CS1;
+		}
+	} else {
+		if (!current.isEgprs()) {
+			tmp = GprsCodingScheme::getEgprsByNum(uplink ? b->initial_mcs_ul : b->initial_mcs_dl);
+			if (!tmp.isValid())
+				return GprsCodingScheme::MCS1;
+		}
+	}
+
+    return tmp;
+}
+
 void GprsMs::set_mode(GprsCodingScheme::Mode mode)
 {
+	GprsCodingScheme tmp;
 	m_mode = mode;
 
 	if (!m_bts)
 		return;
 
-	switch (m_mode) {
-	case GprsCodingScheme::GPRS:
-		if (!m_current_cs_ul.isGprs()) {
-			m_current_cs_ul = GprsCodingScheme::getGprsByNum(
-				m_bts->bts_data()->initial_cs_ul);
-			if (!m_current_cs_ul.isValid())
-				m_current_cs_ul = GprsCodingScheme::CS1;
-		}
-		if (!m_current_cs_dl.isGprs()) {
-			m_current_cs_dl = GprsCodingScheme::getGprsByNum(
-				m_bts->bts_data()->initial_cs_dl);
-			if (!m_current_cs_dl.isValid())
-				m_current_cs_dl = GprsCodingScheme::CS1;
-		}
-		break;
+	tmp = assign_cs(m_current_cs_ul, m_bts, true, mode);
+	if (tmp)
+		m_current_cs_ul = tmp;
 
-	case GprsCodingScheme::EGPRS_GMSK:
-	case GprsCodingScheme::EGPRS:
-		if (!m_current_cs_ul.isEgprs()) {
-			m_current_cs_ul = GprsCodingScheme::getEgprsByNum(
-				m_bts->bts_data()->initial_mcs_ul);
-			if (!m_current_cs_dl.isValid())
-				m_current_cs_ul = GprsCodingScheme::MCS1;
-		}
-		if (!m_current_cs_dl.isEgprs()) {
-			m_current_cs_dl = GprsCodingScheme::getEgprsByNum(
-				m_bts->bts_data()->initial_mcs_dl);
-			if (!m_current_cs_dl.isValid())
-				m_current_cs_dl = GprsCodingScheme::MCS1;
-		}
-		break;
-	}
+	tmp = assign_cs(m_current_cs_dl, m_bts, false, mode);
+	if (tmp)
+		m_current_cs_dl = tmp;
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "MS IMSI=%s mode set to %s: UL=%s, DL=%s\n",
+		imsi(), tmp.modeName(mode), m_current_cs_ul.name(), m_current_cs_dl.name());
 }
 
 void GprsMs::attach_tbf(struct gprs_rlcmac_tbf *tbf)
