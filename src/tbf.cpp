@@ -490,7 +490,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK))) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
 				"PACKET CONTROL ACK for PACKET UPLINK ACK\n");
-			rlcmac_diag();
+			rlcmac_diag("POLL TIMEOUT for PACKET CONTROL ACK for PACKET UPLINK ACK");
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
 		}
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
@@ -514,7 +514,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
 				"PACKET CONTROL ACK for PACKET UPLINK "
 				"ASSIGNMENT.\n");
-			rlcmac_diag();
+			rlcmac_diag("POLL TIMEOUT for PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT");
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
 		}
 		ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
@@ -534,7 +534,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
 				"PACKET CONTROL ACK for PACKET DOWNLINK "
 				"ASSIGNMENT.\n");
-			rlcmac_diag();
+			rlcmac_diag("POLL TIMEOUT for PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT");
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
 		}
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
@@ -555,7 +555,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		if (!(dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
 				"PACKET DOWNLINK ACK.\n");
-			dl_tbf->rlcmac_diag();
+			dl_tbf->rlcmac_diag("POLL TIMEOUT for PACKET DOWNLINK ACK");
 			dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 		}
 		dl_tbf->n3105++;
@@ -872,7 +872,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 	case 3195:
 		LOGP(DRLCMAC, LOGL_NOTICE, "%s T%d timeout during "
 			"transsmission\n", tbf_name(this), T);
-		rlcmac_diag();
+		rlcmac_diag("TRANSMISSION TIMEOUT");
 		/* fall through */
 	case 3193:
 		LOGP(DRLCMAC, LOGL_DEBUG,
@@ -887,8 +887,26 @@ void gprs_rlcmac_tbf::handle_timeout()
 	}
 }
 
-int gprs_rlcmac_tbf::rlcmac_diag()
+static inline void print_tbf_diag(const struct gprs_rlcmac_tbf * t, bool uplink)
 {
+	const char * d = uplink ? "UL" : "DL";
+
+	LOGP(DRLCMAC, LOGL_NOTICE, "- MS %s %s\n", d, t->name());
+	LOGP(DRLCMAC, LOGL_NOTICE, "- MS %s TBF 1st TS = %d, 1st common TS = %d, ctrl TS = %d\n",
+		d, t->first_ts, t->first_common_ts, t->control_ts);
+	LOGP(DRLCMAC, LOGL_NOTICE, "- MS %s TBF TSC = %d, DL: "OSMO_BIT_SPEC", UL: "OSMO_BIT_SPEC"\n",
+		d, t->tsc(), OSMO_BIT_PRINT(t->dl_slots()), OSMO_BIT_PRINT(t->ul_slots()));
+
+	if (GPRS_RLCMAC_POLL_SCHED == t->poll_state)
+		LOGP(DRLCMAC, LOGL_NOTICE, "- MS %s TBF poll. scheduled: FN = %d, TS = %d\n", d, t->poll_fn, t->poll_ts);
+	else
+		LOGP(DRLCMAC, LOGL_NOTICE, "- MS %s TBF no polling\n", d);
+}
+
+void gprs_rlcmac_tbf::rlcmac_diag(const char * context) const
+{
+	GprsMs * m = ms();
+	LOGP(DRLCMAC, LOGL_NOTICE, "- RLCMAC diag. report for %s:\n", context);
 	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
 		LOGP(DRLCMAC, LOGL_NOTICE, "- Assignment was on CCCH\n");
 	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)))
@@ -902,7 +920,57 @@ int gprs_rlcmac_tbf::rlcmac_diag()
 	else if (direction == GPRS_RLCMAC_DL_TBF)
 		LOGP(DRLCMAC, LOGL_NOTICE, "- No downlink ACK received yet\n");
 
-	return 0;
+	if (is_tfi_assigned())
+		LOGP(DRLCMAC, LOGL_NOTICE, "- TBF's TFI = %d\n", tfi());
+	else
+		LOGP(DRLCMAC, LOGL_NOTICE, "- No TFI is assigned to this TBF yet\n");
+
+	if (is_tlli_valid())
+		LOGP(DRLCMAC, LOGL_NOTICE, "- TBF's TLLI = 0x%x\n", tlli());
+	else
+		LOGP(DRLCMAC, LOGL_NOTICE, "- No TLLI is assigned to this TBF yet\n");
+
+	LOGP(DRLCMAC, LOGL_NOTICE, "- MS IMSI = %s, GPRS class = %d, EGPRS class = %d, TA = %d, TLLI = 0x%x\n",
+		m->imsi(), m->ms_class(), m->egprs_ms_class(), m->ta(), m->tlli());
+	LOGP(DRLCMAC, LOGL_NOTICE, "- MS 1st common TS = %d, current PACCH = %d\n",
+		m->first_common_ts(), m->current_pacch_slots());
+	LOGP(DRLCMAC, LOGL_NOTICE, "- MS DL: "OSMO_BIT_SPEC" (RSRVD: "OSMO_BIT_SPEC"), UL: "OSMO_BIT_SPEC" (RSRVD: "OSMO_BIT_SPEC")\n",
+		OSMO_BIT_PRINT(m->dl_slots()), OSMO_BIT_PRINT(m->reserved_dl_slots()), OSMO_BIT_PRINT(m->ul_slots()), OSMO_BIT_PRINT(m->reserved_ul_slots()));
+
+	if (m->is_idle())
+		LOGP(DRLCMAC, LOGL_NOTICE, "- MS id idle\n");
+	if (m->need_dl_tbf())
+		LOGP(DRLCMAC, LOGL_NOTICE, "- MS needs DL TBF\n");
+
+	if (m->dl_tbf()) {
+		struct gprs_rlcmac_dl_tbf * dl = m->dl_tbf();
+		print_tbf_diag(dl, false);
+
+		if (m->dl_tbf()->need_control_ts())
+			LOGP(DRLCMAC, LOGL_NOTICE, "- MS DL TBF needs ctrl TS\n");
+
+		if (m->dl_tbf()->have_data())
+			LOGP(DRLCMAC, LOGL_NOTICE, "- MS DL TBF have data\n");
+	} else
+		LOGP(DRLCMAC, LOGL_NOTICE, "- MS have no DL TBF\n");
+
+	if (m->ul_tbf()) {
+		struct gprs_rlcmac_ul_tbf * ul = m->ul_tbf();
+		print_tbf_diag(ul, true);
+
+		LOGP(DRLCMAC, LOGL_NOTICE, "- MS UL TBF USF: %d %d %d %d %d %d %d %d\n",
+			m->ul_tbf()->m_usf[0],
+			m->ul_tbf()->m_usf[1],
+			m->ul_tbf()->m_usf[2],
+			m->ul_tbf()->m_usf[3],
+			m->ul_tbf()->m_usf[4],
+			m->ul_tbf()->m_usf[5],
+			m->ul_tbf()->m_usf[6],
+			m->ul_tbf()->m_usf[7]);
+	} else
+		LOGP(DRLCMAC, LOGL_NOTICE, "- MS have no UL TBF\n");
+
+	LOGP(DRLCMAC, LOGL_NOTICE, "- RLCMAC diag. report complete\n\n");
 }
 
 struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)

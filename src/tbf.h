@@ -112,7 +112,7 @@ struct gprs_rlcmac_tbf {
 
 	uint8_t tsc() const;
 
-	int rlcmac_diag();
+	void rlcmac_diag(const char * context) const;
 
 	int update();
 	void handle_timeout();
