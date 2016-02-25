@@ -706,9 +706,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
 		if (rc >= 0) {
 			set_polling(new_poll_fn, ts);
+			LOGP(DRLCMACDL, LOGL_DEBUG, "DL TBF polling scheduled in TS = %d, FN = %d\n", ts, new_poll_fn);
 
-			LOGP(DRLCMACDL, LOGL_DEBUG, "Polling scheduled in this "
-				"TS %d\n", ts);
 			m_tx_counter = 0;
 			/* start timer whenever we send the final block */
 			if (is_final)

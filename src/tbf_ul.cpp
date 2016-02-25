@@ -129,6 +129,8 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 
 	if (final) {
 		set_polling(new_poll_fn, ts);
+		LOGP(DRLCMACUL, LOGL_DEBUG, "UL TBF polling scheduled in TS = %d, FN = %d\n", ts, new_poll_fn);
+
 		/* waiting for final acknowledge */
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_WAIT_ACK;
 		m_final_ack_sent = 1;
