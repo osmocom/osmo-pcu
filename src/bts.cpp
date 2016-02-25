@@ -1254,7 +1254,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 	bitvec *rlc_block, uint32_t fn)
 {
 	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)talloc_zero(tall_pcu_ctx, RlcMacUplink_t);
-	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
+	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ RX : Uplink Control Block on FN = %d ++++++++++++++\n", fn);
 	decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
 	LOGPC(DCSN1, LOGL_NOTICE, "\n");
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- RX : Uplink Control Block -------------------------\n");

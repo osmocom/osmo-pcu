@@ -894,8 +894,15 @@ static inline void print_tbf_diag(const struct gprs_rlcmac_tbf * t, bool uplink)
 	LOGP(DRLCMAC, LOGL_NOTICE, "- MS %s %s\n", d, t->name());
 	LOGP(DRLCMAC, LOGL_NOTICE, "- MS %s TBF 1st TS = %d, 1st common TS = %d, ctrl TS = %d\n",
 		d, t->first_ts, t->first_common_ts, t->control_ts);
-	LOGP(DRLCMAC, LOGL_NOTICE, "- MS %s TBF TSC = %d, DL: "OSMO_BIT_SPEC", UL: "OSMO_BIT_SPEC"\n",
-		d, t->tsc(), OSMO_BIT_PRINT(t->dl_slots()), OSMO_BIT_PRINT(t->ul_slots()));
+	LOGP(DRLCMAC, LOGL_NOTICE, "- MS %s TBF TSC = %d, DL: "OSMO_BIT_SPEC", UL: "OSMO_BIT_SPEC", mslot upgradeable: %d\n",
+		d, t->tsc(), OSMO_BIT_PRINT(t->dl_slots()), OSMO_BIT_PRINT(t->ul_slots()), t->upgrade_to_multislot);
+
+	unsigned i;
+	for (i = 0; i < 8; i++)
+		if (t->pdch[i])
+			if (t->pdch[i]->is_enabled())
+				LOGP(DRLCMAC, LOGL_NOTICE, "- MS %s PDCH[%d] USF = %d, last RTS FN = %d, TSC = %d, TS = %d\n",
+					d, i, t->pdch[i]->assigned_usf(), t->pdch[i]->last_rts_fn, t->pdch[i]->tsc, t->pdch[i]->ts_no);
 
 	if (GPRS_RLCMAC_POLL_SCHED == t->poll_state)
 		LOGP(DRLCMAC, LOGL_NOTICE, "- MS %s TBF poll. scheduled: FN = %d, TS = %d\n", d, t->poll_fn, t->poll_ts);
@@ -910,7 +917,7 @@ void gprs_rlcmac_tbf::rlcmac_diag(const char * context) const
 	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
 		LOGP(DRLCMAC, LOGL_NOTICE, "- Assignment was on CCCH\n");
 	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)))
-		LOGP(DRLCMAC, LOGL_NOTICE, "- Assignment was on PACCH\n");
+		LOGP(DRLCMAC, LOGL_NOTICE, "- Assignment was on PACCH\n");// add FN to events if possible
 	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_UL_DATA)))
 		LOGP(DRLCMAC, LOGL_NOTICE, "- Uplink data was received\n");
 	else if (direction == GPRS_RLCMAC_UL_TBF)
