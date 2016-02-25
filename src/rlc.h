@@ -143,8 +143,7 @@ struct gprs_rlc_v_b {
 	void mark_invalid(int bsn);
 
 	void reset();
-
-
+	gprs_rlc_v_b();
 private:
 	bool is_state(int bsn, const gprs_rlc_dl_bsn_state state) const;
 	void mark(int bsn, const gprs_rlc_dl_bsn_state state);
@@ -216,6 +215,7 @@ struct gprs_rlc_v_n {
 	bool is_received(int bsn) const;
 
 	gprs_rlc_ul_bsn_state state(int bsn) const;
+	gprs_rlc_v_n();
 private:
 	bool is_state(int bsn, const gprs_rlc_ul_bsn_state state) const;
 	void mark(int bsn, const gprs_rlc_ul_bsn_state state);
@@ -448,6 +448,7 @@ inline gprs_rlc_dl_window::gprs_rlc_dl_window()
 	: m_v_s(0)
 	, m_v_a(0)
 {
+	m_v_b.reset();
 }
 
 inline const uint16_t gprs_rlc_dl_window::v_s() const
@@ -490,10 +491,21 @@ inline const int16_t gprs_rlc_dl_window::distance() const
 	return (m_v_s - m_v_a) & mod_sns();
 }
 
+inline gprs_rlc_v_b::gprs_rlc_v_b()
+{
+	reset();
+}
+
+inline gprs_rlc_v_n::gprs_rlc_v_n()
+{
+	reset();
+}
+
 inline gprs_rlc_ul_window::gprs_rlc_ul_window()
 	: m_v_r(0)
 	, m_v_q(0)
 {
+	m_v_n.reset();
 }
 
 inline bool gprs_rlc_ul_window::is_in_window(uint16_t bsn) const
