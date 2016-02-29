@@ -14,11 +14,12 @@ docbooktotypes = pdf
 # htmlcss =
 
 TOPDIR := ..
-ASCIIDOCS := osmopcu-usermanual
+ASCIIDOCS := osmopcu-usermanual osmopcu-gb
 
 include $(TOPDIR)/build/Makefile.asciidoc.inc
 include $(TOPDIR)/build/Makefile.inc
 
+osmopcu-gb.pdf: gb/*.adoc gb/*.msc
 osmopcu-usermanual.pdf: chapters/*.adoc
 
 clean:

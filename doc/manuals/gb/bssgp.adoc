@@ -1,0 +1,67 @@
+== BSS GPRS Protocol (BSSGP)
+
+=== List of Messages
+
+The following tables list the BSSGP messages used by OsmoPCU, grouped by their
+level of compliance with 3GPP TS 08.18.
+
+==== Messages Compliant With TS 08.18
+
+.Messages compliant with TS 08.18
+[options="header",cols="10%,10%,20%,35%,5%,20%"]
+|===
+| TS 08.18 § | type code (hex) | This document § | Message | <-/-> | Received/Sent by OsmoPCU
+|===
+
+==== Messages Specific to OsmoPCU
+
+There are no OsmoPCU specific BSSGP messages.
+
+==== Messages Not Implemented by OsmoPCU
+
+.3GPP TS 08.18 messages not implemented by OsmoPCU
+[options="header",cols="10%,10%,80%"]
+|===
+| TS 08.18 § | type code (hex) | Message
+|===
+
+
+=== Details on Compliant BSSGP Messages
+
+FIXME
+
+=== Information Elements Overview
+
+All of the IEs handled by OsmoPCU are listed below, with limitations and
+additions to TS 08.18 specified in more detail.
+
+==== IEs Conforming to TS 08.18
+
+The following Information Elements are accepted by OsmoPCU. Not all IEs are
+actually evaluated.
+
+.IEs conforming to TS 08.18
+[options="header",cols="5%,10%,40%,5%,40%"]
+|===
+| tag (hex) | TS 08.18 § | IE name | <-/-> | Received/Sent by OsmoPCU
+|===
+
+==== IEs Not Conforming to TS 08.18
+
+.IEs not conforming to TS 08.18
+[options="header",cols="5%,10%,30%,55%"]
+|===
+| tag (hex) | TS 08.18 § | IE name | Description
+|===
+
+==== Additional Attributes and Parameters
+
+There are no OsmoPCU specific additional Attributes and Parameters.
+
+=== Details on IEs
+
+FIXME
+
+=== Gb BSSGP Initialization / PCU bring-up
+
+FIXME

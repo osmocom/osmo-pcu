@@ -1,0 +1,89 @@
+OsmoPCU Gb Protocol Specification
+=================================
+Harald Welte <nhofmeyr@sysmocom.de>
+
+== Introduction
+
+This document describes the Gb interface of *OsmoPCU*. Based on 3GPP TS
+FIXME and FIXME, this document indicates which of the 3GPP specified Gb
+messages and IEs are implemented according to 3GPP specifications, which of
+these are not or not fully implemented, as well as OsmoPCU-specific extensions
+to the Gb interface not specified by 3GPP.
+
+Extensions to the Gb interface specific to OsmoPCU are detailed in this
+document. For details on the messages and IEs that comply with abovementioned
+3GPP specifications, please refer to those documents.
+
+.3GPP document versions referred to by this document
+[cols="20%,80%"]
+|===
+|3GPP TS 08.56 | version 8.0.1 Release 1999
+|3GPP TS 08.58 | version 8.6.0 Release 1999
+|3GPP TS 08.60 | version 8.2.1 Release 1999
+|3GPP TS 12.21 | version 8.0.0 Release 1999
+|===
+
+.IETF documents referred to by his document
+[cols="20%,80%"]
+|===
+|IETF RFC 768 | User Datagram Protocol
+|IETF RFC 791 | Internet Protocol
+|===
+
+== Overview
+
+The OsmoPCU Gb interface consists of the NS (Network Services) and
+BSSGP (Base Station Subsystem Gateway Protocol), encapsulated in UDP
+(User Datagram Protocol) and IP (Internet Protocol) version 4.
+
+.UDP port numbers used by OsmoPCU Gb/IP
+[options="header",width="50%",cols="35%,65%"]
+|===
+|TCP Port Number|Usage
+|23000|NS over UDP
+|===
+
+The NS-over-UDP link is established in the PCU -> SGSN direction, i.e.
+the PCU is running as client while the SGSN is running as server.
+
+Establishment of the NS-over-UDP link is only possible after OsmoPCU
+has been configured viat the *PCU socket* interface from OsmoBTS.
+
+OsmoBTS in turn receives relevant configuration parameters from
+OsmoBSC or the BSC component inside OsmoNITB.
+
+.Overview of Gb link establishment
+["mscgen"]
+----
+include::gb/gb-startup.msc[]
+----
+
+=== Identities
+
+The Gb interface identities of the PCU are configured via BSC ->
+OsmoBTS -> PCU Socket. They consist of
+
+NSEI:: NS Equipment Identifier
+NSVCI:: NS Virtual Connection Identifier
+BVCI:: BSSGP Virtual Connection Identifier
+
+For an explanation of those identifiers and their use in the NS and
+BSSGP protocols, please see the reelvant 3GPP specifications for NS
+and BSSGP.
+
+In most cases, all above identities belong to different namespaces and
+must be unique within their respective namespace and within the SGSN
+they connect to.
+
+This means that typically each OsmoPCU has one unique set of NSEI,
+NSVCI and BVCI in your network.
+
+include::gb/ns.adoc[]
+
+include::gb/bssgp.adoc[]
+
+include::../common/chapters/port_numbers.adoc[]
+
+include::../common/chapters/glossary.adoc[]
+
+include::../common/chapters/gfdl.adoc[]
