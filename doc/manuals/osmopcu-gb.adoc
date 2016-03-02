@@ -1,11 +1,11 @@
 OsmoPCU Gb Protocol Specification
 =================================
-Harald Welte <nhofmeyr@sysmocom.de>
+Harald Welte <hwelte@sysmocom.de>
 
 == Introduction
 
 This document describes the Gb interface of *OsmoPCU*. Based on 3GPP TS
-FIXME and FIXME, this document indicates which of the 3GPP specified Gb
+08.16 and 08.18, this document indicates which of the 3GPP specified Gb
 messages and IEs are implemented according to 3GPP specifications, which of
 these are not or not fully implemented, as well as OsmoPCU-specific extensions
 to the Gb interface not specified by 3GPP.
@@ -21,6 +21,8 @@ document. For details on the messages and IEs that comply with abovementioned
 |3GPP TS 08.58 | version 8.6.0 Release 1999
 |3GPP TS 08.60 | version 8.2.1 Release 1999
 |3GPP TS 12.21 | version 8.0.0 Release 1999
+|3GPP TS 08.16 | version 8.0.1 Release 1999
+|3GPP TS 08.18 | version 8.12.0 Release 1999
 |===
 
 .IETF documents referred to by his document
