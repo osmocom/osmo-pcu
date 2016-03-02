@@ -37,6 +37,7 @@ document. For details on the messages and IEs that comply with abovementioned
 The OsmoPCU Gb interface consists of the NS (Network Services) and
 BSSGP (Base Station Subsystem Gateway Protocol), encapsulated in UDP
 (User Datagram Protocol) and IP (Internet Protocol) version 4.
+Use of other underlying protocols (e. g. FrameRelay) is not supported.
 
 .UDP port numbers used by OsmoPCU Gb/IP
 [options="header",width="50%",cols="35%,65%"]
@@ -60,6 +61,7 @@ OsmoBSC or the BSC component inside OsmoNITB.
 include::gb/gb-startup.msc[]
 ----
 
+[[ident]]
 === Identities
 
 The Gb interface identities of the PCU are configured via BSC ->
@@ -70,8 +72,8 @@ NSVCI:: NS Virtual Connection Identifier
 BVCI:: BSSGP Virtual Connection Identifier
 
 For an explanation of those identifiers and their use in the NS and
-BSSGP protocols, please see the reelvant 3GPP specifications for NS
-and BSSGP.
+BSSGP protocols, please see the reelvant 3GPP specifications for NS (TS 08.16)
+and BSSGP (TS 08.18).
 
 In most cases, all above identities belong to different namespaces and
 must be unique within their respective namespace and within the SGSN
