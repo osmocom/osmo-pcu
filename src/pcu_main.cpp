@@ -46,7 +46,7 @@ void *tall_pcu_ctx;
 extern void *bv_tall_ctx;
 static int quit = 0;
 static int rt_prio = -1;
-static char *gsmtap_addr = "localhost"; // FIXME: use gengetopt's default value instead
+static const char *gsmtap_addr = "localhost"; // FIXME: use gengetopt's default value instead
 
 static void print_help()
 {
