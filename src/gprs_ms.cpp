@@ -237,7 +237,7 @@ void GprsMs::set_mode(GprsCodingScheme::Mode mode)
 		if (!m_current_cs_ul.isEgprs()) {
 			m_current_cs_ul = GprsCodingScheme::getEgprsByNum(
 				m_bts->bts_data()->initial_mcs_ul);
-			if (!m_current_cs_dl.isValid())
+			if (!m_current_cs_ul.isValid())
 				m_current_cs_ul = GprsCodingScheme::MCS1;
 		}
 		if (!m_current_cs_dl.isEgprs()) {
