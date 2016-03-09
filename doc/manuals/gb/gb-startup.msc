@@ -1,0 +1,24 @@
+msc {
+	hscale="1.2";
+	sgsn [label="SGSN"], pcu [label="PCU"], bts [label="BTS"], bsc [label="BSC"];
+
+	|||;
+	bts box bsc [label="A-bis connection"];
+	pcu <: bts  [label="Config. parameters"];
+	pcu rbox pcu [label="listen on UDP socket"];
+	pcu note sgsn [label="send to SGSN UDP (port 23000)"];
+	pcu => sgsn [label="NS RESET"];
+	pcu <= sgsn [label="NS RESET ACK"];
+	...;
+	pcu => sgsn [label="NS UNBLOCK"];
+	pcu <= sgsn [label="NS UNBLOCK ACK"];
+	pcu box sgsn [label="NS link established"];
+	...;
+	pcu => sgsn [label="BVC RESET"];
+	pcu <= sgsn [label="BVC RESET ACK"];
+	...;
+	pcu => sgsn [label="BVC UNBLOCK"];
+	pcu <= sgsn [label="BVC UNBLOCK ACK"];
+	pcu box sgsn [label="BSSGP link established"];
+	|||;
+}
