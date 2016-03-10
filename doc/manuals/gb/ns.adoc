@@ -41,7 +41,7 @@ All the NS protocol messages from 3GPP TS 08.16 are implemented in OsmoPCU.
 ==== NS-UNITDATA
 
 This PDU transfers one NS SDU (specified in 3GPP TS 08.18) between OsmoPCU and SGSN. Upon receiving it OsmoPCU passes it to BSSGP
-implementaton to handle. It is also sent by BSSGP as necessary - see <<bssgp>> for details.
+implementation to handle. It is also sent by BSSGP as necessary - see <<bssgp>> for details.
 It contains BVCI (<<ie_bvci>>) and NS SDU (<<ie_nssdu>>) IEs.
 
 [[ns_reset]]

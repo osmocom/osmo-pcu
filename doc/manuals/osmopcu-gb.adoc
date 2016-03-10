@@ -11,7 +11,7 @@ these are not or not fully implemented, as well as OsmoPCU-specific extensions
 to the Gb interface not specified by 3GPP.
 
 Extensions to the Gb interface specific to OsmoPCU are detailed in this
-document. For details on the messages and IEs that comply with abovementioned
+document. For details on the messages and IEs that comply with above-mentioned
 3GPP specifications, please refer to those documents.
 
 .3GPP document versions referred to by this document
@@ -37,7 +37,7 @@ document. For details on the messages and IEs that comply with abovementioned
 The OsmoPCU Gb interface consists of the NS (Network Services) and
 BSSGP (Base Station Subsystem Gateway Protocol), encapsulated in UDP
 (User Datagram Protocol) and IP (Internet Protocol) version 4.
-Use of other underlying protocols (e. g. FrameRelay) is not supported.
+Use of other underlying protocols (e. g. Frame Relay) is not supported.
 
 .UDP port numbers used by OsmoPCU Gb/IP
 [options="header",width="50%",cols="35%,65%"]
@@ -50,7 +50,7 @@ The NS-over-UDP link is established in the PCU -> SGSN direction, i.e.
 the PCU is running as client while the SGSN is running as server.
 
 Establishment of the NS-over-UDP link is only possible after OsmoPCU
-has been configured viat the *PCU socket* interface from OsmoBTS.
+has been configured via the *PCU socket* interface from OsmoBTS.
 
 OsmoBTS in turn receives relevant configuration parameters from
 OsmoBSC or the BSC component inside OsmoNITB.

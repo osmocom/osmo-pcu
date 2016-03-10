@@ -280,7 +280,7 @@ actually evaluated.
 [options="header",cols="5%,10%,30%,55%"]
 |===
 | tag (hex) | TS 08.18 § | IE name | Description
-| 0x18 | 11.3.28 | QoS Profile | Received value is ignored. Sent value is hardcoded to 0x4 (3 octets).
+| 0x18 | 11.3.28 | QoS Profile | Received value is ignored. Sent value is hard-coded to 0x4 (3 octets).
 |===
 
 ==== Additional Attributes and Parameters
