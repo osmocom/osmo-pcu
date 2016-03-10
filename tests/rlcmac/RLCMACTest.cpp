@@ -91,7 +91,9 @@ void testRlcMacDownlink()
 	"4e082500e3f1a81d080820800b2b2b2b2b2b2b2b2b2b2b", // Packet Downlink Assignment
 	"48282407a6a07422720100032b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Assignment
 	"47240c00400000000000000079eb2ac9402b2b2b2b2b2b", // Packet Uplink Ack Nack
-	"47283c367513ba333004242b2b2b2b2b2b2b2b2b2b2b2b"  // Packet Uplink Assignment
+	"47283c367513ba333004242b2b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Assignment
+	"400820001a3904df0680efb3300b2b2b2b2b2b2b2b2b2b", // Packet Downlink Assignment (EGPRS)
+	"4024030f2f0000000087b0042b2b2b2b2b2b2b2b2b2b2b"  // Packet Uplink Ack Nack (EGPRS)
 	"4913e00850884013a8048b2b2b2b2b2b2b2b2b2b2b2b2b"
 	"412430007fffffffffffffffefd19c7ba12b2b2b2b2b2b"
 	"41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b"
@@ -154,7 +156,8 @@ void testRlcMacUplink()
 	std::string testData[] = {
 	"400e1e61d11d2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Dummy Control Block
 	"400b8020000000000000002480e0032b2b2b2b2b2b2b2b", // Packet Downlink Ack/Nack
-	"4016713dc094270ca2ae57ef909006aa0fc0001f80222b"  // Packet Resource Request
+	"4016713dc094270ca2ae57ef909006aa0fc0001f80222b", // Packet Resource Request
+	"40200ffc0021ec010b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // EPDAN
 	"400a9020000000000000003010012a0800132b2b2b2b2b"
 	};
 
