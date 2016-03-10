@@ -1,12 +1,12 @@
 msc {
 	hscale="1.2";
-	sgsn [label="SGSN"], pcu [label="PCU"], bts [label="BTS"], bsc [label="BSC"];
+	bsc [label="BSC"], bts [label="BTS"], pcu [label="PCU"], sgsn [label="SGSN"];
 
 	|||;
-	bts box bsc [label="A-bis connection"];
+	bts box bsc [label="A-bis OML connection"];
 	pcu <: bts  [label="Config. parameters"];
-	pcu rbox pcu [label="listen on UDP socket"];
-	pcu note sgsn [label="send to SGSN UDP (port 23000)"];
+	pcu rbox pcu [label="bind/connect UDP socket"];
+	pcu note sgsn [label="NS-over-IP (UDP port 23000)"];
 	pcu => sgsn [label="NS RESET"];
 	pcu <= sgsn [label="NS RESET ACK"];
 	...;
