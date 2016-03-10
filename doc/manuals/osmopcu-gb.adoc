@@ -43,7 +43,7 @@ Use of other underlying protocols (e. g. Frame Relay) is not supported.
 [options="header",width="50%",cols="35%,65%"]
 |===
 |TCP Port Number|Usage
-|23000|NS over UDP
+|23000|NS over UDP (default port)
 |===
 
 The NS-over-UDP link is established in the PCU -> SGSN direction, i.e.

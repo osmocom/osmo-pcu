@@ -219,8 +219,9 @@ This IE represents NSEI identity described in <<ident>> and 3GPP TS 08.16 §
 [[ns_init]]
 === Gb NS Initialization / PCU bring-up
 
-OsmoPCU create NS listening socket using UDP port given by OsmoBTS via
-PCU socket. OsmoBTS in turn receive it from BSC.  After that OsmoPCU
-tried to connect to remote NS ip:port over UDP using parameters
-received from BTS.  Following successful connection the reset
+OsmoPCU binds and connects an UDP socket for NS using port numbers and IP
+information given by OsmoBTS via the PCU socket. OsmoBTS in turn
+receives this information from the BSC vi A-bis OML.
+
+Following successful initialization of the UDP socket, the reset
 procedure is initiated as described in <<ns_reset>>.
