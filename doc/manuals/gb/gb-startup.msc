@@ -4,6 +4,9 @@ msc {
 
 	|||;
 	bts box bsc [label="A-bis OML connection"];
+	bsc => bts [label="Set OML Attrbibutes (NSVC,CELL)"];
+	bts rbox pcu [label="PCU Unix Domain Socket"];
+	pcu => bts [label="connect to PCU socket"];
 	pcu <: bts  [label="Config. parameters"];
 	pcu rbox pcu [label="bind/connect UDP socket"];
 	pcu note sgsn [label="NS-over-IP (UDP port 23000)"];
