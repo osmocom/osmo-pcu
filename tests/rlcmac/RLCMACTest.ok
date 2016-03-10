@@ -7,13 +7,13 @@ vector1 = 4e8250e3f1a81d882080b2b2b2b2b2b2b2b2b2b2b
 vector1 = 4e8250e3f1a81d882080b2b2b2b2b2b2b2b2b2b2b
 vector2 = 4e8250e3f1a81d882080b2b2b2b2b2b2b2b2b2b2b
 vector1 == vector2 : TRUE
-vector1 = 4828247a6a074227210b2b2b2b2b2b2b2b2b2b2b2b
+vector1 = 4828247a6a07422721032b2b2b2b2b2b2b2b2b2b2b
 =========Start DECODE===========
 +++++++++Finish DECODE++++++++++
 =========Start ENCODE=============
 +++++++++Finish ENCODE+++++++++++
-vector1 = 4828247a6a074227210b2b2b2b2b2b2b2b2b2b2b2b
-vector2 = 4828247a6a074227210b2b2b2b2b2b2b2b2b2b2b2b
+vector1 = 4828247a6a07422721032b2b2b2b2b2b2b2b2b2b2b
+vector2 = 4828247a6a07422721032b2b2b2b2b2b2b2b2b2b2b
 vector1 == vector2 : TRUE
 vector1 = 4724c040000000079eb2ac9402b2b2b2b2b2b
 =========Start DECODE===========
@@ -32,21 +32,21 @@ vector1 = 47283c367513ba33304242b2b2b2b2b2b2b2b2b2b2b2b
 vector2 = 47283c367513ba33304242b2b2b2b2b2b2b2b2b2b2b2b
 vector1 == vector2 : TRUE
  UPLINK 
-vector1 = 40e1e61d11f2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
+vector1 = 40e1e61d11d2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
 =========Start DECODE===========
 +++++++++Finish DECODE++++++++++
 =========Start ENCODE=============
 +++++++++Finish ENCODE+++++++++++
-vector1 = 40e1e61d11f2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
-vector2 = 40e1e61d11f2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
+vector1 = 40e1e61d11d2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
+vector2 = 40e1e61d11d2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
 vector1 == vector2 : TRUE
-vector1 = 40b802000000002480e0b2b2b2b2b2b2b2b2b
+vector1 = 40b802000000002480e032b2b2b2b2b2b2b2b
 =========Start DECODE===========
 +++++++++Finish DECODE++++++++++
 =========Start ENCODE=============
 +++++++++Finish ENCODE+++++++++++
-vector1 = 40b802000000002480e0b2b2b2b2b2b2b2b2b
-vector2 = 40b802000000002480e0b2b2b2b2b2b2b2b2b
+vector1 = 40b802000000002480e032b2b2b2b2b2b2b2b
+vector2 = 40b802000000002480e032b2b2b2b2b2b2b2b
 vector1 == vector2 : TRUE
 vector1 = 4016713dc09427ca2ae57ef90906aafc001f80222b
 =========Start DECODE===========

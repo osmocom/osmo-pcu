@@ -2400,7 +2400,12 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
             guint8 bits_to_handle = remaining_bits_len%8;
             if (bits_to_handle > 0)
             {
-              guint8 fl = filler&(0xff>>(8-bits_to_handle));
+              /* section 11 of 44.060
+               * The padding bits may be the 'null' string. Otherwise, the
+               * padding bits starts with bit '0', followed by 'spare padding'
+               * < padding bits > ::= { null | 0 < spare padding > ! < Ignore : 1 bit** = < no string > > } ;
+              */
+              guint8 fl = filler&(0xff>>(8-bits_to_handle + 1));
               bitvec_write_field(vector, writeIndex, fl, bits_to_handle);
               LOGPC(DCSN1, LOGL_NOTICE, "%u|", fl);
               remaining_bits_len -= bits_to_handle;

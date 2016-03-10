@@ -89,7 +89,7 @@ void testRlcMacDownlink()
 
 	std::string testData[] = {
 	"4e082500e3f1a81d080820800b2b2b2b2b2b2b2b2b2b2b", // Packet Downlink Assignment
-	"48282407a6a074227201000b2b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Assignment
+	"48282407a6a07422720100032b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Assignment
 	"47240c00400000000000000079eb2ac9402b2b2b2b2b2b", // Packet Uplink Ack Nack
 	"47283c367513ba333004242b2b2b2b2b2b2b2b2b2b2b2b"  // Packet Uplink Assignment
 	"4913e00850884013a8048b2b2b2b2b2b2b2b2b2b2b2b2b"
@@ -152,8 +152,8 @@ void testRlcMacUplink()
 	bitvec_unhex(resultVector, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 
 	std::string testData[] = {
-	"400e1e61d11f2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Dummy Control Block
-	"400b8020000000000000002480e00b2b2b2b2b2b2b2b2b", // Packet Downlink Ack/Nack
+	"400e1e61d11d2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Dummy Control Block
+	"400b8020000000000000002480e0032b2b2b2b2b2b2b2b", // Packet Downlink Ack/Nack
 	"4016713dc094270ca2ae57ef909006aa0fc0001f80222b"  // Packet Resource Request
 	"400a9020000000000000003010012a0800132b2b2b2b2b"
 	};

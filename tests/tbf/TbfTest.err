@@ -3430,7 +3430,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assign
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 03 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
 - Sending new block at BSN 0, CS=MCS-1
@@ -3738,7 +3738,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assign
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 03 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
 - Sending new block at BSN 0, CS=MCS-2
@@ -3996,7 +3996,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assign
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 03 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
 - Sending new block at BSN 0, CS=MCS-3
@@ -4217,7 +4217,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assign
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 03 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
 - Sending new block at BSN 0, CS=MCS-4
@@ -4405,7 +4405,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assign
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 03 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
 - Sending new block at BSN 0, CS=MCS-5
@@ -4573,7 +4573,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assign
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 03 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
 - Sending new block at BSN 0, CS=MCS-6
@@ -4724,7 +4724,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assign
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 03 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
 - Sending new block at BSN 0, CS=MCS-7
@@ -4872,7 +4872,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assign
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 03 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
 - Sending new block at BSN 0, CS=MCS-8
@@ -5008,7 +5008,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)  start Packet Downlink Assign
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 13 TS 4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on FN=13, TS=4
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (TRX=0, TS=4)
-Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 0b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=0 block=0 data=4f 08 20 00 44 02 00 02 08 04 00 c0 03 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
 - Sending new block at BSN 0, CS=MCS-9
