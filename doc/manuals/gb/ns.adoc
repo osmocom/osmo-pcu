@@ -5,13 +5,13 @@
 The following tables list the NS messages used by OsmoPCU, grouped by their
 level of compliance with 3GPP TS 08.16.
 
-==== Messages Compliant With TS 08.16
+==== Messages Compliant With 3GPP TS 08.16
 
 The NS protocol is implemented inside libosmocore so none of the messages below are sent by OsmoPCU explicitly.
 Instead corresponding functions from libosmocore are called which send and receive messages as necessary. See <<ns_init>> for details
 on establishing NS connection.
 
-.Messages compliant with TS 08.16
+.Messages compliant with 3GPP TS 08.16
 [options="header",cols="10%,10%,20%,35%,5%,20%"]
 |===
 | TS 08.16 § | type code (hex) | This document § | Message | <-/-> | Received/Sent by OsmoPCU
@@ -155,13 +155,13 @@ The message conforms to 3GPP TS 08.16 § 9.2.2 specification.
 === Information Elements Overview
 
 All of the IEs handled by OsmoPCU are listed below, with limitations and
-additions to TS 08.16 specified in more detail.
+additions to 3GPP TS 08.16 specified in more detail.
 
-==== IEs Conforming to TS 08.16
+==== IEs Conforming to 3GPP TS 08.16
 
 The following Information Elements are accepted by OsmoPCU.
 
-.IEs conforming to TS 08.16
+.IEs conforming to 3GPP TS 08.16
 [options="header",cols="5%,10%,40%,5%,40%"]
 |===
 | tag (hex) | TS 08.16 § | IE name | <-/-> | Received/Sent by OsmoPCU
@@ -172,9 +172,9 @@ The following Information Elements are accepted by OsmoPCU.
 | 0x04 | 10.3.6 | NSEI | <-/-> | Received/Sent
 |===
 
-==== IEs Not Conforming to TS 08.16
+==== IEs Not Conforming to 3GPP TS 08.16
 
-All IEs defined in TS 08.16 § 10.3 are supported by OsmoPCU.
+All IEs defined in 3GPP TS 08.16 § 10.3 are supported by OsmoPCU.
 
 ==== Additional Attributes and Parameters
 
@@ -185,18 +185,18 @@ There are no OsmoPCU specific additional Attributes and Parameters.
 [[ie_cause]]
 ==== Cause
 
-This IE contains reason for a procedure or error as described in TS 08.16 § 10.3.2.
+This IE contains reason for a procedure or error as described in 3GPP TS 08.16 § 10.3.2.
 
 [[ie_nsvci]]
 ==== NSVCI
 
-This IE represents NSVCI identity described in <<ident>> and TS 08.16 § 10.3.5.
+This IE represents NSVCI identity described in <<ident>> and 3GPP TS 08.16 § 10.3.5.
 
 [[ie_nspdu]]
 ==== NS PDU
 
 This IE contains PDU (possibly truncated) which cause error described
-in NS-STATUS message (<<ns_status>>) as described in TS 08.16 §
+in NS-STATUS message (<<ns_status>>) as described in 3GPP TS 08.16 §
 10.3.3.
 
 [[ie_nssdu]]
@@ -207,13 +207,13 @@ This IE contains BSSGP data - see <<bssgp>> for details.
 [[ie_bvci]]
 ==== BVCI
 
-This IE represents BSSGP identity described in <<ident>> and TS 08.16
+This IE represents BSSGP identity described in <<ident>> and 3GPP TS 08.16
 § 10.3.1.
 
 [[ie_nsei]]
 ==== NSEI
 
-This IE represents NSEI identity described in <<ident>> and TS 08.16 §
+This IE represents NSEI identity described in <<ident>> and 3GPP TS 08.16 §
 10.3.6.
 
 [[ns_init]]

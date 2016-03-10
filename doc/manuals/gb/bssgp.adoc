@@ -244,14 +244,14 @@ This message conforms to 3GPP TS 08.18 § 10.4.14.
 === Information Elements Overview
 
 All of the IEs handled by OsmoPCU are listed below, with limitations
-and additions to TS 08.18 specified in more detail.
+and additions to 3GPP TS 08.18 specified in more detail.
 
-==== IEs Conforming to TS 08.18
+==== IEs Conforming to 3GPP TS 08.18
 
 The following Information Elements are accepted by OsmoPCU. Not all
 IEs are actually evaluated.
 
-.IEs conforming to TS 08.18
+.IEs conforming to 3GPP TS 08.18
 [options="header",cols="5%,10%,40%,5%,40%"]
 |===
 | tag (hex) | TS 08.18 § | IE name | <-/-> | Received/Sent by OsmoPCU
@@ -301,9 +301,9 @@ IEs are actually evaluated.
 | 0x3d | 11.3.47 | Service UTRAN CCO (Cell Change Order) | <- | Received
 |===
 
-==== IEs Not Conforming to TS 08.18
+==== IEs Not Conforming to 3GPP TS 08.18
 
-.IEs not conforming to TS 08.18
+.IEs not conforming to 3GPP TS 08.18
 [options="header",cols="5%,10%,30%,55%"]
 |===
 | tag (hex) | TS 08.18 § | IE name | Description
@@ -494,8 +494,8 @@ in turn receives it from OpenBSC via OML procedures.
 
 In addition to the BVCI identifying the OsmoPCU side of BSSGP
 connection, there is also special BVCI which is accepted by OsmoPCU in
-accordance with TS 08.18 § 5.4.1: BVCI = 0 represents signaling data
+accordance with 3GPP TS 08.18 § 5.4.1: BVCI = 0 represents signaling data
 between SGSN and PCU in contrast to PTP (Peer-To-Peer) user's data.
 
 The mapping between BSSGP PDUs and signaling or PTP BVCIs is available
-in TS 08.18 Table 5.4.
+in 3GPP TS 08.18 Table 5.4.
