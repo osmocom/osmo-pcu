@@ -39,6 +39,14 @@ vector1 = 4082001a394df680efb330b2b2b2b2b2b2b2b2b2b
 vector1 = 4082001a394df680efb330b2b2b2b2b2b2b2b2b2b
 vector2 = 4082001a394df680efb330b2b2b2b2b2b2b2b2b2b
 vector1 == vector2 : TRUE
+vector1 = 40284f00010981c826f446809dcecb2b2b2b2b2b
+=========Start DECODE===========
++++++++++Finish DECODE++++++++++
+=========Start ENCODE=============
++++++++++Finish ENCODE+++++++++++
+vector1 = 40284f00010981c826f446809dcecb2b2b2b2b2b
+vector2 = 40284f00010981c826f446809dcecb2b2b2b2b2b
+vector1 == vector2 : TRUE
 vector1 = 40243f2f000087b042b2b2b2b2b2b2b2b2b2b2b
 =========Start DECODE===========
 +++++++++Finish DECODE++++++++++

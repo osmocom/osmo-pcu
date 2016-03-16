@@ -2504,6 +2504,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
         bitvec_write_field(vector, writeIndex, !Tag, 1);
         LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)(!Tag));
         bit_offset++;
+        remaining_bits_len--;
 
         pDescr++;
         break;
