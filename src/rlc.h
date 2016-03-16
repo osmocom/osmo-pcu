@@ -288,6 +288,44 @@ struct rlc_li_field_egprs {
 		 li:7;
 } __attribute__ ((packed));
 
+/* TS 44.060  10.3a.4.1.1 */
+struct gprs_rlc_ul_header_egprs_1 {
+	uint8_t r:1,
+		si:1,
+		cv:4,
+		tfi_a:2;
+	uint8_t tfi_b:3,
+		bsn1_a:5;
+	uint8_t bsn1_b:6,
+		bsn2_a:2;
+	uint8_t bsn2_b;
+	uint8_t cps:5,
+		rsb:1,
+		pi:1,
+		spare_a:1;
+	uint8_t spare_b:6,
+		dummy:2;
+} __attribute__ ((packed));
+
+/* TS 44.060  10.3a.4.2.1 */
+struct gprs_rlc_ul_header_egprs_2 {
+	uint8_t r:1,
+		si:1,
+		cv:4,
+		tfi_a:2;
+	uint8_t tfi_b:3,
+		bsn1_a:5;
+	uint8_t bsn1_b:6,
+		cps_a:2;
+	uint8_t cps_b:1,
+		rsb:1,
+		pi:1,
+		spare_a:5;
+	uint8_t spare_b:5,
+		dummy:3;
+} __attribute__ ((packed));
+
+/* TS 44.060  10.3a.4.3.1 */
 struct gprs_rlc_ul_header_egprs_3 {
 	uint8_t r:1,
 		si:1,
