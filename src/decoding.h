@@ -43,7 +43,14 @@ public:
 
 	static void extract_rbb(const uint8_t *rbb, char *extracted_rbb);
 	static void extract_rbb(const struct bitvec *rbb, char *show_rbb);
-
+	static int rlc_parse_ul_data_header_egprs_type_3(
+		struct gprs_rlc_data_info *rlc,
+		const uint8_t *data,
+		const GprsCodingScheme &cs);
+	static int rlc_parse_ul_data_header_gprs(
+		struct gprs_rlc_data_info *rlc,
+		const uint8_t *data,
+		const GprsCodingScheme &cs);
 	static int rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 		const uint8_t *data, GprsCodingScheme cs);
 	static unsigned int rlc_copy_to_aligned_buffer(

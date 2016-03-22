@@ -344,74 +344,14 @@ void Decoding::extract_rbb(const struct bitvec *rbb, char *show_rbb)
 int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 	const uint8_t *data, GprsCodingScheme cs)
 {
-	const struct gprs_rlc_ul_header_egprs_3 *egprs3;
-	const struct rlc_ul_header *gprs;
-	unsigned int e_ti_header;
 	unsigned int cur_bit = 0;
-	int punct, punct2, with_padding, cps;
-	unsigned int offs;
-
 	switch(cs.headerTypeData()) {
-	case GprsCodingScheme::HEADER_GPRS_DATA:
-		gprs = static_cast<struct rlc_ul_header *>
-			((void *)data);
-
-		gprs_rlc_data_info_init_ul(rlc, cs, false);
-
-		rlc->r      = gprs->r;
-		rlc->si     = gprs->si;
-		rlc->tfi    = gprs->tfi;
-		rlc->cps    = 0;
-		rlc->rsb    = 0;
-
-		rlc->num_data_blocks = 1;
-		rlc->block_info[0].cv  = gprs->cv;
-		rlc->block_info[0].pi  = gprs->pi;
-		rlc->block_info[0].bsn = gprs->bsn;
-		rlc->block_info[0].e   = gprs->e;
-		rlc->block_info[0].ti  = gprs->ti;
-		rlc->block_info[0].spb = 0;
-
-		cur_bit += rlc->data_offs_bits[0];
-
-		/* skip data area */
-		cur_bit += cs.maxDataBlockBytes() * 8;
+	case GprsCodingScheme::HEADER_GPRS_DATA :
+		cur_bit = rlc_parse_ul_data_header_gprs(rlc, data, cs);
 		break;
-	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3:
-		egprs3 = static_cast<struct gprs_rlc_ul_header_egprs_3 *>
-			((void *)data);
-
-		cps    = (egprs3->cps_a << 0)  | (egprs3->cps_b << 2);
-		gprs_rlc_mcs_cps_decode(cps, cs, &punct, &punct2, &with_padding);
-		gprs_rlc_data_info_init_ul(rlc, cs, with_padding);
-
-		rlc->r      = egprs3->r;
-		rlc->si     = egprs3->si;
-		rlc->tfi    = (egprs3->tfi_a << 0)  | (egprs3->tfi_b << 2);
-		rlc->cps    = cps;
-		rlc->rsb    = egprs3->rsb;
-
-		rlc->num_data_blocks = 1;
-		rlc->block_info[0].cv  = egprs3->cv;
-		rlc->block_info[0].pi  = egprs3->pi;
-		rlc->block_info[0].spb = egprs3->spb;
-		rlc->block_info[0].bsn =
-			(egprs3->bsn1_a << 0) | (egprs3->bsn1_b << 5);
-
-		cur_bit += rlc->data_offs_bits[0] - 2;
-
-		offs = rlc->data_offs_bits[0] / 8;
-		OSMO_ASSERT(rlc->data_offs_bits[0] % 8 == 1);
-
-		e_ti_header = (data[offs-1] + (data[offs] << 8)) >> 7;
-		rlc->block_info[0].e   = !!(e_ti_header & 0x01);
-		rlc->block_info[0].ti  = !!(e_ti_header & 0x02);
-		cur_bit += 2;
-
-		/* skip data area */
-		cur_bit += cs.maxDataBlockBytes() * 8;
+	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3 :
+		cur_bit = rlc_parse_ul_data_header_egprs_type_3(rlc, data, cs);
 		break;
-
 	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1:
 	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2:
 		/* TODO: Support both header types */
@@ -422,6 +362,78 @@ int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 			cs.name());
 		return -ENOTSUP;
 	};
+
+	return cur_bit;
+}
+
+int Decoding::rlc_parse_ul_data_header_egprs_type_3(
+	struct gprs_rlc_data_info *rlc,
+	const uint8_t *data,
+	const GprsCodingScheme &cs)
+{
+	int punct, punct2, with_padding, cps;
+	unsigned int e_ti_header, offs, cur_bit = 0;
+	const struct gprs_rlc_ul_header_egprs_3 *egprs3;
+
+	egprs3 = static_cast < struct gprs_rlc_ul_header_egprs_3 * >
+			((void *)data);
+
+	cps    = (egprs3->cps_a << 0)  | (egprs3->cps_b << 2);
+	gprs_rlc_mcs_cps_decode(cps, cs, &punct, &punct2, &with_padding);
+	gprs_rlc_data_info_init_ul(rlc, cs, with_padding);
+
+	rlc->r      = egprs3->r;
+	rlc->si     = egprs3->si;
+	rlc->tfi    = (egprs3->tfi_a << 0)  | (egprs3->tfi_b << 2);
+	rlc->cps    = cps;
+	rlc->rsb    = egprs3->rsb;
+
+	rlc->num_data_blocks = 1;
+	rlc->block_info[0].cv  = egprs3->cv;
+	rlc->block_info[0].pi  = egprs3->pi;
+	rlc->block_info[0].spb = egprs3->spb;
+	rlc->block_info[0].bsn =
+			(egprs3->bsn1_a << 0) | (egprs3->bsn1_b << 5);
+
+	cur_bit += rlc->data_offs_bits[0] - 2;
+	offs = rlc->data_offs_bits[0] / 8;
+	OSMO_ASSERT(rlc->data_offs_bits[0] % 8 == 1);
+	e_ti_header = (data[offs-1] + (data[offs] << 8)) >> 7;
+	rlc->block_info[0].e   = !!(e_ti_header & 0x01);
+	rlc->block_info[0].ti  = !!(e_ti_header & 0x02);
+	cur_bit += 2;
+	/* skip data area */
+	cur_bit += cs.maxDataBlockBytes() * 8;
+
+	return cur_bit;
+}
+
+int Decoding::rlc_parse_ul_data_header_gprs(struct gprs_rlc_data_info *rlc,
+	const uint8_t *data, const GprsCodingScheme &cs)
+{
+	const struct rlc_ul_header *gprs;
+	unsigned int cur_bit = 0;
+
+	gprs = static_cast < struct rlc_ul_header * >
+		((void *)data);
+
+	gprs_rlc_data_info_init_ul(rlc, cs, false);
+
+	rlc->r      = gprs->r;
+	rlc->si     = gprs->si;
+	rlc->tfi    = gprs->tfi;
+	rlc->cps    = 0;
+	rlc->rsb    = 0;
+	rlc->num_data_blocks = 1;
+	rlc->block_info[0].cv  = gprs->cv;
+	rlc->block_info[0].pi  = gprs->pi;
+	rlc->block_info[0].bsn = gprs->bsn;
+	rlc->block_info[0].e   = gprs->e;
+	rlc->block_info[0].ti  = gprs->ti;
+	rlc->block_info[0].spb = 0;
+	cur_bit += rlc->data_offs_bits[0];
+	/* skip data area */
+	cur_bit += cs.maxDataBlockBytes() * 8;
 
 	return cur_bit;
 }
