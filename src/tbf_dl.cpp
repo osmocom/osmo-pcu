@@ -587,6 +587,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	bool is_final = false;
 	gprs_rlc_data_info rlc;
 	GprsCodingScheme cs;
+	GprsCodingScheme cs_current_trans;
 	int bsns[ARRAY_SIZE(rlc.block_info)];
 	unsigned num_bsns;
 	enum egprs_puncturing_values punct[ARRAY_SIZE(rlc.block_info)];
@@ -638,6 +639,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		GprsCodingScheme cs_enc;
 		uint8_t *block_data;
 		gprs_rlc_data_block_info *rdbi, *block_info;
+		enum egprs_puncturing_values punct_scheme;
 
 		/* Check if there are more blocks than BSNs */
 		if (data_block_idx < num_bsns)
@@ -650,9 +652,19 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		/* get data and header from current block */
 		block_data = m_rlc.block(bsn)->block;
 
-		/* TODO: Use real puncturing values */
-		punct[data_block_idx] =
-			(enum egprs_puncturing_values) data_block_idx;
+		/* TODO: Need to support MCS change during retx */
+		cs_current_trans = cs;
+
+		/* Get current puncturing scheme from block */
+		punct_scheme = gprs_get_punct_scheme(
+			m_rlc.block(bsn)->next_ps,
+			cs, cs_current_trans);
+
+		if (cs.isEgprs()) {
+			OSMO_ASSERT(punct_scheme >= EGPRS_PS_1);
+			OSMO_ASSERT(punct_scheme <= EGPRS_PS_3);
+		}
+		punct[data_block_idx] = punct_scheme;
 
 		rdbi = &rlc.block_info[data_block_idx];
 		block_info = &m_rlc.block(bsn)->block_info;
@@ -665,6 +677,13 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				data_block_idx, bsn, cs_enc.name());
 			OSMO_ASSERT(rdbi->data_len == m_rlc.block(bsn)->len);
 		}
+
+		/* TODO: Need to handle 2 same bsns
+		 * in header type 1
+		 */
+		gprs_update_punct_scheme(&m_rlc.block(bsn)->next_ps,
+					cs_current_trans);
+
 		rdbi->e   = block_info->e;
 		rdbi->cv  = block_info->cv;
 		rdbi->bsn = bsn;

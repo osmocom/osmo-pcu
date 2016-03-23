@@ -399,3 +399,77 @@ void gprs_rlc_mcs_cps_decode(unsigned int cps,
 	default: ;
 	}
 }
+
+/*
+ * Finds the PS value for retransmission with MCS change,
+ * retransmission with no MCS change, fresh transmission cases.
+ * The return value shall be used for current transmission only
+ * 44.060 9.3.2.1 defines the PS selection for MCS change case
+ * cs_current is the output of MCS selection algorithm for retx
+ * cs is coding scheme of previous transmission of RLC data block
+ */
+enum egprs_puncturing_values gprs_get_punct_scheme(
+	enum egprs_puncturing_values punct,
+	const GprsCodingScheme &cs,
+	const GprsCodingScheme &cs_current)
+{
+	/* TS  44.060 9.3.2.1.1 */
+	if ((GprsCodingScheme::Scheme(cs) == GprsCodingScheme::MCS9) &&
+	(GprsCodingScheme::Scheme(cs_current) == GprsCodingScheme::MCS6)) {
+		if ((punct == EGPRS_PS_1) || (punct == EGPRS_PS_3))
+			return EGPRS_PS_1;
+		else if (punct == EGPRS_PS_2)
+			return EGPRS_PS_2;
+	} else if ((GprsCodingScheme::Scheme(cs) == GprsCodingScheme::MCS6) &&
+	(GprsCodingScheme::Scheme(cs_current) == GprsCodingScheme::MCS9)) {
+		if (punct == EGPRS_PS_1)
+			return EGPRS_PS_3;
+		else if (punct == EGPRS_PS_2)
+			return EGPRS_PS_2;
+	} else if ((GprsCodingScheme::Scheme(cs) == GprsCodingScheme::MCS7) &&
+	(GprsCodingScheme::Scheme(cs_current) == GprsCodingScheme::MCS5))
+		return EGPRS_PS_1;
+	else if ((GprsCodingScheme::Scheme(cs) == GprsCodingScheme::MCS5) &&
+	(GprsCodingScheme::Scheme(cs_current) == GprsCodingScheme::MCS7))
+		return EGPRS_PS_2;
+	else if (cs != cs_current)
+		return EGPRS_PS_1;
+	/* TS  44.060 9.3.2.1.1 ends here */
+	/*
+	 * Below else will handle fresh transmission, retransmission with no
+	 * MCS change case
+	 */
+	else
+		return punct;
+	return EGPRS_PS_INVALID;
+}
+
+/*
+ * This function calculates puncturing scheme for retransmission of a RLC
+ * block with same MCS. The computed value shall be used for next transmission
+ * of the same RLC block
+ * TS 44.060 10.4.8a.3.1, 10.4.8a.2.1, 10.4.8a.1.1
+ */
+void gprs_update_punct_scheme(enum egprs_puncturing_values *punct,
+	const GprsCodingScheme &cs)
+{
+	switch (GprsCodingScheme::Scheme(cs)) {
+	case GprsCodingScheme::MCS1 :
+	case GprsCodingScheme::MCS2 :
+	case GprsCodingScheme::MCS5 :
+	case GprsCodingScheme::MCS6 :
+		*punct = ((enum egprs_puncturing_values)((*punct + 1) %
+			EGPRS_MAX_PS_NUM_2));
+		break;
+	case GprsCodingScheme::MCS3 :
+	case GprsCodingScheme::MCS4 :
+	case GprsCodingScheme::MCS7 :
+	case GprsCodingScheme::MCS8 :
+	case GprsCodingScheme::MCS9 :
+		*punct = ((enum egprs_puncturing_values)((*punct + 1) %
+			EGPRS_MAX_PS_NUM_3));
+		break;
+	default:
+		break;
+	}
+}

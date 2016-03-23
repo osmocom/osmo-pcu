@@ -136,7 +136,11 @@ unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, enum egprs_puncturing_values
 	punct, enum egprs_puncturing_values punct2, int with_padding);
 void gprs_rlc_mcs_cps_decode(unsigned int cps, GprsCodingScheme cs,
 	int *punct, int *punct2, int *with_padding);
-
+enum egprs_puncturing_values gprs_get_punct_scheme(enum egprs_puncturing_values
+	punct, const GprsCodingScheme &cs,
+	const GprsCodingScheme &cs_current_trans);
+void gprs_update_punct_scheme(enum egprs_puncturing_values *punct,
+	const GprsCodingScheme &cs);
 /*
  * I hold the currently transferred blocks and will provide
  * the routines to manipulate these arrays.
