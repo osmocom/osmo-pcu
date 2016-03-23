@@ -589,7 +589,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	GprsCodingScheme cs;
 	int bsns[ARRAY_SIZE(rlc.block_info)];
 	unsigned num_bsns;
-	int punct[ARRAY_SIZE(rlc.block_info)];
+	enum egprs_puncturing_values punct[ARRAY_SIZE(rlc.block_info)];
 	bool need_padding = false;
 
 	/*
@@ -651,7 +651,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		block_data = m_rlc.block(bsn)->block;
 
 		/* TODO: Use real puncturing values */
-		punct[data_block_idx] = data_block_idx;
+		punct[data_block_idx] =
+			(enum egprs_puncturing_values) data_block_idx;
 
 		rdbi = &rlc.block_info[data_block_idx];
 		block_info = &m_rlc.block(bsn)->block_info;

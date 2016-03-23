@@ -132,8 +132,8 @@ void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
 	GprsCodingScheme cs, bool with_padding);
 void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
 	GprsCodingScheme cs, bool with_padding);
-unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, int punct, int punct2,
-	int with_padding);
+unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, enum egprs_puncturing_values
+	punct, enum egprs_puncturing_values punct2, int with_padding);
 void gprs_rlc_mcs_cps_decode(unsigned int cps, GprsCodingScheme cs,
 	int *punct, int *punct2, int *with_padding);
 
