@@ -56,6 +56,27 @@ enum gprs_rlc_dl_bsn_state {
 	GPRS_RLC_DL_BSN_MAX,
 };
 
+/*
+ * Valid puncturing scheme values
+ * TS 44.060 10.4.8a.3.1, 10.4.8a.2.1, 10.4.8a.1.1
+ */
+enum egprs_puncturing_values {
+	EGPRS_PS_1,
+	EGPRS_PS_2,
+	EGPRS_PS_3,
+	EGPRS_PS_INVALID,
+};
+
+/*
+ * EGPRS_MAX_PS_NUM_2 is valid for MCS 1,2,5,6.
+ * And EGPRS_MAX_PS_NUM_3 is valid for MCS 3,4,7,8,9
+ * TS 44.060 10.4.8a.3.1, 10.4.8a.2.1, 10.4.8a.1.1
+ */
+enum egprs_puncturing_types {
+	EGPRS_MAX_PS_NUM_2 = 2,
+	EGPRS_MAX_PS_NUM_3,
+	EGPRS_MAX_PS_NUM_INVALID,
+};
 
 static inline uint16_t mod_sns_half()
 {
@@ -100,6 +121,9 @@ struct gprs_rlc_data {
 
 	struct gprs_rlc_data_block_info block_info;
 	GprsCodingScheme cs;
+
+	/* puncturing scheme value to be used for next transmission*/
+	enum egprs_puncturing_values next_ps;
 };
 
 void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,

@@ -33,6 +33,9 @@ uint8_t *gprs_rlc_data::prepare(size_t block_data_len)
 	memset(block, 0x0, sizeof(block));
 	memset(block, 0x2b, block_data_len);
 
+	/* Initial value of puncturing scheme */
+	next_ps = EGPRS_PS_1;
+
 	return block;
 }
 
