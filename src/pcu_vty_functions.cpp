@@ -102,7 +102,7 @@ int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
 	llist_for_each(ms_iter, &bts->ms_store().ms_list()) {
 		GprsMs *ms = ms_iter->entry();
 
-		vty_out(vty, "MS TLLI=%08x, TA=%d, CS-UL=%s, CS-DL=%s, LLC=%d, "
+		vty_out(vty, "MS TLLI=%08x, TA=%d, CS-UL=%s, CS-DL=%s, LLC=%zd, "
 			"IMSI=%s%s",
 			ms->tlli(),
 			ms->ta(), ms->current_cs_ul().name(),
@@ -136,9 +136,9 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 		if (slots & (1 << i))
 			vty_out(vty, "%d ", i);
 	vty_out(vty, "%s", VTY_NEWLINE);
-	vty_out(vty, "  LLC queue length:       %d%s", ms->llc_queue()->size(),
+	vty_out(vty, "  LLC queue length:       %zd%s", ms->llc_queue()->size(),
 		VTY_NEWLINE);
-	vty_out(vty, "  LLC queue octets:       %d%s", ms->llc_queue()->octets(),
+	vty_out(vty, "  LLC queue octets:       %zd%s", ms->llc_queue()->octets(),
 		VTY_NEWLINE);
 	if (ms->l1_meas()->have_rssi)
 		vty_out(vty, "  RSSI:                   %d dBm%s",
