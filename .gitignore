@@ -14,6 +14,7 @@ config.guess
 config.sub
 config.status
 configure
+compile
 depcomp
 install-sh
 missing
@@ -43,3 +44,17 @@ tests/codel/codel_test
 tests/emu/pcu_emu
 tests/testsuite
 tests/testsuite.log
+tests/edge/EdgeTest
+tests/llc/LlcTest
+
+# ignore debian files
+.tarball-version
+debian/autoreconf.after
+debian/autoreconf.before
+debian/files
+debian/*.debhelper*
+debian/*.substvars
+debian/osmo-pcu-dbg/
+debian/osmo-pcu.substvars
+debian/osmo-pcu/
+debian/tmp/
