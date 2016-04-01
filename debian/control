@@ -1,0 +1,24 @@
+Source: osmo-pcu
+Section: net
+Priority: optional
+Maintainer: Holger Hans Peter Freyther <holger@moiji-mobile.com>
+Build-Depends: debhelper (>= 7.0.0~), dh-autoreconf, dh-systemd (>= 1.5), autotools-dev, pkg-config, libosmocore-dev
+Standards-Version: 3.8.4
+Homepage: http://osmocom.org/projects/osmopcu
+Vcs-Git: git://git.osmocom.org/osmo-pcu
+Vcs-Browser: http://git.osmocom.org/osmo-pcu/
+
+Package: osmo-pcu
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: osmo-pcu GSM PCU for GPRS and EDGE
+ osmo-pcu for GPRS and EDGE support in the network
+
+Package: osmo-pcu-dbg
+Architecture: any
+Section: debug
+Priority: extra
+Depends: osmo-pcu (= ${binary:Version}), ${misc:Depends}
+Description: Debug symbols for the osmo-pcu
+ Make debugging possible
+
