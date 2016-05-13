@@ -38,7 +38,7 @@ struct femtol1_hdl {
 	struct gsmtap_inst *gsmtap;
 	uint32_t gsmtap_sapi_mask;
 
-	void *priv;			/* user reference */
+	uint8_t trx_no;
 
 	struct osmo_timer_list alive_timer;
 	unsigned int alive_prim_cnt;

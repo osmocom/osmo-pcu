@@ -155,7 +155,7 @@ static int handle_ph_readytosend_ind(struct femtol1_hdl *fl1h,
 	switch (rts_ind->sapi) {
 	case GsmL1_Sapi_Pdtch:
 	case GsmL1_Sapi_Pacch:
-		rc = pcu_rx_rts_req_pdtch((long)fl1h->priv, rts_ind->u8Tn,
+		rc = pcu_rx_rts_req_pdtch(fl1h->trx_no, rts_ind->u8Tn,
 			rts_ind->u16Arfcn, rts_ind->u32Fn, rts_ind->u8BlockNbr);
 	case GsmL1_Sapi_Ptcch:
 		// FIXME
@@ -215,7 +215,7 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 			!= GsmL1_PdtchPlType_Full)
 			break;
 		/* PDTCH / PACCH frame handling */
-		pcu_rx_data_ind_pdtch((long)fl1h->priv, data_ind->u8Tn,
+		pcu_rx_data_ind_pdtch(fl1h->trx_no, data_ind->u8Tn,
 			data_ind->msgUnitParam.u8Buffer + 1,
 			data_ind->msgUnitParam.u8Size - 1,
 			data_ind->u32Fn,
@@ -357,7 +357,7 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 	return 0;
 }
 
-void *l1if_open_pdch(void *priv, uint32_t hlayer1, struct gsmtap_inst *gsmtap)
+void *l1if_open_pdch(uint8_t trx_no, uint32_t hlayer1, struct gsmtap_inst *gsmtap)
 {
 	struct femtol1_hdl *fl1h;
 	int rc;
@@ -367,7 +367,7 @@ void *l1if_open_pdch(void *priv, uint32_t hlayer1, struct gsmtap_inst *gsmtap)
 		return NULL;
 
 	fl1h->hLayer1 = hlayer1;
-	fl1h->priv = priv;
+	fl1h->trx_no = trx_no;
 	fl1h->clk_cal = 0;
 	/* default clock source: OCXO */
 	fl1h->clk_src = SuperFemto_ClkSrcId_Ocxo;
