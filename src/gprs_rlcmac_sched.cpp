@@ -341,8 +341,11 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 		dl_ass_tbf, ul_ack_tbf);
 
 	/* Prio 2: select data message for downlink */
-	if (!msg)
+	if (!msg) {
 		msg = sched_select_downlink(bts, trx, ts, fn, block_nr, pdch);
+		if (msg)
+			bts->bts->rlc_sent();
+	}
 
 	/* Prio 3: send dummy contol message */
 	if (!msg)

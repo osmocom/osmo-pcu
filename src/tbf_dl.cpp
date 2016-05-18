@@ -762,8 +762,6 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	/* Increment TX-counter */
 	m_tx_counter++;
 
-	bts->rlc_sent();
-
 	return dl_msg;
 }
 
