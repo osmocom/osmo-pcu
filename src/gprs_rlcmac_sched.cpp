@@ -348,8 +348,12 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	}
 
 	/* Prio 3: send dummy contol message */
-	if (!msg)
+	if (!msg) {
+		/* increase counter */
 		msg = sched_dummy();
+		if (msg)
+			bts->bts->rlc_sent_dummy();
+	}
 
 	if (!msg)
 		return -ENOMEM;
