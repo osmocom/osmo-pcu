@@ -35,6 +35,25 @@ AC_ARG_ENABLE(sysmocom-dsp,
 AC_MSG_RESULT([$enable_sysmocom_dsp])
 AM_CONDITIONAL(ENABLE_SYSMODSP, test "x$enable_sysmocom_dsp" = "xyes")
 
+AC_MSG_CHECKING([whether to enable direct PHY access for PDCH of NuRAN Wireless Litecell 1.5 BTS])
+AC_ARG_ENABLE(lc15bts-phy,
+                AC_HELP_STRING([--enable-lc15bts-phy],
+                                [enable code for Litecell 1.5 PHY [default=no]]),
+                [enable_lc15bts_phy="$enableval"],[enable_lc15bts_phy="no"])
+AC_ARG_WITH([litecell15], [AS_HELP_STRING([--with-litecell15=INCLUDE_DIR], [Location of the litecell 1.5 API header files])],
+			 [litecell15_incdir="$withval"],[litecell15_incdir="$incdir"])
+AC_SUBST([LITECELL15_INCDIR], $litecell15_incdir)
+AC_MSG_RESULT([$enable_lc15bts_phy])
+AM_CONDITIONAL(ENABLE_LC15BTS_PHY, test "x$enable_lc15bts_phy" = "xyes")
+if test "$enable_litecell15" = "yes"; then
+	oldCPPFLAGS=$CPPFLAGS
+	CPPFLAGS="$CPPFLAGS -I$LITECELL15_INCDIR -I$srcdir/include $LIBOSMOCORE_CFLAGS"
+	AC_CHECK_HEADER([nrw/litecell15/litecell15.h],[],
+			[AC_MSG_ERROR([nrw/litecell15/litecell15.h can not be found in $litecell15_incdir])],
+			[#include <nrw/litecell15/litecell15.h>])
+	CPPFLAGS=$oldCPPFLAGS
+fi
+
 AC_ARG_ENABLE([vty_tests],
 		AC_HELP_STRING([--enable-vty-tests],
 				[Include the VTY tests in make check [default=no]]),

@@ -25,6 +25,10 @@ if ENABLE_SYSMODSP
 AM_CPPFLAGS += -DENABLE_DIRECT_PHY
 endif
 
+if ENABLE_LC15BTS_PHY
+AM_CPPFLAGS += -DENABLE_DIRECT_PHY
+endif
+
 AM_CXXFLAGS = -Wall -ldl -pthread
 AM_LDFLAGS = -lrt
 
@@ -128,6 +132,26 @@ osmo_pcu_remote_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(COMMON_LA)
+endif
+
+if ENABLE_LC15BTS_PHY
+AM_CPPFLAGS += -I$(LITECELL15_INCDIR) -I$(srcdir)/osmo-bts-litecell15
+
+EXTRA_DIST = \
+	osmo-bts-litecell15/lc15_l1_if.c \
+        osmo-bts-litecell15/lc15_l1_if.h \
+        osmo-bts-litecell15/lc15_l1_hw.c \
+        osmo-bts-litecell15/lc15bts.c \
+        osmo-bts-litecell15/lc15bts.h
+
+noinst_HEADERS += \
+        osmo-bts-litecell15/lc15_l1_if.h \
+        osmo-bts-litecell15/lc15bts.h
+
+osmo_pcu_SOURCES += \
+	osmo-bts-litecell15/lc15_l1_if.c \
+	osmo-bts-litecell15/lc15_l1_hw.c \
+	osmo-bts-litecell15/lc15bts.c
 endif
 
 osmo_pcu_LDADD = \
