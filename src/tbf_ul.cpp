@@ -67,6 +67,8 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 	for (i = 0; i < num_frames; i++) {
 		frame = frames + i;
 
+		bts->rlc_ul_payload_bytes(frame->length);
+
 		LOGP(DRLCMACUL, LOGL_DEBUG, "-- Frame %d starts at offset %d, "
 			"length=%d, is_complete=%d\n",
 			i + 1, frame->offset, frame->length, frame->is_complete);
@@ -79,6 +81,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 			LOGP(DRLCMACUL, LOGL_INFO, "%s complete UL frame len=%d\n",
 				tbf_name(this) , m_llc.frame_length());
 			snd_ul_ud();
+			bts->llc_ul_bytes(m_llc.frame_length());
 			m_llc.reset();
 		}
 	}

@@ -235,6 +235,10 @@ public:
 		CTR_RLC_LATE_BLOCK,
 		CTR_RLC_SENT_DUMMY,
 		CTR_RLC_SENT_CONTROL,
+		CTR_RLC_DL_BYTES,
+		CTR_RLC_DL_PAYLOAD_BYTES,
+		CTR_RLC_UL_BYTES,
+		CTR_RLC_UL_PAYLOAD_BYTES,
 		CTR_DECODE_ERRORS,
 		CTR_SBA_ALLOCATED,
 		CTR_SBA_FREED,
@@ -242,6 +246,8 @@ public:
 		CTR_LLC_FRAME_TIMEDOUT,
 		CTR_LLC_FRAME_DROPPED,
 		CTR_LLC_FRAME_SCHED,
+		CTR_LLC_DL_BYTES,
+		CTR_LLC_UL_BYTES,
 		CTR_RACH_REQUESTS,
 	};
 
@@ -313,6 +319,10 @@ public:
 	void rlc_late_block();
 	void rlc_sent_dummy();
 	void rlc_sent_control();
+	void rlc_dl_bytes(int bytes);
+	void rlc_dl_payload_bytes(int bytes);
+	void rlc_ul_bytes(int bytes);
+	void rlc_ul_payload_bytes(int bytes);
 	void decode_error();
 	void sba_allocated();
 	void sba_freed();
@@ -320,6 +330,8 @@ public:
 	void llc_timedout_frame();
 	void llc_dropped_frame();
 	void llc_frame_sched();
+	void llc_dl_bytes(int bytes);
+	void llc_ul_bytes(int bytes);
 	void rach_frame();
 
 	void ms_present(int32_t n);
@@ -427,6 +439,11 @@ inline struct osmo_stat_item_group *BTS::stat_items() const
 	return m_statg;
 }
 
+#define CREATE_COUNT_ADD_INLINE(func_name, ctr_name) \
+	inline void BTS::func_name(int inc) {\
+		rate_ctr_add(&m_ratectrs->ctr[ctr_name], inc); \
+	}
+
 #define CREATE_COUNT_INLINE(func_name, ctr_name) \
 	inline void BTS::func_name() {\
 		rate_ctr_inc(&m_ratectrs->ctr[ctr_name]); \
@@ -455,6 +472,10 @@ CREATE_COUNT_INLINE(rlc_rel_timedout, CTR_RLC_REL_TIMEDOUT);
 CREATE_COUNT_INLINE(rlc_late_block, CTR_RLC_LATE_BLOCK);
 CREATE_COUNT_INLINE(rlc_sent_dummy, CTR_RLC_SENT_DUMMY);
 CREATE_COUNT_INLINE(rlc_sent_control, CTR_RLC_SENT_CONTROL);
+CREATE_COUNT_ADD_INLINE(rlc_dl_bytes, CTR_RLC_DL_BYTES);
+CREATE_COUNT_ADD_INLINE(rlc_dl_payload_bytes, CTR_RLC_DL_PAYLOAD_BYTES);
+CREATE_COUNT_ADD_INLINE(rlc_ul_bytes, CTR_RLC_UL_BYTES);
+CREATE_COUNT_ADD_INLINE(rlc_ul_payload_bytes, CTR_RLC_UL_PAYLOAD_BYTES);
 CREATE_COUNT_INLINE(decode_error, CTR_DECODE_ERRORS)
 CREATE_COUNT_INLINE(sba_allocated, CTR_SBA_ALLOCATED)
 CREATE_COUNT_INLINE(sba_freed, CTR_SBA_FREED)
@@ -462,6 +483,8 @@ CREATE_COUNT_INLINE(sba_timedout, CTR_SBA_TIMEDOUT)
 CREATE_COUNT_INLINE(llc_timedout_frame, CTR_LLC_FRAME_TIMEDOUT);
 CREATE_COUNT_INLINE(llc_dropped_frame, CTR_LLC_FRAME_DROPPED);
 CREATE_COUNT_INLINE(llc_frame_sched, CTR_LLC_FRAME_SCHED);
+CREATE_COUNT_ADD_INLINE(llc_dl_bytes, CTR_LLC_DL_BYTES);
+CREATE_COUNT_ADD_INLINE(llc_ul_bytes, CTR_LLC_UL_BYTES);
 CREATE_COUNT_INLINE(rach_frame, CTR_RACH_REQUESTS);
 
 #undef CREATE_COUNT_INLINE

@@ -513,6 +513,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 
 	do {
 		bool is_final;
+		int payload_written = 0;
 
 		if (m_llc.frame_length() == 0) {
 			/* nothing to sent - delay the release of the TBF */
@@ -540,7 +541,10 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 		is_final = llc_queue()->size() == 0 && !keep_open(fn);
 
 		ar = Encoding::rlc_data_to_dl_append(rdbi, cs,
-			&m_llc, &write_offset, &num_chunks, data, is_final, NULL);
+			&m_llc, &write_offset, &num_chunks, data, is_final, &payload_written);
+
+		if (payload_written > 0)
+			bts->rlc_dl_payload_bytes(payload_written);
 
 		if (ar == Encoding::AR_NEED_MORE_BLOCKS)
 			break;
@@ -548,6 +552,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 		LOGP(DRLCMACDL, LOGL_INFO, "Complete DL frame for %s"
 			"len=%d\n", tbf_name(this), m_llc.frame_length());
 		gprs_rlcmac_dl_bw(this, m_llc.frame_length());
+		bts->llc_dl_bytes(m_llc.frame_length());
 		m_llc.reset();
 
 		if (is_final) {

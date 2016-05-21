@@ -360,6 +360,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	if (!msg)
 		return -ENOMEM;
 	/* msg is now available */
+	bts->bts->rlc_dl_bytes(msg->data_len);
 
 	/* set USF */
 	OSMO_ASSERT(msgb_length(msg) > 0);

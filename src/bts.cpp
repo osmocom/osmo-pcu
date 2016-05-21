@@ -73,6 +73,10 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "rlc.late-block",		"RLC Late Block       "},
 	{ "rlc.sent-dummy",		"RLC Sent Dummy       "},
 	{ "rlc.sent-control",		"RLC Sent Control     "},
+	{ "rlc.dl_bytes",		"RLC DL Bytes         "},
+	{ "rlc.dl_payload_bytes",	"RLC DL Payload Bytes "},
+	{ "rlc.ul_bytes",		"RLC UL Bytes         "},
+	{ "rlc.ul_payload_bytes",	"RLC UL Payload Bytes "},
 	{ "decode.errors",		"Decode Errors        "},
 	{ "sba.allocated",		"SBA Allocated        "},
 	{ "sba.freed",			"SBA Freed            "},
@@ -80,6 +84,8 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "llc.timeout",		"Timedout Frames      "},
 	{ "llc.dropped",		"Dropped Frames       "},
 	{ "llc.scheduled",		"Scheduled Frames     "},
+	{ "llc.dl_bytes",               "RLC encapsulated PDUs"},
+	{ "llc.ul_bytes",               "full PDUs received   "},
 	{ "rach.requests",		"RACH requests        "},
 };
 
@@ -1301,6 +1307,8 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 			"length: %d)\n", len);
 		return -EINVAL;
 	}
+
+	bts()->rlc_ul_bytes(len);
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Got RLC block, coding scheme: %s, "
 		"length: %d (%d))\n", cs.name(), len, cs.usedSizeUL());
