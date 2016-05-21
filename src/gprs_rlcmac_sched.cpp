@@ -132,7 +132,7 @@ static struct msgb *sched_select_ctrl_msg(
 
 		/*
 		 * Assignments for the same direction have lower precedence,
-		 * because they may kill the TBF when the CONTOL ACK is
+		 * because they may kill the TBF when the CONTROL ACK is
 		 * received, thus preventing the others from being processed.
 		 */
 
