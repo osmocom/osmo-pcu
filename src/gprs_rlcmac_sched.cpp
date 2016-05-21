@@ -339,6 +339,8 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	/* Prio 1: select control message */
 	msg = sched_select_ctrl_msg(trx, ts, fn, block_nr, pdch, ul_ass_tbf,
 		dl_ass_tbf, ul_ack_tbf);
+	if (msg)
+		bts->bts->rlc_sent_control();
 
 	/* Prio 2: select data message for downlink */
 	if (!msg) {

@@ -234,6 +234,7 @@ public:
 		CTR_RLC_REL_TIMEDOUT,
 		CTR_RLC_LATE_BLOCK,
 		CTR_RLC_SENT_DUMMY,
+		CTR_RLC_SENT_CONTROL,
 		CTR_DECODE_ERRORS,
 		CTR_SBA_ALLOCATED,
 		CTR_SBA_FREED,
@@ -311,6 +312,7 @@ public:
 	void rlc_rel_timedout();
 	void rlc_late_block();
 	void rlc_sent_dummy();
+	void rlc_sent_control();
 	void decode_error();
 	void sba_allocated();
 	void sba_freed();
@@ -452,6 +454,7 @@ CREATE_COUNT_INLINE(rlc_ack_failed, CTR_RLC_ACK_FAILED);
 CREATE_COUNT_INLINE(rlc_rel_timedout, CTR_RLC_REL_TIMEDOUT);
 CREATE_COUNT_INLINE(rlc_late_block, CTR_RLC_LATE_BLOCK);
 CREATE_COUNT_INLINE(rlc_sent_dummy, CTR_RLC_SENT_DUMMY);
+CREATE_COUNT_INLINE(rlc_sent_control, CTR_RLC_SENT_CONTROL);
 CREATE_COUNT_INLINE(decode_error, CTR_DECODE_ERRORS)
 CREATE_COUNT_INLINE(sba_allocated, CTR_SBA_ALLOCATED)
 CREATE_COUNT_INLINE(sba_freed, CTR_SBA_FREED)
