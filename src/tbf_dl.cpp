@@ -34,6 +34,7 @@
 extern "C" {
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/talloc.h>
+#include <osmocom/gprs/gprs_bssgp_bss.h>
 }
 
 #include <errno.h>
@@ -42,11 +43,6 @@ extern "C" {
 
 /* After sending these frames, we poll for ack/nack. */
 #define POLL_ACK_AFTER_FRAMES 20
-
-extern "C" {
-int bssgp_tx_llc_discarded(struct bssgp_bvc_ctx *bctx, uint32_t tlli,
-                           uint8_t num_frames, uint32_t num_octets);
-}
 
 static inline void tbf_update_ms_class(struct gprs_rlcmac_tbf *tbf,
 					const uint8_t ms_class)
