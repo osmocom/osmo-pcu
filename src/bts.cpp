@@ -71,7 +71,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "rlc.ack.failed",		"RLC Ack Failed       "},
 	{ "rlc.rel.timedout",		"RLC Release Timeout  "},
 	{ "rlc.late-block",		"RLC Late Block       "},
-	{ "rlc.sent_dummy",             "RLC Sent Dummy       "},
+	{ "rlc.sent_dummy",		"RLC Sent Dummy       "},
 	{ "decode.errors",		"Decode Errors        "},
 	{ "sba.allocated",		"SBA Allocated        "},
 	{ "sba.freed",			"SBA Freed            "},
