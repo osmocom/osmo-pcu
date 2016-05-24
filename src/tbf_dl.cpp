@@ -515,6 +515,8 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 		bool is_final;
 
 		if (m_llc.frame_length() == 0) {
+			/* nothing to sent - delay the release of the TBF */
+
 			int space = block_data_len - write_offset;
 			/* A header will need to by added, so we just need
 			 * space-1 octets */
