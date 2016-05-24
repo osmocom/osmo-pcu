@@ -60,7 +60,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- Assembling frames: (len=%d)\n", len);
 
 	num_frames = Decoding::rlc_data_from_ul_data(
-		rdbi, cs, data, &(frames[0]), sizeof(frames),
+		rdbi, cs, data, &(frames[0]), ARRAY_SIZE(frames),
 		&dummy_tlli);
 
 	/* create LLC frames */
