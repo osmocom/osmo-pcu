@@ -138,6 +138,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 	return msg;
 }
 
+/*! \brief receive data from PDCH/L1 */
 int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	const struct gprs_rlc_data_info *rlc,
 	uint8_t *data, struct pcu_l1_meas *meas)

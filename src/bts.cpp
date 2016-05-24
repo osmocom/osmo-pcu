@@ -1317,6 +1317,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	return -EINVAL;
 }
 
+/*! \brief process egprs and gprs data blocks */
 int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint32_t fn,
 	struct pcu_l1_meas *meas, GprsCodingScheme cs)
 {
