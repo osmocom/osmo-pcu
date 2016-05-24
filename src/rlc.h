@@ -27,7 +27,6 @@
 
 #define RLC_GPRS_SNS 128 /* GPRS, must be power of 2 */
 #define RLC_GPRS_WS  64 /* max window size */
-#define RLC_EGPRS_SNS 2048 /* EGPRS, must be power of 2 */
 #define RLC_EGPRS_MIN_WS 64 /* min window size */
 #define RLC_EGPRS_MAX_WS 1024 /* min window size */
 #define RLC_EGPRS_SNS 2048 /* EGPRS, must be power of 2 */
