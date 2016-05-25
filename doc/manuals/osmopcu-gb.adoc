@@ -72,7 +72,7 @@ NSVCI:: NS Virtual Connection Identifier
 BVCI:: BSSGP Virtual Connection Identifier
 
 For an explanation of those identifiers and their use in the NS and
-BSSGP protocols, please see the reelvant 3GPP specifications for NS (TS 08.16)
+BSSGP protocols, please see the relevant 3GPP specifications for NS (TS 08.16)
 and BSSGP (TS 08.18).
 
 In most cases, all above identities belong to different namespaces and

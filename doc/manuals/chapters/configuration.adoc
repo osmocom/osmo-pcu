@@ -59,7 +59,7 @@ reached, a higher coding scheme is chosen.
 
 You can use the `cs link-quality-ranges cs1 <0-35> cs2 <0-35> <0-35> cs3
 <0-35> <0-35> cs4 <0-35>` command at the `pcu` VTY config node to tune
-the link quality ranges for the respecive coding schemes.
+the link quality ranges for the respective coding schemes.
 
 ==== Data Size based CS downgrade Threshold
 
@@ -114,7 +114,7 @@ filter).
 ==== Normal BSSGP Flow Control Tuning parameters
 
 You can use the following commands at the `pcu` VTY config node to tune
-the the BSSGP flow control parameters:
+the BSSGP flow control parameters:
 
 `flow-control-interval <1-10>`::
 	configure the interval (in seconds) between subsequent flow
@@ -185,7 +185,7 @@ parameters.
 You can set those parameters at the `pcu` VTY config node as follows:
 
 `alpha <0-10>`::
-	Alpha parameter for MS power contrl in units of 0.1.
+	Alpha parameter for MS power control in units of 0.1.
 	Make sure to set the alpha value at System Information 13 (in
 	the BSC), too!
 `gamma <0-62>`::

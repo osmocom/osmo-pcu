@@ -6,7 +6,7 @@ OsmoPCU is the Osmocom implementation of the GPRS PCU (Packet Control
 Unit) element inside the GPRS network.
 
 The OsmoPCU is co-located within the BTS and connects to OsmoBTS via its
-PCU socket inteface.
+PCU socket interface.
 
 On the other side, OsmoPCU is connected via the Gb interface to the
 SGSN.
