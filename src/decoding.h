@@ -28,10 +28,11 @@ struct bitvec;
 
 class Decoding {
 public:
+	/* represents (parts) LLC PDUs within one RLC Data block */
 	struct RlcData {
 		uint8_t	offset;
 		uint8_t	length;
-		bool	is_complete;
+		bool	is_complete; /* if this PDU ends in this block */
 	};
 
 	static int rlc_data_from_ul_data(

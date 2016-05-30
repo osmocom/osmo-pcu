@@ -32,7 +32,7 @@ extern "C" {
 #include <string.h>
 
 #define LENGTH_TO_END 255
-/*
+/*!
  * \returns num extensions fields (num frames == offset) on success,
  *          -errno otherwise.
  */
@@ -197,6 +197,7 @@ int Decoding::rlc_data_from_ul_data(
 	e = rdbi->e;
 	if (e) {
 		if (chunks_size > 0) {
+			/* Block without LI means it only contains data of one LLC PDU */
 			chunks[num_chunks].offset = offs;
 			chunks[num_chunks].length = LENGTH_TO_END;
 			chunks[num_chunks].is_complete = is_last_block;
