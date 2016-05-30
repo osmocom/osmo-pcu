@@ -540,7 +540,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 		is_final = llc_queue()->size() == 0 && !keep_open(fn);
 
 		ar = Encoding::rlc_data_to_dl_append(rdbi, cs,
-			&m_llc, &write_offset, &num_chunks, data, is_final);
+			&m_llc, &write_offset, &num_chunks, data, is_final, NULL);
 
 		if (ar == Encoding::AR_NEED_MORE_BLOCKS)
 			break;

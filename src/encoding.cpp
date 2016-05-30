@@ -899,13 +899,13 @@ unsigned int Encoding::rlc_copy_from_aligned_buffer(
  * \param num_chunks count the chunks (llc pdu data) within rlc/mac
  * \param data_block buffer holds rlc/mac data
  * \param is_final if this is the last rlc/mac within a TBF
+ * \param count_payload if not NULL save the written size of payload in bytes into it
  * \return the state of the rlc/mac like if there is more space for another chunk
  */
 static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 	struct gprs_rlc_data_block_info *rdbi,
 	gprs_llc *llc, int *offset, int *num_chunks,
-	uint8_t *data_block,
-	bool is_final)
+	uint8_t *data_block, bool is_final, int *count_payload)
 {
 	int chunk;
 	int space;
@@ -930,6 +930,8 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 			*e_pointer |= 0x01;
 		/* fill only space */
 		llc->consume(data, space);
+		if (count_payload)
+			*count_payload = space;
 		/* return data block as message */
 		*offset = rdbi->data_len;
 		(*num_chunks)++;
@@ -947,6 +949,8 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 			*e_pointer |= 0x01;
 		/* fill space */
 		llc->consume(data, space);
+		if (count_payload)
+			*count_payload = space;
 		*offset = rdbi->data_len;
 		(*num_chunks)++;
 		rdbi->cv = 0;
@@ -974,6 +978,8 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 		// no need to set e_pointer nor increase delimiter
 		/* fill only space, which is 1 octet less than chunk */
 		llc->consume(data, space);
+		if (count_payload)
+			*count_payload = space;
 		/* return data block as message */
 		*offset = rdbi->data_len;
 		(*num_chunks)++;
@@ -999,6 +1005,8 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 	(*num_chunks)++;
 	/* copy (rest of) LLC frame to space and reset later */
 	llc->consume(data, chunk);
+	if (count_payload)
+		*count_payload = chunk;
 	data += chunk;
 	space -= chunk;
 	(*offset) += chunk;
@@ -1030,13 +1038,14 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
  * \param num_chunks count the chunks (llc pdu data) within rlc/mac
  * \param data_block buffer holds rlc/mac data
  * \param is_final if this is the last rlc/mac within a TBF
+ * \param count_payload if not NULL save the written size of payload in bytes into it
  * \return the state of the rlc/mac like if there is more space for another chunk
  */
 static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 	struct gprs_rlc_data_block_info *rdbi,
 	gprs_llc *llc, int *offset, int *num_chunks,
 	uint8_t *data_block,
-	bool is_final)
+	bool is_final, int *count_payload)
 {
 	int chunk;
 	int space;
@@ -1060,6 +1069,8 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 			chunk, space);
 		/* fill only space */
 		llc->consume(data, space);
+		if (count_payload)
+			*count_payload = space;
 		/* return data block as message */
 		*offset = rdbi->data_len;
 		(*num_chunks)++;
@@ -1074,6 +1085,8 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 			"header, and we are done\n", chunk, space);
 		/* fill space */
 		llc->consume(data, space);
+		if (count_payload)
+			*count_payload = space;
 		*offset = rdbi->data_len;
 		(*num_chunks)++;
 		rdbi->cv = 0;
@@ -1088,6 +1101,8 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 			chunk, space);
 		/* fill space */
 		llc->consume(data, space);
+		if (count_payload)
+			*count_payload = space;
 		*offset = rdbi->data_len;
 		(*num_chunks)++;
 		return Encoding::AR_NEED_MORE_BLOCKS;
@@ -1118,6 +1133,8 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 	(*num_chunks)++;
 	/* copy (rest of) LLC frame to space and reset later */
 	llc->consume(data, chunk);
+	if (count_payload)
+		*count_payload = chunk;
 	data += chunk;
 	space -= chunk;
 	(*offset) += chunk;
@@ -1183,21 +1200,23 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
  * \param num_chunks count the chunks (llc pdu data) within rlc/mac
  * \param data_block buffer holds rlc/mac data
  * \param is_final if this is the last rlc/mac within a TBF
+ * \param count_payload if not NULL save the written size of payload in bytes into it
  * \return the state of the rlc/mac like if there is more space for another chunk
  */
 Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 	struct gprs_rlc_data_block_info *rdbi, GprsCodingScheme cs,
 	gprs_llc *llc, int *offset, int *num_chunks,
-	uint8_t *data_block,
-	bool is_final)
+	uint8_t *data_block, bool is_final, int *count_payload)
 {
 	if (cs.isGprs())
 		return rlc_data_to_dl_append_gprs(rdbi,
-			llc, offset, num_chunks, data_block, is_final);
+			llc, offset, num_chunks, data_block, is_final,
+			count_payload);
 
 	if (cs.isEgprs())
 		return rlc_data_to_dl_append_egprs(rdbi,
-			llc, offset, num_chunks, data_block, is_final);
+			llc, offset, num_chunks, data_block, is_final,
+			count_payload);
 
 	LOGP(DRLCMACDL, LOGL_ERROR, "%s data block encoding not implemented\n",
 		cs.name());

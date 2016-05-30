@@ -91,6 +91,5 @@ public:
 	static AppendResult rlc_data_to_dl_append(
 		struct gprs_rlc_data_block_info *rdbi, GprsCodingScheme cs,
 		gprs_llc *llc, int *offset, int *num_chunks,
-		uint8_t *data,
-		bool is_final);
+		uint8_t *data, bool is_final, int *count_payload);
 };
