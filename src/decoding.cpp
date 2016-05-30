@@ -267,7 +267,7 @@ int Decoding::rlc_data_from_ul_data(
 				 * so drop it (this may happen with EGPRS since
 				 * there is no M flag. */
 				num_chunks -= 1;
-				break;;
+				break;
 			}
 			chunks[i].length = data_len - offs;
 		}
