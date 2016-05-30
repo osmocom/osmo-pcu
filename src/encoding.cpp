@@ -891,6 +891,16 @@ unsigned int Encoding::rlc_copy_from_aligned_buffer(
 	return rdbi->data_len;
 }
 
+/*!
+ * \brief (GPRS) put llc pdu into an rlc/mac block. fragment the llc pdu if needed
+ * \param rdbi rlc/mac block info
+ * \param llc llc pdu
+ * \param offset given offset within the rlc/mac block
+ * \param num_chunks count the chunks (llc pdu data) within rlc/mac
+ * \param data_block buffer holds rlc/mac data
+ * \param is_final if this is the last rlc/mac within a TBF
+ * \return the state of the rlc/mac like if there is more space for another chunk
+ */
 static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 	struct gprs_rlc_data_block_info *rdbi,
 	gprs_llc *llc, int *offset, int *num_chunks,
@@ -1012,6 +1022,16 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 	return Encoding::AR_COMPLETED_BLOCK_FILLED;
 }
 
+/*!
+ * \brief (EGPRS) put llc pdu into an rlc/mac block. fragment the llc pdu if needed
+ * \param rdbi rlc/mac block info
+ * \param llc llc pdu
+ * \param offset given offset within the rlc/mac block
+ * \param num_chunks count the chunks (llc pdu data) within rlc/mac
+ * \param data_block buffer holds rlc/mac data
+ * \param is_final if this is the last rlc/mac within a TBF
+ * \return the state of the rlc/mac like if there is more space for another chunk
+ */
 static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 	struct gprs_rlc_data_block_info *rdbi,
 	gprs_llc *llc, int *offset, int *num_chunks,
@@ -1154,6 +1174,17 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 	return Encoding::AR_COMPLETED_BLOCK_FILLED;
 }
 
+/*!
+ * \brief Encoding::rlc_data_to_dl_append
+ * \param rdbi rlc/mac block info
+ * \param cs the coding scheme to use
+ * \param llc llc pdu
+ * \param offset given offset within the rlc/mac block
+ * \param num_chunks count the chunks (llc pdu data) within rlc/mac
+ * \param data_block buffer holds rlc/mac data
+ * \param is_final if this is the last rlc/mac within a TBF
+ * \return the state of the rlc/mac like if there is more space for another chunk
+ */
 Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 	struct gprs_rlc_data_block_info *rdbi, GprsCodingScheme cs,
 	gprs_llc *llc, int *offset, int *num_chunks,
