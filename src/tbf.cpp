@@ -1176,14 +1176,11 @@ int gprs_rlcmac_tbf::set_tlli_from_ul(uint32_t new_tlli)
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf)
 {
-	return tbf->name();
+	return tbf ? tbf->name() : "(no TBF)";
 }
 
 const char *gprs_rlcmac_tbf::name() const
 {
-	if (this == NULL)
-		return "(no TBF)";
-
 	snprintf(m_name_buf, sizeof(m_name_buf) - 1,
 		"TBF(TFI=%d TLLI=0x%08x DIR=%s STATE=%s%s)",
 		m_tfi, tlli(),
