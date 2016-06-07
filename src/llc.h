@@ -127,10 +127,10 @@ inline bool gprs_llc::fits_in_current_frame(uint8_t chunk_size) const
 
 inline size_t gprs_llc_queue::size() const
 {
-	return this ? m_queue_size : 0;
+	return m_queue_size;
 }
 
 inline size_t gprs_llc_queue::octets() const
 {
-	return this ? m_queue_octets : 0;
+	return m_queue_octets;
 }
