@@ -214,7 +214,7 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 				LOGP(DRLCMAC, LOGL_NOTICE,
 					"%s IMSI %s: "
 					"moving DL TBF to new MS object\n",
-					dl_tbf->name(), imsi);
+					ms_old->dl_tbf()->name(), imsi);
 				dl_tbf = ms_old->dl_tbf();
 				/* Move the DL TBF to the new MS */
 				dl_tbf->set_ms(ms);

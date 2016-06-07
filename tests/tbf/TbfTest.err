@@ -1868,7 +1868,7 @@ TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 0
 - No gaps in received block, last block: BSN=0 CV=15
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 0
 There is a new MS object for the same MS: (0xf1223344, '0011223344') -> (0xf5667788, '')
-(no TBF) IMSI 0011223344: moving DL TBF to new MS object
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) IMSI 0011223344: moving DL TBF to new MS object
 Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED)
 Attaching TBF to MS object, TLLI = 0xf5667788, TBF = TBF(TFI=0 TLLI=0xf5667788 DIR=DL STATE=FINISHED)
 Modifying MS object, TLLI = 0xf5667788, IMSI '' -> '0011223344'
