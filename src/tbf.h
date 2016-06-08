@@ -43,8 +43,7 @@ class GprsMs;
 
 enum gprs_rlcmac_tbf_state {
 	GPRS_RLCMAC_NULL = 0,	/* new created TBF */
-	GPRS_RLCMAC_ASSIGN,     /* wait for DL transmission */
-	GPRS_RLCMAC_WAIT_ASSIGN,/* wait for confirmation */
+	GPRS_RLCMAC_ASSIGN,	/* wait for downlink assignment */
 	GPRS_RLCMAC_FLOW,	/* RLC/MAC flow, resource needed */
 	GPRS_RLCMAC_FINISHED,	/* flow finished, wait for release */
 	GPRS_RLCMAC_WAIT_RELEASE,/* wait for release or restart of DL TBF */
@@ -233,7 +232,7 @@ protected:
 	gprs_llc_queue *llc_queue();
 	const gprs_llc_queue *llc_queue() const;
 
-	static const char *tbf_state_name[7];
+	static const char *tbf_state_name[6];
 
 	class GprsMs *m_ms;
 
@@ -318,7 +317,10 @@ inline bool gprs_rlcmac_tbf::is_tfi_assigned() const
 {
 	/* The TBF is established or has been assigned by a IMM.ASS for
 	 * download */
-	return state > GPRS_RLCMAC_ASSIGN;
+	return state > GPRS_RLCMAC_ASSIGN ||
+		(direction == GPRS_RLCMAC_DL_TBF &&
+		 state == GPRS_RLCMAC_ASSIGN &&
+		 (state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)));
 }
 
 inline uint8_t gprs_rlcmac_tbf::tfi() const
