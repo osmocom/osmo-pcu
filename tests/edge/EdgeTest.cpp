@@ -26,7 +26,7 @@
 #include "encoding.h"
 #include "rlc.h"
 #include "llc.h"
-
+#include "bts.h"
 extern "C" {
 #include "pcu_vty.h"
 
@@ -1156,6 +1156,130 @@ const struct log_info debug_log_info = {
 	ARRAY_SIZE(default_categories),
 };
 
+static void setup_bts(BTS *the_bts, uint8_t ts_no, uint8_t cs = 1)
+{
+	gprs_rlcmac_bts *bts;
+	gprs_rlcmac_trx *trx;
+
+	bts = the_bts->bts_data();
+	bts->egprs_enabled = true;
+	bts->alloc_algorithm = alloc_algorithm_a;
+	bts->initial_cs_dl = cs;
+	bts->initial_cs_ul = cs;
+	trx = &bts->trx[0];
+	trx->pdch[ts_no].enable();
+}
+static void uplink_header_type_2_parsing_test(BTS *the_bts,
+	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
+	uint8_t ms_class)
+{
+	GprsMs *ms;
+	struct pcu_l1_meas meas;
+	int tfi = 0;
+	gprs_rlcmac_bts *bts;
+	RlcMacUplink_t ulreq = {0};
+	uint8_t data[79] = {0};
+	struct gprs_rlc_ul_header_egprs_2 *egprs2  = NULL;
+
+	egprs2 = (struct gprs_rlc_ul_header_egprs_2 *) data;
+	bts = the_bts->bts_data();
+
+	tfi = 1;
+
+	struct gprs_rlc_data_info rlc;
+	GprsCodingScheme cs;
+	int rc, offs;
+
+	/*without padding*/
+	cs = GprsCodingScheme::MCS5;
+	egprs2 = (struct gprs_rlc_ul_header_egprs_2 *) data;
+	egprs2->r = 1;
+	egprs2->si = 1;
+	egprs2->cv = 7;
+	egprs2->tfi_a = tfi & 0x03;
+	egprs2->tfi_b = (tfi & 0x1c) >> 2;
+	egprs2->bsn1_a = 0;
+	egprs2->bsn1_b = 0;
+	egprs2->cps_a = 3;
+	egprs2->cps_b = 0;
+	egprs2->rsb = 0;
+	egprs2->pi = 0;
+	data[4] = 0x20;                /* Setting E field */
+	rc = Decoding::rlc_parse_ul_data_header(&rlc, data, cs);
+	offs = rlc.data_offs_bits[0] / 8;
+	OSMO_ASSERT(offs == 4);
+	OSMO_ASSERT(rlc.tfi == 1);
+	OSMO_ASSERT(rlc.num_data_blocks == 1);
+	OSMO_ASSERT(rlc.block_info[0].e == 1);
+	OSMO_ASSERT(rlc.block_info[0].ti == 0);
+	OSMO_ASSERT(rlc.block_info[0].bsn == 0);
+
+	/* with padding case */
+	cs = GprsCodingScheme::MCS6;
+	egprs2 = (struct gprs_rlc_ul_header_egprs_2 *) data;
+	egprs2->r = 1;
+	egprs2->si = 1;
+	egprs2->cv = 7;
+	egprs2->tfi_a = tfi & 0x03;
+	egprs2->tfi_b = (tfi & 0x1c) >> 2;
+	egprs2->bsn1_a = 0;
+	egprs2->bsn1_b = 0;
+	egprs2->cps_a = 3;
+	egprs2->cps_b = 0;
+	egprs2->rsb = 0;
+	egprs2->pi = 0;
+	data[10] = 0x20;                /* Setting E field */
+	rc = Decoding::rlc_parse_ul_data_header(&rlc, data, cs);
+	offs = rlc.data_offs_bits[0] / 8;
+	OSMO_ASSERT(offs == 10);
+	OSMO_ASSERT(rlc.num_data_blocks == 1);
+	OSMO_ASSERT(rlc.tfi == 1);
+	OSMO_ASSERT(rlc.block_info[0].e == 1);
+	OSMO_ASSERT(rlc.block_info[0].ti == 0);
+	OSMO_ASSERT(rlc.block_info[0].bsn == 0);
+
+	egprs2->r = 1;
+	egprs2->si = 1;
+	egprs2->cv = 7;
+	egprs2->tfi_a = tfi & 0x03;
+	egprs2->tfi_b = (tfi & 0x1c) >> 2;
+	egprs2->bsn1_a = 1;
+	egprs2->bsn1_b = 0;
+	egprs2->cps_a = 2;
+	egprs2->cps_b = 0;
+	egprs2->rsb = 0;
+	egprs2->pi = 0;
+	data[10] = 0x20;		/* Setting E field */
+	rc = Decoding::rlc_parse_ul_data_header(&rlc, data, cs);
+	offs = rlc.data_offs_bits[0] / 8;
+	OSMO_ASSERT(offs == 10);
+	OSMO_ASSERT(rlc.tfi == 1);
+	OSMO_ASSERT(rlc.num_data_blocks == 1);
+	OSMO_ASSERT(rlc.block_info[0].e == 1);
+	OSMO_ASSERT(rlc.block_info[0].ti == 0);
+	OSMO_ASSERT(rlc.block_info[0].bsn == 1);
+}
+
+static void uplink_header_type2_test(void)
+{
+	BTS the_bts;
+	int ts_no = 7;
+	uint32_t fn = 2654218;
+	uint16_t qta = 31;
+	uint32_t tlli = 0xf1223344;
+	const char *imsi = "0011223344";
+	uint8_t ms_class = 1;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	GprsMs *ms;
+
+	printf("=== start %s ===\n", __func__);
+	setup_bts(&the_bts, ts_no, 10);
+
+	uplink_header_type_2_parsing_test(&the_bts, ts_no,
+			tlli, &fn, qta, ms_class);
+	printf("=== end %s ===\n", __func__);
+}
+
 int main(int argc, char **argv)
 {
 	struct vty_app_info pcu_vty_info = {0};
@@ -1178,6 +1302,7 @@ int main(int argc, char **argv)
 	test_rlc_unaligned_copy();
 	test_rlc_unit_encoder();
 
+	uplink_header_type2_test();
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
 	return EXIT_SUCCESS;
