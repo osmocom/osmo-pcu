@@ -225,7 +225,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 		block = m_rlc.block(rdbi->bsn);
 		block->block_info = *rdbi;
 		block->cs = rlc->cs;
-		OSMO_ASSERT(rdbi->data_len < sizeof(block->block));
+		OSMO_ASSERT(rdbi->data_len <= sizeof(block->block));
 		rlc_data = &(block->block[0]);
 		/* TODO: Handle SPB != 0 -> Set length to 2*len, add offset if
 		 * 2nd part. Note that resegmentation is currently disabled

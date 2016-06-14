@@ -353,9 +353,11 @@ int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3 :
 		cur_bit = rlc_parse_ul_data_header_egprs_type_3(rlc, data, cs);
 		break;
-	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1:
-	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2:
-		/* TODO: Support both header types */
+	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2 :
+		cur_bit = rlc_parse_ul_data_header_egprs_type_2(rlc, data, cs);
+		break;
+	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1 :
+		/* TODO: Support both header type 1 */
 		/* fall through */
 	default:
 		LOGP(DRLCMACDL, LOGL_ERROR,
@@ -403,6 +405,50 @@ int Decoding::rlc_parse_ul_data_header_egprs_type_3(
 	rlc->block_info[0].e   = !!(e_ti_header & 0x01);
 	rlc->block_info[0].ti  = !!(e_ti_header & 0x02);
 	cur_bit += 2;
+	/* skip data area */
+	cur_bit += cs.maxDataBlockBytes() * 8;
+
+	return cur_bit;
+}
+
+int Decoding::rlc_parse_ul_data_header_egprs_type_2(
+	struct gprs_rlc_data_info *rlc,
+	const uint8_t *data,
+	const GprsCodingScheme &cs)
+{
+	const struct gprs_rlc_ul_header_egprs_2 *egprs2;
+	unsigned int e_ti_header, offs, cur_bit = 0;
+	int punct, punct2, with_padding, cps;
+
+	egprs2 = static_cast < struct gprs_rlc_ul_header_egprs_2 * >
+			((void *)data);
+
+	cps    = (egprs2->cps_a << 0)  | (egprs2->cps_b << 2);
+	gprs_rlc_mcs_cps_decode(cps, cs, &punct, &punct2, &with_padding);
+	gprs_rlc_data_info_init_ul(rlc, cs, with_padding);
+
+	rlc->r      = egprs2->r;
+	rlc->si     = egprs2->si;
+	rlc->tfi    = (egprs2->tfi_a << 0)  | (egprs2->tfi_b << 2);
+	rlc->cps    = cps;
+	rlc->rsb    = egprs2->rsb;
+
+	rlc->num_data_blocks = 1;
+	rlc->block_info[0].cv  = egprs2->cv;
+	rlc->block_info[0].pi  = egprs2->pi;
+	rlc->block_info[0].bsn =
+		(egprs2->bsn1_a << 0) | (egprs2->bsn1_b << 5);
+
+	cur_bit += rlc->data_offs_bits[0] - 2;
+
+	offs = rlc->data_offs_bits[0] / 8;
+	OSMO_ASSERT(rlc->data_offs_bits[0] % 8 == 7);
+
+	e_ti_header = (data[offs] & 0x60) >> 5;
+	rlc->block_info[0].e   = !!(e_ti_header & 0x01);
+	rlc->block_info[0].ti  = !!(e_ti_header & 0x02);
+	cur_bit += 2;
+
 	/* skip data area */
 	cur_bit += cs.maxDataBlockBytes() * 8;
 
