@@ -8,3 +8,5 @@
 === end test_rlc_unit_encoder ===
 === start uplink_header_type2_test ===
 === end uplink_header_type2_test ===
+=== start uplink_header_type1_test ===
+=== end uplink_header_type1_test ===

@@ -1280,6 +1280,126 @@ static void uplink_header_type2_test(void)
 	printf("=== end %s ===\n", __func__);
 }
 
+static void uplink_header_type_1_parsing_test(BTS *the_bts,
+	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
+	uint8_t ms_class)
+{
+	uint8_t trx_no = 0;
+	int tfi = 0;
+	struct gprs_rlcmac_pdch *pdch;
+	gprs_rlcmac_bts *bts;
+	uint8_t data[155] = {0};
+	struct gprs_rlc_ul_header_egprs_1 *egprs1  = NULL;
+	struct gprs_rlc_data_info rlc;
+	GprsCodingScheme cs;
+	int rc, offs;
+
+	egprs1 = (struct gprs_rlc_ul_header_egprs_1 *) data;
+	bts = the_bts->bts_data();
+
+	tfi = 1;
+
+	/* MCS 7 */
+	cs = GprsCodingScheme::MCS7;
+	egprs1 = (struct gprs_rlc_ul_header_egprs_1 *) data;
+	egprs1->si = 1;
+	egprs1->r = 1;
+	egprs1->cv = 7;
+	egprs1->tfi_a = tfi & 0x03;
+	egprs1->tfi_b = (tfi & 0x1c) >> 2;
+	egprs1->bsn1_a = 0;
+	egprs1->bsn1_b = 0;
+	egprs1->bsn2_a = 1;
+	egprs1->bsn2_b = 0;
+	egprs1->cps = 15;
+	egprs1->rsb = 0;
+	egprs1->pi = 0;
+	data[5] = 0xc0;
+	data[5 + 57] = 1;
+	rc = Decoding::rlc_parse_ul_data_header(&rlc, data, cs);
+	OSMO_ASSERT(rlc.num_data_blocks == 2);
+	OSMO_ASSERT(rlc.block_info[0].e == 1);
+	OSMO_ASSERT(rlc.block_info[0].ti == 1);
+	OSMO_ASSERT(rlc.block_info[1].e == 1);
+	OSMO_ASSERT(rlc.block_info[1].ti == 0);
+	OSMO_ASSERT(rlc.block_info[0].bsn == 0);
+	OSMO_ASSERT(rlc.block_info[1].bsn == 1);
+	OSMO_ASSERT(rlc.tfi == 1);
+
+	/* MCS 8 */
+	cs = GprsCodingScheme::MCS8;
+	egprs1 = (struct gprs_rlc_ul_header_egprs_1 *) data;
+	egprs1->si = 1;
+	egprs1->r = 1;
+	egprs1->cv = 7;
+	egprs1->tfi_a = tfi & 0x03;
+	egprs1->tfi_b = (tfi & 0x1c) >> 2;
+	egprs1->bsn1_a = 0;
+	egprs1->bsn1_b = 0;
+	egprs1->bsn2_a = 1;
+	egprs1->bsn2_b = 0;
+	egprs1->cps = 15;
+	egprs1->rsb = 0;
+	egprs1->pi = 0;
+	data[5] = 0xc0;
+	data[5 + 69] = 1;
+	rc = Decoding::rlc_parse_ul_data_header(&rlc, data, cs);
+	OSMO_ASSERT(rlc.num_data_blocks == 2);
+	OSMO_ASSERT(rlc.block_info[0].e == 1);
+	OSMO_ASSERT(rlc.block_info[0].ti == 1);
+	OSMO_ASSERT(rlc.block_info[1].e == 1);
+	OSMO_ASSERT(rlc.block_info[1].ti == 0);
+	OSMO_ASSERT(rlc.block_info[0].bsn == 0);
+	OSMO_ASSERT(rlc.block_info[1].bsn == 1);
+	OSMO_ASSERT(rlc.tfi == 1);
+
+	/* MCS 9 */
+	cs = GprsCodingScheme::MCS9;
+	egprs1 = (struct gprs_rlc_ul_header_egprs_1 *) data;
+	egprs1->si = 1;
+	egprs1->r = 1;
+	egprs1->cv = 7;
+	egprs1->tfi_a = tfi & 0x03;
+	egprs1->tfi_b = (tfi & 0x1c) >> 2;
+	egprs1->bsn1_a = 0;
+	egprs1->bsn1_b = 0;
+	egprs1->bsn2_a = 1;
+	egprs1->bsn2_b = 0;
+	egprs1->cps = 15;
+	egprs1->rsb = 0;
+	egprs1->pi = 0;
+	data[5] = 0xc0;
+	data[5 + 75] = 1;
+	rc = Decoding::rlc_parse_ul_data_header(&rlc, data, cs);
+	OSMO_ASSERT(rlc.num_data_blocks == 2);
+	OSMO_ASSERT(rlc.block_info[0].e == 1);
+	OSMO_ASSERT(rlc.block_info[0].ti == 1);
+	OSMO_ASSERT(rlc.block_info[1].e == 1);
+	OSMO_ASSERT(rlc.block_info[1].ti == 0);
+	OSMO_ASSERT(rlc.block_info[0].bsn == 0);
+	OSMO_ASSERT(rlc.block_info[1].bsn == 1);
+	OSMO_ASSERT(rlc.tfi == 1);
+}
+
+void uplink_header_type1_test(void)
+{
+	BTS the_bts;
+	int ts_no = 7;
+	uint32_t fn = 2654218;
+	uint16_t qta = 31;
+	uint32_t tlli = 0xf1223344;
+	const char *imsi = "0011223344";
+	uint8_t ms_class = 1;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	GprsMs *ms;
+
+	printf("=== start %s ===\n", __func__);
+	setup_bts(&the_bts, ts_no, 12);
+	uplink_header_type_1_parsing_test(&the_bts, ts_no, tlli, &fn,
+			qta, ms_class);
+	printf("=== end %s ===\n", __func__);
+}
+
 int main(int argc, char **argv)
 {
 	struct vty_app_info pcu_vty_info = {0};
@@ -1303,6 +1423,8 @@ int main(int argc, char **argv)
 	test_rlc_unit_encoder();
 
 	uplink_header_type2_test();
+	uplink_header_type1_test();
+
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
 	return EXIT_SUCCESS;
