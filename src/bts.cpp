@@ -1344,15 +1344,6 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint32_t fn,
 				cs.name());
 			return -EINVAL;
 		}
-
-		if (!cs.isEgprsGmsk()) {
-			LOGP(DRLCMACUL, LOGL_ERROR,
-				"Got %s RLC block but EGPRS is not implemented "
-				"for 8PSK yet\n",
-				cs.name());
-			bts()->decode_error();
-			return -EINVAL;
-		}
 	}
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "  UL data: %s\n", osmo_hexdump(data, len));
