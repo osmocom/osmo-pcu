@@ -52,6 +52,10 @@ public:
 		struct gprs_rlc_data_info *rlc,
 		const uint8_t *data,
 		const GprsCodingScheme &cs);
+	static int rlc_parse_ul_data_header_egprs_type_1(
+		struct gprs_rlc_data_info *rlc,
+		const uint8_t *data,
+		const GprsCodingScheme &cs);
 	static int rlc_parse_ul_data_header_gprs(
 		struct gprs_rlc_data_info *rlc,
 		const uint8_t *data,

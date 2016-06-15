@@ -610,8 +610,9 @@ static void write_packet_uplink_ack_egprs(
 	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
 {
 	bitvec_write_field(dest, wp, 0, 2); // fixed 00
-	bitvec_write_field(dest, wp, 2, 4); // CHANNEL_CODING_COMMAND: MCS-3
-	// bitvec_write_field(dest, wp, tbf->current_cs() - 1, 4); // CHANNEL_CODING_COMMAND
+	/* CHANNEL_CODING_COMMAND */
+	bitvec_write_field(dest, wp,
+		tbf->current_cs().to_num() - 1, 4);
 	bitvec_write_field(dest, wp, 0, 1); // 0: no RESEGMENT (nyi)
 	bitvec_write_field(dest, wp, 1, 1); // PRE_EMPTIVE_TRANSMISSION, TODO: This resembles GPRS, change it?
 	bitvec_write_field(dest, wp, 0, 1); // 0: no PRR_RETRANSMISSION_REQUEST, TODO: clarify

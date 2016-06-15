@@ -357,8 +357,8 @@ int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 		cur_bit = rlc_parse_ul_data_header_egprs_type_2(rlc, data, cs);
 		break;
 	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1 :
-		/* TODO: Support both header type 1 */
-		/* fall through */
+		cur_bit = rlc_parse_ul_data_header_egprs_type_1(rlc, data, cs);
+		break;
 	default:
 		LOGP(DRLCMACDL, LOGL_ERROR,
 			"Decoding of uplink %s data blocks not yet supported.\n",
@@ -449,6 +449,65 @@ int Decoding::rlc_parse_ul_data_header_egprs_type_2(
 	rlc->block_info[0].ti  = !!(e_ti_header & 0x02);
 	cur_bit += 2;
 
+	/* skip data area */
+	cur_bit += cs.maxDataBlockBytes() * 8;
+
+	return cur_bit;
+}
+
+int Decoding::rlc_parse_ul_data_header_egprs_type_1(
+	struct gprs_rlc_data_info *rlc,
+	const uint8_t *data, const GprsCodingScheme &cs)
+{
+	struct gprs_rlc_ul_header_egprs_1 *egprs1;
+	unsigned int e_ti_header, cur_bit = 0, offs;
+	int punct, punct2, with_padding;
+
+	egprs1 = static_cast < struct gprs_rlc_ul_header_egprs_1 * >
+		((void *)data);
+	gprs_rlc_mcs_cps_decode(egprs1->cps, cs, &punct, &punct2,
+		&with_padding);
+	gprs_rlc_data_info_init_ul(rlc, cs, with_padding);
+
+	rlc->r      = egprs1->r;
+	rlc->si     = egprs1->si;
+	rlc->tfi    = (egprs1->tfi_a << 0)  | (egprs1->tfi_b << 2);
+	rlc->cps    = egprs1->cps;
+	rlc->rsb    = egprs1->rsb;
+	rlc->num_data_blocks = 2;
+	rlc->block_info[0].cv  = egprs1->cv;
+	rlc->block_info[0].pi  = egprs1->pi;
+	rlc->block_info[0].bsn =
+			(egprs1->bsn1_a << 0) | (egprs1->bsn1_b << 5);
+
+	cur_bit += rlc->data_offs_bits[0] - 2;
+	offs = rlc->data_offs_bits[0] / 8;
+	OSMO_ASSERT(rlc->data_offs_bits[0] % 8 == 0);
+
+	e_ti_header = data[offs - 1] >> 6;
+	rlc->block_info[0].e   = (e_ti_header & 0x01);
+	rlc->block_info[0].ti  = !!(e_ti_header & 0x02);
+	cur_bit += 2;
+
+	rlc->block_info[1].cv  = egprs1->cv;
+	rlc->block_info[1].pi  = egprs1->pi;
+	rlc->block_info[1].bsn = rlc->block_info[0].bsn +
+		((egprs1->bsn2_a << 0) | (egprs1->bsn2_b << 2));
+	rlc->block_info[1].bsn = rlc->block_info[1].bsn &  (RLC_EGPRS_SNS - 1);
+
+	if ((rlc->block_info[1].bsn != rlc->block_info[0].bsn) &&
+			(rlc->block_info[0].cv == 0))
+		rlc->block_info[0].cv = 1;
+
+	cur_bit = rlc->data_offs_bits[1] - 2;
+
+	offs = rlc->data_offs_bits[1] / 8;
+	OSMO_ASSERT(rlc->data_offs_bits[1] % 8 == 2);
+
+	e_ti_header = (data[offs] & (0x03));
+	rlc->block_info[1].e   = (e_ti_header & 0x01);
+	rlc->block_info[1].ti  = !!(e_ti_header & 0x02);
+	cur_bit += 2;
 	/* skip data area */
 	cur_bit += cs.maxDataBlockBytes() * 8;
 

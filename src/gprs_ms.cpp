@@ -632,8 +632,8 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 		high = bts_data->cs_lqual_ranges[current_cs_num-1].high;
 	} else if (m_current_cs_ul.isEgprs()) {
 		/* TODO, use separate table */
-		if (current_cs_num > 4)
-			current_cs_num = 4;
+		if (current_cs_num > MAX_GPRS_CS)
+			current_cs_num = MAX_GPRS_CS;
 		low  = bts_data->cs_lqual_ranges[current_cs_num-1].low;
 		high = bts_data->cs_lqual_ranges[current_cs_num-1].high;
 	} else {
