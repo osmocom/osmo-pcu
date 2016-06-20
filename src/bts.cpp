@@ -513,7 +513,7 @@ int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
 		tsc = m_bts.trx[trx_no].pdch[ts_no].tsc;
 	} else {
 		// Create new TBF
-		#warning "Copy and pate with other routines.."
+		#warning "Copy and paste with other routines.."
 		/* set class to 0, since we don't know the multislot class yet */
 		tbf = tbf_alloc_ul_tbf(&m_bts, NULL, -1, 0, 0, 1);
 		if (!tbf) {
