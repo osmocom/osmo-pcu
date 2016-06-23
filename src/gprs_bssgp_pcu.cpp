@@ -74,6 +74,7 @@ static int parse_imsi(struct tlv_parsed *tp, char *imsi)
 	return 0;
 }
 
+#if 0
 static int parse_ra_cap(struct tlv_parsed *tp, MS_Radio_Access_capability_t *rac)
 {
 	bitvec *block;
@@ -99,6 +100,7 @@ static int parse_ra_cap(struct tlv_parsed *tp, MS_Radio_Access_capability_t *rac
 	bitvec_free(block);
 	return 0;
 }
+#endif
 
 static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 {
@@ -138,7 +140,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	 * will listen to all paging blocks. */
 	parse_imsi(tp, imsi);
 
-#if 0 /* Do not rely on this IE. TODO: make this configurable */
+#if 0 /* Do not rely on this IE. TODO: make this configurable. Another #if 0 above. */
 	/* parse ms radio access capability */
 	if (parse_ra_cap(tp, &rac) >= 0) {
 		/* Get the EGPRS class from the RA capability */
