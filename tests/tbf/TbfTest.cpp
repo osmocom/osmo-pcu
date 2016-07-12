@@ -1272,6 +1272,232 @@ static void establish_and_use_egprs_dl_tbf(BTS *the_bts, int mcs)
 	tbf_free(dl_tbf);
 }
 
+static gprs_rlcmac_dl_tbf *tbf_init(BTS *the_bts,
+		int mcs)
+{
+	unsigned i;
+	uint8_t ms_class = 11;
+	uint8_t egprs_ms_class = 11;
+	uint32_t fn = 0;
+	uint8_t trx_no;
+	uint32_t tlli = 0xffeeddcc;
+	uint8_t test_data[512];
+
+	uint8_t rbb[64/8];
+
+	gprs_rlcmac_dl_tbf *dl_tbf;
+
+	memset(test_data, 1, sizeof(test_data));
+	the_bts->bts_data()->initial_mcs_dl = mcs;
+
+	dl_tbf = create_dl_tbf(the_bts, ms_class, egprs_ms_class, &trx_no);
+	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
+
+	for (i = 0; i < sizeof(test_data); i++)
+		test_data[i] = i%256;
+
+	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+
+	/* Schedule a LLC frame
+	 * passing only 100 bytes, since it is enough to construct
+	 * 2 RLC data blocks. Which are enough to test Header Type 1
+	 * cases
+	 */
+	dl_tbf->append_data(ms_class, 1000, test_data, 100);
+
+	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+
+	return dl_tbf;
+
+}
+
+static void tbf_cleanup(gprs_rlcmac_dl_tbf *dl_tbf)
+{
+	uint32_t fn = 0;
+	uint8_t rbb[64/8];
+
+	/* Receive a final ACK */
+	dl_tbf->rcvd_dl_ack(1, dl_tbf->m_window.v_s(), rbb);
+
+	/* Clean up and ensure tbfs are in the correct state */
+	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
+	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+	check_tbf(dl_tbf);
+	tbf_free(dl_tbf);
+
+}
+
+static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
+		int mcs, int demanded_mcs)
+{
+	uint32_t fn = 0;
+	gprs_rlcmac_dl_tbf *dl_tbf;
+	uint8_t block_nr = 0;
+	int index1 = 0;
+	uint8_t bn;
+	struct msgb *msg;
+
+	printf("Testing retx for MCS %d - %d\n", mcs, demanded_mcs);
+
+	dl_tbf = tbf_init(the_bts, mcs);
+
+	/* For MCS reduction cases like MCS9->MCS6, MCS7->MCS5
+	 * The MCS transition are referred from table Table 8.1.1.2
+	 * of TS 44.060
+	 */
+	/* TODO: Need to support of MCS8 -> MCS6 transistion
+	 * Refer commit be881c028fc4da00c4046ecd9296727975c206a3
+	 * dated 2016-02-07 23:45:40 (UTC)
+	 */
+	if (((mcs == 9) && (demanded_mcs < 9)) ||
+		((mcs == 7) && (demanded_mcs < 7))) {
+		fn = fn_add_blocks(fn, 1);
+		/* Send 2 RLC data block */
+		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
+		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
+				== mcs);
+		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
+				== mcs);
+
+		dl_tbf->m_window.m_v_b.mark_nacked(0);
+		dl_tbf->m_window.m_v_b.mark_nacked(1);
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(1));
+
+		/* Set the demanded MCS to demanded_mcs */
+		dl_tbf->ms()->set_current_cs_dl
+			(static_cast < GprsCodingScheme::Scheme >
+				(GprsCodingScheme::CS4 + demanded_mcs));
+
+		fn = fn_add_blocks(fn, 1);
+		/* Retransmit the first RLC data block with demanded_mcs */
+		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(1));
+		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
+				== demanded_mcs);
+
+		fn = fn_add_blocks(fn, 1);
+		/* Retransmit the second RLC data block with demanded_mcs */
+		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
+		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
+				== demanded_mcs);
+	} else if (((mcs == 5) && (demanded_mcs > 6)) ||
+		((mcs == 6) && (demanded_mcs > 8))) {
+		fn = fn_add_blocks(fn, 1);
+		/* Send first RLC data block BSN 0 */
+		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
+		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
+				== mcs);
+
+		fn = fn_add_blocks(fn, 1);
+		/* Send second RLC data block BSN 1 */
+		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
+		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
+				== mcs);
+
+		dl_tbf->m_window.m_v_b.mark_nacked(0);
+		dl_tbf->m_window.m_v_b.mark_nacked(1);
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(1));
+
+		dl_tbf->ms()->set_current_cs_dl
+			(static_cast < GprsCodingScheme::Scheme >
+				(GprsCodingScheme::CS4 + demanded_mcs));
+
+		fn = fn_add_blocks(fn, 1);
+		/* Send first, second RLC data blocks with demanded_mcs */
+		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
+		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
+				== demanded_mcs);
+		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
+				== demanded_mcs);
+	} else if (mcs > 6) {
+		/* No Mcs change cases are handled here for mcs > MCS6*/
+		fn = fn_add_blocks(fn, 1);
+		/* Send first,second RLC data blocks */
+		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
+		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
+				== mcs);
+		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
+				== mcs);
+
+		dl_tbf->m_window.m_v_b.mark_nacked(0);
+		dl_tbf->m_window.m_v_b.mark_nacked(1);
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(1));
+
+		fn = fn_add_blocks(fn, 1);
+		/* Send first,second RLC data blocks with demanded_mcs*/
+		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
+		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
+				== mcs);
+		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
+				== mcs);
+	} else {
+
+		/* No MCS change cases are handled here for mcs <= MCS6*/
+		fn = fn_add_blocks(fn, 1);
+		/* Send first RLC data block */
+		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
+		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
+				== mcs);
+
+		dl_tbf->m_window.m_v_b.mark_nacked(0);
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
+
+		fn = fn_add_blocks(fn, 1);
+		/* Send first RLC data block with demanded_mcs */
+		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
+		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
+				== mcs);
+	}
+
+	tbf_cleanup(dl_tbf);
+}
+
+static void test_tbf_egprs_retx_dl(void)
+{
+	BTS the_bts;
+	gprs_rlcmac_bts *bts;
+	uint8_t ts_no = 4;
+	int i, j;
+
+	printf("=== start %s ===\n", __func__);
+
+	bts = the_bts.bts_data();
+	bts->cs_downgrade_threshold = 0;
+	setup_bts(&the_bts, ts_no);
+	bts->dl_tbf_idle_msec = 200;
+	bts->egprs_enabled = 1;
+
+	/* First parameter is current MCS, second one is demanded_mcs */
+	establish_and_use_egprs_dl_tbf_for_retx(&the_bts, 6, 6);
+	establish_and_use_egprs_dl_tbf_for_retx(&the_bts, 1, 9);
+	establish_and_use_egprs_dl_tbf_for_retx(&the_bts, 2, 8);
+	establish_and_use_egprs_dl_tbf_for_retx(&the_bts, 5, 7);
+	establish_and_use_egprs_dl_tbf_for_retx(&the_bts, 6, 9);
+	establish_and_use_egprs_dl_tbf_for_retx(&the_bts, 7, 5);
+	establish_and_use_egprs_dl_tbf_for_retx(&the_bts, 9, 6);
+
+	printf("=== end %s ===\n", __func__);
+}
+
 static void test_tbf_egprs_dl()
 {
 	BTS the_bts;
@@ -1356,6 +1582,7 @@ int main(int argc, char **argv)
 	test_tbf_ws();
 	test_tbf_egprs_two_phase();
 	test_tbf_egprs_dl();
+	test_tbf_egprs_retx_dl();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);

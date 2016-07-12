@@ -43,3 +43,12 @@ Testing MCS-7
 Testing MCS-8
 Testing MCS-9
 === end test_tbf_egprs_dl ===
+=== start test_tbf_egprs_retx_dl ===
+Testing retx for MCS 6 - 6
+Testing retx for MCS 1 - 9
+Testing retx for MCS 2 - 8
+Testing retx for MCS 5 - 7
+Testing retx for MCS 6 - 9
+Testing retx for MCS 7 - 5
+Testing retx for MCS 9 - 6
+=== end test_tbf_egprs_retx_dl ===

@@ -5116,3 +5116,411 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Sending new block at BSN 0, CS=MCS-6
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=100)
+-- Chunk with length 100 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 0, MCS-6): 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 
+- Copying data unit 0 (BSN 0)
+msg block (BSN 0, MCS-6): 07 00 00 10 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 12 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- current_cs_dl(6) demanded_mcs(6) cs_trans(6)
+- Resending BSN 0
+- Copying data unit 0 (BSN 0)
+msg block (BSN 0, MCS-6): 07 00 00 12 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 12 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Sending new block at BSN 0, CS=MCS-1
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=100)
+-- Chunk with length 100 larger than space (22) left in block: copy only remaining space, and we are done
+data block (BSN 0, MCS-1): 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 
+- Copying data unit 0 (BSN 0)
+msg block (BSN 0, MCS-1): 07 00 00 96 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- current_cs_dl(1) demanded_mcs(1) cs_trans(1)
+- Resending BSN 0
+- Copying data unit 0 (BSN 0)
+msg block (BSN 0, MCS-1): 07 00 00 98 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Sending new block at BSN 0, CS=MCS-2
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=100)
+-- Chunk with length 100 larger than space (28) left in block: copy only remaining space, and we are done
+data block (BSN 0, MCS-2): 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 
+- Copying data unit 0 (BSN 0)
+msg block (BSN 0, MCS-2): 07 00 00 92 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 2c 2e 30 32 34 36 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- current_cs_dl(2) demanded_mcs(2) cs_trans(2)
+- Resending BSN 0
+- Copying data unit 0 (BSN 0)
+msg block (BSN 0, MCS-2): 07 00 00 94 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 2c 2e 30 32 34 36 00 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Sending new block at BSN 0, CS=MCS-5
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=100)
+-- Chunk with length 100 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 0, MCS-5): 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 
+- Copying data unit 0 (BSN 0)
+msg block (BSN 0, MCS-5): 07 00 00 18 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- Sending new block at BSN 1, CS=MCS-5
+-- Chunk with length 44 is less than remaining space (56): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=100
+-- Empty chunk, added LLC dummy command of size 10, drained_since=0
+-- Chunk with length 10 is less than remaining space (11): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=10
+data block (BSN 1, MCS-5): 58 15 38 39 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 43 c0 01 2b 2b 2b 2b 2b 2b 2b 
+- Copying data unit 0 (BSN 1)
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 21 TS 4
+Polling scheduled in this TS 4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=21, TS=4
+msg block (BSN 1, MCS-5): 0f 40 00 08 56 05 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 92 d2 12 53 93 d3 13 54 94 d4 14 55 95 d5 15 56 96 d6 16 57 97 d7 17 58 98 d8 d8 10 70 c0 ca ca ca ca ca ca 0a 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- current_cs_dl(5) demanded_mcs(7) cs_trans(7)
+- Resending BSN 0
+- current_cs_dl(5) demanded_mcs(7) cs_trans(7)
+- Resending BSN 1
+- Copying data unit 0 (BSN 0)
+- Copying data unit 1 (BSN 1)
+msg block (BSN 0, MCS-7): 07 00 00 02 c0 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc 80 55 81 93 a3 b3 c3 d3 e3 f3 03 14 24 34 44 54 64 74 84 94 a4 b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 36 04 1c b0 b2 b2 b2 b2 b2 b2 02 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Sending new block at BSN 0, CS=MCS-6
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=100)
+-- Chunk with length 100 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 0, MCS-6): 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 
+- Copying data unit 0 (BSN 0)
+msg block (BSN 0, MCS-6): 07 00 00 10 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 12 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- Sending new block at BSN 1, CS=MCS-6
+-- Chunk with length 26 is less than remaining space (74): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=100
+-- Empty chunk, added LLC dummy command of size 46, drained_since=0
+-- Chunk with length 46 is less than remaining space (47): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=46
+data block (BSN 1, MCS-6): 34 5d 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Copying data unit 0 (BSN 1)
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 21 TS 4
+Polling scheduled in this TS 4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=21, TS=4
+msg block (BSN 1, MCS-6): 0f 40 00 00 4d 97 d2 12 53 93 d3 13 54 94 d4 14 55 95 d5 15 56 96 d6 16 57 97 d7 17 58 98 d8 d8 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- current_cs_dl(6) demanded_mcs(9) cs_trans(9)
+- Resending BSN 0
+- current_cs_dl(6) demanded_mcs(9) cs_trans(9)
+- Resending BSN 1
+- Copying data unit 0 (BSN 0)
+- Copying data unit 1 (BSN 1)
+msg block (BSN 0, MCS-9): 07 00 00 02 28 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc e0 e4 e8 ec f0 f4 f8 fc 00 05 09 0d 11 15 19 1d 21 25 41 d3 a5 b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 36 04 1c b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Sending new block at BSN 0, CS=MCS-7
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=100)
+-- Chunk with length 100 larger than space (56) left in block: copy only remaining space, and we are done
+data block (BSN 0, MCS-7): 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 
+- Sending new block at BSN 1, CS=MCS-7
+-- Chunk with length 44 is less than remaining space (56): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=100
+-- Empty chunk, added LLC dummy command of size 10, drained_since=0
+-- Chunk with length 10 is less than remaining space (11): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=10
+data block (BSN 1, MCS-7): 58 15 38 39 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 43 c0 01 2b 2b 2b 2b 2b 2b 2b 
+- Copying data unit 0 (BSN 0)
+- Copying data unit 1 (BSN 1)
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 17 TS 4
+Polling scheduled in this TS 4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
+msg block (BSN 0, MCS-7): 0f 00 00 02 a0 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc 80 55 81 93 a3 b3 c3 d3 e3 f3 03 14 24 34 44 54 64 74 84 94 a4 b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 36 04 1c b0 b2 b2 b2 b2 b2 b2 02 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- current_cs_dl(7) demanded_mcs(5) cs_trans(5)
+- Resending BSN 0
+- Copying data unit 0 (BSN 0)
+msg block (BSN 0, MCS-5): 07 00 00 18 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- current_cs_dl(7) demanded_mcs(5) cs_trans(5)
+- Resending BSN 1
+- Copying data unit 0 (BSN 1)
+msg block (BSN 1, MCS-5): 07 40 00 08 56 05 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 92 d2 12 53 93 d3 13 54 94 d4 14 55 95 d5 15 56 96 d6 16 57 97 d7 17 58 98 d8 d8 10 70 c0 ca ca ca ca ca ca 0a 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
+The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0)
+- Sending new block at BSN 0, CS=MCS-9
+- Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=100)
+-- Chunk with length 100 larger than space (74) left in block: copy only remaining space, and we are done
+data block (BSN 0, MCS-9): 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 
+- Sending new block at BSN 1, CS=MCS-9
+-- Chunk with length 26 is less than remaining space (74): add length header to to delimit LLC frame
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=100
+-- Empty chunk, added LLC dummy command of size 46, drained_since=0
+-- Chunk with length 46 is less than remaining space (47): add length header to to delimit LLC frame
+-- No space left, so we are done.
+Complete DL frame for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)len=46
+data block (BSN 1, MCS-9): 34 5d 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+- Copying data unit 0 (BSN 0)
+- Copying data unit 1 (BSN 1)
+- Scheduling Ack/Nack polling, because is was requested explicitly (e.g. first final block sent).
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS): Scheduling polling at FN 17 TS 4
+Polling scheduled in this TS 4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
+msg block (BSN 0, MCS-9): 0f 00 00 02 00 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc e0 e4 e8 ec f0 f4 f8 fc 00 05 09 0d 11 15 19 1d 21 25 41 d3 a5 b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 36 04 1c b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- current_cs_dl(9) demanded_mcs(6) cs_trans(6)
+- Resending BSN 0
+- Copying data unit 0 (BSN 0)
+msg block (BSN 0, MCS-6): 07 00 00 12 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 12 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
+- current_cs_dl(9) demanded_mcs(6) cs_trans(6)
+- Resending BSN 1
+- Copying data unit 0 (BSN 1)
+msg block (BSN 1, MCS-6): 07 40 00 02 4d 97 d2 12 53 93 d3 13 54 94 d4 14 55 95 d5 15 56 96 d6 16 57 97 d7 17 58 98 d8 d8 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+- Final ACK received.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer 3193.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer 3193.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0xffeeddcc
+********** TBF ends here **********
