@@ -25,6 +25,10 @@
 #include <tbf.h>
 #include <gprs_debug.h>
 
+extern "C" {
+#include <osmocom/gprs/protocol/gsm_04_60.h>
+}
+
 #include <errno.h>
 #include <string.h>
 
@@ -745,20 +749,20 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 		egprs1->usf    = rlc->usf;
 		egprs1->es_p   = rlc->es_p;
 		egprs1->rrbp   = rlc->rrbp;
-		egprs1->tfi_a  = rlc->tfi >> 0; /* 1 bit LSB */
-		egprs1->tfi_b  = rlc->tfi >> 1; /* 4 bits */
+		egprs1->tfi_hi = rlc->tfi >> 0; /* 1 bit LSB */
+		egprs1->tfi_lo = rlc->tfi >> 1; /* 4 bits */
 		egprs1->pr     = rlc->pr;
 		egprs1->cps    = rlc->cps;
 
-		egprs1->bsn1_a = rlc->block_info[0].bsn >> 0; /* 2 bits LSB */
-		egprs1->bsn1_b = rlc->block_info[0].bsn >> 2; /* 8 bits */
-		egprs1->bsn1_c = rlc->block_info[0].bsn >> 10; /* 1 bit */
+		egprs1->bsn1_hi  = rlc->block_info[0].bsn >> 0; /* 2 bits LSB */
+		egprs1->bsn1_mid = rlc->block_info[0].bsn >> 2; /* 8 bits */
+		egprs1->bsn1_lo  = rlc->block_info[0].bsn >> 10; /* 1 bit */
 
 		bsn_delta = (rlc->block_info[1].bsn - rlc->block_info[0].bsn) &
 			(RLC_EGPRS_SNS - 1);
 
-		egprs1->bsn2_a = bsn_delta >> 0; /* 7 bits LSB */
-		egprs1->bsn2_b = bsn_delta >> 7; /* 3 bits */
+		egprs1->bsn2_hi = bsn_delta >> 0; /* 7 bits LSB */
+		egprs1->bsn2_lo = bsn_delta >> 7; /* 3 bits */
 
 		/* first FBI/E header */
 		e_fbi_header   = rlc->block_info[0].e       ? 0x01 : 0;
@@ -784,14 +788,14 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 		egprs2->usf    = rlc->usf;
 		egprs2->es_p   = rlc->es_p;
 		egprs2->rrbp   = rlc->rrbp;
-		egprs2->tfi_a  = rlc->tfi >> 0; /* 1 bit LSB */
-		egprs2->tfi_b  = rlc->tfi >> 1; /* 4 bits */
+		egprs2->tfi_hi = rlc->tfi >> 0; /* 1 bit LSB */
+		egprs2->tfi_lo = rlc->tfi >> 1; /* 4 bits */
 		egprs2->pr     = rlc->pr;
 		egprs2->cps    = rlc->cps;
 
-		egprs2->bsn1_a = rlc->block_info[0].bsn >> 0; /* 2 bits LSB */
-		egprs2->bsn1_b = rlc->block_info[0].bsn >> 2; /* 8 bits */
-		egprs2->bsn1_c = rlc->block_info[0].bsn >> 10; /* 1 bit */
+		egprs2->bsn1_hi  = rlc->block_info[0].bsn >> 0; /* 2 bits LSB */
+		egprs2->bsn1_mid = rlc->block_info[0].bsn >> 2; /* 8 bits */
+		egprs2->bsn1_lo  = rlc->block_info[0].bsn >> 10; /* 1 bit */
 
 		e_fbi_header   = rlc->block_info[0].e       ? 0x01 : 0;
 		e_fbi_header  |= rlc->block_info[0].cv == 0 ? 0x02 : 0; /* FBI */
@@ -808,14 +812,14 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 		egprs3->usf    = rlc->usf;
 		egprs3->es_p   = rlc->es_p;
 		egprs3->rrbp   = rlc->rrbp;
-		egprs3->tfi_a  = rlc->tfi >> 0; /* 1 bit LSB */
-		egprs3->tfi_b  = rlc->tfi >> 1; /* 4 bits */
+		egprs3->tfi_hi = rlc->tfi >> 0; /* 1 bit LSB */
+		egprs3->tfi_lo = rlc->tfi >> 1; /* 4 bits */
 		egprs3->pr     = rlc->pr;
 		egprs3->cps    = rlc->cps;
 
-		egprs3->bsn1_a = rlc->block_info[0].bsn >> 0; /* 2 bits LSB */
-		egprs3->bsn1_b = rlc->block_info[0].bsn >> 2; /* 8 bits */
-		egprs3->bsn1_c = rlc->block_info[0].bsn >> 10; /* 1 bit */
+		egprs3->bsn1_hi  = rlc->block_info[0].bsn >> 0; /* 2 bits LSB */
+		egprs3->bsn1_mid = rlc->block_info[0].bsn >> 2; /* 8 bits */
+		egprs3->bsn1_lo  = rlc->block_info[0].bsn >> 10; /* 1 bit */
 
 		egprs3->spb    = rlc->block_info[0].spb;
 

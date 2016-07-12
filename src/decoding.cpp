@@ -24,6 +24,7 @@
 extern "C" {
 #include <osmocom/core/utils.h>
 #include <osmocom/core/bitcomp.h>
+#include <osmocom/gprs/protocol/gsm_04_60.h>
 }
 
 #include <arpa/inet.h>
@@ -381,13 +382,13 @@ int Decoding::rlc_parse_ul_data_header_egprs_type_3(
 	egprs3 = static_cast < struct gprs_rlc_ul_header_egprs_3 * >
 			((void *)data);
 
-	cps    = (egprs3->cps_a << 0)  | (egprs3->cps_b << 2);
+	cps    = (egprs3->cps_hi << 0)  | (egprs3->cps_lo << 2);
 	gprs_rlc_mcs_cps_decode(cps, cs, &punct, &punct2, &with_padding);
 	gprs_rlc_data_info_init_ul(rlc, cs, with_padding);
 
 	rlc->r      = egprs3->r;
 	rlc->si     = egprs3->si;
-	rlc->tfi    = (egprs3->tfi_a << 0)  | (egprs3->tfi_b << 2);
+	rlc->tfi    = (egprs3->tfi_hi << 0)  | (egprs3->tfi_lo << 2);
 	rlc->cps    = cps;
 	rlc->rsb    = egprs3->rsb;
 
@@ -396,7 +397,7 @@ int Decoding::rlc_parse_ul_data_header_egprs_type_3(
 	rlc->block_info[0].pi  = egprs3->pi;
 	rlc->block_info[0].spb = egprs3->spb;
 	rlc->block_info[0].bsn =
-			(egprs3->bsn1_a << 0) | (egprs3->bsn1_b << 5);
+			(egprs3->bsn1_hi << 0) | (egprs3->bsn1_lo << 5);
 
 	cur_bit += rlc->data_offs_bits[0] - 2;
 	offs = rlc->data_offs_bits[0] / 8;
@@ -423,13 +424,13 @@ int Decoding::rlc_parse_ul_data_header_egprs_type_2(
 	egprs2 = static_cast < struct gprs_rlc_ul_header_egprs_2 * >
 			((void *)data);
 
-	cps    = (egprs2->cps_a << 0)  | (egprs2->cps_b << 2);
+	cps    = (egprs2->cps_hi << 0)  | (egprs2->cps_lo << 2);
 	gprs_rlc_mcs_cps_decode(cps, cs, &punct, &punct2, &with_padding);
 	gprs_rlc_data_info_init_ul(rlc, cs, with_padding);
 
 	rlc->r      = egprs2->r;
 	rlc->si     = egprs2->si;
-	rlc->tfi    = (egprs2->tfi_a << 0)  | (egprs2->tfi_b << 2);
+	rlc->tfi    = (egprs2->tfi_hi << 0)  | (egprs2->tfi_lo << 2);
 	rlc->cps    = cps;
 	rlc->rsb    = egprs2->rsb;
 
@@ -437,7 +438,7 @@ int Decoding::rlc_parse_ul_data_header_egprs_type_2(
 	rlc->block_info[0].cv  = egprs2->cv;
 	rlc->block_info[0].pi  = egprs2->pi;
 	rlc->block_info[0].bsn =
-		(egprs2->bsn1_a << 0) | (egprs2->bsn1_b << 5);
+		(egprs2->bsn1_hi << 0) | (egprs2->bsn1_lo << 5);
 
 	cur_bit += rlc->data_offs_bits[0] - 2;
 
@@ -471,14 +472,14 @@ int Decoding::rlc_parse_ul_data_header_egprs_type_1(
 
 	rlc->r      = egprs1->r;
 	rlc->si     = egprs1->si;
-	rlc->tfi    = (egprs1->tfi_a << 0)  | (egprs1->tfi_b << 2);
+	rlc->tfi    = (egprs1->tfi_hi << 0)  | (egprs1->tfi_lo << 2);
 	rlc->cps    = egprs1->cps;
 	rlc->rsb    = egprs1->rsb;
 	rlc->num_data_blocks = 2;
 	rlc->block_info[0].cv  = egprs1->cv;
 	rlc->block_info[0].pi  = egprs1->pi;
 	rlc->block_info[0].bsn =
-			(egprs1->bsn1_a << 0) | (egprs1->bsn1_b << 5);
+			(egprs1->bsn1_hi << 0) | (egprs1->bsn1_lo << 5);
 
 	cur_bit += rlc->data_offs_bits[0] - 2;
 	offs = rlc->data_offs_bits[0] / 8;
@@ -492,7 +493,7 @@ int Decoding::rlc_parse_ul_data_header_egprs_type_1(
 	rlc->block_info[1].cv  = egprs1->cv;
 	rlc->block_info[1].pi  = egprs1->pi;
 	rlc->block_info[1].bsn = rlc->block_info[0].bsn +
-		((egprs1->bsn2_a << 0) | (egprs1->bsn2_b << 2));
+		((egprs1->bsn2_hi << 0) | (egprs1->bsn2_lo << 2));
 	rlc->block_info[1].bsn = rlc->block_info[1].bsn &  (RLC_EGPRS_SNS - 1);
 
 	if ((rlc->block_info[1].bsn != rlc->block_info[0].bsn) &&

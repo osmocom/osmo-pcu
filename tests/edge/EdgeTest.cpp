@@ -35,6 +35,7 @@ extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/utils.h>
 #include <osmocom/vty/vty.h>
+#include <osmocom/gprs/protocol/gsm_04_60.h>
 }
 
 #include <errno.h>
@@ -1196,12 +1197,12 @@ static void uplink_header_type_2_parsing_test(BTS *the_bts,
 	egprs2->r = 1;
 	egprs2->si = 1;
 	egprs2->cv = 7;
-	egprs2->tfi_a = tfi & 0x03;
-	egprs2->tfi_b = (tfi & 0x1c) >> 2;
-	egprs2->bsn1_a = 0;
-	egprs2->bsn1_b = 0;
-	egprs2->cps_a = 3;
-	egprs2->cps_b = 0;
+	egprs2->tfi_hi = tfi & 0x03;
+	egprs2->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs2->bsn1_hi = 0;
+	egprs2->bsn1_lo = 0;
+	egprs2->cps_hi = 3;
+	egprs2->cps_lo = 0;
 	egprs2->rsb = 0;
 	egprs2->pi = 0;
 	data[4] = 0x20;                /* Setting E field */
@@ -1220,12 +1221,12 @@ static void uplink_header_type_2_parsing_test(BTS *the_bts,
 	egprs2->r = 1;
 	egprs2->si = 1;
 	egprs2->cv = 7;
-	egprs2->tfi_a = tfi & 0x03;
-	egprs2->tfi_b = (tfi & 0x1c) >> 2;
-	egprs2->bsn1_a = 0;
-	egprs2->bsn1_b = 0;
-	egprs2->cps_a = 3;
-	egprs2->cps_b = 0;
+	egprs2->tfi_hi = tfi & 0x03;
+	egprs2->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs2->bsn1_hi = 0;
+	egprs2->bsn1_lo = 0;
+	egprs2->cps_hi = 3;
+	egprs2->cps_lo = 0;
 	egprs2->rsb = 0;
 	egprs2->pi = 0;
 	data[10] = 0x20;                /* Setting E field */
@@ -1241,12 +1242,12 @@ static void uplink_header_type_2_parsing_test(BTS *the_bts,
 	egprs2->r = 1;
 	egprs2->si = 1;
 	egprs2->cv = 7;
-	egprs2->tfi_a = tfi & 0x03;
-	egprs2->tfi_b = (tfi & 0x1c) >> 2;
-	egprs2->bsn1_a = 1;
-	egprs2->bsn1_b = 0;
-	egprs2->cps_a = 2;
-	egprs2->cps_b = 0;
+	egprs2->tfi_hi = tfi & 0x03;
+	egprs2->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs2->bsn1_hi = 1;
+	egprs2->bsn1_lo = 0;
+	egprs2->cps_hi = 2;
+	egprs2->cps_lo = 0;
 	egprs2->rsb = 0;
 	egprs2->pi = 0;
 	data[10] = 0x20;		/* Setting E field */
@@ -1305,12 +1306,12 @@ static void uplink_header_type_1_parsing_test(BTS *the_bts,
 	egprs1->si = 1;
 	egprs1->r = 1;
 	egprs1->cv = 7;
-	egprs1->tfi_a = tfi & 0x03;
-	egprs1->tfi_b = (tfi & 0x1c) >> 2;
-	egprs1->bsn1_a = 0;
-	egprs1->bsn1_b = 0;
-	egprs1->bsn2_a = 1;
-	egprs1->bsn2_b = 0;
+	egprs1->tfi_hi = tfi & 0x03;
+	egprs1->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs1->bsn1_hi = 0;
+	egprs1->bsn1_lo = 0;
+	egprs1->bsn2_hi = 1;
+	egprs1->bsn2_lo = 0;
 	egprs1->cps = 15;
 	egprs1->rsb = 0;
 	egprs1->pi = 0;
@@ -1332,12 +1333,12 @@ static void uplink_header_type_1_parsing_test(BTS *the_bts,
 	egprs1->si = 1;
 	egprs1->r = 1;
 	egprs1->cv = 7;
-	egprs1->tfi_a = tfi & 0x03;
-	egprs1->tfi_b = (tfi & 0x1c) >> 2;
-	egprs1->bsn1_a = 0;
-	egprs1->bsn1_b = 0;
-	egprs1->bsn2_a = 1;
-	egprs1->bsn2_b = 0;
+	egprs1->tfi_hi = tfi & 0x03;
+	egprs1->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs1->bsn1_hi = 0;
+	egprs1->bsn1_lo = 0;
+	egprs1->bsn2_hi = 1;
+	egprs1->bsn2_lo = 0;
 	egprs1->cps = 15;
 	egprs1->rsb = 0;
 	egprs1->pi = 0;
@@ -1359,12 +1360,12 @@ static void uplink_header_type_1_parsing_test(BTS *the_bts,
 	egprs1->si = 1;
 	egprs1->r = 1;
 	egprs1->cv = 7;
-	egprs1->tfi_a = tfi & 0x03;
-	egprs1->tfi_b = (tfi & 0x1c) >> 2;
-	egprs1->bsn1_a = 0;
-	egprs1->bsn1_b = 0;
-	egprs1->bsn2_a = 1;
-	egprs1->bsn2_b = 0;
+	egprs1->tfi_hi = tfi & 0x03;
+	egprs1->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs1->bsn1_hi = 0;
+	egprs1->bsn1_lo = 0;
+	egprs1->bsn2_hi = 1;
+	egprs1->bsn2_lo = 0;
 	egprs1->cps = 15;
 	egprs1->rsb = 0;
 	egprs1->pi = 0;
