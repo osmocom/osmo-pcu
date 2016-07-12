@@ -21,6 +21,38 @@
 
 #include "gprs_coding_scheme.h"
 
+/*
+ * 44.060 Table 8.1.1.1 and Table 8.1.1.2
+ * It has 3 level indexing. 0th level is ARQ type
+ * 1st level is Original MCS( index 0 corresponds to MCS1 and so on)
+ * 2nd level is MS MCS (index 0 corresponds to MCS1 and so on)
+ */
+enum GprsCodingScheme::Scheme GprsCodingScheme::egprs_mcs_retx_tbl[MAX_NUM_ARQ]
+			[MAX_NUM_MCS][MAX_NUM_MCS] = {
+		{
+			{MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1},
+			{MCS2, MCS2, MCS2, MCS2, MCS2, MCS2, MCS2, MCS2, MCS2},
+			{MCS3, MCS3, MCS3, MCS3, MCS3, MCS3, MCS3, MCS3, MCS3},
+			{MCS1, MCS1, MCS1, MCS4, MCS4, MCS4, MCS4, MCS4, MCS4},
+			{MCS2, MCS2, MCS2, MCS2, MCS5, MCS5, MCS7, MCS7, MCS7},
+			{MCS3, MCS3, MCS3, MCS3, MCS3, MCS6, MCS6, MCS6, MCS9},
+			{MCS2, MCS2, MCS2, MCS2, MCS5, MCS5, MCS7, MCS7, MCS7},
+			{MCS3, MCS3, MCS3, MCS3, MCS3, MCS6, MCS6, MCS8, MCS8},
+			{MCS3, MCS3, MCS3, MCS3, MCS3, MCS6, MCS6, MCS6, MCS9}
+		},
+		{
+			{MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1},
+			{MCS2, MCS2, MCS2, MCS2, MCS2, MCS2, MCS2, MCS2, MCS2},
+			{MCS3, MCS3, MCS3, MCS3, MCS3, MCS3, MCS3, MCS3, MCS3},
+			{MCS4, MCS4, MCS4, MCS4, MCS4, MCS4, MCS4, MCS4, MCS4},
+			{MCS5, MCS5, MCS5, MCS5, MCS5, MCS5, MCS7, MCS7, MCS7},
+			{MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS9},
+			{MCS5, MCS5, MCS5, MCS5, MCS5, MCS5, MCS7, MCS7, MCS7},
+			{MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS8, MCS8},
+			{MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS9}
+		}
+	};
+
 static struct {
 	struct {
 		unsigned int bytes;

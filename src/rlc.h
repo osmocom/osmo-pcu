@@ -119,7 +119,17 @@ struct gprs_rlc_data {
 	uint8_t len;
 
 	struct gprs_rlc_data_block_info block_info;
-	GprsCodingScheme cs;
+	/*
+	 * cs_current_trans is variable to hold the cs_last value for
+	 * current transmission. cs_current_trans is same as cs_last during
+	 * transmission case. during retransmission cs_current_trans is
+	 * fetched from egprs_mcs_retx_tbl table based on
+	 * cs and demanded cs.reference is 44.060 Table
+	 * 8.1.1.1 and Table 8.1.1.2
+	 * For UL. cs_last shall be used everywhere.
+	 */
+	GprsCodingScheme cs_current_trans;
+	GprsCodingScheme cs_last;
 
 	/* puncturing scheme value to be used for next transmission*/
 	enum egprs_puncturing_values next_ps;

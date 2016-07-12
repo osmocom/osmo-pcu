@@ -51,7 +51,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 	const uint8_t *data = _data->block;
 	uint8_t len = _data->len;
 	const struct gprs_rlc_data_block_info *rdbi = &_data->block_info;
-	GprsCodingScheme cs = _data->cs;
+	GprsCodingScheme cs = _data->cs_last;
 
 	Decoding::RlcData frames[16], *frame;
 	int i, num_frames = 0;
@@ -224,7 +224,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 			m_window.mod_sns(m_window.v_q() + ws - 1));
 		block = m_rlc.block(rdbi->bsn);
 		block->block_info = *rdbi;
-		block->cs = rlc->cs;
+		block->cs_last = rlc->cs;
 		OSMO_ASSERT(rdbi->data_len <= sizeof(block->block));
 		rlc_data = &(block->block[0]);
 		/* TODO: Handle SPB != 0 -> Set length to 2*len, add offset if

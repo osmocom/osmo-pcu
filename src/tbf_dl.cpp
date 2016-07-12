@@ -361,7 +361,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 	bsn = m_window.resend_needed();
 
 	if (previous_bsn >= 0) {
-		force_cs = m_rlc.block(previous_bsn)->cs;
+		force_cs = m_rlc.block(previous_bsn)->cs_last;
 		if (!force_cs.isEgprs())
 			return -1;
 		force_data_len = m_rlc.block(previous_bsn)->len;
@@ -375,7 +375,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			m_window.mod_sns(bsn - previous_bsn) > RLC_EGPRS_MAX_BSN_DELTA)
 			return -1;
 
-		cs2 = m_rlc.block(bsn)->cs;
+		cs2 = m_rlc.block(bsn)->cs_last;
 		data_len2 = m_rlc.block(bsn)->len;
 		if (force_data_len > 0 && force_data_len != data_len2)
 			return -1;
@@ -500,7 +500,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 	/* now we still have untransmitted LLC data, so we fill mac block */
 	rlc_data = m_rlc.block(bsn);
 	data = rlc_data->prepare(block_data_len);
-	rlc_data->cs = cs;
+	rlc_data->cs_last = cs;
 	rlc_data->len = block_data_len;
 
 	rdbi = &(rlc_data->block_info);
@@ -565,7 +565,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 	} while (ar == Encoding::AR_COMPLETED_SPACE_LEFT);
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "data block (BSN %d, %s): %s\n",
-		bsn, rlc_data->cs.name(),
+		bsn, rlc_data->cs_last.name(),
 		osmo_hexdump(rlc_data->block, block_data_len));
 	/* raise send state and set ack state array */
 	m_window.m_v_b.mark_unacked(bsn);
@@ -604,7 +604,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	 * be put into the data area, even if the resulting CS is higher than
 	 * the current limit.
 	 */
-	cs = m_rlc.block(index)->cs;
+	cs = m_rlc.block(index)->cs_last;
 	bsns[0] = index;
 	num_bsns = 1;
 
@@ -650,7 +650,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		else
 			bsn = bsns[0];
 
-		cs_enc = m_rlc.block(bsn)->cs;
+		cs_enc = m_rlc.block(bsn)->cs_last;
 
 		/* get data and header from current block */
 		block_data = m_rlc.block(bsn)->block;
@@ -817,7 +817,7 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 
 		/* Get statistics for current CS */
 
-		if (rlc_data->cs != current_cs()) {
+		if (rlc_data->cs_last != current_cs()) {
 			/* This block has already been encoded with a different
 			 * CS, so it doesn't help us to decide, whether the
 			 * current CS is ok. Ignore it. */

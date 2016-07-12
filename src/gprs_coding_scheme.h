@@ -26,6 +26,12 @@
 
 class GprsCodingScheme {
 public:
+
+#define MAX_NUM_ARQ           2      /* max. number of ARQ */
+#define MAX_NUM_MCS           9     /* max. number of MCS */
+#define EGPRS_ARQ1            0x0
+#define EGPRS_ARQ2            0x1
+
 	enum Scheme {
 		UNKNOWN,
 		CS1, CS2, CS3, CS4,
@@ -105,6 +111,8 @@ public:
 	static GprsCodingScheme getEgprsByNum(unsigned num);
 
 	static const char *modeName(Mode mode);
+	static enum Scheme egprs_mcs_retx_tbl[MAX_NUM_ARQ]
+			[MAX_NUM_MCS][MAX_NUM_MCS];
 private:
 	GprsCodingScheme(int s); /* fail on use */
 	GprsCodingScheme& operator =(int s); /* fail on use */
