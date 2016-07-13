@@ -355,13 +355,12 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 {
 	int bsn;
 	int data_len2, force_data_len = -1;
-	GprsCodingScheme cs2;
 	GprsCodingScheme force_cs;
 
 	bsn = m_window.resend_needed();
 
 	if (previous_bsn >= 0) {
-		force_cs = m_rlc.block(previous_bsn)->cs_last;
+		force_cs = m_rlc.block(previous_bsn)->cs_current_trans;
 		if (!force_cs.isEgprs())
 			return -1;
 		force_data_len = m_rlc.block(previous_bsn)->len;
@@ -375,7 +374,28 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			m_window.mod_sns(bsn - previous_bsn) > RLC_EGPRS_MAX_BSN_DELTA)
 			return -1;
 
-		cs2 = m_rlc.block(bsn)->cs_last;
+		if (is_egprs_enabled()) {
+			m_rlc.block(bsn)->cs_current_trans =
+			GprsCodingScheme::get_retx_mcs(
+			m_rlc.block(bsn)->cs_last, ms()->current_cs_dl());
+
+			LOGP(DRLCMACDL, LOGL_DEBUG,
+			"- current_cs_dl(%d) demanded_mcs(%d) cs_trans(%d)\n",
+			m_rlc.block(bsn)->cs_last.to_num(),
+			ms()->current_cs_dl().to_num(),
+			m_rlc.block(bsn)->cs_current_trans.to_num());
+
+			/* TODO: Need to remove this check when MCS-8 -> MCS-6
+			 * transistion is handled.
+			 * Refer commit be881c028fc4da00c4046ecd9296727975c206a3
+			 */
+			if (m_rlc.block(bsn)->cs_last == GprsCodingScheme::MCS8)
+				m_rlc.block(bsn)->cs_current_trans =
+					GprsCodingScheme::MCS8;
+		} else
+			m_rlc.block(bsn)->cs_current_trans =
+					m_rlc.block(bsn)->cs_last;
+
 		data_len2 = m_rlc.block(bsn)->len;
 		if (force_data_len > 0 && force_data_len != data_len2)
 			return -1;
@@ -398,13 +418,14 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		if (restart_bsn_cycle())
 			return take_next_bsn(fn, previous_bsn, may_combine);
 	} else if (have_data()) {
+		GprsCodingScheme new_cs;
 		/* New blocks may be send */
-		cs2 = force_cs ? force_cs : current_cs();
+		new_cs = force_cs ? force_cs : current_cs();
 		LOGP(DRLCMACDL, LOGL_DEBUG,
 			"- Sending new block at BSN %d, CS=%s\n",
-			m_window.v_s(), cs2.name());
+			m_window.v_s(), new_cs.name());
 
-		bsn = create_new_bsn(fn, cs2);
+		bsn = create_new_bsn(fn, new_cs);
 	} else if (!m_window.window_empty()) {
 		LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
 			"because all blocks have been transmitted (FLOW).\n",
@@ -418,7 +439,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			"- Sending new dummy block at BSN %d, CS=%s\n",
 			m_window.v_s(), current_cs().name());
 		bsn = create_new_bsn(fn, current_cs());
-		/* Don't send a second block, so don't set cs2 */
+		/* Don't send a second block, so don't set cs_current_trans */
 	}
 
 	if (bsn < 0) {
@@ -429,7 +450,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		bts->rlc_resent();
 	}
 
-	*may_combine = cs2.numDataBlocks() > 1;
+	*may_combine = m_rlc.block(bsn)->cs_current_trans.numDataBlocks() > 1;
 
 	return bsn;
 }
@@ -501,6 +522,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 	rlc_data = m_rlc.block(bsn);
 	data = rlc_data->prepare(block_data_len);
 	rlc_data->cs_last = cs;
+	rlc_data->cs_current_trans = cs;
 	rlc_data->len = block_data_len;
 
 	rdbi = &(rlc_data->block_info);
@@ -590,7 +612,6 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	bool is_final = false;
 	gprs_rlc_data_info rlc;
 	GprsCodingScheme cs;
-	GprsCodingScheme cs_current_trans;
 	int bsns[ARRAY_SIZE(rlc.block_info)];
 	unsigned num_bsns;
 	enum egprs_puncturing_values punct[ARRAY_SIZE(rlc.block_info)];
@@ -604,7 +625,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	 * be put into the data area, even if the resulting CS is higher than
 	 * the current limit.
 	 */
-	cs = m_rlc.block(index)->cs_last;
+	cs = m_rlc.block(index)->cs_current_trans;
 	bsns[0] = index;
 	num_bsns = 1;
 
@@ -616,6 +637,11 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	if (num_bsns == 1) {
 		/* TODO: remove the conditional when MCS-6 padding isn't
 		 * failing to be decoded by MEs anymore */
+		/* TODO: support of MCS-8 -> MCS-6 transition should be
+		 * handled
+		 * Refer commit be881c028fc4da00c4046ecd9296727975c206a3
+		 * dated 2016-02-07 23:45:40 (UTC)
+		 */
 		if (cs != GprsCodingScheme(GprsCodingScheme::MCS8))
 			cs.decToSingleBlock(&need_padding);
 	}
@@ -650,18 +676,14 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		else
 			bsn = bsns[0];
 
-		cs_enc = m_rlc.block(bsn)->cs_last;
-
+		cs_enc = m_rlc.block(bsn)->cs_current_trans;
 		/* get data and header from current block */
 		block_data = m_rlc.block(bsn)->block;
-
-		/* TODO: Need to support MCS change during retx */
-		cs_current_trans = cs;
 
 		/* Get current puncturing scheme from block */
 		punct_scheme = gprs_get_punct_scheme(
 			m_rlc.block(bsn)->next_ps,
-			cs, cs_current_trans);
+			m_rlc.block(bsn)->cs_last, cs);
 
 		if (cs.isEgprs()) {
 			OSMO_ASSERT(punct_scheme >= EGPRS_PS_1);
@@ -685,8 +707,9 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		 * in header type 1
 		 */
 		gprs_update_punct_scheme(&m_rlc.block(bsn)->next_ps,
-					cs_current_trans);
+					cs);
 
+		m_rlc.block(bsn)->cs_last = cs;
 		rdbi->e   = block_info->e;
 		rdbi->cv  = block_info->cv;
 		rdbi->bsn = bsn;

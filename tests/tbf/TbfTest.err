@@ -4746,6 +4746,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- current_cs_dl(5) demanded_mcs(7) cs_trans(7)
 - Resending BSN 0
 - Sending new block at BSN 1, CS=MCS-7
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=512)
@@ -4895,6 +4896,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- current_cs_dl(8) demanded_mcs(8) cs_trans(8)
 - Resending BSN 0
 - Sending new block at BSN 1, CS=MCS-8
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=512)
@@ -5030,6 +5032,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
+- current_cs_dl(6) demanded_mcs(9) cs_trans(9)
 - Resending BSN 0
 - Sending new block at BSN 1, CS=MCS-9
 - Dequeue next LLC for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) (len=512)
