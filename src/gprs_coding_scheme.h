@@ -70,6 +70,7 @@ public:
 	unsigned int to_num() const;
 
 	GprsCodingScheme& operator =(Scheme s);
+	bool operator == (Scheme s) const;
 	GprsCodingScheme& operator =(GprsCodingScheme o);
 
 	bool isValid()   const {return UNKNOWN <= m_scheme && m_scheme <= MCS9;}
@@ -111,6 +112,9 @@ public:
 	static GprsCodingScheme getEgprsByNum(unsigned num);
 
 	static const char *modeName(Mode mode);
+	static Scheme get_retx_mcs(const GprsCodingScheme mcs,
+				const GprsCodingScheme retx_mcs);
+
 	static enum Scheme egprs_mcs_retx_tbl[MAX_NUM_ARQ]
 			[MAX_NUM_MCS][MAX_NUM_MCS];
 private:
@@ -196,6 +200,11 @@ inline bool operator ==(GprsCodingScheme a, GprsCodingScheme b)
 	return GprsCodingScheme::Scheme(a) == GprsCodingScheme::Scheme(b);
 }
 
+inline bool GprsCodingScheme::operator == (Scheme scheme) const
+{
+	return this->m_scheme == scheme;
+}
+
 inline bool operator !=(GprsCodingScheme a, GprsCodingScheme b)
 {
 	return !(a == b);
@@ -221,4 +230,10 @@ inline bool operator >=(GprsCodingScheme a, GprsCodingScheme b)
 {
 	return a == b || a > b;
 }
-
+inline GprsCodingScheme::Scheme GprsCodingScheme::get_retx_mcs(
+				const GprsCodingScheme mcs,
+				const GprsCodingScheme demanded_mcs)
+{
+	return egprs_mcs_retx_tbl[EGPRS_ARQ2][mcs.to_num() - 1]
+			[demanded_mcs.to_num() - 1];
+}

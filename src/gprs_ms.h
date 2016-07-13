@@ -86,6 +86,7 @@ public:
 	uint8_t egprs_ms_class() const;
 	void set_ms_class(uint8_t ms_class);
 	void set_egprs_ms_class(uint8_t ms_class);
+	void set_current_cs_dl(GprsCodingScheme::Scheme scheme);
 
 	GprsCodingScheme current_cs_ul() const;
 	GprsCodingScheme current_cs_dl() const;

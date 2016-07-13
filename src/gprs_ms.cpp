@@ -574,6 +574,11 @@ GprsCodingScheme GprsMs::max_cs_ul() const
 	return GprsCodingScheme(GprsCodingScheme::MCS4);
 }
 
+void GprsMs::set_current_cs_dl(GprsCodingScheme::Scheme scheme)
+{
+	m_current_cs_dl = scheme;
+}
+
 GprsCodingScheme GprsMs::max_cs_dl() const
 {
 	struct gprs_rlcmac_bts *bts_data;
