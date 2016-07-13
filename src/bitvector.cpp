@@ -101,23 +101,6 @@ uint64_t bitvec_read_field(struct bitvec *bv, unsigned& read_index, unsigned len
 }
 
 
-int bitvec_write_field(struct bitvec *bv, unsigned& write_index, uint64_t val, unsigned len)
-{
-	unsigned int i;
-	int rc;
-	bv->cur_bit = write_index;
-	for (i = 0; i < len; i++) {
-		int bit = 0;
-		if (val & ((uint64_t)1 << (len - i - 1)))
-			bit = 1;
-		rc = bitvec_set_bit(bv, (bit_value)bit);
-		if (rc)
-			return rc;
-	}
-	write_index += len;
-	return 0;
-}
-
 int bitvec_write_field_lh(struct bitvec *bv, unsigned& write_index,
 		uint64_t val, unsigned len)
 {
