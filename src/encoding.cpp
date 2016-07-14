@@ -29,13 +29,16 @@ extern "C" {
 #include <osmocom/gprs/protocol/gsm_04_60.h>
 }
 
+#include <osmocom/gsm/protocol/gsm_04_08.h>
+
+#include <stdbool.h>
 #include <errno.h>
 #include <string.h>
 
 static int write_ia_rest_downlink(
 	gprs_rlcmac_dl_tbf *tbf,
 	bitvec * dest, unsigned& wp,
-	uint8_t polling, uint32_t fn,
+	uint8_t polling, bool ta_valid, uint32_t fn,
 	uint8_t alpha, uint8_t gamma, int8_t ta_idx)
 {
 	if (!tbf) {
@@ -58,7 +61,7 @@ static int write_ia_rest_downlink(
 	}
 	bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
 	bitvec_write_field(dest, wp,polling,1);   // Polling Bit
-	bitvec_write_field(dest, wp,!polling,1);   // TA_VALID ???
+	bitvec_write_field(dest, wp, ta_valid, 1); // N. B: NOT related to TAI!
 	if (ta_idx < 0) {
 		bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
 	} else {
@@ -208,7 +211,7 @@ int Encoding::write_immediate_assignment(
 
 	if (downlink)
 		rc = write_ia_rest_downlink(as_dl_tbf(tbf), dest, wp,
-			polling, fn,
+					    polling, gsm48_ta_is_valid(ta), fn,
 			alpha, gamma, ta_idx);
 	else if (as_ul_tbf(tbf) && as_ul_tbf(tbf)->is_egprs_enabled())
 		rc = write_ia_rest_egprs_uplink(as_ul_tbf(tbf), dest, wp,
