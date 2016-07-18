@@ -181,6 +181,7 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(BTS *the_bts, uint8_t ms_class,
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx_no, -1);
 	OSMO_ASSERT(tfi >= 0);
 	dl_tbf = tbf_alloc_dl_tbf(bts, NULL, trx_no, ms_class, egprs_ms_class, 1);
+	dl_tbf->set_ta(0);
 	check_tbf(dl_tbf);
 
 	/* "Establish" the DL TBF */
@@ -505,6 +506,7 @@ static void test_tbf_dl_llc_loss()
 	ms = the_bts.ms_store().get_ms(0, 0, imsi);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms->dl_tbf() != NULL);
+	ms->dl_tbf()->set_ta(0);
 
 	/* Handle LLC frame 2 */
 	memset(buf, 2, sizeof(buf));

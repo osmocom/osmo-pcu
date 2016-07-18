@@ -26,6 +26,7 @@
 
 extern "C" {
 #include <osmocom/core/talloc.h>
+#include <osmocom/gsm/protocol/gsm_04_08.h>
 }
 
 #include <errno.h>
@@ -54,6 +55,9 @@ int SBAController::alloc(
 	sba = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_sba);
 	if (!sba)
 		return -ENOMEM;
+
+	if (!gsm48_ta_is_valid(ta))
+		return -EINVAL;
 
 	for (trx = 0; trx < 8; trx++) {
 		for (ts = 7; ts >= 0; ts--) {

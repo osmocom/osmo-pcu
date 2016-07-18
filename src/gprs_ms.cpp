@@ -32,6 +32,7 @@
 extern "C" {
 	#include <osmocom/core/talloc.h>
 	#include <osmocom/core/utils.h>
+	#include <osmocom/gsm/protocol/gsm_04_08.h>
 }
 
 #define GPRS_CODEL_SLOW_INTERVAL_MS 4000
@@ -95,7 +96,7 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	m_tlli(tlli),
 	m_new_ul_tlli(0),
 	m_new_dl_tlli(0),
-	m_ta(0),
+	m_ta(GSM48_TA_INVALID),
 	m_ms_class(0),
 	m_egprs_ms_class(0),
 	m_is_idle(true),
@@ -464,11 +465,15 @@ void GprsMs::set_ta(uint8_t ta_)
 	if (ta_ == m_ta)
 		return;
 
-	LOGP(DRLCMAC, LOGL_INFO,
-		"Modifying MS object, TLLI = 0x%08x, TA %d -> %d\n",
-		tlli(), m_ta, ta_);
-
-	m_ta = ta_;
+	if (gsm48_ta_is_valid(ta_)) {
+		LOGP(DRLCMAC, LOGL_INFO,
+		     "Modifying MS object, TLLI = 0x%08x, TA %d -> %d\n",
+		     tlli(), m_ta, ta_);
+		m_ta = ta_;
+	} else
+		LOGP(DRLCMAC, LOGL_NOTICE,
+		     "MS object, TLLI = 0x%08x, invalid TA %d rejected (old "
+		     "value %d kept)\n", tlli(), ta_, m_ta);
 }
 
 void GprsMs::set_ms_class(uint8_t ms_class_)

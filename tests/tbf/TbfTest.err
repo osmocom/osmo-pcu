@@ -15,7 +15,7 @@ PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBF
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL): trx = 0, ul_slots = 04, dl_slots = 04
 The MS object cannot fully confirm an unexpected TLLI: 0x00002342, partly confirmed
-Modifying MS object, TLLI = 0x00002342, TA 0 -> 4
+Modifying MS object, TLLI = 0x00002342, TA 220 -> 4
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Slot Allocation (Algorithm A) for class 0
@@ -54,6 +54,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBF
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL): trx = 0, ul_slots = 10, dl_slots = 10
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
@@ -141,6 +142,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBF
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL): trx = 0, ul_slots = 10, dl_slots = 10
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
@@ -228,6 +230,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBF
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL): trx = 0, ul_slots = 10, dl_slots = 10
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
@@ -530,6 +533,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBF
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL): trx = 0, ul_slots = 10, dl_slots = 10
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
 Searching for first unallocated TFI: TRX=0
  Found TFI=1.
@@ -550,6 +554,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBF
 - Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 Allocated TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL): trx = 0, ul_slots = 10, dl_slots = 10
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xf1000001, partly confirmed
 The MS object cannot fully confirm an unexpected TLLI: 0xf1000002, partly confirmed
@@ -595,8 +600,8 @@ Modifying MS object, TLLI = 0xc0000000, IMSI '' -> '001001000000000'
 Send dowlink assignment for TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000000)
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 30 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 08 00 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 30 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 08 00 23 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -622,8 +627,8 @@ Modifying MS object, TLLI = 0xc0000001, IMSI '' -> '001001000000001'
 Send dowlink assignment for TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000001)
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 18 40 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 31 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 18 40 23 2b 2b 2b 2b 
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -649,8 +654,8 @@ Modifying MS object, TLLI = 0xc0000002, IMSI '' -> '001001000000002'
 Send dowlink assignment for TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000002)
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 28 80 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 32 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 28 80 23 2b 2b 2b 2b 
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -676,8 +681,8 @@ Modifying MS object, TLLI = 0xc0000003, IMSI '' -> '001001000000003'
 Send dowlink assignment for TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000003)
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 33 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 38 c0 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 33 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 38 c0 23 2b 2b 2b 2b 
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -703,8 +708,8 @@ Modifying MS object, TLLI = 0xc0000004, IMSI '' -> '001001000000004'
 Send dowlink assignment for TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000004)
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 34 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 49 00 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 34 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 49 00 23 2b 2b 2b 2b 
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -730,8 +735,8 @@ Modifying MS object, TLLI = 0xc0000005, IMSI '' -> '001001000000005'
 Send dowlink assignment for TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000005)
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 35 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 59 40 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 35 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 59 40 23 2b 2b 2b 2b 
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -757,8 +762,8 @@ Modifying MS object, TLLI = 0xc0000006, IMSI '' -> '001001000000006'
 Send dowlink assignment for TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000006)
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 69 80 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 36 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 69 80 23 2b 2b 2b 2b 
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -784,8 +789,8 @@ Modifying MS object, TLLI = 0xc0000007, IMSI '' -> '001001000000007'
 Send dowlink assignment for TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000007)
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 37 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 79 c0 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 37 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 79 c0 23 2b 2b 2b 2b 
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -811,8 +816,8 @@ Modifying MS object, TLLI = 0xc0000008, IMSI '' -> '001001000000008'
 Send dowlink assignment for TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000008)
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 38 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 8a 00 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 38 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 8a 00 23 2b 2b 2b 2b 
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -838,8 +843,8 @@ Modifying MS object, TLLI = 0xc0000009, IMSI '' -> '001001000000009'
 Send dowlink assignment for TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000009)
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 39 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 9a 40 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 39 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 9a 40 23 2b 2b 2b 2b 
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -865,8 +870,8 @@ Modifying MS object, TLLI = 0xc000000a, IMSI '' -> '001001000000010'
 Send dowlink assignment for TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000010)
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 30 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 aa 80 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 30 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 aa 80 23 2b 2b 2b 2b 
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -892,8 +897,8 @@ Modifying MS object, TLLI = 0xc000000b, IMSI '' -> '001001000000011'
 Send dowlink assignment for TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000011)
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 ba c0 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 31 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 ba c0 23 2b 2b 2b 2b 
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -919,8 +924,8 @@ Modifying MS object, TLLI = 0xc000000c, IMSI '' -> '001001000000012'
 Send dowlink assignment for TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000012)
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 cb 00 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 32 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 cb 00 23 2b 2b 2b 2b 
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -946,8 +951,8 @@ Modifying MS object, TLLI = 0xc000000d, IMSI '' -> '001001000000013'
 Send dowlink assignment for TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000013)
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 33 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 db 40 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 33 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 db 40 23 2b 2b 2b 2b 
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -973,8 +978,8 @@ Modifying MS object, TLLI = 0xc000000e, IMSI '' -> '001001000000014'
 Send dowlink assignment for TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000014)
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 34 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 eb 80 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 34 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 eb 80 23 2b 2b 2b 2b 
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1000,8 +1005,8 @@ Modifying MS object, TLLI = 0xc000000f, IMSI '' -> '001001000000015'
 Send dowlink assignment for TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000015)
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 35 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 00 fb c0 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 35 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 fb c0 23 2b 2b 2b 2b 
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1027,8 +1032,8 @@ Modifying MS object, TLLI = 0xc0000010, IMSI '' -> '001001000000016'
 Send dowlink assignment for TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000016)
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 0c 00 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 36 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 0c 00 23 2b 2b 2b 2b 
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1054,8 +1059,8 @@ Modifying MS object, TLLI = 0xc0000011, IMSI '' -> '001001000000017'
 Send dowlink assignment for TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000017)
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 37 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 1c 40 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 37 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 1c 40 23 2b 2b 2b 2b 
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1081,8 +1086,8 @@ Modifying MS object, TLLI = 0xc0000012, IMSI '' -> '001001000000018'
 Send dowlink assignment for TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000018)
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 38 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 2c 80 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 38 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 2c 80 23 2b 2b 2b 2b 
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1108,8 +1113,8 @@ Modifying MS object, TLLI = 0xc0000013, IMSI '' -> '001001000000019'
 Send dowlink assignment for TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000019)
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 39 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 3c c0 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 39 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 3c c0 23 2b 2b 2b 2b 
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1135,8 +1140,8 @@ Modifying MS object, TLLI = 0xc0000014, IMSI '' -> '001001000000020'
 Send dowlink assignment for TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000020)
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 30 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 4d 00 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 30 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 4d 00 23 2b 2b 2b 2b 
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1162,8 +1167,8 @@ Modifying MS object, TLLI = 0xc0000015, IMSI '' -> '001001000000021'
 Send dowlink assignment for TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000021)
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 5d 40 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 31 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 5d 40 23 2b 2b 2b 2b 
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1189,8 +1194,8 @@ Modifying MS object, TLLI = 0xc0000016, IMSI '' -> '001001000000022'
 Send dowlink assignment for TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000022)
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 32 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 6d 80 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 32 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 6d 80 23 2b 2b 2b 2b 
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1216,8 +1221,8 @@ Modifying MS object, TLLI = 0xc0000017, IMSI '' -> '001001000000023'
 Send dowlink assignment for TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000023)
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 33 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 7d c0 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 33 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 7d c0 23 2b 2b 2b 2b 
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1243,8 +1248,8 @@ Modifying MS object, TLLI = 0xc0000018, IMSI '' -> '001001000000024'
 Send dowlink assignment for TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000024)
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 34 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 8e 00 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 34 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 8e 00 23 2b 2b 2b 2b 
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1270,8 +1275,8 @@ Modifying MS object, TLLI = 0xc0000019, IMSI '' -> '001001000000025'
 Send dowlink assignment for TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000025)
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 35 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 9e 40 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 35 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 9e 40 23 2b 2b 2b 2b 
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1297,8 +1302,8 @@ Modifying MS object, TLLI = 0xc000001a, IMSI '' -> '001001000000026'
 Send dowlink assignment for TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000026)
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 ae 80 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 36 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 ae 80 23 2b 2b 2b 2b 
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1324,8 +1329,8 @@ Modifying MS object, TLLI = 0xc000001b, IMSI '' -> '001001000000027'
 Send dowlink assignment for TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000027)
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 37 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 be c0 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 37 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 be c0 23 2b 2b 2b 2b 
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1351,8 +1356,8 @@ Modifying MS object, TLLI = 0xc000001c, IMSI '' -> '001001000000028'
 Send dowlink assignment for TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000028)
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 38 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 cf 00 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 38 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 cf 00 23 2b 2b 2b 2b 
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1378,8 +1383,8 @@ Modifying MS object, TLLI = 0xc000001d, IMSI '' -> '001001000000029'
 Send dowlink assignment for TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000029)
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 39 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 df 40 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 39 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 df 40 23 2b 2b 2b 2b 
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1405,8 +1410,8 @@ Modifying MS object, TLLI = 0xc000001e, IMSI '' -> '001001000000030'
 Send dowlink assignment for TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000030)
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 33 30 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 ef 80 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 33 30 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 ef 80 23 2b 2b 2b 2b 
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1432,8 +1437,8 @@ Modifying MS object, TLLI = 0xc000001f, IMSI '' -> '001001000000031'
 Send dowlink assignment for TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000000031)
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 33 31 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 00 00 01 ff c0 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 33 31 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 ff c0 23 2b 2b 2b 2b 
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=WAIT ASSIGN) append
 ********** TBF starts here **********
@@ -1467,10 +1472,11 @@ Modifying MS object, TLLI = 0xc0123456, IMSI '' -> '001001000123456'
 Send dowlink assignment for TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) on PCH, no TBF exist (IMSI=001001000123456)
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TX: START TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) Immediate Assignment Downlink (PCH)
- - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 01 23 45 68 00 23 2b 2b 2b 2b 
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 01 23 45 68 00 23 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) changes state from ASSIGN to WAIT ASSIGN
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) append
+Modifying MS object, TLLI = 0xc0123456, TA 220 -> 0
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) append
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=WAIT ASSIGN) changes state from WAIT ASSIGN to RELEASING
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING) free
@@ -1555,7 +1561,7 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBF
 - Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL): trx = 0, ul_slots = 80, dl_slots = 00
-Modifying MS object, TLLI = 0x00000000, TA 0 -> 7
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer 3169.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
@@ -1642,7 +1648,7 @@ Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL): trx = 0, ul_slots = 80, 
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer 3169.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
-Modifying MS object, TLLI = 0xf1223344, TA 0 -> 7
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Change control TS to 7 until assinment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
@@ -1728,7 +1734,7 @@ Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL): trx = 0, ul_slots = 80, 
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer 3169.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
-Modifying MS object, TLLI = 0xf1223344, TA 0 -> 7
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Change control TS to 7 until assinment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
@@ -1868,7 +1874,7 @@ Allocated TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL): trx = 0, ul_slots = 80, 
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer 3169.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf5667788, not yet confirmed
-Modifying MS object, TLLI = 0xf5667788, TA 0 -> 7
+Modifying MS object, TLLI = 0xf5667788, TA 220 -> 7
 Change control TS to 7 until assinment is complete.
 Received RTS for PDCH: TRX=0 TS=7 FN=2654335 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
@@ -1941,7 +1947,7 @@ Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL): trx = 0, ul_slots = 80, 
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer 3169.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
-Modifying MS object, TLLI = 0xf1223344, TA 0 -> 7
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Change control TS to 7 until assinment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
@@ -2120,7 +2126,7 @@ Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL): trx = 0, ul_slots = 80, 
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer 3169.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
-Modifying MS object, TLLI = 0xf1223344, TA 0 -> 7
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Change control TS to 7 until assinment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
@@ -2200,7 +2206,7 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBF
 - Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL): trx = 0, ul_slots = 80, dl_slots = 00
-Modifying MS object, TLLI = 0x00000000, TA 0 -> 7
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer 3169.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
@@ -2272,7 +2278,7 @@ Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL): trx = 0, ul_slots = 80, 
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer 3169.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
-Modifying MS object, TLLI = 0xf1223344, TA 0 -> 7
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Change control TS to 7 until assinment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)s start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
@@ -3412,7 +3418,7 @@ Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS): trx = 0, ul_slots 
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer 3169.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
-Modifying MS object, TLLI = 0xf1223344, TA 0 -> 7
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Change control TS to 7 until assinment is complete.
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)s start Packet Uplink Assignment (PACCH)
@@ -3747,6 +3753,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -4080,6 +4087,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -4358,6 +4366,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -4595,6 +4604,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -4796,6 +4806,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -4975,6 +4986,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -5135,6 +5147,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -5291,6 +5304,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -5434,6 +5448,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -5578,6 +5593,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -5628,6 +5644,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -5678,6 +5695,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -5728,6 +5746,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -5797,6 +5816,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -5866,6 +5886,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append
@@ -5935,6 +5956,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) append

@@ -120,7 +120,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 {
 	uint8_t ss;
 	int8_t use_trx;
-	uint16_t ta = 0;
+	uint16_t ta = GSM48_TA_INVALID;
 	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL, *old_ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 	GprsMs *ms;

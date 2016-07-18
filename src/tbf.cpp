@@ -74,7 +74,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	m_tfi(0),
 	m_created_ts(0),
 	m_ms(NULL),
-	m_ta(0),
+	m_ta(GSM48_TA_INVALID),
 	m_ms_class(0),
 	m_list(this),
 	m_ms_list(this),
@@ -151,7 +151,8 @@ void gprs_rlcmac_tbf::set_ta(uint8_t ta)
 	if (ms())
 		ms()->set_ta(ta);
 
-	m_ta = ta;
+	if (gsm48_ta_is_valid(ta))
+		m_ta = ta;
 }
 
 uint8_t gprs_rlcmac_tbf::ms_class() const

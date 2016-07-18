@@ -33,6 +33,7 @@ extern "C" {
 	#include <osmocom/core/talloc.h>
 	#include <osmocom/core/msgb.h>
 	#include <osmocom/core/stats.h>
+	#include <osmocom/gsm/protocol/gsm_04_08.h>
 }
 
 #include <arpa/inet.h>
@@ -1129,7 +1130,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		uint32_t tlli = request->ID.u.TLLI;
 		uint8_t ms_class = 0;
 		uint8_t egprs_ms_class = 0;
-		uint8_t ta = 0;
+		uint8_t ta = GSM48_TA_INVALID;
 		struct pcu_l1_meas meas;
 
 		GprsMs *ms = bts()->ms_by_tlli(tlli);
