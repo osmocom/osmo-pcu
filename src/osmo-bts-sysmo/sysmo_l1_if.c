@@ -109,23 +109,6 @@ static void *prim_init(GsmL1_Prim_t *prim, GsmL1_PrimId_t id, struct femtol1_hdl
 	return &prim->u;
 }
 
-struct sapi_dir {
-	GsmL1_Sapi_t sapi;
-	GsmL1_Dir_t dir;
-};
-
-static const struct sapi_dir pdtch_sapis[] = {
-	{ GsmL1_Sapi_Pdtch,	GsmL1_Dir_TxDownlink },
-	{ GsmL1_Sapi_Pdtch,	GsmL1_Dir_RxUplink },
-	{ GsmL1_Sapi_Ptcch,	GsmL1_Dir_TxDownlink },
-	{ GsmL1_Sapi_Prach,	GsmL1_Dir_RxUplink },
-#if 0
-	{ GsmL1_Sapi_Ptcch,	GsmL1_Dir_RxUplink },
-	{ GsmL1_Sapi_Pacch,	GsmL1_Dir_TxDownlink },
-#endif
-};
-
-
 /* connect PDTCH */
 int l1if_connect_pdch(void *obj, uint8_t ts)
 {
