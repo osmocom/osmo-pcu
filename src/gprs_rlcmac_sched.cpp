@@ -289,7 +289,7 @@ static struct msgb *sched_dummy(void)
 }
 
 int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
-	uint8_t trx, uint8_t ts, uint16_t arfcn,
+	uint8_t trx, uint8_t ts,
         uint32_t fn, uint8_t block_nr)
 {
 	struct gprs_rlcmac_pdch *pdch;
@@ -299,8 +299,6 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	uint8_t usf = 0x7;
 	struct msgb *msg = NULL;
 	uint32_t poll_fn, sba_fn;
-
-#warning "ARFCN... it is already in the TRX..... is it consistent with it?"
 
 	if (trx >= 8 || ts >= 8)
 		return -EINVAL;
@@ -370,7 +368,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	gprs_bssgp_update_frames_sent();
 
 	/* send PDTCH/PACCH to L1 */
-	pcu_l1if_tx_pdtch(msg, trx, ts, arfcn, fn, block_nr);
+	pcu_l1if_tx_pdtch(msg, trx, ts, bts->trx[trx].arfcn, fn, block_nr);
 
 	return 0;
 }

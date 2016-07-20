@@ -264,11 +264,11 @@ static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 }
 
 // FIXME: remove this, when changed from c++ to c.
-extern "C" int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts, uint16_t arfcn,
+extern "C" int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts,
 	uint32_t fn, uint8_t block_nr)
 {
 	return gprs_rlcmac_rcv_rts_block(bts_main_data(),
-					trx, ts, arfcn, fn, block_nr);
+					trx, ts, fn, block_nr);
 }
 
 static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
@@ -282,7 +282,7 @@ static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 	switch (rts_req->sapi) {
 	case PCU_IF_SAPI_PDTCH:
 		pcu_rx_rts_req_pdtch(rts_req->trx_nr, rts_req->ts_nr,
-			rts_req->arfcn, rts_req->fn, rts_req->block_nr);
+			rts_req->fn, rts_req->block_nr);
 		break;
 	case PCU_IF_SAPI_PTCCH:
 		/* FIXME */

@@ -124,7 +124,7 @@ int pcu_sock_send(struct msgb *msg);
 #ifdef __cplusplus
 extern "C" {
 #endif
-int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts, uint16_t arfcn,
+int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts,
 	uint32_t fn, uint8_t block_nr);
 
 int pcu_rx_data_ind_pdtch(uint8_t trx, uint8_t ts, uint8_t *data,

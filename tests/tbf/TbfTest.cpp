@@ -206,11 +206,11 @@ static unsigned fn_add_blocks(unsigned fn, unsigned blocks)
 }
 
 static void request_dl_rlc_block(struct gprs_rlcmac_bts *bts,
-	uint8_t trx_no, uint8_t ts_no, uint16_t arfcn,
+	uint8_t trx_no, uint8_t ts_no,
 	uint32_t *fn, uint8_t *block_nr = NULL)
 {
 	uint8_t bn = fn2bn(*fn);
-	gprs_rlcmac_rcv_rts_block(bts, trx_no, ts_no, arfcn, *fn, bn);
+	gprs_rlcmac_rcv_rts_block(bts, trx_no, ts_no, *fn, bn);
 	*fn = fn_add_blocks(*fn, 1);
 	bn += 1;
 	if (block_nr)
@@ -221,7 +221,7 @@ static void request_dl_rlc_block(struct gprs_rlcmac_tbf *tbf,
 	uint32_t *fn, uint8_t *block_nr = NULL)
 {
 	request_dl_rlc_block(tbf->bts->bts_data(), tbf->trx->trx_no,
-		tbf->control_ts, tbf->trx->arfcn, fn, block_nr);
+		tbf->control_ts, fn, block_nr);
 }
 
 enum test_tbf_final_ack_mode {
@@ -636,7 +636,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	bts = the_bts->bts_data();
 
 	/* needed to set last_rts_fn in the PDCH object */
-	request_dl_rlc_block(bts, trx_no, ts_no, 0, fn);
+	request_dl_rlc_block(bts, trx_no, ts_no, fn);
 
 	/* simulate RACH, this sends an Immediate Assignment Uplink on the AGCH */
 	the_bts->rcv_rach(0x73, rach_fn, qta);
@@ -741,7 +741,7 @@ static void transmit_dl_data(BTS *the_bts, uint32_t tlli, uint32_t *fn,
 			if (!(slots & (1 << ts_no)))
 				continue;
 			gprs_rlcmac_rcv_rts_block(the_bts->bts_data(),
-				dl_tbf->trx->trx_no, ts_no, 0,
+				dl_tbf->trx->trx_no, ts_no,
 				*fn, bn);
 		}
 		*fn = fn_add_blocks(*fn, 1);
