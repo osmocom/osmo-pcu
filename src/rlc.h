@@ -56,6 +56,34 @@ enum gprs_rlc_dl_bsn_state {
 };
 
 /*
+ * EGPRS resegment status information for UL
+ * When only first split block is received bsn state
+ * will be set to EGPRS_RESEG_FIRST_SEG_RXD and when
+ * only second segment is received the state will be
+ * set to EGPRS_RESEG_SECOND_SEG_RXD. When both Split
+ * blocks are received the state will be set to
+ * EGPRS_RESEG_DEFAULT
+ * The EGPRS resegmentation feature allows MS to retransmit
+ * RLC blocks of HeaderType1, HeaderType2 by segmenting
+ * them to 2 HeaderType3 blocks(Example MCS5 will be
+ * retransmitted as 2 MCS2 blocks). Table 10.4.8b.1 of 44.060
+ * explains the possible values of SPB in HeadrType3 for UL
+ * direction. When the MCS is changed at the PCU, PCU directs the
+ * changed MCS to MS by PUAN or UPLINK ASSIGNMENT message along
+ * with RESEGMENT flag, Then MS may decide to retransmit the
+ * blocks by resegmenting it based on Table 8.1.1.1 of 44.060.
+ * The retransmission MCS is calculated based on current MCS of
+ * the Block and demanded MCS by PCU. Section 10.3a.4.3 of 44.060
+ * shows the HeadrType3 with SPB field present in it
+*/
+enum egprs_rlc_ul_reseg_bsn_state {
+	EGPRS_RESEG_DEFAULT = 0,
+	EGPRS_RESEG_FIRST_SEG_RXD = 0x01,
+	EGPRS_RESEG_SECOND_SEG_RXD = 0x02,
+	EGPRS_RESEG_INVALID = 0x04
+};
+
+/*
  * Valid puncturing scheme values
  * TS 44.060 10.4.8a.3.1, 10.4.8a.2.1, 10.4.8a.1.1
  */
@@ -109,6 +137,15 @@ struct gprs_rlc_data_info {
 	struct gprs_rlc_data_block_info block_info[2];
 };
 
+/* holds the current status of the block w.r.t UL/DL split blocks */
+union split_block_status {
+	egprs_rlc_ul_reseg_bsn_state block_status_ul;
+	/*
+	 * TODO: DL split block status need to be supported
+	 * for EGPRS DL
+	*/
+};
+
 struct gprs_rlc_data {
 	uint8_t *prepare(size_t block_data_length);
 	void put_data(const uint8_t *data, size_t len);
@@ -133,6 +170,9 @@ struct gprs_rlc_data {
 
 	/* puncturing scheme value to be used for next transmission*/
 	enum egprs_puncturing_values next_ps;
+
+	/* holds the status of the block w.r.t UL/DL split blocks*/
+	union split_block_status spb_status;
 };
 
 void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,
