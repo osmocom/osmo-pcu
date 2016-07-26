@@ -1066,6 +1066,20 @@ unsigned Encoding::write_packet_paging_request(bitvec * dest)
 	return wp;
 }
 
+/* 3GPP TS 44.060 § 11.2.10:
+   < Repeated Page info struct > ::=
+   { 0  -- Page request for TBF establishment
+    { 0 < PTMSI : bit (32) >
+    | 1 < Length of Mobile Identity contents : bit (4) >
+        < Mobile Identity : octet (val (Length of Mobile Identity contents)) > }
+   | 1  -- Page request for RR conn. establishment
+    { 0 < TMSI : bit (32) >
+    | 1 < Length of Mobile Identity contents : bit (4) >
+        < Mobile Identity : octet (val (Length of Mobile Identity contents)) > }
+    < CHANNEL_NEEDED : bit (2) >
+    { 0 | 1 < eMLPP_PRIORITY : bit (3) > }
+   }
+ */
 unsigned Encoding::write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
 	uint8_t *identity, uint8_t chan_needed)
 {
@@ -1078,7 +1092,7 @@ unsigned Encoding::write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t
 		identity++;
 		len--;
 	} else {
-		bitvec_write_field(dest, &wp,0x0,1);  // MI
+		bitvec_write_field(dest, &wp,0x1,1);  // MI
 		bitvec_write_field(dest, &wp,len,4);  // MI len
 	}
 	while (len) {
