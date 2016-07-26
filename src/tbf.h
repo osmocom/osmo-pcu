@@ -439,6 +439,21 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	int assemble_forward_llc(const gprs_rlc_data *data);
 	int snd_ul_ud();
 
+	egprs_rlc_ul_reseg_bsn_state handle_egprs_ul_spb(
+		const struct gprs_rlc_data_info *rlc,
+		struct gprs_rlc_data *block,
+		uint8_t *data, const uint8_t block_idx);
+
+	egprs_rlc_ul_reseg_bsn_state handle_egprs_ul_first_seg(
+		const struct gprs_rlc_data_info *rlc,
+		struct gprs_rlc_data *block,
+		uint8_t *data, const uint8_t block_idx);
+
+	egprs_rlc_ul_reseg_bsn_state handle_egprs_ul_second_seg(
+		const struct gprs_rlc_data_info *rlc,
+		struct gprs_rlc_data *block,
+		uint8_t *data, const uint8_t block_idx);
+
 	/* Please note that all variables here will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
 	 * All states that need reset must be in this struct, so this is why

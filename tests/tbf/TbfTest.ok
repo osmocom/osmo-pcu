@@ -32,6 +32,8 @@
 === end test_tbf_ws ===
 === start test_tbf_egprs_two_phase ===
 === end test_tbf_egprs_two_phase ===
+=== start test_tbf_egprs_two_phase_spb ===
+=== end test_tbf_egprs_two_phase_spb ===
 === start test_tbf_egprs_dl ===
 Testing MCS-1
 Testing MCS-2

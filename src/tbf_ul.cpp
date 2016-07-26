@@ -223,36 +223,28 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 			rdbi->bsn, m_window.v_q(),
 			m_window.mod_sns(m_window.v_q() + ws - 1));
 		block = m_rlc.block(rdbi->bsn);
-		block->block_info = *rdbi;
-		block->cs_last = rlc->cs;
 		OSMO_ASSERT(rdbi->data_len <= sizeof(block->block));
 		rlc_data = &(block->block[0]);
-		/* TODO: Handle SPB != 0 -> Set length to 2*len, add offset if
-		 * 2nd part. Note that resegmentation is currently disabled
-		 * within the UL assignment.
-		 */
-		if (rdbi->spb) {
-			LOGP(DRLCMACUL, LOGL_NOTICE,
-				"Got SPB != 0 but resegmentation has been "
-				"disabled, skipping %s data block with BSN %d, "
-				"TFI=%d.\n", rlc->cs.name(), rdbi->bsn,
-				rlc->tfi);
-			continue;
-		}
 
-		block->len =
-			Decoding::rlc_copy_to_aligned_buffer(rlc, block_idx, data,
-				rlc_data);
+		if (rdbi->spb) {
+			egprs_rlc_ul_reseg_bsn_state assemble_status;
+
+			assemble_status = handle_egprs_ul_spb(rlc,
+						block, data, block_idx);
+
+			if (assemble_status != EGPRS_RESEG_DEFAULT)
+				return 0;
+		} else {
+			block->block_info = *rdbi;
+			block->cs_last = rlc->cs;
+			block->len =
+				Decoding::rlc_copy_to_aligned_buffer(rlc,
+				block_idx, data, rlc_data);
+		}
 
 		LOGP(DRLCMACUL, LOGL_DEBUG,
 			"%s: data_length=%d, data=%s\n",
 			name(), block->len, osmo_hexdump(rlc_data, block->len));
-
-		/* TODO: Handle SPB != 0 -> set state to partly received
-		 * (upper/lower) and continue with the loop, unless the other
-		 * part is already present.
-		 */
-
 		/* Get/Handle TLLI */
 		if (rdbi->ti) {
 			num_chunks = Decoding::rlc_data_from_ul_data(
@@ -393,3 +385,131 @@ int gprs_rlcmac_ul_tbf::snd_ul_ud()
 	return 0;
 }
 
+egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_second_seg(
+	const struct gprs_rlc_data_info *rlc, struct gprs_rlc_data *block,
+	uint8_t *data, const uint8_t block_idx)
+{
+	const gprs_rlc_data_block_info *rdbi = &rlc->block_info[block_idx];
+	union split_block_status *spb_status = &block->spb_status;
+	uint8_t *rlc_data = &block->block[0];
+
+	if (spb_status->block_status_ul &
+				EGPRS_RESEG_FIRST_SEG_RXD) {
+		LOGP(DRLCMACUL, LOGL_DEBUG,
+				"---%s: Second seg is received "
+				"first seg is already present "
+				"set the status to complete\n", name());
+		spb_status->block_status_ul = EGPRS_RESEG_DEFAULT;
+
+		block->len += Decoding::rlc_copy_to_aligned_buffer(rlc,
+			block_idx, data, rlc_data + block->len);
+		block->block_info.data_len += rdbi->data_len;
+	} else if (spb_status->block_status_ul == EGPRS_RESEG_DEFAULT) {
+		LOGP(DRLCMACUL, LOGL_DEBUG,
+				"---%s: Second seg is received "
+				"first seg is not received "
+				"set the status to second seg received\n",
+				name());
+
+		block->len = Decoding::rlc_copy_to_aligned_buffer(rlc,
+				block_idx, data,
+				rlc_data + rlc->block_info[block_idx].data_len);
+
+		spb_status->block_status_ul = EGPRS_RESEG_SECOND_SEG_RXD;
+		block->block_info = *rdbi;
+	}
+	return spb_status->block_status_ul;
+}
+
+egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_first_seg(
+	const struct gprs_rlc_data_info *rlc, struct gprs_rlc_data *block,
+	uint8_t *data, const uint8_t block_idx)
+{
+	const gprs_rlc_data_block_info *rdbi = &rlc->block_info[block_idx];
+	uint8_t *rlc_data = &block->block[0];
+	union split_block_status *spb_status = &block->spb_status;
+
+	if (spb_status->block_status_ul & EGPRS_RESEG_SECOND_SEG_RXD) {
+		LOGP(DRLCMACUL, LOGL_DEBUG,
+				"---%s: First seg is received "
+				"second seg is already present "
+				"set the status to complete\n", name());
+
+		block->len += Decoding::rlc_copy_to_aligned_buffer(rlc,
+				block_idx, data, rlc_data);
+
+		block->block_info.data_len = block->len;
+		spb_status->block_status_ul = EGPRS_RESEG_DEFAULT;
+	} else if (spb_status->block_status_ul == EGPRS_RESEG_DEFAULT) {
+		LOGP(DRLCMACUL, LOGL_DEBUG,
+				"---%s: First seg is received "
+				"second seg is not received "
+				"set the status to first seg "
+				"received\n", name());
+
+		spb_status->block_status_ul = EGPRS_RESEG_FIRST_SEG_RXD;
+		block->len = Decoding::rlc_copy_to_aligned_buffer(rlc,
+					block_idx, data, rlc_data);
+		block->block_info = *rdbi;
+	}
+	return spb_status->block_status_ul;
+}
+
+egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_spb(
+	const struct gprs_rlc_data_info *rlc, struct gprs_rlc_data *block,
+	uint8_t *data, const uint8_t block_idx)
+{
+	const gprs_rlc_data_block_info *rdbi = &rlc->block_info[block_idx];
+
+	LOGP(DRLCMACUL, LOGL_DEBUG,
+		"--%s: Got SPB(%d)  "
+		"cs(%s) data block with BSN (%d), "
+		"TFI(%d).\n", name(), rdbi->spb,  rlc->cs.name(), rdbi->bsn,
+		rlc->tfi);
+
+	egprs_rlc_ul_reseg_bsn_state assemble_status = EGPRS_RESEG_INVALID;
+
+	/* Section 10.4.8b of 44.060*/
+	if (rdbi->spb == 2)
+		assemble_status = handle_egprs_ul_first_seg(rlc,
+						block, data, block_idx);
+	else if (rdbi->spb == 3)
+		assemble_status = handle_egprs_ul_second_seg(rlc,
+						block, data, block_idx);
+	else {
+		LOGP(DRLCMACUL, LOGL_ERROR,
+			"--%s: spb(%d) Not supported SPB for this EGPRS "
+			"configuration\n",
+			name(), rdbi->spb);
+	}
+
+	/*
+	 * When the block is successfully constructed out of segmented blocks
+	 * upgrade the MCS to the type 2
+	 */
+	if (assemble_status == EGPRS_RESEG_DEFAULT) {
+		switch (GprsCodingScheme::Scheme(rlc->cs)) {
+		case GprsCodingScheme::MCS3 :
+			block->cs_last = GprsCodingScheme::MCS6;
+			LOGP(DRLCMACUL, LOGL_DEBUG,
+				"--%s: Upgrading to MCS6\n", name());
+			break;
+		case GprsCodingScheme::MCS2 :
+			block->cs_last = GprsCodingScheme::MCS5;
+			LOGP(DRLCMACUL, LOGL_DEBUG,
+				"--%s: Upgrading to MCS5\n", name());
+			break;
+		case GprsCodingScheme::MCS1 :
+			LOGP(DRLCMACUL, LOGL_DEBUG,
+				"--%s: Upgrading to MCS4\n", name());
+			block->cs_last = GprsCodingScheme::MCS4;
+			break;
+		default:
+			LOGP(DRLCMACUL, LOGL_ERROR,
+				"--%s: cs(%s) Error in Upgrading to higher MCS\n",
+				name(), rlc->cs.name());
+			break;
+		}
+	}
+	return assemble_status;
+}

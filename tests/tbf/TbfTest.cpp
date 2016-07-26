@@ -35,6 +35,7 @@ extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/utils.h>
 #include <osmocom/vty/vty.h>
+#include <osmocom/gprs/protocol/gsm_04_60.h>
 }
 
 #include <errno.h>
@@ -617,6 +618,457 @@ static void send_control_ack(gprs_rlcmac_tbf *tbf)
 		&ulreq, tbf->poll_fn);
 }
 
+static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
+	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
+	uint8_t ms_class, uint8_t egprs_ms_class)
+{
+	GprsMs *ms;
+	uint32_t rach_fn = *fn - 51;
+	uint32_t sba_fn = *fn + 52;
+	uint8_t trx_no = 0;
+	int tfi = 0, i = 0;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	struct gprs_rlcmac_pdch *pdch;
+	gprs_rlcmac_bts *bts;
+	RlcMacUplink_t ulreq = {0};
+	struct pcu_l1_meas meas;
+	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
+	GprsCodingScheme cs;
+
+	meas.set_rssi(31);
+	bts = the_bts->bts_data();
+
+	/* needed to set last_rts_fn in the PDCH object */
+	request_dl_rlc_block(bts, trx_no, ts_no, fn);
+
+	/*
+	 * simulate RACH, this sends an Immediate
+	 * Assignment Uplink on the AGCH
+	 */
+	the_bts->rcv_rach(0x73, rach_fn, qta);
+
+	/* get next free TFI */
+	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
+
+	/* fake a resource request */
+	ulreq.u.MESSAGE_TYPE = MT_PACKET_RESOURCE_REQUEST;
+	ulreq.u.Packet_Resource_Request.PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
+	ulreq.u.Packet_Resource_Request.ID.UnionType = 1; /* != 0 */
+	ulreq.u.Packet_Resource_Request.ID.u.TLLI = tlli;
+	ulreq.u.Packet_Resource_Request.Exist_MS_Radio_Access_capability = 1;
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		Count_MS_RA_capability_value = 1;
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		MS_RA_capability_value[0].u.Content.
+			Exist_Multislot_capability = 1;
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		MS_RA_capability_value[0].u.Content.Multislot_capability.
+		Exist_GPRS_multislot_class = 1;
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		MS_RA_capability_value[0].u.Content.Multislot_capability.
+		GPRS_multislot_class = ms_class;
+	if (egprs_ms_class) {
+		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+			MS_RA_capability_value[0].u.Content.
+			Multislot_capability.Exist_EGPRS_multislot_class = 1;
+		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+			MS_RA_capability_value[0].u.Content.
+			Multislot_capability.EGPRS_multislot_class = ms_class;
+	}
+
+	send_ul_mac_block(the_bts, trx_no, ts_no, &ulreq, sba_fn);
+
+	/* check the TBF */
+	ul_tbf = the_bts->ul_tbf_by_tfi(tfi, trx_no, ts_no);
+	OSMO_ASSERT(ul_tbf != NULL);
+	OSMO_ASSERT(ul_tbf->ta() == qta / 4);
+
+	/* send packet uplink assignment */
+	*fn = sba_fn;
+	request_dl_rlc_block(ul_tbf, fn);
+
+	/* send real acknowledgement */
+	send_control_ack(ul_tbf);
+
+	check_tbf(ul_tbf);
+
+	/* send fake data */
+	uint8_t data_msg[42] = {
+		0x00 | 0xf << 2, /* GPRS_RLCMAC_DATA_BLOCK << 6, CV = 15 */
+		uint8_t(0 | (tfi << 1)),
+		uint8_t(1), /* BSN:7, E:1 */
+	};
+
+	pdch = &the_bts->bts_data()->trx[trx_no].pdch[ts_no];
+	pdch->rcv_block(&data_msg[0], 23, *fn, &meas);
+
+	ms = the_bts->ms_by_tlli(tlli);
+	OSMO_ASSERT(ms != NULL);
+	OSMO_ASSERT(ms->ta() == qta/4);
+	OSMO_ASSERT(ms->ul_tbf() == ul_tbf);
+
+	/*
+	 * TS 44.060, B.8.1
+	 * first seg received first, later second seg
+	 */
+	cs = GprsCodingScheme::MCS3;
+	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
+	egprs3->si = 1;
+	egprs3->r = 1;
+	egprs3->cv = 7;
+	egprs3->tfi_hi = tfi & 0x03;
+	egprs3->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs3->bsn1_hi = 1;
+	egprs3->bsn1_lo = 0;
+	egprs3->cps_hi = 1;
+	data_msg[3] = 0xff;
+	egprs3->pi = 0;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 2;
+	egprs3->pi = 0;
+
+	pdch->rcv_block(data_msg, 42, *fn, &meas);
+
+	struct gprs_rlc_data *block =  ul_tbf->m_rlc.block(1);
+
+	/* check the status of the block */
+	OSMO_ASSERT(block->spb_status.block_status_ul ==
+				EGPRS_RESEG_FIRST_SEG_RXD);
+
+	egprs3->si = 1;
+	egprs3->r = 1;
+	egprs3->cv = 7;
+	egprs3->tfi_hi = tfi & 0x03;
+	egprs3->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs3->bsn1_hi = 1;
+	egprs3->bsn1_lo = 0;
+	egprs3->cps_hi = 1;
+	data_msg[3] = 0xff;
+	egprs3->pi = 0;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 3;
+
+	pdch->rcv_block(data_msg, 42, *fn, &meas);
+
+	/* check the status of the block */
+	OSMO_ASSERT(block->spb_status.block_status_ul ==
+				EGPRS_RESEG_DEFAULT);
+	OSMO_ASSERT(block->cs_last ==
+			GprsCodingScheme::MCS6);
+	/* Assembled MCS is MCS6. so the size is 74 */
+	OSMO_ASSERT(block->len == 74);
+
+	/*
+	 * TS 44.060, B.8.1
+	 * second seg first, later first seg
+	 */
+	memset(data_msg, 0, sizeof(data_msg));
+
+	cs = GprsCodingScheme::MCS3;
+	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
+	egprs3->si = 1;
+	egprs3->r = 1;
+	egprs3->cv = 7;
+	egprs3->tfi_hi = tfi & 0x03;
+	egprs3->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs3->bsn1_hi = 2;
+	egprs3->bsn1_lo = 0;
+	egprs3->cps_hi = 1;
+	data_msg[3] = 0xff;
+	egprs3->pi = 0;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 3;
+	egprs3->pi = 0;
+
+	pdch->rcv_block(data_msg, 42, *fn, &meas);
+
+	block =  ul_tbf->m_rlc.block(2);
+	/* check the status of the block */
+	OSMO_ASSERT(block->spb_status.block_status_ul ==
+				EGPRS_RESEG_SECOND_SEG_RXD);
+
+	egprs3->si = 1;
+	egprs3->r = 1;
+	egprs3->cv = 7;
+	egprs3->tfi_hi = tfi & 0x03;
+	egprs3->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs3->bsn1_hi = 2;
+	egprs3->bsn1_lo = 0;
+	egprs3->cps_hi = 1;
+	data_msg[3] = 0xff;
+	egprs3->pi = 0;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 2;
+	egprs3->pi = 0;
+
+	pdch->rcv_block(data_msg, 42, *fn, &meas);
+
+	/* check the status of the block */
+	OSMO_ASSERT(block->spb_status.block_status_ul ==
+				EGPRS_RESEG_DEFAULT);
+	OSMO_ASSERT(block->cs_last ==
+			GprsCodingScheme::MCS6);
+	/* Assembled MCS is MCS6. so the size is 74 */
+	OSMO_ASSERT(block->len == 74);
+
+	/*
+	 * TS 44.060, B.8.1
+	 * Error scenario with spb as 1
+	 */
+	cs = GprsCodingScheme::MCS3;
+	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
+	egprs3->si = 1;
+	egprs3->r = 1;
+	egprs3->cv = 7;
+	egprs3->tfi_hi = tfi & 0x03;
+	egprs3->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs3->bsn1_hi = 3;
+	egprs3->bsn1_lo = 0;
+	egprs3->cps_hi = 1;
+	data_msg[3] = 0xff;
+	egprs3->pi = 0;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 1;
+	egprs3->pi = 0;
+
+	pdch->rcv_block(data_msg, 42, *fn, &meas);
+
+	block =  ul_tbf->m_rlc.block(3);
+	/* check the status of the block */
+	OSMO_ASSERT(block->spb_status.block_status_ul ==
+				EGPRS_RESEG_DEFAULT);
+	/*
+	 * TS 44.060, B.8.1
+	 * comparison of rlc_data for multiple scenarios
+	 * Receive First, the second(BSN 3)
+	 * Receive First, First then Second(BSN 4)
+	 * Receive Second then First(BSN 5)
+	 * after above 3 scenarios are triggered,
+	 * rlc_data of all 3 BSN are compared
+	 */
+
+	/* Initialize the data_msg */
+	for (i = 0; i < 42; i++)
+		data_msg[i] = i;
+
+	cs = GprsCodingScheme::MCS3;
+	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
+	egprs3->si = 1;
+	egprs3->r = 1;
+	egprs3->cv = 7;
+	egprs3->tfi_hi = tfi & 0x03;
+	egprs3->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs3->bsn1_hi = 3;
+	egprs3->bsn1_lo = 0;
+	egprs3->cps_hi = 1;
+	data_msg[3] = 0xff;
+	egprs3->pi = 0;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 2;
+	egprs3->pi = 0;
+
+	pdch->rcv_block(data_msg, 42, *fn, &meas);
+
+	block =  ul_tbf->m_rlc.block(3);
+	/* check the status of the block */
+	OSMO_ASSERT(block->spb_status.block_status_ul ==
+				EGPRS_RESEG_FIRST_SEG_RXD);
+
+	cs = GprsCodingScheme::MCS3;
+	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
+	egprs3->si = 1;
+	egprs3->r = 1;
+	egprs3->cv = 7;
+	egprs3->tfi_hi = tfi & 0x03;
+	egprs3->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs3->bsn1_hi = 3;
+	egprs3->bsn1_lo = 0;
+	egprs3->cps_hi = 1;
+	data_msg[3] = 0xff;
+	egprs3->pi = 0;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 3;
+	egprs3->pi = 0;
+
+	pdch->rcv_block(data_msg, 42, *fn, &meas);
+
+	block =  ul_tbf->m_rlc.block(3);
+	/* check the status of the block */
+	OSMO_ASSERT(block->spb_status.block_status_ul ==
+				EGPRS_RESEG_DEFAULT);
+	/* Assembled MCS is MCS6. so the size is 74 */
+	OSMO_ASSERT(block->len == 74);
+	OSMO_ASSERT(block->cs_last ==
+			GprsCodingScheme::MCS6);
+
+	cs = GprsCodingScheme::MCS3;
+	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
+	egprs3->si = 1;
+	egprs3->r = 1;
+	egprs3->cv = 7;
+	egprs3->tfi_hi = tfi & 0x03;
+	egprs3->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs3->bsn1_hi = 4;
+	egprs3->bsn1_lo = 0;
+	egprs3->cps_hi = 1;
+	data_msg[3] = 0xff;
+	egprs3->pi = 0;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 2;
+	egprs3->pi = 0;
+
+	pdch->rcv_block(data_msg, 42, *fn, &meas);
+
+	block =  ul_tbf->m_rlc.block(4);
+	/* check the status of the block */
+	OSMO_ASSERT(block->spb_status.block_status_ul ==
+				EGPRS_RESEG_FIRST_SEG_RXD);
+
+	cs = GprsCodingScheme::MCS3;
+	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
+	egprs3->si = 1;
+	egprs3->r = 1;
+	egprs3->cv = 7;
+	egprs3->tfi_hi = tfi & 0x03;
+	egprs3->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs3->bsn1_hi = 4;
+	egprs3->bsn1_lo = 0;
+	egprs3->cps_hi = 1;
+	data_msg[3] = 0xff;
+	egprs3->pi = 0;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 2;
+	egprs3->pi = 0;
+
+	pdch->rcv_block(data_msg, 42, *fn, &meas);
+
+	block =  ul_tbf->m_rlc.block(4);
+	/* check the status of the block */
+	OSMO_ASSERT(block->spb_status.block_status_ul ==
+				EGPRS_RESEG_FIRST_SEG_RXD);
+
+	cs = GprsCodingScheme::MCS3;
+	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
+	egprs3->si = 1;
+	egprs3->r = 1;
+	egprs3->cv = 7;
+	egprs3->tfi_hi = tfi & 0x03;
+	egprs3->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs3->bsn1_hi = 4;
+	egprs3->bsn1_lo = 0;
+	egprs3->cps_hi = 1;
+	data_msg[3] = 0xff;
+	egprs3->pi = 0;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 3;
+	egprs3->pi = 0;
+
+	pdch->rcv_block(data_msg, 42, *fn, &meas);
+
+	block =  ul_tbf->m_rlc.block(4);
+	/* check the status of the block */
+	OSMO_ASSERT(block->spb_status.block_status_ul ==
+				EGPRS_RESEG_DEFAULT);
+	OSMO_ASSERT(block->cs_last ==
+			GprsCodingScheme::MCS6);
+	/* Assembled MCS is MCS6. so the size is 74 */
+	OSMO_ASSERT(block->len == 74);
+
+	cs = GprsCodingScheme::MCS3;
+	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
+	egprs3->si = 1;
+	egprs3->r = 1;
+	egprs3->cv = 7;
+	egprs3->tfi_hi = tfi & 0x03;
+	egprs3->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs3->bsn1_hi = 5;
+	egprs3->bsn1_lo = 0;
+	egprs3->cps_hi = 1;
+	data_msg[3] = 0xff;
+	egprs3->pi = 0;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 3;
+	egprs3->pi = 0;
+
+	pdch->rcv_block(data_msg, 42, *fn, &meas);
+
+	block =  ul_tbf->m_rlc.block(5);
+	/* check the status of the block */
+	OSMO_ASSERT(block->spb_status.block_status_ul ==
+				EGPRS_RESEG_SECOND_SEG_RXD);
+
+	cs = GprsCodingScheme::MCS3;
+	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
+	egprs3->si = 1;
+	egprs3->r = 1;
+	egprs3->cv = 7;
+	egprs3->tfi_hi = tfi & 0x03;
+	egprs3->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs3->bsn1_hi = 5;
+	egprs3->bsn1_lo = 0;
+	egprs3->cps_hi = 1;
+	data_msg[3] = 0xff;
+	egprs3->pi = 0;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 2;
+	egprs3->pi = 0;
+
+	pdch->rcv_block(data_msg, 42, *fn, &meas);
+
+	block =  ul_tbf->m_rlc.block(5);
+
+	/* check the status of the block */
+	OSMO_ASSERT(block->spb_status.block_status_ul ==
+				EGPRS_RESEG_DEFAULT);
+	OSMO_ASSERT(block->cs_last ==
+			GprsCodingScheme::MCS6);
+	/* Assembled MCS is MCS6. so the size is 74 */
+	OSMO_ASSERT(block->len == 74);
+
+	OSMO_ASSERT(ul_tbf->m_rlc.block(5)->len ==
+				ul_tbf->m_rlc.block(4)->len);
+	OSMO_ASSERT(ul_tbf->m_rlc.block(5)->len ==
+				ul_tbf->m_rlc.block(3)->len);
+
+	/* Compare the spb status of each BSNs(3,4,5). should be same */
+	OSMO_ASSERT(
+		ul_tbf->m_rlc.block(5)->spb_status.block_status_ul ==
+		ul_tbf->m_rlc.block(4)->spb_status.block_status_ul);
+	OSMO_ASSERT(
+		ul_tbf->m_rlc.block(5)->spb_status.block_status_ul ==
+		ul_tbf->m_rlc.block(3)->spb_status.block_status_ul);
+
+	/* Compare the Assembled MCS of each BSNs(3,4,5). should be same */
+	OSMO_ASSERT(ul_tbf->m_rlc.block(5)->cs_last ==
+				ul_tbf->m_rlc.block(4)->cs_last);
+	OSMO_ASSERT(ul_tbf->m_rlc.block(5)->cs_last ==
+				ul_tbf->m_rlc.block(3)->cs_last);
+
+	/* Compare the data of each BSNs(3,4,5). should be same */
+	OSMO_ASSERT(
+		!memcmp(ul_tbf->m_rlc.block(5)->block,
+		ul_tbf->m_rlc.block(4)->block, ul_tbf->m_rlc.block(5)->len
+		));
+	OSMO_ASSERT(
+		!memcmp(ul_tbf->m_rlc.block(5)->block,
+		ul_tbf->m_rlc.block(3)->block, ul_tbf->m_rlc.block(5)->len
+		));
+
+	return ul_tbf;
+}
+
 static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
 	uint8_t ms_class, uint8_t egprs_ms_class)
@@ -1179,6 +1631,41 @@ static void test_tbf_ws()
 	gprs_bssgp_destroy();
 }
 
+static void test_tbf_egprs_two_phase_spb(void)
+{
+	BTS the_bts;
+	int ts_no = 7;
+	uint32_t fn = 2654218;
+	uint16_t qta = 31;
+	uint32_t tlli = 0xf1223344;
+	const char *imsi = "0011223344";
+	uint8_t ms_class = 1;
+	uint8_t egprs_ms_class = 1;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	GprsMs *ms;
+	uint8_t test_data[256];
+
+	printf("=== start %s ===\n", __func__);
+
+	memset(test_data, 1, sizeof(test_data));
+
+	setup_bts(&the_bts, ts_no, 4);
+	the_bts.bts_data()->initial_mcs_dl = 9;
+	the_bts.bts_data()->egprs_enabled = 1;
+
+	ul_tbf = establish_ul_tbf_two_phase_spb(&the_bts, ts_no, tlli, &fn, qta,
+		ms_class, egprs_ms_class);
+
+	ms = ul_tbf->ms();
+	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
+	fprintf(stderr,
+		"Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
+
+	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
+
+	printf("=== end %s ===\n", __func__);
+}
+
 static void test_tbf_egprs_two_phase()
 {
 	BTS the_bts;
@@ -1581,6 +2068,7 @@ int main(int argc, char **argv)
 	test_tbf_gprs_egprs();
 	test_tbf_ws();
 	test_tbf_egprs_two_phase();
+	test_tbf_egprs_two_phase_spb();
 	test_tbf_egprs_dl();
 	test_tbf_egprs_retx_dl();
 

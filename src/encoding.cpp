@@ -283,7 +283,8 @@ void Encoding::write_packet_uplink_assignment(
 		bitvec_write_field(dest, wp,0x0,1); // No CONTENTION_RESOLUTION_TLLI
 		bitvec_write_field(dest, wp,0x0,1); // No COMPACT reduced MA
 		bitvec_write_field(dest, wp,tbf->current_cs().to_num()-1, 4); // EGPRS Modulation and Coding IE
-		bitvec_write_field(dest, wp,0x0,1); // No RESEGMENT
+		/* 0: no RESEGMENT, 1: Segmentation*/
+		bitvec_write_field(dest, wp, 0x1, 1);
 		bitvec_write_field(dest, wp,ws_enc,5); // EGPRS Window Size
 		bitvec_write_field(dest, wp,0x0,1); // No Access Technologies Request
 		bitvec_write_field(dest, wp,0x0,1); // No ARAC RETRANSMISSION REQUEST
@@ -620,7 +621,8 @@ static void write_packet_uplink_ack_egprs(
 	/* CHANNEL_CODING_COMMAND */
 	bitvec_write_field(dest, wp,
 		tbf->current_cs().to_num() - 1, 4);
-	bitvec_write_field(dest, wp, 0, 1); // 0: no RESEGMENT (nyi)
+	/* 0: no RESEGMENT, 1: Segmentation*/
+	bitvec_write_field(dest, wp, 1, 1);
 	bitvec_write_field(dest, wp, 1, 1); // PRE_EMPTIVE_TRANSMISSION, TODO: This resembles GPRS, change it?
 	bitvec_write_field(dest, wp, 0, 1); // 0: no PRR_RETRANSMISSION_REQUEST, TODO: clarify
 	bitvec_write_field(dest, wp, 0, 1); // 0: no ARAC_RETRANSMISSION_REQUEST, TODO: clarify
