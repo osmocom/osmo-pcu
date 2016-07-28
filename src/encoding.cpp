@@ -35,6 +35,43 @@ extern "C" {
 #include <errno.h>
 #include <string.h>
 
+/* { 0 | 1 < TIMING_ADVANCE_INDEX : bit (4) > } */
+static inline bool write_tai(bitvec *dest, unsigned& wp, int8_t tai)
+{
+	if (tai < 0) { /* No TIMING_ADVANCE_INDEX: */
+		bitvec_write_field(dest, wp, 0, 1);
+		return false;
+	}
+	/* TIMING_ADVANCE_INDEX: */
+	bitvec_write_field(dest, wp, 1, 1);
+	bitvec_write_field(dest, wp, tai, 4);
+	return true;
+}
+
+/* { 0 | 1 < TIMING_ADVANCE_VALUE : bit (6) > } */
+static inline void write_ta(bitvec *dest, unsigned& wp, int8_t ta)
+{
+	if (ta < 0) /* No TIMING_ADVANCE_VALUE: */
+		bitvec_write_field(dest, wp, 0, 1);
+	else { /* TIMING_ADVANCE_VALUE: */
+		bitvec_write_field(dest, wp, 1, 1);
+		bitvec_write_field(dest, wp, ta, 6);
+	}
+}
+
+/* 3GPP TS 44.060 § 12.12:
+   { 0 | 1 < TIMING_ADVANCE_VALUE : bit (6) > }
+   { 0 | 1 < TIMING_ADVANCE_INDEX : bit (4) >
+           < TIMING_ADVANCE_TIMESLOT_NUMBER : bit (3) > }
+ */
+static inline void write_ta_ie(bitvec *dest, unsigned& wp,
+			       int8_t ta, int8_t tai, uint8_t ts)
+{
+	write_ta(dest, wp, ta);
+	if (write_tai(dest, wp, tai)) /* TIMING_ADVANCE_TIMESLOT_NUMBER: */
+		bitvec_write_field(dest, wp, ts, 3);
+}
+
 static int write_ia_rest_downlink(
 	gprs_rlcmac_dl_tbf *tbf,
 	bitvec * dest, unsigned& wp,
@@ -62,12 +99,7 @@ static int write_ia_rest_downlink(
 	bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
 	bitvec_write_field(dest, wp,polling,1);   // Polling Bit
 	bitvec_write_field(dest, wp, ta_valid, 1); // N. B: NOT related to TAI!
-	if (ta_idx < 0) {
-		bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
-	} else {
-		bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
-		bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
-	}
+	write_tai(dest, wp, ta_idx);
 	if (polling) {
 		bitvec_write_field(dest, wp,0x1,1);   // TBF Starting TIME present
 		bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
@@ -110,12 +142,7 @@ static int write_ia_rest_uplink(
 		} else
 			bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
 		bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
-		if (ta_idx < 0) {
-			bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
-		} else {
-			bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
-			bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
-		}
+		write_tai(dest, wp, ta_idx);
 		bitvec_write_field(dest, wp, 1, 1);    // TBF_STARTING_TIME_FLAG
 		bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
 		bitvec_write_field(dest, wp,fn % 51,6);               // T3
@@ -311,6 +338,8 @@ void Encoding::write_packet_uplink_assignment(
 	// TODO We should use our implementation of encode RLC/MAC Control messages.
 	unsigned wp = 0;
 	uint8_t ts;
+	/* timeslot assigned for the Continuous Timing Advance procedure */
+	uint8_t ta_ts = 0; /* FIXME: supply it as parameter from caller */
 
 	bitvec_write_field(dest, wp,0x1,2);  // Payload Type
 	bitvec_write_field(dest, wp,0x0,2);  // Uplink block with TDMA framenumber (N+13)
@@ -334,15 +363,7 @@ void Encoding::write_packet_uplink_assignment(
 		bitvec_write_field(dest, wp,0x0,1); // Message escape
 		bitvec_write_field(dest, wp,tbf->current_cs().to_num()-1, 2); // CHANNEL_CODING_COMMAND 
 		bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
-		bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
-		bitvec_write_field(dest, wp,tbf->ta(),6); // TIMING_ADVANCE_VALUE
-		if (ta_idx < 0) {
-			bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
-		} else {
-			bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
-			bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
-		}
-
+		write_ta_ie(dest, wp,tbf->ta(), ta_idx, ta_ts);
 	} else { /* EPGRS */
 		unsigned int ws_enc = (tbf->m_window.ws() - 64) / 32;
 		bitvec_write_field(dest, wp,0x1,1); // Message escape
@@ -357,16 +378,7 @@ void Encoding::write_packet_uplink_assignment(
 		bitvec_write_field(dest, wp,0x0,1); // No ARAC RETRANSMISSION REQUEST
 		bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
 		bitvec_write_field(dest, wp,0x0,1); // No BEP_PERIOD2
-
-		bitvec_write_field(dest, wp,0x1,1); // switch TIMING_ADVANCE_VALUE = on
-		bitvec_write_field(dest, wp,tbf->ta(),6); // TIMING_ADVANCE_VALUE
-		if (ta_idx < 0) {
-			bitvec_write_field(dest, wp,0x0,1);   // switch TIMING_ADVANCE_INDEX = off
-		} else {
-			bitvec_write_field(dest, wp,0x1,1);   // switch TIMING_ADVANCE_INDEX = on
-			bitvec_write_field(dest, wp,ta_idx,4);   // TIMING_ADVANCE_INDEX
-		}
-
+		write_ta_ie(dest, wp,tbf->ta(), ta_idx, ta_ts);
 		bitvec_write_field(dest, wp,0x0,1); // No Packet Extended Timing Advance
 	}
 
