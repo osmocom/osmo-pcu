@@ -214,7 +214,15 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind, struct gsmtap_inst 
 	int rc;
 	pcu_l1_meas meas;
 	meas.set_rssi(data_ind->rssi);
-
+#ifndef ENABLE_DIRECT_PHY
+	/* convert BER to % value */
+	meas.set_ber(data_ind->ber10k / 100);
+	meas.set_bto(data_ind->ta_offs_qbits);
+	meas.set_link_qual(data_ind->lqual_cb / 10);
+	LOGP(DL1IF, LOGL_DEBUG, "Data indication with raw measurements "
+	     "received: BER10k = %d, BTO = %d, Q = %d\n", data_ind->ber10k,
+	     data_ind->ta_offs_qbits, data_ind->lqual_cb);
+#endif
 	LOGP(DL1IF, LOGL_DEBUG, "Data indication received: sapi=%d arfcn=%d "
 		"block=%d data=%s\n", data_ind->sapi,
 		data_ind->arfcn, data_ind->block_nr,
