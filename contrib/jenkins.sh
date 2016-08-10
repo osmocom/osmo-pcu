@@ -2,6 +2,11 @@
 
 set -ex
 
+if [ -z "$MAKE" ]; then
+  echo 'The $MAKE variable is not defined, cannot build'
+  exit 1
+fi
+
 if [ $sysmobts = "no" -a $sysmodsp = "yes" ]; then
    echo "This config does not make sense."
    exit 0
