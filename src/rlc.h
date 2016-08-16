@@ -84,6 +84,39 @@ enum egprs_rlc_ul_reseg_bsn_state {
 };
 
 /*
+ * EGPRS resegment status information for DL
+ * When only first segment is sent, bsn state
+ * will be set to EGPRS_RESEG_FIRST_SEG_SENT and when
+ * second segment is sent the state will be
+ * set to EGPRS_RESEG_SECOND_SEG_SENT.
+ * EGPRS_RESEG_DL_INVALID is set to 8 considering there is a scope for
+ * 3rd segment according to Table 10.4.8b.2 of 44.060
+ * The EGPRS resegmentation feature allows PCU to retransmit
+ * RLC blocks of HeaderType1, HeaderType2 by segmenting
+ * them to 2 HeaderType3 blocks(Example MCS5 will be
+ * retransmitted as 2 MCS2 blocks). Table 10.4.8b.2 of 44.060
+ * explains the possible values of SPB in HeadrType3 for DL
+ * direction.The PCU decides to retransmit the
+ * blocks by resegmenting it based on Table 8.1.1.1 of 44.060.
+ * The retransmission MCS is calculated based on current MCS of
+ * the Block and demanded MCS by PCU. Section 10.3a.3.3 of 44.060
+ * shows the HeadrType3 with SPB field present in it
+ */
+enum egprs_rlc_dl_reseg_bsn_state {
+	EGPRS_RESEG_DL_DEFAULT = 0,
+	EGPRS_RESEG_FIRST_SEG_SENT = 0x01,
+	EGPRS_RESEG_SECOND_SEG_SENT = 0x02,
+	EGPRS_RESEG_DL_INVALID = 0x08
+};
+
+/* Table 10.4.8b.2 of 44.060 */
+enum egprs_rlcmac_dl_spb {
+	EGPRS_RLCMAC_DL_NO_RETX = 0,
+	EGPRS_RLCMAC_DL_FIRST_SEG = 2,
+	EGPRS_RLCMAC_DL_SEC_SEG = 3,
+};
+
+/*
  * Valid puncturing scheme values
  * TS 44.060 10.4.8a.3.1, 10.4.8a.2.1, 10.4.8a.1.1
  */
@@ -140,10 +173,7 @@ struct gprs_rlc_data_info {
 /* holds the current status of the block w.r.t UL/DL split blocks */
 union split_block_status {
 	egprs_rlc_ul_reseg_bsn_state block_status_ul;
-	/*
-	 * TODO: DL split block status need to be supported
-	 * for EGPRS DL
-	*/
+	egprs_rlc_dl_reseg_bsn_state block_status_dl;
 };
 
 struct gprs_rlc_data {
@@ -167,6 +197,13 @@ struct gprs_rlc_data {
 	 */
 	GprsCodingScheme cs_current_trans;
 	GprsCodingScheme cs_last;
+
+	/*
+	 * The MCS of initial transmission of a BSN
+	 * This variable is used for split block
+	 * processing in DL
+	 */
+	GprsCodingScheme cs_init;
 
 	/* puncturing scheme value to be used for next transmission*/
 	enum egprs_puncturing_values next_ps;

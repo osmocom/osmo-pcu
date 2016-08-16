@@ -186,6 +186,10 @@ struct gprs_rlcmac_bts {
 	uint8_t alpha, gamma;
 	uint8_t egprs_enabled;
 	uint32_t dl_tbf_idle_msec; /* hold time for idle DL TBFs */
+
+	/* 0 to support resegmentation in DL, 1 for no reseg */
+	uint8_t dl_arq_type;
+
 	uint32_t ms_idle_sec;
 	uint8_t cs_adj_enabled;
 	uint8_t cs_adj_upper_limit;
