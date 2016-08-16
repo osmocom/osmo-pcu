@@ -7,15 +7,6 @@ if [ -z "$MAKE" ]; then
   exit 1
 fi
 
-# Compat: to be able to smoothly reconfigure the jenkins job, handle both
-# old and new matrix variables
-if [ -z "$with_dsp" -a "$sysmodsp" = yes ]; then
-  with_dsp="sysmo"
-else
-  with_vty="yes"
-fi
-# end of compat part
-
 base="$PWD"
 deps="$base/deps"
 inst="$deps/install"
