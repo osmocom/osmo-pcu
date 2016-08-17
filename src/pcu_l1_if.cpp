@@ -322,7 +322,8 @@ static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
 	case PCU_IF_SAPI_RACH:
 		rc = BTS::main_bts()->rcv_rach(
 			rach_ind->ra, rach_ind->fn,
-			rach_ind->qta);
+			rach_ind->qta, rach_ind->is_11bit,
+			(ph_burst_type)rach_ind->burst_type);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU rach request with "

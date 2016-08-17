@@ -36,6 +36,7 @@ extern "C" {
 #include <osmocom/core/utils.h>
 #include <osmocom/vty/vty.h>
 #include <osmocom/gprs/protocol/gsm_04_60.h>
+#include <osmocom/gsm/l1sap.h>
 }
 
 #include <errno.h>
@@ -553,7 +554,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_single_phase(BTS *the_bts,
 
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 
-	the_bts->rcv_rach(0x03, *fn, qta);
+	the_bts->rcv_rach(0x03, *fn, qta, 0, GSM_L1_BURST_TYPE_ACCESS_0);
 
 	ul_tbf = the_bts->ul_tbf_by_tfi(tfi, trx_no, ts_no);
 	OSMO_ASSERT(ul_tbf != NULL);
@@ -787,7 +788,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	 * simulate RACH, this sends an Immediate
 	 * Assignment Uplink on the AGCH
 	 */
-	the_bts->rcv_rach(0x73, rach_fn, qta);
+	the_bts->rcv_rach(0x73, rach_fn, qta, 0, GSM_L1_BURST_TYPE_ACCESS_0);
 
 	/* get next free TFI */
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
@@ -1232,8 +1233,8 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	/* needed to set last_rts_fn in the PDCH object */
 	request_dl_rlc_block(bts, trx_no, ts_no, fn);
 
-	/* simulate RACH, this sends an Immediate Assignment Uplink on the AGCH */
-	the_bts->rcv_rach(0x73, rach_fn, qta);
+	/* simulate RACH, sends an Immediate Assignment Uplink on the AGCH */
+	the_bts->rcv_rach(0x73, rach_fn, qta, 0, GSM_L1_BURST_TYPE_ACCESS_0);
 
 	/* get next free TFI */
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);

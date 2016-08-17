@@ -467,7 +467,8 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	return 0;
 }
 
-int BTS::rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta)
+int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
+		enum ph_burst_type burst_type)
 {
 	struct gprs_rlcmac_ul_tbf *tbf = NULL;
 	uint8_t trx_no, ts_no = 0;

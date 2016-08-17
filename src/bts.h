@@ -28,6 +28,7 @@ extern "C" {
 #include <osmocom/core/stat_item.h>
 #include <osmocom/core/timer.h>
 #include <osmocom/core/gsmtap.h>
+#include <osmocom/gsm/l1sap.h>
 }
 
 #include "poll_controller.h"
@@ -289,7 +290,8 @@ public:
 	int tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx);
 
 	int rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn);
-	int rcv_rach(uint8_t ra, uint32_t Fn, int16_t qta);
+	int rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
+		enum ph_burst_type burst_type);
 
 	void trigger_dl_ass(gprs_rlcmac_dl_tbf *tbf, gprs_rlcmac_tbf *old_tbf);
 	void snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi);
