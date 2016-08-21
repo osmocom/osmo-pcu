@@ -310,7 +310,7 @@ drop_frame:
 		LOGP(DRLCMACDL, LOGL_NOTICE, "%s Discarding LLC PDU "
 			"because lifetime limit reached, "
 			"count=%u new_queue_size=%zu\n",
-			tbf_name(this), frames, llc_queue()->size());
+			tbf_name(this), frames, llc_queue_size());
 		if (frames > 0xff)
 			frames = 0xff;
 		if (octets > 0xffffff)
@@ -572,7 +572,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 				m_llc.frame_length(), frames_since_last_drain(fn));
 		}
 
-		is_final = llc_queue()->size() == 0 && !keep_open(fn);
+		is_final = llc_queue_size() == 0 && !keep_open(fn);
 
 		ar = Encoding::rlc_data_to_dl_append(rdbi, cs,
 			&m_llc, &write_offset, &num_chunks, data, is_final, &payload_written);
@@ -1050,7 +1050,7 @@ int gprs_rlcmac_dl_tbf::maybe_start_new_window()
 	release();
 
 	/* check for LLC PDU in the LLC Queue */
-	if (llc_queue()->size() > 0)
+	if (llc_queue_size() > 0)
 		/* we have more data so we will re-use this tbf */
 		establish_dl_tbf_on_pacch();
 
@@ -1168,7 +1168,7 @@ bool gprs_rlcmac_dl_tbf::need_control_ts() const
 bool gprs_rlcmac_dl_tbf::have_data() const
 {
 	return m_llc.chunk_size() > 0 ||
-		(llc_queue() && llc_queue()->size() > 0);
+		(llc_queue_size() > 0);
 }
 
 int gprs_rlcmac_dl_tbf::frames_since_last_poll(unsigned fn) const

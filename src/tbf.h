@@ -142,8 +142,7 @@ struct gprs_rlcmac_tbf {
 	uint8_t ms_class() const;
 	void set_ms_class(uint8_t);
 	GprsCodingScheme current_cs() const;
-	gprs_llc_queue *llc_queue();
-	const gprs_llc_queue *llc_queue() const;
+	int llc_queue_size() const;
 
 	time_t created_ts() const;
 	uint8_t dl_slots() const;
@@ -230,6 +229,9 @@ protected:
 
 	int set_tlli_from_ul(uint32_t new_tlli);
 	void merge_and_clear_ms(GprsMs *old_ms);
+
+	gprs_llc_queue *llc_queue();
+	const gprs_llc_queue *llc_queue() const;
 
 	static const char *tbf_state_name[7];
 
