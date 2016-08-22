@@ -1,21 +1,15 @@
-#include "egprs_rlc_compression.h"
-#include "decoding.h"
-#include "bts.h"
-#include "tbf.h"
+#include <stdint.h>
+#include <string.h>
+
+#include "rlc.h"
 #include "gprs_debug.h"
-#include "pcu_utils.h"
-#include "gprs_bssgp_pcu.h"
-#include "pcu_l1_if.h"
+#include "egprs_rlc_compression.h"
 
 extern "C" {
-#include "pcu_vty.h"
-
-#include <osmocom/core/application.h>
-#include <osmocom/core/msgb.h>
-#include <osmocom/core/talloc.h>
+#include <osmocom/core/logging.h>
+#include <osmocom/core/bitvec.h>
 #include <osmocom/core/utils.h>
-#include <osmocom/vty/vty.h>
-#include <osmocom/gprs/protocol/gsm_04_60.h>
+#include <osmocom/core/application.h>
 }
 
 #define NEW 1
@@ -215,20 +209,16 @@ const struct log_info debug_log_info = {
 
 int main(int argc, char **argv)
 {
-	struct vty_app_info pcu_vty_info = {0};
-
 	osmo_init_logging(&debug_log_info);
 	log_set_use_color(osmo_stderr_target, 0);
 	log_set_print_filename(osmo_stderr_target, 0);
-	bssgp_set_log_ss(DBSSGP);
 
-	vty_init(&pcu_vty_info);
-	pcu_vty_init(&debug_log_info);
-
-	tall_pcu_ctx = talloc_named_const(NULL, 1, "moiji-mobile TbfTest context");
+	tall_pcu_ctx = talloc_named_const(NULL, 1, "BitcompTest context");
 	if (!tall_pcu_ctx)
 		abort();
+
 	test_EPDAN_decode_tree();
+
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
 	talloc_free(tall_pcu_ctx);
