@@ -226,7 +226,7 @@ int main(int argc, char **argv)
 }
 /*
  * stubs that should not be reached
- */ 
+ */
 extern "C" {
 void l1if_pdch_req() { abort(); }
 void l1if_connect_pdch() { abort(); }
