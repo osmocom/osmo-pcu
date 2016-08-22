@@ -1,0 +1,92 @@
+
+Test:1
+Tree based decoding:
+uncompressed data = 02 0c a0 30 cb 1a 0c e3 6c 
+len = 67
+
+expected data = ff ff ff f8 00 00 01 ff ff ff f8 00 00 00 ff ff ff fe 00 00 3f ff ff ff db 
+expected len = 194
+decoded data = ff ff ff f8 00 00 01 ff ff ff f8 00 00 00 ff ff ff fe 00 00 3f ff ff ff db 
+decoded len = 194
+
+Test:2
+Tree based decoding:
+uncompressed data = 53 06 c5 40 6d 
+len = 40
+
+expected data = ff ff ff ff ff ff c0 00 00 00 00 3f ff ff ff ff ff f8 00 00 00 00 03 
+expected len = 182
+decoded data = ff ff ff ff ff ff c0 00 00 00 00 3f ff ff ff ff ff f8 00 00 00 00 03 
+decoded len = 182
+
+Test:3
+Tree based decoding:
+uncompressed data = 02 
+len = 8
+
+expected data = ff ff ff f8 
+expected len = 29
+decoded data = ff ff ff f8 
+decoded len = 29
+
+Test:4
+Tree based decoding:
+uncompressed data = 02 0c e0 41 a0 0c 36 0d 03 71 b0 6e 24 
+len = 103
+
+expected data = ff ff ff f8 00 00 ff ff ff f8 00 00 7f ff ff fe 00 00 0f ff ff ff e0 00 00 7f ff ff ff 80 00 01 ff ff ff ff 
+expected len = 288
+decoded data = ff ff ff f8 00 00 ff ff ff f8 00 00 7f ff ff fe 00 00 0f ff ff ff e0 00 00 7f ff ff ff 80 00 01 ff ff ff ff 
+decoded len = 288
+
+Test:5
+Tree based decoding:
+uncompressed data = de 88 75 65 80 
+len = 35
+
+expected data = 37 47 81 f0 
+expected len = 28
+decoded data = 37 47 81 f0 
+decoded len = 28
+
+Test:6
+Tree based decoding:
+uncompressed data = dd 41 00 
+len = 18
+
+expected data = ff ff ff ff ff ff ff ff ff ff 00 00 
+expected len = 90
+decoded data = ff ff ff ff ff ff ff ff ff ff 00 00 
+decoded len = 90
+
+Test:7
+Tree based decoding:
+uncompressed data = 1e 70 c0 
+len = 18
+
+expected data = 
+expected len = 0
+decoded data = 
+decoded len = 19
+
+Test:8
+Tree based decoding:
+uncompressed data = 00 1e 
+len = 14
+
+Failed to decode CRBB: length 14, data 00 1e 
+expected data = 
+expected len = 0
+decoded data = 
+decoded len = 0
+
+Test:9
+Tree based decoding:
+uncompressed data = 00 00 00 
+len = 24
+
+Failed to decode CRBB: length 24, data 00 00 00 
+expected data = 
+expected len = 0
+decoded data = 
+decoded len = 0

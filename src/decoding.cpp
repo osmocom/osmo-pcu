@@ -20,6 +20,7 @@
 #include <decoding.h>
 #include <rlc.h>
 #include <gprs_debug.h>
+#include <egprs_rlc_compression.h>
 
 extern "C" {
 #include <osmocom/core/utils.h>
@@ -652,10 +653,10 @@ int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
 	int num_blocks = 0;
 	struct bitvec urbb;
 	int i;
+	int rc;
 	bool have_bitmap;
 	int implicitly_acked_blocks;
 	int ssn = desc->STARTING_SEQUENCE_NUMBER;
-	int rc;
 
 	if (desc->FINAL_ACK_INDICATION)
 		return handle_final_ack(bits, bsn_begin, bsn_end, window);
@@ -695,24 +696,20 @@ int Decoding::decode_egprs_acknack_bits(const EGPRS_AckNack_Desc_t *desc,
 
 	if (crbb_len > 0) {
 		int old_len = bits->cur_bit;
-		struct bitvec crbb;
 
-		crbb.data = (uint8_t *)desc->CRBB;
-		crbb.data_len = sizeof(desc->CRBB);
-		crbb.cur_bit = desc->CRBB_LENGTH;
-
-		rc = osmo_t4_decode(&crbb, desc->CRBB_STARTING_COLOR_CODE,
-			bits);
-
+		LOGP(DRLCMACDL, LOGL_DEBUG, "Compress bitmap exist,"
+			"CRBB LEN =%d and Starting color code =%d",
+			desc->CRBB_LENGTH, desc->CRBB_STARTING_COLOR_CODE);
+		rc = decompress_crbb(desc->CRBB_LENGTH, desc->CRBB_STARTING_COLOR_CODE,
+					desc->CRBB, bits);
 		if (rc < 0) {
 			LOGP(DRLCMACUL, LOGL_NOTICE,
-				"Failed to decode CRBB: "
-				"length %d, data '%s'\n",
-				desc->CRBB_LENGTH,
-				osmo_hexdump(crbb.data, crbb.data_len));
+				"Failed to decode CRBB: length %d, data '%s'\n",
+				desc->CRBB_LENGTH, osmo_hexdump(
+					desc->CRBB, (desc->CRBB_LENGTH + 7)/8));
 			/* We don't know the SSN offset for the URBB,
-			 * return what we have so far and assume the
-			 * bitmap has stopped here */
+			* return what we have so far and assume the
+			* bitmap has stopped here */
 			goto aborted;
 		}
 
