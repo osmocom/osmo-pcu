@@ -421,6 +421,11 @@ protected:
 	int analyse_errors(char *show_rbb, uint8_t ssn, ana_result *res);
 	void schedule_next_frame();
 
+	enum egprs_rlc_dl_reseg_bsn_state egprs_dl_get_data
+		(int bsn, uint8_t **block_data);
+	unsigned int get_egprs_dl_spb_status(int bsn);
+	enum egprs_rlcmac_dl_spb get_egprs_dl_spb(int bsn);
+
 	struct osmo_timer_list m_llc_timer;
 };
 

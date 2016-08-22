@@ -375,21 +375,28 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			return -1;
 
 		if (is_egprs_enabled()) {
+			/* Table 8.1.1.2 and Table 8.1.1.1 of 44.060 */
 			m_rlc.block(bsn)->cs_current_trans =
-			GprsCodingScheme::get_retx_mcs(
-			m_rlc.block(bsn)->cs_last, ms()->current_cs_dl());
+				GprsCodingScheme::get_retx_mcs(
+					m_rlc.block(bsn)->cs_init,
+					ms()->current_cs_dl(),
+					bts->bts_data()->dl_arq_type);
 
 			LOGP(DRLCMACDL, LOGL_DEBUG,
-			"- current_cs_dl(%d) demanded_mcs(%d) cs_trans(%d)\n",
-			m_rlc.block(bsn)->cs_last.to_num(),
-			ms()->current_cs_dl().to_num(),
-			m_rlc.block(bsn)->cs_current_trans.to_num());
+				"- initial_cs_dl(%d) last_mcs(%d)"
+				" demanded_mcs(%d) cs_trans(%d)"
+				" arq_type(%d) bsn(%d)\n",
+				m_rlc.block(bsn)->cs_init.to_num(),
+				m_rlc.block(bsn)->cs_last.to_num(),
+				ms()->current_cs_dl().to_num(),
+				m_rlc.block(bsn)->cs_current_trans.to_num(),
+				bts->bts_data()->dl_arq_type, bsn);
 
 			/* TODO: Need to remove this check when MCS-8 -> MCS-6
 			 * transistion is handled.
 			 * Refer commit be881c028fc4da00c4046ecd9296727975c206a3
 			 */
-			if (m_rlc.block(bsn)->cs_last == GprsCodingScheme::MCS8)
+			if (m_rlc.block(bsn)->cs_init == GprsCodingScheme::MCS8)
 				m_rlc.block(bsn)->cs_current_trans =
 					GprsCodingScheme::MCS8;
 		} else
@@ -523,6 +530,11 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 	data = rlc_data->prepare(block_data_len);
 	rlc_data->cs_last = cs;
 	rlc_data->cs_current_trans = cs;
+
+	/* Initialise the variable related to DL SPB */
+	rlc_data->spb_status.block_status_dl = EGPRS_RESEG_DL_DEFAULT;
+	rlc_data->cs_init = cs;
+
 	rlc_data->len = block_data_len;
 
 	rdbi = &(rlc_data->block_info);
@@ -616,7 +628,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	unsigned num_bsns;
 	enum egprs_puncturing_values punct[ARRAY_SIZE(rlc.block_info)];
 	bool need_padding = false;
-
+	enum egprs_rlcmac_dl_spb spb = EGPRS_RLCMAC_DL_NO_RETX;
+	unsigned int spb_status = get_egprs_dl_spb_status(index);
 	/*
 	 * TODO: This is an experimental work-around to put 2 BSN into
 	 * MSC-7 to MCS-9 encoded messages. It just sends the same BSN
@@ -626,6 +639,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	 * the current limit.
 	 */
 	cs = m_rlc.block(index)->cs_current_trans;
+	GprsCodingScheme &cs_init = m_rlc.block(index)->cs_init;
 	bsns[0] = index;
 	num_bsns = 1;
 
@@ -634,7 +648,17 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		num_bsns += 1;
 	}
 
-	if (num_bsns == 1) {
+	/*
+	 * if the intial mcs is 8 and retransmission mcs is either 6 or 3
+	 * we have to include the padding of 6 octets in first segment
+	 */
+	if ((GprsCodingScheme::Scheme(cs_init) == GprsCodingScheme::MCS8) &&
+		(GprsCodingScheme::Scheme(cs) == GprsCodingScheme::MCS6 ||
+		GprsCodingScheme::Scheme(cs) == GprsCodingScheme::MCS3)) {
+		if (spb_status == EGPRS_RESEG_DL_DEFAULT ||
+			spb_status == EGPRS_RESEG_SECOND_SEG_SENT)
+			need_padding  = true;
+	} else if (num_bsns == 1) {
 		/* TODO: remove the conditional when MCS-6 padding isn't
 		 * failing to be decoded by MEs anymore */
 		/* TODO: support of MCS-8 -> MCS-6 transition should be
@@ -646,7 +670,14 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			cs.decToSingleBlock(&need_padding);
 	}
 
-	gprs_rlc_data_info_init_dl(&rlc, cs, need_padding);
+	spb = get_egprs_dl_spb(index);
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "- need_padding %d spb_status %d spb %d"
+			"(BSN1 %d BSN2 %d)\n",
+			need_padding,
+			spb_status, spb, index, index2);
+
+	gprs_rlc_data_info_init_dl(&rlc, cs, need_padding, spb);
 
 	rlc.usf = 7; /* will be set at scheduler */
 	rlc.pr = 0; /* FIXME: power reduction */
@@ -665,10 +696,9 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		data_block_idx++)
 	{
 		int bsn;
-		GprsCodingScheme cs_enc;
 		uint8_t *block_data;
 		gprs_rlc_data_block_info *rdbi, *block_info;
-		enum egprs_puncturing_values punct_scheme;
+		enum egprs_rlc_dl_reseg_bsn_state reseg_status;
 
 		/* Check if there are more blocks than BSNs */
 		if (data_block_idx < num_bsns)
@@ -676,38 +706,43 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		else
 			bsn = bsns[0];
 
-		cs_enc = m_rlc.block(bsn)->cs_current_trans;
-		/* get data and header from current block */
-		block_data = m_rlc.block(bsn)->block;
-
 		/* Get current puncturing scheme from block */
-		punct_scheme = gprs_get_punct_scheme(
+
+		m_rlc.block(bsn)->next_ps = gprs_get_punct_scheme(
 			m_rlc.block(bsn)->next_ps,
-			m_rlc.block(bsn)->cs_last, cs);
+			m_rlc.block(bsn)->cs_last, cs, spb);
 
 		if (cs.isEgprs()) {
-			OSMO_ASSERT(punct_scheme >= EGPRS_PS_1);
-			OSMO_ASSERT(punct_scheme <= EGPRS_PS_3);
+			OSMO_ASSERT(m_rlc.block(bsn)->next_ps >= EGPRS_PS_1);
+			OSMO_ASSERT(m_rlc.block(bsn)->next_ps <= EGPRS_PS_3);
 		}
-		punct[data_block_idx] = punct_scheme;
+		punct[data_block_idx] = m_rlc.block(bsn)->next_ps;
 
 		rdbi = &rlc.block_info[data_block_idx];
 		block_info = &m_rlc.block(bsn)->block_info;
 
-		if(rdbi->data_len != m_rlc.block(bsn)->len) {
-			LOGP(DRLCMACDL, LOGL_ERROR,
-				"ERROR: Expected len = %d for %s instead of "
-				"%d in data unit %d (BSN %d, %s)\n",
-				rdbi->data_len, cs.name(), m_rlc.block(bsn)->len,
-				data_block_idx, bsn, cs_enc.name());
-			OSMO_ASSERT(rdbi->data_len == m_rlc.block(bsn)->len);
-		}
-
-		/* TODO: Need to handle 2 same bsns
-		 * in header type 1
+		/*
+		 * get data and header from current block
+		 * function returns the reseg status
 		 */
-		gprs_update_punct_scheme(&m_rlc.block(bsn)->next_ps,
-					cs);
+		reseg_status = egprs_dl_get_data(bsn, &block_data);
+		m_rlc.block(bsn)->spb_status.block_status_dl = reseg_status;
+
+		/*
+		 * If it is first segment of the split block set the state of
+		 * bsn to nacked. If it is the first segment dont update the
+		 * next ps value of bsn. since next segment also needs same cps
+		 */
+		if (spb == EGPRS_RLCMAC_DL_FIRST_SEG)
+			m_window.m_v_b.mark_nacked(bsn);
+		else {
+			/*
+			 * TODO: Need to handle 2 same bsns
+			 * in header type 1
+			 */
+			gprs_update_punct_scheme(&m_rlc.block(bsn)->next_ps,
+						cs);
+		}
 
 		m_rlc.block(bsn)->cs_last = cs;
 		rdbi->e   = block_info->e;
@@ -1168,4 +1203,119 @@ bool gprs_rlcmac_dl_tbf::keep_open(unsigned fn) const
 
 	keep_time_frames = msecs_to_frames(bts_data()->dl_tbf_idle_msec);
 	return frames_since_last_drain(fn) <= keep_time_frames;
+}
+
+/*
+ * This function returns the pointer to data which needs
+ * to be copied. Also updates the status of the block related to
+ * Split block handling in the RLC/MAC block.
+ */
+enum egprs_rlc_dl_reseg_bsn_state
+	gprs_rlcmac_dl_tbf::egprs_dl_get_data(int bsn, uint8_t **block_data)
+{
+	gprs_rlc_data *rlc_data = m_rlc.block(bsn);
+	egprs_rlc_dl_reseg_bsn_state *block_status_dl =
+				&rlc_data->spb_status.block_status_dl;
+
+	GprsCodingScheme &cs_current_trans = m_rlc.block(bsn)->cs_current_trans;
+	GprsCodingScheme &cs_init = m_rlc.block(bsn)->cs_init;
+	*block_data = &rlc_data->block[0];
+
+	/*
+	 * Table 10.3a.0.1 of 44.060
+	 * MCS6,9: second segment starts at 74/2 = 37
+	 * MCS5,7: second segment starts at 56/2 = 28
+	 * MCS8: second segment starts at 31
+	 * MCS4: second segment starts at 44/2 = 22
+	 */
+	if (cs_current_trans.headerTypeData() ==
+			GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3) {
+		if (*block_status_dl == EGPRS_RESEG_FIRST_SEG_SENT) {
+			switch (GprsCodingScheme::Scheme(cs_init)) {
+			case GprsCodingScheme::MCS6 :
+			case GprsCodingScheme::MCS9 :
+				*block_data = &rlc_data->block[37];
+				break;
+			case GprsCodingScheme::MCS7 :
+			case GprsCodingScheme::MCS5 :
+				*block_data = &rlc_data->block[28];
+				break;
+			case GprsCodingScheme::MCS8 :
+				*block_data = &rlc_data->block[31];
+				break;
+			case GprsCodingScheme::MCS4 :
+				*block_data = &rlc_data->block[22];
+				break;
+			default:
+				LOGP(DRLCMACDL, LOGL_ERROR, "Software error: "
+				"--%s hit invalid condition. headerType(%d) "
+				" blockstatus(%d) cs(%s) PLEASE FIX!\n", name(),
+				cs_current_trans.headerTypeData(),
+				*block_status_dl, cs_init.name());
+				break;
+
+			}
+			return EGPRS_RESEG_SECOND_SEG_SENT;
+		} else if ((cs_init.headerTypeData() ==
+				GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1) ||
+			(cs_init.headerTypeData() ==
+				GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2)) {
+			return EGPRS_RESEG_FIRST_SEG_SENT;
+		} else if ((GprsCodingScheme::Scheme(cs_init) ==
+					GprsCodingScheme::MCS4) &&
+				(GprsCodingScheme::Scheme(cs_current_trans) ==
+					GprsCodingScheme::MCS1)) {
+			return EGPRS_RESEG_FIRST_SEG_SENT;
+		}
+	}
+	return EGPRS_RESEG_DL_DEFAULT;
+}
+
+/*
+ * This function returns the status of split block
+ * for RLC/MAC block.
+ */
+unsigned int gprs_rlcmac_dl_tbf::get_egprs_dl_spb_status(const int bsn)
+{
+	const gprs_rlc_data *rlc_data = m_rlc.block(bsn);
+
+	return rlc_data->spb_status.block_status_dl;
+}
+
+/*
+ * This function returns the spb value to be sent OTA
+ * for RLC/MAC block.
+ */
+enum egprs_rlcmac_dl_spb gprs_rlcmac_dl_tbf::get_egprs_dl_spb(const int bsn)
+{
+	struct gprs_rlc_data *rlc_data = m_rlc.block(bsn);
+	egprs_rlc_dl_reseg_bsn_state block_status_dl =
+				rlc_data->spb_status.block_status_dl;
+
+	GprsCodingScheme &cs_current_trans = m_rlc.block(bsn)->cs_current_trans;
+	GprsCodingScheme &cs_init = m_rlc.block(bsn)->cs_init;
+
+	/* Table 10.4.8b.1 of 44.060 */
+	if (cs_current_trans.headerTypeData() ==
+			GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3) {
+	/*
+	 * if we are sending the second segment the spb should be 3
+	 * other wise it should be 2
+	 */
+		if (block_status_dl == EGPRS_RESEG_FIRST_SEG_SENT) {
+			return EGPRS_RLCMAC_DL_SEC_SEG;
+		} else if ((cs_init.headerTypeData() ==
+				GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1) ||
+			(cs_init.headerTypeData() ==
+				GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2)) {
+			return EGPRS_RLCMAC_DL_FIRST_SEG;
+		} else if ((GprsCodingScheme::Scheme(cs_init) ==
+					GprsCodingScheme::MCS4) &&
+				(GprsCodingScheme::Scheme(cs_current_trans) ==
+					GprsCodingScheme::MCS1)) {
+			return EGPRS_RLCMAC_DL_FIRST_SEG;
+		}
+	}
+	/* Non SPB cases 0 is reurned */
+	return EGPRS_RLCMAC_DL_NO_RETX;
 }

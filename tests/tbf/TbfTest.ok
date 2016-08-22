@@ -54,3 +54,9 @@ Testing retx for MCS 6 - 9
 Testing retx for MCS 7 - 5
 Testing retx for MCS 9 - 6
 === end test_tbf_egprs_retx_dl ===
+=== start test_tbf_egprs_spb_dl ===
+Testing retx for MCS 6 to reseg_mcs 3
+Testing retx for MCS 5 to reseg_mcs 2
+Testing retx for MCS 4 to reseg_mcs 1
+Testing retx for MCS 6 to reseg_mcs 3
+=== end test_tbf_egprs_spb_dl ===

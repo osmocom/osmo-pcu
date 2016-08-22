@@ -129,6 +129,10 @@ static int config_write_pcu(struct vty *vty)
 	vty_out(vty, " window-size %d %d%s", bts->ws_base, bts->ws_pdch,
 		VTY_NEWLINE);
 
+	if (bts->dl_arq_type)
+		vty_out(vty, " egprs dl arq-type arq2%s",
+			VTY_NEWLINE);
+
 	if (bts->force_llc_lifetime == 0xffff)
 		vty_out(vty, " queue lifetime infinite%s", VTY_NEWLINE);
 	else if (bts->force_llc_lifetime)
@@ -470,6 +474,25 @@ DEFUN(cfg_pcu_no_mcs_max,
 
 	bts->max_mcs_dl = 0;
 	bts->max_mcs_ul = 0;
+
+	return CMD_SUCCESS;
+}
+
+#define DL_STR "downlink specific configuration\n"
+
+DEFUN(cfg_pcu_dl_arq_type,
+      cfg_pcu_dl_arq_cmd,
+      "egprs dl arq-type (spb|arq2)",
+      EGPRS_STR DL_STR "ARQ options\n"
+      "enable SPB(ARQ1) support\n"
+      "enable ARQ2 support")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	if (!strcmp(argv[0], "arq2"))
+		bts->dl_arq_type = 1;
+	else
+		bts->dl_arq_type = 0;
 
 	return CMD_SUCCESS;
 }
@@ -948,6 +971,7 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_no_cs_downgrade_thrsh_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_lqual_ranges_cmd);
 	install_element(PCU_NODE, &cfg_pcu_mcs_cmd);
+	install_element(PCU_NODE, &cfg_pcu_dl_arq_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_mcs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_mcs_max_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_mcs_max_cmd);

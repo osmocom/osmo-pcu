@@ -210,6 +210,12 @@ int main(int argc, char *argv[])
 	bts->dl_tbf_idle_msec = 2000;
 	bts->llc_idle_ack_csec = 10;
 
+	/*
+	 * By default resegmentation is supported in DL
+	 * can also be configured through VTY
+	 */
+	bts->dl_arq_type = EGPRS_ARQ1;
+
 	msgb_set_talloc_ctx(tall_pcu_ctx);
 
 	osmo_init_logging(&gprs_log_info);

@@ -113,7 +113,8 @@ public:
 
 	static const char *modeName(Mode mode);
 	static Scheme get_retx_mcs(const GprsCodingScheme mcs,
-				const GprsCodingScheme retx_mcs);
+				const GprsCodingScheme retx_mcs,
+				const unsigned arq_type);
 
 	static enum Scheme egprs_mcs_retx_tbl[MAX_NUM_ARQ]
 			[MAX_NUM_MCS][MAX_NUM_MCS];
@@ -232,8 +233,9 @@ inline bool operator >=(GprsCodingScheme a, GprsCodingScheme b)
 }
 inline GprsCodingScheme::Scheme GprsCodingScheme::get_retx_mcs(
 				const GprsCodingScheme mcs,
-				const GprsCodingScheme demanded_mcs)
+				const GprsCodingScheme demanded_mcs,
+				const unsigned arq_type)
 {
-	return egprs_mcs_retx_tbl[EGPRS_ARQ2][mcs.to_num() - 1]
+	return egprs_mcs_retx_tbl[arq_type][mcs.to_num() - 1]
 			[demanded_mcs.to_num() - 1];
 }

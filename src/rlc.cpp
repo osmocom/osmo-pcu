@@ -285,7 +285,8 @@ bool gprs_rlc_ul_window::invalidate_bsn(const uint16_t bsn)
 }
 
 static void gprs_rlc_data_header_init(struct gprs_rlc_data_info *rlc,
-	GprsCodingScheme cs, bool with_padding, unsigned int header_bits)
+	GprsCodingScheme cs, bool with_padding, unsigned int header_bits,
+	const unsigned int spb)
 {
 	unsigned int i;
 	unsigned int padding_bits = with_padding ? cs.optionalPaddingBits() : 0;
@@ -300,7 +301,7 @@ static void gprs_rlc_data_header_init(struct gprs_rlc_data_info *rlc,
 
 	for (i = 0; i < rlc->num_data_blocks; i++) {
 		gprs_rlc_data_block_info_init(&rlc->block_info[i], cs,
-			with_padding);
+			with_padding, spb);
 
 		rlc->data_offs_bits[i] =
 			header_bits + padding_bits +
@@ -310,21 +311,25 @@ static void gprs_rlc_data_header_init(struct gprs_rlc_data_info *rlc,
 }
 
 void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,
-	GprsCodingScheme cs, bool with_padding)
+	GprsCodingScheme cs, bool with_padding, const unsigned int spb)
 {
 	return gprs_rlc_data_header_init(rlc, cs, with_padding,
-		cs.numDataHeaderBitsDL());
+		cs.numDataHeaderBitsDL(), spb);
 }
 
 void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
 	GprsCodingScheme cs, bool with_padding)
 {
+	/*
+	 * last parameter is sent as 0 since common function used
+	 * for both DL and UL
+	 */
 	return gprs_rlc_data_header_init(rlc, cs, with_padding,
-		cs.numDataHeaderBitsUL());
+		cs.numDataHeaderBitsUL(), 0);
 }
 
 void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
-	GprsCodingScheme cs, bool with_padding)
+	GprsCodingScheme cs, bool with_padding, const unsigned int spb)
 {
 	unsigned int data_len = cs.maxDataBlockBytes();
 	if (with_padding)
@@ -336,7 +341,7 @@ void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
 	rdbi->e   = 1;
 	rdbi->cv  = 15;
 	rdbi->pi  = 0;
-	rdbi->spb = 0;
+	rdbi->spb = spb;
 }
 
 unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs,
@@ -411,8 +416,18 @@ void gprs_rlc_mcs_cps_decode(unsigned int cps,
 enum egprs_puncturing_values gprs_get_punct_scheme(
 	enum egprs_puncturing_values punct,
 	const GprsCodingScheme &cs,
-	const GprsCodingScheme &cs_current)
+	const GprsCodingScheme &cs_current,
+	const enum egprs_rlcmac_dl_spb spb)
 {
+
+	/*
+	 * 10.4.8b of TS 44.060
+	 * If it is second segment of the block
+	 * dont change the puncturing scheme
+	 */
+	if (spb == EGPRS_RLCMAC_DL_SEC_SEG)
+		return punct;
+
 	/* TS  44.060 9.3.2.1.1 */
 	if ((GprsCodingScheme::Scheme(cs) == GprsCodingScheme::MCS9) &&
 	(GprsCodingScheme::Scheme(cs_current) == GprsCodingScheme::MCS6)) {
