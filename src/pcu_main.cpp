@@ -32,6 +32,7 @@ extern "C" {
 #include "pcu_vty.h"
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
+#include <osmocom/vty/ports.h>
 #include <osmocom/core/stats.h>
 #include <osmocom/core/gsmtap.h>
 #include <osmocom/core/gsmtap_util.h>
@@ -250,7 +251,7 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "No config file: '%s' Using default config.\n",
 			config_file);
 
-	rc = telnet_init(tall_pcu_ctx, NULL, 4240);
+	rc = telnet_init(tall_pcu_ctx, NULL, OSMO_VTY_PORT_PCU);
 	if (rc < 0) {
 		fprintf(stderr, "Error initializing telnet\n");
 		exit(1);
