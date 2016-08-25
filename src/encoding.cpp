@@ -575,7 +575,8 @@ static void write_packet_ack_nack_desc_egprs(
 		eow = false;
 		urbb_len = rest_bits - 9;
 		/* TODO: use compression (see above) */
-	}
+	} else
+		urbb_len = num_blocks;
 
 	if (urbb_len + crbb_len == rest_bits)
 		len = -1;

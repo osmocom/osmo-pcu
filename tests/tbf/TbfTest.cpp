@@ -753,9 +753,8 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(BTS *the_bts,
 
 	msg1 = ul_tbf->create_ul_ack(*fn, ts_no);
 
-	/* TODO: Need to modify the assert */
 	OSMO_ASSERT(!strcmp(osmo_hexdump(msg1->data, msg1->data_len),
-	"40 24 01 3f 3e 24 46 68 90 87 b0 06 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b "
+	"40 24 01 3f 3e 24 46 68 90 88 b0 06 8b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b "
 	));
 
 	return ul_tbf;

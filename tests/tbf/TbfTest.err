@@ -6307,8 +6307,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=37, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 - Raising V(R) to 5
 Encoding Ack/Nack for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) (final=0)
- - EGPRS URBB, len = 0, SSN = 3, ESN_CRBB = 2, SNS = 2048, WS = 64, V(Q) = 2, V(R) = 5, BOW, EOW
-Uplink Ack/Nack bit count 98, max 184, message = 40 24 01 3f 3e 24 46 68 90 87 b0 06 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+ - EGPRS URBB, len = 2, SSN = 3, ESN_CRBB = 2, SNS = 2048, WS = 64, V(Q) = 2, V(R) = 5, BOW, EOW
+Uplink Ack/Nack bit count 100, max 184, message = 40 24 01 3f 3e 24 46 68 90 88 b0 06 8b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 ********** TBF starts here **********
