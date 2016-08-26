@@ -691,6 +691,9 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 
 	msg_data = msgb_put(dl_msg, msg_len);
 
+	OSMO_ASSERT(rlc.num_data_blocks <= ARRAY_SIZE(rlc.block_info));
+	OSMO_ASSERT(rlc.num_data_blocks > 0);
+
 	/* Copy block(s) to RLC message */
 	for (data_block_idx = 0; data_block_idx < rlc.num_data_blocks;
 		data_block_idx++)
