@@ -646,7 +646,7 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(BTS *the_bts,
 	 * simulate RACH, this sends an Immediate
 	 * Assignment Uplink on the AGCH
 	 */
-	the_bts->rcv_rach(0x73, rach_fn, qta);
+	the_bts->rcv_rach(0x73, rach_fn, qta, 0, GSM_L1_BURST_TYPE_ACCESS_0);
 
 	/* get next free TFI */
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
