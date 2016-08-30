@@ -30,6 +30,7 @@ extern const struct log_info gprs_log_info;
 #include "pcu_vty.h"
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
+#include <osmocom/core/utils.h>
 #include <osmocom/core/application.h>
 }
 using namespace std;
@@ -211,6 +212,26 @@ void testRlcMacUplink()
 	bitvec_free(resultVector);
 }
 
+void testCsnLeftAlignedVarBmpBounds()
+{
+	bitvec *vector = bitvec_alloc(23);
+
+	bitvec_unhex(vector, "40200bffd161003e0e519ffffffb800000000000000000");
+	RlcMacUplink_t data;
+
+	EGPRS_AckNack_Desc_t *urbb =
+		&data.u.Egprs_Packet_Downlink_Ack_Nack.EGPRS_AckNack.Desc;
+	decode_gsm_rlcmac_uplink(vector, &data);
+
+	/*
+	 * TODO: URBB len is decoded as 102 bits. So 96 + 6 bits = 12 bytes + 6
+	 * bits should be decoded. The 13th byte should end up as 0x00, but we
+	 * see data coming from bitvec_get_bit_pos() returning -EINVAL.
+	 */
+	OSMO_ASSERT(!strcmp(osmo_hexdump(urbb->URBB, 13),
+			    "7f ff ff ee 00 00 00 00 00 00 00 00 ea "));
+}
+
 int main(int argc, char *argv[])
 {
 	osmo_init_logging(&gprs_log_info);
@@ -218,5 +239,5 @@ int main(int argc, char *argv[])
 	//printSizeofRLCMAC();
 	testRlcMacDownlink();
 	testRlcMacUplink();
-
+	testCsnLeftAlignedVarBmpBounds();
 }
