@@ -227,7 +227,7 @@ void gprs_rlc_ul_window::update_rbb(char *rbb)
 {
 	int i;
 	for (i=0; i < ws(); i++) {
-		if (m_v_n.is_received(ssn()-1-i))
+		if (m_v_n.is_received((ssn()-1-i) & mod_sns()))
 			rbb[ws()-1-i] = 'R';
 		else
 			rbb[ws()-1-i] = 'I';

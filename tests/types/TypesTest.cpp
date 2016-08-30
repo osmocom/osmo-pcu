@@ -325,10 +325,9 @@ static void test_rlc_dl_ul_basic()
 
 		/*
 		 * SSN wrap around case
-		 * TODO: Should not expect any BSN as nacked.
-		 * should be fixed in subsequent patch
+		 * Should not expect any BSN as nacked.
 		 */
-		rbb = "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIRR";
+		rbb = "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR";
 		for (int i = 0; i < 128; ++i) {
 			ul_win.receive_bsn(i);
 			ul_win.raise_v_q();
