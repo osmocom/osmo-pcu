@@ -322,6 +322,24 @@ static void test_rlc_dl_ul_basic()
 		ul_win.receive_bsn(4);
 		count = ul_win.raise_v_q();
 		OSMO_ASSERT(count == 0);
+
+		/*
+		 * SSN wrap around case
+		 * TODO: Should not expect any BSN as nacked.
+		 * should be fixed in subsequent patch
+		 */
+		rbb = "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIRR";
+		for (int i = 0; i < 128; ++i) {
+			ul_win.receive_bsn(i);
+			ul_win.raise_v_q();
+		}
+		ul_win.receive_bsn(0);
+		ul_win.raise_v_q();
+		ul_win.receive_bsn(1);
+		ul_win.raise_v_q();
+		ul_win.update_rbb(win_rbb);
+		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
+		OSMO_ASSERT(ul_win.ssn() == 2);
 	}
 
 	{
