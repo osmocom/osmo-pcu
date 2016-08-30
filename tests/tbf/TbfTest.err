@@ -6335,3 +6335,52 @@ Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer 0.
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) append
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+Slot Allocation (Algorithm B) for class 11
+- Rx=4 Tx=3 Sum Rx+Tx=5  Tta=3 Ttb=1  Tra=2 Trb=1 Type=1
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+- Possible DL/UL slots: (TS=0)"..CCCC.."(TS=7)
+- Selected DL slots: (TS=0)"..ddDd.."(TS=7), single
+Using single slot at TS 4 for DL
+- Reserved DL/UL slots: (TS=0)"....C..."(TS=7)
+- Assigning DL TS 4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Setting Control TS 4
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 192
+DL TBF slots: 0x10, N: 1, WS: 192
+********** TBF update **********
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+- Selected DL slots: (TS=0)"..DDDD.."(TS=7)
+Using 4 slots for DL
+- Assigning DL TS 2
+PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Assigning DL TS 3
+PDCH(TS 3, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Assigning DL TS 4
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+- Assigning DL TS 5
+PDCH(TS 5, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+DL TBF slots: 0x3c, N: 4, WS: 192
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to RELEASING
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS) free
+PDCH(TS 2, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 3, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(TS 5, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS)
+Destroying MS object, TLLI = 0x00000000
+********** TBF ends here **********
