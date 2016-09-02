@@ -23,6 +23,9 @@
 #include <stdint.h>
 #include <gsm_rlcmac.h>
 #include <gprs_coding_scheme.h>
+extern "C" {
+#include <osmocom/gsm/l1sap.h>
+}
 
 struct gprs_rlcmac_bts;
 struct gprs_rlcmac_tbf;
@@ -40,11 +43,14 @@ class Encoding {
 public:
 	static int write_immediate_assignment(
 			struct gprs_rlcmac_tbf *tbf,
-			bitvec * dest, uint8_t downlink, uint8_t ra,
+			bitvec * dest, uint8_t downlink, uint16_t ra,
 			uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts,
 			uint8_t tsc, uint8_t usf, uint8_t polling,
 			uint32_t fn, uint8_t alpha, uint8_t gamma,
-			int8_t ta_idx);
+			int8_t ta_idx,
+			enum ph_burst_type burst_type =
+				GSM_L1_BURST_TYPE_ACCESS_0,
+			uint8_t sb = 1);
 
 	static void write_packet_uplink_assignment(
 			struct gprs_rlcmac_bts *bts,

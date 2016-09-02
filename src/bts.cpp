@@ -556,7 +556,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 	plen = Encoding::write_immediate_assignment(
 		tbf, immediate_assignment, 0, ra, Fn, ta,
 		m_bts.trx[trx_no].arfcn, ts_no, tsc, usf, 0, sb_fn,
-		m_bts.alpha, m_bts.gamma, -1);
+		m_bts.alpha, m_bts.gamma, -1, burst_type, sb);
 
 	if (plen >= 0) {
 		pcu_l1if_tx_agch(immediate_assignment, plen);

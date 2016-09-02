@@ -147,11 +147,71 @@ static int write_ia_rest_egprs_uplink(
 	gprs_rlcmac_ul_tbf *tbf,
 	bitvec * dest, unsigned& wp,
 	uint8_t usf, uint32_t fn,
-	uint8_t alpha, uint8_t gamma, int8_t ta_idx)
+	uint8_t alpha, uint8_t gamma, int8_t ta_idx,
+	enum ph_burst_type burst_type, uint16_t ra)
 {
-	LOGP(DRLCMACUL, LOGL_ERROR,
-		"EGPRS Packet Uplink Assignment is not yet implemented\n");
-	return -EINVAL;
+	unsigned int ws_enc = 0;
+	uint8_t extended_ra = 0;
+
+	extended_ra = (ra & 0x1F);
+
+	bitvec_write_field(dest, wp, 1, 2);    /* LH */
+	bitvec_write_field(dest, wp, 0, 2);    /* 0 EGPRS Uplink Assignment */
+	bitvec_write_field(dest, wp, extended_ra, 5);    /* Extended RA */
+	bitvec_write_field(dest, wp, 0, 1);    /* Access technology Request */
+
+	if (tbf == NULL) {
+
+		bitvec_write_field(dest, wp, 0, 1); /* multiblock allocation */
+
+		if (alpha) {
+			bitvec_write_field(dest, wp, 0x1, 1); /* ALPHA =yes */
+			bitvec_write_field(dest, wp, alpha, 4); /* ALPHA */
+		} else {
+			bitvec_write_field(dest, wp, 0x0, 1); /* ALPHA = no */
+		}
+
+		bitvec_write_field(dest, wp, gamma, 5); /* GAMMA power contrl */
+		bitvec_write_field(dest, wp, (fn / (26 * 51)) % 32, 5);/* T1' */
+		bitvec_write_field(dest, wp, fn % 51, 6);              /* T3 */
+		bitvec_write_field(dest, wp, fn % 26, 5);              /* T2 */
+		bitvec_write_field(dest, wp, 0, 2); /* Radio block allocation */
+
+		bitvec_write_field(dest, wp, 0, 1);
+
+	} else {
+
+		ws_enc = (tbf->m_window.ws() - 64) / 32;
+
+		bitvec_write_field(dest, wp, 1, 1);     /* single block alloc */
+		bitvec_write_field(dest, wp, tbf->tfi(), 5);/* TFI assignment */
+		bitvec_write_field(dest, wp, 0, 1);     /* polling bit */
+		bitvec_write_field(dest, wp, 0, 1);     /* constant */
+		bitvec_write_field(dest, wp, usf, 3);   /* USF bit */
+		bitvec_write_field(dest, wp, 0, 1);     /* USF granularity */
+		bitvec_write_field(dest, wp, 0, 1);     /* P0 */
+		/* MCS */
+		bitvec_write_field(dest, wp, tbf->current_cs().to_num()-1, 4);
+		/* tlli channel block */
+		bitvec_write_field(dest, wp, tbf->tlli(), 1);
+		bitvec_write_field(dest, wp, 0, 1);   /* BEP period present */
+		bitvec_write_field(dest, wp, 0, 1);   /* resegmentation */
+		bitvec_write_field(dest, wp, ws_enc, 5);/* egprs window_size */
+
+		if (alpha) {
+			bitvec_write_field(dest, wp, 0x1, 1);   /* ALPHA =yes */
+			bitvec_write_field(dest, wp, alpha, 4); /* ALPHA */
+		} else {
+			bitvec_write_field(dest, wp, 0x0, 1);   /* ALPHA = no */
+		}
+
+		bitvec_write_field(dest, wp, gamma, 5); /* GAMMA power contrl */
+		bitvec_write_field(dest, wp, 0, 1); /* TIMING_ADVANCE_INDEX */
+		bitvec_write_field(dest, wp, 0, 1); /* TBF_STARTING_TIME_FLAG */
+		bitvec_write_field(dest, wp, 0, 1); /* NULL */
+	}
+
+	return 0;
 }
 
 /*
@@ -160,10 +220,10 @@ static int write_ia_rest_egprs_uplink(
  */
 int Encoding::write_immediate_assignment(
 	struct gprs_rlcmac_tbf *tbf,
-	bitvec * dest, uint8_t downlink, uint8_t ra,
+	bitvec * dest, uint8_t downlink, uint16_t ra,
 	uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc,
 	uint8_t usf, uint8_t polling, uint32_t fn, uint8_t alpha,
-	uint8_t gamma, int8_t ta_idx)
+	uint8_t gamma, int8_t ta_idx, enum ph_burst_type burst_type, uint8_t sb)
 {
 	unsigned wp = 0;
 	int plen;
@@ -189,7 +249,13 @@ int Encoding::write_immediate_assignment(
 	bitvec_write_field(dest, wp,arfcn,10); // ARFCN
 
 	//10.5.2.30 Request Reference
-	bitvec_write_field(dest, wp,ra,8);                    // RA
+	if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) ||
+		(burst_type == GSM_L1_BURST_TYPE_ACCESS_2))) {
+		bitvec_write_field(dest, wp, 0x7f, 8);  /* RACH value */
+	} else {
+		bitvec_write_field(dest, wp, ra, 8);	/* RACH value */
+	}
+
 	bitvec_write_field(dest, wp,(ref_fn / (26 * 51)) % 32,5); // T1'
 	bitvec_write_field(dest, wp,ref_fn % 51,6);               // T3
 	bitvec_write_field(dest, wp,ref_fn % 26,5);               // T2
@@ -213,10 +279,11 @@ int Encoding::write_immediate_assignment(
 		rc = write_ia_rest_downlink(as_dl_tbf(tbf), dest, wp,
 					    polling, gsm48_ta_is_valid(ta), fn,
 			alpha, gamma, ta_idx);
-	else if (as_ul_tbf(tbf) && as_ul_tbf(tbf)->is_egprs_enabled())
+	else if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) ||
+			(burst_type == GSM_L1_BURST_TYPE_ACCESS_2)))
 		rc = write_ia_rest_egprs_uplink(as_ul_tbf(tbf), dest, wp,
 			usf, fn,
-			alpha, gamma, ta_idx);
+			alpha, gamma, ta_idx, burst_type, ra);
 	else
 		rc = write_ia_rest_uplink(as_ul_tbf(tbf), dest, wp,
 			usf, fn,
