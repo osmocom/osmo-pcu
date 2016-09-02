@@ -223,13 +223,8 @@ void testCsnLeftAlignedVarBmpBounds()
 		&data.u.Egprs_Packet_Downlink_Ack_Nack.EGPRS_AckNack.Desc;
 	decode_gsm_rlcmac_uplink(vector, &data);
 
-	/*
-	 * TODO: URBB len is decoded as 102 bits. So 96 + 6 bits = 12 bytes + 6
-	 * bits should be decoded. The 13th byte should end up as 0x00, but we
-	 * see data coming from bitvec_get_bit_pos() returning -EINVAL.
-	 */
 	OSMO_ASSERT(!strcmp(osmo_hexdump(urbb->URBB, 13),
-			    "7f ff ff ee 00 00 00 00 00 00 00 00 ea "));
+			    "7f ff ff ee 00 00 00 00 00 00 00 00 00 "));
 }
 
 int main(int argc, char *argv[])

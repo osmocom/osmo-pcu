@@ -1110,22 +1110,21 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
 
           { /* extract bits */
             guint8* pui8 = pui8DATA(data, pDescr->offset);
-            gint16 nB1  = no_of_bits & 0x07;/* no_of_bits Mod 8 */
 
-            while (no_of_bits > 0)
+            while (no_of_bits >= 8)
             {
               *pui8 = bitvec_read_field(vector, readIndex, 8);
               LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
               no_of_bits -= 8;
             }
-            if (nB1 > 0)
+            if (no_of_bits > 0)
             { 
-              *pui8 = bitvec_read_field(vector, readIndex, nB1);
+              *pui8 = bitvec_read_field(vector, readIndex, no_of_bits);
               LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
-              no_of_bits  -= nB1;
-              bit_offset += nB1; /* (nB1 is no_of_bits Mod 8) */
+              bit_offset += no_of_bits;
+              no_of_bits = 0;
             }
           }
         }
