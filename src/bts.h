@@ -36,6 +36,7 @@ extern "C" {
 #include "tbf.h"
 #include "gprs_ms_storage.h"
 #include "gprs_coding_scheme.h"
+#include "pcuif_proto.h"
 #endif
 
 #include <stdint.h>
@@ -208,6 +209,12 @@ struct gprs_rlcmac_bts {
 	 * period.
 	 */
 	struct BTS *bts;
+
+	/*
+	 * PCU alarm list
+	 */
+	struct llist_head alarm_list;
+
 };
 
 #ifdef __cplusplus

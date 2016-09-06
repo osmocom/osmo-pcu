@@ -52,6 +52,7 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 }
 
 extern void *tall_pcu_ctx;
+struct pcu_fail_evt_rep_sig_data alarm_sig_data;
 
 /*
  * PCU messages
@@ -121,6 +122,27 @@ static int pcu_tx_data_req(uint8_t trx, uint8_t ts, uint8_t sapi,
 	memcpy(data_req->data, data, len);
 	data_req->len = len;
 
+	return pcu_sock_send(msg);
+}
+
+int pcu_tx_nm_fail_evt(uint8_t event_type, uint8_t event_severity,
+	uint8_t cause_type, uint16_t event_cause, char *add_text)
+{
+	struct msgb *msg;
+	struct gsm_pcu_if *pcu_prim;
+
+	msg = pcu_msgb_alloc(PCU_IF_MSG_FAILURE_EVT_IND, 0);
+	if (!msg)
+		return -ENOMEM;
+
+	pcu_prim = (struct gsm_pcu_if *) msg->data;
+	pcu_prim->u.failure_evt_ind.event_type = event_type;
+	pcu_prim->u.failure_evt_ind.event_severity = event_severity;
+	pcu_prim->u.failure_evt_ind.event_cause = event_cause;
+	pcu_prim->u.failure_evt_ind.cause_type = cause_type;
+	strcpy(pcu_prim->u.failure_evt_ind.add_text, add_text);
+
+	LOGP(DL1IF, LOGL_DEBUG, "[PCU->BTS] Sending FAILure EVT REP dump %s (%d)\n", osmo_hexdump(msg->data , msg->data_len), msg->data_len);
 	return pcu_sock_send(msg);
 }
 
@@ -343,12 +365,26 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 	int rc = 0, ts;
 	uint8_t trx;
 	int i;
+	struct pcu_alarm_list *alarm_list;
 
 	if (info_ind->version != PCU_IF_VERSION) {
 		fprintf(stderr, "PCU interface version number of BTS (%d) is "
 			"different (%d).\nPlease re-compile!\n",
 			info_ind->version, PCU_IF_VERSION);
-		exit(-1);
+
+		memcpy(alarm_sig_data.spare, &info_ind->version, sizeof(unsigned int));
+		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_WRONG_IF_VER_ALARM, &alarm_sig_data);
+
+		/* allocate new list of sent alarms */
+		alarm_list = talloc_zero(tall_pcu_ctx, struct pcu_alarm_list);
+		if (!alarm_list)
+			return -EIO;
+
+		alarm_list->alarm_signal = S_PCU_NM_WRONG_IF_VER_ALARM;
+		/* add alarm to sent list */
+		llist_add(&alarm_list->list, &bts->alarm_list);
+		LOGP(DL1IF, LOGL_DEBUG, "PCU alarm 0x%04x added to sent alarm list\n", alarm_list->alarm_signal);
+		return -EPERM;
 	}
 
 	LOGP(DL1IF, LOGL_DEBUG, "Info indication received:\n");
@@ -534,6 +570,16 @@ int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 {
 	int rc = 0;
 	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct pcu_alarm_list *alarm_list;
+
+	/* check for the PCU alarm has already sent or not */
+	llist_for_each_entry(alarm_list, &bts->alarm_list, list) {
+		if (alarm_list->alarm_signal != S_PCU_NM_WRONG_IF_VER_ALARM)
+			continue;
+		llist_del(&alarm_list->list);
+		LOGP(DL1IF, LOGL_DEBUG, "Alarm 0x%04x has removed from PCU sent alarm list\n", alarm_list->alarm_signal);
+		exit(-1);
+	}
 
 	switch (msg_type) {
 	case PCU_IF_MSG_DATA_IND:
@@ -564,4 +610,49 @@ int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 	}
 
 	return rc;
+}
+
+static int handle_pcu_fail_evt_rep_sig(unsigned int subsys, unsigned int signal,
+			void *handler_data, void *_signal_data)
+{
+	struct pcu_fail_evt_rep_sig_data *sig_data = (struct pcu_fail_evt_rep_sig_data *)_signal_data;
+	int rc = 0;
+	unsigned int res;
+	char log_msg[100];
+
+	if (subsys != SS_L_GLOBAL)
+		return 0;
+
+	switch (signal) {
+	case S_PCU_NM_WRONG_IF_VER_ALARM:
+		memcpy(&res, sig_data->spare, sizeof(unsigned int));
+		snprintf(log_msg, 100, "PCU interface version number of BTS (%d) is different (%d)", res, PCU_IF_VERSION);
+		sig_data->add_text = &log_msg[0];
+
+		rc = pcu_tx_nm_fail_evt(NM_EVT_PROC_FAIL,
+				NM_SEVER_CRITICAL,
+				NM_PCAUSE_T_MANUF,
+				PCU_NM_EVT_CAUSE_CRIT_BAD_PCU_IF_VER,
+				sig_data->add_text);
+		break;
+	default:
+		break;
+	}
+
+	sig_data->rc = rc;
+	return rc;
+}
+
+/* Initialization of the PCU failure alarm event handler */
+void pcu_failure_report_init(void *handler)
+{
+	/* register for failure report events */
+	osmo_signal_register_handler(SS_L_GLOBAL, handle_pcu_fail_evt_rep_sig, handler);
+}
+
+/* Uninitizalization of the PCU failure alarm event handler */
+void pcu_failure_report_free(void *handler)
+{
+	/* unregister for failure report events */
+	osmo_signal_unregister_handler(SS_L_GLOBAL, handle_pcu_fail_evt_rep_sig, handler);
 }

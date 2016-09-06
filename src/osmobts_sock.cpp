@@ -284,6 +284,7 @@ int pcu_l1if_open(void)
 
 	LOGP(DL1IF, LOGL_NOTICE, "osmo-bts PCU socket has been connected\n");
 
+	pcu_failure_report_init(NULL);
 	pcu_sock_state = state;
 
 	return 0;
@@ -297,6 +298,7 @@ void pcu_l1if_close(void)
 	if (!state)
 		return;
 
+	pcu_failure_report_free(NULL);
 	osmo_timer_del(&state->timer);
 
 	bfd = &state->conn_bfd;

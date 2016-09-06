@@ -217,6 +217,9 @@ int main(int argc, char *argv[])
 	 */
 	bts->dl_arq_type = EGPRS_ARQ1;
 
+	/* Initialization PCU alarm list */
+	INIT_LLIST_HEAD(&bts->alarm_list);
+
 	msgb_set_talloc_ctx(tall_pcu_ctx);
 
 	osmo_init_logging(&gprs_log_info);

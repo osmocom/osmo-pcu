@@ -133,6 +133,14 @@ int pcu_rx_data_ind_pdtch(uint8_t trx, uint8_t ts, uint8_t *data,
 void pcu_rx_block_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no);
 void pcu_rx_ra_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no);
 
+/* PCU transmits alarm message to BTS so that BTS is able to conveys it to network */
+int pcu_tx_nm_fail_evt(uint8_t event_type, uint8_t event_severity,
+	uint8_t cause_type, uint16_t event_cause, char *add_text);
+/* Initialization of signal creation-consumption based PCU alarm */
+void pcu_failure_report_init(void *handler);
+/* Free signal creation-consumption based PCU alarm */
+void pcu_failure_report_free(void *handler);
+
 #ifdef __cplusplus
 }
 #endif

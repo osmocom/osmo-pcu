@@ -2,6 +2,8 @@
 #define _PCUIF_PROTO_H
 
 #include <osmocom/gsm/l1sap.h>
+#include <osmocom/core/signal.h>
+#include <osmocom/gsm/protocol/gsm_12_21.h>
 
 #define PCU_IF_VERSION		0x07
 
@@ -15,6 +17,9 @@
 #define PCU_IF_MSG_ACT_REQ	0x40	/* activate/deactivate PDCH */
 #define PCU_IF_MSG_TIME_IND	0x52	/* GSM time indication */
 #define PCU_IF_MSG_PAG_REQ	0x60	/* paging request */
+
+/*PCU alarm indication */
+#define PCU_IF_MSG_FAILURE_EVT_IND	0x61 /* PCU failure event report indication */
 
 /* sapi */
 #define PCU_IF_SAPI_RACH	0x01	/* channel request on CCCH */
@@ -41,6 +46,50 @@
 #define PCU_IF_FLAG_MCS7	(1 << 26)
 #define PCU_IF_FLAG_MCS8	(1 << 27)
 #define PCU_IF_FLAG_MCS9	(1 << 28)
+
+/* NuRAN Wireless manufacture-defined alarm causes */
+enum pcu_nm_event_causes {
+	/* Critical causes */
+	PCU_NM_EVT_CAUSE_CRIT_BAD_PCU_IF_VER	= 0x3415,
+	/* Major causes */
+	PCU_NM_EVT_CAUSE_MAJ_UKWN_L1_MSG	= 0x3012,
+	PCU_NM_EVT_CAUSE_MAJ_UKWN_BTS_MSG	= 0x3013,
+	/* Warning causes */
+	PCU_NM_EVT_CAUSE_WARN_NO_PDCH_AVAIL	= 0x3011,
+
+};
+
+/* NuRAN Wireless manufacture-defined alarm signals */
+enum pcu_fail_evt_rep_sig {
+	S_PCU_NM_NO_PDCH_ALARM		= 0x0b1b,
+	S_PCU_NM_RX_UNKN_L1_SAP_ALARM,
+	S_PCU_NM_RX_UNKN_L1_PRIM_ALARM,
+	S_PCU_NM_RX_UNKN_MSG_ALARM,
+	S_PCU_NM_FAIL_NSVC_ALARM,
+	S_PCU_NM_FAIL_RST_NSVC_ALARM,
+	S_PCU_NM_FAIL_UNBLK_NSVC_ALARM,
+	S_PCU_NM_FAIL_PTP_BVC_ALARM,
+	S_PCU_NM_UNKN_NSEI_BVCI_ALARM,
+	S_PCU_NM_UNKN_NSVC_ALARM,
+	S_PCU_NM_PDTCH_QUEUE_FULL_ALARM,
+	S_PCU_NM_FAIL_OPEN_L1_ALARM,
+	S_PCU_NM_FAIL_OPEN_PDCH_ALARM,
+	S_PCU_NM_WRONG_IF_VER_ALARM,
+};
+
+/* NuRAN Wireless manufacture-defined alarm signal data structure */
+struct pcu_fail_evt_rep_sig_data {
+	char *add_text;
+	int rc;
+	uint8_t spare[4];
+};
+
+/* NuRAN Wireless manufacture-defined alarm signal list structure */
+struct pcu_alarm_list {
+	struct llist_head list; /* List of sent failure alarm report */
+	uint16_t alarm_signal;	/* Failure alarm report signal cause */
+};
+
 
 struct gsm_pcu_if_data {
 	uint8_t		sapi;
@@ -138,6 +187,14 @@ struct gsm_pcu_if_pag_req {
 	uint8_t		identity_lv[9];
 } __attribute__ ((packed));
 
+struct gsm_pcu_if_fail_evt_ind {
+	uint8_t 	event_type;
+	uint8_t 	event_severity;
+	uint8_t 	cause_type;
+	uint16_t 	event_cause;
+	char 		add_text[100];
+}__attribute__ ((packed));
+
 struct gsm_pcu_if {
 	/* context based information */
 	uint8_t		msg_type;	/* message type */
@@ -154,7 +211,10 @@ struct gsm_pcu_if {
 		struct gsm_pcu_if_act_req	act_req;
 		struct gsm_pcu_if_time_ind	time_ind;
 		struct gsm_pcu_if_pag_req	pag_req;
+		struct gsm_pcu_if_fail_evt_ind	failure_evt_ind;
 	} u;
 } __attribute__ ((packed));
+
+extern struct pcu_fail_evt_rep_sig_data alarm_sig_data;
 
 #endif /* _PCUIF_PROTO_H */
