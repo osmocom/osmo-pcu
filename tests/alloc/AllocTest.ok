@@ -10793,3 +10793,6 @@ Going to test assignment with many connections, algorithm dynamic
  TBF[31] class 14 reserves ......C.
  TBF[31] class 15 reserves .......C
   Successfully allocated 160 TBFs
+Testing DL TS allocation for Multi UEs
+TBF1: numTs(4)
+TBF2: numTs(3)

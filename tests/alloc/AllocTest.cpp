@@ -792,6 +792,56 @@ static void test_many_connections()
 	test_many_connections(alloc_algorithm_dynamic, 160, "algorithm dynamic");
 }
 
+static void test_2_consecutive_dl_tbfs()
+{
+	BTS the_bts;
+	struct gprs_rlcmac_bts *bts;
+	struct gprs_rlcmac_trx *trx;
+	uint8_t ms_class = 11;
+	uint8_t egprs_ms_class = 11;
+	gprs_rlcmac_tbf *dl_tbf1, *dl_tbf2;
+	uint8_t numTs1 = 0, numTs2 = 0;
+
+	printf("Testing DL TS allocation for Multi UEs\n");
+
+	bts = the_bts.bts_data();
+	bts->alloc_algorithm = alloc_algorithm_b;
+
+	trx = &bts->trx[0];
+	trx->pdch[4].enable();
+	trx->pdch[5].enable();
+	trx->pdch[6].enable();
+	trx->pdch[7].enable();
+
+	dl_tbf1 = tbf_alloc_dl_tbf(bts, NULL, 0, ms_class, egprs_ms_class, 0);
+	OSMO_ASSERT(dl_tbf1);
+
+	for (int i = 0; i < 8; i++) {
+		if (dl_tbf1->pdch[i])
+			numTs1++;
+	}
+	OSMO_ASSERT(numTs1 == 4);
+	printf("TBF1: numTs(%d)\n", numTs1);
+
+	dl_tbf2 = tbf_alloc_dl_tbf(bts, NULL, 0, ms_class, egprs_ms_class, 0);
+	OSMO_ASSERT(dl_tbf2);
+
+	for (int i = 0; i < 8; i++) {
+		if (dl_tbf2->pdch[i])
+			numTs2++;
+	}
+
+	/*
+	 * TODO: currently 2nd DL TBF gets 3 TS
+	 * This behaviour will be fixed in subsequent patch
+	 */
+	printf("TBF2: numTs(%d)\n", numTs2);
+	OSMO_ASSERT(numTs2 == 3);
+
+	tbf_free(dl_tbf1);
+	tbf_free(dl_tbf2);
+}
+
 int main(int argc, char **argv)
 {
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "moiji-mobile AllocTest context");
@@ -809,6 +859,7 @@ int main(int argc, char **argv)
 	test_alloc_b();
 	test_successive_allocation();
 	test_many_connections();
+	test_2_consecutive_dl_tbfs();
 	return EXIT_SUCCESS;
 }
 
