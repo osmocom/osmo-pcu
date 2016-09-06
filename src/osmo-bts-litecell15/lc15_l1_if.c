@@ -364,8 +364,8 @@ void *l1if_open_pdch(uint8_t trx_no, uint32_t hlayer1)
 
 	fl1h->hLayer1 = hlayer1;
 	fl1h->trx_no = trx_no;
-	/* hardware queues are numbered starting from 1 */
-	fl1h->hw_info.trx_nr = trx_no + 1;
+	/* hardware queues are numbered starting from 0 */
+	fl1h->hw_info.trx_nr = trx_no;
 
 	DEBUGP(DL1IF, "PCU: Using TRX HW#%u\n", fl1h->hw_info.trx_nr);
 
