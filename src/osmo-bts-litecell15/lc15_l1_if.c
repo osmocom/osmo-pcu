@@ -226,6 +226,9 @@ static int handle_ph_data_ind(struct lc15l1_hdl *fl1h,
 	default:
 		LOGP(DL1IF, LOGL_NOTICE, "Rx PH-DATA.ind for unknown L1 SAPI %s\n",
 			get_value_string(lc15bts_l1sapi_names, data_ind->sapi));
+		memcpy(alarm_sig_data.spare, &data_ind->sapi, sizeof(unsigned int));
+		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_RX_UNKN_L1_SAP_ALARM, &alarm_sig_data);
+
 		break;
 	}
 
