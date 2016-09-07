@@ -649,6 +649,17 @@ static int handle_pcu_fail_evt_rep_sig(unsigned int subsys, unsigned int signal,
 				PCU_NM_EVT_CAUSE_CRIT_OPEN_PDCH_FAIL,
 				sig_data->add_text);
 		break;
+
+	case S_PCU_NM_FAIL_OPEN_L1_ALARM:
+		snprintf(log_msg, 100, "PCU: Failed to open L1 transport for TRX %d", sig_data->spare[0]);
+		sig_data->add_text = &log_msg[0];
+
+		rc = pcu_tx_nm_fail_evt(NM_EVT_PROC_FAIL,
+				NM_SEVER_CRITICAL,
+				NM_PCAUSE_T_MANUF,
+				PCU_NM_EVT_CAUSE_CRIT_OPEN_L1_FAIL,
+				sig_data->add_text);
+		break;
 #endif
 	default:
 		break;

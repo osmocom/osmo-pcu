@@ -32,6 +32,7 @@
 #include <lc15_l1_if.h>
 #include <gprs_debug.h>
 #include <pcu_l1_if.h>
+#include <pcuif_proto.h>
 
 extern void *tall_pcu_ctx;
 
@@ -371,6 +372,8 @@ void *l1if_open_pdch(uint8_t trx_no, uint32_t hlayer1)
 
 	rc = l1if_transport_open(MQ_PDTCH_WRITE, fl1h);
 	if (rc < 0) {
+		alarm_sig_data.spare[0] = trx_no;
+		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_FAIL_OPEN_L1_ALARM, &alarm_sig_data);
 		talloc_free(fl1h);
 		return NULL;
 	}
