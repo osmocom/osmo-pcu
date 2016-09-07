@@ -502,6 +502,9 @@ bssgp_failed:
 			if (!bts->trx[trx].fl1h) {
 				LOGP(DL1IF, LOGL_FATAL, "Failed to open direct "
 					"DSP access for PDCH.\n");
+
+				alarm_sig_data.spare[0] = trx;
+				osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_FAIL_OPEN_PDCH_ALARM, &alarm_sig_data);
 				exit(0);
 			}
 #else
@@ -635,6 +638,18 @@ static int handle_pcu_fail_evt_rep_sig(unsigned int subsys, unsigned int signal,
 				PCU_NM_EVT_CAUSE_CRIT_BAD_PCU_IF_VER,
 				sig_data->add_text);
 		break;
+#ifdef ENABLE_DIRECT_PHY
+	case S_PCU_NM_FAIL_OPEN_PDCH_ALARM:
+		snprintf(log_msg, 100, "PCU: Failed to open direct DSP (%d) access for PDCH.\n", sig_data->spare[0]);
+		sig_data->add_text = &log_msg[0];
+
+		rc = pcu_tx_nm_fail_evt(NM_EVT_PROC_FAIL,
+				NM_SEVER_CRITICAL,
+				NM_PCAUSE_T_MANUF,
+				PCU_NM_EVT_CAUSE_CRIT_OPEN_PDCH_FAIL,
+				sig_data->add_text);
+		break;
+#endif
 	default:
 		break;
 	}

@@ -50,6 +50,7 @@
 /* NuRAN Wireless manufacture-defined alarm causes */
 enum pcu_nm_event_causes {
 	/* Critical causes */
+	PCU_NM_EVT_CAUSE_CRIT_OPEN_PDCH_FAIL	= 0x3411,
 	PCU_NM_EVT_CAUSE_CRIT_BAD_PCU_IF_VER	= 0x3415,
 	/* Major causes */
 	PCU_NM_EVT_CAUSE_MAJ_UKWN_L1_MSG	= 0x3012,
