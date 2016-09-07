@@ -609,6 +609,8 @@ int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received unknwon PCU msg type %d\n",
 			msg_type);
+		alarm_sig_data.spare[0] = msg_type;
+		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_RX_UNKN_MSG_ALARM, &alarm_sig_data);
 		rc = -EINVAL;
 	}
 
@@ -692,6 +694,18 @@ static int handle_pcu_fail_evt_rep_sig(unsigned int subsys, unsigned int signal,
 				PCU_NM_EVT_CAUSE_WARN_NO_PDCH_AVAIL,
 				"PCU no PDCH available\n");
 		break;
+
+	case S_PCU_NM_RX_UNKN_MSG_ALARM:
+		snprintf(log_msg, 100, "PCU: Rx unknown BTS message type 0x%x\n", sig_data->spare[0]);
+		sig_data->add_text = &log_msg[0];
+
+		rc = pcu_tx_nm_fail_evt(NM_EVT_PROC_FAIL,
+				NM_SEVER_MAJOR,
+				NM_PCAUSE_T_MANUF,
+				PCU_NM_EVT_CAUSE_MAJ_UKWN_BTS_MSG,
+				sig_data->add_text);
+		break;
+
 	default:
 		break;
 	}
