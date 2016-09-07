@@ -672,6 +672,18 @@ static int handle_pcu_fail_evt_rep_sig(unsigned int subsys, unsigned int signal,
 					PCU_NM_EVT_CAUSE_MAJ_UKWN_L1_MSG,
 					sig_data->add_text);
 			break;
+
+	case S_PCU_NM_RX_UNKN_L1_PRIM_ALARM:
+				memcpy(&res, sig_data->spare, sizeof(unsigned int));
+				snprintf(log_msg, 100, "PCU: Rx unknown L1 primitive type 0x%x\n", res);
+				sig_data->add_text = &log_msg[0];
+
+				rc = pcu_tx_nm_fail_evt(NM_EVT_PROC_FAIL,
+						NM_SEVER_MAJOR,
+						NM_PCAUSE_T_MANUF,
+						PCU_NM_EVT_CAUSE_MAJ_UKWN_L1_PRIM_MSG,
+						sig_data->add_text);
+				break;
 #endif
 	case S_PCU_NM_NO_PDCH_ALARM:
 		rc = pcu_tx_nm_fail_evt(NM_EVT_PROC_FAIL,

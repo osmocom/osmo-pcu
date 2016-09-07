@@ -298,6 +298,7 @@ int l1if_handle_l1prim(int wq, struct lc15l1_hdl *fl1h, struct msgb *msg)
 		rc = handle_ph_ra_ind(fl1h, &l1p->u.phRaInd);
 		break;
 	default:
+		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_RX_UNKN_L1_PRIM_ALARM, &alarm_sig_data);
 		break;
 	}
 
