@@ -352,6 +352,7 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 	/* transmit */
 	if (osmo_wqueue_enqueue(&fl1h->write_q[MQ_PDTCH_WRITE], msg) != 0) {
 		LOGP(DL1IF, LOGL_ERROR, "PDTCH queue full. dropping message.\n");
+		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_PDTCH_QUEUE_FULL_ALARM, &alarm_sig_data);
 		msgb_free(msg);
 	}
 
