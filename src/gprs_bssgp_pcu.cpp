@@ -24,9 +24,11 @@
 #include <bts.h>
 #include <tbf.h>
 #include <decoding.h>
+#include <pcuif_proto.h>
 
 #define BSSGP_TIMER_T1	30	/* Guards the (un)blocking procedures */
 #define BSSGP_TIMER_T2	30	/* Guards the reset procedure */
+#define BSSGP_TIMER_T3	5	/* Reset procedure status polling timer*/
 
 /* Tuning parameters for BSSGP flow control */
 #define FC_DEFAULT_LIFE_TIME_SECS 10		/* experimental value, 10s */
@@ -44,6 +46,7 @@ extern void *tall_pcu_ctx;
 extern uint16_t spoof_mcc, spoof_mnc;
 
 static void bvc_timeout(void *_priv);
+static void bssgp_timeout_cb(void *_priv);
 
 static int parse_imsi(struct tlv_parsed *tp, char *imsi)
 {
@@ -507,6 +510,9 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 	case S_NS_ALIVE_EXP:
 		LOGP(DPCU, LOGL_NOTICE, "Tns alive expired too often, "
 			"re-starting RESET procedure\n");
+		memcpy(alarm_sig_data.spare, &the_pcu.nsvc->nsvci, sizeof(uint16_t));
+		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_FAIL_NSVC_ALARM, &alarm_sig_data);
+
 		gprs_ns_reconnect(nssd->nsvc);
 		break;
 	}
@@ -780,6 +786,9 @@ static void bvc_timeout(void *_priv)
 		return;
 	}
 
+	/* Cancel any pending BSSGP timer on successful of BVCI reset */
+	osmo_timer_del(&the_pcu.bssgp_timer);
+
 	if (!the_pcu.bvc_unblocked) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending unblock on BVCI %d\n",
 			the_pcu.bctx->bvci);
@@ -815,6 +824,13 @@ int gprs_ns_reconnect(struct gprs_nsvc *nsvc)
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to reconnect NSVC\n");
 		return -EIO;
 	}
+
+	/* Cancel any existing BSSGP timer */
+	osmo_timer_del(&the_pcu.bssgp_timer);
+
+	/* start BSSGP timer */
+	the_pcu.bssgp_timer.cb = bssgp_timeout_cb;
+	osmo_timer_schedule(&the_pcu.bssgp_timer, BSSGP_TIMER_T3, 0);
 
 	return 0;
 }
@@ -884,6 +900,12 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 
 	the_pcu.bvc_timer.cb = bvc_timeout;
 
+	/* Cancel any existing BSSGP timer */
+	osmo_timer_del(&the_pcu.bssgp_timer);
+
+	/* Start BSSGP timer */
+	the_pcu.bssgp_timer.cb = bssgp_timeout_cb;
+	osmo_timer_schedule(&the_pcu.bssgp_timer, BSSGP_TIMER_T3, 0);
 
 	return &the_pcu;
 }
@@ -945,4 +967,27 @@ void gprs_bssgp_update_queue_delay(const struct timeval *tv_recv,
 	timeradd(delay_sum, &tv_delay, delay_sum);
 
 	the_pcu.queue_delay_count += 1;
+}
+
+static void bssgp_timeout_cb(void *_priv) {
+
+	LOGP(DBSSGP, LOGL_DEBUG, "BSSGP timer expired, NSVC state=%x, restart BSSGP timer\n", the_pcu.nsvc->state);
+
+	if (the_pcu.nsvc->state & NSE_S_BLOCKED) {
+		LOGP(DBSSGP, LOGL_DEBUG, "PCU: Tx NSVC BLOCKED failure alarm\n");
+		memcpy(alarm_sig_data.spare, &the_pcu.nsvc->nsvci, sizeof(uint16_t));
+		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_FAIL_UNBLK_NSVC_ALARM, &alarm_sig_data);
+	}
+
+	if (the_pcu.nsvc->state & NSE_S_RESET) {
+		LOGP(DBSSGP, LOGL_DEBUG, "PCU: Tx NSVC RESET failure alarm\n");
+		memcpy(alarm_sig_data.spare, &the_pcu.nsvc->nsvci, sizeof(uint16_t));
+		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_FAIL_RST_NSVC_ALARM, &alarm_sig_data);
+	}
+
+	/* Cancel any existing BSSGP timer */
+	osmo_timer_del(&the_pcu.bssgp_timer);
+
+	/* restart BSSGP timer */
+	osmo_timer_schedule(&the_pcu.bssgp_timer, BSSGP_TIMER_T3, 0);
 }

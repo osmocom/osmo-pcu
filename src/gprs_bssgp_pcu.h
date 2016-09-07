@@ -51,6 +51,7 @@ struct gprs_bssgp_pcu {
 	struct gprs_rlcmac_bts *bts;
 
 	struct osmo_timer_list bvc_timer;
+	struct osmo_timer_list bssgp_timer;
 
 	int nsvc_unblocked;
 

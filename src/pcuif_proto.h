@@ -57,6 +57,9 @@ extern "C" {
 /* NuRAN Wireless manufacture-defined alarm causes */
 enum pcu_nm_event_causes {
 	/* Critical causes */
+	PCU_NM_EVT_CAUSE_CRIT_NSVC_FAIL	= 0x3310,
+	PCU_NM_EVT_CAUSE_CRIT_NSVC_RST_FAIL	= 0x3311,
+	PCU_NM_EVT_CAUSE_CRIT_NSVC_UNBLK_FAIL	= 0x3312,
 	PCU_NM_EVT_CAUSE_CRIT_OPEN_L1_FAIL	= 0x333b,
 	PCU_NM_EVT_CAUSE_CRIT_OPEN_PDCH_FAIL	= 0x3411,
 	PCU_NM_EVT_CAUSE_CRIT_BAD_PCU_IF_VER	= 0x3415,
