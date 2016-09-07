@@ -2,8 +2,15 @@
 #define _PCUIF_PROTO_H
 
 #include <osmocom/gsm/l1sap.h>
-#include <osmocom/core/signal.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <osmocom/gsm/protocol/gsm_12_21.h>
+#include <osmocom/core/signal.h>
+#ifdef __cplusplus
+}
+#endif
 
 #define PCU_IF_VERSION		0x07
 

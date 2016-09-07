@@ -29,6 +29,7 @@
 #include <gprs_ms.h>
 #include <decoding.h>
 #include <pcu_utils.h>
+#include <pcuif_proto.h>
 
 extern "C" {
 #include <osmocom/core/msgb.h>
@@ -282,6 +283,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	if (!tbf) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */
+		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_NO_PDCH_ALARM, &alarm_sig_data);
 		return NULL;
 	}
 	tbf->m_contention_resolution_done = 1;

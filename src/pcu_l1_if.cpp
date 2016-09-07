@@ -661,6 +661,13 @@ static int handle_pcu_fail_evt_rep_sig(unsigned int subsys, unsigned int signal,
 				sig_data->add_text);
 		break;
 #endif
+	case S_PCU_NM_NO_PDCH_ALARM:
+		rc = pcu_tx_nm_fail_evt(NM_EVT_PROC_FAIL,
+				NM_SEVER_WARNING,
+				NM_PCAUSE_T_MANUF,
+				PCU_NM_EVT_CAUSE_WARN_NO_PDCH_AVAIL,
+				"PCU no PDCH available\n");
+		break;
 	default:
 		break;
 	}
