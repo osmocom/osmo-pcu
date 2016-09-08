@@ -624,7 +624,7 @@ static int handle_pcu_fail_evt_rep_sig(unsigned int subsys, unsigned int signal,
 	int rc = 0;
 	unsigned int res;
 	char log_msg[100];
-	uint16_t nscvi;
+	uint16_t val;
 
 	if (subsys != SS_L_GLOBAL)
 		return 0;
@@ -717,8 +717,8 @@ static int handle_pcu_fail_evt_rep_sig(unsigned int subsys, unsigned int signal,
 		break;
 
 	case S_PCU_NM_FAIL_NSVC_ALARM:
-			memcpy(&nscvi, sig_data->spare, sizeof(uint16_t));
-			snprintf(log_msg, 100, "PCU: NS-VC %d failure\n", nscvi);
+			memcpy(&val, sig_data->spare, sizeof(uint16_t));
+			snprintf(log_msg, 100, "PCU: NS-VC %d failure\n", val);
 			sig_data->add_text = &log_msg[0];
 
 			rc = pcu_tx_nm_fail_evt(NM_EVT_COMM_FAIL,
@@ -729,8 +729,8 @@ static int handle_pcu_fail_evt_rep_sig(unsigned int subsys, unsigned int signal,
 			break;
 
 	case S_PCU_NM_FAIL_RST_NSVC_ALARM:
-		memcpy(&nscvi, sig_data->spare, sizeof(uint16_t));
-		snprintf(log_msg, 100, "PCU: NS-VC %d reset failure\n", nscvi);
+		memcpy(&val, sig_data->spare, sizeof(uint16_t));
+		snprintf(log_msg, 100, "PCU: NS-VC %d reset failure\n", val);
 		sig_data->add_text = &log_msg[0];
 		rc = pcu_tx_nm_fail_evt(NM_EVT_COMM_FAIL,
 				NM_SEVER_MAJOR,
@@ -740,8 +740,8 @@ static int handle_pcu_fail_evt_rep_sig(unsigned int subsys, unsigned int signal,
 		break;
 
 	case S_PCU_NM_FAIL_UNBLK_NSVC_ALARM:
-		memcpy(&nscvi, sig_data->spare, sizeof(uint16_t));
-		snprintf(log_msg, 100, "PCU: NS-VC %d unblock failure\n", nscvi);
+		memcpy(&val, sig_data->spare, sizeof(uint16_t));
+		snprintf(log_msg, 100, "PCU: NS-VC %d unblock failure\n", val);
 		sig_data->add_text = &log_msg[0];
 		rc = pcu_tx_nm_fail_evt(NM_EVT_COMM_FAIL,
 				NM_SEVER_MAJOR,
@@ -750,6 +750,16 @@ static int handle_pcu_fail_evt_rep_sig(unsigned int subsys, unsigned int signal,
 				sig_data->add_text);
 		break;
 
+	case S_PCU_NM_FAIL_PTP_BVC_ALARM:
+			memcpy(&val, sig_data->spare, sizeof(uint16_t));
+			snprintf(log_msg, 100, "PCU:BVCI %d PTP failure\n", val);
+			sig_data->add_text = &log_msg[0];
+			rc = pcu_tx_nm_fail_evt(NM_EVT_COMM_FAIL,
+					NM_SEVER_MAJOR,
+					NM_PCAUSE_T_MANUF,
+					PCU_NM_EVT_CAUSE_MAJ_PTP_BVC_FAIL,
+					sig_data->add_text);
+			break;
 	default:
 		break;
 	}

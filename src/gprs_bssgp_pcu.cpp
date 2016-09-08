@@ -387,6 +387,10 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	{
 		LOGP(DBSSGP, LOGL_DEBUG, "rx BVCI_PTP gprs_bssgp_rx_ptp\n");
 		rc = gprs_bssgp_pcu_rx_ptp(msg, &tp, bctx);
+		if (rc < 0) {
+			memcpy(alarm_sig_data.spare, &ns_bvci, sizeof(uint16_t));
+			osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_FAIL_PTP_BVC_ALARM, &alarm_sig_data);
+		}
 	}
 	return rc;
 }
