@@ -363,6 +363,8 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 		LOGP(DBSSGP, LOGL_NOTICE, "NSEI=%u/BVCI=%u Rejecting PDU "
 			"type %u for unknown BVCI\n", msgb_nsei(msg), ns_bvci,
 			pdu_type);
+		memcpy(alarm_sig_data.spare, &ns_bvci, sizeof(uint16_t));
+		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_UNKN_NSEI_BVCI_ALARM, &alarm_sig_data);
 		return bssgp_tx_status(BSSGP_CAUSE_UNKNOWN_BVCI, NULL, msg);
 	}
 

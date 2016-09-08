@@ -760,6 +760,18 @@ static int handle_pcu_fail_evt_rep_sig(unsigned int subsys, unsigned int signal,
 					PCU_NM_EVT_CAUSE_MAJ_PTP_BVC_FAIL,
 					sig_data->add_text);
 			break;
+
+	case S_PCU_NM_UNKN_NSEI_BVCI_ALARM:
+		memcpy(&val, sig_data->spare, sizeof(uint16_t));
+		snprintf(log_msg, 100, "PCU: Rx unknown BVCI %d\n", val);
+		sig_data->add_text = &log_msg[0];
+		rc = pcu_tx_nm_fail_evt(NM_EVT_COMM_FAIL,
+				NM_SEVER_MAJOR,
+				NM_PCAUSE_T_MANUF,
+				PCU_NM_EVT_CAUSE_MAJ_UNKN_NSEI_BVCI,
+				sig_data->add_text);
+		break;
+
 	default:
 		break;
 	}
