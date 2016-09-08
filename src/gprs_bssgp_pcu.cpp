@@ -488,6 +488,8 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 	nssd = (struct ns_signal_data *)signal_data;
 	if (nssd->nsvc != the_pcu.nsvc) {
 		LOGP(DPCU, LOGL_ERROR, "Signal received of unknown NSVC\n");
+		memcpy(alarm_sig_data.spare, &nssd->nsvc->nsvci, sizeof(uint16_t));
+		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_UNKN_NSVC_ALARM, &alarm_sig_data);
 		return -EINVAL;
 	}
 
