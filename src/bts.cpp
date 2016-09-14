@@ -480,20 +480,16 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 	uint8_t usf = 7;
 	uint8_t tsc;
 	uint16_t ta;
+	uint16_t ms_class = 0;
+	uint16_t priority = 0;
 
 	rach_frame();
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, so we provide "
 		"one:\n");
-	if ((ra & 0xf8) == 0x70) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block "
-			"allocation\n");
-		sb = 1;
-	} else if (m_bts.force_two_phase) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single phase access, "
-			"but we force two phase access\n");
-		sb = 1;
-	}
+
+	sb = is_single_block(ra, burst_type, is_11bit, &ms_class, &priority);
+
 	if (qta < 0)
 		qta = 0;
 	if (qta > 252)
@@ -516,8 +512,16 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 	} else {
 		// Create new TBF
 		#warning "Copy and paste with other routines.."
-		/* set class to 0, since we don't know the multislot class yet */
-		tbf = tbf_alloc_ul_tbf(&m_bts, NULL, -1, 0, 0, 1);
+
+		if (is_11bit) {
+			tbf = tbf_alloc_ul_tbf(&m_bts, NULL, -1, 0,
+				ms_class, 1);
+		} else {
+			/* set class to 0, since we don't know the multislot
+			 * class yet */
+			tbf = tbf_alloc_ul_tbf(&m_bts, NULL, -1, 0, 0, 1);
+		}
+
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
 			/* FIXME: send reject */
@@ -563,6 +567,73 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 	bitvec_free(immediate_assignment);
 
 	return 0;
+}
+
+uint8_t BTS::is_single_block(uint16_t ra, enum ph_burst_type burst_type,
+		uint8_t is_11bit, uint16_t *ms_class, uint16_t *priority)
+{
+	uint8_t sb = 0, val = 0;
+
+	if (!is_11bit && (burst_type == GSM_L1_BURST_TYPE_ACCESS_0)) {
+
+		if ((ra & 0xf8) == 0x70) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block "
+				"allocation\n");
+			sb = 1;
+		} else if (m_bts.force_two_phase) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single "
+				"phase access, but we force two phase "
+				"access\n");
+			sb = 1;
+		}
+
+	} else if (is_11bit &&
+		((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) ||
+		(burst_type == GSM_L1_BURST_TYPE_ACCESS_2))) {
+
+		val = !!(ra & (1 << 10));
+
+		if (!val) {
+			if (m_bts.force_two_phase) {
+				LOGP(DRLCMAC, LOGL_DEBUG, "EGPRS 11 bit RACH "
+					"received. MS requests single phase "
+					"access but we force two phase "
+					"access\n");
+				sb = 1;
+			} else {
+				sb = 0;
+				*ms_class = (ra & 0x3e0) >> 5;
+				*priority = (ra & 0x18) >> 3;
+			}
+
+		} else {
+			LOGP(DRLCMAC, LOGL_DEBUG, "EGPRS 11 bit RACH received."
+				"MS requests single block allocation\n");
+			sb = 1;
+		}
+
+	} else if (is_11bit &&
+		(burst_type == GSM_L1_BURST_TYPE_ACCESS_0)) {
+		LOGP(DRLCMAC, LOGL_ERROR,
+			"Error: GPRS 11 bit RACH not supported\n");
+
+	} else if (burst_type == GSM_L1_BURST_TYPE_NONE) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "pcu has not received burst type "
+			"from bts \n");
+
+		if ((ra & 0xf8) == 0x70) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block "
+				"allocation\n");
+			sb = 1;
+		} else if (m_bts.force_two_phase) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single "
+				"phase access, but we force two phase "
+				"access\n");
+			sb = 1;
+		}
+	}
+
+	return sb;
 }
 
 /* depending on the current TBF, we assign on PACCH or AGCH */
