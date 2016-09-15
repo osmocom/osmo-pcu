@@ -1980,8 +1980,7 @@ static gprs_rlcmac_ul_tbf *tbf_li_decoding(BTS *the_bts,
 	data_msg[5] = 0x0;
 	pdch->rcv_block(data_msg, 49, *fn, &meas);
 
-	/* TODO: should expect m_index as 43 */
-	OSMO_ASSERT(ul_tbf->m_llc.m_index == 87);
+	OSMO_ASSERT(ul_tbf->m_llc.m_index == 43);
 
 	return ul_tbf;
 }

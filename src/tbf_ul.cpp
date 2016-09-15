@@ -67,14 +67,18 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 	for (i = 0; i < num_frames; i++) {
 		frame = frames + i;
 
-		bts->rlc_ul_payload_bytes(frame->length);
+		if (frame->length) {
+			bts->rlc_ul_payload_bytes(frame->length);
 
-		LOGP(DRLCMACUL, LOGL_DEBUG, "-- Frame %d starts at offset %d, "
-			"length=%d, is_complete=%d\n",
-			i + 1, frame->offset, frame->length, frame->is_complete);
+			LOGP(DRLCMACUL, LOGL_DEBUG, "-- Frame %d "
+				"starts at offset %d, "
+				"length=%d, is_complete=%d\n",
+				i + 1, frame->offset, frame->length,
+				frame->is_complete);
 
-		m_llc.append_frame(data + frame->offset, frame->length);
-		m_llc.consume(frame->length);
+			m_llc.append_frame(data + frame->offset, frame->length);
+			m_llc.consume(frame->length);
+		}
 
 		if (frame->is_complete) {
 			/* send frame to SGSN */

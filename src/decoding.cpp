@@ -67,14 +67,11 @@ static int parse_extensions_egprs(const uint8_t *data, unsigned int data_len,
 				"but no more chunks possible\n");
 			return -ENOSPC;
 		}
-		if (li->li == 0 && num_chunks == 0 && li->e == 0) {
+		if (li->li == 0 && num_chunks == 0) {
 			/* TS 44.060, table 10.4.14a.1, row 2a */
+			/* TS 44.060, table 10.4.14a.1, row 4 */
 			chunks[num_chunks].length = 0;
 			chunks[num_chunks].is_complete = true;
-		} else if (li->li == 0 && num_chunks == 0 && li->e == 1) {
-			/* TS 44.060, table 10.4.14a.1, row 4 */
-			chunks[num_chunks].length = LENGTH_TO_END;
-			chunks[num_chunks].is_complete = is_last_block;
 		} else if (li->li == 127 && li->e == 1) {
 			/* TS 44.060, table 10.4.14a.1, row 3 & 5 */
 			/* only filling bytes left */
