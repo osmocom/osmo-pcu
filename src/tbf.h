@@ -372,6 +372,8 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int release();
 	int abort();
 
+	void egprs_calc_window_size();
+
 	/* TODO: add the gettimeofday as parameter */
 	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
 

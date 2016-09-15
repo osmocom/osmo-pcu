@@ -1322,3 +1322,23 @@ enum egprs_rlcmac_dl_spb gprs_rlcmac_dl_tbf::get_egprs_dl_spb(const int bsn)
 	/* Non SPB cases 0 is reurned */
 	return EGPRS_RLCMAC_DL_NO_RETX;
 }
+
+void gprs_rlcmac_dl_tbf::egprs_calc_window_size()
+{
+	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
+	unsigned int num_pdch = pcu_bitcount(dl_slots());
+	unsigned int ws = bts_data->ws_base + num_pdch * bts_data->ws_pdch;
+
+	ws = (ws / 32) * 32;
+	ws = OSMO_MAX(64, ws);
+
+	if (num_pdch == 1)
+		ws = OSMO_MIN(192, ws);
+	else
+		ws = OSMO_MIN(128 * num_pdch, ws);
+
+	LOGP(DRLCMAC, LOGL_INFO, "%s: Setting EGPRS window size to %d\n",
+		name(), ws);
+
+	m_window.set_ws(ws);
+}

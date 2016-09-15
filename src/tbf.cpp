@@ -781,20 +781,8 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 		return NULL;
 	}
 
-	if (tbf->is_egprs_enabled()) {
-		unsigned int num_pdch = pcu_bitcount(tbf->dl_slots());
-		unsigned int ws = bts->ws_base + num_pdch * bts->ws_pdch;
-		ws = (ws / 32) * 32;
-		ws = OSMO_MAX(64, ws);
-		if (num_pdch == 1)
-			ws = OSMO_MIN(192, ws);
-		else
-			ws = OSMO_MIN(128 * num_pdch, ws);
-
-		LOGP(DRLCMAC, LOGL_INFO, "%s: Setting EGPRS window size to %d\n",
-			tbf->name(), ws);
-		tbf->m_window.set_ws(ws);
-	}
+	if (tbf->is_egprs_enabled())
+		tbf->egprs_calc_window_size();
 
 	llist_add(&tbf->list(), &bts->bts->dl_tbfs());
 	tbf->bts->tbf_dl_created();
