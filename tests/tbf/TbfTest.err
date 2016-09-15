@@ -6410,3 +6410,110 @@ PDCH(TS 5, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0x00000000
 ********** TBF ends here **********
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+MS requests UL TBF on RACH, so we provide one:
+MS requests single block allocation
+RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
+TX: Immediate Assignment Uplink (AGCH)
+ - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 73 8b 29 07 00 c0 0c 5a 43 2b 2b 2b 2b 2b 2b 2b 
+Searching for first unallocated TFI: TRX=0
+ Found TFI=0.
+Got RLC block, coding scheme: CS-1, length: 23 (23))
++++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+------------------------- RX : Uplink Control Block -------------------------
+MS requests UL TBF in packet resource request of single block, so we provide one:
+MS supports EGPRS multislot class 1.
+********** TBF starts here **********
+Allocating UL TBF: MS_CLASS=1/1
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 1
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 4, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Assign uplink TS=7 TFI=0 USF=0
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+- Setting Control TS 7
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS): trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer 3169.
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
+Change control TS to 7 until assinment is complete.
+max_cs_ul cannot be derived (current UL CS: UNKNOWN)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)s start Packet Uplink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS): Scheduling polling at FN 2654283 TS 7
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes state from ASSIGN to WAIT ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN EGPRS) Scheduled UL Assignment polling on FN=2654283, TS=7
+Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN EGPRS) (TRX=0, TS=7)
+Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654270 block=8 data=4f 28 5e 24 46 68 90 f8 0a 39 00 00 88 00 08 2b 2b 2b 2b 2b 2b 2b 2b 
+Got RLC block, coding scheme: CS-1, length: 23 (23))
++++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+------------------------- RX : Uplink Control Block -------------------------
+RX: [PCU <- BTS] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN EGPRS) Packet Control Ack
+TBF: [DOWNLINK] UPLINK ASSIGNED TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN EGPRS)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=WAIT ASSIGN EGPRS) changes state from WAIT ASSIGN to FLOW
+Got RLC block, coding scheme: MCS-4, length: 49 (49))
+  UL data: 1d 00 40 c1 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Got MCS-4 RLC block: R=1, SI=0, TFI=0, CPS=5, RSB=0, rc=385
+UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
+max_cs_ul cannot be derived (current UL CS: UNKNOWN)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=7, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=33
+- BSN 0 storing in window (0..63)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+- Raising V(R) to 1
+- Taking block 0 out, raising V(Q) to 1
+- Assembling frames: (len=44)
+-- Frame 1 starts at offset 0, length=44, is_complete=0
+- No gaps in received block, last block: BSN=0 CV=7
+Got RLC block, coding scheme: MCS-4, length: 49 (49))
+  UL data: 1d 08 40 41 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+Got MCS-4 RLC block: R=1, SI=0, TFI=0, CPS=5, RSB=0, rc=385
+UL DATA TFI=0 received (V(Q)=1 .. V(R)=1)
+max_cs_ul cannot be derived (current UL CS: UNKNOWN)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=7, BSN=1, SPB=0, PI=0, E=0, TI=0, bitoffs=33
+- BSN 1 storing in window (1..64)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+- Raising V(R) to 2
+- Taking block 1 out, raising V(Q) to 2
+- Assembling frames: (len=44)
+-- Frame 1 starts at offset 1, length=43, is_complete=0
+- No gaps in received block, last block: BSN=1 CV=7
+Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
+Got MS: TLLI = 0xf1223344, TA = 7
+********** TBF starts here **********
+Allocating DL TBF: MS_CLASS=1/1
+Enabled EGPRS for TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), mode EGPRS
+Slot Allocation (Algorithm A) for class 0
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 4, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Assign downlink TS=7 TFI=0
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+- Setting Control TS 7
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
+Allocated TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 80, dl_slots = 80
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+Modifying MS object, TLLI: 0xf1223344 confirmed
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) exists
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer 0.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) append

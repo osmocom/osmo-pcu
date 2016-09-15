@@ -496,6 +496,34 @@ static void test_rlc_unit_decoder()
 	OSMO_ASSERT(chunks[2].length == 1);
 	OSMO_ASSERT(!chunks[2].is_complete);
 
+	/*
+	 * TODO: simulate 3GPP TS 44.060 version 7.27.0 Release 7
+	 * row 4 of Table 10.4.14a.1
+	 * should expect 2 chunks. but currently it fails
+	 * due to bug. The assert will be fixed along with actual
+	 * fix
+	 */
+	rdbi.e = 0;
+	rdbi.ti = 0;
+	rdbi.cv = 1;
+	tlli = 0;
+	offs = 0;
+	data[offs++] = 1;
+	num_chunks = Decoding::rlc_data_from_ul_data(&rdbi, cs, data,
+		chunks, ARRAY_SIZE(chunks), &tlli);
+
+	/*
+	 * TODO: we expect 2 chunks here
+	 * index 0 as complete and index 1 as incomplete
+	 * due to current bug we see only 1 chunk
+	 * assert for index 1 will be added in subsequent
+	 * patch
+	 */
+	OSMO_ASSERT(num_chunks == 1);
+	OSMO_ASSERT(chunks[0].offset == 1);
+	OSMO_ASSERT(chunks[0].length == 43);
+	OSMO_ASSERT(!chunks[0].is_complete);
+
 	printf("=== end %s ===\n", __func__);
 }
 

@@ -1870,6 +1870,157 @@ static void test_tbf_puan_urbb_len(void)
 	printf("=== end %s ===\n", __func__);
 }
 
+static gprs_rlcmac_ul_tbf *tbf_li_decoding(BTS *the_bts,
+	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
+	uint8_t ms_class, uint8_t egprs_ms_class)
+{
+	GprsMs *ms;
+	uint32_t rach_fn = *fn - 51;
+	uint32_t sba_fn = *fn + 52;
+	uint8_t trx_no = 0;
+	int tfi = 0, i = 0;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	struct gprs_rlcmac_pdch *pdch;
+	gprs_rlcmac_bts *bts;
+	RlcMacUplink_t ulreq = {0};
+	struct pcu_l1_meas meas;
+	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
+	GprsCodingScheme cs;
+	Packet_Resource_Request_t *presreq = NULL;
+	MS_Radio_Access_capability_t *pmsradiocap = NULL;
+	Multislot_capability_t *pmultislotcap = NULL;
+
+	meas.set_rssi(31);
+	bts = the_bts->bts_data();
+
+	/* needed to set last_rts_fn in the PDCH object */
+	request_dl_rlc_block(bts, trx_no, ts_no, fn);
+
+	/*
+	 * simulate RACH, this sends an Immediate
+	 * Assignment Uplink on the AGCH
+	 */
+	the_bts->rcv_rach(0x73, rach_fn, qta, 0, GSM_L1_BURST_TYPE_ACCESS_0);
+
+	/* get next free TFI */
+	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
+
+	/* fake a resource request */
+	ulreq.u.MESSAGE_TYPE = MT_PACKET_RESOURCE_REQUEST;
+	presreq = &ulreq.u.Packet_Resource_Request;
+	presreq->PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
+	presreq->ID.UnionType = 1; /* != 0 */
+	presreq->ID.u.TLLI = tlli;
+	presreq->Exist_MS_Radio_Access_capability = 1;
+	pmsradiocap = &presreq->MS_Radio_Access_capability;
+	pmsradiocap->Count_MS_RA_capability_value = 1;
+	pmsradiocap->MS_RA_capability_value[0].u.Content.
+		Exist_Multislot_capability = 1;
+	pmultislotcap = &pmsradiocap->MS_RA_capability_value[0].
+		u.Content.Multislot_capability;
+
+	pmultislotcap->Exist_GPRS_multislot_class = 1;
+	pmultislotcap->GPRS_multislot_class = ms_class;
+	if (egprs_ms_class) {
+		pmultislotcap->Exist_EGPRS_multislot_class = 1;
+		pmultislotcap->EGPRS_multislot_class = ms_class;
+	}
+
+	send_ul_mac_block(the_bts, trx_no, ts_no, &ulreq, sba_fn);
+
+	/* check the TBF */
+	ul_tbf = the_bts->ul_tbf_by_tfi(tfi, trx_no, ts_no);
+	OSMO_ASSERT(ul_tbf);
+	OSMO_ASSERT(ul_tbf->ta() == qta / 4);
+
+	/* send packet uplink assignment */
+	*fn = sba_fn;
+	request_dl_rlc_block(ul_tbf, fn);
+
+	/* send real acknowledgement */
+	send_control_ack(ul_tbf);
+
+	check_tbf(ul_tbf);
+
+	uint8_t data_msg[49] = {0};
+
+	pdch = &the_bts->bts_data()->trx[trx_no].pdch[ts_no];
+
+	ms = the_bts->ms_by_tlli(tlli);
+	OSMO_ASSERT(ms != NULL);
+	OSMO_ASSERT(ms->ta() == qta/4);
+	OSMO_ASSERT(ms->ul_tbf() == ul_tbf);
+
+	cs = GprsCodingScheme::MCS4;
+	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
+	egprs3->si = 0;
+	egprs3->r = 1;
+	egprs3->cv = 7;
+	egprs3->tfi_hi = tfi & 0x03;
+	egprs3->tfi_lo = (tfi & 0x1c) >> 2;
+	egprs3->bsn1_hi = 0;
+	egprs3->bsn1_lo = 0;
+	egprs3->cps_hi = 1;
+	data_msg[3] = 0xff;
+	egprs3->pi = 0;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 0;
+	egprs3->pi = 0;
+	pdch->rcv_block(data_msg, 49, *fn, &meas);
+
+	egprs3->bsn1_hi = 1;
+	egprs3->bsn1_lo = 0;
+	data_msg[3] = 0x7f;
+	egprs3->cps_lo = 1;
+	egprs3->rsb = 0;
+	egprs3->spb = 0;
+	egprs3->pi = 0;
+	data_msg[4] = 0x2;
+	data_msg[5] = 0x0;
+	pdch->rcv_block(data_msg, 49, *fn, &meas);
+
+	/* TODO: should expect m_index as 43 */
+	OSMO_ASSERT(ul_tbf->m_llc.m_index == 87);
+
+	return ul_tbf;
+}
+
+static void test_tbf_li_decoding(void)
+{
+	BTS the_bts;
+	int ts_no = 7;
+	uint32_t fn = 2654218;
+	uint16_t qta = 31;
+	uint32_t tlli = 0xf1223344;
+	const char *imsi = "0011223344";
+	uint8_t ms_class = 1;
+	uint8_t egprs_ms_class = 1;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	GprsMs *ms;
+	uint8_t test_data[256];
+
+	printf("=== start %s ===\n", __func__);
+
+	memset(test_data, 1, sizeof(test_data));
+
+	setup_bts(&the_bts, ts_no, 4);
+	the_bts.bts_data()->initial_mcs_dl = 9;
+	the_bts.bts_data()->egprs_enabled = 1;
+
+	ul_tbf = tbf_li_decoding(&the_bts, ts_no, tlli, &fn, qta,
+		ms_class, egprs_ms_class);
+
+	ms = ul_tbf->ms();
+	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
+	fprintf(stderr,
+		"Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
+
+	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
+
+	printf("=== end %s ===\n", __func__);
+}
+
 static void test_tbf_egprs_two_phase_spb(void)
 {
 	BTS the_bts;
@@ -2547,6 +2698,7 @@ int main(int argc, char **argv)
 	test_tbf_egprs_spb_dl();
 	test_tbf_puan_urbb_len();
 	test_tbf_update_ws();
+	test_tbf_li_decoding();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
