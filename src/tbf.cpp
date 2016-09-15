@@ -376,6 +376,12 @@ int gprs_rlcmac_tbf::update()
 		return -rc;
 	}
 
+	if (is_egprs_enabled()) {
+		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
+		if (dl_tbf)
+			dl_tbf->egprs_calc_window_size();
+	}
+
 	return 0;
 }
 

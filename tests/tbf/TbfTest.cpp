@@ -1816,17 +1816,14 @@ static void test_tbf_update_ws(void)
 
 	dl_tbf->update();
 
-	/*
-	 * TODO: Should not expect window size as 192.
-	 * should be fixed in subsequent patch
-	 */
+	/* window size should be 384 */
 	OSMO_ASSERT(dl_tbf != NULL);
 	fprintf(stderr, "DL TBF slots: 0x%02x, N: %d, WS: %d\n",
 		dl_tbf->dl_slots(),
 		pcu_bitcount(dl_tbf->dl_slots()),
 		dl_tbf->window()->ws());
 	OSMO_ASSERT(pcu_bitcount(dl_tbf->dl_slots()) == 4);
-	OSMO_ASSERT(dl_tbf->window()->ws() == 128 + 1 * 64);
+	OSMO_ASSERT(dl_tbf->window()->ws() == 128 + 4 * 64);
 
 	tbf_free(dl_tbf);
 
