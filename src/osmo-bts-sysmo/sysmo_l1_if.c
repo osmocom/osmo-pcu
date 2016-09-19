@@ -13,6 +13,7 @@
 #include <sysmo_l1_if.h>
 #include <gprs_debug.h>
 #include <pcu_l1_if.h>
+#include <bts.h>
 
 extern void *tall_pcu_ctx;
 
@@ -189,6 +190,8 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 			data_ind->msgUnitParam.u8Size-1);
 
 	get_meas(&meas, &data_ind->measParam);
+	bts_update_tbf_ta("PH-DATA", data_ind->u32Fn, fl1h->trx_no,
+			  data_ind->u8Tn, qta2ta(meas.bto));
 
 	switch (data_ind->sapi) {
 	case GsmL1_Sapi_Pdtch:
@@ -220,33 +223,14 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 
 static int handle_ph_ra_ind(struct femtol1_hdl *fl1h, GsmL1_PhRaInd_t *ra_ind)
 {
-	uint8_t acc_delay;
-
 	pcu_rx_ra_time(ra_ind->u16Arfcn, ra_ind->u32Fn, ra_ind->u8Tn);
 
 	if (ra_ind->measParam.fLinkQuality < MIN_QUAL_RACH)
 		return 0;
 
 	DEBUGP(DL1IF, "Rx PH-RA.ind");
-
-	/* check for under/overflow / sign */
-	if (ra_ind->measParam.i16BurstTiming < 0)
-		acc_delay = 0;
-	else
-		acc_delay = ra_ind->measParam.i16BurstTiming >> 2;
-
-	LOGP(DL1IF, LOGL_NOTICE, "got (P)RACH request, TA = %u (ignored)\n",
-		acc_delay);
-
-#warning "The (P)RACH request is just dropped here"
-
-#if 0
-	if (acc_delay > bts->max_ta) {
-		LOGP(DL1C, LOGL_INFO, "ignoring RACH request %u > max_ta(%u)\n",
-		     acc_delay, btsb->max_ta);
-		return 0;
-	}
-#endif
+	bts_update_tbf_ta("PH-RA", ra_ind->u32Fn, fl1h->trx_no, ra_ind->u8Tn,
+			  qta2ta(ra_ind->measParam.i16BurstTiming));
 
 	return 0;
 }

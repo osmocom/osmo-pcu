@@ -33,6 +33,15 @@ extern "C" {
 }
 #endif
 
+static inline uint8_t qta2ta(int16_t qta)
+{
+	if (qta < 0)
+		return 0;
+	if (qta > 252)
+		qta = 252;
+	return qta >> 2;
+}
+
 /*
  * L1 Measurement values
  */

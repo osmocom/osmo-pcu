@@ -478,8 +478,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 	int rc;
 	int plen;
 	uint8_t usf = 7;
-	uint8_t tsc;
-	uint16_t ta;
+	uint8_t tsc, ta = qta2ta(qta);
 	uint16_t ms_class = 0;
 	uint16_t priority = 0;
 
@@ -489,13 +488,6 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 		"one:\n");
 
 	sb = is_single_block(ra, burst_type, is_11bit, &ms_class, &priority);
-
-	if (qta < 0)
-		qta = 0;
-	if (qta > 252)
-		qta = 252;
-
-	ta = qta >> 2;
 
 	if (sb) {
 		rc = sba()->alloc(&trx_no, &ts_no, &sb_fn, ta);
@@ -1473,6 +1465,23 @@ int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint32_t fn,
 	}
 
 	return rc;
+}
+
+void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts,
+		       uint8_t ta)
+{
+	struct gprs_rlcmac_ul_tbf *tbf =
+		bts_main_data()->bts->ul_tbf_by_poll_fn(fn, trx_no, ts);
+	if (!tbf)
+		LOGP(DL1IF, LOGL_DEBUG, "[%s] update TA = %u ignored due to "
+		     "unknown UL TBF on TRX = %d, TS = %d, FN = %d\n",
+		     p, ta, trx_no, ts, fn);
+	else if (tbf->ta() != ta) {
+		LOGP(DL1IF, LOGL_INFO, "[%s] Updating TA %u -> %u on "
+		     "TRX = %d, TS = %d, FN = %d\n",
+		     p, tbf->ta(), ta, trx_no, ts, fn);
+		tbf->set_ta(ta);
+	}
 }
 
 gprs_rlcmac_tbf *gprs_rlcmac_pdch::tbf_from_list_by_tfi(

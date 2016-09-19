@@ -143,6 +143,15 @@ struct gprs_rlcmac_trx {
 #endif
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts,
+		       uint8_t ta);
+#ifdef __cplusplus
+}
+#endif
+
 /**
  * This is the data from C. As soon as our minimal compiler is gcc 4.7
  * we can start to compile pcu_vty.c with c++ and remove the split.
