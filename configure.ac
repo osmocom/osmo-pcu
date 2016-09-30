@@ -79,6 +79,9 @@ AC_MSG_CHECKING([whether to enable VTY tests])
 AC_MSG_RESULT([$enable_vty_tests])
 AM_CONDITIONAL(ENABLE_VTY_TESTS, test "x$enable_vty_tests" = "xyes")
 
+STD_DEFINES_AND_INCLUDES="-Wall"
+AC_SUBST(STD_DEFINES_AND_INCLUDES)
+
 AC_OUTPUT(
     src/Makefile
     examples/Makefile
