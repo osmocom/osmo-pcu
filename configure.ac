@@ -19,6 +19,13 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 LT_INIT
 
+dnl check for pkg-config (explained in detail in libosmocore/configure.ac)
+AC_PATH_PROG(PKG_CONFIG_INSTALLED, pkg-config, no)
+if test "x$PKG_CONFIG_INSTALLED" = "xno"; then
+        AC_MSG_WARN([You need to install pkg-config])
+fi
+PKG_PROG_PKG_CONFIG([0.20])
+
 dnl checks for header files
 AC_HEADER_STDC
 
