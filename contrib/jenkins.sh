@@ -10,9 +10,10 @@ fi
 base="$PWD"
 deps="$base/deps"
 inst="$deps/install"
+export deps inst
 
+mkdir "$deps" || true
 rm -rf "$inst"
-mkdir -p "$deps"
 
 # Collect configure options for osmo-pcu
 PCU_CONFIG=""
@@ -30,6 +31,7 @@ if [ "$with_dsp" = sysmo ]; then
   api_incl="$inst/include/sysmocom/femtobts/"
   mkdir -p "$api_incl"
   cp include/*.h "$api_incl"
+  cd "$base"
 
 elif [ -z "$with_dsp" -o "$with_dsp" = none ]; then
   echo "Direct DSP access disabled"
@@ -48,19 +50,22 @@ else
 fi
 
 # Build deps
-cd "$deps"
-osmo-deps.sh libosmocore
-cd libosmocore
-autoreconf --install --force
-./configure --prefix="$inst"
-$MAKE $PARALLEL_MAKE install
+osmo-build-dep.sh libosmocore
 
-export PKG_CONFIG_PATH="$inst/lib/pkgconfig"
+export PKG_CONFIG_PATH="$inst/lib/pkgconfig:$PKG_CONFIG_PATH"
 export LD_LIBRARY_PATH="$inst/lib"
 
-# Build osmo-pcu
-cd "$base"
+set +x
+echo
+echo
+echo
+echo " =============================== osmo-pcu ==============================="
+echo
+set -x
+
 autoreconf --install --force
 ./configure $PCU_CONFIG
 $MAKE $PARALLEL_MAKE
-DISTCHECK_CONFIGURE_FLAGS="$PCU_CONFIG" AM_DISTCHECK_CONFIGURE_FLAGS="$PCU_CONFIG" $MAKE distcheck
+DISTCHECK_CONFIGURE_FLAGS="$PCU_CONFIG" AM_DISTCHECK_CONFIGURE_FLAGS="$PCU_CONFIG" \
+  $MAKE distcheck \
+  || cat-testlogs.sh
