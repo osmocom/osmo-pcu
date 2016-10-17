@@ -23,9 +23,11 @@ osmopcu-gb.pdf: gb/*.adoc gb/*.msc
 osmopcu-usermanual.pdf: chapters/*.adoc
 
 clean:
-	rm -rf $(cleanfiles)
-	rm -rf gen-vty-docbook
-	rm -rf osmopcu-usermanual__*.{svg,png,check}
+	-rm -rf $(cleanfiles)
+	-rm -rf gen-vty-docbook
+	-rm osmopcu-usermanual__*.png
+	-rm osmopcu-usermanual__*.svg
+	-rm osmopcu-usermanual.check
 
 gen-vty-docbook: FORCE
 	$(call command,xsltproc -o generated/combined1.xml \
