@@ -1,7 +1,7 @@
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/
 AM_LDFLAGS = -lrt
 
-check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest tbf/TbfTest types/TypesTest ms/MsTest llist/LListTest llc/LlcTest codel/codel_test edge/EdgeTest
+check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest tbf/TbfTest types/TypesTest ms/MsTest llist/LListTest llc/LlcTest codel/codel_test edge/EdgeTest bitcomp/BitcompTest
 noinst_PROGRAMS = emu/pcu_emu
 
 rlcmac_RLCMACTest_SOURCES = rlcmac/RLCMACTest.cpp
@@ -23,6 +23,11 @@ tbf_TbfTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCORE_LIBS) \
+	$(COMMON_LA)
+
+bitcomp_BitcompTest_SOURCES = bitcomp/BitcompTest.cpp ../src/egprs_rlc_compression.cpp
+bitcomp_BitcompTest_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
@@ -108,6 +113,7 @@ EXTRA_DIST = \
 	rlcmac/RLCMACTest.ok rlcmac/RLCMACTest.err \
 	alloc/AllocTest.ok alloc/AllocTest.err \
 	tbf/TbfTest.ok tbf/TbfTest.err \
+	bitcomp/BitcompTest.ok bitcomp/BitcompTest.err \
 	types/TypesTest.ok types/TypesTest.err \
 	ms/MsTest.ok ms/MsTest.err \
 	llc/LlcTest.ok llc/LlcTest.err \

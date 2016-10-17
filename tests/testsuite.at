@@ -23,6 +23,13 @@ cat $abs_srcdir/tbf/TbfTest.err > experr
 AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/tbf/TbfTest], [0], [expout], [experr])
 AT_CLEANUP
 
+AT_SETUP([bitcomp])
+AT_KEYWORDS([bitcomp])
+cat $abs_srcdir/bitcomp/BitcompTest.ok > expout
+cat $abs_srcdir/bitcomp/BitcompTest.err > experr
+AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/bitcomp/BitcompTest], [0], [expout], [experr])
+AT_CLEANUP
+
 AT_SETUP([edge])
 AT_KEYWORDS([edge])
 cat $abs_srcdir/edge/EdgeTest.ok > expout
