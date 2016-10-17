@@ -25,7 +25,7 @@ osmopcu-usermanual.pdf: chapters/*.adoc
 clean:
 	rm -rf $(cleanfiles)
 	rm -rf gen-vty-docbook
-	rm -rf osmopcu-usermanual__*.{svg,png}
+	rm -rf osmopcu-usermanual__*.{svg,png,check}
 
 gen-vty-docbook: FORCE
 	$(call command,xsltproc -o generated/combined1.xml \
