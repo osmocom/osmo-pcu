@@ -702,14 +702,17 @@ static void write_packet_ack_nack_desc_egprs(
 	gprs_rlc_ul_window *window, bool is_final)
 {
 	int urbb_len = 0;
-	int crbb_len = 0;
 	int len;
 	bool bow = true;
 	bool eow = true;
 	int ssn = window->mod_sns(window->v_q() + 1);
 	int num_blocks = window->mod_sns(window->v_r() - window->v_q());
 	int esn_crbb = window->mod_sns(ssn - 1);
-	int rest_bits = dest->data_len * 8 - wp;
+	/* Bit 0 at the end is mandatory Table 11.2.28.1 in 44.060 */
+	int rest_bits = dest->data_len * 8 - wp - 1;
+	int is_compressed = 0;
+	bool len_coded = true;
+	uint8_t i;
 
 	if (num_blocks > 0)
 		/* V(Q) is NACK and omitted -> SSN = V(Q) + 1 */
@@ -717,33 +720,31 @@ static void write_packet_ack_nack_desc_egprs(
 
 	if (num_blocks > window->ws())
 		num_blocks = window->ws();
+	/* TODO Compression support */
+	if (is_compressed == 0) {
+		/* Union bit takes 1 bit */
+		/* Other fields in descr for uncompresed bitmap takes 15 bits*/
 
-	if (num_blocks > rest_bits) {
-		eow = false;
-		urbb_len = rest_bits;
-		/* TODO: use compression, start encoding bits and stop when the
-		 * space is exhausted. Use the first combination that encodes
-		 * all bits. If there is none, use the combination that encodes
-		 * the largest number of bits (e.g. by setting num_blocks to the
-		 * max and repeating the construction).
-		 */
-	} else if (num_blocks > rest_bits - 9) {
-		/* union bit and length field take 9 bits */
-		eow = false;
-		urbb_len = rest_bits - 9;
-		/* TODO: use compression (see above) */
-	} else
-		urbb_len = num_blocks;
-
-	if (urbb_len + crbb_len == rest_bits)
-		len = -1;
-	else if (crbb_len == 0)
+		if (num_blocks > rest_bits - 15 - 1) {
+			eow = false;
+			urbb_len = rest_bits - 15 - 1;
+			len_coded = false;
+		} else if (num_blocks == rest_bits - 15 - 1) {
+			urbb_len = rest_bits - 15 - 1;
+			len_coded = false;
+		/* Union bit takes 1 bit length field takes 8 bits*/
+		} else if (num_blocks > rest_bits - 15 - 9) {
+			eow = false;
+			urbb_len = rest_bits - 15 - 9;
+		} else
+			urbb_len = num_blocks;
 		len = urbb_len + 15;
-	else
-		len = urbb_len + crbb_len + 23;
+	} else {
+		/* TODO Compressed bitmap */
+	}
 
 	/* EGPRS Ack/Nack Description IE */
-	if (len < 0) {
+	if (len_coded == false) {
 		bitvec_write_field(dest, wp, 0, 1); // 0: don't have length
 	} else {
 		bitvec_write_field(dest, wp, 1, 1); // 1: have length
@@ -754,17 +755,19 @@ static void write_packet_ack_nack_desc_egprs(
 	bitvec_write_field(dest, wp, bow, 1); // BEGINNING_OF_WINDOW
 	bitvec_write_field(dest, wp, eow, 1); // END_OF_WINDOW
 	bitvec_write_field(dest, wp, ssn, 11); // STARTING_SEQUENCE_NUMBER
-	bitvec_write_field(dest, wp, 0, 1); // 0: don't have CRBB
-
-	/* TODO: Add CRBB support */
-
+	if (is_compressed) {
+		/* TODO Add CRBB support */
+	} else
+		bitvec_write_field(dest, wp, 0, 1); // CRBB_Exist
 	LOGP(DRLCMACUL, LOGL_DEBUG,
-		" - EGPRS URBB, len = %d, SSN = %d, ESN_CRBB = %d, "
+		"EGPRS URBB, urbb len = %d, SSN = %d, ESN_CRBB = %d, "
+		"len present = %s,desc len = %d, "
 		"SNS = %d, WS = %d, V(Q) = %d, V(R) = %d%s%s\n",
-		urbb_len, ssn, esn_crbb,
+		urbb_len, ssn, esn_crbb, len_coded ? "yes" : "No", len,
 		window->sns(), window->ws(), window->v_q(), window->v_r(),
 		bow ? ", BOW" : "", eow ? ", EOW" : "");
-	for (int i = urbb_len; i > 0; i--) {
+
+	for (i = urbb_len; i > 0; i--) {
 		/* Set bit at the appropriate position (see 3GPP TS 04.60 12.3.1) */
 		bool is_ack = window->m_v_n.is_received(esn_crbb + i);
 		bitvec_write_field(dest, wp, is_ack, 1);
