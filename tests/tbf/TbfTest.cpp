@@ -26,6 +26,7 @@
 #include "pcu_utils.h"
 #include "gprs_bssgp_pcu.h"
 #include "pcu_l1_if.h"
+#include "decoding.h"
 
 extern "C" {
 #include "pcu_vty.h"
@@ -2017,6 +2018,106 @@ static void test_tbf_li_decoding(void)
 	printf("=== end %s ===\n", __func__);
 }
 
+/*
+ * Test that a bit within the uncompressed bitmap whose BSN is not within
+ * the transmit window shall be ignored. See section 9.1.8.2.4 of 44.060
+ * version 7.27.0 Release 7.
+ */
+static void test_tbf_epdan_out_of_rx_window(void)
+{
+	BTS the_bts;
+	gprs_rlcmac_bts *bts;
+	uint8_t ms_class = 11;
+	uint8_t egprs_ms_class = 11;
+	uint8_t trx_no;
+	uint32_t tlli = 0xffeeddcc;
+	gprs_rlcmac_dl_tbf *dl_tbf;
+	int ts_no = 4;
+	bitvec *block;
+	uint8_t bits_data[RLC_EGPRS_MAX_WS/8];
+	bitvec bits;
+	int bsn_begin, bsn_end;
+	EGPRS_PD_AckNack_t *ack_nack;
+	RlcMacUplink_t ul_control_block;
+	gprs_rlc_v_b *prlcmvb;
+	gprs_rlc_dl_window *prlcdlwindow;
+
+	printf("=== start %s ===\n", __func__);
+
+	bts = the_bts.bts_data();
+
+	setup_bts(&the_bts, ts_no);
+	bts->dl_tbf_idle_msec = 200;
+	bts->egprs_enabled = 1;
+	/* ARQ II */
+	bts->dl_arq_type = EGPRS_ARQ2;
+
+	/*
+	 * Simulate a message captured during over-the-air testing,
+	 * where the following values were observed:
+	 * v_a = 1176, vs = 1288, max sns = 2048, window size = 480.
+	 */
+	uint8_t data_msg[23] = {0x40, 0x20, 0x0b, 0xff, 0xd1,
+				0x61, 0x00, 0x3e, 0x0e, 0x51, 0x9f,
+				0xff, 0xff, 0xfb, 0x80, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+	dl_tbf = create_dl_tbf(&the_bts, ms_class, egprs_ms_class, &trx_no);
+	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
+	prlcdlwindow = &dl_tbf->m_window;
+	prlcmvb = &prlcdlwindow->m_v_b;
+	prlcdlwindow->m_v_s = 1288;
+	prlcdlwindow->m_v_a = 1176;
+	prlcdlwindow->set_sns(2048);
+	prlcdlwindow->set_ws(480);
+	prlcmvb->mark_unacked(1176);
+	prlcmvb->mark_unacked(1177);
+	prlcmvb->mark_unacked(1286);
+	prlcmvb->mark_unacked(1287);
+
+	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+
+	block = bitvec_alloc(23);
+
+	bitvec_unpack(block, data_msg);
+
+	bits.data = bits_data;
+	bits.data_len = sizeof(bits_data);
+	bits.cur_bit = 0;
+
+	decode_gsm_rlcmac_uplink(block, &ul_control_block);
+
+	ack_nack = &ul_control_block.u.Egprs_Packet_Downlink_Ack_Nack;
+
+	OSMO_ASSERT(prlcmvb->is_unacked(1176));
+	OSMO_ASSERT(prlcmvb->is_unacked(1177));
+	OSMO_ASSERT(prlcmvb->is_unacked(1286));
+	OSMO_ASSERT(prlcmvb->is_unacked(1287));
+
+	Decoding::decode_egprs_acknack_bits(
+		&ack_nack->EGPRS_AckNack.Desc, &bits,
+		&bsn_begin, &bsn_end, &dl_tbf->m_window);
+
+	dl_tbf->rcvd_dl_ack(
+		ack_nack->EGPRS_AckNack.Desc.FINAL_ACK_INDICATION,
+		bsn_begin, &bits);
+	/*
+	 * TODO:status of BSN:1176,1177 shall be invalid
+	 * status of BSN:1286,1287 shall be acked.
+	 * both condition fails because of existing bug. Which shall be
+	 * fixed in subsequent commit
+	 */
+
+	OSMO_ASSERT(prlcmvb->is_unacked(1176));
+	OSMO_ASSERT(prlcmvb->is_unacked(1177));
+	OSMO_ASSERT(prlcmvb->is_unacked(1286));
+	OSMO_ASSERT(prlcmvb->is_unacked(1287));
+
+	bitvec_free(block);
+	tbf_free(dl_tbf);
+	printf("=== end %s ===\n", __func__);
+}
+
 static void test_tbf_egprs_two_phase_spb(void)
 {
 	BTS the_bts;
@@ -2695,6 +2796,7 @@ int main(int argc, char **argv)
 	test_tbf_puan_urbb_len();
 	test_tbf_update_ws();
 	test_tbf_li_decoding();
+	test_tbf_epdan_out_of_rx_window();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
