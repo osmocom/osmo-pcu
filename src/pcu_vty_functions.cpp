@@ -61,6 +61,8 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 		if (tbf->pdch[i])
 			vty_out(vty, "%d%s ", i, is_ctrl ? "!" : "");
 	}
+	if (tbf->trx != NULL)
+		vty_out(vty, " TRX_ID=%d", tbf->trx->trx_no);
 	vty_out(vty, " CS=%s WS=%d",
 		tbf->current_cs().name(), tbf->window()->ws());
 
