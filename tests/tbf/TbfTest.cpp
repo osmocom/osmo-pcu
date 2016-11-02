@@ -2101,17 +2101,11 @@ static void test_tbf_epdan_out_of_rx_window(void)
 	dl_tbf->rcvd_dl_ack(
 		ack_nack->EGPRS_AckNack.Desc.FINAL_ACK_INDICATION,
 		bsn_begin, &bits);
-	/*
-	 * TODO:status of BSN:1176,1177 shall be invalid
-	 * status of BSN:1286,1287 shall be acked.
-	 * both condition fails because of existing bug. Which shall be
-	 * fixed in subsequent commit
-	 */
 
-	OSMO_ASSERT(prlcmvb->is_unacked(1176));
-	OSMO_ASSERT(prlcmvb->is_unacked(1177));
-	OSMO_ASSERT(prlcmvb->is_unacked(1286));
-	OSMO_ASSERT(prlcmvb->is_unacked(1287));
+	OSMO_ASSERT(prlcmvb->is_invalid(1176));
+	OSMO_ASSERT(prlcmvb->is_invalid(1177));
+	OSMO_ASSERT(prlcmvb->is_acked(1286));
+	OSMO_ASSERT(prlcmvb->is_acked(1287));
 
 	bitvec_free(block);
 	tbf_free(dl_tbf);

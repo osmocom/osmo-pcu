@@ -105,7 +105,9 @@ void gprs_rlc_dl_window::update(BTS *bts, const struct bitvec *rbb,
 			uint16_t first_bsn, uint16_t *lost,
 			uint16_t *received)
 {
-	unsigned num_blocks = rbb->cur_bit;
+	unsigned dist = distance();
+	unsigned num_blocks = rbb->cur_bit > dist
+				? dist : rbb->cur_bit;
 	unsigned bsn;
 
 	/* first_bsn is in range V(A)..V(S) */

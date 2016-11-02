@@ -847,6 +847,11 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 	unsigned received_packets = 0, lost_packets = 0;
 	unsigned num_blocks = strlen(show_rbb);
 
+	unsigned distance = m_window.distance();
+
+	num_blocks = num_blocks > distance
+				? distance : num_blocks;
+
 	/* SSN - 1 is in range V(A)..V(S)-1 */
 	for (unsigned int bitpos = 0; bitpos < num_blocks; bitpos++) {
 		bool is_received;
@@ -919,13 +924,15 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 	const struct bitvec *rbb)
 {
-	int16_t dist; /* must be signed */
+	unsigned dist;
 	uint16_t lost = 0, received = 0;
 	char show_v_b[RLC_MAX_SNS + 1];
 	char show_rbb[RLC_MAX_SNS + 1];
 	int error_rate;
 	struct ana_result ana_res;
-	unsigned num_blocks = rbb->cur_bit;
+	dist = m_window.distance();
+	unsigned num_blocks = rbb->cur_bit > dist
+				? dist : rbb->cur_bit;
 	unsigned behind_last_bsn = m_window.mod_sns(first_bsn + num_blocks);
 
 	Decoding::extract_rbb(rbb, show_rbb);
@@ -933,25 +940,6 @@ int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- ack:  (BSN=%d)\"%s\""
 		"(BSN=%d)  R=ACK I=NACK\n", first_bsn,
 		show_rbb, m_window.mod_sns(behind_last_bsn - 1));
-
-	/* apply received array to receive state (first_bsn..behind_last_bsn-1) */
-	if (num_blocks > 0) {
-		/* calculate distance of ssn from V(S) */
-		dist = m_window.mod_sns(m_window.v_s() - behind_last_bsn);
-		/* check if distance is less than distance V(A)..V(S) */
-		if (dist >= m_window.distance()) {
-			/* this might happpen, if the downlink assignment
-			 * was not received by ms and the ack refers
-			 * to previous TBF
-			 * FIXME: we should implement polling for
-			 * control ack!
-			 * TODO: check whether this FIXME still makes sense
-			 */
-			LOGP(DRLCMACDL, LOGL_NOTICE, "- ack range is out of "
-				"V(A)..V(S) range %s Free TBF!\n", tbf_name(this));
-			return 1; /* indicate to free TBF */
-		}
-	}
 
 	error_rate = analyse_errors(show_rbb, behind_last_bsn, &ana_res);
 

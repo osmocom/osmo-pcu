@@ -446,7 +446,7 @@ msg block (BSN 20, CS-1): 07 00 28 0a 41 c6 c7 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=91 block=9 data=07 00 28 0a 41 c6 c7 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 - ack:  (BSN=85)"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=20)  R=ACK I=NACK
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=0:21, lost=0, recv=21, skipped=0, bsn=127, info='RRRRRRRRRRRRRRRRRRRRR$..........................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=0:21, lost=0, recv=21, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRRR...........................................'
 - got ack for BSN=20
 - got ack for BSN=19
 - got ack for BSN=18
@@ -485,7 +485,7 @@ msg block (BSN 21, CS-1): 07 00 2a 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 Sending data request: trx=0 ts=4 sapi=5 arfcn=0 fn=95 block=10 data=07 00 2a 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 - ack:  (BSN=86)"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=21)  R=ACK I=NACK
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=21:22, lost=0, recv=1, skipped=0, bsn=20, info='R$..............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=21:22, lost=0, recv=1, skipped=0, bsn=21, info='R...............................................................'
 - got ack for BSN=21
 - V(B): (V(A)=22)""(V(S)-1=21)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4
@@ -6504,9 +6504,122 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
-- ack:  (BSN=1176)"RRRRRRRRRRIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIRRRIRRRRRRRRRRRRRRRRRRRRRRRRRRI"(BSN=1288)  R=ACK I=NACK
-- ack range is out of V(A)..V(S) range TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Free TBF!
-DL packet loss of IMSI= / TLLI=0xffeeddcc: 100%
+- ack:  (BSN=1176)"RRRRRRRRRRIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIRRRIRRRRRRRRRRRRRRRRRRRRRRRRRRI"(BSN=1287)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=1176:1288, lost=73, recv=39, skipped=0, bsn=1944, info='RRRRRRRRRRRRRRRRRRRRRRRRRRLRRRLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLRRRRRRRRRR................................................................................................................................................................................................................................................................................................................................................................................'
+- got ack for BSN=1176
+- got ack for BSN=1177
+- got ack for BSN=1178
+- got ack for BSN=1179
+- got ack for BSN=1180
+- got ack for BSN=1181
+- got ack for BSN=1182
+- got ack for BSN=1183
+- got ack for BSN=1184
+- got ack for BSN=1185
+- got NACK for BSN=1186
+- got NACK for BSN=1187
+- got NACK for BSN=1188
+- got NACK for BSN=1189
+- got NACK for BSN=1190
+- got NACK for BSN=1191
+- got NACK for BSN=1192
+- got NACK for BSN=1193
+- got NACK for BSN=1194
+- got NACK for BSN=1195
+- got NACK for BSN=1196
+- got NACK for BSN=1197
+- got NACK for BSN=1198
+- got NACK for BSN=1199
+- got NACK for BSN=1200
+- got NACK for BSN=1201
+- got NACK for BSN=1202
+- got NACK for BSN=1203
+- got NACK for BSN=1204
+- got NACK for BSN=1205
+- got NACK for BSN=1206
+- got NACK for BSN=1207
+- got NACK for BSN=1208
+- got NACK for BSN=1209
+- got NACK for BSN=1210
+- got NACK for BSN=1211
+- got NACK for BSN=1212
+- got NACK for BSN=1213
+- got NACK for BSN=1214
+- got NACK for BSN=1215
+- got NACK for BSN=1216
+- got NACK for BSN=1217
+- got NACK for BSN=1218
+- got NACK for BSN=1219
+- got NACK for BSN=1220
+- got NACK for BSN=1221
+- got NACK for BSN=1222
+- got NACK for BSN=1223
+- got NACK for BSN=1224
+- got NACK for BSN=1225
+- got NACK for BSN=1226
+- got NACK for BSN=1227
+- got NACK for BSN=1228
+- got NACK for BSN=1229
+- got NACK for BSN=1230
+- got NACK for BSN=1231
+- got NACK for BSN=1232
+- got NACK for BSN=1233
+- got NACK for BSN=1234
+- got NACK for BSN=1235
+- got NACK for BSN=1236
+- got NACK for BSN=1237
+- got NACK for BSN=1238
+- got NACK for BSN=1239
+- got NACK for BSN=1240
+- got NACK for BSN=1241
+- got NACK for BSN=1242
+- got NACK for BSN=1243
+- got NACK for BSN=1244
+- got NACK for BSN=1245
+- got NACK for BSN=1246
+- got NACK for BSN=1247
+- got NACK for BSN=1248
+- got NACK for BSN=1249
+- got NACK for BSN=1250
+- got NACK for BSN=1251
+- got NACK for BSN=1252
+- got NACK for BSN=1253
+- got NACK for BSN=1254
+- got NACK for BSN=1255
+- got NACK for BSN=1256
+- got NACK for BSN=1257
+- got ack for BSN=1258
+- got ack for BSN=1259
+- got ack for BSN=1260
+- got NACK for BSN=1261
+- got ack for BSN=1262
+- got ack for BSN=1263
+- got ack for BSN=1264
+- got ack for BSN=1265
+- got ack for BSN=1266
+- got ack for BSN=1267
+- got ack for BSN=1268
+- got ack for BSN=1269
+- got ack for BSN=1270
+- got ack for BSN=1271
+- got ack for BSN=1272
+- got ack for BSN=1273
+- got ack for BSN=1274
+- got ack for BSN=1275
+- got ack for BSN=1276
+- got ack for BSN=1277
+- got ack for BSN=1278
+- got ack for BSN=1279
+- got ack for BSN=1280
+- got ack for BSN=1281
+- got ack for BSN=1282
+- got ack for BSN=1283
+- got ack for BSN=1284
+- got ack for BSN=1285
+- got ack for BSN=1286
+- got ack for BSN=1287
+- V(B): (V(A)=1186)"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNAAANAAAAAAAAAAAAAAAAAAAAAAAAAA"(V(S)-1=1287)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
+DL packet loss of IMSI= / TLLI=0xffeeddcc: 78%
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) Software error: Pending downlink assignment. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
