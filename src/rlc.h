@@ -300,7 +300,7 @@ struct gprs_rlc_dl_window: public gprs_rlc_window {
 	const uint16_t v_s() const;
 	const uint16_t v_s_mod(int offset) const;
 	const uint16_t v_a() const;
-	const int16_t distance() const;
+	const uint16_t distance() const;
 
 	/* Methods to manage reception */
 	int resend_needed();
@@ -539,7 +539,7 @@ inline void gprs_rlc_dl_window::raise(int moves)
 	m_v_a = (m_v_a + moves) & mod_sns();
 }
 
-inline const int16_t gprs_rlc_dl_window::distance() const
+inline const uint16_t gprs_rlc_dl_window::distance() const
 {
 	return (m_v_s - m_v_a) & mod_sns();
 }
