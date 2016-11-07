@@ -536,6 +536,21 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 	if (is_11bit)
 		rach_frame_11bit();
 
+	/* Note: If a BTS is sending in a rach request it will be fully aware
+	 * of the frame number. If the PCU is used in a BSC-co-located setup.
+	 * The BSC will forward the incoming RACH request. The RACH request
+	 * only contains the relative frame number (Fn % 42432) in its request
+	 * reference. This PCU implementation has to fit both secenarious, so
+	 * we need to assume that Fn is a relative frame number. */
+
+	/* Ensure that all following calculations are performed with the
+	 * relative frame number */
+	Fn = Fn % 42432;
+
+	/* Restore the full frame number
+	 * (See also 3GPP TS 44.018, section 10.5.2.38) */
+	Fn = Fn + m_cur_fn - m_cur_fn % 42432;
+
 	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, "
 		"so we provide one \n"
 		"ra=0x%02x Fn=%u qta=%d is_11bit=%d:\n", ra, Fn, qta, is_11bit);

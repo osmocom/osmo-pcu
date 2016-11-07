@@ -42,6 +42,8 @@ extern "C" {
 
 #include <errno.h>
 
+#define DUMMY_FN 2654167
+
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 
@@ -166,6 +168,7 @@ static void setup_bts(BTS *the_bts, uint8_t ts_no, uint8_t cs = 1)
 	trx = &bts->trx[0];
 
 	trx->pdch[ts_no].enable();
+	the_bts->set_current_frame_number(DUMMY_FN);
 }
 
 static gprs_rlcmac_dl_tbf *create_dl_tbf(BTS *the_bts, uint8_t ms_class,
@@ -1692,7 +1695,7 @@ static void test_tbf_single_phase()
 {
 	BTS the_bts;
 	int ts_no = 7;
-	uint32_t fn = 2654167; /* 17,25,9 */
+	uint32_t fn = DUMMY_FN; /* 17,25,9 */
 	uint32_t tlli = 0xf1223344;
 	const char *imsi = "0011223344";
 	uint16_t qta = 31;
