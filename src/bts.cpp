@@ -525,6 +525,13 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 
 	rach_frame();
 
+	/* Santizize frame number */
+	Fn = Fn % 42432;
+
+	/* Restore the full frame number
+	 * (See also 3GPP TS 44.018, section 10.5.2.38) */
+	Fn = Fn + m_cur_fn - m_cur_fn % 42432;
+
 	if (is_11bit)
 		rach_frame_11bit();
 
