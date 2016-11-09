@@ -242,6 +242,84 @@ static int write_ia_rest_egprs_uplink(
 }
 
 /*
+ * Immediate assignment reject, sent on the CCCH/AGCH
+ * see GSM 44.018, 9.1.20 + 10.5.2.30
+ */
+int Encoding::write_immediate_assignment_reject(
+	bitvec *dest, uint16_t ra,
+	uint32_t ref_fn,
+	enum ph_burst_type burst_type)
+{
+	unsigned wp = 0;
+	int plen;
+	int i;
+
+	bitvec_write_field(dest, wp, 0x0, 4);  // Skip Indicator
+	bitvec_write_field(dest, wp, 0x6, 4);  // Protocol Discriminator
+	bitvec_write_field(dest, wp, 0x3A, 8); // Immediate Assign Message Type
+
+	// feature indicator
+	bitvec_write_field(dest, wp, 0x0, 1);      // spare
+	bitvec_write_field(dest, wp, 0x0, 1);      // spare
+	bitvec_write_field(dest, wp, 0x0, 1);      // no cs
+	bitvec_write_field(dest, wp, 0x1, 1);      // implicit detach for PS
+
+	bitvec_write_field(dest, wp, 0x0, 4); // Page Mode
+	/*
+	 * 9.1.20.2 of 44.018 version 11.7.0 Release 11
+	 * Filling of the message
+	 * If necessary the request reference information element and the
+	 * wait indication information element should be duplicated to
+	 * fill the message.
+	 * TODO: group rejection for multiple MS
+	*/
+	for (i = 0; i < 4; i++) {
+		//10.5.2.30 Request Reference
+		if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) ||
+			(burst_type == GSM_L1_BURST_TYPE_ACCESS_2))) {
+			//9.1.20.2a of 44.018 version 11.7.0 Release 11
+			bitvec_write_field(dest, wp, 0x7f, 8);  /* RACH value */
+		} else {
+			bitvec_write_field(dest, wp, ra, 8);	/* RACH value */
+		}
+
+		bitvec_write_field(dest, wp,
+					(ref_fn / (26 * 51)) % 32, 5); // T1'
+		bitvec_write_field(dest, wp, ref_fn % 51, 6);          // T3
+		bitvec_write_field(dest, wp, ref_fn % 26, 5);          // T2
+
+		/* TODO: Make it configurable */
+		bitvec_write_field(dest, wp, 20, 8); //Wait Indication 1
+	}
+
+	plen = wp / 8;
+
+	if ((wp % 8)) {
+		LOGP(DRLCMACUL, LOGL_ERROR, "Length of IMM.ASS.Rej without"
+			"rest octets is not multiple of 8 bits, PLEASE FIX!\n");
+		return -1;
+	}
+
+	// Extended RA
+	else if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) ||
+			(burst_type == GSM_L1_BURST_TYPE_ACCESS_2))) {
+		//9.1.20.2a of 44.018 version 11.7.0 Release 11
+		uint8_t extended_ra = 0;
+
+		extended_ra = (ra & 0x1F);
+		bitvec_write_field(dest, wp, 0x1, 1);
+		bitvec_write_field(dest, wp, extended_ra, 5); /* Extended RA */
+	} else {
+		bitvec_write_field(dest, wp, 0x0, 1);
+	}
+	bitvec_write_field(dest, wp, 0x0, 1);
+	bitvec_write_field(dest, wp, 0x0, 1);
+	bitvec_write_field(dest, wp, 0x0, 1);
+
+	return plen;
+}
+
+/*
  * Immediate assignment, sent on the CCCH/AGCH
  * see GSM 04.08, 9.1.18 and GSM 44.018, 9.1.18 + 10.5.2.16
  */

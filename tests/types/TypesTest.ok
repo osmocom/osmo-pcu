@@ -6,3 +6,5 @@ rbb: 00 00 00 00 00 00 00 31
 rbb: 10 00 00 00 00 00 00 01 
 show_rbb: RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
 show_rbb: IIRRIIIR
+assignment reject: 06 3a 10 7f 06 36 14 7f 06 36 14 7f 06 36 14 7f 06 36 14 c0 2b 2b 
+assignment reject: 06 3a 10 70 06 36 14 70 06 36 14 70 06 36 14 70 06 36 14 0b 2b 2b 

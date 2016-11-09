@@ -475,32 +475,42 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 	uint8_t trx_no, ts_no = 0;
 	uint8_t sb = 0;
 	uint32_t sb_fn = 0;
-	int rc;
+	int rc = 0;
 	int plen;
 	uint8_t usf = 7;
-	uint8_t tsc, ta = qta2ta(qta);
+	uint8_t tsc = 0, ta = qta2ta(qta);
 	uint16_t ms_class = 0;
 	uint16_t priority = 0;
+	bool failure = false;
 
 	rach_frame();
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, so we provide "
-		"one:\n");
+	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, "
+		"so we provide one \n"
+		"ra=0x%02x Fn=%u qta=%d is_11bit=%d:\n", ra, Fn, qta, is_11bit);
 
 	sb = is_single_block(ra, burst_type, is_11bit, &ms_class, &priority);
 
 	if (sb) {
 		rc = sba()->alloc(&trx_no, &ts_no, &sb_fn, ta);
-		if (rc < 0)
-			return rc;
-		LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] RACH qbit-ta=%d "
-			"ra=0x%02x, Fn=%d (%d,%d,%d), SBFn=%d\n",
-			qta, ra,
-			Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26,
-			sb_fn);
-		LOGP(DRLCMAC, LOGL_INFO, "TX: Immediate Assignment Uplink "
-			"(AGCH)\n");
-		tsc = m_bts.trx[trx_no].pdch[ts_no].tsc;
+		if (rc < 0) {
+			failure = true;
+			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource for "
+					"single block allocation."
+					"sending Immediate "
+					"Assignment Uplink (AGCH) reject\n");
+		} else {
+			tsc = m_bts.trx[trx_no].pdch[ts_no].tsc;
+
+			LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] RACH "
+				" qbit-ta=%d ra=0x%02x, Fn=%d (%d,%d,%d),"
+				" SBFn=%d\n",
+				qta, ra,
+				Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26,
+				sb_fn);
+			LOGP(DRLCMAC, LOGL_INFO, "TX: Immediate Assignment "
+				"Uplink (AGCH)\n");
+		}
 	} else {
 		// Create new TBF
 		#warning "Copy and paste with other routines.."
@@ -515,47 +525,60 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 		}
 
 		if (!tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
-			/* FIXME: send reject */
-			return -EBUSY;
+			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource sending "
+					"Immediate Assignment Uplink (AGCH) "
+					"reject\n");
+			rc = -EBUSY;
+			failure = true;
+		} else {
+			tbf->set_ta(ta);
+			tbf->set_state(GPRS_RLCMAC_FLOW);
+			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
+			tbf_timer_start(tbf, 3169, m_bts.t3169, 0);
+			LOGP(DRLCMAC, LOGL_DEBUG, "%s [UPLINK] START\n",
+					tbf_name(tbf));
+			LOGP(DRLCMAC, LOGL_DEBUG, "%s RX: [PCU <- BTS] RACH "
+					"qbit-ta=%d ra=0x%02x, Fn=%d "
+					" (%d,%d,%d)\n",
+					tbf_name(tbf),
+					qta, ra, Fn, (Fn / (26 * 51)) % 32,
+					Fn % 51, Fn % 26);
+			LOGP(DRLCMAC, LOGL_INFO, "%s TX: START Immediate "
+					"Assignment Uplink (AGCH)\n",
+					tbf_name(tbf));
+			trx_no = tbf->trx->trx_no;
+			ts_no = tbf->first_ts;
+			usf = tbf->m_usf[ts_no];
+			tsc = tbf->tsc();
 		}
-		tbf->set_ta(ta);
-		tbf->set_state(GPRS_RLCMAC_FLOW);
-		tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
-		tbf_timer_start(tbf, 3169, m_bts.t3169, 0);
-		LOGP(DRLCMAC, LOGL_DEBUG, "%s [UPLINK] START\n",
-			tbf_name(tbf));
-		LOGP(DRLCMAC, LOGL_DEBUG, "%s RX: [PCU <- BTS] RACH "
-			"qbit-ta=%d ra=0x%02x, Fn=%d (%d,%d,%d)\n",
-			tbf_name(tbf),
-			qta, ra, Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26);
-		LOGP(DRLCMAC, LOGL_INFO, "%s TX: START Immediate "
-			"Assignment Uplink (AGCH)\n", tbf_name(tbf));
-		trx_no = tbf->trx->trx_no;
-		ts_no = tbf->first_ts;
-		usf = tbf->m_usf[ts_no];
-		tsc = tbf->tsc();
 	}
 	bitvec *immediate_assignment = bitvec_alloc(22) /* without plen */;
 	bitvec_unhex(immediate_assignment,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 
-	LOGP(DRLCMAC, LOGL_DEBUG,
-		" - TRX=%d (%d) TS=%d TA=%d TSC=%d TFI=%d USF=%d\n",
-		trx_no, m_bts.trx[trx_no].arfcn, ts_no, ta, tsc,
-		tbf ? tbf->tfi() : -1, usf);
 
-	plen = Encoding::write_immediate_assignment(
-		tbf, immediate_assignment, 0, ra, Fn, ta,
-		m_bts.trx[trx_no].arfcn, ts_no, tsc, usf, 0, sb_fn,
-		m_bts.alpha, m_bts.gamma, -1, burst_type, sb);
+	if (failure)
+		plen = Encoding::write_immediate_assignment_reject(
+			immediate_assignment, ra, Fn,
+			burst_type);
+	else {
+		LOGP(DRLCMAC, LOGL_DEBUG,
+			" - TRX=%d (%d) TS=%d TA=%d TSC=%d TFI=%d USF=%d\n",
+			trx_no, m_bts.trx[trx_no].arfcn, ts_no, ta, tsc,
+			tbf ? tbf->tfi() : -1, usf);
+
+		plen = Encoding::write_immediate_assignment(
+			tbf, immediate_assignment, 0, ra, Fn, ta,
+			m_bts.trx[trx_no].arfcn, ts_no, tsc, usf, 0, sb_fn,
+			m_bts.alpha, m_bts.gamma, -1, burst_type, sb);
+	}
 
 	if (plen >= 0)
 		pcu_l1if_tx_agch(immediate_assignment, plen);
 
 	bitvec_free(immediate_assignment);
 
-	return 0;
+	return rc;
 }
 
 uint8_t BTS::is_single_block(uint16_t ra, enum ph_burst_type burst_type,

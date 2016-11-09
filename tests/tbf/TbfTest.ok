@@ -68,3 +68,7 @@ Testing retx for MCS 6 to reseg_mcs 3
 === end test_tbf_li_decoding ===
 === start test_tbf_epdan_out_of_rx_window ===
 === end test_tbf_epdan_out_of_rx_window ===
+=== start test_immediate_assign_rej_multi_block ===
+=== end test_immediate_assign_rej_multi_block ===
+=== start test_immediate_assign_rej_single_block ===
+=== end test_immediate_assign_rej_single_block ===

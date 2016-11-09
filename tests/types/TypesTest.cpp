@@ -427,6 +427,42 @@ static void test_rlc_dl_ul_basic()
 	}
 }
 
+void test_immediate_assign_rej()
+{
+	uint8_t plen;
+	bitvec *immediate_assignment_rej = bitvec_alloc(22);
+
+	bitvec_unhex(immediate_assignment_rej,
+		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	plen = Encoding::write_immediate_assignment_reject(
+		immediate_assignment_rej, 112, 100,
+		GSM_L1_BURST_TYPE_ACCESS_1);
+
+	printf("assignment reject: %s\n",
+		osmo_hexdump(immediate_assignment_rej->data, 22));
+
+	OSMO_ASSERT(plen == 19);
+	/* RA value */
+	OSMO_ASSERT(immediate_assignment_rej->data[3] == 0x7f);
+	/* Extended RA value */
+	OSMO_ASSERT(immediate_assignment_rej->data[19] == 0xc0);
+
+	bitvec_unhex(immediate_assignment_rej,
+		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+
+	plen = Encoding::write_immediate_assignment_reject(
+		immediate_assignment_rej, 112, 100,
+		GSM_L1_BURST_TYPE_ACCESS_0);
+
+	printf("assignment reject: %s\n",
+		osmo_hexdump(immediate_assignment_rej->data, 22));
+
+	OSMO_ASSERT(plen == 19);
+	/* RA value */
+	OSMO_ASSERT(immediate_assignment_rej->data[3] == 0x70);
+
+}
+
 int main(int argc, char **argv)
 {
 	osmo_init_logging(&gprs_log_info);
@@ -439,6 +475,7 @@ int main(int argc, char **argv)
 	test_rlc_v_b();
 	test_rlc_v_n();
 	test_rlc_dl_ul_basic();
+	test_immediate_assign_rej();
 	return EXIT_SUCCESS;
 }
 

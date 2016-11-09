@@ -52,6 +52,12 @@ public:
 				GSM_L1_BURST_TYPE_ACCESS_0,
 			uint8_t sb = 1);
 
+	static int write_immediate_assignment_reject(
+			bitvec *dest, uint16_t ra,
+			uint32_t ref_fn,
+			enum ph_burst_type burst_type
+		);
+
 	static void write_packet_uplink_assignment(
 			struct gprs_rlcmac_bts *bts,
 			bitvec * dest, uint8_t old_tfi,

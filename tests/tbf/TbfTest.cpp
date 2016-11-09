@@ -1372,6 +1372,88 @@ static void test_tbf_single_phase()
 	printf("=== end %s ===\n", __func__);
 }
 
+/*
+ * Trigger rach for single block
+ */
+static void test_immediate_assign_rej_single_block()
+{
+	BTS the_bts;
+	uint32_t fn = 2654218;
+	uint16_t qta = 31;
+	int ts_no = 7;
+
+	printf("=== start %s ===\n", __func__);
+
+	setup_bts(&the_bts, ts_no, 4);
+
+	the_bts.bts_data()->trx[0].pdch[ts_no].disable();
+
+	uint32_t rach_fn = fn - 51;
+
+	int rc = 0;
+
+	/*
+	 * simulate RACH, sends an Immediate Assignment
+	 * Uplink reject on the AGCH
+	 */
+	rc = the_bts.rcv_rach(0x70, rach_fn, qta, 0,
+				GSM_L1_BURST_TYPE_ACCESS_0);
+
+	OSMO_ASSERT(rc == -EINVAL);
+
+	printf("=== end %s ===\n", __func__);
+}
+
+/*
+ * Trigger rach till resources(USF) exhaust
+ */
+static void test_immediate_assign_rej_multi_block()
+{
+	BTS the_bts;
+	uint32_t fn = 2654218;
+	uint16_t qta = 31;
+	int ts_no = 7;
+
+	printf("=== start %s ===\n", __func__);
+
+	setup_bts(&the_bts, ts_no, 4);
+
+	uint32_t rach_fn = fn - 51;
+
+	int rc = 0;
+
+	/*
+	 * simulate RACH, sends an Immediate Assignment Uplink
+	 * reject on the AGCH
+	 */
+	rc = the_bts.rcv_rach(0x78, rach_fn, qta, 0,
+				GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = the_bts.rcv_rach(0x79, rach_fn, qta, 0,
+				GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = the_bts.rcv_rach(0x7a, rach_fn, qta, 0,
+				GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = the_bts.rcv_rach(0x7b, rach_fn, qta, 0,
+				GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = the_bts.rcv_rach(0x7c, rach_fn, qta, 0,
+				GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = the_bts.rcv_rach(0x7d, rach_fn, qta, 0,
+				GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = the_bts.rcv_rach(0x7e, rach_fn, qta, 0,
+				GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = the_bts.rcv_rach(0x7f, rach_fn, qta, 0,
+				GSM_L1_BURST_TYPE_ACCESS_0);
+
+	OSMO_ASSERT(rc == -EBUSY);
+
+	printf("=== end %s ===\n", __func__);
+}
+
+static void test_immediate_assign_rej()
+{
+	test_immediate_assign_rej_multi_block();
+	test_immediate_assign_rej_single_block();
+}
+
 static void test_tbf_two_phase()
 {
 	BTS the_bts;
@@ -2791,6 +2873,7 @@ int main(int argc, char **argv)
 	test_tbf_update_ws();
 	test_tbf_li_decoding();
 	test_tbf_epdan_out_of_rx_window();
+	test_immediate_assign_rej();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
