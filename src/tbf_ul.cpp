@@ -175,7 +175,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 	/* Increment RX-counter */
 	this->m_rx_counter++;
-
+	update_coding_scheme_counter_ul(rlc->cs);
 	/* Loop over num_blocks */
 	for (block_idx = 0; block_idx < rlc->num_data_blocks; block_idx++) {
 		int num_chunks;
@@ -516,4 +516,57 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_spb(
 		}
 	}
 	return assemble_status;
+}
+
+void gprs_rlcmac_ul_tbf::update_coding_scheme_counter_ul(const GprsCodingScheme cs)
+{
+	uint8_t coding_scheme = 0;
+
+	coding_scheme = GprsCodingScheme::Scheme(cs);
+	if (cs.isGprs()) {
+		switch (coding_scheme) {
+		case GprsCodingScheme::CS1 :
+			bts->gprs_ul_cs1();
+			break;
+		case GprsCodingScheme::CS2 :
+			bts->gprs_ul_cs2();
+			break;
+		case GprsCodingScheme::CS3 :
+			bts->gprs_ul_cs3();
+			break;
+		case GprsCodingScheme::CS4 :
+			bts->gprs_ul_cs4();
+			break;
+		}
+	} else {
+		switch (coding_scheme) {
+		case GprsCodingScheme::MCS1 :
+			bts->egprs_ul_mcs1();
+			break;
+		case GprsCodingScheme::MCS2 :
+			bts->egprs_ul_mcs2();
+			break;
+		case GprsCodingScheme::MCS3 :
+			bts->egprs_ul_mcs3();
+			break;
+		case GprsCodingScheme::MCS4 :
+			bts->egprs_ul_mcs4();
+			break;
+		case GprsCodingScheme::MCS5 :
+			bts->egprs_ul_mcs5();
+			break;
+		case GprsCodingScheme::MCS6 :
+			bts->egprs_ul_mcs6();
+			break;
+		case GprsCodingScheme::MCS7 :
+			bts->egprs_ul_mcs7();
+			break;
+		case GprsCodingScheme::MCS8 :
+			bts->egprs_ul_mcs8();
+			break;
+		case GprsCodingScheme::MCS9 :
+			bts->egprs_ul_mcs9();
+			break;
+		}
+	}
 }

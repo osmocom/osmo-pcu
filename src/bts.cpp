@@ -88,6 +88,46 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "llc.dl_bytes",               "RLC encapsulated PDUs"},
 	{ "llc.ul_bytes",               "full PDUs received   "},
 	{ "rach.requests",		"RACH requests        "},
+	{ "11bit_rach.requests",	"11BIT_RACH requests  "},
+	{ "immediate.assignment_UL",	"Immediate Assign UL  "},
+	{ "immediate.assignment_DL",	"Immediate Assign DL  "},
+	{ "pkt.ul_assignment",		"Packet UL Assignment "},
+	{ "pkt.dl_assignment",		"Packet DL Assignment "},
+	{ "ul.control",			"UL control Block     "},
+	{ "ul.assignment_poll_timeout",	"UL Assign Timeout    "},
+	{ "ul.assignment_failed",	"UL Assign Failed     "},
+	{ "dl.assignment_timeout",	"DL Assign Timeout    "},
+	{ "dl.assignment_failed",	"DL Assign Failed     "},
+	{ "pkt.ul_ack_nack_timeout",	"PUAN Poll Timeout    "},
+	{ "pkt.ul_ack_nack_failed",	"PUAN poll Failed     "},
+	{ "pkt.dl_ack_nack_timeout",	"PDAN poll Timeout    "},
+	{ "pkt.dl_ack_nack_failed",	"PDAN poll Failed     "},
+	{ "gprs.downlink_cs1",		"CS1 downlink         "},
+	{ "gprs.downlink_cs2",		"CS2 downlink         "},
+	{ "gprs.downlink_cs3",		"CS3 downlink         "},
+	{ "gprs.downlink_cs4",		"CS4 downlink         "},
+	{ "egprs.downlink_mcs1",	"MCS1 downlink        "},
+	{ "egprs.downlink_mcs2",	"MCS2 downlink        "},
+	{ "egprs.downlink_mcs3",	"MCS3 downlink        "},
+	{ "egprs.downlink_mcs4",	"MCS4 downlink        "},
+	{ "egprs.downlink_mcs5",	"MCS5 downlink        "},
+	{ "egprs.downlink_mcs6",	"MCS6 downlink        "},
+	{ "egprs.downlink_mcs7",	"MCS7 downlink        "},
+	{ "egprs.downlink_mcs8",	"MCS8 downlink        "},
+	{ "egprs.downlink_mcs9",	"MCS9 downlink        "},
+	{ "gprs.uplink_cs1",		"CS1 Uplink           "},
+	{ "gprs.uplink_cs2",		"CS2 Uplink           "},
+	{ "gprs.uplink_cs3",		"CS3 Uplink           "},
+	{ "gprs.uplink_cs4",		"CS4 Uplink           "},
+	{ "egprs.uplink_mcs1",		"MCS1 Uplink          "},
+	{ "egprs.uplink_mcs2",		"MCS2 Uplink          "},
+	{ "egprs.uplink_mcs3",		"MCS3 Uplink          "},
+	{ "egprs.uplink_mcs4",		"MCS4 Uplink          "},
+	{ "egprs.uplink_mcs5",		"MCS5 Uplink          "},
+	{ "egprs.uplink_mcs6",		"MCS6 Uplink          "},
+	{ "egprs.uplink_mcs7",		"MCS7 Uplink          "},
+	{ "egprs.uplink_mcs8",		"MCS8 Uplink          "},
+	{ "egprs.uplink_mcs9",		"MCS9 Uplink          "},
 };
 
 static const struct rate_ctr_group_desc bts_ctrg_desc = {
@@ -485,6 +525,9 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 
 	rach_frame();
 
+	if (is_11bit)
+		rach_frame_11bit();
+
 	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, "
 		"so we provide one \n"
 		"ra=0x%02x Fn=%u qta=%d is_11bit=%d:\n", ra, Fn, qta, is_11bit);
@@ -573,8 +616,10 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 			m_bts.alpha, m_bts.gamma, -1, burst_type, sb);
 	}
 
-	if (plen >= 0)
+	if (plen >= 0) {
+		immediate_assignment_ul_tbf();
 		pcu_l1if_tx_agch(immediate_assignment, plen);
+	}
 
 	bitvec_free(immediate_assignment);
 
@@ -699,8 +744,11 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 		(tbf->pdch[ts]->last_rts_fn + 21216) % 2715648, tbf->ta(),
 		tbf->trx->arfcn, ts, tbf->tsc(), 7, poll,
 		tbf->poll_fn, m_bts.alpha, m_bts.gamma, -1);
-	if (plen >= 0)
+	if (plen >= 0) {
+		immediate_assignment_dl_tbf();
 		pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
+	}
+
 	bitvec_free(immediate_assignment);
 }
 
@@ -1363,6 +1411,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 	decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
 	LOGPC(DCSN1, LOGL_NOTICE, "\n");
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- RX : Uplink Control Block -------------------------\n");
+	bts()->rlc_rcvd_control();
 	switch (ul_control_block->u.MESSAGE_TYPE) {
 	case MT_PACKET_CONTROL_ACK:
 		rcv_control_ack(&ul_control_block->u.Packet_Control_Acknowledgement, fn);

@@ -379,6 +379,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int abort();
 
 	void egprs_calc_window_size();
+	void update_coding_scheme_counter_dl(const GprsCodingScheme cs);
 
 	/* TODO: add the gettimeofday as parameter */
 	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
@@ -466,6 +467,8 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 		const struct gprs_rlc_data_info *rlc,
 		struct gprs_rlc_data *block,
 		uint8_t *data, const uint8_t block_idx);
+
+	void update_coding_scheme_counter_ul(const GprsCodingScheme cs);
 
 	/* Please note that all variables here will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).

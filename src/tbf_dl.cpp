@@ -648,6 +648,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		num_bsns += 1;
 	}
 
+	update_coding_scheme_counter_dl(cs);
 	/*
 	 * if the intial mcs is 8 and retransmission mcs is either 6 or 3
 	 * we have to include the padding of 6 octets in first segment
@@ -1329,4 +1330,57 @@ void gprs_rlcmac_dl_tbf::egprs_calc_window_size()
 		name(), ws);
 
 	m_window.set_ws(ws);
+}
+
+void gprs_rlcmac_dl_tbf::update_coding_scheme_counter_dl(const GprsCodingScheme cs)
+{
+	uint8_t coding_scheme = 0;
+
+	coding_scheme = GprsCodingScheme::Scheme(cs);
+	if (cs.isGprs()) {
+		switch (coding_scheme) {
+		case GprsCodingScheme::CS1 :
+			bts->gprs_dl_cs1();
+			break;
+		case GprsCodingScheme::CS2 :
+			bts->gprs_dl_cs2();
+			break;
+		case GprsCodingScheme::CS3 :
+			bts->gprs_dl_cs3();
+			break;
+		case GprsCodingScheme::CS4 :
+			bts->gprs_dl_cs4();
+			break;
+		}
+	} else {
+		switch (coding_scheme) {
+		case GprsCodingScheme::MCS1 :
+			bts->egprs_dl_mcs1();
+			break;
+		case GprsCodingScheme::MCS2 :
+			bts->egprs_dl_mcs2();
+			break;
+		case GprsCodingScheme::MCS3 :
+			bts->egprs_dl_mcs3();
+			break;
+		case GprsCodingScheme::MCS4 :
+			bts->egprs_dl_mcs4();
+			break;
+		case GprsCodingScheme::MCS5 :
+			bts->egprs_dl_mcs5();
+			break;
+		case GprsCodingScheme::MCS6 :
+			bts->egprs_dl_mcs6();
+			break;
+		case GprsCodingScheme::MCS7 :
+			bts->egprs_dl_mcs7();
+			break;
+		case GprsCodingScheme::MCS8 :
+			bts->egprs_dl_mcs8();
+			break;
+		case GprsCodingScheme::MCS9 :
+			bts->egprs_dl_mcs9();
+			break;
+		}
+	}
 }

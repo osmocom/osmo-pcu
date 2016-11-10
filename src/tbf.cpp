@@ -508,12 +508,14 @@ void gprs_rlcmac_tbf::poll_timeout()
 		}
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
 		bts->rlc_ack_timedout();
+		bts->pkt_ul_ack_nack_poll_timedout();
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
 			gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
 			ul_tbf->m_n3103++;
 			if (ul_tbf->m_n3103 == ul_tbf->bts->bts_data()->n3103) {
 				LOGP(DRLCMAC, LOGL_NOTICE,
 					"- N3103 exceeded\n");
+				bts->pkt_ul_ack_nack_poll_failed();
 				ul_tbf->set_state(GPRS_RLCMAC_RELEASING);
 				tbf_timer_start(ul_tbf, 3169, ul_tbf->bts->bts_data()->t3169, 0);
 				return;
@@ -533,11 +535,13 @@ void gprs_rlcmac_tbf::poll_timeout()
 		ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
 		n3105++;
 		bts->rlc_ass_timedout();
+		bts->pua_poll_timedout();
 		if (n3105 == bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
 			set_state(GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
 			bts->rlc_ass_failed();
+			bts->pua_poll_failed();
 			return;
 		}
 		/* reschedule UL assignment */
@@ -553,11 +557,13 @@ void gprs_rlcmac_tbf::poll_timeout()
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 		n3105++;
 		bts->rlc_ass_timedout();
+		bts->pda_poll_timedout();
 		if (n3105 == bts->bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
 			set_state(GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
 			bts->rlc_ass_failed();
+			bts->pda_poll_failed();
 			return;
 		}
 		/* reschedule DL assignment */
@@ -574,12 +580,15 @@ void gprs_rlcmac_tbf::poll_timeout()
 		dl_tbf->n3105++;
 		if (dl_tbf->state_is(GPRS_RLCMAC_RELEASING))
 			bts->rlc_rel_timedout();
-		else
+		else {
 			bts->rlc_ack_timedout();
+			bts->pkt_dl_ack_nack_poll_timedout();
+		}
 		if (dl_tbf->n3105 == dl_tbf->bts->bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
 			dl_tbf->set_state(GPRS_RLCMAC_RELEASING);
 			tbf_timer_start(dl_tbf, 3195, dl_tbf->bts_data()->t3195, 0);
+			bts->pkt_dl_ack_nack_poll_failed();
 			bts->rlc_ack_failed();
 			return;
 		}
@@ -991,6 +1000,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	encode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
 	LOGPC(DCSN1, LOGL_NOTICE, "\n");
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Downlink Assignment -------------------------\n");
+	bts->pkt_dl_assignemnt();
 	bitvec_pack(ass_vec, msgb_put(msg, 23));
 	bitvec_free(ass_vec);
 	talloc_free(mac_control_block);
@@ -1087,6 +1097,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 	decode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
 	LOGPC(DCSN1, LOGL_NOTICE, "\n");
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Uplink Assignment -------------------------\n");
+	bts->pkt_ul_assignment();
 	bitvec_free(ass_vec);
 	talloc_free(mac_control_block);
 
