@@ -72,7 +72,8 @@ static uint32_t sched_poll(BTS *bts,
 			*poll_tbf = dl_tbf;
 		if (dl_tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_SEND_ASS)
 			*dl_ass_tbf = dl_tbf;
-		if (dl_tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS)
+		if (dl_tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS
+		 || dl_tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ)
 			*ul_ass_tbf = dl_tbf;
 	}
 
@@ -137,7 +138,11 @@ static struct msgb *sched_select_ctrl_msg(
 		 */
 
 		if (tbf == ul_ass_tbf && tbf->direction == GPRS_RLCMAC_DL_TBF)
-			msg = ul_ass_tbf->create_ul_ass(fn, ts);
+			if (tbf->ul_ass_state ==
+					GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ)
+				msg = ul_ass_tbf->create_packet_access_reject();
+			else
+				msg = ul_ass_tbf->create_ul_ass(fn, ts);
 		else if (tbf == dl_ass_tbf && tbf->direction == GPRS_RLCMAC_UL_TBF)
 			msg = dl_ass_tbf->create_dl_ass(fn, ts);
 		else if (tbf == ul_ack_tbf)

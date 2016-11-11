@@ -64,6 +64,7 @@ enum gprs_rlcmac_tbf_dl_ass_state {
 enum gprs_rlcmac_tbf_ul_ass_state {
 	GPRS_RLCMAC_UL_ASS_NONE = 0,
 	GPRS_RLCMAC_UL_ASS_SEND_ASS, /* send uplink assignment on next RTS */
+	GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ, /* send assignment reject next RTS */
 	GPRS_RLCMAC_UL_ASS_WAIT_ACK, /* wait for PACKET CONTROL ACK */
 };
 
@@ -103,6 +104,7 @@ struct gprs_rlcmac_tbf {
 
 	struct msgb *create_dl_ass(uint32_t fn, uint8_t ts);
 	struct msgb *create_ul_ass(uint32_t fn, uint8_t ts);
+	struct msgb *create_packet_access_reject();
 
 	GprsMs *ms() const;
 	void set_ms(GprsMs *ms);

@@ -2831,6 +2831,29 @@ const struct log_info debug_log_info = {
 	ARRAY_SIZE(default_categories),
 };
 
+void test_packet_access_rej_epdan()
+{
+	BTS the_bts;
+	uint32_t tlli = 0xffeeddcc;
+
+	printf("=== start %s ===\n", __func__);
+	setup_bts(&the_bts, 4);
+	static gprs_rlcmac_dl_tbf *dl_tbf = tbf_init(&the_bts, 1);
+
+	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
+
+	struct msgb *msg = dl_tbf->create_packet_access_reject();
+
+	printf("packet reject: %s\n",
+			osmo_hexdump(msg->data, 23));
+
+	OSMO_ASSERT(!strcmp(osmo_hexdump(msg->data, 23),
+			    "40 84 7f f7 6e e6 41 4b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b "));
+	printf("=== end %s ===\n", __func__);
+
+}
+
+
 int main(int argc, char **argv)
 {
 	struct vty_app_info pcu_vty_info = {0};
@@ -2874,6 +2897,7 @@ int main(int argc, char **argv)
 	test_tbf_li_decoding();
 	test_tbf_epdan_out_of_rx_window();
 	test_immediate_assign_rej();
+	test_packet_access_rej_epdan();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);

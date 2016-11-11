@@ -1391,3 +1391,28 @@ Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 
 	return AR_NEED_MORE_BLOCKS;
 }
+
+/*
+ * Refer 44.060 version 7.27.0 Release 7
+ * section 7.1.3.2.1 On receipt of a PACKET RESOURCE REQUEST message
+ * 8.1.2.5 Establishment of uplink TBF
+ */
+void Encoding::write_packet_access_reject(
+	bitvec * dest, uint32_t tlli)
+{
+	unsigned wp = 0;
+
+	bitvec_write_field(dest, wp, 0x1, 2);  // Payload Type
+	bitvec_write_field(dest, wp, 0x0, 2);  // Uplink block with TDMA FN
+	bitvec_write_field(dest, wp, 0, 1);  // No Polling Bit
+	bitvec_write_field(dest, wp, 0x0, 3);  // Uplink state flag
+	bitvec_write_field(dest, wp,
+				MT_PACKET_ACCESS_REJECT, 6);  // MESSAGE TYPE
+	bitvec_write_field(dest, wp, 0, 2); // fixed 00
+	bitvec_write_field(dest, wp, 0x0, 1);  //  TLLI / G-RNTI : bit (32)
+	bitvec_write_field(dest, wp, tlli, 32); // CONTENTION_RESOLUTION_TLLI
+	bitvec_write_field(dest, wp, 1, 1);  //  WAIT_INDICATION size in seconds
+	/* TODO: make it configurable */
+	bitvec_write_field(dest, wp, 5, 8);  //  WAIT_INDICATION value
+	bitvec_write_field(dest, wp, 0, 1);  //  WAIT_INDICATION size in seconds
+}

@@ -74,6 +74,9 @@ public:
 
 	static void encode_rbb(const char *show_rbb, uint8_t *rbb);
 
+	static void write_packet_access_reject(
+		bitvec * dest, uint32_t tlli);
+
 	static void write_packet_uplink_ack(
 			struct gprs_rlcmac_bts *bts, bitvec * dest,
 			struct gprs_rlcmac_ul_tbf *tbf, bool is_final,

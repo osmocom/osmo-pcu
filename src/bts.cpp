@@ -1077,16 +1077,23 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	}
 	/* check for channel request */
 	if (ack_nack->Exist_Channel_Request_Description) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
-			"message, so we provide one:\n");
 
 		/* This call will register the new TBF with the MS on success */
-		tbf_alloc_ul(bts_data(), tbf->trx->trx_no,
+		gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts_data(),
+			tbf->trx->trx_no,
 			tbf->ms_class(), tbf->ms()->egprs_ms_class(),
 			tbf->tlli(), tbf->ta(), tbf->ms());
 
-		/* schedule uplink assignment */
-		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+		/* schedule uplink assignment or reject*/
+		if (ul_tbf) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
+				"message, so we provide one:\n");
+			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+		} else {
+			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
+				"message, so we pacekt access reject:\n");
+			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ;
+		}
 	}
 	/* get measurements */
 	if (tbf->ms()) {
@@ -1179,16 +1186,23 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 
 	/* check for channel request */
 	if (ack_nack->Exist_ChannelRequestDescription) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
-			"message, so we provide one:\n");
 
 		/* This call will register the new TBF with the MS on success */
-		tbf_alloc_ul(bts_data(), tbf->trx->trx_no,
+		gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts_data(),
+			tbf->trx->trx_no,
 			tbf->ms_class(), tbf->ms()->egprs_ms_class(),
 			tbf->tlli(), tbf->ta(), tbf->ms());
 
-		/* schedule uplink assignment */
-		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+		/* schedule uplink assignment or reject*/
+		if (ul_tbf) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
+				"message, so we provide one:\n");
+			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+		} else {
+			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
+				"message, so we send packet access reject:\n");
+			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ;
+		}
 	}
 
 	/* get measurements */

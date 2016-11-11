@@ -1013,6 +1013,29 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	return msg;
 }
 
+struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
+{
+	struct msgb *msg;
+
+	msg = msgb_alloc(23, "rlcmac_ul_ass_rej");
+
+	bitvec *packet_access_rej = bitvec_alloc(23);
+
+	bitvec_unhex(packet_access_rej,
+		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+
+	Encoding::write_packet_access_reject(
+		packet_access_rej, tlli());
+
+	bitvec_pack(packet_access_rej, msgb_put(msg, 23));
+
+	bitvec_free(packet_access_rej);
+	ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+
+	return msg;
+
+}
+
 struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 {
 	struct msgb *msg;
