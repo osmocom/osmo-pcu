@@ -42,6 +42,7 @@ enum {
 	DNS,
 	DBSSGP,
 	DPCU,
+	DPGSL,
 	aDebug_LastEntry
 };
 

@@ -158,6 +158,29 @@ osmo_pcu_SOURCES += \
 	osmo-bts-litecell15/lc15bts.c
 endif
 
+if ENABLE_RBS
+AM_CPPFLAGS += -I$(RBS_INCDIR) -I$(srcdir)/osmo-bts-rbs
+AM_CPPFLAGS += -DENABLE_ERICSSON_RBS
+
+EXTRA_DIST = \
+	osmo-bts-rbs/pgsl_l1_if.c \
+        osmo-bts-rbs/pgsl_l1_if.h \
+        osmo-bts-rbs/pgsl.c \
+        osmo-bts-rbs/pgsl.h \
+        osmo-bts-rbs/l2tp_sock.c \
+        osmo-bts-rbs/l2tp_sock.h
+
+noinst_HEADERS += \
+        osmo-bts-rbs/pgsl_l1_if.h \
+        osmo-bts-rbs/pgsl.h \
+        osmo-bts-rbs/l2tp_sock.h
+
+osmo_pcu_SOURCES += \
+	osmo-bts-rbs/pgsl_l1_if.c \
+	osmo-bts-rbs/pgsl.c \
+        osmo-bts-rbs/l2tp_sock.c
+endif
+
 osmo_pcu_LDADD = \
 	libgprs.la \
 	$(LIBOSMOGB_LIBS) \

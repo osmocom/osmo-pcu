@@ -36,6 +36,10 @@ extern "C" {
 #include <osmocom/core/stats.h>
 #include <osmocom/core/gsmtap.h>
 #include <osmocom/core/gsmtap_util.h>
+#ifdef ENABLE_ERICSSON_RBS
+#include "osmo-bts-rbs/l2tp_sock.h"
+#endif
+
 }
 
 extern struct gprs_nsvc *nsvc;
@@ -48,6 +52,9 @@ extern void *bv_tall_ctx;
 static int quit = 0;
 static int rt_prio = -1;
 static const char *gsmtap_addr = "localhost"; // FIXME: use gengetopt's default value instead
+#ifdef ENABLE_ERICSSON_RBS
+static char *pgsl_sock = L2TP_SOCK_DEFAULT; // FIXME: use gengetopt's default value instead
+#endif
 
 static void print_help()
 {
@@ -63,6 +70,9 @@ static void print_help()
 		"  -r   --realtime PRIO Use SCHED_RR with the specified "
 			"priority\n"
 		"  -i	--gsmtap-ip	The destination IP used for GSMTAP.\n"
+#ifdef ENABLE_ERICSSON_RBS
+		"  -s	--pgsl-sock	Unix domain socket for PGSL interface.\n"
+#endif
 		);
 }
 
@@ -80,10 +90,13 @@ static void handle_options(int argc, char **argv)
 			{ "realtime", 1, 0, 'r' },
 			{ "exit", 0, 0, 'e' },
 			{ "gsmtap-ip", 1, 0, 'i' },
+#ifdef ENABLE_ERICSSON_RBS
+			{ "pgsl-sock", 1, 0, 's' },
+#endif
 			{ 0, 0, 0, 0 }
 		};
 
-		c = getopt_long(argc, argv, "hc:m:n:Vr:e:i:",
+		c = getopt_long(argc, argv, "hc:m:n:Vr:e:i:s:",
 				long_options, &option_idx);
 		if (c == -1)
 			break;
@@ -117,6 +130,11 @@ static void handle_options(int argc, char **argv)
 		case 'e':
 			fprintf(stderr, "Warning: Option '-e' is deprecated!\n");
 			break;
+#ifdef ENABLE_ERICSSON_RBS
+		case 's':
+			pgsl_sock = optarg;
+			break;
+#endif
 		default:
 			fprintf(stderr, "Unknown option '%c'\n", c);
 			exit(0);
@@ -285,6 +303,10 @@ int main(int argc, char *argv[])
 			exit(1);
 		}
 	}
+
+#ifdef ENABLE_ERICSSON_RBS
+	l2tp_sock_init(pgsl_sock);
+#endif
 
 	while (!quit) {
 		osmo_gsm_timers_check();

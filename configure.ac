@@ -64,6 +64,14 @@ if test "$enable_litecell15" = "yes"; then
 	CPPFLAGS=$oldCPPFLAGS
 fi
 
+AC_MSG_CHECKING([whether to enable bsc co-located access for PDCH of ericson-rbs-bts])
+AC_ARG_ENABLE(ericsson-rbs,
+		AC_HELP_STRING([--enable-ericsson-rbs],
+				[enable code for ericsson rbs [default=no]]),
+		[enable_ericsson_rbs="$enableval"],[enable_ericsson_rbs="no"])
+AC_MSG_RESULT([$enable_ericsson_rbs])
+AM_CONDITIONAL(ENABLE_RBS, test "x$enable_ericsson_rbs" = "xyes")
+
 AC_ARG_ENABLE([vty_tests],
 		AC_HELP_STRING([--enable-vty-tests],
 				[Include the VTY tests in make check [default=no]]),

@@ -44,6 +44,7 @@ static const struct log_info_cat default_categories[] = {
 	{"DNS","\033[1;34m", "GPRS Network Service Protocol (NS)", LOGL_INFO , 1},
 	{"DBSSGP","\033[1;34m", "GPRS BSS Gateway Protocol (BSSGP)", LOGL_INFO , 1},
 	{"DPCU", "\033[1;35m", "GPRS Packet Control Unit (PCU)", LOGL_NOTICE, 1},
+	{"DPGSL", "\033[1;35m", "Ericsson PGSL protocol (SIU)", LOGL_NOTICE, 1},
 };
 
 enum {
