@@ -234,6 +234,7 @@ static int er_pgsl_encode_dldata_ind(struct msgb *msg,
 		ack_data_ind |= 0x02;
 	if (dldi->data_ind)
 		ack_data_ind |= 0x01;
+	msgb_put_u8(msg, ack_data_ind);
 
 	if (!dldi->data_ind)
 		return 0;
