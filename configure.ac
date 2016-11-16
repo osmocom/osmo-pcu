@@ -83,6 +83,7 @@ STD_DEFINES_AND_INCLUDES="-Wall"
 AC_SUBST(STD_DEFINES_AND_INCLUDES)
 
 AC_OUTPUT(
+    include/Makefile
     src/Makefile
     examples/Makefile
     tests/Makefile

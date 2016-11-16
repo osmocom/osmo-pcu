@@ -19,7 +19,7 @@
 #
 
 AUTOMAKE_OPTIONS = subdir-objects
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS)
+AM_CPPFLAGS = -I$(top_srcdir)/include $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS)
 
 if ENABLE_SYSMODSP
 AM_CPPFLAGS += -DENABLE_DIRECT_PHY
@@ -78,7 +78,6 @@ noinst_HEADERS = \
 	gprs_rlcmac.h \
 	gprs_ms.h \
 	gprs_ms_storage.h \
-	pcuif_proto.h \
 	pcu_l1_if.h \
 	gsm_timer.h \
 	bitvector.h \
@@ -97,6 +96,9 @@ noinst_HEADERS = \
 	gprs_codel.h \
 	gprs_coding_scheme.h \
 	egprs_rlc_compression.h
+
+nobase_include_HEADERS =
+	osmocom/pcu/pcuif_proto.h
 
 osmo_pcu_SOURCES = pcu_main.cpp
 

@@ -35,7 +35,7 @@ extern "C" {
 #include <pcu_l1_if.h>
 #include <gprs_debug.h>
 #include <gprs_bssgp_pcu.h>
-#include <pcuif_proto.h>
+#include <osmocom/pcu/pcuif_proto.h>
 #include <bts.h>
 #include <tbf.h>
 
