@@ -382,6 +382,9 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 	uint8_t tei;
 	arfcn_to_trx(&tei, arfcn);
 
+	/* CAUTION HACK! Enforce TEI=1, always! */
+	tei=1;
+
 	/* Feature not supported yet */
 	OSMO_ASSERT(is_ptcch == 0);
 
@@ -461,4 +464,22 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 	msgb_free(msg);
 	ps[tei].tn[ts].tx.next_seqno++;
 	return rc;
+}
+
+int l1if_connect_pdch(void *obj, uint8_t ts)
+{
+	LOGP(DL1IF, LOGL_INFO, "l1if_connect_pdch() not applicable!\n");
+	return 0;
+}
+
+void *l1if_open_pdch(uint8_t trx_no, uint32_t hlayer1, struct gsmtap_inst *gsmtap)
+{
+	LOGP(DL1IF, LOGL_INFO, "l1if_open_pdch()\n");
+	return (void *)0x2342;
+}
+
+int l1if_close_pdch(void *obj)
+{
+	LOGP(DL1IF, LOGL_INFO, "l1if_close_pdch() not applicable!\n");
+	return 0;
 }
