@@ -271,6 +271,26 @@ static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 	return rc;
 }
 
+static int pcu_rx_data_cnf_dt(struct gsm_pcu_if_data_cnf_dt *data_cnf)
+{
+	int rc = 0;
+
+	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d fn=%d\n",
+		data_cnf->sapi, data_cnf->fn);
+
+	switch (data_cnf->sapi) {
+	case PCU_IF_SAPI_PCH:
+		BTS::main_bts()->rcv_imm_ass_cnf_dt(data_cnf->tlli, data_cnf->fn);
+		break;
+	default:
+		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with "
+			"unsupported sapi %d\n", data_cnf->sapi);
+		rc = -EINVAL;
+	}
+
+	return rc;
+}
+
 // FIXME: remove this, when changed from c++ to c.
 extern "C" int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts,
 	uint32_t fn, uint8_t block_nr)
@@ -541,6 +561,9 @@ int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 		break;
 	case PCU_IF_MSG_DATA_CNF:
 		rc = pcu_rx_data_cnf(&pcu_prim->u.data_cnf);
+		break;
+	case PCU_IF_MSG_DATA_CNF_DT:
+		rc = pcu_rx_data_cnf_dt(&pcu_prim->u.data_cnf_dt);
 		break;
 	case PCU_IF_MSG_RTS_REQ:
 		rc = pcu_rx_rts_req(&pcu_prim->u.rts_req);

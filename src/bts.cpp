@@ -508,6 +508,28 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	return 0;
 }
 
+int BTS::rcv_imm_ass_cnf_dt(uint32_t tlli, uint32_t fn)
+{
+	GprsMs *ms;
+	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
+
+	ms = ms_by_tlli(tlli);
+	if (ms)
+		dl_tbf = ms->dl_tbf();
+	if (!dl_tbf) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Got IMM.ASS confirm, but TLLI=%08x "
+			"does not exit\n", tlli);
+		return -EINVAL;
+	}
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
+
+	if (dl_tbf->m_wait_confirm)
+		tbf_timer_start(dl_tbf, 0, Tassign_agch);
+
+	return 0;
+}
+
 int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 		enum ph_burst_type burst_type)
 {

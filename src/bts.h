@@ -339,6 +339,7 @@ public:
 	int tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx);
 
 	int rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn);
+	int rcv_imm_ass_cnf_dt(uint32_t tlli, uint32_t fn);
 	uint8_t is_single_block(uint16_t ra, enum ph_burst_type burst_type,
 		uint8_t is_11bit, uint16_t *ms_class, uint16_t *priority);
 	int rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
