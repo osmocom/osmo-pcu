@@ -440,8 +440,8 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 		     "unable to determine CS/MCS frame type!\n");
 		return -EINVAL;
 	}
-
-	frame.u.dldata_ind.ucm = ER_PGSL_UCM_NB_CS1_OR_MCS;
+	/* FIXME: switch to ER_PGSL_UCM_NB_CS1_OR_MCS when applicable */
+	frame.u.dldata_ind.ucm = ER_PGSL_UCM_NB_GSMK;
 	frame.u.dldata_ind.timing_offset = 0;
 	frame.u.dldata_ind.pwr_ctrl = 0;
 	frame.u.dldata_ind.data_len = len;
