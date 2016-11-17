@@ -746,7 +746,7 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 		tbf->poll_fn, m_bts.alpha, m_bts.gamma, -1);
 	if (plen >= 0) {
 		immediate_assignment_dl_tbf();
-		pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
+		pcu_l1if_tx_agch(immediate_assignment, plen);
 	}
 
 	bitvec_free(immediate_assignment);
