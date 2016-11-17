@@ -340,8 +340,8 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 	struct gprs_bssgp_pcu *pcu;
 	struct gprs_rlcmac_pdch *pdch;
 	struct in_addr ia;
-	int rc = 0, ts;
-	uint8_t trx;
+	int rc = 0;
+	unsigned int trx, ts;
 	int i;
 
 	if (info_ind->version != PCU_IF_VERSION) {
@@ -357,9 +357,9 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 		LOGP(DL1IF, LOGL_NOTICE, "BTS not available\n");
 bssgp_failed:
 		/* free all TBF */
-		for (trx = 0; trx < 8; trx++) {
+		for (trx = 0; trx < ARRAY_SIZE(bts->trx); trx++) {
 			bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
-			for (ts = 0; ts < 8; ts++)
+			for (ts = 0; ts < ARRAY_SIZE(bts->trx[0].pdch); ts++)
 				bts->trx[trx].pdch[ts].free_resources();
 		}
 		gprs_bssgp_destroy();
@@ -451,7 +451,7 @@ bssgp_failed:
 		bts->initial_cs_ul = bts->initial_cs_dl;
 	}
 
-	for (trx = 0; trx < 8; trx++) {
+	for (trx = 0; trx < ARRAY_SIZE(bts->trx); trx++) {
 		bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
 		if ((info_ind->flags & PCU_IF_FLAG_SYSMO)
 		 && info_ind->trx[trx].hlayer1) {
@@ -476,7 +476,7 @@ bssgp_failed:
 #endif
 		}
 
-		for (ts = 0; ts < 8; ts++) {
+		for (ts = 0; ts < ARRAY_SIZE(bts->trx[0].pdch); ts++) {
 			pdch = &bts->trx[trx].pdch[ts];
 			if ((info_ind->trx[trx].pdch_mask & (1 << ts))) {
 				/* FIXME: activate dynamically at RLCMAC */
