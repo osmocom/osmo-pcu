@@ -129,6 +129,7 @@ void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
+	gsmtap_send(bts->gsmtap, arfcn, ts, GSMTAP_CHANNEL_PACCH, 0, fn, 0, 0, msg->data, msg->len);
 #ifdef ENABLE_DIRECT_PHY
 	if (bts->trx[trx].fl1h) {
 		l1if_pdch_req(bts->trx[trx].fl1h, ts, 0, fn, arfcn, block_nr,
@@ -137,7 +138,6 @@ void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 		return;
 	}
 #endif
-	gsmtap_send(bts->gsmtap, arfcn, ts, GSMTAP_CHANNEL_PACCH, 0, fn, 0, 0, msg->data, msg->len);
 	pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PDTCH, arfcn, fn, block_nr,
 			msg->data, msg->len);
 	msgb_free(msg);
@@ -148,6 +148,7 @@ void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
+	gsmtap_send(bts->gsmtap, arfcn, ts, GSMTAP_CHANNEL_PACCH, 0, fn, 0, 0, msg->data, msg->len);
 #ifdef ENABLE_DIRECT_PHY
 	if (bts->trx[trx].fl1h) {
 		l1if_pdch_req(bts->trx[trx].fl1h, ts, 1, fn, arfcn, block_nr,
@@ -156,7 +157,6 @@ void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 		return;
 	}
 #endif
-	gsmtap_send(bts->gsmtap, arfcn, ts, GSMTAP_CHANNEL_PACCH, 0, fn, 0, 0, msg->data, msg->len);
 	pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr,
 			msg->data, msg->len);
 	msgb_free(msg);
