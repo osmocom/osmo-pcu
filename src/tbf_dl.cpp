@@ -454,6 +454,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		LOGP(DRLCMACDL, LOGL_DEBUG,
 			"- Nothing else to send, Re-transmit final block!\n");
 		bsn = m_window.v_s_mod(-1);
+		bts->rlc_final_block_resent();
 		bts->rlc_resent();
 	}
 

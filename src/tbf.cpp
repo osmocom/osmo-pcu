@@ -1037,6 +1037,8 @@ struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
 	Encoding::write_packet_access_reject(
 		packet_access_rej, tlli());
 
+	bts->pkt_access_reject();
+
 	bitvec_pack(packet_access_rej, msgb_put(msg, 23));
 
 	bitvec_free(packet_access_rej);

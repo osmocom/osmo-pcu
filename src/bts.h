@@ -243,6 +243,7 @@ public:
 		CTR_RLC_RESTARTED,
 		CTR_RLC_STALLED,
 		CTR_RLC_NACKED,
+		CTR_RLC_FINAL_BLOCK_RESENT,
 		CTR_RLC_ASS_TIMEDOUT,
 		CTR_RLC_ASS_FAILED,
 		CTR_RLC_ACK_TIMEDOUT,
@@ -267,8 +268,11 @@ public:
 		CTR_RACH_REQUESTS,
 		CTR_11BIT_RACH_REQUESTS,
 		CTR_IMMEDIATE_ASSIGN_UL_TBF,
+		CTR_IMMEDIATE_ASSIGN_REJ,
 		CTR_IMMEDIATE_ASSIGN_DL_TBF,
+		CTR_CHANNEL_REQUEST_DESCRIPTION,
 		CTR_PKT_UL_ASSIGNMENT,
+		CTR_PKT_ACCESS_REJ,
 		CTR_PKT_DL_ASSIGNMENT,
 		CTR_RLC_RECV_CONTROL,
 		CTR_PUA_POLL_TIMEDOUT,
@@ -370,6 +374,7 @@ public:
 	void rlc_restarted();
 	void rlc_stalled();
 	void rlc_nacked();
+	void rlc_final_block_resent();
 	void rlc_ass_timedout();
 	void rlc_ass_failed();
 	void rlc_ack_timedout();
@@ -394,8 +399,11 @@ public:
 	void rach_frame();
 	void rach_frame_11bit();
 	void immediate_assignment_ul_tbf();
+	void immediate_assignment_reject();
 	void immediate_assignment_dl_tbf();
+	void channel_request_description();
 	void pkt_ul_assignment();
+	void pkt_access_reject();
 	void pkt_dl_assignemnt();
 	void rlc_rcvd_control();
 	void pua_poll_timedout();
@@ -563,6 +571,7 @@ CREATE_COUNT_INLINE(rlc_resent, CTR_RLC_RESENT)
 CREATE_COUNT_INLINE(rlc_restarted, CTR_RLC_RESTARTED)
 CREATE_COUNT_INLINE(rlc_stalled, CTR_RLC_STALLED)
 CREATE_COUNT_INLINE(rlc_nacked, CTR_RLC_NACKED)
+CREATE_COUNT_INLINE(rlc_final_block_resent, CTR_RLC_FINAL_BLOCK_RESENT);
 CREATE_COUNT_INLINE(rlc_ass_timedout, CTR_RLC_ASS_TIMEDOUT);
 CREATE_COUNT_INLINE(rlc_ass_failed, CTR_RLC_ASS_FAILED);
 CREATE_COUNT_INLINE(rlc_ack_timedout, CTR_RLC_ACK_TIMEDOUT);
@@ -587,8 +596,11 @@ CREATE_COUNT_ADD_INLINE(llc_ul_bytes, CTR_LLC_UL_BYTES);
 CREATE_COUNT_INLINE(rach_frame, CTR_RACH_REQUESTS);
 CREATE_COUNT_INLINE(rach_frame_11bit, CTR_11BIT_RACH_REQUESTS);
 CREATE_COUNT_INLINE(immediate_assignment_ul_tbf, CTR_IMMEDIATE_ASSIGN_UL_TBF);
+CREATE_COUNT_INLINE(immediate_assignment_reject, CTR_IMMEDIATE_ASSIGN_REJ);
 CREATE_COUNT_INLINE(immediate_assignment_dl_tbf, CTR_IMMEDIATE_ASSIGN_DL_TBF);
+CREATE_COUNT_INLINE(channel_request_description, CTR_CHANNEL_REQUEST_DESCRIPTION);
 CREATE_COUNT_INLINE(pkt_ul_assignment, CTR_PKT_UL_ASSIGNMENT);
+CREATE_COUNT_INLINE(pkt_access_reject, CTR_PKT_ACCESS_REJ);
 CREATE_COUNT_INLINE(pkt_dl_assignemnt, CTR_PKT_DL_ASSIGNMENT);
 CREATE_COUNT_INLINE(rlc_rcvd_control, CTR_RLC_RECV_CONTROL);
 CREATE_COUNT_INLINE(pua_poll_timedout, CTR_PUA_POLL_TIMEDOUT);

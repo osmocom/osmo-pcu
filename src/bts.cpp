@@ -66,6 +66,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "rlc.restarted",		"RLC Restarted        "},
 	{ "rlc.stalled",		"RLC Stalled          "},
 	{ "rlc.nacked",			"RLC Nacked           "},
+	{ "rlc.final_block_resent",	"RLC Final Blk resent "},
 	{ "rlc.ass.timedout",		"RLC Assign Timeout   "},
 	{ "rlc.ass.failed",		"RLC Assign Failed    "},
 	{ "rlc.ack.timedout",		"RLC Ack Timeout      "},
@@ -90,8 +91,11 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "rach.requests",		"RACH requests        "},
 	{ "11bit_rach.requests",	"11BIT_RACH requests  "},
 	{ "immediate.assignment_UL",	"Immediate Assign UL  "},
+	{ "immediate.assignment_rej",   "Immediate Assign Rej "},
 	{ "immediate.assignment_DL",	"Immediate Assign DL  "},
+	{ "channel.request_description","Channel Request Desc "},
 	{ "pkt.ul_assignment",		"Packet UL Assignment "},
+	{ "pkt.access_reject",          "Packet Access Reject "},
 	{ "pkt.dl_assignment",		"Packet DL Assignment "},
 	{ "ul.control",			"UL control Block     "},
 	{ "ul.assignment_poll_timeout",	"UL Assign Timeout    "},
@@ -600,10 +604,12 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 
 
-	if (failure)
+	if (failure) {
 		plen = Encoding::write_immediate_assignment_reject(
 			immediate_assignment, ra, Fn,
 			burst_type);
+		immediate_assignment_reject();
+	}
 	else {
 		LOGP(DRLCMAC, LOGL_DEBUG,
 			" - TRX=%d (%d) TS=%d TA=%d TSC=%d TFI=%d USF=%d\n",
@@ -1126,6 +1132,8 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	/* check for channel request */
 	if (ack_nack->Exist_Channel_Request_Description) {
 
+		bts()->channel_request_description();
+
 		/* This call will register the new TBF with the MS on success */
 		gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts_data(),
 			tbf->trx->trx_no,
@@ -1234,6 +1242,8 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 
 	/* check for channel request */
 	if (ack_nack->Exist_ChannelRequestDescription) {
+
+		bts()->channel_request_description();
 
 		/* This call will register the new TBF with the MS on success */
 		gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts_data(),
