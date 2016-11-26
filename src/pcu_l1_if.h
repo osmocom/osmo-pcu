@@ -110,7 +110,14 @@ struct pcu_l1_meas {
 		have_ms_rx_qual(0),
 		have_ms_c_value(0),
 		have_ms_sign_var(0),
-		have_ms_i_level(0)
+		have_ms_i_level(0),
+		rssi(0),
+		ber(0),
+		bto(0),
+		link_qual(0),
+		ms_rx_qual(0),
+		ms_c_value(0),
+		ms_sign_var(0)
 	{}
 #endif
 };
