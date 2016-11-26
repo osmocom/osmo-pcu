@@ -57,7 +57,8 @@ struct pcu_l1_meas_ts {
 	}
 
 	pcu_l1_meas_ts() :
-		have_ms_i_level(0)
+		have_ms_i_level(0),
+		ms_i_level(0)
 	{}
 #endif
 };
