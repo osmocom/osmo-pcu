@@ -76,6 +76,9 @@ static int parse_extensions_egprs(const uint8_t *data, unsigned int data_len,
 		} else if (li->li == 127 && li->e == 1) {
 			/* TS 44.060, table 10.4.14a.1, row 3 & 5 */
 			/* only filling bytes left */
+			LOGP(DRLCMACUL, LOGL_DEBUG, "UL DATA LI contains "
+				"only filling bytes with extention octet: LI=%d, E=%d, count=%d\n",
+				li->li, li->e, num_chunks);
 			break;
 		} else if (li->li > 0) {
 			/* TS 44.060, table 10.4.14a.1, row 1 & 2b */
@@ -88,6 +91,9 @@ static int parse_extensions_egprs(const uint8_t *data, unsigned int data_len,
 			return -EINVAL;
 		}
 
+		LOGP(DRLCMACUL, LOGL_DEBUG, "UL DATA LI contains "
+			"extention octet: LI=%d, E=%d, count=%d\n",
+			li->li, li->e, num_chunks);
 		num_chunks += 1;
 
 		if (e == 1) {
@@ -161,6 +167,9 @@ static int parse_extensions_gprs(const uint8_t *data, unsigned int data_len,
 
 		chunks[num_chunks].is_complete = li->li || is_last_block;
 
+		LOGP(DRLCMACUL, LOGL_DEBUG, "UL DATA LI contains "
+			"extention octet: LI=%d, M=%d, E=%d, count=%d\n",
+			li->li, li->m, li->e, num_chunks);
 		num_chunks += 1;
 
 		if (e == 1 && m == 1) {

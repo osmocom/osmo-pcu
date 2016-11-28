@@ -6460,6 +6460,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=01 00 0
 - Raising V(R) to 2
 - Taking block 1 out, raising V(Q) to 2
 - Assembling frames: (len=44)
+UL DATA LI contains extention octet: LI=0, E=1, count=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) complete UL frame len=44
 LLC [PCU -> SGSN] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) len=44
 No bctx
