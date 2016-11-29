@@ -272,8 +272,10 @@ void pgsl_init(void)
 	memset(&ps, 0, sizeof(*ps) * TRX_MAX);
 	for (k = 0; k < TRX_MAX; k++) {
 		/* Backpointer (timeslot->transceiver) */
-		for (i = 0; i < 8; i++)
+		for (i = 0; i < 8; i++) {
 			ps[k].tn[i].trxs = &ps[k];
+			ps[k].tn[i].tn = i;
+		}
 
 		/* Transceiver number */
 		ps[k].nr = k;
