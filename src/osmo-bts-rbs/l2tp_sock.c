@@ -93,8 +93,6 @@ static int socket_rx(struct osmo_fd *bfd, unsigned int flags)
 int l2tp_socket_tx(struct msgb *msg)
 {
 	if (l2tp_connected()) {
-		LOGP(DPGSL, LOGL_ERROR,
-		     "transmitting data to l2tp-daemon...\n");
 		return write(sock_state.bfd.fd, msg->data, msg->len);
 	} else
 		LOGP(DPGSL, LOGL_ERROR,
