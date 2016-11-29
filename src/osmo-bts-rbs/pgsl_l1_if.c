@@ -29,6 +29,7 @@
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/utils.h>
 #include <bts.h>
+#include <pcu_l1_if.h>
 #include "gprs_debug.h"
 #include "pgsl.h"
 #include "pgsl_l1_if.h"
@@ -182,6 +183,8 @@ static int rx_uldata_ind(struct pgsl_tn_state *tns,
 	default:
 		break;
 	}
+
+	pcu_rx_block_time(55, ind->afn_u, ind->tn);
 
 	return ret;
 }
