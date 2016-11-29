@@ -153,10 +153,37 @@ static int rx_uldata_ind(struct pgsl_tn_state *tns,
 	LOGPTN(tns, LOGL_DEBUG, "Rx ULDATA.ind (fn=%u, cs=%u, data=%s)\n",
 	       ind->afn_u, ind->cs_ucm, osmo_hexdump(ind->data, ind->data_len));
 
-	/* Hand over data to PCU logic */
-	return pcu_rx_data_ind_pdtch(tns->trxs->nr, tns->tn,
-				     (uint8_t *) ind->data, ind->data_len,
-				     ind->afn_u, NULL);
+	int ret = 0;
+
+	switch (ind->cs_ucm) {
+	case ER_PGSL_CS_CS1:
+	case ER_PGSL_CS_CS2:
+	case ER_PGSL_CS_CS3:
+	case ER_PGSL_CS_CS4:
+		/* drop invalid packages */
+		if (ind->u.gprs.parity_ok) {
+			/* Hand over data to PCU logic */
+			ret = pcu_rx_data_ind_pdtch(tns->trxs->nr, tns->tn,
+					(uint8_t *) ind->data, ind->data_len,
+					ind->afn_u, NULL);
+		}
+		break;
+	case ER_PGSL_MCS_HDR_T1:
+	case ER_PGSL_MCS_HDR_T2:
+	case ER_PGSL_MCS_HDR_T3:
+		/* drop bad headers */
+		if (ind->u.egprs.hdr_good) {
+			/* Hand over data to PCU logic */
+			ret = pcu_rx_data_ind_pdtch(tns->trxs->nr, tns->tn,
+					(uint8_t *) ind->data, ind->data_len,
+					ind->afn_u, NULL);
+		}
+		break;
+	default:
+		break;
+	}
+
+	return ret;
 }
 
 /* Calculate GPRS block number from frame number */
