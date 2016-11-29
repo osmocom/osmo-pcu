@@ -1,2 +1,3 @@
 etc/osmocom/osmo-pcu.cfg
 usr/bin/osmo-pcu
+usr/include/osmocom/pcu/pcuif_proto.h
