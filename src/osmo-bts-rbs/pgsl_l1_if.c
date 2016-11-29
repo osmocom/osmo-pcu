@@ -169,7 +169,7 @@ static int rx_uldata_ind(struct pgsl_tn_state *tns,
 			/* Hand over data to PCU logic */
 			ret = pcu_rx_data_ind_pdtch(tns->trxs->nr, tns->tn,
 					(uint8_t *) ind->data, ind->data_len,
-					ind->afn_u, &meas);
+					ind->afn_u - 3, &meas);
 		}
 		break;
 	case ER_PGSL_MCS_HDR_T1:
@@ -180,14 +180,14 @@ static int rx_uldata_ind(struct pgsl_tn_state *tns,
 			/* Hand over data to PCU logic */
 			ret = pcu_rx_data_ind_pdtch(tns->trxs->nr, tns->tn,
 					(uint8_t *) ind->data, ind->data_len,
-					ind->afn_u, &meas);
+					ind->afn_u - 3, &meas);
 		}
 		break;
 	default:
 		break;
 	}
 
-	pcu_rx_block_time(55, ind->afn_u, ind->tn);
+	pcu_rx_block_time(55, ind->afn_u - 3, ind->tn);
 
 	return ret;
 }
