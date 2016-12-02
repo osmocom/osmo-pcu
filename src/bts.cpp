@@ -753,6 +753,9 @@ void BTS::trigger_dl_ass(
 		/* send immediate assignment */
 		dl_tbf->bts->snd_dl_ass(dl_tbf, 0, dl_tbf->imsi());
 		dl_tbf->m_wait_confirm = 1;
+		/* start timer */
+		tbf_timer_start(dl_tbf, 0, Tassign_pacch);
+
 	}
 }
 
