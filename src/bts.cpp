@@ -647,10 +647,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 
 	if (plen >= 0) {
 		immediate_assignment_ul_tbf();
-		if (this->bts_data()->use_direct_tlli)
-			pcu_l1if_tx_agch_dt(tbf->tlli(), immediate_assignment, plen);
-		else
-			pcu_l1if_tx_agch(immediate_assignment, plen);
+		pcu_l1if_tx_agch(immediate_assignment, plen);
 	}
 
 	bitvec_free(immediate_assignment);
