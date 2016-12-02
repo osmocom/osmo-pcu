@@ -745,12 +745,15 @@ void BTS::trigger_dl_ass(
 		/* start timer */
 		tbf_timer_start(dl_tbf, 0, Tassign_pacch);
 	} else {
+		uint32_t tlli = dl_tbf->tlli();
 		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for %s on PCH, no TBF exist (IMSI=%s)\n", tbf_name(dl_tbf), dl_tbf->imsi());
 		dl_tbf->was_releasing = dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 		/* change state */
 		dl_tbf->set_state(GPRS_RLCMAC_ASSIGN);
 		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
 		/* send immediate assignment */
+		/* FIXME TLLI != P-TMSI, but our sgsn use TLLI == P-TMSI */
+		gprs_rlcmac_paging_request((uint8_t *)&tlli, sizeof(dl_tbf->tlli()), dl_tbf->imsi());
 		dl_tbf->bts->snd_dl_ass(dl_tbf, 0, dl_tbf->imsi());
 		dl_tbf->m_wait_confirm = 1;
 		/* start timer */
