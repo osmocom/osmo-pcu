@@ -844,6 +844,21 @@ void gprs_rlcmac_tbf::handle_timeout()
 		}
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
 			gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
+			if (dl_tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
+				tbf_assign_control_ts(dl_tbf);
+
+				/* keep to flags */
+				dl_tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
+				dl_tbf->update();
+				dl_tbf->bts->trigger_dl_ass(dl_tbf, dl_tbf);
+
+				return;
+			}
+		}
+		break;
+	case 1:
+		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
+			gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
 			dl_tbf->m_wait_confirm = 0;
 			if (dl_tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
 				tbf_assign_control_ts(dl_tbf);
@@ -865,7 +880,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 
 				dl_tbf->update();
 
-				dl_tbf->bts->trigger_dl_ass(dl_tbf, dl_tbf);
+				dl_tbf->bts->trigger_dl_ass(dl_tbf, NULL);
 			} else
 				LOGP(DRLCMAC, LOGL_NOTICE, "%s Continue flow after "
 					"IMM.ASS confirm\n", tbf_name(dl_tbf));

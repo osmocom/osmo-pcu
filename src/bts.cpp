@@ -503,7 +503,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
 
 	if (dl_tbf->m_wait_confirm)
-		tbf_timer_start(dl_tbf, 0, Tassign_agch);
+		tbf_timer_start(dl_tbf, 1, Tassign_agch);
 
 	return 0;
 }
@@ -525,7 +525,7 @@ int BTS::rcv_imm_ass_cnf_dt(uint32_t tlli, uint32_t fn)
 	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
 
 	if (dl_tbf->m_wait_confirm)
-		tbf_timer_start(dl_tbf, 0, Tassign_agch);
+		tbf_timer_start(dl_tbf, 1, Tassign_agch);
 
 	return 0;
 }
