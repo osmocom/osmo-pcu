@@ -120,6 +120,8 @@ void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn, 
         uint32_t fn, uint8_t block_nr);
 void pcu_l1if_tx_agch(bitvec * block, int len);
+/* same as agch but has tlli prefixed */
+void pcu_l1if_tx_agch_dt(uint32_t tlli, bitvec * block, int len);
 
 void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi);
 

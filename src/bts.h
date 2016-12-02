@@ -158,6 +158,7 @@ void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts,
  */
 struct gprs_rlcmac_bts {
 	uint8_t bsic;
+	uint8_t use_direct_tlli;
 	uint8_t fc_interval;
 	uint16_t fc_bucket_time;
 	uint32_t fc_bvc_bucket_size;

@@ -741,6 +741,18 @@ DEFUN(show_bts_stats,
 	return CMD_SUCCESS;
 }
 
+DEFUN(cfg_pcu_use_direct_tlli,
+      cfg_pcu_use_direct_tlli_cmd,
+      "use-direct-tlli <0-1>",
+      "use direct tlli message when sending AGCH message.\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->use_direct_tlli = atoi(argv[0]);
+
+	return CMD_SUCCESS;
+}
+
 #define IDLE_TIME_STR "keep an idle DL TBF alive for the time given\n"
 DEFUN(cfg_pcu_dl_tbf_idle_time,
       cfg_pcu_dl_tbf_idle_time_cmd,
@@ -958,6 +970,7 @@ int pcu_vty_init(const struct log_info *cat)
 	install_node(&pcu_node, config_write_pcu);
 	install_element(CONFIG_NODE, &cfg_pcu_cmd);
 	vty_install_default(PCU_NODE);
+	install_element(PCU_NODE, &cfg_pcu_use_direct_tlli_cmd);
 	install_element(PCU_NODE, &cfg_pcu_egprs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_egprs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_two_phase_cmd);
