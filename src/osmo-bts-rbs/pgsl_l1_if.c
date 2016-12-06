@@ -413,15 +413,13 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 	struct er_pgsl_frame frame;
 	struct msgb *msg = msgb_alloc(1500, "tx pgsl");
 	int rc;
-	/* TODO: Resolve TEI from arfcn! */
-	uint8_t tei;
-	arfcn_to_trx(&tei, arfcn);
+	uint8_t tei = 0;
 
-	/* CAUTION HACK! Enforce TEI=1, always! */
-	tei=1;
-
-	/* Feature not supported yet */
-	OSMO_ASSERT(is_ptcch == 0);
+	if (arfcn_to_trx(&tei, arfcn) != 0) {
+	        LOGP(DL1IF, LOGL_ERROR,
+		     "Unable to determine TEI from ARFCN (%d)\n", arfcn);
+		return -EINVAL;
+	}
 
 	/* Encode lapd header */
 	gen_lapd_hdr(msg, tei);
