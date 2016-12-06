@@ -97,8 +97,47 @@ struct pgsl_trx_state {
 	/* per-timeslot state */
 	struct pgsl_tn_state tn[8];
 };
-
 static struct pgsl_trx_state ps[TRX_MAX];
+
+/* Helper function: Find out the arfcn for a given TRX number (=tei) */
+static int tei_to_arfcn(uint16_t *arfcn, uint8_t tei)
+{
+	unsigned int i;
+	unsigned int len;
+	struct gprs_rlcmac_bts *bts;
+	bts = bts_main_data();
+
+	len = sizeof(bts->trx) / sizeof(bts->trx[0]);
+
+	for (i = 0; i < len; i++) {
+		if (bts->trx[i].trx_no == tei) {
+			*arfcn = bts->trx[i].arfcn;
+			return 0;
+		}
+	}
+
+	return -1;
+}
+
+/* Helper function: Find out the trx number (=tei) for a given ARFCN */
+static int arfcn_to_tei(uint8_t *tei, uint16_t arfcn)
+{
+	unsigned int i;
+	unsigned int len;
+	struct gprs_rlcmac_bts *bts;
+	bts = bts_main_data();
+
+	len = sizeof(bts->trx) / sizeof(bts->trx[0]);
+
+	for (i = 0; i < len; i++) {
+		if (bts->trx[i].arfcn == arfcn) {
+			*tei = bts->trx[i].trx_no;
+			return 0;
+		}
+	}
+
+	return -1;
+}
 
 /* Check that the trx sequence number of incoming frames is consecutive */
 static int check_inc_trx_seqno(struct pgsl_trx_state *ps, uint32_t trx_seqno)
@@ -148,14 +187,16 @@ static inline void *pgsl_frm_init(struct er_pgsl_frame *frm,
 }
 
 /* Receive ULDATA.ind (ccu sends uplink data to PCU) */
-static int rx_uldata_ind(struct pgsl_tn_state *tns,
+static int rx_uldata_ind(struct pgsl_tn_state *tns, uint8_t tei,
 			 const struct decoded_uldata_ind *ind)
 {
 	LOGPTN(tns, LOGL_DEBUG, "Rx ULDATA.ind (fn=%u, cs=%u, data=%s)\n",
 	       ind->afn_u, ind->cs_ucm, osmo_hexdump(ind->data, ind->data_len));
 
 	int ret = 0;
+	uint16_t arfcn;
 	struct pcu_l1_meas meas = { 0 };
+
 	meas.have_rssi = 1;
 	meas.rssi = rxlev2dbm(ind->rx_lev);
 
@@ -187,7 +228,12 @@ static int rx_uldata_ind(struct pgsl_tn_state *tns,
 		break;
 	}
 
-	pcu_rx_block_time(55, ind->afn_u - 3, ind->tn);
+	if (tei_to_arfcn(&arfcn, tei) != 0) {
+	        LOGP(DL1IF, LOGL_ERROR,
+		     "Unable to determine ARFCN from TEI (%d)\n", tei);
+		return -EINVAL;
+	}
+	pcu_rx_block_time(arfcn, ind->afn_u - 3, ind->tn);
 
 	return ret;
 }
@@ -259,7 +305,7 @@ static int rx_status_ind(struct pgsl_tn_state *tns,
 }
 
 /* Defer parsed pgsl frame */
-static int rx_pgsl_frame(struct pgsl_trx_state *ps,
+static int rx_pgsl_frame(struct pgsl_trx_state *ps, uint8_t tei,
 			 const struct er_pgsl_frame *frame)
 {
 	int rc = 0;
@@ -277,7 +323,7 @@ static int rx_pgsl_frame(struct pgsl_trx_state *ps,
 		     "received pgsl frame is of type: ULDATA.req\n");
 		tn_state = resolve_tn_state(ps, frame->u.uldata_ind.tn);
 		check_inc_tn_seqno(tn_state, frame->u.uldata_ind.tn_seqno);
-		rc = rx_uldata_ind(tn_state, &frame->u.uldata_ind);
+		rc = rx_uldata_ind(tn_state, tei, &frame->u.uldata_ind);
 		break;
 	case ER_PGSL_STATUS_IND:
 		LOGP(DPGSL, LOGL_DEBUG,
@@ -365,31 +411,11 @@ void pgsl_msg_rx(struct msgb *msg)
 	}
 
 	/* Forward parsed pgsl frame to input logic */
-	rc = rx_pgsl_frame(&ps[tei], &frame);
+	rc = rx_pgsl_frame(&ps[tei], tei, &frame);
 	if (rc < 0) {
 		LOGP(DPGSL, LOGL_ERROR, "unable to handle pgsl data!\n");
 		return;
 	}
-}
-
-/* Find out the trx number (=tei) for a given ARFCN */
-static int arfcn_to_trx(uint8_t *trx, uint16_t arfcn)
-{
-	unsigned int i;
-	unsigned int len;
-	struct gprs_rlcmac_bts *bts;
-	bts = bts_main_data();
-
-	len = sizeof(bts->trx) / sizeof(bts->trx[0]);
-
-	for (i = 0; i < len; i++) {
-		if (bts->trx[i].arfcn == arfcn) {
-			*trx = bts->trx[i].trx_no;
-			return 0;
-		}
-	}
-
-	return -1;
 }
 
 /* Generate lapd header */
@@ -415,7 +441,7 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 	int rc;
 	uint8_t tei = 0;
 
-	if (arfcn_to_trx(&tei, arfcn) != 0) {
+	if (arfcn_to_tei(&tei, arfcn) != 0) {
 	        LOGP(DL1IF, LOGL_ERROR,
 		     "Unable to determine TEI from ARFCN (%d)\n", arfcn);
 		return -EINVAL;
