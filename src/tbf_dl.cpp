@@ -949,6 +949,7 @@ int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 		ms()->update_error_rate(this, error_rate);
 
 	m_window.update(bts, rbb, first_bsn, &lost, &received);
+	rate_ctr_add(&m_ctrs->ctr[TBF_CTR_RLC_NACKED], lost);
 
 	/* report lost and received packets */
 	gprs_rlcmac_received_lost(this, received, lost);
@@ -1007,6 +1008,7 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 
 	m_window.update(bts, show_rbb, ssn,
 			&lost, &received);
+	rate_ctr_add(&m_ctrs->ctr[TBF_CTR_RLC_NACKED], lost);
 
 	/* report lost and received packets */
 	gprs_rlcmac_received_lost(this, received, lost);
@@ -1342,45 +1344,58 @@ void gprs_rlcmac_dl_tbf::update_coding_scheme_counter_dl(const GprsCodingScheme 
 		switch (coding_scheme) {
 		case GprsCodingScheme::CS1 :
 			bts->gprs_dl_cs1();
+			rate_ctr_inc(&m_dl_gprs_ctrs->ctr[TBF_CTR_GPRS_DL_CS1]);
 			break;
 		case GprsCodingScheme::CS2 :
 			bts->gprs_dl_cs2();
+			rate_ctr_inc(&m_dl_gprs_ctrs->ctr[TBF_CTR_GPRS_DL_CS2]);
 			break;
 		case GprsCodingScheme::CS3 :
 			bts->gprs_dl_cs3();
+			rate_ctr_inc(&m_dl_gprs_ctrs->ctr[TBF_CTR_GPRS_DL_CS3]);
 			break;
 		case GprsCodingScheme::CS4 :
 			bts->gprs_dl_cs4();
+			rate_ctr_inc(&m_dl_gprs_ctrs->ctr[TBF_CTR_GPRS_DL_CS4]);
 			break;
 		}
 	} else {
 		switch (coding_scheme) {
 		case GprsCodingScheme::MCS1 :
 			bts->egprs_dl_mcs1();
+			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS1]);
 			break;
 		case GprsCodingScheme::MCS2 :
 			bts->egprs_dl_mcs2();
+			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS2]);
 			break;
 		case GprsCodingScheme::MCS3 :
 			bts->egprs_dl_mcs3();
+			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS3]);
 			break;
 		case GprsCodingScheme::MCS4 :
 			bts->egprs_dl_mcs4();
+			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS4]);
 			break;
 		case GprsCodingScheme::MCS5 :
 			bts->egprs_dl_mcs5();
+			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS5]);
 			break;
 		case GprsCodingScheme::MCS6 :
 			bts->egprs_dl_mcs6();
+			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS6]);
 			break;
 		case GprsCodingScheme::MCS7 :
 			bts->egprs_dl_mcs7();
+			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS7]);
 			break;
 		case GprsCodingScheme::MCS8 :
 			bts->egprs_dl_mcs8();
+			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS8]);
 			break;
 		case GprsCodingScheme::MCS9 :
 			bts->egprs_dl_mcs9();
+			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS9]);
 			break;
 		}
 	}

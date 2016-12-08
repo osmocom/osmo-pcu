@@ -79,6 +79,29 @@ enum gprs_rlcmac_tbf_direction {
 	GPRS_RLCMAC_UL_TBF
 };
 
+enum tbf_counters {
+	TBF_CTR_RLC_NACKED,
+};
+
+enum tbf_gprs_counters {
+	TBF_CTR_GPRS_DL_CS1,
+	TBF_CTR_GPRS_DL_CS2,
+	TBF_CTR_GPRS_DL_CS3,
+	TBF_CTR_GPRS_DL_CS4,
+};
+
+enum tbf_egprs_counters {
+	TBF_CTR_EGPRS_DL_MCS1,
+	TBF_CTR_EGPRS_DL_MCS2,
+	TBF_CTR_EGPRS_DL_MCS3,
+	TBF_CTR_EGPRS_DL_MCS4,
+	TBF_CTR_EGPRS_DL_MCS5,
+	TBF_CTR_EGPRS_DL_MCS6,
+	TBF_CTR_EGPRS_DL_MCS7,
+	TBF_CTR_EGPRS_DL_MCS8,
+	TBF_CTR_EGPRS_DL_MCS9,
+};
+
 #define GPRS_RLCMAC_FLAG_CCCH		0 /* assignment on CCCH */
 #define GPRS_RLCMAC_FLAG_PACCH		1 /* assignment on PACCH */
 #define GPRS_RLCMAC_FLAG_UL_DATA	2 /* uplink data received */
@@ -224,6 +247,8 @@ struct gprs_rlcmac_tbf {
 	 */
 	uint8_t m_tfi;
 	time_t m_created_ts;
+
+	struct rate_ctr_group *m_ctrs;
 
 protected:
 	gprs_rlcmac_bts *bts_data() const;
@@ -399,6 +424,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	struct BandWidth {
 		struct timeval dl_bw_tv; /* timestamp for dl bw calculation */
 		uint32_t dl_bw_octets; /* number of octets since bw_tv */
+		uint32_t dl_throughput; /* throughput to be displayed in stats */
 
 		struct timeval dl_loss_tv; /* timestamp for loss calculation */
 		uint16_t dl_loss_lost; /* sum of lost packets */
@@ -406,6 +432,9 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 
 		BandWidth();
 	} m_bw;
+
+	struct rate_ctr_group *m_dl_gprs_ctrs;
+	struct rate_ctr_group *m_dl_egprs_ctrs;
 
 protected:
 	struct ana_result {

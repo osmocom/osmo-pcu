@@ -179,6 +179,8 @@ int gprs_rlcmac_dl_bw(struct gprs_rlcmac_dl_tbf *tbf, uint16_t octets)
 	if (elapsed < 128)
 		return 0;
 
+	tbf->m_bw.dl_throughput = (tbf->m_bw.dl_bw_octets/elapsed);
+
 	LOGP(DRLCMACMEAS, LOGL_INFO, "DL Bandwitdh of IMSI=%s / TLLI=0x%08x: "
 		"%d KBits/s\n", tbf->imsi(), tbf->tlli(),
 		tbf->m_bw.dl_bw_octets / elapsed);

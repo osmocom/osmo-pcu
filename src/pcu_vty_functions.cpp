@@ -76,6 +76,13 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 		vty_out(vty, " V(A)=%d V(S)=%d nBSN=%d%s",
 			win->v_a(), win->v_s(), win->resend_needed(),
 			win->window_stalled() ? " STALLED" : "");
+		vty_out(vty, "%s", VTY_NEWLINE);
+		vty_out_rate_ctr_group(vty, " ", tbf->m_ctrs);
+		if(GprsCodingScheme::GPRS == tbf->ms()->mode()) {
+			vty_out_rate_ctr_group(vty, " ", dl_tbf->m_dl_gprs_ctrs);
+		} else {
+			vty_out_rate_ctr_group(vty, " ", dl_tbf->m_dl_egprs_ctrs);
+		}
 	}
 	vty_out(vty, "%s%s", VTY_NEWLINE, VTY_NEWLINE);
 }
@@ -176,11 +183,15 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 			ms->ul_tbf()->tfi(),
 			ms->ul_tbf()->state_name(),
 			VTY_NEWLINE);
-	if (ms->dl_tbf())
+	if (ms->dl_tbf()) {
 		vty_out(vty, "  Downlink TBF:           TFI=%d, state=%s%s",
 			ms->dl_tbf()->tfi(),
 			ms->dl_tbf()->state_name(),
 			VTY_NEWLINE);
+		vty_out(vty, "  Current DL Throughput:  %d Kbps %s",
+			ms->dl_tbf()->m_bw.dl_throughput,
+			VTY_NEWLINE);
+	}
 
 	llist_for_each(i_tbf, &ms->old_tbfs())
 		vty_out(vty, "  Old %-19s TFI=%d, state=%s%s",

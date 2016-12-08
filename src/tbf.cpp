@@ -33,6 +33,7 @@
 extern "C" {
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/talloc.h>
+#include <osmocom/core/stats.h>
 }
 
 #include <errno.h>
@@ -41,6 +42,53 @@ extern "C" {
 extern void *tall_pcu_ctx;
 
 static void tbf_timer_cb(void *_tbf);
+
+static const struct rate_ctr_desc tbf_ctr_description[] = {
+        { "rlc.nacked",                     "RLC Nacked " },
+};
+
+static const struct rate_ctr_desc tbf_dl_gprs_ctr_description[] = {
+        { "gprs.downlink.cs1",              "CS1        " },
+        { "gprs.downlink.cs2",              "CS2        " },
+        { "gprs.downlink.cs3",              "CS3        " },
+        { "gprs.downlink.cs4",              "CS4        " },
+};
+
+static const struct rate_ctr_desc tbf_dl_egprs_ctr_description[] = {
+        { "egprs.downlink.mcs1",            "MCS1        " },
+        { "egprs.downlink.mcs2",            "MCS2        " },
+        { "egprs.downlink.mcs3",            "MCS3        " },
+        { "egprs.downlink.mcs4",            "MCS4        " },
+        { "egprs.downlink.mcs5",            "MCS5        " },
+        { "egprs.downlink.mcs6",            "MCS6        " },
+        { "egprs.downlink.mcs7",            "MCS7        " },
+        { "egprs.downlink.mcs8",            "MCS8        " },
+        { "egprs.downlink.mcs9",            "MCS9        " },
+};
+
+static const struct rate_ctr_group_desc tbf_ctrg_desc = {
+        "pcu.tbf",
+        "TBF Statistics",
+        OSMO_STATS_CLASS_SUBSCRIBER,
+        ARRAY_SIZE(tbf_ctr_description),
+        tbf_ctr_description,
+};
+
+static const struct rate_ctr_group_desc tbf_dl_gprs_ctrg_desc = {
+        "tbf.gprs",
+        "Data Blocks",
+        OSMO_STATS_CLASS_SUBSCRIBER,
+        ARRAY_SIZE(tbf_dl_gprs_ctr_description),
+        tbf_dl_gprs_ctr_description,
+};
+
+static const struct rate_ctr_group_desc tbf_dl_egprs_ctrg_desc = {
+        "tbf.egprs",
+        "Data Blocks",
+        OSMO_STATS_CLASS_SUBSCRIBER,
+        ARRAY_SIZE(tbf_dl_egprs_ctr_description),
+        tbf_dl_egprs_ctr_description,
+};
 
 gprs_rlcmac_tbf::Meas::Meas() :
 	rssi_sum(0),
@@ -78,7 +126,8 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	m_ms_class(0),
 	m_list(this),
 	m_ms_list(this),
-	m_egprs_enabled(false)
+	m_egprs_enabled(false),
+	m_ctrs(NULL)
 {
 	/* The classes of these members do not have proper constructors yet.
 	 * Just set them to 0 like talloc_zero did */
@@ -325,6 +374,12 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 		if (tbf->state_is(GPRS_RLCMAC_FLOW))
 			tbf->bts->tbf_ul_aborted();
 	} else {
+		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
+		if (tbf->is_egprs_enabled()) {
+			rate_ctr_group_free(dl_tbf->m_dl_egprs_ctrs);
+		} else {
+			rate_ctr_group_free(dl_tbf->m_dl_gprs_ctrs);
+		}
 		tbf->bts->tbf_dl_freed();
 		if (tbf->state_is(GPRS_RLCMAC_FLOW))
 			tbf->bts->tbf_dl_aborted();
@@ -359,6 +414,8 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 
 	if (tbf->ms())
 		tbf->set_ms(NULL);
+
+	rate_ctr_group_free(tbf->m_ctrs);
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF ends here **********\n");
 	talloc_free(tbf);
@@ -646,6 +703,8 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf,
 		"Allocated %s: trx = %d, ul_slots = %02x, dl_slots = %02x\n",
 		tbf->name(), tbf->trx->trx_no, tbf->ul_slots(), tbf->dl_slots());
 
+	tbf->m_ctrs = rate_ctr_group_alloc(tbf, &tbf_ctrg_desc, 0);
+
 	return 0;
 }
 
@@ -732,7 +791,8 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 gprs_rlcmac_dl_tbf::BandWidth::BandWidth() :
 	dl_bw_octets(0),
 	dl_loss_lost(0),
-	dl_loss_received(0)
+	dl_loss_received(0),
+	dl_throughput(0)
 {
 	timerclear(&dl_bw_tv);
 	timerclear(&dl_loss_tv);
@@ -744,7 +804,9 @@ gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(BTS *bts_) :
 	m_wait_confirm(0),
 	m_dl_ack_requested(false),
 	m_last_dl_poll_fn(0),
-	m_last_dl_drained_fn(0)
+	m_last_dl_drained_fn(0),
+	m_dl_gprs_ctrs(NULL),
+	m_dl_egprs_ctrs(NULL)
 {
 	memset(&m_llc_timer, 0, sizeof(m_llc_timer));
 }
@@ -802,8 +864,12 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 		return NULL;
 	}
 
-	if (tbf->is_egprs_enabled())
+	if (tbf->is_egprs_enabled()) {
 		tbf->egprs_calc_window_size();
+		tbf->m_dl_egprs_ctrs = rate_ctr_group_alloc(tbf, &tbf_dl_egprs_ctrg_desc, 0);
+	} else {
+		tbf->m_dl_gprs_ctrs = rate_ctr_group_alloc(tbf, &tbf_dl_gprs_ctrg_desc, 0);
+	}
 
 	llist_add(&tbf->list(), &bts->bts->dl_tbfs());
 	tbf->bts->tbf_dl_created();
