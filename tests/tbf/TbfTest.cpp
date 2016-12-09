@@ -2124,6 +2124,8 @@ static void test_tbf_epdan_out_of_rx_window(void)
 	gprs_rlc_v_b *prlcmvb;
 	gprs_rlc_dl_window *prlcdlwindow;
 
+	memset(&ul_control_block, 0, sizeof(RlcMacUplink_t));
+
 	printf("=== start %s ===\n", __func__);
 
 	bts = the_bts.bts_data();
