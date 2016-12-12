@@ -72,6 +72,9 @@ enum pdch_cs_len {
 #define LOGPTN(tns, logl, fmt, args ...) \
 	LOGP(DPGSL, logl, "(%u/%u) " fmt, (tns)->trxs->nr, (tns)->tn, ##args)
 
+/* Subtrahend to convert Ericsson adjusted fn to regular fn */
+#define AFN_SUBTRAHEND 3
+
 /* (tns-variable) */
 struct pgsl_tn_state {
 	/* back-pointer to TRX */
@@ -210,30 +213,35 @@ static int rx_uldata_ind(struct pgsl_tn_state *tns, uint8_t tei,
 			/* Hand over data to PCU logic */
 			ret = pcu_rx_data_ind_pdtch(tns->trxs->nr, tns->tn,
 					(uint8_t *) ind->data, ind->data_len,
-					ind->afn_u - 3, &meas);
+					ind->afn_u - AFN_SUBTRAHEND, &meas);
 		}
 		break;
 	case ER_PGSL_MCS_HDR_T1:
 	case ER_PGSL_MCS_HDR_T2:
 	case ER_PGSL_MCS_HDR_T3:
 		/* drop bad headers */
-		if (ind->u.egprs.hdr_good) {
+		if (ind->u.egprs.hdr_good
+		    && (ind->u.egprs.data_good[0]
+			|| ind->u.egprs.data_good[1])) {
 			/* Hand over data to PCU logic */
 			ret = pcu_rx_data_ind_pdtch(tns->trxs->nr, tns->tn,
-					(uint8_t *) ind->data, ind->data_len,
-					ind->afn_u - 3, &meas);
+						    (uint8_t *) ind->data,
+						    ind->data_len,
+						    ind->afn_u - AFN_SUBTRAHEND,
+						    &meas);
 		}
 		break;
 	default:
 		break;
 	}
 
+	/* Update pcu block time */
 	if (tei_to_arfcn(&arfcn, tei) != 0) {
 	        LOGP(DL1IF, LOGL_ERROR,
 		     "Unable to determine ARFCN from TEI (%d)\n", tei);
 		return -EINVAL;
 	}
-	pcu_rx_block_time(arfcn, ind->afn_u - 3, ind->tn);
+	pcu_rx_block_time(arfcn, ind->afn_u - AFN_SUBTRAHEND, ind->tn);
 
 	return ret;
 }
