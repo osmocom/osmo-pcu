@@ -221,6 +221,7 @@ int main(int argc, char *argv[])
 
 	osmo_init_logging(&gprs_log_info);
 	osmo_stats_init(tall_pcu_ctx);
+	rate_ctr_init(tall_pcu_ctx);
 	gprs_ns_set_log_ss(DNS);
 	bssgp_set_log_ss(DBSSGP);
 
