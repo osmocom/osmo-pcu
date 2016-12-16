@@ -1298,16 +1298,21 @@ enum egprs_rlcmac_dl_spb gprs_rlcmac_dl_tbf::get_egprs_dl_spb(const int bsn)
 	 * other wise it should be 2
 	 */
 		if (block_status_dl == EGPRS_RESEG_FIRST_SEG_SENT) {
+
+			/* statistics */
+			bts->spb_downlink_second_segment();
 			return EGPRS_RLCMAC_DL_SEC_SEG;
 		} else if ((cs_init.headerTypeData() ==
 				GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1) ||
 			(cs_init.headerTypeData() ==
 				GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2)) {
+			bts->spb_downlink_first_segment();
 			return EGPRS_RLCMAC_DL_FIRST_SEG;
 		} else if ((GprsCodingScheme::Scheme(cs_init) ==
 					GprsCodingScheme::MCS4) &&
 				(GprsCodingScheme::Scheme(cs_current_trans) ==
 					GprsCodingScheme::MCS1)) {
+			bts->spb_downlink_first_segment();
 			return EGPRS_RLCMAC_DL_FIRST_SEG;
 		}
 	}

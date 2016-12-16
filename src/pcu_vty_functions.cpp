@@ -70,6 +70,13 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 		gprs_rlc_ul_window *win = &ul_tbf->m_window;
 		vty_out(vty, " V(Q)=%d V(R)=%d",
 			win->v_q(), win->v_r());
+		vty_out(vty, "%s", VTY_NEWLINE);
+		vty_out(vty, " TBF Statistics:%s", VTY_NEWLINE);
+		if(GprsCodingScheme::GPRS == tbf->ms()->mode()) {
+			vty_out_rate_ctr_group(vty, " ", ul_tbf->m_ul_gprs_ctrs);
+		} else {
+			vty_out_rate_ctr_group(vty, " ", ul_tbf->m_ul_egprs_ctrs);
+		}
 	}
 	if (dl_tbf) {
 		gprs_rlc_dl_window *win = &dl_tbf->m_window;
@@ -178,6 +185,8 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 			vty_out(vty, "  MS I level (slot %d):    %d dB%s",
 				i, ms->l1_meas()->ts[i].ms_i_level, VTY_NEWLINE);
 	}
+	vty_out(vty, "  RLC/MAC DL Control Msg: %d%s", ms->dl_ctrl_msg(),
+		VTY_NEWLINE);
 	if (ms->ul_tbf())
 		vty_out(vty, "  Uplink TBF:             TFI=%d, state=%s%s",
 			ms->ul_tbf()->tfi(),

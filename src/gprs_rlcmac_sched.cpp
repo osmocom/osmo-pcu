@@ -179,6 +179,8 @@ static struct msgb *sched_select_ctrl_msg(
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling control "
 			"message at RTS for %s (TRX=%d, TS=%d)\n",
 			tbf_name(tbf), trx, ts);
+		/* Updates the dl ctrl msg counter for ms */
+		tbf->ms()->update_dl_ctrl_msg();
 		return msg;
 	}
 	/* schedule PACKET PAGING REQUEST */
@@ -186,6 +188,9 @@ static struct msgb *sched_select_ctrl_msg(
 	if (msg) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling paging request "
 			"message at RTS for (TRX=%d, TS=%d)\n", trx, ts);
+
+		/* Updates the dl ctrl msg counter for ms */
+		tbf->ms()->update_dl_ctrl_msg();
 		return msg;
 	}
 

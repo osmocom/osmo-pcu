@@ -102,6 +102,25 @@ enum tbf_egprs_counters {
 	TBF_CTR_EGPRS_DL_MCS9,
 };
 
+enum tbf_gprs_ul_counters {
+        TBF_CTR_GPRS_UL_CS1,
+        TBF_CTR_GPRS_UL_CS2,
+        TBF_CTR_GPRS_UL_CS3,
+        TBF_CTR_GPRS_UL_CS4,
+};
+
+enum tbf_egprs_ul_counters {
+        TBF_CTR_EGPRS_UL_MCS1,
+        TBF_CTR_EGPRS_UL_MCS2,
+        TBF_CTR_EGPRS_UL_MCS3,
+        TBF_CTR_EGPRS_UL_MCS4,
+        TBF_CTR_EGPRS_UL_MCS5,
+        TBF_CTR_EGPRS_UL_MCS6,
+        TBF_CTR_EGPRS_UL_MCS7,
+        TBF_CTR_EGPRS_UL_MCS8,
+        TBF_CTR_EGPRS_UL_MCS9,
+};
+
 #define GPRS_RLCMAC_FLAG_CCCH		0 /* assignment on CCCH */
 #define GPRS_RLCMAC_FLAG_PACCH		1 /* assignment on PACCH */
 #define GPRS_RLCMAC_FLAG_UL_DATA	2 /* uplink data received */
@@ -510,6 +529,9 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	uint8_t m_usf[8];	/* list USFs per PDCH (timeslot) */
 	uint8_t m_contention_resolution_done; /* set after done */
 	uint8_t m_final_ack_sent; /* set if we sent final ack */
+
+	struct rate_ctr_group *m_ul_gprs_ctrs;
+	struct rate_ctr_group *m_ul_egprs_ctrs;
 
 protected:
 	void maybe_schedule_uplink_acknack(const gprs_rlc_data_info *rlc);

@@ -130,6 +130,8 @@ public:
 	void update_l1_meas(const pcu_l1_meas *meas);
 	const pcu_l1_meas* l1_meas() const {return &m_l1_meas;};
 	unsigned nack_rate_dl() const;
+	unsigned dl_ctrl_msg() const;
+	void update_dl_ctrl_msg();
 
 	/* internal use */
 	static void timeout(void *priv_);
@@ -180,6 +182,8 @@ private:
 
 	struct gprs_codel *m_codel_state;
 	GprsCodingScheme::Mode m_mode;
+
+	unsigned m_dl_ctrl_msg;
 };
 
 inline bool GprsMs::is_idle() const
@@ -261,6 +265,16 @@ inline gprs_codel *GprsMs::codel_state() const
 inline unsigned GprsMs::nack_rate_dl() const
 {
 	return m_nack_rate_dl;
+}
+
+inline unsigned GprsMs::dl_ctrl_msg() const
+{
+	return m_dl_ctrl_msg;
+}
+
+inline void GprsMs::update_dl_ctrl_msg()
+{
+	m_dl_ctrl_msg++;
 }
 
 inline uint8_t GprsMs::reserved_dl_slots() const

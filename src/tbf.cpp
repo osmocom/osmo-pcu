@@ -66,6 +66,25 @@ static const struct rate_ctr_desc tbf_dl_egprs_ctr_description[] = {
         { "egprs.downlink.mcs9",            "MCS9        " },
 };
 
+static const struct rate_ctr_desc tbf_ul_gprs_ctr_description[] = {
+        { "gprs.uplink.cs1",              "CS1        " },
+        { "gprs.uplink.cs2",              "CS2        " },
+        { "gprs.uplink.cs3",              "CS3        " },
+        { "gprs.uplink.cs4",              "CS4        " },
+};
+
+static const struct rate_ctr_desc tbf_ul_egprs_ctr_description[] = {
+        { "egprs.uplink.mcs1",            "MCS1        " },
+        { "egprs.uplink.mcs2",            "MCS2        " },
+        { "egprs.uplink.mcs3",            "MCS3        " },
+        { "egprs.uplink.mcs4",            "MCS4        " },
+        { "egprs.uplink.mcs5",            "MCS5        " },
+        { "egprs.uplink.mcs6",            "MCS6        " },
+        { "egprs.uplink.mcs7",            "MCS7        " },
+        { "egprs.uplink.mcs8",            "MCS8        " },
+        { "egprs.uplink.mcs9",            "MCS9        " },
+};
+
 static const struct rate_ctr_group_desc tbf_ctrg_desc = {
         "pcu.tbf",
         "TBF Statistics",
@@ -88,6 +107,22 @@ static const struct rate_ctr_group_desc tbf_dl_egprs_ctrg_desc = {
         OSMO_STATS_CLASS_SUBSCRIBER,
         ARRAY_SIZE(tbf_dl_egprs_ctr_description),
         tbf_dl_egprs_ctr_description,
+};
+
+static const struct rate_ctr_group_desc tbf_ul_gprs_ctrg_desc = {
+        "tbf.gprs",
+        "Data Blocks",
+        OSMO_STATS_CLASS_SUBSCRIBER,
+        ARRAY_SIZE(tbf_ul_gprs_ctr_description),
+        tbf_ul_gprs_ctr_description,
+};
+
+static const struct rate_ctr_group_desc tbf_ul_egprs_ctrg_desc = {
+        "tbf.egprs",
+        "Data Blocks",
+        OSMO_STATS_CLASS_SUBSCRIBER,
+        ARRAY_SIZE(tbf_ul_egprs_ctr_description),
+        tbf_ul_egprs_ctr_description,
 };
 
 gprs_rlcmac_tbf::Meas::Meas() :
@@ -370,9 +405,12 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 {
 	/* update counters */
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
+		gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
 		tbf->bts->tbf_ul_freed();
 		if (tbf->state_is(GPRS_RLCMAC_FLOW))
 			tbf->bts->tbf_ul_aborted();
+		rate_ctr_group_free(ul_tbf->m_ul_egprs_ctrs);
+		rate_ctr_group_free(ul_tbf->m_ul_gprs_ctrs);
 	} else {
 		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
 		if (tbf->is_egprs_enabled()) {
@@ -713,7 +751,9 @@ gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(BTS *bts_) :
 	m_rx_counter(0),
 	m_n3103(0),
 	m_contention_resolution_done(0),
-	m_final_ack_sent(0)
+	m_final_ack_sent(0),
+	m_ul_gprs_ctrs(NULL),
+	m_ul_egprs_ctrs(NULL)
 {
 	memset(&m_usf, 0, sizeof(m_usf));
 }
@@ -781,6 +821,9 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 		talloc_free(tbf);
 		return NULL;
 	}
+
+	tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(tbf, &tbf_ul_egprs_ctrg_desc, 0);
+	tbf->m_ul_gprs_ctrs = rate_ctr_group_alloc(tbf, &tbf_ul_gprs_ctrg_desc, 0);
 
 	llist_add(&tbf->list(), &bts->bts->ul_tbfs());
 	tbf->bts->tbf_ul_created();

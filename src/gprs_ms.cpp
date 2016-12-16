@@ -108,7 +108,8 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	m_reserved_ul_slots(0),
 	m_current_trx(NULL),
 	m_codel_state(NULL),
-	m_mode(GprsCodingScheme::GPRS)
+	m_mode(GprsCodingScheme::GPRS),
+	m_dl_ctrl_msg(0)
 {
 	int codel_interval = LLC_CODEL_USE_DEFAULT;
 
