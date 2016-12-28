@@ -173,6 +173,9 @@ static struct msgb *sched_select_ctrl_msg(
 		}
 	}
 
+	if (!tbf)
+		return NULL;
+
 	/* any message */
 	if (msg) {
 		tbf->rotate_in_list();
