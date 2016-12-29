@@ -266,11 +266,11 @@ public:
 		CTR_LLC_DL_BYTES,
 		CTR_LLC_UL_BYTES,
 		CTR_RACH_REQUESTS,
+		CTR_11BIT_RACH_REQUESTS,
 		CTR_SPB_UL_FIRST_SEGMENT,
 		CTR_SPB_UL_SECOND_SEGMENT,
 		CTR_SPB_DL_FIRST_SEGMENT,
 		CTR_SPB_DL_SECOND_SEGMENT,
-		CTR_11BIT_RACH_REQUESTS,
 		CTR_IMMEDIATE_ASSIGN_UL_TBF,
 		CTR_IMMEDIATE_ASSIGN_REJ,
 		CTR_IMMEDIATE_ASSIGN_DL_TBF,
@@ -401,11 +401,11 @@ public:
 	void llc_dl_bytes(int bytes);
 	void llc_ul_bytes(int bytes);
 	void rach_frame();
+	void rach_frame_11bit();
 	void spb_uplink_first_segment();
 	void spb_uplink_second_segment();
 	void spb_downlink_first_segment();
 	void spb_downlink_second_segment();
-	void rach_frame_11bit();
 	void immediate_assignment_ul_tbf();
 	void immediate_assignment_reject();
 	void immediate_assignment_dl_tbf();
@@ -602,11 +602,11 @@ CREATE_COUNT_INLINE(llc_frame_sched, CTR_LLC_FRAME_SCHED);
 CREATE_COUNT_ADD_INLINE(llc_dl_bytes, CTR_LLC_DL_BYTES);
 CREATE_COUNT_ADD_INLINE(llc_ul_bytes, CTR_LLC_UL_BYTES);
 CREATE_COUNT_INLINE(rach_frame, CTR_RACH_REQUESTS);
+CREATE_COUNT_INLINE(rach_frame_11bit, CTR_11BIT_RACH_REQUESTS);
 CREATE_COUNT_INLINE(spb_uplink_first_segment, CTR_SPB_UL_FIRST_SEGMENT);
 CREATE_COUNT_INLINE(spb_uplink_second_segment, CTR_SPB_UL_SECOND_SEGMENT);
 CREATE_COUNT_INLINE(spb_downlink_first_segment, CTR_SPB_DL_FIRST_SEGMENT);
 CREATE_COUNT_INLINE(spb_downlink_second_segment, CTR_SPB_DL_SECOND_SEGMENT);
-CREATE_COUNT_INLINE(rach_frame_11bit, CTR_11BIT_RACH_REQUESTS);
 CREATE_COUNT_INLINE(immediate_assignment_ul_tbf, CTR_IMMEDIATE_ASSIGN_UL_TBF);
 CREATE_COUNT_INLINE(immediate_assignment_reject, CTR_IMMEDIATE_ASSIGN_REJ);
 CREATE_COUNT_INLINE(immediate_assignment_dl_tbf, CTR_IMMEDIATE_ASSIGN_DL_TBF);
