@@ -27,6 +27,9 @@
 #include <gprs_debug.h>
 
 #include <stdint.h>
+extern "C" {
+#include <osmocom/core/utils.h>
+}
 
 struct bssgp_bvc_ctx;
 struct rlc_ul_header;
@@ -61,12 +64,16 @@ enum gprs_rlcmac_tbf_dl_ass_state {
 	GPRS_RLCMAC_DL_ASS_WAIT_ACK, /* wait for PACKET CONTROL ACK */
 };
 
+extern const struct value_string gprs_rlcmac_tbf_dl_ass_state_names[];
+
 enum gprs_rlcmac_tbf_ul_ass_state {
 	GPRS_RLCMAC_UL_ASS_NONE = 0,
 	GPRS_RLCMAC_UL_ASS_SEND_ASS, /* send uplink assignment on next RTS */
 	GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ, /* send assignment reject next RTS */
 	GPRS_RLCMAC_UL_ASS_WAIT_ACK, /* wait for PACKET CONTROL ACK */
 };
+
+extern const struct value_string gprs_rlcmac_tbf_ul_ass_state_names[];
 
 enum gprs_rlcmac_tbf_ul_ack_state {
 	GPRS_RLCMAC_UL_ACK_NONE = 0,

@@ -43,6 +43,21 @@ extern void *tall_pcu_ctx;
 
 static void tbf_timer_cb(void *_tbf);
 
+const struct value_string gprs_rlcmac_tbf_dl_ass_state_names[] = {
+	OSMO_VALUE_STRING(GPRS_RLCMAC_DL_ASS_NONE),
+	OSMO_VALUE_STRING(GPRS_RLCMAC_DL_ASS_SEND_ASS),
+	OSMO_VALUE_STRING(GPRS_RLCMAC_DL_ASS_WAIT_ACK),
+ 	{ 0, NULL }
+};
+
+const struct value_string gprs_rlcmac_tbf_ul_ass_state_names[] = {
+	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ASS_NONE),
+	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ASS_SEND_ASS),
+	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ),
+	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ASS_WAIT_ACK),
+ 	{ 0, NULL }
+};
+
 static const struct rate_ctr_desc tbf_ctr_description[] = {
         { "rlc.nacked",                     "RLC Nacked " },
 };
@@ -435,16 +450,20 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	LOGP(DRLCMAC, LOGL_INFO, "%s free\n", tbf_name(tbf));
 	if (tbf->ul_ass_state != GPRS_RLCMAC_UL_ASS_NONE)
 		LOGP(DRLCMAC, LOGL_ERROR, "%s Software error: Pending uplink "
-			"assignment. This may not happen, because the "
+		     "assignment in state %s. This may not happen, because the "
 			"assignment message never gets transmitted. Please "
 			"be sure not to free in this state. PLEASE FIX!\n",
-			tbf_name(tbf));
+		     tbf_name(tbf),
+		     get_value_string(gprs_rlcmac_tbf_ul_ass_state_names,
+				      tbf->ul_ass_state));
 	if (tbf->dl_ass_state != GPRS_RLCMAC_DL_ASS_NONE)
 		LOGP(DRLCMAC, LOGL_ERROR, "%s Software error: Pending downlink "
-			"assignment. This may not happen, because the "
+		     "assignment in state %s. This may not happen, because the "
 			"assignment message never gets transmitted. Please "
 			"be sure not to free in this state. PLEASE FIX!\n",
-			tbf_name(tbf));
+		     tbf_name(tbf),
+		     get_value_string(gprs_rlcmac_tbf_dl_ass_state_names,
+				      tbf->dl_ass_state));
 	tbf->stop_timer();
 	#warning "TODO: Could/Should generate  bssgp_tx_llc_discarded"
 	tbf_unlink_pdch(tbf);
