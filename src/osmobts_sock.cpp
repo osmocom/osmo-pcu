@@ -282,7 +282,8 @@ int pcu_l1if_open(void)
 		return rc;
 	}
 
-	LOGP(DL1IF, LOGL_NOTICE, "osmo-bts PCU socket has been connected\n");
+	LOGP(DL1IF, LOGL_NOTICE, "osmo-bts PCU socket %s has been connected\n",
+	     local.sun_path);
 
 	pcu_sock_state = state;
 
