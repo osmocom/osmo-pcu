@@ -127,7 +127,9 @@ uint32_t SBAController::sched(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t bloc
 
 int SBAController::timeout(struct gprs_rlcmac_sba *sba)
 {
-	LOGP(DRLCMAC, LOGL_NOTICE, "Poll timeout for SBA\n");
+	LOGP(DRLCMAC, LOGL_NOTICE,
+	     "Poll timeout for SBA (TRX=%u, TS=%u, FN=%u, TA=%u)\n", sba->trx_no,
+	     sba->ts_no, sba->fn, sba->ta);
 	m_bts.sba_timedout();
 	free_sba(sba);
 	return 0;

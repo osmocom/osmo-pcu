@@ -909,9 +909,9 @@ void gprs_rlcmac_pdch::add_paging(struct gprs_rlcmac_paging *pag)
 void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet, uint32_t fn)
 {
 	struct gprs_rlcmac_tbf *tbf, *new_tbf;
-	uint32_t tlli = 0;
+	uint32_t tlli = packet->TLLI;
+	GprsMs *ms = bts()->ms_by_tlli(tlli);
 
-	tlli = packet->TLLI;
 	tbf = bts()->ul_tbf_by_poll_fn(fn, trx_no(), ts_no);
 	if (!tbf)
 		tbf = bts()->dl_tbf_by_poll_fn(fn, trx_no(), ts_no);
@@ -920,6 +920,15 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
 			"unknown FN=%u TLLI=0x%08x (TRX %d TS %d)\n",
 			fn, tlli, trx_no(), ts_no);
+		if (ms)
+			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
+			     "unknown TBF corresponds to MS with IMSI %s, TA %d, "
+			     "uTBF (TFI=%d, state=%s), uTBF (TFI=%d, state=%s)\n",
+			     ms->imsi(), ms->ta(),
+			     ms->ul_tbf() ? ms->ul_tbf()->tfi() : 0,
+			     ms->ul_tbf() ? ms->ul_tbf()->state_name() : "None",
+			     ms->dl_tbf() ? ms->dl_tbf()->tfi() : 0,
+			     ms->dl_tbf() ? ms->dl_tbf()->state_name() : "None");
 		return;
 	}
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
