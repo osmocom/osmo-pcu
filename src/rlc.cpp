@@ -83,6 +83,32 @@ int gprs_rlc_dl_window::mark_for_resend()
 	return resend;
 }
 
+/* Update the receive block bitmap */
+uint16_t gprs_rlc_ul_window::update_egprs_rbb(uint8_t *rbb)
+{
+	int i;
+	uint16_t bsn;
+	uint16_t bitmask = 0x80;
+	int8_t pos = 0;
+	int8_t bit_pos = 0;
+	for (i = 0, bsn = (v_q()+1); ((bsn < (v_r())) && (i < ws())); i++,
+					bsn = this->mod_sns(bsn + 1)) {
+		if (m_v_n.is_received(bsn)) {
+			rbb[pos] = rbb[pos] | bitmask;
+		} else {
+			rbb[pos] = rbb[pos] & (~bitmask);
+		}
+		bitmask = bitmask >> 1;
+		bit_pos++;
+		bit_pos = bit_pos % 8;
+		if (bit_pos == 0) {
+			pos++;
+			bitmask = 0x80;
+		}
+	}
+	return i;
+}
+
 int gprs_rlc_dl_window::count_unacked()
 {
 	uint16_t unacked = 0;
@@ -219,6 +245,8 @@ void gprs_rlc_window::set_sns(uint16_t sns)
 
 void gprs_rlc_window::set_ws(uint16_t ws)
 {
+	LOGP(DRLCMAC, LOGL_INFO, "ws(%d)\n",
+		ws);
 	OSMO_ASSERT(ws >= RLC_GPRS_SNS/2);
 	OSMO_ASSERT(ws <= RLC_MAX_SNS/2);
 	m_ws = ws;

@@ -5,6 +5,7 @@
 #pragma once
 
 struct egprs_compress_node;
+#define	 MOD64(X)	(((X) + 64) & 0x3F)
 
 /* Singleton to manage the EGPRS compression algorithm. */
 class egprs_compress
@@ -14,6 +15,9 @@ public:
 		bool start, const uint8_t *orig_buf,
 		bitvec *dest);
 	egprs_compress();
+	int osmo_t4_compress(struct bitvec *bv);
+	static int compress_rbb(struct bitvec *urbb_vec, struct bitvec *crbb_vec,
+		uint8_t *uclen_crbb, uint8_t  max_bits);
 
 private:
 	egprs_compress_node *ones_list;

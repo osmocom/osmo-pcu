@@ -3342,6 +3342,7 @@ PDCH(TS 5, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 3c
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 384
+ws(384)
 DL TBF slots: 0x3c, N: 4, WS: 384
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to RELEASING
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS) free
@@ -3386,6 +3387,8 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS),
 - Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS): trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS): Setting EGPRS window size to 64, base(0) slots(1) ws_pdch(0)
+ws(64)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer 3169.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
@@ -3438,6 +3441,7 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 80, dl_slots = 80
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -3479,6 +3483,8 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS),
 - Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS): trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS): Setting EGPRS window size to 64, base(0) slots(1) ws_pdch(0)
+ws(64)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer 3169.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
@@ -3694,6 +3700,7 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 80, dl_slots = 80
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -3723,6 +3730,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -4057,6 +4065,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -4336,6 +4345,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -4574,6 +4584,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -4776,6 +4787,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -4956,6 +4968,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -5117,6 +5130,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -5274,6 +5288,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -5418,6 +5433,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -5563,6 +5579,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -5614,6 +5631,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -5665,6 +5683,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -5716,6 +5735,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -5786,6 +5806,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -5856,6 +5877,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -5926,6 +5948,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -5996,6 +6019,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -6053,6 +6077,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -6110,6 +6135,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -6167,6 +6193,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
@@ -6242,6 +6269,8 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS),
 - Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS): trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS): Setting EGPRS window size to 64, base(0) slots(1) ws_pdch(0)
+ws(64)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer 3169.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
@@ -6324,6 +6353,7 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 80, dl_slots = 80
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -6355,6 +6385,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 192
+ws(192)
 DL TBF slots: 0x10, N: 1, WS: 192
 ********** TBF update **********
 PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -6371,6 +6402,7 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 - Assigning DL TS 5
 PDCH(TS 5, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 384
+ws(384)
 DL TBF slots: 0x3c, N: 4, WS: 384
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to RELEASING
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS) free
@@ -6415,6 +6447,8 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS),
 - Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS): trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS): Setting EGPRS window size to 64, base(0) slots(1) ws_pdch(0)
+ws(64)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer 3169.
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
@@ -6485,6 +6519,7 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 80, dl_slots = 80
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -6514,9 +6549,11 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 Allocated TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): trx = 0, ul_slots = 10, dl_slots = 10
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS): Setting EGPRS window size to 64
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
+ws(480)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 - ack:  (BSN=1176)"RRRRRRRRRRIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIRRRIRRRRRRRRRRRRRRRRRRRRRRRRRRI"(BSN=1287)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=1176:1288, lost=73, recv=39, skipped=0, bsn=1944, info='RRRRRRRRRRRRRRRRRRRRRRRRRRLRRRLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLRRRRRRRRRR................................................................................................................................................................................................................................................................................................................................................................................'

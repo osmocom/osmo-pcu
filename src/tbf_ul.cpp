@@ -29,6 +29,8 @@
 #include <decoding.h>
 #include <pcu_l1_if.h>
 
+#include "pcu_utils.h"
+
 extern "C" {
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/talloc.h>
@@ -586,4 +588,23 @@ void gprs_rlcmac_ul_tbf::update_coding_scheme_counter_ul(const GprsCodingScheme 
 			break;
 		}
 	}
+}
+
+void gprs_rlcmac_ul_tbf::egprs_calc_ulwindow_size()
+{
+	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
+	unsigned int num_pdch = pcu_bitcount(ul_slots());
+	unsigned int ws = bts_data->ws_base + num_pdch * bts_data->ws_pdch;
+	ws = (ws / 32) * 32;
+	ws = OSMO_MAX(64, ws);
+
+	if (num_pdch == 1)
+		ws = OSMO_MIN(192, ws);
+	else
+		ws = OSMO_MIN(128 * num_pdch, ws);
+
+	LOGP(DRLCMAC, LOGL_INFO, "%s: Setting EGPRS window size to %d, base(%d) slots(%d) ws_pdch(%d)\n",
+		name(), ws, bts_data->ws_base, num_pdch, bts_data->ws_pdch);
+
+	m_window.set_ws(ws);
 }

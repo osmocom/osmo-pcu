@@ -347,6 +347,7 @@ struct gprs_rlc_ul_window: public gprs_rlc_window {
 	bool is_received(uint16_t bsn) const;
 
 	void update_rbb(char *rbb);
+	uint16_t update_egprs_rbb(uint8_t *rbb);
 	void raise_v_r_to(int moves);
 	void raise_v_r(const uint16_t bsn);
 	uint16_t raise_v_q();

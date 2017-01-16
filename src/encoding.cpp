@@ -24,6 +24,7 @@
 #include <bts.h>
 #include <tbf.h>
 #include <gprs_debug.h>
+#include <egprs_rlc_compression.h>
 
 extern "C" {
 #include <osmocom/gprs/protocol/gsm_04_60.h>
@@ -699,20 +700,44 @@ static void write_packet_uplink_ack_gprs(
 
 static void write_packet_ack_nack_desc_egprs(
 	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
-	gprs_rlc_ul_window *window, bool is_final)
+	gprs_rlc_ul_window *window, bool is_final, unsigned& rest_bits)
 {
-	int urbb_len = 0;
-	int len;
+	unsigned int urbb_len = 0;
+	uint8_t crbb_len = 0;
+	uint8_t len;
 	bool bow = true;
 	bool eow = true;
 	int ssn = window->mod_sns(window->v_q() + 1);
-	int num_blocks = window->mod_sns(window->v_r() - window->v_q());
+	unsigned int num_blocks = window->mod_sns(window->v_r() - window->v_q());
 	int esn_crbb = window->mod_sns(ssn - 1);
-	/* Bit 0 at the end is mandatory Table 11.2.28.1 in 44.060 */
-	int rest_bits = dest->data_len * 8 - wp - 1;
+	static  uint8_t rbb[RLC_EGPRS_MAX_WS] = {'\0'};
+	uint8_t iter = 0;
 	int is_compressed = 0;
+	bool try_compression = false;
+	uint8_t ucmp_bmplen;
+	uint8_t crbb_bitmap[23] = {'\0'};
+	bitvec ucmp_vec;
+	bitvec crbb_vec;
+	uint8_t uclen_crbb = 0;
 	bool len_coded = true;
+	uint8_t crbb_start_clr_code;
 	uint8_t i;
+#if 0
+	/* static size of 16 bits*/
+	 ..0. .... = ACKNACK:  (Union)
+        Desc
+
+            ...0 .... = FINAL_ACK_INDICATION: False
+
+            .... 1... = BEGINNING_OF_WINDOW: 1
+
+            .... .1.. = END_OF_WINDOW: 1
+
+            .... ..10  0101 0001  1... .... = STARTING_SEQUENCE_NUMBER: 1187
+
+            .0.. .... = CRBB Exist: 0
+#endif
+	rest_bits -= 16;
 
 	if (num_blocks > 0)
 		/* V(Q) is NACK and omitted -> SSN = V(Q) + 1 */
@@ -720,27 +745,67 @@ static void write_packet_ack_nack_desc_egprs(
 
 	if (num_blocks > window->ws())
 		num_blocks = window->ws();
-	/* TODO Compression support */
-	if (is_compressed == 0) {
-		/* Union bit takes 1 bit */
-		/* Other fields in descr for uncompresed bitmap takes 15 bits*/
+	/* Try Compression  as number of blocks does not fit */
+	if (num_blocks > rest_bits) {
+		try_compression = true;
+	}
+	if (try_compression == true) {
+		ucmp_bmplen = window->update_egprs_rbb(rbb);
+		ucmp_vec.data = rbb;
+		ucmp_vec.cur_bit = ucmp_bmplen;
+		ucmp_vec.data_len = 127;
+		crbb_vec.data = crbb_bitmap;
+		crbb_vec.cur_bit = 0;
+		crbb_vec.data_len = 127;
+		LOGP(DRLCMACUL, LOGL_DEBUG,
+		"rest_bits=%d uncompressed len %d and uncompressed bitmap = %s\n",
+		 rest_bits, ucmp_bmplen,
+		osmo_hexdump(ucmp_vec.data, (ucmp_bmplen+7)/8));
 
-		if (num_blocks > rest_bits - 15 - 1) {
+		is_compressed = egprs_compress::compress_rbb(&ucmp_vec, /* Uncompressed bitmap*/
+			&crbb_vec, /*Compressed bitmap vector */
+			&uclen_crbb,
+			(rest_bits - 16));/* CRBBlength:7 colourcode:1 dissector length:8*/
+		LOGP(DRLCMACUL, LOGL_DEBUG,
+		"the ucmp len=%d uclen_crbb=%d num_blocks=%d crbb length %d, "
+		"and the CRBB bitmap  = %s\n",
+		ucmp_bmplen, uclen_crbb, num_blocks, crbb_vec.cur_bit,
+		osmo_hexdump(crbb_bitmap, (crbb_vec.cur_bit+7)/8));
+		crbb_len = crbb_vec.cur_bit;
+	}
+
+	if (is_compressed == 0) {
+		/* length field takes 8 bits*/
+		if (num_blocks > rest_bits - 8) {
 			eow = false;
-			urbb_len = rest_bits - 15 - 1;
+			urbb_len = rest_bits;
 			len_coded = false;
-		} else if (num_blocks == rest_bits - 15 - 1) {
-			urbb_len = rest_bits - 15 - 1;
+		} else if (num_blocks == rest_bits) {
+			urbb_len = rest_bits;
 			len_coded = false;
-		/* Union bit takes 1 bit length field takes 8 bits*/
-		} else if (num_blocks > rest_bits - 15 - 9) {
-			eow = false;
-			urbb_len = rest_bits - 15 - 9;
 		} else
 			urbb_len = num_blocks;
+
 		len = urbb_len + 15;
 	} else {
-		/* TODO Compressed bitmap */
+		if (num_blocks > uclen_crbb) {
+			eow = false;
+			urbb_len = num_blocks - uclen_crbb;
+		}
+		/* Union bit takes 1 bit */
+		/* Other fields in descr of compresed bitmap takes 23 bits
+		 * -8 = CRBB_STARTING_COLOR_CODE + CRBB_LENGTH */
+		if (urbb_len > (rest_bits - crbb_len - 8)) {
+			eow = false;
+			len_coded = false;
+			urbb_len = rest_bits - crbb_len - 8;
+		/* -16 =  ACKNACK Dissector length + CRBB_STARTING_COLOR_CODE + CRBB_LENGTH */
+		} else if (urbb_len > (rest_bits - crbb_len - 16)) {
+			eow = false;
+			len_coded = false;
+			urbb_len = rest_bits - crbb_len - 16;
+		}
+		len = urbb_len + crbb_len + 23;
 	}
 
 	/* EGPRS Ack/Nack Description IE */
@@ -756,14 +821,32 @@ static void write_packet_ack_nack_desc_egprs(
 	bitvec_write_field(dest, wp, eow, 1); // END_OF_WINDOW
 	bitvec_write_field(dest, wp, ssn, 11); // STARTING_SEQUENCE_NUMBER
 	if (is_compressed) {
-		/* TODO Add CRBB support */
-	} else
+		bitvec_write_field(dest, wp, 1, 1); // CRBB_Exist
+		bitvec_write_field(dest, wp, crbb_len, 7); // CRBB_LENGTH
+		crbb_start_clr_code = (0x80 & ucmp_vec.data[0])>>7;
+		bitvec_write_field(dest, wp, crbb_start_clr_code, 1); // CRBB_clr_code
+		LOGP(DRLCMACUL, LOGL_DEBUG,
+			"EGPRS CRBB, crbb_len = %d, crbb_start_clr_code = %d\n",
+			crbb_len, crbb_start_clr_code);
+		while (crbb_len != 0) {
+			if (crbb_len > 8) {
+				bitvec_write_field(dest, wp, crbb_bitmap[iter], 8);
+				crbb_len = crbb_len - 8;
+				iter++;
+			} else {
+				bitvec_write_field(dest, wp, crbb_bitmap[iter], crbb_len);
+				crbb_len = 0;
+			}
+		}
+		esn_crbb = window->mod_sns(esn_crbb + uclen_crbb);
+	} else {
 		bitvec_write_field(dest, wp, 0, 1); // CRBB_Exist
+	}
 	LOGP(DRLCMACUL, LOGL_DEBUG,
 		"EGPRS URBB, urbb len = %d, SSN = %d, ESN_CRBB = %d, "
 		"len present = %s,desc len = %d, "
 		"SNS = %d, WS = %d, V(Q) = %d, V(R) = %d%s%s\n",
-		urbb_len, ssn, esn_crbb, len_coded ? "yes" : "No", len,
+		urbb_len, ssn, esn_crbb, len_coded ? "yes" : "No" , len,
 		window->sns(), window->ws(), window->v_q(), window->v_r(),
 		bow ? ", BOW" : "", eow ? ", EOW" : "");
 
@@ -795,7 +878,9 @@ static void write_packet_uplink_ack_egprs(
 	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Power Control Parameters
 	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Extension Bits
 
-	write_packet_ack_nack_desc_egprs(bts, dest, wp, &tbf->m_window, is_final);
+	/* -2 for last bit 0 mandatory and REL5 not supported */
+	unsigned bits_ack_nack = dest->data_len * 8 - wp - 2;
+	write_packet_ack_nack_desc_egprs(bts, dest, wp, &tbf->m_window, is_final, bits_ack_nack);
 
 	bitvec_write_field(dest, wp, 0, 1); // fixed 0
 	bitvec_write_field(dest, wp, 0, 1); // 0: don't have REL 5

@@ -523,6 +523,8 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 		struct gprs_rlc_data *block,
 		uint8_t *data, const uint8_t block_idx);
 
+	void egprs_calc_ulwindow_size();
+
 	void update_coding_scheme_counter_ul(const GprsCodingScheme cs);
 
 	/* Please note that all variables here will be reset when changing
