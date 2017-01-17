@@ -1311,7 +1311,7 @@ int gprs_rlcmac_tbf::set_tlli_from_ul(uint32_t new_tlli)
 	if (dl_tbf && dl_tbf->ms() != ms()) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 			"TLLI=0x%08x while %s still exists. "
-			"Killing pending DL TBF\n", tlli(),
+			"Killing pending DL TBF\n", new_tlli,
 			tbf_name(dl_tbf));
 		tbf_free(dl_tbf);
 		dl_tbf = NULL;
@@ -1319,7 +1319,7 @@ int gprs_rlcmac_tbf::set_tlli_from_ul(uint32_t new_tlli)
 	if (ul_tbf && ul_tbf->ms() != ms()) {
 		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
 			"TLLI=0x%08x while %s still exists. "
-			"Killing pending UL TBF\n", tlli(),
+			"Killing pending UL TBF\n", new_tlli,
 			tbf_name(ul_tbf));
 		tbf_free(ul_tbf);
 		ul_tbf = NULL;
