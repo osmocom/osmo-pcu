@@ -72,7 +72,7 @@ than the specified number of octets are left to be transmitted.
 ==== Downlink TBF idle time
 
 After a down-link TBF is idle (all data in the current LLC downlink
-queue for thi MS has been transmitted), we can keep the TBF established
+queue for the MS has been transmitted), we can keep the TBF established
 for a configurable time.  This avoids having to go through a new one or
 two phase TBF establishment once the next data for downlink arrives.
 
@@ -94,7 +94,7 @@ require any resources of the air interface.
 
 ==== Forcing two-phase access
 
-If the MS is using for a single-phase access, you can still force it to
+If the MS is using a single-phase access, you can still force it to
 use a two-phase access using the `two-phase-access` VTY configuration
 command at the `pcu` VTY config node.
 
