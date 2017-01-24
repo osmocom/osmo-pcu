@@ -72,6 +72,8 @@ Testing retx for MCS 6 to reseg_mcs 3
 === end test_immediate_assign_rej_multi_block ===
 === start test_immediate_assign_rej_single_block ===
 === end test_immediate_assign_rej_single_block ===
+=== start test_tbf_egprs_two_phase_puan ===
+=== end test_tbf_egprs_two_phase_puan ===
 === start test_packet_access_rej_epdan ===
 packet reject: 40 84 7f f7 6e e6 41 4b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 === end test_packet_access_rej_epdan ===
