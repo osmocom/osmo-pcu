@@ -3242,6 +3242,114 @@ const struct log_info debug_log_info = {
 	ARRAY_SIZE(default_categories),
 };
 
+static void test_packet_access_rej_prr_no_other_tbfs()
+{
+	BTS the_bts;
+	uint32_t fn = 2654218;
+	int ts_no = 7;
+	uint8_t trx_no = 0;
+	uint32_t tlli = 0xffeeddcc;
+	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
+
+	printf("=== start %s ===\n", __func__);
+
+	setup_bts(&the_bts, ts_no, 4);
+
+	int rc = 0;
+
+	ul_tbf = handle_tbf_reject(the_bts.bts_data(), NULL, tlli,
+				trx_no, ts_no);
+
+	OSMO_ASSERT(ul_tbf != 0);
+
+	/* trigger packet access reject */
+	uint8_t bn = fn2bn(fn);
+
+	rc = gprs_rlcmac_rcv_rts_block(the_bts.bts_data(),
+		trx_no, ts_no, fn, bn);
+
+	OSMO_ASSERT(rc == 0);
+
+	ul_tbf->handle_timeout();
+
+	printf("=== end %s ===\n", __func__);
+}
+
+static void test_packet_access_rej_prr()
+{
+	BTS the_bts;
+	uint32_t fn = 2654218;
+	uint16_t qta = 31;
+	int ts_no = 7;
+	uint8_t trx_no = 0;
+	RlcMacUplink_t ulreq = {0};
+	Packet_Resource_Request_t *presreq = NULL;
+	uint8_t ms_class = 11;
+	uint8_t egprs_ms_class = 11;
+	uint32_t rach_fn = fn - 51;
+	uint32_t sba_fn = fn + 52;
+	uint32_t tlli = 0xffeeddcc;
+	MS_Radio_Access_capability_t *pmsradiocap = NULL;
+	Multislot_capability_t *pmultislotcap = NULL;
+
+	printf("=== start %s ===\n", __func__);
+
+	setup_bts(&the_bts, ts_no, 4);
+
+	int rc = 0;
+
+	/*
+	 * Trigger rach till resources(USF) exhaust
+	 */
+	rc = the_bts.rcv_rach(0x78, rach_fn, qta, 0,
+			GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = the_bts.rcv_rach(0x79, rach_fn, qta, 0,
+			GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = the_bts.rcv_rach(0x7a, rach_fn, qta, 0,
+			GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = the_bts.rcv_rach(0x7b, rach_fn, qta, 0,
+			GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = the_bts.rcv_rach(0x7c, rach_fn, qta, 0,
+			GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = the_bts.rcv_rach(0x7d, rach_fn, qta, 0,
+			GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = the_bts.rcv_rach(0x7e, rach_fn, qta, 0,
+			GSM_L1_BURST_TYPE_ACCESS_0);
+
+	/* fake a resource request */
+	ulreq.u.MESSAGE_TYPE = MT_PACKET_RESOURCE_REQUEST;
+	presreq = &ulreq.u.Packet_Resource_Request;
+	presreq->PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
+	presreq->ID.UnionType = 1; /* != 0 */
+	presreq->ID.u.TLLI = tlli;
+	presreq->Exist_MS_Radio_Access_capability = 1;
+	pmsradiocap = &presreq->MS_Radio_Access_capability;
+	pmsradiocap->Count_MS_RA_capability_value = 1;
+	pmsradiocap->MS_RA_capability_value[0].u.Content.
+		Exist_Multislot_capability = 1;
+	pmultislotcap = &pmsradiocap->MS_RA_capability_value[0].
+		u.Content.Multislot_capability;
+
+	pmultislotcap->Exist_GPRS_multislot_class = 1;
+	pmultislotcap->GPRS_multislot_class = ms_class;
+	if (egprs_ms_class) {
+		pmultislotcap->Exist_EGPRS_multislot_class = 1;
+		pmultislotcap->EGPRS_multislot_class = egprs_ms_class;
+	}
+
+	send_ul_mac_block(&the_bts, trx_no, ts_no, &ulreq, sba_fn);
+
+	/* trigger packet access reject */
+	uint8_t bn = fn2bn(fn);
+
+	rc = gprs_rlcmac_rcv_rts_block(the_bts.bts_data(),
+		trx_no, ts_no, fn, bn);
+
+	OSMO_ASSERT(rc == 0);
+
+	printf("=== end %s ===\n", __func__);
+}
+
 void test_packet_access_rej_epdan()
 {
 	BTS the_bts;
@@ -3310,6 +3418,8 @@ int main(int argc, char **argv)
 	test_immediate_assign_rej();
 	test_tbf_egprs_two_phase_puan();
 	test_packet_access_rej_epdan();
+	test_packet_access_rej_prr();
+	test_packet_access_rej_prr_no_other_tbfs();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);

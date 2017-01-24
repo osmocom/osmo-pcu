@@ -43,6 +43,7 @@ class GprsMs;
 
 #define Tassign_agch 0,200000	/* waiting after IMM.ASS confirm */
 #define Tassign_pacch 2,0	/* timeout for pacch assigment */
+#define Treject_pacch 0,2000	/* timeout for tbf reject for PRR*/
 
 enum gprs_rlcmac_tbf_state {
 	GPRS_RLCMAC_NULL = 0,	/* new created TBF */
@@ -315,6 +316,9 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	uint8_t ms_class, uint8_t egprs_ms_class, uint8_t single_slot);
 
 void tbf_free(struct gprs_rlcmac_tbf *tbf);
+
+struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
+	GprsMs *ms, uint32_t tlli, uint8_t trx_no, uint8_t ts_no);
 
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 

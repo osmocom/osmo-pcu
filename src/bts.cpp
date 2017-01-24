@@ -1356,8 +1356,12 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				egprs_ms_class);
 		ul_tbf = tbf_alloc_ul(bts_data(), trx_no(), ms_class,
 			egprs_ms_class, tlli, ta, ms);
-		if (!ul_tbf)
+
+		if (!ul_tbf) {
+			handle_tbf_reject(bts_data(), ms, tlli,
+				trx_no(), ts_no);
 			return;
+		}
 
 		/* set control ts to current MS's TS, until assignment complete */
 		LOGP(DRLCMAC, LOGL_DEBUG, "Change control TS to %d until assinment is complete.\n", ts_no);

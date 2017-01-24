@@ -56,7 +56,9 @@ static uint32_t sched_poll(BTS *bts,
 			*ul_ack_tbf = ul_tbf;
 		if (ul_tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_SEND_ASS)
 			*dl_ass_tbf = ul_tbf;
-		if (ul_tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS)
+		if (ul_tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_SEND_ASS
+			|| ul_tbf->ul_ass_state ==
+				GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ)
 			*ul_ass_tbf = ul_tbf;
 #warning "Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all states?"
 	}
@@ -136,8 +138,11 @@ static struct msgb *sched_select_ctrl_msg(
 		 * because they may kill the TBF when the CONTROL ACK is
 		 * received, thus preventing the others from being processed.
 		 */
-
-		if (tbf == ul_ass_tbf && tbf->direction == GPRS_RLCMAC_DL_TBF)
+		if (tbf == ul_ass_tbf && tbf->ul_ass_state ==
+				GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ)
+			msg = ul_ass_tbf->create_packet_access_reject();
+		else if (tbf == ul_ass_tbf && tbf->direction ==
+				GPRS_RLCMAC_DL_TBF)
 			if (tbf->ul_ass_state ==
 					GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ)
 				msg = ul_ass_tbf->create_packet_access_reject();

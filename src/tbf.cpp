@@ -1174,6 +1174,10 @@ struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
 	bitvec_free(packet_access_rej);
 	ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
 
+	/* Start Tmr only if it is UL TBF */
+	if (direction == GPRS_RLCMAC_UL_TBF)
+		tbf_timer_start(this, 0, Treject_pacch);
+
 	return msg;
 
 }
@@ -1402,4 +1406,40 @@ uint8_t gprs_rlcmac_tbf::ul_slots() const
 bool gprs_rlcmac_tbf::is_control_ts(uint8_t ts) const
 {
 	return ts == control_ts;
+}
+
+struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
+			GprsMs *ms, uint32_t tlli, uint8_t trx_no, uint8_t ts)
+{
+	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
+	struct gprs_rlcmac_trx *trx = &bts->trx[trx_no];
+
+	ul_tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
+	if (!ul_tbf)
+		return ul_tbf;
+
+	talloc_set_destructor(ul_tbf, ul_tbf_dtor);
+	new (ul_tbf) gprs_rlcmac_ul_tbf(bts->bts);
+	if (!ms)
+		ms = bts->bts->ms_alloc(0, 0);
+
+	ms->set_tlli(tlli);
+
+	llist_add(&ul_tbf->list(), &bts->bts->ul_tbfs());
+	ul_tbf->bts->tbf_ul_created();
+	ul_tbf->set_state(GPRS_RLCMAC_ASSIGN);
+	ul_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
+
+	ul_tbf->set_ms(ms);
+	ul_tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
+	ul_tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ;
+	ul_tbf->control_ts = ts;
+	ul_tbf->trx = trx;
+	ul_tbf->m_ctrs = rate_ctr_group_alloc(ul_tbf, &tbf_ctrg_desc, 0);
+	ul_tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(ul_tbf,
+					&tbf_ul_egprs_ctrg_desc, 0);
+	ul_tbf->m_ul_gprs_ctrs = rate_ctr_group_alloc(ul_tbf,
+					&tbf_ul_gprs_ctrg_desc, 0);
+
+	return ul_tbf;
 }

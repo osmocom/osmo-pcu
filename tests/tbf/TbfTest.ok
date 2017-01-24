@@ -77,3 +77,7 @@ Testing retx for MCS 6 to reseg_mcs 3
 === start test_packet_access_rej_epdan ===
 packet reject: 40 84 7f f7 6e e6 41 4b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 === end test_packet_access_rej_epdan ===
+=== start test_packet_access_rej_prr ===
+=== end test_packet_access_rej_prr ===
+=== start test_packet_access_rej_prr_no_other_tbfs ===
+=== end test_packet_access_rej_prr_no_other_tbfs ===
