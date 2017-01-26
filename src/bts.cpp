@@ -552,8 +552,8 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 	Fn = Fn + m_cur_fn - m_cur_fn % 42432;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, "
-		"so we provide one \n"
-		"ra=0x%02x Fn=%u qta=%d is_11bit=%d:\n", ra, Fn, qta, is_11bit);
+		"so we provide one: ra=0x%02x Fn=%u qta=%d is_11bit=%d:\n",
+		ra, Fn, qta, is_11bit);
 
 	sb = is_single_block(ra, burst_type, is_11bit, &ms_class, &priority);
 

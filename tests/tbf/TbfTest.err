@@ -1510,8 +1510,7 @@ msg block (BSN 2, CS-1): 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 0
 MSG = 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
-MS requests UL TBF on RACH, so we provide one 
-ra=0x03 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x03 Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -1585,8 +1584,7 @@ TX: START TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Immediate Assignment Do
 Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=33 34 34 2d 06 3f 30 0f 00 00 7d 80 00 07 00 df 12 23 34 48 00 23 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) append
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
@@ -1671,8 +1669,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer 0.
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) append
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
@@ -1806,8 +1803,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) downlink (V(A)==0 .. V(S)==1)
 - Copying data unit 0 (BSN 0)
 msg block (BSN 0, CS-4): 07 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 00 
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654283 block=11 data=00 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 00 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x73 Fn=2654232 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654232 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654232 (17,39,22), SBFn=2654335
 TX: Immediate Assignment Uplink (AGCH)
@@ -1883,8 +1879,7 @@ TBF(TFI=0 TLLI=0xf5667788 DIR=DL STATE=FINISHED) append
 Modifying MS object, TLLI: 0xf5667788 confirmed
 New MS: TLLI = 0xf5667788, TA = 7, IMSI = 0011223344, LLC = 1
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
@@ -1977,8 +1972,7 @@ PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 0 TBF
 Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 ********** TBF ends here **********
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654275 block=9 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x73 Fn=2654224 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654224 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654224 (17,31,14), SBFn=2654327
 TX: Immediate Assignment Uplink (AGCH)
@@ -2062,8 +2056,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 0
 - No gaps in received block, last block: BSN=0 CV=15
 New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
@@ -2157,8 +2150,7 @@ Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344
 ********** TBF ends here **********
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
-MS requests UL TBF on RACH, so we provide one 
-ra=0x03 Fn=2654275 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x03 Fn=2654275 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -2218,8 +2210,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes state from FLOW to FINISHED
 - Scheduling Ack/Nack, because last block has CV==0.
 New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
@@ -3354,8 +3345,7 @@ Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000
 Destroying MS object, TLLI = 0x00000000
 ********** TBF ends here **********
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
@@ -3450,8 +3440,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to AS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer 0.
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) append
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
@@ -6236,8 +6225,7 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** TBF ends here **********
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
@@ -6414,8 +6402,7 @@ Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000
 Destroying MS object, TLLI = 0x00000000
 ********** TBF ends here **********
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
@@ -6678,8 +6665,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** TBF ends here **********
-MS requests UL TBF on RACH, so we provide one 
-ra=0x78 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x78 Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -6704,8 +6690,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 78 8b 29 07 00 c8 00 70 0b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x79 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x79 Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -6730,8 +6715,7 @@ TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=1 USF=1
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 79 8b 29 07 00 c8 42 70 0b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x7a Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x7a Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -6756,8 +6740,7 @@ TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=2 USF=2
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 7a 8b 29 07 00 c8 84 70 0b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x7b Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x7b Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -6782,8 +6765,7 @@ TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=3 USF=3
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 7b 8b 29 07 00 c8 c6 70 0b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x7c Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x7c Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -6808,8 +6790,7 @@ TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=4 USF=4
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 7c 8b 29 07 00 c9 08 70 0b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x7d Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x7d Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -6834,8 +6815,7 @@ TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=5 USF=5
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 7d 8b 29 07 00 c9 4a 70 0b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x7e Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x7e Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -6860,8 +6840,7 @@ TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=6 USF=6
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 7e 8b 29 07 00 c9 8c 70 0b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x7f Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x7f Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -6878,15 +6857,13 @@ Slot Allocation (Algorithm A) for class 0
 No PDCH resource sending Immediate Assignment Uplink (AGCH) reject
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=4d 06 3a 10 7f 8b 29 14 7f 8b 29 14 7f 8b 29 14 7f 8b 29 14 0b 2b 2b 
 Destroying MS object, TLLI = 0x00000000
-MS requests UL TBF on RACH, so we provide one 
-ra=0x70 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x70 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 No PDCH available.
 No PDCH resource for single block allocation.sending Immediate Assignment Uplink (AGCH) reject
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=4d 06 3a 10 70 8b 29 14 70 8b 29 14 70 8b 29 14 70 8b 29 14 0b 2b 2b 
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
 TX: Immediate Assignment Uplink (AGCH)
@@ -8873,8 +8850,7 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) append
-MS requests UL TBF on RACH, so we provide one 
-ra=0x78 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x78 Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -8899,8 +8875,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 78 8b 29 07 00 c8 00 70 0b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x79 Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x79 Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -8925,8 +8900,7 @@ TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=1 USF=1
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 79 8b 29 07 00 c8 42 70 0b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x7a Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x7a Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -8951,8 +8925,7 @@ TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=2 USF=2
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 7a 8b 29 07 00 c8 84 70 0b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x7b Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x7b Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -8977,8 +8950,7 @@ TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=3 USF=3
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 7b 8b 29 07 00 c8 c6 70 0b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x7c Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x7c Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -9003,8 +8975,7 @@ TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=4 USF=4
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 7c 8b 29 07 00 c9 08 70 0b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x7d Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x7d Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -9029,8 +9000,7 @@ TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=5 USF=5
 Sending data request: trx=0 ts=0 sapi=2 arfcn=0 fn=0 block=0 data=2d 06 3f 10 0f 00 00 7d 8b 29 07 00 c9 4a 70 0b 2b 2b 2b 2b 2b 2b 2b 
-MS requests UL TBF on RACH, so we provide one 
-ra=0x7e Fn=2654167 qta=31 is_11bit=0:
+MS requests UL TBF on RACH, so we provide one: ra=0x7e Fn=2654167 qta=31 is_11bit=0:
 ********** TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
