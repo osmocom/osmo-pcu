@@ -528,10 +528,10 @@ int egprs_compress::decompress_crbb(
 		/* put run length of Ones in uncompressed bitmap */
 		while (run_length != 0) {
 			if (run_length > 8) {
-				bitvec_write_field(dest, wp, data, 8);
+				bitvec_write_field(dest, &wp, data, 8);
 				run_length = run_length - 8;
 			} else {
-				bitvec_write_field(dest, wp, data, run_length);
+				bitvec_write_field(dest, &wp, data, run_length);
 				run_length = 0;
 			}
 		}
@@ -581,7 +581,7 @@ static void compress_bitmap(
 		*codewrd_bitmap = t4_term[start][*run_len_cnt];
 		*codewrd_len = t4_term_length[start][*run_len_cnt];
 	}
-	bitvec_write_field(crbb_vec, writeIndex, *codewrd_bitmap, *codewrd_len);
+	bitvec_write_field(crbb_vec, &writeIndex, *codewrd_bitmap, *codewrd_len);
 }
 
 /* Compress received block bitmap */

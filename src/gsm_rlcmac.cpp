@@ -4799,7 +4799,7 @@ void decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
 {
   csnStream_t      ar;
   unsigned readIndex = 0;
-  guint8 payload_type = bitvec_read_field(vector, readIndex, 2);
+  guint8 payload_type = bitvec_read_field(vector, &readIndex, 2);
 
   if (payload_type == PAYLOAD_TYPE_DATA)
   {
@@ -4814,7 +4814,7 @@ void decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
   data->NrOfBits = 23 * 8;
   csnStreamInit(&ar, 0, data->NrOfBits);
   readIndex += 6;
-  data->u.MESSAGE_TYPE = bitvec_read_field(vector, readIndex, 6);
+  data->u.MESSAGE_TYPE = bitvec_read_field(vector, &readIndex, 6);
   readIndex = 0;
   switch (data->u.MESSAGE_TYPE)
   {
@@ -4907,10 +4907,10 @@ void decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
   gint bit_offset = 0;
   gint bit_length;
   unsigned readIndex = 0;
-  data->PAYLOAD_TYPE = bitvec_read_field(vector, readIndex, 2);
-  data->RRBP = bitvec_read_field(vector, readIndex, 2);
-  data->SP = bitvec_read_field(vector, readIndex, 1);
-  data->USF = bitvec_read_field(vector, readIndex, 3);
+  data->PAYLOAD_TYPE = bitvec_read_field(vector, &readIndex, 2);
+  data->RRBP = bitvec_read_field(vector, &readIndex, 2);
+  data->SP = bitvec_read_field(vector, &readIndex, 1);
+  data->USF = bitvec_read_field(vector, &readIndex, 3);
 
   if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_DATA)
   {
@@ -4929,27 +4929,27 @@ void decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
     bit_offset = 8;
     if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_CTRL_OPT_OCTET)
     {
-      data->RBSN = bitvec_read_field(vector, readIndex, 1);
-      data->RTI = bitvec_read_field(vector, readIndex, 5);
-      data->FS = bitvec_read_field(vector, readIndex, 1);
-      data->AC = bitvec_read_field(vector, readIndex, 1);
+      data->RBSN = bitvec_read_field(vector, &readIndex, 1);
+      data->RTI = bitvec_read_field(vector, &readIndex, 5);
+      data->FS = bitvec_read_field(vector, &readIndex, 1);
+      data->AC = bitvec_read_field(vector, &readIndex, 1);
       bit_offset += 8;
       if (data->AC == 1)
       {
-        data->PR = bitvec_read_field(vector, readIndex, 2);
-        data->TFI = bitvec_read_field(vector, readIndex, 5);
-        data->D = bitvec_read_field(vector, readIndex, 1);
+	data->PR = bitvec_read_field(vector, &readIndex, 2);
+	data->TFI = bitvec_read_field(vector, &readIndex, 5);
+	data->D = bitvec_read_field(vector, &readIndex, 1);
         bit_offset += 8;
       }
       if ((data->RBSN == 1) && (data->FS == 0))
       {
-        data->RBSNe = bitvec_read_field(vector, readIndex, 3);
-        data->FSe = bitvec_read_field(vector, readIndex, 1);
-        data->spare = bitvec_read_field(vector, readIndex, 4);
+	data->RBSNe = bitvec_read_field(vector, &readIndex, 3);
+	data->FSe = bitvec_read_field(vector, &readIndex, 1);
+	data->spare = bitvec_read_field(vector, &readIndex, 4);
         bit_offset += 8;
       }
     }
-    data->u.MESSAGE_TYPE = bitvec_read_field(vector, readIndex, 6);
+    data->u.MESSAGE_TYPE = bitvec_read_field(vector, &readIndex, 6);
   }
 
   /* Initialize the contexts */
@@ -5206,30 +5206,30 @@ void encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
   else
   {
     /* First print the message type and create a tree item */
-    bitvec_write_field(vector, writeIndex, data->PAYLOAD_TYPE, 2);
-    bitvec_write_field(vector, writeIndex, data->RRBP, 2);
-    bitvec_write_field(vector, writeIndex, data->SP, 1);
-    bitvec_write_field(vector, writeIndex, data->USF, 3);
+    bitvec_write_field(vector, &writeIndex, data->PAYLOAD_TYPE, 2);
+    bitvec_write_field(vector, &writeIndex, data->RRBP, 2);
+    bitvec_write_field(vector, &writeIndex, data->SP, 1);
+    bitvec_write_field(vector, &writeIndex, data->USF, 3);
     bit_offset = 8;
     if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_CTRL_OPT_OCTET)
     {
-      bitvec_write_field(vector, writeIndex, data->RBSN, 1);
-      bitvec_write_field(vector, writeIndex, data->RTI, 5);
-      bitvec_write_field(vector, writeIndex, data->FS, 1);
-      bitvec_write_field(vector, writeIndex, data->AC, 1);
+      bitvec_write_field(vector, &writeIndex, data->RBSN, 1);
+      bitvec_write_field(vector, &writeIndex, data->RTI, 5);
+      bitvec_write_field(vector, &writeIndex, data->FS, 1);
+      bitvec_write_field(vector, &writeIndex, data->AC, 1);
       bit_offset += 8;
       if (data->AC == 1)
       {
-        bitvec_write_field(vector, writeIndex, data->PR, 2);
-        bitvec_write_field(vector, writeIndex, data->TFI, 5);
-        bitvec_write_field(vector, writeIndex, data->D, 1);
+	bitvec_write_field(vector, &writeIndex, data->PR, 2);
+	bitvec_write_field(vector, &writeIndex, data->TFI, 5);
+	bitvec_write_field(vector, &writeIndex, data->D, 1);
         bit_offset += 8;
       }
       if ((data->RBSN == 1) && (data->FS == 0))
       {
-        bitvec_write_field(vector, writeIndex, data->RBSNe, 3);
-        bitvec_write_field(vector, writeIndex, data->FSe, 1);
-        bitvec_write_field(vector, writeIndex, data->spare, 4);
+	bitvec_write_field(vector, &writeIndex, data->RBSNe, 3);
+	bitvec_write_field(vector, &writeIndex, data->FSe, 1);
+	bitvec_write_field(vector, &writeIndex, data->spare, 4);
         bit_offset += 8;
       }
     }
@@ -5378,32 +5378,32 @@ void decode_gsm_rlcmac_uplink_data(bitvec * vector, RlcMacUplinkDataBlock_t * da
 {
   unsigned readIndex = 0;
   //unsigned dataLen = 0;
-  guint8 payload_type = bitvec_read_field(vector, readIndex, 2);
+  guint8 payload_type = bitvec_read_field(vector, &readIndex, 2);
   if (payload_type == PAYLOAD_TYPE_DATA)
   {
     readIndex = 0;
     // MAC header
-    data->PAYLOAD_TYPE = bitvec_read_field(vector, readIndex, 2);
-    data->CV = bitvec_read_field(vector, readIndex, 4);
-    data->SI = bitvec_read_field(vector, readIndex, 1);
-    data->R = bitvec_read_field(vector, readIndex, 1);
+    data->PAYLOAD_TYPE = bitvec_read_field(vector, &readIndex, 2);
+    data->CV = bitvec_read_field(vector, &readIndex, 4);
+    data->SI = bitvec_read_field(vector, &readIndex, 1);
+    data->R = bitvec_read_field(vector, &readIndex, 1);
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "PAYLOAD_TYPE = %u ", (unsigned)(data->PAYLOAD_TYPE));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "CV = %u ", (unsigned)(data->CV));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "SI = %u ", (unsigned)(data->SI));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "R = %u ", (unsigned)(data->R));
     // Octet 1
-    data->spare = bitvec_read_field(vector, readIndex, 1);
-    data->PI = bitvec_read_field(vector, readIndex, 1);
-    data->TFI = bitvec_read_field(vector, readIndex, 5);
-    data->TI = bitvec_read_field(vector, readIndex, 1);
+    data->spare = bitvec_read_field(vector, &readIndex, 1);
+    data->PI = bitvec_read_field(vector, &readIndex, 1);
+    data->TFI = bitvec_read_field(vector, &readIndex, 5);
+    data->TI = bitvec_read_field(vector, &readIndex, 1);
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "spare = %u ", (unsigned)(data->spare));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "PI = %u ", (unsigned)(data->PI));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "TFI = %u ", (unsigned)(data->TFI));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "TI = %u ", (unsigned)(data->TI));
 
     // Octet 2
-    data->BSN = bitvec_read_field(vector, readIndex, 7);
-    data->E_1 = bitvec_read_field(vector, readIndex, 1);
+    data->BSN = bitvec_read_field(vector, &readIndex, 7);
+    data->E_1 = bitvec_read_field(vector, &readIndex, 1);
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "BSN = %u ", (unsigned)(data->BSN));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "E_1 = %u ", (unsigned)(data->E_1));
 
@@ -5414,9 +5414,9 @@ void decode_gsm_rlcmac_uplink_data(bitvec * vector, RlcMacUplinkDataBlock_t * da
       unsigned i = 0;
       do
       {
-        data->LENGTH_INDICATOR[i] = bitvec_read_field(vector, readIndex, 6);
-        data->M[i] = bitvec_read_field(vector, readIndex, 1);
-        data->E[i] = bitvec_read_field(vector, readIndex, 1);
+	data->LENGTH_INDICATOR[i] = bitvec_read_field(vector, &readIndex, 6);
+	data->M[i] = bitvec_read_field(vector, &readIndex, 1);
+	data->E[i] = bitvec_read_field(vector, &readIndex, 1);
         LOGPC(DRLCMACDATA, LOGL_NOTICE, "LENGTH_INDICATOR[%u] = %u ", i, (unsigned)(data->LENGTH_INDICATOR[i]));
         LOGPC(DRLCMACDATA, LOGL_NOTICE, "M[%u] = %u ", i, (unsigned)(data->M[i]));
         LOGPC(DRLCMACDATA, LOGL_NOTICE, "E[%u] = %u ", i, (unsigned)(data->E[i]));
@@ -5425,12 +5425,12 @@ void decode_gsm_rlcmac_uplink_data(bitvec * vector, RlcMacUplinkDataBlock_t * da
     }
     if(data->TI == 1) // TLLI field is present
     {
-      data->TLLI = bitvec_read_field(vector, readIndex, 32);
+      data->TLLI = bitvec_read_field(vector, &readIndex, 32);
       LOGPC(DRLCMACDATA, LOGL_NOTICE, "TLLI = %08x ", data->TLLI);
       if (data->PI == 1) // PFI is present if TI field indicates presence of TLLI
       {
-        data->PFI = bitvec_read_field(vector, readIndex, 7);
-        data->E_2 = bitvec_read_field(vector, readIndex, 1);
+	data->PFI = bitvec_read_field(vector, &readIndex, 7);
+	data->E_2 = bitvec_read_field(vector, &readIndex, 1);
         LOGPC(DRLCMACDATA, LOGL_NOTICE, "PFI = %u ", (unsigned)(data->PFI));
         LOGPC(DRLCMACDATA, LOGL_NOTICE, "E_2 = %u ", (unsigned)(data->E_2));
       }
@@ -5440,7 +5440,7 @@ void decode_gsm_rlcmac_uplink_data(bitvec * vector, RlcMacUplinkDataBlock_t * da
     assert(dataLen <= 20);
     for (unsigned i = 0; i < dataLen; i++)
     {
-      data->RLC_DATA[i] = bitvec_read_field(vector, readIndex, 8);
+      data->RLC_DATA[i] = bitvec_read_field(vector, &readIndex, 8);
       LOGPC(DRLCMACDATA, LOGL_NOTICE, "%02x", (unsigned)(data->RLC_DATA[i]));
     }
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "\n");
@@ -5459,26 +5459,26 @@ void encode_gsm_rlcmac_downlink_data(bitvec * vector, RlcMacDownlinkDataBlock_t 
   if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_DATA)
   {
     // MAC header
-    bitvec_write_field(vector, writeIndex, data->PAYLOAD_TYPE, 2);
-    bitvec_write_field(vector, writeIndex, data->RRBP, 2);
-    bitvec_write_field(vector, writeIndex, data->SP, 1);
-    bitvec_write_field(vector, writeIndex, data->USF, 3);
+    bitvec_write_field(vector, &writeIndex, data->PAYLOAD_TYPE, 2);
+    bitvec_write_field(vector, &writeIndex, data->RRBP, 2);
+    bitvec_write_field(vector, &writeIndex, data->SP, 1);
+    bitvec_write_field(vector, &writeIndex, data->USF, 3);
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "PAYLOAD_TYPE = %u ", (unsigned)(data->PAYLOAD_TYPE));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "RRBP = %u ", (unsigned)(data->RRBP));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "SP = %u ", (unsigned)(data->SP));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "USF = %u ", (unsigned)(data->USF));
     
     // Octet 1
-    bitvec_write_field(vector, writeIndex, data->PR, 2);
-    bitvec_write_field(vector, writeIndex, data->TFI, 5);
-    bitvec_write_field(vector, writeIndex, data->FBI, 1);
+    bitvec_write_field(vector, &writeIndex, data->PR, 2);
+    bitvec_write_field(vector, &writeIndex, data->TFI, 5);
+    bitvec_write_field(vector, &writeIndex, data->FBI, 1);
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "PR = %u ", (unsigned)(data->PR));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "TFI = %u ", (unsigned)(data->TFI));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "FBI = %u ", (unsigned)(data->FBI));
 
     // Octet 2
-    bitvec_write_field(vector, writeIndex, data->BSN, 7);
-    bitvec_write_field(vector, writeIndex, data->E_1, 1);
+    bitvec_write_field(vector, &writeIndex, data->BSN, 7);
+    bitvec_write_field(vector, &writeIndex, data->E_1, 1);
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "BSN = %u ", (unsigned)(data->BSN));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "E_1 = %u ", (unsigned)(data->E_1));
 
@@ -5488,9 +5488,9 @@ void encode_gsm_rlcmac_downlink_data(bitvec * vector, RlcMacDownlinkDataBlock_t 
       unsigned i = 0;
       do
       {
-        bitvec_write_field(vector, writeIndex, data->LENGTH_INDICATOR[i], 6);
-        bitvec_write_field(vector, writeIndex, data->M[i], 1);
-        bitvec_write_field(vector, writeIndex, data->E[i], 1);
+	bitvec_write_field(vector, &writeIndex, data->LENGTH_INDICATOR[i], 6);
+	bitvec_write_field(vector, &writeIndex, data->M[i], 1);
+	bitvec_write_field(vector, &writeIndex, data->E[i], 1);
         LOGPC(DRLCMACDATA, LOGL_NOTICE, "LENGTH_INDICATOR[%u] = %u ", i, (unsigned)(data->LENGTH_INDICATOR[i]));
         LOGPC(DRLCMACDATA, LOGL_NOTICE, "M[%u] = %u ", i, (unsigned)(data->M[i]));
         LOGPC(DRLCMACDATA, LOGL_NOTICE, "E[%u] = %u ", i, (unsigned)(data->E[i]));
@@ -5503,7 +5503,7 @@ void encode_gsm_rlcmac_downlink_data(bitvec * vector, RlcMacDownlinkDataBlock_t 
     assert(dataNumOctets <= 20);
     for (unsigned i = 0; i < dataNumOctets; i++)
     {
-      bitvec_write_field(vector, writeIndex, data->RLC_DATA[i], 8);
+      bitvec_write_field(vector, &writeIndex, data->RLC_DATA[i], 8);
       LOGPC(DRLCMACDATA, LOGL_NOTICE, "%02x", (unsigned)(data->RLC_DATA[i]));
     }
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "\n");

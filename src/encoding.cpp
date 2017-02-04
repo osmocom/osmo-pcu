@@ -40,12 +40,12 @@ extern "C" {
 static inline bool write_tai(bitvec *dest, unsigned& wp, int8_t tai)
 {
 	if (tai < 0) { /* No TIMING_ADVANCE_INDEX: */
-		bitvec_write_field(dest, wp, 0, 1);
+		bitvec_write_field(dest, &wp, 0, 1);
 		return false;
 	}
 	/* TIMING_ADVANCE_INDEX: */
-	bitvec_write_field(dest, wp, 1, 1);
-	bitvec_write_field(dest, wp, tai, 4);
+	bitvec_write_field(dest, &wp, 1, 1);
+	bitvec_write_field(dest, &wp, tai, 4);
 	return true;
 }
 
@@ -53,10 +53,10 @@ static inline bool write_tai(bitvec *dest, unsigned& wp, int8_t tai)
 static inline void write_ta(bitvec *dest, unsigned& wp, int8_t ta)
 {
 	if (ta < 0) /* No TIMING_ADVANCE_VALUE: */
-		bitvec_write_field(dest, wp, 0, 1);
+		bitvec_write_field(dest, &wp, 0, 1);
 	else { /* TIMING_ADVANCE_VALUE: */
-		bitvec_write_field(dest, wp, 1, 1);
-		bitvec_write_field(dest, wp, ta, 6);
+		bitvec_write_field(dest, &wp, 1, 1);
+		bitvec_write_field(dest, &wp, ta, 6);
 	}
 }
 
@@ -70,7 +70,7 @@ static inline void write_ta_ie(bitvec *dest, unsigned& wp,
 {
 	write_ta(dest, wp, ta);
 	if (write_tai(dest, wp, tai)) /* TIMING_ADVANCE_TIMESLOT_NUMBER: */
-		bitvec_write_field(dest, wp, ts, 3);
+		bitvec_write_field(dest, &wp, ts, 3);
 }
 
 static int write_ia_rest_downlink(
@@ -85,40 +85,40 @@ static int write_ia_rest_downlink(
 		return -EINVAL;
 	}
 	// GSM 04.08 10.5.2.16 IA Rest Octets
-	bitvec_write_field_lh(dest, wp, 3, 2);   // "HH"
-	bitvec_write_field(dest, wp, 1, 2);   // "01" Packet Downlink Assignment
-	bitvec_write_field(dest, wp,tbf->tlli(),32); // TLLI
-	bitvec_write_field(dest, wp,0x1,1);   // switch TFI   : on
-	bitvec_write_field(dest, wp,tbf->tfi(),5);   // TFI
-	bitvec_write_field(dest, wp,0x0,1);   // RLC acknowledged mode
+	bitvec_write_field(dest, &wp, 3, 2);   // "HH"
+	bitvec_write_field(dest, &wp, 1, 2);   // "01" Packet Downlink Assignment
+	bitvec_write_field(dest, &wp,tbf->tlli(),32); // TLLI
+	bitvec_write_field(dest, &wp,0x1,1);   // switch TFI   : on
+	bitvec_write_field(dest, &wp,tbf->tfi(),5);   // TFI
+	bitvec_write_field(dest, &wp,0x0,1);   // RLC acknowledged mode
 	if (alpha) {
-		bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
-		bitvec_write_field(dest, wp,alpha,4);   // ALPHA
+		bitvec_write_field(dest, &wp,0x1,1);   // ALPHA = present
+		bitvec_write_field(dest, &wp,alpha,4);   // ALPHA
 	} else {
-		bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
+		bitvec_write_field(dest, &wp,0x0,1);   // ALPHA = not present
 	}
-	bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
-	bitvec_write_field(dest, wp,polling,1);   // Polling Bit
-	bitvec_write_field(dest, wp, ta_valid, 1); // N. B: NOT related to TAI!
+	bitvec_write_field(dest, &wp,gamma,5);   // GAMMA power control parameter
+	bitvec_write_field(dest, &wp,polling,1);   // Polling Bit
+	bitvec_write_field(dest, &wp, ta_valid, 1); // N. B: NOT related to TAI!
 	write_tai(dest, wp, ta_idx);
 	if (polling) {
-		bitvec_write_field(dest, wp,0x1,1);   // TBF Starting TIME present
-		bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
-		bitvec_write_field(dest, wp,fn % 51,6);               // T3
-		bitvec_write_field(dest, wp,fn % 26,5);               // T2
+		bitvec_write_field(dest, &wp,0x1,1);   // TBF Starting TIME present
+		bitvec_write_field(dest, &wp,(fn / (26 * 51)) % 32,5); // T1'
+		bitvec_write_field(dest, &wp,fn % 51,6);               // T3
+		bitvec_write_field(dest, &wp,fn % 26,5);               // T2
 	} else {
-		bitvec_write_field(dest, wp,0x0,1);   // TBF Starting TIME present
+		bitvec_write_field(dest, &wp,0x0,1);   // TBF Starting TIME present
 	}
-	bitvec_write_field(dest, wp,0x0,1);   // P0 not present
-	//		bitvec_write_field(dest, wp,0x1,1);   // P0 not present
-	//		bitvec_write_field(dest, wp,0xb,4);
+	bitvec_write_field(dest, &wp,0x0,1);   // P0 not present
+	//		bitvec_write_field(dest, &wp,0x1,1);   // P0 not present
+	//		bitvec_write_field(dest, &wp,,0xb,4);
 	if (tbf->is_egprs_enabled()) {
 		/* see GMS 44.018, 10.5.2.16 */
 		unsigned int ws_enc = (tbf->m_window.ws() - 64) / 32;
-		bitvec_write_field_lh(dest, wp, 1, 1);  // "H"
-		bitvec_write_field(dest, wp, ws_enc,5); // EGPRS Window Size
-		bitvec_write_field(dest, wp, 0x0,2);    // LINK_QUALITY_MEASUREMENT_MODE
-		bitvec_write_field(dest, wp, 0,1);      // BEP_PERIOD2 not present
+		bitvec_write_field(dest, &wp, 1, 1);  // "H"
+		bitvec_write_field(dest, &wp, ws_enc, 5); // EGPRS Window Size
+		bitvec_write_field(dest, &wp, 0x0, 2);    // LINK_QUALITY_MEASUREMENT_MODE
+		bitvec_write_field(dest, &wp, 0, 1);      // BEP_PERIOD2 not present
 	}
 
 	return 0;
@@ -133,40 +133,40 @@ static int write_ia_rest_uplink(
 	OSMO_ASSERT(!tbf || !tbf->is_egprs_enabled());
 
 	// GMS 04.08 10.5.2.37b 10.5.2.16
-	bitvec_write_field_lh(dest, wp, 3, 2);    // "HH"
-	bitvec_write_field(dest, wp, 0, 2);    // "0" Packet Uplink Assignment
+	bitvec_write_field(dest, &wp, 3, 2);    // "HH"
+	bitvec_write_field(dest, &wp, 0, 2);    // "0" Packet Uplink Assignment
 	if (tbf == NULL) {
-		bitvec_write_field(dest, wp, 0, 1);    // Block Allocation : Single Block Allocation
+		bitvec_write_field(dest, &wp, 0, 1);    // Block Allocation : Single Block Allocation
 		if (alpha) {
-			bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
-			bitvec_write_field(dest, wp,alpha,4);   // ALPHA = present
+			bitvec_write_field(dest, &wp,0x1,1);   // ALPHA = present
+			bitvec_write_field(dest, &wp,alpha,4);   // ALPHA = present
 		} else
-			bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
-		bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
+			bitvec_write_field(dest, &wp,0x0,1);   // ALPHA = not present
+		bitvec_write_field(dest, &wp,gamma,5);   // GAMMA power control parameter
 		write_tai(dest, wp, ta_idx);
-		bitvec_write_field(dest, wp, 1, 1);    // TBF_STARTING_TIME_FLAG
-		bitvec_write_field(dest, wp,(fn / (26 * 51)) % 32,5); // T1'
-		bitvec_write_field(dest, wp,fn % 51,6);               // T3
-		bitvec_write_field(dest, wp,fn % 26,5);               // T2
+		bitvec_write_field(dest, &wp, 1, 1);    // TBF_STARTING_TIME_FLAG
+		bitvec_write_field(dest, &wp,(fn / (26 * 51)) % 32,5); // T1'
+		bitvec_write_field(dest, &wp,fn % 51,6);               // T3
+		bitvec_write_field(dest, &wp,fn % 26,5);               // T2
 	} else {
-		bitvec_write_field(dest, wp, 1, 1);    // Block Allocation : Not Single Block Allocation
-		bitvec_write_field(dest, wp, tbf->tfi(), 5);  // TFI_ASSIGNMENT Temporary Flow Identity
-		bitvec_write_field(dest, wp, 0, 1);    // POLLING
-		bitvec_write_field(dest, wp, 0, 1);    // ALLOCATION_TYPE: dynamic
-		bitvec_write_field(dest, wp, usf, 3);    // USF
-		bitvec_write_field(dest, wp, 0, 1);    // USF_GRANULARITY
-		bitvec_write_field(dest, wp, 0, 1);   // "0" power control: Not Present
-		bitvec_write_field(dest, wp, tbf->current_cs().to_num()-1, 2);    // CHANNEL_CODING_COMMAND 
-		bitvec_write_field(dest, wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
+		bitvec_write_field(dest, &wp, 1, 1);    // Block Allocation : Not Single Block Allocation
+		bitvec_write_field(dest, &wp, tbf->tfi(), 5);  // TFI_ASSIGNMENT Temporary Flow Identity
+		bitvec_write_field(dest, &wp, 0, 1);    // POLLING
+		bitvec_write_field(dest, &wp, 0, 1);    // ALLOCATION_TYPE: dynamic
+		bitvec_write_field(dest, &wp, usf, 3);    // USF
+		bitvec_write_field(dest, &wp, 0, 1);    // USF_GRANULARITY
+		bitvec_write_field(dest, &wp, 0, 1);   // "0" power control: Not Present
+		bitvec_write_field(dest, &wp, tbf->current_cs().to_num()-1, 2);    // CHANNEL_CODING_COMMAND
+		bitvec_write_field(dest, &wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
 		if (alpha) {
-			bitvec_write_field(dest, wp,0x1,1);   // ALPHA = present
-			bitvec_write_field(dest, wp,alpha,4);   // ALPHA
+			bitvec_write_field(dest, &wp,0x1,1);   // ALPHA = present
+			bitvec_write_field(dest, &wp,alpha,4);   // ALPHA
 		} else
-			bitvec_write_field(dest, wp,0x0,1);   // ALPHA = not present
-		bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
+			bitvec_write_field(dest, &wp,0x0,1);   // ALPHA = not present
+		bitvec_write_field(dest, &wp,gamma,5);   // GAMMA power control parameter
 		/* note: there is no choise for TAI and no starting time */
-		bitvec_write_field(dest, wp, 0, 1);   // switch TIMING_ADVANCE_INDEX = off
-		bitvec_write_field(dest, wp, 0, 1);    // TBF_STARTING_TIME_FLAG
+		bitvec_write_field(dest, &wp, 0, 1);   // switch TIMING_ADVANCE_INDEX = off
+		bitvec_write_field(dest, &wp, 0, 1);    // TBF_STARTING_TIME_FLAG
 	}
 	return 0;
 }
@@ -183,60 +183,60 @@ static int write_ia_rest_egprs_uplink(
 
 	extended_ra = (ra & 0x1F);
 
-	bitvec_write_field(dest, wp, 1, 2);    /* LH */
-	bitvec_write_field(dest, wp, 0, 2);    /* 0 EGPRS Uplink Assignment */
-	bitvec_write_field(dest, wp, extended_ra, 5);    /* Extended RA */
-	bitvec_write_field(dest, wp, 0, 1);    /* Access technology Request */
+	bitvec_write_field(dest, &wp, 1, 2);    /* LH */
+	bitvec_write_field(dest, &wp, 0, 2);    /* 0 EGPRS Uplink Assignment */
+	bitvec_write_field(dest, &wp, extended_ra, 5);    /* Extended RA */
+	bitvec_write_field(dest, &wp, 0, 1);    /* Access technology Request */
 
 	if (tbf == NULL) {
 
-		bitvec_write_field(dest, wp, 0, 1); /* multiblock allocation */
+		bitvec_write_field(dest, &wp, 0, 1); /* multiblock allocation */
 
 		if (alpha) {
-			bitvec_write_field(dest, wp, 0x1, 1); /* ALPHA =yes */
-			bitvec_write_field(dest, wp, alpha, 4); /* ALPHA */
+			bitvec_write_field(dest, &wp, 0x1, 1); /* ALPHA =yes */
+			bitvec_write_field(dest, &wp, alpha, 4); /* ALPHA */
 		} else {
-			bitvec_write_field(dest, wp, 0x0, 1); /* ALPHA = no */
+			bitvec_write_field(dest, &wp, 0x0, 1); /* ALPHA = no */
 		}
 
-		bitvec_write_field(dest, wp, gamma, 5); /* GAMMA power contrl */
-		bitvec_write_field(dest, wp, (fn / (26 * 51)) % 32, 5);/* T1' */
-		bitvec_write_field(dest, wp, fn % 51, 6);              /* T3 */
-		bitvec_write_field(dest, wp, fn % 26, 5);              /* T2 */
-		bitvec_write_field(dest, wp, 0, 2); /* Radio block allocation */
+		bitvec_write_field(dest, &wp, gamma, 5); /* GAMMA power contrl */
+		bitvec_write_field(dest, &wp, (fn / (26 * 51)) % 32, 5);/* T1' */
+		bitvec_write_field(dest, &wp, fn % 51, 6);              /* T3 */
+		bitvec_write_field(dest, &wp, fn % 26, 5);              /* T2 */
+		bitvec_write_field(dest, &wp, 0, 2); /* Radio block allocation */
 
-		bitvec_write_field(dest, wp, 0, 1);
+		bitvec_write_field(dest, &wp, 0, 1);
 
 	} else {
 
 		ws_enc = (tbf->m_window.ws() - 64) / 32;
 
-		bitvec_write_field(dest, wp, 1, 1);     /* single block alloc */
-		bitvec_write_field(dest, wp, tbf->tfi(), 5);/* TFI assignment */
-		bitvec_write_field(dest, wp, 0, 1);     /* polling bit */
-		bitvec_write_field(dest, wp, 0, 1);     /* constant */
-		bitvec_write_field(dest, wp, usf, 3);   /* USF bit */
-		bitvec_write_field(dest, wp, 0, 1);     /* USF granularity */
-		bitvec_write_field(dest, wp, 0, 1);     /* P0 */
+		bitvec_write_field(dest, &wp, 1, 1);     /* single block alloc */
+		bitvec_write_field(dest, &wp, tbf->tfi(), 5);/* TFI assignment */
+		bitvec_write_field(dest, &wp, 0, 1);     /* polling bit */
+		bitvec_write_field(dest, &wp, 0, 1);     /* constant */
+		bitvec_write_field(dest, &wp, usf, 3);   /* USF bit */
+		bitvec_write_field(dest, &wp, 0, 1);     /* USF granularity */
+		bitvec_write_field(dest, &wp, 0, 1);     /* P0 */
 		/* MCS */
-		bitvec_write_field(dest, wp, tbf->current_cs().to_num()-1, 4);
+		bitvec_write_field(dest, &wp, tbf->current_cs().to_num()-1, 4);
 		/* tlli channel block */
-		bitvec_write_field(dest, wp, tbf->tlli(), 1);
-		bitvec_write_field(dest, wp, 0, 1);   /* BEP period present */
-		bitvec_write_field(dest, wp, 0, 1);   /* resegmentation */
-		bitvec_write_field(dest, wp, ws_enc, 5);/* egprs window_size */
+		bitvec_write_field(dest, &wp, tbf->tlli(), 1);
+		bitvec_write_field(dest, &wp, 0, 1);   /* BEP period present */
+		bitvec_write_field(dest, &wp, 0, 1);   /* resegmentation */
+		bitvec_write_field(dest, &wp, ws_enc, 5);/* egprs window_size */
 
 		if (alpha) {
-			bitvec_write_field(dest, wp, 0x1, 1);   /* ALPHA =yes */
-			bitvec_write_field(dest, wp, alpha, 4); /* ALPHA */
+			bitvec_write_field(dest, &wp, 0x1, 1);   /* ALPHA =yes */
+			bitvec_write_field(dest, &wp, alpha, 4); /* ALPHA */
 		} else {
-			bitvec_write_field(dest, wp, 0x0, 1);   /* ALPHA = no */
+			bitvec_write_field(dest, &wp, 0x0, 1);   /* ALPHA = no */
 		}
 
-		bitvec_write_field(dest, wp, gamma, 5); /* GAMMA power contrl */
-		bitvec_write_field(dest, wp, 0, 1); /* TIMING_ADVANCE_INDEX */
-		bitvec_write_field(dest, wp, 0, 1); /* TBF_STARTING_TIME_FLAG */
-		bitvec_write_field(dest, wp, 0, 1); /* NULL */
+		bitvec_write_field(dest, &wp, gamma, 5); /* GAMMA power contrl */
+		bitvec_write_field(dest, &wp, 0, 1); /* TIMING_ADVANCE_INDEX */
+		bitvec_write_field(dest, &wp, 0, 1); /* TBF_STARTING_TIME_FLAG */
+		bitvec_write_field(dest, &wp, 0, 1); /* NULL */
 	}
 
 	return 0;
@@ -255,17 +255,17 @@ int Encoding::write_immediate_assignment_reject(
 	int plen;
 	int i;
 
-	bitvec_write_field(dest, wp, 0x0, 4);  // Skip Indicator
-	bitvec_write_field(dest, wp, 0x6, 4);  // Protocol Discriminator
-	bitvec_write_field(dest, wp, 0x3A, 8); // Immediate Assign Message Type
+	bitvec_write_field(dest, &wp, 0x0, 4);  // Skip Indicator
+	bitvec_write_field(dest, &wp, 0x6, 4);  // Protocol Discriminator
+	bitvec_write_field(dest, &wp, 0x3A, 8); // Immediate Assign Message Type
 
 	// feature indicator
-	bitvec_write_field(dest, wp, 0x0, 1);      // spare
-	bitvec_write_field(dest, wp, 0x0, 1);      // spare
-	bitvec_write_field(dest, wp, 0x0, 1);      // no cs
-	bitvec_write_field(dest, wp, 0x1, 1);      // implicit detach for PS
+	bitvec_write_field(dest, &wp, 0x0, 1);      // spare
+	bitvec_write_field(dest, &wp, 0x0, 1);      // spare
+	bitvec_write_field(dest, &wp, 0x0, 1);      // no cs
+	bitvec_write_field(dest, &wp, 0x1, 1);      // implicit detach for PS
 
-	bitvec_write_field(dest, wp, 0x0, 4); // Page Mode
+	bitvec_write_field(dest, &wp, 0x0, 4); // Page Mode
 	/*
 	 * 9.1.20.2 of 44.018 version 11.7.0 Release 11
 	 * Filling of the message
@@ -279,18 +279,18 @@ int Encoding::write_immediate_assignment_reject(
 		if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) ||
 			(burst_type == GSM_L1_BURST_TYPE_ACCESS_2))) {
 			//9.1.20.2a of 44.018 version 11.7.0 Release 11
-			bitvec_write_field(dest, wp, 0x7f, 8);  /* RACH value */
+			bitvec_write_field(dest, &wp, 0x7f, 8);  /* RACH value */
 		} else {
-			bitvec_write_field(dest, wp, ra, 8);	/* RACH value */
+			bitvec_write_field(dest, &wp, ra, 8);	/* RACH value */
 		}
 
-		bitvec_write_field(dest, wp,
+		bitvec_write_field(dest, &wp,
 					(ref_fn / (26 * 51)) % 32, 5); // T1'
-		bitvec_write_field(dest, wp, ref_fn % 51, 6);          // T3
-		bitvec_write_field(dest, wp, ref_fn % 26, 5);          // T2
+		bitvec_write_field(dest, &wp, ref_fn % 51, 6);          // T3
+		bitvec_write_field(dest, &wp, ref_fn % 26, 5);          // T2
 
 		/* TODO: Make it configurable */
-		bitvec_write_field(dest, wp, 20, 8); //Wait Indication 1
+		bitvec_write_field(dest, &wp, 20, 8); //Wait Indication 1
 	}
 
 	plen = wp / 8;
@@ -308,14 +308,14 @@ int Encoding::write_immediate_assignment_reject(
 		uint8_t extended_ra = 0;
 
 		extended_ra = (ra & 0x1F);
-		bitvec_write_field(dest, wp, 0x1, 1);
-		bitvec_write_field(dest, wp, extended_ra, 5); /* Extended RA */
+		bitvec_write_field(dest, &wp, 0x1, 1);
+		bitvec_write_field(dest, &wp, extended_ra, 5); /* Extended RA */
 	} else {
-		bitvec_write_field(dest, wp, 0x0, 1);
+		bitvec_write_field(dest, &wp, 0x0, 1);
 	}
-	bitvec_write_field(dest, wp, 0x0, 1);
-	bitvec_write_field(dest, wp, 0x0, 1);
-	bitvec_write_field(dest, wp, 0x0, 1);
+	bitvec_write_field(dest, &wp, 0x0, 1);
+	bitvec_write_field(dest, &wp, 0x0, 1);
+	bitvec_write_field(dest, &wp, 0x0, 1);
 
 	return plen;
 }
@@ -342,44 +342,44 @@ int Encoding::write_immediate_assignment(
 	int plen;
 	int rc;
 
-	bitvec_write_field(dest, wp,0x0,4);  // Skip Indicator
-	bitvec_write_field(dest, wp,0x6,4);  // Protocol Discriminator
-	bitvec_write_field(dest, wp,0x3F,8); // Immediate Assignment Message Type
+	bitvec_write_field(dest, &wp,0x0,4);  // Skip Indicator
+	bitvec_write_field(dest, &wp,0x6,4);  // Protocol Discriminator
+	bitvec_write_field(dest, &wp,0x3F,8); // Immediate Assignment Message Type
 
 	// 10.5.2.25b Dedicated mode or TBF
-	bitvec_write_field(dest, wp,0x0,1);      // spare
-	bitvec_write_field(dest, wp,0x0,1);      // TMA : Two-message assignment: No meaning
-	bitvec_write_field(dest, wp,downlink,1); // Downlink : Downlink assignment to mobile in packet idle mode
-	bitvec_write_field(dest, wp,0x1,1);      // T/D : TBF or dedicated mode: this message assigns a Temporary Block Flow (TBF).
+	bitvec_write_field(dest, &wp,0x0,1);      // spare
+	bitvec_write_field(dest, &wp,0x0,1);      // TMA : Two-message assignment: No meaning
+	bitvec_write_field(dest, &wp,downlink,1); // Downlink : Downlink assignment to mobile in packet idle mode
+	bitvec_write_field(dest, &wp,0x1,1);      // T/D : TBF or dedicated mode: this message assigns a Temporary Block Flow (TBF).
 
-	bitvec_write_field(dest, wp,0x0,4); // Page Mode
+	bitvec_write_field(dest, &wp,0x0,4); // Page Mode
 
 	// GSM 04.08 10.5.2.25a Packet Channel Description
-	bitvec_write_field(dest, wp,0x1,5);                               // Channel type
-	bitvec_write_field(dest, wp,ts,3);     // TN
-	bitvec_write_field(dest, wp,tsc,3);    // TSC
-	bitvec_write_field(dest, wp,0x0,3);                               // non-hopping RF channel configuraion
-	bitvec_write_field(dest, wp,arfcn,10); // ARFCN
+	bitvec_write_field(dest, &wp,0x1,5);                               // Channel type
+	bitvec_write_field(dest, &wp,ts,3);     // TN
+	bitvec_write_field(dest, &wp,tsc,3);    // TSC
+	bitvec_write_field(dest, &wp,0x0,3);                               // non-hopping RF channel configuraion
+	bitvec_write_field(dest, &wp,arfcn,10); // ARFCN
 
 	//10.5.2.30 Request Reference
 	if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) ||
 		(burst_type == GSM_L1_BURST_TYPE_ACCESS_2))) {
-		bitvec_write_field(dest, wp, 0x7f, 8);  /* RACH value */
+		bitvec_write_field(dest, &wp, 0x7f, 8);  /* RACH value */
 	} else {
-		bitvec_write_field(dest, wp, ra, 8);	/* RACH value */
+		bitvec_write_field(dest, &wp, ra, 8);	/* RACH value */
 	}
 
-	bitvec_write_field(dest, wp,(ref_fn / (26 * 51)) % 32,5); // T1'
-	bitvec_write_field(dest, wp,ref_fn % 51,6);               // T3
-	bitvec_write_field(dest, wp,ref_fn % 26,5);               // T2
+	bitvec_write_field(dest, &wp,(ref_fn / (26 * 51)) % 32,5); // T1'
+	bitvec_write_field(dest, &wp,ref_fn % 51,6);               // T3
+	bitvec_write_field(dest, &wp,ref_fn % 26,5);               // T2
 
 	// 10.5.2.40 Timing Advance
-	bitvec_write_field(dest, wp,0x0,2); // spare
-	bitvec_write_field(dest, wp,ta,6);  // Timing Advance value
+	bitvec_write_field(dest, &wp,0x0,2); // spare
+	bitvec_write_field(dest, &wp,ta,6);  // Timing Advance value
 
 	// No mobile allocation in non-hopping systems.
 	// A zero-length LV.  Just write L=0.
-	bitvec_write_field(dest, wp,0,8);
+	bitvec_write_field(dest, &wp,0,8);
 
 	if ((wp % 8))
 		log_alert_exit("Length of IMM.ASS without rest octets is not "
@@ -426,83 +426,83 @@ void Encoding::write_packet_uplink_assignment(
 	/* timeslot assigned for the Continuous Timing Advance procedure */
 	uint8_t ta_ts = 0; /* FIXME: supply it as parameter from caller */
 
-	bitvec_write_field(dest, wp,0x1,2);  // Payload Type
-	bitvec_write_field(dest, wp,0x0,2);  // Uplink block with TDMA framenumber (N+13)
-	bitvec_write_field(dest, wp,poll,1);  // Suppl/Polling Bit
-	bitvec_write_field(dest, wp,0x0,3);  // Uplink state flag
-	bitvec_write_field(dest, wp,0xa,6);  // MESSAGE TYPE
+	bitvec_write_field(dest, &wp,0x1,2);  // Payload Type
+	bitvec_write_field(dest, &wp,0x0,2);  // Uplink block with TDMA framenumber (N+13)
+	bitvec_write_field(dest, &wp,poll,1);  // Suppl/Polling Bit
+	bitvec_write_field(dest, &wp,0x0,3);  // Uplink state flag
+	bitvec_write_field(dest, &wp,0xa,6);  // MESSAGE TYPE
 
-	bitvec_write_field(dest, wp,0x0,2);  // Page Mode
+	bitvec_write_field(dest, &wp,0x0,2);  // Page Mode
 
-	bitvec_write_field(dest, wp,0x0,1); // switch PERSIST_LEVEL: off
+	bitvec_write_field(dest, &wp,0x0,1); // switch PERSIST_LEVEL: off
 	if (use_tlli) {
-		bitvec_write_field(dest, wp,0x2,2); // switch TLLI   : on
-		bitvec_write_field(dest, wp,tlli,32); // TLLI
+		bitvec_write_field(dest, &wp,0x2,2); // switch TLLI   : on
+		bitvec_write_field(dest, &wp,tlli,32); // TLLI
 	} else {
-		bitvec_write_field(dest, wp,0x0,1); // switch TFI : on
-		bitvec_write_field(dest, wp,old_downlink,1); // 0=UPLINK TFI, 1=DL TFI
-		bitvec_write_field(dest, wp,old_tfi,5); // TFI
+		bitvec_write_field(dest, &wp,0x0,1); // switch TFI : on
+		bitvec_write_field(dest, &wp,old_downlink,1); // 0=UPLINK TFI, 1=DL TFI
+		bitvec_write_field(dest, &wp,old_tfi,5); // TFI
 	}
 
 	if (!use_egprs) {
-		bitvec_write_field(dest, wp,0x0,1); // Message escape
-		bitvec_write_field(dest, wp,tbf->current_cs().to_num()-1, 2); // CHANNEL_CODING_COMMAND 
-		bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
+		bitvec_write_field(dest, &wp,0x0,1); // Message escape
+		bitvec_write_field(dest, &wp,tbf->current_cs().to_num()-1, 2); // CHANNEL_CODING_COMMAND
+		bitvec_write_field(dest, &wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING
 		write_ta_ie(dest, wp,tbf->ta(), ta_idx, ta_ts);
 	} else { /* EPGRS */
 		unsigned int ws_enc = (tbf->m_window.ws() - 64) / 32;
-		bitvec_write_field(dest, wp,0x1,1); // Message escape
-		bitvec_write_field(dest, wp,0x0,2); // EGPRS message contents
-		bitvec_write_field(dest, wp,0x0,1); // No CONTENTION_RESOLUTION_TLLI
-		bitvec_write_field(dest, wp,0x0,1); // No COMPACT reduced MA
-		bitvec_write_field(dest, wp,tbf->current_cs().to_num()-1, 4); // EGPRS Modulation and Coding IE
+		bitvec_write_field(dest, &wp,0x1,1); // Message escape
+		bitvec_write_field(dest, &wp,0x0,2); // EGPRS message contents
+		bitvec_write_field(dest, &wp,0x0,1); // No CONTENTION_RESOLUTION_TLLI
+		bitvec_write_field(dest, &wp,0x0,1); // No COMPACT reduced MA
+		bitvec_write_field(dest, &wp,tbf->current_cs().to_num()-1, 4); // EGPRS Modulation and Coding IE
 		/* 0: no RESEGMENT, 1: Segmentation*/
-		bitvec_write_field(dest, wp, 0x1, 1);
-		bitvec_write_field(dest, wp,ws_enc,5); // EGPRS Window Size
-		bitvec_write_field(dest, wp,0x0,1); // No Access Technologies Request
-		bitvec_write_field(dest, wp,0x0,1); // No ARAC RETRANSMISSION REQUEST
-		bitvec_write_field(dest, wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING 
-		bitvec_write_field(dest, wp,0x0,1); // No BEP_PERIOD2
+		bitvec_write_field(dest, &wp, 0x1, 1);
+		bitvec_write_field(dest, &wp,ws_enc,5); // EGPRS Window Size
+		bitvec_write_field(dest, &wp,0x0,1); // No Access Technologies Request
+		bitvec_write_field(dest, &wp,0x0,1); // No ARAC RETRANSMISSION REQUEST
+		bitvec_write_field(dest, &wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING
+		bitvec_write_field(dest, &wp,0x0,1); // No BEP_PERIOD2
 		write_ta_ie(dest, wp,tbf->ta(), ta_idx, ta_ts);
-		bitvec_write_field(dest, wp,0x0,1); // No Packet Extended Timing Advance
+		bitvec_write_field(dest, &wp,0x0,1); // No Packet Extended Timing Advance
 	}
 
 #if 1
-	bitvec_write_field(dest, wp,0x1,1); // Frequency Parameters information elements = present
-	bitvec_write_field(dest, wp,tbf->tsc(),3); // Training Sequence Code (TSC)
-	bitvec_write_field(dest, wp,0x0,2); // ARFCN = present
-	bitvec_write_field(dest, wp,tbf->trx->arfcn,10); // ARFCN
+	bitvec_write_field(dest, &wp,0x1,1); // Frequency Parameters information elements = present
+	bitvec_write_field(dest, &wp,tbf->tsc(),3); // Training Sequence Code (TSC)
+	bitvec_write_field(dest, &wp,0x0,2); // ARFCN = present
+	bitvec_write_field(dest, &wp,tbf->trx->arfcn,10); // ARFCN
 #else
-	bitvec_write_field(dest, wp,0x0,1); // Frequency Parameters = off
+	bitvec_write_field(dest, &wp,0x0,1); // Frequency Parameters = off
 #endif
 
-	bitvec_write_field(dest, wp,0x1,2); // Dynamic Allocation
+	bitvec_write_field(dest, &wp,0x1,2); // Dynamic Allocation
 
-	bitvec_write_field(dest, wp,0x0,1); // Extended Dynamic Allocation = off
-	bitvec_write_field(dest, wp,0x0,1); // P0 = off
+	bitvec_write_field(dest, &wp,0x0,1); // Extended Dynamic Allocation = off
+	bitvec_write_field(dest, &wp,0x0,1); // P0 = off
 
-	bitvec_write_field(dest, wp,0x0,1); // USF_GRANULARITY
-	bitvec_write_field(dest, wp,0x1,1); // switch TFI   : on
-	bitvec_write_field(dest, wp,tbf->tfi(),5);// TFI
+	bitvec_write_field(dest, &wp,0x0,1); // USF_GRANULARITY
+	bitvec_write_field(dest, &wp,0x1,1); // switch TFI   : on
+	bitvec_write_field(dest, &wp,tbf->tfi(),5);// TFI
 
-	bitvec_write_field(dest, wp,0x0,1); //
-	bitvec_write_field(dest, wp,0x0,1); // TBF Starting Time = off
+	bitvec_write_field(dest, &wp,0x0,1); //
+	bitvec_write_field(dest, &wp,0x0,1); // TBF Starting Time = off
 	if (alpha || gamma) {
-		bitvec_write_field(dest, wp,0x1,1); // Timeslot Allocation with Power Control
-		bitvec_write_field(dest, wp,alpha,4);   // ALPHA
+		bitvec_write_field(dest, &wp,0x1,1); // Timeslot Allocation with Power Control
+		bitvec_write_field(dest, &wp,alpha,4);   // ALPHA
 	} else
-		bitvec_write_field(dest, wp,0x0,1); // Timeslot Allocation
+		bitvec_write_field(dest, &wp,0x0,1); // Timeslot Allocation
 
 	for (ts = 0; ts < 8; ts++) {
 		if (tbf->pdch[ts]) {
-			bitvec_write_field(dest, wp,0x1,1); // USF_TN(i): on
-			bitvec_write_field(dest, wp,tbf->m_usf[ts],3); // USF_TN(i)
+			bitvec_write_field(dest, &wp,0x1,1); // USF_TN(i): on
+			bitvec_write_field(dest, &wp,tbf->m_usf[ts],3); // USF_TN(i)
 			if (alpha || gamma)
-				bitvec_write_field(dest, wp,gamma,5);   // GAMMA power control parameter
+				bitvec_write_field(dest, &wp,gamma,5);   // GAMMA power control parameter
 		} else
-			bitvec_write_field(dest, wp,0x0,1); // USF_TN(i): off
+			bitvec_write_field(dest, &wp,0x0,1); // USF_TN(i): off
 	}
-	//	bitvec_write_field(dest, wp,0x0,1); // Measurement Mapping struct not present
+	//	bitvec_write_field(dest, &wp,0x0,1); // Measurement Mapping struct not present
 }
 
 
@@ -609,20 +609,20 @@ int Encoding::write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi
 	unsigned wp = 0;
 	int plen;
 
-	bitvec_write_field(dest, wp,0x0,4);  // Skip Indicator
-	bitvec_write_field(dest, wp,0x6,4);  // Protocol Discriminator
-	bitvec_write_field(dest, wp,0x21,8); // Paging Request Message Type
+	bitvec_write_field(dest, &wp,0x0,4);  // Skip Indicator
+	bitvec_write_field(dest, &wp,0x6,4);  // Protocol Discriminator
+	bitvec_write_field(dest, &wp,0x21,8); // Paging Request Message Type
 
-	bitvec_write_field(dest, wp,0x0,4);  // Page Mode
-	bitvec_write_field(dest, wp,0x0,4);  // Channel Needed
+	bitvec_write_field(dest, &wp,0x0,4);  // Page Mode
+	bitvec_write_field(dest, &wp,0x0,4);  // Channel Needed
 
 	// Mobile Identity
-	bitvec_write_field(dest, wp,ptmsi_len+1,8);  // Mobile Identity length
-	bitvec_write_field(dest, wp,0xf,4);          // unused
-	bitvec_write_field(dest, wp,0x4,4);          // PTMSI type
+	bitvec_write_field(dest, &wp,ptmsi_len+1,8);  // Mobile Identity length
+	bitvec_write_field(dest, &wp,0xf,4);          // unused
+	bitvec_write_field(dest, &wp,0x4,4);          // PTMSI type
 	for (int i = 0; i < ptmsi_len; i++)
 	{
-		bitvec_write_field(dest, wp,ptmsi[i],8); // PTMSI
+		bitvec_write_field(dest, &wp,ptmsi[i],8); // PTMSI
 	}
 
 	if ((wp % 8))
@@ -630,12 +630,12 @@ int Encoding::write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi
 			       "multiple of 8 bits, PLEASE FIX!\n");
 
 	plen = wp / 8;
-	bitvec_write_field(dest, wp,0x0,1); // "L" NLN(PCH) = off
-	bitvec_write_field(dest, wp,0x0,1); // "L" Priority1 = off
-	bitvec_write_field(dest, wp,0x1,1); // "L" Priority2 = off
-	bitvec_write_field(dest, wp,0x0,1); // "L" Group Call information = off
-	bitvec_write_field(dest, wp,0x0,1); // "H" Packet Page Indication 1 = packet paging procedure
-	bitvec_write_field(dest, wp,0x1,1); // "H" Packet Page Indication 2 = packet paging procedure
+	bitvec_write_field(dest, &wp,0x0,1); // "L" NLN(PCH) = off
+	bitvec_write_field(dest, &wp,0x0,1); // "L" Priority1 = off
+	bitvec_write_field(dest, &wp,0x1,1); // "L" Priority2 = off
+	bitvec_write_field(dest, &wp,0x0,1); // "L" Group Call information = off
+	bitvec_write_field(dest, &wp,0x0,1); // "H" Packet Page Indication 1 = packet paging procedure
+	bitvec_write_field(dest, &wp,0x1,1); // "H" Packet Page Indication 2 = packet paging procedure
 
 	return plen;
 }
@@ -673,13 +673,13 @@ static void write_packet_ack_nack_desc_gprs(
 	LOGP(DRLCMACUL, LOGL_DEBUG, "- V(N): \"%s\" R=Received "
 		"I=Invalid\n", rbb);
 
-	bitvec_write_field(dest, wp, is_final, 1); // FINAL_ACK_INDICATION
-	bitvec_write_field(dest, wp, window->ssn(), 7); // STARTING_SEQUENCE_NUMBER
+	bitvec_write_field(dest, &wp, is_final, 1); // FINAL_ACK_INDICATION
+	bitvec_write_field(dest, &wp, window->ssn(), 7); // STARTING_SEQUENCE_NUMBER
 
 	for (int i = 0; i < 64; i++) {
 		/* Set bit at the appropriate position (see 3GPP TS 04.60 9.1.8.1) */
 		bool is_ack = (rbb[i] == 'R');
-		bitvec_write_field(dest, wp, is_ack, 1);
+		bitvec_write_field(dest, &wp, is_ack, 1);
 	}
 }
 
@@ -688,20 +688,20 @@ static void write_packet_uplink_ack_gprs(
 	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
 {
 
-	bitvec_write_field(dest, wp, tbf->current_cs().to_num() - 1, 2); // CHANNEL_CODING_COMMAND
+	bitvec_write_field(dest, &wp, tbf->current_cs().to_num() - 1, 2); // CHANNEL_CODING_COMMAND
 	write_packet_ack_nack_desc_gprs(bts, dest, wp, &tbf->m_window, is_final);
 
-	bitvec_write_field(dest, wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
-	bitvec_write_field(dest, wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
+	bitvec_write_field(dest, &wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
+	bitvec_write_field(dest, &wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
 
-	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Packet Timing Advance
-	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Power Control Parameters
-	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Extension Bits
-	bitvec_write_field(dest, wp, 0, 1); // fixed 0
-	bitvec_write_field(dest, wp, 1, 1); // 1: have Additions R99
-	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Packet Extended Timing Advance
-	bitvec_write_field(dest, wp, 1, 1); // TBF_EST (enabled)
-	bitvec_write_field(dest, wp, 0, 1); // 0: don't have REL 5
+	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Packet Timing Advance
+	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Power Control Parameters
+	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Extension Bits
+	bitvec_write_field(dest, &wp, 0, 1); // fixed 0
+	bitvec_write_field(dest, &wp, 1, 1); // 1: have Additions R99
+	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Packet Extended Timing Advance
+	bitvec_write_field(dest, &wp, 1, 1); // TBF_EST (enabled)
+	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have REL 5
 };
 
 static void write_packet_ack_nack_desc_egprs(
@@ -816,37 +816,37 @@ static void write_packet_ack_nack_desc_egprs(
 
 	/* EGPRS Ack/Nack Description IE */
 	if (len_coded == false) {
-		bitvec_write_field(dest, wp, 0, 1); // 0: don't have length
+		bitvec_write_field(dest, &wp, 0, 1); // 0: don't have length
 	} else {
-		bitvec_write_field(dest, wp, 1, 1); // 1: have length
-		bitvec_write_field(dest, wp, len, 8); // length
+		bitvec_write_field(dest, &wp, 1, 1); // 1: have length
+		bitvec_write_field(dest, &wp, len, 8); // length
 	}
 
-	bitvec_write_field(dest, wp, is_final, 1); // FINAL_ACK_INDICATION
-	bitvec_write_field(dest, wp, bow, 1); // BEGINNING_OF_WINDOW
-	bitvec_write_field(dest, wp, eow, 1); // END_OF_WINDOW
-	bitvec_write_field(dest, wp, ssn, 11); // STARTING_SEQUENCE_NUMBER
+	bitvec_write_field(dest, &wp, is_final, 1); // FINAL_ACK_INDICATION
+	bitvec_write_field(dest, &wp, bow, 1); // BEGINNING_OF_WINDOW
+	bitvec_write_field(dest, &wp, eow, 1); // END_OF_WINDOW
+	bitvec_write_field(dest, &wp, ssn, 11); // STARTING_SEQUENCE_NUMBER
 	if (is_compressed) {
-		bitvec_write_field(dest, wp, 1, 1); // CRBB_Exist
-		bitvec_write_field(dest, wp, crbb_len, 7); // CRBB_LENGTH
+		bitvec_write_field(dest, &wp, 1, 1); // CRBB_Exist
+		bitvec_write_field(dest, &wp, crbb_len, 7); // CRBB_LENGTH
 		crbb_start_clr_code = (0x80 & ucmp_vec.data[0])>>7;
-		bitvec_write_field(dest, wp, crbb_start_clr_code, 1); // CRBB_clr_code
+		bitvec_write_field(dest, &wp, crbb_start_clr_code, 1); // CRBB_clr_code
 		LOGP(DRLCMACUL, LOGL_DEBUG,
 			"EGPRS CRBB, crbb_len = %d, crbb_start_clr_code = %d\n",
 			crbb_len, crbb_start_clr_code);
 		while (crbb_len != 0) {
 			if (crbb_len > 8) {
-				bitvec_write_field(dest, wp, crbb_bitmap[iter], 8);
+				bitvec_write_field(dest, &wp, crbb_bitmap[iter], 8);
 				crbb_len = crbb_len - 8;
 				iter++;
 			} else {
-				bitvec_write_field(dest, wp, crbb_bitmap[iter], crbb_len);
+				bitvec_write_field(dest, &wp, crbb_bitmap[iter], crbb_len);
 				crbb_len = 0;
 			}
 		}
 		esn_crbb = window->mod_sns(esn_crbb + uclen_crbb);
 	} else {
-		bitvec_write_field(dest, wp, 0, 1); // CRBB_Exist
+		bitvec_write_field(dest, &wp, 0, 1); // CRBB_Exist
 	}
 	LOGP(DRLCMACUL, LOGL_DEBUG,
 		"EGPRS URBB, urbb len = %d, SSN = %d, ESN_CRBB = %d, "
@@ -859,7 +859,7 @@ static void write_packet_ack_nack_desc_egprs(
 	for (i = urbb_len; i > 0; i--) {
 		/* Set bit at the appropriate position (see 3GPP TS 04.60 12.3.1) */
 		bool is_ack = window->m_v_n.is_received(esn_crbb + i);
-		bitvec_write_field(dest, wp, is_ack, 1);
+		bitvec_write_field(dest, &wp, is_ack, 1);
 	}
 }
 
@@ -867,29 +867,29 @@ static void write_packet_uplink_ack_egprs(
 	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
 	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
 {
-	bitvec_write_field(dest, wp, 0, 2); // fixed 00
+	bitvec_write_field(dest, &wp, 0, 2); // fixed 00
 	/* CHANNEL_CODING_COMMAND */
-	bitvec_write_field(dest, wp,
+	bitvec_write_field(dest, &wp,
 		tbf->current_cs().to_num() - 1, 4);
 	/* 0: no RESEGMENT, 1: Segmentation*/
-	bitvec_write_field(dest, wp, 1, 1);
-	bitvec_write_field(dest, wp, 1, 1); // PRE_EMPTIVE_TRANSMISSION, TODO: This resembles GPRS, change it?
-	bitvec_write_field(dest, wp, 0, 1); // 0: no PRR_RETRANSMISSION_REQUEST, TODO: clarify
-	bitvec_write_field(dest, wp, 0, 1); // 0: no ARAC_RETRANSMISSION_REQUEST, TODO: clarify
-	bitvec_write_field(dest, wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
-	bitvec_write_field(dest, wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
-	bitvec_write_field(dest, wp, 1, 1); // TBF_EST (enabled)
-	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Packet Timing Advance
-	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Packet Extended Timing Advance
-	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Power Control Parameters
-	bitvec_write_field(dest, wp, 0, 1); // 0: don't have Extension Bits
+	bitvec_write_field(dest, &wp, 1, 1);
+	bitvec_write_field(dest, &wp, 1, 1); // PRE_EMPTIVE_TRANSMISSION, TODO: This resembles GPRS, change it?
+	bitvec_write_field(dest, &wp, 0, 1); // 0: no PRR_RETRANSMISSION_REQUEST, TODO: clarify
+	bitvec_write_field(dest, &wp, 0, 1); // 0: no ARAC_RETRANSMISSION_REQUEST, TODO: clarify
+	bitvec_write_field(dest, &wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
+	bitvec_write_field(dest, &wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
+	bitvec_write_field(dest, &wp, 1, 1); // TBF_EST (enabled)
+	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Packet Timing Advance
+	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Packet Extended Timing Advance
+	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Power Control Parameters
+	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Extension Bits
 
 	/* -2 for last bit 0 mandatory and REL5 not supported */
 	unsigned bits_ack_nack = dest->data_len * 8 - wp - 2;
 	write_packet_ack_nack_desc_egprs(bts, dest, wp, &tbf->m_window, is_final, bits_ack_nack);
 
-	bitvec_write_field(dest, wp, 0, 1); // fixed 0
-	bitvec_write_field(dest, wp, 0, 1); // 0: don't have REL 5
+	bitvec_write_field(dest, &wp, 0, 1); // fixed 0
+	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have REL 5
 };
 
 void Encoding::write_packet_uplink_ack(
@@ -902,23 +902,23 @@ void Encoding::write_packet_uplink_ack(
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Encoding Ack/Nack for %s "
 		"(final=%d)\n", tbf_name(tbf), is_final);
 
-	bitvec_write_field(dest, wp, 0x1, 2);  // Payload Type
-	bitvec_write_field(dest, wp, rrbp, 2);  // Uplink block with TDMA framenumber
-	bitvec_write_field(dest, wp, is_final, 1);  // Suppl/Polling Bit
-	bitvec_write_field(dest, wp, 0x0, 3);  // Uplink state flag
-	bitvec_write_field(dest, wp, 0x9, 6);  // MESSAGE TYPE Uplink Ack/Nack
-	bitvec_write_field(dest, wp, 0x0, 2);  // Page Mode
+	bitvec_write_field(dest, &wp, 0x1, 2);  // Payload Type
+	bitvec_write_field(dest, &wp, rrbp, 2);  // Uplink block with TDMA framenumber
+	bitvec_write_field(dest, &wp, is_final, 1);  // Suppl/Polling Bit
+	bitvec_write_field(dest, &wp, 0x0, 3);  // Uplink state flag
+	bitvec_write_field(dest, &wp, 0x9, 6);  // MESSAGE TYPE Uplink Ack/Nack
+	bitvec_write_field(dest, &wp, 0x0, 2);  // Page Mode
 
-	bitvec_write_field(dest, wp, 0x0, 2);  // fixed 00
-	bitvec_write_field(dest, wp, tbf->tfi(), 5);  // Uplink TFI
+	bitvec_write_field(dest, &wp, 0x0, 2);  // fixed 00
+	bitvec_write_field(dest, &wp, tbf->tfi(), 5);  // Uplink TFI
 
 	if (tbf->is_egprs_enabled()) {
 		/* PU_AckNack_EGPRS = on */
-		bitvec_write_field(dest, wp, 1, 1);  // 1: EGPRS
+		bitvec_write_field(dest, &wp, 1, 1);  // 1: EGPRS
 		write_packet_uplink_ack_egprs(bts, dest, wp, tbf, is_final);
 	} else {
 		/* PU_AckNack_GPRS = on */
-		bitvec_write_field(dest, wp, 0, 1);  // 0: GPRS
+		bitvec_write_field(dest, &wp, 0, 1);  // 0: GPRS
 		write_packet_uplink_ack_gprs(bts, dest, wp, tbf, is_final);
 	}
 
@@ -932,15 +932,15 @@ unsigned Encoding::write_packet_paging_request(bitvec * dest)
 {
 	unsigned wp = 0;
 
-	bitvec_write_field(dest, wp,0x1,2);  // Payload Type
-	bitvec_write_field(dest, wp,0x0,3);  // No polling
-	bitvec_write_field(dest, wp,0x0,3);  // Uplink state flag
-	bitvec_write_field(dest, wp,0x22,6);  // MESSAGE TYPE
+	bitvec_write_field(dest, &wp,0x1,2);  // Payload Type
+	bitvec_write_field(dest, &wp,0x0,3);  // No polling
+	bitvec_write_field(dest, &wp,0x0,3);  // Uplink state flag
+	bitvec_write_field(dest, &wp,0x22,6);  // MESSAGE TYPE
 
-	bitvec_write_field(dest, wp,0x0,2);  // Page Mode
+	bitvec_write_field(dest, &wp,0x0,2);  // Page Mode
 
-	bitvec_write_field(dest, wp,0x0,1);  // No PERSISTENCE_LEVEL
-	bitvec_write_field(dest, wp,0x0,1);  // No NLN
+	bitvec_write_field(dest, &wp,0x0,1);  // No PERSISTENCE_LEVEL
+	bitvec_write_field(dest, &wp,0x0,1);  // No NLN
 
 	return wp;
 }
@@ -948,24 +948,24 @@ unsigned Encoding::write_packet_paging_request(bitvec * dest)
 unsigned Encoding::write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
 	uint8_t *identity, uint8_t chan_needed)
 {
-	bitvec_write_field(dest, wp,0x1,1);  // Repeated Page info exists
+	bitvec_write_field(dest, &wp,0x1,1);  // Repeated Page info exists
 
-	bitvec_write_field(dest, wp,0x1,1);  // RR connection paging
+	bitvec_write_field(dest, &wp,0x1,1);  // RR connection paging
 
 	if ((identity[0] & 0x07) == 4) {
-		bitvec_write_field(dest, wp,0x0,1);  // TMSI
+		bitvec_write_field(dest, &wp,0x0,1);  // TMSI
 		identity++;
 		len--;
 	} else {
-		bitvec_write_field(dest, wp,0x0,1);  // MI
-		bitvec_write_field(dest, wp,len,4);  // MI len
+		bitvec_write_field(dest, &wp,0x0,1);  // MI
+		bitvec_write_field(dest, &wp,len,4);  // MI len
 	}
 	while (len) {
-		bitvec_write_field(dest, wp,*identity++,8);  // MI data
+		bitvec_write_field(dest, &wp,*identity++,8);  // MI data
 		len--;
 	}
-	bitvec_write_field(dest, wp,chan_needed,2);  // CHANNEL_NEEDED
-	bitvec_write_field(dest, wp,0x0,1);  // No eMLPP_PRIORITY
+	bitvec_write_field(dest, &wp,chan_needed,2);  // CHANNEL_NEEDED
+	bitvec_write_field(dest, &wp,0x0,1);  // No eMLPP_PRIORITY
 
 	return wp;
 }
@@ -1496,17 +1496,17 @@ void Encoding::write_packet_access_reject(
 {
 	unsigned wp = 0;
 
-	bitvec_write_field(dest, wp, 0x1, 2);  // Payload Type
-	bitvec_write_field(dest, wp, 0x0, 2);  // Uplink block with TDMA FN
-	bitvec_write_field(dest, wp, 0, 1);  // No Polling Bit
-	bitvec_write_field(dest, wp, 0x0, 3);  // Uplink state flag
-	bitvec_write_field(dest, wp,
+	bitvec_write_field(dest, &wp, 0x1, 2);  // Payload Type
+	bitvec_write_field(dest, &wp, 0x0, 2);  // Uplink block with TDMA FN
+	bitvec_write_field(dest, &wp, 0, 1);  // No Polling Bit
+	bitvec_write_field(dest, &wp, 0x0, 3);  // Uplink state flag
+	bitvec_write_field(dest, &wp,
 				MT_PACKET_ACCESS_REJECT, 6);  // MESSAGE TYPE
-	bitvec_write_field(dest, wp, 0, 2); // fixed 00
-	bitvec_write_field(dest, wp, 0x0, 1);  //  TLLI / G-RNTI : bit (32)
-	bitvec_write_field(dest, wp, tlli, 32); // CONTENTION_RESOLUTION_TLLI
-	bitvec_write_field(dest, wp, 1, 1);  //  WAIT_INDICATION size in seconds
+	bitvec_write_field(dest, &wp, 0, 2); // fixed 00
+	bitvec_write_field(dest, &wp, 0x0, 1);  //  TLLI / G-RNTI : bit (32)
+	bitvec_write_field(dest, &wp, tlli, 32); // CONTENTION_RESOLUTION_TLLI
+	bitvec_write_field(dest, &wp, 1, 1);  //  WAIT_INDICATION size in seconds
 	/* TODO: make it configurable */
-	bitvec_write_field(dest, wp, 5, 8);  //  WAIT_INDICATION value
-	bitvec_write_field(dest, wp, 0, 1);  //  WAIT_INDICATION size in seconds
+	bitvec_write_field(dest, &wp, 5, 8);  //  WAIT_INDICATION value
+	bitvec_write_field(dest, &wp, 0, 1);  //  WAIT_INDICATION size in seconds
 }

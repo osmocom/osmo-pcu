@@ -90,7 +90,7 @@ static int parse_ra_cap(struct tlv_parsed *tp, MS_Radio_Access_capability_t *rac
 
 	LOGP(DBSSGP, LOGL_DEBUG, "Got BSSGP RA Capability of size %d\n", cap_len);
 
-	block = bitvec_alloc(cap_len);
+	block = bitvec_alloc(cap_len, tall_pcu_ctx);
 	bitvec_unpack(block, cap);
 
 	/* TS 24.008, 10.5.5.12a */

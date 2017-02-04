@@ -121,7 +121,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 	msg = msgb_alloc(23, "rlcmac_ul_ack");
 	if (!msg)
 		return NULL;
-	bitvec *ack_vec = bitvec_alloc(23);
+	bitvec *ack_vec = bitvec_alloc(23, tall_pcu_ctx);
 	if (!ack_vec) {
 		msgb_free(msg);
 		return NULL;

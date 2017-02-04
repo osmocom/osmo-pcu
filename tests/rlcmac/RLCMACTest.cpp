@@ -83,9 +83,9 @@ void printSizeofRLCMAC()
 	cout << "sizeof PSI5_t                " << sizeof(PSI5_t) << endl;
 }
 
-void testRlcMacDownlink()
+void testRlcMacDownlink(void *test_ctx)
 {
-	struct bitvec *resultVector = bitvec_alloc(23);
+	struct bitvec *resultVector = bitvec_alloc(23, test_ctx);
 	bitvec_unhex(resultVector, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 
 	std::string testData[] = {
@@ -106,7 +106,7 @@ void testRlcMacDownlink()
 	cout << " DOWNLINK " << endl;
 	for (int i = 0; i < testDataSize; i++)
 	{
-		bitvec *vector = bitvec_alloc(23);
+		bitvec *vector = bitvec_alloc(23, test_ctx);
 		bitvec_unhex(vector, testData[i].c_str());
 		cout << "vector1 = ";
 		for (int i = 0; i < 23; i++)
@@ -150,9 +150,9 @@ void testRlcMacDownlink()
 }
 
 
-void testRlcMacUplink()
+void testRlcMacUplink(void *test_ctx)
 {
-	struct bitvec *resultVector = bitvec_alloc(23);
+	struct bitvec *resultVector = bitvec_alloc(23, test_ctx);
 	bitvec_unhex(resultVector, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 
 	std::string testData[] = {
@@ -169,7 +169,7 @@ void testRlcMacUplink()
 	cout << " UPLINK " << endl;
 	for (int i = 0; i < testDataSize; i++)
 	{
-		bitvec *vector = bitvec_alloc(23);
+		bitvec *vector = bitvec_alloc(23, test_ctx);
 		bitvec_unhex(vector, testData[i].c_str());
 		cout << "vector1 = ";
 		for (int i = 0; i < 23; i++)
@@ -212,9 +212,9 @@ void testRlcMacUplink()
 	bitvec_free(resultVector);
 }
 
-void testCsnLeftAlignedVarBmpBounds()
+void testCsnLeftAlignedVarBmpBounds(void *test_ctx)
 {
-	bitvec *vector = bitvec_alloc(23);
+	bitvec *vector = bitvec_alloc(23, test_ctx);
 
 	bitvec_unhex(vector, "40200bffd161003e0e519ffffffb800000000000000000");
 	RlcMacUplink_t data;
@@ -229,10 +229,12 @@ void testCsnLeftAlignedVarBmpBounds()
 
 int main(int argc, char *argv[])
 {
+	void *ctx = talloc_named_const(NULL, 1, "RLCMACTest");
 	osmo_init_logging(&gprs_log_info);
 
 	//printSizeofRLCMAC();
-	testRlcMacDownlink();
-	testRlcMacUplink();
-	testCsnLeftAlignedVarBmpBounds();
+	testRlcMacDownlink(ctx);
+	testRlcMacUplink(ctx);
+	testCsnLeftAlignedVarBmpBounds(ctx);
+	talloc_free(ctx);
 }

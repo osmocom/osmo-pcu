@@ -1112,7 +1112,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	msg = msgb_alloc(23, "rlcmac_dl_ass");
 	if (!msg)
 		return NULL;
-	bitvec *ass_vec = bitvec_alloc(23);
+	bitvec *ass_vec = bitvec_alloc(23, tall_pcu_ctx);
 	if (!ass_vec) {
 		msgb_free(msg);
 		return NULL;
@@ -1159,7 +1159,7 @@ struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
 
 	msg = msgb_alloc(23, "rlcmac_ul_ass_rej");
 
-	bitvec *packet_access_rej = bitvec_alloc(23);
+	bitvec *packet_access_rej = bitvec_alloc(23, tall_pcu_ctx);
 
 	bitvec_unhex(packet_access_rej,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
@@ -1216,7 +1216,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 	if (!msg)
 		return NULL;
 	LOGP(DRLCMAC, LOGL_INFO, "%ss start Packet Uplink Assignment (PACCH)\n", tbf_name(new_tbf));
-	bitvec *ass_vec = bitvec_alloc(23);
+	bitvec *ass_vec = bitvec_alloc(23, tall_pcu_ctx);
 	if (!ass_vec) {
 		msgb_free(msg);
 		return NULL;

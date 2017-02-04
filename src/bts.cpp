@@ -666,7 +666,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 			tsc = tbf->tsc();
 		}
 	}
-	bitvec *immediate_assignment = bitvec_alloc(22) /* without plen */;
+	bitvec *immediate_assignment = bitvec_alloc(22, tall_pcu_ctx) /* without plen */;
 	bitvec_unhex(immediate_assignment,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 
@@ -806,7 +806,7 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 	unsigned int ts = tbf->first_ts;
 
 	LOGP(DRLCMAC, LOGL_INFO, "TX: START %s Immediate Assignment Downlink (PCH)\n", tbf_name(tbf));
-	bitvec *immediate_assignment = bitvec_alloc(22); /* without plen */
+	bitvec *immediate_assignment = bitvec_alloc(22, tall_pcu_ctx); /* without plen */
 	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	/* use request reference that has maximum distance to current time,
 	 * so the assignment will not conflict with possible RACH requests. */
@@ -904,7 +904,7 @@ struct msgb *gprs_rlcmac_pdch::packet_paging_request()
 		talloc_free(pag);
 		return NULL;
 	}
-	bitvec *pag_vec = bitvec_alloc(23);
+	bitvec *pag_vec = bitvec_alloc(23, tall_pcu_ctx);
 	if (!pag_vec) {
 		msgb_free(msg);
 		talloc_free(pag);
@@ -1625,7 +1625,7 @@ int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint32_t fn,
 		rc = rcv_data_block(data, fn, meas, cs);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK:
-		block = bitvec_alloc(len);
+		block = bitvec_alloc(len, tall_pcu_ctx);
 		if (!block)
 			return -ENOMEM;
 		bitvec_unpack(block, data);

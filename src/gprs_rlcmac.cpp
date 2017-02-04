@@ -33,7 +33,7 @@ int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len,
 	const char *imsi)
 {
 	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Paging Request (CCCH)\n");
-	bitvec *paging_request = bitvec_alloc(23);
+	bitvec *paging_request = bitvec_alloc(23, tall_pcu_ctx);
 	bitvec_unhex(paging_request, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 	int plen = Encoding::write_paging_request(paging_request, ptmsi, ptmsi_len);
 	pcu_l1if_tx_pch(paging_request, plen, (char *)imsi);

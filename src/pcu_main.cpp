@@ -168,7 +168,6 @@ int main(int argc, char *argv[])
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "Osmo-PCU context");
 	if (!tall_pcu_ctx)
 		return -ENOMEM;
-	bv_tall_ctx = tall_pcu_ctx;
 
 	bts = bts_main_data();
 	bts->fc_interval = 1;

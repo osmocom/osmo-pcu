@@ -22,13 +22,13 @@
 #define GPRS_RLCMAC_H
 
 #ifdef __cplusplus
-#include <bitvector.h>
 #include <gsm_rlcmac.h>
 #include <gsm_timer.h>
 
 extern "C" {
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/timer.h>
+#include <osmocom/core/bitvec.h>
 }
 #endif
 

@@ -595,7 +595,7 @@ static void send_ul_mac_block(BTS *the_bts, unsigned trx_no, unsigned ts_no,
 
 	meas.set_rssi(31);
 
-	rlc_block = bitvec_alloc(23);
+	rlc_block = bitvec_alloc(23, tall_pcu_ctx);
 
 	encode_gsm_rlcmac_uplink(rlc_block, ulreq);
 	num_bytes = bitvec_pack(rlc_block, &buf[0]);
@@ -2555,7 +2555,7 @@ static void test_tbf_epdan_out_of_rx_window(void)
 
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
 
-	block = bitvec_alloc(23);
+	block = bitvec_alloc(23, tall_pcu_ctx);
 
 	bitvec_unpack(block, data_msg);
 

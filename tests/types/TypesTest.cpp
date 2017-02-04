@@ -430,7 +430,7 @@ static void test_rlc_dl_ul_basic()
 void test_immediate_assign_rej()
 {
 	uint8_t plen;
-	bitvec *immediate_assignment_rej = bitvec_alloc(22);
+	bitvec *immediate_assignment_rej = bitvec_alloc(22, tall_pcu_ctx);
 
 	bitvec_unhex(immediate_assignment_rej,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
