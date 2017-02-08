@@ -110,7 +110,7 @@ int main(int argc, char **argv)
 	if (!tall_pcu_ctx)
 		abort();
 
-	msgb_set_talloc_ctx(tall_pcu_ctx);
+	msgb_talloc_ctx_init(tall_pcu_ctx, 0);
 	osmo_init_logging(&gprs_log_info);
 	vty_init(&pcu_vty_info);
 	pcu_vty_init(&gprs_log_info);
