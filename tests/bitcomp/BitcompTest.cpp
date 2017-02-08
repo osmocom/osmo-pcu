@@ -121,7 +121,7 @@ static int filter_fn(const struct log_context *ctx,
 }
 
 /* To verify the result with expected result */
-int check_result(bitvec bits, uint8_t *exp_data, int exp_len)
+int check_result(bitvec bits, uint8_t *exp_data, unsigned int exp_len)
 {
 	if (bits.cur_bit != exp_len)
 		return 0;
@@ -147,7 +147,7 @@ static void test_EPDAN_decode_tree(void)
 {
 	bitvec dest;
 	int init_flag = 1;
-	int itr;
+	unsigned int itr;
 	int rc;
 	uint8_t bits_data[RLC_EGPRS_MAX_WS/8];
 

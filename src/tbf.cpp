@@ -171,13 +171,13 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	bts(bts_),
 	m_tfi(0),
 	m_created_ts(0),
+	m_ctrs(NULL),
 	m_ms(NULL),
 	m_ta(GSM48_TA_INVALID),
 	m_ms_class(0),
 	m_list(this),
 	m_ms_list(this),
-	m_egprs_enabled(false),
-	m_ctrs(NULL)
+	m_egprs_enabled(false)
 {
 	/* The classes of these members do not have proper constructors yet.
 	 * Just set them to 0 like talloc_zero did */
@@ -854,9 +854,9 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 
 gprs_rlcmac_dl_tbf::BandWidth::BandWidth() :
 	dl_bw_octets(0),
+	dl_throughput(0),
 	dl_loss_lost(0),
-	dl_loss_received(0),
-	dl_throughput(0)
+	dl_loss_received(0)
 {
 	timerclear(&dl_bw_tv);
 	timerclear(&dl_loss_tv);

@@ -633,7 +633,7 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(BTS *the_bts,
 	uint32_t rach_fn = *fn - 51;
 	uint32_t sba_fn = *fn + 52;
 	uint8_t trx_no = 0;
-	int tfi = 0, i = 0;
+	int tfi = 0;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_pdch *pdch;
 	gprs_rlcmac_bts *bts;
@@ -701,7 +701,7 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(BTS *the_bts,
 	/* send fake data */
 	uint8_t data_msg[42] = {
 		0xf << 2, /* GPRS_RLCMAC_DATA_BLOCK << 6, CV = 15 */
-		tfi << 1,
+		(uint8_t)(tfi << 1),
 		1, /* BSN:7, E:1 */
 	};
 
@@ -1222,17 +1222,14 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf(BTS *the_bts,
 	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
 	uint8_t ms_class, uint8_t egprs_ms_class)
 {
-	GprsMs *ms;
 	uint32_t rach_fn = *fn - 51;
 	uint32_t sba_fn = *fn + 52;
 	uint8_t trx_no = 0;
-	int tfi = 0, i = 0;
+	int tfi = 0;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	struct gprs_rlcmac_pdch *pdch;
 	gprs_rlcmac_bts *bts;
 	RlcMacUplink_t ulreq = {0};
 	struct pcu_l1_meas meas;
-	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
 	GprsCodingScheme cs;
 
 	meas.set_rssi(31);
@@ -1298,15 +1295,10 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_no_length(BTS *t
 	OSMO_ASSERT(ul_tbf);
 	OSMO_ASSERT(ul_tbf->ta() == qta / 4);
 	GprsMs *ms;
-	uint32_t rach_fn = *fn - 51;
-	uint32_t sba_fn = *fn + 52;
 	uint8_t trx_no = 0;
-	int tfi = 0, i = 0;
+	int tfi = 0;
 	struct gprs_rlcmac_pdch *pdch;
-	gprs_rlcmac_bts *bts;
-	RlcMacUplink_t ulreq = {0};
 	struct pcu_l1_meas meas;
-	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
 	GprsCodingScheme cs;
 
 
@@ -1386,15 +1378,10 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_with_length(BTS 
 	OSMO_ASSERT(ul_tbf);
 	OSMO_ASSERT(ul_tbf->ta() == qta / 4);
 	GprsMs *ms;
-	uint32_t rach_fn = *fn - 51;
-	uint32_t sba_fn = *fn + 52;
 	uint8_t trx_no = 0;
-	int tfi = 0, i = 0;
+	int tfi = 0;
 	struct gprs_rlcmac_pdch *pdch;
-	gprs_rlcmac_bts *bts;
-	RlcMacUplink_t ulreq = {0};
 	struct pcu_l1_meas meas;
-	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
 	GprsCodingScheme cs;
 
 	check_tbf(ul_tbf);
@@ -1473,16 +1460,11 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_CRBB(BTS *the_bts,
 	uint8_t ms_class, uint8_t egprs_ms_class)
 {
 	GprsMs *ms;
-	uint32_t rach_fn = *fn - 51;
-	uint32_t sba_fn = *fn + 52;
 	uint8_t trx_no = 0;
-	int tfi = 0, i = 0;
+	int tfi = 0;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_pdch *pdch;
-	gprs_rlcmac_bts *bts;
-	RlcMacUplink_t ulreq = {0};
 	struct pcu_l1_meas meas;
-	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
 	GprsCodingScheme cs;
 
 
@@ -1918,7 +1900,7 @@ static void test_tbf_ra_update_rach()
 	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
 
 	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"RAU_ACCEPT", 10);
-	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
 		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
 
 	/* Send Packet Downlink Assignment to MS */
@@ -1941,7 +1923,7 @@ static void test_tbf_ra_update_rach()
 	/* The PCU cannot know yet, that both TBF belong to the same MS */
 	OSMO_ASSERT(ms1 != ms2);
 
-	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
 		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
 
 	/* Send some downlink data along with the new TLLI and the IMSI so that
@@ -1951,7 +1933,7 @@ static void test_tbf_ra_update_rach()
 	ms = the_bts.ms_by_imsi(imsi);
 	OSMO_ASSERT(ms == ms2);
 
-	fprintf(stderr, "New MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+	fprintf(stderr, "New MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
 		ms2->tlli(), ms2->ta(), ms2->imsi(), ms2->llc_queue()->size());
 
 	ms = the_bts.ms_by_tlli(tlli1);
@@ -1987,7 +1969,7 @@ static void test_tbf_dl_flow_and_rach_two_phase()
 
 	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"DATA 1 *************", 20);
 	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"DATA 2 *************", 20);
-	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
 		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
 
 	OSMO_ASSERT(ms1->llc_queue()->size() == 2);
@@ -2004,7 +1986,7 @@ static void test_tbf_dl_flow_and_rach_two_phase()
 		ms_class, 0);
 
 	ms2 = ul_tbf->ms();
-	fprintf(stderr, "New MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+	fprintf(stderr, "New MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
 		ms2->tlli(), ms2->ta(), ms2->imsi(), ms2->llc_queue()->size());
 
 	/* This should be the same MS object */
@@ -2048,7 +2030,7 @@ static void test_tbf_dl_flow_and_rach_single_phase()
 
 	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"DATA 1 *************", 20);
 	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"DATA 2 *************", 20);
-	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
 		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
 
 	OSMO_ASSERT(ms1->llc_queue()->size() == 2);
@@ -2064,7 +2046,7 @@ static void test_tbf_dl_flow_and_rach_single_phase()
 	ul_tbf = establish_ul_tbf_single_phase(&the_bts, ts_no, tlli1, &fn, qta);
 
 	ms2 = ul_tbf->ms();
-	fprintf(stderr, "New MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+	fprintf(stderr, "New MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
 		ms2->tlli(), ms2->ta(), ms2->imsi(), ms2->llc_queue()->size());
 
 	/* There should be a different MS object */
@@ -2119,7 +2101,7 @@ static void test_tbf_dl_reuse()
 		send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)buf, rc);
 	}
 
-	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %d\n",
+	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
 		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
 
 	/* Send Packet Downlink Assignment to MS */
@@ -2370,7 +2352,7 @@ static gprs_rlcmac_ul_tbf *tbf_li_decoding(BTS *the_bts,
 	uint32_t rach_fn = *fn - 51;
 	uint32_t sba_fn = *fn + 52;
 	uint8_t trx_no = 0;
-	int tfi = 0, i = 0;
+	int tfi = 0;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_pdch *pdch;
 	gprs_rlcmac_bts *bts;
@@ -2742,12 +2724,9 @@ static gprs_rlcmac_dl_tbf *tbf_init(BTS *the_bts,
 	unsigned i;
 	uint8_t ms_class = 11;
 	uint8_t egprs_ms_class = 11;
-	uint32_t fn = 0;
 	uint8_t trx_no;
 	uint32_t tlli = 0xffeeddcc;
 	uint8_t test_data[512];
-
-	uint8_t rbb[64/8];
 
 	gprs_rlcmac_dl_tbf *dl_tbf;
 
@@ -2777,7 +2756,6 @@ static gprs_rlcmac_dl_tbf *tbf_init(BTS *the_bts,
 
 static void tbf_cleanup(gprs_rlcmac_dl_tbf *dl_tbf)
 {
-	uint32_t fn = 0;
 	uint8_t rbb[64/8];
 
 	/* Receive a final ACK */
@@ -2792,19 +2770,16 @@ static void tbf_cleanup(gprs_rlcmac_dl_tbf *dl_tbf)
 }
 
 static void egprs_spb_to_normal_validation(BTS *the_bts,
-		int mcs, int demanded_mcs)
+		unsigned int mcs, unsigned int demanded_mcs)
 {
 	uint32_t fn = 0;
 	gprs_rlcmac_dl_tbf *dl_tbf;
-	uint8_t block_nr = 0;
-	int index1 = 0;
-	uint8_t bn;
 	uint16_t bsn1, bsn2, bsn3;
 	struct msgb *msg;
 	struct gprs_rlc_dl_header_egprs_3 *egprs3;
 	struct gprs_rlc_dl_header_egprs_2 *egprs2;
 
-	printf("Testing retx for MCS %d to reseg_mcs %d\n", mcs, demanded_mcs);
+	printf("Testing retx for MCS %u to reseg_mcs %u\n", mcs, demanded_mcs);
 
 	dl_tbf = tbf_init(the_bts, mcs);
 
@@ -2886,18 +2861,16 @@ static void egprs_spb_to_normal_validation(BTS *the_bts,
 
 	tbf_cleanup(dl_tbf);
 }
+
 static void establish_and_use_egprs_dl_tbf_for_spb(BTS *the_bts,
-		int mcs, int demanded_mcs)
+		unsigned int mcs, unsigned int demanded_mcs)
 {
 	uint32_t fn = 0;
 	gprs_rlcmac_dl_tbf *dl_tbf;
-	uint8_t block_nr = 0;
-	int index1 = 0;
-	uint8_t bn;
 	struct msgb *msg;
 	struct gprs_rlc_dl_header_egprs_3 *egprs3;
 
-	printf("Testing retx for MCS %d to reseg_mcs %d\n", mcs, demanded_mcs);
+	printf("Testing retx for MCS %u to reseg_mcs %u\n", mcs, demanded_mcs);
 
 	dl_tbf = tbf_init(the_bts, mcs);
 
@@ -2989,16 +2962,13 @@ static void establish_and_use_egprs_dl_tbf_for_spb(BTS *the_bts,
 }
 
 static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
-		int mcs, int demanded_mcs)
+		unsigned int mcs, unsigned int demanded_mcs)
 {
 	uint32_t fn = 0;
 	gprs_rlcmac_dl_tbf *dl_tbf;
-	uint8_t block_nr = 0;
-	int index1 = 0;
-	uint8_t bn;
 	struct msgb *msg;
 
-	printf("Testing retx for MCS %d - %d\n", mcs, demanded_mcs);
+	printf("Testing retx for MCS %u - %u\n", mcs, demanded_mcs);
 
 	dl_tbf = tbf_init(the_bts, mcs);
 
@@ -3137,7 +3107,6 @@ static void test_tbf_egprs_retx_dl(void)
 	BTS the_bts;
 	gprs_rlcmac_bts *bts;
 	uint8_t ts_no = 4;
-	int i, j;
 
 	printf("=== start %s ===\n", __func__);
 
@@ -3167,7 +3136,6 @@ static void test_tbf_egprs_spb_dl(void)
 	BTS the_bts;
 	gprs_rlcmac_bts *bts;
 	uint8_t ts_no = 4;
-	int i, j;
 
 	printf("=== start %s ===\n", __func__);
 

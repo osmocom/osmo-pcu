@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <osmocom/vty/logging.h>
 #include <osmocom/vty/stats.h>
 #include <osmocom/vty/misc.h>

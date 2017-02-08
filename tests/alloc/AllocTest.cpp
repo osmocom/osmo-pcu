@@ -170,7 +170,7 @@ static void dump_assignment(struct gprs_rlcmac_tbf *tbf, const char *dir)
 {
 	for (size_t i = 0; i < ARRAY_SIZE(tbf->pdch); ++i)
 		if (tbf->pdch[i])
-			printf("PDCH[%d] is used for %s\n", i, dir);
+			printf("PDCH[%zu] is used for %s\n", i, dir);
 	printf("PDCH[%d] is control_ts for %s\n", tbf->control_ts, dir);
 	printf("PDCH[%d] is first common for %s\n", tbf->first_common_ts, dir);
 }

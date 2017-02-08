@@ -66,7 +66,7 @@ static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
 	llc_msg = queue->dequeue(&info_res);
 	OSMO_ASSERT(llc_msg != NULL);
 
-	fprintf(stderr, "dequeued msg, length %d (expected %d), data %s\n",
+	fprintf(stderr, "dequeued msg, length %u (expected %zu), data %s\n",
 		msgb_length(llc_msg), len, msgb_hexdump(llc_msg));
 
 	OSMO_ASSERT(msgb_length(llc_msg) == len);
@@ -239,7 +239,7 @@ int main(int argc, char **argv)
 	if (!tall_pcu_ctx)
 		abort();
 
-	msgb_set_talloc_ctx(tall_pcu_ctx);
+	msgb_talloc_ctx_init(tall_pcu_ctx, 0);
 	osmo_init_logging(&debug_log_info);
 	log_set_use_color(osmo_stderr_target, 0);
 	log_set_print_filename(osmo_stderr_target, 0);

@@ -40,6 +40,7 @@ extern "C" {
 
 #include <errno.h>
 #include <string.h>
+#include <limits.h>
 
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
@@ -1001,7 +1002,7 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(rdbi.e == 1);
 	OSMO_ASSERT(rdbi.cv == 0);
 	OSMO_ASSERT(write_offset == (int)rdbi.data_len);
-	OSMO_ASSERT(count_payload == rdbi.data_len);
+	OSMO_ASSERT(rdbi.data_len <= INT_MAX && count_payload == (int)rdbi.data_len);
 	OSMO_ASSERT(num_chunks == 1);
 
 	OSMO_ASSERT(data[0] == 0);
@@ -1027,7 +1028,8 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(rdbi.e == 0);
 	OSMO_ASSERT(rdbi.cv == 0);
 	OSMO_ASSERT(write_offset == (int)rdbi.data_len);
-	OSMO_ASSERT(count_payload == rdbi.data_len - 1);
+	OSMO_ASSERT((rdbi.data_len - 1) <= INT_MAX
+		    && count_payload == (int)(rdbi.data_len - 1));
 	OSMO_ASSERT(num_chunks == 1);
 
 	OSMO_ASSERT(data[0] == (((rdbi.data_len-1) << 1) | (1 << 0)));
@@ -1054,7 +1056,8 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(rdbi.e == 0);
 	OSMO_ASSERT(rdbi.cv == 0);
 	OSMO_ASSERT(write_offset == (int)rdbi.data_len);
-	OSMO_ASSERT(count_payload == rdbi.data_len - 2);
+	OSMO_ASSERT((rdbi.data_len - 2) <= INT_MAX
+		    && count_payload == (int)(rdbi.data_len - 2));
 	OSMO_ASSERT(num_chunks == 2);
 
 	OSMO_ASSERT(data[0] == (((rdbi.data_len-2) << 1) | (0 << 0)));
@@ -1194,16 +1197,12 @@ static void uplink_header_type_2_parsing_test(BTS *the_bts,
 	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
 	uint8_t ms_class)
 {
-	GprsMs *ms;
 	struct pcu_l1_meas meas;
 	int tfi = 0;
-	gprs_rlcmac_bts *bts;
-	RlcMacUplink_t ulreq = {0};
 	uint8_t data[79] = {0};
 	struct gprs_rlc_ul_header_egprs_2 *egprs2  = NULL;
 
 	egprs2 = (struct gprs_rlc_ul_header_egprs_2 *) data;
-	bts = the_bts->bts_data();
 
 	tfi = 1;
 
@@ -1288,10 +1287,7 @@ static void uplink_header_type2_test(void)
 	uint32_t fn = 2654218;
 	uint16_t qta = 31;
 	uint32_t tlli = 0xf1223344;
-	const char *imsi = "0011223344";
 	uint8_t ms_class = 1;
-	gprs_rlcmac_ul_tbf *ul_tbf;
-	GprsMs *ms;
 
 	printf("=== start %s ===\n", __func__);
 	setup_bts(&the_bts, ts_no, 10);
@@ -1305,18 +1301,14 @@ static void uplink_header_type_1_parsing_test(BTS *the_bts,
 	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
 	uint8_t ms_class)
 {
-	uint8_t trx_no = 0;
 	int tfi = 0;
-	struct gprs_rlcmac_pdch *pdch;
-	gprs_rlcmac_bts *bts;
 	uint8_t data[155] = {0};
 	struct gprs_rlc_ul_header_egprs_1 *egprs1  = NULL;
 	struct gprs_rlc_data_info rlc;
 	GprsCodingScheme cs;
-	int rc, offs;
+	int rc;
 
 	egprs1 = (struct gprs_rlc_ul_header_egprs_1 *) data;
-	bts = the_bts->bts_data();
 
 	tfi = 1;
 
@@ -1409,10 +1401,7 @@ void uplink_header_type1_test(void)
 	uint32_t fn = 2654218;
 	uint16_t qta = 31;
 	uint32_t tlli = 0xf1223344;
-	const char *imsi = "0011223344";
 	uint8_t ms_class = 1;
-	gprs_rlcmac_ul_tbf *ul_tbf;
-	GprsMs *ms;
 
 	printf("=== start %s ===\n", __func__);
 	setup_bts(&the_bts, ts_no, 12);
