@@ -378,6 +378,36 @@ unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs,
 	enum egprs_puncturing_values punct,
 	enum egprs_puncturing_values punct2, int with_padding)
 {
+	/* validate that punct and punct2 are as expected */
+	switch (GprsCodingScheme::Scheme(cs)) {
+	case GprsCodingScheme::MCS9:
+	case GprsCodingScheme::MCS8:
+	case GprsCodingScheme::MCS7:
+		if (punct2 == EGPRS_PS_INVALID) {
+			LOGP(DRLCMACDL, LOGL_ERROR,
+			     "Invalid punct2 value for coding scheme %d: %d\n",
+			     GprsCodingScheme::Scheme(cs), punct2);
+			return -1;
+		}
+		/* fall through */
+	case GprsCodingScheme::MCS6:
+	case GprsCodingScheme::MCS5:
+	case GprsCodingScheme::MCS4:
+	case GprsCodingScheme::MCS3:
+	case GprsCodingScheme::MCS2:
+	case GprsCodingScheme::MCS1:
+		if (punct == EGPRS_PS_INVALID) {
+			LOGP(DRLCMACDL, LOGL_ERROR,
+			     "Invalid punct value for coding scheme %d: %d\n",
+			     GprsCodingScheme::Scheme(cs), punct);
+			return -1;
+		}
+		break;
+	default:
+		return -1;
+	}
+
+	/* See 3GPP TS 44.060 10.4.8a.3.1, 10.4.8a.2.1, 10.4.8a.1.1 */
 	switch (GprsCodingScheme::Scheme(cs)) {
 	case GprsCodingScheme::MCS1: return 0b1011 +
 		punct % EGPRS_MAX_PS_NUM_2;

@@ -627,10 +627,16 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	GprsCodingScheme cs;
 	int bsns[ARRAY_SIZE(rlc.block_info)];
 	unsigned num_bsns;
-	enum egprs_puncturing_values punct[ARRAY_SIZE(rlc.block_info)];
 	bool need_padding = false;
 	enum egprs_rlcmac_dl_spb spb = EGPRS_RLCMAC_DL_NO_RETX;
 	unsigned int spb_status = get_egprs_dl_spb_status(index);
+
+	enum egprs_puncturing_values punct[2] = {
+		EGPRS_PS_INVALID, EGPRS_PS_INVALID
+	};
+	osmo_static_assert(ARRAY_SIZE(rlc.block_info) == 2,
+			   rlc_block_info_size_is_two);
+
 	/*
 	 * TODO: This is an experimental work-around to put 2 BSN into
 	 * MSC-7 to MCS-9 encoded messages. It just sends the same BSN
@@ -763,10 +769,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	}
 
 	/* Calculate CPS only for EGPRS case */
-	if (cs.isEgprs()) {
-		OSMO_ASSERT(ARRAY_SIZE(punct) >= 2);
+	if (cs.isEgprs())
 		rlc.cps = gprs_rlc_mcs_cps(cs, punct[0], punct[1], need_padding);
-	}
 
 	/* If the TBF has just started, relate frames_since_last_poll to the
 	 * current fn */
