@@ -762,8 +762,11 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			msg_data, block_data);
 	}
 
-	OSMO_ASSERT(ARRAY_SIZE(punct) >= 2);
-	rlc.cps = gprs_rlc_mcs_cps(cs, punct[0], punct[1], need_padding);
+	/* Calculate CPS only for EGPRS case */
+	if (cs.isEgprs()) {
+		OSMO_ASSERT(ARRAY_SIZE(punct) >= 2);
+		rlc.cps = gprs_rlc_mcs_cps(cs, punct[0], punct[1], need_padding);
+	}
 
 	/* If the TBF has just started, relate frames_since_last_poll to the
 	 * current fn */
