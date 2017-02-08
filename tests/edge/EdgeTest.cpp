@@ -1226,6 +1226,7 @@ static void uplink_header_type_2_parsing_test(BTS *the_bts,
 	egprs2->pi = 0;
 	data[4] = 0x20;                /* Setting E field */
 	rc = Decoding::rlc_parse_ul_data_header(&rlc, data, cs);
+	OSMO_ASSERT(rc == 487);
 	offs = rlc.data_offs_bits[0] / 8;
 	OSMO_ASSERT(offs == 4);
 	OSMO_ASSERT(rlc.tfi == 1);
@@ -1250,6 +1251,7 @@ static void uplink_header_type_2_parsing_test(BTS *the_bts,
 	egprs2->pi = 0;
 	data[10] = 0x20;                /* Setting E field */
 	rc = Decoding::rlc_parse_ul_data_header(&rlc, data, cs);
+	OSMO_ASSERT(rc == 679);
 	offs = rlc.data_offs_bits[0] / 8;
 	OSMO_ASSERT(offs == 10);
 	OSMO_ASSERT(rlc.num_data_blocks == 1);
@@ -1271,6 +1273,7 @@ static void uplink_header_type_2_parsing_test(BTS *the_bts,
 	egprs2->pi = 0;
 	data[10] = 0x20;		/* Setting E field */
 	rc = Decoding::rlc_parse_ul_data_header(&rlc, data, cs);
+	OSMO_ASSERT(rc == 679);
 	offs = rlc.data_offs_bits[0] / 8;
 	OSMO_ASSERT(offs == 10);
 	OSMO_ASSERT(rlc.tfi == 1);
@@ -1330,6 +1333,7 @@ static void uplink_header_type_1_parsing_test(BTS *the_bts,
 	data[5] = 0xc0;
 	data[5 + 57] = 1;
 	rc = Decoding::rlc_parse_ul_data_header(&rlc, data, cs);
+	OSMO_ASSERT(rc == 946);
 	OSMO_ASSERT(rlc.num_data_blocks == 2);
 	OSMO_ASSERT(rlc.block_info[0].e == 1);
 	OSMO_ASSERT(rlc.block_info[0].ti == 1);
@@ -1357,6 +1361,7 @@ static void uplink_header_type_1_parsing_test(BTS *the_bts,
 	data[5] = 0xc0;
 	data[5 + 69] = 1;
 	rc = Decoding::rlc_parse_ul_data_header(&rlc, data, cs);
+	OSMO_ASSERT(rc == 1138);
 	OSMO_ASSERT(rlc.num_data_blocks == 2);
 	OSMO_ASSERT(rlc.block_info[0].e == 1);
 	OSMO_ASSERT(rlc.block_info[0].ti == 1);
@@ -1384,6 +1389,7 @@ static void uplink_header_type_1_parsing_test(BTS *the_bts,
 	data[5] = 0xc0;
 	data[5 + 75] = 1;
 	rc = Decoding::rlc_parse_ul_data_header(&rlc, data, cs);
+	OSMO_ASSERT(rc == 1234);
 	OSMO_ASSERT(rlc.num_data_blocks == 2);
 	OSMO_ASSERT(rlc.block_info[0].e == 1);
 	OSMO_ASSERT(rlc.block_info[0].ti == 1);

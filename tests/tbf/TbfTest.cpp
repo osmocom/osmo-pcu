@@ -2985,7 +2985,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 		fn = fn_add_blocks(fn, 1);
 		/* Send 2 RLC data block */
 		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-
+		OSMO_ASSERT(msg);
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
 		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
@@ -3006,6 +3006,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 		fn = fn_add_blocks(fn, 1);
 		/* Retransmit the first RLC data block with demanded_mcs */
 		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(msg);
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(1));
 		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
@@ -3014,6 +3015,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 		fn = fn_add_blocks(fn, 1);
 		/* Retransmit the second RLC data block with demanded_mcs */
 		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(msg);
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
 		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
@@ -3023,6 +3025,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 		fn = fn_add_blocks(fn, 1);
 		/* Send first RLC data block BSN 0 */
 		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(msg);
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
 		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
 				== mcs);
@@ -3030,6 +3033,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 		fn = fn_add_blocks(fn, 1);
 		/* Send second RLC data block BSN 1 */
 		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(msg);
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
 		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
 				== mcs);
@@ -3046,6 +3050,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 		fn = fn_add_blocks(fn, 1);
 		/* Send first, second RLC data blocks with demanded_mcs */
 		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(msg);
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
 		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
@@ -3057,6 +3062,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 		fn = fn_add_blocks(fn, 1);
 		/* Send first,second RLC data blocks */
 		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(msg);
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
 		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
@@ -3072,6 +3078,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 		fn = fn_add_blocks(fn, 1);
 		/* Send first,second RLC data blocks with demanded_mcs*/
 		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(msg);
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
 		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
@@ -3084,6 +3091,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 		fn = fn_add_blocks(fn, 1);
 		/* Send first RLC data block */
 		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(msg);
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
 		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
 				== mcs);
@@ -3094,6 +3102,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 		fn = fn_add_blocks(fn, 1);
 		/* Send first RLC data block with demanded_mcs */
 		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
+		OSMO_ASSERT(msg);
 		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
 		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
 				== mcs);
