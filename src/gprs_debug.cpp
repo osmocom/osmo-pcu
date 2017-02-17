@@ -46,27 +46,20 @@ static const struct log_info_cat default_categories[] = {
 	{"DPCU", "\033[1;35m", "GPRS Packet Control Unit (PCU)", LOGL_NOTICE, 1},
 };
 
-enum {
-	_FLT_ALL = LOG_FILTER_ALL,	/* libosmocore */
-	FLT_IMSI = 1,
-	FLT_NSVC = 2,
-	FLT_BVC  = 3,
-};
-
 static int filter_fn(const struct log_context *ctx,
 		     struct log_target *tar)
 {
-	const struct gprs_nsvc *nsvc = (const struct gprs_nsvc*)ctx->ctx[BSC_CTX_NSVC];
-	const struct gprs_nsvc *bvc = (const struct gprs_nsvc*)ctx->ctx[BSC_CTX_BVC];
+	const struct gprs_nsvc *nsvc = (const struct gprs_nsvc*)ctx->ctx[LOGGING_CTX_GB_NSVC];
+	const struct gprs_nsvc *bvc = (const struct gprs_nsvc*)ctx->ctx[LOGGING_CTX_GB_BVC];
 
 	/* Filter on the NS Virtual Connection */
-	if ((tar->filter_map & (1 << FLT_NSVC)) != 0
-	    && nsvc && (nsvc == tar->filter_data[FLT_NSVC]))
+	if ((tar->filter_map & (1 << LOGGING_FILTER_GB_NSVC)) != 0
+	    && nsvc && (nsvc == tar->filter_data[LOGGING_FILTER_GB_NSVC]))
 		return 1;
 
 	/* Filter on the BVC */
-	if ((tar->filter_map & (1 << FLT_BVC)) != 0
-	    && bvc && (bvc == tar->filter_data[FLT_BVC]))
+	if ((tar->filter_map & (1 << LOGGING_FILTER_GB_BVC)) != 0
+	    && bvc && (bvc == tar->filter_data[LOGGING_FILTER_GB_BVC]))
 		return 1;
 
 	return 0;
