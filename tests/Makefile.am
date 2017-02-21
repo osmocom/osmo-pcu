@@ -1,7 +1,7 @@
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/
 AM_LDFLAGS = -lrt
 
-check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest tbf/TbfTest types/TypesTest ms/MsTest llist/LListTest llc/LlcTest codel/codel_test edge/EdgeTest bitcomp/BitcompTest
+check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest tbf/TbfTest types/TypesTest ms/MsTest llist/LListTest llc/LlcTest codel/codel_test edge/EdgeTest bitcomp/BitcompTest fn/FnTest
 noinst_PROGRAMS = emu/pcu_emu
 
 rlcmac_RLCMACTest_SOURCES = rlcmac/RLCMACTest.cpp
@@ -90,6 +90,14 @@ codel_codel_test_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
+fn_FnTest_SOURCES = fn/FnTest.cpp
+fn_FnTest_LDADD = \
+	$(top_builddir)/src/libgprs.la \
+	$(LIBOSMOGB_LIBS) \
+	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCORE_LIBS) \
+	$(COMMON_LA)
+
 # The `:;' works around a Bash 3.2 bug when the output is not writeable.
 $(srcdir)/package.m4: $(top_srcdir)/configure.ac
 	:;{ \
@@ -119,7 +127,8 @@ EXTRA_DIST = \
 	llc/LlcTest.ok llc/LlcTest.err \
 	llist/LListTest.ok llist/LListTest.err \
 	codel/codel_test.ok \
-	edge/EdgeTest.ok
+	edge/EdgeTest.ok \
+	fn/FnTest.ok
 
 DISTCLEANFILES = atconfig
 

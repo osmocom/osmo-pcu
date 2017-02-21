@@ -34,12 +34,16 @@ extern "C" {
 	#include <osmocom/core/msgb.h>
 	#include <osmocom/core/stats.h>
 	#include <osmocom/gsm/protocol/gsm_04_08.h>
+	#include <osmocom/gsm/gsm_utils.h>
 }
 
 #include <arpa/inet.h>
 
 #include <errno.h>
 #include <string.h>
+
+#define RFN_MODULUS 42432
+#define RFN_THRESHOLD RFN_MODULUS / 2
 
 extern void *tall_pcu_ctx;
 
@@ -516,6 +520,57 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	return 0;
 }
 
+/* Determine the full frame number from a relative frame number */
+uint32_t BTS::rfn_to_fn(uint32_t rfn)
+{
+	uint32_t m_cur_rfn;
+	uint32_t fn;
+	uint32_t fn_rounded;
+
+	/* Note: If a BTS is sending in a rach request it will be fully aware
+	 * of the frame number. If the PCU is used in a BSC-co-located setup.
+	 * The BSC will forward the incoming RACH request. The RACH request
+	 * only contains the relative frame number (Fn % 42432) in its request
+	 * reference. This PCU implementation has to fit both scenarios, so
+	 * we need to assume that Fn is a relative frame number. */
+
+	/* Ensure that all following calculations are performed with the
+	 * relative frame number */
+	rfn = rfn % 42432;
+
+	/* Compute an internal relative frame number from the full internal
+	   frame number */
+	m_cur_rfn = m_cur_fn % RFN_MODULUS;
+
+	/* Compute a "rounded" version of the internal frame number, which
+	 * exactly fits in the RFN_MODULUS raster */
+	fn_rounded = m_cur_fn - m_cur_rfn;
+
+	/* If the delta between the internal and the external relative frame
+	 * number exceeds a certain limit, we need to assume that the incoming
+	 * rach request belongs to a the previous rfn period. To correct this,
+	 * we roll back the rounded frame number by one RFN_MODULUS */
+	if (abs(rfn - m_cur_rfn) > RFN_THRESHOLD) {
+		LOGP(DRLCMAC, LOGL_DEBUG,
+		     "Race condition between rfn (%u) and m_cur_fn (%u) detected: rfn belongs to the previos modulus %u cycle, wrappng...\n",
+		     rfn, m_cur_fn, RFN_MODULUS);
+		if (fn_rounded < RFN_MODULUS) {
+			LOGP(DRLCMAC, LOGL_DEBUG,
+			"Cornercase detected: wrapping crosses %u border\n",
+			GSM_MAX_FN);
+			fn_rounded = GSM_MAX_FN - (RFN_MODULUS - fn_rounded);
+		}
+		else
+			fn_rounded -= RFN_MODULUS;
+	}
+
+	/* The real frame number is the sum of the rounded frame number and the
+	 * relative framenumber computed via RACH */
+	fn = fn_rounded + rfn;
+
+	return fn;
+}
+
 int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 		enum ph_burst_type burst_type)
 {
@@ -536,20 +591,8 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 	if (is_11bit)
 		rach_frame_11bit();
 
-	/* Note: If a BTS is sending in a rach request it will be fully aware
-	 * of the frame number. If the PCU is used in a BSC-co-located setup.
-	 * The BSC will forward the incoming RACH request. The RACH request
-	 * only contains the relative frame number (Fn % 42432) in its request
-	 * reference. This PCU implementation has to fit both secenarious, so
-	 * we need to assume that Fn is a relative frame number. */
-
-	/* Ensure that all following calculations are performed with the
-	 * relative frame number */
-	Fn = Fn % 42432;
-
-	/* Restore the full frame number
-	 * (See also 3GPP TS 44.018, section 10.5.2.38) */
-	Fn = Fn + m_cur_fn - m_cur_fn % 42432;
+	/* Determine full frame number */
+	Fn = rfn_to_fn(Fn);
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, "
 		"so we provide one: ra=0x%02x Fn=%u qta=%d is_11bit=%d:\n",
