@@ -4,6 +4,7 @@
 #include <osmocom/gsm/l1sap.h>
 
 #define PCU_IF_VERSION		0x07
+#define TXT_MAX_LEN	128
 
 /* msg_type */
 #define PCU_IF_MSG_DATA_REQ	0x00	/* send data to given channel */
@@ -15,6 +16,7 @@
 #define PCU_IF_MSG_ACT_REQ	0x40	/* activate/deactivate PDCH */
 #define PCU_IF_MSG_TIME_IND	0x52	/* GSM time indication */
 #define PCU_IF_MSG_PAG_REQ	0x60	/* paging request */
+#define PCU_IF_MSG_TXT_IND	0x70	/* Text indication for BTS */
 
 /* sapi */
 #define PCU_IF_SAPI_RACH	0x01	/* channel request on CCCH */
@@ -41,6 +43,16 @@
 #define PCU_IF_FLAG_MCS7	(1 << 26)
 #define PCU_IF_FLAG_MCS8	(1 << 27)
 #define PCU_IF_FLAG_MCS9	(1 << 28)
+
+enum gsm_pcu_if_text_type {
+	PCU_VERSION,
+	PCU_OML_ALERT,
+};
+
+struct gsm_pcu_if_txt_ind {
+	uint8_t		type; /* gsm_pcu_if_text_type */
+	char		text[TXT_MAX_LEN]; /* Text to be transmitted to BTS */
+} __attribute__ ((packed));
 
 struct gsm_pcu_if_data {
 	uint8_t		sapi;
@@ -150,6 +162,7 @@ struct gsm_pcu_if {
 		struct gsm_pcu_if_data		data_ind;
 		struct gsm_pcu_if_rts_req	rts_req;
 		struct gsm_pcu_if_rach_ind	rach_ind;
+		struct gsm_pcu_if_txt_ind	txt_ind;
 		struct gsm_pcu_if_info_ind	info_ind;
 		struct gsm_pcu_if_act_req	act_req;
 		struct gsm_pcu_if_time_ind	time_ind;

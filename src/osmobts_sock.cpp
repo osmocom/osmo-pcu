@@ -287,6 +287,9 @@ int pcu_l1if_open(void)
 
 	pcu_sock_state = state;
 
+	LOGP(DL1IF, LOGL_INFO, "Sending version %s to BTS.\n", PACKAGE_VERSION);
+	pcu_tx_txt_ind(PCU_VERSION, "%s", PACKAGE_VERSION);
+
 	return 0;
 }
 

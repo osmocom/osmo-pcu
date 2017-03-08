@@ -73,6 +73,42 @@ struct msgb *pcu_msgb_alloc(uint8_t msg_type, uint8_t bts_nr)
 	return msg;
 }
 
+const struct value_string gsm_pcu_if_text_type_names[] = {
+	OSMO_VALUE_STRING(PCU_VERSION),
+	OSMO_VALUE_STRING(PCU_OML_ALERT),
+	{ 0, NULL }
+};
+
+int pcu_tx_txt_ind(enum gsm_pcu_if_text_type t, const char *fmt, ...)
+{
+	struct gsm_pcu_if *pcu_prim;
+	struct gsm_pcu_if_txt_ind *txt;
+	va_list ap;
+	char *rep;
+	struct msgb *msg = pcu_msgb_alloc(PCU_IF_MSG_TXT_IND, 0);
+	if (!msg)
+		return -ENOMEM;
+
+	pcu_prim = (struct gsm_pcu_if *) msg->data;
+	txt = &pcu_prim->u.txt_ind;
+	txt->type = t;
+
+	va_start(ap, fmt);
+	rep = talloc_vasprintf(tall_pcu_ctx, fmt, ap);
+	va_end(ap);
+
+	if (!rep)
+		return -ENOMEM;
+
+	osmo_strlcpy(txt->text, rep, TXT_MAX_LEN);
+	talloc_free(rep);
+
+	LOGP(DL1IF, LOGL_INFO, "Sending %s TXT as %s to BTS\n", txt->text,
+	     get_value_string(gsm_pcu_if_text_type_names, t));
+
+	return pcu_sock_send(msg);
+}
+
 static int pcu_tx_act_req(uint8_t trx, uint8_t ts, uint8_t activate)
 {
 	struct msgb *msg;

@@ -320,6 +320,13 @@ int Encoding::write_immediate_assignment_reject(
 	return plen;
 }
 
+static inline void log_alert_exit(const char * error)
+{
+	LOGP(DRLCMACUL, LOGL_ERROR, error);
+	pcu_tx_txt_ind(PCU_OML_ALERT, error);
+	exit(1);
+}
+
 /*
  * Immediate assignment, sent on the CCCH/AGCH
  * see GSM 04.08, 9.1.18 and GSM 44.018, 9.1.18 + 10.5.2.16
@@ -374,11 +381,10 @@ int Encoding::write_immediate_assignment(
 	// A zero-length LV.  Just write L=0.
 	bitvec_write_field(dest, wp,0,8);
 
-	if ((wp % 8)) {
-		LOGP(DRLCMACUL, LOGL_ERROR, "Length of IMM.ASS without rest "
-			"octets is not multiple of 8 bits, PLEASE FIX!\n");
-		exit (0);
-	}
+	if ((wp % 8))
+		log_alert_exit("Length of IMM.ASS without rest octets is not "
+			       "multiple of 8 bits, PLEASE FIX!\n");
+
 	plen = wp / 8;
 
 	if (downlink)
@@ -618,11 +624,11 @@ int Encoding::write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi
 	{
 		bitvec_write_field(dest, wp,ptmsi[i],8); // PTMSI
 	}
-	if ((wp % 8)) {
-		LOGP(DRLCMACUL, LOGL_ERROR, "Length of PAG.REQ without rest "
-			"octets is not multiple of 8 bits, PLEASE FIX!\n");
-		exit (0);
-	}
+
+	if ((wp % 8))
+		log_alert_exit("Length of PAG.REQ without rest octets is not "
+			       "multiple of 8 bits, PLEASE FIX!\n");
+
 	plen = wp / 8;
 	bitvec_write_field(dest, wp,0x0,1); // "L" NLN(PCH) = off
 	bitvec_write_field(dest, wp,0x0,1); // "L" Priority1 = off

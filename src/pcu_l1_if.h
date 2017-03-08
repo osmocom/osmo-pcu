@@ -29,6 +29,7 @@ extern "C" {
 #include <osmocom/core/timer.h>
 #include <osmocom/core/bitvec.h>
 #include <osmocom/gsm/gsm_utils.h>
+#include <osmocom/pcu/pcuif_proto.h>
 #ifdef __cplusplus
 }
 #endif
@@ -130,6 +131,8 @@ void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 void pcu_l1if_tx_agch(bitvec * block, int len);
 
 void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi);
+
+int pcu_tx_txt_ind(enum gsm_pcu_if_text_type t, const char *fmt, ...);
 
 int pcu_l1if_open(void);
 void pcu_l1if_close(void);
