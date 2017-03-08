@@ -521,11 +521,15 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 }
 
 /* Determine the full frame number from a relative frame number */
-uint32_t BTS::rfn_to_fn(uint32_t rfn)
+uint32_t BTS::rfn_to_fn(int32_t rfn)
 {
-	uint32_t m_cur_rfn;
-	uint32_t fn;
-	uint32_t fn_rounded;
+	int32_t m_cur_rfn;
+	int32_t fn;
+	int32_t fn_rounded;
+
+	/* double-check that relative FN is not negative and fits into int32_t */
+	OSMO_ASSERT(rfn < GSM_MAX_FN);
+	OSMO_ASSERT(rfn >= 0);
 
 	/* Note: If a BTS is sending in a rach request it will be fully aware
 	 * of the frame number. If the PCU is used in a BSC-co-located setup.
@@ -536,7 +540,8 @@ uint32_t BTS::rfn_to_fn(uint32_t rfn)
 
 	/* Ensure that all following calculations are performed with the
 	 * relative frame number */
-	rfn = rfn % 42432;
+	if (rfn >= RFN_MODULUS)
+		return rfn;
 
 	/* Compute an internal relative frame number from the full internal
 	   frame number */

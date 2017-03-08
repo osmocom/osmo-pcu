@@ -350,7 +350,7 @@ public:
 	uint8_t is_single_block(uint16_t ra, enum ph_burst_type burst_type,
 		uint8_t is_11bit, uint16_t *ms_class, uint16_t *priority);
 
-	uint32_t rfn_to_fn(uint32_t rfn);
+	uint32_t rfn_to_fn(int32_t rfn);
 	int rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 		enum ph_burst_type burst_type);
 
