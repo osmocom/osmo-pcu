@@ -58,3 +58,5 @@ debian/osmo-pcu-dbg/
 debian/osmo-pcu.substvars
 debian/osmo-pcu/
 debian/tmp/
+
+osmo-pcu.pc
