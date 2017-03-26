@@ -18,6 +18,8 @@ extern "C" {
 #define MAX_CRBB_LEN 23
 #define MAX_URBB_LEN 40
 #define CEIL_DIV_8(x) (((x) + 7)/8)
+#define _LOG(fmt, args...) \
+	fprintf(stderr, fmt, ## args)
 
 void *tall_pcu_ctx;
 
@@ -157,8 +159,7 @@ static void test_EPDAN_decode_tree(void)
 		dest.data = bits_data;
 		dest.data_len = sizeof(bits_data);
 		dest.cur_bit = 0;
-		LOGP(DRLCMACDL, LOGL_DEBUG,
-		     "\nTest:%d\n"
+		_LOG("\nTest:%d\n"
 		     "Tree based decoding:\n"
 		     "uncompressed data = %s\n"
 		     "len = %d\n",
@@ -169,8 +170,7 @@ static void test_EPDAN_decode_tree(void)
 		rc = egprs_compress::decompress_crbb(test[itr].crbb_len,
 			test[itr].cc, test[itr].crbb_data, &dest);
 		if (rc < 0) {
-			LOGP(DRLCMACUL, LOGL_NOTICE,
-			     "\nFailed to decode CRBB: length %d, data %s",
+			_LOG("\nFailed to decode CRBB: length %d, data %s",
 			     test[itr].crbb_len,
 			     osmo_hexdump(test[itr].crbb_data,
 					  CEIL_DIV_8(test[itr].crbb_len)));
@@ -178,29 +178,27 @@ static void test_EPDAN_decode_tree(void)
 		if (test[itr].verify) {
 			if (!result_matches(dest, test[itr].ucmp_data,
 					    test[itr].ucmp_len)) {
-				LOGP(DRLCMACDL, LOGL_DEBUG,
-				     "\nTree based decoding: Error\n"
+				_LOG("\nTree based decoding: Error\n"
 				     "expected data = %s\n"
-				     "expected len = %d\n"
-				     "decoded data = %s\n"
-				     "decoded len = %d\n",
+				     "expected len = %d\n",
 				     osmo_hexdump(test[itr].ucmp_data,
 						  CEIL_DIV_8(test[itr].ucmp_len)),
-				     test[itr].ucmp_len,
+				     test[itr].ucmp_len);
+				_LOG("decoded data = %s\n"
+				     "decoded len = %d\n",
 				     osmo_hexdump(dest.data,
 						  CEIL_DIV_8(dest.cur_bit)),
 				     dest.cur_bit);
 				OSMO_ASSERT(0);
 			}
 		}
-		LOGP(DRLCMACDL, LOGL_DEBUG,
-		     "\nexpected data = %s\n"
-		     "expected len = %d\n"
-		     "decoded data = %s\n"
-		     "decoded len = %d\n",
+		_LOG("\nexpected data = %s\n"
+		     "expected len = %d\n",
 		     osmo_hexdump(test[itr].ucmp_data,
 				  CEIL_DIV_8(test[itr].ucmp_len)),
-		     test[itr].ucmp_len,
+		     test[itr].ucmp_len);
+		_LOG("decoded data = %s\n"
+		     "decoded len = %d\n",
 		     osmo_hexdump(dest.data, CEIL_DIV_8(dest.cur_bit)),
 		     dest.cur_bit);
 	}
