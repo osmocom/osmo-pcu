@@ -29,7 +29,7 @@ struct test_data {
 	uint8_t crbb_data[MAX_CRBB_LEN]; /* compressed data */
 	uint8_t ucmp_data[MAX_URBB_LEN]; /* uncompressed data */
 	int ucmp_len;
-	int verify;
+	int expect_rc;
 } test[] = {
 		{ .crbb_len = 67, .cc = 1,
 			.crbb_data = {
@@ -40,7 +40,8 @@ struct test_data {
 			0xff, 0xf8, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xfe,
 			0x00, 0x00, 0x3f, 0xff, 0xff, 0xff, 0xc0
 			},
-			.ucmp_len = 194, .verify = 1
+			.ucmp_len = 194,
+			.expect_rc = 0,
 		},
 		{ .crbb_len = 40, .cc = 1,
 			.crbb_data = {
@@ -51,12 +52,14 @@ struct test_data {
 			0x00, 0x00, 0x3f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xf8,
 			0x00, 0x00, 0x00, 0x00, 0x00
 			},
-			.ucmp_len = 182, .verify = 1
+			.ucmp_len = 182,
+			.expect_rc = 0,
 		},
 		{ .crbb_len = 8, .cc = 1,
 			.crbb_data = {0x02},
 			.ucmp_data = {0xff, 0xff, 0xff, 0xf8},
-			.ucmp_len = 29, .verify = 1
+			.ucmp_len = 29,
+			.expect_rc = 0,
 		},
 		{ .crbb_len = 103, .cc = 1,
 			.crbb_data = {
@@ -69,13 +72,15 @@ struct test_data {
 			0x0f, 0xff, 0xff, 0xff, 0xe0, 0x00, 0x00, 0x7f, 0xff,
 			0xff, 0xff, 0x80, 0x00, 0x01, 0xff, 0xff, 0xff, 0xff
 			},
-			.ucmp_len = 288, .verify = 1
+			.ucmp_len = 288,
+			.expect_rc = 0,
 		},
 		/* Test vector from libosmocore test */
 		{ .crbb_len = 35, .cc = 0,
 			.crbb_data = {0xde, 0x88, 0x75, 0x65, 0x80},
 			.ucmp_data = {0x37, 0x47, 0x81, 0xf0},
-			.ucmp_len = 28, .verify = 1
+			.ucmp_len = 28,
+			.expect_rc = 0,
 		},
 		{ .crbb_len = 18, .cc = 1,
 			.crbb_data = {0xdd, 0x41, 0x00},
@@ -83,23 +88,28 @@ struct test_data {
 			0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
 			0xff, 0x00, 0x00
 			},
-			.ucmp_len = 90, .verify = 1
+			.ucmp_len = 90,
+			.expect_rc = 0,
 		},
-		/*Invalid inputs*/
+		/* TODO: previously marked as "Invalid inputs" but succeeds */
 		{ .crbb_len = 18, .cc = 1,
 			.crbb_data = {0x1E, 0x70, 0xc0},
-			.ucmp_data = {0x0},
-			.ucmp_len = 0, .verify = 0
+			.ucmp_data = {0xb0, 0x00, 0x00},
+			.ucmp_len = 19,
+			.expect_rc = 0,
 		},
+		/* Invalid inputs */
 		{ .crbb_len = 14, .cc = 1,
 			.crbb_data = {0x00, 0x1E, 0x7c},
 			.ucmp_data = {0x0},
-			.ucmp_len = 0, .verify = 0
+			.ucmp_len = 0,
+			.expect_rc = -1,
 		},
 		{ .crbb_len = 24, .cc = 0,
 			.crbb_data = {0x00, 0x00, 0x00},
 			.ucmp_data = {0x0},
-			.ucmp_len = 0, .verify = 0
+			.ucmp_len = 0,
+			.expect_rc = -1,
 		}
 	};
 
@@ -158,28 +168,29 @@ static void test_EPDAN_decode_tree(void)
 		     test[itr].crbb_len);
 		rc = egprs_compress::decompress_crbb(test[itr].crbb_len,
 			test[itr].cc, test[itr].crbb_data, &dest);
+		_LOG("rc = %d\n", rc);
+		OSMO_ASSERT(test[itr].expect_rc == rc);
 		if (rc < 0) {
-			_LOG("\nFailed to decode CRBB: length %d, data %s",
+			_LOG("Failed to decode CRBB: length %d, data %s\n",
 			     test[itr].crbb_len,
 			     osmo_hexdump(test[itr].crbb_data,
 					  CEIL_DIV_8(test[itr].crbb_len)));
+			continue;
 		}
-		if (test[itr].verify) {
-			if (!result_matches(dest, test[itr].ucmp_data,
-					    test[itr].ucmp_len)) {
-				_LOG("\nTree based decoding: Error\n"
-				     "expected data = %s\n"
-				     "expected len = %d\n",
-				     osmo_hexdump(test[itr].ucmp_data,
-						  CEIL_DIV_8(test[itr].ucmp_len)),
-				     test[itr].ucmp_len);
-				_LOG("decoded data = %s\n"
-				     "decoded len = %d\n",
-				     osmo_hexdump(dest.data,
-						  CEIL_DIV_8(dest.cur_bit)),
-				     dest.cur_bit);
-				OSMO_ASSERT(0);
-			}
+		if (!result_matches(dest, test[itr].ucmp_data,
+				    test[itr].ucmp_len)) {
+			_LOG("\nTree based decoding: Error\n"
+			     "expected data = %s\n"
+			     "expected len = %d\n",
+			     osmo_hexdump(test[itr].ucmp_data,
+					  CEIL_DIV_8(test[itr].ucmp_len)),
+			     test[itr].ucmp_len);
+			_LOG("decoded data = %s\n"
+			     "decoded len = %d\n",
+			     osmo_hexdump(dest.data,
+					  CEIL_DIV_8(dest.cur_bit)),
+			     dest.cur_bit);
+			OSMO_ASSERT(0);
 		}
 		_LOG("\nexpected data = %s\n"
 		     "expected len = %d\n",
