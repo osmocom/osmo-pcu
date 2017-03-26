@@ -17,6 +17,7 @@ extern "C" {
 #define MASK(n) (0xFF << (8-n))
 #define MAX_CRBB_LEN 23
 #define MAX_URBB_LEN 40
+#define CEIL_DIV_8(x) (((x) + 7)/8)
 
 void *tall_pcu_ctx;
 
@@ -120,23 +121,22 @@ static int filter_fn(const struct log_context *ctx,
 	return 1;
 }
 
-/* To verify the result with expected result */
-int check_result(bitvec bits, uint8_t *exp_data, unsigned int exp_len)
+bool result_matches(const bitvec &bits, const uint8_t *exp_data, unsigned int exp_len)
 {
 	if (bits.cur_bit != exp_len)
-		return 0;
+		return false;
 	size_t n = (exp_len / 8);
 	int rem = (exp_len % 8);
 
 	if (memcmp(exp_data, bits.data, n) == 0) {
 		if (rem == 0)
-			return 1;
+			return true;
 		if ((bits.data[n] & MASK(rem)) == ((*(exp_data + n)) & MASK(rem)))
-			return 1;
+			return true;
 		else
-			return 0;
+			return false;
 	} else
-		return 0;
+		return false;
 }
 
 /*  To test decoding of compressed bitmap by Tree based method
@@ -146,7 +146,6 @@ int check_result(bitvec bits, uint8_t *exp_data, unsigned int exp_len)
 static void test_EPDAN_decode_tree(void)
 {
 	bitvec dest;
-	int init_flag = 1;
 	unsigned int itr;
 	int rc;
 	uint8_t bits_data[RLC_EGPRS_MAX_WS/8];
@@ -154,47 +153,56 @@ static void test_EPDAN_decode_tree(void)
 	printf("=== start %s ===\n", __func__);
 
 	for (itr = 0 ; itr < (sizeof(test) / sizeof(test_data)) ; itr++) {
+		memset(bits_data, 0, sizeof(bits_data));
 		dest.data = bits_data;
 		dest.data_len = sizeof(bits_data);
 		dest.cur_bit = 0;
-		memset(dest.data, 0, sizeof(bits_data));
-		LOGP(DRLCMACDL, LOGL_DEBUG, "\nTest:%d\nTree based decoding:"
-			"\nuncompressed data = %s\nlen = %d\n", itr + 1,
-			osmo_hexdump(test[itr].crbb_data,
-			(test[itr].crbb_len + 7)/8), test[itr].crbb_len
-		);
+		LOGP(DRLCMACDL, LOGL_DEBUG,
+		     "\nTest:%d\n"
+		     "Tree based decoding:\n"
+		     "uncompressed data = %s\n"
+		     "len = %d\n",
+		     itr + 1,
+		     osmo_hexdump(test[itr].crbb_data,
+				  CEIL_DIV_8(test[itr].crbb_len)),
+		     test[itr].crbb_len);
 		rc = egprs_compress::decompress_crbb(test[itr].crbb_len,
 			test[itr].cc, test[itr].crbb_data, &dest);
 		if (rc < 0) {
 			LOGP(DRLCMACUL, LOGL_NOTICE,
-				"\nFailed to decode CRBB: length %d, data %s",
-				test[itr].crbb_len, osmo_hexdump(
-				test[itr].crbb_data, (test[itr].crbb_len + 7)/8));
+			     "\nFailed to decode CRBB: length %d, data %s",
+			     test[itr].crbb_len,
+			     osmo_hexdump(test[itr].crbb_data,
+					  CEIL_DIV_8(test[itr].crbb_len)));
 		}
-		if (init_flag)
-			init_flag = 0;
 		if (test[itr].verify) {
-			if (check_result(dest, test[itr].ucmp_data,
-				test[itr].ucmp_len) == 0) {
-				LOGP(DRLCMACDL, LOGL_DEBUG, "\nTree based decoding"
-					":Error\nexpected data = %s\nexpected"
-					" len = %d\ndecoded data = %s\n"
-					"decoded len = %d\n",
-					osmo_hexdump(test[itr].ucmp_data,
-						(test[itr].ucmp_len + 7)/8),
-					test[itr].ucmp_len, osmo_hexdump(dest.data,
-						(dest.cur_bit + 7)/8), dest.cur_bit
-				);
+			if (!result_matches(dest, test[itr].ucmp_data,
+					    test[itr].ucmp_len)) {
+				LOGP(DRLCMACDL, LOGL_DEBUG,
+				     "\nTree based decoding: Error\n"
+				     "expected data = %s\n"
+				     "expected len = %d\n"
+				     "decoded data = %s\n"
+				     "decoded len = %d\n",
+				     osmo_hexdump(test[itr].ucmp_data,
+						  CEIL_DIV_8(test[itr].ucmp_len)),
+				     test[itr].ucmp_len,
+				     osmo_hexdump(dest.data,
+						  CEIL_DIV_8(dest.cur_bit)),
+				     dest.cur_bit);
 				OSMO_ASSERT(0);
 			}
 		}
-		LOGP(DRLCMACDL, LOGL_DEBUG, "\nexpected data = %s\nexpected len = %d"
-			"\ndecoded data = %s\ndecoded len = %d\n",
-			osmo_hexdump(test[itr].ucmp_data,
-			(test[itr].ucmp_len + 7)/8),
-			test[itr].ucmp_len, osmo_hexdump(dest.data,
-			(dest.cur_bit + 7)/8), dest.cur_bit
-		);
+		LOGP(DRLCMACDL, LOGL_DEBUG,
+		     "\nexpected data = %s\n"
+		     "expected len = %d\n"
+		     "decoded data = %s\n"
+		     "decoded len = %d\n",
+		     osmo_hexdump(test[itr].ucmp_data,
+				  CEIL_DIV_8(test[itr].ucmp_len)),
+		     test[itr].ucmp_len,
+		     osmo_hexdump(dest.data, CEIL_DIV_8(dest.cur_bit)),
+		     dest.cur_bit);
 	}
 
 	printf("=== end %s ===\n", __func__);
