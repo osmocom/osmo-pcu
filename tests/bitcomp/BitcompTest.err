@@ -11,7 +11,7 @@ Run_length = 31
 Run_length = 19
 Run_length = 32
 
-expected data = ff ff ff f8 00 00 01 ff ff ff f8 00 00 00 ff ff ff fe 00 00 3f ff ff ff db 
+expected data = ff ff ff f8 00 00 01 ff ff ff f8 00 00 00 ff ff ff fe 00 00 3f ff ff ff c0 
 expected len = 194
 decoded data = ff ff ff f8 00 00 01 ff ff ff f8 00 00 00 ff ff ff fe 00 00 3f ff ff ff c0 
 decoded len = 194
@@ -25,7 +25,7 @@ Run_length = 40
 Run_length = 51
 Run_length = 41
 
-expected data = ff ff ff ff ff ff c0 00 00 00 00 3f ff ff ff ff ff f8 00 00 00 00 03 
+expected data = ff ff ff ff ff ff c0 00 00 00 00 3f ff ff ff ff ff f8 00 00 00 00 00 
 expected len = 182
 decoded data = ff ff ff ff ff ff c0 00 00 00 00 3f ff ff ff ff ff f8 00 00 00 00 00 
 decoded len = 182
