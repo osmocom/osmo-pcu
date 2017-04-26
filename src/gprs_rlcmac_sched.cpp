@@ -178,11 +178,14 @@ static struct msgb *sched_select_ctrl_msg(
 		}
 	}
 
-	if (!tbf)
-		return NULL;
-
 	/* any message */
 	if (msg) {
+		if (!tbf) {
+			LOGP(DRLCMACSCHED, LOGL_ERROR,
+			     "Control message to be scheduled, but no TBF (TRX=%d, TS=%d)\n", trx, ts);
+			msgb_free(msg);
+			return NULL;
+		}
 		tbf->rotate_in_list();
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling control "
 			"message at RTS for %s (TRX=%d, TS=%d)\n",
@@ -191,14 +194,12 @@ static struct msgb *sched_select_ctrl_msg(
 		tbf->ms()->update_dl_ctrl_msg();
 		return msg;
 	}
-	/* schedule PACKET PAGING REQUEST */
+
+	/* schedule PACKET PAGING REQUEST, if any are pending */
 	msg = pdch->packet_paging_request();
 	if (msg) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling paging request "
 			"message at RTS for (TRX=%d, TS=%d)\n", trx, ts);
-
-		/* Updates the dl ctrl msg counter for ms */
-		tbf->ms()->update_dl_ctrl_msg();
 		return msg;
 	}
 
