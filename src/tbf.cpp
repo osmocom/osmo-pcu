@@ -566,8 +566,7 @@ void gprs_rlcmac_tbf::stop_timer()
 int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 	uint32_t *poll_fn_, unsigned int *rrbp_)
 {
-	uint32_t fn_offs = 13;
-	uint32_t new_poll_fn = (fn + fn_offs) % 2715648;
+	uint32_t new_poll_fn = next_fn(fn, 13);
 
 	if (!is_control_ts(ts)) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
@@ -581,7 +580,7 @@ int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 			name());
 		return -EBUSY;
 	}
-	if (bts->sba()->find(trx->trx_no, ts, (fn + 13) % 2715648)) {
+	if (bts->sba()->find(trx->trx_no, ts, next_fn(fn, 13))) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "%s: Polling is already scheduled "
 			"for single block allocation at FN %d TS %d ...\n",
 			name(), new_poll_fn, ts);

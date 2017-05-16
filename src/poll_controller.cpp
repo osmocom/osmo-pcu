@@ -28,35 +28,39 @@ PollController::PollController(BTS& bts)
 	: m_bts(bts)
 {}
 
+static inline bool elapsed_fn_check(unsigned max_delay, int frame_number, uint32_t from)
+{
+	uint32_t elapsed = (frame_number + GSM_MAX_FN - from) % GSM_MAX_FN;
+
+	if (elapsed > max_delay && elapsed < 2715400)
+		return true;
+
+	return false;
+}
+
 void PollController::expireTimedout(int frame_number, unsigned max_delay)
 {
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_sba *sba, *sba2;
 	LListHead<gprs_rlcmac_tbf> *pos;
-	uint32_t elapsed;
 
 	llist_for_each(pos, &m_bts.ul_tbfs()) {
 		ul_tbf = as_ul_tbf(pos->entry());
 		if (ul_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
-			elapsed = (frame_number + 2715648 - ul_tbf->poll_fn)
-								% 2715648;
-			if (elapsed > max_delay && elapsed < 2715400)
+			if (elapsed_fn_check(max_delay, frame_number, ul_tbf->poll_fn))
 				ul_tbf->poll_timeout();
 		}
 	}
 	llist_for_each(pos, &m_bts.dl_tbfs()) {
 		dl_tbf = as_dl_tbf(pos->entry());
 		if (dl_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
-			elapsed = (frame_number + 2715648 - dl_tbf->poll_fn)
-								% 2715648;
-			if (elapsed > max_delay && elapsed < 2715400)
+			if (elapsed_fn_check(max_delay, frame_number, dl_tbf->poll_fn))
 				dl_tbf->poll_timeout();
 		}
 	}
 	llist_for_each_entry_safe(sba, sba2, &m_bts.sba()->m_sbas, list) {
-		elapsed = (frame_number + 2715648 - sba->fn) % 2715648;
-		if (elapsed > max_delay && elapsed < 2715400) {
+		if (elapsed_fn_check(max_delay, frame_number, sba->fn)) {
 			/* sba will be freed here */
 			m_bts.sba()->timeout(sba);
 		}

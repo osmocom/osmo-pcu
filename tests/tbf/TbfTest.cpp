@@ -56,20 +56,6 @@ static void check_tbf(gprs_rlcmac_tbf *tbf)
 		OSMO_ASSERT(tbf->T != 0);
 }
 
-/*
-static unsigned inc_fn(fn)
-{
-	unsigned next_fn;
-
-	next_fn = fn + 4;
-	if ((block_nr % 3) == 2)
-		next_fn ++;
-	next_fn = next_fn % 2715648;
-
-	return next_fn;
-}
-*/
-
 static void test_tbf_base()
 {
 
@@ -209,7 +195,7 @@ static unsigned fn_add_blocks(unsigned fn, unsigned blocks)
 	unsigned bn = fn2bn(fn) + blocks;
 	fn = fn - (fn % 52);
 	fn += bn * 4 + bn / 3;
-	return fn % 2715648;
+	return fn % GSM_MAX_FN;
 }
 
 static void request_dl_rlc_block(struct gprs_rlcmac_bts *bts,

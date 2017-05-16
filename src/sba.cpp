@@ -23,6 +23,7 @@
 #include <gprs_rlcmac.h>
 #include <gprs_debug.h>
 #include <bts.h>
+#include <pcu_utils.h>
 
 extern "C" {
 #include <osmocom/core/talloc.h>
@@ -75,7 +76,7 @@ int SBAController::alloc(
 		return -EINVAL;
 	}
 
-	fn = (pdch->last_rts_fn + AGCH_START_OFFSET) % 2715648;
+	fn = next_fn(pdch->last_rts_fn, AGCH_START_OFFSET);
 
 	sba->trx_no = trx;
 	sba->ts_no = ts;
@@ -110,14 +111,13 @@ gprs_rlcmac_sba *SBAController::find(const gprs_rlcmac_pdch *pdch, uint32_t fn)
 
 uint32_t SBAController::sched(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr)
 {
-	uint32_t sba_fn;
+	uint32_t sba_fn = fn + 4;
 	struct gprs_rlcmac_sba *sba;
 
 	/* check special TBF for events */
-	sba_fn = fn + 4;
 	if ((block_nr % 3) == 2)
-		sba_fn ++;
-	sba_fn = sba_fn % 2715648;
+		sba_fn++;
+	sba_fn = sba_fn % GSM_MAX_FN;
 	sba = find(trx, ts, sba_fn);
 	if (sba)
 		return sba_fn;

@@ -41,7 +41,7 @@ static uint32_t sched_poll(BTS *bts,
 	poll_fn = fn + 4;
 	if ((block_nr % 3) == 2)
 		poll_fn ++;
-	poll_fn = poll_fn % 2715648;
+	poll_fn = poll_fn % GSM_MAX_FN;
 	llist_for_each(pos, &bts->ul_tbfs()) {
 		ul_tbf = as_ul_tbf(pos->entry());
 		OSMO_ASSERT(ul_tbf);

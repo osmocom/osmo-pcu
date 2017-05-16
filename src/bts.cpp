@@ -238,6 +238,11 @@ void BTS::set_current_frame_number(int fn)
 	m_pollController.expireTimedout(m_cur_fn, max_delay);
 }
 
+static inline int delta_fn(int fn, int to)
+{
+	return (fn + GSM_MAX_FN * 3 / 2 - to) % GSM_MAX_FN - GSM_MAX_FN/2;
+}
+
 void BTS::set_current_block_frame_number(int fn, unsigned max_delay)
 {
 	int delay = 0;
@@ -248,15 +253,14 @@ void BTS::set_current_block_frame_number(int fn, unsigned max_delay)
 	/* frame numbers in the received blocks are assumed to be strongly
 	 * monotonic. */
 	if (m_cur_blk_fn >= 0) {
-		int delta = (fn + 2715648 * 3 / 2 - m_cur_blk_fn) % 2715648 - 2715648/2;
+		int delta = delta_fn(fn, m_cur_blk_fn);
 		if (delta <= 0)
 			return;
 	}
 
 	/* Check block delay vs. the current frame number */
 	if (current_frame_number() != 0)
-		delay = (fn + 2715648 * 3 / 2 - current_frame_number()) % 2715648
-			- 2715648/2;
+		delay = delta_fn(fn, current_frame_number());
 	if (delay <= -late_block_delay_thresh) {
 		LOGP(DRLCMAC, LOGL_NOTICE,
 			"Late RLC block, FN delta: %d FN: %d curFN: %d\n",
@@ -814,7 +818,7 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 		tbf->trx->trx_no, tbf->trx->arfcn,
 		ts, tbf->ta(), poll ? tbf->poll_fn : -1);
 	plen = Encoding::write_immediate_assignment(tbf, immediate_assignment, 1, 125,
-		(tbf->pdch[ts]->last_rts_fn + 21216) % 2715648, tbf->ta(),
+		(tbf->pdch[ts]->last_rts_fn + 21216) % GSM_MAX_FN, tbf->ta(),
 		tbf->trx->arfcn, ts, tbf->tsc(), 7, poll,
 		tbf->poll_fn, m_bts.alpha, m_bts.gamma, -1);
 	if (plen >= 0) {

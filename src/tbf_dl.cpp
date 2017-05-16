@@ -1170,30 +1170,27 @@ bool gprs_rlcmac_dl_tbf::have_data() const
 		(llc_queue_size() > 0);
 }
 
-int gprs_rlcmac_dl_tbf::frames_since_last_poll(unsigned fn) const
+static inline int frames_since_last(int32_t last, unsigned fn)
 {
-	unsigned wrapped;
-	if (m_last_dl_poll_fn < 0)
+	unsigned wrapped = (fn + GSM_MAX_FN - last) % GSM_MAX_FN;
+
+	if (last < 0)
 		return -1;
 
-	wrapped = (fn + 2715648 - m_last_dl_poll_fn) % 2715648;
-	if (wrapped < 2715648/2)
+	if (wrapped < GSM_MAX_FN/2)
 		return wrapped;
-	else
-		return wrapped - 2715648;
+
+	return wrapped - GSM_MAX_FN;
+}
+
+int gprs_rlcmac_dl_tbf::frames_since_last_poll(unsigned fn) const
+{
+	return frames_since_last(m_last_dl_poll_fn, fn);
 }
 
 int gprs_rlcmac_dl_tbf::frames_since_last_drain(unsigned fn) const
 {
-	unsigned wrapped;
-	if (m_last_dl_drained_fn < 0)
-		return -1;
-
-	wrapped = (fn + 2715648 - m_last_dl_drained_fn) % 2715648;
-	if (wrapped < 2715648/2)
-		return wrapped;
-	else
-		return wrapped - 2715648;
+	return frames_since_last(m_last_dl_drained_fn, fn);
 }
 
 bool gprs_rlcmac_dl_tbf::keep_open(unsigned fn) const
