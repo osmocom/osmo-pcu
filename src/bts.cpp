@@ -986,7 +986,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		if (ms)
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
 			     "unknown TBF corresponds to MS with IMSI %s, TA %d, "
-			     "uTBF (TFI=%d, state=%s), uTBF (TFI=%d, state=%s)\n",
+			     "uTBF (TFI=%d, state=%s), dTBF (TFI=%d, state=%s)\n",
 			     ms->imsi(), ms->ta(),
 			     ms->ul_tbf() ? ms->ul_tbf()->tfi() : 0,
 			     ms->ul_tbf() ? ms->ul_tbf()->state_name() : "None",
