@@ -209,7 +209,7 @@ int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 static int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx)
 {
 	struct bssgp_normal_hdr *bgph = (struct bssgp_normal_hdr *) msgb_bssgph(msg);
-	uint8_t pdu_type = bgph->pdu_type;
+	enum bssgp_pdu_type pdu_type = (enum bssgp_pdu_type) bgph->pdu_type;
 	unsigned rc = 0;
 
 	if (!bctx)
@@ -248,7 +248,7 @@ static int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct
 		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_FLOW_CONTROL_MS_ACK\n");
 		break;
 	default:
-		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%u PDU type 0x%02x unknown\n", bctx->bvci, pdu_type);
+		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%u PDU type 0x%02x unknown\n", bctx->bvci, bssgp_pdu_str(pdu_type));
 		rc = bssgp_tx_status(BSSGP_CAUSE_PROTO_ERR_UNSPEC, NULL, msg);
 		break;
 	}
@@ -259,9 +259,10 @@ static int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct
 static int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struct bssgp_bvc_ctx *bctx)
 {
 	struct bssgp_normal_hdr *bgph = (struct bssgp_normal_hdr *) msgb_bssgph(msg);
+	enum bssgp_pdu_type pdu_type = (enum bssgp_pdu_type) bgph->pdu_type;
 	int rc = 0;
 	int bvci = bctx ? bctx->bvci : -1;
-	switch (bgph->pdu_type) {
+	switch (pdu_type) {
 	case BSSGP_PDUT_STATUS:
 		/* Some exception has occurred */
 		DEBUGP(DBSSGP, "BSSGP BVCI=%d Rx BVC STATUS\n", bvci);
@@ -311,8 +312,8 @@ static int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struc
 		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SGSN_INVOKE_TRACE\n");
 		break;
 	default:
-		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%d Rx PDU type 0x%02x unknown\n",
-			bvci, bgph->pdu_type);
+		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%d Rx PDU type %s unknown\n",
+		     bvci, bssgp_pdu_str(pdu_type));
 		rc = bssgp_tx_status(BSSGP_CAUSE_PROTO_ERR_UNSPEC, NULL, msg);
 		break;
 	}
@@ -324,7 +325,7 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	struct bssgp_normal_hdr *bgph = (struct bssgp_normal_hdr *) msgb_bssgph(msg);
 	struct bssgp_ud_hdr *budh = (struct bssgp_ud_hdr *) msgb_bssgph(msg);
 	struct tlv_parsed tp;
-	uint8_t pdu_type = bgph->pdu_type;
+	enum bssgp_pdu_type pdu_type = (enum bssgp_pdu_type) bgph->pdu_type;
 	uint16_t ns_bvci = msgb_bvci(msg);
 	int data_len;
 	int rc = 0;
@@ -358,8 +359,8 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	 && pdu_type != BSSGP_PDUT_PAGING_PS)
 	{
 		LOGP(DBSSGP, LOGL_NOTICE, "NSEI=%u/BVCI=%u Rejecting PDU "
-			"type %u for unknown BVCI\n", msgb_nsei(msg), ns_bvci,
-			pdu_type);
+			"type %s for unknown BVCI\n", msgb_nsei(msg), ns_bvci,
+			bssgp_pdu_str(pdu_type));
 		return bssgp_tx_status(BSSGP_CAUSE_UNKNOWN_BVCI, NULL, msg);
 	}
 
