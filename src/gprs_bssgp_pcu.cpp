@@ -248,7 +248,8 @@ static int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct
 		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_FLOW_CONTROL_MS_ACK\n");
 		break;
 	default:
-		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%u PDU type 0x%02x unknown\n", bctx->bvci, bssgp_pdu_str(pdu_type));
+		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%u PDU type %s unknown\n",
+			bctx->bvci, bssgp_pdu_str(pdu_type));
 		rc = bssgp_tx_status(BSSGP_CAUSE_PROTO_ERR_UNSPEC, NULL, msg);
 		break;
 	}
