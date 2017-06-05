@@ -139,6 +139,25 @@ if test "$enable_litecell15" = "yes"; then
 	CPPFLAGS="$oldCPPFLAGS"
 fi
 
+AC_MSG_CHECKING([whether to enable direct PHY access for PDCH of NuRAN Wireless OC-2G BTS])
+AC_ARG_ENABLE(oc2gbts-phy,
+                AC_HELP_STRING([--enable-oc2gbts-phy],
+                                [enable code for OC-2G PHY [default=no]]),
+                [enable_oc2gbts_phy="$enableval"],[enable_oc2gbts_phy="no"])
+AC_ARG_WITH([oc2g], [AS_HELP_STRING([--with-oc2g=INCLUDE_DIR], [Location of the OC-2G API header files])],
+			 [oc2g_incdir="$withval"],[oc2g_incdir="$incdir"])
+AC_SUBST([OC2G_INCDIR], $oc2g_incdir)
+AC_MSG_RESULT([$enable_oc2gbts_phy])
+AM_CONDITIONAL(ENABLE_OC2GBTS_PHY, test "x$enable_oc2gbts_phy" = "xyes")
+if test "$enable_oc2g" = "yes"; then
+	oldCPPFLAGS=$CPPFLAGS
+	CPPFLAGS="$CPPFLAGS -I$OC2G_INCDIR -I$srcdir/include $LIBOSMOCORE_CFLAGS"
+	AC_CHECK_HEADER([nrw/oc2g/oc2g.h],[],
+			[AC_MSG_ERROR([nrw/oc2g/oc2g.h can not be found in $oc2g_incdir])],
+			[#include <nrw/oc2g/oc2g.h>])
+	CPPFLAGS=$oldCPPFLAGS
+fi
+
 AC_ARG_ENABLE([vty_tests],
 		AC_HELP_STRING([--enable-vty-tests],
 				[Include the VTY tests in make check [default=no]]),
