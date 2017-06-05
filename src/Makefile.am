@@ -29,6 +29,10 @@ if ENABLE_LC15BTS_PHY
 AM_CPPFLAGS += -DENABLE_DIRECT_PHY
 endif
 
+if ENABLE_OC2GBTS_PHY
+AM_CPPFLAGS += -DENABLE_DIRECT_PHY
+endif
+
 AM_CXXFLAGS = -Wall -ldl -pthread
 AM_LDFLAGS = -lrt
 
@@ -156,6 +160,26 @@ osmo_pcu_SOURCES += \
 	osmo-bts-litecell15/lc15_l1_if.c \
 	osmo-bts-litecell15/lc15_l1_hw.c \
 	osmo-bts-litecell15/lc15bts.c
+endif
+
+if ENABLE_OC2GBTS_PHY
+AM_CPPFLAGS += -I$(OC2G_INCDIR) -I$(srcdir)/osmo-bts-oc2g
+
+EXTRA_DIST = \
+	osmo-bts-oc2g/oc2g_l1_if.c \
+        osmo-bts-oc2g/oc2g_l1_if.h \
+        osmo-bts-oc2g/oc2g_l1_hw.c \
+        osmo-bts-oc2g/oc2gbts.c \
+        osmo-bts-oc2g/oc2gbts.h
+
+noinst_HEADERS += \
+        osmo-bts-oc2g/oc2g_l1_if.h \
+        osmo-bts-oc2g/oc2gbts.h
+
+osmo_pcu_SOURCES += \
+	osmo-bts-oc2g/oc2g_l1_if.c \
+	osmo-bts-oc2g/oc2g_l1_hw.c \
+	osmo-bts-oc2g/oc2gbts.c
 endif
 
 osmo_pcu_LDADD = \
