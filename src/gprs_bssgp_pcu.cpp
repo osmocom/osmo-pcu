@@ -155,9 +155,8 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	if (TLVP_PRESENT(tp, BSSGP_IE_PDU_LIFETIME))
 	{
 		uint8_t lt_len = TLVP_LEN(tp, BSSGP_IE_PDU_LIFETIME);
-		uint16_t *lt = (uint16_t *) TLVP_VAL(tp, BSSGP_IE_PDU_LIFETIME);
 		if (lt_len == 2)
-			delay_csec = ntohs(*lt);
+			delay_csec = tlvp_val16be(tp, BSSGP_IE_PDU_LIFETIME);
 		else
 			LOGP(DBSSGP, LOGL_NOTICE, "BSSGP invalid length of "
 				"PDU_LIFETIME IE\n");
@@ -169,9 +168,8 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	if (TLVP_PRESENT(tp, BSSGP_IE_TLLI))
 	{
 		uint8_t tlli_len = TLVP_LEN(tp, BSSGP_IE_PDU_LIFETIME);
-		uint16_t *e_tlli_old = (uint16_t *) TLVP_VAL(tp, BSSGP_IE_TLLI);
 		if (tlli_len == 2)
-			tlli_old = ntohs(*e_tlli_old);
+			tlli_old = tlvp_val16be(tp, BSSGP_IE_TLLI);
 		else
 			LOGP(DBSSGP, LOGL_NOTICE, "BSSGP invalid length of "
 				"TLLI (old) IE\n");
