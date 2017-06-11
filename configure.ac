@@ -51,7 +51,7 @@ AC_ARG_ENABLE(lc15bts-phy,
                                 [enable code for Litecell 1.5 PHY [default=no]]),
                 [enable_lc15bts_phy="$enableval"],[enable_lc15bts_phy="no"])
 AC_ARG_WITH([litecell15], [AS_HELP_STRING([--with-litecell15=INCLUDE_DIR], [Location of the litecell 1.5 API header files])],
-			 [litecell15_incdir="$withval"],[litecell15_incdir="$incdir"])
+			 [litecell15_incdir="$withval"],[litecell15_incdir="$includedir"])
 AC_SUBST([LITECELL15_INCDIR], $litecell15_incdir)
 AC_MSG_RESULT([$enable_lc15bts_phy])
 AM_CONDITIONAL(ENABLE_LC15BTS_PHY, test "x$enable_lc15bts_phy" = "xyes")
