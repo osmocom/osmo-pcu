@@ -137,7 +137,7 @@ osmo_pcu_remote_LDADD = \
 endif
 
 if ENABLE_LC15BTS_PHY
-AM_CPPFLAGS += -I$(LITECELL15_INCDIR) -I$(srcdir)/osmo-bts-litecell15
+AM_CPPFLAGS += $(LITECELL15_CFLAGS) -I$(srcdir)/osmo-bts-litecell15
 
 EXTRA_DIST = \
 	osmo-bts-litecell15/lc15_l1_if.c \
