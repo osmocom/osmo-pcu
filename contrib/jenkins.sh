@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 set -ex
 
@@ -22,15 +22,17 @@ if [ "$with_dsp" = sysmo ]; then
 
   # For direct sysmo DSP access, provide the SysmoBTS Layer 1 API
   cd "$deps"
-  if [ ! -d layer1-api ]; then
-    git clone git://git.sysmocom.de/sysmo-bts/layer1-api.git layer1-api
-  fi
-  cd layer1-api
-  git fetch origin
-  git reset --hard origin/master
+  osmo-layer1-headers.sh sysmo
+  cd layer1-headers
   api_incl="$inst/include/sysmocom/femtobts/"
   mkdir -p "$api_incl"
   cp include/*.h "$api_incl"
+  cd "$base"
+
+elif [ "$with_dsp" = lc15 ]; then
+  PCU_CONFIG="$PCU_CONFIG --enable-lc15bts-phy --with-litecell15=$deps/layer1-headers/inc"
+  cd "$deps"
+  osmo-layer1-headers.sh lc15
   cd "$base"
 
 elif [ -z "$with_dsp" -o "$with_dsp" = none ]; then
