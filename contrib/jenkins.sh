@@ -32,7 +32,7 @@ if [ "$with_dsp" = sysmo ]; then
 elif [ "$with_dsp" = lc15 ]; then
   PCU_CONFIG="$PCU_CONFIG --enable-lc15bts-phy --with-litecell15=$deps/layer1-headers/inc"
   cd "$deps"
-  osmo-layer1-headers.sh lc15
+  osmo-layer1-headers.sh lc15 "$FIRMWARE_VERSION"
   cd "$base"
 
 elif [ -z "$with_dsp" -o "$with_dsp" = none ]; then
