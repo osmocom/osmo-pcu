@@ -549,9 +549,8 @@ static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 	/* omit frame numbers not starting at a MAC block */
 	if (fn13 != 0 && fn13 != 4 && fn13 != 8)
 		return 0;
-#warning uncomment
-//	LOGP(DL1IF, LOGL_DEBUG, "Time indication received: %d\n",
-//		time_ind->fn % 52);
+
+	LOGP(DL1IF, LOGL_DEBUG, "Time indication received: %d\n", time_ind->fn % 52);
 
 	BTS::main_bts()->set_current_frame_number(time_ind->fn);
 	return 0;
