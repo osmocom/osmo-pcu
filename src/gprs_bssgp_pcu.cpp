@@ -325,14 +325,15 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	struct bssgp_ud_hdr *budh = (struct bssgp_ud_hdr *) msgb_bssgph(msg);
 	struct tlv_parsed tp;
 	enum bssgp_pdu_type pdu_type = (enum bssgp_pdu_type) bgph->pdu_type;
-	uint16_t ns_bvci = msgb_bvci(msg);
+	enum gprs_bssgp_cause cause = BSSGP_CAUSE_OML_INTERV;
+	uint16_t ns_bvci = msgb_bvci(msg), nsei = msgb_nsei(msg);
 	int data_len;
 	int rc = 0;
 	struct bssgp_bvc_ctx *bctx;
 
 	if (pdu_type == BSSGP_PDUT_STATUS)
 		/* Pass the message to the generic BSSGP parser, which handles
-		 * STATUS message in either direction. */
+		 * STATUS and RESET messages in either direction. */
 		return bssgp_rcvmsg(msg);
 
 	/* Identifiers from DOWN: NSEI, BVCI (both in msg->cb) */
@@ -349,6 +350,23 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 		rc = bssgp_tlv_parse(&tp, budh->data, data_len);
 	}
 
+	if (pdu_type == BSSGP_PDUT_BVC_RESET) {
+		rc = bssgp_rcvmsg(msg);
+		if (ns_bvci != BVCI_SIGNALLING)
+			return rc;
+
+		if (TLVP_PRES_LEN(&tp, BSSGP_IE_CAUSE, 1))
+			cause = (enum gprs_bssgp_cause)*TLVP_VAL(&tp, BSSGP_IE_CAUSE);
+		else
+			LOGP(DBSSGP, LOGL_ERROR, "NSEI=%u BVC RESET without cause?!\n", nsei);
+
+		rc = bssgp_tx_bvc_ptp_reset(nsei, cause);
+		if (rc < 0)
+			LOGP(DBSSGP, LOGL_ERROR, "NSEI=%u BVC PTP reset procedure failed: %d\n", nsei, rc);
+
+		return rc;
+	}
+
 	/* look-up or create the BTS context for this BVC */
 	bctx = btsctx_by_bvci_nsei(ns_bvci, msgb_nsei(msg));
 
@@ -357,9 +375,8 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	 && pdu_type != BSSGP_PDUT_BVC_UNBLOCK_ACK
 	 && pdu_type != BSSGP_PDUT_PAGING_PS)
 	{
-		LOGP(DBSSGP, LOGL_NOTICE, "NSEI=%u/BVCI=%u Rejecting PDU "
-			"type %s for unknown BVCI\n", msgb_nsei(msg), ns_bvci,
-			bssgp_pdu_str(pdu_type));
+		LOGP(DBSSGP, LOGL_NOTICE, "NSEI=%u/BVCI=%u Rejecting PDU type %s for unknown BVCI\n",
+		     nsei, ns_bvci, bssgp_pdu_str(pdu_type));
 		return bssgp_tx_status(BSSGP_CAUSE_UNKNOWN_BVCI, NULL, msg);
 	}
 
