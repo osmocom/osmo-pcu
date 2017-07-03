@@ -14,4 +14,4 @@ CPUSchedulingPriority=1
 
 [Install]
 WantedBy=multi-user.target
-Alias=osmo-pcu.service
+Alias=sysmopcu.service
