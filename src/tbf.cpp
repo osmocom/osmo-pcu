@@ -607,27 +607,25 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts)
 
 void gprs_rlcmac_tbf::poll_timeout()
 {
+	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
+
 	LOGP(DRLCMAC, LOGL_NOTICE, "%s poll timeout for FN=%d, TS=%d (curr FN %d)\n",
 		tbf_name(this), poll_fn, poll_ts, bts->current_frame_number());
 
 	poll_state = GPRS_RLCMAC_POLL_NONE;
 
-	if (ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
-		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK))) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
-				"PACKET CONTROL ACK for PACKET UPLINK ACK\n");
+	if (ul_tbf && ul_tbf->handle_ctrl_ack()) {
+		if (!ul_tbf->ctrl_ack_to_toggle()) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ACK\n");
 			rlcmac_diag();
-			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
 		}
-		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
 		bts->rlc_ack_timedout();
 		bts->pkt_ul_ack_nack_poll_timedout();
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
-			gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
 			ul_tbf->m_n3103++;
 			if (ul_tbf->m_n3103 == ul_tbf->bts->bts_data()->n3103) {
 				LOGP(DRLCMAC, LOGL_NOTICE,
-					"- N3103 exceeded\n");
+				     "- N3103 exceeded\n");
 				bts->pkt_ul_ack_nack_poll_failed();
 				ul_tbf->set_state(GPRS_RLCMAC_RELEASING);
 				tbf_timer_start(ul_tbf, 3169, ul_tbf->bts->bts_data()->t3169, 0);
@@ -640,10 +638,10 @@ void gprs_rlcmac_tbf::poll_timeout()
 	} else if (ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
 		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS))) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- Timeout for polling "
-				"PACKET CONTROL ACK for PACKET UPLINK "
-				"ASSIGNMENT.\n");
-			rlcmac_diag();
-			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
+			     "PACKET CONTROL ACK for PACKET UPLINK "
+			     "ASSIGNMENT.\n");
+				rlcmac_diag();
+				state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
 		}
 		ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
 		n3105++;

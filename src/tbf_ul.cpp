@@ -95,6 +95,27 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 	return 0;
 }
 
+bool gprs_rlcmac_ul_tbf::ctrl_ack_to_toggle()
+{
+	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK))) {
+		state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
+		return true; /* GPRS_RLCMAC_FLAG_TO_UL_ACK was set, now cleared */
+	}
+
+	state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
+	return false; /* GPRS_RLCMAC_FLAG_TO_UL_ACK was unset, now set */
+}
+
+bool gprs_rlcmac_ul_tbf::handle_ctrl_ack()
+{
+	/* check if this control ack belongs to packet uplink ack */
+	if (ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
+		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
+		return true;
+	}
+
+	return false;
+}
 
 struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 {

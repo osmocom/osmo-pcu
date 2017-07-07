@@ -503,6 +503,8 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_ul_tbf(BTS *bts);
 
 	struct msgb *create_ul_ack(uint32_t fn, uint8_t ts);
+	bool ctrl_ack_to_toggle();
+	bool handle_ctrl_ack();
 
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(

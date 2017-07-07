@@ -998,6 +998,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	struct gprs_rlcmac_tbf *tbf, *new_tbf;
 	uint32_t tlli = packet->TLLI;
 	GprsMs *ms = bts()->ms_by_tlli(tlli);
+	gprs_rlcmac_ul_tbf *ul_tbf;
 
 	tbf = bts()->ul_tbf_by_poll_fn(fn, trx_no(), ts_no);
 	if (!tbf)
@@ -1024,16 +1025,12 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 
 	/* check if this control ack belongs to packet uplink ack */
-	if (tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
+	ul_tbf = as_ul_tbf(tbf);
+	if (ul_tbf && ul_tbf->handle_ctrl_ack()) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "TBF: [UPLINK] END %s\n", tbf_name(tbf));
-		tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
-		if ((tbf->state_flags &
-			(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK))) {
-			tbf->state_flags &=
-				~(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
-				LOGP(DRLCMAC, LOGL_NOTICE, "Recovered uplink "
-					"ack for UL %s\n", tbf_name(tbf));
-		}
+		if (ul_tbf->ctrl_ack_to_toggle())
+			LOGP(DRLCMAC, LOGL_NOTICE, "Recovered uplink ack for UL %s\n", tbf_name(tbf));
+
 		tbf_free(tbf);
 		return;
 	}
