@@ -609,6 +609,29 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 	return bsn;
 }
 
+void gprs_rlcmac_dl_tbf::clear_poll_timeout_flag()
+{
+	state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
+}
+
+bool gprs_rlcmac_dl_tbf::handle_ack_nack()
+{
+	bool ack_recovered = false;
+
+	state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
+	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
+		clear_poll_timeout_flag();
+		ack_recovered = true;
+	}
+
+	/* reset N3105 */
+	n3105 = 0;
+	stop_t3191();
+	poll_state = GPRS_RLCMAC_POLL_NONE;
+
+	return ack_recovered;
+}
+
 struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				const uint32_t fn, const uint8_t ts,
 				int index, int index2)
@@ -807,8 +830,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			if (is_final)
 				tbf_timer_start(this, 3191, bts_data()->t3191, 0);
 
-			/* Clear poll timeout flag */
-			state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
+			clear_poll_timeout_flag();
 
 			/* Clear request flag */
 			m_dl_ack_requested = false;

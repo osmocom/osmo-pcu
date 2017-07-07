@@ -424,6 +424,8 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int rcvd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
 	int rcvd_dl_ack(uint8_t final_ack, unsigned first_bsn, struct bitvec *rbb);
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
+	void clear_poll_timeout_flag();
+	bool handle_ack_nack();
 	void request_dl_ack();
 	bool need_control_ts() const;
 	bool have_data() const;

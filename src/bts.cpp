@@ -1175,17 +1175,11 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 			"wrong TFI=%d, ignoring!\n", tfi);
 		return;
 	}
-	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
-	if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
-		tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
-		LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink ack "
-			"for %s\n", tbf_name(tbf));
-	}
-	/* reset N3105 */
-	tbf->n3105 = 0;
-	tbf->stop_t3191();
+
+	if (tbf->handle_ack_nack())
+		LOGP(DRLCMAC, LOGL_NOTICE, "Recovered downlink ack for %s\n", tbf_name(tbf));
+
 	LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] %s Packet Downlink Ack/Nack\n", tbf_name(tbf));
-	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 
 	bits.data = bits_data;
 	bits.data_len = sizeof(bits_data);
@@ -1263,19 +1257,13 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 			"wrong TFI=%d, ignoring!\n", tfi);
 		return;
 	}
-	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
-	if ((tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
-		tbf->state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
-		LOGP(DRLCMAC, LOGL_NOTICE, "Recovered EGPRS downlink ack "
-			"for %s\n", tbf_name(tbf));
-	}
-	/* reset N3105 */
-	tbf->n3105 = 0;
-	tbf->stop_t3191();
+
+	if (tbf->handle_ack_nack())
+		LOGP(DRLCMAC, LOGL_NOTICE, "Recovered EGPRS downlink ack for %s\n", tbf_name(tbf));
+
 	LOGP(DRLCMAC, LOGL_DEBUG,
 		"RX: [PCU <- BTS] %s EGPRS Packet Downlink Ack/Nack\n",
 		tbf_name(tbf));
-	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "EGPRS ACK/NACK: "
 		"ut: %d, final: %d, bow: %d, eow: %d, ssn: %d, have_crbb: %d, "
