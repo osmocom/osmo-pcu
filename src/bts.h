@@ -373,7 +373,6 @@ public:
 	int rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 		enum ph_burst_type burst_type);
 
-	void trigger_dl_ass(gprs_rlcmac_dl_tbf *tbf, gprs_rlcmac_tbf *old_tbf);
 	void snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi);
 
 	GprsMsStorage &ms_store();
@@ -501,7 +500,6 @@ private:
 	/* list of downlink TBFs */
 	LListHead<gprs_rlcmac_tbf> m_dl_tbfs;
 
-private:
 	/* disable copying to avoid slicing */
 	BTS(const BTS&);
 	BTS& operator=(const BTS&);

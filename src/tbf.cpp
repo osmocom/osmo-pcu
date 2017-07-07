@@ -1011,7 +1011,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 
 				dl_tbf->update();
 
-				dl_tbf->bts->trigger_dl_ass(dl_tbf, dl_tbf);
+				dl_tbf->trigger_ass(dl_tbf);
 			} else
 				LOGP(DRLCMAC, LOGL_NOTICE, "%s Continue flow after "
 					"IMM.ASS confirm\n", tbf_name(dl_tbf));
@@ -1299,7 +1299,7 @@ int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s Trigger downlink assignment on PACCH\n",
 		tbf_name(this));
-	bts->trigger_dl_ass(new_tbf, this);
+	new_tbf->trigger_ass(this);
 
 	return 0;
 }

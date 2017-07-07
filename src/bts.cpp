@@ -788,40 +788,6 @@ uint8_t BTS::is_single_block(uint16_t ra, enum ph_burst_type burst_type,
 	return sb;
 }
 
-/* depending on the current TBF, we assign on PACCH or AGCH */
-void BTS::trigger_dl_ass(
-	struct gprs_rlcmac_dl_tbf *dl_tbf,
-	struct gprs_rlcmac_tbf *old_tbf)
-{
-	/* stop pending timer */
-	dl_tbf->stop_timer();
-
-	/* check for downlink tbf:  */
-	if (old_tbf) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment on "
-			"PACCH, because %s exists\n", tbf_name(old_tbf));
-		old_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
-
-		old_tbf->was_releasing = old_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
-
-		/* change state */
-		dl_tbf->set_state(GPRS_RLCMAC_ASSIGN);
-		if (!(dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
-			dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
-		/* start timer */
-		tbf_timer_start(dl_tbf, 0, Tassign_pacch);
-	} else {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Send dowlink assignment for %s on PCH, no TBF exist (IMSI=%s)\n", tbf_name(dl_tbf), dl_tbf->imsi());
-		dl_tbf->was_releasing = dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
-		/* change state */
-		dl_tbf->set_state(GPRS_RLCMAC_ASSIGN);
-		dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
-		/* send immediate assignment */
-		dl_tbf->bts->snd_dl_ass(dl_tbf, 0, dl_tbf->imsi());
-		dl_tbf->m_wait_confirm = 1;
-	}
-}
-
 void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 {
 	int plen;
