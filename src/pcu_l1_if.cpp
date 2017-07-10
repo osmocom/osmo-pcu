@@ -604,6 +604,22 @@ static int pcu_rx_pag_req(struct gsm_pcu_if_pag_req *pag_req)
 						pag_req->identity_lv);
 }
 
+static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)
+{
+	struct bssgp_bvc_ctx *bctx = gprs_bssgp_pcu_current_bctx();
+	struct gprs_ra_id ra_id;
+
+	gsm48_parse_ra(&ra_id, susp_req->ra_id);
+
+	LOGP(DL1IF, LOGL_INFO, "GPRS Suspend request received: TLLI=0x%08x RAI=%s\n",
+		susp_req->tlli, osmo_rai_name(&ra_id));
+
+	if (!bctx)
+		return -1;
+
+	return bssgp_tx_suspend(bctx->nsei, susp_req->tlli, &ra_id);
+}
+
 int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 {
 	int rc = 0;
@@ -629,6 +645,9 @@ int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 		break;
 	case PCU_IF_MSG_PAG_REQ:
 		rc = pcu_rx_pag_req(&pcu_prim->u.pag_req);
+		break;
+	case PCU_IF_MSG_SUSP_REQ:
+		rc = pcu_rx_susp_req(&pcu_prim->u.susp_req);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received unknwon PCU msg type %d\n",
