@@ -1381,7 +1381,9 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		}
 
 		/* set control ts to current MS's TS, until assignment complete */
-		LOGP(DRLCMAC, LOGL_DEBUG, "Change control TS to %d until assinment is complete.\n", ts_no);
+		LOGP(DRLCMAC, LOGL_DEBUG, "%s change control TS %d -> %d until assinment is complete.\n",
+		     tbf_name(ul_tbf), ul_tbf->control_ts, ts_no);
+
 		ul_tbf->control_ts = ts_no;
 		/* schedule uplink assignment */
 		ul_tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;

@@ -54,6 +54,13 @@ enum gprs_rlcmac_tbf_state {
 	GPRS_RLCMAC_RELEASING,	/* releasing, wait to free TBI/USF */
 };
 
+enum gprs_rlcmac_tbf_poll_type {
+	GPRS_RLCMAC_POLL_UL_ASS,
+	GPRS_RLCMAC_POLL_DL_ASS,
+	GPRS_RLCMAC_POLL_UL_ACK,
+	GPRS_RLCMAC_POLL_DL_ACK,
+};
+
 enum gprs_rlcmac_tbf_poll_state {
 	GPRS_RLCMAC_POLL_NONE = 0,
 	GPRS_RLCMAC_POLL_SCHED, /* a polling was scheduled */
@@ -173,7 +180,7 @@ struct gprs_rlcmac_tbf {
 
 	int check_polling(uint32_t fn, uint8_t ts,
 		uint32_t *poll_fn, unsigned int *rrbp);
-	void set_polling(uint32_t poll_fn, uint8_t ts);
+	void set_polling(uint32_t poll_fn, uint8_t ts, enum gprs_rlcmac_tbf_poll_type t);
 	void poll_timeout();
 
 	/** tlli handling */

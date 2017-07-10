@@ -158,9 +158,8 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 	m_contention_resolution_done = 1;
 
 	if (final) {
-		set_polling(new_poll_fn, ts);
+		set_polling(new_poll_fn, ts, GPRS_RLCMAC_POLL_UL_ACK);
 		/* waiting for final acknowledge */
-		ul_ack_state = GPRS_RLCMAC_UL_ACK_WAIT_ACK;
 		m_final_ack_sent = 1;
 	} else
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
