@@ -760,6 +760,10 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf,
 		tbf->name(), tbf->trx->trx_no, tbf->ul_slots(), tbf->dl_slots());
 
 	tbf->m_ctrs = rate_ctr_group_alloc(tbf, &tbf_ctrg_desc, 0);
+	if (!tbf->m_ctrs) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Couldn't allocate TBF counters\n");
+		return -1;
+	}
 
 	return 0;
 }
@@ -844,6 +848,11 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 
 	tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(tbf, &tbf_ul_egprs_ctrg_desc, 0);
 	tbf->m_ul_gprs_ctrs = rate_ctr_group_alloc(tbf, &tbf_ul_gprs_ctrg_desc, 0);
+	if (!tbf->m_ul_egprs_ctrs || !tbf->m_ul_gprs_ctrs) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Couldn't allocate TBF UL counters\n");
+		talloc_free(tbf);
+		return NULL;
+	}
 
 	llist_add(&tbf->list(), &bts->bts->ul_tbfs());
 	tbf->bts->tbf_ul_created();
@@ -930,8 +939,18 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	if (tbf->is_egprs_enabled()) {
 		tbf->egprs_calc_window_size();
 		tbf->m_dl_egprs_ctrs = rate_ctr_group_alloc(tbf, &tbf_dl_egprs_ctrg_desc, 0);
+		if (!tbf->m_dl_egprs_ctrs) {
+			LOGP(DRLCMAC, LOGL_ERROR, "Couldn't allocate EGPRS DL counters\n");
+			talloc_free(tbf);
+			return NULL;
+		}
 	} else {
 		tbf->m_dl_gprs_ctrs = rate_ctr_group_alloc(tbf, &tbf_dl_gprs_ctrg_desc, 0);
+		if (!tbf->m_dl_gprs_ctrs) {
+			LOGP(DRLCMAC, LOGL_ERROR, "Couldn't allocate GPRS DL counters\n");
+			talloc_free(tbf);
+			return NULL;
+		}
 	}
 
 	llist_add(&tbf->list(), &bts->bts->dl_tbfs());
@@ -1439,6 +1458,11 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 					&tbf_ul_egprs_ctrg_desc, 0);
 	ul_tbf->m_ul_gprs_ctrs = rate_ctr_group_alloc(ul_tbf,
 					&tbf_ul_gprs_ctrg_desc, 0);
+	if (!ul_tbf->m_ctrs || !ul_tbf->m_ul_egprs_ctrs || !ul_tbf->m_ul_gprs_ctrs) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Cound not allocate TBF UL rate counters\n");
+		talloc_free(ul_tbf);
+		return NULL;
+	}
 
 	return ul_tbf;
 }

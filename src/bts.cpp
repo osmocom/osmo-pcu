@@ -207,7 +207,9 @@ BTS::BTS()
 	}
 
 	m_ratectrs = rate_ctr_group_alloc(tall_pcu_ctx, &bts_ctrg_desc, 0);
+	OSMO_ASSERT(m_ratectrs);
 	m_statg = osmo_stat_item_group_alloc(tall_pcu_ctx, &bts_statg_desc, 0);
+	OSMO_ASSERT(m_statg);
 }
 
 BTS::~BTS()
