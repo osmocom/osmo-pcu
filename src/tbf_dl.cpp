@@ -126,8 +126,6 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	GprsMs *ms;
 
 	/* check for uplink data, so we copy our informations */
-#warning "Do the same look up for IMSI, TLLI and OLD_TLLI"
-#warning "Refactor the below lines... into a new method"
 	ms = bts->bts->ms_store().get_ms(tlli, tlli_old, imsi);
 	if (ms) {
 		ul_tbf = ms->ul_tbf();
