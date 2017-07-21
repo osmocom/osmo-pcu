@@ -44,6 +44,20 @@ extern "C" {
 #define LLC_CODEL_USE_DEFAULT (-1)
 #define MAX_GPRS_CS 9
 
+/* see bts->gsmtap_categ_mask */
+enum pcu_gsmtap_category {
+	PCU_GSMTAP_C_DL_UNKNOWN		= 0,	/* unknown or undecodable downlink blocks */
+	PCU_GSMTAP_C_DL_DUMMY		= 1, 	/* downlink dummy blocks */
+	PCU_GSMTAP_C_DL_CTRL		= 2,	/* downlink control blocks */
+	PCU_GSMTAP_C_DL_DATA_GPRS	= 3,	/* downlink GPRS data blocks */
+	PCU_GSMTAP_C_DL_DATA_EGPRS	= 4,	/* downlink EGPRS data blocks */
+
+	PCU_GSMTAP_C_UL_UNKNOWN		= 15,	/* unknown or undecodable uplink blocks */
+	PCU_GSMTAP_C_UL_DUMMY		= 16,	/* uplink dummy blocks */
+	PCU_GSMTAP_C_UL_CTRL		= 17,	/* uplink control blocks */
+	PCU_GSMTAP_C_UL_DATA_GPRS	= 18,	/* uplink GPRS data blocks */
+	PCU_GSMTAP_C_UL_DATA_EGPRS	= 19,	/* uplink EGPRS data blocks */
+};
 
 struct BTS;
 struct GprsMs;
@@ -68,9 +82,9 @@ struct gprs_rlcmac_pdch {
 	/* dispatching of messages */
 	int rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 		struct pcu_l1_meas *meas);
-	int rcv_block_gprs(uint8_t *data, uint32_t fn,
+	int rcv_block_gprs(uint8_t *data, uint8_t data_len, uint32_t fn,
 		struct pcu_l1_meas *meas, GprsCodingScheme cs);
-	int rcv_data_block(uint8_t *data, uint32_t fn,
+	int rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t fn,
 		struct pcu_l1_meas *meas, GprsCodingScheme cs);
 
 	gprs_rlcmac_bts *bts_data() const;
@@ -107,7 +121,7 @@ struct gprs_rlcmac_pdch {
 
 #ifdef __cplusplus
 private:
-	int rcv_control_block(bitvec *rlc_block, uint32_t fn);
+	int rcv_control_block(const uint8_t *data, uint8_t data_len, bitvec *rlc_block, uint32_t fn);
 
 	void rcv_control_ack(Packet_Control_Acknowledgement_t *, uint32_t fn);
 	void rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *, uint32_t fn);
@@ -186,6 +200,7 @@ struct gprs_rlcmac_bts {
 	uint8_t n3103;
 	uint8_t n3105;
 	struct gsmtap_inst *gsmtap;
+	uint32_t gsmtap_categ_mask;
 	struct gprs_rlcmac_trx trx[8];
 	int (*alloc_algorithm)(struct gprs_rlcmac_bts *bts,
 		struct GprsMs *ms,
@@ -361,6 +376,10 @@ public:
 	GprsMs *ms_by_tlli(uint32_t tlli, uint32_t old_tlli = 0);
 	GprsMs *ms_by_imsi(const char *imsi);
 	GprsMs *ms_alloc(uint8_t ms_class, uint8_t egprs_ms_class = 0);
+
+	void send_gsmtap(enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_no,
+			      uint8_t ts_no, uint8_t channel, uint32_t fn,
+			      const uint8_t *data, unsigned int len);
 
 	/*
 	 * Statistics

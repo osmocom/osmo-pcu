@@ -356,22 +356,29 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	/* Prio 1: select control message */
 	msg = sched_select_ctrl_msg(trx, ts, fn, block_nr, pdch, ul_ass_tbf,
 		dl_ass_tbf, ul_ack_tbf);
-	if (msg)
+	if (msg) {
 		bts->bts->rlc_sent_control();
+		bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_CTRL, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data, msg->len);
+	}
 
 	/* Prio 2: select data message for downlink */
 	if (!msg) {
 		msg = sched_select_downlink(bts, trx, ts, fn, block_nr, pdch);
-		if (msg)
+		if (msg) {
 			bts->bts->rlc_sent();
+			/* FIXME: distinguish between GPRS and EGPRS */
+			bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_DATA_GPRS, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data, msg->len);
+		}
 	}
 
 	/* Prio 3: send dummy contol message */
 	if (!msg) {
 		/* increase counter */
 		msg = sched_dummy();
-		if (msg)
+		if (msg) {
 			bts->bts->rlc_sent_dummy();
+			bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_DUMMY, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data, msg->len);
+		}
 	}
 
 	if (!msg)

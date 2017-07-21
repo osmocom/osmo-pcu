@@ -35,6 +35,7 @@ extern "C" {
 	#include <osmocom/core/stats.h>
 	#include <osmocom/gsm/protocol/gsm_04_08.h>
 	#include <osmocom/gsm/gsm_utils.h>
+	#include <osmocom/core/gsmtap_util.h>
 }
 
 #include <arpa/inet.h>
@@ -360,6 +361,23 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 		LOGP(DRLCMAC, LOGL_INFO, "No paging, because no TBF\n");
 
 	return 0;
+}
+
+void BTS::send_gsmtap(enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_no,
+		      uint8_t ts_no, uint8_t channel, uint32_t fn,
+		      const uint8_t *data, unsigned int len)
+{
+	uint16_t arfcn;
+
+	/* check if category is activated at all */
+	if (!(m_bts.gsmtap_categ_mask & (1 << categ)))
+		return;
+
+	arfcn = m_bts.trx[trx_no].arfcn;
+	if (uplink)
+		arfcn |= GSMTAP_ARFCN_F_UPLINK;
+
+	gsmtap_send(m_bts.gsmtap, arfcn, ts_no, channel, 0, fn, 0, 0, data, len);
 }
 
 gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
@@ -1488,13 +1506,19 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 
 /* Received Uplink RLC control block. */
 int gprs_rlcmac_pdch::rcv_control_block(
-	bitvec *rlc_block, uint32_t fn)
+	const uint8_t *data, uint8_t data_len, bitvec *rlc_block, uint32_t fn)
 {
 	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)talloc_zero(tall_pcu_ctx, RlcMacUplink_t);
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
 	decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
 	LOGPC(DCSN1, LOGL_NOTICE, "\n");
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- RX : Uplink Control Block -------------------------\n");
+
+	if (ul_control_block->u.MESSAGE_TYPE == MT_PACKET_UPLINK_DUMMY_CONTROL_BLOCK)
+		bts()->send_gsmtap(PCU_GSMTAP_C_UL_DUMMY, true, trx_no(), ts_no, GSMTAP_CHANNEL_PACCH, fn, data, data_len);
+	else
+		bts()->send_gsmtap(PCU_GSMTAP_C_UL_CTRL, true, trx_no(), ts_no, GSMTAP_CHANNEL_PACCH, fn, data, data_len);
+
 	bts()->rlc_rcvd_control();
 	switch (ul_control_block->u.MESSAGE_TYPE) {
 	case MT_PACKET_CONTROL_ACK:
@@ -1544,10 +1568,10 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 		"length: %d (%d))\n", cs.name(), len, cs.usedSizeUL());
 
 	if (cs.isGprs())
-		return rcv_block_gprs(data, fn, meas, cs);
+		return rcv_block_gprs(data, len, fn, meas, cs);
 
 	if (cs.isEgprs())
-		return rcv_data_block(data, fn, meas, cs);
+		return rcv_data_block(data, len, fn, meas, cs);
 
 	bts()->decode_error();
 	LOGP(DRLCMACUL, LOGL_ERROR, "Unsupported coding scheme %s\n",
@@ -1556,7 +1580,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 }
 
 /*! \brief process egprs and gprs data blocks */
-int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint32_t fn,
+int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t fn,
 	struct pcu_l1_meas *meas, GprsCodingScheme cs)
 {
 	int rc;
@@ -1574,6 +1598,9 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint32_t fn,
 				cs.name());
 			return -EINVAL;
 		}
+		bts()->send_gsmtap(PCU_GSMTAP_C_UL_DATA_EGPRS, true, trx_no(), ts_no, GSMTAP_CHANNEL_PACCH, fn, data, data_len);
+	} else {
+		bts()->send_gsmtap(PCU_GSMTAP_C_UL_DATA_GPRS, true, trx_no(), ts_no, GSMTAP_CHANNEL_PACCH, fn, data, data_len);
 	}
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "  UL data: %s\n", osmo_hexdump(data, len));
@@ -1606,7 +1633,7 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint32_t fn,
 	return tbf->rcv_data_block_acknowledged(&rlc_dec, data, meas);
 }
 
-int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint32_t fn,
+int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint8_t data_len, uint32_t fn,
 	struct pcu_l1_meas *meas, GprsCodingScheme cs)
 {
 	unsigned payload = data[0] >> 6;
@@ -1616,14 +1643,14 @@ int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint32_t fn,
 
 	switch (payload) {
 	case GPRS_RLCMAC_DATA_BLOCK:
-		rc = rcv_data_block(data, fn, meas, cs);
+		rc = rcv_data_block(data, data_len, fn, meas, cs);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK:
 		block = bitvec_alloc(len, tall_pcu_ctx);
 		if (!block)
 			return -ENOMEM;
 		bitvec_unpack(block, data);
-		rc = rcv_control_block(block, fn);
+		rc = rcv_control_block(data, data_len, block, fn);
 		bitvec_free(block);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK_OPT:

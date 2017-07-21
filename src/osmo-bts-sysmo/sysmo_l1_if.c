@@ -184,11 +184,6 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 	if (data_ind->msgUnitParam.u8Size == 0)
 		return -1;
 
-	gsmtap_send(fl1h->gsmtap, data_ind->u16Arfcn | GSMTAP_ARFCN_F_UPLINK,
-			data_ind->u8Tn, GSMTAP_CHANNEL_PACCH, 0,
-			data_ind->u32Fn, 0, 0, data_ind->msgUnitParam.u8Buffer+1,
-			data_ind->msgUnitParam.u8Size-1);
-
 	get_meas(&meas, &data_ind->measParam);
 	bts_update_tbf_ta("PH-DATA", data_ind->u32Fn, fl1h->trx_no,
 			  data_ind->u8Tn, qta2ta(meas.bto));
@@ -209,11 +204,21 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 		break;
 	case GsmL1_Sapi_Ptcch:
 		// FIXME
+		rc = -1;
 		break;
 	default:
 		LOGP(DL1IF, LOGL_NOTICE, "Rx PH-DATA.ind for unknown L1 SAPI %s\n",
 			get_value_string(femtobts_l1sapi_names, data_ind->sapi));
+		rc = -1;
 		break;
+	}
+
+	if (rc < 0) {
+		gsmtap_send(fl1h->gsmtap, data_ind->u16Arfcn | GSMTAP_ARFCN_F_UPLINK,
+				data_ind->u8Tn, GSMTAP_CHANNEL_PACCH, 0,
+				data_ind->u32Fn, 0, 0, data_ind->msgUnitParam.u8Buffer+1,
+				data_ind->msgUnitParam.u8Size-1);
+		//send_gsmtap(PCU_GSMTAP_C_UL_UNKNOWN, true, 0, date_ind->u8Tn, GSMTAP_CHANNEL_PACCH, data_ind->u32Fn, data_ind->msgUnitParam.u8Buffer+1, data_ind->msgUnitParam.u8Size-1);
 	}
 
 	return rc;
@@ -308,12 +313,6 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 	msu_param = &data_req->msgUnitParam;
 	msu_param->u8Size = len;
 	memcpy(msu_param->u8Buffer, data, len);
-
-	gsmtap_send(fl1h->gsmtap, arfcn, data_req->u8Tn, GSMTAP_CHANNEL_PACCH,
-			0, data_req->u32Fn, 0, 0,
-			data_req->msgUnitParam.u8Buffer,
-			data_req->msgUnitParam.u8Size);
-
 
 	/* transmit */
 	if (osmo_wqueue_enqueue(&fl1h->write_q[MQ_PDTCH_WRITE], msg) != 0) {
