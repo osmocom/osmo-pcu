@@ -208,6 +208,7 @@ static int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct
 {
 	struct bssgp_normal_hdr *bgph = (struct bssgp_normal_hdr *) msgb_bssgph(msg);
 	enum bssgp_pdu_type pdu_type = (enum bssgp_pdu_type) bgph->pdu_type;
+	int bvci = bctx ? bctx->bvci : -1;
 	unsigned rc = 0;
 
 	if (!bctx)
@@ -224,29 +225,51 @@ static int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct
 	}
 
 	switch (pdu_type) {
+	case BSSGP_PDUT_STATUS:
+		/* already handled in libosmogb */
+		OSMO_ASSERT(0);
+		break;
 	case BSSGP_PDUT_DL_UNITDATA:
-		LOGP(DBSSGP, LOGL_DEBUG, "RX: [SGSN->PCU] BSSGP_PDUT_DL_UNITDATA\n");
+		LOGP(DBSSGP, LOGL_DEBUG, "Rx BSSGP BVCI=%d (PTP) DL_UNITDATA\n", bvci);
 		if (the_pcu.on_dl_unit_data)
 			the_pcu.on_dl_unit_data(&the_pcu, msg, tp);
 		gprs_bssgp_pcu_rx_dl_ud(msg, tp);
 		break;
-	case BSSGP_PDUT_PAGING_PS:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_PAGING_PS\n");
-		break;
-	case BSSGP_PDUT_PAGING_CS:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_PAGING_CS\n");
-		break;
-	case BSSGP_PDUT_RA_CAPA_UPDATE_ACK:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_RA_CAPA_UPDATE_ACK\n");
-		break;
 	case BSSGP_PDUT_FLOW_CONTROL_BVC_ACK:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_FLOW_CONTROL_BVC_ACK\n");
-		break;
 	case BSSGP_PDUT_FLOW_CONTROL_MS_ACK:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_FLOW_CONTROL_MS_ACK\n");
+		LOGP(DBSSGP, LOGL_DEBUG, "Rx BSSGP BVCI=%d (PTP) %s\n",
+		     bvci, bssgp_pdu_str(pdu_type));
+		break;
+	case BSSGP_PDUT_PAGING_PS:
+	case BSSGP_PDUT_PAGING_CS:
+	case BSSGP_PDUT_RA_CAPABILITY:
+	case BSSGP_PDUT_RA_CAPA_UPDATE_ACK:
+		LOGP(DBSSGP, LOGL_INFO, "Rx BSSGP BVCI=%d (PTP) PDU type %s not implemented\n",
+		     bvci, bssgp_pdu_str(pdu_type));
+		break;
+	/* See TS 08.18 5.4.1 */
+	case BSSGP_PDUT_SUSPEND:
+	case BSSGP_PDUT_SUSPEND_ACK:
+	case BSSGP_PDUT_SUSPEND_NACK:
+	case BSSGP_PDUT_RESUME:
+	case BSSGP_PDUT_RESUME_ACK:
+	case BSSGP_PDUT_RESUME_NACK:
+	case BSSGP_PDUT_FLUSH_LL:
+	case BSSGP_PDUT_FLUSH_LL_ACK:
+	case BSSGP_PDUT_LLC_DISCARD:
+	case BSSGP_PDUT_BVC_BLOCK:
+	case BSSGP_PDUT_BVC_BLOCK_ACK:
+	case BSSGP_PDUT_BVC_UNBLOCK:
+	case BSSGP_PDUT_BVC_UNBLOCK_ACK:
+	case BSSGP_PDUT_BVC_RESET:
+	case BSSGP_PDUT_BVC_RESET_ACK:
+	case BSSGP_PDUT_SGSN_INVOKE_TRACE:
+		LOGP(DBSSGP, LOGL_NOTICE, "Rx BSSGP BVCI=%u (PTP) PDU type %s unexpected at PTP\n",
+			bctx->bvci, bssgp_pdu_str(pdu_type));
+		rc = bssgp_tx_status(BSSGP_CAUSE_PROTO_ERR_UNSPEC, NULL, msg);
 		break;
 	default:
-		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%u PDU type %s unknown\n",
+		LOGP(DBSSGP, LOGL_NOTICE, "Rx BSSGP BVCI=%u (PTP) PDU type %s unknown\n",
 			bctx->bvci, bssgp_pdu_str(pdu_type));
 		rc = bssgp_tx_status(BSSGP_CAUSE_PROTO_ERR_UNSPEC, NULL, msg);
 		break;
@@ -263,18 +286,17 @@ static int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struc
 	int bvci = bctx ? bctx->bvci : -1;
 	switch (pdu_type) {
 	case BSSGP_PDUT_STATUS:
-		/* Some exception has occurred */
-		DEBUGP(DBSSGP, "BSSGP BVCI=%d Rx BVC STATUS\n", bvci);
-		/* FIXME: send NM_STATUS.ind to NM */
+		/* already handled in libosmogb */
+		OSMO_ASSERT(0);
 		break;
 	case BSSGP_PDUT_SUSPEND_ACK:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SUSPEND_ACK\n");
-		break;
-	case BSSGP_PDUT_SUSPEND_NACK:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SUSPEND_NACK\n");
+	case BSSGP_PDUT_RESUME_ACK:
+	case BSSGP_PDUT_BVC_BLOCK_ACK:
+		LOGP(DBSSGP, LOGL_DEBUG, "Rx BSSGP BVCI=%d (SIGN) %s\n",
+		     bvci, bssgp_pdu_str(pdu_type));
 		break;
 	case BSSGP_PDUT_BVC_RESET_ACK:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_BVC_RESET_ACK\n");
+		LOGP(DBSSGP, LOGL_NOTICE, "Rx BSSGP BVCI=%d (SIGN) BVC_RESET_ACK\n", bvci);
 		if (!the_pcu.bvc_sig_reset)
 			the_pcu.bvc_sig_reset = 1;
 		else
@@ -282,36 +304,48 @@ static int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struc
 		bvc_timeout(NULL);
 		break;
 	case BSSGP_PDUT_PAGING_PS:
-		LOGP(DBSSGP, LOGL_NOTICE, "RX: [SGSN->PCU] BSSGP_PDUT_PAGING_PS\n");
 		gprs_bssgp_pcu_rx_paging_ps(msg, tp);
 		break;
-	case BSSGP_PDUT_PAGING_CS:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_PAGING_CS\n");
-		break;
-	case BSSGP_PDUT_RESUME_ACK:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_RESUME_ACK\n");
-		break;
-	case BSSGP_PDUT_RESUME_NACK:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_RESUME_NACK\n");
-		break;
-	case BSSGP_PDUT_FLUSH_LL:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_FLUSH_LL\n");
-		break;
-	case BSSGP_PDUT_BVC_BLOCK_ACK:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SUSPEND_ACK\n");
-		break;
 	case BSSGP_PDUT_BVC_UNBLOCK_ACK:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_BVC_UNBLOCK_ACK\n");
+		LOGP(DBSSGP, LOGL_NOTICE, "Rx BSSGP BVCI=%d (SIGN) BVC_UNBLOCK_ACK\n", bvci);
 		the_pcu.bvc_unblocked = 1;
 		if (the_pcu.on_unblock_ack)
 			the_pcu.on_unblock_ack(&the_pcu);
 		bvc_timeout(NULL);
 		break;
+	case BSSGP_PDUT_SUSPEND_NACK:
+	case BSSGP_PDUT_RESUME_NACK:
+	case BSSGP_PDUT_PAGING_CS:
+	case BSSGP_PDUT_FLUSH_LL:
 	case BSSGP_PDUT_SGSN_INVOKE_TRACE:
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BSSGP_PDUT_SGSN_INVOKE_TRACE\n");
+		LOGP(DBSSGP, LOGL_INFO, "Rx BSSGP BVCI=%d (SIGN) PDU type %s not implemented\n",
+		     bvci, bssgp_pdu_str(pdu_type));
+		break;
+	/* See TS 08.18 5.4.1 */
+	case BSSGP_PDUT_UL_UNITDATA:
+	case BSSGP_PDUT_DL_UNITDATA:
+	case BSSGP_PDUT_RA_CAPABILITY:
+	case BSSGP_PDUT_PTM_UNITDATA:
+	case BSSGP_PDUT_RA_CAPA_UDPATE:
+	case BSSGP_PDUT_RA_CAPA_UPDATE_ACK:
+	case BSSGP_PDUT_RADIO_STATUS:
+	case BSSGP_PDUT_FLOW_CONTROL_BVC:
+	case BSSGP_PDUT_FLOW_CONTROL_BVC_ACK:
+	case BSSGP_PDUT_FLOW_CONTROL_MS:
+	case BSSGP_PDUT_FLOW_CONTROL_MS_ACK:
+	case BSSGP_PDUT_DOWNLOAD_BSS_PFC:
+	case BSSGP_PDUT_CREATE_BSS_PFC:
+	case BSSGP_PDUT_CREATE_BSS_PFC_ACK:
+	case BSSGP_PDUT_CREATE_BSS_PFC_NACK:
+	case BSSGP_PDUT_MODIFY_BSS_PFC:
+	case BSSGP_PDUT_MODIFY_BSS_PFC_ACK:
+	case BSSGP_PDUT_DELETE_BSS_PFC:
+	case BSSGP_PDUT_DELETE_BSS_PFC_ACK:
+		LOGP(DBSSGP, LOGL_NOTICE, "Rx BSSGP BVCI=%d (SIGN) PDU type %s unexpected at SIGN\n",
+		     bvci, bssgp_pdu_str(pdu_type));
 		break;
 	default:
-		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP BVCI=%d Rx PDU type %s unknown\n",
+		LOGP(DBSSGP, LOGL_NOTICE, "Rx BSSGP BVCI=%d (SIGN) PDU type %s unknown\n",
 		     bvci, bssgp_pdu_str(pdu_type));
 		rc = bssgp_tx_status(BSSGP_CAUSE_PROTO_ERR_UNSPEC, NULL, msg);
 		break;
