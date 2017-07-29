@@ -1598,9 +1598,9 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 				cs.name());
 			return -EINVAL;
 		}
-		bts()->send_gsmtap(PCU_GSMTAP_C_UL_DATA_EGPRS, true, trx_no(), ts_no, GSMTAP_CHANNEL_PACCH, fn, data, data_len);
+		bts()->send_gsmtap(PCU_GSMTAP_C_UL_DATA_EGPRS, true, trx_no(), ts_no, GSMTAP_CHANNEL_PDTCH, fn, data, data_len);
 	} else {
-		bts()->send_gsmtap(PCU_GSMTAP_C_UL_DATA_GPRS, true, trx_no(), ts_no, GSMTAP_CHANNEL_PACCH, fn, data, data_len);
+		bts()->send_gsmtap(PCU_GSMTAP_C_UL_DATA_GPRS, true, trx_no(), ts_no, GSMTAP_CHANNEL_PDTCH, fn, data, data_len);
 	}
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "  UL data: %s\n", osmo_hexdump(data, len));

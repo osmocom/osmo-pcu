@@ -367,7 +367,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 		if (msg) {
 			bts->bts->rlc_sent();
 			/* FIXME: distinguish between GPRS and EGPRS */
-			bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_DATA_GPRS, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data, msg->len);
+			bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_DATA_GPRS, false, trx, ts, GSMTAP_CHANNEL_PDTCH, fn, msg->data, msg->len);
 		}
 	}
 
