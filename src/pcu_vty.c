@@ -24,6 +24,7 @@ static const struct value_string pcu_gsmtap_categ_names[] = {
 	{ PCU_GSMTAP_C_DL_CTRL,		"dl-ctrl" },
 	{ PCU_GSMTAP_C_DL_DATA_GPRS,	"dl-data-gprs" },
 	{ PCU_GSMTAP_C_DL_DATA_EGPRS,	"dl-data-egprs" },
+	{ PCU_GSMTAP_C_DL_PTCCH,	"dl-ptcch" },
 
 	{ PCU_GSMTAP_C_UL_UNKNOWN,	"ul-unknown" },
 	{ PCU_GSMTAP_C_UL_DUMMY,	"ul-dummy" },
@@ -40,6 +41,7 @@ static const struct value_string pcu_gsmtap_categ_help[] = {
 	{ PCU_GSMTAP_C_DL_CTRL,		"Downlink Control Blocks" },
 	{ PCU_GSMTAP_C_DL_DATA_GPRS,	"Downlink Data Blocks (GPRS)" },
 	{ PCU_GSMTAP_C_DL_DATA_EGPRS,	"Downlink Data Blocks (EGPRS)" },
+	{ PCU_GSMTAP_C_DL_PTCCH,	"Downlink PTCCH Blocks" },
 
 	{ PCU_GSMTAP_C_UL_UNKNOWN,	"Unknown / Unparseable / Erroneous Downlink Blocks" },
 	{ PCU_GSMTAP_C_UL_DUMMY,	"Uplink Dummy Blocks" },
