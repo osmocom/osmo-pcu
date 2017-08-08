@@ -233,6 +233,9 @@ struct gprs_rlcmac_bts {
 	 * period.
 	 */
 	struct BTS *bts;
+
+	/* Path to be used for the pcu-bts socket */
+	char *pcu_sock_path;
 };
 
 #ifdef __cplusplus

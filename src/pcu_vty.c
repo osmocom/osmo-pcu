@@ -9,6 +9,7 @@
 #include <osmocom/vty/misc.h>
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/rate_ctr.h>
+#include <osmocom/pcu/pcuif_proto.h>
 #include "pcu_vty.h"
 #include "gprs_rlcmac.h"
 #include "bts.h"
@@ -233,6 +234,8 @@ static int config_write_pcu(struct vty *vty)
 	if (bts->dl_tbf_idle_msec)
 		vty_out(vty, " dl-tbf-idle-time %d%s", bts->dl_tbf_idle_msec,
 			VTY_NEWLINE);
+	if (strcmp(bts->pcu_sock_path, PCU_SOCK_DEFAULT))
+		vty_out(vty, " pcu-socket %s%s", bts->pcu_sock_path, VTY_NEWLINE);
 
 	for (i = 0; i < 32; i++) {
 		unsigned int cs = (1 << i);
@@ -966,6 +969,23 @@ DEFUN(cfg_pcu_cs_lqual_ranges,
 	return CMD_SUCCESS;
 }
 
+DEFUN(cfg_pcu_sock,
+      cfg_pcu_sock_cmd,
+      "pcu-socket PATH",
+      "Configure the osmo-bts PCU socket file/path name\n"
+      "Path of the socket to connect to\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	if (bts->pcu_sock_path) {
+		/* FIXME: close the interface? */
+		talloc_free(bts->pcu_sock_path);
+	}
+	bts->pcu_sock_path = talloc_strdup(tall_pcu_ctx, argv[0]);
+	/* FIXME: re-open the interface? */
+
+	return CMD_SUCCESS;
+}
 
 DEFUN(show_tbf,
       show_tbf_cmd,
@@ -1096,6 +1116,7 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_no_ms_idle_time_cmd);
 	install_element(PCU_NODE, &cfg_pcu_gsmtap_categ_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_gsmtap_categ_cmd);
+	install_element(PCU_NODE, &cfg_pcu_sock_cmd);
 
 	install_element_ve(&show_bts_stats_cmd);
 	install_element_ve(&show_tbf_cmd);

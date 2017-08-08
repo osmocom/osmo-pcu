@@ -223,6 +223,7 @@ int pcu_l1if_open(void)
 	struct sockaddr_un local;
 	unsigned int namelen;
 	int rc;
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	LOGP(DL1IF, LOGL_INFO, "Opening OsmoPCU L1 interface to OsmoBTS\n");
 
@@ -244,7 +245,7 @@ int pcu_l1if_open(void)
 	}
 
 	local.sun_family = AF_UNIX;
-	strncpy(local.sun_path, "/tmp/pcu_bts", sizeof(local.sun_path));
+	strncpy(local.sun_path, bts->pcu_sock_path, sizeof(local.sun_path));
 	local.sun_path[sizeof(local.sun_path) - 1] = '\0';
 
 	/* we use the same magic that X11 uses in Xtranssock.c for

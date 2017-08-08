@@ -216,6 +216,8 @@ int main(int argc, char *argv[])
 	 */
 	bts->dl_arq_type = EGPRS_ARQ1;
 
+	bts->pcu_sock_path = talloc_strdup(tall_pcu_ctx, PCU_SOCK_DEFAULT);
+
 	msgb_talloc_ctx_init(tall_pcu_ctx, 0);
 
 	osmo_init_logging(&gprs_log_info);
