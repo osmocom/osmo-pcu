@@ -380,39 +380,37 @@ void BTS::send_gsmtap(enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_n
 	gsmtap_send(m_bts.gsmtap, arfcn, ts_no, channel, 0, fn, 0, 0, data, len);
 }
 
+static inline bool tbf_check(gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t trx_no, uint8_t ts)
+{
+	if (tbf->state_is_not(GPRS_RLCMAC_RELEASING) && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
+	    && tbf->poll_fn == fn && tbf->trx->trx_no == trx_no && tbf->poll_ts == ts)
+		return true;
+
+	return false;
+}
+
 gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 {
-	struct gprs_rlcmac_dl_tbf *tbf;
 	LListHead<gprs_rlcmac_tbf> *pos;
 
 	/* only one TBF can poll on specific TS/FN, because scheduler can only
 	 * schedule one downlink control block (with polling) at a FN per TS */
 	llist_for_each(pos, &m_dl_tbfs) {
-		tbf = as_dl_tbf(pos->entry());
-		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
-		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
-		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
-		 && tbf->poll_ts == ts) {
-			return tbf;
-		}
+		if (tbf_check(pos->entry(), fn, trx, ts))
+			return as_dl_tbf(pos->entry());
 	}
 	return NULL;
 }
+
 gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
 {
-	struct gprs_rlcmac_ul_tbf *tbf;
 	LListHead<gprs_rlcmac_tbf> *pos;
 
 	/* only one TBF can poll on specific TS/FN, because scheduler can only
 	 * schedule one downlink control block (with polling) at a FN per TS */
 	llist_for_each(pos, &m_ul_tbfs) {
-		tbf = as_ul_tbf(pos->entry());
-		if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)
-		 && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
-		 && tbf->poll_fn == fn && tbf->trx->trx_no == trx
-		 && tbf->poll_ts == ts) {
-			return tbf;
-		}
+		if (tbf_check(pos->entry(), fn, trx, ts))
+			return as_ul_tbf(pos->entry());
 	}
 	return NULL;
 }
@@ -1167,6 +1165,24 @@ static void get_meas(struct pcu_l1_meas *meas,
 	}
 }
 
+static inline void sched_ul_ass_or_rej(BTS *bts, gprs_rlcmac_bts *bts_data, struct gprs_rlcmac_dl_tbf *tbf)
+{
+	bts->channel_request_description();
+
+	/* This call will register the new TBF with the MS on success */
+	gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts_data, tbf->trx->trx_no, tbf->ms_class(),
+						  tbf->ms()->egprs_ms_class(), tbf->tlli(), tbf->ta(), tbf->ms());
+
+	/* schedule uplink assignment or reject */
+	if (ul_tbf) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack message, so we provide one:\n");
+		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+	} else {
+		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack message, so we packet access reject:\n");
+		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ;
+	}
+}
+
 void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_nack, uint32_t fn)
 {
 	int8_t tfi = 0; /* must be signed */
@@ -1221,27 +1237,9 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 		return;
 	}
 	/* check for channel request */
-	if (ack_nack->Exist_Channel_Request_Description) {
+	if (ack_nack->Exist_Channel_Request_Description)
+		sched_ul_ass_or_rej(bts(), bts_data(), tbf);
 
-		bts()->channel_request_description();
-
-		/* This call will register the new TBF with the MS on success */
-		gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts_data(),
-			tbf->trx->trx_no,
-			tbf->ms_class(), tbf->ms()->egprs_ms_class(),
-			tbf->tlli(), tbf->ta(), tbf->ms());
-
-		/* schedule uplink assignment or reject*/
-		if (ul_tbf) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
-				"message, so we provide one:\n");
-			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
-		} else {
-			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
-				"message, so we pacekt access reject:\n");
-			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ;
-		}
-	}
 	/* get measurements */
 	if (tbf->ms()) {
 		get_meas(&meas, &ack_nack->Channel_Quality_Report);
@@ -1326,27 +1324,8 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 	}
 
 	/* check for channel request */
-	if (ack_nack->Exist_ChannelRequestDescription) {
-
-		bts()->channel_request_description();
-
-		/* This call will register the new TBF with the MS on success */
-		gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts_data(),
-			tbf->trx->trx_no,
-			tbf->ms_class(), tbf->ms()->egprs_ms_class(),
-			tbf->tlli(), tbf->ta(), tbf->ms());
-
-		/* schedule uplink assignment or reject*/
-		if (ul_tbf) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
-				"message, so we provide one:\n");
-			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
-		} else {
-			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack "
-				"message, so we send packet access reject:\n");
-			tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ;
-		}
-	}
+	if (ack_nack->Exist_ChannelRequestDescription)
+		sched_ul_ass_or_rej(bts(), bts_data(), tbf);
 
 	/* get measurements */
 	if (tbf->ms()) {
