@@ -221,6 +221,7 @@ struct gprs_rlcmac_bts {
 	uint8_t cs_adj_upper_limit;
 	uint8_t cs_adj_lower_limit;
 	struct {int16_t low; int16_t high; } cs_lqual_ranges[MAX_GPRS_CS];
+	struct {int16_t low; int16_t high; } mcs_lqual_ranges[MAX_GPRS_CS];
 	uint16_t cs_downgrade_threshold; /* downgrade if less packets left (DL) */
 	uint16_t ws_base;
 	uint16_t ws_pdch; /* increase WS by this value per PDCH */

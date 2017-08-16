@@ -200,6 +200,28 @@ int main(int argc, char *argv[])
 	bts->cs_lqual_ranges[2].high = 13;
 	bts->cs_lqual_ranges[3].low = 12;
 	bts->cs_lqual_ranges[3].high = 256;
+
+	/* MCS-1 to MCS-9 */
+	/* Default thresholds are referenced from literature */
+	/* Fig. 2.3, Chapter 2, Optimizing Wireless Communication Systems, Springer (2009) */
+	bts->mcs_lqual_ranges[0].low = -256;
+	bts->mcs_lqual_ranges[0].high = 6;
+	bts->mcs_lqual_ranges[1].low = 5;
+	bts->mcs_lqual_ranges[1].high = 8;
+	bts->mcs_lqual_ranges[2].low = 7;
+	bts->mcs_lqual_ranges[2].high = 13;
+	bts->mcs_lqual_ranges[3].low = 12;
+	bts->mcs_lqual_ranges[3].high = 15;
+	bts->mcs_lqual_ranges[4].low = 14;
+	bts->mcs_lqual_ranges[4].high = 17;
+	bts->mcs_lqual_ranges[5].low = 16;
+	bts->mcs_lqual_ranges[5].high = 18;
+	bts->mcs_lqual_ranges[6].low = 17;
+	bts->mcs_lqual_ranges[6].high = 20;
+	bts->mcs_lqual_ranges[7].low = 19;
+	bts->mcs_lqual_ranges[7].high = 24;
+	bts->mcs_lqual_ranges[8].low = 23;
+	bts->mcs_lqual_ranges[8].high = 256;
 	bts->cs_downgrade_threshold = 200;
 
 	/* TODO: increase them when CRBB decoding is implemented */

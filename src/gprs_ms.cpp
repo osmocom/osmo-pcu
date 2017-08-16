@@ -624,7 +624,7 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 	bts_data = m_bts->bts_data();
 
 	if (!max_cs_ul) {
-		LOGP(DRLCMACDL, LOGL_ERROR,
+		LOGP(DRLCMACMEAS, LOGL_ERROR,
 			"max_cs_ul cannot be derived (current UL CS: %s)\n",
 			m_current_cs_ul.name());
 		return;
@@ -642,11 +642,10 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 		low  = bts_data->cs_lqual_ranges[current_cs_num-1].low;
 		high = bts_data->cs_lqual_ranges[current_cs_num-1].high;
 	} else if (m_current_cs_ul.isEgprs()) {
-		/* TODO, use separate table */
 		if (current_cs_num > MAX_GPRS_CS)
 			current_cs_num = MAX_GPRS_CS;
-		low  = bts_data->cs_lqual_ranges[current_cs_num-1].low;
-		high = bts_data->cs_lqual_ranges[current_cs_num-1].high;
+		low  = bts_data->mcs_lqual_ranges[current_cs_num-1].low;
+		high = bts_data->mcs_lqual_ranges[current_cs_num-1].high;
 	} else {
 		return;
 	}
@@ -661,7 +660,7 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 		new_cs_ul.inc(mode());
 
 	if (m_current_cs_ul != new_cs_ul) {
-		LOGP(DRLCMACDL, LOGL_INFO,
+		LOGP(DRLCMACMEAS, LOGL_INFO,
 			"MS (IMSI %s): "
 			"Link quality %ddB (%ddB) left window [%d, %d], "
 			"modifying uplink CS level: %s -> %s\n",

@@ -178,6 +178,25 @@ static int config_write_pcu(struct vty *vty)
 		bts->cs_lqual_ranges[3].low,
 		VTY_NEWLINE);
 
+	vty_out(vty, " mcs link-quality-ranges mcs1 %d mcs2 %d %d mcs3 %d %d mcs4 %d %d mcs5 %d %d mcs6 %d %d mcs7 %d %d mcs8 %d %d mcs9 %d%s",
+		bts->mcs_lqual_ranges[0].high,
+		bts->mcs_lqual_ranges[1].low,
+		bts->mcs_lqual_ranges[1].high,
+		bts->mcs_lqual_ranges[2].low,
+		bts->mcs_lqual_ranges[2].high,
+		bts->mcs_lqual_ranges[3].low,
+		bts->mcs_lqual_ranges[3].high,
+		bts->mcs_lqual_ranges[4].low,
+		bts->mcs_lqual_ranges[4].high,
+		bts->mcs_lqual_ranges[5].low,
+		bts->mcs_lqual_ranges[5].high,
+		bts->mcs_lqual_ranges[6].low,
+		bts->mcs_lqual_ranges[6].high,
+		bts->mcs_lqual_ranges[7].low,
+		bts->mcs_lqual_ranges[7].high,
+		bts->mcs_lqual_ranges[8].low,
+		VTY_NEWLINE);
+
 	if (bts->initial_mcs_dl != 1 && bts->initial_mcs_ul != 1) {
 		if (bts->initial_mcs_ul == bts->initial_mcs_dl)
 			vty_out(vty, " mcs %d%s", bts->initial_mcs_dl,
@@ -186,6 +205,7 @@ static int config_write_pcu(struct vty *vty)
 			vty_out(vty, " mcs %d %d%s", bts->initial_mcs_dl,
 				bts->initial_mcs_ul, VTY_NEWLINE);
 	}
+
 	if (bts->max_mcs_dl && bts->max_mcs_ul) {
 		if (bts->max_mcs_ul == bts->max_mcs_dl)
 			vty_out(vty, " mcs max %d%s", bts->max_mcs_dl,
@@ -969,6 +989,58 @@ DEFUN(cfg_pcu_cs_lqual_ranges,
 	return CMD_SUCCESS;
 }
 
+DEFUN(cfg_pcu_mcs_lqual_ranges,
+      cfg_pcu_mcs_lqual_ranges_cmd,
+      "mcs link-quality-ranges mcs1 <0-35> mcs2 <0-35> <0-35> mcs3 <0-35> <0-35> mcs4 <0-35> <0-35> mcs5 <0-35> <0-35> mcs6 <0-35> <0-35> mcs7 <0-35> <0-35> mcs8 <0-35> <0-35> mcs9 <0-35>",
+      CS_STR "Set link quality ranges\n"
+      "Set quality range for MCS-1 (high value only)\n"
+      "MCS-1 high (dB)\n"
+      "Set quality range for MCS-2\n"
+      "MCS-2 high (dB)\n"
+      "MCS-2 low (dB)\n"
+      "Set quality range for MCS-3\n"
+      "MCS-3 high (dB)\n"
+      "MCS-3 low (dB)\n"
+      "Set quality range for MCS-4\n"
+      "MCS-4 high (dB)\n"
+      "MCS-4 low (dB)\n"
+      "Set quality range for MCS-5\n"
+      "MCS-5 high (dB)\n"
+      "MCS-5 low (dB)\n"
+      "Set quality range for MCS-6\n"
+      "MCS-6 low (dB)\n"
+      "MCS-6 high (dB)\n"
+      "Set quality range for MCS-7\n"
+      "MCS-7 low (dB)\n"
+      "MCS-7 high (dB)\n"
+      "Set quality range for MCS-8\n"
+      "MCS-8 low (dB)\n"
+      "MCS-8 high (dB)\n"
+      "Set quality range for MCS-9 (low value only)\n"
+      "MCS-9 low (dB)\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->mcs_lqual_ranges[0].high = atoi(argv[0]);
+	bts->mcs_lqual_ranges[1].low  = atoi(argv[1]);
+	bts->mcs_lqual_ranges[1].high = atoi(argv[2]);
+	bts->mcs_lqual_ranges[2].low  = atoi(argv[3]);
+	bts->mcs_lqual_ranges[2].high = atoi(argv[4]);
+	bts->mcs_lqual_ranges[3].low  = atoi(argv[5]);
+	bts->mcs_lqual_ranges[3].high  = atoi(argv[6]);
+	bts->mcs_lqual_ranges[4].low  = atoi(argv[7]);
+	bts->mcs_lqual_ranges[4].high  = atoi(argv[8]);
+	bts->mcs_lqual_ranges[5].low  = atoi(argv[9]);
+	bts->mcs_lqual_ranges[5].high  = atoi(argv[10]);
+	bts->mcs_lqual_ranges[6].low  = atoi(argv[11]);
+	bts->mcs_lqual_ranges[6].high  = atoi(argv[12]);
+	bts->mcs_lqual_ranges[7].low  = atoi(argv[13]);
+	bts->mcs_lqual_ranges[7].high  = atoi(argv[14]);
+	bts->mcs_lqual_ranges[8].low  = atoi(argv[15]);
+
+	return CMD_SUCCESS;
+}
+
 DEFUN(cfg_pcu_sock,
       cfg_pcu_sock_cmd,
       "pcu-socket PATH",
@@ -1079,6 +1151,7 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_cs_downgrade_thrsh_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_cs_downgrade_thrsh_cmd);
 	install_element(PCU_NODE, &cfg_pcu_cs_lqual_ranges_cmd);
+	install_element(PCU_NODE, &cfg_pcu_mcs_lqual_ranges_cmd);
 	install_element(PCU_NODE, &cfg_pcu_mcs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_dl_arq_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_mcs_cmd);
