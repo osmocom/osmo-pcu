@@ -183,7 +183,7 @@ void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	if (bts->gsmtap_categ_mask & PCU_GSMTAP_C_DL_PTCCH)
+	if (bts->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PTCCH))
 		gsmtap_send(bts->gsmtap, arfcn, ts, GSMTAP_CHANNEL_PTCCH, 0, fn, 0, 0, msg->data, msg->len);
 #ifdef ENABLE_DIRECT_PHY
 	if (bts->trx[trx].fl1h) {
@@ -277,7 +277,7 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 		rc = -EINVAL;
 	}
 
-	if (rc < 0 && (bts->gsmtap_categ_mask & PCU_GSMTAP_C_UL_UNKNOWN)) {
+	if (rc < 0 && (bts->gsmtap_categ_mask & (1 <<PCU_GSMTAP_C_UL_UNKNOWN))) {
 		gsmtap_send(bts->gsmtap, data_ind->arfcn | GSMTAP_ARFCN_F_UPLINK, data_ind->ts_nr,
 			    GSMTAP_CHANNEL_PACCH, 0, data_ind->fn, 0, 0, data_ind->data, data_ind->len);
 	}
