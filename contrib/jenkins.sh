@@ -58,10 +58,10 @@ else
   exit 1
 fi
 
+verify_value_string_arrays_are_terminated.py $(find . -name "*.[hc]")
+
 # Build deps
 osmo-build-dep.sh libosmocore
-
-"$deps"/libosmocore/contrib/verify_value_string_arrays_are_terminated.py $(find . -name "*.[hc]")
 
 export PKG_CONFIG_PATH="$inst/lib/pkgconfig:$PKG_CONFIG_PATH"
 export LD_LIBRARY_PATH="$inst/lib"
