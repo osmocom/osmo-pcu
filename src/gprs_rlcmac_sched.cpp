@@ -307,6 +307,34 @@ static struct msgb *sched_dummy(void)
 	return msg;
 }
 
+static inline void tap_n_acc(const struct msgb *msg, const struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
+			     uint32_t fn, enum pcu_gsmtap_category cat)
+{
+	if (!msg)
+		return;
+
+	switch(cat) {
+	case PCU_GSMTAP_C_DL_CTRL:
+		bts->bts->rlc_sent_control();
+		bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_CTRL, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data,
+				      msg->len);
+		break;
+	case PCU_GSMTAP_C_DL_DATA_GPRS:
+		bts->bts->rlc_sent();
+		/* FIXME: distinguish between GPRS and EGPRS */
+		bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_DATA_GPRS, false, trx, ts, GSMTAP_CHANNEL_PDTCH, fn, msg->data,
+				      msg->len);
+		break;
+	case PCU_GSMTAP_C_DL_DUMMY:
+		bts->bts->rlc_sent_dummy();
+		bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_DUMMY, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data,
+				      msg->len);
+		break;
+	default:
+		break;
+	}
+}
+
 int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	uint8_t trx, uint8_t ts,
         uint32_t fn, uint8_t block_nr)
@@ -356,29 +384,19 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	/* Prio 1: select control message */
 	msg = sched_select_ctrl_msg(trx, ts, fn, block_nr, pdch, ul_ass_tbf,
 		dl_ass_tbf, ul_ack_tbf);
-	if (msg) {
-		bts->bts->rlc_sent_control();
-		bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_CTRL, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data, msg->len);
-	}
+	tap_n_acc(msg, bts, trx, ts, fn, PCU_GSMTAP_C_DL_CTRL);
 
 	/* Prio 2: select data message for downlink */
 	if (!msg) {
 		msg = sched_select_downlink(bts, trx, ts, fn, block_nr, pdch);
-		if (msg) {
-			bts->bts->rlc_sent();
-			/* FIXME: distinguish between GPRS and EGPRS */
-			bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_DATA_GPRS, false, trx, ts, GSMTAP_CHANNEL_PDTCH, fn, msg->data, msg->len);
-		}
+		tap_n_acc(msg, bts, trx, ts, fn, PCU_GSMTAP_C_DL_DATA_GPRS);
 	}
 
 	/* Prio 3: send dummy contol message */
 	if (!msg) {
 		/* increase counter */
 		msg = sched_dummy();
-		if (msg) {
-			bts->bts->rlc_sent_dummy();
-			bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_DUMMY, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data, msg->len);
-		}
+		tap_n_acc(msg, bts, trx, ts, fn, PCU_GSMTAP_C_DL_DUMMY);
 	}
 
 	if (!msg)
