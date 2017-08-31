@@ -1,3 +1,5 @@
+:gfdl-enabled:
+
 OsmoPCU Gb Protocol Specification
 =================================
 Harald Welte <hwelte@sysmocom.de>

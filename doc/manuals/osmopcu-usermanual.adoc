@@ -1,3 +1,5 @@
+:gfdl-enabled:
+
 OsmoPCU User Manual
 ===================
 Harald Welte <hwelte@sysmocom.de>
