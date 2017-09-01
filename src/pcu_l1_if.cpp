@@ -163,9 +163,9 @@ static int pcu_tx_data_req(uint8_t trx, uint8_t ts, uint8_t sapi,
 void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr)
 {
+#ifdef ENABLE_DIRECT_PHY
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-#ifdef ENABLE_DIRECT_PHY
 	if (bts->trx[trx].fl1h) {
 		l1if_pdch_req(bts->trx[trx].fl1h, ts, 0, fn, arfcn, block_nr,
 			msg->data, msg->len);
@@ -250,16 +250,7 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	int rc;
 	pcu_l1_meas meas;
-	meas.set_rssi(data_ind->rssi);
-#ifndef ENABLE_DIRECT_PHY
-	/* convert BER to % value */
-	meas.set_ber(data_ind->ber10k / 100);
-	meas.set_bto(data_ind->ta_offs_qbits);
-	meas.set_link_qual(data_ind->lqual_cb / 10);
-	LOGP(DL1IF, LOGL_DEBUG, "Data indication with raw measurements "
-	     "received: BER10k = %d, BTO = %d, Q = %d\n", data_ind->ber10k,
-	     data_ind->ta_offs_qbits, data_ind->lqual_cb);
-#endif
+
 	LOGP(DL1IF, LOGL_DEBUG, "Data indication received: sapi=%d arfcn=%d "
 		"block=%d data=%s\n", data_ind->sapi,
 		data_ind->arfcn, data_ind->block_nr,
@@ -267,6 +258,15 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 
 	switch (data_ind->sapi) {
 	case PCU_IF_SAPI_PDTCH:
+		meas.set_rssi(data_ind->rssi);
+#ifndef ENABLE_DIRECT_PHY
+		/* convert BER to % value */
+		meas.set_ber(data_ind->ber10k / 100);
+		meas.set_bto(data_ind->ta_offs_qbits);
+		meas.set_link_qual(data_ind->lqual_cb / 10);
+		LOGP(DL1IF, LOGL_DEBUG, "Data indication with raw measurements received: BER10k = %d, BTO = %d, Q = %d\n",
+		     data_ind->ber10k, data_ind->ta_offs_qbits, data_ind->lqual_cb);
+#endif
 		rc = pcu_rx_data_ind_pdtch(data_ind->trx_nr, data_ind->ts_nr,
 			data_ind->data, data_ind->len, data_ind->fn,
 			&meas);
