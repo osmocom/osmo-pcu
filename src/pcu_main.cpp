@@ -183,6 +183,7 @@ int main(int argc, char *argv[])
 	bts->n3103 = 4;
 	bts->n3105 = 8;
 	bts->alpha = 0; /* a = 0.0 */
+	bts->si13_is_set = false;
 	bts->ms_idle_sec = 60; /* slightly above T3314 (default 44s, 24.008, 11.2.2) */
 	bts->cs_adj_enabled = 1;
 	bts->cs_adj_upper_limit = 33; /* Decrease CS if the error rate is above */

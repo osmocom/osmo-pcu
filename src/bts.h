@@ -29,6 +29,7 @@ extern "C" {
 #include <osmocom/core/timer.h>
 #include <osmocom/core/gsmtap.h>
 #include <osmocom/gsm/l1sap.h>
+#include <osmocom/gsm/protocol/gsm_04_08.h>
 }
 
 #include "poll_controller.h"
@@ -212,7 +213,8 @@ struct gprs_rlcmac_bts {
 	uint8_t alpha, gamma;
 	uint8_t egprs_enabled;
 	uint32_t dl_tbf_idle_msec; /* hold time for idle DL TBFs */
-
+	uint8_t si13[GSM_MACBLOCK_LEN];
+	bool si13_is_set;
 	/* 0 to support resegmentation in DL, 1 for no reseg */
 	uint8_t dl_arq_type;
 

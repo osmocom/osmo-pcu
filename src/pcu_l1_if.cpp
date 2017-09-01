@@ -245,6 +245,27 @@ extern "C" int pcu_rx_data_ind_pdtch(uint8_t trx_no, uint8_t ts_no, uint8_t *dat
 	return pdch->rcv_block(data, len, fn, meas);
 }
 
+static int pcu_rx_data_ind_bcch(uint8_t *data, uint8_t len)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	if (len == 0) {
+		bts->si13_is_set = false;
+		LOGP(DL1IF, LOGL_INFO, "Received PCU data indication with empty SI13: cache cleaned\n");
+		return 0;
+	}
+
+	if (len != GSM_MACBLOCK_LEN) {
+		LOGP(DL1IF, LOGL_ERROR, "Received PCU data indication with SI13 with unexpected length %u\n", len);
+		return -EINVAL;
+	}
+
+	memcpy(bts->si13, data, GSM_MACBLOCK_LEN);
+	bts->si13_is_set = true;
+
+	return 0;
+}
+
 static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
@@ -270,6 +291,9 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 		rc = pcu_rx_data_ind_pdtch(data_ind->trx_nr, data_ind->ts_nr,
 			data_ind->data, data_ind->len, data_ind->fn,
 			&meas);
+		break;
+	case PCU_IF_SAPI_BCCH:
+		rc = pcu_rx_data_ind_bcch(data_ind->data, data_ind->len);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data indication with "
