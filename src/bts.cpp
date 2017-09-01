@@ -649,7 +649,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 		}
 	} else {
 		// Create new TBF
-		#warning "Copy and paste with other routines.."
+		/* FIXME: Copy and paste with other routines.. */
 
 		if (is_11bit) {
 			tbf = tbf_alloc_ul_tbf(&m_bts, NULL, -1, 0,

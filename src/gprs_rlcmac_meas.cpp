@@ -28,7 +28,7 @@
 /*
  * downlink measurement
  */
-#warning "TODO: trigger the measurement report from the pollcontroller and use it for flow control"
+/* TODO: trigger the measurement report from the pollcontroller and use it for flow control */
 
 /* received Measurement Report */
 int gprs_rlcmac_meas_rep(Packet_Measurement_Report_t *pmr)

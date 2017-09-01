@@ -60,7 +60,8 @@ static uint32_t sched_poll(BTS *bts,
 			|| ul_tbf->ul_ass_state ==
 				GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ)
 			*ul_ass_tbf = ul_tbf;
-#warning "Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all states?"
+/* FIXME: Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all
+states? */
 	}
 	llist_for_each(pos, &bts->dl_tbfs()) {
 		dl_tbf = as_dl_tbf(pos->entry());

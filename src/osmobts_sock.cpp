@@ -108,7 +108,8 @@ static void pcu_sock_close(struct pcu_sock_state *state, int lost)
 #endif
 		for (ts = 0; ts < 8; ts++)
 			bts->trx[trx].pdch[ts].disable();
-#warning "NOT ALL RESOURCES are freed in this case... inconsistent with the other code. Share the code with pcu_l1if.c for the reset."
+/* FIXME: NOT ALL RESOURCES are freed in this case... inconsistent with the other code. Share the code with pcu_l1if.c
+for the reset. */
 		gprs_rlcmac_tbf::free_all(&bts->trx[trx]);
 	}
 

@@ -145,7 +145,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	}
 
 	// Create new TBF (any TRX)
-#warning "Copy and paste with alloc_ul_tbf"
+/* FIXME: Copy and paste with alloc_ul_tbf */
 	/* set number of downlink slots according to multislot class */
 	dl_tbf = tbf_alloc_dl_tbf(bts, ms, use_trx, ms_class, egprs_ms_class, ss);
 

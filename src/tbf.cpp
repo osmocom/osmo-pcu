@@ -382,7 +382,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
 
-#warning "Copy and paste with tbf_new_dl_assignment"
+/* FIXME: Copy and paste with tbf_new_dl_assignment */
 	/* create new TBF, use same TRX as DL TBF */
 	/* use multislot class of downlink TBF */
 	tbf = tbf_alloc_ul_tbf(bts, ms, use_trx, ms_class, egprs_ms_class, 0);
@@ -465,7 +465,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 		     get_value_string(gprs_rlcmac_tbf_dl_ass_state_names,
 				      tbf->dl_ass_state));
 	tbf->stop_timer();
-	#warning "TODO: Could/Should generate  bssgp_tx_llc_discarded"
+	/* TODO: Could/Should generate  bssgp_tx_llc_discarded */
 	tbf_unlink_pdch(tbf);
 	llist_del(&tbf->list());
 
