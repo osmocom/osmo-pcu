@@ -757,6 +757,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	OSMO_ASSERT(rlc.num_data_blocks <= ARRAY_SIZE(rlc.block_info));
 	OSMO_ASSERT(rlc.num_data_blocks > 0);
 
+	LOGP(DRLCMACDL, LOGL_DEBUG, "- Copying %u RLC blocks, %u BSNs\n", rlc.num_data_blocks, num_bsns);
+
 	/* Copy block(s) to RLC message */
 	for (data_block_idx = 0; data_block_idx < rlc.num_data_blocks;
 		data_block_idx++)
@@ -782,6 +784,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			OSMO_ASSERT(m_rlc.block(bsn)->next_ps >= EGPRS_PS_1);
 			OSMO_ASSERT(m_rlc.block(bsn)->next_ps <= EGPRS_PS_3);
 		}
+		OSMO_ASSERT(data_block_idx < 2); /* punct defined above as 2-element array */
 		punct[data_block_idx] = m_rlc.block(bsn)->next_ps;
 
 		rdbi = &rlc.block_info[data_block_idx];
