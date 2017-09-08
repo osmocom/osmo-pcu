@@ -630,6 +630,8 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 		return;
 	}
 
+	OSMO_ASSERT(current_cs_num > 0);
+
 	if (!m_current_cs_ul)
 		return;
 

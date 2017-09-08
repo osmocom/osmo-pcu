@@ -23,6 +23,9 @@
 #include <stdint.h>
 #include <stddef.h>
 
+extern "C" {
+	#include <osmocom/core/utils.h>
+}
 
 class GprsCodingScheme {
 public:
@@ -236,6 +239,9 @@ inline GprsCodingScheme::Scheme GprsCodingScheme::get_retx_mcs(
 				const GprsCodingScheme demanded_mcs,
 				const unsigned arq_type)
 {
+	OSMO_ASSERT(mcs.to_num() > 0);
+	OSMO_ASSERT(demanded_mcs.to_num() > 0);
+
 	return egprs_mcs_retx_tbl[arq_type][mcs.to_num() - 1]
 			[demanded_mcs.to_num() - 1];
 }
