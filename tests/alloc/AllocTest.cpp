@@ -602,6 +602,10 @@ static unsigned alloc_many_tbfs(BTS *the_bts, unsigned min_class,
 			if (dl_tbf->pdch[i])
 				dl_slots |= 1 << i;
 
+		for (i = 0; ul_tbf && i < ARRAY_SIZE(ul_tbf->pdch); i += 1)
+			if (ul_tbf->pdch[i])
+				ul_slots |= 1 << i;
+
 		for (i = 0; trx && i < ARRAY_SIZE(trx->pdch); i += 1) {
 			struct gprs_rlcmac_pdch *pdch = &trx->pdch[i];
 
