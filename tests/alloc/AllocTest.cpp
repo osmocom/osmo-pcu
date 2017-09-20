@@ -585,17 +585,17 @@ static unsigned alloc_many_tbfs(BTS *the_bts, unsigned min_class,
 				continue;
 
 			if (ul_tbf &&
-				pdch->assigned_tfi(GPRS_RLCMAC_DL_TBF) != 0xffffffff)
+				pdch->assigned_tfi(GPRS_RLCMAC_DL_TBF) != NO_FREE_TFI)
 				continue;
 
 			if (dl_tbf &&
-				pdch->assigned_tfi(GPRS_RLCMAC_UL_TBF) != 0xffffffff)
+				pdch->assigned_tfi(GPRS_RLCMAC_UL_TBF) != NO_FREE_TFI)
 				continue;
 
 			busy_slots |= 1 << i;
 		}
 
-		printf(" TBF[%d] class %d reserves %c%c%c%c%c%c%c%c\n",
+		printf(" TBF[%d] class %d reserves " OSMO_BIT_SPEC "\n",
 			tfi, ms_class,
 			get_dir_char(0x01, ul_slots, dl_slots, busy_slots),
 			get_dir_char(0x02, ul_slots, dl_slots, busy_slots),

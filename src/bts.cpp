@@ -475,7 +475,7 @@ int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir,
 	for (trx = trx_from; trx <= trx_to; trx++) {
 		bool trx_has_pdch = false;
 
-		free_tfis = 0xffffffff;
+		free_tfis = NO_FREE_TFI;
 
 		for (ts = 0; ts < 8; ts++) {
 			pdch = &m_bts.trx[trx].pdch[ts];
