@@ -44,6 +44,7 @@ extern "C" {
 #define LLC_CODEL_DISABLE 0
 #define LLC_CODEL_USE_DEFAULT (-1)
 #define MAX_GPRS_CS 9
+#define NO_FREE_TFI 0xffffffff
 
 /* see bts->gsmtap_categ_mask */
 enum pcu_gsmtap_category {

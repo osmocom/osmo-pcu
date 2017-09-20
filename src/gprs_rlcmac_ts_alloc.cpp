@@ -83,7 +83,7 @@ static inline int8_t find_free_tfi(struct gprs_rlcmac_pdch *pdch,
 	int8_t tfi;
 
 	tfi_map = pdch->assigned_tfi(dir);
-	if (tfi_map == 0xffffffffUL)
+	if (tfi_map == NO_FREE_TFI)
 		return -1;
 
 	/* look for USF, don't use USF=7 */
@@ -164,7 +164,7 @@ static int compute_usage_for_algo_a(struct gprs_rlcmac_pdch *pdch,
 		pdch->num_tbfs(GPRS_RLCMAC_UL_TBF) +
 		compute_usage_by_reservation(pdch, dir);
 
-	if (pdch->assigned_tfi(reverse(dir)) == 0xffffffff)
+	if (pdch->assigned_tfi(reverse(dir)) == NO_FREE_TFI)
 		/* No TFI in the opposite direction, avoid it */
 		usage += 32;
 
@@ -295,10 +295,10 @@ static int find_trx(BTS *bts, const GprsMs *ms, int use_trx)
 			if (!pdch->is_enabled())
 				continue;
 
-			if (pdch->assigned_tfi(GPRS_RLCMAC_UL_TBF) == 0xffffffff)
+			if (pdch->assigned_tfi(GPRS_RLCMAC_UL_TBF) == NO_FREE_TFI)
 				continue;
 
-			if (pdch->assigned_tfi(GPRS_RLCMAC_DL_TBF) == 0xffffffff)
+			if (pdch->assigned_tfi(GPRS_RLCMAC_DL_TBF) == NO_FREE_TFI)
 				continue;
 
 			return trx_no;
