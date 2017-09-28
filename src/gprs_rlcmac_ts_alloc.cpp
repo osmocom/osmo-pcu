@@ -770,8 +770,8 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 		return -EINVAL;
 	}
 
-	reserved_dl_slots = dl_slots = ms->reserved_dl_slots();
-	reserved_ul_slots = ul_slots = ms->reserved_ul_slots();
+	dl_slots = ms->reserved_dl_slots();
+	ul_slots = ms->reserved_ul_slots();
 	first_common_ts = ms->first_common_ts();
 	trx = ms->current_trx();
 
@@ -800,10 +800,10 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 		rc = find_multi_slots(trx, ms->ms_class(), &ul_slots, &dl_slots);
 		if (rc < 0)
 			return rc;
-
-		reserved_dl_slots = dl_slots;
-		reserved_ul_slots = ul_slots;
 	}
+
+	reserved_dl_slots = dl_slots;
+	reserved_ul_slots = ul_slots;
 
 	/* Step 3: Derive the slot set for the current TBF */
 	if (single) {
