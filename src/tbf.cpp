@@ -500,8 +500,7 @@ int gprs_rlcmac_tbf::update()
 	LOGP(DTBF, LOGL_DEBUG, "********** DL-TBF update **********\n");
 
 	tbf_unlink_pdch(this);
-	rc = bts_data->alloc_algorithm(bts_data, ms(), this,
-		bts_data->alloc_algorithm_curst, 0, -1);
+	rc = bts_data->alloc_algorithm(bts_data, ms(), this, false, -1);
 	/* if no resource */
 	if (rc < 0) {
 		LOGPTBF(this, LOGL_ERROR, "No resource after update???\n");
@@ -828,9 +827,8 @@ void gprs_rlcmac_tbf::poll_timeout()
 		LOGPTBF(this, LOGL_ERROR, "Poll Timeout, but no event!\n");
 }
 
-static int setup_tbf(struct gprs_rlcmac_tbf *tbf,
-	GprsMs *ms, int8_t use_trx,
-	uint8_t ms_class, uint8_t egprs_ms_class, uint8_t single_slot)
+static int setup_tbf(struct gprs_rlcmac_tbf *tbf, GprsMs *ms, int8_t use_trx, uint8_t ms_class, uint8_t egprs_ms_class,
+		     bool single_slot)
 {
 	int rc;
 	struct gprs_rlcmac_bts *bts;
@@ -845,8 +843,7 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf,
 	tbf->m_created_ts = time(NULL);
 	tbf->set_ms_class(ms_class);
 	/* select algorithm */
-	rc = bts->alloc_algorithm(bts, ms, tbf, bts->alloc_algorithm_curst,
-		single_slot, use_trx);
+	rc = bts->alloc_algorithm(bts, ms, tbf, single_slot, use_trx);
 	/* if no resource */
 	if (rc < 0) {
 		return -1;
@@ -906,9 +903,8 @@ static void setup_egprs_mode(gprs_rlcmac_bts *bts, GprsMs *ms)
 	}
 }
 
-struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
-	GprsMs *ms, int8_t use_trx,
-	uint8_t ms_class, uint8_t egprs_ms_class, uint8_t single_slot)
+struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, uint8_t ms_class,
+					    uint8_t egprs_ms_class, bool single_slot)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
 	int rc;
@@ -995,9 +991,8 @@ static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
 	return 0;
 }
 
-struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
-	GprsMs *ms, int8_t use_trx,
-	uint8_t ms_class, uint8_t egprs_ms_class, uint8_t single_slot)
+struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, uint8_t ms_class,
+					    uint8_t egprs_ms_class, bool single_slot)
 {
 	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;

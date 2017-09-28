@@ -203,11 +203,9 @@ struct gprs_rlcmac_bts {
 	struct gsmtap_inst *gsmtap;
 	uint32_t gsmtap_categ_mask;
 	struct gprs_rlcmac_trx trx[8];
-	int (*alloc_algorithm)(struct gprs_rlcmac_bts *bts,
-		struct GprsMs *ms,
-		struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single,
-		int use_tbf);
-	uint32_t alloc_algorithm_curst; /* options to customize algorithm */
+	int (*alloc_algorithm)(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf,
+			       bool single, int8_t use_tbf);
+
 	uint8_t force_two_phase;
 	uint8_t alpha, gamma;
 	uint8_t egprs_enabled;

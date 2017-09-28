@@ -115,7 +115,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 				const uint8_t egprs_ms_class,
 				struct gprs_rlcmac_dl_tbf **tbf)
 {
-	uint8_t ss;
+	bool ss;
 	int8_t use_trx;
 	uint16_t ta = GSM48_TA_INVALID;
 	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL, *old_ul_tbf;
@@ -133,11 +133,11 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	if (ul_tbf && ul_tbf->m_contention_resolution_done
 	 && !ul_tbf->m_final_ack_sent) {
 		use_trx = ul_tbf->trx->trx_no;
-		ss = 0;
+		ss = false;
 		old_ul_tbf = ul_tbf;
 	} else {
 		use_trx = -1;
-		ss = 1; /* PCH assignment only allows one timeslot */
+		ss = true; /* PCH assignment only allows one timeslot */
 		old_ul_tbf = NULL;
 	}
 

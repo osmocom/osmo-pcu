@@ -21,6 +21,8 @@
 #ifndef GPRS_RLCMAC_H
 #define GPRS_RLCMAC_H
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 #include <gsm_rlcmac.h>
 #include <gsm_timer.h>
@@ -100,20 +102,14 @@ int gprs_alloc_max_dl_slots_per_ms(struct gprs_rlcmac_bts *bts,
 
 extern "C" {
 #endif
-int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
-	struct GprsMs *ms,
-	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single,
-	int use_trx);
+int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, bool single,
+		      int8_t use_trx);
 
-int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
-	struct GprsMs *ms,
-	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single,
-	int use_trx);
+int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, bool single,
+		      int8_t use_trx);
 
-int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts,
-	struct GprsMs *ms,
-	struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single,
-	int use_trx);
+int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, bool single,
+			    int8_t use_trx);
 #ifdef __cplusplus
 }
 #endif

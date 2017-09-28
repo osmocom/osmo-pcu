@@ -40,7 +40,7 @@ int16_t spoof_mnc = 0, spoof_mcc = 0;
 static gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 		GprsMs *ms, gprs_rlcmac_tbf_direction dir,
 		uint8_t use_trx,
-		uint8_t ms_class, uint8_t egprs_ms_class, uint8_t single_slot)
+		uint8_t ms_class, uint8_t egprs_ms_class, bool single_slot)
 {
 	if (dir == GPRS_RLCMAC_UL_TBF)
 		return tbf_alloc_ul_tbf(bts, ms, use_trx,
@@ -410,10 +410,8 @@ static void test_alloc_b()
 	test_all_alloc_b();
 }
 
-typedef int (*algo_t)(struct gprs_rlcmac_bts *bts,
-		struct GprsMs *ms,
-		struct gprs_rlcmac_tbf *tbf, uint32_t cust, uint8_t single,
-		int use_trx);
+typedef int (*algo_t)(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, bool single,
+		      int8_t use_trx);
 
 static char get_dir_char(uint8_t mask, uint8_t tx, uint8_t rx, uint8_t busy)
 {
