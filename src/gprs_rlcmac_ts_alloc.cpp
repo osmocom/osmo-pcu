@@ -329,7 +329,7 @@ static bool idle_pdch_avail(const struct gprs_rlcmac_bts *bts_data)
 /*! Return free TFI
  *
  *  \param[in] bts Pointer to BTS struct
- *  \param[in] trx Pointer to TRX struct
+ *  \param[in] trx Optional pointer to TRX struct
  *  \param[in] ms Pointer to MS object
  *  \param[in] dir DL or UL direction
  *  \param[in] use_trx which TRX to use or -1 if it should be selected based on what MS uses
@@ -341,6 +341,15 @@ static int tfi_find_free(const BTS *bts, const gprs_rlcmac_trx *trx, const GprsM
 {
 	int tfi;
 	uint8_t trx_no;
+
+	if (trx) {
+		if (use_trx >= 0 && use_trx != trx->trx_no) {
+			LOGP(DRLCMAC, LOGL_ERROR, "- Requested incompatible TRX %d (current is %d)\n",
+			     use_trx, trx->trx_no);
+			return -EINVAL;
+		}
+		use_trx = trx->trx_no;
+	}
 
 	if (use_trx == -1 && ms->current_trx())
 		use_trx = ms->current_trx()->trx_no;
@@ -785,16 +794,6 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	ul_slots = ms->reserved_ul_slots();
 	first_common_ts = ms->first_common_ts();
 	trx = ms->current_trx();
-
-	if (trx) {
-		if (use_trx >= 0 && use_trx != trx->trx_no) {
-			LOGP(DRLCMAC, LOGL_ERROR,
-				"- Requested incompatible TRX %d (current is %d)\n",
-				use_trx, trx->trx_no);
-			return -EINVAL;
-		}
-		use_trx = trx->trx_no;
-	}
 
 	/* Step 2a: Find usable TRX and TFI */
 	tfi = tfi_find_free(bts->bts, trx, ms, tbf->direction, use_trx, &trx_no);
