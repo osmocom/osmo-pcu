@@ -31,6 +31,8 @@
 #include <osmocom/core/gsmtap.h>
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/timer.h>
+#include <osmocom/gsm/protocol/gsm_04_08.h>
+
 #include <gprs_debug.h>
 #include <pcu_l1_if.h>
 #include <osmocom/pcu/pcuif_proto.h>
