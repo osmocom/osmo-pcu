@@ -896,6 +896,8 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 		return NULL;
 	}
 	gprs_ns_vty_init(bssgp_nsi);
+	bssgp_nsi->nsip.remote_port = sgsn_port;
+	bssgp_nsi->nsip.remote_ip = sgsn_ip;
 	bssgp_nsi->nsip.local_port = local_port;
 	rc = gprs_ns_nsip_listen(bssgp_nsi);
 	if (rc < 0) {
