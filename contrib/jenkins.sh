@@ -19,8 +19,9 @@ deps="$base/deps"
 inst="$deps/install"
 export deps inst
 
+osmo-clean-workspace.sh
+
 mkdir "$deps" || true
-rm -rf "$inst"
 
 # Collect configure options for osmo-pcu
 PCU_CONFIG=""
@@ -80,3 +81,5 @@ $MAKE $PARALLEL_MAKE
 DISTCHECK_CONFIGURE_FLAGS="$PCU_CONFIG" AM_DISTCHECK_CONFIGURE_FLAGS="$PCU_CONFIG" \
   $MAKE distcheck \
   || cat-testlogs.sh
+
+osmo-clean-workspace.sh
