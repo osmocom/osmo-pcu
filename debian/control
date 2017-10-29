@@ -2,7 +2,12 @@ Source: osmo-pcu
 Section: net
 Priority: optional
 Maintainer: Holger Hans Peter Freyther <holger@moiji-mobile.com>
-Build-Depends: debhelper (>= 7.0.0~), dh-autoreconf, dh-systemd (>= 1.5), autotools-dev, pkg-config, libosmocore-dev (>= 0.10.1)
+Build-Depends: debhelper (>= 7.0.0~),
+               dh-autoreconf,
+               dh-systemd (>= 1.5),
+               autotools-dev,
+               pkg-config,
+               libosmocore-dev (>= 0.10.1)
 Standards-Version: 3.8.4
 Homepage: http://osmocom.org/projects/osmopcu
 Vcs-Git: git://git.osmocom.org/osmo-pcu
@@ -11,14 +16,22 @@ Vcs-Browser: http://git.osmocom.org/osmo-pcu/
 Package: osmo-pcu
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: osmo-pcu GSM PCU for GPRS and EDGE
- osmo-pcu for GPRS and EDGE support in the network
+Description: Osmocom GPRS/EDGE Packet Control Unit (PCU)
+ The GPRS Packet Control Unit is co-located with the GSM BTS or GSM BSC
+ in order to provide packet-switched services for 2G (2.5G, 2.75G)
+ networks.  OsmoPCU is the Osmcoom implementation of this network
+ element. It interfaces to osmo-bts via the PCU socket of OsmoBTS
+ and via Gb (NS-over-IP) interface with the SGSN such as OsmoSGSN.
 
 Package: osmo-pcu-dbg
 Architecture: any
 Section: debug
 Priority: extra
-Depends: osmo-pcu (= ${binary:Version}), ${misc:Depends}
-Description: Debug symbols for the osmo-pcu
- Make debugging possible
-
+Depends: osmo-pcu (= ${binary:Version}),
+         ${misc:Depends}
+Description: Debug symbols for the Osmocom GPRS/EDGE Packet Control Unit (PCU)
+ The GPRS Packet Control Unit is co-located with the GSM BTS or GSM BSC
+ in order to provide packet-switched services for 2G (2.5G, 2.75G)
+ networks.  OsmoPCU is the Osmcoom implementation of this network
+ element. It interfaces to osmo-bts via the PCU socket of OsmoBTS
+ and via Gb (NS-over-IP) interface with the SGSN such as OsmoSGSN.
