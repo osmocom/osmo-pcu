@@ -17,3 +17,12 @@ override_dh_strip:
 override_dh_autoreconf:
 	echo $(VERSION) > .tarball-version
 	dh_autoreconf
+
+override_dh_clean:
+	dh_clean
+	$(RM) tests/package.m4
+	$(RM) test/testsuite
+
+# Print test results in case of a failure
+override_dh_auto_test:
+	dh_auto_test || (find . -name testsuite.log -exec cat {} \; ; false)
