@@ -215,22 +215,6 @@ static void test_llc_merge()
 	printf("=== end %s ===\n", __func__);
 }
 
-static const struct log_info_cat default_categories[] = {
-	{"DPCU", "", "GPRS Packet Control Unit (PCU)", LOGL_INFO, 1},
-};
-
-static int filter_fn(const struct log_context *ctx,
-	struct log_target *tar)
-{
-	return 1;
-}
-
-const struct log_info debug_log_info = {
-	filter_fn,
-	(struct log_info_cat*)default_categories,
-	ARRAY_SIZE(default_categories),
-};
-
 int main(int argc, char **argv)
 {
 	struct vty_app_info pcu_vty_info = {0};
@@ -240,13 +224,14 @@ int main(int argc, char **argv)
 		abort();
 
 	msgb_talloc_ctx_init(tall_pcu_ctx, 0);
-	osmo_init_logging(&debug_log_info);
+	osmo_init_logging(&gprs_log_info);
 	log_set_use_color(osmo_stderr_target, 0);
 	log_set_print_filename(osmo_stderr_target, 0);
 	log_set_log_level(osmo_stderr_target, LOGL_INFO);
+	log_parse_category_mask(osmo_stderr_target, "DPCU,3");
 
 	vty_init(&pcu_vty_info);
-	pcu_vty_init(&debug_log_info);
+	pcu_vty_init(&gprs_log_info);
 
 	test_llc_queue();
 	test_llc_meta();

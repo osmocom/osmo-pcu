@@ -28,6 +28,7 @@ tbf_TbfTest_LDADD = \
 
 bitcomp_BitcompTest_SOURCES = bitcomp/BitcompTest.cpp ../src/egprs_rlc_compression.cpp
 bitcomp_BitcompTest_LDADD = \
+	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 

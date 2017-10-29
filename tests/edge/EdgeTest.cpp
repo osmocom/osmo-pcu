@@ -1154,32 +1154,6 @@ static void test_rlc_info_init()
 	printf("=== end %s ===\n", __func__);
 }
 
-static const struct log_info_cat default_categories[] = {
-	{"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_INFO, 0},
-	{"DL1IF", "\033[1;32m", "GPRS PCU L1 interface (L1IF)", LOGL_DEBUG, 1},
-	{"DRLCMAC", "\033[0;33m", "GPRS RLC/MAC layer (RLCMAC)", LOGL_DEBUG, 1},
-	{"DRLCMACDATA", "\033[0;33m", "GPRS RLC/MAC layer Data (RLCMAC)", LOGL_DEBUG, 1},
-	{"DRLCMACDL", "\033[1;33m", "GPRS RLC/MAC layer Downlink (RLCMAC)", LOGL_DEBUG, 1},
-	{"DRLCMACUL", "\033[1;36m", "GPRS RLC/MAC layer Uplink (RLCMAC)", LOGL_DEBUG, 1},
-	{"DRLCMACSCHED", "\033[0;36m", "GPRS RLC/MAC layer Scheduling (RLCMAC)", LOGL_DEBUG, 1},
-	{"DRLCMACMEAS", "\033[1;31m", "GPRS RLC/MAC layer Measurements (RLCMAC)", LOGL_INFO, 1},
-	{"DNS","\033[1;34m", "GPRS Network Service Protocol (NS)", LOGL_INFO , 1},
-	{"DBSSGP","\033[1;34m", "GPRS BSS Gateway Protocol (BSSGP)", LOGL_INFO , 1},
-	{"DPCU", "\033[1;35m", "GPRS Packet Control Unit (PCU)", LOGL_NOTICE, 1},
-};
-
-static int filter_fn(const struct log_context *ctx,
-	struct log_target *tar)
-{
-	return 1;
-}
-
-const struct log_info debug_log_info = {
-	filter_fn,
-	(struct log_info_cat*)default_categories,
-	ARRAY_SIZE(default_categories),
-};
-
 static void setup_bts(BTS *the_bts, uint8_t ts_no, uint8_t cs = 1)
 {
 	gprs_rlcmac_bts *bts;
@@ -1425,12 +1399,12 @@ int main(int argc, char **argv)
 		abort();
 
 	msgb_talloc_ctx_init(tall_pcu_ctx, 0);
-	osmo_init_logging(&debug_log_info);
+	osmo_init_logging(&gprs_log_info);
 	log_set_use_color(osmo_stderr_target, 0);
 	log_set_print_filename(osmo_stderr_target, 0);
 
 	vty_init(&pcu_vty_info);
-	pcu_vty_init(&debug_log_info);
+	pcu_vty_init(&gprs_log_info);
 
 	test_coding_scheme();
 	test_rlc_info_init();
