@@ -2,13 +2,13 @@ Source: osmo-pcu
 Section: net
 Priority: optional
 Maintainer: Holger Hans Peter Freyther <holger@moiji-mobile.com>
-Build-Depends: debhelper (>= 7.0.0~),
+Build-Depends: debhelper (>= 9),
                dh-autoreconf,
                dh-systemd (>= 1.5),
                autotools-dev,
                pkg-config,
                libosmocore-dev (>= 0.10.1)
-Standards-Version: 3.8.4
+Standards-Version: 3.9.8
 Homepage: http://osmocom.org/projects/osmopcu
 Vcs-Git: git://git.osmocom.org/osmo-pcu
 Vcs-Browser: http://git.osmocom.org/osmo-pcu/
