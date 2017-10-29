@@ -36,6 +36,7 @@ extern "C" {
 	#include <osmocom/gsm/protocol/gsm_04_08.h>
 	#include <osmocom/gsm/gsm_utils.h>
 	#include <osmocom/core/gsmtap_util.h>
+	#include <osmocom/core/application.h>
 }
 
 #include <arpa/inet.h>
@@ -47,6 +48,16 @@ extern "C" {
 #define RFN_THRESHOLD RFN_MODULUS / 2
 
 extern void *tall_pcu_ctx;
+
+extern "C" {
+	/* e must make sure to initialize logging before the BTS static
+	 * constructors are executed below, as those call libosmocore APIs that
+	 * require logging already to be initialized. */
+	__attribute__((constructor)) static void early_init(void)
+	{
+		osmo_init_logging(&gprs_log_info);
+	}
+}
 
 static BTS s_bts;
 
