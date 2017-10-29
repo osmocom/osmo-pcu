@@ -1,3 +1,33 @@
+osmo-pcu (0.4.0) unstable; urgency=medium
+
+  [ Holger Hans Peter Freyther ]
+  * Initial release.
+
+  [ Max ]
+  * Use value string check from osmo-ci
+  * cosmetic: tighten direct-phy related code
+  * Support receiving SI13 from BTS
+  * Move gsmtap and accounting into separate function
+  * cosmetic: convert explicit warnings to fixme/todo
+  * Assert valid CS
+  * TBF-DL: extend index check for RLC block copy
+  * TS alloc: properly count UL slots
+  * cosmetic: reformat multislot classes table
+
+  [ Philipp Maier ]
+  * gb: allow only packets from a specific SGSN
+
+  [ Harald Welte ]
+  * tests: Don't use private version of log_info but global gprs_log_info
+  * Call osmo_init_logging() before static BTS constructor
+  * Forward GPRS SUSPEND REQ from BTS to SGSN using BSSGP
+  * Debian: Cosmetic changes to control file; add better Description
+  * Debian: print test results in case of failure + clean-up autotest
+  * Debian: migrate from DEB_BUILD_HARDENING to DEB_BUILD_MAINT_OPTIONS
+  * Debian: upgrade to debhelper 9 / Standards 3.9.8
+
+ -- Harald Welte <laforge@gnumonks.org>  Sun, 29 Oct 2017 12:03:05 +0100
+
 osmo-pcu (0.3.0) UNRELEASED; urgency=medium
 
   * Initial release.
