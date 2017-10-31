@@ -1138,7 +1138,6 @@ int pcu_vty_init(const struct log_info *cat)
 
 	install_node(&pcu_node, config_write_pcu);
 	install_element(CONFIG_NODE, &cfg_pcu_cmd);
-	vty_install_default(PCU_NODE);
 	install_element(PCU_NODE, &cfg_pcu_egprs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_egprs_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_two_phase_cmd);
