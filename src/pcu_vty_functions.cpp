@@ -44,8 +44,9 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
 	gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
 
-	vty_out(vty, "TBF: TFI=%d TLLI=0x%08x (%s) DIR=%s IMSI=%s%s", tbf->tfi(),
+	vty_out(vty, "TBF: TFI=%d TLLI=0x%08x (%s) TA=%u DIR=%s IMSI=%s%s", tbf->tfi(),
 			tbf->tlli(), tbf->is_tlli_valid() ? "valid" : "invalid",
+			tbf->ta(),
 			tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
 			tbf->imsi(), VTY_NEWLINE);
 	vty_out(vty, " created=%lu state=%08x 1st_TS=%d 1st_cTS=%d ctrl_TS=%d "
