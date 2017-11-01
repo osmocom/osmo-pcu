@@ -443,7 +443,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	return 0;
 }
 
-static int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *ul_slots, uint8_t *dl_slots)
+int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *ul_slots, uint8_t *dl_slots)
 {
 	uint8_t Tx, Sum;	/* Maximum Number of Slots: RX, Tx, Sum Rx+Tx */
 	uint8_t Tta, Ttb, Tra, Trb;	/* Minimum Number of Slots */

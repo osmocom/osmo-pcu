@@ -62,6 +62,9 @@ struct gprs_rlcmac_cs {
 	uint8_t block_payload;
 };
 
+/* TS allocation internal functions */
+int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *ul_slots, uint8_t *dl_slots);
+
 int gprs_rlcmac_received_lost(struct gprs_rlcmac_dl_tbf *tbf, uint16_t received,
 	uint16_t lost);
 
