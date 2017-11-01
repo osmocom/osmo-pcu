@@ -489,8 +489,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	return 0;
 }
 
-static int find_multi_slots(struct gprs_rlcmac_bts *bts,
-	struct gprs_rlcmac_trx *trx,
+static int find_multi_slots(struct gprs_rlcmac_trx *trx,
 	const GprsMs *ms, uint8_t *ul_slots, uint8_t *dl_slots)
 {
 	const struct gprs_ms_multislot_class *ms_class;
@@ -859,7 +858,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		trx = &bts->trx[trx_no];
 
 	if (!dl_slots || !ul_slots) {
-		rc = find_multi_slots(bts, trx, ms, &ul_slots, &dl_slots);
+		rc = find_multi_slots(trx, ms, &ul_slots, &dl_slots);
 		if (rc < 0)
 			return rc;
 
