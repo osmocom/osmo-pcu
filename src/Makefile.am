@@ -49,6 +49,7 @@ libgprs_la_SOURCES = \
 	pcu_l1_if.cpp \
 	pcu_vty.c \
 	pcu_vty_functions.cpp \
+	mslot_class.c \
 	tbf.cpp \
 	tbf_ul.cpp \
 	tbf_dl.cpp \
@@ -81,6 +82,7 @@ noinst_HEADERS = \
 	gsm_timer.h \
 	pcu_vty.h \
 	pcu_vty_functions.h \
+	mslot_class.h \
 	tbf.h \
 	bts.h \
 	poll_controller.h \

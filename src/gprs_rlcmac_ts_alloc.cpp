@@ -29,58 +29,12 @@
 #include <errno.h>
 #include <values.h>
 
+extern "C" {
+#include "mslot_class.h"
+}
+
 /* Consider a PDCH as idle if has at most this number of TBFs assigned to it */
 #define PDCH_IDLE_TBF_THRESH	1
-
-/* 3GPP TS 05.02 Annex B.1 */
-
-#define MS_NA	255 /* N/A */
-#define MS_A	254 /* 1 with hopping, 0 without */
-#define MS_B	253 /* 1 with hopping, 0 without (change Rx to Tx)*/
-#define MS_C	252 /* 1 with hopping, 0 without (change Tx to Rx)*/
-
-struct gprs_ms_multislot_class {
-	uint8_t rx, tx, sum;	/* Maximum Number of Slots: RX, Tx, Sum Rx+Tx */
-	uint8_t ta, tb, ra, rb;	/* Minimum Number of Slots */
-	uint8_t type; /* Type of Mobile */
-};
-
-static const struct gprs_ms_multislot_class gprs_ms_multislot_class[32] = {
-	/* M-S Class |  Max # of slots |       Min # of slots      | Type */
-	/*           | Rx     Tx   Sum |  Tta    Ttb    Tra    Trb |      */
-	/* N/A */ { MS_NA, MS_NA, MS_NA, MS_NA, MS_NA, MS_NA, MS_NA, MS_NA },
-	/*  1 */  {   1,     1,     2,     3,     2,     4,     2,     1 },
-	/*  2 */  {   2,     1,     3,     3,     2,     3,     1,     1 },
-	/*  3 */  {   2,     2,     3,     3,     2,     3,     1,     1 },
-	/*  4 */  {   3,     1,     4,     3,     1,     3,     1,     1 },
-	/*  5 */  {   2,     2,     4,     3,     1,     3,     1,     1 },
-	/*  6 */  {   3,     2,     4,     3,     1,     3,     1,     1 },
-	/*  7 */  {   3,     3,     4,     3,     1,     3,     1,     1 },
-	/*  8 */  {   4,     1,     5,     3,     1,     2,     1,     1 },
-	/*  9 */  {   3,     2,     5,     3,     1,     2,     1,     1 },
-	/* 10 */  {   4,     2,     5,     3,     1,     2,     1,     1 },
-	/* 11 */  {   4,     3,     5,     3,     1,     2,     1,     1 },
-	/* 12 */  {   4,     4,     5,     2,     1,     2,     1,     1 },
-	/* 13 */  {   3,     3,   MS_NA, MS_NA, MS_A,    3,   MS_A,    2 },
-	/* 14 */  {   4,     4,   MS_NA, MS_NA, MS_A,    3,   MS_A,    2 },
-	/* 15 */  {   5,     5,   MS_NA, MS_NA, MS_A,    3,   MS_A,    2 },
-	/* 16 */  {   6,     6,   MS_NA, MS_NA, MS_A,    2,   MS_A,    2 },
-	/* 17 */  {   7,     7,   MS_NA, MS_NA, MS_A,    1,     0,     2 },
-	/* 18 */  {   8,     8,   MS_NA, MS_NA,   0,     0,     0,     2 },
-	/* 19 */  {   6,     2,   MS_NA,   3,   MS_B,    2,   MS_C,    1 },
-	/* 20 */  {   6,     3,   MS_NA,   3,   MS_B,    2,   MS_C,    1 },
-	/* 21 */  {   6,     4,   MS_NA,   3,   MS_B,    2,   MS_C,    1 },
-	/* 22 */  {   6,     4,   MS_NA,   2,   MS_B,    2,   MS_C,    1 },
-	/* 23 */  {   6,     6,   MS_NA,   2,   MS_B,    2,   MS_C,    1 },
-	/* 24 */  {   8,     2,   MS_NA,   3,   MS_B,    2,   MS_C,    1 },
-	/* 25 */  {   8,     3,   MS_NA,   3,   MS_B,    2,   MS_C,    1 },
-	/* 26 */  {   8,     4,   MS_NA,   3,   MS_B,    2,   MS_C,    1 },
-	/* 27 */  {   8,     4,   MS_NA,   2,   MS_B,    2,   MS_C,    1 },
-	/* 28 */  {   8,     6,   MS_NA,   2,   MS_B,    2,   MS_C,    1 },
-	/* 29 */  {   8,     8,   MS_NA,   2,   MS_B,    2,   MS_C,    1 },
-/* N/A */	{ MS_NA,MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA },
-/* N/A */	{ MS_NA,MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA },
-};
 
 static char *set_flag_chars(char *buf, uint8_t val, char set_char, char unset_char = 0)
 {
@@ -489,10 +443,8 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts,
 	return 0;
 }
 
-static int find_multi_slots(struct gprs_rlcmac_trx *trx,
-	const GprsMs *ms, uint8_t *ul_slots, uint8_t *dl_slots)
+static int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *ul_slots, uint8_t *dl_slots)
 {
-	const struct gprs_ms_multislot_class *ms_class;
 	uint8_t Tx, Sum;	/* Maximum Number of Slots: RX, Tx, Sum Rx+Tx */
 	uint8_t Tta, Ttb, Tra, Trb;	/* Minimum Number of Slots */
 	uint8_t Type; /* Type of Mobile */
@@ -509,57 +461,30 @@ static int find_multi_slots(struct gprs_rlcmac_trx *trx,
 	enum {MASK_TT, MASK_TR};
 	unsigned mask_sel;
 
-	if (ms->ms_class() >= 32) {
-		LOGP(DRLCMAC, LOGL_ERROR, "Multislot class %d out of range.\n",
-			ms->ms_class());
+	if (mslot_class)
+		LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm B) for class %d\n",
+		     mslot_class);
+
+	Tx = mslot_class_get_tx(mslot_class);
+	Sum = mslot_class_get_sum(mslot_class);
+	Tta = mslot_class_get_ta(mslot_class);
+	Ttb = mslot_class_get_tb(mslot_class);
+	Tra = mslot_class_get_ra(mslot_class);
+	Trb = mslot_class_get_rb(mslot_class);
+	Type = mslot_class_get_type(mslot_class);
+
+	if (Tx == MS_NA) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "Multislot class %d not applicable.\n",
+		     mslot_class);
 		return -EINVAL;
 	}
-
-	if (ms->ms_class()) {
-		ms_class = &gprs_ms_multislot_class[ms->ms_class()];
-		LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm B) for "
-			"class %d\n", ms->ms_class());
-	} else {
-		ms_class = &gprs_ms_multislot_class[12];
-		LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm B) for "
-			"unknown class (assuming 12)\n");
-	}
-
-	if (ms_class->tx == MS_NA) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "Multislot class %d not "
-			"applicable.\n", ms->ms_class());
-		return -EINVAL;
-	}
-
-	Tx = ms_class->tx;
-	Sum = ms_class->sum;
-	Tta = ms_class->ta;
-	Ttb = ms_class->tb;
-	Tra = ms_class->ra;
-	Trb = ms_class->rb;
-	Type = ms_class->type;
-
-	/* MS_A maps to 0 if frequency hopping is disabled */
-	/* TODO: Set it to 1 if FH is implemented and enabled */
-	if (Ttb == MS_A)
-		Ttb = 0;
-	if (Trb == MS_A)
-		Trb = 0;
-
-	/* MS_A and MS_B are 0 iff FH is disabled and there is no Tx/Rx change.
-	 * This is never the case with the current implementation, so 1 will
-	 * always be used. */
-	if (Ttb == MS_B)
-		Ttb = 1;
-	if (Trb == MS_C)
-		Trb = 1;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "- Rx=%d Tx=%d Sum Rx+Tx=%s  Tta=%s Ttb=%d "
-		" Tra=%d Trb=%d Type=%d\n", ms_class->rx, Tx,
+		" Tra=%d Trb=%d Type=%d\n", mslot_class_get_rx(mslot_class), Tx,
 		(Sum == MS_NA) ? "N/A" : digit[Sum],
 		(Tta == MS_NA) ? "N/A" : digit[Tta], Ttb, Tra, Trb, Type);
 
-	max_slots = OSMO_MAX(ms_class->rx, ms_class->tx);
+	max_slots = OSMO_MAX(mslot_class_get_rx(mslot_class), Tx);
 
 	if (*dl_slots == 0)
 		*dl_slots = 0xff;
@@ -585,11 +510,11 @@ static int find_multi_slots(struct gprs_rlcmac_trx *trx,
 	max_dl_slots = 0;
 
 	/* Iterate through possible numbers of TX slots */
-	for (num_tx = 1; num_tx <= ms_class->tx; num_tx += 1) {
+	for (num_tx = 1; num_tx <= mslot_class_get_tx(mslot_class); num_tx += 1) {
 		uint16_t tx_valid_win = (1 << num_tx) - 1;
 
 		uint8_t rx_mask[MASK_TR+1];
-		if (ms_class->type == 1) {
+		if (Type == 1) {
 			rx_mask[MASK_TT] = (0x100 >> OSMO_MAX(Ttb, Tta)) - 1;
 			rx_mask[MASK_TT] &= ~((1 << (Trb + num_tx)) - 1);
 			rx_mask[MASK_TR] = (0x100 >> Ttb) - 1;
@@ -629,7 +554,7 @@ static int find_multi_slots(struct gprs_rlcmac_trx *trx,
 
 		tx_slot_count = pcu_bitcount(tx_window);
 
-		max_rx = OSMO_MIN(ms_class->rx, ms_class->sum - num_tx);
+		max_rx = OSMO_MIN(mslot_class_get_rx(mslot_class), Sum - num_tx);
 		rx_valid_win = (1 << max_rx) - 1;
 
 	/* Rotate group of RX slots: DDD-----, -DDD----, ..., DD-----D */
@@ -671,7 +596,7 @@ static int find_multi_slots(struct gprs_rlcmac_trx *trx,
 		/* Whether to skip this round doesn not only depend on the bit
 		 * sets but also on mask_sel. Therefore this check must be done
 		 * before doing the test_and_set_bit shortcut. */
-		if (ms_class->type == 1) {
+		if (Type == 1) {
 			unsigned slot_sum = rx_slot_count + tx_slot_count;
 			/* Assume down+up/dynamic.
 			 * TODO: For ext-dynamic, down only, up only add more
@@ -723,7 +648,7 @@ static int find_multi_slots(struct gprs_rlcmac_trx *trx,
 		/* Check number of common slots according to TS 54.002, 6.4.2.2 */
 		common_slot_count = pcu_bitcount(tx_window & rx_window);
 		req_common_slots = OSMO_MIN(tx_slot_count, rx_slot_count);
-		if (ms_class->type == 1)
+		if (Type == 1)
 			req_common_slots = OSMO_MIN(req_common_slots, 2);
 
 		if (req_common_slots != common_slot_count) {
@@ -858,7 +783,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts,
 		trx = &bts->trx[trx_no];
 
 	if (!dl_slots || !ul_slots) {
-		rc = find_multi_slots(trx, ms, &ul_slots, &dl_slots);
+		rc = find_multi_slots(trx, ms->ms_class(), &ul_slots, &dl_slots);
 		if (rc < 0)
 			return rc;
 
@@ -1063,12 +988,7 @@ int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts,
 
 int gprs_alloc_max_dl_slots_per_ms(struct gprs_rlcmac_bts *bts, uint8_t ms_class)
 {
-	int rx;
-
-	if (ms_class >= ARRAY_SIZE(gprs_ms_multislot_class))
-		ms_class = 0;
-
-	rx = gprs_ms_multislot_class[ms_class].rx;
+	int rx = mslot_class_get_rx(ms_class);
 
 	if (rx == MS_NA)
 		rx = 4;
