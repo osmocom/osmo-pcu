@@ -1619,8 +1619,45 @@ int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint8_t data_len, uint32_t f
 	return rc;
 }
 
-void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts,
-		       uint8_t ta)
+/* update TA based on TA provided by PH-DATA-IND */
+void update_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, int8_t ta_delta)
+{
+	int16_t ta_adj;
+	uint8_t ta_target;
+
+	if (ta_delta) {
+		/* adjust TA based on TA provided by PH-DATA-IND */
+		ta_adj = tbf->ta() + ta_delta;
+
+		/* limit target TA in range 0..63 bits */
+		ta_target = ta_limit(ta_adj);
+
+		LOGP(DL1IF, LOGL_INFO, "PH-DATA-IND is updating TLLI=0x%08x: TA %u -> %u on "
+				"TRX = %d, TS = %d, FN = %d\n",
+				tbf->tlli(), tbf->ta(), ta_target,
+				tbf->trx->trx_no , tbf->poll_ts, tbf->poll_fn);
+		tbf->set_ta(ta_target);
+	}
+}
+
+/* set TA based on TA provided by PH-RA-IND */
+void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta)
+{
+	uint8_t ta_target;
+
+	if (tbf->ta() != ta) {
+		/* limit target TA in range 0..63 bits */
+		ta_target = ta_limit(ta);
+
+		LOGP(DL1IF, LOGL_INFO, "PH-RA-IND is updating TLLI=0x%08x: TA %u -> %u on "
+				"TRX = %d, TS = %d, FN = %d\n",
+				tbf->tlli(), tbf->ta(), ta_target,
+				tbf->trx->trx_no , tbf->poll_ts, tbf->poll_fn);
+		tbf->set_ta(ta_target);
+	}
+}
+
+void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts, int8_t ta, bool is_rach)
 {
 	struct gprs_rlcmac_ul_tbf *tbf =
 		bts_main_data()->bts->ul_tbf_by_poll_fn(fn, trx_no, ts);
@@ -1628,11 +1665,16 @@ void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts,
 		LOGP(DL1IF, LOGL_DEBUG, "[%s] update TA = %u ignored due to "
 		     "unknown UL TBF on TRX = %d, TS = %d, FN = %d\n",
 		     p, ta, trx_no, ts, fn);
-	else if (tbf->ta() != ta) {
-		LOGP(DL1IF, LOGL_INFO, "[%s] Updating TA %u -> %u on "
-		     "TRX = %d, TS = %d, FN = %d\n",
-		     p, tbf->ta(), ta, trx_no, ts, fn);
-		tbf->set_ta(ta);
+	else {
+		/* we need to distinguish TA information provided by L1
+		 * from PH-DATA-IND and PHY-RA-IND so that we can properly
+		 * update TA for given TBF
+		 */
+		if (is_rach)
+			set_tbf_ta(tbf, (uint8_t)ta);
+		else
+			update_tbf_ta(tbf, ta);
+
 	}
 }
 

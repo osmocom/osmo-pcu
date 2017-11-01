@@ -162,8 +162,9 @@ struct gprs_rlcmac_trx {
 #ifdef __cplusplus
 extern "C" {
 #endif
-void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts,
-		       uint8_t ta);
+void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts, int8_t ta, bool is_rach);
+void update_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, int8_t ta_delta);
+void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta);
 #ifdef __cplusplus
 }
 #endif

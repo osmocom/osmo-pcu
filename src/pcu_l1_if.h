@@ -43,6 +43,34 @@ static inline uint8_t qta2ta(int16_t qta)
 	return qta >> 2;
 }
 
+static inline int8_t sign_qta2ta(int16_t qta)
+{
+	int8_t ta_adj = 0;
+
+	if (qta < -252)
+		qta = -252;
+
+	if (qta > 252)
+		qta = 252;
+
+	/* 1-bit TA adjustment  if TA error reported by L1 is outside +/- 2 qbits */
+	if (qta > 2)
+		ta_adj = 1;
+	if (qta < -2)
+		ta_adj = -1;
+
+	return (qta >> 2) + ta_adj;
+}
+
+static inline uint8_t ta_limit(int16_t ta)
+{
+	if (ta < 0)
+		ta = 0;
+	if (ta > 63)
+		ta = 63;
+	return ta;
+}
+
 /*
  * L1 Measurement values
  */
