@@ -9,6 +9,12 @@ cat $abs_srcdir/rlcmac/RLCMACTest.err > experr
 AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/rlcmac/RLCMACTest], [0], [expout], [experr])
 AT_CLEANUP
 
+AT_SETUP([multi_slot])
+AT_KEYWORDS([multi_slot])
+cat $abs_srcdir/alloc/MslotTest.ok > expout
+AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/alloc/MslotTest], [0], [expout], [ignore])
+AT_CLEANUP
+
 AT_SETUP([ts_alloc])
 AT_KEYWORDS([ts_alloc])
 cat $abs_srcdir/alloc/AllocTest.ok > expout
