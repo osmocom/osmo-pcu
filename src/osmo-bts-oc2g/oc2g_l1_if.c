@@ -251,7 +251,7 @@ static int handle_ph_ra_ind(struct oc2gl1_hdl *fl1h, GsmL1_PhRaInd_t *ra_ind)
 	bts_update_tbf_ta("PH-RA", ra_ind->u32Fn, fl1h->trx_no, ra_ind->u8Tn,
 			qta2ta(ra_ind->measParam.i16BurstTiming), true);
 
-	return 0;
+	return pcu_rx_ra_ind_pdtch(fl1h->trx_no, ra_ind->u8Tn, ra_ind->u32Fn, qta2ta(ra_ind->measParam.i16BurstTiming));
 }
 
 
