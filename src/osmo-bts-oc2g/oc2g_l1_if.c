@@ -248,9 +248,10 @@ static int handle_ph_ra_ind(struct oc2gl1_hdl *fl1h, GsmL1_PhRaInd_t *ra_ind)
 	if (ra_ind->measParam.fLinkQuality < MIN_QUAL_RACH)
 		return 0;
 
-	DEBUGP(DL1IF, "Rx PH-RA.ind");
+	LOGP(DL1IF, LOGL_DEBUG, "PH-RA-IND L1 qta=%d\n", ra_ind->measParam.i16BurstTiming);
+
 	bts_update_tbf_ta("PH-RA", ra_ind->u32Fn, fl1h->trx_no, ra_ind->u8Tn,
-			sign_qta2ta(ra_ind->measParam.i16BurstTiming), true);
+			qta2ta(ra_ind->measParam.i16BurstTiming), true);
 
 	return 0;
 }
