@@ -82,6 +82,11 @@ static inline const struct gprs_ms_multislot_class *get_mslot_table(uint8_t ms_c
 	return &gprs_ms_multislot_class[index];
 }
 
+uint8_t mslot_class_max()
+{
+	return ARRAY_SIZE(gprs_ms_multislot_class);
+}
+
 uint8_t mslot_class_get_ta(uint8_t ms_cl)
 {
 	return get_mslot_table(ms_cl)->ta;

@@ -28,7 +28,7 @@
 
 /* 3GPP TS 05.02 Annex B.1 */
 
-#define MS_NA	255 /* N/A *///
+#define MS_NA	255 /* N/A */
 #define MS_A	254 /* 1 with hopping, 0 without */
 #define MS_B	253 /* 1 with hopping, 0 without (change Rx to Tx)*/
 #define MS_C	252 /* 1 with hopping, 0 without (change Tx to Rx)*/
@@ -44,3 +44,4 @@ uint8_t mslot_class_get_tx(uint8_t ms_cl);
 uint8_t mslot_class_get_rx(uint8_t ms_cl);
 uint8_t mslot_class_get_sum(uint8_t ms_cl);
 uint8_t mslot_class_get_type(uint8_t ms_cl);
+uint8_t mslot_class_max();
