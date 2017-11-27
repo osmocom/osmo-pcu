@@ -8588,7 +8588,7 @@ Mass test: TS0(OOOOOOOO)TS7 MS_Class=26
 Mass test: TS0(OOOOOOOO)TS7 MS_Class=27
 Mass test: TS0(OOOOOOOO)TS7 MS_Class=28
 Mass test: TS0(OOOOOOOO)TS7 MS_Class=29
-Going to test assignment with many TBF, algorithm A (UL and DL)
+Going to test assignment with many TBF, algorithm A class 1..1 (UL and DL)
  TBF[0] class 1 reserves ...C....
  TBF[0] class 1 reserves ....C...
  TBF[0] class 1 reserves .....C..
@@ -8624,8 +8624,8 @@ Going to test assignment with many TBF, algorithm A (UL and DL)
  TBF[6] class 1 reserves .....C..
  TBF[6] class 1 reserves ......C.
  TBF[6] class 1 reserves .......C
-  Successfully allocated 35 UL TBFs
-Going to test assignment with many TBF, algorithm B class 10 (UL and DL)
+  Successfully allocated 35 UL TBFs, algorithm A class 1..1 (UL and DL)
+Going to test assignment with many TBF, algorithm B class 10..10 (UL and DL)
  TBF[0] class 10 reserves ...DDCD.
  TBF[1] class 10 reserves .....DCD
  TBF[2] class 10 reserves ...DCD..
@@ -8658,8 +8658,8 @@ Going to test assignment with many TBF, algorithm B class 10 (UL and DL)
  TBF[29] class 10 reserves ...CD...
  TBF[30] class 10 reserves ...CD...
  TBF[31] class 10 reserves ...CD...
-  Successfully allocated 32 UL TBFs
-Going to test assignment with many TBF, algorithm B class 12 (UL and DL)
+  Successfully allocated 32 UL TBFs, algorithm B class 10..10 (UL and DL)
+Going to test assignment with many TBF, algorithm B class 12..12 (UL and DL)
  TBF[0] class 12 reserves ...DDCD.
  TBF[1] class 12 reserves .....DCD
  TBF[2] class 12 reserves ...DCD..
@@ -8692,8 +8692,8 @@ Going to test assignment with many TBF, algorithm B class 12 (UL and DL)
  TBF[29] class 12 reserves ...CD...
  TBF[30] class 12 reserves ...CD...
  TBF[31] class 12 reserves ...CD...
-  Successfully allocated 32 UL TBFs
-Going to test assignment with many TBF, algorithm B class 1-12 (UL and DL)
+  Successfully allocated 32 UL TBFs, algorithm B class 12..12 (UL and DL)
+Going to test assignment with many TBF, algorithm B class 1..12 (UL and DL)
  TBF[0] class 1 reserves ...C....
  TBF[1] class 2 reserves ....DC..
  TBF[2] class 3 reserves ......DC
@@ -8726,8 +8726,8 @@ Going to test assignment with many TBF, algorithm B class 1-12 (UL and DL)
  TBF[29] class 6 reserves ......CD
  TBF[30] class 7 reserves ...CD...
  TBF[31] class 8 reserves ...DDCD.
-  Successfully allocated 32 UL TBFs
-Going to test assignment with many TBF, algorithm B class 1-29 (UL and DL)
+  Successfully allocated 32 UL TBFs, algorithm B class 1..12 (UL and DL)
+Going to test assignment with many TBF, algorithm B class 1..29 (UL and DL)
  TBF[0] class 1 reserves ...C....
  TBF[1] class 2 reserves ....DC..
  TBF[2] class 3 reserves ......DC
@@ -8760,8 +8760,8 @@ Going to test assignment with many TBF, algorithm B class 1-29 (UL and DL)
  TBF[29] class 1 reserves ...C....
  TBF[30] class 2 reserves ......DC
  TBF[31] class 3 reserves ....DC..
-  Successfully allocated 32 UL TBFs
-Going to test assignment with many TBF, algorithm dynamic class 1-29 (UL and DL)
+  Successfully allocated 32 UL TBFs, algorithm B class 1..29 (UL and DL)
+Going to test assignment with many TBF, algorithm dynamic class 1..29 (UL and DL)
  TBF[0] class 1 reserves ...C....
  TBF[1] class 2 reserves ....DC..
  TBF[2] class 3 reserves ......DC
@@ -8797,8 +8797,8 @@ Going to test assignment with many TBF, algorithm dynamic class 1-29 (UL and DL)
  TBF[1] class 4 reserves ...C....
  TBF[2] class 5 reserves ...C....
  TBF[0] class 6 reserves ......C.
-  Successfully allocated 35 UL TBFs
-Going to test assignment with many TBF, algorithm A (DL and UL)
+  Successfully allocated 35 UL TBFs, algorithm dynamic class 1..29 (UL and DL)
+Going to test assignment with many TBF, algorithm A class 1..1 (DL and UL)
  TBF[0] class 1 reserves ...C....
  TBF[0] class 1 reserves ....C...
  TBF[0] class 1 reserves .....C..
@@ -8834,8 +8834,8 @@ Going to test assignment with many TBF, algorithm A (DL and UL)
  TBF[6] class 1 reserves .....C..
  TBF[6] class 1 reserves ......C.
  TBF[6] class 1 reserves .......C
-  Successfully allocated 35 UL TBFs
-Going to test assignment with many TBF, algorithm B class 10 (DL and UL)
+  Successfully allocated 35 UL TBFs, algorithm A class 1..1 (DL and UL)
+Going to test assignment with many TBF, algorithm B class 10..10 (DL and UL)
  TBF[0] class 10 reserves ...DDCD.
  TBF[1] class 10 reserves .....DCD
  TBF[2] class 10 reserves ...DCD..
@@ -8868,8 +8868,8 @@ Going to test assignment with many TBF, algorithm B class 10 (DL and UL)
  TBF[29] class 10 reserves ...CD...
  TBF[30] class 10 reserves .....DDC
  TBF[31] class 10 reserves ...CD...
-  Successfully allocated 32 UL TBFs
-Going to test assignment with many TBF, algorithm dynamic class 10 (DL and UL)
+  Successfully allocated 32 UL TBFs, algorithm B class 10..10 (DL and UL)
+Going to test assignment with many TBF, algorithm dynamic class 10..10 (DL and UL)
  TBF[0] class 10 reserves ...DDCD.
  TBF[1] class 10 reserves .....DCD
  TBF[2] class 10 reserves ...DCD..
@@ -8902,8 +8902,8 @@ Going to test assignment with many TBF, algorithm dynamic class 10 (DL and UL)
  TBF[29] class 10 reserves ...CD...
  TBF[30] class 10 reserves .....DDC
  TBF[31] class 10 reserves ...CD...
-  Successfully allocated 32 UL TBFs
-Going to test assignment with many TBF, algorithm A (DL after UL)
+  Successfully allocated 32 UL TBFs, algorithm dynamic class 10..10 (DL and UL)
+Going to test assignment with many TBF, algorithm A class 1..1 (DL after UL)
  TBF[0] class 1 reserves ...C....
  TBF[0] class 1 reserves ....C...
  TBF[0] class 1 reserves .....C..
@@ -9064,8 +9064,8 @@ Going to test assignment with many TBF, algorithm A (DL after UL)
  TBF[31] class 1 reserves .....C..
  TBF[31] class 1 reserves ......C.
  TBF[31] class 1 reserves .......C
-  Successfully allocated 160 UL TBFs
-Going to test assignment with many TBF, algorithm B class 10 (DL after UL)
+  Successfully allocated 160 UL TBFs, algorithm A class 1..1 (DL after UL)
+Going to test assignment with many TBF, algorithm B class 10..10 (DL after UL)
  TBF[0] class 10 reserves ...DDCD.
  TBF[1] class 10 reserves .....DCD
  TBF[2] class 10 reserves ...DCD..
@@ -9098,8 +9098,8 @@ Going to test assignment with many TBF, algorithm B class 10 (DL after UL)
  TBF[29] class 10 reserves .....DCD
  TBF[30] class 10 reserves ...DCD..
  TBF[31] class 10 reserves .....DCD
-  Successfully allocated 32 UL TBFs
-Going to test assignment with many TBF, algorithm dynamic class 10 (DL after UL)
+  Successfully allocated 32 UL TBFs, algorithm B class 10..10 (DL after UL)
+Going to test assignment with many TBF, algorithm dynamic class 10..10 (DL after UL)
  TBF[0] class 10 reserves ...DDCD.
  TBF[1] class 10 reserves .....DCD
  TBF[2] class 10 reserves ...DCD..
@@ -9195,8 +9195,8 @@ Going to test assignment with many TBF, algorithm dynamic class 10 (DL after UL)
  TBF[28] class 10 reserves ......C.
  TBF[31] class 10 reserves ....C...
  TBF[30] class 10 reserves ......C.
-  Successfully allocated 95 UL TBFs
-Going to test assignment with many TBF, algorithm A (UL after DL)
+  Successfully allocated 95 UL TBFs, algorithm dynamic class 10..10 (DL after UL)
+Going to test assignment with many TBF, algorithm A class 1..1 (UL after DL)
  TBF[0] class 1 reserves ...U....
  TBF[0] class 1 reserves ....U...
  TBF[0] class 1 reserves .....U..
@@ -9232,8 +9232,8 @@ Going to test assignment with many TBF, algorithm A (UL after DL)
  TBF[6] class 1 reserves .....U..
  TBF[6] class 1 reserves ......U.
  TBF[6] class 1 reserves .......U
-  Successfully allocated 35 UL TBFs
-Going to test assignment with many TBF, algorithm B class 10 (UL after DL)
+  Successfully allocated 35 UL TBFs, algorithm A class 1..1 (UL after DL)
+Going to test assignment with many TBF, algorithm B class 10..10 (UL after DL)
  TBF[0] class 10 reserves .....U..
  TBF[1] class 10 reserves ......U.
  TBF[2] class 10 reserves ....U...
@@ -9266,8 +9266,8 @@ Going to test assignment with many TBF, algorithm B class 10 (UL after DL)
  TBF[29] class 10 reserves ...U....
  TBF[30] class 10 reserves .......U
  TBF[31] class 10 reserves ...U....
-  Successfully allocated 32 UL TBFs
-Going to test assignment with many TBF, algorithm dynamic class 10 (UL after DL)
+  Successfully allocated 32 UL TBFs, algorithm B class 10..10 (UL after DL)
+Going to test assignment with many TBF, algorithm dynamic class 10..10 (UL after DL)
  TBF[0] class 10 reserves .....U..
  TBF[1] class 10 reserves ......U.
  TBF[2] class 10 reserves ....U...
@@ -9303,8 +9303,8 @@ Going to test assignment with many TBF, algorithm dynamic class 10 (UL after DL)
  TBF[0] class 10 reserves ...U....
  TBF[1] class 10 reserves ...U....
  TBF[2] class 10 reserves ...U....
-  Successfully allocated 35 UL TBFs
-Going to test assignment with many TBF, algorithm A (UL only)
+  Successfully allocated 35 UL TBFs, algorithm dynamic class 10..10 (UL after DL)
+Going to test assignment with many TBF, algorithm A class 1..1 (UL only)
  TBF[0] class 1 reserves ...U....
  TBF[0] class 1 reserves ....U...
  TBF[0] class 1 reserves .....U..
@@ -9340,8 +9340,8 @@ Going to test assignment with many TBF, algorithm A (UL only)
  TBF[6] class 1 reserves .....U..
  TBF[6] class 1 reserves ......U.
  TBF[6] class 1 reserves .......U
-  Successfully allocated 35 UL TBFs
-Going to test assignment with many TBF, algorithm B class 10 (UL only)
+  Successfully allocated 35 UL TBFs, algorithm A class 1..1 (UL only)
+Going to test assignment with many TBF, algorithm B class 10..10 (UL only)
  TBF[0] class 10 reserves .....U..
  TBF[1] class 10 reserves ......U.
  TBF[2] class 10 reserves ....U...
@@ -9374,8 +9374,8 @@ Going to test assignment with many TBF, algorithm B class 10 (UL only)
  TBF[29] class 10 reserves ...U....
  TBF[30] class 10 reserves ...U....
  TBF[31] class 10 reserves ...U....
-  Successfully allocated 32 UL TBFs
-Going to test assignment with many TBF, algorithm dynamic class 10 (UL only)
+  Successfully allocated 32 UL TBFs, algorithm B class 10..10 (UL only)
+Going to test assignment with many TBF, algorithm dynamic class 10..10 (UL only)
  TBF[0] class 10 reserves .....U..
  TBF[1] class 10 reserves ......U.
  TBF[2] class 10 reserves ....U...
@@ -9411,8 +9411,8 @@ Going to test assignment with many TBF, algorithm dynamic class 10 (UL only)
  TBF[0] class 10 reserves ...U....
  TBF[1] class 10 reserves ...U....
  TBF[2] class 10 reserves ...U....
-  Successfully allocated 35 UL TBFs
-Going to test assignment with many TBF, algorithm A (DL ONLY)
+  Successfully allocated 35 UL TBFs, algorithm dynamic class 10..10 (UL only)
+Going to test assignment with many TBF, algorithm A class 1..1 (DL only)
  TBF[0] class 1 reserves ...C....
  TBF[0] class 1 reserves ....C...
  TBF[0] class 1 reserves .....C..
@@ -9573,8 +9573,8 @@ Going to test assignment with many TBF, algorithm A (DL ONLY)
  TBF[31] class 1 reserves .....C..
  TBF[31] class 1 reserves ......C.
  TBF[31] class 1 reserves .......C
-  Successfully allocated 160 UL TBFs
-Going to test assignment with many TBF, algorithm B class 10 (DL ONLY)
+  Successfully allocated 160 UL TBFs, algorithm A class 1..1 (DL only)
+Going to test assignment with many TBF, algorithm B class 10..10 (DL only)
  TBF[0] class 10 reserves ...DDCD.
  TBF[1] class 10 reserves .....DCD
  TBF[2] class 10 reserves ...DCD..
@@ -9607,8 +9607,8 @@ Going to test assignment with many TBF, algorithm B class 10 (DL ONLY)
  TBF[29] class 10 reserves .....DCD
  TBF[30] class 10 reserves ...CD...
  TBF[31] class 10 reserves ...CD...
-  Successfully allocated 32 UL TBFs
-Going to test assignment with many TBF, algorithm dynamic class 10 (DL ONLY)
+  Successfully allocated 32 UL TBFs, algorithm B class 10..10 (DL only)
+Going to test assignment with many TBF, algorithm dynamic class 10..10 (DL only)
  TBF[0] class 10 reserves ...DDCD.
  TBF[1] class 10 reserves .....DCD
  TBF[2] class 10 reserves ...DCD..
@@ -9710,7 +9710,7 @@ Going to test assignment with many TBF, algorithm dynamic class 10 (DL ONLY)
  TBF[29] class 10 reserves ....C...
  TBF[31] class 10 reserves ......C.
  TBF[31] class 10 reserves .......C
-  Successfully allocated 101 UL TBFs
+  Successfully allocated 101 UL TBFs, algorithm dynamic class 10..10 (DL only)
 Going to test assignment with many connections, algorithm A
  TBF[0] class 1 reserves ...C....
  TBF[0] class 2 reserves ....C...
