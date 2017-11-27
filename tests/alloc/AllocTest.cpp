@@ -432,6 +432,19 @@ enum test_mode {
 	TEST_MODE_UL_AFTER_DL,
 };
 
+static inline char *test_mode_descr(enum test_mode t)
+{
+	switch (t) {
+	case TEST_MODE_UL_ONLY: return (char*)"UL only";
+	case TEST_MODE_DL_ONLY: return (char*)"DL only";
+	case TEST_MODE_UL_AND_DL: return (char*)"UL and DL";
+	case TEST_MODE_DL_AND_UL: return (char*)"DL and UL";
+	case TEST_MODE_DL_AFTER_UL: return (char*)"DL after UL";
+	case TEST_MODE_UL_AFTER_DL: return (char*)"UL after DL";
+	default: return NULL;
+	}
+}
+
 static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, unsigned ms_class,
 	enum test_mode mode)
 {
@@ -617,7 +630,8 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 	struct gprs_rlcmac_trx *trx;
 	unsigned counter;
 
-	printf("Going to test assignment with many TBF, %s\n", text);
+	printf("Going to test assignment with many TBF, algorithm %s class %u..%u (%s)\n",
+	       text, min_class, max_class, test_mode_descr(mode));
 
 	bts = the_bts.bts_data();
 	bts->alloc_algorithm = algo;
@@ -631,9 +645,11 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 
 	counter = alloc_many_tbfs(&the_bts, min_class, max_class, mode);
 
-	printf("  Successfully allocated %d UL TBFs\n", counter);
+	printf("  Successfully allocated %u UL TBFs, algorithm %s class %u..%u (%s)\n",
+	       counter, text, min_class, max_class, test_mode_descr(mode));
 	if (counter != expect_num)
-		fprintf(stderr, "  Expected %d TBFs for %s\n", expect_num, text);
+		fprintf(stderr, "  Expected %u TBFs (got %u), algorithm %s class %u..%u (%s)\n",
+			expect_num, counter, text, min_class, max_class, test_mode_descr(mode));
 
 	OSMO_ASSERT(counter == expect_num);
 
@@ -655,7 +671,7 @@ static void test_many_connections(algo_t algo, unsigned expect_num,
 		TEST_MODE_DL_ONLY,
 	};
 
-	printf("Going to test assignment with many connections, %s\n", text);
+	printf("Going to test assignment with many connections, algorithm %s\n", text);
 
 	bts = the_bts.bts_data();
 	bts->alloc_algorithm = algo;
@@ -690,67 +706,33 @@ static void test_many_connections(algo_t algo, unsigned expect_num,
 
 	printf("  Successfully allocated %d TBFs\n", counter1);
 	if (counter1 != (int)expect_num)
-		fprintf(stderr, "  Expected %d TBFs for %s\n", expect_num, text);
+		fprintf(stderr, "  Expected %d TBFs (got %d) for algorithm %s\n", expect_num, counter1, text);
 
 	OSMO_ASSERT(expect_num == (unsigned)counter1);
 }
 
-static void test_successive_allocation()
+static inline void test_a_b_dyn(enum test_mode mode, uint8_t exp_A, uint8_t exp_B, uint8_t exp_dyn)
 {
-	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_AND_DL,
-		35, "algorithm A (UL and DL)");
-	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_AND_DL,
-		32, "algorithm B class 10 (UL and DL)");
-	test_successive_allocation(alloc_algorithm_b, 12, 12, TEST_MODE_UL_AND_DL,
-		32, "algorithm B class 12 (UL and DL)");
-	test_successive_allocation(alloc_algorithm_b, 1, 12, TEST_MODE_UL_AND_DL,
-		32, "algorithm B class 1-12 (UL and DL)");
-	test_successive_allocation(alloc_algorithm_b, 1, 29, TEST_MODE_UL_AND_DL,
-		32, "algorithm B class 1-29 (UL and DL)");
-	test_successive_allocation(alloc_algorithm_dynamic, 1, 29, TEST_MODE_UL_AND_DL,
-		35, "algorithm dynamic class 1-29 (UL and DL)");
-
-	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_DL_AND_UL,
-		35, "algorithm A (DL and UL)");
-	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_DL_AND_UL,
-		32, "algorithm B class 10 (DL and UL)");
-	test_successive_allocation(alloc_algorithm_dynamic, 10, 10, TEST_MODE_DL_AND_UL,
-		32, "algorithm dynamic class 10 (DL and UL)");
-
-	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_DL_AFTER_UL,
-		160, "algorithm A (DL after UL)");
-	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_DL_AFTER_UL,
-		32, "algorithm B class 10 (DL after UL)");
-	test_successive_allocation(alloc_algorithm_dynamic, 10, 10, TEST_MODE_DL_AFTER_UL,
-		95, "algorithm dynamic class 10 (DL after UL)");
-
-	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_AFTER_DL,
-		35, "algorithm A (UL after DL)");
-	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_AFTER_DL,
-		32, "algorithm B class 10 (UL after DL)");
-	test_successive_allocation(alloc_algorithm_dynamic, 10, 10, TEST_MODE_UL_AFTER_DL,
-		35, "algorithm dynamic class 10 (UL after DL)");
-
-	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_UL_ONLY,
-		35, "algorithm A (UL only)");
-	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_UL_ONLY,
-		32, "algorithm B class 10 (UL only)");
-	test_successive_allocation(alloc_algorithm_dynamic, 10, 10, TEST_MODE_UL_ONLY,
-		35, "algorithm dynamic class 10 (UL only)");
-
-	test_successive_allocation(alloc_algorithm_a, 1, 1, TEST_MODE_DL_ONLY,
-		160, "algorithm A (DL ONLY)");
-	test_successive_allocation(alloc_algorithm_b, 10, 10, TEST_MODE_DL_ONLY,
-		32, "algorithm B class 10 (DL ONLY)");
-	test_successive_allocation(alloc_algorithm_dynamic, 10, 10, TEST_MODE_DL_ONLY,
-		101, "algorithm dynamic class 10 (DL ONLY)");
+	test_successive_allocation(alloc_algorithm_a,        1,  1, mode, exp_A,   "A");
+	test_successive_allocation(alloc_algorithm_b,       10, 10, mode, exp_B,   "B");
+	test_successive_allocation(alloc_algorithm_dynamic, 10, 10, mode, exp_dyn, "dynamic");
 }
 
-static void test_many_connections()
+static void test_successive_allocations()
 {
-	test_many_connections(alloc_algorithm_a, 160, "algorithm A");
-	test_many_connections(alloc_algorithm_b, 32, "algorithm B");
-	test_many_connections(alloc_algorithm_dynamic, 160, "algorithm dynamic");
+	test_successive_allocation(alloc_algorithm_a,       1,  1, TEST_MODE_UL_AND_DL, 35, "A");
+	test_successive_allocation(alloc_algorithm_b,      10, 10, TEST_MODE_UL_AND_DL, 32, "B");
+	test_successive_allocation(alloc_algorithm_b,      12, 12, TEST_MODE_UL_AND_DL, 32, "B");
+
+	test_successive_allocation(alloc_algorithm_b,       1, 12, TEST_MODE_UL_AND_DL, 32, "B");
+	test_successive_allocation(alloc_algorithm_b,       1, 29, TEST_MODE_UL_AND_DL, 32, "B");
+	test_successive_allocation(alloc_algorithm_dynamic, 1, 29, TEST_MODE_UL_AND_DL, 35, "dynamic");
+
+	test_a_b_dyn(TEST_MODE_DL_AND_UL,    35, 32,  32);
+	test_a_b_dyn(TEST_MODE_DL_AFTER_UL, 160, 32,  95);
+	test_a_b_dyn(TEST_MODE_UL_AFTER_DL,  35, 32,  35);
+	test_a_b_dyn(TEST_MODE_UL_ONLY,      35, 32,  35);
+	test_a_b_dyn(TEST_MODE_DL_ONLY,     160, 32, 101);
 }
 
 static void test_2_consecutive_dl_tbfs()
@@ -818,8 +800,10 @@ int main(int argc, char **argv)
 
 	test_alloc_a();
 	test_alloc_b();
-	test_successive_allocation();
-	test_many_connections();
+	test_successive_allocations();
+	test_many_connections(alloc_algorithm_a, 160, "A");
+	test_many_connections(alloc_algorithm_b, 32, "B");
+	test_many_connections(alloc_algorithm_dynamic, 160, "dynamic");
 	test_2_consecutive_dl_tbfs();
 	return EXIT_SUCCESS;
 }
