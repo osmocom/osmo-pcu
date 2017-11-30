@@ -1566,7 +1566,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 00 01 01 f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) restarting timer 3169.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=0, BSN=0, SPB=0, PI=0, E=1, TI=1, bitoffs=24
 - BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): data_length=20, data=f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -1661,7 +1661,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -1745,7 +1745,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -1883,7 +1883,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 02 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=1, CPS=0, RSB=0, rc=184
 UL DATA TFI=1 received (V(Q)=0 .. V(R)=0)
-TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) restarting timer 3169.
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -1953,7 +1953,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -2067,7 +2067,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -2128,7 +2128,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -2200,7 +2200,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 00 01 01 f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) restarting timer 3169.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=0, BSN=0, SPB=0, PI=0, E=1, TI=1, bitoffs=24
 - BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW): data_length=20, data=f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -2281,7 +2281,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
   UL data: 3c 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -3457,7 +3457,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -3551,7 +3551,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -3565,7 +3565,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=1)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=1, SPB=2, PI=0, E=1, TI=0, bitoffs=33
 - BSN 1 storing in window (1..64)
 --TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got SPB(2)  cs(MCS-3) data block with BSN (1), TFI(0).
@@ -3575,7 +3575,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=1)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=1, SPB=3, PI=0, E=1, TI=0, bitoffs=33
 - BSN 1 storing in window (1..64)
 --TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got SPB(3)  cs(MCS-3) data block with BSN (1), TFI(0).
@@ -3593,7 +3593,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=2 .. V(R)=2)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=2, SPB=3, PI=0, E=1, TI=0, bitoffs=33
 - BSN 2 storing in window (2..65)
 --TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got SPB(3)  cs(MCS-3) data block with BSN (2), TFI(0).
@@ -3603,7 +3603,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=2 .. V(R)=2)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=2, SPB=2, PI=0, E=1, TI=0, bitoffs=33
 - BSN 2 storing in window (2..65)
 --TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got SPB(2)  cs(MCS-3) data block with BSN (2), TFI(0).
@@ -3622,7 +3622,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=3 .. V(R)=3)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=3, SPB=1, PI=0, E=1, TI=0, bitoffs=33
 - BSN 3 storing in window (3..66)
 --TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got SPB(1)  cs(MCS-3) data block with BSN (3), TFI(0).
@@ -3632,7 +3632,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=3 .. V(R)=3)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=3, SPB=2, PI=0, E=1, TI=0, bitoffs=33
 - BSN 3 storing in window (3..66)
 --TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got SPB(2)  cs(MCS-3) data block with BSN (3), TFI(0).
@@ -3642,7 +3642,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=3 .. V(R)=3)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=3, SPB=3, PI=0, E=1, TI=0, bitoffs=33
 - BSN 3 storing in window (3..66)
 --TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got SPB(3)  cs(MCS-3) data block with BSN (3), TFI(0).
@@ -3661,7 +3661,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=4 .. V(R)=4)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=4, SPB=2, PI=0, E=1, TI=0, bitoffs=33
 - BSN 4 storing in window (4..67)
 --TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got SPB(2)  cs(MCS-3) data block with BSN (4), TFI(0).
@@ -3671,7 +3671,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=4 .. V(R)=4)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=4, SPB=2, PI=0, E=1, TI=0, bitoffs=33
 - BSN 4 storing in window (4..67)
 --TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got SPB(2)  cs(MCS-3) data block with BSN (4), TFI(0).
@@ -3680,7 +3680,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=4 .. V(R)=4)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=4, SPB=3, PI=0, E=1, TI=0, bitoffs=33
 - BSN 4 storing in window (4..67)
 --TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got SPB(3)  cs(MCS-3) data block with BSN (4), TFI(0).
@@ -3699,7 +3699,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=5 .. V(R)=5)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=5, SPB=3, PI=0, E=1, TI=0, bitoffs=33
 - BSN 5 storing in window (5..68)
 --TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got SPB(3)  cs(MCS-3) data block with BSN (5), TFI(0).
@@ -3709,7 +3709,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=5 .. V(R)=5)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=5, SPB=2, PI=0, E=1, TI=0, bitoffs=33
 - BSN 5 storing in window (5..68)
 --TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got SPB(2)  cs(MCS-3) data block with BSN (5), TFI(0).
@@ -6466,7 +6466,7 @@ Got RLC block, coding scheme: CS-1, length: 23 (23))
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 - BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -6480,7 +6480,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=0, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=1)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=1, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 1 storing in window (1..64)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=37, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -6497,7 +6497,7 @@ Got RLC block, coding scheme: MCS-3, length: 42 (42))
 Got MCS-3 RLC block: R=1, SI=0, TFI=0, CPS=5, RSB=0, rc=329
 UL DATA TFI=0 received (V(Q)=2 .. V(R)=2)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-3 RLC data block: CV=7, BSN=4, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 4 storing in window (2..65)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=37, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -6642,7 +6642,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=1, SI=0, TFI=0, CPS=5, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=7, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -6656,7 +6656,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=1, SI=0, TFI=0, CPS=5, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=1)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=7, BSN=1, SPB=0, PI=0, E=0, TI=0, bitoffs=33
 - BSN 1 storing in window (1..64)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -7102,7 +7102,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 0 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7116,7 +7116,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=1)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=2, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 2 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7126,7 +7126,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=3)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=4, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 4 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7136,7 +7136,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=5)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=6, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 6 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7146,7 +7146,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=7)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=8, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 8 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7156,7 +7156,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=9)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=10, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 10 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7166,7 +7166,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=11)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=12, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 12 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7176,7 +7176,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=13)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=14, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 14 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7186,7 +7186,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=15)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=16, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 16 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7196,7 +7196,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=17)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=18, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 18 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7206,7 +7206,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=19)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=20, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 20 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7216,7 +7216,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=21)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=22, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 22 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7226,7 +7226,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=23)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=24, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 24 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7236,7 +7236,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=25)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=26, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 26 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7246,7 +7246,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=27)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=28, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 28 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7256,7 +7256,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=29)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=30, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 30 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7266,7 +7266,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=31)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=32, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 32 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7276,7 +7276,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=33)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=34, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 34 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7286,7 +7286,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=35)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=36, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 36 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7296,7 +7296,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=37)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=38, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 38 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7307,7 +7307,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=39)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=40, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 40 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7317,7 +7317,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=41)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=42, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 42 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7327,7 +7327,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=43)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=44, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 44 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7337,7 +7337,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=45)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=46, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 46 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7347,7 +7347,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=47)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=48, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 48 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7357,7 +7357,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=49)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=50, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 50 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7367,7 +7367,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=51)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=52, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 52 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7377,7 +7377,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=53)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=54, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 54 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7387,7 +7387,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=55)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=56, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 56 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7397,7 +7397,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=57)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=58, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 58 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7407,7 +7407,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=59)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=60, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 60 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7417,7 +7417,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=61)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=62, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 62 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7427,7 +7427,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=63)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=64, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 64 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7437,7 +7437,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=65)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=66, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 66 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7447,7 +7447,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=67)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=68, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 68 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7457,7 +7457,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=69)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=70, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 70 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7467,7 +7467,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=71)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=72, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 72 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7477,7 +7477,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=73)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=74, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 74 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7487,7 +7487,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=75)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=76, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 76 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7497,7 +7497,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=77)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=78, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 78 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7509,7 +7509,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=79)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=80, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 80 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7519,7 +7519,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=81)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=82, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 82 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7529,7 +7529,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=83)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=84, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 84 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7539,7 +7539,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=85)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=86, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 86 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7549,7 +7549,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=87)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=88, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 88 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7559,7 +7559,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=89)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=90, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 90 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7569,7 +7569,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=91)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=92, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 92 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7579,7 +7579,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=93)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=94, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 94 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7589,7 +7589,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=95)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=96, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 96 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7599,7 +7599,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=97)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=98, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 98 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7609,7 +7609,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=99)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=100, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 100 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7619,7 +7619,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=101)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=102, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 102 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7629,7 +7629,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=103)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=104, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 104 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7639,7 +7639,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=105)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=106, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 106 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7649,7 +7649,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=107)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=108, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 108 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7659,7 +7659,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=109)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=110, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 110 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7669,7 +7669,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=111)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=112, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 112 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7679,7 +7679,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=113)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=114, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 114 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7689,7 +7689,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=115)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=116, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 116 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7699,7 +7699,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=117)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=118, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 118 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7711,7 +7711,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=119)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=120, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 120 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7721,7 +7721,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=121)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=122, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 122 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7731,7 +7731,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=123)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=124, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 124 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7741,7 +7741,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=125)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=126, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 126 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7751,7 +7751,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=127)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=128, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 128 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7761,7 +7761,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=129)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=130, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 130 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7771,7 +7771,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=131)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=132, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 132 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7781,7 +7781,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=133)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=134, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 134 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7791,7 +7791,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=135)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=136, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 136 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7801,7 +7801,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=137)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=138, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 138 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7811,7 +7811,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=139)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=140, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 140 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7821,7 +7821,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=141)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=142, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 142 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7831,7 +7831,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=143)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=144, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 144 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7841,7 +7841,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=145)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=146, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 146 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7851,7 +7851,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=147)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=148, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 148 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7861,7 +7861,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=149)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=150, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 150 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7871,7 +7871,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=151)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=152, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 152 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7881,7 +7881,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=153)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=154, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 154 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7891,7 +7891,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=155)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=156, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 156 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7901,7 +7901,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=157)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=158, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 158 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7918,7 +7918,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=159)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=0, BSN=64, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 64 already received
 Received RTS for PDCH: TRX=0 TS=7 FN=2654275 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
@@ -7955,7 +7955,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 0 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7969,7 +7969,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=1)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=2, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 2 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7979,7 +7979,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=3)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=4, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 4 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7989,7 +7989,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=5)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=6, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 6 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -7999,7 +7999,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=7)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=8, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 8 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8009,7 +8009,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=9)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=10, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 10 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8019,7 +8019,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=11)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=12, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 12 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8029,7 +8029,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=13)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=14, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 14 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8039,7 +8039,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=15)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=16, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 16 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8049,7 +8049,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=17)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=18, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 18 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8059,7 +8059,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=19)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=20, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 20 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8069,7 +8069,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=21)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=22, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 22 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8079,7 +8079,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=23)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=24, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 24 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8089,7 +8089,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=25)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=26, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 26 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8099,7 +8099,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=27)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=28, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 28 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8109,7 +8109,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=29)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=30, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 30 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8119,7 +8119,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=31)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=32, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 32 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8129,7 +8129,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=33)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=34, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 34 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8139,7 +8139,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=35)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=36, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 36 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8150,7 +8150,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=37)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=38, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 38 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8163,7 +8163,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=1 .. V(R)=39)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=0, BSN=64, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 64 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8183,7 +8183,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=80, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 80 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8193,7 +8193,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=81)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=81, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 81 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8203,7 +8203,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=82)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=82, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 82 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8213,7 +8213,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=83)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=83, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 83 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8223,7 +8223,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=84)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=84, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 84 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8233,7 +8233,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=85)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=85, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 85 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8243,7 +8243,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=86)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=86, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 86 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8253,7 +8253,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=87)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=87, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 87 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8263,7 +8263,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=88)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=88, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 88 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8273,7 +8273,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=89)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=89, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 89 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8283,7 +8283,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=90)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=90, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 90 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8293,7 +8293,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=91)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=91, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 91 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8303,7 +8303,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=92)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=92, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 92 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8313,7 +8313,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=93)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=93, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 93 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8323,7 +8323,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=94)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=94, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 94 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8333,7 +8333,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=95)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=95, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 95 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8343,7 +8343,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=96)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=96, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 96 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8353,7 +8353,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=97)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=97, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 97 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8364,7 +8364,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=98)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=98, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 98 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8374,7 +8374,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=99)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=99, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 99 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8384,7 +8384,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=100)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=100, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 100 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8394,7 +8394,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=101)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=101, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 101 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8404,7 +8404,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=102)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=102, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 102 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8414,7 +8414,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=103)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=103, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 103 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8424,7 +8424,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=104)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=104, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 104 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8434,7 +8434,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=105)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=105, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 105 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8444,7 +8444,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=106)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=106, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 106 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8454,7 +8454,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=107)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=107, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 107 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8464,7 +8464,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=108)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=108, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 108 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8474,7 +8474,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=109)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=109, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 109 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8484,7 +8484,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=110)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=110, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 110 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8494,7 +8494,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=111)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=111, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 111 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8504,7 +8504,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=112)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=112, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 112 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8514,7 +8514,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=113)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=113, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 113 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8524,7 +8524,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=114)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=114, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 114 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8534,7 +8534,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=115)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=115, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 115 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8544,7 +8544,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=116)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=116, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 116 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8554,7 +8554,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=117)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=117, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 117 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8566,7 +8566,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=118)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=118, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 118 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8576,7 +8576,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=119)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=119, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 119 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8586,7 +8586,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=120)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=120, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 120 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8596,7 +8596,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=121)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=121, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 121 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8606,7 +8606,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=122)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=122, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 122 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8616,7 +8616,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=123)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=123, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 123 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8626,7 +8626,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=124)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=124, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 124 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8636,7 +8636,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=125)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=125, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 125 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8646,7 +8646,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=126)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=126, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 126 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8656,7 +8656,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=127)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=127, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 127 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8666,7 +8666,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=128)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=128, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 128 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8676,7 +8676,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=129)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=129, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 129 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8686,7 +8686,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=130)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=130, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 130 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8696,7 +8696,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=131)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=131, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 131 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8706,7 +8706,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=132)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=132, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 132 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8716,7 +8716,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=133)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=133, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 133 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8726,7 +8726,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=134)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=134, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 134 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8736,7 +8736,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=135)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=135, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 135 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8746,7 +8746,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=136)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=136, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 136 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8756,7 +8756,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=137)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=137, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 137 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8768,7 +8768,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=138)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=138, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 138 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8778,7 +8778,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=139)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=139, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 139 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8788,7 +8788,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=140)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=140, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 140 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8798,7 +8798,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=141)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=141, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 141 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8808,7 +8808,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=142)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=142, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 142 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8818,7 +8818,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=143)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=143, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 143 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8828,7 +8828,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=144)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=144, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 144 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8838,7 +8838,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=145)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=145, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 145 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8848,7 +8848,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=146)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=146, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 146 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8858,7 +8858,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=147)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=147, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 147 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8868,7 +8868,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=148)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=148, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 148 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8878,7 +8878,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=149)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=149, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 149 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8888,7 +8888,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=150)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=150, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 150 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8898,7 +8898,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=151)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=151, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 151 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8908,7 +8908,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=152)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=152, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 152 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8918,7 +8918,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=153)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=153, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 153 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8928,7 +8928,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=154)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=154, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 154 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8938,7 +8938,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=155)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=155, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 155 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8948,7 +8948,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=156)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=156, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 156 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8958,7 +8958,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=157)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=157, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 157 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8970,7 +8970,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=158)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=158, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 158 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8980,7 +8980,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=159)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=10, BSN=159, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 159 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
@@ -8997,7 +8997,7 @@ Got RLC block, coding scheme: MCS-4, length: 49 (49))
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 UL DATA TFI=0 received (V(Q)=0 .. V(R)=160)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169 while old timer 3169 pending 
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) restarting timer 3169.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): Got MCS-4 RLC data block: CV=0, BSN=64, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 - BSN 64 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS): data_length=44, data=80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 

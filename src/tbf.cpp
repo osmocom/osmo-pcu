@@ -531,13 +531,13 @@ const char *gprs_rlcmac_tbf::tbf_state_name[] = {
 void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
 			unsigned int seconds, unsigned int microseconds)
 {
-	if (!osmo_timer_pending(&tbf->timer))
-		LOGP(DRLCMAC, LOGL_DEBUG, "%s starting timer %u.\n",
-			tbf_name(tbf), T);
-	else
-		LOGP(DRLCMAC, LOGL_DEBUG, "%s restarting timer %u "
-			"while old timer %u pending \n",
-			tbf_name(tbf), T, tbf->T);
+	LOGPC(DRLCMAC, (T != tbf->T) ? LOGL_ERROR : LOGL_DEBUG, "%s %sstarting timer %u.",
+	     tbf_name(tbf), osmo_timer_pending(&tbf->timer) ? "re" : "", T);
+
+	if (T != tbf->T && osmo_timer_pending(&tbf->timer))
+		LOGPC(DRLCMAC, LOGL_ERROR, " while old timer %u pending", tbf->T);
+
+	LOGPC(DRLCMAC, (T != tbf->T) ? LOGL_ERROR : LOGL_DEBUG, "\n");
 
 	tbf->T = T;
 	tbf->num_T_exp = 0;
