@@ -193,7 +193,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	unsigned int block_idx;
 
 	/* restart T3169 */
-	tbf_timer_start(this, 3169, bts_data()->t3169, 0);
+	tbf_timer_start(this, 3169, bts_data()->t3169, 0, "acked (data)");
 
 	/* Increment RX-counter */
 	this->m_rx_counter++;

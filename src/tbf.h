@@ -174,7 +174,7 @@ struct gprs_rlcmac_tbf {
 
 	int update();
 	void handle_timeout();
-	void stop_timer();
+	void stop_timer(const char *reason);
 	void stop_t3191();
 	int establish_dl_tbf_on_pacch();
 
@@ -330,7 +330,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 
 void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
-                        unsigned int seconds, unsigned int microseconds);
+		     unsigned int seconds, unsigned int microseconds, const char *reason);
 
 inline bool gprs_rlcmac_tbf::state_is(enum gprs_rlcmac_tbf_state rhs) const
 {

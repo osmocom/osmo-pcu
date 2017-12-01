@@ -394,7 +394,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	tbf->m_contention_resolution_done = 1;
 	tbf->set_state(GPRS_RLCMAC_ASSIGN);
 	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
-	tbf_timer_start(tbf, 3169, bts->t3169, 0);
+	tbf_timer_start(tbf, 3169, bts->t3169, 0, "allocation (UL-TBF)");
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(tbf->ms());
 
@@ -464,7 +464,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 		     tbf_name(tbf),
 		     get_value_string(gprs_rlcmac_tbf_dl_ass_state_names,
 				      tbf->dl_ass_state));
-	tbf->stop_timer();
+	tbf->stop_timer("freeing TBF");
 	/* TODO: Could/Should generate  bssgp_tx_llc_discarded */
 	tbf_unlink_pdch(tbf);
 	llist_del(&tbf->list());
@@ -529,13 +529,14 @@ const char *gprs_rlcmac_tbf::tbf_state_name[] = {
 };
 
 void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
-			unsigned int seconds, unsigned int microseconds)
+		     unsigned int seconds, unsigned int microseconds, const char *reason)
 {
-	LOGPC(DRLCMAC, (T != tbf->T) ? LOGL_ERROR : LOGL_DEBUG, "%s %sstarting timer %u.",
-	     tbf_name(tbf), osmo_timer_pending(&tbf->timer) ? "re" : "", T);
+	LOGPC(DRLCMAC, (T != tbf->T) ? LOGL_ERROR : LOGL_DEBUG,
+	      "%s %sstarting timer T%u [%s] with %u sec. %u microsec.",
+	      tbf_name(tbf), osmo_timer_pending(&tbf->timer) ? "re" : "", T, reason, seconds, microseconds);
 
 	if (T != tbf->T && osmo_timer_pending(&tbf->timer))
-		LOGPC(DRLCMAC, LOGL_ERROR, " while old timer %u pending", tbf->T);
+		LOGPC(DRLCMAC, LOGL_ERROR, " while old timer T%u pending", tbf->T);
 
 	LOGPC(DRLCMAC, (T != tbf->T) ? LOGL_ERROR : LOGL_DEBUG, "\n");
 
@@ -551,14 +552,14 @@ void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
 
 void gprs_rlcmac_tbf::stop_t3191()
 {
-	return stop_timer();
+	return stop_timer("T3191");
 }
 
-void gprs_rlcmac_tbf::stop_timer()
+void gprs_rlcmac_tbf::stop_timer(const char *reason)
 {
 	if (osmo_timer_pending(&timer)) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "%s stopping timer %u.\n",
-			tbf_name(this), T);
+		LOGP(DRLCMAC, LOGL_DEBUG, "%s stopping timer T%u [%s]\n",
+		     tbf_name(this), T, reason);
 		osmo_timer_del(&timer);
 	}
 }
@@ -662,7 +663,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 				     "- N3103 exceeded\n");
 				bts->pkt_ul_ack_nack_poll_failed();
 				ul_tbf->set_state(GPRS_RLCMAC_RELEASING);
-				tbf_timer_start(ul_tbf, 3169, ul_tbf->bts->bts_data()->t3169, 0);
+				tbf_timer_start(ul_tbf, 3169, ul_tbf->bts->bts_data()->t3169, 0, "MAX N3103 reached");
 				return;
 			}
 			/* reschedule UL ack */
@@ -684,7 +685,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		if (n3105 == bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
 			set_state(GPRS_RLCMAC_RELEASING);
-			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
+			tbf_timer_start(this, 3195, bts_data()->t3195, 0, "MAX N3105 reached");
 			bts->rlc_ass_failed();
 			bts->pua_poll_failed();
 			return;
@@ -706,7 +707,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		if (n3105 == bts->bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
 			set_state(GPRS_RLCMAC_RELEASING);
-			tbf_timer_start(this, 3195, bts_data()->t3195, 0);
+			tbf_timer_start(this, 3195, bts_data()->t3195, 0, "MAX N3105 reached");
 			bts->rlc_ass_failed();
 			bts->pda_poll_failed();
 			return;
@@ -732,7 +733,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		if (dl_tbf->n3105 == dl_tbf->bts->bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
 			dl_tbf->set_state(GPRS_RLCMAC_RELEASING);
-			tbf_timer_start(dl_tbf, 3195, dl_tbf->bts_data()->t3195, 0);
+			tbf_timer_start(dl_tbf, 3195, dl_tbf->bts_data()->t3195, 0, "MAX N3105 reached");
 			bts->pkt_dl_ack_nack_poll_failed();
 			bts->rlc_ack_failed();
 			return;
@@ -1192,7 +1193,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 		new_dl_tbf->set_state(GPRS_RLCMAC_FLOW);
 		tbf_assign_control_ts(new_dl_tbf);
 		/* stop pending assignment timer */
-		new_dl_tbf->stop_timer();
+		new_dl_tbf->stop_timer("assignment (DL-TBF)");
 
 	}
 
@@ -1222,7 +1223,7 @@ struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
 
 	/* Start Tmr only if it is UL TBF */
 	if (direction == GPRS_RLCMAC_UL_TBF)
-		tbf_timer_start(this, 0, Treject_pacch);
+		tbf_timer_start(this, 0, Treject_pacch, "reject (PACCH)");
 
 	return msg;
 

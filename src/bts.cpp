@@ -548,7 +548,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
 
 	if (dl_tbf->m_wait_confirm)
-		tbf_timer_start(dl_tbf, 0, Tassign_agch);
+		tbf_timer_start(dl_tbf, 0, Tassign_agch, "assignment (AGCH)");
 
 	return 0;
 }
@@ -681,7 +681,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 			tbf->set_ta(ta);
 			tbf->set_state(GPRS_RLCMAC_FLOW);
 			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
-			tbf_timer_start(tbf, 3169, m_bts.t3169, 0);
+			tbf_timer_start(tbf, 3169, m_bts.t3169, 0, "RACH (new UL-TBF)");
 			LOGP(DRLCMAC, LOGL_DEBUG, "%s [UPLINK] START\n",
 					tbf_name(tbf));
 			LOGP(DRLCMAC, LOGL_DEBUG, "%s RX: [PCU <- BTS] RACH "
@@ -1036,7 +1036,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		}
 		new_tbf->set_state(GPRS_RLCMAC_FLOW);
 		/* stop pending assignment timer */
-		new_tbf->stop_timer();
+		new_tbf->stop_timer("control acked (DL-TBF)");
 		if ((new_tbf->state_flags &
 			(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS))) {
 			new_tbf->state_flags &=
