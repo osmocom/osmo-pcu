@@ -2785,8 +2785,7 @@ static void egprs_spb_to_normal_validation(BTS *the_bts,
 			== mcs);
 
 	egprs2 = (struct gprs_rlc_dl_header_egprs_2 *) msg->data;
-	bsn1 = (egprs2->bsn1_hi << 9) || (egprs2->bsn1_mid << 1)
-			|| (egprs2->bsn1_lo);
+	bsn1 = (egprs2->bsn1_hi << 9) | (egprs2->bsn1_mid << 1) | (egprs2->bsn1_lo);
 	dl_tbf->m_window.m_v_b.mark_nacked(0);
 	OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
 	OSMO_ASSERT(bsn1 == 0);
@@ -2822,8 +2821,7 @@ static void egprs_spb_to_normal_validation(BTS *the_bts,
 	egprs3 = (struct gprs_rlc_dl_header_egprs_3 *) msg->data;
 	/* Table 10.4.8a.3.1 of 44.060 */
 	OSMO_ASSERT(egprs3->spb == 3);
-	bsn2 = (egprs3->bsn1_hi << 9) || (egprs3->bsn1_mid << 1) ||
-			(egprs3->bsn1_lo);
+	bsn2 = (egprs3->bsn1_hi << 9) | (egprs3->bsn1_mid << 1) | (egprs3->bsn1_lo);
 	OSMO_ASSERT(bsn2 == bsn1);
 
 	/* Table 10.4.8a.3.1 of 44.060 */
@@ -2841,8 +2839,7 @@ static void egprs_spb_to_normal_validation(BTS *the_bts,
 
 	/* Table 10.4.8a.3.1 of 44.060 */
 	OSMO_ASSERT(egprs2->cps == 0);
-	bsn3 = (egprs2->bsn1_hi << 9) || (egprs2->bsn1_mid << 1) ||
-			(egprs2->bsn1_lo);
+	bsn3 = (egprs2->bsn1_hi << 9) | (egprs2->bsn1_mid << 1) | (egprs2->bsn1_lo);
 	OSMO_ASSERT(bsn3 == bsn2);
 
 	tbf_cleanup(dl_tbf);
