@@ -562,6 +562,15 @@ protected:
 	void maybe_schedule_uplink_acknack(const gprs_rlc_data_info *rlc);
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+void update_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, int8_t ta_delta);
+void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta);
+#ifdef __cplusplus
+}
+#endif
+
 inline enum gprs_rlcmac_tbf_direction reverse(enum gprs_rlcmac_tbf_direction dir)
 {
 	return (enum gprs_rlcmac_tbf_direction)
