@@ -174,7 +174,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	n3105(0),
 	fT(0),
 	num_fT_exp(0),
-	state(GPRS_RLCMAC_NULL),
 	was_releasing(0),
 	upgrade_to_multislot(0),
 	bts(bts_),
@@ -185,6 +184,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	m_ms(NULL),
 	m_ta(GSM48_TA_INVALID),
 	m_ms_class(0),
+	state(GPRS_RLCMAC_NULL),
 	m_list(this),
 	m_ms_list(this),
 	m_egprs_enabled(false)

@@ -284,10 +284,6 @@ struct gprs_rlcmac_tbf {
 		Meas();
 	} meas;
 
-	/* these should become protected but only after gprs_rlcmac_data.c
-	 * stops to iterate over all tbf in its current form */
-	enum gprs_rlcmac_tbf_state state;
-
 	/* Remember if the tbf was in wait_release state when we want to
 	 * schedule a new dl assignment */
 	uint8_t was_releasing;
@@ -327,6 +323,7 @@ protected:
 	uint8_t m_ms_class;
 
 private:
+	enum gprs_rlcmac_tbf_state state;
 	LListHead<gprs_rlcmac_tbf> m_list;
 	LListHead<gprs_rlcmac_tbf> m_ms_list;
 	bool m_egprs_enabled;
