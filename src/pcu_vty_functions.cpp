@@ -119,12 +119,16 @@ int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
 	llist_for_each(ms_iter, &bts->ms_store().ms_list()) {
 		GprsMs *ms = ms_iter->entry();
 
-		vty_out(vty, "MS TLLI=%08x, TA=%d, CS-UL=%s, CS-DL=%s, LLC=%zd, "
-			"IMSI=%s%s",
+		vty_out(vty, "MS TLLI=%08x, TA=%d, CS-UL=%s, CS-DL=%s, LLC=%zd, Cl=%d, E-Cl=%d,"
+			" TBF-UL=%s, TBF-DL=%s, IMSI=%s%s",
 			ms->tlli(),
 			ms->ta(), ms->current_cs_ul().name(),
 			ms->current_cs_dl().name(),
 			ms->llc_queue()->size(),
+			ms->ms_class(),
+			ms->egprs_ms_class(),
+			ms->ul_tbf() ? ms->ul_tbf()->state_name() : "NA",
+			ms->dl_tbf() ? ms->dl_tbf()->state_name() : "NA",
 			ms->imsi(),
 			VTY_NEWLINE);
 	}
