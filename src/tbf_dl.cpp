@@ -1252,7 +1252,7 @@ bool gprs_rlcmac_dl_tbf::keep_open(unsigned fn) const
 {
 	int keep_time_frames;
 
-	if (bts_data()->dl_tbf_idle_msec <= 0)
+	if (bts_data()->dl_tbf_idle_msec == 0)
 		return false;
 
 	keep_time_frames = msecs_to_frames(bts_data()->dl_tbf_idle_msec);
