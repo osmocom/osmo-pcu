@@ -58,7 +58,7 @@ void gprs_rlc_dl_window::reset()
 	m_v_b.reset();
 }
 
-int gprs_rlc_dl_window::resend_needed()
+int gprs_rlc_dl_window::resend_needed() const
 {
 	for (uint16_t bsn = v_a(); bsn != v_s(); bsn = mod_sns(bsn + 1)) {
 		if (m_v_b.is_nacked(bsn) || m_v_b.is_resend(bsn))

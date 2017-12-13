@@ -303,7 +303,7 @@ struct gprs_rlc_dl_window: public gprs_rlc_window {
 	const uint16_t distance() const;
 
 	/* Methods to manage reception */
-	int resend_needed();
+	int resend_needed() const;
 	int mark_for_resend();
 	void update(BTS *bts, char *show_rbb, uint16_t ssn,
 			uint16_t *lost, uint16_t *received);
