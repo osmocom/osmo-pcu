@@ -92,6 +92,15 @@ enum gprs_rlcmac_tbf_direction {
 	GPRS_RLCMAC_UL_TBF
 };
 
+enum tbf_dl_prio {
+	DL_PRIO_NONE,
+	DL_PRIO_SENT_DATA, /* the data has been sent and not (yet) nacked */
+	DL_PRIO_LOW_AGE,   /* the age has reached the first threshold */
+	DL_PRIO_NEW_DATA,  /* the data has not been sent yet or nacked */
+	DL_PRIO_HIGH_AGE,  /* the age has reached the second threshold */
+	DL_PRIO_CONTROL,   /* a control block needs to be sent */
+};
+
 enum tbf_counters {
 	TBF_CTR_RLC_NACKED,
 };

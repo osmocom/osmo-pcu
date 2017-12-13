@@ -207,27 +207,41 @@ static struct msgb *sched_select_ctrl_msg(
 	return NULL;
 }
 
+static inline enum tbf_dl_prio tbf_compute_priority(const struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_dl_tbf *tbf,
+						    uint8_t ts, uint32_t fn, int age)
+{
+	const gprs_rlc_dl_window *w = tbf->window();
+	int age_thresh1 = msecs_to_frames(200),
+		age_thresh2 = msecs_to_frames(OSMO_MIN(BTS::TIMER_T3190_MSEC/2, bts->dl_tbf_idle_msec));
+
+	if (tbf->is_control_ts(ts) && tbf->need_control_ts())
+		return DL_PRIO_CONTROL;
+
+	if (tbf->is_control_ts(ts) && age > age_thresh2 && age_thresh2 > 0)
+		return DL_PRIO_HIGH_AGE;
+
+	if ((tbf->state_is(GPRS_RLCMAC_FLOW) && tbf->have_data()) || w->resend_needed() >= 0)
+		return DL_PRIO_NEW_DATA;
+
+	if (tbf->is_control_ts(ts) && age > age_thresh1 && tbf->keep_open(fn))
+		return DL_PRIO_LOW_AGE;
+
+	if (!w->window_empty())
+		return DL_PRIO_SENT_DATA;
+
+	return DL_PRIO_NONE;
+}
+
 static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		    uint8_t trx, uint8_t ts, uint32_t fn,
 		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch)
 {
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_dl_tbf *tbf, *prio_tbf = NULL;
-	enum {
-		DL_PRIO_NONE,
-		DL_PRIO_SENT_DATA, /* the data has been sent and not (yet) nacked */
-		DL_PRIO_LOW_AGE,   /* the age has reached the first threshold */
-		DL_PRIO_NEW_DATA,  /* the data has not been sent yet or nacked */
-		DL_PRIO_HIGH_AGE,  /* the age has reached the second threshold */
-		DL_PRIO_CONTROL,   /* a control block needs to be sent */
-	} prio, max_prio = DL_PRIO_NONE;
+	enum tbf_dl_prio prio, max_prio = DL_PRIO_NONE;
 
 	uint8_t i, tfi, prio_tfi;
 	int age;
-	const int age_thresh1 = msecs_to_frames(200);
-	const int high_prio_msecs =
-		OSMO_MIN(BTS::TIMER_T3190_MSEC/2, bts->dl_tbf_idle_msec);
-	const int age_thresh2 = msecs_to_frames(high_prio_msecs);
 
 	/* select downlink resource */
 	for (i = 0, tfi = pdch->next_dl_tfi; i < 32;
@@ -251,20 +265,8 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		age = tbf->frames_since_last_poll(fn);
 
 		/* compute priority */
-		if (tbf->is_control_ts(ts) && tbf->need_control_ts())
-			prio = DL_PRIO_CONTROL;
-		else if (tbf->is_control_ts(ts) &&
-			age > age_thresh2 && age_thresh2 > 0)
-			prio = DL_PRIO_HIGH_AGE;
-		else if ((tbf->state_is(GPRS_RLCMAC_FLOW) && tbf->have_data()) ||
-			tbf->m_window.resend_needed() >= 0)
-			prio = DL_PRIO_NEW_DATA;
-		else if (tbf->is_control_ts(ts) &&
-			age > age_thresh1 && tbf->keep_open(fn))
-			prio = DL_PRIO_LOW_AGE;
-		else if (!tbf->m_window.window_empty())
-			prio = DL_PRIO_SENT_DATA;
-		else
+		prio = tbf_compute_priority(bts, tbf, ts, fn, age);
+		if (prio == DL_PRIO_NONE)
 			continue;
 
 		/* get the TBF with the highest priority */
