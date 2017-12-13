@@ -210,7 +210,6 @@ struct gprs_rlcmac_tbf {
 
 	/* EGPRS */
 	bool is_egprs_enabled() const;
-	void enable_egprs();
 	void disable_egprs();
 
 	/* attempt to make things a bit more fair */
@@ -286,7 +285,7 @@ struct gprs_rlcmac_tbf {
 
 protected:
 	gprs_rlcmac_bts *bts_data() const;
-
+	void enable_egprs();
 	int set_tlli_from_ul(uint32_t new_tlli);
 	void merge_and_clear_ms(GprsMs *old_ms);
 
@@ -416,7 +415,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_dl_tbf(BTS *bts);
 
 	void cleanup();
-
+	void enable_egprs();
 	/* dispatch Unitdata.DL messages */
 	static int handle(struct gprs_rlcmac_bts *bts,
 		const uint32_t tlli, const uint32_t old_tlli,
@@ -513,7 +512,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	struct msgb *create_ul_ack(uint32_t fn, uint8_t ts);
 	bool ctrl_ack_to_toggle();
 	bool handle_ctrl_ack();
-
+	void enable_egprs();
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(
 		const struct gprs_rlc_data_info *rlc,
@@ -575,6 +574,18 @@ inline enum gprs_rlcmac_tbf_direction reverse(enum gprs_rlcmac_tbf_direction dir
 {
 	return (enum gprs_rlcmac_tbf_direction)
 		((int)GPRS_RLCMAC_UL_TBF - (int)dir + (int)GPRS_RLCMAC_DL_TBF);
+}
+
+inline void gprs_rlcmac_ul_tbf::enable_egprs()
+{
+	m_window.set_sns(RLC_EGPRS_SNS);
+	gprs_rlcmac_tbf::enable_egprs();
+}
+
+inline void gprs_rlcmac_dl_tbf::enable_egprs()
+{
+	m_window.set_sns(RLC_EGPRS_SNS);
+	gprs_rlcmac_tbf::enable_egprs();
 }
 
 inline gprs_rlcmac_ul_tbf *as_ul_tbf(gprs_rlcmac_tbf *tbf)
