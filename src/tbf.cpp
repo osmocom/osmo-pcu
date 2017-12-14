@@ -487,6 +487,14 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	talloc_free(tbf);
 }
 
+uint16_t egprs_window_size(const struct gprs_rlcmac_bts *bts_data, uint8_t slots)
+{
+	uint8_t num_pdch = pcu_bitcount(slots);
+
+	return OSMO_MIN((num_pdch != 1) ? (128 * num_pdch) : 192,
+			OSMO_MAX(64, (bts_data->ws_base + num_pdch * bts_data->ws_pdch) / 32 * 32));
+}
+
 int gprs_rlcmac_tbf::update()
 {
 	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
@@ -509,7 +517,7 @@ int gprs_rlcmac_tbf::update()
 	if (is_egprs_enabled()) {
 		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
 		if (dl_tbf)
-			dl_tbf->egprs_calc_window_size();
+			dl_tbf->set_window_size();
 	}
 
 	return 0;
@@ -946,7 +954,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 	rc = setup_tbf(tbf, ms, use_trx, ms_class, egprs_ms_class, single_slot);
 
 	if (tbf->is_egprs_enabled())
-		tbf->egprs_calc_ulwindow_size();
+		tbf->set_window_size();
 
 	/* if no resource */
 	if (rc < 0) {
@@ -1044,7 +1052,7 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 	}
 
 	if (tbf->is_egprs_enabled()) {
-		tbf->egprs_calc_window_size();
+		tbf->set_window_size();
 		tbf->m_dl_egprs_ctrs = rate_ctr_group_alloc(tbf, &tbf_dl_egprs_ctrg_desc, 0);
 		if (!tbf->m_dl_egprs_ctrs) {
 			LOGP(DRLCMAC, LOGL_ERROR, "Couldn't allocate EGPRS DL counters\n");

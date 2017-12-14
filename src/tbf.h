@@ -492,7 +492,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int release();
 	int abort();
 	uint16_t window_size() const;
-	void egprs_calc_window_size();
+	void set_window_size();
 	void update_coding_scheme_counter_dl(const GprsCodingScheme cs);
 
 	/* TODO: add the gettimeofday as parameter */
@@ -594,8 +594,8 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 		struct gprs_rlc_data *block,
 		uint8_t *data, const uint8_t block_idx);
 
-	void egprs_calc_ulwindow_size();
 	uint16_t window_size() const;
+	void set_window_size();
 	void update_coding_scheme_counter_ul(const GprsCodingScheme cs);
 
 	/* Please note that all variables here will be reset when changing
@@ -675,5 +675,7 @@ inline gprs_rlcmac_dl_tbf *as_dl_tbf(gprs_rlcmac_tbf *tbf)
 	else
 		return NULL;
 }
+
+uint16_t egprs_window_size(const struct gprs_rlcmac_bts *bts_data, uint8_t slots);
 
 #endif

@@ -606,21 +606,10 @@ void gprs_rlcmac_ul_tbf::update_coding_scheme_counter_ul(const GprsCodingScheme 
 	}
 }
 
-void gprs_rlcmac_ul_tbf::egprs_calc_ulwindow_size()
+void gprs_rlcmac_ul_tbf::set_window_size()
 {
-	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
-	unsigned int num_pdch = pcu_bitcount(ul_slots());
-	unsigned int ws = bts_data->ws_base + num_pdch * bts_data->ws_pdch;
-	ws = (ws / 32) * 32;
-	ws = OSMO_MAX(64, ws);
-
-	if (num_pdch == 1)
-		ws = OSMO_MIN(192, ws);
-	else
-		ws = OSMO_MIN(128 * num_pdch, ws);
-
-	LOGP(DRLCMAC, LOGL_INFO, "%s: Setting EGPRS window size to %d, base(%d) slots(%d) ws_pdch(%d)\n",
-		name(), ws, bts_data->ws_base, num_pdch, bts_data->ws_pdch);
-
+	uint16_t ws = egprs_window_size(bts->bts_data(), ul_slots());
+	LOGP(DRLCMAC, LOGL_INFO, "%s: setting EGPRS UL window size to %u, base(%u) slots(%u) ws_pdch(%u)\n",
+	     name(), ws, bts->bts_data()->ws_base, pcu_bitcount(ul_slots()), bts->bts_data()->ws_pdch);
 	m_window.set_ws(ws);
 }

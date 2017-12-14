@@ -1366,23 +1366,11 @@ enum egprs_rlcmac_dl_spb gprs_rlcmac_dl_tbf::get_egprs_dl_spb(const int bsn)
 	return EGPRS_RLCMAC_DL_NO_RETX;
 }
 
-void gprs_rlcmac_dl_tbf::egprs_calc_window_size()
+void gprs_rlcmac_dl_tbf::set_window_size()
 {
-	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
-	unsigned int num_pdch = pcu_bitcount(dl_slots());
-	unsigned int ws = bts_data->ws_base + num_pdch * bts_data->ws_pdch;
-
-	ws = (ws / 32) * 32;
-	ws = OSMO_MAX(64, ws);
-
-	if (num_pdch == 1)
-		ws = OSMO_MIN(192, ws);
-	else
-		ws = OSMO_MIN(128 * num_pdch, ws);
-
-	LOGP(DRLCMAC, LOGL_INFO, "%s: Setting EGPRS window size to %d\n",
-		name(), ws);
-
+	uint16_t ws = egprs_window_size(bts->bts_data(), dl_slots());
+	LOGP(DRLCMAC, LOGL_INFO, "%s: setting EGPRS DL window size to %u, base(%u) slots(%u) ws_pdch(%u)\n",
+	     name(), ws, bts->bts_data()->ws_base, pcu_bitcount(dl_slots()), bts->bts_data()->ws_pdch);
 	m_window.set_ws(ws);
 }
 
