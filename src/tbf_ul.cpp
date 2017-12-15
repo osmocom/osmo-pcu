@@ -84,8 +84,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 
 		if (frame->is_complete) {
 			/* send frame to SGSN */
-			LOGP(DRLCMACUL, LOGL_INFO, "%s complete UL frame len=%d\n",
-				tbf_name(this) , m_llc.frame_length());
+			LOGPTBFUL(this, LOGL_INFO, "complete UL frame len=%d\n", m_llc.frame_length());
 			snd_ul_ud();
 			bts->llc_ul_bytes(m_llc.frame_length());
 			m_llc.reset();
@@ -128,9 +127,8 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 	if (final) {
 		if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
 			ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
-			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-				"scheduled for %s, so we must wait for "
-				"the final uplink ack...\n", tbf_name(this));
+			LOGPTBFUL(this, LOGL_DEBUG,
+				  "Polling is already scheduled, so we must wait for the final uplink ack...\n");
 			return NULL;
 		}
 

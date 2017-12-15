@@ -134,6 +134,10 @@ enum tbf_egprs_ul_counters {
         TBF_CTR_EGPRS_UL_MCS9,
 };
 
+#define LOGPTBF(tbf, level, fmt, args...) LOGP(DRLCMAC, level, "%s " fmt, tbf_name(tbf), ## args)
+#define LOGPTBFUL(tbf, level, fmt, args...) LOGP(DRLCMACUL, level, "%s " fmt, tbf_name(tbf), ## args)
+#define LOGPTBFDL(tbf, level, fmt, args...) LOGP(DRLCMACDL, level, "%s " fmt, tbf_name(tbf), ## args)
+
 #define GPRS_RLCMAC_FLAG_CCCH		0 /* assignment on CCCH */
 #define GPRS_RLCMAC_FLAG_PACCH		1 /* assignment on PACCH */
 #define GPRS_RLCMAC_FLAG_UL_DATA	2 /* uplink data received */

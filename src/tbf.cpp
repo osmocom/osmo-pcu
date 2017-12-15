@@ -446,21 +446,19 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 		dl_tbf->cleanup();
 	}
 
-	LOGP(DRLCMAC, LOGL_INFO, "%s free\n", tbf_name(tbf));
+	LOGPTBF(tbf, LOGL_INFO, "free\n");
 	if (tbf->ul_ass_state != GPRS_RLCMAC_UL_ASS_NONE)
-		LOGP(DRLCMAC, LOGL_ERROR, "%s Software error: Pending uplink "
+		LOGPTBF(tbf, LOGL_ERROR, "Software error: Pending uplink "
 		     "assignment in state %s. This may not happen, because the "
 			"assignment message never gets transmitted. Please "
 			"be sure not to free in this state. PLEASE FIX!\n",
-		     tbf_name(tbf),
 		     get_value_string(gprs_rlcmac_tbf_ul_ass_state_names,
 				      tbf->ul_ass_state));
 	if (tbf->dl_ass_state != GPRS_RLCMAC_DL_ASS_NONE)
-		LOGP(DRLCMAC, LOGL_ERROR, "%s Software error: Pending downlink "
+		LOGPTBF(tbf, LOGL_ERROR, "Software error: Pending downlink "
 		     "assignment in state %s. This may not happen, because the "
 			"assignment message never gets transmitted. Please "
 			"be sure not to free in this state. PLEASE FIX!\n",
-		     tbf_name(tbf),
 		     get_value_string(gprs_rlcmac_tbf_dl_ass_state_names,
 				      tbf->dl_ass_state));
 	tbf->stop_timer("freeing TBF");
@@ -473,7 +471,8 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 
 	rate_ctr_group_free(tbf->m_ctrs);
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF ends here **********\n");
+	LOGP(DRLCMAC, LOGL_DEBUG, "********** %s-TBF ends here **********\n",
+	     (tbf->direction != GPRS_RLCMAC_UL_TBF) ? "DL" : "UL");
 	talloc_free(tbf);
 }
 
@@ -482,10 +481,10 @@ int gprs_rlcmac_tbf::update()
 	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
 	int rc;
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF update **********\n");
-
 	if (direction != GPRS_RLCMAC_DL_TBF)
 		return -EINVAL;
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "********** DL-TBF update **********\n");
 
 	tbf_unlink_pdch(this);
 	rc = bts_data->alloc_algorithm(bts_data, ms(), this,
@@ -508,10 +507,10 @@ int gprs_rlcmac_tbf::update()
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 {
 	if (tbf->control_ts == 0xff)
-		LOGP(DRLCMAC, LOGL_INFO, "- Setting Control TS %d\n",
+		LOGPTBF(tbf, LOGL_INFO, "Setting Control TS %d\n",
 			tbf->first_common_ts);
 	else if (tbf->control_ts != tbf->first_common_ts)
-		LOGP(DRLCMAC, LOGL_INFO, "- Changing Control TS %d\n",
+		LOGPTBF(tbf, LOGL_INFO, "Changing Control TS %d\n",
 			tbf->first_common_ts);
 	tbf->control_ts = tbf->first_common_ts;
 
@@ -556,8 +555,8 @@ void gprs_rlcmac_tbf::stop_t3191()
 void gprs_rlcmac_tbf::stop_timer(const char *reason)
 {
 	if (osmo_timer_pending(&timer)) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "%s stopping timer T%u [%s]\n",
-		     tbf_name(this), T, reason);
+		LOGPTBF(this, LOGL_DEBUG, "stopping timer T%u [%s]\n",
+			T, reason);
 		osmo_timer_del(&timer);
 	}
 }
@@ -568,21 +567,19 @@ int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 	uint32_t new_poll_fn = next_fn(fn, 13);
 
 	if (!is_control_ts(ts)) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Polling cannot be "
+		LOGPTBF(this, LOGL_DEBUG, "Polling cannot be "
 			"scheduled in this TS %d (first control TS %d)\n",
 			ts, control_ts);
 		return -EINVAL;
 	}
 	if (poll_state != GPRS_RLCMAC_POLL_NONE) {
-		LOGP(DRLCMAC, LOGL_DEBUG,
-			"Polling is already scheduled for %s\n",
-			name());
+		LOGPTBF(this, LOGL_DEBUG, "Polling is already scheduled\n");
 		return -EBUSY;
 	}
 	if (bts->sba()->find(trx->trx_no, ts, next_fn(fn, 13))) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "%s: Polling is already scheduled "
+		LOGPTBF(this, LOGL_DEBUG, "Polling is already scheduled "
 			"for single block allocation at FN %d TS %d ...\n",
-			name(), new_poll_fn, ts);
+			new_poll_fn, ts);
 		return -EBUSY;
 	}
 
@@ -642,8 +639,8 @@ void gprs_rlcmac_tbf::poll_timeout()
 {
 	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
 
-	LOGP(DRLCMAC, LOGL_NOTICE, "%s poll timeout for FN=%d, TS=%d (curr FN %d)\n",
-		tbf_name(this), poll_fn, poll_ts, bts->current_frame_number());
+	LOGPTBF(this, LOGL_NOTICE, "poll timeout for FN=%d, TS=%d (curr FN %d)\n",
+		poll_fn, poll_ts, bts->current_frame_number());
 
 	poll_state = GPRS_RLCMAC_POLL_NONE;
 
@@ -739,9 +736,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		/* resend IMM.ASS on CCCH on timeout */
 		if ((dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
 		 && !(dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "Re-send dowlink assignment "
-				"for %s on PCH (IMSI=%s)\n",
-				tbf_name(dl_tbf),
+			LOGPTBF(dl_tbf, LOGL_DEBUG, "Re-send dowlink assignment on PCH (IMSI=%s)\n",
 				imsi());
 			/* send immediate assignment */
 			dl_tbf->bts->snd_dl_ass(dl_tbf, 0, imsi());
@@ -843,9 +838,9 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts,
 		return NULL;
 	}
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
-	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d/%d\n",
-		"UL", ms_class, egprs_ms_class);
+	LOGP(DRLCMAC, LOGL_DEBUG, "********** UL-TBF starts here **********\n");
+	LOGP(DRLCMAC, LOGL_INFO, "Allocating UL TBF: MS_CLASS=%d/%d\n",
+	     ms_class, egprs_ms_class);
 
 	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 
@@ -936,9 +931,9 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts,
 		egprs_ms_class = 1;
 	}
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "********** TBF starts here **********\n");
-	LOGP(DRLCMAC, LOGL_INFO, "Allocating %s TBF: MS_CLASS=%d/%d\n",
-		"DL", ms_class, egprs_ms_class);
+	LOGP(DRLCMAC, LOGL_DEBUG, "********** DL-TBF starts here **********\n");
+	LOGP(DRLCMAC, LOGL_INFO, "Allocating DL TBF: MS_CLASS=%d/%d\n",
+	     ms_class, egprs_ms_class);
 
 	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
 
@@ -1002,20 +997,19 @@ static void tbf_timer_cb(void *_tbf)
 
 void gprs_rlcmac_tbf::handle_timeout()
 {
-	LOGP(DRLCMAC, LOGL_DEBUG, "%s timer %u expired.\n",
-		tbf_name(this), T);
+	LOGPTBF(this, LOGL_DEBUG, "timer %u expired.\n", T);
 
 	switch (T) {
 	case 0: /* assignment */
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
 			if (state_is(GPRS_RLCMAC_ASSIGN)) {
-				LOGP(DRLCMAC, LOGL_NOTICE, "%s releasing due to "
-					"PACCH assignment timeout.\n", tbf_name(this));
+				LOGPTBF(this, LOGL_NOTICE,
+					"releasing due to PACCH assignment timeout.\n");
 				tbf_free(this);
 				return;
 			} else
-				LOGP(DRLCMAC, LOGL_ERROR, "Error: %s is not "
-					"in assign state\n", tbf_name(this));
+				LOGPTBF(this, LOGL_ERROR,
+					"Error: TBF is not in assign state\n");
 		}
 		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
 			gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
@@ -1042,15 +1036,15 @@ void gprs_rlcmac_tbf::handle_timeout()
 
 				dl_tbf->trigger_ass(dl_tbf);
 			} else
-				LOGP(DRLCMAC, LOGL_NOTICE, "%s Continue flow after "
-					"IMM.ASS confirm\n", tbf_name(dl_tbf));
+				LOGPTBF(dl_tbf, LOGL_NOTICE,
+					"Continue flow after IMM.ASS confirm\n");
 		}
 		break;
 	case 3169:
 	case 3191:
 	case 3195:
-		LOGP(DRLCMAC, LOGL_NOTICE, "%s T%d timeout during "
-			"transsmission\n", tbf_name(this), T);
+		LOGPTBF(this, LOGL_NOTICE, "T%d timeout during "
+			"transsmission\n", T);
 		rlcmac_diag();
 		/* fall through */
 	case 3193:
@@ -1105,9 +1099,8 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 		if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
 			ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK)
 		{
-			LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-				"scheduled for %s, so we must wait for the uplink "
-				"assignment...\n", tbf_name(this));
+			LOGPTBFUL(this, LOGL_DEBUG,
+				  "Polling is already scheduled, so we must wait for the uplink assignment...\n");
 			return NULL;
 		}
 		rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
@@ -1133,9 +1126,8 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 		new_dl_tbf = ms()->dl_tbf();
 
 	if (!new_dl_tbf) {
-		LOGP(DRLCMACDL, LOGL_ERROR, "We have a schedule for downlink "
-			"assignment at %s, but there is no downlink "
-			"TBF\n", tbf_name(this));
+		LOGPTBFDL(this, LOGL_ERROR,
+			  "We have a schedule for downlink assignment, but there is no downlink TBF\n");
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 		return NULL;
 	}
@@ -1164,7 +1156,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	}
 	bitvec_unhex(ass_vec,
 		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
-	LOGP(DRLCMAC, LOGL_INFO, "%s  start Packet Downlink Assignment (PACCH)\n", tbf_name(new_dl_tbf));
+	LOGPTBF(new_dl_tbf, LOGL_INFO, "start Packet Downlink Assignment (PACCH)\n");
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	Encoding::write_packet_downlink_assignment(mac_control_block,
 		old_tfi_is_valid, m_tfi, (direction == GPRS_RLCMAC_DL_TBF),
@@ -1233,9 +1225,8 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 
 	if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
 		ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
-		LOGP(DRLCMACUL, LOGL_DEBUG, "Polling is already "
-			"scheduled for %s, so we must wait for the uplink "
-			"assignment...\n", tbf_name(this));
+		LOGPTBFUL(this, LOGL_DEBUG,
+			  "Polling is already scheduled, so we must wait for the uplink assignment...\n");
 			return NULL;
 	}
 
@@ -1246,9 +1237,8 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 	if (ms())
 		new_tbf = ms()->ul_tbf();
 	if (!new_tbf) {
-		LOGP(DRLCMACUL, LOGL_ERROR, "We have a schedule for uplink "
-			"assignment at downlink %s, but there is no uplink "
-			"TBF\n", tbf_name(this));
+		LOGPTBFUL(this, LOGL_ERROR,
+			  "We have a schedule for uplink assignment, but there is no uplink TBF\n");
 		ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
 		return NULL;
 	}
@@ -1256,7 +1246,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 	msg = msgb_alloc(23, "rlcmac_ul_ass");
 	if (!msg)
 		return NULL;
-	LOGP(DRLCMAC, LOGL_INFO, "%ss start Packet Uplink Assignment (PACCH)\n", tbf_name(new_tbf));
+	LOGPTBF(new_tbf, LOGL_INFO, "start Packet Uplink Assignment (PACCH)\n");
 	bitvec *ass_vec = bitvec_alloc(23, tall_pcu_ctx);
 	if (!ass_vec) {
 		msgb_free(msg);
@@ -1318,8 +1308,7 @@ int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
 		return -1;
 	}
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "%s Trigger downlink assignment on PACCH\n",
-		tbf_name(this));
+	LOGPTBF(this, LOGL_DEBUG, "Trigger downlink assignment on PACCH\n");
 	new_tbf->trigger_ass(this);
 
 	return 0;
@@ -1346,18 +1335,14 @@ int gprs_rlcmac_tbf::set_tlli_from_ul(uint32_t new_tlli)
 	}
 
 	if (dl_tbf && dl_tbf->ms() != ms()) {
-		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-			"TLLI=0x%08x while %s still exists. "
-			"Killing pending DL TBF\n", new_tlli,
-			tbf_name(dl_tbf));
+		LOGPTBFUL(dl_tbf, LOGL_NOTICE,
+			  "Got RACH from TLLI=0x%08x while TBF still exists: killing pending DL TBF\n", new_tlli);
 		tbf_free(dl_tbf);
 		dl_tbf = NULL;
 	}
 	if (ul_tbf && ul_tbf->ms() != ms()) {
-		LOGP(DRLCMACUL, LOGL_NOTICE, "Got RACH from "
-			"TLLI=0x%08x while %s still exists. "
-			"Killing pending UL TBF\n", new_tlli,
-			tbf_name(ul_tbf));
+		LOGPTBFUL(ul_tbf, LOGL_NOTICE,
+			  "Got RACH from TLLI=0x%08x while TBF still exists: killing pending UL TBF\n", new_tlli);
 		tbf_free(ul_tbf);
 		ul_tbf = NULL;
 	}
