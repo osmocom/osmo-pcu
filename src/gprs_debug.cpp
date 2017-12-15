@@ -16,16 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
- 
-#include <stdarg.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <strings.h>
-#include <time.h>
-#include <errno.h>
 
-#include <osmocom/core/talloc.h>
 #include <osmocom/core/utils.h>
 #include <osmocom/core/logging.h>
 #include <gprs_debug.h>

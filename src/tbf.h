@@ -32,8 +32,6 @@ extern "C" {
 }
 
 struct bssgp_bvc_ctx;
-struct rlc_ul_header;
-struct msgb;
 struct pcu_l1_meas;
 class GprsMs;
 

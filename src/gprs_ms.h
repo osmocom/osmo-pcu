@@ -20,9 +20,6 @@
 
 #pragma once
 
-struct gprs_rlcmac_tbf;
-struct gprs_rlcmac_dl_tbf;
-struct gprs_rlcmac_ul_tbf;
 struct gprs_codel;
 
 #include "cxx_linuxlist.h"

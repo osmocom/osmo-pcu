@@ -36,7 +36,6 @@
 #define RLC_MAX_LEN 74 /* MCS-9 data unit */
 
 struct BTS;
-struct gprs_rlc_v_n;
 
 /* The state of a BSN in the send/receive window */
 enum gprs_rlc_ul_bsn_state {

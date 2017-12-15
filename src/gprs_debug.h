@@ -19,11 +19,9 @@
 
 #pragma once
 
-#include <stdio.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include <osmocom/core/linuxlist.h>
 #include <osmocom/core/logging.h>
 #ifdef __cplusplus
 };

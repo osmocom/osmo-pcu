@@ -19,7 +19,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
  
-#include <gprs_bssgp_pcu.h>
 #include <pcu_l1_if.h>
 #include <gprs_rlcmac.h>
 #include <bts.h>

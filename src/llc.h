@@ -29,7 +29,6 @@ extern "C" {
 #define LLC_MAX_LEN 1543
 
 struct BTS;
-struct timeval;
 struct msgb;
 
 /**

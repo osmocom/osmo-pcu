@@ -28,7 +28,6 @@ extern "C" {
 
 struct BTS;
 class PollController;
-struct gprs_rlcmac_sba;
 struct gprs_rlcmac_pdch;
 
 /*
