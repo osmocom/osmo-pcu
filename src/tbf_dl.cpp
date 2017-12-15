@@ -1159,7 +1159,7 @@ int gprs_rlcmac_dl_tbf::abort()
 	return 0;
 }
 
-int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, unsigned first_bsn,
+int gprs_rlcmac_dl_tbf::rcvd_dl_ack(bool final_ack, unsigned first_bsn,
 	struct bitvec *rbb)
 {
 	int rc;
@@ -1179,7 +1179,7 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, unsigned first_bsn,
 	return rc;
 }
 
-int gprs_rlcmac_dl_tbf::rcvd_dl_ack(uint8_t final_ack, uint8_t ssn, uint8_t *rbb)
+int gprs_rlcmac_dl_tbf::rcvd_dl_ack(bool final_ack, uint8_t ssn, uint8_t *rbb)
 {
 	LOGPTBFDL(this, LOGL_DEBUG, "downlink acknowledge\n");
 

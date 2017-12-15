@@ -450,8 +450,8 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 			const uint16_t pdu_delay_csec,
 			const uint8_t *data, const uint16_t len);
 
-	int rcvd_dl_ack(uint8_t final, uint8_t ssn, uint8_t *rbb);
-	int rcvd_dl_ack(uint8_t final_ack, unsigned first_bsn, struct bitvec *rbb);
+	int rcvd_dl_ack(bool final, uint8_t ssn, uint8_t *rbb);
+	int rcvd_dl_ack(bool final_ack, unsigned first_bsn, struct bitvec *rbb);
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
 	void trigger_ass(struct gprs_rlcmac_tbf *old_tbf);
 	void clear_poll_timeout_flag();

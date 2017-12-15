@@ -267,7 +267,7 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	/* Queue a final ACK */
 	memset(rbb, 0, sizeof(rbb));
 	/* Receive a final ACK */
-	dl_tbf->rcvd_dl_ack(1, 1, rbb);
+	dl_tbf->rcvd_dl_ack(true, 1, rbb);
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
@@ -341,14 +341,14 @@ static void test_tbf_delayed_release()
 	/* ACK all blocks */
 	memset(rbb, 0xff, sizeof(rbb));
 	/* Receive an ACK */
-	dl_tbf->rcvd_dl_ack(0, dl_tbf->m_window.v_s(), rbb);
+	dl_tbf->rcvd_dl_ack(false, dl_tbf->m_window.v_s(), rbb);
 	OSMO_ASSERT(dl_tbf->m_window.window_empty());
 
 	/* Force sending of a single block containing an LLC dummy command */
 	request_dl_rlc_block(dl_tbf, &fn);
 
 	/* Receive an ACK */
-	dl_tbf->rcvd_dl_ack(0, dl_tbf->m_window.v_s(), rbb);
+	dl_tbf->rcvd_dl_ack(false, dl_tbf->m_window.v_s(), rbb);
 	OSMO_ASSERT(dl_tbf->m_window.window_empty());
 
 	/* Timeout (make sure fn % 52 remains valid) */
@@ -358,7 +358,7 @@ static void test_tbf_delayed_release()
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FINISHED));
 
 	/* Receive a final ACK */
-	dl_tbf->rcvd_dl_ack(1, dl_tbf->m_window.v_s(), rbb);
+	dl_tbf->rcvd_dl_ack(true, dl_tbf->m_window.v_s(), rbb);
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
@@ -2695,7 +2695,7 @@ static void establish_and_use_egprs_dl_tbf(BTS *the_bts, int mcs)
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
 
 	/* Receive a final ACK */
-	dl_tbf->rcvd_dl_ack(1, dl_tbf->m_window.v_s(), rbb);
+	dl_tbf->rcvd_dl_ack(true, dl_tbf->m_window.v_s(), rbb);
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
@@ -2745,7 +2745,7 @@ static void tbf_cleanup(gprs_rlcmac_dl_tbf *dl_tbf)
 	uint8_t rbb[64/8];
 
 	/* Receive a final ACK */
-	dl_tbf->rcvd_dl_ack(1, dl_tbf->m_window.v_s(), rbb);
+	dl_tbf->rcvd_dl_ack(true, dl_tbf->m_window.v_s(), rbb);
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
