@@ -162,7 +162,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	poll_ts(0),
 	n3105(0),
 	T(0),
-	num_T_exp(0),
 	fT(0),
 	num_fT_exp(0),
 	state(GPRS_RLCMAC_NULL),
@@ -541,7 +540,6 @@ void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
 	LOGPC(DRLCMAC, (T != tbf->T) ? LOGL_ERROR : LOGL_DEBUG, "\n");
 
 	tbf->T = T;
-	tbf->num_T_exp = 0;
 
 	/* Tunning timers can be safely re-scheduled. */
 	tbf->timer.data = tbf;
@@ -1006,8 +1004,6 @@ void gprs_rlcmac_tbf::handle_timeout()
 {
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s timer %u expired.\n",
 		tbf_name(this), T);
-
-	num_T_exp++;
 
 	switch (T) {
 	case 0: /* assignment */
