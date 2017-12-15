@@ -1722,8 +1722,7 @@ static void test_tbf_egprs_two_phase_puan(void)
 		"Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
 	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
 
-	ul_tbf->m_window.set_v_r(0);
-	ul_tbf->m_window.set_v_q(0);
+	ul_tbf->m_window.reset_state();
 	/* Function to generate URBB with length */
 	ul_tbf = establish_ul_tbf_two_phase_puan_URBB_with_length(&the_bts, ts_no, tlli, &fn,
 		qta, ms_class, egprs_ms_class, ul_tbf);
@@ -1735,8 +1734,7 @@ static void test_tbf_egprs_two_phase_puan(void)
 
 	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
 
-	ul_tbf->m_window.set_v_r(0);
-	ul_tbf->m_window.set_v_q(0);
+	ul_tbf->m_window.reset_state();
 	/* Function to generate CRBB */
 	bts->ws_base = 128;
 	bts->ws_pdch = 64;

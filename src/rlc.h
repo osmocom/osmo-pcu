@@ -342,6 +342,7 @@ struct gprs_rlc_ul_window: public gprs_rlc_window {
 
 	const void set_v_r(int);
 	const void set_v_q(int);
+	void reset_state();
 
 	const uint16_t ssn() const;
 
@@ -571,6 +572,12 @@ inline bool gprs_rlc_ul_window::is_received(uint16_t bsn) const
 	/* Offset to the end of the received window */
 	offset_v_r = (m_v_r - 1 - bsn) & mod_sns();
 	return is_in_window(bsn) && m_v_n.is_received(bsn) && offset_v_r < ws();
+}
+
+inline void gprs_rlc_ul_window::reset_state()
+{
+	m_v_r = 0;
+	m_v_q = 0;
 }
 
 inline const void gprs_rlc_ul_window::set_v_r(int v_r)
