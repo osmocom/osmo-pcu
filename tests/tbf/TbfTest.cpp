@@ -295,6 +295,13 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	printf("=== end %s ===\n", __func__);
 }
 
+/* Receive an ACK */
+#define RCV_ACK(fin, tbf, rbb) do {					\
+		tbf->rcvd_dl_ack(fin, tbf->m_window.v_s(), rbb);	\
+		if (!fin)						\
+			OSMO_ASSERT(tbf->m_window.window_empty());	\
+	} while(0)
+
 static void test_tbf_delayed_release()
 {
 	BTS the_bts;
@@ -340,16 +347,13 @@ static void test_tbf_delayed_release()
 
 	/* ACK all blocks */
 	memset(rbb, 0xff, sizeof(rbb));
-	/* Receive an ACK */
-	dl_tbf->rcvd_dl_ack(false, dl_tbf->m_window.v_s(), rbb);
-	OSMO_ASSERT(dl_tbf->m_window.window_empty());
+
+	RCV_ACK(false, dl_tbf, rbb); /* Receive an ACK */
 
 	/* Force sending of a single block containing an LLC dummy command */
 	request_dl_rlc_block(dl_tbf, &fn);
 
-	/* Receive an ACK */
-	dl_tbf->rcvd_dl_ack(false, dl_tbf->m_window.v_s(), rbb);
-	OSMO_ASSERT(dl_tbf->m_window.window_empty());
+	RCV_ACK(false, dl_tbf, rbb); /* Receive an ACK */
 
 	/* Timeout (make sure fn % 52 remains valid) */
 	fn += 52 * ((msecs_to_frames(bts->dl_tbf_idle_msec + 100) + 51)/ 52);
@@ -357,8 +361,7 @@ static void test_tbf_delayed_release()
 
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FINISHED));
 
-	/* Receive a final ACK */
-	dl_tbf->rcvd_dl_ack(true, dl_tbf->m_window.v_s(), rbb);
+	RCV_ACK(true, dl_tbf, rbb); /* Receive a final ACK */
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
@@ -2692,8 +2695,7 @@ static void establish_and_use_egprs_dl_tbf(BTS *the_bts, int mcs)
 
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
 
-	/* Receive a final ACK */
-	dl_tbf->rcvd_dl_ack(true, dl_tbf->m_window.v_s(), rbb);
+	RCV_ACK(true, dl_tbf, rbb); /* Receive a final ACK */
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
@@ -2742,8 +2744,7 @@ static void tbf_cleanup(gprs_rlcmac_dl_tbf *dl_tbf)
 {
 	uint8_t rbb[64/8];
 
-	/* Receive a final ACK */
-	dl_tbf->rcvd_dl_ack(true, dl_tbf->m_window.v_s(), rbb);
+	RCV_ACK(true, dl_tbf, rbb); /* Receive a final ACK */
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
@@ -2752,6 +2753,30 @@ static void tbf_cleanup(gprs_rlcmac_dl_tbf *dl_tbf)
 	tbf_free(dl_tbf);
 
 }
+
+#define NACK(tbf, x) do {					\
+		tbf->m_window.m_v_b.mark_nacked(x);		\
+		OSMO_ASSERT(tbf->m_window.m_v_b.is_nacked(x));	\
+	} while(0)
+
+#define CHECK_UNACKED(tbf, cs, bsn) do {				             \
+		OSMO_ASSERT(tbf->m_window.m_v_b.is_unacked(bsn));	             \
+		OSMO_ASSERT(tbf->m_rlc.block(bsn)->cs_current_trans.to_num() == cs); \
+	} while(0)
+
+#define CHECK_NACKED(tbf, cs, bsn) do {					             \
+		OSMO_ASSERT(tbf->m_window.m_v_b.is_nacked(bsn));	             \
+		OSMO_ASSERT(tbf->m_rlc.block(bsn)->cs_current_trans.to_num() == cs); \
+	} while(0)
+
+#define MAKE_ACKED(m, tbf, fn, cs, check_unacked) do {			\
+		m = tbf->create_dl_acked_block(fn, tbf->control_ts);	\
+		OSMO_ASSERT(m);						\
+		if (check_unacked)					\
+			CHECK_UNACKED(tbf, cs, 0);			\
+		else							\
+			CHECK_NACKED(tbf, cs, 0);			\
+	} while(0)
 
 static void egprs_spb_to_normal_validation(BTS *the_bts,
 		unsigned int mcs, unsigned int demanded_mcs)
@@ -2777,15 +2802,13 @@ static void egprs_spb_to_normal_validation(BTS *the_bts,
 
 	fn = fn_add_blocks(fn, 1);
 	/* Send first RLC data block BSN 0 */
-	msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-	OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
-	OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-			== mcs);
+	MAKE_ACKED(msg, dl_tbf, fn, mcs, true);
 
 	egprs2 = (struct gprs_rlc_dl_header_egprs_2 *) msg->data;
 	bsn1 = (egprs2->bsn1_hi << 9) | (egprs2->bsn1_mid << 1) | (egprs2->bsn1_lo);
-	dl_tbf->m_window.m_v_b.mark_nacked(0);
-	OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
+
+	NACK(dl_tbf, 0);
+
 	OSMO_ASSERT(bsn1 == 0);
 
 	dl_tbf->ms()->set_current_cs_dl
@@ -2795,10 +2818,7 @@ static void egprs_spb_to_normal_validation(BTS *the_bts,
 	fn = fn_add_blocks(fn, 1);
 
 	/* Send first segment with demanded_mcs */
-	msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-	OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
-	OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-			== demanded_mcs);
+	MAKE_ACKED(msg, dl_tbf, fn, demanded_mcs, false);
 	OSMO_ASSERT(dl_tbf->m_rlc.block(0)->spb_status.block_status_dl
 			== EGPRS_RESEG_FIRST_SEG_SENT);
 
@@ -2809,10 +2829,7 @@ static void egprs_spb_to_normal_validation(BTS *the_bts,
 	OSMO_ASSERT(egprs3->cps == 3);
 
 	/* Send second segment with demanded_mcs */
-	msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-	OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
-	OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-			== demanded_mcs);
+	MAKE_ACKED(msg, dl_tbf, fn, demanded_mcs, true);
 	OSMO_ASSERT(dl_tbf->m_rlc.block(0)->spb_status.block_status_dl
 			== EGPRS_RESEG_SECOND_SEG_SENT);
 
@@ -2830,8 +2847,8 @@ static void egprs_spb_to_normal_validation(BTS *the_bts,
 		(static_cast < GprsCodingScheme::Scheme >
 			(GprsCodingScheme::CS4 + mcs));
 
-	dl_tbf->m_window.m_v_b.mark_nacked(0);
-	OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
+	NACK(dl_tbf, 0);
+
 	msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
 	egprs2 = (struct gprs_rlc_dl_header_egprs_2 *) msg->data;
 
@@ -2871,13 +2888,9 @@ static void establish_and_use_egprs_dl_tbf_for_spb(BTS *the_bts,
 
 	fn = fn_add_blocks(fn, 1);
 	/* Send first RLC data block BSN 0 */
-	msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-	OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
-	OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-			== mcs);
+	MAKE_ACKED(msg, dl_tbf, fn, mcs, true);
 
-	dl_tbf->m_window.m_v_b.mark_nacked(0);
-	OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
+	NACK(dl_tbf, 0);
 
 	dl_tbf->ms()->set_current_cs_dl
 		(static_cast < GprsCodingScheme::Scheme >
@@ -2886,10 +2899,7 @@ static void establish_and_use_egprs_dl_tbf_for_spb(BTS *the_bts,
 	fn = fn_add_blocks(fn, 1);
 
 	/* Send first segment with demanded_mcs */
-	msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-	OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
-	OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-			== demanded_mcs);
+	MAKE_ACKED(msg, dl_tbf, fn, demanded_mcs, false);
 	OSMO_ASSERT(dl_tbf->m_rlc.block(0)->spb_status.block_status_dl
 			== EGPRS_RESEG_FIRST_SEG_SENT);
 
@@ -2913,10 +2923,7 @@ static void establish_and_use_egprs_dl_tbf_for_spb(BTS *the_bts,
 	}
 
 	/* Send second segment with demanded_mcs */
-	msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-	OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
-	OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-			== demanded_mcs);
+	MAKE_ACKED(msg, dl_tbf, fn, demanded_mcs, true);
 	OSMO_ASSERT(dl_tbf->m_rlc.block(0)->spb_status.block_status_dl
 			== EGPRS_RESEG_SECOND_SEG_SENT);
 
@@ -2965,19 +2972,11 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 		((mcs == 7) && (demanded_mcs < 7))) {
 		fn = fn_add_blocks(fn, 1);
 		/* Send 2 RLC data block */
-		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-		OSMO_ASSERT(msg);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
-		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-				== mcs);
-		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
-				== mcs);
+		MAKE_ACKED(msg, dl_tbf, fn, mcs, true);
+		CHECK_UNACKED(dl_tbf, mcs, 1);
 
-		dl_tbf->m_window.m_v_b.mark_nacked(0);
-		dl_tbf->m_window.m_v_b.mark_nacked(1);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(1));
+		NACK(dl_tbf, 0);
+		NACK(dl_tbf, 1);
 
 		/* Set the demanded MCS to demanded_mcs */
 		dl_tbf->ms()->set_current_cs_dl
@@ -2986,43 +2985,26 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 
 		fn = fn_add_blocks(fn, 1);
 		/* Retransmit the first RLC data block with demanded_mcs */
-		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-		OSMO_ASSERT(msg);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(1));
-		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-				== demanded_mcs);
+		MAKE_ACKED(msg, dl_tbf, fn, demanded_mcs, true);
+		CHECK_NACKED(dl_tbf, mcs, 1);
 
 		fn = fn_add_blocks(fn, 1);
 		/* Retransmit the second RLC data block with demanded_mcs */
-		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-		OSMO_ASSERT(msg);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
-		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
-				== demanded_mcs);
+		MAKE_ACKED(msg, dl_tbf, fn, demanded_mcs, true);
+		CHECK_UNACKED(dl_tbf, demanded_mcs, 1);
 	} else if (((mcs == 5) && (demanded_mcs > 6)) ||
 		((mcs == 6) && (demanded_mcs > 8))) {
 		fn = fn_add_blocks(fn, 1);
 		/* Send first RLC data block BSN 0 */
-		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-		OSMO_ASSERT(msg);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
-		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-				== mcs);
+		MAKE_ACKED(msg, dl_tbf, fn, mcs, true);
 
 		fn = fn_add_blocks(fn, 1);
 		/* Send second RLC data block BSN 1 */
-		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-		OSMO_ASSERT(msg);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
-		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
-				== mcs);
+		MAKE_ACKED(msg, dl_tbf, fn, mcs, true);
+		CHECK_UNACKED(dl_tbf, mcs, 1);
 
-		dl_tbf->m_window.m_v_b.mark_nacked(0);
-		dl_tbf->m_window.m_v_b.mark_nacked(1);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(1));
+		NACK(dl_tbf, 0);
+		NACK(dl_tbf, 1);
 
 		dl_tbf->ms()->set_current_cs_dl
 			(static_cast < GprsCodingScheme::Scheme >
@@ -3030,63 +3012,34 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 
 		fn = fn_add_blocks(fn, 1);
 		/* Send first, second RLC data blocks with demanded_mcs */
-		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-		OSMO_ASSERT(msg);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
-		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-				== demanded_mcs);
-		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
-				== demanded_mcs);
+		MAKE_ACKED(msg, dl_tbf, fn, demanded_mcs, true);
+		CHECK_UNACKED(dl_tbf, demanded_mcs, 1);
 	} else if (mcs > 6) {
 		/* No Mcs change cases are handled here for mcs > MCS6*/
 		fn = fn_add_blocks(fn, 1);
 		/* Send first,second RLC data blocks */
-		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-		OSMO_ASSERT(msg);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
-		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-				== mcs);
-		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
-				== mcs);
+		MAKE_ACKED(msg, dl_tbf, fn, mcs, true);
+		CHECK_UNACKED(dl_tbf, mcs, 1);
 
-		dl_tbf->m_window.m_v_b.mark_nacked(0);
-		dl_tbf->m_window.m_v_b.mark_nacked(1);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(1));
+		NACK(dl_tbf, 0);
+		NACK(dl_tbf, 1);
 
 		fn = fn_add_blocks(fn, 1);
 		/* Send first,second RLC data blocks with demanded_mcs*/
-		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-		OSMO_ASSERT(msg);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(1));
-		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-				== mcs);
-		OSMO_ASSERT(dl_tbf->m_rlc.block(1)->cs_current_trans.to_num()
-				== mcs);
+		MAKE_ACKED(msg, dl_tbf, fn, mcs, true);
+		CHECK_UNACKED(dl_tbf, mcs, 1);
 	} else {
 
 		/* No MCS change cases are handled here for mcs <= MCS6*/
 		fn = fn_add_blocks(fn, 1);
 		/* Send first RLC data block */
-		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-		OSMO_ASSERT(msg);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
-		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-				== mcs);
+		MAKE_ACKED(msg, dl_tbf, fn, mcs, true);
 
-		dl_tbf->m_window.m_v_b.mark_nacked(0);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_nacked(0));
+		NACK(dl_tbf, 0);
 
 		fn = fn_add_blocks(fn, 1);
 		/* Send first RLC data block with demanded_mcs */
-		msg = dl_tbf->create_dl_acked_block(fn, dl_tbf->control_ts);
-		OSMO_ASSERT(msg);
-		OSMO_ASSERT(dl_tbf->m_window.m_v_b.is_unacked(0));
-		OSMO_ASSERT(dl_tbf->m_rlc.block(0)->cs_current_trans.to_num()
-				== mcs);
+		MAKE_ACKED(msg, dl_tbf, fn, mcs, true);
 	}
 
 	tbf_cleanup(dl_tbf);
