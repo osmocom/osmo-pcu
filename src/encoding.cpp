@@ -60,6 +60,21 @@ static inline void write_ta(bitvec *dest, unsigned& wp, int8_t ta)
 	}
 }
 
+/* 3GPP TS 44.060 Table 12.5.2.1 */
+static inline uint16_t enc_ws(uint16_t ws)
+{
+	return (ws - 64) / 32;
+}
+
+static inline void write_ws(bitvec *dest, unsigned int *write_index, uint16_t ws)
+{
+	dest->cur_bit = *write_index;
+
+	bitvec_set_u64(dest, enc_ws(ws), 5, false);
+
+	*write_index += 5;
+}
+
 /* 3GPP TS 44.060 § 12.12:
    { 0 | 1 < TIMING_ADVANCE_VALUE : bit (6) > }
    { 0 | 1 < TIMING_ADVANCE_INDEX : bit (4) >
@@ -114,9 +129,8 @@ static int write_ia_rest_downlink(
 	//		bitvec_write_field(dest, &wp,,0xb,4);
 	if (tbf->is_egprs_enabled()) {
 		/* see GMS 44.018, 10.5.2.16 */
-		unsigned int ws_enc = (tbf->m_window.ws() - 64) / 32;
 		bitvec_write_field(dest, &wp, 1, 1);  // "H"
-		bitvec_write_field(dest, &wp, ws_enc, 5); // EGPRS Window Size
+		write_ws(dest, &wp, tbf->window_size()); // EGPRS Window Size
 		bitvec_write_field(dest, &wp, 0x0, 2);    // LINK_QUALITY_MEASUREMENT_MODE
 		bitvec_write_field(dest, &wp, 0, 1);      // BEP_PERIOD2 not present
 	}
@@ -178,7 +192,6 @@ static int write_ia_rest_egprs_uplink(
 	uint8_t alpha, uint8_t gamma, int8_t ta_idx,
 	enum ph_burst_type burst_type, uint16_t ra)
 {
-	unsigned int ws_enc = 0;
 	uint8_t extended_ra = 0;
 
 	extended_ra = (ra & 0x1F);
@@ -208,9 +221,6 @@ static int write_ia_rest_egprs_uplink(
 		bitvec_write_field(dest, &wp, 0, 1);
 
 	} else {
-
-		ws_enc = (tbf->m_window.ws() - 64) / 32;
-
 		bitvec_write_field(dest, &wp, 1, 1);     /* single block alloc */
 		bitvec_write_field(dest, &wp, tbf->tfi(), 5);/* TFI assignment */
 		bitvec_write_field(dest, &wp, 0, 1);     /* polling bit */
@@ -224,7 +234,7 @@ static int write_ia_rest_egprs_uplink(
 		bitvec_write_field(dest, &wp, tbf->tlli(), 1);
 		bitvec_write_field(dest, &wp, 0, 1);   /* BEP period present */
 		bitvec_write_field(dest, &wp, 0, 1);   /* resegmentation */
-		bitvec_write_field(dest, &wp, ws_enc, 5);/* egprs window_size */
+		write_ws(dest, &wp, tbf->window_size()); /* EGPRS window size */
 
 		if (alpha) {
 			bitvec_write_field(dest, &wp, 0x1, 1);   /* ALPHA =yes */
@@ -450,7 +460,6 @@ void Encoding::write_packet_uplink_assignment(
 		bitvec_write_field(dest, &wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING
 		write_ta_ie(dest, wp,tbf->ta(), ta_idx, ta_ts);
 	} else { /* EPGRS */
-		unsigned int ws_enc = (tbf->m_window.ws() - 64) / 32;
 		bitvec_write_field(dest, &wp,0x1,1); // Message escape
 		bitvec_write_field(dest, &wp,0x0,2); // EGPRS message contents
 		bitvec_write_field(dest, &wp,0x0,1); // No CONTENTION_RESOLUTION_TLLI
@@ -458,7 +467,7 @@ void Encoding::write_packet_uplink_assignment(
 		bitvec_write_field(dest, &wp,tbf->current_cs().to_num()-1, 4); // EGPRS Modulation and Coding IE
 		/* 0: no RESEGMENT, 1: Segmentation*/
 		bitvec_write_field(dest, &wp, 0x1, 1);
-		bitvec_write_field(dest, &wp,ws_enc,5); // EGPRS Window Size
+		write_ws(dest, &wp, tbf->window_size()); // EGPRS Window Size
 		bitvec_write_field(dest, &wp,0x0,1); // No Access Technologies Request
 		bitvec_write_field(dest, &wp,0x0,1); // No ARAC RETRANSMISSION REQUEST
 		bitvec_write_field(dest, &wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING
@@ -509,7 +518,7 @@ void Encoding::write_packet_uplink_assignment(
 /* generate downlink assignment */
 void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 	bool old_tfi_is_valid, uint8_t old_tfi, uint8_t old_downlink,
-	struct gprs_rlcmac_tbf *tbf, uint8_t poll, uint8_t rrbp,
+	struct gprs_rlcmac_dl_tbf *tbf, uint8_t poll, uint8_t rrbp,
 	uint8_t alpha, uint8_t gamma, int8_t ta_idx,
 	uint8_t ta_ts, bool use_egprs)
 {
@@ -518,7 +527,6 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 	PDA_AdditionsR99_t *pda_r99;
 
 	uint8_t tn;
-	unsigned int ws_enc;
 
 	block->PAYLOAD_TYPE = 0x1;  // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
 	block->RRBP         = rrbp;  // 0: N+13
@@ -591,12 +599,10 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 		return;
 	}
 
-	ws_enc = (tbf->window()->ws() - 64) / 32;
-
 	block->u.Packet_Downlink_Assignment.Exist_AdditionsR99        = 0x1; // AdditionsR99 = on
 	pda_r99 = &block->u.Packet_Downlink_Assignment.AdditionsR99;
 	pda_r99->Exist_EGPRS_Params = 1;
-	pda_r99->EGPRS_WindowSize = ws_enc; /* see TS 44.060, table 12.5.2.1 */
+	pda_r99->EGPRS_WindowSize = enc_ws(tbf->window_size()); /* see TS 44.060, table 12.5.2.1 */
 	pda_r99->LINK_QUALITY_MEASUREMENT_MODE = 0x0; /* no meas, see TS 44.060, table 11.2.7.2 */
 	pda_r99->Exist_BEP_PERIOD2 = 0; /* No extra EGPRS BEP PERIOD */
 	pda_r99->Exist_Packet_Extended_Timing_Advance = 0;

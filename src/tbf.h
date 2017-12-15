@@ -464,7 +464,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	bool keep_open(unsigned fn) const;
 	int release();
 	int abort();
-
+	uint16_t window_size() const;
 	void egprs_calc_window_size();
 	void update_coding_scheme_counter_dl(const GprsCodingScheme cs);
 
@@ -562,7 +562,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 		uint8_t *data, const uint8_t block_idx);
 
 	void egprs_calc_ulwindow_size();
-
+	uint16_t window_size() const;
 	void update_coding_scheme_counter_ul(const GprsCodingScheme cs);
 
 	/* Please note that all variables here will be reset when changing
@@ -597,6 +597,16 @@ inline enum gprs_rlcmac_tbf_direction reverse(enum gprs_rlcmac_tbf_direction dir
 {
 	return (enum gprs_rlcmac_tbf_direction)
 		((int)GPRS_RLCMAC_UL_TBF - (int)dir + (int)GPRS_RLCMAC_DL_TBF);
+}
+
+inline uint16_t gprs_rlcmac_ul_tbf::window_size() const
+{
+	return m_window.ws();
+}
+
+inline uint16_t gprs_rlcmac_dl_tbf::window_size() const
+{
+	return m_window.ws();
 }
 
 inline void gprs_rlcmac_ul_tbf::enable_egprs()

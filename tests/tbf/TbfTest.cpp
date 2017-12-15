@@ -2214,9 +2214,9 @@ static void test_tbf_ws()
 	fprintf(stderr, "DL TBF slots: 0x%02x, N: %d, WS: %d\n",
 		dl_tbf->dl_slots(),
 		pcu_bitcount(dl_tbf->dl_slots()),
-		dl_tbf->window()->ws());
+		dl_tbf->window_size());
 	OSMO_ASSERT(pcu_bitcount(dl_tbf->dl_slots()) == 4);
-	OSMO_ASSERT(dl_tbf->window()->ws() == 64);
+	OSMO_ASSERT(dl_tbf->window_size() == 64);
 	tbf_free(dl_tbf);
 
 	/* EGPRS-only */
@@ -2229,9 +2229,9 @@ static void test_tbf_ws()
 	fprintf(stderr, "DL TBF slots: 0x%02x, N: %d, WS: %d\n",
 		dl_tbf->dl_slots(),
 		pcu_bitcount(dl_tbf->dl_slots()),
-		dl_tbf->window()->ws());
+		dl_tbf->window_size());
 	OSMO_ASSERT(pcu_bitcount(dl_tbf->dl_slots()) == 4);
-	OSMO_ASSERT(dl_tbf->window()->ws() == 128 + 4 * 64);
+	OSMO_ASSERT(dl_tbf->window_size() == 128 + 4 * 64);
 	tbf_free(dl_tbf);
 
 	printf("=== end %s ===\n", __func__);
@@ -2273,9 +2273,9 @@ static void test_tbf_update_ws(void)
 	fprintf(stderr, "DL TBF slots: 0x%02x, N: %d, WS: %d\n",
 		dl_tbf->dl_slots(),
 		pcu_bitcount(dl_tbf->dl_slots()),
-		dl_tbf->window()->ws());
+		dl_tbf->window_size());
 	OSMO_ASSERT(pcu_bitcount(dl_tbf->dl_slots()) == 1);
-	OSMO_ASSERT(dl_tbf->window()->ws() == 128 + 1 * 64);
+	OSMO_ASSERT(dl_tbf->window_size() == 128 + 1 * 64);
 
 	dl_tbf->update();
 
@@ -2284,9 +2284,9 @@ static void test_tbf_update_ws(void)
 	fprintf(stderr, "DL TBF slots: 0x%02x, N: %d, WS: %d\n",
 		dl_tbf->dl_slots(),
 		pcu_bitcount(dl_tbf->dl_slots()),
-		dl_tbf->window()->ws());
+		dl_tbf->window_size());
 	OSMO_ASSERT(pcu_bitcount(dl_tbf->dl_slots()) == 4);
-	OSMO_ASSERT(dl_tbf->window()->ws() == 128 + 4 * 64);
+	OSMO_ASSERT(dl_tbf->window_size() == 128 + 4 * 64);
 
 	tbf_free(dl_tbf);
 

@@ -64,13 +64,12 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 	}
 	if (tbf->trx != NULL)
 		vty_out(vty, " TRX_ID=%d", tbf->trx->trx_no);
-	vty_out(vty, " CS=%s WS=%d",
-		tbf->current_cs().name(), tbf->window()->ws());
+	vty_out(vty, " CS=%s", tbf->current_cs().name());
 
 	if (ul_tbf) {
 		gprs_rlc_ul_window *win = &ul_tbf->m_window;
-		vty_out(vty, " V(Q)=%d V(R)=%d",
-			win->v_q(), win->v_r());
+		vty_out(vty, " WS=%u V(Q)=%d V(R)=%d",
+			ul_tbf->window_size(), win->v_q(), win->v_r());
 		vty_out(vty, "%s", VTY_NEWLINE);
 		vty_out(vty, " TBF Statistics:%s", VTY_NEWLINE);
 		if(GprsCodingScheme::GPRS == tbf->ms()->mode()) {
@@ -81,8 +80,8 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 	}
 	if (dl_tbf) {
 		gprs_rlc_dl_window *win = &dl_tbf->m_window;
-		vty_out(vty, " V(A)=%d V(S)=%d nBSN=%d%s",
-			win->v_a(), win->v_s(), win->resend_needed(),
+		vty_out(vty, " WS=%u V(A)=%d V(S)=%d nBSN=%d%s",
+			dl_tbf->window_size(), win->v_a(), win->v_s(), win->resend_needed(),
 			win->window_stalled() ? " STALLED" : "");
 		vty_out(vty, "%s", VTY_NEWLINE);
 		vty_out_rate_ctr_group(vty, " ", tbf->m_ctrs);
