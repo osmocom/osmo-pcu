@@ -218,8 +218,16 @@ BTS::BTS()
 		}
 	}
 
-	m_ratectrs = rate_ctr_group_alloc(tall_pcu_ctx, &bts_ctrg_desc, 0);
+	/* The static allocator might have already registered the counter group.
+	   If this happens and we still called explicitly (in tests/* for example)
+	   than just allocate the group with different index.
+	   This shall be removed once weget rid of BTS singleton */
+	if (rate_ctr_get_group_by_name_idx(bts_ctrg_desc.group_name_prefix, 0))
+		m_ratectrs = rate_ctr_group_alloc(tall_pcu_ctx, &bts_ctrg_desc, 1);
+	else
+		m_ratectrs = rate_ctr_group_alloc(tall_pcu_ctx, &bts_ctrg_desc, 0);
 	OSMO_ASSERT(m_ratectrs);
+
 	m_statg = osmo_stat_item_group_alloc(tall_pcu_ctx, &bts_statg_desc, 0);
 	OSMO_ASSERT(m_statg);
 }
