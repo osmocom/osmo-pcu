@@ -996,6 +996,10 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 			     ms->dl_tbf() ? ms->dl_tbf()->state_name() : "None");
 		return;
 	}
+
+	/* Reset N3101 counter: */
+	tbf->m_n3101 = 0;
+
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 
 	LOGPTBF(tbf, LOGL_DEBUG, "RX: [PCU <- BTS] Packet Control Ack\n");
@@ -1185,6 +1189,9 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 		return;
 	}
 
+	/* Reset N3101 counter: */
+	tbf->m_n3101 = 0;
+
 	if (tbf->handle_ack_nack())
 		LOGPTBF(tbf, LOGL_NOTICE, "Recovered downlink ack\n");
 
@@ -1248,6 +1255,9 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 			"wrong TFI=%d, ignoring!\n", tfi);
 		return;
 	}
+
+	/* Reset N3101 counter: */
+	tbf->m_n3101 = 0;
 
 	if (tbf->handle_ack_nack())
 		LOGPTBF(tbf, LOGL_NOTICE, "Recovered EGPRS downlink ack\n");
@@ -1417,6 +1427,9 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		}
 		LOGPTBFDL(dl_tbf, LOGL_ERROR,
 			"RX: [PCU <- BTS] FIXME: Packet resource request\n");
+
+		/* Reset N3101 counter: */
+		dl_tbf->m_n3101 = 0;
 	} else {
 		struct gprs_rlcmac_ul_tbf *ul_tbf;
 		int8_t tfi = request->ID.u.Global_TFI.u.UPLINK_TFI;
@@ -1427,6 +1440,9 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		}
 		LOGPTBFUL(ul_tbf, LOGL_ERROR,
 			"RX: [PCU <- BTS] %s FIXME: Packet resource request\n");
+
+		/* Reset N3101 counter: */
+		ul_tbf->m_n3101 = 0;
 	}
 }
 
@@ -1578,6 +1594,9 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 			rlc_dec.tfi);
 		return 0;
 	}
+
+	/* Reset N3101 counter: */
+	tbf->m_n3101 = 0;
 
 	return tbf->rcv_data_block_acknowledged(&rlc_dec, data, meas);
 }

@@ -177,6 +177,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	was_releasing(0),
 	upgrade_to_multislot(0),
 	bts(bts_),
+	m_n3101(0),
 	m_tfi(0),
 	m_created_ts(0),
 	m_ctrs(NULL),
@@ -739,6 +740,14 @@ void gprs_rlcmac_tbf::poll_timeout()
 		poll_fn, poll_ts, bts->current_frame_number());
 
 	poll_state = GPRS_RLCMAC_POLL_NONE;
+
+	m_n3101++;
+	if (m_n3101 == bts->bts_data()->n3101) {
+		LOGP(DRLCMAC, LOGL_NOTICE, " N3101 exceeded MAX (%u)\n", bts->bts_data()->n3101);
+		set_state(GPRS_RLCMAC_RELEASING);
+		t_start(T3169, bts->bts_data()->t3169, 0, "MAX N3101 reached", false);
+		return;
+	}
 
 	if (ul_tbf && ul_tbf->handle_ctrl_ack()) {
 		if (!ul_tbf->ctrl_ack_to_toggle()) {

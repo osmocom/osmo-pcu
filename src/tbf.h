@@ -296,6 +296,8 @@ struct gprs_rlcmac_tbf {
 	/* store the BTS this TBF belongs to */
 	BTS *bts;
 
+	uint8_t m_n3101; /* N3101 counter */
+
 	/*
 	 * private fields. We can't make it private as it is breaking the
 	 * llist macros.
