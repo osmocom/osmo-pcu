@@ -216,9 +216,9 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 			}
 			/* Clean up the old MS object */
 			/* TODO: Put this into a separate function, use timer? */
-			if (ms_old->ul_tbf() && ms_old->ul_tbf()->T == 0)
+			if (ms_old->ul_tbf() && !ms_old->ul_tbf()->timers_pending(T_MAX))
 				tbf_free(ms_old->ul_tbf());
-			if (ms_old->dl_tbf() && ms_old->dl_tbf()->T == 0)
+			if (ms_old->dl_tbf() && !ms_old->dl_tbf()->timers_pending(T_MAX))
 				tbf_free(ms_old->dl_tbf());
 
 			ms->merge_old_ms(ms_old);
@@ -485,6 +485,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 {
 	/* stop pending timer */
 	stop_timer("assignment (DL-TBF)");
+	stop_timers("assignment (DL-TBF)");
 
 	/* check for downlink tbf:  */
 	if (old_tbf) {
@@ -651,7 +652,7 @@ bool gprs_rlcmac_dl_tbf::handle_ack_nack()
 
 	/* reset N3105 */
 	n3105 = 0;
-	stop_t3191();
+	t_stop(T3191, "ACK/NACK received");
 	poll_state = GPRS_RLCMAC_POLL_NONE;
 
 	return ack_recovered;
@@ -854,7 +855,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			m_tx_counter = 0;
 			/* start timer whenever we send the final block */
 			if (is_final)
-				tbf_timer_start(this, 3191, bts_data()->t3191, 0, "final block (DL-TBF)");
+				t_start(T3191, bts_data()->t3191, 0, "final block (DL-TBF)", true);
 
 			clear_poll_timeout_flag();
 
@@ -1116,9 +1117,8 @@ int gprs_rlcmac_dl_tbf::release()
 	set_state(GPRS_RLCMAC_WAIT_RELEASE);
 
 	/* start T3193 */
-	tbf_timer_start(this, 3193,
-		bts_data()->t3193_msec / 1000,
-			(bts_data()->t3193_msec % 1000) * 1000, "release (DL-TBF)");
+	t_start(T3193, bts_data()->t3193_msec / 1000, (bts_data()->t3193_msec % 1000) * 1000,
+		  "release (DL-TBF)", true);
 
 	/* reset rlc states */
 	m_tx_counter = 0;

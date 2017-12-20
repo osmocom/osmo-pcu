@@ -687,7 +687,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 			tbf->set_ta(ta);
 			tbf->set_state(GPRS_RLCMAC_FLOW);
 			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
-			tbf_timer_start(tbf, 3169, m_bts.t3169, 0, "RACH (new UL-TBF)");
+			tbf->t_start(T3169, m_bts.t3169, 0, "RACH (new UL-TBF)", true);
 			LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] START\n");
 			LOGPTBF(tbf, LOGL_DEBUG, "RX: [PCU <- BTS] RACH "
 					"qbit-ta=%d ra=0x%02x, Fn=%d "

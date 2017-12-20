@@ -32,6 +32,7 @@
 
 extern "C" {
 #include <osmocom/core/msgb.h>
+#include <osmocom/core/utils.h>
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/stats.h>
 }
@@ -56,6 +57,14 @@ const struct value_string gprs_rlcmac_tbf_ul_ass_state_names[] = {
 	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ),
 	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ASS_WAIT_ACK),
  	{ 0, NULL }
+};
+
+static const struct value_string tbf_timers_names[] = {
+	OSMO_VALUE_STRING(T3169),
+	OSMO_VALUE_STRING(T3191),
+	OSMO_VALUE_STRING(T3193),
+	OSMO_VALUE_STRING(T3195),
+	{ 0, NULL }
 };
 
 static const struct rate_ctr_desc tbf_ctr_description[] = {
@@ -182,6 +191,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	 * Just set them to 0 like talloc_zero did */
 	memset(&pdch, 0, sizeof(pdch));
 	memset(&timer, 0, sizeof(timer));
+	memset(&T31, 0, sizeof(T31));
 	memset(&m_rlc, 0, sizeof(m_rlc));
 	memset(&gsm_timer, 0, sizeof(gsm_timer));
 
@@ -323,7 +333,7 @@ void gprs_rlcmac_tbf::merge_and_clear_ms(GprsMs *old_ms)
 
 	/* Clean up the old MS object */
 	/* TODO: Use timer? */
-	if (old_ms->ul_tbf() && old_ms->ul_tbf()->T == 0) {
+	if (old_ms->ul_tbf() && !old_ms->ul_tbf()->timers_pending(T_MAX)) {
 		if (old_ms->ul_tbf() == this) {
 			LOGP(DRLCMAC, LOGL_ERROR,
 				"%s is referred by the old MS "
@@ -334,7 +344,7 @@ void gprs_rlcmac_tbf::merge_and_clear_ms(GprsMs *old_ms)
 			tbf_free(old_ms->ul_tbf());
 		}
 	}
-	if (old_ms->dl_tbf() && old_ms->dl_tbf()->T == 0) {
+	if (old_ms->dl_tbf() && !old_ms->dl_tbf()->timers_pending(T_MAX)) {
 		if (old_ms->dl_tbf() == this) {
 			LOGP(DRLCMAC, LOGL_ERROR,
 				"%s is referred by the old MS "
@@ -393,7 +403,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	tbf->m_contention_resolution_done = 1;
 	tbf->set_state(GPRS_RLCMAC_ASSIGN);
 	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
-	tbf_timer_start(tbf, 3169, bts->t3169, 0, "allocation (UL-TBF)");
+	tbf->t_start(T3169, bts->t3169, 0, "allocation (UL-TBF)", true);
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(tbf->ms());
 
@@ -462,6 +472,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 		     get_value_string(gprs_rlcmac_tbf_dl_ass_state_names,
 				      tbf->dl_ass_state));
 	tbf->stop_timer("freeing TBF");
+	tbf->stop_timers("freeing TBF");
 	/* TODO: Could/Should generate  bssgp_tx_llc_discarded */
 	tbf_unlink_pdch(tbf);
 	llist_del(&tbf->list());
@@ -547,9 +558,40 @@ void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
 	osmo_timer_schedule(&tbf->timer, seconds, microseconds);
 }
 
-void gprs_rlcmac_tbf::stop_t3191()
+void gprs_rlcmac_tbf::t_stop(enum tbf_timers t, const char *reason)
 {
-	return stop_timer("T3191");
+	if (t >= T_MAX) {
+		LOGPTBF(this, LOGL_ERROR, "attempting to stop unknown timer %s [%s]\n",
+			get_value_string(tbf_timers_names, t), reason);
+	}
+
+	if (osmo_timer_pending(&T31[t])) {
+		LOGPTBF(this, LOGL_DEBUG, "stopping timer %s [%s]\n",
+			get_value_string(tbf_timers_names, t), reason);
+		osmo_timer_del(&T31[t]);
+	}
+}
+
+/* check if any of T31xx timer(s) are pending */
+bool gprs_rlcmac_tbf::timers_pending(enum tbf_timers t)
+{
+	uint8_t i;
+
+	if (t != T_MAX)
+		return osmo_timer_pending(&T31[t]);
+
+	for (i = T3169; i < T_MAX; i++)
+		if (osmo_timer_pending(&T31[i]))
+			return true;
+
+	return false;
+}
+
+void gprs_rlcmac_tbf::stop_timers(const char *reason)
+{
+	uint8_t i;
+	for (i = 0; i < T_MAX; i++)
+		t_stop((enum tbf_timers)i, reason);
 }
 
 void gprs_rlcmac_tbf::stop_timer(const char *reason)
@@ -559,6 +601,60 @@ void gprs_rlcmac_tbf::stop_timer(const char *reason)
 			T, reason);
 		osmo_timer_del(&timer);
 	}
+}
+
+static inline void tbf_timeout_free(struct gprs_rlcmac_tbf *tbf, enum tbf_timers t, bool run_diag)
+{
+	LOGPTBF(tbf, LOGL_NOTICE, "%s timeout expired, freeing TBF\n",
+		get_value_string(tbf_timers_names, t));
+
+	if (run_diag)
+		tbf->rlcmac_diag();
+
+	tbf_free(tbf);
+}
+
+#define T_CBACK(t, diag) static void cb_##t(void *_tbf) { tbf_timeout_free((struct gprs_rlcmac_tbf *)_tbf, t, diag); }
+
+T_CBACK(T3169, true)
+T_CBACK(T3191, true)
+T_CBACK(T3193, false)
+T_CBACK(T3195, true)
+
+void gprs_rlcmac_tbf::t_start(enum tbf_timers t, uint32_t sec, uint32_t microsec, const char *reason, bool force)
+{
+	if (t >= T_MAX) {
+		LOGPTBF(this, LOGL_ERROR, "attempting to start unknown timer %s [%s]\n",
+			get_value_string(tbf_timers_names, t), reason);
+	}
+
+	if (!force && osmo_timer_pending(&T31[t]))
+		return;
+
+	LOGPTBF(this, LOGL_DEBUG, "%sstarting timer %s [%s] with %u sec. %u microsec.\n",
+		osmo_timer_pending(&T31[t]) ? "re" : "", get_value_string(tbf_timers_names, t), reason, sec, microsec);
+
+	T31[t].data = this;
+
+	switch(t) {
+	case T3169:
+		T31[t].cb = cb_T3169;
+		break;
+	case T3191:
+		T31[t].cb = cb_T3191;
+		break;
+	case T3193:
+		T31[t].cb = cb_T3193;
+		break;
+	case T3195:
+		T31[t].cb = cb_T3195;
+		break;
+	default:
+		LOGPTBF(this, LOGL_ERROR, "attempting to set callback for unknown timer %s [%s]\n",
+			get_value_string(tbf_timers_names, t), reason);
+	}
+
+	osmo_timer_schedule(&T31[t], sec, microsec);
 }
 
 int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
@@ -658,7 +754,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 				     "- N3103 exceeded\n");
 				bts->pkt_ul_ack_nack_poll_failed();
 				ul_tbf->set_state(GPRS_RLCMAC_RELEASING);
-				tbf_timer_start(ul_tbf, 3169, ul_tbf->bts->bts_data()->t3169, 0, "MAX N3103 reached");
+				ul_tbf->t_start(T3169, ul_tbf->bts->bts_data()->t3169, 0, "MAX N3103 reached", false);
 				return;
 			}
 			/* reschedule UL ack */
@@ -680,7 +776,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		if (n3105 == bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
 			set_state(GPRS_RLCMAC_RELEASING);
-			tbf_timer_start(this, 3195, bts_data()->t3195, 0, "MAX N3105 reached");
+			t_start(T3195, bts_data()->t3195, 0, "MAX N3105 reached", true);
 			bts->rlc_ass_failed();
 			bts->pua_poll_failed();
 			return;
@@ -702,7 +798,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		if (n3105 == bts->bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
 			set_state(GPRS_RLCMAC_RELEASING);
-			tbf_timer_start(this, 3195, bts_data()->t3195, 0, "MAX N3105 reached");
+			t_start(T3195, bts_data()->t3195, 0, "MAX N3105 reached", true);
 			bts->rlc_ass_failed();
 			bts->pda_poll_failed();
 			return;
@@ -728,7 +824,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		if (dl_tbf->n3105 == dl_tbf->bts->bts_data()->n3105) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "- N3105 exceeded\n");
 			dl_tbf->set_state(GPRS_RLCMAC_RELEASING);
-			tbf_timer_start(dl_tbf, 3195, dl_tbf->bts_data()->t3195, 0, "MAX N3105 reached");
+			dl_tbf->t_start(T3195, dl_tbf->bts_data()->t3195, 0, "MAX N3105 reached", true);
 			bts->pkt_dl_ack_nack_poll_failed();
 			bts->rlc_ack_failed();
 			return;
@@ -999,64 +1095,47 @@ void gprs_rlcmac_tbf::handle_timeout()
 {
 	LOGPTBF(this, LOGL_DEBUG, "timer %u expired.\n", T);
 
-	switch (T) {
-	case 0: /* assignment */
-		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
-			if (state_is(GPRS_RLCMAC_ASSIGN)) {
-				LOGPTBF(this, LOGL_NOTICE,
-					"releasing due to PACCH assignment timeout.\n");
-				tbf_free(this);
-				return;
-			} else
-				LOGPTBF(this, LOGL_ERROR,
-					"Error: TBF is not in assign state\n");
-		}
-		if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
-			gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
-			dl_tbf->m_wait_confirm = 0;
-			if (dl_tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
-				tbf_assign_control_ts(dl_tbf);
-
-				if (!dl_tbf->upgrade_to_multislot) {
-					/* change state to FLOW, so scheduler
-					 * will start transmission */
-					dl_tbf->set_state(GPRS_RLCMAC_FLOW);
-					break;
-				}
-
-				/* This tbf can be upgraded to use multiple DL
-				 * timeslots and now that there is already one
-				 * slot assigned send another DL assignment via
-				 * PDCH. */
-
-				/* keep to flags */
-				dl_tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
-
-				dl_tbf->update();
-
-				dl_tbf->trigger_ass(dl_tbf);
-			} else
-				LOGPTBF(dl_tbf, LOGL_NOTICE,
-					"Continue flow after IMM.ASS confirm\n");
-		}
-		break;
-	case 3169:
-	case 3191:
-	case 3195:
-		LOGPTBF(this, LOGL_NOTICE, "T%d timeout during "
-			"transsmission\n", T);
-		rlcmac_diag();
-		/* fall through */
-	case 3193:
-		LOGP(DRLCMAC, LOGL_DEBUG,
-			"%s will be freed due to timeout\n", tbf_name(this));
-		/* free TBF */
-		tbf_free(this);
+	if (T) {
+		LOGPTBF(this, LOGL_ERROR, "%s timer expired in unknown mode: %u\n", T);
 		return;
-		break;
-	default:
-		LOGP(DRLCMAC, LOGL_ERROR,
-			"%s timer expired in unknown mode: %u\n", tbf_name(this), T);
+	}
+
+	/* assignment */
+	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
+		if (state_is(GPRS_RLCMAC_ASSIGN)) {
+			LOGPTBF(this, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
+			tbf_free(this);
+			return;
+		} else
+			LOGPTBF(this, LOGL_ERROR, "Error: TBF is not in assign state\n");
+	}
+
+	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
+		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
+		dl_tbf->m_wait_confirm = 0;
+		if (dl_tbf->state_is(GPRS_RLCMAC_ASSIGN)) {
+			tbf_assign_control_ts(dl_tbf);
+
+			if (!dl_tbf->upgrade_to_multislot) {
+				/* change state to FLOW, so scheduler
+				 * will start transmission */
+				dl_tbf->set_state(GPRS_RLCMAC_FLOW);
+				return;
+			}
+
+			/* This tbf can be upgraded to use multiple DL
+			 * timeslots and now that there is already one
+			 * slot assigned send another DL assignment via
+			 * PDCH. */
+
+			/* keep to flags */
+			dl_tbf->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
+
+			dl_tbf->update();
+
+			dl_tbf->trigger_ass(dl_tbf);
+		} else
+			LOGPTBF(dl_tbf, LOGL_NOTICE, "Continue flow after IMM.ASS confirm\n");
 	}
 }
 

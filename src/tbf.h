@@ -138,6 +138,24 @@ enum tbf_egprs_ul_counters {
 #define LOGPTBFUL(tbf, level, fmt, args...) LOGP(DRLCMACUL, level, "%s " fmt, tbf_name(tbf), ## args)
 #define LOGPTBFDL(tbf, level, fmt, args...) LOGP(DRLCMACDL, level, "%s " fmt, tbf_name(tbf), ## args)
 
+enum tbf_timers {
+	/* Wait for reuse of USF and TFI(s) after the MS uplink assignment for this TBF is invalid. */
+	T3169,
+
+	/* Wait for reuse of TFI(s) after sending of the last RLC Data Block on this TBF.
+	   Wait for reuse of TFI(s) after sending the PACKET TBF RELEASE for an MBMS radio bearer. */
+	T3191,
+
+	/* Wait for reuse of TFI(s) after reception of the final PACKET DOWNLINK ACK/NACK from the
+	   MS for this TBF. */
+	T3193,
+
+	/* Wait for reuse of TFI(s) when there is no response from the MS
+	   (radio failure or cell change) for this TBF/MBMS radio bearer. */
+	T3195,
+	T_MAX
+};
+
 #define GPRS_RLCMAC_FLAG_CCCH		0 /* assignment on CCCH */
 #define GPRS_RLCMAC_FLAG_PACCH		1 /* assignment on PACCH */
 #define GPRS_RLCMAC_FLAG_UL_DATA	2 /* uplink data received */
@@ -177,7 +195,10 @@ struct gprs_rlcmac_tbf {
 	int update();
 	void handle_timeout();
 	void stop_timer(const char *reason);
-	void stop_t3191();
+	void stop_timers(const char *reason);
+	bool timers_pending(enum tbf_timers t);
+	void t_stop(enum tbf_timers t, const char *reason);
+	void t_start(enum tbf_timers t, uint32_t sec, uint32_t microsec, const char *reason, bool force);
 	int establish_dl_tbf_on_pacch();
 
 	int check_polling(uint32_t fn, uint8_t ts,
@@ -305,7 +326,7 @@ private:
 	LListHead<gprs_rlcmac_tbf> m_list;
 	LListHead<gprs_rlcmac_tbf> m_ms_list;
 	bool m_egprs_enabled;
-
+	struct osmo_timer_list T31[T_MAX];
 	mutable char m_name_buf[60];
 };
 
