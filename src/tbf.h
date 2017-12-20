@@ -169,6 +169,8 @@ enum tbf_timers {
 #define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
+#define T_START(tbf, t, sec, usec, r, f) tbf->t_start(t, sec, usec, r, f, __FILE__, __LINE__)
+
 struct gprs_rlcmac_tbf {
 	gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir);
 
@@ -200,7 +202,8 @@ struct gprs_rlcmac_tbf {
 	void stop_timers(const char *reason);
 	bool timers_pending(enum tbf_timers t);
 	void t_stop(enum tbf_timers t, const char *reason);
-	void t_start(enum tbf_timers t, uint32_t sec, uint32_t microsec, const char *reason, bool force);
+	void t_start(enum tbf_timers t, uint32_t sec, uint32_t microsec, const char *reason, bool force,
+		     const char *file, unsigned line);
 	int establish_dl_tbf_on_pacch();
 
 	int check_polling(uint32_t fn, uint8_t ts,

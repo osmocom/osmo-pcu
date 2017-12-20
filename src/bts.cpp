@@ -554,7 +554,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
 
 	if (dl_tbf->m_wait_confirm)
-		dl_tbf->t_start(T0, 0, T_ASS_AGCH_USEC, "assignment (AGCH)", true);
+		T_START(dl_tbf, T0, 0, T_ASS_AGCH_USEC, "assignment (AGCH)", true);
 
 	return 0;
 }
@@ -687,7 +687,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, uint8_t is_11bit,
 			tbf->set_ta(ta);
 			tbf->set_state(GPRS_RLCMAC_FLOW);
 			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
-			tbf->t_start(T3169, m_bts.t3169, 0, "RACH (new UL-TBF)", true);
+			T_START(tbf, T3169, m_bts.t3169, 0, "RACH (new UL-TBF)", true);
 			LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] START\n");
 			LOGPTBF(tbf, LOGL_DEBUG, "RX: [PCU <- BTS] RACH "
 					"qbit-ta=%d ra=0x%02x, Fn=%d "
