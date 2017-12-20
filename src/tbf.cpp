@@ -60,6 +60,7 @@ const struct value_string gprs_rlcmac_tbf_ul_ass_state_names[] = {
 };
 
 static const struct value_string tbf_timers_names[] = {
+	OSMO_VALUE_STRING(T0),
 	OSMO_VALUE_STRING(T3169),
 	OSMO_VALUE_STRING(T3191),
 	OSMO_VALUE_STRING(T3193),
@@ -170,7 +171,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	poll_fn(0),
 	poll_ts(0),
 	n3105(0),
-	T(0),
 	fT(0),
 	num_fT_exp(0),
 	state(GPRS_RLCMAC_NULL),
@@ -191,8 +191,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	/* The classes of these members do not have proper constructors yet.
 	 * Just set them to 0 like talloc_zero did */
 	memset(&pdch, 0, sizeof(pdch));
-	memset(&timer, 0, sizeof(timer));
-	memset(&T31, 0, sizeof(T31));
+	memset(&T, 0, sizeof(T));
 	memset(&m_rlc, 0, sizeof(m_rlc));
 	memset(&gsm_timer, 0, sizeof(gsm_timer));
 
@@ -472,7 +471,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 			"be sure not to free in this state. PLEASE FIX!\n",
 		     get_value_string(gprs_rlcmac_tbf_dl_ass_state_names,
 				      tbf->dl_ass_state));
-	tbf->stop_timer("freeing TBF");
+
 	tbf->stop_timers("freeing TBF");
 	/* TODO: Could/Should generate  bssgp_tx_llc_discarded */
 	tbf_unlink_pdch(tbf);
@@ -538,27 +537,6 @@ const char *gprs_rlcmac_tbf::tbf_state_name[] = {
 	"RELEASING",
 };
 
-void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
-		     unsigned int seconds, unsigned int microseconds, const char *reason)
-{
-	LOGPC(DRLCMAC, (T != tbf->T) ? LOGL_ERROR : LOGL_DEBUG,
-	      "%s %sstarting timer T%u [%s] with %u sec. %u microsec.",
-	      tbf_name(tbf), osmo_timer_pending(&tbf->timer) ? "re" : "", T, reason, seconds, microseconds);
-
-	if (T != tbf->T && osmo_timer_pending(&tbf->timer))
-		LOGPC(DRLCMAC, LOGL_ERROR, " while old timer T%u pending", tbf->T);
-
-	LOGPC(DRLCMAC, (T != tbf->T) ? LOGL_ERROR : LOGL_DEBUG, "\n");
-
-	tbf->T = T;
-
-	/* Tunning timers can be safely re-scheduled. */
-	tbf->timer.data = tbf;
-	tbf->timer.cb = &tbf_timer_cb;
-
-	osmo_timer_schedule(&tbf->timer, seconds, microseconds);
-}
-
 void gprs_rlcmac_tbf::t_stop(enum tbf_timers t, const char *reason)
 {
 	if (t >= T_MAX) {
@@ -579,10 +557,11 @@ bool gprs_rlcmac_tbf::timers_pending(enum tbf_timers t)
 	uint8_t i;
 
 	if (t != T_MAX)
-		return osmo_timer_pending(&T31[t]);
+		return osmo_timer_pending(&T[t]);
 
+	/* we don't start with T0 because it's internal timer which requires special handling */
 	for (i = T3169; i < T_MAX; i++)
-		if (osmo_timer_pending(&T31[i]))
+		if (osmo_timer_pending(&T[i]))
 			return true;
 
 	return false;
@@ -591,17 +570,9 @@ bool gprs_rlcmac_tbf::timers_pending(enum tbf_timers t)
 void gprs_rlcmac_tbf::stop_timers(const char *reason)
 {
 	uint8_t i;
-	for (i = 0; i < T_MAX; i++)
+	/* we start with T0 because timer reset does not require any special handling */
+	for (i = T0; i < T_MAX; i++)
 		t_stop((enum tbf_timers)i, reason);
-}
-
-void gprs_rlcmac_tbf::stop_timer(const char *reason)
-{
-	if (osmo_timer_pending(&timer)) {
-		LOGPTBF(this, LOGL_DEBUG, "stopping timer T%u [%s]\n",
-			T, reason);
-		osmo_timer_del(&timer);
-	}
 }
 
 static inline void tbf_timeout_free(struct gprs_rlcmac_tbf *tbf, enum tbf_timers t, bool run_diag)
@@ -629,33 +600,36 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, uint32_t sec, uint32_t microsec
 			get_value_string(tbf_timers_names, t), reason);
 	}
 
-	if (!force && osmo_timer_pending(&T31[t]))
+	if (!force && osmo_timer_pending(&T[t]))
 		return;
 
 	LOGPTBF(this, LOGL_DEBUG, "%sstarting timer %s [%s] with %u sec. %u microsec.\n",
-		osmo_timer_pending(&T31[t]) ? "re" : "", get_value_string(tbf_timers_names, t), reason, sec, microsec);
+		osmo_timer_pending(&T[t]) ? "re" : "", get_value_string(tbf_timers_names, t), reason, sec, microsec);
 
-	T31[t].data = this;
+	T[t].data = this;
 
 	switch(t) {
+	case T0:
+		T[t].cb = tbf_timer_cb;
+		break;
 	case T3169:
-		T31[t].cb = cb_T3169;
+		T[t].cb = cb_T3169;
 		break;
 	case T3191:
-		T31[t].cb = cb_T3191;
+		T[t].cb = cb_T3191;
 		break;
 	case T3193:
-		T31[t].cb = cb_T3193;
+		T[t].cb = cb_T3193;
 		break;
 	case T3195:
-		T31[t].cb = cb_T3195;
+		T[t].cb = cb_T3195;
 		break;
 	default:
 		LOGPTBF(this, LOGL_ERROR, "attempting to set callback for unknown timer %s [%s]\n",
 			get_value_string(tbf_timers_names, t), reason);
 	}
 
-	osmo_timer_schedule(&T31[t], sec, microsec);
+	osmo_timer_schedule(&T[t], sec, microsec);
 }
 
 int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
@@ -1102,12 +1076,7 @@ static void tbf_timer_cb(void *_tbf)
 
 void gprs_rlcmac_tbf::handle_timeout()
 {
-	LOGPTBF(this, LOGL_DEBUG, "timer %u expired.\n", T);
-
-	if (T) {
-		LOGPTBF(this, LOGL_ERROR, "%s timer expired in unknown mode: %u\n", T);
-		return;
-	}
+	LOGPTBF(this, LOGL_DEBUG, "timer 0 expired.\n");
 
 	/* assignment */
 	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
@@ -1267,7 +1236,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 		new_dl_tbf->set_state(GPRS_RLCMAC_FLOW);
 		tbf_assign_control_ts(new_dl_tbf);
 		/* stop pending assignment timer */
-		new_dl_tbf->stop_timer("assignment (DL-TBF)");
+		new_dl_tbf->t_stop(T0, "assignment (DL-TBF)");
 
 	}
 
@@ -1297,7 +1266,7 @@ struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
 
 	/* Start Tmr only if it is UL TBF */
 	if (direction == GPRS_RLCMAC_UL_TBF)
-		tbf_timer_start(this, 0, Treject_pacch, "reject (PACCH)");
+		t_start(T0, 0, T_REJ_PACCH_USEC, "reject (PACCH)", true);
 
 	return msg;
 

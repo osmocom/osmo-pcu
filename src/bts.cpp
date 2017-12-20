@@ -554,7 +554,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
 
 	if (dl_tbf->m_wait_confirm)
-		tbf_timer_start(dl_tbf, 0, Tassign_agch, "assignment (AGCH)");
+		dl_tbf->t_start(T0, 0, T_ASS_AGCH_USEC, "assignment (AGCH)", true);
 
 	return 0;
 }
@@ -1041,7 +1041,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		}
 		new_tbf->set_state(GPRS_RLCMAC_FLOW);
 		/* stop pending assignment timer */
-		new_tbf->stop_timer("control acked (DL-TBF)");
+		new_tbf->t_stop(T0, "control acked (DL-TBF)");
 		if ((new_tbf->state_flags &
 			(1 << GPRS_RLCMAC_FLAG_TO_DL_ASS))) {
 			new_tbf->state_flags &=

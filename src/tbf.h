@@ -39,9 +39,9 @@ class GprsMs;
  * TBF instance
  */
 
-#define Tassign_agch 0,200000	/* waiting after IMM.ASS confirm */
-#define Tassign_pacch 2,0	/* timeout for pacch assigment */
-#define Treject_pacch 0,2000	/* timeout for tbf reject for PRR*/
+#define T_ASS_AGCH_USEC 200000	/* waiting after IMM.ASS confirm */
+#define T_ASS_PACCH_SEC 2	/* timeout for pacch assigment */
+#define T_REJ_PACCH_USEC 2000	/* timeout for tbf reject for PRR*/
 
 enum gprs_rlcmac_tbf_state {
 	GPRS_RLCMAC_NULL = 0,	/* new created TBF */
@@ -139,6 +139,9 @@ enum tbf_egprs_ul_counters {
 #define LOGPTBFDL(tbf, level, fmt, args...) LOGP(DRLCMACDL, level, "%s " fmt, tbf_name(tbf), ## args)
 
 enum tbf_timers {
+	/* internal assign/reject timer */
+	T0,
+
 	/* Wait for reuse of USF and TFI(s) after the MS uplink assignment for this TBF is invalid. */
 	T3169,
 
@@ -194,7 +197,6 @@ struct gprs_rlcmac_tbf {
 
 	int update();
 	void handle_timeout();
-	void stop_timer(const char *reason);
 	void stop_timers(const char *reason);
 	bool timers_pending(enum tbf_timers t);
 	void t_stop(enum tbf_timers t, const char *reason);
@@ -266,9 +268,6 @@ struct gprs_rlcmac_tbf {
 	gprs_rlc m_rlc;
 	
 	uint8_t n3105;	/* N3105 counter */
-
-	struct osmo_timer_list	timer;
-	unsigned int T; /* Txxxx number */
 	
 	struct osmo_gsm_timer_list	gsm_timer;
 	unsigned int fT; /* fTxxxx number */
@@ -328,7 +327,7 @@ private:
 	LListHead<gprs_rlcmac_tbf> m_list;
 	LListHead<gprs_rlcmac_tbf> m_ms_list;
 	bool m_egprs_enabled;
-	struct osmo_timer_list T31[T_MAX];
+	struct osmo_timer_list T[T_MAX];
 	mutable char m_name_buf[60];
 };
 
@@ -351,9 +350,6 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 	GprsMs *ms, uint32_t tlli, uint8_t trx_no, uint8_t ts_no);
 
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
-
-void tbf_timer_start(struct gprs_rlcmac_tbf *tbf, unsigned int T,
-		     unsigned int seconds, unsigned int microseconds, const char *reason);
 
 inline bool gprs_rlcmac_tbf::state_is(enum gprs_rlcmac_tbf_state rhs) const
 {

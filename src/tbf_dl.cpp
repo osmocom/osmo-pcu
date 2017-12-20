@@ -484,7 +484,6 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 {
 	/* stop pending timer */
-	stop_timer("assignment (DL-TBF)");
 	stop_timers("assignment (DL-TBF)");
 
 	/* check for downlink tbf:  */
@@ -499,7 +498,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 
 		/* start timer */
-		tbf_timer_start(this, 0, Tassign_pacch, "assignment (PACCH)");
+		t_start(T0, T_ASS_PACCH_SEC, 0, "assignment (PACCH)", true);
 	} else {
 		LOGPTBFDL(this, LOGL_DEBUG, "Send dowlink assignment on PCH, no TBF exist (IMSI=%s)\n",
 			  imsi());
