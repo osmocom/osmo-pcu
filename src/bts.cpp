@@ -219,7 +219,7 @@ BTS::BTS()
 	}
 
 	/* The static allocator might have already registered the counter group.
-	   If this happens and we still called explicitly (in tests/* for example)
+	   If this happens and we still called explicitly (in tests/ for example)
 	   than just allocate the group with different index.
 	   This shall be removed once weget rid of BTS singleton */
 	if (rate_ctr_get_group_by_name_idx(bts_ctrg_desc.group_name_prefix, 0))
@@ -1439,7 +1439,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			return;
 		}
 		LOGPTBFUL(ul_tbf, LOGL_ERROR,
-			"RX: [PCU <- BTS] %s FIXME: Packet resource request\n");
+			"RX: [PCU <- BTS] FIXME: Packet resource request\n");
 
 		/* Reset N3101 counter: */
 		ul_tbf->m_n3101 = 0;
