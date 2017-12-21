@@ -44,7 +44,8 @@ elif [ "$with_dsp" = lc15 ]; then
   cd "$base"
 
 elif [ -z "$with_dsp" -o "$with_dsp" = none ]; then
-  echo "Direct DSP access disabled"
+  echo "Direct DSP access disabled, sanitizer enabled"
+  PCU_CONFIG="$PCU_CONFIG --enable-sanitize"
 else
   echo 'Invalid $with_dsp value:' $with_dsp
   exit 1
