@@ -543,6 +543,7 @@ void gprs_rlcmac_tbf::t_stop(enum tbf_timers t, const char *reason)
 	if (t >= T_MAX) {
 		LOGPTBF(this, LOGL_ERROR, "attempting to stop unknown timer %s [%s]\n",
 			get_value_string(tbf_timers_names, t), reason);
+		return;
 	}
 
 	if (osmo_timer_pending(&T[t])) {
@@ -600,6 +601,7 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, uint32_t sec, uint32_t microsec
 	if (t >= T_MAX) {
 		LOGPSRC(DRLCMAC, LOGL_ERROR, file, line, "%s attempting to start unknown timer %s [%s]\n",
 			tbf_name(this), get_value_string(tbf_timers_names, t), reason);
+		return;
 	}
 
 	if (!force && osmo_timer_pending(&T[t]))
