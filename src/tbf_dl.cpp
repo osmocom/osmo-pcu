@@ -666,7 +666,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	unsigned msg_len;
 	bool need_poll;
 	/* TODO: support MCS-7 - MCS-9, where data_block_idx can be 1 */
-	unsigned int data_block_idx = 0;
+	uint8_t data_block_idx = 0;
 	unsigned int rrbp;
 	uint32_t new_poll_fn;
 	int rc;
@@ -752,8 +752,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "- Copying %u RLC blocks, %u BSNs\n", rlc.num_data_blocks, num_bsns);
 
-	/* Copy block(s) to RLC message */
-	for (data_block_idx = 0; data_block_idx < rlc.num_data_blocks;
+	/* Copy block(s) to RLC message: the num_data_blocks cannot be more than 2 - see assert above */
+	for (data_block_idx = 0; data_block_idx < OSMO_MIN(rlc.num_data_blocks, 2);
 		data_block_idx++)
 	{
 		int bsn;
@@ -777,7 +777,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			OSMO_ASSERT(m_rlc.block(bsn)->next_ps >= EGPRS_PS_1);
 			OSMO_ASSERT(m_rlc.block(bsn)->next_ps <= EGPRS_PS_3);
 		}
-		OSMO_ASSERT(data_block_idx < 2); /* punct defined above as 2-element array */
+
 		punct[data_block_idx] = m_rlc.block(bsn)->next_ps;
 
 		rdbi = &rlc.block_info[data_block_idx];

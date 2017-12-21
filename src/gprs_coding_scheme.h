@@ -70,7 +70,7 @@ public:
 
 	operator bool() const {return m_scheme != UNKNOWN;}
 	operator Scheme() const {return m_scheme;}
-	unsigned int to_num() const;
+	uint8_t to_num() const;
 
 	GprsCodingScheme& operator =(Scheme s);
 	bool operator == (Scheme s) const;
@@ -91,20 +91,20 @@ public:
 	void dec();
 	void decToSingleBlock(bool *needStuffing);
 
-	unsigned int sizeUL() const;
-	unsigned int sizeDL() const;
-	unsigned int usedSizeUL() const;
-	unsigned int usedSizeDL() const;
-	unsigned int maxBytesUL() const;
-	unsigned int maxBytesDL() const;
-	unsigned int spareBitsUL() const;
-	unsigned int spareBitsDL() const;
-	unsigned int maxDataBlockBytes() const;
-	unsigned int numDataBlocks() const;
-	unsigned int numDataHeaderBitsUL() const;
-	unsigned int numDataHeaderBitsDL() const;
-	unsigned int numDataBlockHeaderBits() const;
-	unsigned int optionalPaddingBits() const;
+	uint8_t sizeUL() const;
+	uint8_t sizeDL() const;
+	uint8_t usedSizeUL() const;
+	uint8_t usedSizeDL() const;
+	uint8_t maxBytesUL() const;
+	uint8_t maxBytesDL() const;
+	uint8_t spareBitsUL() const;
+	uint8_t spareBitsDL() const;
+	uint8_t maxDataBlockBytes() const;
+	uint8_t numDataBlocks() const;
+	uint8_t numDataHeaderBitsUL() const;
+	uint8_t numDataHeaderBitsDL() const;
+	uint8_t numDataBlockHeaderBits() const;
+	uint8_t optionalPaddingBits() const;
 	const char *name() const;
 	HeaderType headerTypeData() const;
 	HeaderType headerTypeControl() const;
@@ -127,7 +127,7 @@ private:
 	enum Scheme m_scheme;
 };
 
-inline unsigned int GprsCodingScheme::to_num() const
+inline uint8_t GprsCodingScheme::to_num() const
 {
 	if (isGprs())
 		return (m_scheme - CS1) + 1;

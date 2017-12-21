@@ -375,7 +375,7 @@ void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
 
 unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs,
 	enum egprs_puncturing_values punct,
-	enum egprs_puncturing_values punct2, int with_padding)
+	enum egprs_puncturing_values punct2, bool with_padding)
 {
 	/* validate that punct and punct2 are as expected */
 	switch (GprsCodingScheme::Scheme(cs)) {

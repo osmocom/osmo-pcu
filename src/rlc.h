@@ -163,7 +163,7 @@ struct gprs_rlc_data_info {
 	unsigned int es_p;
 	unsigned int rrbp;
 	unsigned int pr;
-	unsigned int num_data_blocks;
+	uint8_t num_data_blocks; /* this can actually be only 0, 1, 2: enforced in gprs_rlc_data_header_init() */
 	unsigned int with_padding;
 	unsigned int data_offs_bits[2];
 	struct gprs_rlc_data_block_info block_info[2];
@@ -218,7 +218,7 @@ void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
 void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
 	GprsCodingScheme cs, bool with_padding, const unsigned int spb);
 unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, enum egprs_puncturing_values
-	punct, enum egprs_puncturing_values punct2, int with_padding);
+	punct, enum egprs_puncturing_values punct2, bool with_padding);
 void gprs_rlc_mcs_cps_decode(unsigned int cps, GprsCodingScheme cs,
 	int *punct, int *punct2, int *with_padding);
 enum egprs_puncturing_values gprs_get_punct_scheme(enum egprs_puncturing_values

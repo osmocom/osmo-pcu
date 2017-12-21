@@ -55,12 +55,12 @@ enum GprsCodingScheme::Scheme GprsCodingScheme::egprs_mcs_retx_tbl[MAX_NUM_ARQ]
 
 static struct {
 	struct {
-		unsigned int bytes;
-		unsigned int ext_bits;
-		unsigned int data_header_bits;
+		uint8_t bytes;
+		uint8_t ext_bits;
+		uint8_t data_header_bits;
 	} uplink, downlink;
-	unsigned int data_bytes;
-	unsigned int optional_padding_bits;
+	uint8_t data_bytes;
+	uint8_t optional_padding_bits;
 	const char *name;
 	GprsCodingScheme::HeaderType data_hdr;
 	GprsCodingScheme::Family family;
@@ -99,10 +99,10 @@ static struct {
 
 static struct {
 	struct {
-		int data_header_bits;
+		uint8_t data_header_bits;
 	} uplink, downlink;
-	unsigned int data_block_header_bits;
-	unsigned int num_blocks;
+	uint8_t data_block_header_bits;
+	uint8_t num_blocks;
 	const char *name;
 } hdr_type_info[GprsCodingScheme::NUM_HEADER_TYPES] = {
 	{{0},       {0},       0, 0, "INVALID"},
@@ -134,12 +134,12 @@ GprsCodingScheme GprsCodingScheme::getBySizeUL(unsigned size)
 	return GprsCodingScheme(UNKNOWN);
 }
 
-unsigned int GprsCodingScheme::sizeUL() const
+uint8_t GprsCodingScheme::sizeUL() const
 {
 	return mcs_info[m_scheme].uplink.bytes + (spareBitsUL() ? 1 : 0);
 }
 
-unsigned int GprsCodingScheme::usedSizeUL() const
+uint8_t GprsCodingScheme::usedSizeUL() const
 {
 	if (mcs_info[m_scheme].data_hdr == HEADER_GPRS_DATA)
 		return mcs_info[m_scheme].uplink.bytes;
@@ -147,22 +147,22 @@ unsigned int GprsCodingScheme::usedSizeUL() const
 		return sizeUL();
 }
 
-unsigned int GprsCodingScheme::maxBytesUL() const
+uint8_t GprsCodingScheme::maxBytesUL() const
 {
 	return mcs_info[m_scheme].uplink.bytes;
 }
 
-unsigned int GprsCodingScheme::spareBitsUL() const
+uint8_t GprsCodingScheme::spareBitsUL() const
 {
 	return mcs_info[m_scheme].uplink.ext_bits;
 }
 
-unsigned int GprsCodingScheme::sizeDL() const
+uint8_t GprsCodingScheme::sizeDL() const
 {
 	return mcs_info[m_scheme].downlink.bytes + (spareBitsDL() ? 1 : 0);
 }
 
-unsigned int GprsCodingScheme::usedSizeDL() const
+uint8_t GprsCodingScheme::usedSizeDL() const
 {
 	if (mcs_info[m_scheme].data_hdr == HEADER_GPRS_DATA)
 		return mcs_info[m_scheme].downlink.bytes;
@@ -170,42 +170,42 @@ unsigned int GprsCodingScheme::usedSizeDL() const
 		return sizeDL();
 }
 
-unsigned int GprsCodingScheme::maxBytesDL() const
+uint8_t GprsCodingScheme::maxBytesDL() const
 {
 	return mcs_info[m_scheme].downlink.bytes;
 }
 
-unsigned int GprsCodingScheme::spareBitsDL() const
+uint8_t GprsCodingScheme::spareBitsDL() const
 {
 	return mcs_info[m_scheme].downlink.ext_bits;
 }
 
-unsigned int GprsCodingScheme::maxDataBlockBytes() const
+uint8_t GprsCodingScheme::maxDataBlockBytes() const
 {
 	return mcs_info[m_scheme].data_bytes;
 }
 
-unsigned int GprsCodingScheme::optionalPaddingBits() const
+uint8_t GprsCodingScheme::optionalPaddingBits() const
 {
 	return mcs_info[m_scheme].optional_padding_bits;
 }
 
-unsigned int GprsCodingScheme::numDataBlocks() const
+uint8_t GprsCodingScheme::numDataBlocks() const
 {
 	return hdr_type_info[headerTypeData()].num_blocks;
 }
 
-unsigned int GprsCodingScheme::numDataHeaderBitsUL() const
+uint8_t GprsCodingScheme::numDataHeaderBitsUL() const
 {
 	return hdr_type_info[headerTypeData()].uplink.data_header_bits;
 }
 
-unsigned int GprsCodingScheme::numDataHeaderBitsDL() const
+uint8_t GprsCodingScheme::numDataHeaderBitsDL() const
 {
 	return hdr_type_info[headerTypeData()].downlink.data_header_bits;
 }
 
-unsigned int GprsCodingScheme::numDataBlockHeaderBits() const
+uint8_t GprsCodingScheme::numDataBlockHeaderBits() const
 {
 	return hdr_type_info[headerTypeData()].data_block_header_bits;
 }
