@@ -21,6 +21,7 @@
  */
 #include "bts.h"
 #include "tbf.h"
+#include "pcu_utils.h"
 #include "gprs_debug.h"
 #include "encoding.h"
 #include "decoding.h"
@@ -30,6 +31,7 @@ extern "C" {
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/utils.h>
+#include <osmocom/core/bits.h>
 }
 
 #define OSMO_ASSERT_STR_EQ(a, b) \
@@ -463,6 +465,20 @@ void test_immediate_assign_rej()
 
 }
 
+static void test_lsb()
+{
+	uint8_t u = 0;
+
+	printf("Testing LBS utility...\n");
+
+	do {
+		uint8_t x = pcu_lsb(u); /* equivalent of (1 << ffs(u)) / 2 */
+		printf("%2X " OSMO_BIT_SPEC ": {%d} %3d\n",
+		       u, OSMO_BIT_PRINT(u), pcu_bitcount(u), x);
+		u++;
+	} while (u);
+}
+
 int main(int argc, char **argv)
 {
 	osmo_init_logging(&gprs_log_info);
@@ -476,6 +492,8 @@ int main(int argc, char **argv)
 	test_rlc_v_n();
 	test_rlc_dl_ul_basic();
 	test_immediate_assign_rej();
+	test_lsb();
+
 	return EXIT_SUCCESS;
 }
 

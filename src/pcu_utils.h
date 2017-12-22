@@ -16,6 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+extern "C" {
+#include <osmocom/gsm/gsm_utils.h>
+}
+
 inline int msecs_to_frames(int msecs) {
 	return (msecs * (1024 * 1000 / 4615)) / 1024;
 }
