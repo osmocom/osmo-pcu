@@ -44,6 +44,15 @@ then
 	CPPFLAGS="$CPPFLAGS -fsanitize=address -fsanitize=undefined"
 fi
 
+AC_ARG_ENABLE(profile,
+		[AS_HELP_STRING([--enable-profile], [Compile with profiling support enabled], )],
+		[profile=$enableval], [profile="no"])
+if test x"$profile" = x"yes"
+then
+	CFLAGS="$CFLAGS -pg"
+	CPPFLAGS="$CPPFLAGS -pg"
+fi
+
 dnl checks for libraries
 PKG_CHECK_MODULES(LIBOSMOCORE, libosmocore  >= 0.10.1)
 PKG_CHECK_MODULES(LIBOSMOVTY, libosmovty)
