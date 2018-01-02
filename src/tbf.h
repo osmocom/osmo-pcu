@@ -180,6 +180,8 @@ struct gprs_rlcmac_tbf {
 	bool state_is(enum gprs_rlcmac_tbf_state rhs) const;
 	bool state_is_not(enum gprs_rlcmac_tbf_state rhs) const;
 	void set_state(enum gprs_rlcmac_tbf_state new_state);
+	bool check_n_clear(uint8_t state_flag);
+	void set_assigned_on(uint8_t state_flag, bool check_ccch);
 	const char *state_name() const;
 
 	const char *name() const;
@@ -368,12 +370,33 @@ inline const char *gprs_rlcmac_tbf::state_name() const
 	return tbf_state_name[state];
 }
 
+/* Set assignment state and corrsponding flags */
+inline void gprs_rlcmac_tbf::set_assigned_on(uint8_t state_flag, bool check_ccch)
+{
+	set_state(GPRS_RLCMAC_ASSIGN);
+	if (check_ccch) {
+		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
+			state_flags |= (1 << state_flag);
+	} else
+		state_flags |= (1 << state_flag);
+}
+
 inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
 {
 	LOGP(DRLCMAC, LOGL_DEBUG, "%s changes state from %s to %s\n",
 		tbf_name(this),
 		tbf_state_name[state], tbf_state_name[new_state]);
 	state = new_state;
+}
+
+inline bool gprs_rlcmac_tbf::check_n_clear(uint8_t state_flag)
+{
+	if ((state_flags & (1 << state_flag))) {
+		state_flags &= ~(1 << state_flag);
+		return true;
+	}
+
+	return false;
 }
 
 inline LListHead<gprs_rlcmac_tbf>& gprs_rlcmac_tbf::list()
@@ -451,7 +474,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int rcvd_dl_ack(bool final_ack, unsigned first_bsn, struct bitvec *rbb);
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
 	void trigger_ass(struct gprs_rlcmac_tbf *old_tbf);
-	void clear_poll_timeout_flag();
+
 	bool handle_ack_nack();
 	void request_dl_ack();
 	bool need_control_ts() const;

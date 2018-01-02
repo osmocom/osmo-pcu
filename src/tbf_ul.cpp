@@ -96,10 +96,8 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 
 bool gprs_rlcmac_ul_tbf::ctrl_ack_to_toggle()
 {
-	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK))) {
-		state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
+	if (check_n_clear(GPRS_RLCMAC_FLAG_TO_UL_ACK))
 		return true; /* GPRS_RLCMAC_FLAG_TO_UL_ACK was set, now cleared */
-	}
 
 	state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
 	return false; /* GPRS_RLCMAC_FLAG_TO_UL_ACK was unset, now set */

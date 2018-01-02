@@ -493,9 +493,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 		old_tbf->was_releasing = old_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 
 		/* change state */
-		set_state(GPRS_RLCMAC_ASSIGN);
-		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
-			state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
+		set_assigned_on(GPRS_RLCMAC_FLAG_PACCH, true);
 
 		/* start timer */
 		T_START(this, T0, T_ASS_PACCH_SEC, 0, "assignment (PACCH)", true);
@@ -505,8 +503,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 		was_releasing = state_is(GPRS_RLCMAC_WAIT_RELEASE);
 
 		/* change state */
-		set_state(GPRS_RLCMAC_ASSIGN);
-		state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
+		set_assigned_on(GPRS_RLCMAC_FLAG_CCCH, false);
 
 		/* send immediate assignment */
 		bts->snd_dl_ass(this, 0, imsi());
@@ -634,18 +631,12 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 	return bsn;
 }
 
-void gprs_rlcmac_dl_tbf::clear_poll_timeout_flag()
-{
-	state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
-}
-
 bool gprs_rlcmac_dl_tbf::handle_ack_nack()
 {
 	bool ack_recovered = false;
 
 	state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
-	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
-		clear_poll_timeout_flag();
+	if (check_n_clear(GPRS_RLCMAC_FLAG_TO_DL_ACK)) {
 		ack_recovered = true;
 	}
 
@@ -856,7 +847,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			if (is_final)
 				T_START(this, T3191, bts_data()->t3191, 0, "final block (DL-TBF)", true);
 
-			clear_poll_timeout_flag();
+			state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK); /* clear poll timeout flag */
 
 			/* Clear request flag */
 			m_dl_ack_requested = false;

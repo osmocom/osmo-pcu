@@ -402,8 +402,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 		return NULL;
 	}
 	tbf->m_contention_resolution_done = 1;
-	tbf->set_state(GPRS_RLCMAC_ASSIGN);
-	tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
+	tbf->set_assigned_on(GPRS_RLCMAC_FLAG_PACCH, false);
 	T_START(tbf, T3169, bts->t3169, 0, "allocation (UL-TBF)", true);
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(tbf->ms());
@@ -1511,8 +1510,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 
 	llist_add(&ul_tbf->list(), &bts->bts->ul_tbfs());
 	ul_tbf->bts->tbf_ul_created();
-	ul_tbf->set_state(GPRS_RLCMAC_ASSIGN);
-	ul_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
+	ul_tbf->set_assigned_on(GPRS_RLCMAC_FLAG_PACCH, false);
 
 	ul_tbf->set_ms(ms);
 	ul_tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
