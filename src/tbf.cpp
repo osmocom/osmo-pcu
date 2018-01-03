@@ -298,7 +298,7 @@ const gprs_llc_queue *gprs_rlcmac_tbf::llc_queue() const
 	return m_ms ? m_ms->llc_queue() : NULL;
 }
 
-int gprs_rlcmac_tbf::llc_queue_size() const
+size_t gprs_rlcmac_tbf::llc_queue_size() const
 {
 	/* m_ms->llc_queue() never returns NULL: GprsMs::m_llc_queue is a
 	 * member instance. */

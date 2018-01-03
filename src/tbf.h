@@ -228,7 +228,7 @@ struct gprs_rlcmac_tbf {
 	uint8_t ms_class() const;
 	void set_ms_class(uint8_t);
 	GprsCodingScheme current_cs() const;
-	int llc_queue_size() const;
+	size_t llc_queue_size() const;
 
 	time_t created_ts() const;
 	uint8_t dl_slots() const;
