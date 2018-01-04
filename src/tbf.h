@@ -193,8 +193,6 @@ struct gprs_rlcmac_tbf {
 	GprsMs *ms() const;
 	void set_ms(GprsMs *ms);
 
-	gprs_rlc_window *window();
-
 	uint8_t tsc() const;
 
 	int rlcmac_diag();
@@ -456,7 +454,7 @@ inline void gprs_rlcmac_tbf::disable_egprs()
 
 struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_dl_tbf(BTS *bts);
-
+	gprs_rlc_dl_window *window();
 	void cleanup();
 	void enable_egprs();
 	/* dispatch Unitdata.DL messages */
@@ -496,7 +494,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	 * All states that need reset must be in this struct, so this is why
 	 * variables are in both (dl and ul) structs and not outside union.
 	 */
-	gprs_rlc_dl_window m_window;
 	int32_t m_tx_counter; /* count all transmitted blocks */
 	uint8_t m_wait_confirm; /* wait for CCCH IMM.ASS cnf */
 	bool m_dl_ack_requested;
@@ -547,11 +544,18 @@ protected:
 	enum egprs_rlcmac_dl_spb get_egprs_dl_spb(int bsn);
 
 	struct osmo_timer_list m_llc_timer;
+
+	/* Please note that all variables below will be reset when changing
+	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
+	 * All states that need reset must be in this struct, so this is why
+	 * variables are in both (dl and ul) structs and not outside union.
+	 */
+	gprs_rlc_dl_window m_window;
 };
 
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_ul_tbf(BTS *bts);
-
+	gprs_rlc_ul_window *window();
 	struct msgb *create_ul_ack(uint32_t fn, uint8_t ts);
 	bool ctrl_ack_to_toggle();
 	bool handle_ctrl_ack();
@@ -590,7 +594,6 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	 * All states that need reset must be in this struct, so this is why
 	 * variables are in both (dl and ul) structs and not outside union.
 	 */
-	gprs_rlc_ul_window m_window;
 	int32_t m_rx_counter; /* count all received blocks */
 	uint8_t m_n3103;	/* N3103 counter */
 	uint8_t m_usf[8];	/* list USFs per PDCH (timeslot) */
@@ -602,6 +605,13 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 
 protected:
 	void maybe_schedule_uplink_acknack(const gprs_rlc_data_info *rlc);
+
+	/* Please note that all variables below will be reset when changing
+	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
+	 * All states that need reset must be in this struct, so this is why
+	 * variables are in both (dl and ul) structs and not outside union.
+	 */
+	gprs_rlc_ul_window m_window;
 };
 
 #ifdef __cplusplus
@@ -655,16 +665,6 @@ inline gprs_rlcmac_dl_tbf *as_dl_tbf(gprs_rlcmac_tbf *tbf)
 		return static_cast<gprs_rlcmac_dl_tbf *>(tbf);
 	else
 		return NULL;
-}
-
-inline gprs_rlc_window *gprs_rlcmac_tbf::window()
-{
-	switch (direction)
-	{
-	case GPRS_RLCMAC_UL_TBF: return &as_ul_tbf(this)->m_window;
-	case GPRS_RLCMAC_DL_TBF: return &as_dl_tbf(this)->m_window;
-	}
-	return NULL;
 }
 
 #endif

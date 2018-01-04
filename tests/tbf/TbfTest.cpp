@@ -297,9 +297,9 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 
 /* Receive an ACK */
 #define RCV_ACK(fin, tbf, rbb) do {					\
-		tbf->rcvd_dl_ack(fin, tbf->m_window.v_s(), rbb);	\
+		tbf->rcvd_dl_ack(fin, tbf->window()->v_s(), rbb);	\
 		if (!fin)						\
-			OSMO_ASSERT(tbf->m_window.window_empty());	\
+			OSMO_ASSERT(tbf->window()->window_empty());	\
 	} while(0)
 
 static void test_tbf_delayed_release()
@@ -1725,7 +1725,7 @@ static void test_tbf_egprs_two_phase_puan(void)
 		"Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
 	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
 
-	ul_tbf->m_window.reset_state();
+	ul_tbf->window()->reset_state();
 	/* Function to generate URBB with length */
 	ul_tbf = establish_ul_tbf_two_phase_puan_URBB_with_length(&the_bts, ts_no, tlli, &fn,
 		qta, ms_class, egprs_ms_class, ul_tbf);
@@ -1737,7 +1737,7 @@ static void test_tbf_egprs_two_phase_puan(void)
 
 	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
 
-	ul_tbf->m_window.reset_state();
+	ul_tbf->window()->reset_state();
 	/* Function to generate CRBB */
 	bts->ws_base = 128;
 	bts->ws_pdch = 64;
@@ -2529,7 +2529,7 @@ static void test_tbf_epdan_out_of_rx_window(void)
 
 	dl_tbf = create_dl_tbf(&the_bts, ms_class, egprs_ms_class, &trx_no);
 	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
-	prlcdlwindow = &dl_tbf->m_window;
+	prlcdlwindow = dl_tbf->window();
 	prlcmvb = &prlcdlwindow->m_v_b;
 	prlcdlwindow->m_v_s = 1288;
 	prlcdlwindow->m_v_a = 1176;
@@ -2561,7 +2561,7 @@ static void test_tbf_epdan_out_of_rx_window(void)
 
 	Decoding::decode_egprs_acknack_bits(
 		&ack_nack->EGPRS_AckNack.Desc, &bits,
-		&bsn_begin, &bsn_end, &dl_tbf->m_window);
+		&bsn_begin, &bsn_end, dl_tbf->window());
 
 	dl_tbf->rcvd_dl_ack(
 		ack_nack->EGPRS_AckNack.Desc.FINAL_ACK_INDICATION,
@@ -2755,17 +2755,17 @@ static void tbf_cleanup(gprs_rlcmac_dl_tbf *dl_tbf)
 }
 
 #define NACK(tbf, x) do {					\
-		tbf->m_window.m_v_b.mark_nacked(x);		\
-		OSMO_ASSERT(tbf->m_window.m_v_b.is_nacked(x));	\
+		tbf->window()->m_v_b.mark_nacked(x);		\
+		OSMO_ASSERT(tbf->window()->m_v_b.is_nacked(x));	\
 	} while(0)
 
 #define CHECK_UNACKED(tbf, cs, bsn) do {				             \
-		OSMO_ASSERT(tbf->m_window.m_v_b.is_unacked(bsn));	             \
+		OSMO_ASSERT(tbf->window()->m_v_b.is_unacked(bsn));	             \
 		OSMO_ASSERT(tbf->m_rlc.block(bsn)->cs_current_trans.to_num() == cs); \
 	} while(0)
 
 #define CHECK_NACKED(tbf, cs, bsn) do {					             \
-		OSMO_ASSERT(tbf->m_window.m_v_b.is_nacked(bsn));	             \
+		OSMO_ASSERT(tbf->window()->m_v_b.is_nacked(bsn));	             \
 		OSMO_ASSERT(tbf->m_rlc.block(bsn)->cs_current_trans.to_num() == cs); \
 	} while(0)
 

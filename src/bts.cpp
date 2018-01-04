@@ -1203,7 +1203,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 
 	num_blocks = Decoding::decode_gprs_acknack_bits(
 		&ack_nack->Ack_Nack_Description, &bits,
-		&bsn_begin, &bsn_end, &tbf->m_window);
+		&bsn_begin, &bsn_end, tbf->window());
 
 	LOGP(DRLCMAC, LOGL_DEBUG,
 		"Got GPRS DL ACK bitmap: SSN: %d, BSN %d to %d - 1 (%d blocks), "
@@ -1279,8 +1279,8 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 		(void *)&ack_nack->EGPRS_AckNack.Desc,
 		(int)offsetof(EGPRS_AckNack_t, Desc),
 		(int)offsetof(EGPRS_AckNack_w_len_t, Desc),
-		tbf->m_window.v_a(),
-		tbf->m_window.v_s(),
+		tbf->window()->v_a(),
+		tbf->window()->v_s(),
 		osmo_hexdump((const uint8_t *)&ack_nack->EGPRS_AckNack.Desc.URBB,
 			sizeof(ack_nack->EGPRS_AckNack.Desc.URBB)));
 
@@ -1290,7 +1290,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 
 	num_blocks = Decoding::decode_egprs_acknack_bits(
 		&ack_nack->EGPRS_AckNack.Desc, &bits,
-		&bsn_begin, &bsn_end, &tbf->m_window);
+		&bsn_begin, &bsn_end, tbf->window());
 
 	LOGP(DRLCMAC, LOGL_DEBUG,
 		"Got EGPRS DL ACK bitmap: SSN: %d, BSN %d to %d - 1 (%d blocks), "

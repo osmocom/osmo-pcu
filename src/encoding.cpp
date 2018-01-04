@@ -695,7 +695,7 @@ static void write_packet_uplink_ack_gprs(
 {
 
 	bitvec_write_field(dest, &wp, tbf->current_cs().to_num() - 1, 2); // CHANNEL_CODING_COMMAND
-	write_packet_ack_nack_desc_gprs(bts, dest, wp, &tbf->m_window, is_final);
+	write_packet_ack_nack_desc_gprs(bts, dest, wp, tbf->window(), is_final);
 
 	bitvec_write_field(dest, &wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
 	bitvec_write_field(dest, &wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
@@ -892,7 +892,7 @@ static void write_packet_uplink_ack_egprs(
 
 	/* -2 for last bit 0 mandatory and REL5 not supported */
 	unsigned bits_ack_nack = dest->data_len * 8 - wp - 2;
-	write_packet_ack_nack_desc_egprs(bts, dest, wp, &tbf->m_window, is_final, bits_ack_nack);
+	write_packet_ack_nack_desc_egprs(bts, dest, wp, tbf->window(), is_final, bits_ack_nack);
 
 	bitvec_write_field(dest, &wp, 0, 1); // fixed 0
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have REL 5

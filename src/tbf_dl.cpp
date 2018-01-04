@@ -969,6 +969,11 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 	return lost * 100 / (lost + received);
 }
 
+gprs_rlc_dl_window *gprs_rlcmac_dl_tbf::window()
+{
+	return &m_window;
+}
+
 int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 	const struct bitvec *rbb)
 {
