@@ -642,55 +642,39 @@ static inline bool is_single_block(bool force_two_phase, uint16_t ra, enum ph_bu
 		     "MS requests single phase access, but we force two phase access [RACH is %s bit]\n",
 		     is_11bit ? "11" : "8");
 
-	if (!is_11bit && (burst_type == GSM_L1_BURST_TYPE_ACCESS_0)) {
+	switch(burst_type) {
+	case GSM_L1_BURST_TYPE_ACCESS_0:
+		if (is_11bit) {
+			LOGP(DRLCMAC, LOGL_ERROR, "Error: GPRS 11 bit RACH not supported\n");
+			return false;
+		}
 
 		if ((ra & 0xf8) == 0x70)
-			sb = true;
-		else if (force_two_phase) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single "
-				"phase access, but we force two phase "
-				"access\n");
-			sb = true;
+			return true;
+
+		if (force_two_phase)
+			return true;
+		break;
+	case GSM_L1_BURST_TYPE_ACCESS_1: /* deliberate fall-through */
+	case GSM_L1_BURST_TYPE_ACCESS_2:
+		if (is_11bit) {
+			if (!(ra & (1 << 10))) {
+				if (force_two_phase)
+					return true;
+
+				return false;
+			}
+
+			return true;
 		}
-
-	} else if (is_11bit &&
-		((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) ||
-		(burst_type == GSM_L1_BURST_TYPE_ACCESS_2))) {
-
-		if (!(ra & (1 << 10))) {
-			if (force_two_phase) {
-				LOGP(DRLCMAC, LOGL_DEBUG, "EGPRS 11 bit RACH "
-					"received. MS requests single phase "
-					"access but we force two phase "
-					"access\n");
-				sb = true;
-			} else
-				sb = false;
-		} else {
-			LOGP(DRLCMAC, LOGL_DEBUG, "EGPRS 11 bit RACH received."
-				"MS requests single block allocation\n");
-			sb = true;
-		}
-
-	} else if (is_11bit &&
-		(burst_type == GSM_L1_BURST_TYPE_ACCESS_0)) {
-		LOGP(DRLCMAC, LOGL_ERROR,
-			"Error: GPRS 11 bit RACH not supported\n");
-
-	} else if (burst_type == GSM_L1_BURST_TYPE_NONE) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "pcu has not received burst type "
-			"from bts \n");
-
-		if ((ra & 0xf8) == 0x70) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block "
-				"allocation\n");
-			sb = true;
-		} else if (force_two_phase) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single "
-				"phase access, but we force two phase "
-				"access\n");
-			sb = true;
-		}
+		LOGP(DRLCMAC, LOGL_ERROR, "Unexpected RACH burst type %u for 8-bit RACH\n", burst_type);
+		break;
+	case GSM_L1_BURST_TYPE_NONE:
+		LOGP(DRLCMAC, LOGL_ERROR, "PCU has not received burst type from BTS\n");
+		break;
+	default:
+		LOGP(DRLCMAC, LOGL_ERROR, "Unexpected RACH burst type %u for %s-bit RACH\n",
+		     burst_type, is_11bit ? "11" : "8");
 	}
 
 	return sb;
