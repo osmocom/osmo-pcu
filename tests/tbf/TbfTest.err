@@ -625,7 +625,7 @@ TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no 
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 30 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 08 00 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 30 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 08 00 0f 8b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -651,7 +651,7 @@ TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no 
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 31 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 18 40 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 31 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 18 40 0f 8b 2b 2b 2b 
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -677,7 +677,7 @@ TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no 
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 32 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 28 80 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 32 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 28 80 0f 8b 2b 2b 2b 
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -703,7 +703,7 @@ TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no 
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 33 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 38 c0 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 33 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 38 c0 0f 8b 2b 2b 2b 
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -729,7 +729,7 @@ TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no 
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 34 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 49 00 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 34 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 49 00 0f 8b 2b 2b 2b 
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -755,7 +755,7 @@ TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no 
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 35 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 59 40 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 35 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 59 40 0f 8b 2b 2b 2b 
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -781,7 +781,7 @@ TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no 
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 36 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 69 80 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 36 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 69 80 0f 8b 2b 2b 2b 
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -807,7 +807,7 @@ TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no 
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 37 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 79 c0 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 37 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 79 c0 0f 8b 2b 2b 2b 
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -833,7 +833,7 @@ TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no 
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 38 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 8a 00 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 38 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 8a 00 0f 8b 2b 2b 2b 
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -859,7 +859,7 @@ TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no 
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 39 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 9a 40 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 30 39 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 9a 40 0f 8b 2b 2b 2b 
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -885,7 +885,7 @@ TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 30 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 aa 80 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 30 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 aa 80 0f 8b 2b 2b 2b 
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -911,7 +911,7 @@ TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 31 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 ba c0 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 31 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 ba c0 0f 8b 2b 2b 2b 
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -937,7 +937,7 @@ TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 32 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 cb 00 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 32 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 cb 00 0f 8b 2b 2b 2b 
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -963,7 +963,7 @@ TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 33 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 db 40 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 33 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 db 40 0f 8b 2b 2b 2b 
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -989,7 +989,7 @@ TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 34 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 eb 80 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 34 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 eb 80 0f 8b 2b 2b 2b 
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1015,7 +1015,7 @@ TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 35 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 fb c0 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 35 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 00 fb c0 0f 8b 2b 2b 2b 
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1041,7 +1041,7 @@ TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 36 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 0c 00 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 36 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 0c 00 0f 8b 2b 2b 2b 
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1067,7 +1067,7 @@ TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 37 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 1c 40 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 37 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 1c 40 0f 8b 2b 2b 2b 
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1093,7 +1093,7 @@ TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 38 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 2c 80 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 38 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 2c 80 0f 8b 2b 2b 2b 
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1119,7 +1119,7 @@ TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 39 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 3c c0 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 31 39 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 3c c0 0f 8b 2b 2b 2b 
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1145,7 +1145,7 @@ TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 30 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 4d 00 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 30 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 4d 00 0f 8b 2b 2b 2b 
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1171,7 +1171,7 @@ TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 31 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 5d 40 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 31 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 5d 40 0f 8b 2b 2b 2b 
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1197,7 +1197,7 @@ TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 32 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 6d 80 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 32 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 6d 80 0f 8b 2b 2b 2b 
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1223,7 +1223,7 @@ TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 33 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 7d c0 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 33 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 7d c0 0f 8b 2b 2b 2b 
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1249,7 +1249,7 @@ TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 34 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 8e 00 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 34 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 8e 00 0f 8b 2b 2b 2b 
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1275,7 +1275,7 @@ TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 35 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 9e 40 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 35 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 9e 40 0f 8b 2b 2b 2b 
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1301,7 +1301,7 @@ TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 36 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 ae 80 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 36 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 ae 80 0f 8b 2b 2b 2b 
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1327,7 +1327,7 @@ TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 37 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 be c0 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 37 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 be c0 0f 8b 2b 2b 2b 
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1353,7 +1353,7 @@ TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 38 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 cf 00 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 38 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 cf 00 0f 8b 2b 2b 2b 
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1379,7 +1379,7 @@ TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 39 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 df 40 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 32 39 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 df 40 0f 8b 2b 2b 2b 
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1405,7 +1405,7 @@ TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 33 30 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 ef 80 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 33 30 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 ef 80 0f 8b 2b 2b 2b 
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1431,7 +1431,7 @@ TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) Send dowlink assignment on PCH, no
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 33 31 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 ff c0 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=30 33 31 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 00 00 01 ff c0 0f 8b 2b 2b 2b 
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) appending 256 bytes
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
@@ -1465,7 +1465,7 @@ TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no 
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 01 23 45 68 00 03 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06 3f 30 0c 00 00 7d 80 00 1c 00 dc 01 23 45 68 00 0f 8b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) appending 19 bytes
 Modifying MS object, TLLI = 0xc0123456, TA 220 -> 0
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) appending 19 bytes
@@ -1494,7 +1494,7 @@ TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no 
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 01 23 45 68 00 23 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=34 35 36 2d 06 3f 30 0c 00 00 7d 80 00 00 00 dc 01 23 45 68 00 2f 8b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) appending 19 bytes
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) downlink (V(A)==0 .. V(S)==0)
 - Sending new block at BSN 0, CS=CS-1
@@ -1608,7 +1608,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no 
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=7 TA=7 pollFN=-1
-Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=33 34 34 2d 06 3f 30 0f 00 00 7d 80 00 07 00 df 12 23 34 48 00 23 2b 2b 2b 2b 
+Sending data request: trx=0 ts=0 sapi=3 arfcn=0 fn=0 block=0 data=33 34 34 2d 06 3f 30 0f 00 00 7d 80 00 07 00 df 12 23 34 48 00 2f 8b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 4 bytes
 Sending data request: trx=0 ts=7 sapi=5 arfcn=0 fn=2654218 block=8 data=47 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:

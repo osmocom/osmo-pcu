@@ -44,6 +44,21 @@ extern "C" {
 #define set_H(bv) set_x(bv, H)
 
 /* { 0 | 1 < TIMING_ADVANCE_INDEX : bit (4) > } */
+static inline int write_ta_index(bitvec *dest, int8_t tai)
+{
+	int rc;
+
+	if (tai < 0) /* No TIMING_ADVANCE_INDEX: */
+		set_0(dest);
+
+	/* TIMING_ADVANCE_INDEX: */
+	set_1(dest);
+	rc = bitvec_set_u64(dest, tai, 4, false);
+	check(rc);
+
+	return 0;
+}
+
 static inline bool write_tai(bitvec *dest, unsigned& wp, int8_t tai)
 {
 	if (tai < 0) { /* No TIMING_ADVANCE_INDEX: */
@@ -159,52 +174,58 @@ static inline int write_tfi_usf(bitvec *dest, const gprs_rlcmac_ul_tbf *tbf, uin
 	return 0;
 }
 
-static int write_ia_rest_downlink(
-	gprs_rlcmac_dl_tbf *tbf,
-	bitvec * dest, unsigned& wp,
-	uint8_t polling, bool ta_valid, uint32_t fn,
-	uint8_t alpha, uint8_t gamma, int8_t ta_idx)
+/* 3GPP TS 44.018 §10.5.2.16 IA Rest Octets ::= Packet Downlink Assignment */
+static inline int write_ia_rest_downlink(const gprs_rlcmac_dl_tbf *tbf, bitvec *dest,
+					 bool polling, bool ta_valid, uint32_t fn,
+					 uint8_t alpha, uint8_t gamma, int8_t ta_idx)
 {
-	if (!tbf) {
-		LOGP(DRLCMACDL, LOGL_ERROR,
-			"Cannot encode DL IMMEDIATE ASSIGNMENT without TBF\n");
-		return -EINVAL;
-	}
-	// GSM 04.08 10.5.2.16 IA Rest Octets
-	bitvec_write_field(dest, &wp, 3, 2);   // "HH"
-	bitvec_write_field(dest, &wp, 1, 2);   // "01" Packet Downlink Assignment
-	bitvec_write_field(dest, &wp,tbf->tlli(),32); // TLLI
-	bitvec_write_field(dest, &wp,0x1,1);   // switch TFI   : on
-	bitvec_write_field(dest, &wp,tbf->tfi(),5);   // TFI
-	bitvec_write_field(dest, &wp,0x0,1);   // RLC acknowledged mode
-	if (alpha) {
-		bitvec_write_field(dest, &wp,0x1,1);   // ALPHA = present
-		bitvec_write_field(dest, &wp,alpha,4);   // ALPHA
-	} else {
-		bitvec_write_field(dest, &wp,0x0,1);   // ALPHA = not present
-	}
-	bitvec_write_field(dest, &wp,gamma,5);   // GAMMA power control parameter
-	bitvec_write_field(dest, &wp,polling,1);   // Polling Bit
-	bitvec_write_field(dest, &wp, ta_valid, 1); // N. B: NOT related to TAI!
-	write_tai(dest, wp, ta_idx);
+	int rc;
+
+	set_H(dest); set_H(dest);
+	set_0(dest); set_1(dest); /* 00 Packet Downlink Assignment */
+
+	rc = bitvec_set_u64(dest, tbf->tlli(), 32, false); /* TLLI */
+	check(rc);
+
+	set_1(dest);
+	rc = bitvec_set_u64(dest, tbf->tfi(), 5, false);   /* TFI_ASSIGNMENT */
+	check(rc);
+
+	/* RLC acknowledged mode */
+	set_0(dest); /* RLC_MODE */
+
+	rc = write_alpha_gamma(dest, alpha, gamma);        /* ALPHA and GAMMA */
+	check(rc);
+
+	rc = bitvec_set_bit(dest, (bit_value)polling); /* POLLING */
+	check(rc);
+
+	/* N. B: NOT related to TAI! */
+	rc = bitvec_set_bit(dest, (bit_value)ta_valid); /* TA_VALID */
+	check(rc);
+
+	rc = write_ta_index(dest, ta_idx);
+	check(rc);
+
 	if (polling) {
-		bitvec_write_field(dest, &wp,0x1,1);   // TBF Starting TIME present
-		bitvec_write_field(dest, &wp,(fn / (26 * 51)) % 32,5); // T1'
-		bitvec_write_field(dest, &wp,fn % 51,6);               // T3
-		bitvec_write_field(dest, &wp,fn % 26,5);               // T2
-	} else {
-		bitvec_write_field(dest, &wp,0x0,1);   // TBF Starting TIME present
-	}
-	bitvec_write_field(dest, &wp,0x0,1);   // P0 not present
-	//		bitvec_write_field(dest, &wp,0x1,1);   // P0 not present
-	//		bitvec_write_field(dest, &wp,,0xb,4);
+		set_1(dest);
+		rc = write_tbf_start_time(dest, fn);	/* TBF_STARTING_TIME */
+		check(rc);
+	} else
+		set_0(dest);	                     /* No TBF_STARTING_TIME */
+
+	set_0(dest); /* No P0 nor PR_MODE */
+
 	if (tbf->is_egprs_enabled()) {
-		/* see GMS 44.018, 10.5.2.16 */
-		bitvec_write_field(dest, &wp, 1, 1);  // "H"
-		write_ws(dest, &wp, tbf->window_size()); // EGPRS Window Size
-		bitvec_write_field(dest, &wp, 0x0, 2);    // LINK_QUALITY_MEASUREMENT_MODE
-		bitvec_write_field(dest, &wp, 0, 1);      // BEP_PERIOD2 not present
-	}
+		set_H(dest);
+		rc = bitvec_set_u64(dest, enc_ws(tbf->window_size()), 5, false); /* EGPRS Window Size */
+		check(rc);
+
+		/* The mobile station shall not report measurements: (see 3GPP TS 44.060 Table 11.2.7.1) */
+		set_0(dest); set_0(dest); /* LINK_QUALITY_MEASUREMENT_MODE */
+		set_1(dest);              /* No BEP_PERIOD2 */
+	} else
+		set_L(dest);              /* No Additions for Rel-6 */
 
 	return 0;
 }
@@ -460,11 +481,15 @@ int Encoding::write_immediate_assignment(
 
 	plen = wp / 8;
 
-	if (downlink)
-		rc = write_ia_rest_downlink(as_dl_tbf(tbf), dest, wp,
-					    polling, gsm48_ta_is_valid(ta), fn,
-			alpha, gamma, ta_idx);
-	else if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) ||
+	if (downlink) {
+		if (!as_dl_tbf(tbf)) {
+			LOGP(DRLCMACDL, LOGL_ERROR, "Cannot encode DL IMMEDIATE ASSIGNMENT without TBF\n");
+			return -EINVAL;
+		}
+		dest->cur_bit = wp;
+		rc = write_ia_rest_downlink(as_dl_tbf(tbf), dest, polling, gsm48_ta_is_valid(ta), fn,
+					    alpha, gamma, ta_idx);
+	} else if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) ||
 		  (burst_type == GSM_L1_BURST_TYPE_ACCESS_2))) {
 		dest->cur_bit = wp;
 		rc = write_ia_rest_egprs_uplink(as_ul_tbf(tbf), dest, usf, fn, alpha, gamma, ta_idx, burst_type, ra);
