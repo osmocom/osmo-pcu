@@ -51,9 +51,9 @@ else
   exit 1
 fi
 
-if [ "$with_vty" = "yes" ]; then
+if [ "$with_vty" = "True" ]; then
   PCU_CONFIG="$PCU_CONFIG --enable-vty-tests"
-elif [ -z "$with_vty" -o "$with_vty" = "no" ]; then
+elif [ -z "$with_vty" -o "$with_vty" = "False" ]; then
   echo "VTY tests disabled"
 else
   echo 'Invalid $with_vty value:' $with_vty
