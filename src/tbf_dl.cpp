@@ -493,7 +493,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 		old_tbf->was_releasing = old_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 
 		/* change state */
-		set_assigned_on(GPRS_RLCMAC_FLAG_PACCH, true);
+		TBF_SET_ASS_ON(this, GPRS_RLCMAC_FLAG_PACCH, true);
 
 		/* start timer */
 		T_START(this, T0, T_ASS_PACCH_SEC, 0, "assignment (PACCH)", true);
@@ -503,7 +503,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 		was_releasing = state_is(GPRS_RLCMAC_WAIT_RELEASE);
 
 		/* change state */
-		set_assigned_on(GPRS_RLCMAC_FLAG_CCCH, false);
+		TBF_SET_ASS_ON(this, GPRS_RLCMAC_FLAG_CCCH, false);
 
 		/* send immediate assignment */
 		bts->snd_dl_ass(this, 0, imsi());
@@ -614,7 +614,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 
 		if (is_final) {
 			request_dl_ack();
-			set_state(GPRS_RLCMAC_FINISHED);
+			TBF_SET_STATE(this, GPRS_RLCMAC_FINISHED);
 		}
 
 		/* dequeue next LLC frame, if any */
@@ -1109,7 +1109,7 @@ int gprs_rlcmac_dl_tbf::release()
 	/* report all outstanding packets as received */
 	gprs_rlcmac_received_lost(this, received, 0);
 
-	set_state(GPRS_RLCMAC_WAIT_RELEASE);
+	TBF_SET_STATE(this, GPRS_RLCMAC_WAIT_RELEASE);
 
 	/* start T3193 */
 	T_START(this, T3193, bts_data()->t3193_msec / 1000, (bts_data()->t3193_msec % 1000) * 1000,
@@ -1143,7 +1143,7 @@ int gprs_rlcmac_dl_tbf::abort()
 		 * (partly) encoded in chunk 1 of block V(A). (optional) */
 	}
 
-	set_state(GPRS_RLCMAC_RELEASING);
+	TBF_SET_STATE(this, GPRS_RLCMAC_RELEASING);
 
 	/* reset rlc states */
 	m_window.reset();
