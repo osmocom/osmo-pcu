@@ -759,7 +759,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 			failure = true;
 		} else {
 			tbf->set_ta(ta);
-			tbf->set_state(GPRS_RLCMAC_FLOW);
+			TBF_SET_STATE(tbf, GPRS_RLCMAC_FLOW);
 			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
 			T_START(tbf, T3169, m_bts.t3169, 0, "RACH (new UL-TBF)", true);
 			LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] START\n");
@@ -1045,7 +1045,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				"changed type from CCCH to PACCH\n");
 			new_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
 		}
-		new_tbf->set_state(GPRS_RLCMAC_FLOW);
+		TBF_SET_STATE(new_tbf, GPRS_RLCMAC_FLOW);
 		/* stop pending assignment timer */
 		new_tbf->t_stop(T0, "control acked (DL-TBF)");
 		if (new_tbf->check_n_clear(GPRS_RLCMAC_FLAG_TO_DL_ASS))
@@ -1070,7 +1070,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				tbf->direction == new_tbf->direction)
 			tbf_free(tbf);
 
-		new_tbf->set_state(GPRS_RLCMAC_FLOW);
+		TBF_SET_STATE(new_tbf, GPRS_RLCMAC_FLOW);
 		if (new_tbf->check_n_clear(GPRS_RLCMAC_FLAG_TO_UL_ASS))
 			LOGPTBF(new_tbf, LOGL_NOTICE, "Recovered uplink assignment for UL\n");
 

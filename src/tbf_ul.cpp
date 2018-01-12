@@ -330,7 +330,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 		if (rdbi->cv == 0) {
 			LOGP(DRLCMACUL, LOGL_DEBUG, "- Finished with UL "
 				"TBF\n");
-			set_state(GPRS_RLCMAC_FINISHED);
+			TBF_SET_STATE(this, GPRS_RLCMAC_FINISHED);
 			/* Reset N3103 counter. */
 			this->m_n3103 = 0;
 		}

@@ -180,6 +180,9 @@ enum tbf_timers {
 
 #define T_START(tbf, t, sec, usec, r, f) tbf->t_start(t, sec, usec, r, f, __FILE__, __LINE__)
 
+#define TBF_SET_STATE(t, st) do { t->set_state(st, __FILE__, __LINE__); } while(0)
+#define TBF_SET_ASS_ON(t, fl, chk) do { t->set_assigned_on(fl, chk, __FILE__, __LINE__); } while(0)
+
 struct gprs_rlcmac_tbf {
 	gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir);
 
@@ -188,9 +191,9 @@ struct gprs_rlcmac_tbf {
 
 	bool state_is(enum gprs_rlcmac_tbf_state rhs) const;
 	bool state_is_not(enum gprs_rlcmac_tbf_state rhs) const;
-	void set_state(enum gprs_rlcmac_tbf_state new_state);
+	void set_state(enum gprs_rlcmac_tbf_state new_state, const char *file, int line);
 	bool check_n_clear(uint8_t state_flag);
-	void set_assigned_on(uint8_t state_flag, bool check_ccch);
+	void set_assigned_on(uint8_t state_flag, bool check_ccch, const char *file, int line);
 	const char *state_name() const;
 
 	const char *name() const;
@@ -378,9 +381,9 @@ inline const char *gprs_rlcmac_tbf::state_name() const
 }
 
 /* Set assignment state and corrsponding flags */
-inline void gprs_rlcmac_tbf::set_assigned_on(uint8_t state_flag, bool check_ccch)
+inline void gprs_rlcmac_tbf::set_assigned_on(uint8_t state_flag, bool check_ccch, const char *file, int line)
 {
-	set_state(GPRS_RLCMAC_ASSIGN);
+	set_state(GPRS_RLCMAC_ASSIGN, file, line);
 	if (check_ccch) {
 		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
 			state_flags |= (1 << state_flag);
@@ -388,9 +391,9 @@ inline void gprs_rlcmac_tbf::set_assigned_on(uint8_t state_flag, bool check_ccch
 		state_flags |= (1 << state_flag);
 }
 
-inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state)
+inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state, const char *file, int line)
 {
-	LOGP(DRLCMAC, LOGL_DEBUG, "%s changes state from %s to %s\n",
+	LOGPSRC(DRLCMAC, LOGL_DEBUG, file, line, "%s changes state from %s to %s\n",
 		tbf_name(this),
 		tbf_state_name[state], tbf_state_name[new_state]);
 	state = new_state;

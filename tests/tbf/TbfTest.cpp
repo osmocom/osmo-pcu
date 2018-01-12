@@ -176,7 +176,7 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(BTS *the_bts, uint8_t ms_class,
 
 	/* "Establish" the DL TBF */
 	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
-	dl_tbf->set_state(GPRS_RLCMAC_FLOW);
+	TBF_SET_STATE(dl_tbf, GPRS_RLCMAC_FLOW);
 	dl_tbf->m_wait_confirm = 0;
 	check_tbf(dl_tbf);
 
