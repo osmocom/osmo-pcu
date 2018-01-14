@@ -42,6 +42,7 @@ if test x"$sanitize" = x"yes"
 then
 	CFLAGS="$CFLAGS -fsanitize=address -fsanitize=undefined"
 	CPPFLAGS="$CPPFLAGS -fsanitize=address -fsanitize=undefined"
+	LDFLAGS="$LDFLAGS -fsanitize=address -fsanitize=undefined"
 fi
 
 AC_ARG_ENABLE(profile,
