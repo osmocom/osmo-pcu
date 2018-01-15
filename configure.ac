@@ -65,8 +65,19 @@ AC_ARG_ENABLE(sysmocom-dsp,
 		AC_HELP_STRING([--enable-sysmocom-dsp],
 				[enable code for sysmocom DSP [default=no]]),
 		[enable_sysmocom_dsp="$enableval"],[enable_sysmocom_dsp="no"])
+AC_ARG_WITH([sysmobts], [AS_HELP_STRING([--with-sysmobts=INCLUDE_DIR], [Location of the sysmobts API header files])],
+			 [sysmobts_incdir="$withval"],[sysmobts_incdir="$incdir"])
+AC_SUBST([SYSMOBTS_INCDIR], $sysmobts_incdir)
 AC_MSG_RESULT([$enable_sysmocom_dsp])
 AM_CONDITIONAL(ENABLE_SYSMODSP, test "x$enable_sysmocom_dsp" = "xyes")
+if test "$enable_sysmocom_bts" = "yes"; then
+	oldCPPFLAGS=$CPPFLAGS
+	CPPFLAGS="$CPPFLAGS -I$SYSMOBTS_INCDIR -I$srcdir/include $LIBOSMOCORE_CFLAGS"
+	AC_CHECK_HEADER([sysmocom/femtobts/superfemto.h],[],
+			[AC_MSG_ERROR([sysmocom/femtobts/superfemto.h can not be found in $sysmobts_incdir])],
+			[#include <sysmocom/femtobts/superfemto.h>])
+	CPPFLAGS=$oldCPPFLAGS
+fi
 
 AC_MSG_CHECKING([whether to enable direct PHY access for PDCH of NuRAN Wireless Litecell 1.5 BTS])
 AC_ARG_ENABLE(lc15bts-phy,
