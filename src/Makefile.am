@@ -103,7 +103,7 @@ nobase_include_HEADERS =
 osmo_pcu_SOURCES = pcu_main.cpp
 
 if ENABLE_SYSMODSP
-AM_CPPFLAGS += -I$(srcdir)/osmo-bts-sysmo
+AM_CPPFLAGS += -I$(srcdir)/osmo-bts-sysmo -I$(SYSMOBTS_INCDIR)
 
 EXTRA_DIST = \
 	osmo-bts-sysmo/sysmo_l1_if.c \

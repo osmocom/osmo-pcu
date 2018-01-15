@@ -26,15 +26,13 @@ mkdir "$deps" || true
 # Collect configure options for osmo-pcu
 PCU_CONFIG=""
 if [ "$with_dsp" = sysmo ]; then
-  PCU_CONFIG="$PCU_CONFIG --enable-sysmocom-dsp"
+  PCU_CONFIG="$PCU_CONFIG --enable-sysmocom-dsp --with-sysmobts=$inst/include/"
 
   # For direct sysmo DSP access, provide the SysmoBTS Layer 1 API
   cd "$deps"
   osmo-layer1-headers.sh sysmo
-  cd layer1-headers
-  api_incl="$inst/include/sysmocom/femtobts/"
-  mkdir -p "$api_incl"
-  cp include/*.h "$api_incl"
+  mkdir -p "$inst/include/sysmocom/femtobts"
+  ln -s $deps/layer1-headers/include/* "$inst/include/sysmocom/femtobts/"
   cd "$base"
 
 elif [ "$with_dsp" = lc15 ]; then
