@@ -481,6 +481,11 @@ static void test_lsb()
 
 int main(int argc, char **argv)
 {
+	tall_pcu_ctx = talloc_named_const(NULL, 1, "types test context");
+	if (!tall_pcu_ctx)
+		abort();
+
+	msgb_talloc_ctx_init(tall_pcu_ctx, 0);
 	osmo_init_logging(&gprs_log_info);
 	log_set_use_color(osmo_stderr_target, 0);
 	log_set_print_filename(osmo_stderr_target, 0);
