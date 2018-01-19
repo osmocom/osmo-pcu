@@ -143,9 +143,9 @@ enum tbf_egprs_ul_counters {
         TBF_CTR_EGPRS_UL_MCS9,
 };
 
-#define LOGPTBF(tbf, level, fmt, args...) LOGP(DRLCMAC, level, "%s " fmt, tbf_name(tbf), ## args)
-#define LOGPTBFUL(tbf, level, fmt, args...) LOGP(DRLCMACUL, level, "%s " fmt, tbf_name(tbf), ## args)
-#define LOGPTBFDL(tbf, level, fmt, args...) LOGP(DRLCMACDL, level, "%s " fmt, tbf_name(tbf), ## args)
+#define LOGPTBF(tbf, level, fmt, args...) LOGP(DTBF, level, "%s " fmt, tbf_name(tbf), ## args)
+#define LOGPTBFUL(tbf, level, fmt, args...) LOGP(DTBFUL, level, "%s " fmt, tbf_name(tbf), ## args)
+#define LOGPTBFDL(tbf, level, fmt, args...) LOGP(DTBFDL, level, "%s " fmt, tbf_name(tbf), ## args)
 
 enum tbf_timers {
 	/* internal assign/reject timer */
@@ -393,7 +393,7 @@ inline void gprs_rlcmac_tbf::set_assigned_on(uint8_t state_flag, bool check_ccch
 
 inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state, const char *file, int line)
 {
-	LOGPSRC(DRLCMAC, LOGL_DEBUG, file, line, "%s changes state from %s to %s\n",
+	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s changes state from %s to %s\n",
 		tbf_name(this),
 		tbf_state_name[state], tbf_state_name[new_state]);
 	state = new_state;

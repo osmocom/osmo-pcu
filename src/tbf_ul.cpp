@@ -59,7 +59,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 	int i, num_frames = 0;
 	uint32_t dummy_tlli;
 
-	LOGP(DRLCMACUL, LOGL_DEBUG, "- Assembling frames: (len=%d)\n", len);
+	LOGPTBFUL(this, LOGL_DEBUG, "Assembling frames: (len=%d)\n", len);
 
 	num_frames = Decoding::rlc_data_from_ul_data(
 		rdbi, cs, data, &(frames[0]), ARRAY_SIZE(frames),
@@ -72,7 +72,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 		if (frame->length) {
 			bts->rlc_ul_payload_bytes(frame->length);
 
-			LOGP(DRLCMACUL, LOGL_DEBUG, "-- Frame %d "
+			LOGPTBFUL(this, LOGL_DEBUG, "Frame %d "
 				"starts at offset %d, "
 				"length=%d, is_complete=%d\n",
 				i + 1, frame->offset, frame->length,
@@ -174,7 +174,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 	this->state_flags |= (1 << GPRS_RLCMAC_FLAG_UL_DATA);
 
-	LOGP(DRLCMACUL, LOGL_DEBUG, "UL DATA TFI=%d received (V(Q)=%d .. "
+	LOGPTBFUL(this, LOGL_DEBUG, "UL DATA TFI=%d received (V(Q)=%d .. "
 		"V(R)=%d)\n", rlc->tfi, this->m_window.v_q(),
 		this->m_window.v_r());
 
@@ -203,34 +203,29 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 		bool need_rlc_data = false;
 		struct gprs_rlc_data *block;
 
-		LOGP(DRLCMACUL, LOGL_DEBUG,
-			"%s: Got %s RLC data block: "
-			"CV=%d, BSN=%d, SPB=%d, "
-			"PI=%d, E=%d, TI=%d, bitoffs=%d\n",
-			name(), rlc->cs.name(),
-			rdbi->cv, rdbi->bsn, rdbi->spb,
-			rdbi->pi, rdbi->e, rdbi->ti,
-			rlc->data_offs_bits[block_idx]);
+		LOGPTBFUL(this, LOGL_DEBUG,
+			  "Got %s RLC data block: CV=%d, BSN=%d, SPB=%d, PI=%d, E=%d, TI=%d, bitoffs=%d\n",
+			  rlc->cs.name(),
+			  rdbi->cv, rdbi->bsn, rdbi->spb,
+			  rdbi->pi, rdbi->e, rdbi->ti,
+			  rlc->data_offs_bits[block_idx]);
 
 		/* Check whether the block needs to be decoded */
 
 		if (!m_window.is_in_window(rdbi->bsn)) {
-			LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d out of window "
-				"%d..%d (it's normal)\n", rdbi->bsn,
-				m_window.v_q(),
-				m_window.mod_sns(m_window.v_q() + ws - 1));
+			LOGPTBFUL(this, LOGL_DEBUG, "BSN %d out of window %d..%d (it's normal)\n",
+				  rdbi->bsn,
+				  m_window.v_q(), m_window.mod_sns(m_window.v_q() + ws - 1));
 		} else if (m_window.is_received(rdbi->bsn)) {
-			LOGP(DRLCMACUL, LOGL_DEBUG,
-				"- BSN %d already received\n", rdbi->bsn);
+			LOGPTBFUL(this, LOGL_DEBUG,
+				  "BSN %d already received\n", rdbi->bsn);
 		} else {
 			need_rlc_data = true;
 		}
 
 		if (!is_tlli_valid()) {
 			if (!rdbi->ti) {
-				LOGP(DRLCMACUL, LOGL_NOTICE,
-					"%s: Missing TLLI within UL DATA.\n",
-					name());
+				LOGPTBFUL(this, LOGL_NOTICE, "Missing TLLI within UL DATA.\n");
 				continue;
 			}
 			need_rlc_data = true;
@@ -241,9 +236,9 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 		/* Store block and meta info to BSN buffer */
 
-		LOGP(DRLCMACUL, LOGL_DEBUG, "- BSN %d storing in window (%d..%d)\n",
-			rdbi->bsn, m_window.v_q(),
-			m_window.mod_sns(m_window.v_q() + ws - 1));
+		LOGPTBFUL(this, LOGL_DEBUG, "BSN %d storing in window (%d..%d)\n",
+			  rdbi->bsn, m_window.v_q(),
+			  m_window.mod_sns(m_window.v_q() + ws - 1));
 		block = m_rlc.block(rdbi->bsn);
 		OSMO_ASSERT(rdbi->data_len <= sizeof(block->block));
 		rlc_data = &(block->block[0]);
@@ -264,9 +259,9 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 				block_idx, data, rlc_data);
 		}
 
-		LOGP(DRLCMACUL, LOGL_DEBUG,
-			"%s: data_length=%d, data=%s\n",
-			name(), block->len, osmo_hexdump(rlc_data, block->len));
+		LOGPTBFUL(this, LOGL_DEBUG,
+			  "data_length=%d, data=%s\n",
+			  block->len, osmo_hexdump(rlc_data, block->len));
 		/* Get/Handle TLLI */
 		if (rdbi->ti) {
 			num_chunks = Decoding::rlc_data_from_ul_data(
@@ -274,28 +269,27 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 			if (num_chunks < 0) {
 				bts->decode_error();
-				LOGP(DRLCMACUL, LOGL_NOTICE,
-					"Failed to decode TLLI of %s UL DATA "
-					"TFI=%d.\n", rlc->cs.name(), rlc->tfi);
+				LOGPTBFUL(this, LOGL_NOTICE,
+					  "Failed to decode TLLI of %s UL DATA TFI=%d.\n",
+					  rlc->cs.name(), rlc->tfi);
 				m_window.invalidate_bsn(rdbi->bsn);
 				continue;
 			}
 			if (!this->is_tlli_valid()) {
 				if (!new_tlli) {
-					LOGP(DRLCMACUL, LOGL_NOTICE,
-						"%s: TLLI = 0 within UL DATA.\n",
-						name());
+					LOGPTBFUL(this, LOGL_NOTICE,
+						  "TLLI = 0 within UL DATA.\n");
 					m_window.invalidate_bsn(rdbi->bsn);
 					continue;
 				}
-				LOGP(DRLCMACUL, LOGL_INFO,
-					"Decoded premier TLLI=0x%08x of "
-					"UL DATA TFI=%d.\n", tlli(), rlc->tfi);
+				LOGPTBFUL(this, LOGL_INFO,
+					  "Decoded premier TLLI=0x%08x of UL DATA TFI=%d.\n",
+					  tlli(), rlc->tfi);
 				set_tlli_from_ul(new_tlli);
 			} else if (new_tlli && new_tlli != tlli()) {
-				LOGP(DRLCMACUL, LOGL_NOTICE, "TLLI mismatch on UL "
-					"DATA TFI=%d. (Ignoring due to contention "
-					"resolution)\n", rlc->tfi);
+				LOGPTBFUL(this, LOGL_NOTICE,
+					  "TLLI mismatch on UL DATA TFI=%d. (Ignoring due to contention resolution)\n",
+					  rlc->tfi);
 				m_window.invalidate_bsn(rdbi->bsn);
 				continue;
 			}
@@ -324,12 +318,11 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 		const struct gprs_rlc_data_block_info *rdbi =
 			&block->block_info;
 
-		LOGP(DRLCMACUL, LOGL_DEBUG, "- No gaps in received block, "
-			"last block: BSN=%d CV=%d\n", rdbi->bsn,
-			rdbi->cv);
+		LOGPTBFUL(this, LOGL_DEBUG,
+			  "No gaps in received block, last block: BSN=%d CV=%d\n",
+			  rdbi->bsn, rdbi->cv);
 		if (rdbi->cv == 0) {
-			LOGP(DRLCMACUL, LOGL_DEBUG, "- Finished with UL "
-				"TBF\n");
+			LOGPTBFUL(this, LOGL_DEBUG, "Finished with UL TBF\n");
 			TBF_SET_STATE(this, GPRS_RLCMAC_FINISHED);
 			/* Reset N3103 counter. */
 			this->m_n3103 = 0;
@@ -353,29 +346,29 @@ void gprs_rlcmac_ul_tbf::maybe_schedule_uplink_acknack(
 		(m_rx_counter % SEND_ACK_AFTER_FRAMES) == 0)
 	{
 		if (rlc->si) {
-			LOGP(DRLCMACUL, LOGL_NOTICE, "- Scheduling Ack/Nack, "
-				"because MS is stalled.\n");
+			LOGPTBFUL(this, LOGL_NOTICE,
+				  "Scheduling Ack/Nack, because MS is stalled.\n");
 		}
 		if (have_ti) {
-			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
-				"because TLLI is included.\n");
+			LOGPTBFUL(this, LOGL_DEBUG,
+				  "Scheduling Ack/Nack, because TLLI is included.\n");
 		}
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
-			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
-				"because last block has CV==0.\n");
+			LOGPTBFUL(this, LOGL_DEBUG,
+				  "Scheduling Ack/Nack, because last block has CV==0.\n");
 		}
 		if ((m_rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
-			LOGP(DRLCMACUL, LOGL_DEBUG, "- Scheduling Ack/Nack, "
-				"because %d frames received.\n",
-				SEND_ACK_AFTER_FRAMES);
+			LOGPTBFUL(this, LOGL_DEBUG,
+				  "Scheduling Ack/Nack, because %d frames received.\n",
+				  SEND_ACK_AFTER_FRAMES);
 		}
 		if (ul_ack_state == GPRS_RLCMAC_UL_ACK_NONE) {
 			/* trigger sending at next RTS */
 			ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
 		} else {
 			/* already triggered */
-			LOGP(DRLCMACUL, LOGL_DEBUG, "-  Sending Ack/Nack is "
-				"already triggered, don't schedule!\n");
+			LOGPTBFUL(this, LOGL_DEBUG,
+				  "Sending Ack/Nack is already triggered, don't schedule!\n");
 		}
 	}
 }
@@ -419,21 +412,16 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_second_seg(
 
 	if (spb_status->block_status_ul &
 				EGPRS_RESEG_FIRST_SEG_RXD) {
-		LOGP(DRLCMACUL, LOGL_DEBUG,
-				"---%s: Second seg is received "
-				"first seg is already present "
-				"set the status to complete\n", name());
+		LOGPTBFUL(this, LOGL_DEBUG,
+			  "Second seg is received first seg is already present set the status to complete\n");
 		spb_status->block_status_ul = EGPRS_RESEG_DEFAULT;
 
 		block->len += Decoding::rlc_copy_to_aligned_buffer(rlc,
 			block_idx, data, rlc_data + block->len);
 		block->block_info.data_len += rdbi->data_len;
 	} else if (spb_status->block_status_ul == EGPRS_RESEG_DEFAULT) {
-		LOGP(DRLCMACUL, LOGL_DEBUG,
-				"---%s: Second seg is received "
-				"first seg is not received "
-				"set the status to second seg received\n",
-				name());
+		LOGPTBFUL(this, LOGL_DEBUG,
+			  "Second seg is received first seg is not received set the status to second seg received\n");
 
 		block->len = Decoding::rlc_copy_to_aligned_buffer(rlc,
 				block_idx, data,
@@ -456,10 +444,8 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_first_seg(
 	bts->spb_uplink_first_segment();
 
 	if (spb_status->block_status_ul & EGPRS_RESEG_SECOND_SEG_RXD) {
-		LOGP(DRLCMACUL, LOGL_DEBUG,
-				"---%s: First seg is received "
-				"second seg is already present "
-				"set the status to complete\n", name());
+		LOGPTBFUL(this, LOGL_DEBUG,
+			  "First seg is received second seg is already present set the status to complete\n");
 
 		block->len += Decoding::rlc_copy_to_aligned_buffer(rlc,
 				block_idx, data, rlc_data);
@@ -467,11 +453,8 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_first_seg(
 		block->block_info.data_len = block->len;
 		spb_status->block_status_ul = EGPRS_RESEG_DEFAULT;
 	} else if (spb_status->block_status_ul == EGPRS_RESEG_DEFAULT) {
-		LOGP(DRLCMACUL, LOGL_DEBUG,
-				"---%s: First seg is received "
-				"second seg is not received "
-				"set the status to first seg "
-				"received\n", name());
+		LOGPTBFUL(this, LOGL_DEBUG,
+			  "First seg is received second seg is not received set the status to first seg received\n");
 
 		spb_status->block_status_ul = EGPRS_RESEG_FIRST_SEG_RXD;
 		block->len = Decoding::rlc_copy_to_aligned_buffer(rlc,
@@ -487,11 +470,9 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_spb(
 {
 	const gprs_rlc_data_block_info *rdbi = &rlc->block_info[block_idx];
 
-	LOGP(DRLCMACUL, LOGL_DEBUG,
-		"--%s: Got SPB(%d)  "
-		"cs(%s) data block with BSN (%d), "
-		"TFI(%d).\n", name(), rdbi->spb,  rlc->cs.name(), rdbi->bsn,
-		rlc->tfi);
+	LOGPTBFUL(this, LOGL_DEBUG,
+		  "Got SPB(%d) cs(%s) data block with BSN (%d), TFI(%d).\n",
+		  rdbi->spb,  rlc->cs.name(), rdbi->bsn, rlc->tfi);
 
 	egprs_rlc_ul_reseg_bsn_state assemble_status = EGPRS_RESEG_INVALID;
 
@@ -503,10 +484,9 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_spb(
 		assemble_status = handle_egprs_ul_second_seg(rlc,
 						block, data, block_idx);
 	else {
-		LOGP(DRLCMACUL, LOGL_ERROR,
-			"--%s: spb(%d) Not supported SPB for this EGPRS "
-			"configuration\n",
-			name(), rdbi->spb);
+		LOGPTBFUL(this, LOGL_ERROR,
+			  "spb(%d) Not supported SPB for this EGPRS configuration\n",
+			  rdbi->spb);
 	}
 
 	/*
@@ -517,23 +497,20 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_spb(
 		switch (GprsCodingScheme::Scheme(rlc->cs)) {
 		case GprsCodingScheme::MCS3 :
 			block->cs_last = GprsCodingScheme::MCS6;
-			LOGP(DRLCMACUL, LOGL_DEBUG,
-				"--%s: Upgrading to MCS6\n", name());
+			LOGPTBFUL(this, LOGL_DEBUG, "Upgrading to MCS6\n");
 			break;
 		case GprsCodingScheme::MCS2 :
 			block->cs_last = GprsCodingScheme::MCS5;
-			LOGP(DRLCMACUL, LOGL_DEBUG,
-				"--%s: Upgrading to MCS5\n", name());
+			LOGPTBFUL(this, LOGL_DEBUG, "Upgrading to MCS5\n");
 			break;
 		case GprsCodingScheme::MCS1 :
-			LOGP(DRLCMACUL, LOGL_DEBUG,
-				"--%s: Upgrading to MCS4\n", name());
+			LOGPTBFUL(this, LOGL_DEBUG, "Upgrading to MCS4\n");
 			block->cs_last = GprsCodingScheme::MCS4;
 			break;
 		default:
-			LOGP(DRLCMACUL, LOGL_ERROR,
-				"--%s: cs(%s) Error in Upgrading to higher MCS\n",
-				name(), rlc->cs.name());
+			LOGPTBFUL(this, LOGL_ERROR,
+				  "cs(%s) Error in Upgrading to higher MCS\n",
+				  rlc->cs.name());
 			break;
 		}
 	}
@@ -609,7 +586,7 @@ void gprs_rlcmac_ul_tbf::update_coding_scheme_counter_ul(const GprsCodingScheme 
 void gprs_rlcmac_ul_tbf::set_window_size()
 {
 	uint16_t ws = egprs_window_size(bts->bts_data(), ul_slots());
-	LOGP(DRLCMAC, LOGL_INFO, "%s: setting EGPRS UL window size to %u, base(%u) slots(%u) ws_pdch(%u)\n",
-	     name(), ws, bts->bts_data()->ws_base, pcu_bitcount(ul_slots()), bts->bts_data()->ws_pdch);
+	LOGPTBFUL(this, LOGL_INFO, "setting EGPRS UL window size to %u, base(%u) slots(%u) ws_pdch(%u)\n",
+		  ws, bts->bts_data()->ws_base, pcu_bitcount(ul_slots()), bts->bts_data()->ws_pdch);
 	m_window.set_ws(ws);
 }
