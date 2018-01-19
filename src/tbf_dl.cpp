@@ -147,7 +147,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	dl_tbf = tbf_alloc_dl_tbf(bts, ms, use_trx, ms_class, egprs_ms_class, ss);
 
 	if (!dl_tbf) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource\n");
+		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource\n");
 		return -EBUSY;
 	}
 	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
@@ -197,19 +197,16 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 		if (ms_old && ms_old != ms) {
 			/* The TLLI has changed (RAU), so there are two MS
 			 * objects for the same MS */
-			LOGP(DRLCMAC, LOGL_NOTICE,
-				"There is a new MS object for the same MS: "
-				"(0x%08x, '%s') -> (0x%08x, '%s')\n",
-				ms_old->tlli(), ms_old->imsi(),
-				ms->tlli(), ms->imsi());
+			LOGP(DTBF, LOGL_NOTICE,
+			     "There is a new MS object for the same MS: (0x%08x, '%s') -> (0x%08x, '%s')\n",
+			     ms_old->tlli(), ms_old->imsi(), ms->tlli(), ms->imsi());
 
 			GprsMs::Guard guard_old(ms_old);
 
 			if (!dl_tbf && ms_old->dl_tbf()) {
-				LOGP(DRLCMAC, LOGL_NOTICE,
-					"%s IMSI %s: "
-					"moving DL TBF to new MS object\n",
-					ms_old->dl_tbf()->name(), imsi);
+				LOGP(DTBF, LOGL_NOTICE,
+				     "IMSI %s, old TBF %s: moving DL TBF to new MS object\n",
+				     imsi, ms_old->dl_tbf()->name());
 				dl_tbf = ms_old->dl_tbf();
 				/* Move the DL TBF to the new MS */
 				dl_tbf->set_ms(ms);
@@ -326,7 +323,7 @@ bool gprs_rlcmac_dl_tbf::restart_bsn_cycle()
 	 * should never happen if MS works correctly.
 	 */
 	if (m_window.window_empty()) {
-		LOGP(DRLCMACDL, LOGL_DEBUG, "- MS acked all blocks\n");
+		LOGPTBFDL(this, LOGL_DEBUG, "MS acked all blocks\n");
 		return false;
 	}
 
@@ -336,9 +333,8 @@ bool gprs_rlcmac_dl_tbf::restart_bsn_cycle()
 	/* At this point there should be at least one unacked block
 	 * to be resent. If not, this is an software error. */
 	if (resend == 0) {
-		LOGP(DRLCMACDL, LOGL_ERROR, "Software error: "
-			"There are no unacknowledged blocks, but V(A) "
-			" != V(S). PLEASE FIX!\n");
+		LOGPTBFDL(this, LOGL_ERROR,
+			  "FIXME: Software error: There are no unacknowledged blocks, but V(A) != V(S). PLEASE FIX!\n");
 		return false;
 	}
 
@@ -377,15 +373,13 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 					ms()->current_cs_dl(),
 					bts->bts_data()->dl_arq_type);
 
-			LOGP(DRLCMACDL, LOGL_DEBUG,
-				"- initial_cs_dl(%d) last_mcs(%d)"
-				" demanded_mcs(%d) cs_trans(%d)"
-				" arq_type(%d) bsn(%d)\n",
-				m_rlc.block(bsn)->cs_init.to_num(),
-				m_rlc.block(bsn)->cs_last.to_num(),
-				ms()->current_cs_dl().to_num(),
-				m_rlc.block(bsn)->cs_current_trans.to_num(),
-				bts->bts_data()->dl_arq_type, bsn);
+			LOGPTBFDL(this, LOGL_DEBUG,
+				  "initial_cs_dl(%d) last_mcs(%d) demanded_mcs(%d) cs_trans(%d) arq_type(%d) bsn(%d)\n",
+				  m_rlc.block(bsn)->cs_init.to_num(),
+				  m_rlc.block(bsn)->cs_last.to_num(),
+				  ms()->current_cs_dl().to_num(),
+				  m_rlc.block(bsn)->cs_current_trans.to_num(),
+				  bts->bts_data()->dl_arq_type, bsn);
 
 			/* TODO: Need to remove this check when MCS-8 -> MCS-6
 			 * transistion is handled.
@@ -401,21 +395,21 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		data_len2 = m_rlc.block(bsn)->len;
 		if (force_data_len > 0 && force_data_len != data_len2)
 			return -1;
-		LOGP(DRLCMACDL, LOGL_DEBUG, "- Resending BSN %d\n", bsn);
+		LOGPTBFDL(this, LOGL_DEBUG, "Resending BSN %d\n", bsn);
 		/* re-send block with negative aknowlegement */
 		m_window.m_v_b.mark_unacked(bsn);
 		bts->rlc_resent();
 	} else if (state_is(GPRS_RLCMAC_FINISHED)) {
-		LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
-			"because all blocks have been transmitted.\n",
-			m_window.v_a());
+		LOGPTBFDL(this, LOGL_DEBUG,
+			  "Restarting at BSN %d, because all blocks have been transmitted.\n",
+			  m_window.v_a());
 		bts->rlc_restarted();
 		if (restart_bsn_cycle())
 			return take_next_bsn(fn, previous_bsn, may_combine);
 	} else if (dl_window_stalled()) {
-		LOGP(DRLCMACDL, LOGL_NOTICE, "- Restarting at BSN %d, "
-			"because the window is stalled.\n",
-			m_window.v_a());
+		LOGPTBFDL(this, LOGL_NOTICE,
+			  "Restarting at BSN %d, because the window is stalled.\n",
+			  m_window.v_a());
 		bts->rlc_stalled();
 		if (restart_bsn_cycle())
 			return take_next_bsn(fn, previous_bsn, may_combine);
@@ -423,31 +417,31 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		GprsCodingScheme new_cs;
 		/* New blocks may be send */
 		new_cs = force_cs ? force_cs : current_cs();
-		LOGP(DRLCMACDL, LOGL_DEBUG,
-			"- Sending new block at BSN %d, CS=%s\n",
-			m_window.v_s(), new_cs.name());
+		LOGPTBFDL(this, LOGL_DEBUG,
+			  "Sending new block at BSN %d, CS=%s\n",
+			  m_window.v_s(), new_cs.name());
 
 		bsn = create_new_bsn(fn, new_cs);
 	} else if (!m_window.window_empty()) {
-		LOGP(DRLCMACDL, LOGL_DEBUG, "- Restarting at BSN %d, "
-			"because all blocks have been transmitted (FLOW).\n",
-			m_window.v_a());
+		LOGPTBFDL(this, LOGL_DEBUG,
+			  "Restarting at BSN %d, because all blocks have been transmitted (FLOW).\n",
+			  m_window.v_a());
 		bts->rlc_restarted();
 		if (restart_bsn_cycle())
 			return take_next_bsn(fn, previous_bsn, may_combine);
 	} else {
 		/* Nothing left to send, create dummy LLC commands */
-		LOGP(DRLCMACDL, LOGL_DEBUG,
-			"- Sending new dummy block at BSN %d, CS=%s\n",
-			m_window.v_s(), current_cs().name());
+		LOGPTBFDL(this, LOGL_DEBUG,
+			  "Sending new dummy block at BSN %d, CS=%s\n",
+			  m_window.v_s(), current_cs().name());
 		bsn = create_new_bsn(fn, current_cs());
 		/* Don't send a second block, so don't set cs_current_trans */
 	}
 
 	if (bsn < 0) {
 		/* we just send final block again */
-		LOGP(DRLCMACDL, LOGL_DEBUG,
-			"- Nothing else to send, Re-transmit final block!\n");
+		LOGPTBFDL(this, LOGL_DEBUG,
+			  "Nothing else to send, Re-transmit final block!\n");
 		bsn = m_window.v_s_mod(-1);
 		bts->rlc_final_block_resent();
 		bts->rlc_resent();
@@ -589,11 +583,9 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 			 * arrive, so request a DL ack/nack now */
 			request_dl_ack();
 
-			LOGP(DRLCMACDL, LOGL_DEBUG,
-				"-- Empty chunk, "
-				"added LLC dummy command of size %d, "
-				"drained_since=%d\n",
-				m_llc.frame_length(), frames_since_last_drain(fn));
+			LOGPTBFDL(this, LOGL_DEBUG,
+				  "Empty chunk, added LLC dummy command of size %d, drained_since=%d\n",
+				  m_llc.frame_length(), frames_since_last_drain(fn));
 		}
 
 		is_final = llc_queue_size() == 0 && !keep_open(fn);
@@ -621,9 +613,9 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 		schedule_next_frame();
 	} while (ar == Encoding::AR_COMPLETED_SPACE_LEFT);
 
-	LOGP(DRLCMACDL, LOGL_DEBUG, "data block (BSN %d, %s): %s\n",
-		bsn, rlc_data->cs_last.name(),
-		osmo_hexdump(rlc_data->block, block_data_len));
+	LOGPTBFDL(this, LOGL_DEBUG, "data block (BSN %d, %s): %s\n",
+		  bsn, rlc_data->cs_last.name(),
+		  osmo_hexdump(rlc_data->block, block_data_len));
 	/* raise send state and set ack state array */
 	m_window.m_v_b.mark_unacked(bsn);
 	m_window.increment_send();
@@ -719,10 +711,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 
 	spb = get_egprs_dl_spb(index);
 
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- need_padding %d spb_status %d spb %d"
-			"(BSN1 %d BSN2 %d)\n",
-			need_padding,
-			spb_status, spb, index, index2);
+	LOGPTBFDL(this, LOGL_DEBUG, "need_padding %d spb_status %d spb %d (BSN1 %d BSN2 %d)\n",
+		  need_padding, spb_status, spb, index, index2);
 
 	gprs_rlc_data_info_init_dl(&rlc, cs, need_padding, spb);
 
@@ -741,7 +731,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	OSMO_ASSERT(rlc.num_data_blocks <= ARRAY_SIZE(rlc.block_info));
 	OSMO_ASSERT(rlc.num_data_blocks > 0);
 
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- Copying %u RLC blocks, %u BSNs\n", rlc.num_data_blocks, num_bsns);
+	LOGPTBFDL(this, LOGL_DEBUG, "Copying %u RLC blocks, %u BSNs\n", rlc.num_data_blocks, num_bsns);
 
 	/* Copy block(s) to RLC message: the num_data_blocks cannot be more than 2 - see assert above */
 	for (data_block_idx = 0; data_block_idx < OSMO_MIN(rlc.num_data_blocks, 2);
@@ -803,8 +793,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		rdbi->bsn = bsn;
 		is_final = is_final || rdbi->cv == 0;
 
-		LOGP(DRLCMACDL, LOGL_DEBUG, "- Copying data unit %d (BSN %d)\n",
-			data_block_idx, bsn);
+		LOGPTBFDL(this, LOGL_DEBUG, "Copying data unit %d (BSN %d)\n",
+			  data_block_idx, bsn);
 
 		Encoding::rlc_copy_from_aligned_buffer(&rlc, data_block_idx,
 			msg_data, block_data);
@@ -826,15 +816,15 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	if (m_tx_counter >= POLL_ACK_AFTER_FRAMES || m_dl_ack_requested ||
 			need_poll) {
 		if (m_dl_ack_requested) {
-			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
-				"polling, because is was requested explicitly "
-				"(e.g. first final block sent).\n");
+			LOGPTBFDL(this, LOGL_DEBUG,
+				  "Scheduling Ack/Nack polling, because is was requested explicitly "
+				  "(e.g. first final block sent).\n");
 		} else if (need_poll) {
-			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
-				"polling, because polling timed out.\n");
+			LOGPTBFDL(this, LOGL_DEBUG,
+				  "Scheduling Ack/Nack polling, because polling timed out.\n");
 		} else {
-			LOGP(DRLCMACDL, LOGL_DEBUG, "- Scheduling Ack/Nack "
-				"polling, because %d blocks sent.\n",
+			LOGPTBFDL(this, LOGL_DEBUG,
+				  "Scheduling Ack/Nack polling, because %d blocks sent.\n",
 				POLL_ACK_AFTER_FRAMES);
 		}
 
@@ -858,18 +848,18 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 
 			m_last_dl_poll_fn = poll_fn;
 
-			LOGP(DRLCMACDL, LOGL_INFO,
-				"%s Scheduled Ack/Nack polling on FN=%d, TS=%d\n",
-				name(), poll_fn, poll_ts);
+			LOGPTBFDL(this, LOGL_INFO,
+				  "Scheduled Ack/Nack polling on FN=%d, TS=%d\n",
+				  poll_fn, poll_ts);
 		}
 	}
 
 	Encoding::rlc_write_dl_data_header(&rlc, msg_data);
 
-	LOGP(DRLCMACDL, LOGL_DEBUG, "msg block (BSN %d, %s%s): %s\n",
-		index, cs.name(),
-		need_padding ? ", padded" : "",
-		msgb_hexdump(dl_msg));
+	LOGPTBFDL(this, LOGL_DEBUG, "msg block (BSN %d, %s%s): %s\n",
+		  index, cs.name(),
+		  need_padding ? ", padded" : "",
+		  msgb_hexdump(dl_msg));
 
 	/* Increment TX-counter */
 	m_tx_counter++;
@@ -953,10 +943,9 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 		}
 	}
 
-	LOGP(DRLCMACDL, LOGL_DEBUG, "%s DL analysis, range=%d:%d, lost=%d, recv=%d, "
-		"skipped=%d, bsn=%d, info='%s'\n",
-		name(), m_window.v_a(), m_window.v_s(), lost, received,
-		skipped, bsn, info);
+	LOGPTBFDL(this, LOGL_DEBUG,
+		  "DL analysis, range=%d:%d, lost=%d, recv=%d, skipped=%d, bsn=%d, info='%s'\n",
+		  m_window.v_a(), m_window.v_s(), lost, received, skipped, bsn, info);
 
 	res->received_packets = received_packets;
 	res->lost_packets = lost_packets;
@@ -990,9 +979,9 @@ int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 
 	Decoding::extract_rbb(rbb, show_rbb);
 	/* show received array in debug */
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- ack:  (BSN=%d)\"%s\""
-		"(BSN=%d)  R=ACK I=NACK\n", first_bsn,
-		show_rbb, m_window.mod_sns(behind_last_bsn - 1));
+	LOGPTBFDL(this, LOGL_DEBUG,
+		  "ack:  (BSN=%d)\"%s\"(BSN=%d)  R=ACK I=NACK\n",
+		  first_bsn, show_rbb, m_window.mod_sns(behind_last_bsn - 1));
 
 	error_rate = analyse_errors(show_rbb, behind_last_bsn, &ana_res);
 
@@ -1014,11 +1003,9 @@ int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 
 	/* show receive state array in debug (V(A)..V(S)-1) */
 	m_window.show_state(show_v_b);
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- V(B): (V(A)=%d)\"%s\""
-		"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked "
-		"X=Resend-Unacked I=Invalid\n",
-		m_window.v_a(), show_v_b,
-		m_window.v_s_mod(-1));
+	LOGPTBFDL(this, LOGL_DEBUG,
+		  "V(B): (V(A)=%d)\"%s\"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid\n",
+		  m_window.v_a(), show_v_b, m_window.v_s_mod(-1));
 	return 0;
 }
 
@@ -1033,9 +1020,9 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 
 	Decoding::extract_rbb(rbb, show_rbb);
 	/* show received array in debug (bit 64..1) */
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- ack:  (BSN=%d)\"%s\""
-		"(BSN=%d)  R=ACK I=NACK\n", m_window.mod_sns(ssn - 64),
-		show_rbb, m_window.mod_sns(ssn - 1));
+	LOGPTBFDL(this, LOGL_DEBUG,
+		  "ack:  (BSN=%d)\"%s\"(BSN=%d)  R=ACK I=NACK\n",
+		  m_window.mod_sns(ssn - 64), show_rbb, m_window.mod_sns(ssn - 1));
 
 	/* apply received array to receive state (SSN-64..SSN-1) */
 	/* calculate distance of ssn from V(S) */
@@ -1072,16 +1059,13 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 
 	/* show receive state array in debug (V(A)..V(S)-1) */
 	m_window.show_state(show_v_b);
-	LOGP(DRLCMACDL, LOGL_DEBUG, "- V(B): (V(A)=%d)\"%s\""
-		"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked "
-		"X=Resend-Unacked I=Invalid\n",
-		m_window.v_a(), show_v_b,
-		m_window.v_s_mod(-1));
+	LOGPTBFDL(this, LOGL_DEBUG,
+		  "V(B): (V(A)=%d)\"%s\"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid\n",
+		  m_window.v_a(), show_v_b, m_window.v_s_mod(-1));
 
 	if (state_is(GPRS_RLCMAC_FINISHED) && m_window.window_empty()) {
-		LOGP(DRLCMACDL, LOGL_NOTICE, "Received acknowledge of "
-			"all blocks, but without final ack "
-			"inidcation (don't worry)\n");
+		LOGPTBFDL(this, LOGL_NOTICE,
+			  "Received acknowledge of all blocks, but without final ack inidcation (don't worry)\n");
 	}
 	return 0;
 }
@@ -1164,12 +1148,11 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(bool final_ack, unsigned first_bsn,
 	rc = update_window(first_bsn, rbb);
 
 	if (final_ack) {
-		LOGP(DRLCMACDL, LOGL_DEBUG, "- Final ACK received.\n");
+		LOGPTBFDL(this, LOGL_DEBUG, "Final ACK received.\n");
 		rc = maybe_start_new_window();
 	} else if (state_is(GPRS_RLCMAC_FINISHED) && m_window.window_empty()) {
-		LOGP(DRLCMACDL, LOGL_NOTICE, "Received acknowledge of "
-			"all blocks, but without final ack "
-			"indication (don't worry)\n");
+		LOGPTBFDL(this, LOGL_NOTICE,
+			  "Received acknowledge of all blocks, but without final ack indication (don't worry)\n");
 	}
 
 	return rc;
@@ -1288,11 +1271,11 @@ enum egprs_rlc_dl_reseg_bsn_state
 				*block_data = &rlc_data->block[22];
 				break;
 			default:
-				LOGP(DRLCMACDL, LOGL_ERROR, "Software error: "
-				"--%s hit invalid condition. headerType(%d) "
-				" blockstatus(%d) cs(%s) PLEASE FIX!\n", name(),
-				cs_current_trans.headerTypeData(),
-				*block_status_dl, cs_init.name());
+				LOGPTBFDL(this, LOGL_ERROR,
+					  "FIXME: Software error: hit invalid condition. "
+					  "headerType(%d) blockstatus(%d) cs(%s) PLEASE FIX!\n",
+					  cs_current_trans.headerTypeData(),
+					  *block_status_dl, cs_init.name());
 				break;
 
 			}
@@ -1369,8 +1352,8 @@ enum egprs_rlcmac_dl_spb gprs_rlcmac_dl_tbf::get_egprs_dl_spb(const int bsn)
 void gprs_rlcmac_dl_tbf::set_window_size()
 {
 	uint16_t ws = egprs_window_size(bts->bts_data(), dl_slots());
-	LOGP(DRLCMAC, LOGL_INFO, "%s: setting EGPRS DL window size to %u, base(%u) slots(%u) ws_pdch(%u)\n",
-	     name(), ws, bts->bts_data()->ws_base, pcu_bitcount(dl_slots()), bts->bts_data()->ws_pdch);
+	LOGPTBFDL(this, LOGL_INFO, "setting EGPRS DL window size to %u, base(%u) slots(%u) ws_pdch(%u)\n",
+		  ws, bts->bts_data()->ws_base, pcu_bitcount(dl_slots()), bts->bts_data()->ws_pdch);
 	m_window.set_ws(ws);
 }
 
