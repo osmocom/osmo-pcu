@@ -26,6 +26,7 @@
 #include <stdio.h>
 
 extern "C" {
+#include "mslot_class.h"
 #include <osmocom/core/application.h>
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/talloc.h>
@@ -397,13 +398,13 @@ static void test_all_alloc_b()
        for (uint8_t ts5 = 0; ts5 < 2; ++ts5)
         for (uint8_t ts6 = 0; ts6 < 2; ++ts6)
          for (uint8_t ts7 = 0; ts7 < 2; ++ts7)
-	  for (int ms_class = 0; ms_class < 30; ++ms_class)
+	  for (int ms_class = 0; ms_class < mslot_class_max(); ++ms_class)
 		test_alloc_mass(ts0, ts1, ts2, ts3, ts4, ts5, ts6, ts7, ms_class);
 }
 
 static void test_alloc_b()
 {
-	for (int i = 0; i < 30; ++i)
+	for (int i = 0; i < mslot_class_max(); ++i)
 		test_alloc_b_for_ms(i);
 
 	test_all_alloc_b();
@@ -684,7 +685,7 @@ static void test_many_connections(algo_t algo, unsigned expect_num,
 	trx->pdch[7].enable();
 
 	for (i = 0; i < ARRAY_SIZE(mode_seq); i += 1) {
-		counter1 = alloc_many_tbfs(&the_bts, 1, 29, mode_seq[i]);
+		counter1 = alloc_many_tbfs(&the_bts, 1, mslot_class_max(), mode_seq[i]);
 		fprintf(stderr, "  Allocated %d TBFs (previously %d)\n",
 			counter1, counter2);
 
@@ -724,9 +725,9 @@ static void test_successive_allocations()
 	test_successive_allocation(alloc_algorithm_b,      10, 10, TEST_MODE_UL_AND_DL, 32, "B");
 	test_successive_allocation(alloc_algorithm_b,      12, 12, TEST_MODE_UL_AND_DL, 32, "B");
 
-	test_successive_allocation(alloc_algorithm_b,       1, 12, TEST_MODE_UL_AND_DL, 32, "B");
-	test_successive_allocation(alloc_algorithm_b,       1, 29, TEST_MODE_UL_AND_DL, 32, "B");
-	test_successive_allocation(alloc_algorithm_dynamic, 1, 29, TEST_MODE_UL_AND_DL, 35, "dynamic");
+	test_successive_allocation(alloc_algorithm_b,       1,                12, TEST_MODE_UL_AND_DL, 32, "B");
+	test_successive_allocation(alloc_algorithm_b,       1, mslot_class_max(), TEST_MODE_UL_AND_DL, 29, "B");
+	test_successive_allocation(alloc_algorithm_dynamic, 1, mslot_class_max(), TEST_MODE_UL_AND_DL, 35, "dynamic");
 
 	test_a_b_dyn(TEST_MODE_DL_AND_UL,    35, 32,  32);
 	test_a_b_dyn(TEST_MODE_DL_AFTER_UL, 160, 32,  95);
@@ -802,7 +803,7 @@ int main(int argc, char **argv)
 	test_alloc_b();
 	test_successive_allocations();
 	test_many_connections(alloc_algorithm_a, 160, "A");
-	test_many_connections(alloc_algorithm_b, 32, "B");
+	test_many_connections(alloc_algorithm_b, 29, "B");
 	test_many_connections(alloc_algorithm_dynamic, 160, "dynamic");
 	test_2_consecutive_dl_tbfs();
 	return EXIT_SUCCESS;
