@@ -181,6 +181,8 @@ enum tbf_timers {
 #define T_START(tbf, t, sec, usec, r, f) tbf->t_start(t, sec, usec, r, f, __FILE__, __LINE__)
 
 #define TBF_SET_STATE(t, st) do { t->set_state(st, __FILE__, __LINE__); } while(0)
+#define TBF_SET_ASS_STATE_DL(t, st) do { t->set_ass_state_dl(st, __FILE__, __LINE__); } while(0)
+#define TBF_SET_ASS_STATE_UL(t, st) do { t->set_ass_state_ul(st, __FILE__, __LINE__); } while(0)
 #define TBF_SET_ASS_ON(t, fl, chk) do { t->set_assigned_on(fl, chk, __FILE__, __LINE__); } while(0)
 
 struct gprs_rlcmac_tbf {
@@ -191,7 +193,12 @@ struct gprs_rlcmac_tbf {
 
 	bool state_is(enum gprs_rlcmac_tbf_state rhs) const;
 	bool state_is_not(enum gprs_rlcmac_tbf_state rhs) const;
+	bool dl_ass_state_is(enum gprs_rlcmac_tbf_dl_ass_state rhs) const;
+	bool ul_ass_state_is(enum gprs_rlcmac_tbf_ul_ass_state rhs) const;
 	void set_state(enum gprs_rlcmac_tbf_state new_state, const char *file, int line);
+	void set_ass_state_dl(enum gprs_rlcmac_tbf_dl_ass_state new_state, const char *file, int line);
+	void set_ass_state_ul(enum gprs_rlcmac_tbf_ul_ass_state new_state, const char *file, int line);
+	void check_pending_ass();
 	bool check_n_clear(uint8_t state_flag);
 	void set_assigned_on(uint8_t state_flag, bool check_ccch, const char *file, int line);
 	const char *state_name() const;
@@ -272,8 +279,6 @@ struct gprs_rlcmac_tbf {
 
 	gprs_llc m_llc;
 
-	enum gprs_rlcmac_tbf_dl_ass_state dl_ass_state;
-	enum gprs_rlcmac_tbf_ul_ass_state ul_ass_state;
 	enum gprs_rlcmac_tbf_ul_ack_state ul_ack_state;
 
 	enum gprs_rlcmac_tbf_poll_state poll_state;
@@ -336,6 +341,8 @@ protected:
 
 private:
 	enum gprs_rlcmac_tbf_state state;
+	enum gprs_rlcmac_tbf_dl_ass_state dl_ass_state;
+	enum gprs_rlcmac_tbf_ul_ass_state ul_ass_state;
 	LListHead<gprs_rlcmac_tbf> m_list;
 	LListHead<gprs_rlcmac_tbf> m_ms_list;
 	bool m_egprs_enabled;
@@ -368,6 +375,16 @@ inline bool gprs_rlcmac_tbf::state_is(enum gprs_rlcmac_tbf_state rhs) const
 	return state == rhs;
 }
 
+inline bool gprs_rlcmac_tbf::dl_ass_state_is(enum gprs_rlcmac_tbf_dl_ass_state rhs) const
+{
+	return dl_ass_state == rhs;
+}
+
+inline bool gprs_rlcmac_tbf::ul_ass_state_is(enum gprs_rlcmac_tbf_ul_ass_state rhs) const
+{
+	return ul_ass_state == rhs;
+}
+
 inline bool gprs_rlcmac_tbf::state_is_not(enum gprs_rlcmac_tbf_state rhs) const
 {
 	return state != rhs;
@@ -397,6 +414,39 @@ inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state, con
 		tbf_name(this),
 		tbf_state_name[state], tbf_state_name[new_state]);
 	state = new_state;
+}
+
+inline void gprs_rlcmac_tbf::set_ass_state_dl(enum gprs_rlcmac_tbf_dl_ass_state new_state, const char *file, int line)
+{
+	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s changes DL ASS state from %s to %s\n",
+		tbf_name(this),
+		get_value_string(gprs_rlcmac_tbf_dl_ass_state_names, dl_ass_state),
+		get_value_string(gprs_rlcmac_tbf_dl_ass_state_names, new_state));
+	dl_ass_state = new_state;
+}
+
+inline void gprs_rlcmac_tbf::set_ass_state_ul(enum gprs_rlcmac_tbf_ul_ass_state new_state, const char *file, int line)
+{
+	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s changes UL ASS state from %s to %s\n",
+		tbf_name(this),
+		get_value_string(gprs_rlcmac_tbf_ul_ass_state_names, ul_ass_state),
+		get_value_string(gprs_rlcmac_tbf_ul_ass_state_names, new_state));
+	ul_ass_state = new_state;
+}
+
+inline void gprs_rlcmac_tbf::check_pending_ass()
+{
+	if (ul_ass_state != GPRS_RLCMAC_UL_ASS_NONE)
+		LOGPTBF(this, LOGL_ERROR, "FIXME: Software error: Pending uplink assignment in state %s. "
+			"This may not happen, because the assignment message never gets transmitted. "
+			"Please be sure not to free in this state. PLEASE FIX!\n",
+			get_value_string(gprs_rlcmac_tbf_ul_ass_state_names, ul_ass_state));
+
+	if (dl_ass_state != GPRS_RLCMAC_DL_ASS_NONE)
+		LOGPTBF(this, LOGL_ERROR, "FIXME: Software error: Pending downlink assignment in state %s. "
+			"This may not happen, because the assignment message never gets transmitted. "
+			"Please be sure not to free in this state. PLEASE FIX!\n",
+			get_value_string(gprs_rlcmac_tbf_dl_ass_state_names, dl_ass_state));
 }
 
 inline bool gprs_rlcmac_tbf::check_n_clear(uint8_t state_flag)

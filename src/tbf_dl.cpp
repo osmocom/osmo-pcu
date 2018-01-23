@@ -483,7 +483,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 	/* check for downlink tbf:  */
 	if (old_tbf) {
 		LOGPTBFDL(this, LOGL_DEBUG, "Send dowlink assignment on PACCH, because %s exists\n", old_tbf->name());
-		old_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
+		TBF_SET_ASS_STATE_DL(old_tbf, GPRS_RLCMAC_DL_ASS_SEND_ASS);
 		old_tbf->was_releasing = old_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
 
 		/* change state */

@@ -165,8 +165,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	first_ts(0),
 	first_common_ts(0),
 	control_ts(0xff),
-	dl_ass_state(GPRS_RLCMAC_DL_ASS_NONE),
-	ul_ass_state(GPRS_RLCMAC_UL_ASS_NONE),
 	ul_ack_state(GPRS_RLCMAC_UL_ACK_NONE),
 	poll_state(GPRS_RLCMAC_POLL_NONE),
 	poll_fn(0),
@@ -185,6 +183,8 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	m_ta(GSM48_TA_INVALID),
 	m_ms_class(0),
 	state(GPRS_RLCMAC_NULL),
+	dl_ass_state(GPRS_RLCMAC_DL_ASS_NONE),
+	ul_ass_state(GPRS_RLCMAC_UL_ASS_NONE),
 	m_list(this),
 	m_ms_list(this),
 	m_egprs_enabled(false)
@@ -452,21 +452,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	}
 
 	LOGPTBF(tbf, LOGL_INFO, "free\n");
-	if (tbf->ul_ass_state != GPRS_RLCMAC_UL_ASS_NONE)
-		LOGPTBF(tbf, LOGL_ERROR, "Software error: Pending uplink "
-		     "assignment in state %s. This may not happen, because the "
-			"assignment message never gets transmitted. Please "
-			"be sure not to free in this state. PLEASE FIX!\n",
-		     get_value_string(gprs_rlcmac_tbf_ul_ass_state_names,
-				      tbf->ul_ass_state));
-	if (tbf->dl_ass_state != GPRS_RLCMAC_DL_ASS_NONE)
-		LOGPTBF(tbf, LOGL_ERROR, "Software error: Pending downlink "
-		     "assignment in state %s. This may not happen, because the "
-			"assignment message never gets transmitted. Please "
-			"be sure not to free in this state. PLEASE FIX!\n",
-		     get_value_string(gprs_rlcmac_tbf_dl_ass_state_names,
-				      tbf->dl_ass_state));
-
+	tbf->check_pending_ass();
 	tbf->stop_timers("freeing TBF");
 	/* TODO: Could/Should generate  bssgp_tx_llc_discarded */
 	tbf_unlink_pdch(tbf);
@@ -1513,7 +1499,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 
 	ul_tbf->set_ms(ms);
 	ul_tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
-	ul_tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ;
+	TBF_SET_ASS_STATE_UL(ul_tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ);
 	ul_tbf->control_ts = ts;
 	ul_tbf->trx = trx;
 	ul_tbf->m_ctrs = rate_ctr_group_alloc(ul_tbf, &tbf_ctrg_desc, 0);

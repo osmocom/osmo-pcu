@@ -1022,11 +1022,11 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		tbf_free(tbf);
 		return;
 	}
-	if (tbf->dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
+	if (tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_WAIT_ACK)) {
 		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] DOWNLINK ASSIGNED\n");
 		/* reset N3105 */
 		tbf->n3105 = 0;
-		tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+		TBF_SET_ASS_STATE_DL(tbf, GPRS_RLCMAC_DL_ASS_NONE);
 
 		new_tbf = tbf->ms() ? tbf->ms()->dl_tbf() : NULL;
 		if (!new_tbf) {
@@ -1054,11 +1054,11 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		tbf_assign_control_ts(new_tbf);
 		return;
 	}
-	if (tbf->ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
+	if (tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_WAIT_ACK)) {
 		LOGPTBF(tbf, LOGL_DEBUG, "[DOWNLINK] UPLINK ASSIGNED\n");
 		/* reset N3105 */
 		tbf->n3105 = 0;
-		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
+		TBF_SET_ASS_STATE_UL(tbf, GPRS_RLCMAC_UL_ASS_NONE);
 
 		new_tbf = tbf->ms() ? tbf->ms()->ul_tbf() : NULL;
 		if (!new_tbf) {
@@ -1156,10 +1156,10 @@ static inline void sched_ul_ass_or_rej(BTS *bts, gprs_rlcmac_bts *bts_data, stru
 	/* schedule uplink assignment or reject */
 	if (ul_tbf) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack message, so we provide one:\n");
-		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+		TBF_SET_ASS_STATE_UL(tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS);
 	} else {
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack message, so we packet access reject:\n");
-		tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ;
+		TBF_SET_ASS_STATE_UL(tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ);
 	}
 }
 
@@ -1403,7 +1403,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 
 		ul_tbf->control_ts = ts_no;
 		/* schedule uplink assignment */
-		ul_tbf->ul_ass_state = GPRS_RLCMAC_UL_ASS_SEND_ASS;
+		TBF_SET_ASS_STATE_UL(ul_tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS);
 
 		/* get capabilities */
 		if (ul_tbf->ms())
