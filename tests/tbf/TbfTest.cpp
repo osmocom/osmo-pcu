@@ -1350,7 +1350,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_no_length(BTS *t
 	request_dl_rlc_block(ul_tbf, fn);
 
 	check_tbf(ul_tbf);
-	OSMO_ASSERT(ul_tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_NONE);
+	OSMO_ASSERT(ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_NONE));
 
 	ms = the_bts->ms_by_tlli(tlli);
 	OSMO_ASSERT(ms != NULL);
@@ -1434,7 +1434,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_with_length(BTS 
 	request_dl_rlc_block(ul_tbf, fn);
 
 	check_tbf(ul_tbf);
-	OSMO_ASSERT(ul_tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_NONE);
+	OSMO_ASSERT(ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_NONE));
 
 	ms = the_bts->ms_by_tlli(tlli);
 	OSMO_ASSERT(ms != NULL);
@@ -1522,7 +1522,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_CRBB(BTS *the_bts,
 	request_dl_rlc_block(ul_tbf, fn);
 
 	check_tbf(ul_tbf);
-	OSMO_ASSERT(ul_tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_NONE);
+	OSMO_ASSERT(ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_NONE));
 
 	ms = the_bts->ms_by_tlli(tlli);
 	OSMO_ASSERT(ms != NULL);

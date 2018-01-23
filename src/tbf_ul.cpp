@@ -106,8 +106,8 @@ bool gprs_rlcmac_ul_tbf::ctrl_ack_to_toggle()
 bool gprs_rlcmac_ul_tbf::handle_ctrl_ack()
 {
 	/* check if this control ack belongs to packet uplink ack */
-	if (ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
-		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
+	if (ul_ack_state_is(GPRS_RLCMAC_UL_ACK_WAIT_ACK)) {
+		TBF_SET_ACK_STATE(this, GPRS_RLCMAC_UL_ACK_NONE);
 		return true;
 	}
 
@@ -124,7 +124,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 
 	if (final) {
 		if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
-			ul_ack_state == GPRS_RLCMAC_UL_ACK_WAIT_ACK) {
+		    ul_ack_state_is(GPRS_RLCMAC_UL_ACK_WAIT_ACK)) {
 			LOGPTBFUL(this, LOGL_DEBUG,
 				  "Polling is already scheduled, so we must wait for the final uplink ack...\n");
 			return NULL;
@@ -158,7 +158,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 		/* waiting for final acknowledge */
 		m_final_ack_sent = 1;
 	} else
-		ul_ack_state = GPRS_RLCMAC_UL_ACK_NONE;
+		TBF_SET_ACK_STATE(this, GPRS_RLCMAC_UL_ACK_NONE);
 
 	return msg;
 }
@@ -362,9 +362,9 @@ void gprs_rlcmac_ul_tbf::maybe_schedule_uplink_acknack(
 				  "Scheduling Ack/Nack, because %d frames received.\n",
 				  SEND_ACK_AFTER_FRAMES);
 		}
-		if (ul_ack_state == GPRS_RLCMAC_UL_ACK_NONE) {
+		if (ul_ack_state_is(GPRS_RLCMAC_UL_ACK_NONE)) {
 			/* trigger sending at next RTS */
-			ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
+			TBF_SET_ACK_STATE(this, GPRS_RLCMAC_UL_ACK_SEND_ACK);
 		} else {
 			/* already triggered */
 			LOGPTBFUL(this, LOGL_DEBUG,
