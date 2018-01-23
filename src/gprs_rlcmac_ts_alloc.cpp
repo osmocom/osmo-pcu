@@ -469,8 +469,12 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 	Sum = mslot_class_get_sum(mslot_class);
 	Tta = mslot_class_get_ta(mslot_class);
 	Ttb = mslot_class_get_tb(mslot_class);
-	Tra = mslot_class_get_ra(mslot_class);
-	Trb = mslot_class_get_rb(mslot_class);
+
+	/* FIXME: use actual TA offset for computation - make sure to adjust "1 + MS_TO" accordingly
+	   see also "Offset required" bit in 3GPP TS 24.008 §10.5.1.7 */
+	Tra = mslot_class_get_ra(mslot_class, 0);
+	Trb = mslot_class_get_rb(mslot_class, 0);
+
 	Type = mslot_class_get_type(mslot_class);
 
 	if (Tx == MS_NA) {

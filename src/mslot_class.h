@@ -32,14 +32,15 @@
 #define MS_A	254 /* 1 with hopping, 0 without */
 #define MS_B	253 /* 1 with hopping, 0 without (change Rx to Tx)*/
 #define MS_C	252 /* 1 with hopping, 0 without (change Tx to Rx)*/
+#define MS_TO	251 /* 31 symbol periods (this can be provided by a TA offset, i.e. a minimum TA value) */
 
 #define DEFAULT_MSLOT_CLASS 12
 
 /* multislot class selection routines */
 uint8_t mslot_class_get_ta(uint8_t ms_cl);
 uint8_t mslot_class_get_tb(uint8_t ms_cl);
-uint8_t mslot_class_get_ra(uint8_t ms_cl);
-uint8_t mslot_class_get_rb(uint8_t ms_cl);
+uint8_t mslot_class_get_ra(uint8_t ms_cl, uint8_t ta);
+uint8_t mslot_class_get_rb(uint8_t ms_cl, uint8_t ta);
 uint8_t mslot_class_get_tx(uint8_t ms_cl);
 uint8_t mslot_class_get_rx(uint8_t ms_cl);
 uint8_t mslot_class_get_sum(uint8_t ms_cl);

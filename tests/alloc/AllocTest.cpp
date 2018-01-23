@@ -726,7 +726,7 @@ static void test_successive_allocations()
 	test_successive_allocation(alloc_algorithm_b,      12, 12, TEST_MODE_UL_AND_DL, 32, "B");
 
 	test_successive_allocation(alloc_algorithm_b,       1,                12, TEST_MODE_UL_AND_DL, 32, "B");
-	test_successive_allocation(alloc_algorithm_b,       1, mslot_class_max(), TEST_MODE_UL_AND_DL, 29, "B");
+	test_successive_allocation(alloc_algorithm_b,       1, mslot_class_max(), TEST_MODE_UL_AND_DL, 32, "B");
 	test_successive_allocation(alloc_algorithm_dynamic, 1, mslot_class_max(), TEST_MODE_UL_AND_DL, 35, "dynamic");
 
 	test_a_b_dyn(TEST_MODE_DL_AND_UL,    35, 32,  32);
@@ -803,7 +803,7 @@ int main(int argc, char **argv)
 	test_alloc_b();
 	test_successive_allocations();
 	test_many_connections(alloc_algorithm_a, 160, "A");
-	test_many_connections(alloc_algorithm_b, 29, "B");
+	test_many_connections(alloc_algorithm_b, 32, "B");
 	test_many_connections(alloc_algorithm_dynamic, 160, "dynamic");
 	test_2_consecutive_dl_tbfs();
 	return EXIT_SUCCESS;
