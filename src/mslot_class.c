@@ -27,7 +27,7 @@
 
 #include <errno.h>
 
-/* 3GPP TS 05.02 Annex B.1 */
+/* 3GPP TS 45.002 Annex B Table B.1 */
 
 struct gprs_ms_multislot_class {
 	uint8_t rx, tx, sum;	/* Maximum Number of Slots: RX, Tx, Sum Rx+Tx */
@@ -35,7 +35,7 @@ struct gprs_ms_multislot_class {
 	uint8_t type; /* Type of Mobile */
 };
 
-static const struct gprs_ms_multislot_class gprs_ms_multislot_class[32] = {
+static const struct gprs_ms_multislot_class gprs_ms_multislot_class[] = {
 	/* M-S Class |  Max # of slots |       Min # of slots      | Type */
 	/*           | Rx     Tx   Sum |  Tta    Ttb    Tra    Trb |      */
 	/* N/A */ { MS_NA, MS_NA, MS_NA, MS_NA, MS_NA, MS_NA, MS_NA, MS_NA },
@@ -68,8 +68,22 @@ static const struct gprs_ms_multislot_class gprs_ms_multislot_class[32] = {
 	/* 27 */  {   8,     4,   MS_NA,   2,   MS_B,    2,   MS_C,    1 },
 	/* 28 */  {   8,     6,   MS_NA,   2,   MS_B,    2,   MS_C,    1 },
 	/* 29 */  {   8,     8,   MS_NA,   2,   MS_B,    2,   MS_C,    1 },
-/* N/A */	{ MS_NA,MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA },
-/* N/A */	{ MS_NA,MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA,	MS_NA },
+	/* 30 */  {   5,     1,     6,     2,     1,     1,     1,     1 },
+	/* 31 */  {   5,     2,     6,     2,     1,     1,     1,     1 },
+	/* 32 */  {   5,     3,     6,     2,     1,     1,     1,     1 },
+	/* 33 */  {   5,     4,     6,     2,     1,     1,     1,     1 },
+	/* 34 */  {   5,     5,     6,     2,     1,     1,     1,     1 },
+	/* 35 */  {   5,     1,     6,     2,     1,   MS_TO,   1,     1 },
+	/* 36 */  {   5,     2,     6,     2,     1,   MS_TO,   1,     1 },
+	/* 37 */  {   5,     3,     6,     2,     1,   MS_TO,   1,     1 },
+	/* 38 */  {   5,     4,     6,     2,     1,   MS_TO,   1,     1 },
+	/* 39 */  {   5,     5,     6,     2,     1,   MS_TO,   1,     1 },
+	/* 40 */  {   6,     1,     7,     1,     1,     1,   MS_TO,   1 },
+	/* 41 */  {   6,     2,     7,     1,     1,     1,   MS_TO,   1 },
+	/* 42 */  {   6,     3,     7,     1,     1,     1,   MS_TO,   1 },
+	/* 43 */  {   6,     4,     7,     1,     1,     1,   MS_TO,   1 },
+	/* 44 */  {   6,     5,     7,     1,     1,     1,   MS_TO,   1 },
+	/* 45 */  {   6,     6,     7,     1,     1,     1,   MS_TO,   1 },
 };
 
 static inline const struct gprs_ms_multislot_class *get_mslot_table(uint8_t ms_cl)
@@ -109,12 +123,19 @@ uint8_t mslot_class_get_tb(uint8_t ms_cl)
 	}
 }
 
-uint8_t mslot_class_get_ra(uint8_t ms_cl)
+uint8_t mslot_class_get_ra(uint8_t ms_cl, uint8_t ta)
 {
-	return get_mslot_table(ms_cl)->ra;
+	const struct gprs_ms_multislot_class *t = get_mslot_table(ms_cl);
+
+	switch (t->ra) {
+	case MS_TO:
+		return ta + 1;
+	default:
+		return t->ra;
+	}
 }
 
-uint8_t mslot_class_get_rb(uint8_t ms_cl)
+uint8_t mslot_class_get_rb(uint8_t ms_cl, uint8_t ta)
 {
 	const struct gprs_ms_multislot_class *t = get_mslot_table(ms_cl);
 
@@ -123,6 +144,8 @@ uint8_t mslot_class_get_rb(uint8_t ms_cl)
 		return 0;
 	case MS_C:
 		return 1;
+	case MS_TO:
+		return ta;
 	default:
 		return t->rb;
 	}
