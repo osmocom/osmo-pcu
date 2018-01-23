@@ -60,6 +60,13 @@ const struct value_string gprs_rlcmac_tbf_ul_ass_state_names[] = {
  	{ 0, NULL }
 };
 
+const struct value_string gprs_rlcmac_tbf_ul_ack_state_names[] = {
+	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ACK_NONE),
+	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ACK_SEND_ACK), /* send acknowledge on next RTS */
+	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ACK_WAIT_ACK), /* wait for PACKET CONTROL ACK */
+	{ 0, NULL }
+};
+
 static const struct value_string tbf_timers_names[] = {
 	OSMO_VALUE_STRING(T0),
 	OSMO_VALUE_STRING(T3169),
@@ -165,7 +172,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	first_ts(0),
 	first_common_ts(0),
 	control_ts(0xff),
-	ul_ack_state(GPRS_RLCMAC_UL_ACK_NONE),
 	poll_state(GPRS_RLCMAC_POLL_NONE),
 	poll_fn(0),
 	poll_ts(0),
@@ -185,6 +191,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	state(GPRS_RLCMAC_NULL),
 	dl_ass_state(GPRS_RLCMAC_DL_ASS_NONE),
 	ul_ass_state(GPRS_RLCMAC_UL_ASS_NONE),
+	ul_ack_state(GPRS_RLCMAC_UL_ACK_NONE),
 	m_list(this),
 	m_ms_list(this),
 	m_egprs_enabled(false)

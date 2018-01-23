@@ -52,7 +52,7 @@ static uint32_t sched_poll(BTS *bts,
 		if (ul_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
 		 && ul_tbf->poll_fn == poll_fn)
 			*poll_tbf = ul_tbf;
-		if (ul_tbf->ul_ack_state == GPRS_RLCMAC_UL_ACK_SEND_ACK)
+		if (ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_SEND_ACK))
 			*ul_ack_tbf = ul_tbf;
 		if (ul_tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_SEND_ASS))
 			*dl_ass_tbf = ul_tbf;
