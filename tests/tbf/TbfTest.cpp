@@ -175,7 +175,7 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(BTS *the_bts, uint8_t ms_class,
 	check_tbf(dl_tbf);
 
 	/* "Establish" the DL TBF */
-	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
+	TBF_SET_ASS_STATE_DL(dl_tbf, GPRS_RLCMAC_DL_ASS_SEND_ASS);
 	TBF_SET_STATE(dl_tbf, GPRS_RLCMAC_FLOW);
 	dl_tbf->m_wait_confirm = 0;
 	check_tbf(dl_tbf);
@@ -276,7 +276,7 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	OSMO_ASSERT(new_tbf != dl_tbf);
 	OSMO_ASSERT(new_tbf->tfi() == 1);
 	check_tbf(dl_tbf);
-	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+	TBF_SET_ASS_STATE_DL(dl_tbf, GPRS_RLCMAC_DL_ASS_NONE);
 	if (test_mode == TEST_MODE_REVERSE_FREE) {
 		GprsMs::Guard guard(ms);
 		tbf_free(new_tbf);
@@ -365,7 +365,7 @@ static void test_tbf_delayed_release()
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
-	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+	TBF_SET_ASS_STATE_DL(dl_tbf, GPRS_RLCMAC_DL_ASS_NONE);
 	check_tbf(dl_tbf);
 	tbf_free(dl_tbf);
 	printf("=== end %s ===\n", __func__);
@@ -2699,7 +2699,7 @@ static void establish_and_use_egprs_dl_tbf(BTS *the_bts, int mcs)
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
-	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+	TBF_SET_ASS_STATE_DL(dl_tbf, GPRS_RLCMAC_DL_ASS_NONE);
 	check_tbf(dl_tbf);
 	tbf_free(dl_tbf);
 }
@@ -2748,7 +2748,7 @@ static void tbf_cleanup(gprs_rlcmac_dl_tbf *dl_tbf)
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
-	dl_tbf->dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
+	TBF_SET_ASS_STATE_DL(dl_tbf, GPRS_RLCMAC_DL_ASS_NONE);
 	check_tbf(dl_tbf);
 	tbf_free(dl_tbf);
 
