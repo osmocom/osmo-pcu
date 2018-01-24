@@ -123,8 +123,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 	uint32_t new_poll_fn = 0;
 
 	if (final) {
-		if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
-		    ul_ack_state_is(GPRS_RLCMAC_UL_ACK_WAIT_ACK)) {
+		if (poll_scheduled() && ul_ack_state_is(GPRS_RLCMAC_UL_ACK_WAIT_ACK)) {
 			LOGPTBFUL(this, LOGL_DEBUG,
 				  "Polling is already scheduled, so we must wait for the final uplink ack...\n");
 			return NULL;

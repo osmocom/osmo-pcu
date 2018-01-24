@@ -64,6 +64,8 @@ enum gprs_rlcmac_tbf_poll_state {
 	GPRS_RLCMAC_POLL_SCHED, /* a polling was scheduled */
 };
 
+extern const struct value_string gprs_rlcmac_tbf_poll_state_names[];
+
 enum gprs_rlcmac_tbf_dl_ass_state {
 	GPRS_RLCMAC_DL_ASS_NONE = 0,
 	GPRS_RLCMAC_DL_ASS_SEND_ASS, /* send downlink assignment on next RTS */
@@ -186,6 +188,8 @@ enum tbf_timers {
 #define TBF_SET_ASS_STATE_DL(t, st) do { t->set_ass_state_dl(st, __FILE__, __LINE__); } while(0)
 #define TBF_SET_ASS_STATE_UL(t, st) do { t->set_ass_state_ul(st, __FILE__, __LINE__); } while(0)
 #define TBF_SET_ACK_STATE(t, st) do { t->set_ack_state(st, __FILE__, __LINE__); } while(0)
+#define TBF_POLL_SCHED_SET(t) do { t->poll_sched_set(__FILE__, __LINE__); } while(0)
+#define TBF_POLL_SCHED_UNSET(t) do { t->poll_sched_unset(__FILE__, __LINE__); } while(0)
 #define TBF_SET_ASS_ON(t, fl, chk) do { t->set_assigned_on(fl, chk, __FILE__, __LINE__); } while(0)
 
 struct gprs_rlcmac_tbf {
@@ -199,10 +203,13 @@ struct gprs_rlcmac_tbf {
 	bool dl_ass_state_is(enum gprs_rlcmac_tbf_dl_ass_state rhs) const;
 	bool ul_ass_state_is(enum gprs_rlcmac_tbf_ul_ass_state rhs) const;
 	bool ul_ack_state_is(enum gprs_rlcmac_tbf_ul_ack_state rhs) const;
+	bool poll_scheduled() const;
 	void set_state(enum gprs_rlcmac_tbf_state new_state, const char *file, int line);
 	void set_ass_state_dl(enum gprs_rlcmac_tbf_dl_ass_state new_state, const char *file, int line);
 	void set_ass_state_ul(enum gprs_rlcmac_tbf_ul_ass_state new_state, const char *file, int line);
 	void set_ack_state(enum gprs_rlcmac_tbf_ul_ack_state new_state, const char *file, int line);
+	void poll_sched_set(const char *file, int line);
+	void poll_sched_unset(const char *file, int line);
 	void check_pending_ass();
 	bool check_n_clear(uint8_t state_flag);
 	void set_assigned_on(uint8_t state_flag, bool check_ccch, const char *file, int line);
@@ -284,7 +291,6 @@ struct gprs_rlcmac_tbf {
 
 	gprs_llc m_llc;
 
-	enum gprs_rlcmac_tbf_poll_state poll_state;
 	uint32_t poll_fn; /* frame number to poll */
 	uint8_t poll_ts; /* TS to poll */
 
@@ -347,6 +353,7 @@ private:
 	enum gprs_rlcmac_tbf_dl_ass_state dl_ass_state;
 	enum gprs_rlcmac_tbf_ul_ass_state ul_ass_state;
 	enum gprs_rlcmac_tbf_ul_ack_state ul_ack_state;
+	enum gprs_rlcmac_tbf_poll_state poll_state;
 	LListHead<gprs_rlcmac_tbf> m_list;
 	LListHead<gprs_rlcmac_tbf> m_ms_list;
 	bool m_egprs_enabled;
@@ -392,6 +399,11 @@ inline bool gprs_rlcmac_tbf::ul_ass_state_is(enum gprs_rlcmac_tbf_ul_ass_state r
 inline bool gprs_rlcmac_tbf::ul_ack_state_is(enum gprs_rlcmac_tbf_ul_ack_state rhs) const
 {
 	return ul_ack_state == rhs;
+}
+
+inline bool gprs_rlcmac_tbf::poll_scheduled() const
+{
+	return poll_state == GPRS_RLCMAC_POLL_SCHED;
 }
 
 inline bool gprs_rlcmac_tbf::state_is_not(enum gprs_rlcmac_tbf_state rhs) const
@@ -450,6 +462,20 @@ inline void gprs_rlcmac_tbf::set_ack_state(enum gprs_rlcmac_tbf_ul_ack_state new
 		get_value_string(gprs_rlcmac_tbf_ul_ack_state_names, ul_ack_state),
 		get_value_string(gprs_rlcmac_tbf_ul_ack_state_names, new_state));
 	ul_ack_state = new_state;
+}
+
+inline void gprs_rlcmac_tbf::poll_sched_set(const char *file, int line)
+{
+	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s changes poll state from %s to GPRS_RLCMAC_POLL_SCHED\n",
+		tbf_name(this), get_value_string(gprs_rlcmac_tbf_poll_state_names, poll_state));
+	poll_state = GPRS_RLCMAC_POLL_SCHED;
+}
+
+inline void gprs_rlcmac_tbf::poll_sched_unset(const char *file, int line)
+{
+	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s changes poll state from %s to GPRS_RLCMAC_POLL_NONE\n",
+		tbf_name(this), get_value_string(gprs_rlcmac_tbf_poll_state_names, poll_state));
+	poll_state = GPRS_RLCMAC_POLL_NONE;
 }
 
 inline void gprs_rlcmac_tbf::check_pending_ass()

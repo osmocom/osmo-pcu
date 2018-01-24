@@ -635,7 +635,7 @@ bool gprs_rlcmac_dl_tbf::handle_ack_nack()
 	/* reset N3105 */
 	n3105 = 0;
 	t_stop(T3191, "ACK/NACK received");
-	poll_state = GPRS_RLCMAC_POLL_NONE;
+	TBF_POLL_SCHED_UNSET(this);
 
 	return ack_recovered;
 }
@@ -1181,7 +1181,7 @@ void gprs_rlcmac_dl_tbf::request_dl_ack()
 
 bool gprs_rlcmac_dl_tbf::need_control_ts() const
 {
-	if (poll_state != GPRS_RLCMAC_POLL_NONE)
+	if (poll_scheduled())
 		return false;
 
 	return state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK) ||
