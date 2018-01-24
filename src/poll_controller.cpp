@@ -47,14 +47,14 @@ void PollController::expireTimedout(int frame_number, unsigned max_delay)
 
 	llist_for_each(pos, &m_bts.ul_tbfs()) {
 		ul_tbf = as_ul_tbf(pos->entry());
-		if (ul_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
+		if (ul_tbf->poll_scheduled()) {
 			if (elapsed_fn_check(max_delay, frame_number, ul_tbf->poll_fn))
 				ul_tbf->poll_timeout();
 		}
 	}
 	llist_for_each(pos, &m_bts.dl_tbfs()) {
 		dl_tbf = as_dl_tbf(pos->entry());
-		if (dl_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED) {
+		if (dl_tbf->poll_scheduled()) {
 			if (elapsed_fn_check(max_delay, frame_number, dl_tbf->poll_fn))
 				dl_tbf->poll_timeout();
 		}

@@ -399,7 +399,7 @@ void BTS::send_gsmtap(enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_n
 
 static inline bool tbf_check(gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t trx_no, uint8_t ts)
 {
-	if (tbf->state_is_not(GPRS_RLCMAC_RELEASING) && tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
+	if (tbf->state_is_not(GPRS_RLCMAC_RELEASING) && tbf->poll_scheduled()
 	    && tbf->poll_fn == fn && tbf->trx->trx_no == trx_no && tbf->poll_ts == ts)
 		return true;
 
@@ -1010,7 +1010,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 
 	LOGPTBF(tbf, LOGL_DEBUG, "RX: [PCU <- BTS] Packet Control Ack\n");
-	tbf->poll_state = GPRS_RLCMAC_POLL_NONE;
+	TBF_POLL_SCHED_UNSET(tbf);
 
 	/* check if this control ack belongs to packet uplink ack */
 	ul_tbf = as_ul_tbf(tbf);

@@ -49,8 +49,7 @@ static uint32_t sched_poll(BTS *bts,
 		if (ul_tbf->trx->trx_no != trx || !ul_tbf->is_control_ts(ts))
 			continue;
 		/* polling for next uplink block */
-		if (ul_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
-		 && ul_tbf->poll_fn == poll_fn)
+		if (ul_tbf->poll_scheduled() && ul_tbf->poll_fn == poll_fn)
 			*poll_tbf = ul_tbf;
 		if (ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_SEND_ACK))
 			*ul_ack_tbf = ul_tbf;
@@ -69,8 +68,7 @@ states? */
 		if (dl_tbf->trx->trx_no != trx || !dl_tbf->is_control_ts(ts))
 			continue;
 		/* polling for next uplink block */
-		if (dl_tbf->poll_state == GPRS_RLCMAC_POLL_SCHED
-		 && dl_tbf->poll_fn == poll_fn)
+		if (dl_tbf->poll_scheduled() && dl_tbf->poll_fn == poll_fn)
 			*poll_tbf = dl_tbf;
 		if (dl_tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_SEND_ASS))
 			*dl_ass_tbf = dl_tbf;
