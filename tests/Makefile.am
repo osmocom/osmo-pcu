@@ -33,6 +33,7 @@ tbf_TbfTest_LDADD = \
 	$(LIBOSMOGSM_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
+tbf_TbfTest_LDFLAGS = -Wl,--wrap=pcu_sock_send
 
 bitcomp_BitcompTest_SOURCES = bitcomp/BitcompTest.cpp ../src/egprs_rlc_compression.cpp
 bitcomp_BitcompTest_LDADD = \
