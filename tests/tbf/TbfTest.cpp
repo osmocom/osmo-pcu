@@ -137,7 +137,9 @@ static void test_tbf_tlli_update()
 
 static uint8_t llc_data[200];
 
-int pcu_sock_send(struct msgb *msg)
+/* override, requires '-Wl,--wrap=pcu_sock_send' */
+int __real_pcu_sock_send(struct msgb *msg);
+int __wrap_pcu_sock_send(struct msgb *msg)
 {
 	return 0;
 }
