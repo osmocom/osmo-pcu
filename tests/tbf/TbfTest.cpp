@@ -3276,7 +3276,7 @@ int main(int argc, char **argv)
 	bssgp_set_log_ss(DBSSGP);
 	log_parse_category_mask(osmo_stderr_target, "DRLCMAC,1:DRLCMACDATA,3:DRLCMACDL,3:DRLCMACUL,3:"
 				"DRLCMACSCHED,1:DRLCMACMEAS,3:DNS,3:DBSSGP,3:DPCU,5:"
-				"DL1IF,1:DTBF,1:DTBFUL,1:DTBFDL,1:");
+				"DL1IF,6:DTBF,1:DTBFUL,1:DTBFDL,1:");
 
 	vty_init(&pcu_vty_info);
 	pcu_vty_init(&gprs_log_info);
