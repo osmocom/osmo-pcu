@@ -29,9 +29,9 @@
 #include "cxx_linuxlist.h"
 
 extern "C" {
-#  include <osmocom/vty/command.h>
-#  include <osmocom/vty/logging.h>
-#  include <osmocom/vty/misc.h>
+#include <osmocom/vty/command.h>
+#include <osmocom/vty/logging.h>
+#include <osmocom/vty/misc.h>
 }
 
 int pcu_vty_config_write_pcu_ext(struct vty *vty)
