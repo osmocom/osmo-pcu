@@ -27,6 +27,8 @@
 #include "rlc.h"
 #include "llc.h"
 #include "bts.h"
+#include <gprs_rlcmac.h>
+
 extern "C" {
 #include "pcu_vty.h"
 

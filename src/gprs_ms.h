@@ -22,13 +22,16 @@
 
 struct gprs_codel;
 
+#include <gprs_coding_scheme.h>
 #include "cxx_linuxlist.h"
 #include "llc.h"
 #include "tbf.h"
 #include "pcu_l1_if.h"
+#include <gprs_coding_scheme.h>
 
 extern "C" {
 	#include <osmocom/core/timer.h>
+	#include <osmocom/core/linuxlist.h>
 }
 
 #include <stdint.h>

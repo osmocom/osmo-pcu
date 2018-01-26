@@ -23,7 +23,10 @@
 
 #include "tbf.h"
 #include "bts.h"
-#include "gprs_debug.h"
+
+extern "C" {
+	#include <osmocom/core/linuxlist.h>
+}
 
 #define GPRS_UNDEFINED_IMSI "000"
 

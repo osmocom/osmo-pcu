@@ -42,8 +42,6 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 #define NS_HDR_LEN 4
 #define IE_LLC_PDU 14
 
-struct gprs_rlcmac_bts;
-
 struct gprs_bssgp_pcu {
 	struct gprs_nsvc *nsvc;
 	struct bssgp_bvc_ctx *bctx;

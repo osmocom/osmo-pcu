@@ -26,12 +26,18 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <arpa/inet.h>
+
 extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/select.h>
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/gsmtap_util.h>
 #include <osmocom/core/gsmtap.h>
+#include <osmocom/core/bitvec.h>
+#include <osmocom/core/logging.h>
+#include <osmocom/core/utils.h>
+#include <osmocom/gsm/l1sap.h>
+#include <osmocom/gsm/protocol/gsm_04_08.h>
 }
 
 #include <gprs_rlcmac.h>
@@ -40,7 +46,6 @@ extern "C" {
 #include <gprs_bssgp_pcu.h>
 #include <osmocom/pcu/pcuif_proto.h>
 #include <bts.h>
-#include <tbf.h>
 
 // FIXME: move this, when changed from c++ to c.
 extern "C" {

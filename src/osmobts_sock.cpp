@@ -29,9 +29,11 @@ extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/select.h>
 #include <osmocom/core/msgb.h>
+#include <osmocom/core/linuxlist.h>
+#include <osmocom/core/logging.h>
+#include <osmocom/core/timer.h>
 }
 
-#include <gprs_rlcmac.h>
 #include <pcu_l1_if.h>
 #include <gprs_debug.h>
 #include <gprs_bssgp_pcu.h>

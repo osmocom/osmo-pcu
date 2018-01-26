@@ -28,12 +28,21 @@
 #include <gprs_bssgp_pcu.h>
 #include <decoding.h>
 #include <pcu_l1_if.h>
-
+#include <gprs_coding_scheme.h>
+#include <gprs_ms.h>
+#include <llc.h>
 #include "pcu_utils.h"
 
 extern "C" {
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/talloc.h>
+	#include <osmocom/core/bitvec.h>
+	#include <osmocom/core/logging.h>
+	#include <osmocom/core/rate_ctr.h>
+	#include <osmocom/core/utils.h>
+	#include <osmocom/gprs/gprs_bssgp_bss.h>
+	#include <osmocom/gprs/protocol/gsm_08_18.h>
+	#include <osmocom/gsm/tlv.h>
 }
 
 #include <errno.h>

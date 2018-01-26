@@ -20,7 +20,7 @@
 
 
 #include "gprs_ms.h"
-
+#include <gprs_coding_scheme.h>
 #include "bts.h"
 #include "tbf.h"
 #include "gprs_debug.h"
@@ -33,6 +33,7 @@ extern "C" {
 	#include <osmocom/core/talloc.h>
 	#include <osmocom/core/utils.h>
 	#include <osmocom/gsm/protocol/gsm_04_08.h>
+	#include <osmocom/core/logging.h>
 }
 
 #define GPRS_CODEL_SLOW_INTERVAL_MS 4000

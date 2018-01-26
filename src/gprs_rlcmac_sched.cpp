@@ -22,8 +22,15 @@
 #include <pcu_l1_if.h>
 #include <bts.h>
 #include <tbf.h>
-
+#include <gprs_debug.h>
+#include <gprs_ms.h>
+#include <rlc.h>
+#include <sba.h>
 #include "pcu_utils.h"
+
+extern "C" {
+	#include <osmocom/core/gsmtap.h>
+}
 
 static uint32_t sched_poll(BTS *bts,
 		    uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
