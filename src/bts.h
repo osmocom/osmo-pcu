@@ -364,7 +364,7 @@ public:
 	gprs_rlcmac_dl_tbf *dl_tbf_by_tfi(uint8_t tfi, uint8_t trx, uint8_t ts);
 	gprs_rlcmac_ul_tbf *ul_tbf_by_tfi(uint8_t tfi, uint8_t trx, uint8_t ts);
 
-	int tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx);
+	int tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx) const;
 
 	int rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn);
 
