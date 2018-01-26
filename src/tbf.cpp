@@ -403,7 +403,8 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 /* FIXME: Copy and paste with tbf_new_dl_assignment */
 	/* create new TBF, use same TRX as DL TBF */
 	/* use multislot class of downlink TBF */
-	tbf = tbf_alloc_ul_tbf(bts, ms, use_trx, ms_class, egprs_ms_class, 0);
+	tbf = tbf_alloc_ul_tbf(bts, ms, use_trx, ms_class, egprs_ms_class,
+			       false);
 	if (!tbf) {
 		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */
@@ -1350,7 +1351,7 @@ int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
 
 	new_tbf = tbf_alloc_dl_tbf(bts->bts_data(), ms(),
 		this->trx->trx_no, ms_class(),
-		ms() ?  ms()->egprs_ms_class() : 0, 0);
+		ms() ?  ms()->egprs_ms_class() : 0, false);
 
 	if (!new_tbf) {
 		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource\n");
