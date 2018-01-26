@@ -749,7 +749,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 		// Create new TBF
 		/* FIXME: Copy and paste with other routines.. */
 
-		tbf = tbf_alloc_ul_tbf(&m_bts, NULL, -1, 0, ms_class, 1);
+		tbf = tbf_alloc_ul_tbf(&m_bts, NULL, -1, 0, ms_class, true);
 
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource sending "

@@ -213,7 +213,7 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 	enable_ts_on_bts(bts, ts0, ts1, ts2, ts3, ts4, ts5, ts6, ts7);
 
-	ul_tbf = tbf_alloc_ul_tbf(bts, NULL, -1, ms_class, 0, 1);
+	ul_tbf = tbf_alloc_ul_tbf(bts, NULL, -1, ms_class, 0, true);
 	if (!ul_tbf)
 		return false;
 
@@ -223,7 +223,8 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	dump_assignment(ul_tbf, "UL", verbose);
 
 	/* assume final ack has not been sent */
-	dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), ul_tbf->ms()->current_trx()->trx_no, ms_class, 0, 0);
+	dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), ul_tbf->ms()->current_trx()->trx_no, ms_class, 0,
+				  false);
 	if (!dl_tbf)
 		return false;
 
@@ -254,7 +255,7 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 	enable_ts_on_bts(bts, ts0, ts1, ts2, ts3, ts4, ts5, ts6, ts7);
 
-	dl_tbf = tbf_alloc_dl_tbf(bts, NULL, -1, ms_class, 0, 1);
+	dl_tbf = tbf_alloc_dl_tbf(bts, NULL, -1, ms_class, 0, true);
 	if (!dl_tbf)
 		return false;
 
@@ -265,7 +266,8 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 	dump_assignment(dl_tbf, "DL", verbose);
 
-	ul_tbf = tbf_alloc_ul_tbf(bts, dl_tbf->ms(), dl_tbf->ms()->current_trx()->trx_no, ms_class, 0, 0);
+	ul_tbf = tbf_alloc_ul_tbf(bts, dl_tbf->ms(), dl_tbf->ms()->current_trx()->trx_no, ms_class, 0,
+				  false);
 	if (!ul_tbf)
 		return false;
 
@@ -305,7 +307,7 @@ static inline bool test_alloc_b_jolly(uint8_t ms_class)
 
 	tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 	OSMO_ASSERT(tfi >= 0);
-	ul_tbf = tbf_alloc_ul_tbf(bts, NULL, .1, ms_class, 0, 0);
+	ul_tbf = tbf_alloc_ul_tbf(bts, NULL, .1, ms_class, 0, false);
 	if (!ul_tbf)
 		return false;
 
@@ -315,7 +317,8 @@ static inline bool test_alloc_b_jolly(uint8_t ms_class)
 	dump_assignment(ul_tbf, "UL", true);
 
 	/* assume final ack has not been sent */
-	dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), trx_no, ms_class, 0, 0);
+	dl_tbf = tbf_alloc_dl_tbf(bts, ul_tbf->ms(), trx_no, ms_class, 0,
+				  false);
 	if (!dl_tbf)
 		return false;
 
@@ -466,7 +469,7 @@ static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, unsigned ms_class,
 	case TEST_MODE_UL_AND_DL:
 		if (ms && ms->ul_tbf())
 			tbf_free(ms->ul_tbf());
-		tbf = tbf_alloc_ul_tbf(bts, ms, trx_no, ms_class, 0, 0);
+		tbf = tbf_alloc_ul_tbf(bts, ms, trx_no, ms_class, 0, false);
 		if (tbf == NULL)
 			return NULL;
 		break;
@@ -475,7 +478,7 @@ static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, unsigned ms_class,
 	case TEST_MODE_DL_AND_UL:
 		if (ms && ms->dl_tbf())
 			tbf_free(ms->dl_tbf());
-		tbf = tbf_alloc_dl_tbf(bts, ms, trx_no, ms_class, 0, 0);
+		tbf = tbf_alloc_dl_tbf(bts, ms, trx_no, ms_class, 0, false);
 		if (tbf == NULL)
 			return NULL;
 	}
@@ -755,7 +758,8 @@ static void test_2_consecutive_dl_tbfs()
 	trx->pdch[6].enable();
 	trx->pdch[7].enable();
 
-	dl_tbf1 = tbf_alloc_dl_tbf(bts, NULL, 0, ms_class, egprs_ms_class, 0);
+	dl_tbf1 = tbf_alloc_dl_tbf(bts, NULL, 0, ms_class, egprs_ms_class,
+				   false);
 	OSMO_ASSERT(dl_tbf1);
 
 	for (int i = 0; i < 8; i++) {
@@ -765,7 +769,8 @@ static void test_2_consecutive_dl_tbfs()
 	OSMO_ASSERT(numTs1 == 4);
 	printf("TBF1: numTs(%d)\n", numTs1);
 
-	dl_tbf2 = tbf_alloc_dl_tbf(bts, NULL, 0, ms_class, egprs_ms_class, 0);
+	dl_tbf2 = tbf_alloc_dl_tbf(bts, NULL, 0, ms_class, egprs_ms_class,
+				   false);
 	OSMO_ASSERT(dl_tbf2);
 
 	for (int i = 0; i < 8; i++) {
