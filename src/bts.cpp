@@ -495,7 +495,7 @@ int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t
 	}
 
 	if (!free_tfis) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No TFI available.\n");
+		LOGP(DRLCMAC, LOGL_NOTICE, "No TFI available (suggested TRX: %d).\n", use_trx);
 		return -EBUSY;
 	}
 
