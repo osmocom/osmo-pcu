@@ -44,8 +44,7 @@ inline unsigned int pcu_bitcount(T x)
 	return count;
 }
 
-template <typename T>
-inline T pcu_lsb(T x)
+inline uint8_t pcu_lsb(uint8_t x)
 {
 	return x & -x;
 }
