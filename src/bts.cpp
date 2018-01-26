@@ -456,10 +456,9 @@ gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_tfi(uint8_t tfi, uint8_t trx, uint8_t ts)
  * a TRX. The first TRX that contains such an TFI is returned. Negative values
  * indicate errors.
  */
-int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir,
-		uint8_t *_trx, int8_t use_trx)
+int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx) const
 {
-	struct gprs_rlcmac_pdch *pdch;
+	const struct gprs_rlcmac_pdch *pdch;
 	uint32_t free_tfis;
 	bool has_pdch = false;
 	uint8_t trx_from, trx_to, trx, ts, tfi;
