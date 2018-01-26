@@ -27,11 +27,19 @@
 #include "gprs_ms_storage.h"
 #include "gprs_ms.h"
 #include "cxx_linuxlist.h"
+#include <gprs_coding_scheme.h>
+#include <llc.h>
+#include <pcu_l1_if.h>
+#include <rlc.h>
+#include <tbf.h>
 
 extern "C" {
 #include <osmocom/vty/command.h>
 #include <osmocom/vty/logging.h>
 #include <osmocom/vty/misc.h>
+	#include <osmocom/core/linuxlist.h>
+	#include <osmocom/core/utils.h>
+	#include <osmocom/vty/vty.h>
 }
 
 static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)

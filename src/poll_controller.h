@@ -21,8 +21,6 @@
 
 #pragma once
 
-struct gprs_rlcmac_bts;
-
 struct BTS;
 
 /**

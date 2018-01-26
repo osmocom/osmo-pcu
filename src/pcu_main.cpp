@@ -17,22 +17,34 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include <gprs_bssgp_pcu.h>
-#include <arpa/inet.h>
 #include <pcu_l1_if.h>
 #include <gprs_rlcmac.h>
 #include <gsm_timer.h>
 #include <gprs_debug.h>
 #include <unistd.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 #include <getopt.h>
 #include <signal.h>
 #include <sched.h>
 #include <bts.h>
+#include <gprs_coding_scheme.h>
+#include <osmocom/pcu/pcuif_proto.h>
 extern "C" {
 #include "pcu_vty.h"
+#include <osmocom/gprs/gprs_bssgp.h>
+#include <osmocom/gprs/gprs_ns.h>
 #include <osmocom/vty/telnet_interface.h>
-#include <osmocom/vty/logging.h>
+#include <osmocom/vty/command.h>
+#include <osmocom/vty/vty.h>
 #include <osmocom/vty/ports.h>
+#include <osmocom/core/rate_ctr.h>
+#include <osmocom/core/select.h>
+#include <osmocom/core/application.h>
+#include <osmocom/core/msgb.h>
 #include <osmocom/core/stats.h>
 #include <osmocom/core/gsmtap.h>
 #include <osmocom/core/gsmtap_util.h>

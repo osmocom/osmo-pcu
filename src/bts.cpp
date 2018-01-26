@@ -25,9 +25,10 @@
 #include <decoding.h>
 #include <rlc.h>
 #include <pcu_l1_if.h>
-
+#include <gprs_ms.h>
 #include <gprs_rlcmac.h>
 #include <gprs_debug.h>
+#include <cxx_linuxlist.h>
 
 extern "C" {
 	#include <osmocom/core/talloc.h>
@@ -37,9 +38,11 @@ extern "C" {
 	#include <osmocom/gsm/gsm_utils.h>
 	#include <osmocom/core/gsmtap_util.h>
 	#include <osmocom/core/application.h>
+	#include <osmocom/core/bitvec.h>
+	#include <osmocom/core/gsmtap.h>
+	#include <osmocom/core/logging.h>
+	#include <osmocom/core/utils.h>
 }
-
-#include <arpa/inet.h>
 
 #include <errno.h>
 #include <string.h>

@@ -21,8 +21,10 @@
 #include <gprs_rlcmac.h>
 #include <gprs_bssgp_pcu.h>
 #include <pcu_l1_if.h>
+#include <gprs_debug.h>
 #include <bts.h>
 #include <tbf.h>
+#include <gprs_coding_scheme.h>
 
 #define BSSGP_TIMER_T1	30	/* Guards the (un)blocking procedures */
 #define BSSGP_TIMER_T2	30	/* Guards the reset procedure */

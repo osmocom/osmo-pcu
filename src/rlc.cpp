@@ -18,11 +18,17 @@
 
 #include "bts.h"
 #include "gprs_debug.h"
+#include <gprs_coding_scheme.h>
+#include <rlc.h>
 
-#include <errno.h>
+#include <stdbool.h>
+#include <string.h>
+#include <sys/types.h>
 
 extern "C" {
 #include <osmocom/core/utils.h>
+#include <osmocom/core/bitvec.h>
+#include <osmocom/core/logging.h>
 }
 
 

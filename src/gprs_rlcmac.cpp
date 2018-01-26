@@ -24,7 +24,7 @@
 #include <bts.h>
 #include <encoding.h>
 #include <tbf.h>
-
+#include <gprs_debug.h>
 
 extern void *tall_pcu_ctx;
 

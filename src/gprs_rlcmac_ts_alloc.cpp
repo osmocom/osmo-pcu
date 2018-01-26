@@ -31,6 +31,9 @@
 
 extern "C" {
 #include "mslot_class.h"
+#include <osmocom/core/linuxlist.h>
+#include <osmocom/core/logging.h>
+#include <osmocom/core/utils.h>
 }
 
 /* Consider a PDCH as idle if has at most this number of TBFs assigned to it */

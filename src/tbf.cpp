@@ -25,10 +25,13 @@
 #include <encoding.h>
 #include <gprs_rlcmac.h>
 #include <gprs_debug.h>
-#include <gprs_bssgp_pcu.h>
 #include <gprs_ms.h>
-#include <decoding.h>
 #include <pcu_utils.h>
+#include <gprs_ms_storage.h>
+#include <gsm_rlcmac.h>
+#include <sba.h>
+#include <gprs_coding_scheme.h>
+#include <gsm_timer.h>
 
 extern "C" {
 #include <osmocom/core/msgb.h>
@@ -36,6 +39,9 @@ extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/stats.h>
 #include <osmocom/core/logging.h>
+	#include <osmocom/core/bitvec.h>
+	#include <osmocom/core/rate_ctr.h>
+	#include <osmocom/gsm/protocol/gsm_04_08.h>
 }
 
 #include <errno.h>

@@ -27,6 +27,7 @@
 #include "gprs_bssgp_pcu.h"
 #include "pcu_l1_if.h"
 #include "decoding.h"
+#include <gprs_rlcmac.h>
 
 extern "C" {
 #include "pcu_vty.h"

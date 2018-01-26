@@ -26,17 +26,17 @@ extern "C" {
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/rate_ctr.h>
 #include <osmocom/core/stat_item.h>
-#include <osmocom/core/timer.h>
-#include <osmocom/core/gsmtap.h>
 #include <osmocom/gsm/l1sap.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
 }
 
+#include <gsm_rlcmac.h>
 #include "poll_controller.h"
 #include "sba.h"
 #include "tbf.h"
 #include "gprs_ms_storage.h"
 #include "gprs_coding_scheme.h"
+#include <cxx_linuxlist.h>
 #endif
 
 #include <stdint.h>

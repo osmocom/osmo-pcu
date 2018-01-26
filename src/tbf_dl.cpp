@@ -28,18 +28,28 @@
 #include <gprs_codel.h>
 #include <decoding.h>
 #include <encoding.h>
-
+#include <gprs_coding_scheme.h>
+#include <gprs_ms.h>
+#include <gprs_ms_storage.h>
+#include <llc.h>
 #include "pcu_utils.h"
 
 extern "C" {
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/talloc.h>
 #include <osmocom/gprs/gprs_bssgp_bss.h>
+	#include <osmocom/core/bitvec.h>
+	#include <osmocom/core/linuxlist.h>
+	#include <osmocom/core/logging.h>
+	#include <osmocom/core/rate_ctr.h>
+	#include <osmocom/core/timer.h>
+	#include <osmocom/core/utils.h>
+	#include <osmocom/gsm/gsm_utils.h>
+	#include <osmocom/gsm/protocol/gsm_04_08.h>
 }
 
 #include <errno.h>
 #include <string.h>
-#include <math.h>
 
 /* After sending these frames, we poll for ack/nack. */
 #define POLL_ACK_AFTER_FRAMES 20

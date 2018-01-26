@@ -23,6 +23,13 @@
 #include <poll_controller.h>
 #include <bts.h>
 #include <tbf.h>
+#include <cxx_linuxlist.h>
+#include <sba.h>
+
+extern "C" {
+#include <osmocom/core/linuxlist.h>
+#include <osmocom/gsm/gsm_utils.h>
+}
 
 PollController::PollController(BTS& bts)
 	: m_bts(bts)

@@ -20,20 +20,23 @@
 
 #ifdef __cplusplus
 
-#include "gprs_rlcmac.h"
 #include "llc.h"
 #include "rlc.h"
 #include "cxx_linuxlist.h"
 #include <gprs_debug.h>
-
+#include <gprs_coding_scheme.h>
+#include <gsm_timer.h>
 #include <stdint.h>
 extern "C" {
 #include <osmocom/core/utils.h>
+	#include <osmocom/core/linuxlist.h>
+	#include <osmocom/core/logging.h>
+	#include <osmocom/core/timer.h>
 }
 
 struct bssgp_bvc_ctx;
-struct pcu_l1_meas;
 class GprsMs;
+struct gprs_rlcmac_bts;
 
 /*
  * TBF instance
