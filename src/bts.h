@@ -73,7 +73,7 @@ struct gprs_rlcmac_pdch {
 	struct gprs_rlcmac_paging *dequeue_paging();
 	struct msgb *packet_paging_request();
 
-	void add_paging(struct gprs_rlcmac_paging *pag);
+	bool add_paging(uint8_t chan_needed, uint8_t *identity_lv);
 
 	void free_resources();
 

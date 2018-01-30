@@ -303,7 +303,6 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 	uint8_t l, trx, ts, any_tbf = 0;
 	struct gprs_rlcmac_tbf *tbf;
 	LListHead<gprs_rlcmac_tbf> *pos;
-	struct gprs_rlcmac_paging *pag;
 	uint8_t slot_mask[8];
 	int8_t first_ts; /* must be signed */
 
@@ -359,16 +358,10 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 		for (ts = 0; ts < 8; ts++) {
 			if ((slot_mask[trx] & (1 << ts))) {
 				/* schedule */
-				pag = talloc_zero(tall_pcu_ctx,
-					struct gprs_rlcmac_paging);
-				if (!pag)
+				if (!m_bts.trx[trx].pdch[ts].add_paging(chan_needed, identity_lv))
 					return -ENOMEM;
-				pag->chan_needed = chan_needed;
-				memcpy(pag->identity_lv, identity_lv,
-					identity_lv[0] + 1);
-				m_bts.trx[trx].pdch[ts].add_paging(pag);
-				LOGP(DRLCMAC, LOGL_INFO, "Paging on PACCH of "
-					"TRX=%d TS=%d\n", trx, ts);
+
+				LOGP(DRLCMAC, LOGL_INFO, "Paging on PACCH of TRX=%d TS=%d\n", trx, ts);
 				any_tbf = 1;
 			}
 		}
@@ -955,9 +948,18 @@ continue_next:
 	return msg;
 }
 
-void gprs_rlcmac_pdch::add_paging(struct gprs_rlcmac_paging *pag)
+bool gprs_rlcmac_pdch::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 {
+	struct gprs_rlcmac_paging *pag = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_paging);
+	if (!pag)
+		return false;
+
+	pag->chan_needed = chan_needed;
+	memcpy(pag->identity_lv, identity_lv, identity_lv[0] + 1);
+
 	llist_add(&pag->list, &paging_list);
+
+	return true;
 }
 
 void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet, uint32_t fn)
