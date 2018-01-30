@@ -191,6 +191,8 @@ enum tbf_timers {
 #define TBF_POLL_SCHED_SET(t) do { t->poll_sched_set(__FILE__, __LINE__); } while(0)
 #define TBF_POLL_SCHED_UNSET(t) do { t->poll_sched_unset(__FILE__, __LINE__); } while(0)
 #define TBF_SET_ASS_ON(t, fl, chk) do { t->set_assigned_on(fl, chk, __FILE__, __LINE__); } while(0)
+#define TBF_ASS_TYPE_SET(t, kind) do { t->ass_type_mod(kind, false, __FILE__, __LINE__); } while(0)
+#define TBF_ASS_TYPE_UNSET(t, kind) do { t->ass_type_mod(kind, true, __FILE__, __LINE__); } while(0)
 
 struct gprs_rlcmac_tbf {
 	gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir);
@@ -213,6 +215,7 @@ struct gprs_rlcmac_tbf {
 	void check_pending_ass();
 	bool check_n_clear(uint8_t state_flag);
 	void set_assigned_on(uint8_t state_flag, bool check_ccch, const char *file, int line);
+	void ass_type_mod(uint8_t t, bool unset, const char *file, int line);
 	const char *state_name() const;
 
 	const char *name() const;
@@ -422,9 +425,55 @@ inline void gprs_rlcmac_tbf::set_assigned_on(uint8_t state_flag, bool check_ccch
 	set_state(GPRS_RLCMAC_ASSIGN, file, line);
 	if (check_ccch) {
 		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
-			state_flags |= (1 << state_flag);
+			ass_type_mod(state_flag, false, file, line);
 	} else
 		state_flags |= (1 << state_flag);
+}
+
+inline void gprs_rlcmac_tbf::ass_type_mod(uint8_t t, bool unset, const char *file, int line)
+{
+	const char *ch = "UNKNOWN";
+	switch (t) {
+	case GPRS_RLCMAC_FLAG_CCCH:
+		if (unset) {
+			if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
+				return;
+		} else {
+			if (state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
+				LOGPSRC(DTBF, LOGL_ERROR, file, line,
+					"%s attempted to set ass. type CCCH which is already set.\n",
+					tbf_name(this));
+		}
+		ch = "CCCH";
+		break;
+	case GPRS_RLCMAC_FLAG_PACCH:
+		if (unset) {
+			if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)))
+				return;
+		} else {
+			if (state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))
+				LOGPSRC(DTBF, LOGL_ERROR, file, line,
+					"%s attempted to set ass. type PACCH which is already set.\n",
+					tbf_name(this));
+		}
+		ch = "PACCH";
+		break;
+	default:
+		LOGPSRC(DTBF, LOGL_ERROR, file, line, "%s attempted to %sset unexpected ass. type %d - FIXME!\n",
+			tbf_name(this), unset ? "un" : "", t);
+		return;
+	}
+
+	LOGPSRC(DTBF, LOGL_INFO, file, line, "%s %sset ass. type %s [prev CCCH:%u, PACCH:%u]\n",
+		tbf_name(this), unset ? "un" : "", ch,
+		state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH),
+		state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH));
+
+	if (unset) {
+		state_flags &= GPRS_RLCMAC_FLAG_TO_MASK; /* keep to flags */
+		state_flags &= ~(1 << t);
+	} else
+		state_flags |= (1 << t);
 }
 
 inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state, const char *file, int line)

@@ -1104,9 +1104,7 @@ int gprs_rlcmac_dl_tbf::release()
 	m_wait_confirm = 0;
 	m_window.reset();
 
-	/* keep to flags */
-	state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
-	state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
+	TBF_ASS_TYPE_UNSET(this, GPRS_RLCMAC_FLAG_CCCH);
 
 	return 0;
 }
@@ -1132,9 +1130,7 @@ int gprs_rlcmac_dl_tbf::abort()
 	/* reset rlc states */
 	m_window.reset();
 
-	/* keep to flags */
-	state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
-	state_flags &= ~(1 << GPRS_RLCMAC_FLAG_CCCH);
+	TBF_ASS_TYPE_UNSET(this, GPRS_RLCMAC_FLAG_CCCH);
 
 	return 0;
 }
