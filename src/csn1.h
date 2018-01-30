@@ -25,15 +25,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#ifndef _PACKET_CSN1_H_
+#define _PACKET_CSN1_H_
+
 extern "C" {
 #include <osmocom/core/bitvec.h>
 }
 
 #include <iostream>
 #include <cstdlib>
-#ifndef _PACKET_CSN1_H_
-#define _PACKET_CSN1_H_
-
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 //#define max(a,b) (((a)>(b))?(a):(b))
