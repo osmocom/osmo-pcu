@@ -759,7 +759,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 		} else {
 			tbf->set_ta(ta);
 			TBF_SET_STATE(tbf, GPRS_RLCMAC_FLOW);
-			tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_CCCH);
+			TBF_ASS_TYPE_SET(tbf, GPRS_RLCMAC_FLAG_CCCH);
 			T_START(tbf, T3169, m_bts.t3169, 0, "RACH (new UL-TBF)", true);
 			LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] START\n");
 			LOGPTBF(tbf, LOGL_DEBUG, "RX: [PCU <- BTS] RACH "
@@ -1042,7 +1042,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 			LOGPTBF(new_tbf, LOGL_INFO,
 				"The TBF has been confirmed on the PACCH, "
 				"changed type from CCCH to PACCH\n");
-			new_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_PACCH);
+			TBF_ASS_TYPE_SET(new_tbf, GPRS_RLCMAC_FLAG_PACCH);
 		}
 		TBF_SET_STATE(new_tbf, GPRS_RLCMAC_FLOW);
 		/* stop pending assignment timer */
