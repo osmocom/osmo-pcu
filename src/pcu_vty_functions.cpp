@@ -34,11 +34,6 @@ extern "C" {
 #include <osmocom/vty/misc.h>
 }
 
-int pcu_vty_config_write_pcu_ext(struct vty *vty)
-{
-	return CMD_SUCCESS;
-}
-
 static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 {
 	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);

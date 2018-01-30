@@ -265,7 +265,7 @@ static int config_write_pcu(struct vty *vty)
 		}
 	}
 
-	return pcu_vty_config_write_pcu_ext(vty);
+	return CMD_SUCCESS;
 }
 
 /* per-BTS configuration */
