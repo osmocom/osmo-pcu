@@ -29,11 +29,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#ifndef __PACKET_GSM_RLCMAC_H__
+#define __PACKET_GSM_RLCMAC_H__
+
 #include "csn1.h"
 #include <iostream>
 #include <cstdlib>
-#ifndef __PACKET_GSM_RLCMAC_H__
-#define __PACKET_GSM_RLCMAC_H__
 
 #ifndef PRE_PACKED
 #define PRE_PACKED
