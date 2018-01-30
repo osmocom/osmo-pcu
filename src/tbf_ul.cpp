@@ -84,7 +84,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 
 		if (frame->is_complete) {
 			/* send frame to SGSN */
-			LOGPTBFUL(this, LOGL_INFO, "complete UL frame len=%d\n", m_llc.frame_length());
+			LOGPTBFUL(this, LOGL_DEBUG, "complete UL frame len=%d\n", m_llc.frame_length());
 			snd_ul_ud();
 			bts->llc_ul_bytes(m_llc.frame_length());
 			m_llc.reset();

@@ -517,7 +517,7 @@ void gprs_rlcmac_dl_tbf::schedule_next_frame()
 	if (!msg)
 		return;
 
-	LOGPTBFDL(this, LOGL_INFO, "Dequeue next LLC (len=%d)\n", msg->len);
+	LOGPTBFDL(this, LOGL_DEBUG, "Dequeue next LLC (len=%d)\n", msg->len);
 
 	m_llc.put_frame(msg->data, msg->len);
 	bts->llc_frame_sched();
@@ -599,7 +599,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 		if (ar == Encoding::AR_NEED_MORE_BLOCKS)
 			break;
 
-		LOGPTBFDL(this, LOGL_INFO, "Complete DL frame, len=%d\n", m_llc.frame_length());
+		LOGPTBFDL(this, LOGL_DEBUG, "Complete DL frame, len=%d\n", m_llc.frame_length());
 		gprs_rlcmac_dl_bw(this, m_llc.frame_length());
 		bts->llc_dl_bytes(m_llc.frame_length());
 		m_llc.reset();
