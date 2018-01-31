@@ -36,6 +36,8 @@
 
 #define DEFAULT_MSLOT_CLASS 12
 
+enum { MASK_TT = 0, MASK_TR = 1 };
+
 /* multislot class selection routines */
 uint8_t mslot_class_get_ta(uint8_t ms_cl);
 uint8_t mslot_class_get_tb(uint8_t ms_cl);
@@ -46,3 +48,5 @@ uint8_t mslot_class_get_rx(uint8_t ms_cl);
 uint8_t mslot_class_get_sum(uint8_t ms_cl);
 uint8_t mslot_class_get_type(uint8_t ms_cl);
 uint8_t mslot_class_max();
+
+void mslot_fill_rx_mask(uint8_t mslot_class, uint8_t num_tx, uint8_t *rx_mask);
