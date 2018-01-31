@@ -228,3 +228,11 @@ int8_t find_free_usf(uint8_t usf_map)
 
 	return -1;
 }
+
+void masked_override_with(char *buf, uint8_t mask, char set_char)
+{
+	int i;
+	for (i = 0; mask; i++, mask >>= 1)
+		if (mask & 1)
+			buf[i] = set_char;
+}
