@@ -474,48 +474,27 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
  */
 int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *ul_slots, uint8_t *dl_slots)
 {
-	uint8_t Tx, Sum;	/* Maximum Number of Slots: RX, Tx, Sum Rx+Tx */
-	uint8_t Tta, Ttb, Tra, Trb;	/* Minimum Number of Slots */
-	uint8_t Type; /* Type of Mobile */
+	uint8_t Tx = mslot_class_get_tx(mslot_class),   /* Max number of Tx slots */
+		Sum = mslot_class_get_sum(mslot_class); /* Max number of Tx + Rx slots */
 	int rx_window, tx_window, pdch_slots;
-	static const char *digit[10] = { "0","1","2","3","4","5","6","7","8","9" };
 	char slot_info[9] = {0};
-	int max_capacity;
-	uint8_t max_ul_slots;
-	uint8_t max_dl_slots;
+	int max_capacity = -1;
+	uint8_t max_ul_slots = 0, max_dl_slots = 0;
 	unsigned max_slots;
 
 	unsigned ul_ts, dl_ts;
 	unsigned num_tx;
-	enum {MASK_TT, MASK_TR};
 	unsigned mask_sel;
 
 	if (mslot_class)
 		LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm B) for class %d\n",
 		     mslot_class);
 
-	Tx = mslot_class_get_tx(mslot_class);
-	Sum = mslot_class_get_sum(mslot_class);
-	Tta = mslot_class_get_ta(mslot_class);
-	Ttb = mslot_class_get_tb(mslot_class);
-
-	/* FIXME: use actual TA offset for computation - make sure to adjust "1 + MS_TO" accordingly
-	   see also "Offset required" bit in 3GPP TS 24.008 §10.5.1.7 */
-	Tra = mslot_class_get_ra(mslot_class, 0);
-	Trb = mslot_class_get_rb(mslot_class, 0);
-
-	Type = mslot_class_get_type(mslot_class);
-
 	if (Tx == MS_NA) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "Multislot class %d not applicable.\n",
 		     mslot_class);
 		return -EINVAL;
 	}
-
-	LOGP(DRLCMAC, LOGL_DEBUG, "- Rx=%d Tx=%d Sum Rx+Tx=%s  Tta=%s Ttb=%d "
-		" Tra=%d Trb=%d Type=%d\n", mslot_class_get_rx(mslot_class), Tx,
-		(Sum == MS_NA) ? "N/A" : digit[Sum],
-		(Tta == MS_NA) ? "N/A" : digit[Tta], Ttb, Tra, Trb, Type);
 
 	max_slots = OSMO_MAX(mslot_class_get_rx(mslot_class), Tx);
 
@@ -538,29 +517,12 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 
 	/* Check for each UL (TX) slot */
 
-	max_capacity = -1;
-	max_ul_slots = 0;
-	max_dl_slots = 0;
-
 	/* Iterate through possible numbers of TX slots */
 	for (num_tx = 1; num_tx <= mslot_class_get_tx(mslot_class); num_tx += 1) {
 		uint16_t tx_valid_win = (1 << num_tx) - 1;
+		uint8_t rx_mask[MASK_TR + 1];
 
-		uint8_t rx_mask[MASK_TR+1];
-		if (Type == 1) {
-			rx_mask[MASK_TT] = (0x100 >> OSMO_MAX(Ttb, Tta)) - 1;
-			rx_mask[MASK_TT] &= ~((1 << (Trb + num_tx)) - 1);
-			rx_mask[MASK_TR] = (0x100 >> Ttb) - 1;
-			rx_mask[MASK_TR] &=
-				~((1 << (OSMO_MAX(Trb, Tra) + num_tx)) - 1);
-		} else {
-			/* Class type 2 MS have independant RX and TX */
-			rx_mask[MASK_TT] = 0xff;
-			rx_mask[MASK_TR] = 0xff;
-		}
-
-		rx_mask[MASK_TT] = (rx_mask[MASK_TT] << 3) | (rx_mask[MASK_TT] >> 5);
-		rx_mask[MASK_TR] = (rx_mask[MASK_TR] << 3) | (rx_mask[MASK_TR] >> 5);
+		mslot_fill_rx_mask(mslot_class, num_tx, rx_mask);
 
 	/* Rotate group of TX slots: UUU-----, -UUU----, ..., UU-----U */
 	for (ul_ts = 0; ul_ts < 8; ul_ts += 1, tx_valid_win <<= 1) {
@@ -629,7 +591,7 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 		/* Whether to skip this round doesn not only depend on the bit
 		 * sets but also on mask_sel. Therefore this check must be done
 		 * before doing the test_and_set_bit shortcut. */
-		if (Type == 1) {
+		if (mslot_class_get_type(mslot_class) == 1) {
 			unsigned slot_sum = rx_slot_count + tx_slot_count;
 			/* Assume down+up/dynamic.
 			 * TODO: For ext-dynamic, down only, up only add more
@@ -681,7 +643,7 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 		/* Check number of common slots according to TS 54.002, 6.4.2.2 */
 		common_slot_count = pcu_bitcount(tx_window & rx_window);
 		req_common_slots = OSMO_MIN(tx_slot_count, rx_slot_count);
-		if (Type == 1)
+		if (mslot_class_get_type(mslot_class) == 1)
 			req_common_slots = OSMO_MIN(req_common_slots, 2);
 
 		if (req_common_slots != common_slot_count) {

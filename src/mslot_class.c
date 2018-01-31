@@ -21,6 +21,7 @@
  */
 
 #include <mslot_class.h>
+#include <gprs_debug.h>
 
 #include <osmocom/core/utils.h>
 #include <osmocom/core/logging.h>
@@ -169,4 +170,45 @@ uint8_t mslot_class_get_sum(uint8_t ms_cl)
 uint8_t mslot_class_get_type(uint8_t ms_cl)
 {
 	return get_mslot_table(ms_cl)->type;
+}
+
+/*! Fill in RX mask table for a given MS Class
+ *
+ *  \param[in] ms_cl MS Class pointer
+ *  \param[in] num_tx Number of TX slots to consider
+ *  \param[out] rx_mask RX mask table
+ */
+void mslot_fill_rx_mask(uint8_t mslot_class, uint8_t num_tx, uint8_t *rx_mask)
+{
+	static const char *digit[10] = { "0","1","2","3","4","5","6","7","8","9" };
+	uint8_t Tx = mslot_class_get_tx(mslot_class),     /* Max number of Tx slots */
+		Sum = mslot_class_get_sum(mslot_class),	  /* Max number of Tx + Rx slots */
+		Type = mslot_class_get_type(mslot_class), /* Type of Mobile */
+		Tta = mslot_class_get_ta(mslot_class),    /* Minimum number of slots */
+		Ttb = mslot_class_get_tb(mslot_class),
+		/* FIXME: use actual TA offset for computation - make sure to adjust "1 + MS_TO" accordingly
+		   see also "Offset required" bit in 3GPP TS 24.008 §10.5.1.7 */
+		Tra = mslot_class_get_ra(mslot_class, 0),
+		Trb = mslot_class_get_rb(mslot_class, 0);
+
+	if (num_tx == 1) /* it's enough to log this once per TX slot set iteration */
+		LOGP(DRLCMAC, LOGL_DEBUG,
+		     "Rx=%d Tx=%d Sum Rx+Tx=%s, Tta=%s Ttb=%d, Tra=%d Trb=%d, Type=%d\n",
+		     mslot_class_get_rx(mslot_class), Tx,
+		     (Sum == MS_NA) ? "N/A" : digit[Sum],
+		     (Tta == MS_NA) ? "N/A" : digit[Tta], Ttb, Tra, Trb, Type);
+
+	if (Type == 1) {
+		rx_mask[MASK_TT] = (0x100 >> OSMO_MAX(Ttb, Tta)) - 1;
+		rx_mask[MASK_TT] &= ~((1 << (Trb + num_tx)) - 1);
+		rx_mask[MASK_TR] = (0x100 >> Ttb) - 1;
+		rx_mask[MASK_TR] &= ~((1 << (OSMO_MAX(Trb, Tra) + num_tx)) - 1);
+	} else {
+		/* Class type 2 MS have independant RX and TX */
+		rx_mask[MASK_TT] = 0xff;
+		rx_mask[MASK_TR] = 0xff;
+	}
+
+	rx_mask[MASK_TT] = (rx_mask[MASK_TT] << 3) | (rx_mask[MASK_TT] >> 5);
+	rx_mask[MASK_TR] = (rx_mask[MASK_TR] << 3) | (rx_mask[MASK_TR] >> 5);
 }
