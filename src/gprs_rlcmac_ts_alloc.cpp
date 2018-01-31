@@ -1017,7 +1017,7 @@ int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gpr
 	return alloc_algorithm_a(bts, ms_, tbf_, single, use_trx);
 }
 
-int gprs_alloc_max_dl_slots_per_ms(struct gprs_rlcmac_bts *bts, uint8_t ms_class)
+int gprs_alloc_max_dl_slots_per_ms(const struct gprs_rlcmac_bts *bts, uint8_t ms_class)
 {
 	int rx = mslot_class_get_rx(ms_class);
 

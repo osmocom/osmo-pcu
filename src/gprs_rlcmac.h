@@ -97,7 +97,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	uint8_t trx, uint8_t ts,
         uint32_t fn, uint8_t block_nr);
 
-int gprs_alloc_max_dl_slots_per_ms(struct gprs_rlcmac_bts *bts,
+int gprs_alloc_max_dl_slots_per_ms(const struct gprs_rlcmac_bts *bts,
 	uint8_t ms_class = 0);
 
 extern "C" {
