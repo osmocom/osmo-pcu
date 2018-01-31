@@ -49,5 +49,7 @@ uint8_t mslot_class_get_sum(uint8_t ms_cl);
 uint8_t mslot_class_get_type(uint8_t ms_cl);
 uint8_t mslot_class_max();
 
+/* multislot allocation helper routines */
 void mslot_fill_rx_mask(uint8_t mslot_class, uint8_t num_tx, uint8_t *rx_mask);
 int8_t find_free_usf(uint8_t usf_map);
+void masked_override_with(char *buf, uint8_t mask, char set_char);

@@ -709,6 +709,87 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 	return 0;
 }
 
+/*! Count used bits in slots and reserved_slots bitmasks
+ *
+ *  \param[in] slots Timeslots in use
+ *  \param[in] reserved_slots Reserved timeslots
+ *  \param[out] slotcount Number of TS in use
+ *  \param[out] avail_count Number of reserved TS
+ */
+static void update_slot_counters(uint8_t slots, uint8_t reserved_slots, uint8_t *slotcount, uint8_t *avail_count)
+{
+	(*slotcount) = pcu_bitcount(slots);
+	(*avail_count) = pcu_bitcount(reserved_slots);
+}
+
+/*! Return slot mask with single TS from a given UL/DL set according to TBF's direction, ts pointer is set to that TS
+ * number or to negative value on error
+ *
+ *  \param[in] trx Pointer to TRX object
+ *  \param[in] tbf Pointer to TBF object
+ *  \param[in] dl_slots set of DL timeslots
+ *  \param[in] ul_slots set of UL timeslots
+ *  \param[in] ts corresponding TS or -1 for autoselection
+ *  \returns slot mask with single UL or DL timeslot number if possible
+ */
+static uint8_t get_single_ts(const gprs_rlcmac_trx *trx, const gprs_rlcmac_tbf *tbf, uint8_t dl_slots, uint8_t ul_slots,
+			     int ts)
+{
+	uint8_t ret = dl_slots & ul_slots; /* Make sure to consider the first common slot only */
+
+	if (ts < 0)
+		ts = find_least_busy_pdch(trx, tbf->direction, ret, compute_usage_by_num_tbfs, NULL, NULL);
+
+	if (ts < 0)
+		return ffs(ret);
+
+	return ret & (1 << ts);
+}
+
+/*! Find set of timeslots available for allocation
+ *
+ *  \param[in] trx Pointer to TRX object
+ *  \param[in] tbf Pointer to TBF object
+ *  \param[in] single Flag to force the single TS allocation
+ *  \param[in] ul_slots set of UL timeslots
+ *  \param[in] dl_slots set of DL timeslots
+ *  \param[in] reserved_ul_slots set of reserved UL timeslots
+ *  \param[in] reserved_dl_slots set of reserved DL timeslots
+ *  \param[in] first_common_ts First TS common for both UL and DL or -1 if unknown
+ *  \returns negative error code or selected TS on success
+ */
+static int tbf_select_slot_set(const gprs_rlcmac_tbf *tbf, const gprs_rlcmac_trx *trx, bool single,
+			       uint8_t ul_slots, uint8_t dl_slots,
+			       uint8_t reserved_ul_slots, uint8_t reserved_dl_slots,
+			       int8_t first_common_ts)
+{
+	uint8_t sl = tbf->direction != GPRS_RLCMAC_DL_TBF ? ul_slots : dl_slots;
+	char slot_info[9] = { 0 };
+
+	if (single)
+		sl = get_single_ts(trx, tbf, dl_slots, ul_slots, first_common_ts);
+
+	if (!sl) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No %s slots available\n",
+		     tbf->direction != GPRS_RLCMAC_DL_TBF ? "uplink" : "downlink");
+		return -EINVAL;
+	}
+
+	if (tbf->direction != GPRS_RLCMAC_DL_TBF) {
+		snprintf(slot_info, 9, OSMO_BIT_SPEC, OSMO_BIT_PRINT_EX(reserved_ul_slots, 'u'));
+		masked_override_with(slot_info, sl, 'U');
+		LOGPC(DRLCMAC, LOGL_DEBUG, "- Selected UL");
+	} else {
+		snprintf(slot_info, 9, OSMO_BIT_SPEC, OSMO_BIT_PRINT_EX(reserved_dl_slots, 'd'));
+		masked_override_with(slot_info, sl, 'D');
+		LOGPC(DRLCMAC, LOGL_DEBUG, "- Selected DL");
+	}
+
+	LOGPC(DRLCMAC, LOGL_DEBUG, " slots: (TS=0)\"%s\"(TS=7)%s\n", slot_info, single ? ", single" : "");
+
+	return sl;
+}
+
 /*! Slot Allocation: Algorithm B
  *
  * Assign as many downlink slots as possible.
@@ -773,86 +854,43 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	reserved_dl_slots = dl_slots;
 	reserved_ul_slots = ul_slots;
 
-	/* Step 3: Derive the slot set for the current TBF */
-	if (single) {
-		/* Make sure to consider the first common slot only */
-		ul_slots = dl_slots = dl_slots & ul_slots;
-
-		ts = first_common_ts;
-
-		if (ts < 0)
-			ts = find_least_busy_pdch(trx, tbf->direction,
-				dl_slots & ul_slots, compute_usage_by_num_tbfs,
-				NULL, NULL);
-		if (ts < 0)
-			ul_slots = dl_slots = pcu_lsb(dl_slots & ul_slots);
-		else
-			ul_slots = dl_slots = (dl_slots & ul_slots) & (1<<ts);
-	}
-
-	if (dl_slots == 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No downlink slots available\n");
+	/* Step 3a: Derive the slot set for the current TBF */
+	rc = tbf_select_slot_set(tbf, trx, single, ul_slots, dl_slots, reserved_ul_slots, reserved_dl_slots,
+				 first_common_ts);
+	if (rc < 0)
 		return -EINVAL;
-	}
 
-	if (ul_slots == 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No uplink slots available\n");
-		return -EINVAL;
-	}
+	first_ts = ffs(rc) - 1;
 
+	/* Step 3b: Derive the slot set for a given direction */
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
-		LOGP(DRLCMAC, LOGL_DEBUG,
-			"- Selected DL slots: (TS=0)\"%s\"(TS=7)%s\n",
-			set_flag_chars(set_flag_chars(slot_info,
-					reserved_dl_slots, 'd', '.'),
-					dl_slots, 'D'),
-			single ? ", single" : "");
-
-		/* assign downlink */
-		if (dl_slots == 0) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No downlink slots "
-				"available\n");
-			return -EINVAL;
-		}
-		slotcount = pcu_bitcount(dl_slots);
-		first_ts = ffs(dl_slots) - 1;
-		avail_count = pcu_bitcount(reserved_dl_slots);
-
+		dl_slots = rc;
+		update_slot_counters(dl_slots, reserved_dl_slots, &slotcount, &avail_count);
 	} else {
 		int free_usf = -1;
+
+		ul_slots = rc;
 
 		if (first_common_ts >= 0)
 			ul_slots = 1 << first_common_ts;
 		else
 			ul_slots = ul_slots & dl_slots;
 
-		ts = find_least_busy_pdch(trx, GPRS_RLCMAC_UL_TBF,
-			ul_slots, compute_usage_by_num_tbfs,
-			NULL, &free_usf);
+		ts = find_least_busy_pdch(trx, GPRS_RLCMAC_UL_TBF, ul_slots, compute_usage_by_num_tbfs, NULL, &free_usf);
 
 		if (free_usf < 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No USF available\n");
 			return -EBUSY;
 		}
+
 		OSMO_ASSERT(ts >= 0 && ts <= 8);
 
+		/* We will stick to that single UL slot, unreserve the others */
 		ul_slots = 1 << ts;
 		usf[ts] = free_usf;
-
-		LOGP(DRLCMAC, LOGL_DEBUG,
-			"- Selected UL slots: (TS=0)\"%s\"(TS=7)%s\n",
-			set_flag_chars(set_flag_chars(slot_info,
-					reserved_ul_slots, 'u', '.'),
-					ul_slots, 'U'),
-			single ? ", single" : "");
-
-		slotcount++;
-		first_ts = ts;
-
-		/* We will stick to that single UL slot, unreserve the others */
 		reserved_ul_slots = ul_slots;
 
-		avail_count = pcu_bitcount(reserved_ul_slots);
+		update_slot_counters(ul_slots, reserved_ul_slots, &slotcount, &avail_count);
 	}
 
 	first_common_ts = ffs(dl_slots & ul_slots) - 1;
