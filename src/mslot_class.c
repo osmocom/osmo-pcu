@@ -212,3 +212,19 @@ void mslot_fill_rx_mask(uint8_t mslot_class, uint8_t num_tx, uint8_t *rx_mask)
 	rx_mask[MASK_TT] = (rx_mask[MASK_TT] << 3) | (rx_mask[MASK_TT] >> 5);
 	rx_mask[MASK_TR] = (rx_mask[MASK_TR] << 3) | (rx_mask[MASK_TR] >> 5);
 }
+
+/* look for USF, don't use USF=7 */
+int8_t find_free_usf(uint8_t usf_map)
+{
+	uint8_t usf;
+
+	if (usf_map == (1 << 7) - 1)
+		return -1;
+
+	for (usf = 0; usf < 7; usf++) {
+		if (!(usf_map & (1 << usf)))
+			return usf;
+	}
+
+	return -1;
+}

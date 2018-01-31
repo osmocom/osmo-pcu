@@ -61,24 +61,6 @@ static bool test_and_set_bit(uint32_t *bits, size_t elem)
 	return was_set;
 }
 
-static inline int8_t find_free_usf(const struct gprs_rlcmac_pdch *pdch)
-{
-	uint8_t usf_map = 0;
-	uint8_t usf;
-
-	usf_map = pdch->assigned_usf();
-	if (usf_map == (1 << 7) - 1)
-		return -1;
-
-	/* look for USF, don't use USF=7 */
-	for (usf = 0; usf < 7; usf++) {
-		if (!(usf_map & (1 << usf)))
-			return usf;
-	}
-
-	return -1;
-}
-
 static inline int8_t find_free_tfi(const struct gprs_rlcmac_pdch *pdch, enum gprs_rlcmac_tbf_direction dir)
 {
 	uint32_t tfi_map = pdch->assigned_tfi(dir);
@@ -214,7 +196,7 @@ static int find_least_busy_pdch(const struct gprs_rlcmac_trx *trx, enum gprs_rlc
 			}
 			/* Make sure that an USF is available */
 			if (dir == GPRS_RLCMAC_UL_TBF) {
-				usf = find_free_usf(pdch);
+				usf = find_free_usf(pdch->assigned_usf());
 				if (usf < 0) {
 					LOGP(DRLCMAC, LOGL_DEBUG,
 						"- Skipping TS %d, because "
@@ -464,6 +446,33 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	return 0;
 }
 
+/*! Compute capacity of a given TRX
+ *
+ *  \param[in] trx Pointer to TRX object
+ *  \param[in] rx_window Receive window
+ *  \param[in] tx_window Transmit window
+ *  \returns non-negative capacity
+ */
+static inline unsigned compute_capacity(const struct gprs_rlcmac_trx *trx, int rx_window, int tx_window)
+{
+	const struct gprs_rlcmac_pdch *pdch;
+	unsigned ts, capacity = 0;
+
+	for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
+		pdch = &trx->pdch[ts];
+		if (rx_window & (1 << ts))
+			capacity += OSMO_MAX(32 - pdch->num_reserved(GPRS_RLCMAC_DL_TBF), 1);
+
+		/* Only consider common slots for UL */
+		if (tx_window & rx_window & (1 << ts)) {
+			if (find_free_usf(pdch->assigned_usf()) >= 0)
+				capacity += OSMO_MAX(32 - pdch->num_reserved(GPRS_RLCMAC_UL_TBF), 1);
+		}
+	}
+
+	return capacity;
+}
+
 /*! Find set of slots available for allocation while taking MS class into account
  *
  *  \param[in] trx Pointer to TRX object
@@ -564,7 +573,6 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 		unsigned rx_slot_count;
 		uint16_t rx_bad;
 		uint8_t rx_good;
-		unsigned ts;
 		int capacity;
 
 		/* Filter out bad slots */
@@ -663,25 +671,7 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 		}
 
 		/* Compute capacity */
-		capacity = 0;
-
-		for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
-			int c;
-			const struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts];
-			if (rx_window & (1 << ts)) {
-				c = 32 - pdch->num_reserved(GPRS_RLCMAC_DL_TBF);
-				c = OSMO_MAX(c, 1);
-				capacity += c;
-			}
-			/* Only consider common slots for UL */
-			if (tx_window & rx_window & (1 << ts)) {
-				if (find_free_usf(pdch) >= 0) {
-					c = 32 - pdch->num_reserved(GPRS_RLCMAC_UL_TBF);
-					c = OSMO_MAX(c, 1);
-					capacity += c;
-				}
-			}
-		}
+		capacity = compute_capacity(trx, rx_window, tx_window);
 
 #ifdef ENABLE_TS_ALLOC_DEBUG
 		LOGP(DRLCMAC, LOGL_DEBUG,
@@ -702,7 +692,10 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 		max_capacity = capacity;
 		max_ul_slots = tx_window;
 		max_dl_slots = rx_window;
-	}}}}
+	}
+	}
+	}
+	}
 
 	if (!max_ul_slots || !max_dl_slots) {
 		LOGP(DRLCMAC, LOGL_NOTICE,
