@@ -1665,6 +1665,13 @@ static void transmit_dl_data(BTS *the_bts, uint32_t tlli, uint32_t *fn,
 	}
 }
 
+static inline void print_ta_tlli(const gprs_rlcmac_ul_tbf *ul_tbf, bool print_ms)
+{
+	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
+	if (print_ms)
+		fprintf(stderr, "Got MS: TLLI = 0x%08x, TA = %d\n", ul_tbf->ms()->tlli(), ul_tbf->ms()->ta());
+}
+
 static void test_tbf_single_phase()
 {
 	BTS the_bts;
@@ -1674,7 +1681,6 @@ static void test_tbf_single_phase()
 	const char *imsi = "0011223344";
 	uint16_t qta = 31;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	GprsMs *ms;
 
 	printf("=== start %s ===\n", __func__);
 
@@ -1682,10 +1688,7 @@ static void test_tbf_single_phase()
 
 	ul_tbf = establish_ul_tbf_single_phase(&the_bts, ts_no, tlli, &fn, qta);
 
-	ms = ul_tbf->ms();
-	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
-	fprintf(stderr, "Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
-
+	print_ta_tlli(ul_tbf, true);
 	send_dl_data(&the_bts, tlli, imsi, (const uint8_t *)"TEST", 4);
 
 	printf("=== end %s ===\n", __func__);
@@ -1703,7 +1706,6 @@ static void test_tbf_egprs_two_phase_puan(void)
 	gprs_rlcmac_bts *bts;
 	uint8_t egprs_ms_class = 1;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	GprsMs *ms;
 	uint8_t test_data[256];
 
 	printf("=== start %s ===\n", __func__);
@@ -1722,10 +1724,7 @@ static void test_tbf_egprs_two_phase_puan(void)
 	ul_tbf = establish_ul_tbf_two_phase_puan_URBB_no_length(&the_bts, ts_no, tlli, &fn,
 		qta, ms_class, egprs_ms_class, ul_tbf);
 
-	ms = ul_tbf->ms();
-	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
-	fprintf(stderr,
-		"Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
+	print_ta_tlli(ul_tbf, true);
 	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
 
 	ul_tbf->window()->reset_state();
@@ -1733,11 +1732,7 @@ static void test_tbf_egprs_two_phase_puan(void)
 	ul_tbf = establish_ul_tbf_two_phase_puan_URBB_with_length(&the_bts, ts_no, tlli, &fn,
 		qta, ms_class, egprs_ms_class, ul_tbf);
 
-	ms = ul_tbf->ms();
-	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
-	fprintf(stderr,
-		"Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
-
+	print_ta_tlli(ul_tbf, true);
 	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
 
 	ul_tbf->window()->reset_state();
@@ -1747,11 +1742,7 @@ static void test_tbf_egprs_two_phase_puan(void)
 	ul_tbf = establish_ul_tbf_two_phase_puan_CRBB(&the_bts, ts_no, tlli, &fn,
 		qta, ms_class, egprs_ms_class);
 
-	ms = ul_tbf->ms();
-	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
-	fprintf(stderr,
-		"Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
-
+	print_ta_tlli(ul_tbf, true);
 	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
 
 	printf("=== end %s ===\n", __func__);
@@ -1848,7 +1839,6 @@ static void test_tbf_two_phase()
 	const char *imsi = "0011223344";
 	uint8_t ms_class = 1;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	GprsMs *ms;
 
 	printf("=== start %s ===\n", __func__);
 
@@ -1857,13 +1847,16 @@ static void test_tbf_two_phase()
 	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli, &fn, qta,
 		ms_class, 0);
 
-	ms = ul_tbf->ms();
-	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
-	fprintf(stderr, "Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
-
+	print_ta_tlli(ul_tbf, true);
 	send_dl_data(&the_bts, tlli, imsi, (const uint8_t *)"TEST", 4);
 
 	printf("=== end %s ===\n", __func__);
+}
+
+static inline void print_ms(const GprsMs *ms, bool old)
+{
+	fprintf(stderr, "%s MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
+		old ? "Old" : "New", ms->tlli(), ms->ta(), ms->imsi(), ms->llc_queue()->size());
 }
 
 static void test_tbf_ra_update_rach()
@@ -1887,11 +1880,10 @@ static void test_tbf_ra_update_rach()
 		ms_class, 0);
 
 	ms1 = ul_tbf->ms();
-	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
+	print_ta_tlli(ul_tbf, false);
 
 	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"RAU_ACCEPT", 10);
-	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
-		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
+	print_ms(ms1, true);
 
 	/* Send Packet Downlink Assignment to MS */
 	request_dl_rlc_block(ul_tbf, &fn);
@@ -1912,9 +1904,7 @@ static void test_tbf_ra_update_rach()
 
 	/* The PCU cannot know yet, that both TBF belong to the same MS */
 	OSMO_ASSERT(ms1 != ms2);
-
-	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
-		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
+	print_ms(ms1, true);
 
 	/* Send some downlink data along with the new TLLI and the IMSI so that
 	 * the PCU can see, that both MS objects belong to same MS */
@@ -1923,8 +1913,7 @@ static void test_tbf_ra_update_rach()
 	ms = the_bts.ms_by_imsi(imsi);
 	OSMO_ASSERT(ms == ms2);
 
-	fprintf(stderr, "New MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
-		ms2->tlli(), ms2->ta(), ms2->imsi(), ms2->llc_queue()->size());
+	print_ms(ms2, false);
 
 	ms = the_bts.ms_by_tlli(tlli1);
 	OSMO_ASSERT(ms == NULL);
@@ -1955,12 +1944,11 @@ static void test_tbf_dl_flow_and_rach_two_phase()
 		ms_class, 0);
 
 	ms1 = ul_tbf->ms();
-	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
+	print_ta_tlli(ul_tbf, false);
 
 	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"DATA 1 *************", 20);
 	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"DATA 2 *************", 20);
-	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
-		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
+	print_ms(ms1, true);
 
 	OSMO_ASSERT(ms1->llc_queue()->size() == 2);
 	dl_tbf = ms1->dl_tbf();
@@ -1976,8 +1964,7 @@ static void test_tbf_dl_flow_and_rach_two_phase()
 		ms_class, 0);
 
 	ms2 = ul_tbf->ms();
-	fprintf(stderr, "New MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
-		ms2->tlli(), ms2->ta(), ms2->imsi(), ms2->llc_queue()->size());
+	print_ms(ms2, false);
 
 	/* This should be the same MS object */
 	OSMO_ASSERT(ms2 == ms1);
@@ -2016,12 +2003,11 @@ static void test_tbf_dl_flow_and_rach_single_phase()
 		ms_class, 0);
 
 	ms1 = ul_tbf->ms();
-	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
+	print_ta_tlli(ul_tbf, false);
 
 	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"DATA 1 *************", 20);
 	send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)"DATA 2 *************", 20);
-	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
-		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
+	print_ms(ms1, true);
 
 	OSMO_ASSERT(ms1->llc_queue()->size() == 2);
 	dl_tbf = ms1->dl_tbf();
@@ -2036,8 +2022,7 @@ static void test_tbf_dl_flow_and_rach_single_phase()
 	ul_tbf = establish_ul_tbf_single_phase(&the_bts, ts_no, tlli1, &fn, qta);
 
 	ms2 = ul_tbf->ms();
-	fprintf(stderr, "New MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
-		ms2->tlli(), ms2->ta(), ms2->imsi(), ms2->llc_queue()->size());
+	print_ms(ms2, false);
 
 	/* There should be a different MS object */
 	OSMO_ASSERT(ms2 != ms1);
@@ -2078,7 +2063,7 @@ static void test_tbf_dl_reuse()
 		ms_class, 0);
 
 	ms1 = ul_tbf->ms();
-	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
+	print_ta_tlli(ul_tbf, false);
 
 	/* Send some LLC frames */
 	for (i = 0; i < 40; i++) {
@@ -2091,8 +2076,7 @@ static void test_tbf_dl_reuse()
 		send_dl_data(&the_bts, tlli1, imsi, (const uint8_t *)buf, rc);
 	}
 
-	fprintf(stderr, "Old MS: TLLI = 0x%08x, TA = %d, IMSI = %s, LLC = %zu\n",
-		ms1->tlli(), ms1->ta(), ms1->imsi(), ms1->llc_queue()->size());
+	print_ms(ms1, true);
 
 	/* Send Packet Downlink Assignment to MS */
 	request_dl_rlc_block(ul_tbf, &fn);
@@ -2188,6 +2172,34 @@ static void test_tbf_gprs_egprs()
 	gprs_bssgp_destroy();
 }
 
+static inline void ws_check(gprs_rlcmac_dl_tbf *dl_tbf, const char *test, uint8_t exp_slots, uint16_t exp_ws,
+			    bool free, bool end)
+{
+	if (!dl_tbf) {
+		fprintf(stderr, "%s(): FAILED (NULL TBF)\n", test);
+		return;
+	}
+
+	fprintf(stderr, "DL TBF slots: 0x%02x, N: %d, WS: %d",
+		dl_tbf->dl_slots(),
+		pcu_bitcount(dl_tbf->dl_slots()),
+		dl_tbf->window_size());
+
+	if (pcu_bitcount(dl_tbf->dl_slots()) != exp_slots || dl_tbf->window_size() != exp_ws)
+		fprintf(stderr, "%s(): DL TBF FAILED: dl_slots = %u (exp. %u), WS = %u (exp. %u)",
+			test, pcu_bitcount(dl_tbf->dl_slots()), 4, dl_tbf->window_size(), 128 + 4 * 64);
+
+	fprintf(stderr, "\n");
+
+	if (free)
+		tbf_free(dl_tbf);
+
+	if (end) {
+		printf("=== end %s ===\n", test);
+		gprs_bssgp_destroy();
+	}
+}
+
 static void test_tbf_ws()
 {
 	BTS the_bts;
@@ -2214,14 +2226,8 @@ static void test_tbf_ws()
 
 	/* Does no support EGPRS */
 	dl_tbf = tbf_alloc_dl_tbf(bts, NULL, 0, ms_class, 0, false);
-	OSMO_ASSERT(dl_tbf != NULL);
-	fprintf(stderr, "DL TBF slots: 0x%02x, N: %d, WS: %d\n",
-		dl_tbf->dl_slots(),
-		pcu_bitcount(dl_tbf->dl_slots()),
-		dl_tbf->window_size());
-	OSMO_ASSERT(pcu_bitcount(dl_tbf->dl_slots()) == 4);
-	OSMO_ASSERT(dl_tbf->window_size() == 64);
-	tbf_free(dl_tbf);
+
+	ws_check(dl_tbf, __func__, 4, 64, true, false);
 
 	/* EGPRS-only */
 	bts->egprs_enabled = 1;
@@ -2229,18 +2235,7 @@ static void test_tbf_ws()
 	/* Does support EGPRS */
 	dl_tbf = tbf_alloc_dl_tbf(bts, NULL, 0, ms_class, ms_class, false);
 
-	OSMO_ASSERT(dl_tbf != NULL);
-	fprintf(stderr, "DL TBF slots: 0x%02x, N: %d, WS: %d\n",
-		dl_tbf->dl_slots(),
-		pcu_bitcount(dl_tbf->dl_slots()),
-		dl_tbf->window_size());
-	OSMO_ASSERT(pcu_bitcount(dl_tbf->dl_slots()) == 4);
-	OSMO_ASSERT(dl_tbf->window_size() == 128 + 4 * 64);
-	tbf_free(dl_tbf);
-
-	printf("=== end %s ===\n", __func__);
-
-	gprs_bssgp_destroy();
+	ws_check(dl_tbf, __func__, 4, 128 + 4 * 64, true, true);
 }
 
 static void test_tbf_update_ws(void)
@@ -2273,30 +2268,12 @@ static void test_tbf_update_ws(void)
 	/* Does support EGPRS */
 	dl_tbf = tbf_alloc_dl_tbf(bts, NULL, 0, ms_class, ms_class, true);
 
-	OSMO_ASSERT(dl_tbf != NULL);
-	fprintf(stderr, "DL TBF slots: 0x%02x, N: %d, WS: %d\n",
-		dl_tbf->dl_slots(),
-		pcu_bitcount(dl_tbf->dl_slots()),
-		dl_tbf->window_size());
-	OSMO_ASSERT(pcu_bitcount(dl_tbf->dl_slots()) == 1);
-	OSMO_ASSERT(dl_tbf->window_size() == 128 + 1 * 64);
+	ws_check(dl_tbf, __func__, 1, 128 + 1 * 64, false, false);
 
 	dl_tbf->update();
 
 	/* window size should be 384 */
-	OSMO_ASSERT(dl_tbf != NULL);
-	fprintf(stderr, "DL TBF slots: 0x%02x, N: %d, WS: %d\n",
-		dl_tbf->dl_slots(),
-		pcu_bitcount(dl_tbf->dl_slots()),
-		dl_tbf->window_size());
-	OSMO_ASSERT(pcu_bitcount(dl_tbf->dl_slots()) == 4);
-	OSMO_ASSERT(dl_tbf->window_size() == 128 + 4 * 64);
-
-	tbf_free(dl_tbf);
-
-	printf("=== end %s ===\n", __func__);
-
-	gprs_bssgp_destroy();
+	ws_check(dl_tbf, __func__, 4, 128 + 4 * 64, true, true);
 }
 
 static void test_tbf_puan_urbb_len(void)
@@ -2310,7 +2287,6 @@ static void test_tbf_puan_urbb_len(void)
 	uint8_t ms_class = 1;
 	uint8_t egprs_ms_class = 1;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	GprsMs *ms;
 	uint8_t test_data[256];
 
 	printf("=== start %s ===\n", __func__);
@@ -2324,11 +2300,7 @@ static void test_tbf_puan_urbb_len(void)
 	ul_tbf = puan_urbb_len_issue(&the_bts, ts_no, tlli, &fn, qta,
 		ms_class, egprs_ms_class);
 
-	ms = ul_tbf->ms();
-	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
-	fprintf(stderr,
-		"Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
-
+	print_ta_tlli(ul_tbf, true);
 	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
 
 	printf("=== end %s ===\n", __func__);
@@ -2460,7 +2432,6 @@ static void test_tbf_li_decoding(void)
 	uint8_t ms_class = 1;
 	uint8_t egprs_ms_class = 1;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	GprsMs *ms;
 	uint8_t test_data[256];
 
 	printf("=== start %s ===\n", __func__);
@@ -2474,11 +2445,7 @@ static void test_tbf_li_decoding(void)
 	ul_tbf = tbf_li_decoding(&the_bts, ts_no, tlli, &fn, qta,
 		ms_class, egprs_ms_class);
 
-	ms = ul_tbf->ms();
-	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
-	fprintf(stderr,
-		"Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
-
+	print_ta_tlli(ul_tbf, true);
 	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
 
 	printf("=== end %s ===\n", __func__);
@@ -2591,7 +2558,6 @@ static void test_tbf_egprs_two_phase_spb(void)
 	uint8_t ms_class = 1;
 	uint8_t egprs_ms_class = 1;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	GprsMs *ms;
 	uint8_t test_data[256];
 
 	printf("=== start %s ===\n", __func__);
@@ -2605,11 +2571,7 @@ static void test_tbf_egprs_two_phase_spb(void)
 	ul_tbf = establish_ul_tbf_two_phase_spb(&the_bts, ts_no, tlli, &fn, qta,
 		ms_class, egprs_ms_class);
 
-	ms = ul_tbf->ms();
-	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
-	fprintf(stderr,
-		"Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
-
+	print_ta_tlli(ul_tbf, true);
 	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
 
 	printf("=== end %s ===\n", __func__);
@@ -2626,7 +2588,6 @@ static void test_tbf_egprs_two_phase()
 	uint8_t ms_class = 1;
 	uint8_t egprs_ms_class = 1;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	GprsMs *ms;
 	uint8_t test_data[256];
 
 	printf("=== start %s ===\n", __func__);
@@ -2640,10 +2601,7 @@ static void test_tbf_egprs_two_phase()
 	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli, &fn, qta,
 		ms_class, egprs_ms_class);
 
-	ms = ul_tbf->ms();
-	fprintf(stderr, "Got '%s', TA=%d\n", ul_tbf->name(), ul_tbf->ta());
-	fprintf(stderr, "Got MS: TLLI = 0x%08x, TA = %d\n", ms->tlli(), ms->ta());
-
+	print_ta_tlli(ul_tbf, true);
 	send_dl_data(&the_bts, tlli, imsi, test_data, sizeof(test_data));
 
 	printf("=== end %s ===\n", __func__);
