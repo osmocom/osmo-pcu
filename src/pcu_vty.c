@@ -1083,11 +1083,20 @@ DEFUN(cfg_pcu_gb_dialect,
 
 DEFUN(show_tbf,
       show_tbf_cmd,
-      "show tbf all",
-      SHOW_STR "information about TBFs\n" "All TBFs\n")
+      "show tbf (all|ccch|pacch)",
+      SHOW_STR "information about TBFs\n"
+      "All TBFs\n"
+      "TBFs allocated via CCCH\n"
+      "TBFs allocated via PACCH\n")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	return pcu_vty_show_tbf_all(vty, bts);
+	if (!strcmp(argv[0], "all"))
+		return pcu_vty_show_tbf_all(vty, bts, true, true);
+
+	if (!strcmp(argv[0], "ccch"))
+		return pcu_vty_show_tbf_all(vty, bts_main_data(), true, false);
+
+	return pcu_vty_show_tbf_all(vty, bts_main_data(), false, true);
 }
 
 DEFUN(show_ms_all,
