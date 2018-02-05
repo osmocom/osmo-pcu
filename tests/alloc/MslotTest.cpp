@@ -27,6 +27,7 @@
 #include <errno.h>
 
 extern "C" {
+	#include "mslot_class.h"
 #include <osmocom/core/application.h>
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/talloc.h>
@@ -137,6 +138,13 @@ static inline void test_multislot_ends(bool seq)
 	test_all_classes(trx, seq);
 }
 
+static inline void test_window_wrapper()
+{
+	uint16_t i;
+	for (i = 0; i < 256 * 2 + 1; i++)
+		printf("W[%03u] -> %3u %s\n",
+		       i, mslot_wrap_window(i), mslot_wrap_window(i) < 256 ? "OK" : "FAIL");
+}
 
 int main(int argc, char **argv)
 {
@@ -162,6 +170,8 @@ int main(int argc, char **argv)
 
 	test_multislot_ends(true);
 	test_multislot_ends(false);
+
+	test_window_wrapper();
 
 	return EXIT_SUCCESS;
 }

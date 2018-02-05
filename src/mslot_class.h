@@ -57,3 +57,6 @@ int8_t find_free_usf(uint8_t usf_map);
 int8_t find_free_tfi(uint32_t tfi_map);
 void masked_override_with(char *buf, uint8_t mask, char set_char);
 void ts_format(char *buf, uint8_t dl_mask, uint8_t ul_mask);
+uint16_t mslot_wrap_window(uint16_t win);
+bool mslot_test_and_set_bit(uint32_t *bits, size_t elem);
+int16_t mslot_filter_bad(uint8_t mask, uint8_t ul_slots, uint8_t dl_slots, uint16_t rx_valid_win);
