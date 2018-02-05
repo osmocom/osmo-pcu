@@ -229,6 +229,22 @@ int8_t find_free_usf(uint8_t usf_map)
 	return -1;
 }
 
+/* look for USF, don't use USF=7 */
+int8_t find_free_tfi(uint32_t tfi_map)
+{
+	int8_t tfi;
+
+	if (tfi_map == NO_FREE_TFI)
+		return -1;
+
+	for (tfi = 0; tfi < 32; tfi++) {
+		if (!(tfi_map & (1 << tfi)))
+			return tfi;
+	}
+
+	return -1;
+}
+
 void masked_override_with(char *buf, uint8_t mask, char set_char)
 {
 	int i;

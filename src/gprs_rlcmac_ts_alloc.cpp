@@ -62,23 +62,6 @@ static bool test_and_set_bit(uint32_t *bits, size_t elem)
 	return was_set;
 }
 
-static inline int8_t find_free_tfi(const struct gprs_rlcmac_pdch *pdch, enum gprs_rlcmac_tbf_direction dir)
-{
-	uint32_t tfi_map = pdch->assigned_tfi(dir);
-	int8_t tfi;
-
-	if (tfi_map == NO_FREE_TFI)
-		return -1;
-
-	/* look for USF, don't use USF=7 */
-	for (tfi = 0; tfi < 32; tfi++) {
-		if (!(tfi_map & (1 << tfi)))
-			return tfi;
-	}
-
-	return -1;
-}
-
 static int find_possible_pdchs(const struct gprs_rlcmac_trx *trx, size_t max_slots, uint8_t mask,
 			       const char *mask_reason = NULL)
 {
@@ -187,7 +170,7 @@ static int find_least_busy_pdch(const struct gprs_rlcmac_trx *trx, enum gprs_rlc
 			/* We have found a candidate */
 			/* Make sure that a TFI is available */
 			if (free_tfi) {
-				tfi = find_free_tfi(pdch, dir);
+				tfi = find_free_tfi(pdch->assigned_tfi(dir));
 				if (tfi < 0) {
 					LOGP(DRLCMAC, LOGL_DEBUG,
 						"- Skipping TS %d, because "

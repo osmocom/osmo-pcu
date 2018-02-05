@@ -36,6 +36,8 @@
 
 #define DEFAULT_MSLOT_CLASS 12
 
+#define NO_FREE_TFI 0xffffffff
+
 enum { MASK_TT = 0, MASK_TR = 1 };
 
 /* multislot class selection routines */
@@ -52,4 +54,5 @@ uint8_t mslot_class_max();
 /* multislot allocation helper routines */
 void mslot_fill_rx_mask(uint8_t mslot_class, uint8_t num_tx, uint8_t *rx_mask);
 int8_t find_free_usf(uint8_t usf_map);
+int8_t find_free_tfi(uint32_t tfi_map);
 void masked_override_with(char *buf, uint8_t mask, char set_char);
