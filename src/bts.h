@@ -28,6 +28,7 @@ extern "C" {
 #include <osmocom/core/stat_item.h>
 #include <osmocom/gsm/l1sap.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
+	#include <mslot_class.h>
 }
 
 #include <gsm_rlcmac.h>
@@ -45,7 +46,6 @@ extern "C" {
 #define LLC_CODEL_DISABLE 0
 #define LLC_CODEL_USE_DEFAULT (-1)
 #define MAX_GPRS_CS 9
-#define NO_FREE_TFI 0xffffffff
 
 /* see bts->gsmtap_categ_mask */
 enum pcu_gsmtap_category {
