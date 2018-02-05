@@ -54,19 +54,11 @@ static char *set_flag_chars(char *buf, uint8_t val, char set_char, char unset_ch
 	return buf;
 }
 
-static bool test_and_set_bit(uint32_t *bits, size_t elem)
-{
-	bool was_set = bits[elem/32] & (1 << (elem % 32));
-	bits[elem/32] |= (1 << (elem % 32));
-
-	return was_set;
-}
-
-static int find_possible_pdchs(const struct gprs_rlcmac_trx *trx, size_t max_slots, uint8_t mask,
-			       const char *mask_reason = NULL)
+static uint8_t find_possible_pdchs(const struct gprs_rlcmac_trx *trx, uint8_t max_slots, uint8_t mask,
+				   const char *mask_reason = NULL)
 {
 	unsigned ts;
-	int valid_ts_set = 0;
+	uint8_t valid_ts_set = 0;
 	int8_t last_tsc = -1; /* must be signed */
 
 	for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
@@ -353,7 +345,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	int trx_no;
 	int tfi = -1;
 	int usf = -1;
-	int mask = 0xff;
+	uint8_t mask = 0xff;
 	const char *mask_reason = NULL;
 	const GprsMs *ms = ms_;
 	const gprs_rlcmac_tbf *tbf = tbf_;
@@ -457,6 +449,58 @@ static inline unsigned compute_capacity(const struct gprs_rlcmac_trx *trx, int r
 	return capacity;
 }
 
+/*! Decide if a given slot should be skipped by multislot allocator
+ *
+ *  \param[in] ms_class Pointer to MS Class object
+ *  \param[in] check_tr Flag indicating whether we should check for Tra or Tta parameters for a given MS class
+ *  \param[in] rx_window Receive window
+ *  \param[in] tx_window Transmit window
+ *  \param[in,out] checked_rx array with already checked RX timeslots
+ *  \returns true if the slot should be skipped, false otherwise
+ */
+static bool skip_slot(uint8_t mslot_class, bool check_tr,
+		      int16_t rx_window, int16_t tx_window,
+		      uint32_t *checked_rx)
+{
+	uint8_t common_slot_count, req_common_slots,
+		rx_slot_count = pcu_bitcount(rx_window),
+		tx_slot_count = pcu_bitcount(tx_window);
+
+	/* Check compliance with TS 45.002, table 6.4.2.2.1 */
+	/* Whether to skip this round doesn not only depend on the bit
+	 * sets but also on check_tr. Therefore this check must be done
+	 * before doing the mslot_test_and_set_bit shortcut. */
+	if (mslot_class_get_type(mslot_class) == 1) {
+		uint16_t slot_sum = rx_slot_count + tx_slot_count;
+		/* Assume down + up / dynamic.
+		 * TODO: For ext-dynamic, down only, up only add more cases.
+		 */
+		if (slot_sum <= 6 && tx_slot_count < 3) {
+			if (!check_tr)
+				return true; /* Skip Tta */
+		} else if (slot_sum > 6 && tx_slot_count < 3) {
+			if (check_tr)
+				return true; /* Skip Tra */
+		} else
+			return true; /* No supported row in TS 45.002, table 6.4.2.2.1. */
+	}
+
+	/* Avoid repeated RX combination check */
+	if (mslot_test_and_set_bit(checked_rx, rx_window))
+		return true;
+
+	/* Check number of common slots according to TS 45.002, §6.4.2.2 */
+	common_slot_count = pcu_bitcount(tx_window & rx_window);
+	req_common_slots = OSMO_MIN(tx_slot_count, rx_slot_count);
+	if (mslot_class_get_type(mslot_class) == 1)
+		req_common_slots = OSMO_MIN(req_common_slots, 2);
+
+	if (req_common_slots != common_slot_count)
+		return true;
+
+	return false;
+}
+
 /*! Find set of slots available for allocation while taking MS class into account
  *
  *  \param[in] trx Pointer to TRX object
@@ -468,16 +512,12 @@ static inline unsigned compute_capacity(const struct gprs_rlcmac_trx *trx, int r
 int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *ul_slots, uint8_t *dl_slots)
 {
 	uint8_t Tx = mslot_class_get_tx(mslot_class),   /* Max number of Tx slots */
-		Sum = mslot_class_get_sum(mslot_class); /* Max number of Tx + Rx slots */
-	int rx_window, tx_window, pdch_slots;
+		Sum = mslot_class_get_sum(mslot_class), /* Max number of Tx + Rx slots */
+		max_slots, num_tx, mask_sel, pdch_slots, ul_ts, dl_ts;
+	int16_t rx_window, tx_window;
 	char slot_info[9] = {0};
 	int max_capacity = -1;
 	uint8_t max_ul_slots = 0, max_dl_slots = 0;
-	unsigned max_slots;
-
-	unsigned ul_ts, dl_ts;
-	unsigned num_tx;
-	unsigned mask_sel;
 
 	if (mslot_class)
 		LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm B) for class %d\n",
@@ -519,13 +559,11 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 
 	/* Rotate group of TX slots: UUU-----, -UUU----, ..., UU-----U */
 	for (ul_ts = 0; ul_ts < 8; ul_ts += 1, tx_valid_win <<= 1) {
-		unsigned tx_slot_count;
-		int max_rx;
 		uint16_t rx_valid_win;
 		uint32_t checked_rx[256/32] = {0};
 
 		/* Wrap valid window */
-		tx_valid_win = (tx_valid_win | tx_valid_win >> 8) & 0xff;
+		tx_valid_win = mslot_wrap_window(tx_valid_win);
 
 		tx_window = tx_valid_win;
 
@@ -540,10 +578,7 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 		if ((tx_window & (1 << ((ul_ts+num_tx-1) % 8))) == 0)
 			continue;
 
-		tx_slot_count = pcu_bitcount(tx_window);
-
-		max_rx = OSMO_MIN(mslot_class_get_rx(mslot_class), Sum - num_tx);
-		rx_valid_win = (1 << max_rx) - 1;
+		rx_valid_win = (1 << OSMO_MIN(mslot_class_get_rx(mslot_class), Sum - num_tx)) - 1;
 
 	/* Rotate group of RX slots: DDD-----, -DDD----, ..., DD-----D */
 	for (dl_ts = 0; dl_ts < 8; dl_ts += 1, rx_valid_win <<= 1) {
@@ -552,107 +587,14 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 
 	/* Validate with both Tta/Ttb/Trb and Ttb/Tra/Trb */
 	for (mask_sel = MASK_TT; mask_sel <= MASK_TR; mask_sel += 1) {
-		unsigned common_slot_count;
-		unsigned req_common_slots;
-		unsigned rx_slot_count;
-		uint16_t rx_bad;
-		uint8_t rx_good;
 		int capacity;
 
-		/* Filter out bad slots */
-		rx_bad = (uint16_t)(0xff & ~rx_mask[mask_sel]) << ul_ts;
-		rx_bad = (rx_bad | (rx_bad >> 8)) & 0xff;
-		rx_good = *dl_slots & ~rx_bad;
-
-		/* TODO: CHECK this calculation -> separate function for unit
-		 * testing */
-
-		rx_window = rx_good & rx_valid_win;
-		rx_slot_count = pcu_bitcount(rx_window);
-
-#if 0
-		LOGP(DRLCMAC, LOGL_DEBUG, "n_tx=%d, n_rx=%d, mask_sel=%d, "
-			"tx=%02x, rx=%02x, mask=%02x, bad=%02x, good=%02x, "
-			"ul=%02x, dl=%02x\n",
-			tx_slot_count, rx_slot_count, mask_sel,
-			tx_window, rx_window, rx_mask[mask_sel], rx_bad, rx_good,
-			*ul_slots, *dl_slots);
-#endif
-
-		/* Check compliance with TS 45.002, table 6.4.2.2.1 */
-		/* Whether to skip this round doesn not only depend on the bit
-		 * sets but also on mask_sel. Therefore this check must be done
-		 * before doing the test_and_set_bit shortcut. */
-		if (mslot_class_get_type(mslot_class) == 1) {
-			unsigned slot_sum = rx_slot_count + tx_slot_count;
-			/* Assume down+up/dynamic.
-			 * TODO: For ext-dynamic, down only, up only add more
-			 *       cases.
-			 */
-			if (slot_sum <= 6 && tx_slot_count < 3) {
-			       if (mask_sel != MASK_TR)
-				       /* Skip Tta */
-				       continue;
-			} else if (slot_sum > 6 && tx_slot_count < 3) {
-				if (mask_sel != MASK_TT)
-					/* Skip Tra */
-					continue;
-			} else {
-				/* No supported row in table 6.4.2.2.1. */
-#ifdef ENABLE_TS_ALLOC_DEBUG
-				LOGP(DRLCMAC, LOGL_DEBUG,
-					"- Skipping DL/UL slots: (TS=0)\"%s\"(TS=7), "
-					"combination not supported\n",
-					set_flag_chars(set_flag_chars(set_flag_chars(
-								slot_info,
-								rx_bad, 'x', '.'),
-							rx_window, 'D'),
-						tx_window, 'U'));
-#endif
-				continue;
-			}
-		}
-
-		/* Avoid repeated RX combination check */
-		if (test_and_set_bit(checked_rx, rx_window))
+		rx_window = mslot_filter_bad(rx_mask[mask_sel], ul_ts, *dl_slots, rx_valid_win);
+		if (rx_window < 0)
 			continue;
 
-		if (!rx_good) {
-#ifdef ENABLE_TS_ALLOC_DEBUG
-			LOGP(DRLCMAC, LOGL_DEBUG,
-				"- Skipping DL/UL slots: (TS=0)\"%s\"(TS=7), "
-				"no DL slots available\n",
-				set_flag_chars(set_flag_chars(slot_info,
-						rx_bad, 'x', '.'),
-						tx_window, 'U'));
-#endif
-			continue;
-		}
-
-		if (!rx_window)
-			continue;
-
-		/* Check number of common slots according to TS 54.002, 6.4.2.2 */
-		common_slot_count = pcu_bitcount(tx_window & rx_window);
-		req_common_slots = OSMO_MIN(tx_slot_count, rx_slot_count);
-		if (mslot_class_get_type(mslot_class) == 1)
-			req_common_slots = OSMO_MIN(req_common_slots, 2);
-
-		if (req_common_slots != common_slot_count) {
-#ifdef ENABLE_TS_ALLOC_DEBUG
-			LOGP(DRLCMAC, LOGL_DEBUG,
-				"- Skipping DL/UL slots: (TS=0)\"%s\"(TS=7), "
-				"invalid number of common TS: %d (expected %d)\n",
-				set_flag_chars(set_flag_chars(set_flag_chars(
-							slot_info,
-							rx_bad, 'x', '.'),
-						rx_window, 'D'),
-					tx_window, 'U'),
-				common_slot_count,
-				req_common_slots);
-#endif
-			continue;
-		}
+		if (skip_slot(mslot_class, mask_sel != MASK_TT, rx_window, tx_window, checked_rx))
+ 			continue;
 
 		/* Compute capacity */
 		capacity = compute_capacity(trx, rx_window, tx_window);

@@ -260,3 +260,38 @@ void ts_format(char *buf, uint8_t dl_mask, uint8_t ul_mask)
 	masked_override_with(buf, ul_mask, 'U');
 	masked_override_with(buf, ul_mask & dl_mask, 'C');
 }
+
+uint16_t mslot_wrap_window(uint16_t win)
+{
+	return (win | win >> 8) & 0xFF;
+}
+
+bool mslot_test_and_set_bit(uint32_t *bits, size_t elem)
+{
+	bool was_set = bits[elem/32] & (1 << (elem % 32));
+	bits[elem/32] |= (1 << (elem % 32));
+
+	return was_set;
+}
+
+/*! Filter out bad slots
+ *
+ *  \param[in] mask TS selection mask
+ *  \param[in] ul_slots set of UL timeslots
+ *  \param[in] dl_slots set of DL timeslots
+ *  \param[in] rx_valid_win Mask for valid RX window value
+ *  \returns negative error code or RX window on success
+ */
+int16_t mslot_filter_bad(uint8_t mask, uint8_t ul_slots, uint8_t dl_slots, uint16_t rx_valid_win)
+{
+	uint8_t rx_good;
+	uint16_t rx_bad = (uint16_t)(0xFF & ~mask) << ul_slots;
+
+	/* TODO: CHECK this calculation -> separate function for unit testing */
+	rx_bad = (rx_bad | (rx_bad >> 8)) & 0xFF;
+	rx_good = dl_slots & ~rx_bad;
+	if (!rx_good)
+		return -1;
+
+	return rx_good & rx_valid_win;
+}
