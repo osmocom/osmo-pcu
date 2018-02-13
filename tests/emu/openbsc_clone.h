@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 #include <osmocom/gsm/protocol/gsm_04_08.h>
-
+#include <osmocom/gsm/protocol/gsm_04_08_gprs.h>
 #include <stdint.h>
 
 enum gprs_llc_cmd {
@@ -58,34 +58,6 @@ struct gprs_llc_hdr_parsed {
 };
 
 int gprs_llc_hdr_parse(struct gprs_llc_hdr_parsed *ghp, const uint8_t *llc_hdr, int len);
-
-/* Table 10.4 / 10.4a, GPRS Mobility Management (GMM) */
-#define GSM48_MT_GMM_ATTACH_ACK		0x02
-
-/* Chapter 9.4.2 / Table 9.4.2 */
-struct gsm48_attach_ack {
-	uint8_t att_result:4,	/* 10.5.5.7 */
-		 force_stby:4;	/* 10.5.5.1 */
-	uint8_t ra_upd_timer;	/* 10.5.7.3 */
-	uint8_t radio_prio;	/* 10.5.7.2 */
-	struct gsm48_ra_id ra_id; /* 10.5.5.15 */
-	uint8_t data[0];
-} __attribute__((packed));
-
-enum gsm48_gprs_ie_mm {
-	GSM48_IE_GMM_CIPH_CKSN		= 0x08, /* 10.5.1.2 */
-	GSM48_IE_GMM_TIMER_READY	= 0x17,	/* 10.5.7.3 */
-	GSM48_IE_GMM_ALLOC_PTMSI	= 0x18,	/* 10.5.1.4 */
-	GSM48_IE_GMM_PTMSI_SIG		= 0x19,	/* 10.5.5.8 */
-	GSM48_IE_GMM_AUTH_RAND		= 0x21,	/* 10.5.3.1 */
-	GSM48_IE_GMM_AUTH_SRES		= 0x22,	/* 10.5.3.2 */
-	GSM48_IE_GMM_IMEISV		= 0x23,	/* 10.5.1.4 */
-	GSM48_IE_GMM_DRX_PARAM		= 0x27,	/* 10.5.5.6 */
-	GSM48_IE_GMM_MS_NET_CAPA	= 0x31,	/* 10.5.5.12 */
-	GSM48_IE_GMM_PDP_CTX_STATUS	= 0x32,	/* 10.5.7.1 */
-	GSM48_IE_GMM_PS_LCS_CAPA	= 0x33,	/* 10.5.5.22 */
-	GSM48_IE_GMM_GMM_MBMS_CTX_ST	= 0x35,	/* 10.5.7.6 */
-};
 
 extern const struct tlv_definition gsm48_gmm_att_tlvdef;
 
