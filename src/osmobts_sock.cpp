@@ -55,7 +55,23 @@ struct pcu_sock_state {
 	struct llist_head upqueue;	/* queue for sending messages */
 } *pcu_sock_state = NULL;
 
-static void pcu_sock_timeout(void *_priv);
+static void pcu_sock_timeout(void *_priv)
+{
+	pcu_l1if_open();
+}
+
+static void pcu_tx_txt_retry(void *_priv)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct pcu_sock_state *state = pcu_sock_state;
+
+	if (bts->active)
+		return;
+
+	LOGP(DL1IF, LOGL_INFO, "Sending version %s to BTS.\n", PACKAGE_VERSION);
+	pcu_tx_txt_ind(PCU_VERSION, "%s", PACKAGE_VERSION);
+	osmo_timer_schedule(&state->timer, 5, 0);
+}
 
 int pcu_sock_send(struct msgb *msg)
 {
@@ -268,7 +284,7 @@ int pcu_l1if_open(void)
 		pcu_sock_state = state;
 		close(bfd->fd);
 		bfd->fd = -1;
-		state->timer.cb = pcu_sock_timeout;
+		osmo_timer_setup(&state->timer, pcu_sock_timeout, NULL);
 		osmo_timer_schedule(&state->timer, 5, 0);
 		return 0;
 	}
@@ -293,6 +309,10 @@ int pcu_l1if_open(void)
 	LOGP(DL1IF, LOGL_INFO, "Sending version %s to BTS.\n", PACKAGE_VERSION);
 	pcu_tx_txt_ind(PCU_VERSION, "%s", PACKAGE_VERSION);
 
+	/* Schedule a timer so we keep trying until the BTS becomes active. */
+	osmo_timer_setup(&state->timer, pcu_tx_txt_retry, NULL);
+	osmo_timer_schedule(&state->timer, 5, 0);
+
 	return 0;
 }
 
@@ -311,9 +331,4 @@ void pcu_l1if_close(void)
 		pcu_sock_close(state, 0);
 	talloc_free(state);
 	pcu_sock_state = NULL;
-}
-
-static void pcu_sock_timeout(void *_priv)
-{
-	pcu_l1if_open();
 }
