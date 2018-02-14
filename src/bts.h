@@ -173,6 +173,7 @@ void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts, i
  * we can start to compile pcu_vty.c with c++ and remove the split.
  */
 struct gprs_rlcmac_bts {
+	bool active;
 	uint8_t bsic;
 	uint8_t fc_interval;
 	uint16_t fc_bucket_time;

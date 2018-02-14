@@ -414,7 +414,10 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 
 	if (!(info_ind->flags & PCU_IF_FLAG_ACTIVE)) {
 		LOGP(DL1IF, LOGL_NOTICE, "BTS not available\n");
+		if (!bts->active)
+			return -EAGAIN;
 bssgp_failed:
+		bts->active = false;
 		/* free all TBF */
 		for (trx = 0; trx < ARRAY_SIZE(bts->trx); trx++) {
 			bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
@@ -562,6 +565,7 @@ bssgp_failed:
 		}
 	}
 
+	bts->active = true;
 	return rc;
 }
 
