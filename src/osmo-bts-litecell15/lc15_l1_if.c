@@ -34,6 +34,7 @@
 #include <lc15_l1_if.h>
 #include <gprs_debug.h>
 #include <pcu_l1_if.h>
+#include <pdch.h>
 #include <bts.h>
 
 extern void *tall_pcu_ctx;

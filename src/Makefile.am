@@ -54,6 +54,7 @@ libgprs_la_SOURCES = \
 	tbf_ul.cpp \
 	tbf_dl.cpp \
 	bts.cpp \
+	pdch.cpp \
 	poll_controller.cpp \
 	encoding.cpp \
 	sba.cpp \
@@ -85,6 +86,7 @@ noinst_HEADERS = \
 	mslot_class.h \
 	tbf.h \
 	bts.h \
+	pdch.h \
 	poll_controller.h \
 	encoding.h \
 	sba.h \

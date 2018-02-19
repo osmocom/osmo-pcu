@@ -23,6 +23,7 @@
 #include <gprs_debug.h>
 #include <bts.h>
 #include <pcu_utils.h>
+#include <pdch.h>
 
 extern "C" {
 #include <osmocom/core/logging.h>

@@ -40,6 +40,7 @@ extern "C" {
 #include <osmocom/pcu/pcuif_proto.h>
 #include <bts.h>
 #include <tbf.h>
+#include <pdch.h>
 
 extern void *tall_pcu_ctx;
 
