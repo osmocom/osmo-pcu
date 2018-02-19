@@ -12,9 +12,9 @@
 #include <osmocom/pcu/pcuif_proto.h>
 #include "pcu_vty.h"
 #include "gprs_rlcmac.h"
+#include <pdch.h>
 #include "bts.h"
 #include "tbf.h"
-
 #include "pcu_vty_functions.h"
 
 extern void *tall_pcu_ctx;

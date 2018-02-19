@@ -46,6 +46,7 @@ extern "C" {
 #include <gprs_bssgp_pcu.h>
 #include <osmocom/pcu/pcuif_proto.h>
 #include <bts.h>
+#include <pdch.h>
 
 // FIXME: move this, when changed from c++ to c.
 extern "C" {

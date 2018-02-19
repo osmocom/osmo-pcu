@@ -32,6 +32,7 @@
 #include <sba.h>
 #include <gprs_coding_scheme.h>
 #include <gsm_timer.h>
+#include <pdch.h>
 
 extern "C" {
 #include <osmocom/core/msgb.h>

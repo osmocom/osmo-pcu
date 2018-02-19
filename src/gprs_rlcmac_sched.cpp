@@ -26,6 +26,7 @@
 #include <gprs_ms.h>
 #include <rlc.h>
 #include <sba.h>
+#include <pdch.h>
 #include "pcu_utils.h"
 
 extern "C" {
