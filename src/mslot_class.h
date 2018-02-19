@@ -56,3 +56,4 @@ void mslot_fill_rx_mask(uint8_t mslot_class, uint8_t num_tx, uint8_t *rx_mask);
 int8_t find_free_usf(uint8_t usf_map);
 int8_t find_free_tfi(uint32_t tfi_map);
 void masked_override_with(char *buf, uint8_t mask, char set_char);
+void ts_format(char *buf, uint8_t dl_mask, uint8_t ul_mask);

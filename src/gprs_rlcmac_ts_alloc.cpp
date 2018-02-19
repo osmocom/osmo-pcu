@@ -812,6 +812,75 @@ static int allocate_usf(const gprs_rlcmac_trx *trx, int8_t first_common_ts, uint
 	return ul_slots;
 }
 
+/*! Update MS' reserved timeslots
+ *
+ *  \param[in,out] trx Pointer to TRX struct
+ *  \param[in,out] ms_ Pointer to MS object
+ *  \param[in] tbf_ Pointer to TBF struct
+ *  \param[in] res_ul_slots Newly reserved UL slots
+ *  \param[in] res_dl_slots Newly reserved DL slots
+ *  \param[in] ul_slots available UL slots (for logging only)
+ *  \param[in] dl_slots available DL slots (for logging only)
+ */
+static void update_ms_reserved_slots(gprs_rlcmac_trx *trx, GprsMs *ms, uint8_t res_ul_slots, uint8_t res_dl_slots,
+				     uint8_t ul_slots, uint8_t dl_slots)
+{
+	char slot_info[9] = { 0 };
+
+	if (res_ul_slots == ms->reserved_ul_slots() && res_dl_slots == ms->reserved_dl_slots())
+		return;
+
+	/* The reserved slots have changed, update the MS */
+	ms->set_reserved_slots(trx, res_ul_slots, res_dl_slots);
+
+	ts_format(slot_info, dl_slots, ul_slots);
+	LOGP(DRLCMAC, LOGL_DEBUG, "- Reserved DL/UL slots: (TS=0)\"%s\"(TS=7)\n", slot_info);
+}
+
+/*! Assign given UL timeslots to UL TBF
+ *
+ *  \param[in,out] ul_tbf Pointer to UL TBF struct
+ *  \param[in,out] trx Pointer to TRX object
+ *  \param[in] ul_slots Set of slots to be assigned
+ *  \param[in] tfi selected TFI
+ *  \param[in] usf selected USF
+ */
+static void assign_ul_tbf_slots(struct gprs_rlcmac_ul_tbf *ul_tbf, gprs_rlcmac_trx *trx, uint8_t ul_slots, int tfi,
+				int *usf)
+{
+	uint8_t ts;
+
+	for (ts = 0; ts < 8; ts++) {
+		if (!(ul_slots & (1 << ts)))
+			continue;
+
+		OSMO_ASSERT(usf[ts] >= 0);
+
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Assigning UL TS %u\n", ts);
+		assign_uplink_tbf_usf(&trx->pdch[ts], ul_tbf, tfi, usf[ts]);
+	}
+}
+
+/*! Assign given DL timeslots to DL TBF
+ *
+ *  \param[in,out] dl_tbf Pointer to DL TBF struct
+ *  \param[in,out] trx Pointer to TRX object
+ *  \param[in] ul_slots Set of slots to be assigned
+ *  \param[in] tfi selected TFI
+ */
+static void assign_dl_tbf_slots(struct gprs_rlcmac_dl_tbf *dl_tbf, gprs_rlcmac_trx *trx, uint8_t dl_slots, int tfi)
+{
+	uint8_t ts;
+
+	for (ts = 0; ts < 8; ts++) {
+		if (!(dl_slots & (1 << ts)))
+			continue;
+
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Assigning DL TS %u\n", ts);
+		assign_dlink_tbf(&trx->pdch[ts], dl_tbf, tfi);
+	}
+}
+
 /*! Slot Allocation: Algorithm B
  *
  * Assign as many downlink slots as possible.
@@ -834,8 +903,6 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	int8_t first_common_ts;
 	uint8_t slotcount = 0;
 	uint8_t avail_count = 0, trx_no;
-	char slot_info[9] = {0};
-	int ts;
 	int first_ts = -1;
 	int usf[8] = {-1, -1, -1, -1, -1, -1, -1, -1};
 	int rc;
@@ -927,50 +994,16 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 
 	/* Step 4: Update MS and TBF and really allocate the resources */
 
-	/* The reserved slots have changed, update the MS */
-	if (reserved_ul_slots != ms->reserved_ul_slots() ||
-		reserved_dl_slots != ms->reserved_dl_slots())
-	{
-		ms_->set_reserved_slots(trx,
-			reserved_ul_slots, reserved_dl_slots);
-
-		LOGP(DRLCMAC, LOGL_DEBUG,
-			"- Reserved DL/UL slots: (TS=0)\"%s\"(TS=7)\n",
-			set_flag_chars(set_flag_chars(set_flag_chars(slot_info,
-				dl_slots, 'D', '.'),
-				ul_slots, 'U'),
-				ul_slots & dl_slots, 'C'));
-	}
+	update_ms_reserved_slots(trx, ms_, reserved_ul_slots, reserved_dl_slots, ul_slots, dl_slots);
 
 	tbf_->trx = trx;
 	tbf_->first_common_ts = first_common_ts;
 	tbf_->first_ts = first_ts;
 
-	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
-		struct gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf_);
-		for (ts = 0; ts < 8; ts++) {
-			if (!(dl_slots & (1 << ts)))
-				continue;
-
-			LOGP(DRLCMAC, LOGL_DEBUG, "- Assigning DL TS "
-				"%d\n", ts);
-			assign_dlink_tbf(&trx->pdch[ts], dl_tbf, tfi);
-		}
-	} else {
-		struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf_);
-
-		for (ts = 0; ts < 8; ts++) {
-			if (!(ul_slots & (1 << ts)))
-				continue;
-
-			OSMO_ASSERT(usf[ts] >= 0);
-
-			LOGP(DRLCMAC, LOGL_DEBUG, "- Assigning UL TS "
-				"%d\n", ts);
-			assign_uplink_tbf_usf(&trx->pdch[ts], ul_tbf,
-				tfi, usf[ts]);
-		}
-	}
+	if (tbf->direction == GPRS_RLCMAC_DL_TBF)
+		assign_dl_tbf_slots(as_dl_tbf(tbf_), trx, dl_slots, tfi);
+	else
+		assign_ul_tbf_slots(as_ul_tbf(tbf_), trx, ul_slots, tfi, usf);
 
 	bts->bts->tbf_alloc_algo_b();
 
