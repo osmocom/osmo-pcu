@@ -23,6 +23,7 @@
 #include <mslot_class.h>
 #include <gprs_debug.h>
 
+#include <osmocom/core/bits.h>
 #include <osmocom/core/utils.h>
 #include <osmocom/core/logging.h>
 
@@ -251,4 +252,11 @@ void masked_override_with(char *buf, uint8_t mask, char set_char)
 	for (i = 0; mask; i++, mask >>= 1)
 		if (mask & 1)
 			buf[i] = set_char;
+}
+
+void ts_format(char *buf, uint8_t dl_mask, uint8_t ul_mask)
+{
+	snprintf(buf, 9, OSMO_BIT_SPEC, OSMO_BIT_PRINT_EX(dl_mask, 'D'));
+	masked_override_with(buf, ul_mask, 'U');
+	masked_override_with(buf, ul_mask & dl_mask, 'C');
 }
