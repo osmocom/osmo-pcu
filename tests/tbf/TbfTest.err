@@ -1,7 +1,7 @@
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 4, because not enabled
@@ -9,7 +9,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 - Skipping TS 3, because num TBFs 0 >= 0
-- Assign downlink TS=2 TFI=0
+[DL] Assign downlink TS=2 TFI=0
 PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 2
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -18,7 +18,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0x00002342, partly confir
 Modifying MS object, TLLI = 0x00002342, TA 220 -> 4
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 3, because need to reuse TS
@@ -26,7 +26,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign uplink TS=2 TFI=0 USF=0
+[UL] Assign uplink TS=2 TFI=0 USF=0
 PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 2
 Attaching TBF to MS object, TLLI = 0x00002342, TBF = TBF(TFI=0 TLLI=0x00002342 DIR=UL STATE=NULL)
@@ -41,7 +41,7 @@ Searching for first unallocated TFI: TRX=0
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -49,7 +49,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -90,7 +90,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) changes state from FLOW to WAIT REL
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 0 microsec, cur_fn=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -98,7 +98,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=1
+[DL] Assign downlink TS=4 TFI=1
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
@@ -129,7 +129,7 @@ Searching for first unallocated TFI: TRX=0
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -137,7 +137,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -178,7 +178,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) changes state from FLOW to WAIT REL
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 0 microsec, cur_fn=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -186,7 +186,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=1
+[DL] Assign downlink TS=4 TFI=1
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
@@ -217,7 +217,7 @@ Searching for first unallocated TFI: TRX=0
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -225,7 +225,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -470,7 +470,7 @@ Searching for first unallocated TFI: TRX=0
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -478,7 +478,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -492,7 +492,7 @@ Searching for first unallocated TFI: TRX=0
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -500,7 +500,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=1
+[DL] Assign downlink TS=4 TFI=1
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -533,7 +533,7 @@ Destroying MS object, TLLI = 0xf1000002
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -541,7 +541,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -558,7 +558,7 @@ TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -566,7 +566,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=1
+[DL] Assign downlink TS=4 TFI=1
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -583,7 +583,7 @@ TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -591,7 +591,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=2
+[DL] Assign downlink TS=4 TFI=2
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL), 3 TBFs, USFs = 00, TFIs = 00000007.
 TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -608,7 +608,7 @@ TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -616,7 +616,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=3
+[DL] Assign downlink TS=4 TFI=3
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL), 4 TBFs, USFs = 00, TFIs = 0000000f.
 TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -633,7 +633,7 @@ TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -641,7 +641,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=4
+[DL] Assign downlink TS=4 TFI=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL), 5 TBFs, USFs = 00, TFIs = 0000001f.
 TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -658,7 +658,7 @@ TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -666,7 +666,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=5
+[DL] Assign downlink TS=4 TFI=5
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL), 6 TBFs, USFs = 00, TFIs = 0000003f.
 TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -683,7 +683,7 @@ TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -691,7 +691,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=6
+[DL] Assign downlink TS=4 TFI=6
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL), 7 TBFs, USFs = 00, TFIs = 0000007f.
 TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -708,7 +708,7 @@ TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -716,7 +716,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=7
+[DL] Assign downlink TS=4 TFI=7
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL), 8 TBFs, USFs = 00, TFIs = 000000ff.
 TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -733,7 +733,7 @@ TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -741,7 +741,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=8
+[DL] Assign downlink TS=4 TFI=8
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL), 9 TBFs, USFs = 00, TFIs = 000001ff.
 TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -758,7 +758,7 @@ TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -766,7 +766,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=9
+[DL] Assign downlink TS=4 TFI=9
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL), 10 TBFs, USFs = 00, TFIs = 000003ff.
 TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -783,7 +783,7 @@ TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -791,7 +791,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=10
+[DL] Assign downlink TS=4 TFI=10
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL), 11 TBFs, USFs = 00, TFIs = 000007ff.
 TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -808,7 +808,7 @@ TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -816,7 +816,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=11
+[DL] Assign downlink TS=4 TFI=11
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL), 12 TBFs, USFs = 00, TFIs = 00000fff.
 TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -833,7 +833,7 @@ TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -841,7 +841,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=12
+[DL] Assign downlink TS=4 TFI=12
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL), 13 TBFs, USFs = 00, TFIs = 00001fff.
 TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -858,7 +858,7 @@ TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -866,7 +866,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=13
+[DL] Assign downlink TS=4 TFI=13
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL), 14 TBFs, USFs = 00, TFIs = 00003fff.
 TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -883,7 +883,7 @@ TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -891,7 +891,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=14
+[DL] Assign downlink TS=4 TFI=14
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL), 15 TBFs, USFs = 00, TFIs = 00007fff.
 TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -908,7 +908,7 @@ TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -916,7 +916,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=15
+[DL] Assign downlink TS=4 TFI=15
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL), 16 TBFs, USFs = 00, TFIs = 0000ffff.
 TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -933,7 +933,7 @@ TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -941,7 +941,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=16
+[DL] Assign downlink TS=4 TFI=16
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL), 17 TBFs, USFs = 00, TFIs = 0001ffff.
 TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -958,7 +958,7 @@ TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -966,7 +966,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=17
+[DL] Assign downlink TS=4 TFI=17
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL), 18 TBFs, USFs = 00, TFIs = 0003ffff.
 TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -983,7 +983,7 @@ TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -991,7 +991,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=18
+[DL] Assign downlink TS=4 TFI=18
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL), 19 TBFs, USFs = 00, TFIs = 0007ffff.
 TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1008,7 +1008,7 @@ TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1016,7 +1016,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=19
+[DL] Assign downlink TS=4 TFI=19
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL), 20 TBFs, USFs = 00, TFIs = 000fffff.
 TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1033,7 +1033,7 @@ TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1041,7 +1041,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=20
+[DL] Assign downlink TS=4 TFI=20
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL), 21 TBFs, USFs = 00, TFIs = 001fffff.
 TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1058,7 +1058,7 @@ TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1066,7 +1066,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=21
+[DL] Assign downlink TS=4 TFI=21
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL), 22 TBFs, USFs = 00, TFIs = 003fffff.
 TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1083,7 +1083,7 @@ TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1091,7 +1091,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=22
+[DL] Assign downlink TS=4 TFI=22
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL), 23 TBFs, USFs = 00, TFIs = 007fffff.
 TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1108,7 +1108,7 @@ TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1116,7 +1116,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=23
+[DL] Assign downlink TS=4 TFI=23
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL), 24 TBFs, USFs = 00, TFIs = 00ffffff.
 TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1133,7 +1133,7 @@ TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1141,7 +1141,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=24
+[DL] Assign downlink TS=4 TFI=24
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL), 25 TBFs, USFs = 00, TFIs = 01ffffff.
 TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1158,7 +1158,7 @@ TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1166,7 +1166,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=25
+[DL] Assign downlink TS=4 TFI=25
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL), 26 TBFs, USFs = 00, TFIs = 03ffffff.
 TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1183,7 +1183,7 @@ TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1191,7 +1191,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=26
+[DL] Assign downlink TS=4 TFI=26
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL), 27 TBFs, USFs = 00, TFIs = 07ffffff.
 TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1208,7 +1208,7 @@ TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1216,7 +1216,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=27
+[DL] Assign downlink TS=4 TFI=27
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL), 28 TBFs, USFs = 00, TFIs = 0fffffff.
 TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1233,7 +1233,7 @@ TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1241,7 +1241,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=28
+[DL] Assign downlink TS=4 TFI=28
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL), 29 TBFs, USFs = 00, TFIs = 1fffffff.
 TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1258,7 +1258,7 @@ TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1266,7 +1266,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=29
+[DL] Assign downlink TS=4 TFI=29
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL), 30 TBFs, USFs = 00, TFIs = 3fffffff.
 TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1283,7 +1283,7 @@ TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1291,7 +1291,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=30
+[DL] Assign downlink TS=4 TFI=30
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL), 31 TBFs, USFs = 00, TFIs = 7fffffff.
 TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1308,7 +1308,7 @@ TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1316,7 +1316,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=31
+[DL] Assign downlink TS=4 TFI=31
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL), 32 TBFs, USFs = 00, TFIs = ffffffff.
 TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1333,15 +1333,15 @@ TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) appending 256 bytes
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
-- Failed to find a usable TRX (TFI exhausted)
+[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): failed to find a usable TRX (TFI exhausted)
 No PDCH resource
 Destroying MS object, TLLI = 0x00000000
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1349,7 +1349,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -1372,7 +1372,7 @@ Detaching TBF from MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456
 ********** DL-TBF ends here **********
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-Slot Allocation (Algorithm A) for class 45
+[DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1380,7 +1380,7 @@ Slot Allocation (Algorithm A) for class 45
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL)
@@ -1430,7 +1430,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x03 Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1438,7 +1438,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -1475,7 +1475,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=0/0
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1483,7 +1483,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=0
+[DL] Assign downlink TS=7 TFI=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
@@ -1510,7 +1510,7 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Allocating UL TBF: MS_CLASS=1/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Slot Allocation (Algorithm A) for class 1
+[UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1518,7 +1518,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -1556,7 +1556,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
-Slot Allocation (Algorithm A) for class 1
+[DL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1564,7 +1564,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=0
+[DL] Assign downlink TS=7 TFI=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
@@ -1592,7 +1592,7 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Allocating UL TBF: MS_CLASS=1/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Slot Allocation (Algorithm A) for class 1
+[UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1600,7 +1600,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -1637,7 +1637,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
-Slot Allocation (Algorithm A) for class 1
+[DL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1645,7 +1645,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=0
+[DL] Assign downlink TS=7 TFI=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
@@ -1724,7 +1724,7 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Allocating UL TBF: MS_CLASS=1/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Slot Allocation (Algorithm A) for class 1
+[UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1732,7 +1732,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=1 USF=1
+[UL] Assign uplink TS=7 TFI=1 USF=1
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL), 2 TBFs, USFs = 03, TFIs = 00000003.
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -1791,7 +1791,7 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Allocating UL TBF: MS_CLASS=1/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Slot Allocation (Algorithm A) for class 1
+[UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1799,7 +1799,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -1836,7 +1836,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
-Slot Allocation (Algorithm A) for class 1
+[DL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1844,7 +1844,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=0
+[DL] Assign downlink TS=7 TFI=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
@@ -1886,7 +1886,7 @@ Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344
 MS requests UL TBF in packet resource request of single block, so we provide one:
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-Slot Allocation (Algorithm A) for class 1
+[UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1894,7 +1894,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
@@ -1918,7 +1918,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RL
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
-Slot Allocation (Algorithm A) for class 1
+[DL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1926,7 +1926,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=0
+[DL] Assign downlink TS=7 TFI=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
@@ -1962,7 +1962,7 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Allocating UL TBF: MS_CLASS=1/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Slot Allocation (Algorithm A) for class 1
+[UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1970,7 +1970,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -2007,7 +2007,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
-Slot Allocation (Algorithm A) for class 1
+[DL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -2015,7 +2015,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=0
+[DL] Assign downlink TS=7 TFI=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
@@ -2044,7 +2044,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x03 Fn=2654275 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -2052,7 +2052,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -2111,7 +2111,7 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Allocating UL TBF: MS_CLASS=1/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Slot Allocation (Algorithm A) for class 1
+[UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -2119,7 +2119,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -2156,7 +2156,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
-Slot Allocation (Algorithm A) for class 1
+[DL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -2164,7 +2164,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=0
+[DL] Assign downlink TS=7 TFI=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
@@ -2790,7 +2790,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) changes state from FINISHED to 
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 0 microsec, cur_fn=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
-Slot Allocation (Algorithm A) for class 1
+[DL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -2798,7 +2798,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=1
+[DL] Assign downlink TS=7 TFI=1
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 01, TFIs = 00000003.
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL)
@@ -3046,8 +3046,8 @@ Slot Allocation (Algorithm B) for class 12
 - Skipping TS 7, because not enabled
 - Possible DL/UL slots: (TS=0)"..CCCC.."(TS=7)
 Rx=4 Tx=4 Sum Rx+Tx=5, Tta=2 Ttb=1, Tra=2 Trb=1, Type=1
-- Selected DL slots: (TS=0)"..DDDD.."(TS=7)
-Using 4 slots for DL
+- Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
+[DL] algo B <multi> (suggested TRX: 0): using 4 slots
 - Reserved DL/UL slots: (TS=0)"..DDCD.."(TS=7)
 - Assigning DL TS 2
 PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
@@ -3085,8 +3085,8 @@ Slot Allocation (Algorithm B) for class 12
 - Skipping TS 7, because not enabled
 - Possible DL/UL slots: (TS=0)"..CCCC.."(TS=7)
 Rx=4 Tx=4 Sum Rx+Tx=5, Tta=2 Ttb=1, Tra=2 Trb=1, Type=1
-- Selected DL slots: (TS=0)"..DDDD.."(TS=7)
-Using 4 slots for DL
+- Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
+[DL] algo B <multi> (suggested TRX: 0): using 4 slots
 - Reserved DL/UL slots: (TS=0)"..DDCD.."(TS=7)
 - Assigning DL TS 2
 PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
@@ -3128,7 +3128,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 1
+[UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3136,7 +3136,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
@@ -3177,7 +3177,7 @@ Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3185,7 +3185,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=0
+[DL] Assign downlink TS=7 TFI=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
@@ -3218,7 +3218,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 1
+[UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3226,7 +3226,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
@@ -3397,7 +3397,7 @@ Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3405,7 +3405,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=0
+[DL] Assign downlink TS=7 TFI=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
@@ -3429,7 +3429,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3437,7 +3437,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -3735,7 +3735,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3743,7 +3743,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -3991,7 +3991,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3999,7 +3999,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -4209,7 +4209,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -4217,7 +4217,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -4395,7 +4395,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -4403,7 +4403,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -4561,7 +4561,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -4569,7 +4569,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -4709,7 +4709,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -4717,7 +4717,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -4852,7 +4852,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -4860,7 +4860,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -4984,7 +4984,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -4992,7 +4992,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -5116,7 +5116,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5124,7 +5124,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -5171,7 +5171,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5179,7 +5179,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -5226,7 +5226,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5234,7 +5234,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -5281,7 +5281,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5289,7 +5289,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -5352,7 +5352,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5360,7 +5360,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -5423,7 +5423,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5431,7 +5431,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -5494,7 +5494,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5502,7 +5502,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -5565,7 +5565,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5573,7 +5573,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -5627,7 +5627,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5635,7 +5635,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -5689,7 +5689,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5697,7 +5697,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -5751,7 +5751,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5759,7 +5759,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -5829,7 +5829,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 1
+[UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5837,7 +5837,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
@@ -5897,7 +5897,7 @@ Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5905,7 +5905,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=0
+[DL] Assign downlink TS=7 TFI=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
@@ -5937,7 +5937,7 @@ Slot Allocation (Algorithm B) for class 11
 - Possible DL/UL slots: (TS=0)"..CCCC.."(TS=7)
 Rx=4 Tx=3 Sum Rx+Tx=5, Tta=3 Ttb=1, Tra=2 Trb=1, Type=1
 - Selected DL slots: (TS=0)"..ddDd.."(TS=7), single
-Using single slot at TS 4 for DL
+[DL] algo B <single> (suggested TRX: 0): using single slot at TS 4
 - Reserved DL/UL slots: (TS=0)"...DC..."(TS=7)
 - Assigning DL TS 4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
@@ -5951,8 +5951,8 @@ DL TBF slots: 0x10, N: 1, WS: 192
 PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
-- Selected DL slots: (TS=0)"..DDDD.."(TS=7)
-Using 4 slots for DL
+- Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
+[DL] algo B <multi> (suggested TRX: -1): using 4 slots
 - Assigning DL TS 2
 PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 - Assigning DL TS 3
@@ -5990,7 +5990,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 1
+[UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5998,7 +5998,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
@@ -6052,7 +6052,7 @@ Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6060,7 +6060,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=0
+[DL] Assign downlink TS=7 TFI=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
@@ -6084,7 +6084,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6092,7 +6092,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
@@ -6119,7 +6119,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x78 Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6127,7 +6127,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -6144,7 +6144,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x79 Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6152,7 +6152,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=1 USF=1
+[UL] Assign uplink TS=7 TFI=1 USF=1
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL), 2 TBFs, USFs = 03, TFIs = 00000003.
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -6169,7 +6169,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x7a Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6177,7 +6177,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=2 USF=2
+[UL] Assign uplink TS=7 TFI=2 USF=2
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL), 3 TBFs, USFs = 07, TFIs = 00000007.
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -6194,7 +6194,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x7b Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6202,7 +6202,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=3 USF=3
+[UL] Assign uplink TS=7 TFI=3 USF=3
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL), 4 TBFs, USFs = 0f, TFIs = 0000000f.
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -6219,7 +6219,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x7c Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6227,7 +6227,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=4 USF=4
+[UL] Assign uplink TS=7 TFI=4 USF=4
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL), 5 TBFs, USFs = 1f, TFIs = 0000001f.
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -6244,7 +6244,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x7d Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6252,7 +6252,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=5 USF=5
+[UL] Assign uplink TS=7 TFI=5 USF=5
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL), 6 TBFs, USFs = 3f, TFIs = 0000003f.
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -6269,7 +6269,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x7e Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6277,7 +6277,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=6 USF=6
+[UL] Assign uplink TS=7 TFI=6 USF=6
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL), 7 TBFs, USFs = 7f, TFIs = 0000007f.
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -6294,7 +6294,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x7f Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6303,7 +6303,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because no USF available
-- Failed to allocate a TS, no USF available
+[UL] algo A <single> (suggested TRX: -1): failed to allocate a TS, no USF available
 No PDCH resource sending Immediate Assignment Uplink (AGCH) reject
 Destroying MS object, TLLI = 0x00000000
 MS requests UL TBF on RACH, so we provide one: ra=0x70 Fn=2654167 qta=31 is_11bit=0:
@@ -6327,7 +6327,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 1
+[UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6335,7 +6335,7 @@ Slot Allocation (Algorithm A) for class 1
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
@@ -6945,7 +6945,7 @@ Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-Slot Allocation (Algorithm A) for class 0
+[DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6953,7 +6953,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign downlink TS=7 TFI=0
+[DL] Assign downlink TS=7 TFI=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
@@ -7718,7 +7718,7 @@ Allocating DL TBF: MS_CLASS=11/11
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Slot Allocation (Algorithm A) for class 11
+[DL] Slot Allocation (Algorithm A) for class 11
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7726,7 +7726,7 @@ Slot Allocation (Algorithm A) for class 11
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
-- Assign downlink TS=4 TFI=0
+[DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
@@ -7740,7 +7740,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x78 Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7748,7 +7748,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=0 USF=0
+[UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -7765,7 +7765,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x79 Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7773,7 +7773,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=1 USF=1
+[UL] Assign uplink TS=7 TFI=1 USF=1
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL), 2 TBFs, USFs = 03, TFIs = 00000003.
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -7790,7 +7790,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x7a Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7798,7 +7798,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=2 USF=2
+[UL] Assign uplink TS=7 TFI=2 USF=2
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL), 3 TBFs, USFs = 07, TFIs = 00000007.
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -7815,7 +7815,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x7b Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7823,7 +7823,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=3 USF=3
+[UL] Assign uplink TS=7 TFI=3 USF=3
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL), 4 TBFs, USFs = 0f, TFIs = 0000000f.
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -7840,7 +7840,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x7c Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7848,7 +7848,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=4 USF=4
+[UL] Assign uplink TS=7 TFI=4 USF=4
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL), 5 TBFs, USFs = 1f, TFIs = 0000001f.
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -7865,7 +7865,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x7d Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7873,7 +7873,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=5 USF=5
+[UL] Assign uplink TS=7 TFI=5 USF=5
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL), 6 TBFs, USFs = 3f, TFIs = 0000003f.
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -7890,7 +7890,7 @@ MS requests UL TBF on RACH, so we provide one: ra=0x7e Fn=2654167 qta=31 is_11bi
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
-Slot Allocation (Algorithm A) for class 0
+[UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7898,7 +7898,7 @@ Slot Allocation (Algorithm A) for class 0
 - Skipping TS 4, because not enabled
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
-- Assign uplink TS=7 TFI=6 USF=6
+[UL] Assign uplink TS=7 TFI=6 USF=6
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL), 7 TBFs, USFs = 7f, TFIs = 0000007f.
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
 Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL)
@@ -7921,7 +7921,7 @@ Allocating UL TBF: MS_CLASS=11/11
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Slot Allocation (Algorithm A) for class 11
+[UL] Slot Allocation (Algorithm A) for class 11
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7930,7 +7930,7 @@ Slot Allocation (Algorithm A) for class 11
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because no USF available
-- Failed to allocate a TS, no USF available
+[UL] algo A <single> (suggested TRX: 0): failed to allocate a TS, no USF available
 No PDCH resource
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, UL TLLI: 0x00000000 -> 0xffeeddcc, not yet confirmed

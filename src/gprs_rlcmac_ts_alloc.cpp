@@ -40,6 +40,13 @@ extern "C" {
 /* Consider a PDCH as idle if has at most this number of TBFs assigned to it */
 #define PDCH_IDLE_TBF_THRESH	1
 
+#define LOGPSL(tbf, level, fmt, args...) LOGP(DRLCMAC, level, "[%s] " fmt, \
+					      (tbf->direction == GPRS_RLCMAC_DL_TBF) ? "DL" : "UL", ## args)
+
+#define LOGPAL(tbf, kind, single, trx_n, level, fmt, args...) LOGPSL(tbf, level, \
+								     "algo %s <%s> (suggested TRX: %d): " fmt, \
+								     kind, single ? "single" : "multi", trx_n, ## args)
+
 static char *set_flag_chars(char *buf, uint8_t val, char set_char, char unset_char = 0)
 {
 	int i;
@@ -351,13 +358,12 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	const gprs_rlcmac_tbf *tbf = tbf_;
 	gprs_rlcmac_trx *trx = ms->current_trx();
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "Slot Allocation (Algorithm A) for class "
-		"%d\n", tbf->ms_class());
+	LOGPSL(tbf, LOGL_DEBUG, "Slot Allocation (Algorithm A) for class %d\n", tbf->ms_class());
 
 	trx_no = find_trx(bts, ms, use_trx);
 	if (trx_no < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE,
-			"- Failed to find a usable TRX (TFI exhausted)\n");
+		LOGPAL(tbf, "A", single ? "single" : "multi", use_trx, LOGL_NOTICE,
+		       "failed to find a usable TRX (TFI exhausted)\n");
 		return trx_no;
 	}
 	if (!trx)
@@ -385,14 +391,14 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 		&tfi, &usf);
 
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF && usf < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "- Failed "
-			"to allocate a TS, no USF available\n");
+		LOGPAL(tbf, "A", single ? "single" : "multi", use_trx, LOGL_NOTICE,
+		       "failed to allocate a TS, no USF available\n");
 		return -EBUSY;
 	}
 
 	if (ts < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "- Failed "
-			"to allocate a TS, no TFI available\n");
+		LOGPAL(tbf, "A", single ? "single" : "multi", use_trx, LOGL_NOTICE,
+		       "failed to allocate a TS, no TFI available\n");
 		return -EBUSY;
 	}
 
@@ -402,13 +408,11 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	 * may be modified from now on. */
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
 		struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf_);
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Assign uplink TS=%d TFI=%d USF=%d\n",
-			ts, tfi, usf);
+		LOGPSL(tbf, LOGL_DEBUG, "Assign uplink TS=%d TFI=%d USF=%d\n", ts, tfi, usf);
 		assign_uplink_tbf_usf(pdch, ul_tbf, tfi, usf);
 	} else {
 		struct gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf_);
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Assign downlink TS=%d TFI=%d\n",
-			ts, tfi);
+		LOGPSL(tbf, LOGL_DEBUG, "Assign downlink TS=%d TFI=%d\n", ts, tfi);
 		assign_dlink_tbf(pdch, dl_tbf, tfi);
 	}
 
@@ -711,7 +715,7 @@ static int tbf_select_slot_set(const gprs_rlcmac_tbf *tbf, const gprs_rlcmac_trx
 		LOGPC(DRLCMAC, LOGL_DEBUG, "- Selected DL");
 	}
 
-	LOGPC(DRLCMAC, LOGL_DEBUG, " slots: (TS=0)\"%s\"(TS=7)%s\n", slot_info, single ? ", single" : "");
+	LOGPC(DRLCMAC, LOGL_DEBUG, " slots: (TS=0)\"%s\"(TS=7), %s\n", slot_info, single ? "single" : "multi");
 
 	return sl;
 }
@@ -868,7 +872,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	/* Step 2a: Find usable TRX and TFI */
 	tfi = tfi_find_free(bts->bts, trx, ms, tbf->direction, use_trx, &trx_no);
 	if (tfi < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "- Failed to allocate a TFI\n");
+		LOGPAL(tbf, "B", single, use_trx, LOGL_NOTICE, "failed to allocate a TFI\n");
 		return tfi;
 	}
 
@@ -912,23 +916,21 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	first_common_ts = ffs(dl_slots & ul_slots) - 1;
 
 	if (first_common_ts < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No first common slots available\n");
+		LOGPAL(tbf, "B", single, use_trx, LOGL_NOTICE, "first common slot unavailable\n");
 		return -EINVAL;
 	}
+
 	if (first_ts < 0) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No first slot available\n");
+		LOGPAL(tbf, "B", single, use_trx, LOGL_NOTICE, "first slot unavailable\n");
 		return -EINVAL;
 	}
 
 	if (single && slotcount) {
 		tbf_->upgrade_to_multislot = (avail_count > slotcount);
-		LOGP(DRLCMAC, LOGL_INFO, "Using single slot at TS %d for %s\n",
-			first_ts,
-			(tbf->direction == GPRS_RLCMAC_DL_TBF) ? "DL" : "UL");
+		LOGPAL(tbf, "B", single, use_trx, LOGL_INFO, "using single slot at TS %d\n", first_ts);
 	} else {
 		tbf_->upgrade_to_multislot = 0;
-		LOGP(DRLCMAC, LOGL_INFO, "Using %d slots for %s\n", slotcount,
-			(tbf->direction == GPRS_RLCMAC_DL_TBF) ? "DL" : "UL");
+		LOGPAL(tbf, "B", single, use_trx, LOGL_INFO, "using %d slots\n", slotcount);
 	}
 
 	/* The allocation will be successful, so the system state and tbf_/ms_
