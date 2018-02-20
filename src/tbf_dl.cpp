@@ -643,7 +643,7 @@ bool gprs_rlcmac_dl_tbf::handle_ack_nack()
 	}
 
 	/* reset N3105 */
-	n3105 = 0;
+	n_reset(N3105);
 	t_stop(T3191, "ACK/NACK received");
 	TBF_POLL_SCHED_UNSET(this);
 

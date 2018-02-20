@@ -80,6 +80,13 @@ const struct value_string gprs_rlcmac_tbf_ul_ack_state_names[] = {
 	{ 0, NULL }
 };
 
+static const struct value_string tbf_counters_names[] = {
+	OSMO_VALUE_STRING(N3101),
+	OSMO_VALUE_STRING(N3103),
+	OSMO_VALUE_STRING(N3105),
+	{ 0, NULL }
+};
+
 static const struct value_string tbf_timers_names[] = {
 	OSMO_VALUE_STRING(T0),
 	OSMO_VALUE_STRING(T3169),
@@ -187,13 +194,11 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	control_ts(0xff),
 	poll_fn(0),
 	poll_ts(0),
-	n3105(0),
 	fT(0),
 	num_fT_exp(0),
 	was_releasing(0),
 	upgrade_to_multislot(0),
 	bts(bts_),
-	m_n3101(0),
 	m_tfi(0),
 	m_created_ts(0),
 	m_ctrs(NULL),
@@ -213,6 +218,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	 * Just set them to 0 like talloc_zero did */
 	memset(&pdch, 0, sizeof(pdch));
 	memset(&T, 0, sizeof(T));
+	memset(&N, 0, sizeof(N));
 	memset(&m_rlc, 0, sizeof(m_rlc));
 	memset(&gsm_timer, 0, sizeof(gsm_timer));
 
@@ -546,6 +552,55 @@ const char *gprs_rlcmac_tbf::tbf_state_name[] = {
 	"RELEASING",
 };
 
+void gprs_rlcmac_tbf::n_reset(enum tbf_counters n)
+{
+	if (n >= N_MAX) {
+		LOGPTBF(this, LOGL_ERROR, "attempting to reset unknown counter %s\n",
+			get_value_string(tbf_counters_names, n));
+		return;
+	}
+
+	N[n] = 0;
+}
+
+/* Increment counter and check for MAX value (return true if we hit it) */
+bool gprs_rlcmac_tbf::n_inc(enum tbf_counters n)
+{
+	uint8_t chk;
+
+	if (n >= N_MAX) {
+		LOGPTBF(this, LOGL_ERROR, "attempting to increment unknown counter %s\n",
+			get_value_string(tbf_counters_names, n));
+		return true;
+	}
+
+	N[n]++;
+
+	switch(n) {
+	case N3101:
+		chk = bts->bts_data()->n3101;
+		break;
+	case N3103:
+		chk = bts->bts_data()->n3103;
+		break;
+	case N3105:
+		chk = bts->bts_data()->n3105;
+		break;
+	default:
+		LOGPTBF(this, LOGL_ERROR, "unhandled counter %s\n",
+			get_value_string(tbf_counters_names, n));
+		return true;
+	}
+
+	if (N[n] == chk) {
+		LOGPTBF(this, LOGL_NOTICE, "%s exceeded MAX (%u)\n",
+			get_value_string(tbf_counters_names, n), chk);
+		return true;
+	}
+
+	return false;
+}
+
 void gprs_rlcmac_tbf::t_stop(enum tbf_timers t, const char *reason)
 {
 	if (t >= T_MAX) {
@@ -728,9 +783,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 
 	poll_state = GPRS_RLCMAC_POLL_NONE;
 
-	m_n3101++;
-	if (m_n3101 == bts->bts_data()->n3101) {
-		LOGPTBF(this, LOGL_NOTICE, "N3101 exceeded MAX (%u)\n", bts->bts_data()->n3101);
+	if (n_inc(N3101)) {
 		TBF_SET_STATE(this, GPRS_RLCMAC_RELEASING);
 		T_START(this, T3169, bts->bts_data()->t3169, 0, "MAX N3101 reached", false);
 		return;
@@ -744,9 +797,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		bts->rlc_ack_timedout();
 		bts->pkt_ul_ack_nack_poll_timedout();
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
-			ul_tbf->m_n3103++;
-			if (ul_tbf->m_n3103 == ul_tbf->bts->bts_data()->n3103) {
-				LOGPTBF(this, LOGL_NOTICE, "N3103 exceeded\n");
+			if (ul_tbf->n_inc(N3103)) {
 				bts->pkt_ul_ack_nack_poll_failed();
 				TBF_SET_STATE(ul_tbf, GPRS_RLCMAC_RELEASING);
 				T_START(ul_tbf, T3169, ul_tbf->bts->bts_data()->t3169, 0, "MAX N3103 reached", false);
@@ -764,11 +815,9 @@ void gprs_rlcmac_tbf::poll_timeout()
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
 		}
 		ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
-		n3105++;
 		bts->rlc_ass_timedout();
 		bts->pua_poll_timedout();
-		if (n3105 == bts_data()->n3105) {
-			LOGPTBF(this, LOGL_NOTICE, "N3105 exceeded\n");
+		if (n_inc(N3105)) {
 			TBF_SET_STATE(this, GPRS_RLCMAC_RELEASING);
 			T_START(this, T3195, bts_data()->t3195, 0, "MAX N3105 reached", true);
 			bts->rlc_ass_failed();
@@ -785,11 +834,9 @@ void gprs_rlcmac_tbf::poll_timeout()
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
 		}
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-		n3105++;
 		bts->rlc_ass_timedout();
 		bts->pda_poll_timedout();
-		if (n3105 == bts->bts_data()->n3105) {
-			LOGPTBF(this, LOGL_NOTICE, "N3105 exceeded\n");
+		if (n_inc(N3105)) {
 			TBF_SET_STATE(this, GPRS_RLCMAC_RELEASING);
 			T_START(this, T3195, bts_data()->t3195, 0, "MAX N3105 reached", true);
 			bts->rlc_ass_failed();
@@ -807,15 +854,15 @@ void gprs_rlcmac_tbf::poll_timeout()
 			dl_tbf->rlcmac_diag();
 			dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 		}
-		dl_tbf->n3105++;
+
 		if (dl_tbf->state_is(GPRS_RLCMAC_RELEASING))
 			bts->rlc_rel_timedout();
 		else {
 			bts->rlc_ack_timedout();
 			bts->pkt_dl_ack_nack_poll_timedout();
 		}
-		if (dl_tbf->n3105 == dl_tbf->bts->bts_data()->n3105) {
-			LOGPTBF(this, LOGL_NOTICE, "N3105 exceeded\n");
+
+		if (dl_tbf->n_inc(N3105)) {
 			TBF_SET_STATE(dl_tbf, GPRS_RLCMAC_RELEASING);
 			T_START(dl_tbf, T3195, dl_tbf->bts_data()->t3195, 0, "MAX N3105 reached", true);
 			bts->pkt_dl_ack_nack_poll_failed();
@@ -884,7 +931,6 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, GprsMs *ms, int8_t use_trx, ui
 gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(BTS *bts_) :
 	gprs_rlcmac_tbf(bts_, GPRS_RLCMAC_UL_TBF),
 	m_rx_counter(0),
-	m_n3103(0),
 	m_contention_resolution_done(0),
 	m_final_ack_sent(0),
 	m_ul_gprs_ctrs(NULL),

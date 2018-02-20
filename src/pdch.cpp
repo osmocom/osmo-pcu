@@ -290,7 +290,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	}
 
 	/* Reset N3101 counter: */
-	tbf->m_n3101 = 0;
+	tbf->n_reset(N3101);
 
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 
@@ -310,7 +310,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	if (tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_WAIT_ACK)) {
 		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] DOWNLINK ASSIGNED\n");
 		/* reset N3105 */
-		tbf->n3105 = 0;
+		tbf->n_reset(N3105);
 		TBF_SET_ASS_STATE_DL(tbf, GPRS_RLCMAC_DL_ASS_NONE);
 
 		new_tbf = tbf->ms() ? tbf->ms()->dl_tbf() : NULL;
@@ -342,7 +342,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	if (tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_WAIT_ACK)) {
 		LOGPTBF(tbf, LOGL_DEBUG, "[DOWNLINK] UPLINK ASSIGNED\n");
 		/* reset N3105 */
-		tbf->n3105 = 0;
+		tbf->n_reset(N3105);
 		TBF_SET_ASS_STATE_UL(tbf, GPRS_RLCMAC_UL_ASS_NONE);
 
 		new_tbf = tbf->ms() ? tbf->ms()->ul_tbf() : NULL;
@@ -399,7 +399,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	}
 
 	/* Reset N3101 counter: */
-	tbf->m_n3101 = 0;
+	tbf->n_reset(N3101);
 
 	if (tbf->handle_ack_nack())
 		LOGPTBF(tbf, LOGL_NOTICE, "Recovered downlink ack\n");
@@ -466,7 +466,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 	}
 
 	/* Reset N3101 counter: */
-	tbf->m_n3101 = 0;
+	tbf->n_reset(N3101);
 
 	if (tbf->handle_ack_nack())
 		LOGPTBF(tbf, LOGL_NOTICE, "Recovered EGPRS downlink ack\n");
@@ -638,7 +638,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			"RX: [PCU <- BTS] FIXME: Packet resource request\n");
 
 		/* Reset N3101 counter: */
-		dl_tbf->m_n3101 = 0;
+		dl_tbf->n_reset(N3101);
 	} else {
 		struct gprs_rlcmac_ul_tbf *ul_tbf;
 		int8_t tfi = request->ID.u.Global_TFI.u.UPLINK_TFI;
@@ -651,7 +651,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			"RX: [PCU <- BTS] FIXME: Packet resource request\n");
 
 		/* Reset N3101 counter: */
-		ul_tbf->m_n3101 = 0;
+		ul_tbf->n_reset(N3101);
 	}
 }
 
@@ -806,7 +806,7 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 	}
 
 	/* Reset N3101 counter: */
-	tbf->m_n3101 = 0;
+	tbf->n_reset(N3101);
 
 	return tbf->rcv_data_block_acknowledged(&rlc_dec, data, meas);
 }
