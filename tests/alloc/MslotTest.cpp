@@ -37,6 +37,7 @@ extern "C" {
 /* globals used by the code */
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
+bool spoof_mnc_3_digits = false;
 
 static inline void test_all_classes(struct gprs_rlcmac_trx *trx, bool clear_masks)
 {

@@ -52,6 +52,7 @@ extern "C" {
 
 extern struct gprs_nsvc *nsvc;
 uint16_t spoof_mcc = 0, spoof_mnc = 0;
+bool spoof_mnc_3_digits = false;
 static int config_given = 0;
 static char *config_file = strdup("osmo-pcu.cfg");
 extern struct vty_app_info pcu_vty_info;
@@ -114,7 +115,10 @@ static void handle_options(int argc, char **argv)
 			spoof_mcc = atoi(optarg);
 			break;
 		case 'n':
-			spoof_mnc = atoi(optarg);
+			if (osmo_mnc_from_str(optarg, &spoof_mnc, &spoof_mnc_3_digits)) {
+				fprintf(stderr, "Error decoding MNC '%s'\n", optarg);
+				exit(1);
+			}
 			break;
 		case 'V':
 			print_version(1);

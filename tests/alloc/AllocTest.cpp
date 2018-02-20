@@ -36,6 +36,7 @@ extern "C" {
 /* globals used by the code */
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
+bool spoof_mnc_3_digits = false;
 
 static gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 		GprsMs *ms, gprs_rlcmac_tbf_direction dir,

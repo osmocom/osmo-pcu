@@ -408,6 +408,7 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 	int rc = 0;
 	unsigned int trx, ts;
 	int i;
+	uint16_t cell_id = ntohs(info_ind->cell_id);
 
 	if (info_ind->version != PCU_IF_VERSION) {
 		fprintf(stderr, "PCU interface version number of BTS (%d) is "
@@ -434,11 +435,11 @@ bssgp_failed:
 		exit(0);
 	}
 	LOGP(DL1IF, LOGL_INFO, "BTS available\n");
-	LOGP(DL1IF, LOGL_DEBUG, " mcc=%x\n", info_ind->mcc);
-	LOGP(DL1IF, LOGL_DEBUG, " mnc=%x\n", info_ind->mnc);
+	LOGP(DL1IF, LOGL_DEBUG, " mcc=%03u\n", info_ind->mcc);
+	LOGP(DL1IF, LOGL_DEBUG, " mnc=%0*u\n", info_ind->mnc_3_digits, info_ind->mnc);
 	LOGP(DL1IF, LOGL_DEBUG, " lac=%d\n", info_ind->lac);
 	LOGP(DL1IF, LOGL_DEBUG, " rac=%d\n", info_ind->rac);
-	LOGP(DL1IF, LOGL_DEBUG, " cell_id=%d\n", ntohs(info_ind->cell_id));
+	LOGP(DL1IF, LOGL_DEBUG, " cell_id=%d\n", cell_id);
 	LOGP(DL1IF, LOGL_DEBUG, " bsic=%d\n", info_ind->bsic);
 	LOGP(DL1IF, LOGL_DEBUG, " nsei=%d\n", info_ind->nsei);
 	LOGP(DL1IF, LOGL_DEBUG, " nse_timer=%d %d %d %d %d %d %d\n",
@@ -488,8 +489,8 @@ bssgp_failed:
 	pcu = gprs_bssgp_create_and_connect(bts, info_ind->local_port[0],
 		info_ind->remote_ip[0], info_ind->remote_port[0],
 		info_ind->nsei, info_ind->nsvci[0], info_ind->bvci,
-		info_ind->mcc, info_ind->mnc, info_ind->lac, info_ind->rac,
-		info_ind->cell_id);
+		info_ind->mcc, info_ind->mnc, info_ind->mnc_3_digits, info_ind->lac, info_ind->rac,
+		cell_id);
 	if (!pcu) {
 		LOGP(DL1IF, LOGL_NOTICE, "SGSN not available\n");
 		goto bssgp_failed;

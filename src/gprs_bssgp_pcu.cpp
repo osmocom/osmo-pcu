@@ -44,6 +44,7 @@ static struct gprs_bssgp_pcu the_pcu = { 0, };
 
 extern void *tall_pcu_ctx;
 extern uint16_t spoof_mcc, spoof_mnc;
+extern bool spoof_mnc_3_digits;
 
 static void bvc_timeout(void *_priv);
 
@@ -876,15 +877,11 @@ int gprs_ns_reconnect(struct gprs_nsvc *nsvc)
 struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts,
 	uint16_t local_port, uint32_t sgsn_ip,
 	uint16_t sgsn_port, uint16_t nsei, uint16_t nsvci, uint16_t bvci,
-	uint16_t mcc, uint16_t mnc, uint16_t lac, uint16_t rac,
+	uint16_t mcc, uint16_t mnc, bool mnc_3_digits, uint16_t lac, uint16_t rac,
 	uint16_t cell_id)
 {
 	struct sockaddr_in dest;
 	int rc;
-
-	mcc = ((mcc & 0xf00) >> 8) * 100 + ((mcc & 0x0f0) >> 4) * 10 + (mcc & 0x00f);
-	mnc = ((mnc & 0xf00) >> 8) * 100 + ((mnc & 0x0f0) >> 4) * 10 + (mnc & 0x00f);
-	cell_id = ntohs(cell_id);
 
 	/* if already created... return the current address */
 	if (the_pcu.bctx)
@@ -930,7 +927,13 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 		return NULL;
 	}
 	the_pcu.bctx->ra_id.mcc = spoof_mcc ? : mcc;
-	the_pcu.bctx->ra_id.mnc = spoof_mnc ? : mnc;
+	if (spoof_mnc) {
+		the_pcu.bctx->ra_id.mnc = spoof_mnc;
+		the_pcu.bctx->ra_id.mnc_3_digits = spoof_mnc_3_digits;
+	} else {
+		the_pcu.bctx->ra_id.mnc = mnc;
+		the_pcu.bctx->ra_id.mnc_3_digits = mnc_3_digits;
+	}
 	the_pcu.bctx->ra_id.lac = lac;
 	the_pcu.bctx->ra_id.rac = rac;
 	the_pcu.bctx->cell_id = cell_id;

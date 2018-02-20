@@ -40,6 +40,7 @@ extern "C" {
 
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
+bool spoof_mnc_3_digits = false;
 
 static void enqueue_data(gprs_llc_queue *queue, const uint8_t *data, size_t len,
 	gprs_llc_queue::MetaInfo *info = 0)

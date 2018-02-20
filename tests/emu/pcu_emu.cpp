@@ -40,6 +40,7 @@ static size_t current_test;
 /* Extern data to please the underlying code */
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
+bool spoof_mnc_3_digits = false;
 
 extern void test_replay_gprs_attach(struct gprs_bssgp_pcu *pcu);
 extern void test_replay_gprs_data(struct gprs_bssgp_pcu *, struct msgb *, struct tlv_parsed *);
@@ -99,7 +100,7 @@ void create_and_connect_bssgp(struct gprs_rlcmac_bts *bts,
 	struct gprs_bssgp_pcu *pcu;
 
 	pcu = gprs_bssgp_create_and_connect(bts, 0, sgsn_ip, sgsn_port,
-					20, 20, 20, 0x901, 0x99, 1, 0, 0);
+					20, 20, 20, 901, 99, false, 1, 0, 0);
 	pcu->on_unblock_ack = bvci_unblocked;
 	pcu->on_dl_unit_data = bssgp_data;
 }
