@@ -108,7 +108,7 @@ enum tbf_dl_prio {
 	DL_PRIO_CONTROL,   /* a control block needs to be sent */
 };
 
-enum tbf_counters {
+enum tbf_rlc_counters {
 	TBF_CTR_RLC_NACKED,
 };
 
@@ -175,6 +175,14 @@ enum tbf_timers {
 	T_MAX
 };
 
+enum tbf_counters { /* TBF counters from 3GPP TS 44.060 §13.4 */
+	/* counters are reset when: */
+	N3101, /* received a valid data block from mobile station in a block assigned for this USF */
+	N3103, /* transmitting the final PACKET UPLINK ACK/NACK message */
+	N3105, /* after sending a RRBP field in the downlink RLC data block, receives a valid RLC/MAC control message */
+	N_MAX
+};
+
 #define GPRS_RLCMAC_FLAG_CCCH		0 /* assignment on CCCH */
 #define GPRS_RLCMAC_FLAG_PACCH		1 /* assignment on PACCH */
 #define GPRS_RLCMAC_FLAG_UL_DATA	2 /* uplink data received */
@@ -233,6 +241,9 @@ struct gprs_rlcmac_tbf {
 	uint8_t tsc() const;
 
 	int rlcmac_diag();
+
+	bool n_inc(enum tbf_counters n);
+	void n_reset(enum tbf_counters n);
 
 	int update();
 	void handle_timeout();
@@ -301,9 +312,7 @@ struct gprs_rlcmac_tbf {
 	uint8_t poll_ts; /* TS to poll */
 
 	gprs_rlc m_rlc;
-	
-	uint8_t n3105;	/* N3105 counter */
-	
+
 	struct osmo_gsm_timer_list	gsm_timer;
 	unsigned int fT; /* fTxxxx number */
 	unsigned int num_fT_exp; /* number of consecutive fT expirations */
@@ -325,8 +334,6 @@ struct gprs_rlcmac_tbf {
 
 	/* store the BTS this TBF belongs to */
 	BTS *bts;
-
-	uint8_t m_n3101; /* N3101 counter */
 
 	/*
 	 * private fields. We can't make it private as it is breaking the
@@ -364,6 +371,7 @@ private:
 	LListHead<gprs_rlcmac_tbf> m_ms_list;
 	bool m_egprs_enabled;
 	struct osmo_timer_list T[T_MAX];
+	uint8_t N[N_MAX];
 	mutable char m_name_buf[60];
 };
 
@@ -751,7 +759,6 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	 * variables are in both (dl and ul) structs and not outside union.
 	 */
 	int32_t m_rx_counter; /* count all received blocks */
-	uint8_t m_n3103;	/* N3103 counter */
 	uint8_t m_usf[8];	/* list USFs per PDCH (timeslot) */
 	uint8_t m_contention_resolution_done; /* set after done */
 	uint8_t m_final_ack_sent; /* set if we sent final ack */
