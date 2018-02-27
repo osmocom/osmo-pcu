@@ -255,9 +255,7 @@ static inline int write_ia_rest_uplink(const gprs_rlcmac_ul_tbf *tbf, bitvec * d
 		rc = write_alpha_gamma(dest, alpha, gamma);
 		check(rc);
 
-		rc = write_ta_index(dest, ta_idx);
-		check(rc);
-
+		set_0(dest); /* No TIMING_ADVANCE_INDEX */
 		set_0(dest); /* No TBF_STARTING_TIME */
 	} else {
 		set_0(dest); /* Single Block Allocation */
@@ -319,9 +317,7 @@ static inline int write_ia_rest_egprs_uplink(const gprs_rlcmac_ul_tbf *tbf, bitv
 		rc = write_alpha_gamma(dest, alpha, gamma);                 /* ALPHA and GAMMA */
 		check(rc);
 
-		rc = write_ta_index(dest, ta_idx);
-		check(rc);
-
+		set_0(dest);                                                /* No TIMING_ADVANCE_INDEX */
 		set_0(dest);                                                /* No TBF_STARTING_TIME */
 		bitvec_set_bit(dest, L);                                    /* No Additions for Rel-7 */
 	} else {
