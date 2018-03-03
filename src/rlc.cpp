@@ -294,11 +294,13 @@ uint16_t gprs_rlc_ul_window::raise_v_q()
 	uint16_t count = 0;
 
 	while (v_q() != v_r()) {
+		uint16_t v_q_old;
 		if (!m_v_n.is_received(v_q()))
 			break;
+		v_q_old = v_q();
+		set_v_q(mod_sns(v_q() + 1));
 		LOGP(DRLCMACUL, LOGL_DEBUG, "- Taking block %d out, raising "
-			"V(Q) to %d\n", v_q(), mod_sns(v_q() + 1));
-		raise_v_q(1);
+			"V(Q) to %d\n", v_q_old, v_q());
 		count += 1;
 	}
 
