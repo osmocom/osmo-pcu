@@ -77,6 +77,7 @@ static int parse_imsi(struct tlv_parsed *tp, char *imsi)
 	return 0;
 }
 
+#if 0
 static int parse_ra_cap(struct tlv_parsed *tp, MS_Radio_Access_capability_t *rac)
 {
 	bitvec *block;
@@ -102,6 +103,7 @@ static int parse_ra_cap(struct tlv_parsed *tp, MS_Radio_Access_capability_t *rac
 	bitvec_free(block);
 	return 0;
 }
+#endif
 
 static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 {
