@@ -268,8 +268,8 @@ uint16_t mslot_wrap_window(uint16_t win)
 
 bool mslot_test_and_set_bit(uint32_t *bits, size_t elem)
 {
-	bool was_set = bits[elem/32] & (1 << (elem % 32));
-	bits[elem/32] |= (1 << (elem % 32));
+	bool was_set = bits[elem/32] & (((uint32_t)1) << (elem % 32));
+	bits[elem/32] |= (((uint32_t)1) << (elem % 32));
 
 	return was_set;
 }
