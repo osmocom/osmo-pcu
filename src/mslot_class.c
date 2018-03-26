@@ -239,7 +239,7 @@ int8_t find_free_tfi(uint32_t tfi_map)
 		return -1;
 
 	for (tfi = 0; tfi < 32; tfi++) {
-		if (!(tfi_map & (1 << tfi)))
+		if (!(tfi_map & (((uint32_t)1) << tfi)))
 			return tfi;
 	}
 
