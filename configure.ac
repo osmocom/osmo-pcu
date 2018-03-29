@@ -130,12 +130,12 @@ AC_SUBST([LITECELL15_CFLAGS], $litecell15_cflags)
 AC_MSG_RESULT([$enable_lc15bts_phy])
 AM_CONDITIONAL(ENABLE_LC15BTS_PHY, test "x$enable_lc15bts_phy" = "xyes")
 if test "$enable_litecell15" = "yes"; then
-	oldCPPFLAGS=$CPPFLAGS
+	oldCPPFLAGS="$CPPFLAGS"
 	CPPFLAGS="$CPPFLAGS $LITECELL15_CFLAGS -I$srcdir/include $LIBOSMOCORE_CFLAGS"
 	AC_CHECK_HEADER([nrw/litecell15/litecell15.h],[],
 			[AC_MSG_ERROR([nrw/litecell15/litecell15.h can not be found using $litecell15_cflags])],
 			[#include <nrw/litecell15/litecell15.h>])
-	CPPFLAGS=$oldCPPFLAGS
+	CPPFLAGS="$oldCPPFLAGS"
 fi
 
 AC_ARG_ENABLE([vty_tests],
