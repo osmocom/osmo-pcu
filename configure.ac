@@ -80,21 +80,43 @@ PKG_CHECK_MODULES(LIBOSMOGB, libosmogb >= 0.5.1.4)
 
 AC_MSG_CHECKING([whether to enable direct DSP access for PDCH of sysmocom-bts])
 AC_ARG_ENABLE(sysmocom-dsp,
-		AC_HELP_STRING([--enable-sysmocom-dsp],
-				[enable code for sysmocom DSP [default=no]]),
-		[enable_sysmocom_dsp="$enableval"],[enable_sysmocom_dsp="no"])
-AC_ARG_WITH([sysmobts], [AS_HELP_STRING([--with-sysmobts=INCLUDE_DIR], [Location of the sysmobts API header files])],
-			 [sysmobts_incdir="$withval"],[sysmobts_incdir="$incdir"])
-AC_SUBST([SYSMOBTS_INCDIR], $sysmobts_incdir)
-AC_MSG_RESULT([$enable_sysmocom_dsp])
+	      AC_HELP_STRING([--enable-sysmocom-dsp],
+			     [enable code for direct sysmocom DSP access[default=no]]),
+	      [enable_sysmocom_dsp="$enableval"], [enable_sysmocom_dsp="unset"])
+AC_ARG_WITH([sysmobts],
+	    [AS_HELP_STRING([--with-sysmobts=INCLUDE_DIR],
+			    [Location of the sysmobts API header files, implies --enable-sysmocom-dsp])],
+	    [sysmobts_incdir="$withval"], [sysmobts_incdir=""])
+if test "x$sysmobts_incdir" != "x"; then
+	# --with-sysmobts was passed, imply enable_sysmocom_dsp
+	if test "x$enable_sysmocom_dsp" = "xno"; then
+		AC_MSG_RESULT([error])
+		AC_MSG_ERROR([--with-sysmobts does not work with --disable-sysmocom-dsp])
+	fi
+	enable_sysmocom_dsp="yes"
+	# 'readlink' should make an absolute path, but must not return empty if the path does not exist,
+	# so we can still report on it below.
+	sysmobts_incdir="$(readlink -fm "$sysmobts_incdir")"
+	AC_SUBST([SYSMOBTS_INCDIR], $sysmobts_incdir)
+	AC_MSG_RESULT([yes, using -I$SYSMOBTS_INCDIR])
+else
+	AC_SUBST([SYSMOBTS_INCDIR], "")
+	AC_MSG_RESULT([$enable_sysmocom_dsp])
+fi
 AM_CONDITIONAL(ENABLE_SYSMODSP, test "x$enable_sysmocom_dsp" = "xyes")
-if test "$enable_sysmocom_bts" = "yes"; then
-	oldCPPFLAGS=$CPPFLAGS
-	CPPFLAGS="$CPPFLAGS -I$SYSMOBTS_INCDIR -I$srcdir/include $LIBOSMOCORE_CFLAGS"
+if test "x$enable_sysmocom_dsp" = "xyes"; then
+	oldCPPFLAGS="$CPPFLAGS"
+	_sysmobts_include=""
+	_sysmobts_include_msg=""
+	if test -n "$SYSMOBTS_INCDIR"; then
+		_sysmobts_include="-I$SYSMOBTS_INCDIR"
+		_sysmobts_include_msg=" in -I$SYSMOBTS_INCDIR"
+	fi
+	CPPFLAGS="$CPPFLAGS $_sysmobts_include -I$srcdir/include $LIBOSMOCORE_CFLAGS"
 	AC_CHECK_HEADER([sysmocom/femtobts/superfemto.h],[],
-			[AC_MSG_ERROR([sysmocom/femtobts/superfemto.h can not be found in $sysmobts_incdir])],
+			[AC_MSG_ERROR([sysmocom/femtobts/superfemto.h can not be found$_sysmobts_include_msg, see --with-sysmobts])],
 			[#include <sysmocom/femtobts/superfemto.h>])
-	CPPFLAGS=$oldCPPFLAGS
+	CPPFLAGS="$oldCPPFLAGS"
 fi
 
 AC_MSG_CHECKING([whether to enable direct PHY access for PDCH of NuRAN Wireless Litecell 1.5 BTS])
