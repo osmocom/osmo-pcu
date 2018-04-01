@@ -230,7 +230,7 @@ void testCsnLeftAlignedVarBmpBounds(void *test_ctx)
 int main(int argc, char *argv[])
 {
 	void *ctx = talloc_named_const(NULL, 1, "RLCMACTest");
-	osmo_init_logging(&gprs_log_info);
+	osmo_init_logging2(ctx, &gprs_log_info);
 
 	//printSizeofRLCMAC();
 	testRlcMacDownlink(ctx);

@@ -56,7 +56,7 @@ bool spoof_mnc_3_digits = false;
 static int config_given = 0;
 static char *config_file = strdup("osmo-pcu.cfg");
 extern struct vty_app_info pcu_vty_info;
-void *tall_pcu_ctx;
+void *tall_pcu_ctx = NULL;
 extern void *bv_tall_ctx;
 static int quit = 0;
 static int rt_prio = -1;
@@ -181,9 +181,13 @@ int main(int argc, char *argv[])
 	struct gprs_rlcmac_bts *bts;
 	int rc;
 
-	tall_pcu_ctx = talloc_named_const(NULL, 1, "Osmo-PCU context");
-	if (!tall_pcu_ctx)
-		return -ENOMEM;
+	/* tall_pcu_ctx may already have been initialized in bts.cpp during early_init(). */
+	if (!tall_pcu_ctx) {
+		tall_pcu_ctx = talloc_named_const(NULL, 1, "Osmo-PCU context");
+		if (!tall_pcu_ctx)
+			return -ENOMEM;
+		osmo_init_logging2(tall_pcu_ctx, &gprs_log_info);
+	}
 
 	bts = bts_main_data();
 	bts->fc_interval = 1;
@@ -259,7 +263,6 @@ int main(int argc, char *argv[])
 
 	msgb_talloc_ctx_init(tall_pcu_ctx, 0);
 
-	osmo_init_logging(&gprs_log_info);
 	osmo_stats_init(tall_pcu_ctx);
 	rate_ctr_init(tall_pcu_ctx);
 	gprs_ns_set_log_ss(DNS);

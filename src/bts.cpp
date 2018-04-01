@@ -59,7 +59,10 @@ extern "C" {
 	 * require logging already to be initialized. */
 	__attribute__((constructor)) static void early_init(void)
 	{
-		osmo_init_logging(&gprs_log_info);
+		if (!tall_pcu_ctx) {
+			tall_pcu_ctx = talloc_named_const(NULL, 1, "Osmo-PCU context");
+			osmo_init_logging2(tall_pcu_ctx, &gprs_log_info);
+		}
 	}
 }
 
