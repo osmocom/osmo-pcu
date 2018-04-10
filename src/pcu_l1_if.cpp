@@ -630,6 +630,6 @@ int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 			msg_type);
 		rc = -EINVAL;
 	}
-;
+
 	return rc;
 }
