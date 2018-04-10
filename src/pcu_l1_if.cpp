@@ -143,9 +143,10 @@ static int pcu_tx_data_req(uint8_t trx, uint8_t ts, uint8_t sapi,
 	struct msgb *msg;
 	struct gsm_pcu_if *pcu_prim;
 	struct gsm_pcu_if_data *data_req;
+	int current_fn = get_current_fn();
 
 	LOGP(DL1IF, LOGL_DEBUG, "Sending data request: trx=%d ts=%d sapi=%d "
-		"arfcn=%d fn=%d block=%d data=%s\n", trx, ts, sapi, arfcn, fn,
+		"arfcn=%d fn=%d cur_fn=%d block=%d data=%s\n", trx, ts, sapi, arfcn, fn, current_fn,
 		block_nr, osmo_hexdump(data, len));
 
 	msg = pcu_msgb_alloc(PCU_IF_MSG_DATA_REQ, 0);
@@ -276,11 +277,12 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	int rc;
+	int current_fn = get_current_fn();
 	pcu_l1_meas meas;
 
 	LOGP(DL1IF, LOGL_DEBUG, "Data indication received: sapi=%d arfcn=%d "
-		"block=%d data=%s\n", data_ind->sapi,
-		data_ind->arfcn, data_ind->block_nr,
+		"fn=%d cur_fn=%d block=%d data=%s\n", data_ind->sapi,
+		data_ind->arfcn, data_ind->fn, current_fn, data_ind->block_nr,
 		osmo_hexdump(data_ind->data, data_ind->len));
 
 	switch (data_ind->sapi) {
@@ -318,9 +320,10 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 {
 	int rc = 0;
+	int current_fn = get_current_fn();
 
-	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d fn=%d\n",
-		data_cnf->sapi, data_cnf->fn);
+	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d fn=%d cur_fn=%d\n",
+		data_cnf->sapi, data_cnf->fn, current_fn);
 
 	switch (data_cnf->sapi) {
 	case PCU_IF_SAPI_PCH:
@@ -347,10 +350,11 @@ extern "C" int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts,
 static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 {
 	int rc = 0;
+	int current_fn = get_current_fn();
 
 	LOGP(DL1IF, LOGL_DEBUG, "RTS request received: trx=%d ts=%d sapi=%d "
-		"arfcn=%d fn=%d block=%d\n", rts_req->trx_nr, rts_req->ts_nr,
-		rts_req->sapi, rts_req->arfcn, rts_req->fn, rts_req->block_nr);
+		"arfcn=%d fn=%d cur_fn=%d block=%d\n", rts_req->trx_nr, rts_req->ts_nr,
+		rts_req->sapi, rts_req->arfcn, rts_req->fn, current_fn, rts_req->block_nr);
 
 	switch (rts_req->sapi) {
 	case PCU_IF_SAPI_PDTCH:
@@ -378,10 +382,11 @@ static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
 {
 	int rc = 0;
+	int current_fn = get_current_fn();
 
 	LOGP(DL1IF, LOGL_INFO, "RACH request received: sapi=%d "
-		"qta=%d, ra=%d, fn=%d\n", rach_ind->sapi, rach_ind->qta,
-		rach_ind->ra, rach_ind->fn);
+		"qta=%d, ra=%d, fn=%d, cur_fn=%d, is_11bit=%d\n", rach_ind->sapi, rach_ind->qta,
+		rach_ind->ra, rach_ind->fn, current_fn, rach_ind->is_11bit);
 
 	switch (rach_ind->sapi) {
 	case PCU_IF_SAPI_RACH:

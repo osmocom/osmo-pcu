@@ -43,7 +43,7 @@ static struct rb_root timer_root = RB_ROOT;
  * all time functions schedule based on the BTS they
  * are scheduled on.
  */
-static int get_current_fn()
+int get_current_fn()
 {
 	return BTS::main_bts()->current_frame_number();
 }

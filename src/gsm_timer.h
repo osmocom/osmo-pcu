@@ -79,6 +79,12 @@ void osmo_gsm_timers_prepare(void);
 int osmo_gsm_timers_update(void);
 int osmo_gsm_timers_check(void);
 
+
+/*
+ * Get Current Frame Number
+ */
+int get_current_fn();
+
 /*! }@ */
 
 #endif // GSM_TIMER_H
