@@ -661,18 +661,20 @@ T_CBACK(T3195, true)
 void gprs_rlcmac_tbf::t_start(enum tbf_timers t, uint32_t sec, uint32_t microsec, const char *reason, bool force,
 			      const char *file, unsigned line)
 {
+	int current_fn = get_current_fn();
+
 	if (t >= T_MAX) {
-		LOGPSRC(DTBF, LOGL_ERROR, file, line, "%s attempting to start unknown timer %s [%s]\n",
-			tbf_name(this), get_value_string(tbf_timers_names, t), reason);
+		LOGPSRC(DTBF, LOGL_ERROR, file, line, "%s attempting to start unknown timer %s [%s], cur_fn=%d\n",
+			tbf_name(this), get_value_string(tbf_timers_names, t), reason, current_fn);
 		return;
 	}
 
 	if (!force && osmo_timer_pending(&T[t]))
 		return;
 
-	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s %sstarting timer %s [%s] with %u sec. %u microsec.\n",
+	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s %sstarting timer %s [%s] with %u sec. %u microsec, cur_fn=%d\n",
 	     tbf_name(this), osmo_timer_pending(&T[t]) ? "re" : "",
-	     get_value_string(tbf_timers_names, t), reason, sec, microsec);
+	     get_value_string(tbf_timers_names, t), reason, sec, microsec, current_fn);
 
 	T[t].data = this;
 
@@ -693,8 +695,8 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, uint32_t sec, uint32_t microsec
 		T[t].cb = cb_T3195;
 		break;
 	default:
-		LOGPSRC(DTBF, LOGL_ERROR, file, line, "%s attempting to set callback for unknown timer %s [%s]\n",
-		     tbf_name(this), get_value_string(tbf_timers_names, t), reason);
+		LOGPSRC(DTBF, LOGL_ERROR, file, line, "%s attempting to set callback for unknown timer %s [%s], cur_fn=%d\n",
+		     tbf_name(this), get_value_string(tbf_timers_names, t), reason, current_fn);
 	}
 
 	osmo_timer_schedule(&T[t], sec, microsec);
@@ -1126,7 +1128,9 @@ static void tbf_timer_cb(void *_tbf)
 
 void gprs_rlcmac_tbf::handle_timeout()
 {
-	LOGPTBF(this, LOGL_DEBUG, "timer 0 expired.\n");
+	int current_fn = get_current_fn();
+
+	LOGPTBF(this, LOGL_DEBUG, "timer 0 expired. cur_fn=%d\n", current_fn);
 
 	/* assignment */
 	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
