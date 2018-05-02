@@ -609,7 +609,7 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 	pda_r99->Exist_COMPACT_ReducedMA = 0;
 }
 
-/* generate paging request */
+/* Generate paging request. See 44.018, sections 10 and 9.1.22 */
 int Encoding::write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len)
 {
 	unsigned wp = 0;
@@ -617,7 +617,7 @@ int Encoding::write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi
 
 	bitvec_write_field(dest, &wp,0x0,4);  // Skip Indicator
 	bitvec_write_field(dest, &wp,0x6,4);  // Protocol Discriminator
-	bitvec_write_field(dest, &wp,0x21,8); // Paging Request Message Type
+	bitvec_write_field(dest, &wp,0x21,8); // Paging Request Message Type 1
 
 	bitvec_write_field(dest, &wp,0x0,4);  // Page Mode
 	bitvec_write_field(dest, &wp,0x0,4);  // Channel Needed
@@ -636,7 +636,7 @@ int Encoding::write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi
 			       "multiple of 8 bits, PLEASE FIX!\n");
 
 	plen = wp / 8;
-	bitvec_write_field(dest, &wp,0x0,1); // "L" NLN(PCH) = off
+	bitvec_write_field(dest, &wp,0x0,1); // "L" Notification List Number; NLN(PCH) = off
 	bitvec_write_field(dest, &wp,0x0,1); // "L" Priority1 = off
 	bitvec_write_field(dest, &wp,0x1,1); // "L" Priority2 = off
 	bitvec_write_field(dest, &wp,0x0,1); // "L" Group Call information = off
