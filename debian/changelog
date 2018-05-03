@@ -1,3 +1,136 @@
+osmo-pcu (0.5.0) unstable; urgency=medium
+
+  [ Neels Hofmeyr ]
+  * jenkins: use osmo-clean-workspace.sh before and after build
+  * vty: skip installing cmds now always installed by default
+  * implement support for 3-digit MNC with leading zeros
+  * configure: add --enable-werror
+  * mslot_class: find_free_tfi(): use uint32_t to shift 1 << 31
+  * mslot_class: two more: use uint32_t to shift 1 << 31
+  * Revert "Use Timing Advance Index in UL assignments"
+  * Revert "Rewrite Packet Uplink Assignment"
+  * Revert "Rewrite Packet Downlink Assignment"
+  * configure: fix --enable-sysmocom-dsp and --with-sysmobts flags
+  * configure: properly quote CFLAGS in lc15 check
+  * Revert "Rewrite EGPRS Packet Uplink Assignment"
+  * use osmo_init_logging2() with proper talloc ctx
+
+  [ Minh-Quang Nguyen ]
+  * PCU: Fix TA adjustment
+  * PCU: display TA information in TBF stats
+
+  [ Max ]
+  * Remove unused parameter
+  * Move multislot table to separate file
+  * Replace '.' in counter names with ':'
+  * Fix compiler warning
+  * TBF: log timer override
+  * TBF: fix compiler warning in test
+  * TBF: expand timer logging
+  * vty: print class and TBFs for each MS
+  * DL window: constify resend_needed() function
+  * TBF: move EGPRS enablement into (U|D)L-TBF
+  * TBF-DL: fix misleading idle time check
+  * TBF: remove unused variable
+  * Remove unused includes and forward declarations
+  * Fix tests after rate_ctr change
+  * Introduce LOGTBF* for consistent logging
+  * TBF: implement independent T31xx timers
+  * TBF: add N3101 counter
+  * Fix warnings
+  * Add function to get max supported MS class
+  * Add --enable-sanitize configure option
+  * Enable sanitize for CI test
+  * Add tests for pcu_lsb()
+  * Add optional profiling support
+  * TBF: unify timer handling
+  * TBF: log timer invocation source
+  * TBF: bail out for unknown timers
+  * Fix llc_queue_size() type
+  * TBF-DL: mark rcvd_dl_ack() parameters as boolean
+  * window: move encoding into functions
+  * cosmetic: clarify coding scheme and puncturing
+  * Make TBF state private
+  * TBF: cleanup state flag handling
+  * Clarify RACH-related interfaces
+  * TBF-UL: add simpler test helper
+  * Avoid code duplication in TBF test
+  * TBF: move window parameters to UL/DL level
+  * TBF-DL: move priority computation into function
+  * TBF: unify EGPRS window calculation
+  * Don't access TBF internals in vty functions
+  * Fix jenkins.sh to match jenkins job axis filter
+  * Allocate global context for TypesTest
+  * Fix sanitizer build
+  * Rewrite EGPRS Packet Uplink Assignment
+  * Rewrite Packet Downlink Assignment
+  * Rewrite Packet Uplink Assignment
+  * Use Timing Advance Index in UL assignments
+  * Allow specifying sysmocom headers explicitly
+  * TBF: log source of state transitions
+  * jenkins.sh: Disable building doxygen for deps
+  * Set V_N and V_B to known initial state
+  * TBF: add dedicated log categories
+  * TBF: make UL/DL state internal
+  * TBF: make UL ack state internal
+  * TBF: make poll state internal
+  * TBF: adjust test log levels
+  * Add tests for find_multi_slots()
+  * AllocTest: adjust test_alloc_b()
+  * AllocTest: expand test output
+  * AllocTest: remove assumption on max MS class
+  * Add multislot classes from latest spec
+  * cosmetic: fix whitespace issue with include files
+  * TBF: decrease L1 logging verbosity in test
+  * TBF: override send function via linker option
+  * Simplify TS alloc: adjust allocator signatures
+  * Simplify TS alloc: fix allocation calls
+  * Simplify TS alloc: avoid TS reassignment
+  * Simplify TS alloc: use defines for constants
+  * Simplify TS alloc: adjust function signatures
+  * TS alloc: print suggested TRX on allocation errors
+  * Simplify TS alloc: internalize TRX check
+  * TBF: decrease logging verbosity for traffic
+  * TBF: add helpers for assignment type handling
+  * TBF: show assignment kind in vty
+  * vty: drop unused function
+  * RACH: improve single block detection
+  * TBF: move common test code into functions
+  * emu: use libosmocore definitions
+  * Use explicit type for pcu_lsb()
+  * Move paging generation into PDCH
+  * Move include guard to the top
+  * Update header includes
+  * Simplify TS alloc: split off RX mask computation
+  * Simplify TS alloc: separate capacity computation
+  * Simplify TS alloc: split allocation
+  * Simplify TS alloc: split USF/UL allocation
+  * Move PDCH-related functions into separate files
+  * Simplify TS alloc: don't use PDCH for free TFI
+  * Simplify TS alloc: constify max dl slot func
+  * TBF: make network counters internal
+  * Simplify TS alloc: move slot assignment
+  * Simplify TS alloc: move slot check into functions
+
+  [ Pau Espin Pedrol ]
+  * Print error cause of pcu socket connect failure
+  * gprs_bssgp_pcu.cpp: Comment unused function parse_ra_cap
+
+  [ Stefan Sperling ]
+  * Make osmo-pcu wait for BTS to become available at start-up time.
+  * improve documentation of Encoding::write_paging_request()
+
+  [ Alexander Couzens ]
+  * pcuif_proto.h: fix whitespaces and indention
+  * pcuif_proto: add version 8 features
+
+  [ Philipp Maier ]
+  * cosmetic: remove runaway semicolon
+  * pcu_l1_if: add frame number to log output
+  * tbf: add frame number to log output
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Thu, 03 May 2018 16:20:00 +0200
+
 osmo-pcu (0.4.0) unstable; urgency=medium
 
   [ Holger Hans Peter Freyther ]
