@@ -143,7 +143,7 @@ static void handle_options(int argc, char **argv)
 
 void sighandler(int sigset)
 {
-	if (sigset == SIGHUP || sigset == SIGPIPE)
+	if (sigset == SIGPIPE)
 		return;
 
 	fprintf(stderr, "Signal %d received.\n", sigset);
@@ -155,7 +155,6 @@ void sighandler(int sigset)
 		 * is terminated without finishing shutdown process.
 		 */
 		signal(SIGINT, SIG_DFL);
-		signal(SIGHUP, SIG_DFL);
 		signal(SIGTERM, SIG_DFL);
 		signal(SIGPIPE, SIG_DFL);
 		signal(SIGABRT, SIG_DFL);
@@ -311,12 +310,12 @@ int main(int argc, char *argv[])
 		return rc;
 
 	signal(SIGINT, sighandler);
-	signal(SIGHUP, sighandler);
 	signal(SIGTERM, sighandler);
 	signal(SIGPIPE, sighandler);
 	signal(SIGABRT, sighandler);
 	signal(SIGUSR1, sighandler);
 	signal(SIGUSR2, sighandler);
+	osmo_init_ignore_signals();
 
 	/* enable realtime priority for us */
 	if (rt_prio != -1) {
