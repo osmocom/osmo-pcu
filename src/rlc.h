@@ -24,6 +24,7 @@
 #include <osmocom/core/endian.h>
 
 #include <stdint.h>
+#include <string.h>
 
 #define RLC_GPRS_SNS 128 /* GPRS, must be power of 2 */
 #define RLC_GPRS_WS  64 /* max window size */
@@ -232,6 +233,7 @@ void gprs_update_punct_scheme(enum egprs_puncturing_values *punct,
  * the routines to manipulate these arrays.
  */
 struct gprs_rlc {
+	void init();
 	gprs_rlc_data *block(int bsn);
 	gprs_rlc_data m_blocks[RLC_MAX_SNS/2];
 };
@@ -645,6 +647,11 @@ inline void gprs_rlc_v_n::mark(int bsn, gprs_rlc_ul_bsn_state type)
 inline gprs_rlc_ul_bsn_state gprs_rlc_v_n::state(int bsn) const
 {
 	return m_v_n[bsn & mod_sns_half()];
+}
+
+inline void gprs_rlc::init()
+{
+	memset(m_blocks, 0, sizeof(m_blocks));
 }
 
 inline gprs_rlc_data *gprs_rlc::block(int bsn)

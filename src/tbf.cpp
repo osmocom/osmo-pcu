@@ -219,9 +219,9 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	memset(&pdch, 0, sizeof(pdch));
 	memset(&T, 0, sizeof(T));
 	memset(&N, 0, sizeof(N));
-	memset(&m_rlc, 0, sizeof(m_rlc));
 	memset(&gsm_timer, 0, sizeof(gsm_timer));
 
+	m_rlc.init();
 	m_llc.init();
 
 	m_name_buf[0] = '\0';
