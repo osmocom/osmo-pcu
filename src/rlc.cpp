@@ -326,11 +326,18 @@ static void gprs_rlc_data_header_init(struct gprs_rlc_data_info *rlc,
 	unsigned int i;
 	unsigned int padding_bits = with_padding ? cs.optionalPaddingBits() : 0;
 
-	memset(rlc, 0, sizeof(*rlc));
-
 	rlc->cs = cs;
-	rlc->with_padding = with_padding;
+	rlc->r = 0;
+	rlc->si = 0;
+	rlc->tfi = 0;
+	rlc->cps = 0;
+	rlc->rsb = 0;
+	rlc->usf = 0;
+	rlc->es_p = 0;
+	rlc->rrbp = 0;
+	rlc->pr = 0;
 	rlc->num_data_blocks = cs.numDataBlocks();
+	rlc->with_padding = with_padding;
 
 	OSMO_ASSERT(rlc->num_data_blocks <= ARRAY_SIZE(rlc->block_info));
 
