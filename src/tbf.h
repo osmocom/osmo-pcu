@@ -318,7 +318,7 @@ struct gprs_rlcmac_tbf {
 	unsigned int num_fT_exp; /* number of consecutive fT expirations */
 
 	struct Meas {
-		struct timeval rssi_tv; /* timestamp for rssi calculation */
+		struct timespec rssi_tv; /* timestamp for rssi calculation */
 		int32_t rssi_sum; /* sum of rssi values */
 		int rssi_num; /* number of rssi values added since rssi_tv */
 
@@ -665,11 +665,11 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int32_t m_last_dl_drained_fn;
 
 	struct BandWidth {
-		struct timeval dl_bw_tv; /* timestamp for dl bw calculation */
+		struct timespec dl_bw_tv; /* timestamp for dl bw calculation */
 		uint32_t dl_bw_octets; /* number of octets since bw_tv */
 		uint32_t dl_throughput; /* throughput to be displayed in stats */
 
-		struct timeval dl_loss_tv; /* timestamp for loss calculation */
+		struct timespec dl_loss_tv; /* timestamp for loss calculation */
 		uint16_t dl_loss_lost; /* sum of lost packets */
 		uint16_t dl_loss_received; /* sum of received packets */
 

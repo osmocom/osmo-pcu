@@ -40,6 +40,7 @@ extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/stats.h>
 #include <osmocom/core/logging.h>
+#include <osmocom/core/timer_compat.h>
 	#include <osmocom/core/bitvec.h>
 	#include <osmocom/core/rate_ctr.h>
 	#include <osmocom/gsm/protocol/gsm_04_08.h>
@@ -182,7 +183,7 @@ gprs_rlcmac_tbf::Meas::Meas() :
 	rssi_sum(0),
 	rssi_num(0)
 {
-	timerclear(&rssi_tv);
+	timespecclear(&rssi_tv);
 }
 
 gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
@@ -913,7 +914,7 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, GprsMs *ms, int8_t use_trx, ui
 	}
 
 	/* set timestamp */
-	gettimeofday(&tbf->meas.rssi_tv, NULL);
+	osmo_clock_gettime(CLOCK_MONOTONIC, &tbf->meas.rssi_tv);
 
 	tbf->set_ms(ms);
 
@@ -1024,8 +1025,8 @@ gprs_rlcmac_dl_tbf::BandWidth::BandWidth() :
 	dl_loss_lost(0),
 	dl_loss_received(0)
 {
-	timerclear(&dl_bw_tv);
-	timerclear(&dl_loss_tv);
+	timespecclear(&dl_bw_tv);
+	timespecclear(&dl_loss_tv);
 }
 
 gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(BTS *bts_) :
@@ -1114,8 +1115,8 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 	tbf->m_last_dl_poll_fn = -1;
 	tbf->m_last_dl_drained_fn = -1;
 
-	gettimeofday(&tbf->m_bw.dl_bw_tv, NULL);
-	gettimeofday(&tbf->m_bw.dl_loss_tv, NULL);
+	osmo_clock_gettime(CLOCK_MONOTONIC, &tbf->m_bw.dl_bw_tv);
+	osmo_clock_gettime(CLOCK_MONOTONIC, &tbf->m_bw.dl_loss_tv);
 
 	return tbf;
 }

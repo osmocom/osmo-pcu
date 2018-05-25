@@ -71,22 +71,22 @@ int gprs_rlcmac_meas_rep(Packet_Measurement_Report_t *pmr)
 /* RSSI values received from MS */
 int gprs_rlcmac_rssi(struct gprs_rlcmac_tbf *tbf, int8_t rssi)
 {
-	struct timeval now_tv, *rssi_tv = &tbf->meas.rssi_tv;
+	struct timespec now_tv, *rssi_tv = &tbf->meas.rssi_tv;
 	uint32_t elapsed;
 
 	tbf->meas.rssi_sum += rssi;
 	tbf->meas.rssi_num++;
 
-	gettimeofday(&now_tv, NULL);
+	osmo_clock_gettime(CLOCK_MONOTONIC, &now_tv);
 	elapsed = ((now_tv.tv_sec - rssi_tv->tv_sec) << 7)
-		+ ((now_tv.tv_usec - rssi_tv->tv_usec) << 7) / 1000000;
+		+ (((now_tv.tv_nsec - rssi_tv->tv_nsec)/1000) << 7) / 1000000;
 	if (elapsed < 128)
 		return 0;
 
 	gprs_rlcmac_rssi_rep(tbf);
 
 	/* reset rssi values and timestamp */
-	memcpy(rssi_tv, &now_tv, sizeof(struct timeval));
+	memcpy(rssi_tv, &now_tv, sizeof(*rssi_tv));
 	tbf->meas.rssi_sum = 0;
 	tbf->meas.rssi_num = 0;
 
@@ -115,7 +115,7 @@ int gprs_rlcmac_rssi_rep(struct gprs_rlcmac_tbf *tbf)
 int gprs_rlcmac_received_lost(struct gprs_rlcmac_dl_tbf *tbf, uint16_t received,
 	uint16_t lost)
 {
-	struct timeval now_tv, *loss_tv = &tbf->m_bw.dl_loss_tv;
+	struct timespec now_tv, *loss_tv = &tbf->m_bw.dl_loss_tv;
 	uint32_t elapsed;
 	uint16_t sum = received + lost;
 
@@ -129,16 +129,16 @@ int gprs_rlcmac_received_lost(struct gprs_rlcmac_dl_tbf *tbf, uint16_t received,
 	tbf->m_bw.dl_loss_received += received;
 	tbf->m_bw.dl_loss_lost += lost;
 
-	gettimeofday(&now_tv, NULL);
+	osmo_clock_gettime(CLOCK_MONOTONIC, &now_tv);
 	elapsed = ((now_tv.tv_sec - loss_tv->tv_sec) << 7)
-		+ ((now_tv.tv_usec - loss_tv->tv_usec) << 7) / 1000000;
+		+ (((now_tv.tv_nsec - loss_tv->tv_nsec)/1000) << 7) / 1000000;
 	if (elapsed < 128)
 		return 0;
 
 	gprs_rlcmac_lost_rep(tbf);
 
 	/* reset lost values and timestamp */
-	memcpy(loss_tv, &now_tv, sizeof(struct timeval));
+	memcpy(loss_tv, &now_tv, sizeof(*loss_tv));
 	tbf->m_bw.dl_loss_received = 0;
 	tbf->m_bw.dl_loss_lost = 0;
 
@@ -168,14 +168,14 @@ int gprs_rlcmac_lost_rep(struct gprs_rlcmac_dl_tbf *tbf)
 
 int gprs_rlcmac_dl_bw(struct gprs_rlcmac_dl_tbf *tbf, uint16_t octets)
 {
-	struct timeval now_tv, *bw_tv = &tbf->m_bw.dl_bw_tv;
+	struct timespec now_tv, *bw_tv = &tbf->m_bw.dl_bw_tv;
 	uint32_t elapsed;
 
 	tbf->m_bw.dl_bw_octets += octets;
 
-	gettimeofday(&now_tv, NULL);
+	osmo_clock_gettime(CLOCK_MONOTONIC, &now_tv);
 	elapsed = ((now_tv.tv_sec - bw_tv->tv_sec) << 7)
-		+ ((now_tv.tv_usec - bw_tv->tv_usec) << 7) / 1000000;
+		+ (((now_tv.tv_nsec - bw_tv->tv_nsec)/1000) << 7) / 1000000;
 	if (elapsed < 128)
 		return 0;
 
@@ -186,7 +186,7 @@ int gprs_rlcmac_dl_bw(struct gprs_rlcmac_dl_tbf *tbf, uint16_t octets)
 		tbf->m_bw.dl_bw_octets / elapsed);
 
 	/* reset bandwidth values timestamp */
-	memcpy(bw_tv, &now_tv, sizeof(struct timeval));
+	memcpy(bw_tv, &now_tv, sizeof(*bw_tv));
 	tbf->m_bw.dl_bw_octets = 0;
 
 	return 0;
