@@ -217,7 +217,7 @@ void pcu_l1if_tx_agch(bitvec * block, int plen)
 
 void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi)
 {
-	uint8_t data[23+3]; /* prefix PLEN */
+	uint8_t data[3+1+23]; /* prefix PLEN */
 
 	/* paging group */
 	if (!imsi || strlen(imsi) < 3)
@@ -227,6 +227,7 @@ void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi)
 	data[1] = imsi[1];
 	data[2] = imsi[2];
 
+	OSMO_ASSERT(block->data_len <= sizeof(data) - (3+1));
 	bitvec_pack(block, data + 3+1);
 	data[3] = (plen << 2) | 0x01;
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, 23+3);
