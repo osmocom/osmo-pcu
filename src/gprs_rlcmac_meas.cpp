@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
  
+#include <osmocom/core/timer_compat.h>
+
 #include <gprs_rlcmac.h>
 #include <gprs_debug.h>
 #include <pcu_l1_if.h>
@@ -72,15 +74,15 @@ int gprs_rlcmac_meas_rep(Packet_Measurement_Report_t *pmr)
 int gprs_rlcmac_rssi(struct gprs_rlcmac_tbf *tbf, int8_t rssi)
 {
 	struct timespec now_tv, *rssi_tv = &tbf->meas.rssi_tv;
-	uint32_t elapsed;
+	struct timespec elapsed;
 
 	tbf->meas.rssi_sum += rssi;
 	tbf->meas.rssi_num++;
 
 	osmo_clock_gettime(CLOCK_MONOTONIC, &now_tv);
-	elapsed = ((now_tv.tv_sec - rssi_tv->tv_sec) << 7)
-		+ (((now_tv.tv_nsec - rssi_tv->tv_nsec)/1000) << 7) / 1000000;
-	if (elapsed < 128)
+
+	timespecsub(&now_tv, rssi_tv, &elapsed);
+	if (elapsed.tv_sec < 1)
 		return 0;
 
 	gprs_rlcmac_rssi_rep(tbf);
@@ -116,7 +118,7 @@ int gprs_rlcmac_received_lost(struct gprs_rlcmac_dl_tbf *tbf, uint16_t received,
 	uint16_t lost)
 {
 	struct timespec now_tv, *loss_tv = &tbf->m_bw.dl_loss_tv;
-	uint32_t elapsed;
+	struct timespec elapsed;
 	uint16_t sum = received + lost;
 
 	/* No measurement values */
@@ -129,10 +131,8 @@ int gprs_rlcmac_received_lost(struct gprs_rlcmac_dl_tbf *tbf, uint16_t received,
 	tbf->m_bw.dl_loss_received += received;
 	tbf->m_bw.dl_loss_lost += lost;
 
-	osmo_clock_gettime(CLOCK_MONOTONIC, &now_tv);
-	elapsed = ((now_tv.tv_sec - loss_tv->tv_sec) << 7)
-		+ (((now_tv.tv_nsec - loss_tv->tv_nsec)/1000) << 7) / 1000000;
-	if (elapsed < 128)
+	timespecsub(&now_tv, loss_tv, &elapsed);
+	if (elapsed.tv_sec < 1)
 		return 0;
 
 	gprs_rlcmac_lost_rep(tbf);
@@ -169,21 +169,18 @@ int gprs_rlcmac_lost_rep(struct gprs_rlcmac_dl_tbf *tbf)
 int gprs_rlcmac_dl_bw(struct gprs_rlcmac_dl_tbf *tbf, uint16_t octets)
 {
 	struct timespec now_tv, *bw_tv = &tbf->m_bw.dl_bw_tv;
-	uint32_t elapsed;
+	struct timespec elapsed;
 
 	tbf->m_bw.dl_bw_octets += octets;
 
 	osmo_clock_gettime(CLOCK_MONOTONIC, &now_tv);
-	elapsed = ((now_tv.tv_sec - bw_tv->tv_sec) << 7)
-		+ (((now_tv.tv_nsec - bw_tv->tv_nsec)/1000) << 7) / 1000000;
-	if (elapsed < 128)
+	timespecsub(&now_tv, bw_tv, &elapsed);
+	if (elapsed.tv_sec < 1)
 		return 0;
 
-	tbf->m_bw.dl_throughput = (tbf->m_bw.dl_bw_octets/elapsed);
-
+	tbf->m_bw.dl_throughput = (tbf->m_bw.dl_bw_octets << 10) / ((elapsed.tv_sec << 10) + (elapsed.tv_nsec >> 20));
 	LOGP(DRLCMACMEAS, LOGL_INFO, "DL Bandwitdh of IMSI=%s / TLLI=0x%08x: "
-		"%d KBits/s\n", tbf->imsi(), tbf->tlli(),
-		tbf->m_bw.dl_bw_octets / elapsed);
+		"%d KBits/s\n", tbf->imsi(), tbf->tlli(), tbf->m_bw.dl_throughput);
 
 	/* reset bandwidth values timestamp */
 	memcpy(bw_tv, &now_tv, sizeof(*bw_tv));
