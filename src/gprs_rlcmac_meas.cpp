@@ -154,7 +154,7 @@ int gprs_rlcmac_lost_rep(struct gprs_rlcmac_dl_tbf *tbf)
 	if (!sum)
 		return -EINVAL;
 
-	LOGP(DRLCMACMEAS, LOGL_INFO, "DL packet loss of IMSI=%s / TLLI=0x%08x: "
+	LOGP(DRLCMACMEAS, LOGL_DEBUG, "DL packet loss of IMSI=%s / TLLI=0x%08x: "
 		"%d%%\n", tbf->imsi(), tbf->tlli(),
 		tbf->m_bw.dl_loss_lost * 100 / sum);
 
