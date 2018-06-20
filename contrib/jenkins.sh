@@ -26,7 +26,7 @@ mkdir "$deps" || true
 # Collect configure options for osmo-pcu
 PCU_CONFIG=""
 if [ "$with_dsp" = sysmo ]; then
-  PCU_CONFIG="$PCU_CONFIG --enable-sysmocom-dsp --with-sysmobts=$inst/include/"
+  PCU_CONFIG="$PCU_CONFIG --enable-werror --enable-sysmocom-dsp --with-sysmobts=$inst/include/"
 
   # For direct sysmo DSP access, provide the SysmoBTS Layer 1 API
   cd "$deps"
@@ -43,7 +43,7 @@ elif [ "$with_dsp" = lc15 ]; then
 
 elif [ -z "$with_dsp" -o "$with_dsp" = none ]; then
   echo "Direct DSP access disabled, sanitizer enabled"
-  PCU_CONFIG="$PCU_CONFIG --enable-sanitize"
+  PCU_CONFIG="$PCU_CONFIG --enable-werror --enable-sanitize"
 else
   echo 'Invalid $with_dsp value:' $with_dsp
   exit 1
