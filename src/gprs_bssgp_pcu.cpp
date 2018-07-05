@@ -540,12 +540,16 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 		return -EINVAL;
 
 	nssd = (struct ns_signal_data *)signal_data;
-	if (nssd->nsvc != the_pcu.nsvc) {
+	if (signal != S_SNS_CONFIGURED &&  nssd->nsvc != the_pcu.nsvc) {
 		LOGP(DPCU, LOGL_ERROR, "Signal received of unknown NSVC\n");
 		return -EINVAL;
 	}
 
 	switch (signal) {
+	case S_SNS_CONFIGURED:
+		/* SNS configuration completed, send NS-RESET via NS-VC */
+		gprs_nsvc_reset(the_pcu.nsvc, NS_CAUSE_OM_INTERVENTION);
+		break;
 	case S_NS_UNBLOCK:
 		if (!the_pcu.nsvc_unblocked) {
 			the_pcu.nsvc_unblocked = 1;
@@ -871,8 +875,7 @@ int gprs_ns_reconnect(struct gprs_nsvc *nsvc)
 		return -EBADF;
 	}
 
-	nsvc2 = gprs_ns_nsip_connect(bssgp_nsi, &nsvc->ip.bts_addr,
-		nsvc->nsei, nsvc->nsvci);
+	nsvc2 = gprs_ns_nsip_connect_sns(bssgp_nsi, &nsvc->ip.bts_addr, nsvc->nsei, nsvc->nsvci);
 
 	if (!nsvc2) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to reconnect NSVC\n");
@@ -919,7 +922,7 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 	dest.sin_port = htons(sgsn_port);
 	dest.sin_addr.s_addr = htonl(sgsn_ip);
 
-	the_pcu.nsvc = gprs_ns_nsip_connect(bssgp_nsi, &dest, nsei, nsvci);
+	the_pcu.nsvc = gprs_ns_nsip_connect_sns(bssgp_nsi, &dest, nsei, nsvci);
 	if (!the_pcu.nsvc) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSVCt\n");
 		gprs_ns_destroy(bssgp_nsi);
