@@ -159,6 +159,9 @@ struct gprs_rlcmac_bts {
 
 	/* Path to be used for the pcu-bts socket */
 	char *pcu_sock_path;
+
+	/* Are we talking Gb with IP-SNS (true) or classic Gb? */
+	bool gb_dialect_sns;
 };
 
 #ifdef __cplusplus

@@ -541,12 +541,20 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 		return -EINVAL;
 
 	nssd = (struct ns_signal_data *)signal_data;
-	if (nssd->nsvc != the_pcu.nsvc) {
+	if (signal != S_SNS_CONFIGURED &&  nssd->nsvc != the_pcu.nsvc) {
 		LOGP(DPCU, LOGL_ERROR, "Signal received of unknown NSVC\n");
 		return -EINVAL;
 	}
 
 	switch (signal) {
+	case S_SNS_CONFIGURED:
+		the_pcu.bvc_sig_reset = 0;
+		the_pcu.bvc_reset = 0;
+		/* There's no NS-RESET / NS-UNBLOCK procedure on IP SNS based NS-VCs */
+		the_pcu.nsvc_unblocked = 1;
+		LOGP(DPCU, LOGL_NOTICE, "NS-VC %d is unblocked.\n", the_pcu.nsvc->nsvci);
+		bvc_timeout(NULL);
+		break;
 	case S_NS_UNBLOCK:
 		if (!the_pcu.nsvc_unblocked) {
 			the_pcu.nsvc_unblocked = 1;
@@ -872,9 +880,10 @@ static int gprs_ns_reconnect(struct gprs_nsvc *nsvc)
 		return -EBADF;
 	}
 
-	nsvc2 = gprs_ns_nsip_connect(bssgp_nsi, &nsvc->ip.bts_addr,
-		nsvc->nsei, nsvc->nsvci);
-
+	if (the_pcu.bts->gb_dialect_sns)
+		nsvc2 = gprs_ns_nsip_connect_sns(bssgp_nsi, &nsvc->ip.bts_addr, nsvc->nsei, nsvc->nsvci);
+	else
+		nsvc2 = gprs_ns_nsip_connect(bssgp_nsi, &nsvc->ip.bts_addr, nsvc->nsei, nsvc->nsvci);
 	if (!nsvc2) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to reconnect NSVC\n");
 		return -EIO;
@@ -905,8 +914,13 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 		return NULL;
 	}
 	gprs_ns_vty_init(bssgp_nsi);
-	bssgp_nsi->nsip.remote_port = sgsn_port;
-	bssgp_nsi->nsip.remote_ip = sgsn_ip;
+	/* don't specify remote IP/port if SNS dialect is in use; Doing so would
+	 * issue a connect() on the socket, which prevents us to dynamically communicate
+	 * with any number of IP-SNS endpoints on the SGSN side */
+	if (!bts->gb_dialct_sns) {
+		bssgp_nsi->nsip.remote_port = sgsn_port;
+		bssgp_nsi->nsip.remote_ip = sgsn_ip;
+	}
 	bssgp_nsi->nsip.local_port = local_port;
 	rc = gprs_ns_nsip_listen(bssgp_nsi);
 	if (rc < 0) {
@@ -920,7 +934,10 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 	dest.sin_port = htons(sgsn_port);
 	dest.sin_addr.s_addr = htonl(sgsn_ip);
 
-	the_pcu.nsvc = gprs_ns_nsip_connect(bssgp_nsi, &dest, nsei, nsvci);
+	if (bts->gb_dialect_sns)
+		the_pcu.nsvc = gprs_ns_nsip_connect_sns(bssgp_nsi, &dest, nsei, nsvci);
+	else
+		the_pcu.nsvc = gprs_ns_nsip_connect(bssgp_nsi, &dest, nsei, nsvci);
 	if (!the_pcu.nsvc) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSVCt\n");
 		gprs_ns_destroy(bssgp_nsi);
