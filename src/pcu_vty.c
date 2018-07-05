@@ -265,6 +265,11 @@ static int config_write_pcu(struct vty *vty)
 		}
 	}
 
+	if (bts->gb_dialect_sns)
+		vty_out(vty, " gb-dialect ip-sns%s", VTY_NEWLINE);
+	else
+		vty_out(vty, " gb-dialect classic%s", VTY_NEWLINE);
+
 	return CMD_SUCCESS;
 }
 
@@ -1059,6 +1064,23 @@ DEFUN(cfg_pcu_sock,
 	return CMD_SUCCESS;
 }
 
+DEFUN(cfg_pcu_gb_dialect,
+      cfg_pcu_gb_dialect_cmd,
+      "gb-dialect (classic|ip-sns)",
+      "Select which Gb interface dialect to use\n"
+      "Classic Gb interface with NS-{RESET,BLOCK,UNBLOCK} and static configuration\n"
+      "Modern Gb interface with IP-SNS (Sub Network Service) and dynamic configuration\n")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	if (!strcmp(argv[0], "ip-sns"))
+		bts->gb_dialect_sns = true;
+	else
+		bts->gb_dialect_sns = false;
+
+	return CMD_SUCCESS;
+}
+
 DEFUN(show_tbf,
       show_tbf_cmd,
       "show tbf all",
@@ -1189,6 +1211,7 @@ int pcu_vty_init(const struct log_info *cat)
 	install_element(PCU_NODE, &cfg_pcu_gsmtap_categ_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_gsmtap_categ_cmd);
 	install_element(PCU_NODE, &cfg_pcu_sock_cmd);
+	install_element(PCU_NODE, &cfg_pcu_gb_dialect_cmd);
 
 	install_element_ve(&show_bts_stats_cmd);
 	install_element_ve(&show_tbf_cmd);
