@@ -51,6 +51,8 @@ extern "C" {
 
 extern void *tall_pcu_ctx;
 
+static unsigned int next_tbf_ctr_group_id = 0; /* Incrementing group id */
+
 static void tbf_timer_cb(void *_tbf);
 
 const struct value_string gprs_rlcmac_tbf_poll_state_names[] = {
@@ -922,7 +924,7 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, GprsMs *ms, int8_t use_trx, ui
 		"Allocated: trx = %d, ul_slots = %02x, dl_slots = %02x\n",
 		tbf->trx->trx_no, tbf->ul_slots(), tbf->dl_slots());
 
-	tbf->m_ctrs = rate_ctr_group_alloc(tbf, &tbf_ctrg_desc, 0);
+	tbf->m_ctrs = rate_ctr_group_alloc(tbf, &tbf_ctrg_desc, next_tbf_ctr_group_id++);
 	if (!tbf->m_ctrs) {
 		LOGPTBF(tbf, LOGL_ERROR, "Couldn't allocate TBF counters\n");
 		return -1;
@@ -1005,8 +1007,10 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 		return NULL;
 	}
 
-	tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(tbf, &tbf_ul_egprs_ctrg_desc, 0);
-	tbf->m_ul_gprs_ctrs = rate_ctr_group_alloc(tbf, &tbf_ul_gprs_ctrg_desc, 0);
+	tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(tbf,
+					&tbf_ul_egprs_ctrg_desc, tbf->m_ctrs->idx);
+	tbf->m_ul_gprs_ctrs = rate_ctr_group_alloc(tbf,
+					&tbf_ul_gprs_ctrg_desc, tbf->m_ctrs->idx);
 	if (!tbf->m_ul_egprs_ctrs || !tbf->m_ul_gprs_ctrs) {
 		LOGPTBF(tbf, LOGL_ERROR, "Couldn't allocate TBF UL counters\n");
 		talloc_free(tbf);
@@ -1094,14 +1098,18 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 
 	if (tbf->is_egprs_enabled()) {
 		tbf->set_window_size();
-		tbf->m_dl_egprs_ctrs = rate_ctr_group_alloc(tbf, &tbf_dl_egprs_ctrg_desc, 0);
+		tbf->m_dl_egprs_ctrs = rate_ctr_group_alloc(tbf,
+							&tbf_dl_egprs_ctrg_desc,
+							tbf->m_ctrs->idx);
 		if (!tbf->m_dl_egprs_ctrs) {
 			LOGPTBF(tbf, LOGL_ERROR, "Couldn't allocate EGPRS DL counters\n");
 			talloc_free(tbf);
 			return NULL;
 		}
 	} else {
-		tbf->m_dl_gprs_ctrs = rate_ctr_group_alloc(tbf, &tbf_dl_gprs_ctrg_desc, 0);
+		tbf->m_dl_gprs_ctrs = rate_ctr_group_alloc(tbf,
+							&tbf_dl_gprs_ctrg_desc,
+							tbf->m_ctrs->idx);
 		if (!tbf->m_dl_gprs_ctrs) {
 			LOGPTBF(tbf, LOGL_ERROR, "Couldn't allocate GPRS DL counters\n");
 			talloc_free(tbf);
@@ -1569,11 +1577,13 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 	TBF_SET_ASS_STATE_UL(ul_tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ);
 	ul_tbf->control_ts = ts;
 	ul_tbf->trx = trx;
-	ul_tbf->m_ctrs = rate_ctr_group_alloc(ul_tbf, &tbf_ctrg_desc, 0);
+	ul_tbf->m_ctrs = rate_ctr_group_alloc(ul_tbf, &tbf_ctrg_desc, next_tbf_ctr_group_id++);
 	ul_tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(ul_tbf,
-					&tbf_ul_egprs_ctrg_desc, 0);
+						       &tbf_ul_egprs_ctrg_desc,
+						       ul_tbf->m_ctrs->idx);
 	ul_tbf->m_ul_gprs_ctrs = rate_ctr_group_alloc(ul_tbf,
-					&tbf_ul_gprs_ctrg_desc, 0);
+						      &tbf_ul_gprs_ctrg_desc,
+						      ul_tbf->m_ctrs->idx);
 	if (!ul_tbf->m_ctrs || !ul_tbf->m_ul_egprs_ctrs || !ul_tbf->m_ul_gprs_ctrs) {
 		LOGPTBF(ul_tbf, LOGL_ERROR, "Cound not allocate TBF UL rate counters\n");
 		talloc_free(ul_tbf);
