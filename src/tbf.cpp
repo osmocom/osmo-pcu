@@ -100,49 +100,49 @@ static const struct value_string tbf_timers_names[] = {
 };
 
 static const struct rate_ctr_desc tbf_ctr_description[] = {
-        { "rlc.nacked",                     "RLC Nacked " },
+        { "rlc:nacked",                     "RLC Nacked " },
 };
 
 static const struct rate_ctr_desc tbf_dl_gprs_ctr_description[] = {
-        { "gprs.downlink.cs1",              "CS1        " },
-        { "gprs.downlink.cs2",              "CS2        " },
-        { "gprs.downlink.cs3",              "CS3        " },
-        { "gprs.downlink.cs4",              "CS4        " },
+        { "gprs:downlink:cs1",              "CS1        " },
+        { "gprs:downlink:cs2",              "CS2        " },
+        { "gprs:downlink:cs3",              "CS3        " },
+        { "gprs:downlink:cs4",              "CS4        " },
 };
 
 static const struct rate_ctr_desc tbf_dl_egprs_ctr_description[] = {
-        { "egprs.downlink.mcs1",            "MCS1        " },
-        { "egprs.downlink.mcs2",            "MCS2        " },
-        { "egprs.downlink.mcs3",            "MCS3        " },
-        { "egprs.downlink.mcs4",            "MCS4        " },
-        { "egprs.downlink.mcs5",            "MCS5        " },
-        { "egprs.downlink.mcs6",            "MCS6        " },
-        { "egprs.downlink.mcs7",            "MCS7        " },
-        { "egprs.downlink.mcs8",            "MCS8        " },
-        { "egprs.downlink.mcs9",            "MCS9        " },
+        { "egprs:downlink:mcs1",            "MCS1        " },
+        { "egprs:downlink:mcs2",            "MCS2        " },
+        { "egprs:downlink:mcs3",            "MCS3        " },
+        { "egprs:downlink:mcs4",            "MCS4        " },
+        { "egprs:downlink:mcs5",            "MCS5        " },
+        { "egprs:downlink:mcs6",            "MCS6        " },
+        { "egprs:downlink:mcs7",            "MCS7        " },
+        { "egprs:downlink:mcs8",            "MCS8        " },
+        { "egprs:downlink:mcs9",            "MCS9        " },
 };
 
 static const struct rate_ctr_desc tbf_ul_gprs_ctr_description[] = {
-        { "gprs.uplink.cs1",              "CS1        " },
-        { "gprs.uplink.cs2",              "CS2        " },
-        { "gprs.uplink.cs3",              "CS3        " },
-        { "gprs.uplink.cs4",              "CS4        " },
+        { "gprs:uplink:cs1",              "CS1        " },
+        { "gprs:uplink:cs2",              "CS2        " },
+        { "gprs:uplink:cs3",              "CS3        " },
+        { "gprs:uplink:cs4",              "CS4        " },
 };
 
 static const struct rate_ctr_desc tbf_ul_egprs_ctr_description[] = {
-        { "egprs.uplink.mcs1",            "MCS1        " },
-        { "egprs.uplink.mcs2",            "MCS2        " },
-        { "egprs.uplink.mcs3",            "MCS3        " },
-        { "egprs.uplink.mcs4",            "MCS4        " },
-        { "egprs.uplink.mcs5",            "MCS5        " },
-        { "egprs.uplink.mcs6",            "MCS6        " },
-        { "egprs.uplink.mcs7",            "MCS7        " },
-        { "egprs.uplink.mcs8",            "MCS8        " },
-        { "egprs.uplink.mcs9",            "MCS9        " },
+        { "egprs:uplink:mcs1",            "MCS1        " },
+        { "egprs:uplink:mcs2",            "MCS2        " },
+        { "egprs:uplink:mcs3",            "MCS3        " },
+        { "egprs:uplink:mcs4",            "MCS4        " },
+        { "egprs:uplink:mcs5",            "MCS5        " },
+        { "egprs:uplink:mcs6",            "MCS6        " },
+        { "egprs:uplink:mcs7",            "MCS7        " },
+        { "egprs:uplink:mcs8",            "MCS8        " },
+        { "egprs:uplink:mcs9",            "MCS9        " },
 };
 
 static const struct rate_ctr_group_desc tbf_ctrg_desc = {
-        "pcu.tbf",
+        "pcu:tbf",
         "TBF Statistics",
         OSMO_STATS_CLASS_SUBSCRIBER,
         ARRAY_SIZE(tbf_ctr_description),
@@ -150,7 +150,7 @@ static const struct rate_ctr_group_desc tbf_ctrg_desc = {
 };
 
 static const struct rate_ctr_group_desc tbf_dl_gprs_ctrg_desc = {
-        "tbf.gprs",
+        "tbf:gprs",
         "Data Blocks",
         OSMO_STATS_CLASS_SUBSCRIBER,
         ARRAY_SIZE(tbf_dl_gprs_ctr_description),
@@ -158,7 +158,7 @@ static const struct rate_ctr_group_desc tbf_dl_gprs_ctrg_desc = {
 };
 
 static const struct rate_ctr_group_desc tbf_dl_egprs_ctrg_desc = {
-        "tbf.egprs",
+        "tbf:egprs",
         "Data Blocks",
         OSMO_STATS_CLASS_SUBSCRIBER,
         ARRAY_SIZE(tbf_dl_egprs_ctr_description),
@@ -166,7 +166,7 @@ static const struct rate_ctr_group_desc tbf_dl_egprs_ctrg_desc = {
 };
 
 static const struct rate_ctr_group_desc tbf_ul_gprs_ctrg_desc = {
-        "tbf.gprs",
+        "tbf:gprs",
         "Data Blocks",
         OSMO_STATS_CLASS_SUBSCRIBER,
         ARRAY_SIZE(tbf_ul_gprs_ctr_description),
@@ -174,7 +174,7 @@ static const struct rate_ctr_group_desc tbf_ul_gprs_ctrg_desc = {
 };
 
 static const struct rate_ctr_group_desc tbf_ul_egprs_ctrg_desc = {
-        "tbf.egprs",
+        "tbf:egprs",
         "Data Blocks",
         OSMO_STATS_CLASS_SUBSCRIBER,
         ARRAY_SIZE(tbf_ul_egprs_ctr_description),
