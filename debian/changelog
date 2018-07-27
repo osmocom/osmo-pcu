@@ -1,3 +1,24 @@
+osmo-pcu (0.5.1) unstable; urgency=medium
+
+  [ Harald Welte ]
+  * Don't register SIGHUP handler without actually handling SIGHUP
+
+  [ Pau Espin Pedrol ]
+  * tbf: Fix memset(0) on object with no trivial copy-assignment
+  * rlc: Fix memset(0) on object with no trivial copy-assignment
+  * jenkins.sh: use flag --enable-werror for sysmo and none
+  * tbf: Use incrementing id for rate_ctr_group_alloc
+  * tbf: Replace '.' in counter names with ':'
+
+  [ Stefan Sperling ]
+  * fix a one-byte stack buffer overrun in osmo-pcu
+  * read monotonic clock with clock_gettime() instead of gettimeofday()
+  * fix time-delta calculations for measurement reports
+  * change log level of "DL packet loss" log messages
+  * check bssgp_tlv_parse() return code in gprs_bssgp_pcu_rcvmsg()
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Fri, 27 Jul 2018 21:56:38 +0200
+
 osmo-pcu (0.5.0) unstable; urgency=medium
 
   [ Neels Hofmeyr ]
