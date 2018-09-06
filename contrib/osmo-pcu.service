@@ -1,5 +1,5 @@
 [Unit]
-Description=sysmocom sysmoPCU
+Description=Osmocom osmo-pcu
 
 [Service]
 Type=simple
@@ -14,4 +14,3 @@ CPUSchedulingPriority=1
 
 [Install]
 WantedBy=multi-user.target
-Alias=sysmopcu.service
