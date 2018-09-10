@@ -1,4 +1,5 @@
 etc/osmocom/osmo-pcu.cfg
+lib/systemd/system/osmo-pcu.service
 usr/bin/osmo-pcu
 usr/include/osmocom/pcu/pcuif_proto.h
 usr/lib/*/pkgconfig/osmo-pcu.pc
