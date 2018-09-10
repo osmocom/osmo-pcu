@@ -41,6 +41,7 @@ AC_ARG_ENABLE(sanitize,
 if test x"$sanitize" = x"yes"
 then
 	CFLAGS="$CFLAGS -fsanitize=address -fsanitize=undefined"
+	CXXFLAGS="$CXXFLAGS -fsanitize=address -fsanitize=undefined"
 	CPPFLAGS="$CPPFLAGS -fsanitize=address -fsanitize=undefined"
 	LDFLAGS="$LDFLAGS -fsanitize=address -fsanitize=undefined"
 fi
@@ -156,8 +157,10 @@ AM_CONDITIONAL(ENABLE_VTY_TESTS, test "x$enable_vty_tests" = "xyes")
 STD_DEFINES_AND_INCLUDES="-Wall"
 AC_SUBST(STD_DEFINES_AND_INCLUDES)
 
-AC_MSG_RESULT([CFLAGS="$CFLAGS"])
 AC_MSG_RESULT([CPPFLAGS="$CPPFLAGS"])
+AC_MSG_RESULT([CFLAGS="$CFLAGS"])
+AC_MSG_RESULT([CXXFLAGS="$CXXFLAGS"])
+AC_MSG_RESULT([LDFLAGS="$LDFLAGS"])
 
 AC_OUTPUT(
     osmo-pcu.pc
