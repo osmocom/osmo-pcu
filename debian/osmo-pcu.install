@@ -3,3 +3,4 @@ lib/systemd/system/osmo-pcu.service
 usr/bin/osmo-pcu
 usr/include/osmocom/pcu/pcuif_proto.h
 usr/lib/*/pkgconfig/osmo-pcu.pc
+usr/share/doc/osmo-pcu/examples/osmo-pcu/osmo-pcu.cfg
