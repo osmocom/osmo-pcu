@@ -182,7 +182,8 @@ AC_OUTPUT(
     osmo-pcu.pc
     include/Makefile
     src/Makefile
-    examples/Makefile
+    doc/Makefile
+    doc/examples/Makefile
     tests/Makefile
     contrib/Makefile
     contrib/systemd/Makefile

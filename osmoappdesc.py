@@ -15,12 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 app_configs = {
-    "osmo-pcu": ["examples/osmo-pcu.cfg"]
+    "osmo-pcu": ["doc/examples/osmo-pcu.cfg"]
 }
 
 apps = [(4240, "src/osmo-pcu", "Osmo-PCU", "osmo-pcu"),
         ]
 
-vty_command = ["src/osmo-pcu", "-c", "examples/osmo-pcu.cfg"]
+vty_command = ["src/osmo-pcu", "-c", "doc/examples/osmo-pcu.cfg"]
 
 vty_app = apps[0]

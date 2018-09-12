@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign dist-bzip2 1.6
 
-SUBDIRS = include src examples tests contrib
+SUBDIRS = include src doc tests contrib
 EXTRA_DIST = osmoappdesc.py README.md
 
 DISTCHECK_CONFIGURE_FLAGS = \
