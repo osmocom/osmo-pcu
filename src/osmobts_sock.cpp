@@ -265,8 +265,11 @@ int pcu_l1if_open(void)
 	}
 
 	local.sun_family = AF_UNIX;
-	strncpy(local.sun_path, bts->pcu_sock_path, sizeof(local.sun_path));
-	local.sun_path[sizeof(local.sun_path) - 1] = '\0';
+	if (osmo_strlcpy(local.sun_path, bts->pcu_sock_path, sizeof(local.sun_path)) >= sizeof(local.sun_path)) {
+		LOGP(DLGLOBAL, LOGL_ERROR, "Socket path exceeds maximum length of %zd bytes: %s\n",
+		     sizeof(local.sun_path), bts->pcu_sock_path);
+		return -ENOSPC;
+	}
 
 	/* we use the same magic that X11 uses in Xtranssock.c for
 	 * calculating the proper length of the sockaddr */
