@@ -650,7 +650,7 @@ int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 		rc = pcu_rx_susp_req(&pcu_prim->u.susp_req);
 		break;
 	default:
-		LOGP(DL1IF, LOGL_ERROR, "Received unknwon PCU msg type %d\n",
+		LOGP(DL1IF, LOGL_ERROR, "Received unknown PCU msg type %d\n",
 			msg_type);
 		rc = -EINVAL;
 	}

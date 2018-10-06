@@ -632,7 +632,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		int8_t tfi = request->ID.u.Global_TFI.u.DOWNLINK_TFI;
 		dl_tbf = bts()->dl_tbf_by_tfi(tfi, trx_no(), ts_no);
 		if (!dl_tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown downlink TFI=%d\n", tfi);
+			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESOURCE REQ unknown downlink TFI=%d\n", tfi);
 			return;
 		}
 		LOGPTBFDL(dl_tbf, LOGL_ERROR,
@@ -645,7 +645,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		int8_t tfi = request->ID.u.Global_TFI.u.UPLINK_TFI;
 		ul_tbf = bts()->ul_tbf_by_tfi(tfi, trx_no(), ts_no);
 		if (!ul_tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESSOURCE REQ unknown uplink TFI=%d\n", tfi);
+			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESOURCE REQ unknown uplink TFI=%d\n", tfi);
 			return;
 		}
 		LOGPTBFUL(ul_tbf, LOGL_ERROR,

@@ -1208,7 +1208,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 
 	if (direction == GPRS_RLCMAC_DL_TBF && !is_control_ts(ts)) {
 		LOGPTBF(this, LOGL_NOTICE,
-			"Cannot poll for downlink assigment, because MS cannot reply. (TS=%d, first common TS=%d)\n",
+			"Cannot poll for downlink assignment, because MS cannot reply. (TS=%d, first common TS=%d)\n",
 			ts, first_common_ts);
 		poll_ass_dl = 0;
 	}

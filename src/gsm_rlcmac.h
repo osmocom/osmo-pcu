@@ -1602,8 +1602,8 @@ typedef struct
 
 typedef struct
 {
-  guint8 Exist_G_RNTI_extention;
-  guint8  G_RNTI_extention;
+  guint8 Exist_G_RNTI_extension;
+  guint8  G_RNTI_extension;
   guint8 Exist_AdditionsR8;
   PCCF_AdditionsR8_t AdditionsR8;
 } PCCF_AdditionsR5_t;

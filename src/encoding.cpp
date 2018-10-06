@@ -532,7 +532,7 @@ int Encoding::write_immediate_assignment(
 
 	if (rc < 0) {
 		LOGP(DRLCMAC, LOGL_ERROR,
-			"Failed to create IMMEDIATE ASSIGMENT (%s) for %s\n",
+			"Failed to create IMMEDIATE ASSIGNMENT (%s) for %s\n",
 			downlink ? "downlink" : "uplink",
 			tbf ? tbf->name() : "single block allocation");
 		return rc;

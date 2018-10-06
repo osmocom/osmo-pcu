@@ -43,7 +43,7 @@ struct gprs_rlcmac_bts;
  */
 
 #define T_ASS_AGCH_USEC 200000	/* waiting after IMM.ASS confirm */
-#define T_ASS_PACCH_SEC 2	/* timeout for pacch assigment */
+#define T_ASS_PACCH_SEC 2	/* timeout for pacch assignment */
 #define T_REJ_PACCH_USEC 2000	/* timeout for tbf reject for PRR*/
 
 enum gprs_rlcmac_tbf_state {

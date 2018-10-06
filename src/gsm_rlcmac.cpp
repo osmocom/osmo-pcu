@@ -1363,8 +1363,8 @@ CSN_DESCR_END  (PCCF_AdditionsR8_t)
 
 static const
 CSN_DESCR_BEGIN(PCCF_AdditionsR5_t)
-  M_NEXT_EXIST (PCCF_AdditionsR5_t, Exist_G_RNTI_extention, 1),
-  M_UINT       (PCCF_AdditionsR5_t,  G_RNTI_extention,  4),
+  M_NEXT_EXIST (PCCF_AdditionsR5_t, Exist_G_RNTI_extension, 1),
+  M_UINT       (PCCF_AdditionsR5_t,  G_RNTI_extension,  4),
   M_NEXT_EXIST_OR_NULL(PCCF_AdditionsR5_t, Exist_AdditionsR8, 1),
   M_TYPE       (PCCF_AdditionsR5_t, AdditionsR8, PCCF_AdditionsR8_t),
 CSN_DESCR_END  (PCCF_AdditionsR5_t)

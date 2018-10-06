@@ -611,7 +611,7 @@ uint32_t BTS::rfn_to_fn(int32_t rfn)
 	 * we roll back the rounded frame number by one RFN_MODULUS */
 	if (abs(rfn - m_cur_rfn) > RFN_THRESHOLD) {
 		LOGP(DRLCMAC, LOGL_DEBUG,
-		     "Race condition between rfn (%u) and m_cur_fn (%u) detected: rfn belongs to the previos modulus %u cycle, wrappng...\n",
+		     "Race condition between rfn (%u) and m_cur_fn (%u) detected: rfn belongs to the previous modulus %u cycle, wrapping...\n",
 		     rfn, m_cur_fn, RFN_MODULUS);
 		if (fn_rounded < RFN_MODULUS) {
 			LOGP(DRLCMAC, LOGL_DEBUG,
