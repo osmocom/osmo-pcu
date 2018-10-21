@@ -131,6 +131,7 @@ int gprs_rlcmac_received_lost(struct gprs_rlcmac_dl_tbf *tbf, uint16_t received,
 	tbf->m_bw.dl_loss_received += received;
 	tbf->m_bw.dl_loss_lost += lost;
 
+	osmo_clock_gettime(CLOCK_MONOTONIC, &now_tv);
 	timespecsub(&now_tv, loss_tv, &elapsed);
 	if (elapsed.tv_sec < 1)
 		return 0;
