@@ -490,7 +490,7 @@ The BSSGP initialization directly follows NS connection establishment
 described in <<ns_init>>.
 
 OsmoPCU allocates a BVC context for the BVCI given by OsmoBTS, which
-in turn receives it from OpenBSC via OML procedures.
+in turn receives it from OsmoBSC or OsmoNITB via OML procedures.
 
 In addition to the BVCI identifying the OsmoPCU side of BSSGP
 connection, there is also special BVCI which is accepted by OsmoPCU in
