@@ -1,0 +1,132 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: osmo-pcu
+Source: git://git.osmocom.org/osmo-pcu
+Files-Excluded: debian
+
+Files:     *
+Copyright: 2009-2015 Holger Hans Peter Freyther <zecke@selfish.org>
+           2013 Jacob Erlbeck <jerlbeck@sysmocom.de>
+           2016-2017 sysmocom s.m.f.c. GmbH <info@sysmocom.de>
+           2015 by Yves Godin <support@nuranwireless.com>
+License:   AGPL-3.0+
+
+Files:     src/gprs_ms_storage.h
+           src/gprs_ms_storage.cpp
+           src/gprs_ms.h
+           src/gprs_coding_scheme.cpp
+           src/gprs_coding_scheme.h
+           src/cxx_linuxlist.h
+           src/pcu_vty_functions.cpp
+           src/pcu_vty_functions.h
+           src/pcu_utils.h
+           src/gprs_codel.c
+           src/gprs_codel.h
+Copyright: 2016-2017 sysmocom s.m.f.c. GmbH <info@sysmocom.de>
+License:   GPL-2.0+
+
+Files:     osmoappdesc.py
+Copyright: 2013 by Katerina Barone-Adesi <kat.obsc@gmail.com>
+License:   GPL-3.0+
+
+Files:     src/gprs_debug.cpp
+           src/gprs_debug.h
+           src/pcu_main.cpp
+           src/pcu_l1_if.h
+           src/gsm_timer.cpp
+           src/gsm_timer.h
+Copyright: 2012 Ivan Klyuchnikov
+License:   GPL-2.0+
+
+Files:     src/tbf.cpp
+           src/tbf_ul.cpp
+           src/tbf_dl.cpp
+           src/sba.cpp
+           src/sba.h
+           src/llc.cpp
+           src/encoding.cpp
+           src/encoding.h
+           src/gprs_rlcmac.cpp
+           src/gprs_rlcmac_ts_alloc.cpp
+Copyright: 2012 Ivan Klyuchnikov
+           2012 Andreas Eversberg <jolly@eversberg.eu>
+           2013 by Holger Hans Peter Freyther
+License:   GPL-2.0+
+
+Files:     src/gprs_rlcmac.h
+           src/gprs_bssgp_pcu.cpp
+           src/gprs_bssgp_pcu.h
+           src/bts.h
+Copyright: 2012 Ivan Klyuchnikov
+           2013 by Holger Hans Peter Freyther
+License:   GPL-2.0+
+
+Files:     src/rlc.h
+           src/decoding.cpp
+           src/decoding.h
+Copyright: 2012 Ivan Klyuchnikov
+           2012 Andreas Eversberg <jolly@eversberg.eu>
+License:   GPL-2.0+
+
+Files:     src/rlc.cpp
+           src/llc.h
+           src/tbf.h
+Copyright: 2013 by Holger Hans Peter Freyther
+License:   GPL-2.0+
+
+Files:     src/pcu_l1_if.cpp
+           src/gprs_rlcmac_meas.cpp
+           src/gprs_rlcmac_sched.cpp
+           src/osmobts_sock.cpp
+Copyright: 2012 Andreas Eversberg <jolly@eversberg.eu>
+License:   GPL-2.0+
+
+Files:     src/csn1.h
+           src/csn1.cpp
+           src/gsm_rlcmac.cpp
+           src/gsm_rlcmac.h
+Copyright: 2011 Vincent Helfre
+           2011 ST-Ericsson (Jari Sassi)
+License:   GPL-2.0+
+
+License:   AGPL-3.0+
+ All rights not specifically granted under this license are reserved.
+ .
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Affero General Public License as published by the
+ Free Software Foundation; either version 3 of the License, or (at your
+ option) any later version.
+
+License:   GPL-3.0+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU General Public License
+ Version 3 can be found in `/usr/share/common-licenses/GPL-3'.
+
+License:   GPL-2.0+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU General Public License
+ Version 2 can be found in `/usr/share/common-licenses/GPL-2'.
+
