@@ -60,7 +60,7 @@ OsmoBSC or the BSC component inside OsmoNITB.
 .Overview of Gb link establishment
 ["mscgen"]
 ----
-include::gb/gb-startup.msc[]
+include::{srcdir}/gb/gb-startup.msc[]
 ----
 
 [[ident]]
@@ -84,12 +84,12 @@ they connect to.
 This means that typically each OsmoPCU has one unique set of NSEI,
 NSVCI and BVCI in your network.
 
-include::gb/ns.adoc[]
+include::{srcdir}/gb/ns.adoc[]
 
-include::gb/bssgp.adoc[]
+include::{srcdir}/gb/bssgp.adoc[]
 
-include::../common/chapters/port_numbers.adoc[]
+include::./common/chapters/port_numbers.adoc[]
 
-include::../common/chapters/glossary.adoc[]
+include::./common/chapters/glossary.adoc[]
 
-include::../common/chapters/gfdl.adoc[]
+include::./common/chapters/gfdl.adoc[]
