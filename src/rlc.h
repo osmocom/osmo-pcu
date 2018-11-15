@@ -374,6 +374,7 @@ extern "C" {
 /* TS 04.60  10.2.2 */
 #if OSMO_IS_LITTLE_ENDIAN
 struct rlc_ul_header {
+#if OSMO_IS_LITTLE_ENDIAN
 	uint8_t	r:1,
 		 si:1,
 		 cv:4,
@@ -384,9 +385,16 @@ struct rlc_ul_header {
 		 spare:1;
 	uint8_t	e:1,
 		 bsn:7;
+#elif OSMO_IS_BIG_ENDIAN
+/* auto-generated from the little endian part above (libosmocore/contrib/struct_endianess.py) */
+	uint8_t	pt:2, cv:4, si:1, r:1;
+	uint8_t	spare:1, pi:1, tfi:5, ti:1;
+	uint8_t	bsn:7, e:1;
+#endif
 } __attribute__ ((packed));
 
 struct rlc_dl_header {
+#if OSMO_IS_LITTLE_ENDIAN
 	uint8_t	usf:3,
 		 s_p:1,
 		 rrbp:2,
@@ -396,17 +404,33 @@ struct rlc_dl_header {
 		 pr:2;
 	uint8_t	e:1,
 		 bsn:7;
+#elif OSMO_IS_BIG_ENDIAN
+/* auto-generated from the little endian part above (libosmocore/contrib/struct_endianess.py) */
+	uint8_t	pt:2, rrbp:2, s_p:1, usf:3;
+	uint8_t	pr:2, tfi:5, fbi:1;
+	uint8_t	bsn:7, e:1;
+#endif
 } __attribute__ ((packed));
 
 struct rlc_li_field {
+#if OSMO_IS_LITTLE_ENDIAN
 	uint8_t	e:1,
 		 m:1,
 		 li:6;
+#elif OSMO_IS_BIG_ENDIAN
+/* auto-generated from the little endian part above (libosmocore/contrib/struct_endianess.py) */
+	uint8_t	li:6, m:1, e:1;
+#endif
 } __attribute__ ((packed));
 
 struct rlc_li_field_egprs {
+#if OSMO_IS_LITTLE_ENDIAN
 	uint8_t	e:1,
 		 li:7;
+#elif OSMO_IS_BIG_ENDIAN
+/* auto-generated from the little endian part above (libosmocore/contrib/struct_endianess.py) */
+	uint8_t	li:7, e:1;
+#endif
 } __attribute__ ((packed));
 #else
 #  error "Only little endian headers are supported yet. TODO: add missing structs"
