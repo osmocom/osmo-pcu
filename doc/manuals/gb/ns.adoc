@@ -1,0 +1,227 @@
+== Network Service (NS)
+
+=== List of Messages
+
+The following tables list the NS messages used by OsmoPCU, grouped by their
+level of compliance with 3GPP TS 08.16.
+
+==== Messages Compliant With 3GPP TS 08.16
+
+The NS protocol is implemented inside libosmocore so none of the messages below are sent by OsmoPCU explicitly.
+Instead corresponding functions from libosmocore are called which send and receive messages as necessary. See <<ns_init>> for details
+on establishing NS connection.
+
+.Messages compliant with 3GPP TS 08.16
+[options="header",cols="10%,10%,20%,35%,5%,20%"]
+|===
+| TS 08.16 § | type code (hex) | This document § | Message | <-/-> | Received/Sent by OsmoPCU
+| 9.2.10 | 0x00 | <<ns_unit_data>> | NS-UNITDATA | <-/-> | Received/Sent
+| 9.2.5 | 0x02 | <<ns_reset>> | NS-RESET | <-/-> | Received/Sent
+| 9.2.6 | 0x03 | <<ns_reset_ack>> | NS-RESET-ACK | <-/-> | Received/Sent
+| 9.2.3 | 0x04 | <<ns_block>> | NS-BLOCK | <-/-> | Received/Sent
+| 9.2.4 | 0x05 | <<ns_block_ack>> | NS-BLOCK-ACK | <-/-> | Received/Sent
+| 9.2.8 | 0x06 | <<ns_unblock>> | NS-UNBLOCK | <-/-> | Received/Sent
+| 9.2.9 | 0x07 | <<ns_unblock_ack>> | NS-UNBLOCK-ACK | <-/-> | Received/Sent
+| 9.2.7 | 0x08 | <<ns_status>> | NS-STATUS | <-/-> | Received/Sent
+| 9.2.1 | 0x0a | <<ns_alive>> | NS-ALIVE | <-/-> | Received/Sent
+| 9.2.2 | 0x0b | <<ns_alive_ack>> | NS-ALIVE-ACK | <-/-> | Received/Sent
+|===
+
+==== Messages Specific to OsmoPCU
+
+There are no OsmoPCU specific NS messages.
+
+==== Messages Not Implemented by OsmoPCU
+
+All the NS protocol messages from 3GPP TS 08.16 are implemented in OsmoPCU.
+
+=== Details on Compliant NS Messages
+
+[[ns_unit_data]]
+==== NS-UNITDATA
+
+This PDU transfers one NS SDU (specified in 3GPP TS 08.18) between
+OsmoPCU and SGSN. Upon receiving it OsmoPCU passes it to BSSGP
+implementation to handle. It is also sent by BSSGP as necessary - see
+<<bssgp>> for details.
+
+It contains BVCI (<<ie_bvci>>) and NS SDU (<<ie_nssdu>>) IEs.
+
+[[ns_reset]]
+==== NS-RESET
+
+This message is send by OsmoPCU in order to initiate reset procedure
+described in 3GPP TS 08.16 § 7.3. The expected reply is NS-RESET-ACK
+(<<ns_reset_ack>>) message. If no expected reply is received in 3
+seconds than the sending is retried up to 3 times.  When this message
+is received it is replied with NS-RESET-ACK (<<ns_reset_ack>>).
+It might be ignored under conditions described in 3GPP TS 08.16 § 7.3.1.
+
+The message conforms to 3GPP TS 08.16 § 9.2.5 specification.
+
+It contains Cause (<<ie_cause>>), NSVCI (<<ie_nsvci>>) and NSEI (<<ie_nsei>>) IEs.
+
+[[ns_reset_ack]]
+==== NS-RESET-ACK
+
+This message is sent as a response to proper NS-RESET (<<ns_reset>>)
+message initiating reset procedure.
+
+The message conforms to 3GPP TS 08.16 § 9.2.6 specification.
+
+It contains NSVCI (<<ie_nsvci>>) and NSEI (<<ie_nsei>>) IEs.
+
+[[ns_block]]
+==== NS-BLOCK
+
+Upon receiving this message corresponding NS-VC is marked as blocked
+by OsmoPCU and NS-BLOCK-ACK (<<ns_block_ack>>) reply is transmitted.
+When this message is sent by OsmoPCU corresponding NS-BLOCK-ACK
+(<<ns_block_ack>>) reply is expected before NS-VC is actually marked
+as blocked.  This behavior follows the blocking procedure described in
+3GPP TS 08.16 § 7.2.
+
+The message conforms to 3GPP TS 08.16 § 9.2.3 specification.
+
+It contains Cause (<<ie_cause>>) and NSVCI (<<ie_nsvci>>) IEs.
+
+[[ns_block_ack]]
+==== NS-BLOCK-ACK
+
+This message is sent by OsmoPCU automatically upon reception of
+correct NS-BLOCK (<<ns_block>>) message.  It is expected as a reply
+for NS-BLOCK (<<ns_block>>) message sent by OsmoPCU.
+
+The message conforms to 3GPP TS 08.16 § 9.2.4 specification.
+
+It contains NSVCI (<<ie_nsvci>>) IE.
+
+[[ns_unblock]]
+==== NS-UNBLOCK
+
+Upon receiving this message corresponding NS-VC is unblocked by
+OsmoPCU and NS-UNBLOCK-ACK (<<ns_unblock_ack>>) reply is sent.  When
+this message is sent by OsmoPCU corresponding NS-UNBLOCK-ACK
+(<<ns_unblock_ack>>) reply is expected before NS-VC is actually marked
+as unblocked.  This behavior follows the blocking procedure described
+in 3GPP TS 08.16 § 7.2.
+
+The message conforms to 3GPP TS 08.16 § 9.2.8 specification.
+
+[[ns_unblock_ack]]
+==== NS-UNBLOCK-ACK
+
+Receiving this message notifies OsmoPCU that NS-VC unblocking request
+is confirmed and thus NS-VC is marked as unblocked.  This message is
+also sent as a reply to NS-UNBLOCK (<<ns_unblock>>) message.
+
+The message conforms to 3GPP TS 08.16 § 9.2.9 specification.
+
+[[ns_status]]
+==== NS-STATUS
+
+This message is sent to inform other party about error conditions as a
+response to various unexpected PDUs or PDUs with unexpected/missing
+data. If this message is received for unknown NS-VC it is ignored in
+accordance with 3GPP TS 08.16 § 7.5.1, otherwise the error cause is
+logged if present in NS-STATUS.
+
+The message conforms to 3GPP TS 08.16 § 9.2.7 specification.
+
+It contains Cause (<<ie_cause>>) and might (depending on actual error)
+contain NSVCI (<<ie_nsvci>>), NS PDU (<<ie_nspdu>>) and BVCI
+(<<ie_bvci>>) IEs.
+
+[[ns_alive]]
+==== NS-ALIVE
+
+This message is sent periodically to test connectivity according to
+3GPP TS 08.16 § 4.5.3. The expected response is NS-ALIVE-ACK
+(<<ns_alive_ack>>). If no such response arrives within given amount of
+time (3 seconds) than another NS-ALIVE message is sent and failed test
+attempt is recorded.  After 10 failed attempts NS connection is
+considered dead and OsmoPCU tries to reconnect.
+
+The message conforms to 3GPP TS 08.16 § 9.2.1 specification.
+
+[[ns_alive_ack]]
+==== NS-ALIVE-ACK
+
+This message is sent automatically in reply to NS-ALIVE (<<ns_alive>>)
+message.
+
+The message conforms to 3GPP TS 08.16 § 9.2.2 specification.
+
+=== Information Elements Overview
+
+All of the IEs handled by OsmoPCU are listed below, with limitations and
+additions to 3GPP TS 08.16 specified in more detail.
+
+==== IEs Conforming to 3GPP TS 08.16
+
+The following Information Elements are accepted by OsmoPCU.
+
+.IEs conforming to 3GPP TS 08.16
+[options="header",cols="5%,10%,40%,5%,40%"]
+|===
+| tag (hex) | TS 08.16 § | IE name | <-/-> | Received/Sent by OsmoPCU
+| 0x00 | 10.3.2 | Cause | <-/-> | Received/Sent
+| 0x01 | 10.3.5 | NSVCI | <-/-> | Received/Sent
+| 0x02 | 10.3.3 | NS PDU | <-/-> | Received/Sent
+| 0x03 | 10.3.1 | BVCI | <-/-> | Received/Sent
+| 0x04 | 10.3.6 | NSEI | <-/-> | Received/Sent
+|===
+
+==== IEs Not Conforming to 3GPP TS 08.16
+
+All IEs defined in 3GPP TS 08.16 § 10.3 are supported by OsmoPCU.
+
+==== Additional Attributes and Parameters
+
+There are no OsmoPCU specific additional Attributes and Parameters.
+
+=== Details on IEs
+
+[[ie_cause]]
+==== Cause
+
+This IE contains reason for a procedure or error as described in 3GPP TS 08.16 § 10.3.2.
+
+[[ie_nsvci]]
+==== NSVCI
+
+This IE represents NSVCI identity described in <<ident>> and 3GPP TS 08.16 § 10.3.5.
+
+[[ie_nspdu]]
+==== NS PDU
+
+This IE contains PDU (possibly truncated) which cause error described
+in NS-STATUS message (<<ns_status>>) as described in 3GPP TS 08.16 §
+10.3.3.
+
+[[ie_nssdu]]
+==== NS SDU
+
+This IE contains BSSGP data - see <<bssgp>> for details.
+
+[[ie_bvci]]
+==== BVCI
+
+This IE represents BSSGP identity described in <<ident>> and 3GPP TS 08.16
+§ 10.3.1.
+
+[[ie_nsei]]
+==== NSEI
+
+This IE represents NSEI identity described in <<ident>> and 3GPP TS 08.16 §
+10.3.6.
+
+[[ns_init]]
+=== Gb NS Initialization / PCU bring-up
+
+OsmoPCU binds and connects an UDP socket for NS using port numbers and IP
+information given by OsmoBTS via the PCU socket. OsmoBTS in turn
+receives this information from the BSC vi A-bis OML.
+
+Following successful initialization of the UDP socket, the reset
+procedure is initiated as described in <<ns_reset>>.

@@ -1,0 +1,9 @@
+<vtydoc xmlns='urn:osmocom:xml:libosmocore:vty:doc:1.0'>
+    <node id='14'>
+    <child_of id='4' />
+    <name>PCU Configuration Node</name>
+    <description>The main PCU configuration including the timeslot
+    assignment algorithm and other parameters.</description>
+    </node>
+</vtydoc>
+

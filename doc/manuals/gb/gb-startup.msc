@@ -1,0 +1,27 @@
+msc {
+	hscale="1.2";
+	bsc [label="BSC"], bts [label="BTS"], pcu [label="PCU"], sgsn [label="SGSN"];
+
+	|||;
+	bts box bsc [label="A-bis OML connection"];
+	bsc => bts [label="Set OML Attrbibutes (NSVC,CELL)"];
+	bts rbox pcu [label="PCU Unix Domain Socket"];
+	pcu => bts [label="connect to PCU socket"];
+	pcu <: bts  [label="Config. parameters"];
+	pcu rbox pcu [label="bind/connect UDP socket"];
+	pcu note sgsn [label="NS-over-IP (UDP port 23000)"];
+	pcu => sgsn [label="NS RESET"];
+	pcu <= sgsn [label="NS RESET ACK"];
+	...;
+	pcu => sgsn [label="NS UNBLOCK"];
+	pcu <= sgsn [label="NS UNBLOCK ACK"];
+	pcu box sgsn [label="NS link established"];
+	...;
+	pcu => sgsn [label="BVC RESET"];
+	pcu <= sgsn [label="BVC RESET ACK"];
+	...;
+	pcu => sgsn [label="BVC UNBLOCK"];
+	pcu <= sgsn [label="BVC UNBLOCK ACK"];
+	pcu box sgsn [label="BSSGP link established"];
+	|||;
+}

@@ -1,0 +1,501 @@
+[[bssgp]]
+== BSS GPRS Protocol (BSSGP)
+
+=== List of Messages
+
+The following tables list the BSSGP messages used by OsmoPCU, grouped
+by their level of compliance with 3GPP TS 08.18.
+
+==== Messages Compliant With TS 08.18
+
+.Messages compliant with TS 08.18
+[options="header",cols="10%,10%,20%,35%,5%,20%"]
+|===
+| TS 08.18 § | type code (hex) | This document § | Message | <-/-> | Received/Sent by OsmoPCU
+6+<| *RL and BSSGP SAP Messages:*
+| 10.2.1 | 0x00 | <<dl_unit_data>> | DL-UNITDATA | <- | Received
+| 10.2.2 | 0x01 | <<ul_unit_data>> | UL-UNITDATA | -> | Sent
+| 10.2.3 | 0x02 | <<ra_capab>> | RA-CAPABILITY | <- | Received
+6+<| *GMM SAP Messages:*
+| 10.3.1 | 0x06 | <<paging_ps>> | PAGING PS | <- | Received
+| 10.3.2 | 0x07 | <<paging_cs>> | PAGING CS | <- | Received
+| 10.3.7 | 0x0c | <<susp_ack>> | SUSPEND-ACK | <- | Received
+| 10.3.8 | 0x0d | <<susp_nack>> | SUSPEND-NACK | <- | Received
+| 10.3.10 | 0x0f | <<res_ack>> | RESUME-ACK | <- | Received
+| 10.3.11 | 0x10 | <<res_nack>> | RESUME-NACK | <- | Received
+6+<| *NM SAP Messages:*
+| 10.4.9 | 0x21 | <<block_ack>> | BVC-BLOCK-ACK | <- | Received
+| 10.4.12 | 0x22 | <<bvc_reset>> | BVC-RESET | <-/-> | Received/Sent
+| 10.4.13 | 0x23 | <<reset_ack>> | BVC-RESET-ACK | <- | Received
+| 10.4.10 | 0x24 | <<bvc_unblock>> | BVC-UNBLOCK | -> | Sent
+| 10.4.11 | 0x25 | <<unblock_ack>> | BVC-UNBLOCK-ACK | <- | Received
+| 10.4.4 | 0x26 | <<flow_bvc>> | FLOW-CONTROL-BVC | -> | Sent
+| 10.4.5 | 0x27 | <<flow_bvc_ack>> | FLOW-CONTROL-BVC-ACK | <- | Received
+| 10.4.7 | 0x29 | <<flow_ms_ack>> | FLOW-CONTROL-MS-ACK | <- | Received
+| 10.4.1 | 0x2a | <<flush_ll>> | FLUSH-LL | <- | Received
+| 10.4.15 | 0x40 | <<invoke_trace>> | SGSN-INVOKE-TRACE | <- | Received
+| 10.4.14 | 0x41 | <<bssgp_status>> | STATUS | <-/->  | Received/Sent
+|===
+
+==== Messages Specific to OsmoPCU
+
+There are no OsmoPCU specific BSSGP messages.
+
+[[not_impl]]
+==== Messages Not Implemented by OsmoPCU
+
+.3GPP TS 08.18 messages not implemented by OsmoPCU
+[options="header",cols="10%,10%,80%"]
+|===
+| TS 08.18 § | type code (hex) | Message
+3+<| *RL (relay) and BSSGP SAP Messages:*
+| 10.2.4 | 0x03 | PTM-UNITDATA
+3+<| *GMM (GPRS mobility management) SAP Messages:*
+| 10.3.3 | 0x08 | RA-CAPABILITY-UPDATE
+| 10.3.4 | 0x09 | RA-CAPABILITY-UPDATE-ACK
+| 10.3.5 | 0x0a | RADIO-STATUS
+| 10.3.6 | 0x0b | SUSPEND
+| 10.3.9 | 0x0e | RESUME
+3+<| *NM (network management) SAP Messages:*
+| 10.4.8 | 0x20 | BVC-BLOCK
+| 10.4.6 | 0x28 | FLOW-CONTROL-MS
+| 10.4.2 | 0x2b | FLUSH-LL-ACK
+| 10.4.3 | 0x2c | LLC-DISCARDED
+3+<| *PFM (packet flow management) SAP Messages:*
+| 10.4.16 | 0x50 | DOWNLOAD-BSS-PFC
+| 10.4.17 | 0x51 | CREATE-BSS-PFC
+| 10.4.18 | 0x52 | CREATE-BSS-PFC-ACK
+| 10.4.19 | 0x53 | CREATE-BSS-PFC-NACK
+| 10.4.20 | 0x54 | MODIFY-BSS-PFC
+| 10.4.21 | 0x55 | MODIFY-BSS-PFC-ACK
+| 10.4.22 | 0x56 | DELETE-BSS-PFC
+| 10.4.23 | 0x57 | DELETE-BSS-PFC-ACK
+|===
+
+
+=== Details on Compliant BSSGP Messages
+
+[[dl_unit_data]]
+==== DL-UNITDATA
+
+This message conforms to 3GPP TS 08.18 § 10.2.1, with the following
+limitations:
+
+* OsmoPCU does not support QoS
+* all optional IEs except for IMSI and old TLLI are ignored.
+
+._DL-UNITDATA_ IE limitations
+[options="header",cols="10%,30%,60%"]
+|===
+| TS 08.18 § | IE Name | Handling
+| 11.3.28 | QoS Profile | _ignored_
+| 11.3.22 | MS Radio Access Capability | _ignored_
+| 11.3.27 | Priority | _ignored_
+| 11.3.11 | DRX Parameters | _ignored_
+| 1.3.42 | PFI | _ignored_
+| 11.3.19 | LSA Information | _ignored_
+| 11.3.47 | Service UTRAN CCO | _ignored_
+|===
+
+[[ul_unit_data]]
+==== UL-UNITDATA
+
+This message conforms to 3GPP TS 08.18 § 10.2.2, with the following limitations:
+
+* OsmoPCU does not send optional IEs - PFI (§ 12.3.42) and LSA
+  Identifier List (§ 11.3.18).
+* QoS Profile (§ 11.3.28) IE is always set to 0x04.
+
+[[ra_capab]]
+==== RA-CAPABILITY
+
+This message is received and logged but ignored by OsmoPCU at the moment.
+
+[[paging_ps]]
+==== PAGING PS
+
+This message conforms to 3GPP TS 08.18 § 10.3.1, with the following
+limitations:
+
+* only IMSI and P-TMSI are parsed by OsmoPCU.
+
+._DL-UNITDATA_ IE limitations
+[options="header",cols="10%,30%,60%"]
+|===
+| TS 08.18 § | IE Name | Handling
+| 11.3.11 | DRX Parameters | _ignored_
+| 11.3.6 | BVCI | _ignored_
+| 11.3.17 | Location Are | _ignored_
+| 11.3.31 | Routeing Area | _ignored_
+| 11.3.3 | BSS Area Indication | _ignored_
+| 11.3.42 | PFI | _ignored_
+| 11.3.43 | ABQP | _ignored_
+| 11.3.28 | QoS Profile | _ignored_
+| 11.3.36 | P-TMSI | treated as mandatory (in case of absence paging with 0-length P-TMSI will be sent)
+|===
+
+
+[[paging_cs]]
+==== PAGING CS
+
+This message is received and logged but ignored by OsmoPCU at the
+moment.
+
+[[susp_ack]]
+==== SUSPEND-ACK
+
+This message is received and logged but ignored by OsmoPCU at the
+moment.
+
+[[susp_nack]]
+==== SUSPEND-NACK
+
+This message is received and logged but ignored by OsmoPCU at the
+moment.
+
+[[res_ack]]
+==== RESUME-ACK
+
+This message is received and logged but ignored by OsmoPCU at the
+moment.
+
+[[res_nack]]
+==== RESUME-NACK
+
+This message is received and logged but ignored by OsmoPCU at the
+moment.
+
+[[block_ack]]
+==== BVC-BLOCK-ACK
+
+This message is received and logged but ignored by OsmoPCU at the
+moment.
+
+[[bvc_reset]]
+==== BVC-RESET
+
+OsmoPCU never transmits optional Feature bitmap (3GPP TS 08.18 §
+11.3.40) IE.
+
+Receiving BVC RESET will cause OsmoPCU to respond with "Unknown BVCI"
+status message.
+
+[[reset_ack]]
+==== BVC-RESET-ACK
+
+This message conforms to 3GPP TS 08.18 § 10.4.13.
+
+After receiving it OsmoPCU completes the RESET procedure for BVC
+according to 3GPP TS 08.18 § 8.4.
+
+[[unblock_ack]]
+==== BVC-UNBLOCK-ACK
+
+This message conforms to 3GPP TS 08.18 § 10.4.11.
+
+After receiving it OsmoPCU completes the RESET procedure for BVC
+according to 3GPP TS 08.18 § 8.3.
+
+[[bvc_unblock]]
+==== BVC-UNBLOCK
+
+This message conforms to 3GPP TS 08.18 § 10.4.10 and is send by
+OsmoPCU as part of UNBLOCK procedure described in 3GPP TS 08.18 § 8.3.
+
+[[flow_ms_ack]]
+==== FLOW-CONTROL-MS-ACK
+
+This message is received and logged but ignored by OsmoPCU at the
+moment.
+
+[[flow_bvc_ack]]
+==== FLOW-CONTROL-BVC-ACK
+
+This message is received and logged but ignored by OsmoPCU at the
+moment.
+
+[[flow_bvc]]
+==== FLOW-CONTROL-BVC
+
+This message conforms to 3GPP TS 08.18 § 10.4.4, with the following
+limitations:
+
+* OsmoPCU does not support Current Bucket Level (CBL) feature so
+  Bucket_Full Ratio (TS 08.18 § 11.3.46) IE is not transmitted as part
+  of this message.
+
+[[flush_ll]]
+==== FLUSH-LL
+
+This message is received and logged but ignored by OsmoPCU at the
+moment.
+
+[[invoke_trace]]
+==== SGSN-INVOKE-TRACE
+
+This message is received and logged but ignored by OsmoPCU at the
+moment.
+
+[[bssgp_status]]
+==== STATUS
+
+This message conforms to 3GPP TS 08.18 § 10.4.14.
+
+=== Information Elements Overview
+
+All of the IEs handled by OsmoPCU are listed below, with limitations
+and additions to 3GPP TS 08.18 specified in more detail.
+
+==== IEs Conforming to 3GPP TS 08.18
+
+The following Information Elements are accepted by OsmoPCU. Not all
+IEs are actually evaluated.
+
+.IEs conforming to 3GPP TS 08.18
+[options="header",cols="5%,10%,40%,5%,40%"]
+|===
+| tag (hex) | TS 08.18 § | IE name | <-/-> | Received/Sent by OsmoPCU
+| 0x00 | 11.3.1 | Alignment Octets | <-/-> | Received/Sent
+| 0x01 | 11.3.2 | Bmax default MS | -> | Sent
+| 0x02 | 11.3.3 | BSS Area Indication | <- | Received
+| 0x03 | 11.3.4 | Bucket Leak Rate | -> | Sent
+| 0x04 | 11.3.6 | BVCI | <-/-> | Received/Sent
+| 0x05 | 11.3.5 | BVC Bucket Size | -> | Sent
+| 0x06 | 11.3.7 | BVC Measurement | -> | Sent
+| 0x07 | 11.3.8 | Cause | <-/-> | Received/Sent
+| 0x08 | 11.3.9 | Cell Identifier | -> | Sent
+| 0x09 | 11.3.10 | Channel needed | <- | Received
+| 0x0a | 11.3.11 | DRX Parameters | <- | Received
+| 0x0b | 11.3.12 | eMLPP-Priority | <- | Received
+| 0x0c | 11.3.13 | Flush Action | <- | Received
+| 0x0d | 11.3.14 | IMSI | <-/-> | Received/Sent
+| 0x0e | 11.3.15 | LLC-PDU | <-/-> | Received/Sent
+| 0x0f | 11.3.16 | LLC Frames Discarded | -> | Sent
+| 0x10 | 11.3.17 | Location Area | <- | Received
+| 0x11 | 11.3.20 | Mobile Id | <- | Received
+| 0x12 | 11.3.21 | MS Bucket Size | -> | Sent
+| 0x13 | 11.3.22 | MS Radio Access Capability | <- | Received
+| 0x14 | 11.3.23 | OMC Id | <- | Received
+| 0x15 | 11.3.24 | PDU In Error | <-/-> | Received/Sent
+| 0x16 | 11.3.25 | PDU Lifetime | <- | Received
+| 0x17 | 11.3.27 | Priority | <- | Received
+| 0x19 | 11.3.29 | Radio Cause | -> | Sent
+| 0x1a | 11.3.30 | RA-Cap-UPD-Cause | -> | Sent
+| 0x1b | 11.3.31 | Routeing Area | <-/-> | Received/Sent
+| 0x1c | 11.3.32 | R_default_MS | -> | Sent
+| 0x1d | 11.3.33 | Suspend Reference Number | <-/-> | Received/Sent
+| 0x1e | 11.3.34 | Tag | <-/-> | Received/Sent
+| 0x1f | 11.3.35 | TLLI | <-/-> | Received/Sent
+| 0x20 | 11.3.36 | TMSI | <-/-> | Received/Sent
+| 0x21 | 11.3.37 | Trace Reference | <- | Received
+| 0x22 | 11.3.38 | Trace Type | <- | Received
+| 0x23 | 11.3.39 | TransactionId | <- | Received
+| 0x24 | 11.3.40 | Trigger Id | <- | Received
+| 0x25 | 11.3.41 | Number of octets affected | -> | Sent
+| 0x26 | 11.3.18 | LSA Identifier List | -> | Sent
+| 0x27 | 11.3.19 | LSA Information | <- | Received
+| 0x28 | 11.3.42 | Packet Flow Identifier | <-/-> | Received/Sent
+| 0x3a | 11.3.43 | Aggregate BSS QoS Profile (ABQP) | <-/-> | Received/Sent
+| 0x3b | 11.3.45 | Feature Bitmap | <-/-> | Received/Sent
+| 0x3c | 11.3.46 | Bucket_Full Ratio | -> | Sent
+| 0x3d | 11.3.47 | Service UTRAN CCO (Cell Change Order) | <- | Received
+|===
+
+==== IEs Not Conforming to 3GPP TS 08.18
+
+.IEs not conforming to 3GPP TS 08.18
+[options="header",cols="5%,10%,30%,55%"]
+|===
+| tag (hex) | TS 08.18 § | IE name | Description
+| 0x18 | 11.3.28 | QoS Profile | Received value is ignored. Sent value is hard-coded to 0x4 (3 octets).
+|===
+
+==== Additional Attributes and Parameters
+
+There are no OsmoPCU specific additional Attributes and Parameters.
+
+=== Details on IEs
+
+==== BSS Area Indication
+
+This IE is ignored by OsmoPCU.
+
+==== Bucket Leak Rate
+
+The value used by OsmoPCU for this IE can be set through configuration
+file or vty via "flow-control force-ms-leak-rate <1-6553500>" command.
+
+==== BVC Bucket Size
+
+The value used by OsmoPCU for this IE can be set through configuration file or vty via
+"flow-control force-bvc-bucket-size <1-6553500>" command.
+
+==== Channel needed
+
+This IE is ignored because entire message which contains it is ignored
+by OsmoPCU - see <<paging_cs>> for details.
+
+==== DRX Parameters
+
+This IE is ignored by OsmoPCU.
+
+==== eMLPP-Priority
+
+This IE is ignored because entire message which contains it is ignored
+by OsmoPCU - see <<paging_cs>> for details.
+
+==== Flush Action
+
+This IE is ignored because entire message which contains it is ignored
+by OsmoPCU - see <<flush_ll>> for details.
+
+==== LLC Frames Discarded
+
+This IE is not available because entire message which contains it
+(LLC-DISCARDED) is not implemented by OsmoPCU - see for <<not_impl>>
+details.
+
+==== Location Area
+
+This IE is ignored by OsmoPCU.
+
+==== Mobile Id
+
+This IE is ignored because entire message which contains it is ignored
+by OsmoPCU - see <<invoke_trace>> for details.
+
+==== MS Bucket Size
+
+The value used by OsmoPCU for this IE can be set through configuration
+file or vty via "flow-control force-ms-bucket-size <1-6553500>"
+command.
+
+==== MS Radio Access Capability
+
+This IE is ignored by OsmoPCU.
+
+==== OMC Id
+
+This IE is ignored because entire message which contains it is ignored
+by OsmoPCU - see <<invoke_trace>> for details.
+
+==== Priority
+
+This IE is ignored by OsmoPCU.
+
+==== QoS Profile
+
+No QoS is supported by OsmoPCU so this IE is ignored or safe default
+used when mandatory.
+
+==== Radio Cause
+
+This IE is not available because entire message which contains it
+(RADIO-STATUS) is not implemented by OsmoPCU - see for <<not_impl>>
+details.
+
+==== RA-Cap-UPD-Cause
+
+This IE is not available because entire message which contains it
+(RA-CAPABILITY-UPDATE-ACK) is not implemented by OsmoPCU - see for
+<<not_impl>> details.
+
+==== Routeing Area
+
+This IE is ignored by OsmoPCU upon receiving.
+
+The messages which might require this IE to be send are not
+implemented by OsmoPCU - see for <<not_impl>> details.
+
+==== Suspend Reference Number
+
+This IE is ignored by OsmoPCU upon receiving.
+
+The messages which might require this IE to be send are not
+implemented by OsmoPCU - see for <<not_impl>> details.
+
+==== Tag
+
+This IE currently only used by OsmoPCU for Flow Control procedure (TS
+08.18 § 8.2). In other cases it's either ignored or unavailable.
+
+==== Trace Reference
+
+This IE is ignored because entire message which contains it is ignored
+by OsmoPCU - see <<invoke_trace>> for details.
+
+==== Trace Type
+
+This IE is ignored because entire message which contains it is ignored
+by OsmoPCU - see <<invoke_trace>> for details.
+
+==== TransactionId
+
+This IE is ignored because entire message which contains it is ignored
+by OsmoPCU - see <<invoke_trace>> for details.
+
+==== Trigger Id
+
+This IE is ignored because entire message which contains it is ignored
+by OsmoPCU - see <<invoke_trace>> for details.
+
+==== Number of octets affected
+
+This IE is not available because the messages which contains it
+(FLUSH-LL-ACK and LLC-DISCARDE) are not implemented by OsmoPCU - see
+for <<not_impl>> details.
+
+==== LSA Information
+
+This IE is ignored by OsmoPCU.
+
+==== LSA Identifier List
+
+This IE is not implemented by OsmoPCU.
+
+==== Packet Flow Identifier
+
+This IE is ignored by OsmoPCU upon receiving.
+
+The messages which might require this IE to be send are not
+implemented by OsmoPCU - see for <<not_impl>> details.
+
+==== Aggregate BSS QoS Profile (ABQP)
+
+This IE is ignored by OsmoPCU upon receiving.
+
+The messages which might require this IE to be send are not
+implemented by OsmoPCU - see for <<not_impl>> details.
+
+==== Feature Bitmap
+
+This IE is not implemented by OsmoPCU.
+
+This IE is ignored by OsmoPCU when received.
+
+Absence of Feature Bitmap automatically disables optional features for
+Network Service Entity (NSE) communicating with OsmoPCU.
+
+==== Bucket_Full Ratio
+
+This IE is not implemented by OsmoPCU.
+
+==== Service UTRAN CCO (Cell Change Order)
+
+This IE is ignored by OsmoPCU.
+
+=== Gb BSSGP Initialization / PCU bring-up
+
+The BSSGP initialization directly follows NS connection establishment
+described in <<ns_init>>.
+
+OsmoPCU allocates a BVC context for the BVCI given by OsmoBTS, which
+in turn receives it from OsmoBSC or OsmoNITB via OML procedures.
+
+In addition to the BVCI identifying the OsmoPCU side of BSSGP
+connection, there is also special BVCI which is accepted by OsmoPCU in
+accordance with 3GPP TS 08.18 § 5.4.1: BVCI = 0 represents signaling data
+between SGSN and PCU in contrast to PTP (Peer-To-Peer) user's data.
+
+The mapping between BSSGP PDUs and signaling or PTP BVCIs is available
+in 3GPP TS 08.18 Table 5.4.
