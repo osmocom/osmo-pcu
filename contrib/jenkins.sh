@@ -1,5 +1,12 @@
 #!/bin/sh
 # jenkins build helper script for osmo-pcu.  This is how we build on jenkins.osmocom.org
+#
+# environment variables:
+# * with_dsp: the DSP to configure ("sysmo", "lc15" or "none")
+# * with_vty: enable VTY tests if set to "True"
+# * WITH_MANUALS: build manual PDFs if set to "1"
+# * PUBLISH: upload manuals after building if set to "1" (ignored without WITH_MANUALS = "1")
+#
 
 if ! [ -x "$(command -v osmo-build-dep.sh)" ]; then
 	echo "Error: We need to have scripts/osmo-deps.sh from http://git.osmocom.org/osmo-ci/ in PATH !"
@@ -65,6 +72,12 @@ osmo-build-dep.sh libosmocore "" --disable-doxygen
 
 export PKG_CONFIG_PATH="$inst/lib/pkgconfig:$PKG_CONFIG_PATH"
 export LD_LIBRARY_PATH="$inst/lib"
+export PATH="$inst/bin:$PATH"
+
+if [ "$WITH_MANUALS" = "1" ]; then
+  osmo-build-dep.sh osmo-gsm-manuals
+  PCU_CONFIG="$PCU_CONFIG --enable-manuals"
+fi
 
 set +x
 echo
@@ -80,5 +93,9 @@ $MAKE $PARALLEL_MAKE
 DISTCHECK_CONFIGURE_FLAGS="$PCU_CONFIG" \
   $MAKE distcheck \
   || cat-testlogs.sh
+
+if [ "$WITH_MANUALS" = "1" ] && [ "$PUBLISH" = "1" ]; then
+  make -C "$base/doc/manuals" publish
+fi
 
 osmo-clean-workspace.sh
