@@ -77,7 +77,7 @@ set -x
 autoreconf --install --force
 ./configure $PCU_CONFIG
 $MAKE $PARALLEL_MAKE
-DISTCHECK_CONFIGURE_FLAGS="$PCU_CONFIG" AM_DISTCHECK_CONFIGURE_FLAGS="$PCU_CONFIG" \
+DISTCHECK_CONFIGURE_FLAGS="$PCU_CONFIG" \
   $MAKE distcheck \
   || cat-testlogs.sh
 
