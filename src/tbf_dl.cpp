@@ -1350,9 +1350,11 @@ enum egprs_rlcmac_dl_spb gprs_rlcmac_dl_tbf::get_egprs_dl_spb(const int bsn)
 
 void gprs_rlcmac_dl_tbf::set_window_size()
 {
-	uint16_t ws = egprs_window_size(bts->bts_data(), dl_slots());
+	const struct gprs_rlcmac_bts *b = bts->bts_data();
+	uint16_t ws = egprs_window_size(b, dl_slots());
+
 	LOGPTBFDL(this, LOGL_INFO, "setting EGPRS DL window size to %u, base(%u) slots(%u) ws_pdch(%u)\n",
-		  ws, bts->bts_data()->ws_base, pcu_bitcount(dl_slots()), bts->bts_data()->ws_pdch);
+		  ws, b->ws_base, pcu_bitcount(dl_slots()), b->ws_pdch);
 	m_window.set_ws(ws);
 }
 

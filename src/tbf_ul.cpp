@@ -588,8 +588,9 @@ void gprs_rlcmac_ul_tbf::update_coding_scheme_counter_ul(enum CodingScheme cs)
 
 void gprs_rlcmac_ul_tbf::set_window_size()
 {
-	uint16_t ws = egprs_window_size(bts->bts_data(), ul_slots());
+	const struct gprs_rlcmac_bts *b = bts->bts_data();
+	uint16_t ws = egprs_window_size(b, ul_slots());
 	LOGPTBFUL(this, LOGL_INFO, "setting EGPRS UL window size to %u, base(%u) slots(%u) ws_pdch(%u)\n",
-		  ws, bts->bts_data()->ws_base, pcu_bitcount(ul_slots()), bts->bts_data()->ws_pdch);
+		  ws, b->ws_base, pcu_bitcount(ul_slots()), b->ws_pdch);
 	m_window.set_ws(ws);
 }
