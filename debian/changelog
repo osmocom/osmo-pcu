@@ -1,3 +1,64 @@
+osmo-pcu (0.6.0) unstable; urgency=medium
+
+  [ Harald Welte ]
+  * debian/rules: Don't overwrite .tarball-version
+  * gprs_rlcmac_received_lost(): Fix regression / uninitialized now_tv
+  * initial checkin of manuals to public repo
+  * Add link to Asciidoc source code of manual
+  * Initial place-holder for the new Gb/IP interface documentation
+  * Gb message sequence chart: flip sides (SGSN should be right)
+  * Gb message sequence chart: Add notion of PCU unix domain socket
+  * Gb: Various spelling fixes
+  * gb: Some language improvements, formatting changes
+  * consistently use '3GPP TS' not sometimes 3GPP TS and sometimes TS.
+  * gb/NS: Clarify the language regarding the UDP port numbers / socket
+  * vty-ref: Update URI of docbook 5.0 schema
+
+  [ Pau Espin Pedrol ]
+  * Cleanup of systemd service files
+  * configure.ac: Set CXXFLAGS during --enable-sanitize
+  * Install systemd services with autotools
+  * Move examples/ to doc/examples/
+  * Install osmo-pcu.cfg to docdir/examples
+  * Allow easily disabling GFDL references
+
+  [ Stefan Sperling ]
+  * check for overlong unix socket paths
+
+  [ Max ]
+  * deb: add missing copyright file
+  * OsmoPCU: fix Gb documentation front page
+  * OsmoPCU: expand NS documentation
+  * OsmoPCU: expand BSSGP documentation
+  * OsmoPCU: add MSC chart
+
+  [ Neels Hofmeyr ]
+  * Importing history from osmo-gsm-manuals.git
+  * make clean: also remove generated image files
+  * add 'make check' target
+  * fix 'make clean': shell glob, ignore failure
+  * refactor Makefile build rules, don't use the FORCE
+
+  [ Jonathan Brielmaier ]
+  * fix various typos across all manuals
+
+  [ Philipp ]
+  * configuration: fixing typos
+
+  [ Alexander Couzens ]
+  * OsmoPCU: add rate counter documentation
+
+  [ Daniel Willmann ]
+  * Change OpenBSC mentions to OsmoBSC where applicable
+
+  [ Oliver Smith ]
+  * build manuals moved here from osmo-gsm-manuals.git
+  * Fix DISTCHECK_CONFIGURE_FLAGS override
+  * contrib/jenkins.sh: build and publish manuals
+  * contrib: fix makedistcheck with disabled systemd
+
+ -- Harald Welte <laforge@gnumonks.org>  Mon, 21 Jan 2019 19:03:52 +0100
+
 osmo-pcu (0.5.1) unstable; urgency=medium
 
   [ Harald Welte ]
