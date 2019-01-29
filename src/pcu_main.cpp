@@ -60,6 +60,7 @@ void *tall_pcu_ctx = NULL;
 extern void *bv_tall_ctx;
 static int quit = 0;
 static int rt_prio = -1;
+static bool daemonize = false;
 static const char *gsmtap_addr = "localhost"; // FIXME: use gengetopt's default value instead
 
 static void print_help()
@@ -75,6 +76,8 @@ static void print_help()
 		"  -V   --version	print version\n"
 		"  -r   --realtime PRIO Use SCHED_RR with the specified "
 			"priority\n"
+		"  -D	--daemonize	Fork the process into a background"
+			"daemon\n"
 		"  -i	--gsmtap-ip	The destination IP used for GSMTAP.\n"
 		);
 }
@@ -91,12 +94,13 @@ static void handle_options(int argc, char **argv)
 			{ "mnc", 1, 0, 'n' },
 			{ "version", 0, 0, 'V' },
 			{ "realtime", 1, 0, 'r' },
+			{ "daemonize", 0, 0, 'D' },
 			{ "exit", 0, 0, 'e' },
 			{ "gsmtap-ip", 1, 0, 'i' },
 			{ 0, 0, 0, 0 }
 		};
 
-		c = getopt_long(argc, argv, "hc:m:n:Vr:e:i:",
+		c = getopt_long(argc, argv, "hc:m:n:Vr:De:i:",
 				long_options, &option_idx);
 		if (c == -1)
 			break;
@@ -129,6 +133,9 @@ static void handle_options(int argc, char **argv)
 			break;
 		case 'r':
 			rt_prio = atoi(optarg);
+			break;
+		case 'D':
+			daemonize = true;
 			break;
 		case 'e':
 			fprintf(stderr, "Warning: Option '-e' is deprecated!\n");
@@ -325,6 +332,14 @@ int main(int argc, char *argv[])
 		if (rc != 0) {
 			fprintf(stderr, "Setting SCHED_RR priority(%d) failed: %s\n",
 			param.sched_priority, strerror(errno));
+			exit(1);
+		}
+	}
+
+	if (daemonize) {
+		rc = osmo_daemonize();
+		if (rc < 0) {
+			perror("Error during daemonize");
 			exit(1);
 		}
 	}
