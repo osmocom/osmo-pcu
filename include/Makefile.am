@@ -1,2 +1,2 @@
-nobase_include_HEADERS = \
+noinst_HEADERS = \
 	osmocom/pcu/pcuif_proto.h

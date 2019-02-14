@@ -99,9 +99,6 @@ noinst_HEADERS = \
 	gprs_coding_scheme.h \
 	egprs_rlc_compression.h
 
-nobase_include_HEADERS =
-	osmocom/pcu/pcuif_proto.h
-
 osmo_pcu_SOURCES = pcu_main.cpp
 
 if ENABLE_SYSMODSP

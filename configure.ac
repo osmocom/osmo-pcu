@@ -221,7 +221,6 @@ AC_MSG_RESULT([CXXFLAGS="$CXXFLAGS"])
 AC_MSG_RESULT([LDFLAGS="$LDFLAGS"])
 
 AC_OUTPUT(
-    osmo-pcu.pc
     include/Makefile
     src/Makefile
     doc/Makefile
