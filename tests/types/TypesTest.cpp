@@ -431,6 +431,134 @@ static void test_rlc_dl_ul_basic()
 	}
 }
 
+static void check_imm_ass(struct gprs_rlcmac_tbf *tbf, bool dl, enum ph_burst_type bt, const uint8_t *exp, uint8_t len,
+			  const char *kind)
+{
+	uint8_t alpha = 7, gamma = 8, ta = 35, ts = 5, tsc = 1, usf = 1, sz = sizeof(DUMMY_VEC) / 2, plen;
+	bitvec *immediate_assignment = bitvec_alloc(sz, tall_pcu_ctx);
+	struct msgb *m = msgb_alloc(80, "test");
+	bool poll = true;
+	uint16_t ra = 13, arfcn = 877;
+	uint32_t ref_fn = 24, fn = 11;
+	int8_t ta_idx = 0;
+
+	bitvec_unhex(immediate_assignment, DUMMY_VEC);
+	plen = Encoding::write_immediate_assignment(tbf, immediate_assignment, dl,
+						    ra, ref_fn, ta, arfcn, ts, tsc, usf,
+						    poll, fn, alpha, gamma, ta_idx, bt);
+	printf("[%u] %s Immediate Assignment <%s>:\n\t%s\n", plen, dl ? "DL" : "UL", kind,
+	       osmo_hexdump(immediate_assignment->data, sz));
+
+	memcpy(msgb_put(m, sz), immediate_assignment->data, sz);
+	if (!msgb_eq_data_print(m, exp, len))
+		printf("%s(%s, %s) failed!\n", __func__, dl ? "DL" : "UL", kind);
+
+	msgb_free(m);
+}
+
+void test_immediate_assign_dl()
+{
+	BTS the_bts;
+	the_bts.bts_data()->alloc_algorithm = alloc_algorithm_a;
+	the_bts.bts_data()->trx[0].pdch[2].enable();
+	the_bts.bts_data()->trx[0].pdch[3].enable();
+
+	struct gprs_rlcmac_tbf *tbf = tbf_alloc_dl_tbf(the_bts.bts_data(), NULL, 0, 1, 1, false);
+	static uint8_t res[] = { 0x06,
+				 0x3f, /* Immediate Assignment Message Type */
+				 0x30, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
+				 0x0d, 0x23, 0x6d, /* §10.5.2.25a Packet Channel Description */
+				 /* ETSI TS 44.018 §10.5.2.30 Request Reference */
+				 0x7f, /* RA */
+				 0x03, 0x18, /* T1'-T3 */
+				 0x23, /* TA */
+				 0x00, /* 0-length §10.5.2.21 Mobile Allocation */
+				 /* ETSI TS 44.018 §10.5.2.16 IA Rest Octets */
+				 0xd0, 0x00, 0x00, 0x00, 0x08, 0x17, 0x47, 0x08, 0x0b, 0x5b, 0x2b, 0x2b, };
+
+	check_imm_ass(tbf, true, GSM_L1_BURST_TYPE_ACCESS_2, res, sizeof(res), "ia_rest_downlink");
+}
+
+void test_immediate_assign_ul0m()
+{
+	BTS the_bts;
+	the_bts.bts_data()->alloc_algorithm = alloc_algorithm_a;
+	the_bts.bts_data()->trx[0].pdch[4].enable();
+	the_bts.bts_data()->trx[0].pdch[5].enable();
+
+	struct gprs_rlcmac_tbf *tbf = tbf_alloc_ul_tbf(the_bts.bts_data(), NULL, 0, 1, 1, false);
+	static uint8_t res[] = { 0x06,
+				 0x3f, /* Immediate Assignment Message Type */
+				 0x10, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
+				 0x0d, 0x23, 0x6d, /* §10.5.2.25a Packet Channel Description */
+				 /* ETSI TS 44.018 §10.5.2.30 Request Reference */
+				 0x0d, /* RA */
+				 0x03, 0x18, /* T1'-T3 */
+				 0x23, /* TA */
+				 0x00, /* 0-length §10.5.2.21 Mobile Allocation */
+				 /* ETSI TS 44.018 §10.5.2.16 IA Rest Octets */
+				 0xc8, 0x02, 0x7b, 0xa0, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, };
+
+	check_imm_ass(tbf, false, GSM_L1_BURST_TYPE_ACCESS_0, res, sizeof(res), "ia_rest_uplink(MBA)");
+}
+
+void test_immediate_assign_ul0s()
+{
+	static uint8_t res[] = { 0x06,
+				 0x3f, /* Immediate Assignment Message Type */
+				 0x10, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
+				 0x0d, 0x23, 0x6d, /* §10.5.2.25a Packet Channel Description */
+				 /* ETSI TS 44.018 §10.5.2.30 Request Reference */
+				 0x0d, /* RA */
+				 0x03, 0x18, /* T1'-T3 */
+				 0x23, /* TA */
+				 0x00, /* 0-length §10.5.2.21 Mobile Allocation */
+				 /* ETSI TS 44.018 §10.5.2.16 IA Rest Octets */
+				 0xc5, 0xd1, 0x08, 0x0b, 0x5b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, };
+
+	check_imm_ass(NULL, false, GSM_L1_BURST_TYPE_ACCESS_0, res, sizeof(res), "ia_rest_uplink(SBA)");
+}
+
+void test_immediate_assign_ul1s()
+{
+	BTS the_bts;
+	the_bts.bts_data()->alloc_algorithm = alloc_algorithm_a;
+	the_bts.bts_data()->trx[0].pdch[1].enable();
+	the_bts.bts_data()->trx[0].pdch[2].enable();
+
+	struct gprs_rlcmac_tbf *tbf = tbf_alloc_ul_tbf(the_bts.bts_data(), NULL, 0, 1, 1, false);
+	static uint8_t res[] = { 0x06,
+				 0x3f, /* Immediate Assignment Message Type */
+				 0x10, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
+				 0x0d, 0x23, 0x6d, /* §10.5.2.25a Packet Channel Description */
+				 /* ETSI TS 44.018 §10.5.2.30 Request Reference */
+				 0x7f, /* RA */
+				 0x03, 0x18, /* T1'-T3 */
+				 0x23, /* TA */
+				 0x00, /* 0-length §10.5.2.21 Mobile Allocation */
+				 /* ETSI TS 44.018 §10.5.2.16 IA Rest Octets */
+				 0x46, 0xa0, 0x09, 0xe0, 0x17, 0x40, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, };
+
+	check_imm_ass(tbf, false, GSM_L1_BURST_TYPE_ACCESS_1, res, sizeof(res), "ia_rest_egprs_uplink(SBA)");
+}
+
+void test_immediate_assign_ul1m()
+{
+	static uint8_t res[] = { 0x06,
+				 0x3f, /* Immediate Assignment Message Type */
+				 0x10, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
+				 0x0d, 0x23, 0x6d, /* §10.5.2.25a Packet Channel Description */
+				 /* ETSI TS 44.018 §10.5.2.30 Request Reference */
+				 0x7f, /* RA */
+				 0x03, 0x18, /* T1'-T3 */
+				 0x23, /* TA */
+				 0x00, /* 0-length §10.5.2.21 Mobile Allocation */
+				 /* ETSI TS 44.018 §10.5.2.16 IA Rest Octets */
+				 0x46, 0x97, 0x40, 0x0b, 0x58, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, };
+
+	check_imm_ass(NULL, false, GSM_L1_BURST_TYPE_ACCESS_1, res, sizeof(res), "ia_rest_egprs_uplink(MBA)");
+}
+
 void test_immediate_assign_rej()
 {
 	uint8_t plen;
@@ -496,6 +624,11 @@ int main(int argc, char **argv)
 	test_rlc_v_b();
 	test_rlc_v_n();
 	test_rlc_dl_ul_basic();
+	test_immediate_assign_dl();
+	test_immediate_assign_ul0m();
+	test_immediate_assign_ul0s();
+	test_immediate_assign_ul1m();
+	test_immediate_assign_ul1s();
 	test_immediate_assign_rej();
 	test_lsb();
 
