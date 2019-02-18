@@ -43,14 +43,12 @@ class Encoding {
 public:
 	static int write_immediate_assignment(
 			struct gprs_rlcmac_tbf *tbf,
-			bitvec * dest, uint8_t downlink, uint16_t ra,
+			bitvec * dest, bool downlink, uint16_t ra,
 			uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts,
-			uint8_t tsc, uint8_t usf, uint8_t polling,
+			uint8_t tsc, uint8_t usf, bool polling,
 			uint32_t fn, uint8_t alpha, uint8_t gamma,
 			int8_t ta_idx,
-			enum ph_burst_type burst_type =
-				GSM_L1_BURST_TYPE_ACCESS_0,
-			uint8_t sb = 1);
+			enum ph_burst_type burst_type);
 
 	static int write_immediate_assignment_reject(
 			bitvec *dest, uint16_t ra,

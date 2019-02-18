@@ -510,7 +510,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 		TBF_SET_ASS_ON(this, GPRS_RLCMAC_FLAG_CCCH, false);
 
 		/* send immediate assignment */
-		bts->snd_dl_ass(this, 0, imsi());
+		bts->snd_dl_ass(this, false, imsi());
 		m_wait_confirm = 1;
 	}
 }

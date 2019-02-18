@@ -774,11 +774,10 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 			" - TRX=%d (%d) TS=%d TA=%d TSC=%d TFI=%d USF=%d\n",
 			trx_no, m_bts.trx[trx_no].arfcn, ts_no, ta, tsc,
 			tbf ? tbf->tfi() : -1, usf);
-
-		plen = Encoding::write_immediate_assignment(
-			tbf, immediate_assignment, 0, ra, Fn, ta,
-			m_bts.trx[trx_no].arfcn, ts_no, tsc, usf, 0, sb_fn,
-			m_bts.alpha, m_bts.gamma, -1, burst_type, sb);
+		// N. B: if tbf == NULL then SBA is used for Imm. Ass. below
+		plen = Encoding::write_immediate_assignment(tbf, immediate_assignment, false, ra, Fn, ta,
+							    m_bts.trx[trx_no].arfcn, ts_no, tsc, usf, false, sb_fn,
+							    m_bts.alpha, m_bts.gamma, -1, burst_type);
 	}
 
 	if (plen >= 0) {
@@ -791,7 +790,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 	return rc;
 }
 
-void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
+void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, const char *imsi)
 {
 	int plen;
 	unsigned int ts = tbf->first_ts;
@@ -804,10 +803,11 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi)
 	LOGP(DRLCMAC, LOGL_DEBUG, " - TRX=%d (%d) TS=%d TA=%d pollFN=%d\n",
 		tbf->trx->trx_no, tbf->trx->arfcn,
 		ts, tbf->ta(), poll ? tbf->poll_fn : -1);
-	plen = Encoding::write_immediate_assignment(tbf, immediate_assignment, 1, 125,
-		(tbf->pdch[ts]->last_rts_fn + 21216) % GSM_MAX_FN, tbf->ta(),
-		tbf->trx->arfcn, ts, tbf->tsc(), 7, poll,
-		tbf->poll_fn, m_bts.alpha, m_bts.gamma, -1);
+	plen = Encoding::write_immediate_assignment(tbf, immediate_assignment, true, 125,
+						    (tbf->pdch[ts]->last_rts_fn + 21216) % GSM_MAX_FN, tbf->ta(),
+						    tbf->trx->arfcn, ts, tbf->tsc(), 7, poll,
+						    tbf->poll_fn, m_bts.alpha, m_bts.gamma, -1,
+						    GSM_L1_BURST_TYPE_ACCESS_0);
 	if (plen >= 0) {
 		immediate_assignment_dl_tbf();
 		pcu_l1if_tx_pch(immediate_assignment, plen, imsi);

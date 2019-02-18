@@ -880,7 +880,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 			LOGPTBF(dl_tbf, LOGL_DEBUG, "Re-send dowlink assignment on PCH (IMSI=%s)\n",
 				imsi());
 			/* send immediate assignment */
-			dl_tbf->bts->snd_dl_ass(dl_tbf, 0, imsi());
+			dl_tbf->bts->snd_dl_ass(dl_tbf, false, imsi());
 			dl_tbf->m_wait_confirm = 1;
 		}
 	} else

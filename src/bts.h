@@ -294,7 +294,7 @@ public:
 	int rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 		enum ph_burst_type burst_type);
 
-	void snd_dl_ass(gprs_rlcmac_tbf *tbf, uint8_t poll, const char *imsi);
+	void snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, const char *imsi);
 
 	GprsMsStorage &ms_store();
 	GprsMs *ms_by_tlli(uint32_t tlli, uint32_t old_tlli = 0);
