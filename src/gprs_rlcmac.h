@@ -40,6 +40,7 @@ extern "C" {
  */
 //#define DEBUG_DL_ASS_IDLE
 
+#define DUMMY_VEC "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b"
 
 struct gprs_rlcmac_tbf;
 struct gprs_rlcmac_bts;

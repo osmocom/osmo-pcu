@@ -25,6 +25,8 @@
 #include <cstring>
 #include "csn1.h"
 #include "gsm_rlcmac.h"
+#include "gprs_rlcmac.h"
+
 extern "C" {
 extern const struct log_info gprs_log_info;
 #include "pcu_vty.h"
@@ -86,7 +88,7 @@ void printSizeofRLCMAC()
 void testRlcMacDownlink(void *test_ctx)
 {
 	struct bitvec *resultVector = bitvec_alloc(23, test_ctx);
-	bitvec_unhex(resultVector, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	bitvec_unhex(resultVector, DUMMY_VEC);
 
 	std::string testData[] = {
 	"4e082500e3f1a81d080820800b2b2b2b2b2b2b2b2b2b2b", // Packet Downlink Assignment
@@ -141,7 +143,7 @@ void testRlcMacDownlink(void *test_ctx)
 		{
 			cout << "vector1 == vector2 : FALSE" << endl;
 		}
-		bitvec_unhex(resultVector, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+		bitvec_unhex(resultVector, DUMMY_VEC);
 		bitvec_free(vector);
 		free(data);
 	}
@@ -153,7 +155,7 @@ void testRlcMacDownlink(void *test_ctx)
 void testRlcMacUplink(void *test_ctx)
 {
 	struct bitvec *resultVector = bitvec_alloc(23, test_ctx);
-	bitvec_unhex(resultVector, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	bitvec_unhex(resultVector, DUMMY_VEC);
 
 	std::string testData[] = {
 	"400e1e61d11d2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Dummy Control Block
@@ -204,7 +206,7 @@ void testRlcMacUplink(void *test_ctx)
 		{
 			cout << "vector1 == vector2 : FALSE" << endl;
 		}
-		bitvec_unhex(resultVector, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+		bitvec_unhex(resultVector, DUMMY_VEC);
 		bitvec_free(vector);
 		free(data);
 	}

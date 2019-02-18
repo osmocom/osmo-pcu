@@ -25,6 +25,7 @@
 #include "gprs_debug.h"
 #include "encoding.h"
 #include "decoding.h"
+#include "gprs_rlcmac.h"
 
 extern "C" {
 #include <osmocom/core/application.h>
@@ -435,8 +436,7 @@ void test_immediate_assign_rej()
 	uint8_t plen;
 	bitvec *immediate_assignment_rej = bitvec_alloc(22, tall_pcu_ctx);
 
-	bitvec_unhex(immediate_assignment_rej,
-		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	bitvec_unhex(immediate_assignment_rej, DUMMY_VEC);
 	plen = Encoding::write_immediate_assignment_reject(
 		immediate_assignment_rej, 112, 100,
 		GSM_L1_BURST_TYPE_ACCESS_1);
@@ -450,8 +450,7 @@ void test_immediate_assign_rej()
 	/* Extended RA value */
 	OSMO_ASSERT(immediate_assignment_rej->data[19] == 0xc0);
 
-	bitvec_unhex(immediate_assignment_rej,
-		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	bitvec_unhex(immediate_assignment_rej, DUMMY_VEC);
 
 	plen = Encoding::write_immediate_assignment_reject(
 		immediate_assignment_rej, 112, 100,

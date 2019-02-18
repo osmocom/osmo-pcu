@@ -1270,8 +1270,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 		msgb_free(msg);
 		return NULL;
 	}
-	bitvec_unhex(ass_vec,
-		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	bitvec_unhex(ass_vec, DUMMY_VEC);
 	LOGPTBF(new_dl_tbf, LOGL_INFO, "start Packet Downlink Assignment (PACCH)\n");
 	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	Encoding::write_packet_downlink_assignment(mac_control_block,
@@ -1310,8 +1309,7 @@ struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
 
 	bitvec *packet_access_rej = bitvec_alloc(23, tall_pcu_ctx);
 
-	bitvec_unhex(packet_access_rej,
-		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	bitvec_unhex(packet_access_rej, DUMMY_VEC);
 
 	Encoding::write_packet_access_reject(
 		packet_access_rej, tlli());
@@ -1368,8 +1366,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 		msgb_free(msg);
 		return NULL;
 	}
-	bitvec_unhex(ass_vec,
-		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	bitvec_unhex(ass_vec, DUMMY_VEC);
 	Encoding::write_packet_uplink_assignment(bts_data(), ass_vec, m_tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), tlli(),
 		is_tlli_valid(), new_tbf, 1, rrbp, bts_data()->alpha,
