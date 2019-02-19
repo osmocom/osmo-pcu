@@ -35,7 +35,72 @@ extern "C" {
 #include <errno.h>
 #include <string.h>
 
+#define CHECK(rc) { if (rc < 0) return rc; }
+#define SET_X(bv, x) { if (bitvec_set_bit(bv, x) < 0) return -EOWNERDEAD; }
+#define SET_0(bv) SET_X(bv, ZERO)
+#define SET_1(bv) SET_X(bv, ONE)
+#define SET_L(bv) SET_X(bv, L)
+#define SET_H(bv) SET_X(bv, H)
+
+/* 3GPP TS 44.018 § 10.5.2.16:
+   { 0 | 1 < ALPHA : bit (4) > }
+   < GAMMA : bit (5) >
+*/
+static int write_alpha_gamma(bitvec *dest, uint8_t alpha, uint8_t gamma)
+{
+	int rc;
+
+	if (alpha) {
+		SET_1(dest);
+		rc = bitvec_set_u64(dest, alpha, 4, false);
+		CHECK(rc);
+	} else
+		SET_0(dest);
+
+	rc = bitvec_set_u64(dest, gamma, 5, false);
+	CHECK(rc);
+
+	return 0;
+}
+
+/* TBF_STARTING_TIME -- same as 3GPP TS 44.018 §10.5.2.38 Starting Time without tag: */
+static int write_tbf_start_time(bitvec *dest, uint32_t fn)
+{
+	int rc;
+
+	/* Set values according to 3GPP TS 44.018 Table 10.5.2.38.1 */
+
+	/* T1' */
+	rc = bitvec_set_u64(dest, (fn / (26 * 51)) % 32, 5, false);
+	CHECK(rc);
+
+	/* T3  */
+	rc = bitvec_set_u64(dest, fn % 51, 6, false);
+	CHECK(rc);
+
+	/* T2  */
+	rc = bitvec_set_u64(dest, fn % 26, 5, false);
+	CHECK(rc);
+
+	return rc;
+}
+
 /* { 0 | 1 < TIMING_ADVANCE_INDEX : bit (4) > } */
+static int write_ta_index(bitvec *dest, int8_t tai)
+{
+	int rc;
+
+	if (tai < 0) /* No TIMING_ADVANCE_INDEX: */
+		SET_0(dest);
+
+	/* TIMING_ADVANCE_INDEX: */
+	SET_1(dest);
+	rc = bitvec_set_u64(dest, tai, 4, false);
+	CHECK(rc);
+
+	return 0;
+}
+
 static inline bool write_tai(bitvec *dest, unsigned& wp, int8_t tai)
 {
 	if (tai < 0) { /* No TIMING_ADVANCE_INDEX: */
@@ -88,43 +153,55 @@ static inline void write_ta_ie(bitvec *dest, unsigned& wp,
 }
 
 static int write_ia_rest_downlink(const gprs_rlcmac_dl_tbf *tbf, bitvec * dest, bool polling, bool ta_valid,
-				  uint32_t fn, uint8_t alpha, uint8_t gamma, int8_t ta_idx, unsigned& wp)
+				  uint32_t fn, uint8_t alpha, uint8_t gamma, int8_t ta_idx)
 {
 	int rc = 0;
 
-	bitvec_write_field(dest, &wp, 3, 2);   // "HH"
-	bitvec_write_field(dest, &wp, 1, 2);   // "01" Packet Downlink Assignment
-	bitvec_write_field(dest, &wp,tbf->tlli(),32); // TLLI
-	bitvec_write_field(dest, &wp,0x1,1);   // switch TFI   : on
-	bitvec_write_field(dest, &wp,tbf->tfi(),5);   // TFI
-	bitvec_write_field(dest, &wp,0x0,1);   // RLC acknowledged mode
-	if (alpha) {
-		bitvec_write_field(dest, &wp,0x1,1);   // ALPHA = present
-		bitvec_write_field(dest, &wp,alpha,4);   // ALPHA
-	} else {
-		bitvec_write_field(dest, &wp,0x0,1);   // ALPHA = not present
-	}
-	bitvec_write_field(dest, &wp,gamma,5);   // GAMMA power control parameter
-	bitvec_write_field(dest, &wp,polling,1);   // Polling Bit
-	bitvec_write_field(dest, &wp, ta_valid, 1); // N. B: NOT related to TAI!
-	write_tai(dest, wp, ta_idx);
+	SET_H(dest); SET_H(dest);
+	SET_0(dest); SET_1(dest); /* 00 Packet Downlink Assignment */
+
+	rc = bitvec_set_u64(dest, tbf->tlli(), 32, false); /* TLLI */
+	CHECK(rc);
+
+	SET_1(dest);
+	rc = bitvec_set_u64(dest, tbf->tfi(), 5, false);   /* TFI_ASSIGNMENT */
+	CHECK(rc);
+
+	/* RLC acknowledged mode */
+	SET_0(dest); /* RLC_MODE */
+
+	rc = write_alpha_gamma(dest, alpha, gamma);
+	CHECK(rc);
+
+	rc = bitvec_set_bit(dest, (bit_value)polling); /* POLLING */
+	CHECK(rc);
+
+	/* N. B: NOT related to TAI! */
+	rc = bitvec_set_bit(dest, (bit_value)ta_valid); /* TA_VALID */
+	CHECK(rc);
+
+	rc = write_ta_index(dest, ta_idx);
+	CHECK(rc);
+
 	if (polling) {
-		bitvec_write_field(dest, &wp,0x1,1);   // TBF Starting TIME present
-		bitvec_write_field(dest, &wp,(fn / (26 * 51)) % 32,5); // T1'
-		bitvec_write_field(dest, &wp,fn % 51,6);               // T3
-		bitvec_write_field(dest, &wp,fn % 26,5);               // T2
-	} else {
-		bitvec_write_field(dest, &wp,0x0,1);   // TBF Starting TIME present
-	}
-	bitvec_write_field(dest, &wp,0x0,1);   // P0 not present
-	//		bitvec_write_field(dest, &wp,0x1,1);   // P0 not present
-	//		bitvec_write_field(dest, &wp,,0xb,4);
+		SET_1(dest);
+		rc = write_tbf_start_time(dest, fn);
+		CHECK(rc);
+       } else
+		SET_0(dest);
+
+	SET_0(dest); /* No P0 nor PR_MODE */
+
 	if (tbf->is_egprs_enabled()) {
-		bitvec_write_field(dest, &wp, 1, 1);  // "H"
-		write_ws(dest, &wp, tbf->window_size()); // EGPRS Window Size
-		bitvec_write_field(dest, &wp, 0x0, 2);    // LINK_QUALITY_MEASUREMENT_MODE
-		bitvec_write_field(dest, &wp, 0, 1);      // BEP_PERIOD2 not present
-	}
+		SET_H(dest);
+		rc = bitvec_set_u64(dest, enc_ws(tbf->window_size()), 5, false); /* EGPRS Window Size */
+		CHECK(rc);
+
+               /* The mobile station shall not report measurements: (see 3GPP TS 44.060 Table 11.2.7.1) */
+		SET_0(dest); SET_0(dest); /* LINK_QUALITY_MEASUREMENT_MODE */
+		SET_1(dest);              /* No BEP_PERIOD2 */
+	} else
+		SET_L(dest);              /* No Additions for Rel-6 */
 
 	return rc;
 }
@@ -393,8 +470,10 @@ int Encoding::write_immediate_assignment(
 			LOGP(DRLCMACDL, LOGL_ERROR, "Cannot encode DL IMMEDIATE ASSIGNMENT without TBF\n");
 			return -EINVAL;
 		}
+
+		dest->cur_bit = wp;
 		rc = write_ia_rest_downlink(as_dl_tbf(tbf), dest, polling, gsm48_ta_is_valid(ta), fn, alpha, gamma,
-					    ta_idx, wp);
+					    ta_idx);
 	} else if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) || (burst_type == GSM_L1_BURST_TYPE_ACCESS_2))) {
 		bitvec_write_field(dest, &wp, 1, 2);    /* LH */
 		bitvec_write_field(dest, &wp, 0, 2);    /* 0 EGPRS Uplink Assignment */
