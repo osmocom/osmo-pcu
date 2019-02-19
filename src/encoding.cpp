@@ -87,18 +87,11 @@ static inline void write_ta_ie(bitvec *dest, unsigned& wp,
 		bitvec_write_field(dest, &wp, ts, 3);
 }
 
-static int write_ia_rest_downlink(
-	gprs_rlcmac_dl_tbf *tbf,
-	bitvec * dest, unsigned& wp,
-	bool polling, bool ta_valid, uint32_t fn,
-	uint8_t alpha, uint8_t gamma, int8_t ta_idx)
+static int write_ia_rest_downlink(const gprs_rlcmac_dl_tbf *tbf, bitvec * dest, bool polling, bool ta_valid,
+				  uint32_t fn, uint8_t alpha, uint8_t gamma, int8_t ta_idx, unsigned& wp)
 {
-	if (!tbf) {
-		LOGP(DRLCMACDL, LOGL_ERROR,
-			"Cannot encode DL IMMEDIATE ASSIGNMENT without TBF\n");
-		return -EINVAL;
-	}
-	// GSM 04.08 10.5.2.16 IA Rest Octets
+	int rc = 0;
+
 	bitvec_write_field(dest, &wp, 3, 2);   // "HH"
 	bitvec_write_field(dest, &wp, 1, 2);   // "01" Packet Downlink Assignment
 	bitvec_write_field(dest, &wp,tbf->tlli(),32); // TLLI
@@ -127,128 +120,126 @@ static int write_ia_rest_downlink(
 	//		bitvec_write_field(dest, &wp,0x1,1);   // P0 not present
 	//		bitvec_write_field(dest, &wp,,0xb,4);
 	if (tbf->is_egprs_enabled()) {
-		/* see GMS 44.018, 10.5.2.16 */
 		bitvec_write_field(dest, &wp, 1, 1);  // "H"
 		write_ws(dest, &wp, tbf->window_size()); // EGPRS Window Size
 		bitvec_write_field(dest, &wp, 0x0, 2);    // LINK_QUALITY_MEASUREMENT_MODE
 		bitvec_write_field(dest, &wp, 0, 1);      // BEP_PERIOD2 not present
 	}
 
-	return 0;
+	return rc;
 }
 
-static int write_ia_rest_uplink(
-	gprs_rlcmac_ul_tbf *tbf,
-	bitvec * dest, unsigned& wp,
-	uint8_t usf, uint32_t fn,
-	uint8_t alpha, uint8_t gamma, int8_t ta_idx)
+static int write_ia_rest_uplink_sba(bitvec *dest, uint32_t fn, uint8_t alpha, uint8_t gamma, int8_t ta_idx,
+				    unsigned& wp)
 {
-	OSMO_ASSERT(!tbf || !tbf->is_egprs_enabled());
+	int rc = 0;
 
-	// GMS 04.08 10.5.2.37b 10.5.2.16
-	bitvec_write_field(dest, &wp, 3, 2);    // "HH"
-	bitvec_write_field(dest, &wp, 0, 2);    // "0" Packet Uplink Assignment
-	if (tbf == NULL) {
-		bitvec_write_field(dest, &wp, 0, 1);    // Block Allocation : Single Block Allocation
-		if (alpha) {
-			bitvec_write_field(dest, &wp,0x1,1);   // ALPHA = present
-			bitvec_write_field(dest, &wp,alpha,4);   // ALPHA = present
-		} else
-			bitvec_write_field(dest, &wp,0x0,1);   // ALPHA = not present
-		bitvec_write_field(dest, &wp,gamma,5);   // GAMMA power control parameter
-		write_tai(dest, wp, ta_idx);
-		bitvec_write_field(dest, &wp, 1, 1);    // TBF_STARTING_TIME_FLAG
-		bitvec_write_field(dest, &wp,(fn / (26 * 51)) % 32,5); // T1'
-		bitvec_write_field(dest, &wp,fn % 51,6);               // T3
-		bitvec_write_field(dest, &wp,fn % 26,5);               // T2
-	} else {
-		bitvec_write_field(dest, &wp, 1, 1);    // Block Allocation : Not Single Block Allocation
-		bitvec_write_field(dest, &wp, tbf->tfi(), 5);  // TFI_ASSIGNMENT Temporary Flow Identity
-		bitvec_write_field(dest, &wp, 0, 1);    // POLLING
-		bitvec_write_field(dest, &wp, 0, 1);    // ALLOCATION_TYPE: dynamic
-		bitvec_write_field(dest, &wp, usf, 3);    // USF
-		bitvec_write_field(dest, &wp, 0, 1);    // USF_GRANULARITY
-		bitvec_write_field(dest, &wp, 0, 1);   // "0" power control: Not Present
-		bitvec_write_field(dest, &wp, tbf->current_cs().to_num()-1, 2);    // CHANNEL_CODING_COMMAND
-		bitvec_write_field(dest, &wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
-		if (alpha) {
-			bitvec_write_field(dest, &wp,0x1,1);   // ALPHA = present
-			bitvec_write_field(dest, &wp,alpha,4);   // ALPHA
-		} else
-			bitvec_write_field(dest, &wp,0x0,1);   // ALPHA = not present
-		bitvec_write_field(dest, &wp,gamma,5);   // GAMMA power control parameter
-		/* note: there is no choise for TAI and no starting time */
-		bitvec_write_field(dest, &wp, 0, 1);   // switch TIMING_ADVANCE_INDEX = off
-		bitvec_write_field(dest, &wp, 0, 1);    // TBF_STARTING_TIME_FLAG
-	}
-	return 0;
+	bitvec_write_field(dest, &wp, 0, 1); // Block Allocation: Single Block Allocation
+
+	if (alpha) {
+		bitvec_write_field(dest, &wp, 0x1, 1);   // ALPHA = present
+		bitvec_write_field(dest, &wp, alpha, 4);
+	} else
+		bitvec_write_field(dest, &wp, 0x0, 1);   // ALPHA = not present
+
+	bitvec_write_field(dest, &wp, gamma, 5);       // GAMMA power control parameter
+	write_tai(dest, wp, ta_idx);
+	bitvec_write_field(dest, &wp, 1, 1);         // TBF_STARTING_TIME_FLAG
+	bitvec_write_field(dest, &wp, (fn / (26 * 51)) % 32, 5); // T1'
+	bitvec_write_field(dest, &wp, fn % 51, 6);               // T3
+	bitvec_write_field(dest, &wp, fn % 26, 5);               // T2
+
+	return rc;
 }
 
-static int write_ia_rest_egprs_uplink(
-	gprs_rlcmac_ul_tbf *tbf,
-	bitvec * dest, unsigned& wp,
-	uint8_t usf, uint32_t fn,
-	uint8_t alpha, uint8_t gamma, int8_t ta_idx,
-	enum ph_burst_type burst_type, uint16_t ra)
+static int write_ia_rest_uplink_mba(const gprs_rlcmac_ul_tbf *tbf, bitvec *dest, uint8_t usf,
+				    uint8_t alpha, uint8_t gamma, unsigned& wp)
 {
-	uint8_t extended_ra = 0;
+	int rc = 0;
 
-	extended_ra = (ra & 0x1F);
+	bitvec_write_field(dest, &wp, 1, 1);    // Block Allocation: Not Single Block Allocation
+	bitvec_write_field(dest, &wp, tbf->tfi(), 5);  // TFI_ASSIGNMENT Temporary Flow Identity
+	bitvec_write_field(dest, &wp, 0, 1);    // POLLING
+	bitvec_write_field(dest, &wp, 0, 1);    // ALLOCATION_TYPE: dynamic
+	bitvec_write_field(dest, &wp, usf, 3);    // USF
+	bitvec_write_field(dest, &wp, 0, 1);    // USF_GRANULARITY
+	bitvec_write_field(dest, &wp, 0, 1);   // "0" power control: Not Present
+	bitvec_write_field(dest, &wp, tbf->current_cs().to_num() - 1, 2);    // CHANNEL_CODING_COMMAND
+	bitvec_write_field(dest, &wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
+	if (alpha) {
+		bitvec_write_field(dest, &wp, 0x1, 1);   // ALPHA = present
+		bitvec_write_field(dest, &wp, alpha, 4);   // ALPHA
+	} else
+		bitvec_write_field(dest, &wp, 0x0, 1);   // ALPHA = not present
 
-	bitvec_write_field(dest, &wp, 1, 2);    /* LH */
-	bitvec_write_field(dest, &wp, 0, 2);    /* 0 EGPRS Uplink Assignment */
-	bitvec_write_field(dest, &wp, extended_ra, 5);    /* Extended RA */
-	bitvec_write_field(dest, &wp, 0, 1);    /* Access technology Request */
+	bitvec_write_field(dest, &wp, gamma, 5);   // GAMMA power control parameter
 
-	if (tbf == NULL) {
+	/* note: there is no choise for TAI and no starting time */
+	bitvec_write_field(dest, &wp, 0, 1);   // switch TIMING_ADVANCE_INDEX = off
+	bitvec_write_field(dest, &wp, 0, 1);    // TBF_STARTING_TIME_FLAG
 
-		bitvec_write_field(dest, &wp, 0, 1); /* multiblock allocation */
+	return rc;
+}
 
-		if (alpha) {
-			bitvec_write_field(dest, &wp, 0x1, 1); /* ALPHA =yes */
-			bitvec_write_field(dest, &wp, alpha, 4); /* ALPHA */
-		} else {
-			bitvec_write_field(dest, &wp, 0x0, 1); /* ALPHA = no */
-		}
+static int write_ia_rest_egprs_uplink_mba(bitvec * dest, uint32_t fn, uint8_t alpha, uint8_t gamma, unsigned& wp)
+{
+	int rc = 0;
 
-		bitvec_write_field(dest, &wp, gamma, 5); /* GAMMA power contrl */
-		bitvec_write_field(dest, &wp, (fn / (26 * 51)) % 32, 5);/* T1' */
-		bitvec_write_field(dest, &wp, fn % 51, 6);              /* T3 */
-		bitvec_write_field(dest, &wp, fn % 26, 5);              /* T2 */
-		bitvec_write_field(dest, &wp, 0, 2); /* Radio block allocation */
+	bitvec_write_field(dest, &wp, 0, 1); /* multiblock allocation */
 
-		bitvec_write_field(dest, &wp, 0, 1);
-
+	if (alpha) {
+		bitvec_write_field(dest, &wp, 0x1, 1); /* ALPHA =yes */
+		bitvec_write_field(dest, &wp, alpha, 4); /* ALPHA */
 	} else {
-		bitvec_write_field(dest, &wp, 1, 1);     /* single block alloc */
-		bitvec_write_field(dest, &wp, tbf->tfi(), 5);/* TFI assignment */
-		bitvec_write_field(dest, &wp, 0, 1);     /* polling bit */
-		bitvec_write_field(dest, &wp, 0, 1);     /* constant */
-		bitvec_write_field(dest, &wp, usf, 3);   /* USF bit */
-		bitvec_write_field(dest, &wp, 0, 1);     /* USF granularity */
-		bitvec_write_field(dest, &wp, 0, 1);     /* P0 */
-		/* MCS */
-		bitvec_write_field(dest, &wp, tbf->current_cs().to_num()-1, 4);
-		/* tlli channel block */
-		bitvec_write_field(dest, &wp, tbf->tlli(), 1);
-		bitvec_write_field(dest, &wp, 0, 1);   /* BEP period present */
-		bitvec_write_field(dest, &wp, 0, 1);   /* resegmentation */
-		write_ws(dest, &wp, tbf->window_size()); /* EGPRS window size */
-
-		if (alpha) {
-			bitvec_write_field(dest, &wp, 0x1, 1);   /* ALPHA =yes */
-			bitvec_write_field(dest, &wp, alpha, 4); /* ALPHA */
-		} else {
-			bitvec_write_field(dest, &wp, 0x0, 1);   /* ALPHA = no */
-		}
-
-		bitvec_write_field(dest, &wp, gamma, 5); /* GAMMA power contrl */
-		bitvec_write_field(dest, &wp, 0, 1); /* TIMING_ADVANCE_INDEX */
-		bitvec_write_field(dest, &wp, 0, 1); /* TBF_STARTING_TIME_FLAG */
-		bitvec_write_field(dest, &wp, 0, 1); /* NULL */
+		bitvec_write_field(dest, &wp, 0x0, 1); /* ALPHA = no */
 	}
 
-	return 0;
+	bitvec_write_field(dest, &wp, gamma, 5); /* GAMMA power contrl */
+	bitvec_write_field(dest, &wp, (fn / (26 * 51)) % 32, 5);/* T1' */
+	bitvec_write_field(dest, &wp, fn % 51, 6);              /* T3 */
+	bitvec_write_field(dest, &wp, fn % 26, 5);              /* T2 */
+	bitvec_write_field(dest, &wp, 0, 2); /* Radio block allocation */
+
+	bitvec_write_field(dest, &wp, 0, 1);
+
+	return rc;
+}
+
+static int write_ia_rest_egprs_uplink_sba(const gprs_rlcmac_ul_tbf *tbf, bitvec * dest, uint8_t usf,
+					  uint8_t alpha, uint8_t gamma, unsigned& wp)
+{
+	int rc = 0;
+
+	bitvec_write_field(dest, &wp, 1, 1);     /* single block allocation */
+	bitvec_write_field(dest, &wp, tbf->tfi(), 5); /* TFI assignment */
+	bitvec_write_field(dest, &wp, 0, 1);     /* polling bit */
+	bitvec_write_field(dest, &wp, 0, 1);     /* constant */
+	bitvec_write_field(dest, &wp, usf, 3);   /* USF bit */
+	bitvec_write_field(dest, &wp, 0, 1);     /* USF granularity */
+	bitvec_write_field(dest, &wp, 0, 1);     /* P0 */
+
+	/* MCS */
+	bitvec_write_field(dest, &wp, tbf->current_cs().to_num() - 1, 4);
+
+	/* TLLI channel block */
+	bitvec_write_field(dest, &wp, tbf->tlli(), 1);
+	bitvec_write_field(dest, &wp, 0, 1);   /* BEP period present */
+	bitvec_write_field(dest, &wp, 0, 1);   /* resegmentation */
+	write_ws(dest, &wp, tbf->window_size()); /* EGPRS window size */
+
+	if (alpha) {
+		bitvec_write_field(dest, &wp, 0x1, 1);   /* ALPHA = yes */
+		bitvec_write_field(dest, &wp, alpha, 4); /* ALPHA */
+	} else {
+		bitvec_write_field(dest, &wp, 0x0, 1);   /* ALPHA = no */
+	}
+
+	bitvec_write_field(dest, &wp, gamma, 5); /* GAMMA power contrl */
+	bitvec_write_field(dest, &wp, 0, 1); /* TIMING_ADVANCE_INDEX */
+	bitvec_write_field(dest, &wp, 0, 1); /* TBF_STARTING_TIME_FLAG */
+	bitvec_write_field(dest, &wp, 0, 1); /* NULL */
+
+	return rc;
 }
 
 /*
@@ -396,19 +387,37 @@ int Encoding::write_immediate_assignment(
 
 	plen = wp / 8;
 
-	if (downlink)
-		rc = write_ia_rest_downlink(as_dl_tbf(tbf), dest, wp,
-					    polling, gsm48_ta_is_valid(ta), fn,
-			alpha, gamma, ta_idx);
-	else if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) ||
-			(burst_type == GSM_L1_BURST_TYPE_ACCESS_2)))
-		rc = write_ia_rest_egprs_uplink(as_ul_tbf(tbf), dest, wp,
-			usf, fn,
-			alpha, gamma, ta_idx, burst_type, ra);
-	else
-		rc = write_ia_rest_uplink(as_ul_tbf(tbf), dest, wp,
-			usf, fn,
-			alpha, gamma, ta_idx);
+	/* 3GPP TS 44.018 §10.5.2.16 IA Rest Octets */
+	if (downlink) {
+		if (!as_dl_tbf(tbf)) {
+			LOGP(DRLCMACDL, LOGL_ERROR, "Cannot encode DL IMMEDIATE ASSIGNMENT without TBF\n");
+			return -EINVAL;
+		}
+		rc = write_ia_rest_downlink(as_dl_tbf(tbf), dest, polling, gsm48_ta_is_valid(ta), fn, alpha, gamma,
+					    ta_idx, wp);
+	} else if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) || (burst_type == GSM_L1_BURST_TYPE_ACCESS_2))) {
+		bitvec_write_field(dest, &wp, 1, 2);    /* LH */
+		bitvec_write_field(dest, &wp, 0, 2);    /* 0 EGPRS Uplink Assignment */
+		bitvec_write_field(dest, &wp, ra & 0x1F, 5);    /* Extended RA */
+		bitvec_write_field(dest, &wp, 0, 1);    /* Access technology Request */
+
+		if (as_ul_tbf(tbf) != NULL) {
+			rc = write_ia_rest_egprs_uplink_sba(as_ul_tbf(tbf), dest, usf, alpha, gamma, wp);
+		} else {
+			rc = write_ia_rest_egprs_uplink_mba(dest, fn, alpha, gamma, wp);
+		}
+	} else {
+		OSMO_ASSERT(!tbf || !tbf->is_egprs_enabled());
+
+		bitvec_write_field(dest, &wp, 3, 2);    // "HH"
+		bitvec_write_field(dest, &wp, 0, 2);    // "0" Packet Uplink Assignment
+
+		if (as_ul_tbf(tbf) != NULL) {
+			rc = write_ia_rest_uplink_mba(as_ul_tbf(tbf), dest, usf, alpha, gamma, wp);
+		} else {
+			rc = write_ia_rest_uplink_sba(dest, fn, alpha, gamma, ta_idx, wp);
+		}
+	}
 
 	if (rc < 0) {
 		LOGP(DRLCMAC, LOGL_ERROR,
