@@ -11,7 +11,7 @@ show_rbb: IIRRIIIR
 [11] UL Immediate Assignment <ia_rest_uplink(MBA)>:
 	06 3f 10 0d 23 6d 0d 03 18 23 00 c8 02 1b a0 2b 2b 2b 2b 2b 2b 2b 2b 
 [11] UL Immediate Assignment <ia_rest_uplink(SBA)>:
-	06 3f 10 0d 23 6d 0d 03 18 23 00 c5 d1 08 0b 5b 2b 2b 2b 2b 2b 2b 2b 
+	06 3f 10 0d 23 6d 0d 03 18 23 00 c5 d0 80 b5 ab 2b 2b 2b 2b 2b 2b 2b 
 [11] UL Immediate Assignment <ia_rest_egprs_uplink(MBA)>:
 	06 3f 10 0d 23 6d 7f 03 18 23 00 46 97 40 0b 58 2b 2b 2b 2b 2b 2b 2b 
 [11] UL Immediate Assignment <ia_rest_egprs_uplink(SBA)>:

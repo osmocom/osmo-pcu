@@ -233,25 +233,31 @@ static int write_ia_rest_downlink(const gprs_rlcmac_dl_tbf *tbf, bitvec * dest, 
 	return rc;
 }
 
-static int write_ia_rest_uplink_sba(bitvec *dest, uint32_t fn, uint8_t alpha, uint8_t gamma, int8_t ta_idx,
-				    unsigned& wp)
+/* 3GPP TS 44.018 Table 10.5.2.16.1 < Packet Uplink Assignment > -- Single Block Allocation */
+static int write_ia_rest_uplink_sba(bitvec *dest, uint32_t fn, uint8_t alpha, uint8_t gamma)
 {
 	int rc = 0;
 
-	bitvec_write_field(dest, &wp, 0, 1); // Block Allocation: Single Block Allocation
+	SET_0(dest); /* Single Block Allocation */
+	rc = write_alpha_gamma(dest, alpha, gamma);
+	CHECK(rc);
 
-	if (alpha) {
-		bitvec_write_field(dest, &wp, 0x1, 1);   // ALPHA = present
-		bitvec_write_field(dest, &wp, alpha, 4);
-	} else
-		bitvec_write_field(dest, &wp, 0x0, 1);   // ALPHA = not present
+	/* A 'Timing Advance index' shall not be allocated at a Single Block allocation.
+	   A 'TBF Starting Time' shall be allocated at a Single Block allocation. */
+	SET_0(dest);
+	SET_1(dest);
 
-	bitvec_write_field(dest, &wp, gamma, 5);       // GAMMA power control parameter
-	write_tai(dest, wp, ta_idx);
-	bitvec_write_field(dest, &wp, 1, 1);         // TBF_STARTING_TIME_FLAG
-	bitvec_write_field(dest, &wp, (fn / (26 * 51)) % 32, 5); // T1'
-	bitvec_write_field(dest, &wp, fn % 51, 6);               // T3
-	bitvec_write_field(dest, &wp, fn % 26, 5);               // T2
+	rc = write_tbf_start_time(dest, fn);
+	CHECK(rc);
+
+	 /* No P0 nor PR_MODE */
+	SET_L(dest);
+
+	/* No Additions for R99 */
+	SET_L(dest);
+
+	 /* No Additions for Rel-6 */
+	SET_L(dest);
 
 	return rc;
 }
@@ -523,7 +529,8 @@ int Encoding::write_immediate_assignment(
 			dest->cur_bit = wp;
 			rc = write_ia_rest_uplink_mba(as_ul_tbf(tbf), dest, usf, alpha, gamma);
 		} else {
-			rc = write_ia_rest_uplink_sba(dest, fn, alpha, gamma, ta_idx, wp);
+			dest->cur_bit = wp;
+			rc = write_ia_rest_uplink_sba(dest, fn, alpha, gamma);
 		}
 	}
 
