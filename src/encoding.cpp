@@ -258,26 +258,21 @@ static int write_ia_rest_uplink_mba(const gprs_rlcmac_ul_tbf *tbf, bitvec *dest,
 	return rc;
 }
 
-static int write_ia_rest_egprs_uplink_mba(bitvec * dest, uint32_t fn, uint8_t alpha, uint8_t gamma, unsigned& wp)
+static int write_ia_rest_egprs_uplink_mba(bitvec * dest, uint32_t fn, uint8_t alpha, uint8_t gamma)
 {
 	int rc = 0;
 
-	bitvec_write_field(dest, &wp, 0, 1); /* multiblock allocation */
+	SET_0(dest); /* Multi Block Allocation */
 
-	if (alpha) {
-		bitvec_write_field(dest, &wp, 0x1, 1); /* ALPHA =yes */
-		bitvec_write_field(dest, &wp, alpha, 4); /* ALPHA */
-	} else {
-		bitvec_write_field(dest, &wp, 0x0, 1); /* ALPHA = no */
-	}
+	rc = write_alpha_gamma(dest, alpha, gamma);
+	CHECK(rc);
 
-	bitvec_write_field(dest, &wp, gamma, 5); /* GAMMA power contrl */
-	bitvec_write_field(dest, &wp, (fn / (26 * 51)) % 32, 5);/* T1' */
-	bitvec_write_field(dest, &wp, fn % 51, 6);              /* T3 */
-	bitvec_write_field(dest, &wp, fn % 26, 5);              /* T2 */
-	bitvec_write_field(dest, &wp, 0, 2); /* Radio block allocation */
+	rc = write_tbf_start_time(dest, fn);
+	CHECK(rc);
 
-	bitvec_write_field(dest, &wp, 0, 1);
+	SET_0(dest); /* NUMBER OF RADIO BLOCKS ALLOCATED: */
+	SET_0(dest); /* 1 radio block reserved for uplink transmission */
+	SET_0(dest); /* No P0 */
 
 	return rc;
 }
@@ -483,7 +478,8 @@ int Encoding::write_immediate_assignment(
 		if (as_ul_tbf(tbf) != NULL) {
 			rc = write_ia_rest_egprs_uplink_sba(as_ul_tbf(tbf), dest, usf, alpha, gamma, wp);
 		} else {
-			rc = write_ia_rest_egprs_uplink_mba(dest, fn, alpha, gamma, wp);
+			dest->cur_bit = wp;
+			rc = write_ia_rest_egprs_uplink_mba(dest, fn, alpha, gamma);
 		}
 	} else {
 		OSMO_ASSERT(!tbf || !tbf->is_egprs_enabled());
