@@ -28,9 +28,8 @@
 
 extern "C" {
 #include <osmocom/gprs/protocol/gsm_04_60.h>
-}
-
 #include <osmocom/gsm/protocol/gsm_04_08.h>
+}
 
 #include <stdbool.h>
 #include <errno.h>
