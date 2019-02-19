@@ -85,6 +85,33 @@ static int write_tbf_start_time(bitvec *dest, uint32_t fn)
 	return rc;
 }
 
+/* 3GPP TS 44.018 §10.5.2.16:
+   < TFI_ASSIGNMENT : bit (5) >
+   < POLLING : bit >
+   0 -- The value '1' was allocated in an earlier version of the protocol and shall not be used.
+   < USF: bit (3) >
+   < USF_GRANULARITY : bit >
+   { 0 | 1 < P0 : bit (4) > < PR_MODE : bit (1) > }
+*/
+static int write_tfi_usf(bitvec *dest, const gprs_rlcmac_ul_tbf *tbf, uint8_t usf)
+{
+       int rc = bitvec_set_u64(dest, tbf->tfi(), 5, false); /* TFI_ASSIGNMENT */
+       CHECK(rc);
+
+       SET_0(dest); /* POLLING -- no action is required from MS */
+
+       SET_0(dest);
+
+       rc = bitvec_set_u64(dest, usf, 3, false); /* USF */
+       CHECK(rc);
+
+       SET_0(dest); /* USF_GRANULARITY -- the mobile station shall transmit one RLC/MAC block */
+
+       SET_0(dest); /* No P0 nor PR_MODE */
+
+       return 0;
+}
+
 /* { 0 | 1 < TIMING_ADVANCE_INDEX : bit (4) > } */
 static int write_ta_index(bitvec *dest, int8_t tai)
 {
@@ -278,38 +305,42 @@ static int write_ia_rest_egprs_uplink_mba(bitvec * dest, uint32_t fn, uint8_t al
 }
 
 static int write_ia_rest_egprs_uplink_sba(const gprs_rlcmac_ul_tbf *tbf, bitvec * dest, uint8_t usf,
-					  uint8_t alpha, uint8_t gamma, unsigned& wp)
+					  uint8_t alpha, uint8_t gamma)
 {
 	int rc = 0;
 
-	bitvec_write_field(dest, &wp, 1, 1);     /* single block allocation */
-	bitvec_write_field(dest, &wp, tbf->tfi(), 5); /* TFI assignment */
-	bitvec_write_field(dest, &wp, 0, 1);     /* polling bit */
-	bitvec_write_field(dest, &wp, 0, 1);     /* constant */
-	bitvec_write_field(dest, &wp, usf, 3);   /* USF bit */
-	bitvec_write_field(dest, &wp, 0, 1);     /* USF granularity */
-	bitvec_write_field(dest, &wp, 0, 1);     /* P0 */
+	SET_1(dest); /* Single Block Allocation */
 
-	/* MCS */
-	bitvec_write_field(dest, &wp, tbf->current_cs().to_num() - 1, 4);
+	rc = write_tfi_usf(dest, tbf, usf);
+	CHECK(rc);
 
-	/* TLLI channel block */
-	bitvec_write_field(dest, &wp, tbf->tlli(), 1);
-	bitvec_write_field(dest, &wp, 0, 1);   /* BEP period present */
-	bitvec_write_field(dest, &wp, 0, 1);   /* resegmentation */
-	write_ws(dest, &wp, tbf->window_size()); /* EGPRS window size */
+	/* 3GPP TS 44.060 §12.10d EGPRS Modulation and coding Scheme description: */
+	rc = bitvec_set_u64(dest, tbf->current_cs().to_num() - 1, 4, false); /* EGPRS CHANNEL_CODING_COMMAND */
+	CHECK(rc);
 
-	if (alpha) {
-		bitvec_write_field(dest, &wp, 0x1, 1);   /* ALPHA = yes */
-		bitvec_write_field(dest, &wp, alpha, 4); /* ALPHA */
-	} else {
-		bitvec_write_field(dest, &wp, 0x0, 1);   /* ALPHA = no */
-	}
+	/* TLLI_BLOCK_CHANNEL_CODING */
+	rc = bitvec_set_bit(dest, (bit_value)tbf->tlli());
 
-	bitvec_write_field(dest, &wp, gamma, 5); /* GAMMA power contrl */
-	bitvec_write_field(dest, &wp, 0, 1); /* TIMING_ADVANCE_INDEX */
-	bitvec_write_field(dest, &wp, 0, 1); /* TBF_STARTING_TIME_FLAG */
-	bitvec_write_field(dest, &wp, 0, 1); /* NULL */
+	/* No BEP_PERIOD2 */
+	SET_0(dest);
+
+	/* Retransmitted RLC data blocks shall not be re-segmented: (see 3GPP TS 44.060 §12.10e) */
+	SET_0(dest); /* RESEGMENT */
+
+	rc = bitvec_set_u64(dest, enc_ws(tbf->window_size()), 5, false); /* EGPRS Window Size */
+	CHECK(rc);
+
+	rc = write_alpha_gamma(dest, alpha, gamma);
+	CHECK(rc);
+
+	/* No TIMING_ADVANCE_INDEX */
+	SET_0(dest);
+
+	/* No TBF_STARTING_TIME */
+	SET_0(dest);
+
+	/* No Additions for Rel-7 */
+	SET_0(dest);
 
 	return rc;
 }
@@ -476,7 +507,8 @@ int Encoding::write_immediate_assignment(
 		bitvec_write_field(dest, &wp, 0, 1);    /* Access technology Request */
 
 		if (as_ul_tbf(tbf) != NULL) {
-			rc = write_ia_rest_egprs_uplink_sba(as_ul_tbf(tbf), dest, usf, alpha, gamma, wp);
+			dest->cur_bit = wp;
+			rc = write_ia_rest_egprs_uplink_sba(as_ul_tbf(tbf), dest, usf, alpha, gamma);
 		} else {
 			dest->cur_bit = wp;
 			rc = write_ia_rest_egprs_uplink_mba(dest, fn, alpha, gamma);
