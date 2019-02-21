@@ -47,6 +47,7 @@ extern uint16_t spoof_mcc, spoof_mnc;
 extern bool spoof_mnc_3_digits;
 
 static void bvc_timeout(void *_priv);
+static int gprs_ns_reconnect(struct gprs_nsvc *nsvc);
 
 static int parse_imsi(struct tlv_parsed *tp, char *imsi)
 {
@@ -857,7 +858,7 @@ static void bvc_timeout(void *_priv)
 	osmo_timer_schedule(&the_pcu.bvc_timer, the_pcu.bts->fc_interval, 0);
 }
 
-int gprs_ns_reconnect(struct gprs_nsvc *nsvc)
+static int gprs_ns_reconnect(struct gprs_nsvc *nsvc)
 {
 	struct gprs_nsvc *nsvc2;
 

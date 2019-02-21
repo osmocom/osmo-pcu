@@ -81,7 +81,6 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 		uint16_t lac, uint16_t rac, uint16_t cell_id);
 
 void gprs_bssgp_destroy(void);
-int gprs_ns_reconnect(struct gprs_nsvc *nsvc);
 
 struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void);
 
