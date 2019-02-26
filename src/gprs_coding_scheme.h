@@ -59,13 +59,6 @@ public:
 		NUM_HEADER_TYPES
 	};
 
-	enum Family {
-		FAMILY_INVALID,
-		FAMILY_A,
-		FAMILY_B,
-		FAMILY_C,
-	};
-
 	GprsCodingScheme(Scheme s = UNKNOWN);
 
 	operator bool() const {return m_scheme != UNKNOWN;}
@@ -108,7 +101,6 @@ public:
 	const char *name() const;
 	HeaderType headerTypeData() const;
 	HeaderType headerTypeControl() const;
-	Family family() const;
 
 	static GprsCodingScheme getBySizeUL(unsigned size);
 	static GprsCodingScheme getGprsByNum(unsigned num);

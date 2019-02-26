@@ -53,6 +53,13 @@ enum GprsCodingScheme::Scheme GprsCodingScheme::egprs_mcs_retx_tbl[MAX_NUM_ARQ]
 		}
 	};
 
+enum Family {
+	FAMILY_INVALID,
+	FAMILY_A,
+	FAMILY_B,
+	FAMILY_C,
+};
+
 static struct {
 	struct {
 		uint8_t bytes;
@@ -63,38 +70,38 @@ static struct {
 	uint8_t optional_padding_bits;
 	const char *name;
 	GprsCodingScheme::HeaderType data_hdr;
-	GprsCodingScheme::Family family;
+	enum Family family;
 } mcs_info[GprsCodingScheme::NUM_SCHEMES] = {
 	{{0, 0},   {0, 0},    0,  0, "UNKNOWN",
-		GprsCodingScheme::HEADER_INVALID, GprsCodingScheme::FAMILY_INVALID},
+		GprsCodingScheme::HEADER_INVALID, FAMILY_INVALID},
 	{{23, 0},  {23, 0},  20,  0, "CS-1",
-		GprsCodingScheme::HEADER_GPRS_DATA, GprsCodingScheme::FAMILY_INVALID},
+		GprsCodingScheme::HEADER_GPRS_DATA, FAMILY_INVALID},
 	{{33, 7},  {33, 7},  30,  0, "CS-2",
-		GprsCodingScheme::HEADER_GPRS_DATA, GprsCodingScheme::FAMILY_INVALID},
+		GprsCodingScheme::HEADER_GPRS_DATA, FAMILY_INVALID},
 	{{39, 3},  {39, 3},  36,  0, "CS-3",
-		GprsCodingScheme::HEADER_GPRS_DATA, GprsCodingScheme::FAMILY_INVALID},
+		GprsCodingScheme::HEADER_GPRS_DATA, FAMILY_INVALID},
 	{{53, 7},  {53, 7},  50,  0, "CS-4",
-		GprsCodingScheme::HEADER_GPRS_DATA, GprsCodingScheme::FAMILY_INVALID},
+		GprsCodingScheme::HEADER_GPRS_DATA, FAMILY_INVALID},
 
 	{{26, 1},  {26, 1},  22,  0, "MCS-1",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, GprsCodingScheme::FAMILY_C},
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, FAMILY_C},
 	{{32, 1},  {32, 1},  28,  0, "MCS-2",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, GprsCodingScheme::FAMILY_B},
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, FAMILY_B},
 	{{41, 1},  {41, 1},  37, 48, "MCS-3",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, GprsCodingScheme::FAMILY_A},
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, FAMILY_A},
 	{{48, 1},  {48, 1},  44,  0, "MCS-4",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, GprsCodingScheme::FAMILY_C},
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, FAMILY_C},
 
 	{{60, 7},  {59, 6},  56,  0, "MCS-5",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2, GprsCodingScheme::FAMILY_B},
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2, FAMILY_B},
 	{{78, 7},  {77, 6},  74, 48, "MCS-6",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2, GprsCodingScheme::FAMILY_A},
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2, FAMILY_A},
 	{{118, 2}, {117, 4}, 56,  0, "MCS-7",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1, GprsCodingScheme::FAMILY_B},
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1, FAMILY_B},
 	{{142, 2}, {141, 4}, 68,  0, "MCS-8",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1, GprsCodingScheme::FAMILY_A},
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1, FAMILY_A},
 	{{154, 2}, {153, 4}, 74,  0, "MCS-9",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1, GprsCodingScheme::FAMILY_A},
+		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1, FAMILY_A},
 };
 
 static struct {
@@ -220,11 +227,6 @@ GprsCodingScheme::HeaderType GprsCodingScheme::headerTypeData() const
 	return mcs_info[m_scheme].data_hdr;
 }
 
-GprsCodingScheme::Family GprsCodingScheme::family() const
-{
-	return mcs_info[m_scheme].family;
-}
-
 void GprsCodingScheme::inc(Mode mode)
 {
 	if (!isCompatible(mode))
@@ -296,10 +298,10 @@ bool GprsCodingScheme::isFamilyCompatible(GprsCodingScheme o) const
 	if (*this == o)
 		return true;
 
-	if (family() == FAMILY_INVALID)
+	if (mcs_info[m_scheme].family == FAMILY_INVALID)
 		return false;
 
-	return family() == o.family();
+	return mcs_info[m_scheme].family == mcs_info[o.m_scheme].family;
 }
 
 bool GprsCodingScheme::isCombinable(GprsCodingScheme o) const
