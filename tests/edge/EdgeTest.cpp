@@ -105,11 +105,22 @@ static void check_coding_scheme(GprsCodingScheme& cs, GprsCodingScheme::Mode mod
 
 }
 
+static bool check_strong_monotonicity(const GprsCodingScheme *cs, uint8_t last_UL, uint8_t last_DL)
+{
+	if (cs->maxBytesUL() <= last_UL)
+		return false;
+
+	if (cs->maxBytesDL() <= last_DL)
+		return false;
+
+	return true;
+}
+
 static void test_coding_scheme()
 {
 	unsigned i;
-	unsigned last_size_UL;
-	unsigned last_size_DL;
+	uint8_t last_size_UL;
+	uint8_t last_size_DL;
 	GprsCodingScheme::Scheme gprs_schemes[] = {
 		GprsCodingScheme::CS1,
 		GprsCodingScheme::CS2,
@@ -152,9 +163,7 @@ static void test_coding_scheme()
 		OSMO_ASSERT(GprsCodingScheme::Scheme(current_cs) == gprs_schemes[i]);
 		OSMO_ASSERT(current_cs == GprsCodingScheme(gprs_schemes[i]));
 
-		/* Check strong monotonicity */
-		OSMO_ASSERT(current_cs.maxBytesUL() > last_size_UL);
-		OSMO_ASSERT(current_cs.maxBytesDL() > last_size_DL);
+		OSMO_ASSERT(check_strong_monotonicity(&current_cs, last_size_UL, last_size_DL));
 		last_size_UL = current_cs.maxBytesUL();
 		last_size_DL = current_cs.maxBytesDL();
 
@@ -179,9 +188,7 @@ static void test_coding_scheme()
 		OSMO_ASSERT(GprsCodingScheme::Scheme(current_cs) == egprs_schemes[i].s);
 		OSMO_ASSERT(current_cs == GprsCodingScheme(egprs_schemes[i].s));
 
-		/* Check strong monotonicity */
-		OSMO_ASSERT(current_cs.maxBytesUL() > last_size_UL);
-		OSMO_ASSERT(current_cs.maxBytesDL() > last_size_DL);
+		OSMO_ASSERT(check_strong_monotonicity(&current_cs, last_size_UL, last_size_DL));
 		last_size_UL = current_cs.maxBytesUL();
 		last_size_DL = current_cs.maxBytesDL();
 
