@@ -212,20 +212,6 @@ inline bool operator <(GprsCodingScheme a, GprsCodingScheme b)
 		GprsCodingScheme::Scheme(a) < GprsCodingScheme::Scheme(b);
 }
 
-inline bool operator >(GprsCodingScheme a, GprsCodingScheme b)
-{
-	return b < a;
-}
-
-inline bool operator <=(GprsCodingScheme a, GprsCodingScheme b)
-{
-	return a == b || a < b;
-}
-
-inline bool operator >=(GprsCodingScheme a, GprsCodingScheme b)
-{
-	return a == b || a > b;
-}
 inline GprsCodingScheme::Scheme GprsCodingScheme::get_retx_mcs(
 				const GprsCodingScheme mcs,
 				const GprsCodingScheme demanded_mcs,
