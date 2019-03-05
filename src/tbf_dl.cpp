@@ -46,6 +46,7 @@ extern "C" {
 	#include <osmocom/core/utils.h>
 	#include <osmocom/gsm/gsm_utils.h>
 	#include <osmocom/gsm/protocol/gsm_04_08.h>
+	#include "coding_scheme.h"
 }
 
 #include <errno.h>
@@ -429,7 +430,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		new_cs = force_cs ? force_cs : current_cs();
 		LOGPTBFDL(this, LOGL_DEBUG,
 			  "Sending new block at BSN %d, CS=%s\n",
-			  m_window.v_s(), new_cs.name());
+			  m_window.v_s(), mcs_name(new_cs));
 
 		bsn = create_new_bsn(fn, new_cs);
 	} else if (!m_window.window_empty()) {
@@ -443,7 +444,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		/* Nothing left to send, create dummy LLC commands */
 		LOGPTBFDL(this, LOGL_DEBUG,
 			  "Sending new dummy block at BSN %d, CS=%s\n",
-			  m_window.v_s(), current_cs().name());
+			  m_window.v_s(), mcs_name(current_cs()));
 		bsn = create_new_bsn(fn, current_cs());
 		/* Don't send a second block, so don't set cs_current_trans */
 	}
@@ -624,7 +625,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 	} while (ar == Encoding::AR_COMPLETED_SPACE_LEFT);
 
 	LOGPTBFDL(this, LOGL_DEBUG, "data block (BSN %d, %s): %s\n",
-		  bsn, rlc_data->cs_last.name(),
+		  bsn, mcs_name(rlc_data->cs_last),
 		  osmo_hexdump(rlc_data->block, block_data_len));
 	/* raise send state and set ack state array */
 	m_window.m_v_b.mark_unacked(bsn);
@@ -867,7 +868,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	Encoding::rlc_write_dl_data_header(&rlc, msg_data);
 
 	LOGPTBFDL(this, LOGL_DEBUG, "msg block (BSN %d, %s%s): %s\n",
-		  index, cs.name(),
+		  index, mcs_name(cs),
 		  need_padding ? ", padded" : "",
 		  msgb_hexdump(dl_msg));
 
@@ -1281,7 +1282,7 @@ enum egprs_rlc_dl_reseg_bsn_state
 					  "FIXME: Software error: hit invalid condition. "
 					  "headerType(%d) blockstatus(%d) cs(%s) PLEASE FIX!\n",
 					  cs_current_trans.headerTypeData(),
-					  *block_status_dl, cs_init.name());
+					  *block_status_dl, mcs_name(cs_init));
 				break;
 
 			}

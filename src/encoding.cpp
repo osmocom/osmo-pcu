@@ -1227,7 +1227,7 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 	default:
 		LOGP(DRLCMACDL, LOGL_ERROR,
 			"Encoding of uplink %s data blocks not yet supported.\n",
-			cs.name());
+			mcs_name(cs));
 		return -ENOTSUP;
 	};
 
@@ -1616,7 +1616,7 @@ Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 			count_payload);
 
 	LOGP(DRLCMACDL, LOGL_ERROR, "%s data block encoding not implemented\n",
-		cs.name());
+		mcs_name(cs));
 
 	return AR_NEED_MORE_BLOCKS;
 }

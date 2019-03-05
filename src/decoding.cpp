@@ -370,7 +370,7 @@ int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 	default:
 		LOGP(DRLCMACDL, LOGL_ERROR,
 			"Decoding of uplink %s data blocks not yet supported.\n",
-			cs.name());
+			mcs_name(cs));
 		return -ENOTSUP;
 	};
 

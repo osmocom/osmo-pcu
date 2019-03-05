@@ -24,6 +24,28 @@
 
 #include "coding_scheme.h"
 
+const struct value_string mcs_names[] = {
+	{ UNKNOWN, "UNKNOWN" },
+	{ CS1, "CS-1" },
+	{ CS2, "CS-2" },
+	{ CS3, "CS-3" },
+	{ CS4, "CS-4" },
+	{ MCS1, "MCS-1" },
+	{ MCS2, "MCS-2" },
+	{ MCS3, "MCS-3" },
+	{ MCS4, "MCS-4" },
+	{ MCS5, "MCS-5" },
+	{ MCS6, "MCS-6" },
+	{ MCS7, "MCS-7" },
+	{ MCS8, "MCS-8" },
+	{ MCS9, "MCS-9" },
+	{ 0, NULL }
+};
+
+const char *mcs_name(enum CodingScheme val) {
+	return get_value_string(mcs_names, val);
+}
+
 static struct {
 	struct {
 		uint8_t data_header_bits;

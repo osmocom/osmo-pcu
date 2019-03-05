@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <osmocom/core/utils.h>
+
 enum CodingScheme {
 	UNKNOWN,
 	/* GPRS Coding Schemes: */
@@ -27,6 +29,9 @@ enum CodingScheme {
 	MCS1, MCS2, MCS3, MCS4, MCS5, MCS6, MCS7, MCS8, MCS9,
 	NUM_SCHEMES
 };
+
+extern const struct value_string mcs_names[];
+const char *mcs_name(enum CodingScheme val);
 
 enum HeaderType {
 	HEADER_INVALID,

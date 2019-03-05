@@ -34,6 +34,7 @@ extern "C" {
 	#include <osmocom/core/utils.h>
 	#include <osmocom/gsm/protocol/gsm_04_08.h>
 	#include <osmocom/core/logging.h>
+	#include "coding_scheme.h"
 }
 
 #define GPRS_CODEL_SLOW_INTERVAL_MS 4000
@@ -527,7 +528,7 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 			LOGP(DRLCMACDL, LOGL_INFO,
 				"MS (IMSI %s): High error rate %d%%, "
 				"reducing CS level to %s\n",
-				imsi(), error_rate, m_current_cs_dl.name());
+				imsi(), error_rate, mcs_name(m_current_cs_dl));
 			m_last_cs_not_low = now;
 		}
 	} else if (error_rate < bts_data->cs_adj_lower_limit) {
@@ -539,7 +540,7 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 				       "MS (IMSI %s): Low error rate %d%%, "
 				       "increasing DL CS level to %s\n",
 				       imsi(), error_rate,
-				       m_current_cs_dl.name());
+				       mcs_name(m_current_cs_dl));
 			       m_last_cs_not_low = now;
 		       } else {
 			       LOGP(DRLCMACDL, LOGL_DEBUG,
@@ -627,7 +628,7 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 	if (!max_cs_ul) {
 		LOGP(DRLCMACMEAS, LOGL_ERROR,
 			"max_cs_ul cannot be derived (current UL CS: %s)\n",
-			m_current_cs_ul.name());
+			mcs_name(m_current_cs_ul));
 		return;
 	}
 
@@ -636,14 +637,14 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 	if (!m_current_cs_ul) {
 		LOGP(DRLCMACMEAS, LOGL_ERROR,
 		     "Unable to update UL (M)CS because it's not set: %s\n",
-		     m_current_cs_ul.name());
+		     mcs_name(m_current_cs_ul));
 		return;
 	}
 
 	if (!meas->have_link_qual) {
 		LOGP(DRLCMACMEAS, LOGL_ERROR,
 		     "Unable to update UL (M)CS %s because we don't have link quality measurements.\n",
-		     m_current_cs_ul.name());
+		     mcs_name(m_current_cs_ul));
 		return;
 	}
 
@@ -662,7 +663,7 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 	} else {
 		LOGP(DRLCMACMEAS, LOGL_ERROR,
 		     "Unable to update UL (M)CS because it's neither GPRS nor EDGE: %s\n",
-		     m_current_cs_ul.name());
+		     mcs_name(m_current_cs_ul));
 		return;
 	}
 
@@ -682,7 +683,7 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 			"modifying uplink CS level: %s -> %s\n",
 			imsi(), meas->link_qual, old_link_qual,
 			low, high,
-			m_current_cs_ul.name(), new_cs_ul.name());
+			mcs_name(m_current_cs_ul), mcs_name(new_cs_ul));
 
 		m_current_cs_ul = new_cs_ul;
 	}

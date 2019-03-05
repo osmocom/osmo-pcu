@@ -41,6 +41,7 @@ extern "C" {
 	#include <osmocom/core/linuxlist.h>
 	#include <osmocom/core/utils.h>
 	#include <osmocom/vty/vty.h>
+	#include "coding_scheme.h"
 }
 
 static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
@@ -70,7 +71,7 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 	}
 	if (tbf->trx != NULL)
 		vty_out(vty, " TRX_ID=%d", tbf->trx->trx_no);
-	vty_out(vty, " CS=%s", tbf->current_cs().name());
+	vty_out(vty, " CS=%s", mcs_name(tbf->current_cs()));
 
 	if (ul_tbf) {
 		gprs_rlc_ul_window *win = ul_tbf->window();
@@ -127,8 +128,8 @@ int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
 		vty_out(vty, "MS TLLI=%08x, TA=%d, CS-UL=%s, CS-DL=%s, LLC=%zd, Cl=%d, E-Cl=%d,"
 			" TBF-UL=%s, TBF-DL=%s, IMSI=%s%s",
 			ms->tlli(),
-			ms->ta(), ms->current_cs_ul().name(),
-			ms->current_cs_dl().name(),
+			ms->ta(), mcs_name(ms->current_cs_ul()),
+			mcs_name(ms->current_cs_dl()),
 			ms->llc_queue()->size(),
 			ms->ms_class(),
 			ms->egprs_ms_class(),
@@ -148,9 +149,9 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 
 	vty_out(vty, "MS TLLI=%08x, IMSI=%s%s", ms->tlli(), ms->imsi(), VTY_NEWLINE);
 	vty_out(vty, "  Timing advance (TA):    %d%s", ms->ta(), VTY_NEWLINE);
-	vty_out(vty, "  Coding scheme uplink:   %s%s", ms->current_cs_ul().name(),
+	vty_out(vty, "  Coding scheme uplink:   %s%s", mcs_name(ms->current_cs_ul()),
 		VTY_NEWLINE);
-	vty_out(vty, "  Coding scheme downlink: %s%s", ms->current_cs_dl().name(),
+	vty_out(vty, "  Coding scheme downlink: %s%s", mcs_name(ms->current_cs_dl()),
 		VTY_NEWLINE);
 	vty_out(vty, "  Mode:                   %s%s",
 		GprsCodingScheme::modeName(ms->mode()), VTY_NEWLINE);

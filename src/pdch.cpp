@@ -43,6 +43,7 @@ extern "C" {
 	#include <osmocom/core/gsmtap.h>
 	#include <osmocom/core/logging.h>
 	#include <osmocom/core/utils.h>
+	#include "coding_scheme.h"
 }
 
 #include <errno.h>
@@ -738,7 +739,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	bts()->rlc_ul_bytes(len);
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Got RLC block, coding scheme: %s, "
-		"length: %d (%d))\n", cs.name(), len, cs.usedSizeUL());
+		"length: %d (%d))\n", mcs_name(cs), len, cs.usedSizeUL());
 
 	if (cs.isGprs())
 		return rcv_block_gprs(data, len, fn, meas, cs);
@@ -748,7 +749,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 
 	bts()->decode_error();
 	LOGP(DRLCMACUL, LOGL_ERROR, "Unsupported coding scheme %s\n",
-		cs.name());
+		mcs_name(cs));
 	return -EINVAL;
 }
 
@@ -768,7 +769,7 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 		if (!bts()->bts_data()->egprs_enabled) {
 			LOGP(DRLCMACUL, LOGL_ERROR,
 				"Got %s RLC block but EGPRS is not enabled\n",
-				cs.name());
+				mcs_name(cs));
 			return -EINVAL;
 		}
 		bts()->send_gsmtap(PCU_GSMTAP_C_UL_DATA_EGPRS, true, trx_no(), ts_no, GSMTAP_CHANNEL_PDTCH, fn,
@@ -784,7 +785,7 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 	if (rc < 0) {
 		LOGP(DRLCMACUL, LOGL_ERROR,
 			"Got %s RLC block but header parsing has failed\n",
-			cs.name());
+			mcs_name(cs));
 		bts()->decode_error();
 		return rc;
 	}
@@ -793,7 +794,7 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 		"Got %s RLC block: "
 		"R=%d, SI=%d, TFI=%d, CPS=%d, RSB=%d, "
 		"rc=%d\n",
-		cs.name(),
+		mcs_name(cs),
 		rlc_dec.r, rlc_dec.si, rlc_dec.tfi, rlc_dec.cps, rlc_dec.rsb,
 		rc);
 

@@ -81,39 +81,38 @@ static struct {
 	} uplink, downlink;
 	uint8_t data_bytes;
 	uint8_t optional_padding_bits;
-	const char *name;
 	enum HeaderType data_hdr;
 	enum Family family;
 } mcs_info[NUM_SCHEMES] = {
-	{{0, 0},   {0, 0},    0,  0, "UNKNOWN",
+	{{0, 0},   {0, 0},    0,  0,
 		HEADER_INVALID, FAMILY_INVALID},
-	{{23, 0},  {23, 0},  20,  0, "CS-1",
+	{{23, 0},  {23, 0},  20,  0,
 		HEADER_GPRS_DATA, FAMILY_INVALID},
-	{{33, 7},  {33, 7},  30,  0, "CS-2",
+	{{33, 7},  {33, 7},  30,  0,
 		HEADER_GPRS_DATA, FAMILY_INVALID},
-	{{39, 3},  {39, 3},  36,  0, "CS-3",
+	{{39, 3},  {39, 3},  36,  0,
 		HEADER_GPRS_DATA, FAMILY_INVALID},
-	{{53, 7},  {53, 7},  50,  0, "CS-4",
+	{{53, 7},  {53, 7},  50,  0,
 		HEADER_GPRS_DATA, FAMILY_INVALID},
 
-	{{26, 1},  {26, 1},  22,  0, "MCS-1",
+	{{26, 1},  {26, 1},  22,  0,
 		HEADER_EGPRS_DATA_TYPE_3, FAMILY_C},
-	{{32, 1},  {32, 1},  28,  0, "MCS-2",
+	{{32, 1},  {32, 1},  28,  0,
 		HEADER_EGPRS_DATA_TYPE_3, FAMILY_B},
-	{{41, 1},  {41, 1},  37, 48, "MCS-3",
+	{{41, 1},  {41, 1},  37, 48,
 		HEADER_EGPRS_DATA_TYPE_3, FAMILY_A},
-	{{48, 1},  {48, 1},  44,  0, "MCS-4",
+	{{48, 1},  {48, 1},  44,  0,
 		HEADER_EGPRS_DATA_TYPE_3, FAMILY_C},
 
-	{{60, 7},  {59, 6},  56,  0, "MCS-5",
+	{{60, 7},  {59, 6},  56,  0,
 		HEADER_EGPRS_DATA_TYPE_2, FAMILY_B},
-	{{78, 7},  {77, 6},  74, 48, "MCS-6",
+	{{78, 7},  {77, 6},  74, 48,
 		HEADER_EGPRS_DATA_TYPE_2, FAMILY_A},
-	{{118, 2}, {117, 4}, 56,  0, "MCS-7",
+	{{118, 2}, {117, 4}, 56,  0,
 		HEADER_EGPRS_DATA_TYPE_1, FAMILY_B},
-	{{142, 2}, {141, 4}, 68,  0, "MCS-8",
+	{{142, 2}, {141, 4}, 68,  0,
 		HEADER_EGPRS_DATA_TYPE_1, FAMILY_A},
-	{{154, 2}, {153, 4}, 74,  0, "MCS-9",
+	{{154, 2}, {153, 4}, 74,  0,
 		HEADER_EGPRS_DATA_TYPE_1, FAMILY_A},
 };
 
@@ -192,11 +191,6 @@ uint8_t GprsCodingScheme::maxDataBlockBytes() const
 uint8_t GprsCodingScheme::optionalPaddingBits() const
 {
 	return mcs_info[m_scheme].optional_padding_bits;
-}
-
-const char *GprsCodingScheme::name() const
-{
-	return mcs_info[m_scheme].name;
 }
 
 enum HeaderType GprsCodingScheme::headerTypeData() const

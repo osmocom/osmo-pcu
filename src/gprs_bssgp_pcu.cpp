@@ -26,7 +26,11 @@
 #include <tbf.h>
 #include <gprs_coding_scheme.h>
 #include <pdch.h>
-#include "coding_scheme.h"
+
+extern "C" {
+	#include <osmocom/core/utils.h>
+	#include "coding_scheme.h"
+}
 
 #define BSSGP_TIMER_T1	30	/* Guards the (un)blocking procedures */
 #define BSSGP_TIMER_T2	30	/* Guards the reset procedure */
@@ -775,7 +779,7 @@ int gprs_bssgp_tx_fc_bvc(void)
 
 		LOGP(DBSSGP, LOGL_DEBUG,
 			"Computed BVC leak rate = %d, num_pdch = %d, cs = %s\n",
-			leak_rate, num_pdch, max_cs_dl.name());
+			leak_rate, num_pdch, mcs_name(max_cs_dl));
 	};
 
 	if (ms_leak_rate == 0) {
@@ -799,7 +803,7 @@ int gprs_bssgp_tx_fc_bvc(void)
 		LOGP(DBSSGP, LOGL_DEBUG,
 			"Computed MS default leak rate = %d, ms_num_pdch = %d, "
 			"cs = %s\n",
-			ms_leak_rate, ms_num_pdch, max_cs_dl.name());
+			ms_leak_rate, ms_num_pdch, mcs_name(max_cs_dl));
 	};
 
 	/* TODO: Force leak_rate to 0 on buffer bloat */

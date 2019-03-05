@@ -74,7 +74,7 @@ public:
 	uint8_t spareBitsDL() const;
 	uint8_t maxDataBlockBytes() const;
 	uint8_t optionalPaddingBits() const;
-	const char *name() const;
+
 	enum HeaderType headerTypeData() const;
 
 	static GprsCodingScheme getBySizeUL(unsigned size);

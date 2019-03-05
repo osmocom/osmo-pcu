@@ -1118,7 +1118,7 @@ static void test_rlc_unaligned_copy()
 				fprintf(stderr,
 					"Encoded message block, %s, idx %d, "
 					"pattern %02x: %s\n",
-					rlc.cs.name(), block_idx, pattern,
+					mcs_name(rlc.cs), block_idx, pattern,
 					osmo_hexdump(bits, cs.sizeDL()));
 
 				Decoding::rlc_copy_to_aligned_buffer(

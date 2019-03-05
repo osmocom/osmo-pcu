@@ -43,6 +43,7 @@ extern "C" {
 	#include <osmocom/gprs/gprs_bssgp_bss.h>
 	#include <osmocom/gprs/protocol/gsm_08_18.h>
 	#include <osmocom/gsm/tlv.h>
+	#include "coding_scheme.h"
 }
 
 #include <errno.h>
@@ -212,7 +213,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 		LOGPTBFUL(this, LOGL_DEBUG,
 			  "Got %s RLC data block: CV=%d, BSN=%d, SPB=%d, PI=%d, E=%d, TI=%d, bitoffs=%d\n",
-			  rlc->cs.name(),
+			  mcs_name(rlc->cs),
 			  rdbi->cv, rdbi->bsn, rdbi->spb,
 			  rdbi->pi, rdbi->e, rdbi->ti,
 			  rlc->data_offs_bits[block_idx]);
@@ -278,7 +279,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 				bts->decode_error();
 				LOGPTBFUL(this, LOGL_NOTICE,
 					  "Failed to decode TLLI of %s UL DATA TFI=%d.\n",
-					  rlc->cs.name(), rlc->tfi);
+					  mcs_name(rlc->cs), rlc->tfi);
 				m_window.invalidate_bsn(rdbi->bsn);
 				continue;
 			}
@@ -479,7 +480,7 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_spb(
 
 	LOGPTBFUL(this, LOGL_DEBUG,
 		  "Got SPB(%d) cs(%s) data block with BSN (%d), TFI(%d).\n",
-		  rdbi->spb,  rlc->cs.name(), rdbi->bsn, rlc->tfi);
+		  rdbi->spb,  mcs_name(rlc->cs), rdbi->bsn, rlc->tfi);
 
 	egprs_rlc_ul_reseg_bsn_state assemble_status = EGPRS_RESEG_INVALID;
 
@@ -517,7 +518,7 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_spb(
 		default:
 			LOGPTBFUL(this, LOGL_ERROR,
 				  "cs(%s) Error in Upgrading to higher MCS\n",
-				  rlc->cs.name());
+				  mcs_name(rlc->cs));
 			break;
 		}
 	}
