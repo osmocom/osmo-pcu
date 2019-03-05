@@ -31,8 +31,6 @@ extern "C" {
 class GprsCodingScheme {
 public:
 
-#define MAX_NUM_ARQ           2      /* max. number of ARQ */
-#define MAX_NUM_MCS           9     /* max. number of MCS */
 #define EGPRS_ARQ1            0x0
 #define EGPRS_ARQ2            0x1
 
@@ -102,9 +100,6 @@ public:
 	static CodingScheme get_retx_mcs(const GprsCodingScheme mcs,
 				const GprsCodingScheme retx_mcs,
 				const unsigned arq_type);
-
-	static enum CodingScheme egprs_mcs_retx_tbl[MAX_NUM_ARQ]
-			[MAX_NUM_MCS][MAX_NUM_MCS];
 private:
 	GprsCodingScheme(int s); /* fail on use */
 	GprsCodingScheme& operator =(int s); /* fail on use */
@@ -191,16 +186,4 @@ inline bool operator !=(GprsCodingScheme a, GprsCodingScheme b)
 inline bool operator <(GprsCodingScheme a, GprsCodingScheme b)
 {
 	return a.isCompatible(b) && a.to_num() < b.to_num();
-}
-
-inline CodingScheme GprsCodingScheme::get_retx_mcs(
-				const GprsCodingScheme mcs,
-				const GprsCodingScheme demanded_mcs,
-				const unsigned arq_type)
-{
-	OSMO_ASSERT(mcs.to_num() > 0);
-	OSMO_ASSERT(demanded_mcs.to_num() > 0);
-
-	return egprs_mcs_retx_tbl[arq_type][mcs.to_num() - 1]
-			[demanded_mcs.to_num() - 1];
 }

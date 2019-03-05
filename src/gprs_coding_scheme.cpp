@@ -21,13 +21,16 @@
 
 #include "gprs_coding_scheme.h"
 
+#define MAX_NUM_ARQ           2     /* max. number of ARQ */
+#define MAX_NUM_MCS           9     /* max. number of MCS */
+
 /*
  * 44.060 Table 8.1.1.1 and Table 8.1.1.2
  * It has 3 level indexing. 0th level is ARQ type
  * 1st level is Original MCS( index 0 corresponds to MCS1 and so on)
  * 2nd level is MS MCS (index 0 corresponds to MCS1 and so on)
  */
-enum CodingScheme GprsCodingScheme::egprs_mcs_retx_tbl[MAX_NUM_ARQ]
+static enum CodingScheme egprs_mcs_retx_tbl[MAX_NUM_ARQ]
 			[MAX_NUM_MCS][MAX_NUM_MCS] = {
 		{
 			{MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1},
@@ -59,6 +62,16 @@ enum Family {
 	FAMILY_B,
 	FAMILY_C,
 };
+
+CodingScheme GprsCodingScheme::get_retx_mcs(const GprsCodingScheme mcs,
+							const GprsCodingScheme demanded_mcs,
+							const unsigned arq_type)
+{
+	OSMO_ASSERT(mcs.to_num() > 0);
+	OSMO_ASSERT(demanded_mcs.to_num() > 0);
+
+	return egprs_mcs_retx_tbl[arq_type][mcs.to_num() - 1][demanded_mcs.to_num() - 1];
+}
 
 static struct {
 	struct {
