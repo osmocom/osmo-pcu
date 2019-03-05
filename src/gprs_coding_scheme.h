@@ -100,7 +100,6 @@ public:
 	uint8_t optionalPaddingBits() const;
 	const char *name() const;
 	HeaderType headerTypeData() const;
-	HeaderType headerTypeControl() const;
 
 	static GprsCodingScheme getBySizeUL(unsigned size);
 	static GprsCodingScheme getGprsByNum(unsigned num);
@@ -144,11 +143,6 @@ inline bool GprsCodingScheme::isCompatible(Mode mode) const
 inline bool GprsCodingScheme::isCompatible(GprsCodingScheme o) const
 {
 	return (isGprs() && o.isGprs()) || (isEgprs() && o.isEgprs());
-}
-
-inline GprsCodingScheme::HeaderType GprsCodingScheme::headerTypeControl() const
-{
-	return HEADER_GPRS_CONTROL;
 }
 
 inline GprsCodingScheme::GprsCodingScheme(Scheme s)

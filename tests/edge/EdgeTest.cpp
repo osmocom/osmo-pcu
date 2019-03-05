@@ -170,8 +170,6 @@ static void test_coding_scheme()
 		/* Check header types */
 		OSMO_ASSERT(current_cs.headerTypeData() ==
 			GprsCodingScheme::HEADER_GPRS_DATA);
-		OSMO_ASSERT(current_cs.headerTypeControl() ==
-			GprsCodingScheme::HEADER_GPRS_CONTROL);
 
 		check_coding_scheme(current_cs, GprsCodingScheme::GPRS);
 	}
