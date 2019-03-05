@@ -61,7 +61,6 @@ static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
 	size_t len, const gprs_llc_queue::MetaInfo *exp_info = 0)
 {
 	struct msgb *llc_msg;
-	uint8_t *msg_data;
 	const gprs_llc_queue::MetaInfo *info_res;
 
 	llc_msg = queue->dequeue(&info_res);
@@ -70,10 +69,8 @@ static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
 	fprintf(stderr, "dequeued msg, length %u (expected %zu), data %s\n",
 		msgb_length(llc_msg), len, msgb_hexdump(llc_msg));
 
-	OSMO_ASSERT(msgb_length(llc_msg) == len);
-	msg_data = msgb_data(llc_msg);
-
-	OSMO_ASSERT(memcmp(msg_data, exp_data, len) == 0);
+	if (!msgb_eq_data_print(llc_msg, exp_data, len))
+		fprintf(stderr, "check failed!\n");
 
 	if (exp_info)
 		OSMO_ASSERT(memcmp(exp_info, info_res, sizeof(*exp_info)) == 0);
@@ -229,7 +226,7 @@ int main(int argc, char **argv)
 	log_set_use_color(osmo_stderr_target, 0);
 	log_set_print_filename(osmo_stderr_target, 0);
 	log_set_log_level(osmo_stderr_target, LOGL_INFO);
-	log_parse_category_mask(osmo_stderr_target, "DPCU,3");
+	log_parse_category_mask(osmo_stderr_target, "DPCU,3:DLGLOBAL,1:");
 
 	vty_init(&pcu_vty_info);
 	pcu_vty_init(&gprs_log_info);

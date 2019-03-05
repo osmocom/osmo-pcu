@@ -527,12 +527,21 @@ static void test_tbf_dl_llc_loss()
 	struct msgb *msg;
 	int fn = 0;
 	uint8_t expected_data = 1;
+	static uint8_t exp[][GSM_MACBLOCK_LEN] = {
+		{ 0x07, 0x00, 0x00, 0x4d, 0x01, 0x01, 0x01,
+		  0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01 },
+		{ 0x07, 0x00, 0x02, 0x4d, 0x02, 0x02, 0x02,
+		  0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02 },
+		{ 0x07, 0x01, 0x04, 0x4d, 0x03, 0x03, 0x03,
+		  0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03 },
+	};
 
 	while (ms->dl_tbf()->have_data()) {
 		msg = ms->dl_tbf()->create_dl_acked_block(fn += 4, 7);
 		fprintf(stderr, "MSG = %s\n", msgb_hexdump(msg));
-		OSMO_ASSERT(msgb_length(msg) == 23);
-		OSMO_ASSERT(msgb_data(msg)[10] == expected_data);
+		if (!msgb_eq_data_print(msg, exp[expected_data - 1], GSM_MACBLOCK_LEN))
+			printf("%s failed at %u\n", __func__, expected_data);
+
 		expected_data += 1;
 	}
 	OSMO_ASSERT(expected_data-1 == 3);
@@ -732,9 +741,14 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(BTS *the_bts,
 
 	struct msgb *msg1 = ul_tbf->create_ul_ack(*fn, ts_no);
 
-	OSMO_ASSERT(!strcmp(osmo_hexdump(msg1->data, msg1->data_len),
-	"40 24 01 3f 3e 24 46 68 90 87 b0 06 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b "
-	));
+	static uint8_t exp1[] = { 0x40, 0x24, 0x01, 0x3f, 0x3e, 0x24, 0x46, 0x68, 0x90, 0x87, 0xb0, 0x06,
+				  0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b
+	};
+
+	if (!msgb_eq_data_print(msg1, exp1, GSM_MACBLOCK_LEN)) {
+		printf("%s test failed on 1st segment!\n", __func__);
+		return NULL;
+	}
 
 	egprs3->si = 0;
 	egprs3->r = 1;
@@ -754,10 +768,14 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(BTS *the_bts,
 
 	msg1 = ul_tbf->create_ul_ack(*fn, ts_no);
 
-	OSMO_ASSERT(!strcmp(osmo_hexdump(msg1->data, msg1->data_len),
-	"40 24 01 3f 3e 24 46 68 90 88 b0 06 8b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b "
-	));
+	static uint8_t exp2[] = { 0x40, 0x24, 0x01, 0x3f, 0x3e, 0x24, 0x46, 0x68, 0x90, 0x88, 0xb0, 0x06, 0x8b,
+				  0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b
+	};
 
+	if (!msgb_eq_data_print(msg1, exp2, GSM_MACBLOCK_LEN)) {
+		printf("%s test failed on 2nd segment!\n", __func__);
+		return NULL;
+	}
 	return ul_tbf;
 }
 
@@ -3205,6 +3223,10 @@ void test_packet_access_rej_epdan()
 {
 	BTS the_bts;
 	uint32_t tlli = 0xffeeddcc;
+	static uint8_t exp[] = { 0x40, 0x84, 0x7f, 0xf7, 0x6e, 0xe6, 0x41, 0x4b,
+				 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b,
+				 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b
+	};
 
 	printf("=== start %s ===\n", __func__);
 	setup_bts(&the_bts, 4);
@@ -3217,8 +3239,9 @@ void test_packet_access_rej_epdan()
 	printf("packet reject: %s\n",
 			osmo_hexdump(msg->data, 23));
 
-	OSMO_ASSERT(!strcmp(osmo_hexdump(msg->data, 23),
-			    "40 84 7f f7 6e e6 41 4b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b "));
+	if (!msgb_eq_data_print(msg, exp, GSM_MACBLOCK_LEN))
+		printf("%s test failed!\n", __func__);
+
 	printf("=== end %s ===\n", __func__);
 
 }

@@ -33,6 +33,7 @@ extern const struct log_info gprs_log_info;
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
 #include <osmocom/core/utils.h>
+#include <osmocom/core/msgb.h>
 #include <osmocom/core/application.h>
 }
 using namespace std;
@@ -216,6 +217,8 @@ void testRlcMacUplink(void *test_ctx)
 
 void testCsnLeftAlignedVarBmpBounds(void *test_ctx)
 {
+	struct msgb *m = msgb_alloc(80, "test");
+	static uint8_t exp[] = { 0x7f, 0xff, 0xff, 0xee, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 	bitvec *vector = bitvec_alloc(23, test_ctx);
 
 	bitvec_unhex(vector, "40200bffd161003e0e519ffffffb800000000000000000");
@@ -225,14 +228,17 @@ void testCsnLeftAlignedVarBmpBounds(void *test_ctx)
 		&data.u.Egprs_Packet_Downlink_Ack_Nack.EGPRS_AckNack.Desc;
 	decode_gsm_rlcmac_uplink(vector, &data);
 
-	OSMO_ASSERT(!strcmp(osmo_hexdump(urbb->URBB, 13),
-			    "7f ff ff ee 00 00 00 00 00 00 00 00 00 "));
+	memcpy(msgb_put(m, 13), urbb->URBB, 13);
+	if (!msgb_eq_data_print(m, exp, 13))
+		printf("%s failed!\n", __func__);
+	msgb_free(m);
 }
 
 int main(int argc, char *argv[])
 {
 	void *ctx = talloc_named_const(NULL, 1, "RLCMACTest");
 	osmo_init_logging2(ctx, &gprs_log_info);
+	log_parse_category_mask(osmo_stderr_target, "DPCU,3:DLGLOBAL,1:");
 
 	//printSizeofRLCMAC();
 	testRlcMacDownlink(ctx);
