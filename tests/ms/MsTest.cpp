@@ -531,6 +531,75 @@ static void test_ms_cs_selection()
 	printf("=== end %s ===\n", __func__);
 }
 
+static void dump_ms(const GprsMs *ms, const char *pref)
+{
+	printf("%s MS DL %s/%s, UL %s/%s, mode %s, <%s>\n", pref,
+	       mcs_name(ms->current_cs_dl()), mcs_name(ms->max_cs_dl()),
+	       mcs_name(ms->current_cs_ul()), mcs_name(ms->max_cs_ul()),
+	       mode_name(ms->mode()),
+	       ms->is_idle() ? "IDLE" : "ACTIVE");
+}
+
+static void test_ms_mcs_mode()
+{
+	BTS the_bts;
+	gprs_rlcmac_bts *bts = the_bts.bts_data();
+	uint32_t tlli = 0xdeadbeef;
+
+	gprs_rlcmac_dl_tbf *dl_tbf;
+	GprsMs *ms1, *ms2;
+
+	printf("=== start %s ===\n", __func__);
+
+	ms1 = new GprsMs(&the_bts, tlli);
+	dump_ms(ms1, "1: no BTS defaults  ");
+
+	bts->initial_cs_dl = 4;
+	bts->initial_cs_ul = 1;
+	bts->cs_downgrade_threshold = 0;
+
+	ms2 = new GprsMs(&the_bts, tlli + 1);
+	dump_ms(ms2, "2: with BTS defaults");
+
+	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
+	new (dl_tbf) gprs_rlcmac_dl_tbf(NULL);
+
+	dl_tbf->set_ms(ms2);
+	dump_ms(ms2, "2: after TBF attach ");
+
+	ms1->set_mode(EGPRS);
+	dump_ms(ms1, "1: after mode set   ");
+
+	ms2->set_mode(EGPRS);
+	dump_ms(ms2, "2: after mode set   ");
+
+	ms1->set_current_cs_dl(MCS7);
+	dump_ms(ms1, "1: after MCS set    ");
+
+	ms2->set_current_cs_dl(MCS8);
+	dump_ms(ms2, "2: after MCS set    ");
+
+	ms1->set_mode(EGPRS_GMSK);
+	dump_ms(ms1, "1: after mode set   ");
+
+	ms2->set_mode(EGPRS_GMSK);
+	dump_ms(ms2, "2: after mode set   ");
+
+	// FIXME: following code triggers ASAN failure:
+	// ms2->detach_tbf(dl_tbf);
+	// dump_ms(ms2, "2: after TBF detach ");
+
+	ms1->set_mode(GPRS);
+	dump_ms(ms1, "1: after mode set   ");
+
+	ms2->set_mode(GPRS);
+	dump_ms(ms2, "2: after mode set   ");
+
+	talloc_free(dl_tbf);
+
+	printf("=== end %s ===\n", __func__);
+}
+
 int main(int argc, char **argv)
 {
 	struct vty_app_info pcu_vty_info = {0};
@@ -556,6 +625,7 @@ int main(int argc, char **argv)
 	test_ms_storage();
 	test_ms_timeout();
 	test_ms_cs_selection();
+	test_ms_mcs_mode();
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);

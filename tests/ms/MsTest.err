@@ -56,3 +56,6 @@ Timeout for MS object, TLLI = 0xffeeddbb
 Destroying MS object, TLLI = 0xffeeddbb
 Creating MS object, TLLI = 0xffeeddbb
 Attaching TBF to MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
+Creating MS object, TLLI = 0xdeadbeef
+Creating MS object, TLLI = 0xdeadbef0
+Attaching TBF to MS object, TLLI = 0xdeadbef0, TBF = TBF(TFI=0 TLLI=0xdeadbef0 DIR=DL STATE=NULL)
