@@ -232,9 +232,6 @@ static int handle_ph_data_ind(struct oc2gl1_hdl *fl1h,
 	default:
 		LOGP(DL1IF, LOGL_NOTICE, "Rx PH-DATA.ind for unknown L1 SAPI %s\n",
 			get_value_string(oc2gbts_l1sapi_names, data_ind->sapi));
-		memcpy(alarm_sig_data.spare, &data_ind->sapi, sizeof(unsigned int));
-		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_RX_UNKN_L1_SAP_ALARM, &alarm_sig_data);
-
 		break;
 	}
 
@@ -286,7 +283,6 @@ int l1if_handle_l1prim(int wq, struct oc2gl1_hdl *fl1h, struct msgb *msg)
 		rc = handle_ph_ra_ind(fl1h, &l1p->u.phRaInd);
 		break;
 	default:
-		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_RX_UNKN_L1_PRIM_ALARM, &alarm_sig_data);
 		break;
 	}
 
@@ -340,7 +336,6 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 	/* transmit */
 	if (osmo_wqueue_enqueue(&fl1h->write_q[MQ_PDTCH_WRITE], msg) != 0) {
 		LOGP(DL1IF, LOGL_ERROR, "PDTCH queue full. dropping message.\n");
-		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_PDTCH_QUEUE_FULL_ALARM, &alarm_sig_data);
 		msgb_free(msg);
 	}
 
@@ -365,8 +360,6 @@ void *l1if_open_pdch(uint8_t trx_no, uint32_t hlayer1)
 
 	rc = l1if_transport_open(MQ_PDTCH_WRITE, fl1h);
 	if (rc < 0) {
-		alarm_sig_data.spare[0] = trx_no;
-		osmo_signal_dispatch(SS_L_GLOBAL, S_PCU_NM_FAIL_OPEN_L1_ALARM, &alarm_sig_data);
 		talloc_free(fl1h);
 		return NULL;
 	}
