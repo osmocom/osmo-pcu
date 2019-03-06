@@ -38,9 +38,9 @@ extern "C" {
 #include "gprs_ms_storage.h"
 #include "gprs_coding_scheme.h"
 #include <cxx_linuxlist.h>
-#include <pdch.h>
 #endif
 
+#include <pdch.h>
 #include <stdint.h>
 
 #define LLC_CODEL_DISABLE 0
