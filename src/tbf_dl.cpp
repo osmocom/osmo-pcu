@@ -395,9 +395,9 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			 * transistion is handled.
 			 * Refer commit be881c028fc4da00c4046ecd9296727975c206a3
 			 */
-			if (m_rlc.block(bsn)->cs_init == GprsCodingScheme::MCS8)
+			if (m_rlc.block(bsn)->cs_init == MCS8)
 				m_rlc.block(bsn)->cs_current_trans =
-					GprsCodingScheme::MCS8;
+					MCS8;
 		} else
 			m_rlc.block(bsn)->cs_current_trans =
 					m_rlc.block(bsn)->cs_last;
@@ -701,9 +701,9 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	 * if the intial mcs is 8 and retransmission mcs is either 6 or 3
 	 * we have to include the padding of 6 octets in first segment
 	 */
-	if ((GprsCodingScheme::Scheme(cs_init) == GprsCodingScheme::MCS8) &&
-		(GprsCodingScheme::Scheme(cs) == GprsCodingScheme::MCS6 ||
-		GprsCodingScheme::Scheme(cs) == GprsCodingScheme::MCS3)) {
+	if ((CodingScheme(cs_init) == MCS8) &&
+		(CodingScheme(cs) == MCS6 ||
+		CodingScheme(cs) == MCS3)) {
 		if (spb_status == EGPRS_RESEG_DL_DEFAULT ||
 			spb_status == EGPRS_RESEG_SECOND_SEG_SENT)
 			need_padding  = true;
@@ -715,7 +715,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		 * Refer commit be881c028fc4da00c4046ecd9296727975c206a3
 		 * dated 2016-02-07 23:45:40 (UTC)
 		 */
-		if (cs != GprsCodingScheme(GprsCodingScheme::MCS8))
+		if (cs != GprsCodingScheme(MCS8))
 			cs.decToSingleBlock(&need_padding);
 	}
 
@@ -1261,19 +1261,19 @@ enum egprs_rlc_dl_reseg_bsn_state
 	if (cs_current_trans.headerTypeData() ==
 			GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3) {
 		if (*block_status_dl == EGPRS_RESEG_FIRST_SEG_SENT) {
-			switch (GprsCodingScheme::Scheme(cs_init)) {
-			case GprsCodingScheme::MCS6 :
-			case GprsCodingScheme::MCS9 :
+			switch (CodingScheme(cs_init)) {
+			case MCS6 :
+			case MCS9 :
 				*block_data = &rlc_data->block[37];
 				break;
-			case GprsCodingScheme::MCS7 :
-			case GprsCodingScheme::MCS5 :
+			case MCS7 :
+			case MCS5 :
 				*block_data = &rlc_data->block[28];
 				break;
-			case GprsCodingScheme::MCS8 :
+			case MCS8 :
 				*block_data = &rlc_data->block[31];
 				break;
-			case GprsCodingScheme::MCS4 :
+			case MCS4 :
 				*block_data = &rlc_data->block[22];
 				break;
 			default:
@@ -1291,10 +1291,10 @@ enum egprs_rlc_dl_reseg_bsn_state
 			(cs_init.headerTypeData() ==
 				GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2)) {
 			return EGPRS_RESEG_FIRST_SEG_SENT;
-		} else if ((GprsCodingScheme::Scheme(cs_init) ==
-					GprsCodingScheme::MCS4) &&
-				(GprsCodingScheme::Scheme(cs_current_trans) ==
-					GprsCodingScheme::MCS1)) {
+		} else if ((CodingScheme(cs_init) ==
+					MCS4) &&
+				(CodingScheme(cs_current_trans) ==
+					MCS1)) {
 			return EGPRS_RESEG_FIRST_SEG_SENT;
 		}
 	}
@@ -1343,10 +1343,10 @@ enum egprs_rlcmac_dl_spb gprs_rlcmac_dl_tbf::get_egprs_dl_spb(const int bsn)
 				GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2)) {
 			bts->spb_downlink_first_segment();
 			return EGPRS_RLCMAC_DL_FIRST_SEG;
-		} else if ((GprsCodingScheme::Scheme(cs_init) ==
-					GprsCodingScheme::MCS4) &&
-				(GprsCodingScheme::Scheme(cs_current_trans) ==
-					GprsCodingScheme::MCS1)) {
+		} else if ((CodingScheme(cs_init) ==
+					MCS4) &&
+				(CodingScheme(cs_current_trans) ==
+					MCS1)) {
 			bts->spb_downlink_first_segment();
 			return EGPRS_RLCMAC_DL_FIRST_SEG;
 		}
@@ -1367,61 +1367,61 @@ void gprs_rlcmac_dl_tbf::update_coding_scheme_counter_dl(const GprsCodingScheme 
 {
 	uint8_t coding_scheme = 0;
 
-	coding_scheme = GprsCodingScheme::Scheme(cs);
+	coding_scheme = CodingScheme(cs);
 	if (cs.isGprs()) {
 		switch (coding_scheme) {
-		case GprsCodingScheme::CS1 :
+		case CS1 :
 			bts->gprs_dl_cs1();
 			rate_ctr_inc(&m_dl_gprs_ctrs->ctr[TBF_CTR_GPRS_DL_CS1]);
 			break;
-		case GprsCodingScheme::CS2 :
+		case CS2 :
 			bts->gprs_dl_cs2();
 			rate_ctr_inc(&m_dl_gprs_ctrs->ctr[TBF_CTR_GPRS_DL_CS2]);
 			break;
-		case GprsCodingScheme::CS3 :
+		case CS3 :
 			bts->gprs_dl_cs3();
 			rate_ctr_inc(&m_dl_gprs_ctrs->ctr[TBF_CTR_GPRS_DL_CS3]);
 			break;
-		case GprsCodingScheme::CS4 :
+		case CS4 :
 			bts->gprs_dl_cs4();
 			rate_ctr_inc(&m_dl_gprs_ctrs->ctr[TBF_CTR_GPRS_DL_CS4]);
 			break;
 		}
 	} else {
 		switch (coding_scheme) {
-		case GprsCodingScheme::MCS1 :
+		case MCS1 :
 			bts->egprs_dl_mcs1();
 			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS1]);
 			break;
-		case GprsCodingScheme::MCS2 :
+		case MCS2 :
 			bts->egprs_dl_mcs2();
 			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS2]);
 			break;
-		case GprsCodingScheme::MCS3 :
+		case MCS3 :
 			bts->egprs_dl_mcs3();
 			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS3]);
 			break;
-		case GprsCodingScheme::MCS4 :
+		case MCS4 :
 			bts->egprs_dl_mcs4();
 			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS4]);
 			break;
-		case GprsCodingScheme::MCS5 :
+		case MCS5 :
 			bts->egprs_dl_mcs5();
 			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS5]);
 			break;
-		case GprsCodingScheme::MCS6 :
+		case MCS6 :
 			bts->egprs_dl_mcs6();
 			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS6]);
 			break;
-		case GprsCodingScheme::MCS7 :
+		case MCS7 :
 			bts->egprs_dl_mcs7();
 			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS7]);
 			break;
-		case GprsCodingScheme::MCS8 :
+		case MCS8 :
 			bts->egprs_dl_mcs8();
 			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS8]);
 			break;
-		case GprsCodingScheme::MCS9 :
+		case MCS9 :
 			bts->egprs_dl_mcs9();
 			rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS9]);
 			break;

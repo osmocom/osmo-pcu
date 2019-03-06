@@ -121,33 +121,33 @@ static void test_coding_scheme()
 	unsigned i;
 	uint8_t last_size_UL;
 	uint8_t last_size_DL;
-	GprsCodingScheme::Scheme gprs_schemes[] = {
-		GprsCodingScheme::CS1,
-		GprsCodingScheme::CS2,
-		GprsCodingScheme::CS3,
-		GprsCodingScheme::CS4
+	CodingScheme gprs_schemes[] = {
+		CS1,
+		CS2,
+		CS3,
+		CS4
 	};
 	struct {
-		GprsCodingScheme::Scheme s;
+		CodingScheme s;
 		bool is_gmsk;
 	} egprs_schemes[] = {
-		{GprsCodingScheme::MCS1, true},
-		{GprsCodingScheme::MCS2, true},
-		{GprsCodingScheme::MCS3, true},
-		{GprsCodingScheme::MCS4, true},
-		{GprsCodingScheme::MCS5, false},
-		{GprsCodingScheme::MCS6, false},
-		{GprsCodingScheme::MCS7, false},
-		{GprsCodingScheme::MCS8, false},
-		{GprsCodingScheme::MCS9, false},
+		{ MCS1, true},
+		{ MCS2, true},
+		{ MCS3, true},
+		{ MCS4, true},
+		{ MCS5, false},
+		{ MCS6, false},
+		{ MCS7, false},
+		{ MCS8, false},
+		{ MCS9, false},
 	};
 
 	printf("=== start %s ===\n", __func__);
 
 	GprsCodingScheme cs;
 	OSMO_ASSERT(!cs);
-	OSMO_ASSERT(GprsCodingScheme::Scheme(cs) == GprsCodingScheme::UNKNOWN);
-	OSMO_ASSERT(cs == GprsCodingScheme(GprsCodingScheme::UNKNOWN));
+	OSMO_ASSERT(CodingScheme(cs) == UNKNOWN);
+	OSMO_ASSERT(cs == GprsCodingScheme(UNKNOWN));
 	OSMO_ASSERT(!cs.isCompatible(GprsCodingScheme::GPRS));
 	OSMO_ASSERT(!cs.isCompatible(GprsCodingScheme::EGPRS_GMSK));
 	OSMO_ASSERT(!cs.isCompatible(GprsCodingScheme::EGPRS));
@@ -160,7 +160,7 @@ static void test_coding_scheme()
 		OSMO_ASSERT(current_cs.isGprs());
 		OSMO_ASSERT(!current_cs.isEgprs());
 		OSMO_ASSERT(!current_cs.isEgprsGmsk());
-		OSMO_ASSERT(GprsCodingScheme::Scheme(current_cs) == gprs_schemes[i]);
+		OSMO_ASSERT(CodingScheme(current_cs) == gprs_schemes[i]);
 		OSMO_ASSERT(current_cs == GprsCodingScheme(gprs_schemes[i]));
 
 		OSMO_ASSERT(check_strong_monotonicity(&current_cs, last_size_UL, last_size_DL));
@@ -183,7 +183,7 @@ static void test_coding_scheme()
 		OSMO_ASSERT(!current_cs.isGprs());
 		OSMO_ASSERT(current_cs.isEgprs());
 		OSMO_ASSERT(!!current_cs.isEgprsGmsk() == !!egprs_schemes[i].is_gmsk);
-		OSMO_ASSERT(GprsCodingScheme::Scheme(current_cs) == egprs_schemes[i].s);
+		OSMO_ASSERT(CodingScheme(current_cs) == egprs_schemes[i].s);
 		OSMO_ASSERT(current_cs == GprsCodingScheme(egprs_schemes[i].s));
 
 		OSMO_ASSERT(check_strong_monotonicity(&current_cs, last_size_UL, last_size_DL));
@@ -213,7 +213,7 @@ static void test_rlc_unit_decoder()
 	printf("=== start %s ===\n", __func__);
 
 	/* TS 44.060, B.1 */
-	cs = GprsCodingScheme::CS4;
+	cs = CS4;
 	rdbi.data_len = cs.maxDataBlockBytes();
 	rdbi.e = 0;
 	rdbi.ti = 0;
@@ -237,7 +237,7 @@ static void test_rlc_unit_decoder()
 	OSMO_ASSERT(!chunks[2].is_complete);
 
 	/* TS 44.060, B.2 */
-	cs = GprsCodingScheme::CS1;
+	cs = CS1;
 	rdbi.data_len = cs.maxDataBlockBytes();
 	rdbi.e = 0;
 	rdbi.ti = 0;
@@ -271,7 +271,7 @@ static void test_rlc_unit_decoder()
 	OSMO_ASSERT(!chunks[1].is_complete);
 
 	/* TS 44.060, B.3 */
-	cs = GprsCodingScheme::CS1;
+	cs = CS1;
 	rdbi.data_len = cs.maxDataBlockBytes();
 	rdbi.e = 0;
 	rdbi.ti = 0;
@@ -292,7 +292,7 @@ static void test_rlc_unit_decoder()
 	OSMO_ASSERT(chunks[1].is_complete);
 
 	/* TS 44.060, B.4 */
-	cs = GprsCodingScheme::CS1;
+	cs = CS1;
 	rdbi.data_len = cs.maxDataBlockBytes();
 	rdbi.e = 1;
 	rdbi.ti = 0;
@@ -308,7 +308,7 @@ static void test_rlc_unit_decoder()
 	OSMO_ASSERT(!chunks[0].is_complete);
 
 	/* TS 44.060, B.6 */
-	cs = GprsCodingScheme::CS1;
+	cs = CS1;
 	rdbi.data_len = cs.maxDataBlockBytes();
 	rdbi.e = 1;
 	rdbi.ti = 0;
@@ -324,7 +324,7 @@ static void test_rlc_unit_decoder()
 	OSMO_ASSERT(chunks[0].is_complete);
 
 	/* TS 44.060, B.8.1 */
-	cs = GprsCodingScheme::MCS4;
+	cs = MCS4;
 	rdbi.data_len = cs.maxDataBlockBytes();
 	rdbi.e = 0;
 	rdbi.ti = 0;
@@ -353,7 +353,7 @@ static void test_rlc_unit_decoder()
 	 * includes the FBI/E header bits into the N2 octet count which
 	 * is not consistent with Section 10.3a.1 & 10.3a.2. */
 
-	cs = GprsCodingScheme::MCS2;
+	cs = MCS2;
 	rdbi.data_len = cs.maxDataBlockBytes();
 	rdbi.e = 0;
 	rdbi.ti = 0;
@@ -417,7 +417,7 @@ static void test_rlc_unit_decoder()
 
 	/* Note that the spec confuses the byte numbering here, too (see above) */
 
-	cs = GprsCodingScheme::MCS2;
+	cs = MCS2;
 	rdbi.data_len = cs.maxDataBlockBytes();
 	rdbi.e = 1;
 	rdbi.ti = 0;
@@ -433,7 +433,7 @@ static void test_rlc_unit_decoder()
 	OSMO_ASSERT(chunks[0].is_complete);
 
 	/* CS-1, TLLI, last block, single chunk until the end of the block */
-	cs = GprsCodingScheme::CS1;
+	cs = CS1;
 	rdbi.data_len = cs.maxDataBlockBytes();
 	rdbi.e = 1;
 	rdbi.ti = 1;
@@ -454,7 +454,7 @@ static void test_rlc_unit_decoder()
 	OSMO_ASSERT(chunks[0].is_complete);
 
 	/* Like TS 44.060, B.2, first RLC block but with TLLI */
-	cs = GprsCodingScheme::CS1;
+	cs = CS1;
 	rdbi.data_len = cs.maxDataBlockBytes();
 	rdbi.e = 0;
 	rdbi.ti = 1;
@@ -476,7 +476,7 @@ static void test_rlc_unit_decoder()
 	OSMO_ASSERT(!chunks[0].is_complete);
 
 	/* Like TS 44.060, B.8.1 but with TLLI */
-	cs = GprsCodingScheme::MCS4;
+	cs = MCS4;
 	rdbi.data_len = cs.maxDataBlockBytes();
 	rdbi.e = 0;
 	rdbi.ti = 1;
@@ -543,7 +543,7 @@ static void test_rlc_unit_encoder()
 	llc.init();
 
 	/* TS 44.060, B.1 */
-	cs = GprsCodingScheme::CS4;
+	cs = CS4;
 	gprs_rlc_data_block_info_init(&rdbi, cs, false, 0);
 	num_chunks = 0;
 	write_offset = 0;
@@ -594,7 +594,7 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(data[2] == 0);
 
 	/* TS 44.060, B.2 */
-	cs = GprsCodingScheme::CS1;
+	cs = CS1;
 
 	/* Block 1 */
 	gprs_rlc_data_block_info_init(&rdbi, cs, false, 0);
@@ -654,7 +654,7 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(data[1] == 0);
 
 	/* TS 44.060, B.3 */
-	cs = GprsCodingScheme::CS1;
+	cs = CS1;
 
 	/* Block 1 */
 	gprs_rlc_data_block_info_init(&rdbi, cs, false, 0);
@@ -693,7 +693,7 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(data[2] == 0);
 
 	/* TS 44.060, B.4 */
-	cs = GprsCodingScheme::CS1;
+	cs = CS1;
 
 	/* Block 1 */
 	gprs_rlc_data_block_info_init(&rdbi, cs, false, 0);
@@ -718,7 +718,7 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(data[0] == 0);
 
 	/* TS 44.060, B.5 */
-	cs = GprsCodingScheme::CS1;
+	cs = CS1;
 
 	/* Block 1 */
 	gprs_rlc_data_block_info_init(&rdbi, cs, false, 0);
@@ -743,7 +743,7 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(data[0] == 0);
 
 	/* TS 44.060, B.7 */
-	cs = GprsCodingScheme::CS1;
+	cs = CS1;
 
 	/* Block 1 */
 	gprs_rlc_data_block_info_init(&rdbi, cs, false, 0);
@@ -801,7 +801,7 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(data[1] == 0);
 
 	/* TS 44.060, B.8.1 */
-	cs = GprsCodingScheme::MCS4;
+	cs = MCS4;
 
 	/* Block 1 */
 	gprs_rlc_data_block_info_init(&rdbi, cs, false, 0);
@@ -859,7 +859,7 @@ static void test_rlc_unit_encoder()
 	 * includes the FBI/E header bits into the N2 octet count which
 	 * is not consistent with Section 10.3a.1 & 10.3a.2. */
 
-	cs = GprsCodingScheme::MCS2;
+	cs = MCS2;
 
 	/* Block 1 */
 	gprs_rlc_data_block_info_init(&rdbi, cs, false, 0);
@@ -991,7 +991,7 @@ static void test_rlc_unit_encoder()
 
 	/* Note that the spec confuses the byte numbering here, too (see above) */
 
-	cs = GprsCodingScheme::MCS2;
+	cs = MCS2;
 
 	/* Block 1 */
 	gprs_rlc_data_block_info_init(&rdbi, cs, false, 0);
@@ -1017,7 +1017,7 @@ static void test_rlc_unit_encoder()
 
 	/* Final block with an LLC of size data_len-1 */
 
-	cs = GprsCodingScheme::MCS2;
+	cs = MCS2;
 
 	/* Block 1 */
 	gprs_rlc_data_block_info_init(&rdbi, cs, false, 0);
@@ -1045,7 +1045,7 @@ static void test_rlc_unit_encoder()
 
 	/* Final block with an LLC of size data_len-2 */
 
-	cs = GprsCodingScheme::MCS2;
+	cs = MCS2;
 
 	/* Block 1 */
 	gprs_rlc_data_block_info_init(&rdbi, cs, false, 0);
@@ -1081,13 +1081,13 @@ static void test_rlc_unaligned_copy()
 	uint8_t saved_block[256];
 	uint8_t test_block[256];
 	uint8_t out_block[256];
-	GprsCodingScheme::Scheme scheme;
+	CodingScheme scheme;
 	int pattern;
 	volatile unsigned int block_idx, i;
 
-	for (scheme = GprsCodingScheme::CS1;
-		scheme < GprsCodingScheme::NUM_SCHEMES;
-		scheme = GprsCodingScheme::Scheme(scheme + 1))
+	for (scheme = CS1;
+		scheme < NUM_SCHEMES;
+		scheme = CodingScheme(scheme + 1))
 	{
 		GprsCodingScheme cs(scheme);
 
@@ -1148,13 +1148,13 @@ static void test_rlc_info_init()
 
 	printf("=== start %s ===\n", __func__);
 	gprs_rlc_data_info_init_dl(&rlc,
-			GprsCodingScheme(GprsCodingScheme::CS1), false, 0);
+			GprsCodingScheme(CS1), false, 0);
 	OSMO_ASSERT(rlc.num_data_blocks == 1);
 	OSMO_ASSERT(rlc.data_offs_bits[0] == 24);
 	OSMO_ASSERT(rlc.block_info[0].data_len == 20);
 
 	gprs_rlc_data_info_init_dl(&rlc,
-			GprsCodingScheme(GprsCodingScheme::MCS1), false, 0);
+			GprsCodingScheme(MCS1), false, 0);
 	OSMO_ASSERT(rlc.num_data_blocks == 1);
 	OSMO_ASSERT(rlc.data_offs_bits[0] == 33);
 	OSMO_ASSERT(rlc.block_info[0].data_len == 22);
@@ -1193,7 +1193,7 @@ static void uplink_header_type_2_parsing_test(BTS *the_bts,
 	int rc, offs;
 
 	/*without padding*/
-	cs = GprsCodingScheme::MCS5;
+	cs = MCS5;
 	egprs2 = (struct gprs_rlc_ul_header_egprs_2 *) data;
 	egprs2->r = 1;
 	egprs2->si = 1;
@@ -1218,7 +1218,7 @@ static void uplink_header_type_2_parsing_test(BTS *the_bts,
 	OSMO_ASSERT(rlc.block_info[0].bsn == 0);
 
 	/* with padding case */
-	cs = GprsCodingScheme::MCS6;
+	cs = MCS6;
 	egprs2 = (struct gprs_rlc_ul_header_egprs_2 *) data;
 	egprs2->r = 1;
 	egprs2->si = 1;
@@ -1298,7 +1298,7 @@ static void uplink_header_type_1_parsing_test(BTS *the_bts,
 	tfi = 1;
 
 	/* MCS 7 */
-	cs = GprsCodingScheme::MCS7;
+	cs = MCS7;
 	egprs1 = (struct gprs_rlc_ul_header_egprs_1 *) data;
 	egprs1->si = 1;
 	egprs1->r = 1;
@@ -1326,7 +1326,7 @@ static void uplink_header_type_1_parsing_test(BTS *the_bts,
 	OSMO_ASSERT(rlc.tfi == 1);
 
 	/* MCS 8 */
-	cs = GprsCodingScheme::MCS8;
+	cs = MCS8;
 	egprs1 = (struct gprs_rlc_ul_header_egprs_1 *) data;
 	egprs1->si = 1;
 	egprs1->r = 1;
@@ -1354,7 +1354,7 @@ static void uplink_header_type_1_parsing_test(BTS *the_bts,
 	OSMO_ASSERT(rlc.tfi == 1);
 
 	/* MCS 9 */
-	cs = GprsCodingScheme::MCS9;
+	cs = MCS9;
 	egprs1 = (struct gprs_rlc_ul_header_egprs_1 *) data;
 	egprs1->si = 1;
 	egprs1->r = 1;

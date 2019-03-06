@@ -27,7 +27,7 @@
  * 1st level is Original MCS( index 0 corresponds to MCS1 and so on)
  * 2nd level is MS MCS (index 0 corresponds to MCS1 and so on)
  */
-enum GprsCodingScheme::Scheme GprsCodingScheme::egprs_mcs_retx_tbl[MAX_NUM_ARQ]
+enum CodingScheme GprsCodingScheme::egprs_mcs_retx_tbl[MAX_NUM_ARQ]
 			[MAX_NUM_MCS][MAX_NUM_MCS] = {
 		{
 			{MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1},
@@ -71,7 +71,7 @@ static struct {
 	const char *name;
 	GprsCodingScheme::HeaderType data_hdr;
 	enum Family family;
-} mcs_info[GprsCodingScheme::NUM_SCHEMES] = {
+} mcs_info[NUM_SCHEMES] = {
 	{{0, 0},   {0, 0},    0,  0, "UNKNOWN",
 		GprsCodingScheme::HEADER_INVALID, FAMILY_INVALID},
 	{{23, 0},  {23, 0},  20,  0, "CS-1",
@@ -233,7 +233,7 @@ void GprsCodingScheme::inc(Mode mode)
 		/* This should not happen. TODO: Use assert? */
 		return;
 
-	Scheme new_cs(Scheme(m_scheme + 1));
+	CodingScheme new_cs(CodingScheme(m_scheme + 1));
 	if (!GprsCodingScheme(new_cs).isCompatible(mode))
 		/* Clipping, do not change the value */
 		return;
@@ -247,7 +247,7 @@ void GprsCodingScheme::dec(Mode mode)
 		/* This should not happen. TODO: Use assert? */
 		return;
 
-	Scheme new_cs(Scheme(m_scheme - 1));
+	CodingScheme new_cs(CodingScheme(m_scheme - 1));
 	if (!GprsCodingScheme(new_cs).isCompatible(mode))
 		/* Clipping, do not change the value */
 		return;
@@ -266,7 +266,7 @@ void GprsCodingScheme::inc()
 	if (!isValid())
 		return;
 
-	m_scheme = Scheme(m_scheme + 1);
+	m_scheme = CodingScheme(m_scheme + 1);
 }
 
 void GprsCodingScheme::dec()
@@ -280,7 +280,7 @@ void GprsCodingScheme::dec()
 	if (!isValid())
 		return;
 
-	m_scheme = Scheme(m_scheme - 1);
+	m_scheme = CodingScheme(m_scheme - 1);
 }
 
 const char *GprsCodingScheme::modeName(Mode mode)

@@ -501,18 +501,18 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_spb(
 	 * upgrade the MCS to the type 2
 	 */
 	if (assemble_status == EGPRS_RESEG_DEFAULT) {
-		switch (GprsCodingScheme::Scheme(rlc->cs)) {
-		case GprsCodingScheme::MCS3 :
-			block->cs_last = GprsCodingScheme::MCS6;
+		switch (CodingScheme(rlc->cs)) {
+		case MCS3 :
+			block->cs_last = MCS6;
 			LOGPTBFUL(this, LOGL_DEBUG, "Upgrading to MCS6\n");
 			break;
-		case GprsCodingScheme::MCS2 :
-			block->cs_last = GprsCodingScheme::MCS5;
+		case MCS2 :
+			block->cs_last = MCS5;
 			LOGPTBFUL(this, LOGL_DEBUG, "Upgrading to MCS5\n");
 			break;
-		case GprsCodingScheme::MCS1 :
+		case MCS1 :
 			LOGPTBFUL(this, LOGL_DEBUG, "Upgrading to MCS4\n");
-			block->cs_last = GprsCodingScheme::MCS4;
+			block->cs_last = MCS4;
 			break;
 		default:
 			LOGPTBFUL(this, LOGL_ERROR,
@@ -528,61 +528,61 @@ void gprs_rlcmac_ul_tbf::update_coding_scheme_counter_ul(const GprsCodingScheme 
 {
 	uint8_t coding_scheme = 0;
 
-	coding_scheme = GprsCodingScheme::Scheme(cs);
+	coding_scheme = CodingScheme(cs);
 	if (cs.isGprs()) {
 		switch (coding_scheme) {
-		case GprsCodingScheme::CS1 :
+		case CS1 :
 			bts->gprs_ul_cs1();
 			rate_ctr_inc(&m_ul_gprs_ctrs->ctr[TBF_CTR_GPRS_UL_CS1]);
 			break;
-		case GprsCodingScheme::CS2 :
+		case CS2 :
 			bts->gprs_ul_cs2();
 			rate_ctr_inc(&m_ul_gprs_ctrs->ctr[TBF_CTR_GPRS_UL_CS2]);
 			break;
-		case GprsCodingScheme::CS3 :
+		case CS3 :
 			bts->gprs_ul_cs3();
 			rate_ctr_inc(&m_ul_gprs_ctrs->ctr[TBF_CTR_GPRS_UL_CS3]);
 			break;
-		case GprsCodingScheme::CS4 :
+		case CS4 :
 			bts->gprs_ul_cs4();
 			rate_ctr_inc(&m_ul_gprs_ctrs->ctr[TBF_CTR_GPRS_UL_CS4]);
 			break;
 		}
 	} else {
 		switch (coding_scheme) {
-		case GprsCodingScheme::MCS1 :
+		case MCS1 :
 			bts->egprs_ul_mcs1();
 			rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS1]);
 			break;
-		case GprsCodingScheme::MCS2 :
+		case MCS2 :
 			bts->egprs_ul_mcs2();
 			rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS2]);
 			break;
-		case GprsCodingScheme::MCS3 :
+		case MCS3 :
 			bts->egprs_ul_mcs3();
 			rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS3]);
 			break;
-		case GprsCodingScheme::MCS4 :
+		case MCS4 :
 			bts->egprs_ul_mcs4();
 			rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS4]);
 			break;
-		case GprsCodingScheme::MCS5 :
+		case MCS5 :
 			bts->egprs_ul_mcs5();
 			rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS5]);
 			break;
-		case GprsCodingScheme::MCS6 :
+		case MCS6 :
 			bts->egprs_ul_mcs6();
 			rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS6]);
 			break;
-		case GprsCodingScheme::MCS7 :
+		case MCS7 :
 			bts->egprs_ul_mcs7();
 			rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS7]);
 			break;
-		case GprsCodingScheme::MCS8 :
+		case MCS8 :
 			bts->egprs_ul_mcs8();
 			rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS8]);
 			break;
-		case GprsCodingScheme::MCS9 :
+		case MCS9 :
 			bts->egprs_ul_mcs9();
 			rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS9]);
 			break;

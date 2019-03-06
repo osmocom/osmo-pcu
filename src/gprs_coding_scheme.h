@@ -25,6 +25,7 @@
 
 extern "C" {
 	#include <osmocom/core/utils.h>
+	#include "coding_scheme.h"
 }
 
 class GprsCodingScheme {
@@ -34,14 +35,6 @@ public:
 #define MAX_NUM_MCS           9     /* max. number of MCS */
 #define EGPRS_ARQ1            0x0
 #define EGPRS_ARQ2            0x1
-
-	enum Scheme {
-		UNKNOWN,
-		CS1, CS2, CS3, CS4,
-		MCS1, MCS2, MCS3, MCS4,
-		MCS5, MCS6, MCS7, MCS8, MCS9,
-		NUM_SCHEMES
-	};
 
 	enum Mode {
 		GPRS,
@@ -59,14 +52,14 @@ public:
 		NUM_HEADER_TYPES
 	};
 
-	GprsCodingScheme(Scheme s = UNKNOWN);
+	GprsCodingScheme(CodingScheme s = UNKNOWN);
 
 	operator bool() const {return m_scheme != UNKNOWN;}
-	operator Scheme() const {return m_scheme;}
+	operator CodingScheme() const {return m_scheme;}
 	uint8_t to_num() const;
 
-	GprsCodingScheme& operator =(Scheme s);
-	bool operator == (Scheme s) const;
+	GprsCodingScheme& operator =(CodingScheme s);
+	bool operator == (CodingScheme s) const;
 	GprsCodingScheme& operator =(GprsCodingScheme o);
 
 	bool isValid()   const {return UNKNOWN <= m_scheme && m_scheme <= MCS9;}
@@ -106,16 +99,16 @@ public:
 	static GprsCodingScheme getEgprsByNum(unsigned num);
 
 	static const char *modeName(Mode mode);
-	static Scheme get_retx_mcs(const GprsCodingScheme mcs,
+	static CodingScheme get_retx_mcs(const GprsCodingScheme mcs,
 				const GprsCodingScheme retx_mcs,
 				const unsigned arq_type);
 
-	static enum Scheme egprs_mcs_retx_tbl[MAX_NUM_ARQ]
+	static enum CodingScheme egprs_mcs_retx_tbl[MAX_NUM_ARQ]
 			[MAX_NUM_MCS][MAX_NUM_MCS];
 private:
 	GprsCodingScheme(int s); /* fail on use */
 	GprsCodingScheme& operator =(int s); /* fail on use */
-	enum Scheme m_scheme;
+	enum CodingScheme m_scheme;
 };
 
 inline uint8_t GprsCodingScheme::to_num() const
@@ -145,14 +138,14 @@ inline bool GprsCodingScheme::isCompatible(GprsCodingScheme o) const
 	return (isGprs() && o.isGprs()) || (isEgprs() && o.isEgprs());
 }
 
-inline GprsCodingScheme::GprsCodingScheme(Scheme s)
+inline GprsCodingScheme::GprsCodingScheme(CodingScheme s)
 	: m_scheme(s)
 {
 	if (!isValid())
 		m_scheme = UNKNOWN;
 }
 
-inline GprsCodingScheme& GprsCodingScheme::operator =(Scheme s)
+inline GprsCodingScheme& GprsCodingScheme::operator =(CodingScheme s)
 {
 	m_scheme = s;
 
@@ -173,7 +166,7 @@ inline GprsCodingScheme GprsCodingScheme::getGprsByNum(unsigned num)
 	if (num < 1 || num > 4)
 		return GprsCodingScheme();
 
-	return GprsCodingScheme(Scheme(CS1 + (num - 1)));
+	return GprsCodingScheme(CodingScheme(CS1 + (num - 1)));
 }
 
 inline GprsCodingScheme GprsCodingScheme::getEgprsByNum(unsigned num)
@@ -181,16 +174,11 @@ inline GprsCodingScheme GprsCodingScheme::getEgprsByNum(unsigned num)
 	if (num < 1 || num > 9)
 		return GprsCodingScheme();
 
-	return GprsCodingScheme(Scheme(MCS1 + (num - 1)));
+	return GprsCodingScheme(CodingScheme(MCS1 + (num - 1)));
 }
 
 /* The coding schemes form a partial ordering */
-inline bool operator ==(GprsCodingScheme a, GprsCodingScheme b)
-{
-	return GprsCodingScheme::Scheme(a) == GprsCodingScheme::Scheme(b);
-}
-
-inline bool GprsCodingScheme::operator == (Scheme scheme) const
+inline bool GprsCodingScheme::operator == (CodingScheme scheme) const
 {
 	return this->m_scheme == scheme;
 }
@@ -202,11 +190,10 @@ inline bool operator !=(GprsCodingScheme a, GprsCodingScheme b)
 
 inline bool operator <(GprsCodingScheme a, GprsCodingScheme b)
 {
-	return a.isCompatible(b) &&
-		GprsCodingScheme::Scheme(a) < GprsCodingScheme::Scheme(b);
+	return a.isCompatible(b) && a.to_num() < b.to_num();
 }
 
-inline GprsCodingScheme::Scheme GprsCodingScheme::get_retx_mcs(
+inline CodingScheme GprsCodingScheme::get_retx_mcs(
 				const GprsCodingScheme mcs,
 				const GprsCodingScheme demanded_mcs,
 				const unsigned arq_type)

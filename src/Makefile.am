@@ -97,6 +97,7 @@ noinst_HEADERS = \
 	cxx_linuxlist.h \
 	gprs_codel.h \
 	gprs_coding_scheme.h \
+	coding_scheme.h \
 	egprs_rlc_compression.h
 
 osmo_pcu_SOURCES = pcu_main.cpp

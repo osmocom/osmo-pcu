@@ -391,27 +391,27 @@ unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs,
 	enum egprs_puncturing_values punct2, bool with_padding)
 {
 	/* validate that punct and punct2 are as expected */
-	switch (GprsCodingScheme::Scheme(cs)) {
-	case GprsCodingScheme::MCS9:
-	case GprsCodingScheme::MCS8:
-	case GprsCodingScheme::MCS7:
+	switch (CodingScheme(cs)) {
+	case MCS9:
+	case MCS8:
+	case MCS7:
 		if (punct2 == EGPRS_PS_INVALID) {
 			LOGP(DRLCMACDL, LOGL_ERROR,
 			     "Invalid punct2 value for coding scheme %d: %d\n",
-			     GprsCodingScheme::Scheme(cs), punct2);
+			     CodingScheme(cs), punct2);
 			return -1;
 		}
 		/* fall through */
-	case GprsCodingScheme::MCS6:
-	case GprsCodingScheme::MCS5:
-	case GprsCodingScheme::MCS4:
-	case GprsCodingScheme::MCS3:
-	case GprsCodingScheme::MCS2:
-	case GprsCodingScheme::MCS1:
+	case MCS6:
+	case MCS5:
+	case MCS4:
+	case MCS3:
+	case MCS2:
+	case MCS1:
 		if (punct == EGPRS_PS_INVALID) {
 			LOGP(DRLCMACDL, LOGL_ERROR,
 			     "Invalid punct value for coding scheme %d: %d\n",
-			     GprsCodingScheme::Scheme(cs), punct);
+			     CodingScheme(cs), punct);
 			return -1;
 		}
 		break;
@@ -420,26 +420,26 @@ unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs,
 	}
 
 	/* See 3GPP TS 44.060 10.4.8a.3.1, 10.4.8a.2.1, 10.4.8a.1.1 */
-	switch (GprsCodingScheme::Scheme(cs)) {
-	case GprsCodingScheme::MCS1: return 0b1011 +
+	switch (CodingScheme(cs)) {
+	case MCS1: return 0b1011 +
 		punct % EGPRS_MAX_PS_NUM_2;
-	case GprsCodingScheme::MCS2: return 0b1001 +
+	case MCS2: return 0b1001 +
 		punct % EGPRS_MAX_PS_NUM_2;
-	case GprsCodingScheme::MCS3: return (with_padding ? 0b0110 : 0b0011) +
+	case MCS3: return (with_padding ? 0b0110 : 0b0011) +
 		punct % EGPRS_MAX_PS_NUM_3;
-	case GprsCodingScheme::MCS4: return 0b0000 +
+	case MCS4: return 0b0000 +
 		punct % EGPRS_MAX_PS_NUM_3;
-	case GprsCodingScheme::MCS5: return  0b100 +
+	case MCS5: return  0b100 +
 		punct % EGPRS_MAX_PS_NUM_2;
-	case GprsCodingScheme::MCS6: return (with_padding ? 0b010 : 0b000) +
+	case MCS6: return (with_padding ? 0b010 : 0b000) +
 		punct % EGPRS_MAX_PS_NUM_2;
-	case GprsCodingScheme::MCS7: return 0b10100 +
+	case MCS7: return 0b10100 +
 		3 * (punct % EGPRS_MAX_PS_NUM_3) +
 		punct2 % EGPRS_MAX_PS_NUM_3;
-	case GprsCodingScheme::MCS8: return 0b01011 +
+	case MCS8: return 0b01011 +
 		3 * (punct % EGPRS_MAX_PS_NUM_3) +
 		punct2 % EGPRS_MAX_PS_NUM_3;
-	case GprsCodingScheme::MCS9: return 0b00000 +
+	case MCS9: return 0b00000 +
 		4 * (punct % EGPRS_MAX_PS_NUM_3) +
 		punct2 % EGPRS_MAX_PS_NUM_3;
 	default: ;
@@ -454,24 +454,24 @@ void gprs_rlc_mcs_cps_decode(unsigned int cps,
 	*punct2 = -1;
 	*with_padding = 0;
 
-	switch (GprsCodingScheme::Scheme(cs)) {
-	case GprsCodingScheme::MCS1:
+	switch (CodingScheme(cs)) {
+	case MCS1:
 		cps -= 0b1011; *punct = cps % 2; break;
-	case GprsCodingScheme::MCS2:
+	case MCS2:
 		cps -= 0b1001; *punct = cps % 2; break;
-	case GprsCodingScheme::MCS3:
+	case MCS3:
 		cps -= 0b0011; *punct = cps % 3; *with_padding = cps >= 3; break;
-	case GprsCodingScheme::MCS4:
+	case MCS4:
 		cps -= 0b0000; *punct = cps % 3; break;
-	case GprsCodingScheme::MCS5:
+	case MCS5:
 		cps -= 0b100; *punct = cps % 2; break;
-	case GprsCodingScheme::MCS6:
+	case MCS6:
 		cps -= 0b000; *punct = cps % 2; *with_padding = cps >= 2; break;
-	case GprsCodingScheme::MCS7:
+	case MCS7:
 		cps -= 0b10100; *punct = cps / 3; *punct2 = cps % 3; break;
-	case GprsCodingScheme::MCS8:
+	case MCS8:
 		cps -= 0b01011; *punct = cps / 3; *punct2 = cps % 3; break;
-	case GprsCodingScheme::MCS9:
+	case MCS9:
 		cps -= 0b00000; *punct = cps / 4; *punct2 = cps % 3; break;
 	default: ;
 	}
@@ -501,23 +501,23 @@ enum egprs_puncturing_values gprs_get_punct_scheme(
 		return punct;
 
 	/* TS  44.060 9.3.2.1.1 */
-	if ((GprsCodingScheme::Scheme(cs) == GprsCodingScheme::MCS9) &&
-	(GprsCodingScheme::Scheme(cs_current) == GprsCodingScheme::MCS6)) {
+	if ((CodingScheme(cs) == MCS9) &&
+	(CodingScheme(cs_current) == MCS6)) {
 		if ((punct == EGPRS_PS_1) || (punct == EGPRS_PS_3))
 			return EGPRS_PS_1;
 		else if (punct == EGPRS_PS_2)
 			return EGPRS_PS_2;
-	} else if ((GprsCodingScheme::Scheme(cs) == GprsCodingScheme::MCS6) &&
-	(GprsCodingScheme::Scheme(cs_current) == GprsCodingScheme::MCS9)) {
+	} else if ((CodingScheme(cs) == MCS6) &&
+	(CodingScheme(cs_current) == MCS9)) {
 		if (punct == EGPRS_PS_1)
 			return EGPRS_PS_3;
 		else if (punct == EGPRS_PS_2)
 			return EGPRS_PS_2;
-	} else if ((GprsCodingScheme::Scheme(cs) == GprsCodingScheme::MCS7) &&
-	(GprsCodingScheme::Scheme(cs_current) == GprsCodingScheme::MCS5))
+	} else if ((CodingScheme(cs) == MCS7) &&
+	(CodingScheme(cs_current) == MCS5))
 		return EGPRS_PS_1;
-	else if ((GprsCodingScheme::Scheme(cs) == GprsCodingScheme::MCS5) &&
-	(GprsCodingScheme::Scheme(cs_current) == GprsCodingScheme::MCS7))
+	else if ((CodingScheme(cs) == MCS5) &&
+	(CodingScheme(cs_current) == MCS7))
 		return EGPRS_PS_2;
 	else if (cs != cs_current)
 		return EGPRS_PS_1;
@@ -540,19 +540,19 @@ enum egprs_puncturing_values gprs_get_punct_scheme(
 void gprs_update_punct_scheme(enum egprs_puncturing_values *punct,
 	const GprsCodingScheme &cs)
 {
-	switch (GprsCodingScheme::Scheme(cs)) {
-	case GprsCodingScheme::MCS1 :
-	case GprsCodingScheme::MCS2 :
-	case GprsCodingScheme::MCS5 :
-	case GprsCodingScheme::MCS6 :
+	switch (CodingScheme(cs)) {
+	case MCS1 :
+	case MCS2 :
+	case MCS5 :
+	case MCS6 :
 		*punct = ((enum egprs_puncturing_values)((*punct + 1) %
 			EGPRS_MAX_PS_NUM_2));
 		break;
-	case GprsCodingScheme::MCS3 :
-	case GprsCodingScheme::MCS4 :
-	case GprsCodingScheme::MCS7 :
-	case GprsCodingScheme::MCS8 :
-	case GprsCodingScheme::MCS9 :
+	case MCS3 :
+	case MCS4 :
+	case MCS7 :
+	case MCS8 :
+	case MCS9 :
 		*punct = ((enum egprs_puncturing_values)((*punct + 1) %
 			EGPRS_MAX_PS_NUM_3));
 		break;

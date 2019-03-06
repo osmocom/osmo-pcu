@@ -225,13 +225,13 @@ void GprsMs::set_mode(GprsCodingScheme::Mode mode)
 			m_current_cs_ul = GprsCodingScheme::getGprsByNum(
 				m_bts->bts_data()->initial_cs_ul);
 			if (!m_current_cs_ul.isValid())
-				m_current_cs_ul = GprsCodingScheme::CS1;
+				m_current_cs_ul = CS1;
 		}
 		if (!m_current_cs_dl.isGprs()) {
 			m_current_cs_dl = GprsCodingScheme::getGprsByNum(
 				m_bts->bts_data()->initial_cs_dl);
 			if (!m_current_cs_dl.isValid())
-				m_current_cs_dl = GprsCodingScheme::CS1;
+				m_current_cs_dl = CS1;
 		}
 		break;
 
@@ -241,13 +241,13 @@ void GprsMs::set_mode(GprsCodingScheme::Mode mode)
 			m_current_cs_ul = GprsCodingScheme::getEgprsByNum(
 				m_bts->bts_data()->initial_mcs_ul);
 			if (!m_current_cs_ul.isValid())
-				m_current_cs_ul = GprsCodingScheme::MCS1;
+				m_current_cs_ul = MCS1;
 		}
 		if (!m_current_cs_dl.isEgprs()) {
 			m_current_cs_dl = GprsCodingScheme::getEgprsByNum(
 				m_bts->bts_data()->initial_mcs_dl);
 			if (!m_current_cs_dl.isValid())
-				m_current_cs_dl = GprsCodingScheme::MCS1;
+				m_current_cs_dl = MCS1;
 		}
 		break;
 	}
@@ -565,7 +565,7 @@ GprsCodingScheme GprsMs::max_cs_ul() const
 
 	if (m_current_cs_ul.isGprs()) {
 		if (!bts_data->max_cs_ul)
-			return GprsCodingScheme(GprsCodingScheme::CS4);
+			return GprsCodingScheme(CS4);
 
 		return GprsCodingScheme::getGprsByNum(bts_data->max_cs_ul);
 	}
@@ -578,10 +578,10 @@ GprsCodingScheme GprsMs::max_cs_ul() const
 	else if (bts_data->max_cs_ul)
 		return GprsCodingScheme::getEgprsByNum(bts_data->max_cs_ul);
 
-	return GprsCodingScheme(GprsCodingScheme::MCS4);
+	return GprsCodingScheme(MCS4);
 }
 
-void GprsMs::set_current_cs_dl(GprsCodingScheme::Scheme scheme)
+void GprsMs::set_current_cs_dl(CodingScheme scheme)
 {
 	m_current_cs_dl = scheme;
 }
@@ -595,7 +595,7 @@ GprsCodingScheme GprsMs::max_cs_dl() const
 
 	if (m_current_cs_dl.isGprs()) {
 		if (!bts_data->max_cs_dl)
-			return GprsCodingScheme(GprsCodingScheme::CS4);
+			return GprsCodingScheme(CS4);
 
 		return GprsCodingScheme::getGprsByNum(bts_data->max_cs_dl);
 	}
@@ -608,7 +608,7 @@ GprsCodingScheme GprsMs::max_cs_dl() const
 	else if (bts_data->max_cs_dl)
 		return GprsCodingScheme::getEgprsByNum(bts_data->max_cs_dl);
 
-	return GprsCodingScheme(GprsCodingScheme::MCS4);
+	return GprsCodingScheme(MCS4);
 }
 
 void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
@@ -746,7 +746,7 @@ GprsCodingScheme GprsMs::current_cs_dl() const
 	cs.dec(mode());
 
 	/* CS-2 doesn't gain throughput with small packets, further reduce to CS-1 */
-	if (cs == GprsCodingScheme(GprsCodingScheme::CS2))
+	if (cs == GprsCodingScheme(CS2))
 		cs.dec(mode());
 
 	return cs;

@@ -15,6 +15,7 @@ Files:     src/gprs_ms_storage.h
            src/gprs_ms.h
            src/gprs_coding_scheme.cpp
            src/gprs_coding_scheme.h
+           src/coding_scheme.h
            src/cxx_linuxlist.h
            src/pcu_vty_functions.cpp
            src/pcu_vty_functions.h
