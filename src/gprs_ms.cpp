@@ -620,7 +620,7 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 	int low;
 	int high;
 	GprsCodingScheme new_cs_ul = m_current_cs_ul;
-	unsigned current_cs_num = m_current_cs_ul.to_num();
+	uint8_t current_cs_num = m_current_cs_ul.to_num();
 
 	bts_data = m_bts->bts_data();
 
@@ -642,11 +642,13 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 	old_link_qual = meas->link_qual;
 
 	if (m_current_cs_ul.isGprs()) {
+		if (current_cs_num > MAX_GPRS_CS)
+			current_cs_num = MAX_GPRS_CS;
 		low  = bts_data->cs_lqual_ranges[current_cs_num-1].low;
 		high = bts_data->cs_lqual_ranges[current_cs_num-1].high;
 	} else if (m_current_cs_ul.isEgprs()) {
-		if (current_cs_num > MAX_GPRS_CS)
-			current_cs_num = MAX_GPRS_CS;
+		if (current_cs_num > MAX_EDGE_MCS)
+			current_cs_num = MAX_EDGE_MCS;
 		low  = bts_data->mcs_lqual_ranges[current_cs_num-1].low;
 		high = bts_data->mcs_lqual_ranges[current_cs_num-1].high;
 	} else {
