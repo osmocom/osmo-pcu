@@ -4754,7 +4754,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(7) last_mcs(5) demanded_mcs(7) cs_trans(7) arq_type(1) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-7) last_mcs(MCS-5) demanded_mcs(MCS-7) cs_trans(MCS-7) arq_type(1) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-7
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=512)
@@ -4898,7 +4898,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(8) last_mcs(8) demanded_mcs(8) cs_trans(8) arq_type(1) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-8) last_mcs(MCS-8) demanded_mcs(MCS-8) cs_trans(MCS-8) arq_type(1) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=512)
@@ -5029,7 +5029,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(9) last_mcs(6) demanded_mcs(9) cs_trans(9) arq_type(1) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-9) last_mcs(MCS-6) demanded_mcs(MCS-9) cs_trans(MCS-9) arq_type(1) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-9
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=512)
@@ -5145,7 +5145,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 00 00 10 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 12 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(6) last_mcs(6) demanded_mcs(6) cs_trans(6) arq_type(1) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-6) last_mcs(MCS-6) demanded_mcs(MCS-6) cs_trans(MCS-6) arq_type(1) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 spb 0 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
@@ -5200,7 +5200,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-1): 07 00 00 96 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(1) last_mcs(1) demanded_mcs(1) cs_trans(1) arq_type(1) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-1) last_mcs(MCS-1) demanded_mcs(MCS-1) cs_trans(MCS-1) arq_type(1) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 spb 0 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
@@ -5255,7 +5255,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-2): 07 00 00 92 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 2c 2e 30 32 34 36 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(2) last_mcs(2) demanded_mcs(2) cs_trans(2) arq_type(1) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-2) last_mcs(MCS-2) demanded_mcs(MCS-2) cs_trans(MCS-2) arq_type(1) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 spb 0 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
@@ -5323,9 +5323,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=21, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-5): 0f 40 00 08 56 05 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 92 d2 12 53 93 d3 13 54 94 d4 14 55 95 d5 15 56 96 d6 16 57 97 d7 17 58 98 d8 d8 10 70 c0 ca ca ca ca ca ca 0a 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(5) last_mcs(5) demanded_mcs(7) cs_trans(7) arq_type(1) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-5) last_mcs(MCS-5) demanded_mcs(MCS-7) cs_trans(MCS-7) arq_type(1) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(5) last_mcs(5) demanded_mcs(7) cs_trans(7) arq_type(1) bsn(1)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-5) last_mcs(MCS-5) demanded_mcs(MCS-7) cs_trans(MCS-7) arq_type(1) bsn(1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 spb 0 (BSN1 0 BSN2 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 2 RLC blocks, 2 BSNs
@@ -5394,9 +5394,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=21, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-6): 0f 40 00 00 4d 97 d2 12 53 93 d3 13 54 94 d4 14 55 95 d5 15 56 96 d6 16 57 97 d7 17 58 98 d8 d8 10 70 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(6) last_mcs(6) demanded_mcs(9) cs_trans(9) arq_type(1) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-6) last_mcs(MCS-6) demanded_mcs(MCS-9) cs_trans(MCS-9) arq_type(1) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(6) last_mcs(6) demanded_mcs(9) cs_trans(9) arq_type(1) bsn(1)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-6) last_mcs(MCS-6) demanded_mcs(MCS-9) cs_trans(MCS-9) arq_type(1) bsn(1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 spb 0 (BSN1 0 BSN2 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 2 RLC blocks, 2 BSNs
@@ -5461,14 +5461,14 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-7): 0f 00 00 02 a0 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc 80 55 81 93 a3 b3 c3 d3 e3 f3 03 14 24 34 44 54 64 74 84 94 a4 b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 36 04 1c b0 b2 b2 b2 b2 b2 b2 02 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(7) last_mcs(7) demanded_mcs(5) cs_trans(5) arq_type(1) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-7) last_mcs(MCS-7) demanded_mcs(MCS-5) cs_trans(MCS-5) arq_type(1) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 spb 0 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-5): 07 00 00 18 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(7) last_mcs(7) demanded_mcs(5) cs_trans(5) arq_type(1) bsn(1)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-7) last_mcs(MCS-7) demanded_mcs(MCS-5) cs_trans(MCS-5) arq_type(1) bsn(1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 spb 0 (BSN1 1 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
@@ -5532,14 +5532,14 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-9): 0f 00 00 02 00 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc e0 e4 e8 ec f0 f4 f8 fc 00 05 09 0d 11 15 19 1d 21 25 41 d3 a5 b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 36 04 1c b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(9) last_mcs(9) demanded_mcs(6) cs_trans(6) arq_type(1) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-9) last_mcs(MCS-9) demanded_mcs(MCS-6) cs_trans(MCS-6) arq_type(1) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 spb 0 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 00 00 12 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 12 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(9) last_mcs(9) demanded_mcs(6) cs_trans(6) arq_type(1) bsn(1)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-9) last_mcs(MCS-9) demanded_mcs(MCS-6) cs_trans(MCS-6) arq_type(1) bsn(1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 spb 0 (BSN1 1 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
@@ -5594,14 +5594,14 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 00 00 10 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 12 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(6) last_mcs(6) demanded_mcs(3) cs_trans(3) arq_type(0) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-6) last_mcs(MCS-6) demanded_mcs(MCS-3) cs_trans(MCS-3) arq_type(0) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 spb 2 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-3): 07 00 00 c6 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 2c 2e 30 32 34 36 38 3a 3c 3e 40 42 44 46 48 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(6) last_mcs(3) demanded_mcs(3) cs_trans(3) arq_type(0) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-6) last_mcs(MCS-3) demanded_mcs(MCS-3) cs_trans(MCS-3) arq_type(0) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 1 spb 3 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
@@ -5656,14 +5656,14 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-5): 07 00 00 18 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(5) last_mcs(5) demanded_mcs(2) cs_trans(2) arq_type(0) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-5) last_mcs(MCS-5) demanded_mcs(MCS-2) cs_trans(MCS-2) arq_type(0) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 spb 2 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-2): 07 00 00 d2 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 2c 2e 30 32 34 36 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(5) last_mcs(2) demanded_mcs(2) cs_trans(2) arq_type(0) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-5) last_mcs(MCS-2) demanded_mcs(MCS-2) cs_trans(MCS-2) arq_type(0) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 1 spb 3 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
@@ -5718,14 +5718,14 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-4): 07 00 00 80 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 2c 2e 30 32 34 36 38 3a 3c 3e 40 42 44 46 48 4a 4c 4e 50 52 54 56 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(4) last_mcs(4) demanded_mcs(1) cs_trans(1) arq_type(0) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-4) last_mcs(MCS-4) demanded_mcs(MCS-1) cs_trans(MCS-1) arq_type(0) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 spb 2 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-1): 07 00 00 d6 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(4) last_mcs(1) demanded_mcs(1) cs_trans(1) arq_type(0) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-4) last_mcs(MCS-1) demanded_mcs(MCS-1) cs_trans(MCS-1) arq_type(0) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 1 spb 3 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
@@ -5780,21 +5780,21 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 00 00 10 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 12 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(6) last_mcs(6) demanded_mcs(3) cs_trans(3) arq_type(0) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-6) last_mcs(MCS-6) demanded_mcs(MCS-3) cs_trans(MCS-3) arq_type(0) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 spb 2 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-3): 07 00 00 c6 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 2c 2e 30 32 34 36 38 3a 3c 3e 40 42 44 46 48 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(6) last_mcs(3) demanded_mcs(3) cs_trans(3) arq_type(0) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-6) last_mcs(MCS-3) demanded_mcs(MCS-3) cs_trans(MCS-3) arq_type(0) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 1 spb 3 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-3): 07 00 00 e6 4a 4c 4e 50 52 54 56 58 5a 5c 5e 60 62 64 66 68 6a 6c 6e 70 72 74 76 78 7a 7c 7e 80 82 84 86 88 8a 8c 8e 90 92 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(6) last_mcs(3) demanded_mcs(6) cs_trans(6) arq_type(0) bsn(0)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-6) last_mcs(MCS-3) demanded_mcs(MCS-6) cs_trans(MCS-6) arq_type(0) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 2 spb 0 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs

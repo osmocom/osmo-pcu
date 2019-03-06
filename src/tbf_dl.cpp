@@ -385,11 +385,11 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 					bts->bts_data()->dl_arq_type);
 
 			LOGPTBFDL(this, LOGL_DEBUG,
-				  "initial_cs_dl(%d) last_mcs(%d) demanded_mcs(%d) cs_trans(%d) arq_type(%d) bsn(%d)\n",
-				  m_rlc.block(bsn)->cs_init.to_num(),
-				  m_rlc.block(bsn)->cs_last.to_num(),
-				  ms()->current_cs_dl().to_num(),
-				  m_rlc.block(bsn)->cs_current_trans.to_num(),
+				  "initial_cs_dl(%s) last_mcs(%s) demanded_mcs(%s) cs_trans(%s) arq_type(%d) bsn(%d)\n",
+				  mcs_name(m_rlc.block(bsn)->cs_init),
+				  mcs_name(m_rlc.block(bsn)->cs_last),
+				  mcs_name(ms()->current_cs_dl()),
+				  mcs_name(m_rlc.block(bsn)->cs_current_trans),
 				  bts->bts_data()->dl_arq_type, bsn);
 
 			/* TODO: Need to remove this check when MCS-8 -> MCS-6
