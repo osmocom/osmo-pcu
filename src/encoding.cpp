@@ -268,7 +268,7 @@ static int write_ia_rest_uplink_mba(const gprs_rlcmac_ul_tbf *tbf, bitvec *dest,
 	bitvec_write_field(dest, &wp, usf, 3);    // USF
 	bitvec_write_field(dest, &wp, 0, 1);    // USF_GRANULARITY
 	bitvec_write_field(dest, &wp, 0, 1);   // "0" power control: Not Present
-	bitvec_write_field(dest, &wp, tbf->current_cs().to_num() - 1, 2);    // CHANNEL_CODING_COMMAND
+	bitvec_write_field(dest, &wp, mcs_chan_code(tbf->current_cs()), 2);    // CHANNEL_CODING_COMMAND
 	bitvec_write_field(dest, &wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
 	if (alpha) {
 		bitvec_write_field(dest, &wp, 0x1, 1);   // ALPHA = present
@@ -315,7 +315,7 @@ static int write_ia_rest_egprs_uplink_sba(const gprs_rlcmac_ul_tbf *tbf, bitvec 
 	CHECK(rc);
 
 	/* 3GPP TS 44.060 §12.10d EGPRS Modulation and coding Scheme description: */
-	rc = bitvec_set_u64(dest, tbf->current_cs().to_num() - 1, 4, false); /* EGPRS CHANNEL_CODING_COMMAND */
+	rc = bitvec_set_u64(dest, mcs_chan_code(tbf->current_cs()), 4, false); /* EGPRS CHANNEL_CODING_COMMAND */
 	CHECK(rc);
 
 	/* TLLI_BLOCK_CHANNEL_CODING */
@@ -571,7 +571,7 @@ void Encoding::write_packet_uplink_assignment(
 
 	if (!use_egprs) {
 		bitvec_write_field(dest, &wp,0x0,1); // Message escape
-		bitvec_write_field(dest, &wp,tbf->current_cs().to_num()-1, 2); // CHANNEL_CODING_COMMAND
+		bitvec_write_field(dest, &wp, mcs_chan_code(tbf->current_cs()), 2); // CHANNEL_CODING_COMMAND
 		bitvec_write_field(dest, &wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING
 		write_ta_ie(dest, wp,tbf->ta(), ta_idx, ta_ts);
 	} else { /* EPGRS */
@@ -579,7 +579,7 @@ void Encoding::write_packet_uplink_assignment(
 		bitvec_write_field(dest, &wp,0x0,2); // EGPRS message contents
 		bitvec_write_field(dest, &wp,0x0,1); // No CONTENTION_RESOLUTION_TLLI
 		bitvec_write_field(dest, &wp,0x0,1); // No COMPACT reduced MA
-		bitvec_write_field(dest, &wp,tbf->current_cs().to_num()-1, 4); // EGPRS Modulation and Coding IE
+		bitvec_write_field(dest, &wp, mcs_chan_code(tbf->current_cs()), 4); // EGPRS Modulation and Coding IE
 		/* 0: no RESEGMENT, 1: Segmentation*/
 		bitvec_write_field(dest, &wp, 0x1, 1);
 		write_ws(dest, &wp, tbf->window_size()); // EGPRS Window Size
@@ -809,7 +809,7 @@ static void write_packet_uplink_ack_gprs(
 	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
 {
 
-	bitvec_write_field(dest, &wp, tbf->current_cs().to_num() - 1, 2); // CHANNEL_CODING_COMMAND
+	bitvec_write_field(dest, &wp, mcs_chan_code(tbf->current_cs()), 2); // CHANNEL_CODING_COMMAND
 	write_packet_ack_nack_desc_gprs(bts, dest, wp, tbf->window(), is_final);
 
 	bitvec_write_field(dest, &wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
@@ -991,7 +991,7 @@ static void write_packet_uplink_ack_egprs(
 	bitvec_write_field(dest, &wp, 0, 2); // fixed 00
 	/* CHANNEL_CODING_COMMAND */
 	bitvec_write_field(dest, &wp,
-		tbf->current_cs().to_num() - 1, 4);
+		mcs_chan_code(tbf->current_cs()), 4);
 	/* 0: no RESEGMENT, 1: Segmentation*/
 	bitvec_write_field(dest, &wp, 1, 1);
 	bitvec_write_field(dest, &wp, 1, 1); // PRE_EMPTIVE_TRANSMISSION, TODO: This resembles GPRS, change it?

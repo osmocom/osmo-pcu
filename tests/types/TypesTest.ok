@@ -9,13 +9,13 @@ show_rbb: IIRRIIIR
 [11] DL Immediate Assignment <ia_rest_downlink>:
 	06 3f 30 0d 23 6d 7f 03 18 23 00 d0 00 00 00 08 17 47 08 0b 5b 2b 2b 
 [11] UL Immediate Assignment <ia_rest_uplink(MBA)>:
-	06 3f 10 0d 23 6d 0d 03 18 23 00 c8 02 7b a0 2b 2b 2b 2b 2b 2b 2b 2b 
+	06 3f 10 0d 23 6d 0d 03 18 23 00 c8 02 1b a0 2b 2b 2b 2b 2b 2b 2b 2b 
 [11] UL Immediate Assignment <ia_rest_uplink(SBA)>:
 	06 3f 10 0d 23 6d 0d 03 18 23 00 c5 d1 08 0b 5b 2b 2b 2b 2b 2b 2b 2b 
 [11] UL Immediate Assignment <ia_rest_egprs_uplink(MBA)>:
 	06 3f 10 0d 23 6d 7f 03 18 23 00 46 97 40 0b 58 2b 2b 2b 2b 2b 2b 2b 
 [11] UL Immediate Assignment <ia_rest_egprs_uplink(SBA)>:
-	06 3f 10 0d 23 6d 7f 03 18 23 00 46 a0 09 e0 17 40 2b 2b 2b 2b 2b 2b 
+	06 3f 10 0d 23 6d 7f 03 18 23 00 46 a0 08 00 17 40 2b 2b 2b 2b 2b 2b 
 assignment reject: 06 3a 10 7f 06 36 14 7f 06 36 14 7f 06 36 14 7f 06 36 14 c0 2b 2b 
 assignment reject: 06 3a 10 70 06 36 14 70 06 36 14 70 06 36 14 70 06 36 14 0b 2b 2b 
 Testing LBS utility...
