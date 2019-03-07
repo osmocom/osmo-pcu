@@ -633,11 +633,19 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 
 	OSMO_ASSERT(current_cs_num > 0);
 
-	if (!m_current_cs_ul)
+	if (!m_current_cs_ul) {
+		LOGP(DRLCMACMEAS, LOGL_ERROR,
+		     "Unable to update UL (M)CS because it's not set: %s\n",
+		     m_current_cs_ul.name());
 		return;
+	}
 
-	if (!meas->have_link_qual)
+	if (!meas->have_link_qual) {
+		LOGP(DRLCMACMEAS, LOGL_ERROR,
+		     "Unable to update UL (M)CS %s because we don't have link quality measurements.\n",
+		     m_current_cs_ul.name());
 		return;
+	}
 
 	old_link_qual = meas->link_qual;
 
@@ -652,6 +660,9 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 		low  = bts_data->mcs_lqual_ranges[current_cs_num-1].low;
 		high = bts_data->mcs_lqual_ranges[current_cs_num-1].high;
 	} else {
+		LOGP(DRLCMACMEAS, LOGL_ERROR,
+		     "Unable to update UL (M)CS because it's neither GPRS nor EDGE: %s\n",
+		     m_current_cs_ul.name());
 		return;
 	}
 
