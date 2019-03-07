@@ -1337,6 +1337,7 @@ Slot Allocation (Algorithm A) for class 45
 - Failed to find a usable TRX (TFI exhausted)
 No PDCH resource
 Destroying MS object, TLLI = 0x00000000
+counter group 'bssgp:bss_ctx' already exists for index 1234, instead using index 1235. This is a software bug that needs fixing.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -3014,8 +3015,10 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled DL Acknowledgement po
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer T3191 [final block (DL-TBF)] with 0 sec. 0 microsec, cur_fn=0
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654461, TS=7
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 10, CS-1): 0f 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 
+counter group 'bssgp:bss_ctx' already exists for index 1234, instead using index 1236. This is a software bug that needs fixing.
 Not accepting non-EGPRS phone in EGPRS-only mode
 No PDCH resource
+counter group 'bssgp:bss_ctx' already exists for index 1234, instead using index 1237. This is a software bug that needs fixing.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=12/0
 Creating MS object, TLLI = 0x00000000
@@ -5904,6 +5907,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to AS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
+counter group 'bssgp:bss_ctx' already exists for index 1234, instead using index 1238. This is a software bug that needs fixing.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 Creating MS object, TLLI = 0x00000000
