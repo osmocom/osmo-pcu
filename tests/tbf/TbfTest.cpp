@@ -449,8 +449,7 @@ static void test_tbf_exhaustion()
 
 	bts = the_bts.bts_data();
 	setup_bts(&the_bts, ts_no);
-	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001,
-		1234, 1234, 1234, 1, 1, false, 0, 0, 0);
+	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001, 1234, 1234, 1234, 1, 1, false, 0, 0, 0);
 
 	for (i = 0; i < 1024; i++) {
 		uint32_t tlli = 0xc0000000 + i;
@@ -492,8 +491,7 @@ static void test_tbf_dl_llc_loss()
 	setup_bts(&the_bts, ts_no);
 	bts->ms_idle_sec = 10; /* keep the MS object */
 
-	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001,
-		1234, 1234, 1234, 1, 1, false, 0, 0, 0);
+	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001, 2234, 2234, 2234, 1, 1, false, 0, 0, 0);
 
 	/* Handle LLC frame 1 */
 	memset(buf, 1, sizeof(buf));
@@ -2179,8 +2177,7 @@ static void test_tbf_gprs_egprs()
 	/* EGPRS-only */
 	bts->egprs_enabled = 1;
 
-	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001,
-		1234, 1234, 1234, 1, 1, false, 0, 0, 0);
+	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001, 3234, 3234, 3234, 1, 1, false, 0, 0, 0);
 
 	/* Does not support EGPRS */
 	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class, 0,
@@ -2241,8 +2238,7 @@ static void test_tbf_ws()
 	bts->trx[0].pdch[4].enable();
 	bts->trx[0].pdch[5].enable();
 
-	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001,
-		1234, 1234, 1234, 1, 1, false, 0, 0, 0);
+	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001, 4234, 4234, 4234, 1, 1, false, 0, 0, 0);
 
 	/* Does no support EGPRS */
 	dl_tbf = tbf_alloc_dl_tbf(bts, NULL, 0, ms_class, 0, false);
@@ -2279,8 +2275,7 @@ static void test_tbf_update_ws(void)
 	bts->trx[0].pdch[4].enable();
 	bts->trx[0].pdch[5].enable();
 
-	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001,
-		1234, 1234, 1234, 1, 1, false, 0, 0, 0);
+	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001, 5234, 5234, 5234, 1, 1, false, 0, 0, 0);
 
 	/* EGPRS-only */
 	bts->egprs_enabled = 1;
