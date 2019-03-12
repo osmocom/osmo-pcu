@@ -263,7 +263,7 @@ static int write_ia_rest_uplink_sba(bitvec *dest, uint32_t fn, uint8_t alpha, ui
 }
 
 static int write_ia_rest_uplink_mba(const gprs_rlcmac_ul_tbf *tbf, bitvec *dest, uint8_t usf,
-				    uint8_t alpha, uint8_t gamma)
+				    uint8_t alpha, uint8_t gamma, int8_t ta_idx)
 {
 	int rc = 0;
 
@@ -282,8 +282,8 @@ static int write_ia_rest_uplink_mba(const gprs_rlcmac_ul_tbf *tbf, bitvec *dest,
 	rc = write_alpha_gamma(dest, alpha, gamma);
 	CHECK(rc);
 
-	/* No TIMING_ADVANCE_INDEX */
-	SET_0(dest);
+	rc = write_ta_index(dest, ta_idx);
+	CHECK(rc);
 
 	/* No TBF_STARTING_TIME */
 	SET_0(dest);
@@ -311,7 +311,7 @@ static int write_ia_rest_egprs_uplink_mba(bitvec * dest, uint32_t fn, uint8_t al
 }
 
 static int write_ia_rest_egprs_uplink_sba(const gprs_rlcmac_ul_tbf *tbf, bitvec * dest, uint8_t usf,
-					  uint8_t alpha, uint8_t gamma)
+					  uint8_t alpha, uint8_t gamma, int8_t ta_idx)
 {
 	int rc = 0;
 
@@ -339,8 +339,8 @@ static int write_ia_rest_egprs_uplink_sba(const gprs_rlcmac_ul_tbf *tbf, bitvec 
 	rc = write_alpha_gamma(dest, alpha, gamma);
 	CHECK(rc);
 
-	/* No TIMING_ADVANCE_INDEX */
-	SET_0(dest);
+	rc = write_ta_index(dest, ta_idx);
+	CHECK(rc);
 
 	/* No TBF_STARTING_TIME */
 	SET_0(dest);
@@ -514,7 +514,7 @@ int Encoding::write_immediate_assignment(
 
 		if (as_ul_tbf(tbf) != NULL) {
 			dest->cur_bit = wp;
-			rc = write_ia_rest_egprs_uplink_sba(as_ul_tbf(tbf), dest, usf, alpha, gamma);
+			rc = write_ia_rest_egprs_uplink_sba(as_ul_tbf(tbf), dest, usf, alpha, gamma, ta_idx);
 		} else {
 			dest->cur_bit = wp;
 			rc = write_ia_rest_egprs_uplink_mba(dest, fn, alpha, gamma);
@@ -527,7 +527,7 @@ int Encoding::write_immediate_assignment(
 
 		if (as_ul_tbf(tbf) != NULL) {
 			dest->cur_bit = wp;
-			rc = write_ia_rest_uplink_mba(as_ul_tbf(tbf), dest, usf, alpha, gamma);
+			rc = write_ia_rest_uplink_mba(as_ul_tbf(tbf), dest, usf, alpha, gamma, ta_idx);
 		} else {
 			dest->cur_bit = wp;
 			rc = write_ia_rest_uplink_sba(dest, fn, alpha, gamma);
