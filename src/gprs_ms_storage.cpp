@@ -106,20 +106,3 @@ GprsMs *GprsMsStorage::create_ms()
 
 	return ms;
 }
-
-GprsMs *GprsMsStorage::create_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
-{
-	GprsMs *ms = get_ms(tlli);
-
-	if (ms)
-		return ms;
-
-	ms = create_ms();
-
-	if (dir == GPRS_RLCMAC_UL_TBF)
-		ms->set_tlli(tlli);
-	else
-		ms->confirm_tlli(tlli);
-
-	return ms;
-}

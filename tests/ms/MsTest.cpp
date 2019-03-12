@@ -337,6 +337,22 @@ static void test_ms_change_tlli()
 	printf("=== end %s ===\n", __func__);
 }
 
+static GprsMs *prepare_ms(GprsMsStorage *st, uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
+{
+	GprsMs *ms = st->get_ms(tlli);
+	if (ms)
+		return ms;
+
+	ms = st->create_ms();
+
+	if (dir == GPRS_RLCMAC_UL_TBF)
+		ms->set_tlli(tlli);
+	else
+		ms->confirm_tlli(tlli);
+
+	return ms;
+}
+
 static void test_ms_storage()
 {
 	uint32_t tlli = 0xffeeddbb;
@@ -355,7 +371,7 @@ static void test_ms_storage()
 	ms = store.get_ms(tlli + 0);
 	OSMO_ASSERT(ms == NULL);
 
-	ms = store.create_ms(tlli + 0, GPRS_RLCMAC_UL_TBF);
+	ms = prepare_ms(&store, tlli + 0, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms->tlli() == tlli + 0);
 	ms->set_imsi(imsi1);
@@ -371,7 +387,7 @@ static void test_ms_storage()
 	ms_tmp = store.get_ms(0, 0, imsi2);
 	OSMO_ASSERT(ms_tmp == NULL);
 
-	ms = store.create_ms(tlli + 1, GPRS_RLCMAC_UL_TBF);
+	ms = prepare_ms(&store, tlli + 1, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms->tlli() == tlli + 1);
 	ms->set_imsi(imsi2);
