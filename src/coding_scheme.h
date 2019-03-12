@@ -37,6 +37,8 @@ bool mcs_is_gprs(enum CodingScheme cs);
 bool mcs_is_edge(enum CodingScheme cs);
 bool mcs_is_edge_gmsk(enum CodingScheme cs);
 
+uint8_t mcs_chan_code(enum CodingScheme cs);
+
 enum HeaderType {
 	HEADER_INVALID,
 	HEADER_GPRS_CONTROL,

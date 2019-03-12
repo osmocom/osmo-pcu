@@ -523,7 +523,7 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 	m_nack_rate_dl = error_rate;
 
 	if (error_rate > bts_data->cs_adj_upper_limit) {
-		if (m_current_cs_dl.to_num() > 1) {
+		if (mcs_chan_code(m_current_cs_dl) > 0) {
 			m_current_cs_dl.dec(mode());
 			LOGP(DRLCMACDL, LOGL_INFO,
 				"MS (IMSI %s): High error rate %d%%, "
@@ -621,7 +621,7 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 	int low;
 	int high;
 	GprsCodingScheme new_cs_ul = m_current_cs_ul;
-	uint8_t current_cs_num = m_current_cs_ul.to_num();
+	uint8_t current_cs = mcs_chan_code(m_current_cs_ul);
 
 	bts_data = m_bts->bts_data();
 
@@ -631,8 +631,6 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 			mcs_name(m_current_cs_ul));
 		return;
 	}
-
-	OSMO_ASSERT(current_cs_num > 0);
 
 	if (!m_current_cs_ul) {
 		LOGP(DRLCMACMEAS, LOGL_ERROR,
@@ -651,15 +649,15 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 	old_link_qual = meas->link_qual;
 
 	if (mcs_is_gprs(m_current_cs_ul)) {
-		if (current_cs_num > MAX_GPRS_CS)
-			current_cs_num = MAX_GPRS_CS;
-		low  = bts_data->cs_lqual_ranges[current_cs_num-1].low;
-		high = bts_data->cs_lqual_ranges[current_cs_num-1].high;
+		if (current_cs >= MAX_GPRS_CS)
+			current_cs = MAX_GPRS_CS - 1;
+		low  = bts_data->cs_lqual_ranges[current_cs].low;
+		high = bts_data->cs_lqual_ranges[current_cs].high;
 	} else if (mcs_is_edge(m_current_cs_ul)) {
-		if (current_cs_num > MAX_EDGE_MCS)
-			current_cs_num = MAX_EDGE_MCS;
-		low  = bts_data->mcs_lqual_ranges[current_cs_num-1].low;
-		high = bts_data->mcs_lqual_ranges[current_cs_num-1].high;
+		if (current_cs >= MAX_EDGE_MCS)
+			current_cs = MAX_EDGE_MCS - 1;
+		low  = bts_data->mcs_lqual_ranges[current_cs].low;
+		high = bts_data->mcs_lqual_ranges[current_cs].high;
 	} else {
 		LOGP(DRLCMACMEAS, LOGL_ERROR,
 		     "Unable to update UL (M)CS because it's neither GPRS nor EDGE: %s\n",

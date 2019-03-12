@@ -82,6 +82,7 @@ private:
 	enum CodingScheme m_scheme;
 };
 
+// FIXME: remove once < comparison operator below is no longer necessary
 inline uint8_t GprsCodingScheme::to_num() const
 {
 	if (mcs_is_gprs(m_scheme))

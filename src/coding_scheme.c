@@ -64,6 +64,19 @@ bool mcs_is_edge_gmsk(enum CodingScheme cs)
 	return false;
 }
 
+/* Return 3GPP TS 44.060 §12.10d (EDGE) or Table 11.2.28.2 (GPRS) Channel Coding Command value */
+uint8_t mcs_chan_code(enum CodingScheme cs)
+{
+	if (mcs_is_gprs(cs))
+		return cs - CS1;
+
+	if (mcs_is_edge(cs))
+		return cs - MCS1;
+
+	/* Defaults to (M)CS1 */
+	return 0;
+}
+
 static struct {
 	struct {
 		uint8_t data_header_bits;

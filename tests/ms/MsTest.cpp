@@ -520,11 +520,11 @@ static void test_ms_cs_selection()
 	dl_tbf->set_ms(ms);
 	OSMO_ASSERT(!ms->is_idle());
 
-	OSMO_ASSERT(ms->current_cs_dl().to_num() == 4);
+	OSMO_ASSERT(mcs_chan_code(ms->current_cs_dl()) == 3);
 
 	bts->cs_downgrade_threshold = 200;
 
-	OSMO_ASSERT(ms->current_cs_dl().to_num() == 3);
+	OSMO_ASSERT(mcs_chan_code(ms->current_cs_dl()) == 2);
 
 	talloc_free(dl_tbf);
 

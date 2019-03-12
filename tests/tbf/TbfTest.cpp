@@ -2737,12 +2737,12 @@ static void tbf_cleanup(gprs_rlcmac_dl_tbf *dl_tbf)
 
 #define CHECK_UNACKED(tbf, cs, bsn) do {				             \
 		OSMO_ASSERT(tbf->window()->m_v_b.is_unacked(bsn));	             \
-		OSMO_ASSERT(tbf->m_rlc.block(bsn)->cs_current_trans.to_num() == cs); \
+		OSMO_ASSERT(mcs_chan_code(tbf->m_rlc.block(bsn)->cs_current_trans) == cs - 1); \
 	} while(0)
 
 #define CHECK_NACKED(tbf, cs, bsn) do {					             \
 		OSMO_ASSERT(tbf->window()->m_v_b.is_nacked(bsn));	             \
-		OSMO_ASSERT(tbf->m_rlc.block(bsn)->cs_current_trans.to_num() == cs); \
+		OSMO_ASSERT(mcs_chan_code(tbf->m_rlc.block(bsn)->cs_current_trans) == cs - 1); \
 	} while(0)
 
 #define MAKE_ACKED(m, tbf, fn, cs, check_unacked) do {			\
