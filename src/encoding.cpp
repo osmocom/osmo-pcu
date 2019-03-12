@@ -257,30 +257,30 @@ static int write_ia_rest_uplink_sba(bitvec *dest, uint32_t fn, uint8_t alpha, ui
 }
 
 static int write_ia_rest_uplink_mba(const gprs_rlcmac_ul_tbf *tbf, bitvec *dest, uint8_t usf,
-				    uint8_t alpha, uint8_t gamma, unsigned& wp)
+				    uint8_t alpha, uint8_t gamma)
 {
 	int rc = 0;
 
-	bitvec_write_field(dest, &wp, 1, 1);    // Block Allocation: Not Single Block Allocation
-	bitvec_write_field(dest, &wp, tbf->tfi(), 5);  // TFI_ASSIGNMENT Temporary Flow Identity
-	bitvec_write_field(dest, &wp, 0, 1);    // POLLING
-	bitvec_write_field(dest, &wp, 0, 1);    // ALLOCATION_TYPE: dynamic
-	bitvec_write_field(dest, &wp, usf, 3);    // USF
-	bitvec_write_field(dest, &wp, 0, 1);    // USF_GRANULARITY
-	bitvec_write_field(dest, &wp, 0, 1);   // "0" power control: Not Present
-	bitvec_write_field(dest, &wp, mcs_chan_code(tbf->current_cs()), 2);    // CHANNEL_CODING_COMMAND
-	bitvec_write_field(dest, &wp, 1, 1);    // TLLI_BLOCK_CHANNEL_CODING
-	if (alpha) {
-		bitvec_write_field(dest, &wp, 0x1, 1);   // ALPHA = present
-		bitvec_write_field(dest, &wp, alpha, 4);   // ALPHA
-	} else
-		bitvec_write_field(dest, &wp, 0x0, 1);   // ALPHA = not present
+	SET_1(dest); /* Multi Block Allocation */
 
-	bitvec_write_field(dest, &wp, gamma, 5);   // GAMMA power control parameter
+	rc = write_tfi_usf(dest, tbf, usf);
+	CHECK(rc);
 
-	/* note: there is no choise for TAI and no starting time */
-	bitvec_write_field(dest, &wp, 0, 1);   // switch TIMING_ADVANCE_INDEX = off
-	bitvec_write_field(dest, &wp, 0, 1);    // TBF_STARTING_TIME_FLAG
+	/* 3GPP TS 44.060 Table 11.2.28.2 Channel Coding Indicator */
+	rc = bitvec_set_u64(dest, mcs_chan_code(tbf->current_cs()), 2, false); /* CHANNEL_CODING_COMMAND */
+	CHECK(rc);
+
+	/* TLLI_BLOCK_CHANNEL_CODING */
+	SET_1(dest); /* use coding scheme as specified by the corresponding CHANNEL CODING COMMAND */
+
+	rc = write_alpha_gamma(dest, alpha, gamma);
+	CHECK(rc);
+
+	/* No TIMING_ADVANCE_INDEX */
+	SET_0(dest);
+
+	/* No TBF_STARTING_TIME */
+	SET_0(dest);
 
 	return rc;
 }
@@ -520,7 +520,8 @@ int Encoding::write_immediate_assignment(
 		bitvec_write_field(dest, &wp, 0, 2);    // "0" Packet Uplink Assignment
 
 		if (as_ul_tbf(tbf) != NULL) {
-			rc = write_ia_rest_uplink_mba(as_ul_tbf(tbf), dest, usf, alpha, gamma, wp);
+			dest->cur_bit = wp;
+			rc = write_ia_rest_uplink_mba(as_ul_tbf(tbf), dest, usf, alpha, gamma);
 		} else {
 			rc = write_ia_rest_uplink_sba(dest, fn, alpha, gamma, ta_idx, wp);
 		}
