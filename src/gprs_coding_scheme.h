@@ -67,7 +67,6 @@ public:
 	bool isCompatible(Mode mode) const;
 	bool isCompatible(GprsCodingScheme o) const;
 	bool isFamilyCompatible(GprsCodingScheme o) const;
-	bool isCombinable(GprsCodingScheme o) const;
 
 	void inc(Mode mode);
 	void dec(Mode mode);

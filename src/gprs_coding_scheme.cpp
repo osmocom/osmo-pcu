@@ -317,11 +317,6 @@ bool GprsCodingScheme::isFamilyCompatible(GprsCodingScheme o) const
 	return mcs_info[m_scheme].family == mcs_info[o.m_scheme].family;
 }
 
-bool GprsCodingScheme::isCombinable(GprsCodingScheme o) const
-{
-	return numDataBlocks() == o.numDataBlocks();
-}
-
 void GprsCodingScheme::decToSingleBlock(bool *needStuffing)
 {
 	switch (m_scheme) {
