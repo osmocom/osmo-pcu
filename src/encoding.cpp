@@ -117,13 +117,13 @@ static int write_ta_index(bitvec *dest, int8_t tai)
 {
 	int rc;
 
-	if (tai < 0) /* No TIMING_ADVANCE_INDEX: */
+	if (tai < 0) { /* No TIMING_ADVANCE_INDEX: */
 		SET_0(dest);
-
-	/* TIMING_ADVANCE_INDEX: */
-	SET_1(dest);
-	rc = bitvec_set_u64(dest, tai, 4, false);
-	CHECK(rc);
+	} else { /* TIMING_ADVANCE_INDEX: */
+		SET_1(dest);
+		rc = bitvec_set_u64(dest, tai, 4, false);
+		CHECK(rc);
+	}
 
 	return 0;
 }
