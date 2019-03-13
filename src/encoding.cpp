@@ -497,41 +497,37 @@ int Encoding::write_immediate_assignment(
 	plen = wp / 8;
 
 	/* 3GPP TS 44.018 §10.5.2.16 IA Rest Octets */
+	dest->cur_bit = wp;
 	if (downlink) {
 		if (!as_dl_tbf(tbf)) {
 			LOGP(DRLCMACDL, LOGL_ERROR, "Cannot encode DL IMMEDIATE ASSIGNMENT without TBF\n");
 			return -EINVAL;
 		}
 
-		dest->cur_bit = wp;
 		rc = write_ia_rest_downlink(as_dl_tbf(tbf), dest, polling, gsm48_ta_is_valid(ta), fn, alpha, gamma,
 					    ta_idx);
 	} else if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) || (burst_type == GSM_L1_BURST_TYPE_ACCESS_2))) {
-		bitvec_write_field(dest, &wp, 1, 2);    /* LH */
-		bitvec_write_field(dest, &wp, 0, 2);    /* 0 EGPRS Uplink Assignment */
-		bitvec_write_field(dest, &wp, ra & 0x1F, 5);    /* Extended RA */
-		bitvec_write_field(dest, &wp, 0, 1);    /* Access technology Request */
+		SET_L(dest); SET_H(dest); // "LH"
+		SET_0(dest); SET_0(dest); // "00" < EGPRS Packet Uplink Assignment >
+		rc = bitvec_set_u64(dest, ra & 0x1F, 5, false); // < Extended RA >
+		CHECK(rc);
 
-		if (as_ul_tbf(tbf) != NULL) {
-			dest->cur_bit = wp;
+		SET_0(dest); // No < Access Technologies Request struct >
+
+		if (as_ul_tbf(tbf) != NULL)
 			rc = write_ia_rest_egprs_uplink_sba(as_ul_tbf(tbf), dest, usf, alpha, gamma, ta_idx);
-		} else {
-			dest->cur_bit = wp;
+		else
 			rc = write_ia_rest_egprs_uplink_mba(dest, fn, alpha, gamma);
-		}
 	} else {
 		OSMO_ASSERT(!tbf || !tbf->is_egprs_enabled());
 
-		bitvec_write_field(dest, &wp, 3, 2);    // "HH"
-		bitvec_write_field(dest, &wp, 0, 2);    // "0" Packet Uplink Assignment
+		SET_H(dest); SET_H(dest); // "HH"
+		SET_0(dest); SET_0(dest); // "00" < Packet Uplink Assignment >
 
-		if (as_ul_tbf(tbf) != NULL) {
-			dest->cur_bit = wp;
+		if (as_ul_tbf(tbf) != NULL)
 			rc = write_ia_rest_uplink_mba(as_ul_tbf(tbf), dest, usf, alpha, gamma, ta_idx);
-		} else {
-			dest->cur_bit = wp;
+		else
 			rc = write_ia_rest_uplink_sba(dest, fn, alpha, gamma);
-		}
 	}
 
 	if (rc < 0) {
