@@ -457,7 +457,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		bts->rlc_resent();
 	}
 
-	*may_combine = m_rlc.block(bsn)->cs_current_trans.numDataBlocks() > 1;
+	*may_combine = num_data_blocks(m_rlc.block(bsn)->cs_current_trans.headerTypeData()) > 1;
 
 	return bsn;
 }
@@ -1259,7 +1259,7 @@ enum egprs_rlc_dl_reseg_bsn_state
 	 * MCS4: second segment starts at 44/2 = 22
 	 */
 	if (cs_current_trans.headerTypeData() ==
-			GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3) {
+			HEADER_EGPRS_DATA_TYPE_3) {
 		if (*block_status_dl == EGPRS_RESEG_FIRST_SEG_SENT) {
 			switch (CodingScheme(cs_init)) {
 			case MCS6 :
@@ -1287,9 +1287,9 @@ enum egprs_rlc_dl_reseg_bsn_state
 			}
 			return EGPRS_RESEG_SECOND_SEG_SENT;
 		} else if ((cs_init.headerTypeData() ==
-				GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1) ||
+				HEADER_EGPRS_DATA_TYPE_1) ||
 			(cs_init.headerTypeData() ==
-				GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2)) {
+				HEADER_EGPRS_DATA_TYPE_2)) {
 			return EGPRS_RESEG_FIRST_SEG_SENT;
 		} else if ((CodingScheme(cs_init) ==
 					MCS4) &&
@@ -1327,7 +1327,7 @@ enum egprs_rlcmac_dl_spb gprs_rlcmac_dl_tbf::get_egprs_dl_spb(const int bsn)
 
 	/* Table 10.4.8b.1 of 44.060 */
 	if (cs_current_trans.headerTypeData() ==
-			GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3) {
+			HEADER_EGPRS_DATA_TYPE_3) {
 	/*
 	 * if we are sending the second segment the spb should be 3
 	 * other wise it should be 2
@@ -1338,9 +1338,9 @@ enum egprs_rlcmac_dl_spb gprs_rlcmac_dl_tbf::get_egprs_dl_spb(const int bsn)
 			bts->spb_downlink_second_segment();
 			return EGPRS_RLCMAC_DL_SEC_SEG;
 		} else if ((cs_init.headerTypeData() ==
-				GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1) ||
+				HEADER_EGPRS_DATA_TYPE_1) ||
 			(cs_init.headerTypeData() ==
-				GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2)) {
+				HEADER_EGPRS_DATA_TYPE_2)) {
 			bts->spb_downlink_first_segment();
 			return EGPRS_RLCMAC_DL_FIRST_SEG;
 		} else if ((CodingScheme(cs_init) ==

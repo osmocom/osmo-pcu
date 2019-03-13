@@ -26,6 +26,7 @@
 #include <tbf.h>
 #include <gprs_coding_scheme.h>
 #include <pdch.h>
+#include "coding_scheme.h"
 
 #define BSSGP_TIMER_T1	30	/* Guards the (un)blocking procedures */
 #define BSSGP_TIMER_T2	30	/* Guards the reset procedure */
@@ -607,7 +608,7 @@ static unsigned count_pdch(const struct gprs_rlcmac_bts *bts)
 
 static uint32_t gprs_bssgp_max_leak_rate(GprsCodingScheme cs, int num_pdch)
 {
-	int bytes_per_rlc_block = cs.maxDataBlockBytes() * cs.numDataBlocks();
+	int bytes_per_rlc_block = cs.maxDataBlockBytes() * num_data_blocks(cs.headerTypeData());
 
 	/* n byte payload per 20ms */
 	return bytes_per_rlc_block * (1000 / 20) * num_pdch;

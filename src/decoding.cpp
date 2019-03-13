@@ -355,16 +355,16 @@ int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 {
 	unsigned int cur_bit = 0;
 	switch(cs.headerTypeData()) {
-	case GprsCodingScheme::HEADER_GPRS_DATA :
+	case HEADER_GPRS_DATA :
 		cur_bit = rlc_parse_ul_data_header_gprs(rlc, data, cs);
 		break;
-	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3 :
+	case HEADER_EGPRS_DATA_TYPE_3 :
 		cur_bit = rlc_parse_ul_data_header_egprs_type_3(rlc, data, cs);
 		break;
-	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2 :
+	case HEADER_EGPRS_DATA_TYPE_2 :
 		cur_bit = rlc_parse_ul_data_header_egprs_type_2(rlc, data, cs);
 		break;
-	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1 :
+	case HEADER_EGPRS_DATA_TYPE_1 :
 		cur_bit = rlc_parse_ul_data_header_egprs_type_1(rlc, data, cs);
 		break;
 	default:

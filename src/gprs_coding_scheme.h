@@ -40,16 +40,6 @@ public:
 		EGPRS,
 	};
 
-	enum HeaderType {
-		HEADER_INVALID,
-		HEADER_GPRS_CONTROL,
-		HEADER_GPRS_DATA,
-		HEADER_EGPRS_DATA_TYPE_1,
-		HEADER_EGPRS_DATA_TYPE_2,
-		HEADER_EGPRS_DATA_TYPE_3,
-		NUM_HEADER_TYPES
-	};
-
 	GprsCodingScheme(CodingScheme s = UNKNOWN);
 
 	operator bool() const {return m_scheme != UNKNOWN;}
@@ -83,13 +73,9 @@ public:
 	uint8_t spareBitsUL() const;
 	uint8_t spareBitsDL() const;
 	uint8_t maxDataBlockBytes() const;
-	uint8_t numDataBlocks() const;
-	uint8_t numDataHeaderBitsUL() const;
-	uint8_t numDataHeaderBitsDL() const;
-	uint8_t numDataBlockHeaderBits() const;
 	uint8_t optionalPaddingBits() const;
 	const char *name() const;
-	HeaderType headerTypeData() const;
+	enum HeaderType headerTypeData() const;
 
 	static GprsCodingScheme getBySizeUL(unsigned size);
 	static GprsCodingScheme getGprsByNum(unsigned num);

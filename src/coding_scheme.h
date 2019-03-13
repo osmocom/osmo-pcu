@@ -27,3 +27,20 @@ enum CodingScheme {
 	MCS1, MCS2, MCS3, MCS4, MCS5, MCS6, MCS7, MCS8, MCS9,
 	NUM_SCHEMES
 };
+
+enum HeaderType {
+	HEADER_INVALID,
+	HEADER_GPRS_CONTROL,
+	HEADER_GPRS_DATA,
+	HEADER_EGPRS_DATA_TYPE_1,
+	HEADER_EGPRS_DATA_TYPE_2,
+	HEADER_EGPRS_DATA_TYPE_3,
+	NUM_HEADER_TYPES
+};
+
+enum HeaderType headerTypeData(enum CodingScheme mcs);
+
+uint8_t num_data_blocks(enum HeaderType ht);
+uint8_t num_data_header_bits_UL(enum HeaderType ht);
+uint8_t num_data_header_bits_DL(enum HeaderType ht);
+uint8_t num_data_block_header_bits(enum HeaderType ht);

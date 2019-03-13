@@ -71,8 +71,8 @@ static void check_coding_scheme(GprsCodingScheme& cs, GprsCodingScheme::Mode mod
 	OSMO_ASSERT(expected_size == cs.sizeDL());
 
 	/* Check data block sizes */
-	OSMO_ASSERT(cs.maxDataBlockBytes() * cs.numDataBlocks() < cs.maxBytesDL());
-	OSMO_ASSERT(cs.maxDataBlockBytes() * cs.numDataBlocks() < cs.maxBytesUL());
+	OSMO_ASSERT(cs.maxDataBlockBytes() * num_data_blocks(cs.headerTypeData()) < cs.maxBytesDL());
+	OSMO_ASSERT(cs.maxDataBlockBytes() * num_data_blocks(cs.headerTypeData()) < cs.maxBytesUL());
 
 	/* Check inc/dec */
 	new_cs = cs;
@@ -168,8 +168,7 @@ static void test_coding_scheme()
 		last_size_DL = current_cs.maxBytesDL();
 
 		/* Check header types */
-		OSMO_ASSERT(current_cs.headerTypeData() ==
-			GprsCodingScheme::HEADER_GPRS_DATA);
+		OSMO_ASSERT(current_cs.headerTypeData() == HEADER_GPRS_DATA);
 
 		check_coding_scheme(current_cs, GprsCodingScheme::GPRS);
 	}
@@ -1099,7 +1098,7 @@ static void test_rlc_unaligned_copy()
 			test_block[cs.maxDataBlockBytes()-1] = pattern ^ 0xff;
 
 			for (block_idx = 0;
-				block_idx < cs.numDataBlocks();
+				block_idx < num_data_blocks(cs.headerTypeData());
 				block_idx++)
 			{
 				struct gprs_rlc_data_info rlc;

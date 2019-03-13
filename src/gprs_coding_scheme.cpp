@@ -82,55 +82,39 @@ static struct {
 	uint8_t data_bytes;
 	uint8_t optional_padding_bits;
 	const char *name;
-	GprsCodingScheme::HeaderType data_hdr;
+	enum HeaderType data_hdr;
 	enum Family family;
 } mcs_info[NUM_SCHEMES] = {
 	{{0, 0},   {0, 0},    0,  0, "UNKNOWN",
-		GprsCodingScheme::HEADER_INVALID, FAMILY_INVALID},
+		HEADER_INVALID, FAMILY_INVALID},
 	{{23, 0},  {23, 0},  20,  0, "CS-1",
-		GprsCodingScheme::HEADER_GPRS_DATA, FAMILY_INVALID},
+		HEADER_GPRS_DATA, FAMILY_INVALID},
 	{{33, 7},  {33, 7},  30,  0, "CS-2",
-		GprsCodingScheme::HEADER_GPRS_DATA, FAMILY_INVALID},
+		HEADER_GPRS_DATA, FAMILY_INVALID},
 	{{39, 3},  {39, 3},  36,  0, "CS-3",
-		GprsCodingScheme::HEADER_GPRS_DATA, FAMILY_INVALID},
+		HEADER_GPRS_DATA, FAMILY_INVALID},
 	{{53, 7},  {53, 7},  50,  0, "CS-4",
-		GprsCodingScheme::HEADER_GPRS_DATA, FAMILY_INVALID},
+		HEADER_GPRS_DATA, FAMILY_INVALID},
 
 	{{26, 1},  {26, 1},  22,  0, "MCS-1",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, FAMILY_C},
+		HEADER_EGPRS_DATA_TYPE_3, FAMILY_C},
 	{{32, 1},  {32, 1},  28,  0, "MCS-2",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, FAMILY_B},
+		HEADER_EGPRS_DATA_TYPE_3, FAMILY_B},
 	{{41, 1},  {41, 1},  37, 48, "MCS-3",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, FAMILY_A},
+		HEADER_EGPRS_DATA_TYPE_3, FAMILY_A},
 	{{48, 1},  {48, 1},  44,  0, "MCS-4",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3, FAMILY_C},
+		HEADER_EGPRS_DATA_TYPE_3, FAMILY_C},
 
 	{{60, 7},  {59, 6},  56,  0, "MCS-5",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2, FAMILY_B},
+		HEADER_EGPRS_DATA_TYPE_2, FAMILY_B},
 	{{78, 7},  {77, 6},  74, 48, "MCS-6",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2, FAMILY_A},
+		HEADER_EGPRS_DATA_TYPE_2, FAMILY_A},
 	{{118, 2}, {117, 4}, 56,  0, "MCS-7",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1, FAMILY_B},
+		HEADER_EGPRS_DATA_TYPE_1, FAMILY_B},
 	{{142, 2}, {141, 4}, 68,  0, "MCS-8",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1, FAMILY_A},
+		HEADER_EGPRS_DATA_TYPE_1, FAMILY_A},
 	{{154, 2}, {153, 4}, 74,  0, "MCS-9",
-		GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1, FAMILY_A},
-};
-
-static struct {
-	struct {
-		uint8_t data_header_bits;
-	} uplink, downlink;
-	uint8_t data_block_header_bits;
-	uint8_t num_blocks;
-	const char *name;
-} hdr_type_info[GprsCodingScheme::NUM_HEADER_TYPES] = {
-	{{0},       {0},       0, 0, "INVALID"},
-	{{1*8 + 0}, {1*8 + 0}, 0, 0, "CONTROL"},
-	{{3*8 + 0}, {3*8 + 0}, 0, 1, "GPRS_DATA"},
-	{{5*8 + 6}, {5*8 + 0}, 2, 2, "EGPRS_DATA_TYPE1"},
-	{{4*8 + 5}, {3*8 + 4}, 2, 1, "EGPRS_DATA_TYPE2"},
-	{{3*8 + 7}, {3*8 + 7}, 2, 1, "EGPRS_DATA_TYPE3"},
+		HEADER_EGPRS_DATA_TYPE_1, FAMILY_A},
 };
 
 GprsCodingScheme GprsCodingScheme::getBySizeUL(unsigned size)
@@ -210,32 +194,12 @@ uint8_t GprsCodingScheme::optionalPaddingBits() const
 	return mcs_info[m_scheme].optional_padding_bits;
 }
 
-uint8_t GprsCodingScheme::numDataBlocks() const
-{
-	return hdr_type_info[headerTypeData()].num_blocks;
-}
-
-uint8_t GprsCodingScheme::numDataHeaderBitsUL() const
-{
-	return hdr_type_info[headerTypeData()].uplink.data_header_bits;
-}
-
-uint8_t GprsCodingScheme::numDataHeaderBitsDL() const
-{
-	return hdr_type_info[headerTypeData()].downlink.data_header_bits;
-}
-
-uint8_t GprsCodingScheme::numDataBlockHeaderBits() const
-{
-	return hdr_type_info[headerTypeData()].data_block_header_bits;
-}
-
 const char *GprsCodingScheme::name() const
 {
 	return mcs_info[m_scheme].name;
 }
 
-GprsCodingScheme::HeaderType GprsCodingScheme::headerTypeData() const
+enum HeaderType GprsCodingScheme::headerTypeData() const
 {
 	return mcs_info[m_scheme].data_hdr;
 }

@@ -1118,7 +1118,7 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 	unsigned int bsn_delta;
 
 	switch(cs.headerTypeData()) {
-	case GprsCodingScheme::HEADER_GPRS_DATA:
+	case HEADER_GPRS_DATA:
 		gprs = static_cast<struct rlc_dl_header *>
 			((void *)data);
 
@@ -1134,7 +1134,7 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 		gprs->bsn   = rlc->block_info[0].bsn;
 		break;
 
-	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_1:
+	case HEADER_EGPRS_DATA_TYPE_1:
 		egprs1 = static_cast<struct gprs_rlc_dl_header_egprs_1 *>
 			((void *)data);
 
@@ -1173,7 +1173,7 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 		data[offs] = (data[offs] & 0b11110011) | e_fbi_header;
 		break;
 
-	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_2:
+	case HEADER_EGPRS_DATA_TYPE_2:
 		egprs2 = static_cast<struct gprs_rlc_dl_header_egprs_2 *>
 			((void *)data);
 
@@ -1197,7 +1197,7 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 		data[offs] = (data[offs] & 0b11001111) | e_fbi_header;
 		break;
 
-	case GprsCodingScheme::HEADER_EGPRS_DATA_TYPE_3:
+	case HEADER_EGPRS_DATA_TYPE_3:
 		egprs3 = static_cast<struct gprs_rlc_dl_header_egprs_3 *>
 			((void *)data);
 

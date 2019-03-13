@@ -336,7 +336,7 @@ static void gprs_rlc_data_header_init(struct gprs_rlc_data_info *rlc,
 	rlc->es_p = 0;
 	rlc->rrbp = 0;
 	rlc->pr = 0;
-	rlc->num_data_blocks = cs.numDataBlocks();
+	rlc->num_data_blocks = num_data_blocks(cs.headerTypeData());
 	rlc->with_padding = with_padding;
 
 	OSMO_ASSERT(rlc->num_data_blocks <= ARRAY_SIZE(rlc->block_info));
@@ -347,7 +347,7 @@ static void gprs_rlc_data_header_init(struct gprs_rlc_data_info *rlc,
 
 		rlc->data_offs_bits[i] =
 			header_bits + padding_bits +
-			(i+1) * cs.numDataBlockHeaderBits() +
+			(i+1) * num_data_block_header_bits(cs.headerTypeData()) +
 			i * 8 * rlc->block_info[0].data_len;
 	}
 }
@@ -356,7 +356,7 @@ void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,
 	GprsCodingScheme cs, bool with_padding, const unsigned int spb)
 {
 	return gprs_rlc_data_header_init(rlc, cs, with_padding,
-		cs.numDataHeaderBitsDL(), spb);
+					 num_data_header_bits_DL(cs.headerTypeData()), spb);
 }
 
 void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
@@ -367,7 +367,7 @@ void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
 	 * for both DL and UL
 	 */
 	return gprs_rlc_data_header_init(rlc, cs, with_padding,
-		cs.numDataHeaderBitsUL(), 0);
+					 num_data_header_bits_UL(cs.headerTypeData()), 0);
 }
 
 void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
