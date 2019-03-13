@@ -688,7 +688,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	 * the current limit.
 	 */
 	cs = m_rlc.block(index)->cs_current_trans;
-	GprsCodingScheme &cs_init = m_rlc.block(index)->cs_init;
+	enum CodingScheme cs_init = m_rlc.block(index)->cs_init;
 	bsns[0] = index;
 	num_bsns = 1;
 
@@ -702,11 +702,10 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	 * if the intial mcs is 8 and retransmission mcs is either 6 or 3
 	 * we have to include the padding of 6 octets in first segment
 	 */
-	if ((CodingScheme(cs_init) == MCS8) &&
-		(CodingScheme(cs) == MCS6 ||
-		CodingScheme(cs) == MCS3)) {
+	if ((cs_init == MCS8) &&
+	    (cs == MCS6 || cs == MCS3)) {
 		if (spb_status == EGPRS_RESEG_DL_DEFAULT ||
-			spb_status == EGPRS_RESEG_SECOND_SEG_SENT)
+		    spb_status == EGPRS_RESEG_SECOND_SEG_SENT)
 			need_padding  = true;
 	} else if (num_bsns == 1) {
 		/* TODO: remove the conditional when MCS-6 padding isn't
@@ -1248,8 +1247,12 @@ enum egprs_rlc_dl_reseg_bsn_state
 	egprs_rlc_dl_reseg_bsn_state *block_status_dl =
 				&rlc_data->spb_status.block_status_dl;
 
-	GprsCodingScheme &cs_current_trans = m_rlc.block(bsn)->cs_current_trans;
-	GprsCodingScheme &cs_init = m_rlc.block(bsn)->cs_init;
+	enum CodingScheme cs_init = CodingScheme(rlc_data->cs_init);
+	enum CodingScheme cs_current_trans = CodingScheme(rlc_data->cs_current_trans);
+
+	enum HeaderType ht_cs_init = rlc_data->cs_init.headerTypeData();
+	enum HeaderType ht_cs_current_trans = rlc_data->cs_current_trans.headerTypeData();
+
 	*block_data = &rlc_data->block[0];
 
 	/*
@@ -1259,10 +1262,9 @@ enum egprs_rlc_dl_reseg_bsn_state
 	 * MCS8: second segment starts at 31
 	 * MCS4: second segment starts at 44/2 = 22
 	 */
-	if (cs_current_trans.headerTypeData() ==
-			HEADER_EGPRS_DATA_TYPE_3) {
+	if (ht_cs_current_trans == HEADER_EGPRS_DATA_TYPE_3) {
 		if (*block_status_dl == EGPRS_RESEG_FIRST_SEG_SENT) {
-			switch (CodingScheme(cs_init)) {
+			switch (cs_init) {
 			case MCS6 :
 			case MCS9 :
 				*block_data = &rlc_data->block[37];
@@ -1281,21 +1283,17 @@ enum egprs_rlc_dl_reseg_bsn_state
 				LOGPTBFDL(this, LOGL_ERROR,
 					  "FIXME: Software error: hit invalid condition. "
 					  "headerType(%d) blockstatus(%d) cs(%s) PLEASE FIX!\n",
-					  cs_current_trans.headerTypeData(),
+					  ht_cs_current_trans,
 					  *block_status_dl, mcs_name(cs_init));
 				break;
 
 			}
 			return EGPRS_RESEG_SECOND_SEG_SENT;
-		} else if ((cs_init.headerTypeData() ==
-				HEADER_EGPRS_DATA_TYPE_1) ||
-			(cs_init.headerTypeData() ==
-				HEADER_EGPRS_DATA_TYPE_2)) {
+		} else if ((ht_cs_init == HEADER_EGPRS_DATA_TYPE_1) ||
+			   (ht_cs_init == HEADER_EGPRS_DATA_TYPE_2)) {
 			return EGPRS_RESEG_FIRST_SEG_SENT;
-		} else if ((CodingScheme(cs_init) ==
-					MCS4) &&
-				(CodingScheme(cs_current_trans) ==
-					MCS1)) {
+		} else if ((cs_init == MCS4) &&
+			   (cs_current_trans == MCS1)) {
 			return EGPRS_RESEG_FIRST_SEG_SENT;
 		}
 	}
@@ -1320,34 +1318,30 @@ unsigned int gprs_rlcmac_dl_tbf::get_egprs_dl_spb_status(const int bsn)
 enum egprs_rlcmac_dl_spb gprs_rlcmac_dl_tbf::get_egprs_dl_spb(const int bsn)
 {
 	struct gprs_rlc_data *rlc_data = m_rlc.block(bsn);
-	egprs_rlc_dl_reseg_bsn_state block_status_dl =
-				rlc_data->spb_status.block_status_dl;
+	egprs_rlc_dl_reseg_bsn_state block_status_dl = rlc_data->spb_status.block_status_dl;
 
-	GprsCodingScheme &cs_current_trans = m_rlc.block(bsn)->cs_current_trans;
-	GprsCodingScheme &cs_init = m_rlc.block(bsn)->cs_init;
+	enum CodingScheme cs_init = CodingScheme(rlc_data->cs_init);
+	enum CodingScheme cs_current_trans = CodingScheme(rlc_data->cs_current_trans);
+
+	enum HeaderType ht_cs_init = rlc_data->cs_init.headerTypeData();
+	enum HeaderType ht_cs_current_trans = rlc_data->cs_current_trans.headerTypeData();
 
 	/* Table 10.4.8b.1 of 44.060 */
-	if (cs_current_trans.headerTypeData() ==
-			HEADER_EGPRS_DATA_TYPE_3) {
-	/*
-	 * if we are sending the second segment the spb should be 3
-	 * other wise it should be 2
-	 */
+	if (ht_cs_current_trans == HEADER_EGPRS_DATA_TYPE_3) {
+		/*
+		 * if we are sending the second segment the spb should be 3
+		 * otherwise it should be 2
+		 */
 		if (block_status_dl == EGPRS_RESEG_FIRST_SEG_SENT) {
-
 			/* statistics */
 			bts->spb_downlink_second_segment();
 			return EGPRS_RLCMAC_DL_SEC_SEG;
-		} else if ((cs_init.headerTypeData() ==
-				HEADER_EGPRS_DATA_TYPE_1) ||
-			(cs_init.headerTypeData() ==
-				HEADER_EGPRS_DATA_TYPE_2)) {
+		} else if ((ht_cs_init == HEADER_EGPRS_DATA_TYPE_1) ||
+			   (ht_cs_init == HEADER_EGPRS_DATA_TYPE_2)) {
 			bts->spb_downlink_first_segment();
 			return EGPRS_RLCMAC_DL_FIRST_SEG;
-		} else if ((CodingScheme(cs_init) ==
-					MCS4) &&
-				(CodingScheme(cs_current_trans) ==
-					MCS1)) {
+		} else if ((cs_init == MCS4) &&
+			   (cs_current_trans == MCS1)) {
 			bts->spb_downlink_first_segment();
 			return EGPRS_RLCMAC_DL_FIRST_SEG;
 		}
