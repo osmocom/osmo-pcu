@@ -85,3 +85,14 @@ uint8_t num_data_block_header_bits(enum HeaderType ht)
 	OSMO_ASSERT(ht < NUM_HEADER_TYPES);
 	return hdr_type_info[ht].data_block_header_bits;
 }
+
+const struct value_string mode_names[] = {
+	{ GPRS, "GPRS" },
+	{ EGPRS_GMSK, "EGPRS_GMSK-only"},
+	{ EGPRS, "EGPRS"},
+	{ 0, NULL }
+};
+
+const char *mode_name(enum mcs_kind val) {
+	return get_value_string(mode_names, val);
+}

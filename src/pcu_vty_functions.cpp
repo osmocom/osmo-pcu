@@ -79,7 +79,7 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 			ul_tbf->window_size(), win->v_q(), win->v_r());
 		vty_out(vty, "%s", VTY_NEWLINE);
 		vty_out(vty, " TBF Statistics:%s", VTY_NEWLINE);
-		if(GprsCodingScheme::GPRS == tbf->ms()->mode()) {
+		if(GPRS == tbf->ms()->mode()) {
 			vty_out_rate_ctr_group(vty, " ", ul_tbf->m_ul_gprs_ctrs);
 		} else {
 			vty_out_rate_ctr_group(vty, " ", ul_tbf->m_ul_egprs_ctrs);
@@ -92,7 +92,7 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 			win->window_stalled() ? " STALLED" : "");
 		vty_out(vty, "%s", VTY_NEWLINE);
 		vty_out_rate_ctr_group(vty, " ", tbf->m_ctrs);
-		if(GprsCodingScheme::GPRS == tbf->ms()->mode()) {
+		if(GPRS == tbf->ms()->mode()) {
 			vty_out_rate_ctr_group(vty, " ", dl_tbf->m_dl_gprs_ctrs);
 		} else {
 			vty_out_rate_ctr_group(vty, " ", dl_tbf->m_dl_egprs_ctrs);
@@ -153,8 +153,7 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 		VTY_NEWLINE);
 	vty_out(vty, "  Coding scheme downlink: %s%s", mcs_name(ms->current_cs_dl()),
 		VTY_NEWLINE);
-	vty_out(vty, "  Mode:                   %s%s",
-		GprsCodingScheme::modeName(ms->mode()), VTY_NEWLINE);
+	vty_out(vty, "  Mode:                   %s%s", mode_name(ms->mode()), VTY_NEWLINE);
 	vty_out(vty, "  MS class:               %d%s", ms->ms_class(), VTY_NEWLINE);
 	vty_out(vty, "  EGPRS MS class:         %d%s", ms->egprs_ms_class(), VTY_NEWLINE);
 	vty_out(vty, "  PACCH:                  ");

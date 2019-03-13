@@ -49,3 +49,11 @@ uint8_t num_data_blocks(enum HeaderType ht);
 uint8_t num_data_header_bits_UL(enum HeaderType ht);
 uint8_t num_data_header_bits_DL(enum HeaderType ht);
 uint8_t num_data_block_header_bits(enum HeaderType ht);
+
+enum mcs_kind {
+	GPRS,
+	EGPRS_GMSK,
+	EGPRS,
+};
+
+const char *mode_name(enum mcs_kind val);

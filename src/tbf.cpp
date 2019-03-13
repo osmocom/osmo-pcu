@@ -897,7 +897,7 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, GprsMs *ms, int8_t use_trx, ui
 
 	bts = tbf->bts->bts_data();
 
-	if (ms->mode() == GprsCodingScheme::EGPRS)
+	if (ms->mode() == EGPRS)
 		ms_class = egprs_ms_class;
 
 	tbf->m_created_ts = time(NULL);
@@ -954,11 +954,11 @@ static void setup_egprs_mode(gprs_rlcmac_bts *bts, GprsMs *ms)
 {
 	if (GprsCodingScheme::getEgprsByNum(bts->max_mcs_ul).isEgprsGmsk() &&
 		GprsCodingScheme::getEgprsByNum(bts->max_mcs_dl).isEgprsGmsk() &&
-		ms->mode() != GprsCodingScheme::EGPRS)
+		ms->mode() != EGPRS)
 	{
-		ms->set_mode(GprsCodingScheme::EGPRS_GMSK);
+		ms->set_mode(EGPRS_GMSK);
 	} else {
-		ms->set_mode(GprsCodingScheme::EGPRS);
+		ms->set_mode(EGPRS);
 	}
 }
 
@@ -992,8 +992,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 	if (egprs_ms_class > 0 && bts->egprs_enabled) {
 		tbf->enable_egprs();
 		setup_egprs_mode(bts, ms);
-		LOGPTBF(tbf, LOGL_INFO, "Enabled EGPRS, mode %s\n",
-			GprsCodingScheme::modeName(ms->mode()));
+		LOGPTBF(tbf, LOGL_INFO, "Enabled EGPRS, mode %s\n", mode_name(ms->mode()));
 	}
 
 	rc = setup_tbf(tbf, ms, use_trx, ms_class, egprs_ms_class, single_slot);
@@ -1085,8 +1084,7 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 	if (egprs_ms_class > 0 && bts->egprs_enabled) {
 		tbf->enable_egprs();
 		setup_egprs_mode(bts, ms);
-		LOGPTBF(tbf, LOGL_INFO, "Enabled EGPRS, mode %s\n",
-			GprsCodingScheme::modeName(ms->mode()));
+		LOGPTBF(tbf, LOGL_INFO, "Enabled EGPRS, mode %s\n", mode_name(ms->mode()));
 	}
 
 	rc = setup_tbf(tbf, ms, use_trx, ms_class, 0, single_slot);

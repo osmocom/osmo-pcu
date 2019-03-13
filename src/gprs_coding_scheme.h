@@ -34,12 +34,6 @@ public:
 #define EGPRS_ARQ1            0x0
 #define EGPRS_ARQ2            0x1
 
-	enum Mode {
-		GPRS,
-		EGPRS_GMSK,
-		EGPRS,
-	};
-
 	GprsCodingScheme(CodingScheme s = UNKNOWN);
 
 	operator bool() const {return m_scheme != UNKNOWN;}
@@ -54,12 +48,12 @@ public:
 	bool isGprs()   const {return CS1 <= m_scheme && m_scheme <= CS4;}
 	bool isEgprs()  const {return m_scheme >= MCS1;}
 	bool isEgprsGmsk()  const {return isEgprs() && m_scheme <= MCS4;}
-	bool isCompatible(Mode mode) const;
+	bool isCompatible(enum mcs_kind mode) const;
 	bool isCompatible(GprsCodingScheme o) const;
 	bool isFamilyCompatible(GprsCodingScheme o) const;
 
-	void inc(Mode mode);
-	void dec(Mode mode);
+	void inc(enum mcs_kind mode);
+	void dec(enum mcs_kind mode);
 	void inc();
 	void dec();
 	void decToSingleBlock(bool *needStuffing);
@@ -81,7 +75,6 @@ public:
 	static GprsCodingScheme getGprsByNum(unsigned num);
 	static GprsCodingScheme getEgprsByNum(unsigned num);
 
-	static const char *modeName(Mode mode);
 	static CodingScheme get_retx_mcs(const GprsCodingScheme mcs,
 				const GprsCodingScheme retx_mcs,
 				const unsigned arq_type);
@@ -102,7 +95,7 @@ inline uint8_t GprsCodingScheme::to_num() const
 	return 0;
 }
 
-inline bool GprsCodingScheme::isCompatible(Mode mode) const
+inline bool GprsCodingScheme::isCompatible(enum mcs_kind mode) const
 {
 	switch (mode) {
 	case GPRS: return isGprs();

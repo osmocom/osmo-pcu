@@ -198,7 +198,7 @@ enum HeaderType GprsCodingScheme::headerTypeData() const
 	return mcs_info[m_scheme].data_hdr;
 }
 
-void GprsCodingScheme::inc(Mode mode)
+void GprsCodingScheme::inc(enum mcs_kind mode)
 {
 	if (!isCompatible(mode))
 		/* This should not happen. TODO: Use assert? */
@@ -212,7 +212,7 @@ void GprsCodingScheme::inc(Mode mode)
 	m_scheme = new_cs;
 }
 
-void GprsCodingScheme::dec(Mode mode)
+void GprsCodingScheme::dec(enum mcs_kind mode)
 {
 	if (!isCompatible(mode))
 		/* This should not happen. TODO: Use assert? */
@@ -252,16 +252,6 @@ void GprsCodingScheme::dec()
 		return;
 
 	m_scheme = CodingScheme(m_scheme - 1);
-}
-
-const char *GprsCodingScheme::modeName(Mode mode)
-{
-	switch (mode) {
-	case GPRS:       return "GPRS";
-	case EGPRS_GMSK: return "EGPRS_GMSK-only";
-	case EGPRS:      return "EGPRS";
-	default:         return "???";
-	}
 }
 
 bool GprsCodingScheme::isFamilyCompatible(GprsCodingScheme o) const

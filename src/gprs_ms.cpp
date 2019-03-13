@@ -110,7 +110,7 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	m_reserved_ul_slots(0),
 	m_current_trx(NULL),
 	m_codel_state(NULL),
-	m_mode(GprsCodingScheme::GPRS),
+	m_mode(GPRS),
 	m_dl_ctrl_msg(0)
 {
 	int codel_interval = LLC_CODEL_USE_DEFAULT;
@@ -213,7 +213,7 @@ void GprsMs::stop_timer()
 	unref();
 }
 
-void GprsMs::set_mode(GprsCodingScheme::Mode mode)
+void GprsMs::set_mode(enum mcs_kind mode)
 {
 	m_mode = mode;
 
@@ -221,7 +221,7 @@ void GprsMs::set_mode(GprsCodingScheme::Mode mode)
 		return;
 
 	switch (m_mode) {
-	case GprsCodingScheme::GPRS:
+	case GPRS:
 		if (!m_current_cs_ul.isGprs()) {
 			m_current_cs_ul = GprsCodingScheme::getGprsByNum(
 				m_bts->bts_data()->initial_cs_ul);
@@ -236,8 +236,8 @@ void GprsMs::set_mode(GprsCodingScheme::Mode mode)
 		}
 		break;
 
-	case GprsCodingScheme::EGPRS_GMSK:
-	case GprsCodingScheme::EGPRS:
+	case EGPRS_GMSK:
+	case EGPRS:
 		if (!m_current_cs_ul.isEgprs()) {
 			m_current_cs_ul = GprsCodingScheme::getEgprsByNum(
 				m_bts->bts_data()->initial_mcs_ul);

@@ -48,7 +48,7 @@ void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 bool spoof_mnc_3_digits = false;
 
-static void check_coding_scheme(GprsCodingScheme& cs, GprsCodingScheme::Mode mode)
+static void check_coding_scheme(GprsCodingScheme& cs, enum mcs_kind mode)
 {
 	volatile unsigned expected_size;
 	bool need_padding;
@@ -148,9 +148,9 @@ static void test_coding_scheme()
 	OSMO_ASSERT(!cs);
 	OSMO_ASSERT(CodingScheme(cs) == UNKNOWN);
 	OSMO_ASSERT(cs == GprsCodingScheme(UNKNOWN));
-	OSMO_ASSERT(!cs.isCompatible(GprsCodingScheme::GPRS));
-	OSMO_ASSERT(!cs.isCompatible(GprsCodingScheme::EGPRS_GMSK));
-	OSMO_ASSERT(!cs.isCompatible(GprsCodingScheme::EGPRS));
+	OSMO_ASSERT(!cs.isCompatible(GPRS));
+	OSMO_ASSERT(!cs.isCompatible(EGPRS_GMSK));
+	OSMO_ASSERT(!cs.isCompatible(EGPRS));
 
 	last_size_UL = 0;
 	last_size_DL = 0;
@@ -170,7 +170,7 @@ static void test_coding_scheme()
 		/* Check header types */
 		OSMO_ASSERT(current_cs.headerTypeData() == HEADER_GPRS_DATA);
 
-		check_coding_scheme(current_cs, GprsCodingScheme::GPRS);
+		check_coding_scheme(current_cs, GPRS);
 	}
 	OSMO_ASSERT(i == 4);
 
@@ -190,8 +190,8 @@ static void test_coding_scheme()
 		last_size_DL = current_cs.maxBytesDL();
 
 		if (egprs_schemes[i].is_gmsk)
-			check_coding_scheme(current_cs, GprsCodingScheme::EGPRS_GMSK);
-		check_coding_scheme(current_cs, GprsCodingScheme::EGPRS);
+			check_coding_scheme(current_cs, EGPRS_GMSK);
+		check_coding_scheme(current_cs, EGPRS);
 	}
 	OSMO_ASSERT(i == 9);
 

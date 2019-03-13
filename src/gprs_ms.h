@@ -74,8 +74,8 @@ public:
 	bool check_tlli(uint32_t tlli);
 
 	void reset();
-	GprsCodingScheme::Mode mode() const;
-	void set_mode(GprsCodingScheme::Mode mode);
+	enum mcs_kind mode() const;
+	void set_mode(enum mcs_kind mode);
 
 	const char *imsi() const;
 	void set_imsi(const char *imsi);
@@ -181,7 +181,7 @@ private:
 	gprs_rlcmac_trx *m_current_trx;
 
 	struct gprs_codel *m_codel_state;
-	GprsCodingScheme::Mode m_mode;
+	enum mcs_kind m_mode;
 
 	unsigned m_dl_ctrl_msg;
 };
@@ -237,7 +237,7 @@ inline GprsCodingScheme GprsMs::current_cs_ul() const
 	return m_current_cs_ul;
 }
 
-inline GprsCodingScheme::Mode GprsMs::mode() const
+inline enum mcs_kind GprsMs::mode() const
 {
 	return m_mode;
 }
