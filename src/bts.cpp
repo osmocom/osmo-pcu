@@ -197,6 +197,11 @@ struct gprs_rlcmac_bts *bts_main_data()
 	return BTS::main_bts()->bts_data();
 }
 
+void bts_cleanup()
+{
+	return BTS::main_bts()->cleanup();
+}
+
 struct rate_ctr_group *bts_main_data_stats()
 {
 	return BTS::main_bts()->rate_counters();
@@ -239,16 +244,27 @@ BTS::BTS()
 	OSMO_ASSERT(m_statg);
 }
 
-BTS::~BTS()
+void BTS::cleanup()
 {
 	/* this can cause counter updates and must not be left to the
 	 * m_ms_store's destructor */
 	m_ms_store.cleanup();
 
-	rate_ctr_group_free(m_ratectrs);
-	osmo_stat_item_group_free(m_statg);
+	if (m_ratectrs) {
+		rate_ctr_group_free(m_ratectrs);
+		m_ratectrs = NULL;
+	}
+
+	if (m_statg) {
+		osmo_stat_item_group_free(m_statg);
+		m_statg = NULL;
+	}
 }
 
+BTS::~BTS()
+{
+	cleanup();
+}
 
 void BTS::set_current_frame_number(int fn)
 {

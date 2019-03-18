@@ -272,6 +272,7 @@ public:
 
 	BTS();
 	~BTS();
+	void cleanup();
 
 	static BTS* main_bts();
 
@@ -591,6 +592,7 @@ CREATE_STAT_INLINE(ms_present, ms_present_get, STAT_MS_PRESENT);
 #ifdef __cplusplus
 extern "C" {
 #endif
+	void bts_cleanup();
 	struct gprs_rlcmac_bts *bts_main_data();
 	struct rate_ctr_group *bts_main_data_stats();
 	struct osmo_stat_item_group *bts_main_data_stat_items();
