@@ -54,35 +54,6 @@ extern bool spoof_mnc_3_digits;
 static void bvc_timeout(void *_priv);
 static int gprs_ns_reconnect(struct gprs_nsvc *nsvc);
 
-static int parse_imsi(struct tlv_parsed *tp, char *imsi)
-{
-	uint8_t imsi_len;
-	uint8_t *bcd_imsi;
-	int i, j;
-
-	if (!TLVP_PRESENT(tp, BSSGP_IE_IMSI))
-		return -EINVAL;
-
-	imsi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
-	bcd_imsi = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_IMSI);
-
-	if ((bcd_imsi[0] & 0x08))
-		imsi_len = imsi_len * 2 - 1;
-	else
-		imsi_len = (imsi_len - 1) * 2;
-	for (i = 0, j = 0; j < imsi_len && j < 15; j++)
-	{
-		if (!(j & 1)) {
-			imsi[j] = (bcd_imsi[i] >> 4) + '0';
-			i++;
-		} else
-			imsi[j] = (bcd_imsi[i] & 0xf) + '0';
-	}
-	imsi[j] = '\0';
-
-	return 0;
-}
-
 #if 0
 static int parse_ra_cap(struct tlv_parsed *tp, MS_Radio_Access_capability_t *rac)
 {
@@ -147,7 +118,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	/* read IMSI. if no IMSI exists, use first paging block (any paging),
 	 * because during attachment the IMSI might not be known, so the MS
 	 * will listen to all paging blocks. */
-	parse_imsi(tp, imsi);
+	gsm48_mi_to_string(imsi, sizeof(imsi), TLVP_VAL(tp, BSSGP_IE_IMSI), TLVP_LEN(tp, BSSGP_IE_IMSI));
 
 #if 0 /* Do not rely on this IE. TODO: make this configurable */
 	/* parse ms radio access capability */
@@ -205,11 +176,12 @@ int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 	}
 	LOGPC(DBSSGP, LOGL_NOTICE, "\n");
 
-	if (parse_imsi(tp, imsi))
-	{
+	if (!TLVP_PRESENT(tp, BSSGP_IE_IMSI)) {
 		LOGP(DBSSGP, LOGL_ERROR, "No IMSI\n");
 		return -EINVAL;
 	}
+
+	gsm48_mi_to_string(imsi, sizeof(imsi), TLVP_VAL(tp, BSSGP_IE_IMSI), TLVP_LEN(tp, BSSGP_IE_IMSI));
 
 	return gprs_rlcmac_paging_request(ptmsi, ptmsi_len, imsi);
 }
