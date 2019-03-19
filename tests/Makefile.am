@@ -1,5 +1,5 @@
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/ -I$(top_srcdir)/include/
-AM_LDFLAGS = -lrt
+AM_LDFLAGS = -lrt -no-install
 
 check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest alloc/MslotTest tbf/TbfTest types/TypesTest ms/MsTest llist/LListTest llc/LlcTest codel/codel_test edge/EdgeTest bitcomp/BitcompTest fn/FnTest
 noinst_PROGRAMS = emu/pcu_emu
