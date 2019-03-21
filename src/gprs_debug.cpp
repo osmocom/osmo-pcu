@@ -1,6 +1,7 @@
 /* gprs_debug.cpp
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
+ * Copyright (C) 2019 Harald Welte <laforge@gnumonks.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,20 +25,104 @@
 /* default categories */
 
 static const struct log_info_cat default_categories[] = {
- 	{"DCSN1", "\033[1;31m", "Concrete Syntax Notation One (CSN1)", LOGL_INFO, 0},
- 	{"DL1IF", "\033[1;32m", "GPRS PCU L1 interface (L1IF)", LOGL_INFO, 1},
-	{"DRLCMAC", "\033[0;33m", "GPRS RLC/MAC layer (RLCMAC)", LOGL_NOTICE, 1},
-	{"DRLCMACDATA", "\033[0;33m", "GPRS RLC/MAC layer Data (RLCMAC)", LOGL_NOTICE, 1},
-	{"DRLCMACDL", "\033[1;33m", "GPRS RLC/MAC layer Downlink (RLCMAC)", LOGL_NOTICE, 1},
-	{"DRLCMACUL", "\033[1;36m", "GPRS RLC/MAC layer Uplink (RLCMAC)", LOGL_NOTICE, 1},
-	{"DRLCMACSCHED", "\033[0;36m", "GPRS RLC/MAC layer Scheduling (RLCMAC)", LOGL_NOTICE, 1},
-	{"DRLCMACMEAS", "\033[1;31m", "GPRS RLC/MAC layer Measurements (RLCMAC)", LOGL_INFO, 1},
-	{"DTBF","\033[1;34m", "Temporary Block Flow (TBF)", LOGL_INFO , 1},
-	{"DTBFDL","\033[1;34m", "Temporary Block Flow (TBF) Downlink", LOGL_INFO , 1},
-	{"DTBFUL","\033[1;34m", "Temporary Block Flow (TBF) Uplink", LOGL_INFO , 1},
-	{"DNS","\033[1;34m", "GPRS Network Service Protocol (NS)", LOGL_INFO , 1},
-	{"DBSSGP","\033[1;34m", "GPRS BSS Gateway Protocol (BSSGP)", LOGL_INFO , 1},
-	{"DPCU", "\033[1;35m", "GPRS Packet Control Unit (PCU)", LOGL_NOTICE, 1},
+	[DCSN1] = {
+		.name = "DCSN1",
+		.color = "\033[1;31m",
+		.description = "Concrete Syntax Notation One (CSN1)",
+		.loglevel = LOGL_INFO,
+		.enabled = 0,
+	},
+	[DL1IF] = {
+		.name = "DL1IF",
+		.color = "\033[1;32m",
+		.description = "GPRS PCU L1 interface (L1IF)",
+		.loglevel = LOGL_INFO,
+		.enabled = 1,
+	},
+	[DRLCMAC] = {
+		.name = "DRLCMAC",
+		.color = "\033[0;33m",
+		.description = "GPRS RLC/MAC layer (RLCMAC)",
+		.loglevel = LOGL_NOTICE,
+		.enabled = 1,
+	},
+	[DRLCMACDATA] = {
+		.name = "DRLCMACDATA",
+		.color = "\033[0;33m",
+		.description = "GPRS RLC/MAC layer Data (RLCMAC)",
+		.loglevel = LOGL_NOTICE,
+		.enabled = 1,
+	},
+	[DRLCMACDL] = {
+		.name = "DRLCMACDL",
+		.color = "\033[1;33m",
+		.description = "GPRS RLC/MAC layer Downlink (RLCMAC)",
+		.loglevel = LOGL_NOTICE,
+		.enabled = 1,
+	},
+	[DRLCMACUL] = {
+		.name = "DRLCMACUL",
+		.color = "\033[1;36m",
+		.description = "GPRS RLC/MAC layer Uplink (RLCMAC)",
+		.loglevel = LOGL_NOTICE,
+		.enabled = 1,
+	},
+	[DRLCMACSCHED] = {
+		.name = "DRLCMACSCHED",
+		.color = "\033[0;36m",
+		.description = "GPRS RLC/MAC layer Scheduling (RLCMAC)",
+		.loglevel = LOGL_NOTICE,
+		.enabled = 1,
+	},
+	[DRLCMACMEAS] = {
+		.name = "DRLCMACMEAS",
+		.color = "\033[1;31m",
+		.description = "GPRS RLC/MAC layer Measurements (RLCMAC)",
+		.loglevel = LOGL_INFO,
+		.enabled = 1,
+	},
+	[DTBF] = {
+		.name = "DTBF",
+		.color = "\033[1;34m",
+		.description = "Temporary Block Flow (TBF)",
+		.loglevel = LOGL_INFO,
+		.enabled = 1,
+	},
+	[DTBFDL] = {
+		.name = "DTBFDL",
+		.color = "\033[1;34m",
+		.description = "Temporary Block Flow (TBF) Downlink",
+		.loglevel = LOGL_INFO,
+		.enabled = 1,
+	},
+	[DTBFUL] = {
+		.name = "DTBFUL",
+		.color = "\033[1;34m",
+		.description = "Temporary Block Flow (TBF) Uplink",
+		.loglevel = LOGL_INFO,
+		.enabled = 1,
+	},
+	[DNS] = {
+		.name = "DNS",
+		.color = "\033[1;34m",
+		.description = "GPRS Network Service Protocol (NS)",
+		.loglevel = LOGL_INFO,
+		.enabled = 1,
+	},
+	[DBSSGP] = {
+		.name = "DBSSGP",
+		.color = "\033[1;34m",
+		.description = "GPRS BSS Gateway Protocol (BSSGP)",
+		.loglevel = LOGL_INFO,
+		.enabled = 1,
+	},
+	[DPCU] = {
+		.name = "DPCU",
+		.color = "\033[1;35m",
+		.description = "GPRS Packet Control Unit (PCU)",
+		.loglevel = LOGL_NOTICE,
+		.enabled = 1,
+	},
 };
 
 static int filter_fn(const struct log_context *ctx,
