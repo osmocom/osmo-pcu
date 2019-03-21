@@ -97,7 +97,7 @@ static int l1if_fd_cb(struct osmo_fd *ofd, unsigned int what)
 	case MQ_SYS_WRITE:
 		if (rc != sizeof(Oc2g_Prim_t))
 			LOGP(DL1IF, LOGL_NOTICE, "%u != "
-			     "sizeof(Litecell15_Prim_t)\n", rc);
+			     "sizeof(Oc2g_Prim_t)\n", rc);
 		return l1if_handle_sysprim(fl1h, msg);
 	case MQ_L1_WRITE:
 	case MQ_TCH_WRITE:
