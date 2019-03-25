@@ -228,10 +228,10 @@ void GprsCodingScheme::dec(enum mcs_kind mode)
 
 void GprsCodingScheme::inc()
 {
-	if (isGprs() && m_scheme == CS4)
+	if (mcs_is_gprs(m_scheme) && m_scheme == CS4)
 		return;
 
-	if (isEgprs() && m_scheme == MCS9)
+	if (mcs_is_edge(m_scheme) && m_scheme == MCS9)
 		return;
 
 	if (!isValid())
@@ -242,10 +242,10 @@ void GprsCodingScheme::inc()
 
 void GprsCodingScheme::dec()
 {
-	if (isGprs() && m_scheme == CS1)
+	if (mcs_is_gprs(m_scheme) && m_scheme == CS1)
 		return;
 
-	if (isEgprs() && m_scheme == MCS1)
+	if (mcs_is_edge(m_scheme) && m_scheme == MCS1)
 		return;
 
 	if (!isValid())

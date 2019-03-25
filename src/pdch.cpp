@@ -741,10 +741,10 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Got RLC block, coding scheme: %s, "
 		"length: %d (%d))\n", mcs_name(cs), len, cs.usedSizeUL());
 
-	if (cs.isGprs())
+	if (mcs_is_gprs(cs))
 		return rcv_block_gprs(data, len, fn, meas, cs);
 
-	if (cs.isEgprs())
+	if (mcs_is_edge(cs))
 		return rcv_data_block(data, len, fn, meas, cs);
 
 	bts()->decode_error();
@@ -765,7 +765,7 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 	/* These are always data blocks, since EGPRS still uses CS-1 for
 	 * control blocks (see 44.060, section 10.3, 1st par.)
 	 */
-	if (cs.isEgprs()) {
+	if (mcs_is_edge(cs)) {
 		if (!bts()->bts_data()->egprs_enabled) {
 			LOGP(DRLCMACUL, LOGL_ERROR,
 				"Got %s RLC block but EGPRS is not enabled\n",

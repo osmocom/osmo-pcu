@@ -46,6 +46,24 @@ const char *mcs_name(enum CodingScheme val) {
 	return get_value_string(mcs_names, val);
 }
 
+bool mcs_is_gprs(enum CodingScheme cs)
+{
+	return CS1 <= cs && cs <= CS4;
+}
+
+bool mcs_is_edge(enum CodingScheme cs)
+{
+	return MCS1 <= cs && cs <= MCS9;
+}
+
+bool mcs_is_edge_gmsk(enum CodingScheme cs)
+{
+	if (mcs_is_edge(cs))
+		return cs <= MCS4;
+
+	return false;
+}
+
 static struct {
 	struct {
 		uint8_t data_header_bits;

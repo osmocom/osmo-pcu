@@ -222,13 +222,13 @@ void GprsMs::set_mode(enum mcs_kind mode)
 
 	switch (m_mode) {
 	case GPRS:
-		if (!m_current_cs_ul.isGprs()) {
+		if (!mcs_is_gprs(m_current_cs_ul)) {
 			m_current_cs_ul = GprsCodingScheme::getGprsByNum(
 				m_bts->bts_data()->initial_cs_ul);
 			if (!m_current_cs_ul.isValid())
 				m_current_cs_ul = CS1;
 		}
-		if (!m_current_cs_dl.isGprs()) {
+		if (!mcs_is_gprs(m_current_cs_dl)) {
 			m_current_cs_dl = GprsCodingScheme::getGprsByNum(
 				m_bts->bts_data()->initial_cs_dl);
 			if (!m_current_cs_dl.isValid())
@@ -238,13 +238,13 @@ void GprsMs::set_mode(enum mcs_kind mode)
 
 	case EGPRS_GMSK:
 	case EGPRS:
-		if (!m_current_cs_ul.isEgprs()) {
+		if (!mcs_is_edge(m_current_cs_ul)) {
 			m_current_cs_ul = GprsCodingScheme::getEgprsByNum(
 				m_bts->bts_data()->initial_mcs_ul);
 			if (!m_current_cs_ul.isValid())
 				m_current_cs_ul = MCS1;
 		}
-		if (!m_current_cs_dl.isEgprs()) {
+		if (!mcs_is_edge(m_current_cs_dl)) {
 			m_current_cs_dl = GprsCodingScheme::getEgprsByNum(
 				m_bts->bts_data()->initial_mcs_dl);
 			if (!m_current_cs_dl.isValid())
@@ -564,14 +564,14 @@ GprsCodingScheme GprsMs::max_cs_ul() const
 	OSMO_ASSERT(m_bts != NULL);
 	bts_data = m_bts->bts_data();
 
-	if (m_current_cs_ul.isGprs()) {
+	if (mcs_is_gprs(m_current_cs_ul)) {
 		if (!bts_data->max_cs_ul)
 			return GprsCodingScheme(CS4);
 
 		return GprsCodingScheme::getGprsByNum(bts_data->max_cs_ul);
 	}
 
-	if (!m_current_cs_ul.isEgprs())
+	if (!mcs_is_edge(m_current_cs_ul))
 		return GprsCodingScheme(); /* UNKNOWN */
 
 	if (bts_data->max_mcs_ul)
@@ -594,14 +594,14 @@ GprsCodingScheme GprsMs::max_cs_dl() const
 	OSMO_ASSERT(m_bts != NULL);
 	bts_data = m_bts->bts_data();
 
-	if (m_current_cs_dl.isGprs()) {
+	if (mcs_is_gprs(m_current_cs_dl)) {
 		if (!bts_data->max_cs_dl)
 			return GprsCodingScheme(CS4);
 
 		return GprsCodingScheme::getGprsByNum(bts_data->max_cs_dl);
 	}
 
-	if (!m_current_cs_dl.isEgprs())
+	if (!mcs_is_edge(m_current_cs_dl))
 		return GprsCodingScheme(); /* UNKNOWN */
 
 	if (bts_data->max_mcs_dl)
@@ -650,12 +650,12 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 
 	old_link_qual = meas->link_qual;
 
-	if (m_current_cs_ul.isGprs()) {
+	if (mcs_is_gprs(m_current_cs_ul)) {
 		if (current_cs_num > MAX_GPRS_CS)
 			current_cs_num = MAX_GPRS_CS;
 		low  = bts_data->cs_lqual_ranges[current_cs_num-1].low;
 		high = bts_data->cs_lqual_ranges[current_cs_num-1].high;
-	} else if (m_current_cs_ul.isEgprs()) {
+	} else if (mcs_is_edge(m_current_cs_ul)) {
 		if (current_cs_num > MAX_EDGE_MCS)
 			current_cs_num = MAX_EDGE_MCS;
 		low  = bts_data->mcs_lqual_ranges[current_cs_num-1].low;

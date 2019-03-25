@@ -215,7 +215,7 @@ int Decoding::rlc_data_from_ul_data(
 				"but no more chunks possible\n");
 			return -ENOSPC;
 		}
-	} else if (cs.isEgprs()) {
+	} else if (mcs_is_edge(cs)) {
 		/* if E is not set (LI follows), EGPRS */
 		num_chunks = parse_extensions_egprs(data, data_len, &offs,
 			is_last_block,
@@ -240,7 +240,7 @@ int Decoding::rlc_data_from_ul_data(
 		}
 
 		memcpy(&tlli_enc, data + offs, sizeof(tlli_enc));
-		if (cs.isGprs())
+		if (mcs_is_gprs(cs))
 			/* The TLLI is encoded in big endian for GPRS (see
 			 * TS 44.060, figure 10.2.2.1, note) */
 			*tlli = be32toh(tlli_enc);

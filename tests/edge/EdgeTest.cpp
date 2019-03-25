@@ -59,14 +59,14 @@ static void check_coding_scheme(GprsCodingScheme& cs, enum mcs_kind mode)
 
 	/* Check static getBySizeUL() */
 	expected_size = cs.usedSizeUL();
-	if (cs.spareBitsUL() > 0 && cs.isGprs())
+	if (cs.spareBitsUL() > 0 && mcs_is_gprs(cs))
 		expected_size += 1;
 	OSMO_ASSERT(expected_size == cs.sizeUL());
 	OSMO_ASSERT(cs == GprsCodingScheme::getBySizeUL(expected_size));
 
 	/* Check static sizeUL() */
 	expected_size = cs.usedSizeDL();
-	if (cs.spareBitsDL() > 0 && cs.isGprs())
+	if (cs.spareBitsDL() > 0 && mcs_is_gprs(cs))
 		expected_size += 1;
 	OSMO_ASSERT(expected_size == cs.sizeDL());
 
@@ -157,9 +157,9 @@ static void test_coding_scheme()
 
 	for (i = 0; i < ARRAY_SIZE(gprs_schemes); i++) {
 		GprsCodingScheme current_cs(gprs_schemes[i]);
-		OSMO_ASSERT(current_cs.isGprs());
-		OSMO_ASSERT(!current_cs.isEgprs());
-		OSMO_ASSERT(!current_cs.isEgprsGmsk());
+		OSMO_ASSERT(mcs_is_gprs(current_cs));
+		OSMO_ASSERT(!mcs_is_edge(current_cs));
+		OSMO_ASSERT(!mcs_is_edge_gmsk(current_cs));
 		OSMO_ASSERT(CodingScheme(current_cs) == gprs_schemes[i]);
 		OSMO_ASSERT(current_cs == GprsCodingScheme(gprs_schemes[i]));
 
@@ -179,9 +179,9 @@ static void test_coding_scheme()
 
 	for (i = 0; i < ARRAY_SIZE(egprs_schemes); i++) {
 		GprsCodingScheme current_cs(egprs_schemes[i].s);
-		OSMO_ASSERT(!current_cs.isGprs());
-		OSMO_ASSERT(current_cs.isEgprs());
-		OSMO_ASSERT(!!current_cs.isEgprsGmsk() == !!egprs_schemes[i].is_gmsk);
+		OSMO_ASSERT(!mcs_is_gprs(current_cs));
+		OSMO_ASSERT(mcs_is_edge(current_cs));
+		OSMO_ASSERT(mcs_is_edge_gmsk(current_cs) == !!egprs_schemes[i].is_gmsk);
 		OSMO_ASSERT(CodingScheme(current_cs) == egprs_schemes[i].s);
 		OSMO_ASSERT(current_cs == GprsCodingScheme(egprs_schemes[i].s));
 

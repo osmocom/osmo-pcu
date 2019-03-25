@@ -952,8 +952,8 @@ static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
 
 static void setup_egprs_mode(gprs_rlcmac_bts *bts, GprsMs *ms)
 {
-	if (GprsCodingScheme::getEgprsByNum(bts->max_mcs_ul).isEgprsGmsk() &&
-		GprsCodingScheme::getEgprsByNum(bts->max_mcs_dl).isEgprsGmsk() &&
+	if (mcs_is_edge_gmsk(GprsCodingScheme::getEgprsByNum(bts->max_mcs_ul)) &&
+		mcs_is_edge_gmsk(GprsCodingScheme::getEgprsByNum(bts->max_mcs_dl)) &&
 		ms->mode() != EGPRS)
 	{
 		ms->set_mode(EGPRS_GMSK);

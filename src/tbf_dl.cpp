@@ -363,7 +363,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 
 	if (previous_bsn >= 0) {
 		force_cs = m_rlc.block(previous_bsn)->cs_current_trans;
-		if (!force_cs.isEgprs())
+		if (!mcs_is_edge(force_cs))
 			return -1;
 		force_data_len = m_rlc.block(previous_bsn)->len;
 	}
@@ -765,7 +765,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			m_rlc.block(bsn)->next_ps,
 			m_rlc.block(bsn)->cs_last, cs, spb);
 
-		if (cs.isEgprs()) {
+		if (mcs_is_edge(cs)) {
 			OSMO_ASSERT(m_rlc.block(bsn)->next_ps >= EGPRS_PS_1);
 			OSMO_ASSERT(m_rlc.block(bsn)->next_ps <= EGPRS_PS_3);
 		}
@@ -812,7 +812,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	}
 
 	/* Calculate CPS only for EGPRS case */
-	if (cs.isEgprs())
+	if (mcs_is_edge(cs))
 		rlc.cps = gprs_rlc_mcs_cps(cs, punct[0], punct[1], need_padding);
 
 	/* If the TBF has just started, relate frames_since_last_poll to the
@@ -1369,7 +1369,7 @@ void gprs_rlcmac_dl_tbf::update_coding_scheme_counter_dl(const GprsCodingScheme 
 	uint8_t coding_scheme = 0;
 
 	coding_scheme = CodingScheme(cs);
-	if (cs.isGprs()) {
+	if (mcs_is_gprs(cs)) {
 		switch (coding_scheme) {
 		case CS1 :
 			bts->gprs_dl_cs1();

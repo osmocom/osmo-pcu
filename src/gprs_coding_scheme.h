@@ -45,9 +45,7 @@ public:
 	GprsCodingScheme& operator =(GprsCodingScheme o);
 
 	bool isValid()   const {return UNKNOWN <= m_scheme && m_scheme <= MCS9;}
-	bool isGprs()   const {return CS1 <= m_scheme && m_scheme <= CS4;}
-	bool isEgprs()  const {return m_scheme >= MCS1;}
-	bool isEgprsGmsk()  const {return isEgprs() && m_scheme <= MCS4;}
+
 	bool isCompatible(enum mcs_kind mode) const;
 	bool isCompatible(GprsCodingScheme o) const;
 	bool isFamilyCompatible(GprsCodingScheme o) const;
@@ -86,10 +84,10 @@ private:
 
 inline uint8_t GprsCodingScheme::to_num() const
 {
-	if (isGprs())
+	if (mcs_is_gprs(m_scheme))
 		return (m_scheme - CS1) + 1;
 
-	if (isEgprs())
+	if (mcs_is_edge(m_scheme))
 		return (m_scheme - MCS1) + 1;
 
 	return 0;
@@ -98,9 +96,9 @@ inline uint8_t GprsCodingScheme::to_num() const
 inline bool GprsCodingScheme::isCompatible(enum mcs_kind mode) const
 {
 	switch (mode) {
-	case GPRS: return isGprs();
-	case EGPRS_GMSK: return isEgprsGmsk();
-	case EGPRS: return isEgprs();
+	case GPRS: return mcs_is_gprs(m_scheme);
+	case EGPRS_GMSK: return mcs_is_edge_gmsk(m_scheme);
+	case EGPRS: return mcs_is_edge(m_scheme);
 	}
 
 	return false;
@@ -108,7 +106,7 @@ inline bool GprsCodingScheme::isCompatible(enum mcs_kind mode) const
 
 inline bool GprsCodingScheme::isCompatible(GprsCodingScheme o) const
 {
-	return (isGprs() && o.isGprs()) || (isEgprs() && o.isEgprs());
+	return (mcs_is_gprs(m_scheme) && mcs_is_gprs(o)) || (mcs_is_edge(m_scheme) && mcs_is_edge(o));
 }
 
 inline GprsCodingScheme::GprsCodingScheme(CodingScheme s)

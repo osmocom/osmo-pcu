@@ -33,6 +33,10 @@ enum CodingScheme {
 extern const struct value_string mcs_names[];
 const char *mcs_name(enum CodingScheme val);
 
+bool mcs_is_gprs(enum CodingScheme cs);
+bool mcs_is_edge(enum CodingScheme cs);
+bool mcs_is_edge_gmsk(enum CodingScheme cs);
+
 enum HeaderType {
 	HEADER_INVALID,
 	HEADER_GPRS_CONTROL,

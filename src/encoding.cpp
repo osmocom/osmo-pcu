@@ -1605,12 +1605,12 @@ Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 	gprs_llc *llc, int *offset, int *num_chunks,
 	uint8_t *data_block, bool is_final, int *count_payload)
 {
-	if (cs.isGprs())
+	if (mcs_is_gprs(cs))
 		return rlc_data_to_dl_append_gprs(rdbi,
 			llc, offset, num_chunks, data_block, is_final,
 			count_payload);
 
-	if (cs.isEgprs())
+	if (mcs_is_edge(cs))
 		return rlc_data_to_dl_append_egprs(rdbi,
 			llc, offset, num_chunks, data_block, is_final,
 			count_payload);

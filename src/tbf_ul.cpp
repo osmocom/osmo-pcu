@@ -530,7 +530,7 @@ void gprs_rlcmac_ul_tbf::update_coding_scheme_counter_ul(const GprsCodingScheme 
 	uint8_t coding_scheme = 0;
 
 	coding_scheme = CodingScheme(cs);
-	if (cs.isGprs()) {
+	if (mcs_is_gprs(cs)) {
 		switch (coding_scheme) {
 		case CS1 :
 			bts->gprs_ul_cs1();
