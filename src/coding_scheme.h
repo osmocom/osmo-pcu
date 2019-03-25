@@ -32,6 +32,7 @@ enum CodingScheme {
 
 extern const struct value_string mcs_names[];
 const char *mcs_name(enum CodingScheme val);
+enum CodingScheme get_retx_mcs(enum CodingScheme initial_mcs, enum CodingScheme commanded_mcs, bool resegment_bit);
 
 bool mcs_is_gprs(enum CodingScheme cs);
 bool mcs_is_edge(enum CodingScheme cs);

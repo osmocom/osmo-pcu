@@ -378,11 +378,9 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 
 		if (is_egprs_enabled()) {
 			/* Table 8.1.1.2 and Table 8.1.1.1 of 44.060 */
-			m_rlc.block(bsn)->cs_current_trans =
-				GprsCodingScheme::get_retx_mcs(
-					m_rlc.block(bsn)->cs_init,
-					ms()->current_cs_dl(),
-					bts->bts_data()->dl_arq_type);
+			m_rlc.block(bsn)->cs_current_trans = get_retx_mcs(m_rlc.block(bsn)->cs_init,
+									  ms()->current_cs_dl(),
+									  !bts->bts_data()->dl_arq_type);
 
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "initial_cs_dl(%s) last_mcs(%s) demanded_mcs(%s) cs_trans(%s) arq_type(%d) bsn(%d)\n",

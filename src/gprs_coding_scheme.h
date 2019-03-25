@@ -73,9 +73,6 @@ public:
 	static GprsCodingScheme getGprsByNum(unsigned num);
 	static GprsCodingScheme getEgprsByNum(unsigned num);
 
-	static CodingScheme get_retx_mcs(const GprsCodingScheme mcs,
-				const GprsCodingScheme retx_mcs,
-				const unsigned arq_type);
 private:
 	GprsCodingScheme(int s); /* fail on use */
 	GprsCodingScheme& operator =(int s); /* fail on use */

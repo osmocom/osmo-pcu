@@ -127,3 +127,39 @@ const struct value_string mode_names[] = {
 const char *mode_name(enum mcs_kind val) {
 	return get_value_string(mode_names, val);
 }
+
+/* FIXME: take into account padding and special cases of commanded MCS (MCS-6-9 and MCS-5-7) */
+enum CodingScheme get_retx_mcs(enum CodingScheme initial_mcs, enum CodingScheme commanded_mcs, bool resegment_bit)
+{
+	OSMO_ASSERT(mcs_is_edge(initial_mcs));
+	OSMO_ASSERT(mcs_is_edge(commanded_mcs));
+	OSMO_ASSERT(NUM_SCHEMES - MCS1 == 9);
+
+	if (resegment_bit) { /* 3GPP TS 44.060 Table 8.1.1.1, reflected over antidiagonal */
+		enum CodingScheme egprs_reseg[NUM_SCHEMES - MCS1][NUM_SCHEMES - MCS1] = {
+			{ MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1 },
+			{ MCS2, MCS2, MCS2, MCS2, MCS2, MCS2, MCS2, MCS2, MCS2 },
+			{ MCS3, MCS3, MCS3, MCS3, MCS3, MCS3, MCS3, MCS3, MCS3 },
+			{ MCS1, MCS1, MCS1, MCS4, MCS4, MCS4, MCS4, MCS4, MCS4 },
+			{ MCS2, MCS2, MCS2, MCS2, MCS5, MCS5, MCS7, MCS7, MCS7 },
+			{ MCS3, MCS3, MCS3, MCS3, MCS3, MCS6, MCS6, MCS6, MCS9 },
+			{ MCS2, MCS2, MCS2, MCS2, MCS5, MCS5, MCS7, MCS7, MCS7 },
+			{ MCS3, MCS3, MCS3, MCS3, MCS3, MCS6, MCS6, MCS8, MCS8 },
+			{ MCS3, MCS3, MCS3, MCS3, MCS3, MCS6, MCS6, MCS6, MCS9 },
+		};
+		return egprs_reseg[mcs_chan_code(initial_mcs)][mcs_chan_code(commanded_mcs)];
+	} else { /* 3GPP TS 44.060 Table 8.1.1.2, reflected over antidiagonal */
+		enum CodingScheme egprs_no_reseg[NUM_SCHEMES - MCS1][NUM_SCHEMES - MCS1] = {
+			{ MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1, MCS1 },
+			{ MCS2, MCS2, MCS2, MCS2, MCS2, MCS2, MCS2, MCS2, MCS2 },
+			{ MCS3, MCS3, MCS3, MCS3, MCS3, MCS3, MCS3, MCS3, MCS3 },
+			{ MCS4, MCS4, MCS4, MCS4, MCS4, MCS4, MCS4, MCS4, MCS4 },
+			{ MCS5, MCS5, MCS5, MCS5, MCS5, MCS5, MCS7, MCS7, MCS7 },
+			{ MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS9 },
+			{ MCS5, MCS5, MCS5, MCS5, MCS5, MCS5, MCS7, MCS7, MCS7 },
+			{ MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS8, MCS8 },
+			{ MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS6, MCS9 },
+		};
+		return egprs_no_reseg[mcs_chan_code(initial_mcs)][mcs_chan_code(commanded_mcs)];
+	}
+}
