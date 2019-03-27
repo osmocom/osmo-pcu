@@ -48,6 +48,12 @@ elif [ "$with_dsp" = lc15 ]; then
   osmo-layer1-headers.sh lc15 "$FIRMWARE_VERSION"
   cd "$base"
 
+elif [ "$with_dsp" = oc2g ]; then
+  PCU_CONFIG="$PCU_CONFIG --enable-oc2gbts-phy --with-oc2g=$deps/layer1-headers/inc"
+  cd "$deps"
+  osmo-layer1-headers.sh oc2g "$FIRMWARE_VERSION"
+  cd "$base"
+
 elif [ -z "$with_dsp" -o "$with_dsp" = none ]; then
   echo "Direct DSP access disabled, sanitizer enabled"
   PCU_CONFIG="$PCU_CONFIG --enable-werror --enable-sanitize"
