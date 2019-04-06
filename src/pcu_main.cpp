@@ -65,18 +65,18 @@ static const char *gsmtap_addr = "localhost"; // FIXME: use gengetopt's default 
 
 static void print_help()
 {
-	printf( "Some useful options:\n"
-		"  -h	--help		this text\n"
+	printf( "Options:\n"
+		"  -h	--help		This text\n"
 		"  -c	--config-file 	Specify the filename of the config "
 			"file\n"
-		"  -m	--mcc MCC	use given MCC instead of value "
+		"  -m	--mcc MCC	Use given MCC instead of value "
 			"provided by BTS\n"
-		"  -n	--mnc MNC	use given MNC instead of value "
+		"  -n	--mnc MNC	Use given MNC instead of value "
 			"provided by BTS\n"
-		"  -V   --version	print version\n"
-		"  -r   --realtime PRIO Use SCHED_RR with the specified "
+		"  -V	--version	Print version\n"
+		"  -r	--realtime PRIO Use SCHED_RR with the specified "
 			"priority\n"
-		"  -D	--daemonize	Fork the process into a background"
+		"  -D	--daemonize	Fork the process into a background "
 			"daemon\n"
 		"  -i	--gsmtap-ip	The destination IP used for GSMTAP.\n"
 		);
