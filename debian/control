@@ -7,7 +7,8 @@ Build-Depends: debhelper (>= 9),
                dh-systemd (>= 1.5),
                autotools-dev,
                pkg-config,
-               libosmocore-dev (>= 0.10.1)
+               libosmocore-dev (>= 0.10.1),
+               osmo-gsm-manuals-dev
 Standards-Version: 3.9.8
 Homepage: http://osmocom.org/projects/osmopcu
 Vcs-Git: git://git.osmocom.org/osmo-pcu
@@ -35,3 +36,12 @@ Description: Debug symbols for the Osmocom GPRS/EDGE Packet Control Unit (PCU)
  networks.  OsmoPCU is the Osmcoom implementation of this network
  element. It interfaces to osmo-bts via the PCU socket of OsmoBTS
  and via Gb (NS-over-IP) interface with the SGSN such as OsmoSGSN.
+
+Package: osmo-pcu-doc
+Architecture: all
+Section: doc
+Priority: optional
+Depends: ${misc:Depends}
+Description: ${misc:Package} PDF documentation
+ Various manuals: user manual, VTY reference manual and/or
+ protocol/interface manuals.
