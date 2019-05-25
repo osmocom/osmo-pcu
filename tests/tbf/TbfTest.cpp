@@ -447,6 +447,12 @@ static void test_tbf_exhaustion()
 
 	printf("=== start %s ===\n", __func__);
 
+	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
+	if (!bssgp_nsi) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
+		abort();
+	}
+
 	bts = the_bts.bts_data();
 	setup_bts(&the_bts, ts_no);
 	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001, 1234, 1234, 1234, 1, 1, false, 0, 0, 0);
@@ -484,6 +490,12 @@ static void test_tbf_dl_llc_loss()
 	GprsMs *ms;
 
 	uint8_t buf[19];
+
+	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
+	if (!bssgp_nsi) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
+		abort();
+	}
 
 	printf("=== start %s ===\n", __func__);
 
@@ -2171,6 +2183,12 @@ static void test_tbf_gprs_egprs()
 
 	printf("=== start %s ===\n", __func__);
 
+	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
+	if (!bssgp_nsi) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
+		abort();
+	}
+
 	bts = the_bts.bts_data();
 	setup_bts(&the_bts, ts_no);
 
@@ -2227,6 +2245,12 @@ static void test_tbf_ws()
 
 	printf("=== start %s ===\n", __func__);
 
+	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
+	if (!bssgp_nsi) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
+		abort();
+	}
+
 	bts = the_bts.bts_data();
 	setup_bts(&the_bts, ts_no);
 
@@ -2263,6 +2287,12 @@ static void test_tbf_update_ws(void)
 	gprs_rlcmac_dl_tbf *dl_tbf;
 
 	printf("=== start %s ===\n", __func__);
+
+	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
+	if (!bssgp_nsi) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
+		abort();
+	}
 
 	bts = the_bts.bts_data();
 	setup_bts(&the_bts, ts_no);

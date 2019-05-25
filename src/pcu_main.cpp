@@ -33,6 +33,8 @@
 #include <bts.h>
 #include <gprs_coding_scheme.h>
 #include <osmocom/pcu/pcuif_proto.h>
+#include "gprs_bssgp_pcu.h"
+
 extern "C" {
 #include "pcu_vty.h"
 #include <osmocom/gprs/gprs_bssgp.h>
@@ -290,6 +292,13 @@ int main(int argc, char *argv[])
 		gsmtap_source_add_sink(bts->gsmtap);
 	else
 		fprintf(stderr, "Failed to initialize GSMTAP for %s\n", gsmtap_addr);
+
+	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
+	if (!bssgp_nsi) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
+		exit(1);
+	}
+	gprs_ns_vty_init(bssgp_nsi);
 
 	rc = vty_read_config_file(config_file, NULL);
 	if (rc < 0 && config_given) {

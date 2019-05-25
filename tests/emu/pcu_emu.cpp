@@ -113,6 +113,13 @@ int main(int argc, char **argv)
 
 	msgb_talloc_ctx_init(tall_pcu_ctx, 0);
 	osmo_init_logging2(tall_pcu_ctx, &gprs_log_info);
+
+	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
+	if (!bssgp_nsi) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
+		abort();
+	}
+
 	vty_init(&pcu_vty_info);
 	pcu_vty_init(&gprs_log_info);
 

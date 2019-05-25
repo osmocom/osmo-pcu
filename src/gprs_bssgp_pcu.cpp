@@ -875,11 +875,6 @@ static int gprs_ns_reconnect(struct gprs_nsvc *nsvc)
 {
 	struct gprs_nsvc *nsvc2;
 
-	if (!bssgp_nsi) {
-		LOGP(DBSSGP, LOGL_ERROR, "NS instance does not exist\n");
-		return -EINVAL;
-	}
-
 	if (nsvc != the_pcu.nsvc) {
 		LOGP(DBSSGP, LOGL_ERROR, "NSVC is invalid\n");
 		return -EBADF;
@@ -913,12 +908,6 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 
 	the_pcu.bts = bts;
 
-	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
-	if (!bssgp_nsi) {
-		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
-		return NULL;
-	}
-	gprs_ns_vty_init(bssgp_nsi);
 	/* don't specify remote IP/port if SNS dialect is in use; Doing so would
 	 * issue a connect() on the socket, which prevents us to dynamically communicate
 	 * with any number of IP-SNS endpoints on the SGSN side */
@@ -930,8 +919,7 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 	rc = gprs_ns_nsip_listen(bssgp_nsi);
 	if (rc < 0) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create socket\n");
-		gprs_ns_destroy(bssgp_nsi);
-		bssgp_nsi = NULL;
+		gprs_ns_close(bssgp_nsi);
 		return NULL;
 	}
 
@@ -945,8 +933,7 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 		the_pcu.nsvc = gprs_ns_nsip_connect(bssgp_nsi, &dest, nsei, nsvci);
 	if (!the_pcu.nsvc) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSVCt\n");
-		gprs_ns_destroy(bssgp_nsi);
-		bssgp_nsi = NULL;
+		gprs_ns_close(bssgp_nsi);
 		return NULL;
 	}
 
@@ -954,8 +941,7 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 	if (!the_pcu.bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create BSSGP context\n");
 		the_pcu.nsvc = NULL;
-		gprs_ns_destroy(bssgp_nsi);
-		bssgp_nsi = NULL;
+		gprs_ns_close(bssgp_nsi);
 		return NULL;
 	}
 	the_pcu.bctx->ra_id.mcc = spoof_mcc ? : mcc;
