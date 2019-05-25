@@ -520,7 +520,7 @@ int bssgp_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 	return 0;
 }
 
-static int sgsn_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msgb *msg, uint16_t bvci)
+int gprs_bssgp_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc, struct msgb *msg, uint16_t bvci)
 {
 	int rc = 0;
 	switch (event) {
@@ -913,7 +913,7 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 
 	the_pcu.bts = bts;
 
-	bssgp_nsi = gprs_ns_instantiate(&sgsn_ns_cb, tall_pcu_ctx);
+	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
 	if (!bssgp_nsi) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		return NULL;
