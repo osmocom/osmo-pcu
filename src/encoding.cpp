@@ -965,7 +965,7 @@ static void write_packet_ack_nack_desc_egprs(
 				crbb_len = crbb_len - 8;
 				iter++;
 			} else {
-				bitvec_write_field(dest, &wp, crbb_bitmap[iter], crbb_len);
+				bitvec_write_field(dest, &wp, crbb_bitmap[iter] >> (8 - crbb_len), crbb_len);
 				crbb_len = 0;
 			}
 		}
