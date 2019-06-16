@@ -153,7 +153,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 		return NULL;
 	}
 	bitvec_unhex(ack_vec, DUMMY_VEC);
-	Encoding::write_packet_uplink_ack(bts_data(), ack_vec, this, final, rrbp);
+	Encoding::write_packet_uplink_ack(ack_vec, this, final, rrbp);
 	bitvec_pack(ack_vec, msgb_put(msg, 23));
 	bitvec_free(ack_vec);
 

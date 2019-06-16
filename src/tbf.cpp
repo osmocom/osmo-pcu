@@ -1365,7 +1365,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 		return NULL;
 	}
 	bitvec_unhex(ass_vec, DUMMY_VEC);
-	Encoding::write_packet_uplink_assignment(bts_data(), ass_vec, m_tfi,
+	Encoding::write_packet_uplink_assignment(ass_vec, m_tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), tlli(),
 		is_tlli_valid(), new_tbf, 1, rrbp, bts_data()->alpha,
 		bts_data()->gamma, -1, is_egprs_enabled());
