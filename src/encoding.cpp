@@ -837,14 +837,14 @@ static void write_packet_ack_nack_desc_egprs(
 	uint8_t len;
 	bool bow = true;
 	bool eow = true;
-	int ssn = window->mod_sns(window->v_q() + 1);
+	uint16_t ssn = window->mod_sns(window->v_q() + 1);
 	unsigned int num_blocks = window->mod_sns(window->v_r() - window->v_q());
-	int esn_crbb = window->mod_sns(ssn - 1);
+	uint16_t esn_crbb = window->mod_sns(ssn - 1);
 	static  uint8_t rbb[RLC_EGPRS_MAX_WS] = {'\0'};
 	uint8_t iter = 0;
 	int is_compressed = 0;
 	bool try_compression = false;
-	uint8_t ucmp_bmplen;
+	uint16_t ucmp_bmplen;
 	uint8_t crbb_bitmap[23] = {'\0'};
 	bitvec ucmp_vec;
 	bitvec crbb_vec;
@@ -972,7 +972,7 @@ static void write_packet_ack_nack_desc_egprs(
 		bitvec_write_field(dest, &wp, 0, 1); // CRBB_Exist
 	}
 	LOGP(DRLCMACUL, LOGL_DEBUG,
-		"EGPRS URBB, urbb len = %d, SSN = %d, ESN_CRBB = %d, "
+		"EGPRS URBB, urbb len = %d, SSN = %u, ESN_CRBB = %u, "
 		"len present = %s,desc len = %d, "
 		"SNS = %d, WS = %d, V(Q) = %d, V(R) = %d%s%s\n",
 		urbb_len, ssn, esn_crbb, len_coded ? "yes" : "No" , len,
