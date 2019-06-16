@@ -853,8 +853,8 @@ static void write_packet_ack_nack_desc_egprs(
 	bool len_coded = true;
 	uint8_t crbb_start_clr_code;
 	uint8_t i;
-#if 0
-	/* static size of 16 bits*/
+
+	/* static size of 16 bits
 	 ..0. .... = ACKNACK:  (Union)
         Desc
 
@@ -866,8 +866,7 @@ static void write_packet_ack_nack_desc_egprs(
 
             .... ..10  0101 0001  1... .... = STARTING_SEQUENCE_NUMBER: 1187
 
-            .0.. .... = CRBB Exist: 0
-#endif
+	    .0.. .... = CRBB Exist: 0 */
 	rest_bits -= 16;
 
 	if (num_blocks > 0)
