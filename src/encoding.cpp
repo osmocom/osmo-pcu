@@ -828,6 +828,17 @@ static void write_packet_uplink_ack_gprs(
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have REL 5
 };
 
+/* Encode the Ack/Nack for EGPRS. 44.060
+ * The PCU encodes to receive block bitmap to the following rules:
+ * - always encode the lenght field
+ * - use compressed receive block bitmap if it's smaller than uncompressed
+ *   receive block bitmap
+ * - use the remaining bits for an uncompressed receive block bitmap if needed
+ *
+ * Note: The spec also defines an Ack/Nack without length field, but the PCU's
+ *       doesn't support this in UL. It would require a lot more code complexity
+ *       and only saves 7 bit in lossy sitations.
+ */
 static void write_packet_ack_nack_desc_egprs(
 	bitvec * dest, unsigned& wp,
 	gprs_rlc_ul_window *window, bool is_final, unsigned rest_bits)
@@ -849,12 +860,12 @@ static void write_packet_ack_nack_desc_egprs(
 	bitvec ucmp_vec;
 	bitvec crbb_vec;
 	uint8_t uclen_crbb = 0;
-	bool len_coded = true;
 	uint8_t crbb_start_clr_code;
 	uint8_t i;
 
 	/* static size of 16 bits
-	 ..0. .... = ACKNACK:  (Union)
+	 ..1. .... = ACKNACK:  (Union)
+	    0 0000 000 Length
         Desc
 
             ...0 .... = FINAL_ACK_INDICATION: False
@@ -865,8 +876,9 @@ static void write_packet_ack_nack_desc_egprs(
 
             .... ..10  0101 0001  1... .... = STARTING_SEQUENCE_NUMBER: 1187
 
-	    .0.. .... = CRBB Exist: 0 */
-	rest_bits -= 16;
+	    .0.. .... = CRBB Exist: 0
+	minimal size is 24 rest_bits */
+	rest_bits -= 24;
 
 	if (num_blocks > 0)
 		/* V(Q) is NACK and omitted -> SSN = V(Q) + 1 */
@@ -903,47 +915,31 @@ static void write_packet_ack_nack_desc_egprs(
 		crbb_len = crbb_vec.cur_bit;
 	}
 
-	if (is_compressed == 0) {
-		/* length field takes 8 bits*/
-		if (num_blocks > rest_bits - 8) {
-			eow = false;
-			urbb_len = rest_bits;
-			len_coded = false;
-		} else if (num_blocks == rest_bits) {
-			urbb_len = rest_bits;
-			len_coded = false;
-		} else
-			urbb_len = num_blocks;
 
-		len = urbb_len + 15;
+	if (is_compressed) {
+		/* 8 = 7 (CRBBlength) + 1 (CRBB starting color code) */
+		rest_bits -= 8;
 	} else {
-		if (num_blocks > uclen_crbb) {
-			eow = false;
-			urbb_len = num_blocks - uclen_crbb;
-		}
-		/* Union bit takes 1 bit */
-		/* Other fields in descr of compresed bitmap takes 23 bits
-		 * -8 = CRBB_STARTING_COLOR_CODE + CRBB_LENGTH */
-		if (urbb_len > (rest_bits - crbb_len - 8)) {
-			eow = false;
-			len_coded = false;
-			urbb_len = rest_bits - crbb_len - 8;
-		/* -16 =  ACKNACK Dissector length + CRBB_STARTING_COLOR_CODE + CRBB_LENGTH */
-		} else if (urbb_len > (rest_bits - crbb_len - 16)) {
-			eow = false;
-			len_coded = false;
-			urbb_len = rest_bits - crbb_len - 16;
-		}
+		uclen_crbb = 0;
+		crbb_len = 0;
+	}
+
+	if (num_blocks > uclen_crbb + rest_bits) {
+		eow = false;
+		urbb_len = rest_bits - crbb_len;
+	} else
+		urbb_len = num_blocks - uclen_crbb;
+
+	if (is_compressed)
 		len = urbb_len + crbb_len + 23;
-	}
+	else
+		len = urbb_len + 15;
 
-	/* EGPRS Ack/Nack Description IE */
-	if (len_coded == false) {
-		bitvec_write_field(dest, &wp, 0, 1); // 0: don't have length
-	} else {
-		bitvec_write_field(dest, &wp, 1, 1); // 1: have length
-		bitvec_write_field(dest, &wp, len, 8); // length
-	}
+
+	/* EGPRS Ack/Nack Description IE
+	 * do not support Ack/Nack without length */
+	bitvec_write_field(dest, &wp, 1, 1); // 1: have length
+	bitvec_write_field(dest, &wp, len, 8); // length
 
 	bitvec_write_field(dest, &wp, is_final, 1); // FINAL_ACK_INDICATION
 	bitvec_write_field(dest, &wp, bow, 1); // BEGINNING_OF_WINDOW
@@ -973,9 +969,9 @@ static void write_packet_ack_nack_desc_egprs(
 	}
 	LOGP(DRLCMACUL, LOGL_DEBUG,
 		"EGPRS URBB, urbb len = %d, SSN = %u, ESN_CRBB = %u, "
-		"len present = %s,desc len = %d, "
+		"desc len = %d, "
 		"SNS = %d, WS = %d, V(Q) = %d, V(R) = %d%s%s\n",
-		urbb_len, ssn, esn_crbb, len_coded ? "yes" : "No" , len,
+		urbb_len, ssn, esn_crbb, len,
 		window->sns(), window->ws(), window->v_q(), window->v_r(),
 		bow ? ", BOW" : "", eow ? ", EOW" : "");
 
