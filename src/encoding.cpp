@@ -903,16 +903,27 @@ static void write_packet_ack_nack_desc_egprs(
 	}
 
 	if (is_compressed == 0) {
-		/* length field takes 8 bits*/
-		if (num_blocks > rest_bits - 8) {
+		/* define if the length field is needed or not.
+		 * length field takes 8 bits */
+		if (num_blocks == rest_bits) {
+			urbb_len = rest_bits;
+			len_coded = false;
+		} else if (num_blocks > rest_bits) {
 			eow = false;
 			urbb_len = rest_bits;
 			len_coded = false;
-		} else if (num_blocks == rest_bits) {
-			urbb_len = rest_bits;
-			len_coded = false;
-		} else
+		} else if (num_blocks <= (rest_bits - 8)) {
 			urbb_len = num_blocks;
+		} else {
+			/* num_blocks < rest_bit && num_block > rest_bit - 8
+			 * The spec is not clear, what happens this case.
+			 * The problem here is an URBB without length field, but the URBB would
+			 * have more bits than the window is valid.
+			 * Enfore the length field and might loose 7 bits in worst case of performance
+			 * to have a clear case. */
+			eow = false;
+			urbb_len = rest_bits - 8;
+		}
 
 		len = urbb_len + 15;
 	} else {
