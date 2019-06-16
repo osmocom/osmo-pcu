@@ -17,7 +17,7 @@ public:
 	egprs_compress();
 	int osmo_t4_compress(struct bitvec *bv);
 	static int compress_rbb(struct bitvec *urbb_vec, struct bitvec *crbb_vec,
-		uint8_t *uclen_crbb, uint8_t  max_bits);
+		uint8_t *uclen_crbb, uint8_t max_bits);
 
 private:
 	egprs_compress_node *ones_list;

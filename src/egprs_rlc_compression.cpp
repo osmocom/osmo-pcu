@@ -618,7 +618,7 @@ int egprs_compress::compress_rbb(
 		struct bitvec *urbb_vec,
 		struct bitvec *crbb_vec,
 		uint8_t *uclen_crbb,  /* Uncompressed bitmap len in CRBB */
-		uint8_t  max_bits)     /* max remaining bits */
+		uint8_t max_bits)     /* max remaining bits */
 {
 	bool run_len_bit;
 	int buflen = urbb_vec->cur_bit;
