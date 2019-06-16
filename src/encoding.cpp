@@ -927,23 +927,28 @@ static void write_packet_ack_nack_desc_egprs(
 
 		len = urbb_len + 15;
 	} else {
-		if (num_blocks > uclen_crbb) {
-			eow = false;
-			urbb_len = num_blocks - uclen_crbb;
-		}
-		/* Union bit takes 1 bit */
-		/* Other fields in descr of compresed bitmap takes 23 bits
-		 * -8 = CRBB_STARTING_COLOR_CODE + CRBB_LENGTH */
-		if (urbb_len > (rest_bits - crbb_len - 8)) {
+		/* 8 = 7 (CRBBlength) + 1 (CRBB starting color code) */
+		if (num_blocks > uclen_crbb + (rest_bits - crbb_len - 8)) {
 			eow = false;
 			len_coded = false;
 			urbb_len = rest_bits - crbb_len - 8;
-		/* -16 =  ACKNACK Dissector length + CRBB_STARTING_COLOR_CODE + CRBB_LENGTH */
-		} else if (urbb_len > (rest_bits - crbb_len - 16)) {
-			eow = false;
+		} else if (num_blocks == uclen_crbb + (rest_bits - crbb_len - 8)) {
 			len_coded = false;
+			urbb_len = rest_bits - crbb_len - 8;
+		/* 16 = 8 (Length) + 7 (CRBBlength) + 1 (CRBB starting color code) */
+		} else if (num_blocks <= uclen_crbb + (rest_bits - crbb_len - 16)) {
+			urbb_len = rest_bits - crbb_len - 16;
+		} else {
+			/* Same problem when not compressing, last case.
+			 * The spec is not clear, what happens this case.
+			 * The problem here is an URBB without length field, but the URBB would
+			 * have more bits than the window is valid.
+			 * Enfore the length field and might loose 7 bits in worst case of performance
+			 * to have a clear case. */
+			eow = false;
 			urbb_len = rest_bits - crbb_len - 16;
 		}
+
 		len = urbb_len + crbb_len + 23;
 	}
 
