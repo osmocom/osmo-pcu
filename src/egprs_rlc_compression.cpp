@@ -449,6 +449,7 @@ const char *zero_run_len_code_list[EGPRS_CODEWORDS] = {
 /* Calculate runlength of a  codeword
  * \param root[in]  Root of Ones or Zeros tree
  * \param bmbuf[in] Received compressed bitmap buf
+ * \param length[in] Length of bitmap buf in bits
  * \param bit_pos[in] The start bit pos to read codeword
  * \param len_codewd[in] Length of code word
  * \param rlen[out] Calculated run length
@@ -456,6 +457,7 @@ const char *zero_run_len_code_list[EGPRS_CODEWORDS] = {
 static int search_runlen(
 		egprs_compress_node *root,
 		const uint8_t *bmbuf,
+		uint8_t length,
 		uint8_t bit_pos,
 		uint8_t *len_codewd,
 		uint16_t *rlen)
@@ -469,6 +471,9 @@ static int search_runlen(
 	while (iter->run_length == -1) {
 		if ((!iter->left) && (!iter->right))
 			return -1;
+		if (bit_pos >= length)
+			return -1;
+
 		/* get the bit value at the bitpos and put it in right most of dir */
 		dir = (bmbuf[bit_pos/8] >> (7 - (bit_pos & 0x07))) & 0x01;
 		bit_pos++;
@@ -498,7 +503,7 @@ int egprs_compress::decompress_crbb(
 		const uint8_t *orig_crbb_buf,
 		bitvec *dest)
 {
-
+	int8_t remaining_bmap_len = compress_bmap_len;
 	uint8_t bit_pos = 0;
 	uint8_t data;
 	egprs_compress_node *list = NULL;
@@ -509,7 +514,7 @@ int egprs_compress::decompress_crbb(
 	int rc = 0;
 	egprs_compress *compress = instance();
 
-	while (compress_bmap_len > 0) {
+	while (remaining_bmap_len > 0) {
 		if (start) {
 			data = 0xff;
 			list = compress->ones_list;
@@ -517,7 +522,7 @@ int egprs_compress::decompress_crbb(
 			data = 0x00;
 			list = compress->zeros_list;
 		}
-		rc = search_runlen(list, orig_crbb_buf,
+		rc = search_runlen(list, orig_crbb_buf, compress_bmap_len,
 				bit_pos, &nbits, &run_length);
 		if (rc == -1)
 			return -1;
@@ -525,6 +530,7 @@ int egprs_compress::decompress_crbb(
 		if (run_length < 64)
 			start = !start;
 		cbmaplen = cbmaplen + run_length;
+
 		/* put run length of Ones in uncompressed bitmap */
 		while (run_length != 0) {
 			if (run_length > 8) {
@@ -536,7 +542,7 @@ int egprs_compress::decompress_crbb(
 			}
 		}
 		bit_pos = bit_pos + nbits;
-		compress_bmap_len = compress_bmap_len - nbits;
+		remaining_bmap_len = remaining_bmap_len - nbits;
 	}
 	return 0;
 }

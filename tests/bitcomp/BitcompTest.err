@@ -108,13 +108,8 @@ len = 18
 Run_length = 1
 Run_length = 1
 Run_length = 2
-Run_length = 15
-rc = 0
-
-expected data = b0 00 00 
-expected len = 19
-decoded data = b0 00 00 
-decoded len = 19
+rc = -1
+Failed to decode CRBB: length 18, data 1e 70 c0 
 
 Test:8
 Tree based decoding:

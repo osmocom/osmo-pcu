@@ -91,14 +91,13 @@ struct test_data {
 			.ucmp_len = 90,
 			.expect_rc = 0,
 		},
-		/* TODO: previously marked as "Invalid inputs" but succeeds */
+		/* Invalid inputs */
 		{ .crbb_len = 18, .cc = 1,
 			.crbb_data = {0x1E, 0x70, 0xc0},
 			.ucmp_data = {0xb0, 0x00, 0x00},
 			.ucmp_len = 19,
-			.expect_rc = 0,
+			.expect_rc = -1,
 		},
-		/* Invalid inputs */
 		{ .crbb_len = 14, .cc = 1,
 			.crbb_data = {0x00, 0x1E, 0x7c},
 			.ucmp_data = {0x0},
