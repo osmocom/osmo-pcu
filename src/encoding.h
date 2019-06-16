@@ -27,7 +27,6 @@ extern "C" {
 #include <osmocom/gsm/l1sap.h>
 }
 
-struct gprs_rlcmac_bts;
 struct gprs_rlcmac_tbf;
 struct bitvec;
 struct gprs_llc;
@@ -57,7 +56,6 @@ public:
 		);
 
 	static void write_packet_uplink_assignment(
-			struct gprs_rlcmac_bts *bts,
 			bitvec * dest, uint8_t old_tfi,
 			uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
 			struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t rrbp,
@@ -76,8 +74,7 @@ public:
 		bitvec * dest, uint32_t tlli);
 
 	static void write_packet_uplink_ack(
-			struct gprs_rlcmac_bts *bts, bitvec * dest,
-			struct gprs_rlcmac_ul_tbf *tbf, bool is_final,
+			bitvec * dest, struct gprs_rlcmac_ul_tbf *tbf, bool is_final,
 			uint8_t rrbp);
 
 	static int write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len);

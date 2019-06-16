@@ -543,7 +543,6 @@ int Encoding::write_immediate_assignment(
 
 /* generate uplink assignment */
 void Encoding::write_packet_uplink_assignment(
-	struct gprs_rlcmac_bts *bts,
 	bitvec * dest, uint8_t old_tfi,
 	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
 	struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t rrbp, uint8_t alpha,
@@ -787,7 +786,7 @@ void Encoding::encode_rbb(const char *show_rbb, uint8_t *rbb)
 }
 
 static void write_packet_ack_nack_desc_gprs(
-	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
+	bitvec * dest, unsigned& wp,
 	gprs_rlc_ul_window *window, bool is_final)
 {
 	char rbb[65];
@@ -809,12 +808,12 @@ static void write_packet_ack_nack_desc_gprs(
 }
 
 static void write_packet_uplink_ack_gprs(
-	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
+	bitvec * dest, unsigned& wp,
 	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
 {
 
 	bitvec_write_field(dest, &wp, mcs_chan_code(tbf->current_cs()), 2); // CHANNEL_CODING_COMMAND
-	write_packet_ack_nack_desc_gprs(bts, dest, wp, tbf->window(), is_final);
+	write_packet_ack_nack_desc_gprs(dest, wp, tbf->window(), is_final);
 
 	bitvec_write_field(dest, &wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
 	bitvec_write_field(dest, &wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
@@ -830,7 +829,7 @@ static void write_packet_uplink_ack_gprs(
 };
 
 static void write_packet_ack_nack_desc_egprs(
-	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
+	bitvec * dest, unsigned& wp,
 	gprs_rlc_ul_window *window, bool is_final, unsigned& rest_bits)
 {
 	unsigned int urbb_len = 0;
@@ -988,7 +987,7 @@ static void write_packet_ack_nack_desc_egprs(
 }
 
 static void write_packet_uplink_ack_egprs(
-	struct gprs_rlcmac_bts *bts, bitvec * dest, unsigned& wp,
+	bitvec * dest, unsigned& wp,
 	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
 {
 	bitvec_write_field(dest, &wp, 0, 2); // fixed 00
@@ -1010,15 +1009,14 @@ static void write_packet_uplink_ack_egprs(
 
 	/* -2 for last bit 0 mandatory and REL5 not supported */
 	unsigned bits_ack_nack = dest->data_len * 8 - wp - 2;
-	write_packet_ack_nack_desc_egprs(bts, dest, wp, tbf->window(), is_final, bits_ack_nack);
+	write_packet_ack_nack_desc_egprs(dest, wp, tbf->window(), is_final, bits_ack_nack);
 
 	bitvec_write_field(dest, &wp, 0, 1); // fixed 0
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have REL 5
 };
 
 void Encoding::write_packet_uplink_ack(
-	struct gprs_rlcmac_bts *bts, bitvec * dest,
-	struct gprs_rlcmac_ul_tbf *tbf, bool is_final,
+	bitvec * dest, struct gprs_rlcmac_ul_tbf *tbf, bool is_final,
 	uint8_t rrbp)
 {
 	unsigned wp = 0;
@@ -1039,11 +1037,11 @@ void Encoding::write_packet_uplink_ack(
 	if (tbf->is_egprs_enabled()) {
 		/* PU_AckNack_EGPRS = on */
 		bitvec_write_field(dest, &wp, 1, 1);  // 1: EGPRS
-		write_packet_uplink_ack_egprs(bts, dest, wp, tbf, is_final);
+		write_packet_uplink_ack_egprs(dest, wp, tbf, is_final);
 	} else {
 		/* PU_AckNack_GPRS = on */
 		bitvec_write_field(dest, &wp, 0, 1);  // 0: GPRS
-		write_packet_uplink_ack_gprs(bts, dest, wp, tbf, is_final);
+		write_packet_uplink_ack_gprs(dest, wp, tbf, is_final);
 	}
 
 	LOGP(DRLCMACUL, LOGL_DEBUG,
