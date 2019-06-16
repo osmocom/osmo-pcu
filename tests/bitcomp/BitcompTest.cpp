@@ -140,7 +140,7 @@ static void test_EPDAN_decode_tree(void)
 		dest.cur_bit = 0;
 		_LOG("\nTest:%d\n"
 		     "Tree based decoding:\n"
-		     "uncompressed data = %s\n"
+		     "compressed data = %s\n"
 		     "len = %d\n",
 		     itr + 1,
 		     osmo_hexdump(test[itr].crbb_data,

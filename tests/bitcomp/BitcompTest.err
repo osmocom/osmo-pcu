@@ -1,7 +1,7 @@
 
 Test:1
 Tree based decoding:
-uncompressed data = 02 0c a0 30 cb 1a 0c e3 6c 
+compressed data = 02 0c a0 30 cb 1a 0c e3 6c 
 len = 67
 Run_length = 29
 Run_length = 26
@@ -19,7 +19,7 @@ decoded len = 194
 
 Test:2
 Tree based decoding:
-uncompressed data = 53 06 c5 40 6d 
+compressed data = 53 06 c5 40 6d 
 len = 40
 Run_length = 50
 Run_length = 40
@@ -34,7 +34,7 @@ decoded len = 182
 
 Test:3
 Tree based decoding:
-uncompressed data = 02 
+compressed data = 02 
 len = 8
 Run_length = 29
 rc = 0
@@ -46,7 +46,7 @@ decoded len = 29
 
 Test:4
 Tree based decoding:
-uncompressed data = 02 0c e0 41 a0 0c 36 0d 03 71 b0 6e 24 
+compressed data = 02 0c e0 41 a0 0c 36 0d 03 71 b0 6e 24 
 len = 103
 Run_length = 29
 Run_length = 19
@@ -68,7 +68,7 @@ decoded len = 288
 
 Test:5
 Tree based decoding:
-uncompressed data = de 88 75 65 80 
+compressed data = de 88 75 65 80 
 len = 35
 Run_length = 2
 Run_length = 2
@@ -89,7 +89,7 @@ decoded len = 28
 
 Test:6
 Tree based decoding:
-uncompressed data = dd 41 00 
+compressed data = dd 41 00 
 len = 18
 Run_length = 64
 Run_length = 16
@@ -103,7 +103,7 @@ decoded len = 90
 
 Test:7
 Tree based decoding:
-uncompressed data = 1e 70 c0 
+compressed data = 1e 70 c0 
 len = 18
 Run_length = 1
 Run_length = 1
@@ -118,14 +118,14 @@ decoded len = 19
 
 Test:8
 Tree based decoding:
-uncompressed data = 00 1e 
+compressed data = 00 1e 
 len = 14
 rc = -1
 Failed to decode CRBB: length 14, data 00 1e 
 
 Test:9
 Tree based decoding:
-uncompressed data = 00 00 00 
+compressed data = 00 00 00 
 len = 24
 rc = -1
 Failed to decode CRBB: length 24, data 00 00 00 
