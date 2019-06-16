@@ -830,7 +830,7 @@ static void write_packet_uplink_ack_gprs(
 
 static void write_packet_ack_nack_desc_egprs(
 	bitvec * dest, unsigned& wp,
-	gprs_rlc_ul_window *window, bool is_final, unsigned& rest_bits)
+	gprs_rlc_ul_window *window, bool is_final, unsigned rest_bits)
 {
 	unsigned int urbb_len = 0;
 	uint8_t crbb_len = 0;
