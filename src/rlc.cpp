@@ -91,7 +91,7 @@ int gprs_rlc_dl_window::mark_for_resend()
 /* Update the receive block bitmap */
 uint16_t gprs_rlc_ul_window::update_egprs_rbb(uint8_t *rbb)
 {
-	int i;
+	uint16_t i;
 	uint16_t bsn;
 	uint16_t bitmask = 0x80;
 	int8_t pos = 0;
