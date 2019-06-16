@@ -2,6 +2,7 @@
  * TypesTest.cpp Test the primitive data types
  *
  * Copyright (C) 2013 by Holger Hans Peter Freyther
+ * Copyright (C) 2019 by Sysmocom s.f.m.c. GmbH
  *
  * All Rights Reserved
  *
@@ -26,6 +27,7 @@
 #include "encoding.h"
 #include "decoding.h"
 #include "gprs_rlcmac.h"
+#include "egprs_rlc_compression.h"
 
 extern "C" {
 #include <osmocom/core/application.h>
@@ -431,6 +433,296 @@ static void test_rlc_dl_ul_basic()
 	}
 }
 
+struct crbb_test {
+	bool has_crbb;
+	bitvec *crbb;
+	uint8_t length;
+	bool color_code;
+};
+
+static void extract_egprs_ul_ack_nack(
+		struct gprs_rlcmac_ul_tbf *tbf,
+		struct bitvec *dest,
+		uint16_t *ssn,
+		struct crbb_test *crbb_test,
+		struct bitvec **urbb,
+		bool is_final)
+{
+	uint8_t bytelength;
+
+	/* Start of Ack/Nack Description struct */
+	uint8_t startbit_ack_nack = 0;
+
+	bool has_length = false;
+	uint8_t length = 0;
+
+	bool bow = false;
+	uint8_t urbb_length = 0;
+	dest->cur_bit = 0;
+
+	/* ignore the first 8 bit */
+	bitvec_get_uint(dest, 8);
+
+	/* uplink ack/nack message content */
+	OSMO_ASSERT(bitvec_get_uint(dest, 6) == 0b001001);
+
+	/* ignore page mode*/
+	bitvec_get_uint(dest, 2);
+
+	/* fix 00 */
+	OSMO_ASSERT(bitvec_get_uint(dest, 2) == 0);
+
+	OSMO_ASSERT(bitvec_get_uint(dest, 5) == tbf->tfi());
+
+	/* egprs ack/nack */
+	OSMO_ASSERT(bitvec_get_uint(dest, 1) == 1);
+
+	/* fix 00 */
+	OSMO_ASSERT(bitvec_get_uint(dest, 2) == 0);
+
+	/* ignore Channel Coding Command */
+	bitvec_get_uint(dest, 4);
+
+	/* we always allow resegmentation */
+	OSMO_ASSERT(bitvec_get_uint(dest, 1) == 1);
+
+	/* ignore pre emptive transmission */
+	bitvec_get_uint(dest, 1);
+
+	/* ignore PRR retransmission request */
+	bitvec_get_uint(dest, 1);
+
+	/* ignore ARAC retransmission request */
+	bitvec_get_uint(dest, 1);
+
+	if (bitvec_get_uint(dest, 1)) {
+		OSMO_ASSERT((uint32_t) bitvec_get_uint(dest, 32) == tbf->tlli());
+	}
+
+	/* ignore TBF_EST */
+	bitvec_get_uint(dest, 1);
+
+	/* Timing Advance */
+	if (bitvec_get_uint(dest, 1)) {
+		/* Timing Advance Value */
+		if (bitvec_get_uint(dest, 1))
+			bitvec_get_uint(dest, 6);
+
+		/* Timing Advance Index*/
+		if (bitvec_get_uint(dest, 1))
+			bitvec_get_uint(dest, 6);
+		/* Timing Advance Timeslot Number */
+		bitvec_get_uint(dest, 3);
+	}
+
+	/* Packet Extended Timing Advance */
+	if (bitvec_get_uint(dest, 1))
+		bitvec_get_uint(dest, 2);
+
+	/* Power Control Parameters */
+	if (bitvec_get_uint(dest, 1)) {
+		/* Alpha */
+		bitvec_get_uint(dest, 4);
+		for (int i=0; i<8 ; i++) {
+			/* Gamma */
+			if (bitvec_get_uint(dest, 1))
+				bitvec_get_uint(dest, 5);
+		}
+	}
+
+	/* Extension Bits */
+	if (bitvec_get_uint(dest, 1)) {
+		int length = bitvec_get_uint(dest, 6);
+		bitvec_get_uint(dest, length);
+	}
+
+	/* Beging of the EGPRS Ack/Nack */
+	has_length = bitvec_get_uint(dest, 1);
+	if (has_length) {
+		length = bitvec_get_uint(dest, 8);
+	} else {
+		/* remaining bits is the length */
+		length = dest->data_len * 8 - dest->cur_bit;
+	}
+	startbit_ack_nack = dest->cur_bit;
+
+	OSMO_ASSERT(bitvec_get_uint(dest, 1) == is_final);
+
+	/* bow Begin Of Window */
+	bow = bitvec_get_uint(dest, 1);
+	/* TODO: check if bow is always present in our implementation */
+
+	/* eow End Of Window */
+	/* TODO: eow checking */
+	bitvec_get_uint(dest, 1);
+
+	*ssn = bitvec_get_uint(dest, 11);
+	if (bow) {
+		OSMO_ASSERT(*ssn == tbf->window()->v_q() + 1);
+	}
+
+	crbb_test->has_crbb = bitvec_get_uint(dest, 1);
+	if (crbb_test->has_crbb) {
+		crbb_test->length = bitvec_get_uint(dest, 7);
+		crbb_test->color_code = bitvec_get_uint(dest, 1);
+		if (crbb_test->length % 8)
+			bytelength = crbb_test->length * 8 + 1;
+		else
+			bytelength = crbb_test->length * 8;
+
+		crbb_test->crbb = bitvec_alloc(bytelength, tall_pcu_ctx);
+		for (int i=0; i<crbb_test->length; i++)
+			bitvec_set_bit(crbb_test->crbb, bitvec_get_bit_pos(dest, dest->cur_bit + i));
+
+		dest->cur_bit += crbb_test->length;
+	}
+
+	OSMO_ASSERT(dest->cur_bit < dest->data_len * 8);
+	urbb_length = length - (dest->cur_bit - startbit_ack_nack);
+
+	if (urbb_length > 0) {
+		if (urbb_length % 8)
+			bytelength = urbb_length / 8 + 1;
+		else
+			bytelength = urbb_length / 8;
+
+		*urbb = bitvec_alloc(bytelength, tall_pcu_ctx);
+		for (int i=urbb_length; i>0; i--) {
+			bitvec_set_bit(*urbb, bitvec_get_bit_pos(dest, dest->cur_bit + i - 1));
+		}
+	}
+}
+
+static void check_egprs_bitmap(struct gprs_rlcmac_ul_tbf *tbf, uint16_t ssn, struct crbb_test *crbb_test, bitvec *urbb, unsigned int *rbb_size)
+{
+	gprs_rlc_ul_window *win = tbf->window();
+	uint8_t rbb_should[RLC_EGPRS_MAX_WS] = {0};
+	bitvec rbb_should_bv;
+	rbb_should_bv.data = rbb_should;
+	rbb_should_bv.data_len = RLC_EGPRS_MAX_WS;
+	rbb_should_bv.cur_bit = 0;
+
+	/* rbb starting at ssn without mod */
+	bitvec *rbb_ssn_bv = bitvec_alloc(RLC_EGPRS_MAX_WS, tall_pcu_ctx);
+
+	/* even any ssn is allowed, pcu should only use v_q() at least for now */
+	OSMO_ASSERT(ssn == (win->v_q() + 1));
+
+	if (crbb_test->has_crbb) {
+		OSMO_ASSERT(0 == egprs_compress::decompress_crbb(
+				    crbb_test->length,
+				    crbb_test->color_code,
+				    crbb_test->crbb->data,
+				    rbb_ssn_bv));
+	}
+
+	if (urbb && urbb->cur_bit > 0) {
+		for (unsigned int i=0; i<urbb->cur_bit; i++) {
+			bitvec_set_bit(rbb_ssn_bv, bitvec_get_bit_pos(urbb, i));
+		}
+	}
+
+	/* check our rbb is equal the decompressed */
+	rbb_should_bv.cur_bit = win->update_egprs_rbb(rbb_should);
+
+	bool failed = false;
+	for (unsigned int i=0; i < rbb_ssn_bv->cur_bit; i++) {
+		if (bitvec_get_bit_pos(&rbb_should_bv, i) !=
+			    bitvec_get_bit_pos(rbb_ssn_bv, i))
+			failed = true;
+	}
+	if (failed) {
+		fprintf(stderr, "SSN %d\n", ssn);
+		for (int i=win->v_q(); i<win->ws(); i++) {
+			fprintf(stderr, "bsn %d is %s\n", i, win->is_received( i) ? "received" : "MISS");
+		}
+		char to_dump[256] = { 0 };
+		bitvec_to_string_r(&rbb_should_bv, to_dump);
+		fprintf(stderr, "should: %s\n", to_dump);
+		memset(to_dump, 0x0, 256);
+		bitvec_to_string_r(rbb_ssn_bv, to_dump);
+		fprintf(stderr, "is    : %s\n", to_dump);
+		OSMO_ASSERT(false);
+	}
+
+	if (rbb_size)
+		*rbb_size = rbb_ssn_bv->cur_bit;
+}
+
+static void free_egprs_ul_ack_nack(bitvec **rbb, struct crbb_test *crbb_test)
+{
+	if (*rbb) {
+		bitvec_free(*rbb);
+		*rbb = NULL;
+	}
+
+	if (crbb_test->crbb) {
+		bitvec_free(crbb_test->crbb);
+		crbb_test->crbb = NULL;
+	}
+}
+
+static void test_egprs_ul_ack_nack()
+{
+	bitvec *dest = bitvec_alloc(23, tall_pcu_ctx);
+
+	fprintf(stderr, "############## test_egprs_ul_ack_nack\n");
+
+	BTS the_bts;
+	the_bts.bts_data()->egprs_enabled = true;
+	the_bts.bts_data()->alloc_algorithm = alloc_algorithm_a;
+	the_bts.bts_data()->trx[0].pdch[4].enable();
+
+	struct gprs_rlcmac_ul_tbf *tbf = tbf_alloc_ul_tbf(the_bts.bts_data(), NULL, 0, 1, 1, true);
+	struct crbb_test crbb_test = {0};
+	bitvec *rbb = NULL;
+	unsigned int rbb_size;
+	uint16_t ssn = 0;
+	gprs_rlc_ul_window *win = tbf->window();
+
+	fprintf(stderr, "************** Test with empty window\n");
+	win->reset_state();
+	win->set_ws(256);
+
+	Encoding::write_packet_uplink_ack(dest, tbf, false, 0);
+	extract_egprs_ul_ack_nack(tbf, dest, &ssn, &crbb_test, &rbb, false);
+	check_egprs_bitmap(tbf, ssn, &crbb_test, rbb, &rbb_size);
+	free_egprs_ul_ack_nack(&rbb, &crbb_test);
+	OSMO_ASSERT(rbb_size == 0);
+
+	fprintf(stderr, "************** Test with 1 lost packet\n");
+	win->reset_state();
+	win->set_ws(256);
+	win->receive_bsn(1);
+
+	Encoding::write_packet_uplink_ack(dest, tbf, false, 0);
+	extract_egprs_ul_ack_nack(tbf, dest, &ssn, &crbb_test, &rbb, false);
+	check_egprs_bitmap(tbf, ssn, &crbb_test, rbb, &rbb_size);
+	free_egprs_ul_ack_nack(&rbb, &crbb_test);
+	OSMO_ASSERT(rbb_size == 1);
+
+	fprintf(stderr, "************** Test with compressed window\n");
+	win->reset_state();
+	win->set_ws(128);
+	win->receive_bsn(127);
+
+	Encoding::write_packet_uplink_ack(dest, tbf, false, 0);
+	extract_egprs_ul_ack_nack(tbf, dest, &ssn, &crbb_test, &rbb, false);
+	check_egprs_bitmap(tbf, ssn, &crbb_test, rbb, &rbb_size);
+	free_egprs_ul_ack_nack(&rbb, &crbb_test);
+
+	fprintf(stderr, "************** Provoke an uncompressed ACK without EOW\n");
+	win->reset_state();
+	win->set_ws(384);
+	for (uint16_t i=1; i<384/2; i++)
+		win->receive_bsn(i*2);
+
+	Encoding::write_packet_uplink_ack(dest, tbf, false, 0);
+	extract_egprs_ul_ack_nack(tbf, dest, &ssn, &crbb_test, &rbb, false);
+	check_egprs_bitmap(tbf, ssn, &crbb_test, rbb, &rbb_size);
+	free_egprs_ul_ack_nack(&rbb, &crbb_test);
+}
+
 static void check_imm_ass(struct gprs_rlcmac_tbf *tbf, bool dl, enum ph_burst_type bt, const uint8_t *exp, uint8_t len,
 			  const char *kind)
 {
@@ -619,6 +911,7 @@ int main(int argc, char **argv)
 	log_set_print_filename(osmo_stderr_target, 0);
 
 	printf("Making some basic type testing.\n");
+
 	test_llc();
 	test_rlc();
 	test_rlc_v_b();
@@ -631,6 +924,7 @@ int main(int argc, char **argv)
 	test_immediate_assign_ul1s();
 	test_immediate_assign_rej();
 	test_lsb();
+	test_egprs_ul_ack_nack();
 
 	return EXIT_SUCCESS;
 }
