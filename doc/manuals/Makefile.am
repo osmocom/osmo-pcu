@@ -3,6 +3,7 @@ EXTRA_DIST = osmopcu-gb.adoc \
     osmopcu-usermanual.adoc \
     osmopcu-usermanual-docinfo.xml \
     osmopcu-vty-reference.xml \
+    regen_doc.sh \
     chapters \
     gb \
     vty
