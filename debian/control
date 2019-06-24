@@ -20,7 +20,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Osmocom GPRS/EDGE Packet Control Unit (PCU)
  The GPRS Packet Control Unit is co-located with the GSM BTS or GSM BSC
  in order to provide packet-switched services for 2G (2.5G, 2.75G)
- networks.  OsmoPCU is the Osmcoom implementation of this network
+ networks.  OsmoPCU is the Osmocom implementation of this network
  element. It interfaces to osmo-bts via the PCU socket of OsmoBTS
  and via Gb (NS-over-IP) interface with the SGSN such as OsmoSGSN.
 
@@ -33,7 +33,7 @@ Depends: osmo-pcu (= ${binary:Version}),
 Description: Debug symbols for the Osmocom GPRS/EDGE Packet Control Unit (PCU)
  The GPRS Packet Control Unit is co-located with the GSM BTS or GSM BSC
  in order to provide packet-switched services for 2G (2.5G, 2.75G)
- networks.  OsmoPCU is the Osmcoom implementation of this network
+ networks.  OsmoPCU is the Osmocom implementation of this network
  element. It interfaces to osmo-bts via the PCU socket of OsmoBTS
  and via Gb (NS-over-IP) interface with the SGSN such as OsmoSGSN.
 
