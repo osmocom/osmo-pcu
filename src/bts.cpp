@@ -551,7 +551,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	}
 
 	/* get TLLI from downlink assignment */
-	tlli = (*data++) << 28;
+	tlli = ((*data++) & 0xf) << 28;
 	tlli |= (*data++) << 20;
 	tlli |= (*data++) << 12;
 	tlli |= (*data++) << 4;
