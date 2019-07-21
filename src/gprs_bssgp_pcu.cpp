@@ -369,9 +369,7 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	if (rc < 0) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to parse BSSGP %s message. Invalid message was: %s\n",
 		     bssgp_pdu_str(pdu_type), msgb_hexdump(msg));
-		if (pdu_type != BSSGP_PDUT_STATUS)
-			return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
-		return rc;
+		return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
 	}
 
 	if (pdu_type == BSSGP_PDUT_BVC_RESET) {
