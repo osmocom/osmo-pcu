@@ -91,7 +91,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	uint32_t tlli_old = 0;
 	uint8_t *data;
 	uint16_t len;
-	char imsi[16] = "000";
+	char imsi[OSMO_IMSI_BUF_SIZE] = "000";
 	uint8_t ms_class = 0;
 	uint8_t egprs_ms_class = 0;
 	int rc;
