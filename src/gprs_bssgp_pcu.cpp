@@ -28,6 +28,7 @@
 #include <pdch.h>
 
 extern "C" {
+	#include <osmocom/gsm/protocol/gsm_23_003.h>
 	#include <osmocom/core/utils.h>
 	#include "coding_scheme.h"
 }
@@ -93,6 +94,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	char imsi[16] = "000";
 	uint8_t ms_class = 0;
 	uint8_t egprs_ms_class = 0;
+	int rc;
 #if 0
 	MS_Radio_Access_capability_t rac;
 #endif
@@ -120,8 +122,13 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	 * will listen to all paging blocks. */
 	if (TLVP_PRESENT(tp, BSSGP_IE_IMSI))
 	{
-		gsm48_mi_to_string(imsi, sizeof(imsi), TLVP_VAL(tp, BSSGP_IE_IMSI),
-						       TLVP_LEN(tp, BSSGP_IE_IMSI));
+		/* gsm48_mi_to_string() returns number of bytes written, including '\0' */
+		rc = gsm48_mi_to_string(imsi, sizeof(imsi), TLVP_VAL(tp, BSSGP_IE_IMSI),
+							    TLVP_LEN(tp, BSSGP_IE_IMSI));
+		if (rc != GSM23003_IMSI_MAX_DIGITS + 1) {
+			LOGP(DBSSGP, LOGL_NOTICE, "Failed to parse IMSI IE (rc=%d)\n", rc);
+			return bssgp_tx_status(BSSGP_CAUSE_COND_IE_ERR, NULL, msg);
+		}
 	}
 
 #if 0 /* Do not rely on this IE. TODO: make this configurable */
@@ -172,6 +179,7 @@ int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 	char imsi[16];
 	uint8_t *ptmsi = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_TMSI);
 	uint16_t ptmsi_len = TLVP_LEN(tp, BSSGP_IE_TMSI);
+	int rc;
 
 	LOGP(DBSSGP, LOGL_NOTICE, " P-TMSI = ");
 	for (int i = 0; i < ptmsi_len; i++)
@@ -185,7 +193,13 @@ int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 		return -EINVAL;
 	}
 
-	gsm48_mi_to_string(imsi, sizeof(imsi), TLVP_VAL(tp, BSSGP_IE_IMSI), TLVP_LEN(tp, BSSGP_IE_IMSI));
+	/* gsm48_mi_to_string() returns number of bytes written, including '\0' */
+	rc = gsm48_mi_to_string(imsi, sizeof(imsi), TLVP_VAL(tp, BSSGP_IE_IMSI),
+						    TLVP_LEN(tp, BSSGP_IE_IMSI));
+	if (rc != GSM23003_IMSI_MAX_DIGITS + 1) {
+		LOGP(DBSSGP, LOGL_NOTICE, "Failed to parse IMSI IE (rc=%d)\n", rc);
+		return bssgp_tx_status(BSSGP_CAUSE_COND_IE_ERR, NULL, msg);
+	}
 
 	return gprs_rlcmac_paging_request(ptmsi, ptmsi_len, imsi);
 }
