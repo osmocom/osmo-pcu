@@ -118,7 +118,11 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	/* read IMSI. if no IMSI exists, use first paging block (any paging),
 	 * because during attachment the IMSI might not be known, so the MS
 	 * will listen to all paging blocks. */
-	gsm48_mi_to_string(imsi, sizeof(imsi), TLVP_VAL(tp, BSSGP_IE_IMSI), TLVP_LEN(tp, BSSGP_IE_IMSI));
+	if (TLVP_PRESENT(tp, BSSGP_IE_IMSI))
+	{
+		gsm48_mi_to_string(imsi, sizeof(imsi), TLVP_VAL(tp, BSSGP_IE_IMSI),
+						       TLVP_LEN(tp, BSSGP_IE_IMSI));
+	}
 
 #if 0 /* Do not rely on this IE. TODO: make this configurable */
 	/* parse ms radio access capability */
