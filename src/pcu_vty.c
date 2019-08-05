@@ -1147,7 +1147,7 @@ struct vty_app_info pcu_vty_info = {
 	.is_config_node	= pcu_vty_is_config_node,
 };
 
-int pcu_vty_init(const struct log_info *cat)
+int pcu_vty_init(void)
 {
 //	install_element_ve(&show_pcu_cmd);
 
@@ -1164,8 +1164,8 @@ int pcu_vty_init(const struct log_info *cat)
 						NO_STR "GSMTAP Category\n",
 						"\n", "", 0);
 
-	logging_vty_add_cmds(cat);
-	osmo_stats_vty_add_cmds(cat);
+	logging_vty_add_cmds();
+	osmo_stats_vty_add_cmds();
 
 	install_node(&pcu_node, config_write_pcu);
 	install_element(CONFIG_NODE, &cfg_pcu_cmd);

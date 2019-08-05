@@ -121,7 +121,7 @@ int main(int argc, char **argv)
 	}
 
 	vty_init(&pcu_vty_info);
-	pcu_vty_init(&gprs_log_info);
+	pcu_vty_init();
 
 	current_test = 0;
 

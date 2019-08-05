@@ -1411,7 +1411,7 @@ int main(int argc, char **argv)
 	log_set_print_filename(osmo_stderr_target, 0);
 
 	vty_init(&pcu_vty_info);
-	pcu_vty_init(&gprs_log_info);
+	pcu_vty_init();
 
 	test_coding_scheme();
 	test_rlc_info_init();

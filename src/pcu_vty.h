@@ -12,7 +12,7 @@ enum pcu_vty_node {
 int pcu_vty_go_parent(struct vty *vty);
 int pcu_vty_is_config_node(struct vty *vty, int node);
 
-int pcu_vty_init(const struct log_info *cat);
+int pcu_vty_init();
 
 extern struct vty_app_info pcu_vty_info;
 

@@ -229,7 +229,7 @@ int main(int argc, char **argv)
 	log_parse_category_mask(osmo_stderr_target, "DPCU,3:DLGLOBAL,1:");
 
 	vty_init(&pcu_vty_info);
-	pcu_vty_init(&gprs_log_info);
+	pcu_vty_init();
 
 	test_llc_queue();
 	test_llc_meta();

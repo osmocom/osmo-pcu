@@ -3290,7 +3290,7 @@ int main(int argc, char **argv)
 				"DL1IF,6:DTBF,1:DTBFUL,1:DTBFDL,1:DLGLOBAL,2:");
 
 	vty_init(&pcu_vty_info);
-	pcu_vty_init(&gprs_log_info);
+	pcu_vty_init();
 
 	test_tbf_base();
 	test_tbf_tlli_update();

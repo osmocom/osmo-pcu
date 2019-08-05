@@ -277,7 +277,7 @@ int main(int argc, char *argv[])
 	bssgp_set_log_ss(DBSSGP);
 
 	vty_init(&pcu_vty_info);
-	pcu_vty_init(&gprs_log_info);
+	pcu_vty_init();
 
 	handle_options(argc, argv);
 	if ((!!spoof_mcc) + (!!spoof_mnc) == 1) {

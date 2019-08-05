@@ -616,7 +616,7 @@ int main(int argc, char **argv)
 	log_parse_category_mask(osmo_stderr_target, "DPCU,3:DRLCMAC,3");
 
 	vty_init(&pcu_vty_info);
-	pcu_vty_init(&gprs_log_info);
+	pcu_vty_init();
 
 	test_ms_state();
 	test_ms_callback();
