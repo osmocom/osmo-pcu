@@ -1,3 +1,123 @@
+osmo-pcu (0.7.0) unstable; urgency=medium
+
+  [ Rafael Diniz ]
+  * Added support for daemonize to osmo-pcu.
+  * Fix help message formatting of osmo-pcu.
+
+  [ Max ]
+  * Don't install pcuif_proto.h header
+  * Move C include to proper place
+  * Add define for dummy burst string
+  * Add encoding tests for Immediate Assignment
+  * Clarify write_immediate_assignment() signature
+  * Restructure IA Rest Octets encoders
+  * Rewrite Packet Downlink Assignment
+  * Rewrite EGPRS Packet Uplink IA Rest Octets for MBA
+  * Rewrite EGPRS Packet Uplink IA Rest Octets for SBA
+  * MCS: internalize 'family' parameter
+  * EDGE tests: reduce code duplication
+  * MCS: remove dead code
+  * EDGE tests: remove no-op check
+  * Use msgb_eq_data_print() in tests
+  * Tighten lqual table limits check
+  * Enable LGLOBAL logging for TBF tests
+  * Log (M)CS UL update errors
+  * MCS: move Coding Scheme enum outside of class definition
+  * Make get_retx_mcs() into regular function
+  * MCS: remove unused function
+  * Debian: bump copyright year
+  * Use unique NSEI/BVCI/NSVCI in TBF tests
+  * MS store: move test helper to unit test
+  * Explicitly clean up BTS singleton
+  * MCS: move HeaderType enum outside of class definition
+  * MCS: use value_string for conversion
+  * TBF-DL: log MCS as string
+  * Fix TA index encoder
+  * MCS: move Mode enum outside of class definition
+  * MCS: add mcs_is_*() helpers
+  * MCS: add Channel Coding Command encoder
+  * Fix Channel Coding Command for MCS
+  * Rewrite Packet Uplink IA Rest Octets for MBA
+  * Rewrite Packet Uplink IA Rest Octets for SBA
+  * Use Timing Advance Index in UL assignments
+  * TBF: update MCS counters
+  * TBF-DL: cosmetic update for helper routines
+  * Update IA Rest Octets encoding
+  * TS alloc: expand tests log
+  * vty: add commands to show TBF of a certain kind
+  * Update MCS selection for retransmission
+  * cosmetic: use const pointer for bts_data
+  * Add test for MS mode and (M)CS settings
+  * Use libosmocore for IMSI parsing
+
+  [ Harald Welte ]
+  * Mark gprs_ns_reconnect() as static (not used outside of C file)
+  * Optionally Use the NS Sub-Network-Service (SNS) on Gb
+  * pcu_l1_if: Fix erroneous endian-swapping of the CellID
+  * Forward GPRS SUSPEND REQ from BTS to SGSN using BSSGP
+  * gprs_debug: Use named initializers and explicit array indicies
+  * bssgp: Fix dead code: PDUT_STATUS can never reach this part
+
+  [ JF Dionne ]
+  * encoding: Fixes TMSI vs MI bit selection in repeated page info
+
+  [ Oliver Smith ]
+  * tests: use -no-install libtool flag to avoid ./lt-* scripts
+  * debian: create -doc subpackage with pdf manuals
+  * contrib/jenkins.sh: run "make maintainer-clean"
+
+  [ Daniel Willmann ]
+  * Include pdch.h in bts.h even if we're not compiling C++
+  * oc2g: Remove custom alarms
+  * oc2g: Change log type (Litecell15->Oc2g)
+  * jenkins.sh: Add oc2g build support
+  * manuals: Add script to regenerate vty/counter documentation
+  * manuals: Update VTY documentation
+
+  [ Jean-Francois Dionne ]
+  * Initial commit for OC-2G support.
+
+  [ Minh-Quang Nguyen ]
+  * OC-2G: Fix missing header
+  * OC-2G: Fix TA adjustment
+  * OC-2G: Always use positive TA information provided in PH-RA-IND
+
+  [ Alexander Couzens ]
+  * gprs_bssgp_pcu: make gprs_bssgp_ns_cb public
+  * gprs_bssgp_pcu: explicit allocate & initialize bssgp_nsi instance
+  * encoding: correct encoding of CRBB in ACK/NACK when not byte aligned
+  * encoding: use `/* */` for comments instead of `#if 0 #endif`
+  * egprs_rlc_compression: fix white spaces
+  * tests/BitcompTest: fix wording in log message
+  * rlc: replace int with uint16_t
+  * Encoding: drop struct gprs_rlcmac_bts* from all functions
+  * decompress_crbb: add length argument for search_runlen
+  * Encoding: write_packet_ack_nack_desc_egprs: don't use a reference for rest_bits
+  * bts.cpp: ensure left-shift operation does not exceed uint32_t
+  * Encoding: use uint16_t when interacting with the window object
+  * Encoding: ACK/NACK: always encode with length field present
+
+  [ Keith ]
+  * Cosmetic: Osmcoom -> Osmocom
+
+  [ Vadim Yanitskiy ]
+  * src/pcu_l1_if.cpp: fix: properly pass measurements from PCUIF
+  * gprs_bssgp_pcu_rx_dl_ud(): fix: BSSGP_IE_IMSI is optional
+  * gprs_bssgp_pcu.cpp: check return code of gsm48_mi_to_string()
+  * gprs_bssgp_pcu_rx_dl_ud(): use OSMO_IMSI_BUF_SIZE
+
+  [ Thorsten Alteholz ]
+  * fix spelling errors detected by lintian
+
+  [ Eric Wild ]
+  * ubsan: fix shift
+
+  [ Pau Espin Pedrol ]
+  * Remove undefined param passed to {logging,osmo_stats}_vty_add_cmds
+  * Require newer libosmocore to avoid compile failures
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Wed, 07 Aug 2019 21:09:53 +0200
+
 osmo-pcu (0.6.0) unstable; urgency=medium
 
   [ Harald Welte ]
