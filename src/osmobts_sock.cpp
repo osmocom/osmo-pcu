@@ -139,17 +139,10 @@ for the reset. */
 static int pcu_sock_read(struct osmo_fd *bfd)
 {
 	struct pcu_sock_state *state = (struct pcu_sock_state *)bfd->data;
-	struct gsm_pcu_if *pcu_prim;
-	struct msgb *msg;
+	struct gsm_pcu_if pcu_prim;
 	int rc;
 
-	msg = msgb_alloc(sizeof(*pcu_prim), "pcu_sock_rx");
-	if (!msg)
-		return -ENOMEM;
-
-	pcu_prim = (struct gsm_pcu_if *) msg->tail;
-
-	rc = recv(bfd->fd, msg->tail, msgb_tailroom(msg), 0);
+	rc = recv(bfd->fd, &pcu_prim, sizeof(pcu_prim), 0);
 	if (rc == 0)
 		goto close;
 
@@ -159,16 +152,11 @@ static int pcu_sock_read(struct osmo_fd *bfd)
 		goto close;
 	}
 
-	rc = pcu_rx(pcu_prim->msg_type, pcu_prim);
-
-	/* as we always synchronously process the message in pcu_rx() and
-	 * its callbacks, we can free the message here. */
-	msgb_free(msg);
+	rc = pcu_rx(pcu_prim.msg_type, &pcu_prim);
 
 	return rc;
 
 close:
-	msgb_free(msg);
 	pcu_sock_close(state, 1);
 	return -1;
 }
