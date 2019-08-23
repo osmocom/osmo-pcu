@@ -143,22 +143,14 @@ static int pcu_sock_read(struct osmo_fd *bfd)
 	int rc;
 
 	rc = recv(bfd->fd, &pcu_prim, sizeof(pcu_prim), 0);
-	if (rc == 0)
-		goto close;
-
-	if (rc < 0) {
-		if (errno == EAGAIN)
-			return 0;
-		goto close;
+	if (rc < 0 && errno == EAGAIN)
+		return 0; /* Try again later */
+	if (rc <= 0) {
+		pcu_sock_close(state, 1);
+		return -EIO;
 	}
 
-	rc = pcu_rx(pcu_prim.msg_type, &pcu_prim);
-
-	return rc;
-
-close:
-	pcu_sock_close(state, 1);
-	return -1;
+	return pcu_rx(pcu_prim.msg_type, &pcu_prim);
 }
 
 static int pcu_sock_write(struct osmo_fd *bfd)
