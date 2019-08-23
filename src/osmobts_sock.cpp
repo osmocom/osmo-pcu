@@ -71,7 +71,6 @@ static void pcu_tx_txt_retry(void *_priv)
 	if (bts->active)
 		return;
 
-	LOGP(DL1IF, LOGL_INFO, "Sending version %s to BTS.\n", PACKAGE_VERSION);
 	pcu_tx_txt_ind(PCU_VERSION, "%s", PACKAGE_VERSION);
 	osmo_timer_schedule(&state->timer, 5, 0);
 }
@@ -250,7 +249,6 @@ int pcu_l1if_open(void)
 
 	pcu_sock_state = state;
 
-	LOGP(DL1IF, LOGL_INFO, "Sending version %s to BTS.\n", PACKAGE_VERSION);
 	pcu_tx_txt_ind(PCU_VERSION, "%s", PACKAGE_VERSION);
 
 	/* Schedule a timer so we keep trying until the BTS becomes active. */
