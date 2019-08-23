@@ -239,9 +239,6 @@ static int pcu_sock_cb(struct osmo_fd *bfd, unsigned int flags)
 int pcu_l1if_open(void)
 {
 	struct pcu_sock_state *state;
-	struct osmo_fd *bfd;
-	struct sockaddr_un local;
-	unsigned int namelen;
 	int rc;
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -255,60 +252,21 @@ int pcu_l1if_open(void)
 		INIT_LLIST_HEAD(&state->upqueue);
 	}
 
-	bfd = &state->conn_bfd;
-
-	bfd->fd = socket(AF_UNIX, SOCK_SEQPACKET, 0);
-	if (bfd->fd < 0) {
-		LOGP(DL1IF, LOGL_ERROR, "Failed to create PCU socket.\n");
-		talloc_free(state);
-		return -1;
-	}
-
-	local.sun_family = AF_UNIX;
-	if (osmo_strlcpy(local.sun_path, bts->pcu_sock_path, sizeof(local.sun_path)) >= sizeof(local.sun_path)) {
-		LOGP(DLGLOBAL, LOGL_ERROR, "Socket path exceeds maximum length of %zd bytes: %s\n",
-		     sizeof(local.sun_path), bts->pcu_sock_path);
-		return -ENOSPC;
-	}
-
-	/* we use the same magic that X11 uses in Xtranssock.c for
-	 * calculating the proper length of the sockaddr */
-#if defined(BSD44SOCKETS) || defined(__UNIXWARE__)
-	local.sun_len = strlen(local.sun_path);
-#endif
-#if defined(BSD44SOCKETS) || defined(SUN_LEN)
-	namelen = SUN_LEN(&local);
-#else
-	namelen = strlen(local.sun_path) +
-		  offsetof(struct sockaddr_un, sun_path);
-#endif
-	rc = connect(bfd->fd, (struct sockaddr *) &local, namelen);
-	if (rc != 0) {
-		LOGP(DL1IF, LOGL_ERROR, "Failed to connect to the osmo-bts"
-			" PCU socket (%s), delaying... '%s'\n",
-			strerror(errno), local.sun_path);
-		pcu_sock_state = state;
-		close(bfd->fd);
-		bfd->fd = -1;
+	rc = osmo_sock_unix_init_ofd(&state->conn_bfd, SOCK_SEQPACKET, 0,
+				     bts->pcu_sock_path, OSMO_SOCK_F_CONNECT);
+	if (rc < 0) {
+		LOGP(DL1IF, LOGL_ERROR, "Failed to connect to the BTS (%s). "
+					"Retrying...\n", bts->pcu_sock_path);
 		osmo_timer_setup(&state->timer, pcu_sock_timeout, NULL);
 		osmo_timer_schedule(&state->timer, 5, 0);
 		return 0;
 	}
 
-	bfd->when = BSC_FD_READ;
-	bfd->cb = pcu_sock_cb;
-	bfd->data = state;
-
-	rc = osmo_fd_register(bfd);
-	if (rc < 0) {
-		LOGP(DL1IF, LOGL_ERROR, "Could not register PCU fd: %d\n", rc);
-		close(bfd->fd);
-		talloc_free(state);
-		return rc;
-	}
+	state->conn_bfd.cb = pcu_sock_cb;
+	state->conn_bfd.data = state;
 
 	LOGP(DL1IF, LOGL_NOTICE, "osmo-bts PCU socket %s has been connected\n",
-	     local.sun_path);
+	     bts->pcu_sock_path);
 
 	pcu_sock_state = state;
 
