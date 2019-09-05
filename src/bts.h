@@ -26,6 +26,7 @@ extern "C" {
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/rate_ctr.h>
 #include <osmocom/core/stat_item.h>
+#include <osmocom/core/tdef.h>
 #include <osmocom/gsm/l1sap.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
 	#include <mslot_class.h>
@@ -117,11 +118,9 @@ struct gprs_rlcmac_bts {
 	uint32_t llc_discard_csec;
 	uint32_t llc_idle_ack_csec;
 	uint32_t llc_codel_interval_msec; /* 0=disabled, -1=use default interval */
-	uint8_t t3142;
-	uint8_t t3169;
-	uint8_t t3191;
-	uint16_t t3193_msec;
-	uint8_t t3195;
+	/* Timer defintions */
+	struct osmo_tdef *T_defs_bts; /* timers controlled by BTS, received through PCUIF */
+	struct osmo_tdef *T_defs_pcu; /* timers controlled by PCU */
 	uint8_t n3101;
 	uint8_t n3103;
 	uint8_t n3105;

@@ -69,11 +69,6 @@ static void init_main_bts()
 	bts->fc_interval = 100;
 	bts->initial_cs_dl = bts->initial_cs_ul = 1;
 	bts->cs1 = 1;
-	bts->t3142 = 20;
-	bts->t3169 = 5;
-	bts->t3191 = 5;
-	bts->t3193_msec = 100;
-	bts->t3195 = 5;
 	bts->n3101 = 10;
 	bts->n3103 = 4;
 	bts->n3105 = 8;

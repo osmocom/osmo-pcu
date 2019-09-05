@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <osmocom/core/tdef.h>
+#include <osmocom/vty/tdef_vty.h>
 #include <osmocom/vty/logging.h>
 #include <osmocom/vty/stats.h>
 #include <osmocom/vty/misc.h>
@@ -1109,6 +1111,38 @@ DEFUN(cfg_pcu_gb_dialect,
 	return CMD_SUCCESS;
 }
 
+DEFUN(show_bts_timer, show_bts_timer_cmd,
+      "show bts-timer " OSMO_TDEF_VTY_ARG_T_OPTIONAL,
+      SHOW_STR "Show BTS controlled timers\n"
+      OSMO_TDEF_VTY_DOC_T)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	const char *T_arg = argc > 0 ? argv[0] : NULL;
+	return osmo_tdef_vty_show_cmd(vty, bts->T_defs_bts, T_arg, NULL);
+}
+
+DEFUN(show_timer, show_timer_cmd,
+      "show timer " OSMO_TDEF_VTY_ARG_T_OPTIONAL,
+      SHOW_STR "Show PCU timers\n"
+      OSMO_TDEF_VTY_DOC_T)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	const char *T_arg = argc > 0 ? argv[0] : NULL;
+	return osmo_tdef_vty_show_cmd(vty, bts->T_defs_pcu, T_arg, NULL);
+}
+
+DEFUN(cfg_pcu_timer, cfg_pcu_timer_cmd,
+      "timer " OSMO_TDEF_VTY_ARG_SET_OPTIONAL,
+      "Configure or show PCU timers\n"
+      OSMO_TDEF_VTY_DOC_SET)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	/* If any arguments are missing, redirect to 'show' */
+	if (argc < 2)
+		return show_timer(self, vty, argc, argv);
+	return osmo_tdef_vty_set_cmd(vty, bts->T_defs_pcu, argv);
+}
+
 DEFUN(show_tbf,
       show_tbf_cmd,
       "show tbf (all|ccch|pacch)",
@@ -1251,12 +1285,15 @@ int pcu_vty_init(void)
 	install_element(PCU_NODE, &cfg_pcu_no_gsmtap_categ_cmd);
 	install_element(PCU_NODE, &cfg_pcu_sock_cmd);
 	install_element(PCU_NODE, &cfg_pcu_gb_dialect_cmd);
+	install_element(PCU_NODE, &cfg_pcu_timer_cmd);
 
 	install_element_ve(&show_bts_stats_cmd);
 	install_element_ve(&show_tbf_cmd);
 	install_element_ve(&show_ms_all_cmd);
 	install_element_ve(&show_ms_tlli_cmd);
 	install_element_ve(&show_ms_imsi_cmd);
+	install_element_ve(&show_bts_timer_cmd);
+	install_element_ve(&show_timer_cmd);
 
 	return 0;
 }

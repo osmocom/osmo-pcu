@@ -388,6 +388,20 @@
         <param name='IMSI' doc='IMSI' />
       </params>
     </command>
+    <command id='show bts-timer [TNNNN]'>
+      <params>
+        <param name='show' doc='Show running system information' />
+        <param name='bts-timer' doc='Show BTS controlled timers' />
+        <param name='[TNNNN]' doc='T- or X-timer-number -- 3GPP compliant timer number of the format &apos;1234&apos; or &apos;T1234&apos; or &apos;t1234&apos;; Osmocom-specific timer number of the format: &apos;X1234&apos; or &apos;x1234&apos;.' />
+      </params>
+    </command>
+    <command id='show timer [TNNNN]'>
+      <params>
+        <param name='show' doc='Show running system information' />
+        <param name='timer' doc='Show PCU timers' />
+        <param name='[TNNNN]' doc='T- or X-timer-number -- 3GPP compliant timer number of the format &apos;1234&apos; or &apos;T1234&apos; or &apos;t1234&apos;; Osmocom-specific timer number of the format: &apos;X1234&apos; or &apos;x1234&apos;.' />
+      </params>
+    </command>
     <command id='show ns'>
       <params>
         <param name='show' doc='Show running system information' />
@@ -795,6 +809,20 @@
         <param name='ms' doc='information about MSs' />
         <param name='imsi' doc='Select MS by IMSI' />
         <param name='IMSI' doc='IMSI' />
+      </params>
+    </command>
+    <command id='show bts-timer [TNNNN]'>
+      <params>
+        <param name='show' doc='Show running system information' />
+        <param name='bts-timer' doc='Show BTS controlled timers' />
+        <param name='[TNNNN]' doc='T- or X-timer-number -- 3GPP compliant timer number of the format &apos;1234&apos; or &apos;T1234&apos; or &apos;t1234&apos;; Osmocom-specific timer number of the format: &apos;X1234&apos; or &apos;x1234&apos;.' />
+      </params>
+    </command>
+    <command id='show timer [TNNNN]'>
+      <params>
+        <param name='show' doc='Show running system information' />
+        <param name='timer' doc='Show PCU timers' />
+        <param name='[TNNNN]' doc='T- or X-timer-number -- 3GPP compliant timer number of the format &apos;1234&apos; or &apos;T1234&apos; or &apos;t1234&apos;; Osmocom-specific timer number of the format: &apos;X1234&apos; or &apos;x1234&apos;.' />
       </params>
     </command>
     <command id='show ns'>
@@ -1874,6 +1902,14 @@
         <param name='gb-dialect' doc='Select which Gb interface dialect to use' />
         <param name='classic' doc='Classic Gb interface with NS-{RESET,BLOCK,UNBLOCK} and static configuration' />
         <param name='ip-sns' doc='Modern Gb interface with IP-SNS (Sub Network Service) and dynamic configuration' />
+      </params>
+    </command>
+    <command id='timer [TNNNN] [(&lt;0-2147483647&gt;|default)]'>
+      <params>
+        <param name='timer' doc='Configure or show PCU timers' />
+        <param name='[TNNNN]' doc='T- or X-timer-number -- 3GPP compliant timer number of the format &apos;1234&apos; or &apos;T1234&apos; or &apos;t1234&apos;; Osmocom-specific timer number of the format: &apos;X1234&apos; or &apos;x1234&apos;.' />
+        <param name='[&lt;0-2147483647&gt;]' doc='New timer value' />
+        <param name='[default]' doc='Set to default timer value' />
       </params>
     </command>
   </node>

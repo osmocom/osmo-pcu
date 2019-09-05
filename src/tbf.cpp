@@ -428,7 +428,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
 	}
 	tbf->m_contention_resolution_done = 1;
 	TBF_SET_ASS_ON(tbf, GPRS_RLCMAC_FLAG_PACCH, false);
-	T_START(tbf, T3169, bts->t3169, 0, "allocation (UL-TBF)", true);
+	T_START(tbf, T3169, 3169, "allocation (UL-TBF)", true);
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(tbf->ms());
 
@@ -661,12 +661,18 @@ T_CBACK(T3191, true)
 T_CBACK(T3193, false)
 T_CBACK(T3195, true)
 
-void gprs_rlcmac_tbf::t_start(enum tbf_timers t, uint32_t sec, uint32_t microsec, const char *reason, bool force,
+void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool force,
 			      const char *file, unsigned line)
 {
 	int current_fn = get_current_fn();
+	int sec;
+	int microsec;
+	struct osmo_tdef *tdef;
 
-	if (t >= T_MAX) {
+	if (!(tdef = osmo_tdef_get_entry(bts->bts_data()->T_defs_bts, T)))
+		tdef = osmo_tdef_get_entry(bts->bts_data()->T_defs_pcu, T);
+
+	if (t >= T_MAX || !tdef) {
 		LOGPSRC(DTBF, LOGL_ERROR, file, line, "%s attempting to start unknown timer %s [%s], cur_fn=%d\n",
 			tbf_name(this), get_value_string(tbf_timers_names, t), reason, current_fn);
 		return;
@@ -674,6 +680,20 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, uint32_t sec, uint32_t microsec
 
 	if (!force && osmo_timer_pending(&Tarr[t]))
 		return;
+
+	switch (tdef->unit) {
+	case OSMO_TDEF_MS:
+		sec = 0;
+		microsec = tdef->val * 1000;
+		break;
+	case OSMO_TDEF_S:
+		sec = tdef->val;
+		microsec = 0;
+		break;
+	default:
+		/* so far only timers using MS and S */
+		OSMO_ASSERT(false);
+	}
 
 	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s %sstarting timer %s [%s] with %u sec. %u microsec, cur_fn=%d\n",
 	     tbf_name(this), osmo_timer_pending(&Tarr[t]) ? "re" : "",
@@ -790,7 +810,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 
 	if (n_inc(N3101)) {
 		TBF_SET_STATE(this, GPRS_RLCMAC_RELEASING);
-		T_START(this, T3169, bts->bts_data()->t3169, 0, "MAX N3101 reached", false);
+		T_START(this, T3169, 3169, "MAX N3101 reached", false);
 		return;
 	}
 
@@ -805,7 +825,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 			if (ul_tbf->n_inc(N3103)) {
 				bts->pkt_ul_ack_nack_poll_failed();
 				TBF_SET_STATE(ul_tbf, GPRS_RLCMAC_RELEASING);
-				T_START(ul_tbf, T3169, ul_tbf->bts->bts_data()->t3169, 0, "MAX N3103 reached", false);
+				T_START(ul_tbf, T3169, 3169, "MAX N3103 reached", false);
 				return;
 			}
 			/* reschedule UL ack */
@@ -824,7 +844,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		bts->pua_poll_timedout();
 		if (n_inc(N3105)) {
 			TBF_SET_STATE(this, GPRS_RLCMAC_RELEASING);
-			T_START(this, T3195, bts_data()->t3195, 0, "MAX N3105 reached", true);
+			T_START(this, T3195, 3195, "MAX N3105 reached", true);
 			bts->rlc_ass_failed();
 			bts->pua_poll_failed();
 			return;
@@ -843,7 +863,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 		bts->pda_poll_timedout();
 		if (n_inc(N3105)) {
 			TBF_SET_STATE(this, GPRS_RLCMAC_RELEASING);
-			T_START(this, T3195, bts_data()->t3195, 0, "MAX N3105 reached", true);
+			T_START(this, T3195, 3195, "MAX N3105 reached", true);
 			bts->rlc_ass_failed();
 			bts->pda_poll_failed();
 			return;
@@ -869,7 +889,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 
 		if (dl_tbf->n_inc(N3105)) {
 			TBF_SET_STATE(dl_tbf, GPRS_RLCMAC_RELEASING);
-			T_START(dl_tbf, T3195, dl_tbf->bts_data()->t3195, 0, "MAX N3105 reached", true);
+			T_START(dl_tbf, T3195, 3195, "MAX N3105 reached", true);
 			bts->pkt_dl_ack_nack_poll_failed();
 			bts->rlc_ack_failed();
 			return;
@@ -1321,7 +1341,7 @@ struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
 
 	/* Start Tmr only if it is UL TBF */
 	if (direction == GPRS_RLCMAC_UL_TBF)
-		T_START(this, T0, 0, T_REJ_PACCH_USEC, "reject (PACCH)", true);
+		T_START(this, T0, -2000, "reject (PACCH)", true);
 
 	return msg;
 

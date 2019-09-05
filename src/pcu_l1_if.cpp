@@ -508,11 +508,11 @@ bssgp_failed:
 	if (!bts->cs1 && !bts->cs2 && !bts->cs3 && !bts->cs4)
 		bts->cs1 = 1;
 	if (info_ind->t3142) { /* if timer values are set */
-		bts->t3142 = info_ind->t3142;
-		bts->t3169 = info_ind->t3169;
-		bts->t3191 = info_ind->t3191;
-		bts->t3193_msec = info_ind->t3193_10ms * 10;
-		bts->t3195 = info_ind->t3195;
+		osmo_tdef_set(bts->T_defs_bts, 3142, info_ind->t3142, OSMO_TDEF_S);
+		osmo_tdef_set(bts->T_defs_bts, 3169, info_ind->t3169, OSMO_TDEF_S);
+		osmo_tdef_set(bts->T_defs_bts, 3191, info_ind->t3191, OSMO_TDEF_S);
+		osmo_tdef_set(bts->T_defs_bts, 3193, info_ind->t3193_10ms * 10, OSMO_TDEF_MS);
+		osmo_tdef_set(bts->T_defs_bts, 3195, info_ind->t3195, OSMO_TDEF_S);
 		bts->n3101 = info_ind->n3101;
 		bts->n3103 = info_ind->n3103;
 		bts->n3105 = info_ind->n3105;

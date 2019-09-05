@@ -68,6 +68,21 @@ extern "C" {
 
 static BTS s_bts;
 
+static struct osmo_tdef T_defs_bts[] = {
+	{ .T=3142, .default_val=20,  .unit=OSMO_TDEF_S,  .desc="timer (s)", .val=0 },
+	{ .T=3169, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of USF and TFI(s) after the MS uplink TBF assignment is invalid (s)", .val=0 },
+	{ .T=3191, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of TFI(s) after sending (1) last RLC Data Block on TBF(s), or (2) PACKET TBF RELEASE for an MBMS radio bearer (s)", .val=0 },
+	{ .T=3193, .default_val=100, .unit=OSMO_TDEF_MS, .desc="Reuse of TFI(s) after reception of final PACKET DOWNLINK ACK/NACK from MS for TBF (ms)", .val=0 },
+	{ .T=3195, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of TFI(s) upon no response from the MS (radio failure or cell change) for TBF/MBMS radio bearer (s)", .val=0 },
+	{}
+};
+static struct osmo_tdef T_defs_pcu[] = {
+	{ .T=-2000, .default_val=2,   .unit=OSMO_TDEF_MS, .desc="Tbf reject for PRR timer (ms)",            .val=0 },
+	{ .T=-2001, .default_val=2,   .unit=OSMO_TDEF_S,  .desc="PACCH assignment timer (s)",               .val=0 },
+	{ .T=-2002, .default_val=200, .unit=OSMO_TDEF_MS, .desc="Waiting after IMM.ASS confirm timer (ms)", .val=0 },
+	{}
+};
+
 /**
  * For gcc-4.4 compat do not use extended initializer list but keep the
  * order from the enum here. Once we support GCC4.7 and up we can change
@@ -217,6 +232,10 @@ BTS::BTS()
 	memset(&m_bts, 0, sizeof(m_bts));
 	m_bts.bts = this;
 	m_bts.dl_tbf_preemptive_retransmission = true;
+	m_bts.T_defs_bts = T_defs_bts;
+	m_bts.T_defs_pcu = T_defs_pcu;
+	osmo_tdefs_reset(m_bts.T_defs_bts);
+	osmo_tdefs_reset(m_bts.T_defs_pcu);
 
 	/* initialize back pointers */
 	for (size_t trx_no = 0; trx_no < ARRAY_SIZE(m_bts.trx); ++trx_no) {
@@ -570,7 +589,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
 
 	if (dl_tbf->m_wait_confirm)
-		T_START(dl_tbf, T0, 0, T_ASS_AGCH_USEC, "assignment (AGCH)", true);
+		T_START(dl_tbf, T0, -2002, "assignment (AGCH)", true);
 
 	return 0;
 }
@@ -761,7 +780,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 			tbf->set_ta(ta);
 			TBF_SET_STATE(tbf, GPRS_RLCMAC_FLOW);
 			TBF_ASS_TYPE_SET(tbf, GPRS_RLCMAC_FLAG_CCCH);
-			T_START(tbf, T3169, m_bts.t3169, 0, "RACH (new UL-TBF)", true);
+			T_START(tbf, T3169, 3169, "RACH (new UL-TBF)", true);
 			LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] START\n");
 			LOGPTBF(tbf, LOGL_DEBUG, "RX: [PCU <- BTS] RACH "
 					"qbit-ta=%d ra=0x%02x, Fn=%d "

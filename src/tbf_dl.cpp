@@ -499,7 +499,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 		TBF_SET_ASS_ON(this, GPRS_RLCMAC_FLAG_PACCH, true);
 
 		/* start timer */
-		T_START(this, T0, T_ASS_PACCH_SEC, 0, "assignment (PACCH)", true);
+		T_START(this, T0, -2001, "assignment (PACCH)", true);
 	} else {
 		LOGPTBFDL(this, LOGL_DEBUG, "Send dowlink assignment on PCH, no TBF exist (IMSI=%s)\n",
 			  imsi());
@@ -843,7 +843,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			m_tx_counter = 0;
 			/* start timer whenever we send the final block */
 			if (is_final)
-				T_START(this, T3191, bts_data()->t3191, 0, "final block (DL-TBF)", true);
+				T_START(this, T3191, 3191, "final block (DL-TBF)", true);
 
 			state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK); /* clear poll timeout flag */
 
@@ -1104,8 +1104,7 @@ int gprs_rlcmac_dl_tbf::release()
 	TBF_SET_STATE(this, GPRS_RLCMAC_WAIT_RELEASE);
 
 	/* start T3193 */
-	T_START(this, T3193, bts_data()->t3193_msec / 1000, (bts_data()->t3193_msec % 1000) * 1000,
-		  "release (DL-TBF)", true);
+	T_START(this, T3193, 3193, "release (DL-TBF)", true);
 
 	/* reset rlc states */
 	m_tx_counter = 0;

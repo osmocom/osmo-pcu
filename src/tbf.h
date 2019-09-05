@@ -42,10 +42,6 @@ struct gprs_rlcmac_bts;
  * TBF instance
  */
 
-#define T_ASS_AGCH_USEC 200000	/* waiting after IMM.ASS confirm */
-#define T_ASS_PACCH_SEC 2	/* timeout for pacch assignment */
-#define T_REJ_PACCH_USEC 2000	/* timeout for tbf reject for PRR*/
-
 enum gprs_rlcmac_tbf_state {
 	GPRS_RLCMAC_NULL = 0,	/* new created TBF */
 	GPRS_RLCMAC_ASSIGN,	/* wait for downlink assignment */
@@ -193,7 +189,7 @@ enum tbf_counters { /* TBF counters from 3GPP TS 44.060 §13.4 */
 #define GPRS_RLCMAC_FLAG_TO_DL_ASS	7
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
-#define T_START(tbf, t, sec, usec, r, f) tbf->t_start(t, sec, usec, r, f, __FILE__, __LINE__)
+#define T_START(tbf, t, T, r, f) tbf->t_start(t, T, r, f, __FILE__, __LINE__)
 
 #define TBF_SET_STATE(t, st) do { t->set_state(st, __FILE__, __LINE__); } while(0)
 #define TBF_SET_ASS_STATE_DL(t, st) do { t->set_ass_state_dl(st, __FILE__, __LINE__); } while(0)
@@ -250,7 +246,7 @@ struct gprs_rlcmac_tbf {
 	void stop_timers(const char *reason);
 	bool timers_pending(enum tbf_timers t);
 	void t_stop(enum tbf_timers t, const char *reason);
-	void t_start(enum tbf_timers t, uint32_t sec, uint32_t microsec, const char *reason, bool force,
+	void t_start(enum tbf_timers t, int T, const char *reason, bool force,
 		     const char *file, unsigned line);
 	int establish_dl_tbf_on_pacch();
 

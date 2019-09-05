@@ -197,7 +197,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	unsigned int block_idx;
 
 	/* restart T3169 */
-	T_START(this, T3169, bts_data()->t3169, 0, "acked (data)", true);
+	T_START(this, T3169, 3169, "acked (data)", true);
 
 	/* Increment RX-counter */
 	this->m_rx_counter++;
