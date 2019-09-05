@@ -254,6 +254,8 @@ static int config_write_pcu(struct vty *vty)
 	if (bts->dl_tbf_idle_msec)
 		vty_out(vty, " dl-tbf-idle-time %d%s", bts->dl_tbf_idle_msec,
 			VTY_NEWLINE);
+	if (!bts->dl_tbf_preemptive_retransmission)
+		vty_out(vty, " no dl-tbf-preemptive-retransmission%s", VTY_NEWLINE);
 	if (strcmp(bts->pcu_sock_path, PCU_SOCK_DEFAULT))
 		vty_out(vty, " pcu-socket %s%s", bts->pcu_sock_path, VTY_NEWLINE);
 
@@ -870,6 +872,32 @@ DEFUN(cfg_pcu_no_dl_tbf_idle_time,
 	return CMD_SUCCESS;
 }
 
+#define RETRANSMISSION_STR "retransmit blocks even before the MS had a chance to receive them (better throughput," \
+			   " less readable traces)"
+DEFUN(cfg_pcu_dl_tbf_preemptive_retransmission,
+      cfg_pcu_dl_tbf_preemptive_retransmission_cmd,
+      "dl-tbf-preemptive-retransmission",
+      RETRANSMISSION_STR " (enabled by default)")
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->dl_tbf_preemptive_retransmission = true;
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_dl_tbf_preemptive_retransmission,
+      cfg_pcu_no_dl_tbf_preemptive_retransmission_cmd,
+      "no dl-tbf-preemptive-retransmission",
+      NO_STR RETRANSMISSION_STR)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
+	bts->dl_tbf_preemptive_retransmission = false;
+
+	return CMD_SUCCESS;
+}
+
 #define MS_IDLE_TIME_STR "keep an idle MS object alive for the time given\n"
 DEFUN(cfg_pcu_ms_idle_time,
       cfg_pcu_ms_idle_time_cmd,
@@ -1215,6 +1243,8 @@ int pcu_vty_init(void)
 	install_element(PCU_NODE, &cfg_pcu_gamma_cmd);
 	install_element(PCU_NODE, &cfg_pcu_dl_tbf_idle_time_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_dl_tbf_idle_time_cmd);
+	install_element(PCU_NODE, &cfg_pcu_dl_tbf_preemptive_retransmission_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_dl_tbf_preemptive_retransmission_cmd);
 	install_element(PCU_NODE, &cfg_pcu_ms_idle_time_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_ms_idle_time_cmd);
 	install_element(PCU_NODE, &cfg_pcu_gsmtap_categ_cmd);

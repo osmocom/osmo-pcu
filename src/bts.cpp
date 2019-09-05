@@ -216,6 +216,7 @@ BTS::BTS()
 {
 	memset(&m_bts, 0, sizeof(m_bts));
 	m_bts.bts = this;
+	m_bts.dl_tbf_preemptive_retransmission = true;
 
 	/* initialize back pointers */
 	for (size_t trx_no = 0; trx_no < ARRAY_SIZE(m_bts.trx); ++trx_no) {

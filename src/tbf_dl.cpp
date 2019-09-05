@@ -431,7 +431,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			  m_window.v_s(), mcs_name(new_cs));
 
 		bsn = create_new_bsn(fn, new_cs);
-	} else if (!m_window.window_empty()) {
+	} else if (bts->bts_data()->dl_tbf_preemptive_retransmission && !m_window.window_empty()) {
 		LOGPTBFDL(this, LOGL_DEBUG,
 			  "Restarting at BSN %d, because all blocks have been transmitted (FLOW).\n",
 			  m_window.v_a());

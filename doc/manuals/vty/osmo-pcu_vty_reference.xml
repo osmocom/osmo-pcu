@@ -1807,6 +1807,17 @@
         <param name='dl-tbf-idle-time' doc='keep an idle DL TBF alive for the time given' />
       </params>
     </command>
+    <command id='dl-tbf-preemptive-retransmission'>
+      <params>
+        <param name='dl-tbf-preemptive-retransmission' doc='retransmit blocks even before the MS had a chance to receive them (better throughput, less readable traces) (enabled by default)' />
+      </params>
+    </command>
+    <command id='no dl-tbf-preemptive-retransmission'>
+      <params>
+        <param name='no' doc='Negate a command or set its defaults' />
+        <param name='dl-tbf-preemptive-retransmission' doc='retransmit blocks even before the MS had a chance to receive them (better throughput, less readable traces)' />
+      </params>
+    </command>
     <command id='ms-idle-time &lt;1-7200&gt;'>
       <params>
         <param name='ms-idle-time' doc='keep an idle MS object alive for the time given' />
