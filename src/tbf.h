@@ -370,8 +370,8 @@ private:
 	LListHead<gprs_rlcmac_tbf> m_list;
 	LListHead<gprs_rlcmac_tbf> m_ms_list;
 	bool m_egprs_enabled;
-	struct osmo_timer_list T[T_MAX];
-	uint8_t N[N_MAX];
+	struct osmo_timer_list Tarr[T_MAX];
+	uint8_t Narr[N_MAX];
 	mutable char m_name_buf[60];
 };
 

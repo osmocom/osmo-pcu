@@ -220,8 +220,8 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	/* The classes of these members do not have proper constructors yet.
 	 * Just set them to 0 like talloc_zero did */
 	memset(&pdch, 0, sizeof(pdch));
-	memset(&T, 0, sizeof(T));
-	memset(&N, 0, sizeof(N));
+	memset(&Tarr, 0, sizeof(Tarr));
+	memset(&Narr, 0, sizeof(Narr));
 	memset(&gsm_timer, 0, sizeof(gsm_timer));
 
 	m_rlc.init();
@@ -563,7 +563,7 @@ void gprs_rlcmac_tbf::n_reset(enum tbf_counters n)
 		return;
 	}
 
-	N[n] = 0;
+	Narr[n] = 0;
 }
 
 /* Increment counter and check for MAX value (return true if we hit it) */
@@ -577,7 +577,7 @@ bool gprs_rlcmac_tbf::n_inc(enum tbf_counters n)
 		return true;
 	}
 
-	N[n]++;
+	Narr[n]++;
 
 	switch(n) {
 	case N3101:
@@ -595,7 +595,7 @@ bool gprs_rlcmac_tbf::n_inc(enum tbf_counters n)
 		return true;
 	}
 
-	if (N[n] == chk) {
+	if (Narr[n] == chk) {
 		LOGPTBF(this, LOGL_NOTICE, "%s exceeded MAX (%u)\n",
 			get_value_string(tbf_counters_names, n), chk);
 		return true;
@@ -612,10 +612,10 @@ void gprs_rlcmac_tbf::t_stop(enum tbf_timers t, const char *reason)
 		return;
 	}
 
-	if (osmo_timer_pending(&T[t])) {
+	if (osmo_timer_pending(&Tarr[t])) {
 		LOGPTBF(this, LOGL_DEBUG, "stopping timer %s [%s]\n",
 			get_value_string(tbf_timers_names, t), reason);
-		osmo_timer_del(&T[t]);
+		osmo_timer_del(&Tarr[t]);
 	}
 }
 
@@ -625,11 +625,11 @@ bool gprs_rlcmac_tbf::timers_pending(enum tbf_timers t)
 	uint8_t i;
 
 	if (t != T_MAX)
-		return osmo_timer_pending(&T[t]);
+		return osmo_timer_pending(&Tarr[t]);
 
 	/* we don't start with T0 because it's internal timer which requires special handling */
 	for (i = T3169; i < T_MAX; i++)
-		if (osmo_timer_pending(&T[i]))
+		if (osmo_timer_pending(&Tarr[i]))
 			return true;
 
 	return false;
@@ -672,37 +672,37 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, uint32_t sec, uint32_t microsec
 		return;
 	}
 
-	if (!force && osmo_timer_pending(&T[t]))
+	if (!force && osmo_timer_pending(&Tarr[t]))
 		return;
 
 	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s %sstarting timer %s [%s] with %u sec. %u microsec, cur_fn=%d\n",
-	     tbf_name(this), osmo_timer_pending(&T[t]) ? "re" : "",
+	     tbf_name(this), osmo_timer_pending(&Tarr[t]) ? "re" : "",
 	     get_value_string(tbf_timers_names, t), reason, sec, microsec, current_fn);
 
-	T[t].data = this;
+	Tarr[t].data = this;
 
 	switch(t) {
 	case T0:
-		T[t].cb = tbf_timer_cb;
+		Tarr[t].cb = tbf_timer_cb;
 		break;
 	case T3169:
-		T[t].cb = cb_T3169;
+		Tarr[t].cb = cb_T3169;
 		break;
 	case T3191:
-		T[t].cb = cb_T3191;
+		Tarr[t].cb = cb_T3191;
 		break;
 	case T3193:
-		T[t].cb = cb_T3193;
+		Tarr[t].cb = cb_T3193;
 		break;
 	case T3195:
-		T[t].cb = cb_T3195;
+		Tarr[t].cb = cb_T3195;
 		break;
 	default:
 		LOGPSRC(DTBF, LOGL_ERROR, file, line, "%s attempting to set callback for unknown timer %s [%s], cur_fn=%d\n",
 		     tbf_name(this), get_value_string(tbf_timers_names, t), reason, current_fn);
 	}
 
-	osmo_timer_schedule(&T[t], sec, microsec);
+	osmo_timer_schedule(&Tarr[t], sec, microsec);
 }
 
 int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
