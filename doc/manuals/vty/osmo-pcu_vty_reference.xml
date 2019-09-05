@@ -263,6 +263,50 @@
         <param name='force-all' doc='Release any globally forced log level set with &apos;logging level force-all &lt;level&gt;&apos;' />
       </params>
     </command>
+    <command id='logp (csn1|l1if|rlcmac|rlcmacdata|rlcmacdl|rlcmacul|rlcmacsched|rlcmacmeas|tbf|tbfdl|tbful|ns|bssgp|pcu|lglobal|llapd|linp|lmux|lmi|lmib|lsms|lctrl|lgtp|lstats|lgsup|loap|lss7|lsccp|lsua|lm3ua|lmgcp|ljibuf|lrspro) (debug|info|notice|error|fatal) .LOGMESSAGE'>
+      <params>
+        <param name='logp' doc='Print a message on all log outputs; useful for placing markers in test logs' />
+        <param name='csn1' doc='Concrete Syntax Notation One (CSN1)' />
+        <param name='l1if' doc='GPRS PCU L1 interface (L1IF)' />
+        <param name='rlcmac' doc='GPRS RLC/MAC layer (RLCMAC)' />
+        <param name='rlcmacdata' doc='GPRS RLC/MAC layer Data (RLCMAC)' />
+        <param name='rlcmacdl' doc='GPRS RLC/MAC layer Downlink (RLCMAC)' />
+        <param name='rlcmacul' doc='GPRS RLC/MAC layer Uplink (RLCMAC)' />
+        <param name='rlcmacsched' doc='GPRS RLC/MAC layer Scheduling (RLCMAC)' />
+        <param name='rlcmacmeas' doc='GPRS RLC/MAC layer Measurements (RLCMAC)' />
+        <param name='tbf' doc='Temporary Block Flow (TBF)' />
+        <param name='tbfdl' doc='Temporary Block Flow (TBF) Downlink' />
+        <param name='tbful' doc='Temporary Block Flow (TBF) Uplink' />
+        <param name='ns' doc='GPRS Network Service Protocol (NS)' />
+        <param name='bssgp' doc='GPRS BSS Gateway Protocol (BSSGP)' />
+        <param name='pcu' doc='GPRS Packet Control Unit (PCU)' />
+        <param name='lglobal' doc='Library-internal global log family' />
+        <param name='llapd' doc='LAPD in libosmogsm' />
+        <param name='linp' doc='A-bis Intput Subsystem' />
+        <param name='lmux' doc='A-bis B-Subchannel TRAU Frame Multiplex' />
+        <param name='lmi' doc='A-bis Input Driver for Signalling' />
+        <param name='lmib' doc='A-bis Input Driver for B-Channels (voice)' />
+        <param name='lsms' doc='Layer3 Short Message Service (SMS)' />
+        <param name='lctrl' doc='Control Interface' />
+        <param name='lgtp' doc='GPRS GTP library' />
+        <param name='lstats' doc='Statistics messages and logging' />
+        <param name='lgsup' doc='Generic Subscriber Update Protocol' />
+        <param name='loap' doc='Osmocom Authentication Protocol' />
+        <param name='lss7' doc='libosmo-sigtran Signalling System 7' />
+        <param name='lsccp' doc='libosmo-sigtran SCCP Implementation' />
+        <param name='lsua' doc='libosmo-sigtran SCCP User Adaptation' />
+        <param name='lm3ua' doc='libosmo-sigtran MTP3 User Adaptation' />
+        <param name='lmgcp' doc='libosmo-mgcp Media Gateway Control Protocol' />
+        <param name='ljibuf' doc='libosmo-netif Jitter Buffer' />
+        <param name='lrspro' doc='Remote SIM protocol' />
+        <param name='debug' doc='Log debug messages and higher levels' />
+        <param name='info' doc='Log informational messages and higher levels' />
+        <param name='notice' doc='Log noticeable messages and higher levels' />
+        <param name='error' doc='Log error messages and higher levels' />
+        <param name='fatal' doc='Log only fatal messages' />
+        <param name='.LOGMESSAGE' doc='Arbitrary message to log on given category and log level' />
+      </params>
+    </command>
     <command id='show logging vty'>
       <params>
         <param name='show' doc='Show running system information' />
@@ -626,6 +670,50 @@
         <param name='logging' doc='Configure logging' />
         <param name='level' doc='Set the log level for a specified category' />
         <param name='force-all' doc='Release any globally forced log level set with &apos;logging level force-all &lt;level&gt;&apos;' />
+      </params>
+    </command>
+    <command id='logp (csn1|l1if|rlcmac|rlcmacdata|rlcmacdl|rlcmacul|rlcmacsched|rlcmacmeas|tbf|tbfdl|tbful|ns|bssgp|pcu|lglobal|llapd|linp|lmux|lmi|lmib|lsms|lctrl|lgtp|lstats|lgsup|loap|lss7|lsccp|lsua|lm3ua|lmgcp|ljibuf|lrspro) (debug|info|notice|error|fatal) .LOGMESSAGE'>
+      <params>
+        <param name='logp' doc='Print a message on all log outputs; useful for placing markers in test logs' />
+        <param name='csn1' doc='Concrete Syntax Notation One (CSN1)' />
+        <param name='l1if' doc='GPRS PCU L1 interface (L1IF)' />
+        <param name='rlcmac' doc='GPRS RLC/MAC layer (RLCMAC)' />
+        <param name='rlcmacdata' doc='GPRS RLC/MAC layer Data (RLCMAC)' />
+        <param name='rlcmacdl' doc='GPRS RLC/MAC layer Downlink (RLCMAC)' />
+        <param name='rlcmacul' doc='GPRS RLC/MAC layer Uplink (RLCMAC)' />
+        <param name='rlcmacsched' doc='GPRS RLC/MAC layer Scheduling (RLCMAC)' />
+        <param name='rlcmacmeas' doc='GPRS RLC/MAC layer Measurements (RLCMAC)' />
+        <param name='tbf' doc='Temporary Block Flow (TBF)' />
+        <param name='tbfdl' doc='Temporary Block Flow (TBF) Downlink' />
+        <param name='tbful' doc='Temporary Block Flow (TBF) Uplink' />
+        <param name='ns' doc='GPRS Network Service Protocol (NS)' />
+        <param name='bssgp' doc='GPRS BSS Gateway Protocol (BSSGP)' />
+        <param name='pcu' doc='GPRS Packet Control Unit (PCU)' />
+        <param name='lglobal' doc='Library-internal global log family' />
+        <param name='llapd' doc='LAPD in libosmogsm' />
+        <param name='linp' doc='A-bis Intput Subsystem' />
+        <param name='lmux' doc='A-bis B-Subchannel TRAU Frame Multiplex' />
+        <param name='lmi' doc='A-bis Input Driver for Signalling' />
+        <param name='lmib' doc='A-bis Input Driver for B-Channels (voice)' />
+        <param name='lsms' doc='Layer3 Short Message Service (SMS)' />
+        <param name='lctrl' doc='Control Interface' />
+        <param name='lgtp' doc='GPRS GTP library' />
+        <param name='lstats' doc='Statistics messages and logging' />
+        <param name='lgsup' doc='Generic Subscriber Update Protocol' />
+        <param name='loap' doc='Osmocom Authentication Protocol' />
+        <param name='lss7' doc='libosmo-sigtran Signalling System 7' />
+        <param name='lsccp' doc='libosmo-sigtran SCCP Implementation' />
+        <param name='lsua' doc='libosmo-sigtran SCCP User Adaptation' />
+        <param name='lm3ua' doc='libosmo-sigtran MTP3 User Adaptation' />
+        <param name='lmgcp' doc='libosmo-mgcp Media Gateway Control Protocol' />
+        <param name='ljibuf' doc='libosmo-netif Jitter Buffer' />
+        <param name='lrspro' doc='Remote SIM protocol' />
+        <param name='debug' doc='Log debug messages and higher levels' />
+        <param name='info' doc='Log informational messages and higher levels' />
+        <param name='notice' doc='Log noticeable messages and higher levels' />
+        <param name='error' doc='Log error messages and higher levels' />
+        <param name='fatal' doc='Log only fatal messages' />
+        <param name='.LOGMESSAGE' doc='Arbitrary message to log on given category and log level' />
       </params>
     </command>
     <command id='show logging vty'>
