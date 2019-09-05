@@ -946,8 +946,7 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 
 	osmo_signal_register_handler(SS_L_NS, nsvc_signal_cb, NULL);
 
-	the_pcu.bvc_timer.cb = bvc_timeout;
-
+	osmo_timer_setup(&the_pcu.bvc_timer, bvc_timeout, NULL);
 
 	return &the_pcu;
 }
