@@ -33,9 +33,6 @@ extern "C" {
 	#include "coding_scheme.h"
 }
 
-#define BSSGP_TIMER_T1	30	/* Guards the (un)blocking procedures */
-#define BSSGP_TIMER_T2	30	/* Guards the reset procedure */
-
 /* Tuning parameters for BSSGP flow control */
 #define FC_DEFAULT_LIFE_TIME_SECS 10		/* experimental value, 10s */
 #define FC_MS_BUCKET_SIZE_BY_BMAX(bmax) ((bmax) / 2 + 500) /* experimental */
@@ -830,10 +827,12 @@ int gprs_bssgp_tx_fc_bvc(void)
 
 static void bvc_timeout(void *_priv)
 {
+	unsigned long secs;
 	if (!the_pcu.bvc_sig_reset) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI 0\n");
 		bssgp_tx_bvc_reset(the_pcu.bctx, 0, BSSGP_CAUSE_OML_INTERV);
-		osmo_timer_schedule(&the_pcu.bvc_timer, BSSGP_TIMER_T2, 0);
+		secs = osmo_tdef_get(the_pcu.bts->T_defs_pcu, 2, OSMO_TDEF_S, -1);
+		osmo_timer_schedule(&the_pcu.bvc_timer, secs, 0);
 		return;
 	}
 
@@ -841,7 +840,8 @@ static void bvc_timeout(void *_priv)
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI %d\n",
 			the_pcu.bctx->bvci);
 		bssgp_tx_bvc_reset(the_pcu.bctx, the_pcu.bctx->bvci, BSSGP_CAUSE_OML_INTERV);
-		osmo_timer_schedule(&the_pcu.bvc_timer, BSSGP_TIMER_T2, 0);
+		secs = osmo_tdef_get(the_pcu.bts->T_defs_pcu, 2, OSMO_TDEF_S, -1);
+		osmo_timer_schedule(&the_pcu.bvc_timer, secs, 0);
 		return;
 	}
 
@@ -849,7 +849,8 @@ static void bvc_timeout(void *_priv)
 		LOGP(DBSSGP, LOGL_INFO, "Sending unblock on BVCI %d\n",
 			the_pcu.bctx->bvci);
 		bssgp_tx_bvc_unblock(the_pcu.bctx);
-		osmo_timer_schedule(&the_pcu.bvc_timer, BSSGP_TIMER_T1, 0);
+		secs = osmo_tdef_get(the_pcu.bts->T_defs_pcu, 1, OSMO_TDEF_S, -1);
+		osmo_timer_schedule(&the_pcu.bvc_timer, secs, 0);
 		return;
 	}
 
