@@ -123,6 +123,34 @@ static uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 	return usf;
 }
 
+struct msgb *sched_app_info(struct gprs_rlcmac_tbf *tbf) {
+	struct gprs_rlcmac_bts *bts_data;
+	struct msgb *msg = NULL;
+
+	if (!tbf || !tbf->ms()->app_info_pending)
+		return NULL;
+
+	bts_data = BTS::main_bts()->bts_data();
+
+	if (bts_data->app_info) {
+		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Sending Packet Application Information message\n");
+		msg = msgb_copy(bts_data->app_info, "app_info_msg_sched");
+	} else
+		LOGP(DRLCMACSCHED, LOGL_ERROR, "MS has app_info_pending flag set, but no Packet Application Information"
+		     " message stored in BTS!\n");
+
+	tbf->ms()->app_info_pending = false;
+	bts_data->app_info_pending--;
+
+	if (!bts_data->app_info_pending) {
+		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Packet Application Information successfully sent to all MS with active"
+		     " TBF\n");
+		msgb_free(bts_data->app_info);
+		bts_data->app_info = NULL;
+	}
+	return msg;
+}
+
 static struct msgb *sched_select_ctrl_msg(
 		    uint8_t trx, uint8_t ts, uint32_t fn,
 		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch,
@@ -134,37 +162,42 @@ static struct msgb *sched_select_ctrl_msg(
 	struct gprs_rlcmac_tbf *tbf = NULL;
 	struct gprs_rlcmac_tbf *next_list[3] = { ul_ass_tbf, dl_ass_tbf, ul_ack_tbf };
 
-	for (size_t i = 0; i < ARRAY_SIZE(next_list); ++i) {
-		tbf = next_list[(pdch->next_ctrl_prio + i) % 3];
-		if (!tbf)
-			continue;
+	/* Send Packet Application Information first (ETWS primary notifications) */
+	msg = sched_app_info(dl_ass_tbf);
 
-		/*
-		 * Assignments for the same direction have lower precedence,
-		 * because they may kill the TBF when the CONTROL ACK is
-		 * received, thus preventing the others from being processed.
-		 */
-		if (tbf == ul_ass_tbf && tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
-			msg = ul_ass_tbf->create_packet_access_reject();
-		else if (tbf == ul_ass_tbf && tbf->direction ==
-				GPRS_RLCMAC_DL_TBF)
-			if (tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
+	if (!msg) {
+		for (size_t i = 0; i < ARRAY_SIZE(next_list); ++i) {
+			tbf = next_list[(pdch->next_ctrl_prio + i) % 3];
+			if (!tbf)
+				continue;
+
+			/*
+			 * Assignments for the same direction have lower precedence,
+			 * because they may kill the TBF when the CONTROL ACK is
+			 * received, thus preventing the others from being processed.
+			 */
+			if (tbf == ul_ass_tbf && tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
 				msg = ul_ass_tbf->create_packet_access_reject();
-			else
-				msg = ul_ass_tbf->create_ul_ass(fn, ts);
-		else if (tbf == dl_ass_tbf && tbf->direction == GPRS_RLCMAC_UL_TBF)
-			msg = dl_ass_tbf->create_dl_ass(fn, ts);
-		else if (tbf == ul_ack_tbf)
-			msg = ul_ack_tbf->create_ul_ack(fn, ts);
+			else if (tbf == ul_ass_tbf && tbf->direction ==
+					GPRS_RLCMAC_DL_TBF)
+				if (tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
+					msg = ul_ass_tbf->create_packet_access_reject();
+				else
+					msg = ul_ass_tbf->create_ul_ass(fn, ts);
+			else if (tbf == dl_ass_tbf && tbf->direction == GPRS_RLCMAC_UL_TBF)
+				msg = dl_ass_tbf->create_dl_ass(fn, ts);
+			else if (tbf == ul_ack_tbf)
+				msg = ul_ack_tbf->create_ul_ack(fn, ts);
 
-		if (!msg) {
-			tbf = NULL;
-			continue;
+			if (!msg) {
+				tbf = NULL;
+				continue;
+			}
+
+			pdch->next_ctrl_prio += 1;
+			pdch->next_ctrl_prio %= 3;
+			break;
 		}
-
-		pdch->next_ctrl_prio += 1;
-		pdch->next_ctrl_prio %= 3;
-		break;
 	}
 
 	if (!msg) {

@@ -620,6 +620,42 @@ static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)
 	return bssgp_tx_suspend(bctx->nsei, susp_req->tlli, &ra_id);
 }
 
+static int pcu_rx_app_info_req(struct gsm_pcu_if_app_info_req *app_info_req)
+{
+	LListHead<GprsMs> *ms_iter;
+	BTS *bts = BTS::main_bts();
+	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
+
+	LOGP(DL1IF, LOGL_DEBUG, "Application Information Request received: type=0x%08x len=%i\n",
+	     app_info_req->application_type, app_info_req->len);
+
+	bts_data->app_info_pending = 0;
+	llist_for_each(ms_iter, &bts->ms_store().ms_list()) {
+		GprsMs *ms = ms_iter->entry();
+		if (!ms->dl_tbf())
+			continue;
+		bts_data->app_info_pending++;
+		ms->app_info_pending = true;
+	}
+
+	if (!bts_data->app_info_pending) {
+		LOGP(DL1IF, LOGL_NOTICE, "Packet Application Information will not be sent, no subscribers with active"
+		     " TBF\n");
+		return -1;
+	}
+
+	if (bts_data->app_info) {
+		LOGP(DL1IF, LOGL_NOTICE, "Previous Packet Application Information was not sent to all subscribers,"
+		     " overwriting with new one\n");
+		msgb_free(bts_data->app_info);
+	}
+
+	LOGP(DL1IF, LOGL_INFO, "Sending Packet Application Information to %i subscribers with active TBF\n",
+	     bts_data->app_info_pending);
+	bts_data->app_info = gprs_rlcmac_app_info_msg(app_info_req);
+	return 0;
+}
+
 int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 {
 	int rc = 0;
@@ -648,6 +684,9 @@ int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 		break;
 	case PCU_IF_MSG_SUSP_REQ:
 		rc = pcu_rx_susp_req(&pcu_prim->u.susp_req);
+		break;
+	case PCU_IF_MSG_APP_INFO_REQ:
+		rc = pcu_rx_app_info_req(&pcu_prim->u.app_info_req);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received unknown PCU msg type %d\n",

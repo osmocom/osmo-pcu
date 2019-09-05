@@ -135,6 +135,7 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 		gprs_codel_set_interval(m_codel_state, codel_interval);
 	}
 	m_last_cs_not_low = now_msec();
+	app_info_pending = false;
 }
 
 GprsMs::~GprsMs()

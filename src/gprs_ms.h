@@ -136,6 +136,8 @@ public:
 	/* internal use */
 	static void timeout(void *priv_);
 
+	bool app_info_pending;
+
 protected:
 	void update_status();
 	GprsMs *ref();

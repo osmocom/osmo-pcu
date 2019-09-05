@@ -82,3 +82,10 @@ AT_KEYWORDS([fn])
 cat $abs_srcdir/fn/FnTest.ok > expout
 AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/fn/FnTest], [0], [expout], [ignore])
 AT_CLEANUP
+
+AT_SETUP([app_info])
+AT_KEYWORDS([app_info])
+cat $abs_srcdir/app_info/AppInfoTest.ok > expout
+cat $abs_srcdir/app_info/AppInfoTest.err > experr
+AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/app_info/AppInfoTest], [0], [expout], [experr])
+AT_CLEANUP

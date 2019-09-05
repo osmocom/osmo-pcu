@@ -69,7 +69,8 @@ libgprs_la_SOURCES = \
 	gprs_codel.c \
 	coding_scheme.c \
 	gprs_coding_scheme.cpp \
-	egprs_rlc_compression.cpp
+	egprs_rlc_compression.cpp \
+	gprs_rlcmac_sched.cpp
 
 bin_PROGRAMS = \
 	osmo-pcu

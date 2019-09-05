@@ -164,6 +164,11 @@ struct gprs_rlcmac_bts {
 
 	/* Are we talking Gb with IP-SNS (true) or classic Gb? */
 	bool gb_dialect_sns;
+
+	/* Packet Application Information (3GPP TS 44.060 11.2.47, usually ETWS primary message). We don't need to store
+	 * more than one message, because they get sent so rarely. */
+	struct msgb *app_info;
+	uint32_t app_info_pending; /* Count of MS with active TBF, to which we did not send app_info yet */
 };
 
 #ifdef __cplusplus

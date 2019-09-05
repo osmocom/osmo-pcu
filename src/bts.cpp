@@ -231,6 +231,7 @@ BTS::BTS()
 {
 	memset(&m_bts, 0, sizeof(m_bts));
 	m_bts.bts = this;
+	m_bts.app_info = NULL;
 	m_bts.dl_tbf_preemptive_retransmission = true;
 	m_bts.T_defs_bts = T_defs_bts;
 	m_bts.T_defs_pcu = T_defs_pcu;
@@ -278,6 +279,11 @@ void BTS::cleanup()
 	if (m_statg) {
 		osmo_stat_item_group_free(m_statg);
 		m_statg = NULL;
+	}
+
+	if (m_bts.app_info) {
+		msgb_free(m_bts.app_info);
+		m_bts.app_info = NULL;
 	}
 }
 

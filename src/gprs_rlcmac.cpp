@@ -41,4 +41,25 @@ int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len,
 	return 0;
 }
 
+/* Encode Application Information Request to Packet Application Information (3GPP TS 44.060 11.2.47) */
+struct msgb *gprs_rlcmac_app_info_msg(const struct gsm_pcu_if_app_info_req *req) {
+	struct msgb *msg;
+	uint16_t msgb_len = req->len + 1;
+	struct bitvec bv = {0, msgb_len, NULL};
+	const enum bit_value page_mode[] = {ZERO, ZERO}; /* Normal Paging (3GPP TS 44.060 12.20) */
 
+	if (!req->len) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Application Information Request with zero length received!\n");
+		return NULL;
+	}
+
+	msg = msgb_alloc(msgb_len, "app_info_msg");
+	if (!msg)
+		return NULL;
+
+	bv.data = msgb_put(msg, msgb_len);
+	bitvec_set_bits(&bv, page_mode, 2);
+	bitvec_set_uint(&bv, req->application_type, 4);
+	bitvec_set_bytes(&bv, req->data, req->len);
+	return msg;
+}
