@@ -247,8 +247,9 @@ static inline enum tbf_dl_prio tbf_compute_priority(const struct gprs_rlcmac_bts
 						    uint8_t ts, uint32_t fn, int age)
 {
 	const gprs_rlc_dl_window *w = tbf->window();
-	int age_thresh1 = msecs_to_frames(200),
-		age_thresh2 = msecs_to_frames(OSMO_MIN(BTS::TIMER_T3190_MSEC/2, bts->dl_tbf_idle_msec));
+	unsigned long msecs = osmo_tdef_get(bts->T_defs_pcu, 3190, OSMO_TDEF_MS, -1);
+	int age_thresh1 = msecs_to_frames(200);
+	int age_thresh2 = msecs_to_frames(OSMO_MIN(msecs/2, bts->dl_tbf_idle_msec));
 
 	if (tbf->is_control_ts(ts) && tbf->need_control_ts())
 		return DL_PRIO_CONTROL;

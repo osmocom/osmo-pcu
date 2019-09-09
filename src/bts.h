@@ -271,10 +271,6 @@ public:
 		STAT_MS_PRESENT,
 	};
 
-	enum {
-		TIMER_T3190_MSEC = 5000,
-	};
-
 	BTS();
 	~BTS();
 	void cleanup();
