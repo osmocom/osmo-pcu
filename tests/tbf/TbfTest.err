@@ -1,3 +1,6 @@
+=== start test_tbf_base ===
+=== end test_tbf_base ===
+=== start test_tbf_tlli_update ===
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=0/0
 Creating MS object, TLLI = 0x00000000
@@ -35,6 +38,8 @@ Modifying MS object, TLLI: 0x00000000 -> 0x00002342, already confirmed partly
 The MS object cannot fully confirm an unexpected TLLI: 0x00004232, partly confirmed
 Modifying MS object, TLLI: 0x00002342 -> 0x00004232, already confirmed partly
 Modifying MS object, TLLI = 0x00004232, TA 4 -> 6
+=== end test_tbf_tlli_update ===
+=== start test_tbf_final_ack ===
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -123,6 +128,8 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING), 
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING)
 ********** DL-TBF ends here **********
 Destroying MS object, TLLI = 0xffeeddcc
+=== end test_tbf_final_ack ===
+=== start test_tbf_final_ack ===
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -211,6 +218,8 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING), 
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING)
 ********** DL-TBF ends here **********
 Destroying MS object, TLLI = 0xffeeddcc
+=== end test_tbf_final_ack ===
+=== start test_tbf_delayed_release ===
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -464,6 +473,8 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING), 
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+=== end test_tbf_delayed_release ===
+=== start test_tbf_imsi ===
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -529,6 +540,8 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=RELEASING), 
 Detaching TBF from MS object, TLLI = 0xf1000002, TBF = TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=RELEASING)
 Destroying MS object, TLLI = 0xf1000002
 ********** DL-TBF ends here **********
+=== end test_tbf_imsi ===
+=== start test_tbf_exhaustion ===
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1336,7 +1349,9 @@ Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 [DL] Slot Allocation (Algorithm A) for class 45
 [DL] algo A <single> (suggested TRX: -1): failed to find a usable TRX (TFI exhausted)
 No PDCH resource
+=== end test_tbf_exhaustion ===
 Destroying MS object, TLLI = 0x00000000
+=== start test_tbf_dl_llc_loss ===
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
@@ -1424,6 +1439,8 @@ TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=FINISHED) Scheduling Ack/Nack polling, be
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=FINISHED) Polling cannot be scheduled in this TS 7 (first control TS 4)
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=FINISHED) msg block (BSN 2, CS-1): 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
 MSG = 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
+=== end test_tbf_dl_llc_loss ===
+=== start test_tbf_single_phase ===
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 MS requests UL TBF on RACH, so we provide one: ra=0x03 Fn=2654167 qta=31 is_11bit=0:
@@ -1496,6 +1513,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=7 TA=7 pollFN=-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 4 bytes
+=== end test_tbf_single_phase ===
+=== start test_tbf_two_phase ===
 MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
@@ -1578,6 +1597,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 4 bytes
+=== end test_tbf_two_phase ===
+=== start test_tbf_ra_update_rach ===
 MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
@@ -1777,6 +1798,8 @@ Clearing MS object, TLLI: 0xf1223344, IMSI: '0011223344'
 TBF(TFI=0 TLLI=0xf5667788 DIR=DL STATE=FINISHED) appending 4 bytes
 Modifying MS object, TLLI: 0xf5667788 confirmed
 New MS: TLLI = 0xf5667788, TA = 7, IMSI = 0011223344, LLC = 1
+=== end test_tbf_ra_update_rach ===
+=== start test_tbf_dl_flow_and_rach_two_phase ===
 MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
@@ -1948,6 +1971,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Assembling frames: (len=20)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Frame 1 starts at offset 0, length=20, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last block: BSN=0 CV=15
 New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
+=== end test_tbf_dl_flow_and_rach_two_phase ===
+=== start test_tbf_dl_flow_and_rach_single_phase ===
 MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
@@ -2097,6 +2122,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling Ack/Nack, because TL
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling Ack/Nack, because last block has CV==0.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
 New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
+=== end test_tbf_dl_flow_and_rach_single_phase ===
+=== start test_tbf_dl_reuse ===
 MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
@@ -3031,8 +3058,12 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled DL Acknowledgement po
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654461, TS=7
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 10, CS-1): 0f 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 
+=== end test_tbf_dl_reuse ===
+=== start test_tbf_gprs_egprs ===
 Not accepting non-EGPRS phone in EGPRS-only mode
 No PDCH resource
+=== end test_tbf_gprs_egprs ===
+=== start test_tbf_ws ===
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=12/0
 Creating MS object, TLLI = 0x00000000
@@ -3111,6 +3142,8 @@ PDCH(TS 5, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0x00000000
 ********** DL-TBF ends here **********
+=== end test_tbf_ws ===
+=== start test_tbf_egprs_two_phase ===
 MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
@@ -3201,6 +3234,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to AS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
+=== end test_tbf_egprs_two_phase ===
+=== start test_tbf_egprs_two_phase_spb ===
 MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
@@ -3421,6 +3456,9 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to AS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
+=== end test_tbf_egprs_two_phase_spb ===
+=== start test_tbf_egprs_dl ===
+Testing MCS-1
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -3727,6 +3765,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing MCS-2
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -3983,6 +4022,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing MCS-3
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -4201,6 +4241,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing MCS-4
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -4387,6 +4428,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing MCS-5
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -4553,6 +4595,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing MCS-6
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -4701,6 +4744,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing MCS-7
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -4844,6 +4888,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing MCS-8
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -4976,6 +5021,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing MCS-9
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -5108,6 +5154,9 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+=== end test_tbf_egprs_dl ===
+=== start test_tbf_egprs_retx_dl ===
+Testing retx for MCS 6 - 6
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -5163,6 +5212,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing retx for MCS 1 - 9
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -5218,6 +5268,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing retx for MCS 2 - 8
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -5273,6 +5324,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing retx for MCS 5 - 7
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -5344,6 +5396,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing retx for MCS 6 - 9
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -5415,6 +5468,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing retx for MCS 7 - 5
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -5486,6 +5540,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing retx for MCS 9 - 6
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -5557,6 +5612,9 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+=== end test_tbf_egprs_retx_dl ===
+=== start test_tbf_egprs_spb_dl ===
+Testing retx for MCS 6 to reseg_mcs 3
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -5619,6 +5677,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing retx for MCS 5 to reseg_mcs 2
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -5681,6 +5740,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing retx for MCS 4 to reseg_mcs 1
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -5743,6 +5803,7 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+Testing retx for MCS 6 to reseg_mcs 3
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -5812,6 +5873,8 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+=== end test_tbf_egprs_spb_dl ===
+=== start test_tbf_puan_urbb_len ===
 MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
@@ -5921,6 +5984,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to AS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
+=== end test_tbf_puan_urbb_len ===
+=== start test_tbf_update_ws ===
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 Creating MS object, TLLI = 0x00000000
@@ -5973,6 +6038,8 @@ PDCH(TS 5, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0x00000000
 ********** DL-TBF ends here **********
+=== end test_tbf_update_ws ===
+=== start test_tbf_li_decoding ===
 MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
@@ -6076,6 +6143,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to AS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
+=== end test_tbf_li_decoding ===
+=== start test_tbf_epdan_out_of_rx_window ===
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -6115,6 +6184,8 @@ PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EG
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
+=== end test_tbf_epdan_out_of_rx_window ===
+=== start test_immediate_assign_rej_multi_block ===
 MS requests UL TBF on RACH, so we provide one: ra=0x78 Fn=2654167 qta=31 is_11bit=0:
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -6305,11 +6376,15 @@ Creating MS object, TLLI = 0x00000000
 - Skipping TS 7, because no USF available
 [UL] algo A <single> (suggested TRX: -1): failed to allocate a TS, no USF available
 No PDCH resource sending Immediate Assignment Uplink (AGCH) reject
+=== end test_immediate_assign_rej_multi_block ===
 Destroying MS object, TLLI = 0x00000000
+=== start test_immediate_assign_rej_single_block ===
 MS requests UL TBF on RACH, so we provide one: ra=0x70 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 No PDCH available.
 No PDCH resource for single block allocation.sending Immediate Assignment Uplink (AGCH) reject
+=== end test_immediate_assign_rej_single_block ===
+=== start test_tbf_egprs_two_phase_puan ===
 MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
 MS requests single block allocation
 RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
@@ -7711,6 +7786,8 @@ Received RTS for PDCH: TRX=0 TS=7 FN=2654283 block_nr=11 scheduling USF=0 for re
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
+=== end test_tbf_egprs_two_phase_puan ===
+=== start test_packet_access_rej_epdan ===
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
@@ -7736,6 +7813,9 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCM
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 100 bytes
+packet reject: 40 84 7f f7 6e e6 41 4b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+=== end test_packet_access_rej_epdan ===
+=== start test_packet_access_rej_prr ===
 MS requests UL TBF on RACH, so we provide one: ra=0x78 Fn=2654167 qta=31 is_11bit=0:
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -7940,7 +8020,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RL
 Received RTS for PDCH: TRX=0 TS=7 FN=2654218 block_nr=8 scheduling USF=0 for required uplink resource of UL TFI=0
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) starting timer T0 [reject (PACCH)] with 0 sec. 2000 microsec, cur_fn=0
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
+=== end test_packet_access_rej_prr ===
 Destroying MS object, TLLI = 0x00000000
+=== start test_packet_access_rej_prr_no_other_tbfs ===
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, UL TLLI: 0x00000000 -> 0xffeeddcc, not yet confirmed
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
@@ -7955,3 +8037,4 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) stopping timer T0 [freeing TBF]
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
 Destroying MS object, TLLI = 0xffeeddcc
 ********** UL-TBF ends here **********
+=== end test_packet_access_rej_prr_no_other_tbfs ===

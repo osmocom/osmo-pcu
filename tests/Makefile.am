@@ -138,7 +138,7 @@ EXTRA_DIST = \
 	testsuite.at $(srcdir)/package.m4 $(TESTSUITE)	\
 	rlcmac/RLCMACTest.ok rlcmac/RLCMACTest.err \
 	alloc/AllocTest.ok alloc/AllocTest.err \
-	tbf/TbfTest.ok tbf/TbfTest.err \
+	tbf/TbfTest.err \
 	bitcomp/BitcompTest.ok bitcomp/BitcompTest.err \
 	types/TypesTest.ok types/TypesTest.err \
 	ms/MsTest.ok ms/MsTest.err alloc/MslotTest.ok \
