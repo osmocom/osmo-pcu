@@ -133,7 +133,6 @@ struct gprs_rlcmac_bts {
 	uint8_t force_two_phase;
 	uint8_t alpha, gamma;
 	uint8_t egprs_enabled;
-	uint32_t dl_tbf_idle_msec; /* hold time for idle DL TBFs */
 	bool dl_tbf_preemptive_retransmission;
 	uint8_t si13[GSM_MACBLOCK_LEN];
 	bool si13_is_set;

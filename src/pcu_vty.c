@@ -253,9 +253,6 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " two-phase-access%s", VTY_NEWLINE);
 	vty_out(vty, " alpha %d%s", bts->alpha, VTY_NEWLINE);
 	vty_out(vty, " gamma %d%s", bts->gamma * 2, VTY_NEWLINE);
-	if (bts->dl_tbf_idle_msec)
-		vty_out(vty, " dl-tbf-idle-time %d%s", bts->dl_tbf_idle_msec,
-			VTY_NEWLINE);
 	if (!bts->dl_tbf_preemptive_retransmission)
 		vty_out(vty, " no dl-tbf-preemptive-retransmission%s", VTY_NEWLINE);
 	if (strcmp(bts->pcu_sock_path, PCU_SOCK_DEFAULT))
@@ -850,27 +847,31 @@ DEFUN(show_bts_stats,
 }
 
 #define IDLE_TIME_STR "keep an idle DL TBF alive for the time given\n"
-DEFUN(cfg_pcu_dl_tbf_idle_time,
+DEFUN_DEPRECATED(cfg_pcu_dl_tbf_idle_time,
       cfg_pcu_dl_tbf_idle_time_cmd,
       "dl-tbf-idle-time <1-5000>",
       IDLE_TIME_STR "idle time in msec")
 {
+	vty_out(vty, "%% 'dl-tbf-idle-time' is now deprecated: use 'timer X2031 <val>' instead%s", VTY_NEWLINE);
+
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	bts->dl_tbf_idle_msec = atoi(argv[0]);
-
+	if (osmo_tdef_set(bts->T_defs_pcu, -2031, atoi(argv[0]), OSMO_TDEF_MS) < 0)
+		return CMD_WARNING;
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_dl_tbf_idle_time,
+DEFUN_DEPRECATED(cfg_pcu_no_dl_tbf_idle_time,
       cfg_pcu_no_dl_tbf_idle_time_cmd,
       "no dl-tbf-idle-time",
       NO_STR IDLE_TIME_STR)
 {
+	vty_out(vty, "%% 'no dl-tbf-idle-time' is now deprecated: use 'timer X2031 0' instead%s", VTY_NEWLINE);
+
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	bts->dl_tbf_idle_msec = 0;
-
+	if (osmo_tdef_set(bts->T_defs_pcu, -2031, 0, OSMO_TDEF_MS) < 0)
+		return CMD_WARNING;
 	return CMD_SUCCESS;
 }
 

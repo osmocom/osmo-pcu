@@ -1235,11 +1235,13 @@ int gprs_rlcmac_dl_tbf::frames_since_last_drain(unsigned fn) const
 bool gprs_rlcmac_dl_tbf::keep_open(unsigned fn) const
 {
 	int keep_time_frames;
+	unsigned long dl_tbf_idle_msec;
 
-	if (bts_data()->dl_tbf_idle_msec == 0)
+	dl_tbf_idle_msec = osmo_tdef_get(bts_data()->T_defs_pcu, -2031, OSMO_TDEF_MS, -1);
+	if (dl_tbf_idle_msec == 0)
 		return false;
 
-	keep_time_frames = msecs_to_frames(bts_data()->dl_tbf_idle_msec);
+	keep_time_frames = msecs_to_frames(dl_tbf_idle_msec);
 	return frames_since_last_drain(fn) <= keep_time_frames;
 }
 

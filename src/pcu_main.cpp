@@ -252,7 +252,6 @@ int main(int argc, char *argv[])
 	bts->ws_pdch = 0;
 
 	bts->llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
-	bts->dl_tbf_idle_msec = 2000;
 	bts->llc_idle_ack_csec = 10;
 
 	/*
