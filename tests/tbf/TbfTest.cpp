@@ -155,6 +155,7 @@ static void setup_bts(BTS *the_bts, uint8_t ts_no, uint8_t cs = 1)
 	bts->alloc_algorithm = alloc_algorithm_a;
 	bts->initial_cs_dl = cs;
 	bts->initial_cs_ul = cs;
+	osmo_tdef_set(bts->T_defs_pcu, -2030, 0, OSMO_TDEF_S);
 	trx = &bts->trx[0];
 
 	trx->pdch[ts_no].enable();
@@ -501,7 +502,8 @@ static void test_tbf_dl_llc_loss()
 
 	bts = the_bts.bts_data();
 	setup_bts(&the_bts, ts_no);
-	bts->ms_idle_sec = 10; /* keep the MS object */
+	/* keep the MS object 10 seconds */
+	OSMO_ASSERT(osmo_tdef_set(bts->T_defs_pcu, -2030, 10, OSMO_TDEF_S) == 0);
 
 	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001, 2234, 2234, 2234, 1, 1, false, 0, 0, 0);
 

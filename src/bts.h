@@ -140,7 +140,6 @@ struct gprs_rlcmac_bts {
 	/* 0 to support resegmentation in DL, 1 for no reseg */
 	uint8_t dl_arq_type;
 
-	uint32_t ms_idle_sec;
 	uint8_t cs_adj_enabled;
 	uint8_t cs_adj_upper_limit;
 	uint8_t cs_adj_lower_limit;

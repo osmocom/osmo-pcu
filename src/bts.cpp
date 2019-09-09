@@ -83,6 +83,7 @@ static struct osmo_tdef T_defs_pcu[] = {
 	{ .T=-2000, .default_val=2,   .unit=OSMO_TDEF_MS, .desc="Tbf reject for PRR timer (ms)",            .val=0 },
 	{ .T=-2001, .default_val=2,   .unit=OSMO_TDEF_S,  .desc="PACCH assignment timer (s)",               .val=0 },
 	{ .T=-2002, .default_val=200, .unit=OSMO_TDEF_MS, .desc="Waiting after IMM.ASS confirm timer (ms)", .val=0 },
+	{ .T=-2030, .default_val=60,  .unit=OSMO_TDEF_S,  .desc="Time to keep an idle MS object alive (s)", .val=0 }, /* slightly above T3314 (default 44s, 24.008, 11.2.2) */
 	{ .T=0, .default_val=0, .unit=OSMO_TDEF_S, .desc=NULL, .val=0 } /* empty item at the end */
 };
 
@@ -867,7 +868,7 @@ GprsMs *BTS::ms_alloc(uint8_t ms_class, uint8_t egprs_ms_class)
 	GprsMs *ms;
 	ms = ms_store().create_ms();
 
-	ms->set_timeout(m_bts.ms_idle_sec);
+	ms->set_timeout(osmo_tdef_get(m_bts.T_defs_pcu, -2030, OSMO_TDEF_S, -1));
 	ms->set_ms_class(ms_class);
 	ms->set_egprs_ms_class(egprs_ms_class);
 

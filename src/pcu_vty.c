@@ -901,27 +901,31 @@ DEFUN(cfg_pcu_no_dl_tbf_preemptive_retransmission,
 }
 
 #define MS_IDLE_TIME_STR "keep an idle MS object alive for the time given\n"
-DEFUN(cfg_pcu_ms_idle_time,
+DEFUN_DEPRECATED(cfg_pcu_ms_idle_time,
       cfg_pcu_ms_idle_time_cmd,
       "ms-idle-time <1-7200>",
       MS_IDLE_TIME_STR "idle time in sec")
 {
+	vty_out(vty, "%% 'ms-idle-time' is now deprecated: use 'timer X2030 <val>' instead%s", VTY_NEWLINE);
+
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	bts->ms_idle_sec = atoi(argv[0]);
-
+	if (osmo_tdef_set(bts->T_defs_pcu, -2030, atoi(argv[0]), OSMO_TDEF_S) < 0)
+		return CMD_WARNING;
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_ms_idle_time,
+DEFUN_DEPRECATED(cfg_pcu_no_ms_idle_time,
       cfg_pcu_no_ms_idle_time_cmd,
       "no ms-idle-time",
       NO_STR MS_IDLE_TIME_STR)
 {
+	vty_out(vty, "%% 'no ms-idle-time' is now deprecated: use 'timer X2030 0' instead%s", VTY_NEWLINE);
+
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	bts->ms_idle_sec = 0;
-
+	if (osmo_tdef_set(bts->T_defs_pcu, -2030, 0, OSMO_TDEF_S) < 0)
+		return CMD_WARNING;
 	return CMD_SUCCESS;
 }
 
