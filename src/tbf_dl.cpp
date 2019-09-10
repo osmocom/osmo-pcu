@@ -359,6 +359,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 	int data_len2, force_data_len = -1;
 	GprsCodingScheme force_cs;
 
+	/* search for a nacked or resend marked bsn */
 	bsn = m_window.resend_needed();
 
 	if (previous_bsn >= 0) {
@@ -369,6 +370,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 	}
 
 	if (bsn >= 0) {
+		/* resend an unacked bsn or resend bsn. */
 		if (previous_bsn == bsn)
 			return -1;
 
@@ -397,9 +399,11 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			if (m_rlc.block(bsn)->cs_init == MCS8)
 				m_rlc.block(bsn)->cs_current_trans =
 					MCS8;
-		} else
+		} else {
+			/* gprs */
 			m_rlc.block(bsn)->cs_current_trans =
 					m_rlc.block(bsn)->cs_last;
+		}
 
 		data_len2 = m_rlc.block(bsn)->len;
 		if (force_data_len > 0 && force_data_len != data_len2)
@@ -409,6 +413,9 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		m_window.m_v_b.mark_unacked(bsn);
 		bts->rlc_resent();
 	} else if (state_is(GPRS_RLCMAC_FINISHED)) {
+		/* If the TBF is in finished, we already sent all packages at least once.
+		 * If any packages could have been sent (because of unacked) it should have
+		 * been catched up by the upper if(bsn >= 0) */
 		LOGPTBFDL(this, LOGL_DEBUG,
 			  "Restarting at BSN %d, because all blocks have been transmitted.\n",
 			  m_window.v_a());
@@ -416,6 +423,8 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		if (restart_bsn_cycle())
 			return take_next_bsn(fn, previous_bsn, may_combine);
 	} else if (dl_window_stalled()) {
+		/* There are no more packages to send, but the window is stalled.
+		 * Restart the bsn_cycle to resend all unacked messages */
 		LOGPTBFDL(this, LOGL_NOTICE,
 			  "Restarting at BSN %d, because the window is stalled.\n",
 			  m_window.v_a());
@@ -423,8 +432,8 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		if (restart_bsn_cycle())
 			return take_next_bsn(fn, previous_bsn, may_combine);
 	} else if (have_data()) {
+		/* The window has space left, generate new bsn */
 		GprsCodingScheme new_cs;
-		/* New blocks may be send */
 		new_cs = force_cs ? force_cs : current_cs();
 		LOGPTBFDL(this, LOGL_DEBUG,
 			  "Sending new block at BSN %d, CS=%s\n",
@@ -432,6 +441,8 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 
 		bsn = create_new_bsn(fn, new_cs);
 	} else if (bts->bts_data()->dl_tbf_preemptive_retransmission && !m_window.window_empty()) {
+		/* The window contains unacked packages, but not acked.
+		 * Mark unacked bsns as RESEND */
 		LOGPTBFDL(this, LOGL_DEBUG,
 			  "Restarting at BSN %d, because all blocks have been transmitted (FLOW).\n",
 			  m_window.v_a());
