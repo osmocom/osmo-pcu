@@ -47,14 +47,14 @@ void test_enc_zero_len() {
 	fprintf(stderr, "\n");
 }
 
-void test_enc() {
-	struct gsm_pcu_if_app_info_req req = {0, 15, {0xff, 0x00, 0xff}};
+void test_enc(const struct gsm_pcu_if_app_info_req *req)
+{
 	const char *exp = "03 fc 03 fc 00 00 00 00 00 00 00 00 00 00 00 00 "; /* shifted by two bits to the right */
 	struct msgb *msg;
 	char *msg_dump;
 
 	fprintf(stderr, "--- %s ---\n",  __func__);
-	msg = gprs_rlcmac_app_info_msg(&req);
+	msg = gprs_rlcmac_app_info_msg(req);
 	msg_dump = msgb_hexdump_c(tall_pcu_ctx, msg);
 
 	fprintf(stderr, "exp: %s\n", exp);
@@ -100,13 +100,13 @@ void prepare_bts_with_two_dl_tbf_subscr()
 	fprintf(stderr, "\n");
 }
 
-void test_sched_app_info_ok()
+void test_sched_app_info_ok(const struct gsm_pcu_if_app_info_req *req)
 {
 	struct gsm_pcu_if pcu_prim = {PCU_IF_MSG_APP_INFO_REQ, };
 	struct msgb *msg;
 
 	fprintf(stderr, "--- %s ---\n",  __func__);
-	pcu_prim.u.app_info_req = {0, 15, {0xff, 0x00, 0xff}};
+	pcu_prim.u.app_info_req = *req;
 	pcu_rx(PCU_IF_MSG_APP_INFO_REQ, &pcu_prim);
 
 	msg = sched_app_info(tbf1);
@@ -120,13 +120,13 @@ void test_sched_app_info_ok()
 	fprintf(stderr, "\n");
 }
 
-void test_sched_app_info_missing_app_info_in_bts()
+void test_sched_app_info_missing_app_info_in_bts(const struct gsm_pcu_if_app_info_req *req)
 {
 	struct gprs_rlcmac_bts *bts_data = BTS::main_bts()->bts_data();
 	struct gsm_pcu_if pcu_prim = {PCU_IF_MSG_APP_INFO_REQ, };
 
 	fprintf(stderr, "--- %s ---\n",  __func__);
-	pcu_prim.u.app_info_req = {0, 15, {0xff, 0x00, 0xff}};
+	pcu_prim.u.app_info_req = *req;
 	pcu_rx(PCU_IF_MSG_APP_INFO_REQ, &pcu_prim);
 
 	msgb_free(bts_data->app_info);
@@ -137,12 +137,12 @@ void test_sched_app_info_missing_app_info_in_bts()
 	fprintf(stderr, "\n");
 }
 
-void test_pcu_rx_overwrite_app_info()
+void test_pcu_rx_overwrite_app_info(const struct gsm_pcu_if_app_info_req *req)
 {
 	struct gsm_pcu_if pcu_prim = {PCU_IF_MSG_APP_INFO_REQ, };
 
 	fprintf(stderr, "--- %s ---\n",  __func__);
-	pcu_prim.u.app_info_req = {0, 15, {0xff, 0x00, 0xff}};
+	pcu_prim.u.app_info_req = *req;
 	pcu_rx(PCU_IF_MSG_APP_INFO_REQ, &pcu_prim);
 	pcu_rx(PCU_IF_MSG_APP_INFO_REQ, &pcu_prim);
 	fprintf(stderr, "\n");
@@ -162,6 +162,10 @@ void cleanup()
 
 int main(int argc, char *argv[])
 {
+	struct gsm_pcu_if_app_info_req req = {0, 15, {0}};
+	const uint8_t req_data[] = {0xff, 0x00, 0xff};
+	memcpy(req.data, req_data, 3);
+
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "AppInfoTest");
 	osmo_init_logging2(tall_pcu_ctx, &gprs_log_info);
 	log_set_use_color(osmo_stderr_target, 0);
@@ -169,13 +173,13 @@ int main(int argc, char *argv[])
 	log_parse_category_mask(osmo_stderr_target, "DL1IF,1:DRLCMAC,3:DRLCMACSCHED,1");
 
 	test_enc_zero_len();
-	test_enc();
+	test_enc(&req);
 	test_pcu_rx_no_subscr_with_active_tbf();
 
 	prepare_bts_with_two_dl_tbf_subscr();
-	test_sched_app_info_ok();
-	test_sched_app_info_missing_app_info_in_bts();
-	test_pcu_rx_overwrite_app_info();
+	test_sched_app_info_ok(&req);
+	test_sched_app_info_missing_app_info_in_bts(&req);
+	test_pcu_rx_overwrite_app_info(&req);
 
 	cleanup();
 }
