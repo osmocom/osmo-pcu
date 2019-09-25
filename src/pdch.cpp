@@ -373,12 +373,11 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		"at no request\n");
 }
 
-void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_nack, uint32_t fn)
+void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_nack, uint32_t fn, struct pcu_l1_meas *meas)
 {
 	int8_t tfi = 0; /* must be signed */
 	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;
-	struct pcu_l1_meas meas;
 	int num_blocks;
 	uint8_t bits_data[RLC_GPRS_WS/8];
 	bitvec bits;
@@ -435,16 +434,15 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 
 	/* get measurements */
 	if (tbf->ms()) {
-		get_meas(&meas, &ack_nack->Channel_Quality_Report);
-		tbf->ms()->update_l1_meas(&meas);
+		get_meas(meas, &ack_nack->Channel_Quality_Report);
+		tbf->ms()->update_l1_meas(meas);
 	}
 }
 
-void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nack, uint32_t fn)
+void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nack, uint32_t fn, struct pcu_l1_meas *meas)
 {
 	int8_t tfi = 0; /* must be signed */
 	struct gprs_rlcmac_dl_tbf *tbf;
-	struct pcu_l1_meas meas;
 	int rc;
 	int num_blocks;
 	uint8_t bits_data[RLC_EGPRS_MAX_WS/8];
@@ -526,13 +524,13 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 	if (tbf->ms()) {
 		/* TODO: Implement Measurements parsing for EGPRS */
 		/*
-		get_meas(&meas, &ack_nack->Channel_Quality_Report);
-		tbf->ms()->update_l1_meas(&meas);
+		get_meas(meas, &ack_nack->Channel_Quality_Report);
+		tbf->ms()->update_l1_meas(meas);
 		*/
 	}
 }
 
-void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, uint32_t fn)
+void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, uint32_t fn, struct pcu_l1_meas *meas)
 {
 	struct gprs_rlcmac_sba *sba;
 
@@ -543,7 +541,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		uint8_t ms_class = 0;
 		uint8_t egprs_ms_class = 0;
 		uint8_t ta = GSM48_TA_INVALID;
-		struct pcu_l1_meas meas;
 
 		GprsMs *ms = bts()->ms_by_tlli(tlli);
 		/* Keep the ms, even if it gets idle temporarily */
@@ -621,8 +618,8 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 
 		/* get measurements */
 		if (ul_tbf->ms()) {
-			get_meas(&meas, request);
-			ul_tbf->ms()->update_l1_meas(&meas);
+			get_meas(meas, request);
+			ul_tbf->ms()->update_l1_meas(meas);
 		}
 		return;
 	}
@@ -681,7 +678,7 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 
 /* Received Uplink RLC control block. */
 int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
-					uint32_t fn, GprsCodingScheme cs)
+					uint32_t fn, struct pcu_l1_meas *meas, GprsCodingScheme cs)
 {
 	bitvec *rlc_block;
 	RlcMacUplink_t *ul_control_block;
@@ -708,13 +705,13 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 		rcv_control_ack(&ul_control_block->u.Packet_Control_Acknowledgement, fn);
 		break;
 	case MT_PACKET_DOWNLINK_ACK_NACK:
-		rcv_control_dl_ack_nack(&ul_control_block->u.Packet_Downlink_Ack_Nack, fn);
+		rcv_control_dl_ack_nack(&ul_control_block->u.Packet_Downlink_Ack_Nack, fn, meas);
 		break;
 	case MT_EGPRS_PACKET_DOWNLINK_ACK_NACK:
-		rcv_control_egprs_dl_ack_nack(&ul_control_block->u.Egprs_Packet_Downlink_Ack_Nack, fn);
+		rcv_control_egprs_dl_ack_nack(&ul_control_block->u.Egprs_Packet_Downlink_Ack_Nack, fn, meas);
 		break;
 	case MT_PACKET_RESOURCE_REQUEST:
-		rcv_resource_request(&ul_control_block->u.Packet_Resource_Request, fn);
+		rcv_resource_request(&ul_control_block->u.Packet_Resource_Request, fn, meas);
 		break;
 	case MT_PACKET_MEASUREMENT_REPORT:
 		rcv_measurement_report(&ul_control_block->u.Packet_Measurement_Report, fn);
@@ -832,7 +829,7 @@ int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint8_t data_len, uint32_t f
 		rc = rcv_data_block(data, data_len, fn, meas, cs);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK:
-		rc = rcv_control_block(data, data_len, fn, cs);
+		rc = rcv_control_block(data, data_len, fn, meas, cs);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK_OPT:
 		LOGP(DRLCMAC, LOGL_NOTICE, "GPRS_RLCMAC_CONTROL_BLOCK_OPT block payload is not supported.\n");
