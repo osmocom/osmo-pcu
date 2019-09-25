@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
- 
+
 #include <osmocom/core/timer_compat.h>
 
 #include <gprs_rlcmac.h>
@@ -189,4 +189,3 @@ int gprs_rlcmac_dl_bw(struct gprs_rlcmac_dl_tbf *tbf, uint16_t octets)
 
 	return 0;
 }
-

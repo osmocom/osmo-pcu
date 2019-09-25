@@ -88,7 +88,7 @@ static void test_llc(void)
 		llc.append_frame(data, llc.remaining_space() - 1);
 		OSMO_ASSERT(llc.fits_in_current_frame(1));
 		OSMO_ASSERT(!llc.fits_in_current_frame(2));
-	}	
+	}
 }
 
 static void test_rlc()

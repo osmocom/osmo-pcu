@@ -395,7 +395,7 @@ int gprs_rlcmac_ul_tbf::snd_ul_ud()
 		m_llc.reset_frame_space();
 		return -EIO;
 	}
-	
+
 	llc_pdu = msgb_alloc_headroom(msg_len, msg_len,"llc_pdu");
 	uint8_t *buf = msgb_push(llc_pdu, TL16V_GROSS_LEN(sizeof(uint8_t)*m_llc.frame_length()));
 	tl16v_put(buf, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*m_llc.frame_length(), m_llc.frame);
