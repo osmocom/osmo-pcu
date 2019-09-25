@@ -680,10 +680,18 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 }
 
 /* Received Uplink RLC control block. */
-int gprs_rlcmac_pdch::rcv_control_block(
-	const uint8_t *data, uint8_t data_len, bitvec *rlc_block, uint32_t fn)
+int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
+					uint32_t fn, GprsCodingScheme cs)
 {
-	RlcMacUplink_t * ul_control_block = (RlcMacUplink_t *)talloc_zero(tall_pcu_ctx, RlcMacUplink_t);
+	bitvec *rlc_block;
+	RlcMacUplink_t *ul_control_block;
+	unsigned len = cs.maxBytesUL();
+
+	if (!(rlc_block = bitvec_alloc(len, tall_pcu_ctx)))
+		return -ENOMEM;
+	bitvec_unpack(rlc_block, data);
+	ul_control_block = (RlcMacUplink_t *)talloc_zero(tall_pcu_ctx, RlcMacUplink_t);
+
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
 	decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
 	LOGPC(DCSN1, LOGL_NOTICE, "\n");
@@ -721,6 +729,7 @@ int gprs_rlcmac_pdch::rcv_control_block(
 			ul_control_block->u.MESSAGE_TYPE);
 	}
 	talloc_free(ul_control_block);
+	bitvec_free(rlc_block);
 	return 1;
 }
 
@@ -816,21 +825,14 @@ int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint8_t data_len, uint32_t f
 	struct pcu_l1_meas *meas, GprsCodingScheme cs)
 {
 	unsigned payload = data[0] >> 6;
-	bitvec *block;
 	int rc = 0;
-	unsigned len = cs.maxBytesUL();
 
 	switch (payload) {
 	case GPRS_RLCMAC_DATA_BLOCK:
 		rc = rcv_data_block(data, data_len, fn, meas, cs);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK:
-		block = bitvec_alloc(len, tall_pcu_ctx);
-		if (!block)
-			return -ENOMEM;
-		bitvec_unpack(block, data);
-		rc = rcv_control_block(data, data_len, block, fn);
-		bitvec_free(block);
+		rc = rcv_control_block(data, data_len, fn, cs);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK_OPT:
 		LOGP(DRLCMAC, LOGL_NOTICE, "GPRS_RLCMAC_CONTROL_BLOCK_OPT block payload is not supported.\n");
@@ -961,4 +963,3 @@ inline gprs_rlcmac_bts *gprs_rlcmac_pdch::bts_data() const
 {
 	return trx->bts->bts_data();
 }
-
