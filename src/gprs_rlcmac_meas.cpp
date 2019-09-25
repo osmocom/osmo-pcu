@@ -23,6 +23,7 @@
 #include <gprs_debug.h>
 #include <pcu_l1_if.h>
 #include <tbf.h>
+#include <tbf_dl.h>
 
 #include <string.h>
 #include <errno.h>

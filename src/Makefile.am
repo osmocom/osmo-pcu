@@ -91,6 +91,8 @@ noinst_HEADERS = \
 	pcu_vty_functions.h \
 	mslot_class.h \
 	tbf.h \
+	tbf_ul.h \
+	tbf_dl.h \
 	bts.h \
 	pdch.h \
 	poll_controller.h \

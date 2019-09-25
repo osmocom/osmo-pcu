@@ -21,6 +21,7 @@
  */
 
 #include "tbf.h"
+#include "tbf_ul.h"
 #include "gprs_debug.h"
 #include "gprs_ms.h"
 #include "gprs_ms_storage.h"

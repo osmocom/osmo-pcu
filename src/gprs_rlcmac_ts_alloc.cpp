@@ -23,6 +23,7 @@
 #include <gprs_debug.h>
 #include <bts.h>
 #include <tbf.h>
+#include <tbf_ul.h>
 #include <pdch.h>
 #include <gprs_ms.h>
 #include <pcu_utils.h>

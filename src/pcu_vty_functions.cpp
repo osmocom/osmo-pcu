@@ -32,6 +32,7 @@
 #include <pcu_l1_if.h>
 #include <rlc.h>
 #include <tbf.h>
+#include <tbf_ul.h>
 #include <pdch.h>
 
 extern "C" {

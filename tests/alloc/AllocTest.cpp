@@ -20,6 +20,7 @@
 #include "gprs_rlcmac.h"
 #include "gprs_debug.h"
 #include "tbf.h"
+#include "tbf_ul.h"
 #include "bts.h"
 
 #include <string.h>

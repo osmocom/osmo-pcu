@@ -23,6 +23,7 @@
 #include <gprs_coding_scheme.h>
 #include "bts.h"
 #include "tbf.h"
+#include "tbf_ul.h"
 #include "gprs_debug.h"
 #include "gprs_codel.h"
 #include "pcu_utils.h"

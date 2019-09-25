@@ -22,6 +22,7 @@
 #include <pcu_l1_if.h>
 #include <bts.h>
 #include <tbf.h>
+#include <tbf_ul.h>
 #include <gprs_debug.h>
 #include <gprs_ms.h>
 #include <rlc.h>

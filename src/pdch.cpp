@@ -32,6 +32,7 @@
 #include <rlc.h>
 #include <sba.h>
 #include <tbf.h>
+#include <tbf_ul.h>
 #include <cxx_linuxlist.h>
 #include <gsm_rlcmac.h>
 

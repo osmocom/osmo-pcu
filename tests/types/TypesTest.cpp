@@ -22,6 +22,7 @@
  */
 #include "bts.h"
 #include "tbf.h"
+#include "tbf_ul.h"
 #include "pcu_utils.h"
 #include "gprs_debug.h"
 #include "encoding.h"

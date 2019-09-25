@@ -23,6 +23,7 @@
 #include <gprs_rlcmac.h>
 #include <bts.h>
 #include <tbf.h>
+#include <tbf_ul.h>
 #include <gprs_debug.h>
 #include <egprs_rlc_compression.h>
 

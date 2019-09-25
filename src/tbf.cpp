@@ -21,6 +21,8 @@
 
 #include <bts.h>
 #include <tbf.h>
+#include <tbf_dl.h>
+#include <tbf_ul.h>
 #include <rlc.h>
 #include <encoding.h>
 #include <gprs_rlcmac.h>

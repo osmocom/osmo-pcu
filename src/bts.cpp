@@ -21,6 +21,7 @@
 #include <bts.h>
 #include <poll_controller.h>
 #include <tbf.h>
+#include <tbf_ul.h>
 #include <encoding.h>
 #include <decoding.h>
 #include <rlc.h>
