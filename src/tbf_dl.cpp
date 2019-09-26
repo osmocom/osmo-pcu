@@ -87,6 +87,7 @@ gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(BTS *bts_) :
 	m_dl_egprs_ctrs(NULL)
 {
 	memset(&m_llc_timer, 0, sizeof(m_llc_timer));
+	osmo_timer_setup(&m_llc_timer, llc_timer_cb, this);
 }
 
 void gprs_rlcmac_dl_tbf::cleanup()
@@ -98,11 +99,6 @@ void gprs_rlcmac_dl_tbf::start_llc_timer()
 {
 	if (bts_data()->llc_idle_ack_csec > 0) {
 		struct timeval tv;
-
-		/* TODO: this ought to be within a constructor */
-		m_llc_timer.data = this;
-		m_llc_timer.cb = &llc_timer_cb;
-
 		csecs_to_timeval(bts_data()->llc_idle_ack_csec, &tv);
 		osmo_timer_schedule(&m_llc_timer, tv.tv_sec, tv.tv_usec);
 	}
