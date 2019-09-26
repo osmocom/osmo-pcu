@@ -123,7 +123,6 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 
 	if (state_is(GPRS_RLCMAC_WAIT_RELEASE)) {
 		LOGPTBFDL(this, LOGL_DEBUG, "in WAIT RELEASE state (T3193), so reuse TBF\n");
-		tbf_update_ms_class(this, ms_class);
 		establish_dl_tbf_on_pacch();
 	}
 
