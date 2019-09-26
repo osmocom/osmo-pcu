@@ -76,6 +76,19 @@ static void llc_timer_cb(void *_tbf)
 	tbf->request_dl_ack();
 }
 
+gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(BTS *bts_) :
+	gprs_rlcmac_tbf(bts_, GPRS_RLCMAC_DL_TBF),
+	m_tx_counter(0),
+	m_wait_confirm(0),
+	m_dl_ack_requested(false),
+	m_last_dl_poll_fn(0),
+	m_last_dl_drained_fn(0),
+	m_dl_gprs_ctrs(NULL),
+	m_dl_egprs_ctrs(NULL)
+{
+	memset(&m_llc_timer, 0, sizeof(m_llc_timer));
+}
+
 void gprs_rlcmac_dl_tbf::cleanup()
 {
 	osmo_timer_del(&m_llc_timer);

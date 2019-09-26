@@ -955,17 +955,6 @@ static int setup_tbf(struct gprs_rlcmac_tbf *tbf, GprsMs *ms, int8_t use_trx, ui
 	return 0;
 }
 
-gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(BTS *bts_) :
-	gprs_rlcmac_tbf(bts_, GPRS_RLCMAC_UL_TBF),
-	m_rx_counter(0),
-	m_contention_resolution_done(0),
-	m_final_ack_sent(0),
-	m_ul_gprs_ctrs(NULL),
-	m_ul_egprs_ctrs(NULL)
-{
-	memset(&m_usf, 0, sizeof(m_usf));
-}
-
 static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
 {
 	tbf->~gprs_rlcmac_ul_tbf();
@@ -1052,19 +1041,6 @@ gprs_rlcmac_dl_tbf::BandWidth::BandWidth() :
 {
 	timespecclear(&dl_bw_tv);
 	timespecclear(&dl_loss_tv);
-}
-
-gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(BTS *bts_) :
-	gprs_rlcmac_tbf(bts_, GPRS_RLCMAC_DL_TBF),
-	m_tx_counter(0),
-	m_wait_confirm(0),
-	m_dl_ack_requested(false),
-	m_last_dl_poll_fn(0),
-	m_last_dl_drained_fn(0),
-	m_dl_gprs_ctrs(NULL),
-	m_dl_egprs_ctrs(NULL)
-{
-	memset(&m_llc_timer, 0, sizeof(m_llc_timer));
 }
 
 static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
