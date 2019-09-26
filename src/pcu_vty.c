@@ -271,6 +271,8 @@ static int config_write_pcu(struct vty *vty)
 	else
 		vty_out(vty, " gb-dialect classic%s", VTY_NEWLINE);
 
+	osmo_tdef_vty_write(vty, bts->T_defs_pcu, " timer ");
+
 	return CMD_SUCCESS;
 }
 
