@@ -207,16 +207,22 @@ void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 
 void pcu_l1if_tx_agch(bitvec * block, int plen)
 {
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t data[23]; /* prefix PLEN */
 	
 	/* FIXME: why does OpenBTS has no PLEN and no fill in message? */
 	bitvec_pack(block, data + 1);
 	data[0] = (plen << 2) | 0x01;
+
+	if (bts->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_AGCH))
+		gsmtap_send(bts->gsmtap, 0, 0, GSMTAP_CHANNEL_AGCH, 0, 0, 0, 0, data, 23);
+
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, 23);
 }
 
 void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi)
 {
+	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t data[3+1+23]; /* prefix PLEN */
 
 	/* paging group */
@@ -230,6 +236,10 @@ void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi)
 	OSMO_ASSERT(block->data_len <= sizeof(data) - (3+1));
 	bitvec_pack(block, data + 3+1);
 	data[3] = (plen << 2) | 0x01;
+
+	if (bts->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PCH))
+		gsmtap_send(bts->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0, data + 4, 23);
+
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, 23+3);
 }
 

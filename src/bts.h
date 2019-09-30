@@ -58,6 +58,8 @@ enum pcu_gsmtap_category {
 	PCU_GSMTAP_C_DL_DATA_GPRS	= 3,	/* downlink GPRS data blocks */
 	PCU_GSMTAP_C_DL_DATA_EGPRS	= 4,	/* downlink EGPRS data blocks */
 	PCU_GSMTAP_C_DL_PTCCH		= 5,	/* downlink PTCCH blocks */
+	PCU_GSMTAP_C_DL_AGCH		= 6,	/* downlink AGCH blocks */
+	PCU_GSMTAP_C_DL_PCH		= 7,	/* downlink PCH blocks */
 
 	PCU_GSMTAP_C_UL_UNKNOWN		= 15,	/* unknown or undecodable uplink blocks */
 	PCU_GSMTAP_C_UL_DUMMY		= 16,	/* uplink dummy blocks */
