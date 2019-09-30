@@ -64,6 +64,7 @@ enum pcu_gsmtap_category {
 	PCU_GSMTAP_C_UL_CTRL		= 17,	/* uplink control blocks */
 	PCU_GSMTAP_C_UL_DATA_GPRS	= 18,	/* uplink GPRS data blocks */
 	PCU_GSMTAP_C_UL_DATA_EGPRS	= 19,	/* uplink EGPRS data blocks */
+	PCU_GSMTAP_C_UL_RACH		= 20,	/* uplink RACH bursts */
 };
 
 struct BTS;

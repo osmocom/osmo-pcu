@@ -750,6 +750,9 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 	/* Determine full frame number */
 	Fn = rfn_to_fn(Fn);
 
+	send_gsmtap(PCU_GSMTAP_C_UL_RACH, true, 0, ts_no, GSMTAP_CHANNEL_RACH,
+		    Fn, (uint8_t*)&ra, is_11bit ? 2 : 1);
+
 	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, "
 		"so we provide one: ra=0x%02x Fn=%u qta=%d is_11bit=%d:\n",
 		ra, Fn, qta, is_11bit);
