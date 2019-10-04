@@ -96,21 +96,21 @@ static int write_tbf_start_time(bitvec *dest, uint32_t fn)
 */
 static int write_tfi_usf(bitvec *dest, const gprs_rlcmac_ul_tbf *tbf, uint8_t usf)
 {
-       int rc = bitvec_set_u64(dest, tbf->tfi(), 5, false); /* TFI_ASSIGNMENT */
-       CHECK(rc);
+	int rc = bitvec_set_u64(dest, tbf->tfi(), 5, false); /* TFI_ASSIGNMENT */
+	CHECK(rc);
 
-       SET_0(dest); /* POLLING -- no action is required from MS */
+	SET_0(dest); /* POLLING -- no action is required from MS */
 
-       SET_0(dest);
+	SET_0(dest);
 
-       rc = bitvec_set_u64(dest, usf, 3, false); /* USF */
-       CHECK(rc);
+	rc = bitvec_set_u64(dest, usf, 3, false); /* USF */
+	CHECK(rc);
 
-       SET_0(dest); /* USF_GRANULARITY -- the mobile station shall transmit one RLC/MAC block */
+	SET_0(dest); /* USF_GRANULARITY -- the mobile station shall transmit one RLC/MAC block */
 
-       SET_0(dest); /* No P0 nor PR_MODE */
+	SET_0(dest); /* No P0 nor PR_MODE */
 
-       return 0;
+	return 0;
 }
 
 /* { 0 | 1 < TIMING_ADVANCE_INDEX : bit (4) > } */
@@ -201,11 +201,11 @@ static int write_ia_rest_downlink(const gprs_rlcmac_dl_tbf *tbf, bitvec * dest, 
 	rc = write_alpha_gamma(dest, alpha, gamma);
 	CHECK(rc);
 
-	rc = bitvec_set_bit(dest, (bit_value)polling); /* POLLING */
+	rc = bitvec_set_bit(dest, (bit_value) polling); /* POLLING */
 	CHECK(rc);
 
 	/* N. B: NOT related to TAI! */
-	rc = bitvec_set_bit(dest, (bit_value)ta_valid); /* TA_VALID */
+	rc = bitvec_set_bit(dest, (bit_value) ta_valid); /* TA_VALID */
 	CHECK(rc);
 
 	rc = write_ta_index(dest, ta_idx);
@@ -215,7 +215,7 @@ static int write_ia_rest_downlink(const gprs_rlcmac_dl_tbf *tbf, bitvec * dest, 
 		SET_1(dest);
 		rc = write_tbf_start_time(dest, fn);
 		CHECK(rc);
-       } else
+	} else
 		SET_0(dest);
 
 	SET_0(dest); /* No P0 nor PR_MODE */
@@ -225,7 +225,7 @@ static int write_ia_rest_downlink(const gprs_rlcmac_dl_tbf *tbf, bitvec * dest, 
 		rc = bitvec_set_u64(dest, enc_ws(tbf->window_size()), 5, false); /* EGPRS Window Size */
 		CHECK(rc);
 
-               /* The mobile station shall not report measurements: (see 3GPP TS 44.060 Table 11.2.7.1) */
+		/* The mobile station shall not report measurements: (see 3GPP TS 44.060 Table 11.2.7.1) */
 		SET_0(dest); SET_0(dest); /* LINK_QUALITY_MEASUREMENT_MODE */
 		SET_1(dest);              /* No BEP_PERIOD2 */
 	} else
@@ -867,16 +867,16 @@ static void write_packet_ack_nack_desc_egprs(
 	/* static size of 16 bits
 	 ..1. .... = ACKNACK:  (Union)
 	    0 0000 000 Length
-        Desc
-
-            ...0 .... = FINAL_ACK_INDICATION: False
-
-            .... 1... = BEGINNING_OF_WINDOW: 1
-
-            .... .1.. = END_OF_WINDOW: 1
-
-            .... ..10  0101 0001  1... .... = STARTING_SEQUENCE_NUMBER: 1187
-
+	Desc
+	
+	    ...0 .... = FINAL_ACK_INDICATION: False
+	
+	    .... 1... = BEGINNING_OF_WINDOW: 1
+	
+	    .... .1.. = END_OF_WINDOW: 1
+	
+	    .... ..10  0101 0001  1... .... = STARTING_SEQUENCE_NUMBER: 1187
+	
 	    .0.. .... = CRBB Exist: 0
 	minimal size is 24 rest_bits */
 	rest_bits -= 24;
@@ -1051,15 +1051,15 @@ unsigned Encoding::write_packet_paging_request(bitvec * dest)
 {
 	unsigned wp = 0;
 
-	bitvec_write_field(dest, &wp,0x1,2);  // Payload Type
-	bitvec_write_field(dest, &wp,0x0,3);  // No polling
-	bitvec_write_field(dest, &wp,0x0,3);  // Uplink state flag
-	bitvec_write_field(dest, &wp,0x22,6);  // MESSAGE TYPE
+	bitvec_write_field(dest, &wp, 0x1, 2);  // Payload Type
+	bitvec_write_field(dest, &wp, 0x0, 3);  // No polling
+	bitvec_write_field(dest, &wp, 0x0, 3);  // Uplink state flag
+	bitvec_write_field(dest, &wp, 0x22, 6);  // MESSAGE TYPE
 
-	bitvec_write_field(dest, &wp,0x0,2);  // Page Mode
+	bitvec_write_field(dest, &wp, 0x0, 2);  // Page Mode
 
-	bitvec_write_field(dest, &wp,0x0,1);  // No PERSISTENCE_LEVEL
-	bitvec_write_field(dest, &wp,0x0,1);  // No NLN
+	bitvec_write_field(dest, &wp, 0x0, 1);  // No PERSISTENCE_LEVEL
+	bitvec_write_field(dest, &wp, 0x0, 1);  // No NLN
 
 	return wp;
 }
