@@ -35,6 +35,11 @@ extern "C" {
 
 #include <stdint.h>
 
+/* PTCCH (Packet Timing Advance Control Channel) */
+#define PTCCH_TAI_FREE		0x7f	/*!< Special value for unused TA Indexes */
+#define PTCCH_TAI_NUM		16	/*!< Number of PTCCH/U slots and thus TA Indexes */
+#define PTCCH_PADDING		0x2b	/*!< PTCCH/D messages need to be padded to 23 octets */
+
 /*
  * PDCH instance
  */
@@ -87,6 +92,19 @@ struct gprs_rlcmac_pdch {
 	uint8_t next_ctrl_prio; /* next kind of ctrl message to schedule */
 	struct llist_head paging_list; /* list of paging messages */
 	uint32_t last_rts_fn; /* store last frame number of RTS */
+
+	/* PTCCH (Packet Timing Advance Control Channel) */
+	uint8_t ptcch_msg[GSM_MACBLOCK_LEN]; /* 'ready to use' PTCCH/D message */
+#ifdef __cplusplus
+	/* Initialize the PTCCH/D message */
+	void init_ptcch_msg(void);
+	/* Obtain an unused TA Index for a TBF */
+	uint8_t reserve_tai(uint8_t ta);
+	/* Mark a given TA Index as free, so it can be used again */
+	void release_tai(uint8_t tai);
+	/* Update the actual Timing Advance value for a given TA Index */
+	void update_ta(uint8_t tai, uint8_t ta);
+#endif
 
 	/* back pointers */
 	struct gprs_rlcmac_trx *trx;

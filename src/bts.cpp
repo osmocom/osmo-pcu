@@ -252,6 +252,7 @@ BTS::BTS()
 
 		for (size_t ts_no = 0; ts_no < ARRAY_SIZE(trx->pdch); ++ts_no) {
 			struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
+			pdch->init_ptcch_msg();
 			pdch->ts_no = ts_no;
 			pdch->trx = trx;
 		}

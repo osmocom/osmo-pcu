@@ -48,6 +48,7 @@ extern "C" {
 }
 
 #include <errno.h>
+#include <stdlib.h>
 #include <arpa/inet.h>
 
 extern void *tall_pcu_ctx;
@@ -960,4 +961,38 @@ uint8_t gprs_rlcmac_pdch::trx_no() const
 inline gprs_rlcmac_bts *gprs_rlcmac_pdch::bts_data() const
 {
 	return trx->bts->bts_data();
+}
+
+/* PTCCH (Packet Timing Advance Control Channel) */
+void gprs_rlcmac_pdch::init_ptcch_msg(void)
+{
+	memset(ptcch_msg, PTCCH_TAI_FREE, PTCCH_TAI_NUM);
+	memset(ptcch_msg + PTCCH_TAI_NUM, PTCCH_PADDING, 7);
+}
+
+uint8_t gprs_rlcmac_pdch::reserve_tai(uint8_t ta)
+{
+	uint8_t tai;
+
+	for (tai = 0; tai < PTCCH_TAI_NUM; tai++) {
+		if (ptcch_msg[tai] == PTCCH_TAI_FREE) {
+			ptcch_msg[tai] = ta;
+			return tai;
+		}
+	}
+
+	/* Special case: no free TAI available */
+	return PTCCH_TAI_FREE;
+}
+
+void gprs_rlcmac_pdch::release_tai(uint8_t tai)
+{
+	OSMO_ASSERT(tai < PTCCH_TAI_NUM);
+	ptcch_msg[tai] = PTCCH_TAI_FREE;
+}
+
+void gprs_rlcmac_pdch::update_ta(uint8_t tai, uint8_t ta)
+{
+	OSMO_ASSERT(tai < PTCCH_TAI_NUM);
+	ptcch_msg[tai] = ta;
 }
