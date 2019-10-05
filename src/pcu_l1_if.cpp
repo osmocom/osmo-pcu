@@ -185,24 +185,21 @@ void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	msgb_free(msg);
 }
 
-void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
-	uint32_t fn, uint8_t block_nr)
+void pcu_l1if_tx_ptcch(uint8_t trx, uint8_t ts, uint16_t arfcn,
+		       uint32_t fn, uint8_t block_nr,
+		       uint8_t *data, size_t data_len)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	if (bts->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PTCCH))
-		gsmtap_send(bts->gsmtap, arfcn, ts, GSMTAP_CHANNEL_PTCCH, 0, fn, 0, 0, msg->data, msg->len);
+		gsmtap_send(bts->gsmtap, arfcn, ts, GSMTAP_CHANNEL_PTCCH, 0, fn, 0, 0, data, data_len);
 #ifdef ENABLE_DIRECT_PHY
 	if (bts->trx[trx].fl1h) {
-		l1if_pdch_req(bts->trx[trx].fl1h, ts, 1, fn, arfcn, block_nr,
-			msg->data, msg->len);
-		msgb_free(msg);
+		l1if_pdch_req(bts->trx[trx].fl1h, ts, 1, fn, arfcn, block_nr, data, data_len);
 		return;
 	}
 #endif
-	pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr,
-			msg->data, msg->len);
-	msgb_free(msg);
+	pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr, data, data_len);
 }
 
 void pcu_l1if_tx_agch(bitvec * block, int plen)
@@ -361,6 +358,25 @@ extern "C" int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts,
 	return gprs_rlcmac_rcv_rts_block(bts_main_data(),
 					trx, ts, fn, block_nr);
 }
+extern "C" int pcu_rx_rts_req_ptcch(uint8_t trx, uint8_t ts,
+	uint32_t fn, uint8_t block_nr)
+{
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_rlcmac_pdch *pdch;
+
+	/* Prevent buffer overflow */
+	if (trx >= ARRAY_SIZE(bts->trx) || ts >= 8)
+		return -EINVAL;
+
+	/* Make sure PDCH time-slot is enabled */
+	pdch = &bts->trx[trx].pdch[ts];
+	if (!pdch->m_is_enabled)
+		return -EAGAIN;
+
+	pcu_l1if_tx_ptcch(trx, ts, bts->trx[trx].arfcn, fn, block_nr,
+			  pdch->ptcch_msg, GSM_MACBLOCK_LEN);
+	return 0;
+}
 
 static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 {
@@ -377,13 +393,8 @@ static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 			rts_req->fn, rts_req->block_nr);
 		break;
 	case PCU_IF_SAPI_PTCCH:
-		/* FIXME */
-		{
-			struct msgb *msg = msgb_alloc(GSM_MACBLOCK_LEN, "l1_prim");
-			memset(msgb_put(msg, GSM_MACBLOCK_LEN), 0x2b, GSM_MACBLOCK_LEN);
-			pcu_l1if_tx_ptcch(msg, rts_req->trx_nr, rts_req->ts_nr,
-				rts_req->arfcn, rts_req->fn, rts_req->block_nr);
-		}
+		pcu_rx_rts_req_ptcch(rts_req->trx_nr, rts_req->ts_nr,
+			rts_req->fn, rts_req->block_nr);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU RTS request with "

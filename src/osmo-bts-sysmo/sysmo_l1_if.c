@@ -144,8 +144,11 @@ static int handle_ph_readytosend_ind(struct femtol1_hdl *fl1h,
 	case GsmL1_Sapi_Pacch:
 		rc = pcu_rx_rts_req_pdtch(fl1h->trx_no, rts_ind->u8Tn,
 			rts_ind->u32Fn, rts_ind->u8BlockNbr);
+		break;
 	case GsmL1_Sapi_Ptcch:
-		// FIXME
+		rc = pcu_rx_rts_req_ptcch(fl1h->trx_no, rts_ind->u8Tn,
+			rts_ind->u32Fn, rts_ind->u8BlockNbr);
+		break;
 	default:
 		break;
 	}

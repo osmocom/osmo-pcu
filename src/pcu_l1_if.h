@@ -154,8 +154,9 @@ struct pcu_l1_meas {
 #ifdef __cplusplus
 void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn, 
         uint32_t fn, uint8_t block_nr);
-void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn, 
-        uint32_t fn, uint8_t block_nr);
+void pcu_l1if_tx_ptcch(uint8_t trx, uint8_t ts, uint16_t arfcn,
+		       uint32_t fn, uint8_t block_nr,
+		       uint8_t *data, size_t data_len);
 void pcu_l1if_tx_agch(bitvec * block, int len);
 
 void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi);
@@ -173,6 +174,8 @@ int pcu_sock_send(struct msgb *msg);
 extern "C" {
 #endif
 int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts,
+	uint32_t fn, uint8_t block_nr);
+int pcu_rx_rts_req_ptcch(uint8_t trx, uint8_t ts,
 	uint32_t fn, uint8_t block_nr);
 
 int pcu_rx_data_ind_pdtch(uint8_t trx, uint8_t ts, uint8_t *data,
