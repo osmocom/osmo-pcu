@@ -301,6 +301,7 @@ public:
 	uint32_t rfn_to_fn(int32_t rfn);
 	int rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 		enum ph_burst_type burst_type);
+	int rcv_ptcch_rach(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta);
 
 	void snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, const char *imsi);
 

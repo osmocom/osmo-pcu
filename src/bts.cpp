@@ -842,6 +842,53 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 	return rc;
 }
 
+/* PTCCH/U sub-slot / frame-number mapping (see 3GPP TS 45.002, table 6) */
+static uint32_t ptcch_slot_map[PTCCH_TAI_NUM] = {
+	 12,  38,  64,  90,
+	116, 142, 168, 194,
+	220, 246, 272, 298,
+	324, 350, 376, 402,
+};
+
+int BTS::rcv_ptcch_rach(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta)
+{
+	struct gprs_rlcmac_bts *bts = bts_data();
+	struct gprs_rlcmac_pdch *pdch;
+	uint32_t fn416 = fn % 416;
+	uint8_t ss;
+
+	/* Prevent buffer overflow */
+	if (trx_nr >= ARRAY_SIZE(bts->trx) || ts_nr >= 8) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Malformed RACH.ind message "
+		     "(TRX=%u TS=%u FN=%u)\n", trx_nr, ts_nr, fn);
+		return -EINVAL;
+	}
+
+	/* Make sure PDCH time-slot is enabled */
+	pdch = &bts->trx[trx_nr].pdch[ts_nr];
+	if (!pdch->m_is_enabled) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "Rx PTCCH RACH.ind for inactive PDCH "
+		     "(TRX=%u TS=%u FN=%u)\n", trx_nr, ts_nr, fn);
+		return -EAGAIN;
+	}
+
+	/* Convert TDMA frame-number to PTCCH/U sub-slot number */
+	for (ss = 0; ss < PTCCH_TAI_NUM; ss++)
+		if (ptcch_slot_map[ss] == fn416)
+			break;
+	if (ss == PTCCH_TAI_NUM) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Failed to map PTCCH/U sub-slot for fn=%u\n", fn);
+		return -ENODEV;
+	}
+
+	/* Apply the new Timing Advance value */
+	LOGP(DRLCMAC, LOGL_INFO, "Continuous Timing Advance update "
+	     "for TAI %u, new TA is %u\n", ss, qta2ta(qta));
+	pdch->update_ta(ss, qta2ta(qta));
+
+	return 0;
+}
+
 void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, const char *imsi)
 {
 	int plen;

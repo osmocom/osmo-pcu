@@ -229,9 +229,6 @@ static int handle_ph_data_ind(struct oc2gl1_hdl *fl1h,
 			data_ind->u32Fn,
 			&meas);
 		break;
-	case GsmL1_Sapi_Ptcch:
-		// FIXME
-		break;
 	default:
 		LOGP(DL1IF, LOGL_NOTICE, "Rx PH-DATA.ind for unknown L1 SAPI %s\n",
 			get_value_string(oc2gbts_l1sapi_names, data_ind->sapi));
@@ -250,8 +247,20 @@ static int handle_ph_ra_ind(struct oc2gl1_hdl *fl1h, GsmL1_PhRaInd_t *ra_ind)
 
 	LOGP(DL1IF, LOGL_DEBUG, "PH-RA-IND L1 qta=%d\n", ra_ind->measParam.i16BurstTiming);
 
-	bts_update_tbf_ta("PH-RA", ra_ind->u32Fn, fl1h->trx_no, ra_ind->u8Tn,
-			qta2ta(ra_ind->measParam.i16BurstTiming), true);
+	switch (ra_ind->sapi) {
+	case GsmL1_Sapi_Pdtch:
+		bts_update_tbf_ta("PH-RA", ra_ind->u32Fn, fl1h->trx_no, ra_ind->u8Tn,
+				  qta2ta(ra_ind->measParam.i16BurstTiming), true);
+		break;
+	case GsmL1_Sapi_Ptcch:
+		pcu_rx_rach_ind_pdtch(fl1h->trx_no, ra_ind->u8Tn, ra_ind->u32Fn,
+				      ra_ind->measParam.i16BurstTiming);
+		break;
+	default:
+		LOGP(DL1IF, LOGL_NOTICE, "Rx PH-RA.ind for unknown L1 SAPI %s\n",
+		     get_value_string(oc2gbts_l1sapi_names, ra_ind->sapi));
+		return -ENOTSUP;
+	}
 
 	return 0;
 }

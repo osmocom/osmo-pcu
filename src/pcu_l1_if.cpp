@@ -405,6 +405,12 @@ static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 	return rc;
 }
 
+/* C -> C++ adapter for direct DSP access code (e.g. osmo-bts-sysmo) */
+extern "C" int pcu_rx_rach_ind_pdtch(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta)
+{
+	return BTS::main_bts()->rcv_ptcch_rach(trx_nr, ts_nr, fn, qta);
+}
+
 static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
 {
 	int rc = 0;
@@ -420,6 +426,11 @@ static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
 			rach_ind->ra, rach_ind->fn,
 			rach_ind->qta, rach_ind->is_11bit,
 			(ph_burst_type)rach_ind->burst_type);
+		break;
+	case PCU_IF_SAPI_PTCCH:
+		rc = BTS::main_bts()->rcv_ptcch_rach(
+			rach_ind->trx_nr, rach_ind->ts_nr,
+			rach_ind->fn, rach_ind->qta);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU rach request with "
