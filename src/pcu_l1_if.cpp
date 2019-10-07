@@ -220,27 +220,31 @@ void pcu_l1if_tx_agch(bitvec * block, int plen)
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, 23);
 }
 
+#define PAGING_GROUP_LEN 3
 void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	uint8_t data[3+23]; /* paging group, prefix PLEN */
+	uint8_t data[PAGING_GROUP_LEN + GSM_MACBLOCK_LEN];
 
-	/* paging group */
-	if (!imsi || strlen(imsi) < 3)
+	/* prepend paging group */
+	if (!imsi || strlen(imsi) < PAGING_GROUP_LEN)
 		return;
-	imsi += strlen(imsi) - 3;
+	imsi += strlen(imsi) - PAGING_GROUP_LEN;
 	data[0] = imsi[0];
 	data[1] = imsi[1];
 	data[2] = imsi[2];
 
-	OSMO_ASSERT(block->data_len <= sizeof(data) - (3+1));
-	bitvec_pack(block, data + 3+1);
+	/* block provided by upper layer comes without first byte (plen),
+	 * prepend it manually:
+	 */
+	OSMO_ASSERT(sizeof(data) >= PAGING_GROUP_LEN + 1 + block->data_len);
 	data[3] = (plen << 2) | 0x01;
+	bitvec_pack(block, data + PAGING_GROUP_LEN + 1);
 
 	if (bts->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PCH))
-		gsmtap_send(bts->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0, data + 3, 23);
+		gsmtap_send(bts->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0, data + 3, GSM_MACBLOCK_LEN);
 
-	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, 23+3);
+	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, PAGING_GROUP_LEN + GSM_MACBLOCK_LEN);
 }
 
 extern "C" void pcu_rx_block_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no)
