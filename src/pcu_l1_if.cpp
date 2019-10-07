@@ -208,16 +208,16 @@ void pcu_l1if_tx_ptcch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 void pcu_l1if_tx_agch(bitvec * block, int plen)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	uint8_t data[23]; /* prefix PLEN */
-	
+	uint8_t data[GSM_MACBLOCK_LEN]; /* prefix PLEN */
+
 	/* FIXME: why does OpenBTS has no PLEN and no fill in message? */
 	bitvec_pack(block, data + 1);
 	data[0] = (plen << 2) | 0x01;
 
 	if (bts->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_AGCH))
-		gsmtap_send(bts->gsmtap, 0, 0, GSMTAP_CHANNEL_AGCH, 0, 0, 0, 0, data, 23);
+		gsmtap_send(bts->gsmtap, 0, 0, GSMTAP_CHANNEL_AGCH, 0, 0, 0, 0, data, GSM_MACBLOCK_LEN);
 
-	pcu_tx_data_req(0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, 23);
+	pcu_tx_data_req(0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, GSM_MACBLOCK_LEN);
 }
 
 #define PAGING_GROUP_LEN 3
@@ -379,8 +379,8 @@ static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 	case PCU_IF_SAPI_PTCCH:
 		/* FIXME */
 		{
-			struct msgb *msg = msgb_alloc(23, "l1_prim");
-			memset(msgb_put(msg, 23), 0x2b, 23);
+			struct msgb *msg = msgb_alloc(GSM_MACBLOCK_LEN, "l1_prim");
+			memset(msgb_put(msg, GSM_MACBLOCK_LEN), 0x2b, GSM_MACBLOCK_LEN);
 			pcu_l1if_tx_ptcch(msg, rts_req->trx_nr, rts_req->ts_nr,
 				rts_req->arfcn, rts_req->fn, rts_req->block_nr);
 		}
