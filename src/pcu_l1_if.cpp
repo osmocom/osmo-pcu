@@ -238,7 +238,7 @@ void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi)
 	data[3] = (plen << 2) | 0x01;
 
 	if (bts->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PCH))
-		gsmtap_send(bts->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0, data + 4, 23);
+		gsmtap_send(bts->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0, data + 3, 23);
 
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, 23+3);
 }
