@@ -223,7 +223,7 @@ void pcu_l1if_tx_agch(bitvec * block, int plen)
 void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	uint8_t data[3+1+23]; /* prefix PLEN */
+	uint8_t data[3+23]; /* paging group, prefix PLEN */
 
 	/* paging group */
 	if (!imsi || strlen(imsi) < 3)
