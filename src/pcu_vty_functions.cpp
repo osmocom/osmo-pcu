@@ -124,30 +124,6 @@ int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data, bool
 	return CMD_SUCCESS;
 }
 
-int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
-{
-	BTS *bts = bts_data->bts;
-	LListHead<GprsMs> *ms_iter;
-
-	llist_for_each(ms_iter, &bts->ms_store().ms_list()) {
-		GprsMs *ms = ms_iter->entry();
-
-		vty_out(vty, "MS TLLI=%08x, TA=%d, CS-UL=%s, CS-DL=%s, LLC=%zd, Cl=%d, E-Cl=%d,"
-			" TBF-UL=%s, TBF-DL=%s, IMSI=%s%s",
-			ms->tlli(),
-			ms->ta(), mcs_name(ms->current_cs_ul()),
-			mcs_name(ms->current_cs_dl()),
-			ms->llc_queue()->size(),
-			ms->ms_class(),
-			ms->egprs_ms_class(),
-			ms->ul_tbf() ? ms->ul_tbf()->state_name() : "NA",
-			ms->dl_tbf() ? ms->dl_tbf()->state_name() : "NA",
-			ms->imsi(),
-			VTY_NEWLINE);
-	}
-	return CMD_SUCCESS;
-}
-
 static int show_ms(struct vty *vty, GprsMs *ms)
 {
 	unsigned i;
@@ -226,6 +202,17 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 			i_tbf->entry()->tfi(),
 			i_tbf->entry()->state_name(),
 			VTY_NEWLINE);
+
+	return CMD_SUCCESS;
+}
+
+int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
+{
+	BTS *bts = bts_data->bts;
+	LListHead<GprsMs> *ms_iter;
+
+	llist_for_each(ms_iter, &bts->ms_store().ms_list())
+		show_ms(vty, ms_iter->entry());
 
 	return CMD_SUCCESS;
 }
