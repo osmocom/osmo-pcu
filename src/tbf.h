@@ -38,6 +38,8 @@ struct bssgp_bvc_ctx;
 class GprsMs;
 struct gprs_rlcmac_bts;
 
+#endif
+
 /*
  * TBF instance
  */
@@ -170,6 +172,8 @@ enum tbf_counters { /* TBF counters from 3GPP TS 44.060 §13.4 */
 #define TBF_SET_ASS_ON(t, fl, chk) do { t->set_assigned_on(fl, chk, __FILE__, __LINE__); } while(0)
 #define TBF_ASS_TYPE_SET(t, kind) do { t->ass_type_mod(kind, false, __FILE__, __LINE__); } while(0)
 #define TBF_ASS_TYPE_UNSET(t, kind) do { t->ass_type_mod(kind, true, __FILE__, __LINE__); } while(0)
+
+#ifdef __cplusplus
 
 struct gprs_rlcmac_tbf {
 	gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir);

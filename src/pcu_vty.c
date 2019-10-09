@@ -1165,13 +1165,14 @@ DEFUN(show_tbf,
       "TBFs allocated via PACCH\n")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	if (!strcmp(argv[0], "all"))
-		return pcu_vty_show_tbf_all(vty, bts, true, true);
+	uint32_t flags = UINT32_MAX;
 
-	if (!strcmp(argv[0], "ccch"))
-		return pcu_vty_show_tbf_all(vty, bts_main_data(), true, false);
+	if (argv[0][0] == 'c')
+		flags = (1 << GPRS_RLCMAC_FLAG_CCCH);
+	else if (argv[0][0] == 'p')
+		flags = (1 << GPRS_RLCMAC_FLAG_PACCH);
 
-	return pcu_vty_show_tbf_all(vty, bts_main_data(), false, true);
+	return pcu_vty_show_tbf_all(vty, bts, flags);
 }
 
 DEFUN(show_ms_all,

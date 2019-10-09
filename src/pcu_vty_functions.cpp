@@ -45,16 +45,10 @@ extern "C" {
 	#include "coding_scheme.h"
 }
 
-static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf, bool show_ccch, bool show_pacch)
+static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 {
 	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
 	gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
-
-	if (show_ccch && !(tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
-		return;
-
-	if (show_pacch && !(tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)))
-		return;
 
 	vty_out(vty, "TBF: TFI=%d TLLI=0x%08x (%s) TA=%u DIR=%s IMSI=%s%s", tbf->tfi(),
 			tbf->tlli(), tbf->is_tlli_valid() ? "valid" : "invalid",
@@ -108,18 +102,22 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf, bool show_
 	vty_out(vty, "%s%s", VTY_NEWLINE, VTY_NEWLINE);
 }
 
-int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data, bool show_ccch, bool show_pacch)
+int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data, uint32_t flags)
 {
 	BTS *bts = bts_data->bts;
-	LListHead<gprs_rlcmac_tbf> *ms_iter;
+	LListHead<gprs_rlcmac_tbf> *iter;
 
 	vty_out(vty, "UL TBFs%s", VTY_NEWLINE);
-	llist_for_each(ms_iter, &bts->ul_tbfs())
-		tbf_print_vty_info(vty, ms_iter->entry(), show_ccch, show_pacch);
+	llist_for_each(iter, &bts->ul_tbfs()) {
+		if (iter->entry()->state_flags & flags)
+			tbf_print_vty_info(vty, iter->entry());
+	}
 
 	vty_out(vty, "%sDL TBFs%s", VTY_NEWLINE, VTY_NEWLINE);
-	llist_for_each(ms_iter, &bts->dl_tbfs())
-		tbf_print_vty_info(vty, ms_iter->entry(), show_ccch, show_pacch);
+	llist_for_each(iter, &bts->dl_tbfs()) {
+		if (iter->entry()->state_flags & flags)
+			tbf_print_vty_info(vty, iter->entry());
+	}
 
 	return CMD_SUCCESS;
 }
