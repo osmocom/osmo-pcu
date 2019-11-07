@@ -407,10 +407,7 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	/* look-up or create the BTS context for this BVC */
 	bctx = btsctx_by_bvci_nsei(ns_bvci, msgb_nsei(msg));
 
-	if (!bctx
-	 && pdu_type != BSSGP_PDUT_BVC_RESET_ACK
-	 && pdu_type != BSSGP_PDUT_BVC_UNBLOCK_ACK
-	 && pdu_type != BSSGP_PDUT_PAGING_PS)
+	if (!bctx && ns_bvci != BVCI_SIGNALLING)
 	{
 		LOGP(DBSSGP, LOGL_NOTICE, "NSEI=%u/BVCI=%u Rejecting PDU type %s for unknown BVCI\n",
 		     nsei, ns_bvci, bssgp_pdu_str(pdu_type));
