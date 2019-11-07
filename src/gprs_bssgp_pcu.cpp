@@ -281,7 +281,7 @@ static int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struc
 	struct bssgp_normal_hdr *bgph = (struct bssgp_normal_hdr *) msgb_bssgph(msg);
 	enum bssgp_pdu_type pdu_type = (enum bssgp_pdu_type) bgph->pdu_type;
 	int rc = 0;
-	int bvci = bctx ? bctx->bvci : -1;
+	int bvci = bctx ? bctx->bvci : msgb_bvci(msg);
 	switch (pdu_type) {
 	case BSSGP_PDUT_STATUS:
 		/* already handled in libosmogb */
