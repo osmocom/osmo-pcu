@@ -648,8 +648,6 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 		return;
 	}
 
-	old_link_qual = meas->link_qual;
-
 	if (mcs_is_gprs(m_current_cs_ul)) {
 		if (current_cs >= MAX_GPRS_CS)
 			current_cs = MAX_GPRS_CS - 1;
@@ -667,8 +665,12 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 		return;
 	}
 
+	/* To avoid rapid changes of the coding scheme, we also take
+	 * the old link quality value into account (if present). */
 	if (m_l1_meas.have_link_qual)
 		old_link_qual = m_l1_meas.link_qual;
+	else
+		old_link_qual = meas->link_qual;
 
 	if (meas->link_qual < low &&  old_link_qual < low)
 		new_cs_ul.dec(mode());
@@ -679,7 +681,7 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 	if (m_current_cs_ul != new_cs_ul) {
 		LOGP(DRLCMACMEAS, LOGL_INFO,
 			"MS (IMSI %s): "
-			"Link quality %ddB (%ddB) left window [%d, %d], "
+			"Link quality %ddB (old %ddB) left window [%d, %d], "
 			"modifying uplink CS level: %s -> %s\n",
 			imsi(), meas->link_qual, old_link_qual,
 			low, high,
