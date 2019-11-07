@@ -50,6 +50,9 @@ void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 bool spoof_mnc_3_digits = false;
 
+/* Measurements shared by all unit tests */
+static struct pcu_l1_meas meas;
+
 static void check_tbf(gprs_rlcmac_tbf *tbf)
 {
 	OSMO_ASSERT(tbf);
@@ -575,7 +578,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_single_phase(BTS *the_bts,
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	uint8_t trx_no = 0;
 	struct gprs_rlcmac_pdch *pdch;
-	struct pcu_l1_meas meas;
 
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 
@@ -610,9 +612,6 @@ static void send_ul_mac_block(BTS *the_bts, unsigned trx_no, unsigned ts_no,
 	uint8_t buf[64];
 	int num_bytes;
 	struct gprs_rlcmac_pdch *pdch;
-	struct pcu_l1_meas meas;
-
-	meas.set_rssi(31);
 
 	rlc_block = bitvec_alloc(23, tall_pcu_ctx);
 
@@ -657,11 +656,9 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(BTS *the_bts,
 	struct gprs_rlcmac_pdch *pdch;
 	gprs_rlcmac_bts *bts;
 	RlcMacUplink_t ulreq = {0};
-	struct pcu_l1_meas meas;
 	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
 	GprsCodingScheme cs;
 
-	meas.set_rssi(31);
 	bts = the_bts->bts_data();
 
 	/* needed to set last_rts_fn in the PDCH object */
@@ -808,11 +805,9 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	struct gprs_rlcmac_pdch *pdch;
 	gprs_rlcmac_bts *bts;
 	RlcMacUplink_t ulreq = {0};
-	struct pcu_l1_meas meas;
 	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
 	GprsCodingScheme cs;
 
-	meas.set_rssi(31);
 	bts = the_bts->bts_data();
 
 	/* needed to set last_rts_fn in the PDCH object */
@@ -1257,10 +1252,8 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf(BTS *the_bts,
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	gprs_rlcmac_bts *bts;
 	RlcMacUplink_t ulreq = {0};
-	struct pcu_l1_meas meas;
 	GprsCodingScheme cs;
 
-	meas.set_rssi(31);
 	bts = the_bts->bts_data();
 
 	/* needed to set last_rts_fn in the PDCH object */
@@ -1326,7 +1319,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_no_length(BTS *t
 	uint8_t trx_no = 0;
 	int tfi = 0;
 	struct gprs_rlcmac_pdch *pdch;
-	struct pcu_l1_meas meas;
 	GprsCodingScheme cs;
 
 
@@ -1409,7 +1401,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_with_length(BTS 
 	uint8_t trx_no = 0;
 	int tfi = 0;
 	struct gprs_rlcmac_pdch *pdch;
-	struct pcu_l1_meas meas;
 	GprsCodingScheme cs;
 
 	check_tbf(ul_tbf);
@@ -1492,7 +1483,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_CRBB(BTS *the_bts,
 	int tfi = 0;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_pdch *pdch;
-	struct pcu_l1_meas meas;
 	GprsCodingScheme cs;
 
 
@@ -1583,8 +1573,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	struct gprs_rlcmac_pdch *pdch;
 	gprs_rlcmac_bts *bts;
 	RlcMacUplink_t ulreq = {0};
-	struct pcu_l1_meas meas;
-	meas.set_rssi(31);
 
 	bts = the_bts->bts_data();
 
@@ -2370,14 +2358,12 @@ static gprs_rlcmac_ul_tbf *tbf_li_decoding(BTS *the_bts,
 	struct gprs_rlcmac_pdch *pdch;
 	gprs_rlcmac_bts *bts;
 	RlcMacUplink_t ulreq = {0};
-	struct pcu_l1_meas meas;
 	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
 	GprsCodingScheme cs;
 	Packet_Resource_Request_t *presreq = NULL;
 	MS_Radio_Access_capability_t *pmsradiocap = NULL;
 	Multislot_capability_t *pmultislotcap = NULL;
 
-	meas.set_rssi(31);
 	bts = the_bts->bts_data();
 
 	/* needed to set last_rts_fn in the PDCH object */
@@ -3297,6 +3283,10 @@ int main(int argc, char **argv)
 
 	vty_init(&pcu_vty_info);
 	pcu_vty_init();
+
+	/* Initialize shared UL measurements */
+	meas.set_link_qual(12);
+	meas.set_rssi(31);
 
 	test_tbf_base();
 	test_tbf_tlli_update();
