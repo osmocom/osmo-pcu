@@ -971,12 +971,7 @@ void gprs_bssgp_destroy(void)
 
 	gprs_ns_destroy(nsi);
 
-	/* FIXME: move this to libgb: btsctx_free() */
-	llist_del(&the_pcu.bctx->list);
-#warning "This causes ASAN to complain. It is not critical for normal operation but should be fixed nevertheless"
-#if 0
-	talloc_free(the_pcu.bctx);
-#endif
+	bssgp_bvc_ctx_free(the_pcu.bctx);
 	the_pcu.bctx = NULL;
 }
 
