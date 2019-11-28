@@ -18,10 +18,11 @@
         <param name='terminal' doc='Write to terminal' />
       </params>
     </command>
-    <command id='write file'>
+    <command id='write file [PATH]'>
       <params>
         <param name='write' doc='Write running configuration to memory, network, or terminal' />
         <param name='file' doc='Write to configuration file' />
+        <param name='[PATH]' doc='Set file path to store the config, or replace if already exists' />
       </params>
     </command>
     <command id='write memory'>
@@ -1823,18 +1824,6 @@
         <param name='&lt;0-62&gt;' doc='Gamma in even unit of dBs' />
       </params>
     </command>
-    <command id='dl-tbf-idle-time &lt;1-5000&gt;'>
-      <params>
-        <param name='dl-tbf-idle-time' doc='keep an idle DL TBF alive for the time given' />
-        <param name='&lt;1-5000&gt;' doc='idle time in msec' />
-      </params>
-    </command>
-    <command id='no dl-tbf-idle-time'>
-      <params>
-        <param name='no' doc='Negate a command or set its defaults' />
-        <param name='dl-tbf-idle-time' doc='keep an idle DL TBF alive for the time given' />
-      </params>
-    </command>
     <command id='dl-tbf-preemptive-retransmission'>
       <params>
         <param name='dl-tbf-preemptive-retransmission' doc='retransmit blocks even before the MS had a chance to receive them (better throughput, less readable traces) (enabled by default)' />
@@ -1846,19 +1835,7 @@
         <param name='dl-tbf-preemptive-retransmission' doc='retransmit blocks even before the MS had a chance to receive them (better throughput, less readable traces)' />
       </params>
     </command>
-    <command id='ms-idle-time &lt;1-7200&gt;'>
-      <params>
-        <param name='ms-idle-time' doc='keep an idle MS object alive for the time given' />
-        <param name='&lt;1-7200&gt;' doc='idle time in sec' />
-      </params>
-    </command>
-    <command id='no ms-idle-time'>
-      <params>
-        <param name='no' doc='Negate a command or set its defaults' />
-        <param name='ms-idle-time' doc='keep an idle MS object alive for the time given' />
-      </params>
-    </command>
-    <command id='gsmtap-category (dl-unknown|dl-dummy|dl-ctrl|dl-data-gprs|dl-data-egprs|dl-ptcch|ul-unknown|ul-dummy|ul-ctrl|ul-data-gprs|ul-data-egprs)'>
+    <command id='gsmtap-category (dl-unknown|dl-dummy|dl-ctrl|dl-data-gprs|dl-data-egprs|dl-ptcch|dl-agch|dl-pch|ul-unknown|ul-dummy|ul-ctrl|ul-data-gprs|ul-data-egprs|ul-rach)'>
       <params>
         <param name='gsmtap-category' doc='GSMTAP Category' />
         <param name='dl-unknown' doc='Unknown / Unparseable / Erroneous Downlink Blocks' />
@@ -1867,14 +1844,17 @@
         <param name='dl-data-gprs' doc='Downlink Data Blocks (GPRS)' />
         <param name='dl-data-egprs' doc='Downlink Data Blocks (EGPRS)' />
         <param name='dl-ptcch' doc='Downlink PTCCH Blocks' />
+        <param name='dl-agch' doc='Downlink AGCH Blocks' />
+        <param name='dl-pch' doc='Downlink PCH Blocks' />
         <param name='ul-unknown' doc='Unknown / Unparseable / Erroneous Downlink Blocks' />
         <param name='ul-dummy' doc='Uplink Dummy Blocks' />
         <param name='ul-ctrl' doc='Uplink Control Blocks' />
         <param name='ul-data-gprs' doc='Uplink Data Blocks (GPRS)' />
         <param name='ul-data-egprs' doc='Uplink Data Blocks (EGPRS)' />
+        <param name='ul-rach' doc='Uplink RACH Bursts' />
       </params>
     </command>
-    <command id='no gsmtap-category (dl-unknown|dl-dummy|dl-ctrl|dl-data-gprs|dl-data-egprs|dl-ptcch|ul-unknown|ul-dummy|ul-ctrl|ul-data-gprs|ul-data-egprs)'>
+    <command id='no gsmtap-category (dl-unknown|dl-dummy|dl-ctrl|dl-data-gprs|dl-data-egprs|dl-ptcch|dl-agch|dl-pch|ul-unknown|ul-dummy|ul-ctrl|ul-data-gprs|ul-data-egprs|ul-rach)'>
       <params>
         <param name='no' doc='Negate a command or set its defaults' />
         <param name='gsmtap-category' doc='GSMTAP Category' />
@@ -1884,11 +1864,14 @@
         <param name='dl-data-gprs' doc='Downlink Data Blocks (GPRS)' />
         <param name='dl-data-egprs' doc='Downlink Data Blocks (EGPRS)' />
         <param name='dl-ptcch' doc='Downlink PTCCH Blocks' />
+        <param name='dl-agch' doc='Downlink AGCH Blocks' />
+        <param name='dl-pch' doc='Downlink PCH Blocks' />
         <param name='ul-unknown' doc='Unknown / Unparseable / Erroneous Downlink Blocks' />
         <param name='ul-dummy' doc='Uplink Dummy Blocks' />
         <param name='ul-ctrl' doc='Uplink Control Blocks' />
         <param name='ul-data-gprs' doc='Uplink Data Blocks (GPRS)' />
         <param name='ul-data-egprs' doc='Uplink Data Blocks (EGPRS)' />
+        <param name='ul-rach' doc='Uplink RACH Bursts' />
       </params>
     </command>
     <command id='pcu-socket PATH'>
