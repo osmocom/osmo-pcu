@@ -938,7 +938,7 @@ DEFUN_DEPRECATED(cfg_pcu_no_ms_idle_time,
 	return CMD_SUCCESS;
 }
 
-#define CS_ERR_LIMITS_STR "set thresholds for error rate based CS adjustment\n"
+#define CS_ERR_LIMITS_STR "set thresholds for error rate based downlink (M)CS adjustment\n"
 DEFUN(cfg_pcu_cs_err_limits,
       cfg_pcu_cs_err_limits_cmd,
       "cs threshold <0-100> <0-100>",
@@ -977,7 +977,7 @@ DEFUN(cfg_pcu_no_cs_err_limits,
 	return CMD_SUCCESS;
 }
 
-#define CS_DOWNGRADE_STR "set threshold for data size based CS downgrade\n"
+#define CS_DOWNGRADE_STR "set threshold for data size based downlink (M)CS downgrade\n"
 DEFUN(cfg_pcu_cs_downgrade_thrsh,
       cfg_pcu_cs_downgrade_thrsh_cmd,
       "cs downgrade-threshold <1-10000>",
@@ -1006,7 +1006,7 @@ DEFUN(cfg_pcu_no_cs_downgrade_thrsh,
 DEFUN(cfg_pcu_cs_lqual_ranges,
       cfg_pcu_cs_lqual_ranges_cmd,
       "cs link-quality-ranges cs1 <0-35> cs2 <0-35> <0-35> cs3 <0-35> <0-35> cs4 <0-35>",
-      CS_STR "Set link quality ranges\n"
+      CS_STR "Set link quality ranges for each uplink CS\n"
       "Set quality range for CS-1 (high value only)\n"
       "CS-1 high (dB)\n"
       "Set quality range for CS-2\n"
@@ -1040,7 +1040,7 @@ DEFUN(cfg_pcu_cs_lqual_ranges,
 DEFUN(cfg_pcu_mcs_lqual_ranges,
       cfg_pcu_mcs_lqual_ranges_cmd,
       "mcs link-quality-ranges mcs1 <0-35> mcs2 <0-35> <0-35> mcs3 <0-35> <0-35> mcs4 <0-35> <0-35> mcs5 <0-35> <0-35> mcs6 <0-35> <0-35> mcs7 <0-35> <0-35> mcs8 <0-35> <0-35> mcs9 <0-35>",
-      CS_STR "Set link quality ranges\n"
+      CS_STR "Set link quality ranges for each uplink MCS\n"
       "Set quality range for MCS-1 (high value only)\n"
       "MCS-1 high (dB)\n"
       "Set quality range for MCS-2\n"

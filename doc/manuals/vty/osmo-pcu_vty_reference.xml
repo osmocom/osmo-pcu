@@ -1536,7 +1536,7 @@
     <command id='cs threshold &lt;0-100&gt; &lt;0-100&gt;'>
       <params>
         <param name='cs' doc='Coding Scheme configuration' />
-        <param name='threshold' doc='set thresholds for error rate based CS adjustment' />
+        <param name='threshold' doc='set thresholds for error rate based downlink (M)CS adjustment' />
         <param name='&lt;0-100&gt;' doc='lower limit in %' />
         <param name='&lt;0-100&gt;' doc='upper limit in %' />
       </params>
@@ -1545,13 +1545,13 @@
       <params>
         <param name='no' doc='Negate a command or set its defaults' />
         <param name='cs' doc='Coding Scheme configuration' />
-        <param name='threshold' doc='set thresholds for error rate based CS adjustment' />
+        <param name='threshold' doc='set thresholds for error rate based downlink (M)CS adjustment' />
       </params>
     </command>
     <command id='cs downgrade-threshold &lt;1-10000&gt;'>
       <params>
         <param name='cs' doc='Coding Scheme configuration' />
-        <param name='downgrade-threshold' doc='set threshold for data size based CS downgrade' />
+        <param name='downgrade-threshold' doc='set threshold for data size based downlink (M)CS downgrade' />
         <param name='&lt;1-10000&gt;' doc='downgrade if less octets left' />
       </params>
     </command>
@@ -1559,13 +1559,13 @@
       <params>
         <param name='no' doc='Negate a command or set its defaults' />
         <param name='cs' doc='Coding Scheme configuration' />
-        <param name='downgrade-threshold' doc='set threshold for data size based CS downgrade' />
+        <param name='downgrade-threshold' doc='set threshold for data size based downlink (M)CS downgrade' />
       </params>
     </command>
     <command id='cs link-quality-ranges cs1 &lt;0-35&gt; cs2 &lt;0-35&gt; &lt;0-35&gt; cs3 &lt;0-35&gt; &lt;0-35&gt; cs4 &lt;0-35&gt;'>
       <params>
         <param name='cs' doc='Coding Scheme configuration' />
-        <param name='link-quality-ranges' doc='Set link quality ranges' />
+        <param name='link-quality-ranges' doc='Set link quality ranges for each uplink CS' />
         <param name='cs1' doc='Set quality range for CS-1 (high value only)' />
         <param name='&lt;0-35&gt;' doc='CS-1 high (dB)' />
         <param name='cs2' doc='Set quality range for CS-2' />
@@ -1581,7 +1581,7 @@
     <command id='mcs link-quality-ranges mcs1 &lt;0-35&gt; mcs2 &lt;0-35&gt; &lt;0-35&gt; mcs3 &lt;0-35&gt; &lt;0-35&gt; mcs4 &lt;0-35&gt; &lt;0-35&gt; mcs5 &lt;0-35&gt; &lt;0-35&gt; mcs6 &lt;0-35&gt; &lt;0-35&gt; mcs7 &lt;0-35&gt; &lt;0-35&gt; mcs8 &lt;0-35&gt; &lt;0-35&gt; mcs9 &lt;0-35&gt;'>
       <params>
         <param name='mcs' doc='Coding Scheme configuration' />
-        <param name='link-quality-ranges' doc='Set link quality ranges' />
+        <param name='link-quality-ranges' doc='Set link quality ranges for each uplink MCS' />
         <param name='mcs1' doc='Set quality range for MCS-1 (high value only)' />
         <param name='&lt;0-35&gt;' doc='MCS-1 high (dB)' />
         <param name='mcs2' doc='Set quality range for MCS-2' />

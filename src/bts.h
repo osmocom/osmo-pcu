@@ -142,12 +142,15 @@ struct gprs_rlcmac_bts {
 	/* 0 to support resegmentation in DL, 1 for no reseg */
 	uint8_t dl_arq_type;
 
-	uint8_t cs_adj_enabled;
-	uint8_t cs_adj_upper_limit;
-	uint8_t cs_adj_lower_limit;
+	uint8_t cs_adj_enabled; /* whether cs_adj_{upper,lower}_limit are used to adjust DL CS */
+	uint8_t cs_adj_upper_limit; /* downgrade DL CS if error rate above its value */
+	uint8_t cs_adj_lower_limit; /* upgrade DL CS if error rate below its value */
+	/* downgrade DL CS when less than specified octets are left in tx queue. Optimization, see paper:
+	  "Theoretical Analysis of GPRS Throughput and Delay" */
+	uint16_t cs_downgrade_threshold;
+	/* Link quality range for each UL (M)CS. Below or above, next/prev (M)CS is selected. */
 	struct {int16_t low; int16_t high; } cs_lqual_ranges[MAX_GPRS_CS];
 	struct {int16_t low; int16_t high; } mcs_lqual_ranges[MAX_EDGE_MCS];
-	uint16_t cs_downgrade_threshold; /* downgrade if less packets left (DL) */
 	uint16_t ws_base;
 	uint16_t ws_pdch; /* increase WS by this value per PDCH */
 
