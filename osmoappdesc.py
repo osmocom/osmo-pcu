@@ -18,7 +18,7 @@ app_configs = {
     "osmo-pcu": ["doc/examples/osmo-pcu.cfg"]
 }
 
-apps = [(4240, "src/osmo-pcu", "Osmo-PCU", "osmo-pcu"),
+apps = [(4240, "src/osmo-pcu", "OsmoPCU", "osmo-pcu"),
         ]
 
 vty_command = ["src/osmo-pcu", "-c", "doc/examples/osmo-pcu.cfg"]

@@ -1215,7 +1215,7 @@ static const char pcu_copyright[] =
 	"There is NO WARRANTY, to the extent permitted by law.\r\n";
 
 struct vty_app_info pcu_vty_info = {
-	.name		= "Osmo-PCU",
+	.name		= "OsmoPCU",
 	.version	= PACKAGE_VERSION,
 	.copyright	= pcu_copyright,
 	.go_parent_cb	= pcu_vty_go_parent,
