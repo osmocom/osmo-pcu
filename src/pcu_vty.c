@@ -91,35 +91,6 @@ DEFUN(cfg_pcu_no_gsmtap_categ, cfg_pcu_no_gsmtap_categ_cmd, "HIDDEN", "HIDDEN")
 	return CMD_SUCCESS;
 }
 
-
-int pcu_vty_go_parent(struct vty *vty)
-{
-	switch (vty->node) {
-#if 0
-	case TRX_NODE:
-		vty->node = PCU_NODE;
-		{
-			struct gsm_bts_trx *trx = vty->index;
-			vty->index = trx->bts;
-		}
-		break;
-#endif
-	default:
-		vty->node = CONFIG_NODE;
-	}
-	return (enum node_type) vty->node;
-}
-
-int pcu_vty_is_config_node(struct vty *vty, int node)
-{
-	switch (node) {
-	case PCU_NODE:
-		return 1;
-	default:
-		return 0;
-	}
-}
-
 static struct cmd_node pcu_node = {
 	(enum node_type) PCU_NODE,
 	"%s(config-pcu)# ",
@@ -1218,8 +1189,6 @@ struct vty_app_info pcu_vty_info = {
 	.name		= "OsmoPCU",
 	.version	= PACKAGE_VERSION,
 	.copyright	= pcu_copyright,
-	.go_parent_cb	= pcu_vty_go_parent,
-	.is_config_node	= pcu_vty_is_config_node,
 };
 
 int pcu_vty_init(void)
