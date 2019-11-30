@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <osmocom/core/tdef.h>
+#include <osmocom/core/utils.h>
 #include <osmocom/vty/tdef_vty.h>
 #include <osmocom/vty/logging.h>
 #include <osmocom/vty/stats.h>
@@ -1100,10 +1101,7 @@ DEFUN(cfg_pcu_sock,
 	if (vty->type != VTY_FILE)
 		vty_out(vty, "Changing PCU socket path at run-time has no effect%s", VTY_NEWLINE);
 
-	if (bts->pcu_sock_path) {
-		talloc_free(bts->pcu_sock_path);
-	}
-	bts->pcu_sock_path = talloc_strdup(tall_pcu_ctx, argv[0]);
+	osmo_talloc_replace_string(tall_pcu_ctx, &bts->pcu_sock_path, argv[0]);
 
 	return CMD_SUCCESS;
 }
