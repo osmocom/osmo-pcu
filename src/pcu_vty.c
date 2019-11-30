@@ -1097,12 +1097,13 @@ DEFUN(cfg_pcu_sock,
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
+	if (vty->type != VTY_FILE)
+		vty_out(vty, "Changing PCU socket path at run-time has no effect%s", VTY_NEWLINE);
+
 	if (bts->pcu_sock_path) {
-		/* FIXME: close the interface? */
 		talloc_free(bts->pcu_sock_path);
 	}
 	bts->pcu_sock_path = talloc_strdup(tall_pcu_ctx, argv[0]);
-	/* FIXME: re-open the interface? */
 
 	return CMD_SUCCESS;
 }
