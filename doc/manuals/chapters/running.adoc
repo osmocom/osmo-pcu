@@ -15,8 +15,8 @@ options:
 	Print a short help message about the supported options
 *-V, --version*::
 	Print the compile-time version number of the program
-//*-D, --daemonize*::
-//	Fork the process as a daemon into background.
+*-D, --daemonize*::
+	Fork the process as a daemon into background.
 *-c, --config-file 'CONFIGFILE'*::
 	Specify the file and path name of the configuration file to be
 	used. If none is specified, use `osmo-pcu.cfg` in the current
