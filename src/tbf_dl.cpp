@@ -846,7 +846,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			need_poll) {
 		if (m_dl_ack_requested) {
 			LOGPTBFDL(this, LOGL_DEBUG,
-				  "Scheduling Ack/Nack polling, because is was requested explicitly "
+				  "Scheduling Ack/Nack polling, because it was requested explicitly "
 				  "(e.g. first final block sent).\n");
 		} else if (need_poll) {
 			LOGPTBFDL(this, LOGL_DEBUG,
