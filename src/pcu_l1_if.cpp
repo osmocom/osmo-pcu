@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
@@ -635,6 +636,13 @@ static int pcu_rx_pag_req(struct gsm_pcu_if_pag_req *pag_req)
 {
 	LOGP(DL1IF, LOGL_DEBUG, "Paging request received: chan_needed=%d "
 		"length=%d\n", pag_req->chan_needed, pag_req->identity_lv[0]);
+
+	/* check if identity does not fit: length > sizeof(lv) - 1 */
+	if (pag_req->identity_lv[0] >= sizeof(pag_req->identity_lv)) {
+		LOGP(DL1IF, LOGL_ERROR, "Paging identity too large (%" PRIu8 ")\n",
+			pag_req->identity_lv[0]);
+		return -EINVAL;
+	}
 
 	return BTS::main_bts()->add_paging(pag_req->chan_needed,
 						pag_req->identity_lv);
