@@ -171,7 +171,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			ms_class, egprs_ms_class, delay_csec, data, len);
 }
 
-int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
+static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 {
 	char imsi[16];
 	uint8_t *ptmsi = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_TMSI);
@@ -709,7 +709,7 @@ static GprsCodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
 	return GprsCodingScheme::getGprsByNum(num);
 }
 
-int gprs_bssgp_tx_fc_bvc(void)
+static int gprs_bssgp_tx_fc_bvc(void)
 {
 	struct gprs_rlcmac_bts *bts;
 	uint32_t bucket_size; /* oct */
@@ -967,7 +967,7 @@ void gprs_bssgp_destroy(void)
 	the_pcu.nsvc_unblocked = 0;
 	the_pcu.bvc_sig_reset = 0;
 	the_pcu.bvc_reset = 0;
-	the_pcu.bvc_unblocked = 0;	
+	the_pcu.bvc_unblocked = 0;
 
 	gprs_ns_destroy(nsi);
 
