@@ -175,25 +175,18 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 {
 	char imsi[16];
 	uint16_t pgroup;
-	uint8_t *ptmsi = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_TMSI);
-	uint16_t ptmsi_len = TLVP_LEN(tp, BSSGP_IE_TMSI);
+	const uint8_t *mi;
+	uint8_t mi_len;
 	int rc;
-
-	LOGP(DBSSGP, LOGL_NOTICE, " P-TMSI = ");
-	for (int i = 0; i < ptmsi_len; i++)
-	{
-		LOGPC(DBSSGP, LOGL_NOTICE, "%02x", ptmsi[i]);
-	}
-	LOGPC(DBSSGP, LOGL_NOTICE, "\n");
 
 	if (!TLVP_PRESENT(tp, BSSGP_IE_IMSI)) {
 		LOGP(DBSSGP, LOGL_ERROR, "No IMSI\n");
-		return -EINVAL;
+		return bssgp_tx_status(BSSGP_CAUSE_MISSING_MAND_IE, NULL, msg);
 	}
 
 	/* gsm48_mi_to_string() returns number of bytes written, including '\0' */
 	rc = gsm48_mi_to_string(imsi, sizeof(imsi), TLVP_VAL(tp, BSSGP_IE_IMSI),
-						    TLVP_LEN(tp, BSSGP_IE_IMSI));
+				TLVP_LEN(tp, BSSGP_IE_IMSI));
 	if (rc != GSM23003_IMSI_MAX_DIGITS + 1) {
 		LOGP(DBSSGP, LOGL_NOTICE, "Failed to parse IMSI IE (rc=%d)\n", rc);
 		return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
@@ -204,7 +197,15 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 		return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
 	}
 
-	return gprs_rlcmac_paging_request(ptmsi, ptmsi_len, pgroup);
+	if (TLVP_PRESENT(tp, BSSGP_IE_TMSI)) {
+		mi_len = TLVP_LEN(tp, BSSGP_IE_TMSI);
+		mi = TLVP_VAL(tp, BSSGP_IE_TMSI);
+	} else { /* Use IMSI if TMSI not available: */
+		mi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
+		mi = TLVP_VAL(tp, BSSGP_IE_IMSI);
+	}
+
+	return gprs_rlcmac_paging_request(mi, mi_len, pgroup);
 }
 
 /* Receive a BSSGP PDU from a BSS on a PTP BVCI */

@@ -19,6 +19,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+extern "C" {
+	#include <osmocom/gsm/gsm48.h>
+}
+
 #include <pcu_l1_if.h>
 #include <gprs_rlcmac.h>
 #include <bts.h>
@@ -28,13 +32,13 @@
 
 extern void *tall_pcu_ctx;
 
-int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len,
-			       uint16_t pgroup)
+int gprs_rlcmac_paging_request(const uint8_t *mi, uint8_t mi_len, uint16_t pgroup)
 {
-	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Paging Request (CCCH)\n");
+	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Paging Request (CCCH) MI=%s\n",
+	    osmo_mi_name(mi, mi_len));
 	bitvec *paging_request = bitvec_alloc(22, tall_pcu_ctx);
 	bitvec_unhex(paging_request, DUMMY_VEC);
-	int plen = Encoding::write_paging_request(paging_request, ptmsi, ptmsi_len);
+	int plen = Encoding::write_paging_request(paging_request, mi, mi_len);
 	pcu_l1if_tx_pch(paging_request, plen, pgroup);
 	bitvec_free(paging_request);
 

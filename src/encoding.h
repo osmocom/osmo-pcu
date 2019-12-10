@@ -77,7 +77,7 @@ public:
 			bitvec * dest, struct gprs_rlcmac_ul_tbf *tbf, bool is_final,
 			uint8_t rrbp);
 
-	static int write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len);
+	static int write_paging_request(bitvec * dest, const uint8_t *mi, uint8_t mi_len);
 
 	static unsigned write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
 			uint8_t *identity, uint8_t chan_needed);

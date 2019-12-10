@@ -729,7 +729,7 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 }
 
 /* Generate paging request. See 44.018, sections 10 and 9.1.22 */
-int Encoding::write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi_len)
+int Encoding::write_paging_request(bitvec * dest, const uint8_t *mi, uint8_t mi_len)
 {
 	unsigned wp = 0;
 	int plen;
@@ -741,14 +741,9 @@ int Encoding::write_paging_request(bitvec * dest, uint8_t *ptmsi, uint16_t ptmsi
 	bitvec_write_field(dest, &wp,0x0,4);  // Page Mode
 	bitvec_write_field(dest, &wp,0x0,4);  // Channel Needed
 
-	// Mobile Identity
-	bitvec_write_field(dest, &wp,ptmsi_len+1,8);  // Mobile Identity length
-	bitvec_write_field(dest, &wp,0xf,4);          // unused
-	bitvec_write_field(dest, &wp,0x4,4);          // PTMSI type
-	for (int i = 0; i < ptmsi_len; i++)
-	{
-		bitvec_write_field(dest, &wp,ptmsi[i],8); // PTMSI
-	}
+	bitvec_write_field(dest, &wp, mi_len, 8);  // Mobile Identity length
+	bitvec_set_bytes(dest, mi, mi_len);        // Mobile Identity
+	wp += mi_len * 8;
 
 	if ((wp % 8))
 		log_alert_exit("Length of PAG.REQ without rest octets is not "
