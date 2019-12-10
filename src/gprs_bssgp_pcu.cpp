@@ -265,8 +265,12 @@ static int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct
 		LOGP(DBSSGP, LOGL_DEBUG, "Rx BSSGP BVCI=%d (PTP) %s\n",
 		     bvci, bssgp_pdu_str(pdu_type));
 		break;
-	case BSSGP_PDUT_PAGING_PS:
 	case BSSGP_PDUT_PAGING_CS:
+		gprs_bssgp_pcu_rx_paging_cs(msg, tp);
+		break;
+	case BSSGP_PDUT_PAGING_PS:
+		gprs_bssgp_pcu_rx_paging_ps(msg, tp);
+		break;
 	case BSSGP_PDUT_RA_CAPABILITY:
 	case BSSGP_PDUT_RA_CAPA_UPDATE_ACK:
 		LOGP(DBSSGP, LOGL_INFO, "Rx BSSGP BVCI=%d (PTP) PDU type %s not implemented\n",
