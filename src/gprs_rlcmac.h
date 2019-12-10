@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
- 
+
 #ifndef GPRS_RLCMAC_H
 #define GPRS_RLCMAC_H
 
@@ -85,7 +85,7 @@ int gprs_rlcmac_dl_bw(struct gprs_rlcmac_dl_tbf *tbf, uint16_t octets);
 /* TS 44.060 Section 10.4.7 Table 10.4.7.1: Payload Type field */
 enum gprs_rlcmac_block_type {
 	GPRS_RLCMAC_DATA_BLOCK = 0x0,
-	GPRS_RLCMAC_CONTROL_BLOCK = 0x1, 
+	GPRS_RLCMAC_CONTROL_BLOCK = 0x1,
 	GPRS_RLCMAC_CONTROL_BLOCK_OPT = 0x2,
 	GPRS_RLCMAC_RESERVED = 0x3
 };

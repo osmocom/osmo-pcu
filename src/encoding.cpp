@@ -868,15 +868,15 @@ static void write_packet_ack_nack_desc_egprs(
 	 ..1. .... = ACKNACK:  (Union)
 	    0 0000 000 Length
 	Desc
-	
+
 	    ...0 .... = FINAL_ACK_INDICATION: False
-	
+
 	    .... 1... = BEGINNING_OF_WINDOW: 1
-	
+
 	    .... .1.. = END_OF_WINDOW: 1
-	
+
 	    .... ..10  0101 0001  1... .... = STARTING_SEQUENCE_NUMBER: 1187
-	
+
 	    .0.. .... = CRBB Exist: 0
 	minimal size is 24 rest_bits */
 	rest_bits -= 24;
