@@ -171,6 +171,26 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			ms_class, egprs_ms_class, delay_csec, data, len);
 }
 
+static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, struct tlv_parsed *tp)
+{
+	const uint8_t *mi;
+	uint8_t mi_len;
+	uint8_t *chan_needed = (uint8_t *)TLVP_VAL(tp, BSSGP_IE_CHAN_NEEDED);
+
+	if (TLVP_PRESENT(tp, BSSGP_IE_TMSI)) {
+		mi_len = TLVP_LEN(tp, BSSGP_IE_TMSI);
+		mi = TLVP_VAL(tp, BSSGP_IE_TMSI);
+	} else if (TLVP_PRESENT(tp, BSSGP_IE_IMSI)) { /* Use IMSI if TMSI not available: */
+		mi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
+		mi = TLVP_VAL(tp, BSSGP_IE_IMSI);
+	} else {
+		LOGP(DBSSGP, LOGL_ERROR, "Neither TMSI IE nor IMSI IE is present\n");
+		return bssgp_tx_status(BSSGP_CAUSE_COND_IE_ERR, NULL, msg);
+	}
+
+	return BTS::main_bts()->add_paging(chan_needed ? *chan_needed : 0, mi, mi_len);
+}
+
 static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 {
 	char imsi[16];
@@ -308,6 +328,9 @@ static int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struc
 			the_pcu.bvc_reset = 1;
 		bvc_timeout(NULL);
 		break;
+	case BSSGP_PDUT_PAGING_CS:
+		gprs_bssgp_pcu_rx_paging_cs(msg, tp);
+		break;
 	case BSSGP_PDUT_PAGING_PS:
 		gprs_bssgp_pcu_rx_paging_ps(msg, tp);
 		break;
@@ -320,7 +343,6 @@ static int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struc
 		break;
 	case BSSGP_PDUT_SUSPEND_NACK:
 	case BSSGP_PDUT_RESUME_NACK:
-	case BSSGP_PDUT_PAGING_CS:
 	case BSSGP_PDUT_FLUSH_LL:
 	case BSSGP_PDUT_SGSN_INVOKE_TRACE:
 		LOGP(DBSSGP, LOGL_INFO, "Rx BSSGP BVCI=%d (SIGN) PDU type %s not implemented\n",
