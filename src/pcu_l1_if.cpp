@@ -644,8 +644,8 @@ static int pcu_rx_pag_req(struct gsm_pcu_if_pag_req *pag_req)
 		return -EINVAL;
 	}
 
-	return BTS::main_bts()->add_paging(pag_req->chan_needed,
-						pag_req->identity_lv);
+	return BTS::main_bts()->add_paging(pag_req->chan_needed, &pag_req->identity_lv[1],
+					   pag_req->identity_lv[0]);
 }
 
 static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)

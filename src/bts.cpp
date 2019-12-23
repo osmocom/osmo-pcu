@@ -38,6 +38,7 @@ extern "C" {
 	#include <osmocom/core/stats.h>
 	#include <osmocom/gsm/protocol/gsm_04_08.h>
 	#include <osmocom/gsm/gsm_utils.h>
+	#include <osmocom/gsm/gsm48.h>
 	#include <osmocom/core/gsmtap_util.h>
 	#include <osmocom/core/application.h>
 	#include <osmocom/core/bitvec.h>
@@ -354,7 +355,7 @@ void BTS::set_current_block_frame_number(int fn, unsigned max_delay)
 	m_pollController.expireTimedout(fn, max_delay);
 }
 
-int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
+int BTS::add_paging(uint8_t chan_needed, const uint8_t *mi, uint8_t mi_len)
 {
 	uint8_t l, trx, ts, any_tbf = 0;
 	struct gprs_rlcmac_tbf *tbf;
@@ -370,7 +371,7 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 
 
 	LOGP(DRLCMAC, LOGL_INFO, "Add RR paging: chan-needed=%d MI=%s\n",
-		chan_needed, osmo_hexdump(identity_lv + 1, identity_lv[0]));
+		chan_needed, osmo_mi_name(mi, mi_len));
 
 	/* collect slots to page
 	 * Mark slots for every TBF, but only mark one of it.
@@ -414,7 +415,7 @@ int BTS::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
 		for (ts = 0; ts < 8; ts++) {
 			if ((slot_mask[trx] & (1 << ts))) {
 				/* schedule */
-				if (!m_bts.trx[trx].pdch[ts].add_paging(chan_needed, identity_lv))
+				if (!m_bts.trx[trx].pdch[ts].add_paging(chan_needed, mi, mi_len))
 					return -ENOMEM;
 
 				LOGP(DRLCMAC, LOGL_INFO, "Paging on PACCH of TRX=%d TS=%d\n", trx, ts);

@@ -251,14 +251,15 @@ continue_next:
 	return msg;
 }
 
-bool gprs_rlcmac_pdch::add_paging(uint8_t chan_needed, uint8_t *identity_lv)
+bool gprs_rlcmac_pdch::add_paging(uint8_t chan_needed, const uint8_t *mi, uint8_t mi_len)
 {
 	struct gprs_rlcmac_paging *pag = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_paging);
 	if (!pag)
 		return false;
 
 	pag->chan_needed = chan_needed;
-	memcpy(pag->identity_lv, identity_lv, identity_lv[0] + 1);
+	pag->identity_lv[0] = mi_len;
+	memcpy(&pag->identity_lv[1], mi, mi_len);
 
 	llist_add(&pag->list, &paging_list);
 

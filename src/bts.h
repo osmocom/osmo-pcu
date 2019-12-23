@@ -290,7 +290,7 @@ public:
 	int current_frame_number() const;
 
 	/** add paging to paging queue(s) */
-	int add_paging(uint8_t chan_needed, uint8_t *identity_lv);
+	int add_paging(uint8_t chan_needed, const uint8_t *mi, uint8_t mi_len);
 
 	gprs_rlcmac_dl_tbf *dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
 	gprs_rlcmac_ul_tbf *ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts);
