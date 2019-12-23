@@ -60,6 +60,28 @@ int l1if_pdch_req(void *obj, uint8_t ts, int is_ptcch, uint32_t fn,
 
 extern void *tall_pcu_ctx;
 
+#define PAGING_GROUP_LEN 3
+
+/* returns [0,999] on success, > 999 on error */
+uint16_t imsi2paging_group(const char* imsi)
+{
+	uint16_t pgroup = 0;
+	size_t len = strlen(imsi);
+
+	if (!imsi || len < PAGING_GROUP_LEN)
+		return 0xFFFF;
+	imsi += len - PAGING_GROUP_LEN;
+
+	while (*imsi != '\0') {
+		if (!isdigit(*imsi))
+			return 0xFFFF;
+		pgroup *= 10;
+		pgroup += *imsi - '0';
+		imsi++;
+	}
+	return pgroup;
+}
+
 /*
  * PCU messages
  */
@@ -218,19 +240,18 @@ void pcu_l1if_tx_agch(bitvec * block, int plen)
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, GSM_MACBLOCK_LEN);
 }
 
-#define PAGING_GROUP_LEN 3
-void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi)
+void pcu_l1if_tx_pch(bitvec * block, int plen, uint16_t pgroup)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t data[PAGING_GROUP_LEN + GSM_MACBLOCK_LEN];
+	int i;
 
 	/* prepend paging group */
-	if (!imsi || strlen(imsi) < PAGING_GROUP_LEN)
-		return;
-	imsi += strlen(imsi) - PAGING_GROUP_LEN;
-	data[0] = imsi[0];
-	data[1] = imsi[1];
-	data[2] = imsi[2];
+	for (i = 0; i < PAGING_GROUP_LEN; i++) {
+		data[PAGING_GROUP_LEN - 1 - i] = '0' + (char)(pgroup % 10);
+		pgroup = pgroup / 10;
+	}
+	OSMO_ASSERT(pgroup == 0);
 
 	/* block provided by upper layer comes without first byte (plen),
 	 * prepend it manually:

@@ -174,6 +174,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 {
 	char imsi[16];
+	uint16_t pgroup;
 	uint8_t *ptmsi = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_TMSI);
 	uint16_t ptmsi_len = TLVP_LEN(tp, BSSGP_IE_TMSI);
 	int rc;
@@ -195,10 +196,15 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 						    TLVP_LEN(tp, BSSGP_IE_IMSI));
 	if (rc != GSM23003_IMSI_MAX_DIGITS + 1) {
 		LOGP(DBSSGP, LOGL_NOTICE, "Failed to parse IMSI IE (rc=%d)\n", rc);
-		return bssgp_tx_status(BSSGP_CAUSE_COND_IE_ERR, NULL, msg);
+		return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
+	}
+	pgroup = imsi2paging_group(imsi);
+	if (pgroup > 999) {
+		LOGP(DBSSGP, LOGL_NOTICE, "Failed to compute IMSI %s paging group\n", imsi);
+		return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
 	}
 
-	return gprs_rlcmac_paging_request(ptmsi, ptmsi_len, imsi);
+	return gprs_rlcmac_paging_request(ptmsi, ptmsi_len, pgroup);
 }
 
 /* Receive a BSSGP PDU from a BSS on a PTP BVCI */

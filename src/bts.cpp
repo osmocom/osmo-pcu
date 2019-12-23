@@ -890,7 +890,7 @@ int BTS::rcv_ptcch_rach(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta)
 	return 0;
 }
 
-void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, const char *imsi)
+void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup)
 {
 	int plen;
 	unsigned int ts = tbf->first_ts;
@@ -910,7 +910,7 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, const char *imsi)
 						    GSM_L1_BURST_TYPE_ACCESS_0);
 	if (plen >= 0) {
 		immediate_assignment_dl_tbf();
-		pcu_l1if_tx_pch(immediate_assignment, plen, imsi);
+		pcu_l1if_tx_pch(immediate_assignment, plen, pgroup);
 	}
 
 	bitvec_free(immediate_assignment);

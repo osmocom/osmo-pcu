@@ -803,6 +803,7 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum gprs_rl
 
 void gprs_rlcmac_tbf::poll_timeout()
 {
+	uint16_t pgroup;
 	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
 
 	LOGPTBF(this, LOGL_NOTICE, "poll timeout for FN=%d, TS=%d (curr FN %d)\n",
@@ -902,7 +903,9 @@ void gprs_rlcmac_tbf::poll_timeout()
 			LOGPTBF(dl_tbf, LOGL_DEBUG, "Re-send dowlink assignment on PCH (IMSI=%s)\n",
 				imsi());
 			/* send immediate assignment */
-			dl_tbf->bts->snd_dl_ass(dl_tbf, false, imsi());
+			if ((pgroup = imsi2paging_group(imsi())) > 999)
+				LOGPTBF(dl_tbf, LOGL_ERROR, "IMSI to paging group failed! (%s)\n", imsi());
+			dl_tbf->bts->snd_dl_ass(dl_tbf, false, pgroup);
 			dl_tbf->m_wait_confirm = 1;
 		}
 	} else

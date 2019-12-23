@@ -26,6 +26,7 @@
 #ifdef __cplusplus
 #include <gsm_rlcmac.h>
 #include <gsm_timer.h>
+#include <pcu_l1_if.h>
 
 extern "C" {
 #include <osmocom/core/linuxlist.h>
@@ -92,8 +93,7 @@ enum gprs_rlcmac_block_type {
 
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
-int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len,
-	const char *imsi);
+int gprs_rlcmac_paging_request(uint8_t *ptmsi, uint16_t ptmsi_len, uint16_t pgroup);
 
 struct msgb *gprs_rlcmac_app_info_msg(const struct gsm_pcu_if_app_info_req *req);
 

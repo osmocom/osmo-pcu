@@ -306,7 +306,7 @@ public:
 		enum ph_burst_type burst_type);
 	int rcv_ptcch_rach(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta);
 
-	void snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, const char *imsi);
+	void snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup);
 
 	GprsMsStorage &ms_store();
 	GprsMs *ms_by_tlli(uint32_t tlli, uint32_t old_tlli = 0);

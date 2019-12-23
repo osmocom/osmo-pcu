@@ -507,6 +507,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts)
 /* depending on the current TBF, we assign on PACCH or AGCH */
 void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 {
+	uint16_t pgroup;
 	/* stop pending timer */
 	stop_timers("assignment (DL-TBF)");
 
@@ -530,7 +531,9 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 		TBF_SET_ASS_ON(this, GPRS_RLCMAC_FLAG_CCCH, false);
 
 		/* send immediate assignment */
-		bts->snd_dl_ass(this, false, imsi());
+		if ((pgroup = imsi2paging_group(imsi())) > 999)
+			LOGPTBFDL(this, LOGL_ERROR, "IMSI to paging group failed! (%s)\n", imsi());
+		bts->snd_dl_ass(this, false, pgroup);
 		m_wait_confirm = 1;
 	}
 }

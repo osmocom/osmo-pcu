@@ -159,7 +159,7 @@ void pcu_l1if_tx_ptcch(uint8_t trx, uint8_t ts, uint16_t arfcn,
 		       uint8_t *data, size_t data_len);
 void pcu_l1if_tx_agch(bitvec * block, int len);
 
-void pcu_l1if_tx_pch(bitvec * block, int plen, const char *imsi);
+void pcu_l1if_tx_pch(bitvec * block, int plen, uint16_t pgroup);
 
 int pcu_tx_txt_ind(enum gsm_pcu_if_text_type t, const char *fmt, ...);
 
@@ -184,7 +184,7 @@ int pcu_rx_data_ind_pdtch(uint8_t trx, uint8_t ts, uint8_t *data,
 
 void pcu_rx_block_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no);
 void pcu_rx_ra_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no);
-
+uint16_t imsi2paging_group(const char* imsi);
 #ifdef __cplusplus
 }
 #endif
