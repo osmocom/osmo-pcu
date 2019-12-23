@@ -433,7 +433,7 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	}
 	else
 	{
-		LOGP(DBSSGP, LOGL_DEBUG, "rx BVCI_PTP gprs_bssgp_rx_ptp\n");
+		LOGP(DBSSGP, LOGL_DEBUG, "rx BVCI_PTP=%u gprs_bssgp_rx_ptp\n", ns_bvci);
 		rc = gprs_bssgp_pcu_rx_ptp(msg, &tp, bctx);
 	}
 	return rc;
