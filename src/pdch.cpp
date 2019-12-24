@@ -607,7 +607,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		}
 
 		/* set control ts to current MS's TS, until assignment complete */
-		LOGPTBF(ul_tbf, LOGL_DEBUG, "change control TS %d -> %d until assinment is complete.\n",
+		LOGPTBF(ul_tbf, LOGL_DEBUG, "change control TS %d -> %d until assignment is complete.\n",
 			ul_tbf->control_ts, ts_no);
 
 		ul_tbf->control_ts = ts_no;

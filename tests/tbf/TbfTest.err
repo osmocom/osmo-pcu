@@ -1546,7 +1546,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assinment is complete.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
@@ -1628,7 +1628,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assinment is complete.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
@@ -1758,7 +1758,7 @@ TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf5667788, not yet confirmed
 Modifying MS object, TLLI = 0xf5667788, TA 220 -> 7
-TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assinment is complete.
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 Received RTS for PDCH: TRX=0 TS=7 FN=2654335 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
@@ -1825,7 +1825,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assinment is complete.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
@@ -1918,7 +1918,7 @@ Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 D
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assinment is complete.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS (IMSI 0011223344): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-3 -> CS-4
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
@@ -1997,7 +1997,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assinment is complete.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
@@ -2148,7 +2148,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assinment is complete.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
@@ -3173,7 +3173,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to AS
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assinment is complete.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
@@ -3265,7 +3265,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to AS
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assinment is complete.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
@@ -5904,7 +5904,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to AS
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assinment is complete.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
@@ -6069,7 +6069,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to AS
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assinment is complete.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
@@ -6414,7 +6414,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to AS
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assinment is complete.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
