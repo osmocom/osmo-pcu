@@ -1,3 +1,79 @@
+osmo-pcu (0.8.0) unstable; urgency=medium
+
+  [ Alexander Couzens ]
+  * tests: test encoding of egprs ul ack/nacks
+  * tbf_dl: add comments to the scheduler
+  * encoding: fix space, tabs
+
+  [ Vadim Yanitskiy ]
+  * osmobts_sock.cpp: pcu_sock_cb(): use libosmocore's socket API
+  * osmobts_sock.cpp: pcu_sock_read(): use stack buffer, not heap
+  * osmobts_sock.cpp: pcu_sock_read(): further simplify the code
+  * osmobts_sock.cpp: do not print the same debug message twice
+  * VTY: refactor pcu_vty_show_ms_all(): use show_ms()
+  * VTY: fix command 'show tbf all': properly filter TBFs
+  * BSSGP: do not reject SUSPEND ACK / NACK messages
+  * BSSGP: properly print BVCI for signalling messages (BVCI=0)
+  * tests/tbf: suspend warnings about the link quality measurements
+  * GprsMs::update_cs_ul(): clarify the meaning of old_link_qual
+  * gprs_bssgp_destroy(): fix memleak and NULL-pointer dereference
+  * PTCCH: implement basic message codec and API
+  * PTCCH: properly handle RTS.req for PCU_IF_SAPI_PTCCH
+  * pcuif_proto.h: extend RACH.ind with TRX / TS numbers
+  * PTCCH: properly handle RACH.ind for PCU_IF_SAPI_PTCCH
+  * VTY: add warning about changing PCU socket path at run-time
+  * VTY: cosmetic: use osmo_talloc_replace_string()
+
+  [ Pau Espin Pedrol ]
+  * cosmetic: tbf: Rename T and N arrays
+  * Use proper API osmo_timer_setup() to set up timer struct
+  * Introduce osmo_tdef infra and timer VTY commands
+  * bts.cpp: Fix osmo_tdef initialization on older g++ compilers
+  * Use osmo_tdef for BSSGP T1 and T2
+  * Use osmo_tdef to implement T3190
+  * tests: TbfTest: Unify stderr and stdout to ease debugging
+  * Use osmo_tdef to implement ms-idle-time
+  * Use osmo_tdef to implement dl-tbf-idle-time
+  * pdch.cpp: Refactor bitvec param passing in rcv_control_block
+  * pdch.cpp: Use pcu_l1_meas previously filled by lower layers
+  * cosmetic: fix whitespace
+  * Move out tbf subclasses from tbf.h to their own headers
+  * Move tbf_{dl,ul} child constructors to respective .cpp files
+  * tbf_dl: Setup m_llc_timer in constructor using osmocom API
+  * tbf_dl.cpp: Remove dup call to tbf_update_ms_class() in state GPRS_RLCMAC_WAIT_RELEASE
+  * vty: Fix osmo_tdef timers not listed in write config
+  * Log RACH Requests using GSMTAP
+  * Log AGCH and PCH blocks using GSMTAP
+  * pcu_l1_if.cpp: Fix GSMTAP Imm Assign PCH wrong encoding
+  * pcu_l1_if.cpp: Drop unneeded byte in Imm Ass PCH buffer
+  * pcu_l1_if.cpp: Imm Assign PCH: clarify size of different items
+  * pcu_l1_if.cpp: Replace value 23 with libosmocore's GSM_MACBLOCK_LEN
+  * Fix assertion hit upon CCCH Paging Request
+  * doc: vty: Update osmo-pcu_vty_reference.xml
+  * Clarify (M)CS related VTY attributes
+  * Remove dash from name used in VTY cmd prompt
+  * tbf_dl.cpp: Fix typo in log line
+  * pcu_l1_if: Check pag_req id_lv len fits buffer
+  * prs_bssgp_pcu.cpp: Mark priv funcs as static and remove trailing whitespace
+  * Fix trailing whitespace
+  * fix typo in log message
+  * Log BVCI PTP value upon msg recv
+  * Split identity_lv param into mi+mi_len
+
+  [ Oliver Smith ]
+  * doc: update generated VTY reference
+  * tbf_dl: make preemptive retransmission optional
+  * Forward ETWS Primary Notification to MS
+  * tests/app_info: fix compiling with older g++
+  * configure.ac: set C and C++ dialects
+
+  [ Harald Welte ]
+  * manual: Fix copy+paste error
+  * manual: Fix documentation missing "-D" command line option
+  * manual: Add missing documentation for '-i' command line option
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Fri, 03 Jan 2020 19:40:02 +0100
+
 osmo-pcu (0.7.0) unstable; urgency=medium
 
   [ Rafael Diniz ]
