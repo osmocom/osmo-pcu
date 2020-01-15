@@ -66,9 +66,10 @@ extern void *tall_pcu_ctx;
 uint16_t imsi2paging_group(const char* imsi)
 {
 	uint16_t pgroup = 0;
-	size_t len = strlen(imsi);
+	size_t len;
 
-	if (!imsi || len < PAGING_GROUP_LEN)
+	len = (imsi != NULL) ? strlen(imsi) : 0;
+	if (len < PAGING_GROUP_LEN)
 		return 0xFFFF;
 	imsi += len - PAGING_GROUP_LEN;
 
