@@ -69,7 +69,7 @@ get_masked_bits8( bitvec *vector, unsigned& readIndex, gint bit_offset,  const g
     result &= maskBits[no_of_bits];
   }
   else
-  { 
+  {
     guint8 hight_part = (0x2B ^ ((guint8)bitvec_read_field(vector, &readIndex, 8))) & maskBits[8 - relative_bit_offset];
     hight_part = (guint8) (hight_part << (-bit_shift));
     result =  (0x2B ^ ((guint8)bitvec_read_field(vector, &readIndex, 8))) >> (8 + bit_shift);
@@ -613,7 +613,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
         /* Assign UnionType */
         pui8  = pui8DATA(data, pDescr->offset);
         *pui8 = index;
-       
+
 
         /* script index to continue on, limited in case we do not have a power of 2 */
         pDescr += (MIN(index + 1, count));
@@ -1128,7 +1128,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
               no_of_bits -= 8;
             }
             if (no_of_bits > 0)
-            { 
+            {
 	      *pui8 = bitvec_read_field(vector, &readIndex, no_of_bits);
               LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
@@ -1339,7 +1339,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
           ElementCount++;
 
           LOGPC(DCSN1, LOGL_NOTICE, "%s { | ", pDescr->sz);
-          
+
           csnStreamInit(&arT, bit_offset, remaining_bits_len);
 	  Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pui8);
 
@@ -1827,7 +1827,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
         }
         else
         {
-          // Has already been processed: 
+          // Has already been processed:
           return Status;
         }
 
@@ -1857,9 +1857,9 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
 	//read index from data and write to vector
 	bitvec_write_field(vector, &writeIndex, *pui8, Bits);
 
-	//decode index 
+	//decode index
         writeIndex -= Bits;
-        
+
         while (Bits > 0)
         {
           index <<= 1;
@@ -2669,4 +2669,3 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
 
   return ProcessError(writeIndex,"csnStreamEncoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
 }
-
