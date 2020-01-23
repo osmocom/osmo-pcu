@@ -5510,10 +5510,10 @@ void encode_gsm_rlcmac_downlink_data(bitvec * vector, RlcMacDownlinkDataBlock_t 
   }
 }
 
-void decode_gsm_ra_cap(bitvec * vector, MS_Radio_Access_capability_t *data)
+int decode_gsm_ra_cap(bitvec * vector, MS_Radio_Access_capability_t *data)
 {
   csnStream_t      ar;
   unsigned readIndex = 0;
   csnStreamInit(&ar, 0, 8 * vector->data_len);
-  /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(MS_Radio_Access_capability_t), vector, readIndex, data);
+  return csnStreamDecoder(&ar, CSNDESCR(MS_Radio_Access_capability_t), vector, readIndex, data);
 }

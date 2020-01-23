@@ -23,9 +23,11 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
+#include <assert.h>
 #include "csn1.h"
 #include "gsm_rlcmac.h"
 #include "gprs_rlcmac.h"
+#include "decoding.h"
 
 extern "C" {
 extern const struct log_info gprs_log_info;
@@ -37,6 +39,8 @@ extern const struct log_info gprs_log_info;
 #include <osmocom/core/application.h>
 }
 using namespace std;
+
+void *tall_pcu_ctx;
 
 void printSizeofRLCMAC()
 {
@@ -203,6 +207,45 @@ void testCsnLeftAlignedVarBmpBounds(void *test_ctx)
 	msgb_free(m);
 }
 
+void testRAcap(void *test_ctx)
+{
+	printf("*** %s ***\n", __func__);
+	MS_Radio_Access_capability_t data;
+	memset(&data, 0, sizeof(data));
+	bitvec *vector = bitvec_alloc(23, test_ctx);
+	int rc;
+/*
+	MS RA capability 1
+	    0001 .... = Access Technology Type: GSM E --note that GSM E covers GSM P (1)
+	    .... 0010  101. .... = Length in bits: 0x15 (21)
+	    ...0 01.. RF Power Capability, GMSK Power Class: Not specified (1)
+	    A5 Bits: Same values apply for parameters as in the immediately preceding Access capabilities field within this IE (0)
+	    .... ...1 = Controlled early Classmark Sending: Implemented
+	    0... .... = Pseudo Synchronisation: Not Present
+	    .0.. .... = Voice Group Call Service: no VGCS capability or no notifications wanted
+	    ..0. .... = Voice Broadcast Service: no VBS capability or no notifications wanted
+	    ...1 .... = Multislot capability struct: Present
+	    .... ..00  011. .... = GPRS multislot class: Max Rx-Slot/TDMA:2 Max Tx-Slot/TDMA:2 Max-Sum-Slot/TDMA:3 Tta:3 Ttb:2 Tra:3 Trb:1 Type:1 (3)
+	    ...0 .... = GPRS Extended Dynamic Allocation Capability: Not Implemented
+*/
+	bitvec_unhex(vector, "12a5146200");
+
+	rc = decode_gsm_ra_cap(vector, &data);
+	printf("decode_gsm_ra_cap fails? %s\n", rc !=0 ? "yes" : "no");
+#if 0
+	/* FIXME: OS#1525, OS#3499: csn1 fails to parse this MS RA Cap IE value */
+	assert (rc == 0);
+
+	/* Make sure there's 1 value (currently fails due to failed decoding) */
+	osmo_assert(cap->Count_MS_RA_capability_value == 1);
+
+	/* Make sure MS multislot class is parsed correctly (currently fails due
+	   to failed decoding and count being 0) */
+	uint8_t ms_class = Decoding::get_ms_class_by_capability(&data);
+	assert(ms_class == 3);
+#endif
+}
+
 int main(int argc, char *argv[])
 {
 	void *ctx = talloc_named_const(NULL, 1, "RLCMACTest");
@@ -213,5 +256,6 @@ int main(int argc, char *argv[])
 	testRlcMacDownlink(ctx);
 	testRlcMacUplink(ctx);
 	testCsnLeftAlignedVarBmpBounds(ctx);
+	testRAcap(ctx);
 	talloc_free(ctx);
 }

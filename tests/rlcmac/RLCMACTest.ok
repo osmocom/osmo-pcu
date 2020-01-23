@@ -123,3 +123,5 @@ vector1 = 40 0a 90 20 00 00 00 00 00 00 00 30 10 01 2a 08 00 13 2b 2b 2b 2b 2b
 vector2 = 40 0a 90 20 00 00 00 00 00 00 00 30 10 01 2a 08 00 13 2b 2b 2b 2b 2b 
 vector1 == vector2 : TRUE
 *** testCsnLeftAlignedVarBmpBounds ***
+*** testRAcap ***
+decode_gsm_ra_cap fails? yes
