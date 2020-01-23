@@ -26,6 +26,7 @@
 #include <tbf.h>
 #include <gprs_coding_scheme.h>
 #include <pdch.h>
+#include <decoding.h>
 
 extern "C" {
 	#include <osmocom/gsm/protocol/gsm_23_003.h>
@@ -52,7 +53,6 @@ extern bool spoof_mnc_3_digits;
 static void bvc_timeout(void *_priv);
 static int gprs_ns_reconnect(struct gprs_nsvc *nsvc);
 
-#if 0
 static int parse_ra_cap(struct tlv_parsed *tp, MS_Radio_Access_capability_t *rac)
 {
 	bitvec *block;
@@ -78,7 +78,6 @@ static int parse_ra_cap(struct tlv_parsed *tp, MS_Radio_Access_capability_t *rac
 	bitvec_free(block);
 	return 0;
 }
-#endif
 
 static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 {
@@ -92,9 +91,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	uint8_t ms_class = 0;
 	uint8_t egprs_ms_class = 0;
 	int rc;
-#if 0
 	MS_Radio_Access_capability_t rac;
-#endif
 
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
 	tlli = ntohl(budh->tlli);
@@ -128,7 +125,6 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		}
 	}
 
-#if 0 /* Do not rely on this IE. TODO: make this configurable */
 	/* parse ms radio access capability */
 	if (parse_ra_cap(tp, &rac) >= 0) {
 		/* Get the EGPRS class from the RA capability */
@@ -138,7 +134,6 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 		LOGP(DBSSGP, LOGL_DEBUG, "Got downlink MS class %d/%d\n",
 			ms_class, egprs_ms_class);
 	}
-#endif
 
 	/* get lifetime */
 	uint16_t delay_csec = 0xffff;
