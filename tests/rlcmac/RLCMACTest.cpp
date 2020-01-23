@@ -111,14 +111,10 @@ void testRlcMacDownlink(void *test_ctx)
 	cout << " DOWNLINK " << endl;
 	for (int i = 0; i < testDataSize; i++)
 	{
+		cout << "vector1 = " << testData[i] << endl;
 		bitvec *vector = bitvec_alloc(23, test_ctx);
 		bitvec_unhex(vector, testData[i].c_str());
-		cout << "vector1 = ";
-		for (int i = 0; i < 23; i++)
-		{
-			cout << hex << (unsigned)*(vector->data + i);
-		}
-		cout << endl;
+
 		RlcMacDownlink_t data;
 		memset(&data, 0, sizeof(data));
 		cout << "=========Start DECODE===========" << endl;
@@ -127,26 +123,12 @@ void testRlcMacDownlink(void *test_ctx)
 		cout << "=========Start ENCODE=============" << endl;
 		encode_gsm_rlcmac_downlink(resultVector, &data);
 		cout << "+++++++++Finish ENCODE+++++++++++" << endl;
-		cout << "vector1 = ";
-		for (int i = 0; i < 23; i++)
-		{
-			cout << (unsigned)*(vector->data + i);
-		}
-		cout << endl;
-		cout << "vector2 = ";
-		for (int i = 0; i < 23; i++)
-		{
-			cout << (unsigned)*(resultVector->data + i);
-		}
-		cout << endl;
+		cout << "vector1 = " << osmo_hexdump(vector->data, 23) << endl;
+		cout << "vector2 = " << osmo_hexdump(resultVector->data, 23) << endl;
 		if (memcmp(vector->data, resultVector->data, 23) == 0)
-		{
 			cout << "vector1 == vector2 : TRUE" << endl;
-		}
 		else
-		{
 			cout << "vector1 == vector2 : FALSE" << endl;
-		}
 		bitvec_unhex(resultVector, DUMMY_VEC);
 		bitvec_free(vector);
 	}
@@ -175,14 +157,10 @@ void testRlcMacUplink(void *test_ctx)
 	cout << " UPLINK " << endl;
 	for (int i = 0; i < testDataSize; i++)
 	{
+		cout << "vector1 = " << testData[i] << endl;
 		bitvec *vector = bitvec_alloc(23, test_ctx);
 		bitvec_unhex(vector, testData[i].c_str());
-		cout << "vector1 = ";
-		for (int i = 0; i < 23; i++)
-		{
-			cout << hex << (unsigned)*(vector->data + i);
-		}
-		cout << endl;
+
 		RlcMacUplink_t data;
 		memset(&data, 0, sizeof(data));
 		cout << "=========Start DECODE===========" << endl;
@@ -191,26 +169,12 @@ void testRlcMacUplink(void *test_ctx)
 		cout << "=========Start ENCODE=============" << endl;
 		encode_gsm_rlcmac_uplink(resultVector, &data);
 		cout << "+++++++++Finish ENCODE+++++++++++" << endl;
-		cout << "vector1 = ";
-		for (int i = 0; i < 23; i++)
-		{
-			cout << (unsigned)*(vector->data + i);
-		}
-		cout << endl;
-		cout << "vector2 = ";
-		for (int i = 0; i < 23; i++)
-		{
-			cout << (unsigned)*(resultVector->data + i);
-		}
-		cout << endl;
+		cout << "vector1 = " << osmo_hexdump(vector->data, 23) << endl;
+		cout << "vector2 = " << osmo_hexdump(resultVector->data, 23) << endl;
 		if (memcmp(vector->data, resultVector->data, 23) == 0)
-		{
 			cout << "vector1 == vector2 : TRUE" << endl;
-		}
 		else
-		{
 			cout << "vector1 == vector2 : FALSE" << endl;
-		}
 		bitvec_unhex(resultVector, DUMMY_VEC);
 		bitvec_free(vector);
 	}
