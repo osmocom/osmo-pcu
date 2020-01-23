@@ -100,10 +100,10 @@ void testRlcMacDownlink(void *test_ctx)
 	"47283c367513ba333004242b2b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Assignment
 	"400820001a3904df0680efb3300b2b2b2b2b2b2b2b2b2b", // Packet Downlink Assignment (EGPRS)
 	"40284f0000001009810c826f4406809dcecb2b2b2b2b2b", // Packet Uplink Assignment (EGPRS)
-	"4024030f2f0000000087b0042b2b2b2b2b2b2b2b2b2b2b"  // Packet Uplink Ack Nack (EGPRS)
-	"4913e00850884013a8048b2b2b2b2b2b2b2b2b2b2b2b2b"
-	"412430007fffffffffffffffefd19c7ba12b2b2b2b2b2b"
-	"41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b"
+	"4024030f2f0000000087b0042b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Ack Nack (EGPRS)
+	"4913e00850884013a8048b2b2b2b2b2b2b2b2b2b2b2b2b", // Polling Request?
+	"412430007fffffffffffffffefd19c7ba12b2b2b2b2b2b", // Packet Uplink Ack Nack?
+	"41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // System Info 13?
 	};
 
 	int testDataSize = sizeof(testData)/sizeof(testData[0]);
@@ -166,7 +166,7 @@ void testRlcMacUplink(void *test_ctx)
 	"400b8020000000000000002480e0032b2b2b2b2b2b2b2b", // Packet Downlink Ack/Nack
 	"4016713dc094270ca2ae57ef909006aa0fc0001f80222b", // Packet Resource Request
 	"40200ffc0021ec010b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // EPDAN
-	"400a9020000000000000003010012a0800132b2b2b2b2b"
+	"400a9020000000000000003010012a0800132b2b2b2b2b", // Packet Downlink Ack/Nack ?
 	};
 
 	int testDataSize = sizeof(testData)/sizeof(testData[0]);

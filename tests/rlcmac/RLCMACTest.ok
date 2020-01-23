@@ -56,6 +56,30 @@ vector1 = 40243f2f000087b042b2b2b2b2b2b2b2b2b2b2b
 vector1 = 40243f2f000087b042b2b2b2b2b2b2b2b2b2b2b
 vector2 = 40243f2f000087b042b2b2b2b2b2b2b2b2b2b2b
 vector1 == vector2 : TRUE
+vector1 = 4913e0850884013a848b2b2b2b2b2b2b2b2b2b2b2b2b
+=========Start DECODE===========
++++++++++Finish DECODE++++++++++
+=========Start ENCODE=============
++++++++++Finish ENCODE+++++++++++
+vector1 = 4913e0850884013a848b2b2b2b2b2b2b2b2b2b2b2b2b
+vector2 = 491312b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
+vector1 == vector2 : FALSE
+vector1 = 41243007fffffffffffffffefd19c7ba12b2b2b2b2b2b
+=========Start DECODE===========
++++++++++Finish DECODE++++++++++
+=========Start ENCODE=============
++++++++++Finish ENCODE+++++++++++
+vector1 = 41243007fffffffffffffffefd19c7ba12b2b2b2b2b2b
+vector2 = 41243007fffffffffffffffefd19c7ba12b2b2b2b2b2b
+vector1 == vector2 : TRUE
+vector1 = 41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
+=========Start DECODE===========
++++++++++Finish DECODE++++++++++
+=========Start ENCODE=============
++++++++++Finish ENCODE+++++++++++
+vector1 = 41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
+vector2 = 41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
+vector1 == vector2 : TRUE
 *** testRlcMacUplink ***
  UPLINK 
 vector1 = 40e1e61d11d2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
