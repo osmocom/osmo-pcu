@@ -40,6 +40,7 @@ using namespace std;
 
 void printSizeofRLCMAC()
 {
+	printf("*** %s ***\n", __func__);
 	cout << "sizeof RlcMacUplink_t                       " << sizeof(RlcMacUplink_t) << endl;
 	cout << "sizeof Packet_Cell_Change_Failure_t         " << sizeof(Packet_Cell_Change_Failure_t) << endl;
 	cout << "sizeof Packet_Control_Acknowledgement_t     " << sizeof(Packet_Control_Acknowledgement_t) << endl;
@@ -88,6 +89,7 @@ void printSizeofRLCMAC()
 
 void testRlcMacDownlink(void *test_ctx)
 {
+	printf("*** %s ***\n", __func__);
 	struct bitvec *resultVector = bitvec_alloc(23, test_ctx);
 	bitvec_unhex(resultVector, DUMMY_VEC);
 
@@ -155,6 +157,7 @@ void testRlcMacDownlink(void *test_ctx)
 
 void testRlcMacUplink(void *test_ctx)
 {
+	printf("*** %s ***\n", __func__);
 	struct bitvec *resultVector = bitvec_alloc(23, test_ctx);
 	bitvec_unhex(resultVector, DUMMY_VEC);
 
@@ -217,6 +220,7 @@ void testRlcMacUplink(void *test_ctx)
 
 void testCsnLeftAlignedVarBmpBounds(void *test_ctx)
 {
+	printf("*** %s ***\n", __func__);
 	struct msgb *m = msgb_alloc(80, "test");
 	static uint8_t exp[] = { 0x7f, 0xff, 0xff, 0xee, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 	bitvec *vector = bitvec_alloc(23, test_ctx);

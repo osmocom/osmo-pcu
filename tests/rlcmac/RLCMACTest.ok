@@ -1,3 +1,4 @@
+*** testRlcMacDownlink ***
  DOWNLINK 
 vector1 = 4e8250e3f1a81d882080b2b2b2b2b2b2b2b2b2b2b
 =========Start DECODE===========
@@ -55,6 +56,7 @@ vector1 = 40243f2f000087b042b2b2b2b2b2b2b2b2b2b2b
 vector1 = 40243f2f000087b042b2b2b2b2b2b2b2b2b2b2b
 vector2 = 40243f2f000087b042b2b2b2b2b2b2b2b2b2b2b
 vector1 == vector2 : TRUE
+*** testRlcMacUplink ***
  UPLINK 
 vector1 = 40e1e61d11d2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
 =========Start DECODE===========
@@ -96,3 +98,4 @@ vector1 = 40a90200000000301012a80132b2b2b2b2b
 vector1 = 40a90200000000301012a80132b2b2b2b2b
 vector2 = 40a90200000000301012a80132b2b2b2b2b
 vector1 == vector2 : TRUE
+*** testCsnLeftAlignedVarBmpBounds ***
