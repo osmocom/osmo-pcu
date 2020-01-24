@@ -432,7 +432,7 @@ int Encoding::write_immediate_assignment_reject(
 
 static inline void log_alert_exit(const char * error)
 {
-	LOGP(DRLCMACUL, LOGL_ERROR, error);
+	LOGP(DRLCMACUL, LOGL_ERROR, "%s", error);
 	pcu_tx_txt_ind(PCU_OML_ALERT, error);
 	exit(1);
 }
