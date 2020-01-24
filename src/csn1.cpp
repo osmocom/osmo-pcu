@@ -1243,6 +1243,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
 	LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)bitvec_read_field(vector, &readIndex, 1));
         /* existNextElement() returned FALSE, 1 bit consumed */
         bit_offset++;
+        remaining_bits_len--;
 
         /* Store the counted number of elements of the array */
         *pui8DATA(data, (gint16)pDescr->descr.value) = ElementCount;
@@ -1567,7 +1568,6 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
 
         if (remaining_bits_len >= no_of_bits)
         {
-          remaining_bits_len -= no_of_bits;
           if (no_of_bits <= 8)
           {
             pui8      = pui8DATA(data, pDescr->offset);
@@ -1608,7 +1608,6 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
 
         if (remaining_bits_len >= no_of_bits)
         {
-          remaining_bits_len -= (no_of_bits*nCount);
           if (no_of_bits <= 8)
           {
             pui8 = pui8DATA(data, pDescr->offset);
@@ -1617,6 +1616,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
 	      bitvec_write_field(vector, &writeIndex, *pui8, no_of_bits);
               LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
+              remaining_bits_len -= no_of_bits;
               bit_offset += no_of_bits;
             } while (--nCount > 0);
           }
@@ -1887,7 +1887,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
             pui8  = pui8DATA(data, pDescr->offset);
 	    bitvec_write_field(vector, &writeIndex, *pui8, 1);
             LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
-            remaining_bits_len -= 1;
+            remaining_bits_len--;
             bit_offset++;
             pDescr++;
             break;
@@ -1904,8 +1904,6 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
             guint8 no_of_bits = (guint8) pDescr->i;
             if (remaining_bits_len >= no_of_bits)
             {
-              remaining_bits_len -= no_of_bits;
-
               if (no_of_bits <= 8)
               {
                 pui8      = pui8DATA(data, pDescr->offset);
@@ -1934,6 +1932,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
               return ProcessError(writeIndex,"csnStreamEncoder", CSN_ERROR_GENERAL, pDescr);
             }
 
+            remaining_bits_len -= no_of_bits;
             bit_offset += no_of_bits;
             pDescr++;
             break;
@@ -2026,7 +2025,6 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
 
             if (remaining_bits_len >= no_of_bits)
             {
-              remaining_bits_len -= (no_of_bits*nCount);
               if (no_of_bits <= 8)
               {
                 pui8 = pui8DATA(data, pDescr->offset);
@@ -2035,6 +2033,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
 		  bitvec_write_field(vector, &writeIndex, *pui8, no_of_bits);
                   LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
                   pui8++;
+                  remaining_bits_len -= no_of_bits;
                   bit_offset += no_of_bits;
                 } while (--nCount > 0);
               }
@@ -2191,8 +2190,9 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
         writeIndex--;
 	bitvec_write_field(vector, &writeIndex, fExist, 1);
         LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz, (unsigned)fExist);
+        remaining_bits_len--;
+        bit_offset++;
         pDescr++;
-        remaining_bits_len -= 1;
 
         if (!exist)
         {
@@ -2222,9 +2222,9 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
 	bitvec_write_field(vector, &writeIndex, *pui8, 1);
         fExist = *pui8;
         LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
-        remaining_bits_len -= 1;
 
-        ++bit_offset;
+        remaining_bits_len--;
+        bit_offset++;
 
         if (fExist == 0)
         { /* Skip 'i' entries */
@@ -2247,12 +2247,6 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
           /* skip 'i' entries + this entry */
           pDescr += pDescr->i + 1;
 
-          /* pDescr now must be pointing to a CSN_END entry, if not this is an error */
-          if ( pDescr->type != CSN_END )
-          { /* substract one more bit from remaining_bits_len to make the "not enough bits" error to be triggered */
-            remaining_bits_len--;
-          }
-
           /* set the data member to "not exist" */
           //*pui8 = 0;
           break;
@@ -2265,8 +2259,8 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
         writeIndex--;
 	bitvec_write_field(vector, &writeIndex, fExist, 1);
         pui8++;
-        remaining_bits_len -= 1;
 
+        remaining_bits_len--;
         bit_offset++;
 
         if (fExist == 0)
@@ -2299,7 +2293,6 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
 
         if (no_of_bits > 0)
         {
-          remaining_bits_len -= no_of_bits;
 
           if (remaining_bits_len < 0)
           {
@@ -2317,6 +2310,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
               pui8++;
               no_of_bits  -= nB1;
               bit_offset += nB1; /* (nB1 is no_of_bits Mod 8) */
+              remaining_bits_len -= nB1;
             }
 
             /* remaining no_of_bits is a multiple of 8 or 0 */
@@ -2326,6 +2320,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
               LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
               no_of_bits -= 8;
+              remaining_bits_len -= 8;
             }
           }
         }
@@ -2444,8 +2439,6 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
 
         if (count > 0)
         {
-          remaining_bits_len -= count * 8;
-
           if (remaining_bits_len < 0)
           {
             return ProcessError(writeIndex,"csnStreamEncoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
@@ -2459,6 +2452,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
             LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
             pui8++;
             bit_offset += 8;
+            remaining_bits_len -= 8;
             count--;
           }
         }
@@ -2491,7 +2485,6 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
 	  bitvec_write_field(vector, &writeIndex, *pui8, no_of_bits);
           LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
           pui8++;
-          remaining_bits_len -= no_of_bits;
           ElementCount--;
 
           if (remaining_bits_len < 0)
@@ -2500,6 +2493,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
           }
 
           bit_offset += no_of_bits;
+          remaining_bits_len -= no_of_bits;
         }
 
 	bitvec_write_field(vector, &writeIndex, !Tag, 1);
