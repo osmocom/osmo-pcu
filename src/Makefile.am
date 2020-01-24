@@ -40,7 +40,7 @@ noinst_LTLIBRARIES = libgprs.la
 
 libgprs_la_SOURCES = \
 	gprs_debug.cpp \
-	csn1.cpp \
+	csn1.c \
 	gsm_rlcmac.cpp \
 	gprs_bssgp_pcu.cpp \
 	gprs_rlcmac.cpp \

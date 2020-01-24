@@ -24,7 +24,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <assert.h>
-#include "csn1.h"
 #include "gsm_rlcmac.h"
 #include "gprs_rlcmac.h"
 #include "decoding.h"
@@ -37,6 +36,8 @@ extern const struct log_info gprs_log_info;
 #include <osmocom/core/utils.h>
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/application.h>
+
+#include "csn1.h"
 }
 using namespace std;
 

@@ -28,12 +28,7 @@
 #ifndef _PACKET_CSN1_H_
 #define _PACKET_CSN1_H_
 
-extern "C" {
 #include <osmocom/core/bitvec.h>
-}
-
-#include <iostream>
-#include <cstdlib>
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 //#define max(a,b) (((a)>(b))?(a):(b))
@@ -88,7 +83,7 @@ typedef struct
   gint  direction;           /* 0 - decode; 1 - encode */
 } csnStream_t;
 
-typedef gint16 (*StreamSerializeFcn_t)(csnStream_t* ar, bitvec *vector, unsigned& readIndex, void* data);
+typedef gint16 (*StreamSerializeFcn_t)(csnStream_t* ar, struct bitvec *vector, unsigned *readIndex, void* data);
 typedef enum
 {
   CSN_END = 0,
@@ -233,9 +228,9 @@ void csnStreamInit(csnStream_t* ar,gint BitOffset,gint BitCount);
 * RETURNS:  int  Number of bits left to be unpacked. Negative Error code if failed to unpack all bits
 ******************************************************************************/
 
-gint16 csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsigned& readIndex, void* data);
+gint16 csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector, unsigned *readIndex, void* data);
 
-gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsigned& readIndex, void* data);
+gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector, unsigned *writeIndex, void* data);
 
 /* CSN struct macro's */
 #define  CSN_DESCR_BEGIN(_STRUCT)\

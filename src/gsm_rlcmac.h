@@ -32,7 +32,10 @@
 #ifndef __PACKET_GSM_RLCMAC_H__
 #define __PACKET_GSM_RLCMAC_H__
 
+extern "C" {
 #include "csn1.h"
+}
+
 #include <iostream>
 #include <cstdlib>
 
