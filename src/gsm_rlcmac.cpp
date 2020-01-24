@@ -387,9 +387,9 @@ CSN_DESCR_END  (IA_EGPRS_00_t)
 static const
 CSN_ChoiceElement_t IA_EGPRS_Choice[] =
 {
-  {2, 0x00, M_TYPE   (IA_EGPRS_t, u.IA_EGPRS_PUA, IA_EGPRS_00_t)},
-  {2, 0x01, CSN_ERROR(IA_EGPRS_t, "01 <IA_EGPRS>", CSN_ERROR_STREAM_NOT_SUPPORTED)},
-  {1, 0x01, CSN_ERROR(IA_EGPRS_t, "1 <IA_EGPRS>", CSN_ERROR_STREAM_NOT_SUPPORTED)}
+  {2, 0x00, 0, M_TYPE   (IA_EGPRS_t, u.IA_EGPRS_PUA, IA_EGPRS_00_t)},
+  {2, 0x01, 0, CSN_ERROR(IA_EGPRS_t, "01 <IA_EGPRS>", CSN_ERROR_STREAM_NOT_SUPPORTED)},
+  {1, 0x01, 0, CSN_ERROR(IA_EGPRS_t, "1 <IA_EGPRS>", CSN_ERROR_STREAM_NOT_SUPPORTED)}
 };
 
 /* Please observe the double usage of UnionType element.
@@ -526,10 +526,10 @@ CSN_DESCR_END  (IA_PacketAssignment_t)
 static const
 CSN_ChoiceElement_t PacketPollingID[] =
 {
-  {1, 0,    M_TYPE(PacketPollingID_t, u.Global_TFI, Global_TFI_t)},
-  {2, 0x02, M_UINT(PacketPollingID_t, u.TLLI, 32)},
-  {3, 0x06, M_UINT(PacketPollingID_t, u.TQI, 16)},
-/*{3, 0x07 , M_TYPE(PacketUplinkID_t, u.Packet_Request_Reference, Packet_Request_Reference_t)},*/
+  {1, 0,    0, M_TYPE(PacketPollingID_t, u.Global_TFI, Global_TFI_t)},
+  {2, 0x02, 0, M_UINT(PacketPollingID_t, u.TLLI, 32)},
+  {3, 0x06, 0, M_UINT(PacketPollingID_t, u.TQI, 16)},
+/*{3, 0x07 , 0, M_TYPE(PacketUplinkID_t, u.Packet_Request_Reference, Packet_Request_Reference_t)},*/
 };
 
 static const
@@ -605,9 +605,9 @@ CSN_DESCR_END  (PBCCH_Not_present_t)
 static const
 CSN_ChoiceElement_t SI13_PBCCH_Description_Channel[] =
 {/* this one is used in SI13*/
-  {2, 0x00 , M_NULL(PBCCH_Description_t, u.dummy, 0)},/*Default to BCCH carrier*/
-  {2, 0x01 , M_UINT(PBCCH_Description_t, u.ARFCN, 10)},
-  {1, 0x01 , M_UINT(PBCCH_Description_t, u.MAIO, 6)},
+  {2, 0x00, 0, M_NULL(PBCCH_Description_t, u.dummy, 0)},/*Default to BCCH carrier*/
+  {2, 0x01, 0, M_UINT(PBCCH_Description_t, u.ARFCN, 10)},
+  {1, 0x01, 0, M_UINT(PBCCH_Description_t, u.MAIO, 6)},
 };
 
 static const
@@ -895,12 +895,12 @@ gint16 Additional_access_technologies_Dissector(csnStream_t* ar, bitvec* vector,
 static const
 CSN_ChoiceElement_t MS_RA_capability_value_Choice[] =
 {
-  {4, AccTech_GSMP,     M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
-  {4, AccTech_GSME,     M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
-  {4, AccTech_GSM1800,  M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
-  {4, AccTech_GSM1900,  M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
-  {4, AccTech_GSM850,   M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
-  {4, AccTech_GSMOther, M_SERIALIZE (MS_RA_capability_value_t, u.Additional_access_technologies, 7, Additional_access_technologies_Dissector)}, /* Short Form */
+  {4, AccTech_GSMP,     0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSME,     0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSM1800,  0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSM1900,  0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSM850,   0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSMOther, 0, M_SERIALIZE (MS_RA_capability_value_t, u.Additional_access_technologies, 7, Additional_access_technologies_Dissector)}, /* Short Form */
 };
 
 static const
@@ -928,12 +928,12 @@ CSN_DESCR_END  (ARC_t)
 static const
 CSN_ChoiceElement_t MultibandChoice[] =
 {
-  {3, 0x00, M_UINT(Multiband_t, u.A5_Bits, 4)},
-  {3, 0x05, M_TYPE(Multiband_t, u.ARC, ARC_t)},
-  {3, 0x06, M_TYPE(Multiband_t, u.ARC, ARC_t)},
-  {3, 0x01, M_TYPE(Multiband_t, u.ARC, ARC_t)},
-  {3, 0x02, M_TYPE(Multiband_t, u.ARC, ARC_t)},
-  {3, 0x04, M_TYPE(Multiband_t, u.ARC, ARC_t)},
+  {3, 0x00, 0, M_UINT(Multiband_t, u.A5_Bits, 4)},
+  {3, 0x05, 0, M_TYPE(Multiband_t, u.ARC, ARC_t)},
+  {3, 0x06, 0, M_TYPE(Multiband_t, u.ARC, ARC_t)},
+  {3, 0x01, 0, M_TYPE(Multiband_t, u.ARC, ARC_t)},
+  {3, 0x02, 0, M_TYPE(Multiband_t, u.ARC, ARC_t)},
+  {3, 0x04, 0, M_TYPE(Multiband_t, u.ARC, ARC_t)},
 };
 
 static const
@@ -1053,8 +1053,8 @@ CSN_DESCR_END  (Channel_Request_Description_t)
 static const
 CSN_ChoiceElement_t PacketResourceRequestID[] =
 {
-  {1, 0,    M_TYPE(PacketResourceRequestID_t, u.Global_TFI, Global_TFI_t)},
-  {1, 0x01, M_UINT(PacketResourceRequestID_t, u.TLLI, 32)},
+  {1, 0,    0, M_TYPE(PacketResourceRequestID_t, u.Global_TFI, Global_TFI_t)},
+  {1, 0x01, 0, M_UINT(PacketResourceRequestID_t, u.TLLI, 32)},
 };
 
 static const
@@ -1732,10 +1732,10 @@ CSN_DESCR_END  (h111_Packet_Request_Reference_t)
 static const
 CSN_ChoiceElement_t PacketUplinkID[] =
 {
-  {1, 0 ,    M_TYPE(PacketUplinkID_t, u.Global_TFI, Global_TFI_t)},
-  {2, 0x02 , M_UINT(PacketUplinkID_t, u.TLLI, 32)},
-  {3, 0x06 , M_UINT(PacketUplinkID_t, u.TQI, 16)},
-  {3, 0x07 , M_TYPE(PacketUplinkID_t, u.Packet_Request_Reference, Packet_Request_Reference_t)},
+  {1, 0,    0, M_TYPE(PacketUplinkID_t, u.Global_TFI, Global_TFI_t)},
+  {2, 0x02, 0, M_UINT(PacketUplinkID_t, u.TLLI, 32)},
+  {3, 0x06, 0, M_UINT(PacketUplinkID_t, u.TQI, 16)},
+  {3, 0x07, 0, M_TYPE(PacketUplinkID_t, u.Packet_Request_Reference, Packet_Request_Reference_t)},
 };
 
 static const
@@ -1866,8 +1866,8 @@ CSN_DESCR_END  (Measurement_Mapping_struct_t)
 static const
 CSN_ChoiceElement_t PacketDownlinkID[] =
 {
-  {1,    0, M_TYPE(PacketDownlinkID_t, u.Global_TFI, Global_TFI_t)},
-  {2, 0x02, M_UINT(PacketDownlinkID_t, u.TLLI, 32)},
+  {1,    0, 0, M_TYPE(PacketDownlinkID_t, u.Global_TFI, Global_TFI_t)},
+  {2, 0x02, 0, M_UINT(PacketDownlinkID_t, u.TLLI, 32)},
 };
 
 static const
@@ -2106,9 +2106,9 @@ CSN_DESCR_END  (GlobalTimingOrPower_t)
 static const
 CSN_ChoiceElement_t PacketPowerControlTimingAdvanceID[] =
 {
-  {1, 0,    M_TYPE(PacketPowerControlTimingAdvanceID_t, u.Global_TFI, Global_TFI_t)},
-  {3, 0x06, M_UINT(PacketPowerControlTimingAdvanceID_t, u.TQI, 16)},
-  {3, 0x07, M_TYPE(PacketPowerControlTimingAdvanceID_t, u.Packet_Request_Reference, Packet_Request_Reference_t)},
+  {1, 0,    0, M_TYPE(PacketPowerControlTimingAdvanceID_t, u.Global_TFI, Global_TFI_t)},
+  {3, 0x06, 0, M_UINT(PacketPowerControlTimingAdvanceID_t, u.TQI, 16)},
+  {3, 0x07, 0, M_TYPE(PacketPowerControlTimingAdvanceID_t, u.Packet_Request_Reference, Packet_Request_Reference_t)},
 };
 
 static const
@@ -2388,9 +2388,9 @@ CSN_DESCR_END  (Packet_PRACH_Parameters_t)
 static const
 CSN_ChoiceElement_t RejectID[] =
 {
-  {1, 0x00, M_UINT(RejectID_t, u.TLLI, 32)},
-  {2, 0x02, M_TYPE(RejectID_t, u.Packet_Request_Reference, Packet_Request_Reference_t)},
-  {2, 0x03, M_TYPE(RejectID_t, u.Global_TFI, Global_TFI_t)},
+  {1, 0x00, 0, M_UINT(RejectID_t, u.TLLI, 32)},
+  {2, 0x02, 0, M_TYPE(RejectID_t, u.Packet_Request_Reference, Packet_Request_Reference_t)},
+  {2, 0x03, 0, M_TYPE(RejectID_t, u.Global_TFI, Global_TFI_t)},
 };
 
 static const
@@ -2421,8 +2421,8 @@ CSN_DESCR_END  (Packet_Access_Reject_t)
 static const
 CSN_ChoiceElement_t PacketCellChangeOrderID[] =
 {
-  {1, 0,    M_TYPE(PacketCellChangeOrderID_t, u.Global_TFI, Global_TFI_t)},
-  {2, 0x02, M_UINT(PacketCellChangeOrderID_t, u.TLLI, 32)},
+  {1, 0,    0, M_TYPE(PacketCellChangeOrderID_t, u.Global_TFI, Global_TFI_t)},
+  {2, 0x02, 0, M_UINT(PacketCellChangeOrderID_t, u.TLLI, 32)},
 };
 /* PacketCellChangeOrderID_t; */
 
@@ -3819,8 +3819,8 @@ CSN_DESCR_END  (PNCD_Container_Without_ID_t)
 static const
 CSN_ChoiceElement_t PNCDContainer[] =
 {
-  {1, 0x0, M_TYPE(PNCDContainer_t, u.PNCD_Container_Without_ID, PNCD_Container_Without_ID_t)},
-  {1, 0x1, M_TYPE(PNCDContainer_t, u.PNCD_Container_With_ID, PNCD_Container_With_ID_t)},
+  {1, 0x0, 0, M_TYPE(PNCDContainer_t, u.PNCD_Container_Without_ID, PNCD_Container_Without_ID_t)},
+  {1, 0x1, 0, M_TYPE(PNCDContainer_t, u.PNCD_Container_With_ID, PNCD_Container_With_ID_t)},
 };
 
 static const
@@ -4124,8 +4124,8 @@ CSN_DESCR_END  (Packet_PhysicalInformation_t)
 static const
 CSN_ChoiceElement_t AdditionalMsRadAccessCapID[] =
 {
-  {1, 0,    M_TYPE(AdditionalMsRadAccessCapID_t, u.Global_TFI, Global_TFI_t)},
-  {1, 0x01, M_UINT(AdditionalMsRadAccessCapID_t, u.TLLI, 32)},
+  {1, 0,    0, M_TYPE(AdditionalMsRadAccessCapID_t, u.Global_TFI, Global_TFI_t)},
+  {1, 0x01, 0, M_UINT(AdditionalMsRadAccessCapID_t, u.TLLI, 32)},
 };
 
 static const

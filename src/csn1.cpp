@@ -507,8 +507,10 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
             pui8          = pui8DATA(data, pDescr->offset);
             *pui8         = i;
             LOGPC(DCSN1, LOGL_NOTICE, "Choice %s = %u | ", pDescr->sz , (unsigned)value);
-            bit_offset += no_of_bits;
-            remaining_bits_len -= no_of_bits;
+            if (!pChoice->keep_bits) {
+              bit_offset += no_of_bits;
+              remaining_bits_len -= no_of_bits;
+            }
 
             csnStreamInit(&arT, bit_offset, remaining_bits_len);
 	    Status = csnStreamDecoder(&arT, descr, vector, readIndex, data);

@@ -212,6 +212,7 @@ typedef struct
 {
   guint8     bits;
   guint8     value;
+  gboolean   keep_bits;
   CSN_DESCR descr;
 } CSN_ChoiceElement_t;
 
