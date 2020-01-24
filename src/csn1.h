@@ -56,6 +56,7 @@ extern "C" {
 typedef signed int gint32;
 typedef signed short gint16;
 typedef int gint;
+typedef unsigned int guint;
 typedef gint gboolean;
 typedef unsigned char guint8;
 typedef unsigned short guint16;

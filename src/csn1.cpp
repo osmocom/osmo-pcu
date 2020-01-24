@@ -1150,7 +1150,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
         {
           while (remaining_bits_len > 0)
           {
-            guint8 bits_to_handle = remaining_bits_len%8;
+            guint bits_to_handle = remaining_bits_len%8;
             if (bits_to_handle > 0)
             {
 	      LOGPC(DCSN1, LOGL_NOTICE, "%" PRIu64 "|", bitvec_read_field(vector, &readIndex, bits_to_handle));
