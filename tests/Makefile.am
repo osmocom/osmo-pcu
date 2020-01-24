@@ -136,7 +136,7 @@ $(srcdir)/package.m4: $(top_srcdir)/configure.ac
 
 EXTRA_DIST = \
 	testsuite.at $(srcdir)/package.m4 $(TESTSUITE)	\
-	rlcmac/RLCMACTest.ok rlcmac/RLCMACTest.err \
+	rlcmac/RLCMACTest.ok \
 	alloc/AllocTest.ok alloc/AllocTest.err \
 	tbf/TbfTest.err \
 	bitcomp/BitcompTest.ok bitcomp/BitcompTest.err \
