@@ -190,6 +190,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
 
       case CSN_NULL:
       { /* Empty member! */
+        bit_offset += pDescr->i;
         pDescr++;
         break;
       }
@@ -631,6 +632,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
 
           case CSN_NULL:
           { /* Empty member! */
+            bit_offset += pDescr->i;
             pDescr++;
             break;
           }

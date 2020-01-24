@@ -605,7 +605,7 @@ CSN_DESCR_END  (PBCCH_Not_present_t)
 static const
 CSN_ChoiceElement_t SI13_PBCCH_Description_Channel[] =
 {/* this one is used in SI13*/
-  {2, 0x00 , M_NULL(PBCCH_Description_t, u.dummy)},/*Default to BCCH carrier*/
+  {2, 0x00 , M_NULL(PBCCH_Description_t, u.dummy, 0)},/*Default to BCCH carrier*/
   {2, 0x01 , M_UINT(PBCCH_Description_t, u.ARFCN, 10)},
   {1, 0x01 , M_UINT(PBCCH_Description_t, u.MAIO, 6)},
 };
@@ -3064,7 +3064,7 @@ CSN_DESCR_END          (PriorityAndEUTRAN_ParametersDescription_PMO_t)
 
 static const
 CSN_DESCR_BEGIN        (Delete_All_Stored_Individual_Priorities_t)
-  M_NULL               (Delete_All_Stored_Individual_Priorities_t, dummy),
+  M_NULL               (Delete_All_Stored_Individual_Priorities_t, dummy, 0),
 CSN_DESCR_END          (Delete_All_Stored_Individual_Priorities_t)
 
 static const
