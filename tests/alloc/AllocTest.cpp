@@ -309,7 +309,7 @@ static inline bool test_alloc_b_jolly(uint8_t ms_class)
 
 	tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 	OSMO_ASSERT(tfi >= 0);
-	ul_tbf = tbf_alloc_ul_tbf(bts, NULL, .1, ms_class, 0, false);
+	ul_tbf = tbf_alloc_ul_tbf(bts, NULL, -1, ms_class, 0, false);
 	if (!ul_tbf)
 		return false;
 
