@@ -1762,7 +1762,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
       {
         //gint16 count = pDescr->i;
         guint8 i     = 0;
-        CSN_ChoiceElement_t* pChoice = (CSN_ChoiceElement_t*) pDescr->descr.ptr;
+        const CSN_ChoiceElement_t* pChoice = (const CSN_ChoiceElement_t*) pDescr->descr.ptr;
 
         pui8          = pui8DATA(data, pDescr->offset);
         i = *pui8;
