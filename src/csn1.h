@@ -480,7 +480,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par3: type of member
  *****************************************************************************/
 #define M_TYPE(_STRUCT, _MEMBER, _MEMBER_TYPE)\
-        {CSN_TYPE, 0, {(void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_TYPE, 0, {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
 
 /******************************************************************************
  * M_UNION(Par1, Par2)
