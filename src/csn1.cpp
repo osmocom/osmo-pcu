@@ -147,7 +147,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
 {
   gint  remaining_bits_len = ar->remaining_bits_len;
   gint  bit_offset         = ar->bit_offset;
-  guint8*  pui8;
+  guint8*  pui8 = NULL;
   guint16* pui16;
   guint32* pui32;
   guint64* pui64;
