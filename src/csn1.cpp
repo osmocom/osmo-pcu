@@ -335,7 +335,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
         guint8  no_of_bits  = (guint8) pDescr->i;
         guint16 nCount = (guint16)pDescr->descr.value; /* nCount supplied by value i.e. M_UINT_ARRAY(...) */
 
-        if (pDescr->serialize.value != 0)
+        if (pDescr->format_p.value != 0)
         { /* nCount specified by a reference to field holding value i.e. M_VAR_UINT_ARRAY(...) */
           nCount = *pui16DATA(data, nCount);
         }
@@ -382,7 +382,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
         gint16      Status;
         csnStream_t arT    = *ar;
         gint16      nCount = pDescr->i;
-        guint16      nSize  = (guint16)(gint32)pDescr->serialize.value;
+        guint16      nSize  = (guint16)(gint32)pDescr->format_p.value;
 
         pui8 = pui8DATA(data, pDescr->offset);
         if (pDescr->type == CSN_VARIABLE_TARRAY)
@@ -539,7 +539,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
 
       case CSN_SERIALIZE:
       {
-        StreamSerializeFcn_t serialize = pDescr->serialize.fcn;
+        StreamSerializeFcn_t serialize = (StreamSerializeFcn_t)pDescr->aux_fn;
         csnStream_t          arT       = *ar;
         guint8 length_len              = pDescr->i;
         gint16               Status    = -1;
@@ -762,7 +762,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
             guint8  no_of_bits  = (guint8) pDescr->i;
             guint16 nCount = (guint16)pDescr->descr.value; /* nCount supplied by value i.e. M_UINT_ARRAY(...) */
 
-            if (pDescr->serialize.value != 0)
+            if (pDescr->format_p.value != 0)
             { /* nCount specified by a reference to field holding value i.e. M_VAR_UINT_ARRAY(...) */
               nCount = *pui16DATA(data, nCount);
             }
@@ -821,7 +821,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
             gint16      Status;
             csnStream_t arT    = *ar;
             guint16      nCount = (guint16) pDescr->i;
-            guint16      nSize  = (guint16)(guint32)pDescr->serialize.value;
+            guint16      nSize  = (guint16)(guint32)pDescr->format_p.value;
 
             pui8  = pui8DATA(data, pDescr->offset);
 
@@ -1264,7 +1264,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
          *  M_REC_TARRAY(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)
          * {t, offsetof(_STRUCT, _ElementCountField), (void*)CSNDESCR_##_MEMBER_TYPE, offsetof(_STRUCT, _MEMBER), #_MEMBER, (StreamSerializeFcn_t)sizeof(_MEMBER_TYPE)}
          */
-        gint16 nSizeElement = (gint16)(gint32)pDescr->serialize.value;
+        gint16 nSizeElement = (gint16)(gint32)pDescr->format_p.value;
         guint8  ElementCount = 0;
         pui8  = pui8DATA(data, pDescr->offset);
 
@@ -1327,7 +1327,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
          * M_REC_TARRAY(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)
          * {t, offsetof(_STRUCT, _ElementCountField), (void*)CSNDESCR_##_MEMBER_TYPE, offsetof(_STRUCT, _MEMBER), #_MEMBER, (StreamSerializeFcn_t)sizeof(_MEMBER_TYPE)}
          */
-        gint16      nSizeElement = (gint16)(gint32)pDescr->serialize.value;
+        gint16      nSizeElement = (gint16)(gint32)pDescr->format_p.value;
         guint8       ElementCount = 0;
         csnStream_t arT          = *ar;
         gboolean     EndOfList    = FALSE;
@@ -1608,7 +1608,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
         guint8  no_of_bits  = (guint8) pDescr->i;
         guint16 nCount = (guint16)pDescr->descr.value; /* nCount supplied by value i.e. M_UINT_ARRAY(...) */
 
-        if (pDescr->serialize.value != 0)
+        if (pDescr->format_p.value != 0)
         { /* nCount specified by a reference to field holding value i.e. M_VAR_UINT_ARRAY(...) */
           nCount = *pui16DATA(data, nCount);
         }
@@ -1655,7 +1655,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
         gint16      Status;
         csnStream_t arT    = *ar;
         gint16      nCount = pDescr->i;
-        guint16     nSize  = (guint16)(gint32)pDescr->serialize.value;
+        guint16     nSize  = (guint16)(gint32)pDescr->format_p.value;
 
         pui8 = pui8DATA(data, pDescr->offset);
         if (pDescr->type == CSN_VARIABLE_TARRAY)
@@ -1801,7 +1801,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
 
    case CSN_SERIALIZE:
       {
-        StreamSerializeFcn_t serialize = pDescr->serialize.fcn;
+        StreamSerializeFcn_t serialize = (StreamSerializeFcn_t)pDescr->aux_fn;
         csnStream_t          arT       = *ar;
         guint8 length_len              = pDescr->i;
         gint16               Status = -1;
@@ -2025,7 +2025,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
             guint8  no_of_bits  = (guint8) pDescr->i;
             guint16 nCount = (guint16)pDescr->descr.value; /* nCount supplied by value i.e. M_UINT_ARRAY(...) */
 
-            if (pDescr->serialize.value != 0)
+            if (pDescr->format_p.value != 0)
             { /* nCount specified by a reference to field holding value i.e. M_VAR_UINT_ARRAY(...) */
               nCount = *pui16DATA(data, nCount);
             }
@@ -2072,7 +2072,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
             gint16      Status;
             csnStream_t arT    = *ar;
             gint16      nCount = pDescr->i;
-            guint16     nSize  = (guint16)(gint32)pDescr->serialize.value;
+            guint16     nSize  = (guint16)(gint32)pDescr->format_p.value;
 
             pui8 = pui8DATA(data, pDescr->offset);
             if (pDescr->type == CSN_VARIABLE_TARRAY)
@@ -2517,7 +2517,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
          *  M_REC_TARRAY(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)
          * {t, offsetof(_STRUCT, _ElementCountField), (void*)CSNDESCR_##_MEMBER_TYPE, offsetof(_STRUCT, _MEMBER), #_MEMBER, (StreamSerializeFcn_t)sizeof(_MEMBER_TYPE)}
          */
-        gint16 nSizeElement = (gint16)(gint32)pDescr->serialize.value;
+        gint16 nSizeElement = (gint16)(gint32)pDescr->format_p.value;
         guint8  ElementCount = 0;
         pui8  = pui8DATA(data, pDescr->offset);
         /* Store the counted number of elements of the array */
@@ -2579,7 +2579,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
          * M_REC_TARRAY(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)
          * {t, offsetof(_STRUCT, _ElementCountField), (void*)CSNDESCR_##_MEMBER_TYPE, offsetof(_STRUCT, _MEMBER), #_MEMBER, (StreamSerializeFcn_t)sizeof(_MEMBER_TYPE)}
          */
-        gint16      nSizeElement = (gint16)(gint32)pDescr->serialize.value;
+        gint16      nSizeElement = (gint16)(gint32)pDescr->format_p.value;
         guint8      ElementCount = 0;
         guint8      ElementNum   = 0;
         csnStream_t arT          = *ar;
