@@ -548,15 +548,20 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
         bit_offset += length_len;
         remaining_bits_len -= length_len;
 
-        csnStreamInit(&arT, bit_offset, length);
+        csnStreamInit(&arT, bit_offset, length > 0 ? length : remaining_bits_len);
         arT.direction = 1;
         LOGPC(DCSN1, LOGL_NOTICE, "ptr = %p | offset = %d | ", (void *)data, (int)pDescr->offset);
 	Status = serialize(&arT, vector, readIndex, pvDATA(data, pDescr->offset));
 
         if (Status >= 0)
         {
-          remaining_bits_len -= length;
-          bit_offset         += length;
+          if (length > 0) {
+            remaining_bits_len -= length;
+            bit_offset         += length;
+          } else {
+            remaining_bits_len = arT.remaining_bits_len;
+            bit_offset         = arT.bit_offset;
+          }
           pDescr++;
         }
         else
