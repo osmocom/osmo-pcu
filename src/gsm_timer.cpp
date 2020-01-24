@@ -144,17 +144,14 @@ int *osmo_gsm_timers_nearest(void)
 
 static void update_nearest(int *cand, int *current)
 {
-	if (*cand != LONG_MAX) {
-		if (*cand > *current)
-			nearest = *cand - *current;
-		else {
-			/* loop again inmediately */
-			nearest = 0;
-		}
-		nearest_p = &nearest;
-	} else {
-		nearest_p = NULL;
+	if (*cand > *current)
+		nearest = *cand - *current;
+	else {
+		/* loop again inmediately */
+		nearest = 0;
 	}
+
+	nearest_p = &nearest;
 }
 
 /*
