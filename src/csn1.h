@@ -202,12 +202,7 @@ typedef struct
   unsigned      offset;
   gboolean    may_be_null;
   const char* sz;
-  union
-  {
-    void *                dummy; /* to eliminate --pedantic compiler warnings */
-    guint32               value;
-    int*                  hf_ptr;
-  } format_p;
+  guint32     value;
   void_fn_t   aux_fn;
 } CSN_DESCR;
 
@@ -247,7 +242,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
         CSN_DESCR CSNDESCR_##_STRUCT[] = {
 
 #define  CSN_DESCR_END(_STRUCT)\
-         {CSN_END, 0, {0}, 0, FALSE, "", {NULL}, NULL} };
+         {CSN_END, 0, {0}, 0, FALSE, "", 0, NULL} };
 
 /******************************************************************************
  * CSN_ERROR(Par1, Par2, Par3)
@@ -258,7 +253,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par3: Error code
  *****************************************************************************/
 #define CSN_ERROR(_STRUCT, _Text, _ERRCODE)\
-        {CSN_TRAP_ERROR, _ERRCODE, {_Text}, 0, FALSE, _Text, {NULL}, NULL}
+        {CSN_TRAP_ERROR, _ERRCODE, {_Text}, 0, FALSE, _Text, 0, NULL}
 
 /******************************************************************************
  * M_BIT(Par1, Par2)
@@ -267,7 +262,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par2: C structure element name
  *****************************************************************************/
 #define M_BIT(_STRUCT, _MEMBER)\
-        {CSN_BIT, 0, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_BIT, 0, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
  * M_BIT_OR_NULL(Par1, Par2)
@@ -277,7 +272,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  * Covers the case {null | 0 | 1}
  *****************************************************************************/
  #define M_BIT_OR_NULL(_STRUCT, _MEMBER)\
-         {CSN_BIT, 0, {0}, offsetof(_STRUCT, _MEMBER), TRUE, #_MEMBER, {NULL}, NULL}
+         {CSN_BIT, 0, {0}, offsetof(_STRUCT, _MEMBER), TRUE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
  * M_NEXT_EXIST(Par1, Par2, Par3)
@@ -289,7 +284,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *            element(s) does not exist
  *****************************************************************************/
 #define M_NEXT_EXIST(_STRUCT, _MEMBER, _NoOfExisting)\
-        {CSN_NEXT_EXIST, _NoOfExisting, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_NEXT_EXIST, _NoOfExisting, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
  * M_NEXT_EXIST_LH(Par1, Par2, Par3)
@@ -299,7 +294,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  * pattern 0x2B is performed on the read bit before the decision is made.
  *****************************************************************************/
 #define M_NEXT_EXIST_LH(_STRUCT, _MEMBER, _NoOfExisting)\
-        {CSN_NEXT_EXIST_LH, _NoOfExisting, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_NEXT_EXIST_LH, _NoOfExisting, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
  * M_NEXT_EXIST_OR_NULL(Par1, Par2, Par3)
@@ -309,7 +304,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  * Covers the case {null | 0 | 1 < IE >} 
  *****************************************************************************/
 #define M_NEXT_EXIST_OR_NULL(_STRUCT, _MEMBER, _NoOfExisting)\
-        {CSN_NEXT_EXIST, _NoOfExisting, {0}, offsetof(_STRUCT, _MEMBER), TRUE, #_MEMBER, {NULL}, NULL}
+        {CSN_NEXT_EXIST, _NoOfExisting, {0}, offsetof(_STRUCT, _MEMBER), TRUE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
  * M_NEXT_EXIST_OR_NULL_LH(Par1, Par2, Par3)
@@ -319,7 +314,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  * Covers the case {null | L | H < IE >} 
  *****************************************************************************/
 #define M_NEXT_EXIST_OR_NULL_LH(_STRUCT, _MEMBER, _NoOfExisting)\
-        {CSN_NEXT_EXIST_LH, _NoOfExisting, {(void*)1}, offsetof(_STRUCT, _MEMBER), TRUE, #_MEMBER, {NULL}, NULL}
+        {CSN_NEXT_EXIST_LH, _NoOfExisting, {(void*)1}, offsetof(_STRUCT, _MEMBER), TRUE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
  * M_UINT(Par1, Par2, Par3)
@@ -329,7 +324,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par3: number of bits used to code the element (between 1 and 32)
  *****************************************************************************/
 #define M_UINT(_STRUCT, _MEMBER, _BITS)\
-        {CSN_UINT, _BITS, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_UINT, _BITS, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
  /******************************************************************************
  * M_UINT_OR_NULL(Par1, Par2, Par3)
@@ -339,7 +334,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  * Covers the case {null | 0 | 1 < IE >}
  *****************************************************************************/
  #define M_UINT_OR_NULL(_STRUCT, _MEMBER, _BITS)\
-         {CSN_UINT, _BITS, {0}, offsetof(_STRUCT, _MEMBER), TRUE, #_MEMBER, {NULL}, NULL}
+         {CSN_UINT, _BITS, {0}, offsetof(_STRUCT, _MEMBER), TRUE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
  * M_UINT(Par1, Par2, Par3)
@@ -349,7 +344,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  * received CSN.1 message
  *****************************************************************************/
 #define M_UINT_LH(_STRUCT, _MEMBER, _BITS)\
-        {CSN_UINT_LH, _BITS, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_UINT_LH, _BITS, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
  * M_UINT_OFFSET(Par1, Par2, Par3, Par4)
@@ -360,7 +355,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par4: value added to the returned integer (offset)
  *****************************************************************************/
 #define M_UINT_OFFSET(_STRUCT, _MEMBER, _BITS, _OFFSET)\
-        {CSN_UINT_OFFSET, _BITS, {(void*)_OFFSET}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_UINT_OFFSET, _BITS, {(void*)_OFFSET}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
  * M_UINT_ARRAY(Par1, Par2, Par3, Par4)
@@ -371,7 +366,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par4: number of elements in the array (fixed integer value)
  *****************************************************************************/
 #define M_UINT_ARRAY(_STRUCT, _MEMBER, _BITS, _ElementCount)\
-        {CSN_UINT_ARRAY, _BITS, {(void*)_ElementCount}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_UINT_ARRAY, _BITS, {(void*)_ElementCount}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
  * M_VAR_UINT_ARRAY(Par1, Par2, Par3, Par4)
@@ -383,7 +378,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *            structure member holding the length value
  *****************************************************************************/
 #define M_VAR_UINT_ARRAY(_STRUCT, _MEMBER, _BITS, _ElementCountField)\
-        {CSN_UINT_ARRAY, _BITS, {(void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {(void *)1}, NULL}
+        {CSN_UINT_ARRAY, _BITS, {(void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 1, NULL}
 
 /******************************************************************************
  * M_VAR_ARRAY(Par1, Par2, Par3, Par4)
@@ -394,7 +389,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par4: offset that is added to the Par3 to get the actual size of the array
  *****************************************************************************/
 #define M_VAR_ARRAY(_STRUCT, _MEMBER, _ElementCountField, _OFFSET)\
-        {CSN_VARIABLE_ARRAY, _OFFSET, {(void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_VARIABLE_ARRAY, _OFFSET, {(void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
  * M_VAR_TARRAY(Par1, Par2, Par3, Par4)
@@ -405,14 +400,14 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par4: name of the structure member holding the size of the array
  *****************************************************************************/
 #define M_VAR_TARRAY(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)\
-        {CSN_VARIABLE_TARRAY, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {(void *)sizeof(_MEMBER_TYPE)}, NULL}
+        {CSN_VARIABLE_TARRAY, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, sizeof(_MEMBER_TYPE), NULL}
 
 /******************************************************************************
  * M_VAR_TARRAY_OFFSET(Par1, Par2, Par3, Par4)
  * Same as M_VAR_TARRAY with offset
  *****************************************************************************/
 #define M_VAR_TARRAY_OFFSET(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)\
-        {CSN_VARIABLE_TARRAY_OFFSET, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {(void *)sizeof(_MEMBER_TYPE)}, NULL}
+        {CSN_VARIABLE_TARRAY_OFFSET, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, sizeof(_MEMBER_TYPE), NULL}
 
 /******************************************************************************
  * M_REC_ARRAY(Par1, Par2, Par3, Par4)
@@ -430,7 +425,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par4: length of each element in bits
  *****************************************************************************/
 #define M_REC_ARRAY(_STRUCT, _MEMBER, _ElementCountField, _BITS)\
-        {CSN_RECURSIVE_ARRAY, _BITS, {(const void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_RECURSIVE_ARRAY, _BITS, {(const void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
  * M_VAR_TYPE_ARRAY(Par1, Par2, Par3, Par4)
@@ -441,7 +436,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par4: number of elements in the array (fixed integer value)
  *****************************************************************************/
 #define M_TYPE_ARRAY(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCount)\
-        {CSN_TYPE_ARRAY, _ElementCount, {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {(void *)sizeof(_MEMBER_TYPE)}, NULL}
+        {CSN_TYPE_ARRAY, _ElementCount, {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, sizeof(_MEMBER_TYPE), NULL}
 
 /******************************************************************************
  * M_REC_TARRAY(Par1, Par2, Par3, Par4)
@@ -453,7 +448,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par4: will hold the number of element in the array after unpacking
  *****************************************************************************/
 #define M_REC_TARRAY(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)\
-        {CSN_RECURSIVE_TARRAY, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {(void *)sizeof(_MEMBER_TYPE)}, NULL}
+        {CSN_RECURSIVE_TARRAY, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, sizeof(_MEMBER_TYPE), NULL}
 
 /******************************************************************************
  * M_REC_TARRAY1(Par1, Par2, Par3, Par4)
@@ -461,7 +456,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  * <list> ::= <type> {1 <type>} ** 0 ;
  *****************************************************************************/
 #define M_REC_TARRAY_1(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)\
-        {CSN_RECURSIVE_TARRAY_1, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {(void *)sizeof(_MEMBER_TYPE)}, NULL}
+        {CSN_RECURSIVE_TARRAY_1, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, sizeof(_MEMBER_TYPE), NULL}
 
 /******************************************************************************
  * M_REC_TARRAY2(Par1, Par2, Par3, Par4)
@@ -469,7 +464,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  * <lists> ::= <type> { 0 <type> } ** 1 ;
  *****************************************************************************/
 #define M_REC_TARRAY_2(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)\
-        {CSN_RECURSIVE_TARRAY_2, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {(void *)sizeof(_MEMBER_TYPE)}, NULL}
+        {CSN_RECURSIVE_TARRAY_2, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, sizeof(_MEMBER_TYPE), NULL}
 
 /******************************************************************************
  * M_TYPE(Par1, Par2, Par3)
@@ -480,7 +475,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par3: type of member
  *****************************************************************************/
 #define M_TYPE(_STRUCT, _MEMBER, _MEMBER_TYPE)\
-        {CSN_TYPE, 0, {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_TYPE, 0, {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
  * M_UNION(Par1, Par2)
@@ -493,14 +488,14 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par2: number of possible choice in the union
  *****************************************************************************/
 #define M_UNION(_STRUCT, _COUNT)\
-        {CSN_UNION, _COUNT, {0}, offsetof(_STRUCT, UnionType), FALSE, "UnionType", {NULL}, NULL}
+        {CSN_UNION, _COUNT, {0}, offsetof(_STRUCT, UnionType), FALSE, "UnionType", 0, NULL}
 
 /******************************************************************************
  * M_UNION_LH(Par1, Par2)
  * Same as M_UNION but masked with background value 0x2B
  *****************************************************************************/
 #define M_UNION_LH(_STRUCT, _COUNT)\
-        {CSN_UNION_LH, _COUNT, {0}, offsetof(_STRUCT, UnionType), FALSE, "UnionType", {NULL}, NULL}
+        {CSN_UNION_LH, _COUNT, {0}, offsetof(_STRUCT, UnionType), FALSE, "UnionType", 0, NULL}
 
 /******************************************************************************
  * M_CHOICE(Par1, Par2, Par3, Par4)
@@ -529,7 +524,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par4: number of possible choices in the union
  *****************************************************************************/
 #define M_CHOICE(_STRUCT, _MEMBER, _CHOICE, _ElementCount)\
-        {CSN_CHOICE, _ElementCount, {(void*)_CHOICE}, offsetof(_STRUCT, _MEMBER), FALSE, #_CHOICE, {NULL}, NULL}
+        {CSN_CHOICE, _ElementCount, {(const void*)_CHOICE}, offsetof(_STRUCT, _MEMBER), FALSE, #_CHOICE, 0, NULL}
 
 /******************************************************************************
  * M_FIXED(Par1, Par2, Par3)
@@ -541,7 +536,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
 *             the message the unpacking procedure is aborted
  *****************************************************************************/
 #define M_FIXED(_STRUCT, _BITS, _BITVALUE)\
-        {CSN_FIXED, _BITS, {0}, _BITVALUE, FALSE, #_BITVALUE, {NULL}, NULL}
+        {CSN_FIXED, _BITS, {0}, _BITVALUE, FALSE, #_BITVALUE, 0, NULL}
 
 /******************************************************************************
  * M_SERIALIZE(Par1, Par2, Par3)
@@ -554,10 +549,10 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  * back control over the data stream and continues to work with the message.
  *****************************************************************************/
 #define M_SERIALIZE(_STRUCT, _MEMBER, _LENGTH_LEN, _SERIALIZEFCN)\
-        {CSN_SERIALIZE, _LENGTH_LEN, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, (void_fn_t)_SERIALIZEFCN}
+        {CSN_SERIALIZE, _LENGTH_LEN, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, (void_fn_t)_SERIALIZEFCN}
 
 #define M_CALLBACK(_STRUCT, _CSNCALLBACKFCN, _PARAM1, _PARAM2)\
-        {CSN_CALLBACK, offsetof(_STRUCT, _PARAM1), {0}, offsetof(_STRUCT, _PARAM2), FALSE, "CallBack_"#_CSNCALLBACKFCN, {NULL}, (void_fn_t)_CSNCALLBACKFCN}
+        {CSN_CALLBACK, offsetof(_STRUCT, _PARAM1), {0}, offsetof(_STRUCT, _PARAM2), FALSE, "CallBack_"#_CSNCALLBACKFCN, 0, (void_fn_t)_CSNCALLBACKFCN}
 
 /******************************************************************************
  * M_BITMAP(Par1, Par2, Par3)
@@ -568,42 +563,42 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
  *      Par3: length of the bitmap expressed in bits
  *****************************************************************************/
 #define M_BITMAP(_STRUCT, _MEMBER, _BITS)\
-        {CSN_BITMAP, _BITS, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_BITMAP, _BITS, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /* variable length, right aligned bitmap i.e. _ElementCountField = 11 => 00000111 11111111 */
 #define M_VAR_BITMAP(_STRUCT, _MEMBER, _ElementCountField, _OFFSET)\
-        {CSN_VARIABLE_BITMAP, _OFFSET, {(void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_VARIABLE_BITMAP, _OFFSET, {(void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /* variable length, right aligned bitmap filling the rest of message
  * - when unpacking the _ElementCountField will be set in runtime
  * - when packing _ElementCountField contains the size of bitmap
  */
 #define M_VAR_BITMAP_1(_STRUCT, _MEMBER, _ElementCountField, _OFFSET)\
-        {CSN_VARIABLE_BITMAP_1, _OFFSET, {(void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_VARIABLE_BITMAP_1, _OFFSET, {(void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /* variable length, left aligned bitmap i.e. _ElementCountField = 11 => 11111111 11100000 */
 #define M_LEFT_VAR_BMP(_STRUCT, _MEMBER, _ElementCountField, _OFFSET)\
-        {CSN_LEFT_ALIGNED_VAR_BMP, _OFFSET, {(void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_LEFT_ALIGNED_VAR_BMP, _OFFSET, {(void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /* variable length, left aligned bitmap filling the rest of message
  *- when unpacking the _ElementCountField will be set in runtime
  * - when packing _ElementCountField contains the size of bitmap
  */
 #define M_LEFT_VAR_BMP_1(_STRUCT, _MEMBER, _ElementCountField, _OFFSET)\
-        {CSN_LEFT_ALIGNED_VAR_BMP_1, _OFFSET, {(void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_LEFT_ALIGNED_VAR_BMP_1, _OFFSET, {(void*)offsetof(_STRUCT, _ElementCountField)}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /* todo: dissect padding bits looking for unexpected extensions */
 #define M_PADDING_BITS(_STRUCT)\
-        {CSN_PADDING_BITS, 0, {0}, 0, TRUE, "Padding", {NULL}, NULL}
+        {CSN_PADDING_BITS, 0, {0}, 0, TRUE, "Padding", 0, NULL}
 
 #define M_NULL(_STRUCT, _MEMBER, _SKIP_BITS)\
-        {CSN_NULL, _SKIP_BITS, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, {NULL}, NULL}
+        {CSN_NULL, _SKIP_BITS, {0}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 #define M_THIS_EXIST(_STRUCT)\
-        {CSN_EXIST, 0, {0}, offsetof(_STRUCT, Exist), FALSE, "Exist", {NULL}, NULL}
+        {CSN_EXIST, 0, {0}, offsetof(_STRUCT, Exist), FALSE, "Exist", 0, NULL}
 
 #define M_THIS_EXIST_LH(_STRUCT)\
-        {CSN_EXIST_LH, 0, {0}, offsetof(_STRUCT, Exist), FALSE, "Exist", {NULL}, NULL}
+        {CSN_EXIST_LH, 0, {0}, offsetof(_STRUCT, Exist), FALSE, "Exist", 0, NULL}
 
 /* return value 0 if ok else discontionue the unpacking */
 typedef gint16 (*CsnCallBackFcn_t)(void* pv ,...);
