@@ -119,12 +119,13 @@ void testRlcMacDownlink(void *test_ctx)
 			cout << hex << (unsigned)*(vector->data + i);
 		}
 		cout << endl;
-		RlcMacDownlink_t * data = (RlcMacDownlink_t *)malloc(sizeof(RlcMacDownlink_t));
+		RlcMacDownlink_t data;
+		memset(&data, 0, sizeof(data));
 		cout << "=========Start DECODE===========" << endl;
-		decode_gsm_rlcmac_downlink(vector, data);
+		decode_gsm_rlcmac_downlink(vector, &data);
 		cout << "+++++++++Finish DECODE++++++++++" << endl;
 		cout << "=========Start ENCODE=============" << endl;
-		encode_gsm_rlcmac_downlink(resultVector, data);
+		encode_gsm_rlcmac_downlink(resultVector, &data);
 		cout << "+++++++++Finish ENCODE+++++++++++" << endl;
 		cout << "vector1 = ";
 		for (int i = 0; i < 23; i++)
@@ -148,7 +149,6 @@ void testRlcMacDownlink(void *test_ctx)
 		}
 		bitvec_unhex(resultVector, DUMMY_VEC);
 		bitvec_free(vector);
-		free(data);
 	}
 
 	bitvec_free(resultVector);
@@ -183,12 +183,13 @@ void testRlcMacUplink(void *test_ctx)
 			cout << hex << (unsigned)*(vector->data + i);
 		}
 		cout << endl;
-		RlcMacUplink_t * data = (RlcMacUplink_t *)malloc(sizeof(RlcMacUplink_t));
+		RlcMacUplink_t data;
+		memset(&data, 0, sizeof(data));
 		cout << "=========Start DECODE===========" << endl;
-		decode_gsm_rlcmac_uplink(vector, data);
+		decode_gsm_rlcmac_uplink(vector, &data);
 		cout << "+++++++++Finish DECODE++++++++++" << endl;
 		cout << "=========Start ENCODE=============" << endl;
-		encode_gsm_rlcmac_uplink(resultVector, data);
+		encode_gsm_rlcmac_uplink(resultVector, &data);
 		cout << "+++++++++Finish ENCODE+++++++++++" << endl;
 		cout << "vector1 = ";
 		for (int i = 0; i < 23; i++)
@@ -212,7 +213,6 @@ void testRlcMacUplink(void *test_ctx)
 		}
 		bitvec_unhex(resultVector, DUMMY_VEC);
 		bitvec_free(vector);
-		free(data);
 	}
 
 	bitvec_free(resultVector);
@@ -227,6 +227,7 @@ void testCsnLeftAlignedVarBmpBounds(void *test_ctx)
 
 	bitvec_unhex(vector, "40200bffd161003e0e519ffffffb800000000000000000");
 	RlcMacUplink_t data;
+	memset(&data, 0, sizeof(data));
 
 	EGPRS_AckNack_Desc_t *urbb =
 		&data.u.Egprs_Packet_Downlink_Ack_Nack.EGPRS_AckNack.Desc;
