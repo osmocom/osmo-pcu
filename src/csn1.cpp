@@ -1042,7 +1042,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
         /*no break -
          * with a length set we have a regular variable length bitmap so we continue */
       }
-
+      /* FALL THROUGH */
       case CSN_VARIABLE_BITMAP:
       { /* {CSN_VARIABLE_BITMAP, 0, offsetof(_STRUCT, _ElementCountField), offsetof(_STRUCT, _MEMBER), #_MEMBER}
          * <N: bit (5)> <bitmap: bit(N + offset)>
@@ -1098,7 +1098,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
          * with a length set we have a regular left aligned variable length bitmap so we continue
          */
       }
-
+      /* FALL THROUGH */
       case CSN_LEFT_ALIGNED_VAR_BMP:
       { /* {CSN_LEFT_ALIGNED_VAR_BMP, _OFFSET, (void*)offsetof(_STRUCT, _ElementCountField), offsetof(_STRUCT, _MEMBER), #_MEMBER}
          * <N: bit (5)> <bitmap: bit(N + offset)>
@@ -1321,7 +1321,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
          * handling is exactly the same as for CSN_RECURSIVE_TARRAY_1 so we continue
          */
       }
-
+      /* FALL THROUGH */
       case CSN_RECURSIVE_TARRAY_1:
       { /* Recursive way to specify an array of type: <lists> ::= <type> { 1 <type> } ** 0 ;
          * M_REC_TARRAY(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)
@@ -2287,7 +2287,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
         /*no break -
          * with a length set we have a regular variable length bitmap so we continue */
       }
-
+      /* FALL THROUGH */
       case CSN_VARIABLE_BITMAP:
       { /* {CSN_VARIABLE_BITMAP, 0, offsetof(_STRUCT, _ElementCountField), offsetof(_STRUCT, _MEMBER), #_MEMBER}
          * <N: bit (5)> <bitmap: bit(N + offset)>
@@ -2344,7 +2344,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
          * with a length set we have a regular left aligned variable length bitmap so we continue
          */
       }
-
+      /* FALL THROUGH */
       case CSN_LEFT_ALIGNED_VAR_BMP:
       { /* {CSN_LEFT_ALIGNED_VAR_BMP, _OFFSET, (void*)offsetof(_STRUCT, _ElementCountField), offsetof(_STRUCT, _MEMBER), #_MEMBER}
          * <N: bit (5)> <bitmap: bit(N + offset)>
@@ -2573,7 +2573,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector
          * handling is exactly the same as for CSN_RECURSIVE_TARRAY_1 so we continue
          */
       }
-
+      /* FALL THROUGH */
       case CSN_RECURSIVE_TARRAY_1:
       { /* Recursive way to specify an array of type: <lists> ::= <type> { 1 <type> } ** 0 ;
          * M_REC_TARRAY(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)
