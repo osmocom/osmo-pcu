@@ -777,6 +777,12 @@ CSN_DESCR_BEGIN       (DTM_EGPRS_HighMultislotClass_t)
 CSN_DESCR_END         (DTM_EGPRS_HighMultislotClass_t)
 
 static const
+CSN_DESCR_BEGIN       (DownlinkDualCarrierCapability_r7_t)
+  M_NEXT_EXIST        (DownlinkDualCarrierCapability_r7_t, MultislotCapabilityReductionForDL_DualCarrier, 1),
+  M_UINT              (DownlinkDualCarrierCapability_r7_t, DL_DualCarrierForDTM,  3),
+CSN_DESCR_END         (DownlinkDualCarrierCapability_r7_t)
+
+static const
 CSN_DESCR_BEGIN       (Multislot_capability_t)
   M_NEXT_EXIST_OR_NULL(Multislot_capability_t, Exist_HSCSD_multislot_class, 1),
   M_UINT              (Multislot_capability_t,  HSCSD_multislot_class,  5),
@@ -854,6 +860,25 @@ CSN_DESCR_BEGIN       (Content_t)
   M_TYPE              (Content_t, DTM_EGPRS_HighMultislotClass, DTM_EGPRS_HighMultislotClass_t),
 
   M_UINT_OR_NULL      (Content_t,  PS_HandoverCapability,  1),
+
+  /* additions in release 7 */
+  M_UINT_OR_NULL      (Content_t,  DTM_Handover_Capability,  1),
+  M_NEXT_EXIST_OR_NULL(Content_t, Exist_DownlinkDualCarrierCapability_r7, 1),
+  M_TYPE              (Content_t, DownlinkDualCarrierCapability_r7, DownlinkDualCarrierCapability_r7_t),
+
+  M_UINT_OR_NULL      (Content_t,  FlexibleTimeslotAssignment,  1),
+  M_UINT_OR_NULL      (Content_t,  GAN_PS_HandoverCapability,  1),
+  M_UINT_OR_NULL      (Content_t,  RLC_Non_persistentMode,  1),
+  M_UINT_OR_NULL      (Content_t,  ReducedLatencyCapability,  1),
+  M_UINT_OR_NULL      (Content_t,  UplinkEGPRS2,  2),
+  M_UINT_OR_NULL      (Content_t,  DownlinkEGPRS2,  2),
+
+  /* additions in release 8 */
+  M_UINT_OR_NULL      (Content_t,  EUTRA_FDD_Support,  1),
+  M_UINT_OR_NULL      (Content_t,  EUTRA_TDD_Support,  1),
+  M_UINT_OR_NULL      (Content_t,  GERAN_To_EUTRAN_supportInGERAN_PTM,  2),
+  M_UINT_OR_NULL      (Content_t,  PriorityBasedReselectionSupport,  1),
+
 CSN_DESCR_END         (Content_t)
 
 gint16 Content_Dissector(csnStream_t* ar, bitvec *vector, unsigned *readIndex, void* data)
@@ -897,9 +922,18 @@ CSN_ChoiceElement_t MS_RA_capability_value_Choice[] =
 {
   {4, AccTech_GSMP,     0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
   {4, AccTech_GSME,     0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSMR,     0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
   {4, AccTech_GSM1800,  0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
   {4, AccTech_GSM1900,  0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSM450,   0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSM480,   0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
   {4, AccTech_GSM850,   0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSM750,   0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSMT830,  0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSMT410,  0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSMT900,  0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSM710,   0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
+  {4, AccTech_GSMT810,  0, M_SERIALIZE (MS_RA_capability_value_t, u.Content, 7, Content_Dissector)}, /* Long Form */
   {4, AccTech_GSMOther, 0, M_SERIALIZE (MS_RA_capability_value_t, u.Additional_access_technologies, 7, Additional_access_technologies_Dissector)}, /* Short Form */
 };
 

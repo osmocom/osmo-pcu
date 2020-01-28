@@ -265,7 +265,7 @@ void testRAcap(void *test_ctx)
 
 	/* NOTE: vector2 is expected to be different because there is actually no
 	 * way to distinguish between NULL and 0 in MS_Radio_Access_capability_t.
-	 * The difference is in length indicator: 29 bits vs 50 bits. */
+	 * The difference is in length indicator: 29 bits vs 65 bits. */
 	printf("vector1 (len_ind=%u) = %s\n", len_dec, osmo_hexdump(bv_dec->data, bv_dec->data_len));
 	printf("vector2 (len_ind=%u) = %s\n", len_enc, osmo_hexdump(bv_enc->data, bv_enc->data_len));
 
