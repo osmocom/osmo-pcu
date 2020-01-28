@@ -4024,10 +4024,16 @@ CSN_DESCR_BEGIN(PHO_TimingAdvance_t)
 CSN_DESCR_END  (PHO_TimingAdvance_t)
 
 static const
-CSN_DESCR_BEGIN(NAS_Container_t)
-  M_UINT       (NAS_Container_t,  NAS_ContainerLength,  7),
-  M_VAR_ARRAY  (NAS_Container_t, NAS_Container, NAS_ContainerLength, 0),
-CSN_DESCR_END  (NAS_Container_t)
+CSN_DESCR_BEGIN(NAS_Container_For_PS_HO_t)
+  M_UINT         (NAS_Container_For_PS_HO_t,  NAS_ContainerLength, 7),
+  M_UINT         (NAS_Container_For_PS_HO_t,  Spare_1a, 1),
+  M_UINT         (NAS_Container_For_PS_HO_t,  Spare_1b, 1),
+  M_UINT         (NAS_Container_For_PS_HO_t,  Spare_1c, 1),
+  M_UINT         (NAS_Container_For_PS_HO_t,  Old_XID, 1),
+  M_UINT         (NAS_Container_For_PS_HO_t,  Spare_1e, 1),
+  M_UINT         (NAS_Container_For_PS_HO_t,  Type_of_Ciphering_Algo, 3),
+  M_UINT         (NAS_Container_For_PS_HO_t,  IOV_UI_value,  32),
+CSN_DESCR_END  (NAS_Container_For_PS_HO_t)
 
 static const
 CSN_DESCR_BEGIN(PS_HandoverTo_UTRAN_Payload_t)
@@ -4080,7 +4086,7 @@ CSN_DESCR_BEGIN(PS_HandoverTo_A_GB_ModePayload_t)
   M_TYPE       (PS_HandoverTo_A_GB_ModePayload_t, PHO_RadioResources, PHO_RadioResources_t),
 
   M_NEXT_EXIST (PS_HandoverTo_A_GB_ModePayload_t, Exist_NAS_Container, 1),
-  M_TYPE       (PS_HandoverTo_A_GB_ModePayload_t, NAS_Container, NAS_Container_t),
+  M_TYPE       (PS_HandoverTo_A_GB_ModePayload_t, NAS_Container, NAS_Container_For_PS_HO_t),
 CSN_DESCR_END  (PS_HandoverTo_A_GB_ModePayload_t)
 
 static const
