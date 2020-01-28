@@ -4235,10 +4235,10 @@ CSN_DESCR_END  (Cell_Identification_t)
 static const
 CSN_DESCR_BEGIN(Non_GPRS_Cell_Options_t)
   M_BIT        (Non_GPRS_Cell_Options_t,  ATT),
-  
+
   M_NEXT_EXIST (Non_GPRS_Cell_Options_t, Exist_T3212, 1),
   M_UINT       (Non_GPRS_Cell_Options_t,  T3212, 8),
-  
+
   M_BIT        (Non_GPRS_Cell_Options_t,  NECI),
   M_BIT        (Non_GPRS_Cell_Options_t,  PWRC),
   M_UINT       (Non_GPRS_Cell_Options_t,  DTX, 2),
@@ -4343,7 +4343,7 @@ CSN_DESCR_BEGIN(Gen_Cell_Sel_t)
   M_BIT        (Gen_Cell_Sel_t,  C31_HYST),
   M_BIT        (Gen_Cell_Sel_t,  C32_QUAL),
   M_FIXED      (Gen_Cell_Sel_t, 1, 0x01),
-    
+
   M_NEXT_EXIST (Gen_Cell_Sel_t, Exist_T_RESEL, 1),
   M_UINT       (Gen_Cell_Sel_t,  T_RESEL, 3),
 
@@ -4440,7 +4440,7 @@ CSN_DESCR_BEGIN(PSI3_t)
   M_TYPE       (PSI3_t,  Serving_Cell_params, Serving_Cell_params_t),
   M_TYPE       (PSI3_t,  General_Cell_Selection, Gen_Cell_Sel_t),
   M_TYPE       (PSI3_t,  NeighbourCellList, NeighbourCellList_t),
-  
+
   M_NEXT_EXIST (PSI3_t, Exist_AdditionR98, 1),
   M_TYPE       (PSI3_t,  AdditionR98, PSI3_AdditionR98_t),
 
@@ -4482,14 +4482,14 @@ CSN_DESCR_BEGIN(GPRSMeasurementParams3G_PSI5_t)
   M_NEXT_EXIST (GPRSMeasurementParams3G_PSI5_t, existRepParamsFDD, 2),
   M_UINT       (GPRSMeasurementParams3G_PSI5_t,  RepQuantFDD,  1),
   M_UINT       (GPRSMeasurementParams3G_PSI5_t,  MultiratReportingFDD,  2),
-    
+
   M_NEXT_EXIST (GPRSMeasurementParams3G_PSI5_t, existReportingParamsFDD, 2),
   M_UINT       (GPRSMeasurementParams3G_PSI5_t,  ReportingOffsetFDD,  3),
   M_UINT       (GPRSMeasurementParams3G_PSI5_t,  ReportingThresholdFDD,  3),
-    
+
   M_NEXT_EXIST (GPRSMeasurementParams3G_PSI5_t, existMultiratReportingTDD, 1),
   M_UINT       (GPRSMeasurementParams3G_PSI5_t,  MultiratReportingTDD,  2),
-    
+
   M_NEXT_EXIST (GPRSMeasurementParams3G_PSI5_t, existOffsetThresholdTDD, 2),
   M_UINT       (GPRSMeasurementParams3G_PSI5_t,  ReportingOffsetTDD,  3),
   M_UINT       (GPRSMeasurementParams3G_PSI5_t,  ReportingThresholdTDD,  3),
@@ -4503,10 +4503,10 @@ CSN_DESCR_BEGIN(ENH_Reporting_Parameters_t)
 
   M_NEXT_EXIST (ENH_Reporting_Parameters_t, Exist_NCC_PERMITTED, 1),
   M_UINT       (ENH_Reporting_Parameters_t,  NCC_PERMITTED,  8),
-    
+
   M_NEXT_EXIST (ENH_Reporting_Parameters_t, Exist_GPRSMeasurementParams, 1),
   M_TYPE       (ENH_Reporting_Parameters_t, GPRSMeasurementParams, MeasurementParams_t),
-    
+
   M_NEXT_EXIST (ENH_Reporting_Parameters_t, Exist_GPRSMeasurementParams3G, 1),
   M_TYPE       (ENH_Reporting_Parameters_t, GPRSMeasurementParams3G, GPRSMeasurementParams3G_PSI5_t),
 CSN_DESCR_END  (ENH_Reporting_Parameters_t)
@@ -4524,7 +4524,7 @@ static const
 CSN_DESCR_BEGIN(PSI5_AdditionsR5)
   M_NEXT_EXIST (PSI5_AdditionsR5, Exist_GPRS_AdditionalMeasurementParams3G, 1),
   M_TYPE       (PSI5_AdditionsR5,  GPRS_AdditionalMeasurementParams3G, GPRS_AdditionalMeasurementParams3G_t),
-  
+
   M_NEXT_EXIST (PSI5_AdditionsR5, Exist_AdditionsR7, 1),
   M_TYPE       (PSI5_AdditionsR5,  AdditionsR7, PSI5_AdditionsR7),
 CSN_DESCR_END  (PSI5_AdditionsR5)
@@ -4587,7 +4587,7 @@ CSN_DESCR_BEGIN(PSI13_t)
   M_UINT       (PSI13_t,  PAGE_MODE,  2),
   M_UINT       (PSI13_t,  BCCH_CHANGE_MARK,  3),
   M_UINT       (PSI13_t,  SI_CHANGE_FIELD,  4),
-  
+
   M_NEXT_EXIST (PSI13_t, Exist_MA, 2),
   M_UINT       (PSI13_t,  SI13_CHANGE_MARK,  2),
   M_TYPE       (PSI13_t,  GPRS_Mobile_Allocation, GPRS_Mobile_Allocation_t),
@@ -5473,7 +5473,7 @@ void encode_gsm_rlcmac_downlink_data(bitvec * vector, RlcMacDownlinkDataBlock_t 
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "RRBP = %u ", (unsigned)(data->RRBP));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "SP = %u ", (unsigned)(data->SP));
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "USF = %u ", (unsigned)(data->USF));
-    
+
     // Octet 1
     bitvec_write_field(vector, &writeIndex, data->PR, 2);
     bitvec_write_field(vector, &writeIndex, data->TFI, 5);
