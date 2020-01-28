@@ -3959,7 +3959,7 @@ CSN_DESCR_END    (PHO_UplinkAssignment_t)
 static const
 CSN_DESCR_BEGIN (GlobalTimeslotDescription_UA_t)
   M_TYPE        (GlobalTimeslotDescription_UA_t, GlobalTimeslotDescription, GlobalTimeslotDescription_t),
-  M_NEXT_EXIST  (GlobalTimeslotDescription_UA_t, Exist_PHO_UA, 3),  /* Don't use M_REC_TARRAY as we don't support multiple TBFs */
+  M_NEXT_EXIST  (GlobalTimeslotDescription_UA_t, Exist_PHO_UA, 2),  /* Don't use M_REC_TARRAY as we don't support multiple TBFs */
 
   M_TYPE        (GlobalTimeslotDescription_UA_t, PHO_UA, PHO_UplinkAssignment_t),
   M_FIXED       (GlobalTimeslotDescription_UA_t, 1, 0x0), /* Escape recursive */
@@ -4012,7 +4012,7 @@ CSN_DESCR_BEGIN (PHO_EGPRS_t)
   M_NEXT_EXIST  (PHO_EGPRS_t, Exist_GlobalTimeslotDescription_UA, 1),
   M_TYPE        (PHO_EGPRS_t, GTD_UA, GlobalTimeslotDescription_UA_t),
 
-  M_NEXT_EXIST  (PHO_EGPRS_t, Exist_DownlinkTBF, 2),
+  M_NEXT_EXIST  (PHO_EGPRS_t, Exist_DownlinkTBF, 1),
   M_TYPE        (PHO_EGPRS_t, DownlinkTBF, DownlinkTBF_t),
 CSN_DESCR_END   (PHO_EGPRS_t)
 
