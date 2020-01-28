@@ -104,7 +104,7 @@ CSN_DESCR_BEGIN(GPRS_Power_Control_Parameters_t)
   M_UINT       (GPRS_Power_Control_Parameters_t,  ALPHA,  4),
   M_UINT       (GPRS_Power_Control_Parameters_t,  T_AVG_W,  5),
   M_UINT       (GPRS_Power_Control_Parameters_t,  T_AVG_T,  5),
-  M_BIT        (GPRS_Power_Control_Parameters_t,  PC_MEAS_CHAN),
+  M_UINT       (GPRS_Power_Control_Parameters_t,  PC_MEAS_CHAN, 1),
   M_UINT       (GPRS_Power_Control_Parameters_t,  N_AVG_I,  4),
 CSN_DESCR_END  (GPRS_Power_Control_Parameters_t)
 
@@ -258,8 +258,8 @@ CSN_DESCR_END  (Group_Channel_Description_t)
 static const
 CSN_DESCR_BEGIN(Group_Call_Reference_t)
   M_UINT       (Group_Call_Reference_t,  value,  27),
-  M_BIT        (Group_Call_Reference_t,  SF),
-  M_BIT        (Group_Call_Reference_t,  AF),
+  M_UINT       (Group_Call_Reference_t,  SF, 1),
+  M_UINT       (Group_Call_Reference_t,  AF, 1),
   M_UINT       (Group_Call_Reference_t,  call_priority,  3),
   M_UINT       (Group_Call_Reference_t,  Ciphering_information,  4),
 CSN_DESCR_END  (Group_Call_Reference_t)
@@ -542,7 +542,7 @@ CSN_DESCR_BEGIN(Packet_Polling_Request_t)
   M_UINT       (Packet_Polling_Request_t,  MESSAGE_TYPE,  6),
   M_UINT       (Packet_Polling_Request_t,  PAGE_MODE,  2),
   M_TYPE       (Packet_Polling_Request_t, ID, PacketPollingID_t),
-  M_BIT        (Packet_Polling_Request_t,  TYPE_OF_ACK),
+  M_UINT       (Packet_Polling_Request_t,  TYPE_OF_ACK, 1),
   M_PADDING_BITS(Packet_Polling_Request_t),
 CSN_DESCR_END  (Packet_Polling_Request_t)
 
@@ -579,8 +579,8 @@ CSN_DESCR_BEGIN(GPRS_Cell_Options_t)
   M_UINT        (GPRS_Cell_Options_t, T3168, 3),
   M_UINT        (GPRS_Cell_Options_t, T3192, 3),
   M_UINT       (GPRS_Cell_Options_t,  DRX_TIMER_MAX,  3),
-  M_BIT        (GPRS_Cell_Options_t,  ACCESS_BURST_TYPE),
-  M_BIT        (GPRS_Cell_Options_t,  CONTROL_ACK_TYPE),
+  M_UINT       (GPRS_Cell_Options_t,  ACCESS_BURST_TYPE, 1),
+  M_UINT       (GPRS_Cell_Options_t,  CONTROL_ACK_TYPE, 1),
   M_UINT       (GPRS_Cell_Options_t,  BS_CV_MAX,  4),
 
   M_NEXT_EXIST (GPRS_Cell_Options_t, Exist_PAN, 3),
@@ -595,7 +595,7 @@ CSN_DESCR_END  (GPRS_Cell_Options_t)
 static const
 CSN_DESCR_BEGIN(PBCCH_Not_present_t)
   M_UINT       (PBCCH_Not_present_t,  RAC,  8),
-  M_BIT        (PBCCH_Not_present_t,  SPGC_CCCH_SUP),
+  M_UINT       (PBCCH_Not_present_t,  SPGC_CCCH_SUP, 1),
   M_UINT       (PBCCH_Not_present_t,  PRIORITY_ACCESS_THR,  3),
   M_UINT       (PBCCH_Not_present_t,  NETWORK_CONTROL_ORDER,  2),
   M_TYPE       (PBCCH_Not_present_t, GPRS_Cell_Options, GPRS_Cell_Options_t),
@@ -676,8 +676,8 @@ CSN_DESCR_BEGIN(Packet_TBF_Release_t)
   M_UINT       (Packet_TBF_Release_t,  PAGE_MODE,  2),
   M_FIXED      (Packet_TBF_Release_t, 1, 0x00),
   M_TYPE       (Packet_TBF_Release_t, Global_TFI, Global_TFI_t),
-  M_BIT        (Packet_TBF_Release_t,  UPLINK_RELEASE),
-  M_BIT        (Packet_TBF_Release_t,  DOWNLINK_RELEASE),
+  M_UINT       (Packet_TBF_Release_t,  UPLINK_RELEASE, 1),
+  M_UINT       (Packet_TBF_Release_t,  DOWNLINK_RELEASE, 1),
   M_UINT       (Packet_TBF_Release_t,  TBF_RELEASE_CAUSE,  4),
   M_PADDING_BITS(Packet_TBF_Release_t ),
 CSN_DESCR_END  (Packet_TBF_Release_t)
@@ -1044,8 +1044,8 @@ static const
 CSN_DESCR_BEGIN(Channel_Request_Description_t)
   M_UINT       (Channel_Request_Description_t,  PEAK_THROUGHPUT_CLASS,  4),
   M_UINT       (Channel_Request_Description_t,  RADIO_PRIORITY,  2),
-  M_BIT        (Channel_Request_Description_t,  RLC_MODE),
-  M_BIT        (Channel_Request_Description_t,  LLC_PDU_TYPE),
+  M_UINT       (Channel_Request_Description_t,  RLC_MODE, 1),
+  M_UINT       (Channel_Request_Description_t,  LLC_PDU_TYPE, 1),
   M_UINT       (Channel_Request_Description_t,  RLC_OCTET_COUNT,  16),
 CSN_DESCR_END  (Channel_Request_Description_t)
 
@@ -1752,7 +1752,7 @@ CSN_DESCR_END  (PUA_GPRS_AdditionsR99_t)
 static const
 CSN_DESCR_BEGIN       (PUA_GPRS_t)
   M_UINT              (PUA_GPRS_t,  CHANNEL_CODING_COMMAND,  2),
-  M_BIT               (PUA_GPRS_t,  TLLI_BLOCK_CHANNEL_CODING),
+  M_UINT              (PUA_GPRS_t,  TLLI_BLOCK_CHANNEL_CODING, 1),
   M_TYPE              (PUA_GPRS_t, Packet_Timing_Advance, Packet_Timing_Advance_t),
 
   M_NEXT_EXIST        (PUA_GPRS_t, Exist_Frequency_Parameters, 1),
@@ -1903,14 +1903,14 @@ CSN_DESCR_BEGIN       (Packet_Downlink_Assignment_t)
   M_FIXED             (Packet_Downlink_Assignment_t, 1, 0x00),/*-- Message escape */
 
   M_UINT              (Packet_Downlink_Assignment_t,  MAC_MODE,  2),
-  M_BIT               (Packet_Downlink_Assignment_t,  RLC_MODE),
-  M_BIT               (Packet_Downlink_Assignment_t,  CONTROL_ACK),
+  M_UINT              (Packet_Downlink_Assignment_t,  RLC_MODE, 1),
+  M_UINT              (Packet_Downlink_Assignment_t,  CONTROL_ACK, 1),
   M_UINT              (Packet_Downlink_Assignment_t,  TIMESLOT_ALLOCATION,  8),
   M_TYPE              (Packet_Downlink_Assignment_t, Packet_Timing_Advance, Packet_Timing_Advance_t),
 
   M_NEXT_EXIST        (Packet_Downlink_Assignment_t, Exist_P0_and_BTS_PWR_CTRL_MODE, 3),
   M_UINT              (Packet_Downlink_Assignment_t,  P0,  4),
-  M_BIT               (Packet_Downlink_Assignment_t,  BTS_PWR_CTRL_MODE),
+  M_UINT              (Packet_Downlink_Assignment_t,  BTS_PWR_CTRL_MODE, 1),
   M_UINT              (Packet_Downlink_Assignment_t,  PR_MODE,  1),
 
   M_NEXT_EXIST        (Packet_Downlink_Assignment_t, Exist_Frequency_Parameters, 1),
@@ -1951,7 +1951,7 @@ CSN_DESCR_END  (pdlaCheck_t)
 static const
 CSN_DESCR_BEGIN(DTM_Packet_Uplink_Assignment_t)
   M_UINT       (DTM_Packet_Uplink_Assignment_t,  CHANNEL_CODING_COMMAND,  2),
-  M_BIT        (DTM_Packet_Uplink_Assignment_t,  TLLI_BLOCK_CHANNEL_CODING),
+  M_UINT       (DTM_Packet_Uplink_Assignment_t,  TLLI_BLOCK_CHANNEL_CODING, 1),
   M_TYPE       (DTM_Packet_Uplink_Assignment_t, Packet_Timing_Advance, Packet_Timing_Advance_t),
 
   M_UNION      (DTM_Packet_Uplink_Assignment_t, 3),
@@ -1975,13 +1975,13 @@ CSN_DESCR_END(DTM_UL_t)
 static const
 CSN_DESCR_BEGIN(DTM_Packet_Downlink_Assignment_t)
   M_UINT       (DTM_Packet_Downlink_Assignment_t,  MAC_MODE,  2),
-  M_BIT        (DTM_Packet_Downlink_Assignment_t,  RLC_MODE),
+  M_UINT       (DTM_Packet_Downlink_Assignment_t,  RLC_MODE ,1),
   M_UINT       (DTM_Packet_Downlink_Assignment_t,  TIMESLOT_ALLOCATION,  8),
   M_TYPE       (DTM_Packet_Downlink_Assignment_t, Packet_Timing_Advance, Packet_Timing_Advance_t),
 
   M_NEXT_EXIST (DTM_Packet_Downlink_Assignment_t, Exist_P0_and_BTS_PWR_CTRL_MODE, 3),
   M_UINT       (DTM_Packet_Downlink_Assignment_t,  P0,  4),
-  M_BIT        (DTM_Packet_Downlink_Assignment_t,  BTS_PWR_CTRL_MODE),
+  M_UINT       (DTM_Packet_Downlink_Assignment_t,  BTS_PWR_CTRL_MODE, 1),
   M_UINT       (DTM_Packet_Downlink_Assignment_t,  PR_MODE,  1),
 
   M_NEXT_EXIST (DTM_Packet_Downlink_Assignment_t, Exist_Power_Control_Parameters, 1),
@@ -2876,7 +2876,7 @@ CSN_DESCR_END  (EUTRAN_REPORTING_THRESHOLD_OFFSET_t)
 static const
 CSN_DESCR_BEGIN(GPRS_EUTRAN_MeasurementParametersDescription_t)
   M_UINT       (GPRS_EUTRAN_MeasurementParametersDescription_t,  Qsearch_P_EUTRAN,  4),
-  M_BIT        (GPRS_EUTRAN_MeasurementParametersDescription_t,  EUTRAN_REP_QUANT),
+  M_UINT       (GPRS_EUTRAN_MeasurementParametersDescription_t,  EUTRAN_REP_QUANT, 1),
   M_UINT       (GPRS_EUTRAN_MeasurementParametersDescription_t,  EUTRAN_MULTIRAT_REPORTING,  2),
   M_TYPE       (GPRS_EUTRAN_MeasurementParametersDescription_t, EUTRAN_REPORTING_THRESHOLD_OFFSET, EUTRAN_REPORTING_THRESHOLD_OFFSET_t),
 CSN_DESCR_END  (GPRS_EUTRAN_MeasurementParametersDescription_t)
@@ -2942,7 +2942,7 @@ CSN_DESCR_END  (RepeatedEUTRAN_PCID_to_TA_mapping_t)
 
 static const
 CSN_DESCR_BEGIN(EUTRAN_ParametersDescription_PMO_t)
-  M_BIT        (EUTRAN_ParametersDescription_PMO_t,  EUTRAN_CCN_ACTIVE),
+  M_UINT       (EUTRAN_ParametersDescription_PMO_t,  EUTRAN_CCN_ACTIVE, 1),
 
   M_NEXT_EXIST (EUTRAN_ParametersDescription_PMO_t, existGPRS_EUTRAN_MeasurementParametersDescription, 1),
   M_TYPE       (EUTRAN_ParametersDescription_PMO_t, GPRS_EUTRAN_MeasurementParametersDescription, GPRS_EUTRAN_MeasurementParametersDescription_t),
@@ -2956,7 +2956,7 @@ static const
 CSN_DESCR_BEGIN(PSC_Pattern_t)
   M_UINT       (PSC_Pattern_t,  PSC_Pattern_length,  3),
   M_VAR_BITMAP (PSC_Pattern_t,  PSC_Pattern, PSC_Pattern_length, 1),
-  M_BIT        (PSC_Pattern_t,  PSC_Pattern_sense),
+  M_UINT        (PSC_Pattern_t,  PSC_Pattern_sense, 1),
 CSN_DESCR_END  (PSC_Pattern_t)
 
 static const
@@ -2990,13 +2990,13 @@ CSN_DESCR_END  (EUTRAN_CSG_Description_t)
 static const
 CSN_DESCR_BEGIN(Meas_Ctrl_Param_Desp_t)
   M_NEXT_EXIST (Meas_Ctrl_Param_Desp_t, existMeasurement_Control_EUTRAN, 3),
-  M_BIT        (Meas_Ctrl_Param_Desp_t,  Measurement_Control_EUTRAN),
-  M_UINT       (Meas_Ctrl_Param_Desp_t,  EUTRAN_FREQUENCY_INDEX_top,  3),
+  M_UINT       (Meas_Ctrl_Param_Desp_t,  Measurement_Control_EUTRAN, 1),
+  M_UINT       (Meas_Ctrl_Param_Desp_t,  EUTRAN_FREQUENCY_INDEX_top, 3),
   M_REC_ARRAY  (Meas_Ctrl_Param_Desp_t,  EUTRAN_FREQUENCY_INDEX, Count_EUTRAN_FREQUENCY_INDEX, 3),
   M_NEXT_EXIST (Meas_Ctrl_Param_Desp_t, existMeasurement_Control_UTRAN, 1),
-  M_BIT        (Meas_Ctrl_Param_Desp_t,  Measurement_Control_UTRAN),
-  M_UINT       (Meas_Ctrl_Param_Desp_t,  UTRAN_FREQUENCY_INDEX_top,  5),
-  M_REC_ARRAY  (Meas_Ctrl_Param_Desp_t,  UTRAN_FREQUENCY_INDEX, Count_UTRAN_FREQUENCY_INDEX, 5),
+  M_UINT       (Meas_Ctrl_Param_Desp_t, Measurement_Control_UTRAN, 1),
+  M_UINT       (Meas_Ctrl_Param_Desp_t, UTRAN_FREQUENCY_INDEX_top,  5),
+  M_REC_ARRAY  (Meas_Ctrl_Param_Desp_t, UTRAN_FREQUENCY_INDEX, Count_UTRAN_FREQUENCY_INDEX, 5),
 CSN_DESCR_END  (Meas_Ctrl_Param_Desp_t)
 
 static const
@@ -3134,8 +3134,8 @@ CSN_DESCR_END          (PMO_AdditionsR9_t)
 static const
 CSN_DESCR_BEGIN        (PMO_AdditionsR8_t)
   M_NEXT_EXIST         (PMO_AdditionsR8_t, existBA_IND_3G_PMO_IND, 2),
-  M_BIT                (PMO_AdditionsR8_t,  BA_IND_3G),
-  M_BIT                (PMO_AdditionsR8_t,  PMO_IND),
+  M_UINT               (PMO_AdditionsR8_t, BA_IND_3G, 1),
+  M_UINT               (PMO_AdditionsR8_t, PMO_IND, 1),
   M_NEXT_EXIST         (PMO_AdditionsR8_t, existPriorityAndEUTRAN_ParametersDescription_PMO, 1),
   M_TYPE               (PMO_AdditionsR8_t, PriorityAndEUTRAN_ParametersDescription_PMO, PriorityAndEUTRAN_ParametersDescription_PMO_t),
   M_NEXT_EXIST         (PMO_AdditionsR8_t, existIndividualPriorities_PMO, 1),
@@ -3447,19 +3447,19 @@ CSN_DESCR_BEGIN(UTRAN_CSG_Measurement_Report_t)
   M_NEXT_EXIST (UTRAN_CSG_Measurement_Report_t, Exist_PLMN_ID, 1),
   M_TYPE       (UTRAN_CSG_Measurement_Report_t,  Plmn_ID, PLMN_t),
   M_UINT       (UTRAN_CSG_Measurement_Report_t,  CSG_ID,  27),
-  M_BIT        (UTRAN_CSG_Measurement_Report_t,  Access_Mode),
+  M_UINT       (UTRAN_CSG_Measurement_Report_t,  Access_Mode, 1),
   M_UINT       (UTRAN_CSG_Measurement_Report_t,  REPORTING_QUANTITY,  6),
 CSN_DESCR_END  (UTRAN_CSG_Measurement_Report_t)
 
 static const
 CSN_DESCR_BEGIN(EUTRAN_CSG_Measurement_Report_t)
-  M_UINT       (EUTRAN_CSG_Measurement_Report_t,  EUTRAN_CGI,  28),
-  M_UINT       (EUTRAN_CSG_Measurement_Report_t,  Tracking_Area_Code,  16),
+  M_UINT       (EUTRAN_CSG_Measurement_Report_t, EUTRAN_CGI,  28),
+  M_UINT       (EUTRAN_CSG_Measurement_Report_t, Tracking_Area_Code,  16),
   M_NEXT_EXIST (EUTRAN_CSG_Measurement_Report_t, Exist_PLMN_ID, 1),
   M_TYPE       (EUTRAN_CSG_Measurement_Report_t,  Plmn_ID, PLMN_t),
-  M_UINT       (EUTRAN_CSG_Measurement_Report_t,  CSG_ID,  27),
-  M_BIT        (EUTRAN_CSG_Measurement_Report_t,  Access_Mode),
-  M_UINT       (EUTRAN_CSG_Measurement_Report_t,  REPORTING_QUANTITY,  6),
+  M_UINT       (EUTRAN_CSG_Measurement_Report_t, CSG_ID,  27),
+  M_UINT       (EUTRAN_CSG_Measurement_Report_t, Access_Mode, 1),
+  M_UINT       (EUTRAN_CSG_Measurement_Report_t, REPORTING_QUANTITY,  6),
 CSN_DESCR_END  (EUTRAN_CSG_Measurement_Report_t)
 
 static const
@@ -3505,7 +3505,7 @@ CSN_DESCR_END   (PMR_AdditionsR99_t)
 static const
 CSN_DESCR_BEGIN(EMR_ServingCell_t)
   /*CSN_MEMBER_BIT (EMR_ServingCell_t, DTX_USED),*/
-  M_BIT          (EMR_ServingCell_t,  DTX_USED),
+  M_UINT         (EMR_ServingCell_t,  DTX_USED, 1),
   M_UINT         (EMR_ServingCell_t,  RXLEV_VAL,        6),
   M_UINT         (EMR_ServingCell_t,  RX_QUAL_FULL,     3),
   M_UINT         (EMR_ServingCell_t,  MEAN_BEP,         5),
@@ -3699,7 +3699,7 @@ CSN_DESCR_END  (Eutran_Ccn_Measurement_Report_Cell_t)
 
 static const
 CSN_DESCR_BEGIN(Eutran_Ccn_Measurement_Report_t)
-  M_BIT        (Eutran_Ccn_Measurement_Report_t,  ThreeG_BA_USED),
+  M_UINT       (Eutran_Ccn_Measurement_Report_t,  ThreeG_BA_USED, 1),
   M_UINT_OFFSET(Eutran_Ccn_Measurement_Report_t,  N_EUTRAN,  2, 1),
   M_VAR_TARRAY (Eutran_Ccn_Measurement_Report_t,  Eutran_Ccn_Measurement_Report_Cell, Eutran_Ccn_Measurement_Report_Cell_t, N_EUTRAN),
 CSN_DESCR_END  (Eutran_Ccn_Measurement_Report_t)
@@ -3881,12 +3881,12 @@ CSN_DESCR_END   (REPORTING_QUANTITY_t)
 
 static const
 CSN_DESCR_BEGIN (NC_MeasurementReport_t)
-  M_BIT         (NC_MeasurementReport_t,  NC_MODE),
+  M_UINT        (NC_MeasurementReport_t, NC_MODE, 1),
   M_UNION       (NC_MeasurementReport_t, 2),
   M_TYPE        (NC_MeasurementReport_t, u.BA_USED, BA_USED_t),
-  M_UINT        (NC_MeasurementReport_t,  u.PSI3_CHANGE_MARK,  2),
-  M_BIT         (NC_MeasurementReport_t,  PMO_USED),
-  M_BIT         (NC_MeasurementReport_t,  SCALE),
+  M_UINT        (NC_MeasurementReport_t, u.PSI3_CHANGE_MARK,  2),
+  M_UINT        (NC_MeasurementReport_t, PMO_USED, 1),
+  M_UINT        (NC_MeasurementReport_t, SCALE, 1),
 
   M_NEXT_EXIST  (NC_MeasurementReport_t, Exist_ServingCellData, 1),
   M_TYPE        (NC_MeasurementReport_t, ServingCellData, ServingCellData_t),
@@ -3911,9 +3911,9 @@ static const
 CSN_DESCR_BEGIN (PHO_DownlinkAssignment_t)
   M_UINT        (PHO_DownlinkAssignment_t,  TimeslotAllocation,  8),
   M_UINT        (PHO_DownlinkAssignment_t,  PFI,  7),
-  M_BIT         (PHO_DownlinkAssignment_t,  RLC_Mode),
+  M_UINT        (PHO_DownlinkAssignment_t,  RLC_Mode, 1),
   M_UINT        (PHO_DownlinkAssignment_t,  TFI_Assignment,  5),
-  M_BIT         (PHO_DownlinkAssignment_t,  ControlACK),
+  M_UINT        (PHO_DownlinkAssignment_t,  ControlACK, 1),
 
   M_NEXT_EXIST  (PHO_DownlinkAssignment_t, Exist_EGPRS_WindowSize, 1),
   M_UINT        (PHO_DownlinkAssignment_t,  EGPRS_WindowSize,  5),
@@ -3934,7 +3934,7 @@ CSN_DESCR_END         (USF_AllocationArray_t)
 static const
 CSN_DESCR_BEGIN  (PHO_UplinkAssignment_t)
   M_UINT         (PHO_UplinkAssignment_t,  PFI,  7),
-  M_BIT          (PHO_UplinkAssignment_t,  RLC_Mode),
+  M_UINT          (PHO_UplinkAssignment_t,  RLC_Mode, 1),
   M_UINT         (PHO_UplinkAssignment_t,  TFI_Assignment,  5),
 
   M_NEXT_EXIST   (PHO_UplinkAssignment_t, Exist_ChannelCodingCommand, 1),
@@ -3946,7 +3946,7 @@ CSN_DESCR_BEGIN  (PHO_UplinkAssignment_t)
   M_NEXT_EXIST   (PHO_UplinkAssignment_t, Exist_EGPRS_WindowSize, 1),
   M_UINT         (PHO_UplinkAssignment_t,  EGPRS_WindowSize,  5),
 
-  M_BIT          (PHO_UplinkAssignment_t,  USF_Granularity),
+  M_UINT          (PHO_UplinkAssignment_t,  USF_Granularity, 1),
 
   M_NEXT_EXIST   (PHO_UplinkAssignment_t, Exist_TBF_TimeslotAllocation, 1),
   M_LEFT_VAR_BMP (PHO_UplinkAssignment_t, TBF_TimeslotAllocation, u.USF_AllocationArray.NBR_OfAllocatedTimeslots, 0),
@@ -4043,13 +4043,13 @@ CSN_DESCR_BEGIN(PHO_RadioResources_t)
 
   M_UINT       (PHO_RadioResources_t,  ARFCN,  10),
   M_UINT       (PHO_RadioResources_t,  SI,  2),
-  M_BIT        (PHO_RadioResources_t,  NCI),
+  M_UINT        (PHO_RadioResources_t,  NCI, 1),
   M_UINT       (PHO_RadioResources_t,  BSIC,  6),
   M_NEXT_EXIST (PHO_RadioResources_t, Exist_CCN_Active, 1),
-  M_BIT        (PHO_RadioResources_t,  CCN_Active),
+  M_UINT        (PHO_RadioResources_t,  CCN_Active, 1),
 
   M_NEXT_EXIST (PHO_RadioResources_t, Exist_CCN_Active_3G, 1),
-  M_BIT        (PHO_RadioResources_t,  CCN_Active_3G),
+  M_UINT        (PHO_RadioResources_t,  CCN_Active_3G, 1),
 
   M_NEXT_EXIST (PHO_RadioResources_t, Exist_CCN_Support_Description, 1),
   M_TYPE       (PHO_RadioResources_t, CCN_Support_Description, CCN_Support_Description_t),
@@ -4059,11 +4059,11 @@ CSN_DESCR_BEGIN(PHO_RadioResources_t)
   M_NEXT_EXIST (PHO_RadioResources_t, Exist_PHO_TimingAdvance, 1),
   M_TYPE       (PHO_RadioResources_t, PHO_TimingAdvance, PHO_TimingAdvance_t),
 
-  M_BIT        (PHO_RadioResources_t,  Extended_Dynamic_Allocation),
-  M_BIT        (PHO_RadioResources_t,  RLC_Reset),
+  M_UINT        (PHO_RadioResources_t,  Extended_Dynamic_Allocation, 1),
+  M_UINT        (PHO_RadioResources_t,  RLC_Reset, 1),
   M_NEXT_EXIST (PHO_RadioResources_t, Exist_PO_PR, 2),
   M_UINT       (PHO_RadioResources_t,  PO,  4),
-  M_BIT        (PHO_RadioResources_t,  PR_Mode),
+  M_UINT        (PHO_RadioResources_t,  PR_Mode, 1),
 
 
   M_NEXT_EXIST (PHO_RadioResources_t, Exist_UplinkControlTimeslot, 1),
@@ -4234,13 +4234,13 @@ CSN_DESCR_END  (Cell_Identification_t)
 
 static const
 CSN_DESCR_BEGIN(Non_GPRS_Cell_Options_t)
-  M_BIT        (Non_GPRS_Cell_Options_t,  ATT),
+  M_UINT        (Non_GPRS_Cell_Options_t,  ATT, 1),
 
   M_NEXT_EXIST (Non_GPRS_Cell_Options_t, Exist_T3212, 1),
   M_UINT       (Non_GPRS_Cell_Options_t,  T3212, 8),
 
-  M_BIT        (Non_GPRS_Cell_Options_t,  NECI),
-  M_BIT        (Non_GPRS_Cell_Options_t,  PWRC),
+  M_UINT       (Non_GPRS_Cell_Options_t,  NECI, 1),
+  M_UINT       (Non_GPRS_Cell_Options_t,  PWRC, 1),
   M_UINT       (Non_GPRS_Cell_Options_t,  DTX, 2),
   M_UINT       (Non_GPRS_Cell_Options_t,  RADIO_LINK_TIMEOUT, 4),
   M_UINT       (Non_GPRS_Cell_Options_t,  BS_AG_BLKS_RES, 3),
@@ -4248,7 +4248,7 @@ CSN_DESCR_BEGIN(Non_GPRS_Cell_Options_t)
   M_UINT       (Non_GPRS_Cell_Options_t,  BS_PA_MFRMS, 3),
   M_UINT       (Non_GPRS_Cell_Options_t,  MAX_RETRANS, 2),
   M_UINT       (Non_GPRS_Cell_Options_t,  TX_INTEGER, 4),
-  M_BIT        (Non_GPRS_Cell_Options_t,  EC),
+  M_UINT       (Non_GPRS_Cell_Options_t,  EC, 1),
   M_UINT       (Non_GPRS_Cell_Options_t,  MS_TXPWR_MAX_CCCH, 5),
 
   M_NEXT_EXIST (Non_GPRS_Cell_Options_t, Exist_Extension_Bits, 1),
@@ -4327,8 +4327,8 @@ CSN_DESCR_END  (PSI2_t)
 /*< Packet System Information Type 3 message content >*/
 static const
 CSN_DESCR_BEGIN(Serving_Cell_params_t)
-  M_BIT        (Serving_Cell_params_t,  CELL_BAR_ACCESS_2),
-  M_BIT        (Serving_Cell_params_t,  EXC_ACC),
+  M_UINT       (Serving_Cell_params_t,  CELL_BAR_ACCESS_2, 1),
+  M_UINT       (Serving_Cell_params_t,  EXC_ACC, 1),
   M_UINT       (Serving_Cell_params_t,  GPRS_RXLEV_ACCESS_MIN, 6),
   M_UINT       (Serving_Cell_params_t,  GPRS_MS_TXPWR_MAX_CCH, 5),
   M_NEXT_EXIST (Serving_Cell_params_t, Exist_HCS, 1),
@@ -4340,8 +4340,8 @@ CSN_DESCR_END  (Serving_Cell_params_t)
 static const
 CSN_DESCR_BEGIN(Gen_Cell_Sel_t)
   M_UINT       (Gen_Cell_Sel_t,  GPRS_CELL_RESELECT_HYSTERESIS, 3),
-  M_BIT        (Gen_Cell_Sel_t,  C31_HYST),
-  M_BIT        (Gen_Cell_Sel_t,  C32_QUAL),
+  M_UINT       (Gen_Cell_Sel_t,  C31_HYST, 1),
+  M_UINT       (Gen_Cell_Sel_t,  C32_QUAL, 1),
   M_FIXED      (Gen_Cell_Sel_t, 1, 0x01),
 
   M_NEXT_EXIST (Gen_Cell_Sel_t, Exist_T_RESEL, 1),
@@ -4355,9 +4355,9 @@ CSN_DESCR_END  (Gen_Cell_Sel_t)
 static const
 CSN_DESCR_BEGIN(COMPACT_Cell_Sel_t)
   M_UINT       (COMPACT_Cell_Sel_t,  bsic, 6),
-  M_BIT        (COMPACT_Cell_Sel_t,  CELL_BAR_ACCESS_2),
-  M_BIT        (COMPACT_Cell_Sel_t,  EXC_ACC),
-  M_BIT        (COMPACT_Cell_Sel_t,  SAME_RA_AS_SERVING_CELL),
+  M_UINT       (COMPACT_Cell_Sel_t,  CELL_BAR_ACCESS_2, 1),
+  M_UINT       (COMPACT_Cell_Sel_t,  EXC_ACC, 1),
+  M_UINT       (COMPACT_Cell_Sel_t,  SAME_RA_AS_SERVING_CELL, 1),
   M_NEXT_EXIST (COMPACT_Cell_Sel_t, Exist_GPRS_RXLEV_ACCESS_MIN, 2),
   M_UINT       (COMPACT_Cell_Sel_t,  GPRS_RXLEV_ACCESS_MIN, 6),
   M_UINT       (COMPACT_Cell_Sel_t,  GPRS_MS_TXPWR_MAX_CCH, 5),
