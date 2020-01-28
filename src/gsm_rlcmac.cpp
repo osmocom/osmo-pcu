@@ -1097,6 +1097,152 @@ CSN_DESCR_BEGIN(EGPRS_BEP_LinkQualityMeasurements_t)
 CSN_DESCR_END  (EGPRS_BEP_LinkQualityMeasurements_t)
 
 static const
+CSN_DESCR_BEGIN(IU_Mode_Channel_Request_Desk_t)
+
+  M_UINT       (IU_Mode_Channel_Request_Desk_t,  RB_ID,  5),
+  M_UINT       (IU_Mode_Channel_Request_Desk_t,  RADIO_PRIORITY,  2),
+
+  M_NEXT_EXIST (IU_Mode_Channel_Request_Desk_t, Exist_RLC_BLOCK_COUNT, 1),
+  M_UINT       (IU_Mode_Channel_Request_Desk_t,  RLC_BLOCK_COUNT,  8),
+
+  M_NEXT_EXIST (IU_Mode_Channel_Request_Desk_t, Exist_Iu_Mode_ChRequestDesk, 1), /* Don't use M_REC_TARRAY as we don't support multiple TBFs */
+
+CSN_DESCR_END  (IU_Mode_Channel_Request_Desk_t)
+
+static const
+CSN_DESCR_BEGIN(IU_Mode_Channel_Request_Desk_RNTI_t)
+
+  M_NEXT_EXIST (IU_Mode_Channel_Request_Desk_RNTI_t, Exist_G_RNTI_Extension, 1),
+  M_UINT       (IU_Mode_Channel_Request_Desk_RNTI_t,  G_RNTI_Extension,  4),
+
+  M_TYPE       (IU_Mode_Channel_Request_Desk_RNTI_t, IU_Mode_Channel_Request_Desk, IU_Mode_Channel_Request_Desk_t),
+
+CSN_DESCR_END  (IU_Mode_Channel_Request_Desk_RNTI_t)
+
+
+static const
+CSN_DESCR_BEGIN(Ext_Channel_Request_desc_t)
+
+  M_UINT       (Ext_Channel_Request_desc_t,  PFI, 7),
+  M_UINT       (Ext_Channel_Request_desc_t,  RADIO_PRIORITY,  2),
+  M_UINT       (Ext_Channel_Request_desc_t,  RLC_Mode, 1),
+
+  M_NEXT_EXIST (Ext_Channel_Request_desc_t, Exist_LCC_PDU, 1),
+  M_UINT       (Ext_Channel_Request_desc_t,  LCC_PDU,  1),
+
+  M_NEXT_EXIST (Ext_Channel_Request_desc_t, Exist_Ext_Channel_Request_desc, 1), /* Don't use M_REC_TARRAY as we don't support multiple TBFs */
+
+CSN_DESCR_END  (Ext_Channel_Request_desc_t)
+
+static const
+CSN_DESCR_BEGIN(EGPRS_BEP_LinkQualityMeasurements_type2_t)
+
+  M_NEXT_EXIST (EGPRS_BEP_LinkQualityMeasurements_type2_t, Exist_GMSK_MEAN_BEP, 1),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  GMSK_MEAN_BEP,  5),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  GMSK_CV_BEP, 3),
+
+  M_NEXT_EXIST (EGPRS_BEP_LinkQualityMeasurements_type2_t, Exist_8PSK_MEAN_BEP, 1),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  p8PSK_MEAN_BEP,  5),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  p8PSK_CV_BEP, 3),
+
+  M_NEXT_EXIST (EGPRS_BEP_LinkQualityMeasurements_type2_t, Exist_QPSK_MEAN_BEP, 1),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  QPSK_MEAN_BEP,  5),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  QPSK_CV_BEP, 3),
+
+  M_NEXT_EXIST (EGPRS_BEP_LinkQualityMeasurements_type2_t, Exist_16QAM_NSR_MEAN_BEP, 1),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  p16QAM_NSR_MEAN_BEP,  5),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  p16QAM_NSR_CV_BEP, 3),
+
+  M_NEXT_EXIST (EGPRS_BEP_LinkQualityMeasurements_type2_t, Exist_32QAM_NSR_MEAN_BEP, 1),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  p32QAM_NSR_MEAN_BEP,  5),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  p32QAM_NSR_CV_BEP, 3),
+
+  M_NEXT_EXIST (EGPRS_BEP_LinkQualityMeasurements_type2_t, Exist_16QAM_HSR_MEAN_BEP, 1),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  p16QAM_HSR_MEAN_BEP,  5),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  p16QAM_HSR_CV_BEP, 3),
+
+  M_NEXT_EXIST (EGPRS_BEP_LinkQualityMeasurements_type2_t, Exist_32QAM_HSR_MEAN_BEP, 1),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  p32QAM_HSR_MEAN_BEP,  5),
+  M_UINT       (EGPRS_BEP_LinkQualityMeasurements_type2_t,  p32QAM_HSR_CV_BEP, 3),
+
+CSN_DESCR_END  (EGPRS_BEP_LinkQualityMeasurements_type2_t)
+
+static const
+CSN_DESCR_BEGIN(BEP_MeasurementReport_type2_t)
+  M_NEXT_EXIST (BEP_MeasurementReport_type2_t, Exist, 1),
+  M_UINT       (BEP_MeasurementReport_type2_t,  REPORTED_MODULATION,  2),
+  M_UINT       (BEP_MeasurementReport_type2_t,  MEAN_BEP_TN,  4),
+CSN_DESCR_END  (BEP_MeasurementReport_type2_t)
+
+static const
+CSN_DESCR_BEGIN(InterferenceMeasurementReport_type2_t)
+  M_NEXT_EXIST (InterferenceMeasurementReport_type2_t, Exist, 1),
+  M_UINT       (InterferenceMeasurementReport_type2_t,  I_LEVEL,  4),
+CSN_DESCR_END  (InterferenceMeasurementReport_type2_t)
+static const
+CSN_DESCR_BEGIN(EGPRS_TimeslotLinkQualityMeasurements_type2_t)
+  M_NEXT_EXIST (EGPRS_TimeslotLinkQualityMeasurements_type2_t, Exist_BEP_MEASUREMENTS, 1),
+  M_TYPE_ARRAY (EGPRS_TimeslotLinkQualityMeasurements_type2_t, BEP_MEASUREMENTS, BEP_MeasurementReport_type2_t, 8),
+
+  M_NEXT_EXIST (EGPRS_TimeslotLinkQualityMeasurements_type2_t, Exist_INTERFERENCE_MEASUREMENTS, 1),
+  M_TYPE_ARRAY (EGPRS_TimeslotLinkQualityMeasurements_type2_t, INTERFERENCE_MEASUREMENTS, InterferenceMeasurementReport_type2_t, 8),
+CSN_DESCR_END  (EGPRS_TimeslotLinkQualityMeasurements_type2_t)
+
+static const
+CSN_DESCR_BEGIN(PRR_AdditionsR12_t)
+
+  M_NEXT_EXIST (PRR_AdditionsR12_t, Exist_Downlink_eTFI, 1),
+  M_UINT       (PRR_AdditionsR12_t,  DOWNLINK_ETFI,  3),
+
+CSN_DESCR_END  (PRR_AdditionsR12_t)
+
+static const
+CSN_DESCR_BEGIN(PRR_AdditionsR10_t)
+  M_UINT       (PRR_AdditionsR10_t,  LOW_ACCESS_PRIORITY_SIGNALLING,  1),
+
+  M_NEXT_EXIST_OR_NULL(PRR_AdditionsR10_t, Exist_AdditionsR12, 1),
+  M_TYPE       (PRR_AdditionsR10_t, AdditionsR12, PRR_AdditionsR12_t),
+
+CSN_DESCR_END  (PRR_AdditionsR10_t)
+
+static const
+CSN_DESCR_BEGIN(PRR_AdditionsR7_t)
+  M_UINT       (PRR_AdditionsR7_t,  EARLY_TBF_ESTABLISHMENT,  1),
+
+  M_NEXT_EXIST (PRR_AdditionsR7_t, Exist_EGPRS_BEP_LinkQualityMeasurements_type2, 1),
+  M_TYPE       (PRR_AdditionsR7_t, EGPRS_BEP_LinkQualityMeasurements_type2, EGPRS_BEP_LinkQualityMeasurements_type2_t),
+
+  M_NEXT_EXIST (PRR_AdditionsR7_t, Exist_EGPRS_TimeslotLinkQualityMeasurements_type2, 1),
+  M_TYPE       (PRR_AdditionsR7_t, EGPRS_TimeslotLinkQualityMeasurements_type2, EGPRS_TimeslotLinkQualityMeasurements_type2_t),
+
+  M_NEXT_EXIST_OR_NULL(PRR_AdditionsR7_t, Exist_AdditionsR10, 1),
+  M_TYPE       (PRR_AdditionsR7_t, AdditionsR10, PRR_AdditionsR10_t),
+
+CSN_DESCR_END  (PRR_AdditionsR7_t)
+
+static const
+CSN_DESCR_BEGIN(PRR_AdditionsR6_t)
+  M_NEXT_EXIST (PRR_AdditionsR6_t, Exist_Ext_Channel_Request_desc, 1),
+  M_TYPE       (PRR_AdditionsR6_t, Ext_Channel_Request_desc, Ext_Channel_Request_desc_t),
+
+  M_NEXT_EXIST_OR_NULL(PRR_AdditionsR6_t, Exist_AdditionsR7, 1),
+  M_TYPE       (PRR_AdditionsR6_t, AdditionsR7, PRR_AdditionsR7_t),
+
+CSN_DESCR_END  (PRR_AdditionsR6_t)
+
+static const
+CSN_DESCR_BEGIN(PRR_AdditionsR5_t)
+  M_NEXT_EXIST (PRR_AdditionsR5_t, Exist_Iu_Mode_ChRequestDesk, 1),
+  M_TYPE       (PRR_AdditionsR5_t, IU_Mode_Channel_Request_Desk_RNTI, IU_Mode_Channel_Request_Desk_RNTI_t),
+
+  M_NEXT_EXIST (PRR_AdditionsR5_t, Exist_HFN_LSB, 1),
+  M_UINT       (PRR_AdditionsR5_t,  HFN_LSb, 7),
+
+  M_NEXT_EXIST_OR_NULL(PRR_AdditionsR5_t, Exist_AdditionsR6, 1),
+  M_TYPE       (PRR_AdditionsR5_t, AdditionsR6, PRR_AdditionsR6_t),
+CSN_DESCR_END  (PRR_AdditionsR5_t)
+
+static const
 CSN_DESCR_BEGIN(PRR_AdditionsR99_t)
   M_NEXT_EXIST (PRR_AdditionsR99_t, Exist_EGPRS_BEP_LinkQualityMeasurements, 1),
   M_TYPE       (PRR_AdditionsR99_t, EGPRS_BEP_LinkQualityMeasurements, EGPRS_BEP_LinkQualityMeasurements_t),
@@ -1109,6 +1255,10 @@ CSN_DESCR_BEGIN(PRR_AdditionsR99_t)
 
   M_UINT       (PRR_AdditionsR99_t,  MS_RAC_AdditionalInformationAvailable,  1),
   M_UINT       (PRR_AdditionsR99_t,  RetransmissionOfPRR,  1),
+
+  M_NEXT_EXIST_OR_NULL(PRR_AdditionsR99_t, Exist_AdditionsR5, 1),
+  M_TYPE       (PRR_AdditionsR99_t, AdditionsR5, PRR_AdditionsR5_t),
+
 CSN_DESCR_END  (PRR_AdditionsR99_t)
 
 static const
