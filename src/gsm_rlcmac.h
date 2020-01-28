@@ -2492,9 +2492,16 @@ typedef struct
 
 typedef struct
 {
-  guint8 MSCR;
-  guint8 SGSNR;
-  guint8 BandIndicator;
+  guint8 LB_MS_TXPWR_MAX_CCH;
+} PSI1_AdditionsR6_t;
+
+typedef struct
+{
+  guint8             MSCR;
+  guint8             SGSNR;
+  guint8             BandIndicator;
+  gboolean           Exist_AdditionsR6;
+  PSI1_AdditionsR6_t AdditionsR6;
 } PSI1_AdditionsR99_t;
 
 typedef struct

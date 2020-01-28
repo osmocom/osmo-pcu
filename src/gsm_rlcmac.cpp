@@ -576,8 +576,8 @@ CSN_DESCR_END   (Extension_Bits_t)
 static const
 CSN_DESCR_BEGIN(GPRS_Cell_Options_t)
   M_UINT       (GPRS_Cell_Options_t,  NMO,  2),
-  M_UINT_OFFSET(GPRS_Cell_Options_t, T3168, 3, 1),
-  M_UINT_OFFSET(GPRS_Cell_Options_t, T3192, 3, 1),
+  M_UINT        (GPRS_Cell_Options_t, T3168, 3),
+  M_UINT        (GPRS_Cell_Options_t, T3192, 3),
   M_UINT       (GPRS_Cell_Options_t,  DRX_TIMER_MAX,  3),
   M_BIT        (GPRS_Cell_Options_t,  ACCESS_BURST_TYPE),
   M_BIT        (GPRS_Cell_Options_t,  CONTROL_ACK_TYPE),
@@ -4167,12 +4167,18 @@ CSN_DESCR_END         (Packet_Pause_t)
 
 
 /*< Packet System Information Type 1 message content >*/
+CSN_DESCR_BEGIN(PSI1_AdditionsR6_t)
+  M_UINT       (PSI1_AdditionsR6_t, LB_MS_TXPWR_MAX_CCH, 5),
+CSN_DESCR_END  (PSI1_AdditionsR6_t)
+
 static const
-CSN_DESCR_BEGIN(PSI1_AdditionsR99_t)
-  M_UINT       (PSI1_AdditionsR99_t,  MSCR,  1),
-  M_UINT       (PSI1_AdditionsR99_t,  SGSNR,  1),
-  M_UINT       (PSI1_AdditionsR99_t,  BandIndicator,  1),
-CSN_DESCR_END  (PSI1_AdditionsR99_t)
+CSN_DESCR_BEGIN        (PSI1_AdditionsR99_t)
+  M_UINT               (PSI1_AdditionsR99_t,  MSCR,  1),
+  M_UINT               (PSI1_AdditionsR99_t,  SGSNR,  1),
+  M_UINT               (PSI1_AdditionsR99_t,  BandIndicator,  1),
+  M_NEXT_EXIST_OR_NULL (PSI1_AdditionsR99_t, Exist_AdditionsR6, 1),
+  M_TYPE               (PSI1_AdditionsR99_t, AdditionsR6, PSI1_AdditionsR6_t),
+CSN_DESCR_END          (PSI1_AdditionsR99_t)
 
 static const
 CSN_DESCR_BEGIN(PCCCH_Organization_t)
@@ -4185,26 +4191,26 @@ CSN_DESCR_END  (PCCCH_Organization_t)
 
 static const
 CSN_DESCR_BEGIN(PSI1_t)
-  M_UINT       (PSI1_t,  MESSAGE_TYPE,  6),
-  M_UINT       (PSI1_t,  PAGE_MODE,  2),
+  M_UINT               (PSI1_t,  MESSAGE_TYPE,  6),
+  M_UINT               (PSI1_t,  PAGE_MODE,  2),
 
-  M_UINT       (PSI1_t,  PBCCH_CHANGE_MARK,  3),
-  M_UINT       (PSI1_t,  PSI_CHANGE_FIELD,  4),
-  M_UINT       (PSI1_t,  PSI1_REPEAT_PERIOD,  4),
-  M_UINT       (PSI1_t,  PSI_COUNT_LR,  6),
+  M_UINT               (PSI1_t,  PBCCH_CHANGE_MARK,  3),
+  M_UINT               (PSI1_t,  PSI_CHANGE_FIELD,  4),
+  M_UINT               (PSI1_t,  PSI1_REPEAT_PERIOD,  4),
+  M_UINT               (PSI1_t,  PSI_COUNT_LR,  6),
 
-  M_NEXT_EXIST (PSI1_t, Exist_PSI_COUNT_HR, 1),
-  M_UINT       (PSI1_t,  PSI_COUNT_HR,  4),
+  M_NEXT_EXIST         (PSI1_t, Exist_PSI_COUNT_HR, 1),
+  M_UINT               (PSI1_t,  PSI_COUNT_HR,  4),
 
-  M_UINT       (PSI1_t,  MEASUREMENT_ORDER,  1),
-  M_TYPE       (PSI1_t,  GPRS_Cell_Options, GPRS_Cell_Options_t),
-  M_TYPE       (PSI1_t,  PRACH_Control, PRACH_Control_t),
-  M_TYPE       (PSI1_t,  PCCCH_Organization, PCCCH_Organization_t),
-  M_TYPE       (PSI1_t,  Global_Power_Control_Parameters, Global_Power_Control_Parameters_t),
-  M_UINT       (PSI1_t,  PSI_STATUS_IND,  1),
+  M_UINT               (PSI1_t,  MEASUREMENT_ORDER,  1),
+  M_TYPE               (PSI1_t,  GPRS_Cell_Options, GPRS_Cell_Options_t),
+  M_TYPE               (PSI1_t,  PRACH_Control, PRACH_Control_t),
+  M_TYPE               (PSI1_t,  PCCCH_Organization, PCCCH_Organization_t),
+  M_TYPE               (PSI1_t,  Global_Power_Control_Parameters, Global_Power_Control_Parameters_t),
+  M_UINT               (PSI1_t,  PSI_STATUS_IND,  1),
 
-  M_NEXT_EXIST (PSI1_t, Exist_AdditionsR99, 1),
-  M_TYPE       (PSI1_t,  AdditionsR99, PSI1_AdditionsR99_t),
+  M_NEXT_EXIST_OR_NULL (PSI1_t, Exist_AdditionsR99, 1),
+  M_TYPE               (PSI1_t,  AdditionsR99, PSI1_AdditionsR99_t),
 
   M_PADDING_BITS(PSI1_t),
 CSN_DESCR_END  (PSI1_t)
