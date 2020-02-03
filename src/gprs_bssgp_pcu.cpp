@@ -108,7 +108,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 
 	data = (uint8_t *) TLVP_VAL(tp, BSSGP_IE_LLC_PDU);
 	len = TLVP_LEN(tp, BSSGP_IE_LLC_PDU);
-	if (len > sizeof(LLC_MAX_LEN))
+	if (len > LLC_MAX_LEN)
 	{
 		LOGP(DBSSGP, LOGL_NOTICE, "BSSGP TLLI=0x%08x Rx UL-UD IE_LLC_PDU too large\n", tlli);
 		return bssgp_tx_status(BSSGP_CAUSE_COND_IE_ERR, NULL, msg);
