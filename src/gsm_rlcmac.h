@@ -5154,10 +5154,10 @@ typedef struct
 
 } EnhancedMeasurementReport_t;
 
- void decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data);
- void decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data);
- void encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data);
- void encode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data);
+ int decode_gsm_rlcmac_uplink(bitvec *vector, RlcMacUplink_t *data);
+ int decode_gsm_rlcmac_downlink(bitvec *vector, RlcMacDownlink_t *data);
+ int encode_gsm_rlcmac_downlink(bitvec *vector, RlcMacDownlink_t *data);
+ int encode_gsm_rlcmac_uplink(bitvec *vector, RlcMacUplink_t *data);
  void decode_gsm_rlcmac_uplink_data(bitvec * vector, RlcMacUplinkDataBlock_t * data);
  void encode_gsm_rlcmac_downlink_data(bitvec * vector, RlcMacDownlinkDataBlock_t * data);
  int decode_gsm_ra_cap(bitvec * vector, MS_Radio_Access_capability_t * data);

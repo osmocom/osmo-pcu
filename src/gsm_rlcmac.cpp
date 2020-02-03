@@ -4807,21 +4807,23 @@ CSN_DESCR_BEGIN  (SI6_RestOctet_t)
   M_UINT_LH      (SI6_RestOctet_t,  BandIndicator,  1),
 CSN_DESCR_END    (SI6_RestOctet_t)
 
-void decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
+/* Returns 0 on success, negative on error. */
+int decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
 {
   csnStream_t      ar;
+  int ret;
   unsigned readIndex = 0;
   guint8 payload_type = bitvec_read_field(vector, &readIndex, 2);
 
   if (payload_type == PAYLOAD_TYPE_DATA)
   {
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "Payload Type: DATA (0), not implemented");
-    return;
+    return CSN_ERROR_GENERAL;
   }
   else if (payload_type == PAYLOAD_TYPE_RESERVED)
   {
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "Payload Type: RESERVED (3)");
-    return;
+    return CSN_ERROR_GENERAL;
   }
   data->NrOfBits = 23 * 8;
   csnStreamInit(&ar, 0, data->NrOfBits);
@@ -4837,88 +4839,98 @@ void decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
        * CSNDESCR is an array that holds the different element types
        * ar is the csn context holding the bitcount, offset and output
        */
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Cell_Change_Failure_t), vector, readIndex, &data->u.Packet_Cell_Change_Failure);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Cell_Change_Failure_t), vector, readIndex, &data->u.Packet_Cell_Change_Failure);
       break;
     }
     case MT_PACKET_CONTROL_ACK:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Control_Acknowledgement_t), vector, readIndex, &data->u.Packet_Control_Acknowledgement);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Control_Acknowledgement_t), vector, readIndex, &data->u.Packet_Control_Acknowledgement);
       break;
     }
     case MT_PACKET_DOWNLINK_ACK_NACK:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Downlink_Ack_Nack_t), vector, readIndex, &data->u.Packet_Downlink_Ack_Nack);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Downlink_Ack_Nack_t), vector, readIndex, &data->u.Packet_Downlink_Ack_Nack);
       break;
     }
     case MT_PACKET_UPLINK_DUMMY_CONTROL_BLOCK:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Uplink_Dummy_Control_Block_t), vector, readIndex, &data->u.Packet_Uplink_Dummy_Control_Block);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Uplink_Dummy_Control_Block_t), vector, readIndex, &data->u.Packet_Uplink_Dummy_Control_Block);
       break;
     }
     case MT_PACKET_MEASUREMENT_REPORT:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Measurement_Report_t), vector, readIndex, &data->u.Packet_Measurement_Report);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Measurement_Report_t), vector, readIndex, &data->u.Packet_Measurement_Report);
       break;
     }
     case MT_PACKET_RESOURCE_REQUEST:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Resource_Request_t), vector, readIndex, &data->u.Packet_Resource_Request);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Resource_Request_t), vector, readIndex, &data->u.Packet_Resource_Request);
       break;
     }
 
     case MT_PACKET_MOBILE_TBF_STATUS:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Mobile_TBF_Status_t), vector, readIndex, &data->u.Packet_Mobile_TBF_Status);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Mobile_TBF_Status_t), vector, readIndex, &data->u.Packet_Mobile_TBF_Status);
       break;
     }
     case MT_PACKET_PSI_STATUS:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_PSI_Status_t), vector, readIndex, &data->u.Packet_PSI_Status);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_PSI_Status_t), vector, readIndex, &data->u.Packet_PSI_Status);
       break;
     }
     case MT_EGPRS_PACKET_DOWNLINK_ACK_NACK:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(EGPRS_PD_AckNack_t), vector, readIndex, &data->u.Egprs_Packet_Downlink_Ack_Nack);
+      ret = csnStreamDecoder(&ar, CSNDESCR(EGPRS_PD_AckNack_t), vector, readIndex, &data->u.Egprs_Packet_Downlink_Ack_Nack);
       break;
     }
     case MT_PACKET_PAUSE:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Pause_t), vector, readIndex, &data->u.Packet_Pause);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Pause_t), vector, readIndex, &data->u.Packet_Pause);
       break;
     }
     case MT_PACKET_ENHANCED_MEASUREMENT_REPORT:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Enh_Measurement_Report_t), vector, readIndex, &data->u.Packet_Enh_Measurement_Report);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Enh_Measurement_Report_t), vector, readIndex, &data->u.Packet_Enh_Measurement_Report);
       break;
     }
     case MT_ADDITIONAL_MS_RAC:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Additional_MS_Rad_Access_Cap_t), vector, readIndex, &data->u.Additional_MS_Rad_Access_Cap);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Additional_MS_Rad_Access_Cap_t), vector, readIndex, &data->u.Additional_MS_Rad_Access_Cap);
       break;
     }
     case MT_PACKET_CELL_CHANGE_NOTIFICATION:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Cell_Change_Notification_t), vector, readIndex, &data->u.Packet_Cell_Change_Notification);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Cell_Change_Notification_t), vector, readIndex, &data->u.Packet_Cell_Change_Notification);
       break;
     }
     case MT_PACKET_SI_STATUS:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_SI_Status_t), vector, readIndex, &data->u.Packet_SI_Status);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_SI_Status_t), vector, readIndex, &data->u.Packet_SI_Status);
       break;
     }
     default:
-      /*ret = -1;*/
+      ret = -1;
       break;
   }
+
+  if (ret > 0) {
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by decoder at the end of bitvec\n", ret);
+    ret = 0;
+  }
+
+  return ret;
 }
 
-void decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
+/* Returns 0 on success, negative on error. */
+int decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
 {
   csnStream_t  ar;
   /* See RLC/MAC downlink control block structure in TS 44.060 / 10.3.1 */
   gint bit_offset = 0;
   gint bit_length;
   unsigned readIndex = 0;
+  int ret;
+
   data->PAYLOAD_TYPE = bitvec_read_field(vector, &readIndex, 2);
   data->RRBP = bitvec_read_field(vector, &readIndex, 2);
   data->SP = bitvec_read_field(vector, &readIndex, 1);
@@ -4927,12 +4939,12 @@ void decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
   if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_DATA)
   {
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "Payload Type: DATA (0), not implemented");
-    return;
+    return CSN_ERROR_GENERAL;
   }
   else if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_RESERVED)
   {
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "Payload Type: RESERVED (3)");
-    return;
+    return CSN_ERROR_GENERAL;
   }
   /* We can decode the message */
   else
@@ -4975,139 +4987,149 @@ void decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
   {
     case MT_PACKET_ACCESS_REJECT:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Access_Reject_t), vector, readIndex, &data->u.Packet_Access_Reject);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Access_Reject_t), vector, readIndex, &data->u.Packet_Access_Reject);
       break;
     }
     case MT_PACKET_CELL_CHANGE_ORDER:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Cell_Change_Order_t), vector, readIndex, &data->u.Packet_Cell_Change_Order);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Cell_Change_Order_t), vector, readIndex, &data->u.Packet_Cell_Change_Order);
       break;
     }
     case MT_PACKET_CELL_CHANGE_CONTINUE:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Cell_Change_Continue_t), vector, readIndex, &data->u.Packet_Cell_Change_Continue);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Cell_Change_Continue_t), vector, readIndex, &data->u.Packet_Cell_Change_Continue);
       break;
     }
     case MT_PACKET_DOWNLINK_ASSIGNMENT:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Downlink_Assignment_t), vector, readIndex, &data->u.Packet_Downlink_Assignment);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Downlink_Assignment_t), vector, readIndex, &data->u.Packet_Downlink_Assignment);
       break;
     }
     case MT_PACKET_MEASUREMENT_ORDER:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Measurement_Order_t), vector, readIndex, &data->u.Packet_Measurement_Order);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Measurement_Order_t), vector, readIndex, &data->u.Packet_Measurement_Order);
       break;
     }
     case MT_PACKET_NEIGHBOUR_CELL_DATA:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Neighbour_Cell_Data_t), vector, readIndex, &data->u.Packet_Neighbour_Cell_Data);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Neighbour_Cell_Data_t), vector, readIndex, &data->u.Packet_Neighbour_Cell_Data);
       break;
     }
     case MT_PACKET_SERVING_CELL_DATA:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Serving_Cell_Data_t), vector, readIndex, &data->u.Packet_Serving_Cell_Data);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Serving_Cell_Data_t), vector, readIndex, &data->u.Packet_Serving_Cell_Data);
       break;
     }
     case MT_PACKET_PAGING_REQUEST:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Paging_Request_t), vector, readIndex, &data->u.Packet_Paging_Request);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Paging_Request_t), vector, readIndex, &data->u.Packet_Paging_Request);
       break;
     }
     case MT_PACKET_PDCH_RELEASE:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_PDCH_Release_t), vector, readIndex, &data->u.Packet_PDCH_Release);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_PDCH_Release_t), vector, readIndex, &data->u.Packet_PDCH_Release);
       break;
     }
     case MT_PACKET_POLLING_REQ:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Polling_Request_t), vector, readIndex, &data->u.Packet_Polling_Request);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Polling_Request_t), vector, readIndex, &data->u.Packet_Polling_Request);
       break;
     }
     case MT_PACKET_POWER_CONTROL_TIMING_ADVANCE:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Power_Control_Timing_Advance_t), vector, readIndex, &data->u.Packet_Power_Control_Timing_Advance);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Power_Control_Timing_Advance_t), vector, readIndex, &data->u.Packet_Power_Control_Timing_Advance);
       break;
     }
     case MT_PACKET_PRACH_PARAMETERS:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_PRACH_Parameters_t), vector, readIndex, &data->u.Packet_PRACH_Parameters);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_PRACH_Parameters_t), vector, readIndex, &data->u.Packet_PRACH_Parameters);
       break;
     }
     case MT_PACKET_QUEUEING_NOTIFICATION:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Queueing_Notification_t), vector, readIndex, &data->u.Packet_Queueing_Notification);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Queueing_Notification_t), vector, readIndex, &data->u.Packet_Queueing_Notification);
       break;
     }
     case MT_PACKET_TIMESLOT_RECONFIGURE:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Timeslot_Reconfigure_t), vector, readIndex, &data->u.Packet_Timeslot_Reconfigure);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Timeslot_Reconfigure_t), vector, readIndex, &data->u.Packet_Timeslot_Reconfigure);
       break;
     }
     case MT_PACKET_TBF_RELEASE:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_TBF_Release_t), vector, readIndex, &data->u.Packet_TBF_Release);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_TBF_Release_t), vector, readIndex, &data->u.Packet_TBF_Release);
       break;
     }
     case MT_PACKET_UPLINK_ACK_NACK:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Uplink_Ack_Nack_t), vector, readIndex, &data->u.Packet_Uplink_Ack_Nack);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Uplink_Ack_Nack_t), vector, readIndex, &data->u.Packet_Uplink_Ack_Nack);
       break;
     }
     case MT_PACKET_UPLINK_ASSIGNMENT:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Uplink_Assignment_t), vector, readIndex, &data->u.Packet_Uplink_Assignment);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Uplink_Assignment_t), vector, readIndex, &data->u.Packet_Uplink_Assignment);
       break;
     }
     case MT_PACKET_HANDOVER_COMMAND:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Handover_Command_t), vector, readIndex, &data->u.Packet_Handover_Command);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Handover_Command_t), vector, readIndex, &data->u.Packet_Handover_Command);
       break;
     }
     case MT_PACKET_PHYSICAL_INFORMATION:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_PhysicalInformation_t), vector, readIndex, &data->u.Packet_Handover_Command);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_PhysicalInformation_t), vector, readIndex, &data->u.Packet_Handover_Command);
       break;
     }
     case MT_PACKET_DOWNLINK_DUMMY_CONTROL_BLOCK:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(Packet_Downlink_Dummy_Control_Block_t), vector, readIndex, &data->u.Packet_Downlink_Dummy_Control_Block);
+      ret = csnStreamDecoder(&ar, CSNDESCR(Packet_Downlink_Dummy_Control_Block_t), vector, readIndex, &data->u.Packet_Downlink_Dummy_Control_Block);
       break;
     }
     case MT_PACKET_SYSTEM_INFO_1:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(PSI1_t), vector, readIndex, &data->u.PSI1);
+      ret = csnStreamDecoder(&ar, CSNDESCR(PSI1_t), vector, readIndex, &data->u.PSI1);
       break;
     }
     case MT_PACKET_SYSTEM_INFO_2:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(PSI2_t), vector, readIndex, &data->u.PSI2);
+      ret = csnStreamDecoder(&ar, CSNDESCR(PSI2_t), vector, readIndex, &data->u.PSI2);
       break;
     }
     case MT_PACKET_SYSTEM_INFO_3:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(PSI3_t), vector, readIndex, &data->u.PSI3);
+      ret = csnStreamDecoder(&ar, CSNDESCR(PSI3_t), vector, readIndex, &data->u.PSI3);
       break;
     }
     case MT_PACKET_SYSTEM_INFO_5:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(PSI5_t), vector, readIndex, &data->u.PSI5);
+      ret = csnStreamDecoder(&ar, CSNDESCR(PSI5_t), vector, readIndex, &data->u.PSI5);
       break;
     }
     case MT_PACKET_SYSTEM_INFO_13:
     {
-      /*ret =*/ csnStreamDecoder(&ar, CSNDESCR(PSI13_t), vector, readIndex, &data->u.PSI13);
+      ret = csnStreamDecoder(&ar, CSNDESCR(PSI13_t), vector, readIndex, &data->u.PSI13);
       break;
     }
     default:
-      /*ret = -1;*/
+      ret = CSN_ERROR_GENERAL;
       break;
   }
+
+  if (ret > 0) {
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by decoder at the end of bitvec\n", ret);
+    ret = 0;
+  }
+
+  return ret;
 }
 
-void encode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
+/* Returns 0 on success, negative on error. */
+int encode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
 {
   csnStream_t      ar;
   unsigned writeIndex = 0;
+  int ret;
+
   data->NrOfBits = 23 * 8;
   csnStreamInit(&ar, 0, data->NrOfBits);
   writeIndex = 0;
@@ -5120,85 +5142,93 @@ void encode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
        * CSNDESCR is an array that holds the different element types
        * ar is the csn context holding the bitcount, offset and output
        */
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Cell_Change_Failure_t), vector, writeIndex, &data->u.Packet_Cell_Change_Failure);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Cell_Change_Failure_t), vector, writeIndex, &data->u.Packet_Cell_Change_Failure);
       break;
     }
     case MT_PACKET_CONTROL_ACK:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Control_Acknowledgement_t), vector, writeIndex, &data->u.Packet_Control_Acknowledgement);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Control_Acknowledgement_t), vector, writeIndex, &data->u.Packet_Control_Acknowledgement);
       break;
     }
     case MT_PACKET_DOWNLINK_ACK_NACK:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Downlink_Ack_Nack_t), vector, writeIndex, &data->u.Packet_Downlink_Ack_Nack);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Downlink_Ack_Nack_t), vector, writeIndex, &data->u.Packet_Downlink_Ack_Nack);
       break;
     }
     case MT_PACKET_UPLINK_DUMMY_CONTROL_BLOCK:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Uplink_Dummy_Control_Block_t), vector, writeIndex, &data->u.Packet_Uplink_Dummy_Control_Block);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Uplink_Dummy_Control_Block_t), vector, writeIndex, &data->u.Packet_Uplink_Dummy_Control_Block);
       break;
     }
     case MT_PACKET_MEASUREMENT_REPORT:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Measurement_Report_t), vector, writeIndex, &data->u.Packet_Measurement_Report);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Measurement_Report_t), vector, writeIndex, &data->u.Packet_Measurement_Report);
       break;
     }
     case MT_PACKET_RESOURCE_REQUEST:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Resource_Request_t), vector, writeIndex, &data->u.Packet_Resource_Request);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Resource_Request_t), vector, writeIndex, &data->u.Packet_Resource_Request);
       break;
     }
 
     case MT_PACKET_MOBILE_TBF_STATUS:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Mobile_TBF_Status_t), vector, writeIndex, &data->u.Packet_Mobile_TBF_Status);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Mobile_TBF_Status_t), vector, writeIndex, &data->u.Packet_Mobile_TBF_Status);
       break;
     }
     case MT_PACKET_PSI_STATUS:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_PSI_Status_t), vector, writeIndex, &data->u.Packet_PSI_Status);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_PSI_Status_t), vector, writeIndex, &data->u.Packet_PSI_Status);
       break;
     }
     case MT_EGPRS_PACKET_DOWNLINK_ACK_NACK:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(EGPRS_PD_AckNack_t), vector, writeIndex, &data->u.Egprs_Packet_Downlink_Ack_Nack);
+      ret = csnStreamEncoder(&ar, CSNDESCR(EGPRS_PD_AckNack_t), vector, writeIndex, &data->u.Egprs_Packet_Downlink_Ack_Nack);
       break;
     }
     case MT_PACKET_PAUSE:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Pause_t), vector, writeIndex, &data->u.Packet_Pause);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Pause_t), vector, writeIndex, &data->u.Packet_Pause);
       break;
     }
     case MT_PACKET_ENHANCED_MEASUREMENT_REPORT:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Enh_Measurement_Report_t), vector, writeIndex, &data->u.Packet_Enh_Measurement_Report);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Enh_Measurement_Report_t), vector, writeIndex, &data->u.Packet_Enh_Measurement_Report);
       break;
     }
     case MT_ADDITIONAL_MS_RAC:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Additional_MS_Rad_Access_Cap_t), vector, writeIndex, &data->u.Additional_MS_Rad_Access_Cap);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Additional_MS_Rad_Access_Cap_t), vector, writeIndex, &data->u.Additional_MS_Rad_Access_Cap);
       break;
     }
     case MT_PACKET_CELL_CHANGE_NOTIFICATION:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Cell_Change_Notification_t), vector, writeIndex, &data->u.Packet_Cell_Change_Notification);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Cell_Change_Notification_t), vector, writeIndex, &data->u.Packet_Cell_Change_Notification);
       break;
     }
     case MT_PACKET_SI_STATUS:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_SI_Status_t), vector, writeIndex, &data->u.Packet_SI_Status);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_SI_Status_t), vector, writeIndex, &data->u.Packet_SI_Status);
       break;
     }
     default:
-      /*ret = -1;*/
+      ret = CSN_ERROR_GENERAL;
       break;
   }
+
+  if (ret > 0) {
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by encoder at the end of bitvec\n", ret);
+    ret = 0;
+  }
+
+  return ret;
 }
 
-void encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
+/* Returns 0 on success, negative on error. */
+int encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
 {
   csnStream_t  ar;
-
+  int ret;
   /* See RLC/MAC downlink control block structure in TS 44.060 / 10.3.1 */
   gint bit_offset = 0;
   gint bit_length;
@@ -5207,12 +5237,12 @@ void encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
   if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_DATA)
   {
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "Payload Type: DATA (0), not implemented");
-    return;
+    return CSN_ERROR_GENERAL;
   }
   else if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_RESERVED)
   {
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "Payload Type: RESERVED (3)");
-    return;
+    return CSN_ERROR_GENERAL;
   }
   /* We can decode the message */
   else
@@ -5257,133 +5287,140 @@ void encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
   {
     case MT_PACKET_ACCESS_REJECT:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Access_Reject_t), vector, writeIndex, &data->u.Packet_Access_Reject);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Access_Reject_t), vector, writeIndex, &data->u.Packet_Access_Reject);
       break;
     }
     case MT_PACKET_CELL_CHANGE_ORDER:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Cell_Change_Order_t), vector, writeIndex, &data->u.Packet_Cell_Change_Order);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Cell_Change_Order_t), vector, writeIndex, &data->u.Packet_Cell_Change_Order);
       break;
     }
     case MT_PACKET_CELL_CHANGE_CONTINUE:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Cell_Change_Continue_t), vector, writeIndex, &data->u.Packet_Cell_Change_Continue);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Cell_Change_Continue_t), vector, writeIndex, &data->u.Packet_Cell_Change_Continue);
       break;
     }
     case MT_PACKET_DOWNLINK_ASSIGNMENT:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Downlink_Assignment_t), vector, writeIndex, &data->u.Packet_Downlink_Assignment);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Downlink_Assignment_t), vector, writeIndex, &data->u.Packet_Downlink_Assignment);
       break;
     }
     case MT_PACKET_MEASUREMENT_ORDER:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Measurement_Order_t), vector, writeIndex, &data->u.Packet_Measurement_Order);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Measurement_Order_t), vector, writeIndex, &data->u.Packet_Measurement_Order);
       break;
     }
     case MT_PACKET_NEIGHBOUR_CELL_DATA:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Neighbour_Cell_Data_t), vector, writeIndex, &data->u.Packet_Neighbour_Cell_Data);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Neighbour_Cell_Data_t), vector, writeIndex, &data->u.Packet_Neighbour_Cell_Data);
       break;
     }
     case MT_PACKET_SERVING_CELL_DATA:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Serving_Cell_Data_t), vector, writeIndex, &data->u.Packet_Serving_Cell_Data);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Serving_Cell_Data_t), vector, writeIndex, &data->u.Packet_Serving_Cell_Data);
       break;
     }
     case MT_PACKET_PAGING_REQUEST:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Paging_Request_t), vector, writeIndex, &data->u.Packet_Paging_Request);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Paging_Request_t), vector, writeIndex, &data->u.Packet_Paging_Request);
       break;
     }
     case MT_PACKET_PDCH_RELEASE:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_PDCH_Release_t), vector, writeIndex, &data->u.Packet_PDCH_Release);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_PDCH_Release_t), vector, writeIndex, &data->u.Packet_PDCH_Release);
       break;
     }
     case MT_PACKET_POLLING_REQ:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Polling_Request_t), vector, writeIndex, &data->u.Packet_Polling_Request);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Polling_Request_t), vector, writeIndex, &data->u.Packet_Polling_Request);
       break;
     }
     case MT_PACKET_POWER_CONTROL_TIMING_ADVANCE:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Power_Control_Timing_Advance_t), vector, writeIndex, &data->u.Packet_Power_Control_Timing_Advance);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Power_Control_Timing_Advance_t), vector, writeIndex, &data->u.Packet_Power_Control_Timing_Advance);
       break;
     }
     case MT_PACKET_PRACH_PARAMETERS:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_PRACH_Parameters_t), vector, writeIndex, &data->u.Packet_PRACH_Parameters);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_PRACH_Parameters_t), vector, writeIndex, &data->u.Packet_PRACH_Parameters);
       break;
     }
     case MT_PACKET_QUEUEING_NOTIFICATION:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Queueing_Notification_t), vector, writeIndex, &data->u.Packet_Queueing_Notification);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Queueing_Notification_t), vector, writeIndex, &data->u.Packet_Queueing_Notification);
       break;
     }
     case MT_PACKET_TIMESLOT_RECONFIGURE:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Timeslot_Reconfigure_t), vector, writeIndex, &data->u.Packet_Timeslot_Reconfigure);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Timeslot_Reconfigure_t), vector, writeIndex, &data->u.Packet_Timeslot_Reconfigure);
       break;
     }
     case MT_PACKET_TBF_RELEASE:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_TBF_Release_t), vector, writeIndex, &data->u.Packet_TBF_Release);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_TBF_Release_t), vector, writeIndex, &data->u.Packet_TBF_Release);
       break;
     }
     case MT_PACKET_UPLINK_ACK_NACK:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Uplink_Ack_Nack_t), vector, writeIndex, &data->u.Packet_Uplink_Ack_Nack);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Uplink_Ack_Nack_t), vector, writeIndex, &data->u.Packet_Uplink_Ack_Nack);
       break;
     }
     case MT_PACKET_UPLINK_ASSIGNMENT:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Uplink_Assignment_t), vector, writeIndex, &data->u.Packet_Uplink_Assignment);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Uplink_Assignment_t), vector, writeIndex, &data->u.Packet_Uplink_Assignment);
       break;
     }
     case MT_PACKET_HANDOVER_COMMAND:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Handover_Command_t), vector, writeIndex, &data->u.Packet_Handover_Command);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Handover_Command_t), vector, writeIndex, &data->u.Packet_Handover_Command);
       break;
     }
     case MT_PACKET_PHYSICAL_INFORMATION:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_PhysicalInformation_t), vector, writeIndex, &data->u.Packet_Handover_Command);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_PhysicalInformation_t), vector, writeIndex, &data->u.Packet_Handover_Command);
       break;
     }
     case MT_PACKET_DOWNLINK_DUMMY_CONTROL_BLOCK:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(Packet_Downlink_Dummy_Control_Block_t), vector, writeIndex, &data->u.Packet_Downlink_Dummy_Control_Block);
+      ret = csnStreamEncoder(&ar, CSNDESCR(Packet_Downlink_Dummy_Control_Block_t), vector, writeIndex, &data->u.Packet_Downlink_Dummy_Control_Block);
       break;
     }
     case MT_PACKET_SYSTEM_INFO_1:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(PSI1_t), vector, writeIndex, &data->u.PSI1);
+      ret = csnStreamEncoder(&ar, CSNDESCR(PSI1_t), vector, writeIndex, &data->u.PSI1);
       break;
     }
     case MT_PACKET_SYSTEM_INFO_2:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(PSI2_t), vector, writeIndex, &data->u.PSI2);
+      ret = csnStreamEncoder(&ar, CSNDESCR(PSI2_t), vector, writeIndex, &data->u.PSI2);
       break;
     }
     case MT_PACKET_SYSTEM_INFO_3:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(PSI3_t), vector, writeIndex, &data->u.PSI3);
+      ret = csnStreamEncoder(&ar, CSNDESCR(PSI3_t), vector, writeIndex, &data->u.PSI3);
       break;
     }
     case MT_PACKET_SYSTEM_INFO_5:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(PSI5_t), vector, writeIndex, &data->u.PSI5);
+      ret = csnStreamEncoder(&ar, CSNDESCR(PSI5_t), vector, writeIndex, &data->u.PSI5);
       break;
     }
     case MT_PACKET_SYSTEM_INFO_13:
     {
-      /*ret =*/ csnStreamEncoder(&ar, CSNDESCR(PSI13_t), vector, writeIndex, &data->u.PSI13);
+      ret = csnStreamEncoder(&ar, CSNDESCR(PSI13_t), vector, writeIndex, &data->u.PSI13);
       break;
     }
     default:
-      /*ret = -1;*/
+      ret = -1;
       break;
   }
+
+  if (ret > 0) {
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by encoder at the end of bitvec\n", ret);
+    ret = 0;
+  }
+
+  return ret;
 }
 
 void decode_gsm_rlcmac_uplink_data(bitvec * vector, RlcMacUplinkDataBlock_t * data)
@@ -5525,7 +5562,15 @@ void encode_gsm_rlcmac_downlink_data(bitvec * vector, RlcMacDownlinkDataBlock_t 
 int decode_gsm_ra_cap(bitvec * vector, MS_Radio_Access_capability_t *data)
 {
   csnStream_t      ar;
+  int ret;
   unsigned readIndex = 0;
+
   csnStreamInit(&ar, 0, 8 * vector->data_len);
-  return csnStreamDecoder(&ar, CSNDESCR(MS_Radio_Access_capability_t), vector, readIndex, data);
+  ret = csnStreamDecoder(&ar, CSNDESCR(MS_Radio_Access_capability_t), vector, readIndex, data);
+
+  if (ret > 0) {
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by decoder at the end of bitvec\n", ret);
+    ret = 0;
+  }
+  return ret;
 }
