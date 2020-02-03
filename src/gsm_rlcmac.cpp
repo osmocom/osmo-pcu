@@ -4817,12 +4817,12 @@ int decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
 
   if (payload_type == PAYLOAD_TYPE_DATA)
   {
-    LOGPC(DRLCMACDATA, LOGL_NOTICE, "Payload Type: DATA (0), not implemented");
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "Payload Type: DATA (0), not implemented\n");
     return CSN_ERROR_GENERAL;
   }
   else if (payload_type == PAYLOAD_TYPE_RESERVED)
   {
-    LOGPC(DRLCMACDATA, LOGL_NOTICE, "Payload Type: RESERVED (3)");
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "Payload Type: RESERVED (3)\n");
     return CSN_ERROR_GENERAL;
   }
   data->NrOfBits = 23 * 8;
@@ -4938,12 +4938,12 @@ int decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
 
   if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_DATA)
   {
-    LOGPC(DRLCMACDATA, LOGL_NOTICE, "Payload Type: DATA (0), not implemented");
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "Payload Type: DATA (0), not implemented\n");
     return CSN_ERROR_GENERAL;
   }
   else if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_RESERVED)
   {
-    LOGPC(DRLCMACDATA, LOGL_NOTICE, "Payload Type: RESERVED (3)");
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "Payload Type: RESERVED (3)\n");
     return CSN_ERROR_GENERAL;
   }
   /* We can decode the message */
@@ -5236,12 +5236,12 @@ int encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
 
   if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_DATA)
   {
-    LOGPC(DRLCMACDATA, LOGL_NOTICE, "Payload Type: DATA (0), not implemented");
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "Payload Type: DATA (0), not implemented\n");
     return CSN_ERROR_GENERAL;
   }
   else if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_RESERVED)
   {
-    LOGPC(DRLCMACDATA, LOGL_NOTICE, "Payload Type: RESERVED (3)");
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "Payload Type: RESERVED (3)\n");
     return CSN_ERROR_GENERAL;
   }
   /* We can decode the message */
@@ -5496,7 +5496,7 @@ void decode_gsm_rlcmac_uplink_data(bitvec * vector, RlcMacUplinkDataBlock_t * da
   }
   else
   {
-    LOGPC(DRLCMACDATA, LOGL_NOTICE, "Payload Type: RESERVED (3)");
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "Payload Type: RESERVED (3)\n");
     return;
   }
 }
