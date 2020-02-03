@@ -615,7 +615,7 @@ static void send_ul_mac_block(BTS *the_bts, unsigned trx_no, unsigned ts_no,
 
 	rlc_block = bitvec_alloc(23, tall_pcu_ctx);
 
-	encode_gsm_rlcmac_uplink(rlc_block, ulreq);
+	OSMO_ASSERT(encode_gsm_rlcmac_uplink(rlc_block, ulreq) == 0);
 	num_bytes = bitvec_pack(rlc_block, &buf[0]);
 	OSMO_ASSERT(size_t(num_bytes) < sizeof(buf));
 	bitvec_free(rlc_block);
@@ -2511,6 +2511,7 @@ static void test_tbf_epdan_out_of_rx_window(void)
 	RlcMacUplink_t ul_control_block;
 	gprs_rlc_v_b *prlcmvb;
 	gprs_rlc_dl_window *prlcdlwindow;
+	int rc;
 
 	memset(&ul_control_block, 0, sizeof(RlcMacUplink_t));
 
@@ -2557,7 +2558,8 @@ static void test_tbf_epdan_out_of_rx_window(void)
 	bits.data_len = sizeof(bits_data);
 	bits.cur_bit = 0;
 
-	decode_gsm_rlcmac_uplink(block, &ul_control_block);
+	rc = decode_gsm_rlcmac_uplink(block, &ul_control_block);
+	OSMO_ASSERT(rc == 0);
 
 	ack_nack = &ul_control_block.u.Egprs_Packet_Downlink_Ack_Nack;
 

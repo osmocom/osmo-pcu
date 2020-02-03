@@ -93,6 +93,8 @@ void printSizeofRLCMAC()
 void testRlcMacDownlink(void *test_ctx)
 {
 	printf("*** %s ***\n", __func__);
+
+	int rc;
 	struct bitvec *resultVector = bitvec_alloc(23, test_ctx);
 	bitvec_unhex(resultVector, DUMMY_VEC);
 
@@ -121,11 +123,11 @@ void testRlcMacDownlink(void *test_ctx)
 		RlcMacDownlink_t data;
 		memset(&data, 0, sizeof(data));
 		cout << "=========Start DECODE===========" << endl;
-		decode_gsm_rlcmac_downlink(vector, &data);
-		cout << "+++++++++Finish DECODE++++++++++" << endl;
+		rc = decode_gsm_rlcmac_downlink(vector, &data);
+		cout << "+++++++++Finish DECODE ("<< rc <<")++++++++++" << endl;
 		cout << "=========Start ENCODE=============" << endl;
-		encode_gsm_rlcmac_downlink(resultVector, &data);
-		cout << "+++++++++Finish ENCODE+++++++++++" << endl;
+		rc = encode_gsm_rlcmac_downlink(resultVector, &data);
+		cout << "+++++++++Finish ENCODE ("<< rc <<")+++++++++++" << endl;
 		cout << "vector1 = " << osmo_hexdump(vector->data, 23) << endl;
 		cout << "vector2 = " << osmo_hexdump(resultVector->data, 23) << endl;
 		if (memcmp(vector->data, resultVector->data, 23) == 0)
@@ -143,6 +145,8 @@ void testRlcMacDownlink(void *test_ctx)
 void testRlcMacUplink(void *test_ctx)
 {
 	printf("*** %s ***\n", __func__);
+
+	int rc;
 	struct bitvec *resultVector = bitvec_alloc(23, test_ctx);
 	bitvec_unhex(resultVector, DUMMY_VEC);
 
@@ -167,11 +171,11 @@ void testRlcMacUplink(void *test_ctx)
 		RlcMacUplink_t data;
 		memset(&data, 0, sizeof(data));
 		cout << "=========Start DECODE===========" << endl;
-		decode_gsm_rlcmac_uplink(vector, &data);
-		cout << "+++++++++Finish DECODE++++++++++" << endl;
+		rc = decode_gsm_rlcmac_uplink(vector, &data);
+		cout << "+++++++++Finish DECODE ("<< rc << ")++++++++++" << endl;
 		cout << "=========Start ENCODE=============" << endl;
-		encode_gsm_rlcmac_uplink(resultVector, &data);
-		cout << "+++++++++Finish ENCODE+++++++++++" << endl;
+		rc = encode_gsm_rlcmac_uplink(resultVector, &data);
+		cout << "+++++++++Finish ENCODE ("<< rc <<")+++++++++++" << endl;
 		cout << "vector1 = " << osmo_hexdump(vector->data, 23) << endl;
 		cout << "vector2 = " << osmo_hexdump(resultVector->data, 23) << endl;
 		if (memcmp(vector->data, resultVector->data, 23) == 0)
@@ -188,9 +192,11 @@ void testRlcMacUplink(void *test_ctx)
 void testCsnLeftAlignedVarBmpBounds(void *test_ctx)
 {
 	printf("*** %s ***\n", __func__);
+
 	struct msgb *m = msgb_alloc(80, "test");
 	static uint8_t exp[] = { 0x7f, 0xff, 0xff, 0xee, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 	bitvec *vector = bitvec_alloc(23, test_ctx);
+	int rc;
 
 	bitvec_unhex(vector, "40200bffd161003e0e519ffffffb800000000000000000");
 	RlcMacUplink_t data;
@@ -198,7 +204,8 @@ void testCsnLeftAlignedVarBmpBounds(void *test_ctx)
 
 	EGPRS_AckNack_Desc_t *urbb =
 		&data.u.Egprs_Packet_Downlink_Ack_Nack.EGPRS_AckNack.Desc;
-	decode_gsm_rlcmac_uplink(vector, &data);
+	rc = decode_gsm_rlcmac_uplink(vector, &data);
+	OSMO_ASSERT(rc == 0);
 
 	memcpy(msgb_put(m, 13), urbb->URBB, 13);
 	if (!msgb_eq_data_print(m, exp, 13))

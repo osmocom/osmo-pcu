@@ -1201,6 +1201,8 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 {
 	struct msgb *msg;
 	struct gprs_rlcmac_dl_tbf *new_dl_tbf = NULL;
+	RlcMacDownlink_t *mac_control_block = NULL;
+	bitvec *ass_vec = NULL;
 	int poll_ass_dl = 1;
 	unsigned int rrbp = 0;
 	uint32_t new_poll_fn = 0;
@@ -1264,27 +1266,26 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	msg = msgb_alloc(23, "rlcmac_dl_ass");
 	if (!msg)
 		return NULL;
-	bitvec *ass_vec = bitvec_alloc(23, tall_pcu_ctx);
-	if (!ass_vec) {
-		msgb_free(msg);
-		return NULL;
-	}
+	ass_vec = bitvec_alloc(23, tall_pcu_ctx);
+	if (!ass_vec)
+		goto free_ret;
 	bitvec_unhex(ass_vec, DUMMY_VEC);
 	LOGPTBF(new_dl_tbf, LOGL_INFO, "start Packet Downlink Assignment (PACCH)\n");
-	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
+	mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	Encoding::write_packet_downlink_assignment(mac_control_block,
 		old_tfi_is_valid, m_tfi, (direction == GPRS_RLCMAC_DL_TBF),
 		new_dl_tbf, poll_ass_dl, rrbp,
 		bts_data()->alpha, bts_data()->gamma, -1, 0,
 		is_egprs_enabled());
 	LOGP(DTBF, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
-	encode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
-	LOGPC(DCSN1, LOGL_NOTICE, "\n");
+	rc = encode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
+	if (rc < 0) {
+		LOGP(DTBF, LOGL_ERROR, "Decoding of Packet Downlink Ass failed (%d)\n", rc);
+		goto free_ret;
+	}
 	LOGP(DTBF, LOGL_DEBUG, "------------------------- TX : Packet Downlink Assignment -------------------------\n");
 	bts->pkt_dl_assignemnt();
 	bitvec_pack(ass_vec, msgb_put(msg, 23));
-	bitvec_free(ass_vec);
-	talloc_free(mac_control_block);
 
 	if (poll_ass_dl) {
 		set_polling(new_poll_fn, ts, GPRS_RLCMAC_POLL_DL_ASS);
@@ -1297,7 +1298,15 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 
 	}
 
+	bitvec_free(ass_vec);
+	talloc_free(mac_control_block);
 	return msg;
+
+free_ret:
+	bitvec_free(ass_vec);
+	talloc_free(mac_control_block);
+	msgb_free(msg);
+	return NULL;
 }
 
 struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
@@ -1330,8 +1339,10 @@ struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
 
 struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 {
-	struct msgb *msg;
+	struct msgb *msg = NULL;
 	struct gprs_rlcmac_ul_tbf *new_tbf = NULL;
+	RlcMacDownlink_t *mac_control_block = NULL;
+	bitvec *ass_vec = NULL;
 	int rc;
 	unsigned int rrbp;
 	uint32_t new_poll_fn;
@@ -1360,29 +1371,37 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 	if (!msg)
 		return NULL;
 	LOGPTBF(new_tbf, LOGL_INFO, "start Packet Uplink Assignment (PACCH)\n");
-	bitvec *ass_vec = bitvec_alloc(23, tall_pcu_ctx);
-	if (!ass_vec) {
-		msgb_free(msg);
-		return NULL;
-	}
+	ass_vec = bitvec_alloc(23, tall_pcu_ctx);
+	if (!ass_vec)
+		goto free_ret;
 	bitvec_unhex(ass_vec, DUMMY_VEC);
 	Encoding::write_packet_uplink_assignment(ass_vec, m_tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), tlli(),
 		is_tlli_valid(), new_tbf, 1, rrbp, bts_data()->alpha,
 		bts_data()->gamma, -1, is_egprs_enabled());
 	bitvec_pack(ass_vec, msgb_put(msg, 23));
-	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
+
+	mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	LOGP(DTBF, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++\n");
-	decode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
-	LOGPC(DCSN1, LOGL_NOTICE, "\n");
+	rc = decode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
+	if (rc < 0) {
+		LOGP(DTBF, LOGL_ERROR, "Decoding of Packet Uplink Ass failed (%d)\n", rc);
+		goto free_ret;
+	}
 	LOGP(DTBF, LOGL_DEBUG, "------------------------- TX : Packet Uplink Assignment -------------------------\n");
 	bts->pkt_ul_assignment();
-	bitvec_free(ass_vec);
-	talloc_free(mac_control_block);
 
 	set_polling(new_poll_fn, ts, GPRS_RLCMAC_POLL_UL_ASS);
 
+	bitvec_free(ass_vec);
+	talloc_free(mac_control_block);
 	return msg;
+
+free_ret:
+	bitvec_free(ass_vec);
+	talloc_free(mac_control_block);
+	msgb_free(msg);
+	return NULL;
 }
 
 void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_trx *trx)

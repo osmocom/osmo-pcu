@@ -175,8 +175,11 @@ struct gprs_rlcmac_paging *gprs_rlcmac_pdch::dequeue_paging()
 struct msgb *gprs_rlcmac_pdch::packet_paging_request()
 {
 	struct gprs_rlcmac_paging *pag;
+	RlcMacDownlink_t *mac_control_block;
+	bitvec *pag_vec;
 	struct msgb *msg;
 	unsigned wp = 0, len;
+	int rc;
 
 	/* no paging, no message */
 	pag = dequeue_paging();
@@ -191,7 +194,7 @@ struct msgb *gprs_rlcmac_pdch::packet_paging_request()
 		talloc_free(pag);
 		return NULL;
 	}
-	bitvec *pag_vec = bitvec_alloc(23, tall_pcu_ctx);
+	pag_vec = bitvec_alloc(23, tall_pcu_ctx);
 	if (!pag_vec) {
 		msgb_free(msg);
 		talloc_free(pag);
@@ -240,15 +243,23 @@ continue_next:
 	}
 
 	bitvec_pack(pag_vec, msgb_put(msg, 23));
-	RlcMacDownlink_t * mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
+	mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Paging Request +++++++++++++++++++++++++\n");
-	decode_gsm_rlcmac_downlink(pag_vec, mac_control_block);
-	LOGPC(DCSN1, LOGL_NOTICE, "\n");
+	rc = decode_gsm_rlcmac_downlink(pag_vec, mac_control_block);
+	if (rc < 0) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Decoding of Downlink Packet Paging Request failed (%d)\n", rc);
+		goto free_ret;
+	}
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Paging Request -------------------------\n");
 	bitvec_free(pag_vec);
 	talloc_free(mac_control_block);
-
 	return msg;
+
+free_ret:
+	bitvec_free(pag_vec);
+	talloc_free(mac_control_block);
+	msgb_free(msg);
+	return NULL;
 }
 
 bool gprs_rlcmac_pdch::add_paging(uint8_t chan_needed, const uint8_t *mi, uint8_t mi_len)
@@ -686,6 +697,7 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 	bitvec *rlc_block;
 	RlcMacUplink_t *ul_control_block;
 	unsigned len = cs.maxBytesUL();
+	int rc;
 
 	if (!(rlc_block = bitvec_alloc(len, tall_pcu_ctx)))
 		return -ENOMEM;
@@ -693,8 +705,12 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 	ul_control_block = (RlcMacUplink_t *)talloc_zero(tall_pcu_ctx, RlcMacUplink_t);
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
-	decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
-	LOGPC(DCSN1, LOGL_NOTICE, "\n");
+	rc = decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
+	if(rc < 0) {
+		LOGP(DRLCMACUL, LOGL_ERROR, "Dropping Uplink Control Block with invalid "
+		     "content, decode failed: %d)\n", rc);
+		goto free_ret;
+	}
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- RX : Uplink Control Block -------------------------\n");
 
 	if (ul_control_block->u.MESSAGE_TYPE == MT_PACKET_UPLINK_DUMMY_CONTROL_BLOCK)
@@ -728,9 +744,10 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 			"RX: [PCU <- BTS] unknown control block(%d) received\n",
 			ul_control_block->u.MESSAGE_TYPE);
 	}
+free_ret:
 	talloc_free(ul_control_block);
 	bitvec_free(rlc_block);
-	return 1;
+	return rc;
 }
 
 /* received RLC/MAC block from L1 */
