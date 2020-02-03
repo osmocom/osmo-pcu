@@ -37,6 +37,10 @@
 #include "csn1.h"
 #include <gprs_debug.h>
 
+extern "C" {
+#include <osmocom/core/logging.h>
+#include <osmocom/core/utils.h>
+}
 
 #define pvDATA(_pv, _offset) ((void*) ((unsigned char*)_pv + _offset))
 #define pui8DATA(_pv, _offset) ((guint8*) pvDATA(_pv, _offset))
@@ -92,34 +96,33 @@ csnStreamInit(csnStream_t* ar, gint bit_offset, gint remaining_bits_len)
   ar->direction           = 0;
 }
 
-static const char* ErrCodes[] =
-{
-  "General 0",
-  "General -1",
-  "DATA_NOT VALID",
-  "IN SCRIPT",
-  "INVALID UNION INDEX",
-  "NEED_MORE BITS TO UNPACK",
-  "ILLEGAL BIT VALUE",
-  "Internal",
-  "STREAM_NOT_SUPPORTED",
-  "MESSAGE_TOO_LONG"
+static const struct value_string csn1_error_names[] = {
+  { CSN_OK,                               "General 0" },
+  { CSN_ERROR_GENERAL,                    "General -1"  },
+  { CSN_ERROR_DATA_NOT_VALID,             "DATA_NOT VALID" },
+  { CSN_ERROR_IN_SCRIPT,                  "IN SCRIPT" },
+  { CSN_ERROR_INVALID_UNION_INDEX,        "INVALID UNION INDEX" },
+  { CSN_ERROR_NEED_MORE_BITS_TO_UNPACK,   "NEED_MORE BITS TO UNPACK" },
+  { CSN_ERROR_NEED_MORE_BITS_TO_UNPACK,   "ILLEGAL BIT VALUE" },
+  { CSN_ERROR_ILLEGAL_BIT_VALUE,          "Internal" },
+  { CSN_ERROR_STREAM_NOT_SUPPORTED,       "STREAM_NOT_SUPPORTED" },
+  { CSN_ERROR_MESSAGE_TOO_LONG,           "MESSAGE_TOO_LONG" },
+  { 0, NULL }
 };
 
-static gint16
-ProcessError( unsigned readIndex, const char* sz, gint16 err, const CSN_DESCR* pDescr)
+
+static gint16 ProcessError_impl(const char *file, int line, unsigned readIndex,
+                                const char* sz, gint16 err, const CSN_DESCR* pDescr)
 {
-  gint16 i = MIN(-err, ((gint16) ElementsOf(ErrCodes)-1));
-  if (i >= 0)
-  {
-    //LOG(ERR) << sz << "Error code: "<< ErrCodes[i] << pDescr?(pDescr->sz):"-";
-  }
-  else
-  {
-    //LOG(ERR) << sz << ": " << pDescr?(pDescr->sz):"-";
-  }
+  if (err != CSN_OK)
+    LOGPSRC(DCSN1, LOGL_ERROR, file, line, "%s: error %s (%d) at %s (idx %d)\n",
+            sz, get_value_string(csn1_error_names, err), err,
+            pDescr ? pDescr->sz : "-", readIndex);
   return err;
 }
+
+#define ProcessError(readIndex, sz, err, pDescr) \
+        ProcessError_impl(__FILE__, __LINE__, readIndex, sz, err, pDescr)
 
 
 /**
