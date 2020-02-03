@@ -4825,11 +4825,15 @@ int decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
     LOGP(DRLCMACDATA, LOGL_NOTICE, "Payload Type: RESERVED (3)\n");
     return CSN_ERROR_GENERAL;
   }
+
   data->NrOfBits = 23 * 8;
   csnStreamInit(&ar, 0, data->NrOfBits);
   readIndex += 6;
   data->u.MESSAGE_TYPE = bitvec_read_field(vector, &readIndex, 6);
   readIndex = 0;
+
+  /* recursive csnStreamDecoder call uses LOGPC everywhere, so we need to start the log somewhere... */
+  LOGP(DCSN1, LOGL_INFO, "csnStreamDecoder (type=%d): ", data->u.MESSAGE_TYPE);
   switch (data->u.MESSAGE_TYPE)
   {
     case MT_PACKET_CELL_CHANGE_FAILURE:
@@ -4913,6 +4917,10 @@ int decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
       break;
   }
 
+  /* recursive csnStreamDecoder call uses LOGPC everywhere without trailing
+     newline, so as a caller we are responisble for submitting it */
+  LOGPC(DCSN1, LOGL_INFO, "\n");
+
   if (ret > 0) {
     LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by decoder at the end of bitvec\n", ret);
     ret = 0;
@@ -4982,6 +4990,9 @@ int decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
   readIndex = bit_offset;
 
   csnStreamInit(&ar, bit_offset, bit_length);
+
+  /* recursive csnStreamDecoder call uses LOGPC everywhere, so we need to start the log somewhere... */
+  LOGP(DCSN1, LOGL_INFO, "csnStreamDecoder (type=%d): ", data->u.MESSAGE_TYPE);
 
   switch (data->u.MESSAGE_TYPE)
   {
@@ -5115,6 +5126,10 @@ int decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
       break;
   }
 
+  /* recursive csnStreamDecoder call uses LOGPC everywhere without trailing
+     newline, so as a caller we are responisble for submitting it */
+  LOGPC(DCSN1, LOGL_INFO, "\n");
+
   if (ret > 0) {
     LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by decoder at the end of bitvec\n", ret);
     ret = 0;
@@ -5133,6 +5148,9 @@ int encode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
   data->NrOfBits = 23 * 8;
   csnStreamInit(&ar, 0, data->NrOfBits);
   writeIndex = 0;
+
+  /* recursive csnStreamEncoder call uses LOGPC everywhere, so we need to start the log somewhere... */
+  LOGP(DCSN1, LOGL_INFO, "csnStreamEncoder (type=%d): ", data->u.MESSAGE_TYPE);
   switch (data->u.MESSAGE_TYPE)
   {
     case MT_PACKET_CELL_CHANGE_FAILURE:
@@ -5216,6 +5234,10 @@ int encode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
       break;
   }
 
+  /* recursive csnStreamDecoder call uses LOGPC everywhere without trailing
+     newline, so as a caller we are responisble for submitting it */
+  LOGPC(DCSN1, LOGL_INFO, "\n");
+
   if (ret > 0) {
     LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by encoder at the end of bitvec\n", ret);
     ret = 0;
@@ -5283,6 +5305,9 @@ int encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
 
   csnStreamInit(&ar, bit_offset, bit_length);
 
+
+  /* recursive csnStreamEncoder call uses LOGPC everywhere, so we need to start the log somewhere... */
+  LOGP(DCSN1, LOGL_INFO, "csnStreamEncoder (type=%d): ", data->u.MESSAGE_TYPE);
   switch (data->u.MESSAGE_TYPE)
   {
     case MT_PACKET_ACCESS_REJECT:
@@ -5414,6 +5439,10 @@ int encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
       ret = -1;
       break;
   }
+
+  /* recursive csnStreamDecoder call uses LOGPC everywhere without trailing
+     newline, so as a caller we are responisble for submitting it */
+  LOGPC(DCSN1, LOGL_INFO, "\n");
 
   if (ret > 0) {
     LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by encoder at the end of bitvec\n", ret);
@@ -5566,7 +5595,14 @@ int decode_gsm_ra_cap(bitvec * vector, MS_Radio_Access_capability_t *data)
   unsigned readIndex = 0;
 
   csnStreamInit(&ar, 0, 8 * vector->data_len);
+
+  /* recursive csnStreamEncoder call uses LOGPC everywhere, so we need to start the log somewhere... */
+  LOGP(DCSN1, LOGL_INFO, "csnStreamEncoder (RAcap): ");
   ret = csnStreamDecoder(&ar, CSNDESCR(MS_Radio_Access_capability_t), vector, readIndex, data);
+
+  /* recursive csnStreamDecoder call uses LOGPC everywhere without trailing
+     newline, so as a caller we are responisble for submitting it */
+  LOGPC(DCSN1, LOGL_INFO, "\n");
 
   if (ret > 0) {
     LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by decoder at the end of bitvec\n", ret);

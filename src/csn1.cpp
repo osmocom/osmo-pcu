@@ -114,8 +114,9 @@ static const struct value_string csn1_error_names[] = {
 static gint16 ProcessError_impl(const char *file, int line, unsigned readIndex,
                                 const char* sz, gint16 err, const CSN_DESCR* pDescr)
 {
+  /* Don't add trailing newline, top caller is responsible for appending it */
   if (err != CSN_OK)
-    LOGPSRC(DCSN1, LOGL_ERROR, file, line, "%s: error %s (%d) at %s (idx %d)\n",
+    LOGPSRC(DCSN1, LOGL_ERROR, file, line, "%s: error %s (%d) at %s (idx %d)",
             sz, get_value_string(csn1_error_names, err), err,
             pDescr ? pDescr->sz : "-", readIndex);
   return err;
