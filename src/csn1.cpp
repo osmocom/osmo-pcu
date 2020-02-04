@@ -1156,13 +1156,13 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
             guint bits_to_handle = remaining_bits_len%8;
             if (bits_to_handle > 0)
             {
-	      LOGPC(DCSN1, LOGL_NOTICE, "%" PRIu64 "|", bitvec_read_field(vector, &readIndex, bits_to_handle));
+              LOGPC(DCSN1, LOGL_NOTICE, "%d|", bitvec_get_uint(vector, bits_to_handle));
               remaining_bits_len -= bits_to_handle;
               bit_offset += bits_to_handle;
             }
             else if (bits_to_handle == 0)
             {
-	      LOGPC(DCSN1, LOGL_NOTICE, "%" PRIu64 "|", bitvec_read_field(vector, &readIndex, 8));
+              LOGPC(DCSN1, LOGL_NOTICE, "%d|", bitvec_get_uint(vector, 8));
               remaining_bits_len -= 8;
               bit_offset += 8;
             }
@@ -1250,7 +1250,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
           bit_offset += no_of_bits;
         }
 
-	LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)bitvec_read_field(vector, &readIndex, 1));
+        LOGPC(DCSN1, LOGL_NOTICE, "%s = %d | ", pDescr->sz , bitvec_get_uint(vector, 1));
         /* existNextElement() returned FALSE, 1 bit consumed */
         bit_offset++;
         remaining_bits_len--;
@@ -1303,7 +1303,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
           }
         }
 
-	LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)bitvec_read_field(vector, &readIndex, 1));
+        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , bitvec_get_uint(vector, 1));
 
         /* existNextElement() returned FALSE, 1 bit consumed */
         bit_offset++;
