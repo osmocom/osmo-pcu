@@ -26,7 +26,6 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 extern "C" {
-#include <osmocom/core/talloc.h>
 #include <osmocom/core/select.h>
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/linuxlist.h>
@@ -42,8 +41,6 @@ extern "C" {
 #include <tbf.h>
 #include <pdch.h>
 
-extern void *tall_pcu_ctx;
-
 extern "C" {
 int l1if_close_pdch(void *obj);
 }
@@ -52,11 +49,11 @@ int l1if_close_pdch(void *obj);
  * osmo-bts PCU socket functions
  */
 
-struct pcu_sock_state {
+static struct {
 	struct osmo_fd conn_bfd;	/* fd for connection to lcr */
 	struct osmo_timer_list timer;	/* socket connect retry timer */
 	struct llist_head upqueue;	/* queue for sending messages */
-} *pcu_sock_state = NULL;
+} pcu_sock_state;
 
 static void pcu_sock_timeout(void *_priv)
 {
@@ -66,40 +63,33 @@ static void pcu_sock_timeout(void *_priv)
 static void pcu_tx_txt_retry(void *_priv)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	struct pcu_sock_state *state = pcu_sock_state;
 
 	if (bts->active)
 		return;
 
 	pcu_tx_txt_ind(PCU_VERSION, "%s", PACKAGE_VERSION);
-	osmo_timer_schedule(&state->timer, 5, 0);
+	osmo_timer_schedule(&pcu_sock_state.timer, 5, 0);
 }
 
 int pcu_sock_send(struct msgb *msg)
 {
-	struct pcu_sock_state *state = pcu_sock_state;
 	struct osmo_fd *conn_bfd;
 
-	if (!state) {
-		LOGP(DL1IF, LOGL_NOTICE, "PCU socket not created, dropping "
-			"message\n");
-		return -EINVAL;
-	}
-	conn_bfd = &state->conn_bfd;
+	conn_bfd = &pcu_sock_state.conn_bfd;
 	if (conn_bfd->fd <= 0) {
 		LOGP(DL1IF, LOGL_NOTICE, "PCU socket not connected, dropping "
 			"message\n");
 		return -EIO;
 	}
-	msgb_enqueue(&state->upqueue, msg);
+	msgb_enqueue(&pcu_sock_state.upqueue, msg);
 	conn_bfd->when |= BSC_FD_WRITE;
 
 	return 0;
 }
 
-static void pcu_sock_close(struct pcu_sock_state *state, int lost)
+static void pcu_sock_close(int lost)
 {
-	struct osmo_fd *bfd = &state->conn_bfd;
+	struct osmo_fd *bfd = &pcu_sock_state.conn_bfd;
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t trx, ts;
 
@@ -111,8 +101,8 @@ static void pcu_sock_close(struct pcu_sock_state *state, int lost)
 	osmo_fd_unregister(bfd);
 
 	/* flush the queue */
-	while (!llist_empty(&state->upqueue)) {
-		struct msgb *msg = msgb_dequeue(&state->upqueue);
+	while (!llist_empty(&pcu_sock_state.upqueue)) {
+		struct msgb *msg = msgb_dequeue(&pcu_sock_state.upqueue);
 		msgb_free(msg);
 	}
 
@@ -137,7 +127,6 @@ for the reset. */
 
 static int pcu_sock_read(struct osmo_fd *bfd)
 {
-	struct pcu_sock_state *state = (struct pcu_sock_state *)bfd->data;
 	struct gsm_pcu_if pcu_prim;
 	int rc;
 
@@ -145,7 +134,7 @@ static int pcu_sock_read(struct osmo_fd *bfd)
 	if (rc < 0 && errno == EAGAIN)
 		return 0; /* Try again later */
 	if (rc <= 0) {
-		pcu_sock_close(state, 1);
+		pcu_sock_close(1);
 		return -EIO;
 	}
 
@@ -154,15 +143,14 @@ static int pcu_sock_read(struct osmo_fd *bfd)
 
 static int pcu_sock_write(struct osmo_fd *bfd)
 {
-	struct pcu_sock_state *state = (struct pcu_sock_state *)bfd->data;
 	int rc;
 
-	while (!llist_empty(&state->upqueue)) {
+	while (!llist_empty(&pcu_sock_state.upqueue)) {
 		struct msgb *msg, *msg2;
 		struct gsm_pcu_if *pcu_prim;
 
 		/* peek at the beginning of the queue */
-		msg = llist_entry(state->upqueue.next, struct msgb, list);
+		msg = llist_entry(pcu_sock_state.upqueue.next, struct msgb, list);
 		pcu_prim = (struct gsm_pcu_if *)msg->data;
 
 		bfd->when &= ~BSC_FD_WRITE;
@@ -188,14 +176,14 @@ static int pcu_sock_write(struct osmo_fd *bfd)
 
 dontsend:
 		/* _after_ we send it, we can deueue */
-		msg2 = msgb_dequeue(&state->upqueue);
+		msg2 = msgb_dequeue(&pcu_sock_state.upqueue);
 		assert(msg == msg2);
 		msgb_free(msg);
 	}
 	return 0;
 
 close:
-	pcu_sock_close(state, 1);
+	pcu_sock_close(1);
 
 	return -1;
 }
@@ -217,60 +205,46 @@ static int pcu_sock_cb(struct osmo_fd *bfd, unsigned int flags)
 
 int pcu_l1if_open(void)
 {
-	struct pcu_sock_state *state;
 	int rc;
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	LOGP(DL1IF, LOGL_INFO, "Opening OsmoPCU L1 interface to OsmoBTS\n");
 
-	state = pcu_sock_state;
-	if (!state) {
-		state = talloc_zero(tall_pcu_ctx, struct pcu_sock_state);
-		if (!state)
-			return -ENOMEM;
-		INIT_LLIST_HEAD(&state->upqueue);
-	}
+	memset(&pcu_sock_state, 0x00, sizeof(pcu_sock_state));
+	INIT_LLIST_HEAD(&pcu_sock_state.upqueue);
 
-	rc = osmo_sock_unix_init_ofd(&state->conn_bfd, SOCK_SEQPACKET, 0,
+	rc = osmo_sock_unix_init_ofd(&pcu_sock_state.conn_bfd, SOCK_SEQPACKET, 0,
 				     bts->pcu_sock_path, OSMO_SOCK_F_CONNECT);
 	if (rc < 0) {
 		LOGP(DL1IF, LOGL_ERROR, "Failed to connect to the BTS (%s). "
 					"Retrying...\n", bts->pcu_sock_path);
-		osmo_timer_setup(&state->timer, pcu_sock_timeout, NULL);
-		osmo_timer_schedule(&state->timer, 5, 0);
+		osmo_timer_setup(&pcu_sock_state.timer, pcu_sock_timeout, NULL);
+		osmo_timer_schedule(&pcu_sock_state.timer, 5, 0);
 		return 0;
 	}
 
-	state->conn_bfd.cb = pcu_sock_cb;
-	state->conn_bfd.data = state;
+	pcu_sock_state.conn_bfd.cb = pcu_sock_cb;
+	pcu_sock_state.conn_bfd.data = NULL;
 
 	LOGP(DL1IF, LOGL_NOTICE, "osmo-bts PCU socket %s has been connected\n",
 	     bts->pcu_sock_path);
 
-	pcu_sock_state = state;
-
 	pcu_tx_txt_ind(PCU_VERSION, "%s", PACKAGE_VERSION);
 
 	/* Schedule a timer so we keep trying until the BTS becomes active. */
-	osmo_timer_setup(&state->timer, pcu_tx_txt_retry, NULL);
-	osmo_timer_schedule(&state->timer, 5, 0);
+	osmo_timer_setup(&pcu_sock_state.timer, pcu_tx_txt_retry, NULL);
+	osmo_timer_schedule(&pcu_sock_state.timer, 5, 0);
 
 	return 0;
 }
 
 void pcu_l1if_close(void)
 {
-	struct pcu_sock_state *state = pcu_sock_state;
 	struct osmo_fd *bfd;
 
-	if (!state)
-		return;
+	osmo_timer_del(&pcu_sock_state.timer);
 
-	osmo_timer_del(&state->timer);
-
-	bfd = &state->conn_bfd;
+	bfd = &pcu_sock_state.conn_bfd;
 	if (bfd->fd > 0)
-		pcu_sock_close(state, 0);
-	talloc_free(state);
-	pcu_sock_state = NULL;
+		pcu_sock_close(0);
 }
