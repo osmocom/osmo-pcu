@@ -50,7 +50,7 @@ int l1if_close_pdch(void *obj);
  */
 
 static struct {
-	struct osmo_fd conn_bfd;	/* fd for connection to lcr */
+	struct osmo_fd conn_bfd;	/* fd for connection to the BTS */
 	struct osmo_timer_list timer;	/* socket connect retry timer */
 	struct llist_head upqueue;	/* queue for sending messages */
 } pcu_sock_state;
