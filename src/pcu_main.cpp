@@ -269,6 +269,7 @@ int main(int argc, char *argv[])
 	gprs_ns_set_log_ss(DNS);
 	bssgp_set_log_ss(DBSSGP);
 
+	pcu_vty_info.tall_ctx = tall_pcu_ctx;
 	vty_init(&pcu_vty_info);
 	pcu_vty_init();
 
