@@ -1351,7 +1351,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 		ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
 		LOGPTBFUL(this, LOGL_DEBUG,
 			  "Polling is already scheduled, so we must wait for the uplink assignment...\n");
-			return NULL;
+		return NULL;
 	}
 
 	rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
