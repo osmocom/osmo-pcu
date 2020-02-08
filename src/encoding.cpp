@@ -162,7 +162,8 @@ static inline void write_ws(bitvec *dest, unsigned int *write_index, uint16_t ws
 {
 	dest->cur_bit = *write_index;
 
-	bitvec_set_u64(dest, enc_ws(ws), 5, false);
+	int rc = bitvec_set_u64(dest, enc_ws(ws), 5, false);
+	OSMO_ASSERT(rc == 0);
 
 	*write_index += 5;
 }
