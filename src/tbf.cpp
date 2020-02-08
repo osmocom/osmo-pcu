@@ -1303,7 +1303,8 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	return msg;
 
 free_ret:
-	bitvec_free(ass_vec);
+	if (ass_vec != NULL)
+		bitvec_free(ass_vec);
 	talloc_free(mac_control_block);
 	msgb_free(msg);
 	return NULL;
@@ -1398,7 +1399,8 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 	return msg;
 
 free_ret:
-	bitvec_free(ass_vec);
+	if (ass_vec != NULL)
+		bitvec_free(ass_vec);
 	talloc_free(mac_control_block);
 	msgb_free(msg);
 	return NULL;
