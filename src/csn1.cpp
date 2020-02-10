@@ -495,6 +495,10 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
         guint8 i     = 0;
         CSN_ChoiceElement_t* pChoice = (CSN_ChoiceElement_t*) pDescr->descr.ptr;
 
+        /* Make sure that the list of choice items is not empty */
+        if (!count)
+          return ProcessError(readIndex, "csnStreamDecoder", CSN_ERROR_IN_SCRIPT, pDescr);
+
         while (count > 0)
         {
           guint8 no_of_bits = pChoice->bits;
@@ -536,6 +540,10 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, bitvec *vector, unsig
           pChoice++;
           i++;
         }
+
+        /* Neither of the choice items matched => unknown value */
+        if (!count)
+          return ProcessError(readIndex, "csnStreamDecoder", CSN_ERROR_STREAM_NOT_SUPPORTED, pDescr);
 
         pDescr++;
         break;

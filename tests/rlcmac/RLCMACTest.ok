@@ -58,11 +58,11 @@ vector2 = 40 24 03 0f 2f 00 00 00 00 87 b0 04 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b
 vector1 == vector2 : TRUE
 vector1 = 4913e00850884013a8048b2b2b2b2b2b2b2b2b2b2b2b2b
 =========Start DECODE===========
-+++++++++Finish DECODE (0)++++++++++
++++++++++Finish DECODE (-8)++++++++++
 =========Start ENCODE=============
 +++++++++Finish ENCODE (0)+++++++++++
 vector1 = 49 13 e0 08 50 88 40 13 a8 04 8b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
-vector2 = 49 13 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+vector2 = 49 13 00 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 vector1 == vector2 : FALSE
 vector1 = 412430007fffffffffffffffefd19c7ba12b2b2b2b2b2b
 =========Start DECODE===========
