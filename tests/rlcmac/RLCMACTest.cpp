@@ -106,7 +106,7 @@ void testRlcMacDownlink(void *test_ctx)
 	"400820001a3904df0680efb3300b2b2b2b2b2b2b2b2b2b", // Packet Downlink Assignment (EGPRS)
 	"40284f0000001009810c826f4406809dcecb2b2b2b2b2b", // Packet Uplink Assignment (EGPRS)
 	"4024030f2f0000000087b0042b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Ack Nack (EGPRS)
-	"4913e00850884013a8048b2b2b2b2b2b2b2b2b2b2b2b2b", // Polling Request?
+	"4913e00850884013a8048b2b2b2b2b2b2b2b2b2b2b2b2b", // Polling Request (malformed)
 	"412430007fffffffffffffffefd19c7ba12b2b2b2b2b2b", // Packet Uplink Ack Nack?
 	"41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // System Info 13?
 	};
