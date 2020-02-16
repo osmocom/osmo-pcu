@@ -137,7 +137,7 @@ static gint16 ProcessError_impl(const char *file, int line, unsigned readIndex,
 static gboolean
 existNextElement(bitvec *vector, unsigned& readIndex, guint8 Tag)
 {
-  guint8 res = bitvec_read_field(vector, &readIndex, 1);
+  int res = bitvec_get_bit_pos(vector, readIndex++);
   if (Tag == STANDARD_TAG)
   {
     return (res > 0);
