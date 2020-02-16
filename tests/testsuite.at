@@ -5,7 +5,8 @@ AT_BANNER([Regression tests])
 AT_SETUP([rlcmac])
 AT_KEYWORDS([rlcmac])
 cat $abs_srcdir/rlcmac/RLCMACTest.ok > expout
-AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/rlcmac/RLCMACTest], [0], [expout], [ignore])
+cat $abs_srcdir/rlcmac/RLCMACTest.err > experr
+AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/rlcmac/RLCMACTest], [0], [expout], [experr])
 AT_CLEANUP
 
 AT_SETUP([multi_slot])
