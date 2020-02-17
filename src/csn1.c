@@ -950,6 +950,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
         *pui8 = fExist;
         LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
         pDescr++;
+        bit_offset++;
         remaining_bits_len -= 1;
 
         if (!fExist)
