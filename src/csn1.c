@@ -656,8 +656,6 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
             guint8 no_of_bits = (guint8) pDescr->i;
             if (remaining_bits_len >= no_of_bits)
             {
-              remaining_bits_len -= no_of_bits;
-
               if (no_of_bits <= 8)
               {
 		guint8 ui8 = bitvec_read_field(vector, readIndex,  no_of_bits);
@@ -689,6 +687,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
               return ProcessError(readIndex,"csnStreamDecoder", CSN_ERROR_GENERAL, pDescr);
             }
 
+            remaining_bits_len -= no_of_bits;
             bit_offset += no_of_bits;
             pDescr++;
             break;
@@ -731,6 +730,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
               return ProcessError(readIndex,"csnStreamDecoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
             }
 
+            remaining_bits_len -= no_of_bits;
             bit_offset += no_of_bits;
             pDescr++;
             break;
@@ -759,6 +759,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
               return ProcessError(readIndex,"csnStreamDecoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
             }
 
+            remaining_bits_len -= no_of_bits;
             bit_offset += no_of_bits;
             pDescr++;
             break;
@@ -1310,6 +1311,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
         LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , bitvec_get_uint(vector, 1));
 
         /* existNextElement() returned FALSE, 1 bit consumed */
+        remaining_bits_len--;
         bit_offset++;
 
         /* Store the counted number of elements of the array */
