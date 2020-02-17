@@ -306,7 +306,6 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
         if (remaining_bits_len >= no_of_bits)
         {
-          remaining_bits_len -= no_of_bits;
           if (no_of_bits <= 8)
           {
 	    guint8 ui8 = get_masked_bits8(vector, readIndex, bit_offset, no_of_bits);
