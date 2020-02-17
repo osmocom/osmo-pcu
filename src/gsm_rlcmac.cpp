@@ -5753,7 +5753,7 @@ int decode_gsm_ra_cap(bitvec * vector, MS_Radio_Access_capability_t *data)
   csnStreamInit(&ar, 0, 8 * vector->data_len);
 
   /* recursive csnStreamEncoder call uses LOGPC everywhere, so we need to start the log somewhere... */
-  LOGP(DCSN1, LOGL_INFO, "csnStreamEncoder (RAcap): ");
+  LOGP(DCSN1, LOGL_INFO, "csnStreamDecoder (RAcap): ");
   ret = csnStreamDecoder(&ar, CSNDESCR(MS_Radio_Access_capability_t), vector, &readIndex, data);
 
   /* recursive csnStreamDecoder call uses LOGPC everywhere without trailing
