@@ -1309,7 +1309,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           }
         }
 
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , bitvec_get_uint(vector, 1));
+        LOGPC(DCSN1, LOGL_NOTICE, "%s = %d | ", pDescr->sz , bitvec_get_uint(vector, 1));
 
         /* existNextElement() returned FALSE, 1 bit consumed */
         remaining_bits_len--;
