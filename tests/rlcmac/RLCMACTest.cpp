@@ -224,7 +224,7 @@ void testRAcap(void *test_ctx)
 /*
 	MS RA capability 1
 	    0001 .... = Access Technology Type: GSM E --note that GSM E covers GSM P (1)
-	    .... 0010  101. .... = Length in bits: 0x15 (21)
+	    .... 0011  101. .... = Length in bits: 0x1d (29)
 	    ...0 01.. RF Power Capability, GMSK Power Class: Not specified (1)
 	    A5 Bits: Same values apply for parameters as in the immediately preceding Access capabilities field within this IE (0)
 	    .... ...1 = Controlled early Classmark Sending: Implemented
@@ -235,22 +235,27 @@ void testRAcap(void *test_ctx)
 	    .... ..00  011. .... = GPRS multislot class: Max Rx-Slot/TDMA:2 Max Tx-Slot/TDMA:2 Max-Sum-Slot/TDMA:3 Tta:3 Ttb:2 Tra:3 Trb:1 Type:1 (3)
 	    ...0 .... = GPRS Extended Dynamic Allocation Capability: Not Implemented
 */
-	bitvec_unhex(vector, "12a5146200");
+	bitvec_unhex(vector, "13a5146200");
 
 	rc = decode_gsm_ra_cap(vector, &data);
-	printf("decode_gsm_ra_cap fails? %s\n", rc !=0 ? "yes" : "no");
-#if 0
-	/* FIXME: OS#1525, OS#3499: csn1 fails to parse this MS RA Cap IE value */
-	assert (rc == 0);
+	OSMO_ASSERT(rc == 0);
 
 	/* Make sure there's 1 value (currently fails due to failed decoding) */
-	osmo_assert(cap->Count_MS_RA_capability_value == 1);
+	OSMO_ASSERT(data.Count_MS_RA_capability_value == 1);
 
-	/* Make sure MS multislot class is parsed correctly (currently fails due
-	   to failed decoding and count being 0) */
-	uint8_t ms_class = Decoding::get_ms_class_by_capability(&data);
-	assert(ms_class == 3);
-#endif
+	/* Make sure GPRS / EGPRS multislot class is parsed correctly */
+	printf("GPRS multislot class = %u\n", Decoding::get_ms_class_by_capability(&data));
+	printf("EGPRS multislot class = %u\n", Decoding::get_egprs_ms_class_by_capability(&data));
+
+	/* Mangle the length indicator (set it to 21) */
+	unsigned int writeIndex = 4;
+	rc = bitvec_write_field(vector, &writeIndex, 21, 7);
+	OSMO_ASSERT(rc == 0);
+
+	/* Make sure decoding attempt fails */
+	printf("Test decoding of a malformed vector (short length indicator)\n");
+	rc = decode_gsm_ra_cap(vector, &data);
+	printf("decode_gsm_ra_cap() returns %d\n", rc);
 }
 
 int main(int argc, char *argv[])
