@@ -124,7 +124,12 @@ vector2 = 40 0a 90 20 00 00 00 00 00 00 00 30 10 01 2a 08 00 13 2b 2b 2b 2b 2b
 vector1 == vector2 : TRUE
 *** testCsnLeftAlignedVarBmpBounds ***
 *** testRAcap ***
+=== Test decoding of MS RA Capability ===
 GPRS multislot class = 3
 EGPRS multislot class = 0
-Test decoding of a malformed vector (short length indicator)
+=== Test encoding of MS RA Capability ===
+encode_gsm_ra_cap() returns 0
+vector1 (len_ind=29) = 13 a5 14 62 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+vector2 (len_ind=50) = 16 45 14 62 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+=== Test decoding of a malformed vector (short length indicator) ===
 decode_gsm_ra_cap() returns -5

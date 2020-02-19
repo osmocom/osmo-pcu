@@ -5766,3 +5766,27 @@ int decode_gsm_ra_cap(bitvec * vector, MS_Radio_Access_capability_t *data)
   }
   return ret;
 }
+
+/* This function is not actually used by osmo-pcu itself, and only needed for
+ * the RLCMAC unit test. Having it here is better than making the internal
+ * CSN.1 definitions (in particular, MS_Radio_Access_capability_t) non-static. */
+int encode_gsm_ra_cap(bitvec *vector, MS_Radio_Access_capability_t *data)
+{
+  unsigned writeIndex = 0;
+  csnStream_t ar;
+  int ret;
+
+  csnStreamInit(&ar, 0, vector->data_len * 8);
+
+  /* recursive csnStreamEncoder call uses LOGPC everywhere, so we need to start the log somewhere... */
+  LOGP(DCSN1, LOGL_INFO, "csnStreamEncoder (RAcap): ");
+  ret = csnStreamEncoder(&ar, CSNDESCR(MS_Radio_Access_capability_t), vector, &writeIndex, data);
+  LOGPC(DCSN1, LOGL_INFO, "\n");
+
+  if (ret > 0) {
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by encoder at the end of bitvec\n", ret);
+    ret = 0;
+  }
+
+  return ret;
+}
