@@ -1294,7 +1294,7 @@ CSN_DESCR_BEGIN       (Packet_Resource_Request_t)
   M_NEXT_EXIST        (Packet_Resource_Request_t, Exist_SIGN_VAR, 1),
   M_UINT              (Packet_Resource_Request_t,  SIGN_VAR,  6),
 
-  M_TYPE_ARRAY        (Packet_Resource_Request_t, Slot, InterferenceMeasurementReport_t, 8),
+  M_TYPE_ARRAY        (Packet_Resource_Request_t, I_LEVEL_TN, InterferenceMeasurementReport_t, 8),
 
   M_NEXT_EXIST_OR_NULL(Packet_Resource_Request_t, Exist_AdditionsR99, 1),
   M_TYPE              (Packet_Resource_Request_t, AdditionsR99, PRR_AdditionsR99_t),

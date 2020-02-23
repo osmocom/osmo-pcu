@@ -1607,7 +1607,7 @@ typedef struct
   guint8 Exist_SIGN_VAR;
   guint8 SIGN_VAR;
 
-  InterferenceMeasurementReport_t  Slot[8];
+  InterferenceMeasurementReport_t  I_LEVEL_TN[8];
 
   guint8                            Exist_AdditionsR99;
   PRR_AdditionsR99_t               AdditionsR99;

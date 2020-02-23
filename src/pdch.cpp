@@ -80,13 +80,13 @@ static void get_meas(struct pcu_l1_meas *meas,
 	if (qr->Exist_SIGN_VAR)
 		meas->set_ms_sign_var((qr->SIGN_VAR + 2) / 4); /* SIGN_VAR * 0.25 dB */
 
-	for (i = 0; i < OSMO_MIN(ARRAY_SIZE(qr->Slot), ARRAY_SIZE(meas->ts)); i++)
+	for (i = 0; i < OSMO_MIN(ARRAY_SIZE(qr->I_LEVEL_TN), ARRAY_SIZE(meas->ts)); i++)
 	{
-		if (qr->Slot[i].Exist) {
+		if (qr->I_LEVEL_TN[i].Exist) {
 			LOGP(DRLCMAC, LOGL_INFO,
 				"Packet resource request: i_level[%d] = %d\n",
-				i, qr->Slot[i].I_LEVEL);
-			meas->set_ms_i_level(i, -2 * qr->Slot[i].I_LEVEL);
+				i, qr->I_LEVEL_TN[i].I_LEVEL);
+			meas->set_ms_i_level(i, -2 * qr->I_LEVEL_TN[i].I_LEVEL);
 		}
 	}
 }
