@@ -103,18 +103,19 @@ void gprs_llc_queue::init()
 	m_avg_queue_delay = 0;
 }
 
-void gprs_llc_queue::enqueue(struct msgb *llc_msg, const MetaInfo *info)
+
+void gprs_llc_queue::enqueue(struct msgb *llc_msg, const struct timeval *expire_time)
 {
-	static const MetaInfo def_meta = {{0}};
 	MetaInfo *meta_storage;
 
-	osmo_static_assert(sizeof(*info) <= sizeof(llc_msg->cb), info_does_not_fit);
+	osmo_static_assert(sizeof(*meta_storage) <= sizeof(llc_msg->cb), info_does_not_fit);
 
 	m_queue_size += 1;
 	m_queue_octets += msgb_length(llc_msg);
 
 	meta_storage = (MetaInfo *)&llc_msg->cb[0];
-	*meta_storage = info ? *info : def_meta;
+	osmo_gettimeofday(&meta_storage->recv_time, NULL);
+	meta_storage->expire_time = *expire_time;
 
 	msgb_enqueue(&m_queue, llc_msg);
 }
@@ -208,7 +209,7 @@ struct msgb *gprs_llc_queue::dequeue(const MetaInfo **info)
 	m_queue_octets -= msgb_length(msg);
 
 	/* take the second time */
-	gettimeofday(&tv_now, NULL);
+	osmo_gettimeofday(&tv_now, NULL);
 	tv = (struct timeval *)&msg->data[sizeof(*tv)];
 	timersub(&tv_now, &meta_storage->recv_time, &tv_result);
 
@@ -234,7 +235,7 @@ void gprs_llc_queue::calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, 
 
 	/* calculate timestamp of timeout */
 	struct timeval now, csec;
-	gettimeofday(&now, NULL);
+	osmo_gettimeofday(&now, NULL);
 	csec.tv_usec = (delay_csec % 100) * 10000;
 	csec.tv_sec = delay_csec / 100;
 

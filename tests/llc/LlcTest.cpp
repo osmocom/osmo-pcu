@@ -34,6 +34,7 @@ extern "C" {
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/utils.h>
+#include <osmocom/core/timer.h>
 #include <osmocom/vty/vty.h>
 }
 
@@ -43,7 +44,7 @@ int16_t spoof_mnc = 0, spoof_mcc = 0;
 bool spoof_mnc_3_digits = false;
 
 static void enqueue_data(gprs_llc_queue *queue, const uint8_t *data, size_t len,
-	gprs_llc_queue::MetaInfo *info = 0)
+			 const struct timeval *expire_time)
 {
 	struct timeval *tv;
 	uint8_t *msg_data;
@@ -54,11 +55,11 @@ static void enqueue_data(gprs_llc_queue *queue, const uint8_t *data, size_t len,
 
 	memcpy(msg_data, data, len);
 
-	queue->enqueue(llc_msg, info);
+	queue->enqueue(llc_msg, expire_time);
 }
 
 static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
-	size_t len, const gprs_llc_queue::MetaInfo *exp_info = 0)
+	size_t len, const gprs_llc_queue::MetaInfo *exp_info)
 {
 	struct msgb *llc_msg;
 	const gprs_llc_queue::MetaInfo *info_res;
@@ -72,16 +73,17 @@ static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
 	if (!msgb_eq_data_print(llc_msg, exp_data, len))
 		fprintf(stderr, "check failed!\n");
 
-	if (exp_info)
-		OSMO_ASSERT(memcmp(exp_info, info_res, sizeof(*exp_info)) == 0);
-
+	if (exp_info) {
+		OSMO_ASSERT(memcmp(&exp_info->recv_time, &info_res->recv_time, sizeof(info_res->recv_time)) == 0);
+		OSMO_ASSERT(memcmp(&exp_info->expire_time, &info_res->expire_time, sizeof(info_res->expire_time)) == 0);
+	}
 	msgb_free(llc_msg);
 }
 
 static void enqueue_data(gprs_llc_queue *queue, const char *message,
-	gprs_llc_queue::MetaInfo *info = 0)
+			 const struct timeval *expire_time)
 {
-	enqueue_data(queue, (uint8_t *)(message), strlen(message), info);
+	enqueue_data(queue, (uint8_t *)(message), strlen(message), expire_time);
 }
 
 static void dequeue_and_check(gprs_llc_queue *queue, const char *exp_message,
@@ -94,6 +96,7 @@ static void dequeue_and_check(gprs_llc_queue *queue, const char *exp_message,
 static void test_llc_queue()
 {
 	gprs_llc_queue queue;
+	struct timeval expire_time = {0};
 
 	printf("=== start %s ===\n", __func__);
 
@@ -101,11 +104,11 @@ static void test_llc_queue()
 	OSMO_ASSERT(queue.size() == 0);
 	OSMO_ASSERT(queue.octets() == 0);
 
-	enqueue_data(&queue, "LLC message");
+	enqueue_data(&queue, "LLC message", &expire_time);
 	OSMO_ASSERT(queue.size() == 1);
 	OSMO_ASSERT(queue.octets() == 11);
 
-	enqueue_data(&queue, "other LLC message");
+	enqueue_data(&queue, "other LLC message", &expire_time);
 	OSMO_ASSERT(queue.size() == 2);
 	OSMO_ASSERT(queue.octets() == 28);
 
@@ -117,7 +120,7 @@ static void test_llc_queue()
 	OSMO_ASSERT(queue.size() == 0);
 	OSMO_ASSERT(queue.octets() == 0);
 
-	enqueue_data(&queue, "LLC");
+	enqueue_data(&queue, "LLC",  &expire_time);
 	OSMO_ASSERT(queue.size() == 1);
 	OSMO_ASSERT(queue.octets() == 3);
 
@@ -131,18 +134,8 @@ static void test_llc_queue()
 static void test_llc_meta()
 {
 	gprs_llc_queue queue;
-	gprs_llc_queue::MetaInfo info1;
-	gprs_llc_queue::MetaInfo info2;
-
-	info1.recv_time.tv_sec    = 123456777;
-	info1.recv_time.tv_usec   = 123456;
-	info1.expire_time.tv_sec  = 123456789;
-	info1.expire_time.tv_usec = 987654;
-
-	info2.recv_time.tv_sec    = 987654321;
-	info2.recv_time.tv_usec   = 547352;
-	info2.expire_time.tv_sec  = 987654327;
-	info2.expire_time.tv_usec = 867252;
+	gprs_llc_queue::MetaInfo info1 = {0};
+	gprs_llc_queue::MetaInfo info2 = {0};
 
 	printf("=== start %s ===\n", __func__);
 
@@ -150,8 +143,19 @@ static void test_llc_meta()
 	OSMO_ASSERT(queue.size() == 0);
 	OSMO_ASSERT(queue.octets() == 0);
 
-	enqueue_data(&queue, "LLC message 1", &info1);
-	enqueue_data(&queue, "LLC message 2", &info2);
+	info1.recv_time.tv_sec = 123456777;
+	info1.recv_time.tv_usec = 123456;
+	info1.expire_time.tv_sec = 123456789;
+	info1.expire_time.tv_usec = 987654;
+	osmo_gettimeofday_override_time = info1.recv_time;
+	enqueue_data(&queue, "LLC message 1", &info1.expire_time);
+
+	info2.recv_time.tv_sec = 987654321;
+	info2.recv_time.tv_usec = 547352;
+	info2.expire_time.tv_sec = 987654327;
+	info2.expire_time.tv_usec = 867252;
+	osmo_gettimeofday_override_time = info2.recv_time;
+	enqueue_data(&queue, "LLC message 2", &info2.expire_time);
 
 	dequeue_and_check(&queue, "LLC message 1", &info1);
 	dequeue_and_check(&queue, "LLC message 2", &info2);
@@ -167,27 +171,27 @@ static void test_llc_merge()
 {
 	gprs_llc_queue queue1;
 	gprs_llc_queue queue2;
-	gprs_llc_queue::MetaInfo info = {0};
+	struct timeval expire_time = {0};
 
 	printf("=== start %s ===\n", __func__);
 
 	queue1.init();
 	queue2.init();
 
-	info.recv_time.tv_sec += 1;
-	enqueue_data(&queue1, "*A*", &info);
+	osmo_gettimeofday_override_time.tv_sec += 1;
+	enqueue_data(&queue1, "*A*", &expire_time);
 
-	info.recv_time.tv_sec += 1;
-	enqueue_data(&queue1, "*B*", &info);
+	osmo_gettimeofday_override_time.tv_sec += 1;
+	enqueue_data(&queue1, "*B*", &expire_time);
 
-	info.recv_time.tv_sec += 1;
-	enqueue_data(&queue2, "*C*", &info);
+	osmo_gettimeofday_override_time.tv_sec += 1;
+	enqueue_data(&queue2, "*C*", &expire_time);
 
-	info.recv_time.tv_sec += 1;
-	enqueue_data(&queue1, "*D*", &info);
+	osmo_gettimeofday_override_time.tv_sec += 1;
+	enqueue_data(&queue1, "*D*", &expire_time);
 
-	info.recv_time.tv_sec += 1;
-	enqueue_data(&queue2, "*E*", &info);
+	osmo_gettimeofday_override_time.tv_sec += 1;
+	enqueue_data(&queue2, "*E*", &expire_time);
 
 	OSMO_ASSERT(queue1.size() == 3);
 	OSMO_ASSERT(queue1.octets() == 9);
@@ -230,6 +234,10 @@ int main(int argc, char **argv)
 
 	vty_init(&pcu_vty_info);
 	pcu_vty_init();
+
+	osmo_gettimeofday_override = true;
+	osmo_gettimeofday_override_time.tv_sec = 123456777;
+	osmo_gettimeofday_override_time.tv_usec = 123456;
 
 	test_llc_queue();
 	test_llc_meta();

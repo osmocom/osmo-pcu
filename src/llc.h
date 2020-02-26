@@ -75,7 +75,7 @@ struct gprs_llc_queue {
 
 	void init();
 
-	void enqueue(struct msgb *llc_msg, const MetaInfo *info = 0);
+	void enqueue(struct msgb *llc_msg, const struct timeval *expire_time);
 	struct msgb *dequeue(const MetaInfo **info = 0);
 	void clear(BTS *bts);
 	void move_and_merge(gprs_llc_queue *o);

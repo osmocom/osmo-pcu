@@ -108,16 +108,17 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 				const uint16_t pdu_delay_csec,
 				const uint8_t *data, const uint16_t len)
 {
+	struct timeval expire_time;
+
 	LOGPTBFDL(this, LOGL_DEBUG, "appending %u bytes\n", len);
-	gprs_llc_queue::MetaInfo info;
+
 	struct msgb *llc_msg = msgb_alloc(len, "llc_pdu_queue");
 	if (!llc_msg)
 		return -ENOMEM;
 
-	gprs_llc_queue::calc_pdu_lifetime(bts, pdu_delay_csec, &info.expire_time);
-	gettimeofday(&info.recv_time, NULL);
+	gprs_llc_queue::calc_pdu_lifetime(bts, pdu_delay_csec, &expire_time);
 	memcpy(msgb_put(llc_msg, len), data, len);
-	llc_queue()->enqueue(llc_msg, &info);
+	llc_queue()->enqueue(llc_msg, &expire_time);
 	tbf_update_ms_class(this, ms_class);
 	start_llc_timer();
 
