@@ -155,6 +155,7 @@ void testRlcMacUplink(void *test_ctx)
 	"400e1e61d11d2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Dummy Control Block
 	"400b8020000000000000002480e0032b2b2b2b2b2b2b2b", // Packet Downlink Ack/Nack
 	"4016713dc094270ca2ae57ef909006aa0fc0001f80222b", // Packet Resource Request
+	"401673c87f24af2632b25964200600000091000b780080", // Packet Resource Request (from keith)
 	"40200ffc0021ec010b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // EPDAN
 	"400a9020000000000000003010012a0800132b2b2b2b2b", // Packet Downlink Ack/Nack ?
 	};
