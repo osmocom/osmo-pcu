@@ -571,6 +571,13 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
             remaining_bits_len = arT.remaining_bits_len;
             bit_offset         = arT.bit_offset;
           }
+
+          /* Skip bits not handled by serialize(), if any */
+          if (Status > 0) {
+            LOGPC(DCSN1, LOGL_NOTICE, "skipped = %d | ", Status);
+            *readIndex += Status;
+          }
+
           pDescr++;
         }
         else
