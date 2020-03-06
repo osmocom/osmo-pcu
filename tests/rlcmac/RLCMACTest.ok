@@ -136,7 +136,7 @@ vector1 == vector2 : TRUE
 GPRS multislot class = 3
 EGPRS multislot class = 0
 === Test encoding of MS RA Capability ===
-encode_gsm_ra_cap() returns 0
+encode_gsm_ra_cap() returns -5
 vector1 (len_ind=29) = 13 a5 14 62 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 vector2 (len_ind=65) = 18 25 14 62 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 === Test decoding of a malformed vector (short length indicator) ===

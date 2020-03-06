@@ -5428,9 +5428,10 @@ int encode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
      newline, so as a caller we are responisble for submitting it */
   LOGPC(DCSN1, LOGL_INFO, "\n");
 
-  if (ret > 0) {
-    LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by encoder at the end of bitvec\n", ret);
-    ret = 0;
+  if (ret > 0 || ret == CSN_ERROR_NEED_MORE_BITS_TO_UNPACK) {
+    LOGP(DRLCMACDATA, LOGL_ERROR, "Failed to encode an Uplink block: not enough bits "
+                                  "in the output buffer (rc=%d)\n", ret);
+    ret = CSN_ERROR_NEED_MORE_BITS_TO_UNPACK;
   }
 
   return ret;
@@ -5634,9 +5635,10 @@ int encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
      newline, so as a caller we are responisble for submitting it */
   LOGPC(DCSN1, LOGL_INFO, "\n");
 
-  if (ret > 0) {
-    LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by encoder at the end of bitvec\n", ret);
-    ret = 0;
+  if (ret > 0 || ret == CSN_ERROR_NEED_MORE_BITS_TO_UNPACK) {
+    LOGP(DRLCMACDATA, LOGL_ERROR, "Failed to encode a Downlink block: not enough bits "
+                                  "in the output buffer (rc=%d)\n", ret);
+    ret = CSN_ERROR_NEED_MORE_BITS_TO_UNPACK;
   }
 
   return ret;
@@ -5817,9 +5819,10 @@ int encode_gsm_ra_cap(bitvec *vector, MS_Radio_Access_capability_t *data)
   ret = csnStreamEncoder(&ar, CSNDESCR(MS_Radio_Access_capability_t), vector, &writeIndex, data);
   LOGPC(DCSN1, LOGL_INFO, "\n");
 
-  if (ret > 0) {
-    LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by encoder at the end of bitvec\n", ret);
-    ret = 0;
+  if (ret > 0 || ret == CSN_ERROR_NEED_MORE_BITS_TO_UNPACK) {
+    LOGP(DRLCMACDATA, LOGL_ERROR, "Failed to encode MS RA Capability IE: not enough bits "
+                                  "in the output buffer (rc=%d)\n", ret);
+    ret = CSN_ERROR_NEED_MORE_BITS_TO_UNPACK;
   }
 
   return ret;
