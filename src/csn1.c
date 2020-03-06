@@ -153,9 +153,9 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
   guint8 Tag = STANDARD_TAG;
   unsigned ib;
 
-  if (remaining_bits_len <= 0)
+  if (remaining_bits_len < 0)
   {
-    return 0;
+    return ProcessError(readIndex, __func__, CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
   }
 
   do
@@ -1463,9 +1463,9 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
 
   guint8 Tag = STANDARD_TAG;
 
-  if (remaining_bits_len <= 0)
+  if (remaining_bits_len < 0)
   {
-    return 0;
+    return ProcessError(writeIndex, __func__, CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
   }
 
   do
