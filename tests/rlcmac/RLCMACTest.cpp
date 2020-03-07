@@ -284,7 +284,7 @@ int main(int argc, char *argv[])
 {
 	void *ctx = talloc_named_const(NULL, 1, "RLCMACTest");
 	osmo_init_logging2(ctx, &gprs_log_info);
-	log_parse_category_mask(osmo_stderr_target, "DPCU,3:DLGLOBAL,1:DCSN1,2:");
+	log_parse_category_mask(osmo_stderr_target, "DPCU,3:DLGLOBAL,1:DRLCMACDATA,2:DCSN1,2:");
 
 	log_set_print_filename2(osmo_stderr_target, LOG_FILENAME_NONE);
 	log_set_print_category_hex(osmo_stderr_target, 0);
