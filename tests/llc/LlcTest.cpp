@@ -150,9 +150,9 @@ static void test_llc_meta()
 	osmo_gettimeofday_override_time = info1.recv_time;
 	enqueue_data(&queue, "LLC message 1", &info1.expire_time);
 
-	info2.recv_time.tv_sec = 987654321;
+	info2.recv_time.tv_sec = 123458000;
 	info2.recv_time.tv_usec = 547352;
-	info2.expire_time.tv_sec = 987654327;
+	info2.expire_time.tv_sec = 123458006;
 	info2.expire_time.tv_usec = 867252;
 	osmo_gettimeofday_override_time = info2.recv_time;
 	enqueue_data(&queue, "LLC message 2", &info2.expire_time);
