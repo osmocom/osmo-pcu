@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include <sys/time.h>
+#include <time.h>
 
 /* Spec default values */
 #define GPRS_CODEL_DEFAULT_INTERVAL_MS 100
@@ -40,10 +40,10 @@ extern "C" {
 struct gprs_codel {
 	int dropping;
 	unsigned count;
-	struct timeval first_above_time;
-	struct timeval drop_next;
-	struct timeval target;
-	struct timeval interval;
+	struct timespec first_above_time;
+	struct timespec drop_next;
+	struct timespec target;
+	struct timespec interval;
 	unsigned maxpacket;
 };
 
@@ -66,8 +66,8 @@ struct gprs_codel {
  *
  * \return != 0 if the packet should be dropped, 0 otherwise
  */
-int gprs_codel_control(struct gprs_codel *state, const struct timeval *recv,
-	const struct timeval *now, int bytes);
+int gprs_codel_control(struct gprs_codel *state, const struct timespec *recv,
+	const struct timespec *now, int bytes);
 
 /*!
  * \brief Initialise CoDel state

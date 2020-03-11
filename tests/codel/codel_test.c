@@ -13,16 +13,17 @@
 #endif
 #include <osmocom/core/application.h>
 #include <osmocom/core/utils.h>
+#include <osmocom/core/timer_compat.h>
 #include <osmocom/core/logging.h>
 
 #include "gprs_codel.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/time.h>
+#include <time.h>
 
-static int do_codel_control(struct gprs_codel *state, const struct timeval *recv,
-	struct timeval *now, const struct timeval *delta_now, int count)
+static int do_codel_control(struct gprs_codel *state, const struct timespec *recv,
+	struct timespec *now, const struct timespec *delta_now, int count)
 {
 	int drop;
 
@@ -32,11 +33,11 @@ static int do_codel_control(struct gprs_codel *state, const struct timeval *recv
 			"recv = %d.%03d, now = %d.%03d, "
 			"codel.count = %d\n",
 			count,
-			(int)recv->tv_sec, (int)recv->tv_usec/1000,
-			(int)now->tv_sec, (int)now->tv_usec/1000,
+			(int)recv->tv_sec, (int)recv->tv_nsec/1000000,
+			(int)now->tv_sec, (int)now->tv_nsec/1000000,
 			state->count);
 	} else {
-		timeradd(now, delta_now, now);
+		timespecadd(now, delta_now, now);
 	}
 
 	return drop == 0 ? 0 : 1;
@@ -45,11 +46,11 @@ static int do_codel_control(struct gprs_codel *state, const struct timeval *recv
 static void test_codel(void)
 {
 	struct gprs_codel codel;
-	struct timeval now;
-	struct timeval recv;
-	const struct timeval delta_now = {0, 10000};
-	const struct timeval init_delta_recv = {0, 5000};
-	struct timeval delta_recv;
+	struct timespec now;
+	struct timespec recv;
+	const struct timespec delta_now = {0, 10000000};
+	const struct timespec init_delta_recv = {0, 5000000};
+	struct timespec delta_recv;
 	unsigned count;
 	unsigned sum = 0;
 	unsigned dropped = 0;
@@ -59,13 +60,13 @@ static void test_codel(void)
 	gprs_codel_init(&codel);
 	gprs_codel_set_interval(&codel, 100);
 
-	timerclear(&now);
-	timerclear(&recv);
+	timespecclear(&now);
+	timespecclear(&recv);
 	delta_recv = init_delta_recv;
 
 	for (count = 0; count < 20; count++, sum++) {
 		drop = do_codel_control(&codel, &recv, &now, &delta_now, sum);
-		timeradd(&recv, &delta_recv, &recv);
+		timespecadd(&recv, &delta_recv, &recv);
 		dropped += drop;
 	}
 
@@ -75,7 +76,7 @@ static void test_codel(void)
 
 	for (count = 0; count < 20; count++, sum++) {
 		drop = do_codel_control(&codel, &recv, &now, &delta_now, sum);
-		timeradd(&recv, &delta_recv, &recv);
+		timespecadd(&recv, &delta_recv, &recv);
 		dropped += drop;
 	}
 
@@ -83,11 +84,11 @@ static void test_codel(void)
 	OSMO_ASSERT(codel.dropping);
 
 	/* slow down recv rate */
-	delta_recv.tv_usec = delta_now.tv_usec;
+	delta_recv.tv_nsec = delta_now.tv_nsec;
 
 	for (count = 0; count < 75; count++, sum++) {
 		drop = do_codel_control(&codel, &recv, &now, &delta_now, sum);
-		timeradd(&recv, &delta_recv, &recv);
+		timespecadd(&recv, &delta_recv, &recv);
 		dropped += drop;
 	}
 
@@ -96,7 +97,7 @@ static void test_codel(void)
 
 	for (count = 0; count < 50; count++, sum++) {
 		drop = do_codel_control(&codel, &recv, &now, &delta_now, sum);
-		timeradd(&recv, &delta_recv, &recv);
+		timespecadd(&recv, &delta_recv, &recv);
 		dropped += drop;
 	}
 
@@ -109,7 +110,7 @@ static void test_codel(void)
 
 	for (count = 0; count < 20; count++, sum++) {
 		drop = do_codel_control(&codel, &recv, &now, &delta_now, sum);
-		timeradd(&recv, &delta_recv, &recv);
+		timespecadd(&recv, &delta_recv, &recv);
 		dropped += drop;
 	}
 
@@ -118,7 +119,7 @@ static void test_codel(void)
 
 	for (count = 0; count < 20; count++, sum++) {
 		drop = do_codel_control(&codel, &recv, &now, &delta_now, sum);
-		timeradd(&recv, &delta_recv, &recv);
+		timespecadd(&recv, &delta_recv, &recv);
 		dropped += drop;
 	}
 

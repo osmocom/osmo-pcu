@@ -72,7 +72,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	void set_window_size();
 	void update_coding_scheme_counter_dl(enum CodingScheme cs);
 
-	/* TODO: add the gettimeofday as parameter */
 	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
 
 	/* Please note that all variables here will be reset when changing

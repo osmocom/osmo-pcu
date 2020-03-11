@@ -22,12 +22,13 @@
 #include "gprs_debug.h"
 
 #include <osmocom/core/utils.h>
+#include <osmocom/core/timer_compat.h>
 
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
 
-static void control_law(struct gprs_codel *state, struct timeval *delta)
+static void control_law(struct gprs_codel *state, struct timespec *delta)
 {
 	/* 256 / sqrt(x), limited to 255 */
 	static uint8_t inv_sqrt_tab[] = {255,
@@ -57,12 +58,12 @@ static void control_law(struct gprs_codel *state, struct timeval *delta)
 		inv_sqrt = inv_sqrt_tab[state->count];
 
 	/* delta = state->interval / sqrt(count) */
-	delta_usecs = state->interval.tv_sec * 1000000 + state->interval.tv_usec;
+	delta_usecs = state->interval.tv_sec * 1000000 + state->interval.tv_nsec/1000;
 	delta_usecs = delta_usecs * inv_sqrt / 256;
 
 	q = div(delta_usecs, 1000000);
 	delta->tv_sec = q.quot;
-	delta->tv_usec = q.rem;
+	delta->tv_nsec = q.rem * 1000;
 }
 
 void gprs_codel_init(struct gprs_codel *state)
@@ -83,12 +84,12 @@ void gprs_codel_set_interval(struct gprs_codel *state, int interval_ms)
 
 	q = div(interval_ms, 1000);
 	state->interval.tv_sec = q.quot;
-	state->interval.tv_usec = q.rem * 1000;
+	state->interval.tv_nsec = q.rem * 1000000;
 
 	/* target ~ 5% of interval */
 	q = div(interval_ms * 13 / 256, 1000);
 	state->target.tv_sec = q.quot;
-	state->target.tv_usec = q.rem * 1000;
+	state->target.tv_nsec = q.rem * 1000000;
 }
 
 void gprs_codel_set_maxpacket(struct gprs_codel *state, int maxpacket)
@@ -104,29 +105,29 @@ void gprs_codel_set_maxpacket(struct gprs_codel *state, int maxpacket)
  * This is an broken up variant of the algorithm being described in
  * http://queue.acm.org/appendices/codel.html
  */
-int gprs_codel_control(struct gprs_codel *state, const struct timeval *recv,
-	const struct timeval *now, int bytes)
+int gprs_codel_control(struct gprs_codel *state, const struct timespec *recv,
+	const struct timespec *now, int bytes)
 {
-	struct timeval sojourn_time;
-	struct timeval delta;
+	struct timespec sojourn_time;
+	struct timespec delta;
 
 	if (recv == NULL)
 		goto stop_dropping;
 
-	timersub(now, recv, &sojourn_time);
+	timespecsub(now, recv, &sojourn_time);
 
-	if (timercmp(&sojourn_time, &state->target, <))
+	if (timespeccmp(&sojourn_time, &state->target, <))
 		goto stop_dropping;
 
 	if (bytes >= 0 && (unsigned)bytes <= state->maxpacket)
 		goto stop_dropping;
 
-	if (!timerisset(&state->first_above_time)) {
-		timeradd(now, &state->interval, &state->first_above_time);
+	if (!timespecisset(&state->first_above_time)) {
+		timespecadd(now, &state->interval, &state->first_above_time);
 		goto not_ok_to_drop;
 	}
 
-	if (timercmp(now, &state->first_above_time, <))
+	if (timespeccmp(now, &state->first_above_time, <))
 		goto not_ok_to_drop;
 
 	/* Ok to drop */
@@ -134,14 +135,14 @@ int gprs_codel_control(struct gprs_codel *state, const struct timeval *recv,
 	if (!state->dropping) {
 		int recently = 0;
 		int in_drop_cycle = 0;
-		if (timerisset(&state->drop_next)) {
-			timersub(now, &state->drop_next, &delta);
-			in_drop_cycle = timercmp(&delta, &state->interval, <);
+		if (timespecisset(&state->drop_next)) {
+			timespecsub(now, &state->drop_next, &delta);
+			in_drop_cycle = timespeccmp(&delta, &state->interval, <);
 			recently = in_drop_cycle;
 		}
 		if (!recently) {
-			timersub(now, &state->first_above_time, &delta);
-			recently = !timercmp(&delta, &state->interval, <);
+			timespecsub(now, &state->first_above_time, &delta);
+			recently = !timespeccmp(&delta, &state->interval, <);
 		};
 		if (!recently)
 			return 0;
@@ -155,24 +156,24 @@ int gprs_codel_control(struct gprs_codel *state, const struct timeval *recv,
 
 		state->drop_next = *now;
 	} else {
-		if (timercmp(now, &state->drop_next, <))
+		if (timespeccmp(now, &state->drop_next, <))
 			return 0;
 
 		state->count += 1;
 	}
 
 	control_law(state, &delta);
-	timeradd(&state->drop_next, &delta, &state->drop_next);
+	timespecadd(&state->drop_next, &delta, &state->drop_next);
 
 #if 1
 	LOGP(DRLCMAC, LOGL_INFO,
 		"CoDel decided to drop packet, window = %d.%03dms, count = %d\n",
-		(int)delta.tv_sec, (int)(delta.tv_usec / 1000), state->count);
+		(int)delta.tv_sec, (int)(delta.tv_nsec / 1000000), state->count);
 #endif
 	return 1;
 
 stop_dropping:
-	timerclear(&state->first_above_time);
+	timespecclear(&state->first_above_time);
 not_ok_to_drop:
 	state->dropping = 0;
 	return 0;

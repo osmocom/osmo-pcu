@@ -37,6 +37,8 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 }
 #include <gprs_debug.h>
 
+#include <time.h>
+
 #define QOS_PROFILE 4
 #define BSSGP_HDR_LEN 53
 #define NS_HDR_LEN 4
@@ -57,7 +59,7 @@ struct gprs_bssgp_pcu {
 	int bvc_unblocked;
 
 	/* Flow control */
-	struct timeval queue_delay_sum;
+	struct timespec queue_delay_sum;
 	unsigned queue_delay_count;
 	uint8_t fc_tag;
 	unsigned queue_frames_sent;
@@ -87,8 +89,8 @@ void gprs_bssgp_destroy(void);
 
 struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void);
 
-void gprs_bssgp_update_queue_delay(const struct timeval *tv_recv,
-		const struct timeval *tv_now);
+void gprs_bssgp_update_queue_delay(const struct timespec *tv_recv,
+		const struct timespec *tv_now);
 void gprs_bssgp_update_frames_sent();
 void gprs_bssgp_update_bytes_received(unsigned bytes_recv, unsigned frames_recv);
 

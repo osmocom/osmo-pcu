@@ -42,11 +42,12 @@ extern "C" {
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 bool spoof_mnc_3_digits = false;
+static struct timespec *clk_mono_override_time;
 
 static void enqueue_data(gprs_llc_queue *queue, const uint8_t *data, size_t len,
-			 const struct timeval *expire_time)
+			 const struct timespec *expire_time)
 {
-	struct timeval *tv;
+	struct timespec *tv;
 	uint8_t *msg_data;
 	struct msgb *llc_msg = msgb_alloc(len + sizeof(*tv) * 2,
 		"llc_pdu_queue");
@@ -81,7 +82,7 @@ static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
 }
 
 static void enqueue_data(gprs_llc_queue *queue, const char *message,
-			 const struct timeval *expire_time)
+			 const struct timespec *expire_time)
 {
 	enqueue_data(queue, (uint8_t *)(message), strlen(message), expire_time);
 }
@@ -96,7 +97,7 @@ static void dequeue_and_check(gprs_llc_queue *queue, const char *exp_message,
 static void test_llc_queue()
 {
 	gprs_llc_queue queue;
-	struct timeval expire_time = {0};
+	struct timespec expire_time = {0};
 
 	printf("=== start %s ===\n", __func__);
 
@@ -144,17 +145,17 @@ static void test_llc_meta()
 	OSMO_ASSERT(queue.octets() == 0);
 
 	info1.recv_time.tv_sec = 123456777;
-	info1.recv_time.tv_usec = 123456;
+	info1.recv_time.tv_nsec = 123456000;
 	info1.expire_time.tv_sec = 123456789;
-	info1.expire_time.tv_usec = 987654;
-	osmo_gettimeofday_override_time = info1.recv_time;
+	info1.expire_time.tv_nsec = 987654000;
+	*clk_mono_override_time = info1.recv_time;
 	enqueue_data(&queue, "LLC message 1", &info1.expire_time);
 
 	info2.recv_time.tv_sec = 123458000;
-	info2.recv_time.tv_usec = 547352;
+	info2.recv_time.tv_nsec = 547352000;
 	info2.expire_time.tv_sec = 123458006;
-	info2.expire_time.tv_usec = 867252;
-	osmo_gettimeofday_override_time = info2.recv_time;
+	info2.expire_time.tv_nsec = 867252000;
+	*clk_mono_override_time = info2.recv_time;
 	enqueue_data(&queue, "LLC message 2", &info2.expire_time);
 
 	dequeue_and_check(&queue, "LLC message 1", &info1);
@@ -171,26 +172,26 @@ static void test_llc_merge()
 {
 	gprs_llc_queue queue1;
 	gprs_llc_queue queue2;
-	struct timeval expire_time = {0};
+	struct timespec expire_time = {0};
 
 	printf("=== start %s ===\n", __func__);
 
 	queue1.init();
 	queue2.init();
 
-	osmo_gettimeofday_override_time.tv_sec += 1;
+	clk_mono_override_time->tv_sec += 1;
 	enqueue_data(&queue1, "*A*", &expire_time);
 
-	osmo_gettimeofday_override_time.tv_sec += 1;
+	clk_mono_override_time->tv_sec += 1;
 	enqueue_data(&queue1, "*B*", &expire_time);
 
-	osmo_gettimeofday_override_time.tv_sec += 1;
+	clk_mono_override_time->tv_sec += 1;
 	enqueue_data(&queue2, "*C*", &expire_time);
 
-	osmo_gettimeofday_override_time.tv_sec += 1;
+	clk_mono_override_time->tv_sec += 1;
 	enqueue_data(&queue1, "*D*", &expire_time);
 
-	osmo_gettimeofday_override_time.tv_sec += 1;
+	clk_mono_override_time->tv_sec += 1;
 	enqueue_data(&queue2, "*E*", &expire_time);
 
 	OSMO_ASSERT(queue1.size() == 3);
@@ -235,9 +236,10 @@ int main(int argc, char **argv)
 	vty_init(&pcu_vty_info);
 	pcu_vty_init();
 
-	osmo_gettimeofday_override = true;
-	osmo_gettimeofday_override_time.tv_sec = 123456777;
-	osmo_gettimeofday_override_time.tv_usec = 123456;
+	osmo_clock_override_enable(CLOCK_MONOTONIC, true);
+	clk_mono_override_time = osmo_clock_override_gettimespec(CLOCK_MONOTONIC);
+	clk_mono_override_time->tv_sec = 123456777;
+	clk_mono_override_time->tv_nsec = 123456000;
 
 	test_llc_queue();
 	test_llc_meta();

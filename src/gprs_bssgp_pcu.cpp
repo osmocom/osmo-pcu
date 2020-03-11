@@ -662,16 +662,16 @@ static uint32_t compute_bucket_size(struct gprs_rlcmac_bts *bts,
 
 static uint32_t get_and_reset_avg_queue_delay(void)
 {
-	struct timeval *delay_sum = &the_pcu.queue_delay_sum;
+	struct timespec *delay_sum = &the_pcu.queue_delay_sum;
 	uint32_t delay_sum_ms = delay_sum->tv_sec * 1000 +
-			delay_sum->tv_usec / 1000000;
+			delay_sum->tv_nsec / 1000000000;
 	uint32_t avg_delay_ms = 0;
 
 	if (the_pcu.queue_delay_count > 0)
 		avg_delay_ms = delay_sum_ms / the_pcu.queue_delay_count;
 
 	/* Reset accumulator */
-	delay_sum->tv_sec = delay_sum->tv_usec = 0;
+	delay_sum->tv_sec = delay_sum->tv_nsec = 0;
 	the_pcu.queue_delay_count = 0;
 
 	return avg_delay_ms;
@@ -1024,14 +1024,14 @@ void gprs_bssgp_update_bytes_received(unsigned bytes_recv, unsigned frames_recv)
 	the_pcu.queue_frames_recv += frames_recv;
 }
 
-void gprs_bssgp_update_queue_delay(const struct timeval *tv_recv,
-	const struct timeval *tv_now)
+void gprs_bssgp_update_queue_delay(const struct timespec *tv_recv,
+	const struct timespec *tv_now)
 {
-	struct timeval *delay_sum = &the_pcu.queue_delay_sum;
-	struct timeval tv_delay;
+	struct timespec *delay_sum = &the_pcu.queue_delay_sum;
+	struct timespec tv_delay;
 
-	timersub(tv_now, tv_recv, &tv_delay);
-	timeradd(delay_sum, &tv_delay, delay_sum);
+	timespecsub(tv_now, tv_recv, &tv_delay);
+	timespecadd(delay_sum, &tv_delay, delay_sum);
 
 	the_pcu.queue_delay_count += 1;
 }

@@ -98,9 +98,9 @@ void gprs_rlcmac_dl_tbf::cleanup()
 void gprs_rlcmac_dl_tbf::start_llc_timer()
 {
 	if (bts_data()->llc_idle_ack_csec > 0) {
-		struct timeval tv;
-		csecs_to_timeval(bts_data()->llc_idle_ack_csec, &tv);
-		osmo_timer_schedule(&m_llc_timer, tv.tv_sec, tv.tv_usec);
+		struct timespec tv;
+		csecs_to_timespec(bts_data()->llc_idle_ack_csec, &tv);
+		osmo_timer_schedule(&m_llc_timer, tv.tv_sec, tv.tv_nsec / 1000);
 	}
 }
 
@@ -108,7 +108,7 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 				const uint16_t pdu_delay_csec,
 				const uint8_t *data, const uint16_t len)
 {
-	struct timeval expire_time;
+	struct timespec expire_time;
 
 	LOGPTBFDL(this, LOGL_DEBUG, "appending %u bytes\n", len);
 
@@ -262,21 +262,21 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 {
 	struct msgb *msg;
-	struct timeval tv_now, tv_now2;
+	struct timespec tv_now, tv_now2;
 	uint32_t octets = 0, frames = 0;
-	struct timeval hyst_delta = {0, 0};
+	struct timespec hyst_delta = {0, 0};
 	const unsigned keep_small_thresh = 60;
 	const gprs_llc_queue::MetaInfo *info;
 
 	if (bts_data()->llc_discard_csec)
-		csecs_to_timeval(bts_data()->llc_discard_csec, &hyst_delta);
+		csecs_to_timespec(bts_data()->llc_discard_csec, &hyst_delta);
 
-	gettimeofday(&tv_now, NULL);
-	timeradd(&tv_now, &hyst_delta, &tv_now2);
+	osmo_clock_gettime(CLOCK_MONOTONIC, &tv_now);
+	timespecadd(&tv_now, &hyst_delta, &tv_now2);
 
 	while ((msg = llc_queue()->dequeue(&info))) {
-		const struct timeval *tv_disc = &info->expire_time;
-		const struct timeval *tv_recv = &info->recv_time;
+		const struct timespec *tv_disc = &info->expire_time;
+		const struct timespec *tv_recv = &info->recv_time;
 
 		gprs_bssgp_update_queue_delay(tv_recv, &tv_now);
 

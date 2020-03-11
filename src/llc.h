@@ -24,7 +24,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <string.h>
-#include <sys/time.h>
+#include <time.h>
 
 #define LLC_MAX_LEN 1543
 
@@ -63,19 +63,19 @@ struct gprs_llc {
  */
 struct gprs_llc_queue {
 	struct MetaInfo {
-		struct timeval recv_time;
-		struct timeval expire_time;
+		struct timespec recv_time;
+		struct timespec expire_time;
 	};
 
 	static void calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec,
-		struct timeval *tv);
-	static bool is_frame_expired(const struct timeval *now,
-		const struct timeval *tv);
+		struct timespec *tv);
+	static bool is_frame_expired(const struct timespec *now,
+		const struct timespec *tv);
 	static bool is_user_data_frame(uint8_t *data, size_t len);
 
 	void init();
 
-	void enqueue(struct msgb *llc_msg, const struct timeval *expire_time);
+	void enqueue(struct msgb *llc_msg, const struct timespec *expire_time);
 	struct msgb *dequeue(const MetaInfo **info = 0);
 	void clear(BTS *bts);
 	void move_and_merge(gprs_llc_queue *o);

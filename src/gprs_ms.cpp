@@ -33,6 +33,7 @@
 extern "C" {
 	#include <osmocom/core/talloc.h>
 	#include <osmocom/core/utils.h>
+	#include <osmocom/core/timer.h>
 	#include <osmocom/gsm/protocol/gsm_04_08.h>
 	#include <osmocom/core/logging.h>
 	#include "coding_scheme.h"
@@ -45,7 +46,7 @@ extern void *tall_pcu_ctx;
 static int64_t now_msec()
 {
 	struct timespec ts;
-	clock_gettime(CLOCK_MONOTONIC, &ts);
+	osmo_clock_gettime(CLOCK_MONOTONIC, &ts);
 
 	return int64_t(ts.tv_sec) * 1000 + ts.tv_nsec / 1000000;
 }
