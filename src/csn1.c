@@ -168,14 +168,14 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
         {
           pui8  = pui8DATA(data, pDescr->offset);
 	  *pui8 = bitvec_read_field(vector, readIndex, 1);
-          LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
           /* end add the bit value to protocol tree */
         }
         else if(pDescr->may_be_null)
         {
            pui8  = pui8DATA(data, pDescr->offset);
            *pui8 = 0;
-           LOGPC(DCSN1, LOGL_NOTICE, "%s = NULL | ", pDescr->sz);
+           LOGPC(DCSN1, LOGL_DEBUG, "%s = NULL | ", pDescr->sz);
         }
         else
         {
@@ -206,21 +206,21 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 	    guint8 ui8 = bitvec_read_field(vector, readIndex, no_of_bits);
             pui8      = pui8DATA(data, pDescr->offset);
             *pui8     = ui8;
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
           }
           else if (no_of_bits <= 16)
           {
 	    guint16 ui16 = bitvec_read_field(vector, readIndex, no_of_bits);
             pui16       = pui16DATA(data, pDescr->offset);
             *pui16      = ui16;
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , *pui16);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , *pui16);
           }
           else if (no_of_bits <= 32)
           {
 	    guint32 ui32 = bitvec_read_field(vector, readIndex, no_of_bits);
             pui32       = pui32DATA(data, pDescr->offset);
             *pui32      = ui32;
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = 0x%08x | ", pDescr->sz , *pui32);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = 0x%08x | ", pDescr->sz , *pui32);
           }
           else
           {
@@ -246,7 +246,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
             pui32      = pui32DATA(data, pDescr->offset);
             *pui32     = 0;
           }
-          LOGPC(DCSN1, LOGL_NOTICE, "%s = NULL | ", pDescr->sz);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s = NULL | ", pDescr->sz);
         }
         else
         {
@@ -268,21 +268,21 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 	    guint8 ui8 = bitvec_read_field(vector, readIndex, no_of_bits);
             pui8      = pui8DATA(data, pDescr->offset);
             *pui8     = ui8 + (guint8)pDescr->descr.value;
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
           }
           else if (no_of_bits <= 16)
           {
 	    guint16 ui16 = bitvec_read_field(vector, readIndex, no_of_bits);
             pui16       = pui16DATA(data, pDescr->offset);
             *pui16      = ui16 + (guint16)pDescr->descr.value;
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , *pui16);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , *pui16);
           }
           else if (no_of_bits <= 32)
           {
 	    guint32 ui32 = bitvec_read_field(vector, readIndex, no_of_bits);
             pui32       = pui32DATA(data, pDescr->offset);
             *pui32      = ui32 + (guint16)pDescr->descr.value;
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , *pui32);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , *pui32);
           }
           else
           {
@@ -311,7 +311,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 	    guint8 ui8 = get_masked_bits8(vector, readIndex, bit_offset, no_of_bits);
             pui8      = pui8DATA(data, pDescr->offset);
             *pui8     = ui8;
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
           }
           else
           {/* Maybe we should support more than 8 bits ? */
@@ -348,7 +348,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
             do
             {
 	      *pui8 = bitvec_read_field(vector, readIndex, no_of_bits);
-              LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
               bit_offset += no_of_bits;
             } while (--nCount > 0);
@@ -399,7 +399,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
            * but no bits shall be read from bitstream
            */
 
-          LOGPC(DCSN1, LOGL_NOTICE, "%s | ", pDescr->sz);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s | ", pDescr->sz);
           csnStreamInit(&arT, bit_offset, remaining_bits_len);
 	  Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pui8);
           if (Status >= 0)
@@ -433,7 +433,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 	      guint8 ui8 = bitvec_read_field(vector, readIndex, 8);
               pui8      = pui8DATA(data, pDescr->offset+ib);
               *pui8      = ui8;
-               LOGPC(DCSN1, LOGL_NOTICE, "%s[%u] = %u | ", pDescr->sz , ib, (unsigned)*pui8);
+               LOGPC(DCSN1, LOGL_DEBUG, "%s[%u] = %u | ", pDescr->sz , ib, (unsigned)*pui8);
             }
           }
           else if (no_of_bits <= 64)
@@ -443,7 +443,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 	      guint8 ui8 = bitvec_read_field(vector, readIndex, 8);
               pui8      = pui8DATA(data, pDescr->offset+ib);
               *pui8      = ui8;
-               LOGPC(DCSN1, LOGL_NOTICE, "%s[%u] = %u | ", pDescr->sz , ib, (unsigned)*pui8);
+               LOGPC(DCSN1, LOGL_DEBUG, "%s[%u] = %u | ", pDescr->sz , ib, (unsigned)*pui8);
             }
           }
           else
@@ -465,10 +465,10 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
       {
         gint16      Status;
         csnStream_t arT = *ar;
-        LOGPC(DCSN1, LOGL_NOTICE, " : %s | ", pDescr->sz);
+        LOGPC(DCSN1, LOGL_DEBUG, " : %s | ", pDescr->sz);
         csnStreamInit(&arT, bit_offset, remaining_bits_len);
 	Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pvDATA(data, pDescr->offset));
-        LOGPC(DCSN1, LOGL_NOTICE, ": End %s | ", pDescr->sz);
+        LOGPC(DCSN1, LOGL_DEBUG, ": End %s | ", pDescr->sz);
         if (Status >= 0)
         {
           remaining_bits_len  = arT.remaining_bits_len;
@@ -509,7 +509,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
             descr[1].type = CSN_END;
             pui8          = pui8DATA(data, pDescr->offset);
             *pui8         = i;
-            LOGPC(DCSN1, LOGL_NOTICE, "Choice %s = %u | ", pDescr->sz , (unsigned)value);
+            LOGPC(DCSN1, LOGL_DEBUG, "Choice %s = %u | ", pDescr->sz , (unsigned)value);
             if (!pChoice->keep_bits) {
               bit_offset += no_of_bits;
               remaining_bits_len -= no_of_bits;
@@ -553,13 +553,13 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
 	guint8 length = bitvec_read_field(vector, readIndex, length_len);
 
-        LOGPC(DCSN1, LOGL_NOTICE, "%s length = %u | ", pDescr->sz , length);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s length = %u | ", pDescr->sz , length);
         bit_offset += length_len;
         remaining_bits_len -= length_len;
 
         csnStreamInit(&arT, bit_offset, length > 0 ? length : remaining_bits_len);
         arT.direction = 1;
-        LOGPC(DCSN1, LOGL_NOTICE, "offset = %u | ", pDescr->offset);
+        LOGPC(DCSN1, LOGL_DEBUG, "offset = %u | ", pDescr->offset);
 	Status = serialize(&arT, vector, readIndex, pvDATA(data, pDescr->offset));
 
         if (Status >= 0)
@@ -574,7 +574,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
           /* Skip bits not handled by serialize(), if any */
           if (Status > 0) {
-            LOGPC(DCSN1, LOGL_NOTICE, "skipped = %d | ", Status);
+            LOGPC(DCSN1, LOGL_DEBUG, "skipped = %d | ", Status);
             *readIndex += Status;
           }
 
@@ -631,7 +631,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
         /* script index to continue on, limited in case we do not have a power of 2 */
         pDescr += (MIN(index + 1, count));
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
 
         switch (pDescr->type)
         { /* get the right element of the union based on computed index */
@@ -644,7 +644,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
             {
               *pui8 = 0x01;
             }
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
             remaining_bits_len -= 1;
             bit_offset++;
             pDescr++;
@@ -668,21 +668,21 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 		guint8 ui8 = bitvec_read_field(vector, readIndex,  no_of_bits);
                 pui8       = pui8DATA(data, pDescr->offset);
                 *pui8      = ui8;
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               }
               else if (no_of_bits <= 16)
               {
 		guint16 ui16 = bitvec_read_field(vector, readIndex,  no_of_bits);
                 pui16        = pui16DATA(data, pDescr->offset);
                 *pui16       = ui16;
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , *pui16);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , *pui16);
               }
               else if (no_of_bits <= 32)
               {
 		guint32 ui32 = bitvec_read_field(vector, readIndex,  no_of_bits);
                 pui32       = pui32DATA(data, pDescr->offset);
                 *pui32      = ui32;
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , *pui32);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , *pui32);
               }
               else
               {
@@ -711,21 +711,21 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 		guint8 ui8 = bitvec_read_field(vector, readIndex,  no_of_bits);
                 pui8      = pui8DATA(data, pDescr->offset);
                 *pui8     = ui8 + (guint8)pDescr->descr.value;
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               }
               else if (no_of_bits <= 16)
               {
 		guint16 ui16 = bitvec_read_field(vector, readIndex,  no_of_bits);
                 pui16       = pui16DATA(data, pDescr->offset);
                 *pui16      = ui16 + (guint16)pDescr->descr.value;
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , *pui16);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , *pui16);
               }
               else if (no_of_bits <= 32)
               {
 		guint32 ui32 = bitvec_read_field(vector, readIndex,  no_of_bits);
                 pui32       = pui32DATA(data, pDescr->offset);
                 *pui32      = ui32 + (guint16)pDescr->descr.value;
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , *pui32);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , *pui32);
               }
               else
               {
@@ -754,7 +754,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 		guint8 ui8 = get_masked_bits8(vector, readIndex, bit_offset, no_of_bits);
                 pui8      = pui8DATA(data, pDescr->offset);
                 *pui8     = ui8;
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               }
               else
               { /* Maybe we should support more than 8 bits ? */
@@ -792,7 +792,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
                 while (nCount > 0)
                 {
 		  *pui8 = bitvec_read_field(vector, readIndex,  no_of_bits);
-                  LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+                  LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
                   pui8++;
                   bit_offset += no_of_bits;
                   nCount--;
@@ -805,7 +805,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
                 while (nCount > 0)
                 {
 		 *pui16 = bitvec_read_field(vector, readIndex,  no_of_bits);
-                  LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , *pui16);
+                  LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , *pui16);
                   pui16++;
                   bit_offset += no_of_bits;
                   nCount--;
@@ -852,7 +852,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
             while (nCount--)    /* Changed to handle length = 0.  */
             {
-              LOGPC(DCSN1, LOGL_NOTICE, "%s | ", pDescr->sz);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s | ", pDescr->sz);
               csnStreamInit(&arT, bit_offset, remaining_bits_len);
 	      Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pui8);
               if (Status >= 0)
@@ -889,7 +889,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 		guint64 ui64 = bitvec_read_field(vector, readIndex, no_of_bits);
                 pui64       = pui64DATA(data, pDescr->offset);
                 *pui64      = ui64;
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %lu | ", pDescr->sz , *pui64);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %lu | ", pDescr->sz , *pui64);
               }
               else
               {
@@ -910,10 +910,10 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           {
             gint16      Status;
             csnStream_t arT = *ar;
-            LOGPC(DCSN1, LOGL_NOTICE, " : %s | ", pDescr->sz);
+            LOGPC(DCSN1, LOGL_DEBUG, " : %s | ", pDescr->sz);
             csnStreamInit(&arT, bit_offset, remaining_bits_len);
 	    Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pvDATA(data, pDescr->offset));
-            LOGPC(DCSN1, LOGL_NOTICE, " : End %s | ", pDescr->sz);
+            LOGPC(DCSN1, LOGL_DEBUG, " : End %s | ", pDescr->sz);
             if (Status >= 0)
             {
               remaining_bits_len = arT.remaining_bits_len;
@@ -955,7 +955,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
         }
 
         *pui8 = fExist;
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
         pDescr++;
         bit_offset++;
         remaining_bits_len -= 1;
@@ -998,7 +998,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
         *pui8     = fExist;
         remaining_bits_len -= 1;
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
         ++bit_offset;
 
         if (fExist == 0)
@@ -1035,7 +1035,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
         /* the "regular" M_NEXT_EXIST_LH description element */
         fExist = get_masked_bits8(vector, readIndex, bit_offset, 1);
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)fExist);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)fExist);
         *pui8++   = fExist;
         remaining_bits_len -= 1;
 
@@ -1085,7 +1085,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
             if (nB1 > 0)
             { /* take care of the first byte - it will be right aligned */
 	      *pui8 = bitvec_read_field(vector, readIndex, nB1);
-              LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
               no_of_bits  -= nB1;
               bit_offset += nB1; /* (nB1 is no_of_bits Mod 8) */
@@ -1095,7 +1095,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
             while (no_of_bits > 0)
             {
 	      *pui8 = bitvec_read_field(vector, readIndex, 8);
-              LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
               no_of_bits -= 8;
             }
@@ -1139,14 +1139,14 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
             while (no_of_bits >= 8)
             {
 	      *pui8 = bitvec_read_field(vector, readIndex, 8);
-              LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
               no_of_bits -= 8;
             }
             if (no_of_bits > 0)
             { 
 	      *pui8 = bitvec_read_field(vector, readIndex, no_of_bits);
-              LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
               bit_offset += no_of_bits;
               no_of_bits = 0;
@@ -1161,7 +1161,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
       case CSN_PADDING_BITS:
       { /* Padding from here and to the end of message */
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = ", pDescr->sz);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = ", pDescr->sz);
         if (remaining_bits_len > 0)
         {
           while (remaining_bits_len > 0)
@@ -1169,13 +1169,13 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
             guint bits_to_handle = remaining_bits_len%8;
             if (bits_to_handle > 0)
             {
-              LOGPC(DCSN1, LOGL_NOTICE, "%d|", bitvec_get_uint(vector, bits_to_handle));
+              LOGPC(DCSN1, LOGL_DEBUG, "%d|", bitvec_get_uint(vector, bits_to_handle));
               remaining_bits_len -= bits_to_handle;
               bit_offset += bits_to_handle;
             }
             else if (bits_to_handle == 0)
             {
-              LOGPC(DCSN1, LOGL_NOTICE, "%d|", bitvec_get_uint(vector, 8));
+              LOGPC(DCSN1, LOGL_DEBUG, "%d|", bitvec_get_uint(vector, 8));
               remaining_bits_len -= 8;
               bit_offset += 8;
             }
@@ -1217,7 +1217,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           {
             readIndex -= 8;
 	    *pui8 = bitvec_read_field(vector, readIndex, 8);
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
             pui8++;
             bit_offset += 8;
             count--;
@@ -1244,13 +1244,13 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
 	while (existNextElement(vector, readIndex, Tag))
         { /* tag control shows existence of next list elements */
-          LOGPC(DCSN1, LOGL_NOTICE, "%s = Exist | ", pDescr->sz);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s = Exist | ", pDescr->sz);
           bit_offset++;
           remaining_bits_len--;
 
           /* extract and store no_of_bits long element from bitstream */
 	  *pui8 = bitvec_read_field(vector, readIndex, no_of_bits);
-          LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
           pui8++;
           remaining_bits_len -= no_of_bits;
           ElementCount++;
@@ -1263,7 +1263,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           bit_offset += no_of_bits;
         }
 
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %d | ", pDescr->sz , bitvec_get_uint(vector, 1));
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %d | ", pDescr->sz , bitvec_get_uint(vector, 1));
         /* existNextElement() returned FALSE, 1 bit consumed */
         bit_offset++;
         remaining_bits_len--;
@@ -1286,7 +1286,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
 	while (existNextElement(vector, readIndex, Tag))
         { /* tag control shows existence of next list elements */
-          LOGPC(DCSN1, LOGL_NOTICE, "%s = Exist | ", pDescr->sz);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s = Exist | ", pDescr->sz);
           /* existNextElement() returned TRUE, 1 bit consumed */
           bit_offset++;
           remaining_bits_len--;
@@ -1316,7 +1316,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           }
         }
 
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %d | ", pDescr->sz , bitvec_get_uint(vector, 1));
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %d | ", pDescr->sz , bitvec_get_uint(vector, 1));
 
         /* existNextElement() returned FALSE, 1 bit consumed */
         remaining_bits_len--;
@@ -1355,7 +1355,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
         { /* get data element */
           ElementCount++;
 
-          LOGPC(DCSN1, LOGL_NOTICE, "%s { | ", pDescr->sz);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s { | ", pDescr->sz);
 
           csnStreamInit(&arT, bit_offset, remaining_bits_len);
 	  Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pui8);
@@ -1377,7 +1377,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           }
 
           /* control of next element's tag */
-          LOGPC(DCSN1, LOGL_NOTICE, "%s } | ", pDescr->sz);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s } | ", pDescr->sz);
 	  EndOfList         = !(existNextElement(vector, readIndex, Tag));
 
           bit_offset++;
@@ -1410,7 +1410,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           return ProcessError(readIndex,"csnStreamDecoder FIXED value does not match", -1, pDescr);
         }
 
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned int)ui32);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned int)ui32);
         remaining_bits_len   -= no_of_bits;
         bit_offset += no_of_bits;
         pDescr++;
@@ -1478,12 +1478,12 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
         {
           pui8  = pui8DATA(data, pDescr->offset);
 	  bitvec_write_field(vector, writeIndex, *pui8, 1);
-          LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
           /* end add the bit value to protocol tree */
         }
         else if(pDescr->may_be_null)
         {
-           LOGPC(DCSN1, LOGL_NOTICE, "%s = NULL | ", pDescr->sz);
+           LOGPC(DCSN1, LOGL_DEBUG, "%s = NULL | ", pDescr->sz);
         }
         else
         {
@@ -1512,19 +1512,19 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
           {
             pui8      = pui8DATA(data, pDescr->offset);
 	    bitvec_write_field(vector, writeIndex, *pui8, no_of_bits);
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
           }
           else if (no_of_bits <= 16)
           {
             pui16       = pui16DATA(data, pDescr->offset);
 	    bitvec_write_field(vector, writeIndex, *pui16, no_of_bits);
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , *pui16);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , *pui16);
           }
           else if (no_of_bits <= 32)
           {
             pui32       = pui32DATA(data, pDescr->offset);
 	    bitvec_write_field(vector, writeIndex, *pui32, no_of_bits);
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , *pui32);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , *pui32);
           }
           else
           {
@@ -1536,7 +1536,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
         }
         else if(pDescr->may_be_null)
         {
-          LOGPC(DCSN1, LOGL_NOTICE, "%s = NULL | ", pDescr->sz);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s = NULL | ", pDescr->sz);
         }
         else
         {
@@ -1557,19 +1557,19 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
           {
             pui8      = pui8DATA(data, pDescr->offset);
 	    bitvec_write_field(vector, writeIndex, *pui8 - (guint8)pDescr->descr.value, no_of_bits);
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)(*pui8 - (guint8)pDescr->descr.value));
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)(*pui8 - (guint8)pDescr->descr.value));
           }
           else if (no_of_bits <= 16)
           {
             pui16       = pui16DATA(data, pDescr->offset);
 	    bitvec_write_field(vector, writeIndex, *pui16 - (guint16)pDescr->descr.value, no_of_bits);
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned short)(*pui16 - (guint16)pDescr->descr.value));
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned short)(*pui16 - (guint16)pDescr->descr.value));
           }
           else if (no_of_bits <= 32)
           {
             pui32       = pui32DATA(data, pDescr->offset);
 	    bitvec_write_field(vector, writeIndex, *pui32 - (guint16)pDescr->descr.value, no_of_bits);
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned int)(*pui32 - (guint16)pDescr->descr.value));
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned int)(*pui32 - (guint16)pDescr->descr.value));
           }
           else
           {
@@ -1602,7 +1602,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
             guint8 ui8 = get_masked_bits8(vector, writeIndex, bit_offset, no_of_bits);
             *writeIndex -= no_of_bits;
 	    bitvec_write_field(vector, writeIndex, ui8, no_of_bits);
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
 
           }
           else
@@ -1639,7 +1639,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
             do
             {
 	      bitvec_write_field(vector, writeIndex, *pui8, no_of_bits);
-              LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
               remaining_bits_len -= no_of_bits;
               bit_offset += no_of_bits;
@@ -1691,7 +1691,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
            * but no bits shall be read from bitstream
            */
 
-          LOGPC(DCSN1, LOGL_NOTICE, "%s : | ", pDescr->sz);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s : | ", pDescr->sz);
           csnStreamInit(&arT, bit_offset, remaining_bits_len);
           Status = csnStreamEncoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, writeIndex, pui8);
           if (Status >= 0)
@@ -1725,7 +1725,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
             {
               pui8      = pui8DATA(data, pDescr->offset+ib);
 	      bitvec_write_field(vector, writeIndex, *pui8, 8);
-              LOGPC(DCSN1, LOGL_NOTICE, "%s[%u] = %u | ", pDescr->sz , ib, (unsigned)*pui8);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s[%u] = %u | ", pDescr->sz , ib, (unsigned)*pui8);
             }
           }
           else if (no_of_bits <= 64)
@@ -1734,7 +1734,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
             {
               pui8      = pui8DATA(data, pDescr->offset+ib);
 	      bitvec_write_field(vector, writeIndex, *pui8, 8);
-              LOGPC(DCSN1, LOGL_NOTICE, "%s[%u] = %u | ", pDescr->sz , ib, (unsigned)*pui8);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s[%u] = %u | ", pDescr->sz , ib, (unsigned)*pui8);
             }
           }
           else
@@ -1756,10 +1756,10 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
       {
         gint16      Status;
         csnStream_t arT = *ar;
-        LOGPC(DCSN1, LOGL_NOTICE, " : %s | ", pDescr->sz);
+        LOGPC(DCSN1, LOGL_DEBUG, " : %s | ", pDescr->sz);
         csnStreamInit(&arT, bit_offset, remaining_bits_len);
         Status = csnStreamEncoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, writeIndex, pvDATA(data, pDescr->offset));
-        LOGPC(DCSN1, LOGL_NOTICE, " : End %s | ", pDescr->sz);
+        LOGPC(DCSN1, LOGL_DEBUG, " : End %s | ", pDescr->sz);
         if (Status >= 0)
         {
 
@@ -1787,7 +1787,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
         pChoice += i;
         guint8 no_of_bits = pChoice->bits;
         guint8 value = pChoice->value;
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pChoice->descr.sz , (unsigned)value);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pChoice->descr.sz , (unsigned)value);
 	bitvec_write_field(vector, writeIndex, value, no_of_bits);
 
         CSN_DESCR   descr[2];
@@ -1835,7 +1835,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
         Status = serialize(&arT, vector, writeIndex, pvDATA(data, pDescr->offset));
 
 	bitvec_write_field(vector, &lengthIndex, *writeIndex - lengthIndex - length_len, length_len);
-        LOGPC(DCSN1, LOGL_NOTICE, "%s length = %u | ", pDescr->sz , (unsigned)(*writeIndex - lengthIndex));
+        LOGPC(DCSN1, LOGL_DEBUG, "%s length = %u | ", pDescr->sz , (unsigned)(*writeIndex - lengthIndex));
 
         if (Status >= 0)
         {
@@ -1902,7 +1902,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
 
         /* script index to continue on, limited in case we do not have a power of 2 */
         pDescr += (MIN(index + 1, count));
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)index);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)index);
 
         switch (pDescr->type)
         { /* get the right element of the union based on computed index */
@@ -1911,7 +1911,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
           {
             pui8  = pui8DATA(data, pDescr->offset);
 	    bitvec_write_field(vector, writeIndex, *pui8, 1);
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
             remaining_bits_len--;
             bit_offset++;
             pDescr++;
@@ -1933,19 +1933,19 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
               {
                 pui8      = pui8DATA(data, pDescr->offset);
 		bitvec_write_field(vector, writeIndex, *pui8, no_of_bits);
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               }
               else if (no_of_bits <= 16)
               {
                 pui16       = pui16DATA(data, pDescr->offset);
 		bitvec_write_field(vector, writeIndex, *pui16, no_of_bits);
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , *pui16);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , *pui16);
               }
               else if (no_of_bits <= 32)
               {
                 pui32       = pui32DATA(data, pDescr->offset);
 		bitvec_write_field(vector, writeIndex, *pui32, no_of_bits);
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , *pui32);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , *pui32);
               }
               else
               {
@@ -1973,19 +1973,19 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
               {
                 pui8      = pui8DATA(data, pDescr->offset);
 		bitvec_write_field(vector, writeIndex, *pui8 - (guint8)pDescr->descr.value, no_of_bits);
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)(*pui8 - (guint8)pDescr->descr.value));
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)(*pui8 - (guint8)pDescr->descr.value));
               }
               else if (no_of_bits <= 16)
               {
                 pui16       = pui16DATA(data, pDescr->offset);
 		bitvec_write_field(vector, writeIndex, *pui16 - (guint16)pDescr->descr.value, no_of_bits);
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned short)(*pui16 - (guint16)pDescr->descr.value));
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned short)(*pui16 - (guint16)pDescr->descr.value));
               }
               else if (no_of_bits <= 32)
               {
                 pui32       = pui32DATA(data, pDescr->offset);
 		bitvec_write_field(vector, writeIndex, *pui32 - (guint16)pDescr->descr.value, no_of_bits);
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned int)(*pui32 - (guint16)pDescr->descr.value));
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned int)(*pui32 - (guint16)pDescr->descr.value));
               }
               else
               {
@@ -2019,7 +2019,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
                 guint8 ui8 = get_masked_bits8(vector, writeIndex, bit_offset, no_of_bits);
                 *writeIndex -= no_of_bits;
 		bitvec_write_field(vector, writeIndex, ui8, no_of_bits);
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
 
               }
               else
@@ -2056,7 +2056,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
                 do
                 {
 		  bitvec_write_field(vector, writeIndex, *pui8, no_of_bits);
-                  LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+                  LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
                   pui8++;
                   remaining_bits_len -= no_of_bits;
                   bit_offset += no_of_bits;
@@ -2108,7 +2108,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
                * but no bits shall be read from bitstream
                */
 
-              LOGPC(DCSN1, LOGL_NOTICE, "%s : | ", pDescr->sz);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s : | ", pDescr->sz);
               csnStreamInit(&arT, bit_offset, remaining_bits_len);
               Status = csnStreamEncoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, writeIndex, pui8);
               if (Status >= 0)
@@ -2139,13 +2139,13 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
               {
                 pui32 = pui32DATA(data, pDescr->offset);
 		bitvec_write_field(vector, writeIndex, *pui32, no_of_bits);
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , *pui32);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , *pui32);
               }
               else if (no_of_bits <= 64)
               {
                 pui64 = pui64DATA(data, pDescr->offset);
 		bitvec_write_field(vector, writeIndex, *pui64, no_of_bits);
-                LOGPC(DCSN1, LOGL_NOTICE, "%s = %lu | ", pDescr->sz , *pui64);
+                LOGPC(DCSN1, LOGL_DEBUG, "%s = %lu | ", pDescr->sz , *pui64);
               }
               else
               {
@@ -2166,10 +2166,10 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
           {
             gint16      Status;
             csnStream_t arT = *ar;
-            LOGPC(DCSN1, LOGL_NOTICE, " : %s | ", pDescr->sz);
+            LOGPC(DCSN1, LOGL_DEBUG, " : %s | ", pDescr->sz);
             csnStreamInit(&arT, bit_offset, remaining_bits_len);
             Status = csnStreamEncoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, writeIndex, pvDATA(data, pDescr->offset));
-            LOGPC(DCSN1, LOGL_NOTICE, " : End %s | ", pDescr->sz);
+            LOGPC(DCSN1, LOGL_DEBUG, " : End %s | ", pDescr->sz);
             if (Status >= 0)
             {
               remaining_bits_len  = arT.remaining_bits_len;
@@ -2214,7 +2214,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
         }
         writeIndex--;
 	bitvec_write_field(vector, writeIndex, fExist, 1);
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz, (unsigned)fExist);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz, (unsigned)fExist);
         remaining_bits_len--;
         bit_offset++;
         pDescr++;
@@ -2246,7 +2246,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
 
 	bitvec_write_field(vector, writeIndex, *pui8, 1);
         fExist = *pui8;
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
 
         remaining_bits_len--;
         bit_offset++;
@@ -2331,7 +2331,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
             if (nB1 > 0)
             { /* take care of the first byte - it will be right aligned */
 	      bitvec_write_field(vector, writeIndex, *pui8, nB1);
-              LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
               no_of_bits  -= nB1;
               bit_offset += nB1; /* (nB1 is no_of_bits Mod 8) */
@@ -2342,7 +2342,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
             while (no_of_bits > 0)
             {
 	      bitvec_write_field(vector, writeIndex, *pui8, 8);
-              LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
               no_of_bits -= 8;
               remaining_bits_len -= 8;
@@ -2389,14 +2389,14 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
             while (no_of_bits > 0)
             {
 	      bitvec_write_field(vector, writeIndex, *pui8, 8);
-              LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
               no_of_bits -= 8;
             }
             if (nB1 > 0)
             {
 	      bitvec_write_field(vector, writeIndex, *pui8, nB1);
-              LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+              LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
               no_of_bits  -= nB1;
               bit_offset += nB1; /* (nB1 is no_of_bits Mod 8) */
@@ -2412,7 +2412,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
 
       case CSN_PADDING_BITS:
       { /* Padding from here and to the end of message */
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = ", pDescr->sz);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = ", pDescr->sz);
         guint8 filler = 0x2b;
         if (remaining_bits_len > 0)
         {
@@ -2428,14 +2428,14 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
               */
               guint8 fl = filler&(0xff>>(8-bits_to_handle + 1));
 	      bitvec_write_field(vector, writeIndex, fl, bits_to_handle);
-              LOGPC(DCSN1, LOGL_NOTICE, "%u|", fl);
+              LOGPC(DCSN1, LOGL_DEBUG, "%u|", fl);
               remaining_bits_len -= bits_to_handle;
               bit_offset += bits_to_handle;
             }
             else if (bits_to_handle == 0)
             {
 	      bitvec_write_field(vector, writeIndex, filler, 8);
-              LOGPC(DCSN1, LOGL_NOTICE, "%u|", filler);
+              LOGPC(DCSN1, LOGL_DEBUG, "%u|", filler);
               remaining_bits_len -= 8;
               bit_offset += 8;
             }
@@ -2474,7 +2474,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
           while (count > 0)
           {
 	    bitvec_write_field(vector, writeIndex, *pui8, 8);
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
             pui8++;
             bit_offset += 8;
             remaining_bits_len -= 8;
@@ -2502,13 +2502,13 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
         while (ElementCount > 0)
         { /* tag control shows existence of next list elements */
 	  bitvec_write_field(vector, writeIndex, Tag, 1);
-          LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)Tag);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)Tag);
           bit_offset++;
           remaining_bits_len--;
 
           /* extract and store no_of_bits long element from bitstream */
 	  bitvec_write_field(vector, writeIndex, *pui8, no_of_bits);
-          LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
           pui8++;
           ElementCount--;
 
@@ -2522,7 +2522,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
         }
 
 	bitvec_write_field(vector, writeIndex, !Tag, 1);
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)(!Tag));
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)(!Tag));
         bit_offset++;
         remaining_bits_len--;
 
@@ -2544,7 +2544,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
         while (ElementCount > 0)
         { /* tag control shows existence of next list elements */
 	  bitvec_write_field(vector, writeIndex, Tag, 1);
-          LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)Tag);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)Tag);
           bit_offset++;
 
           remaining_bits_len--;
@@ -2575,7 +2575,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
         }
 
 	bitvec_write_field(vector, writeIndex, !Tag, 1);
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)(!Tag));
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)(!Tag));
         bit_offset++;
 
         pDescr++;
@@ -2613,15 +2613,15 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
           if (ElementCount != ElementNum)
           {
 	    bitvec_write_field(vector, writeIndex, Tag, 1);
-            LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)Tag);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)Tag);
             bit_offset++;
             remaining_bits_len--;
           }
           ElementCount--;
-          LOGPC(DCSN1, LOGL_NOTICE, "%s { | ", pDescr->sz);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s { | ", pDescr->sz);
           csnStreamInit(&arT, bit_offset, remaining_bits_len);
           Status = csnStreamEncoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, writeIndex, pui8);
-          LOGPC(DCSN1, LOGL_NOTICE, "%s } | ", pDescr->sz);
+          LOGPC(DCSN1, LOGL_DEBUG, "%s } | ", pDescr->sz);
           if (Status >= 0)
           { /* successful completion */
             pui8    += nSizeElement;  /* -> to next */
@@ -2651,7 +2651,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
       { /* Verify the fixed bits */
         guint8  no_of_bits = (guint8) pDescr->i;
 	bitvec_write_field(vector, writeIndex, pDescr->offset, no_of_bits);
-        LOGPC(DCSN1, LOGL_NOTICE, "%s = %u | ", pDescr->sz , (unsigned)pDescr->offset);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)pDescr->offset);
         remaining_bits_len   -= no_of_bits;
         bit_offset += no_of_bits;
         pDescr++;
