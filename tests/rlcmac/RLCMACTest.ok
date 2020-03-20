@@ -146,3 +146,6 @@ decode_gsm_ra_cap() returns -5
 decode_gsm_ra_cap() returns 0
 *** testRAcap2 ***
 === Test decoding of multi-band MS RA Capability ===
+decode_gsm_ra_cap() returns 0
+GPRS multislot class = 12
+EGPRS multislot class = 12

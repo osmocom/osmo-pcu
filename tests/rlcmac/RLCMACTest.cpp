@@ -456,15 +456,16 @@ MS Radio Access Capability
 
 	printf("=== Test decoding of multi-band MS RA Capability ===\n");
 	rc = decode_gsm_ra_cap(bv_dec, &data);
-	OSMO_ASSERT(rc == CSN_ERROR_STREAM_NOT_SUPPORTED);
-#if 0
-	/* Make sure there's 1 value (currently fails due to failed decoding) */
+	printf("decode_gsm_ra_cap() returns %d\n", rc);
+	OSMO_ASSERT(rc == 0);
+
+	/* Make sure there's 3 values */
 	OSMO_ASSERT(data.Count_MS_RA_capability_value == 3);
 
 	/* Make sure GPRS / EGPRS multislot class is parsed correctly */
 	printf("GPRS multislot class = %u\n", Decoding::get_ms_class_by_capability(&data));
 	printf("EGPRS multislot class = %u\n", Decoding::get_egprs_ms_class_by_capability(&data));
-#endif
+
 	bitvec_free(bv_dec);
 }
 
