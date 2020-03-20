@@ -278,6 +278,9 @@ void testRAcap(void *test_ctx)
 	printf("=== Test decoding of a malformed vector (short length indicator) ===\n");
 	rc = decode_gsm_ra_cap(bv_dec, &data);
 	printf("decode_gsm_ra_cap() returns %d\n", rc);
+
+	bitvec_free(bv_dec);
+	bitvec_free(bv_enc);
 }
 
 int main(int argc, char *argv[])
