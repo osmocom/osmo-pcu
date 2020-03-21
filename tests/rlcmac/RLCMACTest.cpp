@@ -219,12 +219,79 @@ int encode_gsm_ra_cap(bitvec * vector, MS_Radio_Access_capability_t * data);
 
 void testRAcap(void *test_ctx)
 {
+        printf("*** %s ***\n", __func__);
+        MS_Radio_Access_capability_t data;
+        memset(&data, 0, sizeof(data));
+        bitvec *bv_dec = bitvec_alloc(23, test_ctx);
+        bitvec *bv_enc = bitvec_alloc(23, test_ctx);
+        unsigned int len_dec, len_enc;
+        int rc;
+/*
+MS RA capability 1
+    0001 .... = Access Technology Type: GSM E --note that GSM E covers GSM P (1)
+    .... 0011  011. .... = Length in bits: 0x1b (27)
+    ...0 01.. RF Power Capability, GMSK Power Class: Not specified (1)
+    A5 Bits: Same values apply for parameters as in the immediately preceding Access capabilities field within this IE (0)
+    .... ...1 = Controlled early Classmark Sending: Implemented
+    0... .... = Pseudo Synchronisation: Not Present
+    .0.. .... = Voice Group Call Service: no VGCS capability or no notifications wanted
+    ..0. .... = Voice Broadcast Service: no VBS capability or no notifications wanted
+    ...1 .... = Multislot capability struct: Present
+        HSCSD multislot class: Bits are not available (0)
+        SMS_VALUE (Switch-Measure-Switch): Bits are not available (0)
+        ECSD multislot class: Bits are not available (0)
+        DTM GPRS Multi Slot Class: Bits are not available (0)
+    .... ..00  011. .... = GPRS multislot class: Max Rx-Slot/TDMA:2 Max Tx-Slot/TDMA:2 Max-Sum-Slot/TDMA:3 Tta:3 Ttb:2 Tra:3 Trb:1 Type:1 (3)
+    ...0 .... = GPRS Extended Dynamic Allocation Capability: Not Implemented
+    .... ...0  0011 .... = EGPRS multislot class: Max Rx-Slot/TDMA:2 Max Tx-Slot/TDMA:2 Max-Sum-Slot/TDMA:3 Tta:3 Ttb:2 Tra:3 Trb:1 Type:1 (3)
+    .... 0... = EGPRS Extended Dynamic Allocation Capability: Not Implemented
+*/
+        bitvec_unhex(bv_dec, "1365146230");
+
+        printf("=== Test decoding of MS RA Capability ===\n");
+        rc = decode_gsm_ra_cap(bv_dec, &data);
+        OSMO_ASSERT(rc == 0);
+
+        /* Make sure there's 1 value (currently fails due to failed decoding) */
+        OSMO_ASSERT(data.Count_MS_RA_capability_value == 1);
+
+        /* Make sure GPRS / EGPRS multislot class is parsed correctly */
+        printf("GPRS multislot class = %u\n", Decoding::get_ms_class_by_capability(&data));
+        printf("EGPRS multislot class = %u\n", Decoding::get_egprs_ms_class_by_capability(&data));
+
+        /* Test encoding of decoded MS RA Capability */
+        printf("=== Test encoding of MS RA Capability ===\n");
+        rc = encode_gsm_ra_cap(bv_enc, &data);
+        printf("encode_gsm_ra_cap() returns %d\n", rc);
+
+        bv_dec->cur_bit = 4;
+        len_dec = bitvec_get_uint(bv_dec, 7);
+        bv_enc->cur_bit = 4;
+        len_enc = bitvec_get_uint(bv_enc, 7);
+
+        /* NOTE: vector2 is expected to be different because there is actually no
+         * way to distinguish between NULL and 0 in MS_Radio_Access_capability_t.
+         * The difference is in length indicator: 27 bits vs 65 bits. */
+        printf("vector1 (len_ind=%u) = %s\n", len_dec, osmo_hexdump(bv_dec->data, bv_dec->data_len));
+        printf("vector2 (len_ind=%u) = %s\n", len_enc, osmo_hexdump(bv_enc->data, bv_enc->data_len));
+
+        /* Mangle the length indicator (set it to 21) */
+        unsigned int writeIndex = 4;
+        rc = bitvec_write_field(bv_dec, &writeIndex, 21, 7);
+        OSMO_ASSERT(rc == 0);
+
+        /* Make sure decoding attempt fails */
+        printf("=== Test decoding of a malformed vector (short length indicator) ===\n");
+        rc = decode_gsm_ra_cap(bv_dec, &data);
+        printf("decode_gsm_ra_cap() returns %d\n", rc);
+}
+
+void testMalformedRAcap(void *test_ctx)
+{
 	printf("*** %s ***\n", __func__);
 	MS_Radio_Access_capability_t data;
 	memset(&data, 0, sizeof(data));
 	bitvec *bv_dec = bitvec_alloc(23, test_ctx);
-	bitvec *bv_enc = bitvec_alloc(23, test_ctx);
-	unsigned int len_dec, len_enc;
 	int rc;
 /*
 	MS RA capability 1
@@ -239,48 +306,26 @@ void testRAcap(void *test_ctx)
 	    ...1 .... = Multislot capability struct: Present
 	    .... ..00  011. .... = GPRS multislot class: Max Rx-Slot/TDMA:2 Max Tx-Slot/TDMA:2 Max-Sum-Slot/TDMA:3 Tta:3 Ttb:2 Tra:3 Trb:1 Type:1 (3)
 	    ...0 .... = GPRS Extended Dynamic Allocation Capability: Not Implemented
+
+	It doesn't show up in wireshark's tree above because specific parser is
+	used, but this RA Cap bitstream has Exist_EGPRS_multislot_class = 1 but
+	it provides no struct with the expected data (malformed, generated
+	erroneusly through TTCN3). The CSN.1 dceoder should ideally return an
+	error here, but it doesn't (it returns a >0 value which we convert to 0
+	in decode_gsm_ra_cap()).
 */
 	bitvec_unhex(bv_dec, "13a5146200");
 
 	printf("=== Test decoding of MS RA Capability ===\n");
 	rc = decode_gsm_ra_cap(bv_dec, &data);
+	printf("decode_gsm_ra_cap() returns %d\n", rc);
 	OSMO_ASSERT(rc == 0);
 
-	/* Make sure there's 1 value (currently fails due to failed decoding) */
+	/* For sake of completeness, check if the decoder could find 1 value
+	  before failing to decode it */
 	OSMO_ASSERT(data.Count_MS_RA_capability_value == 1);
 
-	/* Make sure GPRS / EGPRS multislot class is parsed correctly */
-	printf("GPRS multislot class = %u\n", Decoding::get_ms_class_by_capability(&data));
-	printf("EGPRS multislot class = %u\n", Decoding::get_egprs_ms_class_by_capability(&data));
-
-	/* Test encoding of decoded MS RA Capability */
-	printf("=== Test encoding of MS RA Capability ===\n");
-	rc = encode_gsm_ra_cap(bv_enc, &data);
-	printf("encode_gsm_ra_cap() returns %d\n", rc);
-
-	bv_dec->cur_bit = 4;
-	len_dec = bitvec_get_uint(bv_dec, 7);
-	bv_enc->cur_bit = 4;
-	len_enc = bitvec_get_uint(bv_enc, 7);
-
-	/* NOTE: vector2 is expected to be different because there is actually no
-	 * way to distinguish between NULL and 0 in MS_Radio_Access_capability_t.
-	 * The difference is in length indicator: 29 bits vs 65 bits. */
-	printf("vector1 (len_ind=%u) = %s\n", len_dec, osmo_hexdump(bv_dec->data, bv_dec->data_len));
-	printf("vector2 (len_ind=%u) = %s\n", len_enc, osmo_hexdump(bv_enc->data, bv_enc->data_len));
-
-	/* Mangle the length indicator (set it to 21) */
-	unsigned int writeIndex = 4;
-	rc = bitvec_write_field(bv_dec, &writeIndex, 21, 7);
-	OSMO_ASSERT(rc == 0);
-
-	/* Make sure decoding attempt fails */
-	printf("=== Test decoding of a malformed vector (short length indicator) ===\n");
-	rc = decode_gsm_ra_cap(bv_dec, &data);
-	printf("decode_gsm_ra_cap() returns %d\n", rc);
-
 	bitvec_free(bv_dec);
-	bitvec_free(bv_enc);
 }
 
 int main(int argc, char *argv[])
@@ -300,5 +345,6 @@ int main(int argc, char *argv[])
 	testRlcMacUplink(ctx);
 	testCsnLeftAlignedVarBmpBounds(ctx);
 	testRAcap(ctx);
+	testMalformedRAcap(ctx);
 	talloc_free(ctx);
 }
