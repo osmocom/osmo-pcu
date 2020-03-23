@@ -1278,9 +1278,10 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
       case CSN_RECURSIVE_TARRAY:
       { /* Recursive way to specify an array of type: <lists> ::= { 1 <type> } ** 0 ;
          *  M_REC_TARRAY(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)
-         * {t, offsetof(_STRUCT, _ElementCountField), (void*)CSNDESCR_##_MEMBER_TYPE, offsetof(_STRUCT, _MEMBER), #_MEMBER, (StreamSerializeFcn_t)sizeof(_MEMBER_TYPE)}
+         * {t, offsetof(_STRUCT, _ElementCountField), (void*)CSNDESCR_##_MEMBER_TYPE, offsetof(_STRUCT, _MEMBER), #_MEMBER, (StreamSerializeFcn_t)sizeof(_MEMBER_TYPE), (void_fn_t)ElementsOf(((_STRUCT*)0)->_MEMBER)}
          */
         gint16 nSizeElement = (gint16)(gint32)pDescr->value;
+        guint32 nSizeArray = (guint32)((uintptr_t)pDescr->aux_fn);
         guint8  ElementCount = 0;
         pui8  = pui8DATA(data, pDescr->offset);
 
@@ -1291,6 +1292,12 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           bit_offset++;
           remaining_bits_len--;
           ElementCount++;
+
+          if (ElementCount > nSizeArray)
+          {
+            LOGPC(DCSN1, LOGL_ERROR, "error: %s: too many elements (>%u) in recursive array. Increase its size! } |", pDescr->sz, nSizeArray);
+            return ProcessError(readIndex,"csnStreamDecoder", CSN_ERROR_STREAM_NOT_SUPPORTED, pDescr);
+          }
 
           { /* unpack the following data structure */
             csnStream_t arT = *ar;
@@ -1342,9 +1349,10 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
       case CSN_RECURSIVE_TARRAY_1:
       { /* Recursive way to specify an array of type: <lists> ::= <type> { 1 <type> } ** 0 ;
          * M_REC_TARRAY(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)
-         * {t, offsetof(_STRUCT, _ElementCountField), (void*)CSNDESCR_##_MEMBER_TYPE, offsetof(_STRUCT, _MEMBER), #_MEMBER, (StreamSerializeFcn_t)sizeof(_MEMBER_TYPE)}
+         * {t, offsetof(_STRUCT, _ElementCountField), (void*)CSNDESCR_##_MEMBER_TYPE, offsetof(_STRUCT, _MEMBER), #_MEMBER, (StreamSerializeFcn_t)sizeof(_MEMBER_TYPE), (void_fn_t)ElementsOf(((_STRUCT*)0)->_MEMBER)}
          */
         gint16      nSizeElement = (gint16)(gint32)pDescr->value;
+        guint32     nSizeArray = (guint32)((uintptr_t)pDescr->aux_fn);
         guint8       ElementCount = 0;
         csnStream_t arT          = *ar;
         gboolean     EndOfList    = FALSE;
@@ -1354,6 +1362,12 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
         do
         { /* get data element */
           ElementCount++;
+
+          if (ElementCount > nSizeArray)
+          {
+            LOGPC(DCSN1, LOGL_ERROR, "error: %s: too many elements (>%u) in recursive array. Increase its size! } |", pDescr->sz, nSizeArray);
+            return ProcessError(readIndex,"csnStreamDecoder", CSN_ERROR_STREAM_NOT_SUPPORTED, pDescr);
+          }
 
           LOGPC(DCSN1, LOGL_DEBUG, "%s { | ", pDescr->sz);
 

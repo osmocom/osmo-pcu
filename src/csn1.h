@@ -443,7 +443,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
  *      Par4: will hold the number of element in the array after unpacking
  *****************************************************************************/
 #define M_REC_TARRAY(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)\
-        {CSN_RECURSIVE_TARRAY, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, sizeof(_MEMBER_TYPE), NULL}
+        {CSN_RECURSIVE_TARRAY, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, sizeof(_MEMBER_TYPE), (void_fn_t)ElementsOf(((_STRUCT*)0)->_MEMBER)}
 
 /******************************************************************************
  * M_REC_TARRAY1(Par1, Par2, Par3, Par4)
@@ -451,7 +451,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
  * <list> ::= <type> {1 <type>} ** 0 ;
  *****************************************************************************/
 #define M_REC_TARRAY_1(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)\
-        {CSN_RECURSIVE_TARRAY_1, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, sizeof(_MEMBER_TYPE), NULL}
+        {CSN_RECURSIVE_TARRAY_1, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, sizeof(_MEMBER_TYPE), (void_fn_t)ElementsOf(((_STRUCT*)0)->_MEMBER)}
 
 /******************************************************************************
  * M_REC_TARRAY2(Par1, Par2, Par3, Par4)
@@ -459,7 +459,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
  * <lists> ::= <type> { 0 <type> } ** 1 ;
  *****************************************************************************/
 #define M_REC_TARRAY_2(_STRUCT, _MEMBER, _MEMBER_TYPE, _ElementCountField)\
-        {CSN_RECURSIVE_TARRAY_2, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, sizeof(_MEMBER_TYPE), NULL}
+        {CSN_RECURSIVE_TARRAY_2, offsetof(_STRUCT, _ElementCountField), {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, sizeof(_MEMBER_TYPE), (void_fn_t)ElementsOf(((_STRUCT*)0)->_MEMBER)}
 
 /******************************************************************************
  * M_TYPE(Par1, Par2, Par3)

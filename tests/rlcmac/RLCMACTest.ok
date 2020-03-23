@@ -144,3 +144,5 @@ decode_gsm_ra_cap() returns -5
 *** testMalformedRAcap ***
 === Test decoding of MS RA Capability ===
 decode_gsm_ra_cap() returns 0
+*** testRAcap2 ***
+=== Test decoding of multi-band MS RA Capability ===
