@@ -902,7 +902,7 @@ CSN_DESCR_END         (Additional_access_technologies_struct_t)
 
 static const
 CSN_DESCR_BEGIN       (Additional_access_technologies_t)
-  M_REC_TARRAY        (Additional_access_technologies_t, Additional_access_technologies[0], Additional_access_technologies_struct_t, Count_additional_access_technologies),
+  M_REC_TARRAY        (Additional_access_technologies_t, Additional_access_technologies, Additional_access_technologies_struct_t, Count_additional_access_technologies),
 CSN_DESCR_END         (Additional_access_technologies_t)
 
 gint16 Additional_access_technologies_Dissector(csnStream_t* ar, bitvec* vector, unsigned *readIndex, void* data)
@@ -1365,7 +1365,7 @@ CSN_DESCR_END  (PSI_Message_t)
 
 static const
 CSN_DESCR_BEGIN(PSI_Message_List_t)
-  M_REC_TARRAY (PSI_Message_List_t, PSI_Message[0], PSI_Message_t, Count_PSI_Message),
+  M_REC_TARRAY (PSI_Message_List_t, PSI_Message, PSI_Message_t, Count_PSI_Message),
   M_FIXED      (PSI_Message_List_t, 1, 0x00),
   M_UINT       (PSI_Message_List_t,  ADDITIONAL_MSG_TYPE,  1),
 CSN_DESCR_END  (PSI_Message_List_t)
@@ -1402,7 +1402,7 @@ CSN_DESCR_END  (SI_Message_t)
 
 static const
 CSN_DESCR_BEGIN(SI_Message_List_t)
-  M_REC_TARRAY (SI_Message_List_t, SI_Message[0], SI_Message_t, Count_SI_Message),
+  M_REC_TARRAY (SI_Message_List_t, SI_Message, SI_Message_t, Count_SI_Message),
   M_FIXED      (SI_Message_List_t, 1, 0x00),
   M_UINT       (SI_Message_List_t,  ADDITIONAL_MSG_TYPE,  1),
 CSN_DESCR_END  (SI_Message_List_t)
@@ -2602,8 +2602,7 @@ CSN_DESCR_BEGIN(Packet_Access_Reject_t)
   M_UINT       (Packet_Access_Reject_t,  MESSAGE_TYPE,  6),
   M_UINT       (Packet_Access_Reject_t,  PAGE_MODE,  2),
 
-  M_TYPE       (Packet_Access_Reject_t, Reject, Reject_t),
-  M_REC_TARRAY (Packet_Access_Reject_t, Reject[1], Reject_t, Count_Reject),
+  M_REC_TARRAY_1(Packet_Access_Reject_t, Reject, Reject_t, Count_Reject),
   M_PADDING_BITS(Packet_Access_Reject_t),
 CSN_DESCR_END  (Packet_Access_Reject_t)
 
@@ -3572,7 +3571,7 @@ CSN_DESCR_BEGIN(ENH_NC_Measurement_Report_t)
   M_UINT       (ENH_NC_Measurement_Report_t,  SCALE,  1),
   M_NEXT_EXIST (ENH_NC_Measurement_Report_t, Exist_Serving_Cell_Data, 1),
   M_TYPE       (ENH_NC_Measurement_Report_t, Serving_Cell_Data, Serving_Cell_Data_t),
-  M_REC_TARRAY (ENH_NC_Measurement_Report_t, RepeatedInvalid_BSIC_Info[0], RepeatedInvalid_BSIC_Info_t, Count_RepeatedInvalid_BSIC_Info),
+  M_REC_TARRAY (ENH_NC_Measurement_Report_t, RepeatedInvalid_BSIC_Info, RepeatedInvalid_BSIC_Info_t, Count_RepeatedInvalid_BSIC_Info),
   M_NEXT_EXIST (ENH_NC_Measurement_Report_t, Exist_ReportBitmap, 1),
   M_VAR_TARRAY (ENH_NC_Measurement_Report_t, REPORTING_QUANTITY_Instances, REPORTING_QUANTITY_Instance_t, Count_REPORTING_QUANTITY_Instances),
 CSN_DESCR_END  (ENH_NC_Measurement_Report_t)
@@ -3713,7 +3712,7 @@ CSN_DESCR_BEGIN   (EnhancedMeasurementReport_t)
   M_UINT          (EnhancedMeasurementReport_t,  SCALE,  1),
   M_NEXT_EXIST    (EnhancedMeasurementReport_t, Exist_ServingCellData, 1),
   M_TYPE          (EnhancedMeasurementReport_t, ServingCellData, EMR_ServingCell_t),
-  M_REC_TARRAY    (EnhancedMeasurementReport_t, RepeatedInvalid_BSIC_Info[0], RepeatedInvalid_BSIC_Info_t,
+  M_REC_TARRAY    (EnhancedMeasurementReport_t, RepeatedInvalid_BSIC_Info, RepeatedInvalid_BSIC_Info_t,
                     Count_RepeatedInvalid_BSIC_Info),
   M_NEXT_EXIST    (EnhancedMeasurementReport_t, Exist_ReportBitmap, 1),
   M_VAR_TARRAY    (EnhancedMeasurementReport_t, REPORTING_QUANTITY_Instances, REPORTING_QUANTITY_Instance_t, Count_REPORTING_QUANTITY_Instances),
@@ -4472,7 +4471,7 @@ CSN_DESCR_END  (Non_Hopping_PCCCH_Carriers_t)
 
 static const
 CSN_DESCR_BEGIN(NonHoppingPCCCH_t)
-  M_REC_TARRAY (NonHoppingPCCCH_t, Carriers[0], Non_Hopping_PCCCH_Carriers_t, Count_Carriers),
+  M_REC_TARRAY (NonHoppingPCCCH_t, Carriers, Non_Hopping_PCCCH_Carriers_t, Count_Carriers),
 CSN_DESCR_END  (NonHoppingPCCCH_t)
 
 static const
@@ -4484,7 +4483,7 @@ CSN_DESCR_END  (Hopping_PCCCH_Carriers_t)
 static const
 CSN_DESCR_BEGIN(HoppingPCCCH_t)
   M_UINT(HoppingPCCCH_t, MA_NUMBER, 4),
-  M_REC_TARRAY (HoppingPCCCH_t, Carriers[0], Hopping_PCCCH_Carriers_t, Count_Carriers),
+  M_REC_TARRAY (HoppingPCCCH_t, Carriers, Hopping_PCCCH_Carriers_t, Count_Carriers),
 CSN_DESCR_END  (HoppingPCCCH_t)
 
 static const
@@ -4510,10 +4509,10 @@ CSN_DESCR_BEGIN(PSI2_t)
   M_NEXT_EXIST (PSI2_t, Exist_Non_GPRS_Cell_Options, 1),
   M_TYPE       (PSI2_t,  Non_GPRS_Cell_Options, Non_GPRS_Cell_Options_t),
 
-  M_REC_TARRAY (PSI2_t, Reference_Frequency[0], Reference_Frequency_t, Count_Reference_Frequency),
+  M_REC_TARRAY (PSI2_t, Reference_Frequency, Reference_Frequency_t, Count_Reference_Frequency),
   M_TYPE       (PSI2_t,  Cell_Allocation, Cell_Allocation_t),
-  M_REC_TARRAY (PSI2_t, GPRS_MA[0], PSI2_MA_t, Count_GPRS_MA),
-  M_REC_TARRAY (PSI2_t, PCCCH_Description[0], PCCCH_Description_t, Count_PCCCH_Description),
+  M_REC_TARRAY (PSI2_t, GPRS_MA, PSI2_MA_t, Count_GPRS_MA),
+  M_REC_TARRAY (PSI2_t, PCCCH_Description, PCCCH_Description_t, Count_PCCCH_Description),
   M_PADDING_BITS(PSI2_t),
 CSN_DESCR_END  (PSI2_t)
 /*< End Packet System Information Type 2 message content >*/
