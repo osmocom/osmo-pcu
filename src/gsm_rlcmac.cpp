@@ -29,6 +29,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+extern "C" {
+#include <osmocom/core/utils.h>
+}
+
 #include "gsm_rlcmac.h"
 /* Initialize the protocol and registered fields
 */
@@ -4798,120 +4802,6 @@ CSN_DESCR_BEGIN(PSI13_t)
 CSN_DESCR_END  (PSI13_t)
 /*< End Packet System Information Type 13 message content >*/
 
-
-
-//typedef char* MT_Strings_t;
-
-static const char* szMT_Downlink[] = {
-  "Invalid Message Type",                /* 0x00 */
-  "PACKET_CELL_CHANGE_ORDER",            /* 0x01 */
-  "PACKET_DOWNLINK_ASSIGNMENT",          /* 0x02 */
-  "PACKET_MEASUREMENT_ORDER",            /* 0x03 */
-  "PACKET_POLLING_REQUEST",              /* 0x04 */
-  "PACKET_POWER_CONTROL_TIMING_ADVANCE", /* 0x05 */
-  "PACKET_QUEUEING_NOTIFICATION",        /* 0x06 */
-  "PACKET_TIMESLOT_RECONFIGURE",         /* 0x07 */
-  "PACKET_TBF_RELEASE",                  /* 0x08 */
-  "PACKET_UPLINK_ACK_NACK",              /* 0x09 */
-  "PACKET_UPLINK_ASSIGNMENT",            /* 0x0A */
-  "PACKET_CELL_CHANGE_CONTINUE",         /* 0x0B */
-  "PACKET_NEIGHBOUR_CELL_DATA",          /* 0x0C */
-  "PACKET_SERVING_CELL_DATA",            /* 0x0D */
-  "Invalid Message Type",                /* 0x0E */
-  "Invalid Message Type",                /* 0x0F */
-  "Invalid Message Type",                /* 0x10 */
-  "Invalid Message Type",                /* 0x11 */
-  "Invalid Message Type",                /* 0x12 */
-  "Invalid Message Type",                /* 0x13 */
-  "Invalid Message Type",                /* 0x14 */
-  "PACKET_HANDOVER_COMMAND",             /* 0x15 */
-  "PACKET_PHYSICAL_INFORMATION",         /* 0x16 */
-  "Invalid Message Type",                /* 0x17 */
-  "Invalid Message Type",                /* 0x18 */
-  "Invalid Message Type",                /* 0x19 */
-  "Invalid Message Type",                /* 0x1A */
-  "Invalid Message Type",                /* 0x1B */
-  "Invalid Message Type",                /* 0x1C */
-  "Invalid Message Type",                /* 0x1D */
-  "Invalid Message Type",                /* 0x1E */
-  "Invalid Message Type",                /* 0x1F */
-  "Invalid Message Type",                /* 0x20 */
-  "PACKET_ACCESS_REJECT",                /* 0x21 */
-  "PACKET_PAGING_REQUEST",               /* 0x22 */
-  "PACKET_PDCH_RELEASE",                 /* 0x23 */
-  "PACKET_PRACH_PARAMETERS",             /* 0x24 */
-  "PACKET_DOWNLINK_DUMMY_CONTROL_BLOCK", /* 0x25 */
-  "Invalid Message Type",                /* 0x26 */
-  "Invalid Message Type",                /* 0x27 */
-  "Invalid Message Type",                /* 0x28 */
-  "Invalid Message Type",                /* 0x29 */
-  "Invalid Message Type",                /* 0x2A */
-  "Invalid Message Type",                /* 0x2B */
-  "Invalid Message Type",                /* 0x2C */
-  "Invalid Message Type",                /* 0x2D */
-  "Invalid Message Type",                /* 0x2E */
-  "Invalid Message Type",                /* 0x2F */
-  "PACKET_SYSTEM_INFO_6",                /* 0x30 */
-  "PACKET_SYSTEM_INFO_1",                /* 0x31 */
-  "PACKET_SYSTEM_INFO_2",                /* 0x32 */
-  "PACKET_SYSTEM_INFO_3",                /* 0x33 */
-  "PACKET_SYSTEM_INFO_3_BIS",            /* 0x34 */
-  "PACKET_SYSTEM_INFO_4",                /* 0x35 */
-  "PACKET_SYSTEM_INFO_5",                /* 0x36 */
-  "PACKET_SYSTEM_INFO_13",               /* 0x37 */
-  "PACKET_SYSTEM_INFO_7",                /* 0x38 */
-  "PACKET_SYSTEM_INFO_8",                /* 0x39 */
-  "PACKET_SYSTEM_INFO_14",               /* 0x3A */
-  "Invalid Message Type",                /* 0x3B */
-  "PACKET_SYSTEM_INFO_3_TER",            /* 0x3C */
-  "PACKET_SYSTEM_INFO_3_QUATER",         /* 0x3D */
-  "PACKET_SYSTEM_INFO_15"                /* 0x3E */
-};
-
-static const char* szMT_Uplink[] = {
-  "PACKET_CELL_CHANGE_FAILURE",          /* 0x00 */
-  "PACKET_CONTROL_ACKNOWLEDGEMENT",      /* 0x01 */
-  "PACKET_DOWNLINK_ACK_NACK",            /* 0x02 */
-  "PACKET_UPLINK_DUMMY_CONTROL_BLOCK",   /* 0x03 */
-  "PACKET_MEASUREMENT_REPORT",           /* 0x04 */
-  "PACKET_RESOURCE_REQUEST",             /* 0x05 */
-  "PACKET_MOBILE_TBF_STATUS",            /* 0x06 */
-  "PACKET_PSI_STATUS",                   /* 0x07 */
-  "EGPRS_PACKET_DOWNLINK_ACK_NACK",      /* 0x08 */
-  "PACKET_PAUSE",                        /* 0x09 */
-  "PACKET_ENHANCED_MEASUREMENT_REPORT",  /* 0x0A */
-  "ADDITIONAL_MS_RAC",                   /* 0x0B */
-  "PACKET_CELL_CHANGE_NOTIFICATION",     /* 0x0C */
-  "PACKET_SI_STATUS",                    /* 0x0D */
-};
-
-const char*
-MT_DL_TextGet(guint8 mt)
-{
-  if (mt < ElementsOf(szMT_Downlink))
-  {
-    return(szMT_Downlink[mt]);
-  }
-  else
-  {
-    return("Unknown message type");
-  }
-}
-
-const char*
-MT_UL_TextGet(guint8 mt)
-{
-  if (mt < ElementsOf(szMT_Uplink))
-  {
-    return(szMT_Uplink[mt]);
-  }
-  else
-  {
-    return("Unknown message type");
-  }
-}
-
-
 /* SI1_RestOctet_t */
 
 static const
@@ -4996,6 +4886,67 @@ CSN_DESCR_BEGIN  (SI6_RestOctet_t)
   M_UINT_LH      (SI6_RestOctet_t,  BandIndicator,  1),
 CSN_DESCR_END    (SI6_RestOctet_t)
 
+
+// ----------------------------------------------------------------------------
+// osmo-pcu RLCMAC APIs
+// ----------------------------------------------------------------------------
+static const struct value_string rlcmac_ul_msg_names[] = {
+        { MT_PACKET_CELL_CHANGE_FAILURE,        "Pkt Cell Change Failure" },
+        { MT_PACKET_CONTROL_ACK,                "Pkt Control Ack" },
+        { MT_PACKET_DOWNLINK_ACK_NACK ,         "Pkt DL ACK/NACK" },
+        { MT_PACKET_UPLINK_DUMMY_CONTROL_BLOCK, "Pkt UL Dummy Ctrl Block" },
+        { MT_PACKET_MEASUREMENT_REPORT,         "Pkt Meas Report" },
+        { MT_PACKET_RESOURCE_REQUEST,           "Pkt Resource Req" },
+        { MT_PACKET_MOBILE_TBF_STATUS,          "Pkt Mobile TBF Status" },
+        { MT_PACKET_PSI_STATUS,                 "Pkt PSI Status" },
+        { MT_EGPRS_PACKET_DOWNLINK_ACK_NACK,    "EGPRS Pkt DL ACK/NACK" },
+        { MT_PACKET_PAUSE,                      "Pkt Pause" },
+        { MT_PACKET_ENHANCED_MEASUREMENT_REPORT,"Pkt Enchanced Meas Report" },
+        { MT_ADDITIONAL_MS_RAC,                 "Additional MS RAC" },
+        { MT_PACKET_CELL_CHANGE_NOTIFICATION,   "Pkt Cell Changte Notification" },
+        { MT_PACKET_SI_STATUS,                  "Pkt SI Status" },
+        { MT_ENHANCED_MEASUREMENT_REPORT,       "Enchanced Meas Report" },
+        { 0, NULL }
+};
+
+static const struct value_string rlcmac_dl_msg_names[] = {
+        { MT_PACKET_CELL_CHANGE_ORDER,            "Pkt Cell Change Order" },
+        { MT_PACKET_DOWNLINK_ASSIGNMENT,          "Pkt DL ASS" },
+        { MT_PACKET_MEASUREMENT_ORDER,            "Pkt Meas Order" },
+        { MT_PACKET_POLLING_REQ,                  "Pkt Polling Req" },
+        { MT_PACKET_POWER_CONTROL_TIMING_ADVANCE, "Pkt PWR CTRL TA" },
+        { MT_PACKET_QUEUEING_NOTIFICATION,        "Pkt Queueing Notification" },
+        { MT_PACKET_TIMESLOT_RECONFIGURE,         "Pkt TS Reconf" },
+        { MT_PACKET_TBF_RELEASE,                  "Pkt TBF Release" },
+        { MT_PACKET_UPLINK_ACK_NACK,              "Pkt UL ACK/NACK" },
+        { MT_PACKET_UPLINK_ASSIGNMENT,            "Pkt UL ASS" },
+        { MT_PACKET_CELL_CHANGE_CONTINUE,         "Pkt Cell Change Continue" },
+        { MT_PACKET_NEIGHBOUR_CELL_DATA,          "Pkt Neightbour Cell Data" },
+        { MT_PACKET_SERVING_CELL_DATA,            "Pkt Serving Cell Data" },
+        { MT_PACKET_HANDOVER_COMMAND,             "Pkt Handover Cmd" },
+        { MT_PACKET_PHYSICAL_INFORMATION,         "Pkt Physical Info" },
+        { MT_PACKET_ACCESS_REJECT,                "Pkt Access Reject" },
+        { MT_PACKET_PAGING_REQUEST,               "Pkt Paging Request" },
+        { MT_PACKET_PDCH_RELEASE,                 "Pkt PDCH Release" },
+        { MT_PACKET_PRACH_PARAMETERS,             "Pkt PRACH Params" },
+        { MT_PACKET_DOWNLINK_DUMMY_CONTROL_BLOCK, "Pkt DL Dummy Ctrl Block" },
+        { MT_PACKET_SYSTEM_INFO_6,                "Pkt SI 6" },
+        { MT_PACKET_SYSTEM_INFO_1,                "Pkt SI 1" },
+        { MT_PACKET_SYSTEM_INFO_2,                "Pkt SI 2" },
+        { MT_PACKET_SYSTEM_INFO_3,                "Pkt SI 3" },
+        { MT_PACKET_SYSTEM_INFO_3_BIS,            "Pkt SI 3bis" },
+        { MT_PACKET_SYSTEM_INFO_4,                "Pkt SI 4" },
+        { MT_PACKET_SYSTEM_INFO_5,                "Pkt SI 5" },
+        { MT_PACKET_SYSTEM_INFO_13,               "Pkt SI 13" },
+        { MT_PACKET_SYSTEM_INFO_7,                "Pkt SI 7" },
+        { MT_PACKET_SYSTEM_INFO_8,                "Pkt SI 8" },
+        { MT_PACKET_SYSTEM_INFO_14,               "Pkt SI 14" },
+        { MT_PACKET_SYSTEM_INFO_3_TER,            "Pkt SI 3ter" },
+        { MT_PACKET_SYSTEM_INFO_3_QUATER,         "Pkt SI 3quater" },
+        { MT_PACKET_SYSTEM_INFO_15,               "Pkt SI 15" },
+        { 0, NULL }
+};
+
 /* Returns 0 on success, negative on error. */
 int decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
 {
@@ -5003,6 +4954,7 @@ int decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
   int ret;
   unsigned readIndex = 0;
   guint8 payload_type = bitvec_read_field(vector, &readIndex, 2);
+  const char *msg_type_name;
 
   if (payload_type == PAYLOAD_TYPE_DATA)
   {
@@ -5022,7 +4974,9 @@ int decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
   readIndex = 0;
 
   /* recursive csnStreamDecoder call uses LOGPC everywhere, so we need to start the log somewhere... */
-  LOGP(DCSN1, LOGL_INFO, "csnStreamDecoder (type=%d): ", data->u.MESSAGE_TYPE);
+  msg_type_name = get_value_string(rlcmac_ul_msg_names, data->u.MESSAGE_TYPE);
+  LOGP(DCSN1, LOGL_INFO, "csnStreamDecoder (type: %s (%d)): ",
+       msg_type_name, data->u.MESSAGE_TYPE);
   switch (data->u.MESSAGE_TYPE)
   {
     case MT_PACKET_CELL_CHANGE_FAILURE:
@@ -5111,7 +5065,7 @@ int decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
   LOGPC(DCSN1, LOGL_INFO, "\n");
 
   if (ret > 0) {
-    LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by decoder at the end of bitvec\n", ret);
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "%s: Got %d remaining bits unhandled by decoder at the end of bitvec\n", msg_type_name, ret);
     ret = 0;
   }
 
@@ -5127,6 +5081,7 @@ int decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
   gint bit_length;
   unsigned readIndex = 0;
   int ret;
+  const char *msg_type_name;
 
   data->PAYLOAD_TYPE = bitvec_read_field(vector, &readIndex, 2);
   data->RRBP = bitvec_read_field(vector, &readIndex, 2);
@@ -5181,7 +5136,9 @@ int decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
   csnStreamInit(&ar, bit_offset, bit_length);
 
   /* recursive csnStreamDecoder call uses LOGPC everywhere, so we need to start the log somewhere... */
-  LOGP(DCSN1, LOGL_INFO, "csnStreamDecoder (type=%d): ", data->u.MESSAGE_TYPE);
+  msg_type_name = get_value_string(rlcmac_dl_msg_names, data->u.MESSAGE_TYPE);
+  LOGP(DCSN1, LOGL_INFO, "csnStreamDecoder (type: %s (%d): ",
+       msg_type_name, data->u.MESSAGE_TYPE);
 
   switch (data->u.MESSAGE_TYPE)
   {
@@ -5320,7 +5277,7 @@ int decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
   LOGPC(DCSN1, LOGL_INFO, "\n");
 
   if (ret > 0) {
-    LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by decoder at the end of bitvec\n", ret);
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "%s: Got %d remaining bits unhandled by decoder at the end of bitvec\n", msg_type_name, ret);
     ret = 0;
   }
 
@@ -5333,13 +5290,16 @@ int encode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
   csnStream_t      ar;
   unsigned writeIndex = 0;
   int ret;
+  const char *msg_type_name;
 
   data->NrOfBits = 23 * 8;
   csnStreamInit(&ar, 0, data->NrOfBits);
   writeIndex = 0;
 
   /* recursive csnStreamEncoder call uses LOGPC everywhere, so we need to start the log somewhere... */
-  LOGP(DCSN1, LOGL_INFO, "csnStreamEncoder (type=%d): ", data->u.MESSAGE_TYPE);
+  msg_type_name = get_value_string(rlcmac_ul_msg_names, data->u.MESSAGE_TYPE);
+  LOGP(DCSN1, LOGL_INFO, "csnStreamEncoder (type: %s (%d)): ",
+       msg_type_name, data->u.MESSAGE_TYPE);
   switch (data->u.MESSAGE_TYPE)
   {
     case MT_PACKET_CELL_CHANGE_FAILURE:
@@ -5441,6 +5401,7 @@ int encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
 {
   csnStream_t  ar;
   int ret;
+  const char *msg_type_name;
   /* See RLC/MAC downlink control block structure in TS 44.060 / 10.3.1 */
   gint bit_offset = 0;
   gint bit_length;
@@ -5497,7 +5458,9 @@ int encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
 
 
   /* recursive csnStreamEncoder call uses LOGPC everywhere, so we need to start the log somewhere... */
-  LOGP(DCSN1, LOGL_INFO, "csnStreamEncoder (type=%d): ", data->u.MESSAGE_TYPE);
+  msg_type_name = get_value_string(rlcmac_dl_msg_names, data->u.MESSAGE_TYPE);
+  LOGP(DCSN1, LOGL_INFO, "csnStreamEncoder (type: %s (%d)): ",
+       msg_type_name, data->u.MESSAGE_TYPE);
   switch (data->u.MESSAGE_TYPE)
   {
     case MT_PACKET_ACCESS_REJECT:
@@ -5796,7 +5759,7 @@ int decode_gsm_ra_cap(bitvec * vector, MS_Radio_Access_capability_t *data)
   LOGPC(DCSN1, LOGL_INFO, "\n");
 
   if (ret > 0) {
-    LOGP(DRLCMACDATA, LOGL_NOTICE, "Got %d remaining bits unhandled by decoder at the end of bitvec\n", ret);
+    LOGP(DRLCMACDATA, LOGL_NOTICE, "RAcap: Got %d remaining bits unhandled by decoder at the end of bitvec\n", ret);
     ret = 0;
   }
   return ret;
