@@ -596,12 +596,12 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			ta = sba->ta;
 			bts()->sba()->free_sba(sba);
 		}
-		if (request->Exist_MS_Radio_Access_capability) {
+		if (request->Exist_MS_Radio_Access_capability2) {
 			ms_class = Decoding::get_ms_class_by_capability(
-				&request->MS_Radio_Access_capability);
+				&request->MS_Radio_Access_capability2);
 			egprs_ms_class =
 				Decoding::get_egprs_ms_class_by_capability(
-					&request->MS_Radio_Access_capability);
+					&request->MS_Radio_Access_capability2);
 		}
 		if (!ms_class)
 			LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");

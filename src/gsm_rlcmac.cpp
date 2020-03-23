@@ -948,12 +948,15 @@ CSN_DESCR_END  (MS_RA_capability_value_t)
 
 static const
 CSN_DESCR_BEGIN (MS_Radio_Access_capability_t)
-/*Will be done in the main routines:*/
-/*M_UINT        (MS_Radio_Access_capability_t,  IEI,  8),*/
-/*M_UINT        (MS_Radio_Access_capability_t,  Length,  8),*/
-
   M_REC_TARRAY_1(MS_Radio_Access_capability_t, MS_RA_capability_value, MS_RA_capability_value_t, Count_MS_RA_capability_value),
+  M_PADDING_BITS(MS_Radio_Access_capability_t),
 CSN_DESCR_END   (MS_Radio_Access_capability_t)
+
+/* TS44.060 section 12.30  "MS Radio Access Capability 2". Same as above but without spare bits */
+static const
+CSN_DESCR_BEGIN (MS_Radio_Access_capability2_t)
+  M_REC_TARRAY_1(MS_Radio_Access_capability_t, MS_RA_capability_value, MS_RA_capability_value_t, Count_MS_RA_capability_value),
+CSN_DESCR_END   (MS_Radio_Access_capability2_t)
 
 /*< MS Classmark 3 IE >*/
 static const
@@ -1319,8 +1322,8 @@ CSN_DESCR_BEGIN       (Packet_Resource_Request_t)
 
   M_TYPE              (Packet_Resource_Request_t, ID, PacketResourceRequestID_t),
 
-  M_NEXT_EXIST        (Packet_Resource_Request_t, Exist_MS_Radio_Access_capability, 1),
-  M_TYPE              (Packet_Resource_Request_t, MS_Radio_Access_capability, MS_Radio_Access_capability_t),
+  M_NEXT_EXIST        (Packet_Resource_Request_t, Exist_MS_Radio_Access_capability2, 1),
+  M_TYPE              (Packet_Resource_Request_t, MS_Radio_Access_capability2, MS_Radio_Access_capability2_t),
 
   M_TYPE              (Packet_Resource_Request_t, Channel_Request_Description, Channel_Request_Description_t),
 
@@ -4343,7 +4346,7 @@ CSN_DESCR_BEGIN       (Additional_MS_Rad_Access_Cap_t)
   /* Mac header */
 
   M_TYPE              (Additional_MS_Rad_Access_Cap_t,  ID, AdditionalMsRadAccessCapID_t),
-  M_TYPE              (Additional_MS_Rad_Access_Cap_t,  MS_Radio_Access_capability, MS_Radio_Access_capability_t),
+  M_TYPE              (Additional_MS_Rad_Access_Cap_t,  MS_Radio_Access_capability, MS_Radio_Access_capability2_t),
   M_PADDING_BITS      (Additional_MS_Rad_Access_Cap_t),
 CSN_DESCR_END         (Additional_MS_Rad_Access_Cap_t)
 

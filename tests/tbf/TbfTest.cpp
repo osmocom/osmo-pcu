@@ -678,23 +678,23 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(BTS *the_bts,
 	ulreq.u.Packet_Resource_Request.PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
 	ulreq.u.Packet_Resource_Request.ID.UnionType = 1; /* != 0 */
 	ulreq.u.Packet_Resource_Request.ID.u.TLLI = tlli;
-	ulreq.u.Packet_Resource_Request.Exist_MS_Radio_Access_capability = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.Exist_MS_Radio_Access_capability2 = 1;
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		Count_MS_RA_capability_value = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		MS_RA_capability_value[0].u.Content.
 		Exist_Multislot_capability = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		MS_RA_capability_value[0].u.Content.Multislot_capability.
 		Exist_GPRS_multislot_class = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		MS_RA_capability_value[0].u.Content.Multislot_capability.
 		GPRS_multislot_class = ms_class;
 	if (egprs_ms_class) {
-		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 			MS_RA_capability_value[0].u.Content.
 			Multislot_capability.Exist_EGPRS_multislot_class = 1;
-		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 			MS_RA_capability_value[0].u.Content.
 			Multislot_capability.EGPRS_multislot_class = ms_class;
 	}
@@ -827,23 +827,23 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	ulreq.u.Packet_Resource_Request.PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
 	ulreq.u.Packet_Resource_Request.ID.UnionType = 1; /* != 0 */
 	ulreq.u.Packet_Resource_Request.ID.u.TLLI = tlli;
-	ulreq.u.Packet_Resource_Request.Exist_MS_Radio_Access_capability = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.Exist_MS_Radio_Access_capability2 = 1;
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		Count_MS_RA_capability_value = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		MS_RA_capability_value[0].u.Content.
 			Exist_Multislot_capability = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		MS_RA_capability_value[0].u.Content.Multislot_capability.
 		Exist_GPRS_multislot_class = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		MS_RA_capability_value[0].u.Content.Multislot_capability.
 		GPRS_multislot_class = ms_class;
 	if (egprs_ms_class) {
-		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 			MS_RA_capability_value[0].u.Content.
 			Multislot_capability.Exist_EGPRS_multislot_class = 1;
-		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 			MS_RA_capability_value[0].u.Content.
 			Multislot_capability.EGPRS_multislot_class = ms_class;
 	}
@@ -1273,23 +1273,23 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf(BTS *the_bts,
 	ulreq.u.Packet_Resource_Request.PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
 	ulreq.u.Packet_Resource_Request.ID.UnionType = 1; /* != 0 */
 	ulreq.u.Packet_Resource_Request.ID.u.TLLI = tlli;
-	ulreq.u.Packet_Resource_Request.Exist_MS_Radio_Access_capability = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.Exist_MS_Radio_Access_capability2 = 1;
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		Count_MS_RA_capability_value = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		MS_RA_capability_value[0].u.Content.
 		Exist_Multislot_capability = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		MS_RA_capability_value[0].u.Content.Multislot_capability.
 		Exist_GPRS_multislot_class = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		MS_RA_capability_value[0].u.Content.Multislot_capability.
 		GPRS_multislot_class = ms_class;
 	if (egprs_ms_class) {
-		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 			MS_RA_capability_value[0].u.Content.
 			Multislot_capability.Exist_EGPRS_multislot_class = 1;
-		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 			MS_RA_capability_value[0].u.Content.
 			Multislot_capability.EGPRS_multislot_class = ms_class;
 	}
@@ -1590,22 +1590,22 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	ulreq.u.Packet_Resource_Request.PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
 	ulreq.u.Packet_Resource_Request.ID.UnionType = 1; /* != 0 */
 	ulreq.u.Packet_Resource_Request.ID.u.TLLI = tlli;
-	ulreq.u.Packet_Resource_Request.Exist_MS_Radio_Access_capability = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.Exist_MS_Radio_Access_capability2 = 1;
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		Count_MS_RA_capability_value = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		MS_RA_capability_value[0].u.Content.Exist_Multislot_capability = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		MS_RA_capability_value[0].u.Content.Multislot_capability.
 		Exist_GPRS_multislot_class = 1;
-	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+	ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 		MS_RA_capability_value[0].u.Content.Multislot_capability.
 		GPRS_multislot_class = ms_class;
 	if (egprs_ms_class) {
-		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 			MS_RA_capability_value[0].u.Content.Multislot_capability.
 			Exist_EGPRS_multislot_class = 1;
-		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability.
+		ulreq.u.Packet_Resource_Request.MS_Radio_Access_capability2.
 			MS_RA_capability_value[0].u.Content.Multislot_capability.
 			EGPRS_multislot_class = ms_class;
 	}
@@ -2384,8 +2384,8 @@ static gprs_rlcmac_ul_tbf *tbf_li_decoding(BTS *the_bts,
 	presreq->PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
 	presreq->ID.UnionType = 1; /* != 0 */
 	presreq->ID.u.TLLI = tlli;
-	presreq->Exist_MS_Radio_Access_capability = 1;
-	pmsradiocap = &presreq->MS_Radio_Access_capability;
+	presreq->Exist_MS_Radio_Access_capability2 = 1;
+	pmsradiocap = &presreq->MS_Radio_Access_capability2;
 	pmsradiocap->Count_MS_RA_capability_value = 1;
 	pmsradiocap->MS_RA_capability_value[0].u.Content.
 		Exist_Multislot_capability = 1;
@@ -3210,8 +3210,8 @@ static void test_packet_access_rej_prr()
 	presreq->PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
 	presreq->ID.UnionType = 1; /* != 0 */
 	presreq->ID.u.TLLI = tlli;
-	presreq->Exist_MS_Radio_Access_capability = 1;
-	pmsradiocap = &presreq->MS_Radio_Access_capability;
+	presreq->Exist_MS_Radio_Access_capability2 = 1;
+	pmsradiocap = &presreq->MS_Radio_Access_capability2;
 	pmsradiocap->Count_MS_RA_capability_value = 1;
 	pmsradiocap->MS_RA_capability_value[0].u.Content.
 		Exist_Multislot_capability = 1;
