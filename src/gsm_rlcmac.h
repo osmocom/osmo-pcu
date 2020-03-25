@@ -1242,7 +1242,8 @@ typedef enum
   AccTech_GSMT810  = 0xd,
   AccTech_GSMOther = 0xf
 } AccessTechnology_t;
-/* Maximum entries in one message, Enum above, appying restrictions from section
+
+/* Maximum entries in one message, Enum above, applying restrictions from section
    12.30 "MS Radio Access Capability 2": */
 #define MAX_ACCESS_TECHNOLOGIES_COUNT 11
 
