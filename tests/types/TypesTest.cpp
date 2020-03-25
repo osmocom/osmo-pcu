@@ -915,6 +915,9 @@ int main(int argc, char **argv)
 	log_set_use_color(osmo_stderr_target, 0);
 	log_set_print_filename(osmo_stderr_target, 0);
 
+	log_set_category_filter(osmo_stderr_target, DTBF, 1, LOGL_INFO);
+	log_set_category_filter(osmo_stderr_target, DTBFUL, 1, LOGL_INFO);
+
 	printf("Making some basic type testing.\n");
 
 	test_llc();
