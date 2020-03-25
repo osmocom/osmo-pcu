@@ -166,22 +166,46 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			ms_class, egprs_ms_class, delay_csec, data, len);
 }
 
+/* Returns 0 on success, suggested BSSGP cause otherwise */
+static unsigned int get_paging_mi(const uint8_t **mi, uint8_t *mi_len,
+				  const struct tlv_parsed *tp)
+{
+	static uint8_t tmsi_buf[GSM48_TMSI_LEN];
+
+	/* Use TMSI (if present) or IMSI */
+	if (TLVP_PRESENT(tp, BSSGP_IE_TMSI)) {
+		/* Be safe against an evil SGSN - check the length */
+		if (TLVP_LEN(tp, BSSGP_IE_TMSI) != GSM23003_TMSI_NUM_BYTES) {
+			LOGP(DBSSGP, LOGL_NOTICE, "TMSI IE has odd length (!= 4)\n");
+			return BSSGP_CAUSE_COND_IE_ERR;
+		}
+
+		/* NOTE: TMSI (unlike IMSI) IE comes without MI type header */
+		memcpy(tmsi_buf + 1, TLVP_VAL(tp, BSSGP_IE_TMSI), GSM23003_TMSI_NUM_BYTES);
+		tmsi_buf[0] = 0xf0 | GSM_MI_TYPE_TMSI;
+
+		*mi_len = GSM48_TMSI_LEN;
+		*mi = tmsi_buf;
+	} else if (TLVP_PRESENT(tp, BSSGP_IE_IMSI)) {
+		*mi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
+		*mi = TLVP_VAL(tp, BSSGP_IE_IMSI);
+	} else {
+		LOGP(DBSSGP, LOGL_ERROR, "Neither TMSI IE nor IMSI IE is present\n");
+		return BSSGP_CAUSE_MISSING_COND_IE;
+	}
+
+	return 0;
+}
+
 static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, struct tlv_parsed *tp)
 {
 	const uint8_t *mi;
 	uint8_t mi_len;
+	int rc;
 	uint8_t *chan_needed = (uint8_t *)TLVP_VAL(tp, BSSGP_IE_CHAN_NEEDED);
 
-	if (TLVP_PRESENT(tp, BSSGP_IE_TMSI)) {
-		mi_len = TLVP_LEN(tp, BSSGP_IE_TMSI);
-		mi = TLVP_VAL(tp, BSSGP_IE_TMSI);
-	} else if (TLVP_PRESENT(tp, BSSGP_IE_IMSI)) { /* Use IMSI if TMSI not available: */
-		mi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
-		mi = TLVP_VAL(tp, BSSGP_IE_IMSI);
-	} else {
-		LOGP(DBSSGP, LOGL_ERROR, "Neither TMSI IE nor IMSI IE is present\n");
-		return bssgp_tx_status(BSSGP_CAUSE_COND_IE_ERR, NULL, msg);
-	}
+	if ((rc = get_paging_mi(&mi, &mi_len, tp)) > 0)
+		return bssgp_tx_status((enum gprs_bssgp_cause) rc, NULL, msg);
 
 	return BTS::main_bts()->add_paging(chan_needed ? *chan_needed : 0, mi, mi_len);
 }
@@ -212,13 +236,8 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 		return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
 	}
 
-	if (TLVP_PRESENT(tp, BSSGP_IE_TMSI)) {
-		mi_len = TLVP_LEN(tp, BSSGP_IE_TMSI);
-		mi = TLVP_VAL(tp, BSSGP_IE_TMSI);
-	} else { /* Use IMSI if TMSI not available: */
-		mi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
-		mi = TLVP_VAL(tp, BSSGP_IE_IMSI);
-	}
+	if ((rc = get_paging_mi(&mi, &mi_len, tp)) > 0)
+		return bssgp_tx_status((enum gprs_bssgp_cause) rc, NULL, msg);
 
 	return gprs_rlcmac_paging_request(mi, mi_len, pgroup);
 }
