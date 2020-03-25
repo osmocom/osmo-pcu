@@ -188,7 +188,7 @@ static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, struct tlv_parsed *tp)
 
 static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 {
-	char imsi[16];
+	char imsi[OSMO_IMSI_BUF_SIZE];
 	uint16_t pgroup;
 	const uint8_t *mi;
 	uint8_t mi_len;
