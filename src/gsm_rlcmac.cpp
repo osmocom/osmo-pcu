@@ -4346,7 +4346,7 @@ CSN_DESCR_BEGIN       (Additional_MS_Rad_Access_Cap_t)
   /* Mac header */
 
   M_TYPE              (Additional_MS_Rad_Access_Cap_t,  ID, AdditionalMsRadAccessCapID_t),
-  M_TYPE              (Additional_MS_Rad_Access_Cap_t,  MS_Radio_Access_capability, MS_Radio_Access_capability2_t),
+  M_TYPE              (Additional_MS_Rad_Access_Cap_t,  MS_Radio_Access_capability2, MS_Radio_Access_capability2_t),
   M_PADDING_BITS      (Additional_MS_Rad_Access_Cap_t),
 CSN_DESCR_END         (Additional_MS_Rad_Access_Cap_t)
 
