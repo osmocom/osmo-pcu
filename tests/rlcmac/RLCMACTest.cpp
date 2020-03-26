@@ -215,7 +215,7 @@ void testCsnLeftAlignedVarBmpBounds(void *test_ctx)
 	msgb_free(m);
 }
 
-int encode_gsm_ra_cap(bitvec * vector, MS_Radio_Access_capability_t * data);
+int encode_gsm_ra_cap(struct bitvec *vector, MS_Radio_Access_capability_t * data);
 
 void testRAcap(void *test_ctx)
 {

@@ -188,7 +188,7 @@ CSN_DESCR_BEGIN   (EGPRS_AckNack_Desc_t)
 CSN_DESCR_END     (EGPRS_AckNack_Desc_t)
 
 /*< EGPRS Ack/Nack Description IE >*/
-gint16 Egprs_Ack_Nack_Desc_w_len_Dissector(csnStream_t* ar, bitvec *vector, unsigned *readIndex, void* data)
+gint16 Egprs_Ack_Nack_Desc_w_len_Dissector(csnStream_t* ar, struct bitvec *vector, unsigned *readIndex, void* data)
 {
   if (ar->direction == 0)
   {
@@ -749,7 +749,7 @@ CSN_DESCR_BEGIN(Receive_N_PDU_Number_t)
   M_UINT       (Receive_N_PDU_Number_t,  value,  8),
 CSN_DESCR_END  (Receive_N_PDU_Number_t)
 
-gint16 Receive_N_PDU_Number_list_Dissector(csnStream_t* ar, bitvec *vector, unsigned *readIndex, void* data)
+gint16 Receive_N_PDU_Number_list_Dissector(csnStream_t* ar, struct bitvec *vector, unsigned *readIndex, void* data)
 {
   if (ar->direction == 0)
   {
@@ -885,7 +885,7 @@ CSN_DESCR_BEGIN       (Content_t)
 
 CSN_DESCR_END         (Content_t)
 
-gint16 Content_Dissector(csnStream_t* ar, bitvec *vector, unsigned *readIndex, void* data)
+gint16 Content_Dissector(csnStream_t* ar, struct bitvec *vector, unsigned *readIndex, void* data)
 {
   if (ar->direction == 0)
     {
@@ -909,7 +909,7 @@ CSN_DESCR_BEGIN       (Additional_access_technologies_t)
   M_REC_TARRAY        (Additional_access_technologies_t, Additional_access_technologies, Additional_access_technologies_struct_t, Count_additional_access_technologies),
 CSN_DESCR_END         (Additional_access_technologies_t)
 
-gint16 Additional_access_technologies_Dissector(csnStream_t* ar, bitvec* vector, unsigned *readIndex, void* data)
+static gint16 Additional_access_technologies_Dissector(csnStream_t* ar, struct bitvec *vector, unsigned *readIndex, void* data)
 {
   if (ar->direction == 0)
   {
@@ -4951,7 +4951,7 @@ static const struct value_string rlcmac_dl_msg_names[] = {
 };
 
 /* Returns 0 on success, negative on error. */
-int decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
+int decode_gsm_rlcmac_uplink(struct bitvec *vector, RlcMacUplink_t * data)
 {
   csnStream_t      ar;
   int ret;
@@ -5076,7 +5076,7 @@ int decode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
 }
 
 /* Returns 0 on success, negative on error. */
-int decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
+int decode_gsm_rlcmac_downlink(struct bitvec *vector, RlcMacDownlink_t * data)
 {
   csnStream_t  ar;
   /* See RLC/MAC downlink control block structure in TS 44.060 / 10.3.1 */
@@ -5288,7 +5288,7 @@ int decode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
 }
 
 /* Returns 0 on success, negative on error. */
-int encode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
+int encode_gsm_rlcmac_uplink(struct bitvec *vector, RlcMacUplink_t * data)
 {
   csnStream_t      ar;
   unsigned writeIndex = 0;
@@ -5400,7 +5400,7 @@ int encode_gsm_rlcmac_uplink(bitvec * vector, RlcMacUplink_t * data)
 }
 
 /* Returns 0 on success, negative on error. */
-int encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
+int encode_gsm_rlcmac_downlink(struct bitvec *vector, RlcMacDownlink_t * data)
 {
   csnStream_t  ar;
   int ret;
@@ -5609,7 +5609,7 @@ int encode_gsm_rlcmac_downlink(bitvec * vector, RlcMacDownlink_t * data)
   return ret;
 }
 
-void decode_gsm_rlcmac_uplink_data(bitvec * vector, RlcMacUplinkDataBlock_t * data)
+void decode_gsm_rlcmac_uplink_data(struct bitvec *vector, RlcMacUplinkDataBlock_t * data)
 {
   unsigned readIndex = 0;
   //unsigned dataLen = 0;
@@ -5687,7 +5687,7 @@ void decode_gsm_rlcmac_uplink_data(bitvec * vector, RlcMacUplinkDataBlock_t * da
   }
 }
 
-void encode_gsm_rlcmac_downlink_data(bitvec * vector, RlcMacDownlinkDataBlock_t * data)
+void encode_gsm_rlcmac_downlink_data(struct bitvec *vector, RlcMacDownlinkDataBlock_t * data)
 {
   unsigned writeIndex = 0;
 
@@ -5745,7 +5745,7 @@ void encode_gsm_rlcmac_downlink_data(bitvec * vector, RlcMacDownlinkDataBlock_t 
   }
 }
 
-int decode_gsm_ra_cap(bitvec * vector, MS_Radio_Access_capability_t *data)
+int decode_gsm_ra_cap(struct bitvec *vector, MS_Radio_Access_capability_t *data)
 {
   csnStream_t      ar;
   int ret;
@@ -5771,7 +5771,7 @@ int decode_gsm_ra_cap(bitvec * vector, MS_Radio_Access_capability_t *data)
 /* This function is not actually used by osmo-pcu itself, and only needed for
  * the RLCMAC unit test. Having it here is better than making the internal
  * CSN.1 definitions (in particular, MS_Radio_Access_capability_t) non-static. */
-int encode_gsm_ra_cap(bitvec *vector, MS_Radio_Access_capability_t *data)
+int encode_gsm_ra_cap(struct bitvec *vector, MS_Radio_Access_capability_t *data)
 {
   unsigned writeIndex = 0;
   csnStream_t ar;
