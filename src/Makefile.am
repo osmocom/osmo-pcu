@@ -41,7 +41,7 @@ noinst_LTLIBRARIES = libgprs.la
 libgprs_la_SOURCES = \
 	gprs_debug.cpp \
 	csn1.c \
-	gsm_rlcmac.cpp \
+	gsm_rlcmac.c \
 	gprs_bssgp_pcu.cpp \
 	gprs_rlcmac.cpp \
 	gprs_rlcmac_sched.cpp \
@@ -106,7 +106,8 @@ noinst_HEADERS = \
 	gprs_codel.h \
 	gprs_coding_scheme.h \
 	coding_scheme.h \
-	egprs_rlc_compression.h
+	egprs_rlc_compression.h \
+	wireshark_compat.h
 
 osmo_pcu_SOURCES = pcu_main.cpp
 

@@ -29,10 +29,10 @@ extern "C" {
 #include <osmocom/core/tdef.h>
 #include <osmocom/gsm/l1sap.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
-	#include <mslot_class.h>
+#include "mslot_class.h"
+#include "gsm_rlcmac.h"
 }
 
-#include <gsm_rlcmac.h>
 #include "poll_controller.h"
 #include "sba.h"
 #include "tbf.h"

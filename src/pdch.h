@@ -24,9 +24,9 @@
 #ifdef __cplusplus
 extern "C" {
 #include <osmocom/core/linuxlist.h>
+#include "gsm_rlcmac.h"
 }
 
-#include <gsm_rlcmac.h>
 #include <gprs_coding_scheme.h>
 #include <bts.h>
 #endif

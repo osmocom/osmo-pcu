@@ -32,7 +32,6 @@
 #include <gprs_ms.h>
 #include <pcu_utils.h>
 #include <gprs_ms_storage.h>
-#include <gsm_rlcmac.h>
 #include <sba.h>
 #include <gprs_coding_scheme.h>
 #include <gsm_timer.h>
@@ -48,6 +47,8 @@ extern "C" {
 #include <osmocom/core/bitvec.h>
 #include <osmocom/core/rate_ctr.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
+
+#include "gsm_rlcmac.h"
 }
 
 #include <errno.h>

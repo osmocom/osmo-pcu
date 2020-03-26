@@ -19,7 +19,10 @@
  */
 #pragma once
 
-#include <gsm_rlcmac.h>
+extern "C" {
+#include "gsm_rlcmac.h"
+}
+
 #include "rlc.h"
 
 #include <stdint.h>

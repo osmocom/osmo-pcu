@@ -24,7 +24,6 @@
 #include <stdbool.h>
 
 #ifdef __cplusplus
-#include <gsm_rlcmac.h>
 #include <gsm_timer.h>
 #include <pcu_l1_if.h>
 
@@ -33,6 +32,7 @@ extern "C" {
 #include <osmocom/core/timer.h>
 #include <osmocom/core/bitvec.h>
 #include <osmocom/pcu/pcuif_proto.h>
+#include "gsm_rlcmac.h"
 }
 #endif
 

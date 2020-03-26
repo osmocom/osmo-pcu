@@ -29,18 +29,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-extern "C" {
 #include <osmocom/core/utils.h>
-}
+#include <osmocom/core/bitvec.h>
 
 #include "gsm_rlcmac.h"
+#include "csn1.h"
 /* Initialize the protocol and registered fields
 */
-#include <iostream>
-#include <cstdlib>
 #include <assert.h>
 #include <gprs_debug.h>
-using namespace std;
 
 /* Payload type as defined in TS 44.060 / 10.4.7 */
 #define PAYLOAD_TYPE_DATA              0

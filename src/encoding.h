@@ -21,10 +21,10 @@
 #pragma once
 
 #include <stdint.h>
-#include <gsm_rlcmac.h>
 #include <gprs_coding_scheme.h>
 extern "C" {
 #include <osmocom/gsm/l1sap.h>
+#include "gsm_rlcmac.h"
 }
 
 struct gprs_rlcmac_tbf;

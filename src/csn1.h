@@ -29,9 +29,7 @@
 #define _PACKET_CSN1_H_
 
 #include <osmocom/core/bitvec.h>
-
-#define MIN(a,b) (((a)<(b))?(a):(b))
-//#define max(a,b) (((a)>(b))?(a):(b))
+#include "wireshark_compat.h"
 
 /* Error codes */
 #define  CSN_OK                               0
@@ -46,17 +44,6 @@
 #define  CSN_ERROR_MESSAGE_TOO_LONG          -9
 #define  CSN_ERROR_                         -10
 
-#define FALSE (0)
-#define TRUE  (1)
-typedef signed int gint32;
-typedef signed short gint16;
-typedef int gint;
-typedef unsigned int guint;
-typedef gint gboolean;
-typedef unsigned char guint8;
-typedef unsigned short guint16;
-typedef unsigned int guint32;
-typedef unsigned long guint64;
 /* CallBack return status */
 typedef gint16 CSN_CallBackStatus_t;
 

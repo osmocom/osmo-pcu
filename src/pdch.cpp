@@ -34,7 +34,6 @@
 #include <tbf.h>
 #include <tbf_ul.h>
 #include <cxx_linuxlist.h>
-#include <gsm_rlcmac.h>
 
 extern "C" {
 #include <osmocom/core/talloc.h>
@@ -45,7 +44,9 @@ extern "C" {
 #include <osmocom/core/gsmtap.h>
 #include <osmocom/core/logging.h>
 #include <osmocom/core/utils.h>
+
 #include "coding_scheme.h"
+#include "gsm_rlcmac.h"
 }
 
 #include <errno.h>

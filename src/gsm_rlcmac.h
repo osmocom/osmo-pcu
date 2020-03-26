@@ -32,12 +32,8 @@
 #ifndef __PACKET_GSM_RLCMAC_H__
 #define __PACKET_GSM_RLCMAC_H__
 
-extern "C" {
-#include "csn1.h"
-}
-
-#include <iostream>
-#include <cstdlib>
+#include <osmocom/core/bitvec.h>
+#include "wireshark_compat.h"
 
 #ifndef PRE_PACKED
 #define PRE_PACKED

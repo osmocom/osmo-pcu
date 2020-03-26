@@ -24,7 +24,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <assert.h>
-#include "gsm_rlcmac.h"
 #include "gprs_rlcmac.h"
 #include "decoding.h"
 
@@ -38,6 +37,7 @@ extern const struct log_info gprs_log_info;
 #include <osmocom/core/application.h>
 
 #include "csn1.h"
+#include "gsm_rlcmac.h"
 }
 using namespace std;
 
@@ -215,7 +215,9 @@ void testCsnLeftAlignedVarBmpBounds(void *test_ctx)
 	msgb_free(m);
 }
 
+extern "C" {
 int encode_gsm_ra_cap(struct bitvec *vector, MS_Radio_Access_capability_t * data);
+}
 
 void testRAcap(void *test_ctx)
 {
