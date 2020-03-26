@@ -338,7 +338,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           nCount = *pui16DATA(data, nCount);
         }
 
-        if (remaining_bits_len >= no_of_bits)
+        if (remaining_bits_len >= (no_of_bits * nCount))
         {
           remaining_bits_len -= (no_of_bits*nCount);
           if (no_of_bits <= 8)
@@ -781,7 +781,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
               nCount = *pui16DATA(data, nCount);
             }
 
-            if (remaining_bits_len >= no_of_bits)
+            if (remaining_bits_len >= (no_of_bits * nCount))
             {
               remaining_bits_len -= (no_of_bits * nCount);
               if (no_of_bits <= 8)
@@ -1650,7 +1650,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
           nCount = *pui16DATA(data, nCount);
         }
 
-        if (remaining_bits_len >= no_of_bits)
+        if (remaining_bits_len >= (no_of_bits * nCount))
         {
           if (no_of_bits <= 8)
           {
@@ -2067,7 +2067,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
               nCount = *pui16DATA(data, nCount);
             }
 
-            if (remaining_bits_len >= no_of_bits)
+            if (remaining_bits_len >= (no_of_bits * nCount))
             {
               if (no_of_bits <= 8)
               {
