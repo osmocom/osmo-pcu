@@ -43,9 +43,9 @@ extern "C" {
 #include <osmocom/core/stats.h>
 #include <osmocom/core/logging.h>
 #include <osmocom/core/timer_compat.h>
-	#include <osmocom/core/bitvec.h>
-	#include <osmocom/core/rate_ctr.h>
-	#include <osmocom/gsm/protocol/gsm_04_08.h>
+#include <osmocom/core/bitvec.h>
+#include <osmocom/core/rate_ctr.h>
+#include <osmocom/gsm/protocol/gsm_04_08.h>
 }
 
 #include <errno.h>

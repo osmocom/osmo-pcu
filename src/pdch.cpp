@@ -37,14 +37,14 @@
 #include <gsm_rlcmac.h>
 
 extern "C" {
-	#include <osmocom/core/talloc.h>
-	#include <osmocom/core/msgb.h>
-	#include <osmocom/gsm/protocol/gsm_04_08.h>
-	#include <osmocom/core/bitvec.h>
-	#include <osmocom/core/gsmtap.h>
-	#include <osmocom/core/logging.h>
-	#include <osmocom/core/utils.h>
-	#include "coding_scheme.h"
+#include <osmocom/core/talloc.h>
+#include <osmocom/core/msgb.h>
+#include <osmocom/gsm/protocol/gsm_04_08.h>
+#include <osmocom/core/bitvec.h>
+#include <osmocom/core/gsmtap.h>
+#include <osmocom/core/logging.h>
+#include <osmocom/core/utils.h>
+#include "coding_scheme.h"
 }
 
 #include <errno.h>
