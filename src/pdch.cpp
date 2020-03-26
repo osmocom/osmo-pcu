@@ -209,7 +209,7 @@ struct msgb *gprs_rlcmac_pdch::packet_paging_request()
 		     osmo_mi_name(pag->identity_lv + 1, pag->identity_lv[0]));
 
 		/* try to add paging */
-		if ((pag->identity_lv[1] & 0x07) == 4) {
+		if ((pag->identity_lv[1] & GSM_MI_TYPE_MASK) == GSM_MI_TYPE_TMSI) {
 			/* TMSI */
 			len = 1 + 1 + 1 + 32 + 2 + 1;
 			if (pag->identity_lv[0] != 5) {
