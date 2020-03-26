@@ -37,6 +37,7 @@
 /* Initialize the protocol and registered fields
 */
 #include <assert.h>
+#include <arpa/inet.h>
 #include <gprs_debug.h>
 
 /* Payload type as defined in TS 44.060 / 10.4.7 */
@@ -2637,12 +2638,27 @@ CSN_DESCR_BEGIN(Cell_Selection_Params_With_FreqDiff_t)
   M_TYPE       (Cell_Selection_Params_With_FreqDiff_t, Cell_SelectionParams, Cell_Selection_t),
 CSN_DESCR_END  (Cell_Selection_Params_With_FreqDiff_t)
 
+CSN_CallBackStatus_t callback_init_Cell_Selection_Params_FREQUENCY_DIFF(struct bitvec *vector, void* param1, void* param2, int bit_offset)
+{
+    guint  i;
+    guint8 freq_diff_len = *(guint8*)param1;
+    Cell_Selection_Params_With_FreqDiff_t *pCell_Sel_Param = (Cell_Selection_Params_With_FreqDiff_t*)param2;
+
+    for( i=0; i<16; i++, pCell_Sel_Param++ )
+    {
+        pCell_Sel_Param->FREQ_DIFF_LENGTH = freq_diff_len;
+    }
+
+    return 0;
+}
+
 static const
 CSN_DESCR_BEGIN(NeighbourCellParameters_t)
   M_UINT       (NeighbourCellParameters_t,  START_FREQUENCY,  10),
   M_TYPE       (NeighbourCellParameters_t, Cell_Selection, Cell_Selection_t),
   M_UINT       (NeighbourCellParameters_t,  NR_OF_REMAINING_CELLS,  4),
   M_UINT_OFFSET(NeighbourCellParameters_t, FREQ_DIFF_LENGTH, 3, 1),/* offset 1 */
+  M_CALLBACK   (NeighbourCellParameters_t, callback_init_Cell_Selection_Params_FREQUENCY_DIFF, FREQ_DIFF_LENGTH, Cell_Selection_Params_With_FreqDiff),
   M_VAR_TARRAY (NeighbourCellParameters_t, Cell_Selection_Params_With_FreqDiff, Cell_Selection_Params_With_FreqDiff_t, NR_OF_REMAINING_CELLS),
 CSN_DESCR_END  (NeighbourCellParameters_t)
 
@@ -2741,6 +2757,20 @@ static const CSN_DESCR_BEGIN(CellSelectionParamsWithFreqDiff_t)
   M_TYPE       (CellSelectionParamsWithFreqDiff_t, CellSelectionParams, Cell_Selection_2_t),
 CSN_DESCR_END  (CellSelectionParamsWithFreqDiff_t)
 
+CSN_CallBackStatus_t callback_init_Cell_Sel_Param_2_FREQUENCY_DIFF(struct bitvec *vector, void* param1, void* param2, int bit_offset)
+{
+    guint  i;
+    guint8 freq_diff_len = *(guint8*)param1;
+    CellSelectionParamsWithFreqDiff_t *pCell_Sel_Param = (CellSelectionParamsWithFreqDiff_t*)param2;
+
+    for( i=0; i<16; i++, pCell_Sel_Param++ )
+    {
+        pCell_Sel_Param->FREQ_DIFF_LENGTH = freq_diff_len;
+    }
+
+    return 0;
+}
+
 static const
 CSN_DESCR_BEGIN(Add_Frequency_list_t)
   M_UINT       (Add_Frequency_list_t,  START_FREQUENCY,  10),
@@ -2751,6 +2781,8 @@ CSN_DESCR_BEGIN(Add_Frequency_list_t)
 
   M_UINT       (Add_Frequency_list_t,  NR_OF_FREQUENCIES,  5),
   M_UINT_OFFSET(Add_Frequency_list_t, FREQ_DIFF_LENGTH, 3, 1),/*offset 1*/
+
+  M_CALLBACK   (Add_Frequency_list_t, callback_init_Cell_Sel_Param_2_FREQUENCY_DIFF, FREQ_DIFF_LENGTH, CellSelectionParamsWithFreqDiff),
 
   M_VAR_TARRAY (Add_Frequency_list_t, CellSelectionParamsWithFreqDiff, CellSelectionParamsWithFreqDiff_t, NR_OF_FREQUENCIES),
 CSN_DESCR_END  (Add_Frequency_list_t)
@@ -2923,13 +2955,99 @@ CSN_DESCR_BEGIN(CDMA2000_Description_t)
   CSN_ERROR    (CDMA2000_Description_t, "Not Implemented", CSN_ERROR_STREAM_NOT_SUPPORTED),
 CSN_DESCR_END  (CDMA2000_Description_t)
 
+#if 0
+static const guint8 NR_OF_FDD_CELLS_map[32] = {0, 10, 19, 28, 36, 44, 52, 60, 67, 74, 81, 88, 95, 102, 109, 116, 122, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+#endif
+#if 0
+static CSN_CallBackStatus_t callback_UTRAN_FDD_map_NrOfFrequencies(proto_tree *tree _U_, tvbuff_t *tvb _U_, void* param1, void* param2,
+                                                                   int bit_offset _U_, int ett_csn1 _U_, packet_info* pinfo _U_)
+{   /* TS 44.060 Table 11.2.9b.2.a */
+  guint8 *pNrOfCells = (guint8*)param1;
+  guint8 *pBitsInCellInfo = (guint8*)param2;
+
+  if ( *pNrOfCells < 32 )
+  {
+    *pBitsInCellInfo = NR_OF_FDD_CELLS_map[*pNrOfCells];
+  }
+  else
+  {
+    *pBitsInCellInfo = 0;
+  }
+
+  return 0;
+}
+
+static CSN_CallBackStatus_t callback_UTRAN_FDD_compute_FDD_CELL_INFORMATION(proto_tree *tree, tvbuff_t *tvb, void* param1, void* param2 _U_,
+                                                                            int bit_offset, int ett_csn1, packet_info* pinfo _U_)
+{
+  proto_tree   *subtree;
+  UTRAN_FDD_NeighbourCells_t * pUtranFddNcell = (UTRAN_FDD_NeighbourCells_t*)param1;
+  gint xdd_cell_info, wsize, nwi, jwi, w[64], i, iused;
+  gint curr_bit_offset, idx;
+
+  curr_bit_offset = bit_offset;
+  idx = pUtranFddNcell->BitsInCellInfo;
+
+  if ( idx > 0 )
+  {
+    subtree = proto_tree_add_subtree(tree, tvb, curr_bit_offset>>3, 1, ett_csn1, NULL, "FDD_CELL_INFORMATION: ");
+
+    if (pUtranFddNcell->Indic0)
+    {
+      proto_tree_add_uint(tree, hf_gsm_rlcmac_scrambling_code, tvb, curr_bit_offset>>3, 0, 0);
+      proto_tree_add_uint(tree, hf_gsm_rlcmac_diversity, tvb, curr_bit_offset>>3, 0, 0);
+    }
+
+    if (idx)
+    {
+      wsize = 10;
+      nwi = 1;
+      jwi = 0;
+      i = 1;
+
+      while (idx > 0)
+      {
+        w[i] = tvb_get_bits(tvb, curr_bit_offset, wsize, ENC_BIG_ENDIAN);
+        curr_bit_offset += wsize;
+        idx -= wsize;
+        if (w[i] == 0)
+        {
+          idx = 0;
+          break;
+        }
+        if (++jwi==nwi)
+        {
+          jwi = 0;
+          nwi <<= 1;
+          wsize--;
+        }
+        i++;
+      }
+      if (idx < 0)
+      {
+        curr_bit_offset += idx;
+      }
+      iused = i-1;
+
+      for (i=1; i <= iused; i++)
+      {
+        xdd_cell_info = f_k(i, w, 1024);
+        proto_tree_add_uint(subtree, hf_gsm_rlcmac_scrambling_code, tvb, curr_bit_offset>>3, 0, xdd_cell_info & 0x01FF);
+        proto_tree_add_uint(subtree, hf_gsm_rlcmac_diversity, tvb, curr_bit_offset>>3, 0, (xdd_cell_info >> 9) & 0x01);
+      }
+    }
+  }
+
+  return curr_bit_offset - bit_offset;
+}
+#endif
+
 static const
 CSN_DESCR_BEGIN(UTRAN_FDD_NeighbourCells_t)
   M_UINT       (UTRAN_FDD_NeighbourCells_t,  ZERO,      1),
   M_UINT       (UTRAN_FDD_NeighbourCells_t,  UARFCN,   14),
   M_UINT       (UTRAN_FDD_NeighbourCells_t,  Indic0,      1),
   M_UINT       (UTRAN_FDD_NeighbourCells_t,  NrOfCells,   5),
-/*  M_CALLBACK   (UTRAN_FDD_NeighbourCells_t, (void*) 14, NrOfCells, BitsInCellInfo), */
   M_VAR_BITMAP (UTRAN_FDD_NeighbourCells_t, CellInfo,  BitsInCellInfo, 0),
 CSN_DESCR_END  (UTRAN_FDD_NeighbourCells_t)
 
@@ -2940,14 +3058,101 @@ CSN_DESCR_BEGIN(UTRAN_FDD_Description_t)
   M_REC_TARRAY (UTRAN_FDD_Description_t, CellParams, UTRAN_FDD_NeighbourCells_t, NrOfFrequencies),
 CSN_DESCR_END  (UTRAN_FDD_Description_t)
 
+static const guint8 NR_OF_TDD_CELLS_map[32] = {0, 9, 17, 25, 32, 39, 46, 53, 59, 65, 71, 77, 83, 89, 95, 101, 106, 111, 116, 121, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static CSN_CallBackStatus_t callback_UTRAN_TDD_map_NrOfFrequencies(struct bitvec *vector, unsigned *readIndex, void* param1, void* param2)
+{  /* TS 44.060 Table 11.2.9b.2.b */
+  guint8 * pNrOfCells = (guint8*)param1;
+  guint8 * pBitsInCellInfo = (guint8*)param2;
+
+  if ( *pNrOfCells < 32 )
+  {
+    *pBitsInCellInfo = NR_OF_TDD_CELLS_map[*pNrOfCells];
+  }
+  else
+  {
+    *pBitsInCellInfo = 0;
+  }
+
+  return 0;
+}
+
+static CSN_CallBackStatus_t callback_UTRAN_TDD_compute_TDD_CELL_INFORMATION(struct bitvec *vector, unsigned *readIndex, void* param1, void* param2)
+{
+  UTRAN_TDD_NeighbourCells_t *pUtranTddNcell = (UTRAN_TDD_NeighbourCells_t *)param1;
+  gint wsize, nwi, jwi, w[64], i, iused;
+  guint bit_offset, curr_bit_offset;
+  gint idx;
+
+  bit_offset = *readIndex;
+  curr_bit_offset = bit_offset;
+  idx = pUtranTddNcell->BitsInCellInfo;
+
+  if ( idx > 0 )
+  {
+    /*
+    subtree = proto_tree_add_subtree(tree, tvb, curr_bit_offset>>3, 1, ett_csn1, NULL, "TDD_CELL_INFORMATION: ");
+
+    if (pUtranTddNcell->Indic0)
+    {
+      proto_tree_add_uint(tree, hf_gsm_rlcmac_cell_parameter, tvb, curr_bit_offset>>3, 0, 0);
+      proto_tree_add_uint(tree, hf_gsm_rlcmac_sync_case_tstd, tvb, curr_bit_offset>>3, 0, 0);
+      proto_tree_add_uint(tree, hf_gsm_rlcmac_diversity_tdd, tvb, curr_bit_offset>>3, 0, 0);
+    }
+    */
+
+    if (idx)
+    {
+      wsize = 10;
+      nwi = 1;
+      jwi = 0;
+      i = 1;
+
+      while (idx > 0)
+      {
+        w[i] = ntohs((uint16_t)bitvec_read_field(vector, &curr_bit_offset, wsize));
+        idx -= wsize;
+        if (w[i] == 0)
+        {
+          idx = 0;
+          break;
+        }
+        if (++jwi==nwi)
+        {
+          jwi = 0;
+          nwi <<= 1;
+          wsize--;
+        }
+        i++;
+      }
+      if (idx < 0)
+      {
+        curr_bit_offset += idx;
+      }
+      iused = i-1;
+
+      for (i=1; i <= iused; i++)
+      {
+        /*
+        xdd_cell_info = f_k(i, w, 1024);
+        proto_tree_add_uint(subtree, hf_gsm_rlcmac_cell_parameter, tvb, curr_bit_offset>>3, 0, xdd_cell_info & 0x007F);
+        proto_tree_add_uint(subtree, hf_gsm_rlcmac_sync_case_tstd, tvb, curr_bit_offset>>3, 0, (xdd_cell_info >> 7) & 0x01);
+        proto_tree_add_uint(subtree, hf_gsm_rlcmac_diversity_tdd, tvb, curr_bit_offset>>3, 0, (xdd_cell_info >> 8) & 0x01);
+        */
+      }
+    }
+  }
+  *readIndex = curr_bit_offset;
+  return curr_bit_offset - bit_offset;
+}
+
 static const
 CSN_DESCR_BEGIN(UTRAN_TDD_NeighbourCells_t)
   M_UINT       (UTRAN_TDD_NeighbourCells_t,  ZERO,      1),
   M_UINT       (UTRAN_TDD_NeighbourCells_t,  UARFCN,   14),
   M_UINT       (UTRAN_TDD_NeighbourCells_t,  Indic0,      1),
   M_UINT       (UTRAN_TDD_NeighbourCells_t,  NrOfCells,   5),
-/*  M_CALLBACK   (UTRAN_TDD_NeighbourCells_t, (void*) 23, NrOfCells, BitsInCellInfo), */
-  M_VAR_BITMAP (UTRAN_TDD_NeighbourCells_t, CellInfo,  BitsInCellInfo, 0),
+  M_CALLBACK   (UTRAN_TDD_NeighbourCells_t, callback_UTRAN_TDD_map_NrOfFrequencies, NrOfCells, BitsInCellInfo),
+  M_CALLBACK   (UTRAN_TDD_NeighbourCells_t, callback_UTRAN_TDD_compute_TDD_CELL_INFORMATION, ZERO, CellInfo),
 CSN_DESCR_END  (UTRAN_TDD_NeighbourCells_t)
 
 static const
@@ -3093,6 +3298,20 @@ CSN_DESCR_BEGIN(lu_ModeOnlyCellSelectionParamsWithFreqDiff_t)
   M_TYPE       (lu_ModeOnlyCellSelectionParamsWithFreqDiff_t, lu_ModeOnlyCellSelectionParams, lu_ModeOnlyCellSelection_t),
 CSN_DESCR_END  (lu_ModeOnlyCellSelectionParamsWithFreqDiff_t)
 
+CSN_CallBackStatus_t callback_init_luMode_Cell_Sel_Param_FREQUENCY_DIFF(struct bitvec *vector, unsigned *readIndex, void* param1, void* param2)
+{
+    guint  i;
+    guint8 freq_diff_len = *(guint8*)param1;
+    lu_ModeOnlyCellSelectionParamsWithFreqDiff_t *pArray = (lu_ModeOnlyCellSelectionParamsWithFreqDiff_t*)param2;
+
+    for( i=0; i<16; i++, pArray++ )
+    {
+        pArray->FREQ_DIFF_LENGTH = freq_diff_len;
+    }
+
+    return 0;
+}
+
 static const
 CSN_DESCR_BEGIN(Add_lu_ModeOnlyFrequencyList_t)
   M_UINT       (Add_lu_ModeOnlyFrequencyList_t,  START_FREQUENCY,  10),
@@ -3103,6 +3322,8 @@ CSN_DESCR_BEGIN(Add_lu_ModeOnlyFrequencyList_t)
 
   M_UINT       (Add_lu_ModeOnlyFrequencyList_t,  NR_OF_FREQUENCIES,  5),
   M_UINT       (Add_lu_ModeOnlyFrequencyList_t,  FREQ_DIFF_LENGTH,  3),
+
+  M_CALLBACK   (Add_lu_ModeOnlyFrequencyList_t, callback_init_luMode_Cell_Sel_Param_FREQUENCY_DIFF, FREQ_DIFF_LENGTH, lu_ModeOnlyCellSelectionParamsWithFreqDiff),
 
   M_VAR_TARRAY (Add_lu_ModeOnlyFrequencyList_t, lu_ModeOnlyCellSelectionParamsWithFreqDiff, lu_ModeOnlyCellSelectionParamsWithFreqDiff_t, NR_OF_FREQUENCIES),
 CSN_DESCR_END  (Add_lu_ModeOnlyFrequencyList_t)
@@ -4692,13 +4913,23 @@ CSN_DESCR_END  (COMPACT_Cell_Sel_t)
 
 static const
 CSN_DESCR_BEGIN(COMPACT_Neighbour_Cell_Param_Remaining_t)
-  /* this FREQ_DIFF_LENGTH is not initialised, it should be the SAME as COMPACT_Neighbour_Cell_Param_t.FREQ_DIFF_LENGTH.
-  * So it is buggy, but there is no way to handle it. Same issue is in Cell_Selection_Params_With_FreqDiff_t.FREQ_DIFF_LENGTH.
-  */
   M_VAR_BITMAP (COMPACT_Neighbour_Cell_Param_Remaining_t,  FREQUENCY_DIFF, FREQ_DIFF_LENGTH, 0),
   M_TYPE       (COMPACT_Neighbour_Cell_Param_Remaining_t,  COMPACT_Cell_Sel_Remain_Cells, COMPACT_Cell_Sel_t),
 CSN_DESCR_END  (COMPACT_Neighbour_Cell_Param_Remaining_t)
 
+CSN_CallBackStatus_t callback_init_COMP_Ncell_Param_FREQUENCY_DIFF(struct bitvec *vector, unsigned *readIndex, void* param1, void* param2)
+{
+    guint  i;
+    guint8 freq_diff_len = *(guint8*)param1;
+    COMPACT_Neighbour_Cell_Param_Remaining_t *pCom_NCell_Param_rem = (COMPACT_Neighbour_Cell_Param_Remaining_t*)param2;
+
+    for( i=0; i<16; i++, pCom_NCell_Param_rem++ )
+    {
+        pCom_NCell_Param_rem->FREQ_DIFF_LENGTH = freq_diff_len;
+    }
+
+    return 0;
+}
 
 static const
 CSN_DESCR_BEGIN(COMPACT_Neighbour_Cell_Param_t)
@@ -4706,6 +4937,7 @@ CSN_DESCR_BEGIN(COMPACT_Neighbour_Cell_Param_t)
   M_TYPE       (COMPACT_Neighbour_Cell_Param_t,  COMPACT_Cell_Sel, COMPACT_Cell_Sel_t),
   M_UINT       (COMPACT_Neighbour_Cell_Param_t,  NR_OF_REMAINING_CELLS, 4),
   M_UINT_OFFSET(COMPACT_Neighbour_Cell_Param_t,  FREQ_DIFF_LENGTH, 3, 1),
+  M_CALLBACK   (COMPACT_Neighbour_Cell_Param_t,  callback_init_COMP_Ncell_Param_FREQUENCY_DIFF, FREQ_DIFF_LENGTH, COMPACT_Neighbour_Cell_Param_Remaining),
   M_VAR_TARRAY (COMPACT_Neighbour_Cell_Param_t,  COMPACT_Neighbour_Cell_Param_Remaining, COMPACT_Neighbour_Cell_Param_Remaining_t, NR_OF_REMAINING_CELLS),
 CSN_DESCR_END  (COMPACT_Neighbour_Cell_Param_t)
 

@@ -1433,7 +1433,13 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
       case CSN_CALLBACK:
       {
-        return ProcessError(readIndex,"csnStreamDecoder Callback not implemented", -1, pDescr);
+        guint16  no_of_bits;
+        DissectorCallbackFcn_t callback = (DissectorCallbackFcn_t)pDescr->aux_fn;
+        LOGPC(DCSN1, LOGL_DEBUG, "CSN_CALLBACK(%s) | ", pDescr->sz);
+        no_of_bits = callback(vector, readIndex, pvDATA(data, pDescr->i), pvDATA(data, pDescr->offset));
+        remaining_bits_len -= no_of_bits;
+        bit_offset += no_of_bits;
+        pDescr++;
         break;
       }
 

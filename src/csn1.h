@@ -71,6 +71,8 @@ typedef struct
 } csnStream_t;
 
 typedef gint16 (*StreamSerializeFcn_t)(csnStream_t* ar, struct bitvec *vector, unsigned *readIndex, void* data);
+typedef CSN_CallBackStatus_t (*DissectorCallbackFcn_t)(struct bitvec *vector, unsigned *readIndex, void* param1, void* param2);
+
 typedef enum
 {
   CSN_END = 0,
