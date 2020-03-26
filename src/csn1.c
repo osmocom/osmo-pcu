@@ -424,6 +424,10 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
         if (no_of_bits > 0)
         {
+          if (no_of_bits > remaining_bits_len)
+          {
+            return ProcessError(readIndex, "csnStreamDecoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
+          }
 
           if (no_of_bits <= 32)
           {
@@ -451,7 +455,6 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           }
 
           remaining_bits_len -= no_of_bits;
-          assert(remaining_bits_len >= 0);
           bit_offset += no_of_bits;
         }
         /* bitmap was successfully extracted or it was empty */
@@ -876,6 +879,10 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
             if (no_of_bits > 0)
             {
+              if (no_of_bits > remaining_bits_len)
+              {
+                return ProcessError(readIndex, "csnStreamDecoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
+              }
 
               if (no_of_bits <= 32)
               {
@@ -896,7 +903,6 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
               }
 
               remaining_bits_len -= no_of_bits;
-              assert(remaining_bits_len >= 0);
               bit_offset += no_of_bits;
             }
             /* bitmap was successfully extracted or it was empty */
@@ -1737,6 +1743,10 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
 
         if (no_of_bits > 0)
         {
+          if (no_of_bits > remaining_bits_len)
+          {
+            return ProcessError(writeIndex, "csnStreamDecoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
+          }
 
           if (no_of_bits <= 32)
           {
@@ -1762,7 +1772,6 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
           }
 
           remaining_bits_len -= no_of_bits;
-          assert(remaining_bits_len >= 0);
           bit_offset += no_of_bits;
         }
         /* bitmap was successfully extracted or it was empty */
@@ -2153,6 +2162,10 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
 
             if (no_of_bits > 0)
             {
+              if (no_of_bits > remaining_bits_len)
+              {
+                return ProcessError(writeIndex, "csnStreamDecoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
+              }
 
               if (no_of_bits <= 32)
               {
@@ -2172,7 +2185,6 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
               }
 
               remaining_bits_len -= no_of_bits;
-              assert(remaining_bits_len >= 0);
               bit_offset += no_of_bits;
             }
             /* bitmap was successfully extracted or it was empty */
