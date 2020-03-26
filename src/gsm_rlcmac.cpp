@@ -215,31 +215,40 @@ CSN_DESCR_END  (EGPRS_AckNack_t)
 
 /*<P1 Rest Octets>*/
 /*<P2 Rest Octets>*/
+#if 0
 static const
 CSN_DESCR_BEGIN(MobileAllocationIE_t)
   M_UINT       (MobileAllocationIE_t,  Length,  8),
   M_VAR_ARRAY  (MobileAllocationIE_t, MA, Length, 0),
 CSN_DESCR_END  (MobileAllocationIE_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(SingleRFChannel_t)
   M_UINT       (SingleRFChannel_t,  spare,  2),
   M_UINT       (SingleRFChannel_t,  ARFCN,  10),
 CSN_DESCR_END  (SingleRFChannel_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(RFHoppingChannel_t)
   M_UINT       (RFHoppingChannel_t,  MAIO,  6),
   M_UINT       (RFHoppingChannel_t,  HSN,  6),
 CSN_DESCR_END  (RFHoppingChannel_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(MobileAllocation_or_Frequency_Short_List_t)
   M_UNION      (MobileAllocation_or_Frequency_Short_List_t, 2),
   M_BITMAP     (MobileAllocation_or_Frequency_Short_List_t, u.Frequency_Short_List, 64),
   M_TYPE       (MobileAllocation_or_Frequency_Short_List_t, u.MA, MobileAllocationIE_t),
 CSN_DESCR_END  (MobileAllocation_or_Frequency_Short_List_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(Channel_Description_t)
   M_UINT       (Channel_Description_t,  Channel_type_and_TDMA_offset,  5),
@@ -250,7 +259,9 @@ CSN_DESCR_BEGIN(Channel_Description_t)
   M_TYPE       (Channel_Description_t, u.SingleRFChannel, SingleRFChannel_t),
   M_TYPE       (Channel_Description_t, u.RFHoppingChannel, RFHoppingChannel_t),
 CSN_DESCR_END(Channel_Description_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(Group_Channel_Description_t)
   M_TYPE       (Group_Channel_Description_t, Channel_Description, Channel_Description_t),
@@ -258,7 +269,9 @@ CSN_DESCR_BEGIN(Group_Channel_Description_t)
   M_NEXT_EXIST (Group_Channel_Description_t, Exist_Hopping, 1),
   M_TYPE       (Group_Channel_Description_t, MA_or_Frequency_Short_List, MobileAllocation_or_Frequency_Short_List_t),
 CSN_DESCR_END  (Group_Channel_Description_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(Group_Call_Reference_t)
   M_UINT       (Group_Call_Reference_t,  value,  27),
@@ -267,7 +280,9 @@ CSN_DESCR_BEGIN(Group_Call_Reference_t)
   M_UINT       (Group_Call_Reference_t,  call_priority,  3),
   M_UINT       (Group_Call_Reference_t,  Ciphering_information,  4),
 CSN_DESCR_END  (Group_Call_Reference_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(Group_Call_information_t)
   M_TYPE       (Group_Call_information_t, Group_Call_Reference, Group_Call_Reference_t),
@@ -275,7 +290,9 @@ CSN_DESCR_BEGIN(Group_Call_information_t)
   M_NEXT_EXIST (Group_Call_information_t, Exist_Group_Channel_Description, 1),
   M_TYPE       (Group_Call_information_t, Group_Channel_Description, Group_Channel_Description_t),
 CSN_DESCR_END (Group_Call_information_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN  (P1_Rest_Octets_t)
   M_NEXT_EXIST_LH(P1_Rest_Octets_t, Exist_NLN_PCH_and_NLN_status, 2),
@@ -294,7 +311,9 @@ CSN_DESCR_BEGIN  (P1_Rest_Octets_t)
   M_UINT_LH      (P1_Rest_Octets_t,  Packet_Page_Indication_1,  1),
   M_UINT_LH      (P1_Rest_Octets_t,  Packet_Page_Indication_2,  1),
 CSN_DESCR_END    (P1_Rest_Octets_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN  (P2_Rest_Octets_t)
   M_NEXT_EXIST_LH(P2_Rest_Octets_t, Exist_CN3, 1),
@@ -315,13 +334,14 @@ CSN_DESCR_BEGIN  (P2_Rest_Octets_t)
 
   M_UINT_LH      (P2_Rest_Octets_t,  Packet_Page_Indication_3,  1),
 CSN_DESCR_END    (P2_Rest_Octets_t)
-
+#endif
 
 /* <IA Rest Octets>
  * Note!!
  * - first two bits skipped and frequencyparameters skipped
  * - additions for R99 and EGPRS added
  */
+#if 0
 static const
 CSN_DESCR_BEGIN(DynamicAllocation_t)
   M_UINT       (DynamicAllocation_t,  USF,  3),
@@ -331,7 +351,9 @@ CSN_DESCR_BEGIN(DynamicAllocation_t)
   M_UINT       (DynamicAllocation_t,  P0,  4),
   M_UINT       (DynamicAllocation_t,  PR_MODE,  1),
 CSN_DESCR_END  (DynamicAllocation_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(EGPRS_TwoPhaseAccess_t)
   M_NEXT_EXIST (EGPRS_TwoPhaseAccess_t, Exist_ALPHA, 1),
@@ -346,7 +368,9 @@ CSN_DESCR_BEGIN(EGPRS_TwoPhaseAccess_t)
   M_UINT       (EGPRS_TwoPhaseAccess_t,  BTS_PWR_CTRL_MODE,  1),
   M_UINT       (EGPRS_TwoPhaseAccess_t,  PR_MODE,  1),
 CSN_DESCR_END  (EGPRS_TwoPhaseAccess_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(EGPRS_OnePhaseAccess_t)
   M_UINT       (EGPRS_OnePhaseAccess_t,  TFI_ASSIGNMENT,  5),
@@ -376,7 +400,9 @@ CSN_DESCR_BEGIN(EGPRS_OnePhaseAccess_t)
   M_NEXT_EXIST (EGPRS_OnePhaseAccess_t, Exist_TBF_STARTING_TIME, 1),
   M_TYPE       (EGPRS_OnePhaseAccess_t, TBF_STARTING_TIME, StartingTime_t),
 CSN_DESCR_END  (EGPRS_OnePhaseAccess_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(IA_EGPRS_00_t)
   M_UINT       (IA_EGPRS_00_t,  ExtendedRA,  5),
@@ -387,7 +413,9 @@ CSN_DESCR_BEGIN(IA_EGPRS_00_t)
   M_TYPE       (IA_EGPRS_00_t, Access.TwoPhaseAccess, EGPRS_TwoPhaseAccess_t),
   M_TYPE       (IA_EGPRS_00_t, Access.OnePhaseAccess, EGPRS_OnePhaseAccess_t),
 CSN_DESCR_END  (IA_EGPRS_00_t)
+#endif
 
+#if 0
 static const
 CSN_ChoiceElement_t IA_EGPRS_Choice[] =
 {
@@ -395,11 +423,13 @@ CSN_ChoiceElement_t IA_EGPRS_Choice[] =
   {2, 0x01, 0, CSN_ERROR(IA_EGPRS_t, "01 <IA_EGPRS>", CSN_ERROR_STREAM_NOT_SUPPORTED)},
   {1, 0x01, 0, CSN_ERROR(IA_EGPRS_t, "1 <IA_EGPRS>", CSN_ERROR_STREAM_NOT_SUPPORTED)}
 };
+#endif
 
 /* Please observe the double usage of UnionType element.
  * First, it is used to store the second bit of LL/LH identification of EGPRS contents.
  * Thereafter, UnionType will be used to store the index to detected choice.
  */
+#if 0
 static const
 CSN_DESCR_BEGIN(IA_EGPRS_t)
   M_UINT       (IA_EGPRS_t,  UnionType ,  1 ),
@@ -412,7 +442,9 @@ CSN_DESCR_BEGIN(IA_FreqParamsBeforeTime_t)
   M_UINT       (IA_FreqParamsBeforeTime_t,  MAIO,  6),
   M_VAR_ARRAY  (IA_FreqParamsBeforeTime_t, MobileAllocation, Length, 8),
 CSN_DESCR_END  (IA_FreqParamsBeforeTime_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN  (GPRS_SingleBlockAllocation_t)
   M_NEXT_EXIST   (GPRS_SingleBlockAllocation_t, Exist_ALPHA, 1),
@@ -427,7 +459,9 @@ CSN_DESCR_BEGIN  (GPRS_SingleBlockAllocation_t)
   M_UINT         (GPRS_SingleBlockAllocation_t,  BTS_PWR_CTRL_MODE,  1),
   M_UINT         (GPRS_SingleBlockAllocation_t,  PR_MODE,  1),
 CSN_DESCR_END    (GPRS_SingleBlockAllocation_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN  (GPRS_DynamicOrFixedAllocation_t)
   M_UINT         (GPRS_DynamicOrFixedAllocation_t,  TFI_ASSIGNMENT,  5),
@@ -451,13 +485,17 @@ CSN_DESCR_BEGIN  (GPRS_DynamicOrFixedAllocation_t)
   M_NEXT_EXIST   (GPRS_DynamicOrFixedAllocation_t, Exist_TBF_STARTING_TIME, 1),
   M_TYPE         (GPRS_DynamicOrFixedAllocation_t, TBF_STARTING_TIME, StartingTime_t),
 CSN_DESCR_END    (GPRS_DynamicOrFixedAllocation_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(PU_IA_AdditionsR99_t)
   M_NEXT_EXIST (PU_IA_AdditionsR99_t, Exist_ExtendedRA, 1),
   M_UINT       (PU_IA_AdditionsR99_t,  ExtendedRA,  5),
 CSN_DESCR_END  (PU_IA_AdditionsR99_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN          (Packet_Uplink_ImmAssignment_t)
   M_UNION                (Packet_Uplink_ImmAssignment_t, 2),
@@ -467,7 +505,9 @@ CSN_DESCR_BEGIN          (Packet_Uplink_ImmAssignment_t)
   M_NEXT_EXIST_OR_NULL_LH(Packet_Uplink_ImmAssignment_t, Exist_AdditionsR99, 1),
   M_TYPE                 (Packet_Uplink_ImmAssignment_t, AdditionsR99, PU_IA_AdditionsR99_t),
 CSN_DESCR_END            (Packet_Uplink_ImmAssignment_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(PD_IA_AdditionsR99_t)
   M_UINT       (PD_IA_AdditionsR99_t,  EGPRS_WindowSize,  5),
@@ -476,7 +516,9 @@ CSN_DESCR_BEGIN(PD_IA_AdditionsR99_t)
   M_NEXT_EXIST (PD_IA_AdditionsR99_t, Exist_BEP_PERIOD2, 1),
   M_UINT       (PD_IA_AdditionsR99_t,  BEP_PERIOD2,  4),
 CSN_DESCR_END  (PD_IA_AdditionsR99_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(Packet_Downlink_ImmAssignment_t)
   M_UINT       (Packet_Downlink_ImmAssignment_t,  TLLI,  32),
@@ -504,27 +546,34 @@ CSN_DESCR_BEGIN(Packet_Downlink_ImmAssignment_t)
   M_NEXT_EXIST_OR_NULL_LH(Packet_Downlink_ImmAssignment_t, Exist_AdditionsR99, 1),
   M_TYPE       (Packet_Downlink_ImmAssignment_t, AdditionsR99, PD_IA_AdditionsR99_t),
 CSN_DESCR_END  (Packet_Downlink_ImmAssignment_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN          (Second_Part_Packet_Assignment_t)
   M_NEXT_EXIST_OR_NULL_LH(Second_Part_Packet_Assignment_t, Exist_SecondPart, 2),
   M_NEXT_EXIST           (Second_Part_Packet_Assignment_t, Exist_ExtendedRA, 1),
   M_UINT                 (Second_Part_Packet_Assignment_t,  ExtendedRA,  5),
 CSN_DESCR_END            (Second_Part_Packet_Assignment_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(IA_PacketAssignment_UL_DL_t)
   M_UNION      (IA_PacketAssignment_UL_DL_t, 2),
   M_TYPE       (IA_PacketAssignment_UL_DL_t, ul_dl.Packet_Uplink_ImmAssignment, Packet_Uplink_ImmAssignment_t),
   M_TYPE       (IA_PacketAssignment_UL_DL_t, ul_dl.Packet_Downlink_ImmAssignment, Packet_Downlink_ImmAssignment_t),
 CSN_DESCR_END  (IA_PacketAssignment_UL_DL_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(IA_PacketAssignment_t)
   M_UNION      (IA_PacketAssignment_t, 2),
   M_TYPE       (IA_PacketAssignment_t, u.UplinkDownlinkAssignment, IA_PacketAssignment_UL_DL_t),
   M_TYPE       (IA_PacketAssignment_t, u.UplinkDownlinkAssignment, Second_Part_Packet_Assignment_t),
 CSN_DESCR_END  (IA_PacketAssignment_t)
+#endif
 
 /* <Packet Polling Request> */
 static const
@@ -629,27 +678,34 @@ CSN_DESCR_BEGIN(PBCCH_present_t)
   M_TYPE       (PBCCH_present_t, PBCCH_Description, PBCCH_Description_t),
 CSN_DESCR_END  (PBCCH_present_t)
 
+#if 0
 static const
 CSN_DESCR_BEGIN(SI13_AdditionsR6)
   M_NEXT_EXIST (SI13_AdditionsR6, Exist_LB_MS_TXPWR_MAX_CCH, 1),
   M_UINT       (SI13_AdditionsR6,  LB_MS_TXPWR_MAX_CCH,  5),
   M_UINT       (SI13_AdditionsR6,  SI2n_SUPPORT,  2),
 CSN_DESCR_END  (SI13_AdditionsR6)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(SI13_AdditionsR4)
   M_UINT       (SI13_AdditionsR4,  SI_STATUS_IND,  1),
   M_NEXT_EXIST_OR_NULL_LH (SI13_AdditionsR4, Exist_AdditionsR6, 1),
   M_TYPE       (SI13_AdditionsR4,  AdditionsR6, SI13_AdditionsR6),
 CSN_DESCR_END  (SI13_AdditionsR4)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(SI13_AdditionR99)
   M_UINT       (SI13_AdditionR99,  SGSNR,  1),
   M_NEXT_EXIST_OR_NULL_LH (SI13_AdditionR99, Exist_AdditionsR4, 1),
   M_TYPE       (SI13_AdditionR99,  AdditionsR4, SI13_AdditionsR4),
 CSN_DESCR_END  (SI13_AdditionR99)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN          (SI_13_t)
   M_THIS_EXIST_LH        (SI_13_t),
@@ -668,7 +724,7 @@ CSN_DESCR_BEGIN          (SI_13_t)
   M_NEXT_EXIST_OR_NULL_LH(SI_13_t, Exist_AdditionsR99, 1),
   M_TYPE                 (SI_13_t, AdditionsR99, SI13_AdditionR99),
 CSN_DESCR_END            (SI_13_t)
-
+#endif
 /************************************************************/
 /*                         TS 44.060 messages               */
 /************************************************************/
@@ -743,12 +799,15 @@ CSN_DESCR_BEGIN(Packet_Uplink_Dummy_Control_Block_t)
   M_PADDING_BITS(Packet_Uplink_Dummy_Control_Block_t),
 CSN_DESCR_END  (Packet_Uplink_Dummy_Control_Block_t)
 
+#if 0
 static const
 CSN_DESCR_BEGIN(Receive_N_PDU_Number_t)
   M_UINT       (Receive_N_PDU_Number_t,  nsapi,  4),
   M_UINT       (Receive_N_PDU_Number_t,  value,  8),
 CSN_DESCR_END  (Receive_N_PDU_Number_t)
+#endif
 
+#if 0
 gint16 Receive_N_PDU_Number_list_Dissector(csnStream_t* ar, struct bitvec *vector, unsigned *readIndex, void* data)
 {
   if (ar->direction == 0)
@@ -760,12 +819,15 @@ gint16 Receive_N_PDU_Number_list_Dissector(csnStream_t* ar, struct bitvec *vecto
     return csnStreamDecoder(ar, CSNDESCR(Receive_N_PDU_Number_t), vector, readIndex, data);
   }
 }
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(Receive_N_PDU_Number_list_t)
   M_SERIALIZE  (Receive_N_PDU_Number_list_t, IEI, 7, Receive_N_PDU_Number_list_Dissector),
   M_VAR_TARRAY (Receive_N_PDU_Number_list_t, Receive_N_PDU_Number, Receive_N_PDU_Number_t, Count_Receive_N_PDU_Number),
 CSN_DESCR_END  (Receive_N_PDU_Number_list_t)
+#endif
 
 /*< MS Radio Access capability IE >*/
 static const
@@ -959,13 +1021,16 @@ CSN_DESCR_BEGIN (MS_Radio_Access_capability2_t)
 CSN_DESCR_END   (MS_Radio_Access_capability2_t)
 
 /*< MS Classmark 3 IE >*/
+#if 0
 static const
 CSN_DESCR_BEGIN(ARC_t)
   M_UINT       (ARC_t,  A5_Bits,  4),
   M_UINT       (ARC_t,  Arc2_Spare,  4),
   M_UINT       (ARC_t,  Arc1,  4),
 CSN_DESCR_END  (ARC_t)
+#endif
 
+#if 0
 static const
 CSN_ChoiceElement_t MultibandChoice[] =
 {
@@ -976,12 +1041,16 @@ CSN_ChoiceElement_t MultibandChoice[] =
   {3, 0x02, 0, M_TYPE(Multiband_t, u.ARC, ARC_t)},
   {3, 0x04, 0, M_TYPE(Multiband_t, u.ARC, ARC_t)},
 };
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(Multiband_t)
   M_CHOICE     (Multiband_t, Multiband, MultibandChoice, ElementsOf(MultibandChoice)),
 CSN_DESCR_END  (Multiband_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(EDGE_RF_Pwr_t)
   M_NEXT_EXIST (EDGE_RF_Pwr_t, ExistEDGE_RF_PwrCap1, 1),
@@ -990,7 +1059,9 @@ CSN_DESCR_BEGIN(EDGE_RF_Pwr_t)
   M_NEXT_EXIST (EDGE_RF_Pwr_t, ExistEDGE_RF_PwrCap2, 1),
   M_UINT       (EDGE_RF_Pwr_t,  EDGE_RF_PwrCap2,  2),
 CSN_DESCR_END  (EDGE_RF_Pwr_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(MS_Class3_Unpacked_t)
   M_UINT       (MS_Class3_Unpacked_t,  Spare1,  1),
@@ -1080,6 +1151,7 @@ CSN_DESCR_BEGIN(MS_Class3_Unpacked_t)
   M_UINT       (MS_Class3_Unpacked_t,  RepeatedSACCH_Capability,  1),
   M_UINT       (MS_Class3_Unpacked_t,  Spare2,  1),
 CSN_DESCR_END  (MS_Class3_Unpacked_t)
+#endif
 
 static const
 CSN_DESCR_BEGIN(Channel_Request_Description_t)
@@ -1845,6 +1917,7 @@ CSN_DESCR_BEGIN(Single_Block_Allocation_t)
   M_TYPE       (Single_Block_Allocation_t, TBF_Starting_Time, Starting_Frame_Number_t),
 CSN_DESCR_END  (Single_Block_Allocation_t)
 
+#if 0
 static const
 CSN_DESCR_BEGIN(DTM_Dynamic_Allocation_t)
   M_UINT       (DTM_Dynamic_Allocation_t,  Extended_Dynamic_Allocation,  1),
@@ -1865,7 +1938,9 @@ CSN_DESCR_BEGIN(DTM_Dynamic_Allocation_t)
   M_TYPE_ARRAY (DTM_Dynamic_Allocation_t, u.Timeslot_Allocation, Timeslot_Allocation_t, 8),
   M_TYPE       (DTM_Dynamic_Allocation_t, u.Timeslot_Allocation_Power_Ctrl_Param, Timeslot_Allocation_Power_Ctrl_Param_t),
 CSN_DESCR_END  (DTM_Dynamic_Allocation_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(DTM_Single_Block_Allocation_t)
   M_UINT       (DTM_Single_Block_Allocation_t,  TIMESLOT_NUMBER,  3),
@@ -1879,7 +1954,7 @@ CSN_DESCR_BEGIN(DTM_Single_Block_Allocation_t)
   M_UINT       (DTM_Single_Block_Allocation_t,  BTS_PWR_CTRL_MODE,  1),
   M_UINT       (DTM_Single_Block_Allocation_t,  PR_MODE,  1),
 CSN_DESCR_END  (DTM_Single_Block_Allocation_t)
-
+#endif
 
 /* Help structures */
 typedef struct
@@ -1887,44 +1962,52 @@ typedef struct
   Global_TFI_t Global_TFI;  /* 0  < Global TFI : < Global TFI IE > > */
 } h0_Global_TFI_t;
 
+#if 0
 static const
 CSN_DESCR_BEGIN(h0_Global_TFI_t)
   M_FIXED      (h0_Global_TFI_t, 1, 0x00),
   M_TYPE       (h0_Global_TFI_t, Global_TFI, Global_TFI_t),
 CSN_DESCR_END  (h0_Global_TFI_t)
+#endif
 
 typedef struct
 {
   guint32 TLLI;/* | 10  < TLLI : bit (32) >*/
 } h10_TLLI_t;
 
+#if 0
 static const
 CSN_DESCR_BEGIN(h10_TLLI_t)
   M_FIXED      (h10_TLLI_t, 2, 0x02),
   M_UINT       (h10_TLLI_t,  TLLI,  32),
 CSN_DESCR_END (h10_TLLI_t)
+#endif
 
 typedef struct
 {
   guint16 TQI;/*| 110  < TQI : bit (16) > */
 } h110_TQI_t;
 
+#if 0
 static const
 CSN_DESCR_BEGIN(h110_TQI_t)
   M_FIXED      (h110_TQI_t, 3, 0x06),
   M_UINT       (h110_TQI_t,  TQI,  16),
 CSN_DESCR_END  (h110_TQI_t)
+#endif
 
 typedef struct
 {
   Packet_Request_Reference_t Packet_Request_Reference;/*| 111  < Packet Request Reference : < Packet Request Reference IE > > }*/
 } h111_Packet_Request_Reference_t;
 
+#if 0
 static const
 CSN_DESCR_BEGIN(h111_Packet_Request_Reference_t)
   M_FIXED      (h111_Packet_Request_Reference_t, 3, 0x07),
   M_TYPE       (h111_Packet_Request_Reference_t, Packet_Request_Reference, Packet_Request_Reference_t),
 CSN_DESCR_END  (h111_Packet_Request_Reference_t)
+#endif
 
 static const
 CSN_ChoiceElement_t PacketUplinkID[] =
@@ -2133,6 +2216,7 @@ CSN_DESCR_END         (Packet_Downlink_Assignment_t)
 
 typedef Packet_Downlink_Assignment_t pdlaCheck_t;
 
+#if 0
 static const
 CSN_DESCR_BEGIN(pdlaCheck_t)
   M_UINT       (pdlaCheck_t,  MESSAGE_TYPE,  6),
@@ -2143,7 +2227,9 @@ CSN_DESCR_BEGIN(pdlaCheck_t)
 
   M_TYPE       (pdlaCheck_t, ID, PacketDownlinkID_t),
 CSN_DESCR_END  (pdlaCheck_t)
+#endif
 
+#if 0
 /* DTM Packet UL Assignment */
 static const
 CSN_DESCR_BEGIN(DTM_Packet_Uplink_Assignment_t)
@@ -2162,13 +2248,17 @@ CSN_DESCR_BEGIN(DTM_Packet_Uplink_Assignment_t)
   M_NEXT_EXIST (DTM_Packet_Uplink_Assignment_t, Exist_Packet_Extended_Timing_Advance, 1),
   M_UINT       (DTM_Packet_Uplink_Assignment_t,  Packet_Extended_Timing_Advance,  2),
 CSN_DESCR_END(DTM_Packet_Uplink_Assignment_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(DTM_UL_t)
   M_TYPE       (DTM_UL_t, DTM_Packet_Uplink_Assignment, DTM_Packet_Uplink_Assignment_t),
 CSN_DESCR_END(DTM_UL_t)
+#endif
 
 /* DTM Packet DL Assignment */
+#if 0
 static const
 CSN_DESCR_BEGIN(DTM_Packet_Downlink_Assignment_t)
   M_UINT       (DTM_Packet_Downlink_Assignment_t,  MAC_MODE,  2),
@@ -2195,24 +2285,32 @@ CSN_DESCR_BEGIN(DTM_Packet_Downlink_Assignment_t)
   M_NEXT_EXIST (DTM_Packet_Downlink_Assignment_t, Exist_Packet_Extended_Timing_Advance, 1),
   M_UINT       (DTM_Packet_Downlink_Assignment_t,  Packet_Extended_Timing_Advance,  2),
 CSN_DESCR_END(DTM_Packet_Downlink_Assignment_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(DTM_DL_t)
   M_TYPE       (DTM_DL_t, DTM_Packet_Downlink_Assignment, DTM_Packet_Downlink_Assignment_t),
 CSN_DESCR_END(DTM_DL_t)
+#endif
 
 /* GPRS Broadcast Information */
+#if 0
 static const
 CSN_DESCR_BEGIN(DTM_GPRS_Broadcast_Information_t)
   M_TYPE       (DTM_GPRS_Broadcast_Information_t, GPRS_Cell_Options, GPRS_Cell_Options_t),
   M_TYPE       (DTM_GPRS_Broadcast_Information_t, GPRS_Power_Control_Parameters, GPRS_Power_Control_Parameters_t),
 CSN_DESCR_END(DTM_GPRS_Broadcast_Information_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(DTM_GPRS_B_t)
   M_TYPE       (DTM_GPRS_B_t, DTM_GPRS_Broadcast_Information, DTM_GPRS_Broadcast_Information_t),
 CSN_DESCR_END(DTM_GPRS_B_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN(DTM_Channel_Request_Description_t)
   M_UINT       (DTM_Channel_Request_Description_t,  DTM_Pkt_Est_Cause,  2),
@@ -2220,6 +2318,7 @@ CSN_DESCR_BEGIN(DTM_Channel_Request_Description_t)
   M_NEXT_EXIST (DTM_Channel_Request_Description_t, Exist_PFI, 1),
   M_UINT       (DTM_Channel_Request_Description_t,  PFI,  7),
 CSN_DESCR_END(DTM_Channel_Request_Description_t)
+#endif
 /* DTM  */
 
 /*< Packet Paging Request message content > */
@@ -2470,6 +2569,7 @@ CSN_DESCR_END  (Packet_Timeslot_Reconfigure_t)
 
 typedef Packet_Timeslot_Reconfigure_t PTRCheck_t;
 
+#if 0
 static const
 CSN_DESCR_BEGIN(PTRCheck_t)
   M_UINT       (PTRCheck_t,  MESSAGE_TYPE,  6),
@@ -2477,6 +2577,7 @@ CSN_DESCR_BEGIN(PTRCheck_t)
   M_FIXED      (PTRCheck_t, 1, 0x00),/* 0 fixed */
   M_TYPE       (PTRCheck_t, Global_TFI, Global_TFI_t),
 CSN_DESCR_END  (PTRCheck_t)
+#endif
 
 /*< Packet PRACH Parameters message content > */
 static const
@@ -2627,11 +2728,13 @@ CSN_DESCR_BEGIN(PacketCellChangeOrderID_t)
   M_CHOICE     (PacketCellChangeOrderID_t, UnionType, PacketCellChangeOrderID, ElementsOf(PacketCellChangeOrderID)),
 CSN_DESCR_END  (PacketCellChangeOrderID_t)
 
+#if 0
 static const
 CSN_DESCR_BEGIN(h_FreqBsicCell_t)
   M_UINT       (h_FreqBsicCell_t,  BSIC,  6),
   M_TYPE       (h_FreqBsicCell_t, Cell_Selection, Cell_Selection_t),
 CSN_DESCR_END  (h_FreqBsicCell_t)
+#endif
 
 static const CSN_DESCR_BEGIN(CellSelectionParamsWithFreqDiff_t)
   /*FREQUENCY_DIFF is really an integer but the number of bits to decode it are stored in FREQ_DIFF_LENGTH*/
@@ -2735,6 +2838,7 @@ CSN_DESCR_BEGIN(GPRSMeasurementParams_PMO_PCCO_t)
   M_TYPE       (GPRSMeasurementParams_PMO_PCCO_t, OffsetThreshold850, OffsetThreshold_t),
 CSN_DESCR_END  (GPRSMeasurementParams_PMO_PCCO_t)
 
+#if 0
 static const
 CSN_DESCR_BEGIN(GPRSMeasurementParams3G_t)
   M_UINT       (GPRSMeasurementParams3G_t,  Qsearch_p,  4),
@@ -2755,6 +2859,7 @@ CSN_DESCR_BEGIN(GPRSMeasurementParams3G_t)
   M_UINT       (GPRSMeasurementParams3G_t,  ReportingOffsetTDD,  3),
   M_UINT       (GPRSMeasurementParams3G_t,  ReportingThresholdTDD,  3),
 CSN_DESCR_END  (GPRSMeasurementParams3G_t)
+#endif
 
 static const
 CSN_DESCR_BEGIN(MultiratParams3G_t)
@@ -3698,6 +3803,7 @@ CSN_DESCR_BEGIN (PMR_AdditionsR99_t)
   M_TYPE        (PMR_AdditionsR99_t, AdditionsR5, PMR_AdditionsR5_t),
 CSN_DESCR_END   (PMR_AdditionsR99_t)
 
+#if 0
 static const
 CSN_DESCR_BEGIN(EMR_ServingCell_t)
   /*CSN_MEMBER_BIT (EMR_ServingCell_t, DTX_USED),*/
@@ -3708,7 +3814,9 @@ CSN_DESCR_BEGIN(EMR_ServingCell_t)
   M_UINT         (EMR_ServingCell_t,  CV_BEP,           3),
   M_UINT         (EMR_ServingCell_t,  NBR_RCVD_BLOCKS,  5),
 CSN_DESCR_END(EMR_ServingCell_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN   (EnhancedMeasurementReport_t)
   M_UINT          (EnhancedMeasurementReport_t,  RR_Short_PD,  1),
@@ -3724,6 +3832,7 @@ CSN_DESCR_BEGIN   (EnhancedMeasurementReport_t)
   M_NEXT_EXIST    (EnhancedMeasurementReport_t, Exist_ReportBitmap, 1),
   M_VAR_TARRAY    (EnhancedMeasurementReport_t, REPORTING_QUANTITY_Instances, REPORTING_QUANTITY_Instance_t, Count_REPORTING_QUANTITY_Instances),
 CSN_DESCR_END     (EnhancedMeasurementReport_t)
+#endif
 
 static const
 CSN_DESCR_BEGIN       (Packet_Measurement_Report_t)
@@ -3802,6 +3911,7 @@ CSN_DESCR_BEGIN       (Packet_Enh_Measurement_Report_t)
 CSN_DESCR_END         (Packet_Enh_Measurement_Report_t)
 
 /*< Packet Measurement Order message contents >*/
+#if 0
 static const
 CSN_DESCR_BEGIN(EXT_Frequency_List_t)
   M_UINT       (EXT_Frequency_List_t,  START_FREQUENCY,  10),
@@ -3813,6 +3923,7 @@ CSN_DESCR_BEGIN(EXT_Frequency_List_t)
  * bit (FREQ_DIFF_LENGTH) * NR_OF_FREQUENCIES --> MAX is bit(7) * 31
  */
 CSN_DESCR_END  (EXT_Frequency_List_t)
+#endif
 
 static const
 CSN_DESCR_BEGIN        (Packet_Measurement_Order_t)
@@ -4055,26 +4166,32 @@ CSN_DESCR_END  (Packet_Serving_Cell_Data_t)
 
 
 /* Enhanced Measurement Report */
+#if 0
 static const
 CSN_DESCR_BEGIN (ServingCellData_t)
   M_UINT        (ServingCellData_t,  RXLEV_SERVING_CELL,  6),
   M_FIXED       (ServingCellData_t, 1, 0),
 CSN_DESCR_END   (ServingCellData_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN (Repeated_Invalid_BSIC_Info_t)
   M_UINT        (Repeated_Invalid_BSIC_Info_t,  BCCH_FREQ_NCELL,  5),
   M_UINT        (Repeated_Invalid_BSIC_Info_t,  BSIC,  6),
   M_UINT        (Repeated_Invalid_BSIC_Info_t,  RXLEV_NCELL,  5),
 CSN_DESCR_END   (Repeated_Invalid_BSIC_Info_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN (REPORTING_QUANTITY_t)
   M_NEXT_EXIST  (REPORTING_QUANTITY_t, Exist_REPORTING_QUANTITY, 1),
   M_UINT        (REPORTING_QUANTITY_t,  REPORTING_QUANTITY,  6),
 CSN_DESCR_END   (REPORTING_QUANTITY_t)
+#endif
 
-
+#if 0
 static const
 CSN_DESCR_BEGIN (NC_MeasurementReport_t)
   M_UINT        (NC_MeasurementReport_t, NC_MODE, 1),
@@ -4092,7 +4209,7 @@ CSN_DESCR_BEGIN (NC_MeasurementReport_t)
   M_NEXT_EXIST  (NC_MeasurementReport_t, Exist_Repeated_REPORTING_QUANTITY, 1),
   M_VAR_TARRAY  (NC_MeasurementReport_t, Repeated_REPORTING_QUANTITY, REPORTING_QUANTITY_t, Count_Repeated_Reporting_Quantity),
 CSN_DESCR_END   (NC_MeasurementReport_t)
-
+#endif
 
 
 /*< Packet Handover Command message content > */
@@ -4807,6 +4924,7 @@ CSN_DESCR_END  (PSI13_t)
 
 /* SI1_RestOctet_t */
 
+#if 0
 static const
 CSN_DESCR_BEGIN  (SI1_RestOctet_t)
   M_NEXT_EXIST_LH(SI1_RestOctet_t, Exist_NCH_Position, 1),
@@ -4814,8 +4932,10 @@ CSN_DESCR_BEGIN  (SI1_RestOctet_t)
 
   M_UINT_LH      (SI1_RestOctet_t,  BandIndicator,  1),
 CSN_DESCR_END    (SI1_RestOctet_t)
+#endif
 
 /* SI3_Rest_Octet_t */
+#if 0
 static const
 CSN_DESCR_BEGIN(Selection_Parameters_t)
   M_UINT       (Selection_Parameters_t,  CBQ,  1),
@@ -4847,7 +4967,9 @@ CSN_DESCR_BEGIN  (SI3_Rest_Octet_t)
   M_NEXT_EXIST_LH(SI3_Rest_Octet_t, ExistSI2quaterIndicator, 1),
   M_UINT         (SI3_Rest_Octet_t,  SI2quaterIndicator,  1),
 CSN_DESCR_END    (SI3_Rest_Octet_t)
+#endif
 
+#if 0
 static const
 CSN_DESCR_BEGIN  (SI4_Rest_Octet_t)
   M_NEXT_EXIST_LH(SI4_Rest_Octet_t, Exist_Selection_Parameters, 1),
@@ -4860,9 +4982,11 @@ CSN_DESCR_BEGIN  (SI4_Rest_Octet_t)
   M_UINT         (SI4_Rest_Octet_t,  RA_COLOUR,  3),
   M_UINT         (SI4_Rest_Octet_t,  SI13_POSITION,  1),
 CSN_DESCR_END    (SI4_Rest_Octet_t)
+#endif
 
 /* SI6_RestOctet_t */
 
+#if 0
 static const
 CSN_DESCR_BEGIN(PCH_and_NCH_Info_t)
   M_UINT       (PCH_and_NCH_Info_t,  PagingChannelRestructuring,  1),
@@ -4888,7 +5012,7 @@ CSN_DESCR_BEGIN  (SI6_RestOctet_t)
 
   M_UINT_LH      (SI6_RestOctet_t,  BandIndicator,  1),
 CSN_DESCR_END    (SI6_RestOctet_t)
-
+#endif
 
 // ----------------------------------------------------------------------------
 // osmo-pcu RLCMAC APIs
