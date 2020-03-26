@@ -1027,12 +1027,6 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           /* skip 'i' entries + this entry */
           pDescr += pDescr->i + 1;
 
-          /* pDescr now must be pointing to a CSN_END entry, if not this is an error */
-          if ( pDescr->type != CSN_END )
-          { /* substract one more bit from remaining_bits_len to make the "not enough bits" error to be triggered */
-            remaining_bits_len--;
-          }
-
           /* set the data member to "not exist" */
           *pui8 = 0;
           break;
