@@ -5611,6 +5611,7 @@ int encode_gsm_rlcmac_downlink(struct bitvec *vector, RlcMacDownlink_t * data)
 
 void decode_gsm_rlcmac_uplink_data(struct bitvec *vector, RlcMacUplinkDataBlock_t * data)
 {
+  unsigned i;
   unsigned readIndex = 0;
   //unsigned dataLen = 0;
   guint8 payload_type = bitvec_read_field(vector, &readIndex, 2);
@@ -5646,7 +5647,7 @@ void decode_gsm_rlcmac_uplink_data(struct bitvec *vector, RlcMacUplinkDataBlock_
     if(data->E_1 == 0) // Extension octet follows immediately
     {
       // Octet 3 (optional)
-      unsigned i = 0;
+      i = 0;
       do
       {
 	data->LENGTH_INDICATOR[i] = bitvec_read_field(vector, &readIndex, 6);
@@ -5673,7 +5674,7 @@ void decode_gsm_rlcmac_uplink_data(struct bitvec *vector, RlcMacUplinkDataBlock_
     unsigned dataLen = 23 - readIndex/8;
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "DATA[%u] = ", dataLen);
     assert(dataLen <= 20);
-    for (unsigned i = 0; i < dataLen; i++)
+    for (i = 0; i < dataLen; i++)
     {
       data->RLC_DATA[i] = bitvec_read_field(vector, &readIndex, 8);
       LOGPC(DRLCMACDATA, LOGL_NOTICE, "%02x", (unsigned)(data->RLC_DATA[i]));
@@ -5689,6 +5690,7 @@ void decode_gsm_rlcmac_uplink_data(struct bitvec *vector, RlcMacUplinkDataBlock_
 
 void encode_gsm_rlcmac_downlink_data(struct bitvec *vector, RlcMacDownlinkDataBlock_t * data)
 {
+  unsigned i;
   unsigned writeIndex = 0;
 
   if (data->PAYLOAD_TYPE == PAYLOAD_TYPE_DATA)
@@ -5720,7 +5722,7 @@ void encode_gsm_rlcmac_downlink_data(struct bitvec *vector, RlcMacDownlinkDataBl
     // Octet 3 (optional)
     if(data->E_1 == 0)
     {
-      unsigned i = 0;
+      i = 0;
       do
       {
 	bitvec_write_field(vector, &writeIndex, data->LENGTH_INDICATOR[i], 6);
@@ -5736,7 +5738,7 @@ void encode_gsm_rlcmac_downlink_data(struct bitvec *vector, RlcMacDownlinkDataBl
     unsigned dataNumOctets = 23 - writeIndex/8;
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "DATA[%u] = ", dataNumOctets);
     assert(dataNumOctets <= 20);
-    for (unsigned i = 0; i < dataNumOctets; i++)
+    for (i = 0; i < dataNumOctets; i++)
     {
       bitvec_write_field(vector, &writeIndex, data->RLC_DATA[i], 8);
       LOGPC(DRLCMACDATA, LOGL_NOTICE, "%02x", (unsigned)(data->RLC_DATA[i]));
