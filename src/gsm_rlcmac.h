@@ -4877,6 +4877,11 @@ typedef struct
   guint8 RRC_Container[MAX_RRC_CONTAINER_LENGTH];
 } PS_HandoverTo_UTRAN_Payload_t;
 
+typedef struct
+{
+  guint8 RRC_ContainerLength;
+  guint8 RRC_Container[MAX_RRC_CONTAINER_LENGTH];
+} PS_HandoverTo_E_UTRAN_Payload_t;
 
 typedef struct
 {
@@ -4929,6 +4934,7 @@ typedef struct
   {
     PS_HandoverTo_A_GB_ModePayload_t PS_HandoverTo_A_GB_ModePayload;
     PS_HandoverTo_UTRAN_Payload_t    PS_HandoverTo_UTRAN_Payload;
+    PS_HandoverTo_E_UTRAN_Payload_t  PS_HandoverTo_E_UTRAN_Payload;
   } u;
 } Packet_Handover_Command_t;
 

@@ -4574,6 +4574,12 @@ CSN_DESCR_END  (PS_HandoverTo_UTRAN_Payload_t)
 
 
 static const
+CSN_DESCR_BEGIN(PS_HandoverTo_E_UTRAN_Payload_t)
+  M_UINT       (PS_HandoverTo_E_UTRAN_Payload_t, RRC_ContainerLength, 8),
+  M_VAR_ARRAY  (PS_HandoverTo_E_UTRAN_Payload_t, RRC_Container, RRC_ContainerLength, 0),
+CSN_DESCR_END  (PS_HandoverTo_E_UTRAN_Payload_t)
+
+static const
 CSN_DESCR_BEGIN(PHO_RadioResources_t)
   M_NEXT_EXIST (PHO_RadioResources_t, Exist_HandoverReference, 1),
   M_UINT       (PHO_RadioResources_t,  HandoverReference,  8),
@@ -4633,7 +4639,7 @@ CSN_DESCR_BEGIN(Packet_Handover_Command_t)
   M_UNION      (Packet_Handover_Command_t, 4),
   M_TYPE       (Packet_Handover_Command_t, u.PS_HandoverTo_A_GB_ModePayload, PS_HandoverTo_A_GB_ModePayload_t),
   M_TYPE       (Packet_Handover_Command_t, u.PS_HandoverTo_UTRAN_Payload, PS_HandoverTo_UTRAN_Payload_t),
-  CSN_ERROR    (Packet_Handover_Command_t, "10 <extension> not implemented", CSN_ERROR_STREAM_NOT_SUPPORTED),
+  M_TYPE       (Packet_Handover_Command_t, u.PS_HandoverTo_E_UTRAN_Payload, PS_HandoverTo_E_UTRAN_Payload_t),
   CSN_ERROR    (Packet_Handover_Command_t, "11 <extension> not implemented", CSN_ERROR_STREAM_NOT_SUPPORTED),
 
   M_PADDING_BITS(Packet_Handover_Command_t),
