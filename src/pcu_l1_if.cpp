@@ -27,6 +27,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <arpa/inet.h>
+#include <ctype.h>
 
 extern "C" {
 #include <osmocom/core/talloc.h>
