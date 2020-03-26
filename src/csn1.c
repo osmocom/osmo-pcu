@@ -51,7 +51,6 @@ static const unsigned char ixBitsTab[] = {0, 1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4,
 
 
 /* Returns no_of_bits (up to 8) masked with 0x2B */
-
 static guint8
 get_masked_bits8(struct bitvec *vector, unsigned *readIndex, gint bit_offset,  const gint no_of_bits)
 {
@@ -1144,7 +1143,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
               no_of_bits -= 8;
             }
             if (no_of_bits > 0)
-            { 
+            {
 	      *pui8 = bitvec_read_field(vector, readIndex, no_of_bits);
               LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
               pui8++;
@@ -1183,7 +1182,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
         }
         if (remaining_bits_len < 0)
         {
-          return ProcessError(readIndex,"csnStreamDissector", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
+          return ProcessError(readIndex,"csnStreamDecoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
         }
 
         /* Padding was successfully extracted or it was empty */
@@ -2463,7 +2462,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
         }
         if (remaining_bits_len < 0)
         {
-          return ProcessError(writeIndex,"csnStreamDissector", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
+          return ProcessError(writeIndex,"csnStreamEncoder", CSN_ERROR_NEED_MORE_BITS_TO_UNPACK, pDescr);
         }
 
         /* Padding was successfully extracted or it was empty */
