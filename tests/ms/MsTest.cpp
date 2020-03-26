@@ -40,6 +40,8 @@ extern "C" {
 #include <errno.h>
 #include <unistd.h>
 
+#include <new>
+
 void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 bool spoof_mnc_3_digits = false;
