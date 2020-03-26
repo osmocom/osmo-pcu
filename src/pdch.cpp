@@ -39,6 +39,7 @@
 extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/msgb.h>
+#include <osmocom/gsm/gsm48.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
 #include <osmocom/core/bitvec.h>
 #include <osmocom/core/gsmtap.h>
@@ -204,11 +205,12 @@ struct msgb *gprs_rlcmac_pdch::packet_paging_request()
 
 	/* loop until message is full */
 	while (pag) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "Paging MI - %s\n",
+		     osmo_mi_name(pag->identity_lv + 1, pag->identity_lv[0]));
+
 		/* try to add paging */
 		if ((pag->identity_lv[1] & 0x07) == 4) {
 			/* TMSI */
-			LOGP(DRLCMAC, LOGL_DEBUG, "- TMSI=0x%08x\n",
-				ntohl(*((uint32_t *)(pag->identity_lv + 1))));
 			len = 1 + 1 + 1 + 32 + 2 + 1;
 			if (pag->identity_lv[0] != 5) {
 				LOGP(DRLCMAC, LOGL_ERROR, "TMSI paging with "
@@ -217,9 +219,6 @@ struct msgb *gprs_rlcmac_pdch::packet_paging_request()
 			}
 		} else {
 			/* MI */
-			LOGP(DRLCMAC, LOGL_DEBUG, "- MI=%s\n",
-				osmo_hexdump(pag->identity_lv + 1,
-					pag->identity_lv[0]));
 			len = 1 + 1 + 1 + 4 + (pag->identity_lv[0]<<3) + 2 + 1;
 			if (pag->identity_lv[0] > 8) {
 				LOGP(DRLCMAC, LOGL_ERROR, "Paging with "
