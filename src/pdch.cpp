@@ -706,12 +706,12 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
 
+	rc = decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
 	if (ul_control_block->u.MESSAGE_TYPE == MT_PACKET_UPLINK_DUMMY_CONTROL_BLOCK)
 		bts()->send_gsmtap(PCU_GSMTAP_C_UL_DUMMY, true, trx_no(), ts_no, GSMTAP_CHANNEL_PACCH, fn, data, data_len);
 	else
 		bts()->send_gsmtap(PCU_GSMTAP_C_UL_CTRL, true, trx_no(), ts_no, GSMTAP_CHANNEL_PACCH, fn, data, data_len);
 
-	rc = decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
 	if(rc < 0) {
 		LOGP(DRLCMACUL, LOGL_ERROR, "Dropping Uplink Control Block with invalid "
 		     "content, decode failed: %d)\n", rc);
