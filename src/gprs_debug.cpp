@@ -18,8 +18,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+extern "C" {
 #include <osmocom/core/utils.h>
 #include <osmocom/core/logging.h>
+}
+
 #include <gprs_debug.h>
 
 /* default categories */
