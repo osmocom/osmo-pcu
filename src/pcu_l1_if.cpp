@@ -441,7 +441,7 @@ static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
 	int current_fn = get_current_fn();
 
 	LOGP(DL1IF, LOGL_INFO, "RACH request received: sapi=%d "
-		"qta=%d, ra=%d, fn=%d, cur_fn=%d, is_11bit=%d\n", rach_ind->sapi, rach_ind->qta,
+		"qta=%d, ra=0x%02x, fn=%u, cur_fn=%d, is_11bit=%d\n", rach_ind->sapi, rach_ind->qta,
 		rach_ind->ra, rach_ind->fn, current_fn, rach_ind->is_11bit);
 
 	switch (rach_ind->sapi) {
