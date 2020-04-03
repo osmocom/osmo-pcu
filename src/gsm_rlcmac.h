@@ -5330,6 +5330,47 @@ typedef struct
 
 } EnhancedMeasurementReport_t;
 
+/* EGPRS Packet Channel Request (see 3GPP TS 44.060, table 11.2.5a.2) */
+typedef struct
+{
+  guint8 MultislotClassGroup;
+  guint8 MultislotClass;
+  guint8 NumberOfBlocks;
+  guint8 Priority;
+  guint8 RandomBits;
+} EGPRS_PacketChannelRequestContent_t;
+
+/* HACK: we don't really want separate structures for each sub-type, because
+ * they all have a similar set of fields, so here we basically create a few
+ * aliases to EGPRS_PacketChannelRequestContent_t. This makes the API simpler. */
+typedef EGPRS_PacketChannelRequestContent_t PacketChannelRequest_MC5P2RB3_t;
+typedef EGPRS_PacketChannelRequestContent_t PacketChannelRequest_MCG3P2RB3_t;
+typedef EGPRS_PacketChannelRequestContent_t PacketChannelRequest_NOB3P2RB3_t;
+typedef EGPRS_PacketChannelRequestContent_t PacketChannelRequest_P2RB3_t;
+typedef EGPRS_PacketChannelRequestContent_t PacketChannelRequest_RB5_t;
+
+typedef struct
+{
+  /* NOTE: some fields may be uninitialized (always check Type) */
+  guint8                                Type;
+  EGPRS_PacketChannelRequestContent_t	  Content;
+} EGPRS_PacketChannelRequest_t;
+
+typedef enum {
+  EGPRS_PKT_CHAN_REQ_ONE_PHASE = 0,
+  EGPRS_PKT_CHAN_REQ_SHORT,
+  EGPRS_PKT_CHAN_REQ_ONE_PHASE_RED_LATENCY,
+  EGPRS_PKT_CHAN_REQ_TWO_PHASE,
+  EGPRS_PKT_CHAN_REQ_SIGNALLING,
+  EGPRS_PKT_CHAN_REQ_ONE_PHASE_UNACK,
+  EGPRS_PKT_CHAN_REQ_DEDICATED_CHANNEL,
+  EGPRS_PKT_CHAN_REQ_EMERGENCY_CALL,
+  EGPRS_PKT_CHAN_REQ_TWO_PHASE_IPA,
+  EGPRS_PKT_CHAN_REQ_SIGNALLING_IPA,
+} EGPRS_PacketChannelRequestType_t;
+
+extern struct value_string egprs_pkt_ch_req_type_names[];
+
  int decode_gsm_rlcmac_uplink(struct bitvec *vector, RlcMacUplink_t *data);
  int decode_gsm_rlcmac_downlink(struct bitvec *vector, RlcMacDownlink_t *data);
  int encode_gsm_rlcmac_downlink(struct bitvec *vector, RlcMacDownlink_t *data);
@@ -5337,4 +5378,6 @@ typedef struct
  void decode_gsm_rlcmac_uplink_data(struct bitvec *vector, RlcMacUplinkDataBlock_t * data);
  void encode_gsm_rlcmac_downlink_data(struct bitvec *vector, RlcMacDownlinkDataBlock_t * data);
  int decode_gsm_ra_cap(struct bitvec *vector, MS_Radio_Access_capability_t * data);
+ int decode_egprs_pkt_ch_req(guint16 ra, EGPRS_PacketChannelRequest_t *data);
+
 #endif /* __PACKET_GSM_RLCMAC_H__ */

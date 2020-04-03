@@ -149,3 +149,21 @@ decode_gsm_ra_cap() returns 0
 decode_gsm_ra_cap() returns 0
 GPRS multislot class = 12
 EGPRS multislot class = 12
+*** testEGPRSPktChReq ***
+decode_egprs_pkt_ch_req(0x2b5) returns 0
+ ==> One Phase Access
+decode_egprs_pkt_ch_req(0x14a) returns 0
+ ==> One Phase Access
+decode_egprs_pkt_ch_req(0x428) returns 0
+ ==> Short Access
+decode_egprs_pkt_ch_req(0x600) returns 0
+ ==> Two Phase Access
+decode_egprs_pkt_ch_req(0x61f) returns 0
+ ==> Two Phase Access
+decode_egprs_pkt_ch_req(0x675) returns 0
+ ==> Signalling
+decode_egprs_pkt_ch_req(0x671) returns 0
+ ==> Signalling
+decode_egprs_pkt_ch_req(0x6f9) returns 0
+ ==> Emergency call
+decode_egprs_pkt_ch_req(0x7ea) returns -8

@@ -471,6 +471,59 @@ MS Radio Access Capability
 	bitvec_free(bv_dec);
 }
 
+void testEGPRSPktChReq(void *test_ctx)
+{
+	EGPRS_PacketChannelRequest_t req;
+	int rc;
+
+	printf("*** %s ***\n", __func__);
+
+	static const uint16_t EGPRSPktChReqs[] = {
+		/* < One Phase Access Request : '0'B
+		     < MultislotClass : '10101'B >
+		     < Priority : '10'B >
+		     < RandomBits : '101'B > > */
+		0x2b5,
+		/* < One Phase Access Request : '0'B
+		     < MultislotClass : '01010'B >
+		     < Priority : '01'B >
+		     < RandomBits : '010'B > > */
+		0x14a,
+		/* < Short Access Request : '100'B
+		     < NumberOfBlocks : '001'B >
+		     < Priority : '01'B >
+		     < RandomBits : '000'B > > */
+		0x428,
+		/* < Two Phase Access Request : '110000'B
+		     < Priority : '00'B >
+		     < RandomBits : '000'B > > */
+		0x600,
+		/* < Two Phase Access Request : '110000'B
+		     < Priority : '11'B >
+		     < RandomBits : '111'B > > */
+		0x61f,
+		/* < Signalling : '110011'B
+		     < RandomBits : '10101'B > > */
+		0x675,
+		/* < Signalling : '110011'B
+		     < RandomBits : '10001'B > > */
+		0x671,
+		/* < Emergency call : '110111'B
+		     < RandomBits : '11001'B > > */
+		0x6f9,
+		/* < Unknown (test) : '111111'B
+		     < RandomBits : '01010'B > > */
+		0x7ea,
+	};
+
+	for (size_t i = 0; i < ARRAY_SIZE(EGPRSPktChReqs); i++) {
+		rc = decode_egprs_pkt_ch_req(EGPRSPktChReqs[i], &req);
+		printf("decode_egprs_pkt_ch_req(0x%03x) returns %d\n", EGPRSPktChReqs[i], rc);
+		if (rc == 0)
+			printf(" ==> %s\n", get_value_string(egprs_pkt_ch_req_type_names, req.Type));
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	void *ctx = talloc_named_const(NULL, 1, "RLCMACTest");
@@ -490,5 +543,8 @@ int main(int argc, char *argv[])
 	testRAcap(ctx);
 	testMalformedRAcap(ctx);
 	testRAcap2(ctx);
+
+	testEGPRSPktChReq(ctx);
+
 	talloc_free(ctx);
 }

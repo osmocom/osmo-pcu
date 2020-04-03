@@ -5249,6 +5249,59 @@ CSN_DESCR_BEGIN  (SI6_RestOctet_t)
 CSN_DESCR_END    (SI6_RestOctet_t)
 #endif
 
+/* EGPRS Packet Channel Request (see 3GPP TS 44.060, table 11.2.5a.2) */
+static const
+CSN_DESCR_BEGIN(PacketChannelRequest_MC5P2RB3_t)
+  M_UINT       (PacketChannelRequest_MC5P2RB3_t,  MultislotClass,  5),
+  M_UINT       (PacketChannelRequest_MC5P2RB3_t,  Priority,  2),
+  M_UINT       (PacketChannelRequest_MC5P2RB3_t,  RandomBits,  3),
+CSN_DESCR_END  (PacketChannelRequest_MC5P2RB3_t)
+
+static const
+CSN_DESCR_BEGIN(PacketChannelRequest_MCG3P2RB3_t)
+  M_UINT       (PacketChannelRequest_MCG3P2RB3_t,  MultislotClassGroup,  3),
+  M_UINT       (PacketChannelRequest_MCG3P2RB3_t,  Priority,  2),
+  M_UINT       (PacketChannelRequest_MCG3P2RB3_t,  RandomBits,  3),
+CSN_DESCR_END  (PacketChannelRequest_MCG3P2RB3_t)
+
+static const
+CSN_DESCR_BEGIN(PacketChannelRequest_NOB3P2RB3_t)
+  M_UINT       (PacketChannelRequest_NOB3P2RB3_t,  NumberOfBlocks,  3),
+  M_UINT       (PacketChannelRequest_NOB3P2RB3_t,  Priority,  2),
+  M_UINT       (PacketChannelRequest_NOB3P2RB3_t,  RandomBits,  3),
+CSN_DESCR_END  (PacketChannelRequest_NOB3P2RB3_t)
+
+static const
+CSN_DESCR_BEGIN(PacketChannelRequest_P2RB3_t)
+  M_UINT       (PacketChannelRequest_P2RB3_t,  Priority,  2),
+  M_UINT       (PacketChannelRequest_P2RB3_t,  RandomBits,  3),
+CSN_DESCR_END  (PacketChannelRequest_P2RB3_t)
+
+static const
+CSN_DESCR_BEGIN(PacketChannelRequest_RB5_t)
+  M_UINT       (PacketChannelRequest_RB5_t,  RandomBits,  5),
+CSN_DESCR_END  (PacketChannelRequest_RB5_t)
+
+static const
+CSN_ChoiceElement_t EGPRS_PacketChannelRequest_Choice[] =
+{
+  {1, 0x00, 0, M_TYPE(EGPRS_PacketChannelRequest_t, Content, PacketChannelRequest_MC5P2RB3_t)},
+  {3, 0x04, 0, M_TYPE(EGPRS_PacketChannelRequest_t, Content, PacketChannelRequest_NOB3P2RB3_t)},
+  {3, 0x05, 0, M_TYPE(EGPRS_PacketChannelRequest_t, Content, PacketChannelRequest_MCG3P2RB3_t)},
+  {6, 0x30, 0, M_TYPE(EGPRS_PacketChannelRequest_t, Content, PacketChannelRequest_P2RB3_t)},
+  {6, 0x33, 0, M_TYPE(EGPRS_PacketChannelRequest_t, Content, PacketChannelRequest_RB5_t)},
+  {6, 0x35, 0, M_TYPE(EGPRS_PacketChannelRequest_t, Content, PacketChannelRequest_RB5_t)},
+  {6, 0x36, 0, M_TYPE(EGPRS_PacketChannelRequest_t, Content, PacketChannelRequest_RB5_t)},
+  {6, 0x37, 0, M_TYPE(EGPRS_PacketChannelRequest_t, Content, PacketChannelRequest_RB5_t)},
+  {6, 0x38, 0, M_TYPE(EGPRS_PacketChannelRequest_t, Content, PacketChannelRequest_P2RB3_t)},
+  {6, 0x39, 0, M_TYPE(EGPRS_PacketChannelRequest_t, Content, PacketChannelRequest_RB5_t)},
+};
+
+CSN_DESCR_BEGIN  (EGPRS_PacketChannelRequest_t)
+  M_CHOICE       (EGPRS_PacketChannelRequest_t, Type,
+                  EGPRS_PacketChannelRequest_Choice, ElementsOf(EGPRS_PacketChannelRequest_Choice)),
+CSN_DESCR_END    (EGPRS_PacketChannelRequest_t)
+
 // ----------------------------------------------------------------------------
 // osmo-pcu RLCMAC APIs
 // ----------------------------------------------------------------------------
@@ -6150,6 +6203,49 @@ int encode_gsm_ra_cap(struct bitvec *vector, MS_Radio_Access_capability_t *data)
                                   "in the output buffer (rc=%d)\n", ret);
     ret = CSN_ERROR_NEED_MORE_BITS_TO_UNPACK;
   }
+
+  return ret;
+}
+
+struct value_string egprs_pkt_ch_req_type_names[] = {
+  { EGPRS_PKT_CHAN_REQ_ONE_PHASE,               "One Phase Access" },
+  { EGPRS_PKT_CHAN_REQ_SHORT,                   "Short Access" },
+  { EGPRS_PKT_CHAN_REQ_ONE_PHASE_RED_LATENCY,   "One Phase Access (Reduced Latency MS)" },
+  { EGPRS_PKT_CHAN_REQ_TWO_PHASE,               "Two Phase Access" },
+  { EGPRS_PKT_CHAN_REQ_SIGNALLING,              "Signalling" },
+  { EGPRS_PKT_CHAN_REQ_ONE_PHASE_UNACK,         "One Phase Access (RLC unack mode)" },
+  { EGPRS_PKT_CHAN_REQ_DEDICATED_CHANNEL,       "Dedicated Channel Request" },
+  { EGPRS_PKT_CHAN_REQ_EMERGENCY_CALL,          "Emergency call" },
+  { EGPRS_PKT_CHAN_REQ_TWO_PHASE_IPA,           "Two Phase Access (by IPA capable MS)" },
+  { EGPRS_PKT_CHAN_REQ_SIGNALLING_IPA,          "Signalling (by IPA capable MS)" },
+  { 0, NULL }
+};
+
+int decode_egprs_pkt_ch_req(guint16 ra, EGPRS_PacketChannelRequest_t *req)
+{
+  unsigned readIndex = 0;
+  guint8 bv_data[2];
+  csnStream_t ar;
+  int ret;
+
+  /* Allocate a bitvector on stack */
+  struct bitvec bv = {
+    .cur_bit = 0,
+    .data_len = 2,
+    .data = bv_data,
+  };
+
+  /* Unpack the bits: xxxxxxxx xxx..... */
+  bv_data[0] = (guint8) (ra >> 3);
+  bv_data[1] = (guint8) ((ra & 0x07) << 5);
+
+  csnStreamInit(&ar, 0, 11);
+
+  /* Recursive csnStreamDecoder call uses LOGPC everywhere, so we need to start the log somewhere... */
+  LOGP(DCSN1, LOGL_DEBUG, "csnStreamDecoder (EGPRS Packet Channel Request): ");
+  ret = csnStreamDecoder(&ar, CSNDESCR(EGPRS_PacketChannelRequest_t),
+                         &bv, &readIndex, (void *) req);
+  LOGPC(DCSN1, LOGL_DEBUG, "\n");
 
   return ret;
 }
