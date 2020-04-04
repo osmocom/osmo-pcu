@@ -55,12 +55,12 @@ int SBAController::alloc(
 	int8_t trx, ts;
 	uint32_t fn;
 
+	if (!gsm48_ta_is_valid(ta))
+		return -EINVAL;
+
 	sba = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_sba);
 	if (!sba)
 		return -ENOMEM;
-
-	if (!gsm48_ta_is_valid(ta))
-		return -EINVAL;
 
 	for (trx = 0; trx < 8; trx++) {
 		for (ts = 7; ts >= 0; ts--) {
