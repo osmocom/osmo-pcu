@@ -304,7 +304,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 				}
 				LOGPTBFUL(this, LOGL_INFO,
 					  "Decoded premier TLLI=0x%08x of UL DATA TFI=%d.\n",
-					  tlli(), rlc->tfi);
+					  new_tlli, rlc->tfi);
 				set_tlli_from_ul(new_tlli);
 			} else if (new_tlli && new_tlli != tlli()) {
 				LOGPTBFUL(this, LOGL_NOTICE,
