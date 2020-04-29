@@ -638,6 +638,12 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		return;
 	}
 
+	struct msgb *msg = msgb_alloc(23, "access_reject");
+	struct bitvec bv = {
+		.data_len = GSM_MACBLOCK_LEN,
+		.data = msgb_put(msg, GSM_MACBLOCK_LEN)
+	};
+
 	if (request->ID.u.Global_TFI.UnionType) {
 		struct gprs_rlcmac_dl_tbf *dl_tbf;
 		int8_t tfi = request->ID.u.Global_TFI.u.DOWNLINK_TFI;
@@ -648,6 +654,8 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		}
 		LOGPTBFDL(dl_tbf, LOGL_ERROR,
 			"RX: [PCU <- BTS] FIXME: Packet resource request\n");
+		Encoding::write_packet_access_reject_tfi(&bv, tfi, false);
+		dl_tbf->sched_pkt_acc_req = msg;
 
 		/* Reset N3101 counter: */
 		dl_tbf->n_reset(N3101);
@@ -661,6 +669,8 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		}
 		LOGPTBFUL(ul_tbf, LOGL_ERROR,
 			"RX: [PCU <- BTS] FIXME: Packet resource request\n");
+		Encoding::write_packet_access_reject_tfi(&bv, tfi, true);
+		ul_tbf->sched_pkt_acc_req = msg;
 
 		/* Reset N3101 counter: */
 		ul_tbf->n_reset(N3101);

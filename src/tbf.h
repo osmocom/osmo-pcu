@@ -314,6 +314,9 @@ struct gprs_rlcmac_tbf {
 
 	struct rate_ctr_group *m_ctrs;
 
+	/* HACK HACK HACK */
+	struct msgb *sched_pkt_acc_req;
+
 protected:
 	gprs_rlcmac_bts *bts_data() const;
 	void enable_egprs();

@@ -172,6 +172,12 @@ static struct msgb *sched_select_ctrl_msg(
 			if (!tbf)
 				continue;
 
+			/* HACK: send PACKET ACCESS REJECT if needed */
+			if ((msg = tbf->sched_pkt_acc_req) != NULL) {
+				tbf->sched_pkt_acc_req = NULL;
+				return msg;
+			}
+
 			/*
 			 * Assignments for the same direction have lower precedence,
 			 * because they may kill the TBF when the CONTROL ACK is

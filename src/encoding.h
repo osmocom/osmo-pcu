@@ -73,6 +73,8 @@ public:
 	static void write_packet_access_reject(
 		bitvec * dest, uint32_t tlli);
 
+	static void write_packet_access_reject_tfi(struct bitvec *bv, uint8_t tfi, bool ul);
+
 	static void write_packet_uplink_ack(
 			bitvec * dest, struct gprs_rlcmac_ul_tbf *tbf, bool is_final,
 			uint8_t rrbp);

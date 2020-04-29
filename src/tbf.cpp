@@ -232,6 +232,9 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	m_rlc.init();
 	m_llc.init();
 
+	/* HACK HACK HACK */
+	sched_pkt_acc_req = NULL;
+
 	m_name_buf[0] = '\0';
 }
 

@@ -1639,3 +1639,60 @@ void Encoding::write_packet_access_reject(
 	bitvec_write_field(dest, &wp, 5, 8);  //  WAIT_INDICATION value
 	bitvec_write_field(dest, &wp, 0, 1);  //  WAIT_INDICATION size in seconds
 }
+
+void Encoding::write_packet_access_reject_tfi(struct bitvec *dest, uint8_t tfi, bool ul)
+{
+	unsigned wp = 0;
+
+	bitvec_write_field(dest, &wp, 0x1, 2);  // Payload Type
+	bitvec_write_field(dest, &wp, 0x0, 2);  // Uplink block with TDMA FN
+	bitvec_write_field(dest, &wp, 0, 1);  // No Polling Bit
+	bitvec_write_field(dest, &wp, 0x0, 3);  // Uplink state flag
+	bitvec_write_field(dest, &wp,
+				MT_PACKET_ACCESS_REJECT, 6);  // MESSAGE TYPE
+	bitvec_write_field(dest, &wp, 0, 2); // fixed 00
+	bitvec_write_field(dest, &wp, 0x03, 2);  //  Global TFI
+	bitvec_write_field(dest, &wp, !ul, 1);  //  Uplink / Downlink
+	bitvec_write_field(dest, &wp, tfi, 5); // TFI
+	bitvec_write_field(dest, &wp, 1, 1);  //  WAIT_INDICATION size in seconds
+	/* TODO: make it configurable */
+	bitvec_write_field(dest, &wp, 5, 8);  //  WAIT_INDICATION value
+	bitvec_write_field(dest, &wp, 0, 1);  //  WAIT_INDICATION size in seconds
+}
+
+#if 0
+void Encoding::write_packet_access_reject_tfi(struct bitvec *bv, uint8_t tfi, bool ul)
+{
+	/* The PACKET ACCESS REJECT message (with RLC header) */
+	Packet_Access_Reject_t RejectMsg = {
+		.MESSAGE_TYPE = MT_PACKET_ACCESS_REJECT,
+		.PAGE_MODE = 0x00, /* Normal Paging */
+
+		.Count_Reject = 1,
+	};
+
+	/* Prepare the identity part (Global TFI) */
+	RejectID_t RejectID = { .UnionType = 0x03 };
+	if (ul) {
+		RejectID.u.Global_TFI.UnionType = 0x00;
+		RejectID.u.Global_TFI.u.UPLINK_TFI = tfi;
+	} else {
+		RejectID.u.Global_TFI.UnionType = 0x01;
+		RejectID.u.Global_TFI.u.DOWNLINK_TFI = tfi;
+	}
+
+	RejectMsg.Reject[0] = (Reject_t) {
+		.ID = RejectID,
+		.Exist_Wait = 0,
+	};
+
+	/* Complete block with both MAC and RLC headers */
+	RlcMacDownlink_t dl_block = {
+		.u = { .Packet_Access_Reject = RejectMsg },
+		.PAYLOAD_TYPE = PAYLOAD_TYPE_CTRL_NO_OPT_OCTET,
+		.USF = 7, /* Why should we deal with MAC header here?!? */
+	};
+
+	OSMO_ASSERT(encode_gsm_rlcmac_downlink(bv, &dl_block) == 0);
+}
+#endif
