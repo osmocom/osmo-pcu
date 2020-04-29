@@ -347,7 +347,7 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 
 	if (rc < 0 && (bts->gsmtap_categ_mask & (1 <<PCU_GSMTAP_C_UL_UNKNOWN))) {
 		gsmtap_send(bts->gsmtap, data_ind->arfcn | GSMTAP_ARFCN_F_UPLINK, data_ind->ts_nr,
-			    GSMTAP_CHANNEL_PACCH, 0, data_ind->fn, 0, 0, data_ind->data, data_ind->len);
+			    GSMTAP_CHANNEL_UNKNOWN, 0, data_ind->fn, 0, 0, data_ind->data, data_ind->len);
 	}
 
 	return rc;
