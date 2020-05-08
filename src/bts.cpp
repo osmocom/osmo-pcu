@@ -676,7 +676,7 @@ uint32_t BTS::rfn_to_fn(int32_t rfn)
 static inline uint16_t egprs_mslot_class_from_ra(uint16_t ra, bool is_11bit)
 {
 	if (is_11bit)
-		return (ra & 0x3e0) >> 5;
+		return ((ra & 0x3e0) >> 5) + 1;
 
 	/* set EGPRS multislot class to 0 for 8-bit RACH, since we don't know it yet */
 	return 0;
