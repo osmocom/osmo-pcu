@@ -753,6 +753,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 	uint8_t tsc = 0, ta = qta2ta(qta);
 	uint8_t egprs_ms_class = egprs_mslot_class_from_ra(ra, is_11bit);
 	bool failure = false;
+	GprsMs *ms;
 
 	rach_frame();
 
@@ -792,9 +793,10 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 				"Uplink (AGCH)\n");
 		}
 	} else {
+		ms = ms_alloc(0, egprs_ms_class);
 		// Create new TBF
 		/* FIXME: Copy and paste with other routines.. */
-		tbf = tbf_alloc_ul_tbf(&m_bts, NULL, -1, 0, egprs_ms_class, true);
+		tbf = tbf_alloc_ul_tbf(&m_bts, ms, -1, true);
 
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource sending "

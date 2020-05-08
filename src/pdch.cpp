@@ -118,8 +118,7 @@ static inline void sched_ul_ass_or_rej(BTS *bts, gprs_rlcmac_bts *bts_data, stru
 	bts->channel_request_description();
 
 	/* This call will register the new TBF with the MS on success */
-	gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts_data, tbf->trx->trx_no, tbf->ms_class(),
-						  tbf->ms()->egprs_ms_class(), tbf->tlli(), tbf->ta(), tbf->ms());
+	gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts_data, tbf->ms(), tbf->trx->trx_no, tbf->tlli(), tbf->ta());
 
 	/* schedule uplink assignment or reject */
 	if (ul_tbf) {
@@ -552,19 +551,17 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
 		struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 		uint32_t tlli = request->ID.u.TLLI;
-		uint8_t ms_class = 0;
-		uint8_t egprs_ms_class = 0;
 		uint8_t ta = GSM48_TA_INVALID;
 
 		GprsMs *ms = bts()->ms_by_tlli(tlli);
+		if (!ms)
+			ms = bts()->ms_alloc(0, 0); /* ms class updated later */
+
 		/* Keep the ms, even if it gets idle temporarily */
 		GprsMs::Guard guard(ms);
-
-		if (ms) {
-			ul_tbf = ms->ul_tbf();
-			dl_tbf = ms->dl_tbf();
-			ta = ms->ta();
-		}
+		ul_tbf = ms->ul_tbf();
+		dl_tbf = ms->dl_tbf();
+		ta = ms->ta();
 
 		/* We got a RACH so the MS was in packet idle mode and thus
 		 * didn't have any active TBFs */
@@ -597,20 +594,23 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			bts()->sba()->free_sba(sba);
 		}
 		if (request->Exist_MS_Radio_Access_capability2) {
+			uint8_t ms_class, egprs_ms_class;
 			ms_class = Decoding::get_ms_class_by_capability(
 				&request->MS_Radio_Access_capability2);
+			ms->set_ms_class(ms_class);
 			egprs_ms_class =
 				Decoding::get_egprs_ms_class_by_capability(
 					&request->MS_Radio_Access_capability2);
+			ms->set_egprs_ms_class(egprs_ms_class);
 		}
-		if (!ms_class)
+		if (!ms->ms_class())
 			LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");
-		if (egprs_ms_class)
+		if (ms->egprs_ms_class())
 			LOGP(DRLCMAC, LOGL_NOTICE,
 				"MS supports EGPRS multislot class %d.\n",
-				egprs_ms_class);
-		ul_tbf = tbf_alloc_ul(bts_data(), trx_no(), ms_class,
-			egprs_ms_class, tlli, ta, ms);
+				ms->egprs_ms_class());
+
+		ul_tbf = tbf_alloc_ul(bts_data(), ms, trx_no(), tlli, ta);
 
 		if (!ul_tbf) {
 			handle_tbf_reject(bts_data(), ms, tlli,
@@ -625,10 +625,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		ul_tbf->control_ts = ts_no;
 		/* schedule uplink assignment */
 		TBF_SET_ASS_STATE_UL(ul_tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS);
-
-		/* get capabilities */
-		if (ul_tbf->ms())
-			ul_tbf->ms()->set_egprs_ms_class(egprs_ms_class);
 
 		/* get measurements */
 		if (ul_tbf->ms()) {

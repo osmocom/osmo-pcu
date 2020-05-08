@@ -415,17 +415,15 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction di
 		ms()->confirm_tlli(tlli);
 }
 
-gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts,
-	int8_t use_trx, uint8_t ms_class, uint8_t egprs_ms_class,
-	uint32_t tlli, uint8_t ta, GprsMs *ms)
+gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx,
+				 uint32_t tlli, uint8_t ta)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
 
 /* FIXME: Copy and paste with tbf_new_dl_assignment */
 	/* create new TBF, use same TRX as DL TBF */
 	/* use multislot class of downlink TBF */
-	tbf = tbf_alloc_ul_tbf(bts, ms, use_trx, ms_class, egprs_ms_class,
-			       false);
+	tbf = tbf_alloc_ul_tbf(bts, ms, use_trx, false);
 	if (!tbf) {
 		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */
@@ -979,13 +977,14 @@ static void setup_egprs_mode(gprs_rlcmac_bts *bts, GprsMs *ms)
 	}
 }
 
-struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, uint8_t ms_class,
-					    uint8_t egprs_ms_class, bool single_slot)
+struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
 	int rc;
 
-	if (egprs_ms_class == 0 && bts->egprs_enabled) {
+	OSMO_ASSERT(ms != NULL);
+
+	if (ms->egprs_ms_class() == 0 && bts->egprs_enabled) {
 		LOGP(DTBF, LOGL_NOTICE, "Not accepting non-EGPRS phone in EGPRS-only mode\n");
 		bts->bts->tbf_failed_egprs_only();
 		return NULL;
@@ -993,26 +992,21 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 
 	LOGP(DTBF, LOGL_DEBUG, "********** UL-TBF starts here **********\n");
 	LOGP(DTBF, LOGL_INFO, "Allocating UL TBF: MS_CLASS=%d/%d\n",
-	     ms_class, egprs_ms_class);
+	     ms->ms_class(), ms->egprs_ms_class());
 
 	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-
 	if (!tbf)
 		return NULL;
-
 	talloc_set_destructor(tbf, ul_tbf_dtor);
 	new (tbf) gprs_rlcmac_ul_tbf(bts->bts);
 
-	if (!ms)
-		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class);
-
-	if (egprs_ms_class > 0 && bts->egprs_enabled) {
+	if (ms->egprs_ms_class() > 0 && bts->egprs_enabled) {
 		tbf->enable_egprs();
 		setup_egprs_mode(bts, ms);
 		LOGPTBF(tbf, LOGL_INFO, "Enabled EGPRS, mode %s\n", mode_name(ms->mode()));
 	}
 
-	rc = setup_tbf(tbf, ms, use_trx, ms_class, egprs_ms_class, single_slot);
+	rc = setup_tbf(tbf, ms, use_trx, ms->ms_class(), ms->egprs_ms_class(), single_slot);
 
 	/* if no resource */
 	if (rc < 0) {

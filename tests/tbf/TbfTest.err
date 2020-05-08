@@ -1444,9 +1444,9 @@ MSG = 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 MS requests UL TBF on RACH, so we provide one: ra=0x03 Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1524,11 +1524,11 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
+Creating MS object, TLLI = 0x00000000
 MS requests UL TBF in packet resource request of single block, so we provide one:
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 [UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1606,11 +1606,11 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
+Creating MS object, TLLI = 0x00000000
 MS requests UL TBF in packet resource request of single block, so we provide one:
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 [UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1736,11 +1736,11 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Assignment was on PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) No downlink ACK received yet
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
+Creating MS object, TLLI = 0x00000000
 MS requests UL TBF in packet resource request of single block, so we provide one:
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 [UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1803,11 +1803,11 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
+Creating MS object, TLLI = 0x00000000
 MS requests UL TBF in packet resource request of single block, so we provide one:
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 [UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1975,11 +1975,11 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
+Creating MS object, TLLI = 0x00000000
 MS requests UL TBF in packet resource request of single block, so we provide one:
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 [UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2059,9 +2059,9 @@ Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 MS requests UL TBF on RACH, so we provide one: ra=0x03 Fn=2654275 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2126,11 +2126,11 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
+Creating MS object, TLLI = 0x00000000
 MS requests UL TBF in packet resource request of single block, so we provide one:
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 [UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3146,13 +3146,13 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
+Creating MS object, TLLI = 0x00000000
 MS requests UL TBF in packet resource request of single block, so we provide one:
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 MS supports EGPRS multislot class 1.
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
@@ -3238,13 +3238,13 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
+Creating MS object, TLLI = 0x00000000
 MS requests UL TBF in packet resource request of single block, so we provide one:
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 MS supports EGPRS multislot class 1.
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
@@ -5877,13 +5877,13 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
+Creating MS object, TLLI = 0x00000000
 MS requests UL TBF in packet resource request of single block, so we provide one:
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 MS supports EGPRS multislot class 1.
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
@@ -6042,13 +6042,13 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
+Creating MS object, TLLI = 0x00000000
 MS requests UL TBF in packet resource request of single block, so we provide one:
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 MS supports EGPRS multislot class 1.
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
@@ -6180,9 +6180,9 @@ Destroying MS object, TLLI = 0xffeeddcc
 === end test_tbf_epdan_out_of_rx_window ===
 === start test_immediate_assign_rej_multi_block ===
 MS requests UL TBF on RACH, so we provide one: ra=0x78 Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6205,9 +6205,9 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 MS requests UL TBF on RACH, so we provide one: ra=0x79 Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6230,9 +6230,9 @@ TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=1 USF=1
 MS requests UL TBF on RACH, so we provide one: ra=0x7a Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6255,9 +6255,9 @@ TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=2 USF=2
 MS requests UL TBF on RACH, so we provide one: ra=0x7b Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6280,9 +6280,9 @@ TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=3 USF=3
 MS requests UL TBF on RACH, so we provide one: ra=0x7c Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6305,9 +6305,9 @@ TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=4 USF=4
 MS requests UL TBF on RACH, so we provide one: ra=0x7d Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6330,9 +6330,9 @@ TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=5 USF=5
 MS requests UL TBF on RACH, so we provide one: ra=0x7e Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6355,9 +6355,9 @@ TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=6 USF=6
 MS requests UL TBF on RACH, so we provide one: ra=0x7f Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6387,13 +6387,13 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
+Creating MS object, TLLI = 0x00000000
 MS requests UL TBF in packet resource request of single block, so we provide one:
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 MS supports EGPRS multislot class 1.
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] Slot Allocation (Algorithm A) for class 1
 - Skipping TS 0, because not enabled
@@ -7810,9 +7810,9 @@ packet reject: 40 84 7f f7 6e e6 41 4b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b
 === end test_packet_access_rej_epdan ===
 === start test_packet_access_rej_prr ===
 MS requests UL TBF on RACH, so we provide one: ra=0x78 Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7835,9 +7835,9 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 MS requests UL TBF on RACH, so we provide one: ra=0x79 Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7860,9 +7860,9 @@ TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=1 USF=1
 MS requests UL TBF on RACH, so we provide one: ra=0x7a Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7885,9 +7885,9 @@ TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=2 USF=2
 MS requests UL TBF on RACH, so we provide one: ra=0x7b Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7910,9 +7910,9 @@ TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=3 USF=3
 MS requests UL TBF on RACH, so we provide one: ra=0x7c Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7935,9 +7935,9 @@ TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=4 USF=4
 MS requests UL TBF on RACH, so we provide one: ra=0x7d Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7960,9 +7960,9 @@ TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=5 USF=5
 MS requests UL TBF on RACH, so we provide one: ra=0x7e Fn=2654167 qta=31 is_11bit=0:
+Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [UL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7986,14 +7986,14 @@ TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Upli
  - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=6 USF=6
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
+Creating MS object, TLLI = 0x00000000
 MS requests UL TBF in packet resource request of single block, so we provide one:
 MS requests UL TBF in packet resource request of single block, but there is no resource request scheduled!
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 MS supports EGPRS multislot class 11.
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 [UL] Slot Allocation (Algorithm A) for class 11
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8005,7 +8005,6 @@ Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 - Skipping TS 7, because no USF available
 [UL] algo A <single> (suggested TRX: 0): failed to allocate a TS, no USF available
 No PDCH resource
-Creating MS object, TLLI = 0x00000000
 Modifying MS object, UL TLLI: 0x00000000 -> 0xffeeddcc, not yet confirmed
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
@@ -8014,7 +8013,6 @@ Received RTS for PDCH: TRX=0 TS=7 FN=2654218 block_nr=8 scheduling USF=0 for req
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) starting timer T0 [reject (PACCH)] with 0 sec. 2000 microsec, cur_fn=0
 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) (TRX=0, TS=7)
 === end test_packet_access_rej_prr ===
-Destroying MS object, TLLI = 0x00000000
 === start test_packet_access_rej_prr_no_other_tbfs ===
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, UL TLLI: 0x00000000 -> 0xffeeddcc, not yet confirmed

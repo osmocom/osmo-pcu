@@ -674,7 +674,8 @@ static void test_egprs_ul_ack_nack()
 	the_bts.bts_data()->alloc_algorithm = alloc_algorithm_a;
 	the_bts.bts_data()->trx[0].pdch[4].enable();
 
-	struct gprs_rlcmac_ul_tbf *tbf = tbf_alloc_ul_tbf(the_bts.bts_data(), NULL, 0, 1, 1, true);
+	GprsMs *ms = the_bts.ms_alloc(1, 1);
+	struct gprs_rlcmac_ul_tbf *tbf = tbf_alloc_ul_tbf(the_bts.bts_data(), ms, 0, true);
 	struct crbb_test crbb_test = {0};
 	bitvec *rbb = NULL;
 	unsigned int rbb_size;
@@ -779,7 +780,8 @@ void test_immediate_assign_ul0m()
 	the_bts.bts_data()->trx[0].pdch[4].enable();
 	the_bts.bts_data()->trx[0].pdch[5].enable();
 
-	struct gprs_rlcmac_tbf *tbf = tbf_alloc_ul_tbf(the_bts.bts_data(), NULL, 0, 1, 1, false);
+	GprsMs *ms = the_bts.ms_alloc(1, 1);
+	struct gprs_rlcmac_tbf *tbf = tbf_alloc_ul_tbf(the_bts.bts_data(), ms, 0, false);
 	static uint8_t res[] = { 0x06,
 				 0x3f, /* Immediate Assignment Message Type */
 				 0x10, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
@@ -819,7 +821,8 @@ void test_immediate_assign_ul1s()
 	the_bts.bts_data()->trx[0].pdch[1].enable();
 	the_bts.bts_data()->trx[0].pdch[2].enable();
 
-	struct gprs_rlcmac_tbf *tbf = tbf_alloc_ul_tbf(the_bts.bts_data(), NULL, 0, 1, 1, false);
+	GprsMs *ms = the_bts.ms_alloc(1, 1);
+	struct gprs_rlcmac_tbf *tbf = tbf_alloc_ul_tbf(the_bts.bts_data(), ms, 0, false);
 	static uint8_t res[] = { 0x06,
 				 0x3f, /* Immediate Assignment Message Type */
 				 0x10, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
