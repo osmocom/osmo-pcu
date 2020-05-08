@@ -1,9 +1,9 @@
 === start test_tbf_base ===
 === end test_tbf_base ===
 === start test_tbf_tlli_update ===
+Creating MS object, TLLI = 0x00000000
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=0/0
-Creating MS object, TLLI = 0x00000000
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -40,12 +40,12 @@ Modifying MS object, TLLI: 0x00002342 -> 0x00004232, already confirmed partly
 Modifying MS object, TLLI = 0x00004232, TA 4 -> 6
 === end test_tbf_tlli_update ===
 === start test_tbf_final_ack ===
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -130,12 +130,12 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 === end test_tbf_final_ack ===
 === start test_tbf_final_ack ===
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -220,12 +220,12 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 === end test_tbf_final_ack ===
 === start test_tbf_delayed_release ===
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -475,12 +475,12 @@ Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 === end test_tbf_delayed_release ===
 === start test_tbf_imsi ===
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -497,12 +497,12 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, 
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Searching for first unallocated TFI: TRX=0
  Found TFI=1.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -542,10 +542,10 @@ Destroying MS object, TLLI = 0xf1000002
 ********** DL-TBF ends here **********
 === end test_tbf_imsi ===
 === start test_tbf_exhaustion ===
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -567,10 +567,10 @@ TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -592,10 +592,10 @@ TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -617,10 +617,10 @@ TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -642,10 +642,10 @@ TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -667,10 +667,10 @@ TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -692,10 +692,10 @@ TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -717,10 +717,10 @@ TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -742,10 +742,10 @@ TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -767,10 +767,10 @@ TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -792,10 +792,10 @@ TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -817,10 +817,10 @@ TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -842,10 +842,10 @@ TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -867,10 +867,10 @@ TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -892,10 +892,10 @@ TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -917,10 +917,10 @@ TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -942,10 +942,10 @@ TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -967,10 +967,10 @@ TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -992,10 +992,10 @@ TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1017,10 +1017,10 @@ TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1042,10 +1042,10 @@ TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1067,10 +1067,10 @@ TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1092,10 +1092,10 @@ TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1117,10 +1117,10 @@ TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1142,10 +1142,10 @@ TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1167,10 +1167,10 @@ TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1192,10 +1192,10 @@ TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1217,10 +1217,10 @@ TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1242,10 +1242,10 @@ TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1267,10 +1267,10 @@ TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1292,10 +1292,10 @@ TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1317,10 +1317,10 @@ TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1342,20 +1342,20 @@ TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220 pollFN=-1
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) appending 256 bytes
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 [DL] algo A <single> (suggested TRX: -1): failed to find a usable TRX (TFI exhausted)
 No PDCH resource
 === end test_tbf_exhaustion ===
 Destroying MS object, TLLI = 0x00000000
 === start test_tbf_dl_llc_loss ===
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
 [DL] Slot Allocation (Algorithm A) for class 45
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3053,14 +3053,17 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on F
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 10, CS-1): 0f 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 
 === end test_tbf_dl_reuse ===
 === start test_tbf_gprs_egprs ===
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Not accepting non-EGPRS phone in EGPRS-only mode
 No PDCH resource
 === end test_tbf_gprs_egprs ===
+Destroying MS object, TLLI = 0x00000000
 === start test_tbf_ws ===
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=12/0
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 12
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=12/0
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 Slot Allocation (Algorithm B) for class 12
@@ -3094,11 +3097,11 @@ PDCH(TS 5, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING), 
 Detaching TBF from MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING)
 Destroying MS object, TLLI = 0x00000000
 ********** DL-TBF ends here **********
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=12/12
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 12
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 12
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=12/12
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
@@ -3452,13 +3455,13 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 === end test_tbf_egprs_two_phase_spb ===
 === start test_tbf_egprs_dl ===
 Testing MCS-1
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -3759,13 +3762,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing MCS-2
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -4016,13 +4019,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing MCS-3
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -4235,13 +4238,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing MCS-4
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -4422,13 +4425,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing MCS-5
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -4589,13 +4592,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing MCS-6
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -4738,13 +4741,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing MCS-7
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -4882,13 +4885,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing MCS-8
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -5015,13 +5018,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing MCS-9
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -5150,13 +5153,13 @@ Destroying MS object, TLLI = 0xffeeddcc
 === end test_tbf_egprs_dl ===
 === start test_tbf_egprs_retx_dl ===
 Testing retx for MCS 6 - 6
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -5206,13 +5209,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing retx for MCS 1 - 9
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -5262,13 +5265,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing retx for MCS 2 - 8
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -5318,13 +5321,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing retx for MCS 5 - 7
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -5390,13 +5393,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing retx for MCS 6 - 9
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -5462,13 +5465,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing retx for MCS 7 - 5
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -5534,13 +5537,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing retx for MCS 9 - 6
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -5608,13 +5611,13 @@ Destroying MS object, TLLI = 0xffeeddcc
 === end test_tbf_egprs_retx_dl ===
 === start test_tbf_egprs_spb_dl ===
 Testing retx for MCS 6 to reseg_mcs 3
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -5671,13 +5674,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing retx for MCS 5 to reseg_mcs 2
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -5734,13 +5737,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing retx for MCS 4 to reseg_mcs 1
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -5797,13 +5800,13 @@ Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc
 Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 Testing retx for MCS 6 to reseg_mcs 3
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -5979,11 +5982,11 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer T0 [assignme
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 === end test_tbf_puan_urbb_len ===
 === start test_tbf_update_ws ===
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
@@ -6138,13 +6141,13 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer T0 [assignme
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 === end test_tbf_li_decoding ===
 === start test_tbf_epdan_out_of_rx_window ===
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Slot Allocation (Algorithm A) for class 0
 - Skipping TS 0, because not enabled
@@ -7781,13 +7784,13 @@ Got MS: TLLI = 0xf1223344, TA = 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 === end test_tbf_egprs_two_phase_puan ===
 === start test_packet_access_rej_epdan ===
+Creating MS object, TLLI = 0x00000000
+Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
+Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 [DL] Slot Allocation (Algorithm A) for class 11
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled

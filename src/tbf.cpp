@@ -1049,24 +1049,25 @@ static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
 	return 0;
 }
 
-struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, uint8_t ms_class,
-					    uint8_t egprs_ms_class, bool single_slot)
+struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot)
 {
 	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;
 
-	if (egprs_ms_class == 0 && bts->egprs_enabled) {
-		if (ms_class > 0) {
+	OSMO_ASSERT(ms != NULL);
+
+	if (ms->egprs_ms_class() == 0 && bts->egprs_enabled) {
+		if (ms->ms_class() > 0) {
 			LOGP(DTBF, LOGL_NOTICE, "Not accepting non-EGPRS phone in EGPRS-only mode\n");
 			bts->bts->tbf_failed_egprs_only();
 			return NULL;
 		}
-		egprs_ms_class = 1;
+		ms->set_egprs_ms_class(1);
 	}
 
 	LOGP(DTBF, LOGL_DEBUG, "********** DL-TBF starts here **********\n");
 	LOGP(DTBF, LOGL_INFO, "Allocating DL TBF: MS_CLASS=%d/%d\n",
-	     ms_class, egprs_ms_class);
+	     ms->ms_class(), ms->egprs_ms_class());
 
 	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
 
@@ -1075,17 +1076,13 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 
 	talloc_set_destructor(tbf, dl_tbf_dtor);
 	new (tbf) gprs_rlcmac_dl_tbf(bts->bts);
-
-	if (!ms)
-		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class);
-
-	if (egprs_ms_class > 0 && bts->egprs_enabled) {
+	if (ms->egprs_ms_class() > 0 && bts->egprs_enabled) {
 		tbf->enable_egprs();
 		setup_egprs_mode(bts, ms);
 		LOGPTBF(tbf, LOGL_INFO, "Enabled EGPRS, mode %s\n", mode_name(ms->mode()));
 	}
 
-	rc = setup_tbf(tbf, ms, use_trx, ms_class, 0, single_slot);
+	rc = setup_tbf(tbf, ms, use_trx, ms->ms_class(), 0, single_slot);
 	/* if no resource */
 	if (rc < 0) {
 		talloc_free(tbf);
@@ -1430,8 +1427,7 @@ int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
 	bts->tbf_reused();
 
 	new_tbf = tbf_alloc_dl_tbf(bts->bts_data(), ms(),
-		this->trx->trx_no, ms_class(),
-		ms() ?  ms()->egprs_ms_class() : 0, false);
+		this->trx->trx_no, false);
 
 	if (!new_tbf) {
 		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource\n");

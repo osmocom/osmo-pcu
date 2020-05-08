@@ -146,10 +146,12 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 
 	/* check for uplink data, so we copy our informations */
 	ms = bts->bts->ms_store().get_ms(tlli, tlli_old, imsi);
-	if (ms) {
-		ul_tbf = ms->ul_tbf();
-		ta = ms->ta();
-	}
+	if (!ms)
+		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class); /* ms class updated later */
+
+	ul_tbf = ms->ul_tbf();
+	ta = ms->ta();
+
 	/* TODO: if (!ms) create MS before tbf_alloc is called? */
 
 	if (ul_tbf && ul_tbf->m_contention_resolution_done
@@ -166,7 +168,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	// Create new TBF (any TRX)
 /* FIXME: Copy and paste with alloc_ul_tbf */
 	/* set number of downlink slots according to multislot class */
-	dl_tbf = tbf_alloc_dl_tbf(bts, ms, use_trx, ms_class, egprs_ms_class, ss);
+	dl_tbf = tbf_alloc_dl_tbf(bts, ms, use_trx, ss);
 
 	if (!dl_tbf) {
 		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource\n");

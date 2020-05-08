@@ -756,8 +756,9 @@ void test_immediate_assign_dl()
 	the_bts.bts_data()->alloc_algorithm = alloc_algorithm_a;
 	the_bts.bts_data()->trx[0].pdch[2].enable();
 	the_bts.bts_data()->trx[0].pdch[3].enable();
+	GprsMs *ms = the_bts.ms_alloc(1, 1);
 
-	struct gprs_rlcmac_tbf *tbf = tbf_alloc_dl_tbf(the_bts.bts_data(), NULL, 0, 1, 1, false);
+	struct gprs_rlcmac_tbf *tbf = tbf_alloc_dl_tbf(the_bts.bts_data(), ms, 0, false);
 	static uint8_t res[] = { 0x06,
 				 0x3f, /* Immediate Assignment Message Type */
 				 0x30, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */

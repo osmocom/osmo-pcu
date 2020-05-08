@@ -93,9 +93,9 @@ void prepare_bts_with_two_dl_tbf_subscr()
 	trx->pdch[7].enable();
 
 	ms1 = bts->ms_alloc(10, 11);
-	tbf1 = tbf_alloc_dl_tbf(bts_data, ms1, 0, 10, 11, false);
+	tbf1 = tbf_alloc_dl_tbf(bts_data, ms1, 0, false);
 	ms2 = bts->ms_alloc(12, 13);
-	tbf2 = tbf_alloc_dl_tbf(bts_data, ms2, 0, 12, 13, false);
+	tbf2 = tbf_alloc_dl_tbf(bts_data, ms2, 0, false);
 
 	fprintf(stderr, "\n");
 }
