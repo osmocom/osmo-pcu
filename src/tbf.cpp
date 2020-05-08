@@ -1014,14 +1014,14 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 
 	rc = setup_tbf(tbf, ms, use_trx, ms_class, egprs_ms_class, single_slot);
 
-	if (tbf->is_egprs_enabled())
-		tbf->set_window_size();
-
 	/* if no resource */
 	if (rc < 0) {
 		talloc_free(tbf);
 		return NULL;
 	}
+
+	if (tbf->is_egprs_enabled())
+		tbf->set_window_size();
 
 	tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(tbf,
 					&tbf_ul_egprs_ctrg_desc, tbf->m_ctrs->idx);
