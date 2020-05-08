@@ -673,7 +673,7 @@ uint32_t BTS::rfn_to_fn(int32_t rfn)
  * can only receive EGPRS mslot class through 11-bit EGPRS PACKET CHANNEL
  * REQUEST.
  */
-static inline uint16_t egprs_mslot_class_from_ra(uint16_t ra, bool is_11bit)
+static inline uint8_t egprs_mslot_class_from_ra(uint16_t ra, bool is_11bit)
 {
 	if (is_11bit)
 		return ((ra & 0x3e0) >> 5) + 1;
@@ -750,7 +750,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 	int plen;
 	uint8_t usf = 7;
 	uint8_t tsc = 0, ta = qta2ta(qta);
-	uint16_t egprs_ms_class = egprs_mslot_class_from_ra(ra, is_11bit);
+	uint8_t egprs_ms_class = egprs_mslot_class_from_ra(ra, is_11bit);
 	bool failure = false;
 
 	rach_frame();
