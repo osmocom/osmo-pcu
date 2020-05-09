@@ -82,7 +82,7 @@ int pcu_sock_send(struct msgb *msg)
 		return -EIO;
 	}
 	msgb_enqueue(&pcu_sock_state.upqueue, msg);
-	conn_bfd->when |= BSC_FD_WRITE;
+	conn_bfd->when |= OSMO_FD_WRITE;
 
 	return 0;
 }
@@ -153,7 +153,7 @@ static int pcu_sock_write(struct osmo_fd *bfd)
 		msg = llist_entry(pcu_sock_state.upqueue.next, struct msgb, list);
 		pcu_prim = (struct gsm_pcu_if *)msg->data;
 
-		bfd->when &= ~BSC_FD_WRITE;
+		bfd->when &= ~OSMO_FD_WRITE;
 
 		/* bug hunter 8-): maybe someone forgot msgb_put(...) ? */
 		if (!msgb_length(msg)) {
@@ -168,7 +168,7 @@ static int pcu_sock_write(struct osmo_fd *bfd)
 			goto close;
 		if (rc < 0) {
 			if (errno == EAGAIN) {
-				bfd->when |= BSC_FD_WRITE;
+				bfd->when |= OSMO_FD_WRITE;
 				break;
 			}
 			goto close;
@@ -192,12 +192,12 @@ static int pcu_sock_cb(struct osmo_fd *bfd, unsigned int flags)
 {
 	int rc = 0;
 
-	if (flags & BSC_FD_READ)
+	if (flags & OSMO_FD_READ)
 		rc = pcu_sock_read(bfd);
 	if (rc < 0)
 		return rc;
 
-	if (flags & BSC_FD_WRITE)
+	if (flags & OSMO_FD_WRITE)
 		rc = pcu_sock_write(bfd);
 
 	return rc;
