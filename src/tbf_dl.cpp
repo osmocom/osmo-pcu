@@ -630,14 +630,14 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 			&m_llc, &write_offset, &num_chunks, data, is_final, &payload_written);
 
 		if (payload_written > 0)
-			bts->rlc_dl_payload_bytes(payload_written);
+			bts->do_rate_ctr_add(CTR_RLC_DL_PAYLOAD_BYTES, payload_written);
 
 		if (ar == Encoding::AR_NEED_MORE_BLOCKS)
 			break;
 
 		LOGPTBFDL(this, LOGL_DEBUG, "Complete DL frame, len=%d\n", m_llc.frame_length());
 		gprs_rlcmac_dl_bw(this, m_llc.frame_length());
-		bts->llc_dl_bytes(m_llc.frame_length());
+		bts->do_rate_ctr_add(CTR_LLC_DL_BYTES, m_llc.frame_length());
 		m_llc.reset();
 
 		if (is_final) {

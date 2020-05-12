@@ -320,12 +320,6 @@ public:
 	/*
 	 * Statistics
 	 */
-	void rlc_dl_bytes(int bytes);
-	void rlc_dl_payload_bytes(int bytes);
-	void rlc_ul_bytes(int bytes);
-	void rlc_ul_payload_bytes(int bytes);
-	void llc_dl_bytes(int bytes);
-	void llc_ul_bytes(int bytes);
 
 	void ms_present(int32_t n);
 	int32_t ms_present_get();
@@ -336,6 +330,7 @@ public:
 	struct rate_ctr_group *rate_counters() const;
 	struct osmo_stat_item_group *stat_items() const;
 	void do_rate_ctr_inc(unsigned int ctr_id);
+	void do_rate_ctr_add(unsigned int ctr_id, int inc);
 
 	LListHead<gprs_rlcmac_tbf>& ul_tbfs();
 	LListHead<gprs_rlcmac_tbf>& dl_tbfs();
@@ -409,17 +404,10 @@ inline void BTS::do_rate_ctr_inc(unsigned int ctr_id) {
 	rate_ctr_inc(&m_ratectrs->ctr[ctr_id]);
 }
 
-#define CREATE_COUNT_ADD_INLINE(func_name, ctr_name) \
-	inline void BTS::func_name(int inc) {\
-		rate_ctr_add(&m_ratectrs->ctr[ctr_name], inc); \
-	}
+inline void BTS::do_rate_ctr_add(unsigned int ctr_id, int inc) {
+	rate_ctr_add(&m_ratectrs->ctr[ctr_id], inc);
+}
 
-CREATE_COUNT_ADD_INLINE(rlc_dl_bytes, CTR_RLC_DL_BYTES);
-CREATE_COUNT_ADD_INLINE(rlc_dl_payload_bytes, CTR_RLC_DL_PAYLOAD_BYTES);
-CREATE_COUNT_ADD_INLINE(rlc_ul_bytes, CTR_RLC_UL_BYTES);
-CREATE_COUNT_ADD_INLINE(rlc_ul_payload_bytes, CTR_RLC_UL_PAYLOAD_BYTES);
-CREATE_COUNT_ADD_INLINE(llc_dl_bytes, CTR_LLC_DL_BYTES);
-CREATE_COUNT_ADD_INLINE(llc_ul_bytes, CTR_LLC_UL_BYTES);
 
 #define CREATE_STAT_INLINE(func_name, func_name_get, stat_name) \
 	inline void BTS::func_name(int32_t val) {\

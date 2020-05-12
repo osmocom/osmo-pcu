@@ -92,7 +92,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 		frame = frames + i;
 
 		if (frame->length) {
-			bts->rlc_ul_payload_bytes(frame->length);
+			bts->do_rate_ctr_add(CTR_RLC_UL_PAYLOAD_BYTES, frame->length);
 
 			LOGPTBFUL(this, LOGL_DEBUG, "Frame %d "
 				"starts at offset %d, "
@@ -108,7 +108,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 			/* send frame to SGSN */
 			LOGPTBFUL(this, LOGL_DEBUG, "complete UL frame len=%d\n", m_llc.frame_length());
 			snd_ul_ud();
-			bts->llc_ul_bytes(m_llc.frame_length());
+			bts->do_rate_ctr_add(CTR_LLC_UL_BYTES, m_llc.frame_length());
 			m_llc.reset();
 		}
 	}

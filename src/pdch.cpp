@@ -759,7 +759,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 		return -EINVAL;
 	}
 
-	bts()->rlc_ul_bytes(len);
+	bts()->do_rate_ctr_add(CTR_RLC_UL_BYTES, len);
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Got RLC block, coding scheme: %s, "
 		"length: %d (%d))\n", mcs_name(cs), len, cs.usedSizeUL());
