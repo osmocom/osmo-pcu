@@ -357,18 +357,18 @@ static inline void tap_n_acc(const struct msgb *msg, const struct gprs_rlcmac_bt
 
 	switch(cat) {
 	case PCU_GSMTAP_C_DL_CTRL:
-		bts->bts->rlc_sent_control();
+		bts->bts->do_rate_ctr_inc(CTR_RLC_SENT_CONTROL);
 		bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_CTRL, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data,
 				      msg->len);
 		break;
 	case PCU_GSMTAP_C_DL_DATA_GPRS:
-		bts->bts->rlc_sent();
+		bts->bts->do_rate_ctr_inc(CTR_RLC_SENT);
 		/* FIXME: distinguish between GPRS and EGPRS */
 		bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_DATA_GPRS, false, trx, ts, GSMTAP_CHANNEL_PDTCH, fn, msg->data,
 				      msg->len);
 		break;
 	case PCU_GSMTAP_C_DL_DUMMY:
-		bts->bts->rlc_sent_dummy();
+		bts->bts->do_rate_ctr_inc(CTR_RLC_SENT_DUMMY);
 		bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_DUMMY, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data,
 				      msg->len);
 		break;

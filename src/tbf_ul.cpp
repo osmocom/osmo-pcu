@@ -288,7 +288,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 				rdbi, rlc->cs, rlc_data, NULL, 0, &new_tlli);
 
 			if (num_chunks < 0) {
-				bts->decode_error();
+				bts->do_rate_ctr_inc(CTR_DECODE_ERRORS);
 				LOGPTBFUL(this, LOGL_NOTICE,
 					  "Failed to decode TLLI of %s UL DATA TFI=%d.\n",
 					  mcs_name(rlc->cs), rlc->tfi);
@@ -428,7 +428,7 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_second_seg(
 	union split_block_status *spb_status = &block->spb_status;
 	uint8_t *rlc_data = &block->block[0];
 
-        bts->spb_uplink_second_segment();
+        bts->do_rate_ctr_inc(CTR_SPB_UL_SECOND_SEGMENT);
 
 	if (spb_status->block_status_ul &
 				EGPRS_RESEG_FIRST_SEG_RXD) {
@@ -461,7 +461,7 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_first_seg(
 	uint8_t *rlc_data = &block->block[0];
 	union split_block_status *spb_status = &block->spb_status;
 
-	bts->spb_uplink_first_segment();
+	bts->do_rate_ctr_inc(CTR_SPB_UL_FIRST_SEGMENT);
 
 	if (spb_status->block_status_ul & EGPRS_RESEG_SECOND_SEG_RXD) {
 		LOGPTBFUL(this, LOGL_DEBUG,
@@ -541,55 +541,55 @@ void gprs_rlcmac_ul_tbf::update_coding_scheme_counter_ul(enum CodingScheme cs)
 {
 	switch (cs) {
 	case CS1:
-		bts->gprs_ul_cs1();
+		bts->do_rate_ctr_inc(CTR_GPRS_UL_CS1);
 		rate_ctr_inc(&m_ul_gprs_ctrs->ctr[TBF_CTR_GPRS_UL_CS1]);
 		break;
 	case CS2:
-		bts->gprs_ul_cs2();
+		bts->do_rate_ctr_inc(CTR_GPRS_UL_CS2);
 		rate_ctr_inc(&m_ul_gprs_ctrs->ctr[TBF_CTR_GPRS_UL_CS2]);
 		break;
 	case CS3:
-		bts->gprs_ul_cs3();
+		bts->do_rate_ctr_inc(CTR_GPRS_UL_CS3);
 		rate_ctr_inc(&m_ul_gprs_ctrs->ctr[TBF_CTR_GPRS_UL_CS3]);
 		break;
 	case CS4:
-		bts->gprs_ul_cs4();
+		bts->do_rate_ctr_inc(CTR_GPRS_UL_CS4);
 		rate_ctr_inc(&m_ul_gprs_ctrs->ctr[TBF_CTR_GPRS_UL_CS4]);
 		break;
 	case MCS1:
-		bts->egprs_ul_mcs1();
+		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS1);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS1]);
 		break;
 	case MCS2:
-		bts->egprs_ul_mcs2();
+		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS2);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS2]);
 		break;
 	case MCS3:
-		bts->egprs_ul_mcs3();
+		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS3);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS3]);
 		break;
 	case MCS4:
-		bts->egprs_ul_mcs4();
+		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS4);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS4]);
 		break;
 	case MCS5:
-		bts->egprs_ul_mcs5();
+		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS5);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS5]);
 		break;
 	case MCS6:
-		bts->egprs_ul_mcs6();
+		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS6);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS6]);
 		break;
 	case MCS7:
-		bts->egprs_ul_mcs7();
+		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS7);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS7]);
 		break;
 	case MCS8:
-		bts->egprs_ul_mcs8();
+		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS8);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS8]);
 		break;
 	case MCS9:
-		bts->egprs_ul_mcs9();
+		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS9);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS9]);
 		break;
 	default:

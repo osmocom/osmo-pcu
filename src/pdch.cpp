@@ -115,7 +115,7 @@ static void get_meas(struct pcu_l1_meas *meas,
 
 static inline void sched_ul_ass_or_rej(BTS *bts, gprs_rlcmac_bts *bts_data, struct gprs_rlcmac_dl_tbf *tbf)
 {
-	bts->channel_request_description();
+	bts->do_rate_ctr_inc(CTR_CHANNEL_REQUEST_DESCRIPTION);
 
 	/* This call will register the new TBF with the MS on success */
 	gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts_data, tbf->ms(), tbf->trx->trx_no, tbf->tlli());
@@ -715,7 +715,7 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 	}
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- RX : Uplink Control Block -------------------------\n");
 
-	bts()->rlc_rcvd_control();
+	bts()->do_rate_ctr_inc(CTR_RLC_RECV_CONTROL);
 	switch (ul_control_block->u.MESSAGE_TYPE) {
 	case MT_PACKET_CONTROL_ACK:
 		rcv_control_ack(&ul_control_block->u.Packet_Control_Acknowledgement, fn);
@@ -736,7 +736,7 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 		/* ignoring it. change the SI to not force sending these? */
 		break;
 	default:
-		bts()->decode_error();
+		bts()->do_rate_ctr_inc(CTR_DECODE_ERRORS);
 		LOGP(DRLCMAC, LOGL_NOTICE,
 			"RX: [PCU <- BTS] unknown control block(%d) received\n",
 			ul_control_block->u.MESSAGE_TYPE);
@@ -753,7 +753,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 {
 	GprsCodingScheme cs = GprsCodingScheme::getBySizeUL(len);
 	if (!cs) {
-		bts()->decode_error();
+		bts()->do_rate_ctr_inc(CTR_DECODE_ERRORS);
 		LOGP(DRLCMACUL, LOGL_ERROR, "Dropping data block with invalid"
 			"length: %d)\n", len);
 		return -EINVAL;
@@ -770,7 +770,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	if (mcs_is_edge(cs))
 		return rcv_data_block(data, len, fn, meas, cs);
 
-	bts()->decode_error();
+	bts()->do_rate_ctr_inc(CTR_DECODE_ERRORS);
 	LOGP(DRLCMACUL, LOGL_ERROR, "Unsupported coding scheme %s\n",
 		mcs_name(cs));
 	return -EINVAL;
@@ -809,7 +809,7 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 		LOGP(DRLCMACUL, LOGL_ERROR,
 			"Got %s RLC block but header parsing has failed\n",
 			mcs_name(cs));
-		bts()->decode_error();
+		bts()->do_rate_ctr_inc(CTR_DECODE_ERRORS);
 		return rc;
 	}
 

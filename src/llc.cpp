@@ -128,7 +128,7 @@ void gprs_llc_queue::clear(BTS *bts)
 
 	while ((msg = msgb_dequeue(&m_queue))) {
 		if (bts)
-			bts->llc_dropped_frame();
+			bts->do_rate_ctr_inc(CTR_LLC_FRAME_DROPPED);
 		msgb_free(msg);
 	}
 

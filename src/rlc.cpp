@@ -159,7 +159,7 @@ void gprs_rlc_dl_window::update(BTS *bts, const struct bitvec *rbb,
 		} else {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- got NACK for BSN=%d\n", bsn);
 			m_v_b.mark_nacked(bsn);
-			bts->rlc_nacked();
+			bts->do_rate_ctr_inc(CTR_RLC_NACKED);
 			*lost += 1;
 		}
 	}
@@ -183,7 +183,7 @@ void gprs_rlc_dl_window::update(BTS *bts, char *show_rbb, uint16_t ssn,
 		} else {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- got NACK for BSN=%d\n", bsn);
 			m_v_b.mark_nacked(bsn);
-			bts->rlc_nacked();
+			bts->do_rate_ctr_inc(CTR_RLC_NACKED);
 			*lost += 1;
 		}
 	}

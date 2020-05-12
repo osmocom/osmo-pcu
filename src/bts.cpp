@@ -344,7 +344,7 @@ void BTS::set_current_block_frame_number(int fn, unsigned max_delay)
 		LOGP(DRLCMAC, LOGL_NOTICE,
 			"Late RLC block, FN delta: %d FN: %d curFN: %d\n",
 			delay, fn, current_frame_number());
-		rlc_late_block();
+		do_rate_ctr_inc(CTR_RLC_LATE_BLOCK);
 	}
 
 	m_cur_blk_fn = fn;
@@ -755,10 +755,10 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 	bool failure = false;
 	GprsMs *ms;
 
-	rach_frame();
+	do_rate_ctr_inc(CTR_RACH_REQUESTS);
 
 	if (is_11bit)
-		rach_frame_11bit();
+		do_rate_ctr_inc(CTR_11BIT_RACH_REQUESTS);
 
 	/* Determine full frame number */
 	Fn = rfn_to_fn(Fn);
@@ -831,7 +831,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 		plen = Encoding::write_immediate_assignment_reject(
 			immediate_assignment, ra, Fn,
 			burst_type);
-		immediate_assignment_reject();
+		do_rate_ctr_inc(CTR_IMMEDIATE_ASSIGN_REJ);
 	}
 	else {
 		LOGP(DRLCMAC, LOGL_DEBUG,
@@ -845,7 +845,7 @@ int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
 	}
 
 	if (plen >= 0) {
-		immediate_assignment_ul_tbf();
+		do_rate_ctr_inc(CTR_IMMEDIATE_ASSIGN_UL_TBF);
 		pcu_l1if_tx_agch(immediate_assignment, plen);
 	}
 
@@ -920,7 +920,7 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup)
 						    tbf->poll_fn, m_bts.alpha, m_bts.gamma, -1,
 						    GSM_L1_BURST_TYPE_ACCESS_0);
 	if (plen >= 0) {
-		immediate_assignment_dl_tbf();
+		do_rate_ctr_inc(CTR_IMMEDIATE_ASSIGN_DL_TBF);
 		pcu_l1if_tx_pch(immediate_assignment, plen, pgroup);
 	}
 

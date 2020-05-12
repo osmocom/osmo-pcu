@@ -175,6 +175,94 @@ struct gprs_rlcmac_bts {
 	uint32_t app_info_pending; /* Count of MS with active TBF, to which we did not send app_info yet */
 };
 
+enum {
+	CTR_TBF_DL_ALLOCATED,
+	CTR_TBF_DL_FREED,
+	CTR_TBF_DL_ABORTED,
+	CTR_TBF_UL_ALLOCATED,
+	CTR_TBF_UL_FREED,
+	CTR_TBF_UL_ABORTED,
+	CTR_TBF_REUSED,
+	CTR_TBF_ALLOC_ALGO_A,
+	CTR_TBF_ALLOC_ALGO_B,
+	CTR_TBF_FAILED_EGPRS_ONLY,
+	CTR_RLC_SENT,
+	CTR_RLC_RESENT,
+	CTR_RLC_RESTARTED,
+	CTR_RLC_STALLED,
+	CTR_RLC_NACKED,
+	CTR_RLC_FINAL_BLOCK_RESENT,
+	CTR_RLC_ASS_TIMEDOUT,
+	CTR_RLC_ASS_FAILED,
+	CTR_RLC_ACK_TIMEDOUT,
+	CTR_RLC_ACK_FAILED,
+	CTR_RLC_REL_TIMEDOUT,
+	CTR_RLC_LATE_BLOCK,
+	CTR_RLC_SENT_DUMMY,
+	CTR_RLC_SENT_CONTROL,
+	CTR_RLC_DL_BYTES,
+	CTR_RLC_DL_PAYLOAD_BYTES,
+	CTR_RLC_UL_BYTES,
+	CTR_RLC_UL_PAYLOAD_BYTES,
+	CTR_DECODE_ERRORS,
+	CTR_SBA_ALLOCATED,
+	CTR_SBA_FREED,
+	CTR_SBA_TIMEDOUT,
+	CTR_LLC_FRAME_TIMEDOUT,
+	CTR_LLC_FRAME_DROPPED,
+	CTR_LLC_FRAME_SCHED,
+	CTR_LLC_DL_BYTES,
+	CTR_LLC_UL_BYTES,
+	CTR_RACH_REQUESTS,
+	CTR_11BIT_RACH_REQUESTS,
+	CTR_SPB_UL_FIRST_SEGMENT,
+	CTR_SPB_UL_SECOND_SEGMENT,
+	CTR_SPB_DL_FIRST_SEGMENT,
+	CTR_SPB_DL_SECOND_SEGMENT,
+	CTR_IMMEDIATE_ASSIGN_UL_TBF,
+	CTR_IMMEDIATE_ASSIGN_REJ,
+	CTR_IMMEDIATE_ASSIGN_DL_TBF,
+	CTR_CHANNEL_REQUEST_DESCRIPTION,
+	CTR_PKT_UL_ASSIGNMENT,
+	CTR_PKT_ACCESS_REJ,
+	CTR_PKT_DL_ASSIGNMENT,
+	CTR_RLC_RECV_CONTROL,
+	CTR_PUA_POLL_TIMEDOUT,
+	CTR_PUA_POLL_FAILED,
+	CTR_PDA_POLL_TIMEDOUT,
+	CTR_PDA_POLL_FAILED,
+	CTR_PUAN_POLL_TIMEDOUT,
+	CTR_PUAN_POLL_FAILED,
+	CTR_PDAN_POLL_TIMEDOUT,
+	CTR_PDAN_POLL_FAILED,
+	CTR_GPRS_DL_CS1,
+	CTR_GPRS_DL_CS2,
+	CTR_GPRS_DL_CS3,
+	CTR_GPRS_DL_CS4,
+	CTR_EGPRS_DL_MCS1,
+	CTR_EGPRS_DL_MCS2,
+	CTR_EGPRS_DL_MCS3,
+	CTR_EGPRS_DL_MCS4,
+	CTR_EGPRS_DL_MCS5,
+	CTR_EGPRS_DL_MCS6,
+	CTR_EGPRS_DL_MCS7,
+	CTR_EGPRS_DL_MCS8,
+	CTR_EGPRS_DL_MCS9,
+	CTR_GPRS_UL_CS1,
+	CTR_GPRS_UL_CS2,
+	CTR_GPRS_UL_CS3,
+	CTR_GPRS_UL_CS4,
+	CTR_EGPRS_UL_MCS1,
+	CTR_EGPRS_UL_MCS2,
+	CTR_EGPRS_UL_MCS3,
+	CTR_EGPRS_UL_MCS4,
+	CTR_EGPRS_UL_MCS5,
+	CTR_EGPRS_UL_MCS6,
+	CTR_EGPRS_UL_MCS7,
+	CTR_EGPRS_UL_MCS8,
+	CTR_EGPRS_UL_MCS9,
+};
+
 #ifdef __cplusplus
 /**
  * I represent a GSM BTS. I have one or more TRX, I know the current
@@ -183,94 +271,6 @@ struct gprs_rlcmac_bts {
  */
 struct BTS {
 public:
-	enum {
-		CTR_TBF_DL_ALLOCATED,
-		CTR_TBF_DL_FREED,
-		CTR_TBF_DL_ABORTED,
-		CTR_TBF_UL_ALLOCATED,
-		CTR_TBF_UL_FREED,
-		CTR_TBF_UL_ABORTED,
-		CTR_TBF_REUSED,
-		CTR_TBF_ALLOC_ALGO_A,
-		CTR_TBF_ALLOC_ALGO_B,
-		CTR_TBF_FAILED_EGPRS_ONLY,
-		CTR_RLC_SENT,
-		CTR_RLC_RESENT,
-		CTR_RLC_RESTARTED,
-		CTR_RLC_STALLED,
-		CTR_RLC_NACKED,
-		CTR_RLC_FINAL_BLOCK_RESENT,
-		CTR_RLC_ASS_TIMEDOUT,
-		CTR_RLC_ASS_FAILED,
-		CTR_RLC_ACK_TIMEDOUT,
-		CTR_RLC_ACK_FAILED,
-		CTR_RLC_REL_TIMEDOUT,
-		CTR_RLC_LATE_BLOCK,
-		CTR_RLC_SENT_DUMMY,
-		CTR_RLC_SENT_CONTROL,
-		CTR_RLC_DL_BYTES,
-		CTR_RLC_DL_PAYLOAD_BYTES,
-		CTR_RLC_UL_BYTES,
-		CTR_RLC_UL_PAYLOAD_BYTES,
-		CTR_DECODE_ERRORS,
-		CTR_SBA_ALLOCATED,
-		CTR_SBA_FREED,
-		CTR_SBA_TIMEDOUT,
-		CTR_LLC_FRAME_TIMEDOUT,
-		CTR_LLC_FRAME_DROPPED,
-		CTR_LLC_FRAME_SCHED,
-		CTR_LLC_DL_BYTES,
-		CTR_LLC_UL_BYTES,
-		CTR_RACH_REQUESTS,
-		CTR_11BIT_RACH_REQUESTS,
-		CTR_SPB_UL_FIRST_SEGMENT,
-		CTR_SPB_UL_SECOND_SEGMENT,
-		CTR_SPB_DL_FIRST_SEGMENT,
-		CTR_SPB_DL_SECOND_SEGMENT,
-		CTR_IMMEDIATE_ASSIGN_UL_TBF,
-		CTR_IMMEDIATE_ASSIGN_REJ,
-		CTR_IMMEDIATE_ASSIGN_DL_TBF,
-		CTR_CHANNEL_REQUEST_DESCRIPTION,
-		CTR_PKT_UL_ASSIGNMENT,
-		CTR_PKT_ACCESS_REJ,
-		CTR_PKT_DL_ASSIGNMENT,
-		CTR_RLC_RECV_CONTROL,
-		CTR_PUA_POLL_TIMEDOUT,
-		CTR_PUA_POLL_FAILED,
-		CTR_PDA_POLL_TIMEDOUT,
-		CTR_PDA_POLL_FAILED,
-		CTR_PUAN_POLL_TIMEDOUT,
-		CTR_PUAN_POLL_FAILED,
-		CTR_PDAN_POLL_TIMEDOUT,
-		CTR_PDAN_POLL_FAILED,
-		CTR_GPRS_DL_CS1,
-		CTR_GPRS_DL_CS2,
-		CTR_GPRS_DL_CS3,
-		CTR_GPRS_DL_CS4,
-		CTR_EGPRS_DL_MCS1,
-		CTR_EGPRS_DL_MCS2,
-		CTR_EGPRS_DL_MCS3,
-		CTR_EGPRS_DL_MCS4,
-		CTR_EGPRS_DL_MCS5,
-		CTR_EGPRS_DL_MCS6,
-		CTR_EGPRS_DL_MCS7,
-		CTR_EGPRS_DL_MCS8,
-		CTR_EGPRS_DL_MCS9,
-		CTR_GPRS_UL_CS1,
-		CTR_GPRS_UL_CS2,
-		CTR_GPRS_UL_CS3,
-		CTR_GPRS_UL_CS4,
-		CTR_EGPRS_UL_MCS1,
-		CTR_EGPRS_UL_MCS2,
-		CTR_EGPRS_UL_MCS3,
-		CTR_EGPRS_UL_MCS4,
-		CTR_EGPRS_UL_MCS5,
-		CTR_EGPRS_UL_MCS6,
-		CTR_EGPRS_UL_MCS7,
-		CTR_EGPRS_UL_MCS8,
-		CTR_EGPRS_UL_MCS9,
-	};
-
 	enum {
 		STAT_MS_PRESENT,
 	};
@@ -320,91 +320,12 @@ public:
 	/*
 	 * Statistics
 	 */
-	void tbf_dl_created();
-	void tbf_dl_freed();
-	void tbf_dl_aborted();
-	void tbf_ul_created();
-	void tbf_ul_freed();
-	void tbf_ul_aborted();
-	void tbf_reused();
-	void tbf_alloc_algo_a();
-	void tbf_alloc_algo_b();
-	void tbf_failed_egprs_only();
-	void rlc_sent();
-	void rlc_resent();
-	void rlc_restarted();
-	void rlc_stalled();
-	void rlc_nacked();
-	void rlc_final_block_resent();
-	void rlc_ass_timedout();
-	void rlc_ass_failed();
-	void rlc_ack_timedout();
-	void rlc_ack_failed();
-	void rlc_rel_timedout();
-	void rlc_late_block();
-	void rlc_sent_dummy();
-	void rlc_sent_control();
 	void rlc_dl_bytes(int bytes);
 	void rlc_dl_payload_bytes(int bytes);
 	void rlc_ul_bytes(int bytes);
 	void rlc_ul_payload_bytes(int bytes);
-	void decode_error();
-	void sba_allocated();
-	void sba_freed();
-	void sba_timedout();
-	void llc_timedout_frame();
-	void llc_dropped_frame();
-	void llc_frame_sched();
 	void llc_dl_bytes(int bytes);
 	void llc_ul_bytes(int bytes);
-	void rach_frame();
-	void rach_frame_11bit();
-	void spb_uplink_first_segment();
-	void spb_uplink_second_segment();
-	void spb_downlink_first_segment();
-	void spb_downlink_second_segment();
-	void immediate_assignment_ul_tbf();
-	void immediate_assignment_reject();
-	void immediate_assignment_dl_tbf();
-	void channel_request_description();
-	void pkt_ul_assignment();
-	void pkt_access_reject();
-	void pkt_dl_assignemnt();
-	void rlc_rcvd_control();
-	void pua_poll_timedout();
-	void pua_poll_failed();
-	void pda_poll_timedout();
-	void pda_poll_failed();
-	void pkt_ul_ack_nack_poll_timedout();
-	void pkt_ul_ack_nack_poll_failed();
-	void pkt_dl_ack_nack_poll_timedout();
-	void pkt_dl_ack_nack_poll_failed();
-	void gprs_dl_cs1();
-	void gprs_dl_cs2();
-	void gprs_dl_cs3();
-	void gprs_dl_cs4();
-	void egprs_dl_mcs1();
-	void egprs_dl_mcs2();
-	void egprs_dl_mcs3();
-	void egprs_dl_mcs4();
-	void egprs_dl_mcs5();
-	void egprs_dl_mcs6();
-	void egprs_dl_mcs7();
-	void egprs_dl_mcs8();
-	void egprs_dl_mcs9();
-	void gprs_ul_cs1();
-	void gprs_ul_cs2();
-	void gprs_ul_cs3();
-	void gprs_ul_cs4();
-	void egprs_ul_mcs1();
-	void egprs_ul_mcs2();
-	void egprs_ul_mcs3();
-	void egprs_ul_mcs4();
-	void egprs_ul_mcs5();
-	void egprs_ul_mcs6();
-	void egprs_ul_mcs7();
-	void egprs_ul_mcs8();
-	void egprs_ul_mcs9();
 
 	void ms_present(int32_t n);
 	int32_t ms_present_get();
@@ -414,6 +335,7 @@ public:
 	 */
 	struct rate_ctr_group *rate_counters() const;
 	struct osmo_stat_item_group *stat_items() const;
+	void do_rate_ctr_inc(unsigned int ctr_id);
 
 	LListHead<gprs_rlcmac_tbf>& ul_tbfs();
 	LListHead<gprs_rlcmac_tbf>& dl_tbfs();
@@ -483,103 +405,21 @@ inline struct osmo_stat_item_group *BTS::stat_items() const
 	return m_statg;
 }
 
+inline void BTS::do_rate_ctr_inc(unsigned int ctr_id) {
+	rate_ctr_inc(&m_ratectrs->ctr[ctr_id]);
+}
+
 #define CREATE_COUNT_ADD_INLINE(func_name, ctr_name) \
 	inline void BTS::func_name(int inc) {\
 		rate_ctr_add(&m_ratectrs->ctr[ctr_name], inc); \
 	}
 
-#define CREATE_COUNT_INLINE(func_name, ctr_name) \
-	inline void BTS::func_name() {\
-		rate_ctr_inc(&m_ratectrs->ctr[ctr_name]); \
-	}
-
-CREATE_COUNT_INLINE(tbf_dl_created, CTR_TBF_DL_ALLOCATED)
-CREATE_COUNT_INLINE(tbf_dl_freed, CTR_TBF_DL_FREED)
-CREATE_COUNT_INLINE(tbf_dl_aborted, CTR_TBF_DL_ABORTED)
-CREATE_COUNT_INLINE(tbf_ul_created, CTR_TBF_UL_ALLOCATED)
-CREATE_COUNT_INLINE(tbf_ul_freed, CTR_TBF_UL_FREED)
-CREATE_COUNT_INLINE(tbf_ul_aborted, CTR_TBF_UL_ABORTED)
-CREATE_COUNT_INLINE(tbf_reused, CTR_TBF_REUSED)
-CREATE_COUNT_INLINE(tbf_alloc_algo_a, CTR_TBF_ALLOC_ALGO_A)
-CREATE_COUNT_INLINE(tbf_alloc_algo_b, CTR_TBF_ALLOC_ALGO_B)
-CREATE_COUNT_INLINE(tbf_failed_egprs_only, CTR_TBF_FAILED_EGPRS_ONLY)
-CREATE_COUNT_INLINE(rlc_sent, CTR_RLC_SENT)
-CREATE_COUNT_INLINE(rlc_resent, CTR_RLC_RESENT)
-CREATE_COUNT_INLINE(rlc_restarted, CTR_RLC_RESTARTED)
-CREATE_COUNT_INLINE(rlc_stalled, CTR_RLC_STALLED)
-CREATE_COUNT_INLINE(rlc_nacked, CTR_RLC_NACKED)
-CREATE_COUNT_INLINE(rlc_final_block_resent, CTR_RLC_FINAL_BLOCK_RESENT);
-CREATE_COUNT_INLINE(rlc_ass_timedout, CTR_RLC_ASS_TIMEDOUT);
-CREATE_COUNT_INLINE(rlc_ass_failed, CTR_RLC_ASS_FAILED);
-CREATE_COUNT_INLINE(rlc_ack_timedout, CTR_RLC_ACK_TIMEDOUT);
-CREATE_COUNT_INLINE(rlc_ack_failed, CTR_RLC_ACK_FAILED);
-CREATE_COUNT_INLINE(rlc_rel_timedout, CTR_RLC_REL_TIMEDOUT);
-CREATE_COUNT_INLINE(rlc_late_block, CTR_RLC_LATE_BLOCK);
-CREATE_COUNT_INLINE(rlc_sent_dummy, CTR_RLC_SENT_DUMMY);
-CREATE_COUNT_INLINE(rlc_sent_control, CTR_RLC_SENT_CONTROL);
 CREATE_COUNT_ADD_INLINE(rlc_dl_bytes, CTR_RLC_DL_BYTES);
 CREATE_COUNT_ADD_INLINE(rlc_dl_payload_bytes, CTR_RLC_DL_PAYLOAD_BYTES);
 CREATE_COUNT_ADD_INLINE(rlc_ul_bytes, CTR_RLC_UL_BYTES);
 CREATE_COUNT_ADD_INLINE(rlc_ul_payload_bytes, CTR_RLC_UL_PAYLOAD_BYTES);
-CREATE_COUNT_INLINE(decode_error, CTR_DECODE_ERRORS)
-CREATE_COUNT_INLINE(sba_allocated, CTR_SBA_ALLOCATED)
-CREATE_COUNT_INLINE(sba_freed, CTR_SBA_FREED)
-CREATE_COUNT_INLINE(sba_timedout, CTR_SBA_TIMEDOUT)
-CREATE_COUNT_INLINE(llc_timedout_frame, CTR_LLC_FRAME_TIMEDOUT);
-CREATE_COUNT_INLINE(llc_dropped_frame, CTR_LLC_FRAME_DROPPED);
-CREATE_COUNT_INLINE(llc_frame_sched, CTR_LLC_FRAME_SCHED);
 CREATE_COUNT_ADD_INLINE(llc_dl_bytes, CTR_LLC_DL_BYTES);
 CREATE_COUNT_ADD_INLINE(llc_ul_bytes, CTR_LLC_UL_BYTES);
-CREATE_COUNT_INLINE(rach_frame, CTR_RACH_REQUESTS);
-CREATE_COUNT_INLINE(rach_frame_11bit, CTR_11BIT_RACH_REQUESTS);
-CREATE_COUNT_INLINE(spb_uplink_first_segment, CTR_SPB_UL_FIRST_SEGMENT);
-CREATE_COUNT_INLINE(spb_uplink_second_segment, CTR_SPB_UL_SECOND_SEGMENT);
-CREATE_COUNT_INLINE(spb_downlink_first_segment, CTR_SPB_DL_FIRST_SEGMENT);
-CREATE_COUNT_INLINE(spb_downlink_second_segment, CTR_SPB_DL_SECOND_SEGMENT);
-CREATE_COUNT_INLINE(immediate_assignment_ul_tbf, CTR_IMMEDIATE_ASSIGN_UL_TBF);
-CREATE_COUNT_INLINE(immediate_assignment_reject, CTR_IMMEDIATE_ASSIGN_REJ);
-CREATE_COUNT_INLINE(immediate_assignment_dl_tbf, CTR_IMMEDIATE_ASSIGN_DL_TBF);
-CREATE_COUNT_INLINE(channel_request_description, CTR_CHANNEL_REQUEST_DESCRIPTION);
-CREATE_COUNT_INLINE(pkt_ul_assignment, CTR_PKT_UL_ASSIGNMENT);
-CREATE_COUNT_INLINE(pkt_access_reject, CTR_PKT_ACCESS_REJ);
-CREATE_COUNT_INLINE(pkt_dl_assignemnt, CTR_PKT_DL_ASSIGNMENT);
-CREATE_COUNT_INLINE(rlc_rcvd_control, CTR_RLC_RECV_CONTROL);
-CREATE_COUNT_INLINE(pua_poll_timedout, CTR_PUA_POLL_TIMEDOUT);
-CREATE_COUNT_INLINE(pua_poll_failed, CTR_PUA_POLL_FAILED);
-CREATE_COUNT_INLINE(pda_poll_timedout, CTR_PDA_POLL_TIMEDOUT);
-CREATE_COUNT_INLINE(pda_poll_failed, CTR_PDA_POLL_FAILED);
-CREATE_COUNT_INLINE(pkt_ul_ack_nack_poll_timedout, CTR_PUAN_POLL_TIMEDOUT);
-CREATE_COUNT_INLINE(pkt_ul_ack_nack_poll_failed, CTR_PUAN_POLL_FAILED);
-CREATE_COUNT_INLINE(pkt_dl_ack_nack_poll_timedout, CTR_PDAN_POLL_TIMEDOUT);
-CREATE_COUNT_INLINE(pkt_dl_ack_nack_poll_failed, CTR_PDAN_POLL_FAILED);
-CREATE_COUNT_INLINE(gprs_dl_cs1, CTR_GPRS_DL_CS1);
-CREATE_COUNT_INLINE(gprs_dl_cs2, CTR_GPRS_DL_CS2);
-CREATE_COUNT_INLINE(gprs_dl_cs3, CTR_GPRS_DL_CS3);
-CREATE_COUNT_INLINE(gprs_dl_cs4, CTR_GPRS_DL_CS4);
-CREATE_COUNT_INLINE(egprs_dl_mcs1, CTR_EGPRS_DL_MCS1);
-CREATE_COUNT_INLINE(egprs_dl_mcs2, CTR_EGPRS_DL_MCS2);
-CREATE_COUNT_INLINE(egprs_dl_mcs3, CTR_EGPRS_DL_MCS3);
-CREATE_COUNT_INLINE(egprs_dl_mcs4, CTR_EGPRS_DL_MCS4);
-CREATE_COUNT_INLINE(egprs_dl_mcs5, CTR_EGPRS_DL_MCS5);
-CREATE_COUNT_INLINE(egprs_dl_mcs6, CTR_EGPRS_DL_MCS6);
-CREATE_COUNT_INLINE(egprs_dl_mcs7, CTR_EGPRS_DL_MCS7);
-CREATE_COUNT_INLINE(egprs_dl_mcs8, CTR_EGPRS_DL_MCS8);
-CREATE_COUNT_INLINE(egprs_dl_mcs9, CTR_EGPRS_DL_MCS9);
-CREATE_COUNT_INLINE(gprs_ul_cs1, CTR_GPRS_UL_CS1);
-CREATE_COUNT_INLINE(gprs_ul_cs2, CTR_GPRS_UL_CS2);
-CREATE_COUNT_INLINE(gprs_ul_cs3, CTR_GPRS_UL_CS3);
-CREATE_COUNT_INLINE(gprs_ul_cs4, CTR_GPRS_UL_CS4);
-CREATE_COUNT_INLINE(egprs_ul_mcs1, CTR_EGPRS_UL_MCS1);
-CREATE_COUNT_INLINE(egprs_ul_mcs2, CTR_EGPRS_UL_MCS2);
-CREATE_COUNT_INLINE(egprs_ul_mcs3, CTR_EGPRS_UL_MCS3);
-CREATE_COUNT_INLINE(egprs_ul_mcs4, CTR_EGPRS_UL_MCS4);
-CREATE_COUNT_INLINE(egprs_ul_mcs5, CTR_EGPRS_UL_MCS5);
-CREATE_COUNT_INLINE(egprs_ul_mcs6, CTR_EGPRS_UL_MCS6);
-CREATE_COUNT_INLINE(egprs_ul_mcs7, CTR_EGPRS_UL_MCS7);
-CREATE_COUNT_INLINE(egprs_ul_mcs8, CTR_EGPRS_UL_MCS8);
-CREATE_COUNT_INLINE(egprs_ul_mcs9, CTR_EGPRS_UL_MCS9);
-
-#undef CREATE_COUNT_INLINE
 
 #define CREATE_STAT_INLINE(func_name, func_name_get, stat_name) \
 	inline void BTS::func_name(int32_t val) {\

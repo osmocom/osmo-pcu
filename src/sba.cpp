@@ -86,7 +86,7 @@ int SBAController::alloc(
 	sba->ta = ta;
 
 	llist_add(&sba->list, &m_sbas);
-	m_bts.sba_allocated();
+	m_bts.do_rate_ctr_inc(CTR_SBA_ALLOCATED);
 
 	*_trx = trx;
 	*_ts = ts;
@@ -132,14 +132,14 @@ int SBAController::timeout(struct gprs_rlcmac_sba *sba)
 	LOGP(DRLCMAC, LOGL_NOTICE,
 	     "Poll timeout for SBA (TRX=%u, TS=%u, FN=%u, TA=%u)\n", sba->trx_no,
 	     sba->ts_no, sba->fn, sba->ta);
-	m_bts.sba_timedout();
+	m_bts.do_rate_ctr_inc(CTR_SBA_TIMEDOUT);
 	free_sba(sba);
 	return 0;
 }
 
 void SBAController::free_sba(gprs_rlcmac_sba *sba)
 {
-	m_bts.sba_freed();
+	m_bts.do_rate_ctr_inc(CTR_SBA_FREED);
 	llist_del(&sba->list);
 	talloc_free(sba);
 }

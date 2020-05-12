@@ -423,7 +423,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	ms_->set_reserved_slots(trx, 1 << ts, 1 << ts);
 
 	tbf_->upgrade_to_multislot = 0;
-	bts->bts->tbf_alloc_algo_a();
+	bts->bts->do_rate_ctr_inc(CTR_TBF_ALLOC_ALGO_A);
 	return 0;
 }
 
@@ -950,7 +950,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	else
 		assign_ul_tbf_slots(as_ul_tbf(tbf_), trx, ul_slots, tfi, usf);
 
-	bts->bts->tbf_alloc_algo_b();
+	bts->bts->do_rate_ctr_inc(CTR_TBF_ALLOC_ALGO_B);
 
 	return 0;
 }
