@@ -416,7 +416,7 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction di
 }
 
 gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx,
-				 uint32_t tlli, uint8_t ta)
+				 uint32_t tlli)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
 
@@ -434,8 +434,6 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t
 	T_START(tbf, T3169, 3169, "allocation (UL-TBF)", true);
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(tbf->ms());
-
-	tbf->ms()->set_ta(ta);
 
 	return tbf;
 }

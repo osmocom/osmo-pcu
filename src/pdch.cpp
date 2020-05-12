@@ -118,7 +118,7 @@ static inline void sched_ul_ass_or_rej(BTS *bts, gprs_rlcmac_bts *bts_data, stru
 	bts->channel_request_description();
 
 	/* This call will register the new TBF with the MS on success */
-	gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts_data, tbf->ms(), tbf->trx->trx_no, tbf->tlli(), tbf->ta());
+	gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts_data, tbf->ms(), tbf->trx->trx_no, tbf->tlli());
 
 	/* schedule uplink assignment or reject */
 	if (ul_tbf) {
@@ -551,7 +551,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		struct gprs_rlcmac_ul_tbf *ul_tbf;
 		struct gprs_rlcmac_dl_tbf *dl_tbf;
 		uint32_t tlli = request->ID.u.TLLI;
-		uint8_t ta = GSM48_TA_INVALID;
 		bool found = true;
 
 		GprsMs *ms = bts()->ms_by_tlli(tlli);
@@ -566,7 +565,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		if (found) {
 			ul_tbf = ms->ul_tbf();
 			dl_tbf = ms->dl_tbf();
-			ta = ms->ta();
 			/* We got a RACH so the MS was in packet idle mode and thus
 			 * didn't have any active TBFs */
 			if (ul_tbf) {
@@ -593,7 +591,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				"block, but there is no resource request "
 				"scheduled!\n");
 		} else {
-			ta = sba->ta;
+			ms->set_ta(sba->ta);
 			bts()->sba()->free_sba(sba);
 		}
 		if (request->Exist_MS_Radio_Access_capability2) {
@@ -613,7 +611,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				"MS supports EGPRS multislot class %d.\n",
 				ms->egprs_ms_class());
 
-		ul_tbf = tbf_alloc_ul(bts_data(), ms, trx_no(), tlli, ta);
+		ul_tbf = tbf_alloc_ul(bts_data(), ms, trx_no(), tlli);
 		if (!ul_tbf) {
 			handle_tbf_reject(bts_data(), ms, tlli,
 				trx_no(), ts_no);
