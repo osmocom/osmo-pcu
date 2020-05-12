@@ -263,6 +263,10 @@ enum {
 	CTR_EGPRS_UL_MCS9,
 };
 
+enum {
+	STAT_MS_PRESENT,
+};
+
 #ifdef __cplusplus
 /**
  * I represent a GSM BTS. I have one or more TRX, I know the current
@@ -271,10 +275,6 @@ enum {
  */
 struct BTS {
 public:
-	enum {
-		STAT_MS_PRESENT,
-	};
-
 	BTS();
 	~BTS();
 	void cleanup();
@@ -318,19 +318,13 @@ public:
 			      const uint8_t *data, unsigned int len);
 
 	/*
-	 * Statistics
-	 */
-
-	void ms_present(int32_t n);
-	int32_t ms_present_get();
-
-	/*
 	 * Below for C interface for the VTY
 	 */
 	struct rate_ctr_group *rate_counters() const;
 	struct osmo_stat_item_group *stat_items() const;
 	void do_rate_ctr_inc(unsigned int ctr_id);
 	void do_rate_ctr_add(unsigned int ctr_id, int inc);
+	void stat_item_add(unsigned int stat_id, int inc);
 
 	LListHead<gprs_rlcmac_tbf>& ul_tbfs();
 	LListHead<gprs_rlcmac_tbf>& dl_tbfs();
@@ -408,18 +402,10 @@ inline void BTS::do_rate_ctr_add(unsigned int ctr_id, int inc) {
 	rate_ctr_add(&m_ratectrs->ctr[ctr_id], inc);
 }
 
-
-#define CREATE_STAT_INLINE(func_name, func_name_get, stat_name) \
-	inline void BTS::func_name(int32_t val) {\
-		osmo_stat_item_set(m_statg->items[stat_name], val); \
-	} \
-	inline int32_t BTS::func_name_get() {\
-		return osmo_stat_item_get_last(m_statg->items[stat_name]); \
-	}
-
-CREATE_STAT_INLINE(ms_present, ms_present_get, STAT_MS_PRESENT);
-
-#undef CREATE_STAT_INLINE
+inline void BTS::stat_item_add(unsigned int stat_id, int inc) {
+	int32_t val = osmo_stat_item_get_last(m_statg->items[stat_id]);
+	osmo_stat_item_set(m_statg->items[stat_id], val + inc);
+}
 
 #endif
 

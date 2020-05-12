@@ -55,7 +55,7 @@ void GprsMsStorage::ms_idle(class GprsMs *ms)
 {
 	llist_del(&ms->list());
 	if (m_bts)
-		m_bts->ms_present(m_bts->ms_present_get() - 1);
+		m_bts->stat_item_add(STAT_MS_PRESENT, -1);
 	if (ms->is_idle())
 		delete ms;
 }
@@ -102,7 +102,7 @@ GprsMs *GprsMsStorage::create_ms()
 	ms->set_callback(this);
 	llist_add(&ms->list(), &m_list);
 	if (m_bts)
-		m_bts->ms_present(m_bts->ms_present_get() + 1);
+		m_bts->stat_item_add(STAT_MS_PRESENT, 1);
 
 	return ms;
 }
