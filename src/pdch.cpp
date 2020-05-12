@@ -548,38 +548,41 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 	struct gprs_rlcmac_sba *sba;
 
 	if (request->ID.UnionType) {
-		struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
-		struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
+		struct gprs_rlcmac_ul_tbf *ul_tbf;
+		struct gprs_rlcmac_dl_tbf *dl_tbf;
 		uint32_t tlli = request->ID.u.TLLI;
 		uint8_t ta = GSM48_TA_INVALID;
+		bool found = true;
 
 		GprsMs *ms = bts()->ms_by_tlli(tlli);
-		if (!ms)
+		if (!ms) {
+			found = false;
 			ms = bts()->ms_alloc(0, 0); /* ms class updated later */
+		}
 
 		/* Keep the ms, even if it gets idle temporarily */
 		GprsMs::Guard guard(ms);
-		ul_tbf = ms->ul_tbf();
-		dl_tbf = ms->dl_tbf();
-		ta = ms->ta();
 
-		/* We got a RACH so the MS was in packet idle mode and thus
-		 * didn't have any active TBFs */
-		if (ul_tbf) {
-			LOGPTBFUL(ul_tbf, LOGL_NOTICE,
-				  "Got RACH from TLLI=0x%08x while TBF still exists. Killing pending UL TBF\n",
-				  tlli);
-			tbf_free(ul_tbf);
-			ul_tbf = NULL;
+		if (found) {
+			ul_tbf = ms->ul_tbf();
+			dl_tbf = ms->dl_tbf();
+			ta = ms->ta();
+			/* We got a RACH so the MS was in packet idle mode and thus
+			 * didn't have any active TBFs */
+			if (ul_tbf) {
+				LOGPTBFUL(ul_tbf, LOGL_NOTICE,
+					  "Got RACH from TLLI=0x%08x while TBF still exists. Killing pending UL TBF\n",
+					  tlli);
+				tbf_free(ul_tbf);
+			}
+			if (dl_tbf) {
+				LOGPTBFUL(dl_tbf, LOGL_NOTICE,
+					  "Got RACH from TLLI=0x%08x while TBF still exists. Release pending DL TBF\n",
+					  tlli);
+				tbf_free(dl_tbf);
+			}
 		}
 
-		if (dl_tbf) {
-			LOGPTBFUL(dl_tbf, LOGL_NOTICE,
-				  "Got RACH from TLLI=0x%08x while TBF still exists. Release pending DL TBF\n",
-				  tlli);
-			tbf_free(dl_tbf);
-			dl_tbf = NULL;
-		}
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
 			"in packet resource request of single "
 			"block, so we provide one:\n");
@@ -606,12 +609,11 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		if (!ms->ms_class())
 			LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");
 		if (ms->egprs_ms_class())
-			LOGP(DRLCMAC, LOGL_NOTICE,
+			LOGP(DRLCMAC, LOGL_INFO,
 				"MS supports EGPRS multislot class %d.\n",
 				ms->egprs_ms_class());
 
 		ul_tbf = tbf_alloc_ul(bts_data(), ms, trx_no(), tlli, ta);
-
 		if (!ul_tbf) {
 			handle_tbf_reject(bts_data(), ms, tlli,
 				trx_no(), ts_no);
