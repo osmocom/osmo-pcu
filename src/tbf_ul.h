@@ -21,6 +21,8 @@
 
 #ifdef __cplusplus
 
+#include <stdbool.h>
+
 #include "tbf.h"
 /*
  * TBF instance
@@ -97,7 +99,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	struct rate_ctr_group *m_ul_egprs_ctrs;
 
 protected:
-	void maybe_schedule_uplink_acknack(const gprs_rlc_data_info *rlc);
+	void maybe_schedule_uplink_acknack(const gprs_rlc_data_info *rlc, bool countdown_finished);
 
 	/* Please note that all variables below will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).

@@ -1459,6 +1459,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_with_length(BTS 
 
 	pdch = &the_bts->bts_data()->trx[trx_no].pdch[ts_no];
 	pdch->rcv_block(&data[0], sizeof(data), *fn, &meas);
+	ul_tbf->create_ul_ack(*fn, ts_no);
 
 	request_dl_rlc_block(ul_tbf, fn);
 

@@ -188,6 +188,9 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	const struct gprs_rlc_data_info *rlc,
 	uint8_t *data, struct pcu_l1_meas *meas)
 {
+	const struct gprs_rlc_data_block_info *rdbi;
+	struct gprs_rlc_data *block;
+
 	int8_t rssi = meas->have_rssi ? meas->rssi : 0;
 
 	const uint16_t ws = m_window.ws();
@@ -218,10 +221,8 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	for (block_idx = 0; block_idx < rlc->num_data_blocks; block_idx++) {
 		int num_chunks;
 		uint8_t *rlc_data;
-		const struct gprs_rlc_data_block_info *rdbi =
-			&rlc->block_info[block_idx];
+		rdbi = &rlc->block_info[block_idx];
 		bool need_rlc_data = false;
-		struct gprs_rlc_data *block;
 
 		LOGPTBFUL(this, LOGL_DEBUG,
 			  "Got %s RLC data block: CV=%d, BSN=%d, SPB=%d, PI=%d, E=%d, TI=%d, bitoffs=%d\n",
@@ -330,14 +331,13 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 		assemble_forward_llc(m_rlc.block(index));
 	}
 
-	/* Check CV of last frame in buffer */
+	/* Last frame in buffer: */
+	block = m_rlc.block(m_window.mod_sns(m_window.v_r() - 1));
+	rdbi = &block->block_info;
+
+	/* Check if we already received all data TBF had to send: */
 	if (this->state_is(GPRS_RLCMAC_FLOW) /* still in flow state */
 	 && this->m_window.v_q() == this->m_window.v_r()) { /* if complete */
-		struct gprs_rlc_data *block =
-			m_rlc.block(m_window.mod_sns(m_window.v_r() - 1));
-		const struct gprs_rlc_data_block_info *rdbi =
-			&block->block_info;
-
 		LOGPTBFUL(this, LOGL_DEBUG,
 			  "No gaps in received block, last block: BSN=%d CV=%d\n",
 			  rdbi->bsn, rdbi->cv);
@@ -351,13 +351,13 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 	/* If TLLI is included or if we received half of the window, we send
 	 * an ack/nack */
-	maybe_schedule_uplink_acknack(rlc);
+	maybe_schedule_uplink_acknack(rlc, rdbi->cv == 0);
 
 	return 0;
 }
 
 void gprs_rlcmac_ul_tbf::maybe_schedule_uplink_acknack(
-	const gprs_rlc_data_info *rlc)
+	const gprs_rlc_data_info *rlc, bool countdown_finished)
 {
 	bool require_ack = false;
 	bool have_ti = rlc->block_info[0].ti ||
@@ -373,10 +373,14 @@ void gprs_rlcmac_ul_tbf::maybe_schedule_uplink_acknack(
 		LOGPTBFUL(this, LOGL_DEBUG,
 			  "Scheduling Ack/Nack, because TLLI is included.\n");
 	}
-	if (state_is(GPRS_RLCMAC_FINISHED)) {
+	if (countdown_finished) {
 		require_ack = true;
-		LOGPTBFUL(this, LOGL_DEBUG,
-			  "Scheduling final Ack/Nack, because all data was received and last block has CV==0.\n");
+		if (state_is(GPRS_RLCMAC_FLOW))
+			LOGPTBFUL(this, LOGL_DEBUG,
+				  "Scheduling Ack/Nack, because some data is missing and last block has CV==0.\n");
+		else if (state_is(GPRS_RLCMAC_FINISHED))
+			LOGPTBFUL(this, LOGL_DEBUG,
+				  "Scheduling final Ack/Nack, because all data was received and last block has CV==0.\n");
 	}
 	if ((m_rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
 		require_ack = true;
