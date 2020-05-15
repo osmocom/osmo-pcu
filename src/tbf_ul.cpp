@@ -359,37 +359,42 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 void gprs_rlcmac_ul_tbf::maybe_schedule_uplink_acknack(
 	const gprs_rlc_data_info *rlc)
 {
+	bool require_ack = false;
 	bool have_ti = rlc->block_info[0].ti ||
 		(rlc->num_data_blocks > 1 && rlc->block_info[1].ti);
 
-	if (rlc->si || have_ti || state_is(GPRS_RLCMAC_FINISHED) ||
-		(m_rx_counter % SEND_ACK_AFTER_FRAMES) == 0)
-	{
-		if (rlc->si) {
-			LOGPTBFUL(this, LOGL_NOTICE,
-				  "Scheduling Ack/Nack, because MS is stalled.\n");
-		}
-		if (have_ti) {
-			LOGPTBFUL(this, LOGL_DEBUG,
-				  "Scheduling Ack/Nack, because TLLI is included.\n");
-		}
-		if (state_is(GPRS_RLCMAC_FINISHED)) {
-			LOGPTBFUL(this, LOGL_DEBUG,
-				  "Scheduling Ack/Nack, because last block has CV==0.\n");
-		}
-		if ((m_rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
-			LOGPTBFUL(this, LOGL_DEBUG,
-				  "Scheduling Ack/Nack, because %d frames received.\n",
-				  SEND_ACK_AFTER_FRAMES);
-		}
-		if (ul_ack_state_is(GPRS_RLCMAC_UL_ACK_NONE)) {
-			/* trigger sending at next RTS */
-			TBF_SET_ACK_STATE(this, GPRS_RLCMAC_UL_ACK_SEND_ACK);
-		} else {
-			/* already triggered */
-			LOGPTBFUL(this, LOGL_DEBUG,
-				  "Sending Ack/Nack is already triggered, don't schedule!\n");
-		}
+	if (rlc->si) {
+		require_ack = true;
+		LOGPTBFUL(this, LOGL_NOTICE,
+			  "Scheduling Ack/Nack, because MS is stalled.\n");
+	}
+	if (have_ti) {
+		require_ack = true;
+		LOGPTBFUL(this, LOGL_DEBUG,
+			  "Scheduling Ack/Nack, because TLLI is included.\n");
+	}
+	if (state_is(GPRS_RLCMAC_FINISHED)) {
+		require_ack = true;
+		LOGPTBFUL(this, LOGL_DEBUG,
+			  "Scheduling final Ack/Nack, because all data was received and last block has CV==0.\n");
+	}
+	if ((m_rx_counter % SEND_ACK_AFTER_FRAMES) == 0) {
+		require_ack = true;
+		LOGPTBFUL(this, LOGL_DEBUG,
+			  "Scheduling Ack/Nack, because %d frames received.\n",
+			  SEND_ACK_AFTER_FRAMES);
+	}
+
+	if (!require_ack)
+		return;
+
+	if (ul_ack_state_is(GPRS_RLCMAC_UL_ACK_NONE)) {
+		/* trigger sending at next RTS */
+		TBF_SET_ACK_STATE(this, GPRS_RLCMAC_UL_ACK_SEND_ACK);
+	} else {
+		/* already triggered */
+		LOGPTBFUL(this, LOGL_DEBUG,
+			  "Sending Ack/Nack already scheduled, no need to re-schedule\n");
 	}
 }
 

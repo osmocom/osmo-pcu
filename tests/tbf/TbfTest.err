@@ -1486,7 +1486,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Finished with UL TBF
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes state from FLOW to FINISHED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling Ack/Nack, because TLLI is included.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling Ack/Nack, because last block has CV==0.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling final Ack/Nack, because all data was received and last block has CV==0.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
@@ -2112,7 +2112,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Finished with UL TBF
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes state from FLOW to FINISHED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling Ack/Nack, because TLLI is included.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling Ack/Nack, because last block has CV==0.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling final Ack/Nack, because all data was received and last block has CV==0.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
 New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 === end test_tbf_dl_flow_and_rach_single_phase ===
@@ -3338,7 +3338,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Assembling frames: (len=74)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Frame 1 starts at offset 0, length=74, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) No gaps in received block, last block: BSN=2 CV=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because MS is stalled.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack is already triggered, don't schedule!
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=3 .. V(R)=3)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
@@ -3369,7 +3369,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Assembling frames: (len=74)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Frame 1 starts at offset 0, length=74, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) No gaps in received block, last block: BSN=3 CV=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because MS is stalled.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack is already triggered, don't schedule!
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=4 .. V(R)=4)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
@@ -3399,7 +3399,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Assembling frames: (len=74)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Frame 1 starts at offset 0, length=74, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) No gaps in received block, last block: BSN=4 CV=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because MS is stalled.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack is already triggered, don't schedule!
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=5 .. V(R)=5)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
@@ -3422,7 +3422,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Assembling frames: (len=74)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Frame 1 starts at offset 0, length=74, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) No gaps in received block, last block: BSN=5 CV=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because MS is stalled.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack is already triggered, don't schedule!
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
@@ -6718,7 +6718,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 78 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack is already triggered, don't schedule!
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=1 .. V(R)=79)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
@@ -6860,7 +6860,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 118 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack is already triggered, don't schedule!
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=1 .. V(R)=119)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
@@ -7002,7 +7002,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 158 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack is already triggered, don't schedule!
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_SEND_ACK to GPRS_RLCMAC_UL_ACK_NONE
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=1 .. V(R)=159)
@@ -7471,7 +7471,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 117 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack is already triggered, don't schedule!
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=0 .. V(R)=118)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
@@ -7613,7 +7613,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 137 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack is already triggered, don't schedule!
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=0 .. V(R)=138)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
@@ -7755,7 +7755,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 157 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack is already triggered, don't schedule!
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=0 .. V(R)=158)
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
