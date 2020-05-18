@@ -18,7 +18,6 @@
 
 #include "bts.h"
 #include "gprs_debug.h"
-#include <gprs_coding_scheme.h>
 #include <rlc.h>
 
 #include <stdbool.h>
@@ -29,6 +28,8 @@ extern "C" {
 #include <osmocom/core/utils.h>
 #include <osmocom/core/bitvec.h>
 #include <osmocom/core/logging.h>
+
+#include "coding_scheme.h"
 }
 
 
@@ -314,11 +315,11 @@ bool gprs_rlc_ul_window::invalidate_bsn(const uint16_t bsn)
 }
 
 static void gprs_rlc_data_header_init(struct gprs_rlc_data_info *rlc,
-	GprsCodingScheme cs, bool with_padding, unsigned int header_bits,
+	enum CodingScheme cs, bool with_padding, unsigned int header_bits,
 	const unsigned int spb)
 {
 	unsigned int i;
-	unsigned int padding_bits = with_padding ? cs.optionalPaddingBits() : 0;
+	unsigned int padding_bits = with_padding ? mcs_opt_padding_bits(cs) : 0;
 
 	rlc->cs = cs;
 	rlc->r = 0;
@@ -330,7 +331,7 @@ static void gprs_rlc_data_header_init(struct gprs_rlc_data_info *rlc,
 	rlc->es_p = 0;
 	rlc->rrbp = 0;
 	rlc->pr = 0;
-	rlc->num_data_blocks = num_data_blocks(cs.headerTypeData());
+	rlc->num_data_blocks = num_data_blocks(mcs_header_type(cs));
 	rlc->with_padding = with_padding;
 
 	OSMO_ASSERT(rlc->num_data_blocks <= ARRAY_SIZE(rlc->block_info));
@@ -341,35 +342,35 @@ static void gprs_rlc_data_header_init(struct gprs_rlc_data_info *rlc,
 
 		rlc->data_offs_bits[i] =
 			header_bits + padding_bits +
-			(i+1) * num_data_block_header_bits(cs.headerTypeData()) +
+			(i+1) * num_data_block_header_bits(mcs_header_type(cs)) +
 			i * 8 * rlc->block_info[0].data_len;
 	}
 }
 
 void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,
-	GprsCodingScheme cs, bool with_padding, const unsigned int spb)
+	enum CodingScheme cs, bool with_padding, const unsigned int spb)
 {
 	return gprs_rlc_data_header_init(rlc, cs, with_padding,
-					 num_data_header_bits_DL(cs.headerTypeData()), spb);
+					 num_data_header_bits_DL(mcs_header_type(cs)), spb);
 }
 
 void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
-	GprsCodingScheme cs, bool with_padding)
+	enum CodingScheme cs, bool with_padding)
 {
 	/*
 	 * last parameter is sent as 0 since common function used
 	 * for both DL and UL
 	 */
 	return gprs_rlc_data_header_init(rlc, cs, with_padding,
-					 num_data_header_bits_UL(cs.headerTypeData()), 0);
+					 num_data_header_bits_UL(mcs_header_type(cs)), 0);
 }
 
 void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
-	GprsCodingScheme cs, bool with_padding, const unsigned int spb)
+	enum CodingScheme cs, bool with_padding, const unsigned int spb)
 {
-	unsigned int data_len = cs.maxDataBlockBytes();
+	unsigned int data_len = mcs_max_data_block_bytes(cs);
 	if (with_padding)
-		data_len -= cs.optionalPaddingBits() / 8;
+		data_len -= mcs_opt_padding_bits(cs) / 8;
 
 	rdbi->data_len = data_len;
 	rdbi->bsn = 0;
@@ -380,19 +381,19 @@ void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
 	rdbi->spb = spb;
 }
 
-unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs,
+unsigned int gprs_rlc_mcs_cps(enum CodingScheme cs,
 	enum egprs_puncturing_values punct,
 	enum egprs_puncturing_values punct2, bool with_padding)
 {
 	/* validate that punct and punct2 are as expected */
-	switch (CodingScheme(cs)) {
+	switch (cs) {
 	case MCS9:
 	case MCS8:
 	case MCS7:
 		if (punct2 == EGPRS_PS_INVALID) {
 			LOGP(DRLCMACDL, LOGL_ERROR,
 			     "Invalid punct2 value for coding scheme %d: %d\n",
-			     CodingScheme(cs), punct2);
+			     cs, punct2);
 			return -1;
 		}
 		/* fall through */
@@ -405,7 +406,7 @@ unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs,
 		if (punct == EGPRS_PS_INVALID) {
 			LOGP(DRLCMACDL, LOGL_ERROR,
 			     "Invalid punct value for coding scheme %d: %d\n",
-			     CodingScheme(cs), punct);
+			     cs, punct);
 			return -1;
 		}
 		break;
@@ -414,7 +415,7 @@ unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs,
 	}
 
 	/* See 3GPP TS 44.060 10.4.8a.3.1, 10.4.8a.2.1, 10.4.8a.1.1 */
-	switch (CodingScheme(cs)) {
+	switch (cs) {
 	case MCS1: return 0b1011 +
 		punct % EGPRS_MAX_PS_NUM_2;
 	case MCS2: return 0b1001 +
@@ -443,12 +444,12 @@ unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs,
 }
 
 void gprs_rlc_mcs_cps_decode(unsigned int cps,
-	GprsCodingScheme cs, int *punct, int *punct2, int *with_padding)
+	enum CodingScheme cs, int *punct, int *punct2, int *with_padding)
 {
 	*punct2 = -1;
 	*with_padding = 0;
 
-	switch (CodingScheme(cs)) {
+	switch (cs) {
 	case MCS1:
 		cps -= 0b1011; *punct = cps % 2; break;
 	case MCS2:
@@ -481,8 +482,8 @@ void gprs_rlc_mcs_cps_decode(unsigned int cps,
  */
 enum egprs_puncturing_values gprs_get_punct_scheme(
 	enum egprs_puncturing_values punct,
-	const GprsCodingScheme &cs,
-	const GprsCodingScheme &cs_current,
+	const enum CodingScheme &cs,
+	const enum CodingScheme &cs_current,
 	const enum egprs_rlcmac_dl_spb spb)
 {
 
@@ -495,23 +496,23 @@ enum egprs_puncturing_values gprs_get_punct_scheme(
 		return punct;
 
 	/* TS  44.060 9.3.2.1.1 */
-	if ((CodingScheme(cs) == MCS9) &&
-	(CodingScheme(cs_current) == MCS6)) {
+	if ((cs == MCS9) &&
+	(cs_current == MCS6)) {
 		if ((punct == EGPRS_PS_1) || (punct == EGPRS_PS_3))
 			return EGPRS_PS_1;
 		else if (punct == EGPRS_PS_2)
 			return EGPRS_PS_2;
-	} else if ((CodingScheme(cs) == MCS6) &&
-	(CodingScheme(cs_current) == MCS9)) {
+	} else if ((cs == MCS6) &&
+	(cs_current == MCS9)) {
 		if (punct == EGPRS_PS_1)
 			return EGPRS_PS_3;
 		else if (punct == EGPRS_PS_2)
 			return EGPRS_PS_2;
-	} else if ((CodingScheme(cs) == MCS7) &&
-	(CodingScheme(cs_current) == MCS5))
+	} else if ((cs == MCS7) &&
+	(cs_current == MCS5))
 		return EGPRS_PS_1;
-	else if ((CodingScheme(cs) == MCS5) &&
-	(CodingScheme(cs_current) == MCS7))
+	else if ((cs == MCS5) &&
+	(cs_current == MCS7))
 		return EGPRS_PS_2;
 	else if (cs != cs_current)
 		return EGPRS_PS_1;
@@ -532,9 +533,9 @@ enum egprs_puncturing_values gprs_get_punct_scheme(
  * TS 44.060 10.4.8a.3.1, 10.4.8a.2.1, 10.4.8a.1.1
  */
 void gprs_update_punct_scheme(enum egprs_puncturing_values *punct,
-	const GprsCodingScheme &cs)
+	const enum CodingScheme &cs)
 {
-	switch (CodingScheme(cs)) {
+	switch (cs) {
 	case MCS1 :
 	case MCS2 :
 	case MCS5 :

@@ -21,9 +21,10 @@
 #pragma once
 
 #include <stdint.h>
-#include <gprs_coding_scheme.h>
+
 extern "C" {
 #include <osmocom/gsm/l1sap.h>
+#include "coding_scheme.h"
 #include "gsm_rlcmac.h"
 }
 
@@ -99,7 +100,7 @@ public:
 	};
 
 	static AppendResult rlc_data_to_dl_append(
-		struct gprs_rlc_data_block_info *rdbi, GprsCodingScheme cs,
+		struct gprs_rlc_data_block_info *rdbi, enum CodingScheme cs,
 		gprs_llc *llc, int *offset, int *num_chunks,
 		uint8_t *data, bool is_final, int *count_payload);
 };

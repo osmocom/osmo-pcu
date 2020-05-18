@@ -189,7 +189,7 @@ static int parse_extensions_gprs(const uint8_t *data, unsigned int data_len,
 }
 
 int Decoding::rlc_data_from_ul_data(
-	const struct gprs_rlc_data_block_info *rdbi, GprsCodingScheme cs,
+	const struct gprs_rlc_data_block_info *rdbi, enum CodingScheme cs,
 	const uint8_t *data, RlcData *chunks, unsigned int chunks_size,
 	uint32_t *tlli)
 {
@@ -351,10 +351,10 @@ void Decoding::extract_rbb(const struct bitvec *rbb, char *show_rbb)
 }
 
 int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
-	const uint8_t *data, GprsCodingScheme cs)
+	const uint8_t *data, enum CodingScheme cs)
 {
 	unsigned int cur_bit = 0;
-	switch(cs.headerTypeData()) {
+	switch(mcs_header_type(cs)) {
 	case HEADER_GPRS_DATA :
 		cur_bit = rlc_parse_ul_data_header_gprs(rlc, data, cs);
 		break;
@@ -380,7 +380,7 @@ int Decoding::rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
 int Decoding::rlc_parse_ul_data_header_egprs_type_3(
 	struct gprs_rlc_data_info *rlc,
 	const uint8_t *data,
-	const GprsCodingScheme &cs)
+	const enum CodingScheme &cs)
 {
 	int punct, punct2, with_padding, cps;
 	unsigned int e_ti_header, offs, cur_bit = 0;
@@ -414,7 +414,7 @@ int Decoding::rlc_parse_ul_data_header_egprs_type_3(
 	rlc->block_info[0].ti  = !!(e_ti_header & 0x02);
 	cur_bit += 2;
 	/* skip data area */
-	cur_bit += cs.maxDataBlockBytes() * 8;
+	cur_bit += mcs_max_data_block_bytes(cs) * 8;
 
 	return cur_bit;
 }
@@ -422,7 +422,7 @@ int Decoding::rlc_parse_ul_data_header_egprs_type_3(
 int Decoding::rlc_parse_ul_data_header_egprs_type_2(
 	struct gprs_rlc_data_info *rlc,
 	const uint8_t *data,
-	const GprsCodingScheme &cs)
+	const enum CodingScheme &cs)
 {
 	const struct gprs_rlc_ul_header_egprs_2 *egprs2;
 	unsigned int e_ti_header, offs, cur_bit = 0;
@@ -458,14 +458,14 @@ int Decoding::rlc_parse_ul_data_header_egprs_type_2(
 	cur_bit += 2;
 
 	/* skip data area */
-	cur_bit += cs.maxDataBlockBytes() * 8;
+	cur_bit += mcs_max_data_block_bytes(cs) * 8;
 
 	return cur_bit;
 }
 
 int Decoding::rlc_parse_ul_data_header_egprs_type_1(
 	struct gprs_rlc_data_info *rlc,
-	const uint8_t *data, const GprsCodingScheme &cs)
+	const uint8_t *data, const enum CodingScheme &cs)
 {
 	struct gprs_rlc_ul_header_egprs_1 *egprs1;
 	unsigned int e_ti_header, cur_bit = 0, offs;
@@ -517,13 +517,13 @@ int Decoding::rlc_parse_ul_data_header_egprs_type_1(
 	rlc->block_info[1].ti  = !!(e_ti_header & 0x02);
 	cur_bit += 2;
 	/* skip data area */
-	cur_bit += cs.maxDataBlockBytes() * 8;
+	cur_bit += mcs_max_data_block_bytes(cs) * 8;
 
 	return cur_bit;
 }
 
 int Decoding::rlc_parse_ul_data_header_gprs(struct gprs_rlc_data_info *rlc,
-	const uint8_t *data, const GprsCodingScheme &cs)
+	const uint8_t *data, const enum CodingScheme &cs)
 {
 	const struct rlc_ul_header *gprs;
 	unsigned int cur_bit = 0;
@@ -547,7 +547,7 @@ int Decoding::rlc_parse_ul_data_header_gprs(struct gprs_rlc_data_info *rlc,
 	rlc->block_info[0].spb = 0;
 	cur_bit += rlc->data_offs_bits[0];
 	/* skip data area */
-	cur_bit += cs.maxDataBlockBytes() * 8;
+	cur_bit += mcs_max_data_block_bytes(cs) * 8;
 
 	return cur_bit;
 }

@@ -21,6 +21,8 @@
 
 #include <osmocom/core/utils.h>
 
+#include <stdbool.h>
+
 enum CodingScheme {
 	UNKNOWN,
 	/* GPRS Coding Schemes: */
@@ -29,6 +31,15 @@ enum CodingScheme {
 	MCS1, MCS2, MCS3, MCS4, MCS5, MCS6, MCS7, MCS8, MCS9,
 	NUM_SCHEMES
 };
+
+enum mcs_kind {
+	GPRS,
+	EGPRS_GMSK,
+	EGPRS,
+};
+
+#define EGPRS_ARQ1            0x0
+#define EGPRS_ARQ2            0x1
 
 extern const struct value_string mcs_names[];
 const char *mcs_name(enum CodingScheme val);
@@ -40,6 +51,32 @@ bool mcs_is_edge_gmsk(enum CodingScheme cs);
 
 uint8_t mcs_chan_code(enum CodingScheme cs);
 
+enum CodingScheme mcs_get_by_size_ul(unsigned size);
+enum CodingScheme mcs_get_gprs_by_num(unsigned num);
+enum CodingScheme mcs_get_egprs_by_num(unsigned num);
+bool mcs_is_valid(enum CodingScheme cs);
+bool mcs_is_compat(enum CodingScheme cs, enum CodingScheme o);
+bool mcs_is_compat_kind(enum CodingScheme cs, enum mcs_kind mode);
+
+uint8_t mcs_size_ul(enum CodingScheme cs);
+uint8_t mcs_size_dl(enum CodingScheme cs);
+uint8_t mcs_used_size_ul(enum CodingScheme cs);
+uint8_t mcs_used_size_dl(enum CodingScheme cs);
+uint8_t mcs_max_bytes_ul(enum CodingScheme cs);
+uint8_t mcs_max_bytes_dl(enum CodingScheme cs);
+uint8_t mcs_spare_bits_ul(enum CodingScheme cs);
+uint8_t mcs_spare_bits_dl(enum CodingScheme cs);
+uint8_t mcs_max_data_block_bytes(enum CodingScheme cs);
+uint8_t mcs_opt_padding_bits(enum CodingScheme cs);
+
+void mcs_inc_kind(enum CodingScheme *cs, enum mcs_kind mode);
+void mcs_dec_kind(enum CodingScheme *cs, enum mcs_kind mode);
+void mcs_inc(enum CodingScheme *cs);
+void mcs_dec(enum CodingScheme *cs);
+
+bool mcs_is_family_compat(enum CodingScheme cs, enum CodingScheme o);
+void mcs_dec_to_single_block(enum CodingScheme *cs, bool *need_stuffing);
+
 enum HeaderType {
 	HEADER_INVALID,
 	HEADER_GPRS_CONTROL,
@@ -50,17 +87,11 @@ enum HeaderType {
 	NUM_HEADER_TYPES
 };
 
-enum HeaderType headerTypeData(enum CodingScheme mcs);
+enum HeaderType mcs_header_type(enum CodingScheme mcs);
 
 uint8_t num_data_blocks(enum HeaderType ht);
 uint8_t num_data_header_bits_UL(enum HeaderType ht);
 uint8_t num_data_header_bits_DL(enum HeaderType ht);
 uint8_t num_data_block_header_bits(enum HeaderType ht);
-
-enum mcs_kind {
-	GPRS,
-	EGPRS_GMSK,
-	EGPRS,
-};
 
 const char *mode_name(enum mcs_kind val);

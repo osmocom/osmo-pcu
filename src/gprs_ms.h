@@ -22,17 +22,17 @@
 
 struct gprs_codel;
 
-#include <gprs_coding_scheme.h>
 #include "cxx_linuxlist.h"
 #include "llc.h"
 #include "tbf.h"
 #include "tbf_dl.h"
 #include "pcu_l1_if.h"
-#include <gprs_coding_scheme.h>
 
 extern "C" {
 	#include <osmocom/core/timer.h>
 	#include <osmocom/core/linuxlist.h>
+
+	#include "coding_scheme.h"
 }
 
 #include <stdint.h>
@@ -87,12 +87,12 @@ public:
 	uint8_t egprs_ms_class() const;
 	void set_ms_class(uint8_t ms_class);
 	void set_egprs_ms_class(uint8_t ms_class);
-	void set_current_cs_dl(CodingScheme scheme);
+	void set_current_cs_dl(enum CodingScheme scheme);
 
-	GprsCodingScheme current_cs_ul() const;
-	GprsCodingScheme current_cs_dl() const;
-	GprsCodingScheme max_cs_ul() const;
-	GprsCodingScheme max_cs_dl() const;
+	enum CodingScheme current_cs_ul() const;
+	enum CodingScheme current_cs_dl() const;
+	enum CodingScheme max_cs_ul() const;
+	enum CodingScheme max_cs_dl() const;
 
 	int first_common_ts() const;
 	uint8_t dl_slots() const;
@@ -164,8 +164,8 @@ private:
 	uint8_t m_ms_class;
 	uint8_t m_egprs_ms_class;
 	/* current coding scheme */
-	GprsCodingScheme m_current_cs_ul;
-	GprsCodingScheme m_current_cs_dl;
+	enum CodingScheme m_current_cs_ul;
+	enum CodingScheme m_current_cs_dl;
 
 	gprs_llc_queue m_llc_queue;
 
@@ -235,7 +235,7 @@ inline uint8_t GprsMs::egprs_ms_class() const
 	return m_egprs_ms_class;
 }
 
-inline GprsCodingScheme GprsMs::current_cs_ul() const
+inline enum CodingScheme GprsMs::current_cs_ul() const
 {
 	return m_current_cs_ul;
 }

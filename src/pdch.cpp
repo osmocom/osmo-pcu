@@ -25,7 +25,7 @@
 #include <encoding.h>
 #include <gprs_rlcmac.h>
 #include <gprs_debug.h>
-#include <gprs_coding_scheme.h>
+#include <coding_scheme.h>
 #include <gprs_ms.h>
 #include <gprs_ms_storage.h>
 #include <pcu_l1_if.h>
@@ -688,11 +688,11 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 
 /* Received Uplink RLC control block. */
 int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
-					uint32_t fn, struct pcu_l1_meas *meas, GprsCodingScheme cs)
+					uint32_t fn, struct pcu_l1_meas *meas, enum CodingScheme cs)
 {
 	bitvec *rlc_block;
 	RlcMacUplink_t *ul_control_block;
-	unsigned len = cs.maxBytesUL();
+	unsigned len = mcs_max_bytes_ul(cs);
 	int rc;
 
 	if (!(rlc_block = bitvec_alloc(len, tall_pcu_ctx)))
@@ -751,7 +751,7 @@ free_ret:
 int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	struct pcu_l1_meas *meas)
 {
-	GprsCodingScheme cs = GprsCodingScheme::getBySizeUL(len);
+	enum CodingScheme cs = mcs_get_by_size_ul(len);
 	if (!cs) {
 		bts()->do_rate_ctr_inc(CTR_DECODE_ERRORS);
 		LOGP(DRLCMACUL, LOGL_ERROR, "Dropping data block with invalid"
@@ -762,7 +762,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	bts()->do_rate_ctr_add(CTR_RLC_UL_BYTES, len);
 
 	LOGP(DRLCMACUL, LOGL_DEBUG, "Got RLC block, coding scheme: %s, "
-		"length: %d (%d))\n", mcs_name(cs), len, cs.usedSizeUL());
+		"length: %d (%d))\n", mcs_name(cs), len, mcs_used_size_ul(cs));
 
 	if (mcs_is_gprs(cs))
 		return rcv_block_gprs(data, len, fn, meas, cs);
@@ -778,12 +778,12 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 
 /*! \brief process egprs and gprs data blocks */
 int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t fn,
-	struct pcu_l1_meas *meas, GprsCodingScheme cs)
+	struct pcu_l1_meas *meas, enum CodingScheme cs)
 {
 	int rc;
 	struct gprs_rlc_data_info rlc_dec;
 	struct gprs_rlcmac_ul_tbf *tbf;
-	unsigned len = cs.sizeUL();
+	unsigned len = mcs_size_ul(cs);
 
 	/* These are always data blocks, since EGPRS still uses CS-1 for
 	 * control blocks (see 44.060, section 10.3, 1st par.)
@@ -836,7 +836,7 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 }
 
 int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint8_t data_len, uint32_t fn,
-	struct pcu_l1_meas *meas, GprsCodingScheme cs)
+	struct pcu_l1_meas *meas, enum CodingScheme cs)
 {
 	unsigned payload = data[0] >> 6;
 	int rc = 0;

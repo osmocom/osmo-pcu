@@ -30,7 +30,6 @@
 #include <gprs_codel.h>
 #include <decoding.h>
 #include <encoding.h>
-#include <gprs_coding_scheme.h>
 #include <gprs_ms.h>
 #include <gprs_ms_storage.h>
 #include <llc.h>
@@ -370,7 +369,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 {
 	int bsn;
 	int data_len2, force_data_len = -1;
-	GprsCodingScheme force_cs;
+	enum CodingScheme force_cs = UNKNOWN;
 
 	/* search for a nacked or resend marked bsn */
 	bsn = m_window.resend_needed();
@@ -446,7 +445,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			return take_next_bsn(fn, previous_bsn, may_combine);
 	} else if (have_data()) {
 		/* The window has space left, generate new bsn */
-		GprsCodingScheme new_cs;
+		enum CodingScheme new_cs;
 		new_cs = force_cs ? force_cs : current_cs();
 		LOGPTBFDL(this, LOGL_DEBUG,
 			  "Sending new block at BSN %d, CS=%s\n",
@@ -480,7 +479,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		bts->do_rate_ctr_inc(CTR_RLC_RESENT);
 	}
 
-	*may_combine = num_data_blocks(m_rlc.block(bsn)->cs_current_trans.headerTypeData()) > 1;
+	*may_combine = num_data_blocks(mcs_header_type(m_rlc.block(bsn)->cs_current_trans)) > 1;
 
 	return bsn;
 }
@@ -561,7 +560,7 @@ void gprs_rlcmac_dl_tbf::schedule_next_frame()
 	m_last_dl_drained_fn = -1;
 }
 
-int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
+int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 {
 	uint8_t *data;
 	gprs_rlc_data *rlc_data;
@@ -574,10 +573,10 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 	if (m_llc.frame_length() == 0)
 		schedule_next_frame();
 
-	OSMO_ASSERT(cs.isValid());
+	OSMO_ASSERT(mcs_is_valid(cs));
 
 	/* length of usable data block (single data unit w/o header) */
-	const uint8_t block_data_len = cs.maxDataBlockBytes();
+	const uint8_t block_data_len = mcs_max_data_block_bytes(cs);
 
 	/* now we still have untransmitted LLC data, so we fill mac block */
 	rlc_data = m_rlc.block(bsn);
@@ -691,7 +690,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	int rc;
 	bool is_final = false;
 	gprs_rlc_data_info rlc;
-	GprsCodingScheme cs;
+	enum CodingScheme cs;
 	int bsns[ARRAY_SIZE(rlc.block_info)];
 	unsigned num_bsns;
 	bool need_padding = false;
@@ -740,8 +739,8 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		 * Refer commit be881c028fc4da00c4046ecd9296727975c206a3
 		 * dated 2016-02-07 23:45:40 (UTC)
 		 */
-		if (cs != GprsCodingScheme(MCS8))
-			cs.decToSingleBlock(&need_padding);
+		if (cs != MCS8)
+			mcs_dec_to_single_block(&cs, &need_padding);
 	}
 
 	spb = get_egprs_dl_spb(index);
@@ -756,7 +755,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	rlc.tfi = m_tfi; /* TFI */
 
 	/* return data block(s) as message */
-	msg_len = cs.sizeDL();
+	msg_len = mcs_size_dl(cs);
 	dl_msg = msgb_alloc(msg_len, "rlcmac_dl_data");
 	if (!dl_msg)
 		return NULL;
@@ -1273,11 +1272,11 @@ enum egprs_rlc_dl_reseg_bsn_state
 	egprs_rlc_dl_reseg_bsn_state *block_status_dl =
 				&rlc_data->spb_status.block_status_dl;
 
-	enum CodingScheme cs_init = CodingScheme(rlc_data->cs_init);
-	enum CodingScheme cs_current_trans = CodingScheme(rlc_data->cs_current_trans);
+	enum CodingScheme cs_init = rlc_data->cs_init;
+	enum CodingScheme cs_current_trans = rlc_data->cs_current_trans;
 
-	enum HeaderType ht_cs_init = rlc_data->cs_init.headerTypeData();
-	enum HeaderType ht_cs_current_trans = rlc_data->cs_current_trans.headerTypeData();
+	enum HeaderType ht_cs_init = mcs_header_type(rlc_data->cs_init);
+	enum HeaderType ht_cs_current_trans = mcs_header_type(rlc_data->cs_current_trans);
 
 	*block_data = &rlc_data->block[0];
 
@@ -1346,11 +1345,11 @@ enum egprs_rlcmac_dl_spb gprs_rlcmac_dl_tbf::get_egprs_dl_spb(const int bsn)
 	struct gprs_rlc_data *rlc_data = m_rlc.block(bsn);
 	egprs_rlc_dl_reseg_bsn_state block_status_dl = rlc_data->spb_status.block_status_dl;
 
-	enum CodingScheme cs_init = CodingScheme(rlc_data->cs_init);
-	enum CodingScheme cs_current_trans = CodingScheme(rlc_data->cs_current_trans);
+	enum CodingScheme cs_init = rlc_data->cs_init;
+	enum CodingScheme cs_current_trans = rlc_data->cs_current_trans;
 
-	enum HeaderType ht_cs_init = rlc_data->cs_init.headerTypeData();
-	enum HeaderType ht_cs_current_trans = rlc_data->cs_current_trans.headerTypeData();
+	enum HeaderType ht_cs_init = mcs_header_type(rlc_data->cs_init);
+	enum HeaderType ht_cs_current_trans = mcs_header_type(rlc_data->cs_current_trans);
 
 	/* Table 10.4.8b.1 of 44.060 */
 	if (ht_cs_current_trans == HEADER_EGPRS_DATA_TYPE_3) {

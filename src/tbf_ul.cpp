@@ -29,7 +29,6 @@
 #include <gprs_bssgp_pcu.h>
 #include <decoding.h>
 #include <pcu_l1_if.h>
-#include <gprs_coding_scheme.h>
 #include <gprs_ms.h>
 #include <llc.h>
 #include "pcu_utils.h"
@@ -75,7 +74,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 	const uint8_t *data = _data->block;
 	uint8_t len = _data->len;
 	const struct gprs_rlc_data_block_info *rdbi = &_data->block_info;
-	GprsCodingScheme cs = _data->cs_last;
+	enum CodingScheme cs = _data->cs_last;
 
 	Decoding::RlcData frames[16], *frame;
 	int i, num_frames = 0;
@@ -523,7 +522,7 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_spb(
 	 * upgrade the MCS to the type 2
 	 */
 	if (assemble_status == EGPRS_RESEG_DEFAULT) {
-		switch (CodingScheme(rlc->cs)) {
+		switch (rlc->cs) {
 		case MCS3 :
 			block->cs_last = MCS6;
 			LOGPTBFUL(this, LOGL_DEBUG, "Upgrading to MCS6\n");

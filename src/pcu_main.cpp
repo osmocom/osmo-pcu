@@ -31,12 +31,12 @@
 #include <signal.h>
 #include <sched.h>
 #include <bts.h>
-#include <gprs_coding_scheme.h>
 #include <osmocom/pcu/pcuif_proto.h>
 #include "gprs_bssgp_pcu.h"
 
 extern "C" {
 #include "pcu_vty.h"
+#include "coding_scheme.h"
 #include <osmocom/gprs/gprs_bssgp.h>
 #include <osmocom/gprs/gprs_ns.h>
 #include <osmocom/vty/telnet_interface.h>

@@ -40,7 +40,7 @@ public:
 
 	static int rlc_data_from_ul_data(
 		const struct gprs_rlc_data_block_info *rdbi,
-		GprsCodingScheme cs, const uint8_t *data, RlcData *chunks,
+		enum CodingScheme cs, const uint8_t *data, RlcData *chunks,
 		unsigned int chunks_size, uint32_t *tlli);
 	static uint8_t get_ms_class_by_capability(MS_Radio_Access_capability_t *cap);
 	static uint8_t get_egprs_ms_class_by_capability(MS_Radio_Access_capability_t *cap);
@@ -50,21 +50,21 @@ public:
 	static int rlc_parse_ul_data_header_egprs_type_3(
 		struct gprs_rlc_data_info *rlc,
 		const uint8_t *data,
-		const GprsCodingScheme &cs);
+		const enum CodingScheme &cs);
 	static int rlc_parse_ul_data_header_egprs_type_2(
 		struct gprs_rlc_data_info *rlc,
 		const uint8_t *data,
-		const GprsCodingScheme &cs);
+		const enum CodingScheme &cs);
 	static int rlc_parse_ul_data_header_egprs_type_1(
 		struct gprs_rlc_data_info *rlc,
 		const uint8_t *data,
-		const GprsCodingScheme &cs);
+		const enum CodingScheme &cs);
 	static int rlc_parse_ul_data_header_gprs(
 		struct gprs_rlc_data_info *rlc,
 		const uint8_t *data,
-		const GprsCodingScheme &cs);
+		const enum CodingScheme &cs);
 	static int rlc_parse_ul_data_header(struct gprs_rlc_data_info *rlc,
-		const uint8_t *data, GprsCodingScheme cs);
+		const uint8_t *data, enum CodingScheme cs);
 	static unsigned int rlc_copy_to_aligned_buffer(
 		const struct gprs_rlc_data_info *rlc,
 		unsigned int data_block_idx,

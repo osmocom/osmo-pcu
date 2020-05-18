@@ -19,7 +19,9 @@
  */
 #pragma once
 
-#include "gprs_coding_scheme.h"
+extern "C" {
+#include "coding_scheme.h"
+}
 
 #include <osmocom/core/endian.h>
 
@@ -154,7 +156,7 @@ struct gprs_rlc_data_block_info {
 };
 
 struct gprs_rlc_data_info {
-	GprsCodingScheme cs;
+	enum CodingScheme cs;
 	unsigned int r;
 	unsigned int si;
 	unsigned int tfi;
@@ -192,15 +194,15 @@ struct gprs_rlc_data {
 	 * 8.1.1.1 and Table 8.1.1.2
 	 * For UL. cs_last shall be used everywhere.
 	 */
-	GprsCodingScheme cs_current_trans;
-	GprsCodingScheme cs_last;
+	enum CodingScheme cs_current_trans;
+	enum CodingScheme cs_last;
 
 	/*
 	 * The MCS of initial transmission of a BSN
 	 * This variable is used for split block
 	 * processing in DL
 	 */
-	GprsCodingScheme cs_init;
+	enum CodingScheme cs_init;
 
 	/* puncturing scheme value to be used for next transmission*/
 	enum egprs_puncturing_values next_ps;
@@ -212,21 +214,21 @@ struct gprs_rlc_data {
 uint8_t *prepare(struct gprs_rlc_data *rlc, size_t block_data_length);
 
 void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,
-	GprsCodingScheme cs, bool with_padding, const unsigned int spb);
+	enum CodingScheme cs, bool with_padding, const unsigned int spb);
 void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
-	GprsCodingScheme cs, bool with_padding);
+	enum CodingScheme cs, bool with_padding);
 void gprs_rlc_data_block_info_init(struct gprs_rlc_data_block_info *rdbi,
-	GprsCodingScheme cs, bool with_padding, const unsigned int spb);
-unsigned int gprs_rlc_mcs_cps(GprsCodingScheme cs, enum egprs_puncturing_values
+	enum CodingScheme cs, bool with_padding, const unsigned int spb);
+unsigned int gprs_rlc_mcs_cps(enum CodingScheme cs, enum egprs_puncturing_values
 	punct, enum egprs_puncturing_values punct2, bool with_padding);
-void gprs_rlc_mcs_cps_decode(unsigned int cps, GprsCodingScheme cs,
+void gprs_rlc_mcs_cps_decode(unsigned int cps, enum CodingScheme cs,
 	int *punct, int *punct2, int *with_padding);
 enum egprs_puncturing_values gprs_get_punct_scheme(enum egprs_puncturing_values
-	punct, const GprsCodingScheme &cs,
-	const GprsCodingScheme &cs_current_trans,
+	punct, const enum CodingScheme &cs,
+	const enum CodingScheme &cs_current_trans,
 	const enum egprs_rlcmac_dl_spb spb);
 void gprs_update_punct_scheme(enum egprs_puncturing_values *punct,
-	const GprsCodingScheme &cs);
+	const enum CodingScheme &cs);
 /*
  * I hold the currently transferred blocks and will provide
  * the routines to manipulate these arrays.

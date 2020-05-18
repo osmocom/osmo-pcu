@@ -68,7 +68,6 @@ libgprs_la_SOURCES = \
 	osmobts_sock.cpp \
 	gprs_codel.c \
 	coding_scheme.c \
-	gprs_coding_scheme.cpp \
 	egprs_rlc_compression.cpp \
 	gprs_rlcmac_sched.cpp
 
@@ -104,7 +103,6 @@ noinst_HEADERS = \
 	pcu_utils.h \
 	cxx_linuxlist.h \
 	gprs_codel.h \
-	gprs_coding_scheme.h \
 	coding_scheme.h \
 	egprs_rlc_compression.h \
 	wireshark_compat.h

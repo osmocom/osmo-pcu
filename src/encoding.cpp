@@ -1107,11 +1107,11 @@ int Encoding::rlc_write_dl_data_header(const struct gprs_rlc_data_info *rlc,
 	struct gprs_rlc_dl_header_egprs_3 *egprs3;
 	struct rlc_dl_header *gprs;
 	unsigned int e_fbi_header;
-	GprsCodingScheme cs = rlc->cs;
+	enum CodingScheme cs = rlc->cs;
 	unsigned int offs;
 	unsigned int bsn_delta;
 
-	switch(cs.headerTypeData()) {
+	switch(mcs_header_type(cs)) {
 	case HEADER_GPRS_DATA:
 		gprs = static_cast<struct rlc_dl_header *>
 			((void *)data);
@@ -1595,7 +1595,7 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
  * \return the state of the rlc/mac like if there is more space for another chunk
  */
 Encoding::AppendResult Encoding::rlc_data_to_dl_append(
-	struct gprs_rlc_data_block_info *rdbi, GprsCodingScheme cs,
+	struct gprs_rlc_data_block_info *rdbi, enum CodingScheme cs,
 	gprs_llc *llc, int *offset, int *num_chunks,
 	uint8_t *data_block, bool is_final, int *count_payload)
 {

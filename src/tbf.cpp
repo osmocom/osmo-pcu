@@ -33,7 +33,6 @@
 #include <pcu_utils.h>
 #include <gprs_ms_storage.h>
 #include <sba.h>
-#include <gprs_coding_scheme.h>
 #include <gsm_timer.h>
 #include <pdch.h>
 
@@ -49,6 +48,7 @@ extern "C" {
 #include <osmocom/gsm/protocol/gsm_04_08.h>
 
 #include "gsm_rlcmac.h"
+#include "coding_scheme.h"
 }
 
 #include <errno.h>
@@ -310,13 +310,14 @@ void gprs_rlcmac_tbf::set_ms_class(uint8_t ms_class_)
 	m_ms_class = ms_class_;
 }
 
-GprsCodingScheme gprs_rlcmac_tbf::current_cs() const
+enum CodingScheme gprs_rlcmac_tbf::current_cs() const
 {
-	GprsCodingScheme cs;
+	enum CodingScheme cs;
+
 	if (direction == GPRS_RLCMAC_UL_TBF)
-		cs = m_ms ? m_ms->current_cs_ul() : GprsCodingScheme();
+		cs = m_ms ? m_ms->current_cs_ul() : UNKNOWN;
 	else
-		cs = m_ms ? m_ms->current_cs_dl() : GprsCodingScheme();
+		cs = m_ms ? m_ms->current_cs_dl() : UNKNOWN;
 
 	return cs;
 }
@@ -965,8 +966,8 @@ static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
 
 static void setup_egprs_mode(gprs_rlcmac_bts *bts, GprsMs *ms)
 {
-	if (mcs_is_edge_gmsk(GprsCodingScheme::getEgprsByNum(bts->max_mcs_ul)) &&
-		mcs_is_edge_gmsk(GprsCodingScheme::getEgprsByNum(bts->max_mcs_dl)) &&
+	if (mcs_is_edge_gmsk(mcs_get_egprs_by_num(bts->max_mcs_ul)) &&
+		mcs_is_edge_gmsk(mcs_get_egprs_by_num(bts->max_mcs_dl)) &&
 		ms->mode() != EGPRS)
 	{
 		ms->set_mode(EGPRS_GMSK);

@@ -24,7 +24,7 @@
 #include <gprs_debug.h>
 #include <bts.h>
 #include <tbf.h>
-#include <gprs_coding_scheme.h>
+#include <coding_scheme.h>
 #include <pdch.h>
 #include <decoding.h>
 
@@ -639,9 +639,9 @@ static unsigned count_pdch(const struct gprs_rlcmac_bts *bts)
 	return num_pdch;
 }
 
-static uint32_t gprs_bssgp_max_leak_rate(GprsCodingScheme cs, int num_pdch)
+static uint32_t gprs_bssgp_max_leak_rate(enum CodingScheme cs, int num_pdch)
 {
-	int bytes_per_rlc_block = cs.maxDataBlockBytes() * num_data_blocks(cs.headerTypeData());
+	int bytes_per_rlc_block = mcs_max_data_block_bytes(cs) * num_data_blocks(mcs_header_type(cs));
 
 	/* n byte payload per 20ms */
 	return bytes_per_rlc_block * (1000 / 20) * num_pdch;
@@ -717,7 +717,7 @@ static int get_and_reset_measured_leak_rate(int *usage_by_1000, unsigned num_pdc
 	return rate;
 }
 
-static GprsCodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
+static enum CodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
 {
 	int num;
 
@@ -733,7 +733,7 @@ static GprsCodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
 			num = 9;
 		}
 
-		return GprsCodingScheme::getEgprsByNum(num);
+		return mcs_get_egprs_by_num(num);
 	}
 
 	if (!bts->cs_adj_enabled) {
@@ -753,7 +753,7 @@ static GprsCodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
 		num = 4;
 	}
 
-	return GprsCodingScheme::getGprsByNum(num);
+	return mcs_get_gprs_by_num(num);
 }
 
 static int gprs_bssgp_tx_fc_bvc(void)
@@ -765,7 +765,7 @@ static int gprs_bssgp_tx_fc_bvc(void)
 	uint32_t ms_leak_rate; /* oct/s */
 	uint32_t avg_delay_ms;
 	int num_pdch = -1;
-	GprsCodingScheme max_cs_dl;
+	enum CodingScheme max_cs_dl;
 
 	if (!the_pcu.bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");

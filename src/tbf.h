@@ -24,14 +24,16 @@
 #include "rlc.h"
 #include "cxx_linuxlist.h"
 #include <gprs_debug.h>
-#include <gprs_coding_scheme.h>
 #include <gsm_timer.h>
 #include <stdint.h>
+
 extern "C" {
 #include <osmocom/core/utils.h>
-	#include <osmocom/core/linuxlist.h>
-	#include <osmocom/core/logging.h>
-	#include <osmocom/core/timer.h>
+#include <osmocom/core/linuxlist.h>
+#include <osmocom/core/logging.h>
+#include <osmocom/core/timer.h>
+
+#include "coding_scheme.h"
 }
 
 struct bssgp_bvc_ctx;
@@ -245,7 +247,7 @@ struct gprs_rlcmac_tbf {
 	void set_ta(uint8_t);
 	uint8_t ms_class() const;
 	void set_ms_class(uint8_t);
-	GprsCodingScheme current_cs() const;
+	enum CodingScheme current_cs() const;
 	size_t llc_queue_size() const;
 
 	time_t created_ts() const;

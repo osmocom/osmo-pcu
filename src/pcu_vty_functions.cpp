@@ -27,7 +27,6 @@
 #include "gprs_ms_storage.h"
 #include "gprs_ms.h"
 #include "cxx_linuxlist.h"
-#include <gprs_coding_scheme.h>
 #include <llc.h>
 #include <pcu_l1_if.h>
 #include <rlc.h>

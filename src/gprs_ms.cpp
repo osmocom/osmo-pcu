@@ -20,7 +20,6 @@
 
 
 #include "gprs_ms.h"
-#include <gprs_coding_scheme.h>
 #include "bts.h"
 #include "tbf.h"
 #include "tbf_ul.h"
@@ -103,6 +102,8 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	m_ta(GSM48_TA_INVALID),
 	m_ms_class(0),
 	m_egprs_ms_class(0),
+	m_current_cs_ul(UNKNOWN),
+	m_current_cs_dl(UNKNOWN),
 	m_is_idle(true),
 	m_ref(0),
 	m_list(this),
@@ -226,15 +227,15 @@ void GprsMs::set_mode(enum mcs_kind mode)
 	switch (m_mode) {
 	case GPRS:
 		if (!mcs_is_gprs(m_current_cs_ul)) {
-			m_current_cs_ul = GprsCodingScheme::getGprsByNum(
+			m_current_cs_ul = mcs_get_gprs_by_num(
 				m_bts->bts_data()->initial_cs_ul);
-			if (!m_current_cs_ul.isValid())
+			if (!mcs_is_valid(m_current_cs_ul))
 				m_current_cs_ul = CS1;
 		}
 		if (!mcs_is_gprs(m_current_cs_dl)) {
-			m_current_cs_dl = GprsCodingScheme::getGprsByNum(
+			m_current_cs_dl = mcs_get_gprs_by_num(
 				m_bts->bts_data()->initial_cs_dl);
-			if (!m_current_cs_dl.isValid())
+			if (!mcs_is_valid(m_current_cs_dl))
 				m_current_cs_dl = CS1;
 		}
 		break;
@@ -242,15 +243,15 @@ void GprsMs::set_mode(enum mcs_kind mode)
 	case EGPRS_GMSK:
 	case EGPRS:
 		if (!mcs_is_edge(m_current_cs_ul)) {
-			m_current_cs_ul = GprsCodingScheme::getEgprsByNum(
+			m_current_cs_ul = mcs_get_egprs_by_num(
 				m_bts->bts_data()->initial_mcs_ul);
-			if (!m_current_cs_ul.isValid())
+			if (!mcs_is_valid(m_current_cs_ul))
 				m_current_cs_ul = MCS1;
 		}
 		if (!mcs_is_edge(m_current_cs_dl)) {
-			m_current_cs_dl = GprsCodingScheme::getEgprsByNum(
+			m_current_cs_dl = mcs_get_egprs_by_num(
 				m_bts->bts_data()->initial_mcs_dl);
-			if (!m_current_cs_dl.isValid())
+			if (!mcs_is_valid(m_current_cs_dl))
 				m_current_cs_dl = MCS1;
 		}
 		break;
@@ -510,7 +511,7 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 {
 	struct gprs_rlcmac_bts *bts_data;
 	int64_t now;
-	GprsCodingScheme max_cs_dl = this->max_cs_dl();
+	enum CodingScheme max_cs_dl = this->max_cs_dl();
 
 	OSMO_ASSERT(max_cs_dl);
 	bts_data = m_bts->bts_data();
@@ -527,7 +528,7 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 
 	if (error_rate > bts_data->cs_adj_upper_limit) {
 		if (mcs_chan_code(m_current_cs_dl) > 0) {
-			m_current_cs_dl.dec(mode());
+			mcs_dec_kind(&m_current_cs_dl, mode());
 			LOGP(DRLCMACDL, LOGL_INFO,
 				"MS (IMSI %s): High error rate %d%%, "
 				"reducing CS level to %s\n",
@@ -537,7 +538,7 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 	} else if (error_rate < bts_data->cs_adj_lower_limit) {
 		if (m_current_cs_dl < max_cs_dl) {
 		       if (now - m_last_cs_not_low > 1000) {
-			       m_current_cs_dl.inc(mode());
+			       mcs_inc_kind(&m_current_cs_dl, mode());
 
 			       LOGP(DRLCMACDL, LOGL_INFO,
 				       "MS (IMSI %s): Low error rate %d%%, "
@@ -560,7 +561,7 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 	}
 }
 
-GprsCodingScheme GprsMs::max_cs_ul() const
+enum CodingScheme GprsMs::max_cs_ul() const
 {
 	struct gprs_rlcmac_bts *bts_data;
 
@@ -568,29 +569,30 @@ GprsCodingScheme GprsMs::max_cs_ul() const
 	bts_data = m_bts->bts_data();
 
 	if (mcs_is_gprs(m_current_cs_ul)) {
-		if (!bts_data->max_cs_ul)
-			return GprsCodingScheme(CS4);
+		if (!bts_data->max_cs_ul) {
+			return CS4;
+		}
 
-		return GprsCodingScheme::getGprsByNum(bts_data->max_cs_ul);
+		return mcs_get_gprs_by_num(bts_data->max_cs_ul);
 	}
 
 	if (!mcs_is_edge(m_current_cs_ul))
-		return GprsCodingScheme(); /* UNKNOWN */
+		return UNKNOWN;
 
 	if (bts_data->max_mcs_ul)
-		return GprsCodingScheme::getEgprsByNum(bts_data->max_mcs_ul);
+		return mcs_get_egprs_by_num(bts_data->max_mcs_ul);
 	else if (bts_data->max_cs_ul)
-		return GprsCodingScheme::getEgprsByNum(bts_data->max_cs_ul);
+		return mcs_get_egprs_by_num(bts_data->max_cs_ul);
 
-	return GprsCodingScheme(MCS4);
+	return MCS4;
 }
 
-void GprsMs::set_current_cs_dl(CodingScheme scheme)
+void GprsMs::set_current_cs_dl(enum CodingScheme scheme)
 {
 	m_current_cs_dl = scheme;
 }
 
-GprsCodingScheme GprsMs::max_cs_dl() const
+enum CodingScheme GprsMs::max_cs_dl() const
 {
 	struct gprs_rlcmac_bts *bts_data;
 
@@ -598,32 +600,33 @@ GprsCodingScheme GprsMs::max_cs_dl() const
 	bts_data = m_bts->bts_data();
 
 	if (mcs_is_gprs(m_current_cs_dl)) {
-		if (!bts_data->max_cs_dl)
-			return GprsCodingScheme(CS4);
+		if (!bts_data->max_cs_dl) {
+			return CS4;
+		}
 
-		return GprsCodingScheme::getGprsByNum(bts_data->max_cs_dl);
+		return mcs_get_gprs_by_num(bts_data->max_cs_dl);
 	}
 
 	if (!mcs_is_edge(m_current_cs_dl))
-		return GprsCodingScheme(); /* UNKNOWN */
+		return UNKNOWN;
 
 	if (bts_data->max_mcs_dl)
-		return GprsCodingScheme::getEgprsByNum(bts_data->max_mcs_dl);
+		return mcs_get_egprs_by_num(bts_data->max_mcs_dl);
 	else if (bts_data->max_cs_dl)
-		return GprsCodingScheme::getEgprsByNum(bts_data->max_cs_dl);
+		return mcs_get_egprs_by_num(bts_data->max_cs_dl);
 
-	return GprsCodingScheme(MCS4);
+	return MCS4;
 }
 
 void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 {
 	struct gprs_rlcmac_bts *bts_data;
-	GprsCodingScheme max_cs_ul = this->max_cs_ul();
+	enum CodingScheme max_cs_ul = this->max_cs_ul();
 
 	int old_link_qual;
 	int low;
 	int high;
-	GprsCodingScheme new_cs_ul = m_current_cs_ul;
+	enum CodingScheme new_cs_ul = m_current_cs_ul;
 	uint8_t current_cs = mcs_chan_code(m_current_cs_ul);
 
 	bts_data = m_bts->bts_data();
@@ -674,10 +677,10 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 		old_link_qual = meas->link_qual;
 
 	if (meas->link_qual < low &&  old_link_qual < low)
-		new_cs_ul.dec(mode());
+		mcs_dec_kind(&new_cs_ul, mode());
 	else if (meas->link_qual > high &&  old_link_qual > high &&
 		m_current_cs_ul < max_cs_ul)
-		new_cs_ul.inc(mode());
+		mcs_inc_kind(&new_cs_ul, mode());
 
 	if (m_current_cs_ul != new_cs_ul) {
 		LOGP(DRLCMACMEAS, LOGL_INFO,
@@ -724,9 +727,9 @@ void GprsMs::update_l1_meas(const pcu_l1_meas *meas)
 	}
 }
 
-GprsCodingScheme GprsMs::current_cs_dl() const
+enum CodingScheme GprsMs::current_cs_dl() const
 {
-	GprsCodingScheme cs = m_current_cs_dl;
+	enum CodingScheme cs = m_current_cs_dl;
 	size_t unencoded_octets;
 
 	if (!m_bts)
@@ -747,11 +750,11 @@ GprsCodingScheme GprsMs::current_cs_dl() const
 		return cs;
 
 	/* The throughput would probably be better if the CS level was reduced */
-	cs.dec(mode());
+	mcs_dec_kind(&cs, mode());
 
 	/* CS-2 doesn't gain throughput with small packets, further reduce to CS-1 */
-	if (cs == GprsCodingScheme(CS2))
-		cs.dec(mode());
+	if (cs == CS2)
+		mcs_dec_kind(&cs, mode());
 
 	return cs;
 }

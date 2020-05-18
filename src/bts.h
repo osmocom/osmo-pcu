@@ -37,7 +37,7 @@ extern "C" {
 #include "sba.h"
 #include "tbf.h"
 #include "gprs_ms_storage.h"
-#include "gprs_coding_scheme.h"
+#include "coding_scheme.h"
 #include <cxx_linuxlist.h>
 #endif
 

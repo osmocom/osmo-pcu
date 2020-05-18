@@ -32,6 +32,7 @@
 
 extern "C" {
 #include "pcu_vty.h"
+#include "coding_scheme.h"
 
 #include <osmocom/core/application.h>
 #include <osmocom/core/msgb.h>
@@ -656,7 +657,6 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(BTS *the_bts,
 	gprs_rlcmac_bts *bts;
 	RlcMacUplink_t ulreq = {0};
 	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
-	GprsCodingScheme cs;
 
 	bts = the_bts->bts_data();
 
@@ -732,7 +732,6 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(BTS *the_bts,
 	 * TS 44.060, B.8.1
 	 * first seg received first, later second seg
 	 */
-	cs = MCS3;
 	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
 	egprs3->si = 0;
 	egprs3->r = 1;
@@ -805,7 +804,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	gprs_rlcmac_bts *bts;
 	RlcMacUplink_t ulreq = {0};
 	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
-	GprsCodingScheme cs;
 
 	bts = the_bts->bts_data();
 
@@ -882,7 +880,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	 * TS 44.060, B.8.1
 	 * first seg received first, later second seg
 	 */
-	cs = MCS3;
 	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
 	egprs3->si = 1;
 	egprs3->r = 1;
@@ -937,7 +934,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	 */
 	memset(data_msg, 0, sizeof(data_msg));
 
-	cs = MCS3;
 	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
 	egprs3->si = 1;
 	egprs3->r = 1;
@@ -990,7 +986,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	 * TS 44.060, B.8.1
 	 * Error scenario with spb as 1
 	 */
-	cs = MCS3;
 	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
 	egprs3->si = 1;
 	egprs3->r = 1;
@@ -1027,7 +1022,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	for (i = 0; i < 42; i++)
 		data_msg[i] = i;
 
-	cs = MCS3;
 	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
 	egprs3->si = 1;
 	egprs3->r = 1;
@@ -1051,7 +1045,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	OSMO_ASSERT(block->spb_status.block_status_ul ==
 				EGPRS_RESEG_FIRST_SEG_RXD);
 
-	cs = MCS3;
 	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
 	egprs3->si = 1;
 	egprs3->r = 1;
@@ -1079,7 +1072,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	OSMO_ASSERT(block->cs_last ==
 			MCS6);
 
-	cs = MCS3;
 	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
 	egprs3->si = 1;
 	egprs3->r = 1;
@@ -1103,7 +1095,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	OSMO_ASSERT(block->spb_status.block_status_ul ==
 				EGPRS_RESEG_FIRST_SEG_RXD);
 
-	cs = MCS3;
 	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
 	egprs3->si = 1;
 	egprs3->r = 1;
@@ -1127,7 +1118,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	OSMO_ASSERT(block->spb_status.block_status_ul ==
 				EGPRS_RESEG_FIRST_SEG_RXD);
 
-	cs = MCS3;
 	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
 	egprs3->si = 1;
 	egprs3->r = 1;
@@ -1155,7 +1145,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	/* Assembled MCS is MCS6. so the size is 74 */
 	OSMO_ASSERT(block->len == 74);
 
-	cs = MCS3;
 	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
 	egprs3->si = 1;
 	egprs3->r = 1;
@@ -1179,7 +1168,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	OSMO_ASSERT(block->spb_status.block_status_ul ==
 				EGPRS_RESEG_SECOND_SEG_RXD);
 
-	cs = MCS3;
 	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
 	egprs3->si = 1;
 	egprs3->r = 1;
@@ -1251,7 +1239,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf(BTS *the_bts,
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	gprs_rlcmac_bts *bts;
 	RlcMacUplink_t ulreq = {0};
-	GprsCodingScheme cs;
 
 	bts = the_bts->bts_data();
 
@@ -1318,8 +1305,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_no_length(BTS *t
 	uint8_t trx_no = 0;
 	int tfi = 0;
 	struct gprs_rlcmac_pdch *pdch;
-	GprsCodingScheme cs;
-
 
 	/* send fake data with cv=0*/
 	struct gprs_rlc_ul_header_egprs_3 *hdr3 = NULL;
@@ -1400,7 +1385,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_with_length(BTS 
 	uint8_t trx_no = 0;
 	int tfi = 0;
 	struct gprs_rlcmac_pdch *pdch;
-	GprsCodingScheme cs;
 
 	check_tbf(ul_tbf);
 	/* send fake data with cv=0*/
@@ -1483,8 +1467,6 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_CRBB(BTS *the_bts,
 	int tfi = 0;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_pdch *pdch;
-	GprsCodingScheme cs;
-
 
 	/* check the TBF */
 	ul_tbf = the_bts->ul_tbf_by_tfi(tfi, trx_no, ts_no);
@@ -2364,7 +2346,6 @@ static gprs_rlcmac_ul_tbf *tbf_li_decoding(BTS *the_bts,
 	gprs_rlcmac_bts *bts;
 	RlcMacUplink_t ulreq = {0};
 	struct gprs_rlc_ul_header_egprs_3 *egprs3  = NULL;
-	GprsCodingScheme cs;
 	Packet_Resource_Request_t *presreq = NULL;
 	MS_Radio_Access_capability_t *pmsradiocap = NULL;
 	Multislot_capability_t *pmultislotcap = NULL;
@@ -2429,7 +2410,6 @@ static gprs_rlcmac_ul_tbf *tbf_li_decoding(BTS *the_bts,
 	OSMO_ASSERT(ms->ta() == qta/4);
 	OSMO_ASSERT(ms->ul_tbf() == ul_tbf);
 
-	cs = MCS4;
 	egprs3 = (struct gprs_rlc_ul_header_egprs_3 *) data_msg;
 	egprs3->si = 0;
 	egprs3->r = 1;
@@ -2817,7 +2797,7 @@ static void egprs_spb_to_normal_validation(BTS *the_bts,
 	OSMO_ASSERT(bsn1 == 0);
 
 	dl_tbf->ms()->set_current_cs_dl
-		(static_cast < CodingScheme >
+		(static_cast < enum CodingScheme >
 			(CS4 + demanded_mcs));
 
 	fn = fn_add_blocks(fn, 1);
@@ -2849,7 +2829,7 @@ static void egprs_spb_to_normal_validation(BTS *the_bts,
 
 	/* Handle (MCS3, MCS3) -> MCS6 case */
 	dl_tbf->ms()->set_current_cs_dl
-		(static_cast < CodingScheme >
+		(static_cast < enum CodingScheme >
 			(CS4 + mcs));
 
 	NACK(dl_tbf, 0);
@@ -2898,7 +2878,7 @@ static void establish_and_use_egprs_dl_tbf_for_spb(BTS *the_bts,
 	NACK(dl_tbf, 0);
 
 	dl_tbf->ms()->set_current_cs_dl
-		(static_cast < CodingScheme >
+		(static_cast < enum CodingScheme >
 			(CS4 + demanded_mcs));
 
 	fn = fn_add_blocks(fn, 1);
@@ -2985,7 +2965,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 
 		/* Set the demanded MCS to demanded_mcs */
 		dl_tbf->ms()->set_current_cs_dl
-			(static_cast < CodingScheme >
+			(static_cast < enum CodingScheme >
 				(CS4 + demanded_mcs));
 
 		fn = fn_add_blocks(fn, 1);
@@ -3012,7 +2992,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(BTS *the_bts,
 		NACK(dl_tbf, 1);
 
 		dl_tbf->ms()->set_current_cs_dl
-			(static_cast < CodingScheme >
+			(static_cast < enum CodingScheme >
 				(CS4 + demanded_mcs));
 
 		fn = fn_add_blocks(fn, 1);

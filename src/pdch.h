@@ -25,9 +25,9 @@
 extern "C" {
 #include <osmocom/core/linuxlist.h>
 #include "gsm_rlcmac.h"
+#include "coding_scheme.h"
 }
 
-#include <gprs_coding_scheme.h>
 #include <bts.h>
 #endif
 
@@ -61,9 +61,9 @@ struct gprs_rlcmac_pdch {
 	int rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 		struct pcu_l1_meas *meas);
 	int rcv_block_gprs(uint8_t *data, uint8_t data_len, uint32_t fn,
-		struct pcu_l1_meas *meas, GprsCodingScheme cs);
+		struct pcu_l1_meas *meas, enum CodingScheme cs);
 	int rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t fn,
-		struct pcu_l1_meas *meas, GprsCodingScheme cs);
+		struct pcu_l1_meas *meas, enum CodingScheme cs);
 
 	gprs_rlcmac_bts *bts_data() const;
 	BTS *bts() const;
@@ -113,7 +113,7 @@ struct gprs_rlcmac_pdch {
 #ifdef __cplusplus
 private:
 	int rcv_control_block(const uint8_t *data, uint8_t data_len, uint32_t fn,
-			      struct pcu_l1_meas *meas, GprsCodingScheme cs);
+			      struct pcu_l1_meas *meas, enum CodingScheme cs);
 
 	void rcv_control_ack(Packet_Control_Acknowledgement_t *, uint32_t fn);
 	void rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *, uint32_t fn, struct pcu_l1_meas *meas);

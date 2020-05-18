@@ -111,7 +111,7 @@ protected:
 	int take_next_bsn(uint32_t fn, int previous_bsn,
 		bool *may_combine);
 	bool restart_bsn_cycle();
-	int create_new_bsn(const uint32_t fn, GprsCodingScheme cs);
+	int create_new_bsn(const uint32_t fn, enum CodingScheme cs);
 	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
 					int index, int index2 = -1);
 	int update_window(const uint8_t ssn, const uint8_t *rbb);
