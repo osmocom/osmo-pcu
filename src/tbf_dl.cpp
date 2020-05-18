@@ -581,7 +581,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, GprsCodingScheme cs)
 
 	/* now we still have untransmitted LLC data, so we fill mac block */
 	rlc_data = m_rlc.block(bsn);
-	data = rlc_data->prepare(block_data_len);
+	data = prepare(rlc_data, block_data_len);
 	rlc_data->cs_last = cs;
 	rlc_data->cs_current_trans = cs;
 

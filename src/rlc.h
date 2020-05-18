@@ -177,8 +177,6 @@ union split_block_status {
 };
 
 struct gprs_rlc_data {
-	uint8_t *prepare(size_t block_data_length);
-
 	/* block data including LI headers */
 	uint8_t block[RLC_MAX_LEN];
 	/* block data len including LI headers*/
@@ -210,6 +208,8 @@ struct gprs_rlc_data {
 	/* holds the status of the block w.r.t UL/DL split blocks*/
 	union split_block_status spb_status;
 };
+
+uint8_t *prepare(struct gprs_rlc_data *rlc, size_t block_data_length);
 
 void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,
 	GprsCodingScheme cs, bool with_padding, const unsigned int spb);

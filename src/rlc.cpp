@@ -32,16 +32,16 @@ extern "C" {
 }
 
 
-uint8_t *gprs_rlc_data::prepare(size_t block_data_len)
+uint8_t *prepare(struct gprs_rlc_data *rlc, size_t block_data_len)
 {
 	/* todo.. only set it once if it turns out to be a bottleneck */
-	memset(block, 0x0, sizeof(block));
-	memset(block, 0x2b, block_data_len);
+	memset(rlc->block, 0x0, sizeof(rlc->block));
+	memset(rlc->block, 0x2b, block_data_len);
 
 	/* Initial value of puncturing scheme */
-	next_ps = EGPRS_PS_1;
+	rlc->next_ps = EGPRS_PS_1;
 
-	return block;
+	return rlc->block;
 }
 
 void gprs_rlc_v_b::reset()
