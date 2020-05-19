@@ -434,6 +434,14 @@ void BTS::send_gsmtap(enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_n
 		      uint8_t ts_no, uint8_t channel, uint32_t fn,
 		      const uint8_t *data, unsigned int len)
 {
+	struct pcu_l1_meas meas;
+	send_gsmtap_meas(categ, uplink, trx_no, ts_no, channel, fn, data, len, &meas);
+}
+
+void BTS::send_gsmtap_meas(enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_no,
+		      uint8_t ts_no, uint8_t channel, uint32_t fn,
+		      const uint8_t *data, unsigned int len, struct pcu_l1_meas *meas)
+{
 	uint16_t arfcn;
 
 	/* check if category is activated at all */
@@ -444,7 +452,11 @@ void BTS::send_gsmtap(enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_n
 	if (uplink)
 		arfcn |= GSMTAP_ARFCN_F_UPLINK;
 
-	gsmtap_send(m_bts.gsmtap, arfcn, ts_no, channel, 0, fn, 0, 0, data, len);
+	/* GSMTAP needs the SNR here, but we only have C/I (meas->link_qual).
+	   Those are not the same, but there is no known way to convert them,
+	   let's pass C/I instead of nothing */
+	gsmtap_send(m_bts.gsmtap, arfcn, ts_no, channel, 0, fn,
+		    meas->rssi, meas->link_qual, data, len);
 }
 
 static inline bool tbf_check(gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t trx_no, uint8_t ts)
