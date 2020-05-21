@@ -178,7 +178,7 @@ int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts,
 int pcu_rx_rts_req_ptcch(uint8_t trx, uint8_t ts,
 	uint32_t fn, uint8_t block_nr);
 
-int pcu_rx_rach_ind_pdtch(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta);
+int pcu_rx_rach_ind_ptcch(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta);
 int pcu_rx_data_ind_pdtch(uint8_t trx, uint8_t ts, uint8_t *data,
 	uint8_t len, uint32_t fn, struct pcu_l1_meas *meas);
 

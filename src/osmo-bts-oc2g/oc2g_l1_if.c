@@ -253,7 +253,7 @@ static int handle_ph_ra_ind(struct oc2gl1_hdl *fl1h, GsmL1_PhRaInd_t *ra_ind)
 				  qta2ta(ra_ind->measParam.i16BurstTiming), true);
 		break;
 	case GsmL1_Sapi_Ptcch:
-		pcu_rx_rach_ind_pdtch(fl1h->trx_no, ra_ind->u8Tn, ra_ind->u32Fn,
+		pcu_rx_rach_ind_ptcch(fl1h->trx_no, ra_ind->u8Tn, ra_ind->u32Fn,
 				      ra_ind->measParam.i16BurstTiming);
 		break;
 	default:

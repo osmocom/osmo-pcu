@@ -430,7 +430,7 @@ static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 }
 
 /* C -> C++ adapter for direct DSP access code (e.g. osmo-bts-sysmo) */
-extern "C" int pcu_rx_rach_ind_pdtch(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta)
+extern "C" int pcu_rx_rach_ind_ptcch(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta)
 {
 	return BTS::main_bts()->rcv_ptcch_rach(trx_nr, ts_nr, fn, qta);
 }
