@@ -677,191 +677,165 @@ uint32_t BTS::rfn_to_fn(int32_t rfn)
 }
 
 /* 3GPP TS 44.060:
- *   Table 11.2.5.3: PACKET CHANNEL REQUEST
- *   Table 11.2.5a.3: EGPRS PACKET CHANNEL REQUEST
- * Both GPRS and EGPRS use same MultislotClass coding, but since use of PCCCH is
+ *   Table 11.2.5.2: PACKET CHANNEL REQUEST
+ *   Table 11.2.5a.2: EGPRS PACKET CHANNEL REQUEST
+ * Both GPRS and EGPRS use same MultislotClass coding, but since PRACH is
  * deprecated, no PACKET CHANNEL REQUEST exists, which means for GPRS we will
  * receive CCCH RACH which doesn't contain any mslot class. Hence in the end we
- * can only receive EGPRS mslot class through 11-bit EGPRS PACKET CHANNEL
- * REQUEST.
- */
-static inline uint8_t egprs_mslot_class_from_ra(uint16_t ra, bool is_11bit)
+ * can only receive EGPRS mslot class through 11-bit EGPRS PACKET CHANNEL REQUEST. */
+static int parse_egprs_pkt_ch_req(uint16_t ra11, struct chan_req_params *chan_req)
 {
 	/* EGPRS multislot class is only present in One Phase Access Request */
-	if (is_11bit && (ra >> 10) == 0x00) /* .0xx xxx. .... */
-		return ((ra & 0x3e0) >> 5) + 1;
-
-	/* set EGPRS multislot class to 0 for 8-bit RACH, since we don't know it yet */
-	return 0;
-}
-
-static inline uint16_t priority_from_ra(uint16_t ra, bool is_11bit)
-{
-	if (is_11bit)
-		return (ra & 0x18) >> 3;
+	if ((ra11 >> 10) == 0x00) /* .0xx xxx. .... */
+		chan_req->egprs_mslot_class = ((ra11 & 0x3e0) >> 5) + 1;
 
 	return 0;
 }
 
-static inline bool is_single_block(bool force_two_phase, uint16_t ra, enum ph_burst_type burst_type, bool is_11bit)
+/* NOTE: chan_req needs to be zero-initialized by the caller */
+static int parse_rach_ind(const struct rach_ind_params *rip,
+			  struct chan_req_params *chan_req)
 {
-	bool sb = false;
+	int rc;
 
-	if ((ra & 0xf8) == 0x70)
-		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block allocation\n");
-	else if (force_two_phase)
-		LOGP(DRLCMAC, LOGL_DEBUG,
-		     "MS requests single phase access, but we force two phase access [RACH is %s bit]\n",
-		     is_11bit ? "11" : "8");
-
-	switch(burst_type) {
-	case GSM_L1_BURST_TYPE_ACCESS_0:
-		if (is_11bit) {
-			LOGP(DRLCMAC, LOGL_ERROR, "Error: GPRS 11 bit RACH not supported\n");
-			return false;
-		}
-
-		if ((ra & 0xf8) == 0x70)
-			return true;
-
-		if (force_two_phase)
-			return true;
-		break;
-	case GSM_L1_BURST_TYPE_ACCESS_1: /* deliberate fall-through */
-	case GSM_L1_BURST_TYPE_ACCESS_2:
-		if (is_11bit) {
-			if (!(ra & (1 << 10))) {
-				if (force_two_phase)
-					return true;
-
-				return false;
-			}
-
-			return true;
-		}
-		LOGP(DRLCMAC, LOGL_ERROR, "Unexpected RACH burst type %u for 8-bit RACH\n", burst_type);
-		break;
+	switch (rip->burst_type) {
 	case GSM_L1_BURST_TYPE_NONE:
-		LOGP(DRLCMAC, LOGL_ERROR, "PCU has not received burst type from BTS\n");
+		LOGP(DRLCMAC, LOGL_ERROR, "RACH.ind contains no burst type, assuming TS0\n");
+		/* fall-through */
+	case GSM_L1_BURST_TYPE_ACCESS_0:
+		if (rip->is_11bit) { /* 11 bit Access Burst with TS0 => Packet Channel Request */
+			LOGP(DRLCMAC, LOGL_ERROR, "11 bit Packet Channel Request "
+			     "is not supported (PBCCH is deprecated)\n");
+			return -ENOTSUP;
+		}
+
+		/* 3GPP TS 44.018, table 9.1.8.1: 8 bit CHANNEL REQUEST.
+		 * Mask 01110xxx indicates single block packet access. */
+		chan_req->single_block = ((rip->ra & 0xf8) == 0x70);
+		break;
+	case GSM_L1_BURST_TYPE_ACCESS_1:
+	case GSM_L1_BURST_TYPE_ACCESS_2:
+		if (!rip->is_11bit) { /* TS1/TS2 => EGPRS Packet Channel Request (always 11 bit) */
+			LOGP(DRLCMAC, LOGL_ERROR, "11 bit Packet Channel Request "
+			     "is not supported (PBCCH is deprecated)\n");
+			return -ENOTSUP;
+		}
+
+		rc = parse_egprs_pkt_ch_req(rip->ra, chan_req);
+		if (rc)
+			return rc;
 		break;
 	default:
-		LOGP(DRLCMAC, LOGL_ERROR, "Unexpected RACH burst type %u for %s-bit RACH\n",
-		     burst_type, is_11bit ? "11" : "8");
+		LOGP(DRLCMAC, LOGL_ERROR, "RACH.ind contains unknown burst type 0x%02x "
+		     "(%u bit)\n", rip->burst_type, rip->is_11bit ? 11 : 8);
+		return -EINVAL;
 	}
 
-	return sb;
+	return 0;
 }
 
-int BTS::rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
-		enum ph_burst_type burst_type)
+int BTS::rcv_rach(const struct rach_ind_params *rip)
 {
+	struct chan_req_params chan_req = { 0 };
 	struct gprs_rlcmac_ul_tbf *tbf = NULL;
-	uint8_t trx_no, ts_no = 0;
-	uint8_t sb = 0;
+	uint8_t trx_no, ts_no;
 	uint32_t sb_fn = 0;
-	int rc = 0;
-	int plen;
 	uint8_t usf = 7;
-	uint8_t tsc = 0, ta = qta2ta(qta);
-	uint8_t egprs_ms_class = egprs_mslot_class_from_ra(ra, is_11bit);
-	bool failure = false;
-	GprsMs *ms;
+	uint8_t tsc = 0;
+	int plen, rc;
 
 	do_rate_ctr_inc(CTR_RACH_REQUESTS);
 
-	if (is_11bit)
+	if (rip->is_11bit)
 		do_rate_ctr_inc(CTR_11BIT_RACH_REQUESTS);
 
 	/* Determine full frame number */
-	Fn = rfn_to_fn(Fn);
+	uint32_t Fn = rfn_to_fn(rip->rfn);
+	uint8_t ta = qta2ta(rip->qta);
 
-	send_gsmtap(PCU_GSMTAP_C_UL_RACH, true, 0, ts_no, GSMTAP_CHANNEL_RACH,
-		    Fn, (uint8_t*)&ra, is_11bit ? 2 : 1);
+	send_gsmtap(PCU_GSMTAP_C_UL_RACH, true, rip->trx_nr, rip->ts_nr,
+		    GSMTAP_CHANNEL_RACH, Fn, (uint8_t *) &rip->ra,
+		    rip->is_11bit ? 2 : 1);
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF on RACH, "
-		"so we provide one: ra=0x%02x Fn=%u qta=%d is_11bit=%d:\n",
-		ra, Fn, qta, is_11bit);
+	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests Uplink resource on CCCH/RACH: "
+	     "ra=0x%02x (%d bit) Fn=%u qta=%d\n", rip->ra,
+	     rip->is_11bit ? 11 : 8, Fn, rip->qta);
 
-	sb = is_single_block(m_bts.force_two_phase, ra, burst_type, is_11bit);
+	/* Parse [EGPRS Packet] Channel Request from RACH.ind */
+	rc = parse_rach_ind(rip, &chan_req);
+	if (rc) /* Send RR Immediate Assignment Reject */
+		goto send_imm_ass_rej;
 
-	if (sb) {
+	if (chan_req.single_block)
+		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block allocation\n");
+	else if (m_bts.force_two_phase) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block allocation, "
+		     "but we force two phase access\n");
+		chan_req.single_block = true;
+	}
+
+	/* Should we allocate a single block or an Uplink TBF? */
+	if (chan_req.single_block) {
 		rc = sba()->alloc(&trx_no, &ts_no, &sb_fn, ta);
 		if (rc < 0) {
-			failure = true;
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource for "
-					"single block allocation."
-					"sending Immediate "
-					"Assignment Uplink (AGCH) reject\n");
-		} else {
-			tsc = m_bts.trx[trx_no].pdch[ts_no].tsc;
-
-			LOGP(DRLCMAC, LOGL_DEBUG, "RX: [PCU <- BTS] RACH "
-				" qbit-ta=%d ra=0x%02x, Fn=%d (%d,%d,%d),"
-				" SBFn=%d\n",
-				qta, ra,
-				Fn, (Fn / (26 * 51)) % 32, Fn % 51, Fn % 26,
-				sb_fn);
-			LOGP(DRLCMAC, LOGL_INFO, "TX: Immediate Assignment "
-				"Uplink (AGCH)\n");
+			     "single block allocation: rc=%d\n", rc);
+			/* Send RR Immediate Assignment Reject */
+			goto send_imm_ass_rej;
 		}
+
+		tsc = m_bts.trx[trx_no].pdch[ts_no].tsc;
+		LOGP(DRLCMAC, LOGL_DEBUG, "Allocated a single block at "
+		     "SBFn=%u TRX=%u TS=%u\n", sb_fn, trx_no, ts_no);
 	} else {
-		ms = ms_alloc(0, egprs_ms_class);
-		// Create new TBF
-		/* FIXME: Copy and paste with other routines.. */
+		GprsMs *ms = ms_alloc(0, chan_req.egprs_mslot_class);
 		tbf = tbf_alloc_ul_tbf(&m_bts, ms, -1, true);
-
 		if (!tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource sending "
-					"Immediate Assignment Uplink (AGCH) "
-					"reject\n");
+			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource for Uplink TBF\n");
+			/* Send RR Immediate Assignment Reject */
 			rc = -EBUSY;
-			failure = true;
-		} else {
-			tbf->set_ta(ta);
-			TBF_SET_STATE(tbf, GPRS_RLCMAC_FLOW);
-			TBF_ASS_TYPE_SET(tbf, GPRS_RLCMAC_FLAG_CCCH);
-			T_START(tbf, T3169, 3169, "RACH (new UL-TBF)", true);
-			LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] START\n");
-			LOGPTBF(tbf, LOGL_DEBUG, "RX: [PCU <- BTS] RACH "
-					"qbit-ta=%d ra=0x%02x, Fn=%d "
-					" (%d,%d,%d)\n",
-					qta, ra, Fn, (Fn / (26 * 51)) % 32,
-					Fn % 51, Fn % 26);
-			LOGPTBF(tbf, LOGL_INFO, "TX: START Immediate Assignment Uplink (AGCH)\n");
-			trx_no = tbf->trx->trx_no;
-			ts_no = tbf->first_ts;
-			usf = tbf->m_usf[ts_no];
-			tsc = tbf->tsc();
+			goto send_imm_ass_rej;
 		}
+
+		/* FIXME: Copy and paste with other routines.. */
+		tbf->set_ta(ta);
+		TBF_SET_STATE(tbf, GPRS_RLCMAC_FLOW);
+		TBF_ASS_TYPE_SET(tbf, GPRS_RLCMAC_FLAG_CCCH);
+		T_START(tbf, T3169, 3169, "RACH (new UL-TBF)", true);
+		trx_no = tbf->trx->trx_no;
+		ts_no = tbf->first_ts;
+		usf = tbf->m_usf[ts_no];
+		tsc = tbf->tsc();
 	}
-	bitvec *immediate_assignment = bitvec_alloc(22, tall_pcu_ctx) /* without plen */;
-	bitvec_unhex(immediate_assignment,
-		"2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 
+send_imm_ass_rej:
+	/* Allocate a bit-vector for RR Immediate Assignment [Reject] */
+	struct bitvec *bv = bitvec_alloc(22, tall_pcu_ctx); /* without plen */
+	bitvec_unhex(bv, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
 
-	if (failure) {
+	if (rc != 0) {
+		LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment Reject on AGCH\n");
 		plen = Encoding::write_immediate_assignment_reject(
-			immediate_assignment, ra, Fn,
-			burst_type);
+			bv, rip->ra, Fn, rip->burst_type);
 		do_rate_ctr_inc(CTR_IMMEDIATE_ASSIGN_REJ);
-	}
-	else {
-		LOGP(DRLCMAC, LOGL_DEBUG,
-			" - TRX=%d (%d) TS=%d TA=%d TSC=%d TFI=%d USF=%d\n",
-			trx_no, m_bts.trx[trx_no].arfcn, ts_no, ta, tsc,
-			tbf ? tbf->tfi() : -1, usf);
-		// N. B: if tbf == NULL then SBA is used for Imm. Ass. below
-		plen = Encoding::write_immediate_assignment(tbf, immediate_assignment, false, ra, Fn, ta,
-							    m_bts.trx[trx_no].arfcn, ts_no, tsc, usf, false, sb_fn,
-							    m_bts.alpha, m_bts.gamma, -1, burst_type);
-	}
-
-	if (plen >= 0) {
+	} else {
+		LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment on AGCH: "
+		     "TRX=%u (ARFCN %u) TS=%u TA=%u TSC=%u TFI=%d USF=%d\n",
+		     trx_no, m_bts.trx[trx_no].arfcn & ~ARFCN_FLAG_MASK,
+		     ts_no, ta, tsc, tbf ? tbf->tfi() : -1, usf);
+		plen = Encoding::write_immediate_assignment(
+			tbf, bv, false, rip->ra, Fn, ta, m_bts.trx[trx_no].arfcn,
+			ts_no, tsc, usf, false, sb_fn, m_bts.alpha, m_bts.gamma, -1,
+			rip->burst_type);
 		do_rate_ctr_inc(CTR_IMMEDIATE_ASSIGN_UL_TBF);
-		pcu_l1if_tx_agch(immediate_assignment, plen);
 	}
 
-	bitvec_free(immediate_assignment);
+	if (plen >= 0)
+		pcu_l1if_tx_agch(bv, plen);
+	else
+		rc = plen;
+
+	bitvec_free(bv);
 
 	return rc;
 }
@@ -874,25 +848,25 @@ static uint32_t ptcch_slot_map[PTCCH_TAI_NUM] = {
 	324, 350, 376, 402,
 };
 
-int BTS::rcv_ptcch_rach(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta)
+int BTS::rcv_ptcch_rach(const struct rach_ind_params *rip)
 {
+	uint32_t fn416 = rfn_to_fn(rip->rfn) % 416;
 	struct gprs_rlcmac_bts *bts = bts_data();
 	struct gprs_rlcmac_pdch *pdch;
-	uint32_t fn416 = fn % 416;
 	uint8_t ss;
 
 	/* Prevent buffer overflow */
-	if (trx_nr >= ARRAY_SIZE(bts->trx) || ts_nr >= 8) {
-		LOGP(DRLCMAC, LOGL_ERROR, "Malformed RACH.ind message "
-		     "(TRX=%u TS=%u FN=%u)\n", trx_nr, ts_nr, fn);
+	if (rip->trx_nr >= ARRAY_SIZE(bts->trx) || rip->ts_nr >= 8) {
+		LOGP(DRLCMAC, LOGL_ERROR, "(TRX=%u TS=%u RFN=%u) Rx malformed "
+		     "RACH.ind (PTCCH/U)\n", rip->trx_nr, rip->ts_nr, rip->rfn);
 		return -EINVAL;
 	}
 
 	/* Make sure PDCH time-slot is enabled */
-	pdch = &bts->trx[trx_nr].pdch[ts_nr];
+	pdch = &bts->trx[rip->trx_nr].pdch[rip->ts_nr];
 	if (!pdch->m_is_enabled) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "Rx PTCCH RACH.ind for inactive PDCH "
-		     "(TRX=%u TS=%u FN=%u)\n", trx_nr, ts_nr, fn);
+		LOGP(DRLCMAC, LOGL_NOTICE, "(TRX=%u TS=%u RFN=%u) Rx RACH.ind (PTCCH/U) "
+		     "for inactive PDCH\n", rip->trx_nr, rip->ts_nr, rip->rfn);
 		return -EAGAIN;
 	}
 
@@ -901,14 +875,15 @@ int BTS::rcv_ptcch_rach(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta)
 		if (ptcch_slot_map[ss] == fn416)
 			break;
 	if (ss == PTCCH_TAI_NUM) {
-		LOGP(DRLCMAC, LOGL_ERROR, "Failed to map PTCCH/U sub-slot for fn=%u\n", fn);
+		LOGP(DRLCMAC, LOGL_ERROR, "(TRX=%u TS=%u RFN=%u) Failed to map "
+		     "PTCCH/U sub-slot\n", rip->trx_nr, rip->ts_nr, rip->rfn);
 		return -ENODEV;
 	}
 
 	/* Apply the new Timing Advance value */
 	LOGP(DRLCMAC, LOGL_INFO, "Continuous Timing Advance update "
-	     "for TAI %u, new TA is %u\n", ss, qta2ta(qta));
-	pdch->update_ta(ss, qta2ta(qta));
+	     "for TAI %u, new TA is %u\n", ss, qta2ta(rip->qta));
+	pdch->update_ta(ss, qta2ta(rip->qta));
 
 	return 0;
 }

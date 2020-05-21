@@ -432,10 +432,21 @@ static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 /* C -> C++ adapter for direct DSP access code (e.g. osmo-bts-sysmo) */
 extern "C" int pcu_rx_rach_ind_ptcch(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta)
 {
-	return BTS::main_bts()->rcv_ptcch_rach(trx_nr, ts_nr, fn, qta);
+	struct rach_ind_params rip = {
+		/* The content of RA is not of interest on PTCCH/U */
+		.burst_type = GSM_L1_BURST_TYPE_ACCESS_0,
+		.is_11bit = false,
+		.ra = 0x00,
+		.trx_nr = trx_nr,
+		.ts_nr = ts_nr,
+		.rfn = fn,
+		.qta = qta,
+	};
+
+	return BTS::main_bts()->rcv_ptcch_rach(&rip);
 }
 
-static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
+static int pcu_rx_rach_ind(const struct gsm_pcu_if_rach_ind *rach_ind)
 {
 	int rc = 0;
 	int current_fn = get_current_fn();
@@ -444,17 +455,22 @@ static int pcu_rx_rach_ind(struct gsm_pcu_if_rach_ind *rach_ind)
 		"qta=%d, ra=0x%02x, fn=%u, cur_fn=%d, is_11bit=%d\n", rach_ind->sapi, rach_ind->qta,
 		rach_ind->ra, rach_ind->fn, current_fn, rach_ind->is_11bit);
 
+	struct rach_ind_params rip = {
+		.burst_type = (enum ph_burst_type) rach_ind->burst_type,
+		.is_11bit = rach_ind->is_11bit > 0,
+		.ra = rach_ind->ra,
+		.trx_nr = rach_ind->trx_nr,
+		.ts_nr = rach_ind->ts_nr,
+		.rfn = rach_ind->fn,
+		.qta = rach_ind->qta,
+	};
+
 	switch (rach_ind->sapi) {
 	case PCU_IF_SAPI_RACH:
-		rc = BTS::main_bts()->rcv_rach(
-			rach_ind->ra, rach_ind->fn,
-			rach_ind->qta, rach_ind->is_11bit,
-			(ph_burst_type)rach_ind->burst_type);
+		rc = BTS::main_bts()->rcv_rach(&rip);
 		break;
 	case PCU_IF_SAPI_PTCCH:
-		rc = BTS::main_bts()->rcv_ptcch_rach(
-			rach_ind->trx_nr, rach_ind->ts_nr,
-			rach_ind->fn, rach_ind->qta);
+		rc = BTS::main_bts()->rcv_ptcch_rach(&rip);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU rach request with "

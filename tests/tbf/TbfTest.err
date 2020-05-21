@@ -1443,7 +1443,7 @@ MSG = 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03
 === start test_tbf_single_phase ===
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
-MS requests UL TBF on RACH, so we provide one: ra=0x03 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -1464,10 +1464,7 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x03, Fn=2654167  (17,25,9)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=0
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
@@ -1515,11 +1512,10 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 4 bytes
 === end test_tbf_single_phase ===
 === start test_tbf_two_phase ===
-MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
-RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
-TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Allocated a single block at SBFn=2654270 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -1597,11 +1593,10 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PA
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 4 bytes
 === end test_tbf_two_phase ===
 === start test_tbf_ra_update_rach ===
-MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
-RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
-TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Allocated a single block at SBFn=2654270 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -1723,11 +1718,10 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) need_padding 0 spb_status 0 spb
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 0, CS-4): 07 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 00 
-MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654232 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654232 qta=31
 MS requests single block allocation
-RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654232 (17,39,22), SBFn=2654335
-TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Allocated a single block at SBFn=2654335 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Searching for first unallocated TFI: TRX=0
  Found TFI=1.
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654292, TS=7 (curr FN 2654335)
@@ -1794,11 +1788,10 @@ Modifying MS object, TLLI: 0xf5667788 confirmed
 New MS: TLLI = 0xf5667788, TA = 7, IMSI = 0011223344, LLC = 1
 === end test_tbf_ra_update_rach ===
 === start test_tbf_dl_flow_and_rach_two_phase ===
-MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
-RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
-TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Allocated a single block at SBFn=2654270 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -1884,11 +1877,10 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) stopping timer T3169 [freeing TBF]
 PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 0 TBFs, USFs = 00, TFIs = 00000000.
 Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 ********** UL-TBF ends here **********
-MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654224 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654224 qta=31
 MS requests single block allocation
-RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654224 (17,31,14), SBFn=2654327
-TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Allocated a single block at SBFn=2654327 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -1966,11 +1958,10 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 === end test_tbf_dl_flow_and_rach_two_phase ===
 === start test_tbf_dl_flow_and_rach_single_phase ===
-MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
-RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
-TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Allocated a single block at SBFn=2654270 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -2058,7 +2049,7 @@ Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344
 ********** UL-TBF ends here **********
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
-MS requests UL TBF on RACH, so we provide one: ra=0x03 Fn=2654275 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654275 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -2079,10 +2070,7 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x03, Fn=2654275  (17,31,13)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=0
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
@@ -2117,11 +2105,10 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) changes UL ACK state from GPRS_
 New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 === end test_tbf_dl_flow_and_rach_single_phase ===
 === start test_tbf_dl_reuse ===
-MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
-RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
-TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Allocated a single block at SBFn=2654270 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -3140,11 +3127,10 @@ Destroying MS object, TLLI = 0x00000000
 ********** DL-TBF ends here **********
 === end test_tbf_ws ===
 === start test_tbf_egprs_two_phase ===
-MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
-RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
-TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Allocated a single block at SBFn=2654270 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -3232,11 +3218,10 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer T0 [assignme
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 === end test_tbf_egprs_two_phase ===
 === start test_tbf_egprs_two_phase_spb ===
-MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
-RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
-TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Allocated a single block at SBFn=2654270 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -5871,11 +5856,10 @@ Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 === end test_tbf_egprs_spb_dl ===
 === start test_tbf_puan_urbb_len ===
-MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
-RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
-TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Allocated a single block at SBFn=2654270 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -6036,11 +6020,10 @@ Destroying MS object, TLLI = 0x00000000
 ********** DL-TBF ends here **********
 === end test_tbf_update_ws ===
 === start test_tbf_li_decoding ===
-MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
-RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
-TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Allocated a single block at SBFn=2654270 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -6182,7 +6165,7 @@ Destroying MS object, TLLI = 0xffeeddcc
 ********** DL-TBF ends here **********
 === end test_tbf_epdan_out_of_rx_window ===
 === start test_immediate_assign_rej_multi_block ===
-MS requests UL TBF on RACH, so we provide one: ra=0x78 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x78 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -6203,11 +6186,8 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x78, Fn=2654167  (17,25,9)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=0
-MS requests UL TBF on RACH, so we provide one: ra=0x79 Fn=2654167 qta=31 is_11bit=0:
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
+MS requests Uplink resource on CCCH/RACH: ra=0x79 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -6228,11 +6208,8 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x79, Fn=2654167  (17,25,9)
-TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=1 USF=1
-MS requests UL TBF on RACH, so we provide one: ra=0x7a Fn=2654167 qta=31 is_11bit=0:
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=1 USF=1
+MS requests Uplink resource on CCCH/RACH: ra=0x7a (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -6253,11 +6230,8 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x7a, Fn=2654167  (17,25,9)
-TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=2 USF=2
-MS requests UL TBF on RACH, so we provide one: ra=0x7b Fn=2654167 qta=31 is_11bit=0:
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=2 USF=2
+MS requests Uplink resource on CCCH/RACH: ra=0x7b (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -6278,11 +6252,8 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x7b, Fn=2654167  (17,25,9)
-TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=3 USF=3
-MS requests UL TBF on RACH, so we provide one: ra=0x7c Fn=2654167 qta=31 is_11bit=0:
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=3 USF=3
+MS requests Uplink resource on CCCH/RACH: ra=0x7c (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -6303,11 +6274,8 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x7c, Fn=2654167  (17,25,9)
-TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=4 USF=4
-MS requests UL TBF on RACH, so we provide one: ra=0x7d Fn=2654167 qta=31 is_11bit=0:
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=4 USF=4
+MS requests Uplink resource on CCCH/RACH: ra=0x7d (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -6328,11 +6296,8 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x7d, Fn=2654167  (17,25,9)
-TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=5 USF=5
-MS requests UL TBF on RACH, so we provide one: ra=0x7e Fn=2654167 qta=31 is_11bit=0:
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=5 USF=5
+MS requests Uplink resource on CCCH/RACH: ra=0x7e (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -6353,11 +6318,8 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x7e, Fn=2654167  (17,25,9)
-TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=6 USF=6
-MS requests UL TBF on RACH, so we provide one: ra=0x7f Fn=2654167 qta=31 is_11bit=0:
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=6 USF=6
+MS requests Uplink resource on CCCH/RACH: ra=0x7f (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -6371,21 +6333,22 @@ Allocating UL TBF: MS_CLASS=0/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because no USF available
 [UL] algo A <single> (suggested TRX: -1): failed to allocate a TS, no USF available
-No PDCH resource sending Immediate Assignment Uplink (AGCH) reject
+No PDCH resource for Uplink TBF
+Tx Immediate Assignment Reject on AGCH
 === end test_immediate_assign_rej_multi_block ===
 Destroying MS object, TLLI = 0x00000000
 === start test_immediate_assign_rej_single_block ===
-MS requests UL TBF on RACH, so we provide one: ra=0x70 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x70 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
 No PDCH available.
-No PDCH resource for single block allocation.sending Immediate Assignment Uplink (AGCH) reject
+No PDCH resource for single block allocation: rc=-22
+Tx Immediate Assignment Reject on AGCH
 === end test_immediate_assign_rej_single_block ===
 === start test_tbf_egprs_two_phase_puan ===
-MS requests UL TBF on RACH, so we provide one: ra=0x73 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
-RX: [PCU <- BTS] RACH  qbit-ta=31 ra=0x73, Fn=2654167 (17,25,9), SBFn=2654270
-TX: Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Allocated a single block at SBFn=2654270 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -7815,7 +7778,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 100 bytes
 packet reject: 40 84 7f f7 6e e6 41 4b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 === end test_packet_access_rej_epdan ===
 === start test_packet_access_rej_prr ===
-MS requests UL TBF on RACH, so we provide one: ra=0x78 Fn=2654167 qta=31 is_11bit=0:
+MS requests Uplink resource on CCCH/RACH: ra=0x78 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -7836,11 +7799,8 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x78, Fn=2654167  (17,25,9)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=0 USF=0
-MS requests UL TBF on RACH, so we provide one: ra=0x79 Fn=2654167 qta=31 is_11bit=0:
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
+MS requests Uplink resource on CCCH/RACH: ra=0x79 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -7861,11 +7821,8 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x79, Fn=2654167  (17,25,9)
-TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=1 USF=1
-MS requests UL TBF on RACH, so we provide one: ra=0x7a Fn=2654167 qta=31 is_11bit=0:
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=1 USF=1
+MS requests Uplink resource on CCCH/RACH: ra=0x7a (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -7886,11 +7843,8 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x7a, Fn=2654167  (17,25,9)
-TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=2 USF=2
-MS requests UL TBF on RACH, so we provide one: ra=0x7b Fn=2654167 qta=31 is_11bit=0:
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=2 USF=2
+MS requests Uplink resource on CCCH/RACH: ra=0x7b (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -7911,11 +7865,8 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x7b, Fn=2654167  (17,25,9)
-TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=3 USF=3
-MS requests UL TBF on RACH, so we provide one: ra=0x7c Fn=2654167 qta=31 is_11bit=0:
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=3 USF=3
+MS requests Uplink resource on CCCH/RACH: ra=0x7c (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -7936,11 +7887,8 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x7c, Fn=2654167  (17,25,9)
-TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=4 USF=4
-MS requests UL TBF on RACH, so we provide one: ra=0x7d Fn=2654167 qta=31 is_11bit=0:
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=4 USF=4
+MS requests Uplink resource on CCCH/RACH: ra=0x7d (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -7961,11 +7909,8 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x7d, Fn=2654167  (17,25,9)
-TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=5 USF=5
-MS requests UL TBF on RACH, so we provide one: ra=0x7e Fn=2654167 qta=31 is_11bit=0:
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=5 USF=5
+MS requests Uplink resource on CCCH/RACH: ra=0x7e (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
@@ -7986,10 +7931,7 @@ Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) [UPLINK] START
-TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) RX: [PCU <- BTS] RACH qbit-ta=31 ra=0x7e, Fn=2654167  (17,25,9)
-TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) TX: START Immediate Assignment Uplink (AGCH)
- - TRX=0 (0) TS=7 TA=7 TSC=0 TFI=6 USF=6
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=6 USF=6
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000

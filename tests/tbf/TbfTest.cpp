@@ -54,6 +54,21 @@ bool spoof_mnc_3_digits = false;
 /* Measurements shared by all unit tests */
 static struct pcu_l1_meas meas;
 
+static int bts_handle_rach(BTS *bts, uint16_t ra, uint32_t Fn, int16_t qta)
+{
+	struct rach_ind_params rip = {
+		.burst_type = GSM_L1_BURST_TYPE_ACCESS_0,
+		.is_11bit = false,
+		.ra = ra,
+		.trx_nr = 0,
+		.ts_nr = 0,
+		.rfn = Fn,
+		.qta = qta,
+	};
+
+	return bts->rcv_rach(&rip);
+}
+
 static void check_tbf(gprs_rlcmac_tbf *tbf)
 {
 	OSMO_ASSERT(tbf);
@@ -581,7 +596,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_single_phase(BTS *the_bts,
 
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 
-	the_bts->rcv_rach(0x03, *fn, qta, 0, GSM_L1_BURST_TYPE_ACCESS_0);
+	bts_handle_rach(the_bts, 0x03, *fn, qta);
 
 	ul_tbf = the_bts->ul_tbf_by_tfi(tfi, trx_no, ts_no);
 	OSMO_ASSERT(ul_tbf != NULL);
@@ -667,7 +682,7 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(BTS *the_bts,
 	 * simulate RACH, this sends an Immediate
 	 * Assignment Uplink on the AGCH
 	 */
-	the_bts->rcv_rach(0x73, rach_fn, qta, 0, GSM_L1_BURST_TYPE_ACCESS_0);
+	bts_handle_rach(the_bts, 0x73, rach_fn, qta);
 
 	/* get next free TFI */
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
@@ -814,7 +829,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_spb(BTS *the_bts,
 	 * simulate RACH, this sends an Immediate
 	 * Assignment Uplink on the AGCH
 	 */
-	the_bts->rcv_rach(0x73, rach_fn, qta, 0, GSM_L1_BURST_TYPE_ACCESS_0);
+	bts_handle_rach(the_bts, 0x73, rach_fn, qta);
 
 	/* get next free TFI */
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
@@ -1249,7 +1264,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf(BTS *the_bts,
 	 * simulate RACH, this sends an Immediate
 	 * Assignment Uplink on the AGCH
 	 */
-	the_bts->rcv_rach(0x73, rach_fn, qta, 0, GSM_L1_BURST_TYPE_ACCESS_0);
+	bts_handle_rach(the_bts, 0x73, rach_fn, qta);
 
 	/* get next free TFI */
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
@@ -1562,7 +1577,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase(BTS *the_bts,
 	request_dl_rlc_block(bts, trx_no, ts_no, fn);
 
 	/* simulate RACH, sends an Immediate Assignment Uplink on the AGCH */
-	the_bts->rcv_rach(0x73, rach_fn, qta, 0, GSM_L1_BURST_TYPE_ACCESS_0);
+	bts_handle_rach(the_bts, 0x73, rach_fn, qta);
 
 	/* get next free TFI */
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
@@ -1777,8 +1792,7 @@ static void test_immediate_assign_rej_single_block()
 	 * simulate RACH, sends an Immediate Assignment
 	 * Uplink reject on the AGCH
 	 */
-	rc = the_bts.rcv_rach(0x70, rach_fn, qta, 0,
-				GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = bts_handle_rach(&the_bts, 0x70, rach_fn, qta);
 
 	OSMO_ASSERT(rc == -EINVAL);
 
@@ -1807,22 +1821,14 @@ static void test_immediate_assign_rej_multi_block()
 	 * simulate RACH, sends an Immediate Assignment Uplink
 	 * reject on the AGCH
 	 */
-	rc = the_bts.rcv_rach(0x78, rach_fn, qta, 0,
-				GSM_L1_BURST_TYPE_ACCESS_0);
-	rc = the_bts.rcv_rach(0x79, rach_fn, qta, 0,
-				GSM_L1_BURST_TYPE_ACCESS_0);
-	rc = the_bts.rcv_rach(0x7a, rach_fn, qta, 0,
-				GSM_L1_BURST_TYPE_ACCESS_0);
-	rc = the_bts.rcv_rach(0x7b, rach_fn, qta, 0,
-				GSM_L1_BURST_TYPE_ACCESS_0);
-	rc = the_bts.rcv_rach(0x7c, rach_fn, qta, 0,
-				GSM_L1_BURST_TYPE_ACCESS_0);
-	rc = the_bts.rcv_rach(0x7d, rach_fn, qta, 0,
-				GSM_L1_BURST_TYPE_ACCESS_0);
-	rc = the_bts.rcv_rach(0x7e, rach_fn, qta, 0,
-				GSM_L1_BURST_TYPE_ACCESS_0);
-	rc = the_bts.rcv_rach(0x7f, rach_fn, qta, 0,
-				GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = bts_handle_rach(&the_bts, 0x78, rach_fn, qta);
+	rc = bts_handle_rach(&the_bts, 0x79, rach_fn, qta);
+	rc = bts_handle_rach(&the_bts, 0x7a, rach_fn, qta);
+	rc = bts_handle_rach(&the_bts, 0x7b, rach_fn, qta);
+	rc = bts_handle_rach(&the_bts, 0x7c, rach_fn, qta);
+	rc = bts_handle_rach(&the_bts, 0x7d, rach_fn, qta);
+	rc = bts_handle_rach(&the_bts, 0x7e, rach_fn, qta);
+	rc = bts_handle_rach(&the_bts, 0x7f, rach_fn, qta);
 
 	OSMO_ASSERT(rc == -EBUSY);
 
@@ -2359,7 +2365,7 @@ static gprs_rlcmac_ul_tbf *tbf_li_decoding(BTS *the_bts,
 	 * simulate RACH, this sends an Immediate
 	 * Assignment Uplink on the AGCH
 	 */
-	the_bts->rcv_rach(0x73, rach_fn, qta, 0, GSM_L1_BURST_TYPE_ACCESS_0);
+	bts_handle_rach(the_bts, 0x73, rach_fn, qta);
 
 	/* get next free TFI */
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
@@ -3174,20 +3180,13 @@ static void test_packet_access_rej_prr()
 	/*
 	 * Trigger rach till resources(USF) exhaust
 	 */
-	rc = the_bts.rcv_rach(0x78, rach_fn, qta, 0,
-			GSM_L1_BURST_TYPE_ACCESS_0);
-	rc = the_bts.rcv_rach(0x79, rach_fn, qta, 0,
-			GSM_L1_BURST_TYPE_ACCESS_0);
-	rc = the_bts.rcv_rach(0x7a, rach_fn, qta, 0,
-			GSM_L1_BURST_TYPE_ACCESS_0);
-	rc = the_bts.rcv_rach(0x7b, rach_fn, qta, 0,
-			GSM_L1_BURST_TYPE_ACCESS_0);
-	rc = the_bts.rcv_rach(0x7c, rach_fn, qta, 0,
-			GSM_L1_BURST_TYPE_ACCESS_0);
-	rc = the_bts.rcv_rach(0x7d, rach_fn, qta, 0,
-			GSM_L1_BURST_TYPE_ACCESS_0);
-	rc = the_bts.rcv_rach(0x7e, rach_fn, qta, 0,
-			GSM_L1_BURST_TYPE_ACCESS_0);
+	rc = bts_handle_rach(&the_bts, 0x78, rach_fn, qta);
+	rc = bts_handle_rach(&the_bts, 0x79, rach_fn, qta);
+	rc = bts_handle_rach(&the_bts, 0x7a, rach_fn, qta);
+	rc = bts_handle_rach(&the_bts, 0x7b, rach_fn, qta);
+	rc = bts_handle_rach(&the_bts, 0x7c, rach_fn, qta);
+	rc = bts_handle_rach(&the_bts, 0x7d, rach_fn, qta);
+	rc = bts_handle_rach(&the_bts, 0x7e, rach_fn, qta);
 
 	/* fake a resource request */
 	ulreq.u.MESSAGE_TYPE = MT_PACKET_RESOURCE_REQUEST;

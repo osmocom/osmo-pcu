@@ -267,6 +267,24 @@ enum {
 	STAT_MS_PRESENT,
 };
 
+/* RACH.ind parameters (to be parsed) */
+struct rach_ind_params {
+	enum ph_burst_type burst_type;
+	bool is_11bit;
+	uint16_t ra;
+	uint8_t trx_nr;
+	uint8_t ts_nr;
+	uint32_t rfn;
+	int16_t qta;
+};
+
+/* [EGPRS Packet] Channel Request parameters (parsed) */
+struct chan_req_params {
+	unsigned int egprs_mslot_class;
+	unsigned int priority;
+	bool single_block;
+};
+
 #ifdef __cplusplus
 /**
  * I represent a GSM BTS. I have one or more TRX, I know the current
@@ -302,9 +320,8 @@ public:
 	int rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn);
 
 	uint32_t rfn_to_fn(int32_t rfn);
-	int rcv_rach(uint16_t ra, uint32_t Fn, int16_t qta, bool is_11bit,
-		enum ph_burst_type burst_type);
-	int rcv_ptcch_rach(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta);
+	int rcv_rach(const struct rach_ind_params *rip);
+	int rcv_ptcch_rach(const struct rach_ind_params *rip);
 
 	void snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup);
 
