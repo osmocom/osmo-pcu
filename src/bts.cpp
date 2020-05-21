@@ -685,9 +685,57 @@ uint32_t BTS::rfn_to_fn(int32_t rfn)
  * can only receive EGPRS mslot class through 11-bit EGPRS PACKET CHANNEL REQUEST. */
 static int parse_egprs_pkt_ch_req(uint16_t ra11, struct chan_req_params *chan_req)
 {
-	/* EGPRS multislot class is only present in One Phase Access Request */
-	if ((ra11 >> 10) == 0x00) /* .0xx xxx. .... */
-		chan_req->egprs_mslot_class = ((ra11 & 0x3e0) >> 5) + 1;
+	EGPRS_PacketChannelRequest_t req;
+	int rc;
+
+	rc = decode_egprs_pkt_ch_req(ra11, &req);
+	if (rc) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "Failed to decode "
+		     "EGPRS Packet Channel Request: rc=%d\n", rc);
+		return rc;
+	}
+
+	LOGP(DRLCMAC, LOGL_INFO, "Rx EGPRS Packet Channel Request: %s\n",
+	     get_value_string(egprs_pkt_ch_req_type_names, req.Type));
+
+	switch (req.Type) {
+	case EGPRS_PKT_CHAN_REQ_ONE_PHASE:
+		chan_req->egprs_mslot_class = req.Content.MultislotClass + 1;
+		chan_req->priority = req.Content.Priority + 1;
+		break;
+	case EGPRS_PKT_CHAN_REQ_SHORT:
+		chan_req->priority = req.Content.Priority + 1;
+		if (req.Content.NumberOfBlocks == 0)
+			chan_req->single_block = true;
+		break;
+	case EGPRS_PKT_CHAN_REQ_ONE_PHASE_RED_LATENCY:
+		chan_req->priority = req.Content.Priority + 1;
+		break;
+	/* Two phase access => single block is needed */
+	case EGPRS_PKT_CHAN_REQ_TWO_PHASE:
+	case EGPRS_PKT_CHAN_REQ_TWO_PHASE_IPA:
+		chan_req->priority = req.Content.Priority + 1;
+		chan_req->single_block = true;
+		break;
+	/* Signalling => single block is needed */
+	case EGPRS_PKT_CHAN_REQ_SIGNALLING:
+	case EGPRS_PKT_CHAN_REQ_SIGNALLING_IPA:
+		chan_req->single_block = true;
+		break;
+
+	/* Neither unacknowledged RLC mode, nor emergency calls are supported */
+	case EGPRS_PKT_CHAN_REQ_ONE_PHASE_UNACK:
+	case EGPRS_PKT_CHAN_REQ_EMERGENCY_CALL:
+	case EGPRS_PKT_CHAN_REQ_DEDICATED_CHANNEL:
+		LOGP(DRLCMAC, LOGL_NOTICE, "%s is not supported, rejecting\n",
+		     get_value_string(egprs_pkt_ch_req_type_names, req.Type));
+		return -ENOTSUP;
+
+	default:
+		LOGP(DRLCMAC, LOGL_ERROR, "Unknown EGPRS Packet Channel Request "
+		     "type=0x%02x, probably a bug in CSN.1 codec\n", req.Type);
+		return -EINVAL;
+	}
 
 	return 0;
 }
@@ -773,6 +821,11 @@ int BTS::rcv_rach(const struct rach_ind_params *rip)
 		     "but we force two phase access\n");
 		chan_req.single_block = true;
 	}
+
+	/* TODO: handle Radio Priority (see 3GPP TS 44.060, table 11.2.5a.5) */
+	if (chan_req.priority > 0)
+		LOGP(DRLCMAC, LOGL_NOTICE, "EGPRS Packet Channel Request indicates "
+		     "Radio Priority %u, however we ignore it\n", chan_req.priority);
 
 	/* Should we allocate a single block or an Uplink TBF? */
 	if (chan_req.single_block) {
