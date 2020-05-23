@@ -495,6 +495,8 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
         /* Make sure that the list of choice items is not empty */
         if (!count)
           return ProcessError(readIndex, "csnStreamDecoder", CSN_ERROR_IN_SCRIPT, pDescr);
+        else if (count > 255) /* We can handle up to 256 (UCHAR_MAX) selectors */
+          return ProcessError(readIndex, "csnStreamDecoder", CSN_ERROR_IN_SCRIPT, pDescr);
 
         while (count > 0)
         {

@@ -490,7 +490,8 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
  * is the part of the message.  In the CSN_CHOICE case, this rule does not
  * apply. There is free but predefined mapping of the element of the union and
  * the value which addresses this element.
- * The value of the address is called a selector.
+ * The value of the address is called a selector. Up to 256 (UCHAR_MAX) unique
+ * selectors can be handled, longer choice list would cause CSN_ERROR_IN_SCRIPT.
  * After unpacking, this value is then converted to the sequential number of the
  * element in the union and stored in the UnionType variable.
  *      Par1: C structure name
