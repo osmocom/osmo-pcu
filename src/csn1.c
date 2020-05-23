@@ -1803,7 +1803,6 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
       case CSN_CHOICE:
       {
         gint16 count = pDescr->i;
-        guint8 i     = 0;
         const CSN_ChoiceElement_t* pChoice = (const CSN_ChoiceElement_t*) pDescr->descr.ptr;
 
         /* Make sure that the list of choice items is not empty */
@@ -1812,9 +1811,12 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
         else if (count > 255) /* We can handle up to 256 (UCHAR_MAX) selectors */
           return ProcessError(writeIndex, "csnStreamEncoder", CSN_ERROR_IN_SCRIPT, pDescr);
 
-        pui8          = pui8DATA(data, pDescr->offset);
-        i = *pui8;
-        pChoice += i;
+        /* Make sure that choice index is not out of range */
+        pui8 = pui8DATA(data, pDescr->offset);
+        if (*pui8 >= count)
+          return ProcessError(writeIndex, "csnStreamEncoder", CSN_ERROR_INVALID_UNION_INDEX, pDescr);
+
+        pChoice += *pui8;
         guint8 no_of_bits = pChoice->bits;
         guint8 value = pChoice->value;
         LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pChoice->descr.sz , (unsigned)value);
