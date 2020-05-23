@@ -197,7 +197,8 @@ static int write_ia_rest_downlink(const gprs_rlcmac_dl_tbf *tbf, bitvec * dest, 
 	CHECK(rc);
 
 	/* RLC acknowledged mode */
-	SET_0(dest); /* RLC_MODE */
+	rc = bitvec_set_bit(dest, (bit_value) RLC_MODE_ACKNOWLEDGED);
+	CHECK(rc);
 
 	rc = write_alpha_gamma(dest, alpha, gamma);
 	CHECK(rc);
@@ -668,7 +669,7 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 	}
 
 	block->u.Packet_Downlink_Assignment.MAC_MODE            = 0x0;          // Dynamic Allocation
-	block->u.Packet_Downlink_Assignment.RLC_MODE            = 0x0;          // RLC acknowledged mode
+	block->u.Packet_Downlink_Assignment.RLC_MODE            = RLC_MODE_ACKNOWLEDGED;
 	block->u.Packet_Downlink_Assignment.CONTROL_ACK         = tbf->was_releasing; // NW establishes no new DL TBF for the MS with running timer T3192
 	block->u.Packet_Downlink_Assignment.TIMESLOT_ALLOCATION = 0;   // timeslot(s)
 	for (tn = 0; tn < 8; tn++) {
