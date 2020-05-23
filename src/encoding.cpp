@@ -329,6 +329,7 @@ static int write_ia_rest_egprs_uplink_sba(const gprs_rlcmac_ul_tbf *tbf, bitvec 
 
 	/* TLLI_BLOCK_CHANNEL_CODING */
 	rc = bitvec_set_bit(dest, (bit_value)tbf->tlli());
+	CHECK(rc);
 
 	/* No BEP_PERIOD2 */
 	SET_0(dest);
