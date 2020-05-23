@@ -493,9 +493,11 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
  * The value of the address is called a selector. Up to 256 (UCHAR_MAX) unique
  * selectors can be handled, longer choice list would cause CSN_ERROR_IN_SCRIPT.
  * After unpacking, this value is then converted to the sequential number of the
- * element in the union and stored in the UnionType variable.
+ * element in the union and stored in the UnionType variable (Par2).
  *      Par1: C structure name
- *      Par2: C structure element name
+ *      Par2: C structure field name holding sequential number of the chosen element.
+ *            BEWARE! Never use an enumerated type here, because its length is
+ *            compiler/machine dependent, while decoder would cast it to guint8.
  *      Par3: address of an array of type CSN_ChoiceElement_t where all possible
  *            values of the selector are provided, together with the selector
  *            length expressed in bits and the address of  the CSN_DESCR type

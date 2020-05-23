@@ -158,7 +158,7 @@ typedef struct
 {
   guint8 PEAK_THROUGHPUT_CLASS;
   guint8 RADIO_PRIORITY;
-  RLC_MODE_t RLC_MODE;
+  guint8 RLC_MODE;
   guint8 LLC_PDU_TYPE;
   guint16 RLC_OCTET_COUNT;
 } Channel_Request_Description_t;
@@ -1245,7 +1245,7 @@ typedef enum
 
 typedef struct
 {
-  AccessTechnology_t Access_Technology_Type;
+  guint8              Access_Technology_Type;
   guint8              GMSK_Power_class;
   guint8              Eight_PSK_Power_class;
 } Additional_access_technologies_struct_t;
