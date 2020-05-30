@@ -57,7 +57,7 @@ The interface towards OsmoBTS is called 'pcu_sock' and implemented as a
 set of non-standardized primitives over a unix domain socket.  The
 default file system path for this socket is `/tmp/pcu_bts`.
 
-The PCU socket can be changed on both OmsoBTS and OsmoPCU to a different
+The PCU socket can be changed on both OsmoBTS and OsmoPCU to a different
 file/path name, primarily to permit running multiple independent BTS+PCU
 pairs on a single Linux machine without having to use filesystem
 namespaces or other complex configurations.
