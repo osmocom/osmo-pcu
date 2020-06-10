@@ -434,9 +434,21 @@ void BTS::send_gsmtap_rach(enum pcu_gsmtap_category categ, uint8_t channel,
 			   const struct rach_ind_params *rip)
 {
 	struct pcu_l1_meas meas;
+	uint8_t ra_buf[2];
+
+	/* 3GPP TS 44.004 defines 11 bit RA as follows: xxxx xxxx  .... .yyy
+	 * On the PCUIF, we get 16 bit machne dependent number (LE/BE)
+	 * Over GSMTAP we send the following:           xxxx xxxx  yyy. ....
+	 * This simplifies parsing in Wireshark using its CSN.1 codec. */
+	if (rip->is_11bit) {
+		ra_buf[0] = (uint8_t) ((rip->ra >> 3) & 0xff);
+		ra_buf[1] = (uint8_t) ((rip->ra << 5) & 0xff);
+	} else {
+		ra_buf[0] = (uint8_t) (rip->ra & 0xff);
+	}
+
 	send_gsmtap_meas(categ, true, rip->trx_nr, rip->ts_nr, channel,
-			 rfn_to_fn(rip->rfn), (uint8_t *) &rip->ra,
-			 /* TODO: properly pack 11 bit RA */
+			 rfn_to_fn(rip->rfn), ra_buf,
 			 rip->is_11bit ? 2 : 1, &meas);
 }
 
