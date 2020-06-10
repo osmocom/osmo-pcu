@@ -38,6 +38,7 @@ static const struct value_string pcu_gsmtap_categ_names[] = {
 	{ PCU_GSMTAP_C_UL_DATA_GPRS,	"ul-data-gprs" },
 	{ PCU_GSMTAP_C_UL_DATA_EGPRS,	"ul-data-egprs" },
 	{ PCU_GSMTAP_C_UL_RACH,		"ul-rach" },
+	{ PCU_GSMTAP_C_UL_PTCCH,	"ul-ptcch" },
 
 	{ 0, NULL }
 };
@@ -58,6 +59,7 @@ static const struct value_string pcu_gsmtap_categ_help[] = {
 	{ PCU_GSMTAP_C_UL_DATA_GPRS,	"Uplink Data Blocks (GPRS)" },
 	{ PCU_GSMTAP_C_UL_DATA_EGPRS,	"Uplink Data Blocks (EGPRS)" },
 	{ PCU_GSMTAP_C_UL_RACH,		"Uplink RACH Bursts" },
+	{ PCU_GSMTAP_C_UL_PTCCH,	"Uplink PTCCH Bursts" },
 
 	{ 0, NULL }
 };

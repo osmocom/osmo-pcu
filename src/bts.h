@@ -67,6 +67,7 @@ enum pcu_gsmtap_category {
 	PCU_GSMTAP_C_UL_DATA_GPRS	= 18,	/* uplink GPRS data blocks */
 	PCU_GSMTAP_C_UL_DATA_EGPRS	= 19,	/* uplink EGPRS data blocks */
 	PCU_GSMTAP_C_UL_RACH		= 20,	/* uplink RACH bursts */
+	PCU_GSMTAP_C_UL_PTCCH		= 21,	/* uplink PTCCH bursts */
 };
 
 struct BTS;
@@ -336,6 +337,8 @@ public:
 	void send_gsmtap_meas(enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_no,
 			      uint8_t ts_no, uint8_t channel, uint32_t fn,
 			      const uint8_t *data, unsigned int len, struct pcu_l1_meas *meas);
+	void send_gsmtap_rach(enum pcu_gsmtap_category categ, uint8_t channel,
+			      const struct rach_ind_params *rip);
 
 	/*
 	 * Below for C interface for the VTY

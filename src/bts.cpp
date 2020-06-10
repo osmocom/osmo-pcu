@@ -430,6 +430,16 @@ int BTS::add_paging(uint8_t chan_needed, const uint8_t *mi, uint8_t mi_len)
 	return 0;
 }
 
+void BTS::send_gsmtap_rach(enum pcu_gsmtap_category categ, uint8_t channel,
+			   const struct rach_ind_params *rip)
+{
+	struct pcu_l1_meas meas;
+	send_gsmtap_meas(categ, true, rip->trx_nr, rip->ts_nr, channel,
+			 rfn_to_fn(rip->rfn), (uint8_t *) &rip->ra,
+			 /* TODO: properly pack 11 bit RA */
+			 rip->is_11bit ? 2 : 1, &meas);
+}
+
 void BTS::send_gsmtap(enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_no,
 		      uint8_t ts_no, uint8_t channel, uint32_t fn,
 		      const uint8_t *data, unsigned int len)
@@ -801,9 +811,7 @@ int BTS::rcv_rach(const struct rach_ind_params *rip)
 	uint32_t Fn = rfn_to_fn(rip->rfn);
 	uint8_t ta = qta2ta(rip->qta);
 
-	send_gsmtap(PCU_GSMTAP_C_UL_RACH, true, rip->trx_nr, rip->ts_nr,
-		    GSMTAP_CHANNEL_RACH, Fn, (uint8_t *) &rip->ra,
-		    rip->is_11bit ? 2 : 1);
+	send_gsmtap_rach(PCU_GSMTAP_C_UL_RACH, GSMTAP_CHANNEL_RACH, rip);
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests Uplink resource on CCCH/RACH: "
 	     "ra=0x%02x (%d bit) Fn=%u qta=%d\n", rip->ra,
@@ -907,6 +915,8 @@ int BTS::rcv_ptcch_rach(const struct rach_ind_params *rip)
 	struct gprs_rlcmac_bts *bts = bts_data();
 	struct gprs_rlcmac_pdch *pdch;
 	uint8_t ss;
+
+	send_gsmtap_rach(PCU_GSMTAP_C_UL_PTCCH, GSMTAP_CHANNEL_PTCCH, rip);
 
 	/* Prevent buffer overflow */
 	if (rip->trx_nr >= ARRAY_SIZE(bts->trx) || rip->ts_nr >= 8) {
