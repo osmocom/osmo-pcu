@@ -32,6 +32,8 @@ extern "C" {
 	#include <osmocom/core/timer.h>
 	#include <osmocom/core/linuxlist.h>
 
+	#include <osmocom/gsm/protocol/gsm_23_003.h>
+
 	#include "coding_scheme.h"
 }
 
@@ -159,7 +161,7 @@ private:
 	uint32_t m_new_dl_tlli;
 
 	/* store IMSI for look-up and PCH retransmission */
-	char m_imsi[16];
+	char m_imsi[OSMO_IMSI_BUF_SIZE];
 	uint8_t m_ta;
 	uint8_t m_ms_class;
 	uint8_t m_egprs_ms_class;

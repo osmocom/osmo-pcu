@@ -120,7 +120,7 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 
 	LOGP(DRLCMAC, LOGL_INFO, "Creating MS object, TLLI = 0x%08x\n", tlli);
 
-	m_imsi[0] = 0;
+	m_imsi[0] = '\0';
 	memset(&m_timer, 0, sizeof(m_timer));
 	m_timer.cb = GprsMs::timeout;
 	m_llc_queue.init();
@@ -463,8 +463,7 @@ void GprsMs::set_imsi(const char *imsi)
 		"Modifying MS object, TLLI = 0x%08x, IMSI '%s' -> '%s'\n",
 		tlli(), m_imsi, imsi);
 
-	strncpy(m_imsi, imsi, sizeof(m_imsi));
-	m_imsi[sizeof(m_imsi) - 1] = '\0';
+	osmo_strlcpy(m_imsi, imsi, sizeof(m_imsi));
 }
 
 void GprsMs::set_ta(uint8_t ta_)
