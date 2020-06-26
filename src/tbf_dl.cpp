@@ -151,8 +151,6 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 	ul_tbf = ms->ul_tbf();
 	ta = ms->ta();
 
-	/* TODO: if (!ms) create MS before tbf_alloc is called? */
-
 	if (ul_tbf && ul_tbf->m_contention_resolution_done
 	 && !ul_tbf->m_final_ack_sent) {
 		use_trx = ul_tbf->trx->trx_no;

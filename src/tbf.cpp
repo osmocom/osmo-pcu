@@ -392,9 +392,6 @@ void gprs_rlcmac_tbf::merge_and_clear_ms(GprsMs *old_ms)
 
 void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
 {
-	if (!ms())
-		return;
-
 	if (!tlli)
 		return;
 
@@ -1437,49 +1434,6 @@ int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
 	new_tbf->trigger_ass(this);
 
 	return 0;
-}
-
-int gprs_rlcmac_tbf::set_tlli_from_ul(uint32_t new_tlli)
-{
-	struct gprs_rlcmac_tbf *dl_tbf = NULL;
-	struct gprs_rlcmac_tbf *ul_tbf = NULL;
-	GprsMs *old_ms;
-
-	OSMO_ASSERT(direction == GPRS_RLCMAC_UL_TBF);
-
-	old_ms = bts->ms_by_tlli(new_tlli);
-	/* Keep the old MS object for the update_ms() */
-	GprsMs::Guard guard(old_ms);
-	if (old_ms) {
-		/* Get them before calling set_ms() */
-		dl_tbf = old_ms->dl_tbf();
-		ul_tbf = old_ms->ul_tbf();
-
-		if (!ms())
-			set_ms(old_ms);
-	}
-
-	if (dl_tbf && dl_tbf->ms() != ms()) {
-		LOGPTBFUL(dl_tbf, LOGL_NOTICE,
-			  "Got RACH from TLLI=0x%08x while TBF still exists: killing pending DL TBF\n", new_tlli);
-		tbf_free(dl_tbf);
-		dl_tbf = NULL;
-	}
-	if (ul_tbf && ul_tbf->ms() != ms()) {
-		LOGPTBFUL(ul_tbf, LOGL_NOTICE,
-			  "Got RACH from TLLI=0x%08x while TBF still exists: killing pending UL TBF\n", new_tlli);
-		tbf_free(ul_tbf);
-		ul_tbf = NULL;
-	}
-
-	/* The TLLI has been taken from an UL message */
-	update_ms(new_tlli, GPRS_RLCMAC_UL_TBF);
-
-#if 0 /* REMOVEME ??? */
-	if (ms()->need_dl_tbf())
-		establish_dl_tbf_on_pacch();
-#endif
-	return 1;
 }
 
 const char *tbf_name(gprs_rlcmac_tbf *tbf)
