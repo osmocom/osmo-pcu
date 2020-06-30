@@ -315,6 +315,7 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 	int rc;
 	int current_fn = get_current_fn();
 	pcu_l1_meas meas;
+	uint8_t gsmtap_chantype;
 
 	LOGP(DL1IF, LOGL_DEBUG, "Data indication received: sapi=%d arfcn=%d "
 		"fn=%d cur_fn=%d block=%d data=%s\n", data_ind->sapi,
@@ -335,19 +336,22 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 		rc = pcu_rx_data_ind_pdtch(data_ind->trx_nr, data_ind->ts_nr,
 			data_ind->data, data_ind->len, data_ind->fn,
 			&meas);
+		gsmtap_chantype = GSMTAP_CHANNEL_PDTCH;
 		break;
 	case PCU_IF_SAPI_BCCH:
 		rc = pcu_rx_data_ind_bcch(data_ind->data, data_ind->len);
+		gsmtap_chantype = GSMTAP_CHANNEL_BCCH;
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data indication with "
 			"unsupported sapi %d\n", data_ind->sapi);
 		rc = -EINVAL;
+		gsmtap_chantype = GSMTAP_CHANNEL_UNKNOWN;
 	}
 
 	if (rc < 0 && (bts->gsmtap_categ_mask & (1 <<PCU_GSMTAP_C_UL_UNKNOWN))) {
 		gsmtap_send(bts->gsmtap, data_ind->arfcn | GSMTAP_ARFCN_F_UPLINK, data_ind->ts_nr,
-			    GSMTAP_CHANNEL_UNKNOWN, 0, data_ind->fn, meas.rssi, meas.link_qual, data_ind->data, data_ind->len);
+			    gsmtap_chantype, 0, data_ind->fn, meas.rssi, meas.link_qual, data_ind->data, data_ind->len);
 	}
 
 	return rc;
