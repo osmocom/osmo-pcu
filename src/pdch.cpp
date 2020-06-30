@@ -754,8 +754,8 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	enum CodingScheme cs = mcs_get_by_size_ul(len);
 	if (!cs) {
 		bts()->do_rate_ctr_inc(CTR_DECODE_ERRORS);
-		LOGP(DRLCMACUL, LOGL_ERROR, "Dropping data block with invalid"
-			"length: %d)\n", len);
+		LOGP(DRLCMACUL, LOGL_ERROR, "Dropping data block with invalid "
+		     "length %d: %s\n", len, osmo_hexdump(data, len));
 		return -EINVAL;
 	}
 
