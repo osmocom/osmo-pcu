@@ -282,8 +282,8 @@ int Decoding::rlc_data_from_ul_data(
 		offs += chunks[i].length;
 		if (offs > data_len) {
 			LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA out of block "
-				"border, chunk idx: %d, size: %d\n",
-				i, chunks[i].length);
+				"border, chunk idx: %d, offset: %u, size: %d, data_len: %u\n",
+				i, offs, chunks[i].length, data_len);
 			return -EINVAL;
 		}
 	}
