@@ -142,9 +142,9 @@ static inline bool write_tai(bitvec *dest, unsigned& wp, int8_t tai)
 }
 
 /* { 0 | 1 < TIMING_ADVANCE_VALUE : bit (6) > } */
-static inline void write_ta(bitvec *dest, unsigned& wp, int8_t ta)
+static inline void write_ta(bitvec *dest, unsigned& wp, uint8_t ta)
 {
-	if (ta < 0) /* No TIMING_ADVANCE_VALUE: */
+	if (ta >= GSM48_TA_INVALID) /* No TIMING_ADVANCE_VALUE: */
 		bitvec_write_field(dest, &wp, 0, 1);
 	else { /* TIMING_ADVANCE_VALUE: */
 		bitvec_write_field(dest, &wp, 1, 1);
@@ -174,7 +174,7 @@ static inline void write_ws(bitvec *dest, unsigned int *write_index, uint16_t ws
            < TIMING_ADVANCE_TIMESLOT_NUMBER : bit (3) > }
  */
 static inline void write_ta_ie(bitvec *dest, unsigned& wp,
-			       int8_t ta, int8_t tai, uint8_t ts)
+			       uint8_t ta, int8_t tai, uint8_t ts)
 {
 	write_ta(dest, wp, ta);
 	if (write_tai(dest, wp, tai)) /* TIMING_ADVANCE_TIMESLOT_NUMBER: */
