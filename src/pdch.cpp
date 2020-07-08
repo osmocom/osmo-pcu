@@ -550,42 +550,35 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 	if (request->ID.UnionType) {
 		struct gprs_rlcmac_ul_tbf *ul_tbf;
 		uint32_t tlli = request->ID.u.TLLI;
-		bool found = true;
+		bool ms_found = true;
 
 		GprsMs *ms = bts()->ms_by_tlli(tlli);
 		if (!ms) {
-			found = false;
+			ms_found = false;
 			ms = bts()->ms_alloc(0, 0); /* ms class updated later */
 		}
+		ul_tbf = ms->ul_tbf(); /* hence ul_tbf may be NULL */
 
 		/* Keep the ms, even if it gets idle temporarily */
 		GprsMs::Guard guard(ms);
-
-		if (found) {
-			ul_tbf = ms->ul_tbf();
-			/* We got a RACH so the MS was in packet idle mode and thus
-			 * didn't have any active TBFs */
-			if (ul_tbf) {
-				LOGPTBFUL(ul_tbf, LOGL_NOTICE,
-					  "Got RACH from TLLI=0x%08x while TBF still exists. Killing pending UL TBF\n",
-					  tlli);
-				tbf_free(ul_tbf);
-			}
-		}
 
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
 			"in packet resource request of single "
 			"block, so we provide one:\n");
 		sba = bts()->sba()->find(this, fn);
-		if (!sba) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "MS requests UL TBF "
-				"in packet resource request of single "
-				"block, but there is no resource request "
-				"scheduled!\n");
-		} else {
+		if (sba) {
 			ms->set_ta(sba->ta);
 			bts()->sba()->free_sba(sba);
+		} else if (!ul_tbf || !ul_tbf->state_is(GPRS_RLCMAC_FINISHED)) {
+			LOGPTBFUL(ul_tbf, LOGL_NOTICE,
+				  "MS requests UL TBF in PACKET RESOURCE REQ of "
+				  "single block, but there is no resource request "
+				  "scheduled!\n");
 		}
+		/* else: Resource Request can be received even if not scheduled
+		   by the network since it's used by MS to re-establish a new UL
+		   TBF when last one has finished. */
+
 		if (request->Exist_MS_Radio_Access_capability2) {
 			uint8_t ms_class, egprs_ms_class;
 			ms_class = Decoding::get_ms_class_by_capability(&request->MS_Radio_Access_capability2);
@@ -594,6 +587,14 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				ms->set_ms_class(ms_class);
 			if (egprs_ms_class)
 				ms->set_egprs_ms_class(egprs_ms_class);
+		}
+
+		/* Get rid of previous finished UL TBF before providing a new one */
+		if (ms_found && ul_tbf) {
+			if (!ul_tbf->state_is(GPRS_RLCMAC_FINISHED))
+				LOGPTBFUL(ul_tbf, LOGL_NOTICE,
+					  "Got PACKET RESOURCE REQ while TBF not finished, killing pending UL TBF\n");
+			tbf_free(ul_tbf);
 		}
 
 		ul_tbf = tbf_alloc_ul(bts_data(), ms, trx_no(), tlli);

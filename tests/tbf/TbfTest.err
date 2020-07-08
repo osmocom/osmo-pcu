@@ -7902,7 +7902,7 @@ Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=6 USF=6
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
 MS requests UL TBF in packet resource request of single block, so we provide one:
-MS requests UL TBF in packet resource request of single block, but there is no resource request scheduled!
+(no TBF) MS requests UL TBF in PACKET RESOURCE REQ of single block, but there is no resource request scheduled!
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 ********** UL-TBF starts here **********
