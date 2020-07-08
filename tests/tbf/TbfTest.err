@@ -1521,9 +1521,10 @@ Searching for first unallocated TFI: TRX=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 MS requests UL TBF in packet resource request of single block, so we provide one:
-Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
+Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
 [UL] Slot Allocation (Algorithm A) for class 1
@@ -1537,11 +1538,10 @@ Allocating UL TBF: MS_CLASS=1/0
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
@@ -1602,9 +1602,10 @@ Searching for first unallocated TFI: TRX=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 MS requests UL TBF in packet resource request of single block, so we provide one:
-Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
+Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
 [UL] Slot Allocation (Algorithm A) for class 1
@@ -1618,11 +1619,10 @@ Allocating UL TBF: MS_CLASS=1/0
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
@@ -1731,9 +1731,10 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) No downlink ACK received yet
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf5667788, not yet confirmed
 MS requests UL TBF in packet resource request of single block, so we provide one:
-Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Modifying MS object, TLLI = 0xf5667788, TA 220 -> 7
+Modifying MS object, TLLI = 0xf5667788, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
 [UL] Slot Allocation (Algorithm A) for class 1
@@ -1747,11 +1748,10 @@ Allocating UL TBF: MS_CLASS=1/0
 [UL] Assign uplink TS=7 TFI=1 USF=1
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL), 2 TBFs, USFs = 03, TFIs = 00000003.
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL)
-TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
-TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-Modifying MS object, UL TLLI: 0x00000000 -> 0xf5667788, not yet confirmed
+Attaching TBF to MS object, TLLI = 0xf5667788, TBF = TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL)
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 Received RTS for PDCH: TRX=0 TS=7 FN=2654335 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
@@ -1797,9 +1797,10 @@ Searching for first unallocated TFI: TRX=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 MS requests UL TBF in packet resource request of single block, so we provide one:
-Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
+Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
 [UL] Slot Allocation (Algorithm A) for class 1
@@ -1813,11 +1814,10 @@ Allocating UL TBF: MS_CLASS=1/0
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
@@ -1939,9 +1939,10 @@ Searching for first unallocated TFI: TRX=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 MS requests UL TBF in packet resource request of single block, so we provide one:
-Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
+Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
 [UL] Slot Allocation (Algorithm A) for class 1
@@ -1955,11 +1956,10 @@ Allocating UL TBF: MS_CLASS=1/0
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
@@ -2085,9 +2085,10 @@ Searching for first unallocated TFI: TRX=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 MS requests UL TBF in packet resource request of single block, so we provide one:
-Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
+Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
 [UL] Slot Allocation (Algorithm A) for class 1
@@ -2101,11 +2102,10 @@ Allocating UL TBF: MS_CLASS=1/0
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
@@ -3107,10 +3107,11 @@ Searching for first unallocated TFI: TRX=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 MS requests UL TBF in packet resource request of single block, so we provide one:
-Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
+Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -3125,13 +3126,12 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(0) slots(1) ws_pdch(0)
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
@@ -3197,10 +3197,11 @@ Searching for first unallocated TFI: TRX=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 MS requests UL TBF in packet resource request of single block, so we provide one:
-Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
+Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -3215,13 +3216,12 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(0) slots(1) ws_pdch(0)
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
@@ -5834,10 +5834,11 @@ Searching for first unallocated TFI: TRX=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 MS requests UL TBF in packet resource request of single block, so we provide one:
-Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
+Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5852,13 +5853,12 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(0) slots(1) ws_pdch(0)
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
@@ -5997,10 +5997,11 @@ Searching for first unallocated TFI: TRX=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 MS requests UL TBF in packet resource request of single block, so we provide one:
-Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
+Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -6015,13 +6016,12 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(0) slots(1) ws_pdch(0)
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
@@ -6321,10 +6321,11 @@ Searching for first unallocated TFI: TRX=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
 MS requests UL TBF in packet resource request of single block, so we provide one:
-Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
+Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -6339,13 +6340,12 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 192, base(128) slots(1) ws_pdch(64)
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 192, base(128) slots(1) ws_pdch(64)
 ws(192)
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
-Modifying MS object, UL TLLI: 0x00000000 -> 0xf1223344, not yet confirmed
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 max_cs_ul cannot be derived (current UL CS: UNKNOWN)
@@ -7901,10 +7901,11 @@ Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=6 USF=6
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
+Modifying MS object, UL TLLI: 0x00000000 -> 0xffeeddcc, not yet confirmed
 MS requests UL TBF in packet resource request of single block, so we provide one:
 (no TBF) MS requests UL TBF in PACKET RESOURCE REQ of single block, but there is no resource request scheduled!
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+Modifying MS object, TLLI = 0xffeeddcc, MS class 0 -> 11
+Modifying MS object, TLLI = 0xffeeddcc, EGPRS MS class 0 -> 11
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=11/11
 [UL] Slot Allocation (Algorithm A) for class 11
@@ -7918,7 +7919,6 @@ Allocating UL TBF: MS_CLASS=11/11
 - Skipping TS 7, because no USF available
 [UL] algo A <single> (suggested TRX: 0): failed to allocate a TS, no USF available
 No PDCH resource
-Modifying MS object, UL TLLI: 0x00000000 -> 0xffeeddcc, not yet confirmed
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ

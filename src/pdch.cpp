@@ -556,6 +556,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		if (!ms) {
 			ms_found = false;
 			ms = bts()->ms_alloc(0, 0); /* ms class updated later */
+			ms->set_tlli(tlli);
 		}
 		ul_tbf = ms->ul_tbf(); /* hence ul_tbf may be NULL */
 
