@@ -1885,13 +1885,6 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Got RACH from TLLI=0xf1223344 while TBF still exists. Release pending DL TBF
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to RELEASING
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) free
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) stopping timer T0 [freeing TBF]
-PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
-Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING)
-********** DL-TBF ends here **********
 MS requests UL TBF in packet resource request of single block, so we provide one:
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
@@ -1925,27 +1918,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCM
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=1/0
-[DL] Slot Allocation (Algorithm A) for class 1
-- Skipping TS 0, because not enabled
-- Skipping TS 1, because not enabled
-- Skipping TS 2, because not enabled
-- Skipping TS 3, because not enabled
-- Skipping TS 4, because not enabled
-- Skipping TS 5, because not enabled
-- Skipping TS 6, because not enabled
-[DL] Assign downlink TS=7 TFI=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Trigger downlink assignment on PACCH
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) set ass. type PACCH [prev CCCH:0, PACCH:0]
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=0
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer T3169 [acked (data)] with 5 sec. 0 microsec, cur_fn=0

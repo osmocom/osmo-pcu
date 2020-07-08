@@ -549,7 +549,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 
 	if (request->ID.UnionType) {
 		struct gprs_rlcmac_ul_tbf *ul_tbf;
-		struct gprs_rlcmac_dl_tbf *dl_tbf;
 		uint32_t tlli = request->ID.u.TLLI;
 		bool found = true;
 
@@ -564,7 +563,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 
 		if (found) {
 			ul_tbf = ms->ul_tbf();
-			dl_tbf = ms->dl_tbf();
 			/* We got a RACH so the MS was in packet idle mode and thus
 			 * didn't have any active TBFs */
 			if (ul_tbf) {
@@ -572,12 +570,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 					  "Got RACH from TLLI=0x%08x while TBF still exists. Killing pending UL TBF\n",
 					  tlli);
 				tbf_free(ul_tbf);
-			}
-			if (dl_tbf) {
-				LOGPTBFUL(dl_tbf, LOGL_NOTICE,
-					  "Got RACH from TLLI=0x%08x while TBF still exists. Release pending DL TBF\n",
-					  tlli);
-				tbf_free(dl_tbf);
 			}
 		}
 
