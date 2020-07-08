@@ -588,20 +588,13 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		}
 		if (request->Exist_MS_Radio_Access_capability2) {
 			uint8_t ms_class, egprs_ms_class;
-			ms_class = Decoding::get_ms_class_by_capability(
-				&request->MS_Radio_Access_capability2);
-			ms->set_ms_class(ms_class);
-			egprs_ms_class =
-				Decoding::get_egprs_ms_class_by_capability(
-					&request->MS_Radio_Access_capability2);
-			ms->set_egprs_ms_class(egprs_ms_class);
+			ms_class = Decoding::get_ms_class_by_capability(&request->MS_Radio_Access_capability2);
+			egprs_ms_class = Decoding::get_egprs_ms_class_by_capability(&request->MS_Radio_Access_capability2);
+			if (ms_class)
+				ms->set_ms_class(ms_class);
+			if (egprs_ms_class)
+				ms->set_egprs_ms_class(egprs_ms_class);
 		}
-		if (!ms->ms_class())
-			LOGP(DRLCMAC, LOGL_NOTICE, "MS does not give us a class.\n");
-		if (ms->egprs_ms_class())
-			LOGP(DRLCMAC, LOGL_INFO,
-				"MS supports EGPRS multislot class %d.\n",
-				ms->egprs_ms_class());
 
 		ul_tbf = tbf_alloc_ul(bts_data(), ms, trx_no(), tlli);
 		if (!ul_tbf) {

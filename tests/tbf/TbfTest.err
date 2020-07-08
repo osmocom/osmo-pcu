@@ -3111,7 +3111,6 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
-MS supports EGPRS multislot class 1.
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -3202,7 +3201,6 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
-MS supports EGPRS multislot class 1.
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5840,7 +5838,6 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
-MS supports EGPRS multislot class 1.
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -6004,7 +6001,6 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
-MS supports EGPRS multislot class 1.
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -6329,7 +6325,6 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 1
-MS supports EGPRS multislot class 1.
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -7910,7 +7905,6 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 MS requests UL TBF in packet resource request of single block, but there is no resource request scheduled!
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-MS supports EGPRS multislot class 11.
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=11/11
 [UL] Slot Allocation (Algorithm A) for class 11
