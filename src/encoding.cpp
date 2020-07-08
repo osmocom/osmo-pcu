@@ -580,7 +580,7 @@ void Encoding::write_packet_uplink_assignment(
 		bitvec_write_field(dest, &wp,0x0,1); // Message escape
 		bitvec_write_field(dest, &wp, mcs_chan_code(tbf->current_cs()), 2); // CHANNEL_CODING_COMMAND
 		bitvec_write_field(dest, &wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING
-		write_ta_ie(dest, wp,tbf->ta(), ta_idx, ta_ts);
+		write_ta_ie(dest, wp, tbf->ta(), ta_idx, ta_ts);
 	} else { /* EPGRS */
 		bitvec_write_field(dest, &wp,0x1,1); // Message escape
 		bitvec_write_field(dest, &wp,0x0,2); // EGPRS message contents
@@ -594,7 +594,7 @@ void Encoding::write_packet_uplink_assignment(
 		bitvec_write_field(dest, &wp,0x0,1); // No ARAC RETRANSMISSION REQUEST
 		bitvec_write_field(dest, &wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING
 		bitvec_write_field(dest, &wp,0x0,1); // No BEP_PERIOD2
-		write_ta_ie(dest, wp,tbf->ta(), ta_idx, ta_ts);
+		write_ta_ie(dest, wp, tbf->ta(), ta_idx, ta_ts);
 		bitvec_write_field(dest, &wp,0x0,1); // No Packet Extended Timing Advance
 	}
 
