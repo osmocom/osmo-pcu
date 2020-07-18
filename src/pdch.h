@@ -106,6 +106,18 @@ struct gprs_rlcmac_pdch {
 	void update_ta(uint8_t tai, uint8_t ta);
 #endif
 
+	/* Frequency hopping parameters */
+	struct {
+		bool enabled;
+		/* 3GPP TS 45.002 HSN / MAIO (6 bit each) */
+		uint8_t hsn;
+		uint8_t maio;
+		/* 3GPP TS 44.018, 10.5.2.21 "Mobile Allocation" */
+		uint8_t ma_oct_len;
+		uint8_t ma_bit_len;
+		uint8_t ma[8];
+	} fh;
+
 	/* back pointers */
 	struct gprs_rlcmac_trx *trx;
 	uint8_t ts_no;

@@ -467,8 +467,15 @@ int Encoding::write_immediate_assignment(
 	bitvec_write_field(dest, &wp, pdch->ts_no, 3);		// TN
 	bitvec_write_field(dest, &wp, pdch->tsc, 3);		// TSC
 
-	bitvec_write_field(dest, &wp, 0x00, 3);			// spare (non-hopping RF channel configuraion)
-	bitvec_write_field(dest, &wp, pdch->trx->arfcn, 10);	// ARFCN
+	/* RF channel configuraion: hopping or non-hopping */
+	if (pdch->fh.enabled) {
+		bitvec_write_field(dest, &wp, 0x01, 1); /* direct encoding */
+		bitvec_write_field(dest, &wp, pdch->fh.maio, 6);
+		bitvec_write_field(dest, &wp, pdch->fh.hsn, 6);
+	} else {
+		bitvec_write_field(dest, &wp, 0x00, 3);
+		bitvec_write_field(dest, &wp, pdch->trx->arfcn, 10);
+	}
 
 	//10.5.2.30 Request Reference
 	if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) ||
@@ -486,9 +493,16 @@ int Encoding::write_immediate_assignment(
 	bitvec_write_field(dest, &wp,0x0,2); // spare
 	bitvec_write_field(dest, &wp,ta,6);  // Timing Advance value
 
-	// No mobile allocation in non-hopping systems.
-	// A zero-length LV.  Just write L=0.
-	bitvec_write_field(dest, &wp,0,8);
+	/* 10.5.2.21 Mobile Allocation */
+	if (pdch->fh.enabled) {
+		bitvec_write_field(dest, &wp, pdch->fh.ma_oct_len, 8);
+		for (int i = 0; i < pdch->fh.ma_oct_len; i++)
+			bitvec_write_field(dest, &wp, pdch->fh.ma[i], 8);
+	} else {
+		// No mobile allocation in non-hopping systems.
+		// A zero-length LV.  Just write L=0.
+		bitvec_write_field(dest, &wp, 0x00, 8);
+	}
 
 	OSMO_ASSERT(wp % 8 == 0);
 
@@ -534,6 +548,44 @@ int Encoding::write_immediate_assignment(
 	}
 
 	return plen;
+}
+
+/* Prepare to be encoded Frequency Parameters IE (see Table 12.8.1) */
+static void gen_freq_params(Frequency_Parameters_t *freq_params,
+			    const struct gprs_rlcmac_tbf *tbf)
+{
+	const struct gprs_rlcmac_pdch *pdch;
+	Direct_encoding_1_t fh_params;
+
+	/* Check one PDCH, if it's hopping then all other should too */
+	pdch = tbf->pdch[tbf->first_ts];
+	OSMO_ASSERT(pdch != NULL);
+
+	/* Training Sequence Code */
+	freq_params->TSC = pdch->tsc;
+
+	/* If frequency hopping is not in use, encode a single ARFCN */
+	if (pdch == NULL || !pdch->fh.enabled) {
+		freq_params->UnionType = 0x00;
+		freq_params->u.ARFCN = tbf->trx->arfcn;
+		return;
+	}
+
+	/* Direct encoding 1 (see Table 12.8.1) */
+	freq_params->UnionType = 0x2;
+
+	/* HSN / MAIO */
+	fh_params.MAIO = pdch->fh.maio;
+	fh_params.GPRS_Mobile_Allocation.HSN = pdch->fh.hsn;
+	fh_params.GPRS_Mobile_Allocation.ElementsOf_RFL_NUMBER = 0;
+
+	/* Mobile Allocation bitmap */
+	fh_params.GPRS_Mobile_Allocation.UnionType = 0; /* MA bitmap */
+	fh_params.GPRS_Mobile_Allocation.u.MA.MA_LENGTH = pdch->fh.ma_oct_len; /* in bytes */
+	fh_params.GPRS_Mobile_Allocation.u.MA.MA_BitLength = pdch->fh.ma_bit_len; /* in bits */
+	memcpy(fh_params.GPRS_Mobile_Allocation.u.MA.MA_BITMAP, pdch->fh.ma, pdch->fh.ma_oct_len);
+
+	freq_params->u.Direct_encoding_1 = fh_params;
 }
 
 /* Generate Packet Uplink Assignment as per 3GPP TS 44.060, section 11.2.29.
@@ -623,9 +675,7 @@ void Encoding::write_packet_uplink_assignment(
 	}
 
 	/* Frequency Parameters IE */
-	fp->TSC       = tbf->tsc();  // Training Sequence Code (TSC)
-	fp->UnionType = 0x00;        // Single ARFCN
-	fp->u.ARFCN   = tbf->trx->arfcn;
+	gen_freq_params(fp, tbf);
 
 	/* Dynamic allocation parameters */
 	da->USF_GRANULARITY = 0x00;
@@ -716,9 +766,7 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 	block->u.Packet_Downlink_Assignment.Exist_P0_and_BTS_PWR_CTRL_MODE = 0x0;   // POWER CONTROL = off
 
 	block->u.Packet_Downlink_Assignment.Exist_Frequency_Parameters     = 0x1;   // Frequency Parameters = on
-	block->u.Packet_Downlink_Assignment.Frequency_Parameters.TSC       = tbf->tsc();   // Training Sequence Code (TSC)
-	block->u.Packet_Downlink_Assignment.Frequency_Parameters.UnionType = 0x0;   // ARFCN = on
-	block->u.Packet_Downlink_Assignment.Frequency_Parameters.u.ARFCN   = tbf->trx->arfcn; // ARFCN
+	gen_freq_params(&block->u.Packet_Downlink_Assignment.Frequency_Parameters, tbf);
 
 	block->u.Packet_Downlink_Assignment.Exist_DOWNLINK_TFI_ASSIGNMENT  = 0x1;     // DOWNLINK TFI ASSIGNMENT = on
 	block->u.Packet_Downlink_Assignment.DOWNLINK_TFI_ASSIGNMENT        = tbf->tfi(); // TFI
