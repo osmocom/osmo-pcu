@@ -884,7 +884,7 @@ int BTS::rcv_rach(const struct rach_ind_params *rip)
 send_imm_ass_rej:
 	/* Allocate a bit-vector for RR Immediate Assignment [Reject] */
 	struct bitvec *bv = bitvec_alloc(22, tall_pcu_ctx); /* without plen */
-	bitvec_unhex(bv, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	bitvec_unhex(bv, DUMMY_VEC); /* standard '2B'O padding */
 
 	if (rc != 0) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment Reject on AGCH\n");
@@ -970,7 +970,7 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup)
 
 	LOGPTBF(tbf, LOGL_INFO, "TX: START Immediate Assignment Downlink (PCH)\n");
 	bitvec *immediate_assignment = bitvec_alloc(22, tall_pcu_ctx); /* without plen */
-	bitvec_unhex(immediate_assignment, "2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b");
+	bitvec_unhex(immediate_assignment, DUMMY_VEC); /* standard '2B'O padding */
 	/* use request reference that has maximum distance to current time,
 	 * so the assignment will not conflict with possible RACH requests. */
 	LOGP(DRLCMAC, LOGL_DEBUG, " - TRX=%d (%d) TS=%d TA=%d pollFN=%d\n",
