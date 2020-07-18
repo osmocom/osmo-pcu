@@ -494,10 +494,7 @@ int Encoding::write_immediate_assignment(
 	/* 3GPP TS 44.018 §10.5.2.16 IA Rest Octets */
 	dest->cur_bit = wp;
 	if (downlink) {
-		if (!as_dl_tbf(tbf)) {
-			LOGP(DRLCMACDL, LOGL_ERROR, "Cannot encode DL IMMEDIATE ASSIGNMENT without TBF\n");
-			return -EINVAL;
-		}
+		OSMO_ASSERT(as_dl_tbf(tbf) != NULL);
 
 		rc = write_ia_rest_downlink(as_dl_tbf(tbf), dest, polling, gsm48_ta_is_valid(ta), fn, alpha, gamma,
 					    ta_idx);
