@@ -899,8 +899,9 @@ send_imm_ass_rej:
 		     trx_no, m_bts.trx[trx_no].arfcn & ~ARFCN_FLAG_MASK,
 		     ts_no, ta, tsc, tbf ? tbf->tfi() : -1, usf);
 		plen = Encoding::write_immediate_assignment(
-			tbf, bv, false, rip->ra, Fn, ta, m_bts.trx[trx_no].arfcn,
-			ts_no, tsc, usf, false, sb_fn, m_bts.alpha, m_bts.gamma, -1,
+			&m_bts.trx[trx_no].pdch[ts_no], tbf, bv,
+			false, rip->ra, Fn, ta, usf, false, sb_fn,
+			m_bts.alpha, m_bts.gamma, -1,
 			rip->burst_type);
 		do_rate_ctr_inc(CTR_IMMEDIATE_ASSIGN_UL_TBF);
 	}
@@ -967,8 +968,9 @@ int BTS::rcv_ptcch_rach(const struct rach_ind_params *rip)
 
 void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup)
 {
+	uint8_t trx_no = tbf->trx->trx_no;
+	uint8_t ts_no = tbf->first_ts;
 	int plen;
-	unsigned int ts = tbf->first_ts;
 
 	LOGPTBF(tbf, LOGL_INFO, "TX: START Immediate Assignment Downlink (PCH)\n");
 	bitvec *immediate_assignment = bitvec_alloc(22, tall_pcu_ctx); /* without plen */
@@ -976,12 +978,12 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup)
 	/* use request reference that has maximum distance to current time,
 	 * so the assignment will not conflict with possible RACH requests. */
 	LOGP(DRLCMAC, LOGL_DEBUG, " - TRX=%d (%d) TS=%d TA=%d pollFN=%d\n",
-		tbf->trx->trx_no, tbf->trx->arfcn,
-		ts, tbf->ta(), poll ? tbf->poll_fn : -1);
-	plen = Encoding::write_immediate_assignment(tbf, immediate_assignment, true, 125,
-						    (tbf->pdch[ts]->last_rts_fn + 21216) % GSM_MAX_FN, tbf->ta(),
-						    tbf->trx->arfcn, ts, tbf->tsc(), 7, poll,
-						    tbf->poll_fn, m_bts.alpha, m_bts.gamma, -1,
+		trx_no, tbf->trx->arfcn, ts_no, tbf->ta(), poll ? tbf->poll_fn : -1);
+	plen = Encoding::write_immediate_assignment(&m_bts.trx[trx_no].pdch[ts_no],
+						    tbf, immediate_assignment, true, 125,
+						    (tbf->pdch[ts_no]->last_rts_fn + 21216) % GSM_MAX_FN,
+						    tbf->ta(), 7, poll, tbf->poll_fn,
+						    m_bts.alpha, m_bts.gamma, -1,
 						    GSM_L1_BURST_TYPE_ACCESS_0);
 	if (plen >= 0) {
 		do_rate_ctr_inc(CTR_IMMEDIATE_ASSIGN_DL_TBF);

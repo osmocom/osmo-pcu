@@ -728,17 +728,25 @@ static void test_egprs_ul_ack_nack()
 static void check_imm_ass(struct gprs_rlcmac_tbf *tbf, bool dl, enum ph_burst_type bt, const uint8_t *exp, uint8_t len,
 			  const char *kind)
 {
-	uint8_t alpha = 7, gamma = 8, ta = 35, ts = 5, tsc = 1, usf = 1, sz = sizeof(DUMMY_VEC) / 2, plen;
+	uint8_t alpha = 7, gamma = 8, ta = 35, usf = 1, sz = sizeof(DUMMY_VEC) / 2, plen;
 	bitvec *immediate_assignment = bitvec_alloc(sz, tall_pcu_ctx);
 	struct msgb *m = msgb_alloc(80, "test");
 	bool poll = true;
-	uint16_t ra = 13, arfcn = 877;
+	uint16_t ra = 13;
 	uint32_t ref_fn = 24, fn = 11;
 	int8_t ta_idx = 0;
 
+	/* HACK: tbf can be NULL, so we cannot use tbf->trx here */
+	struct gprs_rlcmac_trx trx = { };
+	trx.pdch[5].trx = &trx;
+	trx.pdch[5].ts_no = 5;
+	trx.pdch[5].tsc = 1;
+	trx.arfcn = 877;
+
 	bitvec_unhex(immediate_assignment, DUMMY_VEC);
-	plen = Encoding::write_immediate_assignment(tbf, immediate_assignment, dl,
-						    ra, ref_fn, ta, arfcn, ts, tsc, usf,
+	plen = Encoding::write_immediate_assignment(&trx.pdch[5], tbf,
+						    immediate_assignment,
+						    dl, ra, ref_fn, ta, usf,
 						    poll, fn, alpha, gamma, ta_idx, bt);
 	printf("[%u] %s Immediate Assignment <%s>:\n\t%s\n", plen, dl ? "DL" : "UL", kind,
 	       osmo_hexdump(immediate_assignment->data, sz));

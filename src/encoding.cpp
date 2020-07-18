@@ -439,9 +439,10 @@ int Encoding::write_immediate_assignment_reject(
  * see GSM 04.08, 9.1.18 and GSM 44.018, 9.1.18 + 10.5.2.16
  */
 int Encoding::write_immediate_assignment(
+	const struct gprs_rlcmac_pdch *pdch,
 	struct gprs_rlcmac_tbf *tbf,
 	bitvec * dest, bool downlink, uint16_t ra,
-	uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts, uint8_t tsc,
+	uint32_t ref_fn, uint8_t ta,
 	uint8_t usf, bool polling, uint32_t fn, uint8_t alpha,
 	uint8_t gamma, int8_t ta_idx, enum ph_burst_type burst_type)
 {
@@ -462,11 +463,12 @@ int Encoding::write_immediate_assignment(
 	bitvec_write_field(dest, &wp,0x0,4); // Page Mode
 
 	// GSM 04.08 10.5.2.25a Packet Channel Description
-	bitvec_write_field(dest, &wp,0x1,5);                               // Channel type
-	bitvec_write_field(dest, &wp,ts,3);     // TN
-	bitvec_write_field(dest, &wp,tsc,3);    // TSC
-	bitvec_write_field(dest, &wp,0x0,3);                               // non-hopping RF channel configuraion
-	bitvec_write_field(dest, &wp,arfcn,10); // ARFCN
+	bitvec_write_field(dest, &wp, 0x01, 5);			// Channel type
+	bitvec_write_field(dest, &wp, pdch->ts_no, 3);		// TN
+	bitvec_write_field(dest, &wp, pdch->tsc, 3);		// TSC
+
+	bitvec_write_field(dest, &wp, 0x00, 3);			// spare (non-hopping RF channel configuraion)
+	bitvec_write_field(dest, &wp, pdch->trx->arfcn, 10);	// ARFCN
 
 	//10.5.2.30 Request Reference
 	if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) ||

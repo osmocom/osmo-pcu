@@ -42,10 +42,11 @@ struct gprs_rlc_data_block_info;
 class Encoding {
 public:
 	static int write_immediate_assignment(
+			const struct gprs_rlcmac_pdch *pdch,
 			struct gprs_rlcmac_tbf *tbf,
 			bitvec * dest, bool downlink, uint16_t ra,
-			uint32_t ref_fn, uint8_t ta, uint16_t arfcn, uint8_t ts,
-			uint8_t tsc, uint8_t usf, bool polling,
+			uint32_t ref_fn, uint8_t ta,
+			uint8_t usf, bool polling,
 			uint32_t fn, uint8_t alpha, uint8_t gamma,
 			int8_t ta_idx,
 			enum ph_burst_type burst_type);
