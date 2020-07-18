@@ -433,13 +433,6 @@ int Encoding::write_immediate_assignment_reject(
 	return plen;
 }
 
-static inline void log_alert_exit(const char * error)
-{
-	LOGP(DRLCMACUL, LOGL_ERROR, "%s", error);
-	pcu_tx_txt_ind(PCU_OML_ALERT, error);
-	exit(1);
-}
-
 /*
  * Immediate assignment, sent on the CCCH/AGCH
  * see GSM 04.08, 9.1.18 and GSM 44.018, 9.1.18 + 10.5.2.16
@@ -494,9 +487,7 @@ int Encoding::write_immediate_assignment(
 	// A zero-length LV.  Just write L=0.
 	bitvec_write_field(dest, &wp,0,8);
 
-	if ((wp % 8))
-		log_alert_exit("Length of IMM.ASS without rest octets is not "
-			       "multiple of 8 bits, PLEASE FIX!\n");
+	OSMO_ASSERT(wp % 8 == 0);
 
 	plen = wp / 8;
 
@@ -748,9 +739,7 @@ int Encoding::write_paging_request(bitvec * dest, const uint8_t *mi, uint8_t mi_
 	bitvec_set_bytes(dest, mi, mi_len);        // Mobile Identity
 	wp += mi_len * 8;
 
-	if ((wp % 8))
-		log_alert_exit("Length of PAG.REQ without rest octets is not "
-			       "multiple of 8 bits, PLEASE FIX!\n");
+	OSMO_ASSERT(wp % 8 == 0);
 
 	plen = wp / 8;
 	bitvec_write_field(dest, &wp,0x0,1); // "L" Notification List Number; NLN(PCH) = off
