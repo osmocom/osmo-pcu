@@ -630,6 +630,7 @@ bssgp_failed:
 		}
 
 		for (ts_nr = 0; ts_nr < ARRAY_SIZE(bts->trx[0].pdch); ts_nr++) {
+			const struct gsm_pcu_if_info_ts *its = &info_ind->trx[trx_nr].ts[ts_nr];
 			struct gprs_rlcmac_pdch *pdch = &bts->trx[trx_nr].pdch[ts_nr];
 			if ((info_ind->trx[trx_nr].pdch_mask & (1 << ts_nr))) {
 				/* FIXME: activate dynamically at RLCMAC */
@@ -643,9 +644,27 @@ bssgp_failed:
 					pcu_tx_act_req(trx_nr, ts_nr, 1);
 					pdch->enable();
 				}
-				pdch->tsc = info_ind->trx[trx_nr].tsc[ts_nr];
-				LOGP(DL1IF, LOGL_INFO, "PDCH: trx=%d ts=%d\n",
-					trx_nr, ts_nr);
+
+				pdch->tsc = its->tsc;
+
+				/* (Optional) frequency hopping parameters */
+				if (its->h) {
+					pdch->fh.enabled = true;
+					pdch->fh.maio    = its->maio;
+					pdch->fh.hsn     = its->hsn;
+
+					OSMO_ASSERT(its->ma_bit_len <= sizeof(pdch->fh.ma) * 8);
+					pdch->fh.ma_oct_len = OSMO_BYTES_FOR_BITS(its->ma_bit_len);
+					pdch->fh.ma_bit_len = its->ma_bit_len;
+
+					/* Mobile Allocation + padding (byte/bit order as on the wire):
+					 * | 00 00 00 00 00 cc bb aa | -> | cc bb aa 00 00 00 00 00 | */
+					unsigned int offset = sizeof(pdch->fh.ma) - pdch->fh.ma_oct_len;
+					memcpy(pdch->fh.ma, its->ma + offset, pdch->fh.ma_oct_len);
+				}
+
+				LOGP(DL1IF, LOGL_INFO, "PDCH (trx=%u, ts=%u): tsc=%u, hopping=%s\n",
+				     trx_nr, ts_nr, pdch->tsc, pdch->fh.enabled ? "yes" : "no");
 			} else {
 				if (pdch->is_enabled()) {
 					pcu_tx_act_req(trx_nr, ts_nr, 0);
