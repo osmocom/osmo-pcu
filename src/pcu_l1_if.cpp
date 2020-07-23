@@ -485,7 +485,7 @@ static int pcu_rx_rach_ind(const struct gsm_pcu_if_rach_ind *rach_ind)
 	return rc;
 }
 
-static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
+static int pcu_rx_info_ind(const struct gsm_pcu_if_info_ind *info_ind)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	struct gprs_bssgp_pcu *pcu;
