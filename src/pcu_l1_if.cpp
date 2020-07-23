@@ -489,7 +489,6 @@ static int pcu_rx_info_ind(const struct gsm_pcu_if_info_ind *info_ind)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	struct gprs_bssgp_pcu *pcu;
-	struct gprs_rlcmac_pdch *pdch;
 	struct in_addr ia;
 	int rc = 0;
 	unsigned int trx_nr, ts_nr;
@@ -631,7 +630,7 @@ bssgp_failed:
 		}
 
 		for (ts_nr = 0; ts_nr < ARRAY_SIZE(bts->trx[0].pdch); ts_nr++) {
-			pdch = &bts->trx[trx_nr].pdch[ts_nr];
+			struct gprs_rlcmac_pdch *pdch = &bts->trx[trx_nr].pdch[ts_nr];
 			if ((info_ind->trx[trx_nr].pdch_mask & (1 << ts_nr))) {
 				/* FIXME: activate dynamically at RLCMAC */
 				if (!pdch->is_enabled()) {
