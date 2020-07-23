@@ -492,7 +492,7 @@ static int pcu_rx_info_ind(const struct gsm_pcu_if_info_ind *info_ind)
 	struct gprs_rlcmac_pdch *pdch;
 	struct in_addr ia;
 	int rc = 0;
-	unsigned int trx, ts;
+	unsigned int trx_nr, ts_nr;
 	int i;
 
 	if (info_ind->version != PCU_IF_VERSION) {
@@ -511,10 +511,10 @@ static int pcu_rx_info_ind(const struct gsm_pcu_if_info_ind *info_ind)
 bssgp_failed:
 		bts->active = false;
 		/* free all TBF */
-		for (trx = 0; trx < ARRAY_SIZE(bts->trx); trx++) {
-			bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
-			for (ts = 0; ts < ARRAY_SIZE(bts->trx[0].pdch); ts++)
-				bts->trx[trx].pdch[ts].free_resources();
+		for (trx_nr = 0; trx_nr < ARRAY_SIZE(bts->trx); trx_nr++) {
+			bts->trx[trx_nr].arfcn = info_ind->trx[trx_nr].arfcn;
+			for (ts_nr = 0; ts_nr < ARRAY_SIZE(bts->trx[0].pdch); ts_nr++)
+				bts->trx[trx_nr].pdch[ts_nr].free_resources();
 		}
 		gprs_bssgp_destroy();
 		exit(0);
@@ -605,19 +605,19 @@ bssgp_failed:
 		bts->initial_cs_ul = bts->initial_cs_dl;
 	}
 
-	for (trx = 0; trx < ARRAY_SIZE(bts->trx); trx++) {
-		bts->trx[trx].arfcn = info_ind->trx[trx].arfcn;
+	for (trx_nr = 0; trx_nr < ARRAY_SIZE(bts->trx); trx_nr++) {
+		bts->trx[trx_nr].arfcn = info_ind->trx[trx_nr].arfcn;
 		if ((info_ind->flags & PCU_IF_FLAG_SYSMO)
-		 && info_ind->trx[trx].hlayer1) {
+		 && info_ind->trx[trx_nr].hlayer1) {
 #ifdef ENABLE_DIRECT_PHY
-			LOGP(DL1IF, LOGL_DEBUG, " TRX %d hlayer1=%x\n", trx,
-				info_ind->trx[trx].hlayer1);
-				if (!bts->trx[trx].fl1h)
-					bts->trx[trx].fl1h = l1if_open_pdch(
-						trx,
-						info_ind->trx[trx].hlayer1,
+			LOGP(DL1IF, LOGL_DEBUG, " TRX %d hlayer1=%x\n", trx_nr,
+				info_ind->trx[trx_nr].hlayer1);
+				if (!bts->trx[trx_nr].fl1h)
+					bts->trx[trx_nr].fl1h = l1if_open_pdch(
+						trx_nr,
+						info_ind->trx[trx_nr].hlayer1,
 						bts->gsmtap);
-			if (!bts->trx[trx].fl1h) {
+			if (!bts->trx[trx_nr].fl1h) {
 				LOGP(DL1IF, LOGL_FATAL, "Failed to open direct "
 					"DSP access for PDCH.\n");
 				exit(0);
@@ -630,26 +630,26 @@ bssgp_failed:
 #endif
 		}
 
-		for (ts = 0; ts < ARRAY_SIZE(bts->trx[0].pdch); ts++) {
-			pdch = &bts->trx[trx].pdch[ts];
-			if ((info_ind->trx[trx].pdch_mask & (1 << ts))) {
+		for (ts_nr = 0; ts_nr < ARRAY_SIZE(bts->trx[0].pdch); ts_nr++) {
+			pdch = &bts->trx[trx_nr].pdch[ts_nr];
+			if ((info_ind->trx[trx_nr].pdch_mask & (1 << ts_nr))) {
 				/* FIXME: activate dynamically at RLCMAC */
 				if (!pdch->is_enabled()) {
 #ifdef ENABLE_DIRECT_PHY
 					if ((info_ind->flags &
 							PCU_IF_FLAG_SYSMO))
 						l1if_connect_pdch(
-							bts->trx[trx].fl1h, ts);
+							bts->trx[trx_nr].fl1h, ts_nr);
 #endif
-					pcu_tx_act_req(trx, ts, 1);
+					pcu_tx_act_req(trx_nr, ts_nr, 1);
 					pdch->enable();
 				}
-				pdch->tsc = info_ind->trx[trx].tsc[ts];
+				pdch->tsc = info_ind->trx[trx_nr].tsc[ts_nr];
 				LOGP(DL1IF, LOGL_INFO, "PDCH: trx=%d ts=%d\n",
-					trx, ts);
+					trx_nr, ts_nr);
 			} else {
 				if (pdch->is_enabled()) {
-					pcu_tx_act_req(trx, ts, 0);
+					pcu_tx_act_req(trx_nr, ts_nr, 0);
 					pdch->free_resources();
 					pdch->disable();
 				}
