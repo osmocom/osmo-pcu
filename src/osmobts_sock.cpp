@@ -121,7 +121,7 @@ for the reset. */
 		gprs_rlcmac_tbf::free_all(&bts->trx[trx]);
 	}
 
-	gprs_bssgp_destroy();
+	gprs_bssgp_destroy(bts);
 	exit(0);
 }
 

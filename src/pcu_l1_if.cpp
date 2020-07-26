@@ -490,6 +490,7 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	struct gprs_bssgp_pcu *pcu;
 	struct gprs_rlcmac_pdch *pdch;
+	struct osmo_sockaddr local_sockaddr, remote_sockaddr;
 	struct in_addr ia;
 	int rc = 0;
 	unsigned int trx, ts;
@@ -516,7 +517,7 @@ bssgp_failed:
 			for (ts = 0; ts < ARRAY_SIZE(bts->trx[0].pdch); ts++)
 				bts->trx[trx].pdch[ts].free_resources();
 		}
-		gprs_bssgp_destroy();
+		gprs_bssgp_destroy(bts);
 		exit(0);
 	}
 	LOGP(DL1IF, LOGL_INFO, "BTS available\n");
@@ -571,11 +572,20 @@ bssgp_failed:
 	ia.s_addr = htonl(info_ind->remote_ip[0]);
 	LOGP(DL1IF, LOGL_DEBUG, " remote_ip=%s\n", inet_ntoa(ia));
 
-	pcu = gprs_bssgp_create_and_connect(bts, info_ind->local_port[0],
-		info_ind->remote_ip[0], info_ind->remote_port[0],
-		info_ind->nsei, info_ind->nsvci[0], info_ind->bvci,
-		info_ind->mcc, info_ind->mnc, info_ind->mnc_3_digits, info_ind->lac, info_ind->rac,
-		info_ind->cell_id);
+	local_sockaddr.u.sin.sin_family = AF_INET;
+	local_sockaddr.u.sin.sin_addr.s_addr = htonl(0);
+	local_sockaddr.u.sin.sin_port = htons(info_ind->local_port[0]);
+
+	remote_sockaddr.u.sin.sin_family = AF_INET;
+	remote_sockaddr.u.sin.sin_addr.s_addr = htonl(info_ind->remote_ip[0]);
+	remote_sockaddr.u.sin.sin_port = htons(info_ind->remote_port[0]);
+
+	pcu = gprs_bssgp_create_and_connect(
+			bts,
+			&local_sockaddr, &remote_sockaddr,
+			info_ind->nsei, info_ind->nsvci[0], info_ind->bvci,
+			info_ind->mcc, info_ind->mnc, info_ind->mnc_3_digits,
+			info_ind->lac, info_ind->rac, info_ind->cell_id);
 	if (!pcu) {
 		LOGP(DL1IF, LOGL_NOTICE, "SGSN not available\n");
 		goto bssgp_failed;

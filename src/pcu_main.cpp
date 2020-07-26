@@ -38,7 +38,7 @@ extern "C" {
 #include "pcu_vty.h"
 #include "coding_scheme.h"
 #include <osmocom/gprs/gprs_bssgp.h>
-#include <osmocom/gprs/gprs_ns.h>
+#include <osmocom/gprs/gprs_ns2.h>
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/command.h>
 #include <osmocom/vty/vty.h>
@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
 
 	osmo_stats_init(tall_pcu_ctx);
 	rate_ctr_init(tall_pcu_ctx);
-	gprs_ns_set_log_ss(DNS);
+	gprs_ns2_set_log_ss(DNS);
 	bssgp_set_log_ss(DBSSGP);
 
 	pcu_vty_info.tall_ctx = tall_pcu_ctx;
@@ -289,12 +289,13 @@ int main(int argc, char *argv[])
 	else
 		fprintf(stderr, "Failed to initialize GSMTAP for %s\n", gsmtap_addr);
 
-	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
-	if (!bssgp_nsi) {
+	bts->nsi = gprs_ns2_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
+	if (!bts->nsi) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		exit(1);
 	}
-	gprs_ns_vty_init(bssgp_nsi);
+	bssgp_set_bssgp_callback((bssgp_bvc_send*) gprs_ns2_send, bts->nsi);
+	gprs_ns2_vty_init(bts->nsi);
 
 	rc = vty_read_config_file(config_file, NULL);
 	if (rc < 0 && config_given) {
@@ -305,6 +306,8 @@ int main(int argc, char *argv[])
 	if (rc < 0)
 		fprintf(stderr, "No config file: '%s' Using default config.\n",
 			config_file);
+
+	gprs_ns2_vty_create();
 
 	rc = telnet_init_dynif(tall_pcu_ctx, NULL, vty_get_bind_addr(),
 			       OSMO_VTY_PORT_PCU);

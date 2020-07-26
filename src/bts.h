@@ -174,6 +174,11 @@ struct gprs_rlcmac_bts {
 	 * more than one message, because they get sent so rarely. */
 	struct msgb *app_info;
 	uint32_t app_info_pending; /* Count of MS with active TBF, to which we did not send app_info yet */
+
+	struct gprs_ns2_inst *nsi;
+	/* main nsei */
+	struct gprs_ns2_nse *nse;
+	uint16_t nsei;
 };
 
 enum {
