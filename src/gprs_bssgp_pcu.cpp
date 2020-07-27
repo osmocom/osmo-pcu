@@ -576,21 +576,25 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 		return -EINVAL;
 
 	nssd = (struct gprs_ns2_signal_data *)signal_data;
-	if (signal != S_SNS_CONFIGURED &&  nssd->nsei != the_pcu.bts->nsei) {
+	if (signal != S_SNS_CONFIGURED &&  nssd->nsei != bts->nsei) {
 		LOGP(DPCU, LOGL_ERROR, "Signal received of unknown NSVC\n");
 		return -EINVAL;
 	}
 
 	switch (signal) {
 	case S_SNS_CONFIGURED:
+		LOGP(DPCU, LOGL_NOTICE, "NS-NSE %d is configured.\n", nssd->nsei);
+		break;
+	case S_NSE_AVAILABLE:
+		LOGP(DPCU, LOGL_NOTICE, "NS-NSE %d became available\n", nssd->nsei);
 		the_pcu.bvc_sig_reset = 0;
 		the_pcu.bvc_reset = 0;
 		/* There's no NS-RESET / NS-UNBLOCK procedure on IP SNS based NS-VCs */
 		the_pcu.nsvc_unblocked = 1;
-		LOGP(DPCU, LOGL_NOTICE, "NS-NSE %d is configured.\n", nssd->nsei);
 		bvc_timeout(NULL);
 		break;
-	case S_NS_UNBLOCK:
+	case S_NSE_UNAVAILABLE:
+		LOGP(DPCU, LOGL_NOTICE, "NS-NSE %d became unavailable\n", nssd->nsei);
 		if (!the_pcu.nsvc_unblocked) {
 			the_pcu.nsvc_unblocked = 1;
 			LOGP(DPCU, LOGL_NOTICE, "NS-NSE %d is unblocked.\n",
@@ -600,20 +604,6 @@ static int nsvc_signal_cb(unsigned int subsys, unsigned int signal,
 			the_pcu.bvc_unblocked = 0;
 			bvc_timeout(NULL);
 		}
-		break;
-	case S_NS_BLOCK:
-		if (the_pcu.nsvc_unblocked) {
-			the_pcu.nsvc_unblocked = 0;
-			osmo_timer_del(&the_pcu.bvc_timer);
-			the_pcu.bvc_sig_reset = 0;
-			the_pcu.bvc_reset = 0;
-			the_pcu.bvc_unblocked = 0;
-			LOGP(DPCU, LOGL_NOTICE, "NS-VC is blocked.\n");
-		}
-		break;
-	case S_NS_ALIVE_EXP:
-		LOGP(DPCU, LOGL_NOTICE, "Tns alive expired too often, "
-			"re-starting RESET procedure\n");
 		break;
 	}
 
@@ -954,6 +944,7 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 		gprs_ns2_free(bts->nsi);
 		return NULL;
 	}
+	gprs_ns2_bind_set_mode(bind, NS2_VC_MODE_ALIVE);
 
 	the_pcu.bts->nse = gprs_ns2_nse_by_nsei(bts->nsi, nsei);
 	if (!the_pcu.bts->nse)
@@ -964,6 +955,8 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 		gprs_ns2_free(bts->nsi);
 		return NULL;
 	}
+
+	the_pcu.bts->nsei = nsei;
 
 	if (bts->gb_dialect_sns) {
 		rc = gprs_ns2_ip_connect_sns(bind, sgsn, nsei);
@@ -1007,13 +1000,9 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 
 void gprs_bssgp_destroy(struct gprs_rlcmac_bts *bts)
 {
-	struct gprs_ns2_inst *nsi = bts->nsi;
-	if (!nsi)
-		return;
-
 	osmo_timer_del(&the_pcu.bvc_timer);
 
-	osmo_signal_unregister_handler(SS_L_NS, nsvc_signal_cb, NULL);
+	osmo_signal_unregister_handler(SS_L_NS, nsvc_signal_cb, bts);
 
 	/* FIXME: blocking... */
 	the_pcu.nsvc_unblocked = 0;
@@ -1026,7 +1015,7 @@ void gprs_bssgp_destroy(struct gprs_rlcmac_bts *bts)
 
 	gprs_ns2_free(bts->nsi);
 	bts->nsi = NULL;
-	the_pcu.bts->nse = NULL;
+	bts->nse = NULL;
 }
 
 struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void)
