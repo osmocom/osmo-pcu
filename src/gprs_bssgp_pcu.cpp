@@ -549,7 +549,7 @@ int bssgp_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 	return 0;
 }
 
-int gprs_bssgp_ns_cb(enum gprs_ns_evt event,  struct msgb *msg, uint16_t nsei, uint16_t bvci)
+int gprs_bssgp_ns_cb(enum gprs_ns2_evt event,  struct msgb *msg, uint16_t nsei, uint16_t bvci)
 {
 	int rc = 0;
 	switch (event) {

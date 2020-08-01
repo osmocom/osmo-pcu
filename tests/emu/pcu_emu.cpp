@@ -132,7 +132,7 @@ int main(int argc, char **argv)
 	current_test = 0;
 
 	init_main_bts();
-	bssgp_set_bssgp_callback((bssgp_bvc_send*) gprs_ns2_send, bts->nsi);
+	bssgp_set_bssgp_callback((bssgp_bvc_send) gprs_ns2_send, bts->nsi);
 	create_and_connect_bssgp(bts, INADDR_LOOPBACK, 23000);
 	
 	for (;;)

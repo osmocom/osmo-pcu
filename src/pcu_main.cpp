@@ -294,7 +294,7 @@ int main(int argc, char *argv[])
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		exit(1);
 	}
-	bssgp_set_bssgp_callback((bssgp_bvc_send*) gprs_ns2_send, bts->nsi);
+	bssgp_set_bssgp_callback((bssgp_bvc_send) gprs_ns2_send, bts->nsi);
 	gprs_ns2_vty_init(bts->nsi);
 
 	rc = vty_read_config_file(config_file, NULL);
