@@ -1,7 +1,7 @@
 Source: osmo-pcu
 Section: net
 Priority: optional
-Maintainer: Holger Hans Peter Freyther <holger@moiji-mobile.com>
+Maintainer: Osmocom team <openbsc@lists.osmocom.org>
 Build-Depends: debhelper (>= 9),
                dh-autoreconf,
                dh-systemd (>= 1.5),
