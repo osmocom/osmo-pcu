@@ -42,8 +42,8 @@ int gprs_rlcmac_meas_rep(Packet_Measurement_Report_t *pmr)
 	NC_Measurements_t *nc;
 	int i;
 
-	LOGP(DRLCMACMEAS, LOGL_INFO, "Measuement Report of TLLI=0x%08x:",
-		pmr->TLLI);
+	LOGP(DRLCMACMEAS, LOGL_INFO, "Measurement Report of TLLI=0x%08x:",
+	     pmr->TLLI);
 
 	switch (pmr->UnionType) {
 	case 0:
