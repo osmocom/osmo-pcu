@@ -43,6 +43,7 @@ extern "C" {
 #include <osmocom/vty/command.h>
 #include <osmocom/vty/vty.h>
 #include <osmocom/vty/ports.h>
+#include <osmocom/vty/cpu_sched_vty.h>
 #include <osmocom/core/rate_ctr.h>
 #include <osmocom/core/select.h>
 #include <osmocom/core/application.h>
@@ -272,6 +273,7 @@ int main(int argc, char *argv[])
 	pcu_vty_info.tall_ctx = tall_pcu_ctx;
 	vty_init(&pcu_vty_info);
 	pcu_vty_init();
+	osmo_cpu_sched_vty_init(tall_pcu_ctx);
 
 	handle_options(argc, argv);
 	if ((!!spoof_mcc) + (!!spoof_mnc) == 1) {
