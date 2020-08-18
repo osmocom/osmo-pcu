@@ -75,7 +75,7 @@ int gprs_rlcmac_received_lost(struct gprs_rlcmac_dl_tbf *tbf, uint16_t received,
 
 int gprs_rlcmac_lost_rep(struct gprs_rlcmac_dl_tbf *tbf);
 
-int gprs_rlcmac_meas_rep(Packet_Measurement_Report_t *pmr);
+int gprs_rlcmac_meas_rep(GprsMs *ms, Packet_Measurement_Report_t *pmr);
 
 int gprs_rlcmac_rssi(struct gprs_rlcmac_tbf *tbf, int8_t rssi);
 

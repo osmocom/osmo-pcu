@@ -37,14 +37,13 @@ extern "C" {
 /* TODO: trigger the measurement report from the pollcontroller and use it for flow control */
 
 /* received Measurement Report */
-int gprs_rlcmac_meas_rep(Packet_Measurement_Report_t *pmr)
+int gprs_rlcmac_meas_rep(GprsMs *ms, Packet_Measurement_Report_t *pmr)
 {
 	NC_Measurement_Report_t *ncr;
 	NC_Measurements_t *nc;
 	int i;
 
-	LOGP(DRLCMACMEAS, LOGL_INFO, "Measurement Report of TLLI=0x%08x:",
-	     pmr->TLLI);
+	LOGPMS(ms, DRLCMACMEAS, LOGL_INFO, "Rx Measurement Report:");
 
 	switch (pmr->UnionType) {
 	case 0:

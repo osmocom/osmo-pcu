@@ -663,18 +663,21 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 
 void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *report, uint32_t fn)
 {
-	struct gprs_rlcmac_sba *sba = bts()->sba()->find(this, fn);
-	if (sba) {
-		GprsMs *ms = bts()->ms_store().get_ms(report->TLLI);
-		if (!ms)
-			LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
-				"but TLLI 0x%08x is unknown\n", report->TLLI);
-		else
-			ms->set_ta(sba->ta);
+	struct gprs_rlcmac_sba *sba;
+	GprsMs *ms;
 
+	ms = bts()->ms_by_tlli(report->TLLI);
+	if (!ms) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
+		     "but TLLI 0x%08x is unknown\n", report->TLLI);
+		ms = bts()->ms_alloc(0, 0);
+		ms->set_tlli(report->TLLI);
+	}
+	if ((sba = bts()->sba()->find(this, fn))) {
+		ms->set_ta(sba->ta);
 		bts()->sba()->free_sba(sba);
 	}
-	gprs_rlcmac_meas_rep(report);
+	gprs_rlcmac_meas_rep(ms, report);
 }
 
 /* Received Uplink RLC control block. */
