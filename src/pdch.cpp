@@ -652,15 +652,8 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 
 void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *report, uint32_t fn)
 {
-	struct gprs_rlcmac_sba *sba;
-
-	sba = bts()->sba()->find(this, fn);
-	if (!sba) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
-			"in packet resource request of single "
-			"block, but there is no resource request "
-			"scheduled! TLLI=0x%08x\n", report->TLLI);
-	} else {
+	struct gprs_rlcmac_sba *sba = bts()->sba()->find(this, fn);
+	if (sba) {
 		GprsMs *ms = bts()->ms_store().get_ms(report->TLLI);
 		if (!ms)
 			LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
