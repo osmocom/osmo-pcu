@@ -350,6 +350,43 @@
         <param name='rate-counters' doc='Show all rate counters' />
       </params>
     </command>
+    <command id='show talloc-context (application|all) (full|brief|DEPTH)'>
+      <params>
+        <param name='show' doc='Show running system information' />
+        <param name='talloc-context' doc='Show talloc memory hierarchy' />
+        <param name='application' doc='Application&apos;s context' />
+        <param name='all' doc='All contexts, if NULL-context tracking is enabled' />
+        <param name='full' doc='Display a full talloc memory hierarchy' />
+        <param name='brief' doc='Display a brief talloc memory hierarchy' />
+        <param name='DEPTH' doc='Specify required maximal depth value' />
+      </params>
+    </command>
+    <command id='show talloc-context (application|all) (full|brief|DEPTH) tree ADDRESS'>
+      <params>
+        <param name='show' doc='Show running system information' />
+        <param name='talloc-context' doc='Show talloc memory hierarchy' />
+        <param name='application' doc='Application&apos;s context' />
+        <param name='all' doc='All contexts, if NULL-context tracking is enabled' />
+        <param name='full' doc='Display a full talloc memory hierarchy' />
+        <param name='brief' doc='Display a brief talloc memory hierarchy' />
+        <param name='DEPTH' doc='Specify required maximal depth value' />
+        <param name='tree' doc='Display only a specific memory chunk' />
+        <param name='ADDRESS' doc='Chunk address (e.g. 0xdeadbeef)' />
+      </params>
+    </command>
+    <command id='show talloc-context (application|all) (full|brief|DEPTH) filter REGEXP'>
+      <params>
+        <param name='show' doc='Show running system information' />
+        <param name='talloc-context' doc='Show talloc memory hierarchy' />
+        <param name='application' doc='Application&apos;s context' />
+        <param name='all' doc='All contexts, if NULL-context tracking is enabled' />
+        <param name='full' doc='Display a full talloc memory hierarchy' />
+        <param name='brief' doc='Display a brief talloc memory hierarchy' />
+        <param name='DEPTH' doc='Specify required maximal depth value' />
+        <param name='filter' doc='Filter chunks using regular expression' />
+        <param name='REGEXP' doc='Regular expression' />
+      </params>
+    </command>
     <command id='show bts statistics'>
       <params>
         <param name='show' doc='Show running system information' />
@@ -773,6 +810,55 @@
         <param name='rate-counters' doc='Show all rate counters' />
       </params>
     </command>
+    <command id='stats report'>
+      <params>
+        <param name='stats' doc='Stats related commands' />
+        <param name='report' doc='Manurally trigger reporting of stats' />
+      </params>
+    </command>
+    <command id='stats reset'>
+      <params>
+        <param name='stats' doc='Stats related commands' />
+        <param name='reset' doc='Reset all stats' />
+      </params>
+    </command>
+    <command id='show talloc-context (application|all) (full|brief|DEPTH)'>
+      <params>
+        <param name='show' doc='Show running system information' />
+        <param name='talloc-context' doc='Show talloc memory hierarchy' />
+        <param name='application' doc='Application&apos;s context' />
+        <param name='all' doc='All contexts, if NULL-context tracking is enabled' />
+        <param name='full' doc='Display a full talloc memory hierarchy' />
+        <param name='brief' doc='Display a brief talloc memory hierarchy' />
+        <param name='DEPTH' doc='Specify required maximal depth value' />
+      </params>
+    </command>
+    <command id='show talloc-context (application|all) (full|brief|DEPTH) tree ADDRESS'>
+      <params>
+        <param name='show' doc='Show running system information' />
+        <param name='talloc-context' doc='Show talloc memory hierarchy' />
+        <param name='application' doc='Application&apos;s context' />
+        <param name='all' doc='All contexts, if NULL-context tracking is enabled' />
+        <param name='full' doc='Display a full talloc memory hierarchy' />
+        <param name='brief' doc='Display a brief talloc memory hierarchy' />
+        <param name='DEPTH' doc='Specify required maximal depth value' />
+        <param name='tree' doc='Display only a specific memory chunk' />
+        <param name='ADDRESS' doc='Chunk address (e.g. 0xdeadbeef)' />
+      </params>
+    </command>
+    <command id='show talloc-context (application|all) (full|brief|DEPTH) filter REGEXP'>
+      <params>
+        <param name='show' doc='Show running system information' />
+        <param name='talloc-context' doc='Show talloc memory hierarchy' />
+        <param name='application' doc='Application&apos;s context' />
+        <param name='all' doc='All contexts, if NULL-context tracking is enabled' />
+        <param name='full' doc='Display a full talloc memory hierarchy' />
+        <param name='brief' doc='Display a brief talloc memory hierarchy' />
+        <param name='DEPTH' doc='Specify required maximal depth value' />
+        <param name='filter' doc='Filter chunks using regular expression' />
+        <param name='REGEXP' doc='Regular expression' />
+      </params>
+    </command>
     <command id='show bts statistics'>
       <params>
         <param name='show' doc='Show running system information' />
@@ -1101,11 +1187,11 @@
         <param name='log' doc='Report to the logger' />
       </params>
     </command>
-    <command id='stats interval &lt;1-65535&gt;'>
+    <command id='stats interval &lt;0-65535&gt;'>
       <params>
         <param name='stats' doc='Configure stats sub-system' />
         <param name='interval' doc='Set the reporting interval' />
-        <param name='&lt;1-65535&gt;' doc='Interval in seconds' />
+        <param name='&lt;0-65535&gt;' doc='Interval in seconds (0 disables the reporting interval)' />
       </params>
     </command>
     <command id='pcu'>
@@ -1348,6 +1434,12 @@
         <param name='disable' doc='Disable the reporter' />
       </params>
     </command>
+    <command id='flush-period &lt;0-65535&gt;'>
+      <params>
+        <param name='flush-period' doc='Configure stats sub-system' />
+        <param name='&lt;0-65535&gt;' doc='Send all stats even if they have not changed (i.e. force the flush)every N-th reporting interval. Set to 0 to disable regular flush (default).' />
+      </params>
+    </command>
   </node>
   <node id='config-line'>
     <name>config-line</name>
@@ -1465,6 +1557,15 @@
         <param name='udp' doc='NS over UDP Encapsulation' />
         <param name='dscp' doc='Set DSCP/TOS on the UDP socket' />
         <param name='&lt;0-255&gt;' doc='DSCP Value' />
+      </params>
+    </command>
+    <command id='encapsulation udp use-reset-block-unblock (enabled|disabled)'>
+      <params>
+        <param name='encapsulation' doc='NS encapsulation options' />
+        <param name='udp' doc='NS over UDP Encapsulation' />
+        <param name='use-reset-block-unblock' doc='Use NS-{RESET,BLOCK,UNBLOCK} procedures in violation of 3GPP TS 48.016' />
+        <param name='enabled' doc='Enable NS-{RESET,BLOCK,UNBLOCK}' />
+        <param name='disabled' doc='Disable NS-{RESET,BLOCK,UNBLOCK}' />
       </params>
     </command>
     <command id='encapsulation framerelay-gre enabled (1|0)'>
@@ -1835,7 +1936,7 @@
         <param name='dl-tbf-preemptive-retransmission' doc='retransmit blocks even before the MS had a chance to receive them (better throughput, less readable traces)' />
       </params>
     </command>
-    <command id='gsmtap-category (dl-unknown|dl-dummy|dl-ctrl|dl-data-gprs|dl-data-egprs|dl-ptcch|dl-agch|dl-pch|ul-unknown|ul-dummy|ul-ctrl|ul-data-gprs|ul-data-egprs|ul-rach)'>
+    <command id='gsmtap-category (dl-unknown|dl-dummy|dl-ctrl|dl-data-gprs|dl-data-egprs|dl-ptcch|dl-agch|dl-pch|ul-unknown|ul-dummy|ul-ctrl|ul-data-gprs|ul-data-egprs|ul-rach|ul-ptcch)'>
       <params>
         <param name='gsmtap-category' doc='GSMTAP Category' />
         <param name='dl-unknown' doc='Unknown / Unparseable / Erroneous Downlink Blocks' />
@@ -1852,9 +1953,10 @@
         <param name='ul-data-gprs' doc='Uplink Data Blocks (GPRS)' />
         <param name='ul-data-egprs' doc='Uplink Data Blocks (EGPRS)' />
         <param name='ul-rach' doc='Uplink RACH Bursts' />
+        <param name='ul-ptcch' doc='Uplink PTCCH Bursts' />
       </params>
     </command>
-    <command id='no gsmtap-category (dl-unknown|dl-dummy|dl-ctrl|dl-data-gprs|dl-data-egprs|dl-ptcch|dl-agch|dl-pch|ul-unknown|ul-dummy|ul-ctrl|ul-data-gprs|ul-data-egprs|ul-rach)'>
+    <command id='no gsmtap-category (dl-unknown|dl-dummy|dl-ctrl|dl-data-gprs|dl-data-egprs|dl-ptcch|dl-agch|dl-pch|ul-unknown|ul-dummy|ul-ctrl|ul-data-gprs|ul-data-egprs|ul-rach|ul-ptcch)'>
       <params>
         <param name='no' doc='Negate a command or set its defaults' />
         <param name='gsmtap-category' doc='GSMTAP Category' />
@@ -1872,6 +1974,7 @@
         <param name='ul-data-gprs' doc='Uplink Data Blocks (GPRS)' />
         <param name='ul-data-egprs' doc='Uplink Data Blocks (EGPRS)' />
         <param name='ul-rach' doc='Uplink RACH Bursts' />
+        <param name='ul-ptcch' doc='Uplink PTCCH Bursts' />
       </params>
     </command>
     <command id='pcu-socket PATH'>
