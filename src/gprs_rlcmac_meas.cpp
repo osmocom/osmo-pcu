@@ -26,6 +26,7 @@ extern "C" {
 #include <pcu_l1_if.h>
 #include <tbf.h>
 #include <tbf_dl.h>
+#include <gprs_ms.h>
 
 #include <string.h>
 #include <errno.h>
@@ -105,8 +106,8 @@ int gprs_rlcmac_rssi_rep(struct gprs_rlcmac_tbf *tbf)
 	if (!tbf->meas.rssi_num)
 		return -EINVAL;
 
-	LOGP(DRLCMACMEAS, LOGL_INFO, "UL RSSI of TLLI=0x%08x: %d dBm\n",
-		tbf->tlli(), tbf->meas.rssi_sum / tbf->meas.rssi_num);
+	LOGPMS(tbf->ms(), DRLCMACMEAS, LOGL_INFO, "UL RSSI: %d dBm\n",
+	       tbf->meas.rssi_sum / tbf->meas.rssi_num);
 
 	return 0;
 }

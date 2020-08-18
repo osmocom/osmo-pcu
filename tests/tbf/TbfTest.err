@@ -1467,7 +1467,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
+MS(TLLI=0x00000000, IMSI=, TA=7, 0/0, UL) Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) restarting timer T3169 [acked (data)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) Got CS-1 RLC data block: CV=0, BSN=0, SPB=0, PI=0, E=1, TI=1, bitoffs=24
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) BSN 0 storing in window (0..63)
@@ -1820,7 +1820,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
-MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -1835,7 +1835,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RL
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-2 -> CS-3
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-2 -> CS-3
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer T3169 [acked (data)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) BSN 0 storing in window (0..63)
@@ -1870,7 +1870,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PA
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
-UL RSSI of TLLI=0xf1223344: 31 dBm
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) UL RSSI: 31 dBm
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) free
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) FIXME: Software error: Pending downlink assignment in state GPRS_RLCMAC_DL_ASS_SEND_ASS. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) stopping timer T3169 [freeing TBF]
@@ -1905,7 +1905,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
-MS (IMSI 0011223344): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-3 -> CS-4
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-3 -> CS-4
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -1962,7 +1962,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
-MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -1977,7 +1977,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RL
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-2 -> CS-3
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-2 -> CS-3
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer T3169 [acked (data)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) BSN 0 storing in window (0..63)
@@ -2012,7 +2012,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PA
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
-UL RSSI of TLLI=0xf1223344: 31 dBm
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) UL RSSI: 31 dBm
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) free
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) FIXME: Software error: Pending downlink assignment in state GPRS_RLCMAC_DL_ASS_SEND_ASS. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) stopping timer T3169 [freeing TBF]
@@ -2045,7 +2045,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
+MS(TLLI=0x00000000, IMSI=, TA=7, 0/0, UL) Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) restarting timer T3169 [acked (data)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) Got CS-1 RLC data block: CV=0, BSN=0, SPB=0, PI=0, E=1, TI=1, bitoffs=24
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) BSN 0 storing in window (0..63)
@@ -2108,7 +2108,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
-MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-1 -> CS-2
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -2123,7 +2123,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RL
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
 Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
-MS (IMSI ): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-2 -> CS-3
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-2 -> CS-3
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer T3169 [acked (data)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) BSN 0 storing in window (0..63)
@@ -2787,7 +2787,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) changes DL ASS state from G
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=0
-MS (IMSI 0011223344): Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-3 -> CS-4
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Link quality 12dB (old 12dB) left window [0, 0], modifying uplink CS level: CS-3 -> CS-4
 Received RTS for PDCH: TRX=0 TS=7 FN=2654400 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++

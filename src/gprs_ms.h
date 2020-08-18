@@ -39,6 +39,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stddef.h>
+#include <inttypes.h>
 
 struct BTS;
 struct gprs_rlcmac_trx;
@@ -296,3 +297,10 @@ inline gprs_rlcmac_trx *GprsMs::current_trx() const
 {
 	return m_current_trx;
 }
+
+#define LOGPMS(ms, category, level, fmt, args...) \
+	LOGP(category, level, "MS(TLLI=0x%08x, IMSI=%s, TA=%" PRIu8 ", %" PRIu8 "/%" PRIu8 ",%s%s) " fmt, \
+	     (ms)->tlli(), (ms)->imsi(), (ms)->ta(), (ms)->ms_class(), (ms)->egprs_ms_class(), \
+	     (ms)->ul_tbf() ? " UL": "", \
+	     (ms)->dl_tbf() ? " DL": "", \
+	     ## args)

@@ -685,13 +685,12 @@ void GprsMs::update_cs_ul(const pcu_l1_meas *meas)
 		mcs_inc_kind(&new_cs_ul, mode());
 
 	if (m_current_cs_ul != new_cs_ul) {
-		LOGP(DRLCMACMEAS, LOGL_INFO,
-			"MS (IMSI %s): "
-			"Link quality %ddB (old %ddB) left window [%d, %d], "
-			"modifying uplink CS level: %s -> %s\n",
-			imsi(), meas->link_qual, old_link_qual,
-			low, high,
-			mcs_name(m_current_cs_ul), mcs_name(new_cs_ul));
+		LOGPMS(this, DRLCMACMEAS, LOGL_INFO,
+		       "Link quality %ddB (old %ddB) left window [%d, %d], "
+		       "modifying uplink CS level: %s -> %s\n",
+		       meas->link_qual, old_link_qual,
+		       low, high,
+		       mcs_name(m_current_cs_ul), mcs_name(new_cs_ul));
 
 		m_current_cs_ul = new_cs_ul;
 	}
