@@ -145,7 +145,7 @@ static inline bool write_tai(bitvec *dest, unsigned& wp, int8_t tai)
 /* { 0 | 1 < TIMING_ADVANCE_VALUE : bit (6) > } */
 static inline void write_ta(bitvec *dest, unsigned& wp, uint8_t ta)
 {
-	if (ta >= GSM48_TA_INVALID) /* No TIMING_ADVANCE_VALUE: */
+	if (ta > 63) /* No TIMING_ADVANCE_VALUE: */
 		bitvec_write_field(dest, &wp, 0, 1);
 	else { /* TIMING_ADVANCE_VALUE: */
 		bitvec_write_field(dest, &wp, 1, 1);
@@ -667,8 +667,13 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 			block->u.Packet_Downlink_Assignment.TIMESLOT_ALLOCATION |= 0x80 >> tn;   // timeslot(s)
 	}
 
-	block->u.Packet_Downlink_Assignment.Packet_Timing_Advance.Exist_TIMING_ADVANCE_VALUE = 0x1; // TIMING_ADVANCE_VALUE = on
-	block->u.Packet_Downlink_Assignment.Packet_Timing_Advance.TIMING_ADVANCE_VALUE       = tbf->ta();  // TIMING_ADVANCE_VALUE
+	if (tbf->ta() > 63) { /* { 0 | 1  < TIMING_ADVANCE_VALUE : bit (6) > } */
+		block->u.Packet_Downlink_Assignment.Packet_Timing_Advance.Exist_TIMING_ADVANCE_VALUE = 0x0; // TIMING_ADVANCE_VALUE = off
+	} else {
+		block->u.Packet_Downlink_Assignment.Packet_Timing_Advance.Exist_TIMING_ADVANCE_VALUE = 0x1; // TIMING_ADVANCE_VALUE = on
+		block->u.Packet_Downlink_Assignment.Packet_Timing_Advance.TIMING_ADVANCE_VALUE       = tbf->ta();  // TIMING_ADVANCE_VALUE
+	}
+
 	if (ta_idx < 0) {
 		block->u.Packet_Downlink_Assignment.Packet_Timing_Advance.Exist_IndexAndtimeSlot     = 0x0; // TIMING_ADVANCE_INDEX = off
 	} else {
