@@ -576,7 +576,7 @@ bssgp_failed:
 		info_ind->mcc, info_ind->mnc, info_ind->mnc_3_digits, info_ind->lac, info_ind->rac,
 		info_ind->cell_id);
 	if (!pcu) {
-		LOGP(DL1IF, LOGL_NOTICE, "SGSN not available\n");
+		LOGP(DL1IF, LOGL_NOTICE, "SGSN is not available\n");
 		goto bssgp_failed;
 	}
 
