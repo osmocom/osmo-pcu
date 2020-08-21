@@ -1893,8 +1893,8 @@ typedef struct
 
 typedef struct
 {
-  gboolean Exist_PacketExtendedTimingAdvance;
-  guint8   PacketExtendedTimingAdvance;
+  gboolean Exist_Packet_Extended_Timing_Advance;
+  guint8   Packet_Extended_Timing_Advance;
   guint8   TBF_EST;
 } PU_AckNack_GPRS_AdditionsR99_t;
 
@@ -2201,7 +2201,7 @@ typedef struct
   gboolean                     Exist_BEP_PERIOD2;
   guint8                       BEP_PERIOD2;
 
-  Packet_Timing_Advance_t     PacketTimingAdvance;
+  Packet_Timing_Advance_t     Packet_Timing_Advance;
 
   gboolean                     Exist_Packet_Extended_Timing_Advance;
   guint8                       Packet_Extended_Timing_Advance;
@@ -4854,9 +4854,9 @@ typedef struct
 
 typedef struct
 {
-  Global_Packet_Timing_Advance_t    GlobalPacketTimingAdvance;
-  guint8 Exist_PacketExtendedTimingAdvance;
-  guint8 PacketExtendedTimingAdvance;
+  Global_Packet_Timing_Advance_t    GlobalPacket_Timing_Advance;
+  guint8 Exist_Packet_Extended_Timing_Advance;
+  guint8 Packet_Extended_Timing_Advance;
 } PHO_TimingAdvance_t;
 
 typedef struct

@@ -1699,8 +1699,8 @@ CSN_DESCR_END  (Power_Control_Parameters_t)
 
 static const
 CSN_DESCR_BEGIN(PU_AckNack_GPRS_AdditionsR99_t)
-  M_NEXT_EXIST (PU_AckNack_GPRS_AdditionsR99_t, Exist_PacketExtendedTimingAdvance, 1),
-  M_UINT       (PU_AckNack_GPRS_AdditionsR99_t,  PacketExtendedTimingAdvance,  2),
+  M_NEXT_EXIST (PU_AckNack_GPRS_AdditionsR99_t, Exist_Packet_Extended_Timing_Advance, 1),
+  M_UINT       (PU_AckNack_GPRS_AdditionsR99_t,  Packet_Extended_Timing_Advance,  2),
 
   M_UINT       (PU_AckNack_GPRS_AdditionsR99_t,  TBF_EST,  1),
 CSN_DESCR_END  (PU_AckNack_GPRS_AdditionsR99_t)
@@ -2092,7 +2092,7 @@ CSN_DESCR_BEGIN (PUA_EGPRS_00_t)
   M_NEXT_EXIST  (PUA_EGPRS_00_t, Exist_BEP_PERIOD2, 1),
   M_UINT        (PUA_EGPRS_00_t,  BEP_PERIOD2,  4),
 
-  M_TYPE        (PUA_EGPRS_00_t, PacketTimingAdvance, Packet_Timing_Advance_t),
+  M_TYPE        (PUA_EGPRS_00_t, Packet_Timing_Advance, Packet_Timing_Advance_t),
 
   M_NEXT_EXIST  (PUA_EGPRS_00_t, Exist_Packet_Extended_Timing_Advance, 1),
   M_UINT        (PUA_EGPRS_00_t,  Packet_Extended_Timing_Advance,  2),
@@ -4549,9 +4549,9 @@ CSN_DESCR_END   (PHO_EGPRS_t)
 
 static const
 CSN_DESCR_BEGIN(PHO_TimingAdvance_t)
-  M_TYPE       (PHO_TimingAdvance_t, GlobalPacketTimingAdvance, Global_Packet_Timing_Advance_t),
-  M_NEXT_EXIST (PHO_TimingAdvance_t, Exist_PacketExtendedTimingAdvance, 1),
-  M_UINT       (PHO_TimingAdvance_t,  PacketExtendedTimingAdvance,  2),
+  M_TYPE       (PHO_TimingAdvance_t, GlobalPacket_Timing_Advance, Global_Packet_Timing_Advance_t),
+  M_NEXT_EXIST (PHO_TimingAdvance_t, Exist_Packet_Extended_Timing_Advance, 1),
+  M_UINT       (PHO_TimingAdvance_t,  Packet_Extended_Timing_Advance,  2),
 CSN_DESCR_END  (PHO_TimingAdvance_t)
 
 static const
