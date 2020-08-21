@@ -539,7 +539,7 @@ void Encoding::write_packet_uplink_assignment(
 	bitvec * dest, uint8_t old_tfi,
 	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
 	const struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t rrbp, uint8_t alpha,
-	uint8_t gamma, int8_t ta_idx, int8_t use_egprs)
+	uint8_t gamma, int8_t ta_idx, bool use_egprs)
 {
 	// TODO We should use our implementation of encode RLC/MAC Control messages.
 	unsigned wp = 0;
