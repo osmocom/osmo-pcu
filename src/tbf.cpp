@@ -1368,16 +1368,16 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 	bitvec_unhex(&bv, DUMMY_VEC);
 
 	LOGPTBF(new_tbf, LOGL_INFO, "start Packet Uplink Assignment (PACCH)\n");
-	Encoding::write_packet_uplink_assignment(&bv, m_tfi,
+	mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
+	Encoding::write_packet_uplink_assignment(mac_control_block, m_tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), tlli(),
 		is_tlli_valid(), new_tbf, 1, rrbp, bts_data()->alpha,
 		bts_data()->gamma, -1, is_egprs_enabled());
 
-	mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	LOGP(DTBF, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++\n");
-	rc = decode_gsm_rlcmac_downlink(&bv, mac_control_block);
+	rc = encode_gsm_rlcmac_downlink(&bv, mac_control_block);
 	if (rc < 0) {
-		LOGP(DTBF, LOGL_ERROR, "Decoding of Packet Uplink Ass failed (%d)\n", rc);
+		LOGP(DTBF, LOGL_ERROR, "Encoding of Packet Uplink Ass failed (%d)\n", rc);
 		goto free_ret;
 	}
 	LOGP(DTBF, LOGL_DEBUG, "------------------------- TX : Packet Uplink Assignment -------------------------\n");

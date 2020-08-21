@@ -536,95 +536,125 @@ int Encoding::write_immediate_assignment(
 	return plen;
 }
 
-/* generate uplink assignment */
+/* Generate Packet Uplink Assignment as per 3GPP TS 44.060, section 11.2.29.
+ * NOTE: 'block' is expected to be zero-initialized by the caller. */
 void Encoding::write_packet_uplink_assignment(
-	bitvec * dest, uint8_t old_tfi,
+	RlcMacDownlink_t * block, uint8_t old_tfi,
 	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
 	const struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t rrbp, uint8_t alpha,
 	uint8_t gamma, int8_t ta_idx, bool use_egprs)
 {
-	// TODO We should use our implementation of encode RLC/MAC Control messages.
-	unsigned wp = 0;
-	uint8_t ts;
-	/* timeslot assigned for the Continuous Timing Advance procedure */
-	uint8_t ta_ts = 0; /* FIXME: supply it as parameter from caller */
+	Packet_Uplink_Assignment_t *pua;
+	Packet_Timing_Advance_t *pta;
+	Frequency_Parameters_t *fp;
+	Dynamic_Allocation_t *da;
 
-	bitvec_write_field(dest, &wp,0x1,2);  // Payload Type
-	bitvec_write_field(dest, &wp,rrbp,2);  // Uplink block with TDMA framenumber (N+13)
-	bitvec_write_field(dest, &wp,poll,1);  // Suppl/Polling Bit
-	bitvec_write_field(dest, &wp,0x0,3);  // Uplink state flag
-	bitvec_write_field(dest, &wp,0xa,6);  // MESSAGE TYPE
+	/* RLC/MAC control block without the optional RLC/MAC control header */
+	block->PAYLOAD_TYPE = 0x01;  // Payload Type
+	block->RRBP         = rrbp;  // RRBP (e.g. N+13)
+	block->SP           = poll;  // RRBP field is valid
+	block->USF          = 0x00;  // Uplink state flag
 
-	bitvec_write_field(dest, &wp,0x0,2);  // Page Mode
+	/* See 3GPP TS 44.060, section 11.2.29 */
+	pua = &block->u.Packet_Uplink_Assignment;
+	pua->MESSAGE_TYPE = 0x0a;  // Packet Uplink Assignment
+	pua->PAGE_MODE    = 0x00;  // Normal Paging
 
-	bitvec_write_field(dest, &wp,0x0,1); // switch PERSIST_LEVEL: off
+	/* TLLI or Global (UL/DL) TFI */
 	if (use_tlli) {
-		bitvec_write_field(dest, &wp,0x2,2); // switch TLLI   : on
-		bitvec_write_field(dest, &wp,tlli,32); // TLLI
+		pua->ID.UnionType = 0x01;
+		pua->ID.u.TLLI = tlli;
 	} else {
-		bitvec_write_field(dest, &wp,0x0,1); // switch TFI : on
-		bitvec_write_field(dest, &wp,old_downlink,1); // 0=UPLINK TFI, 1=DL TFI
-		bitvec_write_field(dest, &wp,old_tfi,5); // TFI
+		pua->ID.UnionType = 0x00;
+		pua->ID.u.Global_TFI.UnionType = old_downlink;
+		pua->ID.u.Global_TFI.u.UPLINK_TFI = old_tfi;
 	}
 
+	/* GPRS/EGPRS specific parameters */
+	pua->UnionType = use_egprs ? 0x01 : 0x00;
 	if (!use_egprs) {
-		bitvec_write_field(dest, &wp,0x0,1); // Message escape
-		bitvec_write_field(dest, &wp, mcs_chan_code(tbf->current_cs()), 2); // CHANNEL_CODING_COMMAND
-		bitvec_write_field(dest, &wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING
-		write_ta_ie(dest, wp, tbf->ta(), ta_idx, ta_ts);
-	} else { /* EPGRS */
-		bitvec_write_field(dest, &wp,0x1,1); // Message escape
-		bitvec_write_field(dest, &wp,0x0,2); // EGPRS message contents
-		bitvec_write_field(dest, &wp,0x0,1); // No CONTENTION_RESOLUTION_TLLI
-		bitvec_write_field(dest, &wp,0x0,1); // No COMPACT reduced MA
-		bitvec_write_field(dest, &wp, mcs_chan_code(tbf->current_cs()), 4); // EGPRS Modulation and Coding IE
-		/* 0: no RESEGMENT, 1: Segmentation*/
-		bitvec_write_field(dest, &wp, 0x1, 1);
-		write_ws(dest, &wp, tbf->window_size()); // EGPRS Window Size
-		bitvec_write_field(dest, &wp,0x0,1); // No Access Technologies Request
-		bitvec_write_field(dest, &wp,0x0,1); // No ARAC RETRANSMISSION REQUEST
-		bitvec_write_field(dest, &wp,0x1,1); // TLLI_BLOCK_CHANNEL_CODING
-		bitvec_write_field(dest, &wp,0x0,1); // No BEP_PERIOD2
-		write_ta_ie(dest, wp, tbf->ta(), ta_idx, ta_ts);
-		bitvec_write_field(dest, &wp,0x0,1); // No Packet Extended Timing Advance
+		PUA_GPRS_t *gprs = &pua->u.PUA_GPRS_Struct;
+
+		/* Use the commanded CS/MSC value during the content resolution */
+		gprs->CHANNEL_CODING_COMMAND    = mcs_chan_code(tbf->current_cs());
+		gprs->TLLI_BLOCK_CHANNEL_CODING = 0x01;  // ^^^
+
+		/* Dynamic allocation */
+		gprs->UnionType = 0x01;
+		/* Frequency Parameters IE is present */
+		gprs->Exist_Frequency_Parameters = 0x01;
+
+		/* Common parameters to be set below */
+		pta = &gprs->Packet_Timing_Advance;
+		fp = &gprs->Frequency_Parameters;
+		da = &gprs->u.Dynamic_Allocation;
+	} else {
+		PUA_EGPRS_00_t *egprs = &pua->u.PUA_EGPRS_Struct.u.PUA_EGPRS_00;
+		pua->u.PUA_EGPRS_Struct.UnionType = 0x00;  // 'Normal' EGPRS, not EGPRS2
+
+		/* Use the commanded CS/MSC value during the content resolution */
+		egprs->EGPRS_CHANNEL_CODING_COMMAND = mcs_chan_code(tbf->current_cs());
+		egprs->TLLI_BLOCK_CHANNEL_CODING    = 0x01;  // ^^^
+		egprs->RESEGMENT                    = 0x01;  // Enable segmentation
+		egprs->EGPRS_WindowSize             = tbf->window_size();
+
+		/* Dynamic allocation */
+		egprs->UnionType = 0x01;
+		/* Frequency Parameters IE is present */
+		egprs->Exist_Frequency_Parameters = 0x01;
+
+		/* Common parameters to be set below */
+		pta = &egprs->Packet_Timing_Advance;
+		fp = &egprs->Frequency_Parameters;
+		da = &egprs->u.Dynamic_Allocation;
 	}
 
-#if 1
-	bitvec_write_field(dest, &wp,0x1,1); // Frequency Parameters information elements = present
-	bitvec_write_field(dest, &wp,tbf->tsc(),3); // Training Sequence Code (TSC)
-	bitvec_write_field(dest, &wp,0x0,2); // ARFCN = present
-	bitvec_write_field(dest, &wp,tbf->trx->arfcn,10); // ARFCN
-#else
-	bitvec_write_field(dest, &wp,0x0,1); // Frequency Parameters = off
-#endif
-
-	bitvec_write_field(dest, &wp,0x1,2); // Dynamic Allocation
-
-	bitvec_write_field(dest, &wp,0x0,1); // Extended Dynamic Allocation = off
-	bitvec_write_field(dest, &wp,0x0,1); // P0 = off
-
-	bitvec_write_field(dest, &wp,0x0,1); // USF_GRANULARITY
-	bitvec_write_field(dest, &wp,0x1,1); // switch TFI   : on
-	bitvec_write_field(dest, &wp,tbf->tfi(),5);// TFI
-
-	bitvec_write_field(dest, &wp,0x0,1); //
-	bitvec_write_field(dest, &wp,0x0,1); // TBF Starting Time = off
-	if (alpha || gamma) {
-		bitvec_write_field(dest, &wp,0x1,1); // Timeslot Allocation with Power Control
-		bitvec_write_field(dest, &wp,alpha,4);   // ALPHA
-	} else
-		bitvec_write_field(dest, &wp,0x0,1); // Timeslot Allocation
-
-	for (ts = 0; ts < 8; ts++) {
-		if (tbf->pdch[ts]) {
-			bitvec_write_field(dest, &wp,0x1,1); // USF_TN(i): on
-			bitvec_write_field(dest, &wp,tbf->m_usf[ts],3); // USF_TN(i)
-			if (alpha || gamma)
-				bitvec_write_field(dest, &wp,gamma,5);   // GAMMA power control parameter
-		} else
-			bitvec_write_field(dest, &wp,0x0,1); // USF_TN(i): off
+	/* Packet Timing Advance (if known) */
+	if (tbf->ta() <= 63) { /* { 0 | 1  < TIMING_ADVANCE_VALUE : bit (6) > } */
+		pta->Exist_TIMING_ADVANCE_VALUE = 0x01;  // Present
+		pta->TIMING_ADVANCE_VALUE       = tbf->ta();
 	}
-	//	bitvec_write_field(dest, &wp,0x0,1); // Measurement Mapping struct not present
+
+	/* Continuous Timing Advance Control */
+	if (ta_idx >= 0 && ta_idx < 16) {
+		pta->Exist_IndexAndtimeSlot         = 0x01;  // Present
+		pta->TIMING_ADVANCE_TIMESLOT_NUMBER = 0;  // FIXME!
+		pta->TIMING_ADVANCE_INDEX           = ta_idx;
+	}
+
+	/* Frequency Parameters IE */
+	fp->TSC       = tbf->tsc();  // Training Sequence Code (TSC)
+	fp->UnionType = 0x00;        // Single ARFCN
+	fp->u.ARFCN   = tbf->trx->arfcn;
+
+	/* Dynamic allocation parameters */
+	da->USF_GRANULARITY = 0x00;
+
+	/* Assign an Uplink TFI */
+	da->Exist_UPLINK_TFI_ASSIGNMENT = 0x01;
+	da->UPLINK_TFI_ASSIGNMENT = tbf->tfi();
+
+	/* Timeslot Allocation with or without Power Control */
+	da->UnionType = (alpha || gamma) ? 0x01 : 0x00;
+	if (da->UnionType == 0x01)
+		da->u.Timeslot_Allocation_Power_Ctrl_Param.ALPHA = alpha;
+
+	for (unsigned int tn = 0; tn < 8; tn++) {
+		if (tbf->pdch[tn] == NULL)
+			continue;
+
+		if (da->UnionType == 0x01) {
+			Timeslot_Allocation_Power_Ctrl_Param_t *params = \
+				&da->u.Timeslot_Allocation_Power_Ctrl_Param;
+			params->Slot[tn].Exist    = 0x01;  // Enable this timeslot
+			params->Slot[tn].USF_TN   = tbf->m_usf[tn];  // USF_TN(i)
+			params->Slot[tn].GAMMA_TN = gamma;
+		} else {
+			Timeslot_Allocation_t *slot = &da->u.Timeslot_Allocation[tn];
+			slot->Exist  = 0x01;  // Enable this timeslot
+			slot->USF_TN = tbf->m_usf[tn];  // USF_TN(i)
+		}
+	}
 }
 
 

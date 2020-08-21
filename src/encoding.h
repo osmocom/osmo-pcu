@@ -58,7 +58,7 @@ public:
 		);
 
 	static void write_packet_uplink_assignment(
-			bitvec * dest, uint8_t old_tfi,
+			RlcMacDownlink_t * block, uint8_t old_tfi,
 			uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
 			const struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t rrbp,
 			uint8_t alpha, uint8_t gamma, int8_t ta_idx,
