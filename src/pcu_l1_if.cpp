@@ -677,6 +677,9 @@ static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 
 static int pcu_rx_pag_req(struct gsm_pcu_if_pag_req *pag_req)
 {
+	struct osmo_mobile_identity mi;
+	int rc;
+
 	LOGP(DL1IF, LOGL_DEBUG, "Paging request received: chan_needed=%d "
 		"length=%d\n", pag_req->chan_needed, pag_req->identity_lv[0]);
 
@@ -687,8 +690,13 @@ static int pcu_rx_pag_req(struct gsm_pcu_if_pag_req *pag_req)
 		return -EINVAL;
 	}
 
-	return BTS::main_bts()->add_paging(pag_req->chan_needed, &pag_req->identity_lv[1],
-					   pag_req->identity_lv[0]);
+	rc = osmo_mobile_identity_decode(&mi, &pag_req->identity_lv[1], pag_req->identity_lv[0], true);
+	if (rc < 0) {
+		LOGP(DL1IF, LOGL_ERROR, "Failed to decode Mobile Identity in Paging Request (rc=%d)\n", rc);
+		return -EINVAL;
+	}
+
+	return BTS::main_bts()->add_paging(pag_req->chan_needed, &mi);
 }
 
 static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)

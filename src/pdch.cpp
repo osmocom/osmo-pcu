@@ -266,15 +266,21 @@ free_ret:
 	return NULL;
 }
 
-bool gprs_rlcmac_pdch::add_paging(uint8_t chan_needed, const uint8_t *mi, uint8_t mi_len)
+bool gprs_rlcmac_pdch::add_paging(uint8_t chan_needed, const struct osmo_mobile_identity *mi)
 {
+	int rc;
 	struct gprs_rlcmac_paging *pag = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_paging);
 	if (!pag)
 		return false;
 
 	pag->chan_needed = chan_needed;
-	pag->identity_lv[0] = mi_len;
-	memcpy(&pag->identity_lv[1], mi, mi_len);
+	rc = osmo_mobile_identity_encode_buf(pag->identity_lv + 1, sizeof(pag->identity_lv) - 1, mi, true);
+	if (rc <= 0) {
+		LOGP(DRLCMAC, LOGL_ERROR, "Cannot encode Mobile Identity (rc=%d)\n", rc);
+		talloc_free(pag);
+		return false;
+	}
+	pag->identity_lv[0] = rc;
 
 	llist_add(&pag->list, &paging_list);
 

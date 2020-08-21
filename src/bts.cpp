@@ -355,7 +355,7 @@ void BTS::set_current_block_frame_number(int fn, unsigned max_delay)
 	m_pollController.expireTimedout(fn, max_delay);
 }
 
-int BTS::add_paging(uint8_t chan_needed, const uint8_t *mi, uint8_t mi_len)
+int BTS::add_paging(uint8_t chan_needed, const struct osmo_mobile_identity *mi)
 {
 	uint8_t l, trx, ts, any_tbf = 0;
 	struct gprs_rlcmac_tbf *tbf;
@@ -370,10 +370,8 @@ int BTS::add_paging(uint8_t chan_needed, const uint8_t *mi, uint8_t mi_len)
 	};
 
 	if (log_check_level(DRLCMAC, LOGL_INFO)) {
-		struct osmo_mobile_identity omi = {};
 		char str[64];
-		osmo_mobile_identity_decode(&omi, mi, mi_len, true);
-		osmo_mobile_identity_to_str_buf(str, sizeof(str), &omi);
+		osmo_mobile_identity_to_str_buf(str, sizeof(str), mi);
 		LOGP(DRLCMAC, LOGL_INFO, "Add RR paging: chan-needed=%d MI=%s\n", chan_needed, str);
 	}
 
@@ -419,7 +417,7 @@ int BTS::add_paging(uint8_t chan_needed, const uint8_t *mi, uint8_t mi_len)
 		for (ts = 0; ts < 8; ts++) {
 			if ((slot_mask[trx] & (1 << ts))) {
 				/* schedule */
-				if (!m_bts.trx[trx].pdch[ts].add_paging(chan_needed, mi, mi_len))
+				if (!m_bts.trx[trx].pdch[ts].add_paging(chan_needed, mi))
 					return -ENOMEM;
 
 				LOGP(DRLCMAC, LOGL_INFO, "Paging on PACCH of TRX=%d TS=%d\n", trx, ts);

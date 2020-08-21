@@ -30,6 +30,7 @@
 extern "C" {
 #include <osmocom/gprs/protocol/gsm_04_60.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
+#include <osmocom/gsm/gsm48.h>
 }
 
 #include <stdbool.h>
@@ -720,8 +721,10 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 }
 
 /* Generate paging request. See 44.018, sections 10 and 9.1.22 */
-int Encoding::write_paging_request(bitvec * dest, const uint8_t *mi, uint8_t mi_len)
+int Encoding::write_paging_request(bitvec * dest, const struct osmo_mobile_identity *mi)
 {
+	uint8_t mi_buf[GSM48_MID_MAX_SIZE];
+	int mi_len;
 	unsigned wp = 0;
 	int plen;
 
@@ -732,8 +735,11 @@ int Encoding::write_paging_request(bitvec * dest, const uint8_t *mi, uint8_t mi_
 	bitvec_write_field(dest, &wp,0x0,4);  // Page Mode
 	bitvec_write_field(dest, &wp,0x0,4);  // Channel Needed
 
+	mi_len = osmo_mobile_identity_encode_buf(mi_buf, sizeof(mi_buf), mi, true);
+	if (mi_len <= 0)
+		return mi_len;
 	bitvec_write_field(dest, &wp, mi_len, 8);  // Mobile Identity length
-	bitvec_set_bytes(dest, mi, mi_len);        // Mobile Identity
+	bitvec_set_bytes(dest, mi_buf, mi_len);    // Mobile Identity
 	wp += mi_len * 8;
 
 	OSMO_ASSERT(wp % 8 == 0);

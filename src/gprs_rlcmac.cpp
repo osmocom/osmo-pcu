@@ -32,18 +32,20 @@ extern "C" {
 
 extern void *tall_pcu_ctx;
 
-int gprs_rlcmac_paging_request(const uint8_t *mi, uint8_t mi_len, uint16_t pgroup)
+int gprs_rlcmac_paging_request(const struct osmo_mobile_identity *mi, uint16_t pgroup)
 {
 	if (log_check_level(DRLCMAC, LOGL_NOTICE)) {
-		struct osmo_mobile_identity omi = {};
 		char str[64];
-		osmo_mobile_identity_decode(&omi, mi, mi_len, true);
-		osmo_mobile_identity_to_str_buf(str, sizeof(str), &omi);
+		osmo_mobile_identity_to_str_buf(str, sizeof(str), mi);
 		LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Paging Request (CCCH) MI=%s\n", str);
 	}
 	bitvec *paging_request = bitvec_alloc(22, tall_pcu_ctx);
 	bitvec_unhex(paging_request, DUMMY_VEC);
-	int plen = Encoding::write_paging_request(paging_request, mi, mi_len);
+	int plen = Encoding::write_paging_request(paging_request, mi);
+	if (plen <= 0) {
+		LOGP(DRLCMAC, LOGL_ERROR, "TX: [PCU -> BTS] Failed to encode Paging Request\n");
+		return -1;
+	}
 	pcu_l1if_tx_pch(paging_request, plen, pgroup);
 	bitvec_free(paging_request);
 

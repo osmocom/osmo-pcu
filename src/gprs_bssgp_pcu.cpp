@@ -171,11 +171,8 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 }
 
 /* Returns 0 on success, suggested BSSGP cause otherwise */
-static unsigned int get_paging_mi(const uint8_t **mi, uint8_t *mi_len,
-				  const struct tlv_parsed *tp)
+static unsigned int get_paging_mi(struct osmo_mobile_identity *mi, const struct tlv_parsed *tp)
 {
-	static uint8_t tmsi_buf[GSM48_TMSI_LEN];
-
 	/* Use TMSI (if present) or IMSI */
 	if (TLVP_PRESENT(tp, BSSGP_IE_TMSI)) {
 		/* Be safe against an evil SGSN - check the length */
@@ -185,14 +182,17 @@ static unsigned int get_paging_mi(const uint8_t **mi, uint8_t *mi_len,
 		}
 
 		/* NOTE: TMSI (unlike IMSI) IE comes without MI type header */
-		memcpy(tmsi_buf + 1, TLVP_VAL(tp, BSSGP_IE_TMSI), GSM23003_TMSI_NUM_BYTES);
-		tmsi_buf[0] = 0xf0 | GSM_MI_TYPE_TMSI;
-
-		*mi_len = GSM48_TMSI_LEN;
-		*mi = tmsi_buf;
+		*mi = (struct osmo_mobile_identity){
+			.type = GSM_MI_TYPE_TMSI,
+		};
+		mi->tmsi = osmo_load32be(TLVP_VAL(tp, BSSGP_IE_TMSI));
 	} else if (TLVP_PRESENT(tp, BSSGP_IE_IMSI)) {
-		*mi_len = TLVP_LEN(tp, BSSGP_IE_IMSI);
-		*mi = TLVP_VAL(tp, BSSGP_IE_IMSI);
+		int rc = osmo_mobile_identity_decode(mi, TLVP_VAL(tp, BSSGP_IE_IMSI), TLVP_LEN(tp, BSSGP_IE_IMSI),
+						     true);
+		if (rc < 0 || mi->type != GSM_MI_TYPE_IMSI) {
+			LOGP(DBSSGP, LOGL_ERROR, "Invalid IMSI Mobile Identity\n");
+			return BSSGP_CAUSE_COND_IE_ERR;
+		}
 	} else {
 		LOGP(DBSSGP, LOGL_ERROR, "Neither TMSI IE nor IMSI IE is present\n");
 		return BSSGP_CAUSE_MISSING_COND_IE;
@@ -203,23 +203,21 @@ static unsigned int get_paging_mi(const uint8_t **mi, uint8_t *mi_len,
 
 static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, struct tlv_parsed *tp)
 {
-	const uint8_t *mi;
-	uint8_t mi_len;
+	struct osmo_mobile_identity mi;
 	int rc;
 	uint8_t *chan_needed = (uint8_t *)TLVP_VAL(tp, BSSGP_IE_CHAN_NEEDED);
 
-	if ((rc = get_paging_mi(&mi, &mi_len, tp)) > 0)
+	if ((rc = get_paging_mi(&mi, tp)) > 0)
 		return bssgp_tx_status((enum gprs_bssgp_cause) rc, NULL, msg);
 
-	return BTS::main_bts()->add_paging(chan_needed ? *chan_needed : 0, mi, mi_len);
+	return BTS::main_bts()->add_paging(chan_needed ? *chan_needed : 0, &mi);
 }
 
 static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 {
 	struct osmo_mobile_identity mi_imsi;
+	struct osmo_mobile_identity paging_mi;
 	uint16_t pgroup;
-	const uint8_t *mi;
-	uint8_t mi_len;
 	int rc;
 
 	if (!TLVP_PRESENT(tp, BSSGP_IE_IMSI)) {
@@ -238,10 +236,10 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 		return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
 	}
 
-	if ((rc = get_paging_mi(&mi, &mi_len, tp)) > 0)
+	if ((rc = get_paging_mi(&paging_mi, tp)) > 0)
 		return bssgp_tx_status((enum gprs_bssgp_cause) rc, NULL, msg);
 
-	return gprs_rlcmac_paging_request(mi, mi_len, pgroup);
+	return gprs_rlcmac_paging_request(&paging_mi, pgroup);
 }
 
 /* Receive a BSSGP PDU from a BSS on a PTP BVCI */
