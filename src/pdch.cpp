@@ -205,8 +205,13 @@ struct msgb *gprs_rlcmac_pdch::packet_paging_request()
 
 	/* loop until message is full */
 	while (pag) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Paging MI - %s\n",
-		     osmo_mi_name(pag->identity_lv + 1, pag->identity_lv[0]));
+		if (log_check_level(DRLCMAC, LOGL_DEBUG)) {
+			struct osmo_mobile_identity omi = {};
+			char str[64];
+			osmo_mobile_identity_decode(&omi, pag->identity_lv + 1, pag->identity_lv[0], true);
+			osmo_mobile_identity_to_str_buf(str, sizeof(str), &omi);
+			LOGP(DRLCMAC, LOGL_DEBUG, "Paging MI - %s\n", str);
+		}
 
 		/* try to add paging */
 		if ((pag->identity_lv[1] & GSM_MI_TYPE_MASK) == GSM_MI_TYPE_TMSI) {

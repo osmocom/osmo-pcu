@@ -369,9 +369,13 @@ int BTS::add_paging(uint8_t chan_needed, const uint8_t *mi, uint8_t mi_len)
 		NULL
 	};
 
-
-	LOGP(DRLCMAC, LOGL_INFO, "Add RR paging: chan-needed=%d MI=%s\n",
-		chan_needed, osmo_mi_name(mi, mi_len));
+	if (log_check_level(DRLCMAC, LOGL_INFO)) {
+		struct osmo_mobile_identity omi = {};
+		char str[64];
+		osmo_mobile_identity_decode(&omi, mi, mi_len, true);
+		osmo_mobile_identity_to_str_buf(str, sizeof(str), &omi);
+		LOGP(DRLCMAC, LOGL_INFO, "Add RR paging: chan-needed=%d MI=%s\n", chan_needed, str);
+	}
 
 	/* collect slots to page
 	 * Mark slots for every TBF, but only mark one of it.

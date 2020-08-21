@@ -34,8 +34,13 @@ extern void *tall_pcu_ctx;
 
 int gprs_rlcmac_paging_request(const uint8_t *mi, uint8_t mi_len, uint16_t pgroup)
 {
-	LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Paging Request (CCCH) MI=%s\n",
-	    osmo_mi_name(mi, mi_len));
+	if (log_check_level(DRLCMAC, LOGL_NOTICE)) {
+		struct osmo_mobile_identity omi = {};
+		char str[64];
+		osmo_mobile_identity_decode(&omi, mi, mi_len, true);
+		osmo_mobile_identity_to_str_buf(str, sizeof(str), &omi);
+		LOGP(DRLCMAC, LOGL_NOTICE, "TX: [PCU -> BTS] Paging Request (CCCH) MI=%s\n", str);
+	}
 	bitvec *paging_request = bitvec_alloc(22, tall_pcu_ctx);
 	bitvec_unhex(paging_request, DUMMY_VEC);
 	int plen = Encoding::write_paging_request(paging_request, mi, mi_len);

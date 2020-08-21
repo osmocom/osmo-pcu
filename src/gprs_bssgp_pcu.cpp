@@ -87,11 +87,16 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	uint32_t tlli_old = 0;
 	uint8_t *data;
 	uint16_t len;
-	char imsi[OSMO_IMSI_BUF_SIZE] = "000";
 	uint8_t ms_class = 0;
 	uint8_t egprs_ms_class = 0;
 	int rc;
 	MS_Radio_Access_capability_t rac;
+	/* TODO: is it really necessary to initialize this as a "000" IMSI? It seems, the function should just return an
+	 * error if no IMSI IE was found. */
+	struct osmo_mobile_identity mi_imsi = {
+		.type = GSM_MI_TYPE_TMSI,
+	};
+	OSMO_STRLCPY_ARRAY(mi_imsi.imsi, "000");
 
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
 	tlli = ntohl(budh->tlli);
@@ -116,10 +121,9 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	 * will listen to all paging blocks. */
 	if (TLVP_PRESENT(tp, BSSGP_IE_IMSI))
 	{
-		/* gsm48_mi_to_string() returns number of bytes written, including '\0' */
-		rc = gsm48_mi_to_string(imsi, sizeof(imsi), TLVP_VAL(tp, BSSGP_IE_IMSI),
-							    TLVP_LEN(tp, BSSGP_IE_IMSI));
-		if (rc != GSM23003_IMSI_MAX_DIGITS + 1) {
+		rc = osmo_mobile_identity_decode(&mi_imsi, TLVP_VAL(tp, BSSGP_IE_IMSI), TLVP_LEN(tp, BSSGP_IE_IMSI),
+						 true);
+		if (rc < 0 || mi_imsi.type != GSM_MI_TYPE_TMSI) {
 			LOGP(DBSSGP, LOGL_NOTICE, "Failed to parse IMSI IE (rc=%d)\n", rc);
 			return bssgp_tx_status(BSSGP_CAUSE_COND_IE_ERR, NULL, msg);
 		}
@@ -160,9 +164,9 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 				"TLLI (old) IE\n");
 	}
 
-	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x IMSI: %s len: %d\n", tlli, imsi, len);
+	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x IMSI: %s len: %d\n", tlli, mi_imsi.imsi, len);
 
-	return gprs_rlcmac_dl_tbf::handle(the_pcu.bts, tlli, tlli_old, imsi,
+	return gprs_rlcmac_dl_tbf::handle(the_pcu.bts, tlli, tlli_old, mi_imsi.imsi,
 			ms_class, egprs_ms_class, delay_csec, data, len);
 }
 
@@ -212,7 +216,7 @@ static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, struct tlv_parsed *tp)
 
 static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 {
-	char imsi[OSMO_IMSI_BUF_SIZE];
+	struct osmo_mobile_identity mi_imsi;
 	uint16_t pgroup;
 	const uint8_t *mi;
 	uint8_t mi_len;
@@ -223,16 +227,14 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
 		return bssgp_tx_status(BSSGP_CAUSE_MISSING_MAND_IE, NULL, msg);
 	}
 
-	/* gsm48_mi_to_string() returns number of bytes written, including '\0' */
-	rc = gsm48_mi_to_string(imsi, sizeof(imsi), TLVP_VAL(tp, BSSGP_IE_IMSI),
-				TLVP_LEN(tp, BSSGP_IE_IMSI));
-	if (rc != GSM23003_IMSI_MAX_DIGITS + 1) {
+	rc = osmo_mobile_identity_decode(&mi_imsi, TLVP_VAL(tp, BSSGP_IE_IMSI), TLVP_LEN(tp, BSSGP_IE_IMSI), true);
+	if (rc < 0 || mi_imsi.type != GSM_MI_TYPE_IMSI) {
 		LOGP(DBSSGP, LOGL_NOTICE, "Failed to parse IMSI IE (rc=%d)\n", rc);
 		return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
 	}
-	pgroup = imsi2paging_group(imsi);
+	pgroup = imsi2paging_group(mi_imsi.imsi);
 	if (pgroup > 999) {
-		LOGP(DBSSGP, LOGL_NOTICE, "Failed to compute IMSI %s paging group\n", imsi);
+		LOGP(DBSSGP, LOGL_NOTICE, "Failed to compute IMSI %s paging group\n", mi_imsi.imsi);
 		return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
 	}
 
