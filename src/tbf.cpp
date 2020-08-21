@@ -1253,10 +1253,10 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	}
 
 	new_dl_tbf->was_releasing = was_releasing;
-	msg = msgb_alloc(23, "rlcmac_dl_ass");
+	msg = msgb_alloc(GSM_MACBLOCK_LEN, "rlcmac_dl_ass");
 	if (!msg)
 		return NULL;
-	ass_vec = bitvec_alloc(23, tall_pcu_ctx);
+	ass_vec = bitvec_alloc(GSM_MACBLOCK_LEN, tall_pcu_ctx);
 	if (!ass_vec)
 		goto free_ret;
 	bitvec_unhex(ass_vec, DUMMY_VEC);
@@ -1275,7 +1275,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	}
 	LOGP(DTBF, LOGL_DEBUG, "------------------------- TX : Packet Downlink Assignment -------------------------\n");
 	bts->do_rate_ctr_inc(CTR_PKT_DL_ASSIGNMENT);
-	bitvec_pack(ass_vec, msgb_put(msg, 23));
+	bitvec_pack(ass_vec, msgb_put(msg, GSM_MACBLOCK_LEN));
 
 	if (poll_ass_dl) {
 		set_polling(new_poll_fn, ts, GPRS_RLCMAC_POLL_DL_ASS);
@@ -1304,9 +1304,9 @@ struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
 {
 	struct msgb *msg;
 
-	msg = msgb_alloc(23, "rlcmac_ul_ass_rej");
+	msg = msgb_alloc(GSM_MACBLOCK_LEN, "rlcmac_ul_ass_rej");
 
-	bitvec *packet_access_rej = bitvec_alloc(23, tall_pcu_ctx);
+	bitvec *packet_access_rej = bitvec_alloc(GSM_MACBLOCK_LEN, tall_pcu_ctx);
 
 	bitvec_unhex(packet_access_rej, DUMMY_VEC);
 
@@ -1315,7 +1315,7 @@ struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
 
 	bts->do_rate_ctr_inc(CTR_PKT_ACCESS_REJ);
 
-	bitvec_pack(packet_access_rej, msgb_put(msg, 23));
+	bitvec_pack(packet_access_rej, msgb_put(msg, GSM_MACBLOCK_LEN));
 
 	bitvec_free(packet_access_rej);
 	ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
@@ -1358,11 +1358,11 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 		return NULL;
 	}
 
-	msg = msgb_alloc(23, "rlcmac_ul_ass");
+	msg = msgb_alloc(GSM_MACBLOCK_LEN, "rlcmac_ul_ass");
 	if (!msg)
 		return NULL;
 	LOGPTBF(new_tbf, LOGL_INFO, "start Packet Uplink Assignment (PACCH)\n");
-	ass_vec = bitvec_alloc(23, tall_pcu_ctx);
+	ass_vec = bitvec_alloc(GSM_MACBLOCK_LEN, tall_pcu_ctx);
 	if (!ass_vec)
 		goto free_ret;
 	bitvec_unhex(ass_vec, DUMMY_VEC);
@@ -1370,7 +1370,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 		(direction == GPRS_RLCMAC_DL_TBF), tlli(),
 		is_tlli_valid(), new_tbf, 1, rrbp, bts_data()->alpha,
 		bts_data()->gamma, -1, is_egprs_enabled());
-	bitvec_pack(ass_vec, msgb_put(msg, 23));
+	bitvec_pack(ass_vec, msgb_put(msg, GSM_MACBLOCK_LEN));
 
 	mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	LOGP(DTBF, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++\n");
