@@ -2,10 +2,11 @@
 #define _PCUIF_PROTO_H
 
 #include <osmocom/gsm/l1sap.h>
+#include <arpa/inet.h>
 
 #define PCU_SOCK_DEFAULT	"/tmp/pcu_bts"
 
-#define PCU_IF_VERSION		0x09
+#define PCU_IF_VERSION		0x0a
 #define TXT_MAX_LEN	128
 
 /* msg_type */
@@ -13,7 +14,7 @@
 #define PCU_IF_MSG_DATA_CNF	0x01	/* confirm (e.g. transmission on PCH) */
 #define PCU_IF_MSG_DATA_IND	0x02	/* receive data from given channel */
 #define PCU_IF_MSG_SUSP_REQ	0x03	/* BTS forwards GPRS SUSP REQ to PCU */
-#define PCU_IF_MSG_APP_INFO_REQ	0x04	/* BTS asks PCU to transmit APP INFO via PACCH */
+#define PCU_IF_MSG_APP_INFO_REQ	0x04	/* BTS asks PCU to tranmit APP INFO via PACCH */
 #define PCU_IF_MSG_RTS_REQ	0x10	/* ready to send request */
 #define PCU_IF_MSG_DATA_CNF_DT	0x11	/* confirm (with direct tlli) */
 #define PCU_IF_MSG_RACH_IND	0x22	/* receive RACH */
@@ -112,12 +113,19 @@ struct gsm_pcu_if_rach_ind {
 	uint8_t		ts_nr;
 } __attribute__ ((packed));
 
+struct gsm_pcu_if_info_trx_ts {
+	uint8_t		tsc;
+	uint8_t		hopping;
+	uint8_t		hsn;
+	uint8_t		maio;
+	uint8_t		ma[8];
+} __attribute__ ((packed));
+
 struct gsm_pcu_if_info_trx {
 	uint16_t	arfcn;
 	uint8_t		pdch_mask;		/* PDCH channels per TS */
-	uint8_t		spare;
-	uint8_t		tsc[8];			/* TSC per channel */
 	uint32_t	hlayer1;
+	struct gsm_pcu_if_info_trx_ts ts[8];
 } __attribute__ ((packed));
 
 struct gsm_pcu_if_info_ind {
@@ -155,7 +163,14 @@ struct gsm_pcu_if_info_ind {
 	uint16_t	nsvci[2];
 	uint16_t	local_port[2];
 	uint16_t	remote_port[2];
-	uint32_t	remote_ip[2];
+	/* use IP PROTOCOL instead of address_family, because address_family is
+	 * OS dependent. IPIP => v4, IPV6 => v6, 0 => unused */
+	uint8_t		remote_proto[2];
+	uint8_t		address_family[2];
+	union {
+		struct in_addr ipv4;
+		struct in6_addr ipv6;
+	} remote_ip[2];
 } __attribute__ ((packed));
 
 struct gsm_pcu_if_act_req {
