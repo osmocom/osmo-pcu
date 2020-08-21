@@ -1192,7 +1192,6 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	struct msgb *msg;
 	struct gprs_rlcmac_dl_tbf *new_dl_tbf = NULL;
 	RlcMacDownlink_t *mac_control_block = NULL;
-	bitvec *ass_vec = NULL;
 	int poll_ass_dl = 1;
 	unsigned int rrbp = 0;
 	uint32_t new_poll_fn = 0;
@@ -1256,10 +1255,14 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	msg = msgb_alloc(GSM_MACBLOCK_LEN, "rlcmac_dl_ass");
 	if (!msg)
 		return NULL;
-	ass_vec = bitvec_alloc(GSM_MACBLOCK_LEN, tall_pcu_ctx);
-	if (!ass_vec)
-		goto free_ret;
-	bitvec_unhex(ass_vec, DUMMY_VEC);
+
+	/* Initialize a bit vector that uses allocated msgb as the data buffer.
+	 * Old G++ does not support non-trivial designated initializers. Sigh. */
+	struct bitvec bv = { };
+	bv.data = msgb_put(msg, GSM_MACBLOCK_LEN);
+	bv.data_len = GSM_MACBLOCK_LEN;
+	bitvec_unhex(&bv, DUMMY_VEC);
+
 	LOGPTBF(new_dl_tbf, LOGL_INFO, "start Packet Downlink Assignment (PACCH)\n");
 	mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	Encoding::write_packet_downlink_assignment(mac_control_block,
@@ -1268,14 +1271,13 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 		bts_data()->alpha, bts_data()->gamma, -1, 0,
 		is_egprs_enabled());
 	LOGP(DTBF, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
-	rc = encode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
+	rc = encode_gsm_rlcmac_downlink(&bv, mac_control_block);
 	if (rc < 0) {
 		LOGP(DTBF, LOGL_ERROR, "Decoding of Packet Downlink Ass failed (%d)\n", rc);
 		goto free_ret;
 	}
 	LOGP(DTBF, LOGL_DEBUG, "------------------------- TX : Packet Downlink Assignment -------------------------\n");
 	bts->do_rate_ctr_inc(CTR_PKT_DL_ASSIGNMENT);
-	bitvec_pack(ass_vec, msgb_put(msg, GSM_MACBLOCK_LEN));
 
 	if (poll_ass_dl) {
 		set_polling(new_poll_fn, ts, GPRS_RLCMAC_POLL_DL_ASS);
@@ -1288,13 +1290,10 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 
 	}
 
-	bitvec_free(ass_vec);
 	talloc_free(mac_control_block);
 	return msg;
 
 free_ret:
-	if (ass_vec != NULL)
-		bitvec_free(ass_vec);
 	talloc_free(mac_control_block);
 	msgb_free(msg);
 	return NULL;
@@ -1333,7 +1332,6 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_ul_tbf *new_tbf = NULL;
 	RlcMacDownlink_t *mac_control_block = NULL;
-	bitvec *ass_vec = NULL;
 	int rc;
 	unsigned int rrbp;
 	uint32_t new_poll_fn;
@@ -1361,20 +1359,23 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 	msg = msgb_alloc(GSM_MACBLOCK_LEN, "rlcmac_ul_ass");
 	if (!msg)
 		return NULL;
+
+	/* Initialize a bit vector that uses allocated msgb as the data buffer.
+	 * Old G++ does not support non-trivial designated initializers. Sigh. */
+	struct bitvec bv = { };
+	bv.data = msgb_put(msg, GSM_MACBLOCK_LEN);
+	bv.data_len = GSM_MACBLOCK_LEN;
+	bitvec_unhex(&bv, DUMMY_VEC);
+
 	LOGPTBF(new_tbf, LOGL_INFO, "start Packet Uplink Assignment (PACCH)\n");
-	ass_vec = bitvec_alloc(GSM_MACBLOCK_LEN, tall_pcu_ctx);
-	if (!ass_vec)
-		goto free_ret;
-	bitvec_unhex(ass_vec, DUMMY_VEC);
-	Encoding::write_packet_uplink_assignment(ass_vec, m_tfi,
+	Encoding::write_packet_uplink_assignment(&bv, m_tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), tlli(),
 		is_tlli_valid(), new_tbf, 1, rrbp, bts_data()->alpha,
 		bts_data()->gamma, -1, is_egprs_enabled());
-	bitvec_pack(ass_vec, msgb_put(msg, GSM_MACBLOCK_LEN));
 
 	mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	LOGP(DTBF, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++\n");
-	rc = decode_gsm_rlcmac_downlink(ass_vec, mac_control_block);
+	rc = decode_gsm_rlcmac_downlink(&bv, mac_control_block);
 	if (rc < 0) {
 		LOGP(DTBF, LOGL_ERROR, "Decoding of Packet Uplink Ass failed (%d)\n", rc);
 		goto free_ret;
@@ -1384,13 +1385,10 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 
 	set_polling(new_poll_fn, ts, GPRS_RLCMAC_POLL_UL_ASS);
 
-	bitvec_free(ass_vec);
 	talloc_free(mac_control_block);
 	return msg;
 
 free_ret:
-	if (ass_vec != NULL)
-		bitvec_free(ass_vec);
 	talloc_free(mac_control_block);
 	msgb_free(msg);
 	return NULL;
