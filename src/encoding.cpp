@@ -548,7 +548,7 @@ void Encoding::write_packet_uplink_assignment(
 	uint8_t ta_ts = 0; /* FIXME: supply it as parameter from caller */
 
 	bitvec_write_field(dest, &wp,0x1,2);  // Payload Type
-	bitvec_write_field(dest, &wp,0x0,2);  // Uplink block with TDMA framenumber (N+13)
+	bitvec_write_field(dest, &wp,rrbp,2);  // Uplink block with TDMA framenumber (N+13)
 	bitvec_write_field(dest, &wp,poll,1);  // Suppl/Polling Bit
 	bitvec_write_field(dest, &wp,0x0,3);  // Uplink state flag
 	bitvec_write_field(dest, &wp,0xa,6);  // MESSAGE TYPE
