@@ -103,8 +103,10 @@ void create_and_connect_bssgp(struct gprs_rlcmac_bts *bts,
 	remote.u.sin.sin_addr.s_addr = htonl(sgsn_ip);
 	remote.u.sin.sin_port = htons(sgsn_port);
 
-	pcu = gprs_bssgp_create_and_connect(bts, &local, &remote,
-					20, 20, 20, 901, 99, false, 1, 0, 0);
+	pcu = gprs_bssgp_init(bts, 20, 20, 901, 99, false, 1, 0, 0);
+	gprs_nsvc_create_and_connect(bts, &local, &remote,
+				     20, 20);
+
 	pcu->on_unblock_ack = bvci_unblocked;
 	pcu->on_dl_unit_data = bssgp_data;
 }

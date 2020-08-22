@@ -917,47 +917,33 @@ static int gprs_ns_reconnect(struct gprs_nsvc *nsvc)
 	return 0;
 }
 
-/* create BSSGP/NS layer instances */
-struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts,
-	struct osmo_sockaddr *local, struct osmo_sockaddr *sgsn,
-	uint16_t nsei, uint16_t nsvci, uint16_t bvci,
-	uint16_t mcc, uint16_t mnc, bool mnc_3_digits,
-	uint16_t lac, uint16_t rac, uint16_t cell_id)
+int gprs_nsvc_create_and_connect(
+		struct gprs_rlcmac_bts *bts,
+		struct osmo_sockaddr *local, struct osmo_sockaddr *sgsn,
+		uint16_t nsei, uint16_t nsvci)
 {
 	struct gprs_ns2_vc *nsvc;
 	struct gprs_ns2_vc_bind *bind;
-	struct sockaddr_in dest;
 	int rc;
 
-	/* if already created... return the current address */
-	if (the_pcu.bctx)
-		return &the_pcu;
-
-	the_pcu.bts = bts;
-
-	/* don't specify remote IP/port if SNS dialect is in use; Doing so would
-	 * issue a connect() on the socket, which prevents us to dynamically communicate
-	 * with any number of IP-SNS endpoints on the SGSN side */
 	rc = gprs_ns2_ip_bind(bts->nsi, local, 0, &bind);
 	if (rc < 0) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create socket\n");
 		gprs_ns2_free(bts->nsi);
-		return NULL;
+		return 1;
 	}
 	gprs_ns2_bind_set_mode(bind, NS2_VC_MODE_ALIVE);
 
-	the_pcu.bts->nse = gprs_ns2_nse_by_nsei(bts->nsi, nsei);
-	if (!the_pcu.bts->nse)
-		the_pcu.bts->nse = gprs_ns2_create_nse(bts->nsi, nsei);
+	bts->nse = gprs_ns2_nse_by_nsei(bts->nsi, nsei);
+	if (!bts->nse)
+		bts->nse = gprs_ns2_create_nse(bts->nsi, nsei);
 
-	if (!the_pcu.bts->nse) {
+	if (!bts->nse) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSE\n");
-		gprs_ns2_free(bts->nsi);
-		return NULL;
+		return 1;
 	}
 
-	the_pcu.bts->nsei = nsei;
-
+	bts->nsei = nsei;
 	if (bts->gb_dialect_sns) {
 		rc = gprs_ns2_ip_connect_sns(bind, sgsn, nsei);
 	} else {
@@ -968,15 +954,28 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 
 	if (rc) {
 		/* TODO: Could not connect */
-		return NULL;
+		return 1;
 	}
 
+	return 0;
+}
 
+struct gprs_bssgp_pcu *gprs_bssgp_init(
+		struct gprs_rlcmac_bts *bts,
+		uint16_t nsei, uint16_t bvci,
+		uint16_t mcc, uint16_t mnc, bool mnc_3_digits,
+		uint16_t lac, uint16_t rac, uint16_t cell_id)
+{
+
+	/* if already created... return the current address */
+	if (the_pcu.bctx)
+		return &the_pcu;
+
+	the_pcu.bts = bts;
 	the_pcu.bctx = btsctx_alloc(bvci, nsei);
 	if (!the_pcu.bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create BSSGP context\n");
 		the_pcu.bts->nse = NULL;
-		gprs_ns2_free(bts->nsi);
 		return NULL;
 	}
 	the_pcu.bctx->ra_id.mcc = spoof_mcc ? : mcc;
@@ -992,7 +991,6 @@ struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts
 	the_pcu.bctx->cell_id = cell_id;
 
 	osmo_signal_register_handler(SS_L_NS, nsvc_signal_cb, bts);
-
 	osmo_timer_setup(&the_pcu.bvc_timer, bvc_timeout, bts);
 
 	return &the_pcu;

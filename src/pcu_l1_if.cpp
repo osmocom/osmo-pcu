@@ -36,6 +36,7 @@ extern "C" {
 #include <osmocom/core/gsmtap_util.h>
 #include <osmocom/core/gsmtap.h>
 #include <osmocom/core/bitvec.h>
+#include <osmocom/core/sockaddr_str.h>
 #include <osmocom/core/logging.h>
 #include <osmocom/core/utils.h>
 #include <osmocom/gsm/l1sap.h>
@@ -491,8 +492,10 @@ static int pcu_rx_info_ind(struct gsm_pcu_if_info_ind *info_ind)
 	struct gprs_bssgp_pcu *pcu;
 	struct gprs_rlcmac_pdch *pdch;
 	struct osmo_sockaddr local_sockaddr, remote_sockaddr;
+	struct osmo_sockaddr_str local;
 	struct in_addr ia;
 	int rc = 0;
+	int good_nsvc = 0;
 	unsigned int trx, ts;
 	int i;
 
@@ -566,30 +569,69 @@ bssgp_failed:
 	}
 	LOGP(DL1IF, LOGL_DEBUG, " initial_cs=%d\n", info_ind->initial_cs);
 	LOGP(DL1IF, LOGL_DEBUG, " initial_mcs=%d\n", info_ind->initial_mcs);
-	LOGP(DL1IF, LOGL_DEBUG, " nsvci=%d\n", info_ind->nsvci[0]);
-	LOGP(DL1IF, LOGL_DEBUG, " local_port=%d\n", info_ind->local_port[0]);
-	LOGP(DL1IF, LOGL_DEBUG, " remote_port=%d\n", info_ind->remote_port[0]);
-	ia.s_addr = htonl(info_ind->remote_ip[0]);
-	LOGP(DL1IF, LOGL_DEBUG, " remote_ip=%s\n", inet_ntoa(ia));
 
-	local_sockaddr.u.sin.sin_family = AF_INET;
-	local_sockaddr.u.sin.sin_addr.s_addr = htonl(0);
-	local_sockaddr.u.sin.sin_port = htons(info_ind->local_port[0]);
-
-	remote_sockaddr.u.sin.sin_family = AF_INET;
-	remote_sockaddr.u.sin.sin_addr.s_addr = htonl(info_ind->remote_ip[0]);
-	remote_sockaddr.u.sin.sin_port = htons(info_ind->remote_port[0]);
-
-	pcu = gprs_bssgp_create_and_connect(
+	pcu = gprs_bssgp_init(
 			bts,
-			&local_sockaddr, &remote_sockaddr,
-			info_ind->nsei, info_ind->nsvci[0], info_ind->bvci,
+			info_ind->nsei, info_ind->bvci,
 			info_ind->mcc, info_ind->mnc, info_ind->mnc_3_digits,
 			info_ind->lac, info_ind->rac, info_ind->cell_id);
 	if (!pcu) {
-		LOGP(DL1IF, LOGL_NOTICE, "SGSN not available\n");
+		LOGP(DL1IF, LOGL_NOTICE, "Failed to init BSSGP\n");
 		goto bssgp_failed;
 	}
+
+	for (int i=0; i<2; i++) {
+		struct osmo_sockaddr_str sockstr;
+
+		switch (info_ind->address_family[i]) {
+		case IPPROTO_IPIP:
+			local_sockaddr.u.sin.sin_family = AF_INET;
+			local_sockaddr.u.sin.sin_addr.s_addr = INADDR_ANY;
+			local_sockaddr.u.sin.sin_port = info_ind->local_port[i];;
+
+			remote_sockaddr.u.sin.sin_family = AF_INET;
+			remote_sockaddr.u.sin.sin_addr = info_ind->remote_ip[i].ipv4;
+			remote_sockaddr.u.sin.sin_port = info_ind->remote_port[i];
+			break;
+		case IPPROTO_IPV6:
+			local_sockaddr.u.sin6.sin6_family = AF_INET6;
+			local_sockaddr.u.sin6.sin6_addr = in6addr_any;
+			local_sockaddr.u.sin6.sin6_port = info_ind->local_port[i];
+
+			remote_sockaddr.u.sin6.sin6_family = AF_INET6;
+			remote_sockaddr.u.sin6.sin6_addr = info_ind->remote_ip[i].ipv6;
+			remote_sockaddr.u.sin6.sin6_port = info_ind->remote_port[i];
+			break;
+		default:
+			continue;
+		}
+
+		LOGP(DL1IF, LOGL_DEBUG, " NS%d nsvci=%d\n", i, info_ind->nsvci[i]);
+		LOGP(DL1IF, LOGL_DEBUG, " NS%d local_port=%d\n", i, info_ind->local_port[i]);
+		LOGP(DL1IF, LOGL_DEBUG, " NS%d remote_port=%d\n", i, info_ind->remote_port[i]);
+
+		if (osmo_sockaddr_str_from_sockaddr(&sockstr, &remote_sockaddr.u.sas))
+			strcpy(sockstr.ip, "invalid");
+
+		LOGP(DL1IF, LOGL_DEBUG, " NS%d remote_ip=%s\n", i, sockstr.ip);
+		rc = gprs_nsvc_create_and_connect(bts,
+						  &local_sockaddr, &remote_sockaddr,
+						  info_ind->nsei, info_ind->nsvci[i]);
+		if (rc) {
+			LOGP(DL1IF, LOGL_ERROR, "Failed to create NSVC connection to %s:%d!\n",
+			     sockstr.ip, sockstr.port);
+			continue;
+		}
+
+		good_nsvc++;
+	}
+
+	if (good_nsvc == 0) {
+		LOGP(DL1IF, LOGL_ERROR, "No NSVC available to connect to the SGSN!\n");
+		goto bssgp_failed;
+	}
+
+
 
 	bts->cs1 = !!(info_ind->flags & PCU_IF_FLAG_CS1);
 	bts->cs2 = !!(info_ind->flags & PCU_IF_FLAG_CS2);
@@ -654,7 +696,7 @@ bssgp_failed:
 					pcu_tx_act_req(trx, ts, 1);
 					pdch->enable();
 				}
-				pdch->tsc = info_ind->trx[trx].tsc[ts];
+				pdch->tsc = info_ind->trx[trx].ts[ts].tsc;
 				LOGP(DL1IF, LOGL_INFO, "PDCH: trx=%d ts=%d\n",
 					trx, ts);
 			} else {
