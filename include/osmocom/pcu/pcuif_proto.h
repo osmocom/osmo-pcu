@@ -124,6 +124,7 @@ struct gsm_pcu_if_info_trx_ts {
 struct gsm_pcu_if_info_trx {
 	uint16_t	arfcn;
 	uint8_t		pdch_mask;		/* PDCH channels per TS */
+	uint8_t		spare;
 	uint32_t	hlayer1;
 	struct gsm_pcu_if_info_trx_ts ts[8];
 } __attribute__ ((packed));
