@@ -167,7 +167,6 @@ struct gsm_pcu_if_info_ind {
 	/* use IP PROTOCOL instead of address_family, because address_family is
 	 * OS dependent. IPIP => v4, IPV6 => v6, 0 => unused */
 	uint8_t		remote_proto[2];
-	uint8_t		address_family[2];
 	union {
 		struct in_addr ipv4;
 		struct in6_addr ipv6;
