@@ -583,24 +583,24 @@ bssgp_failed:
 	for (int i=0; i<2; i++) {
 		struct osmo_sockaddr_str sockstr;
 
-		switch (info_ind->address_family[i]) {
+		switch (info_ind->remote_proto[i]) {
 		case IPPROTO_IPIP:
 			local_sockaddr.u.sin.sin_family = AF_INET;
 			local_sockaddr.u.sin.sin_addr.s_addr = INADDR_ANY;
-			local_sockaddr.u.sin.sin_port = info_ind->local_port[i];;
+			local_sockaddr.u.sin.sin_port = htons(info_ind->local_port[i]);
 
 			remote_sockaddr.u.sin.sin_family = AF_INET;
 			remote_sockaddr.u.sin.sin_addr = info_ind->remote_ip[i].ipv4;
-			remote_sockaddr.u.sin.sin_port = info_ind->remote_port[i];
+			remote_sockaddr.u.sin.sin_port = htons(info_ind->remote_port[i]);
 			break;
 		case IPPROTO_IPV6:
 			local_sockaddr.u.sin6.sin6_family = AF_INET6;
 			local_sockaddr.u.sin6.sin6_addr = in6addr_any;
-			local_sockaddr.u.sin6.sin6_port = info_ind->local_port[i];
+			local_sockaddr.u.sin6.sin6_port = htons(info_ind->local_port[i]);
 
 			remote_sockaddr.u.sin6.sin6_family = AF_INET6;
 			remote_sockaddr.u.sin6.sin6_addr = info_ind->remote_ip[i].ipv6;
-			remote_sockaddr.u.sin6.sin6_port = info_ind->remote_port[i];
+			remote_sockaddr.u.sin6.sin6_port = htons(info_ind->remote_port[i]);
 			break;
 		default:
 			continue;

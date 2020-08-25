@@ -894,28 +894,6 @@ static void bvc_timeout(void *_priv)
 	osmo_timer_schedule(&the_pcu.bvc_timer, the_pcu.bts->fc_interval, 0);
 }
 
-static int gprs_ns_reconnect(struct gprs_nsvc *nsvc)
-{
-
-	/* shouldn't the reconnect to be done by the fsm itself? */
-//	struct gprs_nsvc *nsvc2;
-
-//	if (nsvc != the_pcu.bts->nse) {
-//		LOGP(DBSSGP, LOGL_ERROR, "NSE is invalid\n");
-//		return -EBADF;
-//	}
-
-//	if (the_pcu.bts->gb_dialect_sns)
-//		nsvc2 = gprs_ns_nsip_connect_sns(pcu_nsi, &nsvc->ip.bts_addr, nsvc->nsei, nsvc->nsvci);
-//	else
-//		nsvc2 = gprs_ns_nsip_connect(pcu_nsi, &nsvc->ip.bts_addr, nsvc->nsei, nsvc->nsvci);
-//	if (!nsvc2) {
-//		LOGP(DBSSGP, LOGL_ERROR, "Failed to reconnect NSVC\n");
-//		return -EIO;
-//	}
-
-	return 0;
-}
 
 int gprs_nsvc_create_and_connect(
 		struct gprs_rlcmac_bts *bts,
@@ -932,7 +910,6 @@ int gprs_nsvc_create_and_connect(
 		gprs_ns2_free(bts->nsi);
 		return 1;
 	}
-	gprs_ns2_bind_set_mode(bind, NS2_VC_MODE_ALIVE);
 
 	bts->nse = gprs_ns2_nse_by_nsei(bts->nsi, nsei);
 	if (!bts->nse)
