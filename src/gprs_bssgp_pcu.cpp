@@ -123,7 +123,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	{
 		rc = osmo_mobile_identity_decode(&mi_imsi, TLVP_VAL(tp, BSSGP_IE_IMSI), TLVP_LEN(tp, BSSGP_IE_IMSI),
 						 true);
-		if (rc < 0 || mi_imsi.type != GSM_MI_TYPE_TMSI) {
+		if (rc < 0 || mi_imsi.type != GSM_MI_TYPE_IMSI) {
 			LOGP(DBSSGP, LOGL_NOTICE, "Failed to parse IMSI IE (rc=%d)\n", rc);
 			return bssgp_tx_status(BSSGP_CAUSE_COND_IE_ERR, NULL, msg);
 		}
