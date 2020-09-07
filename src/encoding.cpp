@@ -628,15 +628,14 @@ void Encoding::write_packet_uplink_assignment(
 }
 
 
-/* generate downlink assignment */
+/* Generate Packet Downlink Assignment as per 3GPP TS 44.060, section 11.2.7.
+ * NOTE: 'block' is expected to be zero-initialized by the caller. */
 void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 	bool old_tfi_is_valid, uint8_t old_tfi, uint8_t old_downlink,
 	const struct gprs_rlcmac_dl_tbf *tbf, uint8_t poll, uint8_t rrbp,
 	uint8_t alpha, uint8_t gamma, int8_t ta_idx,
 	uint8_t ta_ts, bool use_egprs)
 {
-	// Packet downlink assignment TS 44.060 11.2.7
-
 	PDA_AdditionsR99_t *pda_r99;
 
 	uint8_t tn;
