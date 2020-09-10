@@ -565,7 +565,7 @@ static void gen_freq_params(Frequency_Parameters_t *freq_params,
 	freq_params->TSC = pdch->tsc;
 
 	/* If frequency hopping is not in use, encode a single ARFCN */
-	if (pdch == NULL || !pdch->fh.enabled) {
+	if (!pdch->fh.enabled) {
 		freq_params->UnionType = 0x00;
 		freq_params->u.ARFCN = tbf->trx->arfcn;
 		return;
