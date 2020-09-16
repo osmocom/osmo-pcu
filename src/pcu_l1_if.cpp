@@ -567,22 +567,11 @@ bssgp_failed:
 	LOGP(DL1IF, LOGL_DEBUG, " nsvci=%d\n", info_ind->nsvci[0]);
 	LOGP(DL1IF, LOGL_DEBUG, " local_port=%d\n", info_ind->local_port[0]);
 	LOGP(DL1IF, LOGL_DEBUG, " remote_port=%d\n", info_ind->remote_port[0]);
-	ia.s_addr = info_ind->remote_ip[0].v4.s_addr;
+	ia.s_addr = htonl(info_ind->remote_ip[0]);
 	LOGP(DL1IF, LOGL_DEBUG, " remote_ip=%s\n", inet_ntoa(ia));
 
-	switch (info_ind->address_type[0]) {
-	case PCU_IF_ADDR_TYPE_IPV4:
-		break;
-	case PCU_IF_ADDR_TYPE_IPV6:
-		LOGP(DL1IF, LOGL_ERROR, "This PCU does not support IPv6 NSVC!\n");
-		goto bssgp_failed;
-	default:
-		LOGP(DL1IF, LOGL_ERROR, "No IPv4 NSVC given!\n");
-		goto bssgp_failed;
-	}
-
 	pcu = gprs_bssgp_create_and_connect(bts, info_ind->local_port[0],
-		ntohl(info_ind->remote_ip[0].v4.s_addr), info_ind->remote_port[0],
+		info_ind->remote_ip[0], info_ind->remote_port[0],
 		info_ind->nsei, info_ind->nsvci[0], info_ind->bvci,
 		info_ind->mcc, info_ind->mnc, info_ind->mnc_3_digits, info_ind->lac, info_ind->rac,
 		info_ind->cell_id);
