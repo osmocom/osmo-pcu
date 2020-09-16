@@ -28,7 +28,7 @@ extern "C" {
 #include <osmocom/core/logging.h>
 #include <osmocom/core/signal.h>
 #include <osmocom/core/application.h>
-#include <osmocom/gprs/gprs_ns.h>
+#include <osmocom/gprs/gprs_ns2.h>
 #include <osmocom/gprs/gprs_bssgp.h>
 #include <osmocom/gprs/gprs_bssgp_bss.h>
 #include <osmocom/gprs/gprs_msgb.h>
@@ -45,7 +45,6 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 #define IE_LLC_PDU 14
 
 struct gprs_bssgp_pcu {
-	struct gprs_nsvc *nsvc;
 	struct bssgp_bvc_ctx *bctx;
 
 	struct gprs_rlcmac_bts *bts;
@@ -76,16 +75,21 @@ struct gprs_bssgp_pcu {
 				struct tlv_parsed *tp);
 };
 
-struct gprs_bssgp_pcu *gprs_bssgp_create_and_connect(struct gprs_rlcmac_bts *bts,
-		uint16_t local_port,
-		uint32_t sgsn_ip, uint16_t sgsn_port, uint16_t nsei,
-		uint16_t nsvci, uint16_t bvci, uint16_t mcc, uint16_t mnc, bool mnc_3_digits,
+struct gprs_bssgp_pcu *gprs_bssgp_init(
+		struct gprs_rlcmac_bts *bts,
+		uint16_t nsei, uint16_t bvci,
+		uint16_t mcc, uint16_t mnc, bool mnc_3_digits,
 		uint16_t lac, uint16_t rac, uint16_t cell_id);
 
-int gprs_bssgp_ns_cb(enum gprs_ns_evt event, struct gprs_nsvc *nsvc,
-	       struct msgb *msg, uint16_t bvci);
+int gprs_nsvc_create_and_connect(
+		struct gprs_rlcmac_bts *bts,
+		struct osmo_sockaddr *local, struct osmo_sockaddr *sgsn,
+		uint16_t nsei, uint16_t nsvci);
 
-void gprs_bssgp_destroy(void);
+int gprs_ns_prim_cb(struct osmo_prim_hdr *oph, void *ctx);
+int gprs_gp_send_cb(void *ctx, struct msgb *msg);
+
+void gprs_bssgp_destroy(struct gprs_rlcmac_bts *bts);
 
 struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void);
 

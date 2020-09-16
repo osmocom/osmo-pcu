@@ -13,6 +13,7 @@
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/rate_ctr.h>
 #include <osmocom/pcu/pcuif_proto.h>
+#include <osmocom/gprs/gprs_ns2.h>
 #include "pcu_vty.h"
 #include "gprs_rlcmac.h"
 #include <pdch.h>
@@ -1096,10 +1097,13 @@ DEFUN(cfg_pcu_gb_dialect,
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	if (!strcmp(argv[0], "ip-sns"))
+	if (!strcmp(argv[0], "ip-sns")) {
 		bts->gb_dialect_sns = true;
-	else
+		gprs_ns2_vty_force_vc_mode(true, NS2_VC_MODE_ALIVE, "gb-dialect is ip-sns");
+	} else {
 		bts->gb_dialect_sns = false;
+		gprs_ns2_vty_force_vc_mode(false, 0, NULL);
+	}
 
 	return CMD_SUCCESS;
 }

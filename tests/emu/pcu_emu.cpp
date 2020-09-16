@@ -93,15 +93,28 @@ void create_and_connect_bssgp(struct gprs_rlcmac_bts *bts,
 			uint32_t sgsn_ip, uint16_t sgsn_port)
 {
 	struct gprs_bssgp_pcu *pcu;
+	struct osmo_sockaddr local, remote;
 
-	pcu = gprs_bssgp_create_and_connect(bts, 0, sgsn_ip, sgsn_port,
-					20, 20, 20, 901, 99, false, 1, 0, 0);
+	local.u.sin.sin_family = AF_INET;
+	local.u.sin.sin_addr.s_addr = 0;
+	local.u.sin.sin_port = 0;
+
+	remote.u.sin.sin_family = AF_INET;
+	remote.u.sin.sin_addr.s_addr = htonl(sgsn_ip);
+	remote.u.sin.sin_port = htons(sgsn_port);
+
+	pcu = gprs_bssgp_init(bts, 20, 20, 901, 99, false, 1, 0, 0);
+	gprs_nsvc_create_and_connect(bts, &local, &remote,
+				     20, 20);
+
 	pcu->on_unblock_ack = bvci_unblocked;
 	pcu->on_dl_unit_data = bssgp_data;
 }
 
 int main(int argc, char **argv)
 {
+	struct gprs_rlcmac_bts *bts = bts_main_data();
+
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "moiji-mobile Emu-PCU context");
 	if (!tall_pcu_ctx)
 		abort();
@@ -109,8 +122,8 @@ int main(int argc, char **argv)
 	msgb_talloc_ctx_init(tall_pcu_ctx, 0);
 	osmo_init_logging2(tall_pcu_ctx, &gprs_log_info);
 
-	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
-	if (!bssgp_nsi) {
+	bts->nsi = gprs_ns2_instantiate(tall_pcu_ctx, &gprs_ns_prim_cb, NULL);
+	if (!bts->nsi) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		abort();
 	}
@@ -121,7 +134,8 @@ int main(int argc, char **argv)
 	current_test = 0;
 
 	init_main_bts();
-	create_and_connect_bssgp(bts_main_data(), INADDR_LOOPBACK, 23000);
+	bssgp_set_bssgp_callback(gprs_gp_send_cb, bts->nsi);
+	create_and_connect_bssgp(bts, INADDR_LOOPBACK, 23000);
 	
 	for (;;)
 		osmo_select_main(0);

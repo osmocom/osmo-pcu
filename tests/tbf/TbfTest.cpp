@@ -470,15 +470,15 @@ static void test_tbf_exhaustion()
 
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
-	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
-	if (!bssgp_nsi) {
+	bts = the_bts.bts_data();
+	bts->nsi = gprs_ns2_instantiate(tall_pcu_ctx, gprs_ns_prim_cb, NULL);
+	if (!bts->nsi) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		abort();
 	}
 
-	bts = the_bts.bts_data();
 	setup_bts(&the_bts, ts_no);
-	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001, 1234, 1234, 1234, 1, 1, false, 0, 0, 0);
+	gprs_bssgp_init(bts, 1234, 1234, 1, 1, false, 0, 0, 0);
 
 	for (i = 0; i < 1024; i++) {
 		uint32_t tlli = 0xc0000000 + i;
@@ -497,7 +497,7 @@ static void test_tbf_exhaustion()
 	OSMO_ASSERT(rc == -EBUSY);
 	fprintf(stderr, "=== end %s ===\n", __func__);
 
-	gprs_bssgp_destroy();
+	gprs_bssgp_destroy(bts);
 }
 
 static void test_tbf_dl_llc_loss()
@@ -514,20 +514,20 @@ static void test_tbf_dl_llc_loss()
 
 	uint8_t buf[19];
 
-	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
-	if (!bssgp_nsi) {
+	bts = the_bts.bts_data();
+	bts->nsi = gprs_ns2_instantiate(tall_pcu_ctx, gprs_ns_prim_cb, NULL);
+	if (!bts->nsi) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		abort();
 	}
 
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
-	bts = the_bts.bts_data();
 	setup_bts(&the_bts, ts_no);
 	/* keep the MS object 10 seconds */
 	OSMO_ASSERT(osmo_tdef_set(bts->T_defs_pcu, -2030, 10, OSMO_TDEF_S) == 0);
 
-	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001, 2234, 2234, 2234, 1, 1, false, 0, 0, 0);
+	gprs_bssgp_init(bts, 2234, 2234, 1, 1, false, 0, 0, 0);
 
 	/* Handle LLC frame 1 */
 	memset(buf, 1, sizeof(buf));
@@ -582,7 +582,7 @@ static void test_tbf_dl_llc_loss()
 
 	fprintf(stderr, "=== end %s ===\n", __func__);
 
-	gprs_bssgp_destroy();
+	gprs_bssgp_destroy(bts);
 }
 
 static gprs_rlcmac_ul_tbf *establish_ul_tbf_single_phase(BTS *the_bts,
@@ -2165,19 +2165,19 @@ static void test_tbf_gprs_egprs()
 
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
-	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
-	if (!bssgp_nsi) {
+	bts = the_bts.bts_data();
+	bts->nsi = gprs_ns2_instantiate(tall_pcu_ctx, gprs_ns_prim_cb, NULL);
+	if (!bts->nsi) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		abort();
 	}
 
-	bts = the_bts.bts_data();
 	setup_bts(&the_bts, ts_no);
 
 	/* EGPRS-only */
 	bts->egprs_enabled = 1;
 
-	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001, 3234, 3234, 3234, 1, 1, false, 0, 0, 0);
+	gprs_bssgp_init(bts, 3234, 3234, 1, 1, false, 0, 0, 0);
 
 	/* Does not support EGPRS */
 	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class, 0,
@@ -2186,12 +2186,13 @@ static void test_tbf_gprs_egprs()
 	OSMO_ASSERT(rc == -EBUSY);
 	fprintf(stderr, "=== end %s ===\n", __func__);
 
-	gprs_bssgp_destroy();
+	gprs_bssgp_destroy(bts);
 }
 
 static inline void ws_check(gprs_rlcmac_dl_tbf *dl_tbf, const char *test, uint8_t exp_slots, uint16_t exp_ws,
 			    bool free, bool end)
 {
+	gprs_rlcmac_bts *bts = dl_tbf->bts->bts_data();
 	if (!dl_tbf) {
 		fprintf(stderr, "%s(): FAILED (NULL TBF)\n", test);
 		return;
@@ -2213,7 +2214,7 @@ static inline void ws_check(gprs_rlcmac_dl_tbf *dl_tbf, const char *test, uint8_
 
 	if (end) {
 		fprintf(stderr, "=== end %s ===\n", test);
-		gprs_bssgp_destroy();
+		gprs_bssgp_destroy(bts);
 	}
 }
 
@@ -2228,13 +2229,13 @@ static void test_tbf_ws()
 
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
-	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
-	if (!bssgp_nsi) {
+	bts = the_bts.bts_data();
+	bts->nsi = gprs_ns2_instantiate(tall_pcu_ctx, gprs_ns_prim_cb, NULL);
+	if (!bts->nsi) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		abort();
 	}
 
-	bts = the_bts.bts_data();
 	setup_bts(&the_bts, ts_no);
 
 	bts->ws_base = 128;
@@ -2245,7 +2246,7 @@ static void test_tbf_ws()
 	bts->trx[0].pdch[4].enable();
 	bts->trx[0].pdch[5].enable();
 
-	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001, 4234, 4234, 4234, 1, 1, false, 0, 0, 0);
+	gprs_bssgp_init(bts, 4234, 4234, 1, 1, false, 0, 0, 0);
 
 	/* Does no support EGPRS */
 	ms = the_bts.ms_alloc(ms_class, 0);
@@ -2274,13 +2275,13 @@ static void test_tbf_update_ws(void)
 
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
-	bssgp_nsi = gprs_ns_instantiate(&gprs_bssgp_ns_cb, tall_pcu_ctx);
-	if (!bssgp_nsi) {
+	bts = the_bts.bts_data();
+	bts->nsi = gprs_ns2_instantiate(tall_pcu_ctx, gprs_ns_prim_cb, NULL);
+	if (!bts->nsi) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		abort();
 	}
 
-	bts = the_bts.bts_data();
 	setup_bts(&the_bts, ts_no);
 
 	bts->ws_base = 128;
@@ -2291,7 +2292,7 @@ static void test_tbf_update_ws(void)
 	bts->trx[0].pdch[4].enable();
 	bts->trx[0].pdch[5].enable();
 
-	gprs_bssgp_create_and_connect(bts, 33001, 0, 33001, 5234, 5234, 5234, 1, 1, false, 0, 0, 0);
+	gprs_bssgp_init(bts, 5234, 5234, 1, 1, false, 0, 0, 0);
 
 	/* EGPRS-only */
 	bts->egprs_enabled = 1;
