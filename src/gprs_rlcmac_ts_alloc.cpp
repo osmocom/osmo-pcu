@@ -709,11 +709,11 @@ static int tbf_select_slot_set(const gprs_rlcmac_tbf *tbf, const gprs_rlcmac_trx
 	if (tbf->direction != GPRS_RLCMAC_DL_TBF) {
 		snprintf(slot_info, 9, OSMO_BIT_SPEC, OSMO_BIT_PRINT_EX(reserved_ul_slots, 'u'));
 		masked_override_with(slot_info, sl, 'U');
-		LOGPC(DRLCMAC, LOGL_DEBUG, "- Selected UL");
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Selected UL");
 	} else {
 		snprintf(slot_info, 9, OSMO_BIT_SPEC, OSMO_BIT_PRINT_EX(reserved_dl_slots, 'd'));
 		masked_override_with(slot_info, sl, 'D');
-		LOGPC(DRLCMAC, LOGL_DEBUG, "- Selected DL");
+		LOGP(DRLCMAC, LOGL_DEBUG, "- Selected DL");
 	}
 
 	LOGPC(DRLCMAC, LOGL_DEBUG, " slots: (TS=0)\"%s\"(TS=7), %s\n", slot_info, single ? "single" : "multi");
