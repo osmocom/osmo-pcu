@@ -38,7 +38,7 @@ public:
 	virtual void ms_idle(class GprsMs *);
 	virtual void ms_active(class GprsMs *);
 
-	GprsMs *get_ms(uint32_t tlli, uint32_t old_tlli = 0, const char *imsi = 0) const;
+	GprsMs *get_ms(uint32_t tlli, uint32_t old_tlli = 0, const char *imsi = NULL) const;
 	GprsMs *create_ms();
 
 	const LListHead<GprsMs>& ms_list() const {return m_list;}
