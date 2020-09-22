@@ -33,7 +33,7 @@ int pcu_vty_show_ms_by_tlli(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
 	uint32_t tlli);
 int pcu_vty_show_ms_by_imsi(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
 	const char *imsi);
-
+int pcu_vty_show_bts_pdch(struct vty *vty, const struct gprs_rlcmac_bts *bts_data);
 #ifdef __cplusplus
 }
 #endif

@@ -239,3 +239,31 @@ int pcu_vty_show_ms_by_imsi(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
 
 	return show_ms(vty, ms);
 }
+
+int pcu_vty_show_bts_pdch(struct vty *vty, const struct gprs_rlcmac_bts *bts_data)
+{
+	unsigned int trx_nr, ts_nr;
+
+	vty_out(vty, "BTS (%s)%s", bts_data->active ? "active" : "disabled", VTY_NEWLINE);
+	for (trx_nr = 0; trx_nr < ARRAY_SIZE(bts_data->trx); trx_nr++) {
+		const struct gprs_rlcmac_trx *trx = &bts_data->trx[trx_nr];
+
+		for (ts_nr = 0; ts_nr < ARRAY_SIZE(trx->pdch); ts_nr++) {
+			if (trx->pdch[ts_nr].is_enabled())
+				break;
+		}
+		if (ts_nr == ARRAY_SIZE(trx->pdch))
+			continue; /* no pdch active, skip */
+
+		vty_out(vty, " TRX%u%s", trx->trx_no, VTY_NEWLINE);
+		for (ts_nr = 0; ts_nr < ARRAY_SIZE(trx->pdch); ts_nr++) {
+			const struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts_nr];
+
+			vty_out(vty, "  TS%u: PDCH %s, %u UL TBFs, %u DL TBFs%s", pdch->ts_no,
+				pdch->is_enabled() ? "enabled" : "disabled",
+				pdch->num_tbfs(GPRS_RLCMAC_DL_TBF),
+				pdch->num_tbfs(GPRS_RLCMAC_UL_TBF), VTY_NEWLINE);
+		}
+	}
+	return CMD_SUCCESS;
+}

@@ -828,6 +828,14 @@ DEFUN(show_bts_stats,
 	return CMD_SUCCESS;
 }
 
+DEFUN(show_bts_pdch,
+      show_bts_pdch_cmd,
+      "show bts pdch",
+      SHOW_STR "BTS related functionality\nPDCH timeslots\n")
+{
+	return pcu_vty_show_bts_pdch(vty, bts_main_data());
+}
+
 #define IDLE_TIME_STR "keep an idle DL TBF alive for the time given\n"
 DEFUN_DEPRECATED(cfg_pcu_dl_tbf_idle_time,
       cfg_pcu_dl_tbf_idle_time_cmd,
@@ -1273,6 +1281,7 @@ int pcu_vty_init(void)
 	install_element(PCU_NODE, &cfg_pcu_timer_cmd);
 
 	install_element_ve(&show_bts_stats_cmd);
+	install_element_ve(&show_bts_pdch_cmd);
 	install_element_ve(&show_tbf_cmd);
 	install_element_ve(&show_ms_all_cmd);
 	install_element_ve(&show_ms_tlli_cmd);
