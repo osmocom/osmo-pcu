@@ -1725,9 +1725,7 @@ Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Searching for first unallocated TFI: TRX=0
  Found TFI=1.
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654292, TS=7 (curr FN 2654335)
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK.
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Assignment was on PACCH
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) No downlink ACK received yet
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000

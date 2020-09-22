@@ -20,6 +20,7 @@
  */
 
 #include <new>
+#include <sstream>
 
 #include <bts.h>
 #include <tbf.h>
@@ -647,8 +648,13 @@ static inline void tbf_timeout_free(struct gprs_rlcmac_tbf *tbf, enum tbf_timers
 	LOGPTBF(tbf, LOGL_NOTICE, "%s timeout expired, freeing TBF\n",
 		get_value_string(tbf_timers_names, t));
 
-	if (run_diag)
-		tbf->rlcmac_diag();
+	if (run_diag) {
+		LOGPTBF(tbf, LOGL_NOTICE, "%s timeout expired, freeing TBF: %s\n",
+			get_value_string(tbf_timers_names, t), tbf->rlcmac_diag().c_str());
+	} else {
+		LOGPTBF(tbf, LOGL_NOTICE, "%s timeout expired, freeing TBF\n",
+			get_value_string(tbf_timers_names, t));
+	}
 
 	tbf_free(tbf);
 }
@@ -816,8 +822,9 @@ void gprs_rlcmac_tbf::poll_timeout()
 
 	if (ul_tbf && ul_tbf->handle_ctrl_ack()) {
 		if (!ul_tbf->ctrl_ack_to_toggle()) {
-			LOGPTBF(this, LOGL_NOTICE, "Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ACK\n");
-			rlcmac_diag();
+			LOGPTBF(this, LOGL_NOTICE,
+				"Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ACK: %s\n",
+				rlcmac_diag().c_str());
 		}
 		bts->do_rate_ctr_inc(CTR_RLC_ACK_TIMEDOUT);
 		bts->do_rate_ctr_inc(CTR_PUAN_POLL_TIMEDOUT);
@@ -835,8 +842,8 @@ void gprs_rlcmac_tbf::poll_timeout()
 	} else if (ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
 		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS))) {
 			LOGPTBF(this, LOGL_NOTICE,
-				"Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT.\n");
-			rlcmac_diag();
+				"Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: %s\n",
+				rlcmac_diag().c_str());
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
 		}
 		ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
@@ -854,8 +861,8 @@ void gprs_rlcmac_tbf::poll_timeout()
 	} else if (dl_ass_state == GPRS_RLCMAC_DL_ASS_WAIT_ACK) {
 		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS))) {
 			LOGPTBF(this, LOGL_NOTICE,
-				"Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT.\n");
-			rlcmac_diag();
+				"Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: %s\n",
+				rlcmac_diag().c_str());
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
 		}
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
@@ -875,8 +882,8 @@ void gprs_rlcmac_tbf::poll_timeout()
 
 		if (!(dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
 			LOGPTBF(this, LOGL_NOTICE,
-				"Timeout for polling PACKET DOWNLINK ACK.\n");
-			dl_tbf->rlcmac_diag();
+				"Timeout for polling PACKET DOWNLINK ACK: %s\n",
+				dl_tbf->rlcmac_diag().c_str());
 			dl_tbf->state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 		}
 
@@ -1169,22 +1176,24 @@ void gprs_rlcmac_tbf::handle_timeout()
 	}
 }
 
-int gprs_rlcmac_tbf::rlcmac_diag()
+std::string gprs_rlcmac_tbf::rlcmac_diag()
 {
+	std::ostringstream os;
+	os << "|";
 	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
-		LOGPTBF(this, LOGL_NOTICE, "Assignment was on CCCH\n");
+		os << "Assignment was on CCCH|";
 	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)))
-		LOGPTBF(this, LOGL_NOTICE, "Assignment was on PACCH\n");
+		os << "Assignment was on PACCH|";
 	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_UL_DATA)))
-		LOGPTBF(this, LOGL_NOTICE, "Uplink data was received\n");
+		os << "Uplink data was received|";
 	else if (direction == GPRS_RLCMAC_UL_TBF)
-		LOGPTBF(this, LOGL_NOTICE, "No uplink data received yet\n");
+		os << "No uplink data received yet|";
 	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK)))
-		LOGPTBF(this, LOGL_NOTICE, "Downlink ACK was received\n");
+		os << "Downlink ACK was received|";
 	else if (direction == GPRS_RLCMAC_DL_TBF)
-		LOGPTBF(this, LOGL_NOTICE, "No downlink ACK received yet\n");
+		os << "No downlink ACK received yet|";
 
-	return 0;
+	return os.str();
 }
 
 struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)

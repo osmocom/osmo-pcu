@@ -20,6 +20,8 @@
 
 #ifdef __cplusplus
 
+#include <string>
+
 #include "llc.h"
 #include "rlc.h"
 #include "cxx_linuxlist.h"
@@ -212,7 +214,7 @@ struct gprs_rlcmac_tbf {
 
 	uint8_t tsc() const;
 
-	int rlcmac_diag();
+	std::string rlcmac_diag();
 
 	bool n_inc(enum tbf_counters n);
 	void n_reset(enum tbf_counters n);
