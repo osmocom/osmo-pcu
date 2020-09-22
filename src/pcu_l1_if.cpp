@@ -49,6 +49,8 @@ extern "C" {
 #include <osmocom/pcu/pcuif_proto.h>
 #include <bts.h>
 #include <pdch.h>
+#include <tbf_ul.h>
+#include <tbf_dl.h>
 
 // FIXME: move this, when changed from c++ to c.
 extern "C" {
@@ -730,13 +732,28 @@ static int pcu_rx_pag_req(struct gsm_pcu_if_pag_req *pag_req)
 
 static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)
 {
+	BTS *bts = BTS::main_bts();
 	struct bssgp_bvc_ctx *bctx = gprs_bssgp_pcu_current_bctx();
+	GprsMs *ms;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_ra_id ra_id;
 
 	gsm48_parse_ra(&ra_id, susp_req->ra_id);
 
 	LOGP(DL1IF, LOGL_INFO, "GPRS Suspend request received: TLLI=0x%08x RAI=%s\n",
 		susp_req->tlli, osmo_rai_name(&ra_id));
+
+	if ((ms = bts->ms_store().get_ms(susp_req->tlli))) {
+		/* We need to catch both pointers here since MS may become freed
+		   after first tbf_free(dl_tbf) if only DL TBF was available */
+		dl_tbf = ms->dl_tbf();
+		ul_tbf = ms->ul_tbf();
+		if (dl_tbf)
+			tbf_free(dl_tbf);
+		if (ul_tbf)
+			tbf_free(ul_tbf);
+	}
 
 	if (!bctx)
 		return -1;
