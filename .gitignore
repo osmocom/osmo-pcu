@@ -32,6 +32,7 @@ src/osmo-pcu-remote
 
 # tests
 .dirstamp
+__pycache__/
 tests/atconfig
 tests/package.m4
 tests/*/*Test
