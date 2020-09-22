@@ -562,70 +562,70 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 
 		mslot_fill_rx_mask(mslot_class, num_tx, rx_mask);
 
-	/* Rotate group of TX slots: UUU-----, -UUU----, ..., UU-----U */
-	for (ul_ts = 0; ul_ts < 8; ul_ts += 1, tx_valid_win <<= 1) {
-		uint16_t rx_valid_win;
-		uint32_t checked_rx[256/32] = {0};
+		/* Rotate group of TX slots: UUU-----, -UUU----, ..., UU-----U */
+		for (ul_ts = 0; ul_ts < 8; ul_ts += 1, tx_valid_win <<= 1) {
+			uint16_t rx_valid_win;
+			uint32_t checked_rx[256/32] = {0};
 
-		/* Wrap valid window */
-		tx_valid_win = mslot_wrap_window(tx_valid_win);
+			/* Wrap valid window */
+			tx_valid_win = mslot_wrap_window(tx_valid_win);
 
-		tx_window = tx_valid_win;
+			tx_window = tx_valid_win;
 
-		/* Filter out unavailable slots */
-		tx_window &= *ul_slots;
+			/* Filter out unavailable slots */
+			tx_window &= *ul_slots;
 
-		/* Skip if the the first TS (ul_ts) is not in the set */
-		if ((tx_window & (1 << ul_ts)) == 0)
-			continue;
+			/* Skip if the the first TS (ul_ts) is not in the set */
+			if ((tx_window & (1 << ul_ts)) == 0)
+				continue;
 
-		/* Skip if the the last TS (ul_ts+num_tx-1) is not in the set */
-		if ((tx_window & (1 << ((ul_ts+num_tx-1) % 8))) == 0)
-			continue;
+			/* Skip if the the last TS (ul_ts+num_tx-1) is not in the set */
+			if ((tx_window & (1 << ((ul_ts+num_tx-1) % 8))) == 0)
+				continue;
 
-		rx_valid_win = (1 << OSMO_MIN(mslot_class_get_rx(mslot_class), Sum - num_tx)) - 1;
+			rx_valid_win = (1 << OSMO_MIN(mslot_class_get_rx(mslot_class), Sum - num_tx)) - 1;
 
-	/* Rotate group of RX slots: DDD-----, -DDD----, ..., DD-----D */
-	for (dl_ts = 0; dl_ts < 8; dl_ts += 1, rx_valid_win <<= 1) {
-		/* Wrap valid window */
-		rx_valid_win = (rx_valid_win | rx_valid_win >> 8) & 0xff;
+			/* Rotate group of RX slots: DDD-----, -DDD----, ..., DD-----D */
+			for (dl_ts = 0; dl_ts < 8; dl_ts += 1, rx_valid_win <<= 1) {
+				/* Wrap valid window */
+				rx_valid_win = (rx_valid_win | rx_valid_win >> 8) & 0xff;
 
-	/* Validate with both Tta/Ttb/Trb and Ttb/Tra/Trb */
-	for (mask_sel = MASK_TT; mask_sel <= MASK_TR; mask_sel += 1) {
-		int capacity;
+				/* Validate with both Tta/Ttb/Trb and Ttb/Tra/Trb */
+				for (mask_sel = MASK_TT; mask_sel <= MASK_TR; mask_sel += 1) {
+					int capacity;
 
-		rx_window = mslot_filter_bad(rx_mask[mask_sel], ul_ts, *dl_slots, rx_valid_win);
-		if (rx_window < 0)
-			continue;
+					rx_window = mslot_filter_bad(rx_mask[mask_sel], ul_ts, *dl_slots, rx_valid_win);
+					if (rx_window < 0)
+						continue;
 
-		if (skip_slot(mslot_class, mask_sel != MASK_TT, rx_window, tx_window, checked_rx))
- 			continue;
+					if (skip_slot(mslot_class, mask_sel != MASK_TT, rx_window, tx_window, checked_rx))
+						continue;
 
-		/* Compute capacity */
-		capacity = compute_capacity(trx, rx_window, tx_window);
+					/* Compute capacity */
+					capacity = compute_capacity(trx, rx_window, tx_window);
 
 #ifdef ENABLE_TS_ALLOC_DEBUG
-		LOGP(DRLCMAC, LOGL_DEBUG,
-			"- Considering DL/UL slots: (TS=0)\"%s\"(TS=7), "
-			"capacity = %d\n",
-			set_flag_chars(set_flag_chars(set_flag_chars(set_flag_chars(
-					slot_info,
-					rx_bad, 'x', '.'),
-					rx_window, 'D'),
-					tx_window, 'U'),
-					rx_window & tx_window, 'C'),
-			capacity);
+					LOGP(DRLCMAC, LOGL_DEBUG,
+						"- Considering DL/UL slots: (TS=0)\"%s\"(TS=7), "
+						"capacity = %d\n",
+						set_flag_chars(set_flag_chars(set_flag_chars(set_flag_chars(
+								slot_info,
+								rx_bad, 'x', '.'),
+								rx_window, 'D'),
+								tx_window, 'U'),
+								rx_window & tx_window, 'C'),
+						capacity);
 #endif
 
-		if (capacity <= max_capacity)
-			continue;
+					if (capacity <= max_capacity)
+						continue;
 
-		max_capacity = capacity;
-		max_ul_slots = tx_window;
-		max_dl_slots = rx_window;
-	}
-	}
-	}
+					max_capacity = capacity;
+					max_ul_slots = tx_window;
+					max_dl_slots = rx_window;
+				}
+			}
+		}
 	}
 
 	if (!max_ul_slots || !max_dl_slots) {
