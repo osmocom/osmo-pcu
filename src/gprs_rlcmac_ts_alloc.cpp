@@ -896,8 +896,6 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	if (rc < 0)
 		return -EINVAL;
 
-	first_ts = ffs(rc) - 1;
-
 	/* Step 3b: Derive the slot set for a given direction */
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
 		dl_slots = rc;
@@ -914,6 +912,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 		update_slot_counters(ul_slots, reserved_ul_slots, &slotcount, &avail_count);
 	}
 
+	first_ts = ffs(rc) - 1;
 	first_common_ts = ffs(dl_slots & ul_slots) - 1;
 
 	if (first_common_ts < 0) {
