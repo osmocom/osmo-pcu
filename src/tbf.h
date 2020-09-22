@@ -275,8 +275,8 @@ struct gprs_rlcmac_tbf {
 	enum gprs_rlcmac_tbf_direction direction;
 	struct gprs_rlcmac_trx *trx;
 	uint8_t first_ts; /* first TS used by TBF */
-	uint8_t first_common_ts; /* first TS that the phone can send and
-		reveive simultaniously */
+	uint8_t first_common_ts; /* first TS where the phone can send and
+		receive simultaniously */
 	uint8_t control_ts; /* timeslot control messages and polling */
 	struct gprs_rlcmac_pdch *pdch[8]; /* list of PDCHs allocated to TBF */
 
