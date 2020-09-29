@@ -16,5 +16,12 @@ int pcu_vty_init();
 
 extern struct vty_app_info pcu_vty_info;
 
+enum bsc_vty_cmd_attr {
+	PCU_VTY_ATTR_NEW_TBF = 0,
+	PCU_VTY_ATTR_NEW_SUBSCR,
+	PCU_VTY_ATTR_NS_RESET,
+	/* NOTE: up to 32 entries */
+};
+
 #endif /* _PCU_VTY_H */
 

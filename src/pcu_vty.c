@@ -21,6 +21,8 @@
 #include "tbf.h"
 #include "pcu_vty_functions.h"
 
+#define X(x) (1 << x)
+
 extern void *tall_pcu_ctx;
 
 static const struct value_string pcu_gsmtap_categ_names[] = {
@@ -258,10 +260,11 @@ static int config_write_pcu(struct vty *vty)
 }
 
 /* per-BTS configuration */
-DEFUN(cfg_pcu,
-      cfg_pcu_cmd,
-      "pcu",
-      "BTS specific configure")
+DEFUN_ATTR(cfg_pcu,
+	   cfg_pcu_cmd,
+	   "pcu",
+	   "BTS specific configure",
+	   CMD_ATTR_IMMEDIATE)
 {
 	vty->node = PCU_NODE;
 
@@ -270,10 +273,11 @@ DEFUN(cfg_pcu,
 
 #define EGPRS_STR "EGPRS configuration\n"
 
-DEFUN(cfg_pcu_egprs,
-      cfg_pcu_egprs_cmd,
-      "egprs only",
-      EGPRS_STR "Use EGPRS and disable plain GPRS\n")
+DEFUN_USRATTR(cfg_pcu_egprs,
+	      cfg_pcu_egprs_cmd,
+	      X(PCU_VTY_ATTR_NEW_TBF),
+	      "egprs only",
+	      EGPRS_STR "Use EGPRS and disable plain GPRS\n")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -282,10 +286,11 @@ DEFUN(cfg_pcu_egprs,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_egprs,
-      cfg_pcu_no_egprs_cmd,
-      "no egprs",
-      NO_STR EGPRS_STR)
+DEFUN_USRATTR(cfg_pcu_no_egprs,
+	      cfg_pcu_no_egprs_cmd,
+	      X(PCU_VTY_ATTR_NEW_TBF),
+	      "no egprs",
+	      NO_STR EGPRS_STR)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -294,11 +299,12 @@ DEFUN(cfg_pcu_no_egprs,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_fc_interval,
-      cfg_pcu_fc_interval_cmd,
-      "flow-control-interval <1-10>",
-      "Interval between sending subsequent Flow Control PDUs\n"
-      "Interval time in seconds\n")
+DEFUN_ATTR(cfg_pcu_fc_interval,
+	   cfg_pcu_fc_interval_cmd,
+	   "flow-control-interval <1-10>",
+	   "Interval between sending subsequent Flow Control PDUs\n"
+	   "Interval time in seconds\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -310,10 +316,11 @@ DEFUN(cfg_pcu_fc_interval,
 #define FC_BMAX_STR(who) "Force a fixed value for the " who " bucket size\n"
 #define FC_LR_STR(who) "Force a fixed value for the " who " leak rate\n"
 
-DEFUN(cfg_pcu_fc_bvc_bucket_size,
-      cfg_pcu_fc_bvc_bucket_size_cmd,
-      "flow-control force-bvc-bucket-size <1-6553500>",
-      FC_STR FC_BMAX_STR("BVC") "Bucket size in octets\n")
+DEFUN_ATTR(cfg_pcu_fc_bvc_bucket_size,
+	   cfg_pcu_fc_bvc_bucket_size_cmd,
+	   "flow-control force-bvc-bucket-size <1-6553500>",
+	   FC_STR FC_BMAX_STR("BVC") "Bucket size in octets\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -322,10 +329,11 @@ DEFUN(cfg_pcu_fc_bvc_bucket_size,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_fc_bvc_bucket_size,
-      cfg_pcu_no_fc_bvc_bucket_size_cmd,
-      "no flow-control force-bvc-bucket-size",
-      NO_STR FC_STR FC_BMAX_STR("BVC"))
+DEFUN_ATTR(cfg_pcu_no_fc_bvc_bucket_size,
+	   cfg_pcu_no_fc_bvc_bucket_size_cmd,
+	   "no flow-control force-bvc-bucket-size",
+	   NO_STR FC_STR FC_BMAX_STR("BVC"),
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -334,10 +342,11 @@ DEFUN(cfg_pcu_no_fc_bvc_bucket_size,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_fc_bvc_leak_rate,
-      cfg_pcu_fc_bvc_leak_rate_cmd,
-      "flow-control force-bvc-leak-rate <1-6553500>",
-      FC_STR FC_LR_STR("BVC") "Leak rate in bit/s\n")
+DEFUN_ATTR(cfg_pcu_fc_bvc_leak_rate,
+	   cfg_pcu_fc_bvc_leak_rate_cmd,
+	   "flow-control force-bvc-leak-rate <1-6553500>",
+	   FC_STR FC_LR_STR("BVC") "Leak rate in bit/s\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -346,10 +355,11 @@ DEFUN(cfg_pcu_fc_bvc_leak_rate,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_fc_bvc_leak_rate,
-      cfg_pcu_no_fc_bvc_leak_rate_cmd,
-      "no flow-control force-bvc-leak-rate",
-      NO_STR FC_STR FC_LR_STR("BVC"))
+DEFUN_ATTR(cfg_pcu_no_fc_bvc_leak_rate,
+	   cfg_pcu_no_fc_bvc_leak_rate_cmd,
+	   "no flow-control force-bvc-leak-rate",
+	   NO_STR FC_STR FC_LR_STR("BVC"),
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -358,10 +368,11 @@ DEFUN(cfg_pcu_no_fc_bvc_leak_rate,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_fc_ms_bucket_size,
-      cfg_pcu_fc_ms_bucket_size_cmd,
-      "flow-control force-ms-bucket-size <1-6553500>",
-      FC_STR FC_BMAX_STR("default MS") "Bucket size in octets\n")
+DEFUN_ATTR(cfg_pcu_fc_ms_bucket_size,
+	   cfg_pcu_fc_ms_bucket_size_cmd,
+	   "flow-control force-ms-bucket-size <1-6553500>",
+	   FC_STR FC_BMAX_STR("default MS") "Bucket size in octets\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -370,10 +381,11 @@ DEFUN(cfg_pcu_fc_ms_bucket_size,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_fc_ms_bucket_size,
-      cfg_pcu_no_fc_ms_bucket_size_cmd,
-      "no flow-control force-ms-bucket-size",
-      NO_STR FC_STR FC_BMAX_STR("default MS"))
+DEFUN_ATTR(cfg_pcu_no_fc_ms_bucket_size,
+	   cfg_pcu_no_fc_ms_bucket_size_cmd,
+	   "no flow-control force-ms-bucket-size",
+	   NO_STR FC_STR FC_BMAX_STR("default MS"),
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -382,10 +394,11 @@ DEFUN(cfg_pcu_no_fc_ms_bucket_size,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_fc_ms_leak_rate,
-      cfg_pcu_fc_ms_leak_rate_cmd,
-      "flow-control force-ms-leak-rate <1-6553500>",
-      FC_STR FC_LR_STR("default MS") "Leak rate in bit/s\n")
+DEFUN_ATTR(cfg_pcu_fc_ms_leak_rate,
+	   cfg_pcu_fc_ms_leak_rate_cmd,
+	   "flow-control force-ms-leak-rate <1-6553500>",
+	   FC_STR FC_LR_STR("default MS") "Leak rate in bit/s\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -394,10 +407,11 @@ DEFUN(cfg_pcu_fc_ms_leak_rate,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_fc_ms_leak_rate,
-      cfg_pcu_no_fc_ms_leak_rate_cmd,
-      "no flow-control force-ms-leak-rate",
-      NO_STR FC_STR FC_LR_STR("default MS"))
+DEFUN_ATTR(cfg_pcu_no_fc_ms_leak_rate,
+	   cfg_pcu_no_fc_ms_leak_rate_cmd,
+	   "no flow-control force-ms-leak-rate",
+	   NO_STR FC_STR FC_LR_STR("default MS"),
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -407,10 +421,11 @@ DEFUN(cfg_pcu_no_fc_ms_leak_rate,
 }
 
 #define FC_BTIME_STR "Set target downlink maximum queueing time (only affects the advertised bucket size)\n"
-DEFUN(cfg_pcu_fc_bucket_time,
-      cfg_pcu_fc_bucket_time_cmd,
-      "flow-control bucket-time <1-65534>",
-      FC_STR FC_BTIME_STR "Time in centi-seconds\n")
+DEFUN_ATTR(cfg_pcu_fc_bucket_time,
+	   cfg_pcu_fc_bucket_time_cmd,
+	   "flow-control bucket-time <1-65534>",
+	   FC_STR FC_BTIME_STR "Time in centi-seconds\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -419,10 +434,11 @@ DEFUN(cfg_pcu_fc_bucket_time,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_fc_bucket_time,
-      cfg_pcu_no_fc_bucket_time_cmd,
-      "no flow-control bucket-time",
-      NO_STR FC_STR FC_BTIME_STR)
+DEFUN_ATTR(cfg_pcu_no_fc_bucket_time,
+	   cfg_pcu_no_fc_bucket_time_cmd,
+	   "no flow-control bucket-time",
+	   NO_STR FC_STR FC_BTIME_STR,
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -433,12 +449,13 @@ DEFUN(cfg_pcu_no_fc_bucket_time,
 
 #define CS_STR "Coding Scheme configuration\n"
 
-DEFUN(cfg_pcu_cs,
-      cfg_pcu_cs_cmd,
-      "cs <1-4> [<1-4>]",
-      CS_STR
-      "Initial CS value to be used (overrides BTS config)\n"
-      "Use a different initial CS value for the uplink")
+DEFUN_ATTR(cfg_pcu_cs,
+	   cfg_pcu_cs_cmd,
+	   "cs <1-4> [<1-4>]",
+	   CS_STR
+	   "Initial CS value to be used (overrides BTS config)\n"
+	   "Use a different initial CS value for the uplink",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t cs = atoi(argv[0]);
@@ -453,10 +470,11 @@ DEFUN(cfg_pcu_cs,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_cs,
-      cfg_pcu_no_cs_cmd,
-      "no cs",
-      NO_STR CS_STR)
+DEFUN_ATTR(cfg_pcu_no_cs,
+	   cfg_pcu_no_cs_cmd,
+	   "no cs",
+	   NO_STR CS_STR,
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -466,13 +484,14 @@ DEFUN(cfg_pcu_no_cs,
 }
 
 #define CS_MAX_STR "Set maximum values for adaptive CS selection (overrides BTS config)\n"
-DEFUN(cfg_pcu_cs_max,
-      cfg_pcu_cs_max_cmd,
-      "cs max <1-4> [<1-4>]",
-      CS_STR
-      CS_MAX_STR
-      "Maximum CS value to be used\n"
-      "Use a different maximum CS value for the uplink")
+DEFUN_ATTR(cfg_pcu_cs_max,
+	   cfg_pcu_cs_max_cmd,
+	   "cs max <1-4> [<1-4>]",
+	   CS_STR
+	   CS_MAX_STR
+	   "Maximum CS value to be used\n"
+	   "Use a different maximum CS value for the uplink",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t cs = atoi(argv[0]);
@@ -486,10 +505,11 @@ DEFUN(cfg_pcu_cs_max,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_cs_max,
-      cfg_pcu_no_cs_max_cmd,
-      "no cs max",
-      NO_STR CS_STR CS_MAX_STR)
+DEFUN_ATTR(cfg_pcu_no_cs_max,
+	   cfg_pcu_no_cs_max_cmd,
+	   "no cs max",
+	   NO_STR CS_STR CS_MAX_STR,
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -500,13 +520,13 @@ DEFUN(cfg_pcu_no_cs_max,
 }
 
 #define MCS_STR "Modulation and Coding Scheme configuration (EGPRS)\n"
-
-DEFUN(cfg_pcu_mcs,
-      cfg_pcu_mcs_cmd,
-      "mcs <1-9> [<1-9>]",
-      MCS_STR
-      "Initial MCS value to be used (default 1)\n"
-      "Use a different initial MCS value for the uplink")
+DEFUN_ATTR(cfg_pcu_mcs,
+	   cfg_pcu_mcs_cmd,
+	   "mcs <1-9> [<1-9>]",
+	   MCS_STR
+	   "Initial MCS value to be used (default 1)\n"
+	   "Use a different initial MCS value for the uplink",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t cs = atoi(argv[0]);
@@ -520,10 +540,11 @@ DEFUN(cfg_pcu_mcs,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_mcs,
-      cfg_pcu_no_mcs_cmd,
-      "no mcs",
-      NO_STR MCS_STR)
+DEFUN_ATTR(cfg_pcu_no_mcs,
+	   cfg_pcu_no_mcs_cmd,
+	   "no mcs",
+	   NO_STR MCS_STR,
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -533,13 +554,14 @@ DEFUN(cfg_pcu_no_mcs,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_mcs_max,
-      cfg_pcu_mcs_max_cmd,
-      "mcs max <1-9> [<1-9>]",
-      MCS_STR
-      CS_MAX_STR
-      "Maximum MCS value to be used\n"
-      "Use a different maximum MCS value for the uplink")
+DEFUN_ATTR(cfg_pcu_mcs_max,
+	   cfg_pcu_mcs_max_cmd,
+	   "mcs max <1-9> [<1-9>]",
+	   MCS_STR
+	   CS_MAX_STR
+	   "Maximum MCS value to be used\n"
+	   "Use a different maximum MCS value for the uplink",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t mcs = atoi(argv[0]);
@@ -553,10 +575,11 @@ DEFUN(cfg_pcu_mcs_max,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_mcs_max,
-      cfg_pcu_no_mcs_max_cmd,
-      "no mcs max",
-      NO_STR MCS_STR CS_MAX_STR)
+DEFUN_ATTR(cfg_pcu_no_mcs_max,
+	   cfg_pcu_no_mcs_max_cmd,
+	   "no mcs max",
+	   NO_STR MCS_STR CS_MAX_STR,
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -568,12 +591,13 @@ DEFUN(cfg_pcu_no_mcs_max,
 
 #define DL_STR "downlink specific configuration\n"
 
-DEFUN(cfg_pcu_dl_arq_type,
-      cfg_pcu_dl_arq_cmd,
-      "egprs dl arq-type (spb|arq2)",
-      EGPRS_STR DL_STR "ARQ options\n"
-      "enable SPB(ARQ1) support\n"
-      "enable ARQ2 support")
+DEFUN_ATTR(cfg_pcu_dl_arq_type,
+	   cfg_pcu_dl_arq_cmd,
+	   "egprs dl arq-type (spb|arq2)",
+	   EGPRS_STR DL_STR "ARQ options\n"
+	   "enable SPB(ARQ1) support\n"
+	   "enable ARQ2 support",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -585,12 +609,13 @@ DEFUN(cfg_pcu_dl_arq_type,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_window_size,
-      cfg_pcu_window_size_cmd,
-      "window-size <0-1024> [<0-256>]",
-      "Window size configuration (b + N_PDCH * f)\n"
-      "Base value (b)\n"
-      "Factor for number of PDCH (f)")
+DEFUN_USRATTR(cfg_pcu_window_size,
+	      cfg_pcu_window_size_cmd,
+	      X(PCU_VTY_ATTR_NEW_TBF),
+	      "window-size <0-1024> [<0-256>]",
+	      "Window size configuration (b + N_PDCH * f)\n"
+	      "Base value (b)\n"
+	      "Factor for number of PDCH (f)")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint16_t b = atoi(argv[0]);
@@ -609,10 +634,11 @@ DEFUN(cfg_pcu_window_size,
 #define LIFETIME_STR "Set lifetime limit of LLC frame in centi-seconds " \
 	"(overrides the value given by SGSN)\n"
 
-DEFUN(cfg_pcu_queue_lifetime,
-      cfg_pcu_queue_lifetime_cmd,
-      "queue lifetime <1-65534>",
-      QUEUE_STR LIFETIME_STR "Lifetime in centi-seconds")
+DEFUN_USRATTR(cfg_pcu_queue_lifetime,
+	      cfg_pcu_queue_lifetime_cmd,
+	      X(PCU_VTY_ATTR_NEW_TBF),
+	      "queue lifetime <1-65534>",
+	      QUEUE_STR LIFETIME_STR "Lifetime in centi-seconds")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint16_t csec = atoi(argv[0]);
@@ -622,10 +648,11 @@ DEFUN(cfg_pcu_queue_lifetime,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_queue_lifetime_inf,
-      cfg_pcu_queue_lifetime_inf_cmd,
-      "queue lifetime infinite",
-      QUEUE_STR LIFETIME_STR "Infinite lifetime")
+DEFUN_USRATTR(cfg_pcu_queue_lifetime_inf,
+	      cfg_pcu_queue_lifetime_inf_cmd,
+	      X(PCU_VTY_ATTR_NEW_TBF),
+	      "queue lifetime infinite",
+	      QUEUE_STR LIFETIME_STR "Infinite lifetime")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -634,11 +661,12 @@ DEFUN(cfg_pcu_queue_lifetime_inf,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_queue_lifetime,
-      cfg_pcu_no_queue_lifetime_cmd,
-      "no queue lifetime",
-      NO_STR QUEUE_STR "Disable lifetime limit of LLC frame (use value given "
-      "by SGSN)\n")
+DEFUN_USRATTR(cfg_pcu_no_queue_lifetime,
+	      cfg_pcu_no_queue_lifetime_cmd,
+	      X(PCU_VTY_ATTR_NEW_TBF),
+	      "no queue lifetime",
+	      NO_STR QUEUE_STR "Disable lifetime limit of LLC frame (use value given "
+	      "by SGSN)\n")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -650,10 +678,11 @@ DEFUN(cfg_pcu_no_queue_lifetime,
 #define QUEUE_HYSTERESIS_STR "Set lifetime hysteresis of LLC frame in centi-seconds " \
 	"(continue discarding until lifetime-hysteresis is reached)\n"
 
-DEFUN(cfg_pcu_queue_hysteresis,
-      cfg_pcu_queue_hysteresis_cmd,
-      "queue hysteresis <1-65535>",
-      QUEUE_STR QUEUE_HYSTERESIS_STR "Hysteresis in centi-seconds")
+DEFUN_USRATTR(cfg_pcu_queue_hysteresis,
+	      cfg_pcu_queue_hysteresis_cmd,
+	      X(PCU_VTY_ATTR_NEW_TBF),
+	      "queue hysteresis <1-65535>",
+	      QUEUE_STR QUEUE_HYSTERESIS_STR "Hysteresis in centi-seconds")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint16_t csec = atoi(argv[0]);
@@ -663,10 +692,11 @@ DEFUN(cfg_pcu_queue_hysteresis,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_queue_hysteresis,
-      cfg_pcu_no_queue_hysteresis_cmd,
-      "no queue hysteresis",
-      NO_STR QUEUE_STR QUEUE_HYSTERESIS_STR)
+DEFUN_USRATTR(cfg_pcu_no_queue_hysteresis,
+	      cfg_pcu_no_queue_hysteresis_cmd,
+	      X(PCU_VTY_ATTR_NEW_TBF),
+	      "no queue hysteresis",
+	      NO_STR QUEUE_STR QUEUE_HYSTERESIS_STR)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -676,11 +706,11 @@ DEFUN(cfg_pcu_no_queue_hysteresis,
 }
 
 #define QUEUE_CODEL_STR "Set CoDel queue management\n"
-
-DEFUN(cfg_pcu_queue_codel,
-      cfg_pcu_queue_codel_cmd,
-      "queue codel",
-      QUEUE_STR QUEUE_CODEL_STR)
+DEFUN_USRATTR(cfg_pcu_queue_codel,
+	      cfg_pcu_queue_codel_cmd,
+	      X(PCU_VTY_ATTR_NEW_SUBSCR),
+	      "queue codel",
+	      QUEUE_STR QUEUE_CODEL_STR)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -689,10 +719,11 @@ DEFUN(cfg_pcu_queue_codel,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_queue_codel_interval,
-      cfg_pcu_queue_codel_interval_cmd,
-      "queue codel interval <1-1000>",
-      QUEUE_STR QUEUE_CODEL_STR "Specify interval\n" "Interval in centi-seconds")
+DEFUN_USRATTR(cfg_pcu_queue_codel_interval,
+	      cfg_pcu_queue_codel_interval_cmd,
+	      X(PCU_VTY_ATTR_NEW_SUBSCR),
+	      "queue codel interval <1-1000>",
+	      QUEUE_STR QUEUE_CODEL_STR "Specify interval\n" "Interval in centi-seconds")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint16_t csec = atoi(argv[0]);
@@ -702,10 +733,11 @@ DEFUN(cfg_pcu_queue_codel_interval,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_queue_codel,
-      cfg_pcu_no_queue_codel_cmd,
-      "no queue codel",
-      NO_STR QUEUE_STR QUEUE_CODEL_STR)
+DEFUN_USRATTR(cfg_pcu_no_queue_codel,
+	      cfg_pcu_no_queue_codel_cmd,
+	      X(PCU_VTY_ATTR_NEW_SUBSCR),
+	      "no queue codel",
+	      NO_STR QUEUE_STR QUEUE_CODEL_STR)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -717,10 +749,11 @@ DEFUN(cfg_pcu_no_queue_codel,
 
 #define QUEUE_IDLE_ACK_STR "Request an ACK after the last DL LLC frame in centi-seconds\n"
 
-DEFUN(cfg_pcu_queue_idle_ack_delay,
-      cfg_pcu_queue_idle_ack_delay_cmd,
-      "queue idle-ack-delay <1-65535>",
-      QUEUE_STR QUEUE_IDLE_ACK_STR "Idle ACK delay in centi-seconds")
+DEFUN_ATTR(cfg_pcu_queue_idle_ack_delay,
+	   cfg_pcu_queue_idle_ack_delay_cmd,
+	   "queue idle-ack-delay <1-65535>",
+	   QUEUE_STR QUEUE_IDLE_ACK_STR "Idle ACK delay in centi-seconds",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint16_t csec = atoi(argv[0]);
@@ -730,10 +763,11 @@ DEFUN(cfg_pcu_queue_idle_ack_delay,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_queue_idle_ack_delay,
-      cfg_pcu_no_queue_idle_ack_delay_cmd,
-      "no queue idle-ack-delay",
-      NO_STR QUEUE_STR QUEUE_IDLE_ACK_STR)
+DEFUN_ATTR(cfg_pcu_no_queue_idle_ack_delay,
+	   cfg_pcu_no_queue_idle_ack_delay_cmd,
+	   "no queue idle-ack-delay",
+	   NO_STR QUEUE_STR QUEUE_IDLE_ACK_STR,
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -742,15 +776,15 @@ DEFUN(cfg_pcu_no_queue_idle_ack_delay,
 	return CMD_SUCCESS;
 }
 
-
-DEFUN(cfg_pcu_alloc,
-      cfg_pcu_alloc_cmd,
-      "alloc-algorithm (a|b|dynamic)",
-      "Select slot allocation algorithm to use when assigning timeslots on "
-      "PACCH\n"
-      "Single slot is assigned only\n"
-      "Multiple slots are assigned for semi-duplex operation\n"
-      "Dynamically select the algorithm based on the system state\n")
+DEFUN_ATTR(cfg_pcu_alloc,
+	   cfg_pcu_alloc_cmd,
+	   "alloc-algorithm (a|b|dynamic)",
+	   "Select slot allocation algorithm to use when assigning timeslots on "
+	   "PACCH\n"
+	   "Single slot is assigned only\n"
+	   "Multiple slots are assigned for semi-duplex operation\n"
+	   "Dynamically select the algorithm based on the system state\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -769,10 +803,11 @@ DEFUN(cfg_pcu_alloc,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_two_phase,
-      cfg_pcu_two_phase_cmd,
-      "two-phase-access",
-      "Force two phase access when MS requests single phase access\n")
+DEFUN_ATTR(cfg_pcu_two_phase,
+	   cfg_pcu_two_phase_cmd,
+	   "two-phase-access",
+	   "Force two phase access when MS requests single phase access\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -781,10 +816,11 @@ DEFUN(cfg_pcu_two_phase,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_two_phase,
-      cfg_pcu_no_two_phase_cmd,
-      "no two-phase-access",
-      NO_STR "Only use two phase access when requested my MS\n")
+DEFUN_ATTR(cfg_pcu_no_two_phase,
+	   cfg_pcu_no_two_phase_cmd,
+	   "no two-phase-access",
+	   NO_STR "Only use two phase access when requested my MS\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -793,12 +829,13 @@ DEFUN(cfg_pcu_no_two_phase,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_alpha,
-      cfg_pcu_alpha_cmd,
-      "alpha <0-10>",
-      "Alpha parameter for MS power control in units of 0.1 (see TS 05.08) "
-      "NOTE: Be sure to set Alpha value at System information 13 too.\n"
-      "Alpha in units of 0.1\n")
+DEFUN_ATTR(cfg_pcu_alpha,
+	   cfg_pcu_alpha_cmd,
+	   "alpha <0-10>",
+	   "Alpha parameter for MS power control in units of 0.1 (see TS 05.08) "
+	   "NOTE: Be sure to set Alpha value at System information 13 too.\n"
+	   "Alpha in units of 0.1\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -807,11 +844,12 @@ DEFUN(cfg_pcu_alpha,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_gamma,
-      cfg_pcu_gamma_cmd,
-      "gamma <0-62>",
-      "Gamma parameter for MS power control in units of dB (see TS 05.08)\n"
-      "Gamma in even unit of dBs\n")
+DEFUN_ATTR(cfg_pcu_gamma,
+	   cfg_pcu_gamma_cmd,
+	   "gamma <0-62>",
+	   "Gamma parameter for MS power control in units of dB (see TS 05.08)\n"
+	   "Gamma in even unit of dBs\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -868,10 +906,11 @@ DEFUN_DEPRECATED(cfg_pcu_no_dl_tbf_idle_time,
 
 #define RETRANSMISSION_STR "retransmit blocks even before the MS had a chance to receive them (better throughput," \
 			   " less readable traces)"
-DEFUN(cfg_pcu_dl_tbf_preemptive_retransmission,
-      cfg_pcu_dl_tbf_preemptive_retransmission_cmd,
-      "dl-tbf-preemptive-retransmission",
-      RETRANSMISSION_STR " (enabled by default)")
+DEFUN_ATTR(cfg_pcu_dl_tbf_preemptive_retransmission,
+	   cfg_pcu_dl_tbf_preemptive_retransmission_cmd,
+	   "dl-tbf-preemptive-retransmission",
+	   RETRANSMISSION_STR " (enabled by default)",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -880,10 +919,11 @@ DEFUN(cfg_pcu_dl_tbf_preemptive_retransmission,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_dl_tbf_preemptive_retransmission,
-      cfg_pcu_no_dl_tbf_preemptive_retransmission_cmd,
-      "no dl-tbf-preemptive-retransmission",
-      NO_STR RETRANSMISSION_STR)
+DEFUN_ATTR(cfg_pcu_no_dl_tbf_preemptive_retransmission,
+	   cfg_pcu_no_dl_tbf_preemptive_retransmission_cmd,
+	   "no dl-tbf-preemptive-retransmission",
+	   NO_STR RETRANSMISSION_STR,
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -922,10 +962,11 @@ DEFUN_DEPRECATED(cfg_pcu_no_ms_idle_time,
 }
 
 #define CS_ERR_LIMITS_STR "set thresholds for error rate based downlink (M)CS adjustment\n"
-DEFUN(cfg_pcu_cs_err_limits,
-      cfg_pcu_cs_err_limits_cmd,
-      "cs threshold <0-100> <0-100>",
-      CS_STR CS_ERR_LIMITS_STR "lower limit in %\n" "upper limit in %\n")
+DEFUN_ATTR(cfg_pcu_cs_err_limits,
+	   cfg_pcu_cs_err_limits_cmd,
+	   "cs threshold <0-100> <0-100>",
+	   CS_STR CS_ERR_LIMITS_STR "lower limit in %\n" "upper limit in %\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -946,10 +987,11 @@ DEFUN(cfg_pcu_cs_err_limits,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_cs_err_limits,
-      cfg_pcu_no_cs_err_limits_cmd,
-      "no cs threshold",
-      NO_STR CS_STR CS_ERR_LIMITS_STR)
+DEFUN_ATTR(cfg_pcu_no_cs_err_limits,
+	   cfg_pcu_no_cs_err_limits_cmd,
+	   "no cs threshold",
+	   NO_STR CS_STR CS_ERR_LIMITS_STR,
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -961,10 +1003,11 @@ DEFUN(cfg_pcu_no_cs_err_limits,
 }
 
 #define CS_DOWNGRADE_STR "set threshold for data size based downlink (M)CS downgrade\n"
-DEFUN(cfg_pcu_cs_downgrade_thrsh,
-      cfg_pcu_cs_downgrade_thrsh_cmd,
-      "cs downgrade-threshold <1-10000>",
-      CS_STR CS_DOWNGRADE_STR "downgrade if less octets left\n")
+DEFUN_ATTR(cfg_pcu_cs_downgrade_thrsh,
+	   cfg_pcu_cs_downgrade_thrsh_cmd,
+	   "cs downgrade-threshold <1-10000>",
+	   CS_STR CS_DOWNGRADE_STR "downgrade if less octets left\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -973,10 +1016,11 @@ DEFUN(cfg_pcu_cs_downgrade_thrsh,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_no_cs_downgrade_thrsh,
-      cfg_pcu_no_cs_downgrade_thrsh_cmd,
-      "no cs downgrade-threshold",
-      NO_STR CS_STR CS_DOWNGRADE_STR)
+DEFUN_ATTR(cfg_pcu_no_cs_downgrade_thrsh,
+	   cfg_pcu_no_cs_downgrade_thrsh_cmd,
+	   "no cs downgrade-threshold",
+	   NO_STR CS_STR CS_DOWNGRADE_STR,
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -985,21 +1029,21 @@ DEFUN(cfg_pcu_no_cs_downgrade_thrsh,
 	return CMD_SUCCESS;
 }
 
-
-DEFUN(cfg_pcu_cs_lqual_ranges,
-      cfg_pcu_cs_lqual_ranges_cmd,
-      "cs link-quality-ranges cs1 <0-35> cs2 <0-35> <0-35> cs3 <0-35> <0-35> cs4 <0-35>",
-      CS_STR "Set link quality ranges for each uplink CS\n"
-      "Set quality range for CS-1 (high value only)\n"
-      "CS-1 high (dB)\n"
-      "Set quality range for CS-2\n"
-      "CS-2 low (dB)\n"
-      "CS-2 high (dB)\n"
-      "Set quality range for CS-3\n"
-      "CS-3 low (dB)\n"
-      "CS-3 high (dB)\n"
-      "Set quality range for CS-4 (low value only)\n"
-      "CS-4 low (dB)\n")
+DEFUN_ATTR(cfg_pcu_cs_lqual_ranges,
+	   cfg_pcu_cs_lqual_ranges_cmd,
+	   "cs link-quality-ranges cs1 <0-35> cs2 <0-35> <0-35> cs3 <0-35> <0-35> cs4 <0-35>",
+	   CS_STR "Set link quality ranges for each uplink CS\n"
+	   "Set quality range for CS-1 (high value only)\n"
+	   "CS-1 high (dB)\n"
+	   "Set quality range for CS-2\n"
+	   "CS-2 low (dB)\n"
+	   "CS-2 high (dB)\n"
+	   "Set quality range for CS-3\n"
+	   "CS-3 low (dB)\n"
+	   "CS-3 high (dB)\n"
+	   "Set quality range for CS-4 (low value only)\n"
+	   "CS-4 low (dB)\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -1020,35 +1064,36 @@ DEFUN(cfg_pcu_cs_lqual_ranges,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_mcs_lqual_ranges,
-      cfg_pcu_mcs_lqual_ranges_cmd,
-      "mcs link-quality-ranges mcs1 <0-35> mcs2 <0-35> <0-35> mcs3 <0-35> <0-35> mcs4 <0-35> <0-35> mcs5 <0-35> <0-35> mcs6 <0-35> <0-35> mcs7 <0-35> <0-35> mcs8 <0-35> <0-35> mcs9 <0-35>",
-      CS_STR "Set link quality ranges for each uplink MCS\n"
-      "Set quality range for MCS-1 (high value only)\n"
-      "MCS-1 high (dB)\n"
-      "Set quality range for MCS-2\n"
-      "MCS-2 high (dB)\n"
-      "MCS-2 low (dB)\n"
-      "Set quality range for MCS-3\n"
-      "MCS-3 high (dB)\n"
-      "MCS-3 low (dB)\n"
-      "Set quality range for MCS-4\n"
-      "MCS-4 high (dB)\n"
-      "MCS-4 low (dB)\n"
-      "Set quality range for MCS-5\n"
-      "MCS-5 high (dB)\n"
-      "MCS-5 low (dB)\n"
-      "Set quality range for MCS-6\n"
-      "MCS-6 low (dB)\n"
-      "MCS-6 high (dB)\n"
-      "Set quality range for MCS-7\n"
-      "MCS-7 low (dB)\n"
-      "MCS-7 high (dB)\n"
-      "Set quality range for MCS-8\n"
-      "MCS-8 low (dB)\n"
-      "MCS-8 high (dB)\n"
-      "Set quality range for MCS-9 (low value only)\n"
-      "MCS-9 low (dB)\n")
+DEFUN_ATTR(cfg_pcu_mcs_lqual_ranges,
+	   cfg_pcu_mcs_lqual_ranges_cmd,
+	   "mcs link-quality-ranges mcs1 <0-35> mcs2 <0-35> <0-35> mcs3 <0-35> <0-35> mcs4 <0-35> <0-35> mcs5 <0-35> <0-35> mcs6 <0-35> <0-35> mcs7 <0-35> <0-35> mcs8 <0-35> <0-35> mcs9 <0-35>",
+	   CS_STR "Set link quality ranges for each uplink MCS\n"
+	   "Set quality range for MCS-1 (high value only)\n"
+	   "MCS-1 high (dB)\n"
+	   "Set quality range for MCS-2\n"
+	   "MCS-2 high (dB)\n"
+	   "MCS-2 low (dB)\n"
+	   "Set quality range for MCS-3\n"
+	   "MCS-3 high (dB)\n"
+	   "MCS-3 low (dB)\n"
+	   "Set quality range for MCS-4\n"
+	   "MCS-4 high (dB)\n"
+	   "MCS-4 low (dB)\n"
+	   "Set quality range for MCS-5\n"
+	   "MCS-5 high (dB)\n"
+	   "MCS-5 low (dB)\n"
+	   "Set quality range for MCS-6\n"
+	   "MCS-6 low (dB)\n"
+	   "MCS-6 high (dB)\n"
+	   "Set quality range for MCS-7\n"
+	   "MCS-7 low (dB)\n"
+	   "MCS-7 high (dB)\n"
+	   "Set quality range for MCS-8\n"
+	   "MCS-8 low (dB)\n"
+	   "MCS-8 high (dB)\n"
+	   "Set quality range for MCS-9 (low value only)\n"
+	   "MCS-9 low (dB)\n",
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -1088,12 +1133,13 @@ DEFUN(cfg_pcu_sock,
 	return CMD_SUCCESS;
 }
 
-DEFUN(cfg_pcu_gb_dialect,
-      cfg_pcu_gb_dialect_cmd,
-      "gb-dialect (classic|ip-sns)",
-      "Select which Gb interface dialect to use\n"
-      "Classic Gb interface with NS-{RESET,BLOCK,UNBLOCK} and static configuration\n"
-      "Modern Gb interface with IP-SNS (Sub Network Service) and dynamic configuration\n")
+DEFUN_USRATTR(cfg_pcu_gb_dialect,
+	      cfg_pcu_gb_dialect_cmd,
+	      X(PCU_VTY_ATTR_NS_RESET),
+	      "gb-dialect (classic|ip-sns)",
+	      "Select which Gb interface dialect to use\n"
+	      "Classic Gb interface with NS-{RESET,BLOCK,UNBLOCK} and static configuration\n"
+	      "Modern Gb interface with IP-SNS (Sub Network Service) and dynamic configuration\n")
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
@@ -1128,10 +1174,11 @@ DEFUN(show_timer, show_timer_cmd,
 	return osmo_tdef_vty_show_cmd(vty, bts->T_defs_pcu, T_arg, NULL);
 }
 
-DEFUN(cfg_pcu_timer, cfg_pcu_timer_cmd,
-      "timer " OSMO_TDEF_VTY_ARG_SET_OPTIONAL,
-      "Configure or show PCU timers\n"
-      OSMO_TDEF_VTY_DOC_SET)
+DEFUN_ATTR(cfg_pcu_timer, cfg_pcu_timer_cmd,
+	   "timer " OSMO_TDEF_VTY_ARG_SET_OPTIONAL,
+	   "Configure or show PCU timers\n"
+	   OSMO_TDEF_VTY_DOC_SET,
+	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	/* If any arguments are missing, redirect to 'show' */
@@ -1203,6 +1250,19 @@ struct vty_app_info pcu_vty_info = {
 	.name		= "OsmoPCU",
 	.version	= PACKAGE_VERSION,
 	.copyright	= pcu_copyright,
+	.usr_attr_desc	= {
+		[PCU_VTY_ATTR_NEW_TBF] = \
+			"This command applies when a new TBF is begins",
+		[PCU_VTY_ATTR_NEW_SUBSCR] = \
+			"This command applies when a new subscriber attaches",
+		[PCU_VTY_ATTR_NS_RESET] = \
+			"This command applies when the NS is reset",
+	},
+	.usr_attr_letters = {
+		[PCU_VTY_ATTR_NEW_TBF]		= 'n',
+		[PCU_VTY_ATTR_NEW_SUBSCR]	= 's',
+		[PCU_VTY_ATTR_NS_RESET]		= 'r',
+	},
 };
 
 int pcu_vty_init(void)
