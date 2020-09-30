@@ -59,7 +59,7 @@ extern "C" {
 	/* e must make sure to initialize logging before the BTS static
 	 * constructors are executed below, as those call libosmocore APIs that
 	 * require logging already to be initialized. */
-	__attribute__((constructor)) static void early_init(void)
+	__attribute__((constructor (101))) static void early_init(void)
 	{
 		if (!tall_pcu_ctx) {
 			tall_pcu_ctx = talloc_named_const(NULL, 1, "Osmo-PCU context");
