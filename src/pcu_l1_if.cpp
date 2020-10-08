@@ -579,7 +579,7 @@ bssgp_failed:
 		goto bssgp_failed;
 	}
 
-	for (int i=0; i<2; i++) {
+	for (unsigned int i = 0; i < ARRAY_SIZE(info_ind->nsvci); i++) {
 		struct osmo_sockaddr_str sockstr;
 
 		switch (info_ind->address_type[i]) {
