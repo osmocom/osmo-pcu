@@ -606,19 +606,19 @@ bssgp_failed:
 			continue;
 		}
 
-		LOGP(DL1IF, LOGL_DEBUG, " NS%d nsvci=%d\n", i, info_ind->nsvci[i]);
-		LOGP(DL1IF, LOGL_DEBUG, " NS%d local_port=%d\n", i, info_ind->local_port[i]);
-		LOGP(DL1IF, LOGL_DEBUG, " NS%d remote_port=%d\n", i, info_ind->remote_port[i]);
+		LOGP(DL1IF, LOGL_DEBUG, " NS%u nsvci=%u\n", i, info_ind->nsvci[i]);
+		LOGP(DL1IF, LOGL_DEBUG, " NS%u local_port=%u\n", i, info_ind->local_port[i]);
+		LOGP(DL1IF, LOGL_DEBUG, " NS%u remote_port=%u\n", i, info_ind->remote_port[i]);
 
 		if (osmo_sockaddr_str_from_sockaddr(&sockstr, &remote_sockaddr.u.sas))
 			strcpy(sockstr.ip, "invalid");
 
-		LOGP(DL1IF, LOGL_DEBUG, " NS%d remote_ip=%s\n", i, sockstr.ip);
+		LOGP(DL1IF, LOGL_DEBUG, " NS%u remote_ip=%s\n", i, sockstr.ip);
 		rc = gprs_nsvc_create_and_connect(bts,
 						  &local_sockaddr, &remote_sockaddr,
 						  info_ind->nsei, info_ind->nsvci[i]);
 		if (rc) {
-			LOGP(DL1IF, LOGL_ERROR, "Failed to create NSVC connection to %s:%d!\n",
+			LOGP(DL1IF, LOGL_ERROR, "Failed to create NSVC connection to %s:%u!\n",
 			     sockstr.ip, sockstr.port);
 			continue;
 		}
