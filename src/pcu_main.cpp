@@ -82,6 +82,7 @@ static void print_help()
 		"  -D	--daemonize	Fork the process into a background "
 			"daemon\n"
 		"  -i	--gsmtap-ip	The destination IP used for GSMTAP\n"
+		"    	--vty-ref-xml   Generate the VTY reference XML output and exit.\n"
 		);
 }
 
@@ -90,6 +91,7 @@ static void handle_options(int argc, char **argv)
 {
 	while (1) {
 		int option_idx = 0, c;
+		static int long_option = 0;
 		static const struct option long_options[] = {
 			{ "help", 0, 0, 'h' },
 			{ "config-file", 1, 0, 'c' },
@@ -100,6 +102,7 @@ static void handle_options(int argc, char **argv)
 			{ "daemonize", 0, 0, 'D' },
 			{ "exit", 0, 0, 'e' },
 			{ "gsmtap-ip", 1, 0, 'i' },
+			{ "vty-ref-xml", 0, &long_option, 1 },
 			{ 0, 0, 0, 0 }
 		};
 
@@ -113,6 +116,15 @@ static void handle_options(int argc, char **argv)
 			print_help();
 			exit(0);
 			break;
+		case 0:
+			switch (long_option) {
+			case 1:
+				vty_dump_xml_ref(stdout);
+				exit(0);
+			default:
+				fprintf(stderr, "error parsing cmdline options\n");
+				exit(2);
+			}
 		case 'c':
 			free(config_file);
 			config_file = strdup(optarg);
