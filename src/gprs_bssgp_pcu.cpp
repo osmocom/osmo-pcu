@@ -921,10 +921,10 @@ static void bvc_timeout(void *_priv)
 }
 
 
-int gprs_nsvc_create_and_connect(
-		struct gprs_rlcmac_bts *bts,
-		struct osmo_sockaddr *local, struct osmo_sockaddr *sgsn,
-		uint16_t nsei, uint16_t nsvci)
+int gprs_nsvc_create_and_connect(struct gprs_rlcmac_bts *bts,
+				 const struct osmo_sockaddr *local,
+				 const struct osmo_sockaddr *sgsn,
+				 uint16_t nsei, uint16_t nsvci)
 {
 	struct gprs_ns2_vc *nsvc;
 	struct gprs_ns2_vc_bind *bind;
