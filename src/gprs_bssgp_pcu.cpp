@@ -943,6 +943,7 @@ int gprs_nsvc_create_and_connect(struct gprs_rlcmac_bts *bts,
 
 	if (!bts->nse) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSE\n");
+		gprs_ns2_free_bind(bind);
 		return 1;
 	}
 
