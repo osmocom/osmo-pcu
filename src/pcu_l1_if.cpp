@@ -492,7 +492,6 @@ static int pcu_rx_info_ind(const struct gsm_pcu_if_info_ind *info_ind)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	struct gprs_bssgp_pcu *pcu;
-	struct osmo_sockaddr local_sockaddr = {}, remote_sockaddr = {};
 	int rc = 0;
 	int good_nsvc = 0;
 	unsigned int trx_nr, ts_nr;
@@ -580,6 +579,8 @@ bssgp_failed:
 	}
 
 	for (unsigned int i = 0; i < ARRAY_SIZE(info_ind->nsvci); i++) {
+		struct osmo_sockaddr remote_sockaddr = { };
+		struct osmo_sockaddr local_sockaddr = { };
 		struct osmo_sockaddr_str sockstr;
 
 		switch (info_ind->address_type[i]) {
