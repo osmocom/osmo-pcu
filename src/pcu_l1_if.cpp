@@ -607,13 +607,12 @@ bssgp_failed:
 		}
 
 		LOGP(DL1IF, LOGL_DEBUG, " NS%u nsvci=%u\n", i, info_ind->nsvci[i]);
-		LOGP(DL1IF, LOGL_DEBUG, " NS%u local_port=%u\n", i, info_ind->local_port[i]);
-		LOGP(DL1IF, LOGL_DEBUG, " NS%u remote_port=%u\n", i, info_ind->remote_port[i]);
 
 		if (osmo_sockaddr_str_from_sockaddr(&sockstr, &remote_sockaddr.u.sas))
 			strcpy(sockstr.ip, "invalid");
 
-		LOGP(DL1IF, LOGL_DEBUG, " NS%u remote_ip=%s\n", i, sockstr.ip);
+		LOGP(DL1IF, LOGL_DEBUG, " NS%u address: r=%s:%u<->l=NULL:%u\n",
+		     i, sockstr.ip, sockstr.port, info_ind->local_port[i]);
 		rc = gprs_nsvc_create_and_connect(bts,
 						  &local_sockaddr, &remote_sockaddr,
 						  info_ind->nsei, info_ind->nsvci[i]);
