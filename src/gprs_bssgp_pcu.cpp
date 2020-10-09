@@ -930,20 +930,25 @@ int gprs_nsvc_create_and_connect(struct gprs_rlcmac_bts *bts,
 	struct gprs_ns2_vc_bind *bind;
 	int rc;
 
+	bts->nse = gprs_ns2_nse_by_nsei(bts->nsi, nsei);
+	if (bts->nse != NULL) {
+		/* FIXME: we end up here on receipt of subsequent INFO.ind.
+		 * What are we supposed to do? Re-establish the connection? */
+		LOGP(DBSSGP, LOGL_INFO, "NSE with NSEI %u is already configured, "
+		     "keeping it unchanged\n", nsei);
+		return 0;
+	}
+
+	bts->nse = gprs_ns2_create_nse(bts->nsi, nsei);
+	if (!bts->nse) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSE\n");
+		return 1;
+	}
+
 	rc = gprs_ns2_ip_bind(bts->nsi, local, 0, &bind);
 	if (rc < 0) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create socket\n");
 		gprs_ns2_free(bts->nsi);
-		return 1;
-	}
-
-	bts->nse = gprs_ns2_nse_by_nsei(bts->nsi, nsei);
-	if (!bts->nse)
-		bts->nse = gprs_ns2_create_nse(bts->nsi, nsei);
-
-	if (!bts->nse) {
-		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSE\n");
-		gprs_ns2_free_bind(bind);
 		return 1;
 	}
 
