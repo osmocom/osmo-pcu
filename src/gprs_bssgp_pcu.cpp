@@ -947,7 +947,6 @@ int gprs_nsvc_create_and_connect(struct gprs_rlcmac_bts *bts,
 		return 1;
 	}
 
-	bts->nsei = nsei;
 	if (bts->gb_dialect_sns) {
 		rc = gprs_ns2_ip_connect_sns(bind, sgsn, nsei);
 	} else {

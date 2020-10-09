@@ -178,7 +178,6 @@ struct gprs_rlcmac_bts {
 	struct gprs_ns2_inst *nsi;
 	/* main nsei */
 	struct gprs_ns2_nse *nse;
-	uint16_t nsei;
 };
 
 enum {
