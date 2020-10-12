@@ -15,6 +15,12 @@ if BUILD_MANUALS
   osmopcu-usermanual.pdf: $(srcdir)/chapters/*.adoc
 
   VTY_REFERENCE = osmopcu-vty-reference.xml
+
+  BUILT_REFERENCE_XML = $(builddir)/vty/pcu_vty_reference.xml
+  $(builddir)/vty/pcu_vty_reference.xml: $(top_builddir)/src/osmo-pcu
+	mkdir -p $(builddir)/vty
+	$(top_builddir)/src/osmo-pcu --vty-ref-xml > $@
+
   include $(OSMO_GSM_MANUALS_DIR)/build/Makefile.vty-reference.inc
 
   OSMO_REPOSITORY = osmo-pcu
