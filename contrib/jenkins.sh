@@ -97,12 +97,12 @@ autoreconf --install --force
 ./configure $PCU_CONFIG
 $MAKE $PARALLEL_MAKE
 DISTCHECK_CONFIGURE_FLAGS="$PCU_CONFIG" \
-  $MAKE distcheck \
+  $MAKE $PARALLEL_MAKE distcheck \
   || cat-testlogs.sh
 
 if [ "$WITH_MANUALS" = "1" ] && [ "$PUBLISH" = "1" ]; then
   make -C "$base/doc/manuals" publish
 fi
 
-$MAKE maintainer-clean
+$MAKE $PARALLEL_MAKE maintainer-clean
 osmo-clean-workspace.sh
