@@ -920,44 +920,161 @@ static void bvc_timeout(void *_priv)
 	osmo_timer_schedule(&the_pcu.bvc_timer, the_pcu.bts->fc_interval, 0);
 }
 
-
-int gprs_nsvc_create_and_connect(struct gprs_rlcmac_bts *bts,
-				 const struct osmo_sockaddr *local,
-				 const struct osmo_sockaddr *sgsn,
-				 uint16_t nsei, uint16_t nsvci)
+static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
+			  uint16_t nsei,
+			  const struct osmo_sockaddr *local,
+			  const struct osmo_sockaddr *remote,
+			  const uint16_t *nsvci,
+			  uint16_t valid)
 {
+	int i, rc;
+	uint16_t binds = 0;
+	bool nsvcs = false;
 	struct gprs_ns2_vc *nsvc;
-	struct gprs_ns2_vc_bind *bind;
-	int rc;
+	struct gprs_ns2_vc_bind *bind[PCU_IF_NUM_NSVC] = { };
+
+	if (!valid)
+		return -1;
+
+	for (i = 0; i < PCU_IF_NUM_NSVC; i++) {
+		if (!(valid & (1 << i)))
+			continue;
+
+		if (!gprs_ns2_ip_bind_by_sockaddr(bts->nsi, &local[i])) {
+			rc = gprs_ns2_ip_bind(bts->nsi, &local[i], 0, &bind[i]);
+			if (rc < 0) {
+				LOGP(DBSSGP, LOGL_ERROR, "Failed to bind to %s\n", osmo_sockaddr_to_str(&local[i]));
+				continue;
+			}
+		}
+
+		binds |= 1 << i;
+	}
+
+	if (!binds) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to bind to any NS-VC\n");
+		return -1;
+	}
 
 	bts->nse = gprs_ns2_nse_by_nsei(bts->nsi, nsei);
-	if (bts->nse != NULL) {
-		/* FIXME: we end up here on receipt of subsequent INFO.ind.
-		 * What are we supposed to do? Re-establish the connection? */
-		LOGP(DBSSGP, LOGL_INFO, "NSE with NSEI %u is already configured, "
-		     "keeping it unchanged\n", nsei);
-		return 0;
-	}
+	if (!bts->nse)
+		bts->nse = gprs_ns2_create_nse(bts->nsi, nsei);
 
-	bts->nse = gprs_ns2_create_nse(bts->nsi, nsei);
 	if (!bts->nse) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSE\n");
+		gprs_ns2_free_binds(bts->nsi);
 		return 1;
 	}
 
-	rc = gprs_ns2_ip_bind(bts->nsi, local, 0, &bind);
-	if (rc < 0) {
-		LOGP(DBSSGP, LOGL_ERROR, "Failed to create socket\n");
-		gprs_ns2_free(bts->nsi);
-		return 1;
+	for (i = 0; i < PCU_IF_NUM_NSVC; i++) {
+		if (!(binds & (1 << i)))
+			continue;
+
+		/* FIXME: for SNS we just use the first successful NS-VC instead of all for the initial connect */
+		if (bts->gb_dialect_sns) {
+			rc = gprs_ns2_ip_connect_sns(bind[i], &remote[i], nsei);
+			if (!rc)
+				return rc;
+			else
+				LOGP(DBSSGP, LOGL_ERROR, "Failed to connect to (SNS) towards SGSN %s!\n", osmo_sockaddr_to_str(&remote[i]));
+		} else {
+			nsvc = gprs_ns2_ip_connect(bind[i], &remote[i], bts->nse, nsvci[i]);
+			if (nsvc)
+				nsvcs = true;
+			else
+				LOGP(DBSSGP, LOGL_ERROR, "Failed to connect to towards SGSN %s!\n", osmo_sockaddr_to_str(&remote[i]));
+		}
 	}
 
-	if (bts->gb_dialect_sns) {
-		rc = gprs_ns2_ip_connect_sns(bind, sgsn, nsei);
+	return nsvcs ? 0 : -1;
+}
+
+struct nsvc_cb {
+	const struct osmo_sockaddr *local;
+	const struct osmo_sockaddr *remote;
+	const uint16_t *nsvci;
+	/* [in] bitmask of valid nsvc in local/remote */
+	uint16_t valid;
+	/* [out] bitmask of found nsvcs */
+	uint16_t found;
+};
+
+static int ns_conf_vc_cb(struct gprs_ns2_vc *nsvc, void *ctx)
+{
+	struct nsvc_cb *data = (struct nsvc_cb *) ctx;
+
+	for (unsigned int i = 0; i < PCU_IF_NUM_NSVC; i++) {
+		if (!(data->valid & (1 << i)))
+			continue;
+		if (data->found & (1 << i))
+			continue;
+
+		if (gprs_ns2_ip_vc_equal(nsvc, &data->local[i],
+					 &data->remote[i],
+					 data->nsvci[i])) {
+			data->found |= 1 << i;
+			return 0;
+		}
+	}
+
+	/* Found an extra nsvc */
+	LOGP(DBSSGP, LOGL_DEBUG, " Removing NSVC %s\n", gprs_ns2_ll_str(nsvc));
+	gprs_ns2_free_nsvc(nsvc);
+
+	return 0;
+}
+
+int gprs_ns_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
+		   const struct osmo_sockaddr *local,
+		   const struct osmo_sockaddr *remote,
+		   uint16_t *nsvci, uint16_t valid)
+{
+	int rc = 0;
+	if (!bts->nse) {
+		/* there shouldn't any previous state. */
+		gprs_ns2_free_nses(bts->nsi);
+		gprs_ns2_free_binds(bts->nsi);
+		rc = ns_create_nsvc(bts, nsei, local, remote, nsvci, valid);
+	} else if (nsei != gprs_ns2_nse_nsei(bts->nse)) {
+		/* the NSEI has changed */
+		gprs_ns2_free_nses(bts->nsi);
+		gprs_ns2_free_binds(bts->nsi);
+		rc = ns_create_nsvc(bts, nsei, local, remote, nsvci, valid);
+	} else if (bts->gb_dialect_sns) {
+		/* SNS: check if the initial nsvc is the same, if not recreate it */
+		const struct osmo_sockaddr *initial = gprs_ns2_nse_sns_remote(bts->nse);
+		for (unsigned int i = 0; i < PCU_IF_NUM_NSVC; i++) {
+			if (!(valid & (1 << i)))
+				continue;
+
+			/* found the initial - everything should be fine */
+			if (!osmo_sockaddr_cmp(initial, &remote[i]))
+				return 0;
+		}
+
+		gprs_ns2_free_nses(bts->nsi);
+		gprs_ns2_free_binds(bts->nsi);
+		rc = ns_create_nsvc(bts, nsei, local, remote, nsvci, valid);
 	} else {
-		nsvc = gprs_ns2_ip_connect2(bind, sgsn, nsei, nsvci);
-		if (!nsvc)
-			rc = -1;
+		/* check if all NSVC are still the same. */
+		struct nsvc_cb data = {
+			.local = &local[0],
+			.remote = &remote[0],
+			.nsvci = &nsvci[0],
+			.valid = valid,
+			.found = 0,
+		};
+
+		/* search the current active nsvcs */
+		gprs_ns2_nse_foreach_nsvc(bts->nse, &ns_conf_vc_cb, &data);
+
+		/* we found all our valid nsvcs and might have removed all other nsvcs */
+		if (valid == data.found)
+			return 0;
+
+		/* remove all found nsvcs from the valid field */
+		valid &= ~data.found;
+		rc = ns_create_nsvc(bts, nsei, local, remote, nsvci, valid);
 	}
 
 	if (rc)

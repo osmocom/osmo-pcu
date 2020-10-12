@@ -94,6 +94,8 @@ void create_and_connect_bssgp(struct gprs_rlcmac_bts *bts,
 {
 	struct gprs_bssgp_pcu *pcu;
 	struct osmo_sockaddr local, remote;
+	uint16_t nsvci = 20;
+	uint16_t nsei = 20;
 
 	local.u.sin.sin_family = AF_INET;
 	local.u.sin.sin_addr.s_addr = 0;
@@ -104,8 +106,7 @@ void create_and_connect_bssgp(struct gprs_rlcmac_bts *bts,
 	remote.u.sin.sin_port = htons(sgsn_port);
 
 	pcu = gprs_bssgp_init(bts, 20, 20, 901, 99, false, 1, 0, 0);
-	gprs_nsvc_create_and_connect(bts, &local, &remote,
-				     20, 20);
+	gprs_ns_config(bts, nsei, &local, &remote, &nsvci, 1);
 
 	pcu->on_unblock_ack = bvci_unblocked;
 	pcu->on_dl_unit_data = bssgp_data;

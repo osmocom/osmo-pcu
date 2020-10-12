@@ -81,10 +81,10 @@ struct gprs_bssgp_pcu *gprs_bssgp_init(
 		uint16_t mcc, uint16_t mnc, bool mnc_3_digits,
 		uint16_t lac, uint16_t rac, uint16_t cell_id);
 
-int gprs_nsvc_create_and_connect(struct gprs_rlcmac_bts *bts,
-				 const struct osmo_sockaddr *local,
-				 const struct osmo_sockaddr *sgsn,
-				 uint16_t nsei, uint16_t nsvci);
+int gprs_ns_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
+		   const struct osmo_sockaddr *local,
+		   const struct osmo_sockaddr *remote,
+		   uint16_t *nsvci, uint16_t valid);
 
 int gprs_ns_prim_cb(struct osmo_prim_hdr *oph, void *ctx);
 int gprs_gp_send_cb(void *ctx, struct msgb *msg);

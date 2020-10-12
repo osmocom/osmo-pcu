@@ -39,6 +39,7 @@ extern "C" {
 #include <osmocom/core/sockaddr_str.h>
 #include <osmocom/core/logging.h>
 #include <osmocom/core/utils.h>
+#include <osmocom/gprs/gprs_ns2.h>
 #include <osmocom/gsm/l1sap.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
 }
@@ -488,12 +489,64 @@ static int pcu_rx_rach_ind(const struct gsm_pcu_if_rach_ind *rach_ind)
 	return rc;
 }
 
+static int pcu_info_ind_ns(struct gprs_rlcmac_bts *bts,
+			   const struct gsm_pcu_if_info_ind *info_ind)
+{
+	struct osmo_sockaddr remote[PCU_IF_NUM_NSVC] = { };
+	struct osmo_sockaddr local[PCU_IF_NUM_NSVC] = { };
+	uint16_t nsvci[PCU_IF_NUM_NSVC] = { };
+	uint16_t valid = 0;
+
+	for (unsigned int i = 0; i < PCU_IF_NUM_NSVC; i++) {
+		struct osmo_sockaddr_str sockstr;
+
+		switch (info_ind->address_type[i]) {
+		case PCU_IF_ADDR_TYPE_IPV4:
+			local[i].u.sin.sin_family = AF_INET;
+			local[i].u.sin.sin_addr.s_addr = INADDR_ANY;
+			local[i].u.sin.sin_port = htons(info_ind->local_port[i]);
+
+			remote[i].u.sin.sin_family = AF_INET;
+			remote[i].u.sin.sin_addr = info_ind->remote_ip[i].v4;
+			remote[i].u.sin.sin_port = htons(info_ind->remote_port[i]);
+			break;
+		case PCU_IF_ADDR_TYPE_IPV6:
+			local[i].u.sin6.sin6_family = AF_INET6;
+			local[i].u.sin6.sin6_addr = in6addr_any;
+			local[i].u.sin6.sin6_port = htons(info_ind->local_port[i]);
+
+			remote[i].u.sin6.sin6_family = AF_INET6;
+			remote[i].u.sin6.sin6_addr = info_ind->remote_ip[i].v6;
+			remote[i].u.sin6.sin6_port = htons(info_ind->remote_port[i]);
+			break;
+		default:
+			continue;
+		}
+		nsvci[i] = info_ind->nsvci[i];
+
+		LOGP(DL1IF, LOGL_DEBUG, " NS%u nsvci=%u\n", i, nsvci[i]);
+		if (osmo_sockaddr_str_from_sockaddr(&sockstr, &remote[i].u.sas))
+			strcpy(sockstr.ip, "invalid");
+
+		LOGP(DL1IF, LOGL_DEBUG, " NS%u address: r=%s:%u<->l=NULL:%u\n",
+		     i, sockstr.ip, sockstr.port, info_ind->local_port[i]);
+
+		valid |= 1 << i;
+	}
+
+	if (valid == 0) {
+		LOGP(DL1IF, LOGL_ERROR, "No NSVC available to connect to the SGSN!\n");
+		return -EINVAL;
+	}
+
+	return gprs_ns_config(bts, info_ind->nsei, local, remote, nsvci, valid);
+}
+
 static int pcu_rx_info_ind(const struct gsm_pcu_if_info_ind *info_ind)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	struct gprs_bssgp_pcu *pcu;
 	int rc = 0;
-	int good_nsvc = 0;
 	unsigned int trx_nr, ts_nr;
 	int i;
 
@@ -578,54 +631,8 @@ bssgp_failed:
 		goto bssgp_failed;
 	}
 
-	for (unsigned int i = 0; i < ARRAY_SIZE(info_ind->nsvci); i++) {
-		struct osmo_sockaddr remote_sockaddr = { };
-		struct osmo_sockaddr local_sockaddr = { };
-		struct osmo_sockaddr_str sockstr;
-
-		switch (info_ind->address_type[i]) {
-		case PCU_IF_ADDR_TYPE_IPV4:
-			local_sockaddr.u.sin.sin_family = AF_INET;
-			local_sockaddr.u.sin.sin_addr.s_addr = INADDR_ANY;
-			local_sockaddr.u.sin.sin_port = htons(info_ind->local_port[i]);
-
-			remote_sockaddr.u.sin.sin_family = AF_INET;
-			remote_sockaddr.u.sin.sin_addr = info_ind->remote_ip[i].v4;
-			remote_sockaddr.u.sin.sin_port = htons(info_ind->remote_port[i]);
-			break;
-		case PCU_IF_ADDR_TYPE_IPV6:
-			local_sockaddr.u.sin6.sin6_family = AF_INET6;
-			local_sockaddr.u.sin6.sin6_addr = in6addr_any;
-			local_sockaddr.u.sin6.sin6_port = htons(info_ind->local_port[i]);
-
-			remote_sockaddr.u.sin6.sin6_family = AF_INET6;
-			remote_sockaddr.u.sin6.sin6_addr = info_ind->remote_ip[i].v6;
-			remote_sockaddr.u.sin6.sin6_port = htons(info_ind->remote_port[i]);
-			break;
-		default:
-			continue;
-		}
-
-		LOGP(DL1IF, LOGL_DEBUG, " NS%u nsvci=%u\n", i, info_ind->nsvci[i]);
-
-		if (osmo_sockaddr_str_from_sockaddr(&sockstr, &remote_sockaddr.u.sas))
-			strcpy(sockstr.ip, "invalid");
-
-		LOGP(DL1IF, LOGL_DEBUG, " NS%u address: r=%s:%u<->l=NULL:%u\n",
-		     i, sockstr.ip, sockstr.port, info_ind->local_port[i]);
-		rc = gprs_nsvc_create_and_connect(bts,
-						  &local_sockaddr, &remote_sockaddr,
-						  info_ind->nsei, info_ind->nsvci[i]);
-		if (rc) {
-			LOGP(DL1IF, LOGL_ERROR, "Failed to create NSVC connection to %s:%u!\n",
-			     sockstr.ip, sockstr.port);
-			continue;
-		}
-
-		good_nsvc++;
-	}
-
-	if (good_nsvc == 0) {
+	rc = pcu_info_ind_ns(pcu->bts, info_ind);
+	if (rc < 0) {
 		LOGP(DL1IF, LOGL_ERROR, "No NSVC available to connect to the SGSN!\n");
 		goto bssgp_failed;
 	}
