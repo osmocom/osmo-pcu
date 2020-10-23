@@ -149,4 +149,8 @@ inline gprs_rlcmac_dl_tbf *as_dl_tbf(gprs_rlcmac_tbf *tbf)
 	else
 		return NULL;
 }
+
+struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms,
+					    int8_t use_trx, bool single_slot);
+
 #endif

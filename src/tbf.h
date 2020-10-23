@@ -348,8 +348,6 @@ private:
 	mutable char m_name_buf[60];
 };
 
-struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot);
-
 void tbf_free(struct gprs_rlcmac_tbf *tbf);
 
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);

@@ -43,6 +43,7 @@ extern "C" {
 	#include <osmocom/core/linuxlist.h>
 	#include <osmocom/core/logging.h>
 	#include <osmocom/core/rate_ctr.h>
+	#include <osmocom/core/stats.h>
 	#include <osmocom/core/timer.h>
 	#include <osmocom/core/utils.h>
 	#include <osmocom/gsm/gsm_utils.h>
@@ -55,6 +56,43 @@ extern "C" {
 
 /* After sending these frames, we poll for ack/nack. */
 #define POLL_ACK_AFTER_FRAMES 20
+
+extern void *tall_pcu_ctx;
+
+static const struct rate_ctr_desc tbf_dl_gprs_ctr_description[] = {
+	{ "gprs:downlink:cs1",              "CS1        " },
+	{ "gprs:downlink:cs2",              "CS2        " },
+	{ "gprs:downlink:cs3",              "CS3        " },
+	{ "gprs:downlink:cs4",              "CS4        " },
+};
+
+static const struct rate_ctr_desc tbf_dl_egprs_ctr_description[] = {
+	{ "egprs:downlink:mcs1",            "MCS1        " },
+	{ "egprs:downlink:mcs2",            "MCS2        " },
+	{ "egprs:downlink:mcs3",            "MCS3        " },
+	{ "egprs:downlink:mcs4",            "MCS4        " },
+	{ "egprs:downlink:mcs5",            "MCS5        " },
+	{ "egprs:downlink:mcs6",            "MCS6        " },
+	{ "egprs:downlink:mcs7",            "MCS7        " },
+	{ "egprs:downlink:mcs8",            "MCS8        " },
+	{ "egprs:downlink:mcs9",            "MCS9        " },
+};
+
+static const struct rate_ctr_group_desc tbf_dl_gprs_ctrg_desc = {
+	"tbf:gprs",
+	"Data Blocks",
+	OSMO_STATS_CLASS_SUBSCRIBER,
+	ARRAY_SIZE(tbf_dl_gprs_ctr_description),
+	tbf_dl_gprs_ctr_description,
+};
+
+static const struct rate_ctr_group_desc tbf_dl_egprs_ctrg_desc = {
+	"tbf:egprs",
+	"Data Blocks",
+	OSMO_STATS_CLASS_SUBSCRIBER,
+	ARRAY_SIZE(tbf_dl_egprs_ctr_description),
+	tbf_dl_egprs_ctr_description,
+};
 
 static inline void tbf_update_ms_class(struct gprs_rlcmac_tbf *tbf,
 					const uint8_t ms_class)
@@ -83,6 +121,80 @@ gprs_rlcmac_dl_tbf::BandWidth::BandWidth() :
 {
 	timespecclear(&dl_bw_tv);
 	timespecclear(&dl_loss_tv);
+}
+
+static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
+{
+	tbf->~gprs_rlcmac_dl_tbf();
+	return 0;
+}
+
+struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot)
+{
+	struct gprs_rlcmac_dl_tbf *tbf;
+	int rc;
+
+	OSMO_ASSERT(ms != NULL);
+
+	if (ms->egprs_ms_class() == 0 && bts->egprs_enabled) {
+		if (ms->ms_class() > 0) {
+			LOGP(DTBF, LOGL_NOTICE, "Not accepting non-EGPRS phone in EGPRS-only mode\n");
+			bts->bts->do_rate_ctr_inc(CTR_TBF_FAILED_EGPRS_ONLY);
+			return NULL;
+		}
+		ms->set_egprs_ms_class(1);
+	}
+
+	LOGP(DTBF, LOGL_DEBUG, "********** DL-TBF starts here **********\n");
+	LOGP(DTBF, LOGL_INFO, "Allocating DL TBF: MS_CLASS=%d/%d\n",
+	     ms->ms_class(), ms->egprs_ms_class());
+
+	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
+
+	if (!tbf)
+		return NULL;
+
+	talloc_set_destructor(tbf, dl_tbf_dtor);
+	new (tbf) gprs_rlcmac_dl_tbf(bts->bts, ms);
+
+	rc = tbf->setup(use_trx, single_slot);
+	/* if no resource */
+	if (rc < 0) {
+		talloc_free(tbf);
+		return NULL;
+	}
+
+	if (tbf->is_egprs_enabled()) {
+		tbf->set_window_size();
+		tbf->m_dl_egprs_ctrs = rate_ctr_group_alloc(tbf,
+							&tbf_dl_egprs_ctrg_desc,
+							tbf->m_ctrs->idx);
+		if (!tbf->m_dl_egprs_ctrs) {
+			LOGPTBF(tbf, LOGL_ERROR, "Couldn't allocate EGPRS DL counters\n");
+			talloc_free(tbf);
+			return NULL;
+		}
+	} else {
+		tbf->m_dl_gprs_ctrs = rate_ctr_group_alloc(tbf,
+							&tbf_dl_gprs_ctrg_desc,
+							tbf->m_ctrs->idx);
+		if (!tbf->m_dl_gprs_ctrs) {
+			LOGPTBF(tbf, LOGL_ERROR, "Couldn't allocate GPRS DL counters\n");
+			talloc_free(tbf);
+			return NULL;
+		}
+	}
+
+	llist_add(&tbf->list(), &bts->bts->dl_tbfs());
+	tbf->bts->do_rate_ctr_inc(CTR_TBF_DL_ALLOCATED);
+
+	tbf->m_last_dl_poll_fn = -1;
+	tbf->m_last_dl_drained_fn = -1;
+
+	osmo_clock_gettime(CLOCK_MONOTONIC, &tbf->m_bw.dl_bw_tv);
+	osmo_clock_gettime(CLOCK_MONOTONIC, &tbf->m_bw.dl_loss_tv);
+
+	return tbf;
 }
 
 gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(BTS *bts_, GprsMs *ms) :
