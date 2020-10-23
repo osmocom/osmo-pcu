@@ -15,8 +15,8 @@ Allocating DL TBF: MS_CLASS=0/0
 [DL] Assign downlink TS=2 TFI=0
 PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 2
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 04, dl_slots = 04
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0x00002342, partly confirmed
 Modifying MS object, TLLI = 0x00002342, TA 220 -> 4
 ********** UL-TBF starts here **********
@@ -30,10 +30,10 @@ Allocating UL TBF: MS_CLASS=0/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [UL] Assign uplink TS=2 TFI=0 USF=0
-PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 2
-Attaching TBF to MS object, TLLI = 0x00002342, TBF = TBF(TFI=0 TLLI=0x00002342 DIR=UL STATE=NULL)
+PDCH(TS 2, TRX 0): Attaching TBF(TFI=0 TLLI=0x00002342 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0x00002342 DIR=UL STATE=NULL) Setting Control TS 2
 TBF(TFI=0 TLLI=0x00002342 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 04, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00002342, TBF = TBF(TFI=0 TLLI=0x00002342 DIR=UL STATE=NULL)
 Modifying MS object, TLLI: 0x00000000 -> 0x00002342, already confirmed partly
 The MS object cannot fully confirm an unexpected TLLI: 0x00004232, partly confirmed
 Modifying MS object, TLLI: 0x00002342 -> 0x00004232, already confirmed partly
@@ -57,8 +57,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
@@ -104,10 +104,10 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=1
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
-TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) Setting Control TS 4
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) Trigger downlink assignment on PACCH
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) exists
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_SEND_ASS
@@ -147,8 +147,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
@@ -194,10 +194,10 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=1
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
-TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) Setting Control TS 4
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) Trigger downlink assignment on PACCH
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) exists
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_SEND_ASS
@@ -237,8 +237,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
@@ -492,8 +492,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
@@ -514,8 +514,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=1
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
@@ -557,8 +557,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000000, partly confirmed
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000000, IMSI '' -> '001001000000000'
@@ -582,8 +582,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=1
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000001, partly confirmed
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000001, IMSI '' -> '001001000000001'
@@ -607,8 +607,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=2
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL), 3 TBFs, USFs = 00, TFIs = 00000007.
 TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000002, partly confirmed
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000002, IMSI '' -> '001001000000002'
@@ -632,8 +632,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=3
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL), 4 TBFs, USFs = 00, TFIs = 0000000f.
 TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000003, partly confirmed
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000003, IMSI '' -> '001001000000003'
@@ -657,8 +657,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL), 5 TBFs, USFs = 00, TFIs = 0000001f.
 TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000004, partly confirmed
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000004, IMSI '' -> '001001000000004'
@@ -682,8 +682,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=5
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL), 6 TBFs, USFs = 00, TFIs = 0000003f.
 TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000005, partly confirmed
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000005, IMSI '' -> '001001000000005'
@@ -707,8 +707,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=6
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL), 7 TBFs, USFs = 00, TFIs = 0000007f.
 TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000006, partly confirmed
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000006, IMSI '' -> '001001000000006'
@@ -732,8 +732,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=7
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL), 8 TBFs, USFs = 00, TFIs = 000000ff.
 TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000007, partly confirmed
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000007, IMSI '' -> '001001000000007'
@@ -757,8 +757,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=8
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL), 9 TBFs, USFs = 00, TFIs = 000001ff.
 TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000008, partly confirmed
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000008, IMSI '' -> '001001000000008'
@@ -782,8 +782,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=9
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL), 10 TBFs, USFs = 00, TFIs = 000003ff.
 TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000009, partly confirmed
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000009, IMSI '' -> '001001000000009'
@@ -807,8 +807,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=10
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL), 11 TBFs, USFs = 00, TFIs = 000007ff.
 TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000a, partly confirmed
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000000a, IMSI '' -> '001001000000010'
@@ -832,8 +832,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=11
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL), 12 TBFs, USFs = 00, TFIs = 00000fff.
 TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000b, partly confirmed
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000000b, IMSI '' -> '001001000000011'
@@ -857,8 +857,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=12
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL), 13 TBFs, USFs = 00, TFIs = 00001fff.
 TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000c, partly confirmed
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000000c, IMSI '' -> '001001000000012'
@@ -882,8 +882,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=13
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL), 14 TBFs, USFs = 00, TFIs = 00003fff.
 TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000d, partly confirmed
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000000d, IMSI '' -> '001001000000013'
@@ -907,8 +907,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=14
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL), 15 TBFs, USFs = 00, TFIs = 00007fff.
 TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000e, partly confirmed
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000000e, IMSI '' -> '001001000000014'
@@ -932,8 +932,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=15
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL), 16 TBFs, USFs = 00, TFIs = 0000ffff.
 TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000f, partly confirmed
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000000f, IMSI '' -> '001001000000015'
@@ -957,8 +957,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=16
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL), 17 TBFs, USFs = 00, TFIs = 0001ffff.
 TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000010, partly confirmed
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000010, IMSI '' -> '001001000000016'
@@ -982,8 +982,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=17
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL), 18 TBFs, USFs = 00, TFIs = 0003ffff.
 TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000011, partly confirmed
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000011, IMSI '' -> '001001000000017'
@@ -1007,8 +1007,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=18
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL), 19 TBFs, USFs = 00, TFIs = 0007ffff.
 TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000012, partly confirmed
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000012, IMSI '' -> '001001000000018'
@@ -1032,8 +1032,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=19
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL), 20 TBFs, USFs = 00, TFIs = 000fffff.
 TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000013, partly confirmed
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000013, IMSI '' -> '001001000000019'
@@ -1057,8 +1057,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=20
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL), 21 TBFs, USFs = 00, TFIs = 001fffff.
 TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000014, partly confirmed
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000014, IMSI '' -> '001001000000020'
@@ -1082,8 +1082,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=21
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL), 22 TBFs, USFs = 00, TFIs = 003fffff.
 TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000015, partly confirmed
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000015, IMSI '' -> '001001000000021'
@@ -1107,8 +1107,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=22
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL), 23 TBFs, USFs = 00, TFIs = 007fffff.
 TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000016, partly confirmed
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000016, IMSI '' -> '001001000000022'
@@ -1132,8 +1132,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=23
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL), 24 TBFs, USFs = 00, TFIs = 00ffffff.
 TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000017, partly confirmed
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000017, IMSI '' -> '001001000000023'
@@ -1157,8 +1157,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=24
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL), 25 TBFs, USFs = 00, TFIs = 01ffffff.
 TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000018, partly confirmed
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000018, IMSI '' -> '001001000000024'
@@ -1182,8 +1182,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=25
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL), 26 TBFs, USFs = 00, TFIs = 03ffffff.
 TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000019, partly confirmed
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0000019, IMSI '' -> '001001000000025'
@@ -1207,8 +1207,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=26
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL), 27 TBFs, USFs = 00, TFIs = 07ffffff.
 TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001a, partly confirmed
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000001a, IMSI '' -> '001001000000026'
@@ -1232,8 +1232,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=27
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL), 28 TBFs, USFs = 00, TFIs = 0fffffff.
 TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001b, partly confirmed
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000001b, IMSI '' -> '001001000000027'
@@ -1257,8 +1257,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=28
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL), 29 TBFs, USFs = 00, TFIs = 1fffffff.
 TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001c, partly confirmed
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000001c, IMSI '' -> '001001000000028'
@@ -1282,8 +1282,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=29
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL), 30 TBFs, USFs = 00, TFIs = 3fffffff.
 TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001d, partly confirmed
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000001d, IMSI '' -> '001001000000029'
@@ -1307,8 +1307,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=30
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL), 31 TBFs, USFs = 00, TFIs = 7fffffff.
 TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001e, partly confirmed
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000001e, IMSI '' -> '001001000000030'
@@ -1332,8 +1332,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=31
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL), 32 TBFs, USFs = 00, TFIs = ffffffff.
 TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001f, partly confirmed
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc000001f, IMSI '' -> '001001000000031'
@@ -1367,8 +1367,8 @@ Allocating DL TBF: MS_CLASS=45/0
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0xc0123456, partly confirmed
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xc0123456, IMSI '' -> '001001000123456'
@@ -1396,10 +1396,10 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=0
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL)
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) Setting Control TS 4
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) [DOWNLINK] START
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000123456)
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -1458,8 +1458,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -1498,10 +1498,10 @@ Allocating DL TBF: MS_CLASS=0/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [DL] Assign downlink TS=7 TFI=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
 Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -1536,10 +1536,10 @@ Allocating UL TBF: MS_CLASS=1/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=0 USF=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
@@ -1578,10 +1578,10 @@ Allocating DL TBF: MS_CLASS=1/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [DL] Assign downlink TS=7 TFI=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
 Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -1617,10 +1617,10 @@ Allocating UL TBF: MS_CLASS=1/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=0 USF=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
@@ -1658,10 +1658,10 @@ Allocating DL TBF: MS_CLASS=1/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [DL] Assign downlink TS=7 TFI=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
 Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -1744,10 +1744,10 @@ Allocating UL TBF: MS_CLASS=1/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=1 USF=1
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL), 2 TBFs, USFs = 03, TFIs = 00000003.
-TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf5667788, TBF = TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL), 2 TBFs, USFs = 03, TFIs = 00000003.
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL) Setting Control TS 7
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0xf5667788, TBF = TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL)
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
@@ -1810,10 +1810,10 @@ Allocating UL TBF: MS_CLASS=1/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=0 USF=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
@@ -1853,10 +1853,10 @@ Allocating DL TBF: MS_CLASS=1/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [DL] Assign downlink TS=7 TFI=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
 Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -1895,10 +1895,10 @@ Allocating UL TBF: MS_CLASS=1/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=0 USF=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
@@ -1952,10 +1952,10 @@ Allocating UL TBF: MS_CLASS=1/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=0 USF=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
@@ -1995,10 +1995,10 @@ Allocating DL TBF: MS_CLASS=1/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [DL] Assign downlink TS=7 TFI=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
 Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -2034,8 +2034,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -2098,10 +2098,10 @@ Allocating UL TBF: MS_CLASS=1/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=0 USF=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
@@ -2141,10 +2141,10 @@ Allocating DL TBF: MS_CLASS=1/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [DL] Assign downlink TS=7 TFI=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
 Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -2775,10 +2775,10 @@ Allocating DL TBF: MS_CLASS=1/0
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [DL] Assign downlink TS=7 TFI=1
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 01, TFIs = 00000003.
-TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL), 2 TBFs, USFs = 01, TFIs = 00000003.
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) Trigger downlink assignment on PACCH
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) exists
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
@@ -3042,8 +3042,8 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBF
 - Assigning DL TS 5
 PDCH(TS 5, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 3c
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 DL TBF slots: 0x3c, N: 4, WS: 64
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to RELEASING
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=RELEASING) free
@@ -3082,8 +3082,8 @@ PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS),
 - Assigning DL TS 5
 PDCH(TS 5, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 3c
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 384, base(128) slots(4) ws_pdch(64)
 ws(384)
 DL TBF slots: 0x3c, N: 4, WS: 384
@@ -3114,7 +3114,7 @@ Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3124,10 +3124,10 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=0 USF=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
@@ -3161,7 +3161,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3171,10 +3171,10 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [DL] Assign downlink TS=7 TFI=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI: 0xf1223344 confirmed
@@ -3204,7 +3204,7 @@ Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3214,10 +3214,10 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=0 USF=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
@@ -3381,7 +3381,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3391,10 +3391,10 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [DL] Assign downlink TS=7 TFI=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI: 0xf1223344 confirmed
@@ -3428,8 +3428,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -3735,8 +3735,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -3992,8 +3992,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -4211,8 +4211,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -4398,8 +4398,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -4565,8 +4565,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -4714,8 +4714,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -4858,8 +4858,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -4991,8 +4991,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -5126,8 +5126,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -5182,8 +5182,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -5238,8 +5238,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -5294,8 +5294,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -5366,8 +5366,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -5438,8 +5438,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -5510,8 +5510,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -5584,8 +5584,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -5647,8 +5647,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -5710,8 +5710,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -5773,8 +5773,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -5841,7 +5841,7 @@ Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5851,10 +5851,10 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=0 USF=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
@@ -5907,7 +5907,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5917,10 +5917,10 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [DL] Assign downlink TS=7 TFI=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI: 0xf1223344 confirmed
@@ -5956,8 +5956,8 @@ Rx=4 Tx=3 Sum Rx+Tx=5, Tta=3 Ttb=1, Tra=2 Trb=1, Type=1
 - Assigning DL TS 4
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 192, base(128) slots(1) ws_pdch(64)
 ws(192)
 DL TBF slots: 0x10, N: 1, WS: 192
@@ -6006,7 +6006,7 @@ Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6016,10 +6016,10 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=0 USF=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
@@ -6066,7 +6066,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6076,10 +6076,10 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [DL] Assign downlink TS=7 TFI=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI: 0xf1223344 confirmed
@@ -6112,8 +6112,8 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
@@ -6149,8 +6149,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -6171,8 +6171,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=1 USF=1
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL), 2 TBFs, USFs = 03, TFIs = 00000003.
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -6193,8 +6193,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=2 USF=2
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL), 3 TBFs, USFs = 07, TFIs = 00000007.
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -6215,8 +6215,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=3 USF=3
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL), 4 TBFs, USFs = 0f, TFIs = 0000000f.
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -6237,8 +6237,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=4 USF=4
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL), 5 TBFs, USFs = 1f, TFIs = 0000001f.
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -6259,8 +6259,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=5 USF=5
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL), 6 TBFs, USFs = 3f, TFIs = 0000003f.
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -6281,8 +6281,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=6 USF=6
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL), 7 TBFs, USFs = 7f, TFIs = 0000007f.
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -6330,7 +6330,7 @@ Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6340,10 +6340,10 @@ TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=0 USF=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 192, base(128) slots(1) ws_pdch(64)
 ws(192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
@@ -6946,7 +6946,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6956,10 +6956,10 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [DL] Assign downlink TS=7 TFI=0
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 192, base(128) slots(1) ws_pdch(64)
 ws(192)
 Modifying MS object, TLLI: 0xf1223344 confirmed
@@ -7736,8 +7736,8 @@ Allocating DL TBF: MS_CLASS=11/11
 [DL] Assign downlink TS=4 TFI=0
 PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
@@ -7761,8 +7761,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=0 USF=0
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -7783,8 +7783,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=1 USF=1
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL), 2 TBFs, USFs = 03, TFIs = 00000003.
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=1 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -7805,8 +7805,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=2 USF=2
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL), 3 TBFs, USFs = 07, TFIs = 00000007.
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=2 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -7827,8 +7827,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=3 USF=3
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL), 4 TBFs, USFs = 0f, TFIs = 0000000f.
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=3 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -7849,8 +7849,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=4 USF=4
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL), 5 TBFs, USFs = 1f, TFIs = 0000001f.
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=4 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -7871,8 +7871,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=5 USF=5
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL), 6 TBFs, USFs = 3f, TFIs = 0000003f.
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=5 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -7893,8 +7893,8 @@ Allocating UL TBF: MS_CLASS=0/0
 [UL] Assign uplink TS=7 TFI=6 USF=6
 PDCH(TS 7, TRX 0): Attaching TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL), 7 TBFs, USFs = 7f, TFIs = 0000007f.
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 7
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL)
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 7
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=6 TLLI=0x00000000 DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
@@ -7921,7 +7921,7 @@ Allocating UL TBF: MS_CLASS=11/11
 - Skipping TS 7, because no USF available
 [UL] algo A <multi> (suggested TRX: 0): failed to allocate a TS, no USF available
 No PDCH resource
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ
 Received RTS for PDCH: TRX=0 TS=7 FN=2654218 block_nr=8 scheduling USF=0 for required uplink resource of UL TFI=0
@@ -7931,7 +7931,7 @@ Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASS
 === start test_packet_access_rej_prr_no_other_tbfs ===
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, UL TLLI: 0x00000000 -> 0xffeeddcc, not yet confirmed
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) starting timer T0 [reject (PACCH)] with 0 sec. 2000 microsec, cur_fn=0

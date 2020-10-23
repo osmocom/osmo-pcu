@@ -54,8 +54,8 @@ extern "C" {
 
 extern void *tall_pcu_ctx;
 
-gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(BTS *bts_) :
-	gprs_rlcmac_tbf(bts_, GPRS_RLCMAC_UL_TBF),
+gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(BTS *bts_, GprsMs *ms) :
+	gprs_rlcmac_tbf(bts_, ms, GPRS_RLCMAC_UL_TBF),
 	m_rx_counter(0),
 	m_contention_resolution_done(0),
 	m_final_ack_sent(0),

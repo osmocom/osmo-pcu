@@ -39,7 +39,7 @@ enum tbf_dl_prio {
 #define LOGPTBFDL(tbf, level, fmt, args...) LOGP(DTBFDL, level, "%s " fmt, tbf_name(tbf), ## args)
 
 struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
-	gprs_rlcmac_dl_tbf(BTS *bts);
+	gprs_rlcmac_dl_tbf(BTS *bts, GprsMs *ms);
 	gprs_rlc_window *window();
 	void cleanup();
 	/* dispatch Unitdata.DL messages */

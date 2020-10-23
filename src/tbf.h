@@ -180,13 +180,14 @@ enum tbf_counters { /* TBF counters from 3GPP TS 44.060 §13.4 */
 #ifdef __cplusplus
 
 struct gprs_rlcmac_tbf {
-	gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir);
+	gprs_rlcmac_tbf(BTS *bts_, GprsMs *ms, gprs_rlcmac_tbf_direction dir);
 
 	static void free_all(struct gprs_rlcmac_trx *trx);
 	static void free_all(struct gprs_rlcmac_pdch *pdch);
 
 	virtual gprs_rlc_window *window() = 0;
 
+	int setup(int8_t use_trx, bool single_slot);
 	bool state_is(enum gprs_rlcmac_tbf_state rhs) const;
 	bool state_is_not(enum gprs_rlcmac_tbf_state rhs) const;
 	bool dl_ass_state_is(enum gprs_rlcmac_tbf_dl_ass_state rhs) const;
@@ -250,7 +251,6 @@ struct gprs_rlcmac_tbf {
 	uint8_t ta() const;
 	void set_ta(uint8_t);
 	uint8_t ms_class() const;
-	void set_ms_class(uint8_t);
 	enum CodingScheme current_cs() const;
 	size_t llc_queue_size() const;
 
@@ -263,7 +263,6 @@ struct gprs_rlcmac_tbf {
 	/* EGPRS */
 	bool is_egprs_enabled() const;
 	void disable_egprs();
-	void enable_egprs();
 
 	/* attempt to make things a bit more fair */
 	void rotate_in_list();
@@ -331,12 +330,8 @@ protected:
 	static const char *tbf_state_name[6];
 
 	class GprsMs *m_ms;
-
-	/* Fields to take the TA/MS class values if no MS is associated */
-	uint8_t m_ta;
-	uint8_t m_ms_class;
-
 private:
+	void enable_egprs();
 	enum gprs_rlcmac_tbf_state state;
 	enum gprs_rlcmac_tbf_dl_ass_state dl_ass_state;
 	enum gprs_rlcmac_tbf_ul_ass_state ul_ass_state;

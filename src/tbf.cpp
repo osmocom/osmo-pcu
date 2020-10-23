@@ -187,6 +187,18 @@ static const struct rate_ctr_group_desc tbf_ul_egprs_ctrg_desc = {
         tbf_ul_egprs_ctr_description,
 };
 
+static void setup_egprs_mode(gprs_rlcmac_bts *bts, GprsMs *ms)
+{
+	if (mcs_is_edge_gmsk(mcs_get_egprs_by_num(bts->max_mcs_ul)) &&
+		mcs_is_edge_gmsk(mcs_get_egprs_by_num(bts->max_mcs_dl)) &&
+		ms->mode() != EGPRS)
+	{
+		ms->set_mode(EGPRS_GMSK);
+	} else {
+		ms->set_mode(EGPRS);
+	}
+}
+
 gprs_rlcmac_tbf::Meas::Meas() :
 	rssi_sum(0),
 	rssi_num(0)
@@ -194,7 +206,7 @@ gprs_rlcmac_tbf::Meas::Meas() :
 	timespecclear(&rssi_tv);
 }
 
-gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
+gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, GprsMs *ms, gprs_rlcmac_tbf_direction dir) :
 	state_flags(0),
 	direction(dir),
 	trx(NULL),
@@ -211,9 +223,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, gprs_rlcmac_tbf_direction dir) :
 	m_tfi(0),
 	m_created_ts(0),
 	m_ctrs(NULL),
-	m_ms(NULL),
-	m_ta(GSM48_TA_INVALID),
-	m_ms_class(0),
+	m_ms(ms),
 	state(GPRS_RLCMAC_NULL),
 	dl_ass_state(GPRS_RLCMAC_DL_ASS_NONE),
 	ul_ass_state(GPRS_RLCMAC_UL_ASS_NONE),
@@ -286,29 +296,17 @@ void gprs_rlcmac_tbf::assign_imsi(const char *imsi_)
 
 uint8_t gprs_rlcmac_tbf::ta() const
 {
-	return m_ms ? m_ms->ta() : m_ta;
+	return m_ms->ta();
 }
 
 void gprs_rlcmac_tbf::set_ta(uint8_t ta)
 {
-	if (ms())
-		ms()->set_ta(ta);
-
-	if (gsm48_ta_is_valid(ta))
-		m_ta = ta;
+	ms()->set_ta(ta);
 }
 
 uint8_t gprs_rlcmac_tbf::ms_class() const
 {
-	return m_ms ? m_ms->ms_class() : m_ms_class;
-}
-
-void gprs_rlcmac_tbf::set_ms_class(uint8_t ms_class_)
-{
-	if (ms())
-		ms()->set_ms_class(ms_class_);
-
-	m_ms_class = ms_class_;
+	return m_ms->ms_class();
 }
 
 enum CodingScheme gprs_rlcmac_tbf::current_cs() const
@@ -346,11 +344,6 @@ void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 		return;
 
 	if (m_ms) {
-		/* Save the TA locally. This will also be called, if the MS
-		 * object detaches itself from the TBF, for instance if
-		 * attach_tbf() is called */
-		m_ta = m_ms->ta();
-
 		m_ms->detach_tbf(this);
 	}
 
@@ -916,48 +909,45 @@ void gprs_rlcmac_tbf::poll_timeout()
 		LOGPTBF(this, LOGL_ERROR, "Poll Timeout, but no event!\n");
 }
 
-static int setup_tbf(struct gprs_rlcmac_tbf *tbf, GprsMs *ms, int8_t use_trx, uint8_t ms_class, uint8_t egprs_ms_class,
-		     bool single_slot)
+int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 {
+	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
 	int rc;
-	struct gprs_rlcmac_bts *bts;
-	if (!tbf)
-		return -1;
 
-	bts = tbf->bts->bts_data();
+	if (m_ms->egprs_ms_class() > 0 && bts_data->egprs_enabled) {
+		enable_egprs();
+		setup_egprs_mode(bts_data, m_ms);
+		LOGPTBF(this, LOGL_INFO, "Enabled EGPRS, mode %s\n", mode_name(m_ms->mode()));
+	}
 
-	if (ms->mode() == EGPRS)
-		ms_class = egprs_ms_class;
-
-	tbf->m_created_ts = time(NULL);
-	tbf->set_ms_class(ms_class);
+	m_created_ts = time(NULL);
 	/* select algorithm */
-	rc = bts->alloc_algorithm(bts, ms, tbf, single_slot, use_trx);
+	rc = bts_data->alloc_algorithm(bts_data, m_ms, this, single_slot, use_trx);
 	/* if no resource */
 	if (rc < 0) {
 		return -1;
 	}
 	/* assign control ts */
-	rc = tbf_assign_control_ts(tbf);
+	rc = tbf_assign_control_ts(this);
 	/* if no resource */
 	if (rc < 0) {
 		return -1;
 	}
 
 	/* set timestamp */
-	osmo_clock_gettime(CLOCK_MONOTONIC, &tbf->meas.rssi_tv);
+	osmo_clock_gettime(CLOCK_MONOTONIC, &meas.rssi_tv);
 
-	tbf->set_ms(ms);
-
-	LOGPTBF(tbf, LOGL_INFO,
+	LOGPTBF(this, LOGL_INFO,
 		"Allocated: trx = %d, ul_slots = %02x, dl_slots = %02x\n",
-		tbf->trx->trx_no, tbf->ul_slots(), tbf->dl_slots());
+		this->trx->trx_no, ul_slots(), dl_slots());
 
-	tbf->m_ctrs = rate_ctr_group_alloc(tbf, &tbf_ctrg_desc, next_tbf_ctr_group_id++);
-	if (!tbf->m_ctrs) {
-		LOGPTBF(tbf, LOGL_ERROR, "Couldn't allocate TBF counters\n");
+	m_ctrs = rate_ctr_group_alloc(this, &tbf_ctrg_desc, next_tbf_ctr_group_id++);
+	if (!m_ctrs) {
+		LOGPTBF(this, LOGL_ERROR, "Couldn't allocate TBF counters\n");
 		return -1;
 	}
+
+	m_ms->attach_tbf(this);
 
 	return 0;
 }
@@ -966,18 +956,6 @@ static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
 {
 	tbf->~gprs_rlcmac_ul_tbf();
 	return 0;
-}
-
-static void setup_egprs_mode(gprs_rlcmac_bts *bts, GprsMs *ms)
-{
-	if (mcs_is_edge_gmsk(mcs_get_egprs_by_num(bts->max_mcs_ul)) &&
-		mcs_is_edge_gmsk(mcs_get_egprs_by_num(bts->max_mcs_dl)) &&
-		ms->mode() != EGPRS)
-	{
-		ms->set_mode(EGPRS_GMSK);
-	} else {
-		ms->set_mode(EGPRS);
-	}
 }
 
 struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot)
@@ -1001,15 +979,9 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 	if (!tbf)
 		return NULL;
 	talloc_set_destructor(tbf, ul_tbf_dtor);
-	new (tbf) gprs_rlcmac_ul_tbf(bts->bts);
+	new (tbf) gprs_rlcmac_ul_tbf(bts->bts, ms);
 
-	if (ms->egprs_ms_class() > 0 && bts->egprs_enabled) {
-		tbf->enable_egprs();
-		setup_egprs_mode(bts, ms);
-		LOGPTBF(tbf, LOGL_INFO, "Enabled EGPRS, mode %s\n", mode_name(ms->mode()));
-	}
-
-	rc = setup_tbf(tbf, ms, use_trx, ms->ms_class(), ms->egprs_ms_class(), single_slot);
+	rc = tbf->setup(use_trx, single_slot);
 
 	/* if no resource */
 	if (rc < 0) {
@@ -1068,14 +1040,9 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 		return NULL;
 
 	talloc_set_destructor(tbf, dl_tbf_dtor);
-	new (tbf) gprs_rlcmac_dl_tbf(bts->bts);
-	if (ms->egprs_ms_class() > 0 && bts->egprs_enabled) {
-		tbf->enable_egprs();
-		setup_egprs_mode(bts, ms);
-		LOGPTBF(tbf, LOGL_INFO, "Enabled EGPRS, mode %s\n", mode_name(ms->mode()));
-	}
+	new (tbf) gprs_rlcmac_dl_tbf(bts->bts, ms);
 
-	rc = setup_tbf(tbf, ms, use_trx, ms->ms_class(), 0, single_slot);
+	rc = tbf->setup(use_trx, single_slot);
 	/* if no resource */
 	if (rc < 0) {
 		talloc_free(tbf);
@@ -1512,22 +1479,22 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
 	struct gprs_rlcmac_trx *trx = &bts->trx[trx_no];
 
+	if (!ms)
+		ms = bts->bts->ms_alloc(0, 0);
+	ms->set_tlli(tlli);
+
 	ul_tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 	if (!ul_tbf)
 		return ul_tbf;
 
 	talloc_set_destructor(ul_tbf, ul_tbf_dtor);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(bts->bts);
-	if (!ms)
-		ms = bts->bts->ms_alloc(0, 0);
-
-	ms->set_tlli(tlli);
+	new (ul_tbf) gprs_rlcmac_ul_tbf(bts->bts, ms);
 
 	llist_add(&ul_tbf->list(), &bts->bts->ul_tbfs());
 	ul_tbf->bts->do_rate_ctr_inc(CTR_TBF_UL_ALLOCATED);
 	TBF_SET_ASS_ON(ul_tbf, GPRS_RLCMAC_FLAG_PACCH, false);
 
-	ul_tbf->set_ms(ms);
+	ms->attach_tbf(ul_tbf);
 	ul_tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 	TBF_SET_ASS_STATE_UL(ul_tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ);
 	ul_tbf->control_ts = ts;

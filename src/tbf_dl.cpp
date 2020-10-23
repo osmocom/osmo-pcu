@@ -60,7 +60,7 @@ static inline void tbf_update_ms_class(struct gprs_rlcmac_tbf *tbf,
 					const uint8_t ms_class)
 {
 	if (!tbf->ms_class() && ms_class)
-		tbf->set_ms_class(ms_class);
+		tbf->ms()->set_ms_class(ms_class);
 }
 
 static void llc_timer_cb(void *_tbf)
@@ -85,8 +85,8 @@ gprs_rlcmac_dl_tbf::BandWidth::BandWidth() :
 	timespecclear(&dl_loss_tv);
 }
 
-gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(BTS *bts_) :
-	gprs_rlcmac_tbf(bts_, GPRS_RLCMAC_DL_TBF),
+gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(BTS *bts_, GprsMs *ms) :
+	gprs_rlcmac_tbf(bts_, ms, GPRS_RLCMAC_DL_TBF),
 	m_tx_counter(0),
 	m_wait_confirm(0),
 	m_dl_ack_requested(false),
