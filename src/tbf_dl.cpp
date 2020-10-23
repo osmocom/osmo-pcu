@@ -75,6 +75,16 @@ static void llc_timer_cb(void *_tbf)
 	tbf->request_dl_ack();
 }
 
+gprs_rlcmac_dl_tbf::BandWidth::BandWidth() :
+	dl_bw_octets(0),
+	dl_throughput(0),
+	dl_loss_lost(0),
+	dl_loss_received(0)
+{
+	timespecclear(&dl_bw_tv);
+	timespecclear(&dl_loss_tv);
+}
+
 gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(BTS *bts_) :
 	gprs_rlcmac_tbf(bts_, GPRS_RLCMAC_DL_TBF),
 	m_tx_counter(0),

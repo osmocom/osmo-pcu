@@ -1036,16 +1036,6 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 	return tbf;
 }
 
-gprs_rlcmac_dl_tbf::BandWidth::BandWidth() :
-	dl_bw_octets(0),
-	dl_throughput(0),
-	dl_loss_lost(0),
-	dl_loss_received(0)
-{
-	timespecclear(&dl_bw_tv);
-	timespecclear(&dl_loss_tv);
-}
-
 static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
 {
 	tbf->~gprs_rlcmac_dl_tbf();
