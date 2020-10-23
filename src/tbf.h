@@ -124,6 +124,9 @@ enum tbf_egprs_counters {
 	TBF_CTR_EGPRS_DL_MCS9,
 };
 
+extern const struct rate_ctr_group_desc tbf_ctrg_desc;
+extern unsigned int next_tbf_ctr_group_id;
+
 #define LOGPTBF(tbf, level, fmt, args...) LOGP(DTBF, level, "%s " fmt, tbf_name(tbf), ## args)
 
 enum tbf_timers {
@@ -345,18 +348,9 @@ private:
 	mutable char m_name_buf[60];
 };
 
-
-struct gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts, GprsMs *ms,
-					int8_t use_trx, uint32_t tlli);
-
-struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot);
-
 struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot);
 
 void tbf_free(struct gprs_rlcmac_tbf *tbf);
-
-struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
-	GprsMs *ms, uint32_t tlli, uint8_t trx_no, uint8_t ts_no);
 
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 

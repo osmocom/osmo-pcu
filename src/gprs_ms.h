@@ -25,6 +25,7 @@ struct gprs_codel;
 #include "cxx_linuxlist.h"
 #include "llc.h"
 #include "tbf.h"
+#include "tbf_ul.h"
 #include "tbf_dl.h"
 #include "pcu_l1_if.h"
 

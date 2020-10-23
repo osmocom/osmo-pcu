@@ -57,7 +57,7 @@ extern "C" {
 
 extern void *tall_pcu_ctx;
 
-static unsigned int next_tbf_ctr_group_id = 0; /* Incrementing group id */
+unsigned int next_tbf_ctr_group_id = 0; /* Incrementing group id */
 
 static void tbf_timer_cb(void *_tbf);
 
@@ -128,26 +128,7 @@ static const struct rate_ctr_desc tbf_dl_egprs_ctr_description[] = {
         { "egprs:downlink:mcs9",            "MCS9        " },
 };
 
-static const struct rate_ctr_desc tbf_ul_gprs_ctr_description[] = {
-        { "gprs:uplink:cs1",              "CS1        " },
-        { "gprs:uplink:cs2",              "CS2        " },
-        { "gprs:uplink:cs3",              "CS3        " },
-        { "gprs:uplink:cs4",              "CS4        " },
-};
-
-static const struct rate_ctr_desc tbf_ul_egprs_ctr_description[] = {
-        { "egprs:uplink:mcs1",            "MCS1        " },
-        { "egprs:uplink:mcs2",            "MCS2        " },
-        { "egprs:uplink:mcs3",            "MCS3        " },
-        { "egprs:uplink:mcs4",            "MCS4        " },
-        { "egprs:uplink:mcs5",            "MCS5        " },
-        { "egprs:uplink:mcs6",            "MCS6        " },
-        { "egprs:uplink:mcs7",            "MCS7        " },
-        { "egprs:uplink:mcs8",            "MCS8        " },
-        { "egprs:uplink:mcs9",            "MCS9        " },
-};
-
-static const struct rate_ctr_group_desc tbf_ctrg_desc = {
+const struct rate_ctr_group_desc tbf_ctrg_desc = {
         "pcu:tbf",
         "TBF Statistics",
         OSMO_STATS_CLASS_SUBSCRIBER,
@@ -169,22 +150,6 @@ static const struct rate_ctr_group_desc tbf_dl_egprs_ctrg_desc = {
         OSMO_STATS_CLASS_SUBSCRIBER,
         ARRAY_SIZE(tbf_dl_egprs_ctr_description),
         tbf_dl_egprs_ctr_description,
-};
-
-static const struct rate_ctr_group_desc tbf_ul_gprs_ctrg_desc = {
-        "tbf:gprs",
-        "Data Blocks",
-        OSMO_STATS_CLASS_SUBSCRIBER,
-        ARRAY_SIZE(tbf_ul_gprs_ctr_description),
-        tbf_ul_gprs_ctr_description,
-};
-
-static const struct rate_ctr_group_desc tbf_ul_egprs_ctrg_desc = {
-        "tbf:egprs",
-        "Data Blocks",
-        OSMO_STATS_CLASS_SUBSCRIBER,
-        ARRAY_SIZE(tbf_ul_egprs_ctr_description),
-        tbf_ul_egprs_ctr_description,
 };
 
 static void setup_egprs_mode(gprs_rlcmac_bts *bts, GprsMs *ms)
@@ -405,29 +370,6 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction di
 		ms()->set_tlli(tlli);
 	else
 		ms()->confirm_tlli(tlli);
-}
-
-gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx,
-				 uint32_t tlli)
-{
-	struct gprs_rlcmac_ul_tbf *tbf;
-
-/* FIXME: Copy and paste with tbf_new_dl_assignment */
-	/* create new TBF, use same TRX as DL TBF */
-	/* use multislot class of downlink TBF */
-	tbf = tbf_alloc_ul_tbf(bts, ms, use_trx, false);
-	if (!tbf) {
-		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource\n");
-		/* FIXME: send reject */
-		return NULL;
-	}
-	tbf->m_contention_resolution_done = 1;
-	TBF_SET_ASS_ON(tbf, GPRS_RLCMAC_FLAG_PACCH, false);
-	T_START(tbf, T3169, 3169, "allocation (UL-TBF)", true);
-	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
-	OSMO_ASSERT(tbf->ms());
-
-	return tbf;
 }
 
 static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
@@ -952,62 +894,6 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 	return 0;
 }
 
-static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
-{
-	tbf->~gprs_rlcmac_ul_tbf();
-	return 0;
-}
-
-struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot)
-{
-	struct gprs_rlcmac_ul_tbf *tbf;
-	int rc;
-
-	OSMO_ASSERT(ms != NULL);
-
-	if (ms->egprs_ms_class() == 0 && bts->egprs_enabled) {
-		LOGP(DTBF, LOGL_NOTICE, "Not accepting non-EGPRS phone in EGPRS-only mode\n");
-		bts->bts->do_rate_ctr_inc(CTR_TBF_FAILED_EGPRS_ONLY);
-		return NULL;
-	}
-
-	LOGP(DTBF, LOGL_DEBUG, "********** UL-TBF starts here **********\n");
-	LOGP(DTBF, LOGL_INFO, "Allocating UL TBF: MS_CLASS=%d/%d\n",
-	     ms->ms_class(), ms->egprs_ms_class());
-
-	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	if (!tbf)
-		return NULL;
-	talloc_set_destructor(tbf, ul_tbf_dtor);
-	new (tbf) gprs_rlcmac_ul_tbf(bts->bts, ms);
-
-	rc = tbf->setup(use_trx, single_slot);
-
-	/* if no resource */
-	if (rc < 0) {
-		talloc_free(tbf);
-		return NULL;
-	}
-
-	if (tbf->is_egprs_enabled())
-		tbf->set_window_size();
-
-	tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(tbf,
-					&tbf_ul_egprs_ctrg_desc, tbf->m_ctrs->idx);
-	tbf->m_ul_gprs_ctrs = rate_ctr_group_alloc(tbf,
-					&tbf_ul_gprs_ctrg_desc, tbf->m_ctrs->idx);
-	if (!tbf->m_ul_egprs_ctrs || !tbf->m_ul_gprs_ctrs) {
-		LOGPTBF(tbf, LOGL_ERROR, "Couldn't allocate TBF UL counters\n");
-		talloc_free(tbf);
-		return NULL;
-	}
-
-	llist_add(&tbf->list(), &bts->bts->ul_tbfs());
-	tbf->bts->do_rate_ctr_inc(CTR_TBF_UL_ALLOCATED);
-
-	return tbf;
-}
-
 static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
 {
 	tbf->~gprs_rlcmac_dl_tbf();
@@ -1471,46 +1357,4 @@ uint8_t gprs_rlcmac_tbf::ul_slots() const
 bool gprs_rlcmac_tbf::is_control_ts(uint8_t ts) const
 {
 	return ts == control_ts;
-}
-
-struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
-			GprsMs *ms, uint32_t tlli, uint8_t trx_no, uint8_t ts)
-{
-	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
-	struct gprs_rlcmac_trx *trx = &bts->trx[trx_no];
-
-	if (!ms)
-		ms = bts->bts->ms_alloc(0, 0);
-	ms->set_tlli(tlli);
-
-	ul_tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	if (!ul_tbf)
-		return ul_tbf;
-
-	talloc_set_destructor(ul_tbf, ul_tbf_dtor);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(bts->bts, ms);
-
-	llist_add(&ul_tbf->list(), &bts->bts->ul_tbfs());
-	ul_tbf->bts->do_rate_ctr_inc(CTR_TBF_UL_ALLOCATED);
-	TBF_SET_ASS_ON(ul_tbf, GPRS_RLCMAC_FLAG_PACCH, false);
-
-	ms->attach_tbf(ul_tbf);
-	ul_tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
-	TBF_SET_ASS_STATE_UL(ul_tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ);
-	ul_tbf->control_ts = ts;
-	ul_tbf->trx = trx;
-	ul_tbf->m_ctrs = rate_ctr_group_alloc(ul_tbf, &tbf_ctrg_desc, next_tbf_ctr_group_id++);
-	ul_tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(ul_tbf,
-						       &tbf_ul_egprs_ctrg_desc,
-						       ul_tbf->m_ctrs->idx);
-	ul_tbf->m_ul_gprs_ctrs = rate_ctr_group_alloc(ul_tbf,
-						      &tbf_ul_gprs_ctrg_desc,
-						      ul_tbf->m_ctrs->idx);
-	if (!ul_tbf->m_ctrs || !ul_tbf->m_ul_egprs_ctrs || !ul_tbf->m_ul_gprs_ctrs) {
-		LOGPTBF(ul_tbf, LOGL_ERROR, "Cound not allocate TBF UL rate counters\n");
-		talloc_free(ul_tbf);
-		return NULL;
-	}
-
-	return ul_tbf;
 }
