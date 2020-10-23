@@ -42,7 +42,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_dl_tbf(BTS *bts);
 	gprs_rlc_window *window();
 	void cleanup();
-	void enable_egprs();
 	/* dispatch Unitdata.DL messages */
 	static int handle(struct gprs_rlcmac_bts *bts,
 		const uint32_t tlli, const uint32_t old_tlli,
@@ -141,12 +140,6 @@ protected:
 inline uint16_t gprs_rlcmac_dl_tbf::window_size() const
 {
 	return m_window.ws();
-}
-
-inline void gprs_rlcmac_dl_tbf::enable_egprs()
-{
-	m_window.set_sns(RLC_EGPRS_SNS);
-	gprs_rlcmac_tbf::enable_egprs();
 }
 
 inline gprs_rlcmac_dl_tbf *as_dl_tbf(gprs_rlcmac_tbf *tbf)

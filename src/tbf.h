@@ -263,6 +263,7 @@ struct gprs_rlcmac_tbf {
 	/* EGPRS */
 	bool is_egprs_enabled() const;
 	void disable_egprs();
+	void enable_egprs();
 
 	/* attempt to make things a bit more fair */
 	void rotate_in_list();
@@ -322,7 +323,6 @@ struct gprs_rlcmac_tbf {
 
 protected:
 	gprs_rlcmac_bts *bts_data() const;
-	void enable_egprs();
 	void merge_and_clear_ms(GprsMs *old_ms);
 
 	gprs_llc_queue *llc_queue();
@@ -581,6 +581,7 @@ inline bool gprs_rlcmac_tbf::is_egprs_enabled() const
 inline void gprs_rlcmac_tbf::enable_egprs()
 {
 	m_egprs_enabled = true;
+	window()->set_sns(RLC_EGPRS_SNS);
 }
 
 inline void gprs_rlcmac_tbf::disable_egprs()

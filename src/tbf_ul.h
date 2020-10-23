@@ -55,7 +55,6 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	struct msgb *create_ul_ack(uint32_t fn, uint8_t ts);
 	bool ctrl_ack_to_toggle();
 	bool handle_ctrl_ack();
-	void enable_egprs();
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(
 		const struct gprs_rlc_data_info *rlc,
@@ -121,12 +120,6 @@ void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta);
 inline uint16_t gprs_rlcmac_ul_tbf::window_size() const
 {
 	return m_window.ws();
-}
-
-inline void gprs_rlcmac_ul_tbf::enable_egprs()
-{
-	m_window.set_sns(RLC_EGPRS_SNS);
-	gprs_rlcmac_tbf::enable_egprs();
 }
 
 inline gprs_rlcmac_ul_tbf *as_ul_tbf(gprs_rlcmac_tbf *tbf)
