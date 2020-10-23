@@ -77,8 +77,35 @@ static void print_help()
 		"  -r	--realtime PRIO		Use SCHED_RR with the specified priority\n"
 		"  -D	--daemonize		Fork the process into a background daemon\n"
 		"  -i	--gsmtap-ip		The destination IP used for GSMTAP\n"
-		"    	--vty-ref-xml   	Generate the VTY reference XML output and exit.\n"
+		"\nVTY reference generation:\n"
+		"    	--vty-ref-mode MODE	VTY reference generation mode (e.g. 'expert').\n"
+		"    	--vty-ref-xml		Generate the VTY reference XML output and exit.\n"
 		);
+}
+
+static void handle_long_options(const char *prog_name, const int long_option)
+{
+	static int vty_ref_mode = VTY_REF_GEN_MODE_DEFAULT;
+
+	switch (long_option) {
+	case 1:
+		vty_ref_mode = get_string_value(vty_ref_gen_mode_names, optarg);
+		if (vty_ref_mode < 0) {
+			fprintf(stderr, "%s: Unknown VTY reference generation "
+				"mode '%s'\n", prog_name, optarg);
+			exit(2);
+		}
+		break;
+	case 2:
+		fprintf(stderr, "Generating the VTY reference in mode '%s' (%s)\n",
+			get_value_string(vty_ref_gen_mode_names, vty_ref_mode),
+			get_value_string(vty_ref_gen_mode_desc, vty_ref_mode));
+		vty_dump_xml_ref_mode(stdout, (enum vty_ref_gen_mode) vty_ref_mode);
+		exit(0);
+	default:
+		fprintf(stderr, "%s: error parsing cmdline options\n", prog_name);
+		exit(2);
+	}
 }
 
 /* FIXME: finally get some option parsing code into libosmocore */
@@ -97,7 +124,8 @@ static void handle_options(int argc, char **argv)
 			{ "daemonize", 0, 0, 'D' },
 			{ "exit", 0, 0, 'e' },
 			{ "gsmtap-ip", 1, 0, 'i' },
-			{ "vty-ref-xml", 0, &long_option, 1 },
+			{ "vty-ref-mode", 1, &long_option, 1 },
+			{ "vty-ref-xml", 0, &long_option, 2 },
 			{ 0, 0, 0, 0 }
 		};
 
@@ -112,14 +140,8 @@ static void handle_options(int argc, char **argv)
 			exit(0);
 			break;
 		case 0:
-			switch (long_option) {
-			case 1:
-				vty_dump_xml_ref(stdout);
-				exit(0);
-			default:
-				fprintf(stderr, "error parsing cmdline options\n");
-				exit(2);
-			}
+			handle_long_options(argv[0], long_option);
+			break;
 		case 'c':
 			free(config_file);
 			config_file = strdup(optarg);
