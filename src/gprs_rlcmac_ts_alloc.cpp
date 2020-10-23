@@ -363,7 +363,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 
 	trx_no = find_trx(bts, ms, use_trx);
 	if (trx_no < 0) {
-		LOGPAL(tbf, "A", single ? "single" : "multi", use_trx, LOGL_NOTICE,
+		LOGPAL(tbf, "A", single, use_trx, LOGL_NOTICE,
 		       "failed to find a usable TRX (TFI exhausted)\n");
 		return trx_no;
 	}
@@ -392,13 +392,13 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 		&tfi, &usf);
 
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF && usf < 0) {
-		LOGPAL(tbf, "A", single ? "single" : "multi", use_trx, LOGL_NOTICE,
+		LOGPAL(tbf, "A", single, use_trx, LOGL_NOTICE,
 		       "failed to allocate a TS, no USF available\n");
 		return -EBUSY;
 	}
 
 	if (ts < 0) {
-		LOGPAL(tbf, "A", single ? "single" : "multi", use_trx, LOGL_NOTICE,
+		LOGPAL(tbf, "A", single, use_trx, LOGL_NOTICE,
 		       "failed to allocate a TS, no TFI available\n");
 		return -EBUSY;
 	}
