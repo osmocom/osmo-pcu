@@ -4,7 +4,7 @@
 Creating MS object, TLLI = 0x00000000
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=0/0
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 4, because not enabled
@@ -21,7 +21,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0x00002342, partly confir
 Modifying MS object, TLLI = 0x00002342, TA 220 -> 4
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 3, because need to reuse TS
@@ -46,7 +46,7 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -95,7 +95,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) changes state from FLOW to WAIT REL
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -136,7 +136,7 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -185,7 +185,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) changes state from FLOW to WAIT REL
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -226,7 +226,7 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -481,7 +481,7 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -503,7 +503,7 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=1.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -546,7 +546,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -571,7 +571,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -596,7 +596,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -621,7 +621,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -646,7 +646,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -671,7 +671,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -696,7 +696,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -721,7 +721,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -746,7 +746,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -771,7 +771,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -796,7 +796,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -821,7 +821,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -846,7 +846,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -871,7 +871,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -896,7 +896,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -921,7 +921,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -946,7 +946,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -971,7 +971,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -996,7 +996,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1021,7 +1021,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1046,7 +1046,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1071,7 +1071,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1096,7 +1096,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1121,7 +1121,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1146,7 +1146,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1171,7 +1171,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1196,7 +1196,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1221,7 +1221,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1246,7 +1246,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1271,7 +1271,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1296,7 +1296,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1321,7 +1321,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1346,7 +1346,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 [DL] algo A <single> (suggested TRX: -1): failed to find a usable TRX (TFI exhausted)
 No PDCH resource
 === end test_tbf_exhaustion ===
@@ -1356,7 +1356,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1387,7 +1387,7 @@ Detaching TBF from MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456
 ********** DL-TBF ends here **********
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
-[DL] Slot Allocation (Algorithm A) for class 45
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1447,7 +1447,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1489,7 +1489,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=0/0
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1527,7 +1527,7 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-[UL] Slot Allocation (Algorithm A) for class 1
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1569,7 +1569,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
-[DL] Slot Allocation (Algorithm A) for class 1
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1608,7 +1608,7 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-[UL] Slot Allocation (Algorithm A) for class 1
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1649,7 +1649,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
-[DL] Slot Allocation (Algorithm A) for class 1
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1735,7 +1735,7 @@ Modifying MS object, TLLI = 0xf5667788, TA 220 -> 7
 Modifying MS object, TLLI = 0xf5667788, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-[UL] Slot Allocation (Algorithm A) for class 1
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1801,7 +1801,7 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-[UL] Slot Allocation (Algorithm A) for class 1
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1844,7 +1844,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
-[DL] Slot Allocation (Algorithm A) for class 1
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1886,7 +1886,7 @@ Searching for first unallocated TFI: TRX=0
 MS requests UL TBF in packet resource request of single block, so we provide one:
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-[UL] Slot Allocation (Algorithm A) for class 1
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1943,7 +1943,7 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-[UL] Slot Allocation (Algorithm A) for class 1
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -1986,7 +1986,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
-[DL] Slot Allocation (Algorithm A) for class 1
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -2023,7 +2023,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654275 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -2089,7 +2089,7 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/0
-[UL] Slot Allocation (Algorithm A) for class 1
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -2132,7 +2132,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
-[DL] Slot Allocation (Algorithm A) for class 1
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -2766,7 +2766,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) changes state from FINISHED to 
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
-[DL] Slot Allocation (Algorithm A) for class 1
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3020,6 +3020,7 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 12
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=12/0
+[DL] algo B <multi> (suggested TRX: 0): Alloc start
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 Slot Allocation (Algorithm B) for class 12
@@ -3059,6 +3060,7 @@ Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 12
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=12/12
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
+[DL] algo B <multi> (suggested TRX: 0): Alloc start
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 Slot Allocation (Algorithm B) for class 12
@@ -3113,7 +3115,7 @@ Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[UL] Slot Allocation (Algorithm A) for class 1
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3160,7 +3162,7 @@ Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3203,7 +3205,7 @@ Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[UL] Slot Allocation (Algorithm A) for class 1
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3380,7 +3382,7 @@ Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3415,7 +3417,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3722,7 +3724,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -3979,7 +3981,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -4198,7 +4200,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -4385,7 +4387,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -4552,7 +4554,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -4701,7 +4703,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -4845,7 +4847,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -4978,7 +4980,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5113,7 +5115,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5169,7 +5171,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5225,7 +5227,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5281,7 +5283,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5353,7 +5355,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5425,7 +5427,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5497,7 +5499,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5571,7 +5573,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5634,7 +5636,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5697,7 +5699,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5760,7 +5762,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5840,7 +5842,7 @@ Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[UL] Slot Allocation (Algorithm A) for class 1
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5906,7 +5908,7 @@ Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -5938,6 +5940,7 @@ Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
+[DL] algo B <single> (suggested TRX: 0): Alloc start
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 Slot Allocation (Algorithm B) for class 11
@@ -5960,6 +5963,7 @@ ws(192)
 DL TBF slots: 0x10, N: 1, WS: 192
 ********** DL-TBF update **********
 PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+[DL] algo B <multi> (suggested TRX: -1): Alloc start
 Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 - Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
@@ -6003,7 +6007,7 @@ Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[UL] Slot Allocation (Algorithm A) for class 1
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6063,7 +6067,7 @@ Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6097,7 +6101,7 @@ Searching for first unallocated TFI: TRX=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6134,7 +6138,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x78 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6156,7 +6160,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x79 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6178,7 +6182,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x7a (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6200,7 +6204,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x7b (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6222,7 +6226,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x7c (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6244,7 +6248,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x7d (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6266,7 +6270,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x7e (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6288,7 +6292,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x7f (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6327,7 +6331,7 @@ Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[UL] Slot Allocation (Algorithm A) for class 1
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -6943,7 +6947,7 @@ Got MS: TLLI = 0xf1223344, TA = 7
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
-[DL] Slot Allocation (Algorithm A) for class 0
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7721,7 +7725,7 @@ Searching for first unallocated TFI: TRX=0
  Found TFI=0.
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-[DL] Slot Allocation (Algorithm A) for class 11
+[DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7746,7 +7750,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x78 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7768,7 +7772,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x79 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7790,7 +7794,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x7a (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7812,7 +7816,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x7b (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7834,7 +7838,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x7c (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7856,7 +7860,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x7d (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7878,7 +7882,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x7e (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=0/0
-[UL] Slot Allocation (Algorithm A) for class 0
+[UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7906,7 +7910,7 @@ Modifying MS object, TLLI = 0xffeeddcc, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffeeddcc, EGPRS MS class 0 -> 11
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=11/11
-[UL] Slot Allocation (Algorithm A) for class 11
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled

@@ -359,7 +359,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	const gprs_rlcmac_tbf *tbf = tbf_;
 	gprs_rlcmac_trx *trx = ms->current_trx();
 
-	LOGPSL(tbf, LOGL_DEBUG, "Slot Allocation (Algorithm A) for class %d\n", tbf->ms_class());
+	LOGPAL(tbf, "A", single, use_trx, LOGL_DEBUG, "Alloc start\n");
 
 	trx_no = find_trx(bts, ms, use_trx);
 	if (trx_no < 0) {
@@ -857,6 +857,8 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	const GprsMs *ms = ms_;
 	const gprs_rlcmac_tbf *tbf = tbf_;
 	gprs_rlcmac_trx *trx;
+
+	LOGPAL(tbf, "B", single, use_trx, LOGL_DEBUG, "Alloc start\n");
 
 	/* Step 1: Get current state from the MS object */
 
