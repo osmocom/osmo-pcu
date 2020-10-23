@@ -40,7 +40,7 @@ enum tbf_dl_prio {
 
 struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_dl_tbf(BTS *bts);
-	gprs_rlc_dl_window *window();
+	gprs_rlc_window *window();
 	void cleanup();
 	void enable_egprs();
 	/* dispatch Unitdata.DL messages */

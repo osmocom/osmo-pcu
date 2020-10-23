@@ -247,7 +247,7 @@ static struct msgb *sched_select_ctrl_msg(
 static inline enum tbf_dl_prio tbf_compute_priority(const struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_dl_tbf *tbf,
 						    uint8_t ts, uint32_t fn, int age)
 {
-	const gprs_rlc_dl_window *w = tbf->window();
+	const gprs_rlc_dl_window *w = static_cast<gprs_rlc_dl_window *>(tbf->window());
 	unsigned long msecs_t3190 = osmo_tdef_get(bts->T_defs_pcu, 3190, OSMO_TDEF_MS, -1);
 	unsigned long dl_tbf_idle_msec = osmo_tdef_get(bts->T_defs_pcu, -2031, OSMO_TDEF_MS, -1);
 	int age_thresh1 = msecs_to_frames(200);

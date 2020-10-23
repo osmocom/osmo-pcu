@@ -886,9 +886,10 @@ static void write_packet_uplink_ack_gprs(
 	bitvec * dest, unsigned& wp,
 	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
 {
+	gprs_rlc_ul_window *window = static_cast<gprs_rlc_ul_window *>(tbf->window());
 
 	bitvec_write_field(dest, &wp, mcs_chan_code(tbf->current_cs()), 2); // CHANNEL_CODING_COMMAND
-	write_packet_ack_nack_desc_gprs(dest, wp, tbf->window(), is_final);
+	write_packet_ack_nack_desc_gprs(dest, wp, window, is_final);
 
 	bitvec_write_field(dest, &wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
 	bitvec_write_field(dest, &wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
@@ -1061,6 +1062,8 @@ static void write_packet_uplink_ack_egprs(
 	bitvec * dest, unsigned& wp,
 	struct gprs_rlcmac_ul_tbf *tbf, bool is_final)
 {
+	gprs_rlc_ul_window *window = static_cast<gprs_rlc_ul_window *>(tbf->window());
+
 	bitvec_write_field(dest, &wp, 0, 2); // fixed 00
 	/* CHANNEL_CODING_COMMAND */
 	bitvec_write_field(dest, &wp,
@@ -1080,7 +1083,7 @@ static void write_packet_uplink_ack_egprs(
 
 	/* -2 for last bit 0 mandatory and REL5 not supported */
 	unsigned bits_ack_nack = dest->data_len * 8 - wp - 2;
-	write_packet_ack_nack_desc_egprs(dest, wp, tbf->window(), is_final, bits_ack_nack);
+	write_packet_ack_nack_desc_egprs(dest, wp, window, is_final, bits_ack_nack);
 
 	bitvec_write_field(dest, &wp, 0, 1); // fixed 0
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have REL 5

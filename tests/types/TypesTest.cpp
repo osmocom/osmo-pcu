@@ -559,7 +559,7 @@ static void extract_egprs_ul_ack_nack(
 
 	*ssn = bitvec_get_uint(dest, 11);
 	if (bow) {
-		OSMO_ASSERT(*ssn == tbf->window()->v_q() + 1);
+		OSMO_ASSERT(*ssn == static_cast<gprs_rlc_ul_window *>(tbf->window())->v_q() + 1);
 	}
 
 	crbb_test->has_crbb = bitvec_get_uint(dest, 1);
@@ -596,7 +596,7 @@ static void extract_egprs_ul_ack_nack(
 
 static void check_egprs_bitmap(struct gprs_rlcmac_ul_tbf *tbf, uint16_t ssn, struct crbb_test *crbb_test, bitvec *urbb, unsigned int *rbb_size)
 {
-	gprs_rlc_ul_window *win = tbf->window();
+	gprs_rlc_ul_window *win = static_cast<gprs_rlc_ul_window *>(tbf->window());
 	uint8_t rbb_should[RLC_EGPRS_MAX_WS] = {0};
 	bitvec rbb_should_bv;
 	rbb_should_bv.data = rbb_should;
@@ -680,7 +680,7 @@ static void test_egprs_ul_ack_nack()
 	bitvec *rbb = NULL;
 	unsigned int rbb_size;
 	uint16_t ssn = 0;
-	gprs_rlc_ul_window *win = tbf->window();
+	gprs_rlc_ul_window *win = static_cast<gprs_rlc_ul_window *>(tbf->window());
 
 	fprintf(stderr, "************** Test with empty window\n");
 	win->reset_state();

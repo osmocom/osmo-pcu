@@ -1000,7 +1000,7 @@ int gprs_rlcmac_dl_tbf::analyse_errors(char *show_rbb, uint8_t ssn,
 	return lost * 100 / (lost + received);
 }
 
-gprs_rlc_dl_window *gprs_rlcmac_dl_tbf::window()
+gprs_rlc_window *gprs_rlcmac_dl_tbf::window()
 {
 	return &m_window;
 }

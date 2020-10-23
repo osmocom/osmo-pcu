@@ -185,6 +185,8 @@ struct gprs_rlcmac_tbf {
 	static void free_all(struct gprs_rlcmac_trx *trx);
 	static void free_all(struct gprs_rlcmac_pdch *pdch);
 
+	virtual gprs_rlc_window *window() = 0;
+
 	bool state_is(enum gprs_rlcmac_tbf_state rhs) const;
 	bool state_is_not(enum gprs_rlcmac_tbf_state rhs) const;
 	bool dl_ass_state_is(enum gprs_rlcmac_tbf_dl_ass_state rhs) const;

@@ -615,7 +615,7 @@ void gprs_rlcmac_ul_tbf::set_window_size()
 	m_window.set_ws(ws);
 }
 
-gprs_rlc_ul_window *gprs_rlcmac_ul_tbf::window()
+gprs_rlc_window *gprs_rlcmac_ul_tbf::window()
 {
 	return &m_window;
 }

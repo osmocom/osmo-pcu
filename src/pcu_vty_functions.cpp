@@ -74,7 +74,7 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 	vty_out(vty, " CS=%s", mcs_name(tbf->current_cs()));
 
 	if (ul_tbf) {
-		gprs_rlc_ul_window *win = ul_tbf->window();
+		gprs_rlc_ul_window *win = static_cast<gprs_rlc_ul_window *>(ul_tbf->window());
 		vty_out(vty, " WS=%u V(Q)=%d V(R)=%d",
 			ul_tbf->window_size(), win->v_q(), win->v_r());
 		vty_out(vty, "%s", VTY_NEWLINE);
@@ -86,7 +86,7 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 		}
 	}
 	if (dl_tbf) {
-		gprs_rlc_dl_window *win = dl_tbf->window();
+		gprs_rlc_dl_window *win = static_cast<gprs_rlc_dl_window *>(dl_tbf->window());
 		vty_out(vty, " WS=%u V(A)=%d V(S)=%d nBSN=%d%s",
 			dl_tbf->window_size(), win->v_a(), win->v_s(), win->resend_needed(),
 			win->window_stalled() ? " STALLED" : "");
