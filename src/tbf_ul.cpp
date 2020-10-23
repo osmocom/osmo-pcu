@@ -614,3 +614,8 @@ void gprs_rlcmac_ul_tbf::set_window_size()
 		  ws, b->ws_base, pcu_bitcount(ul_slots()), b->ws_pdch);
 	m_window.set_ws(ws);
 }
+
+gprs_rlc_ul_window *gprs_rlcmac_ul_tbf::window()
+{
+	return &m_window;
+}

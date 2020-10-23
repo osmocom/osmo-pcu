@@ -1516,11 +1516,6 @@ bool gprs_rlcmac_tbf::is_control_ts(uint8_t ts) const
 	return ts == control_ts;
 }
 
-gprs_rlc_ul_window *gprs_rlcmac_ul_tbf::window()
-{
-	return &m_window;
-}
-
 struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 			GprsMs *ms, uint32_t tlli, uint8_t trx_no, uint8_t ts)
 {
