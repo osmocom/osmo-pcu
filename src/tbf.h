@@ -265,7 +265,6 @@ struct gprs_rlcmac_tbf {
 
 	/* EGPRS */
 	bool is_egprs_enabled() const;
-	void disable_egprs();
 
 	/* attempt to make things a bit more fair */
 	void rotate_in_list();
@@ -569,11 +568,6 @@ inline void gprs_rlcmac_tbf::enable_egprs()
 {
 	m_egprs_enabled = true;
 	window()->set_sns(RLC_EGPRS_SNS);
-}
-
-inline void gprs_rlcmac_tbf::disable_egprs()
-{
-	m_egprs_enabled = false;
 }
 
 inline enum gprs_rlcmac_tbf_direction reverse(enum gprs_rlcmac_tbf_direction dir)
