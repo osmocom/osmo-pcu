@@ -597,7 +597,7 @@ int gprs_ns_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 		LOGP(DPCU, LOGL_NOTICE, "NS: %s Unknown prim %d from NS\n",
 		     get_value_string(osmo_prim_op_names, oph->operation),
 		     oph->operation);
-		return 0;
+		goto out;
 	}
 
 	switch (oph->primitive) {
@@ -619,6 +619,10 @@ int gprs_ns_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 		     oph->primitive);
 		break;
 	}
+
+out:
+	if (oph->msg)
+		msgb_free(oph->msg);
 
 	return rc;
 }
