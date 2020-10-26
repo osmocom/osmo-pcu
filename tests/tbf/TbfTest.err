@@ -523,14 +523,14 @@ The MS object cannot fully confirm an unexpected TLLI: 0xf1000001, partly confir
 The MS object cannot fully confirm an unexpected TLLI: 0xf1000002, partly confirmed
 Modifying MS object, TLLI = 0xf1000001, IMSI '' -> '001001000000001'
 Modifying MS object, TLLI = 0xf1000001, IMSI '001001000000001' -> '001001000000002'
-TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) IMSI '001001000000002' was already assigned to another MS object: TLLI = 0xf1000001, that IMSI will be removed
+Modifying MS object, TLLI = 0xf1000002, IMSI '' -> '001001000000002'
+MS(TLLI=0xf1000002, IMSI=, TA=0, 45/0, DL) IMSI '001001000000002' was already assigned to another MS object: TLLI = 0xf1000001, that IMSI will be removed
 TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW) changes state from FLOW to RELEASING
 TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING) free
 TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING) FIXME: Software error: Pending downlink assignment in state GPRS_RLCMAC_DL_ASS_SEND_ASS. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
 PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING), 1 TBFs, USFs = 00, TFIs = 00000002.
 Detaching TBF from MS object, TLLI = 0xf1000001, TBF = TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING)
 ********** DL-TBF ends here **********
-Modifying MS object, TLLI = 0xf1000002, IMSI '' -> '001001000000002'
 Clearing MS object, TLLI: 0xf1000001, IMSI: '001001000000002'
 Destroying MS object, TLLI = 0x00000000
 TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) changes state from FLOW to RELEASING
@@ -544,6 +544,8 @@ Destroying MS object, TLLI = 0xf1000002
 === start test_tbf_exhaustion ===
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000000'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000000, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -555,13 +557,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=0
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000000, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000000, TBF = TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000000, IMSI '' -> '001001000000000'
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000000)
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -569,6 +569,8 @@ TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000001'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000001, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -580,13 +582,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=1
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
-TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000001, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL), 2 TBFs, USFs = 00, TFIs = 00000003.
+TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000001, TBF = TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL)
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000001, IMSI '' -> '001001000000001'
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000001)
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -594,6 +594,8 @@ TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000002'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000002, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -605,13 +607,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=2
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL), 3 TBFs, USFs = 00, TFIs = 00000007.
-TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=2 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000002, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL), 3 TBFs, USFs = 00, TFIs = 00000007.
+TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000002, TBF = TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL)
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000002, IMSI '' -> '001001000000002'
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000002)
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -619,6 +619,8 @@ TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000003'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000003, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -630,13 +632,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=3
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL), 4 TBFs, USFs = 00, TFIs = 0000000f.
-TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=3 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000003, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL), 4 TBFs, USFs = 00, TFIs = 0000000f.
+TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000003, TBF = TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL)
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000003, IMSI '' -> '001001000000003'
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000003)
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -644,6 +644,8 @@ TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000004'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000004, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -655,13 +657,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=4
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL), 5 TBFs, USFs = 00, TFIs = 0000001f.
-TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=4 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000004, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL), 5 TBFs, USFs = 00, TFIs = 0000001f.
+TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000004, TBF = TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL)
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000004, IMSI '' -> '001001000000004'
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000004)
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -669,6 +669,8 @@ TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000005'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000005, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -680,13 +682,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=5
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL), 6 TBFs, USFs = 00, TFIs = 0000003f.
-TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=5 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000005, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL), 6 TBFs, USFs = 00, TFIs = 0000003f.
+TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000005, TBF = TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL)
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000005, IMSI '' -> '001001000000005'
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000005)
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -694,6 +694,8 @@ TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000006'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000006, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -705,13 +707,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=6
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL), 7 TBFs, USFs = 00, TFIs = 0000007f.
-TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=6 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000006, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL), 7 TBFs, USFs = 00, TFIs = 0000007f.
+TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000006, TBF = TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL)
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000006, IMSI '' -> '001001000000006'
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000006)
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -719,6 +719,8 @@ TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000007'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000007, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -730,13 +732,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=7
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL), 8 TBFs, USFs = 00, TFIs = 000000ff.
-TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=7 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000007, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL), 8 TBFs, USFs = 00, TFIs = 000000ff.
+TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000007, TBF = TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL)
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000007, IMSI '' -> '001001000000007'
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000007)
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -744,6 +744,8 @@ TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000008'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000008, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -755,13 +757,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=8
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL), 9 TBFs, USFs = 00, TFIs = 000001ff.
-TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=8 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000008, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL), 9 TBFs, USFs = 00, TFIs = 000001ff.
+TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000008, TBF = TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL)
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000008, IMSI '' -> '001001000000008'
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000008)
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -769,6 +769,8 @@ TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000009'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000009, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -780,13 +782,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=9
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL), 10 TBFs, USFs = 00, TFIs = 000003ff.
-TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=9 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000009, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL), 10 TBFs, USFs = 00, TFIs = 000003ff.
+TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000009, TBF = TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL)
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000009, IMSI '' -> '001001000000009'
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000009)
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -794,6 +794,8 @@ TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000010'
+The MS object cannot fully confirm an unexpected TLLI: 0xc000000a, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -805,13 +807,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=10
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL), 11 TBFs, USFs = 00, TFIs = 000007ff.
-TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=10 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc000000a, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL), 11 TBFs, USFs = 00, TFIs = 000007ff.
+TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc000000a, TBF = TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL)
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc000000a, IMSI '' -> '001001000000010'
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000010)
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -819,6 +819,8 @@ TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000011'
+The MS object cannot fully confirm an unexpected TLLI: 0xc000000b, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -830,13 +832,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=11
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL), 12 TBFs, USFs = 00, TFIs = 00000fff.
-TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=11 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc000000b, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL), 12 TBFs, USFs = 00, TFIs = 00000fff.
+TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc000000b, TBF = TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL)
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc000000b, IMSI '' -> '001001000000011'
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000011)
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -844,6 +844,8 @@ TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000012'
+The MS object cannot fully confirm an unexpected TLLI: 0xc000000c, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -855,13 +857,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=12
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL), 13 TBFs, USFs = 00, TFIs = 00001fff.
-TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=12 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc000000c, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL), 13 TBFs, USFs = 00, TFIs = 00001fff.
+TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc000000c, TBF = TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL)
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc000000c, IMSI '' -> '001001000000012'
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000012)
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -869,6 +869,8 @@ TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000013'
+The MS object cannot fully confirm an unexpected TLLI: 0xc000000d, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -880,13 +882,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=13
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL), 14 TBFs, USFs = 00, TFIs = 00003fff.
-TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=13 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc000000d, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL), 14 TBFs, USFs = 00, TFIs = 00003fff.
+TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc000000d, TBF = TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL)
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc000000d, IMSI '' -> '001001000000013'
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000013)
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -894,6 +894,8 @@ TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000014'
+The MS object cannot fully confirm an unexpected TLLI: 0xc000000e, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -905,13 +907,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=14
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL), 15 TBFs, USFs = 00, TFIs = 00007fff.
-TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=14 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc000000e, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL), 15 TBFs, USFs = 00, TFIs = 00007fff.
+TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc000000e, TBF = TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL)
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc000000e, IMSI '' -> '001001000000014'
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000014)
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -919,6 +919,8 @@ TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000015'
+The MS object cannot fully confirm an unexpected TLLI: 0xc000000f, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -930,13 +932,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=15
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL), 16 TBFs, USFs = 00, TFIs = 0000ffff.
-TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=15 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc000000f, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL), 16 TBFs, USFs = 00, TFIs = 0000ffff.
+TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc000000f, TBF = TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL)
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc000000f, IMSI '' -> '001001000000015'
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000015)
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -944,6 +944,8 @@ TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000016'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000010, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -955,13 +957,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=16
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL), 17 TBFs, USFs = 00, TFIs = 0001ffff.
-TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=16 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000010, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL), 17 TBFs, USFs = 00, TFIs = 0001ffff.
+TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000010, TBF = TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL)
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000010, IMSI '' -> '001001000000016'
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000016)
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -969,6 +969,8 @@ TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000017'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000011, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -980,13 +982,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=17
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL), 18 TBFs, USFs = 00, TFIs = 0003ffff.
-TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=17 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000011, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL), 18 TBFs, USFs = 00, TFIs = 0003ffff.
+TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000011, TBF = TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL)
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000011, IMSI '' -> '001001000000017'
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000017)
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -994,6 +994,8 @@ TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000018'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000012, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1005,13 +1007,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=18
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL), 19 TBFs, USFs = 00, TFIs = 0007ffff.
-TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=18 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000012, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL), 19 TBFs, USFs = 00, TFIs = 0007ffff.
+TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000012, TBF = TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL)
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000012, IMSI '' -> '001001000000018'
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000018)
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1019,6 +1019,8 @@ TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000019'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000013, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1030,13 +1032,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=19
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL), 20 TBFs, USFs = 00, TFIs = 000fffff.
-TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=19 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000013, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL), 20 TBFs, USFs = 00, TFIs = 000fffff.
+TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000013, TBF = TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL)
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000013, IMSI '' -> '001001000000019'
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000019)
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1044,6 +1044,8 @@ TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000020'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000014, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1055,13 +1057,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=20
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL), 21 TBFs, USFs = 00, TFIs = 001fffff.
-TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=20 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000014, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL), 21 TBFs, USFs = 00, TFIs = 001fffff.
+TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000014, TBF = TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL)
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000014, IMSI '' -> '001001000000020'
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000020)
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1069,6 +1069,8 @@ TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000021'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000015, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1080,13 +1082,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=21
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL), 22 TBFs, USFs = 00, TFIs = 003fffff.
-TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=21 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000015, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL), 22 TBFs, USFs = 00, TFIs = 003fffff.
+TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000015, TBF = TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL)
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000015, IMSI '' -> '001001000000021'
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000021)
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1094,6 +1094,8 @@ TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000022'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000016, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1105,13 +1107,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=22
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL), 23 TBFs, USFs = 00, TFIs = 007fffff.
-TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=22 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000016, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL), 23 TBFs, USFs = 00, TFIs = 007fffff.
+TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000016, TBF = TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL)
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000016, IMSI '' -> '001001000000022'
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000022)
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1119,6 +1119,8 @@ TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000023'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000017, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1130,13 +1132,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=23
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL), 24 TBFs, USFs = 00, TFIs = 00ffffff.
-TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=23 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000017, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL), 24 TBFs, USFs = 00, TFIs = 00ffffff.
+TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000017, TBF = TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL)
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000017, IMSI '' -> '001001000000023'
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000023)
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1144,6 +1144,8 @@ TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000024'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000018, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1155,13 +1157,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=24
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL), 25 TBFs, USFs = 00, TFIs = 01ffffff.
-TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=24 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000018, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL), 25 TBFs, USFs = 00, TFIs = 01ffffff.
+TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000018, TBF = TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL)
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000018, IMSI '' -> '001001000000024'
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000024)
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1169,6 +1169,8 @@ TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000025'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000019, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1180,13 +1182,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=25
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL), 26 TBFs, USFs = 00, TFIs = 03ffffff.
-TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=25 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0000019, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL), 26 TBFs, USFs = 00, TFIs = 03ffffff.
+TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0000019, TBF = TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL)
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0000019, IMSI '' -> '001001000000025'
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000025)
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1194,6 +1194,8 @@ TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000026'
+The MS object cannot fully confirm an unexpected TLLI: 0xc000001a, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1205,13 +1207,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=26
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL), 27 TBFs, USFs = 00, TFIs = 07ffffff.
-TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=26 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc000001a, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL), 27 TBFs, USFs = 00, TFIs = 07ffffff.
+TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc000001a, TBF = TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL)
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc000001a, IMSI '' -> '001001000000026'
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000026)
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1219,6 +1219,8 @@ TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000027'
+The MS object cannot fully confirm an unexpected TLLI: 0xc000001b, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1230,13 +1232,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=27
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL), 28 TBFs, USFs = 00, TFIs = 0fffffff.
-TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=27 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc000001b, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL), 28 TBFs, USFs = 00, TFIs = 0fffffff.
+TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc000001b, TBF = TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL)
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc000001b, IMSI '' -> '001001000000027'
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000027)
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1244,6 +1244,8 @@ TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000028'
+The MS object cannot fully confirm an unexpected TLLI: 0xc000001c, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1255,13 +1257,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=28
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL), 29 TBFs, USFs = 00, TFIs = 1fffffff.
-TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=28 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc000001c, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL), 29 TBFs, USFs = 00, TFIs = 1fffffff.
+TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc000001c, TBF = TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL)
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc000001c, IMSI '' -> '001001000000028'
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000028)
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1269,6 +1269,8 @@ TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000029'
+The MS object cannot fully confirm an unexpected TLLI: 0xc000001d, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1280,13 +1282,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=29
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL), 30 TBFs, USFs = 00, TFIs = 3fffffff.
-TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=29 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc000001d, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL), 30 TBFs, USFs = 00, TFIs = 3fffffff.
+TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc000001d, TBF = TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL)
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc000001d, IMSI '' -> '001001000000029'
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000029)
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1294,6 +1294,8 @@ TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000030'
+The MS object cannot fully confirm an unexpected TLLI: 0xc000001e, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1305,13 +1307,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=30
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL), 31 TBFs, USFs = 00, TFIs = 7fffffff.
-TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=30 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc000001e, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL), 31 TBFs, USFs = 00, TFIs = 7fffffff.
+TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc000001e, TBF = TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL)
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc000001e, IMSI '' -> '001001000000030'
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000030)
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1319,6 +1319,8 @@ TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000031'
+The MS object cannot fully confirm an unexpected TLLI: 0xc000001f, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1330,13 +1332,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=31
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL), 32 TBFs, USFs = 00, TFIs = ffffffff.
-TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=31 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc000001f, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL), 32 TBFs, USFs = 00, TFIs = ffffffff.
+TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc000001f, TBF = TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL)
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc000001f, IMSI '' -> '001001000000031'
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000000031)
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1344,16 +1344,20 @@ TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) TX: START Immediate Assignment D
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000000032'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0000020, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 [DL] algo A <single> (suggested TRX: -1): failed to find a usable TRX (TFI exhausted)
 No PDCH resource
 === end test_tbf_exhaustion ===
-Destroying MS object, TLLI = 0x00000000
+Destroying MS object, TLLI = 0xc0000020
 === start test_tbf_dl_llc_loss ===
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001000123456'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0123456, partly confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1365,13 +1369,11 @@ Allocating DL TBF: MS_CLASS=45/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=0
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
-The MS object cannot fully confirm an unexpected TLLI: 0xc0123456, partly confirmed
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xc0123456, IMSI '' -> '001001000123456'
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001000123456)
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1487,6 +1489,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling final Ack/Nack, beca
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=0/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
@@ -1502,9 +1506,7 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL), 1 TBF
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
-Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=0011223344)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
@@ -1567,6 +1569,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Frame 1 starts at offset 0, length=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last block: BSN=0 CV=15
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
@@ -1582,9 +1586,7 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL), 1 TBF
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
-Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -1647,6 +1649,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Assembling frames: (len=20)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Frame 1 starts at offset 0, length=20, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last block: BSN=0 CV=15
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
@@ -1662,9 +1666,7 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL), 1 TBF
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
-Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -1779,10 +1781,9 @@ There is a new MS object for the same MS: (0xf1223344, '0011223344') -> (0xf5667
 IMSI 0011223344, old TBF TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED): moving DL TBF to new MS object
 Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED)
 Attaching TBF to MS object, TLLI = 0xf5667788, TBF = TBF(TFI=0 TLLI=0xf5667788 DIR=DL STATE=FINISHED)
-Modifying MS object, TLLI = 0xf5667788, IMSI '' -> '0011223344'
 Clearing MS object, TLLI: 0xf1223344, IMSI: '0011223344'
-TBF(TFI=0 TLLI=0xf5667788 DIR=DL STATE=FINISHED) appending 4 bytes
 Modifying MS object, TLLI: 0xf5667788 confirmed
+TBF(TFI=0 TLLI=0xf5667788 DIR=DL STATE=FINISHED) appending 4 bytes
 New MS: TLLI = 0xf5667788, TA = 7, IMSI = 0011223344, LLC = 1
 === end test_tbf_ra_update_rach ===
 === start test_tbf_dl_flow_and_rach_two_phase ===
@@ -1842,6 +1843,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Assembling frames: (len=20)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Frame 1 starts at offset 0, length=20, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last block: BSN=0 CV=15
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
@@ -1857,9 +1860,7 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL), 1 TBF
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
-Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -1984,6 +1985,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Assembling frames: (len=20)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Frame 1 starts at offset 0, length=20, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last block: BSN=0 CV=15
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
@@ -1999,9 +2002,7 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL), 1 TBF
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
-Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -2055,7 +2056,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) stopping timer T0 [freeing TBF
 PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 01, TFIs = 00000000.
 Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING)
 ********** DL-TBF ends here **********
-Modifying MS object, TLLI = 0x00000000, IMSI '' -> '0011223344'
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 1
 Clearing MS object, TLLI: 0xf1223344, IMSI: '0011223344'
 Destroying MS object, TLLI = 0x00000000
@@ -2130,6 +2130,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Assembling frames: (len=20)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Frame 1 starts at offset 0, length=20, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last block: BSN=0 CV=15
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/0
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
@@ -2145,9 +2147,7 @@ PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL), 1 TBF
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
-Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
-Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
@@ -3011,10 +3011,12 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 10, CS-1): 0f 03
 === start test_tbf_gprs_egprs ===
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
+Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001123456789'
+The MS object cannot fully confirm an unexpected TLLI: 0xc0006789, partly confirmed
 Not accepting non-EGPRS phone in EGPRS-only mode
 No PDCH resource
 === end test_tbf_gprs_egprs ===
-Destroying MS object, TLLI = 0x00000000
+Destroying MS object, TLLI = 0xc0006789
 === start test_tbf_ws ===
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 12
@@ -3159,6 +3161,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Frame 1 starts at offset 0, l
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) No gaps in received block, last block: BSN=0 CV=15
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -3177,9 +3181,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots 
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
-Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
-Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) exists
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to ASSIGN
@@ -3379,6 +3381,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -3397,9 +3401,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots 
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
-Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
-Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) exists
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to ASSIGN
@@ -5905,6 +5907,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=37, data=00 00 00
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_NONE
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5923,9 +5927,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots 
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
-Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
-Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) exists
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to ASSIGN
@@ -6064,6 +6066,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Frame 2 starts at offset 1, l
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) No gaps in received block, last block: BSN=1 CV=7
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -6082,9 +6086,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots 
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(0) slots(1) ws_pdch(0)
 ws(64)
-Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
-Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) exists
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to ASSIGN
@@ -6944,6 +6946,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 64 already received
 Received RTS for PDCH: TRX=0 TS=7 FN=2654275 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -6962,9 +6966,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots 
 Attaching TBF to MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 192, base(128) slots(1) ws_pdch(64)
 ws(192)
-Modifying MS object, TLLI: 0xf1223344 confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
-Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) exists
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) changes state from NULL to ASSIGN

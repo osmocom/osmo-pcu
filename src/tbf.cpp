@@ -188,40 +188,7 @@ uint32_t gprs_rlcmac_tbf::tlli() const
 
 const char *gprs_rlcmac_tbf::imsi() const
 {
-	static const char nullc = 0;
-	return m_ms ? m_ms->imsi() : &nullc;
-}
-
-void gprs_rlcmac_tbf::assign_imsi(const char *imsi_)
-{
-	GprsMs *old_ms;
-
-	if (!imsi_ || !m_ms) {
-		LOGPTBF(this, LOGL_ERROR,
-			"failed to assign IMSI: missing IMSI or MS object\n");
-		return;
-	}
-
-	if (strcmp(imsi_, imsi()) == 0)
-		return;
-
-	/* really change the IMSI */
-
-	old_ms = bts->ms_store().get_ms(0, 0, imsi_);
-	if (old_ms) {
-		/* We cannot find m_ms by IMSI since we know that it has a
-		 * different IMSI */
-		OSMO_ASSERT(old_ms != m_ms);
-
-		LOGPTBF(this, LOGL_INFO,
-			"IMSI '%s' was already assigned to another "
-			"MS object: TLLI = 0x%08x, that IMSI will be removed\n",
-			imsi_, old_ms->tlli());
-
-		merge_and_clear_ms(old_ms);
-	}
-
-	m_ms->set_imsi(imsi_);
+	return m_ms->imsi();
 }
 
 uint8_t gprs_rlcmac_tbf::ta() const
@@ -283,37 +250,6 @@ void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 		m_ms->attach_tbf(this);
 }
 
-void gprs_rlcmac_tbf::merge_and_clear_ms(GprsMs *old_ms)
-{
-	if (old_ms == ms())
-		return;
-
-	GprsMs::Guard guard_old(old_ms);
-
-	/* Clean up the old MS object */
-	/* TODO: Use timer? */
-	if (old_ms->ul_tbf() && !old_ms->ul_tbf()->timers_pending(T_MAX)) {
-		if (old_ms->ul_tbf() == this) {
-			LOGPTBF(this, LOGL_ERROR,
-				"is referred by the old MS and will not be deleted\n");
-			set_ms(NULL);
-		} else {
-			tbf_free(old_ms->ul_tbf());
-		}
-	}
-	if (old_ms->dl_tbf() && !old_ms->dl_tbf()->timers_pending(T_MAX)) {
-		if (old_ms->dl_tbf() == this) {
-			LOGPTBF(this, LOGL_ERROR,
-				"is referred by the old MS and will not be deleted\n");
-			set_ms(NULL);
-		} else {
-			tbf_free(old_ms->dl_tbf());
-		}
-	}
-
-	ms()->merge_old_ms(old_ms);
-}
-
 void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
 {
 	if (!tlli)
@@ -322,13 +258,13 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction di
 	/* TODO: When the TLLI does not match the ms, check if there is another
 	 * MS object that belongs to that TLLI and if yes make sure one of them
 	 * gets deleted. This is the same problem that can arise with
-	 * assign_imsi() so there should be a unified solution */
+	 * IMSI in gprs_rlcmac_dl_tbf::handle() so there should be a unified solution */
 	if (!ms()->check_tlli(tlli)) {
 		GprsMs *old_ms;
 
 		old_ms = bts->ms_store().get_ms(tlli, 0, NULL);
 		if (old_ms)
-			merge_and_clear_ms(old_ms);
+			ms()->merge_and_clear_ms(old_ms);
 	}
 
 	if (dir == GPRS_RLCMAC_UL_TBF)

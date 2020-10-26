@@ -250,7 +250,6 @@ struct gprs_rlcmac_tbf {
 	bool is_tfi_assigned() const;
 
 	const char *imsi() const;
-	void assign_imsi(const char *imsi);
 	uint8_t ta() const;
 	void set_ta(uint8_t);
 	uint8_t ms_class() const;

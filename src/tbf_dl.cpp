@@ -251,27 +251,15 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 	return 0;
 }
 
-static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
-				const char *imsi,
-				const uint32_t tlli, const uint32_t tlli_old,
-				const uint8_t ms_class,
-				const uint8_t egprs_ms_class,
-				struct gprs_rlcmac_dl_tbf **tbf)
+static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts, GprsMs *ms,
+				 struct gprs_rlcmac_dl_tbf **tbf)
 {
 	bool ss;
 	int8_t use_trx;
-	uint8_t ta = GSM48_TA_INVALID;
 	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL, *old_ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
-	GprsMs *ms;
-
-	/* check for uplink data, so we copy our informations */
-	ms = bts->bts->ms_store().get_ms(tlli, tlli_old, imsi);
-	if (!ms)
-		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class); /* ms class updated later */
 
 	ul_tbf = ms->ul_tbf();
-	ta = ms->ta();
 
 	if (ul_tbf && ul_tbf->m_contention_resolution_done
 	 && !ul_tbf->m_final_ack_sent) {
@@ -293,13 +281,8 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts,
 		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource\n");
 		return -EBUSY;
 	}
-	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
-	dl_tbf->ms()->set_ta(ta);
 
 	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "[DOWNLINK] START\n");
-
-	/* Store IMSI for later look-up and PCH retransmission */
-	dl_tbf->assign_imsi(imsi);
 
 	/* trigger downlink assignment and set state to ASSIGN.
 	 * we don't use old_downlink, so the possible uplink is used
@@ -354,28 +337,23 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 				/* Move the DL TBF to the new MS */
 				dl_tbf->set_ms(ms);
 			}
-			/* Clean up the old MS object */
-			/* TODO: Put this into a separate function, use timer? */
-			if (ms_old->ul_tbf() && !ms_old->ul_tbf()->timers_pending(T_MAX))
-				tbf_free(ms_old->ul_tbf());
-			if (ms_old->dl_tbf() && !ms_old->dl_tbf()->timers_pending(T_MAX))
-				tbf_free(ms_old->dl_tbf());
-
-			ms->merge_old_ms(ms_old);
+			ms->merge_and_clear_ms(ms_old);
 		}
 	}
 
+	if (!ms)
+		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class);
+	ms->set_imsi(imsi);
+	ms->confirm_tlli(tlli);
+
 	if (!dl_tbf) {
-		rc = tbf_new_dl_assignment(bts, imsi, tlli, tlli_old,
-			ms_class, egprs_ms_class, &dl_tbf);
+		rc = tbf_new_dl_assignment(bts, ms, &dl_tbf);
 		if (rc < 0)
 			return rc;
 	}
 
 	/* TODO: ms_class vs. egprs_ms_class is not handled here */
 	rc = dl_tbf->append_data(ms_class, delay_csec, data, len);
-	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
-	dl_tbf->assign_imsi(imsi);
 
 	return rc;
 }

@@ -377,11 +377,10 @@ void GprsMs::reset()
 
 void GprsMs::merge_old_ms(GprsMs *old_ms)
 {
-	if (old_ms == this)
-		return;
+	OSMO_ASSERT(old_ms != this);
 
 	if (strlen(imsi()) == 0 && strlen(old_ms->imsi()) != 0)
-		set_imsi(old_ms->imsi());
+		osmo_strlcpy(m_imsi, old_ms->imsi(), sizeof(m_imsi));
 
 	if (!ms_class() && old_ms->ms_class())
 		set_ms_class(old_ms->ms_class());
@@ -392,6 +391,22 @@ void GprsMs::merge_old_ms(GprsMs *old_ms)
 	m_llc_queue.move_and_merge(&old_ms->m_llc_queue);
 
 	old_ms->reset();
+}
+
+void GprsMs::merge_and_clear_ms(GprsMs *old_ms)
+{
+	OSMO_ASSERT(old_ms != this);
+
+	GprsMs::Guard guard_old(old_ms);
+
+	/* Clean up the old MS object */
+	/* TODO: Use timer? */
+	if (old_ms->ul_tbf() && !old_ms->ul_tbf()->timers_pending(T_MAX))
+			tbf_free(old_ms->ul_tbf());
+	if (old_ms->dl_tbf() && !old_ms->dl_tbf()->timers_pending(T_MAX))
+			tbf_free(old_ms->dl_tbf());
+
+	merge_old_ms(old_ms);
 }
 
 void GprsMs::set_tlli(uint32_t tlli)
@@ -465,6 +480,24 @@ void GprsMs::set_imsi(const char *imsi)
 	LOGP(DRLCMAC, LOGL_INFO,
 		"Modifying MS object, TLLI = 0x%08x, IMSI '%s' -> '%s'\n",
 		tlli(), m_imsi, imsi);
+
+	GprsMs *old_ms = m_bts->ms_store().get_ms(0, 0, imsi);
+	/* Check if we are going to store a different MS object with already
+	   existing IMSI. This is probably a bug in code calling this function,
+	   since it should take care of this explicitly */
+	if (old_ms) {
+		/* We cannot find m_ms by IMSI since we know that it has a
+		* different IMSI */
+		OSMO_ASSERT(old_ms != this);
+
+		LOGPMS(this, DRLCMAC, LOGL_NOTICE,
+		       "IMSI '%s' was already assigned to another "
+		       "MS object: TLLI = 0x%08x, that IMSI will be removed\n",
+		       imsi, old_ms->tlli());
+
+		merge_and_clear_ms(old_ms);
+	}
+
 
 	osmo_strlcpy(m_imsi, imsi, sizeof(m_imsi));
 }

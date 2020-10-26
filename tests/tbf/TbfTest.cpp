@@ -420,7 +420,7 @@ static void test_tbf_imsi()
 	dl_tbf[0]->update_ms(0xf1000001, GPRS_RLCMAC_DL_TBF);
 	dl_tbf[1]->update_ms(0xf1000002, GPRS_RLCMAC_DL_TBF);
 
-	dl_tbf[0]->assign_imsi("001001000000001");
+	dl_tbf[0]->ms()->set_imsi("001001000000001");
 	ms1 = the_bts.ms_store().get_ms(0, 0, "001001000000001");
 	OSMO_ASSERT(ms1 != NULL);
 	ms2 = the_bts.ms_store().get_ms(0xf1000001);
@@ -429,7 +429,7 @@ static void test_tbf_imsi()
 	OSMO_ASSERT(ms1 == ms2);
 
 	/* change the IMSI on TBF 0 */
-	dl_tbf[0]->assign_imsi("001001000000002");
+	dl_tbf[0]->ms()->set_imsi("001001000000002");
 	ms1 = the_bts.ms_store().get_ms(0, 0, "001001000000001");
 	OSMO_ASSERT(ms1 == NULL);
 	ms1 = the_bts.ms_store().get_ms(0, 0, "001001000000002");
@@ -437,10 +437,10 @@ static void test_tbf_imsi()
 	OSMO_ASSERT(strcmp(ms2->imsi(), "001001000000002") == 0);
 	OSMO_ASSERT(ms1 == ms2);
 
-	/* use the same IMSI on TBF 2 */
+	/* use the same IMSI on TBF 1 */
 	{
 		GprsMs::Guard guard(ms2);
-		dl_tbf[1]->assign_imsi("001001000000002");
+		dl_tbf[1]->ms()->set_imsi("001001000000002");
 		ms1 = the_bts.ms_store().get_ms(0, 0, "001001000000002");
 		OSMO_ASSERT(ms1 != NULL);
 		OSMO_ASSERT(ms1 != ms2);
