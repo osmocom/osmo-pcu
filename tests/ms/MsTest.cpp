@@ -369,7 +369,7 @@ static void test_ms_storage()
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	BTS the_bts;
 	GprsMs *ms, *ms_tmp;
-	GprsMsStorage store(NULL);
+	GprsMsStorage store(&the_bts);
 
 	printf("=== start %s ===\n", __func__);
 
