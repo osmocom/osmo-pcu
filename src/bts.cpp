@@ -536,18 +536,51 @@ gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_tfi(uint8_t tfi, uint8_t trx, uint8_t ts)
 	return m_bts.trx[trx].pdch[ts].ul_tbf_by_tfi(tfi);
 }
 
+static unsigned int trx_count_free_tfi(const struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_direction dir, uint8_t *first_free_tfi)
+{
+	const struct gprs_rlcmac_pdch *pdch;
+	uint8_t ts;
+	unsigned int i;
+	unsigned int free_tfi_cnt = 0;
+	bool has_pdch = false;
+	uint32_t mask = NO_FREE_TFI;
+
+	for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
+		pdch = &trx->pdch[ts];
+		if (!pdch->is_enabled())
+			continue;
+		has_pdch = true;
+		mask &= ~pdch->assigned_tfi(dir);
+	}
+
+	if (!has_pdch || !mask) {
+		*first_free_tfi = (uint8_t)-1;
+		return 0;
+	}
+
+	/* Count free tfis and return */
+	for (i = 0; i < sizeof(mask) * 8 ; i++) {
+		if (mask & 1) {
+			if (free_tfi_cnt == 0)
+				*first_free_tfi = i;
+			free_tfi_cnt++;
+		}
+		mask >>= 1;
+	}
+	return free_tfi_cnt;
+}
+
 /*
- * Search for free TFI and return TFI, TRX.
- * This method returns the first TFI that is currently not used in any PDCH of
- * a TRX. The first TRX that contains such an TFI is returned. Negative values
- * indicate errors.
+ * Search for free TFI and return TFI, TRX. This method returns the first TFI
+ * that is currently not used in any PDCH of a the TRX with least TFIs currently
+ * assigned. Negative values indicate errors.
  */
 int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx) const
 {
-	const struct gprs_rlcmac_pdch *pdch;
-	uint32_t free_tfis;
-	bool has_pdch = false;
-	uint8_t trx_from, trx_to, trx, ts, tfi;
+	uint8_t trx_from, trx_to, trx;
+	uint8_t best_trx_nr = 0xff;
+	unsigned int best_cnt = 0;
+	uint8_t best_first_tfi = 0;
 
 	if (use_trx >= 0 && use_trx < 8)
 		trx_from = trx_to = use_trx;
@@ -558,48 +591,27 @@ int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t
 
 	/* find a TFI that is unused on all PDCH */
 	for (trx = trx_from; trx <= trx_to; trx++) {
-		bool trx_has_pdch = false;
-
-		free_tfis = NO_FREE_TFI;
-
-		for (ts = 0; ts < 8; ts++) {
-			pdch = &m_bts.trx[trx].pdch[ts];
-			if (!pdch->is_enabled())
-				continue;
-			free_tfis &= ~pdch->assigned_tfi(dir);
-			trx_has_pdch = true;
-			has_pdch = true;
+		uint8_t tmp_first_tfi;
+		unsigned int tmp_cnt;
+		tmp_cnt = trx_count_free_tfi(&m_bts.trx[trx], dir, &tmp_first_tfi);
+		if (tmp_cnt > best_cnt) {
+			best_cnt = tmp_cnt;
+			best_first_tfi = tmp_first_tfi;
+			best_trx_nr = trx;
 		}
-		if (trx_has_pdch && free_tfis)
-			break;
-
-		free_tfis = 0;
-	}
-	if (!has_pdch) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH available.\n");
-		return -EINVAL;
 	}
 
-	if (!free_tfis) {
+	if (best_trx_nr == 0xff || best_cnt == 0) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No TFI available (suggested TRX: %d).\n", use_trx);
 		return -EBUSY;
 	}
 
+	OSMO_ASSERT(best_first_tfi < 32);
 
-	LOGP(DRLCMAC, LOGL_DEBUG,
-		"Searching for first unallocated TFI: TRX=%d\n", trx);
-
-	/* find the first */
-	for (tfi = 0; tfi < 32; tfi++) {
-		if (free_tfis & 1 << tfi)
-			break;
-	}
-
-	OSMO_ASSERT(tfi < 32);
-
-	LOGP(DRLCMAC, LOGL_DEBUG, " Found TFI=%d.\n", tfi);
-	*_trx = trx;
-	return tfi;
+	LOGP(DRLCMAC, LOGL_DEBUG, "Found first unallocated TRX=%d TFI=%d\n",
+	     best_trx_nr, best_first_tfi);
+	*_trx = best_trx_nr;
+	return best_first_tfi;
 }
 
 int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)

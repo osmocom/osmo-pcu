@@ -197,6 +197,7 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(BTS *the_bts, uint8_t ms_class,
 	tfi = the_bts->tfi_find_free(GPRS_RLCMAC_DL_TBF, &trx_no, -1);
 	OSMO_ASSERT(tfi >= 0);
 	dl_tbf = tbf_alloc_dl_tbf(bts, ms, trx_no, true);
+	OSMO_ASSERT(dl_tbf);
 	dl_tbf->set_ta(0);
 	check_tbf(dl_tbf);
 

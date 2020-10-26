@@ -42,8 +42,7 @@ Modifying MS object, TLLI = 0x00004232, TA 4 -> 6
 === start test_tbf_final_ack ===
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: 0): Alloc start
@@ -132,8 +131,7 @@ Destroying MS object, TLLI = 0xffeeddcc
 === start test_tbf_final_ack ===
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: 0): Alloc start
@@ -222,8 +220,7 @@ Destroying MS object, TLLI = 0xffeeddcc
 === start test_tbf_delayed_release ===
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: 0): Alloc start
@@ -477,8 +474,7 @@ Destroying MS object, TLLI = 0xffeeddcc
 === start test_tbf_imsi ===
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: 0): Alloc start
@@ -499,8 +495,7 @@ TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCM
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
-Searching for first unallocated TFI: TRX=0
- Found TFI=1.
+Found first unallocated TRX=0 TFI=1
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: 0): Alloc start
@@ -1443,8 +1438,7 @@ TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=FINISHED) msg block (BSN 2, CS-1): 07 01 
 MSG = 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
 === end test_tbf_dl_llc_loss ===
 === start test_tbf_single_phase ===
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
@@ -1518,8 +1512,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
@@ -1599,8 +1592,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
@@ -1724,8 +1716,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654232 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654335 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
-Searching for first unallocated TFI: TRX=0
- Found TFI=1.
+Found first unallocated TRX=0 TFI=1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654292, TS=7 (curr FN 2654335)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
@@ -1791,8 +1782,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
@@ -1880,8 +1870,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654224 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654327 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -1933,8 +1922,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
@@ -2018,8 +2006,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) stopping timer T3169 [freeing TBF]
 PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 0 TBFs, USFs = 00, TFIs = 00000000.
 Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 ********** UL-TBF ends here **********
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654275 qta=31
 Creating MS object, TLLI = 0x00000000
 ********** UL-TBF starts here **********
@@ -2078,8 +2065,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
@@ -3023,8 +3009,7 @@ Modifying MS object, TLLI = 0x00000000, MS class 0 -> 12
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=12/0
 [DL] algo B <multi> (suggested TRX: 0): Alloc start
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 12
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3063,8 +3048,7 @@ Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 12
 Allocating DL TBF: MS_CLASS=12/12
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo B <multi> (suggested TRX: 0): Alloc start
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 12
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3104,8 +3088,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
@@ -3194,8 +3177,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
@@ -3414,8 +3396,7 @@ Testing MCS-1
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -3721,8 +3702,7 @@ Testing MCS-2
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -3978,8 +3958,7 @@ Testing MCS-3
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -4197,8 +4176,7 @@ Testing MCS-4
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -4384,8 +4362,7 @@ Testing MCS-5
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -4551,8 +4528,7 @@ Testing MCS-6
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -4700,8 +4676,7 @@ Testing MCS-7
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -4844,8 +4819,7 @@ Testing MCS-8
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -4977,8 +4951,7 @@ Testing MCS-9
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5112,8 +5085,7 @@ Testing retx for MCS 6 - 6
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5168,8 +5140,7 @@ Testing retx for MCS 1 - 9
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5224,8 +5195,7 @@ Testing retx for MCS 2 - 8
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5280,8 +5250,7 @@ Testing retx for MCS 5 - 7
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5352,8 +5321,7 @@ Testing retx for MCS 6 - 9
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5424,8 +5392,7 @@ Testing retx for MCS 7 - 5
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5496,8 +5463,7 @@ Testing retx for MCS 9 - 6
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5570,8 +5536,7 @@ Testing retx for MCS 6 to reseg_mcs 3
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5633,8 +5598,7 @@ Testing retx for MCS 5 to reseg_mcs 2
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5696,8 +5660,7 @@ Testing retx for MCS 4 to reseg_mcs 1
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5759,8 +5722,7 @@ Testing retx for MCS 6 to reseg_mcs 3
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -5831,8 +5793,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
@@ -5943,8 +5904,7 @@ Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo B <single> (suggested TRX: 0): Alloc start
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 11
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5966,8 +5926,7 @@ DL TBF slots: 0x10, N: 1, WS: 192
 ********** DL-TBF update **********
 PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 [DL] algo B <multi> (suggested TRX: -1): Alloc start
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 - Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
 [DL] algo B <multi> (suggested TRX: -1): using 4 slots
 - Assigning DL TS 2
@@ -5996,8 +5955,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
@@ -6098,8 +6056,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
@@ -6320,8 +6277,7 @@ MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0x00000000
@@ -7723,8 +7679,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-Searching for first unallocated TFI: TRX=0
- Found TFI=0.
+Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
 [DL] algo A <single> (suggested TRX: 0): Alloc start
