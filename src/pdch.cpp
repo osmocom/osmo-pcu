@@ -788,12 +788,6 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 		bts()->send_gsmtap_meas(PCU_GSMTAP_C_UL_DATA_EGPRS, true,
 					trx_no(), ts_no, GSMTAP_CHANNEL_PDTCH, fn,
 					data, data_len, meas);
-		if (!bts()->bts_data()->egprs_enabled) {
-			LOGP(DRLCMACUL, LOGL_ERROR,
-				"Got %s RLC block but EGPRS is not enabled\n",
-				mcs_name(cs));
-			return 0;
-		}
 	} else {
 		bts()->send_gsmtap_meas(PCU_GSMTAP_C_UL_DATA_GPRS, true,
 					trx_no(), ts_no, GSMTAP_CHANNEL_PDTCH, fn,
