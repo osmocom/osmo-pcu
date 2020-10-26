@@ -1737,7 +1737,7 @@ static void test_tbf_egprs_two_phase_puan(void)
 
 	setup_bts(&the_bts, ts_no, 4);
 	the_bts.bts_data()->initial_mcs_dl = 9;
-	the_bts.bts_data()->egprs_enabled = 1;
+	the_bts.bts_data()->egprs_enabled = true;
 	bts = the_bts.bts_data();
 	bts->ws_base = 128;
 	bts->ws_pdch = 64;
@@ -2177,7 +2177,7 @@ static void test_tbf_gprs_egprs()
 	setup_bts(&the_bts, ts_no);
 
 	/* EGPRS-only */
-	bts->egprs_enabled = 1;
+	bts->egprs_enabled = true;
 
 	gprs_bssgp_init(bts, 3234, 3234, 1, 1, false, 0, 0, 0);
 
@@ -2257,7 +2257,7 @@ static void test_tbf_ws()
 	ws_check(dl_tbf, __func__, 4, 64, true, false);
 
 	/* EGPRS-only */
-	bts->egprs_enabled = 1;
+	bts->egprs_enabled = true;
 
 	/* Does support EGPRS */
 	ms = the_bts.ms_alloc(ms_class, ms_class);
@@ -2297,7 +2297,7 @@ static void test_tbf_update_ws(void)
 	gprs_bssgp_init(bts, 5234, 5234, 1, 1, false, 0, 0, 0);
 
 	/* EGPRS-only */
-	bts->egprs_enabled = 1;
+	bts->egprs_enabled = true;
 
 	/* Does support EGPRS */
 	ms = the_bts.ms_alloc(ms_class, ms_class);
@@ -2330,7 +2330,7 @@ static void test_tbf_puan_urbb_len(void)
 
 	setup_bts(&the_bts, ts_no, 4);
 	the_bts.bts_data()->initial_mcs_dl = 9;
-	the_bts.bts_data()->egprs_enabled = 1;
+	the_bts.bts_data()->egprs_enabled = true;
 
 	ul_tbf = puan_urbb_len_issue(&the_bts, ts_no, tlli, &fn, qta,
 		ms_class, egprs_ms_class);
@@ -2471,7 +2471,7 @@ static void test_tbf_li_decoding(void)
 
 	setup_bts(&the_bts, ts_no, 4);
 	the_bts.bts_data()->initial_mcs_dl = 9;
-	the_bts.bts_data()->egprs_enabled = 1;
+	the_bts.bts_data()->egprs_enabled = true;
 
 	ul_tbf = tbf_li_decoding(&the_bts, ts_no, tlli, &fn, qta,
 		ms_class, egprs_ms_class);
@@ -2515,7 +2515,7 @@ static void test_tbf_epdan_out_of_rx_window(void)
 
 	setup_bts(&the_bts, ts_no);
 	OSMO_ASSERT(osmo_tdef_set(bts->T_defs_pcu, -2031, 200, OSMO_TDEF_MS) == 0);
-	bts->egprs_enabled = 1;
+	bts->egprs_enabled = true;
 	/* ARQ II */
 	bts->dl_arq_type = EGPRS_ARQ2;
 
@@ -2599,7 +2599,7 @@ static void test_tbf_egprs_two_phase_spb(void)
 
 	setup_bts(&the_bts, ts_no, 4);
 	the_bts.bts_data()->initial_mcs_dl = 9;
-	the_bts.bts_data()->egprs_enabled = 1;
+	the_bts.bts_data()->egprs_enabled = true;
 
 	ul_tbf = establish_ul_tbf_two_phase_spb(&the_bts, ts_no, tlli, &fn, qta,
 		ms_class, egprs_ms_class);
@@ -2629,7 +2629,7 @@ static void test_tbf_egprs_two_phase()
 
 	setup_bts(&the_bts, ts_no, 4);
 	the_bts.bts_data()->initial_mcs_dl = 9;
-	the_bts.bts_data()->egprs_enabled = 1;
+	the_bts.bts_data()->egprs_enabled = true;
 
 	ul_tbf = establish_ul_tbf_two_phase(&the_bts, ts_no, tlli, &fn, qta,
 		ms_class, egprs_ms_class);
@@ -3054,7 +3054,7 @@ static void test_tbf_egprs_retx_dl(void)
 	bts->cs_downgrade_threshold = 0;
 	setup_bts(&the_bts, ts_no);
 	OSMO_ASSERT(osmo_tdef_set(bts->T_defs_pcu, -2031, 200, OSMO_TDEF_MS) == 0);
-	bts->egprs_enabled = 1;
+	bts->egprs_enabled = true;
 	/* ARQ II */
 	bts->dl_arq_type = EGPRS_ARQ2;
 
@@ -3083,7 +3083,7 @@ static void test_tbf_egprs_spb_dl(void)
 	bts->cs_downgrade_threshold = 0;
 	setup_bts(&the_bts, ts_no);
 	OSMO_ASSERT(osmo_tdef_set(bts->T_defs_pcu, -2031, 200, OSMO_TDEF_MS) == 0);
-	bts->egprs_enabled = 1;
+	bts->egprs_enabled = true;
 
 	/* ARQ I resegmentation support */
 	bts->dl_arq_type = EGPRS_ARQ1;
@@ -3115,7 +3115,7 @@ static void test_tbf_egprs_dl()
 
 	setup_bts(&the_bts, ts_no);
 	OSMO_ASSERT(osmo_tdef_set(bts->T_defs_pcu, -2031, 200, OSMO_TDEF_MS) == 0);
-	bts->egprs_enabled = 1;
+	bts->egprs_enabled = true;
 	/* ARQ II */
 	bts->dl_arq_type = EGPRS_ARQ2;
 

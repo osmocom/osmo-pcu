@@ -281,7 +281,7 @@ DEFUN_USRATTR(cfg_pcu_egprs,
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	bts->egprs_enabled = 1;
+	bts->egprs_enabled = true;
 
 	return CMD_SUCCESS;
 }
@@ -294,7 +294,7 @@ DEFUN_USRATTR(cfg_pcu_no_egprs,
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	bts->egprs_enabled = 0;
+	bts->egprs_enabled = false;
 
 	return CMD_SUCCESS;
 }
