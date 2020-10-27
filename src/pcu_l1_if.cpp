@@ -507,7 +507,8 @@ static int pcu_info_ind_ns(struct gprs_rlcmac_bts *bts,
 			local[i].u.sin.sin_port = htons(info_ind->local_port[i]);
 
 			remote[i].u.sin.sin_family = AF_INET;
-			remote[i].u.sin.sin_addr = info_ind->remote_ip[i].v4;
+			memcpy(&remote[i].u.sin.sin_addr, &info_ind->remote_ip[i].v4,
+			       sizeof(struct in_addr));
 			remote[i].u.sin.sin_port = htons(info_ind->remote_port[i]);
 			break;
 		case PCU_IF_ADDR_TYPE_IPV6:
@@ -516,7 +517,9 @@ static int pcu_info_ind_ns(struct gprs_rlcmac_bts *bts,
 			local[i].u.sin6.sin6_port = htons(info_ind->local_port[i]);
 
 			remote[i].u.sin6.sin6_family = AF_INET6;
-			remote[i].u.sin6.sin6_addr = info_ind->remote_ip[i].v6;
+			memcpy(&remote[i].u.sin6.sin6_addr,
+			       &info_ind->remote_ip[i].v6,
+			       sizeof(struct in6_addr));
 			remote[i].u.sin6.sin6_port = htons(info_ind->remote_port[i]);
 			break;
 		default:
