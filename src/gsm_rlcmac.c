@@ -6056,7 +6056,7 @@ void decode_gsm_rlcmac_uplink_data(struct bitvec *vector, RlcMacUplinkDataBlock_
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "E_1 = %u ", (unsigned)(data->E_1));
 
 
-    if(data->E_1 == 0) // Extension octet follows immediately
+    if (data->E_1 == 0) // Extension octet follows immediately
     {
       // Octet 3 (optional)
       i = 0;
@@ -6071,7 +6071,7 @@ void decode_gsm_rlcmac_uplink_data(struct bitvec *vector, RlcMacUplinkDataBlock_
         i++;
       } while((data->M[i-1] == 1)&&(data->E[i-1] == 0));
     }
-    if(data->TI == 1) // TLLI field is present
+    if (data->TI == 1) // TLLI field is present
     {
       data->TLLI = bitvec_read_field(vector, &readIndex, 32);
       LOGPC(DRLCMACDATA, LOGL_NOTICE, "TLLI = %08x ", data->TLLI);
@@ -6132,7 +6132,7 @@ void encode_gsm_rlcmac_downlink_data(struct bitvec *vector, RlcMacDownlinkDataBl
     LOGPC(DRLCMACDATA, LOGL_NOTICE, "E_1 = %u ", (unsigned)(data->E_1));
 
     // Octet 3 (optional)
-    if(data->E_1 == 0)
+    if (data->E_1 == 0)
     {
       i = 0;
       do

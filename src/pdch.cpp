@@ -704,7 +704,7 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 	else
 		bts()->send_gsmtap_meas(PCU_GSMTAP_C_UL_CTRL, true, trx_no(), ts_no, GSMTAP_CHANNEL_PACCH, fn, data, data_len, meas);
 
-	if(rc < 0) {
+	if (rc < 0) {
 		LOGP(DRLCMACUL, LOGL_ERROR, "Dropping Uplink Control Block with invalid "
 		     "content, decode failed: %d)\n", rc);
 		goto free_ret;

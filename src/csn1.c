@@ -170,7 +170,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
           /* end add the bit value to protocol tree */
         }
-        else if(pDescr->may_be_null)
+        else if (pDescr->may_be_null)
         {
            pui8  = pui8DATA(data, pDescr->offset);
            *pui8 = 0;
@@ -228,7 +228,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           remaining_bits_len -= no_of_bits;
           bit_offset += no_of_bits;
         }
-        else if(pDescr->may_be_null)
+        else if (pDescr->may_be_null)
         {
           if (no_of_bits <= 8)
           {
@@ -1502,7 +1502,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
           LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
           /* end add the bit value to protocol tree */
         }
-        else if(pDescr->may_be_null)
+        else if (pDescr->may_be_null)
         {
            LOGPC(DCSN1, LOGL_DEBUG, "%s = NULL | ", pDescr->sz);
         }
@@ -1555,7 +1555,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
           remaining_bits_len -= no_of_bits;
           bit_offset += no_of_bits;
         }
-        else if(pDescr->may_be_null)
+        else if (pDescr->may_be_null)
         {
           LOGPC(DCSN1, LOGL_DEBUG, "%s = NULL | ", pDescr->sz);
         }

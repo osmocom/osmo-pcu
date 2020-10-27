@@ -853,7 +853,7 @@ void Encoding::encode_rbb(const char *show_rbb, uint8_t *rbb)
 		if (show_rbb[i] == 'R')
 			rbb_byte |= 1<< (7-(i%8));
 
-		if((i%8) == 7) {
+		if ((i%8) == 7) {
 			rbb[i/8] = rbb_byte;
 			rbb_byte = 0;
 		}
