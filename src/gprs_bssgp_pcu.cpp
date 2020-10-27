@@ -574,11 +574,13 @@ void gprs_ns_prim_status_cb(struct osmo_gprs_ns2_prim *nsp)
 			the_pcu.bvc_unblocked = 0;
 		}
 		break;
+	case NS_AFF_CAUSE_SNS_FAILURE:
+		break;
 	default:
-		LOGP(DPCU, LOGL_NOTICE,
-		     "NS: %s Unknown prim %d from NS\n",
+		LOGP(DPCU, LOGL_DEBUG,
+		     "NS: %s Unknown affecting cause %s / %d from NS\n",
 		     get_value_string(osmo_prim_op_names, nsp->oph.operation),
-		     nsp->oph.primitive);
+		     gprs_ns2_aff_cause_prim_str(nsp->u.status.cause), nsp->u.status.cause);
 		break;
 	}
 }
@@ -613,11 +615,13 @@ int gprs_ns_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 	case PRIM_NS_STATUS:
 		gprs_ns_prim_status_cb(nsp);
 		break;
+	case PRIM_NS_CONGESTION:
+		break;
 	default:
-		LOGP(DPCU, LOGL_NOTICE,
-		     "NS: %s Unknown prim %d from NS\n",
+		LOGP(DPCU, LOGL_DEBUG,
+		     "NS: %s Unknown prim %s / %d from NS\n",
 		     get_value_string(osmo_prim_op_names, oph->operation),
-		     oph->primitive);
+		     gprs_ns2_prim_str((gprs_ns2_prim) oph->primitive), oph->primitive);
 		break;
 	}
 
