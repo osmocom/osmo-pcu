@@ -129,15 +129,6 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 
 	OSMO_ASSERT(ms != NULL);
 
-	if (ms->egprs_ms_class() == 0 && bts->egprs_enabled) {
-		if (ms->ms_class() > 0) {
-			LOGP(DTBF, LOGL_NOTICE, "Not accepting non-EGPRS phone in EGPRS-only mode\n");
-			bts->bts->do_rate_ctr_inc(CTR_TBF_FAILED_EGPRS_ONLY);
-			return NULL;
-		}
-		ms->set_egprs_ms_class(1);
-	}
-
 	LOGP(DTBF, LOGL_DEBUG, "********** DL-TBF starts here **********\n");
 	LOGP(DTBF, LOGL_INFO, "Allocating DL TBF: MS_CLASS=%d/%d\n",
 	     ms->ms_class(), ms->egprs_ms_class());

@@ -2185,7 +2185,7 @@ static void test_tbf_gprs_egprs()
 	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class, 0,
 		delay_csec, buf, sizeof(buf));
 
-	OSMO_ASSERT(rc == -EBUSY);
+	OSMO_ASSERT(rc == 0);
 	fprintf(stderr, "=== end %s ===\n", __func__);
 
 	gprs_bssgp_destroy(bts);

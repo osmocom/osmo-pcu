@@ -2997,10 +2997,28 @@ Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 45
 Modifying MS object, TLLI = 0x00000000, IMSI '' -> '001001123456789'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0006789, partly confirmed
-Not accepting non-EGPRS phone in EGPRS-only mode
-No PDCH resource
+********** DL-TBF starts here **********
+Allocating DL TBF: MS_CLASS=45/0
+[DL] algo A <single> (suggested TRX: -1): Alloc start
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+- Skipping TS 7, because not enabled
+[DL] Assign downlink TS=4 TFI=0
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=NULL) Setting Control TS 4
+TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0xc0006789, TBF = TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=NULL)
+TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=NULL) [DOWNLINK] START
+TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=NULL) Send dowlink assignment on PCH, no TBF exist (IMSI=001001123456789)
+TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=NULL) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
+ - TRX=0 (0) TS=4 TA=220 pollFN=-1
+TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=ASSIGN) appending 256 bytes
 === end test_tbf_gprs_egprs ===
-Destroying MS object, TLLI = 0xc0006789
 === start test_tbf_ws ===
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 12
