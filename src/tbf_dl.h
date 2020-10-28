@@ -49,9 +49,8 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 		const uint8_t egprs_ms_class, const uint16_t delay_csec,
 		const uint8_t *data, const uint16_t len);
 
-	int append_data(const uint8_t ms_class,
-			const uint16_t pdu_delay_csec,
-			const uint8_t *data, const uint16_t len);
+	int append_data(uint16_t pdu_delay_csec,
+			const uint8_t *data, uint16_t len);
 
 	int rcvd_dl_ack(bool final, uint8_t ssn, uint8_t *rbb);
 	int rcvd_dl_ack(bool final_ack, unsigned first_bsn, struct bitvec *rbb);

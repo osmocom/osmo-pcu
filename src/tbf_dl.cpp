@@ -94,13 +94,6 @@ static const struct rate_ctr_group_desc tbf_dl_egprs_ctrg_desc = {
 	tbf_dl_egprs_ctr_description,
 };
 
-static inline void tbf_update_ms_class(struct gprs_rlcmac_tbf *tbf,
-					const uint8_t ms_class)
-{
-	if (!tbf->ms_class() && ms_class)
-		tbf->ms()->set_ms_class(ms_class);
-}
-
 static void llc_timer_cb(void *_tbf)
 {
 	struct gprs_rlcmac_dl_tbf *tbf = (struct gprs_rlcmac_dl_tbf *)_tbf;
@@ -225,9 +218,8 @@ void gprs_rlcmac_dl_tbf::start_llc_timer()
 	}
 }
 
-int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
-				const uint16_t pdu_delay_csec,
-				const uint8_t *data, const uint16_t len)
+int gprs_rlcmac_dl_tbf::append_data(uint16_t pdu_delay_csec,
+				    const uint8_t *data, uint16_t len)
 {
 	struct timespec expire_time;
 
@@ -240,7 +232,6 @@ int gprs_rlcmac_dl_tbf::append_data(const uint8_t ms_class,
 	gprs_llc_queue::calc_pdu_lifetime(bts, pdu_delay_csec, &expire_time);
 	memcpy(msgb_put(llc_msg, len), data, len);
 	llc_queue()->enqueue(llc_msg, &expire_time);
-	tbf_update_ms_class(this, ms_class);
 	start_llc_timer();
 
 	if (state_is(GPRS_RLCMAC_WAIT_RELEASE)) {
@@ -308,15 +299,6 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 
 	/* check for existing TBF */
 	ms = bts->bts->ms_store().get_ms(tlli, tlli_old, imsi);
-	if (ms) {
-		dl_tbf = ms->dl_tbf();
-
-		/* If we known the GPRS/EGPRS MS class, use it */
-		if (ms->ms_class() || ms->egprs_ms_class()) {
-			ms_class = ms->ms_class();
-			egprs_ms_class = ms->egprs_ms_class();
-		}
-	}
 
 	if (ms && strlen(ms->imsi()) == 0) {
 		ms_old = bts->bts->ms_store().get_ms(0, 0, imsi);
@@ -329,7 +311,7 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 
 			GprsMs::Guard guard_old(ms_old);
 
-			if (!dl_tbf && ms_old->dl_tbf()) {
+			if (!ms->dl_tbf() && ms_old->dl_tbf()) {
 				LOGP(DTBF, LOGL_NOTICE,
 				     "IMSI %s, old TBF %s: moving DL TBF to new MS object\n",
 				     imsi, ms_old->dl_tbf()->name());
@@ -345,15 +327,21 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class);
 	ms->set_imsi(imsi);
 	ms->confirm_tlli(tlli);
+	if (!ms->ms_class() && ms_class) {
+		ms->set_ms_class(ms_class);
+	}
+	if (!ms->egprs_ms_class() && egprs_ms_class) {
+		ms->set_egprs_ms_class(egprs_ms_class);
+	}
 
+	dl_tbf = ms->dl_tbf();
 	if (!dl_tbf) {
 		rc = tbf_new_dl_assignment(bts, ms, &dl_tbf);
 		if (rc < 0)
 			return rc;
 	}
 
-	/* TODO: ms_class vs. egprs_ms_class is not handled here */
-	rc = dl_tbf->append_data(ms_class, delay_csec, data, len);
+	rc = dl_tbf->append_data(delay_csec, data, len);
 
 	return rc;
 }
