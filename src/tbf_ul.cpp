@@ -103,12 +103,6 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 
 	OSMO_ASSERT(ms != NULL);
 
-	if (ms->egprs_ms_class() == 0 && bts->egprs_enabled) {
-		LOGP(DTBF, LOGL_NOTICE, "Not accepting non-EGPRS phone in EGPRS-only mode\n");
-		bts->bts->do_rate_ctr_inc(CTR_TBF_FAILED_EGPRS_ONLY);
-		return NULL;
-	}
-
 	LOGP(DTBF, LOGL_DEBUG, "********** UL-TBF starts here **********\n");
 	LOGP(DTBF, LOGL_INFO, "Allocating UL TBF: MS_CLASS=%d/%d\n",
 	     ms->ms_class(), ms->egprs_ms_class());
