@@ -108,9 +108,6 @@ static int config_write_pcu(struct vty *vty)
 	unsigned int i;
 
 	vty_out(vty, "pcu%s", VTY_NEWLINE);
-	if (bts->egprs_enabled)
-		vty_out(vty, " egprs only%s", VTY_NEWLINE);
-
 	vty_out(vty, " flow-control-interval %d%s", bts->fc_interval,
 		VTY_NEWLINE);
 	if (bts->fc_bvc_bucket_size)
@@ -273,29 +270,21 @@ DEFUN_ATTR(cfg_pcu,
 
 #define EGPRS_STR "EGPRS configuration\n"
 
-DEFUN_USRATTR(cfg_pcu_egprs,
-	      cfg_pcu_egprs_cmd,
-	      X(PCU_VTY_ATTR_NEW_TBF),
-	      "egprs only",
-	      EGPRS_STR "Use EGPRS and disable plain GPRS\n")
+DEFUN_DEPRECATED(cfg_pcu_egprs,
+		 cfg_pcu_egprs_cmd,
+		 "egprs only",
+		 EGPRS_STR "Use EGPRS and disable plain GPRS\n")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->egprs_enabled = true;
-
+	vty_out (vty, "'egprs only' is deprecated, egprs support is controled from BTS/BSC config, this is now a no-op%s", VTY_NEWLINE);
 	return CMD_SUCCESS;
 }
 
-DEFUN_USRATTR(cfg_pcu_no_egprs,
-	      cfg_pcu_no_egprs_cmd,
-	      X(PCU_VTY_ATTR_NEW_TBF),
-	      "no egprs",
-	      NO_STR EGPRS_STR)
+DEFUN_DEPRECATED(cfg_pcu_no_egprs,
+		 cfg_pcu_no_egprs_cmd,
+		 "no egprs",
+		 NO_STR EGPRS_STR)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->egprs_enabled = false;
-
+	vty_out (vty, "'no egprs only' is deprecated, egprs support is controled from BTS/BSC config, this is now a no-op%s", VTY_NEWLINE);
 	return CMD_SUCCESS;
 }
 
