@@ -110,10 +110,8 @@ struct gprs_rlcmac_bts {
 	uint32_t fc_bvc_leak_rate;
 	uint32_t fc_ms_bucket_size;
 	uint32_t fc_ms_leak_rate;
-	uint8_t cs1;
-	uint8_t cs2;
-	uint8_t cs3;
-	uint8_t cs4;
+	uint8_t cs_mask; /* Allowed CS mask from BTS */
+	uint16_t mcs_mask;  /* Allowed MCS mask from BTS */
 	uint8_t initial_cs_dl, initial_cs_ul;
 	uint8_t initial_mcs_dl, initial_mcs_ul;
 	uint8_t max_cs_dl, max_cs_ul;

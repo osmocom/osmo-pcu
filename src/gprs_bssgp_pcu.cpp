@@ -738,39 +738,48 @@ static int get_and_reset_measured_leak_rate(int *usage_by_1000, unsigned num_pdc
 
 static enum CodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
 {
-	int num;
+	int num = 0;
+	int i;
 
 	if (bts->egprs_enabled) {
 		if (!bts->cs_adj_enabled) {
-			if (bts->initial_mcs_dl)
+			if (bts->initial_mcs_dl) {
 				num = bts->initial_mcs_dl;
-			else
-				num = 1;
+			} else {
+				for (i = 8; i >= 0; i--) {
+					if (bts->mcs_mask & (1 << i)) {
+						num = i + 1;
+						break;
+					}
+				}
+			}
 		} else if (bts->max_mcs_dl) {
 			num = bts->max_mcs_dl;
 		} else {
 			num = 9;
 		}
 
-		return mcs_get_egprs_by_num(num);
+		if (num)
+			return mcs_get_egprs_by_num(num);
 	}
 
 	if (!bts->cs_adj_enabled) {
-		if (bts->initial_cs_dl)
+		if (bts->initial_cs_dl) {
 			num = bts->initial_cs_dl;
-		else if (bts->cs4)
-			num = 4;
-		else if (bts->cs3)
-			num = 3;
-		else if (bts->cs2)
-			num = 2;
-		else
-			num = 1;
+		} else {
+			for (i = 3; i >= 0; i--) {
+				if (bts->cs_mask & (1 << i)) {
+					num = i + 1;
+					break;
+				}
+			}
+		}
 	} else if (bts->max_cs_dl) {
 		num = bts->max_cs_dl;
-	} else {
-		num = 4;
 	}
+
+	if (!num)
+		num = 4;
 
 	return mcs_get_gprs_by_num(num);
 }

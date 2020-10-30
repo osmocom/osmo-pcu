@@ -551,7 +551,7 @@ static int pcu_rx_info_ind(const struct gsm_pcu_if_info_ind *info_ind)
 	struct gprs_bssgp_pcu *pcu;
 	int rc = 0;
 	unsigned int trx_nr, ts_nr;
-	int i;
+	unsigned int i;
 
 	if (info_ind->version != PCU_IF_VERSION) {
 		fprintf(stderr, "PCU interface version number of BTS (%u) is "
@@ -613,16 +613,32 @@ bssgp_failed:
 	LOGP(DL1IF, LOGL_DEBUG, " dl_tbf_ext=%d\n", info_ind->dl_tbf_ext);
 	LOGP(DL1IF, LOGL_DEBUG, " ul_tbf_ext=%d\n", info_ind->ul_tbf_ext);
 	bts->bsic = info_ind->bsic;
+
+	bts->cs_mask = 1 << 0; /* We need at least 1 CS, let's enable CS1 */
 	for (i = 0; i < 4; i++) {
-		if ((info_ind->flags & (PCU_IF_FLAG_CS1 << i)))
-			LOGP(DL1IF, LOGL_DEBUG, " Use CS%d\n", i+1);
+		uint8_t allowed = !!(info_ind->flags & (PCU_IF_FLAG_CS1 << i));
+		bts->cs_mask |= allowed << i;
+		if (allowed)
+			LOGP(DL1IF, LOGL_DEBUG, " Use CS%d\n",  i + 1);
 	}
+
+	bts->mcs_mask = 0;
 	for (i = 0; i < 9; i++) {
-		if ((info_ind->flags & (PCU_IF_FLAG_MCS1 << i)))
-			LOGP(DL1IF, LOGL_DEBUG, " Use MCS%d\n", i+1);
+		uint8_t allowed = !!(info_ind->flags & (PCU_IF_FLAG_MCS1 << i));
+		bts->mcs_mask |= allowed << i;
+		if (allowed)
+			LOGP(DL1IF, LOGL_DEBUG, " Use MCS%d\n", i + 1);
 	}
+
 	LOGP(DL1IF, LOGL_DEBUG, " initial_cs=%d\n", info_ind->initial_cs);
 	LOGP(DL1IF, LOGL_DEBUG, " initial_mcs=%d\n", info_ind->initial_mcs);
+	if (!bts->force_cs) {
+		if (info_ind->initial_cs < 1 || info_ind->initial_cs > 4)
+			bts->initial_cs_dl = 1;
+		else
+			bts->initial_cs_dl = info_ind->initial_cs;
+		bts->initial_cs_ul = bts->initial_cs_dl;
+	}
 
 	pcu = gprs_bssgp_init(
 			bts,
@@ -640,12 +656,6 @@ bssgp_failed:
 		goto bssgp_failed;
 	}
 
-	bts->cs1 = !!(info_ind->flags & PCU_IF_FLAG_CS1);
-	bts->cs2 = !!(info_ind->flags & PCU_IF_FLAG_CS2);
-	bts->cs3 = !!(info_ind->flags & PCU_IF_FLAG_CS3);
-	bts->cs4 = !!(info_ind->flags & PCU_IF_FLAG_CS4);
-	if (!bts->cs1 && !bts->cs2 && !bts->cs3 && !bts->cs4)
-		bts->cs1 = 1;
 	if (info_ind->t3142) { /* if timer values are set */
 		osmo_tdef_set(bts->T_defs_bts, 3142, info_ind->t3142, OSMO_TDEF_S);
 		osmo_tdef_set(bts->T_defs_bts, 3169, info_ind->t3169, OSMO_TDEF_S);
@@ -655,13 +665,6 @@ bssgp_failed:
 		bts->n3101 = info_ind->n3101;
 		bts->n3103 = info_ind->n3103;
 		bts->n3105 = info_ind->n3105;
-	}
-	if (!bts->force_cs) {
-		if (info_ind->initial_cs < 1 || info_ind->initial_cs > 4)
-			bts->initial_cs_dl = 1;
-		else
-			bts->initial_cs_dl = info_ind->initial_cs;
-		bts->initial_cs_ul = bts->initial_cs_dl;
 	}
 
 	for (trx_nr = 0; trx_nr < ARRAY_SIZE(bts->trx); trx_nr++) {
