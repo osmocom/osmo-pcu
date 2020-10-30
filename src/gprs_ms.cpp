@@ -617,7 +617,7 @@ enum CodingScheme GprsMs::max_cs_ul() const
 	if (bts_data->max_mcs_ul)
 		return mcs_get_egprs_by_num(bts_data->max_mcs_ul);
 	else if (bts_data->max_cs_ul)
-		return mcs_get_egprs_by_num(bts_data->max_cs_ul);
+		return mcs_get_gprs_by_num(bts_data->max_cs_ul);
 
 	return MCS4;
 }
@@ -648,7 +648,7 @@ enum CodingScheme GprsMs::max_cs_dl() const
 	if (bts_data->max_mcs_dl)
 		return mcs_get_egprs_by_num(bts_data->max_mcs_dl);
 	else if (bts_data->max_cs_dl)
-		return mcs_get_egprs_by_num(bts_data->max_cs_dl);
+		return mcs_get_gprs_by_num(bts_data->max_cs_dl);
 
 	return MCS4;
 }
