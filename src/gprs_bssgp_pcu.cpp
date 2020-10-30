@@ -201,7 +201,7 @@ static unsigned int get_paging_mi(struct osmo_mobile_identity *mi, const struct 
 	return 0;
 }
 
-static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, struct tlv_parsed *tp)
+static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, const struct tlv_parsed *tp)
 {
 	struct osmo_mobile_identity mi;
 	int rc;
@@ -212,7 +212,7 @@ static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, struct tlv_parsed *tp)
 	return BTS::main_bts()->add_paging(tlvp_val8(tp, BSSGP_IE_CHAN_NEEDED, 0), &mi);
 }
 
-static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
+static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, const struct tlv_parsed *tp)
 {
 	struct osmo_mobile_identity mi_imsi;
 	struct osmo_mobile_identity paging_mi;
