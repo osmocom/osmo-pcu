@@ -621,6 +621,7 @@ bssgp_failed:
 		if (allowed)
 			LOGP(DL1IF, LOGL_DEBUG, " Use CS%d\n",  i + 1);
 	}
+	bts_set_max_cs(bts, bts->vty.max_cs_dl, bts->vty.max_cs_ul); /* recalc max CS values */
 
 	bts->mcs_mask = 0;
 	for (i = 0; i < 9; i++) {
@@ -629,6 +630,7 @@ bssgp_failed:
 		if (allowed)
 			LOGP(DL1IF, LOGL_DEBUG, " Use MCS%d\n", i + 1);
 	}
+	bts_set_max_mcs(bts, bts->vty.max_mcs_dl, bts->vty.max_mcs_ul); /* recalc max MCS values */
 
 	LOGP(DL1IF, LOGL_DEBUG, " initial_cs=%d\n", info_ind->initial_cs);
 	LOGP(DL1IF, LOGL_DEBUG, " initial_mcs=%d\n", info_ind->initial_mcs);

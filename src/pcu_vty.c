@@ -133,13 +133,13 @@ static int config_write_pcu(struct vty *vty)
 			vty_out(vty, " cs %d %d%s", bts->initial_cs_dl,
 				bts->initial_cs_ul, VTY_NEWLINE);
 	}
-	if (bts->max_cs_dl && bts->max_cs_ul) {
-		if (bts->max_cs_ul == bts->max_cs_dl)
-			vty_out(vty, " cs max %d%s", bts->max_cs_dl,
+	if (bts->vty.max_cs_dl && bts->vty.max_cs_ul) {
+		if (bts->vty.max_cs_ul == bts->vty.max_cs_dl)
+			vty_out(vty, " cs max %d%s", bts->vty.max_cs_dl,
 				VTY_NEWLINE);
 		else
-			vty_out(vty, " cs max %d %d%s", bts->max_cs_dl,
-				bts->max_cs_ul, VTY_NEWLINE);
+			vty_out(vty, " cs max %d %d%s", bts->vty.max_cs_dl,
+				bts->vty.max_cs_ul, VTY_NEWLINE);
 	}
 	if (bts->cs_adj_enabled)
 		vty_out(vty, " cs threshold %d %d%s",
@@ -191,13 +191,13 @@ static int config_write_pcu(struct vty *vty)
 				bts->initial_mcs_ul, VTY_NEWLINE);
 	}
 
-	if (bts->max_mcs_dl && bts->max_mcs_ul) {
-		if (bts->max_mcs_ul == bts->max_mcs_dl)
-			vty_out(vty, " mcs max %d%s", bts->max_mcs_dl,
+	if (bts->vty.max_mcs_dl && bts->vty.max_mcs_ul) {
+		if (bts->vty.max_mcs_ul == bts->vty.max_mcs_dl)
+			vty_out(vty, " mcs max %d%s", bts->vty.max_mcs_dl,
 				VTY_NEWLINE);
 		else
-			vty_out(vty, " mcs max %d %d%s", bts->max_mcs_dl,
-				bts->max_mcs_ul, VTY_NEWLINE);
+			vty_out(vty, " mcs max %d %d%s", bts->vty.max_mcs_dl,
+				bts->vty.max_mcs_ul, VTY_NEWLINE);
 	}
 
 	vty_out(vty, " window-size %d %d%s", bts->ws_base, bts->ws_pdch,
@@ -494,14 +494,15 @@ DEFUN_ATTR(cfg_pcu_cs_max,
 	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	uint8_t cs = atoi(argv[0]);
+	uint8_t cs_dl = atoi(argv[0]);
+	uint8_t cs_ul;
 
-	bts->max_cs_dl = cs;
 	if (argc > 1)
-		bts->max_cs_ul = atoi(argv[1]);
+		cs_ul = atoi(argv[1]);
 	else
-		bts->max_cs_ul = cs;
+		cs_ul = cs_dl;
 
+	bts_set_max_cs(bts, cs_dl, cs_ul);
 	return CMD_SUCCESS;
 }
 
@@ -513,9 +514,7 @@ DEFUN_ATTR(cfg_pcu_no_cs_max,
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	bts->max_cs_dl = 0;
-	bts->max_cs_ul = 0;
-
+	bts_set_max_cs(bts, 0, 0);
 	return CMD_SUCCESS;
 }
 
@@ -564,14 +563,15 @@ DEFUN_ATTR(cfg_pcu_mcs_max,
 	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	uint8_t mcs = atoi(argv[0]);
+	uint8_t mcs_dl = atoi(argv[0]);
+	uint8_t mcs_ul;
 
-	bts->max_mcs_dl = mcs;
 	if (argc > 1)
-		bts->max_mcs_ul = atoi(argv[1]);
+		mcs_ul = atoi(argv[1]);
 	else
-		bts->max_mcs_ul = mcs;
+		mcs_ul = mcs_dl;
 
+	bts_set_max_mcs(bts, mcs_dl, mcs_ul);
 	return CMD_SUCCESS;
 }
 
@@ -583,9 +583,7 @@ DEFUN_ATTR(cfg_pcu_no_mcs_max,
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	bts->max_mcs_dl = 0;
-	bts->max_mcs_ul = 0;
-
+	bts_set_max_mcs(bts, 0, 0);
 	return CMD_SUCCESS;
 }
 

@@ -114,8 +114,10 @@ struct gprs_rlcmac_bts {
 	uint16_t mcs_mask;  /* Allowed MCS mask from BTS */
 	uint8_t initial_cs_dl, initial_cs_ul;
 	uint8_t initial_mcs_dl, initial_mcs_ul;
-	uint8_t max_cs_dl, max_cs_ul;
-	uint8_t max_mcs_dl, max_mcs_ul;
+	struct { /* Config Values set by VTY */
+		uint8_t max_cs_dl, max_cs_ul;
+		uint8_t max_mcs_dl, max_mcs_ul;
+	} vty;
 	uint8_t force_cs;	/* 0=use from BTS 1=use from VTY */
 	uint16_t force_llc_lifetime; /* overrides lifetime from SGSN */
 	uint32_t llc_discard_csec;
@@ -329,6 +331,15 @@ public:
 
 	void snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup);
 
+	uint8_t max_cs_dl(void) const;
+	uint8_t max_cs_ul(void) const;
+	uint8_t max_mcs_dl(void) const;
+	uint8_t max_mcs_ul(void) const;
+	void set_max_cs_dl(uint8_t cs_dl);
+	void set_max_cs_ul(uint8_t cs_ul);
+	void set_max_mcs_dl(uint8_t mcs_dl);
+	void set_max_mcs_ul(uint8_t mcs_ul);
+
 	GprsMsStorage &ms_store();
 	GprsMs *ms_by_tlli(uint32_t tlli, uint32_t old_tlli = 0);
 	GprsMs *ms_by_imsi(const char *imsi);
@@ -358,6 +369,8 @@ private:
 	int m_cur_fn;
 	int m_cur_blk_fn;
 	struct gprs_rlcmac_bts m_bts;
+	uint8_t m_max_cs_dl, m_max_cs_ul;
+	uint8_t m_max_mcs_dl, m_max_mcs_ul;
 	PollController m_pollController;
 	SBAController m_sba;
 	struct rate_ctr_group *m_ratectrs;
@@ -442,6 +455,8 @@ extern "C" {
 	struct gprs_rlcmac_bts *bts_main_data();
 	struct rate_ctr_group *bts_main_data_stats();
 	struct osmo_stat_item_group *bts_main_data_stat_items();
+	void bts_set_max_cs(struct gprs_rlcmac_bts *bts, uint8_t cs_dl, uint8_t cs_ul);
+	void bts_set_max_mcs(struct gprs_rlcmac_bts *bts, uint8_t mcs_dl, uint8_t mcs_ul);
 #ifdef __cplusplus
 }
 

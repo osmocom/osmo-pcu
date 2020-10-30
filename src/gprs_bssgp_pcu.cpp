@@ -753,8 +753,8 @@ static enum CodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
 					}
 				}
 			}
-		} else if (bts->max_mcs_dl) {
-			num = bts->max_mcs_dl;
+		} else if (bts->bts->max_mcs_dl()) {
+			num = bts->bts->max_mcs_dl();
 		} else {
 			num = 9;
 		}
@@ -774,8 +774,8 @@ static enum CodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
 				}
 			}
 		}
-	} else if (bts->max_cs_dl) {
-		num = bts->max_cs_dl;
+	} else if (bts->bts->max_cs_dl()) {
+		num = bts->bts->max_cs_dl();
 	}
 
 	if (!num)

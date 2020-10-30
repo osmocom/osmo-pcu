@@ -541,9 +541,8 @@ void GprsMs::set_egprs_ms_class(uint8_t ms_class_)
 
 	m_egprs_ms_class = ms_class_;
 
-	const struct gprs_rlcmac_bts *bts = m_bts->bts_data();
-	if (mcs_is_edge_gmsk(mcs_get_egprs_by_num(bts->max_mcs_ul)) &&
-		mcs_is_edge_gmsk(mcs_get_egprs_by_num(bts->max_mcs_dl)) &&
+	if (mcs_is_edge_gmsk(mcs_get_egprs_by_num(m_bts->max_mcs_ul())) &&
+		mcs_is_edge_gmsk(mcs_get_egprs_by_num(m_bts->max_mcs_dl())) &&
 		mode() != EGPRS)
 	{
 		set_mode(EGPRS_GMSK);
@@ -609,26 +608,23 @@ void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)
 
 enum CodingScheme GprsMs::max_cs_ul() const
 {
-	struct gprs_rlcmac_bts *bts_data;
-
 	OSMO_ASSERT(m_bts != NULL);
-	bts_data = m_bts->bts_data();
 
 	if (mcs_is_gprs(m_current_cs_ul)) {
-		if (!bts_data->max_cs_ul) {
+		if (!m_bts->max_cs_ul()) {
 			return CS4;
 		}
 
-		return mcs_get_gprs_by_num(bts_data->max_cs_ul);
+		return mcs_get_gprs_by_num(m_bts->max_cs_ul());
 	}
 
 	if (!mcs_is_edge(m_current_cs_ul))
 		return UNKNOWN;
 
-	if (bts_data->max_mcs_ul)
-		return mcs_get_egprs_by_num(bts_data->max_mcs_ul);
-	else if (bts_data->max_cs_ul)
-		return mcs_get_gprs_by_num(bts_data->max_cs_ul);
+	if (m_bts->max_mcs_ul())
+		return mcs_get_egprs_by_num(m_bts->max_mcs_ul());
+	else if (m_bts->max_cs_ul())
+		return mcs_get_gprs_by_num(m_bts->max_cs_ul());
 
 	return MCS4;
 }
@@ -640,26 +636,23 @@ void GprsMs::set_current_cs_dl(enum CodingScheme scheme)
 
 enum CodingScheme GprsMs::max_cs_dl() const
 {
-	struct gprs_rlcmac_bts *bts_data;
-
 	OSMO_ASSERT(m_bts != NULL);
-	bts_data = m_bts->bts_data();
 
 	if (mcs_is_gprs(m_current_cs_dl)) {
-		if (!bts_data->max_cs_dl) {
+		if (!m_bts->max_cs_dl()) {
 			return CS4;
 		}
 
-		return mcs_get_gprs_by_num(bts_data->max_cs_dl);
+		return mcs_get_gprs_by_num(m_bts->max_cs_dl());
 	}
 
 	if (!mcs_is_edge(m_current_cs_dl))
 		return UNKNOWN;
 
-	if (bts_data->max_mcs_dl)
-		return mcs_get_egprs_by_num(bts_data->max_mcs_dl);
-	else if (bts_data->max_cs_dl)
-		return mcs_get_gprs_by_num(bts_data->max_cs_dl);
+	if (m_bts->max_mcs_dl())
+		return mcs_get_egprs_by_num(m_bts->max_mcs_dl());
+	else if (m_bts->max_cs_dl())
+		return mcs_get_gprs_by_num(m_bts->max_cs_dl());
 
 	return MCS4;
 }

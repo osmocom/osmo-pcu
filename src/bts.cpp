@@ -219,10 +219,10 @@ static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 	bts->cs_adj_enabled = 1;
 	bts->cs_adj_upper_limit = 33; /* Decrease CS if the error rate is above */
 	bts->cs_adj_lower_limit = 10; /* Increase CS if the error rate is below */
-	bts->max_cs_ul = MAX_GPRS_CS;
-	bts->max_cs_dl = MAX_GPRS_CS;
-	bts->max_mcs_ul = MAX_EDGE_MCS;
-	bts->max_mcs_dl = MAX_EDGE_MCS;
+	bts->vty.max_cs_ul = MAX_GPRS_CS;
+	bts->vty.max_cs_dl = MAX_GPRS_CS;
+	bts->vty.max_mcs_ul = MAX_EDGE_MCS;
+	bts->vty.max_mcs_dl = MAX_EDGE_MCS;
 	/* CS-1 to CS-4 */
 	bts->cs_lqual_ranges[0].low = -256;
 	bts->cs_lqual_ranges[0].high = 6;
@@ -320,6 +320,10 @@ struct rate_ctr_group *bts_main_data_stats()
 BTS::BTS()
 	: m_cur_fn(0)
 	, m_cur_blk_fn(-1)
+	, m_max_cs_dl(MAX_GPRS_CS)
+	, m_max_cs_ul(MAX_GPRS_CS)
+	, m_max_mcs_dl(MAX_EDGE_MCS)
+	, m_max_mcs_ul(MAX_EDGE_MCS)
 	, m_pollController(*this)
 	, m_sba(*this)
 	, m_ms_store(this)
@@ -1072,6 +1076,53 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup)
 	bitvec_free(immediate_assignment);
 }
 
+/* return maximum DL CS supported by BTS and allowed by VTY */
+uint8_t BTS::max_cs_dl(void) const
+{
+	return m_max_cs_dl;
+}
+
+/* return maximum UL CS supported by BTS and allowed by VTY */
+uint8_t BTS::max_cs_ul(void) const
+{
+	return m_max_cs_ul;
+}
+
+/* return maximum DL MCS supported by BTS and allowed by VTY */
+uint8_t BTS::max_mcs_dl(void) const
+{
+	return m_max_mcs_dl;
+}
+
+/* return maximum UL MCS supported by BTS and allowed by VTY */
+uint8_t BTS::max_mcs_ul(void) const
+{
+	return m_max_mcs_ul;
+}
+
+/* Set maximum DL CS supported by BTS and allowed by VTY */
+void BTS::set_max_cs_dl(uint8_t cs_dl)
+{
+	m_max_cs_dl = cs_dl;
+}
+
+/* Set maximum UL CS supported by BTS and allowed by VTY */
+void BTS::set_max_cs_ul(uint8_t cs_ul)
+{
+	m_max_cs_ul = cs_ul;
+}
+
+/* Set maximum DL MCS supported by BTS and allowed by VTY */
+void BTS::set_max_mcs_dl(uint8_t mcs_dl)
+{
+	m_max_mcs_dl = mcs_dl;
+}
+
+/* Set maximum UL MCS supported by BTS and allowed by VTY */
+void BTS::set_max_mcs_ul(uint8_t mcs_ul)
+{
+	m_max_mcs_ul = mcs_ul;
+}
 
 GprsMs *BTS::ms_alloc(uint8_t ms_class, uint8_t egprs_ms_class)
 {
@@ -1160,4 +1211,58 @@ void gprs_rlcmac_trx::unreserve_slots(enum gprs_rlcmac_tbf_direction dir,
 	for (i = 0; i < ARRAY_SIZE(pdch); i += 1)
 		if (slots & (1 << i))
 			pdch[i].unreserve(dir);
+}
+
+void bts_set_max_cs(struct gprs_rlcmac_bts *bts, uint8_t cs_dl, uint8_t cs_ul)
+{
+	int i;
+
+	bts->vty.max_cs_dl = cs_dl;
+	cs_dl = 0;
+	for (i = bts->vty.max_cs_dl - 1; i >= 0; i--) {
+		if (bts->cs_mask & (1 << i)) {
+			cs_dl = i + 1;
+			break;
+		}
+	}
+
+	bts->vty.max_cs_ul = cs_ul;
+	cs_ul = 0;
+	for (i = bts->vty.max_cs_ul - 1; i >= 0; i--) {
+		if (bts->cs_mask & (1 << i)) {
+			cs_ul = i + 1;
+			break;
+		}
+	}
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "New max CS: DL=%u UL=%u\n", cs_dl, cs_ul);
+	bts->bts->set_max_cs_dl(cs_dl);
+	bts->bts->set_max_cs_ul(cs_ul);
+}
+
+void bts_set_max_mcs(struct gprs_rlcmac_bts *bts, uint8_t mcs_dl, uint8_t mcs_ul)
+{
+	int i;
+
+	bts->vty.max_mcs_dl = mcs_dl;
+	mcs_dl = 0;
+	for (i = bts->vty.max_mcs_dl - 1; i >= 0; i--) {
+		if (bts->mcs_mask & (1 << i)) {
+			mcs_dl = i + 1;
+			break;
+		}
+	}
+
+	bts->vty.max_mcs_ul = mcs_ul;
+	mcs_ul = 0;
+	for (i = bts->vty.max_mcs_ul - 1; i >= 0; i--) {
+		if (bts->mcs_mask & (1 << i)) {
+			mcs_ul = i + 1;
+			break;
+		}
+	}
+
+	LOGP(DRLCMAC, LOGL_DEBUG, "New max MCS: DL=%u UL=%u\n", mcs_dl, mcs_ul);
+	bts->bts->set_max_mcs_dl(mcs_dl);
+	bts->bts->set_max_mcs_ul(mcs_ul);
 }
