@@ -740,18 +740,23 @@ static enum CodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
 {
 	int num = 0;
 	int i;
+	bool mcs_any = false;
 
-	if (bts->egprs_enabled) {
+	/* First check if we support any MCS: */
+	for (i = 8; i >= 0; i--) {
+		if (bts->mcs_mask & (1 << i)) {
+			num = i + 1;
+			mcs_any = true;
+			break;
+		}
+	}
+
+	if (mcs_any) {
 		if (!bts->cs_adj_enabled) {
 			if (bts->initial_mcs_dl) {
 				num = bts->initial_mcs_dl;
 			} else {
-				for (i = 8; i >= 0; i--) {
-					if (bts->mcs_mask & (1 << i)) {
-						num = i + 1;
-						break;
-					}
-				}
+				/* We found "num" for free in the loop above */
 			}
 		} else if (bts->bts->max_mcs_dl()) {
 			num = bts->bts->max_mcs_dl();
@@ -808,6 +813,9 @@ static int gprs_bssgp_tx_fc_bvc(void)
 	ms_bucket_size = bts->fc_ms_bucket_size;
 	ms_leak_rate = bts->fc_ms_leak_rate;
 
+	/* FIXME: This calculation is mostly wrong. It should be done based on
+	   currently established TBF (and whether the related (egprs)_ms_class
+	   as per which CS/MCS they support). */
 	if (leak_rate == 0) {
 		int meas_rate;
 		int usage; /* in 0..1000 */

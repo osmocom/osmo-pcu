@@ -670,7 +670,6 @@ static void test_egprs_ul_ack_nack()
 	fprintf(stderr, "############## test_egprs_ul_ack_nack\n");
 
 	BTS the_bts;
-	the_bts.bts_data()->egprs_enabled = true;
 	the_bts.bts_data()->alloc_algorithm = alloc_algorithm_a;
 	the_bts.bts_data()->trx[0].pdch[4].enable();
 

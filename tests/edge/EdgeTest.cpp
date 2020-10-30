@@ -1157,7 +1157,6 @@ static void setup_bts(BTS *the_bts, uint8_t ts_no, uint8_t cs = 1)
 	gprs_rlcmac_trx *trx;
 
 	bts = the_bts->bts_data();
-	bts->egprs_enabled = true;
 	bts->alloc_algorithm = alloc_algorithm_a;
 	bts->initial_cs_dl = cs;
 	bts->initial_cs_ul = cs;

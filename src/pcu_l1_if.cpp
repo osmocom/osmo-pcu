@@ -623,15 +623,13 @@ bssgp_failed:
 	}
 	bts_set_max_cs(bts, bts->vty.max_cs_dl, bts->vty.max_cs_ul); /* recalc max CS values */
 
-	bts->egprs_enabled = false;
 	bts->mcs_mask = 0;
 	for (i = 0; i < 9; i++) {
 		uint8_t allowed = !!(info_ind->flags & (PCU_IF_FLAG_MCS1 << i));
 		bts->mcs_mask |= allowed << i;
-		if (allowed) {
-			bts->egprs_enabled = true;
+		if (allowed)
 			LOGP(DL1IF, LOGL_DEBUG, " Use MCS%d\n", i + 1);
-		}
+
 	}
 	bts_set_max_mcs(bts, bts->vty.max_mcs_dl, bts->vty.max_mcs_ul); /* recalc max MCS values */
 
