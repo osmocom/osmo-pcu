@@ -205,12 +205,11 @@ static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, struct tlv_parsed *tp)
 {
 	struct osmo_mobile_identity mi;
 	int rc;
-	uint8_t *chan_needed = (uint8_t *)TLVP_VAL(tp, BSSGP_IE_CHAN_NEEDED);
 
 	if ((rc = get_paging_mi(&mi, tp)) > 0)
 		return bssgp_tx_status((enum gprs_bssgp_cause) rc, NULL, msg);
 
-	return BTS::main_bts()->add_paging(chan_needed ? *chan_needed : 0, &mi);
+	return BTS::main_bts()->add_paging(tlvp_val8(tp, BSSGP_IE_CHAN_NEEDED, 0), &mi);
 }
 
 static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, struct tlv_parsed *tp)
