@@ -1,15 +1,15 @@
-Allocating DL TBF: MS_CLASS=1/1
+Allocating DL TBF: MS_CLASS=1/0
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 2
 TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 04, dl_slots = 04
-Allocating UL TBF: MS_CLASS=1/1
+Allocating UL TBF: MS_CLASS=1/0
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 4
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 00
 Allocating UL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Setting Control TS 1
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 02, dl_slots = 00
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 1
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 02, dl_slots = 00
+TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)
 ############## test_egprs_ul_ack_nack
 Allocating UL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Setting Control TS 4
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 00
 TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)

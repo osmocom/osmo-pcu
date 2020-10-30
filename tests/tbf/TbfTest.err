@@ -3042,9 +3042,9 @@ Destroying MS object, TLLI = 0x00000000
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 12
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 12
+MS(TLLI=0x00000000, IMSI=, TA=220, 12/12,) Enabled EGPRS, mode EGPRS
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=12/12
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo B <multi> (suggested TRX: 0): Alloc start
 Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 12
@@ -3095,9 +3095,9 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3146,7 +3146,6 @@ Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3184,9 +3183,9 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3353,7 +3352,6 @@ Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3382,10 +3380,10 @@ Testing MCS-1
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3688,10 +3686,10 @@ Testing MCS-2
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3944,10 +3942,10 @@ Testing MCS-3
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4162,10 +4160,10 @@ Testing MCS-4
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4348,10 +4346,10 @@ Testing MCS-5
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4514,10 +4512,10 @@ Testing MCS-6
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4662,10 +4660,10 @@ Testing MCS-7
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4805,10 +4803,10 @@ Testing MCS-8
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4937,10 +4935,10 @@ Testing MCS-9
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5071,10 +5069,10 @@ Testing retx for MCS 6 - 6
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5126,10 +5124,10 @@ Testing retx for MCS 1 - 9
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5181,10 +5179,10 @@ Testing retx for MCS 2 - 8
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5236,10 +5234,10 @@ Testing retx for MCS 5 - 7
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5307,10 +5305,10 @@ Testing retx for MCS 6 - 9
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5378,10 +5376,10 @@ Testing retx for MCS 7 - 5
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5449,10 +5447,10 @@ Testing retx for MCS 9 - 6
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5522,10 +5520,10 @@ Testing retx for MCS 6 to reseg_mcs 3
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5584,10 +5582,10 @@ Testing retx for MCS 5 to reseg_mcs 2
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5646,10 +5644,10 @@ Testing retx for MCS 4 to reseg_mcs 1
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5708,10 +5706,10 @@ Testing retx for MCS 6 to reseg_mcs 3
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5788,9 +5786,9 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5856,7 +5854,6 @@ Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5884,9 +5881,9 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo B <single> (suggested TRX: 0): Alloc start
 Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 11
@@ -5948,9 +5945,9 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6011,7 +6008,6 @@ Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6039,10 +6035,10 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6269,9 +6265,9 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6809,7 +6805,6 @@ Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=1/1
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Enabled EGPRS, mode EGPRS
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7480,6 +7475,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 Creating MS object, TLLI = 0x00000000
 Modifying MS object, TLLI = 0x00000000, MS class 0 -> 11
 Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
+MS(TLLI=0x00000000, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
 ********** DL-TBF starts here **********
 Allocating DL TBF: MS_CLASS=11/11
@@ -7492,15 +7488,17 @@ Allocating DL TBF: MS_CLASS=11/11
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because not enabled
 [DL] Assign downlink TS=4 TFI=0
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL), 1 TBFs, USFs = 00, TFIs = 00000001.
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Setting Control TS 4
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL)
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Setting Control TS 4
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
+Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
+ws(64)
 Modifying MS object, TLLI = 0x00000000, TA 220 -> 0
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
-TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL) changes state from NULL to FLOW
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 100 bytes
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
 packet reject: 40 84 7f f7 6e e6 41 4b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 === end test_packet_access_rej_epdan ===
 === start test_packet_access_rej_prr ===
@@ -7666,6 +7664,7 @@ MS requests UL TBF in packet resource request of single block, so we provide one
 (no TBF) MS requests UL TBF in PACKET RESOURCE REQ of single block, but there is no resource request scheduled!
 Modifying MS object, TLLI = 0xffeeddcc, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffeeddcc, EGPRS MS class 0 -> 11
+MS(TLLI=0xffeeddcc, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 ********** UL-TBF starts here **********
 Allocating UL TBF: MS_CLASS=11/11
 [UL] algo A <multi> (suggested TRX: 0): Alloc start

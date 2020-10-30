@@ -540,6 +540,17 @@ void GprsMs::set_egprs_ms_class(uint8_t ms_class_)
 		tlli(), m_egprs_ms_class, ms_class_);
 
 	m_egprs_ms_class = ms_class_;
+
+	const struct gprs_rlcmac_bts *bts = m_bts->bts_data();
+	if (mcs_is_edge_gmsk(mcs_get_egprs_by_num(bts->max_mcs_ul)) &&
+		mcs_is_edge_gmsk(mcs_get_egprs_by_num(bts->max_mcs_dl)) &&
+		mode() != EGPRS)
+	{
+		set_mode(EGPRS_GMSK);
+	} else {
+		set_mode(EGPRS);
+	}
+	LOGPMS(this, DRLCMAC, LOGL_INFO, "Enabled EGPRS, mode %s\n", mode_name(mode()));
 }
 
 void GprsMs::update_error_rate(gprs_rlcmac_tbf *tbf, int error_rate)

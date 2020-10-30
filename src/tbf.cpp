@@ -117,18 +117,6 @@ const struct rate_ctr_group_desc tbf_ctrg_desc = {
         tbf_ctr_description,
 };
 
-static void setup_egprs_mode(gprs_rlcmac_bts *bts, GprsMs *ms)
-{
-	if (mcs_is_edge_gmsk(mcs_get_egprs_by_num(bts->max_mcs_ul)) &&
-		mcs_is_edge_gmsk(mcs_get_egprs_by_num(bts->max_mcs_dl)) &&
-		ms->mode() != EGPRS)
-	{
-		ms->set_mode(EGPRS_GMSK);
-	} else {
-		ms->set_mode(EGPRS);
-	}
-}
-
 gprs_rlcmac_tbf::Meas::Meas() :
 	rssi_sum(0),
 	rssi_num(0)
@@ -757,11 +745,8 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
 	int rc;
 
-	if (m_ms->egprs_ms_class() > 0 && bts_data->egprs_enabled) {
+	if (m_ms->egprs_ms_class() > 0)
 		enable_egprs();
-		setup_egprs_mode(bts_data, m_ms);
-		LOGPTBF(this, LOGL_INFO, "Enabled EGPRS, mode %s\n", mode_name(m_ms->mode()));
-	}
 
 	m_created_ts = time(NULL);
 	/* select algorithm */
