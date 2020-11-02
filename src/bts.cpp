@@ -204,6 +204,94 @@ static const struct osmo_stat_item_group_desc bts_statg_desc = {
 	bts_stat_item_description,
 };
 
+static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
+{
+	memset(bts, 0, sizeof(*bts));
+	bts->fc_interval = 1;
+	bts->initial_cs_dl = bts->initial_cs_ul = 1;
+	bts->initial_mcs_dl = bts->initial_mcs_ul = 1;
+	bts->cs1 = 1;
+	bts->n3101 = 10;
+	bts->n3103 = 4;
+	bts->n3105 = 8;
+	bts->alpha = 0; /* a = 0.0 */
+	bts->si13_is_set = false;
+	bts->cs_adj_enabled = 1;
+	bts->cs_adj_upper_limit = 33; /* Decrease CS if the error rate is above */
+	bts->cs_adj_lower_limit = 10; /* Increase CS if the error rate is below */
+	bts->max_cs_ul = MAX_GPRS_CS;
+	bts->max_cs_dl = MAX_GPRS_CS;
+	bts->max_mcs_ul = MAX_EDGE_MCS;
+	bts->max_mcs_dl = MAX_EDGE_MCS;
+	/* CS-1 to CS-4 */
+	bts->cs_lqual_ranges[0].low = -256;
+	bts->cs_lqual_ranges[0].high = 6;
+	bts->cs_lqual_ranges[1].low = 5;
+	bts->cs_lqual_ranges[1].high = 8;
+	bts->cs_lqual_ranges[2].low = 7;
+	bts->cs_lqual_ranges[2].high = 13;
+	bts->cs_lqual_ranges[3].low = 12;
+	bts->cs_lqual_ranges[3].high = 256;
+
+	/* MCS-1 to MCS-9 */
+	/* Default thresholds are referenced from literature */
+	/* Fig. 2.3, Chapter 2, Optimizing Wireless Communication Systems, Springer (2009) */
+	bts->mcs_lqual_ranges[0].low = -256;
+	bts->mcs_lqual_ranges[0].high = 6;
+	bts->mcs_lqual_ranges[1].low = 5;
+	bts->mcs_lqual_ranges[1].high = 8;
+	bts->mcs_lqual_ranges[2].low = 7;
+	bts->mcs_lqual_ranges[2].high = 13;
+	bts->mcs_lqual_ranges[3].low = 12;
+	bts->mcs_lqual_ranges[3].high = 15;
+	bts->mcs_lqual_ranges[4].low = 14;
+	bts->mcs_lqual_ranges[4].high = 17;
+	bts->mcs_lqual_ranges[5].low = 16;
+	bts->mcs_lqual_ranges[5].high = 18;
+	bts->mcs_lqual_ranges[6].low = 17;
+	bts->mcs_lqual_ranges[6].high = 20;
+	bts->mcs_lqual_ranges[7].low = 19;
+	bts->mcs_lqual_ranges[7].high = 24;
+	bts->mcs_lqual_ranges[8].low = 23;
+	bts->mcs_lqual_ranges[8].high = 256;
+	bts->cs_downgrade_threshold = 200;
+
+	/* TODO: increase them when CRBB decoding is implemented */
+	bts->ws_base = 64;
+	bts->ws_pdch = 0;
+
+	bts->llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
+	bts->llc_idle_ack_csec = 10;
+
+	/*
+	 * By default resegmentation is supported in DL
+	 * can also be configured through VTY
+	 */
+	bts->dl_arq_type = EGPRS_ARQ1;
+
+	bts->app_info = NULL;
+	bts->bts = bts_obj;
+	bts->dl_tbf_preemptive_retransmission = true;
+	bts->T_defs_bts = T_defs_bts;
+	bts->T_defs_pcu = T_defs_pcu;
+	osmo_tdefs_reset(bts->T_defs_bts);
+	osmo_tdefs_reset(bts->T_defs_pcu);
+
+	/* initialize back pointers */
+	for (size_t trx_no = 0; trx_no < ARRAY_SIZE(bts->trx); ++trx_no) {
+		struct gprs_rlcmac_trx *trx = &bts->trx[trx_no];
+		trx->trx_no = trx_no;
+		trx->bts = bts_obj;
+
+		for (size_t ts_no = 0; ts_no < ARRAY_SIZE(trx->pdch); ++ts_no) {
+			struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
+			pdch->init_ptcch_msg();
+			pdch->ts_no = ts_no;
+			pdch->trx = trx;
+		}
+	}
+}
+
 BTS* BTS::main_bts()
 {
 	return &s_bts;
@@ -236,28 +324,7 @@ BTS::BTS()
 	, m_sba(*this)
 	, m_ms_store(this)
 {
-	memset(&m_bts, 0, sizeof(m_bts));
-	m_bts.bts = this;
-	m_bts.app_info = NULL;
-	m_bts.dl_tbf_preemptive_retransmission = true;
-	m_bts.T_defs_bts = T_defs_bts;
-	m_bts.T_defs_pcu = T_defs_pcu;
-	osmo_tdefs_reset(m_bts.T_defs_bts);
-	osmo_tdefs_reset(m_bts.T_defs_pcu);
-
-	/* initialize back pointers */
-	for (size_t trx_no = 0; trx_no < ARRAY_SIZE(m_bts.trx); ++trx_no) {
-		struct gprs_rlcmac_trx *trx = &m_bts.trx[trx_no];
-		trx->trx_no = trx_no;
-		trx->bts = this;
-
-		for (size_t ts_no = 0; ts_no < ARRAY_SIZE(trx->pdch); ++ts_no) {
-			struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
-			pdch->init_ptcch_msg();
-			pdch->ts_no = ts_no;
-			pdch->trx = trx;
-		}
-	}
+	bts_init(&m_bts, this);
 
 	/* The static allocator might have already registered the counter group.
 	   If this happens and we still called explicitly (in tests/ for example)

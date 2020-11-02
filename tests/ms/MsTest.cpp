@@ -517,6 +517,7 @@ static void test_ms_cs_selection()
 	bts->initial_cs_dl = 4;
 	bts->initial_cs_ul = 1;
 	bts->cs_downgrade_threshold = 0;
+	bts->cs_adj_lower_limit = 0;
 
 	ms = new GprsMs(&the_bts, tlli);
 

@@ -228,67 +228,6 @@ int main(int argc, char *argv[])
 	}
 
 	bts = bts_main_data();
-	bts->fc_interval = 1;
-	bts->initial_cs_dl = bts->initial_cs_ul = 1;
-	bts->initial_mcs_dl = bts->initial_mcs_ul = 1;
-	bts->cs1 = 1;
-	bts->n3101 = 10;
-	bts->n3103 = 4;
-	bts->n3105 = 8;
-	bts->alpha = 0; /* a = 0.0 */
-	bts->si13_is_set = false;
-	bts->cs_adj_enabled = 1;
-	bts->cs_adj_upper_limit = 33; /* Decrease CS if the error rate is above */
-	bts->cs_adj_lower_limit = 10; /* Increase CS if the error rate is below */
-	bts->max_cs_ul = MAX_GPRS_CS;
-	bts->max_cs_dl = MAX_GPRS_CS;
-	bts->max_mcs_ul = MAX_EDGE_MCS;
-	bts->max_mcs_dl = MAX_EDGE_MCS;
-	/* CS-1 to CS-4 */
-	bts->cs_lqual_ranges[0].low = -256;
-	bts->cs_lqual_ranges[0].high = 6;
-	bts->cs_lqual_ranges[1].low = 5;
-	bts->cs_lqual_ranges[1].high = 8;
-	bts->cs_lqual_ranges[2].low = 7;
-	bts->cs_lqual_ranges[2].high = 13;
-	bts->cs_lqual_ranges[3].low = 12;
-	bts->cs_lqual_ranges[3].high = 256;
-
-	/* MCS-1 to MCS-9 */
-	/* Default thresholds are referenced from literature */
-	/* Fig. 2.3, Chapter 2, Optimizing Wireless Communication Systems, Springer (2009) */
-	bts->mcs_lqual_ranges[0].low = -256;
-	bts->mcs_lqual_ranges[0].high = 6;
-	bts->mcs_lqual_ranges[1].low = 5;
-	bts->mcs_lqual_ranges[1].high = 8;
-	bts->mcs_lqual_ranges[2].low = 7;
-	bts->mcs_lqual_ranges[2].high = 13;
-	bts->mcs_lqual_ranges[3].low = 12;
-	bts->mcs_lqual_ranges[3].high = 15;
-	bts->mcs_lqual_ranges[4].low = 14;
-	bts->mcs_lqual_ranges[4].high = 17;
-	bts->mcs_lqual_ranges[5].low = 16;
-	bts->mcs_lqual_ranges[5].high = 18;
-	bts->mcs_lqual_ranges[6].low = 17;
-	bts->mcs_lqual_ranges[6].high = 20;
-	bts->mcs_lqual_ranges[7].low = 19;
-	bts->mcs_lqual_ranges[7].high = 24;
-	bts->mcs_lqual_ranges[8].low = 23;
-	bts->mcs_lqual_ranges[8].high = 256;
-	bts->cs_downgrade_threshold = 200;
-
-	/* TODO: increase them when CRBB decoding is implemented */
-	bts->ws_base = 64;
-	bts->ws_pdch = 0;
-
-	bts->llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
-	bts->llc_idle_ack_csec = 10;
-
-	/*
-	 * By default resegmentation is supported in DL
-	 * can also be configured through VTY
-	 */
-	bts->dl_arq_type = EGPRS_ARQ1;
 
 	bts->pcu_sock_path = talloc_strdup(tall_pcu_ctx, PCU_SOCK_DEFAULT);
 
