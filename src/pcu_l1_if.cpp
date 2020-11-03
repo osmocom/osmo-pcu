@@ -633,14 +633,38 @@ bssgp_failed:
 	}
 	bts_set_max_mcs(bts, bts->vty.max_mcs_dl, bts->vty.max_mcs_ul); /* recalc max MCS values */
 
-	LOGP(DL1IF, LOGL_DEBUG, " initial_cs=%d\n", info_ind->initial_cs);
-	LOGP(DL1IF, LOGL_DEBUG, " initial_mcs=%d\n", info_ind->initial_mcs);
-	if (!bts->force_cs) {
-		if (info_ind->initial_cs < 1 || info_ind->initial_cs > 4)
-			bts->initial_cs_dl = 1;
-		else
-			bts->initial_cs_dl = info_ind->initial_cs;
-		bts->initial_cs_ul = bts->initial_cs_dl;
+	LOGP(DL1IF, LOGL_DEBUG, " initial_cs=%u%s\n", info_ind->initial_cs,
+	     bts->vty.force_initial_cs ? " (VTY forced, ignoring)" : "");
+	if (!bts->vty.force_initial_cs) {
+		if (info_ind->initial_cs > bts->bts->max_cs_dl()) {
+			LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_cs_dl to %d\n", bts->bts->max_cs_dl());
+			bts->initial_cs_dl = bts->bts->max_cs_dl();
+		} else {
+			bts->initial_cs_dl =  info_ind->initial_cs;
+		}
+		if (info_ind->initial_cs > bts->bts->max_cs_ul()) {
+			LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_cs_ul to %d\n", bts->bts->max_cs_ul());
+			bts->initial_cs_ul = bts->bts->max_cs_ul();
+		} else {
+			bts->initial_cs_ul =  info_ind->initial_cs;
+		}
+	}
+
+	LOGP(DL1IF, LOGL_DEBUG, " initial_mcs=%u%s\n", info_ind->initial_mcs,
+	     bts->vty.force_initial_mcs ? " (VTY forced, ignoring)" : "");
+	if (!bts->vty.force_initial_mcs) {
+		if (info_ind->initial_mcs > bts->bts->max_mcs_dl()) {
+			LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_mcs_dl to %d\n", bts->bts->max_mcs_dl());
+			bts->initial_mcs_dl = bts->bts->max_mcs_dl();
+		} else {
+			bts->initial_mcs_dl =  info_ind->initial_mcs;
+		}
+		if (info_ind->initial_mcs > bts->bts->max_mcs_ul()) {
+			LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_mcs_ul to %d\n", bts->bts->max_mcs_ul());
+			bts->initial_mcs_ul = bts->bts->max_mcs_ul();
+		} else {
+			bts->initial_mcs_ul =  info_ind->initial_mcs;
+		}
 	}
 
 	pcu = gprs_bssgp_init(

@@ -122,7 +122,7 @@ static int config_write_pcu(struct vty *vty)
 	if (bts->fc_ms_leak_rate)
 		vty_out(vty, " flow-control force-ms-leak-rate %d%s",
 			bts->fc_ms_leak_rate, VTY_NEWLINE);
-	if (bts->force_cs) {
+	if (bts->vty.force_initial_cs) {
 		if (bts->initial_cs_ul == bts->initial_cs_dl)
 			vty_out(vty, " cs %d%s", bts->initial_cs_dl,
 				VTY_NEWLINE);
@@ -179,7 +179,7 @@ static int config_write_pcu(struct vty *vty)
 		bts->mcs_lqual_ranges[8].low,
 		VTY_NEWLINE);
 
-	if (bts->initial_mcs_dl != 1 && bts->initial_mcs_ul != 1) {
+	if (bts->vty.force_initial_mcs) {
 		if (bts->initial_mcs_ul == bts->initial_mcs_dl)
 			vty_out(vty, " mcs %d%s", bts->initial_mcs_dl,
 				VTY_NEWLINE);
@@ -449,7 +449,7 @@ DEFUN_ATTR(cfg_pcu_cs,
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t cs = atoi(argv[0]);
 
-	bts->force_cs = 1;
+	bts->vty.force_initial_cs = true;
 	bts->initial_cs_dl = cs;
 	if (argc > 1)
 		bts->initial_cs_ul = atoi(argv[1]);
@@ -467,7 +467,7 @@ DEFUN_ATTR(cfg_pcu_no_cs,
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	bts->force_cs = 0;
+	bts->vty.force_initial_cs = false;
 
 	return CMD_SUCCESS;
 }
@@ -517,13 +517,14 @@ DEFUN_ATTR(cfg_pcu_mcs,
 	   CMD_ATTR_IMMEDIATE)
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	uint8_t cs = atoi(argv[0]);
+	uint8_t mcs = atoi(argv[0]);
 
-	bts->initial_mcs_dl = cs;
+	bts->vty.force_initial_mcs = true;
+	bts->initial_mcs_dl = mcs;
 	if (argc > 1)
 		bts->initial_mcs_ul = atoi(argv[1]);
 	else
-		bts->initial_mcs_ul = cs;
+		bts->initial_mcs_ul = mcs;
 
 	return CMD_SUCCESS;
 }
@@ -536,8 +537,7 @@ DEFUN_ATTR(cfg_pcu_no_mcs,
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
-	bts->initial_mcs_dl = 1;
-	bts->initial_mcs_ul = 1;
+	bts->vty.force_initial_mcs = false;
 
 	return CMD_SUCCESS;
 }
