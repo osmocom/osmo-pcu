@@ -163,7 +163,7 @@ enum CodingScheme mcs_get_egprs_by_num(unsigned num)
 
 bool mcs_is_valid(enum CodingScheme cs)
 {
-	return UNKNOWN <= cs && cs <= MCS9;
+	return UNKNOWN < cs && cs <= MCS9;
 }
 
 bool mcs_is_compat_kind(enum CodingScheme cs, enum mcs_kind mode)

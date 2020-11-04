@@ -1692,6 +1692,7 @@ Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 
 	LOGP(DRLCMACDL, LOGL_ERROR, "%s data block encoding not implemented\n",
 		mcs_name(cs));
+	OSMO_ASSERT(mcs_is_valid(cs));
 
 	return AR_NEED_MORE_BLOCKS;
 }

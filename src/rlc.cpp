@@ -350,6 +350,7 @@ static void gprs_rlc_data_header_init(struct gprs_rlc_data_info *rlc,
 void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,
 	enum CodingScheme cs, bool with_padding, const unsigned int spb)
 {
+	OSMO_ASSERT(mcs_is_valid(cs));
 	return gprs_rlc_data_header_init(rlc, cs, with_padding,
 					 num_data_header_bits_DL(mcs_header_type(cs)), spb);
 }
@@ -357,6 +358,7 @@ void gprs_rlc_data_info_init_dl(struct gprs_rlc_data_info *rlc,
 void gprs_rlc_data_info_init_ul(struct gprs_rlc_data_info *rlc,
 	enum CodingScheme cs, bool with_padding)
 {
+	OSMO_ASSERT(mcs_is_valid(cs));
 	/*
 	 * last parameter is sent as 0 since common function used
 	 * for both DL and UL
