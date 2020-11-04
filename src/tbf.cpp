@@ -745,7 +745,7 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
 	int rc;
 
-	if (m_ms->egprs_ms_class() > 0)
+	if (m_ms->mode() != GPRS)
 		enable_egprs();
 
 	m_created_ts = time(NULL);

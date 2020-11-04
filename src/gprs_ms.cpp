@@ -541,6 +541,13 @@ void GprsMs::set_egprs_ms_class(uint8_t ms_class_)
 
 	m_egprs_ms_class = ms_class_;
 
+	if (!m_bts->max_mcs_ul() || !m_bts->max_mcs_dl()) {
+		LOGPMS(this, DRLCMAC, LOGL_DEBUG,
+		       "Avoid enabling EGPRS because use of MCS is disabled: ul=%u dl=%u\n",
+			m_bts->max_mcs_ul(), m_bts->max_mcs_dl());
+		return;
+	}
+
 	if (mcs_is_edge_gmsk(mcs_get_egprs_by_num(m_bts->max_mcs_ul())) &&
 		mcs_is_edge_gmsk(mcs_get_egprs_by_num(m_bts->max_mcs_dl())) &&
 		mode() != EGPRS)
