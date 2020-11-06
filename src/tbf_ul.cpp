@@ -460,8 +460,8 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 				update_ms(new_tlli, GPRS_RLCMAC_UL_TBF);
 			} else if (new_tlli && new_tlli != tlli()) {
 				LOGPTBFUL(this, LOGL_NOTICE,
-					  "TLLI mismatch on UL DATA TFI=%d. (Ignoring due to contention resolution)\n",
-					  rlc->tfi);
+					  "Decoded TLLI=%08x mismatch on UL DATA TFI=%d. (Ignoring due to contention resolution)\n",
+					  new_tlli, rlc->tfi);
 				m_window.invalidate_bsn(rdbi->bsn);
 				continue;
 			}
