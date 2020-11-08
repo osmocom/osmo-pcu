@@ -32,6 +32,7 @@ extern "C" {
 	#include <osmocom/gsm/protocol/gsm_23_003.h>
 	#include <osmocom/gprs/protocol/gsm_08_16.h>
 	#include <osmocom/core/utils.h>
+	#include <osmocom/gsm/gsm48.h>
 	#include "coding_scheme.h"
 }
 
@@ -84,7 +85,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	struct bssgp_ud_hdr *budh;
 
 	uint32_t tlli;
-	uint32_t tlli_old = 0;
+	uint32_t tlli_old = GSM_RESERVED_TMSI;
 	uint8_t *data;
 	uint16_t len;
 	uint8_t ms_class = 0;

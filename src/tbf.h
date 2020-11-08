@@ -34,6 +34,7 @@ extern "C" {
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/logging.h>
 #include <osmocom/core/timer.h>
+#include <osmocom/gsm/gsm48.h>
 
 #include "coding_scheme.h"
 }
@@ -535,7 +536,7 @@ inline GprsMs *gprs_rlcmac_tbf::ms() const
 
 inline bool gprs_rlcmac_tbf::is_tlli_valid() const
 {
-	return tlli() != 0;
+	return tlli() != GSM_RESERVED_TMSI;
 }
 
 inline bool gprs_rlcmac_tbf::is_tfi_assigned() const

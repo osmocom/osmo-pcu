@@ -359,7 +359,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	if (ms())
 		ms()->update_l1_meas(meas);
 
-	uint32_t new_tlli = 0;
+	uint32_t new_tlli = GSM_RESERVED_TMSI;
 	unsigned int block_idx;
 
 	/* restart T3169 */
@@ -448,9 +448,10 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 				continue;
 			}
 			if (!this->is_tlli_valid()) {
-				if (!new_tlli) {
+				if (new_tlli == GSM_RESERVED_TMSI) {
 					LOGPTBFUL(this, LOGL_NOTICE,
-						  "TLLI = 0 within UL DATA.\n");
+						  "TLLI is 0x%08x within UL DATA?!?\n",
+						  new_tlli);
 					m_window.invalidate_bsn(rdbi->bsn);
 					continue;
 				}
@@ -458,7 +459,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 					  "Decoded premier TLLI=0x%08x of UL DATA TFI=%d.\n",
 					  new_tlli, rlc->tfi);
 				update_ms(new_tlli, GPRS_RLCMAC_UL_TBF);
-			} else if (new_tlli && new_tlli != tlli()) {
+			} else if (new_tlli != GSM_RESERVED_TMSI && new_tlli != tlli()) {
 				LOGPTBFUL(this, LOGL_NOTICE,
 					  "Decoded TLLI=%08x mismatch on UL DATA TFI=%d. (Ignoring due to contention resolution)\n",
 					  new_tlli, rlc->tfi);

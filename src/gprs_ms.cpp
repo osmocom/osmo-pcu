@@ -34,6 +34,7 @@ extern "C" {
 	#include <osmocom/core/utils.h>
 	#include <osmocom/core/timer.h>
 	#include <osmocom/gsm/protocol/gsm_04_08.h>
+	#include <osmocom/gsm/gsm48.h>
 	#include <osmocom/core/logging.h>
 	#include "coding_scheme.h"
 }
@@ -97,8 +98,8 @@ GprsMs::GprsMs(BTS *bts, uint32_t tlli) :
 	m_ul_tbf(NULL),
 	m_dl_tbf(NULL),
 	m_tlli(tlli),
-	m_new_ul_tlli(0),
-	m_new_dl_tlli(0),
+	m_new_ul_tlli(GSM_RESERVED_TMSI),
+	m_new_dl_tlli(GSM_RESERVED_TMSI),
 	m_ta(GSM48_TA_INVALID),
 	m_ms_class(0),
 	m_egprs_ms_class(0),
@@ -369,9 +370,9 @@ void GprsMs::reset()
 
 	stop_timer();
 
-	m_tlli = 0;
-	m_new_dl_tlli = 0;
-	m_new_ul_tlli = 0;
+	m_tlli = GSM_RESERVED_TMSI;
+	m_new_dl_tlli = m_tlli;
+	m_new_ul_tlli = m_tlli;
 	m_imsi[0] = '\0';
 }
 
@@ -429,8 +430,8 @@ void GprsMs::set_tlli(uint32_t tlli)
 		m_tlli, tlli);
 
 	m_tlli = tlli;
-	m_new_dl_tlli = 0;
-	m_new_ul_tlli = 0;
+	m_new_dl_tlli = GSM_RESERVED_TMSI;
+	m_new_ul_tlli = GSM_RESERVED_TMSI;
 }
 
 bool GprsMs::confirm_tlli(uint32_t tlli)
@@ -455,8 +456,8 @@ bool GprsMs::confirm_tlli(uint32_t tlli)
 		"Modifying MS object, TLLI: 0x%08x confirmed\n", tlli);
 
 	m_tlli = tlli;
-	m_new_dl_tlli = 0;
-	m_new_ul_tlli = 0;
+	m_new_dl_tlli = GSM_RESERVED_TMSI;
+	m_new_ul_tlli = GSM_RESERVED_TMSI;
 
 	return true;
 }

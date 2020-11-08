@@ -10,26 +10,26 @@ Application Information Request received: type=0x00000000 len=0
 Packet Application Information will not be sent, no subscribers with active TBF
 
 --- prepare_bts_with_two_dl_tbf_subscr ---
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 10
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 11
-MS(TLLI=0x00000000, IMSI=, TA=220, 10/11,) Enabled EGPRS, mode EGPRS
+Creating MS object, TLLI = 0xffffffff
+Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 10
+Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 10/11,) Enabled EGPRS, mode EGPRS
 [DL] algo B <multi> (suggested TRX: 0): using 4 slots
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
-PDCH(TS 5, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
-PDCH(TS 6, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+PDCH(TS 5, TRX 0): Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+PDCH(TS 6, TRX 0): Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+Attaching TBF to MS object, TLLI = 0xffffffff, TBF = TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS)
 ws(64)
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, TLLI = 0x00000000, MS class 0 -> 12
-Modifying MS object, TLLI = 0x00000000, EGPRS MS class 0 -> 13
-MS(TLLI=0x00000000, IMSI=, TA=220, 12/13,) Enabled EGPRS, mode EGPRS
+Creating MS object, TLLI = 0xffffffff
+Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 12
+Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 13
+MS(TLLI=0xffffffff, IMSI=, TA=220, 12/13,) Enabled EGPRS, mode EGPRS
 [DL] algo B <multi> (suggested TRX: 0): using 3 slots
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
-PDCH(TS 5, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
-PDCH(TS 6, TRX 0): Attaching TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
-Attaching TBF to MS object, TLLI = 0x00000000, TBF = TBF(TFI=1 TLLI=0x00000000 DIR=DL STATE=NULL EGPRS)
+PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
+PDCH(TS 5, TRX 0): Attaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
+PDCH(TS 6, TRX 0): Attaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
+Attaching TBF to MS object, TLLI = 0xffffffff, TBF = TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS)
 ws(64)
 
 --- test_sched_app_info_ok ---

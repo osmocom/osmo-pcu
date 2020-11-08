@@ -171,7 +171,7 @@ gprs_rlcmac_bts *gprs_rlcmac_tbf::bts_data() const
 
 uint32_t gprs_rlcmac_tbf::tlli() const
 {
-	return m_ms ? m_ms->tlli() : 0;
+	return m_ms ? m_ms->tlli() : GSM_RESERVED_TMSI;
 }
 
 const char *gprs_rlcmac_tbf::imsi() const
@@ -240,7 +240,7 @@ void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 
 void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
 {
-	if (!tlli)
+	if (tlli == GSM_RESERVED_TMSI)
 		return;
 
 	/* TODO: When the TLLI does not match the ms, check if there is another

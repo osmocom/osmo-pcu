@@ -7,7 +7,7 @@ rbb: 10 00 00 00 00 00 00 01
 show_rbb: RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
 show_rbb: IIRRIIIR
 [11] DL Immediate Assignment <ia_rest_downlink>:
-	06 3f 30 0d 23 6d 7f 03 18 23 00 d0 00 00 00 08 17 47 08 0b 5b 2b 2b 
+	06 3f 30 0d 23 6d 7f 03 18 23 00 df ff ff ff f8 17 47 08 0b 5b 2b 2b 
 [11] UL Immediate Assignment <ia_rest_uplink(MBA)>:
 	06 3f 10 0d 23 6d 0d 03 18 23 00 c8 02 1b a2 0b 2b 2b 2b 2b 2b 2b 2b 
 [11] UL Immediate Assignment <ia_rest_uplink(SBA)>:

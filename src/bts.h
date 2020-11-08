@@ -29,6 +29,7 @@ extern "C" {
 #include <osmocom/core/tdef.h>
 #include <osmocom/gsm/l1sap.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
+#include <osmocom/gsm/gsm48.h>
 #include "mslot_class.h"
 #include "gsm_rlcmac.h"
 }
@@ -340,7 +341,7 @@ public:
 	void set_max_mcs_ul(uint8_t mcs_ul);
 
 	GprsMsStorage &ms_store();
-	GprsMs *ms_by_tlli(uint32_t tlli, uint32_t old_tlli = 0);
+	GprsMs *ms_by_tlli(uint32_t tlli, uint32_t old_tlli = GSM_RESERVED_TMSI);
 	GprsMs *ms_by_imsi(const char *imsi);
 	GprsMs *ms_alloc(uint8_t ms_class, uint8_t egprs_ms_class = 0);
 

@@ -34,6 +34,7 @@ extern "C" {
 	#include <osmocom/core/linuxlist.h>
 
 	#include <osmocom/gsm/protocol/gsm_23_003.h>
+	#include <osmocom/gsm/gsm48.h>
 
 	#include "coding_scheme.h"
 }
@@ -209,14 +210,17 @@ inline bool GprsMs::need_dl_tbf() const
 
 inline uint32_t GprsMs::tlli() const
 {
-	return m_new_ul_tlli ? m_new_ul_tlli :
-	       m_tlli        ? m_tlli :
-			       m_new_dl_tlli;
+	if (m_new_ul_tlli != GSM_RESERVED_TMSI)
+		return m_new_ul_tlli;
+	if (m_tlli != GSM_RESERVED_TMSI)
+		return m_tlli;
+
+	return m_new_dl_tlli;
 }
 
 inline bool GprsMs::check_tlli(uint32_t tlli)
 {
-	return tlli != 0 &&
+	return tlli != GSM_RESERVED_TMSI &&
 		(tlli == m_tlli || tlli == m_new_ul_tlli || tlli == m_new_dl_tlli);
 }
 

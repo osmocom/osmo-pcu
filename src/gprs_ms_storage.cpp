@@ -26,6 +26,7 @@
 
 extern "C" {
 	#include <osmocom/core/linuxlist.h>
+	#include <osmocom/gsm/gsm48.h>
 }
 
 #define GPRS_UNDEFINED_IMSI "000"
@@ -70,7 +71,7 @@ GprsMs *GprsMsStorage::get_ms(uint32_t tlli, uint32_t old_tlli, const char *imsi
 	GprsMs *ms;
 	LListHead<GprsMs> *pos;
 
-	if (tlli || old_tlli) {
+	if (tlli != GSM_RESERVED_TMSI || old_tlli != GSM_RESERVED_TMSI) {
 		llist_for_each(pos, &m_list) {
 			ms = pos->entry();
 			if (ms->check_tlli(tlli))
@@ -97,7 +98,7 @@ GprsMs *GprsMsStorage::create_ms()
 {
 	GprsMs *ms;
 
-	ms = new GprsMs(m_bts, 0);
+	ms = new GprsMs(m_bts, GSM_RESERVED_TMSI);
 
 	ms->set_callback(this);
 	llist_add(&ms->list(), &m_list);

@@ -35,17 +35,17 @@ Modifying MS object, TLLI: 0xaa000000 confirmed
 The MS object cannot fully confirm an unexpected TLLI: 0xff001111, partly confirmed
 Modifying MS object, TLLI: 0xaa000000 -> 0xff001111, already confirmed partly
 Destroying MS object, TLLI = 0xff001111
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, UL TLLI: 0x00000000 -> 0xffeeddbb, not yet confirmed
+Creating MS object, TLLI = 0xffffffff
+Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddbb, not yet confirmed
 Modifying MS object, TLLI = 0xffeeddbb, IMSI '' -> '001001987654321'
-Creating MS object, TLLI = 0x00000000
-Modifying MS object, UL TLLI: 0x00000000 -> 0xffeeddbc, not yet confirmed
+Creating MS object, TLLI = 0xffffffff
+Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddbc, not yet confirmed
 Modifying MS object, TLLI = 0xffeeddbc, IMSI '' -> '001001987654322'
 Attaching TBF to MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
 Detaching TBF from MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
 Destroying MS object, TLLI = 0xffeeddbb
-Attaching TBF to MS object, TLLI = 0xffeeddbc, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
-Detaching TBF from MS object, TLLI = 0xffeeddbc, TBF = TBF(TFI=0 TLLI=0x00000000 DIR=UL STATE=NULL)
+Attaching TBF to MS object, TLLI = 0xffeeddbc, TBF = TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL)
+Detaching TBF from MS object, TLLI = 0xffeeddbc, TBF = TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL)
 Destroying MS object, TLLI = 0xffeeddbc
 Creating MS object, TLLI = 0xffeeddbb
 Attaching TBF to MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
