@@ -1460,7 +1460,7 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 
 	LOGP(DRLCMACDL, LOGL_DEBUG, "-- Chunk with length %d is less "
 		"than remaining space (%d): add length header to "
-		"to delimit LLC frame\n", chunk, space);
+		"delimit LLC frame\n", chunk, space);
 	/* the LLC frame chunk ends in this block */
 	/* make space for delimiter */
 	if (delimiter != data)
