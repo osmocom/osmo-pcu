@@ -105,7 +105,6 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "tbf:reused",			"TBF Reused           "},
 	{ "tbf:alloc:algo-a",		"TBF Alloc Algo A     "},
 	{ "tbf:alloc:algo-b",		"TBF Alloc Algo B     "},
-	{ "tbf:failed:egprs-only",	"TBF Failed EGPRS-only"},
 	{ "rlc:sent",			"RLC Sent             "},
 	{ "rlc:resent",			"RLC Resent           "},
 	{ "rlc:restarted",		"RLC Restarted        "},
