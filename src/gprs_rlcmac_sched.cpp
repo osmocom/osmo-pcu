@@ -273,7 +273,7 @@ static inline enum tbf_dl_prio tbf_compute_priority(const struct gprs_rlcmac_bts
 
 static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		    uint8_t trx, uint8_t ts, uint32_t fn,
-		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch)
+		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch, bool *is_egprs)
 {
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_dl_tbf *tbf, *prio_tbf = NULL;
@@ -324,6 +324,7 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		pdch->next_dl_tfi = (prio_tfi + 1) & 31;
 		/* generate DL data block */
 		msg = prio_tbf->create_dl_acked_block(fn, ts);
+		*is_egprs = prio_tbf->ms()->mode() != GPRS;
 	}
 
 	return msg;
@@ -362,9 +363,9 @@ static inline void tap_n_acc(const struct msgb *msg, const struct gprs_rlcmac_bt
 				      msg->len);
 		break;
 	case PCU_GSMTAP_C_DL_DATA_GPRS:
+	case PCU_GSMTAP_C_DL_DATA_EGPRS:
 		bts->bts->do_rate_ctr_inc(CTR_RLC_SENT);
-		/* FIXME: distinguish between GPRS and EGPRS */
-		bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_DATA_GPRS, false, trx, ts, GSMTAP_CHANNEL_PDTCH, fn, msg->data,
+		bts->bts->send_gsmtap(cat, false, trx, ts, GSMTAP_CHANNEL_PDTCH, fn, msg->data,
 				      msg->len);
 		break;
 	case PCU_GSMTAP_C_DL_DUMMY:
@@ -389,6 +390,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	struct msgb *msg = NULL;
 	uint32_t poll_fn, sba_fn;
 	enum pcu_gsmtap_category gsmtap_cat;
+	bool is_egprs = false;
 
 	if (trx >= 8 || ts >= 8)
 		return -EINVAL;
@@ -431,8 +433,8 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 
 	/* Prio 2: select data message for downlink */
 	if (!msg) {
-		msg = sched_select_downlink(bts, trx, ts, fn, block_nr, pdch);
-		gsmtap_cat = PCU_GSMTAP_C_DL_DATA_GPRS;
+		msg = sched_select_downlink(bts, trx, ts, fn, block_nr, pdch, &is_egprs);
+		gsmtap_cat = is_egprs ? PCU_GSMTAP_C_DL_DATA_EGPRS : PCU_GSMTAP_C_DL_DATA_GPRS;
 	}
 
 	/* Prio 3: send dummy contol message */
