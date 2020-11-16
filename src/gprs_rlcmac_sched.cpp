@@ -388,6 +388,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	uint8_t usf = 0x7;
 	struct msgb *msg = NULL;
 	uint32_t poll_fn, sba_fn;
+	enum pcu_gsmtap_category gsmtap_cat;
 
 	if (trx >= 8 || ts >= 8)
 		return -EINVAL;
@@ -426,19 +427,19 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	/* Prio 1: select control message */
 	msg = sched_select_ctrl_msg(trx, ts, fn, block_nr, pdch, ul_ass_tbf,
 		dl_ass_tbf, ul_ack_tbf);
-	tap_n_acc(msg, bts, trx, ts, fn, PCU_GSMTAP_C_DL_CTRL);
+	gsmtap_cat = PCU_GSMTAP_C_DL_CTRL;
 
 	/* Prio 2: select data message for downlink */
 	if (!msg) {
 		msg = sched_select_downlink(bts, trx, ts, fn, block_nr, pdch);
-		tap_n_acc(msg, bts, trx, ts, fn, PCU_GSMTAP_C_DL_DATA_GPRS);
+		gsmtap_cat = PCU_GSMTAP_C_DL_DATA_GPRS;
 	}
 
 	/* Prio 3: send dummy contol message */
 	if (!msg) {
 		/* increase counter */
 		msg = sched_dummy();
-		tap_n_acc(msg, bts, trx, ts, fn, PCU_GSMTAP_C_DL_DUMMY);
+		gsmtap_cat = PCU_GSMTAP_C_DL_DUMMY;
 	}
 
 	if (!msg)
@@ -452,6 +453,9 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 
 	/* Used to measure the leak rate, count all blocks */
 	gprs_bssgp_update_frames_sent();
+
+	/* Send to GSMTAP */
+	tap_n_acc(msg, bts, trx, ts, fn, gsmtap_cat);
 
 	/* send PDTCH/PACCH to L1 */
 	pcu_l1if_tx_pdtch(msg, trx, ts, bts->trx[trx].arfcn, fn, block_nr);
