@@ -40,6 +40,10 @@ extern "C" {
 #define PTCCH_TAI_NUM		16	/*!< Number of PTCCH/U slots and thus TA Indexes */
 #define PTCCH_PADDING		0x2b	/*!< PTCCH/D messages need to be padded to 23 octets */
 
+#define USF_UNUSED 0x07
+/* 3GPP TS 05.08 version 8.23.0 "10.2.2 BTS output power". 360 ms */
+#define MS_RESYNC_NUM_FRAMES 18
+
 /*
  * PDCH instance
  */
@@ -83,6 +87,8 @@ struct gprs_rlcmac_pdch {
 
 	uint8_t assigned_usf() const;
 	uint32_t assigned_tfi(enum gprs_rlcmac_tbf_direction dir) const;
+
+	bool has_gprs_only_tbf_attached() const;
 #endif
 
 	uint8_t m_is_enabled; /* TS is enabled */
@@ -92,6 +98,8 @@ struct gprs_rlcmac_pdch {
 	uint8_t next_ctrl_prio; /* next kind of ctrl message to schedule */
 	struct llist_head paging_list; /* list of paging messages */
 	uint32_t last_rts_fn; /* store last frame number of RTS */
+	/* store number of contiguous frame number where a DL block was transmitted which can be decoded by GPRS-only MS */
+	uint32_t fn_without_cs14;
 
 	/* PTCCH (Packet Timing Advance Control Channel) */
 	uint8_t ptcch_msg[GSM_MACBLOCK_LEN]; /* 'ready to use' PTCCH/D message */

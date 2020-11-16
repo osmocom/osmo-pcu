@@ -89,11 +89,10 @@ states? */
 	return poll_fn;
 }
 
-static uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
-	uint8_t block_nr, struct gprs_rlcmac_pdch *pdch)
+static struct gprs_rlcmac_ul_tbf *sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
+	uint8_t block_nr, struct gprs_rlcmac_pdch *pdch, bool require_gprs_only)
 {
-	struct gprs_rlcmac_ul_tbf *tbf;
-	uint8_t usf = 0x07;
+	struct gprs_rlcmac_ul_tbf *tbf = NULL;
 	uint8_t i, tfi;
 
 	/* select uplink resource */
@@ -110,18 +109,20 @@ static uint8_t sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 		if (tbf->state_is_not(GPRS_RLCMAC_FLOW))
 			continue;
 
+		if (require_gprs_only && tbf->is_egprs_enabled())
+			continue;
+
 		/* use this USF */
-		usf = tbf->m_usf[ts];
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling USF=%d for "
 			"required uplink resource of UL TFI=%d\n", trx, ts, fn,
-			block_nr, usf, tfi);
+			block_nr, tbf->m_usf[ts], tfi);
 		/* next TBF to handle resource is the next one */
 		pdch->next_ul_tfi = (tfi + 1) & 31;
 		break;
 	}
 
-	return usf;
+	return tbf;
 }
 
 struct msgb *sched_app_info(struct gprs_rlcmac_tbf *tbf) {
@@ -273,7 +274,7 @@ static inline enum tbf_dl_prio tbf_compute_priority(const struct gprs_rlcmac_bts
 
 static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		    uint8_t trx, uint8_t ts, uint32_t fn,
-		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch, bool *is_egprs)
+		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch, enum mcs_kind req_mcs_kind, bool *is_egprs)
 {
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_dl_tbf *tbf, *prio_tbf = NULL;
@@ -299,6 +300,13 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 
 		/* waiting for CCCH IMM.ASS confirm */
 		if (tbf->m_wait_confirm)
+			continue;
+
+		/* If a GPRS (CS1-4) Dl block is required, skip EGPRS(_GSMK) tbfs: */
+		if (req_mcs_kind == GPRS && tbf->is_egprs_enabled())
+			continue;
+		/* TODO: If a GPRS (CS1-4/MCS1-4) Dl block is required, downgrade MCS below instead of skipping */
+		if (req_mcs_kind == EGPRS_GMSK && (tbf->is_egprs_enabled() || tbf->ms()->mode() != GPRS))
 			continue;
 
 		age = tbf->frames_since_last_poll(fn);
@@ -385,12 +393,15 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_pdch *pdch;
 	struct gprs_rlcmac_tbf *poll_tbf = NULL, *dl_ass_tbf = NULL,
 		*ul_ass_tbf = NULL;
+	struct gprs_rlcmac_ul_tbf *usf_tbf;
 	struct gprs_rlcmac_ul_tbf *ul_ack_tbf = NULL;
-	uint8_t usf = 0x7;
+	uint8_t usf;
 	struct msgb *msg = NULL;
 	uint32_t poll_fn, sba_fn;
 	enum pcu_gsmtap_category gsmtap_cat;
-	bool is_egprs = false;
+	bool tx_is_egprs = false;
+	bool require_gprs_only;
+	enum mcs_kind req_mcs_kind; /* Restrict CS/MCS if DL Data block is to be sent */
 
 	if (trx >= 8 || ts >= 8)
 		return -EINVAL;
@@ -405,47 +416,79 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	/* store last frame number of RTS */
 	pdch->last_rts_fn = fn;
 
+	/* require_gprs_only: Prioritize USF for GPRS-only MS here,
+	 * since anyway we'll need to tx a Dl block with CS1-4 due to
+	 * synchronization requirements. See 3GPP TS 03.64 version
+	 * 8.12.0
+	 */
+	require_gprs_only = (pdch->fn_without_cs14 == MS_RESYNC_NUM_FRAMES - 1);
+	if (require_gprs_only) {
+		LOGP(DRLCMACSCHED, LOGL_DEBUG, "TRX=%d TS=%d FN=%d "
+		     "synchronization frame (every 18 frames), only CS1-4 allowed",
+		     trx, ts, fn);
+		req_mcs_kind = GPRS; /* only GPRS CS1-4 allowed, all MS need to be able to decode it */
+	} else {
+		req_mcs_kind = EGPRS; /* all kinds are fine */
+	}
+
 	poll_fn = sched_poll(bts->bts, trx, ts, fn, block_nr, &poll_tbf, &ul_ass_tbf,
 		&dl_ass_tbf, &ul_ack_tbf);
 	/* check uplink resource for polling */
-	if (poll_tbf)
+	if (poll_tbf) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling free USF for "
 			"polling at FN=%d of %s\n", trx, ts, fn,
 			block_nr, poll_fn,
 			tbf_name(poll_tbf));
-		/* use free USF */
+		usf = USF_UNUSED;
 	/* else. check for sba */
-	else if ((sba_fn = bts->bts->sba()->sched(trx, ts, fn, block_nr) != 0xffffffff))
+	} else if ((sba_fn = bts->bts->sba()->sched(trx, ts, fn, block_nr) != 0xffffffff)) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling free USF for "
 			"single block allocation at FN=%d\n", trx, ts, fn,
 			block_nr, sba_fn);
-		/* use free USF */
+		usf = USF_UNUSED;
 	/* else, we search for uplink resource */
-	else
-		usf = sched_select_uplink(trx, ts, fn, block_nr, pdch);
-
-	/* Prio 1: select control message */
-	msg = sched_select_ctrl_msg(trx, ts, fn, block_nr, pdch, ul_ass_tbf,
-		dl_ass_tbf, ul_ack_tbf);
-	gsmtap_cat = PCU_GSMTAP_C_DL_CTRL;
-
-	/* Prio 2: select data message for downlink */
-	if (!msg) {
-		msg = sched_select_downlink(bts, trx, ts, fn, block_nr, pdch, &is_egprs);
-		gsmtap_cat = is_egprs ? PCU_GSMTAP_C_DL_DATA_EGPRS : PCU_GSMTAP_C_DL_DATA_GPRS;
+	} else {
+		usf_tbf = sched_select_uplink(trx, ts, fn, block_nr, pdch, require_gprs_only);
+		if (usf_tbf) {
+			usf = usf_tbf->m_usf[ts];
+			/* If MS selected for USF is GPRS-only, then it will
+			 * only be able to read USF if dl block uses GMSK
+			 * (CS1-4, MCS1-4)
+			 */
+			if (req_mcs_kind == EGPRS && usf_tbf->ms()->mode() != EGPRS)
+				req_mcs_kind = EGPRS_GMSK;
+		} else {
+			usf = USF_UNUSED;
+		}
 	}
 
+	/* Prio 1: select control message */
+	if ((msg = sched_select_ctrl_msg(trx, ts, fn, block_nr, pdch, ul_ass_tbf,
+					 dl_ass_tbf, ul_ack_tbf))) {
+			gsmtap_cat = PCU_GSMTAP_C_DL_CTRL;
+	}
+	/* Prio 2: select data message for downlink */
+	else if((msg = sched_select_downlink(bts, trx, ts, fn, block_nr, pdch, req_mcs_kind, &tx_is_egprs))) {
+		gsmtap_cat = tx_is_egprs ? PCU_GSMTAP_C_DL_DATA_EGPRS :
+					   PCU_GSMTAP_C_DL_DATA_GPRS;
+	}
 	/* Prio 3: send dummy contol message */
-	if (!msg) {
+	else if ((msg = sched_dummy())) {
 		/* increase counter */
 		msg = sched_dummy();
 		gsmtap_cat = PCU_GSMTAP_C_DL_DUMMY;
+	} else {
+		return -ENOMEM;
 	}
 
-	if (!msg)
-		return -ENOMEM;
+	if (tx_is_egprs && pdch->has_gprs_only_tbf_attached()) {
+		pdch->fn_without_cs14 += 1;
+	} else {
+		pdch->fn_without_cs14 = 0;
+	}
+
 	/* msg is now available */
 	bts->bts->do_rate_ctr_add(CTR_RLC_DL_BYTES, msg->data_len);
 

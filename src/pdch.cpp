@@ -944,6 +944,22 @@ void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
 		m_assigned_usf, m_assigned_tfi[tbf->direction]);
 }
 
+bool gprs_rlcmac_pdch::has_gprs_only_tbf_attached() const
+{
+	unsigned int i;
+	unsigned int j;
+	for (i = 0; i < sizeof(m_assigned_tfi[0]); i++) {
+		for (j = 0; j < 2; j++) {
+			if (m_assigned_tfi[j] & (1UL << i)) {
+				gprs_rlcmac_tbf *tbf = m_tbfs[j][i];
+				if (!tbf->is_egprs_enabled())
+					return true;
+			}
+		}
+	}
+	return false;
+}
+
 void gprs_rlcmac_pdch::reserve(enum gprs_rlcmac_tbf_direction dir)
 {
 	m_num_reserved[dir] += 1;
