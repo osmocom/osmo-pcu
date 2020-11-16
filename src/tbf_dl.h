@@ -54,7 +54,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 
 	int rcvd_dl_ack(bool final, uint8_t ssn, uint8_t *rbb);
 	int rcvd_dl_ack(bool final_ack, unsigned first_bsn, struct bitvec *rbb);
-	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts);
+	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts, enum mcs_kind req_mcs_kind = EGPRS);
 	void trigger_ass(struct gprs_rlcmac_tbf *old_tbf);
 
 	bool handle_ack_nack();
@@ -106,8 +106,8 @@ protected:
 		unsigned lost_bytes;
 	};
 
-	int take_next_bsn(uint32_t fn, int previous_bsn,
-		bool *may_combine);
+	int take_next_bsn(uint32_t fn, int previous_bsn, enum mcs_kind req_mcs_kind,
+			  bool *may_combine);
 	bool restart_bsn_cycle();
 	int create_new_bsn(const uint32_t fn, enum CodingScheme cs);
 	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,

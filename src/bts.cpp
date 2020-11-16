@@ -1123,6 +1123,17 @@ void BTS::set_max_mcs_ul(uint8_t mcs_ul)
 	m_max_mcs_ul = mcs_ul;
 }
 
+bool BTS::cs_dl_is_supported(CodingScheme cs)
+{
+	OSMO_ASSERT(mcs_is_valid(cs));
+	uint8_t num = mcs_chan_code(cs);
+	if (mcs_is_gprs(cs)) {
+		return (max_cs_dl() >= num) && (m_bts.cs_mask & (1U << num));
+	} else {
+		return (max_mcs_dl() >= num) && (m_bts.mcs_mask & (1U << num));
+	}
+}
+
 GprsMs *BTS::ms_alloc(uint8_t ms_class, uint8_t egprs_ms_class)
 {
 	GprsMs *ms;

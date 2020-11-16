@@ -305,9 +305,6 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		/* If a GPRS (CS1-4) Dl block is required, skip EGPRS(_GSMK) tbfs: */
 		if (req_mcs_kind == GPRS && tbf->is_egprs_enabled())
 			continue;
-		/* TODO: If a GPRS (CS1-4/MCS1-4) Dl block is required, downgrade MCS below instead of skipping */
-		if (req_mcs_kind == EGPRS_GMSK && (tbf->is_egprs_enabled() || tbf->ms()->mode() != GPRS))
-			continue;
 
 		age = tbf->frames_since_last_poll(fn);
 
@@ -315,6 +312,15 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		prio = tbf_compute_priority(bts, tbf, ts, fn, age);
 		if (prio == DL_PRIO_NONE)
 			continue;
+
+		/* If a GPRS (CS1-4/MCS1-4) Dl block is required, downgrade MCS
+		 * below instead of skipping. However, downgrade can only be
+		 * done on new data BSNs (not yet sent) and control blocks. */
+		if (req_mcs_kind == EGPRS_GMSK && tbf->is_egprs_enabled() &&
+		    (prio !=DL_PRIO_CONTROL && prio != DL_PRIO_NEW_DATA)) {
+			LOGP(DRLCMACSCHED, LOGL_DEBUG, "Cannot downgrade EGPRS TBF with prio %d\n", prio);
+			continue;
+		}
 
 		/* get the TBF with the highest priority */
 		if (prio > max_prio) {
@@ -326,12 +332,12 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 
 	if (prio_tbf) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling data message at "
-			"RTS for DL TFI=%d (TRX=%d, TS=%d) prio=%d\n",
-			prio_tfi, trx, ts, max_prio);
+			"RTS for DL TFI=%d (TRX=%d, TS=%d) prio=%d mcs_mode_restrict=%s\n",
+			prio_tfi, trx, ts, max_prio, mode_name(req_mcs_kind));
 		/* next TBF to handle resource is the next one */
 		pdch->next_dl_tfi = (prio_tfi + 1) & 31;
 		/* generate DL data block */
-		msg = prio_tbf->create_dl_acked_block(fn, ts);
+		msg = prio_tbf->create_dl_acked_block(fn, ts, req_mcs_kind);
 		*is_egprs = prio_tbf->ms()->mode() != GPRS;
 	}
 

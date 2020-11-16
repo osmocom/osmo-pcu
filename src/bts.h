@@ -339,6 +339,7 @@ public:
 	void set_max_cs_ul(uint8_t cs_ul);
 	void set_max_mcs_dl(uint8_t mcs_dl);
 	void set_max_mcs_ul(uint8_t mcs_ul);
+	bool cs_dl_is_supported(CodingScheme cs);
 
 	GprsMsStorage &ms_store();
 	GprsMs *ms_by_tlli(uint32_t tlli, uint32_t old_tlli = GSM_RESERVED_TMSI);
