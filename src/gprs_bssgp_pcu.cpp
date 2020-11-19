@@ -979,7 +979,8 @@ static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
 
 	bts->nse = gprs_ns2_nse_by_nsei(bts->nsi, nsei);
 	if (!bts->nse)
-		bts->nse = gprs_ns2_create_nse(bts->nsi, nsei);
+		bts->nse = gprs_ns2_create_nse(bts->nsi, nsei,
+					       GPRS_NS2_LL_UDP);
 
 	if (!bts->nse) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSE\n");
