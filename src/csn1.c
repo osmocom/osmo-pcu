@@ -1216,7 +1216,6 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
 
           while (count > 0)
           {
-            readIndex -= 8;
 	    *pui8 = bitvec_read_field(vector, readIndex, 8);
             LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
             pui8++;

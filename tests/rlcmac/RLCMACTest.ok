@@ -80,6 +80,14 @@ vector1 = 41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b
 vector1 = 41 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 vector2 = 41 94 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 vector1 == vector2 : TRUE
+vector1 = 40883c1493120000000012002b2b2b2b2b2b2b2b2b2b2b
+=========Start DECODE===========
++++++++++Finish DECODE (0)++++++++++
+=========Start ENCODE=============
++++++++++Finish ENCODE (0)+++++++++++
+vector1 = 40 88 3c 14 93 12 00 00 00 00 12 00 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+vector2 = 40 88 3c 14 93 12 00 00 00 00 12 01 95 95 95 95 95 95 95 95 95 95 95 
+vector1 == vector2 : FALSE
 *** testRlcMacUplink ***
  UPLINK 
 vector1 = 400e1e61d11d2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b

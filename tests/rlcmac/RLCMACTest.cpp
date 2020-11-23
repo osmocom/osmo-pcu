@@ -110,6 +110,7 @@ void testRlcMacDownlink(void *test_ctx)
 	"4913e00850884013a8048b2b2b2b2b2b2b2b2b2b2b2b2b", // Polling Request (malformed)
 	"412430007fffffffffffffffefd19c7ba12b2b2b2b2b2b", // Packet Uplink Ack Nack?
 	"41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // System Info 13?
+	"40883c1493120000000012002b2b2b2b2b2b2b2b2b2b2b", // Pkt Paging Request (OS#4838)
 	};
 
 	int testDataSize = sizeof(testData)/sizeof(testData[0]);
