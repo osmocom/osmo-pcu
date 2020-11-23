@@ -251,7 +251,8 @@ continue_next:
 	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Paging Request +++++++++++++++++++++++++\n");
 	rc = decode_gsm_rlcmac_downlink(pag_vec, mac_control_block);
 	if (rc < 0) {
-		LOGP(DRLCMAC, LOGL_ERROR, "Decoding of Downlink Packet Paging Request failed (%d)\n", rc);
+		LOGP(DRLCMAC, LOGL_ERROR, "Decoding of Downlink Packet Paging Request failed (%d): %s\n",
+		     rc, osmo_hexdump(msgb_data(msg), msgb_length(msg)));
 		goto free_ret;
 	}
 	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Paging Request -------------------------\n");
