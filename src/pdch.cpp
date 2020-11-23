@@ -235,7 +235,7 @@ struct msgb *gprs_rlcmac_pdch::packet_paging_request()
 			LOGP(DRLCMAC, LOGL_DEBUG, "- Does not fit, so schedule "
 				"next time\n");
 			/* put back paging record, because does not fit */
-			llist_add_tail(&pag->list, &paging_list);
+			llist_add(&pag->list, &paging_list);
 			break;
 		}
 		Encoding::write_repeated_page_info(pag_vec, wp, pag->identity_lv[0],
