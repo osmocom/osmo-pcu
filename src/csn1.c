@@ -1217,7 +1217,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           while (count > 0)
           {
 	    *pui8 = bitvec_read_field(vector, readIndex, 8);
-            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = 0x%x | ", pDescr->sz , (unsigned)*pui8);
             pui8++;
             bit_offset += 8;
             count--;
@@ -2508,7 +2508,7 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
           while (count > 0)
           {
 	    bitvec_write_field(vector, writeIndex, *pui8, 8);
-            LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+            LOGPC(DCSN1, LOGL_DEBUG, "%s = 0x%x | ", pDescr->sz , (unsigned)*pui8);
             pui8++;
             bit_offset += 8;
             remaining_bits_len -= 8;
