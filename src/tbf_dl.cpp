@@ -694,9 +694,33 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 		int payload_written = 0;
 
 		if (m_llc.frame_length() == 0) {
-			/* nothing to sent - delay the release of the TBF */
+			/* It is not clear, when the next real data will
+			 * arrive, so request a DL ack/nack now */
+			request_dl_ack();
 
 			int space = block_data_len - write_offset;
+
+			if (num_chunks != 0) {
+				/* Nothing to send, and we already put some data in
+				 * rlcmac data block, we are done */
+				LOGPTBFDL(this, LOGL_DEBUG,
+					  "LLC queue completely drained and there's "
+					  "still %d free bytes in rlcmac data block\n", space);
+				if (mcs_is_edge(cs)) {
+					/* in EGPRS there's no M bit, so we need
+					 * to flag padding with LI=127 */
+					Encoding::rlc_data_to_dl_append_egprs_li_padding(rdbi,
+											 &write_offset,
+											 &num_chunks,
+											 data);
+				}
+				break;
+			}
+
+			/* Nothing to send from upper layers (LLC), but still
+			 * requested to send something to MS to delay the
+			 * release of the TBF. See 3GPP TS 44.060 9.3.1a
+			 * "Delayed release of downlink Temporary Block Flow" */
 			/* A header will need to by added, so we just need
 			 * space-1 octets */
 			m_llc.put_dummy_frame(space - 1);
@@ -704,10 +728,6 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 			/* The data just drained, store the current fn */
 			if (m_last_dl_drained_fn < 0)
 				m_last_dl_drained_fn = fn;
-
-			/* It is not clear, when the next real data will
-			 * arrive, so request a DL ack/nack now */
-			request_dl_ack();
 
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Empty chunk, added LLC dummy command of size %d, drained_since=%d\n",

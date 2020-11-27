@@ -1397,9 +1397,10 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 			"larger than space (%d) left in block: copy "
 			"only remaining space, and we are done\n",
 			chunk, space);
-		/* block is filled, so there is no extension */
-		if (e_pointer)
-			*e_pointer |= 0x01;
+		if (e_pointer) {
+			/* LLC frame not finished, so there is no extension octet */
+			*e_pointer |= 0x02; /* set previous M bit = 1 */
+		}
 		/* fill only space */
 		llc->consume(data, space);
 		if (count_payload)
@@ -1438,6 +1439,10 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 		if (delimiter != data)
 			memmove(delimiter + 1, delimiter,
 				data - delimiter);
+		if (e_pointer) {
+			*e_pointer &= 0xfe; /* set previous E bit = 0 */
+			*e_pointer |= 0x02; /* set previous M bit = 1 */
+		}
 		data++;
 		(*offset)++;
 		space--;
@@ -1465,12 +1470,16 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 	/* make space for delimiter */
 	if (delimiter != data)
 		memmove(delimiter + 1, delimiter, data - delimiter);
+	if (e_pointer) {
+		*e_pointer &= 0xfe; /* set previous E bit = 0 */
+		*e_pointer |= 0x02; /* set previous M bit = 1 */
+	}
 	data++;
 	(*offset)++;
 	space--;
 	/* add LI to delimit frame */
 	li = (struct rlc_li_field *)delimiter;
-	li->e = 0; /* Extension bit, maybe set later */
+	li->e = 1; /*  not more extension, maybe set later */
 	li->m = 0; /* will be set later, if there is more LLC data */
 	li->li = chunk; /* length of chunk */
 	rdbi->e = 0; /* 0: extensions present */
@@ -1483,22 +1492,19 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 	space -= chunk;
 	(*offset) += chunk;
 	/* if we have more data and we have space left */
-	if (space > 0 && !is_final) {
-		li->m = 1; /* we indicate more frames to follow */
+	if (space > 0 && !is_final)
 		return Encoding::AR_COMPLETED_SPACE_LEFT;
-	}
+
 	/* if we don't have more LLC frames */
 	if (is_final) {
 		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
 			"done.\n");
-		li->e = 1; /* we cannot extend */
 		rdbi->cv = 0;
 		return Encoding::AR_COMPLETED_BLOCK_FILLED;
 	}
 	/* we have no space left */
 	LOGP(DRLCMACDL, LOGL_DEBUG, "-- No space left, so we are "
 		"done.\n");
-	li->e = 1; /* we cannot extend */
 	return Encoding::AR_COMPLETED_BLOCK_FILLED;
 }
 
@@ -1594,7 +1600,7 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 	space     -= 1;
 	/* add LI to delimit frame */
 	li = (struct rlc_li_field_egprs *)delimiter;
-	li->e = 1; /* Extension bit, maybe set later */
+	li->e = 1; /* not more extension, maybe set later */
 	li->li = chunk; /* length of chunk */
 	/* tell previous extension header about the new one */
 	if (prev_li)
@@ -1611,56 +1617,26 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 	space -= chunk;
 	(*offset) += chunk;
 	/* if we have more data and we have space left */
-	if (space > 0) {
-		if (!is_final)
+	if (!is_final) {
+		if (space > 0) {
 			return Encoding::AR_COMPLETED_SPACE_LEFT;
-
+		} else {
+			/* we have no space left */
+			LOGP(DRLCMACDL, LOGL_DEBUG, "-- No space left, so we are "
+				"done.\n");
+			return Encoding::AR_COMPLETED_BLOCK_FILLED;
+		}
+	} else {
 		/* we don't have more LLC frames */
-		/* We will have to add another chunk with filling octets */
-		LOGP(DRLCMACDL, LOGL_DEBUG,
-			"-- There is remaining space (%d): add filling byte chunk\n",
-			space);
-
-		if (delimiter != data)
-			memmove(delimiter + 1, delimiter, data - delimiter);
-
-		data      += 1;
-		(*offset) += 1;
-		space     -= 1;
-
-		/* set filling bytes extension */
-		li = (struct rlc_li_field_egprs *)delimiter;
-		li->e = 1;
-		li->li = 127;
-
-		/* tell previous extension header about the new one */
-		if (prev_li)
-			prev_li->e = 0;
-
-		delimiter++;
-		(*num_chunks)++;
-
+		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we are done.\n");
 		rdbi->cv = 0;
-
-		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
-			"are done.\n");
-
-		*offset = rdbi->data_len;
+		if (space > 0)
+			Encoding::rlc_data_to_dl_append_egprs_li_padding(rdbi,
+									 offset,
+									 num_chunks,
+									 data_block);
 		return Encoding::AR_COMPLETED_BLOCK_FILLED;
 	}
-
-	if (is_final) {
-		/* we don't have more LLC frames */
-		LOGP(DRLCMACDL, LOGL_DEBUG, "-- Final block, so we "
-			"are done.\n");
-		rdbi->cv = 0;
-		return Encoding::AR_COMPLETED_BLOCK_FILLED;
-	}
-
-	/* we have no space left */
-	LOGP(DRLCMACDL, LOGL_DEBUG, "-- No space left, so we are "
-		"done.\n");
-	return Encoding::AR_COMPLETED_BLOCK_FILLED;
 }
 
 /*!
@@ -1695,6 +1671,39 @@ Encoding::AppendResult Encoding::rlc_data_to_dl_append(
 	OSMO_ASSERT(mcs_is_valid(cs));
 
 	return AR_NEED_MORE_BLOCKS;
+}
+
+void Encoding::rlc_data_to_dl_append_egprs_li_padding(
+	const struct gprs_rlc_data_block_info *rdbi,
+	int *offset, int *num_chunks, uint8_t *data_block)
+{
+	struct rlc_li_field_egprs *li;
+	struct rlc_li_field_egprs *prev_li;
+	uint8_t *delimiter, *data;
+
+	LOGP(DRLCMACDL, LOGL_DEBUG, "Adding LI=127 to signal padding\n");
+
+	data = data_block + *offset;
+	delimiter = data_block + *num_chunks;
+	prev_li = (struct rlc_li_field_egprs *)(*num_chunks ? delimiter - 1 : NULL);
+
+	/* we don't have more LLC frames */
+	/* We will have to add another chunk with filling octets */
+
+	if (delimiter != data)
+		memmove(delimiter + 1, delimiter, data - delimiter);
+
+	/* set filling bytes extension */
+	li = (struct rlc_li_field_egprs *)delimiter;
+	li->e = 1;
+	li->li = 127;
+
+	/* tell previous extension header about the new one */
+	if (prev_li)
+		prev_li->e = 0;
+
+	(*num_chunks)++;
+	*offset = rdbi->data_len;
 }
 
 /*

@@ -104,4 +104,7 @@ public:
 		struct gprs_rlc_data_block_info *rdbi, enum CodingScheme cs,
 		gprs_llc *llc, int *offset, int *num_chunks,
 		uint8_t *data, bool is_final, int *count_payload);
+	static void rlc_data_to_dl_append_egprs_li_padding(
+		const struct gprs_rlc_data_block_info *rdbi,
+		int *offset, int *num_chunks, uint8_t *data_block);
 };
