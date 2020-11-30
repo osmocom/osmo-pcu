@@ -363,8 +363,8 @@ int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 		LOGPTBF(tbf, LOGL_INFO, "Setting Control TS %d\n",
 			tbf->first_common_ts);
 	else if (tbf->control_ts != tbf->first_common_ts)
-		LOGPTBF(tbf, LOGL_INFO, "Changing Control TS %d\n",
-			tbf->first_common_ts);
+		LOGPTBF(tbf, LOGL_INFO, "Changing Control TS %d -> %d\n",
+			tbf->control_ts, tbf->first_common_ts);
 	tbf->control_ts = tbf->first_common_ts;
 
 	return 0;
