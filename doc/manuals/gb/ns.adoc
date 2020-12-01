@@ -7,8 +7,8 @@ level of compliance with 3GPP TS 48.016.
 
 ==== Messages Compliant With 3GPP TS 48.016
 
-The NS protocol is implemented inside libosmocore so none of the messages below are sent by OsmoPCU explicitly.
-Instead corresponding functions from libosmocore are called which send and receive messages as necessary. See <<ns_init>> for details
+The NS protocol is implemented inside libosmogb so none of the messages below are sent by OsmoPCU explicitly.
+Instead corresponding functions from libosmogb are called which send and receive messages as necessary. See <<ns_init>> for details
 on establishing NS connection.
 
 .Messages compliant with 3GPP TS 48.016
