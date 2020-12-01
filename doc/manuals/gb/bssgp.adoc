@@ -4,14 +4,14 @@
 === List of Messages
 
 The following tables list the BSSGP messages used by OsmoPCU, grouped
-by their level of compliance with 3GPP TS 08.18.
+by their level of compliance with 3GPP TS 48.018.
 
-==== Messages Compliant With TS 08.18
+==== Messages Compliant With TS 48.018
 
-.Messages compliant with TS 08.18
+.Messages compliant with TS 48.018
 [options="header",cols="10%,10%,20%,35%,5%,20%"]
 |===
-| TS 08.18 § | type code (hex) | This document § | Message | <-/-> | Received/Sent by OsmoPCU
+| TS 48.018 § | type code (hex) | This document § | Message | <-/-> | Received/Sent by OsmoPCU
 6+<| *RL and BSSGP SAP Messages:*
 | 10.2.1 | 0x00 | <<dl_unit_data>> | DL-UNITDATA | <- | Received
 | 10.2.2 | 0x01 | <<ul_unit_data>> | UL-UNITDATA | -> | Sent
@@ -44,10 +44,10 @@ There are no OsmoPCU specific BSSGP messages.
 [[not_impl]]
 ==== Messages Not Implemented by OsmoPCU
 
-.3GPP TS 08.18 messages not implemented by OsmoPCU
+.3GPP TS 48.018 messages not implemented by OsmoPCU
 [options="header",cols="10%,10%,80%"]
 |===
-| TS 08.18 § | type code (hex) | Message
+| TS 48.018 § | type code (hex) | Message
 3+<| *RL (relay) and BSSGP SAP Messages:*
 | 10.2.4 | 0x03 | PTM-UNITDATA
 3+<| *GMM (GPRS mobility management) SAP Messages:*
@@ -78,7 +78,7 @@ There are no OsmoPCU specific BSSGP messages.
 [[dl_unit_data]]
 ==== DL-UNITDATA
 
-This message conforms to 3GPP TS 08.18 § 10.2.1, with the following
+This message conforms to 3GPP TS 48.018 § 10.2.1, with the following
 limitations:
 
 * OsmoPCU does not support QoS
@@ -87,7 +87,7 @@ limitations:
 ._DL-UNITDATA_ IE limitations
 [options="header",cols="10%,30%,60%"]
 |===
-| TS 08.18 § | IE Name | Handling
+| TS 48.018 § | IE Name | Handling
 | 11.3.28 | QoS Profile | _ignored_
 | 11.3.22 | MS Radio Access Capability | _ignored_
 | 11.3.27 | Priority | _ignored_
@@ -100,7 +100,7 @@ limitations:
 [[ul_unit_data]]
 ==== UL-UNITDATA
 
-This message conforms to 3GPP TS 08.18 § 10.2.2, with the following limitations:
+This message conforms to 3GPP TS 48.018 § 10.2.2, with the following limitations:
 
 * OsmoPCU does not send optional IEs - PFI (§ 12.3.42) and LSA
   Identifier List (§ 11.3.18).
@@ -114,7 +114,7 @@ This message is received and logged but ignored by OsmoPCU at the moment.
 [[paging_ps]]
 ==== PAGING PS
 
-This message conforms to 3GPP TS 08.18 § 10.3.1, with the following
+This message conforms to 3GPP TS 48.018 § 10.3.1, with the following
 limitations:
 
 * only IMSI and P-TMSI are parsed by OsmoPCU.
@@ -122,7 +122,7 @@ limitations:
 ._DL-UNITDATA_ IE limitations
 [options="header",cols="10%,30%,60%"]
 |===
-| TS 08.18 § | IE Name | Handling
+| TS 48.018 § | IE Name | Handling
 | 11.3.11 | DRX Parameters | _ignored_
 | 11.3.6 | BVCI | _ignored_
 | 11.3.17 | Location Are | _ignored_
@@ -174,7 +174,7 @@ moment.
 [[bvc_reset]]
 ==== BVC-RESET
 
-OsmoPCU never transmits optional Feature bitmap (3GPP TS 08.18 §
+OsmoPCU never transmits optional Feature bitmap (3GPP TS 48.018 §
 11.3.40) IE.
 
 Receiving BVC RESET will cause OsmoPCU to respond with "Unknown BVCI"
@@ -183,24 +183,24 @@ status message.
 [[reset_ack]]
 ==== BVC-RESET-ACK
 
-This message conforms to 3GPP TS 08.18 § 10.4.13.
+This message conforms to 3GPP TS 48.018 § 10.4.13.
 
 After receiving it OsmoPCU completes the RESET procedure for BVC
-according to 3GPP TS 08.18 § 8.4.
+according to 3GPP TS 48.018 § 8.4.
 
 [[unblock_ack]]
 ==== BVC-UNBLOCK-ACK
 
-This message conforms to 3GPP TS 08.18 § 10.4.11.
+This message conforms to 3GPP TS 48.018 § 10.4.11.
 
 After receiving it OsmoPCU completes the RESET procedure for BVC
-according to 3GPP TS 08.18 § 8.3.
+according to 3GPP TS 48.018 § 8.3.
 
 [[bvc_unblock]]
 ==== BVC-UNBLOCK
 
-This message conforms to 3GPP TS 08.18 § 10.4.10 and is send by
-OsmoPCU as part of UNBLOCK procedure described in 3GPP TS 08.18 § 8.3.
+This message conforms to 3GPP TS 48.018 § 10.4.10 and is send by
+OsmoPCU as part of UNBLOCK procedure described in 3GPP TS 48.018 § 8.3.
 
 [[flow_ms_ack]]
 ==== FLOW-CONTROL-MS-ACK
@@ -217,11 +217,11 @@ moment.
 [[flow_bvc]]
 ==== FLOW-CONTROL-BVC
 
-This message conforms to 3GPP TS 08.18 § 10.4.4, with the following
+This message conforms to 3GPP TS 48.018 § 10.4.4, with the following
 limitations:
 
 * OsmoPCU does not support Current Bucket Level (CBL) feature so
-  Bucket_Full Ratio (TS 08.18 § 11.3.46) IE is not transmitted as part
+  Bucket_Full Ratio (TS 48.018 § 11.3.46) IE is not transmitted as part
   of this message.
 
 [[flush_ll]]
@@ -239,22 +239,22 @@ moment.
 [[bssgp_status]]
 ==== STATUS
 
-This message conforms to 3GPP TS 08.18 § 10.4.14.
+This message conforms to 3GPP TS 48.018 § 10.4.14.
 
 === Information Elements Overview
 
 All of the IEs handled by OsmoPCU are listed below, with limitations
-and additions to 3GPP TS 08.18 specified in more detail.
+and additions to 3GPP TS 48.018 specified in more detail.
 
-==== IEs Conforming to 3GPP TS 08.18
+==== IEs Conforming to 3GPP TS 48.018
 
 The following Information Elements are accepted by OsmoPCU. Not all
 IEs are actually evaluated.
 
-.IEs conforming to 3GPP TS 08.18
+.IEs conforming to 3GPP TS 48.018
 [options="header",cols="5%,10%,40%,5%,40%"]
 |===
-| tag (hex) | TS 08.18 § | IE name | <-/-> | Received/Sent by OsmoPCU
+| tag (hex) | TS 48.018 § | IE name | <-/-> | Received/Sent by OsmoPCU
 | 0x00 | 11.3.1 | Alignment Octets | <-/-> | Received/Sent
 | 0x01 | 11.3.2 | Bmax default MS | -> | Sent
 | 0x02 | 11.3.3 | BSS Area Indication | <- | Received
@@ -301,12 +301,12 @@ IEs are actually evaluated.
 | 0x3d | 11.3.47 | Service UTRAN CCO (Cell Change Order) | <- | Received
 |===
 
-==== IEs Not Conforming to 3GPP TS 08.18
+==== IEs Not Conforming to 3GPP TS 48.018
 
-.IEs not conforming to 3GPP TS 08.18
+.IEs not conforming to 3GPP TS 48.018
 [options="header",cols="5%,10%,30%,55%"]
 |===
-| tag (hex) | TS 08.18 § | IE name | Description
+| tag (hex) | TS 48.018 § | IE name | Description
 | 0x18 | 11.3.28 | QoS Profile | Received value is ignored. Sent value is hard-coded to 0x4 (3 octets).
 |===
 
@@ -417,7 +417,7 @@ implemented by OsmoPCU - see for <<not_impl>> details.
 ==== Tag
 
 This IE currently only used by OsmoPCU for Flow Control procedure (TS
-08.18 § 8.2). In other cases it's either ignored or unavailable.
+48.018 § 8.2). In other cases it's either ignored or unavailable.
 
 ==== Trace Reference
 
@@ -494,8 +494,8 @@ in turn receives it from OsmoBSC or OsmoNITB via OML procedures.
 
 In addition to the BVCI identifying the OsmoPCU side of BSSGP
 connection, there is also special BVCI which is accepted by OsmoPCU in
-accordance with 3GPP TS 08.18 § 5.4.1: BVCI = 0 represents signaling data
+accordance with 3GPP TS 48.018 § 5.4.1: BVCI = 0 represents signaling data
 between SGSN and PCU in contrast to PTP (Peer-To-Peer) user's data.
 
 The mapping between BSSGP PDUs and signaling or PTP BVCIs is available
-in 3GPP TS 08.18 Table 5.4.
+in 3GPP TS 48.018 Table 5.4.

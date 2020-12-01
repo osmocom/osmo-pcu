@@ -7,7 +7,7 @@ Harald Welte <hwelte@sysmocom.de>
 == Introduction
 
 This document describes the Gb interface of *OsmoPCU*. Based on 3GPP TS
-08.16 and 08.18, this document indicates which of the 3GPP specified Gb
+48.016 and 48.018, this document indicates which of the 3GPP specified Gb
 messages and IEs are implemented according to 3GPP specifications, which of
 these are not or not fully implemented, as well as OsmoPCU-specific extensions
 to the Gb interface not specified by 3GPP.
@@ -23,8 +23,8 @@ document. For details on the messages and IEs that comply with above-mentioned
 |3GPP TS 08.58 | version 8.6.0 Release 1999
 |3GPP TS 08.60 | version 8.2.1 Release 1999
 |3GPP TS 12.21 | version 8.0.0 Release 1999
-|3GPP TS 08.16 | version 8.0.1 Release 1999
-|3GPP TS 08.18 | version 8.12.0 Release 1999
+|3GPP TS 48.016 | version 15.0.0 Release 15
+|3GPP TS 48.018 | version 15.0.0 Release 15
 |===
 
 .IETF documents referred to by his document
@@ -74,8 +74,8 @@ NSVCI:: NS Virtual Connection Identifier
 BVCI:: BSSGP Virtual Connection Identifier
 
 For an explanation of those identifiers and their use in the NS and
-BSSGP protocols, please see the relevant 3GPP specifications for NS (TS 08.16)
-and BSSGP (TS 08.18).
+BSSGP protocols, please see the relevant 3GPP specifications for NS (TS 48.016)
+and BSSGP (TS 48.018).
 
 In most cases, all above identities belong to different namespaces and
 must be unique within their respective namespace and within the SGSN
