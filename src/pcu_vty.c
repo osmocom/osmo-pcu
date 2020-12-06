@@ -246,7 +246,7 @@ static int config_write_pcu(struct vty *vty)
 		}
 	}
 
-	if (bts->gb_dialect_sns)
+	if (bts->ns_dialect == NS2_DIALECT_SNS)
 		vty_out(vty, " gb-dialect ip-sns%s", VTY_NEWLINE);
 	else
 		vty_out(vty, " gb-dialect classic%s", VTY_NEWLINE);
@@ -1131,11 +1131,9 @@ DEFUN_USRATTR(cfg_pcu_gb_dialect,
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 
 	if (!strcmp(argv[0], "ip-sns")) {
-		bts->gb_dialect_sns = true;
-		gprs_ns2_vty_force_vc_mode(true, NS2_VC_MODE_ALIVE, "gb-dialect is ip-sns");
+		bts->ns_dialect = NS2_DIALECT_SNS;
 	} else {
-		bts->gb_dialect_sns = false;
-		gprs_ns2_vty_force_vc_mode(false, 0, NULL);
+		bts->ns_dialect = NS2_DIALECT_IPACCESS;
 	}
 
 	return CMD_SUCCESS;

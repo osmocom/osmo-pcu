@@ -23,17 +23,23 @@
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/rate_ctr.h>
 #include <osmocom/core/stat_item.h>
 #include <osmocom/core/tdef.h>
+#include <osmocom/gprs/gprs_ns2.h>
 #include <osmocom/gsm/l1sap.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
 #include <osmocom/gsm/gsm48.h>
 #include "mslot_class.h"
 #include "gsm_rlcmac.h"
+#ifdef __cplusplus
 }
+#endif
 
+#ifdef __cplusplus
 #include "poll_controller.h"
 #include "sba.h"
 #include "tbf.h"
@@ -170,7 +176,7 @@ struct gprs_rlcmac_bts {
 	char *pcu_sock_path;
 
 	/* Are we talking Gb with IP-SNS (true) or classic Gb? */
-	bool gb_dialect_sns;
+	enum gprs_ns2_dialect ns_dialect;
 
 	/* Packet Application Information (3GPP TS 44.060 11.2.47, usually ETWS primary message). We don't need to store
 	 * more than one message, because they get sent so rarely. */

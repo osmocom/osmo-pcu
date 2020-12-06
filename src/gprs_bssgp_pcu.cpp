@@ -984,7 +984,7 @@ static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
 	bts->nse = gprs_ns2_nse_by_nsei(bts->nsi, nsei);
 	if (!bts->nse)
 		bts->nse = gprs_ns2_create_nse(bts->nsi, nsei,
-					       GPRS_NS2_LL_UDP);
+					       GPRS_NS2_LL_UDP, bts->ns_dialect);
 
 	if (!bts->nse) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSE\n");
@@ -997,7 +997,7 @@ static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
 			continue;
 
 		/* FIXME: for SNS we just use the first successful NS-VC instead of all for the initial connect */
-		if (bts->gb_dialect_sns) {
+		if (bts->ns_dialect == NS2_DIALECT_SNS) {
 			rc = gprs_ns2_ip_connect_sns(bind[i], &remote[i], nsei);
 			if (!rc)
 				return rc;
@@ -1066,7 +1066,7 @@ int gprs_ns_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
 		gprs_ns2_free_nses(bts->nsi);
 		gprs_ns2_free_binds(bts->nsi);
 		rc = ns_create_nsvc(bts, nsei, local, remote, nsvci, valid);
-	} else if (bts->gb_dialect_sns) {
+	} else if (bts->ns_dialect == NS2_DIALECT_SNS) {
 		/* SNS: check if the initial nsvc is the same, if not recreate it */
 		const struct osmo_sockaddr *initial = gprs_ns2_nse_sns_remote(bts->nse);
 		for (unsigned int i = 0; i < PCU_IF_NUM_NSVC; i++) {
