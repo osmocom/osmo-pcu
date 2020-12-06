@@ -957,6 +957,7 @@ static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
 	bool nsvcs = false;
 	struct gprs_ns2_vc *nsvc;
 	struct gprs_ns2_vc_bind *bind[PCU_IF_NUM_NSVC] = { };
+	char name[5];
 
 	if (!valid)
 		return -1;
@@ -966,7 +967,8 @@ static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
 			continue;
 
 		if (!gprs_ns2_ip_bind_by_sockaddr(bts->nsi, &local[i])) {
-			rc = gprs_ns2_ip_bind(bts->nsi, &local[i], 0, &bind[i]);
+			snprintf(name, sizeof(name), "pcu%d", i);
+			rc = gprs_ns2_ip_bind(bts->nsi, name, &local[i], 0, &bind[i]);
 			if (rc < 0) {
 				LOGP(DBSSGP, LOGL_ERROR, "Failed to bind to %s\n", osmo_sockaddr_to_str(&local[i]));
 				continue;
