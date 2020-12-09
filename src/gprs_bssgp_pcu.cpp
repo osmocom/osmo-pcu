@@ -1000,7 +1000,7 @@ static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
 
 		/* FIXME: for SNS we just use the first successful NS-VC instead of all for the initial connect */
 		if (bts->ns_dialect == NS2_DIALECT_SNS) {
-			rc = gprs_ns2_ip_connect_sns(bind[i], &remote[i], nsei);
+			rc = gprs_ns2_sns_add_endpoint(bts->nse, &remote[i]);
 			if (!rc)
 				return rc;
 			else
