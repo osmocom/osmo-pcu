@@ -27,6 +27,10 @@ extern "C" {
 };
 #endif
 
+/* we used to have DBSSGP definded in each application, and applications telling
+ * libosmogb which sub-system to use.  That creates problems and has been deprecated */
+#define DBSSGP DLBSSGP
+
 /* Debug Areas of the code */
 enum {
 	DCSN1,
@@ -41,7 +45,6 @@ enum {
 	DTBFDL,
 	DTBFUL,
 	DNS,
-	DBSSGP,
 	DPCU,
 	aDebug_LastEntry
 };

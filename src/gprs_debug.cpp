@@ -112,13 +112,6 @@ static const struct log_info_cat default_categories[] = {
 		.loglevel = LOGL_NOTICE,
 		.enabled = 1,
 	},
-	[DBSSGP] = {
-		.name = "DBSSGP",
-		.color = "\033[1;34m",
-		.description = "GPRS BSS Gateway Protocol (BSSGP)",
-		.loglevel = LOGL_NOTICE,
-		.enabled = 1,
-	},
 	[DPCU] = {
 		.name = "DPCU",
 		.color = "\033[1;35m",

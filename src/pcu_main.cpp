@@ -43,6 +43,7 @@ extern "C" {
 #include <osmocom/vty/command.h>
 #include <osmocom/vty/vty.h>
 #include <osmocom/vty/ports.h>
+#include <osmocom/vty/logging.h>
 #include <osmocom/vty/cpu_sched_vty.h>
 #include <osmocom/core/rate_ctr.h>
 #include <osmocom/core/select.h>
@@ -242,12 +243,12 @@ int main(int argc, char *argv[])
 
 	osmo_stats_init(tall_pcu_ctx);
 	rate_ctr_init(tall_pcu_ctx);
-	bssgp_set_log_ss(DBSSGP);
 
 	pcu_vty_info.tall_ctx = tall_pcu_ctx;
 	vty_init(&pcu_vty_info);
 	pcu_vty_init();
 	osmo_cpu_sched_vty_init(tall_pcu_ctx);
+	logging_vty_add_deprecated_subsys(tall_pcu_ctx, "bssgp");
 
 	handle_options(argc, argv);
 	if ((!!spoof_mcc) + (!!spoof_mnc) == 1) {
