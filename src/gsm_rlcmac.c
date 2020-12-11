@@ -5318,7 +5318,7 @@ static const struct value_string rlcmac_ul_msg_names[] = {
         { MT_PACKET_PAUSE,                      "Pkt Pause" },
         { MT_PACKET_ENHANCED_MEASUREMENT_REPORT,"Pkt Enchanced Meas Report" },
         { MT_ADDITIONAL_MS_RAC,                 "Additional MS RAC" },
-        { MT_PACKET_CELL_CHANGE_NOTIFICATION,   "Pkt Cell Changte Notification" },
+        { MT_PACKET_CELL_CHANGE_NOTIFICATION,   "Pkt Cell Change Notification" },
         { MT_PACKET_SI_STATUS,                  "Pkt SI Status" },
         { MT_ENHANCED_MEASUREMENT_REPORT,       "Enchanced Meas Report" },
         { 0, NULL }
