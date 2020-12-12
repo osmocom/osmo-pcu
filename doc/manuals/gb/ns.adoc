@@ -2,8 +2,8 @@
 
 === List of Messages
 
-The following tables list the NS messages used by OsmoPCU, grouped by their
-level of compliance with 3GPP TS 48.016.
+The following tables list the NS messages used by osmo-pcu and osmo-gbproxy, grouped by their level of
+compliance with 3GPP TS 48.016.
 
 ==== Messages Compliant With 3GPP TS 48.016
 
@@ -15,16 +15,24 @@ on establishing NS connection.
 [options="header",cols="10%,10%,20%,35%,5%,20%"]
 |===
 | TS 48.016 § | type code (hex) | This document § | Message | <-/-> | Received/Sent by OsmoPCU
-| 9.2.10 | 0x00 | <<ns_unit_data>> | NS-UNITDATA | <-/-> | Received/Sent
-| 9.2.5 | 0x02 | <<ns_reset>> | NS-RESET | <-/-> | Received/Sent
-| 9.2.6 | 0x03 | <<ns_reset_ack>> | NS-RESET-ACK | <-/-> | Received/Sent
-| 9.2.3 | 0x04 | <<ns_block>> | NS-BLOCK | <-/-> | Received/Sent
-| 9.2.4 | 0x05 | <<ns_block_ack>> | NS-BLOCK-ACK | <-/-> | Received/Sent
-| 9.2.8 | 0x06 | <<ns_unblock>> | NS-UNBLOCK | <-/-> | Received/Sent
-| 9.2.9 | 0x07 | <<ns_unblock_ack>> | NS-UNBLOCK-ACK | <-/-> | Received/Sent
-| 9.2.7 | 0x08 | <<ns_status>> | NS-STATUS | <-/-> | Received/Sent
 | 9.2.1 | 0x0a | <<ns_alive>> | NS-ALIVE | <-/-> | Received/Sent
 | 9.2.2 | 0x0b | <<ns_alive_ack>> | NS-ALIVE-ACK | <-/-> | Received/Sent
+| 9.2.3 | 0x04 | <<ns_block>> | NS-BLOCK | <-/-> | Received/Sent
+| 9.2.4 | 0x05 | <<ns_block_ack>> | NS-BLOCK-ACK | <-/-> | Received/Sent
+| 9.2.5 | 0x02 | <<ns_reset>> | NS-RESET | <-/-> | Received/Sent
+| 9.2.6 | 0x03 | <<ns_reset_ack>> | NS-RESET-ACK | <-/-> | Received/Sent
+| 9.2.7 | 0x08 | <<ns_status>> | NS-STATUS | <-/-> | Received/Sent
+| 9.2.8 | 0x06 | <<ns_unblock>> | NS-UNBLOCK | <-/-> | Received/Sent
+| 9.2.9 | 0x07 | <<ns_unblock_ack>> | NS-UNBLOCK-ACK | <-/-> | Received/Sent
+| 9.2.10 | 0x00 | <<ns_unit_data>> | NS-UNITDATA | <-/-> | Received/Sent
+| 9.3.1 | 0x0c | <<sns_ack>> | SNS-ACK | <-/-> | Received/Sent
+| 9.3.2 | 0x0d | <<sns_add>> | SNS-ADD | <-/-> | Received/Sent
+| 9.3.3 | 0x0e | <<sns_changeweight>> | SNS-CHANGEWEIGHT | <-/-> | Received/Sent
+| 9.3.4 | 0x0f | <<sns_config>> | SNS-CONFIG | <-/-> | Received/Sent
+| 9.3.5 | 0x10 | <<sns_config_ack>> | SNS-CONFIG | <-/-> | Received/Sent
+| 9.3.6 | 0x11 | <<sns_delete>> | SNS-DELETE | <-/-> | Received/Sent
+| 9.3.7 | 0x12 | <<sns_size>> | SNS-SIZE | <-/-> | Received/Sent
+| 9.3.8 | 0x13 | <<sns_size_ack>> | SNS-SIZE-ACK | <-/-> | Received/Sent
 |===
 
 ==== Messages Specific to OsmoPCU
@@ -152,6 +160,31 @@ message.
 
 The message conforms to 3GPP TS 48.016 § 9.2.2 specification.
 
+[[sns_ack]]
+==== SNS-ACK
+
+[[sns_add]]
+==== SNS-ADD
+
+[[sns_changeweight]]
+==== SNS-CHANGEWEIGHT
+
+[[sns_config]]
+==== SNS-CONFIG
+
+[[sns_config_ack]]
+==== SNS-CONFIG-ACK
+
+[[sns_delete]]
+==== SNS-DELETE
+
+[[ssn_size]]
+==== SNS-SIZE
+
+[[sns_size_ack]]
+==== SNS-SIZE-ACK
+
+
 === Information Elements Overview
 
 All of the IEs handled by OsmoPCU are listed below, with limitations and
@@ -165,16 +198,34 @@ The following Information Elements are accepted by OsmoPCU.
 [options="header",cols="5%,10%,40%,5%,40%"]
 |===
 | tag (hex) | TS 48.016 § | IE name | <-/-> | Received/Sent by OsmoPCU
-| 0x00 | 10.3.2 | Cause | <-/-> | Received/Sent
-| 0x01 | 10.3.5 | NSVCI | <-/-> | Received/Sent
-| 0x02 | 10.3.3 | NS PDU | <-/-> | Received/Sent
-| 0x03 | 10.3.1 | BVCI | <-/-> | Received/Sent
-| 0x04 | 10.3.6 | NSEI | <-/-> | Received/Sent
+| 0x03 | 10.3.1  | BVCI | <-/-> | Received/Sent
+| 0x00 | 10.3.2  | Cause | <-/-> | Received/Sent
+| -    | 10.3.2a | End Flag | <-/-> | Received/Sent
+| 0x0b | 10.3.2b | IP Address | <-/-> | Received/Sent
+| 0x05 | 10.3.2c | List of IP4 Elements | <-/-> | Received/Sent
+| 0x06 | 10.3.2d | List of IP6 Elements | <-/-> | Received/Sent
+| 0x07 | 10.3.2e | Maximum Number of NS-VCs | <-/-> | Received/Sent
+| 0x08 | 10.3.2f | Number of IP4 Endpoints | <-/-> | Received/Sent
+| 0x09 | 10.3.2g | Number of IP6 Endpoints | <-/-> | Received/Sent
+| 0x02 | 10.3.3  | NS PDU | <-/-> | Received/Sent
+| 0x01 | 10.3.5  | NSVCI | <-/-> | Received/Sent
+| 0x04 | 10.3.6  | NSEI | <-/-> | Received/Sent
+| -    | 10.3.7  | PDU Type | <-/-> | Received/Sent
+| 0x0a | 10.3.7a | Reset Flag | <-/-> | Received/Sent
+| -    | 10.3.8  | Spare Octet | <-/-> | Received/Sent
+| -    | 10.3.10 | Transaction ID | <-/-> | Received/Sent
 |===
 
 ==== IEs Not Conforming to 3GPP TS 48.016
 
-All IEs defined in 3GPP TS 48.016 § 10.3 are supported by OsmoPCU.
+.IEs conforming to 3GPP TS 48.016
+[options="header",cols="5%,10%,40%,5%,40%"]
+|===
+| tag (hex) | TS 48.016 § | IE name | <-/-> | Notice
+| -    | 10.3.9  | NS-SDU Control Bits | <-/-> | Not implemented yet
+|===
+
+All other IEs defined in 3GPP TS 48.016 § 10.3 are supported by OsmoPCU.
 
 ==== Additional Attributes and Parameters
 
