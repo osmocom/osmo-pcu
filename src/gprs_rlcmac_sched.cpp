@@ -164,16 +164,16 @@ static struct msgb *sched_select_ctrl_msg(
 {
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_tbf *tbf = NULL;
-	struct gprs_rlcmac_tbf *next_list[3] = { tbfs->ul_ass,
-						 tbfs->dl_ass,
-						 tbfs->ul_ack };
+	struct gprs_rlcmac_tbf *next_list[] = { tbfs->ul_ass,
+						tbfs->dl_ass,
+						tbfs->ul_ack };
 
 	/* Send Packet Application Information first (ETWS primary notifications) */
 	msg = sched_app_info(tbfs->dl_ass);
 
 	if (!msg) {
 		for (size_t i = 0; i < ARRAY_SIZE(next_list); ++i) {
-			tbf = next_list[(pdch->next_ctrl_prio + i) % 3];
+			tbf = next_list[(pdch->next_ctrl_prio + i) % ARRAY_SIZE(next_list)];
 			if (!tbf)
 				continue;
 
@@ -201,8 +201,7 @@ static struct msgb *sched_select_ctrl_msg(
 				continue;
 			}
 
-			pdch->next_ctrl_prio += 1;
-			pdch->next_ctrl_prio %= 3;
+			pdch->next_ctrl_prio = (pdch->next_ctrl_prio + 1) % ARRAY_SIZE(next_list);
 			break;
 		}
 	}
