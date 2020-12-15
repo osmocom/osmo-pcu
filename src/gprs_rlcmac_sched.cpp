@@ -34,12 +34,16 @@ extern "C" {
 	#include <osmocom/core/gsmtap.h>
 }
 
+struct tbf_sched_candidates {
+	struct gprs_rlcmac_tbf *poll;
+	struct gprs_rlcmac_tbf *ul_ass;
+	struct gprs_rlcmac_tbf *dl_ass;
+	struct gprs_rlcmac_ul_tbf *ul_ack;
+};
+
 static uint32_t sched_poll(BTS *bts,
 		    uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
-		    struct gprs_rlcmac_tbf **poll_tbf,
-		    struct gprs_rlcmac_tbf **ul_ass_tbf,
-		    struct gprs_rlcmac_tbf **dl_ass_tbf,
-		    struct gprs_rlcmac_ul_tbf **ul_ack_tbf)
+		    struct tbf_sched_candidates *tbf_cand)
 {
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
@@ -59,14 +63,14 @@ static uint32_t sched_poll(BTS *bts,
 			continue;
 		/* polling for next uplink block */
 		if (ul_tbf->poll_scheduled() && ul_tbf->poll_fn == poll_fn)
-			*poll_tbf = ul_tbf;
+			tbf_cand->poll = ul_tbf;
 		if (ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_SEND_ACK))
-			*ul_ack_tbf = ul_tbf;
+			tbf_cand->ul_ack = ul_tbf;
 		if (ul_tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_SEND_ASS))
-			*dl_ass_tbf = ul_tbf;
+			tbf_cand->dl_ass = ul_tbf;
 		if (ul_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS)
 		    || ul_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
-			*ul_ass_tbf = ul_tbf;
+			tbf_cand->ul_ass = ul_tbf;
 /* FIXME: Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all
 states? */
 	}
@@ -78,12 +82,12 @@ states? */
 			continue;
 		/* polling for next uplink block */
 		if (dl_tbf->poll_scheduled() && dl_tbf->poll_fn == poll_fn)
-			*poll_tbf = dl_tbf;
+			tbf_cand->poll = dl_tbf;
 		if (dl_tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_SEND_ASS))
-			*dl_ass_tbf = dl_tbf;
+			tbf_cand->dl_ass = dl_tbf;
 		if (dl_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS)
 		    || dl_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
-			*ul_ass_tbf = dl_tbf;
+			tbf_cand->ul_ass = dl_tbf;
 	}
 
 	return poll_fn;
@@ -156,16 +160,16 @@ struct msgb *sched_app_info(struct gprs_rlcmac_tbf *tbf) {
 static struct msgb *sched_select_ctrl_msg(
 		    uint8_t trx, uint8_t ts, uint32_t fn,
 		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch,
-		    struct gprs_rlcmac_tbf *ul_ass_tbf,
-		    struct gprs_rlcmac_tbf *dl_ass_tbf,
-		    struct gprs_rlcmac_ul_tbf *ul_ack_tbf)
+		    struct tbf_sched_candidates *tbfs)
 {
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_tbf *tbf = NULL;
-	struct gprs_rlcmac_tbf *next_list[3] = { ul_ass_tbf, dl_ass_tbf, ul_ack_tbf };
+	struct gprs_rlcmac_tbf *next_list[3] = { tbfs->ul_ass,
+						 tbfs->dl_ass,
+						 tbfs->ul_ack };
 
 	/* Send Packet Application Information first (ETWS primary notifications) */
-	msg = sched_app_info(dl_ass_tbf);
+	msg = sched_app_info(tbfs->dl_ass);
 
 	if (!msg) {
 		for (size_t i = 0; i < ARRAY_SIZE(next_list); ++i) {
@@ -178,18 +182,19 @@ static struct msgb *sched_select_ctrl_msg(
 			 * because they may kill the TBF when the CONTROL ACK is
 			 * received, thus preventing the others from being processed.
 			 */
-			if (tbf == ul_ass_tbf && tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
-				msg = ul_ass_tbf->create_packet_access_reject();
-			else if (tbf == ul_ass_tbf && tbf->direction ==
+			if (tbf == tbfs->ul_ass && tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
+				msg = tbfs->ul_ass->create_packet_access_reject();
+			else if (tbf == tbfs->ul_ass && tbf->direction ==
 					GPRS_RLCMAC_DL_TBF)
 				if (tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
-					msg = ul_ass_tbf->create_packet_access_reject();
+					msg = tbfs->ul_ass->create_packet_access_reject();
 				else
-					msg = ul_ass_tbf->create_ul_ass(fn, ts);
-			else if (tbf == dl_ass_tbf && tbf->direction == GPRS_RLCMAC_UL_TBF)
-				msg = dl_ass_tbf->create_dl_ass(fn, ts);
-			else if (tbf == ul_ack_tbf)
-				msg = ul_ack_tbf->create_ul_ack(fn, ts);
+					msg = tbfs->ul_ass->create_ul_ass(fn, ts);
+			else if (tbf == tbfs->dl_ass && tbf->direction == GPRS_RLCMAC_UL_TBF)
+				msg = tbfs->dl_ass->create_dl_ass(fn, ts);
+			else if (tbf == tbfs->ul_ack)
+				msg = tbfs->ul_ack->create_ul_ack(fn, ts);
+			/* else: if tbf/ms is pending to send tx_neigbhourData or tx_CellchangeContinue, send it */
 
 			if (!msg) {
 				tbf = NULL;
@@ -208,12 +213,12 @@ static struct msgb *sched_select_ctrl_msg(
 		 * MS will kill the current TBF, only one of them can be
 		 * non-NULL
 		 */
-		if (dl_ass_tbf) {
-			tbf = dl_ass_tbf;
-			msg = dl_ass_tbf->create_dl_ass(fn, ts);
-		} else if (ul_ass_tbf) {
-			tbf = ul_ass_tbf;
-			msg = ul_ass_tbf->create_ul_ass(fn, ts);
+		if (tbfs->dl_ass) {
+			tbf = tbfs->dl_ass;
+			msg = tbfs->dl_ass->create_dl_ass(fn, ts);
+		} else if (tbfs->ul_ass) {
+			tbf = tbfs->ul_ass;
+			msg = tbfs->ul_ass->create_ul_ass(fn, ts);
 		}
 	}
 
@@ -397,10 +402,8 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
         uint32_t fn, uint8_t block_nr)
 {
 	struct gprs_rlcmac_pdch *pdch;
-	struct gprs_rlcmac_tbf *poll_tbf = NULL, *dl_ass_tbf = NULL,
-		*ul_ass_tbf = NULL;
+	struct tbf_sched_candidates tbf_cand = {0};
 	struct gprs_rlcmac_ul_tbf *usf_tbf;
-	struct gprs_rlcmac_ul_tbf *ul_ack_tbf = NULL;
 	uint8_t usf;
 	struct msgb *msg = NULL;
 	uint32_t poll_fn, sba_fn;
@@ -437,15 +440,13 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 		req_mcs_kind = EGPRS; /* all kinds are fine */
 	}
 
-	poll_fn = sched_poll(bts->bts, trx, ts, fn, block_nr, &poll_tbf, &ul_ass_tbf,
-		&dl_ass_tbf, &ul_ack_tbf);
+	poll_fn = sched_poll(bts->bts, trx, ts, fn, block_nr, &tbf_cand);
 	/* check uplink resource for polling */
-	if (poll_tbf) {
+	if (tbf_cand.poll) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling free USF for "
 			"polling at FN=%d of %s\n", trx, ts, fn,
-			block_nr, poll_fn,
-			tbf_name(poll_tbf));
+			block_nr, poll_fn, tbf_name(tbf_cand.poll));
 		usf = USF_UNUSED;
 	/* else. check for sba */
 	} else if ((sba_fn = bts->bts->sba()->sched(trx, ts, fn, block_nr) != 0xffffffff)) {
@@ -471,8 +472,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	}
 
 	/* Prio 1: select control message */
-	if ((msg = sched_select_ctrl_msg(trx, ts, fn, block_nr, pdch, ul_ass_tbf,
-					 dl_ass_tbf, ul_ack_tbf))) {
+	if ((msg = sched_select_ctrl_msg(trx, ts, fn, block_nr, pdch, &tbf_cand))) {
 			gsmtap_cat = PCU_GSMTAP_C_DL_CTRL;
 	}
 	/* Prio 2: select data message for downlink */
