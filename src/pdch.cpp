@@ -68,9 +68,9 @@ static void get_rx_qual_meas(struct pcu_l1_meas *meas, uint8_t rx_qual_enc)
 		18, /* 18,10 % */
 	};
 
-	meas->set_ms_rx_qual(rx_qual_map[
-		OSMO_MIN(rx_qual_enc, ARRAY_SIZE(rx_qual_map)-1)
-		]);
+	pcu_l1_meas_set_ms_rx_qual(meas, rx_qual_map[
+					OSMO_MIN(rx_qual_enc, ARRAY_SIZE(rx_qual_map)-1)
+					]);
 }
 
 static void get_meas(struct pcu_l1_meas *meas,
@@ -78,9 +78,9 @@ static void get_meas(struct pcu_l1_meas *meas,
 {
 	unsigned i;
 
-	meas->set_ms_c_value(qr->C_VALUE);
+	pcu_l1_meas_set_ms_c_value(meas, qr->C_VALUE);
 	if (qr->Exist_SIGN_VAR)
-		meas->set_ms_sign_var((qr->SIGN_VAR + 2) / 4); /* SIGN_VAR * 0.25 dB */
+		pcu_l1_meas_set_ms_sign_var(meas, (qr->SIGN_VAR + 2) / 4); /* SIGN_VAR * 0.25 dB */
 
 	for (i = 0; i < OSMO_MIN(ARRAY_SIZE(qr->I_LEVEL_TN), ARRAY_SIZE(meas->ts)); i++)
 	{
@@ -88,7 +88,7 @@ static void get_meas(struct pcu_l1_meas *meas,
 			LOGP(DRLCMAC, LOGL_INFO,
 				"Packet resource request: i_level[%d] = %d\n",
 				i, qr->I_LEVEL_TN[i].I_LEVEL);
-			meas->set_ms_i_level(i, -2 * qr->I_LEVEL_TN[i].I_LEVEL);
+			pcu_l1_meas_set_ms_i_level(meas, i, -2 * qr->I_LEVEL_TN[i].I_LEVEL);
 		}
 	}
 }
@@ -99,8 +99,8 @@ static void get_meas(struct pcu_l1_meas *meas,
 	unsigned i;
 
 	get_rx_qual_meas(meas, qr->RXQUAL);
-	meas->set_ms_c_value(qr->C_VALUE);
-	meas->set_ms_sign_var((qr->SIGN_VAR + 2) / 4); /* SIGN_VAR * 0.25 dB */
+	pcu_l1_meas_set_ms_c_value(meas, qr->C_VALUE);
+	pcu_l1_meas_set_ms_sign_var(meas, (qr->SIGN_VAR + 2) / 4); /* SIGN_VAR * 0.25 dB */
 
 	for (i = 0; i < OSMO_MIN(ARRAY_SIZE(qr->Slot), ARRAY_SIZE(meas->ts)); i++)
 	{
@@ -108,7 +108,7 @@ static void get_meas(struct pcu_l1_meas *meas,
 			LOGP(DRLCMAC, LOGL_DEBUG,
 				"Channel quality report: i_level[%d] = %d\n",
 				i, qr->Slot[i].I_LEVEL_TN);
-			meas->set_ms_i_level(i, -2 * qr->Slot[i].I_LEVEL_TN);
+			pcu_l1_meas_set_ms_i_level(meas, i, -2 * qr->Slot[i].I_LEVEL_TN);
 		}
 	}
 }
@@ -307,11 +307,11 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
 			     "unknown TBF corresponds to MS with IMSI %s, TA %d, "
 			     "uTBF (TFI=%d, state=%s), dTBF (TFI=%d, state=%s)\n",
-			     ms->imsi(), ms->ta(),
-			     ms->ul_tbf() ? ms->ul_tbf()->tfi() : 0,
-			     ms->ul_tbf() ? ms->ul_tbf()->state_name() : "None",
-			     ms->dl_tbf() ? ms->dl_tbf()->tfi() : 0,
-			     ms->dl_tbf() ? ms->dl_tbf()->state_name() : "None");
+			     ms_imsi(ms), ms_ta(ms),
+			     ms_ul_tbf(ms) ? ms_ul_tbf(ms)->tfi() : 0,
+			     ms_ul_tbf(ms) ? ms_ul_tbf(ms)->state_name() : "None",
+			     ms_dl_tbf(ms) ? ms_dl_tbf(ms)->tfi() : 0,
+			     ms_dl_tbf(ms) ? ms_dl_tbf(ms)->state_name() : "None");
 		return;
 	}
 
@@ -339,7 +339,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		tbf->n_reset(N3105);
 		TBF_SET_ASS_STATE_DL(tbf, GPRS_RLCMAC_DL_ASS_NONE);
 
-		new_tbf = tbf->ms() ? tbf->ms()->dl_tbf() : NULL;
+		new_tbf = tbf->ms() ? ms_dl_tbf(tbf->ms()) : NULL;
 		if (!new_tbf) {
 			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
 				"TBF is gone TLLI=0x%08x\n", tlli);
@@ -371,7 +371,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		tbf->n_reset(N3105);
 		TBF_SET_ASS_STATE_UL(tbf, GPRS_RLCMAC_UL_ASS_NONE);
 
-		new_tbf = tbf->ms() ? tbf->ms()->ul_tbf() : NULL;
+		new_tbf = tbf->ms() ? ms_ul_tbf(tbf->ms()) : NULL;
 		if (!new_tbf) {
 			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
 				"TBF is gone TLLI=0x%08x\n", tlli);
@@ -389,7 +389,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		/* there might be LLC packets waiting in the queue, but the DL
 		 * TBF might have been released while the UL TBF has been
 		 * established */
-		if (new_tbf->ms()->need_dl_tbf())
+		if (ms_need_dl_tbf(new_tbf->ms()))
 			new_tbf->establish_dl_tbf_on_pacch();
 
 		return;
@@ -460,7 +460,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	/* get measurements */
 	if (tbf->ms()) {
 		get_meas(meas, &ack_nack->Channel_Quality_Report);
-		tbf->ms()->update_l1_meas(meas);
+		ms_update_l1_meas(tbf->ms(), meas);
 	}
 }
 
@@ -570,19 +570,19 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		if (!ms) {
 			ms_found = false;
 			ms = bts()->ms_alloc(0, 0); /* ms class updated later */
-			ms->set_tlli(tlli);
+			ms_set_tlli(ms, tlli);
 		}
-		ul_tbf = ms->ul_tbf(); /* hence ul_tbf may be NULL */
+		ul_tbf = ms_ul_tbf(ms); /* hence ul_tbf may be NULL */
 
 		/* Keep the ms, even if it gets idle temporarily */
-		GprsMs::Guard guard(ms);
+		ms_ref(ms);
 
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
 			"in packet resource request of single "
 			"block, so we provide one:\n");
 		sba = bts()->sba()->find(this, fn);
 		if (sba) {
-			ms->set_ta(sba->ta);
+			ms_set_ta(ms, sba->ta);
 			bts()->sba()->free_sba(sba);
 		} else if (!ul_tbf || !ul_tbf->state_is(GPRS_RLCMAC_FINISHED)) {
 			LOGPTBFUL(ul_tbf, LOGL_NOTICE,
@@ -599,9 +599,9 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			ms_class = Decoding::get_ms_class_by_capability(&request->MS_Radio_Access_capability2);
 			egprs_ms_class = Decoding::get_egprs_ms_class_by_capability(&request->MS_Radio_Access_capability2);
 			if (ms_class)
-				ms->set_ms_class(ms_class);
+				ms_set_ms_class(ms, ms_class);
 			if (egprs_ms_class)
-				ms->set_egprs_ms_class(egprs_ms_class);
+				ms_set_egprs_ms_class(ms, egprs_ms_class);
 		}
 
 		/* Get rid of previous finished UL TBF before providing a new one */
@@ -616,7 +616,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		if (!ul_tbf) {
 			handle_tbf_reject(bts_data(), ms, tlli,
 				trx_no(), ts_no);
-			return;
+			goto return_unref;
 		}
 
 		/* set control ts to current MS's TS, until assignment complete */
@@ -630,8 +630,10 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		/* get measurements */
 		if (ul_tbf->ms()) {
 			get_meas(meas, request);
-			ul_tbf->ms()->update_l1_meas(meas);
+			ms_update_l1_meas(ul_tbf->ms(), meas);
 		}
+return_unref:
+		ms_unref(ms);
 		return;
 	}
 
@@ -674,10 +676,10 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 		LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
 		     "but TLLI 0x%08x is unknown\n", report->TLLI);
 		ms = bts()->ms_alloc(0, 0);
-		ms->set_tlli(report->TLLI);
+		ms_set_tlli(ms, report->TLLI);
 	}
 	if ((sba = bts()->sba()->find(this, fn))) {
-		ms->set_ta(sba->ta);
+		ms_set_ta(ms, sba->ta);
 		bts()->sba()->free_sba(sba);
 	}
 	gprs_rlcmac_meas_rep(ms, report);

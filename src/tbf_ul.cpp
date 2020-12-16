@@ -105,7 +105,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 
 	LOGP(DTBF, LOGL_DEBUG, "********** UL-TBF starts here **********\n");
 	LOGP(DTBF, LOGL_INFO, "Allocating UL TBF: MS_CLASS=%d/%d\n",
-	     ms->ms_class(), ms->egprs_ms_class());
+	     ms_ms_class(ms), ms_egprs_ms_class(ms));
 
 	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 	if (!tbf)
@@ -172,7 +172,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 
 	if (!ms)
 		ms = bts->bts->ms_alloc(0, 0);
-	ms->set_tlli(tlli);
+	ms_set_tlli(ms, tlli);
 
 	ul_tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 	if (!ul_tbf)
@@ -185,7 +185,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 	ul_tbf->bts->do_rate_ctr_inc(CTR_TBF_UL_ALLOCATED);
 	TBF_SET_ASS_ON(ul_tbf, GPRS_RLCMAC_FLAG_PACCH, false);
 
-	ms->attach_tbf(ul_tbf);
+	ms_attach_tbf(ms, ul_tbf);
 	ul_tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 	TBF_SET_ASS_STATE_UL(ul_tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ);
 	ul_tbf->control_ts = ts;
@@ -252,14 +252,14 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 				frame->is_complete);
 
 			m_llc.append_frame(data + frame->offset, frame->length);
-			m_llc.consume(frame->length);
+			llc_consume(&m_llc, frame->length);
 		}
 
 		if (frame->is_complete) {
 			/* send frame to SGSN */
-			LOGPTBFUL(this, LOGL_DEBUG, "complete UL frame len=%d\n", m_llc.frame_length());
+			LOGPTBFUL(this, LOGL_DEBUG, "complete UL frame len=%d\n", llc_frame_length(&m_llc));
 			snd_ul_ud();
-			bts->do_rate_ctr_add(CTR_LLC_UL_BYTES, m_llc.frame_length());
+			bts->do_rate_ctr_add(CTR_LLC_UL_BYTES, llc_frame_length(&m_llc));
 			m_llc.reset();
 		}
 	}
@@ -357,7 +357,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 	/* store measurement values */
 	if (ms())
-		ms()->update_l1_meas(meas);
+		ms_update_l1_meas(ms(), meas);
 
 	uint32_t new_tlli = GSM_RESERVED_TMSI;
 	unsigned int block_idx;
@@ -559,10 +559,10 @@ int gprs_rlcmac_ul_tbf::snd_ul_ud()
 {
 	uint8_t qos_profile[3];
 	struct msgb *llc_pdu;
-	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + m_llc.frame_length();
+	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + llc_frame_length(&m_llc);
 	struct bssgp_bvc_ctx *bctx = gprs_bssgp_pcu_current_bctx();
 
-	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] %s len=%d\n", tbf_name(this), m_llc.frame_length());
+	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] %s len=%d\n", tbf_name(this), llc_frame_length(&m_llc));
 	if (!bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
 		m_llc.reset_frame_space();
@@ -570,8 +570,8 @@ int gprs_rlcmac_ul_tbf::snd_ul_ud()
 	}
 
 	llc_pdu = msgb_alloc_headroom(msg_len, msg_len,"llc_pdu");
-	uint8_t *buf = msgb_push(llc_pdu, TL16V_GROSS_LEN(sizeof(uint8_t)*m_llc.frame_length()));
-	tl16v_put(buf, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*m_llc.frame_length(), m_llc.frame);
+	uint8_t *buf = msgb_push(llc_pdu, TL16V_GROSS_LEN(sizeof(uint8_t)*llc_frame_length(&m_llc)));
+	tl16v_put(buf, BSSGP_IE_LLC_PDU, sizeof(uint8_t)*llc_frame_length(&m_llc), m_llc.frame);
 	qos_profile[0] = QOS_PROFILE >> 16;
 	qos_profile[1] = QOS_PROFILE >> 8;
 	qos_profile[2] = QOS_PROFILE;
@@ -771,4 +771,12 @@ void gprs_rlcmac_ul_tbf::set_window_size()
 gprs_rlc_window *gprs_rlcmac_ul_tbf::window()
 {
 	return &m_window;
+}
+
+struct gprs_rlcmac_ul_tbf *as_ul_tbf(struct gprs_rlcmac_tbf *tbf)
+{
+	if (tbf && tbf->direction == GPRS_RLCMAC_UL_TBF)
+		return static_cast<gprs_rlcmac_ul_tbf *>(tbf);
+	else
+		return NULL;
 }

@@ -224,12 +224,12 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 		return false;
 
 	OSMO_ASSERT(ul_tbf->ms());
-	OSMO_ASSERT(ul_tbf->ms()->current_trx());
+	OSMO_ASSERT(ms_current_trx(ul_tbf->ms()));
 
 	dump_assignment(ul_tbf, "UL", verbose);
 
 	/* assume final ack has not been sent */
-	dl_tbf = tbf_alloc_dl_tbf(bts, ms, ms->current_trx()->trx_no, false);
+	dl_tbf = tbf_alloc_dl_tbf(bts, ms, ms_current_trx(ms)->trx_no, false);
 	if (!dl_tbf)
 		return false;
 
@@ -268,11 +268,11 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 	dl_tbf->update_ms(0x23, GPRS_RLCMAC_DL_TBF);
 	OSMO_ASSERT(dl_tbf->ms() == ms);
-	OSMO_ASSERT(dl_tbf->ms()->current_trx());
+	OSMO_ASSERT(ms_current_trx(dl_tbf->ms()));
 
 	dump_assignment(dl_tbf, "DL", verbose);
 
-	ul_tbf = tbf_alloc_ul_tbf(bts, ms, ms->current_trx()->trx_no, false);
+	ul_tbf = tbf_alloc_ul_tbf(bts, ms, ms_current_trx(ms)->trx_no, false);
 	if (!ul_tbf)
 		return false;
 
@@ -319,8 +319,8 @@ static inline bool test_alloc_b_jolly(uint8_t ms_class)
 		return false;
 
 	OSMO_ASSERT(ul_tbf->ms() == ms);
-	OSMO_ASSERT(ul_tbf->ms()->current_trx());
-	trx_no = ms->current_trx()->trx_no;
+	OSMO_ASSERT(ms_current_trx(ul_tbf->ms()));
+	trx_no = ms_current_trx(ms)->trx_no;
 	dump_assignment(ul_tbf, "UL", true);
 
 	/* assume final ack has not been sent */
@@ -453,50 +453,55 @@ static inline char *test_mode_descr(enum test_mode t)
 	}
 }
 
-static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, enum test_mode mode)
+static GprsMs *alloc_tbfs(BTS *the_bts, struct GprsMs *old_ms, enum test_mode mode)
 {
 	struct gprs_rlcmac_bts *bts;
+	struct GprsMs *ms, *new_ms;
 	uint8_t trx_no = -1;
 
-	OSMO_ASSERT(ms != NULL);
+	OSMO_ASSERT(old_ms != NULL);
 
 	bts = the_bts->bts_data();
 
 	gprs_rlcmac_tbf *tbf = NULL;
 
-	if (ms && ms->current_trx())
-		trx_no = ms->current_trx()->trx_no;
+	if (ms_current_trx(old_ms))
+		trx_no = ms_current_trx(old_ms)->trx_no;
 
-	GprsMs::Guard guard1(ms);
+	ms_ref(old_ms);
 
 	/* Allocate what is needed first */
 	switch (mode) {
 	case TEST_MODE_UL_ONLY:
 	case TEST_MODE_DL_AFTER_UL:
 	case TEST_MODE_UL_AND_DL:
-		if (ms->ul_tbf())
-			tbf_free(ms->ul_tbf());
-		tbf = tbf_alloc_ul_tbf(bts, ms, trx_no, false);
-		if (tbf == NULL)
+		if (ms_ul_tbf(old_ms))
+			tbf_free(ms_ul_tbf(old_ms));
+		tbf = tbf_alloc_ul_tbf(bts, old_ms, trx_no, false);
+		if (tbf == NULL) {
+			ms_unref(old_ms);
 			return NULL;
+		}
 		break;
 	case TEST_MODE_DL_ONLY:
 	case TEST_MODE_UL_AFTER_DL:
 	case TEST_MODE_DL_AND_UL:
-		if (ms->dl_tbf())
-			tbf_free(ms->dl_tbf());
-		tbf = tbf_alloc_dl_tbf(bts, ms, trx_no, false);
-		if (tbf == NULL)
+		if (ms_dl_tbf(old_ms))
+			tbf_free(ms_dl_tbf(old_ms));
+		tbf = tbf_alloc_dl_tbf(bts, old_ms, trx_no, false);
+		if (tbf == NULL) {
+			ms_unref(old_ms);
 			return NULL;
+		}
 	}
 
 	OSMO_ASSERT(tbf);
 	OSMO_ASSERT(tbf->ms());
-	OSMO_ASSERT(ms == NULL || ms == tbf->ms());
+	OSMO_ASSERT(old_ms == tbf->ms());
 	ms = tbf->ms();
 
-	GprsMs::Guard guard2(ms);
-
+	ms_ref(ms);
+	new_ms = ms;
 	/* Continue with what is needed next */
 	switch (mode) {
 	case TEST_MODE_UL_ONLY:
@@ -506,12 +511,12 @@ static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, enum test_mode mode)
 
 	case TEST_MODE_DL_AFTER_UL:
 	case TEST_MODE_UL_AND_DL:
-		ms = alloc_tbfs(the_bts, ms, TEST_MODE_DL_ONLY);
+		new_ms = alloc_tbfs(the_bts, ms, TEST_MODE_DL_ONLY);
 		break;
 
 	case TEST_MODE_UL_AFTER_DL:
 	case TEST_MODE_DL_AND_UL:
-		ms = alloc_tbfs(the_bts, ms, TEST_MODE_UL_ONLY);
+		new_ms = alloc_tbfs(the_bts, ms, TEST_MODE_UL_ONLY);
 		break;
 	}
 
@@ -527,10 +532,12 @@ static GprsMs *alloc_tbfs(BTS *the_bts, GprsMs *ms, enum test_mode mode)
 		break;
 	}
 
-	if (!ms && tbf)
+	if (!new_ms && tbf)
 		tbf_free(tbf);
 
-	return  guard2.is_idle() ? NULL : ms;
+	ms_unref(old_ms);
+	ms_unref(ms);
+	return new_ms;
 }
 
 static unsigned alloc_many_tbfs(BTS *the_bts, unsigned min_class,
@@ -556,16 +563,16 @@ static unsigned alloc_many_tbfs(BTS *the_bts, unsigned min_class,
 		ms = the_bts->ms_by_tlli(tlli);
 		if (!ms)
 			ms = the_bts->ms_alloc(0, 0);
-		ms->set_ms_class(ms_class);
+		ms_set_ms_class(ms, ms_class);
 		ms = alloc_tbfs(the_bts, ms, mode);
 		if (!ms)
 			break;
 
-		ms->set_tlli(tlli);
+		ms_set_tlli(ms, tlli);
 
-		ul_tbf = ms->ul_tbf();
-		dl_tbf = ms->dl_tbf();
-		trx = ms->current_trx();
+		ul_tbf = ms_ul_tbf(ms);
+		dl_tbf = ms_dl_tbf(ms);
+		trx = ms_current_trx(ms);
 
 		OSMO_ASSERT(ul_tbf || dl_tbf);
 
@@ -616,12 +623,12 @@ static unsigned alloc_many_tbfs(BTS *the_bts, unsigned min_class,
 			get_dir_char(0x80, ul_slots, dl_slots, busy_slots));
 
 		if (tfi >= 0) {
-			OSMO_ASSERT(ms->current_trx());
+			OSMO_ASSERT(ms_current_trx(ms));
 			tfi2 = the_bts->tfi_find_free(dir, &trx_no2,
-				ms->current_trx()->trx_no);
+				ms_current_trx(ms)->trx_no);
 			OSMO_ASSERT(tfi != tfi2);
 			OSMO_ASSERT(tfi2 < 0 ||
-				trx_no2 == ms->current_trx()->trx_no);
+				trx_no2 == ms_current_trx(ms)->trx_no);
 		}
 
 		ms_class += 1;

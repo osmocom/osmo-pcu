@@ -56,33 +56,33 @@ static void test_ms_state()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = new GprsMs(&the_bts, tlli);
-	OSMO_ASSERT(ms->is_idle());
+	ms = ms_alloc(&the_bts, tlli);
+	OSMO_ASSERT(ms_is_idle(ms));
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
 	new (dl_tbf) gprs_rlcmac_dl_tbf(&the_bts, ms);
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 	new (ul_tbf) gprs_rlcmac_ul_tbf(&the_bts, ms);
 
-	ms->attach_tbf(ul_tbf);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(ms->ul_tbf() == ul_tbf);
-	OSMO_ASSERT(ms->dl_tbf() == NULL);
+	ms_attach_tbf(ms, ul_tbf);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
+	OSMO_ASSERT(ms_dl_tbf(ms) == NULL);
 
-	ms->attach_tbf(dl_tbf);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(ms->ul_tbf() == ul_tbf);
-	OSMO_ASSERT(ms->dl_tbf() == dl_tbf);
+	ms_attach_tbf(ms, dl_tbf);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
+	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf);
 
-	OSMO_ASSERT(ms->tbf(GPRS_RLCMAC_UL_TBF) == ul_tbf);
-	OSMO_ASSERT(ms->tbf(GPRS_RLCMAC_DL_TBF) == dl_tbf);
+	OSMO_ASSERT(ms_tbf(ms, GPRS_RLCMAC_UL_TBF) == ul_tbf);
+	OSMO_ASSERT(ms_tbf(ms, GPRS_RLCMAC_DL_TBF) == dl_tbf);
 
-	ms->detach_tbf(ul_tbf);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(ms->ul_tbf() == NULL);
-	OSMO_ASSERT(ms->dl_tbf() == dl_tbf);
+	ms_detach_tbf(ms, ul_tbf);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
+	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf);
 
-	ms->detach_tbf(dl_tbf);
+	ms_detach_tbf(ms, dl_tbf);
 	/* The ms object is freed now */
 	ms = NULL;
 
@@ -92,6 +92,23 @@ static void test_ms_state()
 	printf("=== end %s ===\n", __func__);
 }
 
+static enum {CB_UNKNOWN, CB_IS_IDLE, CB_IS_ACTIVE} last_cb = CB_UNKNOWN;
+static void ms_idle_cb(struct GprsMs *ms)
+{
+	OSMO_ASSERT(ms_is_idle(ms));
+	printf("  ms_idle() was called\n");
+	last_cb = CB_IS_IDLE;
+}
+static void ms_active_cb(struct GprsMs *ms)
+{
+	OSMO_ASSERT(!ms_is_idle(ms));
+	printf("  ms_active() was called\n");
+	last_cb = CB_IS_ACTIVE;
+}
+static struct gpr_ms_callback ms_cb = {
+	.ms_idle = ms_idle_cb,
+	.ms_active = ms_active_cb
+};
 static void test_ms_callback()
 {
 	uint32_t tlli = 0xffeeddbb;
@@ -99,63 +116,50 @@ static void test_ms_callback()
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	BTS the_bts;
 	GprsMs *ms;
-	static enum {UNKNOWN, IS_IDLE, IS_ACTIVE} last_cb = UNKNOWN;
-
-	struct MyCallback: public GprsMs::Callback {
-		virtual void ms_idle(class GprsMs *ms) {
-			OSMO_ASSERT(ms->is_idle());
-			printf("  ms_idle() was called\n");
-			last_cb = IS_IDLE;
-		}
-		virtual void ms_active(class GprsMs *ms) {
-			OSMO_ASSERT(!ms->is_idle());
-			printf("  ms_active() was called\n");
-			last_cb = IS_ACTIVE;
-		}
-	} cb;
+	last_cb = CB_UNKNOWN;
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = new GprsMs(&the_bts, tlli);
-	ms->set_callback(&cb);
+	ms = ms_alloc(&the_bts, tlli);
+	ms_set_callback(ms, &ms_cb);
 
-	OSMO_ASSERT(ms->is_idle());
+	OSMO_ASSERT(ms_is_idle(ms));
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
 	new (dl_tbf) gprs_rlcmac_dl_tbf(&the_bts, ms);
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 	new (ul_tbf) gprs_rlcmac_ul_tbf(&the_bts, ms);
 
-	OSMO_ASSERT(last_cb == UNKNOWN);
+	OSMO_ASSERT(last_cb == CB_UNKNOWN);
 
-	ms->attach_tbf(ul_tbf);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(ms->ul_tbf() == ul_tbf);
-	OSMO_ASSERT(ms->dl_tbf() == NULL);
-	OSMO_ASSERT(last_cb == IS_ACTIVE);
+	ms_attach_tbf(ms, ul_tbf);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
+	OSMO_ASSERT(ms_dl_tbf(ms) == NULL);
+	OSMO_ASSERT(last_cb == CB_IS_ACTIVE);
 
-	last_cb = UNKNOWN;
+	last_cb = CB_UNKNOWN;
 
-	ms->attach_tbf(dl_tbf);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(ms->ul_tbf() == ul_tbf);
-	OSMO_ASSERT(ms->dl_tbf() == dl_tbf);
-	OSMO_ASSERT(last_cb == UNKNOWN);
+	ms_attach_tbf(ms, dl_tbf);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
+	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf);
+	OSMO_ASSERT(last_cb == CB_UNKNOWN);
 
-	ms->detach_tbf(ul_tbf);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(ms->ul_tbf() == NULL);
-	OSMO_ASSERT(ms->dl_tbf() == dl_tbf);
-	OSMO_ASSERT(last_cb == UNKNOWN);
+	ms_detach_tbf(ms, ul_tbf);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
+	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf);
+	OSMO_ASSERT(last_cb == CB_UNKNOWN);
 
-	ms->detach_tbf(dl_tbf);
-	OSMO_ASSERT(ms->is_idle());
-	OSMO_ASSERT(ms->ul_tbf() == NULL);
-	OSMO_ASSERT(ms->dl_tbf() == NULL);
-	OSMO_ASSERT(last_cb == IS_IDLE);
+	ms_detach_tbf(ms, dl_tbf);
+	OSMO_ASSERT(ms_is_idle(ms));
+	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
+	OSMO_ASSERT(ms_dl_tbf(ms) == NULL);
+	OSMO_ASSERT(last_cb == CB_IS_IDLE);
 
-	last_cb = UNKNOWN;
-	delete ms;
+	last_cb = CB_UNKNOWN;
+	talloc_free(ms);
 
 	talloc_free(dl_tbf);
 	talloc_free(ul_tbf);
@@ -163,6 +167,22 @@ static void test_ms_callback()
 	printf("=== end %s ===\n", __func__);
 }
 
+static bool was_idle;
+static void ms_replace_tbf_idle_cb(struct GprsMs *ms)
+{
+	OSMO_ASSERT(ms_is_idle(ms));
+	printf("  ms_idle() was called\n");
+	was_idle = true;
+}
+static void ms_replace_tbf_active_cb(struct GprsMs *ms)
+{
+	OSMO_ASSERT(!ms_is_idle(ms));
+	printf("  ms_active() was called\n");
+}
+static struct gpr_ms_callback ms_replace_tbf_cb = {
+	.ms_idle = ms_replace_tbf_idle_cb,
+	.ms_active = ms_replace_tbf_active_cb
+};
 static void test_ms_replace_tbf()
 {
 	uint32_t tlli = 0xffeeddbb;
@@ -170,26 +190,13 @@ static void test_ms_replace_tbf()
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	BTS the_bts;
 	GprsMs *ms;
-	static bool was_idle;
-
-	struct MyCallback: public GprsMs::Callback {
-		virtual void ms_idle(class GprsMs *ms) {
-			OSMO_ASSERT(ms->is_idle());
-			printf("  ms_idle() was called\n");
-			was_idle = true;
-		}
-		virtual void ms_active(class GprsMs *ms) {
-			OSMO_ASSERT(!ms->is_idle());
-			printf("  ms_active() was called\n");
-		}
-	} cb;
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = new GprsMs(&the_bts, tlli);
-	ms->set_callback(&cb);
+	ms = ms_alloc(&the_bts, tlli);
+	ms_set_callback(ms, &ms_replace_tbf_cb);
 
-	OSMO_ASSERT(ms->is_idle());
+	OSMO_ASSERT(ms_is_idle(ms));
 	was_idle = false;
 
 	dl_tbf[0] = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
@@ -199,49 +206,49 @@ static void test_ms_replace_tbf()
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 	new (ul_tbf) gprs_rlcmac_ul_tbf(&the_bts, ms);
 
-	ms->attach_tbf(dl_tbf[0]);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(ms->ul_tbf() == NULL);
-	OSMO_ASSERT(ms->dl_tbf() == dl_tbf[0]);
-	OSMO_ASSERT(llist_empty(&ms->old_tbfs()));
+	ms_attach_tbf(ms, dl_tbf[0]);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
+	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf[0]);
+	OSMO_ASSERT(llist_empty(&ms->old_tbfs));
 	OSMO_ASSERT(!was_idle);
 
-	ms->attach_tbf(dl_tbf[1]);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(ms->ul_tbf() == NULL);
-	OSMO_ASSERT(ms->dl_tbf() == dl_tbf[1]);
-	OSMO_ASSERT(!llist_empty(&ms->old_tbfs()));
+	ms_attach_tbf(ms, dl_tbf[1]);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
+	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf[1]);
+	OSMO_ASSERT(!llist_empty(&ms->old_tbfs));
 	OSMO_ASSERT(!was_idle);
 
-	ms->attach_tbf(ul_tbf);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(ms->ul_tbf() == ul_tbf);
-	OSMO_ASSERT(ms->dl_tbf() == dl_tbf[1]);
-	OSMO_ASSERT(!llist_empty(&ms->old_tbfs()));
+	ms_attach_tbf(ms, ul_tbf);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
+	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf[1]);
+	OSMO_ASSERT(!llist_empty(&ms->old_tbfs));
 	OSMO_ASSERT(!was_idle);
 
-	ms->detach_tbf(ul_tbf);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(ms->ul_tbf() == NULL);
-	OSMO_ASSERT(ms->dl_tbf() == dl_tbf[1]);
-	OSMO_ASSERT(!llist_empty(&ms->old_tbfs()));
+	ms_detach_tbf(ms, ul_tbf);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
+	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf[1]);
+	OSMO_ASSERT(!llist_empty(&ms->old_tbfs));
 	OSMO_ASSERT(!was_idle);
 
-	ms->detach_tbf(dl_tbf[0]);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(ms->ul_tbf() == NULL);
-	OSMO_ASSERT(ms->dl_tbf() == dl_tbf[1]);
-	OSMO_ASSERT(llist_empty(&ms->old_tbfs()));
+	ms_detach_tbf(ms, dl_tbf[0]);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
+	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf[1]);
+	OSMO_ASSERT(llist_empty(&ms->old_tbfs));
 	OSMO_ASSERT(!was_idle);
 
-	ms->detach_tbf(dl_tbf[1]);
-	OSMO_ASSERT(ms->is_idle());
-	OSMO_ASSERT(ms->ul_tbf() == NULL);
-	OSMO_ASSERT(ms->dl_tbf() == NULL);
-	OSMO_ASSERT(llist_empty(&ms->old_tbfs()));
+	ms_detach_tbf(ms, dl_tbf[1]);
+	OSMO_ASSERT(ms_is_idle(ms));
+	OSMO_ASSERT(ms_ul_tbf(ms) == NULL);
+	OSMO_ASSERT(ms_dl_tbf(ms) == NULL);
+	OSMO_ASSERT(llist_empty(&ms->old_tbfs));
 	OSMO_ASSERT(was_idle);
 
-	delete ms;
+	talloc_free(ms);
 
 	talloc_free(dl_tbf[0]);
 	talloc_free(dl_tbf[1]);
@@ -260,86 +267,86 @@ static void test_ms_change_tlli()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = new GprsMs(&the_bts, start_tlli);
+	ms = ms_alloc(&the_bts, start_tlli);
 
-	OSMO_ASSERT(ms->is_idle());
+	OSMO_ASSERT(ms_is_idle(ms));
 
 	/* MS announces TLLI, SGSN uses it immediately */
-	ms->set_tlli(new_ms_tlli);
-	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
-	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
-	OSMO_ASSERT(ms->check_tlli(start_tlli));
+	ms_set_tlli(ms, new_ms_tlli);
+	OSMO_ASSERT(ms_tlli(ms) == new_ms_tlli);
+	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
+	OSMO_ASSERT(ms_check_tlli(ms, start_tlli));
 
-	ms->confirm_tlli(new_ms_tlli);
-	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
-	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
-	OSMO_ASSERT(!ms->check_tlli(start_tlli));
+	ms_confirm_tlli(ms, new_ms_tlli);
+	OSMO_ASSERT(ms_tlli(ms) == new_ms_tlli);
+	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
+	OSMO_ASSERT(!ms_check_tlli(ms, start_tlli));
 
 	/* MS announces TLLI, SGSN uses it later */
-	ms->set_tlli(start_tlli);
-	ms->confirm_tlli(start_tlli);
+	ms_set_tlli(ms, start_tlli);
+	ms_confirm_tlli(ms, start_tlli);
 
-	ms->set_tlli(new_ms_tlli);
-	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
-	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
-	OSMO_ASSERT(ms->check_tlli(start_tlli));
+	ms_set_tlli(ms, new_ms_tlli);
+	OSMO_ASSERT(ms_tlli(ms) == new_ms_tlli);
+	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
+	OSMO_ASSERT(ms_check_tlli(ms, start_tlli));
 
-	ms->confirm_tlli(start_tlli);
-	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
-	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
-	OSMO_ASSERT(ms->check_tlli(start_tlli));
+	ms_confirm_tlli(ms, start_tlli);
+	OSMO_ASSERT(ms_tlli(ms) == new_ms_tlli);
+	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
+	OSMO_ASSERT(ms_check_tlli(ms, start_tlli));
 
-	ms->set_tlli(new_ms_tlli);
-	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
-	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
-	OSMO_ASSERT(ms->check_tlli(start_tlli));
+	ms_set_tlli(ms, new_ms_tlli);
+	OSMO_ASSERT(ms_tlli(ms) == new_ms_tlli);
+	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
+	OSMO_ASSERT(ms_check_tlli(ms, start_tlli));
 
-	ms->confirm_tlli(new_ms_tlli);
-	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
-	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
-	OSMO_ASSERT(!ms->check_tlli(start_tlli));
+	ms_confirm_tlli(ms, new_ms_tlli);
+	OSMO_ASSERT(ms_tlli(ms) == new_ms_tlli);
+	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
+	OSMO_ASSERT(!ms_check_tlli(ms, start_tlli));
 
 	/* MS announces TLLI, SGSN uses it later after another new TLLI */
-	ms->set_tlli(start_tlli);
-	ms->confirm_tlli(start_tlli);
+	ms_set_tlli(ms, start_tlli);
+	ms_confirm_tlli(ms, start_tlli);
 
-	ms->set_tlli(new_ms_tlli);
-	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
-	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
-	OSMO_ASSERT(ms->check_tlli(start_tlli));
+	ms_set_tlli(ms, new_ms_tlli);
+	OSMO_ASSERT(ms_tlli(ms) == new_ms_tlli);
+	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
+	OSMO_ASSERT(ms_check_tlli(ms, start_tlli));
 
-	ms->confirm_tlli(other_sgsn_tlli);
-	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
-	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
-	OSMO_ASSERT(ms->check_tlli(other_sgsn_tlli));
+	ms_confirm_tlli(ms, other_sgsn_tlli);
+	OSMO_ASSERT(ms_tlli(ms) == new_ms_tlli);
+	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
+	OSMO_ASSERT(ms_check_tlli(ms, other_sgsn_tlli));
 
-	ms->set_tlli(new_ms_tlli);
-	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
-	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
-	OSMO_ASSERT(ms->check_tlli(other_sgsn_tlli));
+	ms_set_tlli(ms, new_ms_tlli);
+	OSMO_ASSERT(ms_tlli(ms) == new_ms_tlli);
+	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
+	OSMO_ASSERT(ms_check_tlli(ms, other_sgsn_tlli));
 
-	ms->confirm_tlli(new_ms_tlli);
-	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
-	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
-	OSMO_ASSERT(!ms->check_tlli(start_tlli));
-	OSMO_ASSERT(!ms->check_tlli(other_sgsn_tlli));
+	ms_confirm_tlli(ms, new_ms_tlli);
+	OSMO_ASSERT(ms_tlli(ms) == new_ms_tlli);
+	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
+	OSMO_ASSERT(!ms_check_tlli(ms, start_tlli));
+	OSMO_ASSERT(!ms_check_tlli(ms, other_sgsn_tlli));
 
 	/* SGSN uses the new TLLI before it is announced by the MS (shouldn't
 	 * happen in normal use) */
-	ms->set_tlli(start_tlli);
-	ms->confirm_tlli(start_tlli);
+	ms_set_tlli(ms, start_tlli);
+	ms_confirm_tlli(ms, start_tlli);
 
-	ms->confirm_tlli(new_ms_tlli);
-	OSMO_ASSERT(ms->tlli() == start_tlli);
-	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
-	OSMO_ASSERT(ms->check_tlli(start_tlli));
+	ms_confirm_tlli(ms, new_ms_tlli);
+	OSMO_ASSERT(ms_tlli(ms) == start_tlli);
+	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
+	OSMO_ASSERT(ms_check_tlli(ms, start_tlli));
 
-	ms->set_tlli(new_ms_tlli);
-	OSMO_ASSERT(ms->tlli() == new_ms_tlli);
-	OSMO_ASSERT(ms->check_tlli(new_ms_tlli));
-	OSMO_ASSERT(!ms->check_tlli(start_tlli));
+	ms_set_tlli(ms, new_ms_tlli);
+	OSMO_ASSERT(ms_tlli(ms) == new_ms_tlli);
+	OSMO_ASSERT(ms_check_tlli(ms, new_ms_tlli));
+	OSMO_ASSERT(!ms_check_tlli(ms, start_tlli));
 
-	delete ms;
+	talloc_free(ms);
 
 	printf("=== end %s ===\n", __func__);
 }
@@ -353,9 +360,9 @@ static GprsMs *prepare_ms(GprsMsStorage *st, uint32_t tlli, enum gprs_rlcmac_tbf
 	ms = st->create_ms();
 
 	if (dir == GPRS_RLCMAC_UL_TBF)
-		ms->set_tlli(tlli);
+		ms_set_tlli(ms, tlli);
 	else
-		ms->confirm_tlli(tlli);
+		ms_confirm_tlli(ms, tlli);
 
 	return ms;
 }
@@ -378,44 +385,44 @@ static void test_ms_storage()
 
 	ms = prepare_ms(&store, tlli + 0, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(ms != NULL);
-	OSMO_ASSERT(ms->tlli() == tlli + 0);
-	ms->set_imsi(imsi1);
-	OSMO_ASSERT(strcmp(ms->imsi(), imsi1) == 0);
+	OSMO_ASSERT(ms_tlli(ms) == tlli + 0);
+	ms_set_imsi(ms, imsi1);
+	OSMO_ASSERT(strcmp(ms_imsi(ms), imsi1) == 0);
 
 	ms_tmp = store.get_ms(tlli + 0);
 	OSMO_ASSERT(ms == ms_tmp);
-	OSMO_ASSERT(ms->tlli() == tlli + 0);
+	OSMO_ASSERT(ms_tlli(ms) == tlli + 0);
 
 	ms_tmp = store.get_ms(0, 0, imsi1);
 	OSMO_ASSERT(ms == ms_tmp);
-	OSMO_ASSERT(strcmp(ms->imsi(), imsi1) == 0);
+	OSMO_ASSERT(strcmp(ms_imsi(ms), imsi1) == 0);
 	ms_tmp = store.get_ms(0, 0, imsi2);
 	OSMO_ASSERT(ms_tmp == NULL);
 
 	ms = prepare_ms(&store, tlli + 1, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(ms != NULL);
-	OSMO_ASSERT(ms->tlli() == tlli + 1);
-	ms->set_imsi(imsi2);
-	OSMO_ASSERT(strcmp(ms->imsi(), imsi2) == 0);
+	OSMO_ASSERT(ms_tlli(ms) == tlli + 1);
+	ms_set_imsi(ms, imsi2);
+	OSMO_ASSERT(strcmp(ms_imsi(ms), imsi2) == 0);
 
 	ms_tmp = store.get_ms(tlli + 1);
 	OSMO_ASSERT(ms == ms_tmp);
-	OSMO_ASSERT(ms->tlli() == tlli + 1);
+	OSMO_ASSERT(ms_tlli(ms) == tlli + 1);
 
 	ms_tmp = store.get_ms(0, 0, imsi1);
 	OSMO_ASSERT(ms_tmp != NULL);
 	OSMO_ASSERT(ms_tmp != ms);
 	ms_tmp = store.get_ms(0, 0, imsi2);
 	OSMO_ASSERT(ms == ms_tmp);
-	OSMO_ASSERT(strcmp(ms->imsi(), imsi2) == 0);
+	OSMO_ASSERT(strcmp(ms_imsi(ms), imsi2) == 0);
 
 	/* delete ms */
 	ms = store.get_ms(tlli + 0);
 	OSMO_ASSERT(ms != NULL);
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 	new (ul_tbf) gprs_rlcmac_ul_tbf(&the_bts, ms);
-	ms->attach_tbf(ul_tbf);
-	ms->detach_tbf(ul_tbf);
+	ms_attach_tbf(ms, ul_tbf);
+	ms_detach_tbf(ms, ul_tbf);
 	ms = store.get_ms(tlli + 0);
 	OSMO_ASSERT(ms == NULL);
 	ms = store.get_ms(tlli + 1);
@@ -424,8 +431,8 @@ static void test_ms_storage()
 	/* delete ms */
 	ms = store.get_ms(tlli + 1);
 	OSMO_ASSERT(ms != NULL);
-	ms->attach_tbf(ul_tbf);
-	ms->detach_tbf(ul_tbf);
+	ms_attach_tbf(ms, ul_tbf);
+	ms_detach_tbf(ms, ul_tbf);
 	ms = store.get_ms(tlli + 1);
 	OSMO_ASSERT(ms == NULL);
 
@@ -441,62 +448,49 @@ static void test_ms_timeout()
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	BTS the_bts;
 	GprsMs *ms;
-	static enum {UNKNOWN, IS_IDLE, IS_ACTIVE} last_cb = UNKNOWN;
-
-	struct MyCallback: public GprsMs::Callback {
-		virtual void ms_idle(class GprsMs *ms) {
-			OSMO_ASSERT(ms->is_idle());
-			printf("  ms_idle() was called\n");
-			last_cb = IS_IDLE;
-		}
-		virtual void ms_active(class GprsMs *ms) {
-			OSMO_ASSERT(!ms->is_idle());
-			printf("  ms_active() was called\n");
-			last_cb = IS_ACTIVE;
-		}
-	} cb;
+	last_cb = CB_UNKNOWN;
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = new GprsMs(&the_bts, tlli);
-	ms->set_callback(&cb);
-	ms->set_timeout(1);
+	ms = ms_alloc(&the_bts, tlli);
+	ms_set_callback(ms, &ms_cb);
+	ms_set_timeout(ms, 1);
 
-	OSMO_ASSERT(ms->is_idle());
+	OSMO_ASSERT(ms_is_idle(ms));
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
 	new (dl_tbf) gprs_rlcmac_dl_tbf(&the_bts, ms);
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 	new (ul_tbf) gprs_rlcmac_ul_tbf(&the_bts, ms);
 
-	OSMO_ASSERT(last_cb == UNKNOWN);
+	OSMO_ASSERT(last_cb == CB_UNKNOWN);
 
-	ms->attach_tbf(ul_tbf);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(last_cb == IS_ACTIVE);
+	ms_attach_tbf(ms, ul_tbf);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(last_cb == CB_IS_ACTIVE);
 
-	last_cb = UNKNOWN;
+	last_cb = CB_UNKNOWN;
 
-	ms->attach_tbf(dl_tbf);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(last_cb == UNKNOWN);
+	ms_attach_tbf(ms, dl_tbf);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(last_cb == CB_UNKNOWN);
 
-	ms->detach_tbf(ul_tbf);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(last_cb == UNKNOWN);
+	ms_detach_tbf(ms, ul_tbf);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(last_cb == CB_UNKNOWN);
 
-	ms->detach_tbf(dl_tbf);
-	OSMO_ASSERT(!ms->is_idle());
-	OSMO_ASSERT(last_cb == UNKNOWN);
+	ms_detach_tbf(ms, dl_tbf);
+	OSMO_ASSERT(!ms_is_idle(ms));
+	OSMO_ASSERT(last_cb == CB_UNKNOWN);
 
 	usleep(1100000);
 	osmo_timers_update();
 
-	OSMO_ASSERT(ms->is_idle());
-	OSMO_ASSERT(last_cb == IS_IDLE);
+	OSMO_ASSERT(ms_is_idle(ms));
+	OSMO_ASSERT(last_cb == CB_IS_IDLE);
 
-	last_cb = UNKNOWN;
-	delete ms;
+	last_cb = CB_UNKNOWN;
+	talloc_free(ms);
 	talloc_free(dl_tbf);
 	talloc_free(ul_tbf);
 
@@ -519,21 +513,21 @@ static void test_ms_cs_selection()
 	bts->cs_downgrade_threshold = 0;
 	bts->cs_adj_lower_limit = 0;
 
-	ms = new GprsMs(&the_bts, tlli);
+	ms = ms_alloc(&the_bts, tlli);
 
-	OSMO_ASSERT(ms->is_idle());
+	OSMO_ASSERT(ms_is_idle(ms));
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
 	new (dl_tbf) gprs_rlcmac_dl_tbf(&the_bts, ms);
-	ms->attach_tbf(dl_tbf);
+	ms_attach_tbf(ms, dl_tbf);
 
-	OSMO_ASSERT(!ms->is_idle());
+	OSMO_ASSERT(!ms_is_idle(ms));
 
-	OSMO_ASSERT(mcs_chan_code(ms->current_cs_dl()) == 3);
+	OSMO_ASSERT(mcs_chan_code(ms_current_cs_dl(ms)) == 3);
 
 	bts->cs_downgrade_threshold = 200;
 
-	OSMO_ASSERT(mcs_chan_code(ms->current_cs_dl()) == 2);
+	OSMO_ASSERT(mcs_chan_code(ms_current_cs_dl(ms)) == 2);
 
 	talloc_free(dl_tbf);
 
@@ -543,10 +537,10 @@ static void test_ms_cs_selection()
 static void dump_ms(const GprsMs *ms, const char *pref)
 {
 	printf("%s MS DL %s/%s, UL %s/%s, mode %s, <%s>\n", pref,
-	       mcs_name(ms->current_cs_dl()), mcs_name(ms->max_cs_dl()),
-	       mcs_name(ms->current_cs_ul()), mcs_name(ms->max_cs_ul()),
-	       mode_name(ms->mode()),
-	       ms->is_idle() ? "IDLE" : "ACTIVE");
+	       mcs_name(ms_current_cs_dl(ms)), mcs_name(ms_max_cs_dl(ms)),
+	       mcs_name(ms_current_cs_ul(ms)), mcs_name(ms_max_cs_ul(ms)),
+	       mode_name(ms_mode(ms)),
+	       ms_is_idle(ms) ? "IDLE" : "ACTIVE");
 }
 
 static void test_ms_mcs_mode()
@@ -560,48 +554,48 @@ static void test_ms_mcs_mode()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms1 = new GprsMs(&the_bts, tlli);
+	ms1 = ms_alloc(&the_bts, tlli);
 	dump_ms(ms1, "1: no BTS defaults  ");
 
 	bts->initial_cs_dl = 4;
 	bts->initial_cs_ul = 1;
 	bts->cs_downgrade_threshold = 0;
 
-	ms2 = new GprsMs(&the_bts, tlli + 1);
+	ms2 = ms_alloc(&the_bts, tlli + 1);
 	dump_ms(ms2, "2: with BTS defaults");
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
 	new (dl_tbf) gprs_rlcmac_dl_tbf(&the_bts, ms2);
-	ms2->attach_tbf(dl_tbf);
+	ms_attach_tbf(ms2, dl_tbf);
 
 	dump_ms(ms2, "2: after TBF attach ");
 
-	ms1->set_mode(EGPRS);
+	ms_set_mode(ms1, EGPRS);
 	dump_ms(ms1, "1: after mode set   ");
 
-	ms2->set_mode(EGPRS);
+	ms_set_mode(ms2, EGPRS);
 	dump_ms(ms2, "2: after mode set   ");
 
-	ms1->set_current_cs_dl(MCS7);
+	ms_set_current_cs_dl(ms1, MCS7);
 	dump_ms(ms1, "1: after MCS set    ");
 
-	ms2->set_current_cs_dl(MCS8);
+	ms_set_current_cs_dl(ms2, MCS8);
 	dump_ms(ms2, "2: after MCS set    ");
 
-	ms1->set_mode(EGPRS_GMSK);
+	ms_set_mode(ms1, EGPRS_GMSK);
 	dump_ms(ms1, "1: after mode set   ");
 
-	ms2->set_mode(EGPRS_GMSK);
+	ms_set_mode(ms2, EGPRS_GMSK);
 	dump_ms(ms2, "2: after mode set   ");
 
 	// FIXME: following code triggers ASAN failure:
 	// ms2->detach_tbf(dl_tbf);
 	// dump_ms(ms2, "2: after TBF detach ");
 
-	ms1->set_mode(GPRS);
+	ms_set_mode(ms1, GPRS);
 	dump_ms(ms1, "1: after mode set   ");
 
-	ms2->set_mode(GPRS);
+	ms_set_mode(ms2, GPRS);
 	dump_ms(ms2, "2: after mode set   ");
 
 	talloc_free(dl_tbf);

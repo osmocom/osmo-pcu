@@ -152,9 +152,9 @@ void cleanup()
 {
 	fprintf(stderr, "--- %s ---\n",  __func__);
 
+	tbf_free(tbf1);
+	tbf_free(tbf2);
 	BTS::main_bts()->cleanup();
-	talloc_free(tbf1);
-	talloc_free(tbf2);
 	/* FIXME: talloc report disabled, because bts->ms_alloc() in prepare_bts_with_two_dl_tbf_subscr() causes leak */
 	/* talloc_report_full(tall_pcu_ctx, stderr); */
 	talloc_free(tall_pcu_ctx);

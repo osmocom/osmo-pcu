@@ -79,18 +79,12 @@ struct pcu_l1_meas_ts {
 	unsigned have_ms_i_level:1;
 
 	int16_t ms_i_level; /* I_LEVEL in dB */
-
-#ifdef __cplusplus
-	pcu_l1_meas_ts& set_ms_i_level(int16_t v) {
-		ms_i_level = v; have_ms_i_level = 1; return *this;
-	}
-
-	pcu_l1_meas_ts() :
-		have_ms_i_level(0),
-		ms_i_level(0)
-	{}
-#endif
 };
+
+static inline void pcu_l1_meas_ts_set_ms_i_level(struct pcu_l1_meas_ts* ts, int16_t v) {
+	ts->ms_i_level = v;
+	ts->have_ms_i_level = 1;
+}
 
 struct pcu_l1_meas {
 	unsigned have_rssi:1;
@@ -111,48 +105,43 @@ struct pcu_l1_meas {
 	int16_t ms_sign_var; /* SIGN_VAR in dB */
 
 	struct pcu_l1_meas_ts ts[8];
-
-#ifdef __cplusplus
-	pcu_l1_meas& set_rssi(int8_t v) { rssi = v; have_rssi = 1; return *this;}
-	pcu_l1_meas& set_ber(uint8_t v) { ber = v; have_ber = 1; return *this;}
-	pcu_l1_meas& set_bto(int16_t v) { bto = v; have_bto = 1; return *this;}
-	pcu_l1_meas& set_link_qual(int16_t v) {
-		link_qual = v; have_link_qual = 1; return *this;
-	}
-	pcu_l1_meas& set_ms_rx_qual(int16_t v) {
-		ms_rx_qual = v; have_ms_rx_qual = 1; return *this;
-	}
-	pcu_l1_meas& set_ms_c_value(int16_t v) {
-		ms_c_value = v; have_ms_c_value = 1; return *this;
-	}
-	pcu_l1_meas& set_ms_sign_var(int16_t v) {
-		ms_sign_var = v; have_ms_sign_var = 1; return *this;
-	}
-	pcu_l1_meas& set_ms_i_level(size_t idx, int16_t v) {
-		ts[idx].set_ms_i_level(v); have_ms_i_level = 1; return *this;
-	}
-	pcu_l1_meas() :
-		have_rssi(0),
-		have_ber(0),
-		have_bto(0),
-		have_link_qual(0),
-		have_ms_rx_qual(0),
-		have_ms_c_value(0),
-		have_ms_sign_var(0),
-		have_ms_i_level(0),
-		rssi(0),
-		ber(0),
-		bto(0),
-		link_qual(0),
-		ms_rx_qual(0),
-		ms_c_value(0),
-		ms_sign_var(0)
-	{}
-#endif
 };
 
+static inline void pcu_l1_meas_set_rssi(struct pcu_l1_meas *m, int8_t v) {
+	m->rssi = v;
+	m->have_rssi = 1;
+}
+static inline void pcu_l1_meas_set_ber(struct pcu_l1_meas *m, uint8_t v) {
+	m->ber = v;
+	m->have_ber = 1;
+}
+static inline void pcu_l1_meas_set_bto(struct pcu_l1_meas *m, int16_t v) {
+	m->bto = v;
+	m->have_bto = 1;
+}
+static inline void pcu_l1_meas_set_link_qual(struct pcu_l1_meas *m, int16_t v) {
+	m->link_qual = v;
+	m->have_link_qual = 1;
+}
+static inline void pcu_l1_meas_set_ms_rx_qual(struct pcu_l1_meas *m, int16_t v) {
+	m->ms_rx_qual = v;
+	m->have_ms_rx_qual = 1;
+}
+static inline void pcu_l1_meas_set_ms_c_value(struct pcu_l1_meas *m, int16_t v) {
+	m->ms_c_value = v;
+	m->have_ms_c_value = 1;
+}
+static inline void pcu_l1_meas_set_ms_sign_var(struct pcu_l1_meas *m, int16_t v) {
+	m->ms_sign_var = v;
+	m->have_ms_sign_var = 1;
+}
+static inline void pcu_l1_meas_set_ms_i_level(struct pcu_l1_meas *m, size_t idx, int16_t v) {
+	pcu_l1_meas_ts_set_ms_i_level(&m->ts[idx], v);
+	m->have_ms_i_level = 1;
+}
+
 #ifdef __cplusplus
-void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn, 
+void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
         uint32_t fn, uint8_t block_nr);
 void pcu_l1if_tx_ptcch(uint8_t trx, uint8_t ts, uint16_t arfcn,
 		       uint32_t fn, uint8_t block_nr,

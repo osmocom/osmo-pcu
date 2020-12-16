@@ -141,14 +141,13 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, GprsMs *ms, gprs_rlcmac_tbf_directio
 	m_tfi(0),
 	m_created_ts(0),
 	m_ctrs(NULL),
-	m_ms(ms),
 	state(GPRS_RLCMAC_NULL),
+	m_ms(ms),
 	dl_ass_state(GPRS_RLCMAC_DL_ASS_NONE),
 	ul_ass_state(GPRS_RLCMAC_UL_ASS_NONE),
 	ul_ack_state(GPRS_RLCMAC_UL_ACK_NONE),
 	poll_state(GPRS_RLCMAC_POLL_NONE),
 	m_list(this),
-	m_ms_list(this),
 	m_egprs_enabled(false)
 {
 	/* The classes of these members do not have proper constructors yet.
@@ -157,6 +156,9 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, GprsMs *ms, gprs_rlcmac_tbf_directio
 	memset(&Tarr, 0, sizeof(Tarr));
 	memset(&Narr, 0, sizeof(Narr));
 	memset(&gsm_timer, 0, sizeof(gsm_timer));
+
+	memset(&m_ms_list, 0, sizeof(m_ms_list));
+	m_ms_list.entry = this;
 
 	m_rlc.init();
 	m_llc.init();
@@ -171,27 +173,27 @@ gprs_rlcmac_bts *gprs_rlcmac_tbf::bts_data() const
 
 uint32_t gprs_rlcmac_tbf::tlli() const
 {
-	return m_ms ? m_ms->tlli() : GSM_RESERVED_TMSI;
+	return m_ms ? ms_tlli(m_ms) : GSM_RESERVED_TMSI;
 }
 
 const char *gprs_rlcmac_tbf::imsi() const
 {
-	return m_ms->imsi();
+	return ms_imsi(m_ms);
 }
 
 uint8_t gprs_rlcmac_tbf::ta() const
 {
-	return m_ms->ta();
+	return ms_ta(m_ms);
 }
 
 void gprs_rlcmac_tbf::set_ta(uint8_t ta)
 {
-	ms()->set_ta(ta);
+	ms_set_ta(m_ms, ta);
 }
 
 uint8_t gprs_rlcmac_tbf::ms_class() const
 {
-	return m_ms->ms_class();
+	return ms_ms_class(m_ms);
 }
 
 enum CodingScheme gprs_rlcmac_tbf::current_cs() const
@@ -199,28 +201,21 @@ enum CodingScheme gprs_rlcmac_tbf::current_cs() const
 	enum CodingScheme cs;
 
 	if (direction == GPRS_RLCMAC_UL_TBF)
-		cs = m_ms ? m_ms->current_cs_ul() : UNKNOWN;
+		cs = m_ms ? ms_current_cs_ul(m_ms) : UNKNOWN;
 	else
-		cs = m_ms ? m_ms->current_cs_dl() : UNKNOWN;
+		cs = m_ms ? ms_current_cs_dl(m_ms) : UNKNOWN;
 
 	return cs;
 }
 
 gprs_llc_queue *gprs_rlcmac_tbf::llc_queue()
 {
-	return m_ms ? m_ms->llc_queue() : NULL;
+	return m_ms ? ms_llc_queue(m_ms) : NULL;
 }
 
 const gprs_llc_queue *gprs_rlcmac_tbf::llc_queue() const
 {
-	return m_ms ? m_ms->llc_queue() : NULL;
-}
-
-size_t gprs_rlcmac_tbf::llc_queue_size() const
-{
-	/* m_ms->llc_queue() never returns NULL: GprsMs::m_llc_queue is a
-	 * member instance. */
-	return m_ms ? m_ms->llc_queue()->size() : 0;
+	return ms_llc_queue(m_ms);
 }
 
 void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
@@ -229,13 +224,13 @@ void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 		return;
 
 	if (m_ms) {
-		m_ms->detach_tbf(this);
+		ms_detach_tbf(m_ms, this);
 	}
 
 	m_ms = ms;
 
 	if (m_ms)
-		m_ms->attach_tbf(this);
+		ms_attach_tbf(m_ms, this);
 }
 
 void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
@@ -247,18 +242,18 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction di
 	 * MS object that belongs to that TLLI and if yes make sure one of them
 	 * gets deleted. This is the same problem that can arise with
 	 * IMSI in gprs_rlcmac_dl_tbf::handle() so there should be a unified solution */
-	if (!ms()->check_tlli(tlli)) {
+	if (!ms_check_tlli(ms(), tlli)) {
 		GprsMs *old_ms;
 
 		old_ms = bts->ms_store().get_ms(tlli, 0, NULL);
 		if (old_ms)
-			ms()->merge_and_clear_ms(old_ms);
+			ms_merge_and_clear_ms(ms(), old_ms);
 	}
 
 	if (dir == GPRS_RLCMAC_UL_TBF)
-		ms()->set_tlli(tlli);
+		ms_set_tlli(ms(), tlli);
 	else
-		ms()->confirm_tlli(tlli);
+		ms_confirm_tlli(ms(), tlli);
 }
 
 static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
@@ -745,7 +740,7 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
 	int rc;
 
-	if (m_ms->mode() != GPRS)
+	if (ms_mode(m_ms) != GPRS)
 		enable_egprs();
 
 	m_created_ts = time(NULL);
@@ -775,7 +770,7 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 		return -1;
 	}
 
-	m_ms->attach_tbf(this);
+	ms_attach_tbf(m_ms, this);
 
 	return 0;
 }
@@ -895,7 +890,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	}
 
 	if (ms())
-		new_dl_tbf = ms()->dl_tbf();
+		new_dl_tbf = ms_dl_tbf(ms());
 
 	if (!new_dl_tbf) {
 		LOGPTBFDL(this, LOGL_ERROR,
@@ -1012,7 +1007,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 		return NULL;
 
 	if (ms())
-		new_tbf = ms()->ul_tbf();
+		new_tbf = ms_ul_tbf(ms());
 	if (!new_tbf) {
 		LOGPTBFUL(this, LOGL_ERROR,
 			  "We have a schedule for uplink assignment, but there is no uplink TBF\n");
@@ -1169,4 +1164,59 @@ uint8_t gprs_rlcmac_tbf::ul_slots() const
 bool gprs_rlcmac_tbf::is_control_ts(uint8_t ts) const
 {
 	return ts == control_ts;
+}
+
+/* C API */
+enum gprs_rlcmac_tbf_state tbf_state(const struct gprs_rlcmac_tbf *tbf)
+{
+	return tbf->state;
+}
+
+enum gprs_rlcmac_tbf_direction tbf_direction(const struct gprs_rlcmac_tbf *tbf)
+{
+	return tbf->direction;
+}
+
+void tbf_set_ms(struct gprs_rlcmac_tbf *tbf, GprsMs *ms)
+{
+	tbf->set_ms(ms);
+}
+
+struct llist_head *tbf_ms_list(struct gprs_rlcmac_tbf *tbf)
+{
+	return &tbf->m_ms_list.list;
+}
+
+struct GprsMs *tbf_ms(struct gprs_rlcmac_tbf *tbf)
+{
+	return tbf->ms();
+}
+
+bool tbf_timers_pending(struct gprs_rlcmac_tbf *tbf, enum tbf_timers t)
+{
+	return tbf->timers_pending(t);
+}
+
+struct gprs_llc *tbf_llc(struct gprs_rlcmac_tbf *tbf)
+{
+	return &tbf->m_llc;
+}
+
+uint8_t tbf_first_common_ts(const struct gprs_rlcmac_tbf *tbf)
+{
+	return tbf->first_common_ts;
+}
+
+uint8_t tbf_dl_slots(const struct gprs_rlcmac_tbf *tbf)
+{
+	return tbf->dl_slots();
+}
+uint8_t tbf_ul_slots(const struct gprs_rlcmac_tbf *tbf)
+{
+	return tbf->ul_slots();
+}
+
+bool tbf_is_tfi_assigned(const struct gprs_rlcmac_tbf *tbf)
+{
+	return tbf->is_tfi_assigned();
 }

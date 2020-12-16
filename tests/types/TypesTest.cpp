@@ -58,27 +58,27 @@ static void test_llc(void)
 		gprs_llc llc;
 		llc.init();
 
-		OSMO_ASSERT(llc.chunk_size() == 0);
-		OSMO_ASSERT(llc.remaining_space() == LLC_MAX_LEN);
-		OSMO_ASSERT(llc.frame_length() == 0);
+		OSMO_ASSERT(llc_chunk_size(&llc) == 0);
+		OSMO_ASSERT(llc_remaining_space(&llc) == LLC_MAX_LEN);
+		OSMO_ASSERT(llc_frame_length(&llc) == 0);
 
 		llc.put_frame(data, 2);
-		OSMO_ASSERT(llc.remaining_space() == LLC_MAX_LEN - 2);
-		OSMO_ASSERT(llc.frame_length() == 2);
-		OSMO_ASSERT(llc.chunk_size() == 2);
+		OSMO_ASSERT(llc_remaining_space(&llc) == LLC_MAX_LEN - 2);
+		OSMO_ASSERT(llc_frame_length(&llc) == 2);
+		OSMO_ASSERT(llc_chunk_size(&llc) == 2);
 		OSMO_ASSERT(llc.frame[0] == 1);
 		OSMO_ASSERT(llc.frame[1] == 2);
 
 		llc.append_frame(&data[3], 1);
-		OSMO_ASSERT(llc.remaining_space() == LLC_MAX_LEN - 3);
-		OSMO_ASSERT(llc.frame_length() == 3);
-		OSMO_ASSERT(llc.chunk_size() == 3);
+		OSMO_ASSERT(llc_remaining_space(&llc) == LLC_MAX_LEN - 3);
+		OSMO_ASSERT(llc_frame_length(&llc) == 3);
+		OSMO_ASSERT(llc_chunk_size(&llc) == 3);
 
 		/* consume two bytes */
-		llc.consume(&out, 1);
-		OSMO_ASSERT(llc.remaining_space() == LLC_MAX_LEN - 3);
-		OSMO_ASSERT(llc.frame_length() == 3);
-		OSMO_ASSERT(llc.chunk_size() == 2);
+		llc_consume_data(&llc, &out, 1);
+		OSMO_ASSERT(llc_remaining_space(&llc) == LLC_MAX_LEN - 3);
+		OSMO_ASSERT(llc_frame_length(&llc) == 3);
+		OSMO_ASSERT(llc_chunk_size(&llc) == 2);
 
 		/* check that the bytes are as we expected */
 		OSMO_ASSERT(llc.frame[0] == 1);
@@ -86,9 +86,9 @@ static void test_llc(void)
 		OSMO_ASSERT(llc.frame[2] == 4);
 
 		/* now fill the frame */
-		llc.append_frame(data, llc.remaining_space() - 1);
-		OSMO_ASSERT(llc.fits_in_current_frame(1));
-		OSMO_ASSERT(!llc.fits_in_current_frame(2));
+		llc.append_frame(data, llc_remaining_space(&llc) - 1);
+		OSMO_ASSERT(llc_fits_in_current_frame(&llc, 1));
+		OSMO_ASSERT(!llc_fits_in_current_frame(&llc, 2));
 	}
 }
 

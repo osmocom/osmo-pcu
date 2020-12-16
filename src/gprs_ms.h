@@ -1,6 +1,6 @@
 /* gprs_ms.h
  *
- * Copyright (C) 2015 by Sysmocom s.f.m.c. GmbH
+ * Copyright (C) 2015-2020 by Sysmocom s.f.m.c. GmbH
  * Author: Jacob Erlbeck <jerlbeck@sysmocom.de>
  *
  * This program is free software; you can redistribute it and/or
@@ -22,22 +22,23 @@
 
 struct gprs_codel;
 
-#include "cxx_linuxlist.h"
 #include "llc.h"
 #include "tbf.h"
 #include "tbf_ul.h"
 #include "tbf_dl.h"
 #include "pcu_l1_if.h"
 
+#ifdef __cplusplus
 extern "C" {
-	#include <osmocom/core/timer.h>
-	#include <osmocom/core/linuxlist.h>
+#endif
 
-	#include <osmocom/gsm/protocol/gsm_23_003.h>
-	#include <osmocom/gsm/gsm48.h>
+#include <osmocom/core/timer.h>
+#include <osmocom/core/linuxlist.h>
 
-	#include "coding_scheme.h"
-}
+#include <osmocom/gsm/protocol/gsm_23_003.h>
+#include <osmocom/gsm/gsm48.h>
+
+#include "coding_scheme.h"
 
 #include <stdint.h>
 #include <stddef.h>
@@ -45,268 +46,207 @@ extern "C" {
 
 struct BTS;
 struct gprs_rlcmac_trx;
+struct GprsMs;
 
-class GprsMs {
-public:
-	struct Callback {
-		virtual void ms_idle(class GprsMs *) = 0;
-		virtual void ms_active(class GprsMs *) = 0;
-	};
-
-	class Guard {
-		public:
-		Guard(GprsMs *ms);
-		~Guard();
-
-		bool is_idle() const;
-
-		private:
-		GprsMs * const m_ms;
-	};
-
-	GprsMs(BTS *bts, uint32_t tlli);
-	~GprsMs();
-
-	void set_callback(Callback *cb) {m_cb = cb;}
-
-	void merge_and_clear_ms(GprsMs *old_ms);
-
-	gprs_rlcmac_ul_tbf *ul_tbf() const {return m_ul_tbf;}
-	gprs_rlcmac_dl_tbf *dl_tbf() const {return m_dl_tbf;}
-	gprs_rlcmac_tbf *tbf(enum gprs_rlcmac_tbf_direction dir) const;
-	uint32_t tlli() const;
-	void set_tlli(uint32_t tlli);
-	bool confirm_tlli(uint32_t tlli);
-	bool check_tlli(uint32_t tlli);
-
-	void reset();
-	enum mcs_kind mode() const;
-	void set_mode(enum mcs_kind mode);
-
-	const char *imsi() const;
-	void set_imsi(const char *imsi);
-
-	uint8_t ta() const;
-	void set_ta(uint8_t ta);
-	uint8_t ms_class() const;
-	uint8_t egprs_ms_class() const;
-	void set_ms_class(uint8_t ms_class);
-	void set_egprs_ms_class(uint8_t ms_class);
-	void set_current_cs_dl(enum CodingScheme scheme);
-
-	enum CodingScheme current_cs_ul() const;
-	enum CodingScheme current_cs_dl() const;
-	enum CodingScheme max_cs_ul() const;
-	enum CodingScheme max_cs_dl() const;
-
-	int first_common_ts() const;
-	uint8_t dl_slots() const;
-	uint8_t ul_slots() const;
-	uint8_t reserved_dl_slots() const;
-	uint8_t reserved_ul_slots() const;
-	uint8_t current_pacch_slots() const;
-	gprs_rlcmac_trx *current_trx() const;
-	void set_reserved_slots(gprs_rlcmac_trx *trx,
-		uint8_t ul_slots, uint8_t dl_slots);
-
-	gprs_llc_queue *llc_queue();
-	const gprs_llc_queue *llc_queue() const;
-	gprs_codel *codel_state() const;
-
-	void set_timeout(unsigned secs);
-
-	void attach_tbf(gprs_rlcmac_tbf *tbf);
-	void attach_ul_tbf(gprs_rlcmac_ul_tbf *tbf);
-	void attach_dl_tbf(gprs_rlcmac_dl_tbf *tbf);
-
-	void detach_tbf(gprs_rlcmac_tbf *tbf);
-
-	void update_error_rate(gprs_rlcmac_tbf *tbf, int percent);
-
-	bool is_idle() const;
-	bool need_dl_tbf() const;
-
-	void* operator new(size_t num);
-	void operator delete(void* p);
-
-	LListHead<GprsMs>& list() {return this->m_list;}
-	const LListHead<GprsMs>& list() const {return this->m_list;}
-	const LListHead<gprs_rlcmac_tbf>& old_tbfs() const {return m_old_tbfs;}
-
-	void update_l1_meas(const pcu_l1_meas *meas);
-	const pcu_l1_meas* l1_meas() const {return &m_l1_meas;};
-	unsigned nack_rate_dl() const;
-	unsigned dl_ctrl_msg() const;
-	void update_dl_ctrl_msg();
-
-	/* internal use */
-	static void timeout(void *priv_);
-
-	bool app_info_pending;
-
-protected:
-	void merge_old_ms(GprsMs *old_ms);
-	void update_status();
-	GprsMs *ref();
-	void unref();
-	void start_timer();
-	void stop_timer();
-	void update_cs_ul(const pcu_l1_meas*);
-
-private:
-	BTS *m_bts;
-	Callback * m_cb;
-	gprs_rlcmac_ul_tbf *m_ul_tbf;
-	gprs_rlcmac_dl_tbf *m_dl_tbf;
-	LListHead<gprs_rlcmac_tbf> m_old_tbfs;
-
-	uint32_t m_tlli;
-	uint32_t m_new_ul_tlli;
-	uint32_t m_new_dl_tlli;
-
-	/* store IMSI for look-up and PCH retransmission */
-	char m_imsi[OSMO_IMSI_BUF_SIZE];
-	uint8_t m_ta;
-	uint8_t m_ms_class;
-	uint8_t m_egprs_ms_class;
-	/* current coding scheme */
-	enum CodingScheme m_current_cs_ul;
-	enum CodingScheme m_current_cs_dl;
-
-	gprs_llc_queue m_llc_queue;
-
-	bool m_is_idle;
-	int m_ref;
-	LListHead<GprsMs> m_list;
-	struct osmo_timer_list m_timer;
-	unsigned m_delay;
-
-	int64_t m_last_cs_not_low;
-
-	pcu_l1_meas m_l1_meas;
-	unsigned m_nack_rate_dl;
-	uint8_t m_reserved_dl_slots;
-	uint8_t m_reserved_ul_slots;
-	gprs_rlcmac_trx *m_current_trx;
-
-	struct gprs_codel *m_codel_state;
-	enum mcs_kind m_mode;
-
-	unsigned m_dl_ctrl_msg;
+struct gpr_ms_callback {
+	void (*ms_idle)(struct GprsMs *);
+	void (*ms_active)(struct GprsMs *);
 };
 
-inline bool GprsMs::is_idle() const
+struct GprsMs {
+	struct llist_head list; /* list of all GprsMs */
+	struct gpr_ms_callback cb;
+	bool app_info_pending;
+
+	struct BTS *bts;
+	struct gprs_rlcmac_ul_tbf *ul_tbf;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	struct llist_head old_tbfs; /* list of gprs_rlcmac_tbf */
+
+	uint32_t tlli;
+	uint32_t new_ul_tlli;
+	uint32_t new_dl_tlli;
+
+	/* store IMSI for look-up and PCH retransmission */
+	char imsi[OSMO_IMSI_BUF_SIZE];
+	uint8_t ta;
+	uint8_t ms_class;
+	uint8_t egprs_ms_class;
+	/* current coding scheme */
+	enum CodingScheme current_cs_ul;
+	enum CodingScheme current_cs_dl;
+
+	struct gprs_llc_queue llc_queue;
+
+	bool is_idle;
+	int ref;
+	struct osmo_timer_list timer;
+	unsigned delay;
+
+	int64_t last_cs_not_low;
+
+	struct pcu_l1_meas l1_meas;
+	unsigned nack_rate_dl;
+	uint8_t reserved_dl_slots;
+	uint8_t reserved_ul_slots;
+	struct gprs_rlcmac_trx *current_trx;
+
+	struct gprs_codel *codel_state;
+	enum mcs_kind mode;
+
+	unsigned dl_ctrl_msg;
+};
+
+struct GprsMs *ms_alloc(struct BTS *bts, uint32_t tlli);
+
+int ms_first_common_ts(const struct GprsMs *ms);
+void ms_set_reserved_slots(struct GprsMs *ms, struct gprs_rlcmac_trx *trx,
+			   uint8_t ul_slots, uint8_t dl_slots);
+struct GprsMs *ms_ref(struct GprsMs *ms);
+void ms_unref(struct GprsMs *ms);
+void ms_set_mode(struct GprsMs *ms, enum mcs_kind mode);
+void ms_set_ms_class(struct GprsMs *ms, uint8_t ms_class_);
+void ms_set_egprs_ms_class(struct GprsMs *ms, uint8_t ms_class_);
+void ms_set_ta(struct GprsMs *ms, uint8_t ta_);
+
+enum CodingScheme ms_current_cs_dl(const struct GprsMs *ms);
+enum CodingScheme ms_max_cs_ul(const struct GprsMs *ms);
+enum CodingScheme ms_max_cs_dl(const struct GprsMs *ms);
+void ms_set_current_cs_dl(struct GprsMs *ms, enum CodingScheme scheme);
+
+void ms_update_error_rate(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, int error_rate);
+uint8_t ms_current_pacch_slots(const struct GprsMs *ms);
+
+void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms);
+
+void ms_attach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf);
+void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf);
+
+void ms_set_tlli(struct GprsMs *ms, uint32_t tlli);
+bool ms_confirm_tlli(struct GprsMs *ms, uint32_t tlli);
+void ms_set_imsi(struct GprsMs *ms, const char *imsi);
+
+void ms_update_l1_meas(struct GprsMs *ms, const struct pcu_l1_meas *meas);
+
+struct gprs_rlcmac_tbf *ms_tbf(const struct GprsMs *ms, enum gprs_rlcmac_tbf_direction dir);
+static inline struct gprs_rlcmac_ul_tbf *ms_ul_tbf(const struct GprsMs *ms) {return ms->ul_tbf;}
+static inline struct gprs_rlcmac_dl_tbf *ms_dl_tbf(const struct GprsMs *ms) {return ms->dl_tbf;}
+
+
+void ms_set_callback(struct GprsMs *ms, struct gpr_ms_callback *cb);
+
+static inline bool ms_is_idle(const struct GprsMs *ms)
 {
-	return !m_ul_tbf && !m_dl_tbf && !m_ref && llist_empty(&m_old_tbfs);
+	return !ms->ul_tbf && !ms->dl_tbf && !ms->ref && llist_empty(&ms->old_tbfs);
 }
 
-inline bool GprsMs::need_dl_tbf() const
+static inline struct gprs_llc_queue *ms_llc_queue(struct GprsMs *ms)
 {
-	if (dl_tbf() != NULL && dl_tbf()->state_is_not(GPRS_RLCMAC_WAIT_RELEASE))
+	return &ms->llc_queue;
+}
+
+static inline bool ms_need_dl_tbf(struct GprsMs *ms)
+{
+	if (ms_dl_tbf(ms) != NULL &&
+	    tbf_state((const struct gprs_rlcmac_tbf *)ms_dl_tbf(ms)) != GPRS_RLCMAC_WAIT_RELEASE)
 		return false;
 
-	return llc_queue()->size() > 0;
+	return llc_queue_size(ms_llc_queue(ms)) > 0;
 }
 
-inline uint32_t GprsMs::tlli() const
+static inline uint32_t ms_tlli(const struct GprsMs *ms)
 {
-	if (m_new_ul_tlli != GSM_RESERVED_TMSI)
-		return m_new_ul_tlli;
-	if (m_tlli != GSM_RESERVED_TMSI)
-		return m_tlli;
+	if (ms->new_ul_tlli != GSM_RESERVED_TMSI)
+		return ms->new_ul_tlli;
+	if (ms->tlli != GSM_RESERVED_TMSI)
+		return ms->tlli;
 
-	return m_new_dl_tlli;
+	return ms->new_dl_tlli;
 }
 
-inline bool GprsMs::check_tlli(uint32_t tlli)
+static inline bool ms_check_tlli(struct GprsMs *ms, uint32_t tlli)
 {
 	return tlli != GSM_RESERVED_TMSI &&
-		(tlli == m_tlli || tlli == m_new_ul_tlli || tlli == m_new_dl_tlli);
+		(tlli == ms->tlli || tlli == ms->new_ul_tlli || tlli == ms->new_dl_tlli);
 }
 
-inline const char *GprsMs::imsi() const
+static inline const char *ms_imsi(const struct GprsMs *ms)
 {
-	return m_imsi;
+	return ms->imsi;
 }
 
-inline uint8_t GprsMs::ta() const
+static inline uint8_t ms_ta(const struct GprsMs *ms)
 {
-	return m_ta;
+	return ms->ta;
 }
 
-inline uint8_t GprsMs::ms_class() const
+static inline uint8_t ms_ms_class(const struct GprsMs *ms)
 {
-	return m_ms_class;
+	return ms->ms_class;
 }
 
-inline uint8_t GprsMs::egprs_ms_class() const
+static inline uint8_t ms_egprs_ms_class(const struct GprsMs *ms)
 {
-	return m_egprs_ms_class;
+	return ms->egprs_ms_class;
 }
 
-inline enum CodingScheme GprsMs::current_cs_ul() const
+static inline enum CodingScheme ms_current_cs_ul(const struct GprsMs *ms)
 {
-	return m_current_cs_ul;
+	return ms->current_cs_ul;
 }
 
-inline enum mcs_kind GprsMs::mode() const
+static inline enum mcs_kind ms_mode(const struct GprsMs *ms)
 {
-	return m_mode;
+	return ms->mode;
 }
 
-inline void GprsMs::set_timeout(unsigned secs)
+static inline void ms_set_timeout(struct GprsMs *ms, unsigned secs)
 {
-	m_delay = secs;
+	ms->delay = secs;
 }
 
-inline gprs_llc_queue *GprsMs::llc_queue()
+static inline struct gprs_codel *ms_codel_state(const struct GprsMs *ms)
 {
-	return &m_llc_queue;
+	return ms->codel_state;
 }
 
-inline const gprs_llc_queue *GprsMs::llc_queue() const
+static inline unsigned ms_nack_rate_dl(const struct GprsMs *ms)
 {
-	return &m_llc_queue;
+	return ms->nack_rate_dl;
 }
 
-inline gprs_codel *GprsMs::codel_state() const
+static inline unsigned ms_dl_ctrl_msg(const struct GprsMs *ms)
 {
-	return m_codel_state;
+	return ms->dl_ctrl_msg;
 }
 
-inline unsigned GprsMs::nack_rate_dl() const
+static inline void ms_update_dl_ctrl_msg(struct GprsMs *ms)
 {
-	return m_nack_rate_dl;
+	ms->dl_ctrl_msg++;
 }
 
-inline unsigned GprsMs::dl_ctrl_msg() const
+static inline uint8_t ms_reserved_dl_slots(const struct GprsMs *ms)
 {
-	return m_dl_ctrl_msg;
+	return ms->reserved_dl_slots;
 }
 
-inline void GprsMs::update_dl_ctrl_msg()
+static inline uint8_t ms_reserved_ul_slots(const struct GprsMs *ms)
 {
-	m_dl_ctrl_msg++;
+	return ms->reserved_ul_slots;
 }
 
-inline uint8_t GprsMs::reserved_dl_slots() const
+static inline struct gprs_rlcmac_trx *ms_current_trx(const struct GprsMs *ms)
 {
-	return m_reserved_dl_slots;
-}
-
-inline uint8_t GprsMs::reserved_ul_slots() const
-{
-	return m_reserved_ul_slots;
-}
-
-inline gprs_rlcmac_trx *GprsMs::current_trx() const
-{
-	return m_current_trx;
+	return ms->current_trx;
 }
 
 #define LOGPMS(ms, category, level, fmt, args...) \
 	LOGP(category, level, "MS(TLLI=0x%08x, IMSI=%s, TA=%" PRIu8 ", %" PRIu8 "/%" PRIu8 ",%s%s) " fmt, \
-	     (ms)->tlli(), (ms)->imsi(), (ms)->ta(), (ms)->ms_class(), (ms)->egprs_ms_class(), \
-	     (ms)->ul_tbf() ? " UL": "", \
-	     (ms)->dl_tbf() ? " DL": "", \
+	     ms_tlli(ms), ms_imsi(ms), ms_ta(ms), ms_ms_class(ms), ms_egprs_ms_class(ms), \
+	     ms_ul_tbf(ms) ? " UL": "", \
+	     ms_dl_tbf(ms) ? " DL": "", \
 	     ## args)
+
+#ifdef __cplusplus
+}
+#endif

@@ -318,7 +318,7 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	int rc;
 	int current_fn = get_current_fn();
-	pcu_l1_meas meas;
+	struct pcu_l1_meas meas = {0};
 	uint8_t gsmtap_chantype;
 
 	LOGP(DL1IF, LOGL_DEBUG, "Data indication received: sapi=%d arfcn=%d "
@@ -328,11 +328,11 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 
 	switch (data_ind->sapi) {
 	case PCU_IF_SAPI_PDTCH:
-		meas.set_rssi(data_ind->rssi);
+		pcu_l1_meas_set_rssi(&meas, data_ind->rssi);
 		/* convert BER to % value */
-		meas.set_ber(data_ind->ber10k / 100);
-		meas.set_bto(data_ind->ta_offs_qbits);
-		meas.set_link_qual(data_ind->lqual_cb / 10);
+		pcu_l1_meas_set_ber(&meas, data_ind->ber10k / 100);
+		pcu_l1_meas_set_bto(&meas, data_ind->ta_offs_qbits);
+		pcu_l1_meas_set_link_qual(&meas, data_ind->lqual_cb / 10);
 
 		LOGP(DL1IF, LOGL_DEBUG, "Data indication with raw measurements received: BER10k = %d, BTO = %d, Q = %d\n",
 		     data_ind->ber10k, data_ind->ta_offs_qbits, data_ind->lqual_cb);
@@ -824,8 +824,8 @@ static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)
 	if ((ms = bts->ms_store().get_ms(susp_req->tlli))) {
 		/* We need to catch both pointers here since MS may become freed
 		   after first tbf_free(dl_tbf) if only DL TBF was available */
-		dl_tbf = ms->dl_tbf();
-		ul_tbf = ms->ul_tbf();
+		dl_tbf = ms_dl_tbf(ms);
+		ul_tbf = ms_ul_tbf(ms);
 		if (dl_tbf)
 			tbf_free(dl_tbf);
 		if (ul_tbf)
@@ -840,7 +840,7 @@ static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)
 
 static int pcu_rx_app_info_req(struct gsm_pcu_if_app_info_req *app_info_req)
 {
-	LListHead<GprsMs> *ms_iter;
+	GprsMs *ms;
 	BTS *bts = BTS::main_bts();
 	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
 
@@ -848,9 +848,8 @@ static int pcu_rx_app_info_req(struct gsm_pcu_if_app_info_req *app_info_req)
 	     app_info_req->application_type, app_info_req->len);
 
 	bts_data->app_info_pending = 0;
-	llist_for_each(ms_iter, &bts->ms_store().ms_list()) {
-		GprsMs *ms = ms_iter->entry();
-		if (!ms->dl_tbf())
+	llist_for_each_entry(ms, bts->ms_store().ms_list(), list) {
+		if (!ms_dl_tbf(ms))
 			continue;
 		bts_data->app_info_pending++;
 		ms->app_info_pending = true;

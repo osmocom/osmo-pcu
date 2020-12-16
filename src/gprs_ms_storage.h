@@ -21,28 +21,24 @@
 #pragma once
 
 #include "gprs_ms.h"
-#include "cxx_linuxlist.h"
 #include "tbf.h"
 #include <stdint.h>
 #include <stddef.h>
 
 struct BTS;
 
-class GprsMsStorage : public GprsMs::Callback {
+class GprsMsStorage {
 public:
 	GprsMsStorage(BTS *bts);
 	~GprsMsStorage();
 
 	void cleanup();
 
-	virtual void ms_idle(class GprsMs *);
-	virtual void ms_active(class GprsMs *);
-
 	GprsMs *get_ms(uint32_t tlli, uint32_t old_tlli = GSM_RESERVED_TMSI, const char *imsi = NULL) const;
 	GprsMs *create_ms();
 
-	const LListHead<GprsMs>& ms_list() const {return m_list;}
+	const struct llist_head* ms_list() const {return &m_list;}
 private:
 	BTS *m_bts;
-	LListHead<GprsMs> m_list;
+	struct llist_head m_list; /* list of struct GprsMs */
 };

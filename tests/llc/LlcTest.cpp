@@ -60,10 +60,10 @@ static void enqueue_data(gprs_llc_queue *queue, const uint8_t *data, size_t len,
 }
 
 static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
-	size_t len, const gprs_llc_queue::MetaInfo *exp_info)
+	size_t len, const MetaInfo *exp_info)
 {
 	struct msgb *llc_msg;
-	const gprs_llc_queue::MetaInfo *info_res;
+	const MetaInfo *info_res;
 
 	llc_msg = queue->dequeue(&info_res);
 	OSMO_ASSERT(llc_msg != NULL);
@@ -88,7 +88,7 @@ static void enqueue_data(gprs_llc_queue *queue, const char *message,
 }
 
 static void dequeue_and_check(gprs_llc_queue *queue, const char *exp_message,
-	const gprs_llc_queue::MetaInfo *exp_info = 0)
+	const MetaInfo *exp_info = 0)
 {
 	dequeue_and_check(queue,
 		(uint8_t *)(exp_message), strlen(exp_message), exp_info);
@@ -101,33 +101,33 @@ static void test_llc_queue()
 
 	printf("=== start %s ===\n", __func__);
 
-	queue.init();
-	OSMO_ASSERT(queue.size() == 0);
-	OSMO_ASSERT(queue.octets() == 0);
+	llc_queue_init(&queue);
+	OSMO_ASSERT(llc_queue_size(&queue) == 0);
+	OSMO_ASSERT(llc_queue_octets(&queue) == 0);
 
 	enqueue_data(&queue, "LLC message", &expire_time);
-	OSMO_ASSERT(queue.size() == 1);
-	OSMO_ASSERT(queue.octets() == 11);
+	OSMO_ASSERT(llc_queue_size(&queue) == 1);
+	OSMO_ASSERT(llc_queue_octets(&queue) == 11);
 
 	enqueue_data(&queue, "other LLC message", &expire_time);
-	OSMO_ASSERT(queue.size() == 2);
-	OSMO_ASSERT(queue.octets() == 28);
+	OSMO_ASSERT(llc_queue_size(&queue) == 2);
+	OSMO_ASSERT(llc_queue_octets(&queue) == 28);
 
 	dequeue_and_check(&queue, "LLC message");
-	OSMO_ASSERT(queue.size() == 1);
-	OSMO_ASSERT(queue.octets() == 17);
+	OSMO_ASSERT(llc_queue_size(&queue) == 1);
+	OSMO_ASSERT(llc_queue_octets(&queue) == 17);
 
 	dequeue_and_check(&queue, "other LLC message");
-	OSMO_ASSERT(queue.size() == 0);
-	OSMO_ASSERT(queue.octets() == 0);
+	OSMO_ASSERT(llc_queue_size(&queue) == 0);
+	OSMO_ASSERT(llc_queue_octets(&queue) == 0);
 
 	enqueue_data(&queue, "LLC",  &expire_time);
-	OSMO_ASSERT(queue.size() == 1);
-	OSMO_ASSERT(queue.octets() == 3);
+	OSMO_ASSERT(llc_queue_size(&queue) == 1);
+	OSMO_ASSERT(llc_queue_octets(&queue) == 3);
 
-	queue.clear(NULL);
-	OSMO_ASSERT(queue.size() == 0);
-	OSMO_ASSERT(queue.octets() == 0);
+	llc_queue_clear(&queue, NULL);
+	OSMO_ASSERT(llc_queue_size(&queue) == 0);
+	OSMO_ASSERT(llc_queue_octets(&queue) == 0);
 
 	printf("=== end %s ===\n", __func__);
 }
@@ -135,14 +135,14 @@ static void test_llc_queue()
 static void test_llc_meta()
 {
 	gprs_llc_queue queue;
-	gprs_llc_queue::MetaInfo info1 = {0};
-	gprs_llc_queue::MetaInfo info2 = {0};
+	MetaInfo info1 = {0};
+	MetaInfo info2 = {0};
 
 	printf("=== start %s ===\n", __func__);
 
-	queue.init();
-	OSMO_ASSERT(queue.size() == 0);
-	OSMO_ASSERT(queue.octets() == 0);
+	llc_queue_init(&queue);
+	OSMO_ASSERT(llc_queue_size(&queue) == 0);
+	OSMO_ASSERT(llc_queue_octets(&queue) == 0);
 
 	info1.recv_time.tv_sec = 123456777;
 	info1.recv_time.tv_nsec = 123456000;
@@ -161,9 +161,9 @@ static void test_llc_meta()
 	dequeue_and_check(&queue, "LLC message 1", &info1);
 	dequeue_and_check(&queue, "LLC message 2", &info2);
 
-	queue.clear(NULL);
-	OSMO_ASSERT(queue.size() == 0);
-	OSMO_ASSERT(queue.octets() == 0);
+	llc_queue_clear(&queue, NULL);
+	OSMO_ASSERT(llc_queue_size(&queue) == 0);
+	OSMO_ASSERT(llc_queue_octets(&queue) == 0);
 
 	printf("=== end %s ===\n", __func__);
 }
@@ -176,8 +176,8 @@ static void test_llc_merge()
 
 	printf("=== start %s ===\n", __func__);
 
-	queue1.init();
-	queue2.init();
+	llc_queue_init(&queue1);
+	llc_queue_init(&queue2);
 
 	clk_mono_override_time->tv_sec += 1;
 	enqueue_data(&queue1, "*A*", &expire_time);
@@ -194,17 +194,17 @@ static void test_llc_merge()
 	clk_mono_override_time->tv_sec += 1;
 	enqueue_data(&queue2, "*E*", &expire_time);
 
-	OSMO_ASSERT(queue1.size() == 3);
-	OSMO_ASSERT(queue1.octets() == 9);
-	OSMO_ASSERT(queue2.size() == 2);
-	OSMO_ASSERT(queue2.octets() == 6);
+	OSMO_ASSERT(llc_queue_size(&queue1) == 3);
+	OSMO_ASSERT(llc_queue_octets(&queue1) == 9);
+	OSMO_ASSERT(llc_queue_size(&queue2) == 2);
+	OSMO_ASSERT(llc_queue_octets(&queue2) == 6);
 
-	queue2.move_and_merge(&queue1);
+	llc_queue_move_and_merge(&queue2, &queue1);
 
-	OSMO_ASSERT(queue1.size() == 0);
-	OSMO_ASSERT(queue1.octets() == 0);
-	OSMO_ASSERT(queue2.size() == 5);
-	OSMO_ASSERT(queue2.octets() == 15);
+	OSMO_ASSERT(llc_queue_size(&queue1) == 0);
+	OSMO_ASSERT(llc_queue_octets(&queue1) == 0);
+	OSMO_ASSERT(llc_queue_size(&queue2) == 5);
+	OSMO_ASSERT(llc_queue_octets(&queue2) == 15);
 
 	dequeue_and_check(&queue2, "*A*");
 	dequeue_and_check(&queue2, "*B*");
@@ -212,8 +212,8 @@ static void test_llc_merge()
 	dequeue_and_check(&queue2, "*D*");
 	dequeue_and_check(&queue2, "*E*");
 
-	OSMO_ASSERT(queue2.size() == 0);
-	OSMO_ASSERT(queue2.octets() == 0);
+	OSMO_ASSERT(llc_queue_size(&queue2) == 0);
+	OSMO_ASSERT(llc_queue_octets(&queue2) == 0);
 
 	printf("=== end %s ===\n", __func__);
 }

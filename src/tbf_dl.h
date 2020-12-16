@@ -141,15 +141,17 @@ inline uint16_t gprs_rlcmac_dl_tbf::window_size() const
 	return m_window.ws();
 }
 
-inline gprs_rlcmac_dl_tbf *as_dl_tbf(gprs_rlcmac_tbf *tbf)
-{
-	if (tbf && tbf->direction == GPRS_RLCMAC_DL_TBF)
-		return static_cast<gprs_rlcmac_dl_tbf *>(tbf);
-	else
-		return NULL;
-}
-
 struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms,
 					    int8_t use_trx, bool single_slot);
 
+#else /* ifdef __cplusplus */
+struct gprs_rlcmac_dl_tbf;
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+struct gprs_rlcmac_dl_tbf *as_dl_tbf(struct gprs_rlcmac_tbf *tbf);
+#ifdef __cplusplus
+}
 #endif

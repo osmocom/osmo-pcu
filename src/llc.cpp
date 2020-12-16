@@ -97,12 +97,12 @@ bool gprs_llc::is_user_data_frame(uint8_t *data, size_t len)
 	return true;
 }
 
-void gprs_llc_queue::init()
+void llc_queue_init(struct gprs_llc_queue *q)
 {
-	INIT_LLIST_HEAD(&m_queue);
-	m_queue_size = 0;
-	m_queue_octets = 0;
-	m_avg_queue_delay = 0;
+	INIT_LLIST_HEAD(&q->m_queue);
+	q->m_queue_size = 0;
+	q->m_queue_octets = 0;
+	q->m_avg_queue_delay = 0;
 }
 
 
@@ -122,21 +122,21 @@ void gprs_llc_queue::enqueue(struct msgb *llc_msg, const struct timespec *expire
 	msgb_enqueue(&m_queue, llc_msg);
 }
 
-void gprs_llc_queue::clear(BTS *bts)
+void llc_queue_clear(struct gprs_llc_queue *q, struct BTS *bts)
 {
 	struct msgb *msg;
 
-	while ((msg = msgb_dequeue(&m_queue))) {
+	while ((msg = msgb_dequeue(&q->m_queue))) {
 		if (bts)
 			bts->do_rate_ctr_inc(CTR_LLC_FRAME_DROPPED);
 		msgb_free(msg);
 	}
 
-	m_queue_size = 0;
-	m_queue_octets = 0;
+	q->m_queue_size = 0;
+	q->m_queue_octets = 0;
 }
 
-void gprs_llc_queue::move_and_merge(gprs_llc_queue *o)
+void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o)
 {
 	struct msgb *msg, *msg1 = NULL, *msg2 = NULL;
 	struct llist_head new_queue;
@@ -146,7 +146,7 @@ void gprs_llc_queue::move_and_merge(gprs_llc_queue *o)
 
 	while (1) {
 		if (msg1 == NULL)
-			msg1 = msgb_dequeue(&m_queue);
+			msg1 = msgb_dequeue(&q->m_queue);
 
 		if (msg2 == NULL)
 			msg2 = msgb_dequeue(&o->m_queue);
@@ -178,15 +178,15 @@ void gprs_llc_queue::move_and_merge(gprs_llc_queue *o)
 		queue_octets += msgb_length(msg);
 	}
 
-	OSMO_ASSERT(llist_empty(&m_queue));
+	OSMO_ASSERT(llist_empty(&q->m_queue));
 	OSMO_ASSERT(llist_empty(&o->m_queue));
 
 	o->m_queue_size = 0;
 	o->m_queue_octets = 0;
 
-	llist_splice_init(&new_queue, &m_queue);
-	m_queue_size = queue_size;
-	m_queue_octets = queue_octets;
+	llist_splice_init(&new_queue, &q->m_queue);
+	q->m_queue_size = queue_size;
+	q->m_queue_octets = queue_octets;
 }
 
 #define ALPHA 0.5f

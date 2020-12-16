@@ -15,26 +15,32 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
+#pragma once 
+#ifdef __cplusplus
 extern "C" {
+#endif
 #include <osmocom/gsm/gsm_utils.h>
+#ifdef __cplusplus
 }
+#endif
+
 #include <time.h>
 
-inline int msecs_to_frames(int msecs) {
+static inline int msecs_to_frames(int msecs) {
 	return (msecs * (1024 * 1000 / 4615)) / 1024;
 }
 
-inline uint32_t next_fn(uint32_t fn, uint32_t offset)
+static inline uint32_t next_fn(uint32_t fn, uint32_t offset)
 {
 	return (fn + offset) % GSM_MAX_FN;
 }
 
-inline void csecs_to_timespec(unsigned csecs, struct timespec *ts) {
+static inline void csecs_to_timespec(unsigned csecs, struct timespec *ts) {
 	ts->tv_sec  = csecs / 100;
 	ts->tv_nsec = (csecs % 100) * 10000000;
 }
 
+#ifdef __cplusplus
 template <typename T>
 inline unsigned int pcu_bitcount(T x)
 {
@@ -44,8 +50,15 @@ inline unsigned int pcu_bitcount(T x)
 
 	return count;
 }
+#endif
 
-inline uint8_t pcu_lsb(uint8_t x)
+static inline uint8_t pcu_lsb(uint8_t x)
 {
 	return x & -x;
 }
+
+/* Used to store a C++ class in a llist used by C code */
+struct llist_item {
+	struct llist_head list; /* item used by llist */
+	void *entry;
+};

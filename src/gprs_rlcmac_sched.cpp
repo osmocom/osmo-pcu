@@ -234,7 +234,7 @@ static struct msgb *sched_select_ctrl_msg(
 			"message at RTS for %s (TRX=%d, TS=%d)\n",
 			tbf_name(tbf), trx, ts);
 		/* Updates the dl ctrl msg counter for ms */
-		tbf->ms()->update_dl_ctrl_msg();
+		ms_update_dl_ctrl_msg(tbf->ms());
 		return msg;
 	}
 
@@ -342,7 +342,7 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		pdch->next_dl_tfi = (prio_tfi + 1) & 31;
 		/* generate DL data block */
 		msg = prio_tbf->create_dl_acked_block(fn, ts, req_mcs_kind);
-		*is_egprs = prio_tbf->ms()->mode() != GPRS;
+		*is_egprs = ms_mode(prio_tbf->ms()) != GPRS;
 	}
 
 	return msg;
@@ -463,7 +463,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 			 * only be able to read USF if dl block uses GMSK
 			 * (CS1-4, MCS1-4)
 			 */
-			if (req_mcs_kind == EGPRS && usf_tbf->ms()->mode() != EGPRS)
+			if (req_mcs_kind == EGPRS && ms_mode(usf_tbf->ms()) != EGPRS)
 				req_mcs_kind = EGPRS_GMSK;
 		} else {
 			usf = USF_UNUSED;

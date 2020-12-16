@@ -131,7 +131,7 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 
 	LOGP(DTBF, LOGL_DEBUG, "********** DL-TBF starts here **********\n");
 	LOGP(DTBF, LOGL_INFO, "Allocating DL TBF: MS_CLASS=%d/%d\n",
-	     ms->ms_class(), ms->egprs_ms_class());
+	     ms_ms_class(ms), ms_egprs_ms_class(ms));
 
 	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
 
@@ -241,7 +241,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts, GprsMs *ms,
 	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL, *old_ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 
-	ul_tbf = ms->ul_tbf();
+	ul_tbf = ms_ul_tbf(ms);
 
 	if (ul_tbf && ul_tbf->m_contention_resolution_done
 	 && !ul_tbf->m_final_ack_sent) {
@@ -291,41 +291,43 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 	/* check for existing TBF */
 	ms = bts->bts->ms_store().get_ms(tlli, tlli_old, imsi);
 
-	if (ms && strlen(ms->imsi()) == 0) {
+	if (ms && strlen(ms_imsi(ms)) == 0) {
 		ms_old = bts->bts->ms_store().get_ms(0, 0, imsi);
 		if (ms_old && ms_old != ms) {
 			/* The TLLI has changed (RAU), so there are two MS
 			 * objects for the same MS */
 			LOGP(DTBF, LOGL_NOTICE,
 			     "There is a new MS object for the same MS: (0x%08x, '%s') -> (0x%08x, '%s')\n",
-			     ms_old->tlli(), ms_old->imsi(), ms->tlli(), ms->imsi());
+			     ms_tlli(ms_old), ms_imsi(ms_old), ms_tlli(ms), ms_imsi(ms));
 
-			GprsMs::Guard guard_old(ms_old);
+			ms_ref(ms_old);
 
-			if (!ms->dl_tbf() && ms_old->dl_tbf()) {
+			if (!ms_dl_tbf(ms) && ms_dl_tbf(ms_old)) {
 				LOGP(DTBF, LOGL_NOTICE,
 				     "IMSI %s, old TBF %s: moving DL TBF to new MS object\n",
-				     imsi, ms_old->dl_tbf()->name());
-				dl_tbf = ms_old->dl_tbf();
+				     imsi, ms_dl_tbf(ms_old)->name());
+				dl_tbf = ms_dl_tbf(ms_old);
 				/* Move the DL TBF to the new MS */
 				dl_tbf->set_ms(ms);
 			}
-			ms->merge_and_clear_ms(ms_old);
+			ms_merge_and_clear_ms(ms, ms_old);
+
+			ms_unref(ms_old);
 		}
 	}
 
 	if (!ms)
 		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class);
-	ms->set_imsi(imsi);
-	ms->confirm_tlli(tlli);
-	if (!ms->ms_class() && ms_class) {
-		ms->set_ms_class(ms_class);
+	ms_set_imsi(ms, imsi);
+	ms_confirm_tlli(ms, tlli);
+	if (!ms_ms_class(ms) && ms_class) {
+		ms_set_ms_class(ms, ms_class);
 	}
-	if (!ms->egprs_ms_class() && egprs_ms_class) {
-		ms->set_egprs_ms_class(egprs_ms_class);
+	if (!ms_egprs_ms_class(ms) && egprs_ms_class) {
+		ms_set_egprs_ms_class(ms, egprs_ms_class);
 	}
 
-	dl_tbf = ms->dl_tbf();
+	dl_tbf = ms_dl_tbf(ms);
 	if (!dl_tbf) {
 		rc = tbf_new_dl_assignment(bts, ms, &dl_tbf);
 		if (rc < 0)
@@ -344,7 +346,7 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 	uint32_t octets = 0, frames = 0;
 	struct timespec hyst_delta = {0, 0};
 	const unsigned keep_small_thresh = 60;
-	const gprs_llc_queue::MetaInfo *info;
+	const MetaInfo *info;
 
 	if (bts_data()->llc_discard_csec)
 		csecs_to_timespec(bts_data()->llc_discard_csec, &hyst_delta);
@@ -358,9 +360,9 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 
 		gprs_bssgp_update_queue_delay(tv_recv, &tv_now);
 
-		if (ms() && ms()->codel_state()) {
-			int bytes = llc_queue()->octets();
-			if (gprs_codel_control(ms()->codel_state(),
+		if (ms() && ms_codel_state(ms())) {
+			int bytes = llc_queue_octets(llc_queue());
+			if (gprs_codel_control(ms_codel_state(ms()),
 					tv_recv, &tv_now, bytes))
 				goto drop_frame;
 		}
@@ -402,7 +404,7 @@ drop_frame:
 		LOGPTBFDL(this, LOGL_NOTICE, "Discarding LLC PDU "
 			"because lifetime limit reached, "
 			"count=%u new_queue_size=%zu\n",
-			  frames, llc_queue_size());
+			  frames, llc_queue_size(llc_queue()));
 		if (frames > 0xff)
 			frames = 0xff;
 		if (octets > 0xffffff)
@@ -459,7 +461,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 	} else if (bsn < 0 && is_egprs_enabled() && req_mcs_kind == EGPRS_GMSK) {
 		/* New data to be sent for EGPRS TBF but we are required to downgrade to
 		 * MCS1-4, because USF for GPRS-only MS will be sent */
-		force_cs = m_ms->current_cs_dl();
+		force_cs = ms_current_cs_dl(m_ms);
 		if (force_cs > MCS4) {
 			force_cs = bts->cs_dl_is_supported(MCS4) ? MCS4 :
 				   bts->cs_dl_is_supported(MCS3) ? MCS3 :
@@ -467,7 +469,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 				   MCS1;
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Force downgrading DL %s -> %s due to USF for GPRS-only MS\n",
-				  mcs_name(m_ms->current_cs_dl()), mcs_name(force_cs));
+				  mcs_name(ms_current_cs_dl(m_ms)), mcs_name(force_cs));
 		}
 	}
 
@@ -483,14 +485,14 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		if (is_egprs_enabled()) {
 			/* Table 8.1.1.2 and Table 8.1.1.1 of 44.060 */
 			m_rlc.block(bsn)->cs_current_trans = get_retx_mcs(m_rlc.block(bsn)->cs_init,
-									  ms()->current_cs_dl(),
+									  ms_current_cs_dl(ms()),
 									  !bts->bts_data()->dl_arq_type);
 
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "initial_cs_dl(%s) last_mcs(%s) demanded_mcs(%s) cs_trans(%s) arq_type(%d) bsn(%d)\n",
 				  mcs_name(m_rlc.block(bsn)->cs_init),
 				  mcs_name(m_rlc.block(bsn)->cs_last),
-				  mcs_name(ms()->current_cs_dl()),
+				  mcs_name(ms_current_cs_dl(ms())),
 				  mcs_name(m_rlc.block(bsn)->cs_current_trans),
 				  bts->bts_data()->dl_arq_type, bsn);
 
@@ -635,7 +637,7 @@ void gprs_rlcmac_dl_tbf::schedule_next_frame()
 {
 	struct msgb *msg;
 
-	if (m_llc.frame_length() != 0)
+	if (llc_frame_length(&m_llc) != 0)
 		return;
 
 	/* dequeue next LLC frame, if any */
@@ -661,7 +663,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 	int write_offset = 0;
 	Encoding::AppendResult ar;
 
-	if (m_llc.frame_length() == 0)
+	if (llc_frame_length(&m_llc) == 0)
 		schedule_next_frame();
 
 	OSMO_ASSERT(mcs_is_valid(cs));
@@ -693,7 +695,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 		bool is_final;
 		int payload_written = 0;
 
-		if (m_llc.frame_length() == 0) {
+		if (llc_frame_length(&m_llc) == 0) {
 			/* It is not clear, when the next real data will
 			 * arrive, so request a DL ack/nack now */
 			request_dl_ack();
@@ -731,10 +733,10 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Empty chunk, added LLC dummy command of size %d, drained_since=%d\n",
-				  m_llc.frame_length(), frames_since_last_drain(fn));
+				  llc_frame_length(&m_llc), frames_since_last_drain(fn));
 		}
 
-		is_final = llc_queue_size() == 0 && !keep_open(fn);
+		is_final = llc_queue_size(llc_queue()) == 0 && !keep_open(fn);
 
 		ar = Encoding::rlc_data_to_dl_append(rdbi, cs,
 			&m_llc, &write_offset, &num_chunks, data, is_final, &payload_written);
@@ -745,9 +747,9 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 		if (ar == Encoding::AR_NEED_MORE_BLOCKS)
 			break;
 
-		LOGPTBFDL(this, LOGL_DEBUG, "Complete DL frame, len=%d\n", m_llc.frame_length());
-		gprs_rlcmac_dl_bw(this, m_llc.frame_length());
-		bts->do_rate_ctr_add(CTR_LLC_DL_BYTES, m_llc.frame_length());
+		LOGPTBFDL(this, LOGL_DEBUG, "Complete DL frame, len=%d\n", llc_frame_length(&m_llc));
+		gprs_rlcmac_dl_bw(this, llc_frame_length(&m_llc));
+		bts->do_rate_ctr_add(CTR_LLC_DL_BYTES, llc_frame_length(&m_llc));
 		m_llc.reset();
 
 		if (is_final) {
@@ -1131,7 +1133,7 @@ int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 	error_rate = analyse_errors(show_rbb, behind_last_bsn, &ana_res);
 
 	if (bts_data()->cs_adj_enabled && ms())
-		ms()->update_error_rate(this, error_rate);
+		ms_update_error_rate(ms(), this, error_rate);
 
 	m_window.update(bts, rbb, first_bsn, &lost, &received);
 	rate_ctr_add(&m_ctrs->ctr[TBF_CTR_RLC_NACKED], lost);
@@ -1186,7 +1188,7 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 	error_rate = analyse_errors(show_rbb, ssn, &ana_res);
 
 	if (bts_data()->cs_adj_enabled && ms())
-		ms()->update_error_rate(this, error_rate);
+		ms_update_error_rate(ms(), this, error_rate);
 
 	m_window.update(bts, show_rbb, ssn,
 			&lost, &received);
@@ -1221,7 +1223,7 @@ int gprs_rlcmac_dl_tbf::maybe_start_new_window()
 	release();
 
 	/* check for LLC PDU in the LLC Queue */
-	if (llc_queue_size() > 0)
+	if (llc_queue_size(llc_queue()) > 0)
 		/* we have more data so we will re-use this tbf */
 		establish_dl_tbf_on_pacch();
 
@@ -1331,8 +1333,8 @@ bool gprs_rlcmac_dl_tbf::need_control_ts() const
 
 bool gprs_rlcmac_dl_tbf::have_data() const
 {
-	return m_llc.chunk_size() > 0 ||
-		(llc_queue_size() > 0);
+	return llc_chunk_size(&m_llc) > 0 ||
+		(llc_queue_size(llc_queue()) > 0);
 }
 
 static inline int frames_since_last(int32_t last, unsigned fn)
@@ -1555,4 +1557,12 @@ void gprs_rlcmac_dl_tbf::update_coding_scheme_counter_dl(enum CodingScheme cs)
 		LOGPTBFDL(this, LOGL_ERROR, "attempting to update rate counters for unsupported (M)CS %s\n",
 			  mcs_name(cs));
 	}
+}
+
+struct gprs_rlcmac_dl_tbf *as_dl_tbf(struct gprs_rlcmac_tbf *tbf)
+{
+	if (tbf && tbf->direction == GPRS_RLCMAC_DL_TBF)
+		return static_cast<gprs_rlcmac_dl_tbf *>(tbf);
+	else
+		return NULL;
 }

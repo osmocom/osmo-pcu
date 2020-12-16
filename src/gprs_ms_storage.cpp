@@ -31,9 +31,29 @@ extern "C" {
 
 #define GPRS_UNDEFINED_IMSI "000"
 
+static void ms_storage_ms_idle_cb(struct GprsMs *ms)
+{
+	llist_del(&ms->list);
+	if (ms->bts)
+		ms->bts->stat_item_add(STAT_MS_PRESENT, -1);
+	if (ms_is_idle(ms))
+		talloc_free(ms);
+}
+
+static void ms_storage_ms_active_cb(struct GprsMs *ms)
+{
+	/* Nothing to do */
+}
+
+static struct gpr_ms_callback ms_storage_ms_cb = {
+	.ms_idle = ms_storage_ms_idle_cb,
+	.ms_active = ms_storage_ms_active_cb,
+};
+
 GprsMsStorage::GprsMsStorage(BTS *bts) :
 	m_bts(bts)
 {
+	INIT_LLIST_HEAD(&m_list);
 }
 
 GprsMsStorage::~GprsMsStorage()
@@ -43,40 +63,26 @@ GprsMsStorage::~GprsMsStorage()
 
 void GprsMsStorage::cleanup()
 {
-	LListHead<GprsMs> *pos, *tmp;
+	struct llist_head *pos, *tmp;
 
 	llist_for_each_safe(pos, tmp, &m_list) {
-		GprsMs *ms = pos->entry();
-		ms->set_callback(NULL);
-		ms_idle(ms);
+		struct GprsMs *ms = llist_entry(pos, typeof(*ms), list);
+		ms_set_callback(ms, NULL);
+		ms_storage_ms_idle_cb(ms);
 	}
-}
-
-void GprsMsStorage::ms_idle(class GprsMs *ms)
-{
-	llist_del(&ms->list());
-	if (m_bts)
-		m_bts->stat_item_add(STAT_MS_PRESENT, -1);
-	if (ms->is_idle())
-		delete ms;
-}
-
-void GprsMsStorage::ms_active(class GprsMs *ms)
-{
-	/* Nothing to do */
 }
 
 GprsMs *GprsMsStorage::get_ms(uint32_t tlli, uint32_t old_tlli, const char *imsi) const
 {
+	struct llist_head *tmp;
 	GprsMs *ms;
-	LListHead<GprsMs> *pos;
 
 	if (tlli != GSM_RESERVED_TMSI || old_tlli != GSM_RESERVED_TMSI) {
-		llist_for_each(pos, &m_list) {
-			ms = pos->entry();
-			if (ms->check_tlli(tlli))
+		llist_for_each(tmp, &m_list) {
+			ms = llist_entry(tmp, typeof(*ms), list);
+			if (ms_check_tlli(ms, tlli))
 				return ms;
-			if (ms->check_tlli(old_tlli))
+			if (ms_check_tlli(ms, old_tlli))
 				return ms;
 		}
 	}
@@ -84,9 +90,9 @@ GprsMs *GprsMsStorage::get_ms(uint32_t tlli, uint32_t old_tlli, const char *imsi
 	/* not found by TLLI */
 
 	if (imsi && imsi[0] && strcmp(imsi, GPRS_UNDEFINED_IMSI) != 0) {
-		llist_for_each(pos, &m_list) {
-			ms = pos->entry();
-			if (strcmp(imsi, ms->imsi()) == 0)
+		llist_for_each(tmp, &m_list) {
+			ms = llist_entry(tmp, typeof(*ms), list);
+			if (strcmp(imsi, ms_imsi(ms)) == 0)
 				return ms;
 		}
 	}
@@ -98,10 +104,10 @@ GprsMs *GprsMsStorage::create_ms()
 {
 	GprsMs *ms;
 
-	ms = new GprsMs(m_bts, GSM_RESERVED_TMSI);
+	ms = ms_alloc(m_bts, GSM_RESERVED_TMSI);
 
-	ms->set_callback(this);
-	llist_add(&ms->list(), &m_list);
+	ms_set_callback(ms, &ms_storage_ms_cb);
+	llist_add(&ms->list, &m_list);
 	if (m_bts)
 		m_bts->stat_item_add(STAT_MS_PRESENT, 1);
 

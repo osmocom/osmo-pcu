@@ -712,7 +712,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 
 	ms = ms_by_tlli(tlli);
 	if (ms)
-		dl_tbf = ms->dl_tbf();
+		dl_tbf = ms_dl_tbf(ms);
 	if (!dl_tbf) {
 		LOGP(DRLCMAC, LOGL_ERROR, "Got IMM.ASS confirm, but TLLI=%08x "
 			"does not exit\n", tlli);
@@ -1140,9 +1140,9 @@ GprsMs *BTS::ms_alloc(uint8_t ms_class, uint8_t egprs_ms_class)
 	GprsMs *ms;
 	ms = ms_store().create_ms();
 
-	ms->set_timeout(osmo_tdef_get(m_bts.T_defs_pcu, -2030, OSMO_TDEF_S, -1));
-	ms->set_ms_class(ms_class);
-	ms->set_egprs_ms_class(egprs_ms_class);
+	ms_set_timeout(ms, osmo_tdef_get(m_bts.T_defs_pcu, -2030, OSMO_TDEF_S, -1));
+	ms_set_ms_class(ms, ms_class);
+	ms_set_egprs_ms_class(ms, egprs_ms_class);
 
 	return ms;
 }
@@ -1206,22 +1206,22 @@ void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts, i
 	}
 }
 
-void gprs_rlcmac_trx::reserve_slots(enum gprs_rlcmac_tbf_direction dir,
+void bts_trx_reserve_slots(struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_direction dir,
 	uint8_t slots)
 {
 	unsigned i;
-	for (i = 0; i < ARRAY_SIZE(pdch); i += 1)
+	for (i = 0; i < ARRAY_SIZE(trx->pdch); i += 1)
 		if (slots & (1 << i))
-			pdch[i].reserve(dir);
+			trx->pdch[i].reserve(dir);
 }
 
-void gprs_rlcmac_trx::unreserve_slots(enum gprs_rlcmac_tbf_direction dir,
+void bts_trx_unreserve_slots(struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_direction dir,
 	uint8_t slots)
 {
 	unsigned i;
-	for (i = 0; i < ARRAY_SIZE(pdch); i += 1)
+	for (i = 0; i < ARRAY_SIZE(trx->pdch); i += 1)
 		if (slots & (1 << i))
-			pdch[i].unreserve(dir);
+			trx->pdch[i].unreserve(dir);
 }
 
 void bts_set_max_cs(struct gprs_rlcmac_bts *bts, uint8_t cs_dl, uint8_t cs_ul)
@@ -1276,4 +1276,35 @@ void bts_set_max_mcs(struct gprs_rlcmac_bts *bts, uint8_t mcs_dl, uint8_t mcs_ul
 	LOGP(DRLCMAC, LOGL_DEBUG, "New max MCS: DL=%u UL=%u\n", mcs_dl, mcs_ul);
 	bts->bts->set_max_mcs_dl(mcs_dl);
 	bts->bts->set_max_mcs_ul(mcs_ul);
+}
+
+
+struct gprs_rlcmac_bts *bts_data(struct BTS *bts)
+{
+	return &bts->m_bts;
+}
+
+struct GprsMs *bts_ms_by_imsi(struct BTS *bts, const char *imsi)
+{
+	return bts->ms_by_imsi(imsi);
+}
+
+uint8_t bts_max_cs_dl(const struct BTS *bts)
+{
+	return bts->max_cs_dl();
+}
+
+uint8_t bts_max_cs_ul(const struct BTS *bts)
+{
+	return bts->max_cs_ul();
+}
+
+uint8_t bts_max_mcs_dl(const struct BTS *bts)
+{
+	return bts->max_mcs_dl();
+}
+
+uint8_t bts_max_mcs_ul(const struct BTS *bts)
+{
+	return bts->max_mcs_ul();
 }

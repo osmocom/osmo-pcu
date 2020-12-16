@@ -1388,7 +1388,7 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 	delimiter = data_block + *num_chunks;
 	e_pointer = (*num_chunks ? delimiter - 1 : NULL);
 
-	chunk = llc->chunk_size();
+	chunk = llc_chunk_size(llc);
 	space = rdbi->data_len - *offset;
 
 	/* if chunk will exceed block limit */
@@ -1402,7 +1402,7 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 			*e_pointer |= 0x02; /* set previous M bit = 1 */
 		}
 		/* fill only space */
-		llc->consume(data, space);
+		llc_consume_data(llc, data, space);
 		if (count_payload)
 			*count_payload = space;
 		/* return data block as message */
@@ -1421,7 +1421,7 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 		if (e_pointer)
 			*e_pointer |= 0x01;
 		/* fill space */
-		llc->consume(data, space);
+		llc_consume_data(llc, data, space);
 		if (count_payload)
 			*count_payload = space;
 		*offset = rdbi->data_len;
@@ -1454,7 +1454,7 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 		rdbi->e = 0; /* 0: extensions present */
 		// no need to set e_pointer nor increase delimiter
 		/* fill only space, which is 1 octet less than chunk */
-		llc->consume(data, space);
+		llc_consume_data(llc, data, space);
 		if (count_payload)
 			*count_payload = space;
 		/* return data block as message */
@@ -1485,7 +1485,7 @@ static Encoding::AppendResult rlc_data_to_dl_append_gprs(
 	rdbi->e = 0; /* 0: extensions present */
 	(*num_chunks)++;
 	/* copy (rest of) LLC frame to space and reset later */
-	llc->consume(data, chunk);
+	llc_consume_data(llc, data, chunk);
 	if (count_payload)
 		*count_payload = chunk;
 	data += chunk;
@@ -1536,7 +1536,7 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 	prev_li = (struct rlc_li_field_egprs *)
 		(*num_chunks ? delimiter - 1 : NULL);
 
-	chunk = llc->chunk_size();
+	chunk = llc_chunk_size(llc);
 	space = rdbi->data_len - *offset;
 
 	/* if chunk will exceed block limit */
@@ -1546,7 +1546,7 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 			"only remaining space, and we are done\n",
 			chunk, space);
 		/* fill only space */
-		llc->consume(data, space);
+		llc_consume_data(llc, data, space);
 		if (count_payload)
 			*count_payload = space;
 		/* return data block as message */
@@ -1562,7 +1562,7 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 			"this is a final block, we don't add length "
 			"header, and we are done\n", chunk, space);
 		/* fill space */
-		llc->consume(data, space);
+		llc_consume_data(llc, data, space);
 		if (count_payload)
 			*count_payload = space;
 		*offset = rdbi->data_len;
@@ -1578,7 +1578,7 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 			"to start with an empty chunk\n",
 			chunk, space);
 		/* fill space */
-		llc->consume(data, space);
+		llc_consume_data(llc, data, space);
 		if (count_payload)
 			*count_payload = space;
 		*offset = rdbi->data_len;
@@ -1610,7 +1610,7 @@ static Encoding::AppendResult rlc_data_to_dl_append_egprs(
 	prev_li = li;
 	(*num_chunks)++;
 	/* copy (rest of) LLC frame to space and reset later */
-	llc->consume(data, chunk);
+	llc_consume_data(llc, data, chunk);
 	if (count_payload)
 		*count_payload = chunk;
 	data += chunk;

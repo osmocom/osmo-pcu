@@ -90,15 +90,14 @@ struct gprs_rlcmac_trx {
 	struct BTS *bts;
 	uint8_t trx_no;
 
-#ifdef __cplusplus
-	void reserve_slots(enum gprs_rlcmac_tbf_direction dir, uint8_t slots);
-	void unreserve_slots(enum gprs_rlcmac_tbf_direction dir, uint8_t slots);
-#endif
 };
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+void bts_trx_reserve_slots(struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_direction dir, uint8_t slots);
+void bts_trx_unreserve_slots(struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_direction dir, uint8_t slots);
+
 void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts, int8_t ta, bool is_rach);
 #ifdef __cplusplus
 }
@@ -372,10 +371,11 @@ public:
 
 	LListHead<gprs_rlcmac_tbf>& ul_tbfs();
 	LListHead<gprs_rlcmac_tbf>& dl_tbfs();
+
+	struct gprs_rlcmac_bts m_bts;
 private:
 	int m_cur_fn;
 	int m_cur_blk_fn;
-	struct gprs_rlcmac_bts m_bts;
 	uint8_t m_max_cs_dl, m_max_cs_ul;
 	uint8_t m_max_mcs_dl, m_max_mcs_ul;
 	PollController m_pollController;
@@ -459,11 +459,17 @@ inline void BTS::stat_item_add(unsigned int stat_id, int inc) {
 extern "C" {
 #endif
 	void bts_cleanup();
+	struct gprs_rlcmac_bts *bts_data(struct BTS *bts);
 	struct gprs_rlcmac_bts *bts_main_data();
 	struct rate_ctr_group *bts_main_data_stats();
 	struct osmo_stat_item_group *bts_main_data_stat_items();
 	void bts_set_max_cs(struct gprs_rlcmac_bts *bts, uint8_t cs_dl, uint8_t cs_ul);
 	void bts_set_max_mcs(struct gprs_rlcmac_bts *bts, uint8_t mcs_dl, uint8_t mcs_ul);
+	struct GprsMs *bts_ms_by_imsi(struct BTS *bts, const char *imsi);
+	uint8_t bts_max_cs_dl(const struct BTS *bts);
+	uint8_t bts_max_cs_ul(const struct BTS *bts);
+	uint8_t bts_max_mcs_dl(const struct BTS *bts);
+	uint8_t bts_max_mcs_ul(const struct BTS *bts);
 #ifdef __cplusplus
 }
 

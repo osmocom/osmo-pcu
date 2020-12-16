@@ -245,8 +245,8 @@ static int find_trx(const struct gprs_rlcmac_bts *bts_data, const GprsMs *ms, in
 	unsigned ts;
 
 	/* We must use the TRX currently actively used by an MS */
-	if (ms && ms->current_trx())
-		return ms->current_trx()->trx_no;
+	if (ms && ms_current_trx(ms))
+		return ms_current_trx(ms)->trx_no;
 
 	if (use_trx >= 0 && use_trx < 8)
 		return use_trx;
@@ -320,8 +320,8 @@ static int tfi_find_free(const BTS *bts, const gprs_rlcmac_trx *trx, const GprsM
 		use_trx = trx->trx_no;
 	}
 
-	if (use_trx == -1 && ms->current_trx())
-		use_trx = ms->current_trx()->trx_no;
+	if (use_trx == -1 && ms_current_trx(ms))
+		use_trx = ms_current_trx(ms)->trx_no;
 
 	tfi = bts->tfi_find_free(dir, &trx_no, use_trx);
 	if (tfi < 0)
@@ -357,7 +357,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	const char *mask_reason = NULL;
 	const GprsMs *ms = ms_;
 	const gprs_rlcmac_tbf *tbf = tbf_;
-	gprs_rlcmac_trx *trx = ms->current_trx();
+	gprs_rlcmac_trx *trx = ms_current_trx(ms);
 
 	LOGPAL(tbf, "A", single, use_trx, LOGL_DEBUG, "Alloc start\n");
 
@@ -370,10 +370,10 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	if (!trx)
 		trx = &bts->trx[trx_no];
 
-	dl_slots = ms->reserved_dl_slots();
-	ul_slots = ms->reserved_ul_slots();
+	dl_slots = ms_reserved_dl_slots(ms);
+	ul_slots = ms_reserved_ul_slots(ms);
 
-	ts = ms->first_common_ts();
+	ts = ms_first_common_ts(ms);
 
 	if (ts >= 0) {
 		mask_reason = "need to reuse TS";
@@ -420,7 +420,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	tbf_->trx = trx;
 	/* the only one TS is the common TS */
 	tbf_->first_ts = tbf_->first_common_ts = ts;
-	ms_->set_reserved_slots(trx, 1 << ts, 1 << ts);
+	ms_set_reserved_slots(ms_, trx, 1 << ts, 1 << ts);
 
 	tbf_->upgrade_to_multislot = 0;
 	bts->bts->do_rate_ctr_inc(CTR_TBF_ALLOC_ALGO_A);
@@ -774,11 +774,11 @@ static void update_ms_reserved_slots(gprs_rlcmac_trx *trx, GprsMs *ms, uint8_t r
 {
 	char slot_info[9] = { 0 };
 
-	if (res_ul_slots == ms->reserved_ul_slots() && res_dl_slots == ms->reserved_dl_slots())
+	if (res_ul_slots == ms_reserved_ul_slots(ms) && res_dl_slots == ms_reserved_dl_slots(ms))
 		return;
 
 	/* The reserved slots have changed, update the MS */
-	ms->set_reserved_slots(trx, res_ul_slots, res_dl_slots);
+	ms_set_reserved_slots(ms, trx, res_ul_slots, res_dl_slots);
 
 	ts_format(slot_info, dl_slots, ul_slots);
 	LOGP(DRLCMAC, LOGL_DEBUG, "- Reserved DL/UL slots: (TS=0)\"%s\"(TS=7)\n", slot_info);
@@ -867,10 +867,10 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 		return -EINVAL;
 	}
 
-	dl_slots = ms->reserved_dl_slots();
-	ul_slots = ms->reserved_ul_slots();
-	first_common_ts = ms->first_common_ts();
-	trx = ms->current_trx();
+	dl_slots = ms_reserved_dl_slots(ms);
+	ul_slots = ms_reserved_ul_slots(ms);
+	first_common_ts = ms_first_common_ts(ms);
+	trx = ms_current_trx(ms);
 
 	/* Step 2a: Find usable TRX and TFI */
 	tfi = tfi_find_free(bts->bts, trx, ms, tbf->direction, use_trx, &trx_no);
@@ -884,7 +884,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 		trx = &bts->trx[trx_no];
 
 	if (!dl_slots || !ul_slots) {
-		rc = find_multi_slots(trx, ms->ms_class(), &ul_slots, &dl_slots);
+		rc = find_multi_slots(trx, ms_ms_class(ms), &ul_slots, &dl_slots);
 		if (rc < 0)
 			return rc;
 	}

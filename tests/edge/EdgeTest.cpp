@@ -619,7 +619,7 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	OSMO_ASSERT(llc.chunk_size() == 1);
+	OSMO_ASSERT(llc_chunk_size(&llc) == 1);
 
 	count_payload = -1;
 
@@ -767,7 +767,7 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	OSMO_ASSERT(llc.chunk_size() == 10);
+	OSMO_ASSERT(llc_chunk_size(&llc) == 10);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -899,7 +899,7 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	OSMO_ASSERT(llc.chunk_size() == 0);
+	OSMO_ASSERT(llc_chunk_size(&llc) == 0);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -1167,7 +1167,6 @@ static void uplink_header_type_2_parsing_test(BTS *the_bts,
 	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
 	uint8_t ms_class)
 {
-	struct pcu_l1_meas meas;
 	int tfi = 0;
 	uint8_t data[79] = {0};
 	struct gprs_rlc_ul_header_egprs_2 *egprs2  = NULL;

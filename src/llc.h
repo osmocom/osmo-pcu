@@ -18,9 +18,13 @@
 
 #pragma once
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 	#include <osmocom/core/linuxlist.h>
+#ifdef __cplusplus
 }
+#endif
 
 #include <stdint.h>
 #include <string.h>
@@ -34,6 +38,8 @@ struct BTS;
  * I represent the LLC data to a MS
  */
 struct gprs_llc {
+
+#ifdef __cplusplus
 	static bool is_user_data_frame(uint8_t *data, size_t len);
 
 	void init();
@@ -43,92 +49,86 @@ struct gprs_llc {
 	void put_frame(const uint8_t *data, size_t len);
 	void put_dummy_frame(size_t req_len);
 	void append_frame(const uint8_t *data, size_t len);
-
-	void consume(size_t len);
-	void consume(uint8_t *data, size_t len);
-
-	uint16_t chunk_size() const;
-	uint16_t remaining_space() const;
-	uint16_t frame_length() const;
-
-	bool fits_in_current_frame(uint8_t size) const;
+#endif
 
 	uint8_t frame[LLC_MAX_LEN]; /* current DL or UL frame */
 	uint16_t m_index; /* current write/read position of frame */
 	uint16_t m_length; /* len of current DL LLC_frame, 0 == no frame */
 };
 
+struct MetaInfo {
+	struct timespec recv_time;
+	struct timespec expire_time;
+};
 /**
  * I store the LLC frames that come from the SGSN.
  */
 struct gprs_llc_queue {
-	struct MetaInfo {
-		struct timespec recv_time;
-		struct timespec expire_time;
-	};
-
+#ifdef __cplusplus
 	static void calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec,
 		struct timespec *tv);
 	static bool is_frame_expired(const struct timespec *now,
 		const struct timespec *tv);
 	static bool is_user_data_frame(uint8_t *data, size_t len);
 
-	void init();
-
 	void enqueue(struct msgb *llc_msg, const struct timespec *expire_time);
 	struct msgb *dequeue(const MetaInfo **info = 0);
-	void clear(BTS *bts);
-	void move_and_merge(gprs_llc_queue *o);
-	size_t size() const;
-	size_t octets() const;
-
-private:
+#endif
 	uint32_t m_avg_queue_delay; /* Average delay of data going through the queue */
 	size_t m_queue_size;
 	size_t m_queue_octets;
 	struct llist_head m_queue; /* queued LLC DL data */
-
 };
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+void llc_queue_init(struct gprs_llc_queue *q);
+void llc_queue_clear(struct gprs_llc_queue *q, struct BTS *bts);
+void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o);
 
-inline uint16_t gprs_llc::chunk_size() const
+static inline uint16_t llc_chunk_size(const struct gprs_llc *llc)
 {
-	return m_length - m_index;
+	return llc->m_length - llc->m_index;
 }
 
-inline uint16_t gprs_llc::remaining_space() const
+static inline uint16_t llc_remaining_space(const struct gprs_llc *llc)
 {
-	return LLC_MAX_LEN - m_length;
+	return LLC_MAX_LEN - llc->m_length;
 }
 
-inline uint16_t gprs_llc::frame_length() const
+static inline uint16_t llc_frame_length(const struct gprs_llc *llc)
 {
-	return m_length;
+	return llc->m_length;
 }
 
-inline void gprs_llc::consume(size_t len)
+static inline void llc_consume(struct gprs_llc *llc, size_t len)
 {
-	m_index += len;
+	llc->m_index += len;
 }
 
-inline void gprs_llc::consume(uint8_t *data, size_t len)
+static inline void llc_consume_data(struct gprs_llc *llc, uint8_t *data, size_t len)
 {
 	/* copy and increment index */
-	memcpy(data, frame + m_index, len);
-	consume(len);
+	memcpy(data, llc->frame + llc->m_index, len);
+	llc_consume(llc, len);
 }
 
-inline bool gprs_llc::fits_in_current_frame(uint8_t chunk_size) const
+static inline bool llc_fits_in_current_frame(const struct gprs_llc *llc, uint8_t chunk_size)
 {
-	return m_length + chunk_size <= LLC_MAX_LEN;
+	return llc->m_length + chunk_size <= LLC_MAX_LEN;
 }
 
-inline size_t gprs_llc_queue::size() const
+static inline size_t llc_queue_size(const struct gprs_llc_queue *q)
 {
-	return m_queue_size;
+	return q->m_queue_size;
 }
 
-inline size_t gprs_llc_queue::octets() const
+static inline size_t llc_queue_octets(const struct gprs_llc_queue *q)
 {
-	return m_queue_octets;
+	return q->m_queue_octets;
 }
+
+#ifdef __cplusplus
+}
+#endif
