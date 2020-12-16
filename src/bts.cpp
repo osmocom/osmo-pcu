@@ -254,6 +254,7 @@ static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 	bts->mcs_lqual_ranges[8].low = 23;
 	bts->mcs_lqual_ranges[8].high = 256;
 	bts->cs_downgrade_threshold = 200;
+	bts->ns_dialect = NS2_DIALECT_IPACCESS;
 
 	/* TODO: increase them when CRBB decoding is implemented */
 	bts->ws_base = 64;
