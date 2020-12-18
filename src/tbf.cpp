@@ -932,7 +932,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	LOGP(DTBF, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
 	rc = encode_gsm_rlcmac_downlink(&bv, mac_control_block);
 	if (rc < 0) {
-		LOGP(DTBF, LOGL_ERROR, "Decoding of Packet Downlink Ass failed (%d)\n", rc);
+		LOGP(DTBF, LOGL_ERROR, "Encoding of Packet Downlink Ass failed (%d)\n", rc);
 		goto free_ret;
 	}
 	LOGP(DTBF, LOGL_DEBUG, "------------------------- TX : Packet Downlink Assignment -------------------------\n");
