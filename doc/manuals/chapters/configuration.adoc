@@ -29,11 +29,22 @@ optimize PCU throughput or latency according to their requirements.
 
 === Configuring the Coding Schemes and Rate Adaption
 
-The BSC includes a bit-mask of permitted [E]GPRS coding schemes as part
-of the A-bis OML configuration.  This is passed from the BTS via the PCU
-socket into OsmoPCU.
+As a reminder:
 
-Some additional parameters can be set as described below.
+- GPRS supports Coding Schemes 1-4 (CS1-4), all of them use GMSK modulation
+  (same as GSM).
+- EGPRS supports MCS1-9, where MCS1-4 is GMSK, and MCS5-9 use 8-PSK modulation.
+
+The range of Coding Schemes above only apply to RLCMAC data blocks; RLCMAC
+control blocks are always transmitted with CS1 (GMSK). Hence, CS1 is always
+supported and must be always permitted.
+
+The BSC includes a bit-mask of permitted [E]GPRS coding schemes as part of the
+A-bis OML configuration, controlled by VTY `gprs mode (none|gprs|egprs)`.  This
+is passed from the BTS via the PCU socket into OsmoPCU, and the resulting set
+can be further constrained by OsmoPCU VTY configuration.
+
+Some additional OsmoPCU parameters can be set as described below.
 
 ==== Initial Coding Scheme
 
@@ -41,11 +52,28 @@ You can use the `cs <1-4> [<1-4>]` command at the `pcu` VTY config node
 to set the initial GPRS coding scheme to be used.  The optional second
 value allows to specify a different initial coding scheme for uplink.
 
+Similarly, `mcs <1-9> [<1-9>]` can be used to set up the initial EGPRS coding
+scheme.
+
+[[max_cs_mcs]]
 ==== Maximum Coding Scheme
 
 You can use the `cs max <1-4> [<1-4>]` command at the `pcu` VTY config
-node to set the maximum coding scheme that should be used as part of the
-rate adaption.
+node to set the maximum GPRS coding scheme that should be used as part of the
+rate adaption.  The optional second value allows to specify a different maximum
+coding scheme for uplink.
+
+Similarly, `mcs max <1-9> [<1-9>]` can be used to set up the maximum EGPRS
+coding scheme.
+
+The actual Maximum Coding Scheme for each direction used at runtime is actually
+the result of taking the maximum value from the permitted GPRS coding schemes
+received by the BSC (or BTS) over PCUIF which is equal or lower tho the
+configured value.
+
+Example: PCUIF announces permitted MCS bit-mask (`MCS1 MCS2 MCS3 MCS4`) and
+OsmoPCU is configured `mcs max 6`, then the actual maximum MCS used at runtime
+will be `MCS4`.
 
 ==== Rate Adaption Error Thresholds
 
@@ -192,14 +220,96 @@ You can set those parameters at the `pcu` VTY config node as follows:
 	Set the gamma parameter for MS power control in units of dB.
 
 
-=== Enabling EGPRS
+=== GPRS vs EGPRS considerations
 
-If you would like to test the currently (experimental) EGPRS support of
-OsmoPCU, you can enable it using the `egprs` command at the `pcu` VTY
-config  node.
+==== Configuration
 
-WARNING: EPGRS functionality is highly experimental at the time of this
-writing.  Please only use if you actively would like to participate in
-the OsmoPCU EGPRS development and/or testing.  You will also need an
-EGPRS capable OsmoBTS+PHY, which means `osmo-bts-sysmo` or
-`osmo-bts-litecell15` with their associated PHY.
+OsmoPCU can be configured to either:
+
+- Allocate only GPRS TBFs to all MS (no EGPRS)
+- Allocate EGPRS TBFs to EGPRS capable phones while still falling back to
+  allocating GPRS TBFs on GPRS-only capable MS.
+
+These two different modes of operation are selected by properly configuring the
+Coding Schemes (see <<max_cs_mcs>>).
+
+The first mode of operation (GPRS-only for all MS) can be accomplished
+configuring OsmoPCU so that the resulting MCS set is empty. This can be done in
+two ways:
+
+- Announcing an empty MCS bit-mask over PCUIF to OsmoPCU:
+  That's actually done automatically by OsmoBSC on BTS with VTY config set to
+  `gprs mode gprs`.
+- Configuring OsmoPCU to force an empty set by using VTY command `mcs max 0`.
+
+Hence, if the resulting MCS bit-mask is not empty, (BSC configuring the BTS with
+`gprs mode egprs` and OsmoPCU VTY containing something other than 'mcs max 0'),
+EGPRS TBFs will be allocated for all MS announcing EGPRS capabilities.
+
+It is important to remark that in order to use MCS5-9, the BTS must support
+8-PSK modulation. Nevertheless, in case 8-PSK is not supported by the BTS, one
+can still enable EGPRS and simply make sure 8-PSK MCS are never used by
+configuring OsmoPCU with `mcs max 4 4`.
+
+Similarly, a BTS may support 8-PSK modulation only on downlink, since it is
+easier to implement than the uplink, together with the fact that higher downlink
+throughput is usually more interesting from user point of view. In this
+scenario, OsmoPCU can be configured to allow for full MCS range in downlink
+while still preventing use of 8-PSK on the uplink: `mcs max 9 4`.
+
+Some other interesting configurations to control use of EGPRS in the network
+which lay outside OsmoPCU include:
+
+- If `osmo-bts-trx` together with `osmo-trx` is used, remember to enable EGPRS
+  support (OsmoTRX VTY `egprs enable`).
+
+- It is possible to improve EGPRS performance (in particular, the TBF
+  establishment timing) a bit by enabling 11-bit Access Burst support. This
+  allows EGPRS capable phones to indicate their EGPRS capability, establishment
+  cause, and multi-slot class directly in the Access Burst (OsmoTRX VTY
+  `ext-rach enable`, OsmoBSC VTY `gprs egprs-packet-channel-request`).
+
+NOTE: If you enable MCS5-9 you will also need an 8-PSK capable OsmoBTS+PHY,
+which means `osmo-bts-sysmo` or `osmo-bts-litecell15` with their associated PHY,
+or `osmo-bts-trx` with `osmo-trx` properly configured.
+
+==== GPRS+EGPRS multiplexing
+
+Both EGPRS and GPRS-only capable MS can be driven concurrently in the same PDCH
+timeslot by the PCU, hence no special configuration is required per timeslot
+regarding this topic; OsmoPCU scheduler takes care of the specific requirements
+when driving MS with different capabilities.
+
+These specific requirements translate to some restrictions regarding which
+Coding Schemes can be used at given frame numbers, and hence which kind of
+RLCMAC blocks can be sent, which means serving a GPRS-only MS in a PDCH may end
+up affecting slightly the downlink throughput of EGPRS capable MS.
+
+Throughput loss based on MS capabilities with TBF attached to a certain PDCH
+timeslot:
+
+All UEs are EGPRS capable::
+ No throughput loss, since all data is sent using EGPRS, and EGPRS control
+ messages are used when appropriate.
+
+All UEs are GPRS-only (doesn't support EGPRS)::
+ No throughput loss, since all data and control blocks use GPRS.
+
+Some UEs are GPRS-only, some EGPRS::
+In general EGPRS capable UEs will use EGPRS, and GPRS-only UEs will use GPRS,
+with some restrictions affecting throughput of EGPRS capable UEs:
+- Whenever a GPRS-only MS is to be polled to send uplink data to PCU, then a
+downlink RLCMAC block modulated using GMSK must be sent, which means that if the
+scheduler selects a EGPRS MS for downlink on that block it will force sending of
+data with MCS1-4 (if it's new data, if it's a retransmission it cannot be
+selected since MCS from original message cannot be changed). In the worst case
+if no control block needs to be sent or no new data in MCS1-4 is available to
+send, then an RLCMAC Dummy Block is sent.
+- For synchronization purposes, each MS needs to receive an RLCMAC block which
+it can fully decode at least every 360ms, which means the scheduler must enforce
+a downlink block in CS1-4 every 360ms, that is, every 18th RLCMAC block. In
+general this is not a big issue since anyway all control RLCMAC blocks are
+encoded in CS1, so in case any control block is sent from time to time it's
+accomplished and there's no penalty. However, if only EGPRS downlink data is sent
+over that time frame, then the scheduler will force sending a RLCMAC Dummy
+Block.
