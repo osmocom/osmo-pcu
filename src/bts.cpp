@@ -506,7 +506,7 @@ int BTS::add_paging(uint8_t chan_needed, const struct osmo_mobile_identity *mi)
 void BTS::send_gsmtap_rach(enum pcu_gsmtap_category categ, uint8_t channel,
 			   const struct rach_ind_params *rip)
 {
-	struct pcu_l1_meas meas;
+	struct pcu_l1_meas meas = { 0 };
 	uint8_t ra_buf[2];
 
 	/* 3GPP TS 44.004 defines 11 bit RA as follows: xxxx xxxx  .... .yyy
