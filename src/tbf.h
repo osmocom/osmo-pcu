@@ -213,6 +213,7 @@ int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 
 struct gprs_rlcmac_tbf {
 	gprs_rlcmac_tbf(BTS *bts_, GprsMs *ms, gprs_rlcmac_tbf_direction dir);
+	virtual ~gprs_rlcmac_tbf() {}
 
 	static void free_all(struct gprs_rlcmac_trx *trx);
 	static void free_all(struct gprs_rlcmac_pdch *pdch);
