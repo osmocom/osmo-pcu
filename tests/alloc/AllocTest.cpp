@@ -219,6 +219,8 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	enable_ts_on_bts(bts, ts0, ts1, ts2, ts3, ts4, ts5, ts6, ts7);
 
 	ms = the_bts.ms_alloc(ms_class, 0);
+	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
+	ms_set_timeout(ms, 0);
 	ul_tbf = tbf_alloc_ul_tbf(bts, ms, -1, true);
 	if (!ul_tbf)
 		return false;
@@ -262,6 +264,8 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	enable_ts_on_bts(bts, ts0, ts1, ts2, ts3, ts4, ts5, ts6, ts7);
 
 	ms = the_bts.ms_alloc(ms_class, 0);
+	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
+	ms_set_timeout(ms, 0);
 	dl_tbf = tbf_alloc_dl_tbf(bts, ms, -1, true);
 	if (!dl_tbf)
 		return false;
@@ -314,6 +318,8 @@ static inline bool test_alloc_b_jolly(uint8_t ms_class)
 	tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 	OSMO_ASSERT(tfi >= 0);
 	ms = the_bts.ms_alloc(ms_class, 0);
+	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
+	ms_set_timeout(ms, 0);
 	ul_tbf = tbf_alloc_ul_tbf(bts, ms, -1, false);
 	if (!ul_tbf)
 		return false;
