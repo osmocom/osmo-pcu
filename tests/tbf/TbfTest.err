@@ -521,7 +521,6 @@ Modifying MS object, TLLI = 0xf1000002, IMSI '' -> '001001000000002'
 MS(TLLI=0xf1000002, IMSI=, TA=0, 45/0, DL) IMSI '001001000000002' was already assigned to another MS object: TLLI = 0xf1000001, that IMSI will be removed
 TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW) changes state from FLOW to RELEASING
 TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING) free
-TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING) FIXME: Software error: Pending downlink assignment in state GPRS_RLCMAC_DL_ASS_SEND_ASS. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
 PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING), 1 TBFs, USFs = 00, TFIs = 00000002.
 Detaching TBF from MS object, TLLI = 0xf1000001, TBF = TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING)
 ********** DL-TBF ends here **********
@@ -529,7 +528,6 @@ Clearing MS object, TLLI: 0xf1000001, IMSI: '001001000000002'
 Destroying MS object, TLLI = 0xffffffff
 TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) changes state from FLOW to RELEASING
 TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=RELEASING) free
-TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=RELEASING) FIXME: Software error: Pending downlink assignment in state GPRS_RLCMAC_DL_ASS_SEND_ASS. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
 PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
 Detaching TBF from MS object, TLLI = 0xf1000002, TBF = TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=RELEASING)
 Destroying MS object, TLLI = 0xf1000002
@@ -1860,7 +1858,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) UL RSSI: 31 dBm
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) free
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) FIXME: Software error: Pending downlink assignment in state GPRS_RLCMAC_DL_ASS_SEND_ASS. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) stopping timer T3169 [freeing TBF]
 PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 0 TBFs, USFs = 00, TFIs = 00000000.
 Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
@@ -1999,7 +1996,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) UL RSSI: 31 dBm
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) free
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) FIXME: Software error: Pending downlink assignment in state GPRS_RLCMAC_DL_ASS_SEND_ASS. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) stopping timer T3169 [freeing TBF]
 PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 0 TBFs, USFs = 00, TFIs = 00000000.
 Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
@@ -6023,7 +6019,6 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=1176:1288,
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1186)"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNAAANAAAAAAAAAAAAAAAAAAAAAAAAAA"(V(S)-1=1287)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) FIXME: Software error: Pending downlink assignment in state GPRS_RLCMAC_DL_ASS_SEND_ASS. This may not happen, because the assignment message never gets transmitted. Please be sure not to free in this state. PLEASE FIX!
 PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 Detaching TBF from MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffeeddcc

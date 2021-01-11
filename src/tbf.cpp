@@ -301,7 +301,6 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	}
 
 	LOGPTBF(tbf, LOGL_INFO, "free\n");
-	tbf->check_pending_ass();
 	tbf->stop_timers("freeing TBF");
 	/* TODO: Could/Should generate  bssgp_tx_llc_discarded */
 	tbf_unlink_pdch(tbf);

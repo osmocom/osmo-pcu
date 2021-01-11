@@ -233,7 +233,6 @@ struct gprs_rlcmac_tbf {
 	void set_ack_state(enum gprs_rlcmac_tbf_ul_ack_state new_state, const char *file, int line);
 	void poll_sched_set(const char *file, int line);
 	void poll_sched_unset(const char *file, int line);
-	void check_pending_ass();
 	bool check_n_clear(uint8_t state_flag);
 	void set_assigned_on(uint8_t state_flag, bool check_ccch, const char *file, int line);
 	void ass_type_mod(uint8_t t, bool unset, const char *file, int line);
@@ -511,21 +510,6 @@ inline void gprs_rlcmac_tbf::poll_sched_unset(const char *file, int line)
 	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s changes poll state from %s to GPRS_RLCMAC_POLL_NONE\n",
 		tbf_name(this), get_value_string(gprs_rlcmac_tbf_poll_state_names, poll_state));
 	poll_state = GPRS_RLCMAC_POLL_NONE;
-}
-
-inline void gprs_rlcmac_tbf::check_pending_ass()
-{
-	if (ul_ass_state != GPRS_RLCMAC_UL_ASS_NONE)
-		LOGPTBF(this, LOGL_ERROR, "FIXME: Software error: Pending uplink assignment in state %s. "
-			"This may not happen, because the assignment message never gets transmitted. "
-			"Please be sure not to free in this state. PLEASE FIX!\n",
-			get_value_string(gprs_rlcmac_tbf_ul_ass_state_names, ul_ass_state));
-
-	if (dl_ass_state != GPRS_RLCMAC_DL_ASS_NONE)
-		LOGPTBF(this, LOGL_ERROR, "FIXME: Software error: Pending downlink assignment in state %s. "
-			"This may not happen, because the assignment message never gets transmitted. "
-			"Please be sure not to free in this state. PLEASE FIX!\n",
-			get_value_string(gprs_rlcmac_tbf_dl_ass_state_names, dl_ass_state));
 }
 
 inline bool gprs_rlcmac_tbf::check_n_clear(uint8_t state_flag)
