@@ -34,6 +34,7 @@ extern "C" {
 
 #include <osmocom/core/timer.h>
 #include <osmocom/core/linuxlist.h>
+#include <osmocom/core/rate_ctr.h>
 
 #include <osmocom/gsm/protocol/gsm_23_003.h>
 #include <osmocom/gsm/gsm48.h>
@@ -43,6 +44,10 @@ extern "C" {
 #include <stdint.h>
 #include <stddef.h>
 #include <inttypes.h>
+
+enum ms_counter_id {
+	MS_CTR_DL_CTRL_MSG_SCHED,
+};
 
 struct BTS;
 struct gprs_rlcmac_trx;
@@ -94,7 +99,7 @@ struct GprsMs {
 	struct gprs_codel *codel_state;
 	enum mcs_kind mode;
 
-	unsigned dl_ctrl_msg;
+	struct rate_ctr_group *ctrs;
 };
 
 struct GprsMs *ms_alloc(struct BTS *bts, uint32_t tlli);
@@ -213,16 +218,6 @@ static inline struct gprs_codel *ms_codel_state(const struct GprsMs *ms)
 static inline unsigned ms_nack_rate_dl(const struct GprsMs *ms)
 {
 	return ms->nack_rate_dl;
-}
-
-static inline unsigned ms_dl_ctrl_msg(const struct GprsMs *ms)
-{
-	return ms->dl_ctrl_msg;
-}
-
-static inline void ms_update_dl_ctrl_msg(struct GprsMs *ms)
-{
-	ms->dl_ctrl_msg++;
 }
 
 static inline uint8_t ms_reserved_dl_slots(const struct GprsMs *ms)

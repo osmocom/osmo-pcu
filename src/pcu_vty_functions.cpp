@@ -175,8 +175,6 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 			vty_out(vty, "  MS I level (slot %d):    %d dB%s",
 				i, ms->l1_meas.ts[i].ms_i_level, VTY_NEWLINE);
 	}
-	vty_out(vty, "  RLC/MAC DL Control Msg: %d%s", ms_dl_ctrl_msg(ms),
-		VTY_NEWLINE);
 	if (ms_ul_tbf(ms))
 		vty_out(vty, "  Uplink TBF:             TFI=%d, state=%s%s",
 			ms_ul_tbf(ms)->tfi(),
@@ -201,6 +199,7 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 			tbf->state_name(),
 			VTY_NEWLINE);
 	}
+	vty_out_rate_ctr_group(vty, "  ", ms->ctrs);
 
 	return CMD_SUCCESS;
 }

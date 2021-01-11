@@ -233,8 +233,7 @@ static struct msgb *sched_select_ctrl_msg(
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling control "
 			"message at RTS for %s (TRX=%d, TS=%d)\n",
 			tbf_name(tbf), trx, ts);
-		/* Updates the dl ctrl msg counter for ms */
-		ms_update_dl_ctrl_msg(tbf->ms());
+		rate_ctr_inc(&tbf->ms()->ctrs->ctr[MS_CTR_DL_CTRL_MSG_SCHED]);
 		return msg;
 	}
 

@@ -35,11 +35,25 @@
 #include <osmocom/gsm/protocol/gsm_04_08.h>
 #include <osmocom/gsm/gsm48.h>
 #include <osmocom/core/logging.h>
+#include <osmocom/core/stats.h>
 #include "coding_scheme.h"
 
 #define GPRS_CODEL_SLOW_INTERVAL_MS 4000
 
 extern void *tall_pcu_ctx;
+static unsigned int next_ms_ctr_group_id;
+
+static const struct rate_ctr_desc ms_ctr_description[] = {
+	[MS_CTR_DL_CTRL_MSG_SCHED] = { "ms:dl_ctrl_msg_sched", "Amount of DL CTRL messages scheduled" },
+};
+
+const struct rate_ctr_group_desc ms_ctrg_desc = {
+	.group_name_prefix = "pcu:ms",
+	.group_description = "MS Statistics",
+	.class_id = OSMO_STATS_CLASS_SUBSCRIBER,
+	.num_ctr = ARRAY_SIZE(ms_ctr_description),
+	.ctr_desc = ms_ctr_description,
+};
 
 static int64_t now_msec()
 {
@@ -118,7 +132,15 @@ struct GprsMs *ms_alloc(struct BTS *bts, uint32_t tlli)
 	}
 	ms->last_cs_not_low = now_msec();
 	ms->app_info_pending = false;
+
+	ms->ctrs = rate_ctr_group_alloc(ms, &ms_ctrg_desc, next_ms_ctr_group_id++);
+	if (!ms->ctrs)
+		goto free_ret;
+
 	return ms;
+free_ret:
+	talloc_free(ms);
+	return NULL;
 }
 
 static int ms_talloc_destructor(struct GprsMs *ms)
@@ -148,6 +170,9 @@ static int ms_talloc_destructor(struct GprsMs *ms)
 	}
 
 	llc_queue_clear(&ms->llc_queue, ms->bts);
+
+	if (ms->ctrs)
+		rate_ctr_group_free(ms->ctrs);
 	return 0;
 }
 
