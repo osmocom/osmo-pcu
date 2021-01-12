@@ -47,7 +47,7 @@ static const struct rate_ctr_desc ms_ctr_description[] = {
 	[MS_CTR_DL_CTRL_MSG_SCHED] = { "ms:dl_ctrl_msg_sched", "Amount of DL CTRL messages scheduled" },
 };
 
-const struct rate_ctr_group_desc ms_ctrg_desc = {
+static const struct rate_ctr_group_desc ms_ctrg_desc = {
 	.group_name_prefix = "pcu:ms",
 	.group_description = "MS Statistics",
 	.class_id = OSMO_STATS_CLASS_SUBSCRIBER,
