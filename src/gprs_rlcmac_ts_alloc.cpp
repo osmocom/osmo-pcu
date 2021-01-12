@@ -518,7 +518,7 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 {
 	uint8_t Tx = mslot_class_get_tx(mslot_class),   /* Max number of Tx slots */
 		Sum = mslot_class_get_sum(mslot_class), /* Max number of Tx + Rx slots */
-		max_slots, num_tx, mask_sel, pdch_slots, ul_ts, dl_ts;
+		max_slots, num_rx, num_tx, mask_sel, pdch_slots, ul_ts, dl_ts;
 	int16_t rx_window, tx_window;
 	char slot_info[9] = {0};
 	int max_capacity = -1;
@@ -570,6 +570,13 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 			/* Wrap valid window */
 			tx_valid_win = mslot_wrap_window(tx_valid_win);
 
+			/* for multislot type 1: don't split the window to wrap around.
+			 * E.g. 'UU-----U' is invalid for a 4 TN window. Except 8 TN window.
+			 * See 45.002 B.1 */
+			if (mslot_class_get_type(mslot_class) == 1 && num_tx < 8 &&
+					tx_valid_win & (1 << 0) && tx_valid_win & (1 << 7))
+				continue;
+
 			tx_window = tx_valid_win;
 
 			/* Filter out unavailable slots */
@@ -583,12 +590,20 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 			if ((tx_window & (1 << ((ul_ts+num_tx-1) % 8))) == 0)
 				continue;
 
-			rx_valid_win = (1 << OSMO_MIN(mslot_class_get_rx(mslot_class), Sum - num_tx)) - 1;
+			num_rx = OSMO_MIN(mslot_class_get_rx(mslot_class), Sum - num_tx);
+			rx_valid_win = (1 << num_rx) - 1;
 
 			/* Rotate group of RX slots: DDD-----, -DDD----, ..., DD-----D */
 			for (dl_ts = 0; dl_ts < 8; dl_ts += 1, rx_valid_win <<= 1) {
 				/* Wrap valid window */
 				rx_valid_win = (rx_valid_win | rx_valid_win >> 8) & 0xff;
+
+				/* for multislot type 1: don't split the window to wrap around.
+				 * E.g. 'DD-----D' is invalid for a 4 TN window. Except 8 TN window.
+				 * See 45.002 B.1 */
+				if (mslot_class_get_type(mslot_class) == 1 && num_rx < 8 &&
+						(rx_valid_win & (1 << 0)) && (rx_valid_win & (1 << 7)))
+					continue;
 
 				/* Validate with both Tta/Ttb/Trb and Ttb/Tra/Trb */
 				for (mask_sel = MASK_TT; mask_sel <= MASK_TR; mask_sel += 1) {
