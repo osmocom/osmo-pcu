@@ -81,7 +81,6 @@ export LD_LIBRARY_PATH="$inst/lib"
 export PATH="$inst/bin:$PATH"
 
 if [ "$WITH_MANUALS" = "1" ]; then
-  osmo-build-dep.sh osmo-gsm-manuals
   PCU_CONFIG="$PCU_CONFIG --enable-manuals"
 fi
 
