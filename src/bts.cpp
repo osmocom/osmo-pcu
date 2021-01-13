@@ -529,7 +529,7 @@ void BTS::send_gsmtap(enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_n
 		      uint8_t ts_no, uint8_t channel, uint32_t fn,
 		      const uint8_t *data, unsigned int len)
 {
-	struct pcu_l1_meas meas;
+	struct pcu_l1_meas meas = { 0 };
 	send_gsmtap_meas(categ, uplink, trx_no, ts_no, channel, fn, data, len, &meas);
 }
 
