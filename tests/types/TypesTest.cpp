@@ -352,7 +352,7 @@ static void test_rlc_dl_ul_basic()
 		uint16_t lost = 0, recv = 0;
 		char show_rbb[65];
 		uint8_t bits_data[8];
-		BTS dummy_bts;
+		BTS dummy_bts(the_pcu);
 		gprs_rlc_dl_window dl_win;
 		bitvec bits;
 		int bsn_begin, bsn_end, num_blocks;
@@ -669,8 +669,8 @@ static void test_egprs_ul_ack_nack()
 
 	fprintf(stderr, "############## test_egprs_ul_ack_nack\n");
 
-	BTS the_bts;
-	the_bts.bts_data()->alloc_algorithm = alloc_algorithm_a;
+	BTS the_bts(the_pcu);
+	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	the_bts.bts_data()->trx[0].pdch[4].enable();
 
 	GprsMs *ms = the_bts.ms_alloc(1, 1);
@@ -759,8 +759,8 @@ static void check_imm_ass(struct gprs_rlcmac_tbf *tbf, bool dl, enum ph_burst_ty
 
 void test_immediate_assign_dl()
 {
-	BTS the_bts;
-	the_bts.bts_data()->alloc_algorithm = alloc_algorithm_a;
+	BTS the_bts(the_pcu);
+	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	the_bts.bts_data()->trx[0].pdch[2].enable();
 	the_bts.bts_data()->trx[0].pdch[3].enable();
 	GprsMs *ms = the_bts.ms_alloc(1, 0);
@@ -783,8 +783,8 @@ void test_immediate_assign_dl()
 
 void test_immediate_assign_ul0m()
 {
-	BTS the_bts;
-	the_bts.bts_data()->alloc_algorithm = alloc_algorithm_a;
+	BTS the_bts(the_pcu);
+	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	the_bts.bts_data()->trx[0].pdch[4].enable();
 	the_bts.bts_data()->trx[0].pdch[5].enable();
 
@@ -824,8 +824,8 @@ void test_immediate_assign_ul0s()
 
 void test_immediate_assign_ul1s()
 {
-	BTS the_bts;
-	the_bts.bts_data()->alloc_algorithm = alloc_algorithm_a;
+	BTS the_bts(the_pcu);
+	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	the_bts.bts_data()->trx[0].pdch[1].enable();
 	the_bts.bts_data()->trx[0].pdch[2].enable();
 
@@ -925,6 +925,8 @@ int main(int argc, char **argv)
 	log_set_category_filter(osmo_stderr_target, DTBF, 1, LOGL_INFO);
 	log_set_category_filter(osmo_stderr_target, DTBFUL, 1, LOGL_INFO);
 
+	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+
 	printf("Making some basic type testing.\n");
 
 	test_llc();
@@ -940,6 +942,8 @@ int main(int argc, char **argv)
 	test_immediate_assign_rej();
 	test_lsb();
 	test_egprs_ul_ack_nack();
+
+	talloc_free(the_pcu);
 
 	return EXIT_SUCCESS;
 }

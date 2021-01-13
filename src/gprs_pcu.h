@@ -1,0 +1,97 @@
+/*
+ * Copyright (C) 2013 by Holger Hans Peter Freyther
+ * Copyright (C) 2021 by sysmocom - s.f.m.c. GmbH <info@sysmocom.de>
+ * Author: Pau Espin Pedrol <pespin@sysmocom.de>
+ *
+ * All Rights Reserved
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+
+#include <osmocom/core/gsmtap_util.h>
+
+#include "gprs_bssgp_pcu.h"
+
+#define LLC_CODEL_DISABLE 0
+#define LLC_CODEL_USE_DEFAULT (-1)
+
+#define MAX_EDGE_MCS 9
+#define MAX_GPRS_CS 4
+
+/* see bts->gsmtap_categ_mask */
+enum pcu_gsmtap_category {
+	PCU_GSMTAP_C_DL_UNKNOWN		= 0,	/* unknown or undecodable downlink blocks */
+	PCU_GSMTAP_C_DL_DUMMY		= 1, 	/* downlink dummy blocks */
+	PCU_GSMTAP_C_DL_CTRL		= 2,	/* downlink control blocks */
+	PCU_GSMTAP_C_DL_DATA_GPRS	= 3,	/* downlink GPRS data blocks */
+	PCU_GSMTAP_C_DL_DATA_EGPRS	= 4,	/* downlink EGPRS data blocks */
+	PCU_GSMTAP_C_DL_PTCCH		= 5,	/* downlink PTCCH blocks */
+	PCU_GSMTAP_C_DL_AGCH		= 6,	/* downlink AGCH blocks */
+	PCU_GSMTAP_C_DL_PCH		= 7,	/* downlink PCH blocks */
+
+	PCU_GSMTAP_C_UL_UNKNOWN		= 15,	/* unknown or undecodable uplink blocks */
+	PCU_GSMTAP_C_UL_DUMMY		= 16,	/* uplink dummy blocks */
+	PCU_GSMTAP_C_UL_CTRL		= 17,	/* uplink control blocks */
+	PCU_GSMTAP_C_UL_DATA_GPRS	= 18,	/* uplink GPRS data blocks */
+	PCU_GSMTAP_C_UL_DATA_EGPRS	= 19,	/* uplink EGPRS data blocks */
+	PCU_GSMTAP_C_UL_RACH		= 20,	/* uplink RACH bursts */
+	PCU_GSMTAP_C_UL_PTCCH		= 21,	/* uplink PTCCH bursts */
+};
+
+struct BTS;
+struct gprs_rlcmac_bts;
+struct GprsMs;
+struct gprs_rlcmac_tbf;
+
+typedef int (*alloc_algorithm_func_t)(struct gprs_rlcmac_bts *bts,
+				      struct GprsMs *ms,
+				      struct gprs_rlcmac_tbf *tbf,
+				      bool single, int8_t use_tbf);
+
+struct gprs_pcu {
+
+	/* Path to be used for the pcu-bts socket */
+	char *pcu_sock_path;
+
+	struct { /* Config Values set by VTY */
+		bool force_initial_cs;	/* false=use from BTS true=use from VTY */
+		bool force_initial_mcs;	/* false=use from BTS true=use from VTY */
+		uint8_t max_cs_dl, max_cs_ul;
+		uint8_t max_mcs_dl, max_mcs_ul;
+	} vty;
+
+	struct gsmtap_inst *gsmtap;
+	uint32_t gsmtap_categ_mask;
+
+	struct BTS *bts;
+
+	struct gprs_ns2_inst *nsi;
+
+	alloc_algorithm_func_t alloc_algorithm;
+
+	struct gprs_bssgp_pcu bssgp;
+};
+
+
+extern struct gprs_pcu *the_pcu;
+
+struct gprs_pcu *gprs_pcu_alloc(void *ctx);
+
+void gprs_pcu_set_max_cs(struct gprs_pcu *pcu, uint8_t cs_dl, uint8_t cs_ul);
+void gprs_pcu_set_max_mcs(struct gprs_pcu *pcu, uint8_t mcs_dl, uint8_t mcs_ul);

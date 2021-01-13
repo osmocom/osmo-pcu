@@ -70,28 +70,26 @@ static const struct value_string pcu_gsmtap_categ_help[] = {
 
 DEFUN(cfg_pcu_gsmtap_categ, cfg_pcu_gsmtap_categ_cmd, "HIDDEN", "HIDDEN")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	int categ;
 
 	categ = get_string_value(pcu_gsmtap_categ_names, argv[0]);
 	if (categ < 0)
 		return CMD_WARNING;
 
-	bts->gsmtap_categ_mask |= (1 << categ);
+	the_pcu->gsmtap_categ_mask |= (1 << categ);
 
 	return CMD_SUCCESS;
 }
 
 DEFUN(cfg_pcu_no_gsmtap_categ, cfg_pcu_no_gsmtap_categ_cmd, "HIDDEN", "HIDDEN")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	int categ;
 
 	categ = get_string_value(pcu_gsmtap_categ_names, argv[0]);
 	if (categ < 0)
 		return CMD_WARNING;
 
-	bts->gsmtap_categ_mask &= ~(1 << categ);
+	the_pcu->gsmtap_categ_mask &= ~(1 << categ);
 
 	return CMD_SUCCESS;
 }
@@ -122,7 +120,7 @@ static int config_write_pcu(struct vty *vty)
 	if (bts->fc_ms_leak_rate)
 		vty_out(vty, " flow-control force-ms-leak-rate %d%s",
 			bts->fc_ms_leak_rate, VTY_NEWLINE);
-	if (bts->vty.force_initial_cs) {
+	if (the_pcu->vty.force_initial_cs) {
 		if (bts->initial_cs_ul == bts->initial_cs_dl)
 			vty_out(vty, " cs %d%s", bts->initial_cs_dl,
 				VTY_NEWLINE);
@@ -130,13 +128,13 @@ static int config_write_pcu(struct vty *vty)
 			vty_out(vty, " cs %d %d%s", bts->initial_cs_dl,
 				bts->initial_cs_ul, VTY_NEWLINE);
 	}
-	if (bts->vty.max_cs_dl && bts->vty.max_cs_ul) {
-		if (bts->vty.max_cs_ul == bts->vty.max_cs_dl)
-			vty_out(vty, " cs max %d%s", bts->vty.max_cs_dl,
+	if (the_pcu->vty.max_cs_dl && the_pcu->vty.max_cs_ul) {
+		if (the_pcu->vty.max_cs_ul == the_pcu->vty.max_cs_dl)
+			vty_out(vty, " cs max %d%s", the_pcu->vty.max_cs_dl,
 				VTY_NEWLINE);
 		else
-			vty_out(vty, " cs max %d %d%s", bts->vty.max_cs_dl,
-				bts->vty.max_cs_ul, VTY_NEWLINE);
+			vty_out(vty, " cs max %d %d%s", the_pcu->vty.max_cs_dl,
+				the_pcu->vty.max_cs_ul, VTY_NEWLINE);
 	}
 	if (bts->cs_adj_enabled)
 		vty_out(vty, " cs threshold %d %d%s",
@@ -179,7 +177,7 @@ static int config_write_pcu(struct vty *vty)
 		bts->mcs_lqual_ranges[8].low,
 		VTY_NEWLINE);
 
-	if (bts->vty.force_initial_mcs) {
+	if (the_pcu->vty.force_initial_mcs) {
 		if (bts->initial_mcs_ul == bts->initial_mcs_dl)
 			vty_out(vty, " mcs %d%s", bts->initial_mcs_dl,
 				VTY_NEWLINE);
@@ -188,13 +186,13 @@ static int config_write_pcu(struct vty *vty)
 				bts->initial_mcs_ul, VTY_NEWLINE);
 	}
 
-	if (bts->vty.max_mcs_dl && bts->vty.max_mcs_ul) {
-		if (bts->vty.max_mcs_ul == bts->vty.max_mcs_dl)
-			vty_out(vty, " mcs max %d%s", bts->vty.max_mcs_dl,
+	if (the_pcu->vty.max_mcs_dl && the_pcu->vty.max_mcs_ul) {
+		if (the_pcu->vty.max_mcs_ul == the_pcu->vty.max_mcs_dl)
+			vty_out(vty, " mcs max %d%s", the_pcu->vty.max_mcs_dl,
 				VTY_NEWLINE);
 		else
-			vty_out(vty, " mcs max %d %d%s", bts->vty.max_mcs_dl,
-				bts->vty.max_mcs_ul, VTY_NEWLINE);
+			vty_out(vty, " mcs max %d %d%s", the_pcu->vty.max_mcs_dl,
+				the_pcu->vty.max_mcs_ul, VTY_NEWLINE);
 	}
 
 	vty_out(vty, " window-size %d %d%s", bts->ws_base, bts->ws_pdch,
@@ -223,11 +221,11 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " queue codel interval %d%s",
 			bts->llc_codel_interval_msec/10, VTY_NEWLINE);
 
-	if (bts->alloc_algorithm == alloc_algorithm_a)
+	if (the_pcu->alloc_algorithm == alloc_algorithm_a)
 		vty_out(vty, " alloc-algorithm a%s", VTY_NEWLINE);
-	if (bts->alloc_algorithm == alloc_algorithm_b)
+	if (the_pcu->alloc_algorithm == alloc_algorithm_b)
 		vty_out(vty, " alloc-algorithm b%s", VTY_NEWLINE);
-	if (bts->alloc_algorithm == alloc_algorithm_dynamic)
+	if (the_pcu->alloc_algorithm == alloc_algorithm_dynamic)
 		vty_out(vty, " alloc-algorithm dynamic%s", VTY_NEWLINE);
 	if (bts->force_two_phase)
 		vty_out(vty, " two-phase-access%s", VTY_NEWLINE);
@@ -235,12 +233,12 @@ static int config_write_pcu(struct vty *vty)
 	vty_out(vty, " gamma %d%s", bts->gamma * 2, VTY_NEWLINE);
 	if (!bts->dl_tbf_preemptive_retransmission)
 		vty_out(vty, " no dl-tbf-preemptive-retransmission%s", VTY_NEWLINE);
-	if (strcmp(bts->pcu_sock_path, PCU_SOCK_DEFAULT))
-		vty_out(vty, " pcu-socket %s%s", bts->pcu_sock_path, VTY_NEWLINE);
+	if (strcmp(the_pcu->pcu_sock_path, PCU_SOCK_DEFAULT))
+		vty_out(vty, " pcu-socket %s%s", the_pcu->pcu_sock_path, VTY_NEWLINE);
 
 	for (i = 0; i < 32; i++) {
 		unsigned int cs = (1 << i);
-		if (bts->gsmtap_categ_mask & cs) {
+		if (the_pcu->gsmtap_categ_mask & cs) {
 			vty_out(vty, " gsmtap-category %s%s",
 				get_value_string(pcu_gsmtap_categ_names, i), VTY_NEWLINE);
 		}
@@ -449,7 +447,7 @@ DEFUN_ATTR(cfg_pcu_cs,
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t cs = atoi(argv[0]);
 
-	bts->vty.force_initial_cs = true;
+	the_pcu->vty.force_initial_cs = true;
 	bts->initial_cs_dl = cs;
 	if (argc > 1)
 		bts->initial_cs_ul = atoi(argv[1]);
@@ -465,9 +463,7 @@ DEFUN_ATTR(cfg_pcu_no_cs,
 	   NO_STR CS_STR,
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->vty.force_initial_cs = false;
+	the_pcu->vty.force_initial_cs = false;
 
 	return CMD_SUCCESS;
 }
@@ -482,7 +478,6 @@ DEFUN_ATTR(cfg_pcu_cs_max,
 	   "Use a different maximum CS value for the uplink",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t cs_dl = atoi(argv[0]);
 	uint8_t cs_ul;
 
@@ -491,7 +486,7 @@ DEFUN_ATTR(cfg_pcu_cs_max,
 	else
 		cs_ul = cs_dl;
 
-	bts_set_max_cs(bts, cs_dl, cs_ul);
+	gprs_pcu_set_max_cs(the_pcu, cs_dl, cs_ul);
 	return CMD_SUCCESS;
 }
 
@@ -501,9 +496,7 @@ DEFUN_ATTR(cfg_pcu_no_cs_max,
 	   NO_STR CS_STR CS_MAX_STR,
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts_set_max_cs(bts, 0, 0);
+	gprs_pcu_set_max_cs(the_pcu, 0, 0);
 	return CMD_SUCCESS;
 }
 
@@ -519,7 +512,7 @@ DEFUN_ATTR(cfg_pcu_mcs,
 	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t mcs = atoi(argv[0]);
 
-	bts->vty.force_initial_mcs = true;
+	the_pcu->vty.force_initial_mcs = true;
 	bts->initial_mcs_dl = mcs;
 	if (argc > 1)
 		bts->initial_mcs_ul = atoi(argv[1]);
@@ -535,9 +528,7 @@ DEFUN_ATTR(cfg_pcu_no_mcs,
 	   NO_STR MCS_STR,
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->vty.force_initial_mcs = false;
+	the_pcu->vty.force_initial_mcs = false;
 
 	return CMD_SUCCESS;
 }
@@ -551,7 +542,6 @@ DEFUN_ATTR(cfg_pcu_mcs_max,
 	   "Use a different maximum MCS value for the uplink",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t mcs_dl = atoi(argv[0]);
 	uint8_t mcs_ul;
 
@@ -560,7 +550,7 @@ DEFUN_ATTR(cfg_pcu_mcs_max,
 	else
 		mcs_ul = mcs_dl;
 
-	bts_set_max_mcs(bts, mcs_dl, mcs_ul);
+	gprs_pcu_set_max_mcs(the_pcu, mcs_dl, mcs_ul);
 	return CMD_SUCCESS;
 }
 
@@ -570,9 +560,7 @@ DEFUN_ATTR(cfg_pcu_no_mcs_max,
 	   NO_STR MCS_STR CS_MAX_STR,
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts_set_max_mcs(bts, 0, 0);
+	gprs_pcu_set_max_mcs(the_pcu, 0, 0);
 	return CMD_SUCCESS;
 }
 
@@ -773,17 +761,15 @@ DEFUN_ATTR(cfg_pcu_alloc,
 	   "Dynamically select the algorithm based on the system state\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
 	switch (argv[0][0]) {
 	case 'a':
-		bts->alloc_algorithm = alloc_algorithm_a;
+		the_pcu->alloc_algorithm = alloc_algorithm_a;
 		break;
 	case 'b':
-		bts->alloc_algorithm = alloc_algorithm_b;
+		the_pcu->alloc_algorithm = alloc_algorithm_b;
 		break;
 	default:
-		bts->alloc_algorithm = alloc_algorithm_dynamic;
+		the_pcu->alloc_algorithm = alloc_algorithm_dynamic;
 		break;
 	}
 
@@ -1110,12 +1096,10 @@ DEFUN(cfg_pcu_sock,
       "Configure the osmo-bts PCU socket file/path name\n"
       "Path of the socket to connect to\n")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
 	if (vty->type != VTY_FILE)
 		vty_out(vty, "Changing PCU socket path at run-time has no effect%s", VTY_NEWLINE);
 
-	osmo_talloc_replace_string(tall_pcu_ctx, &bts->pcu_sock_path, argv[0]);
+	osmo_talloc_replace_string(tall_pcu_ctx, &the_pcu->pcu_sock_path, argv[0]);
 
 	return CMD_SUCCESS;
 }

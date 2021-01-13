@@ -35,6 +35,7 @@ extern "C" {
 #include <osmocom/gsm/gsm48.h>
 #include "mslot_class.h"
 #include "gsm_rlcmac.h"
+#include "gprs_pcu.h"
 #ifdef __cplusplus
 }
 #endif
@@ -51,32 +52,6 @@ extern "C" {
 #include <pdch.h>
 #include <stdint.h>
 #include <stdbool.h>
-
-#define LLC_CODEL_DISABLE 0
-#define LLC_CODEL_USE_DEFAULT (-1)
-
-#define MAX_EDGE_MCS 9
-#define MAX_GPRS_CS 4
-
-/* see bts->gsmtap_categ_mask */
-enum pcu_gsmtap_category {
-	PCU_GSMTAP_C_DL_UNKNOWN		= 0,	/* unknown or undecodable downlink blocks */
-	PCU_GSMTAP_C_DL_DUMMY		= 1, 	/* downlink dummy blocks */
-	PCU_GSMTAP_C_DL_CTRL		= 2,	/* downlink control blocks */
-	PCU_GSMTAP_C_DL_DATA_GPRS	= 3,	/* downlink GPRS data blocks */
-	PCU_GSMTAP_C_DL_DATA_EGPRS	= 4,	/* downlink EGPRS data blocks */
-	PCU_GSMTAP_C_DL_PTCCH		= 5,	/* downlink PTCCH blocks */
-	PCU_GSMTAP_C_DL_AGCH		= 6,	/* downlink AGCH blocks */
-	PCU_GSMTAP_C_DL_PCH		= 7,	/* downlink PCH blocks */
-
-	PCU_GSMTAP_C_UL_UNKNOWN		= 15,	/* unknown or undecodable uplink blocks */
-	PCU_GSMTAP_C_UL_DUMMY		= 16,	/* uplink dummy blocks */
-	PCU_GSMTAP_C_UL_CTRL		= 17,	/* uplink control blocks */
-	PCU_GSMTAP_C_UL_DATA_GPRS	= 18,	/* uplink GPRS data blocks */
-	PCU_GSMTAP_C_UL_DATA_EGPRS	= 19,	/* uplink EGPRS data blocks */
-	PCU_GSMTAP_C_UL_RACH		= 20,	/* uplink RACH bursts */
-	PCU_GSMTAP_C_UL_PTCCH		= 21,	/* uplink PTCCH bursts */
-};
 
 struct BTS;
 struct GprsMs;
@@ -120,12 +95,6 @@ struct gprs_rlcmac_bts {
 	uint16_t mcs_mask;  /* Allowed MCS mask from BTS */
 	uint8_t initial_cs_dl, initial_cs_ul;
 	uint8_t initial_mcs_dl, initial_mcs_ul;
-	struct { /* Config Values set by VTY */
-		bool force_initial_cs;	/* false=use from BTS true=use from VTY */
-		bool force_initial_mcs;	/* false=use from BTS true=use from VTY */
-		uint8_t max_cs_dl, max_cs_ul;
-		uint8_t max_mcs_dl, max_mcs_ul;
-	} vty;
 	uint16_t force_llc_lifetime; /* overrides lifetime from SGSN */
 	uint32_t llc_discard_csec;
 	uint32_t llc_idle_ack_csec;
@@ -136,11 +105,7 @@ struct gprs_rlcmac_bts {
 	uint8_t n3101;
 	uint8_t n3103;
 	uint8_t n3105;
-	struct gsmtap_inst *gsmtap;
-	uint32_t gsmtap_categ_mask;
 	struct gprs_rlcmac_trx trx[8];
-	int (*alloc_algorithm)(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf,
-			       bool single, int8_t use_tbf);
 
 	uint8_t force_two_phase;
 	uint8_t alpha, gamma;
@@ -171,9 +136,6 @@ struct gprs_rlcmac_bts {
 	 */
 	struct BTS *bts;
 
-	/* Path to be used for the pcu-bts socket */
-	char *pcu_sock_path;
-
 	/* Are we talking Gb with IP-SNS (true) or classic Gb? */
 	enum gprs_ns2_dialect ns_dialect;
 
@@ -182,7 +144,6 @@ struct gprs_rlcmac_bts {
 	struct msgb *app_info;
 	uint32_t app_info_pending; /* Count of MS with active TBF, to which we did not send app_info yet */
 
-	struct gprs_ns2_inst *nsi;
 	/* main nsei */
 	struct gprs_ns2_nse *nse;
 };
@@ -304,7 +265,7 @@ struct chan_req_params {
  */
 struct BTS {
 public:
-	BTS();
+	BTS(struct gprs_pcu *pcu);
 	~BTS();
 	void cleanup();
 
@@ -373,7 +334,11 @@ public:
 	LListHead<gprs_rlcmac_tbf>& dl_tbfs();
 
 	struct gprs_rlcmac_bts m_bts;
+
+	/* back pointer to PCU object */
+	struct gprs_pcu *pcu;
 private:
+
 	int m_cur_fn;
 	int m_cur_blk_fn;
 	uint8_t m_max_cs_dl, m_max_cs_ul;
@@ -453,6 +418,8 @@ inline void BTS::stat_item_add(unsigned int stat_id, int inc) {
 	osmo_stat_item_set(m_statg->items[stat_id], val + inc);
 }
 
+struct gprs_pcu;
+struct BTS* bts_alloc(struct gprs_pcu *pcu);
 #endif
 
 #ifdef __cplusplus
@@ -463,8 +430,8 @@ extern "C" {
 	struct gprs_rlcmac_bts *bts_main_data();
 	struct rate_ctr_group *bts_main_data_stats();
 	struct osmo_stat_item_group *bts_main_data_stat_items();
-	void bts_set_max_cs(struct gprs_rlcmac_bts *bts, uint8_t cs_dl, uint8_t cs_ul);
-	void bts_set_max_mcs(struct gprs_rlcmac_bts *bts, uint8_t mcs_dl, uint8_t mcs_ul);
+	void bts_recalc_max_cs(struct gprs_rlcmac_bts *bts);
+	void bts_recalc_max_mcs(struct gprs_rlcmac_bts *bts);
 	struct GprsMs *bts_ms_by_imsi(struct BTS *bts, const char *imsi);
 	uint8_t bts_max_cs_dl(const struct BTS *bts);
 	uint8_t bts_max_cs_ul(const struct BTS *bts);

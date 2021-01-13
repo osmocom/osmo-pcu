@@ -143,7 +143,8 @@ static inline void pcu_l1_meas_set_ms_i_level(struct pcu_l1_meas *m, size_t idx,
 #ifdef __cplusplus
 void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
         uint32_t fn, uint8_t block_nr);
-void pcu_l1if_tx_ptcch(uint8_t trx, uint8_t ts, uint16_t arfcn,
+void pcu_l1if_tx_ptcch(struct gprs_rlcmac_bts *bts,
+		       uint8_t trx, uint8_t ts, uint16_t arfcn,
 		       uint32_t fn, uint8_t block_nr,
 		       uint8_t *data, size_t data_len);
 void pcu_l1if_tx_agch(bitvec * block, int len);

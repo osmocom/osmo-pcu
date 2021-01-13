@@ -112,7 +112,7 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 	int tfi;
 	int i;
 	uint8_t used_trx, tmp_trx;
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	GprsMs *ms;
 	struct gprs_rlcmac_bts *bts;
 	struct gprs_rlcmac_tbf *tbfs[32*8+1] = { 0, };
@@ -120,7 +120,7 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 	printf("Testing alloc_a direction(%d)\n", dir);
 
 	bts = the_bts.bts_data();
-	bts->alloc_algorithm = alloc_algorithm_a;
+	the_pcu->alloc_algorithm = alloc_algorithm_a;
 
 	struct gprs_rlcmac_trx *trx = &bts->trx[0];
 	for (i = 0; i < 8; i += 1)
@@ -205,7 +205,7 @@ static inline void enable_ts_on_bts(struct gprs_rlcmac_bts *bts,
 static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool ts5, bool ts6, bool ts7,
 				      uint8_t ms_class, bool verbose)
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	struct gprs_rlcmac_bts *bts = the_bts.bts_data();
 	GprsMs *ms;
 	gprs_rlcmac_ul_tbf *ul_tbf;
@@ -214,7 +214,7 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	if (verbose)
 		printf("Testing UL then DL assignment.\n");
 
-	bts->alloc_algorithm = alloc_algorithm_b;
+	the_pcu->alloc_algorithm = alloc_algorithm_b;
 
 	enable_ts_on_bts(bts, ts0, ts1, ts2, ts3, ts4, ts5, ts6, ts7);
 
@@ -250,7 +250,7 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool ts5, bool ts6, bool ts7,
 				      uint8_t ms_class, bool verbose)
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	struct gprs_rlcmac_bts *bts = the_bts.bts_data();
 	GprsMs *ms;
 	gprs_rlcmac_ul_tbf *ul_tbf;
@@ -259,7 +259,7 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	if (verbose)
 		printf("Testing DL then UL assignment followed by update\n");
 
-	bts->alloc_algorithm = alloc_algorithm_b;
+	the_pcu->alloc_algorithm = alloc_algorithm_b;
 
 	enable_ts_on_bts(bts, ts0, ts1, ts2, ts3, ts4, ts5, ts6, ts7);
 
@@ -302,7 +302,7 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 static inline bool test_alloc_b_jolly(uint8_t ms_class)
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	struct gprs_rlcmac_bts *bts = the_bts.bts_data();
 	GprsMs *ms;
 	int tfi;
@@ -311,7 +311,7 @@ static inline bool test_alloc_b_jolly(uint8_t ms_class)
 
 	printf("Testing jolly example\n");
 
-	bts->alloc_algorithm = alloc_algorithm_b;
+	the_pcu->alloc_algorithm = alloc_algorithm_b;
 
 	enable_ts_on_bts(bts, false, true, true, true, true, false, false, false);
 
@@ -649,7 +649,7 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 	unsigned max_class, enum test_mode mode,
 	unsigned expect_num, const char *text)
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	struct gprs_rlcmac_bts *bts;
 	struct gprs_rlcmac_trx *trx;
 	unsigned counter;
@@ -658,7 +658,7 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 	       text, min_class, max_class, test_mode_descr(mode));
 
 	bts = the_bts.bts_data();
-	bts->alloc_algorithm = algo;
+	the_pcu->alloc_algorithm = algo;
 
 	trx = &bts->trx[0];
 	trx->pdch[3].enable();
@@ -683,7 +683,7 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 static void test_many_connections(algo_t algo, unsigned expect_num,
 	const char *text)
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	struct gprs_rlcmac_bts *bts;
 	struct gprs_rlcmac_trx *trx;
 	int counter1, counter2 = -1;
@@ -698,7 +698,7 @@ static void test_many_connections(algo_t algo, unsigned expect_num,
 	printf("Going to test assignment with many connections, algorithm %s\n", text);
 
 	bts = the_bts.bts_data();
-	bts->alloc_algorithm = algo;
+	the_pcu->alloc_algorithm = algo;
 
 	trx = &bts->trx[0];
 	trx->pdch[3].enable();
@@ -761,7 +761,7 @@ static void test_successive_allocations()
 
 static void test_2_consecutive_dl_tbfs()
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	GprsMs *ms;
 	struct gprs_rlcmac_bts *bts;
 	struct gprs_rlcmac_trx *trx;
@@ -773,7 +773,7 @@ static void test_2_consecutive_dl_tbfs()
 	printf("Testing DL TS allocation for Multi UEs\n");
 
 	bts = the_bts.bts_data();
-	bts->alloc_algorithm = alloc_algorithm_b;
+	the_pcu->alloc_algorithm = alloc_algorithm_b;
 
 	trx = &bts->trx[0];
 	trx->pdch[4].enable();
@@ -826,6 +826,8 @@ int main(int argc, char **argv)
 	if (getenv("LOGL_DEBUG"))
 		log_set_log_level(osmo_stderr_target, LOGL_DEBUG);
 
+	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+
 	test_alloc_a();
 	test_alloc_b();
 	test_successive_allocations();
@@ -833,6 +835,8 @@ int main(int argc, char **argv)
 	test_many_connections(alloc_algorithm_b, 32, "B");
 	test_many_connections(alloc_algorithm_dynamic, 160, "dynamic");
 	test_2_consecutive_dl_tbfs();
+
+	talloc_free(the_pcu);
 	return EXIT_SUCCESS;
 }
 

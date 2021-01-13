@@ -51,7 +51,7 @@ static void test_ms_state()
 	uint32_t tlli = 0xffeeddbb;
 	gprs_rlcmac_dl_tbf *dl_tbf;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	GprsMs *ms;
 
 	printf("=== start %s ===\n", __func__);
@@ -114,7 +114,7 @@ static void test_ms_callback()
 	uint32_t tlli = 0xffeeddbb;
 	gprs_rlcmac_dl_tbf *dl_tbf;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	GprsMs *ms;
 	last_cb = CB_UNKNOWN;
 
@@ -188,7 +188,7 @@ static void test_ms_replace_tbf()
 	uint32_t tlli = 0xffeeddbb;
 	gprs_rlcmac_dl_tbf *dl_tbf[2];
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	GprsMs *ms;
 
 	printf("=== start %s ===\n", __func__);
@@ -262,7 +262,7 @@ static void test_ms_change_tlli()
 	uint32_t start_tlli = 0xaa000000;
 	uint32_t new_ms_tlli = 0xff001111;
 	uint32_t other_sgsn_tlli = 0xff00eeee;
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	GprsMs *ms;
 
 	printf("=== start %s ===\n", __func__);
@@ -374,7 +374,7 @@ static void test_ms_storage()
 	const char *imsi2 = "001001987654322";
 
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	GprsMs *ms, *ms_tmp;
 	GprsMsStorage store(&the_bts);
 
@@ -446,7 +446,7 @@ static void test_ms_timeout()
 	uint32_t tlli = 0xffeeddbb;
 	gprs_rlcmac_dl_tbf *dl_tbf;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	GprsMs *ms;
 	last_cb = CB_UNKNOWN;
 
@@ -499,7 +499,7 @@ static void test_ms_timeout()
 
 static void test_ms_cs_selection()
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	gprs_rlcmac_bts *bts = the_bts.bts_data();
 	uint32_t tlli = 0xffeeddbb;
 
@@ -545,7 +545,7 @@ static void dump_ms(const GprsMs *ms, const char *pref)
 
 static void test_ms_mcs_mode()
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	gprs_rlcmac_bts *bts = the_bts.bts_data();
 	uint32_t tlli = 0xdeadbeef;
 
@@ -618,6 +618,8 @@ int main(int argc, char **argv)
 	log_set_log_level(osmo_stderr_target, LOGL_INFO);
 	log_parse_category_mask(osmo_stderr_target, "DPCU,3:DRLCMAC,3");
 
+	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+
 	vty_init(&pcu_vty_info);
 	pcu_vty_init();
 
@@ -629,6 +631,8 @@ int main(int argc, char **argv)
 	test_ms_timeout();
 	test_ms_cs_selection();
 	test_ms_mcs_mode();
+
+	talloc_free(the_pcu);
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);

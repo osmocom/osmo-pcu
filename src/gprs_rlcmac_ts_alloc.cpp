@@ -1018,7 +1018,7 @@ int gprs_alloc_max_dl_slots_per_ms(const struct gprs_rlcmac_bts *bts, uint8_t ms
 	if (rx == MS_NA)
 		rx = 4;
 
-	if (bts->alloc_algorithm == alloc_algorithm_a)
+	if (the_pcu->alloc_algorithm == alloc_algorithm_a)
 		return 1;
 
 	if (bts->multislot_disabled)

@@ -214,14 +214,13 @@ void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	msgb_free(msg);
 }
 
-void pcu_l1if_tx_ptcch(uint8_t trx, uint8_t ts, uint16_t arfcn,
+void pcu_l1if_tx_ptcch(struct gprs_rlcmac_bts *bts,
+		       uint8_t trx, uint8_t ts, uint16_t arfcn,
 		       uint32_t fn, uint8_t block_nr,
 		       uint8_t *data, size_t data_len)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	if (bts->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PTCCH))
-		gsmtap_send(bts->gsmtap, arfcn, ts, GSMTAP_CHANNEL_PTCCH, 0, fn, 0, 0, data, data_len);
+	if (the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PTCCH))
+		gsmtap_send(the_pcu->gsmtap, arfcn, ts, GSMTAP_CHANNEL_PTCCH, 0, fn, 0, 0, data, data_len);
 #ifdef ENABLE_DIRECT_PHY
 	if (bts->trx[trx].fl1h) {
 		l1if_pdch_req(bts->trx[trx].fl1h, ts, 1, fn, arfcn, block_nr, data, data_len);
@@ -233,22 +232,20 @@ void pcu_l1if_tx_ptcch(uint8_t trx, uint8_t ts, uint16_t arfcn,
 
 void pcu_l1if_tx_agch(bitvec * block, int plen)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t data[GSM_MACBLOCK_LEN]; /* prefix PLEN */
 
 	/* FIXME: why does OpenBTS has no PLEN and no fill in message? */
 	bitvec_pack(block, data + 1);
 	data[0] = (plen << 2) | 0x01;
 
-	if (bts->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_AGCH))
-		gsmtap_send(bts->gsmtap, 0, 0, GSMTAP_CHANNEL_AGCH, 0, 0, 0, 0, data, GSM_MACBLOCK_LEN);
+	if (the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_AGCH))
+		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_AGCH, 0, 0, 0, 0, data, GSM_MACBLOCK_LEN);
 
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, GSM_MACBLOCK_LEN);
 }
 
 void pcu_l1if_tx_pch(bitvec * block, int plen, uint16_t pgroup)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint8_t data[PAGING_GROUP_LEN + GSM_MACBLOCK_LEN];
 	int i;
 
@@ -266,8 +263,8 @@ void pcu_l1if_tx_pch(bitvec * block, int plen, uint16_t pgroup)
 	data[3] = (plen << 2) | 0x01;
 	bitvec_pack(block, data + PAGING_GROUP_LEN + 1);
 
-	if (bts->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PCH))
-		gsmtap_send(bts->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0, data + 3, GSM_MACBLOCK_LEN);
+	if (the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PCH))
+		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0, data + 3, GSM_MACBLOCK_LEN);
 
 	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, PAGING_GROUP_LEN + GSM_MACBLOCK_LEN);
 }
@@ -315,7 +312,6 @@ static int pcu_rx_data_ind_bcch(uint8_t *data, uint8_t len)
 
 static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	int rc;
 	int current_fn = get_current_fn();
 	struct pcu_l1_meas meas = {0};
@@ -353,8 +349,8 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 		gsmtap_chantype = GSMTAP_CHANNEL_UNKNOWN;
 	}
 
-	if (rc < 0 && (bts->gsmtap_categ_mask & (1 <<PCU_GSMTAP_C_UL_UNKNOWN))) {
-		gsmtap_send(bts->gsmtap, data_ind->arfcn | GSMTAP_ARFCN_F_UPLINK, data_ind->ts_nr,
+	if (rc < 0 && (the_pcu->gsmtap_categ_mask & (1 <<PCU_GSMTAP_C_UL_UNKNOWN))) {
+		gsmtap_send(the_pcu->gsmtap, data_ind->arfcn | GSMTAP_ARFCN_F_UPLINK, data_ind->ts_nr,
 			    gsmtap_chantype, 0, data_ind->fn, meas.rssi, meas.link_qual, data_ind->data, data_ind->len);
 	}
 
@@ -405,7 +401,7 @@ extern "C" int pcu_rx_rts_req_ptcch(uint8_t trx, uint8_t ts,
 	if (!pdch->m_is_enabled)
 		return -EAGAIN;
 
-	pcu_l1if_tx_ptcch(trx, ts, bts->trx[trx].arfcn, fn, block_nr,
+	pcu_l1if_tx_ptcch(bts, trx, ts, bts->trx[trx].arfcn, fn, block_nr,
 			  pdch->ptcch_msg, GSM_MACBLOCK_LEN);
 	return 0;
 }
@@ -621,7 +617,7 @@ bssgp_failed:
 		if (allowed)
 			LOGP(DL1IF, LOGL_DEBUG, " Use CS%d\n",  i + 1);
 	}
-	bts_set_max_cs(bts, bts->vty.max_cs_dl, bts->vty.max_cs_ul); /* recalc max CS values */
+	bts_recalc_max_cs(bts);
 
 	bts->mcs_mask = 0;
 	for (i = 0; i < 9; i++) {
@@ -631,11 +627,11 @@ bssgp_failed:
 			LOGP(DL1IF, LOGL_DEBUG, " Use MCS%d\n", i + 1);
 
 	}
-	bts_set_max_mcs(bts, bts->vty.max_mcs_dl, bts->vty.max_mcs_ul); /* recalc max MCS values */
+	bts_recalc_max_mcs(bts);
 
 	LOGP(DL1IF, LOGL_DEBUG, " initial_cs=%u%s\n", info_ind->initial_cs,
-	     bts->vty.force_initial_cs ? " (VTY forced, ignoring)" : "");
-	if (!bts->vty.force_initial_cs) {
+	     the_pcu->vty.force_initial_cs ? " (VTY forced, ignoring)" : "");
+	if (!the_pcu->vty.force_initial_cs) {
 		if (info_ind->initial_cs > bts->bts->max_cs_dl()) {
 			LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_cs_dl to %d\n", bts->bts->max_cs_dl());
 			bts->initial_cs_dl = bts->bts->max_cs_dl();
@@ -651,8 +647,8 @@ bssgp_failed:
 	}
 
 	LOGP(DL1IF, LOGL_DEBUG, " initial_mcs=%u%s\n", info_ind->initial_mcs,
-	     bts->vty.force_initial_mcs ? " (VTY forced, ignoring)" : "");
-	if (!bts->vty.force_initial_mcs) {
+	     the_pcu->vty.force_initial_mcs ? " (VTY forced, ignoring)" : "");
+	if (!the_pcu->vty.force_initial_mcs) {
 		if (info_ind->initial_mcs > bts->bts->max_mcs_dl()) {
 			LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_mcs_dl to %d\n", bts->bts->max_mcs_dl());
 			bts->initial_mcs_dl = bts->bts->max_mcs_dl();
@@ -705,7 +701,7 @@ bssgp_failed:
 					bts->trx[trx_nr].fl1h = l1if_open_pdch(
 						trx_nr,
 						info_ind->trx[trx_nr].hlayer1,
-						bts->gsmtap);
+						the_pcu->gsmtap);
 			if (!bts->trx[trx_nr].fl1h) {
 				LOGP(DL1IF, LOGL_FATAL, "Failed to open direct "
 					"DSP access for PDCH.\n");

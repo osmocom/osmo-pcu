@@ -335,7 +335,7 @@ int gprs_rlcmac_tbf::update()
 	LOGP(DTBF, LOGL_DEBUG, "********** DL-TBF update **********\n");
 
 	tbf_unlink_pdch(this);
-	rc = bts_data->alloc_algorithm(bts_data, ms(), this, false, -1);
+	rc = the_pcu->alloc_algorithm(bts_data, ms(), this, false, -1);
 	/* if no resource */
 	if (rc < 0) {
 		LOGPTBF(this, LOGL_ERROR, "No resource after update???\n");
@@ -744,7 +744,7 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 
 	m_created_ts = time(NULL);
 	/* select algorithm */
-	rc = bts_data->alloc_algorithm(bts_data, m_ms, this, single_slot, use_trx);
+	rc = the_pcu->alloc_algorithm(bts_data, m_ms, this, single_slot, use_trx);
 	/* if no resource */
 	if (rc < 0) {
 		return -1;

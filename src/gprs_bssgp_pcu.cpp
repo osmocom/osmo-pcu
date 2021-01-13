@@ -46,8 +46,6 @@ extern "C" {
 #define FC_MAX_BUCKET_LEAK_RATE (6553500 / 8)	/* Byte/s */
 #define FC_MAX_BUCKET_SIZE 6553500		/* Octets */
 
-static struct gprs_bssgp_pcu the_pcu = { 0, };
-
 extern void *tall_pcu_ctx;
 extern uint16_t spoof_mcc, spoof_mnc;
 extern bool spoof_mnc_3_digits;
@@ -167,7 +165,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 
 	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x IMSI: %s len: %d\n", tlli, mi_imsi.imsi, len);
 
-	return gprs_rlcmac_dl_tbf::handle(the_pcu.bts, tlli, tlli_old, mi_imsi.imsi,
+	return gprs_rlcmac_dl_tbf::handle(the_pcu->bssgp.bts, tlli, tlli_old, mi_imsi.imsi,
 			ms_class, egprs_ms_class, delay_csec, data, len);
 }
 
@@ -270,8 +268,8 @@ static int gprs_bssgp_pcu_rx_ptp(struct msgb *msg, struct tlv_parsed *tp, struct
 		break;
 	case BSSGP_PDUT_DL_UNITDATA:
 		LOGP(DBSSGP, LOGL_DEBUG, "Rx BSSGP BVCI=%d (PTP) DL_UNITDATA\n", bvci);
-		if (the_pcu.on_dl_unit_data)
-			the_pcu.on_dl_unit_data(&the_pcu, msg, tp);
+		if (the_pcu->bssgp.on_dl_unit_data)
+			the_pcu->bssgp.on_dl_unit_data(&the_pcu->bssgp, msg, tp);
 		gprs_bssgp_pcu_rx_dl_ud(msg, tp);
 		break;
 	case BSSGP_PDUT_FLOW_CONTROL_BVC_ACK:
@@ -340,10 +338,10 @@ static int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struc
 		break;
 	case BSSGP_PDUT_BVC_RESET_ACK:
 		LOGP(DBSSGP, LOGL_NOTICE, "Rx BSSGP BVCI=%d (SIGN) BVC_RESET_ACK\n", bvci);
-		if (!the_pcu.bvc_sig_reset)
-			the_pcu.bvc_sig_reset = 1;
+		if (!the_pcu->bssgp.bvc_sig_reset)
+			the_pcu->bssgp.bvc_sig_reset = 1;
 		else
-			the_pcu.bvc_reset = 1;
+			the_pcu->bssgp.bvc_reset = 1;
 		bvc_timeout(NULL);
 		break;
 	case BSSGP_PDUT_PAGING_CS:
@@ -354,9 +352,9 @@ static int gprs_bssgp_pcu_rx_sign(struct msgb *msg, struct tlv_parsed *tp, struc
 		break;
 	case BSSGP_PDUT_BVC_UNBLOCK_ACK:
 		LOGP(DBSSGP, LOGL_NOTICE, "Rx BSSGP BVCI=%d (SIGN) BVC_UNBLOCK_ACK\n", bvci);
-		the_pcu.bvc_unblocked = 1;
-		if (the_pcu.on_unblock_ack)
-			the_pcu.on_unblock_ack(&the_pcu);
+		the_pcu->bssgp.bvc_unblocked = 1;
+		if (the_pcu->bssgp.on_unblock_ack)
+			the_pcu->bssgp.on_unblock_ack(&the_pcu->bssgp);
 		bvc_timeout(NULL);
 		break;
 	case BSSGP_PDUT_SUSPEND_NACK:
@@ -516,15 +514,15 @@ static void handle_nm_status(struct osmo_bssgp_prim *bp)
 
 	switch (cause) {
 	case BSSGP_CAUSE_BVCI_BLOCKED:
-		if (the_pcu.bvc_unblocked) {
-			the_pcu.bvc_unblocked = 0;
+		if (the_pcu->bssgp.bvc_unblocked) {
+			the_pcu->bssgp.bvc_unblocked = 0;
 			bvc_timeout(NULL);
 		}
 		break;
 
 	case BSSGP_CAUSE_UNKNOWN_BVCI:
-		if (the_pcu.bvc_reset) {
-			the_pcu.bvc_reset = 0;
+		if (the_pcu->bssgp.bvc_reset) {
+			the_pcu->bssgp.bvc_reset = 0;
 			bvc_timeout(NULL);
 		}
 		break;
@@ -557,21 +555,21 @@ void gprs_ns_prim_status_cb(struct osmo_gprs_ns2_prim *nsp)
 		break;
 	case NS_AFF_CAUSE_RECOVERY:
 		LOGP(DPCU, LOGL_NOTICE, "NS-NSE %d became available\n", nsp->nsei);
-		if (!the_pcu.nsvc_unblocked) {
-			the_pcu.bvc_sig_reset = 0;
-			the_pcu.bvc_reset = 0;
-			the_pcu.nsvc_unblocked = 1;
+		if (!the_pcu->bssgp.nsvc_unblocked) {
+			the_pcu->bssgp.bvc_sig_reset = 0;
+			the_pcu->bssgp.bvc_reset = 0;
+			the_pcu->bssgp.nsvc_unblocked = 1;
 			bvc_timeout(NULL);
 		}
 		break;
 	case NS_AFF_CAUSE_FAILURE:
 		LOGP(DPCU, LOGL_NOTICE, "NS-NSE %d became unavailable\n", nsp->nsei);
-		if (the_pcu.nsvc_unblocked) {
-			the_pcu.nsvc_unblocked = 0;
-			osmo_timer_del(&the_pcu.bvc_timer);
-			the_pcu.bvc_sig_reset = 0;
-			the_pcu.bvc_reset = 0;
-			the_pcu.bvc_unblocked = 0;
+		if (the_pcu->bssgp.nsvc_unblocked) {
+			the_pcu->bssgp.nsvc_unblocked = 0;
+			osmo_timer_del(&the_pcu->bssgp.bvc_timer);
+			the_pcu->bssgp.bvc_sig_reset = 0;
+			the_pcu->bssgp.bvc_reset = 0;
+			the_pcu->bssgp.bvc_unblocked = 0;
 		}
 		break;
 	case NS_AFF_CAUSE_SNS_FAILURE:
@@ -700,17 +698,17 @@ static uint32_t compute_bucket_size(struct gprs_rlcmac_bts *bts,
 
 static uint32_t get_and_reset_avg_queue_delay(void)
 {
-	struct timespec *delay_sum = &the_pcu.queue_delay_sum;
+	struct timespec *delay_sum = &the_pcu->bssgp.queue_delay_sum;
 	uint32_t delay_sum_ms = delay_sum->tv_sec * 1000 +
 			delay_sum->tv_nsec / 1000000000;
 	uint32_t avg_delay_ms = 0;
 
-	if (the_pcu.queue_delay_count > 0)
-		avg_delay_ms = delay_sum_ms / the_pcu.queue_delay_count;
+	if (the_pcu->bssgp.queue_delay_count > 0)
+		avg_delay_ms = delay_sum_ms / the_pcu->bssgp.queue_delay_count;
 
 	/* Reset accumulator */
 	delay_sum->tv_sec = delay_sum->tv_nsec = 0;
-	the_pcu.queue_delay_count = 0;
+	the_pcu->bssgp.queue_delay_count = 0;
 
 	return avg_delay_ms;
 }
@@ -719,24 +717,24 @@ static int get_and_reset_measured_leak_rate(int *usage_by_1000, unsigned num_pdc
 {
 	int rate; /* byte per second */
 
-	if (the_pcu.queue_frames_sent == 0)
+	if (the_pcu->bssgp.queue_frames_sent == 0)
 		return -1;
 
-	if (the_pcu.queue_frames_recv == 0)
+	if (the_pcu->bssgp.queue_frames_recv == 0)
 		return -1;
 
-	*usage_by_1000 = the_pcu.queue_frames_recv * 1000 /
-		the_pcu.queue_frames_sent;
+	*usage_by_1000 = the_pcu->bssgp.queue_frames_recv * 1000 /
+		the_pcu->bssgp.queue_frames_sent;
 
 	/* 20ms/num_pdch is the average RLC block duration, so the rate is
 	 * calculated as:
 	 * rate = bytes_recv / (block_dur * block_count) */
-	rate = the_pcu.queue_bytes_recv * 1000 * num_pdch /
-		(20 * the_pcu.queue_frames_recv);
+	rate = the_pcu->bssgp.queue_bytes_recv * 1000 * num_pdch /
+		(20 * the_pcu->bssgp.queue_frames_recv);
 
-	the_pcu.queue_frames_sent = 0;
-	the_pcu.queue_bytes_recv = 0;
-	the_pcu.queue_frames_recv = 0;
+	the_pcu->bssgp.queue_frames_sent = 0;
+	the_pcu->bssgp.queue_bytes_recv = 0;
+	the_pcu->bssgp.queue_frames_recv = 0;
 
 	return rate;
 }
@@ -805,7 +803,7 @@ static int gprs_bssgp_tx_fc_bvc(void)
 	int num_pdch = -1;
 	enum CodingScheme max_cs_dl;
 
-	if (!the_pcu.bctx) {
+	if (!the_pcu->bssgp.bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
 		return -EIO;
 	}
@@ -896,7 +894,7 @@ static int gprs_bssgp_tx_fc_bvc(void)
 	avg_delay_ms = get_and_reset_avg_queue_delay();
 
 	/* Update tag */
-	the_pcu.fc_tag += 1;
+	the_pcu->bssgp.fc_tag += 1;
 
 	LOGP(DBSSGP, LOGL_DEBUG,
 		"Sending FLOW CONTROL BVC, Bmax = %d, R = %d, Bmax_MS = %d, "
@@ -904,7 +902,7 @@ static int gprs_bssgp_tx_fc_bvc(void)
 		bucket_size, leak_rate, ms_bucket_size, ms_leak_rate,
 		avg_delay_ms);
 
-	return bssgp_tx_fc_bvc(the_pcu.bctx, the_pcu.fc_tag,
+	return bssgp_tx_fc_bvc(the_pcu->bssgp.bctx, the_pcu->bssgp.fc_tag,
 		bucket_size, leak_rate,
 		ms_bucket_size, ms_leak_rate,
 		NULL, &avg_delay_ms);
@@ -913,36 +911,36 @@ static int gprs_bssgp_tx_fc_bvc(void)
 static void bvc_timeout(void *_priv)
 {
 	unsigned long secs;
-	if (!the_pcu.bvc_sig_reset) {
+	if (!the_pcu->bssgp.bvc_sig_reset) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI 0\n");
-		bssgp_tx_bvc_reset(the_pcu.bctx, 0, BSSGP_CAUSE_OML_INTERV);
-		secs = osmo_tdef_get(the_pcu.bts->T_defs_pcu, 2, OSMO_TDEF_S, -1);
-		osmo_timer_schedule(&the_pcu.bvc_timer, secs, 0);
+		bssgp_tx_bvc_reset(the_pcu->bssgp.bctx, 0, BSSGP_CAUSE_OML_INTERV);
+		secs = osmo_tdef_get(the_pcu->bssgp.bts->T_defs_pcu, 2, OSMO_TDEF_S, -1);
+		osmo_timer_schedule(&the_pcu->bssgp.bvc_timer, secs, 0);
 		return;
 	}
 
-	if (!the_pcu.bvc_reset) {
+	if (!the_pcu->bssgp.bvc_reset) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI %d\n",
-			the_pcu.bctx->bvci);
-		bssgp_tx_bvc_reset(the_pcu.bctx, the_pcu.bctx->bvci, BSSGP_CAUSE_OML_INTERV);
-		secs = osmo_tdef_get(the_pcu.bts->T_defs_pcu, 2, OSMO_TDEF_S, -1);
-		osmo_timer_schedule(&the_pcu.bvc_timer, secs, 0);
+			the_pcu->bssgp.bctx->bvci);
+		bssgp_tx_bvc_reset(the_pcu->bssgp.bctx, the_pcu->bssgp.bctx->bvci, BSSGP_CAUSE_OML_INTERV);
+		secs = osmo_tdef_get(the_pcu->bssgp.bts->T_defs_pcu, 2, OSMO_TDEF_S, -1);
+		osmo_timer_schedule(&the_pcu->bssgp.bvc_timer, secs, 0);
 		return;
 	}
 
-	if (!the_pcu.bvc_unblocked) {
+	if (!the_pcu->bssgp.bvc_unblocked) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending unblock on BVCI %d\n",
-			the_pcu.bctx->bvci);
-		bssgp_tx_bvc_unblock(the_pcu.bctx);
-		secs = osmo_tdef_get(the_pcu.bts->T_defs_pcu, 1, OSMO_TDEF_S, -1);
-		osmo_timer_schedule(&the_pcu.bvc_timer, secs, 0);
+			the_pcu->bssgp.bctx->bvci);
+		bssgp_tx_bvc_unblock(the_pcu->bssgp.bctx);
+		secs = osmo_tdef_get(the_pcu->bssgp.bts->T_defs_pcu, 1, OSMO_TDEF_S, -1);
+		osmo_timer_schedule(&the_pcu->bssgp.bvc_timer, secs, 0);
 		return;
 	}
 
 	LOGP(DBSSGP, LOGL_DEBUG, "Sending flow control info on BVCI %d\n",
-		the_pcu.bctx->bvci);
+		the_pcu->bssgp.bctx->bvci);
 	gprs_bssgp_tx_fc_bvc();
-	osmo_timer_schedule(&the_pcu.bvc_timer, the_pcu.bts->fc_interval, 0);
+	osmo_timer_schedule(&the_pcu->bssgp.bvc_timer, the_pcu->bssgp.bts->fc_interval, 0);
 }
 
 static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
@@ -966,9 +964,9 @@ static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
 		if (!(valid & (1 << i)))
 			continue;
 
-		if (!gprs_ns2_ip_bind_by_sockaddr(bts->nsi, &local[i])) {
+		if (!gprs_ns2_ip_bind_by_sockaddr(the_pcu->nsi, &local[i])) {
 			snprintf(name, sizeof(name), "pcu%d", i);
-			rc = gprs_ns2_ip_bind(bts->nsi, name, &local[i], 0, &bind[i]);
+			rc = gprs_ns2_ip_bind(the_pcu->nsi, name, &local[i], 0, &bind[i]);
 			if (rc < 0) {
 				LOGP(DBSSGP, LOGL_ERROR, "Failed to bind to %s\n", osmo_sockaddr_to_str(&local[i]));
 				continue;
@@ -983,14 +981,14 @@ static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
 		return -1;
 	}
 
-	bts->nse = gprs_ns2_nse_by_nsei(bts->nsi, nsei);
+	bts->nse = gprs_ns2_nse_by_nsei(the_pcu->nsi, nsei);
 	if (!bts->nse)
-		bts->nse = gprs_ns2_create_nse(bts->nsi, nsei,
+		bts->nse = gprs_ns2_create_nse(the_pcu->nsi, nsei,
 					       GPRS_NS2_LL_UDP, bts->ns_dialect);
 
 	if (!bts->nse) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSE\n");
-		gprs_ns2_free_binds(bts->nsi);
+		gprs_ns2_free_binds(the_pcu->nsi);
 		return 1;
 	}
 
@@ -1060,13 +1058,13 @@ int gprs_ns_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
 	int rc = 0;
 	if (!bts->nse) {
 		/* there shouldn't any previous state. */
-		gprs_ns2_free_nses(bts->nsi);
-		gprs_ns2_free_binds(bts->nsi);
+		gprs_ns2_free_nses(the_pcu->nsi);
+		gprs_ns2_free_binds(the_pcu->nsi);
 		rc = ns_create_nsvc(bts, nsei, local, remote, nsvci, valid);
 	} else if (nsei != gprs_ns2_nse_nsei(bts->nse)) {
 		/* the NSEI has changed */
-		gprs_ns2_free_nses(bts->nsi);
-		gprs_ns2_free_binds(bts->nsi);
+		gprs_ns2_free_nses(the_pcu->nsi);
+		gprs_ns2_free_binds(the_pcu->nsi);
 		rc = ns_create_nsvc(bts, nsei, local, remote, nsvci, valid);
 	} else if (bts->ns_dialect == NS2_DIALECT_SNS) {
 		/* SNS: check if the initial nsvc is the same, if not recreate it */
@@ -1080,8 +1078,8 @@ int gprs_ns_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
 				return 0;
 		}
 
-		gprs_ns2_free_nses(bts->nsi);
-		gprs_ns2_free_binds(bts->nsi);
+		gprs_ns2_free_nses(the_pcu->nsi);
+		gprs_ns2_free_binds(the_pcu->nsi);
 		rc = ns_create_nsvc(bts, nsei, local, remote, nsvci, valid);
 	} else {
 		/* check if all NSVC are still the same. */
@@ -1119,75 +1117,75 @@ struct gprs_bssgp_pcu *gprs_bssgp_init(
 {
 
 	/* if already created... return the current address */
-	if (the_pcu.bctx)
-		return &the_pcu;
+	if (the_pcu->bssgp.bctx)
+		return &the_pcu->bssgp;
 
-	the_pcu.bts = bts;
-	the_pcu.bctx = btsctx_alloc(bvci, nsei);
-	if (!the_pcu.bctx) {
+	the_pcu->bssgp.bts = bts;
+	the_pcu->bssgp.bctx = btsctx_alloc(bvci, nsei);
+	if (!the_pcu->bssgp.bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create BSSGP context\n");
-		the_pcu.bts->nse = NULL;
+		the_pcu->bssgp.bts->nse = NULL;
 		return NULL;
 	}
-	the_pcu.bctx->ra_id.mcc = spoof_mcc ? : mcc;
+	the_pcu->bssgp.bctx->ra_id.mcc = spoof_mcc ? : mcc;
 	if (spoof_mnc) {
-		the_pcu.bctx->ra_id.mnc = spoof_mnc;
-		the_pcu.bctx->ra_id.mnc_3_digits = spoof_mnc_3_digits;
+		the_pcu->bssgp.bctx->ra_id.mnc = spoof_mnc;
+		the_pcu->bssgp.bctx->ra_id.mnc_3_digits = spoof_mnc_3_digits;
 	} else {
-		the_pcu.bctx->ra_id.mnc = mnc;
-		the_pcu.bctx->ra_id.mnc_3_digits = mnc_3_digits;
+		the_pcu->bssgp.bctx->ra_id.mnc = mnc;
+		the_pcu->bssgp.bctx->ra_id.mnc_3_digits = mnc_3_digits;
 	}
-	the_pcu.bctx->ra_id.lac = lac;
-	the_pcu.bctx->ra_id.rac = rac;
-	the_pcu.bctx->cell_id = cell_id;
+	the_pcu->bssgp.bctx->ra_id.lac = lac;
+	the_pcu->bssgp.bctx->ra_id.rac = rac;
+	the_pcu->bssgp.bctx->cell_id = cell_id;
 
-	osmo_timer_setup(&the_pcu.bvc_timer, bvc_timeout, bts);
+	osmo_timer_setup(&the_pcu->bssgp.bvc_timer, bvc_timeout, bts);
 
-	return &the_pcu;
+	return &the_pcu->bssgp;
 }
 
 void gprs_bssgp_destroy(struct gprs_rlcmac_bts *bts)
 {
-	osmo_timer_del(&the_pcu.bvc_timer);
+	osmo_timer_del(&the_pcu->bssgp.bvc_timer);
 
 	/* FIXME: blocking... */
-	the_pcu.nsvc_unblocked = 0;
-	the_pcu.bvc_sig_reset = 0;
-	the_pcu.bvc_reset = 0;
-	the_pcu.bvc_unblocked = 0;
+	the_pcu->bssgp.nsvc_unblocked = 0;
+	the_pcu->bssgp.bvc_sig_reset = 0;
+	the_pcu->bssgp.bvc_reset = 0;
+	the_pcu->bssgp.bvc_unblocked = 0;
 
-	bssgp_bvc_ctx_free(the_pcu.bctx);
-	the_pcu.bctx = NULL;
+	bssgp_bvc_ctx_free(the_pcu->bssgp.bctx);
+	the_pcu->bssgp.bctx = NULL;
 
-	gprs_ns2_free(bts->nsi);
-	bts->nsi = NULL;
+	gprs_ns2_free(the_pcu->nsi);
+	the_pcu->nsi = NULL;
 	bts->nse = NULL;
 }
 
 struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void)
 {
-	return the_pcu.bctx;
+	return the_pcu->bssgp.bctx;
 }
 
 void gprs_bssgp_update_frames_sent()
 {
-	the_pcu.queue_frames_sent += 1;
+	the_pcu->bssgp.queue_frames_sent += 1;
 }
 
 void gprs_bssgp_update_bytes_received(unsigned bytes_recv, unsigned frames_recv)
 {
-	the_pcu.queue_bytes_recv += bytes_recv;
-	the_pcu.queue_frames_recv += frames_recv;
+	the_pcu->bssgp.queue_bytes_recv += bytes_recv;
+	the_pcu->bssgp.queue_frames_recv += frames_recv;
 }
 
 void gprs_bssgp_update_queue_delay(const struct timespec *tv_recv,
 	const struct timespec *tv_now)
 {
-	struct timespec *delay_sum = &the_pcu.queue_delay_sum;
+	struct timespec *delay_sum = &the_pcu->bssgp.queue_delay_sum;
 	struct timespec tv_delay;
 
 	timespecsub(tv_now, tv_recv, &tv_delay);
 	timespecadd(delay_sum, &tv_delay, delay_sum);
 
-	the_pcu.queue_delay_count += 1;
+	the_pcu->bssgp.queue_delay_count += 1;
 }

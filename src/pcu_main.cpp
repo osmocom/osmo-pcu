@@ -224,7 +224,7 @@ void sighandler(int sigset)
 int main(int argc, char *argv[])
 {
 	struct sched_param param;
-	struct gprs_rlcmac_bts *bts;
+	struct gprs_pcu *pcu;
 	int rc;
 
 	/* tall_pcu_ctx may already have been initialized in bts.cpp during early_init(). */
@@ -235,9 +235,12 @@ int main(int argc, char *argv[])
 		osmo_init_logging2(tall_pcu_ctx, &gprs_log_info);
 	}
 
-	bts = bts_main_data();
+	pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = pcu; /* globally avaialable object */
 
-	bts->pcu_sock_path = talloc_strdup(tall_pcu_ctx, PCU_SOCK_DEFAULT);
+	pcu->bts = bts_alloc(pcu);
+
+	pcu->pcu_sock_path = talloc_strdup(tall_pcu_ctx, PCU_SOCK_DEFAULT);
 
 	msgb_talloc_ctx_init(tall_pcu_ctx, 0);
 
@@ -257,20 +260,20 @@ int main(int argc, char *argv[])
 		exit(0);
 	}
 
-	bts->gsmtap = gsmtap_source_init(gsmtap_addr, GSMTAP_UDP_PORT, 1);
+	pcu->gsmtap = gsmtap_source_init(gsmtap_addr, GSMTAP_UDP_PORT, 1);
 
-	if (bts->gsmtap)
-		gsmtap_source_add_sink(bts->gsmtap);
+	if (pcu->gsmtap)
+		gsmtap_source_add_sink(pcu->gsmtap);
 	else
 		fprintf(stderr, "Failed to initialize GSMTAP for %s\n", gsmtap_addr);
 
-	bts->nsi = gprs_ns2_instantiate(tall_pcu_ctx, gprs_ns_prim_cb, NULL);
-	if (!bts->nsi) {
+	pcu->nsi = gprs_ns2_instantiate(tall_pcu_ctx, gprs_ns_prim_cb, NULL);
+	if (!pcu->nsi) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		exit(1);
 	}
-	bssgp_set_bssgp_callback(gprs_gp_send_cb, bts->nsi);
-	gprs_ns2_vty_init(bts->nsi, NULL);
+	bssgp_set_bssgp_callback(gprs_gp_send_cb, pcu->nsi);
+	gprs_ns2_vty_init(pcu->nsi, NULL);
 
 	rc = vty_read_config_file(config_file, NULL);
 	if (rc < 0 && config_given) {
@@ -291,8 +294,8 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	if (!bts->alloc_algorithm)
-		bts->alloc_algorithm = alloc_algorithm_dynamic;
+	if (!pcu->alloc_algorithm)
+		pcu->alloc_algorithm = alloc_algorithm_dynamic;
 
 	rc = pcu_l1if_open();
 

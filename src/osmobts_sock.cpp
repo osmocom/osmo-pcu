@@ -206,18 +206,16 @@ static int pcu_sock_cb(struct osmo_fd *bfd, unsigned int flags)
 int pcu_l1if_open(void)
 {
 	int rc;
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
 	LOGP(DL1IF, LOGL_INFO, "Opening OsmoPCU L1 interface to OsmoBTS\n");
 
 	memset(&pcu_sock_state, 0x00, sizeof(pcu_sock_state));
 	INIT_LLIST_HEAD(&pcu_sock_state.upqueue);
 
 	rc = osmo_sock_unix_init_ofd(&pcu_sock_state.conn_bfd, SOCK_SEQPACKET, 0,
-				     bts->pcu_sock_path, OSMO_SOCK_F_CONNECT);
+				     the_pcu->pcu_sock_path, OSMO_SOCK_F_CONNECT);
 	if (rc < 0) {
 		LOGP(DL1IF, LOGL_ERROR, "Failed to connect to the BTS (%s). "
-					"Retrying...\n", bts->pcu_sock_path);
+					"Retrying...\n", the_pcu->pcu_sock_path);
 		osmo_timer_setup(&pcu_sock_state.timer, pcu_sock_timeout, NULL);
 		osmo_timer_schedule(&pcu_sock_state.timer, 5, 0);
 		return 0;
@@ -227,7 +225,7 @@ int pcu_l1if_open(void)
 	pcu_sock_state.conn_bfd.data = NULL;
 
 	LOGP(DL1IF, LOGL_NOTICE, "osmo-bts PCU socket %s has been connected\n",
-	     bts->pcu_sock_path);
+	     the_pcu->pcu_sock_path);
 
 	pcu_tx_txt_ind(PCU_VERSION, "%s", PACKAGE_VERSION);
 

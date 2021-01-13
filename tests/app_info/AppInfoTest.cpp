@@ -84,7 +84,7 @@ void prepare_bts_with_two_dl_tbf_subscr()
 	fprintf(stderr, "--- %s ---\n",  __func__);
 
 	bts_data = bts->bts_data();
-	bts_data->alloc_algorithm = alloc_algorithm_b;
+	the_pcu->alloc_algorithm = alloc_algorithm_b;
 
 	trx = bts_data->trx;
 	trx->pdch[4].enable();
@@ -157,6 +157,7 @@ void cleanup()
 	BTS::main_bts()->cleanup();
 	/* FIXME: talloc report disabled, because bts->ms_alloc() in prepare_bts_with_two_dl_tbf_subscr() causes leak */
 	/* talloc_report_full(tall_pcu_ctx, stderr); */
+	talloc_free(the_pcu);
 	talloc_free(tall_pcu_ctx);
 }
 
@@ -171,6 +172,9 @@ int main(int argc, char *argv[])
 	log_set_use_color(osmo_stderr_target, 0);
 	log_set_print_filename(osmo_stderr_target, 0);
 	log_parse_category_mask(osmo_stderr_target, "DL1IF,1:DRLCMAC,3:DRLCMACSCHED,1");
+
+	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu->bts = bts_alloc(the_pcu);
 
 	test_enc_zero_len();
 	test_enc(&req);

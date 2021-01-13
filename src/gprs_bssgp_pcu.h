@@ -22,7 +22,9 @@
 #define GPRS_BSSGP_PCU_H
 
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/rate_ctr.h>
 #include <osmocom/core/logging.h>
@@ -34,7 +36,7 @@ extern "C" {
 #include <osmocom/gprs/gprs_msgb.h>
 
 struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
-}
+
 #include <gprs_debug.h>
 
 #include <time.h>
@@ -75,6 +77,14 @@ struct gprs_bssgp_pcu {
 				struct tlv_parsed *tp);
 };
 
+int gprs_gp_send_cb(void *ctx, struct msgb *msg);
+struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void);
+int gprs_ns_prim_cb(struct osmo_prim_hdr *oph, void *ctx);
+void gprs_bssgp_update_queue_delay(const struct timespec *tv_recv,
+		const struct timespec *tv_now);
+void gprs_bssgp_update_frames_sent();
+void gprs_bssgp_update_bytes_received(unsigned bytes_recv, unsigned frames_recv);
+
 struct gprs_bssgp_pcu *gprs_bssgp_init(
 		struct gprs_rlcmac_bts *bts,
 		uint16_t nsei, uint16_t bvci,
@@ -86,16 +96,10 @@ int gprs_ns_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
 		   const struct osmo_sockaddr *remote,
 		   uint16_t *nsvci, uint16_t valid);
 
-int gprs_ns_prim_cb(struct osmo_prim_hdr *oph, void *ctx);
-int gprs_gp_send_cb(void *ctx, struct msgb *msg);
-
 void gprs_bssgp_destroy(struct gprs_rlcmac_bts *bts);
 
-struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void);
-
-void gprs_bssgp_update_queue_delay(const struct timespec *tv_recv,
-		const struct timespec *tv_now);
-void gprs_bssgp_update_frames_sent();
-void gprs_bssgp_update_bytes_received(unsigned bytes_recv, unsigned frames_recv);
+#ifdef __cplusplus
+}
+#endif
 
 #endif // GPRS_BSSGP_PCU_H

@@ -53,7 +53,7 @@ static void set_fn(BTS * bts, uint32_t fn)
 
 static void run_test()
 {
-	BTS bts;
+	BTS bts(the_pcu);
 	uint32_t fn;
 
 	printf("RFN_MODULUS=%i\n",RFN_MODULUS);
@@ -154,7 +154,11 @@ int main(int argc, char **argv)
 	log_set_print_filename(osmo_stderr_target, 0);
 	log_set_log_level(osmo_stderr_target, LOGL_DEBUG);
 
+	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+
 	run_test();
+
+	talloc_free(the_pcu);
 	return EXIT_SUCCESS;
 }
 

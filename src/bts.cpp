@@ -68,8 +68,6 @@ extern "C" {
 	}
 }
 
-static BTS s_bts;
-
 static struct osmo_tdef T_defs_bts[] = {
 	{ .T=3142, .default_val=20,  .unit=OSMO_TDEF_S,  .desc="timer (s)", .val=0 },
 	{ .T=3169, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of USF and TFI(s) after the MS uplink TBF assignment is invalid (s)", .val=0 },
@@ -218,10 +216,6 @@ static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 	bts->cs_adj_enabled = 1;
 	bts->cs_adj_upper_limit = 33; /* Decrease CS if the error rate is above */
 	bts->cs_adj_lower_limit = 10; /* Increase CS if the error rate is below */
-	bts->vty.max_cs_ul = MAX_GPRS_CS;
-	bts->vty.max_cs_dl = MAX_GPRS_CS;
-	bts->vty.max_mcs_ul = MAX_EDGE_MCS;
-	bts->vty.max_mcs_dl = MAX_EDGE_MCS;
 	/* CS-1 to CS-4 */
 	bts->cs_lqual_ranges[0].low = -256;
 	bts->cs_lqual_ranges[0].high = 6;
@@ -294,7 +288,7 @@ static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 
 BTS* BTS::main_bts()
 {
-	return &s_bts;
+	return the_pcu->bts;
 }
 
 struct gprs_rlcmac_bts *BTS::bts_data()
@@ -317,8 +311,9 @@ struct rate_ctr_group *bts_main_data_stats()
 	return BTS::main_bts()->rate_counters();
 }
 
-BTS::BTS()
-	: m_cur_fn(0)
+BTS::BTS(struct gprs_pcu *pcu)
+	: pcu(pcu)
+	, m_cur_fn(0)
 	, m_cur_blk_fn(-1)
 	, m_max_cs_dl(MAX_GPRS_CS)
 	, m_max_cs_ul(MAX_GPRS_CS)
@@ -540,7 +535,7 @@ void BTS::send_gsmtap_meas(enum pcu_gsmtap_category categ, bool uplink, uint8_t 
 	uint16_t arfcn;
 
 	/* check if category is activated at all */
-	if (!(m_bts.gsmtap_categ_mask & (1 << categ)))
+	if (!(pcu->gsmtap_categ_mask & (1 << categ)))
 		return;
 
 	arfcn = m_bts.trx[trx_no].arfcn;
@@ -550,7 +545,7 @@ void BTS::send_gsmtap_meas(enum pcu_gsmtap_category categ, bool uplink, uint8_t 
 	/* GSMTAP needs the SNR here, but we only have C/I (meas->link_qual).
 	   Those are not the same, but there is no known way to convert them,
 	   let's pass C/I instead of nothing */
-	gsmtap_send(m_bts.gsmtap, arfcn, ts_no, channel, 0, fn,
+	gsmtap_send(pcu->gsmtap, arfcn, ts_no, channel, 0, fn,
 		    meas->rssi, meas->link_qual, data, len);
 }
 
@@ -1147,6 +1142,24 @@ GprsMs *BTS::ms_alloc(uint8_t ms_class, uint8_t egprs_ms_class)
 	return ms;
 }
 
+
+static int bts_talloc_destructor(struct BTS* bts)
+{
+	bts->~BTS();
+	return 0;
+}
+
+struct BTS* bts_alloc(struct gprs_pcu *pcu)
+{
+	struct BTS* bts;
+	bts = talloc(pcu, struct BTS);
+	if (!bts)
+		return bts;
+	talloc_set_destructor(bts, bts_talloc_destructor);
+	new (bts) BTS(pcu);
+	return bts;
+}
+
 /* update TA based on TA provided by PH-DATA-IND */
 void update_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, int8_t ta_delta)
 {
@@ -1224,22 +1237,22 @@ void bts_trx_unreserve_slots(struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_d
 			trx->pdch[i].unreserve(dir);
 }
 
-void bts_set_max_cs(struct gprs_rlcmac_bts *bts, uint8_t cs_dl, uint8_t cs_ul)
+void bts_recalc_max_cs(struct gprs_rlcmac_bts *bts)
 {
 	int i;
+	uint8_t cs_dl, cs_ul;
+	struct gprs_pcu *pcu = bts->bts->pcu;
 
-	bts->vty.max_cs_dl = cs_dl;
 	cs_dl = 0;
-	for (i = bts->vty.max_cs_dl - 1; i >= 0; i--) {
+	for (i = pcu->vty.max_cs_dl - 1; i >= 0; i--) {
 		if (bts->cs_mask & (1 << i)) {
 			cs_dl = i + 1;
 			break;
 		}
 	}
 
-	bts->vty.max_cs_ul = cs_ul;
 	cs_ul = 0;
-	for (i = bts->vty.max_cs_ul - 1; i >= 0; i--) {
+	for (i = pcu->vty.max_cs_ul - 1; i >= 0; i--) {
 		if (bts->cs_mask & (1 << i)) {
 			cs_ul = i + 1;
 			break;
@@ -1251,22 +1264,22 @@ void bts_set_max_cs(struct gprs_rlcmac_bts *bts, uint8_t cs_dl, uint8_t cs_ul)
 	bts->bts->set_max_cs_ul(cs_ul);
 }
 
-void bts_set_max_mcs(struct gprs_rlcmac_bts *bts, uint8_t mcs_dl, uint8_t mcs_ul)
+void bts_recalc_max_mcs(struct gprs_rlcmac_bts *bts)
 {
 	int i;
+	uint8_t mcs_dl, mcs_ul;
+	struct gprs_pcu *pcu = bts->bts->pcu;
 
-	bts->vty.max_mcs_dl = mcs_dl;
 	mcs_dl = 0;
-	for (i = bts->vty.max_mcs_dl - 1; i >= 0; i--) {
+	for (i = pcu->vty.max_mcs_dl - 1; i >= 0; i--) {
 		if (bts->mcs_mask & (1 << i)) {
 			mcs_dl = i + 1;
 			break;
 		}
 	}
 
-	bts->vty.max_mcs_ul = mcs_ul;
 	mcs_ul = 0;
-	for (i = bts->vty.max_mcs_ul - 1; i >= 0; i--) {
+	for (i = pcu->vty.max_mcs_ul - 1; i >= 0; i--) {
 		if (bts->mcs_mask & (1 << i)) {
 			mcs_ul = i + 1;
 			break;

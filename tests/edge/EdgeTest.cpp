@@ -1157,7 +1157,7 @@ static void setup_bts(BTS *the_bts, uint8_t ts_no, uint8_t cs = 1)
 	gprs_rlcmac_trx *trx;
 
 	bts = the_bts->bts_data();
-	bts->alloc_algorithm = alloc_algorithm_a;
+	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	bts->initial_cs_dl = cs;
 	bts->initial_cs_ul = cs;
 	trx = &bts->trx[0];
@@ -1254,7 +1254,7 @@ static void uplink_header_type_2_parsing_test(BTS *the_bts,
 
 static void uplink_header_type2_test(void)
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
 	uint16_t qta = 31;
@@ -1371,7 +1371,7 @@ static void uplink_header_type_1_parsing_test(BTS *the_bts,
 
 void uplink_header_type1_test(void)
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
 	uint16_t qta = 31;
@@ -1398,6 +1398,8 @@ int main(int argc, char **argv)
 	log_set_use_color(osmo_stderr_target, 0);
 	log_set_print_filename(osmo_stderr_target, 0);
 
+	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+
 	vty_init(&pcu_vty_info);
 	pcu_vty_init();
 
@@ -1412,6 +1414,8 @@ int main(int argc, char **argv)
 
 	if (getenv("TALLOC_REPORT_FULL"))
 		talloc_report_full(tall_pcu_ctx, stderr);
+
+	talloc_free(the_pcu);
 	return EXIT_SUCCESS;
 }
 

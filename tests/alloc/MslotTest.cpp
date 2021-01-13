@@ -62,7 +62,7 @@ static inline void test_all_classes(struct gprs_rlcmac_trx *trx, bool clear_mask
 
 static inline void test_multislot_total_ascending(bool seq)
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	struct gprs_rlcmac_bts *bts;
 	struct gprs_rlcmac_trx *trx;
 	int i;
@@ -83,7 +83,7 @@ static inline void test_multislot_total_ascending(bool seq)
 
 static inline void test_multislot_total_descending(bool seq)
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	struct gprs_rlcmac_bts *bts;
 	struct gprs_rlcmac_trx *trx;
 	int i;
@@ -104,7 +104,7 @@ static inline void test_multislot_total_descending(bool seq)
 
 static inline void test_multislot_middle(bool seq)
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	struct gprs_rlcmac_bts *bts;
 	struct gprs_rlcmac_trx *trx;
 
@@ -123,7 +123,7 @@ static inline void test_multislot_middle(bool seq)
 
 static inline void test_multislot_ends(bool seq)
 {
-	BTS the_bts;
+	BTS the_bts(the_pcu);
 	struct gprs_rlcmac_bts *bts;
 	struct gprs_rlcmac_trx *trx;
 
@@ -160,6 +160,8 @@ int main(int argc, char **argv)
 	log_set_print_filename(osmo_stderr_target, 0);
 	log_set_log_level(osmo_stderr_target, LOGL_DEBUG);
 
+	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+
 	test_multislot_total_ascending(true);
 	test_multislot_total_ascending(false);
 
@@ -173,6 +175,8 @@ int main(int argc, char **argv)
 	test_multislot_ends(false);
 
 	test_window_wrapper();
+
+	talloc_free(the_pcu);
 
 	return EXIT_SUCCESS;
 }

@@ -73,9 +73,12 @@ static void init_main_bts()
 	bts->n3103 = 4;
 	bts->n3105 = 8;
 	bts->alpha = 0; /* a = 0.0 */
+}
 
-	if (!bts->alloc_algorithm)
-		bts->alloc_algorithm = alloc_algorithm_b;
+static void init_pcu(struct gprs_pcu *pcu)
+{
+	if (!pcu->alloc_algorithm)
+		pcu->alloc_algorithm = alloc_algorithm_b;
 }
 
 static void bvci_unblocked(struct gprs_bssgp_pcu *pcu)
@@ -114,7 +117,9 @@ void create_and_connect_bssgp(struct gprs_rlcmac_bts *bts,
 
 int main(int argc, char **argv)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_pcu *pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = pcu; /* globally avaialable object */
+	pcu->bts = bts_alloc(pcu);
 
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "moiji-mobile Emu-PCU context");
 	if (!tall_pcu_ctx)
@@ -123,8 +128,8 @@ int main(int argc, char **argv)
 	msgb_talloc_ctx_init(tall_pcu_ctx, 0);
 	osmo_init_logging2(tall_pcu_ctx, &gprs_log_info);
 
-	bts->nsi = gprs_ns2_instantiate(tall_pcu_ctx, &gprs_ns_prim_cb, NULL);
-	if (!bts->nsi) {
+	pcu->nsi = gprs_ns2_instantiate(tall_pcu_ctx, &gprs_ns_prim_cb, NULL);
+	if (!pcu->nsi) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
 		abort();
 	}
@@ -134,9 +139,10 @@ int main(int argc, char **argv)
 
 	current_test = 0;
 
+	init_pcu(pcu);
 	init_main_bts();
-	bssgp_set_bssgp_callback(gprs_gp_send_cb, bts->nsi);
-	create_and_connect_bssgp(bts, INADDR_LOOPBACK, 23000);
+	bssgp_set_bssgp_callback(gprs_gp_send_cb, pcu->nsi);
+	create_and_connect_bssgp(bts_data(pcu->bts), INADDR_LOOPBACK, 23000);
 
 	for (;;)
 		osmo_select_main(0);
