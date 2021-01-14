@@ -72,13 +72,13 @@ static void init_main_bts()
 	bts->n3101 = 10;
 	bts->n3103 = 4;
 	bts->n3105 = 8;
-	bts->alpha = 0; /* a = 0.0 */
 }
 
 static void init_pcu(struct gprs_pcu *pcu)
 {
 	if (!pcu->alloc_algorithm)
 		pcu->alloc_algorithm = alloc_algorithm_b;
+	pcu->vty.alpha = 0; /* a = 0.0 */
 }
 
 static void bvci_unblocked(struct gprs_bssgp_pcu *pcu)

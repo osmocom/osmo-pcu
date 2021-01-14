@@ -229,8 +229,8 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " alloc-algorithm dynamic%s", VTY_NEWLINE);
 	if (the_pcu->vty.force_two_phase)
 		vty_out(vty, " two-phase-access%s", VTY_NEWLINE);
-	vty_out(vty, " alpha %d%s", bts->alpha, VTY_NEWLINE);
-	vty_out(vty, " gamma %d%s", bts->gamma * 2, VTY_NEWLINE);
+	vty_out(vty, " alpha %d%s", the_pcu->vty.alpha, VTY_NEWLINE);
+	vty_out(vty, " gamma %d%s", the_pcu->vty.gamma * 2, VTY_NEWLINE);
 	if (!bts->dl_tbf_preemptive_retransmission)
 		vty_out(vty, " no dl-tbf-preemptive-retransmission%s", VTY_NEWLINE);
 	if (strcmp(the_pcu->pcu_sock_path, PCU_SOCK_DEFAULT))
@@ -804,10 +804,7 @@ DEFUN_ATTR(cfg_pcu_alpha,
 	   "Alpha in units of 0.1\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->alpha = atoi(argv[0]);
-
+	the_pcu->vty.alpha = atoi(argv[0]);
 	return CMD_SUCCESS;
 }
 
@@ -818,10 +815,7 @@ DEFUN_ATTR(cfg_pcu_gamma,
 	   "Gamma in even unit of dBs\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->gamma = atoi(argv[0]) / 2;
-
+	the_pcu->vty.gamma = atoi(argv[0]) / 2;
 	return CMD_SUCCESS;
 }
 

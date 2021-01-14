@@ -75,6 +75,7 @@ struct gprs_pcu {
 		uint8_t max_cs_dl, max_cs_ul;
 		uint8_t max_mcs_dl, max_mcs_ul;
 		uint8_t force_two_phase;
+		uint8_t alpha, gamma;
 	} vty;
 
 	struct gsmtap_inst *gsmtap;

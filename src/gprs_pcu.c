@@ -50,6 +50,7 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	pcu->vty.max_cs_dl = MAX_GPRS_CS;
 	pcu->vty.max_mcs_ul = MAX_EDGE_MCS;
 	pcu->vty.max_mcs_dl = MAX_EDGE_MCS;
+	pcu->vty.alpha = 0; /* a = 0.0 */
 
 	pcu->T_defs = T_defs_pcu;
 	osmo_tdefs_reset(pcu->T_defs);

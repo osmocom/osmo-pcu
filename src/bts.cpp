@@ -200,7 +200,6 @@ static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 	bts->n3101 = 10;
 	bts->n3103 = 4;
 	bts->n3105 = 8;
-	bts->alpha = 0; /* a = 0.0 */
 	bts->si13_is_set = false;
 	bts->cs_adj_enabled = 1;
 	bts->cs_adj_upper_limit = 33; /* Decrease CS if the error rate is above */
@@ -966,7 +965,7 @@ send_imm_ass_rej:
 		plen = Encoding::write_immediate_assignment(
 			&m_bts.trx[trx_no].pdch[ts_no], tbf, bv,
 			false, rip->ra, Fn, ta, usf, false, sb_fn,
-			m_bts.alpha, m_bts.gamma, -1,
+			pcu->vty.alpha, pcu->vty.gamma, -1,
 			rip->burst_type);
 		do_rate_ctr_inc(CTR_IMMEDIATE_ASSIGN_UL_TBF);
 	}
@@ -1048,7 +1047,7 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup)
 						    tbf, immediate_assignment, true, 125,
 						    (tbf->pdch[ts_no]->last_rts_fn + 21216) % GSM_MAX_FN,
 						    tbf->ta(), 7, poll, tbf->poll_fn,
-						    m_bts.alpha, m_bts.gamma, -1,
+						    pcu->vty.alpha, pcu->vty.gamma, -1,
 						    GSM_L1_BURST_TYPE_ACCESS_0);
 	if (plen >= 0) {
 		do_rate_ctr_inc(CTR_IMMEDIATE_ASSIGN_DL_TBF);
