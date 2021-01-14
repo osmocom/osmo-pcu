@@ -545,7 +545,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			  force_cs ? " (forced)" : "");
 
 		bsn = create_new_bsn(fn, new_cs);
-	} else if (bts->bts_data()->dl_tbf_preemptive_retransmission && !m_window.window_empty()) {
+	} else if (bts->pcu->vty.dl_tbf_preemptive_retransmission && !m_window.window_empty()) {
 		/* The window contains unacked packages, but not acked.
 		 * Mark unacked bsns as RESEND */
 		LOGPTBFDL(this, LOGL_DEBUG,

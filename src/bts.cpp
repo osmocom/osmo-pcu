@@ -253,7 +253,6 @@ static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 
 	bts->app_info = NULL;
 	bts->bts = bts_obj;
-	bts->dl_tbf_preemptive_retransmission = true;
 	bts->T_defs_bts = T_defs_bts;
 	osmo_tdefs_reset(bts->T_defs_bts);
 

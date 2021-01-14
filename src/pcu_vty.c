@@ -231,7 +231,7 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " two-phase-access%s", VTY_NEWLINE);
 	vty_out(vty, " alpha %d%s", the_pcu->vty.alpha, VTY_NEWLINE);
 	vty_out(vty, " gamma %d%s", the_pcu->vty.gamma * 2, VTY_NEWLINE);
-	if (!bts->dl_tbf_preemptive_retransmission)
+	if (!the_pcu->vty.dl_tbf_preemptive_retransmission)
 		vty_out(vty, " no dl-tbf-preemptive-retransmission%s", VTY_NEWLINE);
 	if (strcmp(the_pcu->pcu_sock_path, PCU_SOCK_DEFAULT))
 		vty_out(vty, " pcu-socket %s%s", the_pcu->pcu_sock_path, VTY_NEWLINE);
@@ -869,10 +869,7 @@ DEFUN_ATTR(cfg_pcu_dl_tbf_preemptive_retransmission,
 	   RETRANSMISSION_STR " (enabled by default)",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->dl_tbf_preemptive_retransmission = true;
-
+	the_pcu->vty.dl_tbf_preemptive_retransmission = true;
 	return CMD_SUCCESS;
 }
 
@@ -882,10 +879,7 @@ DEFUN_ATTR(cfg_pcu_no_dl_tbf_preemptive_retransmission,
 	   NO_STR RETRANSMISSION_STR,
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->dl_tbf_preemptive_retransmission = false;
-
+	the_pcu->vty.dl_tbf_preemptive_retransmission = false;
 	return CMD_SUCCESS;
 }
 
