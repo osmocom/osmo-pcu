@@ -676,7 +676,7 @@ static uint32_t compute_bucket_size(struct gprs_rlcmac_bts *bts,
 	uint16_t bucket_time = the_pcu->vty.fc_bucket_time;
 
 	if (bucket_time == 0)
-		bucket_time = bts->force_llc_lifetime;
+		bucket_time = the_pcu->vty.force_llc_lifetime;
 
 	if (bucket_time == 0xffff)
 		bucket_size = FC_MAX_BUCKET_SIZE;

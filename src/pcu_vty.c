@@ -201,24 +201,24 @@ static int config_write_pcu(struct vty *vty)
 	if (the_pcu->vty.dl_arq_type == EGPRS_ARQ2)
 		vty_out(vty, " egprs dl arq-type arq2%s", VTY_NEWLINE);
 
-	if (bts->force_llc_lifetime == 0xffff)
+	if (the_pcu->vty.force_llc_lifetime == 0xffff)
 		vty_out(vty, " queue lifetime infinite%s", VTY_NEWLINE);
-	else if (bts->force_llc_lifetime)
-		vty_out(vty, " queue lifetime %d%s", bts->force_llc_lifetime,
+	else if (the_pcu->vty.force_llc_lifetime)
+		vty_out(vty, " queue lifetime %d%s", the_pcu->vty.force_llc_lifetime,
 			VTY_NEWLINE);
-	if (bts->llc_discard_csec)
-		vty_out(vty, " queue hysteresis %d%s", bts->llc_discard_csec,
+	if (the_pcu->vty.llc_discard_csec)
+		vty_out(vty, " queue hysteresis %d%s", the_pcu->vty.llc_discard_csec,
 			VTY_NEWLINE);
-	if (bts->llc_idle_ack_csec)
-		vty_out(vty, " queue idle-ack-delay %d%s", bts->llc_idle_ack_csec,
+	if (the_pcu->vty.llc_idle_ack_csec)
+		vty_out(vty, " queue idle-ack-delay %d%s", the_pcu->vty.llc_idle_ack_csec,
 			VTY_NEWLINE);
-	if (bts->llc_codel_interval_msec == LLC_CODEL_USE_DEFAULT)
+	if (the_pcu->vty.llc_codel_interval_msec == LLC_CODEL_USE_DEFAULT)
 		vty_out(vty, " queue codel%s", VTY_NEWLINE);
-	else if (bts->llc_codel_interval_msec == LLC_CODEL_DISABLE)
+	else if (the_pcu->vty.llc_codel_interval_msec == LLC_CODEL_DISABLE)
 		vty_out(vty, " no queue codel%s", VTY_NEWLINE);
 	else
 		vty_out(vty, " queue codel interval %d%s",
-			bts->llc_codel_interval_msec/10, VTY_NEWLINE);
+			the_pcu->vty.llc_codel_interval_msec/10, VTY_NEWLINE);
 
 	if (the_pcu->alloc_algorithm == alloc_algorithm_a)
 		vty_out(vty, " alloc-algorithm a%s", VTY_NEWLINE);
@@ -579,11 +579,8 @@ DEFUN_USRATTR(cfg_pcu_queue_lifetime,
 	      "queue lifetime <1-65534>",
 	      QUEUE_STR LIFETIME_STR "Lifetime in centi-seconds")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint16_t csec = atoi(argv[0]);
-
-	bts->force_llc_lifetime = csec;
-
+	the_pcu->vty.force_llc_lifetime = csec;
 	return CMD_SUCCESS;
 }
 
@@ -593,10 +590,7 @@ DEFUN_USRATTR(cfg_pcu_queue_lifetime_inf,
 	      "queue lifetime infinite",
 	      QUEUE_STR LIFETIME_STR "Infinite lifetime")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->force_llc_lifetime = 0xffff;
-
+	the_pcu->vty.force_llc_lifetime = 0xffff;
 	return CMD_SUCCESS;
 }
 
@@ -607,10 +601,7 @@ DEFUN_USRATTR(cfg_pcu_no_queue_lifetime,
 	      NO_STR QUEUE_STR "Disable lifetime limit of LLC frame (use value given "
 	      "by SGSN)\n")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->force_llc_lifetime = 0;
-
+	the_pcu->vty.force_llc_lifetime = 0;
 	return CMD_SUCCESS;
 }
 
@@ -623,11 +614,8 @@ DEFUN_USRATTR(cfg_pcu_queue_hysteresis,
 	      "queue hysteresis <1-65535>",
 	      QUEUE_STR QUEUE_HYSTERESIS_STR "Hysteresis in centi-seconds")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint16_t csec = atoi(argv[0]);
-
-	bts->llc_discard_csec = csec;
-
+	the_pcu->vty.llc_discard_csec = csec;
 	return CMD_SUCCESS;
 }
 
@@ -637,10 +625,7 @@ DEFUN_USRATTR(cfg_pcu_no_queue_hysteresis,
 	      "no queue hysteresis",
 	      NO_STR QUEUE_STR QUEUE_HYSTERESIS_STR)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->llc_discard_csec = 0;
-
+	the_pcu->vty.llc_discard_csec = 0;
 	return CMD_SUCCESS;
 }
 
@@ -651,10 +636,7 @@ DEFUN_USRATTR(cfg_pcu_queue_codel,
 	      "queue codel",
 	      QUEUE_STR QUEUE_CODEL_STR)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
-
+	the_pcu->vty.llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
 	return CMD_SUCCESS;
 }
 
@@ -664,11 +646,8 @@ DEFUN_USRATTR(cfg_pcu_queue_codel_interval,
 	      "queue codel interval <1-1000>",
 	      QUEUE_STR QUEUE_CODEL_STR "Specify interval\n" "Interval in centi-seconds")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint16_t csec = atoi(argv[0]);
-
-	bts->llc_codel_interval_msec = 10*csec;
-
+	the_pcu->vty.llc_codel_interval_msec = 10*csec;
 	return CMD_SUCCESS;
 }
 
@@ -678,10 +657,7 @@ DEFUN_USRATTR(cfg_pcu_no_queue_codel,
 	      "no queue codel",
 	      NO_STR QUEUE_STR QUEUE_CODEL_STR)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->llc_codel_interval_msec = LLC_CODEL_DISABLE;
-
+	the_pcu->vty.llc_codel_interval_msec = LLC_CODEL_DISABLE;
 	return CMD_SUCCESS;
 }
 
@@ -694,11 +670,8 @@ DEFUN_ATTR(cfg_pcu_queue_idle_ack_delay,
 	   QUEUE_STR QUEUE_IDLE_ACK_STR "Idle ACK delay in centi-seconds",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint16_t csec = atoi(argv[0]);
-
-	bts->llc_idle_ack_csec = csec;
-
+	the_pcu->vty.llc_idle_ack_csec = csec;
 	return CMD_SUCCESS;
 }
 
@@ -708,10 +681,7 @@ DEFUN_ATTR(cfg_pcu_no_queue_idle_ack_delay,
 	   NO_STR QUEUE_STR QUEUE_IDLE_ACK_STR,
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->llc_idle_ack_csec = 0;
-
+	the_pcu->vty.llc_idle_ack_csec = 0;
 	return CMD_SUCCESS;
 }
 

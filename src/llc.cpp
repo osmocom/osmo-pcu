@@ -224,8 +224,8 @@ struct msgb *gprs_llc_queue::dequeue(const MetaInfo **info)
 void gprs_llc_queue::calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct timespec *tv)
 {
 	uint16_t delay_csec;
-	if (bts->bts_data()->force_llc_lifetime)
-		delay_csec = bts->bts_data()->force_llc_lifetime;
+	if (bts->pcu->vty.force_llc_lifetime)
+		delay_csec = bts->pcu->vty.force_llc_lifetime;
 	else
 		delay_csec = pdu_delay_csec;
 

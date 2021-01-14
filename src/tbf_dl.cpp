@@ -202,9 +202,9 @@ void gprs_rlcmac_dl_tbf::cleanup()
 
 void gprs_rlcmac_dl_tbf::start_llc_timer()
 {
-	if (bts_data()->llc_idle_ack_csec > 0) {
+	if (the_pcu->vty.llc_idle_ack_csec > 0) {
 		struct timespec tv;
-		csecs_to_timespec(bts_data()->llc_idle_ack_csec, &tv);
+		csecs_to_timespec(the_pcu->vty.llc_idle_ack_csec, &tv);
 		osmo_timer_schedule(&m_llc_timer, tv.tv_sec, tv.tv_nsec / 1000);
 	}
 }
@@ -348,8 +348,8 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 	const unsigned keep_small_thresh = 60;
 	const MetaInfo *info;
 
-	if (bts_data()->llc_discard_csec)
-		csecs_to_timespec(bts_data()->llc_discard_csec, &hyst_delta);
+	if (the_pcu->vty.llc_discard_csec)
+		csecs_to_timespec(the_pcu->vty.llc_discard_csec, &hyst_delta);
 
 	osmo_clock_gettime(CLOCK_MONOTONIC, &tv_now);
 	timespecadd(&tv_now, &hyst_delta, &tv_now2);

@@ -97,6 +97,10 @@ struct gprs_pcu {
 		enum gprs_ns2_dialect ns_dialect; /* Are we talking Gb with IP-SNS (true) or classic Gb? */
 		uint16_t ws_base;
 		uint16_t ws_pdch; /* increase WS by this value per PDCH */
+		uint16_t force_llc_lifetime; /* overrides lifetime from SGSN */
+		uint32_t llc_discard_csec;
+		uint32_t llc_idle_ack_csec;
+		uint32_t llc_codel_interval_msec; /* 0=disabled, -1=use default interval */
 	} vty;
 
 	struct gsmtap_inst *gsmtap;

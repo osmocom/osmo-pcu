@@ -89,10 +89,6 @@ struct gprs_rlcmac_bts {
 	uint16_t mcs_mask;  /* Allowed MCS mask from BTS */
 	uint8_t initial_cs_dl, initial_cs_ul;
 	uint8_t initial_mcs_dl, initial_mcs_ul;
-	uint16_t force_llc_lifetime; /* overrides lifetime from SGSN */
-	uint32_t llc_discard_csec;
-	uint32_t llc_idle_ack_csec;
-	uint32_t llc_codel_interval_msec; /* 0=disabled, -1=use default interval */
 	/* Timer defintions */
 	struct osmo_tdef *T_defs_bts; /* timers controlled by BTS, received through PCUIF */
 	uint8_t n3101;

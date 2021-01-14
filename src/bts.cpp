@@ -201,9 +201,6 @@ static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 	bts->n3105 = 8;
 	bts->si13_is_set = false;
 
-	bts->llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
-	bts->llc_idle_ack_csec = 10;
-
 	bts->app_info = NULL;
 	bts->bts = bts_obj;
 	bts->T_defs_bts = T_defs_bts;
