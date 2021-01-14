@@ -493,7 +493,7 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool
 	struct osmo_tdef *tdef;
 
 	if (!(tdef = osmo_tdef_get_entry(bts->bts_data()->T_defs_bts, T)))
-		tdef = osmo_tdef_get_entry(bts->bts_data()->T_defs_pcu, T);
+		tdef = osmo_tdef_get_entry(bts->pcu->T_defs, T);
 
 	if (t >= T_MAX || !tdef) {
 		LOGPSRC(DTBF, LOGL_ERROR, file, line, "%s attempting to start unknown timer %s [%s], cur_fn=%d\n",

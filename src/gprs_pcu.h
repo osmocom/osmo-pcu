@@ -86,6 +86,8 @@ struct gprs_pcu {
 	alloc_algorithm_func_t alloc_algorithm;
 
 	struct gprs_bssgp_pcu bssgp;
+
+	struct osmo_tdef *T_defs; /* timers controlled by PCU */
 };
 
 

@@ -27,6 +27,18 @@
 
 struct gprs_pcu *the_pcu;
 
+static struct osmo_tdef T_defs_pcu[] = {
+	{ .T=1,     .default_val=30,  .unit=OSMO_TDEF_S,  .desc="BSSGP (un)blocking procedures timer (s)",  .val=0 },
+	{ .T=2,     .default_val=30,  .unit=OSMO_TDEF_S,  .desc="BSSGP reset procedure timer (s)",          .val=0 },
+	{ .T=3190,  .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Return to packet idle mode after Packet DL Assignment on CCCH (s)", .val=0},
+	{ .T=-2000, .default_val=2,   .unit=OSMO_TDEF_MS, .desc="Tbf reject for PRR timer (ms)",            .val=0 },
+	{ .T=-2001, .default_val=2,   .unit=OSMO_TDEF_S,  .desc="PACCH assignment timer (s)",               .val=0 },
+	{ .T=-2002, .default_val=200, .unit=OSMO_TDEF_MS, .desc="Waiting after IMM.ASS confirm timer (ms)", .val=0 },
+	{ .T=-2030, .default_val=60,  .unit=OSMO_TDEF_S,  .desc="Time to keep an idle MS object alive (s)", .val=0 }, /* slightly above T3314 (default 44s, 24.008, 11.2.2) */
+	{ .T=-2031, .default_val=2000, .unit=OSMO_TDEF_MS, .desc="Time to keep an idle DL TBF alive (ms)",  .val=0 },
+	{ .T=0, .default_val=0, .unit=OSMO_TDEF_S, .desc=NULL, .val=0 } /* empty item at the end */
+};
+
 struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 {
 	struct gprs_pcu *pcu;
@@ -38,6 +50,9 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	pcu->vty.max_cs_dl = MAX_GPRS_CS;
 	pcu->vty.max_mcs_ul = MAX_EDGE_MCS;
 	pcu->vty.max_mcs_dl = MAX_EDGE_MCS;
+
+	pcu->T_defs = T_defs_pcu;
+	osmo_tdefs_reset(pcu->T_defs);
 
 	return pcu;
 }

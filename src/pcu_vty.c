@@ -249,7 +249,7 @@ static int config_write_pcu(struct vty *vty)
 	else
 		vty_out(vty, " gb-dialect classic%s", VTY_NEWLINE);
 
-	osmo_tdef_vty_write(vty, bts->T_defs_pcu, " timer ");
+	osmo_tdef_vty_write(vty, the_pcu->T_defs, " timer ");
 
 	return CMD_SUCCESS;
 }
@@ -856,9 +856,7 @@ DEFUN_DEPRECATED(cfg_pcu_dl_tbf_idle_time,
 {
 	vty_out(vty, "%% 'dl-tbf-idle-time' is now deprecated: use 'timer X2031 <val>' instead%s", VTY_NEWLINE);
 
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	if (osmo_tdef_set(bts->T_defs_pcu, -2031, atoi(argv[0]), OSMO_TDEF_MS) < 0)
+	if (osmo_tdef_set(the_pcu->T_defs, -2031, atoi(argv[0]), OSMO_TDEF_MS) < 0)
 		return CMD_WARNING;
 	return CMD_SUCCESS;
 }
@@ -870,9 +868,7 @@ DEFUN_DEPRECATED(cfg_pcu_no_dl_tbf_idle_time,
 {
 	vty_out(vty, "%% 'no dl-tbf-idle-time' is now deprecated: use 'timer X2031 0' instead%s", VTY_NEWLINE);
 
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	if (osmo_tdef_set(bts->T_defs_pcu, -2031, 0, OSMO_TDEF_MS) < 0)
+	if (osmo_tdef_set(the_pcu->T_defs, -2031, 0, OSMO_TDEF_MS) < 0)
 		return CMD_WARNING;
 	return CMD_SUCCESS;
 }
@@ -912,10 +908,7 @@ DEFUN_DEPRECATED(cfg_pcu_ms_idle_time,
       MS_IDLE_TIME_STR "idle time in sec")
 {
 	vty_out(vty, "%% 'ms-idle-time' is now deprecated: use 'timer X2030 <val>' instead%s", VTY_NEWLINE);
-
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	if (osmo_tdef_set(bts->T_defs_pcu, -2030, atoi(argv[0]), OSMO_TDEF_S) < 0)
+	if (osmo_tdef_set(the_pcu->T_defs, -2030, atoi(argv[0]), OSMO_TDEF_S) < 0)
 		return CMD_WARNING;
 	return CMD_SUCCESS;
 }
@@ -926,10 +919,7 @@ DEFUN_DEPRECATED(cfg_pcu_no_ms_idle_time,
       NO_STR MS_IDLE_TIME_STR)
 {
 	vty_out(vty, "%% 'no ms-idle-time' is now deprecated: use 'timer X2030 0' instead%s", VTY_NEWLINE);
-
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	if (osmo_tdef_set(bts->T_defs_pcu, -2030, 0, OSMO_TDEF_S) < 0)
+	if (osmo_tdef_set(the_pcu->T_defs, -2030, 0, OSMO_TDEF_S) < 0)
 		return CMD_WARNING;
 	return CMD_SUCCESS;
 }
@@ -1138,9 +1128,8 @@ DEFUN(show_timer, show_timer_cmd,
       SHOW_STR "Show PCU timers\n"
       OSMO_TDEF_VTY_DOC_T)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	const char *T_arg = argc > 0 ? argv[0] : NULL;
-	return osmo_tdef_vty_show_cmd(vty, bts->T_defs_pcu, T_arg, NULL);
+	return osmo_tdef_vty_show_cmd(vty, the_pcu->T_defs, T_arg, NULL);
 }
 
 DEFUN_ATTR(cfg_pcu_timer, cfg_pcu_timer_cmd,
@@ -1149,11 +1138,10 @@ DEFUN_ATTR(cfg_pcu_timer, cfg_pcu_timer_cmd,
 	   OSMO_TDEF_VTY_DOC_SET,
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	/* If any arguments are missing, redirect to 'show' */
 	if (argc < 2)
 		return show_timer(self, vty, argc, argv);
-	return osmo_tdef_vty_set_cmd(vty, bts->T_defs_pcu, argv);
+	return osmo_tdef_vty_set_cmd(vty, the_pcu->T_defs, argv);
 }
 
 DEFUN(show_tbf,

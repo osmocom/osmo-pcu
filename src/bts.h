@@ -101,7 +101,6 @@ struct gprs_rlcmac_bts {
 	uint32_t llc_codel_interval_msec; /* 0=disabled, -1=use default interval */
 	/* Timer defintions */
 	struct osmo_tdef *T_defs_bts; /* timers controlled by BTS, received through PCUIF */
-	struct osmo_tdef *T_defs_pcu; /* timers controlled by PCU */
 	uint8_t n3101;
 	uint8_t n3103;
 	uint8_t n3105;

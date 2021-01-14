@@ -176,8 +176,8 @@ static void setup_bts(BTS *the_bts, uint8_t ts_no, uint8_t cs = 1)
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	bts->initial_cs_dl = cs;
 	bts->initial_cs_ul = cs;
-	osmo_tdef_set(bts->T_defs_pcu, -2030, 0, OSMO_TDEF_S);
-	osmo_tdef_set(bts->T_defs_pcu, -2031, 0, OSMO_TDEF_S);
+	osmo_tdef_set(the_pcu->T_defs, -2030, 0, OSMO_TDEF_S);
+	osmo_tdef_set(the_pcu->T_defs, -2031, 0, OSMO_TDEF_S);
 	trx = &bts->trx[0];
 
 	trx->pdch[ts_no].enable();
@@ -340,7 +340,6 @@ static void test_tbf_delayed_release()
 {
 	the_pcu->bts = bts_alloc(the_pcu);
 	BTS *the_bts = the_pcu->bts;
-	gprs_rlcmac_bts *bts;
 	uint8_t ts_no = 4;
 	unsigned i;
 	uint8_t ms_class = 45;
@@ -355,10 +354,8 @@ static void test_tbf_delayed_release()
 
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
-	bts = the_bts->bts_data();
-
 	setup_bts(the_bts, ts_no);
-	OSMO_ASSERT(osmo_tdef_set(bts->T_defs_pcu, -2031, 200, OSMO_TDEF_MS) == 0);
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2031, 200, OSMO_TDEF_MS) == 0);
 
 	dl_tbf = create_dl_tbf(the_bts, ms_class, 0, &trx_no);
 	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
@@ -392,7 +389,7 @@ static void test_tbf_delayed_release()
 	RCV_ACK(false, dl_tbf, rbb); /* Receive an ACK */
 
 	/* Timeout (make sure fn % 52 remains valid) */
-	dl_tbf_idle_msec = osmo_tdef_get(bts->T_defs_pcu, -2031, OSMO_TDEF_MS, -1);
+	dl_tbf_idle_msec = osmo_tdef_get(the_pcu->T_defs, -2031, OSMO_TDEF_MS, -1);
 	fn += 52 * ((msecs_to_frames(dl_tbf_idle_msec + 100) + 51)/ 52);
 	request_dl_rlc_block(dl_tbf, &fn);
 
@@ -541,7 +538,7 @@ static void test_tbf_dl_llc_loss()
 
 	setup_bts(the_bts, ts_no);
 	/* keep the MS object 10 seconds */
-	OSMO_ASSERT(osmo_tdef_set(bts->T_defs_pcu, -2030, 10, OSMO_TDEF_S) == 0);
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2030, 10, OSMO_TDEF_S) == 0);
 
 	gprs_bssgp_init(bts, 2234, 2234, 1, 1, false, 0, 0, 0);
 
@@ -2552,7 +2549,7 @@ static void test_tbf_epdan_out_of_rx_window(void)
 	bts = the_bts->bts_data();
 
 	setup_bts(the_bts, ts_no);
-	OSMO_ASSERT(osmo_tdef_set(bts->T_defs_pcu, -2031, 200, OSMO_TDEF_MS) == 0);
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2031, 200, OSMO_TDEF_MS) == 0);
 	/* ARQ II */
 	bts->dl_arq_type = EGPRS_ARQ2;
 
@@ -3084,7 +3081,7 @@ static void test_tbf_egprs_retx_dl(void)
 	bts = the_bts->bts_data();
 	bts->cs_downgrade_threshold = 0;
 	setup_bts(the_bts, ts_no);
-	OSMO_ASSERT(osmo_tdef_set(bts->T_defs_pcu, -2031, 200, OSMO_TDEF_MS) == 0);
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2031, 200, OSMO_TDEF_MS) == 0);
 	/* ARQ II */
 	bts->dl_arq_type = EGPRS_ARQ2;
 
@@ -3114,7 +3111,7 @@ static void test_tbf_egprs_spb_dl(void)
 	bts = the_bts->bts_data();
 	bts->cs_downgrade_threshold = 0;
 	setup_bts(the_bts, ts_no);
-	OSMO_ASSERT(osmo_tdef_set(bts->T_defs_pcu, -2031, 200, OSMO_TDEF_MS) == 0);
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2031, 200, OSMO_TDEF_MS) == 0);
 
 	/* ARQ I resegmentation support */
 	bts->dl_arq_type = EGPRS_ARQ1;
@@ -3147,7 +3144,7 @@ static void test_tbf_egprs_dl()
 	bts = the_bts->bts_data();
 
 	setup_bts(the_bts, ts_no);
-	OSMO_ASSERT(osmo_tdef_set(bts->T_defs_pcu, -2031, 200, OSMO_TDEF_MS) == 0);
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2031, 200, OSMO_TDEF_MS) == 0);
 	/* ARQ II */
 	bts->dl_arq_type = EGPRS_ARQ2;
 

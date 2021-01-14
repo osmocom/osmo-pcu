@@ -1365,7 +1365,7 @@ bool gprs_rlcmac_dl_tbf::keep_open(unsigned fn) const
 	int keep_time_frames;
 	unsigned long dl_tbf_idle_msec;
 
-	dl_tbf_idle_msec = osmo_tdef_get(bts_data()->T_defs_pcu, -2031, OSMO_TDEF_MS, -1);
+	dl_tbf_idle_msec = osmo_tdef_get(the_pcu->T_defs, -2031, OSMO_TDEF_MS, -1);
 	if (dl_tbf_idle_msec == 0)
 		return false;
 

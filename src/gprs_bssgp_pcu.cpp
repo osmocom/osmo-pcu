@@ -914,7 +914,7 @@ static void bvc_timeout(void *_priv)
 	if (!the_pcu->bssgp.bvc_sig_reset) {
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI 0\n");
 		bssgp_tx_bvc_reset(the_pcu->bssgp.bctx, 0, BSSGP_CAUSE_OML_INTERV);
-		secs = osmo_tdef_get(the_pcu->bssgp.bts->T_defs_pcu, 2, OSMO_TDEF_S, -1);
+		secs = osmo_tdef_get(the_pcu->T_defs, 2, OSMO_TDEF_S, -1);
 		osmo_timer_schedule(&the_pcu->bssgp.bvc_timer, secs, 0);
 		return;
 	}
@@ -923,7 +923,7 @@ static void bvc_timeout(void *_priv)
 		LOGP(DBSSGP, LOGL_INFO, "Sending reset on BVCI %d\n",
 			the_pcu->bssgp.bctx->bvci);
 		bssgp_tx_bvc_reset(the_pcu->bssgp.bctx, the_pcu->bssgp.bctx->bvci, BSSGP_CAUSE_OML_INTERV);
-		secs = osmo_tdef_get(the_pcu->bssgp.bts->T_defs_pcu, 2, OSMO_TDEF_S, -1);
+		secs = osmo_tdef_get(the_pcu->T_defs, 2, OSMO_TDEF_S, -1);
 		osmo_timer_schedule(&the_pcu->bssgp.bvc_timer, secs, 0);
 		return;
 	}
@@ -932,7 +932,7 @@ static void bvc_timeout(void *_priv)
 		LOGP(DBSSGP, LOGL_INFO, "Sending unblock on BVCI %d\n",
 			the_pcu->bssgp.bctx->bvci);
 		bssgp_tx_bvc_unblock(the_pcu->bssgp.bctx);
-		secs = osmo_tdef_get(the_pcu->bssgp.bts->T_defs_pcu, 1, OSMO_TDEF_S, -1);
+		secs = osmo_tdef_get(the_pcu->T_defs, 1, OSMO_TDEF_S, -1);
 		osmo_timer_schedule(&the_pcu->bssgp.bvc_timer, secs, 0);
 		return;
 	}
