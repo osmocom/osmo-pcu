@@ -143,9 +143,9 @@ static int config_write_pcu(struct vty *vty)
 	else
 		vty_out(vty, " no cs threshold%s", VTY_NEWLINE);
 
-	if (bts->cs_downgrade_threshold)
+	if (the_pcu->vty.cs_downgrade_threshold)
 		vty_out(vty, " cs downgrade-threshold %d%s",
-			bts->cs_downgrade_threshold, VTY_NEWLINE);
+			the_pcu->vty.cs_downgrade_threshold, VTY_NEWLINE);
 	else
 		vty_out(vty, " no cs downgrade-threshold%s", VTY_NEWLINE);
 
@@ -947,10 +947,7 @@ DEFUN_ATTR(cfg_pcu_cs_downgrade_thrsh,
 	   CS_STR CS_DOWNGRADE_STR "downgrade if less octets left\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->cs_downgrade_threshold = atoi(argv[0]);
-
+	the_pcu->vty.cs_downgrade_threshold = atoi(argv[0]);
 	return CMD_SUCCESS;
 }
 
@@ -960,10 +957,7 @@ DEFUN_ATTR(cfg_pcu_no_cs_downgrade_thrsh,
 	   NO_STR CS_STR CS_DOWNGRADE_STR,
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->cs_downgrade_threshold = 0;
-
+	the_pcu->vty.cs_downgrade_threshold = 0;
 	return CMD_SUCCESS;
 }
 

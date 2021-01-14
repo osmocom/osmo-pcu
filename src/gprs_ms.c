@@ -794,7 +794,7 @@ enum CodingScheme ms_current_cs_dl(const struct GprsMs *ms)
 		unencoded_octets += llc_chunk_size(tbf_llc((struct gprs_rlcmac_tbf *)ms->dl_tbf));
 
 	/* There are many unencoded octets, don't reduce */
-	if (unencoded_octets >= bts_data(ms->bts)->cs_downgrade_threshold)
+	if (unencoded_octets >= the_pcu->vty.cs_downgrade_threshold)
 		return cs;
 
 	/* RF conditions are good, don't reduce */

@@ -3070,13 +3070,11 @@ static void test_tbf_egprs_retx_dl(void)
 {
 	the_pcu->bts = bts_alloc(the_pcu);
 	BTS *the_bts = the_pcu->bts;
-	gprs_rlcmac_bts *bts;
 	uint8_t ts_no = 4;
 
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
-	bts = the_bts->bts_data();
-	bts->cs_downgrade_threshold = 0;
+	the_pcu->vty.cs_downgrade_threshold = 0;
 	setup_bts(the_bts, ts_no);
 	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2031, 200, OSMO_TDEF_MS) == 0);
 	/* ARQ II */
@@ -3100,13 +3098,11 @@ static void test_tbf_egprs_spb_dl(void)
 {
 	the_pcu->bts = bts_alloc(the_pcu);
 	BTS *the_bts = the_pcu->bts;
-	gprs_rlcmac_bts *bts;
 	uint8_t ts_no = 4;
 
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
-	bts = the_bts->bts_data();
-	bts->cs_downgrade_threshold = 0;
+	the_pcu->vty.cs_downgrade_threshold = 0;
 	setup_bts(the_bts, ts_no);
 	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2031, 200, OSMO_TDEF_MS) == 0);
 

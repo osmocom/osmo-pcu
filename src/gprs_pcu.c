@@ -58,6 +58,7 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	pcu->vty.cs_adj_enabled = true;
 	pcu->vty.cs_adj_upper_limit = 33; /* Decrease CS if the error rate is above */
 	pcu->vty.cs_adj_lower_limit = 10; /* Increase CS if the error rate is below */
+	pcu->vty.cs_downgrade_threshold = 200;
 
 	pcu->T_defs = T_defs_pcu;
 	osmo_tdefs_reset(pcu->T_defs);

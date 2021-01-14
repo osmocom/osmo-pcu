@@ -82,6 +82,9 @@ struct gprs_pcu {
 		bool cs_adj_enabled; /* whether cs_adj_{upper,lower}_limit are used to adjust DL CS */
 		uint8_t cs_adj_upper_limit; /* downgrade DL CS if error rate above its value */
 		uint8_t cs_adj_lower_limit; /* upgrade DL CS if error rate below its value */
+		/* downgrade DL CS when less than specified octets are left in tx queue. Optimization, see paper:
+		  "Theoretical Analysis of GPRS Throughput and Delay" */
+		uint16_t cs_downgrade_threshold;
 	} vty;
 
 	struct gsmtap_inst *gsmtap;

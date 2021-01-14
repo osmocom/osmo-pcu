@@ -510,7 +510,7 @@ static void test_ms_cs_selection()
 
 	bts->initial_cs_dl = 4;
 	bts->initial_cs_ul = 1;
-	bts->cs_downgrade_threshold = 0;
+	the_pcu->vty.cs_downgrade_threshold = 0;
 	the_pcu->vty.cs_adj_lower_limit = 0;
 
 	ms = ms_alloc(&the_bts, tlli);
@@ -525,7 +525,7 @@ static void test_ms_cs_selection()
 
 	OSMO_ASSERT(mcs_chan_code(ms_current_cs_dl(ms)) == 3);
 
-	bts->cs_downgrade_threshold = 200;
+	the_pcu->vty.cs_downgrade_threshold = 200;
 
 	OSMO_ASSERT(mcs_chan_code(ms_current_cs_dl(ms)) == 2);
 
@@ -559,7 +559,7 @@ static void test_ms_mcs_mode()
 
 	bts->initial_cs_dl = 4;
 	bts->initial_cs_ul = 1;
-	bts->cs_downgrade_threshold = 0;
+	the_pcu->vty.cs_downgrade_threshold = 0;
 
 	ms2 = ms_alloc(&the_bts, tlli + 1);
 	dump_ms(ms2, "2: with BTS defaults");
