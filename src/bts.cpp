@@ -201,7 +201,6 @@ static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 	bts->n3103 = 4;
 	bts->n3105 = 8;
 	bts->si13_is_set = false;
-	bts->ns_dialect = NS2_DIALECT_IPACCESS;
 
 	/* TODO: increase them when CRBB decoding is implemented */
 	bts->ws_base = 64;

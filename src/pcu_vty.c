@@ -243,7 +243,7 @@ static int config_write_pcu(struct vty *vty)
 		}
 	}
 
-	if (bts->ns_dialect == NS2_DIALECT_SNS)
+	if (the_pcu->vty.ns_dialect == NS2_DIALECT_SNS)
 		vty_out(vty, " gb-dialect ip-sns%s", VTY_NEWLINE);
 	else
 		vty_out(vty, " gb-dialect classic%s", VTY_NEWLINE);
@@ -1067,12 +1067,10 @@ DEFUN_USRATTR(cfg_pcu_gb_dialect,
 	      "Classic Gb interface with NS-{RESET,BLOCK,UNBLOCK} and static configuration\n"
 	      "Modern Gb interface with IP-SNS (Sub Network Service) and dynamic configuration\n")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
 	if (!strcmp(argv[0], "ip-sns")) {
-		bts->ns_dialect = NS2_DIALECT_SNS;
+		the_pcu->vty.ns_dialect = NS2_DIALECT_SNS;
 	} else {
-		bts->ns_dialect = NS2_DIALECT_IPACCESS;
+		the_pcu->vty.ns_dialect = NS2_DIALECT_IPACCESS;
 	}
 
 	return CMD_SUCCESS;

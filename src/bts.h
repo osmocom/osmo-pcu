@@ -120,9 +120,6 @@ struct gprs_rlcmac_bts {
 	 */
 	struct BTS *bts;
 
-	/* Are we talking Gb with IP-SNS (true) or classic Gb? */
-	enum gprs_ns2_dialect ns_dialect;
-
 	/* Packet Application Information (3GPP TS 44.060 11.2.47, usually ETWS primary message). We don't need to store
 	 * more than one message, because they get sent so rarely. */
 	struct msgb *app_info;
