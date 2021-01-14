@@ -106,20 +106,20 @@ static int config_write_pcu(struct vty *vty)
 	unsigned int i;
 
 	vty_out(vty, "pcu%s", VTY_NEWLINE);
-	vty_out(vty, " flow-control-interval %d%s", bts->fc_interval,
+	vty_out(vty, " flow-control-interval %d%s", the_pcu->vty.fc_interval,
 		VTY_NEWLINE);
-	if (bts->fc_bvc_bucket_size)
+	if (the_pcu->vty.fc_bvc_bucket_size)
 		vty_out(vty, " flow-control force-bvc-bucket-size %d%s",
-			bts->fc_bvc_bucket_size, VTY_NEWLINE);
-	if (bts->fc_bvc_leak_rate)
+			the_pcu->vty.fc_bvc_bucket_size, VTY_NEWLINE);
+	if (the_pcu->vty.fc_bvc_leak_rate)
 		vty_out(vty, " flow-control force-bvc-leak-rate %d%s",
-			bts->fc_bvc_leak_rate, VTY_NEWLINE);
-	if (bts->fc_ms_bucket_size)
+			the_pcu->vty.fc_bvc_leak_rate, VTY_NEWLINE);
+	if (the_pcu->vty.fc_ms_bucket_size)
 		vty_out(vty, " flow-control force-ms-bucket-size %d%s",
-			bts->fc_ms_bucket_size, VTY_NEWLINE);
-	if (bts->fc_ms_leak_rate)
+			the_pcu->vty.fc_ms_bucket_size, VTY_NEWLINE);
+	if (the_pcu->vty.fc_ms_leak_rate)
 		vty_out(vty, " flow-control force-ms-leak-rate %d%s",
-			bts->fc_ms_leak_rate, VTY_NEWLINE);
+			the_pcu->vty.fc_ms_leak_rate, VTY_NEWLINE);
 	if (the_pcu->vty.force_initial_cs) {
 		if (bts->initial_cs_ul == bts->initial_cs_dl)
 			vty_out(vty, " cs %d%s", bts->initial_cs_dl,
@@ -292,10 +292,7 @@ DEFUN_ATTR(cfg_pcu_fc_interval,
 	   "Interval time in seconds\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->fc_interval = atoi(argv[0]);
-
+	the_pcu->vty.fc_interval = atoi(argv[0]);
 	return CMD_SUCCESS;
 }
 #define FC_STR "BSSGP Flow Control configuration\n"
@@ -308,10 +305,7 @@ DEFUN_ATTR(cfg_pcu_fc_bvc_bucket_size,
 	   FC_STR FC_BMAX_STR("BVC") "Bucket size in octets\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->fc_bvc_bucket_size = atoi(argv[0]);
-
+	the_pcu->vty.fc_bvc_bucket_size = atoi(argv[0]);
 	return CMD_SUCCESS;
 }
 
@@ -321,10 +315,7 @@ DEFUN_ATTR(cfg_pcu_no_fc_bvc_bucket_size,
 	   NO_STR FC_STR FC_BMAX_STR("BVC"),
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->fc_bvc_bucket_size = 0;
-
+	the_pcu->vty.fc_bvc_bucket_size = 0;
 	return CMD_SUCCESS;
 }
 
@@ -334,9 +325,7 @@ DEFUN_ATTR(cfg_pcu_fc_bvc_leak_rate,
 	   FC_STR FC_LR_STR("BVC") "Leak rate in bit/s\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->fc_bvc_leak_rate = atoi(argv[0]);
+	the_pcu->vty.fc_bvc_leak_rate = atoi(argv[0]);
 
 	return CMD_SUCCESS;
 }
@@ -347,10 +336,7 @@ DEFUN_ATTR(cfg_pcu_no_fc_bvc_leak_rate,
 	   NO_STR FC_STR FC_LR_STR("BVC"),
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->fc_bvc_leak_rate = 0;
-
+	the_pcu->vty.fc_bvc_leak_rate = 0;
 	return CMD_SUCCESS;
 }
 
@@ -360,10 +346,7 @@ DEFUN_ATTR(cfg_pcu_fc_ms_bucket_size,
 	   FC_STR FC_BMAX_STR("default MS") "Bucket size in octets\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->fc_ms_bucket_size = atoi(argv[0]);
-
+	the_pcu->vty.fc_ms_bucket_size = atoi(argv[0]);
 	return CMD_SUCCESS;
 }
 
@@ -373,10 +356,7 @@ DEFUN_ATTR(cfg_pcu_no_fc_ms_bucket_size,
 	   NO_STR FC_STR FC_BMAX_STR("default MS"),
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->fc_ms_bucket_size = 0;
-
+	the_pcu->vty.fc_ms_bucket_size = 0;
 	return CMD_SUCCESS;
 }
 
@@ -386,10 +366,7 @@ DEFUN_ATTR(cfg_pcu_fc_ms_leak_rate,
 	   FC_STR FC_LR_STR("default MS") "Leak rate in bit/s\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->fc_ms_leak_rate = atoi(argv[0]);
-
+	the_pcu->vty.fc_ms_leak_rate = atoi(argv[0]);
 	return CMD_SUCCESS;
 }
 
@@ -399,10 +376,7 @@ DEFUN_ATTR(cfg_pcu_no_fc_ms_leak_rate,
 	   NO_STR FC_STR FC_LR_STR("default MS"),
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->fc_ms_leak_rate = 0;
-
+	the_pcu->vty.fc_ms_leak_rate = 0;
 	return CMD_SUCCESS;
 }
 
@@ -413,10 +387,7 @@ DEFUN_ATTR(cfg_pcu_fc_bucket_time,
 	   FC_STR FC_BTIME_STR "Time in centi-seconds\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->fc_bucket_time = atoi(argv[0]);
-
+	the_pcu->vty.fc_bucket_time = atoi(argv[0]);
 	return CMD_SUCCESS;
 }
 
@@ -426,10 +397,7 @@ DEFUN_ATTR(cfg_pcu_no_fc_bucket_time,
 	   NO_STR FC_STR FC_BTIME_STR,
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->fc_bucket_time = 0;
-
+	the_pcu->vty.fc_bucket_time = 0;
 	return CMD_SUCCESS;
 }
 

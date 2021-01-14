@@ -71,6 +71,12 @@ struct gprs_pcu {
 	char *pcu_sock_path;
 
 	struct { /* Config Values set by VTY */
+		uint8_t fc_interval;
+		uint16_t fc_bucket_time;
+		uint32_t fc_bvc_bucket_size;
+		uint32_t fc_bvc_leak_rate;
+		uint32_t fc_ms_bucket_size;
+		uint32_t fc_ms_leak_rate;
 		bool force_initial_cs;	/* false=use from BTS true=use from VTY */
 		bool force_initial_mcs;	/* false=use from BTS true=use from VTY */
 		uint8_t max_cs_dl, max_cs_ul;

@@ -66,7 +66,6 @@ struct gprs_test all_tests[] = {
 static void init_main_bts()
 {
 	struct gprs_rlcmac_bts *bts = bts_main_data();
-	bts->fc_interval = 100;
 	bts->initial_cs_dl = bts->initial_cs_ul = 1;
 	bts->cs_mask = 1 << 0; /* CS-1 always enabled by default */
 	bts->n3101 = 10;
@@ -78,6 +77,7 @@ static void init_pcu(struct gprs_pcu *pcu)
 {
 	if (!pcu->alloc_algorithm)
 		pcu->alloc_algorithm = alloc_algorithm_b;
+	pcu->vty.fc_interval = 100;
 	pcu->vty.alpha = 0; /* a = 0.0 */
 }
 

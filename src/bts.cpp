@@ -193,7 +193,6 @@ static const struct osmo_stat_item_group_desc bts_statg_desc = {
 static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 {
 	memset(bts, 0, sizeof(*bts));
-	bts->fc_interval = 1;
 	bts->initial_cs_dl = bts->initial_cs_ul = 1;
 	bts->initial_mcs_dl = bts->initial_mcs_ul = 1;
 	bts->cs_mask = 1 << 0;  /* CS-1 always enabled by default */

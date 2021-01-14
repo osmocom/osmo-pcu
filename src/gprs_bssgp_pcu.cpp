@@ -673,7 +673,7 @@ static uint32_t compute_bucket_size(struct gprs_rlcmac_bts *bts,
 	uint32_t leak_rate, uint32_t fallback)
 {
 	uint32_t bucket_size = 0;
-	uint16_t bucket_time = bts->fc_bucket_time;
+	uint16_t bucket_time = the_pcu->vty.fc_bucket_time;
 
 	if (bucket_time == 0)
 		bucket_time = bts->force_llc_lifetime;
@@ -811,10 +811,10 @@ static int gprs_bssgp_tx_fc_bvc(void)
 
 	max_cs_dl = max_coding_scheme_dl(bts);
 
-	bucket_size = bts->fc_bvc_bucket_size;
-	leak_rate = bts->fc_bvc_leak_rate;
-	ms_bucket_size = bts->fc_ms_bucket_size;
-	ms_leak_rate = bts->fc_ms_leak_rate;
+	bucket_size = the_pcu->vty.fc_bvc_bucket_size;
+	leak_rate = the_pcu->vty.fc_bvc_leak_rate;
+	ms_bucket_size = the_pcu->vty.fc_ms_bucket_size;
+	ms_leak_rate = the_pcu->vty.fc_ms_leak_rate;
 
 	/* FIXME: This calculation is mostly wrong. It should be done based on
 	   currently established TBF (and whether the related (egprs)_ms_class
@@ -940,7 +940,7 @@ static void bvc_timeout(void *_priv)
 	LOGP(DBSSGP, LOGL_DEBUG, "Sending flow control info on BVCI %d\n",
 		the_pcu->bssgp.bctx->bvci);
 	gprs_bssgp_tx_fc_bvc();
-	osmo_timer_schedule(&the_pcu->bssgp.bvc_timer, the_pcu->bssgp.bts->fc_interval, 0);
+	osmo_timer_schedule(&the_pcu->bssgp.bvc_timer, the_pcu->vty.fc_interval, 0);
 }
 
 static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,

@@ -85,12 +85,6 @@ void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts, i
 struct gprs_rlcmac_bts {
 	bool active;
 	uint8_t bsic;
-	uint8_t fc_interval;
-	uint16_t fc_bucket_time;
-	uint32_t fc_bvc_bucket_size;
-	uint32_t fc_bvc_leak_rate;
-	uint32_t fc_ms_bucket_size;
-	uint32_t fc_ms_leak_rate;
 	uint8_t cs_mask; /* Allowed CS mask from BTS */
 	uint16_t mcs_mask;  /* Allowed MCS mask from BTS */
 	uint8_t initial_cs_dl, initial_cs_ul;

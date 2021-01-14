@@ -46,6 +46,7 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	pcu = (struct gprs_pcu *)talloc_zero(ctx, struct gprs_pcu);
 	OSMO_ASSERT(pcu);
 
+	pcu->vty.fc_interval = 1;
 	pcu->vty.max_cs_ul = MAX_GPRS_CS;
 	pcu->vty.max_cs_dl = MAX_GPRS_CS;
 	pcu->vty.max_mcs_ul = MAX_EDGE_MCS;
