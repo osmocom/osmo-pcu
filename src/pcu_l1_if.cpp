@@ -840,15 +840,16 @@ static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)
 
 static int pcu_rx_app_info_req(struct gsm_pcu_if_app_info_req *app_info_req)
 {
-	GprsMs *ms;
 	BTS *bts = BTS::main_bts();
 	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
+	struct llist_head *tmp;
 
 	LOGP(DL1IF, LOGL_DEBUG, "Application Information Request received: type=0x%08x len=%i\n",
 	     app_info_req->application_type, app_info_req->len);
 
 	bts_data->app_info_pending = 0;
-	llist_for_each_entry(ms, bts->ms_store().ms_list(), list) {
+	llist_for_each(tmp, bts->ms_store().ms_list()) {
+		GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
 		if (!ms_dl_tbf(ms))
 			continue;
 		bts_data->app_info_pending++;

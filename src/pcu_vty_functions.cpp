@@ -207,10 +207,12 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
 {
 	BTS *bts = bts_data->bts;
-	GprsMs *ms_iter;
+	struct llist_head *tmp;
 
-	llist_for_each_entry(ms_iter, bts->ms_store().ms_list(), list)
+	llist_for_each(tmp, bts->ms_store().ms_list()) {
+		GprsMs *ms_iter = llist_entry(tmp, typeof(*ms_iter), list);
 		show_ms(vty, ms_iter);
+	}
 
 	return CMD_SUCCESS;
 }
