@@ -102,8 +102,6 @@ struct gprs_rlcmac_bts {
 
 	uint8_t si13[GSM_MACBLOCK_LEN];
 	bool si13_is_set;
-	uint16_t ws_base;
-	uint16_t ws_pdch; /* increase WS by this value per PDCH */
 
 	/* State for dynamic algorithm selection */
 	int multislot_disabled;

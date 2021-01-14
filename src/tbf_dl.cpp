@@ -1494,7 +1494,7 @@ void gprs_rlcmac_dl_tbf::set_window_size()
 	uint16_t ws = egprs_window_size(b, dl_slots());
 
 	LOGPTBFDL(this, LOGL_INFO, "setting EGPRS DL window size to %u, base(%u) slots(%u) ws_pdch(%u)\n",
-		  ws, b->ws_base, pcu_bitcount(dl_slots()), b->ws_pdch);
+		  ws, bts->pcu->vty.ws_base, pcu_bitcount(dl_slots()), bts->pcu->vty.ws_pdch);
 	m_window.set_ws(ws);
 }
 

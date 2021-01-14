@@ -201,10 +201,6 @@ static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 	bts->n3105 = 8;
 	bts->si13_is_set = false;
 
-	/* TODO: increase them when CRBB decoding is implemented */
-	bts->ws_base = 64;
-	bts->ws_pdch = 0;
-
 	bts->llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
 	bts->llc_idle_ack_csec = 10;
 

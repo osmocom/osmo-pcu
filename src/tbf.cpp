@@ -321,7 +321,7 @@ uint16_t egprs_window_size(const struct gprs_rlcmac_bts *bts_data, uint8_t slots
 	uint8_t num_pdch = pcu_bitcount(slots);
 
 	return OSMO_MIN((num_pdch != 1) ? (128 * num_pdch) : 192,
-			OSMO_MAX(64, (bts_data->ws_base + num_pdch * bts_data->ws_pdch) / 32 * 32));
+			OSMO_MAX(64, (the_pcu->vty.ws_base + num_pdch * the_pcu->vty.ws_pdch) / 32 * 32));
 }
 
 int gprs_rlcmac_tbf::update()

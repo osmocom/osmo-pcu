@@ -95,6 +95,8 @@ struct gprs_pcu {
 		struct {int16_t low; int16_t high; } cs_lqual_ranges[MAX_GPRS_CS];
 		struct {int16_t low; int16_t high; } mcs_lqual_ranges[MAX_EDGE_MCS];
 		enum gprs_ns2_dialect ns_dialect; /* Are we talking Gb with IP-SNS (true) or classic Gb? */
+		uint16_t ws_base;
+		uint16_t ws_pdch; /* increase WS by this value per PDCH */
 	} vty;
 
 	struct gsmtap_inst *gsmtap;

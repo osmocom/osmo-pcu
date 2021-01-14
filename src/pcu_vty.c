@@ -195,7 +195,7 @@ static int config_write_pcu(struct vty *vty)
 				the_pcu->vty.max_mcs_ul, VTY_NEWLINE);
 	}
 
-	vty_out(vty, " window-size %d %d%s", bts->ws_base, bts->ws_pdch,
+	vty_out(vty, " window-size %d %d%s", the_pcu->vty.ws_base, the_pcu->vty.ws_pdch,
 		VTY_NEWLINE);
 
 	if (the_pcu->vty.dl_arq_type == EGPRS_ARQ2)
@@ -557,13 +557,12 @@ DEFUN_USRATTR(cfg_pcu_window_size,
 	      "Base value (b)\n"
 	      "Factor for number of PDCH (f)")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	uint16_t b = atoi(argv[0]);
 
-	bts->ws_base = b;
+	the_pcu->vty.ws_base = b;
 	if (argc > 1) {
 		uint16_t f = atoi(argv[1]);
-		bts->ws_pdch = f;
+		the_pcu->vty.ws_pdch = f;
 	}
 
 	return CMD_SUCCESS;

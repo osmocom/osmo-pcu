@@ -1749,7 +1749,6 @@ static void test_tbf_egprs_two_phase_puan(void)
 	uint32_t tlli = 0xf1223344;
 	const char *imsi = "0011223344";
 	uint8_t ms_class = 1;
-	gprs_rlcmac_bts *bts;
 	uint8_t egprs_ms_class = 1;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	uint8_t test_data[256];
@@ -1760,9 +1759,8 @@ static void test_tbf_egprs_two_phase_puan(void)
 
 	setup_bts(the_bts, ts_no, 4);
 	the_bts->bts_data()->initial_mcs_dl = 9;
-	bts = the_bts->bts_data();
-	bts->ws_base = 128;
-	bts->ws_pdch = 64;
+	the_pcu->vty.ws_base = 128;
+	the_pcu->vty.ws_pdch = 64;
 
 	ul_tbf = establish_ul_tbf(the_bts, ts_no, tlli, &fn, qta, ms_class, egprs_ms_class);
 	/* Function to generate URBB with no length */
@@ -1782,8 +1780,8 @@ static void test_tbf_egprs_two_phase_puan(void)
 
 	static_cast<gprs_rlc_ul_window *>(ul_tbf->window())->reset_state();
 	/* Function to generate CRBB */
-	bts->ws_base = 128;
-	bts->ws_pdch = 64;
+	the_pcu->vty.ws_base = 128;
+	the_pcu->vty.ws_pdch = 64;
 	ul_tbf = establish_ul_tbf_two_phase_puan_CRBB(the_bts, ts_no, tlli, &fn,
 		qta, ms_class, egprs_ms_class);
 
@@ -2288,8 +2286,8 @@ static void test_tbf_ws()
 
 	setup_bts(the_bts, ts_no);
 
-	bts->ws_base = 128;
-	bts->ws_pdch = 64;
+	the_pcu->vty.ws_base = 128;
+	the_pcu->vty.ws_pdch = 64;
 	the_pcu->alloc_algorithm = alloc_algorithm_b;
 	bts->trx[0].pdch[2].enable();
 	bts->trx[0].pdch[3].enable();
@@ -2336,8 +2334,8 @@ static void test_tbf_update_ws(void)
 
 	setup_bts(the_bts, ts_no);
 
-	bts->ws_base = 128;
-	bts->ws_pdch = 64;
+	the_pcu->vty.ws_base = 128;
+	the_pcu->vty.ws_pdch = 64;
 	the_pcu->alloc_algorithm = alloc_algorithm_b;
 	bts->trx[0].pdch[2].enable();
 	bts->trx[0].pdch[3].enable();

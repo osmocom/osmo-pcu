@@ -764,7 +764,7 @@ void gprs_rlcmac_ul_tbf::set_window_size()
 	const struct gprs_rlcmac_bts *b = bts->bts_data();
 	uint16_t ws = egprs_window_size(b, ul_slots());
 	LOGPTBFUL(this, LOGL_INFO, "setting EGPRS UL window size to %u, base(%u) slots(%u) ws_pdch(%u)\n",
-		  ws, b->ws_base, pcu_bitcount(ul_slots()), b->ws_pdch);
+		  ws, bts->pcu->vty.ws_base, pcu_bitcount(ul_slots()), bts->pcu->vty.ws_pdch);
 	m_window.set_ws(ws);
 }
 
