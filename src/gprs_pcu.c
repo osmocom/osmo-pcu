@@ -59,6 +59,36 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	pcu->vty.cs_adj_upper_limit = 33; /* Decrease CS if the error rate is above */
 	pcu->vty.cs_adj_lower_limit = 10; /* Increase CS if the error rate is below */
 	pcu->vty.cs_downgrade_threshold = 200;
+	/* CS-1 to CS-4 */
+	pcu->vty.cs_lqual_ranges[0].low = -256;
+	pcu->vty.cs_lqual_ranges[0].high = 6;
+	pcu->vty.cs_lqual_ranges[1].low = 5;
+	pcu->vty.cs_lqual_ranges[1].high = 8;
+	pcu->vty.cs_lqual_ranges[2].low = 7;
+	pcu->vty.cs_lqual_ranges[2].high = 13;
+	pcu->vty.cs_lqual_ranges[3].low = 12;
+	pcu->vty.cs_lqual_ranges[3].high = 256;
+	/* MCS-1 to MCS-9 */
+	/* Default thresholds are referenced from literature */
+	/* Fig. 2.3, Chapter 2, Optimizing Wireless Communication Systems, Springer (2009) */
+	pcu->vty.mcs_lqual_ranges[0].low = -256;
+	pcu->vty.mcs_lqual_ranges[0].high = 6;
+	pcu->vty.mcs_lqual_ranges[1].low = 5;
+	pcu->vty.mcs_lqual_ranges[1].high = 8;
+	pcu->vty.mcs_lqual_ranges[2].low = 7;
+	pcu->vty.mcs_lqual_ranges[2].high = 13;
+	pcu->vty.mcs_lqual_ranges[3].low = 12;
+	pcu->vty.mcs_lqual_ranges[3].high = 15;
+	pcu->vty.mcs_lqual_ranges[4].low = 14;
+	pcu->vty.mcs_lqual_ranges[4].high = 17;
+	pcu->vty.mcs_lqual_ranges[5].low = 16;
+	pcu->vty.mcs_lqual_ranges[5].high = 18;
+	pcu->vty.mcs_lqual_ranges[6].low = 17;
+	pcu->vty.mcs_lqual_ranges[6].high = 20;
+	pcu->vty.mcs_lqual_ranges[7].low = 19;
+	pcu->vty.mcs_lqual_ranges[7].high = 24;
+	pcu->vty.mcs_lqual_ranges[8].low = 23;
+	pcu->vty.mcs_lqual_ranges[8].high = 256;
 
 	pcu->T_defs = T_defs_pcu;
 	osmo_tdefs_reset(pcu->T_defs);

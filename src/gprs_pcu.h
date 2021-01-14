@@ -85,6 +85,9 @@ struct gprs_pcu {
 		/* downgrade DL CS when less than specified octets are left in tx queue. Optimization, see paper:
 		  "Theoretical Analysis of GPRS Throughput and Delay" */
 		uint16_t cs_downgrade_threshold;
+		/* Link quality range for each UL (M)CS. Below or above, next/prev (M)CS is selected. */
+		struct {int16_t low; int16_t high; } cs_lqual_ranges[MAX_GPRS_CS];
+		struct {int16_t low; int16_t high; } mcs_lqual_ranges[MAX_EDGE_MCS];
 	} vty;
 
 	struct gsmtap_inst *gsmtap;

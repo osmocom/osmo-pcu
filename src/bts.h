@@ -108,9 +108,6 @@ struct gprs_rlcmac_bts {
 
 	uint8_t si13[GSM_MACBLOCK_LEN];
 	bool si13_is_set;
-	/* Link quality range for each UL (M)CS. Below or above, next/prev (M)CS is selected. */
-	struct {int16_t low; int16_t high; } cs_lqual_ranges[MAX_GPRS_CS];
-	struct {int16_t low; int16_t high; } mcs_lqual_ranges[MAX_EDGE_MCS];
 	uint16_t ws_base;
 	uint16_t ws_pdch; /* increase WS by this value per PDCH */
 

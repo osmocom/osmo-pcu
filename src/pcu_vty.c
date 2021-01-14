@@ -150,31 +150,31 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " no cs downgrade-threshold%s", VTY_NEWLINE);
 
 	vty_out(vty, " cs link-quality-ranges cs1 %d cs2 %d %d cs3 %d %d cs4 %d%s",
-		bts->cs_lqual_ranges[0].high,
-		bts->cs_lqual_ranges[1].low,
-		bts->cs_lqual_ranges[1].high,
-		bts->cs_lqual_ranges[2].low,
-		bts->cs_lqual_ranges[2].high,
-		bts->cs_lqual_ranges[3].low,
+		the_pcu->vty.cs_lqual_ranges[0].high,
+		the_pcu->vty.cs_lqual_ranges[1].low,
+		the_pcu->vty.cs_lqual_ranges[1].high,
+		the_pcu->vty.cs_lqual_ranges[2].low,
+		the_pcu->vty.cs_lqual_ranges[2].high,
+		the_pcu->vty.cs_lqual_ranges[3].low,
 		VTY_NEWLINE);
 
 	vty_out(vty, " mcs link-quality-ranges mcs1 %d mcs2 %d %d mcs3 %d %d mcs4 %d %d mcs5 %d %d mcs6 %d %d mcs7 %d %d mcs8 %d %d mcs9 %d%s",
-		bts->mcs_lqual_ranges[0].high,
-		bts->mcs_lqual_ranges[1].low,
-		bts->mcs_lqual_ranges[1].high,
-		bts->mcs_lqual_ranges[2].low,
-		bts->mcs_lqual_ranges[2].high,
-		bts->mcs_lqual_ranges[3].low,
-		bts->mcs_lqual_ranges[3].high,
-		bts->mcs_lqual_ranges[4].low,
-		bts->mcs_lqual_ranges[4].high,
-		bts->mcs_lqual_ranges[5].low,
-		bts->mcs_lqual_ranges[5].high,
-		bts->mcs_lqual_ranges[6].low,
-		bts->mcs_lqual_ranges[6].high,
-		bts->mcs_lqual_ranges[7].low,
-		bts->mcs_lqual_ranges[7].high,
-		bts->mcs_lqual_ranges[8].low,
+		the_pcu->vty.mcs_lqual_ranges[0].high,
+		the_pcu->vty.mcs_lqual_ranges[1].low,
+		the_pcu->vty.mcs_lqual_ranges[1].high,
+		the_pcu->vty.mcs_lqual_ranges[2].low,
+		the_pcu->vty.mcs_lqual_ranges[2].high,
+		the_pcu->vty.mcs_lqual_ranges[3].low,
+		the_pcu->vty.mcs_lqual_ranges[3].high,
+		the_pcu->vty.mcs_lqual_ranges[4].low,
+		the_pcu->vty.mcs_lqual_ranges[4].high,
+		the_pcu->vty.mcs_lqual_ranges[5].low,
+		the_pcu->vty.mcs_lqual_ranges[5].high,
+		the_pcu->vty.mcs_lqual_ranges[6].low,
+		the_pcu->vty.mcs_lqual_ranges[6].high,
+		the_pcu->vty.mcs_lqual_ranges[7].low,
+		the_pcu->vty.mcs_lqual_ranges[7].high,
+		the_pcu->vty.mcs_lqual_ranges[8].low,
 		VTY_NEWLINE);
 
 	if (the_pcu->vty.force_initial_mcs) {
@@ -977,8 +977,6 @@ DEFUN_ATTR(cfg_pcu_cs_lqual_ranges,
 	   "CS-4 low (dB)\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
 	uint8_t cs1_high = atoi(argv[0]);
 	uint8_t cs2_low = atoi(argv[1]);
 	uint8_t cs2_high = atoi(argv[2]);
@@ -986,12 +984,12 @@ DEFUN_ATTR(cfg_pcu_cs_lqual_ranges,
 	uint8_t cs3_high = atoi(argv[4]);
 	uint8_t cs4_low = atoi(argv[5]);
 
-	bts->cs_lqual_ranges[0].high = cs1_high;
-	bts->cs_lqual_ranges[1].low  = cs2_low;
-	bts->cs_lqual_ranges[1].high = cs2_high;
-	bts->cs_lqual_ranges[2].low  = cs3_low;
-	bts->cs_lqual_ranges[2].high = cs3_high;
-	bts->cs_lqual_ranges[3].low  = cs4_low;
+	the_pcu->vty.cs_lqual_ranges[0].high = cs1_high;
+	the_pcu->vty.cs_lqual_ranges[1].low  = cs2_low;
+	the_pcu->vty.cs_lqual_ranges[1].high = cs2_high;
+	the_pcu->vty.cs_lqual_ranges[2].low  = cs3_low;
+	the_pcu->vty.cs_lqual_ranges[2].high = cs3_high;
+	the_pcu->vty.cs_lqual_ranges[3].low  = cs4_low;
 
 	return CMD_SUCCESS;
 }
@@ -1027,24 +1025,22 @@ DEFUN_ATTR(cfg_pcu_mcs_lqual_ranges,
 	   "MCS-9 low (dB)\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->mcs_lqual_ranges[0].high = atoi(argv[0]);
-	bts->mcs_lqual_ranges[1].low  = atoi(argv[1]);
-	bts->mcs_lqual_ranges[1].high = atoi(argv[2]);
-	bts->mcs_lqual_ranges[2].low  = atoi(argv[3]);
-	bts->mcs_lqual_ranges[2].high = atoi(argv[4]);
-	bts->mcs_lqual_ranges[3].low  = atoi(argv[5]);
-	bts->mcs_lqual_ranges[3].high  = atoi(argv[6]);
-	bts->mcs_lqual_ranges[4].low  = atoi(argv[7]);
-	bts->mcs_lqual_ranges[4].high  = atoi(argv[8]);
-	bts->mcs_lqual_ranges[5].low  = atoi(argv[9]);
-	bts->mcs_lqual_ranges[5].high  = atoi(argv[10]);
-	bts->mcs_lqual_ranges[6].low  = atoi(argv[11]);
-	bts->mcs_lqual_ranges[6].high  = atoi(argv[12]);
-	bts->mcs_lqual_ranges[7].low  = atoi(argv[13]);
-	bts->mcs_lqual_ranges[7].high  = atoi(argv[14]);
-	bts->mcs_lqual_ranges[8].low  = atoi(argv[15]);
+	the_pcu->vty.mcs_lqual_ranges[0].high = atoi(argv[0]);
+	the_pcu->vty.mcs_lqual_ranges[1].low  = atoi(argv[1]);
+	the_pcu->vty.mcs_lqual_ranges[1].high = atoi(argv[2]);
+	the_pcu->vty.mcs_lqual_ranges[2].low  = atoi(argv[3]);
+	the_pcu->vty.mcs_lqual_ranges[2].high = atoi(argv[4]);
+	the_pcu->vty.mcs_lqual_ranges[3].low  = atoi(argv[5]);
+	the_pcu->vty.mcs_lqual_ranges[3].high  = atoi(argv[6]);
+	the_pcu->vty.mcs_lqual_ranges[4].low  = atoi(argv[7]);
+	the_pcu->vty.mcs_lqual_ranges[4].high  = atoi(argv[8]);
+	the_pcu->vty.mcs_lqual_ranges[5].low  = atoi(argv[9]);
+	the_pcu->vty.mcs_lqual_ranges[5].high  = atoi(argv[10]);
+	the_pcu->vty.mcs_lqual_ranges[6].low  = atoi(argv[11]);
+	the_pcu->vty.mcs_lqual_ranges[6].high  = atoi(argv[12]);
+	the_pcu->vty.mcs_lqual_ranges[7].low  = atoi(argv[13]);
+	the_pcu->vty.mcs_lqual_ranges[7].high  = atoi(argv[14]);
+	the_pcu->vty.mcs_lqual_ranges[8].low  = atoi(argv[15]);
 
 	return CMD_SUCCESS;
 }

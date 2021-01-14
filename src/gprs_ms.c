@@ -673,7 +673,6 @@ enum CodingScheme ms_max_cs_dl(const struct GprsMs *ms)
 
 void ms_update_cs_ul(struct GprsMs *ms, const struct pcu_l1_meas *meas)
 {
-	struct gprs_rlcmac_bts *bts_;
 	enum CodingScheme max_cs_ul = ms_max_cs_ul(ms);
 
 	int old_link_qual;
@@ -681,8 +680,6 @@ void ms_update_cs_ul(struct GprsMs *ms, const struct pcu_l1_meas *meas)
 	int high;
 	enum CodingScheme new_cs_ul = ms->current_cs_ul;
 	uint8_t current_cs = mcs_chan_code(ms->current_cs_ul);
-
-	bts_ = bts_data(ms->bts);
 
 	if (!max_cs_ul) {
 		LOGP(DRLCMACMEAS, LOGL_ERROR,
@@ -708,13 +705,13 @@ void ms_update_cs_ul(struct GprsMs *ms, const struct pcu_l1_meas *meas)
 	if (mcs_is_gprs(ms->current_cs_ul)) {
 		if (current_cs >= MAX_GPRS_CS)
 			current_cs = MAX_GPRS_CS - 1;
-		low  = bts_->cs_lqual_ranges[current_cs].low;
-		high = bts_->cs_lqual_ranges[current_cs].high;
+		low  = the_pcu->vty.cs_lqual_ranges[current_cs].low;
+		high = the_pcu->vty.cs_lqual_ranges[current_cs].high;
 	} else if (mcs_is_edge(ms->current_cs_ul)) {
 		if (current_cs >= MAX_EDGE_MCS)
 			current_cs = MAX_EDGE_MCS - 1;
-		low  = bts_->mcs_lqual_ranges[current_cs].low;
-		high = bts_->mcs_lqual_ranges[current_cs].high;
+		low  = the_pcu->vty.mcs_lqual_ranges[current_cs].low;
+		high = the_pcu->vty.mcs_lqual_ranges[current_cs].high;
 	} else {
 		LOGP(DRLCMACMEAS, LOGL_ERROR,
 		     "Unable to update UL (M)CS because it's neither GPRS nor EDGE: %s\n",
