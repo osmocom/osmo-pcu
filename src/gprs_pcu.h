@@ -79,6 +79,8 @@ struct gprs_pcu {
 		uint32_t fc_ms_leak_rate;
 		bool force_initial_cs;	/* false=use from BTS true=use from VTY */
 		bool force_initial_mcs;	/* false=use from BTS true=use from VTY */
+		uint8_t initial_cs_dl, initial_cs_ul;
+		uint8_t initial_mcs_dl, initial_mcs_ul;
 		uint8_t max_cs_dl, max_cs_ul;
 		uint8_t max_mcs_dl, max_mcs_ul;
 		uint8_t force_two_phase;
@@ -122,5 +124,7 @@ extern struct gprs_pcu *the_pcu;
 
 struct gprs_pcu *gprs_pcu_alloc(void *ctx);
 
+void gprs_pcu_set_initial_cs(struct gprs_pcu *pcu, uint8_t cs_dl, uint8_t cs_ul);
+void gprs_pcu_set_initial_mcs(struct gprs_pcu *pcu, uint8_t mcs_dl, uint8_t mcs_ul);
 void gprs_pcu_set_max_cs(struct gprs_pcu *pcu, uint8_t cs_dl, uint8_t cs_ul);
 void gprs_pcu_set_max_mcs(struct gprs_pcu *pcu, uint8_t mcs_dl, uint8_t mcs_ul);

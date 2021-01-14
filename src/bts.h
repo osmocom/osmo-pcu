@@ -87,6 +87,10 @@ struct gprs_rlcmac_bts {
 	uint8_t bsic;
 	uint8_t cs_mask; /* Allowed CS mask from BTS */
 	uint16_t mcs_mask;  /* Allowed MCS mask from BTS */
+	struct { /* information stored from last received PCUIF info_ind message */
+		uint8_t initial_cs;
+		uint8_t initial_mcs;
+	} pcuif_info_ind;
 	uint8_t initial_cs_dl, initial_cs_ul;
 	uint8_t initial_mcs_dl, initial_mcs_ul;
 	/* Timer defintions */
@@ -399,6 +403,8 @@ extern "C" {
 	struct gprs_rlcmac_bts *bts_main_data();
 	struct rate_ctr_group *bts_main_data_stats();
 	struct osmo_stat_item_group *bts_main_data_stat_items();
+	void bts_recalc_initial_cs(struct gprs_rlcmac_bts *bts);
+	void bts_recalc_initial_mcs(struct gprs_rlcmac_bts *bts);
 	void bts_recalc_max_cs(struct gprs_rlcmac_bts *bts);
 	void bts_recalc_max_mcs(struct gprs_rlcmac_bts *bts);
 	struct GprsMs *bts_ms_by_imsi(struct BTS *bts, const char *imsi);

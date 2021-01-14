@@ -103,6 +103,24 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	return pcu;
 }
 
+void gprs_pcu_set_initial_cs(struct gprs_pcu *pcu, uint8_t cs_dl, uint8_t cs_ul)
+{
+	the_pcu->vty.initial_cs_dl = cs_dl;
+	the_pcu->vty.initial_cs_ul = cs_ul;
+
+	/*TODO: once we support multiple bts, foreach(bts) apply */
+	struct gprs_rlcmac_bts *bts = bts_data(pcu->bts);
+	bts_recalc_initial_cs(bts);
+}
+void gprs_pcu_set_initial_mcs(struct gprs_pcu *pcu, uint8_t mcs_dl, uint8_t mcs_ul)
+{
+	the_pcu->vty.initial_mcs_dl = mcs_dl;
+	the_pcu->vty.initial_mcs_ul = mcs_ul;
+
+	/*TODO: once we support multiple bts, foreach(bts) apply */
+	struct gprs_rlcmac_bts *bts = bts_data(pcu->bts);
+	bts_recalc_initial_mcs(bts);
+}
 
 void gprs_pcu_set_max_cs(struct gprs_pcu *pcu, uint8_t cs_dl, uint8_t cs_ul)
 {

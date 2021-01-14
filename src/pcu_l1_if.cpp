@@ -631,37 +631,13 @@ bssgp_failed:
 
 	LOGP(DL1IF, LOGL_DEBUG, " initial_cs=%u%s\n", info_ind->initial_cs,
 	     the_pcu->vty.force_initial_cs ? " (VTY forced, ignoring)" : "");
-	if (!the_pcu->vty.force_initial_cs) {
-		if (info_ind->initial_cs > bts->bts->max_cs_dl()) {
-			LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_cs_dl to %d\n", bts->bts->max_cs_dl());
-			bts->initial_cs_dl = bts->bts->max_cs_dl();
-		} else {
-			bts->initial_cs_dl =  info_ind->initial_cs;
-		}
-		if (info_ind->initial_cs > bts->bts->max_cs_ul()) {
-			LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_cs_ul to %d\n", bts->bts->max_cs_ul());
-			bts->initial_cs_ul = bts->bts->max_cs_ul();
-		} else {
-			bts->initial_cs_ul =  info_ind->initial_cs;
-		}
-	}
+	bts->pcuif_info_ind.initial_cs = info_ind->initial_cs;
+	bts_recalc_initial_cs(bts);
 
 	LOGP(DL1IF, LOGL_DEBUG, " initial_mcs=%u%s\n", info_ind->initial_mcs,
 	     the_pcu->vty.force_initial_mcs ? " (VTY forced, ignoring)" : "");
-	if (!the_pcu->vty.force_initial_mcs) {
-		if (info_ind->initial_mcs > bts->bts->max_mcs_dl()) {
-			LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_mcs_dl to %d\n", bts->bts->max_mcs_dl());
-			bts->initial_mcs_dl = bts->bts->max_mcs_dl();
-		} else {
-			bts->initial_mcs_dl =  info_ind->initial_mcs;
-		}
-		if (info_ind->initial_mcs > bts->bts->max_mcs_ul()) {
-			LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_mcs_ul to %d\n", bts->bts->max_mcs_ul());
-			bts->initial_mcs_ul = bts->bts->max_mcs_ul();
-		} else {
-			bts->initial_mcs_ul =  info_ind->initial_mcs;
-		}
-	}
+	bts->pcuif_info_ind.initial_mcs = info_ind->initial_mcs;
+	bts_recalc_initial_mcs(bts);
 
 	pcu = gprs_bssgp_init(
 			bts,

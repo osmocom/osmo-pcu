@@ -1172,6 +1172,62 @@ void bts_trx_unreserve_slots(struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_d
 			trx->pdch[i].unreserve(dir);
 }
 
+void bts_recalc_initial_cs(struct gprs_rlcmac_bts *bts)
+{
+	uint8_t max_cs_dl, max_cs_ul;
+
+	if (the_pcu->vty.force_initial_cs) {
+		bts->initial_cs_dl = the_pcu->vty.initial_cs_dl;
+		bts->initial_cs_ul = the_pcu->vty.initial_cs_ul;
+		return;
+	}
+
+	max_cs_dl = bts->bts->max_cs_dl();
+	if (bts->pcuif_info_ind.initial_cs > max_cs_dl) {
+		LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_cs_dl to %d\n", max_cs_dl);
+		bts->initial_cs_dl = max_cs_dl;
+	} else {
+		bts->initial_cs_dl = bts->pcuif_info_ind.initial_cs;
+	}
+	if (bts->initial_cs_dl == 0)
+		bts->initial_cs_dl = 1; /* CS1 Must always be supported */
+
+	max_cs_ul = bts->bts->max_cs_ul();
+	if (bts->pcuif_info_ind.initial_cs > max_cs_ul) {
+		LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_cs_ul to %d\n", max_cs_ul);
+		bts->initial_cs_ul = max_cs_ul;
+	} else {
+		bts->initial_cs_ul = bts->pcuif_info_ind.initial_cs;
+	}
+	if (bts->initial_cs_ul == 0)
+		bts->initial_cs_ul = 1; /* CS1 Must always be supported */
+}
+void bts_recalc_initial_mcs(struct gprs_rlcmac_bts *bts)
+{
+	uint8_t max_mcs_dl, max_mcs_ul;
+
+	if (the_pcu->vty.force_initial_mcs) {
+		bts->initial_mcs_dl = the_pcu->vty.initial_mcs_dl;
+		bts->initial_mcs_ul = the_pcu->vty.initial_mcs_ul;
+		return;
+	}
+
+	max_mcs_dl = bts->bts->max_mcs_dl();
+	if (bts->pcuif_info_ind.initial_mcs > max_mcs_dl) {
+		LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_mcs_dl to %d\n", max_mcs_dl);
+		bts->initial_mcs_dl = max_mcs_dl;
+	} else {
+		bts->initial_mcs_dl = bts->pcuif_info_ind.initial_mcs;
+	}
+	max_mcs_ul = bts->bts->max_mcs_ul();
+	if (bts->pcuif_info_ind.initial_mcs > max_mcs_ul) {
+		LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_mcs_ul to %d\n", max_mcs_ul);
+		bts->initial_mcs_ul = max_mcs_ul;
+	} else {
+		bts->initial_mcs_ul = bts->pcuif_info_ind.initial_mcs;
+	}
+}
+
 void bts_recalc_max_cs(struct gprs_rlcmac_bts *bts)
 {
 	int i;

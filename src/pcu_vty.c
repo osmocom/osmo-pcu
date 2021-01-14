@@ -102,7 +102,6 @@ static struct cmd_node pcu_node = {
 
 static int config_write_pcu(struct vty *vty)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
 	unsigned int i;
 
 	vty_out(vty, "pcu%s", VTY_NEWLINE);
@@ -121,12 +120,12 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " flow-control force-ms-leak-rate %d%s",
 			the_pcu->vty.fc_ms_leak_rate, VTY_NEWLINE);
 	if (the_pcu->vty.force_initial_cs) {
-		if (bts->initial_cs_ul == bts->initial_cs_dl)
-			vty_out(vty, " cs %d%s", bts->initial_cs_dl,
+		if (the_pcu->vty.initial_cs_ul == the_pcu->vty.initial_cs_dl)
+			vty_out(vty, " cs %d%s", the_pcu->vty.initial_cs_dl,
 				VTY_NEWLINE);
 		else
-			vty_out(vty, " cs %d %d%s", bts->initial_cs_dl,
-				bts->initial_cs_ul, VTY_NEWLINE);
+			vty_out(vty, " cs %d %d%s", the_pcu->vty.initial_cs_dl,
+				the_pcu->vty.initial_cs_ul, VTY_NEWLINE);
 	}
 	if (the_pcu->vty.max_cs_dl && the_pcu->vty.max_cs_ul) {
 		if (the_pcu->vty.max_cs_ul == the_pcu->vty.max_cs_dl)
@@ -178,12 +177,12 @@ static int config_write_pcu(struct vty *vty)
 		VTY_NEWLINE);
 
 	if (the_pcu->vty.force_initial_mcs) {
-		if (bts->initial_mcs_ul == bts->initial_mcs_dl)
-			vty_out(vty, " mcs %d%s", bts->initial_mcs_dl,
+		if (the_pcu->vty.initial_mcs_ul == the_pcu->vty.initial_mcs_dl)
+			vty_out(vty, " mcs %d%s", the_pcu->vty.initial_mcs_dl,
 				VTY_NEWLINE);
 		else
-			vty_out(vty, " mcs %d %d%s", bts->initial_mcs_dl,
-				bts->initial_mcs_ul, VTY_NEWLINE);
+			vty_out(vty, " mcs %d %d%s", the_pcu->vty.initial_mcs_dl,
+				the_pcu->vty.initial_mcs_ul, VTY_NEWLINE);
 	}
 
 	if (the_pcu->vty.max_mcs_dl && the_pcu->vty.max_mcs_ul) {
@@ -411,16 +410,14 @@ DEFUN_ATTR(cfg_pcu_cs,
 	   "Use a different initial CS value for the uplink",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-	uint8_t cs = atoi(argv[0]);
-
-	the_pcu->vty.force_initial_cs = true;
-	bts->initial_cs_dl = cs;
+	uint8_t cs_dl, cs_ul;
+	cs_dl = atoi(argv[0]);
 	if (argc > 1)
-		bts->initial_cs_ul = atoi(argv[1]);
+		cs_ul = atoi(argv[1]);
 	else
-		bts->initial_cs_ul = cs;
-
+		cs_ul = cs_dl;
+	the_pcu->vty.force_initial_cs = true;
+	gprs_pcu_set_initial_cs(the_pcu, cs_dl, cs_ul);
 	return CMD_SUCCESS;
 }
 
@@ -431,7 +428,7 @@ DEFUN_ATTR(cfg_pcu_no_cs,
 	   CMD_ATTR_IMMEDIATE)
 {
 	the_pcu->vty.force_initial_cs = false;
-
+	gprs_pcu_set_initial_cs(the_pcu, 0, 0);
 	return CMD_SUCCESS;
 }
 
@@ -476,16 +473,14 @@ DEFUN_ATTR(cfg_pcu_mcs,
 	   "Use a different initial MCS value for the uplink",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-	uint8_t mcs = atoi(argv[0]);
-
-	the_pcu->vty.force_initial_mcs = true;
-	bts->initial_mcs_dl = mcs;
+	uint8_t mcs_dl, mcs_ul;
+	mcs_dl = atoi(argv[0]);
 	if (argc > 1)
-		bts->initial_mcs_ul = atoi(argv[1]);
+		mcs_ul = atoi(argv[1]);
 	else
-		bts->initial_mcs_ul = mcs;
-
+		mcs_ul = mcs_dl;
+	the_pcu->vty.force_initial_mcs = true;
+	gprs_pcu_set_initial_mcs(the_pcu, mcs_dl, mcs_ul);
 	return CMD_SUCCESS;
 }
 
@@ -496,7 +491,7 @@ DEFUN_ATTR(cfg_pcu_no_mcs,
 	   CMD_ATTR_IMMEDIATE)
 {
 	the_pcu->vty.force_initial_mcs = false;
-
+	gprs_pcu_set_initial_mcs(the_pcu, 0, 0);
 	return CMD_SUCCESS;
 }
 
