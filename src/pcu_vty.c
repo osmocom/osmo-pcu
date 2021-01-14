@@ -136,9 +136,9 @@ static int config_write_pcu(struct vty *vty)
 			vty_out(vty, " cs max %d %d%s", the_pcu->vty.max_cs_dl,
 				the_pcu->vty.max_cs_ul, VTY_NEWLINE);
 	}
-	if (bts->cs_adj_enabled)
+	if (the_pcu->vty.cs_adj_enabled)
 		vty_out(vty, " cs threshold %d %d%s",
-			bts->cs_adj_lower_limit, bts->cs_adj_upper_limit,
+			the_pcu->vty.cs_adj_lower_limit, the_pcu->vty.cs_adj_upper_limit,
 			VTY_NEWLINE);
 	else
 		vty_out(vty, " no cs threshold%s", VTY_NEWLINE);
@@ -910,8 +910,6 @@ DEFUN_ATTR(cfg_pcu_cs_err_limits,
 	   CS_STR CS_ERR_LIMITS_STR "lower limit in %\n" "upper limit in %\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
 	uint8_t lower_limit = atoi(argv[0]);
 	uint8_t upper_limit = atoi(argv[1]);
 
@@ -922,9 +920,9 @@ DEFUN_ATTR(cfg_pcu_cs_err_limits,
 		return CMD_WARNING;
 	}
 
-	bts->cs_adj_enabled = 1;
-	bts->cs_adj_upper_limit = upper_limit;
-	bts->cs_adj_lower_limit = lower_limit;
+	the_pcu->vty.cs_adj_enabled = true;
+	the_pcu->vty.cs_adj_upper_limit = upper_limit;
+	the_pcu->vty.cs_adj_lower_limit = lower_limit;
 
 	return CMD_SUCCESS;
 }
@@ -935,11 +933,9 @@ DEFUN_ATTR(cfg_pcu_no_cs_err_limits,
 	   NO_STR CS_STR CS_ERR_LIMITS_STR,
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->cs_adj_enabled = 0;
-	bts->cs_adj_upper_limit = 100;
-	bts->cs_adj_lower_limit = 0;
+	the_pcu->vty.cs_adj_enabled = false;
+	the_pcu->vty.cs_adj_upper_limit = 100;
+	the_pcu->vty.cs_adj_lower_limit = 0;
 
 	return CMD_SUCCESS;
 }

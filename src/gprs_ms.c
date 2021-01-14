@@ -571,12 +571,9 @@ void ms_set_egprs_ms_class(struct GprsMs *ms, uint8_t ms_class_)
 
 void ms_update_error_rate(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, int error_rate)
 {
-	struct gprs_rlcmac_bts *bts_;
 	int64_t now;
 	enum CodingScheme max_cs_dl = ms_max_cs_dl(ms);
-
 	OSMO_ASSERT(max_cs_dl);
-	bts_ = bts_data(ms->bts);
 
 	if (error_rate < 0)
 		return;
@@ -588,7 +585,7 @@ void ms_update_error_rate(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, int er
 
 	ms->nack_rate_dl = error_rate;
 
-	if (error_rate > bts_->cs_adj_upper_limit) {
+	if (error_rate > the_pcu->vty.cs_adj_upper_limit) {
 		if (mcs_chan_code(ms->current_cs_dl) > 0) {
 			mcs_dec_kind(&ms->current_cs_dl, ms_mode(ms));
 			LOGP(DRLCMACDL, LOGL_INFO,
@@ -597,7 +594,7 @@ void ms_update_error_rate(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, int er
 				ms_imsi(ms), error_rate, mcs_name(ms->current_cs_dl));
 			ms->last_cs_not_low = now;
 		}
-	} else if (error_rate < bts_->cs_adj_lower_limit) {
+	} else if (error_rate < the_pcu->vty.cs_adj_lower_limit) {
 		if (ms->current_cs_dl < max_cs_dl) {
 		       if (now - ms->last_cs_not_low > 1000) {
 			       mcs_inc_kind(&ms->current_cs_dl, ms_mode(ms));
@@ -801,7 +798,7 @@ enum CodingScheme ms_current_cs_dl(const struct GprsMs *ms)
 		return cs;
 
 	/* RF conditions are good, don't reduce */
-	if (ms->nack_rate_dl < bts_data(ms->bts)->cs_adj_lower_limit)
+	if (ms->nack_rate_dl < the_pcu->vty.cs_adj_lower_limit)
 		return cs;
 
 	/* The throughput would probably be better if the CS level was reduced */

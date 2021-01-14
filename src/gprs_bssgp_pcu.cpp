@@ -755,7 +755,7 @@ static enum CodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
 	}
 
 	if (mcs_any) {
-		if (!bts->cs_adj_enabled) {
+		if (!the_pcu->vty.cs_adj_enabled) {
 			if (bts->initial_mcs_dl) {
 				num = bts->initial_mcs_dl;
 			} else {
@@ -771,7 +771,7 @@ static enum CodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
 			return mcs_get_egprs_by_num(num);
 	}
 
-	if (!bts->cs_adj_enabled) {
+	if (!the_pcu->vty.cs_adj_enabled) {
 		if (bts->initial_cs_dl) {
 			num = bts->initial_cs_dl;
 		} else {

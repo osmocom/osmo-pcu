@@ -1132,7 +1132,7 @@ int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 
 	error_rate = analyse_errors(show_rbb, behind_last_bsn, &ana_res);
 
-	if (bts_data()->cs_adj_enabled && ms())
+	if (the_pcu->vty.cs_adj_enabled && ms())
 		ms_update_error_rate(ms(), this, error_rate);
 
 	m_window.update(bts, rbb, first_bsn, &lost, &received);
@@ -1187,7 +1187,7 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 
 	error_rate = analyse_errors(show_rbb, ssn, &ana_res);
 
-	if (bts_data()->cs_adj_enabled && ms())
+	if (the_pcu->vty.cs_adj_enabled && ms())
 		ms_update_error_rate(ms(), this, error_rate);
 
 	m_window.update(bts, show_rbb, ssn,

@@ -79,6 +79,9 @@ struct gprs_pcu {
 		uint8_t alpha, gamma;
 		bool dl_tbf_preemptive_retransmission;
 		enum egprs_arq_type dl_arq_type; /* EGPRS_ARQ1 to support resegmentation in DL, EGPRS_ARQ2 for no reseg */
+		bool cs_adj_enabled; /* whether cs_adj_{upper,lower}_limit are used to adjust DL CS */
+		uint8_t cs_adj_upper_limit; /* downgrade DL CS if error rate above its value */
+		uint8_t cs_adj_lower_limit; /* upgrade DL CS if error rate below its value */
 	} vty;
 
 	struct gsmtap_inst *gsmtap;

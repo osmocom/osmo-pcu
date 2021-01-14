@@ -55,6 +55,9 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	/* By default resegmentation is supported in DL can also be configured
 	 * through VTY */
 	pcu->vty.dl_arq_type = EGPRS_ARQ1;
+	pcu->vty.cs_adj_enabled = true;
+	pcu->vty.cs_adj_upper_limit = 33; /* Decrease CS if the error rate is above */
+	pcu->vty.cs_adj_lower_limit = 10; /* Increase CS if the error rate is below */
 
 	pcu->T_defs = T_defs_pcu;
 	osmo_tdefs_reset(pcu->T_defs);

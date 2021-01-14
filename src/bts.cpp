@@ -201,9 +201,6 @@ static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 	bts->n3103 = 4;
 	bts->n3105 = 8;
 	bts->si13_is_set = false;
-	bts->cs_adj_enabled = 1;
-	bts->cs_adj_upper_limit = 33; /* Decrease CS if the error rate is above */
-	bts->cs_adj_lower_limit = 10; /* Increase CS if the error rate is below */
 	/* CS-1 to CS-4 */
 	bts->cs_lqual_ranges[0].low = -256;
 	bts->cs_lqual_ranges[0].high = 6;
