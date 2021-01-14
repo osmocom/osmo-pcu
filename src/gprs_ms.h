@@ -49,7 +49,7 @@ enum ms_counter_id {
 	MS_CTR_DL_CTRL_MSG_SCHED,
 };
 
-struct BTS;
+struct gprs_rlcmac_bts;
 struct gprs_rlcmac_trx;
 struct GprsMs;
 
@@ -63,7 +63,7 @@ struct GprsMs {
 	struct gpr_ms_callback cb;
 	bool app_info_pending;
 
-	struct BTS *bts;
+	struct gprs_rlcmac_bts *bts;
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	struct llist_head old_tbfs; /* list of gprs_rlcmac_tbf */
@@ -102,7 +102,7 @@ struct GprsMs {
 	struct rate_ctr_group *ctrs;
 };
 
-struct GprsMs *ms_alloc(struct BTS *bts, uint32_t tlli);
+struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli);
 
 int ms_first_common_ts(const struct GprsMs *ms);
 void ms_set_reserved_slots(struct GprsMs *ms, struct gprs_rlcmac_trx *trx,

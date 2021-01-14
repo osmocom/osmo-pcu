@@ -127,7 +127,7 @@ static uint16_t bitnum_to_bsn(int bitnum, uint16_t ssn)
 	return (ssn - 1 - bitnum);
 }
 
-void gprs_rlc_dl_window::update(BTS *bts, const struct bitvec *rbb,
+void gprs_rlc_dl_window::update(struct gprs_rlcmac_bts *bts, const struct bitvec *rbb,
 			uint16_t first_bsn, uint16_t *lost,
 			uint16_t *received)
 {
@@ -154,13 +154,13 @@ void gprs_rlc_dl_window::update(BTS *bts, const struct bitvec *rbb,
 		} else {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- got NACK for BSN=%d\n", bsn);
 			m_v_b.mark_nacked(bsn);
-			bts->do_rate_ctr_inc(CTR_RLC_NACKED);
+			bts_do_rate_ctr_inc(bts, CTR_RLC_NACKED);
 			*lost += 1;
 		}
 	}
 }
 
-void gprs_rlc_dl_window::update(BTS *bts, char *show_rbb, uint16_t ssn,
+void gprs_rlc_dl_window::update(struct gprs_rlcmac_bts *bts, char *show_rbb, uint16_t ssn,
 			uint16_t *lost, uint16_t *received)
 {
 	/* SSN - 1 is in range V(A)..V(S)-1 */
@@ -178,7 +178,7 @@ void gprs_rlc_dl_window::update(BTS *bts, char *show_rbb, uint16_t ssn,
 		} else {
 			LOGP(DRLCMACDL, LOGL_DEBUG, "- got NACK for BSN=%d\n", bsn);
 			m_v_b.mark_nacked(bsn);
-			bts->do_rate_ctr_inc(CTR_RLC_NACKED);
+			bts_do_rate_ctr_inc(bts, CTR_RLC_NACKED);
 			*lost += 1;
 		}
 	}

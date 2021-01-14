@@ -139,7 +139,7 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 		return NULL;
 
 	talloc_set_destructor(tbf, dl_tbf_dtor);
-	new (tbf) gprs_rlcmac_dl_tbf(bts->bts, ms);
+	new (tbf) gprs_rlcmac_dl_tbf(bts, ms);
 
 	rc = tbf->setup(use_trx, single_slot);
 	/* if no resource */
@@ -169,8 +169,8 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 		}
 	}
 
-	llist_add(&tbf->list(), &bts->bts->dl_tbfs());
-	tbf->bts->do_rate_ctr_inc(CTR_TBF_DL_ALLOCATED);
+	llist_add(tbf_bts_list((struct gprs_rlcmac_tbf *)tbf), &bts->dl_tbfs);
+	bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_DL_ALLOCATED);
 
 	tbf->m_last_dl_poll_fn = -1;
 	tbf->m_last_dl_drained_fn = -1;
@@ -181,7 +181,7 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 	return tbf;
 }
 
-gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(BTS *bts_, GprsMs *ms) :
+gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms) :
 	gprs_rlcmac_tbf(bts_, ms, GPRS_RLCMAC_DL_TBF),
 	m_tx_counter(0),
 	m_wait_confirm(0),
@@ -289,10 +289,10 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 	GprsMs *ms, *ms_old;
 
 	/* check for existing TBF */
-	ms = bts->bts->ms_store().get_ms(tlli, tlli_old, imsi);
+	ms = bts_ms_store(bts)->get_ms(tlli, tlli_old, imsi);
 
 	if (ms && strlen(ms_imsi(ms)) == 0) {
-		ms_old = bts->bts->ms_store().get_ms(0, 0, imsi);
+		ms_old = bts_ms_store(bts)->get_ms(0, 0, imsi);
 		if (ms_old && ms_old != ms) {
 			/* The TLLI has changed (RAU), so there are two MS
 			 * objects for the same MS */
@@ -317,7 +317,7 @@ int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
 	}
 
 	if (!ms)
-		ms = bts->bts->ms_alloc(ms_class, egprs_ms_class);
+		ms = bts_alloc_ms(bts, ms_class, egprs_ms_class);
 	ms_set_imsi(ms, imsi);
 	ms_confirm_tlli(ms, tlli);
 	if (!ms_ms_class(ms) && ms_class) {
@@ -391,12 +391,12 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 				break;
 		}
 
-		bts->do_rate_ctr_inc(CTR_LLC_FRAME_TIMEDOUT);
+		bts_do_rate_ctr_inc(bts, CTR_LLC_FRAME_TIMEDOUT);
 drop_frame:
 		frames++;
 		octets += msg->len;
 		msgb_free(msg);
-		bts->do_rate_ctr_inc(CTR_LLC_FRAME_DROPPED);
+		bts_do_rate_ctr_inc(bts, CTR_LLC_FRAME_DROPPED);
 		continue;
 	}
 
@@ -463,9 +463,9 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		 * MCS1-4, because USF for GPRS-only MS will be sent */
 		force_cs = ms_current_cs_dl(m_ms);
 		if (force_cs > MCS4) {
-			force_cs = bts->cs_dl_is_supported(MCS4) ? MCS4 :
-				   bts->cs_dl_is_supported(MCS3) ? MCS3 :
-				   bts->cs_dl_is_supported(MCS2) ? MCS2 :
+			force_cs = bts_cs_dl_is_supported(bts, MCS4) ? MCS4 :
+				   bts_cs_dl_is_supported(bts, MCS3) ? MCS3 :
+				   bts_cs_dl_is_supported(bts, MCS2) ? MCS2 :
 				   MCS1;
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Force downgrading DL %s -> %s due to USF for GPRS-only MS\n",
@@ -515,7 +515,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		LOGPTBFDL(this, LOGL_DEBUG, "Resending BSN %d\n", bsn);
 		/* re-send block with negative aknowlegement */
 		m_window.m_v_b.mark_unacked(bsn);
-		bts->do_rate_ctr_inc(CTR_RLC_RESENT);
+		bts_do_rate_ctr_inc(bts, CTR_RLC_RESENT);
 	} else if (state_is(GPRS_RLCMAC_FINISHED)) {
 		/* If the TBF is in finished, we already sent all packages at least once.
 		 * If any packages could have been sent (because of unacked) it should have
@@ -523,7 +523,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		LOGPTBFDL(this, LOGL_DEBUG,
 			  "Restarting at BSN %d, because all blocks have been transmitted.\n",
 			  m_window.v_a());
-		bts->do_rate_ctr_inc(CTR_RLC_RESTARTED);
+		bts_do_rate_ctr_inc(bts, CTR_RLC_RESTARTED);
 		if (restart_bsn_cycle())
 			return take_next_bsn(fn, previous_bsn, req_mcs_kind, may_combine);
 	} else if (dl_window_stalled()) {
@@ -532,7 +532,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		LOGPTBFDL(this, LOGL_NOTICE,
 			  "Restarting at BSN %d, because the window is stalled.\n",
 			  m_window.v_a());
-		bts->do_rate_ctr_inc(CTR_RLC_STALLED);
+		bts_do_rate_ctr_inc(bts, CTR_RLC_STALLED);
 		if (restart_bsn_cycle())
 			return take_next_bsn(fn, previous_bsn, req_mcs_kind, may_combine);
 	} else if (have_data()) {
@@ -551,7 +551,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		LOGPTBFDL(this, LOGL_DEBUG,
 			  "Restarting at BSN %d, because all blocks have been transmitted (FLOW).\n",
 			  m_window.v_a());
-		bts->do_rate_ctr_inc(CTR_RLC_RESTARTED);
+		bts_do_rate_ctr_inc(bts, CTR_RLC_RESTARTED);
 		if (restart_bsn_cycle())
 			return take_next_bsn(fn, previous_bsn, req_mcs_kind, may_combine);
 	} else {
@@ -568,8 +568,8 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		LOGPTBFDL(this, LOGL_DEBUG,
 			  "Nothing else to send, Re-transmit final block!\n");
 		bsn = m_window.v_s_mod(-1);
-		bts->do_rate_ctr_inc(CTR_RLC_FINAL_BLOCK_RESENT);
-		bts->do_rate_ctr_inc(CTR_RLC_RESENT);
+		bts_do_rate_ctr_inc(bts, CTR_RLC_FINAL_BLOCK_RESENT);
+		bts_do_rate_ctr_inc(bts, CTR_RLC_RESENT);
 	}
 
 	*may_combine = num_data_blocks(mcs_header_type(m_rlc.block(bsn)->cs_current_trans)) > 1;
@@ -628,7 +628,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 		/* send immediate assignment */
 		if ((pgroup = imsi2paging_group(imsi())) > 999)
 			LOGPTBFDL(this, LOGL_ERROR, "IMSI to paging group failed! (%s)\n", imsi());
-		bts->snd_dl_ass(this, false, pgroup);
+		bts_snd_dl_ass(bts, this, false, pgroup);
 		m_wait_confirm = 1;
 	}
 }
@@ -648,7 +648,7 @@ void gprs_rlcmac_dl_tbf::schedule_next_frame()
 	LOGPTBFDL(this, LOGL_DEBUG, "Dequeue next LLC (len=%d)\n", msg->len);
 
 	m_llc.put_frame(msg->data, msg->len);
-	bts->do_rate_ctr_inc(CTR_LLC_FRAME_SCHED);
+	bts_do_rate_ctr_inc(bts, CTR_LLC_FRAME_SCHED);
 	msgb_free(msg);
 	m_last_dl_drained_fn = -1;
 }
@@ -742,14 +742,14 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 			&m_llc, &write_offset, &num_chunks, data, is_final, &payload_written);
 
 		if (payload_written > 0)
-			bts->do_rate_ctr_add(CTR_RLC_DL_PAYLOAD_BYTES, payload_written);
+			bts_do_rate_ctr_add(bts, CTR_RLC_DL_PAYLOAD_BYTES, payload_written);
 
 		if (ar == Encoding::AR_NEED_MORE_BLOCKS)
 			break;
 
 		LOGPTBFDL(this, LOGL_DEBUG, "Complete DL frame, len=%d\n", llc_frame_length(&m_llc));
 		gprs_rlcmac_dl_bw(this, llc_frame_length(&m_llc));
-		bts->do_rate_ctr_add(CTR_LLC_DL_BYTES, llc_frame_length(&m_llc));
+		bts_do_rate_ctr_add(bts, CTR_LLC_DL_BYTES, llc_frame_length(&m_llc));
 		m_llc.reset();
 
 		if (is_final) {
@@ -1472,15 +1472,15 @@ enum egprs_rlcmac_dl_spb gprs_rlcmac_dl_tbf::get_egprs_dl_spb(const int bsn)
 		 */
 		if (block_status_dl == EGPRS_RESEG_FIRST_SEG_SENT) {
 			/* statistics */
-			bts->do_rate_ctr_inc(CTR_SPB_DL_SECOND_SEGMENT);
+			bts_do_rate_ctr_inc(bts, CTR_SPB_DL_SECOND_SEGMENT);
 			return EGPRS_RLCMAC_DL_SEC_SEG;
 		} else if ((ht_cs_init == HEADER_EGPRS_DATA_TYPE_1) ||
 			   (ht_cs_init == HEADER_EGPRS_DATA_TYPE_2)) {
-			bts->do_rate_ctr_inc(CTR_SPB_DL_FIRST_SEGMENT);
+			bts_do_rate_ctr_inc(bts, CTR_SPB_DL_FIRST_SEGMENT);
 			return EGPRS_RLCMAC_DL_FIRST_SEG;
 		} else if ((cs_init == MCS4) &&
 			   (cs_current_trans == MCS1)) {
-			bts->do_rate_ctr_inc(CTR_SPB_DL_FIRST_SEGMENT);
+			bts_do_rate_ctr_inc(bts, CTR_SPB_DL_FIRST_SEGMENT);
 			return EGPRS_RLCMAC_DL_FIRST_SEG;
 		}
 	}
@@ -1490,7 +1490,7 @@ enum egprs_rlcmac_dl_spb gprs_rlcmac_dl_tbf::get_egprs_dl_spb(const int bsn)
 
 void gprs_rlcmac_dl_tbf::set_window_size()
 {
-	const struct gprs_rlcmac_bts *b = bts->bts_data();
+	const struct gprs_rlcmac_bts *b = bts;
 	uint16_t ws = egprs_window_size(b, dl_slots());
 
 	LOGPTBFDL(this, LOGL_INFO, "setting EGPRS DL window size to %u, base(%u) slots(%u) ws_pdch(%u)\n",
@@ -1502,55 +1502,55 @@ void gprs_rlcmac_dl_tbf::update_coding_scheme_counter_dl(enum CodingScheme cs)
 {
 	switch (cs) {
 	case CS1:
-		bts->do_rate_ctr_inc(CTR_GPRS_DL_CS1);
+		bts_do_rate_ctr_inc(bts, CTR_GPRS_DL_CS1);
 		rate_ctr_inc(&m_dl_gprs_ctrs->ctr[TBF_CTR_GPRS_DL_CS1]);
 		break;
 	case CS2:
-		bts->do_rate_ctr_inc(CTR_GPRS_DL_CS2);
+		bts_do_rate_ctr_inc(bts, CTR_GPRS_DL_CS2);
 		rate_ctr_inc(&m_dl_gprs_ctrs->ctr[TBF_CTR_GPRS_DL_CS2]);
 		break;
 	case CS3:
-		bts->do_rate_ctr_inc(CTR_GPRS_DL_CS3);
+		bts_do_rate_ctr_inc(bts, CTR_GPRS_DL_CS3);
 		rate_ctr_inc(&m_dl_gprs_ctrs->ctr[TBF_CTR_GPRS_DL_CS3]);
 		break;
 	case CS4:
-		bts->do_rate_ctr_inc(CTR_GPRS_DL_CS4);
+		bts_do_rate_ctr_inc(bts, CTR_GPRS_DL_CS4);
 		rate_ctr_inc(&m_dl_gprs_ctrs->ctr[TBF_CTR_GPRS_DL_CS4]);
 		break;
 	case MCS1:
-		bts->do_rate_ctr_inc(CTR_EGPRS_DL_MCS1);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_DL_MCS1);
 		rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS1]);
 		break;
 	case MCS2:
-		bts->do_rate_ctr_inc(CTR_EGPRS_DL_MCS2);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_DL_MCS2);
 		rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS2]);
 		break;
 	case MCS3:
-		bts->do_rate_ctr_inc(CTR_EGPRS_DL_MCS3);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_DL_MCS3);
 		rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS3]);
 		break;
 	case MCS4:
-		bts->do_rate_ctr_inc(CTR_EGPRS_DL_MCS4);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_DL_MCS4);
 		rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS4]);
 		break;
 	case MCS5:
-		bts->do_rate_ctr_inc(CTR_EGPRS_DL_MCS5);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_DL_MCS5);
 		rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS5]);
 		break;
 	case MCS6:
-		bts->do_rate_ctr_inc(CTR_EGPRS_DL_MCS6);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_DL_MCS6);
 		rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS6]);
 		break;
 	case MCS7:
-		bts->do_rate_ctr_inc(CTR_EGPRS_DL_MCS7);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_DL_MCS7);
 		rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS7]);
 		break;
 	case MCS8:
-		bts->do_rate_ctr_inc(CTR_EGPRS_DL_MCS8);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_DL_MCS8);
 		rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS8]);
 		break;
 	case MCS9:
-		bts->do_rate_ctr_inc(CTR_EGPRS_DL_MCS9);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_DL_MCS9);
 		rate_ctr_inc(&m_dl_egprs_ctrs->ctr[TBF_CTR_EGPRS_DL_MCS9]);
 		break;
 	default:

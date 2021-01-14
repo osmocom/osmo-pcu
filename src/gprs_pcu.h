@@ -55,7 +55,6 @@ enum pcu_gsmtap_category {
 	PCU_GSMTAP_C_UL_PTCCH		= 21,	/* uplink PTCCH bursts */
 };
 
-struct BTS;
 struct gprs_rlcmac_bts;
 struct GprsMs;
 struct gprs_rlcmac_tbf;
@@ -108,7 +107,7 @@ struct gprs_pcu {
 	struct gsmtap_inst *gsmtap;
 	uint32_t gsmtap_categ_mask;
 
-	struct BTS *bts;
+	struct gprs_rlcmac_bts *bts;
 
 	struct gprs_ns2_inst *nsi;
 

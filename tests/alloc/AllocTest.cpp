@@ -21,7 +21,9 @@
 #include "gprs_debug.h"
 #include "tbf.h"
 #include "tbf_ul.h"
+#include "tbf_dl.h"
 #include "bts.h"
+#include "gprs_ms.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -51,17 +53,17 @@ static gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 		return tbf_alloc_dl_tbf(bts, ms, use_trx, single_slot);
 }
 
-static void check_tfi_usage(BTS *the_bts)
+static void check_tfi_usage(struct gprs_rlcmac_bts *bts)
 {
 	int pdch_no;
 
 	struct gprs_rlcmac_tbf *tfi_usage[8][8][2][32] = {{{{NULL}}}};
-	LListHead<gprs_rlcmac_tbf> *tbf_lists[2] = {
-		&the_bts->ul_tbfs(),
-		&the_bts->dl_tbfs()
+	struct llist_head *tbf_lists[2] = {
+		&bts->ul_tbfs,
+		&bts->dl_tbfs
 	};
 
-	LListHead<gprs_rlcmac_tbf> *pos;
+	struct llist_item *pos;
 	gprs_rlcmac_tbf *tbf;
 	unsigned list_idx;
 	struct gprs_rlcmac_tbf **tbf_var;
@@ -69,8 +71,8 @@ static void check_tfi_usage(BTS *the_bts)
 	for (list_idx = 0; list_idx < ARRAY_SIZE(tbf_lists); list_idx += 1)
 	{
 
-		llist_for_each(pos, tbf_lists[list_idx]) {
-			tbf = pos->entry();
+		llist_for_each_entry(pos, tbf_lists[list_idx], list) {
+			tbf = (struct gprs_rlcmac_tbf *)pos->entry;
 			for (pdch_no = 0; pdch_no < 8; pdch_no += 1) {
 				struct gprs_rlcmac_pdch *pdch = tbf->pdch[pdch_no];
 				if (pdch == NULL)
@@ -86,14 +88,14 @@ static void check_tfi_usage(BTS *the_bts)
 				if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
 					OSMO_ASSERT(pdch->dl_tbf_by_tfi(
 							tbf->tfi()) == tbf);
-					OSMO_ASSERT(the_bts->dl_tbf_by_tfi(
+					OSMO_ASSERT(bts_dl_tbf_by_tfi(bts,
 							tbf->tfi(),
 							tbf->trx->trx_no,
 							pdch_no) == tbf);
 				} else {
 					OSMO_ASSERT(pdch->ul_tbf_by_tfi(
 							tbf->tfi()) == tbf);
-					OSMO_ASSERT(the_bts->ul_tbf_by_tfi(
+					OSMO_ASSERT(bts_ul_tbf_by_tfi(bts,
 							tbf->tfi(),
 							tbf->trx->trx_no,
 							pdch_no) == tbf);
@@ -112,14 +114,12 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 	int tfi;
 	int i;
 	uint8_t used_trx, tmp_trx;
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	GprsMs *ms;
-	struct gprs_rlcmac_bts *bts;
 	struct gprs_rlcmac_tbf *tbfs[32*8+1] = { 0, };
 
 	printf("Testing alloc_a direction(%d)\n", dir);
 
-	bts = the_bts.bts_data();
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
 
 	struct gprs_rlcmac_trx *trx = &bts->trx[0];
@@ -136,17 +136,17 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 	 * least this part is working okay.
 	 */
 	for (i = 0; i < (int)ARRAY_SIZE(tbfs); ++i) {
-		ms = bts->bts->ms_alloc(0, 0);
+		ms = bts_alloc_ms(bts, 0, 0);
 		tbfs[i] = tbf_alloc(bts, ms, dir, -1, 0);
 		if (tbfs[i] == NULL)
 			break;
 
 		used_trx = tbfs[i]->trx->trx_no;
-		tfi = the_bts.tfi_find_free(dir, &tmp_trx, used_trx);
+		tfi = bts_tfi_find_free(bts, dir, &tmp_trx, used_trx);
 		OSMO_ASSERT(tbfs[i]->tfi() != tfi);
 	}
 
-	check_tfi_usage(&the_bts);
+	check_tfi_usage(bts);
 
 	OSMO_ASSERT(i == count);
 
@@ -154,10 +154,11 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 		if (tbfs[i])
 			tbf_free(tbfs[i]);
 
-	ms = bts->bts->ms_alloc(0, 0);
+	ms = bts_alloc_ms(bts, 0, 0);
 	tbfs[0] = tbf_alloc(bts, ms, dir, -1, 0);
 	OSMO_ASSERT(tbfs[0]);
 	tbf_free(tbfs[0]);
+	talloc_free(bts);
 }
 
 static void test_alloc_a()
@@ -205,8 +206,7 @@ static inline void enable_ts_on_bts(struct gprs_rlcmac_bts *bts,
 static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool ts5, bool ts6, bool ts7,
 				      uint8_t ms_class, bool verbose)
 {
-	BTS the_bts(the_pcu);
-	struct gprs_rlcmac_bts *bts = the_bts.bts_data();
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	GprsMs *ms;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	gprs_rlcmac_dl_tbf *dl_tbf;
@@ -218,7 +218,7 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 	enable_ts_on_bts(bts, ts0, ts1, ts2, ts3, ts4, ts5, ts6, ts7);
 
-	ms = the_bts.ms_alloc(ms_class, 0);
+	ms = bts_alloc_ms(bts, ms_class, 0);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
 	ms_set_timeout(ms, 0);
 	ul_tbf = tbf_alloc_ul_tbf(bts, ms, -1, true);
@@ -239,19 +239,18 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 	OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
 
-	check_tfi_usage(&the_bts);
+	check_tfi_usage(bts);
 
 	tbf_free(dl_tbf);
 	tbf_free(ul_tbf);
-
+	talloc_free(bts);
 	return true;
 }
 
 static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool ts5, bool ts6, bool ts7,
 				      uint8_t ms_class, bool verbose)
 {
-	BTS the_bts(the_pcu);
-	struct gprs_rlcmac_bts *bts = the_bts.bts_data();
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	GprsMs *ms;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	gprs_rlcmac_dl_tbf *dl_tbf;
@@ -263,7 +262,7 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 	enable_ts_on_bts(bts, ts0, ts1, ts2, ts3, ts4, ts5, ts6, ts7);
 
-	ms = the_bts.ms_alloc(ms_class, 0);
+	ms = bts_alloc_ms(bts, ms_class, 0);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
 	ms_set_timeout(ms, 0);
 	dl_tbf = tbf_alloc_dl_tbf(bts, ms, -1, true);
@@ -292,18 +291,17 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	dump_assignment(dl_tbf, "DL", verbose);
 	OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
 
-	check_tfi_usage(&the_bts);
+	check_tfi_usage(bts);
 
 	tbf_free(dl_tbf);
 	tbf_free(ul_tbf);
-
+	talloc_free(bts);
 	return true;
 }
 
 static inline bool test_alloc_b_jolly(uint8_t ms_class)
 {
-	BTS the_bts(the_pcu);
-	struct gprs_rlcmac_bts *bts = the_bts.bts_data();
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	GprsMs *ms;
 	int tfi;
 	uint8_t trx_no;
@@ -315,9 +313,9 @@ static inline bool test_alloc_b_jolly(uint8_t ms_class)
 
 	enable_ts_on_bts(bts, false, true, true, true, true, false, false, false);
 
-	tfi = the_bts.tfi_find_free(GPRS_RLCMAC_UL_TBF, &trx_no, -1);
+	tfi = bts_tfi_find_free(bts, GPRS_RLCMAC_UL_TBF, &trx_no, -1);
 	OSMO_ASSERT(tfi >= 0);
-	ms = the_bts.ms_alloc(ms_class, 0);
+	ms = bts_alloc_ms(bts, ms_class, 0);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
 	ms_set_timeout(ms, 0);
 	ul_tbf = tbf_alloc_ul_tbf(bts, ms, -1, false);
@@ -338,11 +336,11 @@ static inline bool test_alloc_b_jolly(uint8_t ms_class)
 
 	OSMO_ASSERT(dl_tbf->first_common_ts == ul_tbf->first_common_ts);
 
-	check_tfi_usage(&the_bts);
+	check_tfi_usage(bts);
 
 	tbf_free(dl_tbf);
 	tbf_free(ul_tbf);
-
+	talloc_free(bts);
 	return true;
 }
 
@@ -459,15 +457,12 @@ static inline char *test_mode_descr(enum test_mode t)
 	}
 }
 
-static GprsMs *alloc_tbfs(BTS *the_bts, struct GprsMs *old_ms, enum test_mode mode)
+static GprsMs *alloc_tbfs(struct gprs_rlcmac_bts *bts, struct GprsMs *old_ms, enum test_mode mode)
 {
-	struct gprs_rlcmac_bts *bts;
 	struct GprsMs *ms, *new_ms;
 	uint8_t trx_no = -1;
 
 	OSMO_ASSERT(old_ms != NULL);
-
-	bts = the_bts->bts_data();
 
 	gprs_rlcmac_tbf *tbf = NULL;
 
@@ -517,12 +512,12 @@ static GprsMs *alloc_tbfs(BTS *the_bts, struct GprsMs *old_ms, enum test_mode mo
 
 	case TEST_MODE_DL_AFTER_UL:
 	case TEST_MODE_UL_AND_DL:
-		new_ms = alloc_tbfs(the_bts, ms, TEST_MODE_DL_ONLY);
+		new_ms = alloc_tbfs(bts, ms, TEST_MODE_DL_ONLY);
 		break;
 
 	case TEST_MODE_UL_AFTER_DL:
 	case TEST_MODE_DL_AND_UL:
-		new_ms = alloc_tbfs(the_bts, ms, TEST_MODE_UL_ONLY);
+		new_ms = alloc_tbfs(bts, ms, TEST_MODE_UL_ONLY);
 		break;
 	}
 
@@ -546,7 +541,7 @@ static GprsMs *alloc_tbfs(BTS *the_bts, struct GprsMs *old_ms, enum test_mode mo
 	return new_ms;
 }
 
-static unsigned alloc_many_tbfs(BTS *the_bts, unsigned min_class,
+static unsigned alloc_many_tbfs(struct gprs_rlcmac_bts *bts, unsigned min_class,
 	unsigned max_class, enum test_mode mode)
 {
 	unsigned counter;
@@ -566,11 +561,11 @@ static unsigned alloc_many_tbfs(BTS *the_bts, unsigned min_class,
 		enum gprs_rlcmac_tbf_direction dir;
 		uint32_t tlli = counter + 0xc0000000;
 
-		ms = the_bts->ms_by_tlli(tlli);
+		ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 		if (!ms)
-			ms = the_bts->ms_alloc(0, 0);
+			ms = bts_alloc_ms(bts, 0, 0);
 		ms_set_ms_class(ms, ms_class);
-		ms = alloc_tbfs(the_bts, ms, mode);
+		ms = alloc_tbfs(bts, ms, mode);
 		if (!ms)
 			break;
 
@@ -630,7 +625,7 @@ static unsigned alloc_many_tbfs(BTS *the_bts, unsigned min_class,
 
 		if (tfi >= 0) {
 			OSMO_ASSERT(ms_current_trx(ms));
-			tfi2 = the_bts->tfi_find_free(dir, &trx_no2,
+			tfi2 = bts_tfi_find_free(bts, dir, &trx_no2,
 				ms_current_trx(ms)->trx_no);
 			OSMO_ASSERT(tfi != tfi2);
 			OSMO_ASSERT(tfi2 < 0 ||
@@ -649,15 +644,13 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 	unsigned max_class, enum test_mode mode,
 	unsigned expect_num, const char *text)
 {
-	BTS the_bts(the_pcu);
-	struct gprs_rlcmac_bts *bts;
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	struct gprs_rlcmac_trx *trx;
 	unsigned counter;
 
 	printf("Going to test assignment with many TBF, algorithm %s class %u..%u (%s)\n",
 	       text, min_class, max_class, test_mode_descr(mode));
 
-	bts = the_bts.bts_data();
 	the_pcu->alloc_algorithm = algo;
 
 	trx = &bts->trx[0];
@@ -667,7 +660,7 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 	trx->pdch[6].enable();
 	trx->pdch[7].enable();
 
-	counter = alloc_many_tbfs(&the_bts, min_class, max_class, mode);
+	counter = alloc_many_tbfs(bts, min_class, max_class, mode);
 
 	printf("  Successfully allocated %u UL TBFs, algorithm %s class %u..%u (%s)\n",
 	       counter, text, min_class, max_class, test_mode_descr(mode));
@@ -677,14 +670,14 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 
 	OSMO_ASSERT(counter == expect_num);
 
-	check_tfi_usage(&the_bts);
+	check_tfi_usage(bts);
+	talloc_free(bts);
 }
 
 static void test_many_connections(algo_t algo, unsigned expect_num,
 	const char *text)
 {
-	BTS the_bts(the_pcu);
-	struct gprs_rlcmac_bts *bts;
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	struct gprs_rlcmac_trx *trx;
 	int counter1, counter2 = -1;
 	unsigned i;
@@ -697,7 +690,6 @@ static void test_many_connections(algo_t algo, unsigned expect_num,
 
 	printf("Going to test assignment with many connections, algorithm %s\n", text);
 
-	bts = the_bts.bts_data();
 	the_pcu->alloc_algorithm = algo;
 
 	trx = &bts->trx[0];
@@ -708,11 +700,11 @@ static void test_many_connections(algo_t algo, unsigned expect_num,
 	trx->pdch[7].enable();
 
 	for (i = 0; i < ARRAY_SIZE(mode_seq); i += 1) {
-		counter1 = alloc_many_tbfs(&the_bts, 1, mslot_class_max(), mode_seq[i]);
+		counter1 = alloc_many_tbfs(bts, 1, mslot_class_max(), mode_seq[i]);
 		fprintf(stderr, "  Allocated %d TBFs (previously %d)\n",
 			counter1, counter2);
 
-		check_tfi_usage(&the_bts);
+		check_tfi_usage(bts);
 
 		/* This will stop earlier due to USF shortage */
 		if (mode_seq[i] == TEST_MODE_UL_ONLY)
@@ -733,6 +725,7 @@ static void test_many_connections(algo_t algo, unsigned expect_num,
 		fprintf(stderr, "  Expected %d TBFs (got %d) for algorithm %s\n", expect_num, counter1, text);
 
 	OSMO_ASSERT(expect_num == (unsigned)counter1);
+	talloc_free(bts);
 }
 
 static inline void test_a_b_dyn(enum test_mode mode, uint8_t exp_A, uint8_t exp_B, uint8_t exp_dyn)
@@ -761,9 +754,8 @@ static void test_successive_allocations()
 
 static void test_2_consecutive_dl_tbfs()
 {
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	GprsMs *ms;
-	struct gprs_rlcmac_bts *bts;
 	struct gprs_rlcmac_trx *trx;
 	uint8_t ms_class = 11;
 	uint8_t egprs_ms_class = 11;
@@ -772,7 +764,6 @@ static void test_2_consecutive_dl_tbfs()
 
 	printf("Testing DL TS allocation for Multi UEs\n");
 
-	bts = the_bts.bts_data();
 	the_pcu->alloc_algorithm = alloc_algorithm_b;
 
 	trx = &bts->trx[0];
@@ -781,7 +772,7 @@ static void test_2_consecutive_dl_tbfs()
 	trx->pdch[6].enable();
 	trx->pdch[7].enable();
 
-	ms = the_bts.ms_alloc(ms_class, egprs_ms_class);
+	ms = bts_alloc_ms(bts, ms_class, egprs_ms_class);
 	dl_tbf1 = tbf_alloc_dl_tbf(bts, ms, 0, false);
 	OSMO_ASSERT(dl_tbf1);
 
@@ -792,7 +783,7 @@ static void test_2_consecutive_dl_tbfs()
 	OSMO_ASSERT(numTs1 == 4);
 	printf("TBF1: numTs(%d)\n", numTs1);
 
-	ms = the_bts.ms_alloc(ms_class, egprs_ms_class);
+	ms = bts_alloc_ms(bts, ms_class, egprs_ms_class);
 	dl_tbf2 = tbf_alloc_dl_tbf(bts, ms, 0, false);
 	OSMO_ASSERT(dl_tbf2);
 
@@ -810,6 +801,7 @@ static void test_2_consecutive_dl_tbfs()
 
 	tbf_free(dl_tbf1);
 	tbf_free(dl_tbf2);
+	talloc_free(bts);
 }
 
 int main(int argc, char **argv)

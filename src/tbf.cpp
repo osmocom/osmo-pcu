@@ -124,7 +124,7 @@ gprs_rlcmac_tbf::Meas::Meas() :
 	timespecclear(&rssi_tv);
 }
 
-gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, GprsMs *ms, gprs_rlcmac_tbf_direction dir) :
+gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_rlcmac_tbf_direction dir) :
 	state_flags(0),
 	direction(dir),
 	trx(NULL),
@@ -147,7 +147,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, GprsMs *ms, gprs_rlcmac_tbf_directio
 	ul_ass_state(GPRS_RLCMAC_UL_ASS_NONE),
 	ul_ack_state(GPRS_RLCMAC_UL_ACK_NONE),
 	poll_state(GPRS_RLCMAC_POLL_NONE),
-	m_list(this),
 	m_egprs_enabled(false)
 {
 	/* The classes of these members do not have proper constructors yet.
@@ -160,6 +159,9 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, GprsMs *ms, gprs_rlcmac_tbf_directio
 	memset(&m_ms_list, 0, sizeof(m_ms_list));
 	m_ms_list.entry = this;
 
+	memset(&m_bts_list, 0, sizeof(m_bts_list));
+	m_bts_list.entry = this;
+
 	m_rlc.init();
 	m_llc.init();
 
@@ -168,7 +170,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(BTS *bts_, GprsMs *ms, gprs_rlcmac_tbf_directio
 
 gprs_rlcmac_bts *gprs_rlcmac_tbf::bts_data() const
 {
-	return bts->bts_data();
+	return bts;
 }
 
 uint32_t gprs_rlcmac_tbf::tlli() const
@@ -245,7 +247,7 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction di
 	if (!ms_check_tlli(ms(), tlli)) {
 		GprsMs *old_ms;
 
-		old_ms = bts->ms_store().get_ms(tlli, 0, NULL);
+		old_ms = bts_ms_store(bts)->get_ms(tlli, 0, NULL);
 		if (old_ms)
 			ms_merge_and_clear_ms(ms(), old_ms);
 	}
@@ -274,9 +276,9 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	/* update counters */
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
 		gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
-		tbf->bts->do_rate_ctr_inc(CTR_TBF_UL_FREED);
+		bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_UL_FREED);
 		if (tbf->state_is(GPRS_RLCMAC_FLOW))
-			tbf->bts->do_rate_ctr_inc(CTR_TBF_UL_ABORTED);
+			bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_UL_ABORTED);
 		rate_ctr_group_free(ul_tbf->m_ul_egprs_ctrs);
 		rate_ctr_group_free(ul_tbf->m_ul_gprs_ctrs);
 	} else {
@@ -286,9 +288,9 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 		} else {
 			rate_ctr_group_free(dl_tbf->m_dl_gprs_ctrs);
 		}
-		tbf->bts->do_rate_ctr_inc(CTR_TBF_DL_FREED);
+		bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_DL_FREED);
 		if (tbf->state_is(GPRS_RLCMAC_FLOW))
-			tbf->bts->do_rate_ctr_inc(CTR_TBF_DL_ABORTED);
+			bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_DL_ABORTED);
 	}
 
 	/* Give final measurement report */
@@ -304,7 +306,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	tbf->stop_timers("freeing TBF");
 	/* TODO: Could/Should generate  bssgp_tx_llc_discarded */
 	tbf_unlink_pdch(tbf);
-	llist_del(&tbf->list());
+	llist_del(tbf_bts_list(tbf));
 
 	if (tbf->ms())
 		tbf->set_ms(NULL);
@@ -326,7 +328,7 @@ uint16_t egprs_window_size(const struct gprs_rlcmac_bts *bts_data, uint8_t slots
 
 int gprs_rlcmac_tbf::update()
 {
-	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
+	struct gprs_rlcmac_bts *bts_data = bts;
 	int rc;
 
 	if (direction != GPRS_RLCMAC_DL_TBF)
@@ -399,13 +401,13 @@ bool gprs_rlcmac_tbf::n_inc(enum tbf_counters n)
 
 	switch(n) {
 	case N3101:
-		chk = bts->bts_data()->n3101;
+		chk = bts->n3101;
 		break;
 	case N3103:
-		chk = bts->bts_data()->n3103;
+		chk = bts->n3103;
 		break;
 	case N3105:
-		chk = bts->bts_data()->n3105;
+		chk = bts->n3105;
 		break;
 	default:
 		LOGPTBF(this, LOGL_ERROR, "unhandled counter %s\n",
@@ -492,7 +494,7 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool
 	int microsec;
 	struct osmo_tdef *tdef;
 
-	if (!(tdef = osmo_tdef_get_entry(bts->bts_data()->T_defs_bts, T)))
+	if (!(tdef = osmo_tdef_get_entry(bts->T_defs_bts, T)))
 		tdef = osmo_tdef_get_entry(bts->pcu->T_defs, T);
 
 	if (t >= T_MAX || !tdef) {
@@ -563,7 +565,7 @@ int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 		LOGPTBF(this, LOGL_DEBUG, "Polling is already scheduled\n");
 		return -EBUSY;
 	}
-	if (bts->sba()->find(trx->trx_no, ts, next_fn(fn, 13))) {
+	if (bts_sba(bts)->find(trx->trx_no, ts, next_fn(fn, 13))) {
 		LOGPTBF(this, LOGL_DEBUG, "Polling is already scheduled "
 			"for single block allocation at FN %d TS %d ...\n",
 			new_poll_fn, ts);
@@ -628,7 +630,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
 
 	LOGPTBF(this, LOGL_NOTICE, "poll timeout for FN=%d, TS=%d (curr FN %d)\n",
-		poll_fn, poll_ts, bts->current_frame_number());
+		poll_fn, poll_ts, bts_current_frame_number(bts));
 
 	poll_state = GPRS_RLCMAC_POLL_NONE;
 
@@ -644,11 +646,11 @@ void gprs_rlcmac_tbf::poll_timeout()
 				"Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ACK: %s\n",
 				rlcmac_diag().c_str());
 		}
-		bts->do_rate_ctr_inc(CTR_RLC_ACK_TIMEDOUT);
-		bts->do_rate_ctr_inc(CTR_PUAN_POLL_TIMEDOUT);
+		bts_do_rate_ctr_inc(bts, CTR_RLC_ACK_TIMEDOUT);
+		bts_do_rate_ctr_inc(bts, CTR_PUAN_POLL_TIMEDOUT);
 		if (state_is(GPRS_RLCMAC_FINISHED)) {
 			if (ul_tbf->n_inc(N3103)) {
-				bts->do_rate_ctr_inc(CTR_PUAN_POLL_FAILED);
+				bts_do_rate_ctr_inc(bts, CTR_PUAN_POLL_FAILED);
 				TBF_SET_STATE(ul_tbf, GPRS_RLCMAC_RELEASING);
 				T_START(ul_tbf, T3169, 3169, "MAX N3103 reached", false);
 				return;
@@ -665,13 +667,13 @@ void gprs_rlcmac_tbf::poll_timeout()
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
 		}
 		ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
-		bts->do_rate_ctr_inc(CTR_RLC_ASS_TIMEDOUT);
-		bts->do_rate_ctr_inc(CTR_PUA_POLL_TIMEDOUT);
+		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
+		bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {
 			TBF_SET_STATE(this, GPRS_RLCMAC_RELEASING);
 			T_START(this, T3195, 3195, "MAX N3105 reached", true);
-			bts->do_rate_ctr_inc(CTR_RLC_ASS_FAILED);
-			bts->do_rate_ctr_inc(CTR_PUA_POLL_FAILED);
+			bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_FAILED);
+			bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_FAILED);
 			return;
 		}
 		/* reschedule UL assignment */
@@ -684,13 +686,13 @@ void gprs_rlcmac_tbf::poll_timeout()
 			state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
 		}
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-		bts->do_rate_ctr_inc(CTR_RLC_ASS_TIMEDOUT);
-		bts->do_rate_ctr_inc(CTR_PDA_POLL_TIMEDOUT);
+		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
+		bts_do_rate_ctr_inc(bts, CTR_PDA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {
 			TBF_SET_STATE(this, GPRS_RLCMAC_RELEASING);
 			T_START(this, T3195, 3195, "MAX N3105 reached", true);
-			bts->do_rate_ctr_inc(CTR_RLC_ASS_FAILED);
-			bts->do_rate_ctr_inc(CTR_PDA_POLL_FAILED);
+			bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_FAILED);
+			bts_do_rate_ctr_inc(bts, CTR_PDA_POLL_FAILED);
 			return;
 		}
 		/* reschedule DL assignment */
@@ -706,17 +708,17 @@ void gprs_rlcmac_tbf::poll_timeout()
 		}
 
 		if (dl_tbf->state_is(GPRS_RLCMAC_RELEASING))
-			bts->do_rate_ctr_inc(CTR_RLC_REL_TIMEDOUT);
+			bts_do_rate_ctr_inc(bts, CTR_RLC_REL_TIMEDOUT);
 		else {
-			bts->do_rate_ctr_inc(CTR_RLC_ACK_TIMEDOUT);
-			bts->do_rate_ctr_inc(CTR_PDAN_POLL_TIMEDOUT);
+			bts_do_rate_ctr_inc(bts, CTR_RLC_ACK_TIMEDOUT);
+			bts_do_rate_ctr_inc(bts, CTR_PDAN_POLL_TIMEDOUT);
 		}
 
 		if (dl_tbf->n_inc(N3105)) {
 			TBF_SET_STATE(dl_tbf, GPRS_RLCMAC_RELEASING);
 			T_START(dl_tbf, T3195, 3195, "MAX N3105 reached", true);
-			bts->do_rate_ctr_inc(CTR_PDAN_POLL_FAILED);
-			bts->do_rate_ctr_inc(CTR_RLC_ACK_FAILED);
+			bts_do_rate_ctr_inc(bts, CTR_PDAN_POLL_FAILED);
+			bts_do_rate_ctr_inc(bts, CTR_RLC_ACK_FAILED);
 			return;
 		}
 		/* resend IMM.ASS on CCCH on timeout */
@@ -727,7 +729,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 			/* send immediate assignment */
 			if ((pgroup = imsi2paging_group(imsi())) > 999)
 				LOGPTBF(dl_tbf, LOGL_ERROR, "IMSI to paging group failed! (%s)\n", imsi());
-			dl_tbf->bts->snd_dl_ass(dl_tbf, false, pgroup);
+			bts_snd_dl_ass(dl_tbf->bts, dl_tbf, false, pgroup);
 			dl_tbf->m_wait_confirm = 1;
 		}
 	} else
@@ -736,7 +738,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 
 int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 {
-	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
+	struct gprs_rlcmac_bts *bts_data = bts;
 	int rc;
 
 	if (ms_mode(m_ms) != GPRS)
@@ -935,7 +937,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 		goto free_ret;
 	}
 	LOGP(DTBF, LOGL_DEBUG, "------------------------- TX : Packet Downlink Assignment -------------------------\n");
-	bts->do_rate_ctr_inc(CTR_PKT_DL_ASSIGNMENT);
+	bts_do_rate_ctr_inc(bts, CTR_PKT_DL_ASSIGNMENT);
 
 	if (poll_ass_dl) {
 		set_polling(new_poll_fn, ts, GPRS_RLCMAC_POLL_DL_ASS);
@@ -970,7 +972,7 @@ struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
 	Encoding::write_packet_access_reject(
 		packet_access_rej, tlli());
 
-	bts->do_rate_ctr_inc(CTR_PKT_ACCESS_REJ);
+	bts_do_rate_ctr_inc(bts, CTR_PKT_ACCESS_REJ);
 
 	bitvec_pack(packet_access_rej, msgb_put(msg, GSM_MACBLOCK_LEN));
 
@@ -1039,7 +1041,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 		goto free_ret;
 	}
 	LOGP(DTBF, LOGL_DEBUG, "------------------------- TX : Packet Uplink Assignment -------------------------\n");
-	bts->do_rate_ctr_inc(CTR_PKT_UL_ASSIGNMENT);
+	bts_do_rate_ctr_inc(bts, CTR_PKT_UL_ASSIGNMENT);
 
 	set_polling(new_poll_fn, ts, GPRS_RLCMAC_POLL_UL_ASS);
 
@@ -1076,9 +1078,9 @@ int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
 {
 	struct gprs_rlcmac_dl_tbf *new_tbf = NULL;
 
-	bts->do_rate_ctr_inc(CTR_TBF_REUSED);
+	bts_do_rate_ctr_inc(bts, CTR_TBF_REUSED);
 
-	new_tbf = tbf_alloc_dl_tbf(bts->bts_data(), ms(),
+	new_tbf = tbf_alloc_dl_tbf(bts, ms(),
 		this->trx->trx_no, false);
 
 	if (!new_tbf) {
@@ -1112,11 +1114,11 @@ const char *gprs_rlcmac_tbf::name() const
 
 void gprs_rlcmac_tbf::rotate_in_list()
 {
-	llist_del(&list());
+	llist_del(tbf_bts_list((struct gprs_rlcmac_tbf *)this));
 	if (direction == GPRS_RLCMAC_UL_TBF)
-		llist_add(&list(), &bts->ul_tbfs());
+		llist_add(tbf_bts_list((struct gprs_rlcmac_tbf *)this), &bts->ul_tbfs);
 	else
-		llist_add(&list(), &bts->dl_tbfs());
+		llist_add(tbf_bts_list((struct gprs_rlcmac_tbf *)this), &bts->dl_tbfs);
 }
 
 uint8_t gprs_rlcmac_tbf::tsc() const
@@ -1184,6 +1186,11 @@ void tbf_set_ms(struct gprs_rlcmac_tbf *tbf, GprsMs *ms)
 struct llist_head *tbf_ms_list(struct gprs_rlcmac_tbf *tbf)
 {
 	return &tbf->m_ms_list.list;
+}
+
+struct llist_head *tbf_bts_list(struct gprs_rlcmac_tbf *tbf)
+{
+	return &tbf->m_bts_list.list;
 }
 
 struct GprsMs *tbf_ms(struct gprs_rlcmac_tbf *tbf)

@@ -101,21 +101,23 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 	vty_out(vty, "%s%s", VTY_NEWLINE, VTY_NEWLINE);
 }
 
-int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data, uint32_t flags)
+int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts, uint32_t flags)
 {
-	BTS *bts = bts_data->bts;
-	LListHead<gprs_rlcmac_tbf> *iter;
+	struct llist_item *iter;
+	struct gprs_rlcmac_tbf *tbf;
 
 	vty_out(vty, "UL TBFs%s", VTY_NEWLINE);
-	llist_for_each(iter, &bts->ul_tbfs()) {
-		if (iter->entry()->state_flags & flags)
-			tbf_print_vty_info(vty, iter->entry());
+	llist_for_each_entry(iter, &bts->ul_tbfs, list) {
+		tbf = (struct gprs_rlcmac_tbf *)iter->entry;
+		if (tbf->state_flags & flags)
+			tbf_print_vty_info(vty, tbf);
 	}
 
 	vty_out(vty, "%sDL TBFs%s", VTY_NEWLINE, VTY_NEWLINE);
-	llist_for_each(iter, &bts->dl_tbfs()) {
-		if (iter->entry()->state_flags & flags)
-			tbf_print_vty_info(vty, iter->entry());
+	llist_for_each_entry(iter, &bts->dl_tbfs, list) {
+		tbf = (struct gprs_rlcmac_tbf *)iter->entry;
+		if (tbf->state_flags & flags)
+			tbf_print_vty_info(vty, tbf);
 	}
 
 	return CMD_SUCCESS;
@@ -204,12 +206,11 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 	return CMD_SUCCESS;
 }
 
-int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
+int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts)
 {
-	BTS *bts = bts_data->bts;
 	struct llist_head *tmp;
 
-	llist_for_each(tmp, bts->ms_store().ms_list()) {
+	llist_for_each(tmp, bts_ms_store(bts)->ms_list()) {
 		GprsMs *ms_iter = llist_entry(tmp, typeof(*ms_iter), list);
 		show_ms(vty, ms_iter);
 	}
@@ -217,11 +218,10 @@ int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data)
 	return CMD_SUCCESS;
 }
 
-int pcu_vty_show_ms_by_tlli(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
+int pcu_vty_show_ms_by_tlli(struct vty *vty, struct gprs_rlcmac_bts *bts,
 	uint32_t tlli)
 {
-	BTS *bts = bts_data->bts;
-	GprsMs *ms = bts->ms_store().get_ms(tlli);
+	GprsMs *ms = bts_ms_store(bts)->get_ms(tlli);
 	if (!ms) {
 		vty_out(vty, "Unknown TLLI %08x.%s", tlli, VTY_NEWLINE);
 		return CMD_WARNING;
@@ -230,11 +230,10 @@ int pcu_vty_show_ms_by_tlli(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
 	return show_ms(vty, ms);
 }
 
-int pcu_vty_show_ms_by_imsi(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
+int pcu_vty_show_ms_by_imsi(struct vty *vty, struct gprs_rlcmac_bts *bts,
 	const char *imsi)
 {
-	BTS *bts = bts_data->bts;
-	GprsMs *ms = bts->ms_store().get_ms(0, 0, imsi);
+	GprsMs *ms = bts_ms_store(bts)->get_ms(0, 0, imsi);
 	if (!ms) {
 		vty_out(vty, "Unknown IMSI '%s'.%s", imsi, VTY_NEWLINE);
 		return CMD_WARNING;

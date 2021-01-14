@@ -25,11 +25,11 @@
 #include <stdint.h>
 #include <stddef.h>
 
-struct BTS;
+struct gprs_rlcmac_bts;
 
-class GprsMsStorage {
+struct GprsMsStorage {
 public:
-	GprsMsStorage(BTS *bts);
+	GprsMsStorage(struct gprs_rlcmac_bts *bts);
 	~GprsMsStorage();
 
 	void cleanup();
@@ -39,6 +39,6 @@ public:
 
 	const struct llist_head* ms_list() const {return &m_list;}
 private:
-	BTS *m_bts;
+	struct gprs_rlcmac_bts *m_bts;
 	struct llist_head m_list; /* list of struct GprsMs */
 };

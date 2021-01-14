@@ -32,7 +32,7 @@ extern "C" {
 
 #define LLC_MAX_LEN 1543
 
-struct BTS;
+struct gprs_rlcmac_bts;
 
 /**
  * I represent the LLC data to a MS
@@ -65,7 +65,7 @@ struct MetaInfo {
  */
 struct gprs_llc_queue {
 #ifdef __cplusplus
-	static void calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec,
+	static void calc_pdu_lifetime(struct gprs_rlcmac_bts *bts, const uint16_t pdu_delay_csec,
 		struct timespec *tv);
 	static bool is_frame_expired(const struct timespec *now,
 		const struct timespec *tv);
@@ -84,7 +84,7 @@ struct gprs_llc_queue {
 extern "C" {
 #endif
 void llc_queue_init(struct gprs_llc_queue *q);
-void llc_queue_clear(struct gprs_llc_queue *q, struct BTS *bts);
+void llc_queue_clear(struct gprs_llc_queue *q, struct gprs_rlcmac_bts *bts);
 void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o);
 
 static inline uint16_t llc_chunk_size(const struct gprs_llc *llc)

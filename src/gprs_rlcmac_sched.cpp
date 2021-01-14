@@ -41,13 +41,13 @@ struct tbf_sched_candidates {
 	struct gprs_rlcmac_ul_tbf *ul_ack;
 };
 
-static uint32_t sched_poll(BTS *bts,
+static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 		    uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr,
 		    struct tbf_sched_candidates *tbf_cand)
 {
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
-	LListHead<gprs_rlcmac_tbf> *pos;
+	struct llist_item *pos;
 	uint32_t poll_fn;
 
 	/* check special TBF for events */
@@ -55,8 +55,8 @@ static uint32_t sched_poll(BTS *bts,
 	if ((block_nr % 3) == 2)
 		poll_fn ++;
 	poll_fn = poll_fn % GSM_MAX_FN;
-	llist_for_each(pos, &bts->ul_tbfs()) {
-		ul_tbf = as_ul_tbf(pos->entry());
+	llist_for_each_entry(pos, &bts->ul_tbfs, list) {
+		ul_tbf = as_ul_tbf((struct gprs_rlcmac_tbf *)pos->entry);
 		OSMO_ASSERT(ul_tbf);
 		/* this trx, this ts */
 		if (ul_tbf->trx->trx_no != trx || !ul_tbf->is_control_ts(ts))
@@ -74,8 +74,8 @@ static uint32_t sched_poll(BTS *bts,
 /* FIXME: Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all
 states? */
 	}
-	llist_for_each(pos, &bts->dl_tbfs()) {
-		dl_tbf = as_dl_tbf(pos->entry());
+	llist_for_each_entry(pos, &bts->dl_tbfs, list) {
+		dl_tbf = as_dl_tbf((struct gprs_rlcmac_tbf *)pos->entry);
 		OSMO_ASSERT(dl_tbf);
 		/* this trx, this ts */
 		if (dl_tbf->trx->trx_no != trx || !dl_tbf->is_control_ts(ts))
@@ -136,7 +136,7 @@ struct msgb *sched_app_info(struct gprs_rlcmac_tbf *tbf) {
 	if (!tbf || !tbf->ms()->app_info_pending)
 		return NULL;
 
-	bts_data = BTS::main_bts()->bts_data();
+	bts_data = the_pcu->bts;
 
 	if (bts_data->app_info) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Sending Packet Application Information message\n");
@@ -367,7 +367,7 @@ static struct msgb *sched_dummy(void)
 	return msg;
 }
 
-static inline void tap_n_acc(const struct msgb *msg, const struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
+static inline void tap_n_acc(const struct msgb *msg, struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
 			     uint32_t fn, enum pcu_gsmtap_category cat)
 {
 	if (!msg)
@@ -375,19 +375,19 @@ static inline void tap_n_acc(const struct msgb *msg, const struct gprs_rlcmac_bt
 
 	switch(cat) {
 	case PCU_GSMTAP_C_DL_CTRL:
-		bts->bts->do_rate_ctr_inc(CTR_RLC_SENT_CONTROL);
-		bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_CTRL, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data,
+		bts_do_rate_ctr_inc(bts, CTR_RLC_SENT_CONTROL);
+		bts_send_gsmtap(bts, PCU_GSMTAP_C_DL_CTRL, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data,
 				      msg->len);
 		break;
 	case PCU_GSMTAP_C_DL_DATA_GPRS:
 	case PCU_GSMTAP_C_DL_DATA_EGPRS:
-		bts->bts->do_rate_ctr_inc(CTR_RLC_SENT);
-		bts->bts->send_gsmtap(cat, false, trx, ts, GSMTAP_CHANNEL_PDTCH, fn, msg->data,
+		bts_do_rate_ctr_inc(bts, CTR_RLC_SENT);
+		bts_send_gsmtap(bts, cat, false, trx, ts, GSMTAP_CHANNEL_PDTCH, fn, msg->data,
 				      msg->len);
 		break;
 	case PCU_GSMTAP_C_DL_DUMMY:
-		bts->bts->do_rate_ctr_inc(CTR_RLC_SENT_DUMMY);
-		bts->bts->send_gsmtap(PCU_GSMTAP_C_DL_DUMMY, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data,
+		bts_do_rate_ctr_inc(bts, CTR_RLC_SENT_DUMMY);
+		bts_send_gsmtap(bts, PCU_GSMTAP_C_DL_DUMMY, false, trx, ts, GSMTAP_CHANNEL_PACCH, fn, msg->data,
 				      msg->len);
 		break;
 	default:
@@ -438,7 +438,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 		req_mcs_kind = EGPRS; /* all kinds are fine */
 	}
 
-	poll_fn = sched_poll(bts->bts, trx, ts, fn, block_nr, &tbf_cand);
+	poll_fn = sched_poll(bts, trx, ts, fn, block_nr, &tbf_cand);
 	/* check uplink resource for polling */
 	if (tbf_cand.poll) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
@@ -447,7 +447,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 			block_nr, poll_fn, tbf_name(tbf_cand.poll));
 		usf = USF_UNUSED;
 	/* else. check for sba */
-	} else if ((sba_fn = bts->bts->sba()->sched(trx, ts, fn, block_nr)) != 0xffffffff) {
+} else if ((sba_fn = bts_sba(bts)->sched(trx, ts, fn, block_nr)) != 0xffffffff) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling free USF for "
 			"single block allocation at FN=%d\n", trx, ts, fn,
@@ -493,7 +493,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	}
 
 	/* msg is now available */
-	bts->bts->do_rate_ctr_add(CTR_RLC_DL_BYTES, msg->data_len);
+	bts_do_rate_ctr_add(bts, CTR_RLC_DL_BYTES, msg->data_len);
 
 	/* set USF */
 	OSMO_ASSERT(msgb_length(msg) > 0);

@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
- 
+
 /* These store the amount of frame number that we wait until next timer expires. */
 static int nearest;
 static int *nearest_p;
@@ -45,7 +45,7 @@ static struct rb_root timer_root = RB_ROOT;
  */
 int get_current_fn()
 {
-	return BTS::main_bts()->current_frame_number();
+	return bts_current_frame_number(the_pcu->bts);
 }
 
 static void __add_gsm_timer(struct osmo_gsm_timer_list *timer)
@@ -232,4 +232,3 @@ int osmo_gsm_timers_check(void)
 }
 
 /*! }@ */
-

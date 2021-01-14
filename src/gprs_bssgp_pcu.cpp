@@ -34,6 +34,7 @@ extern "C" {
 	#include <osmocom/core/utils.h>
 	#include <osmocom/gsm/gsm48.h>
 	#include "coding_scheme.h"
+	#include "tbf_dl.h"
 }
 
 /* Tuning parameters for BSSGP flow control */
@@ -208,7 +209,7 @@ static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, const struct tlv_parsed
 	if ((rc = get_paging_mi(&mi, tp)) > 0)
 		return bssgp_tx_status((enum gprs_bssgp_cause) rc, NULL, msg);
 
-	return BTS::main_bts()->add_paging(tlvp_val8(tp, BSSGP_IE_CHAN_NEEDED, 0), &mi);
+	return bts_add_paging(the_pcu->bts, tlvp_val8(tp, BSSGP_IE_CHAN_NEEDED, 0), &mi);
 }
 
 static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, const struct tlv_parsed *tp)
@@ -761,8 +762,8 @@ static enum CodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
 			} else {
 				/* We found "num" for free in the loop above */
 			}
-		} else if (bts->bts->max_mcs_dl()) {
-			num = bts->bts->max_mcs_dl();
+		} else if (bts_max_mcs_dl(bts)) {
+			num = bts_max_mcs_dl(bts);
 		} else {
 			num = 9;
 		}
@@ -782,8 +783,8 @@ static enum CodingScheme max_coding_scheme_dl(struct gprs_rlcmac_bts *bts)
 				}
 			}
 		}
-	} else if (bts->bts->max_cs_dl()) {
-		num = bts->bts->max_cs_dl();
+	} else if (bts_max_cs_dl(bts)) {
+		num = bts_max_cs_dl(bts);
 	}
 
 	if (!num)

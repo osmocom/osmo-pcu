@@ -122,13 +122,13 @@ void gprs_llc_queue::enqueue(struct msgb *llc_msg, const struct timespec *expire
 	msgb_enqueue(&m_queue, llc_msg);
 }
 
-void llc_queue_clear(struct gprs_llc_queue *q, struct BTS *bts)
+void llc_queue_clear(struct gprs_llc_queue *q, struct gprs_rlcmac_bts *bts)
 {
 	struct msgb *msg;
 
 	while ((msg = msgb_dequeue(&q->m_queue))) {
 		if (bts)
-			bts->do_rate_ctr_inc(CTR_LLC_FRAME_DROPPED);
+			bts_do_rate_ctr_inc(bts, CTR_LLC_FRAME_DROPPED);
 		msgb_free(msg);
 	}
 
@@ -221,7 +221,7 @@ struct msgb *gprs_llc_queue::dequeue(const MetaInfo **info)
 	return msg;
 }
 
-void gprs_llc_queue::calc_pdu_lifetime(BTS *bts, const uint16_t pdu_delay_csec, struct timespec *tv)
+void gprs_llc_queue::calc_pdu_lifetime(struct gprs_rlcmac_bts *bts, const uint16_t pdu_delay_csec, struct timespec *tv)
 {
 	uint16_t delay_csec;
 	if (bts->pcu->vty.force_llc_lifetime)

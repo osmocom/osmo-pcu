@@ -24,6 +24,7 @@
 #include <bts.h>
 #include <tbf.h>
 #include <tbf_ul.h>
+#include <tbf_dl.h>
 #include <cxx_linuxlist.h>
 #include <sba.h>
 
@@ -32,7 +33,7 @@ extern "C" {
 #include <osmocom/gsm/gsm_utils.h>
 }
 
-PollController::PollController(BTS& bts)
+PollController::PollController(struct gprs_rlcmac_bts& bts)
 	: m_bts(bts)
 {}
 
@@ -51,26 +52,26 @@ void PollController::expireTimedout(int frame_number, unsigned max_delay)
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_sba *sba, *sba2;
-	LListHead<gprs_rlcmac_tbf> *pos;
+	struct llist_item *pos;
 
-	llist_for_each(pos, &m_bts.ul_tbfs()) {
-		ul_tbf = as_ul_tbf(pos->entry());
+	llist_for_each_entry(pos, &m_bts.ul_tbfs, list) {
+		ul_tbf = as_ul_tbf((struct gprs_rlcmac_tbf *)pos->entry);
 		if (ul_tbf->poll_scheduled()) {
 			if (elapsed_fn_check(max_delay, frame_number, ul_tbf->poll_fn))
 				ul_tbf->poll_timeout();
 		}
 	}
-	llist_for_each(pos, &m_bts.dl_tbfs()) {
-		dl_tbf = as_dl_tbf(pos->entry());
+	llist_for_each_entry(pos, &m_bts.dl_tbfs, list) {
+		dl_tbf = as_dl_tbf((struct gprs_rlcmac_tbf *)pos->entry);
 		if (dl_tbf->poll_scheduled()) {
 			if (elapsed_fn_check(max_delay, frame_number, dl_tbf->poll_fn))
 				dl_tbf->poll_timeout();
 		}
 	}
-	llist_for_each_entry_safe(sba, sba2, &m_bts.sba()->m_sbas, list) {
+	llist_for_each_entry_safe(sba, sba2, &bts_sba(&m_bts)->m_sbas, list) {
 		if (elapsed_fn_check(max_delay, frame_number, sba->fn)) {
 			/* sba will be freed here */
-			m_bts.sba()->timeout(sba);
+			bts_sba(&m_bts)->timeout(sba);
 		}
 	}
 

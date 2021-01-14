@@ -26,7 +26,7 @@ extern "C" {
 #include <osmocom/core/linuxlist.h>
 }
 
-struct BTS;
+struct gprs_rlcmac_bts;
 struct gprs_rlcmac_pdch;
 
 /*
@@ -45,10 +45,10 @@ struct gprs_rlcmac_sba {
  *
  * TODO: Add a flush method..
  */
-class SBAController {
+struct SBAController {
 	friend class PollController;
 public:
-	SBAController(BTS &bts);
+	SBAController(struct gprs_rlcmac_bts &bts);
 
 	int alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta);
 	gprs_rlcmac_sba *find(uint8_t trx, uint8_t ts, uint32_t fn);
@@ -62,6 +62,6 @@ public:
 	void free_sba(gprs_rlcmac_sba *sba);
 
 private:
-	BTS &m_bts;
+	struct gprs_rlcmac_bts &m_bts;
 	llist_head m_sbas;
 };

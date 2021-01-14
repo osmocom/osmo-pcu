@@ -1151,19 +1151,17 @@ static void test_rlc_info_init()
 	printf("=== end %s ===\n", __func__);
 }
 
-static void setup_bts(BTS *the_bts, uint8_t ts_no, uint8_t cs = 1)
+static void setup_bts(struct gprs_rlcmac_bts *bts, uint8_t ts_no, uint8_t cs = 1)
 {
-	gprs_rlcmac_bts *bts;
 	gprs_rlcmac_trx *trx;
 
-	bts = the_bts->bts_data();
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	bts->initial_cs_dl = cs;
 	bts->initial_cs_ul = cs;
 	trx = &bts->trx[0];
 	trx->pdch[ts_no].enable();
 }
-static void uplink_header_type_2_parsing_test(BTS *the_bts,
+static void uplink_header_type_2_parsing_test(struct gprs_rlcmac_bts *bts,
 	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
 	uint8_t ms_class)
 {
@@ -1254,7 +1252,7 @@ static void uplink_header_type_2_parsing_test(BTS *the_bts,
 
 static void uplink_header_type2_test(void)
 {
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
 	uint16_t qta = 31;
@@ -1262,14 +1260,15 @@ static void uplink_header_type2_test(void)
 	uint8_t ms_class = 1;
 
 	printf("=== start %s ===\n", __func__);
-	setup_bts(&the_bts, ts_no, 10);
+	setup_bts(bts, ts_no, 10);
 
-	uplink_header_type_2_parsing_test(&the_bts, ts_no,
+	uplink_header_type_2_parsing_test(bts, ts_no,
 			tlli, &fn, qta, ms_class);
 	printf("=== end %s ===\n", __func__);
+	talloc_free(bts);
 }
 
-static void uplink_header_type_1_parsing_test(BTS *the_bts,
+static void uplink_header_type_1_parsing_test(struct gprs_rlcmac_bts *bts,
 	uint8_t ts_no, uint32_t tlli, uint32_t *fn, uint16_t qta,
 	uint8_t ms_class)
 {
@@ -1371,7 +1370,7 @@ static void uplink_header_type_1_parsing_test(BTS *the_bts,
 
 void uplink_header_type1_test(void)
 {
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts  *bts = bts_alloc(the_pcu);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
 	uint16_t qta = 31;
@@ -1379,8 +1378,8 @@ void uplink_header_type1_test(void)
 	uint8_t ms_class = 1;
 
 	printf("=== start %s ===\n", __func__);
-	setup_bts(&the_bts, ts_no, 12);
-	uplink_header_type_1_parsing_test(&the_bts, ts_no, tlli, &fn,
+	setup_bts(bts, ts_no, 12);
+	uplink_header_type_1_parsing_test(bts, ts_no, tlli, &fn,
 			qta, ms_class);
 	printf("=== end %s ===\n", __func__);
 }

@@ -36,24 +36,24 @@ extern "C" {
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 bool spoof_mnc_3_digits = false;
 
-static uint32_t calc_fn(BTS * bts, uint32_t rfn)
+static uint32_t calc_fn(struct gprs_rlcmac_bts * bts, uint32_t rfn)
 {
 	uint32_t fn;
-	fn = bts->rfn_to_fn(rfn);
+	fn = bts_rfn_to_fn(bts, rfn);
 	printf("rfn=%i ==> fn=%i\n", rfn, fn);
 	return fn;
 }
 
-static void set_fn(BTS * bts, uint32_t fn)
+static void set_fn(struct gprs_rlcmac_bts * bts, uint32_t fn)
 {
 	printf("\n");
-	bts->set_current_frame_number(fn);
+	bts_set_current_frame_number(bts, fn);
 	printf("bts: fn=%i\n", fn);
 }
 
 static void run_test()
 {
-	BTS bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	uint32_t fn;
 
 	printf("RFN_MODULUS=%i\n",RFN_MODULUS);
@@ -63,20 +63,20 @@ static void run_test()
 	/* Test with a collection of real world examples,
 	 * all all of them are not critical and do not
 	 * assume the occurence of any race contions */
-	set_fn(&bts, 1320462);
-	fn = calc_fn(&bts, 5066);
+	set_fn(bts, 1320462);
+	fn = calc_fn(bts, 5066);
 	OSMO_ASSERT(fn == 1320458);
 
-	set_fn(&bts, 8246);
-	fn = calc_fn(&bts, 8244);
+	set_fn(bts, 8246);
+	fn = calc_fn(bts, 8244);
 	OSMO_ASSERT(fn == 8244);
 
-	set_fn(&bts, 10270);
-	fn = calc_fn(&bts, 10269);
+	set_fn(bts, 10270);
+	fn = calc_fn(bts, 10269);
 	OSMO_ASSERT(fn == 10269);
 
-	set_fn(&bts, 311276);
-	fn = calc_fn(&bts, 14250);
+	set_fn(bts, 311276);
+	fn = calc_fn(bts, 14250);
 	OSMO_ASSERT(fn == 311274);
 
 
@@ -84,20 +84,20 @@ static void run_test()
 	 * just wrapped over a little bit above the
 	 * modulo 42432 raster, but the rach request
 	 * occurred before the wrapping */
-	set_fn(&bts, RFN_MODULUS + 30);
-	fn = calc_fn(&bts, RFN_MODULUS - 10);
+	set_fn(bts, RFN_MODULUS + 30);
+	fn = calc_fn(bts, RFN_MODULUS - 10);
 	OSMO_ASSERT(fn == 42422);
 
-	set_fn(&bts, RFN_MODULUS + 1);
-	fn = calc_fn(&bts, RFN_MODULUS - 1);
+	set_fn(bts, RFN_MODULUS + 1);
+	fn = calc_fn(bts, RFN_MODULUS - 1);
 	OSMO_ASSERT(fn == 42431);
 
-	set_fn(&bts, RFN_MODULUS * 123 + 16);
-	fn = calc_fn(&bts, RFN_MODULUS - 4);
+	set_fn(bts, RFN_MODULUS * 123 + 16);
+	fn = calc_fn(bts, RFN_MODULUS - 4);
 	OSMO_ASSERT(fn == 5219132);
 
-	set_fn(&bts, RFN_MODULUS * 123 + 451);
-	fn = calc_fn(&bts, RFN_MODULUS - 175);
+	set_fn(bts, RFN_MODULUS * 123 + 451);
+	fn = calc_fn(bts, RFN_MODULUS - 175);
 	OSMO_ASSERT(fn == 5218961);
 
 
@@ -105,41 +105,42 @@ static void run_test()
 	 * the BTS just wrapped its internal frame number
 	 * but we still get rach requests with high relative
 	 * frame numbers. */
-	set_fn(&bts, 0);
-	fn = calc_fn(&bts, RFN_MODULUS - 13);
+	set_fn(bts, 0);
+	fn = calc_fn(bts, RFN_MODULUS - 13);
 	OSMO_ASSERT(fn == 2715635);
 
-	set_fn(&bts, 453);
-	fn = calc_fn(&bts, RFN_MODULUS - 102);
+	set_fn(bts, 453);
+	fn = calc_fn(bts, RFN_MODULUS - 102);
 	OSMO_ASSERT(fn == 2715546);
 
-	set_fn(&bts, 10);
-	fn = calc_fn(&bts, RFN_MODULUS - 10);
+	set_fn(bts, 10);
+	fn = calc_fn(bts, RFN_MODULUS - 10);
 	OSMO_ASSERT(fn == 2715638);
 
-	set_fn(&bts, 23);
-	fn = calc_fn(&bts, RFN_MODULUS - 42);
+	set_fn(bts, 23);
+	fn = calc_fn(bts, RFN_MODULUS - 42);
 	OSMO_ASSERT(fn == 2715606);
 
 
 	/* Also check with some corner case
 	 * values where Fn and RFn reach its
 	 * maximum/minimum valid range */
-	set_fn(&bts, GSM_MAX_FN);
-	fn = calc_fn(&bts, RFN_MODULUS-1);
+	set_fn(bts, GSM_MAX_FN);
+	fn = calc_fn(bts, RFN_MODULUS-1);
 	OSMO_ASSERT(fn == GSM_MAX_FN-1);
 
-	set_fn(&bts, 0);
-	fn = calc_fn(&bts, RFN_MODULUS-1);
+	set_fn(bts, 0);
+	fn = calc_fn(bts, RFN_MODULUS-1);
 	OSMO_ASSERT(fn == GSM_MAX_FN-1);
 
-	set_fn(&bts, GSM_MAX_FN);
-	fn = calc_fn(&bts, 0);
+	set_fn(bts, GSM_MAX_FN);
+	fn = calc_fn(bts, 0);
 	OSMO_ASSERT(fn == GSM_MAX_FN);
 
-	set_fn(&bts, 0);
-	fn = calc_fn(&bts, 0);
+	set_fn(bts, 0);
+	fn = calc_fn(bts, 0);
 	OSMO_ASSERT(fn == 0);
+	talloc_free(bts);
 }
 
 int main(int argc, char **argv)

@@ -305,7 +305,7 @@ static bool idle_pdch_avail(const struct gprs_rlcmac_bts *bts_data)
  *  \param[out] trx_no_ TRX number on which TFI was found
  *  \returns negative error code or 0 on success
  */
-static int tfi_find_free(const BTS *bts, const gprs_rlcmac_trx *trx, const GprsMs *ms,
+static int tfi_find_free(const struct gprs_rlcmac_bts *bts, const gprs_rlcmac_trx *trx, const GprsMs *ms,
 			 enum gprs_rlcmac_tbf_direction dir, int8_t use_trx, uint8_t *trx_no_)
 {
 	int tfi;
@@ -323,7 +323,7 @@ static int tfi_find_free(const BTS *bts, const gprs_rlcmac_trx *trx, const GprsM
 	if (use_trx == -1 && ms_current_trx(ms))
 		use_trx = ms_current_trx(ms)->trx_no;
 
-	tfi = bts->tfi_find_free(dir, &trx_no, use_trx);
+	tfi = bts_tfi_find_free(bts, dir, &trx_no, use_trx);
 	if (tfi < 0)
 		return -EBUSY;
 
@@ -423,7 +423,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	ms_set_reserved_slots(ms_, trx, 1 << ts, 1 << ts);
 
 	tbf_->upgrade_to_multislot = 0;
-	bts->bts->do_rate_ctr_inc(CTR_TBF_ALLOC_ALGO_A);
+	bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_ALGO_A);
 	return 0;
 }
 
@@ -888,7 +888,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	trx = ms_current_trx(ms);
 
 	/* Step 2a: Find usable TRX and TFI */
-	tfi = tfi_find_free(bts->bts, trx, ms, tbf->direction, use_trx, &trx_no);
+	tfi = tfi_find_free(bts, trx, ms, tbf->direction, use_trx, &trx_no);
 	if (tfi < 0) {
 		LOGPAL(tbf, "B", single, use_trx, LOGL_NOTICE, "failed to allocate a TFI\n");
 		return tfi;
@@ -966,7 +966,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 	else
 		assign_ul_tbf_slots(as_ul_tbf(tbf_), trx, ul_slots, tfi, usf);
 
-	bts->bts->do_rate_ctr_inc(CTR_TBF_ALLOC_ALGO_B);
+	bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_ALGO_B);
 
 	return 0;
 }

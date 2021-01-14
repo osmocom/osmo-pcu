@@ -24,6 +24,7 @@
 #include <bts.h>
 #include <tbf.h>
 #include <tbf_ul.h>
+#include <tbf_dl.h>
 #include <gprs_debug.h>
 #include <egprs_rlc_compression.h>
 

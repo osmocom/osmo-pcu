@@ -31,6 +31,8 @@
 #include <gprs_debug.h>
 #include <cxx_linuxlist.h>
 #include <pdch.h>
+#include <gprs_ms_storage.h>
+#include <sba.h>
 
 extern "C" {
 	#include <osmocom/core/talloc.h>
@@ -190,9 +192,20 @@ static const struct osmo_stat_item_group_desc bts_statg_desc = {
 	bts_stat_item_description,
 };
 
-static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
+static void bts_init(struct gprs_rlcmac_bts *bts, struct gprs_pcu *pcu)
 {
-	memset(bts, 0, sizeof(*bts));
+	bts->pcu = pcu;
+
+	bts->pollController = new PollController(*bts);
+	bts->sba = new SBAController(*bts);
+	bts->ms_store = new GprsMsStorage(bts);
+
+	bts->cur_fn = 0;
+	bts->cur_blk_fn = -1;
+	bts->max_cs_dl = MAX_GPRS_CS;
+	bts->max_cs_ul = MAX_GPRS_CS;
+	bts->max_mcs_dl = MAX_EDGE_MCS;
+	bts->max_mcs_ul = MAX_EDGE_MCS;
 	bts->initial_cs_dl = bts->initial_cs_ul = 1;
 	bts->initial_mcs_dl = bts->initial_mcs_ul = 1;
 	bts->cs_mask = 1 << 0;  /* CS-1 always enabled by default */
@@ -202,15 +215,17 @@ static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 	bts->si13_is_set = false;
 
 	bts->app_info = NULL;
-	bts->bts = bts_obj;
 	bts->T_defs_bts = T_defs_bts;
 	osmo_tdefs_reset(bts->T_defs_bts);
+
+	INIT_LLIST_HEAD(&bts->ul_tbfs);
+	INIT_LLIST_HEAD(&bts->dl_tbfs);
 
 	/* initialize back pointers */
 	for (size_t trx_no = 0; trx_no < ARRAY_SIZE(bts->trx); ++trx_no) {
 		struct gprs_rlcmac_trx *trx = &bts->trx[trx_no];
 		trx->trx_no = trx_no;
-		trx->bts = bts_obj;
+		trx->bts = bts;
 
 		for (size_t ts_no = 0; ts_no < ARRAY_SIZE(trx->pdch); ++ts_no) {
 			struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
@@ -219,89 +234,57 @@ static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 			pdch->trx = trx;
 		}
 	}
-}
-
-BTS* BTS::main_bts()
-{
-	return the_pcu->bts;
-}
-
-struct gprs_rlcmac_bts *BTS::bts_data()
-{
-	return &m_bts;
-}
-
-struct gprs_rlcmac_bts *bts_main_data()
-{
-	return BTS::main_bts()->bts_data();
-}
-
-void bts_cleanup()
-{
-	return BTS::main_bts()->cleanup();
-}
-
-struct rate_ctr_group *bts_main_data_stats()
-{
-	return BTS::main_bts()->rate_counters();
-}
-
-BTS::BTS(struct gprs_pcu *pcu)
-	: pcu(pcu)
-	, m_cur_fn(0)
-	, m_cur_blk_fn(-1)
-	, m_max_cs_dl(MAX_GPRS_CS)
-	, m_max_cs_ul(MAX_GPRS_CS)
-	, m_max_mcs_dl(MAX_EDGE_MCS)
-	, m_max_mcs_ul(MAX_EDGE_MCS)
-	, m_pollController(*this)
-	, m_sba(*this)
-	, m_ms_store(this)
-{
-	bts_init(&m_bts, this);
 
 	/* The static allocator might have already registered the counter group.
 	   If this happens and we still called explicitly (in tests/ for example)
 	   than just allocate the group with different index.
 	   This shall be removed once weget rid of BTS singleton */
 	if (rate_ctr_get_group_by_name_idx(bts_ctrg_desc.group_name_prefix, 0))
-		m_ratectrs = rate_ctr_group_alloc(tall_pcu_ctx, &bts_ctrg_desc, 1);
+		bts->ratectrs = rate_ctr_group_alloc(tall_pcu_ctx, &bts_ctrg_desc, 1);
 	else
-		m_ratectrs = rate_ctr_group_alloc(tall_pcu_ctx, &bts_ctrg_desc, 0);
-	OSMO_ASSERT(m_ratectrs);
+		bts->ratectrs = rate_ctr_group_alloc(tall_pcu_ctx, &bts_ctrg_desc, 0);
+	OSMO_ASSERT(bts->ratectrs);
 
-	m_statg = osmo_stat_item_group_alloc(tall_pcu_ctx, &bts_statg_desc, 0);
-	OSMO_ASSERT(m_statg);
+	bts->statg = osmo_stat_item_group_alloc(tall_pcu_ctx, &bts_statg_desc, 0);
+	OSMO_ASSERT(bts->statg);
 }
 
-void BTS::cleanup()
+struct gprs_rlcmac_bts *bts_main_data()
+{
+	return the_pcu->bts;
+}
+
+struct rate_ctr_group *bts_main_data_stats()
+{
+	return bts_rate_counters(the_pcu->bts);
+}
+
+static void bts_cleanup(gprs_rlcmac_bts *bts)
 {
 	/* this can cause counter updates and must not be left to the
 	 * m_ms_store's destructor */
-	m_ms_store.cleanup();
+	bts->ms_store->cleanup();
+	delete bts->ms_store;
+	delete bts->sba;
+	delete bts->pollController;
 
-	if (m_ratectrs) {
-		rate_ctr_group_free(m_ratectrs);
-		m_ratectrs = NULL;
+	if (bts->ratectrs) {
+		rate_ctr_group_free(bts->ratectrs);
+		bts->ratectrs = NULL;
 	}
 
-	if (m_statg) {
-		osmo_stat_item_group_free(m_statg);
-		m_statg = NULL;
+	if (bts->statg) {
+		osmo_stat_item_group_free(bts->statg);
+		bts->statg = NULL;
 	}
 
-	if (m_bts.app_info) {
-		msgb_free(m_bts.app_info);
-		m_bts.app_info = NULL;
+	if (bts->app_info) {
+		msgb_free(bts->app_info);
+		bts->app_info = NULL;
 	}
 }
 
-BTS::~BTS()
-{
-	cleanup();
-}
-
-void BTS::set_current_frame_number(int fn)
+void bts_set_current_frame_number(struct gprs_rlcmac_bts *bts, int fn)
 {
 	/* The UL frame numbers lag 3 behind the DL frames and the data
 	 * indication is only sent after all 4 frames of the block have been
@@ -314,8 +297,8 @@ void BTS::set_current_frame_number(int fn)
 	 * Values up to 50 frames have been observed under load. */
 	const static int max_delay = 60;
 
-	m_cur_fn = fn;
-	m_pollController.expireTimedout(m_cur_fn, max_delay);
+	bts->cur_fn = fn;
+	bts->pollController->expireTimedout(bts->cur_fn, max_delay);
 }
 
 static inline int delta_fn(int fn, int to)
@@ -323,7 +306,7 @@ static inline int delta_fn(int fn, int to)
 	return (fn + GSM_MAX_FN * 3 / 2 - to) % GSM_MAX_FN - GSM_MAX_FN/2;
 }
 
-void BTS::set_current_block_frame_number(int fn, unsigned max_delay)
+void bts_set_current_block_frame_number(struct gprs_rlcmac_bts *bts, int fn, unsigned max_delay)
 {
 	int delay = 0;
 	const int late_block_delay_thresh = 13;
@@ -332,41 +315,41 @@ void BTS::set_current_block_frame_number(int fn, unsigned max_delay)
 
 	/* frame numbers in the received blocks are assumed to be strongly
 	 * monotonic. */
-	if (m_cur_blk_fn >= 0) {
-		int delta = delta_fn(fn, m_cur_blk_fn);
+	if (bts->cur_blk_fn >= 0) {
+		int delta = delta_fn(fn, bts->cur_blk_fn);
 		if (delta <= 0)
 			return;
 	}
 
 	/* Check block delay vs. the current frame number */
-	if (current_frame_number() != 0)
-		delay = delta_fn(fn, current_frame_number());
+	if (bts_current_frame_number(bts) != 0)
+		delay = delta_fn(fn, bts_current_frame_number(bts));
 	if (delay <= -late_block_delay_thresh) {
 		LOGP(DRLCMAC, LOGL_NOTICE,
 			"Late RLC block, FN delta: %d FN: %d curFN: %d\n",
-			delay, fn, current_frame_number());
-		do_rate_ctr_inc(CTR_RLC_LATE_BLOCK);
+			delay, fn, bts_current_frame_number(bts));
+		bts_do_rate_ctr_inc(bts, CTR_RLC_LATE_BLOCK);
 	}
 
-	m_cur_blk_fn = fn;
+	bts->cur_blk_fn = fn;
 	if (delay < fn_update_ok_min_delay || delay > fn_update_ok_max_delay ||
-		current_frame_number() == 0)
-		m_cur_fn = fn;
+		bts_current_frame_number(bts) == 0)
+		bts->cur_fn = fn;
 
-	m_pollController.expireTimedout(fn, max_delay);
+	bts->pollController->expireTimedout(fn, max_delay);
 }
 
-int BTS::add_paging(uint8_t chan_needed, const struct osmo_mobile_identity *mi)
+int bts_add_paging(struct gprs_rlcmac_bts *bts, uint8_t chan_needed, const struct osmo_mobile_identity *mi)
 {
 	uint8_t l, trx, ts, any_tbf = 0;
 	struct gprs_rlcmac_tbf *tbf;
-	LListHead<gprs_rlcmac_tbf> *pos;
+	struct llist_item *pos;
 	uint8_t slot_mask[8];
 	int8_t first_ts; /* must be signed */
 
-	LListHead<gprs_rlcmac_tbf> *tbfs_lists[] = {
-		&m_ul_tbfs,
-		&m_dl_tbfs,
+	struct llist_head *tbfs_lists[] = {
+		&bts->ul_tbfs,
+		&bts->dl_tbfs,
 		NULL
 	};
 
@@ -382,8 +365,8 @@ int BTS::add_paging(uint8_t chan_needed, const struct osmo_mobile_identity *mi)
 	 * Don't mark, if TBF uses a different slot that is already marked. */
 	memset(slot_mask, 0, sizeof(slot_mask));
 	for (l = 0; tbfs_lists[l]; l++) {
-		llist_for_each(pos, tbfs_lists[l]) {
-			tbf = pos->entry();
+		llist_for_each_entry(pos, tbfs_lists[l], list) {
+			tbf = (struct gprs_rlcmac_tbf *)pos->entry;
 			first_ts = -1;
 			for (ts = 0; ts < 8; ts++) {
 				if (tbf->pdch[ts]) {
@@ -418,7 +401,7 @@ int BTS::add_paging(uint8_t chan_needed, const struct osmo_mobile_identity *mi)
 		for (ts = 0; ts < 8; ts++) {
 			if ((slot_mask[trx] & (1 << ts))) {
 				/* schedule */
-				if (!m_bts.trx[trx].pdch[ts].add_paging(chan_needed, mi))
+				if (!bts->trx[trx].pdch[ts].add_paging(chan_needed, mi))
 					return -ENOMEM;
 
 				LOGP(DRLCMAC, LOGL_INFO, "Paging on PACCH of TRX=%d TS=%d\n", trx, ts);
@@ -433,8 +416,9 @@ int BTS::add_paging(uint8_t chan_needed, const struct osmo_mobile_identity *mi)
 	return 0;
 }
 
-void BTS::send_gsmtap_rach(enum pcu_gsmtap_category categ, uint8_t channel,
-			   const struct rach_ind_params *rip)
+void bts_send_gsmtap_rach(struct gprs_rlcmac_bts *bts,
+			  enum pcu_gsmtap_category categ, uint8_t channel,
+			  const struct rach_ind_params *rip)
 {
 	struct pcu_l1_meas meas = { 0 };
 	uint8_t ra_buf[2];
@@ -450,37 +434,39 @@ void BTS::send_gsmtap_rach(enum pcu_gsmtap_category categ, uint8_t channel,
 		ra_buf[0] = (uint8_t) (rip->ra & 0xff);
 	}
 
-	send_gsmtap_meas(categ, true, rip->trx_nr, rip->ts_nr, channel,
-			 rfn_to_fn(rip->rfn), ra_buf,
+	bts_send_gsmtap_meas(bts, categ, true, rip->trx_nr, rip->ts_nr, channel,
+			 bts_rfn_to_fn(bts, rip->rfn), ra_buf,
 			 rip->is_11bit ? 2 : 1, &meas);
 }
 
-void BTS::send_gsmtap(enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_no,
-		      uint8_t ts_no, uint8_t channel, uint32_t fn,
-		      const uint8_t *data, unsigned int len)
+void bts_send_gsmtap(struct gprs_rlcmac_bts *bts,
+		     enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_no,
+		     uint8_t ts_no, uint8_t channel, uint32_t fn,
+		     const uint8_t *data, unsigned int len)
 {
 	struct pcu_l1_meas meas = { 0 };
-	send_gsmtap_meas(categ, uplink, trx_no, ts_no, channel, fn, data, len, &meas);
+	bts_send_gsmtap_meas(bts, categ, uplink, trx_no, ts_no, channel, fn, data, len, &meas);
 }
 
-void BTS::send_gsmtap_meas(enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_no,
-		      uint8_t ts_no, uint8_t channel, uint32_t fn,
-		      const uint8_t *data, unsigned int len, struct pcu_l1_meas *meas)
+void bts_send_gsmtap_meas(struct gprs_rlcmac_bts *bts,
+			  enum pcu_gsmtap_category categ, bool uplink, uint8_t trx_no,
+			  uint8_t ts_no, uint8_t channel, uint32_t fn,
+			  const uint8_t *data, unsigned int len, struct pcu_l1_meas *meas)
 {
 	uint16_t arfcn;
 
 	/* check if category is activated at all */
-	if (!(pcu->gsmtap_categ_mask & (1 << categ)))
+	if (!(bts->pcu->gsmtap_categ_mask & (1 << categ)))
 		return;
 
-	arfcn = m_bts.trx[trx_no].arfcn;
+	arfcn = bts->trx[trx_no].arfcn;
 	if (uplink)
 		arfcn |= GSMTAP_ARFCN_F_UPLINK;
 
 	/* GSMTAP needs the SNR here, but we only have C/I (meas->link_qual).
 	   Those are not the same, but there is no known way to convert them,
 	   let's pass C/I instead of nothing */
-	gsmtap_send(pcu->gsmtap, arfcn, ts_no, channel, 0, fn,
+	gsmtap_send(bts->pcu->gsmtap, arfcn, ts_no, channel, 0, fn,
 		    meas->rssi, meas->link_qual, data, len);
 }
 
@@ -493,48 +479,52 @@ static inline bool tbf_check(gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t trx_no, 
 	return false;
 }
 
-gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
+struct gprs_rlcmac_dl_tbf *bts_dl_tbf_by_poll_fn(struct gprs_rlcmac_bts *bts, uint32_t fn, uint8_t trx, uint8_t ts)
 {
-	LListHead<gprs_rlcmac_tbf> *pos;
+	struct llist_item *pos;
+	struct gprs_rlcmac_tbf *tbf;
 
 	/* only one TBF can poll on specific TS/FN, because scheduler can only
 	 * schedule one downlink control block (with polling) at a FN per TS */
-	llist_for_each(pos, &m_dl_tbfs) {
-		if (tbf_check(pos->entry(), fn, trx, ts))
-			return as_dl_tbf(pos->entry());
+	llist_for_each_entry(pos, &bts->dl_tbfs, list) {
+		tbf = (struct gprs_rlcmac_tbf *)pos->entry;
+		if (tbf_check(tbf, fn, trx, ts))
+			return as_dl_tbf(tbf);
 	}
 	return NULL;
 }
 
-gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_poll_fn(uint32_t fn, uint8_t trx, uint8_t ts)
+struct gprs_rlcmac_ul_tbf *bts_ul_tbf_by_poll_fn(struct gprs_rlcmac_bts *bts, uint32_t fn, uint8_t trx, uint8_t ts)
 {
-	LListHead<gprs_rlcmac_tbf> *pos;
+	struct llist_item *pos;
+	struct gprs_rlcmac_tbf *tbf;
 
 	/* only one TBF can poll on specific TS/FN, because scheduler can only
 	 * schedule one downlink control block (with polling) at a FN per TS */
-	llist_for_each(pos, &m_ul_tbfs) {
-		if (tbf_check(pos->entry(), fn, trx, ts))
-			return as_ul_tbf(pos->entry());
+	llist_for_each_entry(pos, &bts->ul_tbfs, list) {
+		tbf = (struct gprs_rlcmac_tbf *)pos->entry;
+		if (tbf_check(tbf, fn, trx, ts))
+			return as_ul_tbf(tbf);
 	}
 	return NULL;
 }
 
 /* lookup downlink TBF Entity (by TFI) */
-gprs_rlcmac_dl_tbf *BTS::dl_tbf_by_tfi(uint8_t tfi, uint8_t trx, uint8_t ts)
+struct gprs_rlcmac_dl_tbf *bts_dl_tbf_by_tfi(struct gprs_rlcmac_bts *bts, uint8_t tfi, uint8_t trx, uint8_t ts)
 {
 	if (trx >= 8 || ts >= 8)
 		return NULL;
 
-	return m_bts.trx[trx].pdch[ts].dl_tbf_by_tfi(tfi);
+	return bts->trx[trx].pdch[ts].dl_tbf_by_tfi(tfi);
 }
 
 /* lookup uplink TBF Entity (by TFI) */
-gprs_rlcmac_ul_tbf *BTS::ul_tbf_by_tfi(uint8_t tfi, uint8_t trx, uint8_t ts)
+struct gprs_rlcmac_ul_tbf *bts_ul_tbf_by_tfi(struct gprs_rlcmac_bts *bts, uint8_t tfi, uint8_t trx, uint8_t ts)
 {
 	if (trx >= 8 || ts >= 8)
 		return NULL;
 
-	return m_bts.trx[trx].pdch[ts].ul_tbf_by_tfi(tfi);
+	return bts->trx[trx].pdch[ts].ul_tbf_by_tfi(tfi);
 }
 
 static unsigned int trx_count_free_tfi(const struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_direction dir, uint8_t *first_free_tfi)
@@ -576,7 +566,8 @@ static unsigned int trx_count_free_tfi(const struct gprs_rlcmac_trx *trx, enum g
  * that is currently not used in any PDCH of a the TRX with least TFIs currently
  * assigned. Negative values indicate errors.
  */
-int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t use_trx) const
+int bts_tfi_find_free(const struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_direction dir,
+		      uint8_t *_trx, int8_t use_trx)
 {
 	uint8_t trx_from, trx_to, trx;
 	uint8_t best_trx_nr = 0xff;
@@ -594,7 +585,7 @@ int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t
 	for (trx = trx_from; trx <= trx_to; trx++) {
 		uint8_t tmp_first_tfi;
 		unsigned int tmp_cnt;
-		tmp_cnt = trx_count_free_tfi(&m_bts.trx[trx], dir, &tmp_first_tfi);
+		tmp_cnt = trx_count_free_tfi(&bts->trx[trx], dir, &tmp_first_tfi);
 		if (tmp_cnt > best_cnt) {
 			best_cnt = tmp_cnt;
 			best_first_tfi = tmp_first_tfi;
@@ -615,7 +606,7 @@ int BTS::tfi_find_free(enum gprs_rlcmac_tbf_direction dir, uint8_t *_trx, int8_t
 	return best_first_tfi;
 }
 
-int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
+int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32_t fn)
 {
 	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 	uint8_t plen;
@@ -640,7 +631,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 	tlli |= (*data++) << 4;
 	tlli |= (*data++) >> 4;
 
-	ms = ms_by_tlli(tlli);
+	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	if (ms)
 		dl_tbf = ms_dl_tbf(ms);
 	if (!dl_tbf) {
@@ -658,7 +649,7 @@ int BTS::rcv_imm_ass_cnf(const uint8_t *data, uint32_t fn)
 }
 
 /* Determine the full frame number from a relative frame number */
-uint32_t BTS::rfn_to_fn(int32_t rfn)
+uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, int32_t rfn)
 {
 	int32_t m_cur_rfn;
 	int32_t fn;
@@ -682,11 +673,11 @@ uint32_t BTS::rfn_to_fn(int32_t rfn)
 
 	/* Compute an internal relative frame number from the full internal
 	   frame number */
-	m_cur_rfn = m_cur_fn % RFN_MODULUS;
+	m_cur_rfn = bts->cur_fn % RFN_MODULUS;
 
 	/* Compute a "rounded" version of the internal frame number, which
 	 * exactly fits in the RFN_MODULUS raster */
-	fn_rounded = m_cur_fn - m_cur_rfn;
+	fn_rounded = bts->cur_fn - m_cur_rfn;
 
 	/* If the delta between the internal and the external relative frame
 	 * number exceeds a certain limit, we need to assume that the incoming
@@ -695,7 +686,7 @@ uint32_t BTS::rfn_to_fn(int32_t rfn)
 	if (abs(rfn - m_cur_rfn) > RFN_THRESHOLD) {
 		LOGP(DRLCMAC, LOGL_DEBUG,
 		     "Race condition between rfn (%u) and m_cur_fn (%u) detected: rfn belongs to the previous modulus %u cycle, wrapping...\n",
-		     rfn, m_cur_fn, RFN_MODULUS);
+		     rfn, bts->cur_fn, RFN_MODULUS);
 		if (fn_rounded < RFN_MODULUS) {
 			LOGP(DRLCMAC, LOGL_DEBUG,
 			"Cornercase detected: wrapping crosses %u border\n",
@@ -819,7 +810,7 @@ static int parse_rach_ind(const struct rach_ind_params *rip,
 	return 0;
 }
 
-int BTS::rcv_rach(const struct rach_ind_params *rip)
+int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 {
 	struct chan_req_params chan_req = { 0 };
 	struct gprs_rlcmac_ul_tbf *tbf = NULL;
@@ -829,16 +820,16 @@ int BTS::rcv_rach(const struct rach_ind_params *rip)
 	uint8_t tsc = 0;
 	int plen, rc;
 
-	do_rate_ctr_inc(CTR_RACH_REQUESTS);
+	bts_do_rate_ctr_inc(bts, CTR_RACH_REQUESTS);
 
 	if (rip->is_11bit)
-		do_rate_ctr_inc(CTR_11BIT_RACH_REQUESTS);
+		bts_do_rate_ctr_inc(bts, CTR_11BIT_RACH_REQUESTS);
 
 	/* Determine full frame number */
-	uint32_t Fn = rfn_to_fn(rip->rfn);
+	uint32_t Fn = bts_rfn_to_fn(bts, rip->rfn);
 	uint8_t ta = qta2ta(rip->qta);
 
-	send_gsmtap_rach(PCU_GSMTAP_C_UL_RACH, GSMTAP_CHANNEL_RACH, rip);
+	bts_send_gsmtap_rach(bts, PCU_GSMTAP_C_UL_RACH, GSMTAP_CHANNEL_RACH, rip);
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "MS requests Uplink resource on CCCH/RACH: "
 	     "ra=0x%02x (%d bit) Fn=%u qta=%d\n", rip->ra,
@@ -851,7 +842,7 @@ int BTS::rcv_rach(const struct rach_ind_params *rip)
 
 	if (chan_req.single_block)
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block allocation\n");
-	else if (pcu->vty.force_two_phase) {
+	else if (bts->pcu->vty.force_two_phase) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block allocation, "
 		     "but we force two phase access\n");
 		chan_req.single_block = true;
@@ -864,7 +855,7 @@ int BTS::rcv_rach(const struct rach_ind_params *rip)
 
 	/* Should we allocate a single block or an Uplink TBF? */
 	if (chan_req.single_block) {
-		rc = sba()->alloc(&trx_no, &ts_no, &sb_fn, ta);
+		rc = bts_sba(bts)->alloc(&trx_no, &ts_no, &sb_fn, ta);
 		if (rc < 0) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource for "
 			     "single block allocation: rc=%d\n", rc);
@@ -872,12 +863,12 @@ int BTS::rcv_rach(const struct rach_ind_params *rip)
 			goto send_imm_ass_rej;
 		}
 
-		tsc = m_bts.trx[trx_no].pdch[ts_no].tsc;
+		tsc = bts->trx[trx_no].pdch[ts_no].tsc;
 		LOGP(DRLCMAC, LOGL_DEBUG, "Allocated a single block at "
 		     "SBFn=%u TRX=%u TS=%u\n", sb_fn, trx_no, ts_no);
 	} else {
-		GprsMs *ms = ms_alloc(0, chan_req.egprs_mslot_class);
-		tbf = tbf_alloc_ul_tbf(&m_bts, ms, -1, true);
+		GprsMs *ms = bts_alloc_ms(bts, 0, chan_req.egprs_mslot_class);
+		tbf = tbf_alloc_ul_tbf(bts, ms, -1, true);
 		if (!tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource for Uplink TBF\n");
 			/* Send RR Immediate Assignment Reject */
@@ -905,18 +896,18 @@ send_imm_ass_rej:
 		LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment Reject on AGCH\n");
 		plen = Encoding::write_immediate_assignment_reject(
 			bv, rip->ra, Fn, rip->burst_type);
-		do_rate_ctr_inc(CTR_IMMEDIATE_ASSIGN_REJ);
+		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_REJ);
 	} else {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment on AGCH: "
 		     "TRX=%u (ARFCN %u) TS=%u TA=%u TSC=%u TFI=%d USF=%d\n",
-		     trx_no, m_bts.trx[trx_no].arfcn & ~ARFCN_FLAG_MASK,
+		     trx_no, bts->trx[trx_no].arfcn & ~ARFCN_FLAG_MASK,
 		     ts_no, ta, tsc, tbf ? tbf->tfi() : -1, usf);
 		plen = Encoding::write_immediate_assignment(
-			&m_bts.trx[trx_no].pdch[ts_no], tbf, bv,
+			&bts->trx[trx_no].pdch[ts_no], tbf, bv,
 			false, rip->ra, Fn, ta, usf, false, sb_fn,
-			pcu->vty.alpha, pcu->vty.gamma, -1,
+			bts->pcu->vty.alpha, bts->pcu->vty.gamma, -1,
 			rip->burst_type);
-		do_rate_ctr_inc(CTR_IMMEDIATE_ASSIGN_UL_TBF);
+		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF);
 	}
 
 	if (plen >= 0)
@@ -937,14 +928,13 @@ static uint32_t ptcch_slot_map[PTCCH_TAI_NUM] = {
 	324, 350, 376, 402,
 };
 
-int BTS::rcv_ptcch_rach(const struct rach_ind_params *rip)
+int bts_rcv_ptcch_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 {
-	uint32_t fn416 = rfn_to_fn(rip->rfn) % 416;
-	struct gprs_rlcmac_bts *bts = bts_data();
+	uint32_t fn416 = bts_rfn_to_fn(bts, rip->rfn) % 416;
 	struct gprs_rlcmac_pdch *pdch;
 	uint8_t ss;
 
-	send_gsmtap_rach(PCU_GSMTAP_C_UL_PTCCH, GSMTAP_CHANNEL_PTCCH, rip);
+	bts_send_gsmtap_rach(bts, PCU_GSMTAP_C_UL_PTCCH, GSMTAP_CHANNEL_PTCCH, rip);
 
 	/* Prevent buffer overflow */
 	if (rip->trx_nr >= ARRAY_SIZE(bts->trx) || rip->ts_nr >= 8) {
@@ -979,7 +969,7 @@ int BTS::rcv_ptcch_rach(const struct rach_ind_params *rip)
 	return 0;
 }
 
-void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup)
+void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup)
 {
 	uint8_t trx_no = tbf->trx->trx_no;
 	uint8_t ts_no = tbf->first_ts;
@@ -992,14 +982,14 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup)
 	 * so the assignment will not conflict with possible RACH requests. */
 	LOGP(DRLCMAC, LOGL_DEBUG, " - TRX=%d (%d) TS=%d TA=%d pollFN=%d\n",
 		trx_no, tbf->trx->arfcn, ts_no, tbf->ta(), poll ? tbf->poll_fn : -1);
-	plen = Encoding::write_immediate_assignment(&m_bts.trx[trx_no].pdch[ts_no],
+	plen = Encoding::write_immediate_assignment(&bts->trx[trx_no].pdch[ts_no],
 						    tbf, immediate_assignment, true, 125,
 						    (tbf->pdch[ts_no]->last_rts_fn + 21216) % GSM_MAX_FN,
 						    tbf->ta(), 7, poll, tbf->poll_fn,
-						    pcu->vty.alpha, pcu->vty.gamma, -1,
+						    bts->pcu->vty.alpha, bts->pcu->vty.gamma, -1,
 						    GSM_L1_BURST_TYPE_ACCESS_0);
 	if (plen >= 0) {
-		do_rate_ctr_inc(CTR_IMMEDIATE_ASSIGN_DL_TBF);
+		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_DL_TBF);
 		pcu_l1if_tx_pch(immediate_assignment, plen, pgroup);
 	}
 
@@ -1007,70 +997,70 @@ void BTS::snd_dl_ass(gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup)
 }
 
 /* return maximum DL CS supported by BTS and allowed by VTY */
-uint8_t BTS::max_cs_dl(void) const
+uint8_t bts_max_cs_dl(const struct gprs_rlcmac_bts* bts)
 {
-	return m_max_cs_dl;
+	return bts->max_cs_dl;
 }
 
 /* return maximum UL CS supported by BTS and allowed by VTY */
-uint8_t BTS::max_cs_ul(void) const
+uint8_t bts_max_cs_ul(const struct gprs_rlcmac_bts* bts)
 {
-	return m_max_cs_ul;
+	return bts->max_cs_ul;
 }
 
 /* return maximum DL MCS supported by BTS and allowed by VTY */
-uint8_t BTS::max_mcs_dl(void) const
+uint8_t bts_max_mcs_dl(const struct gprs_rlcmac_bts* bts)
 {
-	return m_max_mcs_dl;
+	return bts->max_mcs_dl;
 }
 
 /* return maximum UL MCS supported by BTS and allowed by VTY */
-uint8_t BTS::max_mcs_ul(void) const
+uint8_t bts_max_mcs_ul(const struct gprs_rlcmac_bts* bts)
 {
-	return m_max_mcs_ul;
+	return bts->max_mcs_ul;
 }
 
 /* Set maximum DL CS supported by BTS and allowed by VTY */
-void BTS::set_max_cs_dl(uint8_t cs_dl)
+void bts_set_max_cs_dl(struct gprs_rlcmac_bts* bts, uint8_t cs_dl)
 {
-	m_max_cs_dl = cs_dl;
+	bts->max_cs_dl = cs_dl;
 }
 
 /* Set maximum UL CS supported by BTS and allowed by VTY */
-void BTS::set_max_cs_ul(uint8_t cs_ul)
+void bts_set_max_cs_ul(struct gprs_rlcmac_bts* bts, uint8_t cs_ul)
 {
-	m_max_cs_ul = cs_ul;
+	bts->max_cs_ul = cs_ul;
 }
 
 /* Set maximum DL MCS supported by BTS and allowed by VTY */
-void BTS::set_max_mcs_dl(uint8_t mcs_dl)
+void bts_set_max_mcs_dl(struct gprs_rlcmac_bts* bts, uint8_t mcs_dl)
 {
-	m_max_mcs_dl = mcs_dl;
+	bts->max_mcs_dl = mcs_dl;
 }
 
 /* Set maximum UL MCS supported by BTS and allowed by VTY */
-void BTS::set_max_mcs_ul(uint8_t mcs_ul)
+void bts_set_max_mcs_ul(struct gprs_rlcmac_bts* bts, uint8_t mcs_ul)
 {
-	m_max_mcs_ul = mcs_ul;
+	bts->max_mcs_ul = mcs_ul;
 }
 
-bool BTS::cs_dl_is_supported(CodingScheme cs)
+bool bts_cs_dl_is_supported(const struct gprs_rlcmac_bts* bts, CodingScheme cs)
 {
 	OSMO_ASSERT(mcs_is_valid(cs));
 	uint8_t num = mcs_chan_code(cs);
 	if (mcs_is_gprs(cs)) {
-		return (max_cs_dl() >= num) && (m_bts.cs_mask & (1U << num));
+		return (bts_max_cs_dl(bts) >= num) && (bts->cs_mask & (1U << num));
 	} else {
-		return (max_mcs_dl() >= num) && (m_bts.mcs_mask & (1U << num));
+		return (bts_max_mcs_dl(bts) >= num) && (bts->mcs_mask & (1U << num));
 	}
 }
 
-GprsMs *BTS::ms_alloc(uint8_t ms_class, uint8_t egprs_ms_class)
+GprsMs *bts_alloc_ms(struct gprs_rlcmac_bts* bts, uint8_t ms_class, uint8_t egprs_ms_class)
 {
 	GprsMs *ms;
-	ms = ms_store().create_ms();
+	ms = bts_ms_store(bts)->create_ms();
 
-	ms_set_timeout(ms, osmo_tdef_get(pcu->T_defs, -2030, OSMO_TDEF_S, -1));
+	ms_set_timeout(ms, osmo_tdef_get(bts->pcu->T_defs, -2030, OSMO_TDEF_S, -1));
 	ms_set_ms_class(ms, ms_class);
 	ms_set_egprs_ms_class(ms, egprs_ms_class);
 
@@ -1078,21 +1068,36 @@ GprsMs *BTS::ms_alloc(uint8_t ms_class, uint8_t egprs_ms_class)
 }
 
 
-static int bts_talloc_destructor(struct BTS* bts)
+static int bts_talloc_destructor(struct gprs_rlcmac_bts* bts)
 {
-	bts->~BTS();
+	bts_cleanup(bts);
 	return 0;
 }
 
-struct BTS* bts_alloc(struct gprs_pcu *pcu)
+struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu)
 {
-	struct BTS* bts;
-	bts = talloc(pcu, struct BTS);
+	struct gprs_rlcmac_bts* bts;
+	bts = talloc_zero(pcu, struct gprs_rlcmac_bts);
 	if (!bts)
 		return bts;
 	talloc_set_destructor(bts, bts_talloc_destructor);
-	new (bts) BTS(pcu);
+	bts_init(bts, pcu);
 	return bts;
+}
+
+struct SBAController *bts_sba(struct gprs_rlcmac_bts *bts)
+{
+	return bts->sba;
+}
+
+struct GprsMsStorage *bts_ms_store(struct gprs_rlcmac_bts *bts)
+{
+	return bts->ms_store;
+}
+
+struct GprsMs *bts_ms_by_tlli(struct gprs_rlcmac_bts *bts, uint32_t tlli, uint32_t old_tlli)
+{
+	return bts_ms_store(bts)->get_ms(tlli, old_tlli);
 }
 
 /* update TA based on TA provided by PH-DATA-IND */
@@ -1136,7 +1141,7 @@ void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta)
 void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts, int8_t ta, bool is_rach)
 {
 	struct gprs_rlcmac_ul_tbf *tbf =
-		bts_main_data()->bts->ul_tbf_by_poll_fn(fn, trx_no, ts);
+		bts_ul_tbf_by_poll_fn(the_pcu->bts, fn, trx_no, ts);
 	if (!tbf)
 		LOGP(DL1IF, LOGL_DEBUG, "[%s] update TA = %u ignored due to "
 		     "unknown UL TBF on TRX = %d, TS = %d, FN = %d\n",
@@ -1182,7 +1187,7 @@ void bts_recalc_initial_cs(struct gprs_rlcmac_bts *bts)
 		return;
 	}
 
-	max_cs_dl = bts->bts->max_cs_dl();
+	max_cs_dl = bts_max_cs_dl(bts);
 	if (bts->pcuif_info_ind.initial_cs > max_cs_dl) {
 		LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_cs_dl to %d\n", max_cs_dl);
 		bts->initial_cs_dl = max_cs_dl;
@@ -1192,7 +1197,7 @@ void bts_recalc_initial_cs(struct gprs_rlcmac_bts *bts)
 	if (bts->initial_cs_dl == 0)
 		bts->initial_cs_dl = 1; /* CS1 Must always be supported */
 
-	max_cs_ul = bts->bts->max_cs_ul();
+	max_cs_ul = bts_max_cs_ul(bts);
 	if (bts->pcuif_info_ind.initial_cs > max_cs_ul) {
 		LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_cs_ul to %d\n", max_cs_ul);
 		bts->initial_cs_ul = max_cs_ul;
@@ -1212,14 +1217,14 @@ void bts_recalc_initial_mcs(struct gprs_rlcmac_bts *bts)
 		return;
 	}
 
-	max_mcs_dl = bts->bts->max_mcs_dl();
+	max_mcs_dl = bts_max_mcs_dl(bts);
 	if (bts->pcuif_info_ind.initial_mcs > max_mcs_dl) {
 		LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_mcs_dl to %d\n", max_mcs_dl);
 		bts->initial_mcs_dl = max_mcs_dl;
 	} else {
 		bts->initial_mcs_dl = bts->pcuif_info_ind.initial_mcs;
 	}
-	max_mcs_ul = bts->bts->max_mcs_ul();
+	max_mcs_ul = bts_max_mcs_ul(bts);
 	if (bts->pcuif_info_ind.initial_mcs > max_mcs_ul) {
 		LOGP(DL1IF, LOGL_DEBUG, " downgrading initial_mcs_ul to %d\n", max_mcs_ul);
 		bts->initial_mcs_ul = max_mcs_ul;
@@ -1232,7 +1237,7 @@ void bts_recalc_max_cs(struct gprs_rlcmac_bts *bts)
 {
 	int i;
 	uint8_t cs_dl, cs_ul;
-	struct gprs_pcu *pcu = bts->bts->pcu;
+	struct gprs_pcu *pcu = bts->pcu;
 
 	cs_dl = 0;
 	for (i = pcu->vty.max_cs_dl - 1; i >= 0; i--) {
@@ -1251,15 +1256,15 @@ void bts_recalc_max_cs(struct gprs_rlcmac_bts *bts)
 	}
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "New max CS: DL=%u UL=%u\n", cs_dl, cs_ul);
-	bts->bts->set_max_cs_dl(cs_dl);
-	bts->bts->set_max_cs_ul(cs_ul);
+	bts_set_max_cs_dl(bts, cs_dl);
+	bts_set_max_cs_ul(bts, cs_ul);
 }
 
 void bts_recalc_max_mcs(struct gprs_rlcmac_bts *bts)
 {
 	int i;
 	uint8_t mcs_dl, mcs_ul;
-	struct gprs_pcu *pcu = bts->bts->pcu;
+	struct gprs_pcu *pcu = bts->pcu;
 
 	mcs_dl = 0;
 	for (i = pcu->vty.max_mcs_dl - 1; i >= 0; i--) {
@@ -1278,37 +1283,11 @@ void bts_recalc_max_mcs(struct gprs_rlcmac_bts *bts)
 	}
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "New max MCS: DL=%u UL=%u\n", mcs_dl, mcs_ul);
-	bts->bts->set_max_mcs_dl(mcs_dl);
-	bts->bts->set_max_mcs_ul(mcs_ul);
+	bts_set_max_mcs_dl(bts, mcs_dl);
+	bts_set_max_mcs_ul(bts, mcs_ul);
 }
 
-
-struct gprs_rlcmac_bts *bts_data(struct BTS *bts)
+struct GprsMs *bts_ms_by_imsi(struct gprs_rlcmac_bts *bts, const char *imsi)
 {
-	return &bts->m_bts;
-}
-
-struct GprsMs *bts_ms_by_imsi(struct BTS *bts, const char *imsi)
-{
-	return bts->ms_by_imsi(imsi);
-}
-
-uint8_t bts_max_cs_dl(const struct BTS *bts)
-{
-	return bts->max_cs_dl();
-}
-
-uint8_t bts_max_cs_ul(const struct BTS *bts)
-{
-	return bts->max_cs_ul();
-}
-
-uint8_t bts_max_mcs_dl(const struct BTS *bts)
-{
-	return bts->max_mcs_dl();
-}
-
-uint8_t bts_max_mcs_ul(const struct BTS *bts)
-{
-	return bts->max_mcs_ul();
+	return bts_ms_store(bts)->get_ms(0, 0, imsi);
 }

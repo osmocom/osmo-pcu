@@ -51,18 +51,18 @@ static void test_ms_state()
 	uint32_t tlli = 0xffeeddbb;
 	gprs_rlcmac_dl_tbf *dl_tbf;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	GprsMs *ms;
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(&the_bts, tlli);
+	ms = ms_alloc(bts, tlli);
 	OSMO_ASSERT(ms_is_idle(ms));
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf) gprs_rlcmac_dl_tbf(&the_bts, ms);
+	new (dl_tbf) gprs_rlcmac_dl_tbf(bts, ms);
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(&the_bts, ms);
+	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
 
 	ms_attach_tbf(ms, ul_tbf);
 	OSMO_ASSERT(!ms_is_idle(ms));
@@ -88,7 +88,7 @@ static void test_ms_state()
 
 	talloc_free(dl_tbf);
 	talloc_free(ul_tbf);
-
+	talloc_free(bts);
 	printf("=== end %s ===\n", __func__);
 }
 
@@ -114,21 +114,21 @@ static void test_ms_callback()
 	uint32_t tlli = 0xffeeddbb;
 	gprs_rlcmac_dl_tbf *dl_tbf;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	GprsMs *ms;
 	last_cb = CB_UNKNOWN;
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(&the_bts, tlli);
+	ms = ms_alloc(bts, tlli);
 	ms_set_callback(ms, &ms_cb);
 
 	OSMO_ASSERT(ms_is_idle(ms));
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf) gprs_rlcmac_dl_tbf(&the_bts, ms);
+	new (dl_tbf) gprs_rlcmac_dl_tbf(bts, ms);
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(&the_bts, ms);
+	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
 
 	OSMO_ASSERT(last_cb == CB_UNKNOWN);
 
@@ -163,7 +163,7 @@ static void test_ms_callback()
 
 	talloc_free(dl_tbf);
 	talloc_free(ul_tbf);
-
+	talloc_free(bts);
 	printf("=== end %s ===\n", __func__);
 }
 
@@ -188,23 +188,23 @@ static void test_ms_replace_tbf()
 	uint32_t tlli = 0xffeeddbb;
 	gprs_rlcmac_dl_tbf *dl_tbf[2];
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	GprsMs *ms;
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(&the_bts, tlli);
+	ms = ms_alloc(bts, tlli);
 	ms_set_callback(ms, &ms_replace_tbf_cb);
 
 	OSMO_ASSERT(ms_is_idle(ms));
 	was_idle = false;
 
 	dl_tbf[0] = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf[0]) gprs_rlcmac_dl_tbf(&the_bts, ms);
+	new (dl_tbf[0]) gprs_rlcmac_dl_tbf(bts, ms);
 	dl_tbf[1] = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf[1]) gprs_rlcmac_dl_tbf(&the_bts, ms);
+	new (dl_tbf[1]) gprs_rlcmac_dl_tbf(bts, ms);
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(&the_bts, ms);
+	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
 
 	ms_attach_tbf(ms, dl_tbf[0]);
 	OSMO_ASSERT(!ms_is_idle(ms));
@@ -253,7 +253,7 @@ static void test_ms_replace_tbf()
 	talloc_free(dl_tbf[0]);
 	talloc_free(dl_tbf[1]);
 	talloc_free(ul_tbf);
-
+	talloc_free(bts);
 	printf("=== end %s ===\n", __func__);
 }
 
@@ -262,12 +262,12 @@ static void test_ms_change_tlli()
 	uint32_t start_tlli = 0xaa000000;
 	uint32_t new_ms_tlli = 0xff001111;
 	uint32_t other_sgsn_tlli = 0xff00eeee;
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	GprsMs *ms;
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(&the_bts, start_tlli);
+	ms = ms_alloc(bts, start_tlli);
 
 	OSMO_ASSERT(ms_is_idle(ms));
 
@@ -347,7 +347,7 @@ static void test_ms_change_tlli()
 	OSMO_ASSERT(!ms_check_tlli(ms, start_tlli));
 
 	talloc_free(ms);
-
+	talloc_free(bts);
 	printf("=== end %s ===\n", __func__);
 }
 
@@ -374,9 +374,9 @@ static void test_ms_storage()
 	const char *imsi2 = "001001987654322";
 
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	GprsMs *ms, *ms_tmp;
-	GprsMsStorage store(&the_bts);
+	GprsMsStorage store(bts);
 
 	printf("=== start %s ===\n", __func__);
 
@@ -420,7 +420,7 @@ static void test_ms_storage()
 	ms = store.get_ms(tlli + 0);
 	OSMO_ASSERT(ms != NULL);
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(&the_bts, ms);
+	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
 	ms_attach_tbf(ms, ul_tbf);
 	ms_detach_tbf(ms, ul_tbf);
 	ms = store.get_ms(tlli + 0);
@@ -437,7 +437,7 @@ static void test_ms_storage()
 	OSMO_ASSERT(ms == NULL);
 
 	talloc_free(ul_tbf);
-
+	talloc_free(bts);
 	printf("=== end %s ===\n", __func__);
 }
 
@@ -446,22 +446,22 @@ static void test_ms_timeout()
 	uint32_t tlli = 0xffeeddbb;
 	gprs_rlcmac_dl_tbf *dl_tbf;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	GprsMs *ms;
 	last_cb = CB_UNKNOWN;
 
 	printf("=== start %s ===\n", __func__);
 
-	ms = ms_alloc(&the_bts, tlli);
+	ms = ms_alloc(bts, tlli);
 	ms_set_callback(ms, &ms_cb);
 	ms_set_timeout(ms, 1);
 
 	OSMO_ASSERT(ms_is_idle(ms));
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf) gprs_rlcmac_dl_tbf(&the_bts, ms);
+	new (dl_tbf) gprs_rlcmac_dl_tbf(bts, ms);
 	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(&the_bts, ms);
+	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
 
 	OSMO_ASSERT(last_cb == CB_UNKNOWN);
 
@@ -493,14 +493,13 @@ static void test_ms_timeout()
 	talloc_free(ms);
 	talloc_free(dl_tbf);
 	talloc_free(ul_tbf);
-
+	talloc_free(bts);
 	printf("=== end %s ===\n", __func__);
 }
 
 static void test_ms_cs_selection()
 {
-	BTS the_bts(the_pcu);
-	gprs_rlcmac_bts *bts = the_bts.bts_data();
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	uint32_t tlli = 0xffeeddbb;
 
 	gprs_rlcmac_dl_tbf *dl_tbf;
@@ -513,12 +512,12 @@ static void test_ms_cs_selection()
 	the_pcu->vty.cs_downgrade_threshold = 0;
 	the_pcu->vty.cs_adj_lower_limit = 0;
 
-	ms = ms_alloc(&the_bts, tlli);
+	ms = ms_alloc(bts, tlli);
 
 	OSMO_ASSERT(ms_is_idle(ms));
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf) gprs_rlcmac_dl_tbf(&the_bts, ms);
+	new (dl_tbf) gprs_rlcmac_dl_tbf(bts, ms);
 	ms_attach_tbf(ms, dl_tbf);
 
 	OSMO_ASSERT(!ms_is_idle(ms));
@@ -530,7 +529,7 @@ static void test_ms_cs_selection()
 	OSMO_ASSERT(mcs_chan_code(ms_current_cs_dl(ms)) == 2);
 
 	talloc_free(dl_tbf);
-
+	talloc_free(bts);
 	printf("=== end %s ===\n", __func__);
 }
 
@@ -545,8 +544,7 @@ static void dump_ms(const GprsMs *ms, const char *pref)
 
 static void test_ms_mcs_mode()
 {
-	BTS the_bts(the_pcu);
-	gprs_rlcmac_bts *bts = the_bts.bts_data();
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	uint32_t tlli = 0xdeadbeef;
 
 	gprs_rlcmac_dl_tbf *dl_tbf;
@@ -554,18 +552,18 @@ static void test_ms_mcs_mode()
 
 	printf("=== start %s ===\n", __func__);
 
-	ms1 = ms_alloc(&the_bts, tlli);
+	ms1 = ms_alloc(bts, tlli);
 	dump_ms(ms1, "1: no BTS defaults  ");
 
 	bts->initial_cs_dl = 4;
 	bts->initial_cs_ul = 1;
 	the_pcu->vty.cs_downgrade_threshold = 0;
 
-	ms2 = ms_alloc(&the_bts, tlli + 1);
+	ms2 = ms_alloc(bts, tlli + 1);
 	dump_ms(ms2, "2: with BTS defaults");
 
 	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf) gprs_rlcmac_dl_tbf(&the_bts, ms2);
+	new (dl_tbf) gprs_rlcmac_dl_tbf(bts, ms2);
 	ms_attach_tbf(ms2, dl_tbf);
 
 	dump_ms(ms2, "2: after TBF attach ");
@@ -599,7 +597,7 @@ static void test_ms_mcs_mode()
 	dump_ms(ms2, "2: after mode set   ");
 
 	talloc_free(dl_tbf);
-
+	talloc_free(bts);
 	printf("=== end %s ===\n", __func__);
 }
 

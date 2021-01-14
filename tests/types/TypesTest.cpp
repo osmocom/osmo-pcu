@@ -23,6 +23,7 @@
 #include "bts.h"
 #include "tbf.h"
 #include "tbf_ul.h"
+#include "tbf_dl.h"
 #include "pcu_utils.h"
 #include "gprs_debug.h"
 #include "encoding.h"
@@ -352,7 +353,7 @@ static void test_rlc_dl_ul_basic()
 		uint16_t lost = 0, recv = 0;
 		char show_rbb[65];
 		uint8_t bits_data[8];
-		BTS dummy_bts(the_pcu);
+		struct gprs_rlcmac_bts *dummy_bts = bts_alloc(the_pcu);
 		gprs_rlc_dl_window dl_win;
 		bitvec bits;
 		int bsn_begin, bsn_end, num_blocks;
@@ -391,7 +392,7 @@ static void test_rlc_dl_ul_basic()
 		Decoding::extract_rbb(&bits, show_rbb);
 		printf("show_rbb: %s\n", show_rbb);
 
-		dl_win.update(&dummy_bts, &bits, 0, &lost, &recv);
+		dl_win.update(dummy_bts, &bits, 0, &lost, &recv);
 		OSMO_ASSERT(lost == 0);
 		OSMO_ASSERT(recv == 35);
 		OSMO_ASSERT(bsn_begin == 0);
@@ -423,7 +424,7 @@ static void test_rlc_dl_ul_basic()
 		printf("show_rbb: %s\n", show_rbb);
 
 		lost = recv = 0;
-		dl_win.update(&dummy_bts, &bits, 0, &lost, &recv);
+		dl_win.update(dummy_bts, &bits, 0, &lost, &recv);
 		OSMO_ASSERT(lost == 5);
 		OSMO_ASSERT(recv == 3);
 		OSMO_ASSERT(bitvec_get_bit_pos(&bits, 0) == 0);
@@ -431,6 +432,7 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(bsn_begin == 35);
 		OSMO_ASSERT(bsn_end == 43);
 		OSMO_ASSERT(num_blocks == 8);
+		talloc_free(dummy_bts);
 	}
 }
 
@@ -669,12 +671,12 @@ static void test_egprs_ul_ack_nack()
 
 	fprintf(stderr, "############## test_egprs_ul_ack_nack\n");
 
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
-	the_bts.bts_data()->trx[0].pdch[4].enable();
+	bts->trx[0].pdch[4].enable();
 
-	GprsMs *ms = the_bts.ms_alloc(1, 1);
-	struct gprs_rlcmac_ul_tbf *tbf = tbf_alloc_ul_tbf(the_bts.bts_data(), ms, 0, true);
+	GprsMs *ms = bts_alloc_ms(bts, 1, 1);
+	struct gprs_rlcmac_ul_tbf *tbf = tbf_alloc_ul_tbf(bts, ms, 0, true);
 	struct crbb_test crbb_test = {0};
 	bitvec *rbb = NULL;
 	unsigned int rbb_size;
@@ -722,6 +724,7 @@ static void test_egprs_ul_ack_nack()
 	extract_egprs_ul_ack_nack(tbf, dest, &ssn, &crbb_test, &rbb, false);
 	check_egprs_bitmap(tbf, ssn, &crbb_test, rbb, &rbb_size);
 	free_egprs_ul_ack_nack(&rbb, &crbb_test);
+	talloc_free(bts);
 }
 
 static void check_imm_ass(struct gprs_rlcmac_tbf *tbf, bool dl, enum ph_burst_type bt, const uint8_t *exp, uint8_t len,
@@ -759,13 +762,13 @@ static void check_imm_ass(struct gprs_rlcmac_tbf *tbf, bool dl, enum ph_burst_ty
 
 void test_immediate_assign_dl()
 {
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
-	the_bts.bts_data()->trx[0].pdch[2].enable();
-	the_bts.bts_data()->trx[0].pdch[3].enable();
-	GprsMs *ms = the_bts.ms_alloc(1, 0);
+	bts->trx[0].pdch[2].enable();
+	bts->trx[0].pdch[3].enable();
+	GprsMs *ms = bts_alloc_ms(bts, 1, 0);
 
-	struct gprs_rlcmac_tbf *tbf = tbf_alloc_dl_tbf(the_bts.bts_data(), ms, 0, false);
+	struct gprs_rlcmac_tbf *tbf = tbf_alloc_dl_tbf(bts, ms, 0, false);
 	static uint8_t res[] = { 0x06,
 				 0x3f, /* Immediate Assignment Message Type */
 				 0x30, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
@@ -779,17 +782,18 @@ void test_immediate_assign_dl()
 				 0xdf, 0xff, 0xff, 0xff, 0xf8, 0x17, 0x47, 0x08, 0x0b, 0x5b, 0x2b, 0x2b, };
 
 	check_imm_ass(tbf, true, GSM_L1_BURST_TYPE_ACCESS_2, res, sizeof(res), "ia_rest_downlink");
+	talloc_free(bts);
 }
 
 void test_immediate_assign_ul0m()
 {
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
-	the_bts.bts_data()->trx[0].pdch[4].enable();
-	the_bts.bts_data()->trx[0].pdch[5].enable();
+	bts->trx[0].pdch[4].enable();
+	bts->trx[0].pdch[5].enable();
 
-	GprsMs *ms = the_bts.ms_alloc(1, 0);
-	struct gprs_rlcmac_tbf *tbf = tbf_alloc_ul_tbf(the_bts.bts_data(), ms, 0, false);
+	GprsMs *ms = bts_alloc_ms(bts, 1, 0);
+	struct gprs_rlcmac_tbf *tbf = tbf_alloc_ul_tbf(bts, ms, 0, false);
 	static uint8_t res[] = { 0x06,
 				 0x3f, /* Immediate Assignment Message Type */
 				 0x10, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
@@ -803,6 +807,7 @@ void test_immediate_assign_ul0m()
 				 0xc8, 0x02, 0x1b, 0xa2, 0x0b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, };
 
 	check_imm_ass(tbf, false, GSM_L1_BURST_TYPE_ACCESS_0, res, sizeof(res), "ia_rest_uplink(MBA)");
+	talloc_free(bts);
 }
 
 void test_immediate_assign_ul0s()
@@ -824,13 +829,13 @@ void test_immediate_assign_ul0s()
 
 void test_immediate_assign_ul1s()
 {
-	BTS the_bts(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
-	the_bts.bts_data()->trx[0].pdch[1].enable();
-	the_bts.bts_data()->trx[0].pdch[2].enable();
+	bts->trx[0].pdch[1].enable();
+	bts->trx[0].pdch[2].enable();
 
-	GprsMs *ms = the_bts.ms_alloc(1, 1);
-	struct gprs_rlcmac_tbf *tbf = tbf_alloc_ul_tbf(the_bts.bts_data(), ms, 0, false);
+	GprsMs *ms = bts_alloc_ms(bts, 1, 1);
+	struct gprs_rlcmac_tbf *tbf = tbf_alloc_ul_tbf(bts, ms, 0, false);
 	static uint8_t res[] = { 0x06,
 				 0x3f, /* Immediate Assignment Message Type */
 				 0x10, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
@@ -844,6 +849,7 @@ void test_immediate_assign_ul1s()
 				 0x46, 0xa0, 0x08, 0x00, 0x17, 0x44, 0x0b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, };
 
 	check_imm_ass(tbf, false, GSM_L1_BURST_TYPE_ACCESS_1, res, sizeof(res), "ia_rest_egprs_uplink(SBA)");
+	talloc_free(bts);
 }
 
 void test_immediate_assign_ul1m()

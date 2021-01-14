@@ -21,22 +21,22 @@
 
 #pragma once
 
-struct BTS;
+struct gprs_rlcmac_bts;
 
 /**
  * I belong to a BTS and I am responsible for finding TBFs and
  * SBAs that should have been polled and execute the timeout
  * action on them.
  */
-class PollController {
+struct PollController {
 public:
-	PollController(BTS& bts);
+	PollController(struct gprs_rlcmac_bts& bts);
 
 	/* check for poll timeout */
 	void expireTimedout(int frame_number, unsigned max_delay);
 
 private:
-	BTS& m_bts;
+	struct gprs_rlcmac_bts& m_bts;
 
 private:
 	/* disable copying to avoid slicing */

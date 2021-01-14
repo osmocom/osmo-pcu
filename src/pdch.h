@@ -70,7 +70,7 @@ struct gprs_rlcmac_pdch {
 		struct pcu_l1_meas *meas, enum CodingScheme cs);
 
 	gprs_rlcmac_bts *bts_data() const;
-	BTS *bts() const;
+	struct gprs_rlcmac_bts *bts() const;
 	uint8_t trx_no() const;
 
 	struct gprs_rlcmac_ul_tbf *ul_tbf_by_tfi(uint8_t tfi);

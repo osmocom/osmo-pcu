@@ -62,14 +62,11 @@ static inline void test_all_classes(struct gprs_rlcmac_trx *trx, bool clear_mask
 
 static inline void test_multislot_total_ascending(bool seq)
 {
-	BTS the_bts(the_pcu);
-	struct gprs_rlcmac_bts *bts;
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	struct gprs_rlcmac_trx *trx;
 	int i;
 
 	printf("%s(): %s\n", __func__, seq ? "sequential" : "accumulative");
-
-	bts = the_bts.bts_data();
 
 	trx = &bts->trx[0];
 
@@ -79,18 +76,16 @@ static inline void test_multislot_total_ascending(bool seq)
 
 		test_all_classes(trx, seq);
 	}
+	talloc_free(bts);
 }
 
 static inline void test_multislot_total_descending(bool seq)
 {
-	BTS the_bts(the_pcu);
-	struct gprs_rlcmac_bts *bts;
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	struct gprs_rlcmac_trx *trx;
 	int i;
 
 	printf("%s(): %s\n", __func__, seq ? "sequential" : "accumulative");
-
-	bts = the_bts.bts_data();
 
 	trx = &bts->trx[0];
 
@@ -100,17 +95,15 @@ static inline void test_multislot_total_descending(bool seq)
 
 		test_all_classes(trx, seq);
 	}
+	talloc_free(bts);
 }
 
 static inline void test_multislot_middle(bool seq)
 {
-	BTS the_bts(the_pcu);
-	struct gprs_rlcmac_bts *bts;
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	struct gprs_rlcmac_trx *trx;
 
 	printf("%s(): %s\n", __func__, seq ? "sequential" : "accumulative");
-
-	bts = the_bts.bts_data();
 
 	trx = &bts->trx[0];
 
@@ -119,17 +112,15 @@ static inline void test_multislot_middle(bool seq)
 	trx->pdch[4].enable();
 
 	test_all_classes(trx, seq);
+	talloc_free(bts);
 }
 
 static inline void test_multislot_ends(bool seq)
 {
-	BTS the_bts(the_pcu);
-	struct gprs_rlcmac_bts *bts;
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
 	struct gprs_rlcmac_trx *trx;
 
 	printf("%s(): %s\n", __func__, seq ? "sequential" : "accumulative");
-
-	bts = the_bts.bts_data();
 
 	trx = &bts->trx[0];
 
@@ -137,6 +128,7 @@ static inline void test_multislot_ends(bool seq)
 	trx->pdch[7].enable();
 
 	test_all_classes(trx, seq);
+	talloc_free(bts);
 }
 
 static inline void test_window_wrapper()

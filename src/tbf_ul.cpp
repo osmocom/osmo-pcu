@@ -111,7 +111,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 	if (!tbf)
 		return NULL;
 	talloc_set_destructor(tbf, ul_tbf_dtor);
-	new (tbf) gprs_rlcmac_ul_tbf(bts->bts, ms);
+	new (tbf) gprs_rlcmac_ul_tbf(bts, ms);
 
 	rc = tbf->setup(use_trx, single_slot);
 
@@ -134,8 +134,8 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 		return NULL;
 	}
 
-	llist_add(&tbf->list(), &bts->bts->ul_tbfs());
-	tbf->bts->do_rate_ctr_inc(CTR_TBF_UL_ALLOCATED);
+	llist_add_tail(tbf_bts_list(tbf), &bts->ul_tbfs);
+	bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_UL_ALLOCATED);
 
 	return tbf;
 }
@@ -171,7 +171,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_trx *trx = &bts->trx[trx_no];
 
 	if (!ms)
-		ms = bts->bts->ms_alloc(0, 0);
+		ms = bts_alloc_ms(bts, 0, 0);
 	ms_set_tlli(ms, tlli);
 
 	ul_tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
@@ -179,10 +179,10 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 		return ul_tbf;
 
 	talloc_set_destructor(ul_tbf, ul_tbf_dtor);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(bts->bts, ms);
+	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
 
-	llist_add(&ul_tbf->list(), &bts->bts->ul_tbfs());
-	ul_tbf->bts->do_rate_ctr_inc(CTR_TBF_UL_ALLOCATED);
+	llist_add(tbf_bts_list((struct gprs_rlcmac_tbf *)ul_tbf), &bts->ul_tbfs);
+	bts_do_rate_ctr_inc(ul_tbf->bts, CTR_TBF_UL_ALLOCATED);
 	TBF_SET_ASS_ON(ul_tbf, GPRS_RLCMAC_FLAG_PACCH, false);
 
 	ms_attach_tbf(ms, ul_tbf);
@@ -206,7 +206,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 	return ul_tbf;
 }
 
-gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(BTS *bts_, GprsMs *ms) :
+gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms) :
 	gprs_rlcmac_tbf(bts_, ms, GPRS_RLCMAC_UL_TBF),
 	m_rx_counter(0),
 	m_contention_resolution_done(0),
@@ -243,7 +243,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 		frame = frames + i;
 
 		if (frame->length) {
-			bts->do_rate_ctr_add(CTR_RLC_UL_PAYLOAD_BYTES, frame->length);
+			bts_do_rate_ctr_add(bts, CTR_RLC_UL_PAYLOAD_BYTES, frame->length);
 
 			LOGPTBFUL(this, LOGL_DEBUG, "Frame %d "
 				"starts at offset %d, "
@@ -259,7 +259,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 			/* send frame to SGSN */
 			LOGPTBFUL(this, LOGL_DEBUG, "complete UL frame len=%d\n", llc_frame_length(&m_llc));
 			snd_ul_ud();
-			bts->do_rate_ctr_add(CTR_LLC_UL_BYTES, llc_frame_length(&m_llc));
+			bts_do_rate_ctr_add(bts, CTR_LLC_UL_BYTES, llc_frame_length(&m_llc));
 			m_llc.reset();
 		}
 	}
@@ -440,7 +440,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 				rdbi, rlc->cs, rlc_data, NULL, 0, &new_tlli);
 
 			if (num_chunks < 0) {
-				bts->do_rate_ctr_inc(CTR_DECODE_ERRORS);
+				bts_do_rate_ctr_inc(bts, CTR_DECODE_ERRORS);
 				LOGPTBFUL(this, LOGL_NOTICE,
 					  "Failed to decode TLLI of %s UL DATA TFI=%d.\n",
 					  mcs_name(rlc->cs), rlc->tfi);
@@ -589,7 +589,7 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_second_seg(
 	union split_block_status *spb_status = &block->spb_status;
 	uint8_t *rlc_data = &block->block[0];
 
-        bts->do_rate_ctr_inc(CTR_SPB_UL_SECOND_SEGMENT);
+        bts_do_rate_ctr_inc(bts, CTR_SPB_UL_SECOND_SEGMENT);
 
 	if (spb_status->block_status_ul &
 				EGPRS_RESEG_FIRST_SEG_RXD) {
@@ -622,7 +622,7 @@ egprs_rlc_ul_reseg_bsn_state gprs_rlcmac_ul_tbf::handle_egprs_ul_first_seg(
 	uint8_t *rlc_data = &block->block[0];
 	union split_block_status *spb_status = &block->spb_status;
 
-	bts->do_rate_ctr_inc(CTR_SPB_UL_FIRST_SEGMENT);
+	bts_do_rate_ctr_inc(bts, CTR_SPB_UL_FIRST_SEGMENT);
 
 	if (spb_status->block_status_ul & EGPRS_RESEG_SECOND_SEG_RXD) {
 		LOGPTBFUL(this, LOGL_DEBUG,
@@ -702,55 +702,55 @@ void gprs_rlcmac_ul_tbf::update_coding_scheme_counter_ul(enum CodingScheme cs)
 {
 	switch (cs) {
 	case CS1:
-		bts->do_rate_ctr_inc(CTR_GPRS_UL_CS1);
+		bts_do_rate_ctr_inc(bts, CTR_GPRS_UL_CS1);
 		rate_ctr_inc(&m_ul_gprs_ctrs->ctr[TBF_CTR_GPRS_UL_CS1]);
 		break;
 	case CS2:
-		bts->do_rate_ctr_inc(CTR_GPRS_UL_CS2);
+		bts_do_rate_ctr_inc(bts, CTR_GPRS_UL_CS2);
 		rate_ctr_inc(&m_ul_gprs_ctrs->ctr[TBF_CTR_GPRS_UL_CS2]);
 		break;
 	case CS3:
-		bts->do_rate_ctr_inc(CTR_GPRS_UL_CS3);
+		bts_do_rate_ctr_inc(bts, CTR_GPRS_UL_CS3);
 		rate_ctr_inc(&m_ul_gprs_ctrs->ctr[TBF_CTR_GPRS_UL_CS3]);
 		break;
 	case CS4:
-		bts->do_rate_ctr_inc(CTR_GPRS_UL_CS4);
+		bts_do_rate_ctr_inc(bts, CTR_GPRS_UL_CS4);
 		rate_ctr_inc(&m_ul_gprs_ctrs->ctr[TBF_CTR_GPRS_UL_CS4]);
 		break;
 	case MCS1:
-		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS1);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_UL_MCS1);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS1]);
 		break;
 	case MCS2:
-		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS2);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_UL_MCS2);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS2]);
 		break;
 	case MCS3:
-		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS3);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_UL_MCS3);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS3]);
 		break;
 	case MCS4:
-		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS4);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_UL_MCS4);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS4]);
 		break;
 	case MCS5:
-		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS5);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_UL_MCS5);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS5]);
 		break;
 	case MCS6:
-		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS6);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_UL_MCS6);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS6]);
 		break;
 	case MCS7:
-		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS7);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_UL_MCS7);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS7]);
 		break;
 	case MCS8:
-		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS8);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_UL_MCS8);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS8]);
 		break;
 	case MCS9:
-		bts->do_rate_ctr_inc(CTR_EGPRS_UL_MCS9);
+		bts_do_rate_ctr_inc(bts, CTR_EGPRS_UL_MCS9);
 		rate_ctr_inc(&m_ul_egprs_ctrs->ctr[TBF_CTR_EGPRS_UL_MCS9]);
 		break;
 	default:
@@ -761,7 +761,7 @@ void gprs_rlcmac_ul_tbf::update_coding_scheme_counter_ul(enum CodingScheme cs)
 
 void gprs_rlcmac_ul_tbf::set_window_size()
 {
-	const struct gprs_rlcmac_bts *b = bts->bts_data();
+	const struct gprs_rlcmac_bts *b = bts;
 	uint16_t ws = egprs_window_size(b, ul_slots());
 	LOGPTBFUL(this, LOGL_INFO, "setting EGPRS UL window size to %u, base(%u) slots(%u) ws_pdch(%u)\n",
 		  ws, bts->pcu->vty.ws_base, pcu_bitcount(ul_slots()), bts->pcu->vty.ws_pdch);

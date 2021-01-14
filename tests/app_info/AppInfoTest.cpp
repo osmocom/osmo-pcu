@@ -20,6 +20,7 @@
 #include <assert.h>
 #include "gprs_rlcmac.h"
 #include "bts.h"
+#include "tbf_dl.h"
 
 extern "C" {
 #include <osmocom/vty/telnet_interface.h>
@@ -77,25 +78,23 @@ void test_pcu_rx_no_subscr_with_active_tbf()
 
 void prepare_bts_with_two_dl_tbf_subscr()
 {
-	BTS *bts = BTS::main_bts();
-	struct gprs_rlcmac_bts *bts_data;
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	struct gprs_rlcmac_trx *trx;
 
 	fprintf(stderr, "--- %s ---\n",  __func__);
 
-	bts_data = bts->bts_data();
 	the_pcu->alloc_algorithm = alloc_algorithm_b;
 
-	trx = bts_data->trx;
+	trx = bts->trx;
 	trx->pdch[4].enable();
 	trx->pdch[5].enable();
 	trx->pdch[6].enable();
 	trx->pdch[7].enable();
 
-	ms1 = bts->ms_alloc(10, 11);
-	tbf1 = tbf_alloc_dl_tbf(bts_data, ms1, 0, false);
-	ms2 = bts->ms_alloc(12, 13);
-	tbf2 = tbf_alloc_dl_tbf(bts_data, ms2, 0, false);
+	ms1 = bts_alloc_ms(bts, 10, 11);
+	tbf1 = tbf_alloc_dl_tbf(bts, ms1, 0, false);
+	ms2 = bts_alloc_ms(bts, 12, 13);
+	tbf2 = tbf_alloc_dl_tbf(bts, ms2, 0, false);
 
 	fprintf(stderr, "\n");
 }
@@ -122,15 +121,15 @@ void test_sched_app_info_ok(const struct gsm_pcu_if_app_info_req *req)
 
 void test_sched_app_info_missing_app_info_in_bts(const struct gsm_pcu_if_app_info_req *req)
 {
-	struct gprs_rlcmac_bts *bts_data = BTS::main_bts()->bts_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	struct gsm_pcu_if pcu_prim = {PCU_IF_MSG_APP_INFO_REQ, };
 
 	fprintf(stderr, "--- %s ---\n",  __func__);
 	pcu_prim.u.app_info_req = *req;
 	pcu_rx(PCU_IF_MSG_APP_INFO_REQ, &pcu_prim);
 
-	msgb_free(bts_data->app_info);
-	bts_data->app_info = NULL;
+	msgb_free(bts->app_info);
+	bts->app_info = NULL;
 
 	assert(sched_app_info(tbf1) == NULL);
 
@@ -154,8 +153,8 @@ void cleanup()
 
 	tbf_free(tbf1);
 	tbf_free(tbf2);
-	BTS::main_bts()->cleanup();
-	/* FIXME: talloc report disabled, because bts->ms_alloc() in prepare_bts_with_two_dl_tbf_subscr() causes leak */
+	TALLOC_FREE(the_pcu->bts);
+	/* FIXME: talloc report disabled, because bts_alloc_ms(bts, ) in prepare_bts_with_two_dl_tbf_subscr() causes leak */
 	/* talloc_report_full(tall_pcu_ctx, stderr); */
 	talloc_free(the_pcu);
 	talloc_free(tall_pcu_ctx);

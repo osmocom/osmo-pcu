@@ -53,6 +53,7 @@ extern "C" {
 #include <pdch.h>
 #include <tbf_ul.h>
 #include <tbf_dl.h>
+#include <gprs_ms_storage.h>
 
 // FIXME: move this, when changed from c++ to c.
 extern "C" {
@@ -271,13 +272,13 @@ void pcu_l1if_tx_pch(bitvec * block, int plen, uint16_t pgroup)
 
 extern "C" void pcu_rx_block_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no)
 {
-	BTS::main_bts()->set_current_block_frame_number(fn, 0);
+	bts_set_current_block_frame_number(the_pcu->bts,fn, 0);
 }
 
 extern "C" void pcu_rx_ra_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no)
 {
 	/* access bursts may arrive some bursts earlier */
-	BTS::main_bts()->set_current_block_frame_number(fn, 5);
+	bts_set_current_block_frame_number(the_pcu->bts,fn, 5);
 }
 
 extern "C" int pcu_rx_data_ind_pdtch(uint8_t trx_no, uint8_t ts_no, uint8_t *data,
@@ -368,7 +369,7 @@ static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 	switch (data_cnf->sapi) {
 	case PCU_IF_SAPI_PCH:
 		if (data_cnf->data[2] == 0x3f)
-			BTS::main_bts()->rcv_imm_ass_cnf(data_cnf->data, data_cnf->fn);
+			bts_rcv_imm_ass_cnf(the_pcu->bts, data_cnf->data, data_cnf->fn);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with "
@@ -447,7 +448,7 @@ extern "C" int pcu_rx_rach_ind_ptcch(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn,
 		.qta = qta,
 	};
 
-	return BTS::main_bts()->rcv_ptcch_rach(&rip);
+	return bts_rcv_ptcch_rach(the_pcu->bts, &rip);
 }
 
 static int pcu_rx_rach_ind(const struct gsm_pcu_if_rach_ind *rach_ind)
@@ -471,10 +472,10 @@ static int pcu_rx_rach_ind(const struct gsm_pcu_if_rach_ind *rach_ind)
 
 	switch (rach_ind->sapi) {
 	case PCU_IF_SAPI_RACH:
-		rc = BTS::main_bts()->rcv_rach(&rip);
+		rc = bts_rcv_rach(the_pcu->bts, &rip);
 		break;
 	case PCU_IF_SAPI_PTCCH:
-		rc = BTS::main_bts()->rcv_ptcch_rach(&rip);
+		rc = bts_rcv_ptcch_rach(the_pcu->bts, &rip);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU rach request with "
@@ -751,7 +752,7 @@ static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 
 	LOGP(DL1IF, LOGL_DEBUG, "Time indication received: %d\n", time_ind->fn % 52);
 
-	BTS::main_bts()->set_current_frame_number(time_ind->fn);
+	bts_set_current_frame_number(the_pcu->bts, time_ind->fn);
 	return 0;
 }
 
@@ -776,12 +777,12 @@ static int pcu_rx_pag_req(struct gsm_pcu_if_pag_req *pag_req)
 		return -EINVAL;
 	}
 
-	return BTS::main_bts()->add_paging(pag_req->chan_needed, &mi);
+	return bts_add_paging(the_pcu->bts, pag_req->chan_needed, &mi);
 }
 
 static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)
 {
-	BTS *bts = BTS::main_bts();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	struct bssgp_bvc_ctx *bctx = gprs_bssgp_pcu_current_bctx();
 	GprsMs *ms;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
@@ -793,7 +794,7 @@ static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)
 	LOGP(DL1IF, LOGL_INFO, "GPRS Suspend request received: TLLI=0x%08x RAI=%s\n",
 		susp_req->tlli, osmo_rai_name(&ra_id));
 
-	if ((ms = bts->ms_store().get_ms(susp_req->tlli))) {
+	if ((ms = bts_ms_store(bts)->get_ms(susp_req->tlli))) {
 		/* We need to catch both pointers here since MS may become freed
 		   after first tbf_free(dl_tbf) if only DL TBF was available */
 		dl_tbf = ms_dl_tbf(ms);
@@ -812,15 +813,15 @@ static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)
 
 static int pcu_rx_app_info_req(struct gsm_pcu_if_app_info_req *app_info_req)
 {
-	BTS *bts = BTS::main_bts();
-	struct gprs_rlcmac_bts *bts_data = bts->bts_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
+	struct gprs_rlcmac_bts *bts_data = bts;
 	struct llist_head *tmp;
 
 	LOGP(DL1IF, LOGL_DEBUG, "Application Information Request received: type=0x%08x len=%i\n",
 	     app_info_req->application_type, app_info_req->len);
 
 	bts_data->app_info_pending = 0;
-	llist_for_each(tmp, bts->ms_store().ms_list()) {
+	llist_for_each(tmp, bts_ms_store(bts)->ms_list()) {
 		GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
 		if (!ms_dl_tbf(ms))
 			continue;

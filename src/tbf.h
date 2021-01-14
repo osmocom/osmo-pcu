@@ -196,6 +196,7 @@ enum gprs_rlcmac_tbf_state tbf_state(const struct gprs_rlcmac_tbf *tbf);
 enum gprs_rlcmac_tbf_direction tbf_direction(const struct gprs_rlcmac_tbf *tbf);
 void tbf_set_ms(struct gprs_rlcmac_tbf *tbf, struct GprsMs *ms);
 struct llist_head *tbf_ms_list(struct gprs_rlcmac_tbf *tbf);
+struct llist_head *tbf_bts_list(struct gprs_rlcmac_tbf *tbf);
 struct GprsMs *tbf_ms(struct gprs_rlcmac_tbf *tbf);
 bool tbf_timers_pending(struct gprs_rlcmac_tbf *tbf, enum tbf_timers t);
 void tbf_free(struct gprs_rlcmac_tbf *tbf);
@@ -212,7 +213,7 @@ int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 #ifdef __cplusplus
 
 struct gprs_rlcmac_tbf {
-	gprs_rlcmac_tbf(BTS *bts_, GprsMs *ms, gprs_rlcmac_tbf_direction dir);
+	gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_rlcmac_tbf_direction dir);
 	virtual ~gprs_rlcmac_tbf() {}
 
 	static void free_all(struct gprs_rlcmac_trx *trx);
@@ -296,9 +297,6 @@ struct gprs_rlcmac_tbf {
 	/* attempt to make things a bit more fair */
 	void rotate_in_list();
 
-	LListHead<gprs_rlcmac_tbf>& list();
-	const LListHead<gprs_rlcmac_tbf>& list() const;
-
 	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
 	struct gprs_rlcmac_trx *trx;
@@ -335,7 +333,7 @@ struct gprs_rlcmac_tbf {
 	uint8_t upgrade_to_multislot;
 
 	/* store the BTS this TBF belongs to */
-	BTS *bts;
+	struct gprs_rlcmac_bts *bts;
 
 	/*
 	 * private fields. We can't make it private as it is breaking the
@@ -347,6 +345,7 @@ struct gprs_rlcmac_tbf {
 	struct rate_ctr_group *m_ctrs;
 	enum gprs_rlcmac_tbf_state state;
 	struct llist_item m_ms_list;
+	struct llist_item m_bts_list;
 
 protected:
 	gprs_rlcmac_bts *bts_data() const;
@@ -364,7 +363,6 @@ private:
 	enum gprs_rlcmac_tbf_ul_ass_state ul_ass_state;
 	enum gprs_rlcmac_tbf_ul_ack_state ul_ack_state;
 	enum gprs_rlcmac_tbf_poll_state poll_state;
-	LListHead<gprs_rlcmac_tbf> m_list;
 	bool m_egprs_enabled;
 	struct osmo_timer_list Tarr[T_MAX];
 	uint8_t Narr[N_MAX];
@@ -520,16 +518,6 @@ inline bool gprs_rlcmac_tbf::check_n_clear(uint8_t state_flag)
 	}
 
 	return false;
-}
-
-inline LListHead<gprs_rlcmac_tbf>& gprs_rlcmac_tbf::list()
-{
-	return this->m_list;
-}
-
-inline const LListHead<gprs_rlcmac_tbf>& gprs_rlcmac_tbf::list() const
-{
-	return this->m_list;
 }
 
 inline GprsMs *gprs_rlcmac_tbf::ms() const

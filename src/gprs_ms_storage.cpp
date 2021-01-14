@@ -35,7 +35,7 @@ static void ms_storage_ms_idle_cb(struct GprsMs *ms)
 {
 	llist_del(&ms->list);
 	if (ms->bts)
-		ms->bts->stat_item_add(STAT_MS_PRESENT, -1);
+		bts_stat_item_add(ms->bts, STAT_MS_PRESENT, -1);
 	if (ms_is_idle(ms))
 		talloc_free(ms);
 }
@@ -50,7 +50,7 @@ static struct gpr_ms_callback ms_storage_ms_cb = {
 	.ms_active = ms_storage_ms_active_cb,
 };
 
-GprsMsStorage::GprsMsStorage(BTS *bts) :
+GprsMsStorage::GprsMsStorage(struct gprs_rlcmac_bts *bts) :
 	m_bts(bts)
 {
 	INIT_LLIST_HEAD(&m_list);
@@ -109,7 +109,7 @@ GprsMs *GprsMsStorage::create_ms()
 	ms_set_callback(ms, &ms_storage_ms_cb);
 	llist_add(&ms->list, &m_list);
 	if (m_bts)
-		m_bts->stat_item_add(STAT_MS_PRESENT, 1);
+		bts_stat_item_add(m_bts, STAT_MS_PRESENT, 1);
 
 	return ms;
 }

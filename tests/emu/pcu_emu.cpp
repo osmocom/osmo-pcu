@@ -142,7 +142,7 @@ int main(int argc, char **argv)
 	init_pcu(pcu);
 	init_main_bts();
 	bssgp_set_bssgp_callback(gprs_gp_send_cb, pcu->nsi);
-	create_and_connect_bssgp(bts_data(pcu->bts), INADDR_LOOPBACK, 23000);
+	create_and_connect_bssgp(pcu->bts, INADDR_LOOPBACK, 23000);
 
 	for (;;)
 		osmo_select_main(0);

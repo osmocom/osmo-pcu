@@ -91,7 +91,7 @@ void ms_timeout(void *data)
 }
 
 static int ms_talloc_destructor(struct GprsMs *ms);
-struct GprsMs *ms_alloc(struct BTS *bts, uint32_t tlli)
+struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli)
 {
 	struct GprsMs *ms = talloc_zero(tall_pcu_ctx, struct GprsMs);
 
@@ -249,13 +249,13 @@ void ms_set_mode(struct GprsMs *ms, enum mcs_kind mode)
 	case GPRS:
 		if (!mcs_is_gprs(ms->current_cs_ul)) {
 			ms->current_cs_ul = mcs_get_gprs_by_num(
-				bts_data(ms->bts)->initial_cs_ul);
+				ms->bts->initial_cs_ul);
 			if (!mcs_is_valid(ms->current_cs_ul))
 				ms->current_cs_ul = CS1;
 		}
 		if (!mcs_is_gprs(ms->current_cs_dl)) {
 			ms->current_cs_dl = mcs_get_gprs_by_num(
-				bts_data(ms->bts)->initial_cs_dl);
+				ms->bts->initial_cs_dl);
 			if (!mcs_is_valid(ms->current_cs_dl))
 				ms->current_cs_dl = CS1;
 		}
@@ -265,13 +265,13 @@ void ms_set_mode(struct GprsMs *ms, enum mcs_kind mode)
 	case EGPRS:
 		if (!mcs_is_edge(ms->current_cs_ul)) {
 			ms->current_cs_ul = mcs_get_egprs_by_num(
-				bts_data(ms->bts)->initial_mcs_ul);
+				ms->bts->initial_mcs_ul);
 			if (!mcs_is_valid(ms->current_cs_ul))
 				ms->current_cs_ul = MCS1;
 		}
 		if (!mcs_is_edge(ms->current_cs_dl)) {
 			ms->current_cs_dl = mcs_get_egprs_by_num(
-				bts_data(ms->bts)->initial_mcs_dl);
+				ms->bts->initial_mcs_dl);
 			if (!mcs_is_valid(ms->current_cs_dl))
 				ms->current_cs_dl = MCS1;
 		}

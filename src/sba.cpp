@@ -40,7 +40,7 @@ extern void *tall_pcu_ctx;
  * This offset must be a multiple of 13. */
 #define AGCH_START_OFFSET 52
 
-SBAController::SBAController(BTS &bts)
+SBAController::SBAController(struct gprs_rlcmac_bts &bts)
 	: m_bts(bts)
 {
 	INIT_LLIST_HEAD(&m_sbas);
@@ -64,7 +64,7 @@ int SBAController::alloc(
 
 	for (trx = 0; trx < 8; trx++) {
 		for (ts = 7; ts >= 0; ts--) {
-			pdch = &m_bts.bts_data()->trx[trx].pdch[ts];
+			pdch = &m_bts.trx[trx].pdch[ts];
 			if (!pdch->is_enabled())
 				continue;
 			break;
@@ -86,7 +86,7 @@ int SBAController::alloc(
 	sba->ta = ta;
 
 	llist_add(&sba->list, &m_sbas);
-	m_bts.do_rate_ctr_inc(CTR_SBA_ALLOCATED);
+	bts_do_rate_ctr_inc(&m_bts, CTR_SBA_ALLOCATED);
 
 	*_trx = trx;
 	*_ts = ts;
@@ -132,14 +132,14 @@ int SBAController::timeout(struct gprs_rlcmac_sba *sba)
 	LOGP(DRLCMAC, LOGL_NOTICE,
 	     "Poll timeout for SBA (TRX=%u, TS=%u, FN=%u, TA=%u)\n", sba->trx_no,
 	     sba->ts_no, sba->fn, sba->ta);
-	m_bts.do_rate_ctr_inc(CTR_SBA_TIMEDOUT);
+	bts_do_rate_ctr_inc(&m_bts, CTR_SBA_TIMEDOUT);
 	free_sba(sba);
 	return 0;
 }
 
 void SBAController::free_sba(gprs_rlcmac_sba *sba)
 {
-	m_bts.do_rate_ctr_inc(CTR_SBA_FREED);
+	bts_do_rate_ctr_inc(&m_bts, CTR_SBA_FREED);
 	llist_del(&sba->list);
 	talloc_free(sba);
 }

@@ -38,7 +38,7 @@ extern "C" {
 #define RLC_MAX_WS   RLC_EGPRS_MAX_WS
 #define RLC_MAX_LEN 74 /* MCS-9 data unit */
 
-struct BTS;
+struct gprs_rlcmac_bts;
 
 /* The state of a BSN in the send/receive window */
 enum gprs_rlc_ul_bsn_state {
@@ -307,9 +307,9 @@ struct gprs_rlc_dl_window: public gprs_rlc_window {
 	/* Methods to manage reception */
 	int resend_needed() const;
 	int mark_for_resend();
-	void update(BTS *bts, char *show_rbb, uint16_t ssn,
+	void update(struct gprs_rlcmac_bts *bts, char *show_rbb, uint16_t ssn,
 			uint16_t *lost, uint16_t *received);
-	void update(BTS *bts, const struct bitvec *rbb,
+	void update(struct gprs_rlcmac_bts *bts, const struct bitvec *rbb,
 			uint16_t first_bsn, uint16_t *lost,
 			uint16_t *received);
 	int move_window();
