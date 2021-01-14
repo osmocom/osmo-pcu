@@ -52,6 +52,9 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	pcu->vty.max_mcs_dl = MAX_EDGE_MCS;
 	pcu->vty.alpha = 0; /* a = 0.0 */
 	pcu->vty.dl_tbf_preemptive_retransmission = true;
+	/* By default resegmentation is supported in DL can also be configured
+	 * through VTY */
+	pcu->vty.dl_arq_type = EGPRS_ARQ1;
 
 	pcu->T_defs = T_defs_pcu;
 	osmo_tdefs_reset(pcu->T_defs);

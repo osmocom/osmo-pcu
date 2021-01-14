@@ -27,6 +27,7 @@
 #include <osmocom/core/gsmtap_util.h>
 
 #include "gprs_bssgp_pcu.h"
+#include "coding_scheme.h"
 
 #define LLC_CODEL_DISABLE 0
 #define LLC_CODEL_USE_DEFAULT (-1)
@@ -77,6 +78,7 @@ struct gprs_pcu {
 		uint8_t force_two_phase;
 		uint8_t alpha, gamma;
 		bool dl_tbf_preemptive_retransmission;
+		enum egprs_arq_type dl_arq_type; /* EGPRS_ARQ1 to support resegmentation in DL, EGPRS_ARQ2 for no reseg */
 	} vty;
 
 	struct gsmtap_inst *gsmtap;

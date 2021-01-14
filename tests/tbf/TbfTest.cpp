@@ -2525,7 +2525,6 @@ static void test_tbf_epdan_out_of_rx_window(void)
 {
 	the_pcu->bts = bts_alloc(the_pcu);
 	BTS *the_bts = the_pcu->bts;
-	gprs_rlcmac_bts *bts;
 	uint8_t ms_class = 11;
 	uint8_t egprs_ms_class = 11;
 	uint8_t trx_no;
@@ -2546,12 +2545,10 @@ static void test_tbf_epdan_out_of_rx_window(void)
 
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
-	bts = the_bts->bts_data();
-
 	setup_bts(the_bts, ts_no);
 	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2031, 200, OSMO_TDEF_MS) == 0);
 	/* ARQ II */
-	bts->dl_arq_type = EGPRS_ARQ2;
+	the_pcu->vty.dl_arq_type = EGPRS_ARQ2;
 
 	/*
 	 * Simulate a message captured during over-the-air testing,
@@ -3083,7 +3080,7 @@ static void test_tbf_egprs_retx_dl(void)
 	setup_bts(the_bts, ts_no);
 	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2031, 200, OSMO_TDEF_MS) == 0);
 	/* ARQ II */
-	bts->dl_arq_type = EGPRS_ARQ2;
+	the_pcu->vty.dl_arq_type = EGPRS_ARQ2;
 
 
 	/* First parameter is current MCS, second one is demanded_mcs */
@@ -3114,7 +3111,7 @@ static void test_tbf_egprs_spb_dl(void)
 	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2031, 200, OSMO_TDEF_MS) == 0);
 
 	/* ARQ I resegmentation support */
-	bts->dl_arq_type = EGPRS_ARQ1;
+	the_pcu->vty.dl_arq_type = EGPRS_ARQ1;
 
 	/*
 	 * First parameter is current MCS, second one is demanded_mcs
@@ -3135,18 +3132,15 @@ static void test_tbf_egprs_dl()
 {
 	the_pcu->bts = bts_alloc(the_pcu);
 	BTS *the_bts = the_pcu->bts;
-	gprs_rlcmac_bts *bts;
 	uint8_t ts_no = 4;
 	int i;
 
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
-	bts = the_bts->bts_data();
-
 	setup_bts(the_bts, ts_no);
 	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2031, 200, OSMO_TDEF_MS) == 0);
 	/* ARQ II */
-	bts->dl_arq_type = EGPRS_ARQ2;
+	the_pcu->vty.dl_arq_type = EGPRS_ARQ2;
 
 	for (i = 1; i <= 9; i++)
 		establish_and_use_egprs_dl_tbf(the_bts, i);

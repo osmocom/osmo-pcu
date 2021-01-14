@@ -108,8 +108,6 @@ struct gprs_rlcmac_bts {
 
 	uint8_t si13[GSM_MACBLOCK_LEN];
 	bool si13_is_set;
-	/* 0 to support resegmentation in DL, 1 for no reseg */
-	uint8_t dl_arq_type;
 
 	uint8_t cs_adj_enabled; /* whether cs_adj_{upper,lower}_limit are used to adjust DL CS */
 	uint8_t cs_adj_upper_limit; /* downgrade DL CS if error rate above its value */

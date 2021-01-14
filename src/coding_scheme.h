@@ -38,8 +38,10 @@ enum mcs_kind {
 	EGPRS,
 };
 
-#define EGPRS_ARQ1            0x0
-#define EGPRS_ARQ2            0x1
+enum egprs_arq_type {
+	EGPRS_ARQ1 = 0,
+	EGPRS_ARQ2 = 1
+};
 
 extern const struct value_string mcs_names[];
 const char *mcs_name(enum CodingScheme val);

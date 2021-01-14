@@ -486,7 +486,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			/* Table 8.1.1.2 and Table 8.1.1.1 of 44.060 */
 			m_rlc.block(bsn)->cs_current_trans = get_retx_mcs(m_rlc.block(bsn)->cs_init,
 									  ms_current_cs_dl(ms()),
-									  !bts->bts_data()->dl_arq_type);
+									  bts->pcu->vty.dl_arq_type == EGPRS_ARQ1);
 
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "initial_cs_dl(%s) last_mcs(%s) demanded_mcs(%s) cs_trans(%s) arq_type(%d) bsn(%d)\n",
@@ -494,7 +494,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 				  mcs_name(m_rlc.block(bsn)->cs_last),
 				  mcs_name(ms_current_cs_dl(ms())),
 				  mcs_name(m_rlc.block(bsn)->cs_current_trans),
-				  bts->bts_data()->dl_arq_type, bsn);
+				  the_pcu->vty.dl_arq_type, bsn);
 
 			/* TODO: Need to remove this check when MCS-8 -> MCS-6
 			 * transistion is handled.

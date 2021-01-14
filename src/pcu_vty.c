@@ -198,9 +198,8 @@ static int config_write_pcu(struct vty *vty)
 	vty_out(vty, " window-size %d %d%s", bts->ws_base, bts->ws_pdch,
 		VTY_NEWLINE);
 
-	if (bts->dl_arq_type)
-		vty_out(vty, " egprs dl arq-type arq2%s",
-			VTY_NEWLINE);
+	if (the_pcu->vty.dl_arq_type == EGPRS_ARQ2)
+		vty_out(vty, " egprs dl arq-type arq2%s", VTY_NEWLINE);
 
 	if (bts->force_llc_lifetime == 0xffff)
 		vty_out(vty, " queue lifetime infinite%s", VTY_NEWLINE);
@@ -574,12 +573,10 @@ DEFUN_ATTR(cfg_pcu_dl_arq_type,
 	   "enable ARQ2 support",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
 	if (!strcmp(argv[0], "arq2"))
-		bts->dl_arq_type = 1;
+		the_pcu->vty.dl_arq_type = EGPRS_ARQ2;
 	else
-		bts->dl_arq_type = 0;
+		the_pcu->vty.dl_arq_type = EGPRS_ARQ1;
 
 	return CMD_SUCCESS;
 }

@@ -245,12 +245,6 @@ static void bts_init(struct gprs_rlcmac_bts *bts, BTS* bts_obj)
 	bts->llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
 	bts->llc_idle_ack_csec = 10;
 
-	/*
-	 * By default resegmentation is supported in DL
-	 * can also be configured through VTY
-	 */
-	bts->dl_arq_type = EGPRS_ARQ1;
-
 	bts->app_info = NULL;
 	bts->bts = bts_obj;
 	bts->T_defs_bts = T_defs_bts;
