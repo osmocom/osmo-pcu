@@ -903,7 +903,7 @@ int BTS::rcv_rach(const struct rach_ind_params *rip)
 
 	if (chan_req.single_block)
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block allocation\n");
-	else if (m_bts.force_two_phase) {
+	else if (pcu->vty.force_two_phase) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block allocation, "
 		     "but we force two phase access\n");
 		chan_req.single_block = true;

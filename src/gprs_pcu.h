@@ -74,6 +74,7 @@ struct gprs_pcu {
 		bool force_initial_mcs;	/* false=use from BTS true=use from VTY */
 		uint8_t max_cs_dl, max_cs_ul;
 		uint8_t max_mcs_dl, max_mcs_ul;
+		uint8_t force_two_phase;
 	} vty;
 
 	struct gsmtap_inst *gsmtap;

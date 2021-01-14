@@ -227,7 +227,7 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " alloc-algorithm b%s", VTY_NEWLINE);
 	if (the_pcu->alloc_algorithm == alloc_algorithm_dynamic)
 		vty_out(vty, " alloc-algorithm dynamic%s", VTY_NEWLINE);
-	if (bts->force_two_phase)
+	if (the_pcu->vty.force_two_phase)
 		vty_out(vty, " two-phase-access%s", VTY_NEWLINE);
 	vty_out(vty, " alpha %d%s", bts->alpha, VTY_NEWLINE);
 	vty_out(vty, " gamma %d%s", bts->gamma * 2, VTY_NEWLINE);
@@ -782,10 +782,7 @@ DEFUN_ATTR(cfg_pcu_two_phase,
 	   "Force two phase access when MS requests single phase access\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->force_two_phase = 1;
-
+	the_pcu->vty.force_two_phase = 1;
 	return CMD_SUCCESS;
 }
 
@@ -795,10 +792,7 @@ DEFUN_ATTR(cfg_pcu_no_two_phase,
 	   NO_STR "Only use two phase access when requested my MS\n",
 	   CMD_ATTR_IMMEDIATE)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
-
-	bts->force_two_phase = 0;
-
+	the_pcu->vty.force_two_phase = 0;
 	return CMD_SUCCESS;
 }
 
