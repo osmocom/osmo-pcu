@@ -24,7 +24,6 @@
 #include <stdbool.h>
 
 #ifdef __cplusplus
-#include <gsm_timer.h>
 #include <pcu_l1_if.h>
 
 extern "C" {

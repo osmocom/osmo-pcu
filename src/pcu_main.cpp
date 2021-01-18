@@ -19,7 +19,6 @@
 
 #include <pcu_l1_if.h>
 #include <gprs_rlcmac.h>
-#include <gsm_timer.h>
 #include <gprs_debug.h>
 #include <unistd.h>
 #include <stdbool.h>
@@ -331,10 +330,6 @@ int main(int argc, char *argv[])
 	}
 
 	while (!quit) {
-		osmo_gsm_timers_check();
-		osmo_gsm_timers_prepare();
-		osmo_gsm_timers_update();
-
 		osmo_select_main(0);
 	}
 

@@ -27,7 +27,6 @@
 #include "cxx_linuxlist.h"
 #include "pcu_utils.h"
 #include <gprs_debug.h>
-#include <gsm_timer.h>
 #include <stdint.h>
 
 struct bssgp_bvc_ctx;
@@ -313,7 +312,6 @@ struct gprs_rlcmac_tbf {
 
 	gprs_rlc m_rlc;
 
-	struct osmo_gsm_timer_list	gsm_timer;
 	unsigned int fT; /* fTxxxx number */
 	unsigned int num_fT_exp; /* number of consecutive fT expirations */
 

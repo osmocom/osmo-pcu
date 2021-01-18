@@ -173,7 +173,7 @@ static int pcu_tx_data_req(uint8_t trx, uint8_t ts, uint8_t sapi,
 	struct msgb *msg;
 	struct gsm_pcu_if *pcu_prim;
 	struct gsm_pcu_if_data *data_req;
-	int current_fn = get_current_fn();
+	int current_fn = bts_current_frame_number(the_pcu->bts);
 
 	LOGP(DL1IF, LOGL_DEBUG, "Sending data request: trx=%d ts=%d sapi=%d "
 		"arfcn=%d fn=%d cur_fn=%d block=%d data=%s\n", trx, ts, sapi, arfcn, fn, current_fn,
@@ -314,7 +314,7 @@ static int pcu_rx_data_ind_bcch(uint8_t *data, uint8_t len)
 static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 {
 	int rc;
-	int current_fn = get_current_fn();
+	int current_fn = bts_current_frame_number(the_pcu->bts);
 	struct pcu_l1_meas meas = {0};
 	uint8_t gsmtap_chantype;
 
@@ -361,7 +361,7 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 {
 	int rc = 0;
-	int current_fn = get_current_fn();
+	int current_fn = bts_current_frame_number(the_pcu->bts);
 
 	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d fn=%d cur_fn=%d\n",
 		data_cnf->sapi, data_cnf->fn, current_fn);
@@ -410,7 +410,7 @@ extern "C" int pcu_rx_rts_req_ptcch(uint8_t trx, uint8_t ts,
 static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 {
 	int rc = 0;
-	int current_fn = get_current_fn();
+	int current_fn = bts_current_frame_number(the_pcu->bts);
 
 	LOGP(DL1IF, LOGL_DEBUG, "RTS request received: trx=%d ts=%d sapi=%d "
 		"arfcn=%d fn=%d cur_fn=%d block=%d\n", rts_req->trx_nr, rts_req->ts_nr,
@@ -454,7 +454,7 @@ extern "C" int pcu_rx_rach_ind_ptcch(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn,
 static int pcu_rx_rach_ind(const struct gsm_pcu_if_rach_ind *rach_ind)
 {
 	int rc = 0;
-	int current_fn = get_current_fn();
+	int current_fn = bts_current_frame_number(the_pcu->bts);
 
 	LOGP(DL1IF, LOGL_INFO, "RACH request received: sapi=%d "
 		"qta=%d, ra=0x%02x, fn=%u, cur_fn=%d, is_11bit=%d\n", rach_ind->sapi, rach_ind->qta,

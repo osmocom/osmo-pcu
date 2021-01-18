@@ -34,8 +34,6 @@ Files:     src/gprs_debug.cpp
            src/gprs_debug.h
            src/pcu_main.cpp
            src/pcu_l1_if.h
-           src/gsm_timer.cpp
-           src/gsm_timer.h
 Copyright: 2012 Ivan Klyuchnikov
 License:   GPL-2.0+
 
@@ -131,4 +129,3 @@ License:   GPL-2.0+
  .
  On Debian systems, the complete text of the GNU General Public License
  Version 2 can be found in `/usr/share/common-licenses/GPL-2'.
-

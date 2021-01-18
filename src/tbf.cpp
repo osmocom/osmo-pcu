@@ -34,7 +34,6 @@
 #include <pcu_utils.h>
 #include <gprs_ms_storage.h>
 #include <sba.h>
-#include <gsm_timer.h>
 #include <pdch.h>
 
 extern "C" {
@@ -154,7 +153,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	memset(&pdch, 0, sizeof(pdch));
 	memset(&Tarr, 0, sizeof(Tarr));
 	memset(&Narr, 0, sizeof(Narr));
-	memset(&gsm_timer, 0, sizeof(gsm_timer));
 
 	memset(&m_ms_list, 0, sizeof(m_ms_list));
 	m_ms_list.entry = this;
@@ -483,7 +481,7 @@ T_CBACK(T3195, true)
 void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool force,
 			      const char *file, unsigned line)
 {
-	int current_fn = get_current_fn();
+	int current_fn = bts_current_frame_number(bts);
 	int sec;
 	int microsec;
 	struct osmo_tdef *tdef;
@@ -777,7 +775,7 @@ static void tbf_timer_cb(void *_tbf)
 
 void gprs_rlcmac_tbf::handle_timeout()
 {
-	int current_fn = get_current_fn();
+	int current_fn = bts_current_frame_number(bts);
 
 	LOGPTBF(this, LOGL_DEBUG, "timer 0 expired. cur_fn=%d\n", current_fn);
 

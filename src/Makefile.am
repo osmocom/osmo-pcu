@@ -50,7 +50,6 @@ libgprs_la_SOURCES = \
 	gprs_ms.c \
 	gprs_ms_storage.cpp \
 	gprs_pcu.c \
-	gsm_timer.cpp \
 	pcu_l1_if.cpp \
 	pcu_vty.c \
 	pcu_vty_functions.cpp \
@@ -87,7 +86,6 @@ noinst_HEADERS = \
 	gprs_ms_storage.h \
 	gprs_pcu.h \
 	pcu_l1_if.h \
-	gsm_timer.h \
 	pcu_vty.h \
 	pcu_vty_functions.h \
 	mslot_class.h \
