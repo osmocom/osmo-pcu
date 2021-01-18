@@ -192,8 +192,40 @@ static const struct osmo_stat_item_group_desc bts_statg_desc = {
 	bts_stat_item_description,
 };
 
-static void bts_init(struct gprs_rlcmac_bts *bts, struct gprs_pcu *pcu)
+static int bts_talloc_destructor(struct gprs_rlcmac_bts* bts)
 {
+	/* this can cause counter updates and must not be left to the
+	 * m_ms_store's destructor */
+	bts->ms_store->cleanup();
+	delete bts->ms_store;
+	delete bts->sba;
+	delete bts->pollController;
+
+	if (bts->ratectrs) {
+		rate_ctr_group_free(bts->ratectrs);
+		bts->ratectrs = NULL;
+	}
+
+	if (bts->statg) {
+		osmo_stat_item_group_free(bts->statg);
+		bts->statg = NULL;
+	}
+
+	if (bts->app_info) {
+		msgb_free(bts->app_info);
+		bts->app_info = NULL;
+	}
+	return 0;
+}
+
+struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu)
+{
+	struct gprs_rlcmac_bts* bts;
+	bts = talloc_zero(pcu, struct gprs_rlcmac_bts);
+	if (!bts)
+		return bts;
+	talloc_set_destructor(bts, bts_talloc_destructor);
+
 	bts->pcu = pcu;
 
 	bts->pollController = new PollController(*bts);
@@ -247,31 +279,8 @@ static void bts_init(struct gprs_rlcmac_bts *bts, struct gprs_pcu *pcu)
 
 	bts->statg = osmo_stat_item_group_alloc(tall_pcu_ctx, &bts_statg_desc, 0);
 	OSMO_ASSERT(bts->statg);
-}
 
-static void bts_cleanup(gprs_rlcmac_bts *bts)
-{
-	/* this can cause counter updates and must not be left to the
-	 * m_ms_store's destructor */
-	bts->ms_store->cleanup();
-	delete bts->ms_store;
-	delete bts->sba;
-	delete bts->pollController;
-
-	if (bts->ratectrs) {
-		rate_ctr_group_free(bts->ratectrs);
-		bts->ratectrs = NULL;
-	}
-
-	if (bts->statg) {
-		osmo_stat_item_group_free(bts->statg);
-		bts->statg = NULL;
-	}
-
-	if (bts->app_info) {
-		msgb_free(bts->app_info);
-		bts->app_info = NULL;
-	}
+	return bts;
 }
 
 void bts_set_current_frame_number(struct gprs_rlcmac_bts *bts, int fn)
@@ -1055,24 +1064,6 @@ GprsMs *bts_alloc_ms(struct gprs_rlcmac_bts* bts, uint8_t ms_class, uint8_t egpr
 	ms_set_egprs_ms_class(ms, egprs_ms_class);
 
 	return ms;
-}
-
-
-static int bts_talloc_destructor(struct gprs_rlcmac_bts* bts)
-{
-	bts_cleanup(bts);
-	return 0;
-}
-
-struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu)
-{
-	struct gprs_rlcmac_bts* bts;
-	bts = talloc_zero(pcu, struct gprs_rlcmac_bts);
-	if (!bts)
-		return bts;
-	talloc_set_destructor(bts, bts_talloc_destructor);
-	bts_init(bts, pcu);
-	return bts;
 }
 
 struct SBAController *bts_sba(struct gprs_rlcmac_bts *bts)
