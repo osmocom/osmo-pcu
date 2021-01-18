@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <inttypes.h>
+
 #include <osmocom/core/tdef.h>
 #include <osmocom/core/utils.h>
 #include <osmocom/vty/tdef_vty.h>
@@ -753,7 +755,11 @@ DEFUN(show_bts_stats,
       "show bts statistics",
       SHOW_STR "BTS related functionality\nStatistics\n")
 {
-	vty_out_rate_ctr_group(vty, "", bts_rate_counters(the_pcu->bts));
+	struct gprs_rlcmac_bts *bts;
+	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
+		vty_out(vty, "BTS%" PRIu8 ":%s", bts->nr, VTY_NEWLINE);
+		vty_out_rate_ctr_group(vty, " ", bts_rate_counters(bts));
+	}
 	return CMD_SUCCESS;
 }
 
@@ -762,7 +768,11 @@ DEFUN(show_bts_pdch,
       "show bts pdch",
       SHOW_STR "BTS related functionality\nPDCH timeslots\n")
 {
-	return pcu_vty_show_bts_pdch(vty, the_pcu->bts);
+	struct gprs_rlcmac_bts *bts;
+	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
+		pcu_vty_show_bts_pdch(vty, bts);
+	}
+	return CMD_SUCCESS;
 }
 
 #define IDLE_TIME_STR "keep an idle DL TBF alive for the time given\n"
@@ -1013,9 +1023,13 @@ DEFUN(show_bts_timer, show_bts_timer_cmd,
       SHOW_STR "Show BTS controlled timers\n"
       OSMO_TDEF_VTY_DOC_T)
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
-	const char *T_arg = argc > 0 ? argv[0] : NULL;
-	return osmo_tdef_vty_show_cmd(vty, bts->T_defs_bts, T_arg, NULL);
+	struct gprs_rlcmac_bts *bts;
+	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
+		const char *T_arg = argc > 0 ? argv[0] : NULL;
+		vty_out(vty, "BTS%" PRIu8 ":%s", bts->nr, VTY_NEWLINE);
+		osmo_tdef_vty_show_cmd(vty, bts->T_defs_bts, T_arg, " ");
+	}
+	return CMD_SUCCESS;
 }
 
 DEFUN(show_timer, show_timer_cmd,
@@ -1047,15 +1061,18 @@ DEFUN(show_tbf,
       "TBFs allocated via CCCH\n"
       "TBFs allocated via PACCH\n")
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
-	uint32_t flags = UINT32_MAX;
+	struct gprs_rlcmac_bts *bts;
+	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
+		uint32_t flags = UINT32_MAX;
 
-	if (argv[0][0] == 'c')
-		flags = (1 << GPRS_RLCMAC_FLAG_CCCH);
-	else if (argv[0][0] == 'p')
-		flags = (1 << GPRS_RLCMAC_FLAG_PACCH);
+		if (argv[0][0] == 'c')
+			flags = (1 << GPRS_RLCMAC_FLAG_CCCH);
+		else if (argv[0][0] == 'p')
+			flags = (1 << GPRS_RLCMAC_FLAG_PACCH);
 
-	return pcu_vty_show_tbf_all(vty, bts, flags);
+		pcu_vty_show_tbf_all(vty, bts, flags);
+	}
+	return CMD_SUCCESS;
 }
 
 DEFUN(show_ms_all,
@@ -1063,8 +1080,11 @@ DEFUN(show_ms_all,
       "show ms all",
       SHOW_STR "information about MSs\n" "All TBFs\n")
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
-	return pcu_vty_show_ms_all(vty, bts);
+	struct gprs_rlcmac_bts *bts;
+	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
+		pcu_vty_show_ms_all(vty, bts);
+	}
+	return CMD_SUCCESS;
 }
 
 DEFUN(show_ms_tlli,
@@ -1072,14 +1092,17 @@ DEFUN(show_ms_tlli,
       "show ms tlli TLLI",
       SHOW_STR "information about MSs\n" "Select MS by TLLI\n" "TLLI as hex\n")
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
-	char *endp = NULL;
-	unsigned long long tlli = strtoll(argv[0], &endp, 16);
-	if ((endp != NULL && *endp != 0) || tlli > 0xffffffffULL) {
-		vty_out(vty, "Invalid TLLI.%s", VTY_NEWLINE);
-		return CMD_WARNING;
+	struct gprs_rlcmac_bts *bts;
+	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
+		char *endp = NULL;
+		unsigned long long tlli = strtoll(argv[0], &endp, 16);
+		if ((endp != NULL && *endp != 0) || tlli > 0xffffffffULL) {
+			vty_out(vty, "Invalid TLLI.%s", VTY_NEWLINE);
+			return CMD_WARNING;
+		}
+		pcu_vty_show_ms_by_tlli(vty, bts, (uint32_t)tlli);
 	}
-	return pcu_vty_show_ms_by_tlli(vty, bts, (uint32_t)tlli);
+	return CMD_SUCCESS;
 }
 
 DEFUN(show_ms_imsi,
@@ -1087,8 +1110,11 @@ DEFUN(show_ms_imsi,
       "show ms imsi IMSI",
       SHOW_STR "information about MSs\n" "Select MS by IMSI\n" "IMSI\n")
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
-	return pcu_vty_show_ms_by_imsi(vty, bts, argv[0]);
+	struct gprs_rlcmac_bts *bts;
+	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
+		pcu_vty_show_ms_by_imsi(vty, bts, argv[0]);
+	}
+	return CMD_SUCCESS;
 }
 
 static const char pcu_copyright[] =

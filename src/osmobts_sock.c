@@ -60,13 +60,20 @@ static void pcu_sock_timeout(void *_priv)
 
 static void pcu_tx_txt_retry(void *_priv)
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
+	struct gprs_rlcmac_bts *bts;
+	bool retry = llist_empty(&the_pcu->bts_list);
 
-	if (bts->active)
-		return;
+	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
+		if (bts->active)
+			continue;
+		retry = true;
+		pcu_tx_txt_ind(PCU_VERSION, "%s", PACKAGE_VERSION);
+		break;
+	}
 
-	pcu_tx_txt_ind(PCU_VERSION, "%s", PACKAGE_VERSION);
-	osmo_timer_schedule(&pcu_sock_state.timer, 5, 0);
+	/* If no BTS (or not all) yet active, retry */
+	if (retry)
+		osmo_timer_schedule(&pcu_sock_state.timer, 5, 0);
 }
 
 int pcu_sock_send(struct msgb *msg)
@@ -88,7 +95,7 @@ int pcu_sock_send(struct msgb *msg)
 static void pcu_sock_close(int lost)
 {
 	struct osmo_fd *bfd = &pcu_sock_state.conn_bfd;
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
+	struct gprs_rlcmac_bts *bts;
 	uint8_t trx, ts;
 
 	LOGP(DL1IF, LOGL_NOTICE, "PCU socket has %s connection\n",
@@ -104,22 +111,23 @@ static void pcu_sock_close(int lost)
 		msgb_free(msg);
 	}
 
-	/* disable all slots, kick all TBFs */
-	for (trx = 0; trx < 8; trx++) {
+	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
+		/* disable all slots, kick all TBFs */
+		for (trx = 0; trx < 8; trx++) {
 #ifdef ENABLE_DIRECT_PHY
-		if (bts->trx[trx].fl1h) {
-			l1if_close_pdch(bts->trx[trx].fl1h);
-			bts->trx[trx].fl1h = NULL;
-		}
+			if (bts->trx[trx].fl1h) {
+				l1if_close_pdch(bts->trx[trx].fl1h);
+				bts->trx[trx].fl1h = NULL;
+			}
 #endif
-		for (ts = 0; ts < 8; ts++)
-			pdch_disable(&bts->trx[trx].pdch[ts]);
-/* FIXME: NOT ALL RESOURCES are freed in this case... inconsistent with the other code. Share the code with pcu_l1if.c
-for the reset. */
-		bts_trx_free_all_tbf(&bts->trx[trx]);
+			for (ts = 0; ts < 8; ts++)
+				pdch_disable(&bts->trx[trx].pdch[ts]);
+	/* FIXME: NOT ALL RESOURCES are freed in this case... inconsistent with the other code. Share the code with pcu_l1if.c
+	for the reset. */
+			bts_trx_free_all_tbf(&bts->trx[trx]);
+		}
+		gprs_bssgp_destroy(bts);
 	}
-
-	gprs_bssgp_destroy(bts);
 	exit(0);
 }
 

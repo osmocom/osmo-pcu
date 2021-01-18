@@ -204,18 +204,24 @@ static unsigned int get_paging_mi(struct osmo_mobile_identity *mi, const struct 
 static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, const struct tlv_parsed *tp)
 {
 	struct osmo_mobile_identity mi;
+	struct gprs_rlcmac_bts *bts;
 	int rc;
 
 	if ((rc = get_paging_mi(&mi, tp)) > 0)
 		return bssgp_tx_status((enum gprs_bssgp_cause) rc, NULL, msg);
 
-	return bts_add_paging(the_pcu->bts, tlvp_val8(tp, BSSGP_IE_CHAN_NEEDED, 0), &mi);
+	/* FIXME: look if MS is attached a specific BTS and then only page on that one? */
+	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
+		bts_add_paging(bts, tlvp_val8(tp, BSSGP_IE_CHAN_NEEDED, 0), &mi);
+	}
+	return 0;
 }
 
 static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, const struct tlv_parsed *tp)
 {
 	struct osmo_mobile_identity mi_imsi;
 	struct osmo_mobile_identity paging_mi;
+	struct gprs_rlcmac_bts *bts;
 	uint16_t pgroup;
 	int rc;
 
@@ -238,7 +244,11 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, const struct tlv_parsed
 	if ((rc = get_paging_mi(&paging_mi, tp)) > 0)
 		return bssgp_tx_status((enum gprs_bssgp_cause) rc, NULL, msg);
 
-	return gprs_rlcmac_paging_request(&paging_mi, pgroup);
+	/* FIXME: look if MS is attached a specific BTS and then only page on that one? */
+	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
+		gprs_rlcmac_paging_request(bts, &paging_mi, pgroup);
+	}
+	return 0;
 }
 
 /* Receive a BSSGP PDU from a BSS on a PTP BVCI */
@@ -808,7 +818,13 @@ static int gprs_bssgp_tx_fc_bvc(void)
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
 		return -EIO;
 	}
-	bts = the_pcu->bts;
+
+	/* FIXME: This calculation needs to be redone to support multiple BTS */
+	bts = llist_first_entry_or_null(&the_pcu->bts_list, struct gprs_rlcmac_bts, list);
+	if (!bts) {
+		LOGP(DBSSGP, LOGL_ERROR, "No bts\n");
+		return -EIO;
+	}
 
 	max_cs_dl = max_coding_scheme_dl(bts);
 

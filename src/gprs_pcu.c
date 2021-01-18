@@ -21,6 +21,7 @@
  */
 
 #include <osmocom/core/utils.h>
+#include <osmocom/core/linuxlist.h>
 
 #include "gprs_pcu.h"
 #include "bts.h"
@@ -100,37 +101,63 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	pcu->T_defs = T_defs_pcu;
 	osmo_tdefs_reset(pcu->T_defs);
 
+	INIT_LLIST_HEAD(&pcu->bts_list);
+
 	return pcu;
+}
+
+struct gprs_rlcmac_bts *gprs_pcu_get_bts_by_nr(struct gprs_pcu *pcu, uint8_t bts_nr)
+{
+	struct gprs_rlcmac_bts *pos;
+	llist_for_each_entry(pos, &pcu->bts_list, list) {
+		if (pos->nr == bts_nr)
+			return pos;
+	}
+	return NULL;
 }
 
 void gprs_pcu_set_initial_cs(struct gprs_pcu *pcu, uint8_t cs_dl, uint8_t cs_ul)
 {
+	struct gprs_rlcmac_bts *bts;
+
 	the_pcu->vty.initial_cs_dl = cs_dl;
 	the_pcu->vty.initial_cs_ul = cs_ul;
 
-	/*TODO: once we support multiple bts, foreach(bts) apply */
-	bts_recalc_initial_cs(pcu->bts);
+	llist_for_each_entry(bts, &pcu->bts_list, list) {
+		bts_recalc_initial_cs(bts);
+	}
 }
 void gprs_pcu_set_initial_mcs(struct gprs_pcu *pcu, uint8_t mcs_dl, uint8_t mcs_ul)
 {
+	struct gprs_rlcmac_bts *bts;
+
 	the_pcu->vty.initial_mcs_dl = mcs_dl;
 	the_pcu->vty.initial_mcs_ul = mcs_ul;
 
-	/*TODO: once we support multiple bts, foreach(bts) apply */
-	bts_recalc_initial_mcs(pcu->bts);
+	llist_for_each_entry(bts, &pcu->bts_list, list) {
+		bts_recalc_initial_mcs(bts);
+	}
 }
 
 void gprs_pcu_set_max_cs(struct gprs_pcu *pcu, uint8_t cs_dl, uint8_t cs_ul)
 {
+	struct gprs_rlcmac_bts *bts;
+
 	the_pcu->vty.max_cs_dl = cs_dl;
 	the_pcu->vty.max_cs_ul = cs_ul;
-	/*TODO: once we support multiple bts, foreach(bts) apply */
-	bts_recalc_max_cs(pcu->bts);
+
+	llist_for_each_entry(bts, &pcu->bts_list, list) {
+		bts_recalc_max_cs(bts);
+	}
 }
 void gprs_pcu_set_max_mcs(struct gprs_pcu *pcu, uint8_t mcs_dl, uint8_t mcs_ul)
 {
+	struct gprs_rlcmac_bts *bts;
+
 	the_pcu->vty.max_mcs_dl = mcs_dl;
 	the_pcu->vty.max_mcs_ul = mcs_ul;
-	/* TODO: once we support multiple bts, foreach(bts) apply */
-	bts_recalc_max_mcs(pcu->bts);
+
+	llist_for_each_entry(bts, &pcu->bts_list, list) {
+		bts_recalc_max_mcs(bts);
+	}
 }

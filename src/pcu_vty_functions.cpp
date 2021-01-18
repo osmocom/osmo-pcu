@@ -246,7 +246,7 @@ int pcu_vty_show_bts_pdch(struct vty *vty, const struct gprs_rlcmac_bts *bts)
 {
 	unsigned int trx_nr, ts_nr;
 
-	vty_out(vty, "BTS (%s)%s", bts->active ? "active" : "disabled", VTY_NEWLINE);
+	vty_out(vty, "BTS%" PRIu8 " (%s)%s", bts->nr, bts->active ? "active" : "disabled", VTY_NEWLINE);
 	for (trx_nr = 0; trx_nr < ARRAY_SIZE(bts->trx); trx_nr++) {
 		const struct gprs_rlcmac_trx *trx = &bts->trx[trx_nr];
 

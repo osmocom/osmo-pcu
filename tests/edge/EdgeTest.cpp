@@ -1252,7 +1252,7 @@ static void uplink_header_type_2_parsing_test(struct gprs_rlcmac_bts *bts,
 
 static void uplink_header_type2_test(void)
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
 	uint16_t qta = 31;
@@ -1370,7 +1370,7 @@ static void uplink_header_type_1_parsing_test(struct gprs_rlcmac_bts *bts,
 
 void uplink_header_type1_test(void)
 {
-	struct gprs_rlcmac_bts  *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts  *bts = bts_alloc(the_pcu, 0);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
 	uint16_t qta = 31;

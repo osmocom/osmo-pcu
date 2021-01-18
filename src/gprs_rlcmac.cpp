@@ -32,7 +32,8 @@ extern "C" {
 
 extern void *tall_pcu_ctx;
 
-int gprs_rlcmac_paging_request(const struct osmo_mobile_identity *mi, uint16_t pgroup)
+int gprs_rlcmac_paging_request(struct gprs_rlcmac_bts *bts, const struct osmo_mobile_identity *mi,
+			       uint16_t pgroup)
 {
 	if (log_check_level(DRLCMAC, LOGL_NOTICE)) {
 		char str[64];
@@ -46,7 +47,7 @@ int gprs_rlcmac_paging_request(const struct osmo_mobile_identity *mi, uint16_t p
 		LOGP(DRLCMAC, LOGL_ERROR, "TX: [PCU -> BTS] Failed to encode Paging Request\n");
 		return -1;
 	}
-	pcu_l1if_tx_pch(paging_request, plen, pgroup);
+	pcu_l1if_tx_pch(bts, paging_request, plen, pgroup);
 	bitvec_free(paging_request);
 
 	return 0;

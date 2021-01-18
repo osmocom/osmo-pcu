@@ -221,10 +221,12 @@ static int bts_talloc_destructor(struct gprs_rlcmac_bts* bts)
 		msgb_free(bts->app_info);
 		bts->app_info = NULL;
 	}
+
+	llist_del(&bts->list);
 	return 0;
 }
 
-struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu)
+struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr)
 {
 	struct gprs_rlcmac_bts* bts;
 	bts = talloc_zero(pcu, struct gprs_rlcmac_bts);
@@ -233,6 +235,7 @@ struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu)
 	talloc_set_destructor(bts, bts_talloc_destructor);
 
 	bts->pcu = pcu;
+	bts->nr = bts_nr;
 
 	bts->pollController = new PollController(*bts);
 	bts->sba = new SBAController(*bts);
@@ -285,6 +288,8 @@ struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu)
 
 	bts->statg = osmo_stat_item_group_alloc(tall_pcu_ctx, &bts_statg_desc, 0);
 	OSMO_ASSERT(bts->statg);
+
+	llist_add_tail(&bts->list, &pcu->bts_list);
 
 	return bts;
 }
@@ -916,7 +921,7 @@ send_imm_ass_rej:
 	}
 
 	if (plen >= 0)
-		pcu_l1if_tx_agch(bv, plen);
+		pcu_l1if_tx_agch(bts, bv, plen);
 	else
 		rc = plen;
 
@@ -995,7 +1000,7 @@ void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bo
 						    GSM_L1_BURST_TYPE_ACCESS_0);
 	if (plen >= 0) {
 		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_DL_TBF);
-		pcu_l1if_tx_pch(immediate_assignment, plen, pgroup);
+		pcu_l1if_tx_pch(bts, immediate_assignment, plen, pgroup);
 	}
 
 	bitvec_free(immediate_assignment);
@@ -1125,10 +1130,11 @@ void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta)
 	}
 }
 
-void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts, int8_t ta, bool is_rach)
+void bts_update_tbf_ta(struct gprs_rlcmac_bts *bts, const char *p, uint32_t fn,
+		       uint8_t trx_no, uint8_t ts, int8_t ta, bool is_rach)
 {
 	struct gprs_rlcmac_ul_tbf *tbf =
-		bts_ul_tbf_by_poll_fn(the_pcu->bts, fn, trx_no, ts);
+		bts_ul_tbf_by_poll_fn(bts, fn, trx_no, ts);
 	if (!tbf)
 		LOGP(DL1IF, LOGL_DEBUG, "[%s] update TA = %u ignored due to "
 		     "unknown UL TBF on TRX = %d, TS = %d, FN = %d\n",

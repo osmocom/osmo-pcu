@@ -145,7 +145,7 @@ int pcu_tx_txt_ind(enum gsm_pcu_if_text_type t, const char *fmt, ...)
 	return pcu_sock_send(msg);
 }
 
-static int pcu_tx_act_req(uint8_t trx, uint8_t ts, uint8_t activate)
+static int pcu_tx_act_req(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts, uint8_t activate)
 {
 	struct msgb *msg;
 	struct gsm_pcu_if *pcu_prim;
@@ -154,7 +154,7 @@ static int pcu_tx_act_req(uint8_t trx, uint8_t ts, uint8_t activate)
 	LOGP(DL1IF, LOGL_INFO, "Sending %s request: trx=%d ts=%d\n",
 		(activate) ? "activate" : "deactivate", trx, ts);
 
-	msg = pcu_msgb_alloc(PCU_IF_MSG_ACT_REQ, 0);
+	msg = pcu_msgb_alloc(PCU_IF_MSG_ACT_REQ, bts->nr);
 	if (!msg)
 		return -ENOMEM;
 	pcu_prim = (struct gsm_pcu_if *) msg->data;
@@ -166,20 +166,20 @@ static int pcu_tx_act_req(uint8_t trx, uint8_t ts, uint8_t activate)
 	return pcu_sock_send(msg);
 }
 
-static int pcu_tx_data_req(uint8_t trx, uint8_t ts, uint8_t sapi,
+static int pcu_tx_data_req(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts, uint8_t sapi,
 	uint16_t arfcn, uint32_t fn, uint8_t block_nr, uint8_t *data,
 	uint8_t len)
 {
 	struct msgb *msg;
 	struct gsm_pcu_if *pcu_prim;
 	struct gsm_pcu_if_data *data_req;
-	int current_fn = bts_current_frame_number(the_pcu->bts);
+	int current_fn = bts_current_frame_number(bts);
 
 	LOGP(DL1IF, LOGL_DEBUG, "Sending data request: trx=%d ts=%d sapi=%d "
 		"arfcn=%d fn=%d cur_fn=%d block=%d data=%s\n", trx, ts, sapi, arfcn, fn, current_fn,
 		block_nr, osmo_hexdump(data, len));
 
-	msg = pcu_msgb_alloc(PCU_IF_MSG_DATA_REQ, 0);
+	msg = pcu_msgb_alloc(PCU_IF_MSG_DATA_REQ, bts->nr);
 	if (!msg)
 		return -ENOMEM;
 	pcu_prim = (struct gsm_pcu_if *) msg->data;
@@ -197,12 +197,10 @@ static int pcu_tx_data_req(uint8_t trx, uint8_t ts, uint8_t sapi,
 	return pcu_sock_send(msg);
 }
 
-void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
+void pcu_l1if_tx_pdtch(msgb *msg, struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr)
 {
 #ifdef ENABLE_DIRECT_PHY
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
-
 	if (bts->trx[trx].fl1h) {
 		l1if_pdch_req(bts->trx[trx].fl1h, ts, 0, fn, arfcn, block_nr,
 			msg->data, msg->len);
@@ -210,7 +208,7 @@ void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 		return;
 	}
 #endif
-	pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PDTCH, arfcn, fn, block_nr,
+	pcu_tx_data_req(bts, trx, ts, PCU_IF_SAPI_PDTCH, arfcn, fn, block_nr,
 			msg->data, msg->len);
 	msgb_free(msg);
 }
@@ -228,10 +226,10 @@ void pcu_l1if_tx_ptcch(struct gprs_rlcmac_bts *bts,
 		return;
 	}
 #endif
-	pcu_tx_data_req(trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr, data, data_len);
+	pcu_tx_data_req(bts, trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr, data, data_len);
 }
 
-void pcu_l1if_tx_agch(bitvec * block, int plen)
+void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec * block, int plen)
 {
 	uint8_t data[GSM_MACBLOCK_LEN]; /* prefix PLEN */
 
@@ -242,10 +240,10 @@ void pcu_l1if_tx_agch(bitvec * block, int plen)
 	if (the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_AGCH))
 		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_AGCH, 0, 0, 0, 0, data, GSM_MACBLOCK_LEN);
 
-	pcu_tx_data_req(0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, GSM_MACBLOCK_LEN);
+	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_AGCH, 0, 0, 0, data, GSM_MACBLOCK_LEN);
 }
 
-void pcu_l1if_tx_pch(bitvec * block, int plen, uint16_t pgroup)
+void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec * block, int plen, uint16_t pgroup)
 {
 	uint8_t data[PAGING_GROUP_LEN + GSM_MACBLOCK_LEN];
 	int i;
@@ -267,33 +265,31 @@ void pcu_l1if_tx_pch(bitvec * block, int plen, uint16_t pgroup)
 	if (the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PCH))
 		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0, data + 3, GSM_MACBLOCK_LEN);
 
-	pcu_tx_data_req(0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, PAGING_GROUP_LEN + GSM_MACBLOCK_LEN);
+	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, PAGING_GROUP_LEN + GSM_MACBLOCK_LEN);
 }
 
-extern "C" void pcu_rx_block_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no)
+void pcu_rx_block_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no)
 {
-	bts_set_current_block_frame_number(the_pcu->bts,fn, 0);
+	bts_set_current_block_frame_number(bts, fn, 0);
 }
 
-extern "C" void pcu_rx_ra_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no)
+void pcu_rx_ra_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no)
 {
 	/* access bursts may arrive some bursts earlier */
-	bts_set_current_block_frame_number(the_pcu->bts,fn, 5);
+	bts_set_current_block_frame_number(bts, fn, 5);
 }
 
-extern "C" int pcu_rx_data_ind_pdtch(uint8_t trx_no, uint8_t ts_no, uint8_t *data,
+int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, uint8_t trx_no, uint8_t ts_no, uint8_t *data,
 	uint8_t len, uint32_t fn, struct pcu_l1_meas *meas)
 {
 	struct gprs_rlcmac_pdch *pdch;
 
-	pdch = &the_pcu->bts->trx[trx_no].pdch[ts_no];
+	pdch = &bts->trx[trx_no].pdch[ts_no];
 	return pdch->rcv_block(data, len, fn, meas);
 }
 
-static int pcu_rx_data_ind_bcch(uint8_t *data, uint8_t len)
+static int pcu_rx_data_ind_bcch(struct gprs_rlcmac_bts *bts, uint8_t *data, uint8_t len)
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
-
 	if (len == 0) {
 		bts->si13_is_set = false;
 		LOGP(DL1IF, LOGL_INFO, "Received PCU data indication with empty SI13: cache cleaned\n");
@@ -311,10 +307,10 @@ static int pcu_rx_data_ind_bcch(uint8_t *data, uint8_t len)
 	return 0;
 }
 
-static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
+static int pcu_rx_data_ind(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data *data_ind)
 {
 	int rc;
-	int current_fn = bts_current_frame_number(the_pcu->bts);
+	int current_fn = bts_current_frame_number(bts);
 	struct pcu_l1_meas meas = {0};
 	uint8_t gsmtap_chantype;
 
@@ -334,13 +330,13 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 		LOGP(DL1IF, LOGL_DEBUG, "Data indication with raw measurements received: BER10k = %d, BTO = %d, Q = %d\n",
 		     data_ind->ber10k, data_ind->ta_offs_qbits, data_ind->lqual_cb);
 
-		rc = pcu_rx_data_ind_pdtch(data_ind->trx_nr, data_ind->ts_nr,
+		rc = pcu_rx_data_ind_pdtch(bts, data_ind->trx_nr, data_ind->ts_nr,
 			data_ind->data, data_ind->len, data_ind->fn,
 			&meas);
 		gsmtap_chantype = GSMTAP_CHANNEL_PDTCH;
 		break;
 	case PCU_IF_SAPI_BCCH:
-		rc = pcu_rx_data_ind_bcch(data_ind->data, data_ind->len);
+		rc = pcu_rx_data_ind_bcch(bts, data_ind->data, data_ind->len);
 		gsmtap_chantype = GSMTAP_CHANNEL_BCCH;
 		break;
 	default:
@@ -358,10 +354,10 @@ static int pcu_rx_data_ind(struct gsm_pcu_if_data *data_ind)
 	return rc;
 }
 
-static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
+static int pcu_rx_data_cnf(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data *data_cnf)
 {
 	int rc = 0;
-	int current_fn = bts_current_frame_number(the_pcu->bts);
+	int current_fn = bts_current_frame_number(bts);
 
 	LOGP(DL1IF, LOGL_DEBUG, "Data confirm received: sapi=%d fn=%d cur_fn=%d\n",
 		data_cnf->sapi, data_cnf->fn, current_fn);
@@ -369,7 +365,7 @@ static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 	switch (data_cnf->sapi) {
 	case PCU_IF_SAPI_PCH:
 		if (data_cnf->data[2] == 0x3f)
-			bts_rcv_imm_ass_cnf(the_pcu->bts, data_cnf->data, data_cnf->fn);
+			bts_rcv_imm_ass_cnf(bts, data_cnf->data, data_cnf->fn);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU data confirm with "
@@ -381,16 +377,15 @@ static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 }
 
 // FIXME: remove this, when changed from c++ to c.
-extern "C" int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts,
+int pcu_rx_rts_req_pdtch(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
 	uint32_t fn, uint8_t block_nr)
 {
-	return gprs_rlcmac_rcv_rts_block(the_pcu->bts,
+	return gprs_rlcmac_rcv_rts_block(bts,
 					trx, ts, fn, block_nr);
 }
-extern "C" int pcu_rx_rts_req_ptcch(uint8_t trx, uint8_t ts,
+int pcu_rx_rts_req_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
 	uint32_t fn, uint8_t block_nr)
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	struct gprs_rlcmac_pdch *pdch;
 
 	/* Prevent buffer overflow */
@@ -407,10 +402,10 @@ extern "C" int pcu_rx_rts_req_ptcch(uint8_t trx, uint8_t ts,
 	return 0;
 }
 
-static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
+static int pcu_rx_rts_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_rts_req *rts_req)
 {
 	int rc = 0;
-	int current_fn = bts_current_frame_number(the_pcu->bts);
+	int current_fn = bts_current_frame_number(bts);
 
 	LOGP(DL1IF, LOGL_DEBUG, "RTS request received: trx=%d ts=%d sapi=%d "
 		"arfcn=%d fn=%d cur_fn=%d block=%d\n", rts_req->trx_nr, rts_req->ts_nr,
@@ -418,11 +413,11 @@ static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 
 	switch (rts_req->sapi) {
 	case PCU_IF_SAPI_PDTCH:
-		pcu_rx_rts_req_pdtch(rts_req->trx_nr, rts_req->ts_nr,
+		pcu_rx_rts_req_pdtch(bts, rts_req->trx_nr, rts_req->ts_nr,
 			rts_req->fn, rts_req->block_nr);
 		break;
 	case PCU_IF_SAPI_PTCCH:
-		pcu_rx_rts_req_ptcch(rts_req->trx_nr, rts_req->ts_nr,
+		pcu_rx_rts_req_ptcch(bts, rts_req->trx_nr, rts_req->ts_nr,
 			rts_req->fn, rts_req->block_nr);
 		break;
 	default:
@@ -435,7 +430,7 @@ static int pcu_rx_rts_req(struct gsm_pcu_if_rts_req *rts_req)
 }
 
 /* C -> C++ adapter for direct DSP access code (e.g. osmo-bts-sysmo) */
-extern "C" int pcu_rx_rach_ind_ptcch(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta)
+extern "C" int pcu_rx_rach_ind_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta)
 {
 	struct rach_ind_params rip = {
 		/* The content of RA is not of interest on PTCCH/U */
@@ -448,13 +443,13 @@ extern "C" int pcu_rx_rach_ind_ptcch(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn,
 		.qta = qta,
 	};
 
-	return bts_rcv_ptcch_rach(the_pcu->bts, &rip);
+	return bts_rcv_ptcch_rach(bts, &rip);
 }
 
-static int pcu_rx_rach_ind(const struct gsm_pcu_if_rach_ind *rach_ind)
+static int pcu_rx_rach_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_rach_ind *rach_ind)
 {
 	int rc = 0;
-	int current_fn = bts_current_frame_number(the_pcu->bts);
+	int current_fn = bts_current_frame_number(bts);
 
 	LOGP(DL1IF, LOGL_INFO, "RACH request received: sapi=%d "
 		"qta=%d, ra=0x%02x, fn=%u, cur_fn=%d, is_11bit=%d\n", rach_ind->sapi, rach_ind->qta,
@@ -472,10 +467,10 @@ static int pcu_rx_rach_ind(const struct gsm_pcu_if_rach_ind *rach_ind)
 
 	switch (rach_ind->sapi) {
 	case PCU_IF_SAPI_RACH:
-		rc = bts_rcv_rach(the_pcu->bts, &rip);
+		rc = bts_rcv_rach(bts, &rip);
 		break;
 	case PCU_IF_SAPI_PTCCH:
-		rc = bts_rcv_ptcch_rach(the_pcu->bts, &rip);
+		rc = bts_rcv_ptcch_rach(bts, &rip);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received PCU rach request with "
@@ -542,9 +537,8 @@ static int pcu_info_ind_ns(struct gprs_rlcmac_bts *bts,
 	return gprs_ns_config(bts, info_ind->nsei, local, remote, nsvci, valid);
 }
 
-static int pcu_rx_info_ind(const struct gsm_pcu_if_info_ind *info_ind)
+static int pcu_rx_info_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_info_ind *info_ind)
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	struct gprs_bssgp_pcu *pcu;
 	int rc = 0;
 	unsigned int trx_nr, ts_nr;
@@ -704,7 +698,7 @@ bssgp_failed:
 						l1if_connect_pdch(
 							bts->trx[trx_nr].fl1h, ts_nr);
 #endif
-					pcu_tx_act_req(trx_nr, ts_nr, 1);
+					pcu_tx_act_req(bts, trx_nr, ts_nr, 1);
 					pdch->enable();
 				}
 
@@ -730,7 +724,7 @@ bssgp_failed:
 				     trx_nr, ts_nr, pdch->tsc, pdch->fh.enabled ? "yes" : "no");
 			} else {
 				if (pdch->is_enabled()) {
-					pcu_tx_act_req(trx_nr, ts_nr, 0);
+					pcu_tx_act_req(bts, trx_nr, ts_nr, 0);
 					pdch->free_resources();
 					pdch->disable();
 				}
@@ -742,7 +736,7 @@ bssgp_failed:
 	return rc;
 }
 
-static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
+static int pcu_rx_time_ind(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_time_ind *time_ind)
 {
 	uint8_t fn13 = time_ind->fn % 13;
 
@@ -752,11 +746,11 @@ static int pcu_rx_time_ind(struct gsm_pcu_if_time_ind *time_ind)
 
 	LOGP(DL1IF, LOGL_DEBUG, "Time indication received: %d\n", time_ind->fn % 52);
 
-	bts_set_current_frame_number(the_pcu->bts, time_ind->fn);
+	bts_set_current_frame_number(bts, time_ind->fn);
 	return 0;
 }
 
-static int pcu_rx_pag_req(struct gsm_pcu_if_pag_req *pag_req)
+static int pcu_rx_pag_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_pag_req *pag_req)
 {
 	struct osmo_mobile_identity mi;
 	int rc;
@@ -777,12 +771,11 @@ static int pcu_rx_pag_req(struct gsm_pcu_if_pag_req *pag_req)
 		return -EINVAL;
 	}
 
-	return bts_add_paging(the_pcu->bts, pag_req->chan_needed, &mi);
+	return bts_add_paging(bts, pag_req->chan_needed, &mi);
 }
 
-static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)
+static int pcu_rx_susp_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_susp_req *susp_req)
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	struct bssgp_bvc_ctx *bctx = gprs_bssgp_pcu_current_bctx();
 	GprsMs *ms;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
@@ -811,9 +804,8 @@ static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)
 	return bssgp_tx_suspend(bctx->nsei, susp_req->tlli, &ra_id);
 }
 
-static int pcu_rx_app_info_req(struct gsm_pcu_if_app_info_req *app_info_req)
+static int pcu_rx_app_info_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_app_info_req *app_info_req)
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	struct llist_head *tmp;
 
 	LOGP(DL1IF, LOGL_DEBUG, "Application Information Request received: type=0x%08x len=%i\n",
@@ -849,34 +841,43 @@ static int pcu_rx_app_info_req(struct gsm_pcu_if_app_info_req *app_info_req)
 int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 {
 	int rc = 0;
+	struct gprs_rlcmac_bts *bts = gprs_pcu_get_bts_by_nr(the_pcu, pcu_prim->bts_nr);
+	if (!bts) {
+		LOGP(DL1IF, LOGL_NOTICE, "Received message for new BTS%d\n", pcu_prim->bts_nr);
+		bts = bts_alloc(the_pcu, pcu_prim->bts_nr);
+		if (!bts) {
+			LOGP(DL1IF, LOGL_ERROR, "Failed to create object for BTS%d!\n", pcu_prim->bts_nr);
+			return -EAGAIN;
+		}
+	}
 
 	switch (msg_type) {
 	case PCU_IF_MSG_DATA_IND:
-		rc = pcu_rx_data_ind(&pcu_prim->u.data_ind);
+		rc = pcu_rx_data_ind(bts, &pcu_prim->u.data_ind);
 		break;
 	case PCU_IF_MSG_DATA_CNF:
-		rc = pcu_rx_data_cnf(&pcu_prim->u.data_cnf);
+		rc = pcu_rx_data_cnf(bts, &pcu_prim->u.data_cnf);
 		break;
 	case PCU_IF_MSG_RTS_REQ:
-		rc = pcu_rx_rts_req(&pcu_prim->u.rts_req);
+		rc = pcu_rx_rts_req(bts, &pcu_prim->u.rts_req);
 		break;
 	case PCU_IF_MSG_RACH_IND:
-		rc = pcu_rx_rach_ind(&pcu_prim->u.rach_ind);
+		rc = pcu_rx_rach_ind(bts, &pcu_prim->u.rach_ind);
 		break;
 	case PCU_IF_MSG_INFO_IND:
-		rc = pcu_rx_info_ind(&pcu_prim->u.info_ind);
+		rc = pcu_rx_info_ind(bts, &pcu_prim->u.info_ind);
 		break;
 	case PCU_IF_MSG_TIME_IND:
-		rc = pcu_rx_time_ind(&pcu_prim->u.time_ind);
+		rc = pcu_rx_time_ind(bts, &pcu_prim->u.time_ind);
 		break;
 	case PCU_IF_MSG_PAG_REQ:
-		rc = pcu_rx_pag_req(&pcu_prim->u.pag_req);
+		rc = pcu_rx_pag_req(bts, &pcu_prim->u.pag_req);
 		break;
 	case PCU_IF_MSG_SUSP_REQ:
-		rc = pcu_rx_susp_req(&pcu_prim->u.susp_req);
+		rc = pcu_rx_susp_req(bts, &pcu_prim->u.susp_req);
 		break;
 	case PCU_IF_MSG_APP_INFO_REQ:
-		rc = pcu_rx_app_info_req(&pcu_prim->u.app_info_req);
+		rc = pcu_rx_app_info_req(bts, &pcu_prim->u.app_info_req);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received unknown PCU msg type %d\n",

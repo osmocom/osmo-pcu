@@ -149,6 +149,7 @@ static int handle_ph_readytosend_ind(struct oc2gl1_hdl *fl1h,
 				     GsmL1_PhReadyToSendInd_t *rts_ind)
 {
 	struct gsm_time g_time;
+	struct gprs_rlcmac_bts *bts;
 	int rc = 0;
 
 	gsm_fn2gsmtime(&g_time, rts_ind->u32Fn);
@@ -157,14 +158,16 @@ static int handle_ph_readytosend_ind(struct oc2gl1_hdl *fl1h,
 		g_time.t1, g_time.t2, g_time.t3,
 		get_value_string(oc2gbts_l1sapi_names, rts_ind->sapi));
 
+	bts = llist_first_entry_or_null(&the_pcu->bts_list, struct gprs_rlcmac_bts, list);
+
 	switch (rts_ind->sapi) {
 	case GsmL1_Sapi_Pdtch:
 	case GsmL1_Sapi_Pacch:
-		rc = pcu_rx_rts_req_pdtch(fl1h->trx_no, rts_ind->u8Tn,
+		rc = pcu_rx_rts_req_pdtch(bts, fl1h->trx_no, rts_ind->u8Tn,
 			rts_ind->u32Fn, rts_ind->u8BlockNbr);
 		break;
 	case GsmL1_Sapi_Ptcch:
-		rc = pcu_rx_rts_req_ptcch(fl1h->trx_no, rts_ind->u8Tn,
+		rc = pcu_rx_rts_req_ptcch(bts, fl1h->trx_no, rts_ind->u8Tn,
 			rts_ind->u32Fn, rts_ind->u8BlockNbr);
 		break;
 	default:
@@ -190,6 +193,7 @@ static int handle_ph_data_ind(struct oc2gl1_hdl *fl1h,
 	GsmL1_PhDataInd_t *data_ind, struct msgb *l1p_msg)
 {
 	int rc = 0;
+	struct gprs_rlcmac_bts *bts;
 	struct pcu_l1_meas meas = {0};
 
 	DEBUGP(DL1IF, "Rx PH-DATA.ind %s (hL2 %08x): %s\n",
@@ -206,13 +210,15 @@ static int handle_ph_data_ind(struct oc2gl1_hdl *fl1h,
 	if (data_ind->msgUnitParam.u8Size == 0)
 		return -1;
 
+	bts = llist_first_entry_or_null(&the_pcu->bts_list, struct gprs_rlcmac_bts, list);
+
 	gsmtap_send(fl1h->gsmtap, data_ind->u16Arfcn | GSMTAP_ARFCN_F_UPLINK,
 			data_ind->u8Tn, GSMTAP_CHANNEL_PACCH, 0,
 			data_ind->u32Fn, 0, 0, data_ind->msgUnitParam.u8Buffer+1,
 			data_ind->msgUnitParam.u8Size-1);
 
 	get_meas(&meas, &data_ind->measParam);
-	bts_update_tbf_ta("PH-DATA", data_ind->u32Fn, fl1h->trx_no,
+	bts_update_tbf_ta(bts, "PH-DATA", data_ind->u32Fn, fl1h->trx_no,
 			  data_ind->u8Tn, sign_qta2ta(meas.bto), false);
 
 	switch (data_ind->sapi) {
@@ -223,7 +229,7 @@ static int handle_ph_data_ind(struct oc2gl1_hdl *fl1h,
 			!= GsmL1_PdtchPlType_Full)
 			break;
 		/* PDTCH / PACCH frame handling */
-		pcu_rx_data_ind_pdtch(fl1h->trx_no, data_ind->u8Tn,
+		pcu_rx_data_ind_pdtch(bts, fl1h->trx_no, data_ind->u8Tn,
 			data_ind->msgUnitParam.u8Buffer + 1,
 			data_ind->msgUnitParam.u8Size - 1,
 			data_ind->u32Fn,
@@ -242,19 +248,23 @@ static int handle_ph_data_ind(struct oc2gl1_hdl *fl1h,
 
 static int handle_ph_ra_ind(struct oc2gl1_hdl *fl1h, GsmL1_PhRaInd_t *ra_ind)
 {
+	struct gprs_rlcmac_bts *bts;
+
 	if (ra_ind->measParam.fLinkQuality < MIN_QUAL_RACH)
 		return 0;
 
 	LOGP(DL1IF, LOGL_DEBUG, "PH-RA-IND L1 qta=%d\n", ra_ind->measParam.i16BurstTiming);
 
+	bts = llist_first_entry_or_null(&the_pcu->bts_list, struct gprs_rlcmac_bts, list);
+
 	switch (ra_ind->sapi) {
 	case GsmL1_Sapi_Pdtch:
 	case GsmL1_Sapi_Prach:
-		bts_update_tbf_ta("PH-RA", ra_ind->u32Fn, fl1h->trx_no, ra_ind->u8Tn,
+		bts_update_tbf_ta(bts, "PH-RA", ra_ind->u32Fn, fl1h->trx_no, ra_ind->u8Tn,
 				  qta2ta(ra_ind->measParam.i16BurstTiming), true);
 		break;
 	case GsmL1_Sapi_Ptcch:
-		pcu_rx_rach_ind_ptcch(fl1h->trx_no, ra_ind->u8Tn, ra_ind->u32Fn,
+		pcu_rx_rach_ind_ptcch(bts, fl1h->trx_no, ra_ind->u8Tn, ra_ind->u32Fn,
 				      ra_ind->measParam.i16BurstTiming);
 		break;
 	default:
@@ -392,4 +402,3 @@ int l1if_close_pdch(void *obj)
 	talloc_free(fl1h);
 	return 0;
 }
-

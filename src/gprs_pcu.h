@@ -107,7 +107,7 @@ struct gprs_pcu {
 	struct gsmtap_inst *gsmtap;
 	uint32_t gsmtap_categ_mask;
 
-	struct gprs_rlcmac_bts *bts;
+	struct llist_head bts_list; /* list of gprs_rlcmac_tbf */
 
 	struct gprs_ns2_inst *nsi;
 
@@ -122,6 +122,8 @@ struct gprs_pcu {
 extern struct gprs_pcu *the_pcu;
 
 struct gprs_pcu *gprs_pcu_alloc(void *ctx);
+
+struct gprs_rlcmac_bts *gprs_pcu_get_bts_by_nr(struct gprs_pcu *pcu, uint8_t bts_nr);
 
 void gprs_pcu_set_initial_cs(struct gprs_pcu *pcu, uint8_t cs_dl, uint8_t cs_ul);
 void gprs_pcu_set_initial_mcs(struct gprs_pcu *pcu, uint8_t mcs_dl, uint8_t mcs_ul);

@@ -78,7 +78,7 @@ void test_pcu_rx_no_subscr_with_active_tbf()
 
 void prepare_bts_with_two_dl_tbf_subscr()
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
+	struct gprs_rlcmac_bts *bts = gprs_pcu_get_bts_by_nr(the_pcu, 0);
 	struct gprs_rlcmac_trx *trx;
 
 	fprintf(stderr, "--- %s ---\n",  __func__);
@@ -121,7 +121,7 @@ void test_sched_app_info_ok(const struct gsm_pcu_if_app_info_req *req)
 
 void test_sched_app_info_missing_app_info_in_bts(const struct gsm_pcu_if_app_info_req *req)
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
+	struct gprs_rlcmac_bts *bts = gprs_pcu_get_bts_by_nr(the_pcu, 0);
 	struct gsm_pcu_if pcu_prim = {PCU_IF_MSG_APP_INFO_REQ, };
 
 	fprintf(stderr, "--- %s ---\n",  __func__);
@@ -147,13 +147,18 @@ void test_pcu_rx_overwrite_app_info(const struct gsm_pcu_if_app_info_req *req)
 	fprintf(stderr, "\n");
 }
 
-void cleanup()
+extern "C" void cleanup()
 {
 	fprintf(stderr, "--- %s ---\n",  __func__);
 
+	struct gprs_rlcmac_bts *bts;
+
 	tbf_free(tbf1);
 	tbf_free(tbf2);
-	TALLOC_FREE(the_pcu->bts);
+
+	bts = gprs_pcu_get_bts_by_nr(the_pcu, 0);
+	talloc_free(bts);
+
 	/* FIXME: talloc report disabled, because bts_alloc_ms(bts, ) in prepare_bts_with_two_dl_tbf_subscr() causes leak */
 	/* talloc_report_full(tall_pcu_ctx, stderr); */
 	talloc_free(the_pcu);
@@ -173,7 +178,7 @@ int main(int argc, char *argv[])
 	log_parse_category_mask(osmo_stderr_target, "DL1IF,1:DRLCMAC,3:DRLCMACSCHED,1");
 
 	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
-	the_pcu->bts = bts_alloc(the_pcu);
+	bts_alloc(the_pcu, 0);
 
 	test_enc_zero_len();
 	test_enc(&req);

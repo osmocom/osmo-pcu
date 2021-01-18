@@ -53,7 +53,7 @@ static void set_fn(struct gprs_rlcmac_bts * bts, uint32_t fn)
 
 static void run_test()
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint32_t fn;
 
 	printf("RFN_MODULUS=%i\n",RFN_MODULUS);

@@ -136,7 +136,7 @@ struct msgb *sched_app_info(struct gprs_rlcmac_tbf *tbf) {
 	if (!tbf || !tbf->ms()->app_info_pending)
 		return NULL;
 
-	bts = the_pcu->bts;
+	bts = tbf->bts;
 
 	if (bts->app_info) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Sending Packet Application Information message\n");
@@ -506,7 +506,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	tap_n_acc(msg, bts, trx, ts, fn, gsmtap_cat);
 
 	/* send PDTCH/PACCH to L1 */
-	pcu_l1if_tx_pdtch(msg, trx, ts, bts->trx[trx].arfcn, fn, block_nr);
+	pcu_l1if_tx_pdtch(msg, bts, trx, ts, bts->trx[trx].arfcn, fn, block_nr);
 
 	return 0;
 }

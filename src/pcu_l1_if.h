@@ -141,20 +141,23 @@ static inline void pcu_l1_meas_set_ms_i_level(struct pcu_l1_meas *m, size_t idx,
 }
 
 #ifdef __cplusplus
-void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
-        uint32_t fn, uint8_t block_nr);
+struct gprs_rlcmac_bts;
+void pcu_l1if_tx_pdtch(msgb *msg, struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
+		       uint16_t arfcn, uint32_t fn, uint8_t block_nr);
 void pcu_l1if_tx_ptcch(struct gprs_rlcmac_bts *bts,
 		       uint8_t trx, uint8_t ts, uint16_t arfcn,
 		       uint32_t fn, uint8_t block_nr,
 		       uint8_t *data, size_t data_len);
-void pcu_l1if_tx_agch(bitvec * block, int len);
+void pcu_l1if_tx_agch(struct gprs_rlcmac_bts *bts, bitvec * block, int len);
 
-void pcu_l1if_tx_pch(bitvec * block, int plen, uint16_t pgroup);
+void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec * block, int plen, uint16_t pgroup);
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+struct gprs_rlcmac_bts;
+
 int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim);
 int pcu_l1if_open(void);
 void pcu_l1if_close(void);
@@ -162,17 +165,17 @@ int pcu_sock_send(struct msgb *msg);
 
 int pcu_tx_txt_ind(enum gsm_pcu_if_text_type t, const char *fmt, ...);
 
-int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts,
+int pcu_rx_rts_req_pdtch(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
 	uint32_t fn, uint8_t block_nr);
-int pcu_rx_rts_req_ptcch(uint8_t trx, uint8_t ts,
+int pcu_rx_rts_req_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
 	uint32_t fn, uint8_t block_nr);
 
-int pcu_rx_rach_ind_ptcch(uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta);
-int pcu_rx_data_ind_pdtch(uint8_t trx, uint8_t ts, uint8_t *data,
+int pcu_rx_rach_ind_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta);
+int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts, uint8_t *data,
 	uint8_t len, uint32_t fn, struct pcu_l1_meas *meas);
 
-void pcu_rx_block_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no);
-void pcu_rx_ra_time(uint16_t arfcn, uint32_t fn, uint8_t ts_no);
+void pcu_rx_block_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no);
+void pcu_rx_ra_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no);
 uint16_t imsi2paging_group(const char* imsi);
 #ifdef __cplusplus
 }

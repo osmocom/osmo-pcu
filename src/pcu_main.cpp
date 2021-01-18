@@ -237,8 +237,6 @@ int main(int argc, char *argv[])
 	pcu = gprs_pcu_alloc(tall_pcu_ctx);
 	the_pcu = pcu; /* globally avaialable object */
 
-	pcu->bts = bts_alloc(pcu);
-
 	pcu->pcu_sock_path = talloc_strdup(tall_pcu_ctx, PCU_SOCK_DEFAULT);
 
 	msgb_talloc_ctx_init(tall_pcu_ctx, 0);

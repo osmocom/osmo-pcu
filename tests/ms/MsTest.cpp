@@ -51,7 +51,7 @@ static void test_ms_state()
 	uint32_t tlli = 0xffeeddbb;
 	gprs_rlcmac_dl_tbf *dl_tbf;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms;
 
 	printf("=== start %s ===\n", __func__);
@@ -114,7 +114,7 @@ static void test_ms_callback()
 	uint32_t tlli = 0xffeeddbb;
 	gprs_rlcmac_dl_tbf *dl_tbf;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms;
 	last_cb = CB_UNKNOWN;
 
@@ -188,7 +188,7 @@ static void test_ms_replace_tbf()
 	uint32_t tlli = 0xffeeddbb;
 	gprs_rlcmac_dl_tbf *dl_tbf[2];
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms;
 
 	printf("=== start %s ===\n", __func__);
@@ -262,7 +262,7 @@ static void test_ms_change_tlli()
 	uint32_t start_tlli = 0xaa000000;
 	uint32_t new_ms_tlli = 0xff001111;
 	uint32_t other_sgsn_tlli = 0xff00eeee;
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms;
 
 	printf("=== start %s ===\n", __func__);
@@ -374,7 +374,7 @@ static void test_ms_storage()
 	const char *imsi2 = "001001987654322";
 
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms, *ms_tmp;
 	GprsMsStorage store(bts);
 
@@ -446,7 +446,7 @@ static void test_ms_timeout()
 	uint32_t tlli = 0xffeeddbb;
 	gprs_rlcmac_dl_tbf *dl_tbf;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms;
 	last_cb = CB_UNKNOWN;
 
@@ -499,7 +499,7 @@ static void test_ms_timeout()
 
 static void test_ms_cs_selection()
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint32_t tlli = 0xffeeddbb;
 
 	gprs_rlcmac_dl_tbf *dl_tbf;
@@ -544,7 +544,7 @@ static void dump_ms(const GprsMs *ms, const char *pref)
 
 static void test_ms_mcs_mode()
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint32_t tlli = 0xdeadbeef;
 
 	gprs_rlcmac_dl_tbf *dl_tbf;

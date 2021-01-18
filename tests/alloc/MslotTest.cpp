@@ -62,7 +62,7 @@ static inline void test_all_classes(struct gprs_rlcmac_trx *trx, bool clear_mask
 
 static inline void test_multislot_total_ascending(bool seq)
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	struct gprs_rlcmac_trx *trx;
 	int i;
 
@@ -81,7 +81,7 @@ static inline void test_multislot_total_ascending(bool seq)
 
 static inline void test_multislot_total_descending(bool seq)
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	struct gprs_rlcmac_trx *trx;
 	int i;
 
@@ -100,7 +100,7 @@ static inline void test_multislot_total_descending(bool seq)
 
 static inline void test_multislot_middle(bool seq)
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	struct gprs_rlcmac_trx *trx;
 
 	printf("%s(): %s\n", __func__, seq ? "sequential" : "accumulative");
@@ -117,7 +117,7 @@ static inline void test_multislot_middle(bool seq)
 
 static inline void test_multislot_ends(bool seq)
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	struct gprs_rlcmac_trx *trx;
 
 	printf("%s(): %s\n", __func__, seq ? "sequential" : "accumulative");

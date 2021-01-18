@@ -63,9 +63,8 @@ struct gprs_test all_tests[] = {
 			test_pdp_activation_data),
 };
 
-static void init_main_bts()
+static void init_main_bts(struct gprs_rlcmac_bts *bts)
 {
-	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	bts->initial_cs_dl = bts->initial_cs_ul = 1;
 	bts->cs_mask = 1 << 0; /* CS-1 always enabled by default */
 	bts->n3101 = 10;
@@ -119,7 +118,7 @@ int main(int argc, char **argv)
 {
 	struct gprs_pcu *pcu = gprs_pcu_alloc(tall_pcu_ctx);
 	the_pcu = pcu; /* globally avaialable object */
-	pcu->bts = bts_alloc(pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(pcu, 0);
 
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "moiji-mobile Emu-PCU context");
 	if (!tall_pcu_ctx)
@@ -140,9 +139,9 @@ int main(int argc, char **argv)
 	current_test = 0;
 
 	init_pcu(pcu);
-	init_main_bts();
+	init_main_bts(bts);
 	bssgp_set_bssgp_callback(gprs_gp_send_cb, pcu->nsi);
-	create_and_connect_bssgp(pcu->bts, INADDR_LOOPBACK, 23000);
+	create_and_connect_bssgp(bts, INADDR_LOOPBACK, 23000);
 
 	for (;;)
 		osmo_select_main(0);

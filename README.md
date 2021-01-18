@@ -82,3 +82,4 @@ Current limitations
  * No half-duplex class support (only semi-duplex)
  * No TA loop
  * No power loop
+ * Multi-BTS support not tested

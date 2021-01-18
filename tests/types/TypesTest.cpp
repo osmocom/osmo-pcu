@@ -353,7 +353,7 @@ static void test_rlc_dl_ul_basic()
 		uint16_t lost = 0, recv = 0;
 		char show_rbb[65];
 		uint8_t bits_data[8];
-		struct gprs_rlcmac_bts *dummy_bts = bts_alloc(the_pcu);
+		struct gprs_rlcmac_bts *dummy_bts = bts_alloc(the_pcu, 0);
 		gprs_rlc_dl_window dl_win;
 		bitvec bits;
 		int bsn_begin, bsn_end, num_blocks;
@@ -671,7 +671,7 @@ static void test_egprs_ul_ack_nack()
 
 	fprintf(stderr, "############## test_egprs_ul_ack_nack\n");
 
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	bts->trx[0].pdch[4].enable();
 
@@ -762,7 +762,7 @@ static void check_imm_ass(struct gprs_rlcmac_tbf *tbf, bool dl, enum ph_burst_ty
 
 void test_immediate_assign_dl()
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	bts->trx[0].pdch[2].enable();
 	bts->trx[0].pdch[3].enable();
@@ -787,7 +787,7 @@ void test_immediate_assign_dl()
 
 void test_immediate_assign_ul0m()
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	bts->trx[0].pdch[4].enable();
 	bts->trx[0].pdch[5].enable();
@@ -829,7 +829,7 @@ void test_immediate_assign_ul0s()
 
 void test_immediate_assign_ul1s()
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	bts->trx[0].pdch[1].enable();
 	bts->trx[0].pdch[2].enable();

@@ -67,7 +67,8 @@ void bts_trx_reserve_slots(struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_dir
 void bts_trx_unreserve_slots(struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_direction dir, uint8_t slots);
 void bts_trx_free_all_tbf(struct gprs_rlcmac_trx *trx);
 
-void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts, int8_t ta, bool is_rach);
+void bts_update_tbf_ta(struct gprs_rlcmac_bts *bts, const char *p, uint32_t fn,
+		       uint8_t trx_no, uint8_t ts, int8_t ta, bool is_rach);
 #ifdef __cplusplus
 }
 #endif
@@ -194,6 +195,8 @@ struct pcu_l1_meas;
  * on my TRXs.
  */
 struct gprs_rlcmac_bts {
+	uint8_t nr; /* bts_nr */
+	struct llist_head list; /* queued in pcu->bts_list */
 	bool active;
 	uint8_t bsic;
 	uint8_t cs_mask; /* Allowed CS mask from BTS */
@@ -317,7 +320,7 @@ static inline void bts_stat_item_add(struct gprs_rlcmac_bts *bts, unsigned int s
 	osmo_stat_item_set(bts->statg->items[stat_id], val + inc);
 }
 
-struct gprs_rlcmac_bts *bts_alloc(struct gprs_pcu *pcu);
+struct gprs_rlcmac_bts *bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr);
 
 void bts_recalc_initial_cs(struct gprs_rlcmac_bts *bts);
 void bts_recalc_initial_mcs(struct gprs_rlcmac_bts *bts);

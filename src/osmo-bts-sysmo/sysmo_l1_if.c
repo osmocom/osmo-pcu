@@ -123,7 +123,7 @@ int l1if_connect_pdch(void *obj, uint8_t ts)
 	cr = prim_init(msgb_l1prim(msg), GsmL1_PrimId_MphConnectReq, fl1h);
 	cr->u8Tn = ts;
 	cr->logChComb = GsmL1_LogChComb_XIII;
-	
+
 	return l1if_req_pdch(fl1h, msg);
 }
 
@@ -131,6 +131,7 @@ static int handle_ph_readytosend_ind(struct femtol1_hdl *fl1h,
 				     GsmL1_PhReadyToSendInd_t *rts_ind)
 {
 	struct gsm_time g_time;
+	struct gprs_rlcmac_bts *bts;
 	int rc = 0;
 
 	gsm_fn2gsmtime(&g_time, rts_ind->u32Fn);
@@ -139,14 +140,16 @@ static int handle_ph_readytosend_ind(struct femtol1_hdl *fl1h,
 		g_time.t1, g_time.t2, g_time.t3,
 		get_value_string(femtobts_l1sapi_names, rts_ind->sapi));
 
+	bts = llist_first_entry_or_null(&the_pcu->bts_list, struct gprs_rlcmac_bts, list);
+
 	switch (rts_ind->sapi) {
 	case GsmL1_Sapi_Pdtch:
 	case GsmL1_Sapi_Pacch:
-		rc = pcu_rx_rts_req_pdtch(fl1h->trx_no, rts_ind->u8Tn,
+		rc = pcu_rx_rts_req_pdtch(bts, fl1h->trx_no, rts_ind->u8Tn,
 			rts_ind->u32Fn, rts_ind->u8BlockNbr);
 		break;
 	case GsmL1_Sapi_Ptcch:
-		rc = pcu_rx_rts_req_ptcch(fl1h->trx_no, rts_ind->u8Tn,
+		rc = pcu_rx_rts_req_ptcch(bts, fl1h->trx_no, rts_ind->u8Tn,
 			rts_ind->u32Fn, rts_ind->u8BlockNbr);
 		break;
 	default:
@@ -172,6 +175,7 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 	GsmL1_PhDataInd_t *data_ind, struct msgb *l1p_msg)
 {
 	int rc = 0;
+	struct gprs_rlcmac_bts *bts;
 	struct pcu_l1_meas meas = {0};
 
 	DEBUGP(DL1IF, "Rx PH-DATA.ind %s (hL2 %08x): %s\n",
@@ -180,7 +184,8 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 		osmo_hexdump(data_ind->msgUnitParam.u8Buffer,
 			     data_ind->msgUnitParam.u8Size));
 
-	pcu_rx_block_time(data_ind->u16Arfcn, data_ind->u32Fn, data_ind->u8Tn);
+	bts = llist_first_entry_or_null(&the_pcu->bts_list, struct gprs_rlcmac_bts, list);
+	pcu_rx_block_time(bts, data_ind->u16Arfcn, data_ind->u32Fn, data_ind->u8Tn);
 
 	/*
 	 * TODO: Add proper bad frame handling here. This could be used
@@ -191,7 +196,7 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 		return -1;
 
 	get_meas(&meas, &data_ind->measParam);
-	bts_update_tbf_ta("PH-DATA", data_ind->u32Fn, fl1h->trx_no,
+	bts_update_tbf_ta(bts, "PH-DATA", data_ind->u32Fn, fl1h->trx_no,
 			  data_ind->u8Tn, sign_qta2ta(meas.bto), false);
 
 	switch (data_ind->sapi) {
@@ -202,7 +207,7 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 			!= GsmL1_PdtchPlType_Full)
 			break;
 		/* PDTCH / PACCH frame handling */
-		pcu_rx_data_ind_pdtch(fl1h->trx_no, data_ind->u8Tn,
+		pcu_rx_data_ind_pdtch(bts, fl1h->trx_no, data_ind->u8Tn,
 			data_ind->msgUnitParam.u8Buffer + 1,
 			data_ind->msgUnitParam.u8Size - 1,
 			data_ind->u32Fn,
@@ -230,7 +235,10 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 
 static int handle_ph_ra_ind(struct femtol1_hdl *fl1h, GsmL1_PhRaInd_t *ra_ind)
 {
-	pcu_rx_ra_time(ra_ind->u16Arfcn, ra_ind->u32Fn, ra_ind->u8Tn);
+	struct gprs_rlcmac_bts *bts;
+	bts = llist_first_entry_or_null(&the_pcu->bts_list, struct gprs_rlcmac_bts, list);
+
+	pcu_rx_ra_time(bts, ra_ind->u16Arfcn, ra_ind->u32Fn, ra_ind->u8Tn);
 
 	if (ra_ind->measParam.fLinkQuality < MIN_QUAL_RACH)
 		return 0;
@@ -240,11 +248,11 @@ static int handle_ph_ra_ind(struct femtol1_hdl *fl1h, GsmL1_PhRaInd_t *ra_ind)
 	switch (ra_ind->sapi) {
 	case GsmL1_Sapi_Pdtch:
 	case GsmL1_Sapi_Prach:
-		bts_update_tbf_ta("PH-RA", ra_ind->u32Fn, fl1h->trx_no, ra_ind->u8Tn,
+		bts_update_tbf_ta(bts, "PH-RA", ra_ind->u32Fn, fl1h->trx_no, ra_ind->u8Tn,
 				  qta2ta(ra_ind->measParam.i16BurstTiming), true);
 		break;
 	case GsmL1_Sapi_Ptcch:
-		pcu_rx_rach_ind_ptcch(fl1h->trx_no, ra_ind->u8Tn, ra_ind->u32Fn,
+		pcu_rx_rach_ind_ptcch(bts, fl1h->trx_no, ra_ind->u8Tn, ra_ind->u32Fn,
 				      ra_ind->measParam.i16BurstTiming);
 		break;
 	default:
@@ -373,4 +381,3 @@ int l1if_close_pdch(void *obj)
 	talloc_free(fl1h);
 	return 0;
 }
-

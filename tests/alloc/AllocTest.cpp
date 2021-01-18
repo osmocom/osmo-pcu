@@ -114,7 +114,7 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 	int tfi;
 	int i;
 	uint8_t used_trx, tmp_trx;
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms;
 	struct gprs_rlcmac_tbf *tbfs[32*8+1] = { 0, };
 
@@ -206,7 +206,7 @@ static inline void enable_ts_on_bts(struct gprs_rlcmac_bts *bts,
 static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool ts5, bool ts6, bool ts7,
 				      uint8_t ms_class, bool verbose)
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	gprs_rlcmac_dl_tbf *dl_tbf;
@@ -250,7 +250,7 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bool ts4, bool ts5, bool ts6, bool ts7,
 				      uint8_t ms_class, bool verbose)
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	gprs_rlcmac_dl_tbf *dl_tbf;
@@ -301,7 +301,7 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 static inline bool test_alloc_b_jolly(uint8_t ms_class)
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms;
 	int tfi;
 	uint8_t trx_no;
@@ -644,7 +644,7 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 	unsigned max_class, enum test_mode mode,
 	unsigned expect_num, const char *text)
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	struct gprs_rlcmac_trx *trx;
 	unsigned counter;
 
@@ -677,7 +677,7 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 static void test_many_connections(algo_t algo, unsigned expect_num,
 	const char *text)
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	struct gprs_rlcmac_trx *trx;
 	int counter1, counter2 = -1;
 	unsigned i;
@@ -754,7 +754,7 @@ static void test_successive_allocations()
 
 static void test_2_consecutive_dl_tbfs()
 {
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms;
 	struct gprs_rlcmac_trx *trx;
 	uint8_t ms_class = 11;
