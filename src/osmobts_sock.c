@@ -25,13 +25,13 @@
 #include <assert.h>
 #include <sys/socket.h>
 #include <sys/un.h>
-extern "C" {
+
 #include <osmocom/core/select.h>
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/logging.h>
 #include <osmocom/core/timer.h>
-}
+
 
 #include <pcu_l1_if.h>
 #include <gprs_debug.h>
@@ -41,9 +41,7 @@ extern "C" {
 #include <tbf.h>
 #include <pdch.h>
 
-extern "C" {
 int l1if_close_pdch(void *obj);
-}
 
 /*
  * osmo-bts PCU socket functions
@@ -115,7 +113,7 @@ static void pcu_sock_close(int lost)
 		}
 #endif
 		for (ts = 0; ts < 8; ts++)
-			bts->trx[trx].pdch[ts].disable();
+			pdch_disable(&bts->trx[trx].pdch[ts]);
 /* FIXME: NOT ALL RESOURCES are freed in this case... inconsistent with the other code. Share the code with pcu_l1if.c
 for the reset. */
 		bts_trx_free_all_tbf(&bts->trx[trx]);

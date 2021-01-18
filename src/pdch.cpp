@@ -1031,3 +1031,7 @@ void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch)
 			tbf_free(tbf);
 	}
 }
+
+void pdch_disable(struct gprs_rlcmac_pdch *pdch) {
+	pdch->disable();
+}

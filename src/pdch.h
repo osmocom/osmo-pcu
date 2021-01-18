@@ -188,6 +188,7 @@ inline bool gprs_rlcmac_pdch::is_enabled() const
 extern "C" {
 #endif
 void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch);
+void pdch_disable(struct gprs_rlcmac_pdch *pdch);
 #ifdef __cplusplus
 }
 #endif

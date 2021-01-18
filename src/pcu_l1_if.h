@@ -150,19 +150,18 @@ void pcu_l1if_tx_ptcch(struct gprs_rlcmac_bts *bts,
 void pcu_l1if_tx_agch(bitvec * block, int len);
 
 void pcu_l1if_tx_pch(bitvec * block, int plen, uint16_t pgroup);
-
-int pcu_tx_txt_ind(enum gsm_pcu_if_text_type t, const char *fmt, ...);
-
-int pcu_l1if_open(void);
-void pcu_l1if_close(void);
-
-int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim);
-int pcu_sock_send(struct msgb *msg);
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim);
+int pcu_l1if_open(void);
+void pcu_l1if_close(void);
+int pcu_sock_send(struct msgb *msg);
+
+int pcu_tx_txt_ind(enum gsm_pcu_if_text_type t, const char *fmt, ...);
+
 int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts,
 	uint32_t fn, uint8_t block_nr);
 int pcu_rx_rts_req_ptcch(uint8_t trx, uint8_t ts,

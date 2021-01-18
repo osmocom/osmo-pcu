@@ -65,7 +65,7 @@ libgprs_la_SOURCES = \
 	decoding.cpp \
 	llc.cpp \
 	rlc.cpp \
-	osmobts_sock.cpp \
+	osmobts_sock.c \
 	gprs_codel.c \
 	coding_scheme.c \
 	egprs_rlc_compression.cpp \

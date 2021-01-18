@@ -166,7 +166,7 @@ static uint8_t llc_data[200];
 
 /* override, requires '-Wl,--wrap=pcu_sock_send' */
 int __real_pcu_sock_send(struct msgb *msg);
-int __wrap_pcu_sock_send(struct msgb *msg)
+extern "C" int __wrap_pcu_sock_send(struct msgb *msg)
 {
 	return 0;
 }
