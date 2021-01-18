@@ -42,7 +42,7 @@ libgprs_la_SOURCES = \
 	gprs_debug.cpp \
 	csn1.c \
 	gsm_rlcmac.c \
-	gprs_bssgp_pcu.cpp \
+	gprs_bssgp_pcu.c \
 	gprs_rlcmac.cpp \
 	gprs_rlcmac_sched.cpp \
 	gprs_rlcmac_meas.cpp \

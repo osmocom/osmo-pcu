@@ -19,15 +19,22 @@
  */
 #pragma once
 
+#ifdef __cplusplus
 extern "C" {
-#include "gsm_rlcmac.h"
-}
+#endif
 
-#include "rlc.h"
+#include "gsm_rlcmac.h"
+#include "coding_scheme.h"
+
+#ifdef __cplusplus
+}
+#endif
 
 #include <stdint.h>
 
 struct bitvec;
+
+#ifdef __cplusplus
 
 class Decoding {
 public:
@@ -42,8 +49,6 @@ public:
 		const struct gprs_rlc_data_block_info *rdbi,
 		enum CodingScheme cs, const uint8_t *data, RlcData *chunks,
 		unsigned int chunks_size, uint32_t *tlli);
-	static uint8_t get_ms_class_by_capability(MS_Radio_Access_capability_t *cap);
-	static uint8_t get_egprs_ms_class_by_capability(MS_Radio_Access_capability_t *cap);
 
 	static void extract_rbb(const uint8_t *rbb, char *extracted_rbb);
 	static void extract_rbb(const struct bitvec *rbb, char *show_rbb);
@@ -82,3 +87,16 @@ public:
 		bitvec *bits, int *bsn_begin, int *bsn_end,
 		gprs_rlc_dl_window *window);
 };
+
+#endif /* #ifdef __cplusplus */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+uint8_t get_ms_class_by_capability(MS_Radio_Access_capability_t *cap);
+uint8_t get_egprs_ms_class_by_capability(MS_Radio_Access_capability_t *cap);
+
+#ifdef __cplusplus
+}
+#endif

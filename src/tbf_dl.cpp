@@ -278,11 +278,11 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts, GprsMs *ms,
 /**
  * TODO: split into unit test-able parts...
  */
-int gprs_rlcmac_dl_tbf::handle(struct gprs_rlcmac_bts *bts,
-		const uint32_t tlli, const uint32_t tlli_old, const char *imsi,
-		uint8_t ms_class, uint8_t egprs_ms_class,
-		const uint16_t delay_csec,
-		const uint8_t *data, const uint16_t len)
+int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
+		  const uint32_t tlli, const uint32_t tlli_old, const char *imsi,
+		  uint8_t ms_class, uint8_t egprs_ms_class,
+		  const uint16_t delay_csec,
+		  const uint8_t *data, const uint16_t len)
 {
 	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 	int rc;

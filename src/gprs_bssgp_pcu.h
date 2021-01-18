@@ -21,7 +21,6 @@
 #ifndef GPRS_BSSGP_PCU_H
 #define GPRS_BSSGP_PCU_H
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -40,6 +39,7 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 #include <gprs_debug.h>
 
 #include <time.h>
+#include <unistd.h>
 
 #define QOS_PROFILE 4
 #define BSSGP_HDR_LEN 53

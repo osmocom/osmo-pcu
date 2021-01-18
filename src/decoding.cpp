@@ -291,7 +291,7 @@ int Decoding::rlc_data_from_ul_data(
 	return num_chunks;
 }
 
-uint8_t Decoding::get_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
+uint8_t get_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
 {
 	int i;
 
@@ -306,7 +306,7 @@ uint8_t Decoding::get_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
 	return 0;
 }
 
-uint8_t Decoding::get_egprs_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
+uint8_t get_egprs_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
 {
 	int i;
 

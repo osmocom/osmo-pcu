@@ -28,14 +28,15 @@
 #include <pdch.h>
 #include <decoding.h>
 
-extern "C" {
-	#include <osmocom/gsm/protocol/gsm_23_003.h>
-	#include <osmocom/gprs/protocol/gsm_08_16.h>
-	#include <osmocom/core/utils.h>
-	#include <osmocom/gsm/gsm48.h>
-	#include "coding_scheme.h"
-	#include "tbf_dl.h"
-}
+#include <osmocom/gprs/gprs_ns2.h>
+#include <osmocom/gsm/protocol/gsm_23_003.h>
+#include <osmocom/gprs/protocol/gsm_08_16.h>
+#include <osmocom/core/utils.h>
+#include <osmocom/gsm/gsm48.h>
+#include "coding_scheme.h"
+#include "tbf_dl.h"
+#include "llc.h"
+#include "gprs_rlcmac.h"
 
 /* Tuning parameters for BSSGP flow control */
 #define FC_DEFAULT_LIFE_TIME_SECS 10		/* experimental value, 10s */
@@ -55,7 +56,7 @@ static void bvc_timeout(void *_priv);
 
 static int parse_ra_cap(struct tlv_parsed *tp, MS_Radio_Access_capability_t *rac)
 {
-	bitvec *block;
+	struct bitvec *block;
 	uint8_t cap_len;
 	uint8_t *cap;
 
@@ -132,9 +133,8 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	/* parse ms radio access capability */
 	if (parse_ra_cap(tp, &rac) >= 0) {
 		/* Get the EGPRS class from the RA capability */
-		ms_class = Decoding::get_ms_class_by_capability(&rac);
-		egprs_ms_class =
-			Decoding::get_egprs_ms_class_by_capability(&rac);
+		ms_class = get_ms_class_by_capability(&rac);
+		egprs_ms_class = get_egprs_ms_class_by_capability(&rac);
 		LOGP(DBSSGP, LOGL_DEBUG, "Got downlink MS class %d/%d\n",
 			ms_class, egprs_ms_class);
 	}
@@ -166,7 +166,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 
 	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x IMSI: %s len: %d\n", tlli, mi_imsi.imsi, len);
 
-	return gprs_rlcmac_dl_tbf::handle(the_pcu->bssgp.bts, tlli, tlli_old, mi_imsi.imsi,
+	return dl_tbf_handle(the_pcu->bssgp.bts, tlli, tlli_old, mi_imsi.imsi,
 			ms_class, egprs_ms_class, delay_csec, data, len);
 }
 
@@ -620,7 +620,7 @@ int gprs_ns_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 		LOGP(DPCU, LOGL_DEBUG,
 		     "NS: %s Unknown prim %s / %d from NS\n",
 		     get_value_string(osmo_prim_op_names, oph->operation),
-		     gprs_ns2_prim_str((gprs_ns2_prim) oph->primitive), oph->primitive);
+		     gprs_ns2_prim_str((enum gprs_ns2_prim) oph->primitive), oph->primitive);
 		break;
 	}
 
@@ -654,7 +654,7 @@ static unsigned count_pdch(const struct gprs_rlcmac_bts *bts)
 		for (ts_no = 0; ts_no < ARRAY_SIZE(trx->pdch); ++ts_no) {
 			const struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
 
-			if (pdch->is_enabled())
+			if (pdch->m_is_enabled)
 				num_pdch += 1;
 		}
 	}
@@ -853,7 +853,7 @@ static int gprs_bssgp_tx_fc_bvc(void)
 
 	if (ms_leak_rate == 0) {
 		int ms_num_pdch;
-		int max_pdch = gprs_alloc_max_dl_slots_per_ms(bts);
+		int max_pdch = gprs_alloc_max_dl_slots_per_ms(bts, 0);
 
 		if (num_pdch < 0)
 			num_pdch = count_pdch(bts);
@@ -1029,8 +1029,9 @@ struct nsvc_cb {
 static int ns_conf_vc_cb(struct gprs_ns2_vc *nsvc, void *ctx)
 {
 	struct nsvc_cb *data = (struct nsvc_cb *) ctx;
+	unsigned int i;
 
-	for (unsigned int i = 0; i < PCU_IF_NUM_NSVC; i++) {
+	for (i = 0; i < PCU_IF_NUM_NSVC; i++) {
 		if (!(data->valid & (1 << i)))
 			continue;
 		if (data->found & (1 << i))
@@ -1070,7 +1071,8 @@ int gprs_ns_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
 	} else if (the_pcu->vty.ns_dialect == NS2_DIALECT_SNS) {
 		/* SNS: check if the initial nsvc is the same, if not recreate it */
 		const struct osmo_sockaddr *initial = gprs_ns2_nse_sns_remote(bts->nse);
-		for (unsigned int i = 0; i < PCU_IF_NUM_NSVC; i++) {
+		unsigned int i;
+		for (i = 0; i < PCU_IF_NUM_NSVC; i++) {
 			if (!(valid & (1 << i)))
 				continue;
 

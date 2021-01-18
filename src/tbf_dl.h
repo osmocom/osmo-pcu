@@ -23,6 +23,8 @@
 
 #include "tbf.h"
 
+#include <stdint.h>
+
 /*
  * TBF instance
  */
@@ -42,12 +44,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms);
 	gprs_rlc_window *window();
 	void cleanup();
-	/* dispatch Unitdata.DL messages */
-	static int handle(struct gprs_rlcmac_bts *bts,
-		const uint32_t tlli, const uint32_t old_tlli,
-		const char *imsi, const uint8_t ms_class,
-		const uint8_t egprs_ms_class, const uint16_t delay_csec,
-		const uint8_t *data, const uint16_t len);
 
 	int append_data(uint16_t pdu_delay_csec,
 			const uint8_t *data, uint16_t len);
@@ -151,7 +147,16 @@ struct gprs_rlcmac_dl_tbf;
 #ifdef __cplusplus
 extern "C" {
 #endif
+struct gprs_rlcmac_bts;
+
 struct gprs_rlcmac_dl_tbf *as_dl_tbf(struct gprs_rlcmac_tbf *tbf);
+/* dispatch Unitdata.DL messages */
+int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
+		  const uint32_t tlli, const uint32_t old_tlli,
+		  const char *imsi, const uint8_t ms_class,
+		  const uint8_t egprs_ms_class, const uint16_t delay_csec,
+		  const uint8_t *data, const uint16_t len);
+
 #ifdef __cplusplus
 }
 #endif

@@ -500,7 +500,7 @@ static void test_tbf_exhaustion()
 
 		snprintf(imsi, sizeof(imsi), "001001%09d", i);
 
-		rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class, 0,
+		rc = dl_tbf_handle(bts, tlli, 0, imsi, ms_class, 0,
 			delay_csec, buf, sizeof(buf));
 
 		if (rc < 0)
@@ -545,7 +545,7 @@ static void test_tbf_dl_llc_loss()
 
 	/* Handle LLC frame 1 */
 	memset(buf, 1, sizeof(buf));
-	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class, 0,
+	rc = dl_tbf_handle(bts, tlli, 0, imsi, ms_class, 0,
 		delay_csec, buf, sizeof(buf));
 	OSMO_ASSERT(rc >= 0);
 
@@ -556,7 +556,7 @@ static void test_tbf_dl_llc_loss()
 
 	/* Handle LLC frame 2 */
 	memset(buf, 2, sizeof(buf));
-	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class, 0,
+	rc = dl_tbf_handle(bts, tlli, 0, imsi, ms_class, 0,
 		delay_csec, buf, sizeof(buf));
 	OSMO_ASSERT(rc >= 0);
 
@@ -565,7 +565,7 @@ static void test_tbf_dl_llc_loss()
 
 	/* Handle LLC frame 3 */
 	memset(buf, 3, sizeof(buf));
-	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class, 0,
+	rc = dl_tbf_handle(bts, tlli, 0, imsi, ms_class, 0,
 		delay_csec, buf, sizeof(buf));
 	OSMO_ASSERT(rc >= 0);
 
@@ -1651,7 +1651,7 @@ static void send_dl_data(struct gprs_rlcmac_bts *bts, uint32_t tlli, const char 
 
 	ms = bts_ms_store(bts)->get_ms(tlli, 0, imsi);
 
-	gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, 0, 0,
+	dl_tbf_handle(bts, tlli, 0, imsi, 0, 0,
 		1000, data, data_size);
 
 	ms = bts_ms_by_imsi(bts, imsi);
@@ -2206,7 +2206,7 @@ static void test_tbf_gprs_egprs()
 	gprs_bssgp_init(bts, 3234, 3234, 1, 1, false, 0, 0, 0);
 
 	/* Does not support EGPRS */
-	rc = gprs_rlcmac_dl_tbf::handle(bts, tlli, 0, imsi, ms_class, 0,
+	rc = dl_tbf_handle(bts, tlli, 0, imsi, ms_class, 0,
 		delay_csec, buf, sizeof(buf));
 
 	OSMO_ASSERT(rc == 0);

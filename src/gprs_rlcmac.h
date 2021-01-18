@@ -22,16 +22,20 @@
 #define GPRS_RLCMAC_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
-#ifdef __cplusplus
 #include <pcu_l1_if.h>
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/timer.h>
 #include <osmocom/core/bitvec.h>
+#include <osmocom/gsm/gsm48.h>
 #include <osmocom/pcu/pcuif_proto.h>
 #include "gsm_rlcmac.h"
+#ifdef __cplusplus
 }
 #endif
 
@@ -92,16 +96,11 @@ enum gprs_rlcmac_block_type {
 
 int gprs_rlcmac_tx_ul_ud(gprs_rlcmac_tbf *tbf);
 
-int gprs_rlcmac_paging_request(const struct osmo_mobile_identity *mi, uint16_t pgroup);
-
 struct msgb *gprs_rlcmac_app_info_msg(const struct gsm_pcu_if_app_info_req *req);
 
 int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	uint8_t trx, uint8_t ts,
         uint32_t fn, uint8_t block_nr);
-
-int gprs_alloc_max_dl_slots_per_ms(const struct gprs_rlcmac_bts *bts,
-	uint8_t ms_class = 0);
 
 extern "C" {
 #endif
@@ -113,8 +112,12 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, struct gpr
 
 int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, bool single,
 			    int8_t use_trx);
+
+int gprs_rlcmac_paging_request(const struct osmo_mobile_identity *mi, uint16_t pgroup);
+int gprs_alloc_max_dl_slots_per_ms(const struct gprs_rlcmac_bts *bts, uint8_t ms_class);
 #ifdef __cplusplus
 }
 #endif
+
 
 #endif // GPRS_RLCMAC_H

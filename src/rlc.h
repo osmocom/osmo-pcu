@@ -18,12 +18,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 #pragma once
-
+#ifdef __cplusplus
 extern "C" {
-#include "coding_scheme.h"
-}
+#endif
 
+#include "coding_scheme.h"
 #include <osmocom/core/endian.h>
+
+#ifdef __cplusplus
+}
+#endif
 
 #include <stdint.h>
 #include <string.h>

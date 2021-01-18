@@ -259,8 +259,8 @@ MS RA capability 1
         OSMO_ASSERT(data.Count_MS_RA_capability_value == 1);
 
         /* Make sure GPRS / EGPRS multislot class is parsed correctly */
-        printf("GPRS multislot class = %u\n", Decoding::get_ms_class_by_capability(&data));
-        printf("EGPRS multislot class = %u\n", Decoding::get_egprs_ms_class_by_capability(&data));
+        printf("GPRS multislot class = %u\n", get_ms_class_by_capability(&data));
+        printf("EGPRS multislot class = %u\n", get_egprs_ms_class_by_capability(&data));
 
         /* Test encoding of decoded MS RA Capability */
         printf("=== Test encoding of MS RA Capability ===\n");
@@ -466,8 +466,8 @@ MS Radio Access Capability
 	OSMO_ASSERT(data.Count_MS_RA_capability_value == 3);
 
 	/* Make sure GPRS / EGPRS multislot class is parsed correctly */
-	printf("GPRS multislot class = %u\n", Decoding::get_ms_class_by_capability(&data));
-	printf("EGPRS multislot class = %u\n", Decoding::get_egprs_ms_class_by_capability(&data));
+	printf("GPRS multislot class = %u\n", get_ms_class_by_capability(&data));
+	printf("EGPRS multislot class = %u\n", get_egprs_ms_class_by_capability(&data));
 
 	bitvec_free(bv_dec);
 }
