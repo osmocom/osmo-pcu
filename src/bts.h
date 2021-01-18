@@ -318,9 +318,6 @@ static inline void bts_stat_item_add(struct gprs_rlcmac_bts *bts, unsigned int s
 
 struct gprs_rlcmac_bts *bts_alloc(struct gprs_pcu *pcu);
 
-struct gprs_rlcmac_bts *bts_main_data();
-struct rate_ctr_group *bts_main_data_stats();
-struct osmo_stat_item_group *bts_main_data_stat_items();
 void bts_recalc_initial_cs(struct gprs_rlcmac_bts *bts);
 void bts_recalc_initial_mcs(struct gprs_rlcmac_bts *bts);
 void bts_recalc_max_cs(struct gprs_rlcmac_bts *bts);

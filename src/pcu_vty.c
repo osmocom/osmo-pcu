@@ -753,7 +753,7 @@ DEFUN(show_bts_stats,
       "show bts statistics",
       SHOW_STR "BTS related functionality\nStatistics\n")
 {
-	vty_out_rate_ctr_group(vty, "", bts_main_data_stats());
+	vty_out_rate_ctr_group(vty, "", bts_rate_counters(the_pcu->bts));
 	return CMD_SUCCESS;
 }
 
@@ -762,7 +762,7 @@ DEFUN(show_bts_pdch,
       "show bts pdch",
       SHOW_STR "BTS related functionality\nPDCH timeslots\n")
 {
-	return pcu_vty_show_bts_pdch(vty, bts_main_data());
+	return pcu_vty_show_bts_pdch(vty, the_pcu->bts);
 }
 
 #define IDLE_TIME_STR "keep an idle DL TBF alive for the time given\n"
@@ -1013,7 +1013,7 @@ DEFUN(show_bts_timer, show_bts_timer_cmd,
       SHOW_STR "Show BTS controlled timers\n"
       OSMO_TDEF_VTY_DOC_T)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	const char *T_arg = argc > 0 ? argv[0] : NULL;
 	return osmo_tdef_vty_show_cmd(vty, bts->T_defs_bts, T_arg, NULL);
 }
@@ -1047,7 +1047,7 @@ DEFUN(show_tbf,
       "TBFs allocated via CCCH\n"
       "TBFs allocated via PACCH\n")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	uint32_t flags = UINT32_MAX;
 
 	if (argv[0][0] == 'c')
@@ -1063,7 +1063,7 @@ DEFUN(show_ms_all,
       "show ms all",
       SHOW_STR "information about MSs\n" "All TBFs\n")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	return pcu_vty_show_ms_all(vty, bts);
 }
 
@@ -1072,7 +1072,7 @@ DEFUN(show_ms_tlli,
       "show ms tlli TLLI",
       SHOW_STR "information about MSs\n" "Select MS by TLLI\n" "TLLI as hex\n")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	char *endp = NULL;
 	unsigned long long tlli = strtoll(argv[0], &endp, 16);
 	if ((endp != NULL && *endp != 0) || tlli > 0xffffffffULL) {
@@ -1087,7 +1087,7 @@ DEFUN(show_ms_imsi,
       "show ms imsi IMSI",
       SHOW_STR "information about MSs\n" "Select MS by IMSI\n" "IMSI\n")
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	return pcu_vty_show_ms_by_imsi(vty, bts, argv[0]);
 }
 

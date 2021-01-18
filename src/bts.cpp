@@ -249,16 +249,6 @@ static void bts_init(struct gprs_rlcmac_bts *bts, struct gprs_pcu *pcu)
 	OSMO_ASSERT(bts->statg);
 }
 
-struct gprs_rlcmac_bts *bts_main_data()
-{
-	return the_pcu->bts;
-}
-
-struct rate_ctr_group *bts_main_data_stats()
-{
-	return bts_rate_counters(the_pcu->bts);
-}
-
 static void bts_cleanup(gprs_rlcmac_bts *bts)
 {
 	/* this can cause counter updates and must not be left to the

@@ -201,7 +201,7 @@ void pcu_l1if_tx_pdtch(msgb *msg, uint8_t trx, uint8_t ts, uint16_t arfcn,
 	uint32_t fn, uint8_t block_nr)
 {
 #ifdef ENABLE_DIRECT_PHY
-	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 
 	if (bts->trx[trx].fl1h) {
 		l1if_pdch_req(bts->trx[trx].fl1h, ts, 0, fn, arfcn, block_nr,
@@ -286,13 +286,13 @@ extern "C" int pcu_rx_data_ind_pdtch(uint8_t trx_no, uint8_t ts_no, uint8_t *dat
 {
 	struct gprs_rlcmac_pdch *pdch;
 
-	pdch = &bts_main_data()->trx[trx_no].pdch[ts_no];
+	pdch = &the_pcu->bts->trx[trx_no].pdch[ts_no];
 	return pdch->rcv_block(data, len, fn, meas);
 }
 
 static int pcu_rx_data_ind_bcch(uint8_t *data, uint8_t len)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 
 	if (len == 0) {
 		bts->si13_is_set = false;
@@ -384,13 +384,13 @@ static int pcu_rx_data_cnf(struct gsm_pcu_if_data *data_cnf)
 extern "C" int pcu_rx_rts_req_pdtch(uint8_t trx, uint8_t ts,
 	uint32_t fn, uint8_t block_nr)
 {
-	return gprs_rlcmac_rcv_rts_block(bts_main_data(),
+	return gprs_rlcmac_rcv_rts_block(the_pcu->bts,
 					trx, ts, fn, block_nr);
 }
 extern "C" int pcu_rx_rts_req_ptcch(uint8_t trx, uint8_t ts,
 	uint32_t fn, uint8_t block_nr)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	struct gprs_rlcmac_pdch *pdch;
 
 	/* Prevent buffer overflow */
@@ -544,7 +544,7 @@ static int pcu_info_ind_ns(struct gprs_rlcmac_bts *bts,
 
 static int pcu_rx_info_ind(const struct gsm_pcu_if_info_ind *info_ind)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	struct gprs_bssgp_pcu *pcu;
 	int rc = 0;
 	unsigned int trx_nr, ts_nr;

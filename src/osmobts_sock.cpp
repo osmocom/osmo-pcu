@@ -62,7 +62,7 @@ static void pcu_sock_timeout(void *_priv)
 
 static void pcu_tx_txt_retry(void *_priv)
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 
 	if (bts->active)
 		return;
@@ -90,7 +90,7 @@ int pcu_sock_send(struct msgb *msg)
 static void pcu_sock_close(int lost)
 {
 	struct osmo_fd *bfd = &pcu_sock_state.conn_bfd;
-	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	uint8_t trx, ts;
 
 	LOGP(DL1IF, LOGL_NOTICE, "PCU socket has %s connection\n",

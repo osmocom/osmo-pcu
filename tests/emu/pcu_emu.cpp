@@ -65,7 +65,7 @@ struct gprs_test all_tests[] = {
 
 static void init_main_bts()
 {
-	struct gprs_rlcmac_bts *bts = bts_main_data();
+	struct gprs_rlcmac_bts *bts = the_pcu->bts;
 	bts->initial_cs_dl = bts->initial_cs_ul = 1;
 	bts->cs_mask = 1 << 0; /* CS-1 always enabled by default */
 	bts->n3101 = 10;

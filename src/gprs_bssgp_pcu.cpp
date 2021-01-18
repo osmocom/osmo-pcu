@@ -808,7 +808,7 @@ static int gprs_bssgp_tx_fc_bvc(void)
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
 		return -EIO;
 	}
-	bts = bts_main_data();
+	bts = the_pcu->bts;
 
 	max_cs_dl = max_coding_scheme_dl(bts);
 
