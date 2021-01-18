@@ -1045,26 +1045,6 @@ free_ret:
 	return NULL;
 }
 
-void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_trx *trx)
-{
-	for (uint8_t ts = 0; ts < 8; ts++)
-		free_all(&trx->pdch[ts]);
-}
-
-void gprs_rlcmac_tbf::free_all(struct gprs_rlcmac_pdch *pdch)
-{
-	for (uint8_t tfi = 0; tfi < 32; tfi++) {
-		struct gprs_rlcmac_tbf *tbf;
-
-		tbf = pdch->ul_tbf_by_tfi(tfi);
-		if (tbf)
-			tbf_free(tbf);
-		tbf = pdch->dl_tbf_by_tfi(tfi);
-		if (tbf)
-			tbf_free(tbf);
-	}
-}
-
 int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
 {
 	struct gprs_rlcmac_dl_tbf *new_tbf = NULL;

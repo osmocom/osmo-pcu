@@ -215,9 +215,6 @@ struct gprs_rlcmac_tbf {
 	gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_rlcmac_tbf_direction dir);
 	virtual ~gprs_rlcmac_tbf() {}
 
-	static void free_all(struct gprs_rlcmac_trx *trx);
-	static void free_all(struct gprs_rlcmac_pdch *pdch);
-
 	virtual gprs_rlc_window *window() = 0;
 
 	int setup(int8_t use_trx, bool single_slot);

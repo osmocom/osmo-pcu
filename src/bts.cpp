@@ -70,6 +70,12 @@ extern "C" {
 	}
 }
 
+void bts_trx_free_all_tbf(struct gprs_rlcmac_trx *trx)
+{
+	for (uint8_t ts = 0; ts < 8; ts++)
+		pdch_free_all_tbf(&trx->pdch[ts]);
+}
+
 static struct osmo_tdef T_defs_bts[] = {
 	{ .T=3142, .default_val=20,  .unit=OSMO_TDEF_S,  .desc="timer (s)", .val=0 },
 	{ .T=3169, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of USF and TFI(s) after the MS uplink TBF assignment is invalid (s)", .val=0 },

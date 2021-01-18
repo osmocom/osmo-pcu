@@ -118,7 +118,7 @@ static void pcu_sock_close(int lost)
 			bts->trx[trx].pdch[ts].disable();
 /* FIXME: NOT ALL RESOURCES are freed in this case... inconsistent with the other code. Share the code with pcu_l1if.c
 for the reset. */
-		gprs_rlcmac_tbf::free_all(&bts->trx[trx]);
+		bts_trx_free_all_tbf(&bts->trx[trx]);
 	}
 
 	gprs_bssgp_destroy(bts);

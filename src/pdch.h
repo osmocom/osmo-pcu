@@ -183,3 +183,11 @@ inline bool gprs_rlcmac_pdch::is_enabled() const
 }
 
 #endif /* __cplusplus */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch);
+#ifdef __cplusplus
+}
+#endif

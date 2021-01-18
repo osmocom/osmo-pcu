@@ -65,6 +65,7 @@ extern "C" {
 #endif
 void bts_trx_reserve_slots(struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_direction dir, uint8_t slots);
 void bts_trx_unreserve_slots(struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_direction dir, uint8_t slots);
+void bts_trx_free_all_tbf(struct gprs_rlcmac_trx *trx);
 
 void bts_update_tbf_ta(const char *p, uint32_t fn, uint8_t trx_no, uint8_t ts, int8_t ta, bool is_rach);
 #ifdef __cplusplus

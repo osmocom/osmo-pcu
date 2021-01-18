@@ -152,7 +152,7 @@ void gprs_rlcmac_pdch::free_resources()
 		return;
 
 	/* kick all TBF on slot */
-	gprs_rlcmac_tbf::free_all(this);
+	pdch_free_all_tbf(this);
 
 	/* flush all pending paging messages */
 	while ((pag = dequeue_paging()))
@@ -1016,4 +1016,18 @@ void gprs_rlcmac_pdch::update_ta(uint8_t tai, uint8_t ta)
 {
 	OSMO_ASSERT(tai < PTCCH_TAI_NUM);
 	ptcch_msg[tai] = ta;
+}
+
+void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch)
+{
+	for (uint8_t tfi = 0; tfi < 32; tfi++) {
+		struct gprs_rlcmac_tbf *tbf;
+
+		tbf = pdch->ul_tbf_by_tfi(tfi);
+		if (tbf)
+			tbf_free(tbf);
+		tbf = pdch->dl_tbf_by_tfi(tfi);
+		if (tbf)
+			tbf_free(tbf);
+	}
 }
