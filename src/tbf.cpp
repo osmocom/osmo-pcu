@@ -168,11 +168,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	m_name_buf[0] = '\0';
 }
 
-gprs_rlcmac_bts *gprs_rlcmac_tbf::bts_data() const
-{
-	return bts;
-}
-
 uint32_t gprs_rlcmac_tbf::tlli() const
 {
 	return m_ms ? ms_tlli(m_ms) : GSM_RESERVED_TMSI;
@@ -318,7 +313,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	talloc_free(tbf);
 }
 
-uint16_t egprs_window_size(const struct gprs_rlcmac_bts *bts_data, uint8_t slots)
+uint16_t egprs_window_size(const struct gprs_rlcmac_bts *bts, uint8_t slots)
 {
 	uint8_t num_pdch = pcu_bitcount(slots);
 
@@ -328,7 +323,6 @@ uint16_t egprs_window_size(const struct gprs_rlcmac_bts *bts_data, uint8_t slots
 
 int gprs_rlcmac_tbf::update()
 {
-	struct gprs_rlcmac_bts *bts_data = bts;
 	int rc;
 
 	if (direction != GPRS_RLCMAC_DL_TBF)
@@ -337,7 +331,7 @@ int gprs_rlcmac_tbf::update()
 	LOGP(DTBF, LOGL_DEBUG, "********** DL-TBF update **********\n");
 
 	tbf_unlink_pdch(this);
-	rc = the_pcu->alloc_algorithm(bts_data, ms(), this, false, -1);
+	rc = the_pcu->alloc_algorithm(bts, ms(), this, false, -1);
 	/* if no resource */
 	if (rc < 0) {
 		LOGPTBF(this, LOGL_ERROR, "No resource after update???\n");
@@ -738,7 +732,6 @@ void gprs_rlcmac_tbf::poll_timeout()
 
 int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 {
-	struct gprs_rlcmac_bts *bts_data = bts;
 	int rc;
 
 	if (ms_mode(m_ms) != GPRS)
@@ -746,7 +739,7 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 
 	m_created_ts = time(NULL);
 	/* select algorithm */
-	rc = the_pcu->alloc_algorithm(bts_data, m_ms, this, single_slot, use_trx);
+	rc = the_pcu->alloc_algorithm(bts, m_ms, this, single_slot, use_trx);
 	/* if no resource */
 	if (rc < 0) {
 		return -1;

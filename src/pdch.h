@@ -69,7 +69,6 @@ struct gprs_rlcmac_pdch {
 	int rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t fn,
 		struct pcu_l1_meas *meas, enum CodingScheme cs);
 
-	gprs_rlcmac_bts *bts_data() const;
 	struct gprs_rlcmac_bts *bts() const;
 	uint8_t trx_no() const;
 

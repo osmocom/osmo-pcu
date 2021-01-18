@@ -130,29 +130,29 @@ static struct gprs_rlcmac_ul_tbf *sched_select_uplink(uint8_t trx, uint8_t ts, u
 }
 
 struct msgb *sched_app_info(struct gprs_rlcmac_tbf *tbf) {
-	struct gprs_rlcmac_bts *bts_data;
+	struct gprs_rlcmac_bts *bts;
 	struct msgb *msg = NULL;
 
 	if (!tbf || !tbf->ms()->app_info_pending)
 		return NULL;
 
-	bts_data = the_pcu->bts;
+	bts = the_pcu->bts;
 
-	if (bts_data->app_info) {
+	if (bts->app_info) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Sending Packet Application Information message\n");
-		msg = msgb_copy(bts_data->app_info, "app_info_msg_sched");
+		msg = msgb_copy(bts->app_info, "app_info_msg_sched");
 	} else
 		LOGP(DRLCMACSCHED, LOGL_ERROR, "MS has app_info_pending flag set, but no Packet Application Information"
 		     " message stored in BTS!\n");
 
 	tbf->ms()->app_info_pending = false;
-	bts_data->app_info_pending--;
+	bts->app_info_pending--;
 
-	if (!bts_data->app_info_pending) {
+	if (!bts->app_info_pending) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Packet Application Information successfully sent to all MS with active"
 		     " TBF\n");
-		msgb_free(bts_data->app_info);
-		bts_data->app_info = NULL;
+		msgb_free(bts->app_info);
+		bts->app_info = NULL;
 	}
 	return msg;
 }

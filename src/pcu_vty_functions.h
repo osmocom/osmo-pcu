@@ -27,13 +27,13 @@ extern "C" {
 struct vty;
 struct gprs_rlcmac_bts;
 
-int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data, uint32_t flags);
-int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts_data);
-int pcu_vty_show_ms_by_tlli(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
+int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts, uint32_t flags);
+int pcu_vty_show_ms_all(struct vty *vty, struct gprs_rlcmac_bts *bts);
+int pcu_vty_show_ms_by_tlli(struct vty *vty, struct gprs_rlcmac_bts *bts,
 	uint32_t tlli);
-int pcu_vty_show_ms_by_imsi(struct vty *vty, struct gprs_rlcmac_bts *bts_data,
+int pcu_vty_show_ms_by_imsi(struct vty *vty, struct gprs_rlcmac_bts *bts,
 	const char *imsi);
-int pcu_vty_show_bts_pdch(struct vty *vty, const struct gprs_rlcmac_bts *bts_data);
+int pcu_vty_show_bts_pdch(struct vty *vty, const struct gprs_rlcmac_bts *bts);
 #ifdef __cplusplus
 }
 #endif

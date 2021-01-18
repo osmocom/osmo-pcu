@@ -113,12 +113,12 @@ static void get_meas(struct pcu_l1_meas *meas,
 	}
 }
 
-static inline void sched_ul_ass_or_rej(struct gprs_rlcmac_bts *bts, gprs_rlcmac_bts *bts_data, struct gprs_rlcmac_dl_tbf *tbf)
+static inline void sched_ul_ass_or_rej(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_dl_tbf *tbf)
 {
 	bts_do_rate_ctr_inc(bts, CTR_CHANNEL_REQUEST_DESCRIPTION);
 
 	/* This call will register the new TBF with the MS on success */
-	gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts_data, tbf->ms(), tbf->trx->trx_no, tbf->tlli());
+	gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul(bts, tbf->ms(), tbf->trx->trx_no, tbf->tlli());
 
 	/* schedule uplink assignment or reject */
 	if (ul_tbf) {
@@ -455,7 +455,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	}
 	/* check for channel request */
 	if (ack_nack->Exist_Channel_Request_Description)
-		sched_ul_ass_or_rej(bts(), bts_data(), tbf);
+		sched_ul_ass_or_rej(bts(), tbf);
 
 	/* get measurements */
 	if (tbf->ms()) {
@@ -545,7 +545,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 
 	/* check for channel request */
 	if (ack_nack->Exist_ChannelRequestDescription)
-		sched_ul_ass_or_rej(bts(), bts_data(), tbf);
+		sched_ul_ass_or_rej(bts(), tbf);
 
 	/* get measurements */
 	if (tbf->ms()) {
@@ -612,9 +612,9 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			tbf_free(ul_tbf);
 		}
 
-		ul_tbf = tbf_alloc_ul(bts_data(), ms, trx_no(), tlli);
+		ul_tbf = tbf_alloc_ul(bts(), ms, trx_no(), tlli);
 		if (!ul_tbf) {
-			handle_tbf_reject(bts_data(), ms, tlli,
+			handle_tbf_reject(bts(), ms, tlli,
 				trx_no(), ts_no);
 			goto return_unref;
 		}
@@ -982,11 +982,6 @@ inline struct gprs_rlcmac_bts *gprs_rlcmac_pdch::bts() const
 uint8_t gprs_rlcmac_pdch::trx_no() const
 {
 	return trx->trx_no;
-}
-
-inline gprs_rlcmac_bts *gprs_rlcmac_pdch::bts_data() const
-{
-	return trx->bts;
 }
 
 /* PTCCH (Packet Timing Advance Control Channel) */

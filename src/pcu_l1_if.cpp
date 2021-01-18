@@ -814,36 +814,35 @@ static int pcu_rx_susp_req(struct gsm_pcu_if_susp_req *susp_req)
 static int pcu_rx_app_info_req(struct gsm_pcu_if_app_info_req *app_info_req)
 {
 	struct gprs_rlcmac_bts *bts = the_pcu->bts;
-	struct gprs_rlcmac_bts *bts_data = bts;
 	struct llist_head *tmp;
 
 	LOGP(DL1IF, LOGL_DEBUG, "Application Information Request received: type=0x%08x len=%i\n",
 	     app_info_req->application_type, app_info_req->len);
 
-	bts_data->app_info_pending = 0;
+	bts->app_info_pending = 0;
 	llist_for_each(tmp, bts_ms_store(bts)->ms_list()) {
 		GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
 		if (!ms_dl_tbf(ms))
 			continue;
-		bts_data->app_info_pending++;
+		bts->app_info_pending++;
 		ms->app_info_pending = true;
 	}
 
-	if (!bts_data->app_info_pending) {
+	if (!bts->app_info_pending) {
 		LOGP(DL1IF, LOGL_NOTICE, "Packet Application Information will not be sent, no subscribers with active"
 		     " TBF\n");
 		return -1;
 	}
 
-	if (bts_data->app_info) {
+	if (bts->app_info) {
 		LOGP(DL1IF, LOGL_NOTICE, "Previous Packet Application Information was not sent to all subscribers,"
 		     " overwriting with new one\n");
-		msgb_free(bts_data->app_info);
+		msgb_free(bts->app_info);
 	}
 
 	LOGP(DL1IF, LOGL_INFO, "Sending Packet Application Information to %i subscribers with active TBF\n",
-	     bts_data->app_info_pending);
-	bts_data->app_info = gprs_rlcmac_app_info_msg(app_info_req);
+	     bts->app_info_pending);
+	bts->app_info = gprs_rlcmac_app_info_msg(app_info_req);
 	return 0;
 }
 

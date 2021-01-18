@@ -242,13 +242,13 @@ int pcu_vty_show_ms_by_imsi(struct vty *vty, struct gprs_rlcmac_bts *bts,
 	return show_ms(vty, ms);
 }
 
-int pcu_vty_show_bts_pdch(struct vty *vty, const struct gprs_rlcmac_bts *bts_data)
+int pcu_vty_show_bts_pdch(struct vty *vty, const struct gprs_rlcmac_bts *bts)
 {
 	unsigned int trx_nr, ts_nr;
 
-	vty_out(vty, "BTS (%s)%s", bts_data->active ? "active" : "disabled", VTY_NEWLINE);
-	for (trx_nr = 0; trx_nr < ARRAY_SIZE(bts_data->trx); trx_nr++) {
-		const struct gprs_rlcmac_trx *trx = &bts_data->trx[trx_nr];
+	vty_out(vty, "BTS (%s)%s", bts->active ? "active" : "disabled", VTY_NEWLINE);
+	for (trx_nr = 0; trx_nr < ARRAY_SIZE(bts->trx); trx_nr++) {
+		const struct gprs_rlcmac_trx *trx = &bts->trx[trx_nr];
 
 		for (ts_nr = 0; ts_nr < ARRAY_SIZE(trx->pdch); ts_nr++) {
 			if (trx->pdch[ts_nr].is_enabled())

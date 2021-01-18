@@ -239,7 +239,7 @@ static void assign_dlink_tbf(struct gprs_rlcmac_pdch *pdch, struct gprs_rlcmac_d
 	attach_tbf_to_pdch(pdch, tbf);
 }
 
-static int find_trx(const struct gprs_rlcmac_bts *bts_data, const GprsMs *ms, int8_t use_trx)
+static int find_trx(const struct gprs_rlcmac_bts *bts, const GprsMs *ms, int8_t use_trx)
 {
 	unsigned trx_no;
 	unsigned ts;
@@ -252,8 +252,8 @@ static int find_trx(const struct gprs_rlcmac_bts *bts_data, const GprsMs *ms, in
 		return use_trx;
 
 	/* Find the first TRX that has a PDCH with a free UL and DL TFI */
-	for (trx_no = 0; trx_no < ARRAY_SIZE(bts_data->trx); trx_no += 1) {
-		const struct gprs_rlcmac_trx *trx = &bts_data->trx[trx_no];
+	for (trx_no = 0; trx_no < ARRAY_SIZE(bts->trx); trx_no += 1) {
+		const struct gprs_rlcmac_trx *trx = &bts->trx[trx_no];
 		for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
 			const struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts];
 			if (!pdch->is_enabled())
@@ -272,14 +272,14 @@ static int find_trx(const struct gprs_rlcmac_bts *bts_data, const GprsMs *ms, in
 	return -EBUSY;
 }
 
-static bool idle_pdch_avail(const struct gprs_rlcmac_bts *bts_data)
+static bool idle_pdch_avail(const struct gprs_rlcmac_bts *bts)
 {
 	unsigned trx_no;
 	unsigned ts;
 
 	/* Find the first PDCH with an unused DL TS */
-	for (trx_no = 0; trx_no < ARRAY_SIZE(bts_data->trx); trx_no += 1) {
-		const struct gprs_rlcmac_trx *trx = &bts_data->trx[trx_no];
+	for (trx_no = 0; trx_no < ARRAY_SIZE(bts->trx); trx_no += 1) {
+		const struct gprs_rlcmac_trx *trx = &bts->trx[trx_no];
 		for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
 			const struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts];
 			if (!pdch->is_enabled())

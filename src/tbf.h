@@ -348,7 +348,6 @@ struct gprs_rlcmac_tbf {
 	struct llist_item m_bts_list;
 
 protected:
-	gprs_rlcmac_bts *bts_data() const;
 	void merge_and_clear_ms(GprsMs *old_ms);
 
 	gprs_llc_queue *llc_queue();
@@ -567,6 +566,6 @@ inline enum gprs_rlcmac_tbf_direction reverse(enum gprs_rlcmac_tbf_direction dir
 		((int)GPRS_RLCMAC_UL_TBF - (int)dir + (int)GPRS_RLCMAC_DL_TBF);
 }
 
-uint16_t egprs_window_size(const struct gprs_rlcmac_bts *bts_data, uint8_t slots);
+uint16_t egprs_window_size(const struct gprs_rlcmac_bts *bts, uint8_t slots);
 
 #endif
