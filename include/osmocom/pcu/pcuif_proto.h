@@ -1,12 +1,13 @@
 #ifndef _PCUIF_PROTO_H
 #define _PCUIF_PROTO_H
 
+#include <osmocom/gsm/protocol/gsm_04_08.h>
 #include <osmocom/gsm/l1sap.h>
 #include <arpa/inet.h>
 
 #define PCU_SOCK_DEFAULT	"/tmp/pcu_bts"
 
-#define PCU_IF_VERSION		0x0a
+#define PCU_IF_VERSION		0x0b
 #define TXT_MAX_LEN	128
 
 /* msg_type */
@@ -177,6 +178,13 @@ struct gsm_pcu_if_info_ind {
 		struct in_addr v4;
 		struct in6_addr v6;
 	} remote_ip[PCU_IF_NUM_NSVC];
+	/* RIM */
+	uint8_t         si1[GSM_MACBLOCK_LEN];
+	uint8_t         si1_is_set;
+	uint8_t         si3[GSM_MACBLOCK_LEN];
+	uint8_t         si3_is_set;
+	uint8_t         si13[GSM_MACBLOCK_LEN];
+	uint8_t         si13_is_set;
 } __attribute__ ((packed));
 
 struct gsm_pcu_if_act_req {

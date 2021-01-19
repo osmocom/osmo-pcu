@@ -20,6 +20,7 @@
 
 #include <gprs_rlcmac.h>
 #include <gprs_bssgp_pcu.h>
+#include <gprs_bssgp_rim.h>
 #include <pcu_l1_if.h>
 #include <gprs_debug.h>
 #include <bts.h>
@@ -424,6 +425,20 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 		 * STATUS and RESET messages in either direction. */
 		return bssgp_rcvmsg(msg);
 
+	switch (pdu_type) {
+		/* Also pass all RIM related messages to the generic BSSGP
+		 * parser so that it can deliver primitive to the RIM SAP
+		 * (SAP_BSSGP_RIM) */
+	case BSSGP_PDUT_RAN_INFO:
+	case BSSGP_PDUT_RAN_INFO_REQ:
+	case BSSGP_PDUT_RAN_INFO_ACK:
+	case BSSGP_PDUT_RAN_INFO_ERROR:
+	case BSSGP_PDUT_RAN_INFO_APP_ERROR:
+		return bssgp_rcvmsg(msg);
+	default:
+		break;
+	}
+
 	/* Identifiers from DOWN: NSEI, BVCI (both in msg->cb) */
 
 	/* UNITDATA BSSGP headers have TLLI in front */
@@ -544,13 +559,24 @@ static void handle_nm_status(struct osmo_bssgp_prim *bp)
 
 int bssgp_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 {
+	struct gprs_rlcmac_bts *bts;
 	struct osmo_bssgp_prim *bp;
 	bp = container_of(oph, struct osmo_bssgp_prim, oph);
+
+	/* FIXME: This calculation needs to be redone to support multiple BTS */
+	bts = llist_first_entry_or_null(&the_pcu->bts_list, struct gprs_rlcmac_bts, list);
+	if (!bts) {
+		LOGP(DBSSGP, LOGL_ERROR, "No bts\n");
+		return -EIO;
+	}
 
 	switch (oph->sap) {
 	case SAP_BSSGP_NM:
 		if (oph->primitive == PRIM_NM_STATUS)
 			handle_nm_status(bp);
+		break;
+	case SAP_BSSGP_RIM:
+		sgsn_rim_rx(bp, oph->msg, bts);
 		break;
 	default:
 		break;
