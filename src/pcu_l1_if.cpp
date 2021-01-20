@@ -603,6 +603,12 @@ bssgp_failed:
 	LOGP(DL1IF, LOGL_DEBUG, " cv_countdown=%d\n", info_ind->cv_countdown);
 	LOGP(DL1IF, LOGL_DEBUG, " dl_tbf_ext=%d\n", info_ind->dl_tbf_ext);
 	LOGP(DL1IF, LOGL_DEBUG, " ul_tbf_ext=%d\n", info_ind->ul_tbf_ext);
+	bts->cgi_ps.rai.lac.plmn.mcc = info_ind->mcc;
+	bts->cgi_ps.rai.lac.plmn.mnc = info_ind->mnc;
+	bts->cgi_ps.rai.lac.plmn.mnc_3_digits = info_ind->mnc_3_digits;
+	bts->cgi_ps.rai.lac.lac = info_ind->lac;
+	bts->cgi_ps.rai.rac = info_ind->rac;
+	bts->cgi_ps.cell_identity = info_ind->cell_id;
 	bts->bsic = info_ind->bsic;
 
 	bts->cs_mask = 1 << 0; /* We need at least 1 CS, let's enable CS1 */

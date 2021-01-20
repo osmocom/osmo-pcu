@@ -198,6 +198,7 @@ struct gprs_rlcmac_bts {
 	uint8_t nr; /* bts_nr */
 	struct llist_head list; /* queued in pcu->bts_list */
 	bool active;
+	struct osmo_cell_global_id_ps cgi_ps;
 	uint8_t bsic;
 	uint8_t cs_mask; /* Allowed CS mask from BTS */
 	uint16_t mcs_mask;  /* Allowed MCS mask from BTS */
