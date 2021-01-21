@@ -1,6 +1,6 @@
-/* gprs_debug.h
+/* gprs_bssgp_rim.h
  *
- * Copyright (C) 2012 Ivan Klyuchnikov
+ * Copyright (C) 2021 by sysmocom - s.f.m.c. GmbH <info@sysmocom.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,35 +19,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include <osmocom/core/logging.h>
-#ifdef __cplusplus
-};
-#endif
+struct osmo_bssgp_prim;
 
-/* we used to have DBSSGP definded in each application, and applications telling
- * libosmogb which sub-system to use.  That creates problems and has been deprecated */
-#define DBSSGP DLBSSGP
-
-/* Debug Areas of the code */
-enum {
-	DCSN1,
-	DL1IF,
-	DRLCMAC,
-	DRLCMACDATA,
-	DRLCMACDL,
-	DRLCMACUL,
-	DRLCMACSCHED,
-	DRLCMACMEAS,
-	DTBF,
-	DTBFDL,
-	DTBFUL,
-	DNS,
-	DPCU,
-	DRIM,
-	aDebug_LastEntry
-};
-
-extern const struct log_info gprs_log_info;
+int handle_rim(struct osmo_bssgp_prim *bp);
