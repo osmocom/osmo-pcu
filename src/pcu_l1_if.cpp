@@ -656,6 +656,33 @@ bssgp_failed:
 		goto bssgp_failed;
 	}
 
+	if (info_ind->si1_is_set) {
+		LOGP(DL1IF, LOGL_DEBUG, " si1=%s\n", osmo_hexdump_nospc(info_ind->si1, GSM_MACBLOCK_LEN));
+		memcpy(bts->si1, info_ind->si1, GSM_MACBLOCK_LEN);
+		bts->si1_is_set = true;
+	} else {
+		LOGP(DL1IF, LOGL_DEBUG, " si1=(not set)\n");
+		bts->si1_is_set = false;
+	}
+
+	if (info_ind->si3_is_set) {
+		LOGP(DL1IF, LOGL_DEBUG, " si3=%s\n", osmo_hexdump_nospc(info_ind->si3, GSM_MACBLOCK_LEN));
+		memcpy(bts->si3, info_ind->si3, GSM_MACBLOCK_LEN);
+		bts->si3_is_set = true;
+	} else {
+		LOGP(DL1IF, LOGL_DEBUG, " si3=(not set)\n");
+		bts->si3_is_set = false;
+	}
+
+	if (info_ind->si13_is_set) {
+		LOGP(DL1IF, LOGL_DEBUG, " si13=%s\n", osmo_hexdump_nospc(info_ind->si13, GSM_MACBLOCK_LEN));
+		memcpy(bts->si13, info_ind->si13, GSM_MACBLOCK_LEN);
+		bts->si13_is_set = true;
+	} else {
+		LOGP(DL1IF, LOGL_DEBUG, " si13=(not set)\n");
+		bts->si13_is_set = false;
+	}
+
 	if (info_ind->t3142) { /* if timer values are set */
 		osmo_tdef_set(bts->T_defs_bts, 3142, info_ind->t3142, OSMO_TDEF_S);
 		osmo_tdef_set(bts->T_defs_bts, 3169, info_ind->t3169, OSMO_TDEF_S);

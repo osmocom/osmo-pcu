@@ -9,3 +9,4 @@
 #library        what            description / commit summary line
 osmo-pcu        update osmo-gsm-manuals dependency to > 0.3.0 for vty_cpu_sched.adoc include
 osmo-pcu	update libosmocore dependency > 1.4.x for osmo_fd_{read,write}_{enable,disable}+DLBSSGP
+osmo-pcu        increment PCUIF version number
