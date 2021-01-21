@@ -641,7 +641,7 @@ void gprs_rlcmac_dl_tbf::schedule_next_frame()
 		return;
 
 	/* dequeue next LLC frame, if any */
-	msg = llc_dequeue(gprs_bssgp_pcu_current_bctx());
+	msg = llc_dequeue(bts->pcu->bssgp.bctx);
 	if (!msg)
 		return;
 

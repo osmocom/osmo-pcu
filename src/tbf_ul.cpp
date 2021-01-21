@@ -560,7 +560,7 @@ int gprs_rlcmac_ul_tbf::snd_ul_ud()
 	uint8_t qos_profile[3];
 	struct msgb *llc_pdu;
 	unsigned msg_len = NS_HDR_LEN + BSSGP_HDR_LEN + llc_frame_length(&m_llc);
-	struct bssgp_bvc_ctx *bctx = gprs_bssgp_pcu_current_bctx();
+	struct bssgp_bvc_ctx *bctx = bts->pcu->bssgp.bctx;
 
 	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] %s len=%d\n", tbf_name(this), llc_frame_length(&m_llc));
 	if (!bctx) {

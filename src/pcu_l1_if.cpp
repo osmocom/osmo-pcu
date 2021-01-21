@@ -782,7 +782,7 @@ static int pcu_rx_pag_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_pag_req
 
 static int pcu_rx_susp_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_susp_req *susp_req)
 {
-	struct bssgp_bvc_ctx *bctx = gprs_bssgp_pcu_current_bctx();
+	struct bssgp_bvc_ctx *bctx = bts->pcu->bssgp.bctx;
 	GprsMs *ms;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	struct gprs_rlcmac_ul_tbf *ul_tbf;

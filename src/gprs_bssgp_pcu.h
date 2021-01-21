@@ -78,7 +78,6 @@ struct gprs_bssgp_pcu {
 };
 
 int gprs_gp_send_cb(void *ctx, struct msgb *msg);
-struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void);
 int gprs_ns_prim_cb(struct osmo_prim_hdr *oph, void *ctx);
 void gprs_bssgp_update_queue_delay(const struct timespec *tv_recv,
 		const struct timespec *tv_now);

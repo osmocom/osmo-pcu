@@ -515,7 +515,7 @@ static void handle_nm_status(struct osmo_bssgp_prim *bp)
 	if (!TLVP_PRESENT(bp->tp, BSSGP_IE_BVCI))
 		return;
 
-	if (gprs_bssgp_pcu_current_bctx()->bvci != bp->bvci) {
+	if (the_pcu->bssgp.bctx->bvci != bp->bvci) {
 		LOGP(DPCU, LOGL_NOTICE,
 			"Received BSSGP STATUS message for an unknown BVCI (%d), "
 			"ignored\n",
@@ -1179,11 +1179,6 @@ void gprs_bssgp_destroy(struct gprs_rlcmac_bts *bts)
 	gprs_ns2_free(the_pcu->nsi);
 	the_pcu->nsi = NULL;
 	bts->nse = NULL;
-}
-
-struct bssgp_bvc_ctx *gprs_bssgp_pcu_current_bctx(void)
-{
-	return the_pcu->bssgp.bctx;
 }
 
 void gprs_bssgp_update_frames_sent()
