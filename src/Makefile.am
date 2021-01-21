@@ -19,7 +19,7 @@
 #
 
 AUTOMAKE_OPTIONS = subdir-objects
-AM_CPPFLAGS = -I$(top_srcdir)/include $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS)
+AM_CPPFLAGS = -I$(top_srcdir)/include $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOCTRL_CFLAGS) $(LIBOSMOGSM_CFLAGS)
 
 if ENABLE_SYSMODSP
 AM_CPPFLAGS += -DENABLE_DIRECT_PHY
@@ -55,6 +55,8 @@ libgprs_la_SOURCES = \
 	pcu_vty.c \
 	pcu_vty_functions.cpp \
 	mslot_class.c \
+	nacc_fsm.c \
+	neigh_cache.c \
 	tbf.cpp \
 	tbf_ul.cpp \
 	tbf_dl.cpp \
@@ -91,6 +93,8 @@ noinst_HEADERS = \
 	pcu_vty.h \
 	pcu_vty_functions.h \
 	mslot_class.h \
+	nacc_fsm.h \
+	neigh_cache.h \
 	tbf.h \
 	tbf_ul.h \
 	tbf_dl.h \
@@ -143,6 +147,7 @@ osmo_pcu_remote_LDADD = \
 	libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(COMMON_LA)
 endif
@@ -191,6 +196,7 @@ osmo_pcu_LDADD = \
 	libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
 	$(COMMON_LA)
 

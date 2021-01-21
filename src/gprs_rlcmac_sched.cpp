@@ -38,6 +38,7 @@ struct tbf_sched_candidates {
 	struct gprs_rlcmac_tbf *poll;
 	struct gprs_rlcmac_tbf *ul_ass;
 	struct gprs_rlcmac_tbf *dl_ass;
+	struct gprs_rlcmac_tbf *nacc;
 	struct gprs_rlcmac_ul_tbf *ul_ack;
 };
 
@@ -71,6 +72,9 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 		if (ul_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS)
 		    || ul_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
 			tbf_cand->ul_ass = ul_tbf;
+		/* NACC ready to send */
+		if (ms_nacc_rts(ul_tbf->ms()))
+			tbf_cand->nacc = ul_tbf;
 /* FIXME: Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all
 states? */
 	}
@@ -88,6 +92,9 @@ states? */
 		if (dl_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS)
 		    || dl_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
 			tbf_cand->ul_ass = dl_tbf;
+		/* NACC ready to send */
+		if (ms_nacc_rts(dl_tbf->ms()))
+			tbf_cand->nacc = dl_tbf;
 	}
 
 	return poll_fn;
@@ -166,7 +173,8 @@ static struct msgb *sched_select_ctrl_msg(
 	struct gprs_rlcmac_tbf *tbf = NULL;
 	struct gprs_rlcmac_tbf *next_list[] = { tbfs->ul_ass,
 						tbfs->dl_ass,
-						tbfs->ul_ack };
+						tbfs->ul_ack,
+						tbfs->nacc };
 
 	/* Send Packet Application Information first (ETWS primary notifications) */
 	msg = sched_app_info(tbfs->dl_ass);
@@ -194,6 +202,9 @@ static struct msgb *sched_select_ctrl_msg(
 				msg = tbfs->dl_ass->create_dl_ass(fn, ts);
 			else if (tbf == tbfs->ul_ack)
 				msg = tbfs->ul_ack->create_ul_ack(fn, ts);
+			else if (tbf == tbfs->nacc) {
+				msg = ms_nacc_create_rlcmac_msg(tbf->ms(), tbf);
+			}
 			/* else: if tbf/ms is pending to send tx_neigbhourData or tx_CellchangeContinue, send it */
 
 			if (!msg) {

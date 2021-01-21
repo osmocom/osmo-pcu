@@ -14,6 +14,7 @@
 #include <osmocom/vty/misc.h>
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/rate_ctr.h>
+#include <osmocom/ctrl/ports.h>
 #include <osmocom/pcu/pcuif_proto.h>
 #include <osmocom/gprs/gprs_ns2.h>
 #include "pcu_vty.h"
@@ -1018,6 +1019,22 @@ DEFUN_USRATTR(cfg_pcu_gb_dialect,
 	return CMD_SUCCESS;
 }
 
+DEFUN(cfg_neighbor_resolution, cfg_neighbor_resolution_cmd,
+       "neighbor resolution " VTY_IPV46_CMD " [<0-65535>]",
+       "Manage local and remote-BSS neighbor cells\n"
+       "Connect to Neighbor Resolution Service (CTRL interface) to given ip and port\n"
+       "IPv4 address to connect to\n" "IPv6 address to connect to\n"
+       "Port to connect to (default 4248)\n")
+{
+	osmo_talloc_replace_string(the_pcu, &the_pcu->vty.neigh_ctrl_addr, argv[0]);
+	if (argc > 1)
+		the_pcu->vty.neigh_ctrl_port = atoi(argv[1]);
+	else
+		the_pcu->vty.neigh_ctrl_port = OSMO_CTRL_PORT_BSC_NEIGH;
+	return CMD_SUCCESS;
+}
+
+
 DEFUN(show_bts_timer, show_bts_timer_cmd,
       "show bts-timer " OSMO_TDEF_VTY_ARG_T_OPTIONAL,
       SHOW_STR "Show BTS controlled timers\n"
@@ -1220,6 +1237,7 @@ int pcu_vty_init(void)
 	install_element(PCU_NODE, &cfg_pcu_no_gsmtap_categ_cmd);
 	install_element(PCU_NODE, &cfg_pcu_sock_cmd);
 	install_element(PCU_NODE, &cfg_pcu_gb_dialect_cmd);
+	install_element(PCU_NODE, &cfg_neighbor_resolution_cmd);
 	install_element(PCU_NODE, &cfg_pcu_timer_cmd);
 
 	install_element_ve(&show_bts_stats_cmd);

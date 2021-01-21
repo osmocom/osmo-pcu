@@ -204,6 +204,7 @@ uint8_t tbf_first_common_ts(const struct gprs_rlcmac_tbf *tbf);
 uint8_t tbf_dl_slots(const struct gprs_rlcmac_tbf *tbf);
 uint8_t tbf_ul_slots(const struct gprs_rlcmac_tbf *tbf);
 bool tbf_is_tfi_assigned(const struct gprs_rlcmac_tbf *tbf);
+uint8_t tbf_tfi(const struct gprs_rlcmac_tbf *tbf);
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 #ifdef __cplusplus
 }

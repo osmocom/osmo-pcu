@@ -22,17 +22,22 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 #include <osmocom/gsm/l1sap.h>
 #include "coding_scheme.h"
 #include "gsm_rlcmac.h"
+#ifdef __cplusplus
 }
+#endif
 
 struct gprs_rlcmac_tbf;
 struct bitvec;
 struct gprs_llc;
 struct gprs_rlc_data_block_info;
 
+#ifdef __cplusplus
 /**
  * I help with encoding data into CSN1 messages.
  * TODO: Nobody can remember a function signature like this. One should
@@ -108,3 +113,21 @@ public:
 		const struct gprs_rlc_data_block_info *rdbi,
 		int *offset, int *num_chunks, uint8_t *data_block);
 };
+
+#endif /* ifdef __cplusplus */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void write_packet_neighbour_cell_data(RlcMacDownlink_t *block,
+		bool tfi_is_dl, uint8_t tfi, uint8_t container_id,
+		uint8_t container_idx, PNCDContainer_t *container);
+
+void write_packet_cell_change_continue(RlcMacDownlink_t *block,
+		bool tfi_is_dl, uint8_t tfi, bool exist_id,
+		uint16_t arfcn, uint8_t bsic, uint8_t container_id);
+
+#ifdef __cplusplus
+}
+#endif

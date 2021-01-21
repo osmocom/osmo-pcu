@@ -685,6 +685,33 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 	gprs_rlcmac_meas_rep(ms, report);
 }
 
+void gprs_rlcmac_pdch::rcv_cell_change_notification(Packet_Cell_Change_Notification_t *notif,
+						    uint32_t fn, struct pcu_l1_meas *meas)
+{
+	GprsMs *ms;
+
+	bts_do_rate_ctr_inc(bts(), CTR_PKT_CELL_CHG_NOTIFICATION);
+
+	if (notif->Global_TFI.UnionType == 0) {
+		struct gprs_rlcmac_ul_tbf *ul_tbf = ul_tbf_by_tfi(notif->Global_TFI.u.UPLINK_TFI);
+		if (!ul_tbf) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "UL TBF TFI=0x%2x not found\n", notif->Global_TFI.u.UPLINK_TFI);
+			return;
+		}
+		ms = ul_tbf->ms();
+	} else if (notif->Global_TFI.UnionType == 1) {
+		struct gprs_rlcmac_dl_tbf *dl_tbf = dl_tbf_by_tfi(notif->Global_TFI.u.DOWNLINK_TFI);
+		if (!dl_tbf) {
+			LOGP(DRLCMAC, LOGL_NOTICE, "DL TBF TFI=0x%2x not found\n", notif->Global_TFI.u.DOWNLINK_TFI);
+			return;
+		}
+		ms = dl_tbf->ms();
+	} else { OSMO_ASSERT(0); }
+
+	ms_update_l1_meas(ms, meas);
+	ms_nacc_start(ms, notif);
+}
+
 /* Received Uplink RLC control block. */
 int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 					uint32_t fn, struct pcu_l1_meas *meas, enum CodingScheme cs)
@@ -733,6 +760,9 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 		break;
 	case MT_PACKET_UPLINK_DUMMY_CONTROL_BLOCK:
 		/* ignoring it. change the SI to not force sending these? */
+		break;
+	case MT_PACKET_CELL_CHANGE_NOTIFICATION:
+		rcv_cell_change_notification(&ul_control_block->u.Packet_Cell_Change_Notification, fn, meas);
 		break;
 	default:
 		bts_do_rate_ctr_inc(bts(), CTR_DECODE_ERRORS);

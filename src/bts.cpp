@@ -140,6 +140,9 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "pkt:ul_assignment",		"Packet UL Assignment "},
 	{ "pkt:access_reject",          "Packet Access Reject "},
 	{ "pkt:dl_assignment",		"Packet DL Assignment "},
+	{ "pkt:cell_chg_notification",	"Packet Cell Change Notification"},
+	{ "pkt:cell_chg_continue",	"Packet Cell Change Continue"},
+	{ "pkt:neigh_cell_data",	"Packet Neighbour Cell Data"},
 	{ "ul:control",			"UL control Block     "},
 	{ "ul:assignment_poll_timeout",	"UL Assign Timeout    "},
 	{ "ul:assignment_failed",	"UL Assign Failed     "},
@@ -1283,4 +1286,9 @@ void bts_recalc_max_mcs(struct gprs_rlcmac_bts *bts)
 struct GprsMs *bts_ms_by_imsi(struct gprs_rlcmac_bts *bts, const char *imsi)
 {
 	return bts_ms_store(bts)->get_ms(0, 0, imsi);
+}
+
+const struct llist_head* bts_ms_list(struct gprs_rlcmac_bts *bts)
+{
+	return bts_ms_store(bts)->ms_list();
 }

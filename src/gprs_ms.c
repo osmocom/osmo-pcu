@@ -26,6 +26,7 @@
 #include "gprs_debug.h"
 #include "gprs_codel.h"
 #include "pcu_utils.h"
+#include "nacc_fsm.h"
 
 #include <time.h>
 
@@ -936,4 +937,37 @@ struct gprs_rlcmac_tbf *ms_tbf(const struct GprsMs *ms, enum gprs_rlcmac_tbf_dir
 	}
 
 	return NULL;
+}
+
+int ms_nacc_start(struct GprsMs *ms, Packet_Cell_Change_Notification_t *notif)
+{
+	if (!ms->nacc)
+		ms->nacc = nacc_fsm_alloc(ms);
+	if (!ms->nacc)
+		return -EINVAL;
+	return osmo_fsm_inst_dispatch(ms->nacc->fi, NACC_EV_RX_CELL_CHG_NOTIFICATION, notif);
+}
+
+bool ms_nacc_rts(const struct GprsMs *ms)
+{
+	if (!ms->nacc)
+		return false;
+	if (ms->nacc->fi->state == NACC_ST_TX_NEIGHBOUR_DATA ||
+	    ms->nacc->fi->state == NACC_ST_TX_CELL_CHG_CONTINUE)
+		return true;
+	return false;
+}
+
+struct msgb *ms_nacc_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
+{
+	int rc;
+	struct nacc_ev_create_rlcmac_msg_ctx data_ctx;
+
+	data_ctx.tbf = tbf;
+	data_ctx.msg = NULL;
+
+	rc = osmo_fsm_inst_dispatch(ms->nacc->fi, NACC_EV_CREATE_RLCMAC_MSG, &data_ctx);
+	if (rc != 0 || !data_ctx.msg)
+		return NULL;
+	return data_ctx.msg;
 }

@@ -26,6 +26,9 @@
 
 #include "gprs_debug.h"
 #include "gprs_pcu.h"
+#include "bts.h"
+#include "gprs_ms.h"
+#include "nacc_fsm.h"
 
 #define LOGPRIM(nsei, level, fmt, args...) \
 	LOGP(DRIM, level, "(NSEI=%u) " fmt, nsei, ## args)
@@ -97,6 +100,65 @@ static bool match_app_id(const struct bssgp_ran_information_pdu *pdu, enum bssgp
 	return false;
 }
 
+static int handle_ran_info_response_nacc(const struct bssgp_ran_inf_app_cont_nacc *nacc, struct gprs_rlcmac_bts *bts)
+{
+	struct si_cache_value val;
+	struct si_cache_entry *entry;
+	struct llist_head *tmp;
+	int i;
+
+	LOGP(DRIM, LOGL_INFO, "Rx RAN-INFO cell=%s type=%sBCCH num_si=%d\n",
+	     osmo_cgi_ps_name(&nacc->reprt_cell),
+	     nacc->type_psi ? "P" : "", nacc->num_si);
+
+	val.type_psi = nacc->type_psi;
+	val.si_len = 0;
+	for (i = 0; i < nacc->num_si; i++) {
+		size_t len = val.type_psi ? BSSGP_RIM_PSI_LEN : BSSGP_RIM_SI_LEN;
+		memcpy(&val.si_buf[val.si_len], nacc->si[i], len);
+		val.si_len += len;
+	}
+	entry = si_cache_add(bts->pcu->si_cache, &nacc->reprt_cell, &val);
+
+	llist_for_each(tmp, bts_ms_list(bts)) {
+		struct GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
+		if (!ms->nacc)
+			continue;
+		if (ms->nacc->fi->state != NACC_ST_WAIT_REQUEST_SI)
+			continue;
+		if (osmo_cgi_ps_cmp(&nacc->reprt_cell, &ms->nacc->cgi_ps) != 0)
+			continue;
+		osmo_fsm_inst_dispatch(ms->nacc->fi, NACC_EV_RX_SI, entry);
+	}
+	return 0;
+}
+
+static int handle_ran_info_response(const struct bssgp_ran_information_pdu *pdu, struct gprs_rlcmac_bts *bts)
+{
+	const struct bssgp_ran_inf_rim_cont *ran_info = &pdu->decoded.rim_cont;
+	char ri_src_str[64];
+
+	if (ran_info->app_err) {
+		LOGP(DRIM, LOGL_ERROR,
+		     "%s Rx RAN-INFO with an app error! cause: %s\n",
+		     bssgp_rim_ri_name_buf(ri_src_str, sizeof(ri_src_str), &pdu->routing_info_src),
+		     bssgp_nacc_cause_str(ran_info->u.app_err_cont_nacc.nacc_cause));
+		return -1;
+	}
+
+	switch (pdu->decoded.rim_cont.app_id) {
+	case BSSGP_RAN_INF_APP_ID_NACC:
+		handle_ran_info_response_nacc(&ran_info->u.app_cont_nacc, bts);
+		break;
+	default:
+		LOGP(DRIM, LOGL_ERROR, "%s Rx RAN-INFO with unknown/wrong application ID %s received\n",
+		     bssgp_rim_ri_name_buf(ri_src_str, sizeof(ri_src_str), &pdu->routing_info_src),
+		     bssgp_ran_inf_app_id_str(pdu->decoded.rim_cont.app_id));
+		return -1;
+	}
+	return 0;
+}
+
 int handle_rim(struct osmo_bssgp_prim *bp)
 {
 	struct msgb *msg = bp->oph.msg;
@@ -151,8 +213,7 @@ int handle_rim(struct osmo_bssgp_prim *bp)
 		LOGPRIM(nsei, LOGL_NOTICE, "Responding to RAN INFORMATION REQUEST not yet implemented!\n");
 		break;
 	case BSSGP_IE_RI_RIM_CONTAINER:
-		LOGPRIM(nsei, LOGL_NOTICE, "Responding to RAN INFORMATION not yet implemented!\n");
-		break;
+		return handle_ran_info_response(pdu, bts);
 	case BSSGP_IE_RI_APP_ERROR_RIM_CONT:
 	case BSSGP_IE_RI_ACK_RIM_CONTAINER:
 	case BSSGP_IE_RI_ERROR_RIM_COINTAINER:

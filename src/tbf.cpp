@@ -1198,3 +1198,8 @@ bool tbf_is_tfi_assigned(const struct gprs_rlcmac_tbf *tbf)
 {
 	return tbf->is_tfi_assigned();
 }
+
+uint8_t tbf_tfi(const struct gprs_rlcmac_tbf *tbf)
+{
+	return tbf->tfi();
+}

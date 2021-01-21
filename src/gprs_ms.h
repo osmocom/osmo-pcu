@@ -40,6 +40,7 @@ extern "C" {
 #include <osmocom/gsm/gsm48.h>
 
 #include "coding_scheme.h"
+#include <gsm_rlcmac.h>
 
 #include <stdint.h>
 #include <stddef.h>
@@ -100,6 +101,7 @@ struct GprsMs {
 	enum mcs_kind mode;
 
 	struct rate_ctr_group *ctrs;
+	struct nacc_fsm_ctx *nacc;
 };
 
 struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli);
@@ -139,6 +141,10 @@ static inline struct gprs_rlcmac_dl_tbf *ms_dl_tbf(const struct GprsMs *ms) {ret
 
 
 void ms_set_callback(struct GprsMs *ms, struct gpr_ms_callback *cb);
+
+int ms_nacc_start(struct GprsMs *ms, Packet_Cell_Change_Notification_t *notif);
+bool ms_nacc_rts(const struct GprsMs *ms);
+struct msgb *ms_nacc_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf);
 
 static inline bool ms_is_idle(const struct GprsMs *ms)
 {

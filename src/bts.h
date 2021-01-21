@@ -2,6 +2,7 @@
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
  * Copyright (C) 2013 by Holger Hans Peter Freyther
+ * Copyright (C) 2021 by sysmocom - s.f.m.c. GmbH <info@sysmocom.de
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -125,6 +126,9 @@ enum {
 	CTR_PKT_UL_ASSIGNMENT,
 	CTR_PKT_ACCESS_REJ,
 	CTR_PKT_DL_ASSIGNMENT,
+	CTR_PKT_CELL_CHG_NOTIFICATION,
+	CTR_PKT_CELL_CHG_CONTINUE,
+	CTR_PKT_NEIGH_CELL_DATA,
 	CTR_RLC_RECV_CONTROL,
 	CTR_PUA_POLL_TIMEDOUT,
 	CTR_PUA_POLL_FAILED,
@@ -337,6 +341,7 @@ void bts_set_max_cs_ul(struct gprs_rlcmac_bts *bts, uint8_t cs_ul);
 void bts_set_max_mcs_dl(struct gprs_rlcmac_bts *bts, uint8_t mcs_dl);
 void bts_set_max_mcs_ul(struct gprs_rlcmac_bts *bts, uint8_t mcs_ul);
 bool bts_cs_dl_is_supported(const struct gprs_rlcmac_bts *bts, enum CodingScheme cs);
+const struct llist_head* bts_ms_list(struct gprs_rlcmac_bts *bts);
 #ifdef __cplusplus
 }
 #endif

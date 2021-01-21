@@ -84,6 +84,7 @@ fi
 dnl checks for libraries
 PKG_CHECK_MODULES(LIBOSMOCORE, libosmocore >= 1.4.0)
 PKG_CHECK_MODULES(LIBOSMOVTY, libosmovty >= 1.4.0)
+PKG_CHECK_MODULES(LIBOSMOCTRL, libosmoctrl >= 1.4.0)
 PKG_CHECK_MODULES(LIBOSMOGSM, libosmogsm >= 1.4.0)
 PKG_CHECK_MODULES(LIBOSMOGB, libosmogb >= 1.4.0)
 

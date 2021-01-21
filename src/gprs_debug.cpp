@@ -119,6 +119,13 @@ static const struct log_info_cat default_categories[] = {
 		.loglevel = LOGL_NOTICE,
 		.enabled = 1,
 	},
+	[DNACC] = {
+		.name = "DNACC",
+		.color = "\033[1;37m",
+		.description = "Network Assisted Cell Change (NACC)",
+		.loglevel = LOGL_NOTICE,
+		.enabled = 1,
+	},
 	[DRIM] = {
 		.name = "DRIM",
 		.color = "\033[1;38m",

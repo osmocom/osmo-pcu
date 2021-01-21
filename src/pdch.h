@@ -139,6 +139,7 @@ private:
 	void rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *, uint32_t fn, struct pcu_l1_meas *meas);
 	void rcv_resource_request(Packet_Resource_Request_t *t, uint32_t fn, struct pcu_l1_meas *meas);
 	void rcv_measurement_report(Packet_Measurement_Report_t *t, uint32_t fn);
+	void rcv_cell_change_notification(Packet_Cell_Change_Notification_t *, uint32_t fn, struct pcu_l1_meas *meas);
 	gprs_rlcmac_tbf *tbf_from_list_by_tfi(
 		LListHead<gprs_rlcmac_tbf> *tbf_list, uint8_t tfi,
 		enum gprs_rlcmac_tbf_direction dir);

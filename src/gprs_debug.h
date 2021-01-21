@@ -46,6 +46,7 @@ enum {
 	DTBFUL,
 	DNS,
 	DPCU,
+	DNACC,
 	DRIM,
 	aDebug_LastEntry
 };

@@ -29,6 +29,8 @@
 #include "gprs_bssgp_pcu.h"
 #include "coding_scheme.h"
 
+#include "neigh_cache.h"
+
 #define LLC_CODEL_DISABLE 0
 #define LLC_CODEL_USE_DEFAULT (-1)
 
@@ -102,6 +104,9 @@ struct gprs_pcu {
 		uint32_t llc_discard_csec;
 		uint32_t llc_idle_ack_csec;
 		uint32_t llc_codel_interval_msec; /* 0=disabled, -1=use default interval */
+		/* Remote BSS resolution sevice (CTRL iface) */
+		char *neigh_ctrl_addr;
+		uint16_t neigh_ctrl_port;
 	} vty;
 
 	struct gsmtap_inst *gsmtap;
@@ -116,6 +121,9 @@ struct gprs_pcu {
 	struct gprs_bssgp_pcu bssgp;
 
 	struct osmo_tdef *T_defs; /* timers controlled by PCU */
+
+	struct neigh_cache *neigh_cache; /* ARFC+BSIC -> CGI PS cache */
+	struct si_cache *si_cache; /* ARFC+BSIC -> CGI PS cache */
 };
 
 

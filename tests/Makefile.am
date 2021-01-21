@@ -1,4 +1,4 @@
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/ -I$(top_srcdir)/include/
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOCTRL_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/ -I$(top_srcdir)/include/
 AM_LDFLAGS = -lrt -no-install
 
 check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest alloc/MslotTest tbf/TbfTest types/TypesTest ms/MsTest llist/LListTest llc/LlcTest codel/codel_test edge/EdgeTest bitcomp/BitcompTest fn/FnTest app_info/AppInfoTest
@@ -15,6 +15,7 @@ alloc_AllocTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
@@ -23,6 +24,7 @@ alloc_MslotTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
@@ -31,6 +33,7 @@ tbf_TbfTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 tbf_TbfTest_LDFLAGS = -Wl,--wrap=pcu_sock_send
@@ -38,6 +41,7 @@ tbf_TbfTest_LDFLAGS = -Wl,--wrap=pcu_sock_send
 bitcomp_BitcompTest_SOURCES = bitcomp/BitcompTest.cpp ../src/egprs_rlc_compression.cpp
 bitcomp_BitcompTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
@@ -46,6 +50,7 @@ edge_EdgeTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
@@ -56,6 +61,7 @@ emu_pcu_emu_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
@@ -64,6 +70,7 @@ types_TypesTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
@@ -72,6 +79,7 @@ ms_MsTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
@@ -83,6 +91,7 @@ llc_LlcTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
@@ -97,6 +106,7 @@ llist_LListTest_LDADD = \
 codel_codel_test_SOURCES = codel/codel_test.c
 codel_codel_test_LDADD = \
 	$(top_builddir)/src/libgprs.la \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
@@ -105,6 +115,7 @@ fn_FnTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
@@ -113,6 +124,7 @@ app_info_AppInfoTest_LDADD = \
 	$(top_builddir)/src/libgprs.la \
 	$(LIBOSMOGB_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 

@@ -1731,3 +1731,56 @@ void Encoding::write_packet_access_reject(
 	bitvec_write_field(dest, &wp, 5, 8);  //  WAIT_INDICATION value
 	bitvec_write_field(dest, &wp, 0, 1);  //  WAIT_INDICATION size in seconds
 }
+
+void write_packet_neighbour_cell_data(RlcMacDownlink_t *block,
+		bool tfi_is_dl, uint8_t tfi, uint8_t container_id,
+		uint8_t container_idx, PNCDContainer_t *container)
+{
+
+	block->PAYLOAD_TYPE = 0x1;  // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
+	block->RRBP         = 0;  // 0: N+13
+	block->SP           = 0; // RRBP field is valid
+	block->USF          = 0x0;  // Uplink state flag
+
+	block->u.Packet_Neighbour_Cell_Data.MESSAGE_TYPE = MT_PACKET_NEIGHBOUR_CELL_DATA;
+	block->u.Packet_Neighbour_Cell_Data.PAGE_MODE    = 0x0;  // Normal Paging
+
+	block->u.Packet_Neighbour_Cell_Data.Global_TFI.UnionType = tfi_is_dl; // 0=UPLINK TFI, 1=DL TFI
+	if (tfi_is_dl) {
+		block->u.Packet_Neighbour_Cell_Data.Global_TFI.u.DOWNLINK_TFI = tfi;
+	} else {
+		block->u.Packet_Neighbour_Cell_Data.Global_TFI.u.UPLINK_TFI = tfi;
+	}
+	block->u.Packet_Neighbour_Cell_Data.CONTAINER_ID = container_id;
+	block->u.Packet_Neighbour_Cell_Data.spare = 0;
+	block->u.Packet_Neighbour_Cell_Data.CONTAINER_INDEX = container_idx;
+	block->u.Packet_Neighbour_Cell_Data.Container = *container;
+}
+
+void write_packet_cell_change_continue(RlcMacDownlink_t *block,
+		bool tfi_is_dl, uint8_t tfi, bool exist_id,
+		uint16_t arfcn, uint8_t bsic, uint8_t container_id)
+{
+
+	block->PAYLOAD_TYPE = 0x1;  // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
+	block->RRBP         = 0;  // 0: N+13
+	block->SP           = 0; // RRBP field is valid
+	block->USF          = 0x0;  // Uplink state flag
+
+	block->u.Packet_Cell_Change_Continue.MESSAGE_TYPE = MT_PACKET_CELL_CHANGE_CONTINUE;
+	block->u.Packet_Cell_Change_Continue.PAGE_MODE    = 0x0;  // Normal Paging
+
+	block->u.Packet_Cell_Change_Continue.Global_TFI.UnionType = tfi_is_dl; // 0=UPLINK TFI, 1=DL TFI
+	if (tfi_is_dl) {
+		block->u.Packet_Cell_Change_Continue.Global_TFI.u.DOWNLINK_TFI = tfi;
+	} else {
+		block->u.Packet_Cell_Change_Continue.Global_TFI.u.UPLINK_TFI = tfi;
+	}
+
+	block->u.Packet_Cell_Change_Continue.Exist_ID = exist_id;
+	if (exist_id) {
+		block->u.Packet_Cell_Change_Continue.ARFCN = arfcn;
+		block->u.Packet_Cell_Change_Continue.BSIC = bsic;
+	}
+	block->u.Packet_Cell_Change_Continue.CONTAINER_ID = container_id;
+}

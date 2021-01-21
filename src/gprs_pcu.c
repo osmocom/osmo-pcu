@@ -22,6 +22,7 @@
 
 #include <osmocom/core/utils.h>
 #include <osmocom/core/linuxlist.h>
+#include <osmocom/ctrl/ports.h>
 
 #include "gprs_pcu.h"
 #include "bts.h"
@@ -40,12 +41,20 @@ static struct osmo_tdef T_defs_pcu[] = {
 	{ .T=0, .default_val=0, .unit=OSMO_TDEF_S, .desc=NULL, .val=0 } /* empty item at the end */
 };
 
+static int gprs_pcu_talloc_destructor(struct gprs_pcu *pcu)
+{
+	neigh_cache_free(pcu->neigh_cache);
+	si_cache_free(pcu->si_cache);
+	return 0;
+}
+
 struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 {
 	struct gprs_pcu *pcu;
 
 	pcu = (struct gprs_pcu *)talloc_zero(ctx, struct gprs_pcu);
 	OSMO_ASSERT(pcu);
+	talloc_set_destructor(pcu, gprs_pcu_talloc_destructor);
 
 	pcu->vty.fc_interval = 1;
 	pcu->vty.max_cs_ul = MAX_GPRS_CS;
@@ -97,11 +106,16 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	pcu->vty.ws_pdch = 0;
 	pcu->vty.llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
 	pcu->vty.llc_idle_ack_csec = 10;
+	pcu->vty.neigh_ctrl_addr = talloc_strdup(pcu, "127.0.0.1");
+	pcu->vty.neigh_ctrl_port = OSMO_CTRL_PORT_BSC_NEIGH;
 
 	pcu->T_defs = T_defs_pcu;
 	osmo_tdefs_reset(pcu->T_defs);
 
 	INIT_LLIST_HEAD(&pcu->bts_list);
+
+	pcu->neigh_cache = neigh_cache_alloc(pcu);
+	pcu->si_cache = si_cache_alloc(pcu);
 
 	return pcu;
 }
