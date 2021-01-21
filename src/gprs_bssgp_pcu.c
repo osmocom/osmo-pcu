@@ -20,6 +20,7 @@
 
 #include <gprs_rlcmac.h>
 #include <gprs_bssgp_pcu.h>
+#include <gprs_bssgp_rim.h>
 #include <pcu_l1_if.h>
 #include <gprs_debug.h>
 #include <bts.h>
@@ -419,10 +420,22 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	int rc = 0;
 	struct bssgp_bvc_ctx *bctx;
 
-	if (pdu_type == BSSGP_PDUT_STATUS)
+	switch (pdu_type) {
+	case BSSGP_PDUT_STATUS:
 		/* Pass the message to the generic BSSGP parser, which handles
 		 * STATUS and RESET messages in either direction. */
+	case BSSGP_PDUT_RAN_INFO:
+	case BSSGP_PDUT_RAN_INFO_REQ:
+	case BSSGP_PDUT_RAN_INFO_ACK:
+	case BSSGP_PDUT_RAN_INFO_ERROR:
+	case BSSGP_PDUT_RAN_INFO_APP_ERROR:
+		/* Also pass all RIM related messages to the generic BSSGP
+		 * parser so that it can deliver primitive to the RIM SAP
+		 * (SAP_BSSGP_RIM) */
 		return bssgp_rcvmsg(msg);
+	default:
+		break;
+	}
 
 	/* Identifiers from DOWN: NSEI, BVCI (both in msg->cb) */
 
@@ -552,6 +565,8 @@ int bssgp_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 		if (oph->primitive == PRIM_NM_STATUS)
 			handle_nm_status(bp);
 		break;
+	case SAP_BSSGP_RIM:
+		return handle_rim(bp);
 	default:
 		break;
 	}

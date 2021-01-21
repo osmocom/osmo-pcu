@@ -116,6 +116,16 @@ struct gprs_rlcmac_bts *gprs_pcu_get_bts_by_nr(struct gprs_pcu *pcu, uint8_t bts
 	return NULL;
 }
 
+struct gprs_rlcmac_bts *gprs_pcu_get_bts_by_cgi_ps(struct gprs_pcu *pcu, struct osmo_cell_global_id_ps *cgi_ps)
+{
+	struct gprs_rlcmac_bts *pos;
+	llist_for_each_entry(pos, &pcu->bts_list, list) {
+		if (memcmp(&pos->cgi_ps, cgi_ps, sizeof(*cgi_ps)) == 0)
+			return pos;
+	}
+	return NULL;
+}
+
 void gprs_pcu_set_initial_cs(struct gprs_pcu *pcu, uint8_t cs_dl, uint8_t cs_ul)
 {
 	struct gprs_rlcmac_bts *bts;

@@ -119,6 +119,13 @@ static const struct log_info_cat default_categories[] = {
 		.loglevel = LOGL_NOTICE,
 		.enabled = 1,
 	},
+	[DRIM] = {
+		.name = "DRIM",
+		.color = "\033[1;38m",
+		.description = "RAN Information Management (RIM)",
+		.loglevel = LOGL_NOTICE,
+		.enabled = 1,
+	},
 };
 
 static int filter_fn(const struct log_context *ctx,

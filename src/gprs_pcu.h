@@ -124,6 +124,7 @@ extern struct gprs_pcu *the_pcu;
 struct gprs_pcu *gprs_pcu_alloc(void *ctx);
 
 struct gprs_rlcmac_bts *gprs_pcu_get_bts_by_nr(struct gprs_pcu *pcu, uint8_t bts_nr);
+struct gprs_rlcmac_bts *gprs_pcu_get_bts_by_cgi_ps(struct gprs_pcu *pcu, struct osmo_cell_global_id_ps *cgi_ps);
 
 void gprs_pcu_set_initial_cs(struct gprs_pcu *pcu, uint8_t cs_dl, uint8_t cs_ul);
 void gprs_pcu_set_initial_mcs(struct gprs_pcu *pcu, uint8_t mcs_dl, uint8_t mcs_ul);
