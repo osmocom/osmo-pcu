@@ -120,7 +120,7 @@ struct gprs_rlcmac_bts *gprs_pcu_get_bts_by_cgi_ps(struct gprs_pcu *pcu, struct 
 {
 	struct gprs_rlcmac_bts *pos;
 	llist_for_each_entry(pos, &pcu->bts_list, list) {
-		if (memcmp(&pos->cgi_ps, cgi_ps, sizeof(*cgi_ps)) == 0)
+		if (osmo_cgi_ps_cmp(&pos->cgi_ps, cgi_ps) == 0)
 			return pos;
 	}
 	return NULL;
