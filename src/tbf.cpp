@@ -196,16 +196,16 @@ enum CodingScheme gprs_rlcmac_tbf::current_cs() const
 	enum CodingScheme cs;
 
 	if (direction == GPRS_RLCMAC_UL_TBF)
-		cs = m_ms ? ms_current_cs_ul(m_ms) : UNKNOWN;
+		cs = ms_current_cs_ul(m_ms);
 	else
-		cs = m_ms ? ms_current_cs_dl(m_ms) : UNKNOWN;
+		cs = ms_current_cs_dl(m_ms);
 
 	return cs;
 }
 
 gprs_llc_queue *gprs_rlcmac_tbf::llc_queue()
 {
-	return m_ms ? ms_llc_queue(m_ms) : NULL;
+	return ms_llc_queue(m_ms);
 }
 
 const gprs_llc_queue *gprs_rlcmac_tbf::llc_queue() const
