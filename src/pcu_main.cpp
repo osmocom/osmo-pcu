@@ -270,7 +270,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 	bssgp_set_bssgp_callback(gprs_gp_send_cb, pcu->nsi);
-	gprs_ns2_vty_init(pcu->nsi, NULL);
+	gprs_ns2_vty_init(pcu->nsi);
 
 	rc = vty_read_config_file(config_file, NULL);
 	if (rc < 0 && config_given) {
@@ -281,8 +281,6 @@ int main(int argc, char *argv[])
 	if (rc < 0)
 		fprintf(stderr, "No config file: '%s' Using default config.\n",
 			config_file);
-
-	gprs_ns2_vty_create();
 
 	rc = telnet_init_dynif(tall_pcu_ctx, NULL, vty_get_bind_addr(),
 			       OSMO_VTY_PORT_PCU);
