@@ -778,13 +778,46 @@ void ms_update_l1_meas(struct GprsMs *ms, const struct pcu_l1_meas *meas)
 	}
 }
 
-enum CodingScheme ms_current_cs_dl(const struct GprsMs *ms)
+/* req_mcs_kind acts as a set filter, where EGPRS means any and GPRS is the most restrictive */
+enum CodingScheme ms_current_cs_dl(const struct GprsMs *ms, enum mcs_kind req_mcs_kind)
 {
-	enum CodingScheme cs = ms->current_cs_dl;
+	enum CodingScheme orig_cs = ms->current_cs_dl;
+	struct gprs_rlcmac_bts *bts = ms->bts;
 	size_t unencoded_octets;
+	enum CodingScheme cs;
 
-	if (!ms->bts)
-		return cs;
+	/* It could be that a TBF requests a GPRS CS despite the MS currently
+	   being upgraded to EGPRS (hence reporting MCS). That could happen
+	   because the TBF was created early in the process where we didn't have
+	   yet enough information about the MS, and only AFTER it was created we
+	   upgraded the MS to be EGPRS capable.
+	   As a result, when  the MS is queried for the target CS here, we could be
+	   returning an MCS despite the current TBF being established as GPRS,
+	   but we rather stick to the TBF type we assigned to the MS rather than
+	   magically sending EGPRS data blocks to a GPRS TBF.
+	   It could also be that the caller requests specific MCS kind
+	   explicitly too due to scheduling restrictions (GPRS+EGPRS multiplexing). */
+	if (req_mcs_kind == EGPRS_GMSK && mcs_is_edge(orig_cs) && orig_cs > MCS4) {
+		cs = bts_cs_dl_is_supported(bts, MCS4) ? MCS4 :
+		     bts_cs_dl_is_supported(bts, MCS3) ? MCS3 :
+		     bts_cs_dl_is_supported(bts, MCS2) ? MCS2 :
+		     MCS1;
+	} else if (req_mcs_kind == GPRS && mcs_is_edge(orig_cs)) { /* GPRS */
+			int i;
+			cs = orig_cs > MCS4 ? MCS4 : orig_cs;
+			cs -= (MCS1 - CS1); /* MCSx -> CSx */
+			/* Find suitable CS starting from equivalent MCS which is supported by BTS: */
+			for (i = mcs_chan_code(cs); !bts_cs_dl_is_supported(bts, CS1 + i); i--);
+			OSMO_ASSERT(i >= 0 && i <= 3); /* CS1 is always supported */
+			cs = CS1 + i;
+	} else {
+		cs = orig_cs;
+	}
+
+	if (orig_cs != cs)
+		LOGPMS(ms, DRLCMACDL, LOGL_INFO, "MS (mode=%s) suggests transmitting "
+			"DL %s, downgrade to %s in order to match TBF & scheduler requirements\n",
+			mode_name(ms_mode(ms)), mcs_name(orig_cs), mcs_name(cs));
 
 	unencoded_octets = llc_queue_octets(&ms->llc_queue);
 

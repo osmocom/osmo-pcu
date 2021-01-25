@@ -114,7 +114,7 @@ void ms_set_ms_class(struct GprsMs *ms, uint8_t ms_class_);
 void ms_set_egprs_ms_class(struct GprsMs *ms, uint8_t ms_class_);
 void ms_set_ta(struct GprsMs *ms, uint8_t ta_);
 
-enum CodingScheme ms_current_cs_dl(const struct GprsMs *ms);
+enum CodingScheme ms_current_cs_dl(const struct GprsMs *ms, enum mcs_kind req_mcs_kind);
 enum CodingScheme ms_max_cs_ul(const struct GprsMs *ms);
 enum CodingScheme ms_max_cs_dl(const struct GprsMs *ms);
 void ms_set_current_cs_dl(struct GprsMs *ms, enum CodingScheme scheme);

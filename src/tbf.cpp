@@ -194,11 +194,12 @@ uint8_t gprs_rlcmac_tbf::ms_class() const
 enum CodingScheme gprs_rlcmac_tbf::current_cs() const
 {
 	enum CodingScheme cs;
+	enum mcs_kind req_mcs_kind = is_egprs_enabled() ? EGPRS : GPRS;
 
 	if (direction == GPRS_RLCMAC_UL_TBF)
 		cs = ms_current_cs_ul(m_ms);
 	else
-		cs = ms_current_cs_dl(m_ms);
+		cs = ms_current_cs_dl(m_ms, req_mcs_kind);
 
 	return cs;
 }

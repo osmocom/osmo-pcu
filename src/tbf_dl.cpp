@@ -448,29 +448,24 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 {
 	int bsn;
 	int data_len2, force_data_len = -1;
-	enum CodingScheme force_cs = UNKNOWN;
+	enum CodingScheme tx_cs;
+
+	/* Scheduler may be fine with sending any kind of data, but if
+	   the selected TBF is GPRS-only, then let's filter out EGPRS
+	   here */
+	if (!is_egprs_enabled())
+		req_mcs_kind = GPRS;
 
 	/* search for a nacked or resend marked bsn */
 	bsn = m_window.resend_needed();
 
 	if (previous_bsn >= 0) {
-		force_cs = m_rlc.block(previous_bsn)->cs_current_trans;
-		if (!mcs_is_edge(force_cs))
+		tx_cs = m_rlc.block(previous_bsn)->cs_current_trans;
+		if (!mcs_is_edge(tx_cs))
 			return -1;
 		force_data_len = m_rlc.block(previous_bsn)->len;
-	} else if (bsn < 0 && is_egprs_enabled() && req_mcs_kind == EGPRS_GMSK) {
-		/* New data to be sent for EGPRS TBF but we are required to downgrade to
-		 * MCS1-4, because USF for GPRS-only MS will be sent */
-		force_cs = ms_current_cs_dl(m_ms);
-		if (force_cs > MCS4) {
-			force_cs = bts_cs_dl_is_supported(bts, MCS4) ? MCS4 :
-				   bts_cs_dl_is_supported(bts, MCS3) ? MCS3 :
-				   bts_cs_dl_is_supported(bts, MCS2) ? MCS2 :
-				   MCS1;
-			LOGPTBFDL(this, LOGL_DEBUG,
-				  "Force downgrading DL %s -> %s due to USF for GPRS-only MS\n",
-				  mcs_name(ms_current_cs_dl(m_ms)), mcs_name(force_cs));
-		}
+	} else {
+		tx_cs = ms_current_cs_dl(ms(), req_mcs_kind);
 	}
 
 	if (bsn >= 0) {
@@ -484,15 +479,14 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 
 		if (is_egprs_enabled()) {
 			/* Table 8.1.1.2 and Table 8.1.1.1 of 44.060 */
-			m_rlc.block(bsn)->cs_current_trans = get_retx_mcs(m_rlc.block(bsn)->cs_init,
-									  ms_current_cs_dl(ms()),
+			m_rlc.block(bsn)->cs_current_trans = get_retx_mcs(m_rlc.block(bsn)->cs_init, tx_cs,
 									  bts->pcu->vty.dl_arq_type == EGPRS_ARQ1);
 
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "initial_cs_dl(%s) last_mcs(%s) demanded_mcs(%s) cs_trans(%s) arq_type(%d) bsn(%d)\n",
 				  mcs_name(m_rlc.block(bsn)->cs_init),
 				  mcs_name(m_rlc.block(bsn)->cs_last),
-				  mcs_name(ms_current_cs_dl(ms())),
+				  mcs_name(tx_cs),
 				  mcs_name(m_rlc.block(bsn)->cs_current_trans),
 				  the_pcu->vty.dl_arq_type, bsn);
 
@@ -537,14 +531,12 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 			return take_next_bsn(fn, previous_bsn, req_mcs_kind, may_combine);
 	} else if (have_data()) {
 		/* The window has space left, generate new bsn */
-		enum CodingScheme new_cs;
-		new_cs = force_cs ? force_cs : current_cs();
 		LOGPTBFDL(this, LOGL_DEBUG,
 			  "Sending new block at BSN %d, CS=%s%s\n",
-			  m_window.v_s(), mcs_name(new_cs),
-			  force_cs ? " (forced)" : "");
+			  m_window.v_s(), mcs_name(tx_cs),
+			  force_data_len != -1 ? " (forced)" : "");
 
-		bsn = create_new_bsn(fn, new_cs);
+		bsn = create_new_bsn(fn, tx_cs);
 	} else if (bts->pcu->vty.dl_tbf_preemptive_retransmission && !m_window.window_empty()) {
 		/* The window contains unacked packages, but not acked.
 		 * Mark unacked bsns as RESEND */
@@ -558,8 +550,8 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		/* Nothing left to send, create dummy LLC commands */
 		LOGPTBFDL(this, LOGL_DEBUG,
 			  "Sending new dummy block at BSN %d, CS=%s\n",
-			  m_window.v_s(), mcs_name(current_cs()));
-		bsn = create_new_bsn(fn, current_cs());
+			  m_window.v_s(), mcs_name(tx_cs));
+		bsn = create_new_bsn(fn, tx_cs);
 		/* Don't send a second block, so don't set cs_current_trans */
 	}
 

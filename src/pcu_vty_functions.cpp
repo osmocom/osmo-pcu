@@ -133,7 +133,7 @@ static int show_ms(struct vty *vty, GprsMs *ms)
 	vty_out(vty, "  Timing advance (TA):    %d%s", ms_ta(ms), VTY_NEWLINE);
 	vty_out(vty, "  Coding scheme uplink:   %s%s", mcs_name(ms_current_cs_ul(ms)),
 		VTY_NEWLINE);
-	vty_out(vty, "  Coding scheme downlink: %s%s", mcs_name(ms_current_cs_dl(ms)),
+	vty_out(vty, "  Coding scheme downlink: %s%s", mcs_name(ms_current_cs_dl(ms, ms_mode(ms))),
 		VTY_NEWLINE);
 	vty_out(vty, "  Mode:                   %s%s", mode_name(ms_mode(ms)), VTY_NEWLINE);
 	vty_out(vty, "  MS class:               %d%s", ms_ms_class(ms), VTY_NEWLINE);

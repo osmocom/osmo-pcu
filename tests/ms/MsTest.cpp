@@ -522,11 +522,11 @@ static void test_ms_cs_selection()
 
 	OSMO_ASSERT(!ms_is_idle(ms));
 
-	OSMO_ASSERT(mcs_chan_code(ms_current_cs_dl(ms)) == 3);
+	OSMO_ASSERT(mcs_chan_code(ms_current_cs_dl(ms, ms_mode(ms))) == 3);
 
 	the_pcu->vty.cs_downgrade_threshold = 200;
 
-	OSMO_ASSERT(mcs_chan_code(ms_current_cs_dl(ms)) == 2);
+	OSMO_ASSERT(mcs_chan_code(ms_current_cs_dl(ms, ms_mode(ms))) == 2);
 
 	talloc_free(dl_tbf);
 	talloc_free(bts);
@@ -536,7 +536,7 @@ static void test_ms_cs_selection()
 static void dump_ms(const GprsMs *ms, const char *pref)
 {
 	printf("%s MS DL %s/%s, UL %s/%s, mode %s, <%s>\n", pref,
-	       mcs_name(ms_current_cs_dl(ms)), mcs_name(ms_max_cs_dl(ms)),
+	       mcs_name(ms_current_cs_dl(ms, ms_mode(ms))), mcs_name(ms_max_cs_dl(ms)),
 	       mcs_name(ms_current_cs_ul(ms)), mcs_name(ms_max_cs_ul(ms)),
 	       mode_name(ms_mode(ms)),
 	       ms_is_idle(ms) ? "IDLE" : "ACTIVE");
