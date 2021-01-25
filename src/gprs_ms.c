@@ -259,6 +259,19 @@ void ms_set_mode(struct GprsMs *ms, enum mcs_kind mode)
 		break;
 
 	case EGPRS_GMSK:
+		if (!mcs_is_edge_gmsk(ms->current_cs_ul)) {
+			ms->current_cs_ul = mcs_get_egprs_by_num(
+				ms->bts->initial_mcs_ul);
+			if (!mcs_is_valid(ms->current_cs_ul))
+				ms->current_cs_ul = MCS1;
+		}
+		if (!mcs_is_edge_gmsk(ms->current_cs_dl)) {
+			ms->current_cs_dl = mcs_get_egprs_by_num(
+				ms->bts->initial_mcs_dl);
+			if (!mcs_is_valid(ms->current_cs_dl))
+				ms->current_cs_dl = MCS1;
+		}
+		break;
 	case EGPRS:
 		if (!mcs_is_edge(ms->current_cs_ul)) {
 			ms->current_cs_ul = mcs_get_egprs_by_num(
