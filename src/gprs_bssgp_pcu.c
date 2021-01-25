@@ -576,10 +576,10 @@ int bssgp_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 void gprs_ns_prim_status_cb(struct osmo_gprs_ns2_prim *nsp)
 {
 	switch (nsp->u.status.cause) {
-	case NS_AFF_CAUSE_SNS_CONFIGURED:
+	case GPRS_NS2_AFF_CAUSE_SNS_CONFIGURED:
 		LOGP(DPCU, LOGL_NOTICE, "NS-NSE %d SNS configured.\n", nsp->nsei);
 		break;
-	case NS_AFF_CAUSE_RECOVERY:
+	case GPRS_NS2_AFF_CAUSE_RECOVERY:
 		LOGP(DPCU, LOGL_NOTICE, "NS-NSE %d became available\n", nsp->nsei);
 		if (!the_pcu->bssgp.nsvc_unblocked) {
 			the_pcu->bssgp.bvc_sig_reset = 0;
@@ -588,7 +588,7 @@ void gprs_ns_prim_status_cb(struct osmo_gprs_ns2_prim *nsp)
 			bvc_timeout(NULL);
 		}
 		break;
-	case NS_AFF_CAUSE_FAILURE:
+	case GPRS_NS2_AFF_CAUSE_FAILURE:
 		LOGP(DPCU, LOGL_NOTICE, "NS-NSE %d became unavailable\n", nsp->nsei);
 		if (the_pcu->bssgp.nsvc_unblocked) {
 			the_pcu->bssgp.nsvc_unblocked = 0;
@@ -598,7 +598,7 @@ void gprs_ns_prim_status_cb(struct osmo_gprs_ns2_prim *nsp)
 			the_pcu->bssgp.bvc_unblocked = 0;
 		}
 		break;
-	case NS_AFF_CAUSE_SNS_FAILURE:
+	case GPRS_NS2_AFF_CAUSE_SNS_FAILURE:
 		break;
 	default:
 		LOGP(DPCU, LOGL_DEBUG,
@@ -628,7 +628,7 @@ int gprs_ns_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 	}
 
 	switch (oph->primitive) {
-	case PRIM_NS_UNIT_DATA:
+	case GPRS_NS2_PRIM_UNIT_DATA:
 		/* hand the message into the BSSGP implementation */
 		/* add required msg fields for Gb layer */
 		msgb_bssgph(oph->msg) = oph->msg->l3h;
@@ -636,10 +636,10 @@ int gprs_ns_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 		msgb_nsei(oph->msg) = nsp->nsei;
 		rc = gprs_bssgp_pcu_rcvmsg(oph->msg);
 		break;
-	case PRIM_NS_STATUS:
+	case GPRS_NS2_PRIM_STATUS:
 		gprs_ns_prim_status_cb(nsp);
 		break;
-	case PRIM_NS_CONGESTION:
+	case GPRS_NS2_PRIM_CONGESTION:
 		break;
 	default:
 		LOGP(DPCU, LOGL_DEBUG,
@@ -663,7 +663,7 @@ int gprs_gp_send_cb(void *ctx, struct msgb *msg)
 	struct osmo_gprs_ns2_prim nsp = {};
 	nsp.nsei = msgb_nsei(msg);
 	nsp.bvci = msgb_bvci(msg);
-	osmo_prim_init(&nsp.oph, SAP_NS, PRIM_NS_UNIT_DATA,
+	osmo_prim_init(&nsp.oph, SAP_NS, GPRS_NS2_PRIM_UNIT_DATA,
 			PRIM_OP_REQUEST, msg);
 	return gprs_ns2_recv_prim(nsi, &nsp.oph);
 }
@@ -1029,7 +1029,7 @@ static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
 			continue;
 
 		/* FIXME: for SNS we just use the first successful NS-VC instead of all for the initial connect */
-		if (the_pcu->vty.ns_dialect == NS2_DIALECT_SNS) {
+		if (the_pcu->vty.ns_dialect == GPRS_NS2_DIALECT_SNS) {
 			rc = gprs_ns2_sns_add_endpoint(bts->nse, &remote[i]);
 			if (!rc)
 				return rc;
@@ -1099,7 +1099,7 @@ int gprs_ns_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
 		gprs_ns2_free_nses(the_pcu->nsi);
 		gprs_ns2_free_binds(the_pcu->nsi);
 		rc = ns_create_nsvc(bts, nsei, local, remote, nsvci, valid);
-	} else if (the_pcu->vty.ns_dialect == NS2_DIALECT_SNS) {
+	} else if (the_pcu->vty.ns_dialect == GPRS_NS2_DIALECT_SNS) {
 		/* SNS: check if the initial nsvc is the same, if not recreate it */
 		const struct osmo_sockaddr *initial = gprs_ns2_nse_sns_remote(bts->nse);
 		unsigned int i;
