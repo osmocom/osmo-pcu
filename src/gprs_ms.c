@@ -242,9 +242,6 @@ void ms_set_mode(struct GprsMs *ms, enum mcs_kind mode)
 {
 	ms->mode = mode;
 
-	if (!ms->bts)
-		return;
-
 	switch (ms->mode) {
 	case GPRS:
 		if (!mcs_is_gprs(ms->current_cs_ul)) {
