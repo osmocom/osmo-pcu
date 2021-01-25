@@ -341,7 +341,7 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		pdch->next_dl_tfi = (prio_tfi + 1) & 31;
 		/* generate DL data block */
 		msg = prio_tbf->create_dl_acked_block(fn, ts, req_mcs_kind);
-		*is_egprs = ms_mode(prio_tbf->ms()) != GPRS;
+		*is_egprs = prio_tbf->is_egprs_enabled();
 	}
 
 	return msg;
