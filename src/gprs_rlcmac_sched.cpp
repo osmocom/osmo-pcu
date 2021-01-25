@@ -275,6 +275,31 @@ static inline enum tbf_dl_prio tbf_compute_priority(const struct gprs_rlcmac_bts
 	return DL_PRIO_NONE;
 }
 
+/* Check if next data block of a TBF can be encoded in GMSK [(M)CS1-4]. */
+static bool can_produce_gmsk_data_block_next(struct gprs_rlcmac_dl_tbf *tbf, enum tbf_dl_prio prio)
+{
+	const gprs_rlc_dl_window *w;
+
+	/* GPRS TBFs can always send GMSK */
+	if (!tbf->is_egprs_enabled())
+		return true;
+
+	switch (prio) {
+	case DL_PRIO_CONTROL:
+		/* Control blocks are always CS-1 */
+		return true;
+	case DL_PRIO_NEW_DATA:
+		/* We can send any new data (no block generated yet) using any
+		 * MCS. However, we don't (yet) support resegmenting already
+		 * sent blocks (NACKed blocks in this case) into lower MCS of
+		 * the same family. See OS#4966 */
+		w = static_cast<gprs_rlc_dl_window *>(tbf->window());
+		return w->resend_needed() < 0;
+	default:
+		return false;
+	}
+}
+
 static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		    uint8_t trx, uint8_t ts, uint32_t fn,
 		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch, enum mcs_kind req_mcs_kind, bool *is_egprs)
@@ -319,9 +344,9 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		/* If a GPRS (CS1-4/MCS1-4) Dl block is required, downgrade MCS
 		 * below instead of skipping. However, downgrade can only be
 		 * done on new data BSNs (not yet sent) and control blocks. */
-		if (req_mcs_kind == EGPRS_GMSK && tbf->is_egprs_enabled() &&
-		    (prio !=DL_PRIO_CONTROL && prio != DL_PRIO_NEW_DATA)) {
-			LOGP(DRLCMACSCHED, LOGL_DEBUG, "Cannot downgrade EGPRS TBF with prio %d\n", prio);
+		if (req_mcs_kind == EGPRS_GMSK && !can_produce_gmsk_data_block_next(tbf, prio)) {
+			LOGP(DRLCMACSCHED, LOGL_DEBUG, "%s Cannot downgrade EGPRS TBF with prio %d\n",
+			     tbf_name(tbf), prio);
 			continue;
 		}
 
