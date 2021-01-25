@@ -628,7 +628,7 @@ void Encoding::write_packet_uplink_assignment(
 	if (!use_egprs) {
 		PUA_GPRS_t *gprs = &pua->u.PUA_GPRS_Struct;
 
-		/* Use the commanded CS/MSC value during the content resolution */
+		/* Use the commanded CS/MCS value during the content resolution */
 		gprs->CHANNEL_CODING_COMMAND    = mcs_chan_code(tbf->current_cs());
 		gprs->TLLI_BLOCK_CHANNEL_CODING = 0x01;  // ^^^
 
@@ -645,7 +645,7 @@ void Encoding::write_packet_uplink_assignment(
 		PUA_EGPRS_00_t *egprs = &pua->u.PUA_EGPRS_Struct.u.PUA_EGPRS_00;
 		pua->u.PUA_EGPRS_Struct.UnionType = 0x00;  // 'Normal' EGPRS, not EGPRS2
 
-		/* Use the commanded CS/MSC value during the content resolution */
+		/* Use the commanded CS/MCS value during the content resolution */
 		egprs->EGPRS_CHANNEL_CODING_COMMAND = mcs_chan_code(tbf->current_cs());
 		egprs->TLLI_BLOCK_CHANNEL_CODING    = 0x01;  // ^^^
 		egprs->RESEGMENT                    = 0x01;  // Enable segmentation
