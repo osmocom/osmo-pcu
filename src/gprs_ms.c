@@ -632,6 +632,7 @@ void ms_update_error_rate(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, int er
 
 enum CodingScheme ms_max_cs_ul(const struct GprsMs *ms)
 {
+	enum CodingScheme cs;
 	OSMO_ASSERT(ms->bts != NULL);
 
 	if (mcs_is_gprs(ms->current_cs_ul)) {
@@ -642,15 +643,10 @@ enum CodingScheme ms_max_cs_ul(const struct GprsMs *ms)
 		return mcs_get_gprs_by_num(bts_max_cs_ul(ms->bts));
 	}
 
-	if (!mcs_is_edge(ms->current_cs_ul))
-		return UNKNOWN;
-
-	if (bts_max_mcs_ul(ms->bts))
-		return mcs_get_egprs_by_num(bts_max_mcs_ul(ms->bts));
-	else if (bts_max_cs_ul(ms->bts))
-		return mcs_get_gprs_by_num(bts_max_cs_ul(ms->bts));
-
-	return MCS4;
+	cs = mcs_get_egprs_by_num(bts_max_mcs_ul(ms->bts));
+	if (ms_mode(ms) == EGPRS_GMSK && cs > MCS4)
+		cs = MCS4;
+	return cs;
 }
 
 void ms_set_current_cs_dl(struct GprsMs *ms, enum CodingScheme scheme)
@@ -660,6 +656,7 @@ void ms_set_current_cs_dl(struct GprsMs *ms, enum CodingScheme scheme)
 
 enum CodingScheme ms_max_cs_dl(const struct GprsMs *ms)
 {
+	enum CodingScheme cs;
 	OSMO_ASSERT(ms->bts != NULL);
 
 	if (mcs_is_gprs(ms->current_cs_dl)) {
@@ -670,15 +667,10 @@ enum CodingScheme ms_max_cs_dl(const struct GprsMs *ms)
 		return mcs_get_gprs_by_num(bts_max_cs_dl(ms->bts));
 	}
 
-	if (!mcs_is_edge(ms->current_cs_dl))
-		return UNKNOWN;
-
-	if (bts_max_mcs_dl(ms->bts))
-		return mcs_get_egprs_by_num(bts_max_mcs_dl(ms->bts));
-	else if (bts_max_cs_dl(ms->bts))
-		return mcs_get_gprs_by_num(bts_max_cs_dl(ms->bts));
-
-	return MCS4;
+	cs = mcs_get_egprs_by_num(bts_max_mcs_dl(ms->bts));
+	if (ms_mode(ms) == EGPRS_GMSK && cs > MCS4)
+		cs = MCS4;
+	return cs;
 }
 
 void ms_update_cs_ul(struct GprsMs *ms, const struct pcu_l1_meas *meas)

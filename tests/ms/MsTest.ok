@@ -26,8 +26,8 @@
 2: after mode set    MS DL MCS-1/MCS-9, UL MCS-1/MCS-9, mode EGPRS, <ACTIVE>
 1: after MCS set     MS DL MCS-7/MCS-9, UL MCS-1/MCS-9, mode EGPRS, <IDLE>
 2: after MCS set     MS DL MCS-8/MCS-9, UL MCS-1/MCS-9, mode EGPRS, <ACTIVE>
-1: after mode set    MS DL MCS-1/MCS-9, UL MCS-1/MCS-9, mode EGPRS_GMSK-only, <IDLE>
-2: after mode set    MS DL MCS-1/MCS-9, UL MCS-1/MCS-9, mode EGPRS_GMSK-only, <ACTIVE>
+1: after mode set    MS DL MCS-1/MCS-4, UL MCS-1/MCS-4, mode EGPRS_GMSK-only, <IDLE>
+2: after mode set    MS DL MCS-1/MCS-4, UL MCS-1/MCS-4, mode EGPRS_GMSK-only, <ACTIVE>
 1: after mode set    MS DL CS-4/CS-4, UL CS-1/CS-4, mode GPRS, <IDLE>
 2: after mode set    MS DL CS-4/CS-4, UL CS-1/CS-4, mode GPRS, <ACTIVE>
 === end test_ms_mcs_mode ===
