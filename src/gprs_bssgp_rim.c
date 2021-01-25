@@ -23,6 +23,9 @@
 #include <osmocom/gsm/tlv.h>
 #include <osmocom/gprs/gprs_ns.h>
 #include <osmocom/core/prim.h>
+#include <pcu_l1_if.h>
+#include <gprs_rlcmac.h>
+#include <bts.h>
 
 #include "gprs_debug.h"
 #include "gprs_pcu.h"
@@ -52,6 +55,59 @@ static void mirror_rim_routing_info(struct bssgp_ran_information_pdu *to_pdu,
 {
 	memcpy(&to_pdu->routing_info_dest, &from_pdu->routing_info_src, sizeof(to_pdu->routing_info_dest));
 	memcpy(&to_pdu->routing_info_src, &from_pdu->routing_info_dest, sizeof(to_pdu->routing_info_src));
+}
+
+/* Fill NACC application container with data (cell identifier, sysinfo) */
+#define SI_HDR_LEN 2
+static void fill_app_cont_nacc(struct bssgp_ran_inf_app_cont_nacc *app_cont, const struct gprs_rlcmac_bts *bts)
+{
+	struct bssgp_bvc_ctx *bctx = the_pcu->bssgp.bctx;
+
+	gprs_ra_id_ci_to_cgi_ps(&app_cont->reprt_cell, &bctx->ra_id, bctx->cell_id);
+	app_cont->num_si = 0;
+
+	/* Note: The BTS struct stores the system information including its pseudo header. The RIM application
+	 * container defines the system information without pseudo header, so we need to chop it off. */
+
+	if (bts->si1_is_set) {
+		app_cont->si[app_cont->num_si] = bts->si1 + SI_HDR_LEN;
+		app_cont->num_si++;
+	}
+
+	if (bts->si3_is_set) {
+		app_cont->si[app_cont->num_si] = bts->si3 + SI_HDR_LEN;
+		app_cont->num_si++;
+	}
+
+	if (bts->si13_is_set) {
+		app_cont->si[app_cont->num_si] = bts->si13 + SI_HDR_LEN;
+		app_cont->num_si++;
+	}
+
+	/* Note: It is possible that the resulting PDU will not contain any system information, even if this is
+	 * an unlikely case since the BTS immediately updates the system information after startup. The
+	 * specification permits to send zero system information, see also: 3GPP TS 48.018 section 11.3.63.2.1 */
+}
+
+/* Format a RAN INFORMATION PDU that contains the requested system information */
+static void format_response_pdu(struct bssgp_ran_information_pdu *resp_pdu, struct bssgp_ran_information_pdu *req_pdu,
+				const struct gprs_rlcmac_bts *bts)
+{
+	memset(resp_pdu, 0, sizeof(*resp_pdu));
+	mirror_rim_routing_info(resp_pdu, req_pdu);
+
+	resp_pdu->decoded.rim_cont = (struct bssgp_ran_inf_rim_cont) {
+		.app_id = BSSGP_RAN_INF_APP_ID_NACC,
+		.seq_num = 1,	/* single report has only one message in response */
+		.pdu_ind = {
+			    .pdu_type_ext = RIM_PDU_TYPE_SING_REP,
+			     },
+		.prot_ver = 1,
+	};
+
+	fill_app_cont_nacc(&resp_pdu->decoded.rim_cont.u.app_cont_nacc, bts);
+	resp_pdu->decoded_present = true;
+	resp_pdu->rim_cont_iei = BSSGP_IE_RI_RIM_CONTAINER;
 }
 
 /* Format a RAN INFORMATION ERROR PDU */
@@ -167,6 +223,7 @@ int handle_rim(struct osmo_bssgp_prim *bp)
 	struct bssgp_ran_information_pdu resp_pdu;
 	struct osmo_cell_global_id_ps dst_addr;
 	struct gprs_rlcmac_bts *bts;
+	int rc;
 
 	OSMO_ASSERT (bp->oph.sap == SAP_BSSGP_RIM);
 
@@ -210,7 +267,15 @@ int handle_rim(struct osmo_bssgp_prim *bp)
 	/* Handle incoming RIM container */
 	switch (pdu->rim_cont_iei) {
 	case BSSGP_IE_RI_REQ_RIM_CONTAINER:
-		LOGPRIM(nsei, LOGL_NOTICE, "Responding to RAN INFORMATION REQUEST not yet implemented!\n");
+		rc = osmo_cgi_ps_cmp(&dst_addr, &pdu->decoded.req_rim_cont.u.app_cont_nacc.reprt_cell);
+		if (rc != 0) {
+			LOGPRIM(nsei, LOGL_ERROR, "reporting cell in RIM application container does not match destination cell in RIM routing info -- rejected.\n");
+			format_response_pdu_err(&resp_pdu, pdu);
+		} else {
+			LOGPRIM(nsei, LOGL_INFO, "Responding to RAN INFORMATION REQUEST ...\n");
+			format_response_pdu(&resp_pdu, pdu, bts);
+		}
+		bssgp_tx_rim(&resp_pdu, nsei);
 		break;
 	case BSSGP_IE_RI_RIM_CONTAINER:
 		return handle_ran_info_response(pdu, bts);

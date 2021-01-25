@@ -42,6 +42,7 @@ extern "C" {
 #include <osmocom/gprs/gprs_ns2.h>
 #include <osmocom/gsm/l1sap.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
+#include <osmocom/gsm/sysinfo.h>
 }
 
 #include <gprs_rlcmac.h>
@@ -290,21 +291,69 @@ int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, uint8_t trx_no, uint8_t t
 
 static int pcu_rx_data_ind_bcch(struct gprs_rlcmac_bts *bts, uint8_t *data, uint8_t len)
 {
-	if (len == 0) {
+	switch (len) {
+	case 0:
+		/* Due to historical reasons also accept a completely empty message as
+		 * revoke command for SI13. */
+		LOGP(DL1IF, LOGL_ERROR,
+		     "Received PCU data indication that contains no data -- Revoked SI13.\n");
 		bts->si13_is_set = false;
-		LOGP(DL1IF, LOGL_INFO, "Received PCU data indication with empty SI13: cache cleaned\n");
-		return 0;
-	}
 
-	if (len != GSM_MACBLOCK_LEN) {
-		LOGP(DL1IF, LOGL_ERROR, "Received PCU data indication with SI13 with unexpected length %u\n", len);
+		return 0;
+	case 1:
+		/* Revoke SI, type is identified by a single byte which is coded after
+		 * enum osmo_sysinfo_type. */
+		switch (data[0]) {
+		case SYSINFO_TYPE_1:
+			bts->si1_is_set = false;
+			break;
+		case SYSINFO_TYPE_3:
+			bts->si3_is_set = false;
+			break;
+		case SYSINFO_TYPE_13:
+			bts->si13_is_set = false;
+			break;
+		default:
+			LOGP(DL1IF, LOGL_ERROR,
+			     "Received PCU data indication that contains an unsupported system information identifier (%02x,OSMO) -- ignored.\n", data[0]);
+			return -EINVAL;
+		}
+		LOGP(DPCU, LOGL_DEBUG,
+		     "Received PCU data indication: Revoked SI%s\n",
+		     get_value_string(osmo_sitype_strs, data[0]));
+		return 0;
+	case GSM_MACBLOCK_LEN:
+		/* Update SI, type is identified by the RR sysinfo type, which is the
+		 * 3rd byte in the buffer. */
+		switch (data[2]) {
+		case GSM48_MT_RR_SYSINFO_1:
+			memcpy(bts->si1, data, GSM_MACBLOCK_LEN);
+			bts->si1_is_set = true;
+			break;
+		case GSM48_MT_RR_SYSINFO_3:
+			memcpy(bts->si3, data, GSM_MACBLOCK_LEN);
+			bts->si3_is_set = true;
+			break;
+		case GSM48_MT_RR_SYSINFO_13:
+			memcpy(bts->si13, data, GSM_MACBLOCK_LEN);
+			bts->si13_is_set = true;
+			break;
+		default:
+			LOGP(DL1IF, LOGL_ERROR,
+			     "Received PCU data indication that contains an unsupported system information identifier (%02x,RR) -- ignored.\n", data[2]);
+			return -EINVAL;
+		}
+		LOGP(DPCU, LOGL_DEBUG,
+		     "Received PCU data indication: Updated %s: %s\n",
+		     gsm48_pdisc_msgtype_name(data[1], data[2]),
+		     osmo_hexdump_nospc(data + 1, GSM_MACBLOCK_LEN));
+		return 0;
+	default:
+		LOGP(DL1IF, LOGL_ERROR,
+		     "Received PCU data indication with unexpected data length: %u -- ignored.\n",
+		     len);
 		return -EINVAL;
 	}
-
-	memcpy(bts->si13, data, GSM_MACBLOCK_LEN);
-	bts->si13_is_set = true;
-
-	return 0;
 }
 
 static int pcu_rx_data_ind(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data *data_ind)
@@ -782,7 +831,7 @@ static int pcu_rx_pag_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_pag_req
 
 static int pcu_rx_susp_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_susp_req *susp_req)
 {
-	struct bssgp_bvc_ctx *bctx = bts->pcu->bssgp.bctx;
+	struct bssgp_bvc_ctx *bctx = the_pcu->bssgp.bctx;
 	GprsMs *ms;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
