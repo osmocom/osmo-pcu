@@ -40,8 +40,24 @@
 
 #define X(s) (1 << (s))
 
+static const struct osmo_tdef_state_timeout nacc_fsm_timeouts[32] = {
+	[NACC_ST_INITIAL] = {},
+	[NACC_ST_WAIT_RESOLVE_RAC_CI] = { .T = PCU_TDEF_NEIGH_RESOLVE_TO },
+	[NACC_ST_WAIT_REQUEST_SI] = { .T = PCU_TDEF_SI_RESOLVE_TO },
+	[NACC_ST_TX_NEIGHBOUR_DATA] = {},
+	[NACC_ST_TX_CELL_CHG_CONTINUE] = {},
+	[NACC_ST_DONE] = {},
+};
+
+/* Transition to a state, using the T timer defined in assignment_fsm_timeouts.
+ * The actual timeout value is in turn obtained from conn->T_defs.
+ * Assumes local variable fi exists. */
+
 #define nacc_fsm_state_chg(fi, NEXT_STATE) \
-	osmo_fsm_inst_state_chg(fi, NEXT_STATE, 0, 0)
+	osmo_tdef_fsm_inst_state_chg(fi, NEXT_STATE, \
+				     nacc_fsm_timeouts, \
+				     ((struct nacc_fsm_ctx*)(fi->priv))->ms->bts->pcu->T_defs, \
+				     -1)
 
 const struct value_string nacc_fsm_event_names[] = {
 	{ NACC_EV_RX_CELL_CHG_NOTIFICATION, "RX_CELL_CHG_NOTIFICATION" },
@@ -469,6 +485,17 @@ static void nacc_fsm_cleanup(struct osmo_fsm_inst *fi, enum osmo_fsm_term_cause 
 	talloc_free(ctx);
 }
 
+static int nacc_fsm_timer_cb(struct osmo_fsm_inst *fi)
+{
+	switch (fi->T) {
+	case PCU_TDEF_NEIGH_RESOLVE_TO:
+	case PCU_TDEF_SI_RESOLVE_TO:
+		nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
+		break;
+	}
+	return 0;
+}
+
 static struct osmo_fsm_state nacc_fsm_states[] = {
 	[NACC_ST_INITIAL] = {
 		.in_event_mask =
@@ -482,7 +509,8 @@ static struct osmo_fsm_state nacc_fsm_states[] = {
 		.in_event_mask =
 			X(NACC_EV_RX_RAC_CI),
 		.out_state_mask =
-			X(NACC_ST_WAIT_REQUEST_SI),
+			X(NACC_ST_WAIT_REQUEST_SI) |
+			X(NACC_ST_TX_CELL_CHG_CONTINUE),
 		.name = "WAIT_RESOLVE_RAC_CI",
 		.onenter = st_wait_resolve_rac_ci_on_enter,
 		.action = st_wait_resolve_rac_ci,
@@ -492,7 +520,8 @@ static struct osmo_fsm_state nacc_fsm_states[] = {
 			X(NACC_EV_RX_CELL_CHG_NOTIFICATION) |
 			X(NACC_EV_RX_SI),
 		.out_state_mask =
-			X(NACC_ST_TX_NEIGHBOUR_DATA),
+			X(NACC_ST_TX_NEIGHBOUR_DATA) |
+			X(NACC_ST_TX_CELL_CHG_CONTINUE),
 		.name = "WAIT_REQUEST_SI",
 		.onenter = st_wait_request_si_on_enter,
 		.action = st_wait_request_si,
@@ -529,6 +558,7 @@ static struct osmo_fsm nacc_fsm = {
 	.name = "NACC",
 	.states = nacc_fsm_states,
 	.num_states = ARRAY_SIZE(nacc_fsm_states),
+	.timer_cb = nacc_fsm_timer_cb,
 	.cleanup = nacc_fsm_cleanup,
 	.log_subsys = DNACC,
 	.event_names = nacc_fsm_event_names,

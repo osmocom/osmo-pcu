@@ -37,6 +37,8 @@
 #define MAX_EDGE_MCS 9
 #define MAX_GPRS_CS 4
 
+#define PCU_TDEF_NEIGH_RESOLVE_TO (-1)
+#define PCU_TDEF_SI_RESOLVE_TO (-2)
 #define PCU_TDEF_NEIGH_CACHE_ALIVE (-10)
 #define PCU_TDEF_SI_CACHE_ALIVE    (-11)
 
