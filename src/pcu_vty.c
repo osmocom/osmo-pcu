@@ -1064,10 +1064,25 @@ DEFUN_ATTR(cfg_pcu_timer, cfg_pcu_timer_cmd,
 	   OSMO_TDEF_VTY_DOC_SET,
 	   CMD_ATTR_IMMEDIATE)
 {
+	int rc;
+	struct osmo_tdef *t;
 	/* If any arguments are missing, redirect to 'show' */
 	if (argc < 2)
 		return show_timer(self, vty, argc, argv);
-	return osmo_tdef_vty_set_cmd(vty, the_pcu->T_defs, argv);
+	if ((rc = osmo_tdef_vty_set_cmd(vty, the_pcu->T_defs, argv)) != CMD_SUCCESS)
+		return rc;
+	t = osmo_tdef_vty_parse_T_arg(vty, the_pcu->T_defs, argv[0]);
+	switch (t->T) {
+	case PCU_TDEF_NEIGH_CACHE_ALIVE:
+		neigh_cache_set_keep_time_interval(the_pcu->neigh_cache, t->val);
+		break;
+	case PCU_TDEF_SI_CACHE_ALIVE:
+		si_cache_set_keep_time_interval(the_pcu->si_cache, t->val);
+		break;
+	default:
+		break;
+	}
+	return CMD_SUCCESS;
 }
 
 DEFUN(show_tbf,

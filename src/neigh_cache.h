@@ -55,7 +55,8 @@ struct neigh_cache_entry {
 	struct osmo_cell_global_id_ps value;
 };
 
-struct neigh_cache *neigh_cache_alloc(void *ctx);
+struct neigh_cache *neigh_cache_alloc(void *ctx, unsigned int keep_time_sec);
+void neigh_cache_set_keep_time_interval(struct neigh_cache *cache, unsigned int keep_time_sec);
 struct neigh_cache_entry *neigh_cache_add(struct neigh_cache *cache,
 					  const struct neigh_cache_entry_key *key,
 					  const struct osmo_cell_global_id_ps *value);
@@ -90,7 +91,8 @@ struct si_cache_entry {
 	struct si_cache_value value;
 };
 
-struct si_cache *si_cache_alloc(void *ctx);
+struct si_cache *si_cache_alloc(void *ctx, unsigned int keep_time_sec);
+void si_cache_set_keep_time_interval(struct si_cache *cache, unsigned int keep_time_sec);
 struct si_cache_entry *si_cache_add(struct si_cache *cache,
 				    const struct osmo_cell_global_id_ps *key,
 				    const struct si_cache_value *value);

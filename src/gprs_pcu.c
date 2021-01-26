@@ -33,6 +33,8 @@ static struct osmo_tdef T_defs_pcu[] = {
 	{ .T=1,     .default_val=30,  .unit=OSMO_TDEF_S,  .desc="BSSGP (un)blocking procedures timer (s)",  .val=0 },
 	{ .T=2,     .default_val=30,  .unit=OSMO_TDEF_S,  .desc="BSSGP reset procedure timer (s)",          .val=0 },
 	{ .T=3190,  .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Return to packet idle mode after Packet DL Assignment on CCCH (s)", .val=0},
+	{ .T=PCU_TDEF_NEIGH_CACHE_ALIVE,   .default_val=5,  .unit=OSMO_TDEF_S,   .desc="[ARFCN+BSIC]->[RAC+CI] resolution cache entry storage timeout (s)", .val=0 },
+	{ .T=PCU_TDEF_SI_CACHE_ALIVE,      .default_val=5,  .unit=OSMO_TDEF_S,   .desc="[RAC+CI]->[SI] resolution cache entry storage timeout (s)", .val=0 },
 	{ .T=-2000, .default_val=2,   .unit=OSMO_TDEF_MS, .desc="Tbf reject for PRR timer (ms)",            .val=0 },
 	{ .T=-2001, .default_val=2,   .unit=OSMO_TDEF_S,  .desc="PACCH assignment timer (s)",               .val=0 },
 	{ .T=-2002, .default_val=200, .unit=OSMO_TDEF_MS, .desc="Waiting after IMM.ASS confirm timer (ms)", .val=0 },
@@ -114,8 +116,8 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 
 	INIT_LLIST_HEAD(&pcu->bts_list);
 
-	pcu->neigh_cache = neigh_cache_alloc(pcu);
-	pcu->si_cache = si_cache_alloc(pcu);
+	pcu->neigh_cache = neigh_cache_alloc(pcu, osmo_tdef_get(pcu->T_defs, PCU_TDEF_NEIGH_CACHE_ALIVE, OSMO_TDEF_S, -1));
+	pcu->si_cache = si_cache_alloc(pcu, osmo_tdef_get(pcu->T_defs, PCU_TDEF_SI_CACHE_ALIVE, OSMO_TDEF_S, -1));
 
 	return pcu;
 }

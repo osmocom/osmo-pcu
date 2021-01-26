@@ -27,10 +27,6 @@
 #include <neigh_cache.h>
 #include <gprs_debug.h>
 
-#define KEEP_TIME_DEFAULT_SEC 5
-
-/*TODO: add a timer to the_pcu T_defs, pass value to struct neigh_cache instead of KEEP_TIME_DEFAULT_SEC */
-
 static inline bool neigh_cache_entry_key_eq(const struct neigh_cache_entry_key *a,
 					    const struct neigh_cache_entry_key *b)
 {
@@ -89,16 +85,23 @@ static void neigh_cache_schedule_cleanup(struct neigh_cache *cache)
 	osmo_timer_schedule(&cache->cleanup_timer, result.tv_sec, result.tv_nsec*1000);
 }
 
-struct neigh_cache *neigh_cache_alloc(void *ctx)
+struct neigh_cache *neigh_cache_alloc(void *ctx, unsigned int keep_time_sec)
 {
 	struct neigh_cache *cache = talloc_zero(ctx, struct neigh_cache);
 	OSMO_ASSERT(cache);
 	INIT_LLIST_HEAD(&cache->list);
 	osmo_timer_setup(&cache->cleanup_timer, neigh_cache_cleanup_cb, cache);
-	cache->keep_time_intval = (struct timespec){ .tv_sec = KEEP_TIME_DEFAULT_SEC, .tv_nsec = 0};
+	cache->keep_time_intval = (struct timespec){ .tv_sec = keep_time_sec, .tv_nsec = 0};
 	return cache;
 
 }
+
+void neigh_cache_set_keep_time_interval(struct neigh_cache *cache, unsigned int keep_time_sec)
+{
+	cache->keep_time_intval = (struct timespec){ .tv_sec = keep_time_sec, .tv_nsec = 0};
+	neigh_cache_schedule_cleanup(cache);
+}
+
 struct neigh_cache_entry *neigh_cache_add(struct neigh_cache *cache,
 					  const struct neigh_cache_entry_key *key,
 					  const struct osmo_cell_global_id_ps *value)
@@ -168,8 +171,6 @@ void neigh_cache_free(struct neigh_cache *cache)
 // SI CACHE
 ///////////////////
 
-/*TODO: add a timer to the_pcu T_defs, pass value to struct neigh_cache instead of KEEP_TIME_DEFAULT_SEC */
-
 static void si_cache_schedule_cleanup(struct si_cache *cache);
 static void si_cache_cleanup_cb(void *data)
 {
@@ -218,15 +219,22 @@ static void si_cache_schedule_cleanup(struct si_cache *cache)
 	osmo_timer_schedule(&cache->cleanup_timer, result.tv_sec, result.tv_nsec*1000);
 }
 
-struct si_cache *si_cache_alloc(void *ctx)
+struct si_cache *si_cache_alloc(void *ctx, unsigned int keep_time_sec)
 {
 	struct si_cache *cache = talloc_zero(ctx, struct si_cache);
 	OSMO_ASSERT(cache);
 	INIT_LLIST_HEAD(&cache->list);
 	osmo_timer_setup(&cache->cleanup_timer, si_cache_cleanup_cb, cache);
-	cache->keep_time_intval = (struct timespec){ .tv_sec = KEEP_TIME_DEFAULT_SEC, .tv_nsec = 0};
+	cache->keep_time_intval = (struct timespec){ .tv_sec = keep_time_sec, .tv_nsec = 0};
 	return cache;
 }
+
+void si_cache_set_keep_time_interval(struct si_cache *cache, unsigned int keep_time_sec)
+{
+	cache->keep_time_intval = (struct timespec){ .tv_sec = keep_time_sec, .tv_nsec = 0};
+	si_cache_schedule_cleanup(cache);
+}
+
 struct si_cache_entry *si_cache_add(struct si_cache *cache,
 				    const struct osmo_cell_global_id_ps *key,
 				    const struct si_cache_value *value)
