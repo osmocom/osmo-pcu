@@ -342,7 +342,7 @@ static void st_wait_resolve_rac_ci_on_enter(struct osmo_fsm_inst *fi, uint32_t p
 
 err_term:
 	talloc_free(cmd);
-	osmo_fsm_inst_term(fi, OSMO_FSM_TERM_ERROR, NULL);
+	nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
 }
 
 
@@ -383,14 +383,14 @@ static void st_wait_request_si_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_
 
 	/* SI info not in cache, resolve it using RIM procedure against SGSN */
 	if (fill_rim_ran_info_req(ctx, &pdu) < 0) {
-		osmo_fsm_inst_term(fi, OSMO_FSM_TERM_ERROR, NULL);
+		nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
 		return;
 	}
 
 	rc = bssgp_tx_rim(&pdu, gprs_ns2_nse_nsei(ctx->ms->bts->nse));
 	if (rc < 0) {
 		LOGPFSML(fi, LOGL_ERROR, "Failed transmitting RIM PDU: %d\n", rc);
-		osmo_fsm_inst_term(fi, OSMO_FSM_TERM_ERROR, NULL);
+		nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
 		return;
 	}
 }
@@ -578,7 +578,7 @@ void nacc_fsm_ctrl_reply_cb(struct ctrl_handle *ctrl, struct ctrl_cmd *cmd, void
 		 cmd->type, cmd->variable, osmo_escape_str(cmd->reply, -1));
 
 	if (cmd->type != CTRL_TYPE_GET_REPLY || !cmd->reply) {
-		osmo_fsm_inst_term(ctx->fi, OSMO_FSM_TERM_ERROR, NULL);
+		nacc_fsm_state_chg(ctx->fi, NACC_ST_TX_CELL_CHG_CONTINUE);
 		return;
 	}
 
@@ -618,7 +618,7 @@ void nacc_fsm_ctrl_reply_cb(struct ctrl_handle *ctrl, struct ctrl_cmd *cmd, void
 
 free_ret:
 	talloc_free(tmp);
-	osmo_fsm_inst_term(ctx->fi, OSMO_FSM_TERM_ERROR, NULL);
+	nacc_fsm_state_chg(ctx->fi, NACC_ST_TX_CELL_CHG_CONTINUE);
 	return;
 }
 
