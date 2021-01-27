@@ -1165,7 +1165,7 @@ struct llist_head *tbf_bts_list(struct gprs_rlcmac_tbf *tbf)
 	return &tbf->m_bts_list.list;
 }
 
-struct GprsMs *tbf_ms(struct gprs_rlcmac_tbf *tbf)
+struct GprsMs *tbf_ms(const struct gprs_rlcmac_tbf *tbf)
 {
 	return tbf->ms();
 }

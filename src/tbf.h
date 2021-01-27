@@ -196,7 +196,7 @@ enum gprs_rlcmac_tbf_direction tbf_direction(const struct gprs_rlcmac_tbf *tbf);
 void tbf_set_ms(struct gprs_rlcmac_tbf *tbf, struct GprsMs *ms);
 struct llist_head *tbf_ms_list(struct gprs_rlcmac_tbf *tbf);
 struct llist_head *tbf_bts_list(struct gprs_rlcmac_tbf *tbf);
-struct GprsMs *tbf_ms(struct gprs_rlcmac_tbf *tbf);
+struct GprsMs *tbf_ms(const struct gprs_rlcmac_tbf *tbf);
 bool tbf_timers_pending(struct gprs_rlcmac_tbf *tbf, enum tbf_timers t);
 void tbf_free(struct gprs_rlcmac_tbf *tbf);
 struct gprs_llc *tbf_llc(struct gprs_rlcmac_tbf *tbf);
