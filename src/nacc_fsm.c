@@ -623,6 +623,9 @@ struct nacc_fsm_ctx *nacc_fsm_alloc(struct GprsMs* ms)
 	ctx->neigh_ctrl_conn = osmo_ctrl_conn_alloc(ctx, ctx->neigh_ctrl);
 	if (!ctx->neigh_ctrl_conn)
 		goto free_ret;
+	/* Older versions of osmo_ctrl_conn_alloc didn't properly initialize fd to -1,
+	 * so make sure to do it here otherwise fd may be valid fd 0 and cause trouble */
+	ctx->neigh_ctrl_conn->write_queue.bfd.fd = -1;
 	llist_add(&ctx->neigh_ctrl_conn->list_entry, &ctx->neigh_ctrl->ccon_list);
 
 	rc = osmo_sock_init2_ofd(&ctx->neigh_ctrl_conn->write_queue.bfd,
