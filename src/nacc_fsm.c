@@ -279,7 +279,7 @@ static void st_wait_resolve_rac_ci_on_enter(struct osmo_fsm_inst *fi, uint32_t p
 	struct gprs_rlcmac_bts *bts = ctx->ms->bts;
 	struct gprs_pcu *pcu = bts->pcu;
 	const struct osmo_cell_global_id_ps *cgi_ps;
-	struct ctrl_cmd *cmd;
+	struct ctrl_cmd *cmd = NULL;
 	int rc;
 
 	/* First try to find the value in the cache */
@@ -294,6 +294,16 @@ static void st_wait_resolve_rac_ci_on_enter(struct osmo_fsm_inst *fi, uint32_t p
 
 	LOGPFSML(fi, LOGL_DEBUG, "No CGI-PS found in cache, resolving " NEIGH_CACHE_ENTRY_KEY_FMT "...\n",
 		 NEIGH_CACHE_ENTRY_KEY_ARGS(&ctx->neigh_key));
+
+	rc = osmo_sock_init2_ofd(&ctx->neigh_ctrl_conn->write_queue.bfd,
+				 AF_UNSPEC, SOCK_STREAM, IPPROTO_TCP,
+				 NULL, 0, pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port,
+				 OSMO_SOCK_F_CONNECT);
+	if (rc < 0) {
+		LOGPFSML(fi, LOGL_ERROR, "Can't connect to CTRL @ %s:%u\n",
+		     pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port);
+		goto err_term;
+	}
 
 	cmd = ctrl_cmd_create(ctx, CTRL_TYPE_GET);
 	if (!cmd) {
@@ -603,11 +613,8 @@ static int nacc_fsm_ctx_talloc_destructor(struct nacc_fsm_ctx *ctx)
 
 struct nacc_fsm_ctx *nacc_fsm_alloc(struct GprsMs* ms)
 {
-	struct gprs_rlcmac_bts *bts = ms->bts;
-	struct gprs_pcu *pcu = bts->pcu;
 	struct nacc_fsm_ctx *ctx = talloc_zero(ms, struct nacc_fsm_ctx);
 	char buf[64];
-	int rc;
 
 	talloc_set_destructor(ctx, nacc_fsm_ctx_talloc_destructor);
 
@@ -627,16 +634,6 @@ struct nacc_fsm_ctx *nacc_fsm_alloc(struct GprsMs* ms)
 	 * so make sure to do it here otherwise fd may be valid fd 0 and cause trouble */
 	ctx->neigh_ctrl_conn->write_queue.bfd.fd = -1;
 	llist_add(&ctx->neigh_ctrl_conn->list_entry, &ctx->neigh_ctrl->ccon_list);
-
-	rc = osmo_sock_init2_ofd(&ctx->neigh_ctrl_conn->write_queue.bfd,
-				 AF_UNSPEC, SOCK_STREAM, IPPROTO_TCP,
-				 NULL, 0, pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port,
-				 OSMO_SOCK_F_CONNECT);
-	if (rc < 0) {
-		LOGP(DNACC, LOGL_ERROR, "Can't connect to CTRL @ %s:%u\n",
-		     pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port);
-		goto free_ret;
-	}
 
 	return ctx;
 free_ret:
