@@ -138,6 +138,38 @@ vector1 = 400a9020000000000000003010012a0800132b2b2b2b2b
 vector1 = 40 0a 90 20 00 00 00 00 00 00 00 30 10 01 2a 08 00 13 2b 2b 2b 2b 2b 
 vector2 = 40 0a 90 20 00 00 00 00 00 00 00 30 10 01 2a 08 00 13 2b 2b 2b 2b 2b 
 vector1 == vector2 : TRUE
+vector1 = 4117ea1b903eaeb2686564b2330820078000102b2b2b2b
+=========Start DECODE===========
++++++++++Finish DECODE (0)++++++++++
+=========Start ENCODE=============
++++++++++Finish ENCODE (0)+++++++++++
+vector1 = 41 17 ea 1b 90 3e ae b2 68 65 64 b2 33 08 20 07 80 00 10 2b 2b 2b 2b 
+vector2 = 41 17 ea 1b 90 3e af 22 68 65 64 b2 33 00 00 00 00 82 00 78 00 01 01 
+vector1 == vector2 : FALSE
+vector1 = 40167e49f7f8ef2632b2596620060000806d00541c0080
+=========Start DECODE===========
++++++++++Finish DECODE (0)++++++++++
+=========Start ENCODE=============
++++++++++Finish ENCODE (0)+++++++++++
+vector1 = 40 16 7e 49 f7 f8 ef 26 32 b2 59 66 20 06 00 00 80 6d 00 54 1c 00 80 
+vector2 = 40 16 7e 49 f7 f8 ef 0e 32 b2 59 66 20 06 00 00 9b 40 15 07 00 20 2b 
+vector1 == vector2 : FALSE
+vector1 = 4017787174d92eba686564b2ccc30800a000040b2b2b2b
+=========Start DECODE===========
++++++++++Finish DECODE (0)++++++++++
+=========Start ENCODE=============
++++++++++Finish ENCODE (0)+++++++++++
+vector1 = 40 17 78 71 74 d9 2e ba 68 65 64 b2 cc c3 08 00 a0 00 04 0b 2b 2b 2b 
+vector2 = 40 17 78 71 74 d9 2f 2a 68 65 64 b2 cc c0 00 00 00 30 80 0a 00 00 40 
+vector1 == vector2 : FALSE
+vector1 = 4017e5b2cd5a2eca68655e44aec84880139300412b2b2b
+=========Start DECODE===========
++++++++++Finish DECODE (-5)++++++++++
+=========Start ENCODE=============
++++++++++Finish ENCODE (-5)+++++++++++
+vector1 = 40 17 e5 b2 cd 5a 2e ca 68 65 5e 44 ae c8 48 80 13 93 00 41 2b 2b 2b 
+vector2 = 40 17 e5 b2 cd 5a 2f 4a 68 65 5e 44 ae c8 00 00 00 00 48 80 13 93 00 
+vector1 == vector2 : FALSE
 *** testCsnLeftAlignedVarBmpBounds ***
 *** testRAcap ***
 === Test decoding of MS RA Capability ===

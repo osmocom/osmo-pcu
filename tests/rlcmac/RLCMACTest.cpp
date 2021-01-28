@@ -159,6 +159,12 @@ void testRlcMacUplink(void *test_ctx)
 	"401673c87f24af2632b25964200600000091000b780080", // Packet Resource Request (from keith)
 	"40200ffc0021ec010b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // EPDAN
 	"400a9020000000000000003010012a0800132b2b2b2b2b", // Packet Downlink Ack/Nack ?
+
+	/* Packet Resource Request (see OS#4955, mistakes in 3GPP TS 44.060) */
+	"4117ea1b903eaeb2686564b2330820078000102b2b2b2b",
+	"40167e49f7f8ef2632b2596620060000806d00541c0080",
+	"4017787174d92eba686564b2ccc30800a000040b2b2b2b",
+	"4017e5b2cd5a2eca68655e44aec84880139300412b2b2b",
 	};
 
 	int testDataSize = sizeof(testData)/sizeof(testData[0]);
