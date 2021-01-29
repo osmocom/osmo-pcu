@@ -220,6 +220,86 @@ You can set those parameters at the `pcu` VTY config node as follows:
 	Set the gamma parameter for MS power control in units of dB.
 
 
+=== Configuring Network Assisted Cell Change (NACC)
+
+Network Assisted Cell Change, defined in 3GPP TS 44.060 sub-clause 8.8, is a
+feature providing the MS aid when changing to a new cell due to autonomous
+reselection. In summary, the MS informs the current cell its intention to change
+to a new target cell, and the network decides whether to grant the intended cell
+change or order a change to another neighbor cell. It also provides several
+System Informations of the target cell to the MS to allow for quicker
+reselection towards it.
+
+OsmoPCU will automatically provide the required neighbor System Information when
+the MS requests NACC towards a target cell also under the management of the same
+OsmoPCU instance, since it already has the System Information of all BTS under
+their control, obtained through PCUIF when the BTS registers against OsmoPCU, so
+no specific user configuration is required here.
+
+However, for remote neighbors (cells managed by another OsmoPCU instance),
+OsmoPCU requires to gather the information from somewhere else before being able
+to provide it to the MS requesting the NACC.
+
+If OsmoPCU fails to gather the System Information, it will simply answer the MS
+allowing the proposed changed but without previously providing the System
+Information of the target cell.
+
+==== Neighbor Address Resolution
+
+First of all, it needs to translate the <ARFCN + BSIC> identity of the target
+cell to change to, provided by the MS, into an identity that the Core Network
+can use and understand to identify the target cell, which happens to be a key
+composed of <RAI + Cell Identity>. This key is also named conveniently as
+CGI-PS, since it actually equals to the Circuit Switch CGI + RAC.
+
+In order to apply this target cell identity translation, OsmoPCU uses the
+OsmoBSC Neighbor Resolution CTRL interface (see OsmoBSC User Manual), since the
+BSC is the node holding all the neighbor related information.
+By default, the use of this interface is not configured and hence disabled in
+OsmoPCU. As a result, until configured, the network won't be able to provide the
+System Information to the MS prior to allowing the change during NACC against
+remote cells, which means the cell change will take longer to complete. In order
+to configure the interface, the OsmoBSC IP address and port to connect to must
+be configured in OsmoPCU VTY.
+
+These neighbor address resolutions (<ARFCN + BSIC> => <RAI + CI>) are by default
+cached for a while in order to avoid querying the BSC frequently and, as a
+result, optimizing the resolution time too.
+
+.Example: Configure Neighbor Resolution CTRL interface against OsmoBSC
+----
+pcu
+ neighbor resolution 172.18.13.10 4248 <1>
+ timer X1 500 <2>
+ timer X0 60 <3>
+----
+<1> Port 4248 is the default and hence could be omitted in this case
+<2> Time out if the BSC doesn't answer our CTRL resolution request after 500 ms
+<3> Keep resolved neighbor addresses cached for 60 seconds
+
+==== System Information Resolution
+
+Once OsmoPCU gains knowledge of the target cell's address in the Core Network,
+it can query its System Information. The query is done using RIM procedures
+(NACC RAN-INFO application) over the Gb interface against the SGSN that OsmoPCU
+is connected to. In its turn, the SGSN will potentially forward this query to
+the PCU serving the target cell, which will provide back the System Information
+of that cell.
+
+The System Information received from remote neighbors are by default
+cached for a while in order to avoid querying the SGSN frequently and, as a
+result, optimizing the resolution time too.
+
+.Example: Configure System Information resolution
+----
+pcu
+ timer X2 500 <1>
+ timer X11 60 <2>
+----
+<1> Time out if the SGSN doesn't answer our RIM RAN-INFO request request after 500 ms
+<2> Keep resolved remote neighbor System Information cached for 60 seconds
+
+
 === GPRS vs EGPRS considerations
 
 ==== Configuration
