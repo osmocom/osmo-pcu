@@ -316,8 +316,9 @@ static void st_wait_resolve_rac_ci_on_enter(struct osmo_fsm_inst *fi, uint32_t p
 				 NULL, 0, pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port,
 				 OSMO_SOCK_F_CONNECT);
 	if (rc < 0) {
-		LOGPFSML(fi, LOGL_ERROR, "Can't connect to CTRL @ %s:%u\n",
-		     pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port);
+		LOGPFSML(fi, LOGL_ERROR,
+			"Failed to establish CTRL (neighbor resolution) connection to BSC r=%s:%u\n\n",
+			pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port);
 		goto err_term;
 	}
 
