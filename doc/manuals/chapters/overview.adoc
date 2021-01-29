@@ -26,6 +26,7 @@ digraph G {
 	BTS->PCU [label="pcu_sock"]
 	PCU->SGSN [label="Gb"]
 	SGSN->GGSN [label="GTP"]
+	PCU [color=red]
 }
 ----
 
