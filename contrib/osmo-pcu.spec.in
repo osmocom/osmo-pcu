@@ -32,6 +32,7 @@ BuildRequires:  pkgconfig(libosmocore) >= 1.4.0
 BuildRequires:  pkgconfig(libosmogb) >= 1.4.0
 BuildRequires:  pkgconfig(libosmogsm) >= 1.4.0
 BuildRequires:  pkgconfig(libosmovty) >= 1.4.0
+BuildRequires:  pkgconfig(libosmoctrl) >= 1.4.0
 %{?systemd_requires}
 
 %description
