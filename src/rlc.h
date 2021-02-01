@@ -376,7 +376,7 @@ struct gprs_rlc_ul_window: public gprs_rlc_window {
 };
 
 extern "C" {
-/* TS 04.60  10.2.2 */
+/* TS 44.060  10.2.2 */
 #if OSMO_IS_LITTLE_ENDIAN
 struct rlc_ul_header {
 	uint8_t	r:1,

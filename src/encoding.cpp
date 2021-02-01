@@ -850,7 +850,7 @@ void Encoding::encode_rbb(const char *show_rbb, uint8_t *rbb)
 
 	// RECEIVE_BLOCK_BITMAP
 	for (int i = 0; i < 64; i++) {
-		/* Set bit at the appropriate position (see 3GPP TS 04.60 9.1.8.1) */
+		/* Set bit at the appropriate position (see 3GPP TS 44.060 9.1.8.1) */
 		if (show_rbb[i] == 'R')
 			rbb_byte |= 1<< (7-(i%8));
 
@@ -877,7 +877,7 @@ static void write_packet_ack_nack_desc_gprs(
 	bitvec_write_field(dest, &wp, window->ssn(), 7); // STARTING_SEQUENCE_NUMBER
 
 	for (int i = 0; i < 64; i++) {
-		/* Set bit at the appropriate position (see 3GPP TS 04.60 9.1.8.1) */
+		/* Set bit at the appropriate position (see 3GPP TS 44.060 9.1.8.1) */
 		bool is_ack = (rbb[i] == 'R');
 		bitvec_write_field(dest, &wp, is_ack, 1);
 	}
@@ -1053,7 +1053,7 @@ static void write_packet_ack_nack_desc_egprs(
 		bow ? ", BOW" : "", eow ? ", EOW" : "");
 
 	for (i = urbb_len; i > 0; i--) {
-		/* Set bit at the appropriate position (see 3GPP TS 04.60 12.3.1) */
+		/* Set bit at the appropriate position (see 3GPP TS 44.060 12.3.1) */
 		bool is_ack = window->m_v_n.is_received(esn_crbb + i);
 		bitvec_write_field(dest, &wp, is_ack, 1);
 	}
