@@ -958,13 +958,17 @@ bool ms_nacc_rts(const struct GprsMs *ms)
 	return false;
 }
 
-struct msgb *ms_nacc_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
+struct msgb *ms_nacc_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts)
 {
 	int rc;
 	struct nacc_ev_create_rlcmac_msg_ctx data_ctx;
 
-	data_ctx.tbf = tbf;
-	data_ctx.msg = NULL;
+	data_ctx = (struct nacc_ev_create_rlcmac_msg_ctx) {
+			.tbf = tbf,
+			.fn = fn,
+			.ts = ts,
+			.msg = NULL,
+	};
 
 	rc = osmo_fsm_inst_dispatch(ms->nacc->fi, NACC_EV_CREATE_RLCMAC_MSG, &data_ctx);
 	if (rc != 0 || !data_ctx.msg)

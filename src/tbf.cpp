@@ -49,6 +49,7 @@ extern "C" {
 
 #include "gsm_rlcmac.h"
 #include "coding_scheme.h"
+#include "nacc_fsm.h"
 }
 
 #include <errno.h>
@@ -614,6 +615,10 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum gprs_rl
 		LOGPTBFDL(this, LOGL_DEBUG, "Scheduled DL Acknowledgement polling on %s (FN=%d, TS=%d)\n",
 			  chan, poll_fn, poll_ts);
 		break;
+	case GPRS_RLCMAC_POLL_CELL_CHG_CONTINUE:
+		LOGPTBFDL(this, LOGL_DEBUG, "Scheduled 'Packet Cell Change Continue' polling on %s (FN=%d, TS=%d)\n",
+			  chan, poll_fn, poll_ts);
+		break;
 	}
 }
 
@@ -690,6 +695,11 @@ void gprs_rlcmac_tbf::poll_timeout()
 		}
 		/* reschedule DL assignment */
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_SEND_ASS;
+	} else if (m_ms->nacc && m_ms->nacc->fi->state == NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK &&
+		   m_ms->nacc->continue_poll_fn == poll_fn && m_ms->nacc->continue_poll_ts == poll_ts) {
+		/* Timeout waiting for CTRL ACK acking Pkt Cell Change Continue */
+		osmo_fsm_inst_dispatch(m_ms->nacc->fi, NACC_EV_TIMEOUT_CELL_CHG_CONTINUE, NULL);
+		return;
 	} else if (direction == GPRS_RLCMAC_DL_TBF) {
 		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
 
@@ -1202,4 +1212,14 @@ bool tbf_is_tfi_assigned(const struct gprs_rlcmac_tbf *tbf)
 uint8_t tbf_tfi(const struct gprs_rlcmac_tbf *tbf)
 {
 	return tbf->tfi();
+}
+
+int tbf_check_polling(const struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts, uint32_t *poll_fn, unsigned int *rrbp)
+{
+	return tbf->check_polling(fn, ts, poll_fn, rrbp);
+}
+
+void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t ts, enum gprs_rlcmac_tbf_poll_type t)
+{
+	return tbf->set_polling(new_poll_fn, ts, t);
 }

@@ -47,6 +47,7 @@ extern "C" {
 
 #include "coding_scheme.h"
 #include "gsm_rlcmac.h"
+#include "nacc_fsm.h"
 }
 
 #include <errno.h>
@@ -392,6 +393,19 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		if (ms_need_dl_tbf(new_tbf->ms()))
 			new_tbf->establish_dl_tbf_on_pacch();
 
+		return;
+	}
+	if (ms->nacc && ms->nacc->fi->state == NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK &&
+	    ms->nacc->continue_poll_fn == fn && ms->nacc->continue_poll_ts == ts_no) {
+		osmo_fsm_inst_dispatch(ms->nacc->fi, NACC_EV_RX_CELL_CHG_CONTINUE_ACK, NULL);
+		/* Don't assume MS is no longer reachable (hence don't free) after this: TS 44.060
+		 * "When the mobile station receives the PACKET CELL CHANGE ORDER
+		 * or the PACKET CELL CHANGE CONTINUE message the mobile station
+		 * shall transmit a PACKET CONTROL ACKNOWLEDGMENT message in the
+		 * specified uplink radio block if a valid RRBP field is
+		 * received as part of the message; the mobile station _MAY_ then
+		 * switch to a new cell."
+		 */
 		return;
 	}
 	LOGP(DRLCMAC, LOGL_ERROR, "Error: received PACET CONTROL ACK "

@@ -68,6 +68,7 @@ enum gprs_rlcmac_tbf_poll_type {
 	GPRS_RLCMAC_POLL_DL_ASS,
 	GPRS_RLCMAC_POLL_UL_ACK,
 	GPRS_RLCMAC_POLL_DL_ACK,
+	GPRS_RLCMAC_POLL_CELL_CHG_CONTINUE,
 };
 
 enum gprs_rlcmac_tbf_poll_state {
@@ -206,6 +207,8 @@ uint8_t tbf_ul_slots(const struct gprs_rlcmac_tbf *tbf);
 bool tbf_is_tfi_assigned(const struct gprs_rlcmac_tbf *tbf);
 uint8_t tbf_tfi(const struct gprs_rlcmac_tbf *tbf);
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
+int tbf_check_polling(const struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts, uint32_t *poll_fn, unsigned int *rrbp);
+void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t ts, enum gprs_rlcmac_tbf_poll_type t);
 #ifdef __cplusplus
 }
 #endif

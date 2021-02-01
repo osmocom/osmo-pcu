@@ -203,7 +203,7 @@ static struct msgb *sched_select_ctrl_msg(
 			else if (tbf == tbfs->ul_ack)
 				msg = tbfs->ul_ack->create_ul_ack(fn, ts);
 			else if (tbf == tbfs->nacc) {
-				msg = ms_nacc_create_rlcmac_msg(tbf->ms(), tbf);
+				msg = ms_nacc_create_rlcmac_msg(tbf->ms(), tbf, fn, ts);
 			}
 
 			if (!msg) {

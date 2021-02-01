@@ -46,6 +46,7 @@ static const struct osmo_tdef_state_timeout nacc_fsm_timeouts[32] = {
 	[NACC_ST_WAIT_REQUEST_SI] = { .T = PCU_TDEF_SI_RESOLVE_TO },
 	[NACC_ST_TX_NEIGHBOUR_DATA] = {},
 	[NACC_ST_TX_CELL_CHG_CONTINUE] = {},
+	[NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK] = {}, /* Timeout through event controlled by tbf::poll_timeout() */
 	[NACC_ST_DONE] = {},
 };
 
@@ -64,6 +65,8 @@ const struct value_string nacc_fsm_event_names[] = {
 	{ NACC_EV_RX_RAC_CI, "RX_RAC_CI" },
 	{ NACC_EV_RX_SI, "RX_SI" },
 	{ NACC_EV_CREATE_RLCMAC_MSG, "CREATE_RLCMAC_MSG" },
+	{ NACC_EV_RX_CELL_CHG_CONTINUE_ACK, "RX_CELL_CHG_CONTINUE_ACK"},
+	{ NACC_EV_TIMEOUT_CELL_CHG_CONTINUE, "TIMEOUT_CELL_CHG_CONTINUE" },
 	{ 0, NULL }
 };
 
@@ -156,12 +159,21 @@ free_ret:
 
 /* TS 44 060 11.2.2a Packet Cell Change Continue */
 static struct msgb *create_packet_cell_chg_continue(const struct nacc_fsm_ctx *ctx,
-						    const struct gprs_rlcmac_tbf *tbf)
+						    const struct nacc_ev_create_rlcmac_msg_ctx *data,
+						    uint32_t *new_poll_fn)
 {
 	struct msgb *msg;
 	int rc;
 	RlcMacDownlink_t *mac_control_block;
+	struct gprs_rlcmac_tbf *tbf = data->tbf;
 	struct GprsMs *ms = tbf_ms(tbf);
+	unsigned int rrbp;
+
+	rc = tbf_check_polling(tbf, data->fn, data->ts, new_poll_fn, &rrbp);
+	if (rc < 0) {
+		LOGP(DTBF, LOGL_ERROR, "Failed registering poll for Pkt Cell Chg Continue (%d)\n", rc);
+		return NULL;
+	}
 
 	msg = msgb_alloc(GSM_MACBLOCK_LEN, "pkt_cell_chg_continue");
 	if (!msg)
@@ -180,7 +192,7 @@ static struct msgb *create_packet_cell_chg_continue(const struct nacc_fsm_ctx *c
 	uint8_t tfi_is_dl = tbf_direction(tbf) == GPRS_RLCMAC_DL_TBF;
 	uint8_t tfi = tbf_tfi(tbf);
 	uint8_t container_id = 0;
-	write_packet_cell_change_continue(mac_control_block, tfi_is_dl, tfi, true,
+	write_packet_cell_change_continue(mac_control_block, 1, rrbp, tfi_is_dl, tfi, true,
 			ctx->neigh_key.tgt_arfcn, ctx->neigh_key.tgt_bsic, container_id);
 	LOGP(DNACC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Cell Change Continue +++++++++++++++++++++++++\n");
 	rc = encode_gsm_rlcmac_downlink(&bv, mac_control_block);
@@ -191,6 +203,7 @@ static struct msgb *create_packet_cell_chg_continue(const struct nacc_fsm_ctx *c
 	LOGP(DNACC, LOGL_DEBUG, "------------------------- TX : Packet Cell Change Continue -------------------------\n");
 	rate_ctr_inc(&bts_rate_counters(ms->bts)->ctr[CTR_PKT_CELL_CHG_CONTINUE]);
 	talloc_free(mac_control_block);
+	tbf_set_polling(tbf, *new_poll_fn, data->ts, GPRS_RLCMAC_POLL_CELL_CHG_CONTINUE);
 	return msg;
 
 free_ret:
@@ -458,7 +471,24 @@ static void st_cell_chg_continue(struct osmo_fsm_inst *fi, uint32_t event, void 
 	switch (event) {
 	case NACC_EV_CREATE_RLCMAC_MSG:
 		data_ctx = (struct nacc_ev_create_rlcmac_msg_ctx *)data;
-		data_ctx->msg = create_packet_cell_chg_continue(ctx, data_ctx->tbf);
+		data_ctx->msg = create_packet_cell_chg_continue(ctx, data_ctx, &ctx->continue_poll_fn);
+		if (data_ctx->msg) {
+			ctx->continue_poll_ts = data_ctx->ts;
+			nacc_fsm_state_chg(fi, NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK);
+		}
+		break;
+	default:
+		OSMO_ASSERT(0);
+	}
+}
+
+static void st_wait_cell_chg_continue_ack(struct osmo_fsm_inst *fi, uint32_t event, void *data)
+{
+	switch (event) {
+	case NACC_EV_TIMEOUT_CELL_CHG_CONTINUE:
+		nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
+		break;
+	case NACC_EV_RX_CELL_CHG_CONTINUE_ACK:
 		nacc_fsm_state_chg(fi, NACC_ST_DONE);
 		break;
 	default:
@@ -543,9 +573,19 @@ static struct osmo_fsm_state nacc_fsm_states[] = {
 			X(NACC_EV_RX_SI) |
 			X(NACC_EV_CREATE_RLCMAC_MSG),
 		.out_state_mask =
-			X(NACC_ST_DONE),
+			X(NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK),
 		.name = "TX_CELL_CHG_CONTINUE",
 		.action = st_cell_chg_continue,
+	},
+	[NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK] = {
+		.in_event_mask =
+			X(NACC_EV_RX_CELL_CHG_CONTINUE_ACK) |
+			X(NACC_EV_TIMEOUT_CELL_CHG_CONTINUE),
+		.out_state_mask =
+			X(NACC_ST_TX_CELL_CHG_CONTINUE) |
+			X(NACC_ST_DONE),
+		.name = "WAIT_CELL_CHG_CONTINUE_ACK",
+		.action = st_wait_cell_chg_continue_ack,
 	},
 	[NACC_ST_DONE] = {
 		.in_event_mask = 0,

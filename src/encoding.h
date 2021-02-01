@@ -124,9 +124,9 @@ void write_packet_neighbour_cell_data(RlcMacDownlink_t *block,
 		bool tfi_is_dl, uint8_t tfi, uint8_t container_id,
 		uint8_t container_idx, PNCDContainer_t *container);
 
-void write_packet_cell_change_continue(RlcMacDownlink_t *block,
-		bool tfi_is_dl, uint8_t tfi, bool exist_id,
-		uint16_t arfcn, uint8_t bsic, uint8_t container_id);
+void write_packet_cell_change_continue(RlcMacDownlink_t *block, uint8_t poll, uint8_t rrbp,
+				       bool tfi_is_dl, uint8_t tfi, bool exist_id,
+				       uint16_t arfcn, uint8_t bsic, uint8_t container_id);
 
 #ifdef __cplusplus
 }

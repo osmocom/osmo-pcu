@@ -1757,14 +1757,14 @@ void write_packet_neighbour_cell_data(RlcMacDownlink_t *block,
 	block->u.Packet_Neighbour_Cell_Data.Container = *container;
 }
 
-void write_packet_cell_change_continue(RlcMacDownlink_t *block,
-		bool tfi_is_dl, uint8_t tfi, bool exist_id,
-		uint16_t arfcn, uint8_t bsic, uint8_t container_id)
+void write_packet_cell_change_continue(RlcMacDownlink_t *block, uint8_t poll, uint8_t rrbp,
+				       bool tfi_is_dl, uint8_t tfi, bool exist_id,
+				       uint16_t arfcn, uint8_t bsic, uint8_t container_id)
 {
 
 	block->PAYLOAD_TYPE = 0x1;  // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
-	block->RRBP         = 0;  // 0: N+13
-	block->SP           = 0; // RRBP field is not valid
+	block->RRBP         = rrbp;  // RRBP (e.g. N+13)
+	block->SP           = poll;  // RRBP field is valid?
 	block->USF          = 0x0;  // Uplink state flag
 
 	block->u.Packet_Cell_Change_Continue.MESSAGE_TYPE = MT_PACKET_CELL_CHANGE_CONTINUE;

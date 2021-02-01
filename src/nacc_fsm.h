@@ -32,6 +32,8 @@ enum nacc_fsm_event {
 	NACC_EV_RX_RAC_CI, /* no data passed, RAC_CI became available in neigh_cache */
 	NACC_EV_RX_SI, /* data: struct si_cache_entry* */
 	NACC_EV_CREATE_RLCMAC_MSG, /* data: struct nacc_ev_create_rlcmac_msg_ctx* */
+	NACC_EV_RX_CELL_CHG_CONTINUE_ACK,
+	NACC_EV_TIMEOUT_CELL_CHG_CONTINUE, /* Poll Timeout */
 };
 
 enum nacc_fsm_states {
@@ -40,6 +42,7 @@ enum nacc_fsm_states {
 	NACC_ST_WAIT_REQUEST_SI,
 	NACC_ST_TX_NEIGHBOUR_DATA,
 	NACC_ST_TX_CELL_CHG_CONTINUE,
+	NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK,
 	NACC_ST_DONE,
 };
 
@@ -53,11 +56,15 @@ struct nacc_fsm_ctx {
 	struct si_cache_value si_info; /* SI info resolved from SGSN, to be sent to MS */
 	size_t si_info_bytes_sent; /* How many bytes out of si_info->si_len were already sent to MS */
 	size_t container_idx; /* Next container_idx to assign when sending Packet Neighbor Data message */
+	uint32_t continue_poll_fn; /* Scheduled poll FN to CTRL ACK the Pkt Cell Chg Continue */
+	uint8_t continue_poll_ts; /* Scheduled poll TS to CTRL ACK the Pkt Cell Chg Continue */
 };
 
 /* passed as data in NACC_EV_CREATE_RLCMAC_MSG */
 struct nacc_ev_create_rlcmac_msg_ctx {
 	struct gprs_rlcmac_tbf *tbf; /* target tbf to create messages for */
+	uint32_t fn; /* FN where the created DL ctrl block is to be sent */
+	uint8_t ts; /* TS where the created DL ctrl block is to be sent */
 	struct msgb *msg; /* to be filled by FSM during event processing */
 };
 
