@@ -444,13 +444,13 @@ static void st_tx_neighbour_data(struct osmo_fsm_inst *fi, uint32_t event, void 
 	}
 }
 
-/* st_cell_cgh_continue_on_enter:
+/* st_cell_chg_continue_on_enter:
  * At this point, we already sent all Pkt Cell Neighbour Change rlcmac
  * blocks, and we only need to wait to be scheduled again to send PKT
  * CELL CHANGE NOTIFICATION and then we are done
  */
 
-static void st_cell_cgh_continue(struct osmo_fsm_inst *fi, uint32_t event, void *data)
+static void st_cell_chg_continue(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct nacc_fsm_ctx *ctx = (struct nacc_fsm_ctx *)fi->priv;
 	struct nacc_ev_create_rlcmac_msg_ctx *data_ctx;
@@ -545,7 +545,7 @@ static struct osmo_fsm_state nacc_fsm_states[] = {
 		.out_state_mask =
 			X(NACC_ST_DONE),
 		.name = "TX_CELL_CHG_CONTINUE",
-		.action = st_cell_cgh_continue,
+		.action = st_cell_chg_continue,
 	},
 	[NACC_ST_DONE] = {
 		.in_event_mask = 0,
