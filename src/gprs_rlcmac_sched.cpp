@@ -205,7 +205,6 @@ static struct msgb *sched_select_ctrl_msg(
 			else if (tbf == tbfs->nacc) {
 				msg = ms_nacc_create_rlcmac_msg(tbf->ms(), tbf);
 			}
-			/* else: if tbf/ms is pending to send tx_neigbhourData or tx_CellchangeContinue, send it */
 
 			if (!msg) {
 				tbf = NULL;
