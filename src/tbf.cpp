@@ -544,7 +544,7 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool
 }
 
 int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
-	uint32_t *poll_fn_, unsigned int *rrbp_)
+	uint32_t *poll_fn_, unsigned int *rrbp_) const
 {
 	uint32_t new_poll_fn = next_fn(fn, 13);
 
@@ -1066,7 +1066,7 @@ int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
 	return 0;
 }
 
-const char *tbf_name(gprs_rlcmac_tbf *tbf)
+const char *tbf_name(const gprs_rlcmac_tbf *tbf)
 {
 	return tbf ? tbf->name() : "(no TBF)";
 }

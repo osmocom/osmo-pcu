@@ -190,7 +190,7 @@ enum tbf_counters { /* TBF counters from 3GPP TS 44.060 §13.4 */
 extern "C" {
 #endif
 struct gprs_rlcmac_tbf;
-const char *tbf_name(struct gprs_rlcmac_tbf *tbf);
+const char *tbf_name(const struct gprs_rlcmac_tbf *tbf);
 enum gprs_rlcmac_tbf_state tbf_state(const struct gprs_rlcmac_tbf *tbf);
 enum gprs_rlcmac_tbf_direction tbf_direction(const struct gprs_rlcmac_tbf *tbf);
 void tbf_set_ms(struct gprs_rlcmac_tbf *tbf, struct GprsMs *ms);
@@ -262,7 +262,7 @@ struct gprs_rlcmac_tbf {
 	int establish_dl_tbf_on_pacch();
 
 	int check_polling(uint32_t fn, uint8_t ts,
-		uint32_t *poll_fn, unsigned int *rrbp);
+		uint32_t *poll_fn, unsigned int *rrbp) const;
 	void set_polling(uint32_t poll_fn, uint8_t ts, enum gprs_rlcmac_tbf_poll_type t);
 	void poll_timeout();
 
