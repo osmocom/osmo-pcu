@@ -236,9 +236,8 @@ OsmoPCU instance, since it already has the System Information of all BTS under
 their control, obtained through PCUIF when the BTS registers against OsmoPCU, so
 no specific user configuration is required here.
 
-However, for remote neighbors (cells managed by another OsmoPCU instance),
-OsmoPCU requires to gather the information from somewhere else before being able
-to provide it to the MS requesting the NACC.
+In general, OsmoPCU requires to gather the information from somewhere else
+before being able to provide it to the MS requesting the NACC.
 
 If OsmoPCU fails to gather the System Information, it will simply answer the MS
 allowing the proposed changed but without previously providing the System
@@ -280,13 +279,19 @@ pcu
 ==== System Information Resolution
 
 Once OsmoPCU gains knowledge of the target cell's address in the Core Network,
-it can query its System Information. The query is done using RIM procedures
-(NACC RAN-INFO application) over the Gb interface against the SGSN that OsmoPCU
-is connected to. In its turn, the SGSN will potentially forward this query to
-the PCU serving the target cell, which will provide back the System Information
-of that cell.
+it can query its System Information.
 
-The System Information received from remote neighbors are by default
+OsmoPCU will gather the requested System Information of target cells under its
+control without need for any external query, since the System Information of all
+BTSs it manages are received over PCUIF and stored internally in OsmoPCU.
+
+For those targets cells not managed by the OsmoPCU instance, the query is
+accomplished by using RIM procedures (NACC RAN-INFO application) over the Gb
+interface against the SGSN that OsmoPCU is connected to. In its turn, the SGSN
+will potentially forward this query to the PCU serving the target cell, which
+will provide back the System Information of that cell.
+
+The System Information received from external PCUs over RIM are by default
 cached for a while in order to avoid querying the SGSN frequently and, as a
 result, optimizing the resolution time too.
 

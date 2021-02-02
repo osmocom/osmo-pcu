@@ -268,6 +268,27 @@ static int fill_rim_ran_info_req(const struct nacc_fsm_ctx *ctx, struct bssgp_ra
 	return 0;
 }
 
+#define SI_HDR_LEN 2
+static void bts_fill_si_cache_value(const struct gprs_rlcmac_bts *bts, struct si_cache_value *val)
+{
+	val->type_psi = false;
+	val->si_len = 0;
+	if (bts->si1_is_set) {
+		osmo_static_assert(sizeof(bts->si1) - SI_HDR_LEN == BSSGP_RIM_SI_LEN, _si1_header_size);
+		memcpy(&val->si_buf[val->si_len], bts->si1 + SI_HDR_LEN, BSSGP_RIM_SI_LEN);
+		val->si_len += BSSGP_RIM_SI_LEN;
+	}
+	if (bts->si3_is_set) {
+		osmo_static_assert(sizeof(bts->si3) - SI_HDR_LEN == BSSGP_RIM_SI_LEN, _si3_header_size);
+		memcpy(&val->si_buf[val->si_len], bts->si3 + SI_HDR_LEN, BSSGP_RIM_SI_LEN);
+		val->si_len += BSSGP_RIM_SI_LEN;
+	}
+	if (bts->si13_is_set) {
+		osmo_static_assert(sizeof(bts->si13) - SI_HDR_LEN == BSSGP_RIM_SI_LEN, _si13_header_size);
+		memcpy(&val->si_buf[val->si_len], bts->si13 + SI_HDR_LEN, BSSGP_RIM_SI_LEN);
+		val->si_len += BSSGP_RIM_SI_LEN;
+	}
+}
 
 ////////////////
 // FSM states //
@@ -382,7 +403,27 @@ static void st_wait_request_si_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_
 	struct gprs_pcu *pcu = bts->pcu;
 	struct bssgp_ran_information_pdu pdu;
 	const struct si_cache_value *si;
+	struct gprs_rlcmac_bts *bts_i;
 	int rc;
+
+	/* First check if the CGI-PS addresses a cell managed by this PCU. If
+	 * that's the case, we already have the info and there's no need to go
+	 * the RIM way since we'd end up to this same PCU on the other end anyway.
+	 */
+	llist_for_each_entry(bts_i, &the_pcu->bts_list, list) {
+		if (bts_i == bts) /* Makes no sense targeting the same cell */
+			continue;
+		if (osmo_cgi_ps_cmp(&ctx->cgi_ps, &bts_i->cgi_ps) != 0)
+			continue;
+
+		LOGPFSML(fi, LOGL_DEBUG, "neighbor CGI-PS %s addresses local BTS %d\n",
+			 osmo_cgi_ps_name(&ctx->cgi_ps), bts_i->nr);
+		bts_fill_si_cache_value(bts, &ctx->si_info);
+		/* Tell the PCU scheduler we are ready to go, from here one we
+		 * are polled/driven by the scheduler */
+		nacc_fsm_state_chg(fi, NACC_ST_TX_NEIGHBOUR_DATA);
+		return;
+	}
 
 	/* First check if we have SI info for the target cell in cache */
 	si = si_cache_lookup_value(pcu->si_cache, &ctx->cgi_ps);
