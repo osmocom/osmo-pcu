@@ -1195,6 +1195,7 @@ int pcu_vty_init(void)
 	logging_vty_add_cmds();
 	osmo_stats_vty_add_cmds();
 	osmo_talloc_vty_add_cmds();
+	osmo_fsm_vty_add_cmds();
 
 	install_node(&pcu_node, config_write_pcu);
 	install_element(CONFIG_NODE, &cfg_pcu_cmd);
