@@ -5832,7 +5832,7 @@ int encode_gsm_rlcmac_downlink(struct bitvec *vector, RlcMacDownlink_t * data)
     LOGP(DRLCMACDATA, LOGL_NOTICE, "Payload Type: RESERVED (3)\n");
     return CSN_ERROR_GENERAL;
   }
-  /* We can decode the message */
+  /* We can encode the message */
   else
   {
     /* First print the message type and create a tree item */
