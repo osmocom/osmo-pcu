@@ -65,7 +65,7 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	pcu->vty.max_cs_dl = MAX_GPRS_CS;
 	pcu->vty.max_mcs_ul = MAX_EDGE_MCS;
 	pcu->vty.max_mcs_dl = MAX_EDGE_MCS;
-	pcu->vty.alpha = 0; /* a = 0.0 */
+	pcu->vty.force_alpha = (uint8_t)-1; /* don't force by default, use BTS SI13 provided value */
 	pcu->vty.dl_tbf_preemptive_retransmission = true;
 	/* By default resegmentation is supported in DL can also be configured
 	 * through VTY */

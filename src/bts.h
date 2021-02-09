@@ -35,6 +35,7 @@ extern "C" {
 #include <osmocom/gprs/gprs_ns2.h>
 #include <osmocom/gsm/l1sap.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
+#include <osmocom/gsm/gsm48_rest_octets.h>
 #include <osmocom/gsm/gsm48.h>
 #include "mslot_class.h"
 #include "gsm_rlcmac.h"
@@ -224,6 +225,7 @@ struct gprs_rlcmac_bts {
 	uint8_t si3[GSM_MACBLOCK_LEN];
 	bool si3_is_set;
 	uint8_t si13[GSM_MACBLOCK_LEN];
+	struct osmo_gsm48_si13_info si31_ro_decoded;
 	bool si13_is_set;
 
 	/* State for dynamic algorithm selection */
@@ -346,6 +348,7 @@ void bts_set_max_mcs_dl(struct gprs_rlcmac_bts *bts, uint8_t mcs_dl);
 void bts_set_max_mcs_ul(struct gprs_rlcmac_bts *bts, uint8_t mcs_ul);
 bool bts_cs_dl_is_supported(const struct gprs_rlcmac_bts *bts, enum CodingScheme cs);
 const struct llist_head* bts_ms_list(struct gprs_rlcmac_bts *bts);
+uint8_t bts_get_ms_pwr_alpha(const struct gprs_rlcmac_bts *bts);
 #ifdef __cplusplus
 }
 #endif

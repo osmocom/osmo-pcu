@@ -918,7 +918,7 @@ send_imm_ass_rej:
 		plen = Encoding::write_immediate_assignment(
 			&bts->trx[trx_no].pdch[ts_no], tbf, bv,
 			false, rip->ra, Fn, ta, usf, false, sb_fn,
-			bts->pcu->vty.alpha, bts->pcu->vty.gamma, -1,
+			bts_get_ms_pwr_alpha(bts), bts->pcu->vty.gamma, -1,
 			rip->burst_type);
 		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF);
 	}
@@ -999,7 +999,7 @@ void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bo
 						    tbf, immediate_assignment, true, 125,
 						    (tbf->pdch[ts_no]->last_rts_fn + 21216) % GSM_MAX_FN,
 						    tbf->ta(), 7, poll, tbf->poll_fn,
-						    bts->pcu->vty.alpha, bts->pcu->vty.gamma, -1,
+						    bts_get_ms_pwr_alpha(bts), bts->pcu->vty.gamma, -1,
 						    GSM_L1_BURST_TYPE_ACCESS_0);
 	if (plen >= 0) {
 		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_DL_TBF);
@@ -1291,4 +1291,15 @@ struct GprsMs *bts_ms_by_imsi(struct gprs_rlcmac_bts *bts, const char *imsi)
 const struct llist_head* bts_ms_list(struct gprs_rlcmac_bts *bts)
 {
 	return bts_ms_store(bts)->ms_list();
+}
+
+uint8_t bts_get_ms_pwr_alpha(const struct gprs_rlcmac_bts *bts)
+{
+	if (bts->pcu->vty.force_alpha != (uint8_t)-1)
+		return bts->pcu->vty.force_alpha;
+	if (bts->si13_is_set)
+		return bts->si31_ro_decoded.pwr_ctrl_pars.alpha;
+	/* default if no SI13 is received yet: closed loop control, TS 44.060
+	 * B.2 Closed loop control */
+	return 0;
 }

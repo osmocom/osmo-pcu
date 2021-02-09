@@ -230,7 +230,8 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " alloc-algorithm dynamic%s", VTY_NEWLINE);
 	if (the_pcu->vty.force_two_phase)
 		vty_out(vty, " two-phase-access%s", VTY_NEWLINE);
-	vty_out(vty, " alpha %d%s", the_pcu->vty.alpha, VTY_NEWLINE);
+	if (the_pcu->vty.force_alpha != (uint8_t)-1)
+		vty_out(vty, " alpha %u%s", the_pcu->vty.force_alpha, VTY_NEWLINE);
 	vty_out(vty, " gamma %d%s", the_pcu->vty.gamma * 2, VTY_NEWLINE);
 	if (!the_pcu->vty.dl_tbf_preemptive_retransmission)
 		vty_out(vty, " no dl-tbf-preemptive-retransmission%s", VTY_NEWLINE);
@@ -735,13 +736,19 @@ DEFUN_ATTR(cfg_pcu_no_two_phase,
 
 DEFUN_ATTR(cfg_pcu_alpha,
 	   cfg_pcu_alpha_cmd,
-	   "alpha <0-10>",
+	   "alpha (si13|<0-10>)",
 	   "Alpha parameter for MS power control in units of 0.1 (see TS 05.08) "
 	   "NOTE: Be sure to set Alpha value at System information 13 too.\n"
-	   "Alpha in units of 0.1\n",
-	   CMD_ATTR_IMMEDIATE)
+	   "Use value received from BSC in System Intormation 13 (default)\n"
+	   "Force Alpha in units of 0.1\n",
+	   CMD_ATTR_IMMEDIATE | CMD_ATTR_DEPRECATED)
 {
-	the_pcu->vty.alpha = atoi(argv[0]);
+	vty_out(vty, "%% 'alpha <0-10>' is now deprecated: use osmo-bsc's 'gprs power-control alpha <0-10>' instead%s",
+		VTY_NEWLINE);
+	if (strcmp(argv[0], "si13") == 0)
+		the_pcu->vty.force_alpha = (uint8_t) -1;
+	else
+		the_pcu->vty.force_alpha = atoi(argv[0]);
 	return CMD_SUCCESS;
 }
 

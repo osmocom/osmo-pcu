@@ -15,14 +15,12 @@ pcu
  flow-control-interval 10 <1>
  cs 2 <2>
  alloc-algorithm dynamic <3>
- alpha 0 <4>
  gamma 0
 ----
 <1> send a BSSGP flow-control PDU every 10 seconds
 <2> start a TBF with the initial coding scheme 2
 <3> dynamically chose between single-slot or multi-slot TBF allocations
     depending on system load
-<4> disable MS power control loop
 
 However, there are plenty of tuning parameters for people interested to
 optimize PCU throughput or latency according to their requirements.
@@ -212,13 +210,15 @@ parameters.
 
 You can set those parameters at the `pcu` VTY config node as follows:
 
-`alpha <0-10>`::
-	Alpha parameter for MS power control in units of 0.1.
-	Make sure to set the alpha value at System Information 13 (in
-	the BSC), too!
 `gamma <0-62>`::
 	Set the gamma parameter for MS power control in units of dB.
 
+Parameter `ALPHA` is set on the BSC VTY configuration file on a per-BTS basis,
+and forwarded by OsmoPCU to the MS through the SI13 received from the former
+over PCUIF. OsmoPCU VTY command `alpha <0-10>` overrides the value received over
+PCUIF to keep backward compatibility with existing config files, but it is
+currently deprecated and its use is discouraged; one should configure it per-BTS
+in OsmoBSC VTY instead.
 
 === Configuring Network Assisted Cell Change (NACC)
 

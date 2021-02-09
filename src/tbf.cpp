@@ -930,7 +930,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	Encoding::write_packet_downlink_assignment(mac_control_block,
 		old_tfi_is_valid, m_tfi, (direction == GPRS_RLCMAC_DL_TBF),
 		new_dl_tbf, poll_ass_dl, rrbp,
-		the_pcu->vty.alpha, the_pcu->vty.gamma, -1, 0,
+		bts_get_ms_pwr_alpha(new_dl_tbf->bts), the_pcu->vty.gamma, -1, 0,
 		is_egprs_enabled());
 	LOGP(DTBF, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++\n");
 	rc = encode_gsm_rlcmac_downlink(&bv, mac_control_block);
@@ -1033,7 +1033,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 	mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
 	Encoding::write_packet_uplink_assignment(mac_control_block, m_tfi,
 		(direction == GPRS_RLCMAC_DL_TBF), tlli(),
-		is_tlli_valid(), new_tbf, 1, rrbp, the_pcu->vty.alpha,
+		is_tlli_valid(), new_tbf, 1, rrbp, bts_get_ms_pwr_alpha(new_tbf->bts),
 		the_pcu->vty.gamma, -1, is_egprs_enabled());
 
 	LOGP(DTBF, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++\n");

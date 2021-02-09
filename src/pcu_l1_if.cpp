@@ -42,6 +42,7 @@ extern "C" {
 #include <osmocom/gprs/gprs_ns2.h>
 #include <osmocom/gsm/l1sap.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
+#include <osmocom/gsm/gsm48_rest_octets.h>
 #include <osmocom/gsm/sysinfo.h>
 }
 
@@ -291,6 +292,7 @@ int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, uint8_t trx_no, uint8_t t
 
 static int pcu_rx_data_ind_bcch(struct gprs_rlcmac_bts *bts, uint8_t *data, uint8_t len)
 {
+	const uint8_t *si_ro;
 	switch (len) {
 	case 0:
 		/* Due to historical reasons also accept a completely empty message as
@@ -337,6 +339,9 @@ static int pcu_rx_data_ind_bcch(struct gprs_rlcmac_bts *bts, uint8_t *data, uint
 		case GSM48_MT_RR_SYSINFO_13:
 			memcpy(bts->si13, data, GSM_MACBLOCK_LEN);
 			bts->si13_is_set = true;
+			si_ro = ((struct gsm48_system_information_type_13*)data)->rest_octets;
+			if (osmo_gsm48_rest_octets_si13_decode(&bts->si31_ro_decoded, si_ro) < 0)
+				LOGP(DPCU, LOGL_ERROR, "Error decoding SI13\n");
 			break;
 		default:
 			LOGP(DL1IF, LOGL_ERROR,
