@@ -309,6 +309,29 @@ static void bts_fill_si_cache_value(const struct gprs_rlcmac_bts *bts, struct si
 	}
 }
 
+/* Called on event NACC_EV_RX_CELL_CHG_NOTIFICATION on states after
+ * WAIT_RESOLVE_RAC_CI. Ignore duplicate messages, transition back if target
+ * cell changed.
+ */
+static void handle_retrans_pkt_cell_chg_notif(struct nacc_fsm_ctx *ctx, const Packet_Cell_Change_Notification_t *notif)
+{
+	struct gprs_rlcmac_bts *bts = ctx->ms->bts;
+	struct neigh_cache_entry_key neigh_key;
+
+	if (fill_neigh_key_from_bts_pkt_cell_chg_not(&neigh_key, bts, notif) < 0) {
+		LOGPFSML(ctx->fi, LOGL_NOTICE, "TargetCell type=0x%x not supported\n",
+			 notif->Target_Cell.UnionType);
+		nacc_fsm_state_chg(ctx->fi, NACC_ST_TX_CELL_CHG_CONTINUE);
+		return;
+	}
+	/* If tgt cell changed, restart resolving it */
+	if (!neigh_cache_entry_key_eq(&ctx->neigh_key, &neigh_key)) {
+		ctx->neigh_key = neigh_key;
+		nacc_fsm_state_chg(ctx->fi, NACC_ST_WAIT_RESOLVE_RAC_CI);
+	}
+	/* else: ignore it, it's a dup, carry on what we were doing */
+}
+
 ////////////////
 // FSM states //
 ////////////////
@@ -398,28 +421,15 @@ err_term:
 	nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
 }
 
-
 static void st_wait_resolve_rac_ci(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct nacc_fsm_ctx *ctx = (struct nacc_fsm_ctx *)fi->priv;
-	struct gprs_rlcmac_bts *bts = ctx->ms->bts;
-	Packet_Cell_Change_Notification_t *notif;
-	struct neigh_cache_entry_key neigh_key;
+	const Packet_Cell_Change_Notification_t *notif;
 
 	switch (event) {
 	case NACC_EV_RX_CELL_CHG_NOTIFICATION:
-		notif = (Packet_Cell_Change_Notification_t *)data;
-		if (fill_neigh_key_from_bts_pkt_cell_chg_not(&neigh_key, bts, notif) < 0) {
-			LOGPFSML(fi, LOGL_NOTICE, "TargetCell type=0x%x not supported\n",
-				 notif->Target_Cell.UnionType);
-			nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
-			return;
-		}
-		/* If tgt cell changed, restart resolving it */
-		if (!neigh_cache_entry_key_eq(&ctx->neigh_key, &neigh_key)) {
-			ctx->neigh_key = neigh_key;
-			nacc_fsm_state_chg(fi, NACC_ST_WAIT_RESOLVE_RAC_CI);
-		}
+		notif = (const Packet_Cell_Change_Notification_t *)data;
+		handle_retrans_pkt_cell_chg_notif(ctx, notif);
 		break;
 	case NACC_EV_RX_RAC_CI:
 		/* Assumption: ctx->cgi_ps has been filled by caller of the event */
@@ -489,9 +499,14 @@ static void st_wait_request_si_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_
 static void st_wait_request_si(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct nacc_fsm_ctx *ctx = (struct nacc_fsm_ctx *)fi->priv;
+	const Packet_Cell_Change_Notification_t *notif;
 	struct si_cache_entry *entry;
 
 	switch (event) {
+	case NACC_EV_RX_CELL_CHG_NOTIFICATION:
+		notif = (const Packet_Cell_Change_Notification_t *)data;
+		handle_retrans_pkt_cell_chg_notif(ctx, notif);
+		break;
 	case NACC_EV_RX_SI:
 		entry = (struct si_cache_entry *)data;
 		/* Copy info since cache can be deleted at any point */
@@ -629,6 +644,7 @@ static struct osmo_fsm_state nacc_fsm_states[] = {
 			X(NACC_EV_RX_CELL_CHG_NOTIFICATION) |
 			X(NACC_EV_RX_SI),
 		.out_state_mask =
+			X(NACC_ST_WAIT_RESOLVE_RAC_CI) |
 			X(NACC_ST_TX_NEIGHBOUR_DATA) |
 			X(NACC_ST_TX_CELL_CHG_CONTINUE),
 		.name = "WAIT_REQUEST_SI",
