@@ -48,6 +48,15 @@ struct neigh_cache_entry_key {
 #define NEIGH_CACHE_ENTRY_KEY_FMT "%" PRIu16 "-%" PRIu16 "-%" PRIu16 "-%" PRIu8
 #define NEIGH_CACHE_ENTRY_KEY_ARGS(key) (key)->local_lac, (key)->local_ci, (key)->tgt_arfcn, (key)->tgt_bsic
 
+static inline bool neigh_cache_entry_key_eq(const struct neigh_cache_entry_key *a,
+					    const struct neigh_cache_entry_key *b)
+{
+	return a->local_lac == b->local_lac &&
+	       a->local_ci == b->local_ci &&
+	       a->tgt_arfcn == b->tgt_arfcn &&
+	       a->tgt_bsic == b->tgt_bsic;
+}
+
 struct neigh_cache_entry {
 	struct llist_head list; /* to be included in neigh_cache->list */
 	struct timespec update_ts;

@@ -27,15 +27,6 @@
 #include <neigh_cache.h>
 #include <gprs_debug.h>
 
-static inline bool neigh_cache_entry_key_eq(const struct neigh_cache_entry_key *a,
-					    const struct neigh_cache_entry_key *b)
-{
-	return a->local_lac == b->local_lac &&
-	       a->local_ci == b->local_ci &&
-	       a->tgt_arfcn == b->tgt_arfcn &&
-	       a->tgt_bsic == b->tgt_bsic;
-}
-
 static void neigh_cache_schedule_cleanup(struct neigh_cache *cache);
 static void neigh_cache_cleanup_cb(void *data)
 {

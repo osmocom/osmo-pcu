@@ -40,6 +40,9 @@
 
 #define X(s) (1 << (s))
 
+/* Infer CTRL id (seqnum) for a given tgt arfcn+bsic (bsic range: 0-63) */
+#define arfcn_bsic_2_ctrl_id(arfcn, bsic) ((arfcn) * 100 + (bsic))
+
 static const struct osmo_tdef_state_timeout nacc_fsm_timeouts[32] = {
 	[NACC_ST_INITIAL] = {},
 	[NACC_ST_WAIT_RESOLVE_RAC_CI] = { .T = PCU_TDEF_NEIGH_RESOLVE_TO },
@@ -354,15 +357,20 @@ static void st_wait_resolve_rac_ci_on_enter(struct osmo_fsm_inst *fi, uint32_t p
 	LOGPFSML(fi, LOGL_DEBUG, "No CGI-PS found in cache, resolving " NEIGH_CACHE_ENTRY_KEY_FMT "...\n",
 		 NEIGH_CACHE_ENTRY_KEY_ARGS(&ctx->neigh_key));
 
-	rc = osmo_sock_init2_ofd(&ctx->neigh_ctrl_conn->write_queue.bfd,
-				 AF_UNSPEC, SOCK_STREAM, IPPROTO_TCP,
-				 NULL, 0, pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port,
-				 OSMO_SOCK_F_CONNECT);
-	if (rc < 0) {
-		LOGPFSML(fi, LOGL_ERROR,
-			"Failed to establish CTRL (neighbor resolution) connection to BSC r=%s:%u\n\n",
-			pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port);
-		goto err_term;
+	/* We may have changed to this state previously (eg: we are handling
+	 * another Pkt cell Change Notify with different target). Avoid
+	 * re-creating the socket in that case. */
+	if (ctx->neigh_ctrl_conn->write_queue.bfd.fd == -1) {
+		rc = osmo_sock_init2_ofd(&ctx->neigh_ctrl_conn->write_queue.bfd,
+					 AF_UNSPEC, SOCK_STREAM, IPPROTO_TCP,
+					 NULL, 0, pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port,
+					 OSMO_SOCK_F_CONNECT);
+		if (rc < 0) {
+			LOGPFSML(fi, LOGL_ERROR,
+				"Failed to establish CTRL (neighbor resolution) connection to BSC r=%s:%u\n\n",
+				pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port);
+			goto err_term;
+		}
 	}
 
 	cmd = ctrl_cmd_create(ctx, CTRL_TYPE_GET);
@@ -371,7 +379,8 @@ static void st_wait_resolve_rac_ci_on_enter(struct osmo_fsm_inst *fi, uint32_t p
 		goto err_term;
 	}
 
-	cmd->id = talloc_asprintf(cmd, "1");
+	cmd->id = talloc_asprintf(cmd, "%u", arfcn_bsic_2_ctrl_id(ctx->neigh_key.tgt_arfcn,
+								  ctx->neigh_key.tgt_bsic));
 	cmd->variable = talloc_asprintf(cmd, "neighbor_resolve_cgi_ps_from_lac_ci.%d.%d.%d.%d",
 					ctx->neigh_key.local_lac, ctx->neigh_key.local_ci,
 					ctx->neigh_key.tgt_arfcn, ctx->neigh_key.tgt_bsic);
@@ -392,8 +401,25 @@ err_term:
 
 static void st_wait_resolve_rac_ci(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
+	struct nacc_fsm_ctx *ctx = (struct nacc_fsm_ctx *)fi->priv;
+	struct gprs_rlcmac_bts *bts = ctx->ms->bts;
+	Packet_Cell_Change_Notification_t *notif;
+	struct neigh_cache_entry_key neigh_key;
+
 	switch (event) {
 	case NACC_EV_RX_CELL_CHG_NOTIFICATION:
+		notif = (Packet_Cell_Change_Notification_t *)data;
+		if (fill_neigh_key_from_bts_pkt_cell_chg_not(&neigh_key, bts, notif) < 0) {
+			LOGPFSML(fi, LOGL_NOTICE, "TargetCell type=0x%x not supported\n",
+				 notif->Target_Cell.UnionType);
+			nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
+			return;
+		}
+		/* If tgt cell changed, restart resolving it */
+		if (!neigh_cache_entry_key_eq(&ctx->neigh_key, &neigh_key)) {
+			ctx->neigh_key = neigh_key;
+			nacc_fsm_state_chg(fi, NACC_ST_WAIT_RESOLVE_RAC_CI);
+		}
 		break;
 	case NACC_EV_RX_RAC_CI:
 		/* Assumption: ctx->cgi_ps has been filled by caller of the event */
@@ -588,8 +614,10 @@ static struct osmo_fsm_state nacc_fsm_states[] = {
 	},
 	[NACC_ST_WAIT_RESOLVE_RAC_CI] = {
 		.in_event_mask =
+			X(NACC_EV_RX_CELL_CHG_NOTIFICATION) |
 			X(NACC_EV_RX_RAC_CI),
 		.out_state_mask =
+			X(NACC_ST_WAIT_RESOLVE_RAC_CI) |
 			X(NACC_ST_WAIT_REQUEST_SI) |
 			X(NACC_ST_TX_CELL_CHG_CONTINUE),
 		.name = "WAIT_RESOLVE_RAC_CI",
@@ -662,12 +690,25 @@ void nacc_fsm_ctrl_reply_cb(struct ctrl_handle *ctrl, struct ctrl_cmd *cmd, void
 {
 	struct nacc_fsm_ctx *ctx = (struct nacc_fsm_ctx *)data;
 	char *tmp = NULL, *tok, *saveptr;
+	unsigned int exp_id;
 
-	LOGPFSML(ctx->fi, LOGL_NOTICE, "Received CTRL message: type=%d %s: %s\n",
-		 cmd->type, cmd->variable, osmo_escape_str(cmd->reply, -1));
+	LOGPFSML(ctx->fi, LOGL_NOTICE, "Received CTRL message: type=%d %s %s: %s\n",
+		 cmd->type, cmd->variable, cmd->id, osmo_escape_str(cmd->reply, -1));
 
 	if (cmd->type != CTRL_TYPE_GET_REPLY || !cmd->reply) {
 		nacc_fsm_state_chg(ctx->fi, NACC_ST_TX_CELL_CHG_CONTINUE);
+		return;
+	}
+
+	/* Validate it's the seqnum from our last GET cmd, and not from older
+	 * one we may have requested in case MS decided to resend Pkt Cell
+	 * Change Notify with a different tgt cell:
+	 */
+	exp_id = arfcn_bsic_2_ctrl_id(ctx->neigh_key.tgt_arfcn, ctx->neigh_key.tgt_bsic);
+	if ((unsigned int)atoi(cmd->id) != exp_id) {
+		LOGPFSML(ctx->fi, LOGL_INFO,
+			 "Received CTRL message with id=%s doesn't match our expected last id=%d, ignoring\n",
+			 cmd->id, exp_id);
 		return;
 	}
 
