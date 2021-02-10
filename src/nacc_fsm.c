@@ -268,6 +268,22 @@ static int fill_rim_ran_info_req(const struct nacc_fsm_ctx *ctx, struct bssgp_ra
 	return 0;
 }
 
+static int fill_neigh_key_from_bts_pkt_cell_chg_not(struct neigh_cache_entry_key *neigh_key,
+						    const struct gprs_rlcmac_bts *bts,
+						    const Packet_Cell_Change_Notification_t *notif)
+{
+	switch (notif->Target_Cell.UnionType) {
+	case 0: /* GSM */
+		neigh_key->local_lac = bts->cgi_ps.rai.lac.lac;
+		neigh_key->local_ci = bts->cgi_ps.cell_identity;
+		neigh_key->tgt_arfcn = notif->Target_Cell.u.Target_Cell_GSM_Notif.ARFCN;
+		neigh_key->tgt_bsic = notif->Target_Cell.u.Target_Cell_GSM_Notif.BSIC;
+		return 0;
+	default:
+		return -ENOTSUP;
+	}
+}
+
 #define SI_HDR_LEN 2
 static void bts_fill_si_cache_value(const struct gprs_rlcmac_bts *bts, struct si_cache_value *val)
 {
@@ -303,19 +319,12 @@ static void st_initial(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	switch (event) {
 	case NACC_EV_RX_CELL_CHG_NOTIFICATION:
 		notif = (Packet_Cell_Change_Notification_t *)data;
-		switch (notif->Target_Cell.UnionType) {
-		case 0: /* GSM */
-			ctx->neigh_key.local_lac = bts->cgi_ps.rai.lac.lac;
-			ctx->neigh_key.local_ci = bts->cgi_ps.cell_identity;
-			ctx->neigh_key.tgt_arfcn = notif->Target_Cell.u.Target_Cell_GSM_Notif.ARFCN;
-			ctx->neigh_key.tgt_bsic = notif->Target_Cell.u.Target_Cell_GSM_Notif.BSIC;
-			nacc_fsm_state_chg(fi, NACC_ST_WAIT_RESOLVE_RAC_CI);
-			break;
-		default:
+		if (fill_neigh_key_from_bts_pkt_cell_chg_not(&ctx->neigh_key, bts, notif) < 0) {
 			LOGPFSML(fi, LOGL_NOTICE, "TargetCell type=0x%x not supported\n",
 				 notif->Target_Cell.UnionType);
 			osmo_fsm_inst_term(fi, OSMO_FSM_TERM_ERROR, NULL);
-			return;
+		} else {
+			nacc_fsm_state_chg(fi, NACC_ST_WAIT_RESOLVE_RAC_CI);
 		}
 		break;
 	default:
