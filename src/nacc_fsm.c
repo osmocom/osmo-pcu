@@ -610,7 +610,6 @@ static struct osmo_fsm_state nacc_fsm_states[] = {
 	[NACC_ST_TX_NEIGHBOUR_DATA] = {
 		.in_event_mask =
 			X(NACC_EV_RX_CELL_CHG_NOTIFICATION) |
-			X(NACC_EV_RX_SI) |
 			X(NACC_EV_CREATE_RLCMAC_MSG),
 		.out_state_mask =
 			X(NACC_ST_TX_CELL_CHG_CONTINUE),
@@ -620,7 +619,6 @@ static struct osmo_fsm_state nacc_fsm_states[] = {
 	[NACC_ST_TX_CELL_CHG_CONTINUE] = {
 		.in_event_mask =
 			X(NACC_EV_RX_CELL_CHG_NOTIFICATION) |
-			X(NACC_EV_RX_SI) |
 			X(NACC_EV_CREATE_RLCMAC_MSG),
 		.out_state_mask =
 			X(NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK),
