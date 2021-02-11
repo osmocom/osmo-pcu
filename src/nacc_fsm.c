@@ -321,7 +321,8 @@ static void handle_retrans_pkt_cell_chg_notif(struct nacc_fsm_ctx *ctx, const Pa
 	if (fill_neigh_key_from_bts_pkt_cell_chg_not(&neigh_key, bts, notif) < 0) {
 		LOGPFSML(ctx->fi, LOGL_NOTICE, "TargetCell type=0x%x not supported\n",
 			 notif->Target_Cell.UnionType);
-		nacc_fsm_state_chg(ctx->fi, NACC_ST_TX_CELL_CHG_CONTINUE);
+		if (ctx->fi->state != NACC_ST_TX_CELL_CHG_CONTINUE)
+			nacc_fsm_state_chg(ctx->fi, NACC_ST_TX_CELL_CHG_CONTINUE);
 		return;
 	}
 	/* If tgt cell changed, restart resolving it */
@@ -520,19 +521,29 @@ static void st_wait_request_si(struct osmo_fsm_inst *fi, uint32_t event, void *d
 	}
 }
 
-/* st_tx_neighbour_data_on_enter:
- * At this point, we already received all required SI information to send stored
+/* At this point, we already received all required SI information to send stored
  * in struct nacc_fsm_ctx. We now wait for scheduler to ask us to construct
  * RLCMAC DL CTRL messages to move FSM states forward
  */
+static void st_tx_neighbour_data_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
+{
+	struct nacc_fsm_ctx *ctx = (struct nacc_fsm_ctx *)fi->priv;
+	ctx->si_info_bytes_sent = 0;
+	ctx->container_idx = 0;
+}
 
 static void st_tx_neighbour_data(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct nacc_fsm_ctx *ctx = (struct nacc_fsm_ctx *)fi->priv;
+	const Packet_Cell_Change_Notification_t *notif;
 	struct nacc_ev_create_rlcmac_msg_ctx *data_ctx;
 	bool all_si_info_sent;
 
 	switch (event) {
+	case NACC_EV_RX_CELL_CHG_NOTIFICATION:
+		notif = (const Packet_Cell_Change_Notification_t *)data;
+		handle_retrans_pkt_cell_chg_notif(ctx, notif);
+		break;
 	case NACC_EV_CREATE_RLCMAC_MSG:
 		data_ctx = (struct nacc_ev_create_rlcmac_msg_ctx *)data;
 		data_ctx->msg = create_packet_neighbour_cell_data(ctx, data_ctx->tbf, &all_si_info_sent);
@@ -557,9 +568,14 @@ static void st_tx_neighbour_data(struct osmo_fsm_inst *fi, uint32_t event, void 
 static void st_cell_chg_continue(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct nacc_fsm_ctx *ctx = (struct nacc_fsm_ctx *)fi->priv;
+	const Packet_Cell_Change_Notification_t *notif;
 	struct nacc_ev_create_rlcmac_msg_ctx *data_ctx;
 
 	switch (event) {
+	case NACC_EV_RX_CELL_CHG_NOTIFICATION:
+		notif = (const Packet_Cell_Change_Notification_t *)data;
+		handle_retrans_pkt_cell_chg_notif(ctx, notif);
+		break;
 	case NACC_EV_CREATE_RLCMAC_MSG:
 		data_ctx = (struct nacc_ev_create_rlcmac_msg_ctx *)data;
 		data_ctx->msg = create_packet_cell_chg_continue(ctx, data_ctx, &ctx->continue_poll_fn);
@@ -575,7 +591,14 @@ static void st_cell_chg_continue(struct osmo_fsm_inst *fi, uint32_t event, void 
 
 static void st_wait_cell_chg_continue_ack(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
+	struct nacc_fsm_ctx *ctx = (struct nacc_fsm_ctx *)fi->priv;
+	const Packet_Cell_Change_Notification_t *notif;
+
 	switch (event) {
+	case NACC_EV_RX_CELL_CHG_NOTIFICATION:
+		notif = (const Packet_Cell_Change_Notification_t *)data;
+		handle_retrans_pkt_cell_chg_notif(ctx, notif);
+		break;
 	case NACC_EV_TIMEOUT_CELL_CHG_CONTINUE:
 		nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
 		break;
@@ -656,8 +679,10 @@ static struct osmo_fsm_state nacc_fsm_states[] = {
 			X(NACC_EV_RX_CELL_CHG_NOTIFICATION) |
 			X(NACC_EV_CREATE_RLCMAC_MSG),
 		.out_state_mask =
+			X(NACC_ST_WAIT_RESOLVE_RAC_CI) |
 			X(NACC_ST_TX_CELL_CHG_CONTINUE),
 		.name = "TX_NEIGHBOUR_DATA",
+		.onenter = st_tx_neighbour_data_on_enter,
 		.action = st_tx_neighbour_data,
 	},
 	[NACC_ST_TX_CELL_CHG_CONTINUE] = {
@@ -665,15 +690,18 @@ static struct osmo_fsm_state nacc_fsm_states[] = {
 			X(NACC_EV_RX_CELL_CHG_NOTIFICATION) |
 			X(NACC_EV_CREATE_RLCMAC_MSG),
 		.out_state_mask =
+			X(NACC_ST_WAIT_RESOLVE_RAC_CI) |
 			X(NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK),
 		.name = "TX_CELL_CHG_CONTINUE",
 		.action = st_cell_chg_continue,
 	},
 	[NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK] = {
 		.in_event_mask =
+			X(NACC_EV_RX_CELL_CHG_NOTIFICATION) |
 			X(NACC_EV_RX_CELL_CHG_CONTINUE_ACK) |
 			X(NACC_EV_TIMEOUT_CELL_CHG_CONTINUE),
 		.out_state_mask =
+			X(NACC_ST_WAIT_RESOLVE_RAC_CI) |
 			X(NACC_ST_TX_CELL_CHG_CONTINUE) |
 			X(NACC_ST_DONE),
 		.name = "WAIT_CELL_CHG_CONTINUE_ACK",
