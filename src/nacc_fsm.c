@@ -488,9 +488,12 @@ static void st_wait_request_si_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_
 		return;
 	}
 
+	LOGPFSML(fi, LOGL_INFO, "Tx RIM RAN-INFO to request SI of %s\n",
+		 osmo_cgi_ps_name(&ctx->cgi_ps));
 	rc = bssgp_tx_rim(&pdu, gprs_ns2_nse_nsei(ctx->ms->bts->nse));
 	if (rc < 0) {
-		LOGPFSML(fi, LOGL_ERROR, "Failed transmitting RIM PDU: %d\n", rc);
+		LOGPFSML(fi, LOGL_ERROR, "Failed transmitting RIM RAN-INFO %s PDU: %d\n",
+			 osmo_cgi_ps_name(&ctx->cgi_ps), rc);
 		nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
 		return;
 	}
