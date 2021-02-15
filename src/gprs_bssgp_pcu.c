@@ -1023,6 +1023,14 @@ static int ns_configure_nse(struct gprs_rlcmac_bts *bts,
 				LOGP(DBSSGP, LOGL_ERROR, "Failed to bind to %s\n", osmo_sockaddr_to_str(&local[i]));
 				continue;
 			}
+
+			if (the_pcu->vty.ns_dialect == GPRS_NS2_DIALECT_SNS) {
+				rc = gprs_ns2_sns_add_bind(bts->nse, bind[i]);
+				if (rc < 0) {
+					LOGP(DBSSGP, LOGL_ERROR, "Failed to add bind %s to the NSE for IP-SNS\n", osmo_sockaddr_to_str(&local[i]));
+					continue;
+				}
+			}
 		}
 
 		binds |= 1 << i;
