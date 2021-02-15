@@ -975,12 +975,22 @@ static void bvc_timeout(void *_priv)
 	osmo_timer_schedule(&the_pcu->bssgp.bvc_timer, the_pcu->vty.fc_interval, 0);
 }
 
-static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
-			  uint16_t nsei,
-			  const struct osmo_sockaddr *local,
-			  const struct osmo_sockaddr *remote,
-			  const uint16_t *nsvci,
-			  uint16_t valid)
+/*! configure NS layer
+ *
+ * \param bts pointer to the bts object
+ * \param nsei the NSEI of the BSS
+ * \param local pointer to an array of local address to bind on.
+ * \param remote pointer to an array of remote address SGSNs. If dynamic IP-SNS is used remote is used as initial SGSN endpoints.
+ * \param nsvci pointer to an array of nsvcis
+ * \param valid bitmask. a 1 means the position in the array contains a valid entry for local, remote, nsvci
+ * \returns 0 if the configuration has succeeded. on error != 0
+ */
+static int ns_configure_nse(struct gprs_rlcmac_bts *bts,
+			    uint16_t nsei,
+			    const struct osmo_sockaddr *local,
+			    const struct osmo_sockaddr *remote,
+			    const uint16_t *nsvci,
+			    uint16_t valid)
 {
 	int i, rc;
 	uint16_t binds = 0;
@@ -988,9 +998,19 @@ static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
 	struct gprs_ns2_vc *nsvc;
 	struct gprs_ns2_vc_bind *bind[PCU_IF_NUM_NSVC] = { };
 	char name[5];
+	bool sns_configured = false;
 
 	if (!valid)
 		return -1;
+
+	bts->nse = gprs_ns2_nse_by_nsei(the_pcu->nsi, nsei);
+	if (!bts->nse)
+		bts->nse = gprs_ns2_create_nse(the_pcu->nsi, nsei,
+					       GPRS_NS2_LL_UDP, the_pcu->vty.ns_dialect);
+	if (!bts->nse) {
+		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSE\n");
+		return -1;
+	}
 
 	for (i = 0; i < PCU_IF_NUM_NSVC; i++) {
 		if (!(valid & (1 << i)))
@@ -1010,31 +1030,22 @@ static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
 
 	if (!binds) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to bind to any NS-VC\n");
+		gprs_ns2_free_nses(the_pcu->nsi);
 		return -1;
-	}
-
-	bts->nse = gprs_ns2_nse_by_nsei(the_pcu->nsi, nsei);
-	if (!bts->nse)
-		bts->nse = gprs_ns2_create_nse(the_pcu->nsi, nsei,
-					       GPRS_NS2_LL_UDP, the_pcu->vty.ns_dialect);
-
-	if (!bts->nse) {
-		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NSE\n");
-		gprs_ns2_free_binds(the_pcu->nsi);
-		return 1;
 	}
 
 	for (i = 0; i < PCU_IF_NUM_NSVC; i++) {
 		if (!(binds & (1 << i)))
 			continue;
 
-		/* FIXME: for SNS we just use the first successful NS-VC instead of all for the initial connect */
 		if (the_pcu->vty.ns_dialect == GPRS_NS2_DIALECT_SNS) {
 			rc = gprs_ns2_sns_add_endpoint(bts->nse, &remote[i]);
-			if (!rc)
+			if (rc && rc != -EALREADY) {
+				LOGP(DBSSGP, LOGL_ERROR, "Failed to add SNS endpoint %s!\n", osmo_sockaddr_to_str(&remote[i]));
 				return rc;
-			else
-				LOGP(DBSSGP, LOGL_ERROR, "Failed to connect to (SNS) towards SGSN %s!\n", osmo_sockaddr_to_str(&remote[i]));
+			} else {
+				sns_configured = true;
+			}
 		} else {
 			nsvc = gprs_ns2_ip_connect(bind[i], &remote[i], bts->nse, nsvci[i]);
 			if (nsvc)
@@ -1044,7 +1055,10 @@ static int ns_create_nsvc(struct gprs_rlcmac_bts *bts,
 		}
 	}
 
-	return nsvcs ? 0 : -1;
+	if (the_pcu->vty.ns_dialect == GPRS_NS2_DIALECT_SNS)
+		return sns_configured ? 0 : -1;
+	else
+		return nsvcs ? 0 : -1;
 }
 
 struct nsvc_cb {
@@ -1093,12 +1107,12 @@ int gprs_ns_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
 		/* there shouldn't any previous state. */
 		gprs_ns2_free_nses(the_pcu->nsi);
 		gprs_ns2_free_binds(the_pcu->nsi);
-		rc = ns_create_nsvc(bts, nsei, local, remote, nsvci, valid);
+		rc = ns_configure_nse(bts, nsei, local, remote, nsvci, valid);
 	} else if (nsei != gprs_ns2_nse_nsei(bts->nse)) {
 		/* the NSEI has changed */
 		gprs_ns2_free_nses(the_pcu->nsi);
 		gprs_ns2_free_binds(the_pcu->nsi);
-		rc = ns_create_nsvc(bts, nsei, local, remote, nsvci, valid);
+		rc = ns_configure_nse(bts, nsei, local, remote, nsvci, valid);
 	} else if (the_pcu->vty.ns_dialect == GPRS_NS2_DIALECT_SNS) {
 		/* SNS: check if the initial nsvc is the same, if not recreate it */
 		const struct osmo_sockaddr *initial = gprs_ns2_nse_sns_remote(bts->nse);
@@ -1114,7 +1128,7 @@ int gprs_ns_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
 
 		gprs_ns2_free_nses(the_pcu->nsi);
 		gprs_ns2_free_binds(the_pcu->nsi);
-		rc = ns_create_nsvc(bts, nsei, local, remote, nsvci, valid);
+		rc = ns_configure_nse(bts, nsei, local, remote, nsvci, valid);
 	} else {
 		/* check if all NSVC are still the same. */
 		struct nsvc_cb data = {
@@ -1134,7 +1148,7 @@ int gprs_ns_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
 
 		/* remove all found nsvcs from the valid field */
 		valid &= ~data.found;
-		rc = ns_create_nsvc(bts, nsei, local, remote, nsvci, valid);
+		rc = ns_configure_nse(bts, nsei, local, remote, nsvci, valid);
 	}
 
 	if (rc)
