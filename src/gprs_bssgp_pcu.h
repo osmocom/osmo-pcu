@@ -90,7 +90,7 @@ struct gprs_bssgp_pcu *gprs_bssgp_init(
 		uint16_t mcc, uint16_t mnc, bool mnc_3_digits,
 		uint16_t lac, uint16_t rac, uint16_t cell_id);
 
-int gprs_ns_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
+int gprs_ns_update_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
 		   const struct osmo_sockaddr *local,
 		   const struct osmo_sockaddr *remote,
 		   uint16_t *nsvci, uint16_t valid);

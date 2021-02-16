@@ -1097,10 +1097,11 @@ static int ns_conf_vc_cb(struct gprs_ns2_vc *nsvc, void *ctx)
 	return 0;
 }
 
-int gprs_ns_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
-		   const struct osmo_sockaddr *local,
-		   const struct osmo_sockaddr *remote,
-		   uint16_t *nsvci, uint16_t valid)
+/* update the ns configuration if needed */
+int gprs_ns_update_config(struct gprs_rlcmac_bts *bts, uint16_t nsei,
+			  const struct osmo_sockaddr *local,
+			  const struct osmo_sockaddr *remote,
+			  uint16_t *nsvci, uint16_t valid)
 {
 	int rc = 0;
 	if (!bts->nse) {

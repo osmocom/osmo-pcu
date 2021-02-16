@@ -583,7 +583,7 @@ static int pcu_info_ind_ns(struct gprs_rlcmac_bts *bts,
 		return -EINVAL;
 	}
 
-	return gprs_ns_config(bts, info_ind->nsei, local, remote, nsvci, valid);
+	return gprs_ns_update_config(bts, info_ind->nsei, local, remote, nsvci, valid);
 }
 
 static int pcu_rx_info_ind(struct gprs_rlcmac_bts *bts, const struct gsm_pcu_if_info_ind *info_ind)
