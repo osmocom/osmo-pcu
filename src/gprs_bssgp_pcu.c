@@ -414,7 +414,6 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	struct bssgp_ud_hdr *budh = (struct bssgp_ud_hdr *) msgb_bssgph(msg);
 	struct tlv_parsed tp;
 	enum bssgp_pdu_type pdu_type = (enum bssgp_pdu_type) bgph->pdu_type;
-	enum gprs_bssgp_cause cause = BSSGP_CAUSE_OML_INTERV;
 	uint16_t ns_bvci = msgb_bvci(msg), nsei = msgb_nsei(msg);
 	int data_len;
 	int rc = 0;
@@ -457,20 +456,7 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	}
 
 	if (pdu_type == BSSGP_PDUT_BVC_RESET) {
-		rc = bssgp_rcvmsg(msg);
-		if (ns_bvci != BVCI_SIGNALLING)
-			return rc;
-
-		if (TLVP_PRES_LEN(&tp, BSSGP_IE_CAUSE, 1))
-			cause = (enum gprs_bssgp_cause)*TLVP_VAL(&tp, BSSGP_IE_CAUSE);
-		else
-			LOGP(DBSSGP, LOGL_ERROR, "NSEI=%u BVC RESET without cause?!\n", nsei);
-
-		rc = bssgp_tx_bvc_ptp_reset(nsei, cause);
-		if (rc < 0)
-			LOGP(DBSSGP, LOGL_ERROR, "NSEI=%u BVC PTP reset procedure failed: %d\n", nsei, rc);
-
-		return rc;
+		return bssgp_rcvmsg(msg);
 	}
 
 	/* look-up or create the BTS context for this BVC */
@@ -558,12 +544,43 @@ static void handle_nm_status(struct osmo_bssgp_prim *bp)
 int bssgp_prim_cb(struct osmo_prim_hdr *oph, void *ctx)
 {
 	struct osmo_bssgp_prim *bp;
+	int rc;
+	enum gprs_bssgp_cause cause;
 	bp = container_of(oph, struct osmo_bssgp_prim, oph);
 
 	switch (oph->sap) {
 	case SAP_BSSGP_NM:
-		if (oph->primitive == PRIM_NM_STATUS)
+		switch (oph->primitive) {
+		case PRIM_NM_STATUS:
 			handle_nm_status(bp);
+			break;
+		case PRIM_NM_BVC_RESET:
+			/* received a BVC PTP reset */
+			LOGP(DPCU, LOGL_INFO, "Rx BVC_RESET on bvci %d\n", bp->bvci);
+			/* Rx Reset from SGSN */
+			if (bp->bvci == BVCI_SIGNALLING) {
+				if (TLVP_PRES_LEN(bp->tp, BSSGP_IE_CAUSE, 1))
+					cause = (enum gprs_bssgp_cause)*TLVP_VAL(bp->tp, BSSGP_IE_CAUSE);
+				else {
+					LOGP(DBSSGP, LOGL_ERROR, "NSEI=%u BVC RESET without cause?!\n", bp->nsei);
+					break;
+				}
+
+				rc = bssgp_tx_bvc_ptp_reset(bp->nsei, cause);
+				if (rc < 0) {
+					LOGP(DBSSGP, LOGL_ERROR, "NSEI=%u BVC PTP reset procedure failed: %d\n", bp->nsei, rc);
+					break;
+				}
+				the_pcu->bssgp.bvc_sig_reset = 1;
+				the_pcu->bssgp.bvc_reset = 0;
+				the_pcu->bssgp.bvc_unblocked = 0;
+			} else if (bp->bvci == the_pcu->bssgp.bctx->bvci) {
+				the_pcu->bssgp.bvc_reset = 1;
+				the_pcu->bssgp.bvc_unblocked = 0;
+				bvc_timeout(NULL);
+			}
+			break;
+		}
 		break;
 	case SAP_BSSGP_RIM:
 		return handle_rim(bp);
@@ -1184,6 +1201,7 @@ struct gprs_bssgp_pcu *gprs_bssgp_init(
 		the_pcu->bssgp.bts->nse = NULL;
 		return NULL;
 	}
+	the_pcu->bssgp.bctx->is_sgsn = false;
 	the_pcu->bssgp.bctx->ra_id.mcc = spoof_mcc ? : mcc;
 	if (spoof_mnc) {
 		the_pcu->bssgp.bctx->ra_id.mnc = spoof_mnc;
