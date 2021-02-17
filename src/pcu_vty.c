@@ -250,6 +250,11 @@ static int config_write_pcu(struct vty *vty)
 	else
 		vty_out(vty, " gb-dialect classic%s", VTY_NEWLINE);
 
+	if (the_pcu->vty.neigh_ctrl_addr) {
+		vty_out(vty, " neighbor resolution %s %u%s",
+			the_pcu->vty.neigh_ctrl_addr, the_pcu->vty.neigh_ctrl_port, VTY_NEWLINE);
+	}
+
 	osmo_tdef_vty_write(vty, the_pcu->T_defs, " timer ");
 
 	return CMD_SUCCESS;
