@@ -72,8 +72,8 @@ static uint32_t sched_poll(struct gprs_rlcmac_bts *bts,
 		if (ul_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS)
 		    || ul_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
 			tbf_cand->ul_ass = ul_tbf;
-		/* NACC ready to send */
-		if (ms_nacc_rts(ul_tbf->ms()))
+		/* NACC ready to send. TFI assigned is needed to send messages */
+		if (ul_tbf->is_tfi_assigned() && ms_nacc_rts(ul_tbf->ms()))
 			tbf_cand->nacc = ul_tbf;
 /* FIXME: Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all
 states? */
@@ -92,8 +92,8 @@ states? */
 		if (dl_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS)
 		    || dl_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
 			tbf_cand->ul_ass = dl_tbf;
-		/* NACC ready to send */
-		if (ms_nacc_rts(dl_tbf->ms()))
+		/* NACC ready to send. TFI assigned is needed to send messages */
+		if (dl_tbf->is_tfi_assigned() && ms_nacc_rts(dl_tbf->ms()))
 			tbf_cand->nacc = dl_tbf;
 	}
 
