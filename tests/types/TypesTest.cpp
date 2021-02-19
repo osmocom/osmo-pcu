@@ -927,6 +927,8 @@ int main(int argc, char **argv)
 	osmo_init_logging2(tall_pcu_ctx, &gprs_log_info);
 	log_set_use_color(osmo_stderr_target, 0);
 	log_set_print_filename(osmo_stderr_target, 0);
+	log_set_print_category(osmo_stderr_target, 0);
+	log_set_print_category_hex(osmo_stderr_target, 0);
 
 	log_set_category_filter(osmo_stderr_target, DTBF, 1, LOGL_INFO);
 	log_set_category_filter(osmo_stderr_target, DTBFUL, 1, LOGL_INFO);
