@@ -518,7 +518,8 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 {
 	const uint8_t Rx = mslot_class_get_rx(mslot_class),   /* Max number of Rx slots */
 		      Tx = mslot_class_get_tx(mslot_class),   /* Max number of Tx slots */
-		      Sum = mslot_class_get_sum(mslot_class); /* Max number of Tx + Rx slots */
+		      Sum = mslot_class_get_sum(mslot_class), /* Max number of Tx + Rx slots */
+		      Type = mslot_class_get_type(mslot_class);
 	uint8_t max_slots, num_rx, num_tx, mask_sel, pdch_slots, ul_ts, dl_ts;
 	int16_t rx_window, tx_window;
 	char slot_info[9] = {0};
@@ -574,7 +575,7 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 			/* for multislot type 1: don't split the window to wrap around.
 			 * E.g. 'UU-----U' is invalid for a 4 TN window. Except 8 TN window.
 			 * See 45.002 B.1 */
-			if (mslot_class_get_type(mslot_class) == 1 && num_tx < 8 &&
+			if (Type == 1 && num_tx < 8 &&
 					tx_valid_win & (1 << 0) && tx_valid_win & (1 << 7))
 				continue;
 
@@ -602,7 +603,7 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 				/* for multislot type 1: don't split the window to wrap around.
 				 * E.g. 'DD-----D' is invalid for a 4 TN window. Except 8 TN window.
 				 * See 45.002 B.1 */
-				if (mslot_class_get_type(mslot_class) == 1 && num_rx < 8 &&
+				if (Type == 1 && num_rx < 8 &&
 						(rx_valid_win & (1 << 0)) && (rx_valid_win & (1 << 7)))
 					continue;
 
