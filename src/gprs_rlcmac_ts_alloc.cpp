@@ -516,10 +516,10 @@ static bool skip_slot(uint8_t mslot_class, bool check_tr,
  */
 int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *ul_slots, uint8_t *dl_slots)
 {
-	uint8_t Rx = mslot_class_get_rx(mslot_class),   /* Max number of Rx slots */
-		Tx = mslot_class_get_tx(mslot_class),   /* Max number of Tx slots */
-		Sum = mslot_class_get_sum(mslot_class), /* Max number of Tx + Rx slots */
-		max_slots, num_rx, num_tx, mask_sel, pdch_slots, ul_ts, dl_ts;
+	const uint8_t Rx = mslot_class_get_rx(mslot_class),   /* Max number of Rx slots */
+		      Tx = mslot_class_get_tx(mslot_class),   /* Max number of Tx slots */
+		      Sum = mslot_class_get_sum(mslot_class); /* Max number of Tx + Rx slots */
+	uint8_t max_slots, num_rx, num_tx, mask_sel, pdch_slots, ul_ts, dl_ts;
 	int16_t rx_window, tx_window;
 	char slot_info[9] = {0};
 	int max_capacity = -1;
