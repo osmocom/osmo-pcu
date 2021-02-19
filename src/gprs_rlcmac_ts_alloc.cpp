@@ -556,7 +556,7 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 	/* Check for each UL (TX) slot */
 
 	/* Iterate through possible numbers of TX slots */
-	for (num_tx = 1; num_tx <= mslot_class_get_tx(mslot_class); num_tx += 1) {
+	for (num_tx = 1; num_tx <= Tx; num_tx += 1) {
 		uint16_t tx_valid_win = (1 << num_tx) - 1;
 		uint8_t rx_mask[MASK_TR + 1];
 
