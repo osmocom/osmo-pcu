@@ -147,7 +147,7 @@ static int compute_usage_for_algo_a(const struct gprs_rlcmac_pdch *pdch, enum gp
  */
 static int find_least_busy_pdch(const struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_direction dir, uint8_t mask,
 				int (*fn)(const struct gprs_rlcmac_pdch *, enum gprs_rlcmac_tbf_direction dir),
-				int *free_tfi = 0, int *free_usf = 0)
+				int *free_tfi = NULL, int *free_usf = NULL)
 {
 	unsigned ts;
 	int min_used = INT_MAX;
