@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "AppInfoTest");
 	osmo_init_logging2(tall_pcu_ctx, &gprs_log_info);
 	log_set_use_color(osmo_stderr_target, 0);
-	log_set_print_filename(osmo_stderr_target, 0);
+	log_set_print_filename2(osmo_stderr_target, LOG_FILENAME_NONE);
 	log_set_print_category(osmo_stderr_target, 0);
 	log_set_print_category_hex(osmo_stderr_target, 0);
 	log_parse_category_mask(osmo_stderr_target, "DL1IF,1:DRLCMAC,3:DRLCMACSCHED,1");
