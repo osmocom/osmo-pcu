@@ -516,7 +516,8 @@ static bool skip_slot(uint8_t mslot_class, bool check_tr,
  */
 int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *ul_slots, uint8_t *dl_slots)
 {
-	uint8_t Tx = mslot_class_get_tx(mslot_class),   /* Max number of Tx slots */
+	uint8_t Rx = mslot_class_get_rx(mslot_class),   /* Max number of Rx slots */
+		Tx = mslot_class_get_tx(mslot_class),   /* Max number of Tx slots */
 		Sum = mslot_class_get_sum(mslot_class), /* Max number of Tx + Rx slots */
 		max_slots, num_rx, num_tx, mask_sel, pdch_slots, ul_ts, dl_ts;
 	int16_t rx_window, tx_window;
@@ -534,7 +535,7 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 		return -EINVAL;
 	}
 
-	max_slots = OSMO_MAX(mslot_class_get_rx(mslot_class), Tx);
+	max_slots = OSMO_MAX(Rx, Tx);
 
 	if (*dl_slots == 0)
 		*dl_slots = 0xff;
@@ -590,7 +591,7 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 			if ((tx_window & (1 << ((ul_ts+num_tx-1) % 8))) == 0)
 				continue;
 
-			num_rx = OSMO_MIN(mslot_class_get_rx(mslot_class), Sum - num_tx);
+			num_rx = OSMO_MIN(Rx, Sum - num_tx);
 			rx_valid_win = (1 << num_rx) - 1;
 
 			/* Rotate group of RX slots: DDD-----, -DDD----, ..., DD-----D */
