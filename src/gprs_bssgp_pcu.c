@@ -415,6 +415,7 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	struct tlv_parsed tp;
 	enum bssgp_pdu_type pdu_type = (enum bssgp_pdu_type) bgph->pdu_type;
 	uint16_t ns_bvci = msgb_bvci(msg), nsei = msgb_nsei(msg);
+	uint16_t bvci;
 	int data_len;
 	int rc = 0;
 	struct bssgp_bvc_ctx *bctx;
@@ -456,6 +457,17 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	}
 
 	if (pdu_type == BSSGP_PDUT_BVC_RESET) {
+		if (ns_bvci != BVCI_SIGNALLING || !TLVP_PRESENT(&tp, BSSGP_IE_BVCI)) {
+			LOGP(DBSSGP, LOGL_ERROR, "Rx an invalid BVC-RESET %s\n", msgb_hexdump(msg));
+			return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
+		}
+
+		bvci = tlvp_val16be(&tp, BSSGP_IE_BVCI);
+		if (bvci != BVCI_SIGNALLING && bvci != the_pcu->bssgp.bctx->bvci) {
+			LOGP(DBSSGP, LOGL_ERROR, "Rx BVC-RESET for an unknown BVCI %d\n", bvci);
+			return bssgp_tx_status(BSSGP_CAUSE_UNKNOWN_BVCI, &bvci, msg);
+		}
+
 		return bssgp_rcvmsg(msg);
 	}
 
