@@ -740,38 +740,40 @@ static int tbf_select_slot_set(const gprs_rlcmac_tbf *tbf, const gprs_rlcmac_trx
 
 /*! Allocate USF according to a given UL TS mapping
  *
- * N. B: this is legacy implementation which ignores given selected_ul_slots
  *  \param[in] trx Pointer to TRX object
- *  \param[in] tbf Pointer to TBF object
- *  \param[in] first_common_ts First TS which is common to both UL and DL
  *  \param[in] selected_ul_slots set of UL timeslots selected for allocation
  *  \param[in] dl_slots set of DL timeslots
  *  \param[out] usf array for allocated USF
- *  \returns updated UL TS or negative on error
+ *  \returns updated UL TS mask or negative on error
  */
-static int allocate_usf(const gprs_rlcmac_trx *trx, int8_t first_common_ts, uint8_t selected_ul_slots, uint8_t dl_slots,
-			int *usf)
+static int allocate_usf(const gprs_rlcmac_trx *trx, uint8_t selected_ul_slots, uint8_t dl_slots,
+			int *usf_list)
 {
-	int free_usf = -1, ts;
-	uint8_t ul_slots = selected_ul_slots;
+	uint8_t ul_slots = selected_ul_slots & dl_slots;
+	unsigned int ts;
 
-	if (first_common_ts >= 0)
-		ul_slots = 1 << first_common_ts;
-	else
-		ul_slots = ul_slots & dl_slots;
+	for (ts = 0; ts < ARRAY_SIZE(trx->pdch); ts++) {
+		const struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts];
+		int8_t free_usf;
 
-	ts = find_least_busy_pdch(trx, GPRS_RLCMAC_UL_TBF, ul_slots, compute_usage_by_num_tbfs, NULL, &free_usf);
+		if (((1 << ts) & ul_slots) == 0)
+			continue;
 
-	if (free_usf < 0 || ts < 0) {
+		free_usf = find_free_usf(pdch->assigned_usf());
+		if (free_usf < 0) {
+			LOGP(DRLCMAC, LOGL_DEBUG,
+				"- Skipping TS %d, because "
+				"no USF available\n", ts);
+			ul_slots &= (~(1 << ts)) & 0xff;
+			continue;
+		}
+		usf_list[ts] = free_usf;
+	}
+
+	if (!ul_slots) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No USF available\n");
 		return -EBUSY;
 	}
-
-	OSMO_ASSERT(ts >= 0 && ts <= 8);
-
-	/* We will stick to that single UL slot, unreserve the others */
-	ul_slots = 1 << ts;
-	usf[ts] = free_usf;
 
 	return ul_slots;
 }
@@ -920,11 +922,10 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, GprsMs *ms_, struct gprs_rlcm
 		dl_slots = rc;
 		update_slot_counters(dl_slots, reserved_dl_slots, &slotcount, &avail_count);
 	} else {
-		rc = allocate_usf(trx, first_common_ts, rc, dl_slots, usf);
+		rc = allocate_usf(trx, rc, dl_slots, usf);
 		if (rc < 0)
 			return rc;
 
-		/* We will stick to that single UL slot, unreserve the others */
 		ul_slots = rc;
 		reserved_ul_slots = ul_slots;
 

@@ -738,17 +738,17 @@ static inline void test_a_b_dyn(enum test_mode mode, uint8_t exp_A, uint8_t exp_
 static void test_successive_allocations()
 {
 	test_successive_allocation(alloc_algorithm_a,       1,  1, TEST_MODE_UL_AND_DL, 35, "A");
-	test_successive_allocation(alloc_algorithm_b,      10, 10, TEST_MODE_UL_AND_DL, 32, "B");
-	test_successive_allocation(alloc_algorithm_b,      12, 12, TEST_MODE_UL_AND_DL, 32, "B");
+	test_successive_allocation(alloc_algorithm_b,      10, 10, TEST_MODE_UL_AND_DL, 15, "B");
+	test_successive_allocation(alloc_algorithm_b,      12, 12, TEST_MODE_UL_AND_DL, 15, "B");
 
-	test_successive_allocation(alloc_algorithm_b,       1,                12, TEST_MODE_UL_AND_DL, 32, "B");
-	test_successive_allocation(alloc_algorithm_b,       1, mslot_class_max(), TEST_MODE_UL_AND_DL, 32, "B");
-	test_successive_allocation(alloc_algorithm_dynamic, 1, mslot_class_max(), TEST_MODE_UL_AND_DL, 35, "dynamic");
+	test_successive_allocation(alloc_algorithm_b,       1,                12, TEST_MODE_UL_AND_DL, 23, "B");
+	test_successive_allocation(alloc_algorithm_b,       1, mslot_class_max(), TEST_MODE_UL_AND_DL, 17, "B");
+	test_successive_allocation(alloc_algorithm_dynamic, 1, mslot_class_max(), TEST_MODE_UL_AND_DL, 17, "dynamic");
 
-	test_a_b_dyn(TEST_MODE_DL_AND_UL,    35, 32,  32);
-	test_a_b_dyn(TEST_MODE_DL_AFTER_UL, 160, 32,  95);
-	test_a_b_dyn(TEST_MODE_UL_AFTER_DL,  35, 32,  35);
-	test_a_b_dyn(TEST_MODE_UL_ONLY,      35, 32,  35);
+	test_a_b_dyn(TEST_MODE_DL_AND_UL,    35, 15,  15);
+	test_a_b_dyn(TEST_MODE_DL_AFTER_UL, 160, 32,  101);
+	test_a_b_dyn(TEST_MODE_UL_AFTER_DL,  35, 15,  15);
+	test_a_b_dyn(TEST_MODE_UL_ONLY,      35, 15,  21);
 	test_a_b_dyn(TEST_MODE_DL_ONLY,     160, 32, 101);
 }
 
