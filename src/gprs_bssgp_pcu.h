@@ -53,10 +53,14 @@ struct gprs_bssgp_pcu {
 
 	struct osmo_timer_list bvc_timer;
 
+	/* state: is the NSVC unblocked? */
 	int nsvc_unblocked;
 
+	/* state: true if bvc signalling needs to be reseted or waiting for reset ack */
 	int bvc_sig_reset;
+	/* state: true if bvc ptp needs to be reseted or waiting for reset ack */
 	int bvc_reset;
+	/* state: true if bvc ptp is unblocked */
 	int bvc_unblocked;
 
 	/* Flow control */
