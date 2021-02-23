@@ -7,5 +7,3 @@
 # If any interfaces have been added since the last public release: c:r:a + 1.
 # If any interfaces have been removed or changed since the last public release: c:r:0.
 #library        what            description / commit summary line
-osmo-pcu        update osmo-gsm-manuals dependency to > 0.3.0 for vty_cpu_sched.adoc include
-osmo-pcu	update libosmocore dependency > 1.4.x for osmo_fd_{read,write}_{enable,disable}+DLBSSGP

@@ -1,3 +1,439 @@
+osmo-pcu (0.9.0) unstable; urgency=medium
+
+  [ Pau Espin Pedrol ]
+  * Pass paging group instead of imsi where later is not needed
+  * Allow Gb PAGING-PS without P-TMSI
+  * Support Gb PAGING-CS
+  * Support PAGING-CS and PAGING-PS on on PTP-BVCI
+  * tests/rlcmac: print test name at the start
+  * tests/rlcmac: Memzero decoded struct
+  * tests/rlcmac: Fix missing commas with unexpected results
+  * tests/rlcmac: Use osmo_hexdump to print buffers
+  * tests/rlcmac: Don't check stderr output
+  * tests/rlcmac: Add test to showcase that decode_gsm_ra_cap() fails
+  * csn1: Extend CSN_SERIALIZE to allow 0 bit of length
+  * csn1: Allow CHOICE elements to re-process the bits used for the choice
+  * csn1: Fix pedantic compiler warnings in csn.1 dissectors
+  * csn1: Drop format_p union from CSN_DESCR
+  * gsm_rlcmac.cpp: Fix trailing whitespace
+  * cosmetic: csn1.cpp: Fix whitespace
+  * csn1.cpp: Rework ProcessError() function to print errors
+  * rlcmac: Return error code from csn1 encoder/decoder
+  * Check return code of rlcmac decode/encode functions
+  * rlcmac: Transform a few LOGPC messages to LOGP
+  * Fix trailing newline mess with LOGP(C) in rlcmac/csn1
+  * llc_queue::{dequeue,enqueue}() refactor
+  * gsm_rlcmac: fix Packet_Resource_Request_t: s/Slot/I_LEVEL_TN/
+  * tests/llc: Change unrealistic time jump to avoid runtime error under ARM
+  * Use clock_gettime(CLOCK_MONOTONIC) and timespec everywhere
+  * Use downlink BSSGP RA Cap IE
+  * tests/RLCMACTest: free allocated bitvectors
+  * tests/RLCMACTest: Several fixes and improvements to RAcap tests
+  * rlcmac: Don't pass array element to CSN1 descriptors
+  * csn1: Validate recursive array max size during decoding
+  * rlcmac: Fix bug receiving RA cap
+  * rlcmac: Log names of de/encoded rlcmac packet types
+  * rlcmac: Introduce MS Radio Access Capabilities 2 to fix related spare bits
+  * cosmetic: rlcmac: Fix comment typo and whitespace introduced recently
+  * rlcmac: Rename field to MS RA Cap2 in Additional_MS_Rad_Access_Cap_t
+  * pcu_l1_if.cpp: Add missing header ctype.h
+  * gsm_rlcmac: Use 'struct bitvec' instead of 'bitvec'
+  * cosmetic: Do not indent header includes inside extern C block
+  * gsm_rlcmac.cpp: Avoid declaring variable in for loop
+  * csn1.h: Fix trailing whitespace
+  * tbf.cpp: Include c++ <new> header required for new operator's replacement type
+  * gsm_rlcmac: Disable unused CSN1 descriptors
+  * Move gsm_rlcmac.cpp -> .c
+  * rlcmac: support decode FDD_CELL_INFORMATION of "UTRAN FDD Description
+  * rlcmac: add dissection of 2G->3G/4G PS handover
+  * csn1: Fix Several typos & whitespace
+  * csn1: verify enough bits present to decode whole CSN_UINT_ARRAY
+  * csn1: Properly verify CSN_BITMAP length
+  * csn1: Remove code block from CSN_NEXT_EXIST_LH
+  * pcu_l1_if: Don't use GSMTAP_CHANNEL_PACCH when sending unknown gsmtap blocks
+  * pdch: Avoid sending GSMTAP_CHANNEL_UNKOWN for rejected UL EGPRS data block
+  * tbf: Avoid crash: don't set TBF window size if setup failed
+  * bts: Rename mslot_class_from_ra
+  * bts: Fix Decoding EGPRS MultislotClass from 11-bit EGPRS PACKET CHANNEL REQUEST
+  * bts: Return uint8_t in egprs_mslot_class_from_ra()
+  * Use OSMO_FD_* instead of deprecated BSC_FD_*
+  * Expect ms object to exist before calling tbf_alloc_ul_tbf()
+  * Expect ms object to exist before calling tbf_alloc_dl_tbf()
+  * pdch: rcv_resource_request(): Clarify tbf_free only needed if MS used to exist beforehand
+  * Drop unneeded arg 'ta' in tbf_alloc_ul()
+  * bts: Drop specific functions to increase counters
+  * bts: Drop specific functions to add values to counters
+  * bts: Drop specific functions to add values to stats
+  * pcu: tbf_ul: Clean up maybe_schedule_uplink_acknack()
+  * sysmo: femtobts.h: Avoid redefining global variables
+  * rlc: Drop unused function gprs_rlc_data::put_data
+  * rlc: Move prepare() function out of gprs_rlc_data struct
+  * tbf_ul: Fix UL ACK not sent to MS if intermediate UL block is lost
+  * Get rid of class GprsCodingScheme
+  * gsmtap: Set signal level and SNR fields
+  * gprs_ms: Small clean ups in IMSI storage related code
+  * gprs_ms: Transfer known EGPRS MS class when mergling old MS
+  * tbf: Drop unneeded method set_tlli_from_ul
+  * pdch.cpp: Fix logging line format in rcv_block wrong length
+  * Set correct GSMTAP channel type for PDTCH messages returning error
+  * decoding.cpp: Improve logging in malformed UL data parsing
+  * tbf_dl: uint8_t is enough to store a TA value
+  * encoding: Encode TA as unsigned and check validty against GSM48_TA_INVALID
+  * encoding.cpp: Fix missing spacing in function param
+  * pdch.cpp: Avoid dropping existing DL TBF during rcv_resource_request
+  * pdch.cpp: Avoid resetting (egprs_)ms_class to unknown if not found in MS RadioAccCap
+  * pdch.cpp: Fix wrong annoying log line about non-scheduled ResourceReq received
+  * pdch.cpp: Store TLLI promptly on newly created TLLI in rcv_resource_request
+  * Fix typo in log message
+  * pdch: Drop unneeded notice log message in rcv pkt meas report
+  * Introduce log macro helper LOGPMS
+  * configure.ac: Fix trailing whitespace
+  * doc: Update VTY reference xml file
+  * Support setting rt-prio and cpu-affinity mask through VTY
+  * pdch: rcv pkt meas rep: Allocate MS object early in path and use it
+  * Fix recent typo preventing MS from registering
+  * gitignore: Add __pychache__ dir
+  * tbf: Don't log rlcmac_diag() output in separate lines
+  * gprs_ms_storage.h: Set pointer to NULL instead of 0
+  * Free all MS TBFs when receiving GPRS Suspension Request
+  * cosmetic: fix indentation alignment
+  * vty: Add 'show bts pdch' command
+  * cosmetic: Fix indentation of for loops
+  * cosmetic: Fix typo in comment
+  * Fix crash accessing NULL tbf->pdch[first_ts]
+  * contrib/jenkins: Enable parallel make in make distcheck
+  * Improve debug logging for alloc algos
+  * Fix several calls to LOGPAL
+  * Move gprs_rlcmac_ul_tbf::window to correct file
+  * Move constructor gprs_rlcmac_dl_tbf::BandWidth to correct file
+  * tbf: Make window() available to tbf base class
+  * tbf: Implement enable_egprs() once
+  * tbf: Set MS during constructor time
+  * Move ul_tbf allocation code to correct file
+  * Move dl_tbf allocation code to correct file
+  * tbf: Drop unused function disable_egprs()
+  * tests: ms: Pass correct pointer in constructor instead of NULL
+  * tbf: Clean up gprs_rlcmac_dl_tbf::handle()
+  * alloc_algo_b: Select TRX with least assigned TFIs during TBF alloc
+  * bts: define egprs_enabled as bool
+  * cosmetic: Fix ws between if keyword and parenthesis
+  * tbf_dl: Update (egprs_)ms_class for already known MS
+  * cosmetic: tests: pcu_emu: fix trailing whitespace
+  * gprs_ms: Use proper function to get CS
+  * Move BTS initial values inside bts.cpp
+  * pcuif: Improve BTS-supported CS/MCS handling
+  * Move EGPRS MS mode set to gprs_ms.cpp
+  * Take into account BTS supported (M)CS values when retrieving the maximum
+  * Enable egprs support through PCUIF from BTS/BSC
+  * pdch: Process received CS1-4 data blocks regardless of egprs_enabled
+  * tbf_dl: Don't fake EGPRS MS class when no related info is available
+  * tbf_ul: Allow non-egprs phones if EGPRS is enabled
+  * Get rid of bts->egprs_enabled
+  * Fix configuration of initial_(m)cs
+  * Fix mcs_is_valid(): UNKNOWN value is not a valid (M)CS
+  * gprs_ms: Avoid enabling EGPRS if no MCS are supported
+  * tbf_ul: Log mismatching TLLI on log message
+  * Fix ctr reports: Remove ctr description from already removed counter
+  * encoding: Fix duplicate word in log str
+  * sched: Fix sending GSMTAP DL data blocks with unset USF
+  * sched: Use correct GMSTAP category for EGPRS DL data blocks
+  * Support multiplexing of GPRS and EGPRS TBFs in one PDCH
+  * pdch: packet_paging_request: Put back non-fitting paging entry where where it was
+  * pdch: Log hexdump of decde failure for dl rlcmac block
+  * csn1: Fix readIndex pointer change in CSN_VARIABLE_ARRAY
+  * csn1: Log CSN_VARIABLE_ARRAY values as hex
+  * main: generate coredump and exit upon SIGABRT received
+  * tbf: Log previous TS when changing Control TS
+  * Implement downgrade to DL MCS1-4 when USF for GPRS_only MS
+  * Dl TBF: Get rid of LLC UI dummy blocks following other data
+  * rlcmac: Fix typo in MT_PACKET_CELL_CHANGE_NOTIFICATION value_string
+  * gprs_rlcmac_sched: Use helper structure to store several tbf pointer params
+  * sched: Convert code handling next_list array to be size independant
+  * Convert GprsMS and helpers classes to C
+  * tbf: Fix wrong verb used in log message
+  * .gitignore: ignore files ending with ~
+  * doc: Improve CS/MCS GPRS/EGPRS considerations in User Manual
+  * tbf: remove 'software error' logs from tbf_free
+  * ms: Replace struct var with rate_ctr
+  * AllocTest: Avoid queuing tons of to-be-freed ms
+  * gprs_ms: Mark ms_ctrg_desc static
+  * Workaround ASan false positive runtime errors under some platforms
+  * Split PCU global PCU object from BTS object
+  * Move T_defs_pcu from BTS to PCU object
+  * Move force_two_phase field from BTS to PCU
+  * Move alpha,gamma fields from BTS to PCU
+  * Move dl_tbf_preemptive_retransmission field from BTS to PCU
+  * Move dl_arq_type field from BTS to PCU
+  * Move cs_adj* fields from BTS to PCU
+  * Move cs_downgrade_threshold field from BTS to PCU
+  * Move (m)cs_lqual_ranges fields from BTS to PCU
+  * Move ns_dialect field from BTS to PCU
+  * Move fc_* fields from BTS to PCU
+  * tests/tbf: Allocate PCU per test instead of globally
+  * Move ws_* fields from BTS to PCU
+  * Move llc_* fields from BTS to PCU
+  * Fix configuration mess of initial_cs/mcs between PCUIF and VTY
+  * Unify BTS into a C usable structure
+  * Get rid of bts singletons
+  * Rename 'bts_data' leftovers to 'bts'
+  * bts: combine bts_{init,cleanup} into consturctor/destructor methods
+  * Get rid of unused gsm_timer.{cpp,h}
+  * Convert gprs_bssgp_pcu.cpp to C
+  * Move tbf::free_all static methods to proper object files
+  * Convert osmo_bts_sock.cpp to C
+  * Allow multiple bts objects in PCU
+  * bts: Store RAC+CI from info_ind
+  * Get rid of singleton gprs_bssgp_pcu_current_bctx()
+  * Initial handling support for RIM messages
+  * gprs_pcu: Use libosmocore osmo_cgi_ps_cmp API
+  * ms: Drop always-false check
+  * sched: Check if egprs is enabled in TBF rather than MS being egprs capable
+  * tbf: Drop always-true condition checking for MS
+  * encoding: fix typos in comment
+  * ms: Set proper initial MCS values setting mode EGPRS_GMSK
+  * ms: Properly handle EGPRS_GMSK mode in ms_max_cs_dl/ul()
+  * Fix Dl EGPRS data blocks being generated occasionally on GPRS TBFs
+  * sched: Avoid picking TBF with nacked dl blocks when GMSK is required
+  * tbf: Make tbf_ms() param const
+  * Introduce NACC support
+  * NACC: Fix crash freeing struct if CTRL conn was refused during alloc
+  * NACC: delay CTRL conn socket init until it's needed
+  * NACC: allow setting keep time for entries in neigh and si cache
+  * NACC: Configure neighbor and SI resolution timeout values
+  * NACC: Send only Pkt Cell Chg Continue if SI retrieve fails
+  * doc: Mark PCU node red in network node diagram
+  * doc: Introduce section documenting NACC support
+  * nacc: Improve log line failing to establish CTRL neigh conn
+  * Update TS 04.60 references to new TS 44.060
+  * Drop comment about an already implemented TODO
+  * Move src/tbf.txt to doc/
+  * encoding: Fix comment description of S/P field
+  * tbf: Reuse stored result in variable in check_polling()
+  * tbf: Constify some methods
+  * nacc: Fix typo in function name
+  * nacc: Implement Pkt Cell Change Continue retransmission
+  * nacc: Avoid RIM procedures targeting cells under same PCU
+  * rlc.h: Fix struct bit fields on big endian systems
+  * cosmetic: fix typo in comment
+  * nacc_fsm: Move code filling struct to helper function
+  * nacc_fsm: Remove NACC_EV_RX_SI from in_event_mask of some states
+  * nacc_fsm: Support receiving Pkt Cell Change Notify in state WAIT_RESOLVE_RAC_CI
+  * nacc_fsm: nacc_fsm: Support receiving Pkt Cell Change Notify in state WAIT_REQUEST_SI
+  * nacc_fsm: Support receiving Pkt Cell Chg Notif while in some advanced states
+  * nacc_fsm: Improve log when sending RIM RAN-INFO to gather SI from remote cell
+  * vty: Write 'neighbor resolution' config to file
+  * cosmetic: fix line indentation
+  * sched: Avoid selecting TBF to tx NACC Dl msg if no TFI is assigned
+  * tests: Explicitly drop category from log
+  * tests: Replace deprecated API log_set_print_filename
+  * Use NULL as default value for pointer type
+  * find_multi_slots: Avoid calling mslot_class_get_tx() on each iteration
+  * find_multi_slots: Avoid multiple calls to mslot_class_get_rx()
+  * find_multi_slots: Mark mslot_class properties const
+  * find_multi_slots: Avoid multiple calls to mslot_class_get_type()
+  * Use ALPHA value received in SI13 from PCUIF
+
+  [ Vadim Yanitskiy ]
+  * pcu_l1_if.cpp: fix NULL-pointer dereference in imsi2paging_group()
+  * gsm_timer: fix comparison of constant LONG_MAX with an integer
+  * encoding: fix log_alert_exit(): do not treat error as format string
+  * tests/alloc: fix implicit conversion from 'double' to 'int8_t'
+  * gprs_bssgp_pcu: fix invalid use of non-static data member 'frame'
+  * gprs_bssgp_pcu: fixup: fix length check in gprs_bssgp_pcu_rx_dl_ud()
+  * csn1: fix csnStreamDecoder(): avoid conditional calls to bitvec_read_field()
+  * VTY: get rid of pcu_vty_go_parent() / pcu_vty_is_config_node()
+  * VTY: install talloc context introspection commands
+  * pcu_sock: fix memleak, allocate pcu_sock_state on stack
+  * pcu_sock: cosmetic: fix typo in a comment message
+  * tbf: cosmetic: fix spacing in gprs_rlcmac_tbf::create_ul_ass()
+  * tbf: fix NULL pointer dereference in create_[ul|dl]_ass()
+  * encoding: assert return value of bitvec_set_u64()
+  * csn1: fix some mistaken CSN.1 error names
+  * csn1: fix csnStreamDecoder(): catch unknown CSN_CHOICE values
+  * tests/rlcmac: mark Packet Polling Request as malformed
+  * csn1: fix existNextElement(): use bitvec_get_bit_pos()
+  * tests/rlcmac: additionally match debug output of the CSN.1 codec
+  * csn1: get rid of C++ specific code, compile with GCC
+  * csn1: fix csnStreamDecoder(): do not subtract no_of_bits twice
+  * csn1: fix csnStreamDecoder(): always keep remaining_bits_len updated
+  * csn1: fix csnStreamDecoder(): update bit_offset in CSN_EXIST{_LH}
+  * csn1: bitvec_get_uint() may return a negative, use %d
+  * csn1: use proper format specifier for unsigned integers
+  * gsm_rlcmac: fix misleading LOGP statement in decode_gsm_ra_cap()
+  * tests/rlcmac: fix malformed MS RA capability in testRAcap()
+  * tests/rlcmac: also verify encoding of MS RA Capability
+  * tests/rlcmac: add a new test vector for Packet Resource Request
+  * csn1: fix csnStreamDecoder(): skip bits unhandled by serialize()
+  * tests/rlcmac: also enable logging for DRLCMACDATA category
+  * rlcmac: fix encode_gsm_*(): do not suppress encoding errors
+  * csn1: fix: do not return 0 if no bits left in the buffer
+  * BSSGP: cosmetic use OSMO_IMSI_BUF_SIZE from libosmocore
+  * BSSGP: fix: properly encode P-TMSI in RR Paging Request
+  * pdch: fix packet_paging_request(): properly print paging MI
+  * pdch: cosmetic: use GSM_MI_TYPE_* constants from libosmocore
+  * fix: properly include pure C headers from C++ code
+  * l1if: fix pcu_rx_rach_ind(): use proper format string specifiers
+  * sba: fix possible memleak in SBAController::alloc()
+  * TBF/UL: fix rcv_data_block_acknowledged(): print the actual TLLI
+  * fix egprs_mslot_class_from_ra(): multislot class may not be present
+  * l1if: fix: s/pcu_rx_rach_ind_pdtch/pcu_rx_rach_ind_ptcch/g
+  * csn1: fix M_CHOICE: restirct maximum length of the choice list
+  * csn1: fix csnStreamEncoder(): also check length of the choice list
+  * csn1: fix csnStreamEncoder(): always check the choice index
+  * csn1: fix: never use enumerated types in codec structures
+  * encoding: cosmetic: use RLC_MODE_ACKNOWLEDGED where possible
+  * RLC/MAC: implement decoding of EGPRS Packet Channel Request
+  * encoding: fix write_ia_rest_egprs_uplink_sba(): add missing CHECK(rc)
+  * doc/manuals: fix typo in overview.adoc: s/Omsocom/Osmocom/g
+  * bts: refactor handling and parsing of RACH.ind
+  * BTS::parse_rach_ind(): properly handle EGPRS Packet Channel Request
+  * bts: add send_gsmtap_rach(), also send PTCCH/U over GSMTAP
+  * bts: fix send_gsmtap_rach(): properly pack 11 bit RA
+  * bts: cosmetic: use DUMMY_VEC for padding where possible
+  * encoding: drop log_alert_exit(), use OSMO_ASSERT() instead
+  * encoding: assert() presence of Downlink TBF
+  * direct-phy: fix handle_ph_ra_ind(): handle PH-RA.ind on PRACH SAPI
+  * debian/control: change maintainer to the Osmocom team / mailing list
+  * pcu_l1_if: use proper format specifier for PCUIF version
+  * pcu_l1_if: constify the argument of pcu_rx_info_ind()
+  * pcu_l1_if: cosmetic: rename both 'trx'/'ts' to 'trx_nr'/'ts_nr'
+  * pcu_l1_if: cosmetic: move struct 'gprs_rlcmac_pdch' into the for loop
+  * pcu_l1_if: cosmetic: correct error message in pcu_rx_info_ind()
+  * gsm_rlcmac: use consistent naming for [Extended] Packet Timing Advance
+  * tbf: cosmetic: use GSM_MACBLOCK_LEN where possible
+  * tbf: allocate the bitvec on stack in create_{dl,ul}_ass()
+  * encoding: constify 'tbf' in UL/DL assignment functions
+  * encoding: do not encode out of range Timing Advance values
+  * encoding: fix RRBP field in write_packet_uplink_assignment()
+  * encoding: use bool for use_egprs in write_packet_uplink_assignment()
+  * encoding: pass pdch slot directly to encoding functions
+  * encoding: clarify docstring for write_packet_downlink_assignment()
+  * encoding: use CSN.1 codec to generate Packet Uplink Assignment
+  * encoding: implement handing of hopping parameters
+  * encoding: fix gen_freq_params(): do not check pdch twice
+  * pcuif_proto: version 10: add frequency hopping parameters
+  * pcu_l1_if: cosmetic: use ARRAY_SIZE() in pcu_rx_info_ind()
+  * pcu_l1_if: correct logging level in pcu_rx_info_ind()
+  * pcu_l1_if: cosmetic: make {local,remote}_sockaddr scoped variables
+  * pcu_l1_if: use proper format string specifiers: %d -> %u
+  * pcu_l1_if: print NSVC address in more common format
+  * gprs_bssgp_pcu: make osmo_sockaddr local/sgsn arguments const
+  * gprs_bssgp_pcu: fix possible memleak in gprs_nsvc_create_and_connect()
+  * struct gprs_rlcmac_bts: remove unused 'nsei' field
+  * gprs_bssgp_pcu: fix: do not crash on receipt of subsequent INFO.ind
+  * doc/manuals: (re-)generate XML VTY reference automatically
+  * fix tbf_select_slot_set(): use LOGP() instead of LOGPC()
+  * main: remove line breaks in print_help(), increase spacing
+  * main: add --vty-ref-mode, use vty_dump_xml_ref_mode()
+  * BSSGP: use tlvp_val8() in gprs_bssgp_pcu_rx_paging_cs()
+  * BSSGP: constify argument 'tp' of gprs_bssgp_pcu_rx_paging_{cs,ps}
+  * TLLI 0x00000000 is a valid TLLI, use 0xffffffff instead
+  * gprs_rlcmac_sched: fix incorrect SBA frame number assignment
+  * bts: fix uninitialized memaccess in BTS::send_gsmtap_rach()
+  * bts: fix uninitialized memaccess in BTS::send_gsmtap()
+  * tests/rlcmac: add more test vectors for Packet Resource Request
+  * contrib/osmo-pcu.spec.in: require libosmo* version 1.4.0
+  * contrib/osmo-pcu.spec.in: add missing libosmoctrl dependency
+  * vty: register libosmocore's FSM introspection commands
+
+  [ Anders Broman ]
+  * csn1: Update M_NULL CSN_DESCR to match wireshark
+  * csn1: packet-csn1.c:179: warning: 'pui8' may be used uninitialized in this function
+  * csn1: Fix warning with -Wmissing-prototypes
+  * csn1: Try to fix cast discards '__attribute__((const))' qualifier from pointer target type
+  * gsm_rlcmac.cpp: hanged all M_BIT macros to M_UINT, as M_BIT does not use the referenced hf.
+
+  [ Jeff Morriss ]
+  * csn1: shuffle decrements of remaining_bits_len
+
+  [ Pascal Quantin ]
+  * csn1: Fix an infinite loop in CSN.1 dissector when having more than 255 padding bits
+  * gsm_rlcmac.h: Remove Uplink messages from the RlcMacDownlink_t structure
+  * gsm_rlcmac: Enhance dissection of PSI1
+  * gsm_rlcmac.cpp: Do not skip too many lines of the CSN_DESCR when the field is missing
+  * gsm_rlcmac.cpp: fix an out of bounds access
+  * gsm_rlcmac.cpp: fix another global-buffer-overflow error reported by ASAN
+  * gsm_rlcmac.cpp: fix global-buffer-overflow error reported by ASAN
+
+  [ Guy Harris ]
+  * csn1: Don't cast away constness
+
+  [ Alexis La Goutte ]
+  * csn1: fix this statement may fall through [-Werror=implicit-fallthrough=] found by gcc7
+
+  [ Bill Meier ]
+  * gsm_rlcmac.h: #if 0 unused stuff
+
+  [ Gerald Combs ]
+  * gsm_rlcmac.h: Make sure we have a corresponding 'u' member to RlcMacDownlink_t for every call
+
+  [ Vincent Helfre ]
+  * gsm_rlcmac: add dissection of NAS container
+  * gsm_rlcmac: improve dissection of MS RA Capability IE
+
+  [ AndersBroman ]
+  * gsm_rlcmac: Update : PACKET RESOURCE REQUEST to Release 14.0.0
+
+  [ Keith ]
+  * Send UL-CTRL Packet to GSMTAP even if we fail to decode.
+  * Don't check ul_control_block before decoding into it.
+
+  [ Harald Welte ]
+  * csn1.c: Almost all of the logging is DEBUG, not NOTICE
+  * TODO: remove those that have obviously been implemented 5+ years ago
+  * bts.cpp: Increase constructor priority
+  * Use osmo_fd_setup() whenever applicable
+  * Use osmo_fd_*_{disable,enable}
+  * gb manual: 08.16 -> 48.016 / 08.18 -> 48.018
+  * gb manual: NS is implemented in libosmogb, not libosmocore
+  * manuals/gb/ns.adoc: Update documentation regarding SNS capability
+  * migrate to DLBSSGP as log sub-system for BSSGP
+
+  [ Eric ]
+  * configure.ac: fix libtool issue  with clang and sanitizer
+  * tbf: add virtual destructor
+
+  [ Philipp Maier ]
+  * gprs_debug: Use only LOGL_NOTICE as default loglevel
+  * vty: add attributes to VTY commands indicating when they apply
+  * pcu_main: add commandline option --vty-ref-xml
+  * gprs_bssgp_rim: add serving BSS NACC application
+
+  [ Oliver Smith ]
+  * contrib: import RPM spec
+  * contrib: integrate RPM spec
+  * Makefile.am: EXTRA_DIST: debian, contrib/*.spec.in
+  * contrib/jenkins: don't build osmo-gsm-manuals
+  * configure.ac: set -std=gnu11
+
+  [ Neels Hofmeyr ]
+  * use new osmo_mobile_identity api (avoid deprecation)
+  * paging: pass struct osmo_mobile_identity, not encoded IE bytes
+
+  [ Alexander Couzens ]
+  * pcuif_proto: version 0xa: add support for IPv6 NSVCs
+  * Revert "pcuif_proto: version 0xa: add support for IPv6 NSVCs"
+  * pcuif_proto: version 10: add support for IPv6 NSVCs
+  * Use the new NS2 lib
+  * Rework NS configuration over the info indication
+  * pcu_l1_if: fix misaligned assignment of remote address
+  * NS2: follow the change of ownership
+  * gprs_bssgp_pcu: follow ns2 library changes
+  * NS2: rework handling of unknown primitive
+  * ns2: follow ns2 dialect changes
+  * ns2: follow changes to add a unique name to all binds
+  * ns2: follow ns2 sns api changes
+  * gprs_ns2: set default dialect to ipaccess
+  * gprs_rlcmac_sched: don't leak a sched_dummy()
+  * gprs_rlc_ts_alloc: ensure no rolling slots are allocated
+  * follow gprs_ns2 API enum changes
+  * gprs_ns2: migrate to the new vty syntax
+  * gprs_bssgp: rework and rename ns_create_nsvc -> ns_configure_nse
+  * gprs_bssgp: rename gprs_ns_config -> gprs_ns_update_config
+  * gprs_bssgp: use gprs_ns2_sns_add_bind() to allow the NSE to use the binds for IP-SNS configuration
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 23 Feb 2021 14:41:00 +0100
+
 osmo-pcu (0.8.0) unstable; urgency=medium
 
   [ Alexander Couzens ]
