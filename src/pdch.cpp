@@ -188,7 +188,7 @@ struct msgb *gprs_rlcmac_pdch::packet_paging_request()
 	if (!pag)
 		return NULL;
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "Scheduling paging\n");
+	LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "Scheduling paging\n");
 
 	/* alloc message */
 	msg = msgb_alloc(23, "pag ctrl block");
@@ -219,22 +219,22 @@ struct msgb *gprs_rlcmac_pdch::packet_paging_request()
 			/* TMSI */
 			len = 1 + 1 + 1 + 32 + 2 + 1;
 			if (pag->identity_lv[0] != 5) {
-				LOGP(DRLCMAC, LOGL_ERROR, "TMSI paging with "
-					"MI != 5 octets!\n");
+				LOGPDCH(this, DRLCMAC, LOGL_ERROR,
+					"TMSI paging with MI != 5 octets!\n");
 				goto continue_next;
 			}
 		} else {
 			/* MI */
 			len = 1 + 1 + 1 + 4 + (pag->identity_lv[0]<<3) + 2 + 1;
 			if (pag->identity_lv[0] > 8) {
-				LOGP(DRLCMAC, LOGL_ERROR, "Paging with "
-					"MI > 8 octets!\n");
+				LOGPDCH(this, DRLCMAC, LOGL_ERROR,
+					"Paging with MI > 8 octets!\n");
 				goto continue_next;
 			}
 		}
 		if (wp + len > 184) {
-			LOGP(DRLCMAC, LOGL_DEBUG, "- Does not fit, so schedule "
-				"next time\n");
+			LOGPDCH(this, DRLCMAC, LOGL_DEBUG,
+				"- Does not fit, so schedule next time\n");
 			/* put back paging record, because does not fit */
 			llist_add(&pag->list, &paging_list);
 			break;
@@ -249,14 +249,14 @@ continue_next:
 
 	bitvec_pack(pag_vec, msgb_put(msg, 23));
 	mac_control_block = (RlcMacDownlink_t *)talloc_zero(tall_pcu_ctx, RlcMacDownlink_t);
-	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Paging Request +++++++++++++++++++++++++\n");
+	LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ TX : Packet Paging Request +++++++++++++++++++++++++\n");
 	rc = decode_gsm_rlcmac_downlink(pag_vec, mac_control_block);
 	if (rc < 0) {
-		LOGP(DRLCMAC, LOGL_ERROR, "Decoding of Downlink Packet Paging Request failed (%d): %s\n",
+		LOGPDCH(this, DRLCMAC, LOGL_ERROR, "Decoding of Downlink Packet Paging Request failed (%d): %s\n",
 		     rc, osmo_hexdump(msgb_data(msg), msgb_length(msg)));
 		goto free_ret;
 	}
-	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Paging Request -------------------------\n");
+	LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "------------------------- TX : Packet Paging Request -------------------------\n");
 	bitvec_free(pag_vec);
 	talloc_free(mac_control_block);
 	return msg;
@@ -278,7 +278,7 @@ bool gprs_rlcmac_pdch::add_paging(uint8_t chan_needed, const struct osmo_mobile_
 	pag->chan_needed = chan_needed;
 	rc = osmo_mobile_identity_encode_buf(pag->identity_lv + 1, sizeof(pag->identity_lv) - 1, mi, true);
 	if (rc <= 0) {
-		LOGP(DRLCMAC, LOGL_ERROR, "Cannot encode Mobile Identity (rc=%d)\n", rc);
+		LOGPDCH(this, DRLCMAC, LOGL_ERROR, "Cannot encode Mobile Identity (rc=%d)\n", rc);
 		talloc_free(pag);
 		return false;
 	}
@@ -301,18 +301,18 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		tbf = bts_dl_tbf_by_poll_fn(bts(), fn, trx_no(), ts_no);
 
 	if (!tbf) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
+		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
 			"unknown FN=%u TLLI=0x%08x (TRX %d TS %d)\n",
 			fn, tlli, trx_no(), ts_no);
 		if (ms)
-			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
-			     "unknown TBF corresponds to MS with IMSI %s, TA %d, "
-			     "uTBF (TFI=%d, state=%s), dTBF (TFI=%d, state=%s)\n",
-			     ms_imsi(ms), ms_ta(ms),
-			     ms_ul_tbf(ms) ? ms_ul_tbf(ms)->tfi() : 0,
-			     ms_ul_tbf(ms) ? ms_ul_tbf(ms)->state_name() : "None",
-			     ms_dl_tbf(ms) ? ms_dl_tbf(ms)->tfi() : 0,
-			     ms_dl_tbf(ms) ? ms_dl_tbf(ms)->state_name() : "None");
+			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
+				"unknown TBF corresponds to MS with IMSI %s, TA %d, "
+				"uTBF (TFI=%d, state=%s), dTBF (TFI=%d, state=%s)\n",
+				ms_imsi(ms), ms_ta(ms),
+				ms_ul_tbf(ms) ? ms_ul_tbf(ms)->tfi() : 0,
+				ms_ul_tbf(ms) ? ms_ul_tbf(ms)->state_name() : "None",
+				ms_dl_tbf(ms) ? ms_dl_tbf(ms)->tfi() : 0,
+				ms_dl_tbf(ms) ? ms_dl_tbf(ms)->state_name() : "None");
 		return;
 	}
 
@@ -342,7 +342,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 
 		new_tbf = tbf->ms() ? ms_dl_tbf(tbf->ms()) : NULL;
 		if (!new_tbf) {
-			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
+			LOGPDCH(this, DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
 				"TBF is gone TLLI=0x%08x\n", tlli);
 			return;
 		}
@@ -374,7 +374,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 
 		new_tbf = tbf->ms() ? ms_ul_tbf(tbf->ms()) : NULL;
 		if (!new_tbf) {
-			LOGP(DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
+			LOGPDCH(this, DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
 				"TBF is gone TLLI=0x%08x\n", tlli);
 			return;
 		}
@@ -408,8 +408,8 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		 */
 		return;
 	}
-	LOGP(DRLCMAC, LOGL_ERROR, "Error: received PACET CONTROL ACK "
-		"at no request\n");
+	LOGPDCH(this, DRLCMAC, LOGL_ERROR,
+		"Error: received PACET CONTROL ACK at no request\n");
 }
 
 void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_nack, uint32_t fn, struct pcu_l1_meas *meas)
@@ -426,14 +426,14 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	tfi = ack_nack->DOWNLINK_TFI;
 	tbf = bts_dl_tbf_by_poll_fn(bts(), fn, trx_no(), ts_no);
 	if (!tbf) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
+		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
 			"unknown FN=%u TFI=%d (TRX %d TS %d)\n",
 			fn, tfi, trx_no(), ts_no);
 		return;
 	}
 	if (tbf->tfi() != tfi) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
-			"wrong TFI=%d, ignoring!\n", tfi);
+		LOGPTBFDL(tbf, LOGL_NOTICE,
+			  "PACKET DOWNLINK ACK with wrong TFI=%d, ignoring!\n", tfi);
 		return;
 	}
 
@@ -453,7 +453,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 		&ack_nack->Ack_Nack_Description, &bits,
 		&bsn_begin, &bsn_end, static_cast<gprs_rlc_dl_window *>(tbf->window()));
 
-	LOGP(DRLCMAC, LOGL_DEBUG,
+	LOGPDCH(this, DRLCMAC, LOGL_DEBUG,
 		"Got GPRS DL ACK bitmap: SSN: %d, BSN %d to %d - 1 (%d blocks), "
 		"\"%s\"\n",
 		ack_nack->Ack_Nack_Description.STARTING_SEQUENCE_NUMBER,
@@ -493,13 +493,13 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 	tfi = ack_nack->DOWNLINK_TFI;
 	tbf = bts_dl_tbf_by_poll_fn(bts(), fn, trx_no(), ts_no);
 	if (!tbf) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "EGPRS PACKET DOWNLINK ACK with "
+		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "EGPRS PACKET DOWNLINK ACK with "
 			"unknown FN=%u TFI=%d (TRX %d TS %d)\n",
 			fn, tfi, trx_no(), ts_no);
 		return;
 	}
 	if (tbf->tfi() != tfi) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "EGPRS PACKET DOWNLINK ACK with "
+		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "EGPRS PACKET DOWNLINK ACK with "
 			"wrong TFI=%d, ignoring!\n", tfi);
 		return;
 	}
@@ -514,7 +514,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 		"RX: [PCU <- BTS] EGPRS Packet Downlink Ack/Nack\n");
 
 	window = static_cast<gprs_rlc_dl_window *>(tbf->window());
-	LOGP(DRLCMAC, LOGL_DEBUG, "EGPRS ACK/NACK: "
+	LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "EGPRS ACK/NACK: "
 		"ut: %d, final: %d, bow: %d, eow: %d, ssn: %d, have_crbb: %d, "
 		"urbb_len:%d, %p, %p, %d, %d, win: %d-%d, urbb: %s\n",
 		(int)ack_nack->EGPRS_AckNack.UnionType,
@@ -541,7 +541,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 		&ack_nack->EGPRS_AckNack.Desc, &bits,
 		&bsn_begin, &bsn_end, window);
 
-	LOGP(DRLCMAC, LOGL_DEBUG,
+	LOGPDCH(this, DRLCMAC, LOGL_DEBUG,
 		"Got EGPRS DL ACK bitmap: SSN: %d, BSN %d to %d - 1 (%d blocks), "
 		"\"%s\"\n",
 		ack_nack->EGPRS_AckNack.Desc.STARTING_SEQUENCE_NUMBER,
@@ -591,7 +591,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		/* Keep the ms, even if it gets idle temporarily */
 		ms_ref(ms);
 
-		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
+		LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
 			"in packet resource request of single "
 			"block, so we provide one:\n");
 		sba = bts_sba(bts())->find(this, fn);
@@ -687,8 +687,8 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 
 	ms = bts_ms_by_tlli(bts(), report->TLLI, GSM_RESERVED_TMSI);
 	if (!ms) {
-		LOGP(DRLCMAC, LOGL_NOTICE, "MS send measurement "
-		     "but TLLI 0x%08x is unknown\n", report->TLLI);
+		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "MS send measurement "
+			"but TLLI 0x%08x is unknown\n", report->TLLI);
 		ms = bts_alloc_ms(bts(), 0, 0);
 		ms_set_tlli(ms, report->TLLI);
 	}
@@ -709,14 +709,14 @@ void gprs_rlcmac_pdch::rcv_cell_change_notification(Packet_Cell_Change_Notificat
 	if (notif->Global_TFI.UnionType == 0) {
 		struct gprs_rlcmac_ul_tbf *ul_tbf = ul_tbf_by_tfi(notif->Global_TFI.u.UPLINK_TFI);
 		if (!ul_tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "UL TBF TFI=0x%2x not found\n", notif->Global_TFI.u.UPLINK_TFI);
+			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "UL TBF TFI=0x%2x not found\n", notif->Global_TFI.u.UPLINK_TFI);
 			return;
 		}
 		ms = ul_tbf->ms();
 	} else if (notif->Global_TFI.UnionType == 1) {
 		struct gprs_rlcmac_dl_tbf *dl_tbf = dl_tbf_by_tfi(notif->Global_TFI.u.DOWNLINK_TFI);
 		if (!dl_tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "DL TBF TFI=0x%2x not found\n", notif->Global_TFI.u.DOWNLINK_TFI);
+			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "DL TBF TFI=0x%2x not found\n", notif->Global_TFI.u.DOWNLINK_TFI);
 			return;
 		}
 		ms = dl_tbf->ms();
@@ -740,7 +740,7 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 	bitvec_unpack(rlc_block, data);
 	ul_control_block = (RlcMacUplink_t *)talloc_zero(tall_pcu_ctx, RlcMacUplink_t);
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
+	LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
 
 	rc = decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
 	if (ul_control_block->u.MESSAGE_TYPE == MT_PACKET_UPLINK_DUMMY_CONTROL_BLOCK)
@@ -749,11 +749,11 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 		bts_send_gsmtap_meas(bts(), PCU_GSMTAP_C_UL_CTRL, true, trx_no(), ts_no, GSMTAP_CHANNEL_PACCH, fn, data, data_len, meas);
 
 	if (rc < 0) {
-		LOGP(DRLCMACUL, LOGL_ERROR, "Dropping Uplink Control Block with invalid "
-		     "content, decode failed: %d)\n", rc);
+		LOGPDCH(this, DRLCMACUL, LOGL_ERROR, "Dropping Uplink Control Block "
+			"with invalid content, decode failed: %d)\n", rc);
 		goto free_ret;
 	}
-	LOGP(DRLCMAC, LOGL_DEBUG, "------------------------- RX : Uplink Control Block -------------------------\n");
+	LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "------------------------- RX : Uplink Control Block -------------------------\n");
 
 	bts_do_rate_ctr_inc(bts(), CTR_RLC_RECV_CONTROL);
 	switch (ul_control_block->u.MESSAGE_TYPE) {
@@ -780,7 +780,7 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 		break;
 	default:
 		bts_do_rate_ctr_inc(bts(), CTR_DECODE_ERRORS);
-		LOGP(DRLCMAC, LOGL_NOTICE,
+		LOGPDCH(this, DRLCMAC, LOGL_NOTICE,
 			"RX: [PCU <- BTS] unknown control block(%d) received\n",
 			ul_control_block->u.MESSAGE_TYPE);
 	}
@@ -797,14 +797,14 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	enum CodingScheme cs = mcs_get_by_size_ul(len);
 	if (!cs) {
 		bts_do_rate_ctr_inc(bts(), CTR_DECODE_ERRORS);
-		LOGP(DRLCMACUL, LOGL_ERROR, "Dropping data block with invalid "
-		     "length %d: %s\n", len, osmo_hexdump(data, len));
+		LOGPDCH(this, DRLCMACUL, LOGL_ERROR, "Dropping data block with invalid "
+			"length %d: %s\n", len, osmo_hexdump(data, len));
 		return -EINVAL;
 	}
 
 	bts_do_rate_ctr_add(bts(), CTR_RLC_UL_BYTES, len);
 
-	LOGP(DRLCMACUL, LOGL_DEBUG, "Got RLC block, coding scheme: %s, "
+	LOGPDCH(this, DRLCMACUL, LOGL_DEBUG, "Got RLC block, coding scheme: %s, "
 		"length: %d (%d))\n", mcs_name(cs), len, mcs_used_size_ul(cs));
 
 	if (mcs_is_gprs(cs))
@@ -814,7 +814,7 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 		return rcv_data_block(data, len, fn, meas, cs);
 
 	bts_do_rate_ctr_inc(bts(), CTR_DECODE_ERRORS);
-	LOGP(DRLCMACUL, LOGL_ERROR, "Unsupported coding scheme %s\n",
+	LOGPDCH(this, DRLCMACUL, LOGL_ERROR, "Unsupported coding scheme %s\n",
 		mcs_name(cs));
 	return -EINVAL;
 }
@@ -841,18 +841,18 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 					data, data_len, meas);
 	}
 
-	LOGP(DRLCMACUL, LOGL_DEBUG, "  UL data: %s\n", osmo_hexdump(data, len));
+	LOGPDCH(this, DRLCMACUL, LOGL_DEBUG, "  UL data: %s\n", osmo_hexdump(data, len));
 
 	rc = Decoding::rlc_parse_ul_data_header(&rlc_dec, data, cs);
 	if (rc < 0) {
-		LOGP(DRLCMACUL, LOGL_ERROR,
+		LOGPDCH(this, DRLCMACUL, LOGL_ERROR,
 			"Got %s RLC block but header parsing has failed\n",
 			mcs_name(cs));
 		bts_do_rate_ctr_inc(bts(), CTR_DECODE_ERRORS);
 		return rc;
 	}
 
-	LOGP(DRLCMACUL, LOGL_INFO,
+	LOGPDCH(this, DRLCMACUL, LOGL_INFO,
 		"Got %s RLC block: "
 		"R=%d, SI=%d, TFI=%d, CPS=%d, RSB=%d, "
 		"rc=%d\n",
@@ -863,7 +863,7 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 	/* find TBF inst from given TFI */
 	tbf = ul_tbf_by_tfi(rlc_dec.tfi);
 	if (!tbf) {
-		LOGP(DRLCMACUL, LOGL_NOTICE, "UL DATA unknown TFI=%d\n",
+		LOGPDCH(this, DRLCMACUL, LOGL_NOTICE, "UL DATA unknown TFI=%d\n",
 			rlc_dec.tfi);
 		return 0;
 	}
@@ -888,10 +888,10 @@ int gprs_rlcmac_pdch::rcv_block_gprs(uint8_t *data, uint8_t data_len, uint32_t f
 		rc = rcv_control_block(data, data_len, fn, meas, cs);
 		break;
 	case GPRS_RLCMAC_CONTROL_BLOCK_OPT:
-		LOGP(DRLCMAC, LOGL_NOTICE, "GPRS_RLCMAC_CONTROL_BLOCK_OPT block payload is not supported.\n");
+		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "GPRS_RLCMAC_CONTROL_BLOCK_OPT block payload is not supported.\n");
 		break;
 	default:
-		LOGP(DRLCMAC, LOGL_NOTICE, "Unknown RLCMAC block payload(%u).\n", payload);
+		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "Unknown RLCMAC block payload(%u).\n", payload);
 		rc = -EINVAL;
 	}
 
@@ -952,9 +952,8 @@ void gprs_rlcmac_pdch::attach_tbf(gprs_rlcmac_tbf *tbf)
 	gprs_rlcmac_ul_tbf *ul_tbf;
 
 	if (m_tbfs[tbf->direction][tbf->tfi()])
-		LOGP(DRLCMAC, LOGL_ERROR, "PDCH(TS %d, TRX %d): "
+		LOGPDCH(this, DRLCMAC, LOGL_ERROR,
 			"%s has not been detached, overwriting it\n",
-			ts_no, trx_no(),
 			m_tbfs[tbf->direction][tbf->tfi()]->name());
 
 	m_num_tbfs[tbf->direction] += 1;
@@ -965,9 +964,9 @@ void gprs_rlcmac_pdch::attach_tbf(gprs_rlcmac_tbf *tbf)
 	m_assigned_tfi[tbf->direction] |= 1UL << tbf->tfi();
 	m_tbfs[tbf->direction][tbf->tfi()] = tbf;
 
-	LOGP(DRLCMAC, LOGL_INFO, "PDCH(TS %d, TRX %d): Attaching %s, %d TBFs, "
+	LOGPDCH(this, DRLCMAC, LOGL_INFO, "Attaching %s, %d TBFs, "
 		"USFs = %02x, TFIs = %08x.\n",
-		ts_no, trx_no(), tbf->name(), m_num_tbfs[tbf->direction],
+		tbf->name(), m_num_tbfs[tbf->direction],
 		m_assigned_usf, m_assigned_tfi[tbf->direction]);
 }
 
@@ -985,9 +984,9 @@ void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
 	m_assigned_tfi[tbf->direction] &= ~(1UL << tbf->tfi());
 	m_tbfs[tbf->direction][tbf->tfi()] = NULL;
 
-	LOGP(DRLCMAC, LOGL_INFO, "PDCH(TS %d, TRX %d): Detaching %s, %d TBFs, "
+	LOGPDCH(this, DRLCMAC, LOGL_INFO, "Detaching %s, %d TBFs, "
 		"USFs = %02x, TFIs = %08x.\n",
-		ts_no, trx_no(), tbf->name(), m_num_tbfs[tbf->direction],
+		tbf->name(), m_num_tbfs[tbf->direction],
 		m_assigned_usf, m_assigned_tfi[tbf->direction]);
 }
 

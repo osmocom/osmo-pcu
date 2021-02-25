@@ -15,10 +15,10 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 10
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 10/11,) Enabled EGPRS, mode EGPRS
 [DL] algo B <multi> (suggested TRX: 0): using 4 slots
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
-PDCH(TS 5, TRX 0): Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
-PDCH(TS 6, TRX 0): Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
-PDCH(TS 7, TRX 0): Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+PDCH(bts=0,trx=0,ts=4) Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+PDCH(bts=0,trx=0,ts=5) Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+PDCH(bts=0,trx=0,ts=6) Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
+PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 Attaching TBF to MS object, TLLI = 0xffffffff, TBF = TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS)
 ws(64)
 Creating MS object, TLLI = 0xffffffff
@@ -26,9 +26,9 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 12
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 13
 MS(TLLI=0xffffffff, IMSI=, TA=220, 12/13,) Enabled EGPRS, mode EGPRS
 [DL] algo B <multi> (suggested TRX: 0): using 3 slots
-PDCH(TS 4, TRX 0): Attaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
-PDCH(TS 5, TRX 0): Attaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
-PDCH(TS 6, TRX 0): Attaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
+PDCH(bts=0,trx=0,ts=4) Attaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
+PDCH(bts=0,trx=0,ts=5) Attaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
+PDCH(bts=0,trx=0,ts=6) Attaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
 Attaching TBF to MS object, TLLI = 0xffffffff, TBF = TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS)
 ws(64)
 
@@ -52,14 +52,14 @@ Previous Packet Application Information was not sent to all subscribers, overwri
 Sending Packet Application Information to 2 subscribers with active TBF
 
 --- cleanup ---
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 1 TBFs, USFs = 00, TFIs = 00000002.
-PDCH(TS 5, TRX 0): Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 1 TBFs, USFs = 00, TFIs = 00000002.
-PDCH(TS 6, TRX 0): Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 1 TBFs, USFs = 00, TFIs = 00000002.
-PDCH(TS 7, TRX 0): Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 1 TBFs, USFs = 00, TFIs = 00000002.
+PDCH(bts=0,trx=0,ts=5) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 1 TBFs, USFs = 00, TFIs = 00000002.
+PDCH(bts=0,trx=0,ts=6) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 1 TBFs, USFs = 00, TFIs = 00000002.
+PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 Detaching TBF from MS object, TLLI = 0xffffffff, TBF = TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS)
-PDCH(TS 4, TRX 0): Detaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(TS 5, TRX 0): Detaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(TS 6, TRX 0): Detaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(bts=0,trx=0,ts=5) Detaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(bts=0,trx=0,ts=6) Detaching TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 Detaching TBF from MS object, TLLI = 0xffffffff, TBF = TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS)
 Destroying MS object, TLLI = 0xffffffff
 Destroying MS object, TLLI = 0xffffffff
