@@ -100,7 +100,11 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "tbf:reused",			"TBF Reused           "},
 	{ "tbf:alloc:algo-a",		"TBF Alloc Algo A     "},
 	{ "tbf:alloc:algo-b",		"TBF Alloc Algo B     "},
-	{ "tbf:alloc:failed",		"TBF Alloc Failure    "},
+	{ "tbf:alloc:failed",		"TBF Alloc Failure (any reason)"},
+	{ "tbf:alloc:failed:no_tfi",	"TBF Alloc Failure (TFIs exhausted)"},
+	{ "tbf:alloc:failed:no_usf",	"TBF Alloc Failure (USFs exhausted)"},
+	{ "tbf:alloc:failed:no_slot_combi", "TBF Alloc Failure (No valid UL/DL slot combination found)"},
+	{ "tbf:alloc:failed:no_slot_avail", "TBF Alloc Failure (No slot available)"},
 	{ "rlc:sent",			"RLC Sent             "},
 	{ "rlc:resent",			"RLC Resent           "},
 	{ "rlc:restarted",		"RLC Restarted        "},
@@ -609,6 +613,7 @@ int bts_tfi_find_free(const struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_di
 
 	if (best_trx_nr == 0xff || best_cnt == 0) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No TFI available (suggested TRX: %d).\n", use_trx);
+		bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_FAIL_NO_TFI);
 		return -EBUSY;
 	}
 

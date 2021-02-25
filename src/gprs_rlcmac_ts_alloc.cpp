@@ -647,6 +647,7 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
 	if (!max_ul_slots || !max_dl_slots) {
 		LOGP(DRLCMAC, LOGL_NOTICE,
 			"No valid UL/DL slot combination found\n");
+		bts_do_rate_ctr_inc(trx->bts, CTR_TBF_ALLOC_FAIL_NO_SLOT_COMBI);
 		return -EINVAL;
 	}
 
@@ -719,6 +720,7 @@ static int tbf_select_slot_set(const gprs_rlcmac_tbf *tbf, const gprs_rlcmac_trx
 	if (!sl) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No %s slots available\n",
 		     tbf->direction != GPRS_RLCMAC_DL_TBF ? "uplink" : "downlink");
+		bts_do_rate_ctr_inc(trx->bts, CTR_TBF_ALLOC_FAIL_NO_SLOT_AVAIL);
 		return -EINVAL;
 	}
 
@@ -771,6 +773,7 @@ static int allocate_usf(const gprs_rlcmac_trx *trx, uint8_t selected_ul_slots, u
 
 	if (!ul_slots) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No USF available\n");
+		bts_do_rate_ctr_inc(trx->bts, CTR_TBF_ALLOC_FAIL_NO_USF);
 		return -EBUSY;
 	}
 

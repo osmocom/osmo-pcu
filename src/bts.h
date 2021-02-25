@@ -88,6 +88,10 @@ enum {
 	CTR_TBF_ALLOC_ALGO_A,
 	CTR_TBF_ALLOC_ALGO_B,
 	CTR_TBF_ALLOC_FAIL,
+	CTR_TBF_ALLOC_FAIL_NO_TFI,
+	CTR_TBF_ALLOC_FAIL_NO_USF,
+	CTR_TBF_ALLOC_FAIL_NO_SLOT_COMBI,
+	CTR_TBF_ALLOC_FAIL_NO_SLOT_AVAIL,
 	CTR_RLC_SENT,
 	CTR_RLC_RESENT,
 	CTR_RLC_RESTARTED,
@@ -319,11 +323,11 @@ static inline struct osmo_stat_item_group *bts_stat_items(struct gprs_rlcmac_bts
 	return bts->statg;
 }
 
-static inline void bts_do_rate_ctr_inc(struct gprs_rlcmac_bts *bts, unsigned int ctr_id) {
+static inline void bts_do_rate_ctr_inc(const struct gprs_rlcmac_bts *bts, unsigned int ctr_id) {
 	rate_ctr_inc(&bts->ratectrs->ctr[ctr_id]);
 }
 
-static inline void bts_do_rate_ctr_add(struct gprs_rlcmac_bts *bts, unsigned int ctr_id, int inc) {
+static inline void bts_do_rate_ctr_add(const struct gprs_rlcmac_bts *bts, unsigned int ctr_id, int inc) {
 	rate_ctr_add(&bts->ratectrs->ctr[ctr_id], inc);
 }
 
