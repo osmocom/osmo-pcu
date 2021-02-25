@@ -2,8 +2,8 @@
 === end test_tbf_base ===
 === start test_tbf_tlli_update ===
 Creating MS object, TLLI = 0xffffffff
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -19,8 +19,8 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 04, 
 Attaching TBF to MS object, TLLI = 0xffffffff, TBF = TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL)
 The MS object cannot fully confirm an unexpected TLLI: 0x00002342, partly confirmed
 Modifying MS object, TLLI = 0x00002342, TA 220 -> 4
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0x00002342, IMSI=, TA=4, 0/0, DL) ********** UL-TBF starts here **********
+MS(TLLI=0x00002342, IMSI=, TA=4, 0/0, DL) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -43,8 +43,8 @@ Modifying MS object, TLLI = 0x00004232, TA 4 -> 6
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -92,8 +92,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) changes state from FLOW to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) ********** DL-TBF starts here **********
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -132,8 +132,8 @@ Destroying MS object, TLLI = 0xffeeddcc
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -181,8 +181,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) changes state from FLOW to WAIT RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) ********** DL-TBF starts here **********
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -221,8 +221,8 @@ Destroying MS object, TLLI = 0xffeeddcc
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -474,8 +474,8 @@ Destroying MS object, TLLI = 0xffeeddcc
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -495,8 +495,8 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) changes state from NULL to FLOW
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Found first unallocated TRX=0 TFI=1
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -538,8 +538,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000000'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000000, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000000, IMSI=001001000000000, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000000, IMSI=001001000000000, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -563,8 +563,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000001'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000001, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000001, IMSI=001001000000001, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000001, IMSI=001001000000001, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -588,8 +588,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000002'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000002, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000002, IMSI=001001000000002, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000002, IMSI=001001000000002, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -613,8 +613,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000003'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000003, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000003, IMSI=001001000000003, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000003, IMSI=001001000000003, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -638,8 +638,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000004'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000004, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000004, IMSI=001001000000004, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000004, IMSI=001001000000004, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -663,8 +663,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000005'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000005, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000005, IMSI=001001000000005, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000005, IMSI=001001000000005, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -688,8 +688,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000006'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000006, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000006, IMSI=001001000000006, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000006, IMSI=001001000000006, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -713,8 +713,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000007'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000007, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000007, IMSI=001001000000007, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000007, IMSI=001001000000007, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -738,8 +738,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000008'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000008, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000008, IMSI=001001000000008, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000008, IMSI=001001000000008, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -763,8 +763,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000009'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000009, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000009, IMSI=001001000000009, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000009, IMSI=001001000000009, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -788,8 +788,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000010'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000a, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc000000a, IMSI=001001000000010, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc000000a, IMSI=001001000000010, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -813,8 +813,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000011'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000b, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc000000b, IMSI=001001000000011, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc000000b, IMSI=001001000000011, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -838,8 +838,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000012'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000c, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc000000c, IMSI=001001000000012, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc000000c, IMSI=001001000000012, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -863,8 +863,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000013'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000d, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc000000d, IMSI=001001000000013, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc000000d, IMSI=001001000000013, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -888,8 +888,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000014'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000e, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc000000e, IMSI=001001000000014, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc000000e, IMSI=001001000000014, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -913,8 +913,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000015'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000f, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc000000f, IMSI=001001000000015, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc000000f, IMSI=001001000000015, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -938,8 +938,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000016'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000010, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000010, IMSI=001001000000016, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000010, IMSI=001001000000016, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -963,8 +963,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000017'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000011, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000011, IMSI=001001000000017, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000011, IMSI=001001000000017, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -988,8 +988,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000018'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000012, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000012, IMSI=001001000000018, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000012, IMSI=001001000000018, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1013,8 +1013,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000019'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000013, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000013, IMSI=001001000000019, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000013, IMSI=001001000000019, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1038,8 +1038,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000020'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000014, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000014, IMSI=001001000000020, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000014, IMSI=001001000000020, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1063,8 +1063,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000021'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000015, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000015, IMSI=001001000000021, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000015, IMSI=001001000000021, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1088,8 +1088,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000022'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000016, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000016, IMSI=001001000000022, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000016, IMSI=001001000000022, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1113,8 +1113,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000023'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000017, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000017, IMSI=001001000000023, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000017, IMSI=001001000000023, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1138,8 +1138,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000024'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000018, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000018, IMSI=001001000000024, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000018, IMSI=001001000000024, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1163,8 +1163,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000025'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000019, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000019, IMSI=001001000000025, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000019, IMSI=001001000000025, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1188,8 +1188,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000026'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001a, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc000001a, IMSI=001001000000026, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc000001a, IMSI=001001000000026, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1213,8 +1213,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000027'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001b, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc000001b, IMSI=001001000000027, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc000001b, IMSI=001001000000027, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1238,8 +1238,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000028'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001c, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc000001c, IMSI=001001000000028, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc000001c, IMSI=001001000000028, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1263,8 +1263,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000029'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001d, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc000001d, IMSI=001001000000029, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc000001d, IMSI=001001000000029, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1288,8 +1288,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000030'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001e, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc000001e, IMSI=001001000000030, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc000001e, IMSI=001001000000030, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1313,8 +1313,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000031'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001f, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc000001f, IMSI=001001000000031, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc000001f, IMSI=001001000000031, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1338,12 +1338,12 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000032'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000020, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 [DL] algo A <single> (suggested TRX: -1): failed to find a usable TRX (TFI exhausted)
 TBF(TFI=0 TLLI=0xc0000020 DIR=DL STATE=NULL) Timeslot Allocation failed: trx = -1, single_slot = 1
-No PDCH resource
+MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) No PDCH resource
 === end test_tbf_exhaustion ===
 Destroying MS object, TLLI = 0xc0000020
 === start test_tbf_dl_llc_loss ===
@@ -1351,8 +1351,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000123456'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0123456, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0123456, IMSI=001001000123456, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0123456, IMSI=001001000123456, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1380,8 +1380,8 @@ TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING) free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
 Detaching TBF from MS object, TLLI = 0xc0123456, TBF = TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING)
 ********** DL-TBF ends here **********
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1439,8 +1439,8 @@ MSG = 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03
 Found first unallocated TRX=0 TFI=0
 MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1483,8 +1483,8 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=0/0
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1518,8 +1518,8 @@ Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=1/0
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1562,8 +1562,8 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=1/0
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1598,8 +1598,8 @@ Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=1/0
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1641,8 +1641,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=1/0
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1724,8 +1724,8 @@ Modifying MS object, UL TLLI: 0xffffffff -> 0xf5667788, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
 Modifying MS object, TLLI = 0xf5667788, TA 220 -> 7
 Modifying MS object, TLLI = 0xf5667788, MS class 0 -> 1
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=1/0
+MS(TLLI=0xf5667788, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xf5667788, IMSI=, TA=7, 1/0,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1788,8 +1788,8 @@ Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=1/0
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1833,8 +1833,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=1/0
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1871,8 +1871,8 @@ Found first unallocated TRX=0 TFI=0
 PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=1/0
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) ********** UL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1926,8 +1926,8 @@ Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=1/0
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1971,8 +1971,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=1/0
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2004,8 +2004,8 @@ Detaching TBF from MS object, TLLI = 0xf1223344, TBF = TBF(TFI=0 TLLI=0xf1223344
 Found first unallocated TRX=0 TFI=0
 MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654275 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2068,8 +2068,8 @@ Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=1/0
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2113,8 +2113,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=1/0
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2745,8 +2745,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) V(B): (V(A)=28)""(V(S)-1=27)  A
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Final ACK received.
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) changes state from FINISHED to WAIT RELEASE
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654379
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=1/0
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2993,8 +2993,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001123456789'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0006789, partly confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=45/0
+MS(TLLI=0xc0006789, IMSI=001001123456789, TA=220, 45/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xc0006789, IMSI=001001123456789, TA=220, 45/0,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3018,8 +3018,8 @@ TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=ASSIGN) appending 256 bytes
 === start test_tbf_ws ===
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 12
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=12/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 12/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 12/0,) Allocating DL TBF
 [DL] algo B <multi> (suggested TRX: 0): Alloc start
 Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 12
@@ -3057,8 +3057,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 12
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 12
 MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) Enabled EGPRS, mode EGPRS
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=12/12
+MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) Allocating DL TBF
 [DL] algo B <multi> (suggested TRX: 0): Alloc start
 Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 12
@@ -3110,8 +3110,8 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=1/1
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3158,8 +3158,8 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=1/1
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3198,8 +3198,8 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=1/1
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3364,8 +3364,8 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=1/1
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3396,8 +3396,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3700,8 +3700,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3954,8 +3954,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4158,8 +4158,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4342,8 +4342,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4506,8 +4506,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4640,8 +4640,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4781,8 +4781,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4911,8 +4911,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5030,8 +5030,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5085,8 +5085,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5140,8 +5140,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5195,8 +5195,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5265,8 +5265,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5335,8 +5335,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5405,8 +5405,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5477,8 +5477,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5539,8 +5539,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5601,8 +5601,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5663,8 +5663,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5742,8 +5742,8 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=1/1
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5807,8 +5807,8 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=1/1
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5837,8 +5837,8 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo B <single> (suggested TRX: 0): Alloc start
 Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 11
@@ -5901,8 +5901,8 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=1/1
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5961,8 +5961,8 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=1/1
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5992,8 +5992,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6028,8 +6028,8 @@ Destroying MS object, TLLI = 0xffeeddcc
 === start test_immediate_assign_rej_multi_block ===
 MS requests Uplink resource on CCCH/RACH: ra=0x78 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6050,8 +6050,8 @@ TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 MS requests Uplink resource on CCCH/RACH: ra=0x79 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6072,8 +6072,8 @@ TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=1 USF=1
 MS requests Uplink resource on CCCH/RACH: ra=0x7a (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6094,8 +6094,8 @@ TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=2 USF=2
 MS requests Uplink resource on CCCH/RACH: ra=0x7b (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6116,8 +6116,8 @@ TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=3 USF=3
 MS requests Uplink resource on CCCH/RACH: ra=0x7c (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6138,8 +6138,8 @@ TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=4 USF=4
 MS requests Uplink resource on CCCH/RACH: ra=0x7d (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6160,8 +6160,8 @@ TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=5 USF=5
 MS requests Uplink resource on CCCH/RACH: ra=0x7e (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6182,8 +6182,8 @@ TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=6 USF=6
 MS requests Uplink resource on CCCH/RACH: ra=0x7f (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6221,8 +6221,8 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=1/1
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6758,8 +6758,8 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=1/1
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7432,8 +7432,8 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 Found first unallocated TRX=0 TFI=0
-********** DL-TBF starts here **********
-Allocating DL TBF: MS_CLASS=11/11
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7459,8 +7459,8 @@ packet reject: 40 84 7f f7 6e e6 41 4b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b
 === start test_packet_access_rej_prr ===
 MS requests Uplink resource on CCCH/RACH: ra=0x78 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7481,8 +7481,8 @@ TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 MS requests Uplink resource on CCCH/RACH: ra=0x79 (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7503,8 +7503,8 @@ TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=1 USF=1
 MS requests Uplink resource on CCCH/RACH: ra=0x7a (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7525,8 +7525,8 @@ TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=2 USF=2
 MS requests Uplink resource on CCCH/RACH: ra=0x7b (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7547,8 +7547,8 @@ TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=3 USF=3
 MS requests Uplink resource on CCCH/RACH: ra=0x7c (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7569,8 +7569,8 @@ TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=4 USF=4
 MS requests Uplink resource on CCCH/RACH: ra=0x7d (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7591,8 +7591,8 @@ TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=5 USF=5
 MS requests Uplink resource on CCCH/RACH: ra=0x7e (8 bit) Fn=2654167 qta=31
 Creating MS object, TLLI = 0xffffffff
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=0/0
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7620,8 +7620,8 @@ PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single b
 Modifying MS object, TLLI = 0xffeeddcc, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffeeddcc, EGPRS MS class 0 -> 11
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
-********** UL-TBF starts here **********
-Allocating UL TBF: MS_CLASS=11/11
+MS(TLLI=0xffeeddcc, IMSI=, TA=220, 11/11,) ********** UL-TBF starts here **********
+MS(TLLI=0xffeeddcc, IMSI=, TA=220, 11/11,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7633,7 +7633,7 @@ Allocating UL TBF: MS_CLASS=11/11
 - Skipping TS 7, because no USF available
 [UL] algo A <multi> (suggested TRX: 0): failed to allocate a TS, no USF available
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL EGPRS) Timeslot Allocation failed: trx = 0, single_slot = 0
-No PDCH resource
+MS(TLLI=0xffeeddcc, IMSI=, TA=220, 11/11,) No PDCH resource
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ

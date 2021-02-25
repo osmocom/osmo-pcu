@@ -129,9 +129,8 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 
 	OSMO_ASSERT(ms != NULL);
 
-	LOGP(DTBF, LOGL_DEBUG, "********** DL-TBF starts here **********\n");
-	LOGP(DTBF, LOGL_INFO, "Allocating DL TBF: MS_CLASS=%d/%d\n",
-	     ms_ms_class(ms), ms_egprs_ms_class(ms));
+	LOGPMS(ms, DTBF, LOGL_DEBUG, "********** DL-TBF starts here **********\n");
+	LOGPMS(ms, DTBF, LOGL_INFO, "Allocating DL TBF\n");
 
 	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
 
@@ -260,7 +259,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts, GprsMs *ms,
 	dl_tbf = tbf_alloc_dl_tbf(bts, ms, use_trx, ss);
 
 	if (!dl_tbf) {
-		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource\n");
+		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");
 		return -EBUSY;
 	}
 

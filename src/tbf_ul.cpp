@@ -103,9 +103,8 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 
 	OSMO_ASSERT(ms != NULL);
 
-	LOGP(DTBF, LOGL_DEBUG, "********** UL-TBF starts here **********\n");
-	LOGP(DTBF, LOGL_INFO, "Allocating UL TBF: MS_CLASS=%d/%d\n",
-	     ms_ms_class(ms), ms_egprs_ms_class(ms));
+	LOGPMS(ms, DTBF, LOGL_DEBUG, "********** UL-TBF starts here **********\n");
+	LOGPMS(ms, DTBF, LOGL_INFO, "Allocating UL TBF\n");
 
 	tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 	if (!tbf)
@@ -151,7 +150,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t
 	/* use multislot class of downlink TBF */
 	tbf = tbf_alloc_ul_tbf(bts, ms, use_trx, false);
 	if (!tbf) {
-		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource\n");
+		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");
 		/* FIXME: send reject */
 		return NULL;
 	}
