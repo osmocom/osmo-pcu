@@ -335,6 +335,7 @@ int gprs_rlcmac_tbf::update()
 	/* if no resource */
 	if (rc < 0) {
 		LOGPTBF(this, LOGL_ERROR, "No resource after update???\n");
+		bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_FAIL);
 		return -rc;
 	}
 
@@ -754,6 +755,7 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 		LOGPTBF(this, LOGL_NOTICE,
 			"Timeslot Allocation failed: trx = %d, single_slot = %d\n",
 			use_trx, single_slot);
+		bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_FAIL);
 		return -1;
 	}
 	/* assign control ts */
