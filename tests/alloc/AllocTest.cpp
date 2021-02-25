@@ -423,9 +423,6 @@ static void test_alloc_b()
 	test_all_alloc_b();
 }
 
-typedef int (*algo_t)(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, bool single,
-		      int8_t use_trx);
-
 static char get_dir_char(uint8_t mask, uint8_t tx, uint8_t rx, uint8_t busy)
 {
 	int offs = busy ? 32 : 0;
@@ -640,7 +637,7 @@ static unsigned alloc_many_tbfs(struct gprs_rlcmac_bts *bts, unsigned min_class,
 	return counter;
 }
 
-static void test_successive_allocation(algo_t algo, unsigned min_class,
+static void test_successive_allocation(alloc_algorithm_func_t algo, unsigned min_class,
 	unsigned max_class, enum test_mode mode,
 	unsigned expect_num, const char *text)
 {
@@ -674,7 +671,7 @@ static void test_successive_allocation(algo_t algo, unsigned min_class,
 	talloc_free(bts);
 }
 
-static void test_many_connections(algo_t algo, unsigned expect_num,
+static void test_many_connections(alloc_algorithm_func_t algo, unsigned expect_num,
 	const char *text)
 {
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);

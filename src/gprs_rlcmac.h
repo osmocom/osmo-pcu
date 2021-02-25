@@ -104,13 +104,13 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 
 extern "C" {
 #endif
-int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, bool single,
+int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool single,
 		      int8_t use_trx);
 
-int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, bool single,
+int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool single,
 		      int8_t use_trx);
 
-int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, bool single,
+int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool single,
 			    int8_t use_trx);
 
 int gprs_rlcmac_paging_request(struct gprs_rlcmac_bts *bts, const struct osmo_mobile_identity *mi, uint16_t pgroup);

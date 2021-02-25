@@ -67,7 +67,6 @@ struct GprsMs;
 struct gprs_rlcmac_tbf;
 
 typedef int (*alloc_algorithm_func_t)(struct gprs_rlcmac_bts *bts,
-				      struct GprsMs *ms,
 				      struct gprs_rlcmac_tbf *tbf,
 				      bool single, int8_t use_tbf);
 
