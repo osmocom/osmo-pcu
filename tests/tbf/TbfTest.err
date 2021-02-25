@@ -1342,6 +1342,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000020, partly confir
 Allocating DL TBF: MS_CLASS=45/0
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 [DL] algo A <single> (suggested TRX: -1): failed to find a usable TRX (TFI exhausted)
+TBF(TFI=0 TLLI=0xc0000020 DIR=DL STATE=NULL) Timeslot Allocation failed: trx = -1, single_slot = 1
 No PDCH resource
 === end test_tbf_exhaustion ===
 Destroying MS object, TLLI = 0xc0000020
@@ -6193,6 +6194,7 @@ Allocating UL TBF: MS_CLASS=0/0
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because no USF available
 [UL] algo A <single> (suggested TRX: -1): failed to allocate a TS, no USF available
+TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) Timeslot Allocation failed: trx = -1, single_slot = 1
 No PDCH resource for Uplink TBF
 Tx Immediate Assignment Reject on AGCH
 Destroying MS object, TLLI = 0xffffffff
@@ -7630,6 +7632,7 @@ Allocating UL TBF: MS_CLASS=11/11
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because no USF available
 [UL] algo A <multi> (suggested TRX: 0): failed to allocate a TS, no USF available
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL EGPRS) Timeslot Allocation failed: trx = 0, single_slot = 0
 No PDCH resource
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 Attaching TBF to MS object, TLLI = 0xffeeddcc, TBF = TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)

@@ -751,6 +751,9 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 	rc = the_pcu->alloc_algorithm(bts, m_ms, this, single_slot, use_trx);
 	/* if no resource */
 	if (rc < 0) {
+		LOGPTBF(this, LOGL_NOTICE,
+			"Timeslot Allocation failed: trx = %d, single_slot = %d\n",
+			use_trx, single_slot);
 		return -1;
 	}
 	/* assign control ts */
