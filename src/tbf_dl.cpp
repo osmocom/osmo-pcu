@@ -171,9 +171,6 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 	llist_add(tbf_bts_list((struct gprs_rlcmac_tbf *)tbf), &bts->dl_tbfs);
 	bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_DL_ALLOCATED);
 
-	tbf->m_last_dl_poll_fn = -1;
-	tbf->m_last_dl_drained_fn = -1;
-
 	osmo_clock_gettime(CLOCK_MONOTONIC, &tbf->m_bw.dl_bw_tv);
 	osmo_clock_gettime(CLOCK_MONOTONIC, &tbf->m_bw.dl_loss_tv);
 
@@ -185,8 +182,8 @@ gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms)
 	m_tx_counter(0),
 	m_wait_confirm(0),
 	m_dl_ack_requested(false),
-	m_last_dl_poll_fn(0),
-	m_last_dl_drained_fn(0),
+	m_last_dl_poll_fn(-1),
+	m_last_dl_drained_fn(-1),
 	m_dl_gprs_ctrs(NULL),
 	m_dl_egprs_ctrs(NULL)
 {
