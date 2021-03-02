@@ -59,8 +59,10 @@ void gprs_llc::put_dummy_frame(size_t req_len)
 
 	/* Add further stuffing, if the requested length exceeds the minimum
 	 * dummy command length */
-	while (m_length < req_len)
-		frame[m_length++] = 0x2b;
+	if (m_length < req_len) {
+		memset(&frame[m_length], 0x2b, req_len - m_length);
+		m_length = req_len;
+	}
 }
 
 void gprs_llc::put_frame(const uint8_t *data, size_t len)
