@@ -684,6 +684,10 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 		int payload_written = 0;
 
 		if (llc_frame_length(&m_llc) == 0) {
+			/* The data just drained, store the current fn */
+			if (m_last_dl_drained_fn < 0)
+				m_last_dl_drained_fn = fn;
+
 			/* It is not clear, when the next real data will
 			 * arrive, so request a DL ack/nack now */
 			request_dl_ack();
@@ -714,10 +718,6 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 			/* A header will need to by added, so we just need
 			 * space-1 octets */
 			m_llc.put_dummy_frame(space - 1);
-
-			/* The data just drained, store the current fn */
-			if (m_last_dl_drained_fn < 0)
-				m_last_dl_drained_fn = fn;
 
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Empty chunk, added LLC dummy command of size %d, drained_since=%d\n",

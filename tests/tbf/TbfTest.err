@@ -431,8 +431,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) V(B): (V(A)=21)""(V(S)-1=20)  A=Ack
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==21 .. V(S)==21) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new dummy block at BSN 21, CS=CS-1
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Empty chunk, added LLC dummy command of size 19, drained_since=0
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Keep idle TBF open: 0/43 -> yes
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Empty chunk, added LLC dummy command of size 19, drained_since=4
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Keep idle TBF open: 4/43 -> yes
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Complete DL frame, len=19
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 21, CS-1): 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (BSN1 21 BSN2 -1)
@@ -448,8 +448,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) V(B): (V(A)=22)""(V(S)-1=21)  A=Ack
 Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==22 .. V(S)==22) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new dummy block at BSN 22, CS=CS-1
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Empty chunk, added LLC dummy command of size 19, drained_since=108
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Keep idle TBF open: 108/43 -> no
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Empty chunk, added LLC dummy command of size 19, drained_since=112
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Keep idle TBF open: 112/43 -> no
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Complete DL frame, len=19
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) changes state from FLOW to FINISHED
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) data block (BSN 22, CS-1): 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
