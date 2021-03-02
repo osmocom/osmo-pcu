@@ -1352,13 +1352,21 @@ bool gprs_rlcmac_dl_tbf::keep_open(unsigned fn) const
 {
 	int keep_time_frames;
 	unsigned long dl_tbf_idle_msec;
+	int since_last_drain;
+	bool keep;
 
 	dl_tbf_idle_msec = osmo_tdef_get(the_pcu->T_defs, -2031, OSMO_TDEF_MS, -1);
 	if (dl_tbf_idle_msec == 0)
 		return false;
 
 	keep_time_frames = msecs_to_frames(dl_tbf_idle_msec);
-	return frames_since_last_drain(fn) <= keep_time_frames;
+	since_last_drain = frames_since_last_drain(fn);
+	keep = since_last_drain <= keep_time_frames;
+
+	if (since_last_drain >= 0)
+		LOGPTBFDL(this, LOGL_DEBUG, "Keep idle TBF open: %d/%d -> %s\n",
+			  since_last_drain, keep_time_frames, keep ? "yes" : "no");
+	return keep;
 }
 
 /*
