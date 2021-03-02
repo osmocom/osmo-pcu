@@ -700,6 +700,16 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 				LOGPTBFDL(this, LOGL_DEBUG,
 					  "LLC queue completely drained and there's "
 					  "still %d free bytes in rlcmac data block\n", space);
+
+				/* We may need to update fbi in header here
+				 * since m_last_dl_drained_fn was updated above
+				 * Specially important when X2031 is 0. */
+				is_final = llc_queue_size(llc_queue()) == 0 && !keep_open(fn);
+				if (is_final) {
+					rdbi->cv = 0;
+					TBF_SET_STATE(this, GPRS_RLCMAC_FINISHED);
+				}
+
 				if (mcs_is_edge(cs)) {
 					/* in EGPRS there's no M bit, so we need
 					 * to flag padding with LI=127 */
