@@ -164,10 +164,8 @@ struct msgb *sched_app_info(struct gprs_rlcmac_tbf *tbf) {
 	return msg;
 }
 
-static struct msgb *sched_select_ctrl_msg(
-		    uint8_t trx, uint8_t ts, uint32_t fn,
-		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch,
-		    struct tbf_sched_candidates *tbfs)
+static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_t fn,
+					  uint8_t block_nr, struct tbf_sched_candidates *tbfs)
 {
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_tbf *tbf = NULL;
@@ -175,6 +173,7 @@ static struct msgb *sched_select_ctrl_msg(
 						tbfs->dl_ass,
 						tbfs->ul_ack,
 						tbfs->nacc };
+	uint8_t ts = pdch->ts_no;
 
 	/* Send Packet Application Information first (ETWS primary notifications) */
 	msg = sched_app_info(tbfs->dl_ass);
@@ -234,15 +233,15 @@ static struct msgb *sched_select_ctrl_msg(
 	/* any message */
 	if (msg) {
 		if (!tbf) {
-			LOGP(DRLCMACSCHED, LOGL_ERROR,
-			     "Control message to be scheduled, but no TBF (TRX=%d, TS=%d)\n", trx, ts);
+			LOGPDCH(pdch, DRLCMACSCHED, LOGL_ERROR, "FN=%" PRIu32
+				" Control message to be scheduled, but no TBF\n", fn);
 			msgb_free(msg);
 			return NULL;
 		}
 		tbf->rotate_in_list();
-		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling control "
-			"message at RTS for %s (TRX=%d, TS=%d)\n",
-			tbf_name(tbf), trx, ts);
+		LOGPDCH(pdch, DRLCMACSCHED, LOGL_DEBUG, "FN=%" PRIu32
+			" Scheduling control message at RTS for %s\n",
+			fn, tbf_name(tbf));
 		rate_ctr_inc(&tbf->ms()->ctrs->ctr[MS_CTR_DL_CTRL_MSG_SCHED]);
 		return msg;
 	}
@@ -250,8 +249,8 @@ static struct msgb *sched_select_ctrl_msg(
 	/* schedule PACKET PAGING REQUEST, if any are pending */
 	msg = pdch->packet_paging_request();
 	if (msg) {
-		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling paging request "
-			"message at RTS for (TRX=%d, TS=%d)\n", trx, ts);
+		LOGPDCH(pdch, DRLCMACSCHED, LOGL_DEBUG, "FN=%" PRIu32
+			" Scheduling paging request message at RTS\n", fn);
 		return msg;
 	}
 
@@ -505,7 +504,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	}
 
 	/* Prio 1: select control message */
-	if ((msg = sched_select_ctrl_msg(trx, ts, fn, block_nr, pdch, &tbf_cand))) {
+	if ((msg = sched_select_ctrl_msg(pdch, fn, block_nr, &tbf_cand))) {
 			gsmtap_cat = PCU_GSMTAP_C_DL_CTRL;
 	}
 	/* Prio 2: select data message for downlink */
