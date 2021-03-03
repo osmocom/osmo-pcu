@@ -147,7 +147,7 @@ static int ms_talloc_destructor(struct GprsMs *ms)
 {
 	struct llist_item *pos, *tmp;
 
-	LOGP(DRLCMAC, LOGL_INFO, "Destroying MS object, TLLI = 0x%08x\n", ms_tlli(ms));
+	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Destroying MS object\n");
 
 	ms_set_reserved_slots(ms, NULL, 0, 0);
 
@@ -298,8 +298,7 @@ static void ms_attach_ul_tbf(struct GprsMs *ms, struct gprs_rlcmac_ul_tbf *tbf)
 	if (ms->ul_tbf == tbf)
 		return;
 
-	LOGP(DRLCMAC, LOGL_INFO, "Attaching TBF to MS object, TLLI = 0x%08x, TBF = %s\n",
-		ms_tlli(ms), tbf_name((struct gprs_rlcmac_tbf *)tbf));
+	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Attaching UL TBF: %s\n", tbf_name((struct gprs_rlcmac_tbf *)tbf));
 
 	ms_ref(ms);
 
@@ -319,8 +318,7 @@ static void ms_attach_dl_tbf(struct GprsMs *ms, struct gprs_rlcmac_dl_tbf *tbf)
 	if (ms->dl_tbf == tbf)
 		return;
 
-	LOGP(DRLCMAC, LOGL_INFO, "Attaching TBF to MS object, TLLI = 0x%08x, TBF = %s\n",
-		ms_tlli(ms), tbf_name((struct gprs_rlcmac_tbf *)tbf));
+	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Attaching DL TBF: %s\n", tbf_name((struct gprs_rlcmac_tbf *)tbf));
 
 	ms_ref(ms);
 
@@ -367,8 +365,8 @@ void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 			return;
 	}
 
-	LOGP(DRLCMAC, LOGL_INFO, "Detaching TBF from MS object, TLLI = 0x%08x, TBF = %s\n",
-		ms_tlli(ms), tbf_name(tbf));
+	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Detaching TBF: %s\n",
+	       tbf_name(tbf));
 
 	if (tbf_ms(tbf) == ms)
 		tbf_set_ms(tbf, NULL);
@@ -385,9 +383,7 @@ void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 
 void ms_reset(struct GprsMs *ms)
 {
-	LOGP(DRLCMAC, LOGL_INFO,
-		"Clearing MS object, TLLI: 0x%08x, IMSI: '%s'\n",
-		ms_tlli(ms), ms_imsi(ms));
+	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Clearing MS object\n");
 
 	ms_release_timer_stop(ms);
 
