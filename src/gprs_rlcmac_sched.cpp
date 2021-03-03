@@ -309,13 +309,13 @@ static bool can_produce_gmsk_data_block_next(struct gprs_rlcmac_dl_tbf *tbf, enu
 	}
 }
 
-static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
-		    uint8_t trx, uint8_t ts, uint32_t fn,
-		    uint8_t block_nr, struct gprs_rlcmac_pdch *pdch, enum mcs_kind req_mcs_kind, bool *is_egprs)
+static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *pdch, uint32_t fn,
+		    uint8_t block_nr, enum mcs_kind req_mcs_kind, bool *is_egprs)
 {
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_dl_tbf *tbf, *prio_tbf = NULL;
 	enum tbf_dl_prio prio, max_prio = DL_PRIO_NONE;
+	uint8_t ts = pdch->ts_no;
 
 	uint8_t i, tfi, prio_tfi;
 	int age;
@@ -354,8 +354,9 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 		 * below instead of skipping. However, downgrade can only be
 		 * done on new data BSNs (not yet sent) and control blocks. */
 		if (req_mcs_kind == EGPRS_GMSK && !can_produce_gmsk_data_block_next(tbf, prio)) {
-			LOGP(DRLCMACSCHED, LOGL_DEBUG, "%s Cannot downgrade EGPRS TBF with prio %d\n",
-			     tbf_name(tbf), prio);
+			LOGPDCH(pdch, DRLCMACSCHED, LOGL_DEBUG, "FN=%" PRIu32
+				" Cannot downgrade EGPRS TBF with prio %d for %s\n",
+				fn, prio, tbf_name(tbf));
 			continue;
 		}
 
@@ -368,9 +369,9 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts,
 	}
 
 	if (prio_tbf) {
-		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Scheduling data message at "
-			"RTS for DL TFI=%d (TRX=%d, TS=%d) prio=%d mcs_mode_restrict=%s\n",
-			prio_tfi, trx, ts, max_prio, mode_name(req_mcs_kind));
+		LOGPDCH(pdch, DRLCMACSCHED, LOGL_DEBUG, "FN=%" PRIu32
+			" Scheduling data message at RTS for DL TFI=%d prio=%d mcs_mode_restrict=%s\n",
+			fn, prio_tfi, max_prio, mode_name(req_mcs_kind));
 		/* next TBF to handle resource is the next one */
 		pdch->next_dl_tfi = (prio_tfi + 1) & 31;
 		/* generate DL data block */
@@ -508,7 +509,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 			gsmtap_cat = PCU_GSMTAP_C_DL_CTRL;
 	}
 	/* Prio 2: select data message for downlink */
-	else if((msg = sched_select_downlink(bts, trx, ts, fn, block_nr, pdch, req_mcs_kind, &tx_is_egprs))) {
+	else if((msg = sched_select_downlink(bts, pdch, fn, block_nr, req_mcs_kind, &tx_is_egprs))) {
 		gsmtap_cat = tx_is_egprs ? PCU_GSMTAP_C_DL_DATA_EGPRS :
 					   PCU_GSMTAP_C_DL_DATA_GPRS;
 	}

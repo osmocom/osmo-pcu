@@ -70,7 +70,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (P
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Scheduled DL Assignment polling on UNKNOWN (FN=13, TS=4)
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 0, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Dequeue next LLC (len=200)
@@ -80,7 +80,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 0, CS-1): 07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 1, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 1, CS-1): 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
@@ -159,7 +159,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (P
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Scheduled DL Assignment polling on UNKNOWN (FN=13, TS=4)
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 0, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Dequeue next LLC (len=200)
@@ -169,7 +169,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 0, CS-1): 07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 1, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 1, CS-1): 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
@@ -248,7 +248,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (P
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Scheduled DL Assignment polling on UNKNOWN (FN=13, TS=4)
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 0, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Dequeue next LLC (len=200)
@@ -258,7 +258,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 0, CS-1): 07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 1, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 1, CS-1): 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
@@ -266,7 +266,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 1, CS-1): 07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 2, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 2, CS-1): 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 3a 3b 
@@ -274,7 +274,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 2)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 2, CS-1): 07 00 05 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 3a 3b 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=17 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==3) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 3, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 3, CS-1): 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 
@@ -282,7 +282,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 3)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 3, CS-1): 07 00 07 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=21 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 4, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 4, CS-1): 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 
@@ -290,7 +290,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 4)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 4, CS-1): 07 00 09 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=26 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==5) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 5, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 5, CS-1): 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 76 77 
@@ -298,7 +298,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 5)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 5, CS-1): 07 00 0b 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 76 77 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=30 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 6, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 6, CS-1): 78 79 7a 7b 7c 7d 7e 7f 80 81 82 83 84 85 86 87 88 89 8a 8b 
@@ -306,7 +306,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 6)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 6, CS-1): 07 00 0d 78 79 7a 7b 7c 7d 7e 7f 80 81 82 83 84 85 86 87 88 89 8a 8b 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=34 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==7) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 7, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 7, CS-1): 8c 8d 8e 8f 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 9e 9f 
@@ -314,7 +314,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 7)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 7, CS-1): 07 00 0f 8c 8d 8e 8f 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 9e 9f 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=39 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 8, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 8, CS-1): a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af b0 b1 b2 b3 
@@ -322,7 +322,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 8, CS-1): 07 00 11 a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af b0 b1 b2 b3 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=43 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==9) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 9, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 9, CS-1): 01 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 c6 
@@ -330,7 +330,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 9)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 9, CS-1): 07 00 12 01 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 c6 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=47 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 10, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Complete DL frame, len=200
@@ -340,7 +340,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 10, CS-1): 07 00 14 07 c7 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=52 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==11) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 11, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 11, CS-1): 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 
@@ -348,7 +348,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 11)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 11, CS-1): 07 00 17 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=56 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==12) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 12, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 12, CS-1): 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 
@@ -356,7 +356,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 12)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 12, CS-1): 07 00 19 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=60 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==13) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 13, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 13, CS-1): 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 
@@ -364,7 +364,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 13)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 13, CS-1): 07 00 1b 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=65 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==14) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 14, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 14, CS-1): 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 
@@ -372,7 +372,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 14)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 14, CS-1): 07 00 1d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=69 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==15) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 15, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 15, CS-1): 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 
@@ -380,7 +380,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 15)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 15, CS-1): 07 00 1f 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=73 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==16) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 16, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 16, CS-1): 76 77 78 79 7a 7b 7c 7d 7e 7f 80 81 82 83 84 85 86 87 88 89 
@@ -388,7 +388,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 16)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 16, CS-1): 07 00 21 76 77 78 79 7a 7b 7c 7d 7e 7f 80 81 82 83 84 85 86 87 88 89 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=78 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==17) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 17, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 17, CS-1): 8a 8b 8c 8d 8e 8f 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 
@@ -396,7 +396,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 17)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 17, CS-1): 07 00 23 8a 8b 8c 8d 8e 8f 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=82 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==18) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 18, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 18, CS-1): 9e 9f a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af b0 b1 
@@ -404,7 +404,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 18)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 18, CS-1): 07 00 25 9e 9f a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af b0 b1 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=86 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==19) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 19, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) data block (BSN 19, CS-1): b2 b3 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 
@@ -412,7 +412,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 19)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 19, CS-1): 07 00 27 b2 b3 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf c0 c1 c2 c3 c4 c5 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=91 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==20) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 20, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Complete DL frame, len=200
@@ -429,7 +429,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) ack:  (BSN=85)"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=20)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=0:21, lost=0, recv=21, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRRR...........................................'
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) V(B): (V(A)=21)""(V(S)-1=20)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=95 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==21 .. V(S)==21) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new dummy block at BSN 21, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Empty chunk, added LLC dummy command of size 19, drained_since=4
@@ -446,7 +446,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) ack:  (BSN=86)"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=21)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=21:22, lost=0, recv=1, skipped=0, bsn=21, info='R...............................................................'
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) V(B): (V(A)=22)""(V(S)-1=21)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=203 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==22 .. V(S)==22) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new dummy block at BSN 22, CS=CS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Empty chunk, added LLC dummy command of size 19, drained_since=112
@@ -1691,7 +1691,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654279 block_nr=10 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654279 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 0, CS=CS-4
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=10)
@@ -1707,7 +1707,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer T3191 [final blo
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654292, TS=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 0, CS-4): 0f 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 00 
 Received RTS for PDCH: TRX=0 TS=7 FN=2654283 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=1 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654283 Scheduling data message at RTS for DL TFI=0 prio=1 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Restarting at BSN 0, because all blocks have been transmitted.
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Resending BSN 0
@@ -2202,7 +2202,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654279 block_nr=10 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654279 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 0, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=13)
@@ -2221,7 +2221,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654283 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654283 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 1, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2239,7 +2239,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654288 block_nr=0 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654288 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 2, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2259,7 +2259,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654292 block_nr=1 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654292 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==3) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 3, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2277,7 +2277,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654296 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654296 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 4, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2297,7 +2297,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654301 block_nr=3 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654301 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==5) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 5, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2315,7 +2315,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654305 block_nr=4 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654305 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 6, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2335,7 +2335,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654309 block_nr=5 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654309 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==7) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 7, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2353,7 +2353,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654314 block_nr=6 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654314 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 8, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2371,7 +2371,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654318 block_nr=7 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654318 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==9) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 9, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2391,7 +2391,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654322 block_nr=8 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654322 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 10, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2409,7 +2409,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654327 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654327 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==11) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 11, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2429,7 +2429,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654331 block_nr=10 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654331 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==12) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 12, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2447,7 +2447,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654335 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654335 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==13) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 13, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2467,7 +2467,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654340 block_nr=0 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654340 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==14) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 14, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2485,7 +2485,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654344 block_nr=1 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654344 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==15) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 15, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2503,7 +2503,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654348 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654348 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==16) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 16, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2523,7 +2523,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654353 block_nr=3 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654353 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==17) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 17, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2541,7 +2541,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654357 block_nr=4 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654357 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==18) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 18, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2561,7 +2561,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654361 block_nr=5 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654361 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==19) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 19, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2579,7 +2579,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654366 block_nr=6 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=5 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654366 Scheduling data message at RTS for DL TFI=0 prio=5 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==20) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 20, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2602,7 +2602,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654370 block_nr=7 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654370 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==21) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 21, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2620,7 +2620,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654374 block_nr=8 scheduling free USF for polling at FN=2654379 of TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=7) FN=2654374 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==22) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 22, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2638,7 +2638,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654379 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654379 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==23) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 23, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2658,7 +2658,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654383 block_nr=10 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654383 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==24) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 24, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2676,7 +2676,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654387 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654387 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==25) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 25, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2696,7 +2696,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654392 block_nr=0 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654392 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==26) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 26, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2714,7 +2714,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654396 block_nr=1 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654396 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==27) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 27, CS=CS-1
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
@@ -2799,7 +2799,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654405 block_nr=3 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654405 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 0, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=21)
@@ -2816,7 +2816,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654409 block_nr=4 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654409 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 1, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
@@ -2834,7 +2834,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654413 block_nr=5 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654413 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 2, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
@@ -2852,7 +2852,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654418 block_nr=6 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654418 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==3) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 3, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
@@ -2870,7 +2870,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654422 block_nr=7 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654422 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 4, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
@@ -2888,7 +2888,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654426 block_nr=8 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654426 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==5) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 5, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
@@ -2906,7 +2906,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654431 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654431 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 6, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
@@ -2924,7 +2924,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654435 block_nr=10 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654435 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==7) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 7, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
@@ -2942,7 +2942,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654439 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654439 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 8, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
@@ -2960,7 +2960,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654444 block_nr=0 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654444 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==9) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 9, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
@@ -2978,7 +2978,7 @@ Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
 Received RTS for PDCH: TRX=0 TS=7 FN=2654448 block_nr=1 scheduling USF=0 for required uplink resource of UL TFI=0
-Scheduling data message at RTS for DL TFI=1 (TRX=0, TS=7) prio=3 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654448 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 10, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
@@ -3429,7 +3429,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignm
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on UNKNOWN (FN=13, TS=4)
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=10)
@@ -3445,7 +3445,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-1): 07 00 00 16 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=512)
@@ -3456,7 +3456,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-1): 07 40 00 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 2, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3466,7 +3466,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 2)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 2, MCS-1): 07 80 00 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=17 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 3, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 3, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3476,7 +3476,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 3)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 3, MCS-1): 07 c0 00 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=21 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 4, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 4, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3486,7 +3486,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 4)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 4, MCS-1): 07 00 01 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=26 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 5, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 5, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3496,7 +3496,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 5)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 5, MCS-1): 07 40 01 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=30 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 6, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 6, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3506,7 +3506,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 6)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 6, MCS-1): 07 80 01 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=34 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 7, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 7, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3516,7 +3516,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 7)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 7, MCS-1): 07 c0 01 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=39 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 8, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 8, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3526,7 +3526,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 8, MCS-1): 07 00 02 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=43 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==9) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 9, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 9, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3536,7 +3536,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 9)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 9, MCS-1): 07 40 02 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=47 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 10, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 10, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3546,7 +3546,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 10, MCS-1): 07 80 02 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=52 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==11) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 11, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 11, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3556,7 +3556,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 11)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 11, MCS-1): 07 c0 02 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=56 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==12) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 12, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 12, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3566,7 +3566,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 12)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 12, MCS-1): 07 00 03 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=60 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==13) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 13, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 13, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3576,7 +3576,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 13)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 13, MCS-1): 07 40 03 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=65 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==14) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 14, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 14, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3586,7 +3586,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 14)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 14, MCS-1): 07 80 03 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=69 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==15) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 15, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 15, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3596,7 +3596,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 15)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 15, MCS-1): 07 c0 03 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=73 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==16) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 16, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 16, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3606,7 +3606,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 16)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 16, MCS-1): 07 00 04 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=78 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==17) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 17, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 17, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3616,7 +3616,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 17)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 17, MCS-1): 07 40 04 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=82 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==18) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 18, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 18, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3626,7 +3626,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 18)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 18, MCS-1): 07 80 04 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=86 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==19) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 19, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 19, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3636,7 +3636,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 19)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 19, MCS-1): 07 c0 04 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=91 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==20) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 20, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 20, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3646,7 +3646,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 20)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 20, MCS-1): 07 00 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=95 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==21) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 21, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 21, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3656,7 +3656,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 21)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 21, MCS-1): 07 40 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=99 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==22) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 22, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 22, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3666,7 +3666,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 22)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 22, MCS-1): 07 80 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=104 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==23) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 23, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 23, MCS-1): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3676,7 +3676,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 23)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 23, MCS-1): 07 c0 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=108 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==24) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 24, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Complete DL frame, len=512
@@ -3735,7 +3735,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignm
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on UNKNOWN (FN=13, TS=4)
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=10)
@@ -3751,7 +3751,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-2): 07 00 00 12 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=512)
@@ -3762,7 +3762,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-2): 07 40 00 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 2, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3772,7 +3772,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 2)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 2, MCS-2): 07 80 00 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=17 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 3, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 3, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3782,7 +3782,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 3)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 3, MCS-2): 07 c0 00 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=21 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 4, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 4, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3792,7 +3792,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 4)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 4, MCS-2): 07 00 01 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=26 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 5, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 5, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3802,7 +3802,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 5)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 5, MCS-2): 07 40 01 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=30 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 6, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 6, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3812,7 +3812,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 6)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 6, MCS-2): 07 80 01 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=34 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 7, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 7, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3822,7 +3822,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 7)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 7, MCS-2): 07 c0 01 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=39 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 8, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 8, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3832,7 +3832,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 8, MCS-2): 07 00 02 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=43 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==9) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 9, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 9, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3842,7 +3842,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 9)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 9, MCS-2): 07 40 02 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=47 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 10, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 10, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3852,7 +3852,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 10, MCS-2): 07 80 02 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=52 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==11) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 11, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 11, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3862,7 +3862,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 11)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 11, MCS-2): 07 c0 02 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=56 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==12) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 12, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 12, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3872,7 +3872,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 12)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 12, MCS-2): 07 00 03 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=60 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==13) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 13, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 13, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3882,7 +3882,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 13)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 13, MCS-2): 07 40 03 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=65 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==14) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 14, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 14, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3892,7 +3892,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 14)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 14, MCS-2): 07 80 03 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=69 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==15) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 15, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 15, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3902,7 +3902,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 15)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 15, MCS-2): 07 c0 03 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=73 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==16) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 16, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 16, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3912,7 +3912,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 16)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 16, MCS-2): 07 00 04 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=78 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==17) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 17, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 17, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3922,7 +3922,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 17)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 17, MCS-2): 07 40 04 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=82 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==18) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 18, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 18, MCS-2): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -3932,7 +3932,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 18)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 18, MCS-2): 07 80 04 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=86 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==19) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 19, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Complete DL frame, len=512
@@ -3991,7 +3991,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignm
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on UNKNOWN (FN=13, TS=4)
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=10)
@@ -4007,7 +4007,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-3): 07 00 00 06 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=512)
@@ -4018,7 +4018,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-3): 07 40 00 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 2, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4028,7 +4028,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 2)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 2, MCS-3): 07 80 00 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=17 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 3, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 3, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4038,7 +4038,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 3)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 3, MCS-3): 07 c0 00 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=21 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 4, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 4, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4048,7 +4048,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 4)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 4, MCS-3): 07 00 01 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=26 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 5, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 5, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4058,7 +4058,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 5)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 5, MCS-3): 07 40 01 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=30 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 6, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 6, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4068,7 +4068,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 6)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 6, MCS-3): 07 80 01 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=34 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 7, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 7, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4078,7 +4078,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 7)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 7, MCS-3): 07 c0 01 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=39 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 8, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 8, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4088,7 +4088,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 8, MCS-3): 07 00 02 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=43 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==9) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 9, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 9, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4098,7 +4098,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 9)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 9, MCS-3): 07 40 02 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=47 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 10, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 10, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4108,7 +4108,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 10, MCS-3): 07 80 02 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=52 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==11) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 11, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 11, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4118,7 +4118,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 11)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 11, MCS-3): 07 c0 02 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=56 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==12) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 12, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 12, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4128,7 +4128,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 12)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 12, MCS-3): 07 00 03 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=60 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==13) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 13, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 13, MCS-3): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4138,7 +4138,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 13)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 13, MCS-3): 07 40 03 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=65 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==14) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 14, CS=MCS-3
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Complete DL frame, len=512
@@ -4197,7 +4197,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignm
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on UNKNOWN (FN=13, TS=4)
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=10)
@@ -4213,7 +4213,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-4): 07 00 00 00 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=512)
@@ -4224,7 +4224,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-4): 07 40 00 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 2, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4234,7 +4234,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 2)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 2, MCS-4): 07 80 00 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=17 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 3, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 3, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4244,7 +4244,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 3)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 3, MCS-4): 07 c0 00 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=21 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 4, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 4, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4254,7 +4254,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 4)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 4, MCS-4): 07 00 01 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=26 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 5, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 5, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4264,7 +4264,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 5)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 5, MCS-4): 07 40 01 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=30 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 6, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 6, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4274,7 +4274,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 6)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 6, MCS-4): 07 80 01 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=34 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 7, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 7, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4284,7 +4284,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 7)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 7, MCS-4): 07 c0 01 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=39 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 8, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 8, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4294,7 +4294,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 8, MCS-4): 07 00 02 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=43 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==9) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 9, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 9, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4304,7 +4304,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 9)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 9, MCS-4): 07 40 02 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=47 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 10, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 10, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4314,7 +4314,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 10, MCS-4): 07 80 02 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=52 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==11) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 11, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 11, MCS-4): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4324,7 +4324,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 11)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 11, MCS-4): 07 c0 02 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=4 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=56 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==12) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 12, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Complete DL frame, len=512
@@ -4383,7 +4383,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignm
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on UNKNOWN (FN=13, TS=4)
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-5
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=10)
@@ -4399,7 +4399,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-5): 07 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-5
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=512)
@@ -4410,7 +4410,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-5): 07 40 00 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-5
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 2, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4420,7 +4420,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 2)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 2, MCS-5): 07 80 00 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=17 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 3, CS=MCS-5
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 3, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4430,7 +4430,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 3)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 3, MCS-5): 07 c0 00 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=21 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 4, CS=MCS-5
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 4, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4440,7 +4440,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 4)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 4, MCS-5): 07 00 01 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=26 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 5, CS=MCS-5
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 5, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4450,7 +4450,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 5)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 5, MCS-5): 07 40 01 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=30 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 6, CS=MCS-5
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 6, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4460,7 +4460,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 6)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 6, MCS-5): 07 80 01 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=34 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 7, CS=MCS-5
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 7, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4470,7 +4470,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 7)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 7, MCS-5): 07 c0 01 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=39 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 8, CS=MCS-5
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 8, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4480,7 +4480,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 8, MCS-5): 07 00 02 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=43 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==9) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 9, CS=MCS-5
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 9, MCS-5): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4490,7 +4490,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 9)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 9, MCS-5): 07 40 02 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=47 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 10, CS=MCS-5
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Complete DL frame, len=512
@@ -4549,7 +4549,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignm
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on UNKNOWN (FN=13, TS=4)
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-6
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=10)
@@ -4565,7 +4565,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-6
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=512)
@@ -4576,7 +4576,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-6): 07 40 00 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-6
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 2, MCS-6): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4586,7 +4586,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 2)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 2, MCS-6): 07 80 00 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=17 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==3) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 3, CS=MCS-6
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 3, MCS-6): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4596,7 +4596,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 3)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 3, MCS-6): 07 c0 00 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=21 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 4, CS=MCS-6
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 4, MCS-6): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4606,7 +4606,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 4)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 4, MCS-6): 07 00 01 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=26 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==5) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 5, CS=MCS-6
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 5, MCS-6): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4616,7 +4616,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 5)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 5, MCS-6): 07 40 01 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=30 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 6, CS=MCS-6
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 6, MCS-6): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4626,7 +4626,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 6)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 6, MCS-6): 07 80 01 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=34 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==7) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 7, CS=MCS-6
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Complete DL frame, len=512
@@ -4685,7 +4685,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignm
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on UNKNOWN (FN=13, TS=4)
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-7
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=10)
@@ -4702,7 +4702,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-5): 07 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-7) last_mcs(MCS-5) demanded_mcs(MCS-7) cs_trans(MCS-7) arq_type(1) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
@@ -4716,7 +4716,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-7): 07 00 00 02 b8 50 fc 07 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-7
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 2, MCS-7): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4729,7 +4729,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 3)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 2, MCS-7): 07 80 00 02 a0 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=17 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 4, CS=MCS-7
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 4, MCS-7): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4742,7 +4742,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 5)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 4, MCS-7): 07 00 01 02 a0 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=21 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 6, CS=MCS-7
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 6, MCS-7): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4755,7 +4755,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 7)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 6, MCS-7): 07 80 01 02 a0 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=26 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 8, CS=MCS-7
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 8, MCS-7): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4768,7 +4768,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 9)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 8, MCS-7): 07 00 02 02 a0 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=30 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 10, CS=MCS-7
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Complete DL frame, len=512
@@ -4828,7 +4828,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignm
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on UNKNOWN (FN=13, TS=4)
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=10)
@@ -4846,7 +4846,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-8): 07 00 00 00 60 50 fc 07 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 40 f1 1f 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-8) last_mcs(MCS-8) demanded_mcs(MCS-8) cs_trans(MCS-8) arq_type(1) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
@@ -4860,7 +4860,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-8): 07 00 00 02 88 50 fc 07 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 2, MCS-8): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4873,7 +4873,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 3)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 2, MCS-8): 07 80 00 02 58 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=17 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 4, CS=MCS-8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 4, MCS-8): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4886,7 +4886,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 5)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 4, MCS-8): 07 00 01 02 58 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=21 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 6, CS=MCS-8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 6, MCS-8): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -4899,7 +4899,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 7)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 6, MCS-8): 07 80 01 02 58 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=26 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 8, CS=MCS-8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Complete DL frame, len=512
@@ -4960,7 +4960,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignm
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on UNKNOWN (FN=13, TS=4)
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-9
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=10)
@@ -4977,7 +4977,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-9) last_mcs(MCS-6) demanded_mcs(MCS-9) cs_trans(MCS-9) arq_type(1) bsn(0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Resending BSN 0
@@ -4991,7 +4991,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-9): 07 00 00 02 20 50 fc 07 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-9
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 2, MCS-9): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -5004,7 +5004,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 3)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 2, MCS-9): 07 80 00 02 00 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=17 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 4, CS=MCS-9
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 4, MCS-9): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
@@ -5017,7 +5017,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 5)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 4, MCS-9): 07 00 01 02 00 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Scheduling data message at RTS for DL TFI=0 (TRX=0, TS=4) prio=3 mcs_mode_restrict=EGPRS
+PDCH(bts=0,trx=0,ts=4) FN=21 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 6, CS=MCS-9
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) data block (BSN 6, MCS-9): 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 01 
