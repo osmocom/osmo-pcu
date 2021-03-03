@@ -79,11 +79,10 @@ static struct gpr_ms_callback gprs_default_cb = {
 	.ms_active = gprs_default_cb_ms_active,
 };
 
-void ms_timeout(void *data)
+static void ms_release_timer_cb(void *data)
 {
 	struct GprsMs *ms = (struct GprsMs *) data;
-	LOGP(DRLCMAC, LOGL_INFO, "Timeout for MS object, TLLI = 0x%08x\n",
-		ms_tlli(ms));
+	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Release timer expired\n");
 
 	if (ms->timer.data) {
 		ms->timer.data = NULL;
@@ -116,7 +115,7 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli)
 
 	ms->imsi[0] = '\0';
 	memset(&ms->timer, 0, sizeof(ms->timer));
-	ms->timer.cb = ms_timeout;
+	ms->timer.cb = ms_release_timer_cb;
 	llc_queue_init(&ms->llc_queue);
 
 	ms_set_mode(ms, GPRS);
@@ -218,10 +217,12 @@ void ms_unref(struct GprsMs *ms)
 		ms_update_status(ms);
 }
 
-void ms_start_timer(struct GprsMs *ms)
+static void ms_release_timer_start(struct GprsMs *ms)
 {
 	if (ms->delay == 0)
 		return;
+
+	LOGPMS(ms, DRLCMAC, LOGL_DEBUG, "Schedule MS release in %u secs\n", ms->delay);
 
 	if (!ms->timer.data)
 		ms->timer.data = ms_ref(ms);
@@ -229,10 +230,12 @@ void ms_start_timer(struct GprsMs *ms)
 	osmo_timer_schedule(&ms->timer, ms->delay, 0);
 }
 
-void ms_stop_timer(struct GprsMs *ms)
+static void ms_release_timer_stop(struct GprsMs *ms)
 {
 	if (!ms->timer.data)
 		return;
+
+	LOGPMS(ms, DRLCMAC, LOGL_DEBUG, "Cancel scheduled MS release\n");
 
 	osmo_timer_del(&ms->timer);
 	ms->timer.data = NULL;
@@ -306,7 +309,7 @@ static void ms_attach_ul_tbf(struct GprsMs *ms, struct gprs_rlcmac_ul_tbf *tbf)
 	ms->ul_tbf = tbf;
 
 	if (tbf)
-		ms_stop_timer(ms);
+		ms_release_timer_stop(ms);
 
 	ms_unref(ms);
 }
@@ -327,7 +330,7 @@ static void ms_attach_dl_tbf(struct GprsMs *ms, struct gprs_rlcmac_dl_tbf *tbf)
 	ms->dl_tbf = tbf;
 
 	if (tbf)
-		ms_stop_timer(ms);
+		ms_release_timer_stop(ms);
 
 	ms_unref(ms);
 }
@@ -374,7 +377,7 @@ void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 		ms_set_reserved_slots(ms, NULL, 0, 0);
 
 		if (ms_tlli(ms) != 0)
-			ms_start_timer(ms);
+			ms_release_timer_start(ms);
 	}
 
 	ms_update_status(ms);
@@ -386,7 +389,7 @@ void ms_reset(struct GprsMs *ms)
 		"Clearing MS object, TLLI: 0x%08x, IMSI: '%s'\n",
 		ms_tlli(ms), ms_imsi(ms));
 
-	ms_stop_timer(ms);
+	ms_release_timer_stop(ms);
 
 	ms->tlli = GSM_RESERVED_TMSI;
 	ms->new_dl_tlli = ms->tlli;

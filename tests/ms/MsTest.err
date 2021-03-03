@@ -52,7 +52,7 @@ Attaching TBF to MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0xffeeddbb D
 Attaching TBF to MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
 Detaching TBF from MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
 Detaching TBF from MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
-Timeout for MS object, TLLI = 0xffeeddbb
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Release timer expired
 Destroying MS object, TLLI = 0xffeeddbb
 Creating MS object, TLLI = 0xffeeddbb
 Attaching TBF to MS object, TLLI = 0xffeeddbb, TBF = TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
