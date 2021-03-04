@@ -414,9 +414,11 @@ bool gprs_rlcmac_tbf::n_inc(enum tbf_counters n)
 		LOGPTBF(this, LOGL_NOTICE, "%s exceeded MAX (%u)\n",
 			get_value_string(tbf_counters_names, n), chk);
 		return true;
+	} else {
+		LOGPTBF(this, LOGL_DEBUG, "%s %" PRIu8 " => %" PRIu8 " (< MAX %" PRIu8 ")\n",
+			get_value_string(tbf_counters_names, n), Narr[n] - 1, Narr[n], chk);
+		return false;
 	}
-
-	return false;
 }
 
 void gprs_rlcmac_tbf::t_stop(enum tbf_timers t, const char *reason)
