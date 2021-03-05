@@ -806,7 +806,8 @@ static int pcu_rx_time_ind(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_time_i
 
 	LOGP(DL1IF, LOGL_DEBUG, "Time indication received: %d\n", time_ind->fn % 52);
 
-	bts_set_current_frame_number(bts, time_ind->fn);
+	/* Ignore TIME.ind completely, we nowadays relay on DATA.ind always
+	 * providing all block FNs. */
 	return 0;
 }
 

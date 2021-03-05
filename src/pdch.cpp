@@ -794,6 +794,9 @@ free_ret:
 int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	struct pcu_l1_meas *meas)
 {
+	/* First of all, update TDMA clock: */
+	bts_set_current_frame_number(trx->bts, fn);
+
 	/* No successfully decoded UL block was received during this FN: */
 	if (len == 0) {
 		/* TODO: Here, in the future, it can be checked whether a UL block was expected for:
