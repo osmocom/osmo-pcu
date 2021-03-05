@@ -794,6 +794,15 @@ free_ret:
 int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	struct pcu_l1_meas *meas)
 {
+	/* No successfully decoded UL block was received during this FN: */
+	if (len == 0) {
+		/* TODO: Here, in the future, it can be checked whether a UL block was expected for:
+		 * - UL/DL TBFs: RRBP poll pending (bts->pollController->expireTimedout)
+		 * - UL TBFs: USF poll pending (we don't store this info in ul_tbf yet) -> inc N3101 (OS#5033)
+		 */
+		return 0;
+	}
+
 	enum CodingScheme cs = mcs_get_by_size_ul(len);
 	if (!cs) {
 		bts_do_rate_ctr_inc(bts(), CTR_DECODE_ERRORS);
