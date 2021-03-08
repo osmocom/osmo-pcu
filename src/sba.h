@@ -20,48 +20,31 @@
  */
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
-extern "C" {
 #include <osmocom/core/linuxlist.h>
-}
 
-struct gprs_rlcmac_bts;
 struct gprs_rlcmac_pdch;
 
 /*
  * single block allocation entry
  */
 struct gprs_rlcmac_sba {
-	struct llist_head list;
-	uint8_t trx_no;
-	uint8_t ts_no;
+	struct gprs_rlcmac_pdch *pdch; /* PDCH where the SBA is allocated on*/
 	uint32_t fn;
 	uint8_t ta;
 };
 
-/**
- * I help to manage SingleBlockAssignment (SBA).
- *
- * TODO: Add a flush method..
- */
-struct SBAController {
-	friend class PollController;
-public:
-	SBAController(struct gprs_rlcmac_bts &bts);
+struct gprs_rlcmac_sba *sba_alloc(void *ctx, struct gprs_rlcmac_pdch *pdch, uint8_t ta);
+void sba_free(struct gprs_rlcmac_sba *sba);
+void sba_timeout(struct gprs_rlcmac_sba *sba);
 
-	int alloc(uint8_t *_trx, uint8_t *_ts, uint32_t *_fn, uint8_t ta);
-	gprs_rlcmac_sba *find(uint8_t trx, uint8_t ts, uint32_t fn);
-	gprs_rlcmac_sba *find(const gprs_rlcmac_pdch *pdch, uint32_t fn);
+uint32_t find_sba_rts(struct gprs_rlcmac_pdch *pdch, uint32_t fn, uint8_t block_nr);
 
-	uint32_t sched(uint8_t trx, uint8_t ts, uint32_t fn, uint8_t block_nr);
-
-	int timeout(struct gprs_rlcmac_sba *sba);
-	void free_resources(struct gprs_rlcmac_pdch *pdch);
-
-	void free_sba(gprs_rlcmac_sba *sba);
-
-private:
-	struct gprs_rlcmac_bts &m_bts;
-	llist_head m_sbas;
-};
+#ifdef __cplusplus
+}
+#endif

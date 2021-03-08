@@ -51,7 +51,6 @@ void PollController::expireTimedout(int frame_number, unsigned max_delay)
 {
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
-	struct gprs_rlcmac_sba *sba, *sba2;
 	struct llist_item *pos;
 
 	llist_for_each_entry(pos, &m_bts.ul_tbfs, list) {
@@ -68,11 +67,4 @@ void PollController::expireTimedout(int frame_number, unsigned max_delay)
 				dl_tbf->poll_timeout();
 		}
 	}
-	llist_for_each_entry_safe(sba, sba2, &bts_sba(&m_bts)->m_sbas, list) {
-		if (elapsed_fn_check(max_delay, frame_number, sba->fn)) {
-			/* sba will be freed here */
-			bts_sba(&m_bts)->timeout(sba);
-		}
-	}
-
 }

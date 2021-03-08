@@ -285,7 +285,11 @@ void pcu_rx_ra_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, ui
 int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *pdch, uint8_t *data,
 	uint8_t len, uint32_t fn, struct pcu_l1_meas *meas)
 {
-	return pdch->rcv_block(data, len, fn, meas);
+	int rc;
+
+	rc = pdch->rcv_block(data, len, fn, meas);
+	pdch_ulc_expire_fn(pdch->ulc, fn);
+	return rc;
 }
 
 static int pcu_rx_data_ind_bcch(struct gprs_rlcmac_bts *bts, uint8_t *data, uint8_t len)

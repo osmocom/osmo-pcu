@@ -25,6 +25,7 @@ extern "C" {
 #endif
 
 #include <time.h>
+#include <stdint.h>
 
 static inline int msecs_to_frames(int msecs) {
 	return (msecs * (1024 * 1000 / 4615)) / 1024;
@@ -38,6 +39,15 @@ static inline uint32_t next_fn(uint32_t fn, uint32_t offset)
 static inline void csecs_to_timespec(unsigned csecs, struct timespec *ts) {
 	ts->tv_sec  = csecs / 100;
 	ts->tv_nsec = (csecs % 100) * 10000000;
+}
+
+static inline uint32_t rts_next_fn(uint32_t rts_fn, uint8_t block_nr)
+{
+	uint32_t fn = rts_fn + 4;
+	if ((block_nr % 3) == 2)
+		fn++;
+	fn = fn % GSM_MAX_FN;
+	return fn;
 }
 
 #ifdef __cplusplus

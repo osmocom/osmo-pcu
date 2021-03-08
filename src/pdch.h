@@ -28,6 +28,7 @@ extern "C" {
 #include <osmocom/core/linuxlist.h>
 #include "gsm_rlcmac.h"
 #include "coding_scheme.h"
+#include "pdch_ul_controller.h"
 }
 #endif
 
@@ -126,6 +127,7 @@ struct gprs_rlcmac_pdch {
 	/* back pointers */
 	struct gprs_rlcmac_trx *trx;
 	uint8_t ts_no;
+	struct pdch_ulc *ulc;
 
 #ifdef __cplusplus
 private:
@@ -191,10 +193,9 @@ void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch);
 void pdch_disable(struct gprs_rlcmac_pdch *pdch);
 #ifdef __cplusplus
 }
+#endif
 
 #define LOGPDCH(pdch, category, level, fmt, args...) \
 	LOGP(category, level, "PDCH(bts=%" PRIu8 ",trx=%" PRIu8 ",ts=%" PRIu8 ") " fmt, \
 	     (pdch)->trx->bts->nr, (pdch)->trx->trx_no, (pdch)->ts_no, \
 	     ## args)
-
-#endif

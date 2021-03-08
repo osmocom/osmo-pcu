@@ -196,7 +196,6 @@ struct chan_req_params {
 };
 
 struct PollController;
-struct SBAController;
 struct GprsMsStorage;
 struct pcu_l1_meas;
 
@@ -253,7 +252,6 @@ struct gprs_rlcmac_bts {
 	uint8_t max_cs_dl, max_cs_ul;
 	uint8_t max_mcs_dl, max_mcs_ul;
 	struct PollController *pollController;
-	struct SBAController *sba;
 	struct rate_ctr_group *ratectrs;
 	struct osmo_stat_item_group *statg;
 
@@ -308,8 +306,6 @@ void bts_send_gsmtap_rach(struct gprs_rlcmac_bts *bts,
 			  enum pcu_gsmtap_category categ, uint8_t channel,
 			  const struct rach_ind_params *rip);
 
-struct SBAController *bts_sba(struct gprs_rlcmac_bts *bts);
-
 struct GprsMsStorage *bts_ms_store(struct gprs_rlcmac_bts *bts);
 
 struct GprsMs *bts_ms_by_tlli(struct gprs_rlcmac_bts *bts, uint32_t tlli, uint32_t old_tlli);
@@ -338,6 +334,8 @@ static inline void bts_stat_item_add(struct gprs_rlcmac_bts *bts, unsigned int s
 }
 
 struct gprs_rlcmac_bts *bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr);
+
+struct gprs_rlcmac_sba *bts_alloc_sba(struct gprs_rlcmac_bts *bts, uint8_t ta);
 
 void bts_recalc_initial_cs(struct gprs_rlcmac_bts *bts);
 void bts_recalc_initial_mcs(struct gprs_rlcmac_bts *bts);

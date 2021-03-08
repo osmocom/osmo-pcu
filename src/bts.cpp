@@ -212,7 +212,6 @@ static int bts_talloc_destructor(struct gprs_rlcmac_bts* bts)
 	 * m_ms_store's destructor */
 	bts->ms_store->cleanup();
 	delete bts->ms_store;
-	delete bts->sba;
 	delete bts->pollController;
 
 	if (bts->ratectrs) {
@@ -246,7 +245,6 @@ struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr)
 	bts->nr = bts_nr;
 
 	bts->pollController = new PollController(*bts);
-	bts->sba = new SBAController(*bts);
 	bts->ms_store = new GprsMsStorage(bts);
 
 	bts->cur_fn = 0;
@@ -819,10 +817,43 @@ static int parse_rach_ind(const struct rach_ind_params *rip,
 	return 0;
 }
 
+struct gprs_rlcmac_sba *bts_alloc_sba(struct gprs_rlcmac_bts *bts, uint8_t ta)
+{
+	struct gprs_rlcmac_pdch *pdch;
+	struct gprs_rlcmac_sba *sba = NULL;
+	int8_t trx, ts;
+
+	if (!gsm48_ta_is_valid(ta))
+		return NULL;
+
+	for (trx = 0; trx < 8; trx++) {
+		for (ts = 7; ts >= 0; ts--) {
+			pdch = &bts->trx[trx].pdch[ts];
+			if (!pdch->is_enabled())
+				continue;
+			break;
+		}
+		if (ts >= 0)
+			break;
+	}
+	if (trx == 8) {
+		LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH available.\n");
+		return NULL;
+	}
+
+	sba = sba_alloc(bts, pdch, ta);
+	if (!sba)
+		return NULL;
+
+	bts_do_rate_ctr_inc(bts, CTR_SBA_ALLOCATED);
+	return sba;
+}
+
 int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 {
 	struct chan_req_params chan_req = { 0 };
 	struct gprs_rlcmac_ul_tbf *tbf = NULL;
+	struct gprs_rlcmac_sba *sba;
 	uint8_t trx_no, ts_no;
 	uint32_t sb_fn = 0;
 	uint8_t usf = 7;
@@ -864,14 +895,18 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 
 	/* Should we allocate a single block or an Uplink TBF? */
 	if (chan_req.single_block) {
-		rc = bts_sba(bts)->alloc(&trx_no, &ts_no, &sb_fn, ta);
-		if (rc < 0) {
+		sba = bts_alloc_sba(bts, ta);
+		if (!sba) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource for "
-			     "single block allocation: rc=%d\n", rc);
+			     "single block allocation\n");
+			rc = -EBUSY;
 			/* Send RR Immediate Assignment Reject */
 			goto send_imm_ass_rej;
 		}
 
+		trx_no = sba->pdch->trx_no();
+		ts_no = sba->pdch->ts_no;
+		sb_fn = sba->fn;
 		tsc = bts->trx[trx_no].pdch[ts_no].tsc;
 		LOGP(DRLCMAC, LOGL_DEBUG, "Allocated a single block at "
 		     "SBFn=%u TRX=%u TS=%u\n", sb_fn, trx_no, ts_no);
@@ -1074,11 +1109,6 @@ GprsMs *bts_alloc_ms(struct gprs_rlcmac_bts* bts, uint8_t ms_class, uint8_t egpr
 	ms_set_egprs_ms_class(ms, egprs_ms_class);
 
 	return ms;
-}
-
-struct SBAController *bts_sba(struct gprs_rlcmac_bts *bts)
-{
-	return bts->sba;
 }
 
 struct GprsMsStorage *bts_ms_store(struct gprs_rlcmac_bts *bts)

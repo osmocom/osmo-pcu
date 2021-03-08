@@ -562,7 +562,7 @@ int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 		LOGPTBF(this, LOGL_DEBUG, "Polling is already scheduled\n");
 		return -EBUSY;
 	}
-	if (bts_sba(bts)->find(trx->trx_no, ts, new_poll_fn)) {
+	if (!pdch_ulc_fn_is_free(trx->pdch[ts].ulc, new_poll_fn)) {
 		LOGPTBF(this, LOGL_DEBUG, "Polling is already scheduled "
 			"for single block allocation at FN %d TS %d ...\n",
 			new_poll_fn, ts);

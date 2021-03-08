@@ -1793,7 +1793,7 @@ static void test_immediate_assign_rej_single_block()
 	 */
 	rc = bts_handle_rach(bts, 0x70, rach_fn, qta);
 
-	OSMO_ASSERT(rc == -EINVAL);
+	OSMO_ASSERT(rc == -EBUSY);
 
 	TALLOC_FREE(the_pcu);
 	fprintf(stderr, "=== end %s ===\n", __func__);

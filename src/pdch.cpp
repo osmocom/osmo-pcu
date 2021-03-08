@@ -139,6 +139,7 @@ void pdch_init(struct gprs_rlcmac_pdch *pdch, struct gprs_rlcmac_trx *trx, uint8
 	/*  Initialize the PTCCH/D message (Packet Timing Advance Control Channel) */
 	memset(pdch->ptcch_msg, PTCCH_TAI_FREE, PTCCH_TAI_NUM);
 	memset(pdch->ptcch_msg + PTCCH_TAI_NUM, PTCCH_PADDING, 7);
+	pdch->ulc = pdch_ulc_alloc(pdch, trx->bts);
 }
 
 void gprs_rlcmac_pdch::enable()
@@ -169,7 +170,7 @@ void gprs_rlcmac_pdch::free_resources()
 	while ((pag = dequeue_paging()))
 		talloc_free(pag);
 
-	bts_sba(trx->bts)->free_resources(this);
+	talloc_free(this->ulc);
 }
 
 struct gprs_rlcmac_paging *gprs_rlcmac_pdch::dequeue_paging()
@@ -604,10 +605,10 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
 			"in packet resource request of single "
 			"block, so we provide one:\n");
-		sba = bts_sba(bts())->find(this, fn);
+		sba = pdch_ulc_get_sba(this->ulc, fn);
 		if (sba) {
 			ms_set_ta(ms, sba->ta);
-			bts_sba(bts())->free_sba(sba);
+			sba_free(sba);
 		} else if (!ul_tbf || !ul_tbf->state_is(GPRS_RLCMAC_FINISHED)) {
 			LOGPTBFUL(ul_tbf, LOGL_NOTICE,
 				  "MS requests UL TBF in PACKET RESOURCE REQ of "
@@ -702,9 +703,9 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 		ms = bts_alloc_ms(bts(), 0, 0);
 		ms_set_tlli(ms, report->TLLI);
 	}
-	if ((sba = bts_sba(bts())->find(this, fn))) {
+	if ((sba = pdch_ulc_get_sba(this->ulc, fn))) {
 		ms_set_ta(ms, sba->ta);
-		bts_sba(bts())->free_sba(sba);
+		sba_free(sba);
 	}
 	gprs_rlcmac_meas_rep(ms, report);
 }

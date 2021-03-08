@@ -6232,7 +6232,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Destroying MS object
 MS requests Uplink resource on CCCH/RACH: ra=0x70 (8 bit) Fn=2654167 qta=31
 MS requests single block allocation
 No PDCH available.
-No PDCH resource for single block allocation: rc=-22
+No PDCH resource for single block allocation
 Tx Immediate Assignment Reject on AGCH
 === end test_immediate_assign_rej_single_block ===
 === start test_tbf_egprs_two_phase_puan ===
