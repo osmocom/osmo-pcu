@@ -105,8 +105,6 @@ struct gprs_rlcmac_pdch {
 	/* PTCCH (Packet Timing Advance Control Channel) */
 	uint8_t ptcch_msg[GSM_MACBLOCK_LEN]; /* 'ready to use' PTCCH/D message */
 #ifdef __cplusplus
-	/* Initialize the PTCCH/D message */
-	void init_ptcch_msg(void);
 	/* Obtain an unused TA Index for a TBF */
 	uint8_t reserve_tai(uint8_t ta);
 	/* Mark a given TA Index as free, so it can be used again */
@@ -190,6 +188,7 @@ inline bool gprs_rlcmac_pdch::is_enabled() const
 #ifdef __cplusplus
 extern "C" {
 #endif
+void pdch_init(struct gprs_rlcmac_pdch *pdch, struct gprs_rlcmac_trx *trx, uint8_t ts_nr);
 void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch);
 void pdch_disable(struct gprs_rlcmac_pdch *pdch);
 #ifdef __cplusplus

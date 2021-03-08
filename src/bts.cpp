@@ -271,18 +271,8 @@ struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr)
 	INIT_LLIST_HEAD(&bts->dl_tbfs);
 
 	/* initialize back pointers */
-	for (size_t trx_no = 0; trx_no < ARRAY_SIZE(bts->trx); ++trx_no) {
-		struct gprs_rlcmac_trx *trx = &bts->trx[trx_no];
-		trx->trx_no = trx_no;
-		trx->bts = bts;
-
-		for (size_t ts_no = 0; ts_no < ARRAY_SIZE(trx->pdch); ++ts_no) {
-			struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
-			pdch->init_ptcch_msg();
-			pdch->ts_no = ts_no;
-			pdch->trx = trx;
-		}
-	}
+	for (size_t trx_no = 0; trx_no < ARRAY_SIZE(bts->trx); ++trx_no)
+		bts_trx_init(&bts->trx[trx_no], bts, trx_no);
 
 	/* The static allocator might have already registered the counter group.
 	   If this happens and we still called explicitly (in tests/ for example)
@@ -1159,6 +1149,15 @@ void bts_update_tbf_ta(struct gprs_rlcmac_bts *bts, const char *p, uint32_t fn,
 			update_tbf_ta(tbf, ta);
 
 	}
+}
+
+void bts_trx_init(struct gprs_rlcmac_trx *trx, struct gprs_rlcmac_bts *bts, uint8_t trx_no)
+{
+	trx->trx_no = trx_no;
+	trx->bts = bts;
+
+	for (size_t ts_no = 0; ts_no < ARRAY_SIZE(trx->pdch); ts_no++)
+		pdch_init(&trx->pdch[ts_no], trx, ts_no);
 }
 
 void bts_trx_reserve_slots(struct gprs_rlcmac_trx *trx, enum gprs_rlcmac_tbf_direction dir,

@@ -131,6 +131,16 @@ static inline void sched_ul_ass_or_rej(struct gprs_rlcmac_bts *bts, struct gprs_
 	}
 }
 
+void pdch_init(struct gprs_rlcmac_pdch *pdch, struct gprs_rlcmac_trx *trx, uint8_t ts_nr)
+{
+	pdch->ts_no = ts_nr;
+	pdch->trx = trx;
+
+	/*  Initialize the PTCCH/D message (Packet Timing Advance Control Channel) */
+	memset(pdch->ptcch_msg, PTCCH_TAI_FREE, PTCCH_TAI_NUM);
+	memset(pdch->ptcch_msg + PTCCH_TAI_NUM, PTCCH_PADDING, 7);
+}
+
 void gprs_rlcmac_pdch::enable()
 {
 	/* TODO: Check if there are still allocated resources.. */
@@ -1037,13 +1047,6 @@ inline struct gprs_rlcmac_bts *gprs_rlcmac_pdch::bts() const
 uint8_t gprs_rlcmac_pdch::trx_no() const
 {
 	return trx->trx_no;
-}
-
-/* PTCCH (Packet Timing Advance Control Channel) */
-void gprs_rlcmac_pdch::init_ptcch_msg(void)
-{
-	memset(ptcch_msg, PTCCH_TAI_FREE, PTCCH_TAI_NUM);
-	memset(ptcch_msg + PTCCH_TAI_NUM, PTCCH_PADDING, 7);
 }
 
 uint8_t gprs_rlcmac_pdch::reserve_tai(uint8_t ta)
