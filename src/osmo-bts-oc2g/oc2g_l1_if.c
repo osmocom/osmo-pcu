@@ -195,20 +195,14 @@ static int handle_ph_data_ind(struct oc2gl1_hdl *fl1h,
 	int rc = 0;
 	struct gprs_rlcmac_bts *bts;
 	struct pcu_l1_meas meas = {0};
+	uint8_t *data;
+	uint8_t data_len;
 
 	DEBUGP(DL1IF, "Rx PH-DATA.ind %s (hL2 %08x): %s\n",
 		get_value_string(oc2gbts_l1sapi_names, data_ind->sapi),
 		data_ind->hLayer2,
 		osmo_hexdump(data_ind->msgUnitParam.u8Buffer,
 			     data_ind->msgUnitParam.u8Size));
-
-	/*
-	 * TODO: Add proper bad frame handling here. This could be used
-	 * to switch the used CS. Avoid a crash with the PCU right now
-	 * feed "0 - 1" amount of data.
-	 */
-	if (data_ind->msgUnitParam.u8Size == 0)
-		return -1;
 
 	bts = llist_first_entry_or_null(&the_pcu->bts_list, struct gprs_rlcmac_bts, list);
 
@@ -224,16 +218,19 @@ static int handle_ph_data_ind(struct oc2gl1_hdl *fl1h,
 	switch (data_ind->sapi) {
 	case GsmL1_Sapi_Pdtch:
 	case GsmL1_Sapi_Pacch:
-		/* drop incomplete UL block */
-		if (data_ind->msgUnitParam.u8Buffer[0]
-			!= GsmL1_PdtchPlType_Full)
-			break;
 		/* PDTCH / PACCH frame handling */
-		pcu_rx_data_ind_pdtch(bts, fl1h->trx_no, data_ind->u8Tn,
-			data_ind->msgUnitParam.u8Buffer + 1,
-			data_ind->msgUnitParam.u8Size - 1,
-			data_ind->u32Fn,
-			&meas);
+		if (data_ind->msgUnitParam.u8Size != 0 &&
+		    data_ind->msgUnitParam.u8Buffer[0] != GsmL1_PdtchPlType_Full) {
+			data = data_ind->msgUnitParam.u8Buffer + 1;
+			data_len = data_ind->msgUnitParam.u8Size - 1;
+			if (data_len == 0)
+				data = NULL;
+		} else {
+			data = NULL;
+			data_len = 0;
+		}
+		pcu_rx_data_ind_pdtch(bts, fl1h->trx_no, data_ind->u8Tn, data,
+				      data_len, data_ind->u32Fn, &meas);
 		break;
 	default:
 		LOGP(DL1IF, LOGL_NOTICE, "Rx PH-DATA.ind for unknown L1 SAPI %s\n",
