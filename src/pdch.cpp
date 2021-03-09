@@ -750,7 +750,7 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 	bitvec_unpack(rlc_block, data);
 	ul_control_block = (RlcMacUplink_t *)talloc_zero(tall_pcu_ctx, RlcMacUplink_t);
 
-	LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "+++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n");
+	LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "FN=%u +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++\n", fn);
 
 	rc = decode_gsm_rlcmac_uplink(rlc_block, ul_control_block);
 	if (ul_control_block->u.MESSAGE_TYPE == MT_PACKET_UPLINK_DUMMY_CONTROL_BLOCK)
@@ -759,11 +759,11 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 		bts_send_gsmtap_meas(bts(), PCU_GSMTAP_C_UL_CTRL, true, trx_no(), ts_no, GSMTAP_CHANNEL_PACCH, fn, data, data_len, meas);
 
 	if (rc < 0) {
-		LOGPDCH(this, DRLCMACUL, LOGL_ERROR, "Dropping Uplink Control Block "
-			"with invalid content, decode failed: %d)\n", rc);
+		LOGPDCH(this, DRLCMACUL, LOGL_ERROR, "FN=%u Dropping Uplink Control Block "
+			"with invalid content, decode failed: %d)\n", fn, rc);
 		goto free_ret;
 	}
-	LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "------------------------- RX : Uplink Control Block -------------------------\n");
+	LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "FN=%u ------------------------- RX : Uplink Control Block -------------------------\n", fn);
 
 	bts_do_rate_ctr_inc(bts(), CTR_RLC_RECV_CONTROL);
 	switch (ul_control_block->u.MESSAGE_TYPE) {
@@ -791,8 +791,8 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 	default:
 		bts_do_rate_ctr_inc(bts(), CTR_DECODE_ERRORS);
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE,
-			"RX: [PCU <- BTS] unknown control block(%d) received\n",
-			ul_control_block->u.MESSAGE_TYPE);
+			"FN=%u RX: [PCU <- BTS] unknown control block(%d) received\n",
+			fn, ul_control_block->u.MESSAGE_TYPE);
 	}
 free_ret:
 	talloc_free(ul_control_block);

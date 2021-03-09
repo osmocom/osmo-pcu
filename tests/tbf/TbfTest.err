@@ -1516,8 +1516,8 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -1547,8 +1547,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
@@ -1596,8 +1596,8 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -1627,8 +1627,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
@@ -1675,8 +1675,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment 
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) [UPLINK] DOWNLINK ASSIGNED
@@ -1724,8 +1724,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654292, TS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3105 0 => 1 (< MAX 8)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654335 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654335 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf5667788, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -1756,8 +1756,8 @@ TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654348, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654335 Scheduling control message at RTS for TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654348 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654348 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
@@ -1788,8 +1788,8 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -1820,8 +1820,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
@@ -1875,8 +1875,8 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654327 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654327 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654327 ------------------------- RX : Uplink Control Block -------------------------
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Allocating UL TBF
@@ -1902,8 +1902,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654340, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654327 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654340 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654340 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
@@ -1926,8 +1926,8 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -1958,8 +1958,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
@@ -2068,8 +2068,8 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -2100,8 +2100,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
@@ -2188,8 +2188,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment 
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) [UPLINK] DOWNLINK ASSIGNED
@@ -2740,8 +2740,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654379 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654379 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) RX: [PCU <- BTS] Packet Downlink Ack/Nack
 PDCH(bts=0,trx=0,ts=7) Got GPRS DL ACK bitmap: SSN: 0, BSN 0 to 28 - 1 (28 blocks), "RRRRRRRRRRRRRRRRRRRRRRRRRRRR"
@@ -2779,8 +2779,8 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment 
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) Scheduled DL Assignment polling on PACCH (FN=2654413, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654400 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654413 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654413 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) [UPLINK] DOWNLINK ASSIGNED
@@ -3108,8 +3108,8 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -3144,8 +3144,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignm
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
@@ -3196,8 +3196,8 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -3232,8 +3232,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignm
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
@@ -5762,8 +5762,8 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -5798,8 +5798,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignm
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
@@ -5921,8 +5921,8 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -5957,8 +5957,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignm
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
@@ -6241,8 +6241,8 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -6277,8 +6277,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignm
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
@@ -7640,8 +7640,8 @@ TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=6 USF=6
-PDCH(bts=0,trx=0,ts=7) +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddcc, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
