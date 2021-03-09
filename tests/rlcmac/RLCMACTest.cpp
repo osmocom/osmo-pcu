@@ -28,7 +28,6 @@
 #include "decoding.h"
 
 extern "C" {
-extern const struct log_info gprs_log_info;
 #include "pcu_vty.h"
 #include <osmocom/vty/telnet_interface.h>
 #include <osmocom/vty/logging.h>
@@ -40,6 +39,8 @@ extern const struct log_info gprs_log_info;
 #include "gsm_rlcmac.h"
 }
 using namespace std;
+
+#include "gprs_debug.h"
 
 void *tall_pcu_ctx;
 
