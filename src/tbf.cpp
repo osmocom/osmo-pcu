@@ -588,7 +588,7 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum gprs_rl
 	if ((state_flags & (1 << (GPRS_RLCMAC_FLAG_PACCH))) && (state_flags & (1 << (GPRS_RLCMAC_FLAG_CCCH))))
 		LOGPTBFDL(this, LOGL_ERROR,
 			  "Attempt to schedule polling on %s (FN=%d, TS=%d) with both CCCH and PACCH flags set - FIXME!\n",
-			  chan, poll_fn, poll_ts);
+			  chan, new_poll_fn, ts);
 
 	/* schedule polling */
 	poll_state = GPRS_RLCMAC_POLL_SCHED;
