@@ -34,6 +34,8 @@ extern "C" {
 }
 #endif
 
+#include "pdch.h"
+
 static inline uint8_t qta2ta(int16_t qta)
 {
 	if (qta < 0)
@@ -171,7 +173,7 @@ int pcu_rx_rts_req_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
 	uint32_t fn, uint8_t block_nr);
 
 int pcu_rx_rach_ind_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx_nr, uint8_t ts_nr, uint32_t fn, int16_t qta);
-int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts, uint8_t *data,
+int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *pdch, uint8_t *data,
 	uint8_t len, uint32_t fn, struct pcu_l1_meas *meas);
 
 void pcu_rx_block_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no);

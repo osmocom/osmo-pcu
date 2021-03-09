@@ -281,12 +281,9 @@ void pcu_rx_ra_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, ui
 	bts_set_current_block_frame_number(bts, fn, 5);
 }
 
-int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, uint8_t trx_no, uint8_t ts_no, uint8_t *data,
+int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *pdch, uint8_t *data,
 	uint8_t len, uint32_t fn, struct pcu_l1_meas *meas)
 {
-	struct gprs_rlcmac_pdch *pdch;
-
-	pdch = &bts->trx[trx_no].pdch[ts_no];
 	return pdch->rcv_block(data, len, fn, meas);
 }
 
@@ -366,27 +363,30 @@ static int pcu_rx_data_ind(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data *
 	int rc;
 	int current_fn = bts_current_frame_number(bts);
 	struct pcu_l1_meas meas = {0};
+	struct gprs_rlcmac_pdch *pdch;
 	uint8_t gsmtap_chantype;
 
-	LOGP(DL1IF, LOGL_DEBUG, "Data indication received: sapi=%d arfcn=%d "
-		"fn=%d cur_fn=%d block=%d data=%s\n", data_ind->sapi,
-		data_ind->arfcn, data_ind->fn, current_fn, data_ind->block_nr,
-		osmo_hexdump(data_ind->data, data_ind->len));
+	LOGP(DL1IF, LOGL_DEBUG, "(bts=%" PRIu8 ",trx=%" PRIu8 ",ts=%" PRIu8 ") FN=%u "
+		"Rx DATA.ind: sapi=%d arfcn=%d cur_fn=%d "
+		"block=%d data=%s\n", bts->nr, data_ind->trx_nr, data_ind->ts_nr,
+		data_ind->fn, data_ind->sapi, data_ind->arfcn, current_fn,
+		data_ind->block_nr, osmo_hexdump(data_ind->data, data_ind->len));
 
 	switch (data_ind->sapi) {
 	case PCU_IF_SAPI_PDTCH:
+		pdch = &bts->trx[data_ind->trx_nr].pdch[data_ind->ts_nr];
 		pcu_l1_meas_set_rssi(&meas, data_ind->rssi);
 		/* convert BER to % value */
 		pcu_l1_meas_set_ber(&meas, data_ind->ber10k / 100);
 		pcu_l1_meas_set_bto(&meas, data_ind->ta_offs_qbits);
 		pcu_l1_meas_set_link_qual(&meas, data_ind->lqual_cb / 10);
 
-		LOGP(DL1IF, LOGL_DEBUG, "Data indication with raw measurements received: BER10k = %d, BTO = %d, Q = %d\n",
-		     data_ind->ber10k, data_ind->ta_offs_qbits, data_ind->lqual_cb);
+		LOGPDCH(pdch, DL1IF, LOGL_DEBUG, "FN=%u Rx DATA.ind PDTCH: "
+			"BER10k = %d, BTO = %d, Q = %d\n", data_ind->fn,
+			data_ind->ber10k, data_ind->ta_offs_qbits, data_ind->lqual_cb);
 
-		rc = pcu_rx_data_ind_pdtch(bts, data_ind->trx_nr, data_ind->ts_nr,
-			data_ind->data, data_ind->len, data_ind->fn,
-			&meas);
+		rc = pcu_rx_data_ind_pdtch(bts, pdch, data_ind->data, data_ind->len,
+					   data_ind->fn, &meas);
 		gsmtap_chantype = GSMTAP_CHANNEL_PDTCH;
 		break;
 	case PCU_IF_SAPI_BCCH:
@@ -394,8 +394,9 @@ static int pcu_rx_data_ind(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data *
 		gsmtap_chantype = GSMTAP_CHANNEL_BCCH;
 		break;
 	default:
-		LOGP(DL1IF, LOGL_ERROR, "Received PCU data indication with "
-			"unsupported sapi %d\n", data_ind->sapi);
+		LOGP(DL1IF, LOGL_ERROR, "(bts=%" PRIu8 ",trx=%" PRIu8 ",ts=%" PRIu8 ") "
+		     "FN=%u Rx DATA.ind with unsupported sapi %d\n",
+		     bts->nr, data_ind->trx_nr, data_ind->ts_nr, data_ind->fn, data_ind->sapi);
 		rc = -EINVAL;
 		gsmtap_chantype = GSMTAP_CHANNEL_UNKNOWN;
 	}

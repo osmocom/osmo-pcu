@@ -194,11 +194,13 @@ static int handle_ph_data_ind(struct oc2gl1_hdl *fl1h,
 {
 	int rc = 0;
 	struct gprs_rlcmac_bts *bts;
+	struct gprs_rlcmac_pdch *pdch;
 	struct pcu_l1_meas meas = {0};
 	uint8_t *data;
 	uint8_t data_len;
 
-	DEBUGP(DL1IF, "Rx PH-DATA.ind %s (hL2 %08x): %s\n",
+	DEBUGP(DL1IF, "(trx=%" PRIu8 ",ts=%u) FN=%u Rx PH-DATA.ind %s (hL2 %08x): %s\n",
+		fl1h->trx_no, data_ind->u8Tn, data_ind->u32Fn,
 		get_value_string(oc2gbts_l1sapi_names, data_ind->sapi),
 		data_ind->hLayer2,
 		osmo_hexdump(data_ind->msgUnitParam.u8Buffer,
@@ -229,12 +231,14 @@ static int handle_ph_data_ind(struct oc2gl1_hdl *fl1h,
 			data = NULL;
 			data_len = 0;
 		}
-		pcu_rx_data_ind_pdtch(bts, fl1h->trx_no, data_ind->u8Tn, data,
-				      data_len, data_ind->u32Fn, &meas);
+		pdch = &bts->trx[fl1h->trx_no].pdch[data_ind->u8Tn];
+		pcu_rx_data_ind_pdtch(bts, pdch, data, data_len, data_ind->u32Fn, &meas);
 		break;
 	default:
-		LOGP(DL1IF, LOGL_NOTICE, "Rx PH-DATA.ind for unknown L1 SAPI %s\n",
-			get_value_string(oc2gbts_l1sapi_names, data_ind->sapi));
+		LOGP(DL1IF, LOGL_NOTICE,
+		     "(trx=%" PRIu8 ",ts=%u) FN=%u Rx PH-DATA.ind for unknown L1 SAPI %s\n",
+		     fl1h->trx_no, data_ind->u8Tn, data_ind->u32Fn,
+		     get_value_string(oc2gbts_l1sapi_names, data_ind->sapi));
 		break;
 	}
 
