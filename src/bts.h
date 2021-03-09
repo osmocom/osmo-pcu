@@ -195,7 +195,6 @@ struct chan_req_params {
 	bool single_block;
 };
 
-struct PollController;
 struct GprsMsStorage;
 struct pcu_l1_meas;
 
@@ -251,7 +250,6 @@ struct gprs_rlcmac_bts {
 	int cur_blk_fn;
 	uint8_t max_cs_dl, max_cs_ul;
 	uint8_t max_mcs_dl, max_mcs_ul;
-	struct PollController *pollController;
 	struct rate_ctr_group *ratectrs;
 	struct osmo_stat_item_group *statg;
 
@@ -272,8 +270,6 @@ int bts_add_paging(struct gprs_rlcmac_bts *bts, uint8_t chan_needed, const struc
 
 uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, int32_t rfn);
 
-struct gprs_rlcmac_dl_tbf *bts_dl_tbf_by_poll_fn(struct gprs_rlcmac_bts *bts, uint32_t fn, uint8_t trx, uint8_t ts);
-struct gprs_rlcmac_ul_tbf *bts_ul_tbf_by_poll_fn(struct gprs_rlcmac_bts *bts, uint32_t fn, uint8_t trx, uint8_t ts);
 struct gprs_rlcmac_dl_tbf *bts_dl_tbf_by_tfi(struct gprs_rlcmac_bts *bts, uint8_t tfi, uint8_t trx, uint8_t ts);
 struct gprs_rlcmac_ul_tbf *bts_ul_tbf_by_tfi(struct gprs_rlcmac_bts *bts, uint8_t tfi, uint8_t trx, uint8_t ts);
 

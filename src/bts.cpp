@@ -19,7 +19,6 @@
  */
 
 #include <bts.h>
-#include <poll_controller.h>
 #include <tbf.h>
 #include <tbf_ul.h>
 #include <encoding.h>
@@ -212,7 +211,6 @@ static int bts_talloc_destructor(struct gprs_rlcmac_bts* bts)
 	 * m_ms_store's destructor */
 	bts->ms_store->cleanup();
 	delete bts->ms_store;
-	delete bts->pollController;
 
 	if (bts->ratectrs) {
 		rate_ctr_group_free(bts->ratectrs);
@@ -244,7 +242,6 @@ struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr)
 	bts->pcu = pcu;
 	bts->nr = bts_nr;
 
-	bts->pollController = new PollController(*bts);
 	bts->ms_store = new GprsMsStorage(bts);
 
 	bts->cur_fn = 0;
@@ -295,16 +292,9 @@ void bts_set_current_frame_number(struct gprs_rlcmac_bts *bts, int fn)
 	/* The UL frame numbers lag 3 behind the DL frames and the data
 	 * indication is only sent after all 4 frames of the block have been
 	 * received. Sometimes there is an idle frame between the end of one
-	 * and start of another frame (every 3 blocks).  So the timeout should
-	 * definitely be there if we're more than 8 frames past poll_fn. Let's
-	 * stay on the safe side and say 13 or more. An additional delay can
-	 * happen due to the block processing time in the DSP, so the delay of
-	 * decoded blocks relative to the timing clock can be much larger.
-	 * Values up to 50 frames have been observed under load. */
-	const static int max_delay = 60;
+	 * and start of another frame (every 3 blocks). */
 
 	bts->cur_fn = fn;
-	bts->pollController->expireTimedout(bts->cur_fn, max_delay);
 }
 
 static inline int delta_fn(int fn, int to)
@@ -341,8 +331,6 @@ void bts_set_current_block_frame_number(struct gprs_rlcmac_bts *bts, int fn, uns
 	if (delay < fn_update_ok_min_delay || delay > fn_update_ok_max_delay ||
 		bts_current_frame_number(bts) == 0)
 		bts->cur_fn = fn;
-
-	bts->pollController->expireTimedout(fn, max_delay);
 }
 
 int bts_add_paging(struct gprs_rlcmac_bts *bts, uint8_t chan_needed, const struct osmo_mobile_identity *mi)
@@ -483,36 +471,6 @@ static inline bool tbf_check(gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t trx_no, 
 		return true;
 
 	return false;
-}
-
-struct gprs_rlcmac_dl_tbf *bts_dl_tbf_by_poll_fn(struct gprs_rlcmac_bts *bts, uint32_t fn, uint8_t trx, uint8_t ts)
-{
-	struct llist_item *pos;
-	struct gprs_rlcmac_tbf *tbf;
-
-	/* only one TBF can poll on specific TS/FN, because scheduler can only
-	 * schedule one downlink control block (with polling) at a FN per TS */
-	llist_for_each_entry(pos, &bts->dl_tbfs, list) {
-		tbf = (struct gprs_rlcmac_tbf *)pos->entry;
-		if (tbf_check(tbf, fn, trx, ts))
-			return as_dl_tbf(tbf);
-	}
-	return NULL;
-}
-
-struct gprs_rlcmac_ul_tbf *bts_ul_tbf_by_poll_fn(struct gprs_rlcmac_bts *bts, uint32_t fn, uint8_t trx, uint8_t ts)
-{
-	struct llist_item *pos;
-	struct gprs_rlcmac_tbf *tbf;
-
-	/* only one TBF can poll on specific TS/FN, because scheduler can only
-	 * schedule one downlink control block (with polling) at a FN per TS */
-	llist_for_each_entry(pos, &bts->ul_tbfs, list) {
-		tbf = (struct gprs_rlcmac_tbf *)pos->entry;
-		if (tbf_check(tbf, fn, trx, ts))
-			return as_ul_tbf(tbf);
-	}
-	return NULL;
 }
 
 /* lookup downlink TBF Entity (by TFI) */
@@ -1162,13 +1120,16 @@ void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta)
 void bts_update_tbf_ta(struct gprs_rlcmac_bts *bts, const char *p, uint32_t fn,
 		       uint8_t trx_no, uint8_t ts, int8_t ta, bool is_rach)
 {
-	struct gprs_rlcmac_ul_tbf *tbf =
-		bts_ul_tbf_by_poll_fn(bts, fn, trx_no, ts);
-	if (!tbf)
+	struct gprs_rlcmac_pdch *pdch = &bts->trx[trx_no].pdch[ts];
+	struct pdch_ulc_node *poll = pdch_ulc_get_node(pdch->ulc, fn);
+	struct gprs_rlcmac_ul_tbf *tbf;
+	if (!poll || poll->type !=PDCH_ULC_NODE_TBF_POLL ||
+	    poll->tbf_poll.poll_tbf->direction != GPRS_RLCMAC_UL_TBF)
 		LOGP(DL1IF, LOGL_DEBUG, "[%s] update TA = %u ignored due to "
 		     "unknown UL TBF on TRX = %d, TS = %d, FN = %d\n",
 		     p, ta, trx_no, ts, fn);
 	else {
+		tbf = as_ul_tbf(poll->tbf_poll.poll_tbf);
 		/* we need to distinguish TA information provided by L1
 		 * from PH-DATA-IND and PHY-RA-IND so that we can properly
 		 * update TA for given TBF

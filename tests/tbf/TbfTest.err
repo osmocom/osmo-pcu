@@ -1706,26 +1706,31 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled DL Acknowledgement po
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654288
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654292, TS=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 0, CS-4): 0f 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 00 
-Received RTS for PDCH: TRX=0 TS=7 FN=2654283 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
-PDCH(bts=0,trx=0,ts=7) FN=2654283 Scheduling data message at RTS for DL TFI=0 prio=1 mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654292): TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654292, TS=7 (curr FN 2654292)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3105 0 => 1 (< MAX 8)
+Received RTS for PDCH: TRX=0 TS=7 FN=2654296 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) FN=2654296 Scheduling data message at RTS for DL TFI=0 prio=5 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Restarting at BSN 0, because all blocks have been transmitted.
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Resending BSN 0
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) need_padding 0 spb_status 0 spb 0 (BSN1 0 BSN2 -1)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Copying data unit 0 (BSN 0)
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 0, CS-4): 07 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 00 
-MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654232 qta=31
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduling Ack/Nack polling, because polling timed out.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled DL Acknowledgement polling on PACCH (FN=2654309, TS=7)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) restarting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654292
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654309, TS=7
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 0, CS-4): 0f 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 00 
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654245 qta=31
 MS requests single block allocation
-Allocated a single block at SBFn=2654335 TRX=0 TS=7
+Allocated a single block at SBFn=2654348 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=1
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654292, TS=7 (curr FN 2654335)
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3101 0 => 1 (< MAX 10)
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3105 0 => 1 (< MAX 8)
-PDCH(bts=0,trx=0,ts=7) FN=2654335 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) FN=2654335 ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) FN=2654348 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654348 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf5667788, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -1747,17 +1752,23 @@ TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL) Setting Control TS 7
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
 MS(TLLI=0xf5667788, IMSI=, TA=7, 1/0,) Attaching UL TBF: TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL)
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
-TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654335
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654348
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
-Received RTS for PDCH: TRX=0 TS=7 FN=2654335 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Expiring FN=2654348 but previous FN=2654309 is still reserved!
+PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654309): TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654309, TS=7 (curr FN 2654348)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3101 1 => 2 (< MAX 10)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3105 1 => 2 (< MAX 8)
+Received RTS for PDCH: TRX=0 TS=7 FN=2654348 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
-TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654348, TS=7)
-PDCH(bts=0,trx=0,ts=7) FN=2654335 Scheduling control message at RTS for TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN)
-PDCH(bts=0,trx=0,ts=7) FN=2654348 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) FN=2654348 ------------------------- RX : Uplink Control Block -------------------------
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654361, TS=7)
+PDCH(bts=0,trx=0,ts=7) FN=2654348 Scheduling control message at RTS for TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN)
+PDCH(bts=0,trx=0,ts=7) FN=2654361 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654361 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
@@ -1765,7 +1776,7 @@ TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RL
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=1, CPS=0, RSB=0, rc=184
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) UL DATA TFI=1 received (V(Q)=0 .. V(R)=0)
-TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) restarting timer T3169 [acked (data)] with 5 sec. 0 microsec, cur_fn=2654340
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) restarting timer T3169 [acked (data)] with 5 sec. 0 microsec, cur_fn=2654353
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) Got CS-1 RLC data block: CV=15, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=24
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) BSN 0 storing in window (0..63)
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) data_length=20, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
@@ -3691,11 +3702,17 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 24)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 24, MCS-1): 07 00 06 16 18 fe 03 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+PDCH(bts=0,trx=0,ts=4) Expiring FN=112 but previous FN=13 is still reserved!
+PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 112)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=112
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
@@ -3947,11 +3964,17 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 19)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 19, MCS-2): 07 c0 04 12 20 fe 03 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+PDCH(bts=0,trx=0,ts=4) Expiring FN=91 but previous FN=13 is still reserved!
+PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 91)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=91
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
@@ -4153,11 +4176,17 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 14)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 14, MCS-3): 07 80 03 06 7c fe 03 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 56 56 56 56 00 
+PDCH(bts=0,trx=0,ts=4) Expiring FN=69 but previous FN=13 is still reserved!
+PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 69)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=69
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
@@ -4339,11 +4368,17 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 12)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 12, MCS-4): 07 00 03 00 70 fe 03 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+PDCH(bts=0,trx=0,ts=4) Expiring FN=60 but previous FN=13 is still reserved!
+PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 60)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=60
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
@@ -4505,11 +4540,17 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 10, MCS-5): 07 80 02 08 c4 7f 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+PDCH(bts=0,trx=0,ts=4) Expiring FN=52 but previous FN=13 is still reserved!
+PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 52)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=52
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
@@ -4641,11 +4682,17 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 7)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 7, MCS-6): 07 c0 01 00 e2 7f 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 c0 ca ca ca 0a 
+PDCH(bts=0,trx=0,ts=4) Expiring FN=39 but previous FN=13 is still reserved!
+PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 39)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=39
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
@@ -4784,11 +4831,17 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 10, MCS-5): 07 80 02 08 c4 7f 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+PDCH(bts=0,trx=0,ts=4) Expiring FN=34 but previous FN=13 is still reserved!
+PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 34)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=34
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
@@ -4916,11 +4969,17 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 8, MCS-8): 07 00 02 00 60 20 fd 07 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 80 f4 1f 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
+PDCH(bts=0,trx=0,ts=4) Expiring FN=30 but previous FN=13 is still reserved!
+PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 30)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=30
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
@@ -5035,11 +5094,17 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 7)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 6, MCS-9): 07 80 01 02 00 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 80 f8 1f 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 02 
+PDCH(bts=0,trx=0,ts=4) Expiring FN=26 but previous FN=13 is still reserved!
+PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 26)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=26
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
@@ -5095,7 +5160,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
@@ -5150,7 +5215,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-1): 07 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
@@ -5205,7 +5270,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-2): 07 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
@@ -5273,10 +5338,16 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 2 RLC blocks, 2 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-7): 07 00 00 02 c0 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc 80 f5 8f 93 a3 b3 c3 d3 e3 f3 03 14 24 34 44 54 64 74 84 94 a4 b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 b6 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
+PDCH(bts=0,trx=0,ts=4) Expiring FN=63 but previous FN=21 is still reserved!
+PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=21): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=21, TS=4 (curr FN 63)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
@@ -5344,10 +5415,16 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 2 RLC blocks, 2 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-9): 07 00 00 02 28 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc e0 e4 e8 ec f0 f4 f8 fc 00 05 09 0d 11 15 19 1d 21 25 41 f3 af b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 b6 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
+PDCH(bts=0,trx=0,ts=4) Expiring FN=63 but previous FN=21 is still reserved!
+PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=21): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=21, TS=4 (curr FN 63)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
@@ -5415,10 +5492,16 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 s
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-5): 07 40 00 08 d6 3f 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 92 d2 12 53 93 d3 13 54 94 d4 14 55 95 d5 15 56 96 d6 16 57 97 d7 17 58 98 d8 d8 ca ca ca ca ca ca ca ca ca 0a 
+PDCH(bts=0,trx=0,ts=4) Expiring FN=63 but previous FN=17 is still reserved!
+PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 63)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
@@ -5486,10 +5569,16 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 s
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-6): 07 40 00 02 cd bf d2 12 53 93 d3 13 54 94 d4 14 55 95 d5 15 56 96 d6 16 57 97 d7 17 58 98 d8 d8 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+PDCH(bts=0,trx=0,ts=4) Expiring FN=63 but previous FN=17 is still reserved!
+PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 63)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT RELEASE EGPRS) changes state from WAIT RELEASE to RELEASING
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free

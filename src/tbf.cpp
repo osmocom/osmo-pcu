@@ -550,8 +550,7 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool
 int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 	uint32_t *poll_fn_, unsigned int *rrbp_) const
 {
-	uint32_t new_poll_fn = next_fn(fn, 13);
-
+	int rc;
 	if (!is_control_ts(ts)) {
 		LOGPTBF(this, LOGL_DEBUG, "Polling cannot be "
 			"scheduled in this TS %d (first control TS %d)\n",
@@ -562,15 +561,13 @@ int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 		LOGPTBF(this, LOGL_DEBUG, "Polling is already scheduled\n");
 		return -EBUSY;
 	}
-	if (!pdch_ulc_fn_is_free(trx->pdch[ts].ulc, new_poll_fn)) {
-		LOGPTBF(this, LOGL_DEBUG, "Polling is already scheduled "
-			"for single block allocation at FN %d TS %d ...\n",
-			new_poll_fn, ts);
-		return -EBUSY;
-	}
 
-	*poll_fn_ = new_poll_fn;
-	*rrbp_ = 0;
+	if ((rc = pdch_ulc_get_next_free_rrbp_fn(trx->pdch[ts].ulc, fn, poll_fn_, rrbp_)) < 0) {
+		LOGPTBF(this, LOGL_DEBUG,
+			"(bts=%u,trx=%u,ts=%u) FN=%u No suitable free RRBP offset found!\n",
+			trx->bts->nr, trx->trx_no, ts, fn);
+		return rc;
+	}
 
 	return 0;
 }
@@ -591,6 +588,11 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum gprs_rl
 			  chan, new_poll_fn, ts);
 
 	/* schedule polling */
+	if (pdch_ulc_reserve_tbf_poll(trx->pdch[ts].ulc, new_poll_fn, this) < 0) {
+		LOGPTBFDL(this, LOGL_ERROR, "Failed scheduling poll on %s (FN=%d, TS=%d)\n",
+			  chan, poll_fn, ts);
+		return;
+	}
 	poll_state = GPRS_RLCMAC_POLL_SCHED;
 	poll_fn = new_poll_fn;
 	poll_ts = ts;
@@ -1229,4 +1231,9 @@ int tbf_check_polling(const struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts
 void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t ts, enum gprs_rlcmac_tbf_poll_type t)
 {
 	return tbf->set_polling(new_poll_fn, ts, t);
+}
+
+void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf)
+{
+	tbf->poll_timeout();
 }

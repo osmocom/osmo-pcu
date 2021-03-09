@@ -306,12 +306,10 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	uint32_t tlli = packet->TLLI;
 	GprsMs *ms = bts_ms_by_tlli(bts(), tlli, GSM_RESERVED_TMSI);
 	gprs_rlcmac_ul_tbf *ul_tbf;
+	struct pdch_ulc_node *poll;
 
-	tbf = bts_ul_tbf_by_poll_fn(bts(), fn, trx_no(), ts_no);
-	if (!tbf)
-		tbf = bts_dl_tbf_by_poll_fn(bts(), fn, trx_no(), ts_no);
-
-	if (!tbf) {
+	poll = pdch_ulc_get_node(ulc, fn);
+	if (!poll || poll->type !=PDCH_ULC_NODE_TBF_POLL || !poll->tbf_poll.poll_tbf) {
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
 			"unknown FN=%u TLLI=0x%08x (TRX %d TS %d)\n",
 			fn, tlli, trx_no(), ts_no);
@@ -326,6 +324,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				ms_dl_tbf(ms) ? ms_dl_tbf(ms)->state_name() : "None");
 		return;
 	}
+	tbf = poll->tbf_poll.poll_tbf;
 
 	/* Reset N3101 counter: */
 	tbf->n_reset(N3101);
@@ -334,6 +333,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 
 	LOGPTBF(tbf, LOGL_DEBUG, "RX: [PCU <- BTS] Packet Control Ack\n");
 	TBF_POLL_SCHED_UNSET(tbf);
+	pdch_ulc_release_fn(ulc, fn);
 
 	/* check if this control ack belongs to packet uplink ack */
 	ul_tbf = as_ul_tbf(tbf);
@@ -426,6 +426,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_nack, uint32_t fn, struct pcu_l1_meas *meas)
 {
 	int8_t tfi = 0; /* must be signed */
+	struct pdch_ulc_node *poll;
 	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;
 	int num_blocks;
@@ -435,13 +436,14 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	char show_bits[RLC_GPRS_WS + 1];
 
 	tfi = ack_nack->DOWNLINK_TFI;
-	tbf = bts_dl_tbf_by_poll_fn(bts(), fn, trx_no(), ts_no);
-	if (!tbf) {
+	poll = pdch_ulc_get_node(ulc, fn);
+	if (!poll || poll->type != PDCH_ULC_NODE_TBF_POLL) {
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "PACKET DOWNLINK ACK with "
 			"unknown FN=%u TFI=%d (TRX %d TS %d)\n",
 			fn, tfi, trx_no(), ts_no);
 		return;
 	}
+	tbf = as_dl_tbf(poll->tbf_poll.poll_tbf);
 	if (tbf->tfi() != tfi) {
 		LOGPTBFDL(tbf, LOGL_NOTICE,
 			  "PACKET DOWNLINK ACK with wrong TFI=%d, ignoring!\n", tfi);
@@ -453,6 +455,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 
 	if (tbf->handle_ack_nack())
 		LOGPTBF(tbf, LOGL_NOTICE, "Recovered downlink ack\n");
+	pdch_ulc_release_fn(ulc, fn);
 
 	LOGPTBF(tbf, LOGL_DEBUG, "RX: [PCU <- BTS] Packet Downlink Ack/Nack\n");
 
@@ -493,6 +496,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 {
 	int8_t tfi = 0; /* must be signed */
 	struct gprs_rlcmac_dl_tbf *tbf;
+	struct pdch_ulc_node *poll;
 	gprs_rlc_dl_window *window;
 	int rc;
 	int num_blocks;
@@ -502,13 +506,14 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 	int bsn_begin, bsn_end;
 
 	tfi = ack_nack->DOWNLINK_TFI;
-	tbf = bts_dl_tbf_by_poll_fn(bts(), fn, trx_no(), ts_no);
-	if (!tbf) {
+	poll = pdch_ulc_get_node(ulc, fn);
+	if (!poll || poll->type !=PDCH_ULC_NODE_TBF_POLL) {
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "EGPRS PACKET DOWNLINK ACK with "
 			"unknown FN=%u TFI=%d (TRX %d TS %d)\n",
 			fn, tfi, trx_no(), ts_no);
 		return;
 	}
+	tbf = as_dl_tbf(poll->tbf_poll.poll_tbf);
 	if (tbf->tfi() != tfi) {
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "EGPRS PACKET DOWNLINK ACK with "
 			"wrong TFI=%d, ignoring!\n", tfi);
@@ -520,6 +525,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 
 	if (tbf->handle_ack_nack())
 		LOGPTBF(tbf, LOGL_NOTICE, "Recovered EGPRS downlink ack\n");
+	pdch_ulc_release_fn(ulc, fn);
 
 	LOGPTBF(tbf, LOGL_DEBUG,
 		"RX: [PCU <- BTS] EGPRS Packet Downlink Ack/Nack\n");
@@ -694,6 +700,7 @@ return_unref:
 void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *report, uint32_t fn)
 {
 	struct gprs_rlcmac_sba *sba;
+	struct pdch_ulc_node *poll;
 	GprsMs *ms;
 
 	ms = bts_ms_by_tlli(bts(), report->TLLI, GSM_RESERVED_TMSI);
@@ -703,9 +710,23 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 		ms = bts_alloc_ms(bts(), 0, 0);
 		ms_set_tlli(ms, report->TLLI);
 	}
-	if ((sba = pdch_ulc_get_sba(this->ulc, fn))) {
-		ms_set_ta(ms, sba->ta);
-		sba_free(sba);
+	if ((poll = pdch_ulc_get_node(ulc, fn))) {
+		switch (poll->type) {
+		case PDCH_ULC_NODE_TBF_USF:
+			break;
+		case PDCH_ULC_NODE_TBF_POLL:
+			LOGPDCH(this, DRLCMAC, LOGL_INFO, "FN=%" PRIu32 " Rx Meas Report "
+				"on RRBP POLL, this probably means a DL/CTRL ACK/NACk will "
+				"need to be polled again later\n", fn);
+			TBF_POLL_SCHED_UNSET(poll->tbf_poll.poll_tbf);
+			pdch_ulc_release_fn(ulc, fn);
+			break;
+		case PDCH_ULC_NODE_SBA:
+			sba = poll->sba.sba;
+			ms_set_ta(ms, sba->ta);
+			sba_free(sba);
+			break;
+		}
 	}
 	gprs_rlcmac_meas_rep(ms, report);
 }
@@ -795,6 +816,7 @@ int gprs_rlcmac_pdch::rcv_control_block(const uint8_t *data, uint8_t data_len,
 			"FN=%u RX: [PCU <- BTS] unknown control block(%d) received\n",
 			fn, ul_control_block->u.MESSAGE_TYPE);
 	}
+
 free_ret:
 	talloc_free(ul_control_block);
 	bitvec_free(rlc_block);
@@ -809,13 +831,8 @@ int gprs_rlcmac_pdch::rcv_block(uint8_t *data, uint8_t len, uint32_t fn,
 	bts_set_current_frame_number(trx->bts, fn);
 
 	/* No successfully decoded UL block was received during this FN: */
-	if (len == 0) {
-		/* TODO: Here, in the future, it can be checked whether a UL block was expected for:
-		 * - UL/DL TBFs: RRBP poll pending (bts->pollController->expireTimedout)
-		 * - UL TBFs: USF poll pending (we don't store this info in ul_tbf yet) -> inc N3101 (OS#5033)
-		 */
+	if (len == 0)
 		return 0;
-	}
 
 	enum CodingScheme cs = mcs_get_by_size_ul(len);
 	if (!cs) {
@@ -1006,6 +1023,8 @@ void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
 	}
 	m_assigned_tfi[tbf->direction] &= ~(1UL << tbf->tfi());
 	m_tbfs[tbf->direction][tbf->tfi()] = NULL;
+
+	pdch_ulc_release_tbf(ulc, tbf);
 
 	LOGPDCH(this, DRLCMAC, LOGL_INFO, "Detaching %s, %d TBFs, "
 		"USFs = %02x, TFIs = %08x.\n",

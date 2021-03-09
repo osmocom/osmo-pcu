@@ -25,6 +25,7 @@
 #include "bts.h"
 #include "sba.h"
 #include "pdch.h"
+#include "pcu_utils.h"
 
 /* TS 44.060 Table 10.4.5.1 states maximum RRBP is N + 26. Give extra space for time diff between Tx and Rx? */
 #define MAX_FN_RESERVED (27 + 50)
@@ -83,6 +84,22 @@ bool pdch_ulc_fn_is_free(struct pdch_ulc *ulc, uint32_t fn)
 	return !pdch_ulc_get_node(ulc, fn);
 }
 
+int pdch_ulc_get_next_free_rrbp_fn(struct pdch_ulc *ulc, uint32_t fn, uint32_t *poll_fn, unsigned int *rrbp)
+{
+	/* TODO: support other RRBP offsets, see TS 44.060 able 10.4.5.1 */
+	uint32_t new_poll_fn = next_fn(fn, 13);
+	if (!pdch_ulc_fn_is_free(ulc, new_poll_fn)) {
+		LOGPDCH(ulc->pdch, DRLCMAC, LOGL_ERROR, "Polling is already scheduled "
+			"for single block allocation at FN=%u\n", fn);
+		return -EBUSY;
+	}
+
+	*poll_fn = new_poll_fn;
+	*rrbp = 0;
+
+	return 0;
+}
+
 static struct pdch_ulc_node *_alloc_node(struct pdch_ulc *ulc, uint32_t fn)
 {
 	struct pdch_ulc_node *node;
@@ -126,7 +143,10 @@ int pdch_ulc_reserve_tbf_usf(struct pdch_ulc *ulc, uint32_t fn, struct gprs_rlcm
 
 int pdch_ulc_reserve_tbf_poll(struct pdch_ulc *ulc, uint32_t fn, struct gprs_rlcmac_tbf *tbf)
 {
-	return 0; /* TODO: implement */
+	struct pdch_ulc_node *item = _alloc_node(ulc, fn);
+	item->type = PDCH_ULC_NODE_TBF_POLL;
+	item->tbf_poll.poll_tbf = tbf;
+	return pdch_ulc_add_node(ulc, item);
 }
 
 int pdch_ulc_reserve_sba(struct pdch_ulc *ulc, struct gprs_rlcmac_sba *sba)
@@ -145,6 +165,40 @@ int pdch_ulc_release_fn(struct pdch_ulc *ulc, uint32_t fn)
 	rb_erase(&item->node, &ulc->tree_root);
 	talloc_free(item);
 	return 0;
+}
+
+void pdch_ulc_release_tbf(struct pdch_ulc *ulc, const struct gprs_rlcmac_tbf *tbf)
+{
+	bool tree_modified;
+	do {
+		struct rb_node *node;
+		struct pdch_ulc_node *item;
+		const struct gprs_rlcmac_tbf *item_tbf;
+
+		tree_modified = false;
+		for (node = rb_first(&ulc->tree_root); node; node = rb_next(node)) {
+			item = container_of(node, struct pdch_ulc_node, node);
+			switch (item->type) {
+			case PDCH_ULC_NODE_SBA:
+				continue;
+			case PDCH_ULC_NODE_TBF_POLL:
+				item_tbf = item->tbf_poll.poll_tbf;
+				break;
+			case PDCH_ULC_NODE_TBF_USF:
+				item_tbf = (struct gprs_rlcmac_tbf *)item->tbf_usf.ul_tbf;
+				break;
+			}
+			if (item_tbf != tbf)
+				continue;
+			/* One entry found, remove it from tree and restart
+			 * search from start (to avoid traverse continue from
+			 * no-more existant node */
+			tree_modified = true;
+			rb_erase(&item->node, &ulc->tree_root);
+			talloc_free(item);
+			break;
+		}
+	} while (tree_modified);
 }
 
 void pdch_ulc_expire_fn(struct pdch_ulc *ulc, uint32_t fn)
@@ -170,7 +224,10 @@ void pdch_ulc_expire_fn(struct pdch_ulc *ulc, uint32_t fn)
 			/* TODO: increase N3...*/
 			break;
 		case PDCH_ULC_NODE_TBF_POLL:
-			/* TODO: increase N3...*/
+			LOGPDCH(ulc->pdch, DRLCMAC, LOGL_NOTICE,
+				"Timeout for registered POLL (FN=%u): %s\n",
+				item->fn, tbf_name(item->tbf_poll.poll_tbf));
+			tbf_poll_timeout(item->tbf_poll.poll_tbf);
 			break;
 		case PDCH_ULC_NODE_SBA:
 			sba = item->sba.sba;

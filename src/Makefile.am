@@ -63,7 +63,6 @@ libgprs_la_SOURCES = \
 	bts.cpp \
 	pdch.cpp \
 	pdch_ul_controller.c \
-	poll_controller.cpp \
 	encoding.cpp \
 	sba.c \
 	decoding.cpp \
@@ -102,7 +101,6 @@ noinst_HEADERS = \
 	bts.h \
 	pdch.h \
 	pdch_ul_controller.h \
-	poll_controller.h \
 	encoding.h \
 	sba.h \
 	rlc.h \

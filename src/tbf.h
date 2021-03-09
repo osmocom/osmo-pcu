@@ -209,6 +209,7 @@ uint8_t tbf_tfi(const struct gprs_rlcmac_tbf *tbf);
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 int tbf_check_polling(const struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts, uint32_t *poll_fn, unsigned int *rrbp);
 void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t ts, enum gprs_rlcmac_tbf_poll_type t);
+void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf);
 #ifdef __cplusplus
 }
 #endif
