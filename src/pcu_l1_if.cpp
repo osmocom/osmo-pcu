@@ -147,14 +147,15 @@ int pcu_tx_txt_ind(enum gsm_pcu_if_text_type t, const char *fmt, ...)
 	return pcu_sock_send(msg);
 }
 
-static int pcu_tx_act_req(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts, uint8_t activate)
+static int pcu_tx_act_req(struct gprs_rlcmac_bts *bts, const struct gprs_rlcmac_pdch *pdch,
+			  uint8_t activate)
 {
 	struct msgb *msg;
 	struct gsm_pcu_if *pcu_prim;
 	struct gsm_pcu_if_act_req *act_req;
 
-	LOGP(DL1IF, LOGL_INFO, "Sending %s request: trx=%d ts=%d\n",
-		(activate) ? "activate" : "deactivate", trx, ts);
+	LOGPDCH(pdch, DL1IF, LOGL_INFO, "Sending %s request\n",
+		(activate) ? "activate" : "deactivate");
 
 	msg = pcu_msgb_alloc(PCU_IF_MSG_ACT_REQ, bts->nr);
 	if (!msg)
@@ -162,8 +163,8 @@ static int pcu_tx_act_req(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts, 
 	pcu_prim = (struct gsm_pcu_if *) msg->data;
 	act_req = &pcu_prim->u.act_req;
 	act_req->activate = activate;
-	act_req->trx_nr = trx;
-	act_req->ts_nr = ts;
+	act_req->trx_nr = pdch->trx_no();
+	act_req->ts_nr = pdch->ts_no;
 
 	return pcu_sock_send(msg);
 }
@@ -177,9 +178,9 @@ static int pcu_tx_data_req(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
 	struct gsm_pcu_if_data *data_req;
 	int current_fn = bts_current_frame_number(bts);
 
-	LOGP(DL1IF, LOGL_DEBUG, "Sending data request: trx=%d ts=%d sapi=%d "
-		"arfcn=%d fn=%d cur_fn=%d block=%d data=%s\n", trx, ts, sapi, arfcn, fn, current_fn,
-		block_nr, osmo_hexdump(data, len));
+	LOGP(DL1IF, LOGL_DEBUG, "(bts=%u,trx=%u,ts=%u) FN=%u Sending data request: sapi=%d "
+	     "arfcn=%d cur_fn=%d block=%d data=%s\n", bts->nr, trx, ts, fn, sapi,
+	     arfcn, current_fn, block_nr, osmo_hexdump(data, len));
 
 	msg = pcu_msgb_alloc(PCU_IF_MSG_DATA_REQ, bts->nr);
 	if (!msg)
@@ -461,10 +462,12 @@ static int pcu_rx_rts_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_rts_req
 {
 	int rc = 0;
 	int current_fn = bts_current_frame_number(bts);
+	const struct gprs_rlcmac_pdch *pdch;
+	pdch = &bts->trx[rts_req->trx_nr].pdch[rts_req->ts_nr];
 
-	LOGP(DL1IF, LOGL_DEBUG, "RTS request received: trx=%d ts=%d sapi=%d "
-		"arfcn=%d fn=%d cur_fn=%d block=%d\n", rts_req->trx_nr, rts_req->ts_nr,
-		rts_req->sapi, rts_req->arfcn, rts_req->fn, current_fn, rts_req->block_nr);
+	LOGPDCH(pdch, DL1IF, LOGL_DEBUG, "FN=%u RX RTS.req: sapi=%d "
+		"arfcn=%d cur_fn=%d block=%d\n", rts_req->fn,
+		rts_req->sapi, rts_req->arfcn, current_fn, rts_req->block_nr);
 
 	switch (rts_req->sapi) {
 	case PCU_IF_SAPI_PDTCH:
@@ -476,8 +479,9 @@ static int pcu_rx_rts_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_rts_req
 			rts_req->fn, rts_req->block_nr);
 		break;
 	default:
-		LOGP(DL1IF, LOGL_ERROR, "Received PCU RTS request with "
-			"unsupported sapi %d\n", rts_req->sapi);
+		LOGP(DL1IF, LOGL_ERROR, "(bts=%u,trx=%u,ts=%u) FN=%u RX RTS.req with "
+		     "unsupported sapi %d\n", bts->nr, rts_req->trx_nr, rts_req->ts_nr,
+		     rts_req->fn, rts_req->sapi);
 		rc = -EINVAL;
 	}
 
@@ -759,7 +763,7 @@ bssgp_failed:
 						l1if_connect_pdch(
 							bts->trx[trx_nr].fl1h, ts_nr);
 #endif
-					pcu_tx_act_req(bts, trx_nr, ts_nr, 1);
+					pcu_tx_act_req(bts, pdch, 1);
 					pdch->enable();
 				}
 
@@ -785,7 +789,7 @@ bssgp_failed:
 				     trx_nr, ts_nr, pdch->tsc, pdch->fh.enabled ? "yes" : "no");
 			} else {
 				if (pdch->is_enabled()) {
-					pcu_tx_act_req(bts, trx_nr, ts_nr, 0);
+					pcu_tx_act_req(bts, pdch, 0);
 					pdch->free_resources();
 					pdch->disable();
 				}
