@@ -29,8 +29,6 @@ extern "C" {
 #include "gsm_rlcmac.h"
 #include "coding_scheme.h"
 }
-
-#include <bts.h>
 #endif
 
 #include <tbf.h>
