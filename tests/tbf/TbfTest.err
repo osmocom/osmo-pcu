@@ -1516,6 +1516,7 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
+Detected FN jump! 2654167 -> 2654270
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -1547,6 +1548,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
+Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
@@ -1554,6 +1556,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCM
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+Detected FN jump! 2654283 -> 2654275
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer T3169 [acked (data)] with 5 sec. 0 microsec, cur_fn=2654275
@@ -1596,6 +1599,7 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
+Detected FN jump! 2654167 -> 2654270
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -1627,6 +1631,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
+Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
@@ -1634,6 +1639,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCM
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+Detected FN jump! 2654283 -> 2654275
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer T3169 [acked (data)] with 5 sec. 0 microsec, cur_fn=2654275
@@ -1675,6 +1681,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment 
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+Detected FN jump! 2654275 -> 2654288
 PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) RX: [PCU <- BTS] Packet Control Ack
@@ -1729,6 +1736,7 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654348 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=1
+Detected FN jump! 2654292 -> 2654348
 PDCH(bts=0,trx=0,ts=7) FN=2654348 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654348 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -1767,6 +1775,7 @@ TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654361, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654348 Scheduling control message at RTS for TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN)
+Detected FN jump! 2654348 -> 2654361
 PDCH(bts=0,trx=0,ts=7) FN=2654361 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654361 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
@@ -1774,6 +1783,7 @@ TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCM
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+Detected FN jump! 2654361 -> 2654353
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=1, CPS=0, RSB=0, rc=184
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) UL DATA TFI=1 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) restarting timer T3169 [acked (data)] with 5 sec. 0 microsec, cur_fn=2654353
@@ -1799,6 +1809,7 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
+Detected FN jump! 2654167 -> 2654270
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -1831,6 +1842,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
+Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
@@ -1838,6 +1850,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCM
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+Detected FN jump! 2654283 -> 2654275
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [5, 8], modifying uplink CS level: CS-2 -> CS-3
@@ -1886,6 +1899,7 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654327 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
+Detected FN jump! 2654275 -> 2654327
 PDCH(bts=0,trx=0,ts=7) FN=2654327 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654327 ------------------------- RX : Uplink Control Block -------------------------
 PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
@@ -1913,6 +1927,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654340, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654327 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
+Detected FN jump! 2654327 -> 2654340
 PDCH(bts=0,trx=0,ts=7) FN=2654340 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654340 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
@@ -1920,6 +1935,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCM
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+Detected FN jump! 2654340 -> 2654331
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) restarting timer T3169 [acked (data)] with 5 sec. 0 microsec, cur_fn=2654331
@@ -1937,6 +1953,7 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
+Detected FN jump! 2654167 -> 2654270
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -1969,6 +1986,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
+Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
@@ -1976,6 +1994,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCM
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+Detected FN jump! 2654283 -> 2654275
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [5, 8], modifying uplink CS level: CS-2 -> CS-3
@@ -2079,6 +2098,7 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
+Detected FN jump! 2654167 -> 2654270
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -2111,6 +2131,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (P
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
+Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
@@ -2118,6 +2139,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCM
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
+Detected FN jump! 2654283 -> 2654275
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [5, 8], modifying uplink CS level: CS-2 -> CS-3
@@ -2199,6 +2221,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment 
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+Detected FN jump! 2654275 -> 2654288
 PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) RX: [PCU <- BTS] Packet Control Ack
@@ -2751,6 +2774,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
+Detected FN jump! 2654288 -> 2654379
 PDCH(bts=0,trx=0,ts=7) FN=2654379 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654379 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
@@ -2790,6 +2814,7 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment 
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) Scheduled DL Assignment polling on PACCH (FN=2654413, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654400 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE)
+Detected FN jump! 2654379 -> 2654413
 PDCH(bts=0,trx=0,ts=7) FN=2654413 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654413 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) RX: [PCU <- BTS] Packet Control Ack
@@ -3119,6 +3144,7 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
+Detected FN jump! 2654167 -> 2654270
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -3155,6 +3181,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignm
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
+Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
@@ -3162,6 +3189,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPR
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes state from ASSIGN to FLOW
+Detected FN jump! 2654283 -> 2654275
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [5, 8], modifying uplink CS level: MCS-2 -> MCS-3
@@ -3207,6 +3235,7 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
+Detected FN jump! 2654167 -> 2654270
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -3243,6 +3272,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignm
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
+Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
@@ -3250,6 +3280,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPR
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes state from ASSIGN to FLOW
+Detected FN jump! 2654283 -> 2654275
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [5, 8], modifying uplink CS level: MCS-2 -> MCS-3
@@ -3456,6 +3487,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-1): 07 00 00 16 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 00 
+Detected FN jump! 2654167 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -3702,6 +3734,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 24)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 24, MCS-1): 07 00 06 16 18 fe 03 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+Detected FN jump! 8 -> 112
 PDCH(bts=0,trx=0,ts=4) Expiring FN=112 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 112)
@@ -3768,6 +3801,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-2): 07 00 00 12 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+Detected FN jump! 112 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -3964,6 +3998,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 19)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 19, MCS-2): 07 c0 04 12 20 fe 03 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+Detected FN jump! 8 -> 91
 PDCH(bts=0,trx=0,ts=4) Expiring FN=91 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 91)
@@ -4030,6 +4065,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-3): 07 00 00 06 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+Detected FN jump! 91 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -4176,6 +4212,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 14)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 14, MCS-3): 07 80 03 06 7c fe 03 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 56 56 56 56 00 
+Detected FN jump! 8 -> 69
 PDCH(bts=0,trx=0,ts=4) Expiring FN=69 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 69)
@@ -4242,6 +4279,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-4): 07 00 00 00 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+Detected FN jump! 69 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -4368,6 +4406,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 12)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 12, MCS-4): 07 00 03 00 70 fe 03 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
+Detected FN jump! 8 -> 60
 PDCH(bts=0,trx=0,ts=4) Expiring FN=60 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 60)
@@ -4434,6 +4473,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-5): 07 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+Detected FN jump! 60 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -4540,6 +4580,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 10, MCS-5): 07 80 02 08 c4 7f 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+Detected FN jump! 8 -> 52
 PDCH(bts=0,trx=0,ts=4) Expiring FN=52 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 52)
@@ -4606,6 +4647,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+Detected FN jump! 52 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -4682,6 +4724,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 7)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 7, MCS-6): 07 c0 01 00 e2 7f 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 c0 ca ca ca 0a 
+Detected FN jump! 8 -> 39
 PDCH(bts=0,trx=0,ts=4) Expiring FN=39 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 39)
@@ -4749,6 +4792,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-5): 07 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+Detected FN jump! 39 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -4831,6 +4875,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 10, MCS-5): 07 80 02 08 c4 7f 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+Detected FN jump! 8 -> 34
 PDCH(bts=0,trx=0,ts=4) Expiring FN=34 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 34)
@@ -4899,6 +4944,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-8): 07 00 00 00 60 50 fc 07 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 40 f1 1f 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
+Detected FN jump! 34 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -4969,6 +5015,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 8, MCS-8): 07 00 02 00 60 20 fd 07 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 80 f4 1f 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
+Detected FN jump! 8 -> 30
 PDCH(bts=0,trx=0,ts=4) Expiring FN=30 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 30)
@@ -5036,6 +5083,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
+Detected FN jump! 30 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
 Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
@@ -5094,6 +5142,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 7)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Polling is already scheduled
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 6, MCS-9): 07 80 01 02 00 05 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 04 80 f8 1f 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 02 
+Detected FN jump! 8 -> 26
 PDCH(bts=0,trx=0,ts=4) Expiring FN=26 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 26)
@@ -5157,6 +5206,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 s
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 00 00 12 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 12 
+Detected FN jump! 2654167 -> 58
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) changes state from FLOW to WAIT RELEASE
@@ -5338,6 +5388,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 2 RLC blocks, 2 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-7): 07 00 00 02 c0 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc 80 f5 8f 93 a3 b3 c3 d3 e3 f3 03 14 24 34 44 54 64 74 84 94 a4 b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 b6 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
+Detected FN jump! 58 -> 63
 PDCH(bts=0,trx=0,ts=4) Expiring FN=63 but previous FN=21 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=21): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=21, TS=4 (curr FN 63)
@@ -5851,6 +5902,7 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
+Detected FN jump! 2654167 -> 2654270
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -5887,6 +5939,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignm
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
+Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
@@ -5894,6 +5947,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPR
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes state from ASSIGN to FLOW
+Detected FN jump! 2654283 -> 2654275
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [5, 8], modifying uplink CS level: MCS-2 -> MCS-3
@@ -6010,6 +6064,7 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
+Detected FN jump! 2654167 -> 2654270
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -6046,6 +6101,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignm
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
+Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
@@ -6053,6 +6109,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPR
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes state from ASSIGN to FLOW
+Detected FN jump! 2654283 -> 2654275
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=1, SI=0, TFI=0, CPS=5, RSB=0, rc=385
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [5, 8], modifying uplink CS level: MCS-2 -> MCS-3
@@ -6330,6 +6387,7 @@ MS requests single block allocation
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
+Detected FN jump! 2654167 -> 2654270
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
@@ -6366,6 +6424,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignm
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
+Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
@@ -6373,6 +6432,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPR
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes state from ASSIGN to FLOW
+Detected FN jump! 2654283 -> 2654275
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [5, 8], modifying uplink CS level: MCS-2 -> MCS-3
@@ -7729,6 +7789,7 @@ TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=6 USF=6
+Detected FN jump! 2654167 -> 2654270
 PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff

@@ -246,7 +246,7 @@ struct gprs_rlcmac_bts {
 	/* back pointer to PCU object */
 	struct gprs_pcu *pcu;
 
-	int cur_fn;
+	uint32_t cur_fn;
 	int cur_blk_fn;
 	uint8_t max_cs_dl, max_cs_ul;
 	uint8_t max_mcs_dl, max_mcs_ul;
@@ -275,10 +275,9 @@ struct gprs_rlcmac_ul_tbf *bts_ul_tbf_by_tfi(struct gprs_rlcmac_bts *bts, uint8_
 
 void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup);
 
-/** TODO: change the number to unsigned */
-void bts_set_current_frame_number(struct gprs_rlcmac_bts *bts, int frame_number);
+void bts_set_current_frame_number(struct gprs_rlcmac_bts *bts, uint32_t frame_number);
 void bts_set_current_block_frame_number(struct gprs_rlcmac_bts *bts, int frame_number, unsigned max_delay);
-static inline int bts_current_frame_number(const struct gprs_rlcmac_bts *bts)
+static inline uint32_t bts_current_frame_number(const struct gprs_rlcmac_bts *bts)
 {
 	return bts->cur_fn;
 }

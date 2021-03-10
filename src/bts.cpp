@@ -244,7 +244,7 @@ struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr)
 
 	bts->ms_store = new GprsMsStorage(bts);
 
-	bts->cur_fn = 0;
+	bts->cur_fn = FN_UNSET;
 	bts->cur_blk_fn = -1;
 	bts->max_cs_dl = MAX_GPRS_CS;
 	bts->max_cs_ul = MAX_GPRS_CS;
@@ -287,13 +287,16 @@ struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr)
 	return bts;
 }
 
-void bts_set_current_frame_number(struct gprs_rlcmac_bts *bts, int fn)
+void bts_set_current_frame_number(struct gprs_rlcmac_bts *bts, uint32_t fn)
 {
 	/* The UL frame numbers lag 3 behind the DL frames and the data
 	 * indication is only sent after all 4 frames of the block have been
 	 * received. Sometimes there is an idle frame between the end of one
 	 * and start of another frame (every 3 blocks). */
-
+	if (fn != bts->cur_fn && bts->cur_fn != FN_UNSET && fn != fn_next_block(bts->cur_fn)) {
+		LOGP(DRLCMAC, LOGL_NOTICE,
+			"Detected FN jump! %u -> %u\n", bts->cur_fn, fn);
+	}
 	bts->cur_fn = fn;
 }
 
@@ -329,8 +332,8 @@ void bts_set_current_block_frame_number(struct gprs_rlcmac_bts *bts, int fn, uns
 
 	bts->cur_blk_fn = fn;
 	if (delay < fn_update_ok_min_delay || delay > fn_update_ok_max_delay ||
-		bts_current_frame_number(bts) == 0)
-		bts->cur_fn = fn;
+	    bts_current_frame_number(bts) == FN_UNSET)
+		bts_set_current_frame_number(bts, fn);
 }
 
 int bts_add_paging(struct gprs_rlcmac_bts *bts, uint8_t chan_needed, const struct osmo_mobile_identity *mi)

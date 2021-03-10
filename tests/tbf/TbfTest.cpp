@@ -213,11 +213,6 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(struct gprs_rlcmac_bts *bts, uint8_t ms
 	return dl_tbf;
 }
 
-static unsigned fn2bn(unsigned fn)
-{
-	return (fn % 52) / 4;
-}
-
 static unsigned fn_add_blocks(unsigned fn, unsigned blocks)
 {
 	unsigned bn = fn2bn(fn) + blocks;

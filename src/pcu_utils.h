@@ -27,6 +27,8 @@ extern "C" {
 #include <time.h>
 #include <stdint.h>
 
+#define FN_UNSET 0xFFFFFFFF
+
 static inline int msecs_to_frames(int msecs) {
 	return (msecs * (1024 * 1000 / 4615)) / 1024;
 }
@@ -48,6 +50,19 @@ static inline uint32_t rts_next_fn(uint32_t rts_fn, uint8_t block_nr)
 		fn++;
 	fn = fn % GSM_MAX_FN;
 	return fn;
+}
+
+static inline unsigned fn2bn(unsigned fn)
+{
+	return (fn % 52) / 4;
+}
+
+static inline unsigned fn_next_block(unsigned fn)
+{
+	unsigned bn = fn2bn(fn) + 1;
+	fn = fn - (fn % 52);
+	fn += bn * 4 + bn / 3;
+	return fn % GSM_MAX_FN;
 }
 
 #ifdef __cplusplus
