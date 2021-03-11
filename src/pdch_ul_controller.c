@@ -79,6 +79,14 @@ struct gprs_rlcmac_sba *pdch_ulc_get_sba(struct pdch_ulc *ulc, uint32_t fn)
 	return item->sba.sba;
 }
 
+struct gprs_rlcmac_tbf *pdch_ulc_get_tbf_poll(struct pdch_ulc *ulc, uint32_t fn)
+{
+	struct pdch_ulc_node *item = pdch_ulc_get_node(ulc, fn);
+	if (!item || item->type != PDCH_ULC_NODE_TBF_POLL)
+		return NULL;
+	return item->tbf_poll.poll_tbf;
+}
+
 bool pdch_ulc_fn_is_free(struct pdch_ulc *ulc, uint32_t fn)
 {
 	return !pdch_ulc_get_node(ulc, fn);
