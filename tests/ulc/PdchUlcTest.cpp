@@ -199,14 +199,14 @@ static void test_fn_wrap_around()
 	printf("*** RELEASE fn=%" PRIu32 ":\n", 0);
 	rc = pdch_ulc_release_fn(pdch->ulc, 0);
 	print_ulc_nodes(pdch->ulc);
-	//OSMO_ASSERT(rc == 0); FIXME: DISABLED DUE TO BUG!
+	OSMO_ASSERT(rc == 0);
 
 	/* Expiring last FN should expire all entries */
 	printf("*** EXPIRE FN=%" PRIu32 ":\n", last_fn);
 	pdch_ulc_expire_fn(pdch->ulc, last_fn);
 	print_ulc_nodes(pdch->ulc);
 	/* Make sure the store is empty now: */
-	//OSMO_ASSERT(!rb_first(&pdch->ulc->tree_root)); FIXME: DISABLED DUE TO BUG!
+	OSMO_ASSERT(!rb_first(&pdch->ulc->tree_root));
 
 	talloc_free(bts);
 	printf("=== end: %s ===\n", __FUNCTION__);

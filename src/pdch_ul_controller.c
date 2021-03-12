@@ -37,6 +37,20 @@ const struct value_string pdch_ul_node_names[] = {
 	{ 0, NULL }
 };
 
+#define GSM_MAX_FN_THRESH (GSM_MAX_FN >> 1)
+/* 0: equal, -1: fn1 BEFORE fn2, 1: fn1 AFTER fn2 */
+static inline int fn_cmp(uint32_t fn1, uint32_t fn2)
+{
+	if (fn1 == fn2)
+		return 0;
+	/* FN1 goes before FN2: */
+	if ((fn1 < fn2 && (fn2 - fn1) < GSM_MAX_FN_THRESH) ||
+	    (fn1 > fn2 && (fn1 - fn2) > GSM_MAX_FN_THRESH))
+		return -1;
+	/* FN1 goes after FN2: */
+	return 1;
+}
+
 struct pdch_ulc *pdch_ulc_alloc(struct gprs_rlcmac_pdch *pdch, void *ctx)
 {
 	struct pdch_ulc* ulc;
@@ -53,11 +67,13 @@ struct pdch_ulc_node *pdch_ulc_get_node(struct pdch_ulc *ulc, uint32_t fn)
 {
 	struct rb_node *node;
 	struct pdch_ulc_node *it;
+	int res;
 	for (node = rb_first(&ulc->tree_root); node; node = rb_next(node)) {
 		it = container_of(node, struct pdch_ulc_node, node);
-		if (it->fn == fn)
+		res = fn_cmp(it->fn, fn);
+		if (res == 0) /* it->fn == fn */
 			return it;
-		if (it->fn > fn)
+		if (res > 0) /* it->fn AFTER fn */
 			break;
 	}
 	return NULL;
@@ -123,13 +139,15 @@ static int pdch_ulc_add_node(struct pdch_ulc *ulc, struct pdch_ulc_node *item)
 
 	while (*n) {
 		struct pdch_ulc_node *it;
+		int res;
 
 		it = container_of(*n, struct pdch_ulc_node, node);
 
 		parent = *n;
-		if (item->fn < it->fn) {
+		res = fn_cmp(item->fn, it->fn);
+		if (res < 0) { /* item->fn "BEFORE" it->fn */
 			n = &((*n)->rb_left);
-		} else if (item->fn > it->fn) {
+		} else if (res > 0) { /* item->fn "AFTER" it->fn */
 			n = &((*n)->rb_right);
 		} else {
 			LOGPDCH(ulc->pdch, DRLCMAC, LOGL_ERROR,
@@ -213,13 +231,15 @@ void pdch_ulc_expire_fn(struct pdch_ulc *ulc, uint32_t fn)
 {
 	struct gprs_rlcmac_sba *sba;
 	struct pdch_ulc_node *item;
+	int res;
 
 	struct rb_node *first;
 	while((first = rb_first(&ulc->tree_root))) {
 		item = container_of(first, struct pdch_ulc_node, node);
-		if (item->fn > fn)
+		res = fn_cmp(item->fn, fn);
+		if (res > 0) /* item->fn AFTER fn */
 			break;
-		if (item->fn < fn) {
+		if (res < 0) { /* item->fn BEFORE fn */
 			/* Sanity check: */
 			LOGPDCH(ulc->pdch, DRLCMAC, LOGL_ERROR,
 				"Expiring FN=%" PRIu32 " but previous FN=%" PRIu32 " is still reserved!\n",
