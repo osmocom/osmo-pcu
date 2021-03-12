@@ -1,7 +1,22 @@
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(LIBOSMOCORE_CFLAGS) $(LIBOSMOCTRL_CFLAGS) $(LIBOSMOGB_CFLAGS) $(LIBOSMOGSM_CFLAGS) -I$(top_srcdir)/src/ -I$(top_srcdir)/include/
 AM_LDFLAGS = -lrt -no-install
 
-check_PROGRAMS = rlcmac/RLCMACTest alloc/AllocTest alloc/MslotTest tbf/TbfTest types/TypesTest ms/MsTest llist/LListTest llc/LlcTest codel/codel_test edge/EdgeTest bitcomp/BitcompTest fn/FnTest app_info/AppInfoTest
+check_PROGRAMS = \
+	rlcmac/RLCMACTest \
+	alloc/AllocTest \
+	alloc/MslotTest \
+	tbf/TbfTest \
+	types/TypesTest \
+	ms/MsTest \
+	llist/LListTest \
+	llc/LlcTest \
+	codel/codel_test \
+	edge/EdgeTest \
+	bitcomp/BitcompTest \
+	fn/FnTest \
+	app_info/AppInfoTest \
+	$(NULL)
+
 noinst_PROGRAMS = emu/pcu_emu
 
 rlcmac_RLCMACTest_SOURCES = rlcmac/RLCMACTest.cpp
@@ -147,7 +162,9 @@ $(srcdir)/package.m4: $(top_srcdir)/configure.ac
              } >'$(srcdir)/package.m4'
 
 EXTRA_DIST = \
-	testsuite.at $(srcdir)/package.m4 $(TESTSUITE)	\
+	testsuite.at \
+	$(srcdir)/package.m4 \
+	$(TESTSUITE)	\
 	rlcmac/RLCMACTest.ok rlcmac/RLCMACTest.err \
 	alloc/AllocTest.ok alloc/AllocTest.err \
 	tbf/TbfTest.err \
@@ -159,7 +176,8 @@ EXTRA_DIST = \
 	codel/codel_test.ok \
 	edge/EdgeTest.ok \
 	fn/FnTest.ok \
-	app_info/AppInfoTest.ok app_info/AppInfoTest.err
+	app_info/AppInfoTest.ok app_info/AppInfoTest.err \
+	$(NULL)
 
 DISTCLEANFILES = atconfig
 
