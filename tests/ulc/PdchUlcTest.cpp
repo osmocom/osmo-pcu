@@ -20,6 +20,9 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <inttypes.h>
 
 extern "C" {
 #include <osmocom/core/application.h>
@@ -28,12 +31,23 @@ extern "C" {
 #include <osmocom/core/utils.h>
 }
 
+#include "gprs_ms.h"
 #include "bts.h"
 #include "sba.h"
 #include "pdch_ul_controller.h"
 
 /* globals used by the code */
 void *tall_pcu_ctx;
+
+static void print_ulc_nodes(struct pdch_ulc *ulc)
+{
+	struct rb_node *node;
+	for (node = rb_first(&ulc->tree_root); node; node = rb_next(node)) {
+		struct pdch_ulc_node *it = container_of(node, struct pdch_ulc_node, node);
+		printf("FN=%" PRIu32 " type=%s\n",
+		       it->fn, get_value_string(pdch_ul_node_names, it->type));
+	}
+}
 
 static void test_reserve_multiple()
 {
@@ -143,6 +157,61 @@ static void test_reserve_multiple()
 	printf("=== end: %s ===\n", __FUNCTION__);
 }
 
+int _alloc_algorithm_dummy(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf,
+			   bool single, int8_t use_tbf)
+{
+	return 0;
+}
+
+
+static void test_fn_wrap_around()
+{
+	printf("=== start: %s ===\n", __FUNCTION__);
+	const uint32_t start_fn = GSM_MAX_FN - 40;
+
+	the_pcu->alloc_algorithm = _alloc_algorithm_dummy;
+
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
+	struct GprsMs *ms = ms_alloc(bts, 0x12345678);
+	struct gprs_rlcmac_tbf *tbf1 = tbf_alloc_dl_tbf(bts, ms, 0, true);
+	tbf1->trx = &bts->trx[0];
+	struct gprs_rlcmac_pdch *pdch = &tbf1->trx->pdch[0];
+	int rc;
+	uint32_t fn, last_fn;
+
+	fn = start_fn;
+	while (fn < 40 || fn >= start_fn) {
+		printf("*** RESERVE FN=%" PRIu32 ":\n", fn);
+		rc = pdch_ulc_reserve_tbf_poll(pdch->ulc, fn, tbf1);
+		OSMO_ASSERT(rc == 0);
+		print_ulc_nodes(pdch->ulc);
+		fn = fn_next_block(fn);
+	}
+	last_fn = fn;
+
+	/* Expiring fn_next_block(start_fn) should only expire first 2 entries here: */
+	fn = fn_next_block(start_fn);
+	printf("*** EXPIRE FN=%" PRIu32 ":\n", fn);
+	pdch_ulc_expire_fn(pdch->ulc, fn);
+	print_ulc_nodes(pdch->ulc);
+
+	/* We should still be able to release FN=0 here, since it came later: */
+	printf("*** RELEASE fn=%" PRIu32 ":\n", 0);
+	rc = pdch_ulc_release_fn(pdch->ulc, 0);
+	print_ulc_nodes(pdch->ulc);
+	//OSMO_ASSERT(rc == 0); FIXME: DISABLED DUE TO BUG!
+
+	/* Expiring last FN should expire all entries */
+	printf("*** EXPIRE FN=%" PRIu32 ":\n", last_fn);
+	pdch_ulc_expire_fn(pdch->ulc, last_fn);
+	print_ulc_nodes(pdch->ulc);
+	/* Make sure the store is empty now: */
+	//OSMO_ASSERT(!rb_first(&pdch->ulc->tree_root)); FIXME: DISABLED DUE TO BUG!
+
+	talloc_free(bts);
+	printf("=== end: %s ===\n", __FUNCTION__);
+}
+
 int main(int argc, char **argv)
 {
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "pdch_ulc test context");
@@ -161,6 +230,7 @@ int main(int argc, char **argv)
 	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
 
 	test_reserve_multiple();
+	test_fn_wrap_around();
 
 	talloc_free(the_pcu);
 	return EXIT_SUCCESS;
