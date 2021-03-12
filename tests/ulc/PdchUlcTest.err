@@ -1,0 +1,6 @@
+PDCH(bts=0,trx=0,ts=0) Trying to reserve already reserved FN 72
+PDCH(bts=0,trx=0,ts=0) Trying to reserve already reserved FN 78
+PDCH(bts=0,trx=0,ts=0) Trying to reserve already reserved FN 72
+PDCH(bts=0,trx=0,ts=0) Trying to reserve already reserved FN 78
+PDCH(bts=0,trx=0,ts=0) Trying to release unregistered SBA (FN=78, TA=0)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered SBA (FN=72, TA=0)

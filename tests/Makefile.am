@@ -15,6 +15,7 @@ check_PROGRAMS = \
 	bitcomp/BitcompTest \
 	fn/FnTest \
 	app_info/AppInfoTest \
+	ulc/PdchUlcTest \
 	$(NULL)
 
 noinst_PROGRAMS = emu/pcu_emu
@@ -143,6 +144,15 @@ app_info_AppInfoTest_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(COMMON_LA)
 
+ulc_PdchUlcTest_SOURCES = ulc/PdchUlcTest.cpp
+ulc_PdchUlcTest_LDADD = \
+	$(top_builddir)/src/libgprs.la \
+	$(LIBOSMOGB_LIBS) \
+	$(LIBOSMOGSM_LIBS) \
+	$(LIBOSMOCTRL_LIBS) \
+	$(LIBOSMOCORE_LIBS) \
+	$(COMMON_LA)
+
 # The `:;' works around a Bash 3.2 bug when the output is not writeable.
 $(srcdir)/package.m4: $(top_srcdir)/configure.ac
 	:;{ \
@@ -177,6 +187,7 @@ EXTRA_DIST = \
 	edge/EdgeTest.ok \
 	fn/FnTest.ok \
 	app_info/AppInfoTest.ok app_info/AppInfoTest.err \
+	ulc/PdchUlcTest.ok ulc/PdchUlcTest.err \
 	$(NULL)
 
 DISTCLEANFILES = atconfig

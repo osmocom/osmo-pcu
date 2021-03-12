@@ -88,3 +88,10 @@ cat $abs_srcdir/app_info/AppInfoTest.ok > expout
 cat $abs_srcdir/app_info/AppInfoTest.err > experr
 AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/app_info/AppInfoTest], [0], [expout], [experr])
 AT_CLEANUP
+
+AT_SETUP([ulc])
+AT_KEYWORDS([ulc])
+cat $abs_srcdir/ulc/PdchUlcTest.ok > expout
+cat $abs_srcdir/ulc/PdchUlcTest.err > experr
+AT_CHECK([$OSMO_QEMU $abs_top_builddir/tests/ulc/PdchUlcTest], [0], [expout], [experr])
+AT_CLEANUP
