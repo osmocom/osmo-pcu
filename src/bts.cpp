@@ -305,7 +305,7 @@ static inline int delta_fn(int fn, int to)
 	return (fn + GSM_MAX_FN * 3 / 2 - to) % GSM_MAX_FN - GSM_MAX_FN/2;
 }
 
-void bts_set_current_block_frame_number(struct gprs_rlcmac_bts *bts, int fn, unsigned max_delay)
+void bts_set_current_block_frame_number(struct gprs_rlcmac_bts *bts, int fn)
 {
 	int delay = 0;
 	const int late_block_delay_thresh = 13;

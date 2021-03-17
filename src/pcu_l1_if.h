@@ -177,7 +177,6 @@ int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *
 	uint8_t len, uint32_t fn, struct pcu_l1_meas *meas);
 
 void pcu_rx_block_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no);
-void pcu_rx_ra_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no);
 uint16_t imsi2paging_group(const char* imsi);
 #ifdef __cplusplus
 }

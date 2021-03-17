@@ -240,8 +240,6 @@ static int handle_ph_ra_ind(struct femtol1_hdl *fl1h, GsmL1_PhRaInd_t *ra_ind)
 	struct gprs_rlcmac_bts *bts;
 	bts = llist_first_entry_or_null(&the_pcu->bts_list, struct gprs_rlcmac_bts, list);
 
-	pcu_rx_ra_time(bts, ra_ind->u16Arfcn, ra_ind->u32Fn, ra_ind->u8Tn);
-
 	if (ra_ind->measParam.fLinkQuality < MIN_QUAL_RACH)
 		return 0;
 

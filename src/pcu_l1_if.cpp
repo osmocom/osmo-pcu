@@ -273,13 +273,7 @@ void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec * block, int plen, uint
 
 void pcu_rx_block_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no)
 {
-	bts_set_current_block_frame_number(bts, fn, 0);
-}
-
-void pcu_rx_ra_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no)
-{
-	/* access bursts may arrive some bursts earlier */
-	bts_set_current_block_frame_number(bts, fn, 5);
+	bts_set_current_block_frame_number(bts, fn);
 }
 
 int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *pdch, uint8_t *data,

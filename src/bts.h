@@ -276,7 +276,7 @@ struct gprs_rlcmac_ul_tbf *bts_ul_tbf_by_tfi(struct gprs_rlcmac_bts *bts, uint8_
 void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup);
 
 void bts_set_current_frame_number(struct gprs_rlcmac_bts *bts, uint32_t frame_number);
-void bts_set_current_block_frame_number(struct gprs_rlcmac_bts *bts, int frame_number, unsigned max_delay);
+void bts_set_current_block_frame_number(struct gprs_rlcmac_bts *bts, int frame_number);
 static inline uint32_t bts_current_frame_number(const struct gprs_rlcmac_bts *bts)
 {
 	return bts->cur_fn;

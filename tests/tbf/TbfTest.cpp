@@ -627,7 +627,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_single_phase(struct gprs_rlcmac_bts 
 static void send_ul_mac_block_buf(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *pdch,
 				  unsigned fn, uint8_t *buf, int num_bytes)
 {
-	bts_set_current_block_frame_number(bts, fn, 0);
+	bts_set_current_block_frame_number(bts, fn);
 	pdch->rcv_block(buf, num_bytes, fn, &meas);
 	pdch_ulc_expire_fn(pdch->ulc, fn);
 }
