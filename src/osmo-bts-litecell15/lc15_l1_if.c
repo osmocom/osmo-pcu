@@ -217,7 +217,7 @@ static int handle_ph_data_ind(struct lc15l1_hdl *fl1h,
 	case GsmL1_Sapi_Pacch:
 		/* PDTCH / PACCH frame handling */
 		if (data_ind->msgUnitParam.u8Size != 0 &&
-		    data_ind->msgUnitParam.u8Buffer[0] != GsmL1_PdtchPlType_Full) {
+		    data_ind->msgUnitParam.u8Buffer[0] == GsmL1_PdtchPlType_Full) {
 			data = data_ind->msgUnitParam.u8Buffer + 1;
 			data_len = data_ind->msgUnitParam.u8Size - 1;
 			if (data_len == 0)
