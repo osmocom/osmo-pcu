@@ -213,6 +213,8 @@ void pdch_ulc_release_tbf(struct pdch_ulc *ulc, const struct gprs_rlcmac_tbf *tb
 			case PDCH_ULC_NODE_TBF_USF:
 				item_tbf = (struct gprs_rlcmac_tbf *)item->tbf_usf.ul_tbf;
 				break;
+			default:
+				OSMO_ASSERT(0);
 			}
 			if (item_tbf != tbf)
 				continue;
