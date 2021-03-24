@@ -239,7 +239,7 @@ static int config_write_pcu(struct vty *vty)
 		vty_out(vty, " pcu-socket %s%s", the_pcu->pcu_sock_path, VTY_NEWLINE);
 
 	for (i = 0; i < 32; i++) {
-		unsigned int cs = (1 << i);
+		uint32_t cs = ((uint32_t)1 << i);
 		if (the_pcu->gsmtap_categ_mask & cs) {
 			vty_out(vty, " gsmtap-category %s%s",
 				get_value_string(pcu_gsmtap_categ_names, i), VTY_NEWLINE);
