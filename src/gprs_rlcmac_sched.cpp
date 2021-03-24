@@ -421,7 +421,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	struct gprs_rlcmac_pdch *pdch;
 	struct tbf_sched_candidates tbf_cand = {0};
 	struct gprs_rlcmac_tbf *poll_tbf;
-	struct gprs_rlcmac_ul_tbf *usf_tbf;
+	struct gprs_rlcmac_ul_tbf *usf_tbf = NULL;
 	struct gprs_rlcmac_sba *sba;
 	uint8_t usf;
 	struct msgb *msg = NULL;
@@ -468,27 +468,19 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 			"TS=%d FN=%d block_nr=%d scheduling free USF for "
 			"polling at FN=%d of %s\n", trx, ts, fn,
 			block_nr, poll_fn, tbf_name(poll_tbf));
-		usf = USF_UNUSED;
 	/* else. check for sba */
 	} else if ((sba = pdch_ulc_get_sba(pdch->ulc, poll_fn))) {
 		LOGPDCH(pdch, DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: "
 			"FN=%d block_nr=%d scheduling free USF for "
 			"single block allocation at FN=%d\n", fn, block_nr, sba->fn);
-		usf = USF_UNUSED;
 	/* else, we search for uplink resource */
 	} else {
 		usf_tbf = sched_select_uplink(trx, ts, fn, block_nr, pdch, require_gprs_only);
-		if (usf_tbf) {
-			usf = usf_tbf->m_usf[ts];
-			/* If MS selected for USF is GPRS-only, then it will
-			 * only be able to read USF if dl block uses GMSK
-			 * (CS1-4, MCS1-4)
-			 */
-			if (req_mcs_kind == EGPRS && ms_mode(usf_tbf->ms()) != EGPRS)
+		/* If MS selected for USF is GPRS-only, then it will only be
+		 * able to read USF if dl block uses GMSK * (CS1-4, MCS1-4)
+		 */
+		if (usf_tbf && req_mcs_kind == EGPRS && ms_mode(usf_tbf->ms()) != EGPRS)
 				req_mcs_kind = EGPRS_GMSK;
-		} else {
-			usf = USF_UNUSED;
-		}
 	}
 
 	get_tbf_candidates(bts, trx, ts, &tbf_cand);
@@ -521,6 +513,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 
 	/* set USF */
 	OSMO_ASSERT(msgb_length(msg) > 0);
+	usf = usf_tbf ? usf_tbf->m_usf[ts] : USF_UNUSED;
 	msg->data[0] = (msg->data[0] & 0xf8) | usf;
 
 	/* Used to measure the leak rate, count all blocks */
