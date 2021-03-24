@@ -754,6 +754,8 @@ void gprs_rlcmac_pdch::rcv_cell_change_notification(Packet_Cell_Change_Notificat
 		ms = dl_tbf->ms();
 	} else { OSMO_ASSERT(0); }
 
+	pdch_ulc_release_fn(ulc, fn);
+
 	ms_update_l1_meas(ms, meas);
 	ms_nacc_start(ms, notif);
 }
