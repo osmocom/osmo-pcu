@@ -713,6 +713,7 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 	if ((poll = pdch_ulc_get_node(ulc, fn))) {
 		switch (poll->type) {
 		case PDCH_ULC_NODE_TBF_USF:
+			pdch_ulc_release_fn(ulc, fn);
 			break;
 		case PDCH_ULC_NODE_TBF_POLL:
 			LOGPDCH(this, DRLCMAC, LOGL_INFO, "FN=%" PRIu32 " Rx Meas Report "
@@ -868,6 +869,7 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 	int rc;
 	struct gprs_rlc_data_info rlc_dec;
 	struct gprs_rlcmac_ul_tbf *tbf;
+	struct pdch_ulc_node *node;
 	unsigned len = mcs_size_ul(cs);
 
 	/* These are always data blocks, since EGPRS still uses CS-1 for
@@ -908,6 +910,32 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 		LOGPDCH(this, DRLCMACUL, LOGL_NOTICE, "UL DATA unknown TFI=%d\n",
 			rlc_dec.tfi);
 		return 0;
+	}
+
+	node = pdch_ulc_get_node(ulc, fn);
+	if (node) {
+		switch (node->type) {
+		case PDCH_ULC_NODE_TBF_USF:
+			if (tbf != node->tbf_usf.ul_tbf)
+				LOGPDCH(this, DRLCMACUL, LOGL_NOTICE, "FN=%" PRIu32 " "
+					"Rx UL DATA from unexpected %s vs expected %s\n",
+					fn, tbf_name(tbf), tbf_name(node->tbf_usf.ul_tbf));
+			break;
+		case PDCH_ULC_NODE_TBF_POLL:
+			LOGPDCH(this, DRLCMACUL, LOGL_NOTICE, "FN=%" PRIu32 " "
+				"Rx UL DATA from unexpected %s vs expected POLL %s\n",
+				fn, tbf_name(tbf), tbf_name(node->tbf_poll.poll_tbf));
+			break;
+		case PDCH_ULC_NODE_SBA:
+			LOGPDCH(this, DRLCMACUL, LOGL_NOTICE, "FN=%" PRIu32 " "
+				"Rx UL DATA from unexpected %s vs expected SBA\n",
+				fn, tbf_name(tbf));
+			break;
+		}
+		pdch_ulc_release_node(ulc, node);
+	} else {
+		LOGPDCH(this, DRLCMACUL, LOGL_NOTICE, "FN=%" PRIu32 " "
+			"Rx UL DATA from unexpected %s\n", fn, tbf_name(tbf));
 	}
 
 	/* Reset N3101 counter: */

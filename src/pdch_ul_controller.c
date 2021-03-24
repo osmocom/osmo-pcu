@@ -164,7 +164,10 @@ static int pdch_ulc_add_node(struct pdch_ulc *ulc, struct pdch_ulc_node *item)
 
 int pdch_ulc_reserve_tbf_usf(struct pdch_ulc *ulc, uint32_t fn, struct gprs_rlcmac_ul_tbf *ul_tbf)
 {
-	return 0; /* TODO: implement */
+	struct pdch_ulc_node *item = _alloc_node(ulc, fn);
+	item->type = PDCH_ULC_NODE_TBF_USF;
+	item->tbf_usf.ul_tbf = ul_tbf;
+	return pdch_ulc_add_node(ulc, item);
 }
 
 int pdch_ulc_reserve_tbf_poll(struct pdch_ulc *ulc, uint32_t fn, struct gprs_rlcmac_tbf *tbf)
@@ -255,7 +258,10 @@ void pdch_ulc_expire_fn(struct pdch_ulc *ulc, uint32_t fn)
 
 		switch (item->type) {
 		case PDCH_ULC_NODE_TBF_USF:
-			/* TODO: increase N3...*/
+			LOGPDCH(ulc->pdch, DRLCMAC, LOGL_INFO,
+				"Timeout for registered USF (FN=%u): %s\n",
+				item->fn, tbf_name((struct gprs_rlcmac_tbf *)item->tbf_usf.ul_tbf));
+			/* TODO: increase N3101 */
 			break;
 		case PDCH_ULC_NODE_TBF_POLL:
 			LOGPDCH(ulc->pdch, DRLCMAC, LOGL_NOTICE,

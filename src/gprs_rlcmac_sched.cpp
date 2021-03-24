@@ -479,8 +479,8 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 		if (poll_tbf->direction == GPRS_RLCMAC_UL_TBF && as_ul_tbf(poll_tbf)->m_usf[ts] != USF_INVALID)
 			usf_tbf = as_ul_tbf(poll_tbf);
 	/* else, search for uplink tbf */
-	} else {
-		usf_tbf = sched_select_uplink(trx, ts, fn, block_nr, pdch, require_gprs_only);
+	} else if ((usf_tbf = sched_select_uplink(trx, ts, fn, block_nr, pdch, require_gprs_only))) {
+		pdch_ulc_reserve_tbf_usf(pdch->ulc, poll_fn, usf_tbf);
 	}
 	/* If MS selected for USF is GPRS-only, then it will only be
 	 * able to read USF if dl block uses GMSK * (CS1-4, MCS1-4) */
