@@ -87,7 +87,7 @@ states? */
 static struct gprs_rlcmac_ul_tbf *sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
 	uint8_t block_nr, struct gprs_rlcmac_pdch *pdch, bool require_gprs_only)
 {
-	struct gprs_rlcmac_ul_tbf *tbf = NULL;
+	struct gprs_rlcmac_ul_tbf *tbf;
 	uint8_t i, tfi;
 
 	/* select uplink resource */
@@ -114,10 +114,10 @@ static struct gprs_rlcmac_ul_tbf *sched_select_uplink(uint8_t trx, uint8_t ts, u
 			block_nr, tbf->m_usf[ts], tfi);
 		/* next TBF to handle resource is the next one */
 		pdch->next_ul_tfi = (tfi + 1) & 31;
-		break;
+		return tbf;
 	}
 
-	return tbf;
+	return NULL;
 }
 
 struct msgb *sched_app_info(struct gprs_rlcmac_tbf *tbf) {
