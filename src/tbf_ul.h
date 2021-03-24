@@ -86,6 +86,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	uint16_t window_size() const;
 	void set_window_size();
 	void update_coding_scheme_counter_ul(enum CodingScheme cs);
+        void usf_timeout();
 
 	/* Please note that all variables here will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
@@ -133,6 +134,7 @@ extern "C" {
 void update_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, int8_t ta_delta);
 void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta);
 struct gprs_rlcmac_ul_tbf *as_ul_tbf(struct gprs_rlcmac_tbf *tbf);
+void tbf_usf_timeout(struct gprs_rlcmac_ul_tbf *tbf);
 #ifdef __cplusplus
 }
 #endif

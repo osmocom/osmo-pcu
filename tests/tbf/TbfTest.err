@@ -1695,6 +1695,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FLOW
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer T0 [control acked (DL-TBF)]
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654288 but previous FN=2654279 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654279): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 0 => 1 (< MAX 10)
 Received RTS on disabled PDCH: TRX=0 TS=0
 Received RTS on disabled PDCH: TRX=0 TS=1
 Received RTS on disabled PDCH: TRX=0 TS=2
@@ -1720,9 +1721,9 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on F
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 0, CS-4): 0f 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 00 
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654292 but previous FN=2654283 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654283): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 1 => 2 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654292): TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654292, TS=7 (curr FN 2654292)
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3105 0 => 1 (< MAX 8)
 Received RTS for PDCH: TRX=0 TS=7 FN=2654296 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
@@ -1772,10 +1773,10 @@ TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until as
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654348 but previous FN=2654301 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654301): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 2 => 3 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654348 but previous FN=2654309 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654309): TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654309, TS=7 (curr FN 2654348)
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3101 1 => 2 (< MAX 10)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3105 1 => 2 (< MAX 8)
 Received RTS for PDCH: TRX=0 TS=7 FN=2654348 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
@@ -1794,6 +1795,7 @@ TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RL
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654361 but previous FN=2654353 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654353): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 3 => 4 (< MAX 10)
 Detected FN jump! 2654361 -> 2654353
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=1, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654353 Rx UL DATA from unexpected TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW)
@@ -2249,6 +2251,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FLOW
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer T0 [control acked (DL-TBF)]
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654288 but previous FN=2654279 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654279): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 0 => 1 (< MAX 10)
 Received RTS on disabled PDCH: TRX=0 TS=0
 Received RTS on disabled PDCH: TRX=0 TS=1
 Received RTS on disabled PDCH: TRX=0 TS=2
@@ -2829,49 +2832,71 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) set ass. type PACCH [prev CCCH:0,
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654379
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654283 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654283): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 1 => 2 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654288 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654288): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 2 => 3 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654292 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654292): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 3 => 4 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654296 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654296): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 4 => 5 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654301 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654301): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 5 => 6 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654305 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654305): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 6 => 7 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654309 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654309): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 7 => 8 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654314 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654314): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 8 => 9 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654318 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654318): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 exceeded MAX (10)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes state from FLOW to RELEASING
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654322 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654322): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654322): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 10 => 11 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654327 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654327): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654327): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 11 => 12 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654331 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654331): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654331): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 12 => 13 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654335 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654335): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654335): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 13 => 14 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654340 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654340): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654340): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 14 => 15 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654344 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654344): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654344): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 15 => 16 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654348 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654348): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654348): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 16 => 17 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654353 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654353): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654353): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 17 => 18 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654357 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654357): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654357): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 18 => 19 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654361 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654361): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654361): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 19 => 20 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654366 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654366): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654366): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 20 => 21 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654370 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654370): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654370): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 21 => 22 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654374 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654374): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
-Received RTS for PDCH: TRX=0 TS=7 FN=2654400 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654374): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 22 => 23 (< MAX 10)
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -2893,17 +2918,20 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Detaching TBF: TBF(TFI=0 
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FLOW
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer T0 [control acked (DL-TBF)]
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654413 but previous FN=2654383 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654383): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654383): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 23 => 24 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654413 but previous FN=2654387 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654387): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654387): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 24 => 25 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654413 but previous FN=2654392 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654392): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654392): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 25 => 26 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654413 but previous FN=2654396 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654396): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654396): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 26 => 27 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654413 but previous FN=2654400 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654400): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
-PDCH(bts=0,trx=0,ts=7) Expiring FN=2654413 but previous FN=2654405 is still reserved!
-PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654405): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654400): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 27 => 28 (< MAX 10)
 Received RTS on disabled PDCH: TRX=0 TS=0
 Received RTS on disabled PDCH: TRX=0 TS=1
 Received RTS on disabled PDCH: TRX=0 TS=2
@@ -2911,9 +2939,8 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654405 block_nr=3 scheduling USF=0 for required uplink resource of UL TFI=0
-PDCH(bts=0,trx=0,ts=7) FN=2654405 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654405 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 0, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=21)
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) data block (BSN 0, CS-1): 4c 4c 43 20 50 41 43 4b 45 54 20 30 30 20 28 54 42 46 20 32 
@@ -2928,9 +2955,8 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654409 block_nr=4 scheduling USF=0 for required uplink resource of UL TFI=0
-PDCH(bts=0,trx=0,ts=7) FN=2654409 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654409 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 1, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=21)
@@ -2946,9 +2972,8 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654413 block_nr=5 scheduling USF=0 for required uplink resource of UL TFI=0
-PDCH(bts=0,trx=0,ts=7) FN=2654413 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654413 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 2, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=21)
@@ -2964,9 +2989,8 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654418 block_nr=6 scheduling USF=0 for required uplink resource of UL TFI=0
-PDCH(bts=0,trx=0,ts=7) FN=2654418 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==3) mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654418 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==3) mcs_mode_restrict=EGPRS
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 3, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=21)
@@ -2982,9 +3006,8 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654422 block_nr=7 scheduling USF=0 for required uplink resource of UL TFI=0
-PDCH(bts=0,trx=0,ts=7) FN=2654422 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654422 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 4, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=21)
@@ -3000,9 +3023,8 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654426 block_nr=8 scheduling USF=0 for required uplink resource of UL TFI=0
-PDCH(bts=0,trx=0,ts=7) FN=2654426 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==5) mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654426 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==5) mcs_mode_restrict=EGPRS
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 5, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=21)
@@ -3018,9 +3040,8 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654431 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
-PDCH(bts=0,trx=0,ts=7) FN=2654431 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654431 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 6, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=21)
@@ -3036,9 +3057,8 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654435 block_nr=10 scheduling USF=0 for required uplink resource of UL TFI=0
-PDCH(bts=0,trx=0,ts=7) FN=2654435 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==7) mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654435 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==7) mcs_mode_restrict=EGPRS
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 7, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=21)
@@ -3054,9 +3074,8 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654439 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
-PDCH(bts=0,trx=0,ts=7) FN=2654439 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654439 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 8, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=21)
@@ -3072,9 +3091,8 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654444 block_nr=0 scheduling USF=0 for required uplink resource of UL TFI=0
-PDCH(bts=0,trx=0,ts=7) FN=2654444 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==9) mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654444 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==9) mcs_mode_restrict=EGPRS
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 9, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=21)
@@ -3090,9 +3108,8 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654448 block_nr=1 scheduling USF=0 for required uplink resource of UL TFI=0
-PDCH(bts=0,trx=0,ts=7) FN=2654448 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS_GMSK-only
+PDCH(bts=0,trx=0,ts=7) FN=2654448 Scheduling data message at RTS for DL TFI=1 prio=3 mcs_mode_restrict=EGPRS
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 10, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) changes state from FLOW to FINISHED
@@ -3827,7 +3844,6 @@ Detected FN jump! 8 -> 112
 PDCH(bts=0,trx=0,ts=4) Expiring FN=112 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 112)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
@@ -4091,7 +4107,6 @@ Detected FN jump! 8 -> 91
 PDCH(bts=0,trx=0,ts=4) Expiring FN=91 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 91)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
@@ -4305,7 +4320,6 @@ Detected FN jump! 8 -> 69
 PDCH(bts=0,trx=0,ts=4) Expiring FN=69 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 69)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
@@ -4499,7 +4513,6 @@ Detected FN jump! 8 -> 60
 PDCH(bts=0,trx=0,ts=4) Expiring FN=60 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 60)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
@@ -4673,7 +4686,6 @@ Detected FN jump! 8 -> 52
 PDCH(bts=0,trx=0,ts=4) Expiring FN=52 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 52)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
@@ -4817,7 +4829,6 @@ Detected FN jump! 8 -> 39
 PDCH(bts=0,trx=0,ts=4) Expiring FN=39 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 39)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
@@ -4968,7 +4979,6 @@ Detected FN jump! 8 -> 34
 PDCH(bts=0,trx=0,ts=4) Expiring FN=34 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 34)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
@@ -5108,7 +5118,6 @@ Detected FN jump! 8 -> 30
 PDCH(bts=0,trx=0,ts=4) Expiring FN=30 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 30)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
@@ -5235,7 +5244,6 @@ Detected FN jump! 8 -> 26
 PDCH(bts=0,trx=0,ts=4) Expiring FN=26 but previous FN=13 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 26)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
@@ -5481,7 +5489,6 @@ Detected FN jump! 58 -> 63
 PDCH(bts=0,trx=0,ts=4) Expiring FN=63 but previous FN=21 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=21): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=21, TS=4 (curr FN 63)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
@@ -5558,7 +5565,6 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-9): 07 
 PDCH(bts=0,trx=0,ts=4) Expiring FN=63 but previous FN=21 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=21): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=21, TS=4 (curr FN 63)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
@@ -5635,7 +5641,6 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-5): 07 
 PDCH(bts=0,trx=0,ts=4) Expiring FN=63 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 63)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
@@ -5712,7 +5717,6 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-6): 07 
 PDCH(bts=0,trx=0,ts=4) Expiring FN=63 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 63)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3101 0 => 1 (< MAX 10)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge

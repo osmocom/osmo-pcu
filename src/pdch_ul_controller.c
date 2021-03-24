@@ -26,6 +26,7 @@
 #include "sba.h"
 #include "pdch.h"
 #include "pcu_utils.h"
+#include "tbf_ul.h"
 
 /* TS 44.060 Table 10.4.5.1 states maximum RRBP is N + 26. Give extra space for time diff between Tx and Rx? */
 #define MAX_FN_RESERVED (27 + 50)
@@ -261,7 +262,7 @@ void pdch_ulc_expire_fn(struct pdch_ulc *ulc, uint32_t fn)
 			LOGPDCH(ulc->pdch, DRLCMAC, LOGL_INFO,
 				"Timeout for registered USF (FN=%u): %s\n",
 				item->fn, tbf_name((struct gprs_rlcmac_tbf *)item->tbf_usf.ul_tbf));
-			/* TODO: increase N3101 */
+			tbf_usf_timeout(item->tbf_usf.ul_tbf);
 			break;
 		case PDCH_ULC_NODE_TBF_POLL:
 			LOGPDCH(ulc->pdch, DRLCMAC, LOGL_NOTICE,

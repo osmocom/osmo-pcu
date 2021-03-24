@@ -772,10 +772,24 @@ gprs_rlc_window *gprs_rlcmac_ul_tbf::window()
 	return &m_window;
 }
 
+void gprs_rlcmac_ul_tbf::usf_timeout()
+{
+	if (n_inc(N3101)) {
+		TBF_SET_STATE(this, GPRS_RLCMAC_RELEASING);
+		T_START(this, T3169, 3169, "MAX N3101 reached", false);
+		return;
+	}
+}
+
 struct gprs_rlcmac_ul_tbf *as_ul_tbf(struct gprs_rlcmac_tbf *tbf)
 {
 	if (tbf && tbf->direction == GPRS_RLCMAC_UL_TBF)
 		return static_cast<gprs_rlcmac_ul_tbf *>(tbf);
 	else
 		return NULL;
+}
+
+void tbf_usf_timeout(struct gprs_rlcmac_ul_tbf *tbf)
+{
+	tbf->usf_timeout();
 }

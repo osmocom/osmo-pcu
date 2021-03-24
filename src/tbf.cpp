@@ -637,12 +637,6 @@ void gprs_rlcmac_tbf::poll_timeout()
 
 	poll_state = GPRS_RLCMAC_POLL_NONE;
 
-	if (n_inc(N3101)) {
-		TBF_SET_STATE(this, GPRS_RLCMAC_RELEASING);
-		T_START(this, T3169, 3169, "MAX N3101 reached", false);
-		return;
-	}
-
 	if (ul_tbf && ul_tbf->handle_ctrl_ack()) {
 		if (!ul_tbf->ctrl_ack_to_toggle()) {
 			LOGPTBF(this, LOGL_NOTICE,
