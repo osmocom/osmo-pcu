@@ -47,6 +47,9 @@ enum tbf_egprs_ul_counters {
         TBF_CTR_EGPRS_UL_MCS9,
 };
 
+/* Used in ul_tbf->m_usf[] to flag unassigned USF on a given TS: */
+#define USF_INVALID 0xFF
+
 #define LOGPTBFUL(tbf, level, fmt, args...) LOGP(DTBFUL, level, "%s " fmt, tbf_name(tbf), ## args)
 
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
@@ -90,7 +93,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	 * variables are in both (dl and ul) structs and not outside union.
 	 */
 	int32_t m_rx_counter; /* count all received blocks */
-	uint8_t m_usf[8];	/* list USFs per PDCH (timeslot) */
+	uint8_t m_usf[8];	/* list USFs per PDCH (timeslot), initialized to USF_INVALID */
 	uint8_t m_contention_resolution_done; /* set after done */
 	uint8_t m_final_ack_sent; /* set if we sent final ack */
 

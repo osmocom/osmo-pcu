@@ -213,7 +213,7 @@ gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms)
 	m_ul_gprs_ctrs(NULL),
 	m_ul_egprs_ctrs(NULL)
 {
-	memset(&m_usf, 0, sizeof(m_usf));
+	memset(&m_usf, USF_INVALID, sizeof(m_usf));
 }
 
 /*

@@ -461,27 +461,31 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 
 	/* polling for next uplink block */
 	poll_fn = rts_next_fn(fn, block_nr);
-
-	/* check uplink resource for polling */
-	if ((poll_tbf = pdch_ulc_get_tbf_poll(pdch->ulc, poll_fn))) {
+	/* check for sba */
+	if ((sba = pdch_ulc_get_sba(pdch->ulc, poll_fn))) {
+		LOGPDCH(pdch, DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: "
+			"FN=%d block_nr=%d scheduling free USF for "
+			"single block allocation at FN=%d\n", fn, block_nr, sba->fn);
+	/* else, check uplink resource for polling */
+	} else if ((poll_tbf = pdch_ulc_get_tbf_poll(pdch->ulc, poll_fn))) {
 		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
 			"TS=%d FN=%d block_nr=%d scheduling free USF for "
 			"polling at FN=%d of %s\n", trx, ts, fn,
 			block_nr, poll_fn, tbf_name(poll_tbf));
-	/* else. check for sba */
-	} else if ((sba = pdch_ulc_get_sba(pdch->ulc, poll_fn))) {
-		LOGPDCH(pdch, DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: "
-			"FN=%d block_nr=%d scheduling free USF for "
-			"single block allocation at FN=%d\n", fn, block_nr, sba->fn);
-	/* else, we search for uplink resource */
+		/* If POLL TBF is UL and already has a USF assigned on this TS,
+		 * let's set its USF in the DL msg. This is not really needed,
+		 * but it helps understand better the flow when looking at
+		 * pcaps. */
+		if (poll_tbf->direction == GPRS_RLCMAC_UL_TBF && as_ul_tbf(poll_tbf)->m_usf[ts] != USF_INVALID)
+			usf_tbf = as_ul_tbf(poll_tbf);
+	/* else, search for uplink tbf */
 	} else {
 		usf_tbf = sched_select_uplink(trx, ts, fn, block_nr, pdch, require_gprs_only);
-		/* If MS selected for USF is GPRS-only, then it will only be
-		 * able to read USF if dl block uses GMSK * (CS1-4, MCS1-4)
-		 */
-		if (usf_tbf && req_mcs_kind == EGPRS && ms_mode(usf_tbf->ms()) != EGPRS)
-				req_mcs_kind = EGPRS_GMSK;
 	}
+	/* If MS selected for USF is GPRS-only, then it will only be
+	 * able to read USF if dl block uses GMSK * (CS1-4, MCS1-4) */
+	if (usf_tbf && req_mcs_kind == EGPRS && ms_mode(usf_tbf->ms()) != EGPRS)
+		req_mcs_kind = EGPRS_GMSK;
 
 	get_tbf_candidates(bts, trx, ts, &tbf_cand);
 
