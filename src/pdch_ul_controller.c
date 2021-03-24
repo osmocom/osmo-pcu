@@ -183,13 +183,18 @@ int pdch_ulc_reserve_sba(struct pdch_ulc *ulc, struct gprs_rlcmac_sba *sba)
 	return pdch_ulc_add_node(ulc, item);
 }
 
+void pdch_ulc_release_node(struct pdch_ulc *ulc, struct pdch_ulc_node *item)
+{
+	rb_erase(&item->node, &ulc->tree_root);
+	talloc_free(item);
+}
+
 int pdch_ulc_release_fn(struct pdch_ulc *ulc, uint32_t fn)
 {
 	struct pdch_ulc_node *item = pdch_ulc_get_node(ulc, fn);
 	if (!item)
 		return -ENOKEY;
-	rb_erase(&item->node, &ulc->tree_root);
-	talloc_free(item);
+	pdch_ulc_release_node(ulc, item);
 	return 0;
 }
 
@@ -222,8 +227,7 @@ void pdch_ulc_release_tbf(struct pdch_ulc *ulc, const struct gprs_rlcmac_tbf *tb
 			 * search from start (to avoid traverse continue from
 			 * no-more existant node */
 			tree_modified = true;
-			rb_erase(&item->node, &ulc->tree_root);
-			talloc_free(item);
+			pdch_ulc_release_node(ulc, item);
 			break;
 		}
 	} while (tree_modified);

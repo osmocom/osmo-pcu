@@ -77,8 +77,8 @@ struct pdch_ulc_node *pdch_ulc_pop_node(struct pdch_ulc *ulc, uint32_t fn);
 struct gprs_rlcmac_sba *pdch_ulc_get_sba(struct pdch_ulc *ulc, uint32_t fn);
 struct gprs_rlcmac_tbf *pdch_ulc_get_tbf_poll(struct pdch_ulc *ulc, uint32_t fn);
 
+void pdch_ulc_release_node(struct pdch_ulc *ulc, struct pdch_ulc_node *item);
 void pdch_ulc_release_tbf(struct pdch_ulc *ulc, const struct gprs_rlcmac_tbf *tbf);
-
 int pdch_ulc_release_fn(struct pdch_ulc *ulc, uint32_t fn);
 
 void pdch_ulc_expire_fn(struct pdch_ulc *ulc, uint32_t fn);
