@@ -33,8 +33,24 @@
 #include "pdch.h"
 #include "pdch_ul_controller.h"
 
-/* starting time for assigning single slot
- * This offset must be a multiple of 13. */
+/* TBF Starting Time for assigning SBA.
+ * See TS 44.060 12.21 "Starting Frame Number Description".
+ * According to spec, k=0 (offset=4) "should not be used, so as to leave time
+ * for the MS to analyze the message and get ready to receive or transmit".
+ * Hence, k=1 (offset=8-9) is theoretically the minimum offset which could be
+ * used.
+ *
+ * However, it was found, empirically, that it takes around 30-40 FNs time for
+ * the Immediate Assignment message created with this "TBF Starting Time" to
+ * travel from PCU->BTS and be transmitted over CCCH on the Um interface. Hence,
+ * we must account for this delay here, otherwise the MS would be receiving eg.
+ * a TBF Starting Time of FN=40 while the Imm Assigned containing it is sent in
+ * eg. FN=50, which would be too late for the MS to answer to it.
+ *
+ * The situation described above, can even get worse on high BTS load for AGCH,
+ * since the Immediate Assignment will queue in the BTS waiting to be
+ * transmitted one after the other, hence increasing the required delay.
+ */
 #define AGCH_START_OFFSET 52
 
 
