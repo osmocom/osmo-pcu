@@ -866,8 +866,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 		poll_ass_dl = 0;
 	}
 	if (poll_ass_dl) {
-		if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
-			ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK)
+		if (ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK)
 		{
 			LOGPTBF(this, LOGL_DEBUG,
 				  "Polling is already scheduled, so we must wait for the uplink assignment...\n");
@@ -997,8 +996,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 	unsigned int rrbp;
 	uint32_t new_poll_fn;
 
-	if (poll_state == GPRS_RLCMAC_POLL_SCHED &&
-		ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
+	if (ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK) {
 		LOGPTBFUL(this, LOGL_DEBUG,
 			  "Polling is already scheduled, so we must wait for the uplink assignment...\n");
 		return NULL;
