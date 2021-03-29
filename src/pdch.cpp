@@ -334,7 +334,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 
 	LOGPTBF(tbf, LOGL_DEBUG, "RX: [PCU <- BTS] Packet Control Ack\n");
-	TBF_POLL_SCHED_UNSET(tbf);
 	pdch_ulc_release_fn(ulc, fn);
 
 	/* check if this control ack belongs to packet uplink ack */
@@ -721,7 +720,6 @@ void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *repor
 			LOGPDCH(this, DRLCMAC, LOGL_INFO, "FN=%" PRIu32 " Rx Meas Report "
 				"on RRBP POLL, this probably means a DL/CTRL ACK/NACk will "
 				"need to be polled again later\n", fn);
-			TBF_POLL_SCHED_UNSET(poll->tbf_poll.poll_tbf);
 			pdch_ulc_release_fn(ulc, fn);
 			break;
 		case PDCH_ULC_NODE_SBA:

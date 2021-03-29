@@ -61,12 +61,6 @@ unsigned int next_tbf_ctr_group_id = 0; /* Incrementing group id */
 
 static void tbf_timer_cb(void *_tbf);
 
-const struct value_string gprs_rlcmac_tbf_poll_state_names[] = {
-	OSMO_VALUE_STRING(GPRS_RLCMAC_POLL_NONE),
-	OSMO_VALUE_STRING(GPRS_RLCMAC_POLL_SCHED), /* a polling was scheduled */
-	{ 0, NULL }
-};
-
 const struct value_string gprs_rlcmac_tbf_dl_ass_state_names[] = {
 	OSMO_VALUE_STRING(GPRS_RLCMAC_DL_ASS_NONE),
 	OSMO_VALUE_STRING(GPRS_RLCMAC_DL_ASS_SEND_ASS),
@@ -146,7 +140,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	dl_ass_state(GPRS_RLCMAC_DL_ASS_NONE),
 	ul_ass_state(GPRS_RLCMAC_UL_ASS_NONE),
 	ul_ack_state(GPRS_RLCMAC_UL_ACK_NONE),
-	poll_state(GPRS_RLCMAC_POLL_NONE),
 	m_egprs_enabled(false)
 {
 	/* The classes of these members do not have proper constructors yet.
@@ -589,7 +582,6 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum pdch_ul
 			  chan, poll_fn, ts);
 		return;
 	}
-	poll_state = GPRS_RLCMAC_POLL_SCHED;
 	poll_fn = new_poll_fn;
 	poll_ts = ts;
 
@@ -630,8 +622,6 @@ void gprs_rlcmac_tbf::poll_timeout(enum pdch_ulc_tbf_poll_reason reason)
 
 	LOGPTBF(this, LOGL_NOTICE, "poll timeout for FN=%d, TS=%d (curr FN %d)\n",
 		poll_fn, poll_ts, bts_current_frame_number(bts));
-
-	poll_state = GPRS_RLCMAC_POLL_NONE;
 
 	if (ul_tbf && ul_tbf->handle_ctrl_ack(reason)) {
 		if (!ul_tbf->ctrl_ack_to_toggle()) {

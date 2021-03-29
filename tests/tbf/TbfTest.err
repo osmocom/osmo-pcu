@@ -1549,7 +1549,6 @@ Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
@@ -1634,7 +1633,6 @@ Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
@@ -1686,7 +1684,6 @@ Detected FN jump! 2654275 -> 2654288
 PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) [UPLINK] DOWNLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FLOW
@@ -1790,7 +1787,6 @@ Detected FN jump! 2654348 -> 2654361
 PDCH(bts=0,trx=0,ts=7) FN=2654361 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654361 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
@@ -1862,7 +1858,6 @@ Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
@@ -1949,7 +1944,6 @@ Detected FN jump! 2654327 -> 2654340
 PDCH(bts=0,trx=0,ts=7) FN=2654340 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654340 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
@@ -2010,7 +2004,6 @@ Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
@@ -2158,7 +2151,6 @@ Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes state from ASSIGN to FLOW
@@ -2250,7 +2242,6 @@ Detected FN jump! 2654275 -> 2654288
 PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) [UPLINK] DOWNLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) changes state from ASSIGN to FLOW
@@ -2810,7 +2801,6 @@ Detected FN jump! 2654288 -> 2654409
 PDCH(bts=0,trx=0,ts=7) FN=2654409 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654409 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) stopping timer T3191 [ACK/NACK received]
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) RX: [PCU <- BTS] Packet Downlink Ack/Nack
 PDCH(bts=0,trx=0,ts=7) Got GPRS DL ACK bitmap: SSN: 0, BSN 0 to 28 - 1 (28 blocks), "RRRRRRRRRRRRRRRRRRRRRRRRRRRR"
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) downlink acknowledge
@@ -2937,7 +2927,6 @@ PDCH(bts=0,trx=0,ts=7) FN=2654400 Scheduling control message at RTS for TBF(TFI=
 PDCH(bts=0,trx=0,ts=7) FN=2654413 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654413 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) [UPLINK] DOWNLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT RELEASE) changes state from WAIT RELEASE to RELEASING
@@ -3295,7 +3284,6 @@ Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes state from ASSIGN to FLOW
@@ -3388,7 +3376,6 @@ Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes state from ASSIGN to FLOW
@@ -5984,7 +5971,6 @@ Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes state from ASSIGN to FLOW
@@ -6150,7 +6136,6 @@ Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes state from ASSIGN to FLOW
@@ -6476,7 +6461,6 @@ Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) RX: [PCU <- BTS] Packet Control Ack
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes poll state from GPRS_RLCMAC_POLL_SCHED to GPRS_RLCMAC_POLL_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes state from ASSIGN to FLOW
