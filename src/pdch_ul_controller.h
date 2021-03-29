@@ -71,6 +71,7 @@ int pdch_ulc_reserve_sba(struct pdch_ulc *ulc, struct gprs_rlcmac_sba *sba);
 bool pdch_ulc_fn_is_free(struct pdch_ulc *ulc, uint32_t fn);
 
 int pdch_ulc_get_next_free_rrbp_fn(struct pdch_ulc *ulc, uint32_t fn, uint32_t *poll_fn, unsigned int *rrbp);
+uint32_t pdch_ulc_get_next_free_fn(struct pdch_ulc *ulc, uint32_t start_fn);
 
 struct pdch_ulc_node *pdch_ulc_get_node(struct pdch_ulc *ulc, uint32_t fn);
 struct pdch_ulc_node *pdch_ulc_pop_node(struct pdch_ulc *ulc, uint32_t fn);

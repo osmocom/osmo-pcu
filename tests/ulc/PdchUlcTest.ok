@@ -247,3 +247,12 @@ FN=34 type=POLL
 FN=39 type=POLL
 *** EXPIRE FN=43:
 === end: test_fn_wrap_around ===
+=== start: test_next_free_fn_sba ===
+*** ALLOC 1 SBA FN=52:
+FN=104 type=SBA
+*** ALLOC 3 SBA FN=65:
+FN=104 type=SBA
+FN=117 type=SBA
+FN=121 type=SBA
+FN=125 type=SBA
+=== end: test_next_free_fn_sba ===

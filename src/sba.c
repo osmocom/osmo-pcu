@@ -57,15 +57,18 @@
 struct gprs_rlcmac_sba *sba_alloc(void *ctx, struct gprs_rlcmac_pdch *pdch, uint8_t ta)
 {
 	struct gprs_rlcmac_sba *sba;
+	uint32_t start_fn;
+
 	sba = talloc_zero(ctx, struct gprs_rlcmac_sba);
 	if (!sba)
 		return NULL;
 
+	/* TODO: Increase start_fn dynamically based on AGCH queue load in the BTS: */
+	start_fn = next_fn(pdch->last_rts_fn, AGCH_START_OFFSET);
+
 	sba->pdch = pdch;
 	sba->ta = ta;
-
-	/* TODO: request ULC for next available FN instead of hardcoded AGCH_START_OFFSET */
-	sba->fn = next_fn(pdch->last_rts_fn, AGCH_START_OFFSET);
+	sba->fn = pdch_ulc_get_next_free_fn(pdch->ulc, start_fn);
 
 	pdch_ulc_reserve_sba(pdch->ulc, sba);
 	return sba;

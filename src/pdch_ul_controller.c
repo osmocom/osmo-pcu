@@ -128,6 +128,29 @@ int pdch_ulc_get_next_free_rrbp_fn(struct pdch_ulc *ulc, uint32_t fn, uint32_t *
 	return 0;
 }
 
+/* Get next free (unreserved) FN which is not located in time before "start_fn" */
+uint32_t pdch_ulc_get_next_free_fn(struct pdch_ulc *ulc, uint32_t start_fn)
+{
+	struct rb_node *node;
+	struct pdch_ulc_node *it;
+	int res;
+	uint32_t check_fn = start_fn;
+
+	for (node = rb_first(&ulc->tree_root); node; node = rb_next(node)) {
+		it = container_of(node, struct pdch_ulc_node, node);
+		res = fn_cmp(it->fn, check_fn);
+		if (res > 0) { /* it->fn AFTER check_fn */
+			/* Next reserved FN is passed check_fn, hence it means check_fn is free */
+			return check_fn;
+		}
+		/* if it->fn < check_fn, simply continue iterating, we want to reach at least check_fn */
+		if (res == 0)/* it->fn == fn */
+			check_fn = fn_next_block(check_fn);
+		/* if it->fn < check_fn, simply continue iterating, we want to reach at least check_fn */
+	}
+	return check_fn;
+}
+
 static struct pdch_ulc_node *_alloc_node(struct pdch_ulc *ulc, uint32_t fn)
 {
 	struct pdch_ulc_node *node;

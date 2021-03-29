@@ -212,6 +212,30 @@ static void test_fn_wrap_around()
 	printf("=== end: %s ===\n", __FUNCTION__);
 }
 
+static void test_next_free_fn_sba()
+{
+	printf("=== start: %s ===\n", __FUNCTION__);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
+	struct gprs_rlcmac_pdch *pdch = &bts->trx[0].pdch[0];
+	struct gprs_rlcmac_sba *sba1, *sba2, *sba3, *sba4;
+
+	pdch->last_rts_fn = 52;
+	printf("*** ALLOC 1 SBA FN=%" PRIu32 ":\n", pdch->last_rts_fn);
+	sba1 = sba_alloc(bts, pdch, 0);
+	print_ulc_nodes(pdch->ulc);
+
+	pdch->last_rts_fn = 65;
+	printf("*** ALLOC 3 SBA FN=%" PRIu32 ":\n", pdch->last_rts_fn);
+	sba2 = sba_alloc(bts, pdch, 0);
+	sba3 = sba_alloc(bts, pdch, 0);
+	sba4 = sba_alloc(bts, pdch, 0);
+	print_ulc_nodes(pdch->ulc);
+	(void)sba1; (void)sba2; (void)sba3; (void)sba4;
+
+	talloc_free(bts);
+	printf("=== end: %s ===\n", __FUNCTION__);
+}
+
 int main(int argc, char **argv)
 {
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "pdch_ulc test context");
@@ -231,6 +255,7 @@ int main(int argc, char **argv)
 
 	test_reserve_multiple();
 	test_fn_wrap_around();
+	test_next_free_fn_sba();
 
 	talloc_free(the_pcu);
 	return EXIT_SUCCESS;
