@@ -994,7 +994,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 
 			LOGPTBFDL(this, LOGL_INFO,
 				  "Scheduled Ack/Nack polling on FN=%d, TS=%d\n",
-				  new_poll_fn, poll_ts);
+				  new_poll_fn, ts);
 		}
 	}
 

@@ -671,16 +671,14 @@ static void send_control_ack(gprs_rlcmac_tbf *tbf)
 {
 	RlcMacUplink_t ulreq = {0};
 
-	OSMO_ASSERT(tbf->is_control_ts(tbf->poll_ts));
-
 	ulreq.u.MESSAGE_TYPE = MT_PACKET_CONTROL_ACK;
 	Packet_Control_Acknowledgement_t *ctrl_ack =
 		&ulreq.u.Packet_Control_Acknowledgement;
 
 	ctrl_ack->PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
 	ctrl_ack->TLLI = tbf->tlli();
-	send_ul_mac_block(tbf->bts, tbf->trx->trx_no, tbf->poll_ts,
-		&ulreq, get_poll_fn(tbf, tbf->poll_ts));
+	send_ul_mac_block(tbf->bts, tbf->trx->trx_no, tbf->control_ts,
+		&ulreq, get_poll_fn(tbf, tbf->control_ts));
 }
 
 static void send_empty_block(gprs_rlcmac_tbf *tbf, unsigned ts_no, unsigned fn)
@@ -1939,8 +1937,8 @@ static void test_tbf_ra_update_rach()
 
 	dl_tbf = ms_dl_tbf(ms1);
 	OSMO_ASSERT(dl_tbf);
-	fn = get_poll_fn(dl_tbf, dl_tbf->poll_ts);
-	send_empty_block(dl_tbf, dl_tbf->poll_ts, fn);
+	fn = get_poll_fn(dl_tbf, dl_tbf->control_ts);
+	send_empty_block(dl_tbf, dl_tbf->control_ts, fn);
 	fn = fn_add_blocks(fn, 1);
 
 	/* Now establish a new TBF for the RA UPDATE COMPLETE (new TLLI) */
@@ -2164,7 +2162,7 @@ static void test_tbf_dl_reuse()
 	ack->DOWNLINK_TFI = dl_tbf1->tfi();
 	ack->Ack_Nack_Description.FINAL_ACK_INDICATION = 1;
 
-	send_ul_mac_block(bts, 0, dl_tbf1->poll_ts, &ulreq, get_poll_fn(dl_tbf1, dl_tbf1->poll_ts));
+	send_ul_mac_block(bts, 0, dl_tbf1->control_ts, &ulreq, get_poll_fn(dl_tbf1, dl_tbf1->control_ts));
 
 	OSMO_ASSERT(dl_tbf1->state_is(GPRS_RLCMAC_WAIT_RELEASE));
 
@@ -2713,7 +2711,7 @@ static void establish_and_use_egprs_dl_tbf(struct gprs_rlcmac_bts *bts, int mcs)
 		/* Request to send one RLC/MAC block */
 		request_dl_rlc_block(dl_tbf, &fn);
 	}
-	send_empty_block(dl_tbf, dl_tbf->poll_ts, fn);
+	send_empty_block(dl_tbf, dl_tbf->control_ts, fn);
 
 	/* Schedule a large LLC frame */
 	dl_tbf->append_data(1000, test_data, sizeof(test_data));
@@ -2725,7 +2723,7 @@ static void establish_and_use_egprs_dl_tbf(struct gprs_rlcmac_bts *bts, int mcs)
 		/* Request to send one RLC/MAC block */
 		request_dl_rlc_block(dl_tbf, &fn);
 	}
-	send_empty_block(dl_tbf, dl_tbf->poll_ts, fn);
+	send_empty_block(dl_tbf, dl_tbf->control_ts, fn);
 
 	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
 
@@ -3069,7 +3067,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(struct gprs_rlcmac_bts *bts,
 		MAKE_ACKED(msg, dl_tbf, fn, mcs, true);
 	}
 	/* Clean up pending items in UL controller: */
-	send_empty_block(dl_tbf, dl_tbf->poll_ts, fn+50);
+	send_empty_block(dl_tbf, dl_tbf->control_ts, fn+50);
 	tbf_cleanup(dl_tbf);
 }
 
