@@ -221,7 +221,6 @@ struct gprs_rlcmac_tbf {
 	bool dl_ass_state_is(enum gprs_rlcmac_tbf_dl_ass_state rhs) const;
 	bool ul_ass_state_is(enum gprs_rlcmac_tbf_ul_ass_state rhs) const;
 	bool ul_ack_state_is(enum gprs_rlcmac_tbf_ul_ack_state rhs) const;
-	bool poll_scheduled() const;
 	void set_state(enum gprs_rlcmac_tbf_state new_state, const char *file, int line);
 	void set_ass_state_dl(enum gprs_rlcmac_tbf_dl_ass_state new_state, const char *file, int line);
 	void set_ass_state_ul(enum gprs_rlcmac_tbf_ul_ass_state new_state, const char *file, int line);
@@ -379,11 +378,6 @@ inline bool gprs_rlcmac_tbf::ul_ass_state_is(enum gprs_rlcmac_tbf_ul_ass_state r
 inline bool gprs_rlcmac_tbf::ul_ack_state_is(enum gprs_rlcmac_tbf_ul_ack_state rhs) const
 {
 	return ul_ack_state == rhs;
-}
-
-inline bool gprs_rlcmac_tbf::poll_scheduled() const
-{
-	return poll_state == GPRS_RLCMAC_POLL_SCHED;
 }
 
 inline bool gprs_rlcmac_tbf::state_is_not(enum gprs_rlcmac_tbf_state rhs) const

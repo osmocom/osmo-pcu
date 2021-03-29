@@ -1321,9 +1321,6 @@ void gprs_rlcmac_dl_tbf::request_dl_ack()
 
 bool gprs_rlcmac_dl_tbf::need_control_ts() const
 {
-	if (poll_scheduled())
-		return false;
-
 	return state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK) ||
 		m_tx_counter >= POLL_ACK_AFTER_FRAMES ||
 		m_dl_ack_requested;
