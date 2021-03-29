@@ -557,10 +557,6 @@ int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 			ts, control_ts);
 		return -EINVAL;
 	}
-	if (poll_state != GPRS_RLCMAC_POLL_NONE) {
-		LOGPTBF(this, LOGL_DEBUG, "Polling is already scheduled\n");
-		return -EBUSY;
-	}
 
 	if ((rc = pdch_ulc_get_next_free_rrbp_fn(trx->pdch[ts].ulc, fn, poll_fn_, rrbp_)) < 0) {
 		LOGPTBF(this, LOGL_DEBUG,
