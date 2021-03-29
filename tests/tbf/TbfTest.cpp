@@ -651,11 +651,26 @@ static void send_ul_mac_block(struct gprs_rlcmac_bts *bts, unsigned trx_no, unsi
 	send_ul_mac_block_buf(bts, pdch, fn, &buf[0], num_bytes);
 }
 
+
+static uint32_t get_poll_fn(struct gprs_rlcmac_tbf *tbf, uint8_t poll_ts)
+{
+	struct gprs_rlcmac_pdch *pdch = &tbf->trx->pdch[poll_ts];
+	struct pdch_ulc *ulc = pdch->ulc;
+	struct rb_node *node;
+	struct pdch_ulc_node *item;
+
+	for (node = rb_first(&ulc->tree_root); node; node = rb_next(node)) {
+		item = container_of(node, struct pdch_ulc_node, node);
+		if (item->type == PDCH_ULC_NODE_TBF_POLL && item->tbf_poll.poll_tbf == tbf)
+			return item->fn;
+	}
+	OSMO_ASSERT(0);
+}
+
 static void send_control_ack(gprs_rlcmac_tbf *tbf)
 {
 	RlcMacUplink_t ulreq = {0};
 
-	OSMO_ASSERT(tbf->poll_fn != 0);
 	OSMO_ASSERT(tbf->is_control_ts(tbf->poll_ts));
 
 	ulreq.u.MESSAGE_TYPE = MT_PACKET_CONTROL_ACK;
@@ -665,7 +680,7 @@ static void send_control_ack(gprs_rlcmac_tbf *tbf)
 	ctrl_ack->PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
 	ctrl_ack->TLLI = tbf->tlli();
 	send_ul_mac_block(tbf->bts, tbf->trx->trx_no, tbf->poll_ts,
-		&ulreq, tbf->poll_fn);
+		&ulreq, get_poll_fn(tbf, tbf->poll_ts));
 }
 
 static void send_empty_block(gprs_rlcmac_tbf *tbf, unsigned ts_no, unsigned fn)
@@ -1924,7 +1939,7 @@ static void test_tbf_ra_update_rach()
 
 	dl_tbf = ms_dl_tbf(ms1);
 	OSMO_ASSERT(dl_tbf);
-	fn = dl_tbf->poll_fn;
+	fn = get_poll_fn(dl_tbf, dl_tbf->poll_ts);
 	send_empty_block(dl_tbf, dl_tbf->poll_ts, fn);
 	fn = fn_add_blocks(fn, 1);
 
@@ -2149,7 +2164,7 @@ static void test_tbf_dl_reuse()
 	ack->DOWNLINK_TFI = dl_tbf1->tfi();
 	ack->Ack_Nack_Description.FINAL_ACK_INDICATION = 1;
 
-	send_ul_mac_block(bts, 0, dl_tbf1->poll_ts, &ulreq, dl_tbf1->poll_fn);
+	send_ul_mac_block(bts, 0, dl_tbf1->poll_ts, &ulreq, get_poll_fn(dl_tbf1, dl_tbf1->poll_ts));
 
 	OSMO_ASSERT(dl_tbf1->state_is(GPRS_RLCMAC_WAIT_RELEASE));
 

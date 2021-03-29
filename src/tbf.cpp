@@ -125,7 +125,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	first_ts(0),
 	first_common_ts(0),
 	control_ts(0xff),
-	poll_fn(0),
 	poll_ts(0),
 	fT(0),
 	num_fT_exp(0),
@@ -579,10 +578,9 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum pdch_ul
 	/* schedule polling */
 	if (pdch_ulc_reserve_tbf_poll(trx->pdch[ts].ulc, new_poll_fn, this, reason) < 0) {
 		LOGPTBFDL(this, LOGL_ERROR, "Failed scheduling poll on %s (FN=%d, TS=%d)\n",
-			  chan, poll_fn, ts);
+			  chan, new_poll_fn, ts);
 		return;
 	}
-	poll_fn = new_poll_fn;
 	poll_ts = ts;
 
 	switch (reason) {
@@ -590,32 +588,32 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum pdch_ul
 		ul_ass_state = GPRS_RLCMAC_UL_ASS_WAIT_ACK;
 
 		LOGPTBFDL(this, LOGL_INFO, "Scheduled UL Assignment polling on %s (FN=%d, TS=%d)\n",
-			  chan, poll_fn, poll_ts);
+			  chan, new_poll_fn, poll_ts);
 		break;
 	case PDCH_ULC_POLL_DL_ASS:
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_WAIT_ACK;
 
 		LOGPTBFDL(this, LOGL_INFO, "Scheduled DL Assignment polling on %s (FN=%d, TS=%d)\n",
-			  chan, poll_fn, poll_ts);
+			  chan, new_poll_fn, poll_ts);
 		break;
 	case PDCH_ULC_POLL_UL_ACK:
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_WAIT_ACK;
 
 		LOGPTBFUL(this, LOGL_DEBUG, "Scheduled UL Acknowledgement polling on %s (FN=%d, TS=%d)\n",
-			  chan, poll_fn, poll_ts);
+			  chan, new_poll_fn, poll_ts);
 		break;
 	case PDCH_ULC_POLL_DL_ACK:
 		LOGPTBFDL(this, LOGL_DEBUG, "Scheduled DL Acknowledgement polling on %s (FN=%d, TS=%d)\n",
-			  chan, poll_fn, poll_ts);
+			  chan, new_poll_fn, poll_ts);
 		break;
 	case PDCH_ULC_POLL_CELL_CHG_CONTINUE:
 		LOGPTBFDL(this, LOGL_DEBUG, "Scheduled 'Packet Cell Change Continue' polling on %s (FN=%d, TS=%d)\n",
-			  chan, poll_fn, poll_ts);
+			  chan, new_poll_fn, poll_ts);
 		break;
 	}
 }
 
-void gprs_rlcmac_tbf::poll_timeout(enum pdch_ulc_tbf_poll_reason reason)
+void gprs_rlcmac_tbf::poll_timeout(uint32_t poll_fn, enum pdch_ulc_tbf_poll_reason reason)
 {
 	uint16_t pgroup;
 	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
@@ -1211,7 +1209,7 @@ void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t 
 	return tbf->set_polling(new_poll_fn, ts, t);
 }
 
-void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, enum pdch_ulc_tbf_poll_reason reason)
+void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, uint32_t poll_fn, enum pdch_ulc_tbf_poll_reason reason)
 {
-	tbf->poll_timeout(reason);
+	tbf->poll_timeout(poll_fn, reason);
 }

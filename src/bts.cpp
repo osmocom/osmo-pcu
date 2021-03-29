@@ -1086,10 +1086,8 @@ void update_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, int8_t ta_delta)
 		/* limit target TA in range 0..63 bits */
 		ta_target = ta_limit(ta_adj);
 
-		LOGP(DL1IF, LOGL_INFO, "PH-DATA-IND is updating TLLI=0x%08x: TA %u -> %u on "
-				"TRX = %d, TS = %d, FN = %d\n",
-				tbf->tlli(), tbf->ta(), ta_target,
-				tbf->trx->trx_no , tbf->poll_ts, tbf->poll_fn);
+		LOGP(DL1IF, LOGL_INFO, "PH-DATA-IND is updating %s: TA %u -> %u on "
+		     "TRX = %d\n", tbf_name(tbf), tbf->ta(), ta_target, tbf->trx->trx_no);
 		tbf->set_ta(ta_target);
 	}
 }
@@ -1103,10 +1101,8 @@ void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta)
 		/* limit target TA in range 0..63 bits */
 		ta_target = ta_limit(ta);
 
-		LOGP(DL1IF, LOGL_INFO, "PH-RA-IND is updating TLLI=0x%08x: TA %u -> %u on "
-				"TRX = %d, TS = %d, FN = %d\n",
-				tbf->tlli(), tbf->ta(), ta_target,
-				tbf->trx->trx_no , tbf->poll_ts, tbf->poll_fn);
+		LOGP(DL1IF, LOGL_INFO, "PH-RA-IND is updating %s: TA %u -> %u on "
+		     "TRX = %d\n", tbf_name(tbf), tbf->ta(), ta_target, tbf->trx->trx_no);
 		tbf->set_ta(ta_target);
 	}
 }
