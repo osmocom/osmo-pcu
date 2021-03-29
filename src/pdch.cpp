@@ -306,6 +306,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	uint32_t tlli = packet->TLLI;
 	GprsMs *ms = bts_ms_by_tlli(bts(), tlli, GSM_RESERVED_TMSI);
 	gprs_rlcmac_ul_tbf *ul_tbf;
+	enum pdch_ulc_tbf_poll_reason reason;
 	struct pdch_ulc_node *poll;
 
 	poll = pdch_ulc_get_node(ulc, fn);
@@ -325,6 +326,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		return;
 	}
 	tbf = poll->tbf_poll.poll_tbf;
+	reason = poll->tbf_poll.reason;
 
 	/* Reset N3101 counter: */
 	tbf->n_reset(N3101);
@@ -337,7 +339,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 
 	/* check if this control ack belongs to packet uplink ack */
 	ul_tbf = as_ul_tbf(tbf);
-	if (ul_tbf && ul_tbf->handle_ctrl_ack()) {
+	if (ul_tbf && ul_tbf->handle_ctrl_ack(reason)) {
 		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] END\n");
 		if (ul_tbf->ctrl_ack_to_toggle())
 			LOGPTBF(tbf, LOGL_NOTICE, "Recovered uplink ack for UL\n");

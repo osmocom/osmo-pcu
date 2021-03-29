@@ -52,6 +52,14 @@ enum PdchUlcNode {
 };
 extern const struct value_string pdch_ul_node_names[];
 
+enum pdch_ulc_tbf_poll_reason {
+	PDCH_ULC_POLL_UL_ASS, /* Expect CTRL ACK for UL ASS we transmit */
+	PDCH_ULC_POLL_DL_ASS, /* Expect CTRL ACK for DL ASS we transmit */
+	PDCH_ULC_POLL_UL_ACK, /* Expect CTRL ACK for UL ACK/NACK we transmit */
+	PDCH_ULC_POLL_DL_ACK, /* Expect DL ACK/NACK requested by RRBP */
+	PDCH_ULC_POLL_CELL_CHG_CONTINUE, /* Expect CTRL ACK for Pkt cell Change Continue we transmit */
+};
+
 struct pdch_ulc_node {
 	struct rb_node node;	  /*! entry in pdch_ulc->tree_root */
 	uint32_t fn;
@@ -62,6 +70,7 @@ struct pdch_ulc_node {
 		} tbf_usf;
 		struct {
 			struct gprs_rlcmac_tbf *poll_tbf;
+			enum pdch_ulc_tbf_poll_reason reason;
 		} tbf_poll;
 		struct {
 			struct gprs_rlcmac_sba *sba;
@@ -73,7 +82,7 @@ struct pdch_ulc_node {
 struct pdch_ulc *pdch_ulc_alloc(struct gprs_rlcmac_pdch *pdch, void *ctx);
 
 int pdch_ulc_reserve_tbf_usf(struct pdch_ulc *ulc, uint32_t fn, struct gprs_rlcmac_ul_tbf *ul_tbf);
-int pdch_ulc_reserve_tbf_poll(struct pdch_ulc *ulc, uint32_t fn, struct gprs_rlcmac_tbf *tbf);
+int pdch_ulc_reserve_tbf_poll(struct pdch_ulc *ulc, uint32_t fn, struct gprs_rlcmac_tbf *tbf, enum pdch_ulc_tbf_poll_reason reason);
 int pdch_ulc_reserve_sba(struct pdch_ulc *ulc, struct gprs_rlcmac_sba *sba);
 
 bool pdch_ulc_fn_is_free(struct pdch_ulc *ulc, uint32_t fn);

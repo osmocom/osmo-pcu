@@ -572,7 +572,7 @@ int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 	return 0;
 }
 
-void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum gprs_rlcmac_tbf_poll_type t)
+void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum pdch_ulc_tbf_poll_reason reason)
 {
 	const char *chan = "UNKNOWN";
 
@@ -588,7 +588,7 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum gprs_rl
 			  chan, new_poll_fn, ts);
 
 	/* schedule polling */
-	if (pdch_ulc_reserve_tbf_poll(trx->pdch[ts].ulc, new_poll_fn, this) < 0) {
+	if (pdch_ulc_reserve_tbf_poll(trx->pdch[ts].ulc, new_poll_fn, this, reason) < 0) {
 		LOGPTBFDL(this, LOGL_ERROR, "Failed scheduling poll on %s (FN=%d, TS=%d)\n",
 			  chan, poll_fn, ts);
 		return;
@@ -597,37 +597,37 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum gprs_rl
 	poll_fn = new_poll_fn;
 	poll_ts = ts;
 
-	switch (t) {
-	case GPRS_RLCMAC_POLL_UL_ASS:
+	switch (reason) {
+	case PDCH_ULC_POLL_UL_ASS:
 		ul_ass_state = GPRS_RLCMAC_UL_ASS_WAIT_ACK;
 
 		LOGPTBFDL(this, LOGL_INFO, "Scheduled UL Assignment polling on %s (FN=%d, TS=%d)\n",
 			  chan, poll_fn, poll_ts);
 		break;
-	case GPRS_RLCMAC_POLL_DL_ASS:
+	case PDCH_ULC_POLL_DL_ASS:
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_WAIT_ACK;
 
 		LOGPTBFDL(this, LOGL_INFO, "Scheduled DL Assignment polling on %s (FN=%d, TS=%d)\n",
 			  chan, poll_fn, poll_ts);
 		break;
-	case GPRS_RLCMAC_POLL_UL_ACK:
+	case PDCH_ULC_POLL_UL_ACK:
 		ul_ack_state = GPRS_RLCMAC_UL_ACK_WAIT_ACK;
 
 		LOGPTBFUL(this, LOGL_DEBUG, "Scheduled UL Acknowledgement polling on %s (FN=%d, TS=%d)\n",
 			  chan, poll_fn, poll_ts);
 		break;
-	case GPRS_RLCMAC_POLL_DL_ACK:
+	case PDCH_ULC_POLL_DL_ACK:
 		LOGPTBFDL(this, LOGL_DEBUG, "Scheduled DL Acknowledgement polling on %s (FN=%d, TS=%d)\n",
 			  chan, poll_fn, poll_ts);
 		break;
-	case GPRS_RLCMAC_POLL_CELL_CHG_CONTINUE:
+	case PDCH_ULC_POLL_CELL_CHG_CONTINUE:
 		LOGPTBFDL(this, LOGL_DEBUG, "Scheduled 'Packet Cell Change Continue' polling on %s (FN=%d, TS=%d)\n",
 			  chan, poll_fn, poll_ts);
 		break;
 	}
 }
 
-void gprs_rlcmac_tbf::poll_timeout()
+void gprs_rlcmac_tbf::poll_timeout(enum pdch_ulc_tbf_poll_reason reason)
 {
 	uint16_t pgroup;
 	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
@@ -637,7 +637,7 @@ void gprs_rlcmac_tbf::poll_timeout()
 
 	poll_state = GPRS_RLCMAC_POLL_NONE;
 
-	if (ul_tbf && ul_tbf->handle_ctrl_ack()) {
+	if (ul_tbf && ul_tbf->handle_ctrl_ack(reason)) {
 		if (!ul_tbf->ctrl_ack_to_toggle()) {
 			LOGPTBF(this, LOGL_NOTICE,
 				"Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ACK: %s\n",
@@ -945,7 +945,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	bts_do_rate_ctr_inc(bts, CTR_PKT_DL_ASSIGNMENT);
 
 	if (poll_ass_dl) {
-		set_polling(new_poll_fn, ts, GPRS_RLCMAC_POLL_DL_ASS);
+		set_polling(new_poll_fn, ts, PDCH_ULC_POLL_DL_ASS);
 	} else {
 		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
 		TBF_SET_STATE(new_dl_tbf, GPRS_RLCMAC_FLOW);
@@ -1048,7 +1048,7 @@ struct msgb *gprs_rlcmac_tbf::create_ul_ass(uint32_t fn, uint8_t ts)
 	LOGP(DTBF, LOGL_DEBUG, "------------------------- TX : Packet Uplink Assignment -------------------------\n");
 	bts_do_rate_ctr_inc(bts, CTR_PKT_UL_ASSIGNMENT);
 
-	set_polling(new_poll_fn, ts, GPRS_RLCMAC_POLL_UL_ASS);
+	set_polling(new_poll_fn, ts, PDCH_ULC_POLL_UL_ASS);
 
 	talloc_free(mac_control_block);
 	return msg;
@@ -1222,12 +1222,12 @@ int tbf_check_polling(const struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts
 	return tbf->check_polling(fn, ts, poll_fn, rrbp);
 }
 
-void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t ts, enum gprs_rlcmac_tbf_poll_type t)
+void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t ts, enum pdch_ulc_tbf_poll_reason t)
 {
 	return tbf->set_polling(new_poll_fn, ts, t);
 }
 
-void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf)
+void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, enum pdch_ulc_tbf_poll_reason reason)
 {
-	tbf->poll_timeout();
+	tbf->poll_timeout(reason);
 }

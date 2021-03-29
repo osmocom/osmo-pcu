@@ -57,7 +57,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	gprs_rlc_window *window();
 	struct msgb *create_ul_ack(uint32_t fn, uint8_t ts);
 	bool ctrl_ack_to_toggle();
-	bool handle_ctrl_ack();
+	bool handle_ctrl_ack(enum pdch_ulc_tbf_poll_reason reason);
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(
 		const struct gprs_rlc_data_info *rlc,

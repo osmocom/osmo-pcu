@@ -275,10 +275,10 @@ bool gprs_rlcmac_ul_tbf::ctrl_ack_to_toggle()
 	return false; /* GPRS_RLCMAC_FLAG_TO_UL_ACK was unset, now set */
 }
 
-bool gprs_rlcmac_ul_tbf::handle_ctrl_ack()
+bool gprs_rlcmac_ul_tbf::handle_ctrl_ack(enum pdch_ulc_tbf_poll_reason reason)
 {
 	/* check if this control ack belongs to packet uplink ack */
-	if (ul_ack_state_is(GPRS_RLCMAC_UL_ACK_WAIT_ACK)) {
+	if (reason == PDCH_ULC_POLL_UL_ACK && ul_ack_state_is(GPRS_RLCMAC_UL_ACK_WAIT_ACK)) {
 		TBF_SET_ACK_STATE(this, GPRS_RLCMAC_UL_ACK_NONE);
 		return true;
 	}
@@ -324,7 +324,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 	m_contention_resolution_done = 1;
 
 	if (final) {
-		set_polling(new_poll_fn, ts, GPRS_RLCMAC_POLL_UL_ACK);
+		set_polling(new_poll_fn, ts, PDCH_ULC_POLL_UL_ACK);
 		/* waiting for final acknowledge */
 		m_final_ack_sent = 1;
 	} else

@@ -88,16 +88,16 @@ static void test_reserve_multiple()
 	node = pdch_ulc_get_node(pdch->ulc, sba2->fn);
 	OSMO_ASSERT(node->type == PDCH_ULC_NODE_SBA && node->sba.sba == sba2);
 
-	rc = pdch_ulc_reserve_tbf_poll(pdch->ulc, sba1->fn, tbf1);
+	rc = pdch_ulc_reserve_tbf_poll(pdch->ulc, sba1->fn, tbf1, PDCH_ULC_POLL_UL_ASS);
 	OSMO_ASSERT(rc == -EEXIST);
 	OSMO_ASSERT(pdch_ulc_get_tbf_poll(pdch->ulc, sba1->fn) == NULL);
-	rc = pdch_ulc_reserve_tbf_poll(pdch->ulc, sba2->fn, tbf1);
+	rc = pdch_ulc_reserve_tbf_poll(pdch->ulc, sba2->fn, tbf1, PDCH_ULC_POLL_UL_ASS);
 	OSMO_ASSERT(rc == -EEXIST);
 	OSMO_ASSERT(pdch_ulc_get_tbf_poll(pdch->ulc, sba2->fn) == NULL);
 
 	/* Now Reserve correctly TBF1 */
 	OSMO_ASSERT(pdch_ulc_fn_is_free(pdch->ulc, tbf1_poll_fn1) == true);
-	rc = pdch_ulc_reserve_tbf_poll(pdch->ulc, tbf1_poll_fn1, tbf1);
+	rc = pdch_ulc_reserve_tbf_poll(pdch->ulc, tbf1_poll_fn1, tbf1, PDCH_ULC_POLL_UL_ASS);
 	OSMO_ASSERT(rc == 0);
 	OSMO_ASSERT(pdch_ulc_get_tbf_poll(pdch->ulc, tbf1_poll_fn1) == tbf1);
 	OSMO_ASSERT(pdch_ulc_fn_is_free(pdch->ulc, tbf1_poll_fn1) == false);
@@ -107,7 +107,7 @@ static void test_reserve_multiple()
 
 	/* Now reserve correctly TBF2 */
 	OSMO_ASSERT(pdch_ulc_fn_is_free(pdch->ulc, tbf2_poll_fn1) == true);
-	rc = pdch_ulc_reserve_tbf_poll(pdch->ulc, tbf2_poll_fn1, tbf2);
+	rc = pdch_ulc_reserve_tbf_poll(pdch->ulc, tbf2_poll_fn1, tbf2, PDCH_ULC_POLL_UL_ASS);
 	OSMO_ASSERT(rc == 0);
 	OSMO_ASSERT(pdch_ulc_get_tbf_poll(pdch->ulc, tbf2_poll_fn1) == tbf2);
 	OSMO_ASSERT(pdch_ulc_fn_is_free(pdch->ulc, tbf2_poll_fn1) == false);
@@ -117,7 +117,7 @@ static void test_reserve_multiple()
 
 	/* Now Reserve TBF1 for POLL again on a later FN, which is totally expected: */
 	OSMO_ASSERT(pdch_ulc_fn_is_free(pdch->ulc, tbf1_poll_fn2) == true);
-	rc = pdch_ulc_reserve_tbf_poll(pdch->ulc, tbf1_poll_fn2, tbf1);
+	rc = pdch_ulc_reserve_tbf_poll(pdch->ulc, tbf1_poll_fn2, tbf1, PDCH_ULC_POLL_UL_ASS);
 	OSMO_ASSERT(rc == 0);
 	OSMO_ASSERT(pdch_ulc_get_tbf_poll(pdch->ulc, tbf1_poll_fn2) == tbf1);
 	OSMO_ASSERT(pdch_ulc_fn_is_free(pdch->ulc, tbf1_poll_fn2) == false);
@@ -182,7 +182,7 @@ static void test_fn_wrap_around()
 	fn = start_fn;
 	while (fn < 40 || fn >= start_fn) {
 		printf("*** RESERVE FN=%" PRIu32 ":\n", fn);
-		rc = pdch_ulc_reserve_tbf_poll(pdch->ulc, fn, tbf1);
+		rc = pdch_ulc_reserve_tbf_poll(pdch->ulc, fn, tbf1, PDCH_ULC_POLL_UL_ASS);
 		OSMO_ASSERT(rc == 0);
 		print_ulc_nodes(pdch->ulc);
 		fn = fn_next_block(fn);

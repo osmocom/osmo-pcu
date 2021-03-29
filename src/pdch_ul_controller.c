@@ -220,11 +220,12 @@ int pdch_ulc_reserve_tbf_usf(struct pdch_ulc *ulc, uint32_t fn, struct gprs_rlcm
 	return pdch_ulc_add_node(ulc, item);
 }
 
-int pdch_ulc_reserve_tbf_poll(struct pdch_ulc *ulc, uint32_t fn, struct gprs_rlcmac_tbf *tbf)
+int pdch_ulc_reserve_tbf_poll(struct pdch_ulc *ulc, uint32_t fn, struct gprs_rlcmac_tbf *tbf, enum pdch_ulc_tbf_poll_reason reason)
 {
 	struct pdch_ulc_node *item = _alloc_node(ulc, fn);
 	item->type = PDCH_ULC_NODE_TBF_POLL;
 	item->tbf_poll.poll_tbf = tbf;
+	item->tbf_poll.reason = reason;
 	return pdch_ulc_add_node(ulc, item);
 }
 
@@ -317,7 +318,7 @@ void pdch_ulc_expire_fn(struct pdch_ulc *ulc, uint32_t fn)
 			LOGPDCH(ulc->pdch, DRLCMAC, LOGL_NOTICE,
 				"Timeout for registered POLL (FN=%u): %s\n",
 				item->fn, tbf_name(item->tbf_poll.poll_tbf));
-			tbf_poll_timeout(item->tbf_poll.poll_tbf);
+			tbf_poll_timeout(item->tbf_poll.poll_tbf, item->tbf_poll.reason);
 			break;
 		case PDCH_ULC_NODE_SBA:
 			sba = item->sba.sba;

@@ -206,7 +206,7 @@ static struct msgb *create_packet_cell_chg_continue(const struct nacc_fsm_ctx *c
 	LOGP(DNACC, LOGL_DEBUG, "------------------------- TX : Packet Cell Change Continue -------------------------\n");
 	rate_ctr_inc(&bts_rate_counters(ms->bts)->ctr[CTR_PKT_CELL_CHG_CONTINUE]);
 	talloc_free(mac_control_block);
-	tbf_set_polling(tbf, *new_poll_fn, data->ts, GPRS_RLCMAC_POLL_CELL_CHG_CONTINUE);
+	tbf_set_polling(tbf, *new_poll_fn, data->ts, PDCH_ULC_POLL_CELL_CHG_CONTINUE);
 	return msg;
 
 free_ret:

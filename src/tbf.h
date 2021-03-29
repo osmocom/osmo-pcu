@@ -46,6 +46,7 @@ extern "C" {
 #include <osmocom/gsm/gsm48.h>
 
 #include "coding_scheme.h"
+#include <pdch_ul_controller.h>
 #ifdef __cplusplus
 }
 #endif
@@ -61,14 +62,6 @@ enum gprs_rlcmac_tbf_state {
 	GPRS_RLCMAC_FINISHED,	/* flow finished, wait for release */
 	GPRS_RLCMAC_WAIT_RELEASE,/* wait for release or restart of DL TBF */
 	GPRS_RLCMAC_RELEASING,	/* releasing, wait to free TBI/USF */
-};
-
-enum gprs_rlcmac_tbf_poll_type {
-	GPRS_RLCMAC_POLL_UL_ASS,
-	GPRS_RLCMAC_POLL_DL_ASS,
-	GPRS_RLCMAC_POLL_UL_ACK,
-	GPRS_RLCMAC_POLL_DL_ACK,
-	GPRS_RLCMAC_POLL_CELL_CHG_CONTINUE,
 };
 
 enum gprs_rlcmac_tbf_poll_state {
@@ -208,8 +201,8 @@ bool tbf_is_tfi_assigned(const struct gprs_rlcmac_tbf *tbf);
 uint8_t tbf_tfi(const struct gprs_rlcmac_tbf *tbf);
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 int tbf_check_polling(const struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts, uint32_t *poll_fn, unsigned int *rrbp);
-void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t ts, enum gprs_rlcmac_tbf_poll_type t);
-void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf);
+void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t ts, enum pdch_ulc_tbf_poll_reason t);
+void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, enum pdch_ulc_tbf_poll_reason reason);
 #ifdef __cplusplus
 }
 #endif
@@ -267,8 +260,8 @@ struct gprs_rlcmac_tbf {
 
 	int check_polling(uint32_t fn, uint8_t ts,
 		uint32_t *poll_fn, unsigned int *rrbp) const;
-	void set_polling(uint32_t poll_fn, uint8_t ts, enum gprs_rlcmac_tbf_poll_type t);
-	void poll_timeout();
+	void set_polling(uint32_t poll_fn, uint8_t ts, enum pdch_ulc_tbf_poll_reason reason);
+	void poll_timeout(enum pdch_ulc_tbf_poll_reason reason);
 
 	/** tlli handling */
 	uint32_t tlli() const;
