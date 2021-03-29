@@ -66,16 +66,19 @@ struct pdch_ulc *pdch_ulc_alloc(struct gprs_rlcmac_pdch *pdch, void *ctx)
 
 struct pdch_ulc_node *pdch_ulc_get_node(struct pdch_ulc *ulc, uint32_t fn)
 {
-	struct rb_node *node;
+	struct rb_node *node = ulc->tree_root.rb_node;
 	struct pdch_ulc_node *it;
 	int res;
-	for (node = rb_first(&ulc->tree_root); node; node = rb_next(node)) {
-		it = container_of(node, struct pdch_ulc_node, node);
+
+	while (node) {
+		it = rb_entry(node, struct pdch_ulc_node, node);
 		res = fn_cmp(it->fn, fn);
-		if (res == 0) /* it->fn == fn */
-			return it;
 		if (res > 0) /* it->fn AFTER fn */
-			break;
+			node = node->rb_left;
+		else if (res < 0) /* it->fn BEFORE fn */
+			node = node->rb_right;
+		else /* it->fn == fn */
+			return it;
 	}
 	return NULL;
 }
