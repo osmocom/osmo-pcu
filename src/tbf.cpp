@@ -717,7 +717,7 @@ void gprs_rlcmac_tbf::poll_timeout(enum pdch_ulc_tbf_poll_reason reason)
 			/* send immediate assignment */
 			if ((pgroup = imsi2paging_group(imsi())) > 999)
 				LOGPTBF(dl_tbf, LOGL_ERROR, "IMSI to paging group failed! (%s)\n", imsi());
-			bts_snd_dl_ass(dl_tbf->bts, dl_tbf, false, pgroup);
+			bts_snd_dl_ass(dl_tbf->bts, dl_tbf, pgroup);
 			dl_tbf->m_wait_confirm = 1;
 		}
 	} else

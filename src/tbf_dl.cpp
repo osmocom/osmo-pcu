@@ -616,7 +616,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 		/* send immediate assignment */
 		if ((pgroup = imsi2paging_group(imsi())) > 999)
 			LOGPTBFDL(this, LOGL_ERROR, "IMSI to paging group failed! (%s)\n", imsi());
-		bts_snd_dl_ass(bts, this, false, pgroup);
+		bts_snd_dl_ass(bts, this, pgroup);
 		m_wait_confirm = 1;
 	}
 }

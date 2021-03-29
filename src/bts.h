@@ -273,7 +273,7 @@ uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, int32_t rfn);
 struct gprs_rlcmac_dl_tbf *bts_dl_tbf_by_tfi(struct gprs_rlcmac_bts *bts, uint8_t tfi, uint8_t trx, uint8_t ts);
 struct gprs_rlcmac_ul_tbf *bts_ul_tbf_by_tfi(struct gprs_rlcmac_bts *bts, uint8_t tfi, uint8_t trx, uint8_t ts);
 
-void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup);
+void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, uint16_t pgroup);
 
 void bts_set_current_frame_number(struct gprs_rlcmac_bts *bts, uint32_t frame_number);
 void bts_set_current_block_frame_number(struct gprs_rlcmac_bts *bts, int frame_number);

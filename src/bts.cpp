@@ -965,7 +965,7 @@ int bts_rcv_ptcch_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params
 	return 0;
 }
 
-void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool poll, uint16_t pgroup)
+void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, uint16_t pgroup)
 {
 	uint8_t trx_no = tbf->trx->trx_no;
 	uint8_t ts_no = tbf->first_ts;
@@ -976,12 +976,12 @@ void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bo
 	bitvec_unhex(immediate_assignment, DUMMY_VEC); /* standard '2B'O padding */
 	/* use request reference that has maximum distance to current time,
 	 * so the assignment will not conflict with possible RACH requests. */
-	LOGP(DRLCMAC, LOGL_DEBUG, " - TRX=%d (%d) TS=%d TA=%d pollFN=%d\n",
-		trx_no, tbf->trx->arfcn, ts_no, tbf->ta(), poll ? tbf->poll_fn : -1);
+	LOGP(DRLCMAC, LOGL_DEBUG, " - TRX=%d (%d) TS=%d TA=%d\n",
+		trx_no, tbf->trx->arfcn, ts_no, tbf->ta());
 	plen = Encoding::write_immediate_assignment(&bts->trx[trx_no].pdch[ts_no],
 						    tbf, immediate_assignment, true, 125,
 						    (tbf->pdch[ts_no]->last_rts_fn + 21216) % GSM_MAX_FN,
-						    tbf->ta(), 7, poll, tbf->poll_fn,
+						    tbf->ta(), 7, false, 0,
 						    bts_get_ms_pwr_alpha(bts), bts->pcu->vty.gamma, -1,
 						    GSM_L1_BURST_TYPE_ACCESS_0);
 	if (plen >= 0) {
