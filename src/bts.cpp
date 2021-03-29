@@ -467,15 +467,6 @@ void bts_send_gsmtap_meas(struct gprs_rlcmac_bts *bts,
 		    meas->rssi, meas->link_qual, data, len);
 }
 
-static inline bool tbf_check(gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t trx_no, uint8_t ts)
-{
-	if (tbf->state_is_not(GPRS_RLCMAC_RELEASING) && tbf->poll_scheduled()
-	    && tbf->poll_fn == fn && tbf->trx->trx_no == trx_no && tbf->poll_ts == ts)
-		return true;
-
-	return false;
-}
-
 /* lookup downlink TBF Entity (by TFI) */
 struct gprs_rlcmac_dl_tbf *bts_dl_tbf_by_tfi(struct gprs_rlcmac_bts *bts, uint8_t tfi, uint8_t trx, uint8_t ts)
 {
