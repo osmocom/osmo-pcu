@@ -64,6 +64,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -153,6 +154,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -242,6 +244,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -1544,6 +1547,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654270
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -1628,6 +1632,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654270
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -1679,6 +1684,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PA
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 10 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 1
 Received RTS for PDCH: TRX=0 TS=7 FN=2654275 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654275 + 13 = 2654288
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -1715,6 +1721,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) need_padding 0 spb_status 0 spb
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654279 + 13 = 2654292
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled DL Acknowledgement polling on PACCH (FN=2654292, TS=7)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654288
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654292, TS=7
@@ -1735,6 +1742,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) need_padding 0 spb_status 0 spb
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduling Ack/Nack polling, because polling timed out.
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654296 + 13 = 2654309
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled DL Acknowledgement polling on PACCH (FN=2654309, TS=7)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) restarting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654292
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654309, TS=7
@@ -1780,6 +1788,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654309, TS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3105 1 => 2 (< MAX 8)
 Received RTS for PDCH: TRX=0 TS=7 FN=2654348 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654348 + 13 = 2654361
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -1851,6 +1860,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: CS-1 -> CS-2
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -1937,6 +1947,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654327
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654327 + 13 = 2654340
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -1997,6 +2008,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: CS-1 -> CS-2
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -2144,6 +2156,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) starting timer T3169 [allocation 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: CS-1 -> CS-2
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -2235,6 +2248,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 40
 Received RTS for PDCH: TRX=0 TS=7 FN=2654275 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654275 + 13 = 2654288
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -2649,6 +2663,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Copying data unit 0 (BSN 20)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Scheduling Ack/Nack polling, because 20 blocks sent.
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654366 + 13 = 2654379
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Scheduled DL Acknowledgement polling on PACCH (FN=2654379, TS=7)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Scheduled Ack/Nack polling on FN=2654379, TS=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) msg block (BSN 20, CS-1): 0f 00 28 16 35 45 54 20 32 38 4c 4c 43 20 50 41 43 4b 45 54 20 32 39 
@@ -2897,6 +2912,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 21 => 22 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654374 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654374): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 22 => 23 (< MAX 10)
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654400 + 13 = 2654413
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -3118,6 +3134,7 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) need_padding 0 spb_status 0 spb
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Copying data unit 0 (BSN 10)
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654448 + 13 = 2654461
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled DL Acknowledgement polling on PACCH (FN=2654461, TS=7)
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654413
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654461, TS=7
@@ -3268,6 +3285,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [alloc
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -3360,6 +3378,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [alloc
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -3573,6 +3592,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPR
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -3886,6 +3906,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPR
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -4149,6 +4170,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPR
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -4362,6 +4384,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPR
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -4555,6 +4578,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPR
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -4728,6 +4752,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPR
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -4871,6 +4896,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPR
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -5021,6 +5047,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPR
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -5160,6 +5187,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPR
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -5472,6 +5500,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 s
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 8 + 13 = 21
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement polling on UNKNOWN (FN=21, TS=4)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=21, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-5): 0f 40 00 08 d6 3f 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 92 d2 12 53 93 d3 13 54 94 d4 14 55 95 d5 15 56 96 d6 16 57 97 d7 17 58 98 d8 d8 ca ca ca ca ca ca ca ca ca 0a 
@@ -5549,6 +5578,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 s
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 8 + 13 = 21
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement polling on UNKNOWN (FN=21, TS=4)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=21, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-6): 0f 40 00 00 cd bf d2 12 53 93 d3 13 54 94 d4 14 55 95 d5 15 56 96 d6 16 57 97 d7 17 58 98 d8 d8 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
@@ -5621,6 +5651,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 2 RLC blocks, 2 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement polling on UNKNOWN (FN=17, TS=4)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-7): 0f 00 00 02 a0 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc 80 f5 8f 93 a3 b3 c3 d3 e3 f3 03 14 24 34 44 54 64 74 84 94 a4 b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 b6 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
@@ -5697,6 +5728,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 2 RLC blocks, 2 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
+PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 4 + 13 = 17
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement polling on UNKNOWN (FN=17, TS=4)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-9): 0f 00 00 02 00 01 04 08 0c 10 14 18 1c 20 24 28 2c 30 34 38 3c 40 44 48 4c 50 54 58 5c 60 64 68 6c 70 74 78 7c 80 84 88 8c 90 94 98 9c a0 a4 a8 ac b0 b4 b8 bc c0 c4 c8 cc d0 d4 d8 dc e0 e4 e8 ec f0 f4 f8 fc 00 05 09 0d 11 15 19 1d 21 25 41 f3 af b4 c4 d4 e4 f4 04 15 25 35 45 55 65 75 85 95 a5 b5 c5 d5 e5 f5 05 16 26 36 b6 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
@@ -6027,6 +6059,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [alloc
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -6192,6 +6225,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [alloc
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -6517,6 +6551,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [alloc
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
@@ -7295,6 +7330,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_SEND_ACK to GPRS_RLCMAC_UL_ACK_NONE
 Received RTS for PDCH: TRX=0 TS=7 FN=2654279 block_nr=10 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654279 + 13 = 2654292
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------

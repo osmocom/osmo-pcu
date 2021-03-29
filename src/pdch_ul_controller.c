@@ -112,20 +112,43 @@ bool pdch_ulc_fn_is_free(struct pdch_ulc *ulc, uint32_t fn)
 	return !pdch_ulc_get_node(ulc, fn);
 }
 
+struct rrbp_opt {
+	uint8_t offset;
+	enum rrbp_field coding;
+};
+
 int pdch_ulc_get_next_free_rrbp_fn(struct pdch_ulc *ulc, uint32_t fn, uint32_t *poll_fn, unsigned int *rrbp)
 {
-	/* TODO: support other RRBP offsets, see TS 44.060 able 10.4.5.1 */
-	uint32_t new_poll_fn = next_fn(fn, 13);
-	if (!pdch_ulc_fn_is_free(ulc, new_poll_fn)) {
-		LOGPDCH(ulc->pdch, DRLCMAC, LOGL_ERROR, "Polling is already scheduled "
-			"for single block allocation at FN=%u\n", fn);
-		return -EBUSY;
+	uint8_t i;
+	static const struct rrbp_opt rrbp_list[] = {
+		{ 13, RRBP_N_plus_13 },
+		{ 17, RRBP_N_plus_17_18 },
+		{ 18, RRBP_N_plus_17_18 },
+		{ 21, RRBP_N_plus_21_22 },
+		{ 22, RRBP_N_plus_21_22 },
+		{ 26, RRBP_N_plus_26 },
+	};
+
+	for (i = 0; i < ARRAY_SIZE(rrbp_list); i++) {
+		uint32_t new_poll_fn = next_fn(fn, rrbp_list[i].offset);
+		if (!fn_valid(new_poll_fn))
+			continue;
+		if (pdch_ulc_fn_is_free(ulc, new_poll_fn)) {
+			LOGPDCH(ulc->pdch, DRLCMAC, LOGL_DEBUG, "POLL scheduled at FN %" PRIu32
+				" + %" PRIu8 " = %" PRIu32 "\n",
+				fn, rrbp_list[i].offset, new_poll_fn);
+			*poll_fn = new_poll_fn;
+			*rrbp = (unsigned int)rrbp_list[i].coding;
+			return 0;
+		}
+		LOGPDCH(ulc->pdch, DRLCMAC, LOGL_DEBUG, "UL block already scheduled at FN %" PRIu32
+			" + %" PRIu8 " = %" PRIu32 "\n",
+			fn, rrbp_list[i].offset, new_poll_fn);
+
 	}
-
-	*poll_fn = new_poll_fn;
-	*rrbp = 0;
-
-	return 0;
+	LOGPDCH(ulc->pdch, DRLCMAC, LOGL_ERROR, "FN=%" PRIu32 " "
+		"Failed allocating POLL, all RRBP values are already reserved!\n", fn);
+	return -EBUSY;
 }
 
 /* Get next free (unreserved) FN which is not located in time before "start_fn" */

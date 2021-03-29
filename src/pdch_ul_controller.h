@@ -30,6 +30,14 @@ struct gprs_rlcmac_tbf;
 struct gprs_rlcmac_ul_tbf;
 struct gprs_rlcmac_sba;
 
+/* RRBP offsets, see TS 44.060 able 10.4.5.1 */
+enum rrbp_field {
+	RRBP_N_plus_13 = 0x0,
+	RRBP_N_plus_17_18 = 0x1,
+	RRBP_N_plus_21_22 = 0x2,
+	RRBP_N_plus_26 = 0x3,
+};
+
 struct pdch_ulc {
 	struct gprs_rlcmac_pdch *pdch; /* back pointer */
 	uint32_t last_fn; /* last FN rx from TDMA clock */

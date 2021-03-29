@@ -236,6 +236,64 @@ static void test_next_free_fn_sba()
 	printf("=== end: %s ===\n", __FUNCTION__);
 }
 
+static void test_next_free_fn_rrbp()
+{
+	printf("=== start: %s ===\n", __FUNCTION__);
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
+	struct gprs_rlcmac_pdch *pdch = &bts->trx[0].pdch[0];
+	struct gprs_rlcmac_sba *sba1;
+	uint32_t poll_fn, curr_fn;
+	unsigned int rrbp;
+	int rc;
+
+	rc = pdch_ulc_get_next_free_rrbp_fn(pdch->ulc, 26, &poll_fn, &rrbp);
+	OSMO_ASSERT(rc == 0);
+	OSMO_ASSERT(poll_fn == 26+13);
+	OSMO_ASSERT(rrbp == RRBP_N_plus_13);
+
+
+	pdch->last_rts_fn = 52;
+	printf("*** ALLOC 1 SBA FN=%" PRIu32 ":\n", pdch->last_rts_fn);
+	sba1 = sba_alloc(bts, pdch, 0); (void)sba1;
+	print_ulc_nodes(pdch->ulc);
+	curr_fn = sba1->fn - 13;
+	rc = pdch_ulc_get_next_free_rrbp_fn(pdch->ulc, curr_fn, &poll_fn, &rrbp);
+	OSMO_ASSERT(rc == 0);
+	printf("***NEXT FREE RRBP FN=%" PRIu32 ":\n", poll_fn);
+	OSMO_ASSERT(poll_fn == (curr_fn+17) || poll_fn == (curr_fn+18));
+	OSMO_ASSERT(rrbp == RRBP_N_plus_17_18);
+
+	pdch->last_rts_fn = fn_next_block(pdch->last_rts_fn);
+	printf("*** ALLOC 1 SBA FN=%" PRIu32 ":\n", pdch->last_rts_fn);
+	sba1 = sba_alloc(bts, pdch, 0); (void)sba1;
+	print_ulc_nodes(pdch->ulc);
+	rc = pdch_ulc_get_next_free_rrbp_fn(pdch->ulc, curr_fn, &poll_fn, &rrbp);
+	OSMO_ASSERT(rc == 0);
+	printf("***NEXT FREE RRBP FN=%" PRIu32 ":\n", poll_fn);
+	OSMO_ASSERT(poll_fn == (curr_fn+21) || poll_fn == (curr_fn+22));
+	OSMO_ASSERT(rrbp == RRBP_N_plus_21_22);
+
+	pdch->last_rts_fn = fn_next_block(pdch->last_rts_fn);
+	printf("*** ALLOC 1 SBA FN=%" PRIu32 ":\n", pdch->last_rts_fn);
+	sba1 = sba_alloc(bts, pdch, 0); (void)sba1;
+	print_ulc_nodes(pdch->ulc);
+	rc = pdch_ulc_get_next_free_rrbp_fn(pdch->ulc, curr_fn, &poll_fn, &rrbp);
+	OSMO_ASSERT(rc == 0);
+	printf("***NEXT FREE RRBP FN=%" PRIu32 ":\n", poll_fn);
+	OSMO_ASSERT(poll_fn == (curr_fn+26));
+	OSMO_ASSERT(rrbp == RRBP_N_plus_26);
+
+	pdch->last_rts_fn = fn_next_block(pdch->last_rts_fn);
+	printf("*** ALLOC 1 SBA FN=%" PRIu32 ":\n", pdch->last_rts_fn);
+	sba1 = sba_alloc(bts, pdch, 0); (void)sba1;
+	print_ulc_nodes(pdch->ulc);
+	rc = pdch_ulc_get_next_free_rrbp_fn(pdch->ulc, curr_fn, &poll_fn, &rrbp);
+	OSMO_ASSERT(rc == -EBUSY);
+
+	talloc_free(bts);
+	printf("=== end: %s ===\n", __FUNCTION__);
+}
+
 int main(int argc, char **argv)
 {
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "pdch_ulc test context");
@@ -256,7 +314,7 @@ int main(int argc, char **argv)
 	test_reserve_multiple();
 	test_fn_wrap_around();
 	test_next_free_fn_sba();
-
+	test_next_free_fn_rrbp();
 	talloc_free(the_pcu);
 	return EXIT_SUCCESS;
 }

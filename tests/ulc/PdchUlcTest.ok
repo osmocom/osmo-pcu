@@ -256,3 +256,22 @@ FN=117 type=SBA
 FN=121 type=SBA
 FN=125 type=SBA
 === end: test_next_free_fn_sba ===
+=== start: test_next_free_fn_rrbp ===
+*** ALLOC 1 SBA FN=52:
+FN=104 type=SBA
+***NEXT FREE RRBP FN=108:
+*** ALLOC 1 SBA FN=56:
+FN=104 type=SBA
+FN=108 type=SBA
+***NEXT FREE RRBP FN=112:
+*** ALLOC 1 SBA FN=60:
+FN=104 type=SBA
+FN=108 type=SBA
+FN=112 type=SBA
+***NEXT FREE RRBP FN=117:
+*** ALLOC 1 SBA FN=65:
+FN=104 type=SBA
+FN=108 type=SBA
+FN=112 type=SBA
+FN=117 type=SBA
+=== end: test_next_free_fn_rrbp ===

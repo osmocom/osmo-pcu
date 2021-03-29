@@ -57,6 +57,12 @@ static inline unsigned fn2bn(unsigned fn)
 	return (fn % 52) / 4;
 }
 
+static inline bool fn_valid(uint32_t fn)
+{
+	uint32_t f = fn % 13;
+	return f == 0 || f == 4 || f == 8;
+}
+
 static inline unsigned fn_next_block(unsigned fn)
 {
 	unsigned bn = fn2bn(fn) + 1;

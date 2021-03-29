@@ -41,3 +41,18 @@ PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=34 is still reserved!
 PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=34): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=RELEASING)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=39 is still reserved!
 PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=39): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=RELEASING)
+PDCH(bts=0,trx=0,ts=0) POLL scheduled at FN 26 + 13 = 39
+PDCH(bts=0,trx=0,ts=0) UL block already scheduled at FN 91 + 13 = 104
+PDCH(bts=0,trx=0,ts=0) POLL scheduled at FN 91 + 17 = 108
+PDCH(bts=0,trx=0,ts=0) UL block already scheduled at FN 91 + 13 = 104
+PDCH(bts=0,trx=0,ts=0) UL block already scheduled at FN 91 + 17 = 108
+PDCH(bts=0,trx=0,ts=0) POLL scheduled at FN 91 + 21 = 112
+PDCH(bts=0,trx=0,ts=0) UL block already scheduled at FN 91 + 13 = 104
+PDCH(bts=0,trx=0,ts=0) UL block already scheduled at FN 91 + 17 = 108
+PDCH(bts=0,trx=0,ts=0) UL block already scheduled at FN 91 + 21 = 112
+PDCH(bts=0,trx=0,ts=0) POLL scheduled at FN 91 + 26 = 117
+PDCH(bts=0,trx=0,ts=0) UL block already scheduled at FN 91 + 13 = 104
+PDCH(bts=0,trx=0,ts=0) UL block already scheduled at FN 91 + 17 = 108
+PDCH(bts=0,trx=0,ts=0) UL block already scheduled at FN 91 + 21 = 112
+PDCH(bts=0,trx=0,ts=0) UL block already scheduled at FN 91 + 26 = 117
+PDCH(bts=0,trx=0,ts=0) FN=91 Failed allocating POLL, all RRBP values are already reserved!
