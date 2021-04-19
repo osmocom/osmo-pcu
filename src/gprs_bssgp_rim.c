@@ -87,6 +87,13 @@ static void fill_app_cont_nacc(struct bssgp_ran_inf_app_cont_nacc *app_cont, con
 	/* Note: It is possible that the resulting PDU will not contain any system information, even if this is
 	 * an unlikely case since the BTS immediately updates the system information after startup. The
 	 * specification permits to send zero system information, see also: 3GPP TS 48.018 section 11.3.63.2.1 */
+
+	if (!bts->si1_is_set || !bts->si3_is_set || !bts->si13_is_set)
+		LOGP(DNACC, LOGL_INFO, "TX RAN INFO RESPONSE (NACC) %s: Some SI are missing:%s%s%s\n",
+		     osmo_cgi_ps_name(&app_cont->reprt_cell),
+		     bts->si1_is_set ? "" : " SI1",
+		     bts->si3_is_set ? "" : " SI3",
+		     bts->si13_is_set ? "" : " SI13");
 }
 
 /* Format a RAN INFORMATION PDU that contains the requested system information */
@@ -243,7 +250,7 @@ int handle_rim(struct osmo_bssgp_prim *bp)
 				pdu->routing_info_dest.geran.cid);
 	bts = gprs_pcu_get_bts_by_cgi_ps(the_pcu, &dst_addr);
 	if (!bts) {
-		LOGPRIM(nsei, LOGL_ERROR, "Cell %s unknown to this pcu\n",
+		LOGPRIM(nsei, LOGL_ERROR, "Destination cell %s unknown to this pcu\n",
 			osmo_cgi_ps_name(&dst_addr));
 		return bssgp_tx_status(BSSGP_CAUSE_UNKN_DST, NULL, msg);
 	}
@@ -251,7 +258,8 @@ int handle_rim(struct osmo_bssgp_prim *bp)
 	/* Check if the incoming RIM PDU is parseable, if not we must report
 	 * an error to the controlling BSS 3GPP TS 48.018, 8c.3.4 and 8c.3.4.2 */
 	if (!pdu->decoded_present) {
-		LOGPRIM(nsei, LOGL_ERROR, "Errornous RIM PDU received -- rejected.\n");
+		LOGPRIM(nsei, LOGL_ERROR, "Erroneous RIM PDU received for cell %s -- reject.\n",
+			osmo_cgi_ps_name(&dst_addr));
 		format_response_pdu_err(&resp_pdu, pdu);
 		return 0;
 	}
@@ -259,7 +267,9 @@ int handle_rim(struct osmo_bssgp_prim *bp)
 	/* Check if the RIM container inside the incoming RIM PDU has the correct
 	 * application ID */
 	if (!match_app_id(pdu, BSSGP_RAN_INF_APP_ID_NACC)) {
-		LOGPRIM(nsei, LOGL_ERROR, "RIM PDU with unknown/wrong application ID received -- rejected.\n");
+		LOGPRIM(nsei, LOGL_ERROR,
+			"RIM PDU for cell %s with unknown/wrong application ID received -- reject.\n",
+			osmo_cgi_ps_name(&dst_addr));
 		format_response_pdu_err(&resp_pdu, pdu);
 		return 0;
 	}
@@ -269,10 +279,14 @@ int handle_rim(struct osmo_bssgp_prim *bp)
 	case BSSGP_IE_RI_REQ_RIM_CONTAINER:
 		rc = osmo_cgi_ps_cmp(&dst_addr, &pdu->decoded.req_rim_cont.u.app_cont_nacc.reprt_cell);
 		if (rc != 0) {
-			LOGPRIM(nsei, LOGL_ERROR, "reporting cell in RIM application container does not match destination cell in RIM routing info -- rejected.\n");
+			LOGPRIM(nsei, LOGL_ERROR, "reporting cell in RIM application container %s "
+				"does not match destination cell in RIM routing info %s -- rejected.\n",
+				osmo_cgi_ps_name(&pdu->decoded.req_rim_cont.u.app_cont_nacc.reprt_cell),
+				osmo_cgi_ps_name2(&dst_addr));
 			format_response_pdu_err(&resp_pdu, pdu);
 		} else {
-			LOGPRIM(nsei, LOGL_INFO, "Responding to RAN INFORMATION REQUEST ...\n");
+			LOGPRIM(nsei, LOGL_INFO, "Responding to RAN INFORMATION REQUEST %s ...\n",
+				osmo_cgi_ps_name(&pdu->decoded.req_rim_cont.u.app_cont_nacc.reprt_cell));
 			format_response_pdu(&resp_pdu, pdu, bts);
 		}
 		bssgp_tx_rim(&resp_pdu, nsei);
