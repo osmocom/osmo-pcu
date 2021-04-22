@@ -156,7 +156,6 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t
 	}
 	tbf->m_contention_resolution_done = 1;
 	TBF_SET_ASS_ON(tbf, GPRS_RLCMAC_FLAG_PACCH, false);
-	T_START(tbf, T3169, 3169, "allocation (UL-TBF)", true);
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(tbf->ms());
 
@@ -360,9 +359,6 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 	uint32_t new_tlli = GSM_RESERVED_TMSI;
 	unsigned int block_idx;
-
-	/* restart T3169 */
-	T_START(this, T3169, 3169, "acked (data)", true);
 
 	/* Increment RX-counter */
 	this->m_rx_counter++;
