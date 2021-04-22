@@ -1044,14 +1044,7 @@ gprs_rlcmac_tbf *gprs_rlcmac_pdch::tbf_by_tfi(uint8_t tfi,
 
 	tbf = m_tbfs[dir][tfi];
 
-	if (!tbf)
-		return NULL;
-
-	if (tbf->state_is_not(GPRS_RLCMAC_RELEASING)) {
-		return tbf;
-	}
-
-	return NULL;
+	return tbf;
 }
 
 void gprs_rlcmac_pdch::attach_tbf(gprs_rlcmac_tbf *tbf)
