@@ -594,37 +594,76 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 	struct gprs_rlcmac_sba *sba;
 
 	if (request->ID.UnionType) {
-		struct gprs_rlcmac_ul_tbf *ul_tbf;
+		struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
+		struct pdch_ulc_node *item;
 		uint32_t tlli = request->ID.u.TLLI;
-		bool ms_found = true;
 
 		GprsMs *ms = bts_ms_by_tlli(bts(), tlli, GSM_RESERVED_TMSI);
 		if (!ms) {
-			ms_found = false;
 			ms = bts_alloc_ms(bts(), 0, 0); /* ms class updated later */
 			ms_set_tlli(ms, tlli);
 		}
-		ul_tbf = ms_ul_tbf(ms); /* hence ul_tbf may be NULL */
 
 		/* Keep the ms, even if it gets idle temporarily */
 		ms_ref(ms);
 
-		LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "MS requests UL TBF "
-			"in packet resource request of single "
-			"block, so we provide one:\n");
-		sba = pdch_ulc_get_sba(this->ulc, fn);
-		if (sba) {
+		if (!(item = pdch_ulc_get_node(ulc, fn))) {
+			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
+				"UL block not reserved\n", fn);
+			goto return_unref;
+		}
+
+		switch (item->type) {
+		case PDCH_ULC_NODE_SBA:
+			sba = item->sba.sba;
+			LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "FN=%u PKT RESOURCE REQ: "
+				"MS requests UL TBF throguh SBA\n", fn);
 			ms_set_ta(ms, sba->ta);
 			sba_free(sba);
-		} else if (!ul_tbf || !ul_tbf->state_is(GPRS_RLCMAC_FINISHED)) {
-			LOGPTBFUL(ul_tbf, LOGL_NOTICE,
-				  "MS requests UL TBF in PACKET RESOURCE REQ of "
-				  "single block, but there is no resource request "
-				  "scheduled!\n");
+			break;
+		case PDCH_ULC_NODE_TBF_POLL:
+			if (item->tbf_poll.poll_tbf->direction != GPRS_RLCMAC_UL_TBF) {
+				LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
+					"Unexpectedly received for DL TBF %s\n", fn,
+					tbf_name(item->tbf_poll.poll_tbf));
+				/* let common path expire the poll */
+				goto return_unref;
+			}
+			ul_tbf = (struct gprs_rlcmac_ul_tbf *)item->tbf_poll.poll_tbf;
+			if (item->tbf_poll.reason != PDCH_ULC_POLL_UL_ACK) {
+				LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
+					"Unexpectedly received, waiting for poll reason %d\n",
+					fn, item->tbf_poll.reason);
+				/* let common path expire the poll */
+				goto return_unref;
+			}
+			if (ul_tbf != ms_ul_tbf(ms)) {
+				LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
+					"Unexpected TLLI 0x%08x received vs exp 0x%08x\n",
+					fn, tlli, ul_tbf->tlli());
+				/* let common path expire the poll */
+				goto return_unref;
+			}
+			/* 3GPP TS 44.060 $ 9.3.3.3 */
+			LOGPTBFUL(ul_tbf, LOGL_DEBUG, "FN=%u PKT RESOURCE REQ: "
+				"MS requests reuse of finished UL TBF in RRBP "
+				"block of final UL ACK/NACK\n", fn);
+			ul_tbf->n_reset(N3103);
+			pdch_ulc_release_node(ulc, item);
+			break;
+		case PDCH_ULC_NODE_TBF_USF:
+			/* Is it actually valid for an MS to send a PKT Res Req during USF? */
+			ul_tbf = item->tbf_usf.ul_tbf;
+			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
+				"Unexpectedly received, waiting USF of %s\n",
+				fn, tbf_name(item->tbf_usf.ul_tbf));
+			pdch_ulc_release_node(ulc, item);
+			break;
+		default:
+			OSMO_ASSERT(0);
 		}
-		/* else: Resource Request can be received even if not scheduled
-		   by the network since it's used by MS to re-establish a new UL
-		   TBF when last one has finished. */
+
+		/* here ul_tbf may be NULL in SBA case (no previous TBF) */
 
 		if (request->Exist_MS_Radio_Access_capability2) {
 			uint8_t ms_class, egprs_ms_class;
@@ -637,7 +676,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		}
 
 		/* Get rid of previous finished UL TBF before providing a new one */
-		if (ms_found && ul_tbf) {
+		if (ul_tbf) {
 			if (!ul_tbf->state_is(GPRS_RLCMAC_FINISHED))
 				LOGPTBFUL(ul_tbf, LOGL_NOTICE,
 					  "Got PACKET RESOURCE REQ while TBF not finished, killing pending UL TBF\n");
@@ -660,10 +699,8 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		TBF_SET_ASS_STATE_UL(ul_tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS);
 
 		/* get measurements */
-		if (ul_tbf->ms()) {
-			get_meas(meas, request);
-			ms_update_l1_meas(ul_tbf->ms(), meas);
-		}
+		get_meas(meas, request);
+		ms_update_l1_meas(ul_tbf->ms(), meas);
 return_unref:
 		ms_unref(ms);
 		return;

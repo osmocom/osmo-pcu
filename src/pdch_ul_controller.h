@@ -55,7 +55,7 @@ extern const struct value_string pdch_ul_node_names[];
 enum pdch_ulc_tbf_poll_reason {
 	PDCH_ULC_POLL_UL_ASS, /* Expect CTRL ACK for UL ASS we transmit */
 	PDCH_ULC_POLL_DL_ASS, /* Expect CTRL ACK for DL ASS we transmit */
-	PDCH_ULC_POLL_UL_ACK, /* Expect CTRL ACK for UL ACK/NACK we transmit */
+	PDCH_ULC_POLL_UL_ACK, /* Expect CTRL ACK (or PKT RES REQ on final UL ACK/NACK) for UL ACK/NACK we transmit */
 	PDCH_ULC_POLL_DL_ACK, /* Expect DL ACK/NACK requested by RRBP */
 	PDCH_ULC_POLL_CELL_CHG_CONTINUE, /* Expect CTRL ACK for Pkt cell Change Continue we transmit */
 };

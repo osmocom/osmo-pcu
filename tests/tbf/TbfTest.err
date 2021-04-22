@@ -1517,7 +1517,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control 
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
-PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
+PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
@@ -1601,7 +1601,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control 
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
-PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
+PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
@@ -1746,7 +1746,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654348 +++++++++++++++++++++++++ RX : Uplink Control 
 PDCH(bts=0,trx=0,ts=7) FN=2654348 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf5667788, not yet confirmed
-PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
+PDCH(bts=0,trx=0,ts=7) FN=2654348 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf5667788, TA 220 -> 7
 Modifying MS object, TLLI = 0xf5667788, MS class 0 -> 1
 MS(TLLI=0xf5667788, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
@@ -1825,7 +1825,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control 
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
-PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
+PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
@@ -1914,7 +1914,7 @@ Found first unallocated TRX=0 TFI=0
 Detected FN jump! 2654275 -> 2654327
 PDCH(bts=0,trx=0,ts=7) FN=2654327 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654327 ------------------------- RX : Uplink Control Block -------------------------
-PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
+PDCH(bts=0,trx=0,ts=7) FN=2654327 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
@@ -1971,7 +1971,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control 
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
-PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
+PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
@@ -2118,7 +2118,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control 
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
-PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
+PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
@@ -3243,7 +3243,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control 
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
-PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
+PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
@@ -3335,7 +3335,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control 
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
-PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
+PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
@@ -5930,7 +5930,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control 
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
-PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
+PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
@@ -6095,7 +6095,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control 
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
-PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
+PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
@@ -6420,7 +6420,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control 
 PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
-PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
+PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
@@ -7845,11 +7845,51 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
 packet reject: 40 84 7f f7 6e e6 41 4b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 === end test_packet_access_rej_epdan ===
 === start test_packet_access_rej_prr ===
-MS requests Uplink resource on CCCH/RACH: ra=0x78 (8 bit) Fn=2654167 qta=31
+MS requests Uplink resource on CCCH/RACH: ra=0x70 (8 bit) Fn=2654167 qta=31
+MS requests single block allocation
+Allocated a single block at SBFn=52 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+MS requests Uplink resource on CCCH/RACH: ra=0x71 (8 bit) Fn=2654167 qta=31
+MS requests single block allocation
+Allocated a single block at SBFn=56 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+MS requests Uplink resource on CCCH/RACH: ra=0x72 (8 bit) Fn=2654167 qta=31
+MS requests single block allocation
+Allocated a single block at SBFn=60 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
+MS requests single block allocation
+Allocated a single block at SBFn=65 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+MS requests Uplink resource on CCCH/RACH: ra=0x74 (8 bit) Fn=2654167 qta=31
+MS requests single block allocation
+Allocated a single block at SBFn=69 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+MS requests Uplink resource on CCCH/RACH: ra=0x75 (8 bit) Fn=2654167 qta=31
+MS requests single block allocation
+Allocated a single block at SBFn=73 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+MS requests Uplink resource on CCCH/RACH: ra=0x76 (8 bit) Fn=2654167 qta=31
+MS requests single block allocation
+Allocated a single block at SBFn=78 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+MS requests Uplink resource on CCCH/RACH: ra=0x77 (8 bit) Fn=2654167 qta=31
+MS requests single block allocation
+Allocated a single block at SBFn=82 TRX=0 TS=7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
+Detected FN jump! 2654167 -> 52
+PDCH(bts=0,trx=0,ts=7) FN=52 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=52 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
-[UL] algo A <single> (suggested TRX: -1): Alloc start
+Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddcc, not yet confirmed
+PDCH(bts=0,trx=0,ts=7) FN=52 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
+Modifying MS object, TLLI = 0xffeeddcc, TA 220 -> 7
+Modifying MS object, TLLI = 0xffeeddcc, MS class 0 -> 11
+Modifying MS object, TLLI = 0xffeeddcc, EGPRS MS class 0 -> 11
+MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
+MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) Allocating UL TBF
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7858,20 +7898,35 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=0 USF=0
-PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL), 1 TBFs, USFs = 01, TFIs = 00000001.
-TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) Setting Control TS 7
-TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL)
-Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
-TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
-TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
-TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
-Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
-MS requests Uplink resource on CCCH/RACH: ra=0x79 (8 bit) Fn=2654167 qta=31
+PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL EGPRS), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL EGPRS) Setting Control TS 7
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)
+ws(64)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=52
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS)
+PDCH(bts=0,trx=0,ts=7) FN=56 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=56 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
-[UL] algo A <single> (suggested TRX: -1): Alloc start
+Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddcd, not yet confirmed
+PDCH(bts=0,trx=0,ts=7) FN=56 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
+Modifying MS object, TLLI = 0xffeeddcd, TA 220 -> 7
+Modifying MS object, TLLI = 0xffeeddcd, MS class 0 -> 11
+Modifying MS object, TLLI = 0xffeeddcd, EGPRS MS class 0 -> 11
+MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
+MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) Allocating UL TBF
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7880,20 +7935,40 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=1 USF=1
-PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=NULL), 2 TBFs, USFs = 03, TFIs = 00000003.
-TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=NULL) Setting Control TS 7
-TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=NULL)
-Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
-TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
-TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
-TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
-Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=1 USF=1
-MS requests Uplink resource on CCCH/RACH: ra=0x7a (8 bit) Fn=2654167 qta=31
+PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=NULL EGPRS), 2 TBFs, USFs = 03, TFIs = 00000003.
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=NULL EGPRS) Setting Control TS 7
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=NULL EGPRS)
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)
+ws(64)
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=56
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+PDCH(bts=0,trx=0,ts=7) Expiring FN=56 but previous FN=2654231 is still reserved!
+PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 56)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS)
+PDCH(bts=0,trx=0,ts=7) FN=60 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=60 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
-[UL] algo A <single> (suggested TRX: -1): Alloc start
+Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddce, not yet confirmed
+PDCH(bts=0,trx=0,ts=7) FN=60 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
+Modifying MS object, TLLI = 0xffeeddce, TA 220 -> 7
+Modifying MS object, TLLI = 0xffeeddce, MS class 0 -> 11
+Modifying MS object, TLLI = 0xffeeddce, EGPRS MS class 0 -> 11
+MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
+MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) Allocating UL TBF
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7902,20 +7977,40 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=2 USF=2
-PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=NULL), 3 TBFs, USFs = 07, TFIs = 00000007.
-TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=NULL) Setting Control TS 7
-TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=NULL)
-Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
-TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
-TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
-TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
-Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=2 USF=2
-MS requests Uplink resource on CCCH/RACH: ra=0x7b (8 bit) Fn=2654167 qta=31
+PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=NULL EGPRS), 3 TBFs, USFs = 07, TFIs = 00000007.
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=NULL EGPRS) Setting Control TS 7
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=NULL EGPRS)
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)
+ws(64)
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=60
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+PDCH(bts=0,trx=0,ts=7) Expiring FN=60 but previous FN=2654231 is still reserved!
+PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS)
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 60)
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS)
+PDCH(bts=0,trx=0,ts=7) FN=65 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=65 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
-[UL] algo A <single> (suggested TRX: -1): Alloc start
+Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddcf, not yet confirmed
+PDCH(bts=0,trx=0,ts=7) FN=65 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
+Modifying MS object, TLLI = 0xffeeddcf, TA 220 -> 7
+Modifying MS object, TLLI = 0xffeeddcf, MS class 0 -> 11
+Modifying MS object, TLLI = 0xffeeddcf, EGPRS MS class 0 -> 11
+MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
+MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) Allocating UL TBF
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7924,20 +8019,40 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=3 USF=3
-PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=NULL), 4 TBFs, USFs = 0f, TFIs = 0000000f.
-TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=NULL) Setting Control TS 7
-TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=NULL)
-Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
-TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
-TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
-TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
-Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=3 USF=3
-MS requests Uplink resource on CCCH/RACH: ra=0x7c (8 bit) Fn=2654167 qta=31
+PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=NULL EGPRS), 4 TBFs, USFs = 0f, TFIs = 0000000f.
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=NULL EGPRS) Setting Control TS 7
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=NULL EGPRS)
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)
+ws(64)
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=65
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+PDCH(bts=0,trx=0,ts=7) Expiring FN=65 but previous FN=2654231 is still reserved!
+PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS)
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 65)
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS)
+PDCH(bts=0,trx=0,ts=7) FN=69 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=69 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
-[UL] algo A <single> (suggested TRX: -1): Alloc start
+Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddd0, not yet confirmed
+PDCH(bts=0,trx=0,ts=7) FN=69 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
+Modifying MS object, TLLI = 0xffeeddd0, TA 220 -> 7
+Modifying MS object, TLLI = 0xffeeddd0, MS class 0 -> 11
+Modifying MS object, TLLI = 0xffeeddd0, EGPRS MS class 0 -> 11
+MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
+MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) Allocating UL TBF
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7946,20 +8061,40 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=4 USF=4
-PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=NULL), 5 TBFs, USFs = 1f, TFIs = 0000001f.
-TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=NULL) Setting Control TS 7
-TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=NULL)
-Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
-TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
-TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
-TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
-Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=4 USF=4
-MS requests Uplink resource on CCCH/RACH: ra=0x7d (8 bit) Fn=2654167 qta=31
+PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=NULL EGPRS), 5 TBFs, USFs = 1f, TFIs = 0000001f.
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=NULL EGPRS)
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)
+ws(64)
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=69
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+PDCH(bts=0,trx=0,ts=7) Expiring FN=69 but previous FN=2654231 is still reserved!
+PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS)
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 69)
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS)
+PDCH(bts=0,trx=0,ts=7) FN=73 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=73 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
-[UL] algo A <single> (suggested TRX: -1): Alloc start
+Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddd1, not yet confirmed
+PDCH(bts=0,trx=0,ts=7) FN=73 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
+Modifying MS object, TLLI = 0xffeeddd1, TA 220 -> 7
+Modifying MS object, TLLI = 0xffeeddd1, MS class 0 -> 11
+Modifying MS object, TLLI = 0xffeeddd1, EGPRS MS class 0 -> 11
+MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
+MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) Allocating UL TBF
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7968,20 +8103,40 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=5 USF=5
-PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=NULL), 6 TBFs, USFs = 3f, TFIs = 0000003f.
-TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=NULL) Setting Control TS 7
-TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=NULL)
-Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
-TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
-TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
-TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
-Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=5 USF=5
-MS requests Uplink resource on CCCH/RACH: ra=0x7e (8 bit) Fn=2654167 qta=31
+PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=NULL EGPRS), 6 TBFs, USFs = 3f, TFIs = 0000003f.
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=NULL EGPRS)
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)
+ws(64)
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=73
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+PDCH(bts=0,trx=0,ts=7) Expiring FN=73 but previous FN=2654231 is still reserved!
+PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS)
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 73)
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS)
+PDCH(bts=0,trx=0,ts=7) FN=78 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=78 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
-[UL] algo A <single> (suggested TRX: -1): Alloc start
+Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddd2, not yet confirmed
+PDCH(bts=0,trx=0,ts=7) FN=78 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
+Modifying MS object, TLLI = 0xffeeddd2, TA 220 -> 7
+Modifying MS object, TLLI = 0xffeeddd2, MS class 0 -> 11
+Modifying MS object, TLLI = 0xffeeddd2, EGPRS MS class 0 -> 11
+MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
+MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) Allocating UL TBF
+[UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
 - Skipping TS 2, because not enabled
@@ -7990,27 +8145,39 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [UL] Assign uplink TS=7 TFI=6 USF=6
-PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=NULL), 7 TBFs, USFs = 7f, TFIs = 0000007f.
-TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=NULL) Setting Control TS 7
-TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=NULL)
-Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
-TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
-TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
-TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3169 [RACH (new UL-TBF)] with 5 sec. 0 microsec, cur_fn=2654167
-Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=6 USF=6
-Detected FN jump! 2654167 -> 2654270
-PDCH(bts=0,trx=0,ts=7) FN=2654270 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) FN=2654270 ------------------------- RX : Uplink Control Block -------------------------
+PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=NULL EGPRS), 7 TBFs, USFs = 7f, TFIs = 0000007f.
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=NULL EGPRS) Setting Control TS 7
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=NULL EGPRS)
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)
+ws(64)
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=NULL EGPRS) changes state from NULL to ASSIGN
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) starting timer T3169 [allocation (UL-TBF)] with 5 sec. 0 microsec, cur_fn=78
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+PDCH(bts=0,trx=0,ts=7) Expiring FN=78 but previous FN=2654231 is still reserved!
+PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS)
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 78)
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS)
+PDCH(bts=0,trx=0,ts=7) FN=82 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=82 ------------------------- RX : Uplink Control Block -------------------------
 Creating MS object, TLLI = 0xffffffff
-Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddcc, not yet confirmed
-PDCH(bts=0,trx=0,ts=7) MS requests UL TBF in packet resource request of single block, so we provide one:
-(no TBF) MS requests UL TBF in PACKET RESOURCE REQ of single block, but there is no resource request scheduled!
-Modifying MS object, TLLI = 0xffeeddcc, MS class 0 -> 11
-Modifying MS object, TLLI = 0xffeeddcc, EGPRS MS class 0 -> 11
-MS(TLLI=0xffeeddcc, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
-MS(TLLI=0xffeeddcc, IMSI=, TA=220, 11/11,) ********** UL-TBF starts here **********
-MS(TLLI=0xffeeddcc, IMSI=, TA=220, 11/11,) Allocating UL TBF
+Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddd3, not yet confirmed
+PDCH(bts=0,trx=0,ts=7) FN=82 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
+Modifying MS object, TLLI = 0xffeeddd3, TA 220 -> 7
+Modifying MS object, TLLI = 0xffeeddd3, MS class 0 -> 11
+Modifying MS object, TLLI = 0xffeeddd3, EGPRS MS class 0 -> 11
+MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
+MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8021,14 +8188,22 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=220, 11/11,) Allocating UL TBF
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because no USF available
 [UL] algo A <multi> (suggested TRX: 0): failed to allocate a TS, no USF available
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL EGPRS) Timeslot Allocation failed: trx = 0, single_slot = 0
-MS(TLLI=0xffeeddcc, IMSI=, TA=220, 11/11,) No PDCH resource
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL) changes state from NULL to ASSIGN
-MS(TLLI=0xffeeddcc, IMSI=, TA=220, 11/11,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ
-Received RTS for PDCH: TRX=0 TS=7 FN=2654218 block_nr=8 scheduling USF=0 for required uplink resource of UL TFI=0
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) starting timer T0 [reject (PACCH)] with 0 sec. 2000 microsec, cur_fn=2654270
-PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
+TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL EGPRS) Timeslot Allocation failed: trx = 0, single_slot = 0
+MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) No PDCH resource
+TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
+MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=ASSIGN)
+TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ
+PDCH(bts=0,trx=0,ts=7) Expiring FN=82 but previous FN=2654231 is still reserved!
+PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS)
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 82)
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Uplink Assignment -------------------------
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS)
 === end test_packet_access_rej_prr ===
 === start test_packet_access_rej_prr_no_other_tbfs ===
 Creating MS object, TLLI = 0xffffffff

@@ -3214,44 +3214,44 @@ static void test_packet_access_rej_prr()
 	/*
 	 * Trigger rach till resources(USF) exhaust
 	 */
-	rc = bts_handle_rach(bts, 0x78, rach_fn, qta);
-	rc = bts_handle_rach(bts, 0x79, rach_fn, qta);
-	rc = bts_handle_rach(bts, 0x7a, rach_fn, qta);
-	rc = bts_handle_rach(bts, 0x7b, rach_fn, qta);
-	rc = bts_handle_rach(bts, 0x7c, rach_fn, qta);
-	rc = bts_handle_rach(bts, 0x7d, rach_fn, qta);
-	rc = bts_handle_rach(bts, 0x7e, rach_fn, qta);
-
-	/* fake a resource request */
-	ulreq.u.MESSAGE_TYPE = MT_PACKET_RESOURCE_REQUEST;
-	presreq = &ulreq.u.Packet_Resource_Request;
-	presreq->PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
-	presreq->ID.UnionType = 1; /* != 0 */
-	presreq->ID.u.TLLI = tlli;
-	presreq->Exist_MS_Radio_Access_capability2 = 1;
-	pmsradiocap = &presreq->MS_Radio_Access_capability2;
-	pmsradiocap->Count_MS_RA_capability_value = 1;
-	pmsradiocap->MS_RA_capability_value[0].u.Content.
-		Exist_Multislot_capability = 1;
-	pmultislotcap = &pmsradiocap->MS_RA_capability_value[0].
-		u.Content.Multislot_capability;
-
-	pmultislotcap->Exist_GPRS_multislot_class = 1;
-	pmultislotcap->GPRS_multislot_class = ms_class;
-	if (egprs_ms_class) {
-		pmultislotcap->Exist_EGPRS_multislot_class = 1;
-		pmultislotcap->EGPRS_multislot_class = egprs_ms_class;
+	int i;
+	for (i = 0; i < 8; i++) {
+		rc = bts_handle_rach(bts, 0x70 + i, rach_fn, qta);
 	}
 
-	send_ul_mac_block(bts, trx_no, ts_no, &ulreq, sba_fn);
+	sba_fn = 52;
+	for (i = 0; i < 8; i++) {
+		/* fake a resource request */
+		ulreq.u.MESSAGE_TYPE = MT_PACKET_RESOURCE_REQUEST;
+		presreq = &ulreq.u.Packet_Resource_Request;
+		presreq->PayloadType = GPRS_RLCMAC_CONTROL_BLOCK;
+		presreq->ID.UnionType = 1; /* != 0 */
+		presreq->ID.u.TLLI = tlli + i;
+		presreq->Exist_MS_Radio_Access_capability2 = 1;
+		pmsradiocap = &presreq->MS_Radio_Access_capability2;
+		pmsradiocap->Count_MS_RA_capability_value = 1;
+		pmsradiocap->MS_RA_capability_value[0].u.Content.
+			Exist_Multislot_capability = 1;
+		pmultislotcap = &pmsradiocap->MS_RA_capability_value[0].
+			u.Content.Multislot_capability;
 
-	/* trigger packet access reject */
-	uint8_t bn = fn2bn(fn);
+		pmultislotcap->Exist_GPRS_multislot_class = 1;
+		pmultislotcap->GPRS_multislot_class = ms_class;
+		if (egprs_ms_class) {
+			pmultislotcap->Exist_EGPRS_multislot_class = 1;
+			pmultislotcap->EGPRS_multislot_class = egprs_ms_class;
+		}
 
-	rc = gprs_rlcmac_rcv_rts_block(bts,
-		trx_no, ts_no, fn, bn);
+		send_ul_mac_block(bts, trx_no, ts_no, &ulreq, sba_fn);
+		sba_fn = fn_next_block(sba_fn);
 
-	OSMO_ASSERT(rc == 0);
+		/* trigger packet access reject */
+		uint8_t bn = fn2bn(fn);
+
+		rc = gprs_rlcmac_rcv_rts_block(bts,
+			trx_no, ts_no, fn, bn);
+		OSMO_ASSERT(rc == 0);
+	}
 
 	TALLOC_FREE(the_pcu);
 	fprintf(stderr, "=== end %s ===\n", __func__);
