@@ -43,8 +43,6 @@ struct gprs_rlcmac_sba *sba_alloc(void *ctx, struct gprs_rlcmac_pdch *pdch, uint
 void sba_free(struct gprs_rlcmac_sba *sba);
 void sba_timeout(struct gprs_rlcmac_sba *sba);
 
-uint32_t find_sba_rts(struct gprs_rlcmac_pdch *pdch, uint32_t fn, uint8_t block_nr);
-
 #ifdef __cplusplus
 }
 #endif

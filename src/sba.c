@@ -95,15 +95,3 @@ void sba_timeout(struct gprs_rlcmac_sba *sba)
 	/* Upon timeout, the UL Controller node is already released */
 	sba_free_norelease(sba);
 }
-
-uint32_t find_sba_rts(struct gprs_rlcmac_pdch *pdch, uint32_t fn, uint8_t block_nr)
-{
-	uint32_t sba_fn = rts_next_fn(fn, block_nr);
-	struct gprs_rlcmac_sba *sba;
-
-	sba = pdch_ulc_get_sba(pdch->ulc, sba_fn);
-	if (sba)
-		return sba_fn;
-
-	return 0xffffffff;
-}
