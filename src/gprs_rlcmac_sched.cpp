@@ -175,12 +175,8 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 			 */
 			if (tbf == tbfs->ul_ass && tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
 				msg = tbfs->ul_ass->create_packet_access_reject();
-			else if (tbf == tbfs->ul_ass && tbf->direction ==
-					GPRS_RLCMAC_DL_TBF)
-				if (tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
-					msg = tbfs->ul_ass->create_packet_access_reject();
-				else
-					msg = tbfs->ul_ass->create_ul_ass(fn, ts);
+			else if (tbf == tbfs->ul_ass && tbf->direction == GPRS_RLCMAC_DL_TBF)
+				msg = tbfs->ul_ass->create_ul_ass(fn, ts);
 			else if (tbf == tbfs->dl_ass && tbf->direction == GPRS_RLCMAC_UL_TBF)
 				msg = tbfs->dl_ass->create_dl_ass(fn, ts);
 			else if (tbf == tbfs->ul_ack)
