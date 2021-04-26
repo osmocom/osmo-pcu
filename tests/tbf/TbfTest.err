@@ -7615,7 +7615,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPR
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes state from NULL to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
-packet reject: 40 84 7f f7 6e e6 41 4b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+packet reject: 40 84 7f f7 6e e6 7e ab 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 === end test_packet_access_rej_epdan ===
 === start test_packet_access_rej_prr ===
 MS requests Uplink resource on CCCH/RACH: ra=0x70 (8 bit) Fn=2654167 qta=31

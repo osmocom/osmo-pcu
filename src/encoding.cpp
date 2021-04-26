@@ -1711,7 +1711,7 @@ void Encoding::rlc_data_to_dl_append_egprs_li_padding(
  * 8.1.2.5 Establishment of uplink TBF
  */
 void Encoding::write_packet_access_reject(
-	bitvec * dest, uint32_t tlli)
+	bitvec * dest, uint32_t tlli, unsigned long t3172_ms)
 {
 	unsigned wp = 0;
 
@@ -1725,9 +1725,15 @@ void Encoding::write_packet_access_reject(
 	bitvec_write_field(dest, &wp, 0x0, 1);  //  TLLI / G-RNTI : bit (32)
 	bitvec_write_field(dest, &wp, tlli, 32); // CONTENTION_RESOLUTION_TLLI
 	bitvec_write_field(dest, &wp, 1, 1);  //  WAIT_INDICATION size in seconds
-	/* TODO: make it configurable */
-	bitvec_write_field(dest, &wp, 5, 8);  //  WAIT_INDICATION value
-	bitvec_write_field(dest, &wp, 0, 1);  //  WAIT_INDICATION size in seconds
+
+	/* WAIT_INDICATION, WAIT_INDICATION_SIZE */
+	if (t3172_ms / 20 <= 255) { /* In units of 20 milliseconds */
+		bitvec_write_field(dest, &wp, t3172_ms/20, 8);
+		bitvec_write_field(dest, &wp, 1, 1);
+	} else { /* value too big to fit in ms, do it in seconds */
+		bitvec_write_field(dest, &wp, t3172_ms/1000, 8);
+		bitvec_write_field(dest, &wp, 0, 1);
+	}
 }
 
 void write_packet_neighbour_cell_data(RlcMacDownlink_t *block,

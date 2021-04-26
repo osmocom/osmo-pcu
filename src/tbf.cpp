@@ -955,8 +955,8 @@ struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
 
 	bitvec_unhex(packet_access_rej, DUMMY_VEC);
 
-	Encoding::write_packet_access_reject(
-		packet_access_rej, tlli());
+	Encoding::write_packet_access_reject(packet_access_rej, tlli(),
+					     osmo_tdef_get(bts->T_defs_bts, 3172, OSMO_TDEF_MS, -1));
 
 	bts_do_rate_ctr_inc(bts, CTR_PKT_ACCESS_REJ);
 
