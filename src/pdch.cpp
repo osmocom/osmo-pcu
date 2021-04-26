@@ -685,8 +685,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 
 		ul_tbf = tbf_alloc_ul(bts(), ms, trx_no(), tlli);
 		if (!ul_tbf) {
-			handle_tbf_reject(bts(), ms, tlli,
-				trx_no(), ts_no);
+			handle_tbf_reject(bts(), ms, trx_no(), ts_no);
 			goto return_unref;
 		}
 

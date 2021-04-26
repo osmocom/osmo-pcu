@@ -96,6 +96,7 @@ static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
 	return 0;
 }
 
+/* Generic function to alloc a UL TBF, later configured to be assigned either over CCCH or PACCH */
 struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
@@ -139,19 +140,16 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 	return tbf;
 }
 
-
+/* Alloc a UL TBF to be assigned over PACCH */
 gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx,
 				 uint32_t tlli)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
 
-/* FIXME: Copy and paste with tbf_new_dl_assignment */
-	/* create new TBF, use same TRX as DL TBF */
-	/* use multislot class of downlink TBF */
 	tbf = tbf_alloc_ul_tbf(bts, ms, use_trx, false);
 	if (!tbf) {
 		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");
-		/* FIXME: send reject */
+		/* Caller will most probably send a Imm Ass Reject after return */
 		return NULL;
 	}
 	tbf->m_contention_resolution_done = 1;
@@ -162,30 +160,23 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t
 	return tbf;
 }
 
+/* Create a temporary dummy TBF to Tx a ImmAssReject if allocating a new one during
+ * packet resource Request failed. This is similar as tbf_alloc_ul() but without
+ * calling tbf->setup() (in charge of TFI/USF allocation), and reusing resources
+ * from Packet Resource Request we received. See TS 44.060 sec 7.1.3.2.1  */
 struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
-			GprsMs *ms, uint32_t tlli, uint8_t trx_no, uint8_t ts)
+			GprsMs *ms, uint8_t trx_no, uint8_t ts)
 {
 	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
 	struct gprs_rlcmac_trx *trx = &bts->trx[trx_no];
-
-	if (!ms)
-		ms = bts_alloc_ms(bts, 0, 0);
-	ms_set_tlli(ms, tlli);
+	OSMO_ASSERT(ms);
 
 	ul_tbf = talloc(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
 	if (!ul_tbf)
 		return ul_tbf;
-
 	talloc_set_destructor(ul_tbf, ul_tbf_dtor);
 	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
 
-	llist_add(tbf_bts_list((struct gprs_rlcmac_tbf *)ul_tbf), &bts->ul_tbfs);
-	bts_do_rate_ctr_inc(ul_tbf->bts, CTR_TBF_UL_ALLOCATED);
-	TBF_SET_ASS_ON(ul_tbf, GPRS_RLCMAC_FLAG_PACCH, false);
-
-	ms_attach_tbf(ms, ul_tbf);
-	ul_tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
-	TBF_SET_ASS_STATE_UL(ul_tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ);
 	ul_tbf->control_ts = ts;
 	ul_tbf->trx = trx;
 	ul_tbf->m_ctrs = rate_ctr_group_alloc(ul_tbf, &tbf_ctrg_desc, next_tbf_ctr_group_id++);
@@ -200,6 +191,12 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 		talloc_free(ul_tbf);
 		return NULL;
 	}
+
+	ms_attach_tbf(ms, ul_tbf);
+	llist_add(tbf_bts_list((struct gprs_rlcmac_tbf *)ul_tbf), &bts->ul_tbfs);
+	bts_do_rate_ctr_inc(ul_tbf->bts, CTR_TBF_UL_ALLOCATED);
+	TBF_SET_ASS_ON(ul_tbf, GPRS_RLCMAC_FLAG_PACCH, false);
+	TBF_SET_ASS_STATE_UL(ul_tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ);
 
 	return ul_tbf;
 }

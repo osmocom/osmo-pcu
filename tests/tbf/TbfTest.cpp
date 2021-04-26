@@ -3160,7 +3160,8 @@ static void test_packet_access_rej_prr_no_other_tbfs()
 	int ts_no = 7;
 	uint8_t trx_no = 0;
 	uint32_t tlli = 0xffeeddcc;
-	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
+	struct gprs_rlcmac_ul_tbf *ul_tbf;
+	struct GprsMs *ms;
 
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
@@ -3168,8 +3169,9 @@ static void test_packet_access_rej_prr_no_other_tbfs()
 
 	int rc = 0;
 
-	ul_tbf = handle_tbf_reject(bts, NULL, tlli,
-				trx_no, ts_no);
+	ms = bts_alloc_ms(bts, 0, 0);
+	ms_set_tlli(ms, tlli);
+	ul_tbf = handle_tbf_reject(bts, ms, trx_no, ts_no);
 
 	OSMO_ASSERT(ul_tbf != 0);
 

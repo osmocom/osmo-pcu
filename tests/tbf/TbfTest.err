@@ -7956,8 +7956,8 @@ MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Allocating UL TBF
 [UL] algo A <multi> (suggested TRX: 0): failed to allocate a TS, no USF available
 TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL EGPRS) Timeslot Allocation failed: trx = 0, single_slot = 0
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) No PDCH resource
+MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL) changes state from NULL to ASSIGN
-MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ
 PDCH(bts=0,trx=0,ts=7) Expiring FN=82 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS)
@@ -7974,8 +7974,8 @@ PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=
 === start test_packet_access_rej_prr_no_other_tbfs ===
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddcc, not yet confirmed
+MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL) changes state from NULL to ASSIGN
-MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) starting timer T0 [reject (PACCH)] with 0 sec. 2000 microsec, cur_fn=2654167
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
