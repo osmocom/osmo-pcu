@@ -76,7 +76,7 @@ void bts_trx_free_all_tbf(struct gprs_rlcmac_trx *trx)
 }
 
 static struct osmo_tdef T_defs_bts[] = {
-	{ .T=3142, .default_val=20,  .unit=OSMO_TDEF_S,  .desc="timer (s)", .val=0 },
+	{ .T=3142, .default_val=20,  .unit=OSMO_TDEF_S,  .desc="Wait Indication used in Imm Ass Reject during TBF Establishment (s)", .val=0, .min_val = 0, .max_val = 255 }, /* TS 44.018 10.5.2.43 */
 	{ .T=3169, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of USF and TFI(s) after the MS uplink TBF assignment is invalid (s)", .val=0 },
 	{ .T=3191, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of TFI(s) after sending (1) last RLC Data Block on TBF(s), or (2) PACKET TBF RELEASE for an MBMS radio bearer (s)", .val=0 },
 	{ .T=3193, .default_val=100, .unit=OSMO_TDEF_MS, .desc="Reuse of TFI(s) after reception of final PACKET DOWNLINK ACK/NACK from MS for TBF (ms)", .val=0 },
@@ -890,7 +890,8 @@ send_imm_ass_rej:
 	if (rc != 0) {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment Reject on AGCH\n");
 		plen = Encoding::write_immediate_assignment_reject(
-			bv, rip->ra, Fn, rip->burst_type);
+			bv, rip->ra, Fn, rip->burst_type,
+			(uint8_t)osmo_tdef_get(bts->T_defs_bts, 3142, OSMO_TDEF_S, -1));
 		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_REJ);
 	} else {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment on AGCH: "

@@ -877,7 +877,7 @@ void test_immediate_assign_rej()
 	bitvec_unhex(immediate_assignment_rej, DUMMY_VEC);
 	plen = Encoding::write_immediate_assignment_reject(
 		immediate_assignment_rej, 112, 100,
-		GSM_L1_BURST_TYPE_ACCESS_1);
+		GSM_L1_BURST_TYPE_ACCESS_1, 20);
 
 	printf("assignment reject: %s\n",
 		osmo_hexdump(immediate_assignment_rej->data, 22));
@@ -892,7 +892,7 @@ void test_immediate_assign_rej()
 
 	plen = Encoding::write_immediate_assignment_reject(
 		immediate_assignment_rej, 112, 100,
-		GSM_L1_BURST_TYPE_ACCESS_0);
+		GSM_L1_BURST_TYPE_ACCESS_0, 20);
 
 	printf("assignment reject: %s\n",
 		osmo_hexdump(immediate_assignment_rej->data, 22));

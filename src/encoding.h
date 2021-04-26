@@ -59,7 +59,8 @@ public:
 	static int write_immediate_assignment_reject(
 			bitvec *dest, uint16_t ra,
 			uint32_t ref_fn,
-			enum ph_burst_type burst_type
+			enum ph_burst_type burst_type,
+			uint8_t t3142
 		);
 
 	static void write_packet_uplink_assignment(

@@ -361,10 +361,8 @@ static int write_ia_rest_egprs_uplink_sba(const gprs_rlcmac_ul_tbf *tbf, bitvec 
  * Immediate assignment reject, sent on the CCCH/AGCH
  * see GSM 44.018, 9.1.20 + 10.5.2.30
  */
-int Encoding::write_immediate_assignment_reject(
-	bitvec *dest, uint16_t ra,
-	uint32_t ref_fn,
-	enum ph_burst_type burst_type)
+int Encoding::write_immediate_assignment_reject(bitvec *dest, uint16_t ra,
+	uint32_t ref_fn, enum ph_burst_type burst_type, uint8_t t3142)
 {
 	unsigned wp = 0;
 	int plen;
@@ -404,8 +402,8 @@ int Encoding::write_immediate_assignment_reject(
 		bitvec_write_field(dest, &wp, ref_fn % 51, 6);          // T3
 		bitvec_write_field(dest, &wp, ref_fn % 26, 5);          // T2
 
-		/* TODO: Make it configurable */
-		bitvec_write_field(dest, &wp, 20, 8); //Wait Indication 1
+		/* 10.5.2.43 Wait Indication */
+		bitvec_write_field(dest, &wp, t3142, 8);
 	}
 
 	plen = wp / 8;
