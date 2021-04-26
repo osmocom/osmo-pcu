@@ -117,13 +117,17 @@ Control TS:
 
 Polling:
   In order to poll uplink control block from MS, a special poll state and
-  frame number is stored at TBF. The scheduler reads that value and will not
-  assign uplink resource for other TBFs at that frame number.
+  frame number is stored at PDCH UL Controller. The scheduler reads that value
+  and will not assign uplink resource for other TBFs at that frame number.
 
-  When there is no uplink transmission received on the block, a timeout is
-  indicated by layer 1 interface. There are two ways of checking timeout:
-   - The received frame is bad (BFI).
-   - The GSM indicates that the block should have been already received.
+  On receipt of an Uplink RLCMAC block, it's the duty of each specific message
+  handler to release the expectancies previously stored in the PDCH UL
+  Controller. After the specific handler returns, the generic return path will
+  expire all reserved events up to the curent FN for that PDCH, eventually
+  calling timeout functions on TBFs and SBAs owning those reservations. Hence,
+  the layer 1 interface is expected to provide DATA.ind for each FN block,
+  containing data=0 if decoding failed, in order to keep the clock up-to-date in
+  upper layers.
 
   Because polling requires uplink response from MS, the polling must be
   performed at control TS.
@@ -131,13 +135,21 @@ Polling:
 
 Data structures of TBFs and PDCHs:
 
-  There is a global structure for BTS.
+  There is a global structure for PCU (struct gprs_pcu the_pcu).
 
-  The BTS structure has 8 TRX structures.
+  A BTS is created and put into PCU's list for each PCUIF INFO_IND with a unique
+  bts_nr received.
+
+  Each BTS structure has 8 TRX structures.
 
   Each TRX structure has 8 PDCH structures, one for each timeslot.
 
-  There are two linked lists of TBF instances:
+  Each BTS structure has a list of MS (struct GprsMs).
+
+  Each MS can have 1 UL TBF and 1 DL TBF, and 1 TBF is always assigned to an
+  existing GprsMS structure.
+
+  Each BTS also has two linked lists of TBF instances:
    - uplink TBFs
    - downlink TBFs
 
@@ -158,4 +170,6 @@ Data structures of TBFs and PDCHs:
   On release of a TBF, the link to this PDCH is removed from all assigned
   PDCHs. The TBF is removed from the list of TBFs. The TBF is destroyed.
 
-
+  GprsMs structures are kept alive for a while once they become unused, in order to
+  have a cache of MS related information it would otherwise need to acquire
+  again once it interacts with the PCU again.
