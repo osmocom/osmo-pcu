@@ -775,7 +775,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 
 	LOGPTBF(this, LOGL_DEBUG, "timer 0 expired. cur_fn=%d\n", current_fn);
 
-	/* assignment */
+	/* PACCH assignment timeout (see timers X2000, X2001) */
 	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
 		if (state_is(GPRS_RLCMAC_ASSIGN)) {
 			LOGPTBF(this, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
@@ -785,6 +785,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 			LOGPTBF(this, LOGL_ERROR, "Error: TBF is not in assign state\n");
 	}
 
+	/* Finish waiting after IMM.ASS confirm timer for CCCH assignment (see timer X2002) */
 	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
 		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
 		dl_tbf->m_wait_confirm = 0;
@@ -965,9 +966,11 @@ struct msgb *gprs_rlcmac_tbf::create_packet_access_reject()
 	bitvec_free(packet_access_rej);
 	ul_ass_state = GPRS_RLCMAC_UL_ASS_NONE;
 
-	/* Start Tmr only if it is UL TBF */
-	if (direction == GPRS_RLCMAC_UL_TBF)
+	/* Start release only if it is UL TBF */
+	if (direction == GPRS_RLCMAC_UL_TBF) {
+		/* tbf_free() called in gprs_rlcmac_tbf::handle_timeout */
 		T_START(this, T0, -2000, "reject (PACCH)", true);
+	}
 
 	return msg;
 
