@@ -11,14 +11,6 @@
 
 <book>
   <info>
-    <revhistory>
-        <revision>
-            <revnumber>v1</revnumber>
-            <date>5th March 2014</date>
-            <authorinitials>hf</authorinitials>
-            <revremark>Initial version for 0.2-307</revremark>
-        </revision>
-    </revhistory>
 
     <title>OsmoPCU VTY Reference</title>
 
