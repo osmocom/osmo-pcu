@@ -1060,6 +1060,11 @@ static int ns_configure_nse(struct gprs_rlcmac_bts *bts,
 					continue;
 				}
 			}
+
+			if (the_pcu->vty.ns_ip_dscp != -1)
+				gprs_ns2_ip_bind_set_dscp(bind[i], the_pcu->vty.ns_ip_dscp);
+			if (the_pcu->vty.ns_priority != -1)
+				gprs_ns2_ip_bind_set_priority(bind[i], the_pcu->vty.ns_priority);
 		}
 
 		binds |= 1 << i;

@@ -105,6 +105,8 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 	pcu->vty.mcs_lqual_ranges[8].low = 23;
 	pcu->vty.mcs_lqual_ranges[8].high = 256;
 	pcu->vty.ns_dialect = GPRS_NS2_DIALECT_IPACCESS;
+	pcu->vty.ns_ip_dscp = -1;
+	pcu->vty.ns_priority = -1;
 	/* TODO: increase them when CRBB decoding is implemented */
 	pcu->vty.ws_base = 64;
 	pcu->vty.ws_pdch = 0;

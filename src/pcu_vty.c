@@ -251,6 +251,11 @@ static int config_write_pcu(struct vty *vty)
 	else
 		vty_out(vty, " gb-dialect classic%s", VTY_NEWLINE);
 
+	if (the_pcu->vty.ns_ip_dscp != -1)
+		vty_out(vty, " gb ip-dscp %d%s", the_pcu->vty.ns_ip_dscp, VTY_NEWLINE);
+	if (the_pcu->vty.ns_priority != -1)
+		vty_out(vty, " gb socket-priority %d%s", the_pcu->vty.ns_priority, VTY_NEWLINE);
+
 	if (the_pcu->vty.neigh_ctrl_addr) {
 		vty_out(vty, " neighbor resolution %s %u%s",
 			the_pcu->vty.neigh_ctrl_addr, the_pcu->vty.neigh_ctrl_port, VTY_NEWLINE);
@@ -1031,6 +1036,30 @@ DEFUN_USRATTR(cfg_pcu_gb_dialect,
 	return CMD_SUCCESS;
 }
 
+DEFUN_USRATTR(cfg_pcu_gb_ip_dscp,
+	      cfg_pcu_gb_ip_dscp_cmd,
+	      X(PCU_VTY_ATTR_NS_RESET),
+	      "gb ip-dscp <0-63>",
+	      "Configure Gb interface\n"
+	      "Set IP DSCP value for outbound packets\n"
+	      "IP DSCP value to use\n")
+{
+	the_pcu->vty.ns_ip_dscp = atoi(argv[0]);
+	return CMD_SUCCESS;
+}
+
+DEFUN_USRATTR(cfg_pcu_gb_priority,
+	      cfg_pcu_gb_priority_cmd,
+	      X(PCU_VTY_ATTR_NS_RESET),
+	      "gb socket-priority <0-255>",
+	      "Configure Gb interface\n"
+	      "Set socket priority value for outbound packets\n"
+	      "Socket priority value to use (>6 requires CAP_NET_ADMIN)")
+{
+	the_pcu->vty.ns_priority = atoi(argv[0]);
+	return CMD_SUCCESS;
+}
+
 DEFUN(cfg_neighbor_resolution, cfg_neighbor_resolution_cmd,
        "neighbor resolution " VTY_IPV46_CMD " [<0-65535>]",
        "Manage local and remote-BSS neighbor cells\n"
@@ -1265,6 +1294,8 @@ int pcu_vty_init(void)
 	install_element(PCU_NODE, &cfg_pcu_no_gsmtap_categ_cmd);
 	install_element(PCU_NODE, &cfg_pcu_sock_cmd);
 	install_element(PCU_NODE, &cfg_pcu_gb_dialect_cmd);
+	install_element(PCU_NODE, &cfg_pcu_gb_ip_dscp_cmd);
+	install_element(PCU_NODE, &cfg_pcu_gb_priority_cmd);
 	install_element(PCU_NODE, &cfg_neighbor_resolution_cmd);
 	install_element(PCU_NODE, &cfg_pcu_timer_cmd);
 
