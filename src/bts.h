@@ -301,7 +301,7 @@ void bts_send_gsmtap_rach(struct gprs_rlcmac_bts *bts,
 			  enum pcu_gsmtap_category categ, uint8_t channel,
 			  const struct rach_ind_params *rip);
 
-struct GprsMsStorage *bts_ms_store(struct gprs_rlcmac_bts *bts);
+struct GprsMsStorage *bts_ms_store(const struct gprs_rlcmac_bts *bts);
 
 struct GprsMs *bts_ms_by_tlli(struct gprs_rlcmac_bts *bts, uint32_t tlli, uint32_t old_tlli);
 

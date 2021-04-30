@@ -1066,7 +1066,7 @@ GprsMs *bts_alloc_ms(struct gprs_rlcmac_bts* bts, uint8_t ms_class, uint8_t egpr
 	return ms;
 }
 
-struct GprsMsStorage *bts_ms_store(struct gprs_rlcmac_bts *bts)
+struct GprsMsStorage *bts_ms_store(const struct gprs_rlcmac_bts *bts)
 {
 	return bts->ms_store;
 }
