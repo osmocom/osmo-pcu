@@ -41,7 +41,7 @@ struct tbf_sched_candidates {
 	struct gprs_rlcmac_ul_tbf *ul_ack;
 };
 
-static void get_tbf_candidates(const struct gprs_rlcmac_bts *bts, uint8_t trx,
+static void get_ctrl_msg_tbf_candidates(const struct gprs_rlcmac_bts *bts, uint8_t trx,
 			       uint8_t ts, struct tbf_sched_candidates *tbf_cand)
 {
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
@@ -483,7 +483,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	if (usf_tbf && req_mcs_kind == EGPRS && ms_mode(usf_tbf->ms()) != EGPRS)
 		req_mcs_kind = EGPRS_GMSK;
 
-	get_tbf_candidates(bts, trx, ts, &tbf_cand);
+	get_ctrl_msg_tbf_candidates(bts, trx, ts, &tbf_cand);
 
 	/* Prio 1: select control message */
 	if ((msg = sched_select_ctrl_msg(pdch, fn, block_nr, &tbf_cand))) {
