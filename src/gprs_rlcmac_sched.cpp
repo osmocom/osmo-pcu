@@ -28,6 +28,7 @@
 #include <rlc.h>
 #include <sba.h>
 #include <pdch.h>
+#include <gprs_ms_storage.h>
 #include "pcu_utils.h"
 
 extern "C" {
@@ -45,43 +46,48 @@ static void get_ctrl_msg_tbf_candidates(const struct gprs_rlcmac_bts *bts,
 					const struct gprs_rlcmac_pdch *pdch,
 					struct tbf_sched_candidates *tbf_cand)
 {
+	const struct llist_head *ms_list = bts_ms_store(bts)->ms_list();
+	struct llist_head *pos;
+	struct GprsMs *ms;
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
-	struct llist_item *pos;
 
-	llist_for_each_entry(pos, &bts->ul_tbfs, list) {
-		ul_tbf = as_ul_tbf((struct gprs_rlcmac_tbf *)pos->entry);
-		OSMO_ASSERT(ul_tbf);
-		/* this trx, this ts */
-		if (ul_tbf->trx->trx_no != pdch->trx->trx_no || !ul_tbf->is_control_ts(pdch->ts_no))
-			continue;
-		if (ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_SEND_ACK))
-			tbf_cand->ul_ack = ul_tbf;
-		if (ul_tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_SEND_ASS))
-			tbf_cand->dl_ass = ul_tbf;
-		if (ul_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS)
-		    || ul_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
-			tbf_cand->ul_ass = ul_tbf;
-		/* NACC ready to send. TFI assigned is needed to send messages */
-		if (ul_tbf->is_tfi_assigned() && ms_nacc_rts(ul_tbf->ms()))
-			tbf_cand->nacc = ul_tbf;
-/* FIXME: Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all
-states? */
-	}
-	llist_for_each_entry(pos, &bts->dl_tbfs, list) {
-		dl_tbf = as_dl_tbf((struct gprs_rlcmac_tbf *)pos->entry);
-		OSMO_ASSERT(dl_tbf);
-		/* this trx, this ts */
-		if (dl_tbf->trx->trx_no != pdch->trx->trx_no || !dl_tbf->is_control_ts(pdch->ts_no))
-			continue;
-		if (dl_tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_SEND_ASS))
-			tbf_cand->dl_ass = dl_tbf;
-		if (dl_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS)
-		    || dl_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
-			tbf_cand->ul_ass = dl_tbf;
-		/* NACC ready to send. TFI assigned is needed to send messages */
-		if (dl_tbf->is_tfi_assigned() && ms_nacc_rts(dl_tbf->ms()))
-			tbf_cand->nacc = dl_tbf;
+	llist_for_each(pos, ms_list) {
+		ms = llist_entry(pos, typeof(*ms), list);
+
+		if ((ul_tbf = ms_ul_tbf(ms))) {
+			/* this trx, this ts */
+			if (ul_tbf->trx->trx_no != pdch->trx->trx_no || !ul_tbf->is_control_ts(pdch->ts_no))
+				goto skip_ul;
+			if (ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_SEND_ACK))
+				tbf_cand->ul_ack = ul_tbf;
+			if (ul_tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_SEND_ASS))
+				tbf_cand->dl_ass = ul_tbf;
+			if (ul_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS)
+			    || ul_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
+				tbf_cand->ul_ass = ul_tbf;
+			/* NACC ready to send. TFI assigned is needed to send messages */
+			if (ul_tbf->is_tfi_assigned() && ms_nacc_rts(ul_tbf->ms()))
+				tbf_cand->nacc = ul_tbf;
+			/* FIXME: Is this supposed to be fair? The last TBF for
+			 * each wins? Maybe use llist_add_tail and skip once we
+			 * have all states? */
+		}
+skip_ul:
+		if ((dl_tbf = ms_dl_tbf(ms))) {
+			/* this trx, this ts */
+			if (dl_tbf->trx->trx_no != pdch->trx->trx_no || !dl_tbf->is_control_ts(pdch->ts_no))
+				continue;
+			if (dl_tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_SEND_ASS))
+				tbf_cand->dl_ass = dl_tbf;
+			if (dl_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS)
+			    || dl_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
+				tbf_cand->ul_ass = dl_tbf;
+			/* NACC ready to send. TFI assigned is needed to send messages */
+			if (dl_tbf->is_tfi_assigned() && ms_nacc_rts(dl_tbf->ms()))
+				tbf_cand->nacc = dl_tbf;
+		}
+
 	}
 }
 
