@@ -103,19 +103,26 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 
 int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts, uint32_t flags)
 {
-	struct llist_item *iter;
-	struct gprs_rlcmac_tbf *tbf;
+	struct llist_head *iter;
+	struct GprsMs *ms;
+	const struct llist_head *ms_list = bts_ms_store(bts)->ms_list();
 
 	vty_out(vty, "UL TBFs%s", VTY_NEWLINE);
-	llist_for_each_entry(iter, &bts->ul_tbfs, list) {
-		tbf = (struct gprs_rlcmac_tbf *)iter->entry;
+	llist_for_each(iter, ms_list) {
+		struct gprs_rlcmac_ul_tbf *tbf;
+		ms = llist_entry(iter, typeof(*ms), list);
+		if (!(tbf = ms_ul_tbf(ms)))
+			continue;
 		if (tbf->state_flags & flags)
 			tbf_print_vty_info(vty, tbf);
 	}
 
 	vty_out(vty, "%sDL TBFs%s", VTY_NEWLINE, VTY_NEWLINE);
-	llist_for_each_entry(iter, &bts->dl_tbfs, list) {
-		tbf = (struct gprs_rlcmac_tbf *)iter->entry;
+	llist_for_each(iter, ms_list) {
+		struct gprs_rlcmac_dl_tbf *tbf;
+		ms = llist_entry(iter, typeof(*ms), list);
+		if (!(tbf = ms_dl_tbf(ms)))
+			continue;
 		if (tbf->state_flags & flags)
 			tbf_print_vty_info(vty, tbf);
 	}
