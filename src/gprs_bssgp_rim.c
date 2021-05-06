@@ -136,34 +136,6 @@ static void format_response_pdu_err(struct bssgp_ran_information_pdu *resp_pdu,
 	resp_pdu->rim_cont_iei = BSSGP_IE_RI_ERROR_RIM_COINTAINER;
 }
 
-/* Check if the application ID in the request PDU is actually BSSGP_RAN_INF_APP_ID_NACC */
-static const enum bssgp_ran_inf_app_id *get_app_id(const struct bssgp_ran_information_pdu *pdu)
-{
-	switch (pdu->rim_cont_iei) {
-	case BSSGP_IE_RI_REQ_RIM_CONTAINER:
-		return &pdu->decoded.req_rim_cont.app_id;
-	case BSSGP_IE_RI_RIM_CONTAINER:
-		return &pdu->decoded.rim_cont.app_id;
-	case BSSGP_IE_RI_APP_ERROR_RIM_CONT:
-		return &pdu->decoded.app_err_rim_cont.app_id;
-	case BSSGP_IE_RI_ACK_RIM_CONTAINER:
-		return &pdu->decoded.ack_rim_cont.app_id;
-	case BSSGP_IE_RI_ERROR_RIM_COINTAINER:
-		return &pdu->decoded.err_rim_cont.app_id;
-	default:
-		return NULL;
-	}
-}
-
-/* Check if the application ID in the request PDU is of a certain type */
-static bool match_app_id(const struct bssgp_ran_information_pdu *pdu, enum bssgp_ran_inf_app_id exp_app_id)
-{
-	const enum bssgp_ran_inf_app_id *app_id = get_app_id(pdu);
-	if (app_id && *app_id == exp_app_id)
-		return true;
-	return false;
-}
-
 static int handle_ran_info_response_nacc(const struct bssgp_ran_inf_app_cont_nacc *nacc, struct gprs_rlcmac_bts *bts)
 {
 	struct si_cache_value val;
@@ -197,10 +169,55 @@ static int handle_ran_info_response_nacc(const struct bssgp_ran_inf_app_cont_nac
 	return 0;
 }
 
+static int handle_ran_info_request(const struct bssgp_ran_information_pdu *pdu,
+				   struct gprs_rlcmac_bts *bts, uint16_t nsei)
+{
+	const struct bssgp_ran_inf_req_rim_cont *ri_req = &pdu->decoded.req_rim_cont;
+	const struct bssgp_ran_inf_req_app_cont_nacc *nacc_req;
+	struct bssgp_ran_information_pdu resp_pdu;
+	int rc;
+
+	/* Check if we support the application ID */
+	if (ri_req->app_id != BSSGP_RAN_INF_APP_ID_NACC) {
+		LOGPRIM(nsei, LOGL_ERROR,
+			"Rx RAN-INFO-REQ for cell %s with unknown/wrong application ID %s -- reject.\n",
+			osmo_cgi_ps_name(&bts->cgi_ps), bssgp_ran_inf_app_id_str(ri_req->app_id));
+		format_response_pdu_err(&resp_pdu, pdu);
+		rc = -ENOTSUP;
+		goto tx_ret;
+	}
+
+	nacc_req = &ri_req->u.app_cont_nacc;
+	rc = osmo_cgi_ps_cmp(&bts->cgi_ps, &nacc_req->reprt_cell);
+	if (rc != 0) {
+		LOGPRIM(nsei, LOGL_ERROR, "reporting cell in RIM application container %s "
+			"does not match destination cell in RIM routing info %s -- rejected.\n",
+			osmo_cgi_ps_name(&nacc_req->reprt_cell),
+			osmo_cgi_ps_name2(&bts->cgi_ps));
+		format_response_pdu_err(&resp_pdu, pdu);
+	} else {
+		LOGPRIM(nsei, LOGL_INFO, "Responding to RAN INFORMATION REQUEST %s ...\n",
+			osmo_cgi_ps_name(&nacc_req->reprt_cell));
+		format_response_pdu(&resp_pdu, pdu, bts);
+	}
+
+tx_ret:
+	bssgp_tx_rim(&resp_pdu, nsei);
+	return rc;
+}
+
 static int handle_ran_info_response(const struct bssgp_ran_information_pdu *pdu, struct gprs_rlcmac_bts *bts)
 {
 	const struct bssgp_ran_inf_rim_cont *ran_info = &pdu->decoded.rim_cont;
 	char ri_src_str[64];
+
+	/* Check if we support the application ID */
+	if (ran_info->app_id != BSSGP_RAN_INF_APP_ID_NACC) {
+		LOGP(DRIM, LOGL_ERROR,
+		     "Rx RAN-INFO for cell %s with unknown/wrong application ID %s received -- reject.\n",
+		     osmo_cgi_ps_name(&bts->cgi_ps), bssgp_ran_inf_app_id_str(ran_info->app_id));
+		return -1;
+	}
 
 	if (ran_info->app_err) {
 		LOGP(DRIM, LOGL_ERROR,
@@ -210,16 +227,7 @@ static int handle_ran_info_response(const struct bssgp_ran_information_pdu *pdu,
 		return -1;
 	}
 
-	switch (pdu->decoded.rim_cont.app_id) {
-	case BSSGP_RAN_INF_APP_ID_NACC:
-		handle_ran_info_response_nacc(&ran_info->u.app_cont_nacc, bts);
-		break;
-	default:
-		LOGP(DRIM, LOGL_ERROR, "%s Rx RAN-INFO with unknown/wrong application ID %s received\n",
-		     bssgp_rim_ri_name_buf(ri_src_str, sizeof(ri_src_str), &pdu->routing_info_src),
-		     bssgp_ran_inf_app_id_str(pdu->decoded.rim_cont.app_id));
-		return -1;
-	}
+	handle_ran_info_response_nacc(&ran_info->u.app_cont_nacc, bts);
 	return 0;
 }
 
@@ -231,7 +239,6 @@ int handle_rim(struct osmo_bssgp_prim *bp)
 	struct bssgp_ran_information_pdu resp_pdu;
 	struct osmo_cell_global_id_ps dst_addr;
 	struct gprs_rlcmac_bts *bts;
-	int rc;
 
 	OSMO_ASSERT (bp->oph.sap == SAP_BSSGP_RIM);
 
@@ -265,33 +272,10 @@ int handle_rim(struct osmo_bssgp_prim *bp)
 		return 0;
 	}
 
-	/* Check if the RIM container inside the incoming RIM PDU has the correct
-	 * application ID */
-	if (!match_app_id(pdu, BSSGP_RAN_INF_APP_ID_NACC)) {
-		LOGPRIM(nsei, LOGL_ERROR,
-			"RIM PDU for cell %s with unknown/wrong application ID received -- reject.\n",
-			osmo_cgi_ps_name(&dst_addr));
-		format_response_pdu_err(&resp_pdu, pdu);
-		return 0;
-	}
-
 	/* Handle incoming RIM container */
 	switch (pdu->rim_cont_iei) {
 	case BSSGP_IE_RI_REQ_RIM_CONTAINER:
-		rc = osmo_cgi_ps_cmp(&dst_addr, &pdu->decoded.req_rim_cont.u.app_cont_nacc.reprt_cell);
-		if (rc != 0) {
-			LOGPRIM(nsei, LOGL_ERROR, "reporting cell in RIM application container %s "
-				"does not match destination cell in RIM routing info %s -- rejected.\n",
-				osmo_cgi_ps_name(&pdu->decoded.req_rim_cont.u.app_cont_nacc.reprt_cell),
-				osmo_cgi_ps_name2(&dst_addr));
-			format_response_pdu_err(&resp_pdu, pdu);
-		} else {
-			LOGPRIM(nsei, LOGL_INFO, "Responding to RAN INFORMATION REQUEST %s ...\n",
-				osmo_cgi_ps_name(&pdu->decoded.req_rim_cont.u.app_cont_nacc.reprt_cell));
-			format_response_pdu(&resp_pdu, pdu, bts);
-		}
-		bssgp_tx_rim(&resp_pdu, nsei);
-		break;
+		return handle_ran_info_request(pdu, bts, nsei);
 	case BSSGP_IE_RI_RIM_CONTAINER:
 		return handle_ran_info_response(pdu, bts);
 	case BSSGP_IE_RI_APP_ERROR_RIM_CONT:
