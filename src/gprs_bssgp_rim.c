@@ -97,7 +97,8 @@ static void fill_app_cont_nacc(struct bssgp_ran_inf_app_cont_nacc *app_cont, con
 }
 
 /* Format a RAN INFORMATION PDU that contains the requested system information */
-static void format_response_pdu(struct bssgp_ran_information_pdu *resp_pdu, struct bssgp_ran_information_pdu *req_pdu,
+static void format_response_pdu(struct bssgp_ran_information_pdu *resp_pdu,
+				const struct bssgp_ran_information_pdu *req_pdu,
 				const struct gprs_rlcmac_bts *bts)
 {
 	memset(resp_pdu, 0, sizeof(*resp_pdu));
