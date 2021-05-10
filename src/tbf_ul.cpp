@@ -160,6 +160,24 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul_pacch(struct gprs_rlcmac_bts *bts, GprsMs *ms, 
 	return tbf;
 }
 
+/* Alloc a UL TBF to be assigned over CCCH */
+struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_ccch(struct gprs_rlcmac_bts *bts, struct GprsMs *ms)
+{
+	struct gprs_rlcmac_ul_tbf *tbf;
+
+	tbf = tbf_alloc_ul_tbf(bts, ms, -1, true);
+	if (!tbf) {
+		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource for Uplink TBF\n");
+		/* Caller will most probably send a Imm Ass Reject after return */
+		return NULL;
+	}
+	TBF_SET_STATE(tbf, GPRS_RLCMAC_FLOW);
+	TBF_ASS_TYPE_SET(tbf, GPRS_RLCMAC_FLAG_CCCH);
+	OSMO_ASSERT(tbf->ms());
+
+	return tbf;
+}
+
 /* Create a temporary dummy TBF to Tx a ImmAssReject if allocating a new one during
  * packet resource Request failed. This is similar as tbf_alloc_ul() but without
  * calling tbf->setup() (in charge of TFI/USF allocation), and reusing resources

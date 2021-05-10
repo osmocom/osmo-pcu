@@ -120,6 +120,7 @@ inline uint16_t gprs_rlcmac_ul_tbf::window_size() const
 struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot);
 struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_pacch(struct gprs_rlcmac_bts *bts, GprsMs *ms,
 					      int8_t use_trx, uint32_t tlli);
+struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_ccch(struct gprs_rlcmac_bts *bts, struct GprsMs *ms);
 struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 	GprsMs *ms, uint8_t trx_no, uint8_t ts_no);
 

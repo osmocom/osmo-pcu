@@ -867,18 +867,13 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 		     "SBFn=%u TRX=%u TS=%u\n", sb_fn, trx_no, ts_no);
 	} else {
 		GprsMs *ms = bts_alloc_ms(bts, 0, chan_req.egprs_mslot_class);
-		tbf = tbf_alloc_ul_tbf(bts, ms, -1, true);
+		tbf = tbf_alloc_ul_ccch(bts, ms);
 		if (!tbf) {
-			LOGP(DRLCMAC, LOGL_NOTICE, "No PDCH resource for Uplink TBF\n");
 			/* Send RR Immediate Assignment Reject */
 			rc = -EBUSY;
 			goto send_imm_ass_rej;
 		}
-
-		/* FIXME: Copy and paste with other routines.. */
 		tbf->set_ta(ta);
-		TBF_SET_STATE(tbf, GPRS_RLCMAC_FLOW);
-		TBF_ASS_TYPE_SET(tbf, GPRS_RLCMAC_FLAG_CCCH);
 		trx_no = tbf->trx->trx_no;
 		ts_no = tbf->first_ts;
 		usf = tbf->m_usf[ts_no];
