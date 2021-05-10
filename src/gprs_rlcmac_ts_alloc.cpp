@@ -883,10 +883,8 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_,
 
 	/* Step 1: Get current state from the MS object */
 
-	OSMO_ASSERT(ms);
-
-	dl_slots = ms_reserved_dl_slots(ms);
-	ul_slots = ms_reserved_ul_slots(ms);
+	reserved_dl_slots = ms_reserved_dl_slots(ms);
+	reserved_ul_slots = ms_reserved_ul_slots(ms);
 	first_common_ts = ms_first_common_ts(ms);
 	trx = ms_current_trx(ms);
 
@@ -901,14 +899,13 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_,
 	if (!trx)
 		trx = &bts->trx[trx_no];
 
-	if (!dl_slots || !ul_slots) {
-		rc = find_multi_slots(trx, ms_ms_class(ms), &ul_slots, &dl_slots);
+	if (!reserved_dl_slots || !reserved_ul_slots) {
+		rc = find_multi_slots(trx, ms_ms_class(ms), &reserved_ul_slots, &reserved_dl_slots);
 		if (rc < 0)
 			return rc;
 	}
-
-	reserved_dl_slots = dl_slots;
-	reserved_ul_slots = ul_slots;
+	dl_slots = reserved_dl_slots;
+	ul_slots = reserved_ul_slots;
 
 	/* Step 3a: Derive the slot set for the current TBF */
 	rc = tbf_select_slot_set(tbf, trx, single, ul_slots, dl_slots, reserved_ul_slots, reserved_dl_slots,
