@@ -3153,7 +3153,7 @@ Slot Allocation (Algorithm B) for class 12
 - Skipping TS 7, because not enabled
 - Possible DL/UL slots: (TS=0)"..CCCC.."(TS=7)
 Rx=4 Tx=4 Sum Rx+Tx=5, Tta=2 Ttb=1, Tra=2 Trb=1, Type=1
-- Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
+Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
 [DL] algo B <multi> (suggested TRX: 0): using 4 slots
 - Reserved DL/UL slots: (TS=0)"..DDCD.."(TS=7)
 - Assigning DL TS 2
@@ -3192,7 +3192,7 @@ Slot Allocation (Algorithm B) for class 12
 - Skipping TS 7, because not enabled
 - Possible DL/UL slots: (TS=0)"..CCCC.."(TS=7)
 Rx=4 Tx=4 Sum Rx+Tx=5, Tta=2 Ttb=1, Tra=2 Trb=1, Type=1
-- Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
+Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
 [DL] algo B <multi> (suggested TRX: 0): using 4 slots
 - Reserved DL/UL slots: (TS=0)"..DDCD.."(TS=7)
 - Assigning DL TS 2
@@ -6013,7 +6013,7 @@ Slot Allocation (Algorithm B) for class 11
 - Skipping TS 7, because not enabled
 - Possible DL/UL slots: (TS=0)"..CCCC.."(TS=7)
 Rx=4 Tx=3 Sum Rx+Tx=5, Tta=3 Ttb=1, Tra=2 Trb=1, Type=1
-- Selected DL slots: (TS=0)"..ddDd.."(TS=7), single
+Selected DL slots: (TS=0)"..ddDd.."(TS=7), single
 [DL] algo B <single> (suggested TRX: 0): using single slot at TS 4
 - Reserved DL/UL slots: (TS=0)"...DC..."(TS=7)
 - Assigning DL TS 4
@@ -6028,7 +6028,7 @@ DL TBF slots: 0x10, N: 1, WS: 192
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 [DL] algo B <multi> (suggested TRX: -1): Alloc start
 Found first unallocated TRX=0 TFI=0
-- Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
+Selected DL slots: (TS=0)"..DDDD.."(TS=7), multi
 [DL] algo B <multi> (suggested TRX: -1): using 4 slots
 - Assigning DL TS 2
 PDCH(bts=0,trx=0,ts=2) Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.

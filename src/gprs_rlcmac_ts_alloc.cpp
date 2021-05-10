@@ -711,7 +711,8 @@ static int tbf_select_slot_set(const gprs_rlcmac_tbf *tbf, const gprs_rlcmac_trx
 			       uint8_t reserved_ul_slots, uint8_t reserved_dl_slots,
 			       int8_t first_common_ts)
 {
-	uint8_t sl = tbf->direction != GPRS_RLCMAC_DL_TBF ? ul_slots : dl_slots;
+	bool is_ul = tbf->direction == GPRS_RLCMAC_UL_TBF;
+	uint8_t sl = is_ul ? ul_slots : dl_slots;
 	char slot_info[9] = { 0 };
 
 	if (single)
@@ -719,22 +720,22 @@ static int tbf_select_slot_set(const gprs_rlcmac_tbf *tbf, const gprs_rlcmac_trx
 
 	if (!sl) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "No %s slots available\n",
-		     tbf->direction != GPRS_RLCMAC_DL_TBF ? "uplink" : "downlink");
+		     is_ul ? "uplink" : "downlink");
 		bts_do_rate_ctr_inc(trx->bts, CTR_TBF_ALLOC_FAIL_NO_SLOT_AVAIL);
 		return -EINVAL;
 	}
 
-	if (tbf->direction != GPRS_RLCMAC_DL_TBF) {
+	if (is_ul) {
 		snprintf(slot_info, 9, OSMO_BIT_SPEC, OSMO_BIT_PRINT_EX(reserved_ul_slots, 'u'));
 		masked_override_with(slot_info, sl, 'U');
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Selected UL");
 	} else {
 		snprintf(slot_info, 9, OSMO_BIT_SPEC, OSMO_BIT_PRINT_EX(reserved_dl_slots, 'd'));
 		masked_override_with(slot_info, sl, 'D');
-		LOGP(DRLCMAC, LOGL_DEBUG, "- Selected DL");
 	}
 
-	LOGPC(DRLCMAC, LOGL_DEBUG, " slots: (TS=0)\"%s\"(TS=7), %s\n", slot_info, single ? "single" : "multi");
+	LOGPC(DRLCMAC, LOGL_DEBUG, "Selected %s slots: (TS=0)\"%s\"(TS=7), %s\n",
+	      is_ul ? "UL" : "DL",
+	      slot_info, single ? "single" : "multi");
 
 	return sl;
 }
