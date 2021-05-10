@@ -92,6 +92,7 @@ static const struct value_string tbf_counters_names[] = {
 
 static const struct value_string tbf_timers_names[] = {
 	OSMO_VALUE_STRING(T0),
+	OSMO_VALUE_STRING(T3141),
 	OSMO_VALUE_STRING(T3169),
 	OSMO_VALUE_STRING(T3191),
 	OSMO_VALUE_STRING(T3193),
@@ -436,7 +437,7 @@ bool gprs_rlcmac_tbf::timers_pending(enum tbf_timers t)
 		return osmo_timer_pending(&Tarr[t]);
 
 	/* we don't start with T0 because it's internal timer which requires special handling */
-	for (i = T3169; i < T_MAX; i++)
+	for (i = T3141; i < T_MAX; i++)
 		if (osmo_timer_pending(&Tarr[i]))
 			return true;
 
@@ -469,6 +470,11 @@ static inline void tbf_timeout_free(struct gprs_rlcmac_tbf *tbf, enum tbf_timers
 
 #define T_CBACK(t, diag) static void cb_##t(void *_tbf) { tbf_timeout_free((struct gprs_rlcmac_tbf *)_tbf, t, diag); }
 
+/* 3GPP TS 44.018 sec 3.5.2.1.5: On the network side, if timer T3141 elapses
+ * before a successful contention resolution procedure is completed, the newly
+ * allocated temporary block flow is released as specified in 3GPP TS 44.060 and
+ * the packet access is forgotten.*/
+T_CBACK(T3141, true)
 T_CBACK(T3169, true)
 T_CBACK(T3191, true)
 T_CBACK(T3193, false)
@@ -517,6 +523,9 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool
 	switch(t) {
 	case T0:
 		Tarr[t].cb = tbf_timer_cb;
+		break;
+	case T3141:
+		Tarr[t].cb = cb_T3141;
 		break;
 	case T3169:
 		Tarr[t].cb = cb_T3169;
@@ -869,7 +878,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 		gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
 
 		/* be sure to check first, if contention resolution is done,
-		 * otherwise we cannot send the assignment yet */
+		 * otherwise we cannot send the assignment yet (3GPP TS 44.060 sec 7.1.3.1) */
 		if (!ul_tbf->m_contention_resolution_done) {
 			LOGPTBF(this, LOGL_DEBUG,
 				"Cannot assign DL TBF now, because contention resolution is not finished.\n");

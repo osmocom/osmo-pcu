@@ -126,6 +126,9 @@ enum tbf_timers {
 	/* internal assign/reject timer */
 	T0,
 
+	/* Wait contention resolution success on UL TBFs assigned over CCCH */
+	T3141,
+
 	/* Wait for reuse of USF and TFI(s) after the MS uplink assignment for this TBF is invalid. */
 	T3169,
 

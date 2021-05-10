@@ -87,6 +87,8 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	void set_window_size();
 	void update_coding_scheme_counter_ul(enum CodingScheme cs);
         void usf_timeout();
+	void contention_resolution_start();
+	void contention_resolution_success();
 
 	/* Please note that all variables here will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).

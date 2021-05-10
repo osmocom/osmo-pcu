@@ -173,6 +173,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_ccch(struct gprs_rlcmac_bts *bts, struct
 	}
 	TBF_SET_STATE(tbf, GPRS_RLCMAC_FLOW);
 	TBF_ASS_TYPE_SET(tbf, GPRS_RLCMAC_FLAG_CCCH);
+	tbf->contention_resolution_start();
 	OSMO_ASSERT(tbf->ms());
 
 	return tbf;
@@ -300,6 +301,37 @@ bool gprs_rlcmac_ul_tbf::handle_ctrl_ack(enum pdch_ulc_tbf_poll_reason reason)
 	return false;
 }
 
+void gprs_rlcmac_ul_tbf::contention_resolution_start()
+{
+	/* 3GPP TS 44.018 sec 11.1.2 Timers on the network side: "This timer is
+	 * started when a temporary block flow is allocated with an IMMEDIATE
+	 * ASSIGNMENT or an IMMEDIATE PACKET ASSIGNMENT or an EC IMMEDIATE
+	 * ASSIGNMENT TYPE 1 message during a packet access procedure. It is
+	 * stopped when the mobile station has correctly seized the temporary
+	 * block flow."
+	 * In our code base, it means we want to do contention resolution
+	 * timeout only for one-phase packet access, since two-phase is handled
+	 * through SBA structs, which are freed by the PDCH UL Controller if the
+	 * single allocated block is lost. */
+	T_START(this, T3141, 3141, "Contention resolution (UL-TBF, CCCH)", true);
+}
+void gprs_rlcmac_ul_tbf::contention_resolution_success()
+{
+	if (m_contention_resolution_done)
+		return;
+
+	/* 3GPP TS 44.060 sec 7a.2.1 Contention Resolution */
+	/* 3GPP TS 44.018 3.5.2.1.4 Packet access completion: The one phase
+	   packet access procedure is completed at a successful contention
+	   resolution. The mobile station has entered the packet transfer mode.
+	   Timer T3141 is stopped on the network side */
+	t_stop(T3141, "Contention resolution success (UL-TBF, CCCH)");
+
+	/* now we must set this flag, so we are allowed to assign downlink
+	 * TBF on PACCH. it is only allowed when TLLI is acknowledged. */
+	m_contention_resolution_done = 1;
+}
+
 struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 {
 	int final = (state_is(GPRS_RLCMAC_FINISHED));
@@ -333,9 +365,15 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 	bitvec_pack(ack_vec, msgb_put(msg, 23));
 	bitvec_free(ack_vec);
 
-	/* now we must set this flag, so we are allowed to assign downlink
-	 * TBF on PACCH. it is only allowed when TLLI is acknowledged. */
-	m_contention_resolution_done = 1;
+	/* TS 44.060 7a.2.1.1: "The contention resolution is completed on
+	 * the network side when the network receives an RLC data block that
+	 * comprises the TLLI value that identifies the mobile station and the
+	 * TFI value associated with the TBF."
+	 * However, it's handier for us to mark contention resolution success
+	 * here since according to spec upon rx UL ACK is the time at which MS
+	 * realizes contention resolution succeeds. */
+	if (ms_tlli(ms()) != GSM_RESERVED_TMSI)
+		contention_resolution_success();
 
 	if (final) {
 		set_polling(new_poll_fn, ts, PDCH_ULC_POLL_UL_ACK);

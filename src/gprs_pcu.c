@@ -31,6 +31,7 @@ struct gprs_pcu *the_pcu;
 
 static struct osmo_tdef T_defs_pcu[] = {
 	{ .T=3190,  .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Return to packet idle mode after Packet DL Assignment on CCCH (s)", .val=0},
+	{ .T=3141,  .default_val=10, .unit=OSMO_TDEF_S, .desc="Timeout for contention resolution procedure (s)", .val=0 },
 	{ .T=PCU_TDEF_NEIGH_RESOLVE_TO,    .default_val=1000,  .unit=OSMO_TDEF_MS,   .desc="[ARFCN+BSIC]->[RAC+CI] resolution timeout (ms)", .val=0 },
 	{ .T=PCU_TDEF_SI_RESOLVE_TO,	   .default_val=1000,  .unit=OSMO_TDEF_MS,   .desc="RIM RAN-INFO response timeout (ms)",	    .val=0 },
 	{ .T=PCU_TDEF_NEIGH_CACHE_ALIVE,   .default_val=5,  .unit=OSMO_TDEF_S,   .desc="[ARFCN+BSIC]->[RAC+CI] resolution cache entry storage timeout (s)", .val=0 },

@@ -239,6 +239,10 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts, GprsMs *ms,
 
 	ul_tbf = ms_ul_tbf(ms);
 
+	/* 3GPP TS 44.060 sec 7.1.3.1 Initiation of the Packet resource request procedure:
+	* "Furthermore, the mobile station shall not respond to PACKET DOWNLINK ASSIGNMENT
+	* or MULTIPLE TBF DOWNLINK ASSIGNMENT messages before contention resolution is
+	* completed on the mobile station side." */
 	if (ul_tbf && ul_tbf->m_contention_resolution_done
 	 && !ul_tbf->m_final_ack_sent) {
 		use_trx = ul_tbf->trx->trx_no;

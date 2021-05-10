@@ -1456,6 +1456,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
+TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -2062,6 +2063,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
+TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654275
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
@@ -6212,6 +6214,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL)
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
+TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 MS requests Uplink resource on CCCH/RACH: ra=0x79 (8 bit) Fn=2654167 qta=31
@@ -6233,6 +6236,7 @@ TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=NULL)
 TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
+TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=1 USF=1
 MS requests Uplink resource on CCCH/RACH: ra=0x7a (8 bit) Fn=2654167 qta=31
@@ -6254,6 +6258,7 @@ TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=NULL)
 TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
+TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=2 USF=2
 MS requests Uplink resource on CCCH/RACH: ra=0x7b (8 bit) Fn=2654167 qta=31
@@ -6275,6 +6280,7 @@ TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=NULL)
 TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
+TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=3 USF=3
 MS requests Uplink resource on CCCH/RACH: ra=0x7c (8 bit) Fn=2654167 qta=31
@@ -6296,6 +6302,7 @@ TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=NULL)
 TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
+TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=4 USF=4
 MS requests Uplink resource on CCCH/RACH: ra=0x7d (8 bit) Fn=2654167 qta=31
@@ -6317,6 +6324,7 @@ TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=NULL)
 TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
+TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=5 USF=5
 MS requests Uplink resource on CCCH/RACH: ra=0x7e (8 bit) Fn=2654167 qta=31
@@ -6338,6 +6346,7 @@ TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=NULL)
 TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=NULL) changes state from NULL to FLOW
 TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=FLOW) set ass. type CCCH [prev CCCH:0, PACCH:0]
+TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=6 USF=6
 MS requests Uplink resource on CCCH/RACH: ra=0x7f (8 bit) Fn=2654167 qta=31
