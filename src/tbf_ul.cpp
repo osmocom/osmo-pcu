@@ -141,7 +141,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 }
 
 /* Alloc a UL TBF to be assigned over PACCH */
-gprs_rlcmac_ul_tbf *tbf_alloc_ul(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx,
+gprs_rlcmac_ul_tbf *tbf_alloc_ul_pacch(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx,
 				 uint32_t tlli)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
