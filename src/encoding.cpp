@@ -890,8 +890,12 @@ static void write_packet_uplink_ack_gprs(
 	bitvec_write_field(dest, &wp, mcs_chan_code(tbf->current_cs()), 2); // CHANNEL_CODING_COMMAND
 	write_packet_ack_nack_desc_gprs(dest, wp, window, is_final);
 
-	bitvec_write_field(dest, &wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
-	bitvec_write_field(dest, &wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
+	if (tbf->is_tlli_valid()) {
+		bitvec_write_field(dest, &wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
+		bitvec_write_field(dest, &wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
+	} else {
+		bitvec_write_field(dest, &wp, 0, 1); // 0: don't have CONTENTION_RESOLUTION_TLLI
+	}
 
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Packet Timing Advance
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Power Control Parameters
@@ -1072,8 +1076,14 @@ static void write_packet_uplink_ack_egprs(
 	bitvec_write_field(dest, &wp, 1, 1); // PRE_EMPTIVE_TRANSMISSION, TODO: This resembles GPRS, change it?
 	bitvec_write_field(dest, &wp, 0, 1); // 0: no PRR_RETRANSMISSION_REQUEST, TODO: clarify
 	bitvec_write_field(dest, &wp, 0, 1); // 0: no ARAC_RETRANSMISSION_REQUEST, TODO: clarify
-	bitvec_write_field(dest, &wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
-	bitvec_write_field(dest, &wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
+
+	if (tbf->is_tlli_valid()) {
+		bitvec_write_field(dest, &wp, 1, 1); // 1: have CONTENTION_RESOLUTION_TLLI
+		bitvec_write_field(dest, &wp, tbf->tlli(), 32); // CONTENTION_RESOLUTION_TLLI
+	} else {
+		bitvec_write_field(dest, &wp, 0, 1); // 0: don't have CONTENTION_RESOLUTION_TLLI
+	}
+
 	bitvec_write_field(dest, &wp, 1, 1); // TBF_EST (enabled)
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Packet Timing Advance
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Packet Extended Timing Advance
