@@ -407,8 +407,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	gprs_rlcmac_rssi(this, rssi);
 
 	/* store measurement values */
-	if (ms())
-		ms_update_l1_meas(ms(), meas);
+	ms_update_l1_meas(ms(), meas);
 
 	uint32_t new_tlli = GSM_RESERVED_TMSI;
 	unsigned int block_idx;
