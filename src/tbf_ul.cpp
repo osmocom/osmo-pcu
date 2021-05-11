@@ -420,7 +420,6 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 		int num_chunks;
 		uint8_t *rlc_data;
 		rdbi = &rlc->block_info[block_idx];
-		bool need_rlc_data = false;
 
 		LOGPTBFUL(this, LOGL_DEBUG,
 			  "Got %s RLC data block: CV=%d, BSN=%d, SPB=%d, PI=%d, E=%d, TI=%d, bitoffs=%d\n",
@@ -435,23 +434,12 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 			LOGPTBFUL(this, LOGL_DEBUG, "BSN %d out of window %d..%d (it's normal)\n",
 				  rdbi->bsn,
 				  m_window.v_q(), m_window.mod_sns(m_window.v_q() + ws - 1));
+			continue;
 		} else if (m_window.is_received(rdbi->bsn)) {
 			LOGPTBFUL(this, LOGL_DEBUG,
 				  "BSN %d already received\n", rdbi->bsn);
-		} else {
-			need_rlc_data = true;
-		}
-
-		if (!is_tlli_valid()) {
-			if (!rdbi->ti) {
-				LOGPTBFUL(this, LOGL_NOTICE, "Missing TLLI within UL DATA.\n");
-				continue;
-			}
-			need_rlc_data = true;
-		}
-
-		if (!need_rlc_data)
 			continue;
+		}
 
 		/* Store block and meta info to BSN buffer */
 
@@ -513,6 +501,10 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 				m_window.invalidate_bsn(rdbi->bsn);
 				continue;
 			}
+		} else if (!is_tlli_valid()) {
+			LOGPTBFUL(this, LOGL_NOTICE, "Missing TLLI within UL DATA.\n");
+			m_window.invalidate_bsn(rdbi->bsn);
+			continue;
 		}
 
 		m_window.receive_bsn(rdbi->bsn);
