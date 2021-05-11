@@ -897,7 +897,15 @@ static void write_packet_uplink_ack_gprs(
 		bitvec_write_field(dest, &wp, 0, 1); // 0: don't have CONTENTION_RESOLUTION_TLLI
 	}
 
-	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Packet Timing Advance
+	if (gsm48_ta_is_valid(tbf->ta())) {
+		bitvec_write_field(dest, &wp, 1, 1); // 1: have Packet Timing Advance IE (TS 44.060 12.12)
+		bitvec_write_field(dest, &wp, 1, 1); // 1: have TIMING_ADVANCE_VALUE
+		bitvec_write_field(dest, &wp, tbf->ta(), 6); // TIMING_ADVANCE_VALUE
+		bitvec_write_field(dest, &wp, 0, 1); // 0: don't have TIMING_ADVANCE_INDEX
+	} else {
+		bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Packet Timing Advance
+	}
+
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Power Control Parameters
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Extension Bits
 	bitvec_write_field(dest, &wp, 0, 1); // fixed 0
@@ -1085,7 +1093,16 @@ static void write_packet_uplink_ack_egprs(
 	}
 
 	bitvec_write_field(dest, &wp, 1, 1); // TBF_EST (enabled)
-	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Packet Timing Advance
+
+	if (gsm48_ta_is_valid(tbf->ta())) {
+		bitvec_write_field(dest, &wp, 1, 1); // 1: have Packet Timing Advance IE (TS 44.060 12.12)
+		bitvec_write_field(dest, &wp, 1, 1); // 1: have TIMING_ADVANCE_VALUE
+		bitvec_write_field(dest, &wp, tbf->ta(), 6); // TIMING_ADVANCE_VALUE
+		bitvec_write_field(dest, &wp, 0, 1); // 0: don't have TIMING_ADVANCE_INDEX
+	} else {
+		bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Packet Timing Advance
+	}
+
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Packet Extended Timing Advance
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Power Control Parameters
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have Extension Bits
