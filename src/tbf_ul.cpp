@@ -372,7 +372,7 @@ struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 	 * However, it's handier for us to mark contention resolution success
 	 * here since according to spec upon rx UL ACK is the time at which MS
 	 * realizes contention resolution succeeds. */
-	if (ms_tlli(ms()) != GSM_RESERVED_TMSI)
+	if (is_tlli_valid())
 		contention_resolution_success();
 
 	if (final) {
