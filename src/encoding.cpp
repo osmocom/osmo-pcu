@@ -661,7 +661,7 @@ void Encoding::write_packet_uplink_assignment(
 	}
 
 	/* Packet Timing Advance (if known) */
-	if (tbf->ta() <= 63) { /* { 0 | 1  < TIMING_ADVANCE_VALUE : bit (6) > } */
+	if (gsm48_ta_is_valid(tbf->ta())) { /* { 0 | 1  < TIMING_ADVANCE_VALUE : bit (6) > } */
 		pta->Exist_TIMING_ADVANCE_VALUE = 0x01;  // Present
 		pta->TIMING_ADVANCE_VALUE       = tbf->ta();
 	}
