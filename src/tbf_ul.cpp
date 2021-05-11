@@ -528,7 +528,8 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 	/* Check if we already received all data TBF had to send: */
 	if (this->state_is(GPRS_RLCMAC_FLOW) /* still in flow state */
-	 && this->m_window.v_q() == this->m_window.v_r()) { /* if complete */
+	 && this->m_window.v_q() == this->m_window.v_r() /* if complete */
+	 && block->len) { /* if there was ever a last block received */
 		LOGPTBFUL(this, LOGL_DEBUG,
 			  "No gaps in received block, last block: BSN=%d CV=%d\n",
 			  rdbi->bsn, rdbi->cv);
@@ -542,7 +543,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 	/* If TLLI is included or if we received half of the window, we send
 	 * an ack/nack */
-	maybe_schedule_uplink_acknack(rlc, rdbi->cv == 0);
+	maybe_schedule_uplink_acknack(rlc, block->len && rdbi->cv == 0);
 
 	return 0;
 }
