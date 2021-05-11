@@ -80,7 +80,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 0, CS-1): 07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
-Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 1, CS=CS-1
@@ -170,7 +170,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 0, CS-1): 07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
-Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 1, CS=CS-1
@@ -260,7 +260,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) need_padding 0 spb_status 0 spb 0 (
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 0, CS-1): 07 00 01 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 
-Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new block at BSN 1, CS=CS-1
@@ -1668,7 +1668,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) set ass. type PACCH [prev CCCH:0,
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654275
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 10 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 1
-Received RTS for PDCH: TRX=0 TS=7 FN=2654275 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654275 block_nr=9 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654279
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654275 + 13 = 2654288
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -1693,7 +1693,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654279 block_nr=10 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654279 block_nr=10 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654279 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 0, CS=CS-4
@@ -1717,7 +1717,7 @@ PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654292): TBF(TFI=0 TLLI=
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654292, TS=7 (curr FN 2654292)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3105 0 => 1 (< MAX 8)
-Received RTS for PDCH: TRX=0 TS=7 FN=2654296 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654296 block_nr=2 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654301
 PDCH(bts=0,trx=0,ts=7) FN=2654296 Scheduling data message at RTS for DL TFI=0 prio=5 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Restarting at BSN 0, because all blocks have been transmitted.
@@ -1770,7 +1770,7 @@ PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654309): TBF(TFI=0 TLLI=
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654309, TS=7 (curr FN 2654348)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3105 1 => 2 (< MAX 8)
-Received RTS for PDCH: TRX=0 TS=7 FN=2654348 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654348 block_nr=2 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654353
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654348 + 13 = 2654361
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
@@ -2219,7 +2219,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 40
-Received RTS for PDCH: TRX=0 TS=7 FN=2654275 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654275 block_nr=9 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654279
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654275 + 13 = 2654288
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -2244,7 +2244,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654279 block_nr=10 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654279 block_nr=10 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654279 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 0, CS=CS-1
@@ -2263,7 +2263,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654283 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654283 block_nr=11 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654288
 PDCH(bts=0,trx=0,ts=7) FN=2654283 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 1, CS=CS-1
@@ -2281,7 +2281,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654288 block_nr=0 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654288 block_nr=0 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654292
 PDCH(bts=0,trx=0,ts=7) FN=2654288 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 2, CS=CS-1
@@ -2301,7 +2301,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654292 block_nr=1 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654292 block_nr=1 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654296
 PDCH(bts=0,trx=0,ts=7) FN=2654292 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==3) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 3, CS=CS-1
@@ -2319,7 +2319,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654296 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654296 block_nr=2 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654301
 PDCH(bts=0,trx=0,ts=7) FN=2654296 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==4) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 4, CS=CS-1
@@ -2339,7 +2339,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654301 block_nr=3 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654301 block_nr=3 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654305
 PDCH(bts=0,trx=0,ts=7) FN=2654301 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==5) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 5, CS=CS-1
@@ -2357,7 +2357,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654305 block_nr=4 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654305 block_nr=4 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654309
 PDCH(bts=0,trx=0,ts=7) FN=2654305 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==6) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 6, CS=CS-1
@@ -2377,7 +2377,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654309 block_nr=5 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654309 block_nr=5 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654314
 PDCH(bts=0,trx=0,ts=7) FN=2654309 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==7) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 7, CS=CS-1
@@ -2395,7 +2395,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654314 block_nr=6 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654314 block_nr=6 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654318
 PDCH(bts=0,trx=0,ts=7) FN=2654314 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==8) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 8, CS=CS-1
@@ -2413,7 +2413,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654318 block_nr=7 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654318 block_nr=7 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654322
 PDCH(bts=0,trx=0,ts=7) FN=2654318 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==9) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 9, CS=CS-1
@@ -2433,7 +2433,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654322 block_nr=8 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654322 block_nr=8 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654327
 PDCH(bts=0,trx=0,ts=7) FN=2654322 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 10, CS=CS-1
@@ -2451,7 +2451,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654327 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654327 block_nr=9 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654331
 PDCH(bts=0,trx=0,ts=7) FN=2654327 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==11) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 11, CS=CS-1
@@ -2471,7 +2471,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654331 block_nr=10 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654331 block_nr=10 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654335
 PDCH(bts=0,trx=0,ts=7) FN=2654331 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==12) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 12, CS=CS-1
@@ -2489,7 +2489,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654335 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654335 block_nr=11 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654340
 PDCH(bts=0,trx=0,ts=7) FN=2654335 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==13) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 13, CS=CS-1
@@ -2509,7 +2509,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654340 block_nr=0 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654340 block_nr=0 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654344
 PDCH(bts=0,trx=0,ts=7) FN=2654340 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==14) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 14, CS=CS-1
@@ -2527,7 +2527,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654344 block_nr=1 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654344 block_nr=1 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654348
 PDCH(bts=0,trx=0,ts=7) FN=2654344 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==15) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 15, CS=CS-1
@@ -2545,7 +2545,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654348 block_nr=2 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654348 block_nr=2 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654353
 PDCH(bts=0,trx=0,ts=7) FN=2654348 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==16) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 16, CS=CS-1
@@ -2565,7 +2565,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654353 block_nr=3 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654353 block_nr=3 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654357
 PDCH(bts=0,trx=0,ts=7) FN=2654353 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==17) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 17, CS=CS-1
@@ -2583,7 +2583,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654357 block_nr=4 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654357 block_nr=4 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654361
 PDCH(bts=0,trx=0,ts=7) FN=2654357 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==18) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 18, CS=CS-1
@@ -2603,7 +2603,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654361 block_nr=5 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654361 block_nr=5 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654366
 PDCH(bts=0,trx=0,ts=7) FN=2654361 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==19) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 19, CS=CS-1
@@ -2621,7 +2621,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654366 block_nr=6 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654366 block_nr=6 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654370
 PDCH(bts=0,trx=0,ts=7) FN=2654366 Scheduling data message at RTS for DL TFI=0 prio=5 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==20) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 20, CS=CS-1
@@ -2645,7 +2645,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654370 block_nr=7 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654370 block_nr=7 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654374
 PDCH(bts=0,trx=0,ts=7) FN=2654370 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==21) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 21, CS=CS-1
@@ -2663,7 +2663,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654374 block_nr=8 scheduling free USF for polling at FN=2654379 of TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654374 block_nr=8 scheduling free USF for polling at FN=2654379 of TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW)
 PDCH(bts=0,trx=0,ts=7) FN=2654374 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==22) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 22, CS=CS-1
@@ -2681,7 +2681,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654379 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654379 block_nr=9 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654383
 PDCH(bts=0,trx=0,ts=7) FN=2654379 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==23) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 23, CS=CS-1
@@ -2701,7 +2701,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654383 block_nr=10 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654383 block_nr=10 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654387
 PDCH(bts=0,trx=0,ts=7) FN=2654383 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==24) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 24, CS=CS-1
@@ -2719,7 +2719,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654387 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654387 block_nr=11 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654392
 PDCH(bts=0,trx=0,ts=7) FN=2654387 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==25) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 25, CS=CS-1
@@ -2739,7 +2739,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654392 block_nr=0 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654392 block_nr=0 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654396
 PDCH(bts=0,trx=0,ts=7) FN=2654392 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==26) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 26, CS=CS-1
@@ -2757,7 +2757,7 @@ Received RTS on disabled PDCH: TRX=0 TS=3
 Received RTS on disabled PDCH: TRX=0 TS=4
 Received RTS on disabled PDCH: TRX=0 TS=5
 Received RTS on disabled PDCH: TRX=0 TS=6
-Received RTS for PDCH: TRX=0 TS=7 FN=2654396 block_nr=1 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654396 block_nr=1 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654400
 PDCH(bts=0,trx=0,ts=7) FN=2654396 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==27) mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 27, CS=CS-1
@@ -3573,7 +3573,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-1): 0f 00 00 16 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 00 
 Detected FN jump! 2654167 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
-Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-1
@@ -3583,7 +3583,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 s
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-1): 07 40 00 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Received RTS for PDCH: TRX=0 TS=4 FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-1
@@ -3748,7 +3748,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 s
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 21)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 21, MCS-1): 07 40 05 96 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Received RTS for PDCH: TRX=0 TS=4 FN=99 block_nr=11 scheduling free USF for polling at FN=104 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=99 block_nr=11 scheduling free USF for polling at FN=104 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=99 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==22) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 22, CS=MCS-1
@@ -3860,7 +3860,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-2): 0f 00 00 12 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 Detected FN jump! 112 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
-Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-2
@@ -3870,7 +3870,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 s
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-2): 07 40 00 92 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Received RTS for PDCH: TRX=0 TS=4 FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-2
@@ -4098,7 +4098,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-3): 0f 00 00 06 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 Detected FN jump! 91 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
-Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-3
@@ -4108,7 +4108,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 s
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-3): 07 40 00 86 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Received RTS for PDCH: TRX=0 TS=4 FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-3
@@ -4296,7 +4296,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-4): 0f 00 00 00 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 Detected FN jump! 69 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
-Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-4
@@ -4306,7 +4306,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 s
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-4): 07 40 00 80 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 00 
-Received RTS for PDCH: TRX=0 TS=4 FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-4
@@ -4478,7 +4478,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-5): 0f 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 Detected FN jump! 60 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
-Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-5
@@ -4488,7 +4488,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 s
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-5): 07 40 00 58 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Received RTS for PDCH: TRX=0 TS=4 FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-5
@@ -4644,7 +4644,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 0f 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 Detected FN jump! 52 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
-Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 1, CS=MCS-6
@@ -4654,7 +4654,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) need_padding 0 spb_status 0 s
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 1, MCS-6): 07 40 00 50 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 00 
-Received RTS for PDCH: TRX=0 TS=4 FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-6
@@ -4787,7 +4787,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-5): 0f 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 Detected FN jump! 39 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
-Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-7) last_mcs(MCS-5) demanded_mcs(MCS-7) cs_trans(MCS-7) arq_type(1) bsn(0)
@@ -4800,7 +4800,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 2 RLC blocks, 2 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-7): 07 00 00 02 b8 50 fc 07 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Received RTS for PDCH: TRX=0 TS=4 FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-7
@@ -4939,7 +4939,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-8): 0f 00 00 00 60 50 fc 07 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 40 f1 1f 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
 Detected FN jump! 34 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
-Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-8) last_mcs(MCS-8) demanded_mcs(MCS-8) cs_trans(MCS-8) arq_type(1) bsn(0)
@@ -4952,7 +4952,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 2 RLC blocks, 2 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-8): 07 00 00 02 88 50 fc 07 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Received RTS for PDCH: TRX=0 TS=4 FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-8
@@ -5080,7 +5080,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 0f 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 Detected FN jump! 30 -> 8
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
-Received RTS for PDCH: TRX=0 TS=4 FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) initial_cs_dl(MCS-9) last_mcs(MCS-6) demanded_mcs(MCS-9) cs_trans(MCS-9) arq_type(1) bsn(0)
@@ -5093,7 +5093,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 2 RLC blocks, 2 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 1 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-9): 07 00 00 02 20 50 fc 07 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 14 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 00 
-Received RTS for PDCH: TRX=0 TS=4 FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
+PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=13 block_nr=3 scheduling free USF for polling at FN=17 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=13 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 2, CS=MCS-9
@@ -6924,7 +6924,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=1 .. V(R)=159)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=0, BSN=64, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 64 already received
-Received RTS for PDCH: TRX=0 TS=7 FN=2654275 block_nr=9 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654275 block_nr=9 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS), expect answer on UL FN=2654279
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -7087,7 +7087,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=80 95 95
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because some data is missing and last block has CV==0.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_SEND_ACK to GPRS_RLCMAC_UL_ACK_NONE
-Received RTS for PDCH: TRX=0 TS=7 FN=2654279 block_nr=10 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654279 block_nr=10 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS), expect answer on UL FN=2654283
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654279 + 13 = 2654292
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
@@ -7591,7 +7591,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=0, BSN=64, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 64 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
-Received RTS for PDCH: TRX=0 TS=7 FN=2654283 block_nr=11 scheduling USF=0 for required uplink resource of UL TFI=0
+PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654283 block_nr=11 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS), expect answer on UL FN=2654288
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes

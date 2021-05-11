@@ -84,8 +84,7 @@ states? */
 	}
 }
 
-static struct gprs_rlcmac_ul_tbf *sched_select_uplink(uint8_t trx, uint8_t ts, uint32_t fn,
-	uint8_t block_nr, struct gprs_rlcmac_pdch *pdch, bool require_gprs_only)
+static struct gprs_rlcmac_ul_tbf *sched_select_uplink(struct gprs_rlcmac_pdch *pdch, bool require_gprs_only)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
 	uint8_t i, tfi;
@@ -107,11 +106,7 @@ static struct gprs_rlcmac_ul_tbf *sched_select_uplink(uint8_t trx, uint8_t ts, u
 		if (require_gprs_only && tbf->is_egprs_enabled())
 			continue;
 
-		/* use this USF */
-		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
-			"TS=%d FN=%d block_nr=%d scheduling USF=%d for "
-			"required uplink resource of UL TFI=%d\n", trx, ts, fn,
-			block_nr, tbf->m_usf[ts], tfi);
+		/* use this USF (tbf) */
 		/* next TBF to handle resource is the next one */
 		pdch->next_ul_tfi = (tfi + 1) & 31;
 		return tbf;
@@ -464,10 +459,9 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 			"single block allocation at FN=%d\n", fn, block_nr, sba->fn);
 	/* else, check uplink resource for polling */
 	} else if ((poll_tbf = pdch_ulc_get_tbf_poll(pdch->ulc, poll_fn))) {
-		LOGP(DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: TRX=%d "
-			"TS=%d FN=%d block_nr=%d scheduling free USF for "
-			"polling at FN=%d of %s\n", trx, ts, fn,
-			block_nr, poll_fn, tbf_name(poll_tbf));
+		LOGPDCH(pdch, DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: FN=%d "
+			"block_nr=%d scheduling free USF for polling at FN=%d of %s\n",
+			fn, block_nr, poll_fn, tbf_name(poll_tbf));
 		/* If POLL TBF is UL and already has a USF assigned on this TS,
 		 * let's set its USF in the DL msg. This is not really needed,
 		 * but it helps understand better the flow when looking at
@@ -475,7 +469,10 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 		if (poll_tbf->direction == GPRS_RLCMAC_UL_TBF && as_ul_tbf(poll_tbf)->m_usf[ts] != USF_INVALID)
 			usf_tbf = as_ul_tbf(poll_tbf);
 	/* else, search for uplink tbf */
-	} else if ((usf_tbf = sched_select_uplink(trx, ts, fn, block_nr, pdch, require_gprs_only))) {
+	} else if ((usf_tbf = sched_select_uplink(pdch, require_gprs_only))) {
+		LOGPDCH(pdch, DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: FN=%d "
+			"block_nr=%d scheduling USF=%d for %s, expect answer on UL FN=%d\n",
+			fn, block_nr, usf_tbf->m_usf[pdch->ts_no], tbf_name(usf_tbf), poll_fn);
 		pdch_ulc_reserve_tbf_usf(pdch->ulc, poll_fn, usf_tbf);
 	}
 	/* If MS selected for USF is GPRS-only, then it will only be
