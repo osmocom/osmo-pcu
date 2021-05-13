@@ -373,16 +373,10 @@ int bts_add_paging(struct gprs_rlcmac_bts *bts, const struct paging_req_cs *req,
 {
 	uint8_t l, trx, ts, any_tbf = 0;
 	struct gprs_rlcmac_tbf *tbf;
-	struct llist_item *pos;
+	struct llist_head *tmp;
 	const struct osmo_mobile_identity *mi;
 	uint8_t slot_mask[8];
 	int8_t first_ts; /* must be signed */
-
-	struct llist_head *tbfs_lists[] = {
-		&bts->ul_tbfs,
-		&bts->dl_tbfs,
-		NULL
-	};
 
 	/* First, build the MI used to page on PDCH from available subscriber info: */
 	if (req->mi_tmsi_present) {
@@ -409,13 +403,18 @@ int bts_add_paging(struct gprs_rlcmac_bts *bts, const struct paging_req_cs *req,
 
 	/* We don't know the target MS.
 	 * collect slots to page
-	 * Mark slots for every TBF, but only mark one of it.
+	 * Mark up to one slot attached to each of the TBF of the MS.
 	 * Mark only the first slot found.
 	 * Don't mark, if TBF uses a different slot that is already marked. */
 	memset(slot_mask, 0, sizeof(slot_mask));
-	for (l = 0; tbfs_lists[l]; l++) {
-		llist_for_each_entry(pos, tbfs_lists[l], list) {
-			tbf = (struct gprs_rlcmac_tbf *)pos->entry;
+
+	llist_for_each(tmp, bts_ms_store(bts)->ms_list()) {
+		ms = llist_entry(tmp, typeof(*ms), list);
+		struct gprs_rlcmac_tbf *tbfs[] = { ms->ul_tbf, ms->dl_tbf };
+		for (l = 0; l < ARRAY_SIZE(tbfs); l++) {
+			tbf = (struct gprs_rlcmac_tbf *)tbfs[l];
+			if (!tbf)
+				continue;
 			first_ts = -1;
 			for (ts = 0; ts < 8; ts++) {
 				if (tbf->pdch[ts]) {
