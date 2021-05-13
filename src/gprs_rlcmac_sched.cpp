@@ -41,19 +41,18 @@ struct tbf_sched_candidates {
 	struct gprs_rlcmac_ul_tbf *ul_ack;
 };
 
-static void get_ctrl_msg_tbf_candidates(const struct gprs_rlcmac_bts *bts,
-					const struct gprs_rlcmac_pdch *pdch,
+static void get_ctrl_msg_tbf_candidates(const struct gprs_rlcmac_pdch *pdch,
 					struct tbf_sched_candidates *tbf_cand)
 {
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	struct llist_item *pos;
 
-	llist_for_each_entry(pos, &bts->ul_tbfs, list) {
+	llist_for_each_entry(pos, &pdch->trx->ul_tbfs, list) {
 		ul_tbf = as_ul_tbf((struct gprs_rlcmac_tbf *)pos->entry);
 		OSMO_ASSERT(ul_tbf);
 		/* this trx, this ts */
-		if (ul_tbf->trx->trx_no != pdch->trx->trx_no || !ul_tbf->is_control_ts(pdch->ts_no))
+		if (!ul_tbf->is_control_ts(pdch->ts_no))
 			continue;
 		if (ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_SEND_ACK))
 			tbf_cand->ul_ack = ul_tbf;
@@ -68,11 +67,11 @@ static void get_ctrl_msg_tbf_candidates(const struct gprs_rlcmac_bts *bts,
 /* FIXME: Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all
 states? */
 	}
-	llist_for_each_entry(pos, &bts->dl_tbfs, list) {
+	llist_for_each_entry(pos, &pdch->trx->dl_tbfs, list) {
 		dl_tbf = as_dl_tbf((struct gprs_rlcmac_tbf *)pos->entry);
 		OSMO_ASSERT(dl_tbf);
 		/* this trx, this ts */
-		if (dl_tbf->trx->trx_no != pdch->trx->trx_no || !dl_tbf->is_control_ts(pdch->ts_no))
+		if (!dl_tbf->is_control_ts(pdch->ts_no))
 			continue;
 		if (dl_tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_SEND_ASS))
 			tbf_cand->dl_ass = dl_tbf;
@@ -481,7 +480,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	if (usf_tbf && req_mcs_kind == EGPRS && ms_mode(usf_tbf->ms()) != EGPRS)
 		req_mcs_kind = EGPRS_GMSK;
 
-	get_ctrl_msg_tbf_candidates(bts, pdch, &tbf_cand);
+	get_ctrl_msg_tbf_candidates(pdch, &tbf_cand);
 
 	/* Prio 1: select control message */
 	if ((msg = sched_select_ctrl_msg(pdch, fn, block_nr, &tbf_cand))) {

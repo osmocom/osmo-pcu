@@ -59,6 +59,11 @@ struct gprs_rlcmac_trx {
 	struct gprs_rlcmac_bts *bts;
 	uint8_t trx_no;
 
+	/* list of uplink TBFs */
+	struct llist_head ul_tbfs; /* list of gprs_rlcmac_tbf */
+	/* list of downlink TBFs */
+	struct llist_head dl_tbfs; /* list of gprs_rlcmac_tbf */
+
 };
 
 
@@ -254,11 +259,6 @@ struct gprs_rlcmac_bts {
 	struct osmo_stat_item_group *statg;
 
 	struct GprsMsStorage *ms_store;
-
-	/* list of uplink TBFs */
-	struct llist_head ul_tbfs; /* list of gprs_rlcmac_tbf */
-	/* list of downlink TBFs */
-	struct llist_head dl_tbfs; /* list of gprs_rlcmac_tbf */
 };
 
 #ifdef __cplusplus

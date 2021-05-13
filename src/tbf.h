@@ -183,7 +183,7 @@ enum gprs_rlcmac_tbf_state tbf_state(const struct gprs_rlcmac_tbf *tbf);
 enum gprs_rlcmac_tbf_direction tbf_direction(const struct gprs_rlcmac_tbf *tbf);
 void tbf_set_ms(struct gprs_rlcmac_tbf *tbf, struct GprsMs *ms);
 struct llist_head *tbf_ms_list(struct gprs_rlcmac_tbf *tbf);
-struct llist_head *tbf_bts_list(struct gprs_rlcmac_tbf *tbf);
+struct llist_head *tbf_trx_list(struct gprs_rlcmac_tbf *tbf);
 struct GprsMs *tbf_ms(const struct gprs_rlcmac_tbf *tbf);
 bool tbf_timers_pending(struct gprs_rlcmac_tbf *tbf, enum tbf_timers t);
 void tbf_free(struct gprs_rlcmac_tbf *tbf);
@@ -327,7 +327,7 @@ struct gprs_rlcmac_tbf {
 	struct rate_ctr_group *m_ctrs;
 	enum gprs_rlcmac_tbf_state state;
 	struct llist_item m_ms_list;
-	struct llist_item m_bts_list;
+	struct llist_item m_trx_list;
 
 protected:
 	void merge_and_clear_ms(GprsMs *old_ms);

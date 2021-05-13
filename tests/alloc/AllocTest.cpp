@@ -59,8 +59,8 @@ static void check_tfi_usage(struct gprs_rlcmac_bts *bts)
 
 	struct gprs_rlcmac_tbf *tfi_usage[8][8][2][32] = {{{{NULL}}}};
 	struct llist_head *tbf_lists[2] = {
-		&bts->ul_tbfs,
-		&bts->dl_tbfs
+		&bts->trx[0].ul_tbfs,
+		&bts->trx[0].dl_tbfs
 	};
 
 	struct llist_item *pos;

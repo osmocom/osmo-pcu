@@ -44,7 +44,7 @@ extern "C" {
 	#include "coding_scheme.h"
 }
 
-static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
+static void tbf_print_vty_info(struct vty *vty, struct gprs_rlcmac_tbf *tbf)
 {
 	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
 	gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
@@ -104,20 +104,28 @@ static void tbf_print_vty_info(struct vty *vty, gprs_rlcmac_tbf *tbf)
 int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts, uint32_t flags)
 {
 	struct llist_item *iter;
+	const struct gprs_rlcmac_trx *trx;
 	struct gprs_rlcmac_tbf *tbf;
+	size_t trx_no;
 
 	vty_out(vty, "UL TBFs%s", VTY_NEWLINE);
-	llist_for_each_entry(iter, &bts->ul_tbfs, list) {
-		tbf = (struct gprs_rlcmac_tbf *)iter->entry;
-		if (tbf->state_flags & flags)
-			tbf_print_vty_info(vty, tbf);
+	for (trx_no = 0; trx_no < ARRAY_SIZE(bts->trx); trx_no++) {
+		trx = &bts->trx[trx_no];
+		llist_for_each_entry(iter, &trx->ul_tbfs, list) {
+			tbf = (struct gprs_rlcmac_tbf *)iter->entry;
+			if (tbf->state_flags & flags)
+				tbf_print_vty_info(vty, tbf);
+		}
 	}
 
 	vty_out(vty, "%sDL TBFs%s", VTY_NEWLINE, VTY_NEWLINE);
-	llist_for_each_entry(iter, &bts->dl_tbfs, list) {
-		tbf = (struct gprs_rlcmac_tbf *)iter->entry;
-		if (tbf->state_flags & flags)
-			tbf_print_vty_info(vty, tbf);
+	for (trx_no = 0; trx_no < ARRAY_SIZE(bts->trx); trx_no++) {
+		trx = &bts->trx[trx_no];
+		llist_for_each_entry(iter, &trx->dl_tbfs, list) {
+			tbf = (struct gprs_rlcmac_tbf *)iter->entry;
+			if (tbf->state_flags & flags)
+				tbf_print_vty_info(vty, tbf);
+		}
 	}
 
 	return CMD_SUCCESS;

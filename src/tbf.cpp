@@ -150,8 +150,8 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	memset(&m_ms_list, 0, sizeof(m_ms_list));
 	m_ms_list.entry = this;
 
-	memset(&m_bts_list, 0, sizeof(m_bts_list));
-	m_bts_list.entry = this;
+	memset(&m_trx_list, 0, sizeof(m_trx_list));
+	m_trx_list.entry = this;
 
 	m_rlc.init();
 	m_llc.init();
@@ -293,7 +293,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 	tbf->stop_timers("freeing TBF");
 	/* TODO: Could/Should generate  bssgp_tx_llc_discarded */
 	tbf_unlink_pdch(tbf);
-	llist_del(tbf_bts_list(tbf));
+	llist_del(tbf_trx_list(tbf));
 
 	if (tbf->ms())
 		tbf->set_ms(NULL);
@@ -1092,11 +1092,11 @@ const char *gprs_rlcmac_tbf::name() const
 
 void gprs_rlcmac_tbf::rotate_in_list()
 {
-	llist_del(tbf_bts_list((struct gprs_rlcmac_tbf *)this));
+	llist_del(tbf_trx_list((struct gprs_rlcmac_tbf *)this));
 	if (direction == GPRS_RLCMAC_UL_TBF)
-		llist_add(tbf_bts_list((struct gprs_rlcmac_tbf *)this), &bts->ul_tbfs);
+		llist_add(tbf_trx_list((struct gprs_rlcmac_tbf *)this), &trx->ul_tbfs);
 	else
-		llist_add(tbf_bts_list((struct gprs_rlcmac_tbf *)this), &bts->dl_tbfs);
+		llist_add(tbf_trx_list((struct gprs_rlcmac_tbf *)this), &trx->dl_tbfs);
 }
 
 uint8_t gprs_rlcmac_tbf::tsc() const
@@ -1166,9 +1166,9 @@ struct llist_head *tbf_ms_list(struct gprs_rlcmac_tbf *tbf)
 	return &tbf->m_ms_list.list;
 }
 
-struct llist_head *tbf_bts_list(struct gprs_rlcmac_tbf *tbf)
+struct llist_head *tbf_trx_list(struct gprs_rlcmac_tbf *tbf)
 {
-	return &tbf->m_bts_list.list;
+	return &tbf->m_trx_list.list;
 }
 
 struct GprsMs *tbf_ms(const struct gprs_rlcmac_tbf *tbf)

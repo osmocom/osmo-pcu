@@ -160,6 +160,7 @@ static void test_reserve_multiple()
 int _alloc_algorithm_dummy(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf,
 			   bool single, int8_t use_tbf)
 {
+	tbf->trx = &bts->trx[0];
 	return 0;
 }
 
@@ -174,7 +175,6 @@ static void test_fn_wrap_around()
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	struct GprsMs *ms = ms_alloc(bts, 0x12345678);
 	struct gprs_rlcmac_tbf *tbf1 = tbf_alloc_dl_tbf(bts, ms, 0, true);
-	tbf1->trx = &bts->trx[0];
 	struct gprs_rlcmac_pdch *pdch = &tbf1->trx->pdch[0];
 	int rc;
 	uint32_t fn, last_fn;

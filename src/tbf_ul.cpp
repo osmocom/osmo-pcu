@@ -134,7 +134,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 		return NULL;
 	}
 
-	llist_add_tail(tbf_bts_list(tbf), &bts->ul_tbfs);
+	llist_add_tail(tbf_trx_list(tbf), &tbf->trx->ul_tbfs);
 	bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_UL_ALLOCATED);
 
 	return tbf;
@@ -212,7 +212,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 	}
 
 	ms_attach_tbf(ms, ul_tbf);
-	llist_add(tbf_bts_list((struct gprs_rlcmac_tbf *)ul_tbf), &bts->ul_tbfs);
+	llist_add(tbf_trx_list((struct gprs_rlcmac_tbf *)ul_tbf), &trx->ul_tbfs);
 	bts_do_rate_ctr_inc(ul_tbf->bts, CTR_TBF_UL_ALLOCATED);
 	TBF_SET_ASS_ON(ul_tbf, GPRS_RLCMAC_FLAG_PACCH, false);
 	TBF_SET_ASS_STATE_UL(ul_tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ);
