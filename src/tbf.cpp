@@ -751,6 +751,7 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 	rc = tbf_assign_control_ts(this);
 	/* if no resource */
 	if (rc < 0) {
+		LOGPTBF(this, LOGL_ERROR, "Failed to assign control TS\n");
 		return -1;
 	}
 
