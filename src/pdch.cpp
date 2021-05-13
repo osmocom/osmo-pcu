@@ -179,7 +179,7 @@ struct gprs_rlcmac_paging *gprs_rlcmac_pdch::dequeue_paging()
 
 	if (llist_empty(&paging_list))
 		return NULL;
-	pag = llist_entry(paging_list.next, struct gprs_rlcmac_paging, list);
+	pag = llist_first_entry(&paging_list, struct gprs_rlcmac_paging, list);
 	llist_del(&pag->list);
 
 	return pag;
