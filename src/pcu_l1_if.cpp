@@ -817,6 +817,9 @@ static int pcu_rx_time_ind(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_time_i
 static int pcu_rx_pag_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_pag_req *pag_req)
 {
 	struct osmo_mobile_identity mi;
+	struct GprsMs *ms = NULL;
+	struct paging_req_cs req = { .chan_needed = pag_req->chan_needed,
+				     .tlli = GSM_RESERVED_TMSI };
 	int rc;
 
 	LOGP(DL1IF, LOGL_DEBUG, "Paging request received: chan_needed=%d "
@@ -835,7 +838,23 @@ static int pcu_rx_pag_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_pag_req
 		return -EINVAL;
 	}
 
-	return bts_add_paging(bts, pag_req->chan_needed, &mi);
+	switch (mi.type) {
+	case GSM_MI_TYPE_TMSI:
+		req.mi_tmsi = mi;
+		req.mi_tmsi_present = true;
+		/* TODO: look up MS by TMSI? Derive TLLI? */
+		break;
+	case GSM_MI_TYPE_IMSI:
+		req.mi_imsi = mi;
+		req.mi_imsi_present = true;
+		ms = bts_ms_by_imsi(bts, req.mi_imsi.imsi);
+		break;
+	default:
+		LOGP(DL1IF, LOGL_ERROR, "Unexpected MI type %u\n", mi.type);
+		return -EINVAL;
+	}
+
+	return bts_add_paging(bts, &req, ms);
 }
 
 static int pcu_rx_susp_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_susp_req *susp_req)

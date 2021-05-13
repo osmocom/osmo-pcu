@@ -171,8 +171,78 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			ms_class, egprs_ms_class, delay_csec, data, len);
 }
 
+/* 3GPP TS 48.018 Table 10.3.2. Returns 0 on success, suggested BSSGP cause otherwise */
+static unsigned int get_paging_cs_mi(struct paging_req_cs *req, const struct tlv_parsed *tp)
+{
+	int rc;
+
+	req->chan_needed = tlvp_val8(tp, BSSGP_IE_CHAN_NEEDED, 0);
+
+	if (!TLVP_PRESENT(tp, BSSGP_IE_IMSI)) {
+		LOGP(DBSSGP, LOGL_ERROR, "IMSI Mobile Identity mandatory IE not found\n");
+		return BSSGP_CAUSE_MISSING_MAND_IE;
+	}
+
+	rc = osmo_mobile_identity_decode(&req->mi_imsi, TLVP_VAL(tp, BSSGP_IE_IMSI),
+					 TLVP_LEN(tp, BSSGP_IE_IMSI), true);
+	if (rc < 0 || req->mi_imsi.type != GSM_MI_TYPE_IMSI) {
+		LOGP(DBSSGP, LOGL_ERROR, "Invalid IMSI Mobile Identity\n");
+		return BSSGP_CAUSE_INV_MAND_INF;
+	}
+	req->mi_imsi_present = true;
+
+	/* TIMSI is optional */
+	req->mi_tmsi_present = false;
+	if (TLVP_PRESENT(tp, BSSGP_IE_TMSI)) {
+		/* Be safe against an evil SGSN - check the length */
+		if (TLVP_LEN(tp, BSSGP_IE_TMSI) != GSM23003_TMSI_NUM_BYTES) {
+			LOGP(DBSSGP, LOGL_NOTICE, "TMSI IE has odd length (!= 4)\n");
+			return BSSGP_CAUSE_COND_IE_ERR;
+		}
+
+		/* NOTE: TMSI (unlike IMSI) IE comes without MI type header */
+		req->mi_tmsi = (struct osmo_mobile_identity){
+			.type = GSM_MI_TYPE_TMSI,
+		};
+		req->mi_tmsi.tmsi = osmo_load32be(TLVP_VAL(tp, BSSGP_IE_TMSI));
+		req->mi_tmsi_present = true;
+	}
+
+	if (TLVP_PRESENT(tp, BSSGP_IE_TLLI))
+		req->tlli = osmo_load32be(TLVP_VAL(tp, BSSGP_IE_TLLI));
+	else
+		req->tlli = GSM_RESERVED_TMSI;
+
+	return 0;
+}
+
+static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, const struct tlv_parsed *tp)
+{
+	struct paging_req_cs req;
+	struct gprs_rlcmac_bts *bts;
+	struct GprsMs *ms;
+	int rc;
+
+	if ((rc = get_paging_cs_mi(&req, tp)) > 0)
+		return bssgp_tx_status((enum gprs_bssgp_cause) rc, NULL, msg);
+
+	/* We need to page all BTSs since even if a BTS has a matching MS, it
+	 * may have already moved to a newer BTS. On Each BTS, if the MS is
+	 * known, then bts_add_paging() can optimize and page only on PDCHs the
+	 * target MS is using. */
+	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
+		/* TODO: Match by TMSI before IMSI if present?! */
+		ms = bts_ms_by_tlli(bts, req.tlli, req.tlli);
+		if (!ms && req.mi_imsi_present)
+			ms = bts_ms_by_imsi(bts, req.mi_imsi.imsi);
+		bts_add_paging(bts, &req, ms);
+	}
+
+	return 0;
+}
+
 /* Returns 0 on success, suggested BSSGP cause otherwise */
-static unsigned int get_paging_mi(struct osmo_mobile_identity *mi, const struct tlv_parsed *tp)
+static unsigned int get_paging_ps_mi(struct osmo_mobile_identity *mi, const struct tlv_parsed *tp)
 {
 	/* Use TMSI (if present) or IMSI */
 	if (TLVP_PRESENT(tp, BSSGP_IE_TMSI)) {
@@ -202,22 +272,6 @@ static unsigned int get_paging_mi(struct osmo_mobile_identity *mi, const struct 
 	return 0;
 }
 
-static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, const struct tlv_parsed *tp)
-{
-	struct osmo_mobile_identity mi;
-	struct gprs_rlcmac_bts *bts;
-	int rc;
-
-	if ((rc = get_paging_mi(&mi, tp)) > 0)
-		return bssgp_tx_status((enum gprs_bssgp_cause) rc, NULL, msg);
-
-	/* FIXME: look if MS is attached a specific BTS and then only page on that one? */
-	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
-		bts_add_paging(bts, tlvp_val8(tp, BSSGP_IE_CHAN_NEEDED, 0), &mi);
-	}
-	return 0;
-}
-
 static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, const struct tlv_parsed *tp)
 {
 	struct osmo_mobile_identity mi_imsi;
@@ -242,7 +296,7 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, const struct tlv_parsed
 		return bssgp_tx_status(BSSGP_CAUSE_INV_MAND_INF, NULL, msg);
 	}
 
-	if ((rc = get_paging_mi(&paging_mi, tp)) > 0)
+	if ((rc = get_paging_ps_mi(&paging_mi, tp)) > 0)
 		return bssgp_tx_status((enum gprs_bssgp_cause) rc, NULL, msg);
 
 	/* FIXME: look if MS is attached a specific BTS and then only page on that one? */

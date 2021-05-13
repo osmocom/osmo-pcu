@@ -265,8 +265,17 @@ struct gprs_rlcmac_bts {
 extern "C" {
 #endif
 
+struct paging_req_cs {
+	uint8_t chan_needed;
+	uint32_t tlli; /* GSM_RESERVED_TMSI if not present */
+	bool mi_tmsi_present;
+	struct osmo_mobile_identity mi_tmsi;
+	bool mi_imsi_present;
+	struct osmo_mobile_identity mi_imsi;
+};
+
 struct GprsMs *bts_alloc_ms(struct gprs_rlcmac_bts *bts, uint8_t ms_class, uint8_t egprs_ms_class);
-int bts_add_paging(struct gprs_rlcmac_bts *bts, uint8_t chan_needed, const struct osmo_mobile_identity *mi);
+int bts_add_paging(struct gprs_rlcmac_bts *bts, const struct paging_req_cs *req, struct GprsMs *ms);
 
 uint32_t bts_rfn_to_fn(const struct gprs_rlcmac_bts *bts, int32_t rfn);
 

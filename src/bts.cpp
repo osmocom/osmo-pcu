@@ -337,11 +337,44 @@ void bts_set_current_block_frame_number(struct gprs_rlcmac_bts *bts, int fn)
 		bts_set_current_frame_number(bts, fn);
 }
 
-int bts_add_paging(struct gprs_rlcmac_bts *bts, uint8_t chan_needed, const struct osmo_mobile_identity *mi)
+/* Helper used by bts_add_paging() whenever the target MS is known */
+static void bts_add_paging_known_ms(struct GprsMs *ms, const struct osmo_mobile_identity *mi, uint8_t chan_needed)
+{
+	uint8_t ts;
+
+	if (ms->ul_tbf) {
+		for (ts = 0; ts < ARRAY_SIZE(ms->ul_tbf->pdch); ts++) {
+			if (ms->ul_tbf->pdch[ts]) {
+				LOGPDCH(ms->ul_tbf->pdch[ts], DRLCMAC, LOGL_INFO,
+					"Paging on PACCH for %s\n", tbf_name(ms->ul_tbf));
+				if (!ms->ul_tbf->pdch[ts]->add_paging(chan_needed, mi))
+					continue;
+				return;
+			}
+		}
+	}
+	if (ms->dl_tbf) {
+		for (ts = 0; ts < ARRAY_SIZE(ms->dl_tbf->pdch); ts++) {
+			if (ms->dl_tbf->pdch[ts]) {
+				LOGPDCH(ms->dl_tbf->pdch[ts], DRLCMAC, LOGL_INFO,
+					"Paging on PACCH for %s\n", tbf_name(ms->ul_tbf));
+				if (!ms->dl_tbf->pdch[ts]->add_paging(chan_needed, mi))
+					continue;
+				return;
+			}
+		}
+	}
+	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Unable to page on PACCH, no available TBFs\n");
+	return;
+}
+
+/* ms is NULL if no specific taget was found */
+int bts_add_paging(struct gprs_rlcmac_bts *bts, const struct paging_req_cs *req, struct GprsMs *ms)
 {
 	uint8_t l, trx, ts, any_tbf = 0;
 	struct gprs_rlcmac_tbf *tbf;
 	struct llist_item *pos;
+	const struct osmo_mobile_identity *mi;
 	uint8_t slot_mask[8];
 	int8_t first_ts; /* must be signed */
 
@@ -351,13 +384,31 @@ int bts_add_paging(struct gprs_rlcmac_bts *bts, uint8_t chan_needed, const struc
 		NULL
 	};
 
+	/* First, build the MI used to page on PDCH from available subscriber info: */
+	if (req->mi_tmsi_present) {
+		mi = &req->mi_tmsi;
+	} else if (req->mi_imsi_present) {
+		mi = &req->mi_imsi;
+	} else {
+		LOGPMS(ms, DRLCMAC, LOGL_ERROR, "Unable to page on PACCH, no TMSI nor IMSI in request\n");
+		return -EINVAL;
+	}
+
 	if (log_check_level(DRLCMAC, LOGL_INFO)) {
 		char str[64];
 		osmo_mobile_identity_to_str_buf(str, sizeof(str), mi);
-		LOGP(DRLCMAC, LOGL_INFO, "Add RR paging: chan-needed=%d MI=%s\n", chan_needed, str);
+		LOGP(DRLCMAC, LOGL_INFO, "Add RR paging: chan-needed=%d MI=%s\n", req->chan_needed, str);
 	}
 
-	/* collect slots to page
+	/* We known the target MS for the paging req, send the req only on PDCH
+	 * were that target MS is listening (first slot is enough), and we are done. */
+	if (ms) {
+		bts_add_paging_known_ms(ms, mi, req->chan_needed);
+		return 0;
+	}
+
+	/* We don't know the target MS.
+	 * collect slots to page
 	 * Mark slots for every TBF, but only mark one of it.
 	 * Mark only the first slot found.
 	 * Don't mark, if TBF uses a different slot that is already marked. */
@@ -399,7 +450,7 @@ int bts_add_paging(struct gprs_rlcmac_bts *bts, uint8_t chan_needed, const struc
 		for (ts = 0; ts < 8; ts++) {
 			if ((slot_mask[trx] & (1 << ts))) {
 				/* schedule */
-				if (!bts->trx[trx].pdch[ts].add_paging(chan_needed, mi))
+				if (!bts->trx[trx].pdch[ts].add_paging(req->chan_needed, mi))
 					return -ENOMEM;
 
 				LOGPDCH(&bts->trx[trx].pdch[ts], DRLCMAC, LOGL_INFO, "Paging on PACCH\n");
