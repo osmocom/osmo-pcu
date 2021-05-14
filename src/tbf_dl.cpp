@@ -98,7 +98,7 @@ static void llc_timer_cb(void *_tbf)
 {
 	struct gprs_rlcmac_dl_tbf *tbf = (struct gprs_rlcmac_dl_tbf *)_tbf;
 
-	if (tbf->state_is_not(GPRS_RLCMAC_FLOW))
+	if (tbf->state_is_not(TBF_ST_FLOW))
 		return;
 
 	LOGPTBFDL(tbf, LOGL_DEBUG, "LLC receive timeout, requesting DL ACK\n");
@@ -221,7 +221,7 @@ int gprs_rlcmac_dl_tbf::append_data(uint16_t pdu_delay_csec,
 	llc_queue()->enqueue(llc_msg, &expire_time);
 	start_llc_timer();
 
-	if (state_is(GPRS_RLCMAC_WAIT_RELEASE)) {
+	if (state_is(TBF_ST_WAIT_RELEASE)) {
 		LOGPTBFDL(this, LOGL_DEBUG, "in WAIT RELEASE state (T3193), so reuse TBF\n");
 		establish_dl_tbf_on_pacch();
 	}
@@ -510,7 +510,7 @@ int gprs_rlcmac_dl_tbf::take_next_bsn(uint32_t fn,
 		/* re-send block with negative aknowlegement */
 		m_window.m_v_b.mark_unacked(bsn);
 		bts_do_rate_ctr_inc(bts, CTR_RLC_RESENT);
-	} else if (state_is(GPRS_RLCMAC_FINISHED)) {
+	} else if (state_is(TBF_ST_FINISHED)) {
 		/* If the TBF is in finished, we already sent all packages at least once.
 		 * If any packages could have been sent (because of unacked) it should have
 		 * been catched up by the upper if(bsn >= 0) */
@@ -602,7 +602,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 	if (old_tbf) {
 		LOGPTBFDL(this, LOGL_DEBUG, "Send dowlink assignment on PACCH, because %s exists\n", old_tbf->name());
 		TBF_SET_ASS_STATE_DL(old_tbf, GPRS_RLCMAC_DL_ASS_SEND_ASS);
-		old_tbf->was_releasing = old_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE);
+		old_tbf->was_releasing = old_tbf->state_is(TBF_ST_WAIT_RELEASE);
 
 		/* change state */
 		TBF_SET_ASS_ON(this, GPRS_RLCMAC_FLAG_PACCH, true);
@@ -612,7 +612,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 	} else {
 		LOGPTBFDL(this, LOGL_DEBUG, "Send dowlink assignment on PCH, no TBF exist (IMSI=%s)\n",
 			  imsi());
-		was_releasing = state_is(GPRS_RLCMAC_WAIT_RELEASE);
+		was_releasing = state_is(TBF_ST_WAIT_RELEASE);
 
 		/* change state */
 		TBF_SET_ASS_ON(this, GPRS_RLCMAC_FLAG_CCCH, false);
@@ -711,7 +711,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 				is_final = llc_queue_size(llc_queue()) == 0 && !keep_open(fn);
 				if (is_final) {
 					rdbi->cv = 0;
-					TBF_SET_STATE(this, GPRS_RLCMAC_FINISHED);
+					TBF_SET_STATE(this, TBF_ST_FINISHED);
 				}
 
 				if (mcs_is_edge(cs)) {
@@ -756,7 +756,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 
 		if (is_final) {
 			request_dl_ack();
-			TBF_SET_STATE(this, GPRS_RLCMAC_FINISHED);
+			TBF_SET_STATE(this, TBF_ST_FINISHED);
 		}
 
 		/* dequeue next LLC frame, if any */
@@ -1211,7 +1211,7 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 		  "V(B): (V(A)=%d)\"%s\"(V(S)-1=%d)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid\n",
 		  m_window.v_a(), show_v_b, m_window.v_s_mod(-1));
 
-	if (state_is(GPRS_RLCMAC_FINISHED) && m_window.window_empty()) {
+	if (state_is(TBF_ST_FINISHED) && m_window.window_empty()) {
 		LOGPTBFDL(this, LOGL_NOTICE,
 			  "Received acknowledge of all blocks, but without final ack inidcation (don't worry)\n");
 	}
@@ -1241,7 +1241,7 @@ int gprs_rlcmac_dl_tbf::release()
 	/* report all outstanding packets as received */
 	gprs_rlcmac_received_lost(this, received, 0);
 
-	TBF_SET_STATE(this, GPRS_RLCMAC_WAIT_RELEASE);
+	TBF_SET_STATE(this, TBF_ST_WAIT_RELEASE);
 
 	/* start T3193 */
 	T_START(this, T3193, 3193, "release (DL-TBF)", true);
@@ -1260,7 +1260,7 @@ int gprs_rlcmac_dl_tbf::abort()
 {
 	uint16_t lost;
 
-	if (state_is(GPRS_RLCMAC_FLOW)) {
+	if (state_is(TBF_ST_FLOW)) {
 		/* range V(A)..V(S)-1 */
 		lost = m_window.count_unacked();
 
@@ -1272,7 +1272,7 @@ int gprs_rlcmac_dl_tbf::abort()
 		 * (partly) encoded in chunk 1 of block V(A). (optional) */
 	}
 
-	TBF_SET_STATE(this, GPRS_RLCMAC_RELEASING);
+	TBF_SET_STATE(this, TBF_ST_RELEASING);
 
 	/* reset rlc states */
 	m_window.reset();
@@ -1293,7 +1293,7 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(bool final_ack, unsigned first_bsn,
 	if (final_ack) {
 		LOGPTBFDL(this, LOGL_DEBUG, "Final ACK received.\n");
 		rc = maybe_start_new_window();
-	} else if (state_is(GPRS_RLCMAC_FINISHED) && m_window.window_empty()) {
+	} else if (state_is(TBF_ST_FINISHED) && m_window.window_empty()) {
 		LOGPTBFDL(this, LOGL_NOTICE,
 			  "Received acknowledge of all blocks, but without final ack indication (don't worry)\n");
 	}

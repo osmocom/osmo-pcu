@@ -34,6 +34,7 @@ extern "C" {
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/utils.h>
+#include <osmocom/core/fsm.h>
 }
 
 /* globals used by the code */
@@ -816,6 +817,7 @@ int main(int argc, char **argv)
 	log_set_category_filter(osmo_stderr_target, DTBF, 1, LOGL_INFO);
 	if (getenv("LOGL_DEBUG"))
 		log_set_log_level(osmo_stderr_target, LOGL_DEBUG);
+	osmo_fsm_log_addr(false);
 
 	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
 

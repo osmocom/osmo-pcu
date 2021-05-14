@@ -47,6 +47,7 @@ extern "C" {
 
 #include "coding_scheme.h"
 #include <pdch_ul_controller.h>
+#include <tbf_fsm.h>
 #ifdef __cplusplus
 }
 #endif
@@ -54,15 +55,6 @@ extern "C" {
 /*
  * TBF instance
  */
-
-enum gprs_rlcmac_tbf_state {
-	GPRS_RLCMAC_NULL = 0,	/* new created TBF */
-	GPRS_RLCMAC_ASSIGN,	/* wait for downlink assignment */
-	GPRS_RLCMAC_FLOW,	/* RLC/MAC flow, resource needed */
-	GPRS_RLCMAC_FINISHED,	/* flow finished, wait for release */
-	GPRS_RLCMAC_WAIT_RELEASE,/* wait for release or restart of DL TBF */
-	GPRS_RLCMAC_RELEASING,	/* releasing, wait to free TBI/USF */
-};
 
 enum gprs_rlcmac_tbf_dl_ass_state {
 	GPRS_RLCMAC_DL_ASS_NONE = 0,
@@ -166,7 +158,7 @@ enum tbf_counters { /* TBF counters from 3GPP TS 44.060 §13.4 */
 
 #define T_START(tbf, t, T, r, f) tbf->t_start(t, T, r, f, __FILE__, __LINE__)
 
-#define TBF_SET_STATE(t, st) do { t->set_state(st, __FILE__, __LINE__); } while(0)
+#define TBF_SET_STATE(t, st) do { tbf_fsm_state_chg(t->state_fsm.fi, st); } while(0)
 #define TBF_SET_ASS_STATE_DL(t, st) do { t->set_ass_state_dl(st, __FILE__, __LINE__); } while(0)
 #define TBF_SET_ASS_STATE_UL(t, st) do { t->set_ass_state_ul(st, __FILE__, __LINE__); } while(0)
 #define TBF_SET_ACK_STATE(t, st) do { t->set_ack_state(st, __FILE__, __LINE__); } while(0)
@@ -179,7 +171,7 @@ extern "C" {
 #endif
 struct gprs_rlcmac_tbf;
 const char *tbf_name(const struct gprs_rlcmac_tbf *tbf);
-enum gprs_rlcmac_tbf_state tbf_state(const struct gprs_rlcmac_tbf *tbf);
+enum tbf_fsm_states tbf_state(const struct gprs_rlcmac_tbf *tbf);
 enum gprs_rlcmac_tbf_direction tbf_direction(const struct gprs_rlcmac_tbf *tbf);
 void tbf_set_ms(struct gprs_rlcmac_tbf *tbf, struct GprsMs *ms);
 struct llist_head *tbf_ms_list(struct gprs_rlcmac_tbf *tbf);
@@ -197,6 +189,7 @@ int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf);
 int tbf_check_polling(const struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts, uint32_t *poll_fn, unsigned int *rrbp);
 void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t ts, enum pdch_ulc_tbf_poll_reason t);
 void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_pdch *pdch, uint32_t poll_fn, enum pdch_ulc_tbf_poll_reason reason);
+void tbf_update_state_fsm_name(struct gprs_rlcmac_tbf *tbf);
 #ifdef __cplusplus
 }
 #endif
@@ -205,17 +198,16 @@ void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_pdch *pdch
 
 struct gprs_rlcmac_tbf {
 	gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_rlcmac_tbf_direction dir);
-	virtual ~gprs_rlcmac_tbf() {}
+	virtual ~gprs_rlcmac_tbf();
 
 	virtual gprs_rlc_window *window() = 0;
 
 	int setup(int8_t use_trx, bool single_slot);
-	bool state_is(enum gprs_rlcmac_tbf_state rhs) const;
-	bool state_is_not(enum gprs_rlcmac_tbf_state rhs) const;
+	bool state_is(enum tbf_fsm_states rhs) const;
+	bool state_is_not(enum tbf_fsm_states rhs) const;
 	bool dl_ass_state_is(enum gprs_rlcmac_tbf_dl_ass_state rhs) const;
 	bool ul_ass_state_is(enum gprs_rlcmac_tbf_ul_ass_state rhs) const;
 	bool ul_ack_state_is(enum gprs_rlcmac_tbf_ul_ack_state rhs) const;
-	void set_state(enum gprs_rlcmac_tbf_state new_state, const char *file, int line);
 	void set_ass_state_dl(enum gprs_rlcmac_tbf_dl_ass_state new_state, const char *file, int line);
 	void set_ass_state_ul(enum gprs_rlcmac_tbf_ul_ass_state new_state, const char *file, int line);
 	void set_ack_state(enum gprs_rlcmac_tbf_ul_ack_state new_state, const char *file, int line);
@@ -325,7 +317,7 @@ struct gprs_rlcmac_tbf {
 	time_t m_created_ts;
 
 	struct rate_ctr_group *m_ctrs;
-	enum gprs_rlcmac_tbf_state state;
+	struct tbf_fsm_ctx state_fsm;
 	struct llist_item m_ms_list;
 	struct llist_item m_trx_list;
 
@@ -334,8 +326,6 @@ protected:
 
 	gprs_llc_queue *llc_queue();
 	const gprs_llc_queue *llc_queue() const;
-
-	static const char *tbf_state_name[6];
 
 	struct GprsMs *m_ms;
 private:
@@ -349,9 +339,9 @@ private:
 	mutable char m_name_buf[60];
 };
 
-inline bool gprs_rlcmac_tbf::state_is(enum gprs_rlcmac_tbf_state rhs) const
+inline bool gprs_rlcmac_tbf::state_is(enum tbf_fsm_states rhs) const
 {
-	return state == rhs;
+	return tbf_state(this) == rhs;
 }
 
 inline bool gprs_rlcmac_tbf::dl_ass_state_is(enum gprs_rlcmac_tbf_dl_ass_state rhs) const
@@ -369,20 +359,21 @@ inline bool gprs_rlcmac_tbf::ul_ack_state_is(enum gprs_rlcmac_tbf_ul_ack_state r
 	return ul_ack_state == rhs;
 }
 
-inline bool gprs_rlcmac_tbf::state_is_not(enum gprs_rlcmac_tbf_state rhs) const
+inline bool gprs_rlcmac_tbf::state_is_not(enum tbf_fsm_states rhs) const
 {
-	return state != rhs;
+	return tbf_state(this) != rhs;
 }
+
 
 inline const char *gprs_rlcmac_tbf::state_name() const
 {
-	return tbf_state_name[state];
+	return osmo_fsm_inst_state_name(state_fsm.fi);
 }
 
 /* Set assignment state and corrsponding flags */
 inline void gprs_rlcmac_tbf::set_assigned_on(uint8_t state_flag, bool check_ccch, const char *file, int line)
 {
-	set_state(GPRS_RLCMAC_ASSIGN, file, line);
+	tbf_fsm_state_chg(state_fsm.fi, TBF_ST_ASSIGN);
 	if (check_ccch) {
 		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
 			ass_type_mod(state_flag, false, file, line);
@@ -436,14 +427,6 @@ inline void gprs_rlcmac_tbf::ass_type_mod(uint8_t t, bool unset, const char *fil
 		state_flags |= (1 << t);
 }
 
-inline void gprs_rlcmac_tbf::set_state(enum gprs_rlcmac_tbf_state new_state, const char *file, int line)
-{
-	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s changes state from %s to %s\n",
-		tbf_name(this),
-		tbf_state_name[state], tbf_state_name[new_state]);
-	state = new_state;
-}
-
 inline void gprs_rlcmac_tbf::set_ass_state_dl(enum gprs_rlcmac_tbf_dl_ass_state new_state, const char *file, int line)
 {
 	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s changes DL ASS state from %s to %s\n",
@@ -495,9 +478,9 @@ inline bool gprs_rlcmac_tbf::is_tfi_assigned() const
 {
 	/* The TBF is established or has been assigned by a IMM.ASS for
 	 * download */
-	return state > GPRS_RLCMAC_ASSIGN ||
+	return state_fsm.fi->state > TBF_ST_ASSIGN ||
 		(direction == GPRS_RLCMAC_DL_TBF &&
-		 state == GPRS_RLCMAC_ASSIGN &&
+		 state_fsm.fi->state == TBF_ST_ASSIGN &&
 		 (state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)));
 }
 

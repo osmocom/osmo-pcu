@@ -58,6 +58,7 @@ libgprs_la_SOURCES = \
 	nacc_fsm.c \
 	neigh_cache.c \
 	tbf.cpp \
+	tbf_fsm.c \
 	tbf_ul.cpp \
 	tbf_dl.cpp \
 	bts.cpp \
@@ -96,6 +97,7 @@ noinst_HEADERS = \
 	nacc_fsm.h \
 	neigh_cache.h \
 	tbf.h \
+	tbf_fsm.h \
 	tbf_ul.h \
 	tbf_dl.h \
 	bts.h \

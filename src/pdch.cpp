@@ -358,7 +358,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				"TBF is gone TLLI=0x%08x\n", tlli);
 			return;
 		}
-		if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE) &&
+		if (tbf->state_is(TBF_ST_WAIT_RELEASE) &&
 				tbf->direction == new_tbf->direction)
 			tbf_free(tbf);
 
@@ -369,7 +369,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				"changed type from CCCH to PACCH\n");
 			TBF_ASS_TYPE_SET(new_tbf, GPRS_RLCMAC_FLAG_PACCH);
 		}
-		TBF_SET_STATE(new_tbf, GPRS_RLCMAC_FLOW);
+		TBF_SET_STATE(new_tbf, TBF_ST_FLOW);
 		/* stop pending assignment timer */
 		new_tbf->t_stop(T0, "control acked (DL-TBF)");
 		if (new_tbf->check_n_clear(GPRS_RLCMAC_FLAG_TO_DL_ASS))
@@ -390,11 +390,11 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				"TBF is gone TLLI=0x%08x\n", tlli);
 			return;
 		}
-		if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE) &&
+		if (tbf->state_is(TBF_ST_WAIT_RELEASE) &&
 				tbf->direction == new_tbf->direction)
 			tbf_free(tbf);
 
-		TBF_SET_STATE(new_tbf, GPRS_RLCMAC_FLOW);
+		TBF_SET_STATE(new_tbf, TBF_ST_FLOW);
 		if (new_tbf->check_n_clear(GPRS_RLCMAC_FLAG_TO_UL_ASS))
 			LOGPTBF(new_tbf, LOGL_NOTICE, "Recovered uplink assignment for UL\n");
 
@@ -677,7 +677,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 
 		/* Get rid of previous finished UL TBF before providing a new one */
 		if (ul_tbf) {
-			if (!ul_tbf->state_is(GPRS_RLCMAC_FINISHED))
+			if (!ul_tbf->state_is(TBF_ST_FINISHED))
 				LOGPTBFUL(ul_tbf, LOGL_NOTICE,
 					  "Got PACKET RESOURCE REQ while TBF not finished, killing pending UL TBF\n");
 			tbf_free(ul_tbf);

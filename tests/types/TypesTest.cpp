@@ -37,6 +37,7 @@ extern "C" {
 #include <osmocom/core/talloc.h>
 #include <osmocom/core/utils.h>
 #include <osmocom/core/bits.h>
+#include <osmocom/core/fsm.h>
 }
 
 #define OSMO_ASSERT_STR_EQ(a, b) \
@@ -932,6 +933,7 @@ int main(int argc, char **argv)
 
 	log_set_category_filter(osmo_stderr_target, DTBF, 1, LOGL_INFO);
 	log_set_category_filter(osmo_stderr_target, DTBFUL, 1, LOGL_INFO);
+	osmo_fsm_log_addr(false);
 
 	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
 

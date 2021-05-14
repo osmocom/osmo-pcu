@@ -44,6 +44,7 @@ extern "C" {
 #include <osmocom/vty/vty.h>
 #include <osmocom/gprs/protocol/gsm_04_60.h>
 #include <osmocom/gsm/l1sap.h>
+#include <osmocom/core/fsm.h>
 }
 
 #include <errno.h>
@@ -75,9 +76,9 @@ static int bts_handle_rach(struct gprs_rlcmac_bts *bts, uint16_t ra, uint32_t Fn
 static void check_tbf(gprs_rlcmac_tbf *tbf)
 {
 	OSMO_ASSERT(tbf);
-	if (tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE))
+	if (tbf->state_is(TBF_ST_WAIT_RELEASE))
 		OSMO_ASSERT(tbf->timers_pending(T3191) || tbf->timers_pending(T3193));
-	if (tbf->state_is(GPRS_RLCMAC_RELEASING))
+	if (tbf->state_is(TBF_ST_RELEASING))
 		OSMO_ASSERT(tbf->timers_pending(T_MAX));
 }
 
@@ -204,7 +205,7 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(struct gprs_rlcmac_bts *bts, uint8_t ms
 
 	/* "Establish" the DL TBF */
 	TBF_SET_ASS_STATE_DL(dl_tbf, GPRS_RLCMAC_DL_ASS_SEND_ASS);
-	TBF_SET_STATE(dl_tbf, GPRS_RLCMAC_FLOW);
+	TBF_SET_STATE(dl_tbf, TBF_ST_FLOW);
 	dl_tbf->m_wait_confirm = 0;
 	check_tbf(dl_tbf);
 
@@ -286,7 +287,7 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	} while (block_nr < 3);
 
 	OSMO_ASSERT(dl_tbf->have_data());
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
 	/* Queue a final ACK */
 	memset(rbb, 0, sizeof(rbb));
@@ -294,7 +295,7 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	dl_tbf->rcvd_dl_ack(true, 1, rbb);
 
 	/* Clean up and ensure tbfs are in the correct state */
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_WAIT_RELEASE));
 	new_tbf = ms_dl_tbf(ms);
 	check_tbf(new_tbf);
 	OSMO_ASSERT(new_tbf != dl_tbf);
@@ -357,20 +358,20 @@ static void test_tbf_delayed_release()
 	for (i = 0; i < sizeof(llc_data); i++)
 		llc_data[i] = i%256;
 
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
 	/* Schedule two LLC frames */
 	dl_tbf->append_data(1000, llc_data, sizeof(llc_data));
 	dl_tbf->append_data(1000, llc_data, sizeof(llc_data));
 
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
 	/* Drain the queue */
 	while (dl_tbf->have_data())
 		/* Request to send one RLC/MAC block */
 		request_dl_rlc_block(dl_tbf, &fn);
 
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
 	/* ACK all blocks */
 	memset(rbb, 0xff, sizeof(rbb));
@@ -387,12 +388,12 @@ static void test_tbf_delayed_release()
 	fn += 52 * ((msecs_to_frames(dl_tbf_idle_msec + 100) + 51)/ 52);
 	request_dl_rlc_block(dl_tbf, &fn);
 
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FINISHED));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FINISHED));
 
 	RCV_ACK(true, dl_tbf, rbb); /* Receive a final ACK */
 
 	/* Clean up and ensure tbfs are in the correct state */
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_WAIT_RELEASE));
 	TBF_SET_ASS_STATE_DL(dl_tbf, GPRS_RLCMAC_DL_ASS_NONE);
 	check_tbf(dl_tbf);
 	tbf_free(dl_tbf);
@@ -2139,7 +2140,7 @@ static void test_tbf_dl_reuse()
 	transmit_dl_data(bts, tlli1, &fn);
 	OSMO_ASSERT(llc_queue_size(ms_llc_queue(ms1)) == 0);
 	OSMO_ASSERT(ms_dl_tbf(ms1));
-	OSMO_ASSERT(ms_dl_tbf(ms1)->state_is(GPRS_RLCMAC_FINISHED));
+	OSMO_ASSERT(ms_dl_tbf(ms1)->state_is(TBF_ST_FINISHED));
 
 	dl_tbf1 = ms_dl_tbf(ms1);
 
@@ -2164,27 +2165,27 @@ static void test_tbf_dl_reuse()
 
 	send_ul_mac_block(bts, 0, dl_tbf1->control_ts, &ulreq, get_poll_fn(dl_tbf1, dl_tbf1->control_ts));
 
-	OSMO_ASSERT(dl_tbf1->state_is(GPRS_RLCMAC_WAIT_RELEASE));
+	OSMO_ASSERT(dl_tbf1->state_is(TBF_ST_WAIT_RELEASE));
 
 	request_dl_rlc_block(dl_tbf1, &fn);
 
 	ms2 = bts_ms_by_tlli(bts, tlli1, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms2 == ms1);
 	OSMO_ASSERT(ms_dl_tbf(ms2));
-	OSMO_ASSERT(ms_dl_tbf(ms2)->state_is(GPRS_RLCMAC_ASSIGN));
+	OSMO_ASSERT(ms_dl_tbf(ms2)->state_is(TBF_ST_ASSIGN));
 
 	dl_tbf2 = ms_dl_tbf(ms2);
 
 	OSMO_ASSERT(dl_tbf1 != dl_tbf2);
 
 	send_control_ack(dl_tbf1);
-	OSMO_ASSERT(dl_tbf2->state_is(GPRS_RLCMAC_FLOW));
+	OSMO_ASSERT(dl_tbf2->state_is(TBF_ST_FLOW));
 
 	/* Transmit all data */
 	transmit_dl_data(bts, tlli1, &fn);
 	OSMO_ASSERT(llc_queue_size(ms_llc_queue(ms2)) == 0);
 	OSMO_ASSERT(ms_dl_tbf(ms2));
-	OSMO_ASSERT(ms_dl_tbf(ms2)->state_is(GPRS_RLCMAC_FINISHED));
+	OSMO_ASSERT(ms_dl_tbf(ms2)->state_is(TBF_ST_FINISHED));
 
 	TALLOC_FREE(the_pcu);
 	fprintf(stderr, "=== end %s ===\n", __func__);
@@ -2573,7 +2574,7 @@ static void test_tbf_epdan_out_of_rx_window(void)
 	prlcmvb->mark_unacked(1286);
 	prlcmvb->mark_unacked(1287);
 
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
 	block = bitvec_alloc(23, tall_pcu_ctx);
 
@@ -2699,12 +2700,12 @@ static void establish_and_use_egprs_dl_tbf(struct gprs_rlcmac_bts *bts, int mcs)
 	for (i = 0; i < sizeof(llc_data); i++)
 		llc_data[i] = i%256;
 
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
 	/* Schedule a small LLC frame */
 	dl_tbf->append_data(1000, test_data, 10);
 
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
 	/* Drain the queue */
 	while (dl_tbf->have_data()) {
@@ -2716,7 +2717,7 @@ static void establish_and_use_egprs_dl_tbf(struct gprs_rlcmac_bts *bts, int mcs)
 	/* Schedule a large LLC frame */
 	dl_tbf->append_data(1000, test_data, sizeof(test_data));
 
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
 	/* Drain the queue */
 	while (dl_tbf->have_data()) {
@@ -2725,12 +2726,12 @@ static void establish_and_use_egprs_dl_tbf(struct gprs_rlcmac_bts *bts, int mcs)
 	}
 	send_empty_block(dl_tbf, dl_tbf->control_ts, fn);
 
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
 	RCV_ACK(true, dl_tbf, rbb); /* Receive a final ACK */
 
 	/* Clean up and ensure tbfs are in the correct state */
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_WAIT_RELEASE));
 	TBF_SET_ASS_STATE_DL(dl_tbf, GPRS_RLCMAC_DL_ASS_NONE);
 	check_tbf(dl_tbf);
 	tbf_free(dl_tbf);
@@ -2757,7 +2758,7 @@ static gprs_rlcmac_dl_tbf *tbf_init(struct gprs_rlcmac_bts *bts,
 	for (i = 0; i < sizeof(test_data); i++)
 		test_data[i] = i%256;
 
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
 	/* Schedule a LLC frame
 	 * passing only 100 bytes, since it is enough to construct
@@ -2766,7 +2767,7 @@ static gprs_rlcmac_dl_tbf *tbf_init(struct gprs_rlcmac_bts *bts,
 	 */
 	dl_tbf->append_data(1000, test_data, 100);
 
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_FLOW));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
 	return dl_tbf;
 
@@ -2779,7 +2780,7 @@ static void tbf_cleanup(gprs_rlcmac_dl_tbf *dl_tbf)
 	RCV_ACK(true, dl_tbf, rbb); /* Receive a final ACK */
 
 	/* Clean up and ensure tbfs are in the correct state */
-	OSMO_ASSERT(dl_tbf->state_is(GPRS_RLCMAC_WAIT_RELEASE));
+	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_WAIT_RELEASE));
 	TBF_SET_ASS_STATE_DL(dl_tbf, GPRS_RLCMAC_DL_ASS_NONE);
 	check_tbf(dl_tbf);
 	tbf_free(dl_tbf);
@@ -3305,6 +3306,7 @@ int main(int argc, char **argv)
 	log_parse_category_mask(osmo_stderr_target, "DRLCMAC,1:DRLCMACDATA,3:DRLCMACDL,3:DRLCMACUL,3:"
 				"DRLCMACSCHED,1:DRLCMACMEAS,3:DNS,3:DLBSSGP,3:DPCU,5:"
 				"DL1IF,6:DTBF,1:DTBFUL,1:DTBFDL,1:DLGLOBAL,2:");
+	osmo_fsm_log_addr(false);
 	vty_init(&pcu_vty_info);
 	pcu_vty_init();
 

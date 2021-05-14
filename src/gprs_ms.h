@@ -159,7 +159,7 @@ static inline struct gprs_llc_queue *ms_llc_queue(struct GprsMs *ms)
 static inline bool ms_need_dl_tbf(struct GprsMs *ms)
 {
 	if (ms_dl_tbf(ms) != NULL &&
-	    tbf_state((const struct gprs_rlcmac_tbf *)ms_dl_tbf(ms)) != GPRS_RLCMAC_WAIT_RELEASE)
+	    tbf_state((const struct gprs_rlcmac_tbf *)ms_dl_tbf(ms)) != TBF_ST_WAIT_RELEASE)
 		return false;
 
 	return llc_queue_size(ms_llc_queue(ms)) > 0;

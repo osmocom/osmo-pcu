@@ -171,7 +171,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_ccch(struct gprs_rlcmac_bts *bts, struct
 		/* Caller will most probably send a Imm Ass Reject after return */
 		return NULL;
 	}
-	TBF_SET_STATE(tbf, GPRS_RLCMAC_FLOW);
+	TBF_SET_STATE(tbf, TBF_ST_FLOW);
 	TBF_ASS_TYPE_SET(tbf, GPRS_RLCMAC_FLAG_CCCH);
 	tbf->contention_resolution_start();
 	OSMO_ASSERT(tbf->ms());
@@ -334,7 +334,7 @@ void gprs_rlcmac_ul_tbf::contention_resolution_success()
 
 struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
 {
-	int final = (state_is(GPRS_RLCMAC_FINISHED));
+	int final = (state_is(TBF_ST_FINISHED));
 	struct msgb *msg;
 	int rc;
 	unsigned int rrbp = 0;
@@ -527,7 +527,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 	rdbi = &block->block_info;
 
 	/* Check if we already received all data TBF had to send: */
-	if (this->state_is(GPRS_RLCMAC_FLOW) /* still in flow state */
+	if (this->state_is(TBF_ST_FLOW) /* still in flow state */
 	 && this->m_window.v_q() == this->m_window.v_r() /* if complete */
 	 && block->len) { /* if there was ever a last block received */
 		LOGPTBFUL(this, LOGL_DEBUG,
@@ -535,7 +535,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 			  rdbi->bsn, rdbi->cv);
 		if (rdbi->cv == 0) {
 			LOGPTBFUL(this, LOGL_DEBUG, "Finished with UL TBF\n");
-			TBF_SET_STATE(this, GPRS_RLCMAC_FINISHED);
+			TBF_SET_STATE(this, TBF_ST_FINISHED);
 			/* Reset N3103 counter. */
 			this->n_reset(N3103);
 		}
@@ -567,10 +567,10 @@ void gprs_rlcmac_ul_tbf::maybe_schedule_uplink_acknack(
 	}
 	if (countdown_finished) {
 		require_ack = true;
-		if (state_is(GPRS_RLCMAC_FLOW))
+		if (state_is(TBF_ST_FLOW))
 			LOGPTBFUL(this, LOGL_DEBUG,
 				  "Scheduling Ack/Nack, because some data is missing and last block has CV==0.\n");
-		else if (state_is(GPRS_RLCMAC_FINISHED))
+		else if (state_is(TBF_ST_FINISHED))
 			LOGPTBFUL(this, LOGL_DEBUG,
 				  "Scheduling final Ack/Nack, because all data was received and last block has CV==0.\n");
 	}
@@ -816,7 +816,7 @@ gprs_rlc_window *gprs_rlcmac_ul_tbf::window()
 void gprs_rlcmac_ul_tbf::usf_timeout()
 {
 	if (n_inc(N3101)) {
-		TBF_SET_STATE(this, GPRS_RLCMAC_RELEASING);
+		TBF_SET_STATE(this, TBF_ST_RELEASING);
 		T_START(this, T3169, 3169, "MAX N3101 reached", false);
 		return;
 	}

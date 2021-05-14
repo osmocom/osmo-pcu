@@ -14,16 +14,16 @@ Notes:
     Queue of next frames to be transmitted.
 
 States:
-  GPRS_RLCMAC_ASSIGN
+  TBF_ST_ASSIGN
     After a downlink TBF is created, it resides in this state until the
     block flow can start. This is required to give the mobile time to listen
     to connect to downlink PDCH.
 
-   GPRS_RLCMAC_FLOW,
+   TBF_ST_FLOW,
     During packet flow, this state indicates downlink and uplink TBF block
     flow.
 
-   GPRS_RLCMAC_FINISHED,
+   TBF_ST_FINISHED,
     Uplink TBF:
     After final block is received AND all other blocks are completely
     received, the state is entered. The PACKET CONTROL ACK is still not
@@ -33,11 +33,11 @@ States:
     downlink blocks are acknowledged yet. (Counter N3015 is counted on each
     poll request.)
 
-   GPRS_RLCMAC_WAIT_RELEASE,
+   TBF_ST_WAIT_RELEASE,
     The all blocks on downlink TBF have been acked by mobile. The penalty
     timer T3192 is running on mobile.
 
-   GPRS_RLCMAC_RELEASING,
+   TBF_ST_RELEASING,
     Wait for TFI/USF to be re-used. This state is entered when a counter
     reaches it's maximum and T3169 is running.
 

@@ -100,7 +100,7 @@ static struct gprs_rlcmac_ul_tbf *sched_select_uplink(struct gprs_rlcmac_pdch *p
 		/* we don't need to give resources in FINISHED state,
 		 * because we have received all blocks and only poll
 		 * for packet control ack. */
-		if (tbf->state_is_not(GPRS_RLCMAC_FLOW))
+		if (tbf->state_is_not(TBF_ST_FLOW))
 			continue;
 
 		if (require_gprs_only && tbf->is_egprs_enabled())
@@ -247,7 +247,7 @@ static inline enum tbf_dl_prio tbf_compute_priority(const struct gprs_rlcmac_bts
 	if (tbf->is_control_ts(ts) && age > age_thresh2 && age_thresh2 > 0)
 		return DL_PRIO_HIGH_AGE;
 
-	if ((tbf->state_is(GPRS_RLCMAC_FLOW) && tbf->have_data()) || w->resend_needed() >= 0)
+	if ((tbf->state_is(TBF_ST_FLOW) && tbf->have_data()) || w->resend_needed() >= 0)
 		return DL_PRIO_NEW_DATA;
 
 	if (tbf->is_control_ts(ts) && age > age_thresh1 && tbf->keep_open(fn))
@@ -306,8 +306,8 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts, struct gp
 		if (tbf->direction != GPRS_RLCMAC_DL_TBF)
 			continue;
 		/* no DL resources needed, go next */
-		if (tbf->state_is_not(GPRS_RLCMAC_FLOW)
-		 && tbf->state_is_not(GPRS_RLCMAC_FINISHED))
+		if (tbf->state_is_not(TBF_ST_FLOW)
+		 && tbf->state_is_not(TBF_ST_FINISHED))
 			continue;
 
 		/* waiting for CCCH IMM.ASS confirm */
