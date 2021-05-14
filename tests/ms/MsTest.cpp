@@ -46,6 +46,36 @@ void *tall_pcu_ctx;
 int16_t spoof_mnc = 0, spoof_mcc = 0;
 bool spoof_mnc_3_digits = false;
 
+static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
+{
+	tbf->~gprs_rlcmac_ul_tbf();
+	return 0;
+}
+
+static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
+{
+	tbf->~gprs_rlcmac_dl_tbf();
+	return 0;
+}
+
+static gprs_rlcmac_ul_tbf *alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms)
+{
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
+	talloc_set_destructor(ul_tbf, ul_tbf_dtor);
+	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
+	return ul_tbf;
+}
+
+static gprs_rlcmac_dl_tbf *alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms)
+{
+	gprs_rlcmac_dl_tbf *dl_tbf;
+	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
+	talloc_set_destructor(dl_tbf, dl_tbf_dtor);
+	new (dl_tbf) gprs_rlcmac_dl_tbf(bts, ms);
+	return dl_tbf;
+}
+
 static void test_ms_state()
 {
 	uint32_t tlli = 0xffeeddbb;
@@ -59,10 +89,8 @@ static void test_ms_state()
 	ms = ms_alloc(bts, tlli);
 	OSMO_ASSERT(ms_is_idle(ms));
 
-	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf) gprs_rlcmac_dl_tbf(bts, ms);
-	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
+	dl_tbf = alloc_dl_tbf(bts, ms);
+	ul_tbf = alloc_ul_tbf(bts, ms);
 
 	ms_attach_tbf(ms, ul_tbf);
 	OSMO_ASSERT(!ms_is_idle(ms));
@@ -125,10 +153,8 @@ static void test_ms_callback()
 
 	OSMO_ASSERT(ms_is_idle(ms));
 
-	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf) gprs_rlcmac_dl_tbf(bts, ms);
-	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
+	dl_tbf = alloc_dl_tbf(bts, ms);
+	ul_tbf = alloc_ul_tbf(bts, ms);
 
 	OSMO_ASSERT(last_cb == CB_UNKNOWN);
 
@@ -199,12 +225,9 @@ static void test_ms_replace_tbf()
 	OSMO_ASSERT(ms_is_idle(ms));
 	was_idle = false;
 
-	dl_tbf[0] = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf[0]) gprs_rlcmac_dl_tbf(bts, ms);
-	dl_tbf[1] = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf[1]) gprs_rlcmac_dl_tbf(bts, ms);
-	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
+	dl_tbf[0] = alloc_dl_tbf(bts, ms);
+	dl_tbf[1] = alloc_dl_tbf(bts, ms);
+	ul_tbf = alloc_ul_tbf(bts, ms);
 
 	ms_attach_tbf(ms, dl_tbf[0]);
 	OSMO_ASSERT(!ms_is_idle(ms));
@@ -419,8 +442,7 @@ static void test_ms_storage()
 	/* delete ms */
 	ms = store.get_ms(tlli + 0);
 	OSMO_ASSERT(ms != NULL);
-	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
+	ul_tbf = alloc_ul_tbf(bts, ms);
 	ms_attach_tbf(ms, ul_tbf);
 	ms_detach_tbf(ms, ul_tbf);
 	ms = store.get_ms(tlli + 0);
@@ -458,10 +480,8 @@ static void test_ms_timeout()
 
 	OSMO_ASSERT(ms_is_idle(ms));
 
-	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf) gprs_rlcmac_dl_tbf(bts, ms);
-	ul_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_ul_tbf);
-	new (ul_tbf) gprs_rlcmac_ul_tbf(bts, ms);
+	dl_tbf = alloc_dl_tbf(bts, ms);
+	ul_tbf = alloc_ul_tbf(bts, ms);
 
 	OSMO_ASSERT(last_cb == CB_UNKNOWN);
 
@@ -516,8 +536,7 @@ static void test_ms_cs_selection()
 
 	OSMO_ASSERT(ms_is_idle(ms));
 
-	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf) gprs_rlcmac_dl_tbf(bts, ms);
+	dl_tbf = alloc_dl_tbf(bts, ms);
 	ms_attach_tbf(ms, dl_tbf);
 
 	OSMO_ASSERT(!ms_is_idle(ms));
@@ -562,8 +581,7 @@ static void test_ms_mcs_mode()
 	ms2 = ms_alloc(bts, tlli + 1);
 	dump_ms(ms2, "2: with BTS defaults");
 
-	dl_tbf = talloc_zero(tall_pcu_ctx, struct gprs_rlcmac_dl_tbf);
-	new (dl_tbf) gprs_rlcmac_dl_tbf(bts, ms2);
+	dl_tbf = alloc_dl_tbf(bts, ms2);
 	ms_attach_tbf(ms2, dl_tbf);
 
 	dump_ms(ms2, "2: after TBF attach ");
