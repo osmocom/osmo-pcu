@@ -690,8 +690,7 @@ int egprs_compress::compress_rbb(
 	if (clen >= uclen)
 		/* No Gain is observed, So no need to compress */
 		return 0;
-	else
-		LOGP(DRLCMACUL, LOGL_DEBUG, "CRBB bitmap = %s\n", osmo_hexdump(crbb_vec->data, (crbb_vec->cur_bit+7)/8));
-		/* Add compressed bitmap to final buffer */
-		return 1;
+	LOGP(DRLCMACUL, LOGL_DEBUG, "CRBB bitmap = %s\n", osmo_hexdump(crbb_vec->data, (crbb_vec->cur_bit+7)/8));
+	/* Add compressed bitmap to final buffer */
+	return 1;
 }
