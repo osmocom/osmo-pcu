@@ -402,7 +402,7 @@ int bts_add_paging(struct gprs_rlcmac_bts *bts, uint8_t chan_needed, const struc
 				if (!bts->trx[trx].pdch[ts].add_paging(chan_needed, mi))
 					return -ENOMEM;
 
-				LOGP(DRLCMAC, LOGL_INFO, "Paging on PACCH of TRX=%d TS=%d\n", trx, ts);
+				LOGPDCH(&bts->trx[trx].pdch[ts], DRLCMAC, LOGL_INFO, "Paging on PACCH\n");
 				any_tbf = 1;
 			}
 		}
