@@ -191,7 +191,7 @@ static unsigned int get_paging_cs_mi(struct paging_req_cs *req, const struct tlv
 	}
 	req->mi_imsi_present = true;
 
-	/* TIMSI is optional */
+	/* TMSI is optional */
 	req->mi_tmsi_present = false;
 	if (TLVP_PRESENT(tp, BSSGP_IE_TMSI)) {
 		/* Be safe against an evil SGSN - check the length */
