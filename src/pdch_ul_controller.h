@@ -58,6 +58,7 @@ enum pdch_ulc_tbf_poll_reason {
 	PDCH_ULC_POLL_UL_ACK, /* Expect CTRL ACK (or PKT RES REQ on final UL ACK/NACK) for UL ACK/NACK we transmit */
 	PDCH_ULC_POLL_DL_ACK, /* Expect DL ACK/NACK requested by RRBP */
 	PDCH_ULC_POLL_CELL_CHG_CONTINUE, /* Expect CTRL ACK for Pkt cell Change Continue we transmit */
+	PDCH_ULC_POLL_MEAS_ORDER, /* Expect CTRL ACK for Pkt Measurement Order we transmit */
 };
 extern const struct value_string pdch_ulc_tbf_poll_reason_names[];
 

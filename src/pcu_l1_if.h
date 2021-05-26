@@ -35,6 +35,7 @@ extern "C" {
 #endif
 
 #include "pdch.h"
+#include "pcu_utils.h"
 
 static inline uint8_t qta2ta(int16_t qta)
 {
@@ -159,6 +160,9 @@ void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec * block, int plen, uint
 extern "C" {
 #endif
 struct gprs_rlcmac_bts;
+
+int pcu_tx_anr_cnf(struct gprs_rlcmac_bts *bts, const struct arfcn_bsic *cell_list,
+			  const uint8_t *meas_list, unsigned int num_cells);
 
 int pcu_rx(struct gsm_pcu_if *pcu_prim, size_t pcu_prim_length);
 int pcu_l1if_open(void);

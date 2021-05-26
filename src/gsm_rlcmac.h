@@ -3259,7 +3259,7 @@ typedef struct
 
 typedef struct
 {
-  guint8 FREQ_DIFF_LENGTH;
+  guint8 FREQ_DIFF_LENGTH; //THIS DOESN?T BELONG HERE!
   guint8 FREQUENCY_DIFF;
   guint8 BSIC;
 

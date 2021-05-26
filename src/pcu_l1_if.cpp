@@ -95,6 +95,7 @@ uint16_t imsi2paging_group(const char* imsi)
  * PCU messages
  */
 
+/* Can be used to allocate message with non-variable size */
 struct msgb *pcu_msgb_alloc(uint8_t msg_type, uint8_t bts_nr)
 {
 	struct msgb *msg;
@@ -108,6 +109,21 @@ struct msgb *pcu_msgb_alloc(uint8_t msg_type, uint8_t bts_nr)
 	pcu_prim->msg_type = msg_type;
 	pcu_prim->bts_nr = bts_nr;
 
+	return msg;
+}
+
+/* Allocate message with extra size, only reserve pcuif msg hdr */
+static struct msgb *pcu_msgb_alloc_ext_size(uint8_t msg_type, uint8_t bts_nr, size_t extra_size)
+{
+	struct msgb *msg;
+	struct gsm_pcu_if *pcu_prim;
+	msg = msgb_alloc(sizeof(struct gsm_pcu_if) + extra_size, "pcu_sock_tx");
+	/* Only header is filled, caller is responible for reserving + filling
+	 * message type specific contents: */
+	msgb_put(msg, PCUIF_HDR_SIZE);
+	pcu_prim = (struct gsm_pcu_if *) msgb_data(msg);
+	pcu_prim->msg_type = msg_type;
+	pcu_prim->bts_nr = bts_nr;
 	return msg;
 }
 
@@ -269,6 +285,49 @@ void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec * block, int plen, uint
 		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0, data + 3, GSM_MACBLOCK_LEN);
 
 	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, PAGING_GROUP_LEN + GSM_MACBLOCK_LEN);
+}
+
+
+static void _arfcn_bsic2cell_desc(struct gsm48_cell_desc *cd, uint16_t arfcn, uint8_t bsic)
+{
+	cd->ncc = (bsic >> 3 & 0x7);
+	cd->bcc = (bsic & 0x7);
+	cd->arfcn_hi = arfcn >> 8;
+	cd->arfcn_lo = arfcn & 0xff;
+}
+
+int pcu_tx_anr_cnf(struct gprs_rlcmac_bts *bts, const struct arfcn_bsic *cell_list,
+			  const uint8_t *meas_list, unsigned int num_cells)
+{
+	struct msgb *msg;
+	struct gsm_pcu_if *pcu_prim;
+	struct gsm_pcu_if_anr_cnf *anr_cnf;
+
+	LOGP(DL1IF, LOGL_DEBUG, "(bts=%u) Sending ANR Confirmation: num_cells=%u\n",
+	     bts->nr, num_cells);
+
+	msg = pcu_msgb_alloc_ext_size(PCU_IF_MSG_CONTAINER, bts->nr, sizeof(struct gsm_pcu_if_anr_cnf));
+	if (!msg)
+		return -ENOMEM;
+	pcu_prim = (struct gsm_pcu_if *) msgb_data(msg);
+	anr_cnf = (struct gsm_pcu_if_anr_cnf *)&pcu_prim->u.container.data[0];
+
+	msgb_put(msg, sizeof(pcu_prim->u.container) + sizeof(struct gsm_pcu_if_anr_cnf));
+	pcu_prim->u.container.msg_type = PCU_IF_MSG_ANR_CNF;
+	osmo_store16be(sizeof(struct gsm_pcu_if_anr_cnf), &pcu_prim->u.container.length);
+
+	OSMO_ASSERT(num_cells <= ARRAY_SIZE(anr_cnf->cell_list));
+	OSMO_ASSERT(num_cells <= ARRAY_SIZE(anr_cnf->rxlev_list));
+
+	anr_cnf->num_cells = num_cells;
+	if (num_cells) {
+		unsigned int i;
+		for (i = 0; i < num_cells; i++)
+			_arfcn_bsic2cell_desc((struct gsm48_cell_desc*)&anr_cnf->cell_list[i], cell_list[i].arfcn, cell_list[i].bsic);
+		memcpy(anr_cnf->rxlev_list, meas_list, num_cells);
+	}
+
+	return pcu_sock_send(msg);
 }
 
 void pcu_rx_block_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no)
@@ -950,11 +1009,28 @@ static int pcu_rx_app_info_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_ap
 	return 0;
 }
 
+static int pcu_rx_anr_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_anr_req *anr_req)
+{
+
+	LOGP(DL1IF, LOGL_INFO, "Automatic Neighbor Registration Request received: num_cells=%u cell_list=%s\n",
+	     anr_req->num_cells,
+	     osmo_hexdump((const uint8_t*)anr_req->cell_list, anr_req->num_cells * sizeof(*anr_req->cell_list)));
+	return osmo_fsm_inst_dispatch(bts->anr->fi, BTS_ANR_EV_RX_ANR_REQ, anr_req);
+}
+
 static int pcu_rx_container(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_container *container)
 {
 	int rc;
+	uint16_t data_length = osmo_load16be(&container->length);
 
 	switch (container->msg_type) {
+	case PCU_IF_MSG_ANR_REQ:
+		if (data_length < sizeof(struct gsm_pcu_if_anr_req)) {
+			LOGP(DL1IF, LOGL_ERROR, "Rx container(ANR_REQ) message too short\n");
+			return -EINVAL;
+		}
+		rc = pcu_rx_anr_req(bts, (struct gsm_pcu_if_anr_req*)&container->data);
+		break;
 	default:
 		LOGP(DL1IF, LOGL_NOTICE, "(bts=%d) Rx unexpected msg type (%u) inside container!\n",
 		     bts->nr, container->msg_type);

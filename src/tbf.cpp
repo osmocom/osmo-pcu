@@ -50,6 +50,7 @@ extern "C" {
 #include "gsm_rlcmac.h"
 #include "coding_scheme.h"
 #include "nacc_fsm.h"
+#include "ms_anr_fsm.h"
 }
 
 #include <errno.h>
@@ -617,6 +618,10 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum pdch_ul
 		LOGPTBFDL(this, LOGL_DEBUG, "Scheduled 'Packet Cell Change Continue' polling on %s (FN=%d, TS=%d)\n",
 			  chan, new_poll_fn, ts);
 		break;
+	case PDCH_ULC_POLL_MEAS_ORDER:
+		LOGPTBFDL(this, LOGL_DEBUG, "Scheduled 'Packet Measurement Order' polling on %s (FN=%d, TS=%d)\n",
+			  chan, new_poll_fn, ts);
+		break;
 	}
 }
 
@@ -724,6 +729,13 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 				LOGPTBF(dl_tbf, LOGL_ERROR, "IMSI to paging group failed! (%s)\n", imsi());
 			bts_snd_dl_ass(dl_tbf->bts, dl_tbf, pgroup);
 			dl_tbf->m_wait_confirm = 1;
+		}
+
+		if (m_ms->anr &&
+		    (m_ms->anr->fi->state == MS_ANR_ST_WAIT_CTRL_ACK1 || m_ms->anr->fi->state == MS_ANR_ST_WAIT_CTRL_ACK2) &&
+		    m_ms->anr->poll_fn == poll_fn && m_ms->anr->poll_ts == pdch->ts_no) {
+			/* Timeout waiting for CTRL ACK acking Pkt Meas Order */
+			osmo_fsm_inst_dispatch(m_ms->anr->fi, MS_ANR_EV_RX_PKT_CTRL_ACK_TIMEOUT, NULL);
 		}
 	} else
 		LOGPTBF(this, LOGL_ERROR, "Poll Timeout, but no event!\n");

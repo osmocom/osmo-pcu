@@ -93,3 +93,8 @@ struct llist_item {
 	struct llist_head list; /* item used by llist */
 	void *entry;
 };
+
+struct arfcn_bsic {
+	uint16_t arfcn;
+	uint8_t bsic;
+};

@@ -129,6 +129,13 @@ void write_packet_cell_change_continue(RlcMacDownlink_t *block, uint8_t poll, ui
 				       bool tfi_is_dl, uint8_t tfi, bool exist_id,
 				       uint16_t arfcn, uint8_t bsic, uint8_t container_id);
 
+void write_packet_measurement_order(RlcMacDownlink_t *block, uint8_t poll, uint8_t rrbp,
+				    bool tfi_assigned, bool tfi_is_dl, uint8_t tfi,
+				    uint32_t tlli, uint8_t pmo_idx, uint8_t pmo_count,
+				    uint8_t nco, bool exist_nc, uint8_t non_drx_period,
+				    uint8_t nc_report_period_i, uint8_t nc_report_period_t,
+				    const NC_Frequency_list_t *NC_Frequency_list);
+
 #ifdef __cplusplus
 }
 #endif

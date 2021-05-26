@@ -38,6 +38,7 @@ struct tbf_sched_candidates {
 	struct gprs_rlcmac_tbf *ul_ass;
 	struct gprs_rlcmac_tbf *dl_ass;
 	struct gprs_rlcmac_tbf *nacc;
+	struct gprs_rlcmac_tbf *anr;
 	struct gprs_rlcmac_ul_tbf *ul_ack;
 };
 
@@ -64,6 +65,7 @@ static void get_ctrl_msg_tbf_candidates(const struct gprs_rlcmac_pdch *pdch,
 		/* NACC ready to send. TFI assigned is needed to send messages */
 		if (ul_tbf->is_tfi_assigned() && ms_nacc_rts(ul_tbf->ms()))
 			tbf_cand->nacc = ul_tbf;
+		/* Don't pick ->anr here, only DL TBFs are useful */
 /* FIXME: Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all
 states? */
 	}
@@ -81,6 +83,8 @@ states? */
 		/* NACC ready to send. TFI assigned is needed to send messages */
 		if (dl_tbf->is_tfi_assigned() && ms_nacc_rts(dl_tbf->ms()))
 			tbf_cand->nacc = dl_tbf;
+		if (ms_anr_rts(dl_tbf->ms(), dl_tbf))
+			tbf_cand->anr = dl_tbf;
 	}
 }
 
@@ -151,7 +155,8 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 	struct gprs_rlcmac_tbf *next_list[] = { tbfs->ul_ass,
 						tbfs->dl_ass,
 						tbfs->ul_ack,
-						tbfs->nacc };
+						tbfs->nacc,
+						tbfs->anr };
 	uint8_t ts = pdch->ts_no;
 
 	/* Send Packet Application Information first (ETWS primary notifications) */
@@ -176,9 +181,10 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 				msg = tbfs->dl_ass->create_dl_ass(fn, ts);
 			else if (tbf == tbfs->ul_ack)
 				msg = tbfs->ul_ack->create_ul_ack(fn, ts);
-			else if (tbf == tbfs->nacc) {
+			else if (tbf == tbfs->nacc)
 				msg = ms_nacc_create_rlcmac_msg(tbf->ms(), tbf, fn, ts);
-			}
+			else if (tbf == tbfs->anr)
+				msg = ms_anr_create_rlcmac_msg(tbf->ms(), tbf, fn, ts);
 
 			if (!msg) {
 				tbf = NULL;

@@ -41,6 +41,7 @@ extern "C" {
 
 #include "coding_scheme.h"
 #include <gsm_rlcmac.h>
+#include "pcu_utils.h"
 
 #include <stdint.h>
 #include <stddef.h>
@@ -102,6 +103,7 @@ struct GprsMs {
 
 	struct rate_ctr_group *ctrs;
 	struct nacc_fsm_ctx *nacc;
+	struct ms_anr_fsm_ctx *anr;
 };
 
 struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli);
@@ -146,6 +148,11 @@ int ms_nacc_start(struct GprsMs *ms, Packet_Cell_Change_Notification_t *notif);
 bool ms_nacc_rts(const struct GprsMs *ms);
 struct msgb *ms_nacc_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts);
 
+int ms_anr_start(struct GprsMs *ms, const struct arfcn_bsic* cell_list, unsigned int num_cells);
+bool ms_anr_rts(const struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf);
+struct msgb *ms_anr_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts);
+bool ms_anr_tbf_keep_open(const struct GprsMs *ms, const struct gprs_rlcmac_tbf *tbf);
+
 static inline bool ms_is_idle(const struct GprsMs *ms)
 {
 	return !ms->ul_tbf && !ms->dl_tbf && !ms->ref && llist_empty(&ms->old_tbfs);
@@ -184,6 +191,11 @@ static inline bool ms_check_tlli(struct GprsMs *ms, uint32_t tlli)
 static inline const char *ms_imsi(const struct GprsMs *ms)
 {
 	return ms->imsi;
+}
+
+static inline bool ms_imsi_valid(const struct GprsMs *ms)
+{
+	return ms->imsi[0] != '\0';
 }
 
 static inline uint8_t ms_ta(const struct GprsMs *ms)

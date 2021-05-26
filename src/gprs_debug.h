@@ -48,6 +48,7 @@ enum {
 	DPCU,
 	DNACC,
 	DRIM,
+	DANR,
 	aDebug_LastEntry
 };
 

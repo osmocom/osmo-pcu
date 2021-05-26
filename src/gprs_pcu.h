@@ -41,6 +41,8 @@
 #define PCU_TDEF_SI_RESOLVE_TO (-2)
 #define PCU_TDEF_NEIGH_CACHE_ALIVE (-10)
 #define PCU_TDEF_SI_CACHE_ALIVE    (-11)
+#define PCU_TDEF_ANR_SCHED_TBF	(-20)
+#define PCU_TDEF_ANR_MS_TIMEOUT	(-21)
 
 /* see bts->gsmtap_categ_mask */
 enum pcu_gsmtap_category {

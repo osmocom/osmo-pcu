@@ -36,6 +36,8 @@ static struct osmo_tdef T_defs_pcu[] = {
 	{ .T=PCU_TDEF_SI_RESOLVE_TO,	   .default_val=1000,  .unit=OSMO_TDEF_MS,   .desc="RIM RAN-INFO response timeout (ms)",	    .val=0 },
 	{ .T=PCU_TDEF_NEIGH_CACHE_ALIVE,   .default_val=5,  .unit=OSMO_TDEF_S,   .desc="[ARFCN+BSIC]->[RAC+CI] resolution cache entry storage timeout (s)", .val=0 },
 	{ .T=PCU_TDEF_SI_CACHE_ALIVE,      .default_val=5,  .unit=OSMO_TDEF_S,   .desc="[RAC+CI]->[SI] resolution cache entry storage timeout (s)", .val=0 },
+	{ .T=PCU_TDEF_ANR_SCHED_TBF,      .default_val=10,  .unit=OSMO_TDEF_S,   .desc="[ANR] Frequency to schedule a new Measurement Report on any MS (s)", .val=0 },
+	{ .T=PCU_TDEF_ANR_MS_TIMEOUT, .default_val=60, .unit=OSMO_TDEF_S, .desc="[ANR] Time to wait for Packet Measurement Report (s)",  .val=0 },
 	{ .T=-101,  .default_val=30,  .unit=OSMO_TDEF_S,  .desc="BSSGP (un)blocking procedures timer (s)",  .val=0 },
 	{ .T=-102,  .default_val=30,  .unit=OSMO_TDEF_S,  .desc="BSSGP reset procedure timer (s)",          .val=0 },
 	{ .T=-2000, .default_val=2,   .unit=OSMO_TDEF_MS, .desc="Delay release of UL TBF after tx Packet Access Reject (PACCH) (ms)", .val=0 },

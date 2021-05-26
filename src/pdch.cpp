@@ -48,6 +48,7 @@ extern "C" {
 #include "coding_scheme.h"
 #include "gsm_rlcmac.h"
 #include "nacc_fsm.h"
+#include "ms_anr_fsm.h"
 }
 
 #include <errno.h>
@@ -424,6 +425,11 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		 * received as part of the message; the mobile station _MAY_ then
 		 * switch to a new cell."
 		 */
+		return;
+	} else if (reason == PDCH_ULC_POLL_MEAS_ORDER && ms->anr &&
+		   (ms->anr->fi->state == MS_ANR_ST_WAIT_CTRL_ACK1 ||  ms->anr->fi->state == MS_ANR_ST_WAIT_CTRL_ACK2)
+		   && ms->anr->poll_fn == fn && ms->anr->poll_ts == ts_no) {
+		osmo_fsm_inst_dispatch(ms->anr->fi, MS_ANR_EV_RX_PKT_CTRL_ACK_MSG, NULL);
 		return;
 	}
 	LOGPDCH(this, DRLCMAC, LOGL_ERROR, "FN=%" PRIu32 " "

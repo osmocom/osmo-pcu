@@ -1815,3 +1815,46 @@ void write_packet_cell_change_continue(RlcMacDownlink_t *block, uint8_t poll, ui
 	}
 	block->u.Packet_Cell_Change_Continue.CONTAINER_ID = container_id;
 }
+
+void write_packet_measurement_order(RlcMacDownlink_t *block, uint8_t poll, uint8_t rrbp,
+				    bool tfi_assigned, bool tfi_is_dl, uint8_t tfi,
+				    uint32_t tlli, uint8_t pmo_idx, uint8_t pmo_count,
+				    uint8_t nco, bool exist_nc, uint8_t non_drx_period,
+				    uint8_t nc_report_period_i, uint8_t nc_report_period_t,
+				    const NC_Frequency_list_t *NC_Frequency_list)
+{
+
+	block->PAYLOAD_TYPE = 0x1;  // RLC/MAC control block that does not include the optional octets of the RLC/MAC control header
+	block->RRBP         = rrbp;  // 0: N+13
+	block->SP           = poll; // RRBP field is valid?
+	block->USF          = 0x0;  // Uplink state flag
+
+	block->u.Packet_Measurement_Order.MESSAGE_TYPE = MT_PACKET_MEASUREMENT_ORDER;
+	block->u.Packet_Measurement_Order.PAGE_MODE    = 0x0;  // Normal Paging
+
+	if (!tfi_assigned) {
+		block->u.Packet_Measurement_Order.ID.UnionType = 0x01; // TLLI
+		block->u.Packet_Measurement_Order.ID.u.TLLI = tlli;
+	} else {
+		block->u.Packet_Measurement_Order.ID.UnionType = 0x00; // Global_TFI
+		block->u.Packet_Measurement_Order.ID.u.Global_TFI.UnionType = tfi_is_dl; // 0=UPLINK TFI, 1=DL TFI
+		if (tfi_is_dl)
+			block->u.Packet_Measurement_Order.ID.u.Global_TFI.u.DOWNLINK_TFI = tfi;
+		else
+			block->u.Packet_Measurement_Order.ID.u.Global_TFI.u.UPLINK_TFI = tfi;
+	}
+	block->u.Packet_Measurement_Order.PMO_INDEX = pmo_idx;
+	block->u.Packet_Measurement_Order.PMO_COUNT = pmo_count;
+	block->u.Packet_Measurement_Order.Exist_NC_Measurement_Parameters = 1;
+
+	block->u.Packet_Measurement_Order.NC_Measurement_Parameters.NETWORK_CONTROL_ORDER = nco;
+	block->u.Packet_Measurement_Order.NC_Measurement_Parameters.Exist_NC = exist_nc;
+	if (exist_nc) {
+		block->u.Packet_Measurement_Order.NC_Measurement_Parameters.NC_NON_DRX_PERIOD = non_drx_period;
+		block->u.Packet_Measurement_Order.NC_Measurement_Parameters.NC_REPORTING_PERIOD_I = nc_report_period_i;
+		block->u.Packet_Measurement_Order.NC_Measurement_Parameters.NC_REPORTING_PERIOD_T = nc_report_period_t;
+	}
+	block->u.Packet_Measurement_Order.NC_Measurement_Parameters.Exist_NC_FREQUENCY_LIST = NC_Frequency_list ? 1 : 0;
+	if (NC_Frequency_list)
+		block->u.Packet_Measurement_Order.NC_Measurement_Parameters.NC_Frequency_list = *NC_Frequency_list;
+}

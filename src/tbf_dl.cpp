@@ -49,6 +49,7 @@ extern "C" {
 	#include <osmocom/gsm/gsm_utils.h>
 	#include <osmocom/gsm/protocol/gsm_04_08.h>
 	#include "coding_scheme.h"
+	#include "ms_anr_fsm.h"
 }
 
 #include <errno.h>
@@ -229,13 +230,14 @@ int gprs_rlcmac_dl_tbf::append_data(uint16_t pdu_delay_csec,
 	return 0;
 }
 
-static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts, GprsMs *ms,
+int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts, struct GprsMs *ms,
 				 struct gprs_rlcmac_dl_tbf **tbf)
 {
 	bool ss;
 	int8_t use_trx;
 	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL, *old_ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
+	*tbf = NULL;
 
 	ul_tbf = ms_ul_tbf(ms);
 
@@ -252,6 +254,8 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts, GprsMs *ms,
 		use_trx = -1;
 		ss = true; /* PCH assignment only allows one timeslot */
 		old_ul_tbf = NULL;
+		if (!ms_imsi_valid(ms)) /* We'll need imsi to potentially page it on CCCH */
+			return -1;
 	}
 
 	// Create new TBF (any TRX)
@@ -1365,6 +1369,10 @@ bool gprs_rlcmac_dl_tbf::keep_open(unsigned fn) const
 	int since_last_drain;
 	bool keep;
 
+	/* ongoing ANR procedure, don't close the TBF */
+	if (ms_anr_tbf_keep_open(ms(), (const struct gprs_rlcmac_tbf *)this))
+		return true;
+
 	dl_tbf_idle_msec = osmo_tdef_get(the_pcu->T_defs, -2031, OSMO_TDEF_MS, -1);
 	if (dl_tbf_idle_msec == 0)
 		return false;
@@ -1571,4 +1579,10 @@ struct gprs_rlcmac_dl_tbf *as_dl_tbf(struct gprs_rlcmac_tbf *tbf)
 		return static_cast<gprs_rlcmac_dl_tbf *>(tbf);
 	else
 		return NULL;
+}
+
+int dl_tbf_append_data(struct gprs_rlcmac_dl_tbf *dl_tbf, uint16_t pdu_delay_csec,
+		const uint8_t *data, uint16_t len)
+{
+	return dl_tbf->append_data(pdu_delay_csec, data, len);
 }

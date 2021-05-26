@@ -27,6 +27,7 @@
 #include "gprs_codel.h"
 #include "pcu_utils.h"
 #include "nacc_fsm.h"
+#include "ms_anr_fsm.h"
 
 #include <time.h>
 
@@ -367,6 +368,12 @@ void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 
 	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Detaching TBF: %s\n",
 	       tbf_name(tbf));
+
+	if (ms->anr && ms->anr->tbf == tbf) {
+		/* TODO: restart it on the other dir tbf if still avaialble? */
+		talloc_free(ms->anr);
+		ms->anr = NULL;
+	}
 
 	if (tbf_ms(tbf) == ms)
 		tbf_set_ms(tbf, NULL);
@@ -973,4 +980,61 @@ struct msgb *ms_nacc_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf
 	if (rc != 0 || !data_ctx.msg)
 		return NULL;
 	return data_ctx.msg;
+}
+
+int ms_anr_start(struct GprsMs *ms, const struct arfcn_bsic* cell_list, unsigned int num_cells)
+{
+	if (!ms->anr)
+		ms->anr = ms_anr_fsm_alloc(ms);
+	if (!ms->anr)
+		return -EINVAL;
+	struct ms_anr_ev_start ev_data = {
+		.tbf = (struct gprs_rlcmac_tbf*) ms->dl_tbf,
+		.cell_list = cell_list,
+		.num_cells = num_cells,
+	};
+	return osmo_fsm_inst_dispatch(ms->anr->fi, MS_ANR_EV_START, &ev_data);
+}
+
+bool ms_anr_rts(const struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
+{
+	if (!ms->anr)
+		return false;
+	if (ms->anr->fi->state != MS_ANR_ST_TX_PKT_MEAS_ORDER &&
+	    ms->anr->fi->state != MS_ANR_ST_TX_PKT_MEAS_RESET1 &&
+	    ms->anr->fi->state != MS_ANR_ST_TX_PKT_MEAS_RESET2)
+		return false;
+	/* If TBF doesn't match, skip */
+	if (ms->anr->tbf && ms->anr->tbf != tbf)
+		return false;
+	/* Wait until TBF is in state FLOW to start transmitting ANR */
+	if (tbf_state((struct gprs_rlcmac_tbf*)ms->dl_tbf) != TBF_ST_FLOW)
+		return false;
+	return true;
+}
+
+struct msgb *ms_anr_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts)
+{
+	int rc;
+	struct ms_anr_ev_create_rlcmac_msg_ctx data_ctx;
+	OSMO_ASSERT(ms->anr->tbf == tbf);
+
+	data_ctx = (struct ms_anr_ev_create_rlcmac_msg_ctx) {
+			//.tbf = tbf,
+			.fn = fn,
+			.ts = ts,
+			.msg = NULL,
+	};
+
+	rc = osmo_fsm_inst_dispatch(ms->anr->fi, MS_ANR_EV_CREATE_RLCMAC_MSG, &data_ctx);
+	if (rc != 0 || !data_ctx.msg)
+		return NULL;
+	return data_ctx.msg;
+}
+
+bool ms_anr_tbf_keep_open(const struct GprsMs *ms, const struct gprs_rlcmac_tbf *tbf)
+{
+	if (ms->anr && ms->anr->tbf == tbf)
+		return true;
+	return false;
 }

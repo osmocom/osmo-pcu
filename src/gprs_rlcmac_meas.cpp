@@ -27,6 +27,7 @@ extern "C" {
 #include <tbf.h>
 #include <tbf_dl.h>
 #include <gprs_ms.h>
+#include <ms_anr_fsm.h>
 
 #include <string.h>
 #include <errno.h>
@@ -42,6 +43,7 @@ int gprs_rlcmac_meas_rep(GprsMs *ms, Packet_Measurement_Report_t *pmr)
 	NC_Measurement_Report_t *ncr;
 	NC_Measurements_t *nc;
 	int i;
+	int rc = 0;
 
 	LOGPMS(ms, DRLCMACMEAS, LOGL_INFO, "Rx Measurement Report:");
 
@@ -65,7 +67,9 @@ int gprs_rlcmac_meas_rep(GprsMs *ms, Packet_Measurement_Report_t *pmr)
 		break;
 	}
 
-	return 0;
+	if (ms->anr && ms->anr->fi->state == MS_ANR_ST_WAIT_PKT_MEAS_REPORT)
+		rc = osmo_fsm_inst_dispatch(ms->anr->fi, MS_ANR_EV_RX_PKT_MEAS_REPORT, pmr);
+	return rc;
 }
 
 

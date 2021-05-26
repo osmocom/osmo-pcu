@@ -44,6 +44,7 @@ const struct value_string pdch_ulc_tbf_poll_reason_names[] = {
 	{ PDCH_ULC_POLL_UL_ACK, "UL_ACK" },
 	{ PDCH_ULC_POLL_DL_ACK, "DL_ACK" },
 	{ PDCH_ULC_POLL_CELL_CHG_CONTINUE, "CELL_CHG_CONTINUE" },
+	{ PDCH_ULC_POLL_MEAS_ORDER, "MEAS_ORDER" },
 	{ 0, NULL }
 };
 

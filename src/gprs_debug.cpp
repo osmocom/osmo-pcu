@@ -133,6 +133,13 @@ static const struct log_info_cat default_categories[] = {
 		.loglevel = LOGL_NOTICE,
 		.enabled = 1,
 	},
+	[DANR] = {
+		.name = "DANR",
+		.color = "\033[1;37m",
+		.description = "Automatic Neighbor Registration (ANR)",
+		.loglevel = LOGL_NOTICE,
+		.enabled = 1,
+	},
 };
 
 static int filter_fn(const struct log_context *ctx,

@@ -148,6 +148,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "pkt:cell_chg_notification",	"Packet Cell Change Notification"},
 	{ "pkt:cell_chg_continue",	"Packet Cell Change Continue"},
 	{ "pkt:neigh_cell_data",	"Packet Neighbour Cell Data"},
+	{ "pkt:meas_order", 		"Packet Measurement Order" },
 	{ "ul:control",			"UL control Block     "},
 	{ "ul:assignment_poll_timeout",	"UL Assign Timeout    "},
 	{ "ul:assignment_failed",	"UL Assign Failed     "},
@@ -279,6 +280,8 @@ struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr)
 
 	bts->statg = osmo_stat_item_group_alloc(tall_pcu_ctx, &bts_statg_desc, 0);
 	OSMO_ASSERT(bts->statg);
+
+	bts->anr = bts_anr_fsm_alloc(bts);
 
 	llist_add_tail(&bts->list, &pcu->bts_list);
 

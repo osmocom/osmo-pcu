@@ -40,6 +40,7 @@ extern "C" {
 #include "mslot_class.h"
 #include "gsm_rlcmac.h"
 #include "gprs_pcu.h"
+#include "bts_anr_fsm.h"
 #ifdef __cplusplus
 }
 #endif
@@ -141,6 +142,7 @@ enum {
 	CTR_PKT_CELL_CHG_NOTIFICATION,
 	CTR_PKT_CELL_CHG_CONTINUE,
 	CTR_PKT_NEIGH_CELL_DATA,
+	CTR_PKT_MEAS_ORDER,
 	CTR_RLC_RECV_CONTROL,
 	CTR_PUA_POLL_TIMEDOUT,
 	CTR_PUA_POLL_FAILED,
@@ -262,6 +264,8 @@ struct gprs_rlcmac_bts {
 	struct osmo_stat_item_group *statg;
 
 	struct GprsMsStorage *ms_store;
+
+	struct bts_anr_fsm_ctx *anr;
 };
 
 #ifdef __cplusplus

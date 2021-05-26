@@ -156,6 +156,12 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 		  const char *imsi, const uint8_t ms_class,
 		  const uint8_t egprs_ms_class, const uint16_t delay_csec,
 		  const uint8_t *data, const uint16_t len);
+/* Schedule new Dl TBF Assignment */
+int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts, struct GprsMs *ms,
+				 struct gprs_rlcmac_dl_tbf **tbf);
+
+int dl_tbf_append_data(struct gprs_rlcmac_dl_tbf *dl_tbf, uint16_t pdu_delay_csec,
+		const uint8_t *data, uint16_t len);
 
 #ifdef __cplusplus
 }
