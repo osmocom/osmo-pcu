@@ -1332,7 +1332,7 @@ uint8_t bts_get_ms_pwr_alpha(const struct gprs_rlcmac_bts *bts)
 	if (bts->pcu->vty.force_alpha != (uint8_t)-1)
 		return bts->pcu->vty.force_alpha;
 	if (bts->si13_is_set)
-		return bts->si31_ro_decoded.pwr_ctrl_pars.alpha;
+		return bts->si13_ro_decoded.pwr_ctrl_pars.alpha;
 	/* default if no SI13 is received yet: closed loop control, TS 44.060
 	 * B.2 Closed loop control */
 	return 0;

@@ -336,7 +336,7 @@ static int pcu_rx_data_ind_bcch(struct gprs_rlcmac_bts *bts, uint8_t *data, uint
 			memcpy(bts->si13, data, GSM_MACBLOCK_LEN);
 			bts->si13_is_set = true;
 			si_ro = ((struct gsm48_system_information_type_13*)data)->rest_octets;
-			if (osmo_gsm48_rest_octets_si13_decode(&bts->si31_ro_decoded, si_ro) < 0)
+			if (osmo_gsm48_rest_octets_si13_decode(&bts->si13_ro_decoded, si_ro) < 0)
 				LOGP(DPCU, LOGL_ERROR, "Error decoding SI13\n");
 			break;
 		default:
