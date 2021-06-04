@@ -147,7 +147,7 @@ static struct msgb *create_packet_neighbour_cell_data(struct nacc_fsm_ctx *ctx,
 		goto free_ret;
 	}
 	LOGP(DNACC, LOGL_DEBUG, "------------------------- TX : Packet Neighbour Cell Data -------------------------\n");
-	rate_ctr_inc(&bts_rate_counters(ms->bts)->ctr[CTR_PKT_NEIGH_CELL_DATA]);
+	rate_ctr_inc(rate_ctr_group_get_ctr(bts_rate_counters(ms->bts), CTR_PKT_NEIGH_CELL_DATA));
 	talloc_free(mac_control_block);
 
 	ctx->container_idx++;
@@ -204,7 +204,7 @@ static struct msgb *create_packet_cell_chg_continue(const struct nacc_fsm_ctx *c
 		goto free_ret;
 	}
 	LOGP(DNACC, LOGL_DEBUG, "------------------------- TX : Packet Cell Change Continue -------------------------\n");
-	rate_ctr_inc(&bts_rate_counters(ms->bts)->ctr[CTR_PKT_CELL_CHG_CONTINUE]);
+	rate_ctr_inc(rate_ctr_group_get_ctr(bts_rate_counters(ms->bts), CTR_PKT_CELL_CHG_CONTINUE));
 	talloc_free(mac_control_block);
 	tbf_set_polling(tbf, *new_poll_fn, data->ts, PDCH_ULC_POLL_CELL_CHG_CONTINUE);
 	return msg;

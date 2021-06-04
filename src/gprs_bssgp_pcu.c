@@ -538,8 +538,8 @@ static int gprs_bssgp_pcu_rcvmsg(struct msgb *msg)
 	if (bctx)
 	{
 		log_set_context(LOG_CTX_GB_BVC, bctx);
-		rate_ctr_inc(&bctx->ctrg->ctr[BSSGP_CTR_PKTS_IN]);
-		rate_ctr_add(&bctx->ctrg->ctr[BSSGP_CTR_BYTES_IN], msgb_bssgp_len(msg));
+		rate_ctr_inc(rate_ctr_group_get_ctr(bctx->ctrg, BSSGP_CTR_PKTS_IN));
+		rate_ctr_add(rate_ctr_group_get_ctr(bctx->ctrg, BSSGP_CTR_BYTES_IN), msgb_bssgp_len(msg));
 	}
 
 	if (ns_bvci == BVCI_SIGNALLING)

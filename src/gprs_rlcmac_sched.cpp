@@ -217,7 +217,7 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 		LOGPDCH(pdch, DRLCMACSCHED, LOGL_DEBUG, "FN=%" PRIu32
 			" Scheduling control message at RTS for %s\n",
 			fn, tbf_name(tbf));
-		rate_ctr_inc(&tbf->ms()->ctrs->ctr[MS_CTR_DL_CTRL_MSG_SCHED]);
+		rate_ctr_inc(rate_ctr_group_get_ctr(tbf->ms()->ctrs, MS_CTR_DL_CTRL_MSG_SCHED));
 		return msg;
 	}
 

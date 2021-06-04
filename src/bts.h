@@ -325,16 +325,17 @@ static inline struct osmo_stat_item_group *bts_stat_items(struct gprs_rlcmac_bts
 }
 
 static inline void bts_do_rate_ctr_inc(const struct gprs_rlcmac_bts *bts, unsigned int ctr_id) {
-	rate_ctr_inc(&bts->ratectrs->ctr[ctr_id]);
+	rate_ctr_inc(rate_ctr_group_get_ctr(bts->ratectrs, ctr_id));
 }
 
 static inline void bts_do_rate_ctr_add(const struct gprs_rlcmac_bts *bts, unsigned int ctr_id, int inc) {
-	rate_ctr_add(&bts->ratectrs->ctr[ctr_id], inc);
+	rate_ctr_add(rate_ctr_group_get_ctr(bts->ratectrs, ctr_id), inc);
 }
 
 static inline void bts_stat_item_add(struct gprs_rlcmac_bts *bts, unsigned int stat_id, int inc) {
-	int32_t val = osmo_stat_item_get_last(bts->statg->items[stat_id]);
-	osmo_stat_item_set(bts->statg->items[stat_id], val + inc);
+	struct osmo_stat_item *item = osmo_stat_item_group_get_item(bts->statg, stat_id);
+	int32_t val = osmo_stat_item_get_last(item);
+	osmo_stat_item_set(item, val + inc);
 }
 
 struct gprs_rlcmac_bts *bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr);
