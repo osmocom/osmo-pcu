@@ -333,7 +333,8 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 
-	LOGPTBF(tbf, LOGL_DEBUG, "RX: [PCU <- BTS] Packet Control Ack\n");
+	LOGPTBF(tbf, LOGL_DEBUG, "FN=%" PRIu32 " Rx Packet Control Ack (reason=%s)\n",
+		fn, get_value_string(pdch_ulc_tbf_poll_reason_names, reason));
 	pdch_ulc_release_fn(ulc, fn);
 
 	/* check if this control ack belongs to packet uplink ack */
@@ -420,8 +421,9 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		 */
 		return;
 	}
-	LOGPDCH(this, DRLCMAC, LOGL_ERROR,
-		"Error: received PACET CONTROL ACK at no request\n");
+	LOGPDCH(this, DRLCMAC, LOGL_ERROR, "FN=%" PRIu32 " "
+		"Error: received PACKET CONTROL ACK at no request (reason=%s)\n", fn,
+		get_value_string(pdch_ulc_tbf_poll_reason_names, reason));
 }
 
 void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_nack, uint32_t fn, struct pcu_l1_meas *meas)

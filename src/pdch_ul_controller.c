@@ -38,6 +38,15 @@ const struct value_string pdch_ul_node_names[] = {
 	{ 0, NULL }
 };
 
+const struct value_string pdch_ulc_tbf_poll_reason_names[] = {
+	{ PDCH_ULC_POLL_UL_ASS, "UL_ASS" },
+	{ PDCH_ULC_POLL_DL_ASS, "DL_ASS" },
+	{ PDCH_ULC_POLL_UL_ACK, "UL_ACK" },
+	{ PDCH_ULC_POLL_DL_ACK, "DL_ACK" },
+	{ PDCH_ULC_POLL_CELL_CHG_CONTINUE, "CELL_CHG_CONTINUE" },
+	{ 0, NULL }
+};
+
 #define GSM_MAX_FN_THRESH (GSM_MAX_FN >> 1)
 /* 0: equal, -1: fn1 BEFORE fn2, 1: fn1 AFTER fn2 */
 static inline int fn_cmp(uint32_t fn1, uint32_t fn2)

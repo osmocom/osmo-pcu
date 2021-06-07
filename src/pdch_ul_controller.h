@@ -59,6 +59,7 @@ enum pdch_ulc_tbf_poll_reason {
 	PDCH_ULC_POLL_DL_ACK, /* Expect DL ACK/NACK requested by RRBP */
 	PDCH_ULC_POLL_CELL_CHG_CONTINUE, /* Expect CTRL ACK for Pkt cell Change Continue we transmit */
 };
+extern const struct value_string pdch_ulc_tbf_poll_reason_names[];
 
 struct pdch_ulc_node {
 	struct rb_node node;	  /*! entry in pdch_ulc->tree_root */
