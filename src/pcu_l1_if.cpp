@@ -286,9 +286,28 @@ int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *
 	return rc;
 }
 
+static int list_arfcn(const struct gprs_rlcmac_bts *bts, const struct gsm_sysinfo_freq *freq, const char *text)
+{
+	int n = 0, i;
+	for (i = 0; i < 1024; i++) {
+		if (freq[i].mask) {
+			if (!n)
+				LOGP(DL1IF, LOGL_INFO, "BTS%d: %s", bts->nr, text);
+			LOGPC(DL1IF, LOGL_INFO, " %d", i);
+			n++;
+		}
+	}
+	if (n)
+		LOGPC(DL1IF, LOGL_INFO, "\n");
+
+	return n;
+}
+
 static int pcu_rx_data_ind_bcch(struct gprs_rlcmac_bts *bts, uint8_t *data, uint8_t len)
 {
+	struct gsm48_system_information_type_2 *si2;
 	const uint8_t *si_ro;
+
 	switch (len) {
 	case 0:
 		/* Due to historical reasons also accept a completely empty message as
@@ -304,6 +323,9 @@ static int pcu_rx_data_ind_bcch(struct gprs_rlcmac_bts *bts, uint8_t *data, uint
 		switch (data[0]) {
 		case SYSINFO_TYPE_1:
 			bts->si1_is_set = false;
+			break;
+		case SYSINFO_TYPE_2:
+			bts->si2_is_set = false;
 			break;
 		case SYSINFO_TYPE_3:
 			bts->si3_is_set = false;
@@ -327,6 +349,14 @@ static int pcu_rx_data_ind_bcch(struct gprs_rlcmac_bts *bts, uint8_t *data, uint
 		case GSM48_MT_RR_SYSINFO_1:
 			memcpy(bts->si1, data, GSM_MACBLOCK_LEN);
 			bts->si1_is_set = true;
+			break;
+		case GSM48_MT_RR_SYSINFO_2:
+			memcpy(bts->si2, data, GSM_MACBLOCK_LEN);
+			bts->si2_is_set = true;
+			si2 = (struct gsm48_system_information_type_2 *)bts->si2;
+			gsm48_decode_freq_list(bts->si2_bcch_cell_list, si2->bcch_frequency_list,
+					       sizeof(si2->bcch_frequency_list), 0xce, 1);
+			list_arfcn(bts, bts->si2_bcch_cell_list, "SI2 Neighbour cells in same band:");
 			break;
 		case GSM48_MT_RR_SYSINFO_3:
 			memcpy(bts->si3, data, GSM_MACBLOCK_LEN);

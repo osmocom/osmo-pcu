@@ -231,6 +231,9 @@ struct gprs_rlcmac_bts {
 
 	uint8_t si1[GSM_MACBLOCK_LEN];
 	bool si1_is_set;
+	uint8_t si2[GSM_MACBLOCK_LEN];
+	bool si2_is_set;
+	struct gsm_sysinfo_freq si2_bcch_cell_list[1024];
 	uint8_t si3[GSM_MACBLOCK_LEN];
 	bool si3_is_set;
 	uint8_t si13[GSM_MACBLOCK_LEN];
