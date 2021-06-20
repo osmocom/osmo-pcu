@@ -992,6 +992,9 @@ int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 	case PCU_IF_MSG_APP_INFO_REQ:
 		rc = pcu_rx_app_info_req(bts, &pcu_prim->u.app_info_req);
 		break;
+	case PCU_IF_MSG_INTERF_IND:
+		/* TODO: handle interference reports */
+		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received unknown PCU msg type %d\n",
 			msg_type);
