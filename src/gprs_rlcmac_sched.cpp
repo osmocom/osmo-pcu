@@ -506,7 +506,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	}
 
 	/* msg is now available */
-	bts_do_rate_ctr_add(bts, CTR_RLC_DL_BYTES, msg->data_len);
+	bts_do_rate_ctr_add(bts, CTR_RLC_DL_BYTES, msgb_length(msg));
 
 	/* set USF */
 	OSMO_ASSERT(msgb_length(msg) > 0);
