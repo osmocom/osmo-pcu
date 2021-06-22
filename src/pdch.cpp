@@ -304,7 +304,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 {
 	struct gprs_rlcmac_tbf *tbf, *new_tbf;
 	uint32_t tlli = packet->TLLI;
-	GprsMs *ms = bts_ms_by_tlli(bts(), tlli, GSM_RESERVED_TMSI);
+	GprsMs *ms;
 	gprs_rlcmac_ul_tbf *ul_tbf;
 	enum pdch_ulc_tbf_poll_reason reason;
 	struct pdch_ulc_node *poll;
@@ -314,6 +314,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
 			"unknown FN=%u TLLI=0x%08x (TRX %d TS %d)\n",
 			fn, tlli, trx_no(), ts_no);
+		ms = bts_ms_by_tlli(bts(), tlli, GSM_RESERVED_TMSI);
 		if (ms)
 			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
 				"unknown TBF corresponds to MS with IMSI %s, TA %d, "
@@ -332,6 +333,8 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	tbf->n_reset(N3101);
 
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
+	/* Gather MS from TBF, since it may be NULL or may have been merged during update_ms */
+	ms = tbf->ms();
 
 	LOGPTBF(tbf, LOGL_DEBUG, "FN=%" PRIu32 " Rx Packet Control Ack (reason=%s)\n",
 		fn, get_value_string(pdch_ulc_tbf_poll_reason_names, reason));
@@ -353,7 +356,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		tbf->n_reset(N3105);
 		TBF_SET_ASS_STATE_DL(tbf, GPRS_RLCMAC_DL_ASS_NONE);
 
-		new_tbf = tbf->ms() ? ms_dl_tbf(tbf->ms()) : NULL;
+		new_tbf = ms_dl_tbf(ms);
 		if (!new_tbf) {
 			LOGPDCH(this, DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
 				"TBF is gone TLLI=0x%08x\n", tlli);
@@ -385,7 +388,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		tbf->n_reset(N3105);
 		TBF_SET_ASS_STATE_UL(tbf, GPRS_RLCMAC_UL_ASS_NONE);
 
-		new_tbf = tbf->ms() ? ms_ul_tbf(tbf->ms()) : NULL;
+		new_tbf = ms_ul_tbf(ms);
 		if (!new_tbf) {
 			LOGPDCH(this, DRLCMAC, LOGL_ERROR, "Got ACK, but UL "
 				"TBF is gone TLLI=0x%08x\n", tlli);
