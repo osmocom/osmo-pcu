@@ -72,7 +72,7 @@ void test_pcu_rx_no_subscr_with_active_tbf()
 	struct gsm_pcu_if pcu_prim = {PCU_IF_MSG_APP_INFO_REQ, };
 
 	fprintf(stderr, "--- %s ---\n",  __func__);
-	pcu_rx(PCU_IF_MSG_APP_INFO_REQ, &pcu_prim);
+	pcu_rx(&pcu_prim, sizeof(struct gsm_pcu_if));
 	fprintf(stderr, "\n");
 }
 
@@ -106,7 +106,7 @@ void test_sched_app_info_ok(const struct gsm_pcu_if_app_info_req *req)
 
 	fprintf(stderr, "--- %s ---\n",  __func__);
 	pcu_prim.u.app_info_req = *req;
-	pcu_rx(PCU_IF_MSG_APP_INFO_REQ, &pcu_prim);
+	pcu_rx(&pcu_prim, sizeof(struct gsm_pcu_if));
 
 	msg = sched_app_info(tbf1);
 	assert(msg);
@@ -126,7 +126,7 @@ void test_sched_app_info_missing_app_info_in_bts(const struct gsm_pcu_if_app_inf
 
 	fprintf(stderr, "--- %s ---\n",  __func__);
 	pcu_prim.u.app_info_req = *req;
-	pcu_rx(PCU_IF_MSG_APP_INFO_REQ, &pcu_prim);
+	pcu_rx(&pcu_prim, sizeof(struct gsm_pcu_if));
 
 	msgb_free(bts->app_info);
 	bts->app_info = NULL;
@@ -142,8 +142,8 @@ void test_pcu_rx_overwrite_app_info(const struct gsm_pcu_if_app_info_req *req)
 
 	fprintf(stderr, "--- %s ---\n",  __func__);
 	pcu_prim.u.app_info_req = *req;
-	pcu_rx(PCU_IF_MSG_APP_INFO_REQ, &pcu_prim);
-	pcu_rx(PCU_IF_MSG_APP_INFO_REQ, &pcu_prim);
+	pcu_rx(&pcu_prim, sizeof(struct gsm_pcu_if));
+	pcu_rx(&pcu_prim, sizeof(struct gsm_pcu_if));
 	fprintf(stderr, "\n");
 }
 

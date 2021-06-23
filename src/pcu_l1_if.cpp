@@ -951,9 +951,32 @@ static int pcu_rx_app_info_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_ap
 	return 0;
 }
 
-int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
+static int pcu_rx_container(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_container *container)
+{
+	int rc;
+
+	switch (container->msg_type) {
+	default:
+		LOGP(DL1IF, LOGL_NOTICE, "(bts=%d) Rx unexpected msg type (%u) inside container!\n",
+		     bts->nr, container->msg_type);
+		rc = -1;
+	}
+	return rc;
+}
+
+#define CHECK_IF_MSG_SIZE(prim_len, prim_msg) \
+	do { \
+		size_t _len = PCUIF_HDR_SIZE + sizeof(prim_msg); \
+		if (prim_len < _len) { \
+			LOGP(DL1IF, LOGL_ERROR, "Received %zu bytes on PCU Socket, but primitive %s " \
+			     "size is %zu, discarding\n", prim_len, #prim_msg, _len); \
+			return -EINVAL; \
+		} \
+	} while(0);
+int pcu_rx(struct gsm_pcu_if *pcu_prim, size_t pcu_prim_length)
 {
 	int rc = 0;
+	size_t exp_len;
 	struct gprs_rlcmac_bts *bts = gprs_pcu_get_bts_by_nr(the_pcu, pcu_prim->bts_nr);
 	if (!bts) {
 		LOGP(DL1IF, LOGL_NOTICE, "Received message for new BTS%d\n", pcu_prim->bts_nr);
@@ -964,40 +987,59 @@ int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim)
 		}
 	}
 
-	switch (msg_type) {
+	switch (pcu_prim->msg_type) {
 	case PCU_IF_MSG_DATA_IND:
+		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.data_ind);
 		rc = pcu_rx_data_ind(bts, &pcu_prim->u.data_ind);
 		break;
 	case PCU_IF_MSG_DATA_CNF:
+		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.data_cnf);
 		rc = pcu_rx_data_cnf(bts, &pcu_prim->u.data_cnf);
 		break;
 	case PCU_IF_MSG_RTS_REQ:
+		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.rts_req);
 		rc = pcu_rx_rts_req(bts, &pcu_prim->u.rts_req);
 		break;
 	case PCU_IF_MSG_RACH_IND:
+		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.rach_ind);
 		rc = pcu_rx_rach_ind(bts, &pcu_prim->u.rach_ind);
 		break;
 	case PCU_IF_MSG_INFO_IND:
+		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.info_ind);
 		rc = pcu_rx_info_ind(bts, &pcu_prim->u.info_ind);
 		break;
 	case PCU_IF_MSG_TIME_IND:
+		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.time_ind);
 		rc = pcu_rx_time_ind(bts, &pcu_prim->u.time_ind);
 		break;
 	case PCU_IF_MSG_PAG_REQ:
+		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.pag_req);
 		rc = pcu_rx_pag_req(bts, &pcu_prim->u.pag_req);
 		break;
 	case PCU_IF_MSG_SUSP_REQ:
+		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.susp_req);
 		rc = pcu_rx_susp_req(bts, &pcu_prim->u.susp_req);
 		break;
 	case PCU_IF_MSG_APP_INFO_REQ:
+		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.app_info_req);
 		rc = pcu_rx_app_info_req(bts, &pcu_prim->u.app_info_req);
 		break;
 	case PCU_IF_MSG_INTERF_IND:
 		/* TODO: handle interference reports */
 		break;
+	case PCU_IF_MSG_CONTAINER:
+		CHECK_IF_MSG_SIZE(pcu_prim_length, pcu_prim->u.container);
+		/* ^ check if we can access container fields, v check with container data length */
+		exp_len = PCUIF_HDR_SIZE + sizeof(pcu_prim->u.container) + osmo_load16be(&pcu_prim->u.container.length);
+		if (pcu_prim_length < exp_len) {
+			LOGP(DL1IF, LOGL_ERROR, "Received %zu bytes on PCU Socket, but primitive container size" \
+			     "is %zu, discarding\n", pcu_prim_length, exp_len);
+		}
+		rc = pcu_rx_container(bts, &pcu_prim->u.container);
+		break;
 	default:
 		LOGP(DL1IF, LOGL_ERROR, "Received unknown PCU msg type %d\n",
-			msg_type);
+			pcu_prim->msg_type);
 		rc = -EINVAL;
 	}
 

@@ -133,10 +133,12 @@ static void pcu_sock_close(int lost)
 
 static int pcu_sock_read(struct osmo_fd *bfd)
 {
-	struct gsm_pcu_if pcu_prim;
+	const size_t max_len = sizeof(struct gsm_pcu_if) + 1000;
+	uint8_t *buf = alloca(max_len);
+	struct gsm_pcu_if *pcu_prim = (struct gsm_pcu_if *)buf;
 	int rc;
 
-	rc = recv(bfd->fd, &pcu_prim, sizeof(pcu_prim), 0);
+	rc = recv(bfd->fd, buf, max_len, 0);
 	if (rc < 0 && errno == EAGAIN)
 		return 0; /* Try again later */
 	if (rc <= 0) {
@@ -144,7 +146,13 @@ static int pcu_sock_read(struct osmo_fd *bfd)
 		return -EIO;
 	}
 
-	return pcu_rx(pcu_prim.msg_type, &pcu_prim);
+	if (rc < PCUIF_HDR_SIZE) {
+		LOGP(DL1IF, LOGL_ERROR, "Received %d bytes on PCU Socket, but primitive "
+		     "hdr size is %zu, discarding\n", rc, PCUIF_HDR_SIZE);
+		return -EINVAL;
+	}
+
+	return pcu_rx(pcu_prim, rc);
 }
 
 static int pcu_sock_write(struct osmo_fd *bfd)

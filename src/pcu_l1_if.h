@@ -160,7 +160,7 @@ extern "C" {
 #endif
 struct gprs_rlcmac_bts;
 
-int pcu_rx(uint8_t msg_type, struct gsm_pcu_if *pcu_prim);
+int pcu_rx(struct gsm_pcu_if *pcu_prim, size_t pcu_prim_length);
 int pcu_l1if_open(void);
 void pcu_l1if_close(void);
 int pcu_sock_send(struct msgb *msg);
@@ -178,6 +178,9 @@ int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *
 
 void pcu_rx_block_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no);
 uint16_t imsi2paging_group(const char* imsi);
+
+#define PCUIF_HDR_SIZE ( sizeof(struct gsm_pcu_if) - sizeof(((struct gsm_pcu_if *)0)->u) )
+
 #ifdef __cplusplus
 }
 #endif
