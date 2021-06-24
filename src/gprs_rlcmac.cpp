@@ -47,6 +47,7 @@ int gprs_rlcmac_paging_request(struct gprs_rlcmac_bts *bts, const struct osmo_mo
 		LOGP(DRLCMAC, LOGL_ERROR, "TX: [PCU -> BTS] Failed to encode Paging Request\n");
 		return -1;
 	}
+	bts_do_rate_ctr_inc(bts, CTR_PCH_REQUESTS);
 	pcu_l1if_tx_pch(bts, paging_request, plen, pgroup);
 	bitvec_free(paging_request);
 
