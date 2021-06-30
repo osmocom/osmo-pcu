@@ -2282,7 +2282,7 @@ static void test_tbf_ws()
 	the_pcu->alloc_algorithm = alloc_algorithm_b;
 	bts->trx[0].pdch[2].enable();
 	bts->trx[0].pdch[3].enable();
-	bts->trx[0].pdch[4].enable();
+	/* bts->trx[0].pdch[4].enable(); Already enabled during setup_bts() */
 	bts->trx[0].pdch[5].enable();
 
 	gprs_bssgp_init(bts, 4234, 4234, 1, 1, false, 0, 0, 0);
@@ -2327,7 +2327,7 @@ static void test_tbf_update_ws(void)
 	the_pcu->alloc_algorithm = alloc_algorithm_b;
 	bts->trx[0].pdch[2].enable();
 	bts->trx[0].pdch[3].enable();
-	bts->trx[0].pdch[4].enable();
+	/* bts->trx[0].pdch[4].enable(); Already enabled during setup_bts()) */
 	bts->trx[0].pdch[5].enable();
 
 	gprs_bssgp_init(bts, 5234, 5234, 1, 1, false, 0, 0, 0);

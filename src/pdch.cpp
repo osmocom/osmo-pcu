@@ -139,29 +139,30 @@ void pdch_init(struct gprs_rlcmac_pdch *pdch, struct gprs_rlcmac_trx *trx, uint8
 	/*  Initialize the PTCCH/D message (Packet Timing Advance Control Channel) */
 	memset(pdch->ptcch_msg, PTCCH_TAI_FREE, PTCCH_TAI_NUM);
 	memset(pdch->ptcch_msg + PTCCH_TAI_NUM, PTCCH_PADDING, 7);
-	pdch->ulc = pdch_ulc_alloc(pdch, trx->bts);
 }
 
 void gprs_rlcmac_pdch::enable()
 {
-	/* TODO: Check if there are still allocated resources.. */
+	OSMO_ASSERT(m_is_enabled == 0);
 	INIT_LLIST_HEAD(&paging_list);
+
+	OSMO_ASSERT(!this->ulc);
+	this->ulc = pdch_ulc_alloc(this, trx->bts);
+
 	m_is_enabled = 1;
 }
 
 void gprs_rlcmac_pdch::disable()
 {
-	/* TODO.. kick free_resources once we know the TRX/TS we are on */
+	OSMO_ASSERT(m_is_enabled == 1);
+	this->free_resources();
+
 	m_is_enabled = 0;
 }
 
 void gprs_rlcmac_pdch::free_resources()
 {
 	struct gprs_rlcmac_paging *pag;
-
-	/* we are not enabled. there should be no resources */
-	if (!is_enabled())
-		return;
 
 	/* kick all TBF on slot */
 	pdch_free_all_tbf(this);
@@ -171,6 +172,7 @@ void gprs_rlcmac_pdch::free_resources()
 		talloc_free(pag);
 
 	talloc_free(this->ulc);
+	this->ulc = NULL;
 }
 
 struct gprs_rlcmac_paging *gprs_rlcmac_pdch::dequeue_paging()
@@ -1174,6 +1176,12 @@ void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch)
 	}
 }
 
-void pdch_disable(struct gprs_rlcmac_pdch *pdch) {
+void pdch_disable(struct gprs_rlcmac_pdch *pdch)
+{
 	pdch->disable();
+}
+
+bool pdch_is_enabled(const struct gprs_rlcmac_pdch *pdch)
+{
+	return pdch->is_enabled();
 }

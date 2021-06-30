@@ -121,7 +121,8 @@ static void pcu_sock_close(int lost)
 			}
 #endif
 			for (ts = 0; ts < 8; ts++)
-				pdch_disable(&bts->trx[trx].pdch[ts]);
+				if (pdch_is_enabled(&bts->trx[trx].pdch[ts]))
+					pdch_disable(&bts->trx[trx].pdch[ts]);
 	/* FIXME: NOT ALL RESOURCES are freed in this case... inconsistent with the other code. Share the code with pcu_l1if.c
 	for the reset. */
 			bts_trx_free_all_tbf(&bts->trx[trx]);

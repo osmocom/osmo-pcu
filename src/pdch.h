@@ -55,8 +55,6 @@ struct gprs_rlcmac_pdch {
 
 	bool add_paging(uint8_t chan_needed, const struct osmo_mobile_identity *mi);
 
-	void free_resources();
-
 	bool is_enabled() const;
 
 	void enable();
@@ -145,6 +143,8 @@ private:
 		enum gprs_rlcmac_tbf_direction dir);
 	gprs_rlcmac_tbf *tbf_by_tfi(uint8_t tfi,
 		enum gprs_rlcmac_tbf_direction dir);
+
+	void free_resources();
 #endif
 
 	uint8_t m_num_tbfs[2];
@@ -191,6 +191,7 @@ extern "C" {
 void pdch_init(struct gprs_rlcmac_pdch *pdch, struct gprs_rlcmac_trx *trx, uint8_t ts_nr);
 void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch);
 void pdch_disable(struct gprs_rlcmac_pdch *pdch);
+bool pdch_is_enabled(const struct gprs_rlcmac_pdch *pdch);
 #ifdef __cplusplus
 }
 #endif

@@ -49,11 +49,19 @@ static void print_ulc_nodes(struct pdch_ulc *ulc)
 	}
 }
 
+static struct gprs_rlcmac_bts *setup_new_bts(void)
+{
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
+	struct gprs_rlcmac_pdch *pdch = &bts->trx[0].pdch[0];
+	pdch->enable();
+	return bts;
+}
+
 static void test_reserve_multiple()
 {
 	printf("=== start: %s ===\n", __FUNCTION__);
 	const uint32_t fn = 20;
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
+	struct gprs_rlcmac_bts *bts = setup_new_bts();
 	struct gprs_rlcmac_pdch *pdch = &bts->trx[0].pdch[0];
 	struct gprs_rlcmac_tbf *tbf1 = (struct gprs_rlcmac_tbf*)0x1234; /*Dummy pointer */
 	struct gprs_rlcmac_tbf *tbf2 = (struct gprs_rlcmac_tbf*)0x5678; /*Dummy pointer */
@@ -172,7 +180,7 @@ static void test_fn_wrap_around()
 
 	the_pcu->alloc_algorithm = _alloc_algorithm_dummy;
 
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
+	struct gprs_rlcmac_bts *bts = setup_new_bts();
 	struct GprsMs *ms = ms_alloc(bts, 0x12345678);
 	struct gprs_rlcmac_tbf *tbf1 = tbf_alloc_dl_tbf(bts, ms, 0, true);
 	struct gprs_rlcmac_pdch *pdch = &tbf1->trx->pdch[0];
@@ -215,7 +223,7 @@ static void test_fn_wrap_around()
 static void test_next_free_fn_sba()
 {
 	printf("=== start: %s ===\n", __FUNCTION__);
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
+	struct gprs_rlcmac_bts *bts = setup_new_bts();
 	struct gprs_rlcmac_pdch *pdch = &bts->trx[0].pdch[0];
 	struct gprs_rlcmac_sba *sba1, *sba2, *sba3, *sba4;
 
@@ -239,7 +247,7 @@ static void test_next_free_fn_sba()
 static void test_next_free_fn_rrbp()
 {
 	printf("=== start: %s ===\n", __FUNCTION__);
-	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
+	struct gprs_rlcmac_bts *bts = setup_new_bts();
 	struct gprs_rlcmac_pdch *pdch = &bts->trx[0].pdch[0];
 	struct gprs_rlcmac_sba *sba1;
 	uint32_t poll_fn, curr_fn;
