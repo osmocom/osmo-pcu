@@ -33,6 +33,7 @@
 #include <osmocom/gsm/protocol/gsm_23_003.h>
 #include <osmocom/gprs/protocol/gsm_08_16.h>
 #include <osmocom/core/utils.h>
+#include <osmocom/core/stats.h>
 #include <osmocom/gsm/gsm48.h>
 #include "coding_scheme.h"
 #include "tbf_dl.h"
@@ -52,6 +53,19 @@
 extern void *tall_pcu_ctx;
 extern uint16_t spoof_mcc, spoof_mnc;
 extern bool spoof_mnc_3_digits;
+
+static const struct rate_ctr_desc sgsn_ctr_description[] = {
+	[SGSN_CTR_RX_PAGING_CS] = { "rx_paging_cs", "Amount of paging CS requests received" },
+	[SGSN_CTR_RX_PAGING_PS] = { "rx_paging_ps", "Amount of paging PS requests received" },
+};
+
+static const struct rate_ctr_group_desc sgsn_ctrg_desc = {
+	.group_name_prefix = "pcu:sgsn",
+	.group_description = "SGSN Statistics",
+	.class_id = OSMO_STATS_CLASS_SUBSCRIBER,
+	.num_ctr = ARRAY_SIZE(sgsn_ctr_description),
+	.ctr_desc = sgsn_ctr_description,
+};
 
 static void bvc_timeout(void *_priv);
 
@@ -223,6 +237,8 @@ static int gprs_bssgp_pcu_rx_paging_cs(struct msgb *msg, const struct tlv_parsed
 	struct GprsMs *ms;
 	int rc;
 
+	rate_ctr_inc(rate_ctr_group_get_ctr(the_pcu->bssgp.ctrs, SGSN_CTR_RX_PAGING_CS));
+
 	if ((rc = get_paging_cs_mi(&req, tp)) > 0)
 		return bssgp_tx_status((enum gprs_bssgp_cause) rc, NULL, msg);
 
@@ -279,6 +295,8 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, const struct tlv_parsed
 	struct gprs_rlcmac_bts *bts;
 	uint16_t pgroup;
 	int rc;
+
+	rate_ctr_inc(rate_ctr_group_get_ctr(the_pcu->bssgp.ctrs, SGSN_CTR_RX_PAGING_PS));
 
 	if (!TLVP_PRESENT(tp, BSSGP_IE_IMSI)) {
 		LOGP(DBSSGP, LOGL_ERROR, "No IMSI\n");
@@ -1288,11 +1306,15 @@ struct gprs_bssgp_pcu *gprs_bssgp_init(
 
 	osmo_timer_setup(&the_pcu->bssgp.bvc_timer, bvc_timeout, bts);
 
+	the_pcu->bssgp.ctrs = rate_ctr_group_alloc(the_pcu, &sgsn_ctrg_desc, 0);
+	OSMO_ASSERT(the_pcu->bssgp.ctrs)
+
 	return &the_pcu->bssgp;
 }
 
 void gprs_bssgp_destroy(struct gprs_rlcmac_bts *bts)
 {
+	rate_ctr_group_free(the_pcu->bssgp.ctrs);
 	osmo_timer_del(&the_pcu->bssgp.bvc_timer);
 
 	/* FIXME: blocking... */

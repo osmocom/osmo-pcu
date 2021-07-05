@@ -46,12 +46,19 @@ struct bssgp_bvc_ctx *btsctx_alloc(uint16_t bvci, uint16_t nsei);
 #define NS_HDR_LEN 4
 #define IE_LLC_PDU 14
 
+enum sgsn_counter_id {
+	SGSN_CTR_RX_PAGING_CS,
+	SGSN_CTR_RX_PAGING_PS,
+};
+
 struct gprs_bssgp_pcu {
 	struct bssgp_bvc_ctx *bctx;
 
 	struct gprs_rlcmac_bts *bts;
 
 	struct osmo_timer_list bvc_timer;
+
+	struct rate_ctr_group *ctrs;
 
 	/* state: is the NSVC unblocked? */
 	int nsvc_unblocked;
