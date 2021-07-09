@@ -126,6 +126,7 @@ enum {
 	CTR_LLC_DL_BYTES,
 	CTR_LLC_UL_BYTES,
 	CTR_PCH_REQUESTS,
+	CTR_PCH_REQUESTS_TIMEDOUT,
 	CTR_RACH_REQUESTS,
 	CTR_11BIT_RACH_REQUESTS,
 	CTR_SPB_UL_FIRST_SEGMENT,
@@ -263,6 +264,9 @@ struct gprs_rlcmac_bts {
 	struct osmo_stat_item_group *statg;
 
 	struct GprsMsStorage *ms_store;
+
+	/* List of struct bts_pch_timer for active PCH pagings */
+	struct llist_head pch_timer;
 };
 
 #ifdef __cplusplus

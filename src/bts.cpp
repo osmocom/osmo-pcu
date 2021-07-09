@@ -133,6 +133,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "llc:dl_bytes",               "RLC encapsulated PDUs"},
 	{ "llc:ul_bytes",               "full PDUs received   "},
 	{ "pch:requests",		"PCH requests sent    "},
+	{ "pch:requests:timeout",	"PCH requests timeout "},
 	{ "rach:requests",		"RACH requests received"},
 	{ "11bit_rach:requests",	"11BIT_RACH requests received"},
 	{ "spb:uplink_first_segment",   "First seg of UL SPB  "},
@@ -282,6 +283,8 @@ struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr)
 	OSMO_ASSERT(bts->statg);
 
 	llist_add_tail(&bts->list, &pcu->bts_list);
+
+	INIT_LLIST_HEAD(&bts->pch_timer);
 
 	return bts;
 }

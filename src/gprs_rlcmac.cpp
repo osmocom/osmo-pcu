@@ -26,6 +26,7 @@ extern "C" {
 #include <pcu_l1_if.h>
 #include <gprs_rlcmac.h>
 #include <bts.h>
+#include <bts_pch_timer.h>
 #include <encoding.h>
 #include <tbf.h>
 #include <gprs_debug.h>
@@ -48,6 +49,7 @@ int gprs_rlcmac_paging_request(struct gprs_rlcmac_bts *bts, const struct osmo_mo
 		return -1;
 	}
 	bts_do_rate_ctr_inc(bts, CTR_PCH_REQUESTS);
+	bts_pch_timer_start(bts, mi->imsi);
 	pcu_l1if_tx_pch(bts, paging_request, plen, pgroup);
 	bitvec_free(paging_request);
 

@@ -62,6 +62,7 @@ libgprs_la_SOURCES = \
 	tbf_ul.cpp \
 	tbf_dl.cpp \
 	bts.cpp \
+	bts_pch_timer.c \
 	pdch.cpp \
 	pdch_ul_controller.c \
 	encoding.cpp \
@@ -101,6 +102,7 @@ noinst_HEADERS = \
 	tbf_ul.h \
 	tbf_dl.h \
 	bts.h \
+	bts_pch_timer.h \
 	pdch.h \
 	pdch_ul_controller.h \
 	encoding.h \
