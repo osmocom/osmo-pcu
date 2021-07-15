@@ -856,7 +856,7 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 	struct chan_req_params chan_req = { 0 };
 	struct gprs_rlcmac_ul_tbf *tbf = NULL;
 	struct gprs_rlcmac_sba *sba;
-	uint8_t trx_no, ts_no;
+	uint8_t trx_no = 0, ts_no = 0; /* initialize to avoid uninitialized false warnings on some gcc versions (11.1.0) */
 	uint32_t sb_fn = 0;
 	uint8_t usf = 7;
 	uint8_t tsc = 0;
