@@ -368,15 +368,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				tbf->direction == new_tbf->direction)
 			tbf_free(tbf);
 
-		if (new_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)) {
-			/* We now know that the PACCH really existed */
-			LOGPTBF(new_tbf, LOGL_INFO,
-				"The TBF has been confirmed on the PACCH, "
-				"changed type from CCCH to PACCH\n");
-			osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_DEL_CCCH, NULL);
-			osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
-		}
-		TBF_SET_STATE(new_tbf, TBF_ST_FLOW);
+		osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
 		/* stop pending assignment timer */
 		new_tbf->t_stop(T0, "control acked (DL-TBF)");
 		if (new_tbf->check_n_clear(GPRS_RLCMAC_FLAG_TO_DL_ASS))
@@ -401,7 +393,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				tbf->direction == new_tbf->direction)
 			tbf_free(tbf);
 
-		TBF_SET_STATE(new_tbf, TBF_ST_FLOW);
+		osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
 		if (new_tbf->check_n_clear(GPRS_RLCMAC_FLAG_TO_UL_ASS))
 			LOGPTBF(new_tbf, LOGL_NOTICE, "Recovered uplink assignment for UL\n");
 

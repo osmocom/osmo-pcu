@@ -30,6 +30,8 @@ enum tbf_fsm_event {
 	TBF_EV_ASSIGN_ADD_CCCH, /* An assignment is sent over CCCH and confirmation from MS is pending */
 	TBF_EV_ASSIGN_ADD_PACCH, /* An assignment is sent over PACCH and confirmation from MS is pending */
 	TBF_EV_ASSIGN_DEL_CCCH, /* An assignment previously sent over CCCH has been confirmed by MS */
+	TBF_EV_ASSIGN_ACK_PACCH, /*  We received a CTRL ACK confirming assignment started on PACCH */
+	TBF_EV_ASSIGN_READY_CCCH, /* TBF Start Time timer triggered */
 };
 
 enum tbf_fsm_states {

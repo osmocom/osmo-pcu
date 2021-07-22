@@ -44,6 +44,8 @@ const struct value_string tbf_fsm_event_names[] = {
 	{ TBF_EV_ASSIGN_ADD_CCCH, "ASSIGN_ADD_CCCH" },
 	{ TBF_EV_ASSIGN_ADD_PACCH, "ASSIGN_ADD_PACCH" },
 	{ TBF_EV_ASSIGN_DEL_CCCH, "ASSIGN_DEL_CCCH" },
+	{ TBF_EV_ASSIGN_ACK_PACCH, "ASSIGN_ACK_PACCH" },
+	{ TBF_EV_ASSIGN_READY_CCCH, "ASSIGN_READY_CCCH" },
 	{ 0, NULL }
 };
 
@@ -115,6 +117,21 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	case TBF_EV_ASSIGN_ADD_PACCH:
 		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_PACCH, true);
 		break;
+	case TBF_EV_ASSIGN_ACK_PACCH:
+		if (ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)) {
+			/* We now know that the PACCH really existed */
+			LOGPTBF(ctx->tbf, LOGL_INFO,
+				"The TBF has been confirmed on the PACCH, "
+				"changed type from CCCH to PACCH\n");
+			mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, false);
+			mod_ass_type(ctx, GPRS_RLCMAC_FLAG_PACCH, true);
+		}
+		tbf_fsm_state_chg(fi, TBF_ST_FLOW);
+		break;
+	case TBF_EV_ASSIGN_READY_CCCH:
+		/* change state to FLOW, so scheduler will start transmission */
+		tbf_fsm_state_chg(fi, TBF_ST_FLOW);
+		break;
 	default:
 		OSMO_ASSERT(0);
 	}
@@ -151,7 +168,9 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 	[TBF_ST_ASSIGN] = {
 		.in_event_mask =
 			X(TBF_EV_ASSIGN_ADD_CCCH) |
-			X(TBF_EV_ASSIGN_ADD_PACCH),
+			X(TBF_EV_ASSIGN_ADD_PACCH) |
+			X(TBF_EV_ASSIGN_ACK_PACCH) |
+			X(TBF_EV_ASSIGN_READY_CCCH),
 		.out_state_mask =
 			X(TBF_ST_FLOW) |
 			X(TBF_ST_FINISHED) |

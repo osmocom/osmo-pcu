@@ -808,7 +808,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 			if (!dl_tbf->upgrade_to_multislot) {
 				/* change state to FLOW, so scheduler
 				 * will start transmission */
-				TBF_SET_STATE(dl_tbf, TBF_ST_FLOW);
+				osmo_fsm_inst_dispatch(dl_tbf->state_fsm.fi, TBF_EV_ASSIGN_READY_CCCH, NULL);
 				return;
 			}
 

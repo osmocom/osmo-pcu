@@ -217,7 +217,8 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(struct gprs_rlcmac_bts *bts, uint8_t ms
 
 	/* "Establish" the DL TBF */
 	TBF_SET_ASS_STATE_DL(dl_tbf, GPRS_RLCMAC_DL_ASS_SEND_ASS);
-	TBF_SET_STATE(dl_tbf, TBF_ST_FLOW);
+	osmo_fsm_inst_dispatch(dl_tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
+	osmo_fsm_inst_dispatch(dl_tbf->state_fsm.fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
 	dl_tbf->m_wait_confirm = 0;
 	check_tbf(dl_tbf);
 
