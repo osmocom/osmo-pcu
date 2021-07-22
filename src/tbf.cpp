@@ -852,29 +852,24 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	struct msgb *msg;
 	struct gprs_rlcmac_dl_tbf *new_dl_tbf = NULL;
 	RlcMacDownlink_t *mac_control_block = NULL;
-	int poll_ass_dl = 1;
+	const int poll_ass_dl = 1;
 	unsigned int rrbp = 0;
 	uint32_t new_poll_fn = 0;
 	int rc;
 	bool old_tfi_is_valid = is_tfi_assigned();
 
-	if (direction == GPRS_RLCMAC_DL_TBF && !is_control_ts(ts)) {
-		LOGPTBF(this, LOGL_NOTICE,
-			"Cannot poll for downlink assignment, because MS cannot reply. (TS=%d, first common TS=%d)\n",
-			ts, first_common_ts);
-		poll_ass_dl = 0;
+	/* We only use this function in control TS (PACCH) so that MS can always answer the poll */
+	OSMO_ASSERT(is_control_ts(ts));
+
+	if (ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK)
+	{
+		LOGPTBF(this, LOGL_DEBUG,
+			  "Polling is already scheduled, so we must wait for the uplink assignment...\n");
+		return NULL;
 	}
-	if (poll_ass_dl) {
-		if (ul_ass_state == GPRS_RLCMAC_UL_ASS_WAIT_ACK)
-		{
-			LOGPTBF(this, LOGL_DEBUG,
-				  "Polling is already scheduled, so we must wait for the uplink assignment...\n");
-			return NULL;
-		}
-		rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
-		if (rc < 0)
-			return NULL;
-	}
+	rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
+	if (rc < 0)
+		return NULL;
 
 	/* on uplink TBF we get the downlink TBF to be assigned. */
 	if (direction == GPRS_RLCMAC_UL_TBF) {
@@ -938,16 +933,7 @@ struct msgb *gprs_rlcmac_tbf::create_dl_ass(uint32_t fn, uint8_t ts)
 	LOGP(DTBF, LOGL_DEBUG, "------------------------- TX : Packet Downlink Assignment -------------------------\n");
 	bts_do_rate_ctr_inc(bts, CTR_PKT_DL_ASSIGNMENT);
 
-	if (poll_ass_dl) {
-		set_polling(new_poll_fn, ts, PDCH_ULC_POLL_DL_ASS);
-	} else {
-		dl_ass_state = GPRS_RLCMAC_DL_ASS_NONE;
-		TBF_SET_STATE(new_dl_tbf, TBF_ST_FLOW);
-		tbf_assign_control_ts(new_dl_tbf);
-		/* stop pending assignment timer */
-		new_dl_tbf->t_stop(T0, "assignment (DL-TBF)");
-
-	}
+	set_polling(new_poll_fn, ts, PDCH_ULC_POLL_DL_ASS);
 
 	talloc_free(mac_control_block);
 	return msg;
