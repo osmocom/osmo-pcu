@@ -368,12 +368,13 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				tbf->direction == new_tbf->direction)
 			tbf_free(tbf);
 
-		if (new_tbf->check_n_clear(GPRS_RLCMAC_FLAG_CCCH)) {
+		if (new_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)) {
 			/* We now know that the PACCH really existed */
 			LOGPTBF(new_tbf, LOGL_INFO,
 				"The TBF has been confirmed on the PACCH, "
 				"changed type from CCCH to PACCH\n");
-			TBF_ASS_TYPE_SET(new_tbf, GPRS_RLCMAC_FLAG_PACCH);
+			osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_DEL_CCCH, NULL);
+			osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
 		}
 		TBF_SET_STATE(new_tbf, TBF_ST_FLOW);
 		/* stop pending assignment timer */

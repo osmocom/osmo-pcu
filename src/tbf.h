@@ -162,9 +162,6 @@ enum tbf_counters { /* TBF counters from 3GPP TS 44.060 §13.4 */
 #define TBF_SET_ASS_STATE_DL(t, st) do { t->set_ass_state_dl(st, __FILE__, __LINE__); } while(0)
 #define TBF_SET_ASS_STATE_UL(t, st) do { t->set_ass_state_ul(st, __FILE__, __LINE__); } while(0)
 #define TBF_SET_ACK_STATE(t, st) do { t->set_ack_state(st, __FILE__, __LINE__); } while(0)
-#define TBF_SET_ASS_ON(t, fl, chk) do { t->set_assigned_on(fl, chk, __FILE__, __LINE__); } while(0)
-#define TBF_ASS_TYPE_SET(t, kind) do { t->ass_type_mod(kind, false, __FILE__, __LINE__); } while(0)
-#define TBF_ASS_TYPE_UNSET(t, kind) do { t->ass_type_mod(kind, true, __FILE__, __LINE__); } while(0)
 
 #ifdef __cplusplus
 extern "C" {
@@ -214,8 +211,6 @@ struct gprs_rlcmac_tbf {
 	void poll_sched_set(const char *file, int line);
 	void poll_sched_unset(const char *file, int line);
 	bool check_n_clear(uint8_t state_flag);
-	void set_assigned_on(uint8_t state_flag, bool check_ccch, const char *file, int line);
-	void ass_type_mod(uint8_t t, bool unset, const char *file, int line);
 	const char *state_name() const;
 
 	const char *name() const;
@@ -276,7 +271,6 @@ struct gprs_rlcmac_tbf {
 	/* attempt to make things a bit more fair */
 	void rotate_in_list();
 
-	uint32_t state_flags;
 	enum gprs_rlcmac_tbf_direction direction;
 	struct gprs_rlcmac_trx *trx;
 	uint8_t first_ts; /* first TS used by TBF */
@@ -370,63 +364,6 @@ inline const char *gprs_rlcmac_tbf::state_name() const
 	return osmo_fsm_inst_state_name(state_fsm.fi);
 }
 
-/* Set assignment state and corrsponding flags */
-inline void gprs_rlcmac_tbf::set_assigned_on(uint8_t state_flag, bool check_ccch, const char *file, int line)
-{
-	tbf_fsm_state_chg(state_fsm.fi, TBF_ST_ASSIGN);
-	if (check_ccch) {
-		if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
-			ass_type_mod(state_flag, false, file, line);
-	} else
-		state_flags |= (1 << state_flag);
-}
-
-inline void gprs_rlcmac_tbf::ass_type_mod(uint8_t t, bool unset, const char *file, int line)
-{
-	const char *ch = "UNKNOWN";
-	switch (t) {
-	case GPRS_RLCMAC_FLAG_CCCH:
-		if (unset) {
-			if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
-				return;
-		} else {
-			if (state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
-				LOGPSRC(DTBF, LOGL_ERROR, file, line,
-					"%s attempted to set ass. type CCCH which is already set.\n",
-					tbf_name(this));
-		}
-		ch = "CCCH";
-		break;
-	case GPRS_RLCMAC_FLAG_PACCH:
-		if (unset) {
-			if (!(state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)))
-				return;
-		} else {
-			if (state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))
-				LOGPSRC(DTBF, LOGL_ERROR, file, line,
-					"%s attempted to set ass. type PACCH which is already set.\n",
-					tbf_name(this));
-		}
-		ch = "PACCH";
-		break;
-	default:
-		LOGPSRC(DTBF, LOGL_ERROR, file, line, "%s attempted to %sset unexpected ass. type %d - FIXME!\n",
-			tbf_name(this), unset ? "un" : "", t);
-		return;
-	}
-
-	LOGPSRC(DTBF, LOGL_INFO, file, line, "%s %sset ass. type %s [prev CCCH:%u, PACCH:%u]\n",
-		tbf_name(this), unset ? "un" : "", ch,
-		state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH),
-		state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH));
-
-	if (unset) {
-		state_flags &= GPRS_RLCMAC_FLAG_TO_MASK; /* keep to flags */
-		state_flags &= ~(1 << t);
-	} else
-		state_flags |= (1 << t);
-}
-
 inline void gprs_rlcmac_tbf::set_ass_state_dl(enum gprs_rlcmac_tbf_dl_ass_state new_state, const char *file, int line)
 {
 	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s changes DL ASS state from %s to %s\n",
@@ -456,8 +393,8 @@ inline void gprs_rlcmac_tbf::set_ack_state(enum gprs_rlcmac_tbf_ul_ack_state new
 
 inline bool gprs_rlcmac_tbf::check_n_clear(uint8_t state_flag)
 {
-	if ((state_flags & (1 << state_flag))) {
-		state_flags &= ~(1 << state_flag);
+	if ((state_fsm.state_flags & (1 << state_flag))) {
+		state_fsm.state_flags &= ~(1 << state_flag);
 		return true;
 	}
 
@@ -481,7 +418,7 @@ inline bool gprs_rlcmac_tbf::is_tfi_assigned() const
 	return state_fsm.fi->state > TBF_ST_ASSIGN ||
 		(direction == GPRS_RLCMAC_DL_TBF &&
 		 state_fsm.fi->state == TBF_ST_ASSIGN &&
-		 (state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)));
+		 (state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)));
 }
 
 inline uint8_t gprs_rlcmac_tbf::tfi() const

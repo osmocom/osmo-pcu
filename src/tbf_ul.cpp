@@ -154,7 +154,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul_pacch(struct gprs_rlcmac_bts *bts, GprsMs *ms, 
 		return NULL;
 	}
 	tbf->m_contention_resolution_done = 1;
-	TBF_SET_ASS_ON(tbf, GPRS_RLCMAC_FLAG_PACCH, false);
+	osmo_fsm_inst_dispatch(tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
 	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
 	OSMO_ASSERT(tbf->ms());
 
@@ -172,8 +172,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_ccch(struct gprs_rlcmac_bts *bts, struct
 		/* Caller will most probably send a Imm Ass Reject after return */
 		return NULL;
 	}
-	TBF_SET_STATE(tbf, TBF_ST_FLOW);
-	TBF_ASS_TYPE_SET(tbf, GPRS_RLCMAC_FLAG_CCCH);
+	osmo_fsm_inst_dispatch(tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
 	tbf->contention_resolution_start();
 	OSMO_ASSERT(tbf->ms());
 
@@ -215,7 +214,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 	ms_attach_tbf(ms, ul_tbf);
 	llist_add(tbf_trx_list((struct gprs_rlcmac_tbf *)ul_tbf), &trx->ul_tbfs);
 	bts_do_rate_ctr_inc(ul_tbf->bts, CTR_TBF_UL_ALLOCATED);
-	TBF_SET_ASS_ON(ul_tbf, GPRS_RLCMAC_FLAG_PACCH, false);
+	osmo_fsm_inst_dispatch(ul_tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
 	TBF_SET_ASS_STATE_UL(ul_tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ);
 
 	return ul_tbf;
@@ -287,7 +286,7 @@ bool gprs_rlcmac_ul_tbf::ctrl_ack_to_toggle()
 	if (check_n_clear(GPRS_RLCMAC_FLAG_TO_UL_ACK))
 		return true; /* GPRS_RLCMAC_FLAG_TO_UL_ACK was set, now cleared */
 
-	state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
+	state_fsm.state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
 	return false; /* GPRS_RLCMAC_FLAG_TO_UL_ACK was unset, now set */
 }
 
@@ -398,7 +397,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 	const uint16_t ws = m_window.ws();
 
-	this->state_flags |= (1 << GPRS_RLCMAC_FLAG_UL_DATA);
+	this->state_fsm.state_flags |= (1 << GPRS_RLCMAC_FLAG_UL_DATA);
 
 	LOGPTBFUL(this, LOGL_DEBUG, "UL DATA TFI=%d received (V(Q)=%d .. "
 		"V(R)=%d)\n", rlc->tfi, this->m_window.v_q(),

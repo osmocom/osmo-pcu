@@ -605,7 +605,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 		old_tbf->was_releasing = old_tbf->state_is(TBF_ST_WAIT_RELEASE);
 
 		/* change state */
-		TBF_SET_ASS_ON(this, GPRS_RLCMAC_FLAG_PACCH, true);
+		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
 
 		/* Start timer, expiry in gprs_rlcmac_tbf::handle_timeout tbf_free()s the TBF */
 		T_START(this, T0, -2001, "assignment (PACCH)", true);
@@ -615,7 +615,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 		was_releasing = state_is(TBF_ST_WAIT_RELEASE);
 
 		/* change state */
-		TBF_SET_ASS_ON(this, GPRS_RLCMAC_FLAG_CCCH, false);
+		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
 
 		/* send immediate assignment */
 		if ((pgroup = imsi2paging_group(imsi())) > 999)
@@ -777,7 +777,7 @@ bool gprs_rlcmac_dl_tbf::handle_ack_nack()
 {
 	bool ack_recovered = false;
 
-	state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
+	state_fsm.state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
 	if (check_n_clear(GPRS_RLCMAC_FLAG_TO_DL_ACK)) {
 		ack_recovered = true;
 	}
@@ -957,7 +957,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	if (m_last_dl_poll_fn < 0)
 		m_last_dl_poll_fn = fn;
 
-	need_poll = state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
+	need_poll = state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 
 	/* poll after POLL_ACK_AFTER_FRAMES frames, or when final block is tx.
 	 */
@@ -985,7 +985,7 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 			if (is_final)
 				T_START(this, T3191, 3191, "final block (DL-TBF)", true);
 
-			state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK); /* clear poll timeout flag */
+			state_fsm.state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK); /* clear poll timeout flag */
 
 			/* Clear request flag */
 			m_dl_ack_requested = false;
@@ -1251,7 +1251,7 @@ int gprs_rlcmac_dl_tbf::release()
 	m_wait_confirm = 0;
 	m_window.reset();
 
-	TBF_ASS_TYPE_UNSET(this, GPRS_RLCMAC_FLAG_CCCH);
+	osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_ASSIGN_DEL_CCCH, NULL);
 
 	return 0;
 }
@@ -1277,7 +1277,7 @@ int gprs_rlcmac_dl_tbf::abort()
 	/* reset rlc states */
 	m_window.reset();
 
-	TBF_ASS_TYPE_UNSET(this, GPRS_RLCMAC_FLAG_CCCH);
+	osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_ASSIGN_DEL_CCCH, NULL);
 
 	return 0;
 }
@@ -1324,7 +1324,7 @@ void gprs_rlcmac_dl_tbf::request_dl_ack()
 
 bool gprs_rlcmac_dl_tbf::need_control_ts() const
 {
-	return state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK) ||
+	return state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK) ||
 		m_tx_counter >= POLL_ACK_AFTER_FRAMES ||
 		m_dl_ack_requested;
 }

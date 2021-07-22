@@ -27,7 +27,9 @@
 struct gprs_rlcmac_tbf;
 
 enum tbf_fsm_event {
-	TBF_EV_FOOBAR,
+	TBF_EV_ASSIGN_ADD_CCCH, /* An assignment is sent over CCCH and confirmation from MS is pending */
+	TBF_EV_ASSIGN_ADD_PACCH, /* An assignment is sent over PACCH and confirmation from MS is pending */
+	TBF_EV_ASSIGN_DEL_CCCH, /* An assignment previously sent over CCCH has been confirmed by MS */
 };
 
 enum tbf_fsm_states {
@@ -42,6 +44,7 @@ enum tbf_fsm_states {
 struct tbf_fsm_ctx {
 	struct osmo_fsm_inst *fi;
 	struct gprs_rlcmac_tbf* tbf; /* back pointer */
+	uint32_t state_flags;
 };
 
 extern const struct osmo_tdef_state_timeout tbf_fsm_timeouts[32];

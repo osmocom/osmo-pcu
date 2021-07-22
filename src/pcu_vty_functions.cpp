@@ -55,9 +55,9 @@ static void tbf_print_vty_info(struct vty *vty, struct gprs_rlcmac_tbf *tbf)
 		tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
 		tbf->imsi(), VTY_NEWLINE);
 	vty_out(vty, " created=%lu state=%08x [CCCH:%u, PACCH:%u] 1st_TS=%d 1st_cTS=%d ctrl_TS=%d MS_CLASS=%d/%d%s",
-		tbf->created_ts(), tbf->state_flags,
-		tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH),
-		tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH),
+		tbf->created_ts(), tbf->state_fsm.state_flags,
+		tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH),
+		tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH),
 		tbf->first_ts,
 		tbf->first_common_ts, tbf->control_ts,
 		tbf->ms_class(),
@@ -113,7 +113,7 @@ int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts, uint32_t 
 		trx = &bts->trx[trx_no];
 		llist_for_each_entry(iter, &trx->ul_tbfs, list) {
 			tbf = (struct gprs_rlcmac_tbf *)iter->entry;
-			if (tbf->state_flags & flags)
+			if (tbf->state_fsm.state_flags & flags)
 				tbf_print_vty_info(vty, tbf);
 		}
 	}
@@ -123,7 +123,7 @@ int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts, uint32_t 
 		trx = &bts->trx[trx_no];
 		llist_for_each_entry(iter, &trx->dl_tbfs, list) {
 			tbf = (struct gprs_rlcmac_tbf *)iter->entry;
-			if (tbf->state_flags & flags)
+			if (tbf->state_fsm.state_flags & flags)
 				tbf_print_vty_info(vty, tbf);
 		}
 	}

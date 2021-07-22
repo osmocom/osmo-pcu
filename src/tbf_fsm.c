@@ -41,9 +41,84 @@ const struct osmo_tdef_state_timeout tbf_fsm_timeouts[32] = {
 };
 
 const struct value_string tbf_fsm_event_names[] = {
-	{ TBF_EV_FOOBAR, "FOOBAR" },
+	{ TBF_EV_ASSIGN_ADD_CCCH, "ASSIGN_ADD_CCCH" },
+	{ TBF_EV_ASSIGN_ADD_PACCH, "ASSIGN_ADD_PACCH" },
+	{ TBF_EV_ASSIGN_DEL_CCCH, "ASSIGN_DEL_CCCH" },
 	{ 0, NULL }
 };
+
+static void mod_ass_type(struct tbf_fsm_ctx *ctx, uint8_t t, bool set)
+{
+	const char *ch = "UNKNOWN";
+	bool prev_set = ctx->state_flags & (1 << t);
+
+	switch (t) {
+	case GPRS_RLCMAC_FLAG_CCCH:
+		ch = "CCCH";
+		break;
+	case GPRS_RLCMAC_FLAG_PACCH:
+		ch = "PACCH";
+		break;
+	default:
+		LOGPTBF(ctx->tbf, LOGL_ERROR,
+			"attempted to %sset unexpected ass. type %d - FIXME!\n",
+			set ? "" : "un", t);
+		return;
+	}
+
+	if (set && prev_set) {
+		LOGPTBF(ctx->tbf, LOGL_ERROR,
+			"attempted to set ass. type %s which is already set.\n", ch);
+	} else if (!set && !prev_set) {
+			return;
+	}
+
+	LOGPTBF(ctx->tbf, LOGL_INFO, "%sset ass. type %s [prev CCCH:%u, PACCH:%u]\n",
+		set ? "" : "un", ch,
+		!!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)),
+		!!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)));
+
+	if (set) {
+		ctx->state_flags |= (1 << t);
+	} else {
+		ctx->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK; /* keep to flags */
+		ctx->state_flags &= ~(1 << t);
+	}
+}
+
+
+static void st_null(struct osmo_fsm_inst *fi, uint32_t event, void *data)
+{
+	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
+	switch (event) {
+	case TBF_EV_ASSIGN_ADD_CCCH:
+		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, true);
+		tbf_fsm_state_chg(fi, tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF ?
+					TBF_ST_ASSIGN : TBF_ST_FLOW);
+		break;
+	case TBF_EV_ASSIGN_ADD_PACCH:
+		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_PACCH, true);
+		tbf_fsm_state_chg(fi, TBF_ST_ASSIGN);
+		break;
+	default:
+		OSMO_ASSERT(0);
+	}
+}
+
+static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
+{
+	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
+	switch (event) {
+	case TBF_EV_ASSIGN_ADD_CCCH:
+		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, true);
+		break;
+	case TBF_EV_ASSIGN_ADD_PACCH:
+		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_PACCH, true);
+		break;
+	default:
+		OSMO_ASSERT(0);
+	}
+}
 
 static void tbf_fsm_cleanup(struct osmo_fsm_inst *fi, enum osmo_fsm_term_cause cause)
 {
@@ -64,24 +139,25 @@ static int tbf_fsm_timer_cb(struct osmo_fsm_inst *fi)
 static struct osmo_fsm_state tbf_fsm_states[] = {
 	[TBF_ST_NULL] = {
 		.in_event_mask =
-			0,
+			X(TBF_EV_ASSIGN_ADD_CCCH) |
+			X(TBF_EV_ASSIGN_ADD_PACCH),
 		.out_state_mask =
 			X(TBF_ST_ASSIGN) |
 			X(TBF_ST_FLOW) |
 			X(TBF_ST_RELEASING),
 		.name = "NULL",
-		//.action = st_null,
+		.action = st_null,
 	},
 	[TBF_ST_ASSIGN] = {
 		.in_event_mask =
-			0,
+			X(TBF_EV_ASSIGN_ADD_CCCH) |
+			X(TBF_EV_ASSIGN_ADD_PACCH),
 		.out_state_mask =
 			X(TBF_ST_FLOW) |
 			X(TBF_ST_FINISHED) |
 			X(TBF_ST_RELEASING),
 		.name = "ASSIGN",
-		//.onenter = st_assign_on_enter,
-		//.action = st_assign,
+		.action = st_assign,
 	},
 	[TBF_ST_FLOW] = {
 		.in_event_mask =
@@ -91,8 +167,6 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 			X(TBF_ST_WAIT_RELEASE) |
 			X(TBF_ST_RELEASING),
 		.name = "FLOW",
-		//.onenter = st_flow_on_enter,
-		//.action = st_flow,
 	},
 	[TBF_ST_FINISHED] = {
 		.in_event_mask =
@@ -100,8 +174,6 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 		.out_state_mask =
 			X(TBF_ST_WAIT_RELEASE),
 		.name = "FINISHED",
-		//.onenter = st_finished_on_enter,
-		//.action = st_finished,
 	},
 	[TBF_ST_WAIT_RELEASE] = {
 		.in_event_mask =
@@ -109,7 +181,6 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 		.out_state_mask =
 			X(TBF_ST_RELEASING),
 		.name = "WAIT_RELEASE",
-		//.action = st_wait_release,
 	},
 	[TBF_ST_RELEASING] = {
 		.in_event_mask =
@@ -117,9 +188,20 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 		.out_state_mask =
 			0,
 		.name = "RELEASING",
-		//.action = st_releasing,
 	},
 };
+
+void tbf_fsm_allstate_action(struct osmo_fsm_inst *fi, uint32_t event, void *data)
+{
+	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
+	switch (event) {
+	case TBF_EV_ASSIGN_DEL_CCCH:
+		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, false);
+		break;
+	default:
+		OSMO_ASSERT(0);
+	}
+}
 
 struct osmo_fsm tbf_fsm = {
 	.name = "TBF",
@@ -129,6 +211,8 @@ struct osmo_fsm tbf_fsm = {
 	.cleanup = tbf_fsm_cleanup,
 	.log_subsys = DTBF,
 	.event_names = tbf_fsm_event_names,
+	.allstate_action = tbf_fsm_allstate_action,
+	.allstate_event_mask = X(TBF_EV_ASSIGN_DEL_CCCH),
 };
 
 static __attribute__((constructor)) void tbf_fsm_init(void)
