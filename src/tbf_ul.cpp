@@ -536,7 +536,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 			  rdbi->bsn, rdbi->cv);
 		if (rdbi->cv == 0) {
 			LOGPTBFUL(this, LOGL_DEBUG, "Finished with UL TBF\n");
-			TBF_SET_STATE(this, TBF_ST_FINISHED);
+			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_LAST_UL_DATA_RECVD, NULL);
 			/* Reset N3103 counter. */
 			this->n_reset(N3103);
 		}

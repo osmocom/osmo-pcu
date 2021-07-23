@@ -483,6 +483,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new dummy block at BSN 21, 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Empty chunk, added LLC dummy command of size 19, drained_since=112
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Keep idle TBF open: 112/43 -> no
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Complete DL frame, len=19
+TBF(DL-TFI_0){FLOW}: Received Event LAST_DL_DATA_SENT
 TBF(DL-TFI_0){FLOW}: state_chg to FINISHED
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) data block (BSN 21, CS-1): 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) need_padding 0 spb_status 0 spb 0 (BSN1 21 BSN2 -1)
@@ -1597,6 +1598,7 @@ MSG = 07 00 02 4d 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02 02
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==2) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=FLOW) Sending new block at BSN 2, CS=CS-1
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=FLOW) Complete DL frame, len=19
+TBF(DL-TFI_0){FLOW}: Received Event LAST_DL_DATA_SENT
 TBF(DL-TFI_0){FLOW}: state_chg to FINISHED
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=FINISHED) data block (BSN 2, CS-1): 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=FINISHED) need_padding 0 spb_status 0 spb 0 (BSN1 2 BSN2 -1)
@@ -1649,6 +1651,7 @@ LLC [PCU -> SGSN] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) len=16
 No bctx
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last block: BSN=0 CV=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Finished with UL TBF
+TBF(UL-TFI_0){FLOW}: Received Event LAST_UL_DATA_RECVD
 TBF(UL-TFI_0){FLOW}: state_chg to FINISHED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling Ack/Nack, because TLLI is included.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling final Ack/Nack, because all data was received and last block has CV==0.
@@ -1889,6 +1892,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_m
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 0, CS=CS-4
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=10)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=10
+TBF(DL-TFI_0){FLOW}: Received Event LAST_DL_DATA_SENT
 TBF(DL-TFI_0){FLOW}: state_chg to FINISHED
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) data block (BSN 0, CS-4): 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) need_padding 0 spb_status 0 spb 0 (BSN1 0 BSN2 -1)
@@ -2308,6 +2312,7 @@ LLC [PCU -> SGSN] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) len=16
 No bctx
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last block: BSN=0 CV=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Finished with UL TBF
+TBF(UL-TFI_0){FLOW}: Received Event LAST_UL_DATA_RECVD
 TBF(UL-TFI_0){FLOW}: state_chg to FINISHED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling Ack/Nack, because TLLI is included.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling final Ack/Nack, because all data was received and last block has CV==0.
@@ -2988,6 +2993,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 27, CS=CS-
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Dequeue next LLC (len=13)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=13
+TBF(DL-TFI_0){FLOW}: Received Event LAST_DL_DATA_SENT
 TBF(DL-TFI_0){FLOW}: state_chg to FINISHED
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) data block (BSN 27, CS-1): 16 35 45 54 20 33 38 4c 4c 43 20 50 41 43 4b 45 54 20 33 39 
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) need_padding 0 spb_status 0 spb 0 (BSN1 27 BSN2 -1)
@@ -3332,6 +3338,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654448 Scheduling data message at RTS for DL TFI=1 pr
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==10) mcs_mode_restrict=EGPRS
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Sending new block at BSN 10, CS=CS-1
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) Complete DL frame, len=21
+TBF(DL-TFI_1){FLOW}: Received Event LAST_DL_DATA_SENT
 TBF(DL-TFI_1){FLOW}: state_chg to FINISHED
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) data block (BSN 10, CS-1): 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) need_padding 0 spb_status 0 spb 0 (BSN1 10 BSN2 -1)

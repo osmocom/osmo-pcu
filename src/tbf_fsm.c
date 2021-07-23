@@ -46,6 +46,8 @@ const struct value_string tbf_fsm_event_names[] = {
 	{ TBF_EV_ASSIGN_DEL_CCCH, "ASSIGN_DEL_CCCH" },
 	{ TBF_EV_ASSIGN_ACK_PACCH, "ASSIGN_ACK_PACCH" },
 	{ TBF_EV_ASSIGN_READY_CCCH, "ASSIGN_READY_CCCH" },
+	{ TBF_EV_LAST_DL_DATA_SENT, "LAST_DL_DATA_SENT" },
+	{ TBF_EV_LAST_UL_DATA_RECVD, "LAST_UL_DATA_RECVD" },
 	{ 0, NULL }
 };
 
@@ -137,6 +139,19 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	}
 }
 
+static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
+{
+	switch (event) {
+	case TBF_EV_LAST_DL_DATA_SENT:
+	case TBF_EV_LAST_UL_DATA_RECVD:
+		/* All data has been sent or received, change state to FINISHED */
+		tbf_fsm_state_chg(fi, TBF_ST_FINISHED);
+		break;
+	default:
+		OSMO_ASSERT(0);
+	}
+}
+
 static void tbf_fsm_cleanup(struct osmo_fsm_inst *fi, enum osmo_fsm_term_cause cause)
 {
 	/* TODO: needed ?
@@ -180,12 +195,14 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 	},
 	[TBF_ST_FLOW] = {
 		.in_event_mask =
-			0,
+			X(TBF_EV_LAST_DL_DATA_SENT) |
+			X(TBF_EV_LAST_UL_DATA_RECVD),
 		.out_state_mask =
 			X(TBF_ST_FINISHED) |
 			X(TBF_ST_WAIT_RELEASE) |
 			X(TBF_ST_RELEASING),
 		.name = "FLOW",
+		.action = st_flow,
 	},
 	[TBF_ST_FINISHED] = {
 		.in_event_mask =

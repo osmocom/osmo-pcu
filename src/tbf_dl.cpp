@@ -711,7 +711,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 				is_final = llc_queue_size(llc_queue()) == 0 && !keep_open(fn);
 				if (is_final) {
 					rdbi->cv = 0;
-					TBF_SET_STATE(this, TBF_ST_FINISHED);
+					osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_LAST_DL_DATA_SENT, NULL);
 				}
 
 				if (mcs_is_edge(cs)) {
@@ -756,7 +756,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 
 		if (is_final) {
 			request_dl_ack();
-			TBF_SET_STATE(this, TBF_ST_FINISHED);
+			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_LAST_DL_DATA_SENT, NULL);
 		}
 
 		/* dequeue next LLC frame, if any */

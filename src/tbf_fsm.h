@@ -32,6 +32,8 @@ enum tbf_fsm_event {
 	TBF_EV_ASSIGN_DEL_CCCH, /* An assignment previously sent over CCCH has been confirmed by MS */
 	TBF_EV_ASSIGN_ACK_PACCH, /*  We received a CTRL ACK confirming assignment started on PACCH */
 	TBF_EV_ASSIGN_READY_CCCH, /* TBF Start Time timer triggered */
+	TBF_EV_LAST_DL_DATA_SENT, /* DL TBF sends RLCMAC block containing last DL avilable data buffered */
+	TBF_EV_LAST_UL_DATA_RECVD, /* UL TBF sends RLCMAC block containing last UL data (cv=0) */
 };
 
 enum tbf_fsm_states {
