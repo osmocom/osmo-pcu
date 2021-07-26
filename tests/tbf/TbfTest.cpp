@@ -574,6 +574,12 @@ static void test_tbf_dl_llc_loss()
 
 	OSMO_ASSERT(ms_dl_tbf(ms) != NULL);
 
+	/* Here PCU would answer with data_cnf and trigger
+	 * bts_rcv_imm_ass_cnf(), which would set up the timer X2002. In this
+	 * test we go directly to T0 timeout to move it to FLOW state: */
+	ms_dl_tbf(ms)->handle_timeout();
+	OSMO_ASSERT(ms_dl_tbf(ms)->state_is(TBF_ST_FLOW));
+
 	/* Get first BSN */
 	struct msgb *msg;
 	int fn = 0;
