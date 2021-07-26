@@ -54,6 +54,7 @@ enum tbf_egprs_ul_counters {
 
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms);
+	~gprs_rlcmac_ul_tbf();
 	gprs_rlc_window *window();
 	struct msgb *create_ul_ack(uint32_t fn, uint8_t ts);
 	bool ctrl_ack_to_toggle();

@@ -180,7 +180,12 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 gprs_rlcmac_dl_tbf::~gprs_rlcmac_dl_tbf()
 {
 	osmo_timer_del(&m_llc_timer);
-	/* ~gprs_rlcmac_dl_tbf() is called automatically upon return */
+	if (is_egprs_enabled()) {
+		rate_ctr_group_free(m_dl_egprs_ctrs);
+	} else {
+		rate_ctr_group_free(m_dl_gprs_ctrs);
+	}
+	/* ~gprs_rlcmac_tbf() is called automatically upon return */
 }
 
 gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms) :

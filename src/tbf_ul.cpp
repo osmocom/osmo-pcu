@@ -91,6 +91,13 @@ static const struct rate_ctr_group_desc tbf_ul_egprs_ctrg_desc = {
 	tbf_ul_egprs_ctr_description,
 };
 
+gprs_rlcmac_ul_tbf::~gprs_rlcmac_ul_tbf()
+{
+	rate_ctr_group_free(m_ul_egprs_ctrs);
+	rate_ctr_group_free(m_ul_gprs_ctrs);
+	/* ~gprs_rlcmac_tbf() is called automatically upon return */
+}
+
 static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
 {
 	tbf->~gprs_rlcmac_ul_tbf();

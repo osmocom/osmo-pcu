@@ -164,6 +164,7 @@ gprs_rlcmac_tbf::~gprs_rlcmac_tbf()
 {
 	osmo_fsm_inst_free(state_fsm.fi);
 	state_fsm.fi = NULL;
+	rate_ctr_group_free(m_ctrs);
 }
 
 uint32_t gprs_rlcmac_tbf::tlli() const
@@ -269,19 +270,11 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 {
 	/* update counters */
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
 		bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_UL_FREED);
 		if (tbf->state_is(TBF_ST_FLOW))
 			bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_UL_ABORTED);
-		rate_ctr_group_free(ul_tbf->m_ul_egprs_ctrs);
-		rate_ctr_group_free(ul_tbf->m_ul_gprs_ctrs);
 	} else {
 		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
-		if (tbf->is_egprs_enabled()) {
-			rate_ctr_group_free(dl_tbf->m_dl_egprs_ctrs);
-		} else {
-			rate_ctr_group_free(dl_tbf->m_dl_gprs_ctrs);
-		}
 		bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_DL_FREED);
 		if (tbf->state_is(TBF_ST_FLOW))
 			bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_DL_ABORTED);
@@ -296,8 +289,6 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 
 	if (tbf->ms())
 		tbf->set_ms(NULL);
-
-	rate_ctr_group_free(tbf->m_ctrs);
 
 	LOGP(DTBF, LOGL_DEBUG, "********** %s-TBF ends here **********\n",
 	     (tbf->direction != GPRS_RLCMAC_UL_TBF) ? "DL" : "UL");
