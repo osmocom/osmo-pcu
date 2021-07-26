@@ -452,9 +452,6 @@ void gprs_rlcmac_tbf::stop_timers(const char *reason)
 
 static inline void tbf_timeout_free(struct gprs_rlcmac_tbf *tbf, enum tbf_timers t, bool run_diag)
 {
-	LOGPTBF(tbf, LOGL_NOTICE, "%s timeout expired, freeing TBF\n",
-		get_value_string(tbf_timers_names, t));
-
 	if (run_diag) {
 		LOGPTBF(tbf, LOGL_NOTICE, "%s timeout expired, freeing TBF: %s\n",
 			get_value_string(tbf_timers_names, t), tbf->rlcmac_diag().c_str());
