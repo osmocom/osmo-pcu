@@ -640,7 +640,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		if (state_is(TBF_ST_FINISHED)) {
 			if (ul_tbf->n_inc(N3103)) {
 				bts_do_rate_ctr_inc(bts, CTR_PUAN_POLL_FAILED);
-				TBF_SET_STATE(ul_tbf, TBF_ST_RELEASING);
+				osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3103, NULL);
 				T_START(ul_tbf, T3169, 3169, "MAX N3103 reached", false);
 				return;
 			}
@@ -659,7 +659,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {
-			TBF_SET_STATE(this, TBF_ST_RELEASING);
+			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3105, NULL);
 			T_START(this, T3195, 3195, "MAX N3105 reached", true);
 			bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_FAILED);
 			bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_FAILED);
@@ -678,7 +678,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PDA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {
-			TBF_SET_STATE(this, TBF_ST_RELEASING);
+			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3105, NULL);
 			T_START(this, T3195, 3195, "MAX N3105 reached", true);
 			bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_FAILED);
 			bts_do_rate_ctr_inc(bts, CTR_PDA_POLL_FAILED);
@@ -709,7 +709,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		}
 
 		if (dl_tbf->n_inc(N3105)) {
-			TBF_SET_STATE(dl_tbf, TBF_ST_RELEASING);
+			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3105, NULL);
 			T_START(dl_tbf, T3195, 3195, "MAX N3105 reached", true);
 			bts_do_rate_ctr_inc(bts, CTR_PDAN_POLL_FAILED);
 			bts_do_rate_ctr_inc(bts, CTR_RLC_ACK_FAILED);

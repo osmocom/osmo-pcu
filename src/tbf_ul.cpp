@@ -817,7 +817,7 @@ gprs_rlc_window *gprs_rlcmac_ul_tbf::window()
 void gprs_rlcmac_ul_tbf::usf_timeout()
 {
 	if (n_inc(N3101)) {
-		TBF_SET_STATE(this, TBF_ST_RELEASING);
+		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3101, NULL);
 		T_START(this, T3169, 3169, "MAX N3101 reached", false);
 		return;
 	}

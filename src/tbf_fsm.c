@@ -49,6 +49,9 @@ const struct value_string tbf_fsm_event_names[] = {
 	{ TBF_EV_LAST_DL_DATA_SENT, "LAST_DL_DATA_SENT" },
 	{ TBF_EV_LAST_UL_DATA_RECVD, "LAST_UL_DATA_RECVD" },
 	{ TBF_EV_FINAL_ACK_RECVD, "FINAL_ACK_RECVD" },
+	{ TBF_EV_MAX_N3101 , "MAX_N3101" },
+	{ TBF_EV_MAX_N3103 , "MAX_N3103" },
+	{ TBF_EV_MAX_N3105 , "MAX_N3105" },
 	{ 0, NULL }
 };
 
@@ -154,6 +157,10 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		   case we receive more DL data to tx */
 		tbf_fsm_state_chg(fi, TBF_ST_WAIT_RELEASE);
 		break;
+	case TBF_EV_MAX_N3101:
+	case TBF_EV_MAX_N3105:
+		tbf_fsm_state_chg(fi, TBF_ST_RELEASING);
+		break;
 	default:
 		OSMO_ASSERT(0);
 	}
@@ -168,6 +175,27 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		   WAIT_RELEASE, we wait there for release or re-use the TBF in
 		   case we receive more DL data to tx */
 		tbf_fsm_state_chg(fi, TBF_ST_WAIT_RELEASE);
+		break;
+	case TBF_EV_MAX_N3103:
+		tbf_fsm_state_chg(fi, TBF_ST_RELEASING);
+		break;
+	case TBF_EV_MAX_N3105:
+		tbf_fsm_state_chg(fi, TBF_ST_RELEASING);
+		break;
+	default:
+		OSMO_ASSERT(0);
+	}
+}
+
+static void st_wait_release(struct osmo_fsm_inst *fi, uint32_t event, void *data)
+{
+	switch (event) {
+	case TBF_EV_FINAL_ACK_RECVD:
+		/* ignore, duplicate ACK, we already know about since we are in WAIT_RELEASE */
+		break;
+	case TBF_EV_MAX_N3101:
+	case TBF_EV_MAX_N3105:
+		tbf_fsm_state_chg(fi, TBF_ST_RELEASING);
 		break;
 	default:
 		OSMO_ASSERT(0);
@@ -219,7 +247,9 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 		.in_event_mask =
 			X(TBF_EV_LAST_DL_DATA_SENT) |
 			X(TBF_EV_LAST_UL_DATA_RECVD) |
-			X(TBF_EV_FINAL_ACK_RECVD),
+			X(TBF_EV_FINAL_ACK_RECVD) |
+			X(TBF_EV_MAX_N3101) |
+			X(TBF_EV_MAX_N3105),
 		.out_state_mask =
 			X(TBF_ST_FINISHED) |
 			X(TBF_ST_WAIT_RELEASE) |
@@ -229,18 +259,24 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 	},
 	[TBF_ST_FINISHED] = {
 		.in_event_mask =
-			X(TBF_EV_FINAL_ACK_RECVD),
+			X(TBF_EV_FINAL_ACK_RECVD) |
+			X(TBF_EV_MAX_N3103) |
+			X(TBF_EV_MAX_N3105),
 		.out_state_mask =
-			X(TBF_ST_WAIT_RELEASE),
+			X(TBF_ST_WAIT_RELEASE) |
+			X(TBF_ST_RELEASING),
 		.name = "FINISHED",
 		.action = st_finished,
 	},
 	[TBF_ST_WAIT_RELEASE] = {
 		.in_event_mask =
-			0,
+			X(TBF_EV_FINAL_ACK_RECVD) |
+			X(TBF_EV_MAX_N3101) |
+			X(TBF_EV_MAX_N3105),
 		.out_state_mask =
 			X(TBF_ST_RELEASING),
 		.name = "WAIT_RELEASE",
+		.action = st_wait_release,
 	},
 	[TBF_ST_RELEASING] = {
 		.in_event_mask =

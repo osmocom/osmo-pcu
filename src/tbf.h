@@ -158,7 +158,6 @@ enum tbf_counters { /* TBF counters from 3GPP TS 44.060 §13.4 */
 
 #define T_START(tbf, t, T, r, f) tbf->t_start(t, T, r, f, __FILE__, __LINE__)
 
-#define TBF_SET_STATE(t, st) do { tbf_fsm_state_chg(t->state_fsm.fi, st); } while(0)
 #define TBF_SET_ASS_STATE_DL(t, st) do { t->set_ass_state_dl(st, __FILE__, __LINE__); } while(0)
 #define TBF_SET_ASS_STATE_UL(t, st) do { t->set_ass_state_ul(st, __FILE__, __LINE__); } while(0)
 #define TBF_SET_ACK_STATE(t, st) do { t->set_ack_state(st, __FILE__, __LINE__); } while(0)

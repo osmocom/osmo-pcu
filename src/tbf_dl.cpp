@@ -1271,7 +1271,8 @@ int gprs_rlcmac_dl_tbf::abort()
 		 * (partly) encoded in chunk 1 of block V(A). (optional) */
 	}
 
-	TBF_SET_STATE(this, TBF_ST_RELEASING);
+	/* This state change looks unneeded and can probably be dropped at some point: */
+	tbf_fsm_state_chg(this->state_fsm.fi, TBF_ST_RELEASING);
 
 	/* reset rlc states */
 	m_window.reset();
