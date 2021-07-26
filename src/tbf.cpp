@@ -293,7 +293,6 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
 
 		dl_tbf->abort();
-		dl_tbf->cleanup();
 	}
 
 	LOGPTBF(tbf, LOGL_INFO, "free\n");

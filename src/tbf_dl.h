@@ -42,8 +42,8 @@ enum tbf_dl_prio {
 
 struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms);
+	~gprs_rlcmac_dl_tbf();
 	gprs_rlc_window *window();
-	void cleanup();
 
 	int append_data(uint16_t pdu_delay_csec,
 			const uint8_t *data, uint16_t len);

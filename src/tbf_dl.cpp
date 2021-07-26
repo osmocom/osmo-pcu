@@ -177,6 +177,12 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 	return tbf;
 }
 
+gprs_rlcmac_dl_tbf::~gprs_rlcmac_dl_tbf()
+{
+	osmo_timer_del(&m_llc_timer);
+	/* ~gprs_rlcmac_dl_tbf() is called automatically upon return */
+}
+
 gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms) :
 	gprs_rlcmac_tbf(bts_, ms, GPRS_RLCMAC_DL_TBF),
 	m_tx_counter(0),
@@ -189,11 +195,6 @@ gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms)
 {
 	memset(&m_llc_timer, 0, sizeof(m_llc_timer));
 	osmo_timer_setup(&m_llc_timer, llc_timer_cb, this);
-}
-
-void gprs_rlcmac_dl_tbf::cleanup()
-{
-	osmo_timer_del(&m_llc_timer);
 }
 
 void gprs_rlcmac_dl_tbf::start_llc_timer()
