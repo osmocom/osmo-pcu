@@ -287,11 +287,8 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 			/* TODO: Reschedule all LLC frames starting with the one that is
 			 * (partly) encoded in chunk 1 of block V(A). (optional) */
 		}
-		/* This state change looks unneeded and can probably be dropped at some point: */
-		tbf_fsm_state_chg(dl_tbf->state_fsm.fi, TBF_ST_RELEASING);
 		/* reset rlc states */
 		win->reset();
-		osmo_fsm_inst_dispatch(dl_tbf->state_fsm.fi, TBF_EV_ASSIGN_DEL_CCCH, NULL);
 	}
 
 	LOGPTBF(tbf, LOGL_INFO, "free\n");

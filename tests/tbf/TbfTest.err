@@ -129,22 +129,18 @@ TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, P
 TBF(DL-TFI_1){NULL}: state_chg to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654167
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING), 1 TBFs, USFs = 00, TFIs = 00000002.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE), 1 TBFs, USFs = 00, TFIs = 00000002.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE)
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
-TBF(DL-TFI_1){ASSIGN}: state_chg to RELEASING
-TBF(DL-TFI_1){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) free
-TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) stopping timer T0 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING)
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer T0 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
 ********** DL-TBF ends here **********
-TBF(DL-TFI_1){RELEASING}: Deallocated
+TBF(DL-TFI_1){ASSIGN}: Deallocated
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Destroying MS object
 === end test_tbf_final_ack ===
 === start test_tbf_final_ack ===
@@ -235,22 +231,18 @@ TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, P
 TBF(DL-TFI_1){NULL}: state_chg to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654167
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_1){ASSIGN}: state_chg to RELEASING
-TBF(DL-TFI_1){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) free
-TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) stopping timer T0 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING), 1 TBFs, USFs = 00, TFIs = 00000001.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=RELEASING)
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer T0 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN), 1 TBFs, USFs = 00, TFIs = 00000001.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
 ********** DL-TBF ends here **********
-TBF(DL-TFI_1){RELEASING}: Deallocated
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING)
+TBF(DL-TFI_1){ASSIGN}: Deallocated
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE)
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Destroying MS object
 === end test_tbf_final_ack ===
 === start test_tbf_delayed_release ===
@@ -504,16 +496,14 @@ TBF(DL-TFI_0){FINISHED}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) stopping timer T3191 [freeing TBF]
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3191 [freeing TBF]
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 === end test_tbf_delayed_release ===
 === start test_tbf_imsi ===
 Creating MS object, TLLI = 0xffffffff
@@ -580,23 +570,19 @@ Modifying MS object, TLLI = 0xf1000001, IMSI '' -> '001001000000001'
 Modifying MS object, TLLI = 0xf1000001, IMSI '001001000000001' -> '001001000000002'
 Modifying MS object, TLLI = 0xf1000002, IMSI '' -> '001001000000002'
 MS(TLLI=0xf1000002, IMSI=, TA=0, 45/0, DL) IMSI '001001000000002' was already assigned to another MS object: TLLI = 0xf1000001, that IMSI will be removed
-TBF(DL-TFI_0){FLOW}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING) free
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING), 1 TBFs, USFs = 00, TFIs = 00000002.
-MS(TLLI=0xf1000001, IMSI=001001000000002, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW) free
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW), 1 TBFs, USFs = 00, TFIs = 00000002.
+MS(TLLI=0xf1000001, IMSI=001001000000002, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW)
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){FLOW}: Deallocated
 MS(TLLI=0xf1000001, IMSI=001001000000002, TA=0, 45/0,) Clearing MS object
 MS(TLLI=0xffffffff, IMSI=, TA=0, 45/0,) Destroying MS object
-TBF(DL-TFI_1){FLOW}: state_chg to RELEASING
-TBF(DL-TFI_1){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=RELEASING) free
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xf1000002, IMSI=001001000000002, TA=0, 45/0,) Detaching TBF: TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=RELEASING)
+TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) free
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xf1000002, IMSI=001001000000002, TA=0, 45/0,) Detaching TBF: TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW)
 MS(TLLI=0xf1000002, IMSI=001001000000002, TA=0, 45/0,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_1){RELEASING}: Deallocated
+TBF(DL-TFI_1){FLOW}: Deallocated
 === end test_tbf_imsi ===
 === start test_tbf_exhaustion ===
 Creating MS object, TLLI = 0xffffffff
@@ -1540,15 +1526,12 @@ TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) appending 19 bytes
 Modifying MS object, TLLI = 0xc0123456, TA 220 -> 0
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) appending 19 bytes
-TBF(DL-TFI_0){ASSIGN}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING) unset ass. type CCCH [prev CCCH:1, PACCH:0]
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING) free
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) free
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Schedule MS release in 10 secs
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){ASSIGN}: Deallocated
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
@@ -2293,14 +2276,12 @@ TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) Got CS-1 RLC data block: CV=0, BSN=
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) data_length=20, data=f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) Decoded premier TLLI=0xf1223344 of UL DATA TFI=0.
-TBF(DL-TFI_0){ASSIGN}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) free
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) stopping timer T0 [freeing TBF]
-PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING), 0 TBFs, USFs = 01, TFIs = 00000000.
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) free
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) stopping timer T0 [freeing TBF]
+PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN), 0 TBFs, USFs = 01, TFIs = 00000000.
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){ASSIGN}: Deallocated
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Clearing MS object
 MS(TLLI=0xffffffff, IMSI=, TA=7, 1/0,) Destroying MS object
@@ -3134,14 +3115,12 @@ PDCH(bts=0,trx=0,ts=7) FN=2654409 ------------------------- RX : Uplink Control 
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) FN=2654409 Rx Packet Control Ack (reason=DL_ACK)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) [UPLINK] DOWNLINK ASSIGNED
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) free
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING), 1 TBFs, USFs = 01, TFIs = 00000002.
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) free
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE), 1 TBFs, USFs = 01, TFIs = 00000002.
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE)
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 TBF(DL-TFI_1){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL-TFI_1){ASSIGN}: state_chg to FLOW
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer T0 [control acked (DL-TBF)]
@@ -3413,17 +3392,15 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) Setting Control TS 4
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 3c
 MS(TLLI=0xffffffff, IMSI=, TA=220, 12/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL)
 DL TBF slots: 0x3c, N: 4, WS: 64
-TBF(DL-TFI_0){NULL}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING) free
-PDCH(bts=0,trx=0,ts=2) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(bts=0,trx=0,ts=3) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(bts=0,trx=0,ts=5) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffffffff, IMSI=, TA=220, 12/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING)
+TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) free
+PDCH(bts=0,trx=0,ts=2) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(bts=0,trx=0,ts=3) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(bts=0,trx=0,ts=5) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffffffff, IMSI=, TA=220, 12/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL)
 MS(TLLI=0xffffffff, IMSI=, TA=220, 12/0,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){NULL}: Deallocated
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 12
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 12
@@ -3457,17 +3434,15 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 384, base(128) slots(4) ws_pdch(64)
 ws(384)
 DL TBF slots: 0x3c, N: 4, WS: 384
-TBF(DL-TFI_0){NULL}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS) free
-PDCH(bts=0,trx=0,ts=2) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(bts=0,trx=0,ts=3) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(bts=0,trx=0,ts=5) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) Detaching TBF: TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) free
+PDCH(bts=0,trx=0,ts=2) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(bts=0,trx=0,ts=3) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(bts=0,trx=0,ts=5) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) Detaching TBF: TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS)
 MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){NULL}: Deallocated
 === end test_tbf_ws ===
 === start test_tbf_egprs_two_phase ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
@@ -4070,15 +4045,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=112
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing MCS-2
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -4320,15 +4293,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=91
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing MCS-3
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -4530,15 +4501,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=69
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing MCS-4
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -4724,15 +4693,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=60
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing MCS-5
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -4902,15 +4869,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=52
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing MCS-6
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5056,15 +5021,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=39
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing MCS-7
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5219,15 +5182,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=34
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing MCS-8
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5373,15 +5334,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=30
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing MCS-9
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5516,15 +5475,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=26
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 === end test_tbf_egprs_dl ===
 === start test_tbf_egprs_retx_dl ===
 Testing retx for MCS 6 - 6
@@ -5586,15 +5543,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing retx for MCS 1 - 9
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5653,15 +5608,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing retx for MCS 2 - 8
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5720,15 +5673,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing retx for MCS 5 - 7
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5810,15 +5761,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing retx for MCS 6 - 9
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5899,15 +5848,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing retx for MCS 7 - 5
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5988,15 +5935,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing retx for MCS 9 - 6
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -6077,15 +6022,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 === end test_tbf_egprs_retx_dl ===
 === start test_tbf_egprs_spb_dl ===
 Testing retx for MCS 6 to reseg_mcs 3
@@ -6153,15 +6096,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing retx for MCS 5 to reseg_mcs 2
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -6227,15 +6168,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing retx for MCS 4 to reseg_mcs 1
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -6301,15 +6240,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 Testing retx for MCS 6 to reseg_mcs 3
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -6382,15 +6319,13 @@ TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
-TBF(DL-TFI_0){WAIT_RELEASE}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) stopping timer T3193 [freeing TBF]
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 === end test_tbf_egprs_spb_dl ===
 === start test_tbf_puan_urbb_len ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
@@ -6550,17 +6485,15 @@ PDCH(bts=0,trx=0,ts=5) Attaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGP
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 384, base(128) slots(4) ws_pdch(64)
 ws(384)
 DL TBF slots: 0x3c, N: 4, WS: 384
-TBF(DL-TFI_0){NULL}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS) free
-PDCH(bts=0,trx=0,ts=2) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(bts=0,trx=0,ts=3) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-PDCH(bts=0,trx=0,ts=5) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) free
+PDCH(bts=0,trx=0,ts=2) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(bts=0,trx=0,ts=3) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+PDCH(bts=0,trx=0,ts=5) Detaching TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS)
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){NULL}: Deallocated
 === end test_tbf_update_ws ===
 === start test_tbf_li_decoding ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
@@ -6710,14 +6643,12 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=1176)"RRRRRRRRRRIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIRRRIRRRRRRRRRRRRRRRRRRRRRRRRRRI"(BSN=1287)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=1176:1288, lost=0, recv=0, skipped=112, bsn=1944, info='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx................................................................................................................................................................................................................................................................................................................................................................................'
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1186)"NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNAAANAAAAAAAAAAAAAAAAAAAAAAAAAA"(V(S)-1=1287)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
-TBF(DL-TFI_0){FLOW}: state_chg to RELEASING
-TBF(DL-TFI_0){RELEASING}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS) free
-PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
-MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=RELEASING EGPRS)
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) free
+PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
-TBF(DL-TFI_0){RELEASING}: Deallocated
+TBF(DL-TFI_0){FLOW}: Deallocated
 === end test_tbf_epdan_out_of_rx_window ===
 === start test_immediate_assign_rej_multi_block ===
 MS requests Uplink resource on CCCH/RACH: ra=0x78 (8 bit) Fn=2654167 qta=31
