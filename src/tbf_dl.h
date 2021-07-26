@@ -110,7 +110,7 @@ protected:
 					int index, int index2 = -1);
 	int update_window(const uint8_t ssn, const uint8_t *rbb);
 	int update_window(unsigned first_bsn, const struct bitvec *rbb);
-	int maybe_start_new_window();
+	int rcvd_dl_final_ack();
 	bool dl_window_stalled() const;
 	void reuse_tbf();
 	void start_llc_timer();

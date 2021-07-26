@@ -1219,8 +1219,9 @@ int gprs_rlcmac_dl_tbf::update_window(const uint8_t ssn, const uint8_t *rbb)
 }
 
 
-int gprs_rlcmac_dl_tbf::maybe_start_new_window()
+int gprs_rlcmac_dl_tbf::rcvd_dl_final_ack()
 {
+	osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_FINAL_ACK_RECVD, NULL);
 	release();
 
 	/* check for LLC PDU in the LLC Queue */
@@ -1240,8 +1241,6 @@ int gprs_rlcmac_dl_tbf::release()
 
 	/* report all outstanding packets as received */
 	gprs_rlcmac_received_lost(this, received, 0);
-
-	TBF_SET_STATE(this, TBF_ST_WAIT_RELEASE);
 
 	/* start T3193 */
 	T_START(this, T3193, 3193, "release (DL-TBF)", true);
@@ -1292,7 +1291,7 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(bool final_ack, unsigned first_bsn,
 
 	if (final_ack) {
 		LOGPTBFDL(this, LOGL_DEBUG, "Final ACK received.\n");
-		rc = maybe_start_new_window();
+		rc = rcvd_dl_final_ack();
 	} else if (state_is(TBF_ST_FINISHED) && m_window.window_empty()) {
 		LOGPTBFDL(this, LOGL_NOTICE,
 			  "Received acknowledge of all blocks, but without final ack indication (don't worry)\n");
@@ -1309,7 +1308,7 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(bool final_ack, uint8_t ssn, uint8_t *rbb)
 		return update_window(ssn, rbb);
 
 	LOGPTBFDL(this, LOGL_DEBUG, "Final ACK received.\n");
-	return maybe_start_new_window();
+	return rcvd_dl_final_ack();
 }
 
 bool gprs_rlcmac_dl_tbf::dl_window_stalled() const

@@ -101,6 +101,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 1, CS-1): 07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -206,6 +207,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 1, CS-1): 07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -497,6 +499,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on F
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) msg block (BSN 21, CS-1): 0f 01 2a 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) Final ACK received.
+TBF(DL-TFI_0){FINISHED}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FINISHED}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -3026,6 +3029,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) ack:  (BSN=0)"RRRRRRRRRRRRRRRRR
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) DL analysis, range=0:28, lost=0, recv=28, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRRRRRRRRRR....................................'
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) V(B): (V(A)=28)""(V(S)-1=27)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Final ACK received.
+TBF(DL-TFI_0){FINISHED}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FINISHED}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654379
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -4063,6 +4067,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=104, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 2 => 3 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=112
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -4312,6 +4317,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DO
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=91
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -4521,6 +4527,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DO
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=69
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -4714,6 +4721,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DO
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=60
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -4891,6 +4899,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DO
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=52
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -5044,6 +5053,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DO
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=39
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -5206,6 +5216,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DO
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=34
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -5359,6 +5370,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DO
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=30
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -5501,6 +5513,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DO
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=26
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -5570,6 +5583,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 
 Detected FN jump! 2654167 -> 58
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -5636,6 +5650,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-1): 07 00 00 98 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -5702,6 +5717,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-2): 07 00 00 94 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 2c 2e 30 32 34 36 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -5791,6 +5807,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DO
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -5879,6 +5896,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DO
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -5967,6 +5985,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DO
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -6055,6 +6074,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DO
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -6130,6 +6150,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-3): 07 00 00 e6 4a 4c 4e 50 52 54 56 58 5a 5c 5e 60 62 64 66 68 6a 6c 6e 70 72 74 76 78 7a 7c 7e 80 82 84 86 88 8a 8c 8e 90 92 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -6203,6 +6224,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-2): 07 00 00 f2 38 3a 3c 3e 40 42 44 46 48 4a 4c 4e 50 52 54 56 58 5a 5c 5e 60 62 64 66 68 6a 6c 6e 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -6276,6 +6298,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-1): 07 00 00 f6 2c 2e 30 32 34 36 38 3a 3c 3e 40 42 44 46 48 4a 4c 4e 50 52 54 56 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
@@ -6356,6 +6379,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 00 00 10 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 12 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
+TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH

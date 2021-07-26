@@ -48,6 +48,7 @@ const struct value_string tbf_fsm_event_names[] = {
 	{ TBF_EV_ASSIGN_READY_CCCH, "ASSIGN_READY_CCCH" },
 	{ TBF_EV_LAST_DL_DATA_SENT, "LAST_DL_DATA_SENT" },
 	{ TBF_EV_LAST_UL_DATA_RECVD, "LAST_UL_DATA_RECVD" },
+	{ TBF_EV_FINAL_ACK_RECVD, "FINAL_ACK_RECVD" },
 	{ 0, NULL }
 };
 
@@ -147,6 +148,27 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		/* All data has been sent or received, change state to FINISHED */
 		tbf_fsm_state_chg(fi, TBF_ST_FINISHED);
 		break;
+	case TBF_EV_FINAL_ACK_RECVD:
+		/* We received Final Ack (DL ACK/NACK) from MS. move to
+		   WAIT_RELEASE, we wait there for release or re-use the TBF in
+		   case we receive more DL data to tx */
+		tbf_fsm_state_chg(fi, TBF_ST_WAIT_RELEASE);
+		break;
+	default:
+		OSMO_ASSERT(0);
+	}
+}
+
+static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
+{
+	//struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
+	switch (event) {
+	case TBF_EV_FINAL_ACK_RECVD:
+		/* We received Final Ack (DL ACK/NACK) from MS. move to
+		   WAIT_RELEASE, we wait there for release or re-use the TBF in
+		   case we receive more DL data to tx */
+		tbf_fsm_state_chg(fi, TBF_ST_WAIT_RELEASE);
+		break;
 	default:
 		OSMO_ASSERT(0);
 	}
@@ -196,7 +218,8 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 	[TBF_ST_FLOW] = {
 		.in_event_mask =
 			X(TBF_EV_LAST_DL_DATA_SENT) |
-			X(TBF_EV_LAST_UL_DATA_RECVD),
+			X(TBF_EV_LAST_UL_DATA_RECVD) |
+			X(TBF_EV_FINAL_ACK_RECVD),
 		.out_state_mask =
 			X(TBF_ST_FINISHED) |
 			X(TBF_ST_WAIT_RELEASE) |
@@ -206,10 +229,11 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 	},
 	[TBF_ST_FINISHED] = {
 		.in_event_mask =
-			0,
+			X(TBF_EV_FINAL_ACK_RECVD),
 		.out_state_mask =
 			X(TBF_ST_WAIT_RELEASE),
 		.name = "FINISHED",
+		.action = st_finished,
 	},
 	[TBF_ST_WAIT_RELEASE] = {
 		.in_event_mask =
