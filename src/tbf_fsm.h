@@ -53,6 +53,7 @@ struct tbf_fsm_ctx {
 	struct osmo_fsm_inst *fi;
 	struct gprs_rlcmac_tbf* tbf; /* back pointer */
 	uint32_t state_flags;
+	unsigned int T_release; /* Timer to be used to end release: T3169 or T3195 */
 };
 
 extern const struct osmo_tdef_state_timeout tbf_fsm_timeouts[32];

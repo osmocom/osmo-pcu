@@ -3085,7 +3085,7 @@ PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654318): TBF(TFI=0 TLLI=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 exceeded MAX (10)
 TBF(UL-TFI_0){FLOW}: Received Event MAX_N3101
 TBF(UL-TFI_0){FLOW}: state_chg to RELEASING
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) starting timer T3169 [MAX N3101 reached] with 5 sec. 0 microsec, cur_fn=2654379
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) starting timer T3169 with 5 sec. 0 microsec
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654322 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654322): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 10 => 11 (< MAX 10)

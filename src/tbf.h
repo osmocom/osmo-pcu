@@ -121,9 +121,6 @@ enum tbf_timers {
 	/* Wait contention resolution success on UL TBFs assigned over CCCH */
 	T3141,
 
-	/* Wait for reuse of USF and TFI(s) after the MS uplink assignment for this TBF is invalid. */
-	T3169,
-
 	/* Wait for reuse of TFI(s) after sending of the last RLC Data Block on this TBF.
 	   Wait for reuse of TFI(s) after sending the PACKET TBF RELEASE for an MBMS radio bearer. */
 	T3191,
@@ -132,9 +129,6 @@ enum tbf_timers {
 	   MS for this TBF. */
 	T3193,
 
-	/* Wait for reuse of TFI(s) when there is no response from the MS
-	   (radio failure or cell change) for this TBF/MBMS radio bearer. */
-	T3195,
 	T_MAX
 };
 

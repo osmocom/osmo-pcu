@@ -93,10 +93,8 @@ static const struct value_string tbf_counters_names[] = {
 static const struct value_string tbf_timers_names[] = {
 	OSMO_VALUE_STRING(T0),
 	OSMO_VALUE_STRING(T3141),
-	OSMO_VALUE_STRING(T3169),
 	OSMO_VALUE_STRING(T3191),
 	OSMO_VALUE_STRING(T3193),
-	OSMO_VALUE_STRING(T3195),
 	{ 0, NULL }
 };
 
@@ -475,10 +473,8 @@ static inline void tbf_timeout_free(struct gprs_rlcmac_tbf *tbf, enum tbf_timers
  * allocated temporary block flow is released as specified in 3GPP TS 44.060 and
  * the packet access is forgotten.*/
 T_CBACK(T3141, true)
-T_CBACK(T3169, true)
 T_CBACK(T3191, true)
 T_CBACK(T3193, false)
-T_CBACK(T3195, true)
 
 void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool force,
 			      const char *file, unsigned line)
@@ -527,17 +523,11 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool
 	case T3141:
 		Tarr[t].cb = cb_T3141;
 		break;
-	case T3169:
-		Tarr[t].cb = cb_T3169;
-		break;
 	case T3191:
 		Tarr[t].cb = cb_T3191;
 		break;
 	case T3193:
 		Tarr[t].cb = cb_T3193;
-		break;
-	case T3195:
-		Tarr[t].cb = cb_T3195;
 		break;
 	default:
 		LOGPSRC(DTBF, LOGL_ERROR, file, line, "%s attempting to set callback for unknown timer %s [%s], cur_fn=%d\n",
@@ -641,7 +631,6 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 			if (ul_tbf->n_inc(N3103)) {
 				bts_do_rate_ctr_inc(bts, CTR_PUAN_POLL_FAILED);
 				osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3103, NULL);
-				T_START(ul_tbf, T3169, 3169, "MAX N3103 reached", false);
 				return;
 			}
 			/* reschedule UL ack */
@@ -660,7 +649,6 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {
 			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3105, NULL);
-			T_START(this, T3195, 3195, "MAX N3105 reached", true);
 			bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_FAILED);
 			bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_FAILED);
 			return;
@@ -679,7 +667,6 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		bts_do_rate_ctr_inc(bts, CTR_PDA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {
 			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3105, NULL);
-			T_START(this, T3195, 3195, "MAX N3105 reached", true);
 			bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_FAILED);
 			bts_do_rate_ctr_inc(bts, CTR_PDA_POLL_FAILED);
 			return;
@@ -710,7 +697,6 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 
 		if (dl_tbf->n_inc(N3105)) {
 			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3105, NULL);
-			T_START(dl_tbf, T3195, 3195, "MAX N3105 reached", true);
 			bts_do_rate_ctr_inc(bts, CTR_PDAN_POLL_FAILED);
 			bts_do_rate_ctr_inc(bts, CTR_RLC_ACK_FAILED);
 			return;

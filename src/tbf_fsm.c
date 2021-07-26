@@ -145,6 +145,7 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 
 static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
+	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
 	switch (event) {
 	case TBF_EV_LAST_DL_DATA_SENT:
 	case TBF_EV_LAST_UL_DATA_RECVD:
@@ -158,7 +159,11 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		tbf_fsm_state_chg(fi, TBF_ST_WAIT_RELEASE);
 		break;
 	case TBF_EV_MAX_N3101:
+		ctx->T_release = 3169;
+		tbf_fsm_state_chg(fi, TBF_ST_RELEASING);
+		break;
 	case TBF_EV_MAX_N3105:
+		ctx->T_release = 3195;
 		tbf_fsm_state_chg(fi, TBF_ST_RELEASING);
 		break;
 	default:
@@ -168,7 +173,7 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 
 static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
-	//struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
+	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
 	switch (event) {
 	case TBF_EV_FINAL_ACK_RECVD:
 		/* We received Final Ack (DL ACK/NACK) from MS. move to
@@ -177,9 +182,11 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		tbf_fsm_state_chg(fi, TBF_ST_WAIT_RELEASE);
 		break;
 	case TBF_EV_MAX_N3103:
+		ctx->T_release = 3169;
 		tbf_fsm_state_chg(fi, TBF_ST_RELEASING);
 		break;
 	case TBF_EV_MAX_N3105:
+		ctx->T_release = 3195;
 		tbf_fsm_state_chg(fi, TBF_ST_RELEASING);
 		break;
 	default:
@@ -189,17 +196,42 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 
 static void st_wait_release(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
+	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
 	switch (event) {
 	case TBF_EV_FINAL_ACK_RECVD:
 		/* ignore, duplicate ACK, we already know about since we are in WAIT_RELEASE */
 		break;
 	case TBF_EV_MAX_N3101:
+		ctx->T_release = 3169;
+		tbf_fsm_state_chg(fi, TBF_ST_RELEASING);
+		break;
 	case TBF_EV_MAX_N3105:
+		ctx->T_release = 3195;
 		tbf_fsm_state_chg(fi, TBF_ST_RELEASING);
 		break;
 	default:
 		OSMO_ASSERT(0);
 	}
+}
+
+static void st_releasing_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
+{
+	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
+	unsigned long val;
+
+	if (!ctx->T_release)
+		return;
+
+	/* In  general we should end up here with an assigned timer in ctx->T_release. Possible values are:
+	* T3195: Wait for reuse of TFI(s) when there is no response from the MS
+	*	 (radio failure or cell change) for this TBF/MBMS radio bearer.
+	* T3169: Wait for reuse of USF and TFI(s) after the MS uplink assignment for this TBF is invalid.
+	*/
+	val = osmo_tdef_get(tbf_ms(ctx->tbf)->bts->T_defs_bts, ctx->T_release, OSMO_TDEF_S, -1);
+	fi->T = ctx->T_release;
+	LOGPTBF(ctx->tbf, LOGL_DEBUG, "starting timer T%u with %lu sec. %u microsec\n",
+		ctx->T_release, val, 0);
+	osmo_timer_schedule(&fi->timer, val, 0);
 }
 
 static void tbf_fsm_cleanup(struct osmo_fsm_inst *fi, enum osmo_fsm_term_cause cause)
@@ -211,9 +243,14 @@ static void tbf_fsm_cleanup(struct osmo_fsm_inst *fi, enum osmo_fsm_term_cause c
 
 static int tbf_fsm_timer_cb(struct osmo_fsm_inst *fi)
 {
+	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
 	switch (fi->T) {
-		default:
-			break;
+	case 3169:
+	case 3195:
+		tbf_free(ctx->tbf);
+		break;
+	default:
+		OSMO_ASSERT(0);
 	}
 	return 0;
 }
@@ -284,6 +321,7 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 		.out_state_mask =
 			0,
 		.name = "RELEASING",
+		.onenter = st_releasing_on_enter,
 	},
 };
 

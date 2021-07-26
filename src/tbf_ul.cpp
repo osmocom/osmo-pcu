@@ -816,11 +816,8 @@ gprs_rlc_window *gprs_rlcmac_ul_tbf::window()
 
 void gprs_rlcmac_ul_tbf::usf_timeout()
 {
-	if (n_inc(N3101)) {
+	if (n_inc(N3101))
 		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3101, NULL);
-		T_START(this, T3169, 3169, "MAX N3101 reached", false);
-		return;
-	}
 }
 
 struct gprs_rlcmac_ul_tbf *as_ul_tbf(struct gprs_rlcmac_tbf *tbf)
