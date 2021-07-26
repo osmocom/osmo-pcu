@@ -61,7 +61,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int frames_since_last_drain(unsigned fn) const;
 	bool keep_open(unsigned fn) const;
 	int release();
-	int abort();
 	uint16_t window_size() const;
 	void set_window_size();
 	void update_coding_scheme_counter_dl(enum CodingScheme cs);

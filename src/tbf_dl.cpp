@@ -1261,32 +1261,6 @@ int gprs_rlcmac_dl_tbf::release()
 	return 0;
 }
 
-int gprs_rlcmac_dl_tbf::abort()
-{
-	uint16_t lost;
-
-	if (state_is(TBF_ST_FLOW)) {
-		/* range V(A)..V(S)-1 */
-		lost = m_window.count_unacked();
-
-		/* report all outstanding packets as lost */
-		gprs_rlcmac_received_lost(this, 0, lost);
-
-		/* TODO: Reschedule all LLC frames starting with the one that is
-		 * (partly) encoded in chunk 1 of block V(A). (optional) */
-	}
-
-	/* This state change looks unneeded and can probably be dropped at some point: */
-	tbf_fsm_state_chg(this->state_fsm.fi, TBF_ST_RELEASING);
-
-	/* reset rlc states */
-	m_window.reset();
-
-	osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_ASSIGN_DEL_CCCH, NULL);
-
-	return 0;
-}
-
 int gprs_rlcmac_dl_tbf::rcvd_dl_ack(bool final_ack, unsigned first_bsn,
 	struct bitvec *rbb)
 {

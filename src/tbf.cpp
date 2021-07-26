@@ -275,10 +275,23 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 			bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_UL_ABORTED);
 	} else {
 		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
+		gprs_rlc_dl_window *win = static_cast<gprs_rlc_dl_window *>(dl_tbf->window());
+
 		bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_DL_FREED);
-		if (tbf->state_is(TBF_ST_FLOW))
+		if (tbf->state_is(TBF_ST_FLOW)) {
 			bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_DL_ABORTED);
-		dl_tbf->abort();
+			/* range V(A)..V(S)-1 */
+			uint16_t lost = win->count_unacked();
+			/* report all outstanding packets as lost */
+			gprs_rlcmac_received_lost(dl_tbf, 0, lost);
+			/* TODO: Reschedule all LLC frames starting with the one that is
+			 * (partly) encoded in chunk 1 of block V(A). (optional) */
+		}
+		/* This state change looks unneeded and can probably be dropped at some point: */
+		tbf_fsm_state_chg(dl_tbf->state_fsm.fi, TBF_ST_RELEASING);
+		/* reset rlc states */
+		win->reset();
+		osmo_fsm_inst_dispatch(dl_tbf->state_fsm.fi, TBF_EV_ASSIGN_DEL_CCCH, NULL);
 	}
 
 	LOGPTBF(tbf, LOGL_INFO, "free\n");
