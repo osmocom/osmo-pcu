@@ -58,6 +58,18 @@ bool spoof_mnc_3_digits = false;
 /* Measurements shared by all unit tests */
 static struct pcu_l1_meas meas;
 
+int gprs_gp_send_test_cb(void *ctx, struct msgb *msg)
+{
+	return 0;
+}
+
+static gprs_pcu *prepare_pcu(void)
+{
+	struct gprs_pcu *pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	bssgp_set_bssgp_callback(gprs_gp_send_test_cb, NULL);
+	return pcu;
+}
+
 static int bts_handle_rach(struct gprs_rlcmac_bts *bts, uint16_t ra, uint32_t Fn, int16_t qta)
 {
 	struct rach_ind_params rip = {
@@ -95,7 +107,7 @@ static void test_tbf_base()
 
 static void test_tbf_tlli_update()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms, *ms_new;
 
@@ -248,7 +260,7 @@ enum test_tbf_final_ack_mode {
 
 static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint8_t ts_no = 4;
 	unsigned i;
@@ -333,7 +345,7 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 
 static void test_tbf_delayed_release()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint8_t ts_no = 4;
 	unsigned i;
@@ -403,7 +415,7 @@ static void test_tbf_delayed_release()
 
 static void test_tbf_imsi()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint8_t ts_no = 4;
 	uint8_t ms_class = 45;
@@ -464,7 +476,7 @@ static void test_tbf_imsi()
 
 static void test_tbf_exhaustion()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	unsigned i;
 	uint8_t ts_no = 4;
@@ -507,7 +519,7 @@ static void test_tbf_exhaustion()
 
 static void test_tbf_dl_llc_loss()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint8_t ts_no = 4;
 	uint8_t ms_class = 45;
@@ -1714,7 +1726,7 @@ static inline void print_ta_tlli(const gprs_rlcmac_ul_tbf *ul_tbf, bool print_ms
 
 static void test_tbf_single_phase()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	int ts_no = 7;
 	uint32_t fn = DUMMY_FN; /* 17,25,9 */
@@ -1738,7 +1750,7 @@ static void test_tbf_single_phase()
 
 static void test_tbf_egprs_two_phase_puan(void)
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
@@ -1793,7 +1805,7 @@ static void test_tbf_egprs_two_phase_puan(void)
  */
 static void test_immediate_assign_rej_single_block()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint32_t fn = 2654218;
 	uint16_t qta = 31;
@@ -1826,7 +1838,7 @@ static void test_immediate_assign_rej_single_block()
  */
 static void test_immediate_assign_rej_multi_block()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint32_t fn = 2654218;
 	uint16_t qta = 31;
@@ -1867,7 +1879,7 @@ static void test_immediate_assign_rej()
 
 static void test_tbf_two_phase()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
@@ -1899,7 +1911,7 @@ static inline void print_ms(GprsMs *ms, bool old)
 
 static void test_tbf_ra_update_rach()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
@@ -1972,7 +1984,7 @@ static void test_tbf_ra_update_rach()
 
 static void test_tbf_dl_flow_and_rach_two_phase()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
@@ -2033,7 +2045,7 @@ static void test_tbf_dl_flow_and_rach_two_phase()
 
 static void test_tbf_dl_flow_and_rach_single_phase()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
@@ -2093,7 +2105,7 @@ static void test_tbf_dl_flow_and_rach_single_phase()
 
 static void test_tbf_dl_reuse()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
@@ -2193,7 +2205,7 @@ static void test_tbf_dl_reuse()
 
 static void test_tbf_gprs_egprs()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint8_t ts_no = 4;
 	uint8_t ms_class = 45;
@@ -2260,7 +2272,7 @@ static inline void ws_check(gprs_rlcmac_dl_tbf *dl_tbf, const char *test, uint8_
 
 static void test_tbf_ws()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms;
 	uint8_t ts_no = 4;
@@ -2305,7 +2317,7 @@ static void test_tbf_ws()
 
 static void test_tbf_update_ws(void)
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	GprsMs *ms;
 	uint8_t ts_no = 4;
@@ -2349,7 +2361,7 @@ static void test_tbf_update_ws(void)
 
 static void test_tbf_puan_urbb_len(void)
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
@@ -2488,7 +2500,7 @@ static gprs_rlcmac_ul_tbf *tbf_li_decoding(struct gprs_rlcmac_bts *bts,
 
 static void test_tbf_li_decoding(void)
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
@@ -2524,7 +2536,7 @@ static void test_tbf_li_decoding(void)
  */
 static void test_tbf_epdan_out_of_rx_window(void)
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint8_t ms_class = 11;
 	uint8_t egprs_ms_class = 11;
@@ -2615,7 +2627,7 @@ static void test_tbf_epdan_out_of_rx_window(void)
 
 static void test_tbf_egprs_two_phase_spb(void)
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
@@ -2646,7 +2658,7 @@ static void test_tbf_egprs_two_phase_spb(void)
 
 static void test_tbf_egprs_two_phase()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	int ts_no = 7;
 	uint32_t fn = 2654218;
@@ -3074,7 +3086,7 @@ static void establish_and_use_egprs_dl_tbf_for_retx(struct gprs_rlcmac_bts *bts,
 
 static void test_tbf_egprs_retx_dl(void)
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint8_t ts_no = 4;
 
@@ -3102,7 +3114,7 @@ static void test_tbf_egprs_retx_dl(void)
 
 static void test_tbf_egprs_spb_dl(void)
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint8_t ts_no = 4;
 
@@ -3132,7 +3144,7 @@ static void test_tbf_egprs_spb_dl(void)
 
 static void test_tbf_egprs_dl()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint8_t ts_no = 4;
 	int i;
@@ -3155,7 +3167,7 @@ static void test_tbf_egprs_dl()
 
 static void test_packet_access_rej_prr_no_other_tbfs()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint32_t fn = 2654218;
 	int ts_no = 7;
@@ -3192,7 +3204,7 @@ static void test_packet_access_rej_prr_no_other_tbfs()
 
 static void test_packet_access_rej_prr()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint32_t fn = 2654218;
 	uint16_t qta = 31;
@@ -3262,7 +3274,7 @@ static void test_packet_access_rej_prr()
 
 void test_packet_access_rej_epdan()
 {
-	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu = prepare_pcu();
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	uint32_t tlli = 0xffeeddcc;
 	static uint8_t exp[] = { 0x40, 0x84, 0x7f, 0xf7, 0x6e, 0xe6, 0x7e, 0xab,
