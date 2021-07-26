@@ -1266,7 +1266,6 @@ int gprs_rlcmac_dl_tbf::abort()
 
 		/* report all outstanding packets as lost */
 		gprs_rlcmac_received_lost(this, 0, lost);
-		gprs_rlcmac_lost_rep(this);
 
 		/* TODO: Reschedule all LLC frames starting with the one that is
 		 * (partly) encoded in chunk 1 of block V(A). (optional) */
