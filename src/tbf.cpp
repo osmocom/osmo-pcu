@@ -285,13 +285,6 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 		bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_DL_FREED);
 		if (tbf->state_is(TBF_ST_FLOW))
 			bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_DL_ABORTED);
-	}
-
-	/* Give final measurement report */
-	gprs_rlcmac_rssi_rep(tbf);
-	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
-		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
-
 		dl_tbf->abort();
 	}
 
