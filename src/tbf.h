@@ -173,6 +173,7 @@ int tbf_check_polling(const struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts
 void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t ts, enum pdch_ulc_tbf_poll_reason t);
 void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_pdch *pdch, uint32_t poll_fn, enum pdch_ulc_tbf_poll_reason reason);
 void tbf_update_state_fsm_name(struct gprs_rlcmac_tbf *tbf);
+const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf);
 #ifdef __cplusplus
 }
 #endif
@@ -206,8 +207,6 @@ struct gprs_rlcmac_tbf {
 	void set_ms(GprsMs *ms);
 
 	uint8_t tsc() const;
-
-	std::string rlcmac_diag();
 
 	bool n_inc(enum tbf_counters n);
 	void n_reset(enum tbf_counters n);
