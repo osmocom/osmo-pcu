@@ -352,11 +352,11 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		tbf_free(tbf);
 		return;
 	}
-	if (tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_WAIT_ACK)) {
+	if (tbf->dl_ass_state_is(TBF_DL_ASS_WAIT_ACK)) {
 		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] DOWNLINK ASSIGNED\n");
 		/* reset N3105 */
 		tbf->n_reset(N3105);
-		TBF_SET_ASS_STATE_DL(tbf, GPRS_RLCMAC_DL_ASS_NONE);
+		osmo_fsm_inst_dispatch(tbf->dl_ass_fsm.fi, TBF_DL_ASS_EV_RX_ASS_CTRL_ACK, NULL);
 
 		new_tbf = ms_dl_tbf(ms);
 		if (!new_tbf) {

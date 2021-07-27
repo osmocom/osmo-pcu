@@ -6,6 +6,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** DL-TBF starts here *********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -25,6 +26,7 @@ MS(TLLI=0x00002342, IMSI=, TA=4, 0/0, DL) ********** UL-TBF starts here ********
 MS(TLLI=0x00002342, IMSI=, TA=4, 0/0, DL) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -51,6 +53,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here ********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -65,7 +68,8 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) Setting Control TS 4
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -77,12 +81,14 @@ TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
@@ -112,6 +118,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) ********** DL-TBF starts here *******
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -127,12 +134,12 @@ TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, 
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Attaching DL TBF: TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) Trigger downlink assignment on PACCH
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) exists
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Event SCHED_ASS not permitted
 TBF(DL-TFI_1){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_1){NULL}: state_chg to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654167
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE), 1 TBFs, USFs = 00, TFIs = 00000002.
@@ -140,6 +147,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeed
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Deallocated
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer T0 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -147,6 +155,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=1 TLLI=0xffeeddcc
 ********** DL-TBF ends here **********
 TBF(DL-TFI_1){ASSIGN}: Deallocated
 UL_ASS_TBF(DL-TFI_1){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_1){NONE}: Deallocated
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Destroying MS object
 === end test_tbf_final_ack ===
 === start test_tbf_final_ack ===
@@ -157,6 +166,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here ********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -171,7 +181,8 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) Setting Control TS 4
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -183,12 +194,14 @@ TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
@@ -218,6 +231,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) ********** DL-TBF starts here *******
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -233,12 +247,12 @@ TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, 
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Attaching DL TBF: TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) Trigger downlink assignment on PACCH
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) exists
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Event SCHED_ASS not permitted
 TBF(DL-TFI_1){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_1){NULL}: state_chg to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654167
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer T0 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN), 1 TBFs, USFs = 00, TFIs = 00000001.
@@ -246,6 +260,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=1 TLLI=0xffeeddcc
 ********** DL-TBF ends here **********
 TBF(DL-TFI_1){ASSIGN}: Deallocated
 UL_ASS_TBF(DL-TFI_1){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_1){NONE}: Deallocated
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -253,6 +268,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Deallocated
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Destroying MS object
 === end test_tbf_final_ack ===
 === start test_tbf_delayed_release ===
@@ -263,6 +279,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here ********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -277,7 +294,8 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) Setting Control TS 4
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -289,12 +307,14 @@ TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW)
 PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
@@ -506,7 +526,6 @@ TBF(DL-TFI_0){FINISHED}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FINISHED}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3191 [freeing TBF]
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
@@ -516,6 +535,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Deallocated
 === end test_tbf_delayed_release ===
 === start test_tbf_imsi ===
 Creating MS object, TLLI = 0xffffffff
@@ -525,6 +545,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here ********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -539,7 +560,8 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) Setting Control TS 4
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -555,6 +577,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here ********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -569,7 +592,8 @@ TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL) Setting Control TS 4
 TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 10
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Attaching DL TBF: TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_1){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_1){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_1){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=1 TLLI=0xffffffff DIR=DL STATE=NULL) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_1){NULL}: state_chg to ASSIGN
@@ -590,6 +614,7 @@ MS(TLLI=0xf1000001, IMSI=001001000000002, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){FLOW}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 MS(TLLI=0xf1000001, IMSI=001001000000002, TA=0, 45/0,) Clearing MS object
 MS(TLLI=0xffffffff, IMSI=, TA=0, 45/0,) Destroying MS object
 TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) free
@@ -599,6 +624,7 @@ MS(TLLI=0xf1000002, IMSI=001001000000002, TA=0, 45/0,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_1){FLOW}: Deallocated
 UL_ASS_TBF(DL-TFI_1){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_1){SEND_ASS}: Deallocated
 === end test_tbf_imsi ===
 === start test_tbf_exhaustion ===
 Creating MS object, TLLI = 0xffffffff
@@ -609,6 +635,7 @@ MS(TLLI=0xc0000000, IMSI=001001000000000, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000000, IMSI=001001000000000, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -638,6 +665,7 @@ MS(TLLI=0xc0000001, IMSI=001001000000001, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000001, IMSI=001001000000001, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -667,6 +695,7 @@ MS(TLLI=0xc0000002, IMSI=001001000000002, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000002, IMSI=001001000000002, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -696,6 +725,7 @@ MS(TLLI=0xc0000003, IMSI=001001000000003, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000003, IMSI=001001000000003, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -725,6 +755,7 @@ MS(TLLI=0xc0000004, IMSI=001001000000004, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000004, IMSI=001001000000004, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -754,6 +785,7 @@ MS(TLLI=0xc0000005, IMSI=001001000000005, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000005, IMSI=001001000000005, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -783,6 +815,7 @@ MS(TLLI=0xc0000006, IMSI=001001000000006, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000006, IMSI=001001000000006, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -812,6 +845,7 @@ MS(TLLI=0xc0000007, IMSI=001001000000007, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000007, IMSI=001001000000007, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -841,6 +875,7 @@ MS(TLLI=0xc0000008, IMSI=001001000000008, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000008, IMSI=001001000000008, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -870,6 +905,7 @@ MS(TLLI=0xc0000009, IMSI=001001000000009, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000009, IMSI=001001000000009, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -899,6 +935,7 @@ MS(TLLI=0xc000000a, IMSI=001001000000010, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc000000a, IMSI=001001000000010, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -928,6 +965,7 @@ MS(TLLI=0xc000000b, IMSI=001001000000011, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc000000b, IMSI=001001000000011, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -957,6 +995,7 @@ MS(TLLI=0xc000000c, IMSI=001001000000012, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc000000c, IMSI=001001000000012, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -986,6 +1025,7 @@ MS(TLLI=0xc000000d, IMSI=001001000000013, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc000000d, IMSI=001001000000013, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1015,6 +1055,7 @@ MS(TLLI=0xc000000e, IMSI=001001000000014, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc000000e, IMSI=001001000000014, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1044,6 +1085,7 @@ MS(TLLI=0xc000000f, IMSI=001001000000015, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc000000f, IMSI=001001000000015, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1073,6 +1115,7 @@ MS(TLLI=0xc0000010, IMSI=001001000000016, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000010, IMSI=001001000000016, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1102,6 +1145,7 @@ MS(TLLI=0xc0000011, IMSI=001001000000017, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000011, IMSI=001001000000017, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1131,6 +1175,7 @@ MS(TLLI=0xc0000012, IMSI=001001000000018, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000012, IMSI=001001000000018, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1160,6 +1205,7 @@ MS(TLLI=0xc0000013, IMSI=001001000000019, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000013, IMSI=001001000000019, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1189,6 +1235,7 @@ MS(TLLI=0xc0000014, IMSI=001001000000020, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000014, IMSI=001001000000020, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1218,6 +1265,7 @@ MS(TLLI=0xc0000015, IMSI=001001000000021, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000015, IMSI=001001000000021, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1247,6 +1295,7 @@ MS(TLLI=0xc0000016, IMSI=001001000000022, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000016, IMSI=001001000000022, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1276,6 +1325,7 @@ MS(TLLI=0xc0000017, IMSI=001001000000023, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000017, IMSI=001001000000023, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1305,6 +1355,7 @@ MS(TLLI=0xc0000018, IMSI=001001000000024, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000018, IMSI=001001000000024, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1334,6 +1385,7 @@ MS(TLLI=0xc0000019, IMSI=001001000000025, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000019, IMSI=001001000000025, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1363,6 +1415,7 @@ MS(TLLI=0xc000001a, IMSI=001001000000026, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc000001a, IMSI=001001000000026, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1392,6 +1445,7 @@ MS(TLLI=0xc000001b, IMSI=001001000000027, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc000001b, IMSI=001001000000027, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1421,6 +1475,7 @@ MS(TLLI=0xc000001c, IMSI=001001000000028, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc000001c, IMSI=001001000000028, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1450,6 +1505,7 @@ MS(TLLI=0xc000001d, IMSI=001001000000029, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc000001d, IMSI=001001000000029, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1479,6 +1535,7 @@ MS(TLLI=0xc000001e, IMSI=001001000000030, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc000001e, IMSI=001001000000030, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1508,6 +1565,7 @@ MS(TLLI=0xc000001f, IMSI=001001000000031, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc000001f, IMSI=001001000000031, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1537,11 +1595,13 @@ MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 [DL] algo A <single> (suggested TRX: -1): failed to find a usable TRX (TFI exhausted)
 TBF(TFI=0 TLLI=0xc0000020 DIR=DL STATE=NULL) Timeslot Allocation failed: trx = -1, single_slot = 1
 TBF{NULL}: Deallocated
 UL_ASS_TBF{NONE}: Deallocated
+DL_ASS_TBF{NONE}: Deallocated
 MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) No PDCH resource
 === end test_tbf_exhaustion ===
 MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) Destroying MS object
@@ -1554,6 +1614,7 @@ MS(TLLI=0xc0123456, IMSI=001001000123456, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1584,10 +1645,12 @@ MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Schedule MS release in 10
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){ASSIGN}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1656,6 +1719,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here *********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1704,6 +1768,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) ********** DL-TBF starts her
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1744,6 +1809,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1798,6 +1864,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts her
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1813,7 +1880,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -1838,6 +1906,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1891,6 +1960,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts her
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1906,7 +1976,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -1914,18 +1985,21 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PA
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 10 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 1
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654275 block_nr=9 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654279
+DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654275 + 13 = 2654288
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
+DL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 Detected FN jump! 2654275 -> 2654288
 PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) FN=2654288 Rx Packet Control Ack (reason=DL_ASS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) [UPLINK] DOWNLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
+DL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+DL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(DL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer T0 [control acked (DL-TBF)]
@@ -1995,6 +2069,7 @@ MS(TLLI=0xf5667788, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf5667788, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2064,6 +2139,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0
 ********** UL-TBF ends here **********
 TBF(UL-TFI_0){FLOW}: Deallocated
 UL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Clearing MS object
 MS(TLLI=0xffffffff, IMSI=, TA=7, 1/0,) Destroying MS object
 Modifying MS object, TLLI: 0xf5667788 confirmed
@@ -2088,6 +2164,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2143,6 +2220,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts her
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2158,7 +2236,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -2172,6 +2251,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Detaching TBF: TBF(TFI=0 TLL
 ********** UL-TBF ends here **********
 TBF(UL-TFI_0){FLOW}: Deallocated
 UL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Deallocated
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654224 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654327 TRX=0 TS=7
@@ -2185,6 +2265,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) ********** UL-TBF starts her
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2251,6 +2332,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2306,6 +2388,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts her
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2321,7 +2404,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -2335,6 +2419,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Detaching TBF: TBF(TFI=0 TLL
 ********** UL-TBF ends here **********
 TBF(UL-TFI_0){FLOW}: Deallocated
 UL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Deallocated
 Found first unallocated TRX=0 TFI=0
 MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654275 qta=31
 Creating MS object, TLLI = 0xffffffff
@@ -2342,6 +2427,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here *********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2376,6 +2462,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){ASSIGN}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Clearing MS object
 MS(TLLI=0xffffffff, IMSI=, TA=7, 1/0,) Destroying MS object
@@ -2412,6 +2499,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2467,6 +2555,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts her
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2482,7 +2571,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) [DOWNLINK] START
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -2529,18 +2619,21 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 40
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654275 block_nr=9 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654279
+DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654275 + 13 = 2654288
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
+DL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 Detected FN jump! 2654275 -> 2654288
 PDCH(bts=0,trx=0,ts=7) FN=2654288 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654288 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) FN=2654288 Rx Packet Control Ack (reason=DL_ASS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) [UPLINK] DOWNLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
+DL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+DL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(DL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer T0 [control acked (DL-TBF)]
@@ -3115,6 +3208,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) ********** DL-TBF starts 
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3130,7 +3224,8 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, 
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Attaching DL TBF: TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) Trigger downlink assignment on PACCH
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) exists
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_1){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_1){NULL}: state_chg to ASSIGN
@@ -3204,18 +3299,21 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 21 => 22 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654374 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654374): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 22 => 23 (< MAX 10)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654400 + 13 = 2654413
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) Scheduled DL Assignment polling on PACCH (FN=2654413, TS=7)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654400 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE)
 Detected FN jump! 2654379 -> 2654409
 PDCH(bts=0,trx=0,ts=7) FN=2654409 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654409 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) FN=2654409 Rx Packet Control Ack (reason=DL_ACK)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) [UPLINK] DOWNLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) changes DL ASS state from GPRS_RLCMAC_DL_ASS_WAIT_ACK to GPRS_RLCMAC_DL_ASS_NONE
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) free
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE), 1 TBFs, USFs = 01, TFIs = 00000002.
@@ -3223,6 +3321,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Detaching TBF: TBF(TFI=0 
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 TBF(DL-TFI_1){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL-TFI_1){ASSIGN}: state_chg to FLOW
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer T0 [control acked (DL-TBF)]
@@ -3443,6 +3542,7 @@ MS(TLLI=0xc0006789, IMSI=001001123456789, TA=220, 45/0,) ********** DL-TBF start
 MS(TLLI=0xc0006789, IMSI=001001123456789, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3472,6 +3572,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 12/0,) ********** DL-TBF starts here ********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 12/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo B <multi> (suggested TRX: 0): Alloc start
 Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 12
@@ -3506,6 +3607,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 12/0,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){NULL}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 12
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 12
@@ -3514,6 +3616,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo B <multi> (suggested TRX: 0): Alloc start
 Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 12
@@ -3550,6 +3653,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){NULL}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 === end test_tbf_ws ===
 === start test_tbf_egprs_two_phase ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
@@ -3571,6 +3675,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3629,6 +3734,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts her
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3646,7 +3752,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size 
 ws(64)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) exists
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -3673,6 +3780,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3849,6 +3957,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts her
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3866,7 +3975,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size 
 ws(64)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) exists
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -3884,6 +3994,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3900,7 +4011,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -3911,12 +4023,14 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev C
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
@@ -4149,6 +4263,8 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 112)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=112 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 112)
@@ -4164,7 +4280,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=112
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -4173,6 +4288,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing MCS-2
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -4183,6 +4299,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4199,7 +4316,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -4210,12 +4328,14 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev C
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
@@ -4403,6 +4523,8 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 91)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=91 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 91)
@@ -4414,7 +4536,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=91
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -4423,6 +4544,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing MCS-3
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -4433,6 +4555,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4449,7 +4572,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -4460,12 +4584,14 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev C
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
@@ -4613,6 +4739,8 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 69)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=69 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 69)
@@ -4624,7 +4752,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=69
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -4633,6 +4760,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing MCS-4
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -4643,6 +4771,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4659,7 +4788,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -4670,12 +4800,14 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev C
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
@@ -4807,6 +4939,8 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 60)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=60 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 60)
@@ -4818,7 +4952,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=60
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -4827,6 +4960,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing MCS-5
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -4837,6 +4971,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4853,7 +4988,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -4864,12 +5000,14 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev C
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
@@ -4985,6 +5123,8 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 52)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=52 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 52)
@@ -4996,7 +5136,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=52
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -5005,6 +5144,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing MCS-6
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5015,6 +5155,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5031,7 +5172,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -5042,12 +5184,14 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev C
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
@@ -5139,6 +5283,8 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 39)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=39 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 39)
@@ -5150,7 +5296,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=39
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -5159,6 +5304,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing MCS-7
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5169,6 +5315,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5185,7 +5332,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -5196,12 +5344,14 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev C
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
@@ -5302,6 +5452,8 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 34)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=34 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 34)
@@ -5313,7 +5465,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=34
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -5322,6 +5473,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing MCS-8
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5332,6 +5484,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5348,7 +5501,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -5359,12 +5513,14 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev C
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
@@ -5456,6 +5612,8 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 30)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=30 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 30)
@@ -5467,7 +5625,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=30
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -5476,6 +5633,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing MCS-9
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5486,6 +5644,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5502,7 +5661,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -5513,12 +5673,14 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev C
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Assignment polling on PACCH (FN=13, TS=4)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=4) FN=0 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=4 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
@@ -5599,6 +5761,8 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=13, TS=4 (curr FN 26)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=26 but previous FN=17 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 26)
@@ -5610,7 +5774,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=26
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -5619,6 +5782,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 === end test_tbf_egprs_dl ===
 === start test_tbf_egprs_retx_dl ===
 Testing retx for MCS 6 - 6
@@ -5631,6 +5795,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5647,7 +5812,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -5680,7 +5846,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -5689,6 +5854,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing retx for MCS 1 - 9
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5699,6 +5865,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5715,7 +5882,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -5747,7 +5915,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -5756,6 +5923,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing retx for MCS 2 - 8
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5766,6 +5934,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5782,7 +5951,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -5814,7 +5984,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -5823,6 +5992,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing retx for MCS 5 - 7
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5833,6 +6003,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5849,7 +6020,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -5904,7 +6076,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -5913,6 +6084,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing retx for MCS 6 - 9
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5923,6 +6095,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5939,7 +6112,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -5993,7 +6167,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -6002,6 +6175,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing retx for MCS 7 - 5
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -6012,6 +6186,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6028,7 +6203,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -6082,7 +6258,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -6091,6 +6266,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing retx for MCS 9 - 6
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -6101,6 +6277,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6117,7 +6294,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -6171,7 +6349,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -6180,6 +6357,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 === end test_tbf_egprs_retx_dl ===
 === start test_tbf_egprs_spb_dl ===
 Testing retx for MCS 6 to reseg_mcs 3
@@ -6192,6 +6370,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6208,7 +6387,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -6247,7 +6427,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -6256,6 +6435,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing retx for MCS 5 to reseg_mcs 2
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -6266,6 +6446,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6282,7 +6463,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -6321,7 +6503,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -6330,6 +6511,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing retx for MCS 4 to reseg_mcs 1
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -6340,6 +6522,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6356,7 +6539,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -6395,7 +6579,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -6404,6 +6587,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 Testing retx for MCS 6 to reseg_mcs 3
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -6414,6 +6598,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6430,7 +6615,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -6476,7 +6662,6 @@ TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_SEND_ASS to GPRS_RLCMAC_DL_ASS_NONE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
@@ -6485,6 +6670,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 === end test_tbf_egprs_spb_dl ===
 === start test_tbf_puan_urbb_len ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
@@ -6506,6 +6692,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6581,6 +6768,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts her
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6598,7 +6786,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size 
 ws(64)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) exists
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -6614,6 +6803,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo B <single> (suggested TRX: 0): Alloc start
 Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 11
@@ -6661,6 +6851,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){NULL}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 === end test_tbf_update_ws ===
 === start test_tbf_li_decoding ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
@@ -6682,6 +6873,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6752,6 +6944,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts her
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6769,7 +6962,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size 
 ws(64)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) exists
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -6786,6 +6980,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6802,7 +6997,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -6824,6 +7020,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){FLOW}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 === end test_tbf_epdan_out_of_rx_window ===
 === start test_immediate_assign_rej_multi_block ===
 MS requests Uplink resource on CCCH/RACH: ra=0x78 (8 bit) Fn=2654167 qta=31
@@ -6832,6 +7029,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here *********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6857,6 +7055,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here *********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6882,6 +7081,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here *********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6907,6 +7107,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here *********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6932,6 +7133,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here *********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6957,6 +7159,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here *********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6982,6 +7185,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here *********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7007,6 +7211,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here *********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7020,6 +7225,7 @@ UL_ASS_TBF{NONE}: Allocated
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) Timeslot Allocation failed: trx = -1, single_slot = 1
 TBF{NULL}: Deallocated
 UL_ASS_TBF{NONE}: Deallocated
+DL_ASS_TBF{NONE}: Deallocated
 No PDCH resource for Uplink TBF
 Tx Immediate Assignment Reject on AGCH
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Destroying MS object
@@ -7051,6 +7257,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7598,6 +7805,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts her
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7615,7 +7823,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size 
 ws(192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) [DOWNLINK] START
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) Send dowlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) exists
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -7756,11 +7965,13 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_SEND_ACK to GPRS_RLCMAC_UL_ACK_NONE
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654279 block_nr=10 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS), expect answer on UL FN=2654283
+DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654279 + 13 = 2654292
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduled DL Assignment polling on PACCH (FN=2654292, TS=7)
+DL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654279 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
@@ -8274,6 +8485,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here *******
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8290,7 +8502,8 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Attaching DL TBF: TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) setting EGPRS DL window size to 64, base(64) slots(1) ws_pdch(0)
 ws(64)
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 0
-TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) changes DL ASS state from GPRS_RLCMAC_DL_ASS_NONE to GPRS_RLCMAC_DL_ASS_SEND_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_CCCH
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL EGPRS) set ass. type CCCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
@@ -8354,6 +8567,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here *********
 MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8397,6 +8611,7 @@ MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here *********
 MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8447,6 +8662,7 @@ MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here *********
 MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8497,6 +8713,7 @@ MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here *********
 MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8547,6 +8764,7 @@ MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here *********
 MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8597,6 +8815,7 @@ MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here *********
 MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8647,6 +8866,7 @@ MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here *********
 MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8697,6 +8917,7 @@ MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here *********
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8710,9 +8931,11 @@ UL_ASS_TBF{NONE}: Allocated
 TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL EGPRS) Timeslot Allocation failed: trx = 0, single_slot = 0
 TBF{NULL}: Deallocated
 UL_ASS_TBF{NONE}: Deallocated
+DL_ASS_TBF{NONE}: Deallocated
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) No PDCH resource
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL)
 TBF{NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
@@ -8740,6 +8963,7 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddcc, not yet confirmed
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL)
 TBF{NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
@@ -8758,4 +8982,5 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Destroying MS object
 ********** UL-TBF ends here **********
 TBF{ASSIGN}: Deallocated
 UL_ASS_TBF{NONE}: Deallocated
+DL_ASS_TBF{NONE}: Deallocated
 === end test_packet_access_rej_prr_no_other_tbfs ===

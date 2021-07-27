@@ -1,16 +1,19 @@
 MS(TLLI=0xffffffff, IMSI=, TA=220, 1/0,) Allocating DL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) Setting Control TS 2
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 04, dl_slots = 04
 MS(TLLI=0xffffffff, IMSI=, TA=220, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) Setting Control TS 4
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) Allocated: trx = 0, ul_slots = 10, dl_slots = 00
 MS(TLLI=0xffffffff, IMSI=, TA=220, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL EGPRS) Setting Control TS 1
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 02, dl_slots = 00
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)
@@ -18,6 +21,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size 
 MS(TLLI=0xffffffff, IMSI=, TA=220, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL EGPRS) Setting Control TS 4
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL EGPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 00
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)

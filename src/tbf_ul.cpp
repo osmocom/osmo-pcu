@@ -839,3 +839,9 @@ void tbf_usf_timeout(struct gprs_rlcmac_ul_tbf *tbf)
 {
 	tbf->usf_timeout();
 }
+
+
+bool ul_tbf_contention_resolution_done(const struct gprs_rlcmac_ul_tbf *tbf)
+{
+	return tbf->m_contention_resolution_done;
+}

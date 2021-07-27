@@ -708,11 +708,11 @@ void write_packet_uplink_assignment(RlcMacDownlink_t *block, uint8_t old_tfi,
 
 /* Generate Packet Downlink Assignment as per 3GPP TS 44.060, section 11.2.7.
  * NOTE: 'block' is expected to be zero-initialized by the caller. */
-void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
+void write_packet_downlink_assignment(RlcMacDownlink_t * block,
 	bool old_tfi_is_valid, uint8_t old_tfi, uint8_t old_downlink,
 	const struct gprs_rlcmac_dl_tbf *tbf, uint8_t poll, uint8_t rrbp,
 	uint8_t alpha, uint8_t gamma, int8_t ta_idx,
-	uint8_t ta_ts, bool use_egprs)
+	uint8_t ta_ts, bool use_egprs, uint8_t control_ack)
 {
 	PDA_AdditionsR99_t *pda_r99;
 
@@ -739,7 +739,7 @@ void Encoding::write_packet_downlink_assignment(RlcMacDownlink_t * block,
 
 	block->u.Packet_Downlink_Assignment.MAC_MODE            = 0x0;          // Dynamic Allocation
 	block->u.Packet_Downlink_Assignment.RLC_MODE            = RLC_MODE_ACKNOWLEDGED;
-	block->u.Packet_Downlink_Assignment.CONTROL_ACK         = tbf->was_releasing; // NW establishes no new DL TBF for the MS with running timer T3192
+	block->u.Packet_Downlink_Assignment.CONTROL_ACK         = control_ack; // NW establishes no new DL TBF for the MS with running timer T3192
 	block->u.Packet_Downlink_Assignment.TIMESLOT_ALLOCATION = 0;   // timeslot(s)
 	for (tn = 0; tn < 8; tn++) {
 		if (tbf->pdch[tn])

@@ -49,6 +49,7 @@ extern "C" {
 #include <pdch_ul_controller.h>
 #include <tbf_fsm.h>
 #include <tbf_ul_ass_fsm.h>
+#include <tbf_dl_ass_fsm.h>
 #ifdef __cplusplus
 }
 #endif
@@ -56,14 +57,6 @@ extern "C" {
 /*
  * TBF instance
  */
-
-enum gprs_rlcmac_tbf_dl_ass_state {
-	GPRS_RLCMAC_DL_ASS_NONE = 0,
-	GPRS_RLCMAC_DL_ASS_SEND_ASS, /* send downlink assignment on next RTS */
-	GPRS_RLCMAC_DL_ASS_WAIT_ACK, /* wait for PACKET CONTROL ACK */
-};
-
-extern const struct value_string gprs_rlcmac_tbf_dl_ass_state_names[];
 
 enum gprs_rlcmac_tbf_ul_ack_state {
 	GPRS_RLCMAC_UL_ACK_NONE = 0,
@@ -142,8 +135,6 @@ enum tbf_counters { /* TBF counters from 3GPP TS 44.060 §13.4 */
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
 #define T_START(tbf, t, T, r, f) tbf->t_start(t, T, r, f, __FILE__, __LINE__)
-
-#define TBF_SET_ASS_STATE_DL(t, st) do { t->set_ass_state_dl(st, __FILE__, __LINE__); } while(0)
 #define TBF_SET_ACK_STATE(t, st) do { t->set_ack_state(st, __FILE__, __LINE__); } while(0)
 
 #ifdef __cplusplus
@@ -153,6 +144,7 @@ struct gprs_rlcmac_tbf;
 const char *tbf_name(const struct gprs_rlcmac_tbf *tbf);
 enum tbf_fsm_states tbf_state(const struct gprs_rlcmac_tbf *tbf);
 struct osmo_fsm_inst *tbf_ul_ass_fi(const struct gprs_rlcmac_tbf *tbf);
+struct osmo_fsm_inst *tbf_dl_ass_fi(const struct gprs_rlcmac_tbf *tbf);
 enum gprs_rlcmac_tbf_direction tbf_direction(const struct gprs_rlcmac_tbf *tbf);
 void tbf_set_ms(struct gprs_rlcmac_tbf *tbf, struct GprsMs *ms);
 struct llist_head *tbf_ms_list(struct gprs_rlcmac_tbf *tbf);
@@ -173,6 +165,7 @@ void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t 
 void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_pdch *pdch, uint32_t poll_fn, enum pdch_ulc_tbf_poll_reason reason);
 void tbf_update_state_fsm_name(struct gprs_rlcmac_tbf *tbf);
 const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf);
+bool tbf_is_control_ts(const struct gprs_rlcmac_tbf *tbf, uint8_t ts);
 #ifdef __cplusplus
 }
 #endif
@@ -188,10 +181,9 @@ struct gprs_rlcmac_tbf {
 	int setup(int8_t use_trx, bool single_slot);
 	bool state_is(enum tbf_fsm_states rhs) const;
 	bool state_is_not(enum tbf_fsm_states rhs) const;
-	bool dl_ass_state_is(enum gprs_rlcmac_tbf_dl_ass_state rhs) const;
+	bool dl_ass_state_is(enum tbf_dl_ass_fsm_states rhs) const;
 	bool ul_ass_state_is(enum tbf_ul_ass_fsm_states rhs) const;
 	bool ul_ack_state_is(enum gprs_rlcmac_tbf_ul_ack_state rhs) const;
-	void set_ass_state_dl(enum gprs_rlcmac_tbf_dl_ass_state new_state, const char *file, int line);
 	void set_ack_state(enum gprs_rlcmac_tbf_ul_ack_state new_state, const char *file, int line);
 	void poll_sched_set(const char *file, int line);
 	void poll_sched_unset(const char *file, int line);
@@ -274,10 +266,6 @@ struct gprs_rlcmac_tbf {
 		Meas();
 	} meas;
 
-	/* Remember if the tbf was in wait_release state when we want to
-	 * schedule a new dl assignment */
-	uint8_t was_releasing;
-
 	/* Can/should we upgrade this tbf to use multiple slots? */
 	uint8_t upgrade_to_multislot;
 
@@ -294,6 +282,7 @@ struct gprs_rlcmac_tbf {
 	struct rate_ctr_group *m_ctrs;
 	struct tbf_fsm_ctx state_fsm;
 	struct tbf_ul_ass_fsm_ctx ul_ass_fsm;
+	struct tbf_ul_ass_fsm_ctx dl_ass_fsm;
 
 	struct llist_item m_ms_list;
 	struct llist_item m_trx_list;
@@ -307,7 +296,6 @@ protected:
 	struct GprsMs *m_ms;
 private:
 	void enable_egprs();
-	enum gprs_rlcmac_tbf_dl_ass_state dl_ass_state;
 	enum gprs_rlcmac_tbf_ul_ack_state ul_ack_state;
 	bool m_egprs_enabled;
 	struct osmo_timer_list Tarr[T_MAX];
@@ -320,9 +308,9 @@ inline bool gprs_rlcmac_tbf::state_is(enum tbf_fsm_states rhs) const
 	return tbf_state(this) == rhs;
 }
 
-inline bool gprs_rlcmac_tbf::dl_ass_state_is(enum gprs_rlcmac_tbf_dl_ass_state rhs) const
+inline bool gprs_rlcmac_tbf::dl_ass_state_is(enum tbf_dl_ass_fsm_states rhs) const
 {
-	return dl_ass_state == rhs;
+	return tbf_dl_ass_fi(this)->state == rhs;
 }
 
 inline bool gprs_rlcmac_tbf::ul_ass_state_is(enum tbf_ul_ass_fsm_states rhs) const
@@ -344,15 +332,6 @@ inline bool gprs_rlcmac_tbf::state_is_not(enum tbf_fsm_states rhs) const
 inline const char *gprs_rlcmac_tbf::state_name() const
 {
 	return osmo_fsm_inst_state_name(state_fsm.fi);
-}
-
-inline void gprs_rlcmac_tbf::set_ass_state_dl(enum gprs_rlcmac_tbf_dl_ass_state new_state, const char *file, int line)
-{
-	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s changes DL ASS state from %s to %s\n",
-		tbf_name(this),
-		get_value_string(gprs_rlcmac_tbf_dl_ass_state_names, dl_ass_state),
-		get_value_string(gprs_rlcmac_tbf_dl_ass_state_names, new_state));
-	dl_ass_state = new_state;
 }
 
 inline void gprs_rlcmac_tbf::set_ack_state(enum gprs_rlcmac_tbf_ul_ack_state new_state, const char *file, int line)

@@ -137,6 +137,7 @@ void update_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, int8_t ta_delta);
 void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta);
 struct gprs_rlcmac_ul_tbf *as_ul_tbf(struct gprs_rlcmac_tbf *tbf);
 void tbf_usf_timeout(struct gprs_rlcmac_ul_tbf *tbf);
+bool ul_tbf_contention_resolution_done(const struct gprs_rlcmac_ul_tbf *tbf);
 
 #define LOGPTBFUL(tbf, level, fmt, args...) LOGP(DTBFUL, level, "%s " fmt, tbf_name(tbf), ## args)
 #ifdef __cplusplus

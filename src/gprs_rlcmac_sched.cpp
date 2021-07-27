@@ -56,7 +56,7 @@ static void get_ctrl_msg_tbf_candidates(const struct gprs_rlcmac_pdch *pdch,
 			continue;
 		if (ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_SEND_ACK))
 			tbf_cand->ul_ack = ul_tbf;
-		if (ul_tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_SEND_ASS))
+		if (tbf_dl_ass_rts(ul_tbf))
 			tbf_cand->dl_ass = ul_tbf;
 		if (tbf_ul_ass_rts(ul_tbf))
 			tbf_cand->ul_ass = ul_tbf;
@@ -72,7 +72,7 @@ states? */
 		/* this trx, this ts */
 		if (!dl_tbf->is_control_ts(pdch->ts_no))
 			continue;
-		if (dl_tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_SEND_ASS))
+		if (tbf_dl_ass_rts(dl_tbf))
 			tbf_cand->dl_ass = dl_tbf;
 		if (tbf_ul_ass_rts(dl_tbf))
 			tbf_cand->ul_ass = dl_tbf;
@@ -171,7 +171,7 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 			else if (tbf == tbfs->ul_ass && tbf->direction == GPRS_RLCMAC_DL_TBF)
 				msg = tbf_ul_ass_create_rlcmac_msg(tbfs->ul_ass, fn, ts);
 			else if (tbf == tbfs->dl_ass && tbf->direction == GPRS_RLCMAC_UL_TBF)
-				msg = tbfs->dl_ass->create_dl_ass(fn, ts);
+				msg = tbf_dl_ass_create_rlcmac_msg(tbfs->dl_ass, fn, ts);
 			else if (tbf == tbfs->ul_ack)
 				msg = tbfs->ul_ack->create_ul_ack(fn, ts);
 			else if (tbf == tbfs->nacc) {
@@ -196,7 +196,7 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 		 */
 		if (tbfs->dl_ass) {
 			tbf = tbfs->dl_ass;
-			msg = tbfs->dl_ass->create_dl_ass(fn, ts);
+			msg = tbf_dl_ass_create_rlcmac_msg(tbfs->dl_ass, fn, ts);
 		} else if (tbfs->ul_ass) {
 			tbf = tbfs->ul_ass;
 			msg = tbf_ul_ass_create_rlcmac_msg(tbfs->ul_ass, fn, ts);
