@@ -371,8 +371,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
 		/* stop pending assignment timer */
 		new_tbf->t_stop(T0, "control acked (DL-TBF)");
-		if (new_tbf->check_n_clear(GPRS_RLCMAC_FLAG_TO_DL_ASS))
-			LOGPTBF(new_tbf, LOGL_NOTICE, "Recovered downlink assignment\n");
 
 		tbf_assign_control_ts(new_tbf);
 		return;

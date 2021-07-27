@@ -630,12 +630,6 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		/* Signal timeout to FSM to reschedule UL assignment */
 		osmo_fsm_inst_dispatch(this->ul_ass_fsm.fi, TBF_UL_ASS_EV_ASS_POLL_TIMEOUT, NULL);
 	} else if (dl_ass_state_is(TBF_DL_ASS_WAIT_ACK)) {
-		if (!(state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS))) {
-			LOGPTBF(this, LOGL_NOTICE,
-				"Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: %s\n",
-				tbf_rlcmac_diag(this));
-			state_fsm.state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ASS);
-		}
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PDA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {

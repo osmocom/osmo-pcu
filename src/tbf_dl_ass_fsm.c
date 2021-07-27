@@ -182,11 +182,16 @@ static void st_send_ass(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 
 static void st_wait_ack(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
+	struct tbf_dl_ass_fsm_ctx *ctx = (struct tbf_dl_ass_fsm_ctx *)fi->priv;
+
 	switch (event) {
 	case TBF_DL_ASS_EV_RX_ASS_CTRL_ACK:
 		tbf_dl_ass_fsm_state_chg(fi, TBF_DL_ASS_NONE);
 		break;
 	case TBF_DL_ASS_EV_ASS_POLL_TIMEOUT:
+		LOGPTBF(ctx->tbf, LOGL_NOTICE,
+			"Timeout for polling PACKET CONTROL ACK for PACKET DOWNLINK ASSIGNMENT: %s\n",
+			tbf_rlcmac_diag(ctx->tbf));
 		/* Reschedule Pkt Dl Ass */
 		tbf_dl_ass_fsm_state_chg(fi, TBF_DL_ASS_SEND_ASS);
 		break;
