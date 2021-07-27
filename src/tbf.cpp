@@ -625,12 +625,6 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		}
 
 	} else if (ul_ass_state_is(TBF_UL_ASS_WAIT_ACK)) {
-		if (!(state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS))) {
-			LOGPTBF(this, LOGL_NOTICE,
-				"Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: %s\n",
-				tbf_rlcmac_diag(this));
-			state_fsm.state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ASS);
-		}
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {

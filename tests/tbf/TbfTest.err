@@ -8422,9 +8422,9 @@ MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left wi
 PDCH(bts=0,trx=0,ts=7) Expiring FN=56 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 56)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
 UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to SEND_ASS
 UL_ASS_TBF(UL-TFI_1){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
@@ -8472,9 +8472,9 @@ MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left wi
 PDCH(bts=0,trx=0,ts=7) Expiring FN=60 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 60)
-TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
 UL_ASS_TBF(UL-TFI_1){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL-TFI_1){WAIT_ACK}: state_chg to SEND_ASS
 UL_ASS_TBF(UL-TFI_2){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
@@ -8522,9 +8522,9 @@ MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left wi
 PDCH(bts=0,trx=0,ts=7) Expiring FN=65 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 65)
-TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
 UL_ASS_TBF(UL-TFI_2){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL-TFI_2){WAIT_ACK}: state_chg to SEND_ASS
 UL_ASS_TBF(UL-TFI_3){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
@@ -8572,9 +8572,9 @@ MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left wi
 PDCH(bts=0,trx=0,ts=7) Expiring FN=69 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 69)
-TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
 UL_ASS_TBF(UL-TFI_3){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL-TFI_3){WAIT_ACK}: state_chg to SEND_ASS
 UL_ASS_TBF(UL-TFI_4){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
@@ -8622,9 +8622,9 @@ MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left wi
 PDCH(bts=0,trx=0,ts=7) Expiring FN=73 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 73)
-TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
 UL_ASS_TBF(UL-TFI_4){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL-TFI_4){WAIT_ACK}: state_chg to SEND_ASS
 UL_ASS_TBF(UL-TFI_5){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
@@ -8672,9 +8672,9 @@ MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left wi
 PDCH(bts=0,trx=0,ts=7) Expiring FN=78 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 78)
-TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
 UL_ASS_TBF(UL-TFI_5){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL-TFI_5){WAIT_ACK}: state_chg to SEND_ASS
 UL_ASS_TBF(UL-TFI_6){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
@@ -8722,9 +8722,9 @@ UL_ASS_TBF{NONE}: state_chg to SEND_ASS_REJ
 PDCH(bts=0,trx=0,ts=7) Expiring FN=82 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 82)
-TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
 UL_ASS_TBF(UL-TFI_6){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 UL_ASS_TBF(UL-TFI_6){WAIT_ACK}: state_chg to SEND_ASS
 UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
