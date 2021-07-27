@@ -222,7 +222,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 	llist_add(tbf_trx_list((struct gprs_rlcmac_tbf *)ul_tbf), &trx->ul_tbfs);
 	bts_do_rate_ctr_inc(ul_tbf->bts, CTR_TBF_UL_ALLOCATED);
 	osmo_fsm_inst_dispatch(ul_tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
-	TBF_SET_ASS_STATE_UL(ul_tbf, GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ);
+	osmo_fsm_inst_dispatch(ul_tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_SCHED_ASS_REJ, NULL);
 
 	return ul_tbf;
 }

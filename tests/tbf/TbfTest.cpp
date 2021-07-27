@@ -3295,7 +3295,8 @@ void test_packet_access_rej_epdan()
 
 	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
 
-	struct msgb *msg = dl_tbf->create_packet_access_reject();
+	osmo_fsm_inst_dispatch(dl_tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_SCHED_ASS_REJ, NULL);
+	struct msgb *msg = tbf_ul_ass_create_rlcmac_msg((const struct gprs_rlcmac_tbf*)dl_tbf, 0, 0);
 
 	fprintf(stderr, "packet reject: %s\n",
 			osmo_hexdump(msg->data, 23));

@@ -589,8 +589,7 @@ static void gen_freq_params(Frequency_Parameters_t *freq_params,
 
 /* Generate Packet Uplink Assignment as per 3GPP TS 44.060, section 11.2.29.
  * NOTE: 'block' is expected to be zero-initialized by the caller. */
-void Encoding::write_packet_uplink_assignment(
-	RlcMacDownlink_t * block, uint8_t old_tfi,
+void write_packet_uplink_assignment(RlcMacDownlink_t *block, uint8_t old_tfi,
 	uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
 	const struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t rrbp, uint8_t alpha,
 	uint8_t gamma, int8_t ta_idx, bool use_egprs)
@@ -1737,8 +1736,7 @@ void Encoding::rlc_data_to_dl_append_egprs_li_padding(
  * section 7.1.3.2.1 On receipt of a PACKET RESOURCE REQUEST message
  * 8.1.2.5 Establishment of uplink TBF
  */
-void Encoding::write_packet_access_reject(
-	bitvec * dest, uint32_t tlli, unsigned long t3172_ms)
+void write_packet_access_reject(struct bitvec *dest, uint32_t tlli, unsigned long t3172_ms)
 {
 	unsigned wp = 0;
 

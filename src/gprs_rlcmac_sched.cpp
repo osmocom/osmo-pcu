@@ -58,8 +58,7 @@ static void get_ctrl_msg_tbf_candidates(const struct gprs_rlcmac_pdch *pdch,
 			tbf_cand->ul_ack = ul_tbf;
 		if (ul_tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_SEND_ASS))
 			tbf_cand->dl_ass = ul_tbf;
-		if (ul_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS)
-		    || ul_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
+		if (tbf_ul_ass_rts(ul_tbf))
 			tbf_cand->ul_ass = ul_tbf;
 		/* NACC ready to send. TFI assigned is needed to send messages */
 		if (ul_tbf->is_tfi_assigned() && ms_nacc_rts(ul_tbf->ms()))
@@ -75,8 +74,7 @@ states? */
 			continue;
 		if (dl_tbf->dl_ass_state_is(GPRS_RLCMAC_DL_ASS_SEND_ASS))
 			tbf_cand->dl_ass = dl_tbf;
-		if (dl_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS)
-		    || dl_tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
+		if (tbf_ul_ass_rts(dl_tbf))
 			tbf_cand->ul_ass = dl_tbf;
 		/* NACC ready to send. TFI assigned is needed to send messages */
 		if (dl_tbf->is_tfi_assigned() && ms_nacc_rts(dl_tbf->ms()))
@@ -168,10 +166,10 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 			 * because they may kill the TBF when the CONTROL ACK is
 			 * received, thus preventing the others from being processed.
 			 */
-			if (tbf == tbfs->ul_ass && tbf->ul_ass_state_is(GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ))
-				msg = tbfs->ul_ass->create_packet_access_reject();
+			if (tbf == tbfs->ul_ass && tbf->ul_ass_state_is(TBF_UL_ASS_SEND_ASS_REJ))
+				msg = tbf_ul_ass_create_rlcmac_msg(tbfs->ul_ass, fn, ts);
 			else if (tbf == tbfs->ul_ass && tbf->direction == GPRS_RLCMAC_DL_TBF)
-				msg = tbfs->ul_ass->create_ul_ass(fn, ts);
+				msg = tbf_ul_ass_create_rlcmac_msg(tbfs->ul_ass, fn, ts);
 			else if (tbf == tbfs->dl_ass && tbf->direction == GPRS_RLCMAC_UL_TBF)
 				msg = tbfs->dl_ass->create_dl_ass(fn, ts);
 			else if (tbf == tbfs->ul_ack)
@@ -201,7 +199,7 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 			msg = tbfs->dl_ass->create_dl_ass(fn, ts);
 		} else if (tbfs->ul_ass) {
 			tbf = tbfs->ul_ass;
-			msg = tbfs->ul_ass->create_ul_ass(fn, ts);
+			msg = tbf_ul_ass_create_rlcmac_msg(tbfs->ul_ass, fn, ts);
 		}
 	}
 

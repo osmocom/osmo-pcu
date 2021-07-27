@@ -63,13 +63,6 @@ public:
 			uint8_t t3142
 		);
 
-	static void write_packet_uplink_assignment(
-			RlcMacDownlink_t * block, uint8_t old_tfi,
-			uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
-			const struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll, uint8_t rrbp,
-			uint8_t alpha, uint8_t gamma, int8_t ta_idx,
-			bool use_egprs);
-
 	static void write_packet_downlink_assignment(RlcMacDownlink_t * block,
 			bool old_tfi_is_valid, uint8_t old_tfi, uint8_t old_downlink,
 			const struct gprs_rlcmac_dl_tbf *tbf, uint8_t poll, uint8_t rrbp,
@@ -77,9 +70,6 @@ public:
 			int8_t ta_idx, uint8_t ta_ts, bool use_egprs);
 
 	static void encode_rbb(const char *show_rbb, uint8_t *rbb);
-
-	static void write_packet_access_reject(bitvec * dest, uint32_t tlli,
-					       unsigned long t3172_ms);
 
 	static void write_packet_uplink_ack(
 			bitvec * dest, struct gprs_rlcmac_ul_tbf *tbf, bool is_final,
@@ -120,6 +110,13 @@ public:
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+void write_packet_access_reject(struct bitvec *dest, uint32_t tlli, unsigned long t3172_ms);
+void write_packet_uplink_assignment(RlcMacDownlink_t *block, uint8_t old_tfi,
+				    uint8_t old_downlink, uint32_t tlli, uint8_t use_tlli,
+				    const struct gprs_rlcmac_ul_tbf *tbf, uint8_t poll,
+				    uint8_t rrbp, uint8_t alpha, uint8_t gamma, int8_t ta_idx,
+				    bool use_egprs);
 
 void write_packet_neighbour_cell_data(RlcMacDownlink_t *block,
 		bool tfi_is_dl, uint8_t tfi, uint8_t container_id,

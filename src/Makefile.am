@@ -60,6 +60,7 @@ libgprs_la_SOURCES = \
 	tbf.cpp \
 	tbf_fsm.c \
 	tbf_ul.cpp \
+	tbf_ul_ass_fsm.c \
 	tbf_dl.cpp \
 	bts.cpp \
 	bts_pch_timer.c \
@@ -100,6 +101,7 @@ noinst_HEADERS = \
 	tbf.h \
 	tbf_fsm.h \
 	tbf_ul.h \
+	tbf_ul_ass_fsm.h \
 	tbf_dl.h \
 	bts.h \
 	bts_pch_timer.h \

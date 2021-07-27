@@ -5,6 +5,7 @@ Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -23,6 +24,7 @@ Modifying MS object, TLLI = 0x00002342, TA 220 -> 4
 MS(TLLI=0x00002342, IMSI=, TA=4, 0/0, DL) ********** UL-TBF starts here **********
 MS(TLLI=0x00002342, IMSI=, TA=4, 0/0, DL) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -48,6 +50,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -108,6 +111,7 @@ TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) ********** DL-TBF starts here **********
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -135,12 +139,14 @@ PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_REL
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE)
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer T0 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
 ********** DL-TBF ends here **********
 TBF(DL-TFI_1){ASSIGN}: Deallocated
+UL_ASS_TBF(DL-TFI_1){NONE}: Deallocated
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Destroying MS object
 === end test_tbf_final_ack ===
 === start test_tbf_final_ack ===
@@ -150,6 +156,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -210,6 +217,7 @@ TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) ********** DL-TBF starts here **********
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -237,12 +245,14 @@ PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN),
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
 ********** DL-TBF ends here **********
 TBF(DL-TFI_1){ASSIGN}: Deallocated
+UL_ASS_TBF(DL-TFI_1){NONE}: Deallocated
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE)
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Destroying MS object
 === end test_tbf_final_ack ===
 === start test_tbf_delayed_release ===
@@ -252,6 +262,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -504,6 +515,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 === end test_tbf_delayed_release ===
 === start test_tbf_imsi ===
 Creating MS object, TLLI = 0xffffffff
@@ -512,6 +524,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -541,6 +554,7 @@ Found first unallocated TRX=0 TFI=1
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -575,6 +589,7 @@ PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW), 1
 MS(TLLI=0xf1000001, IMSI=001001000000002, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1000001 DIR=DL STATE=FLOW)
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){FLOW}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 MS(TLLI=0xf1000001, IMSI=001001000000002, TA=0, 45/0,) Clearing MS object
 MS(TLLI=0xffffffff, IMSI=, TA=0, 45/0,) Destroying MS object
 TBF(TFI=1 TLLI=0xf1000002 DIR=DL STATE=FLOW) free
@@ -583,6 +598,7 @@ MS(TLLI=0xf1000002, IMSI=001001000000002, TA=0, 45/0,) Detaching TBF: TBF(TFI=1 
 MS(TLLI=0xf1000002, IMSI=001001000000002, TA=0, 45/0,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_1){FLOW}: Deallocated
+UL_ASS_TBF(DL-TFI_1){NONE}: Deallocated
 === end test_tbf_imsi ===
 === start test_tbf_exhaustion ===
 Creating MS object, TLLI = 0xffffffff
@@ -592,6 +608,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000000, partly confir
 MS(TLLI=0xc0000000, IMSI=001001000000000, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000000, IMSI=001001000000000, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -620,6 +637,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000001, partly confir
 MS(TLLI=0xc0000001, IMSI=001001000000001, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000001, IMSI=001001000000001, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -648,6 +666,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000002, partly confir
 MS(TLLI=0xc0000002, IMSI=001001000000002, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000002, IMSI=001001000000002, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -676,6 +695,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000003, partly confir
 MS(TLLI=0xc0000003, IMSI=001001000000003, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000003, IMSI=001001000000003, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -704,6 +724,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000004, partly confir
 MS(TLLI=0xc0000004, IMSI=001001000000004, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000004, IMSI=001001000000004, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -732,6 +753,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000005, partly confir
 MS(TLLI=0xc0000005, IMSI=001001000000005, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000005, IMSI=001001000000005, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -760,6 +782,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000006, partly confir
 MS(TLLI=0xc0000006, IMSI=001001000000006, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000006, IMSI=001001000000006, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -788,6 +811,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000007, partly confir
 MS(TLLI=0xc0000007, IMSI=001001000000007, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000007, IMSI=001001000000007, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -816,6 +840,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000008, partly confir
 MS(TLLI=0xc0000008, IMSI=001001000000008, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000008, IMSI=001001000000008, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -844,6 +869,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000009, partly confir
 MS(TLLI=0xc0000009, IMSI=001001000000009, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000009, IMSI=001001000000009, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -872,6 +898,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc000000a, partly confir
 MS(TLLI=0xc000000a, IMSI=001001000000010, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000000a, IMSI=001001000000010, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -900,6 +927,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc000000b, partly confir
 MS(TLLI=0xc000000b, IMSI=001001000000011, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000000b, IMSI=001001000000011, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -928,6 +956,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc000000c, partly confir
 MS(TLLI=0xc000000c, IMSI=001001000000012, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000000c, IMSI=001001000000012, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -956,6 +985,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc000000d, partly confir
 MS(TLLI=0xc000000d, IMSI=001001000000013, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000000d, IMSI=001001000000013, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -984,6 +1014,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc000000e, partly confir
 MS(TLLI=0xc000000e, IMSI=001001000000014, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000000e, IMSI=001001000000014, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1012,6 +1043,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc000000f, partly confir
 MS(TLLI=0xc000000f, IMSI=001001000000015, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000000f, IMSI=001001000000015, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1040,6 +1072,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000010, partly confir
 MS(TLLI=0xc0000010, IMSI=001001000000016, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000010, IMSI=001001000000016, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1068,6 +1101,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000011, partly confir
 MS(TLLI=0xc0000011, IMSI=001001000000017, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000011, IMSI=001001000000017, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1096,6 +1130,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000012, partly confir
 MS(TLLI=0xc0000012, IMSI=001001000000018, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000012, IMSI=001001000000018, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1124,6 +1159,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000013, partly confir
 MS(TLLI=0xc0000013, IMSI=001001000000019, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000013, IMSI=001001000000019, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1152,6 +1188,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000014, partly confir
 MS(TLLI=0xc0000014, IMSI=001001000000020, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000014, IMSI=001001000000020, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1180,6 +1217,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000015, partly confir
 MS(TLLI=0xc0000015, IMSI=001001000000021, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000015, IMSI=001001000000021, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1208,6 +1246,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000016, partly confir
 MS(TLLI=0xc0000016, IMSI=001001000000022, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000016, IMSI=001001000000022, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1236,6 +1275,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000017, partly confir
 MS(TLLI=0xc0000017, IMSI=001001000000023, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000017, IMSI=001001000000023, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1264,6 +1304,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000018, partly confir
 MS(TLLI=0xc0000018, IMSI=001001000000024, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000018, IMSI=001001000000024, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1292,6 +1333,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000019, partly confir
 MS(TLLI=0xc0000019, IMSI=001001000000025, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000019, IMSI=001001000000025, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1320,6 +1362,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc000001a, partly confir
 MS(TLLI=0xc000001a, IMSI=001001000000026, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000001a, IMSI=001001000000026, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1348,6 +1391,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc000001b, partly confir
 MS(TLLI=0xc000001b, IMSI=001001000000027, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000001b, IMSI=001001000000027, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1376,6 +1420,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc000001c, partly confir
 MS(TLLI=0xc000001c, IMSI=001001000000028, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000001c, IMSI=001001000000028, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1404,6 +1449,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc000001d, partly confir
 MS(TLLI=0xc000001d, IMSI=001001000000029, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000001d, IMSI=001001000000029, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1432,6 +1478,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc000001e, partly confir
 MS(TLLI=0xc000001e, IMSI=001001000000030, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000001e, IMSI=001001000000030, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1460,6 +1507,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc000001f, partly confir
 MS(TLLI=0xc000001f, IMSI=001001000000031, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000001f, IMSI=001001000000031, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1488,10 +1536,12 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0000020, partly confir
 MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 [DL] algo A <single> (suggested TRX: -1): failed to find a usable TRX (TFI exhausted)
 TBF(TFI=0 TLLI=0xc0000020 DIR=DL STATE=NULL) Timeslot Allocation failed: trx = -1, single_slot = 1
 TBF{NULL}: Deallocated
+UL_ASS_TBF{NONE}: Deallocated
 MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) No PDCH resource
 === end test_tbf_exhaustion ===
 MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) Destroying MS object
@@ -1503,6 +1553,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0123456, partly confir
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1532,9 +1583,11 @@ MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Schedule MS release in 10 secs
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){ASSIGN}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1602,6 +1655,7 @@ Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1649,6 +1703,7 @@ Modifying MS object, TLLI: 0xf1223344 confirmed
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1688,6 +1743,7 @@ Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1705,19 +1761,23 @@ TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(UL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(UL-TFI_0){ASSIGN}: state_chg to FLOW
 Detected FN jump! 2654283 -> 2654275
@@ -1737,6 +1797,7 @@ Modifying MS object, TLLI: 0xf1223344 confirmed
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1776,6 +1837,7 @@ Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1793,19 +1855,23 @@ TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(UL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(UL-TFI_0){ASSIGN}: state_chg to FLOW
 Detected FN jump! 2654283 -> 2654275
@@ -1824,6 +1890,7 @@ Modifying MS object, TLLI: 0xf1223344 confirmed
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1927,6 +1994,7 @@ Modifying MS object, TLLI = 0xf5667788, MS class 0 -> 1
 MS(TLLI=0xf5667788, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf5667788, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1944,7 +2012,8 @@ TBF(UL-TFI_1){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_1){NULL}: state_chg to ASSIGN
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_1){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_1){NONE}: state_chg to SEND_ASS
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654348 but previous FN=2654301 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654301): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 2 => 3 (< MAX 10)
@@ -1954,18 +2023,21 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654309, TS
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3105 1 => 2 (< MAX 8)
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654348 block_nr=2 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654353
+UL_ASS_TBF(UL-TFI_1){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654348 + 13 = 2654361
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654361, TS=7)
+UL_ASS_TBF(UL-TFI_1){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654348 Scheduling control message at RTS for TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN)
 Detected FN jump! 2654348 -> 2654361
 PDCH(bts=0,trx=0,ts=7) FN=2654361 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654361 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) FN=2654361 Rx Packet Control Ack (reason=UL_ASS)
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
-TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
+UL_ASS_TBF(UL-TFI_1){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+UL_ASS_TBF(UL-TFI_1){WAIT_ACK}: state_chg to NONE
 TBF(UL-TFI_1){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(UL-TFI_1){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654361 but previous FN=2654353 is still reserved!
@@ -1991,6 +2063,7 @@ PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 1
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 ********** UL-TBF ends here **********
 TBF(UL-TFI_0){FLOW}: Deallocated
+UL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Clearing MS object
 MS(TLLI=0xffffffff, IMSI=, TA=7, 1/0,) Destroying MS object
 Modifying MS object, TLLI: 0xf5667788 confirmed
@@ -2014,6 +2087,7 @@ Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2031,20 +2105,24 @@ TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: CS-1 -> CS-2
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(UL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(UL-TFI_0){ASSIGN}: state_chg to FLOW
 Detected FN jump! 2654283 -> 2654275
@@ -2064,6 +2142,7 @@ Modifying MS object, TLLI: 0xf1223344 confirmed
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2092,6 +2171,7 @@ PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 0
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 ********** UL-TBF ends here **********
 TBF(UL-TFI_0){FLOW}: Deallocated
+UL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654224 qta=31
 MS requests single block allocation
 Allocated a single block at SBFn=2654327 TRX=0 TS=7
@@ -2104,6 +2184,7 @@ PDCH(bts=0,trx=0,ts=7) FN=2654327 PKT RESOURCE REQ: MS requests UL TBF throguh S
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2121,19 +2202,23 @@ TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654327 + 13 = 2654340
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654340, TS=7)
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654327 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 Detected FN jump! 2654327 -> 2654340
 PDCH(bts=0,trx=0,ts=7) FN=2654340 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654340 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) FN=2654340 Rx Packet Control Ack (reason=UL_ASS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(UL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(UL-TFI_0){ASSIGN}: state_chg to FLOW
 Detected FN jump! 2654340 -> 2654331
@@ -2165,6 +2250,7 @@ Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2182,20 +2268,24 @@ TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: CS-1 -> CS-2
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(UL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(UL-TFI_0){ASSIGN}: state_chg to FLOW
 Detected FN jump! 2654283 -> 2654275
@@ -2215,6 +2305,7 @@ Modifying MS object, TLLI: 0xf1223344 confirmed
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2243,12 +2334,14 @@ PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 0
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 ********** UL-TBF ends here **********
 TBF(UL-TFI_0){FLOW}: Deallocated
+UL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
 Found first unallocated TRX=0 TFI=0
 MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654275 qta=31
 Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2282,6 +2375,7 @@ PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN),
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){ASSIGN}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Clearing MS object
 MS(TLLI=0xffffffff, IMSI=, TA=7, 1/0,) Destroying MS object
@@ -2317,6 +2411,7 @@ Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2334,20 +2429,24 @@ TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: CS-1 -> CS-2
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN)
 Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) [DOWNLINK] UPLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(UL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(UL-TFI_0){ASSIGN}: state_chg to FLOW
 Detected FN jump! 2654283 -> 2654275
@@ -2367,6 +2466,7 @@ Modifying MS object, TLLI: 0xf1223344 confirmed
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3014,6 +3114,7 @@ TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3121,6 +3222,7 @@ PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_REL
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE)
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 TBF(DL-TFI_1){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL-TFI_1){ASSIGN}: state_chg to FLOW
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer T0 [control acked (DL-TBF)]
@@ -3340,6 +3442,7 @@ The MS object cannot fully confirm an unexpected TLLI: 0xc0006789, partly confir
 MS(TLLI=0xc0006789, IMSI=001001123456789, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0006789, IMSI=001001123456789, TA=220, 45/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3368,6 +3471,7 @@ Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 12
 MS(TLLI=0xffffffff, IMSI=, TA=220, 12/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 12/0,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo B <multi> (suggested TRX: 0): Alloc start
 Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 12
@@ -3401,6 +3505,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 12/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 12/0,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){NULL}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 12
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 12
@@ -3408,6 +3513,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo B <multi> (suggested TRX: 0): Alloc start
 Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 12
@@ -3443,6 +3549,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) Detaching TBF: TBF(TFI=0 TLLI=0xfffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 12/12,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){NULL}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 === end test_tbf_ws ===
 === start test_tbf_egprs_two_phase ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
@@ -3463,6 +3570,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3482,20 +3590,24 @@ TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
 Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(UL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(UL-TFI_0){ASSIGN}: state_chg to FLOW
 Detected FN jump! 2654283 -> 2654275
@@ -3516,6 +3628,7 @@ Modifying MS object, TLLI: 0xf1223344 confirmed
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3559,6 +3672,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3578,20 +3692,24 @@ TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
 Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(UL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(UL-TFI_0){ASSIGN}: state_chg to FLOW
 Detected FN jump! 2654283 -> 2654275
@@ -3730,6 +3848,7 @@ Modifying MS object, TLLI: 0xf1223344 confirmed
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3764,6 +3883,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4052,6 +4172,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing MCS-2
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -4061,6 +4182,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4300,6 +4422,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing MCS-3
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -4309,6 +4432,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4508,6 +4632,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing MCS-4
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -4517,6 +4642,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4700,6 +4826,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing MCS-5
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -4709,6 +4836,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -4876,6 +5004,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing MCS-6
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -4885,6 +5014,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5028,6 +5158,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing MCS-7
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5037,6 +5168,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5189,6 +5321,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing MCS-8
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5198,6 +5331,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5341,6 +5475,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing MCS-9
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5350,6 +5485,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5482,6 +5618,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 === end test_tbf_egprs_dl ===
 === start test_tbf_egprs_retx_dl ===
 Testing retx for MCS 6 - 6
@@ -5493,6 +5630,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5550,6 +5688,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing retx for MCS 1 - 9
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5559,6 +5698,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5615,6 +5755,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing retx for MCS 2 - 8
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5624,6 +5765,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5680,6 +5822,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing retx for MCS 5 - 7
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5689,6 +5832,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5768,6 +5912,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing retx for MCS 6 - 9
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5777,6 +5922,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5855,6 +6001,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing retx for MCS 7 - 5
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5864,6 +6011,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -5942,6 +6090,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing retx for MCS 9 - 6
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -5951,6 +6100,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6029,6 +6179,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 === end test_tbf_egprs_retx_dl ===
 === start test_tbf_egprs_spb_dl ===
 Testing retx for MCS 6 to reseg_mcs 3
@@ -6040,6 +6191,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6103,6 +6255,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing retx for MCS 5 to reseg_mcs 2
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -6112,6 +6265,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6175,6 +6329,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing retx for MCS 4 to reseg_mcs 1
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -6184,6 +6339,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6247,6 +6403,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 Testing retx for MCS 6 to reseg_mcs 3
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 11
@@ -6256,6 +6413,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6326,6 +6484,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 === end test_tbf_egprs_spb_dl ===
 === start test_tbf_puan_urbb_len ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
@@ -6346,6 +6505,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6365,20 +6525,24 @@ TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
 Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(UL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(UL-TFI_0){ASSIGN}: state_chg to FLOW
 Detected FN jump! 2654283 -> 2654275
@@ -6416,6 +6580,7 @@ Modifying MS object, TLLI: 0xf1223344 confirmed
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6448,6 +6613,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo B <single> (suggested TRX: 0): Alloc start
 Found first unallocated TRX=0 TFI=0
 Slot Allocation (Algorithm B) for class 11
@@ -6494,6 +6660,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xfffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){NULL}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 === end test_tbf_update_ws ===
 === start test_tbf_li_decoding ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
@@ -6514,6 +6681,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6533,20 +6701,24 @@ TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
 Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(UL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(UL-TFI_0){ASSIGN}: state_chg to FLOW
 Detected FN jump! 2654283 -> 2654275
@@ -6579,6 +6751,7 @@ Modifying MS object, TLLI: 0xf1223344 confirmed
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6612,6 +6785,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6649,6 +6823,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddc
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){FLOW}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 === end test_tbf_epdan_out_of_rx_window ===
 === start test_immediate_assign_rej_multi_block ===
 MS requests Uplink resource on CCCH/RACH: ra=0x78 (8 bit) Fn=2654167 qta=31
@@ -6656,6 +6831,7 @@ Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6680,6 +6856,7 @@ Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6704,6 +6881,7 @@ Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6728,6 +6906,7 @@ Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6752,6 +6931,7 @@ Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6776,6 +6956,7 @@ Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6800,6 +6981,7 @@ Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6824,6 +7006,7 @@ Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6836,6 +7019,7 @@ TBF{NULL}: Allocated
 [UL] algo A <single> (suggested TRX: -1): failed to allocate a TS, no USF available
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) Timeslot Allocation failed: trx = -1, single_slot = 1
 TBF{NULL}: Deallocated
+UL_ASS_TBF{NONE}: Deallocated
 No PDCH resource for Uplink TBF
 Tx Immediate Assignment Reject on AGCH
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Destroying MS object
@@ -6866,6 +7050,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6885,20 +7070,24 @@ TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654283, TS=7)
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654270 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS)
 Detected FN jump! 2654270 -> 2654283
 PDCH(bts=0,trx=0,ts=7) FN=2654283 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654283 ------------------------- RX : Uplink Control Block -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) FN=2654283 Rx Packet Control Ack (reason=UL_ASS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) [DOWNLINK] UPLINK ASSIGNED
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_WAIT_ACK to GPRS_RLCMAC_UL_ASS_NONE
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(UL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(UL-TFI_0){ASSIGN}: state_chg to FLOW
 Detected FN jump! 2654283 -> 2654275
@@ -7408,6 +7597,7 @@ Modifying MS object, TLLI: 0xf1223344 confirmed
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8083,6 +8273,7 @@ Found first unallocated TRX=0 TFI=0
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) ********** DL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 11/11,) Allocating DL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8110,6 +8301,10 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev C
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
+UL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS_REJ
+UL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS_REJ
+UL_ASS_TBF(DL-TFI_0){SEND_ASS_REJ}: Received Event CREATE_RLCMAC_MSG
+UL_ASS_TBF(DL-TFI_0){SEND_ASS_REJ}: state_chg to NONE
 packet reject: 40 84 7f f7 6e e6 7e ab 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 === end test_packet_access_rej_epdan ===
 === start test_packet_access_rej_prr ===
@@ -8158,6 +8353,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8177,13 +8373,16 @@ TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS)
 PDCH(bts=0,trx=0,ts=7) FN=56 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=56 ------------------------- RX : Uplink Control Block -------------------------
@@ -8197,6 +8396,7 @@ MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8216,18 +8416,23 @@ TBF(UL-TFI_1){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_1){NULL}: state_chg to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_1){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_1){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 PDCH(bts=0,trx=0,ts=7) Expiring FN=56 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 56)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to SEND_ASS
+UL_ASS_TBF(UL-TFI_1){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+UL_ASS_TBF(UL-TFI_1){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS)
 PDCH(bts=0,trx=0,ts=7) FN=60 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=60 ------------------------- RX : Uplink Control Block -------------------------
@@ -8241,6 +8446,7 @@ MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8260,18 +8466,23 @@ TBF(UL-TFI_2){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_2){NULL}: state_chg to ASSIGN
 TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_2){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_2){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 PDCH(bts=0,trx=0,ts=7) Expiring FN=60 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 60)
 TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+UL_ASS_TBF(UL-TFI_1){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+UL_ASS_TBF(UL-TFI_1){WAIT_ACK}: state_chg to SEND_ASS
+UL_ASS_TBF(UL-TFI_2){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+UL_ASS_TBF(UL-TFI_2){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS)
 PDCH(bts=0,trx=0,ts=7) FN=65 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=65 ------------------------- RX : Uplink Control Block -------------------------
@@ -8285,6 +8496,7 @@ MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8304,18 +8516,23 @@ TBF(UL-TFI_3){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_3){NULL}: state_chg to ASSIGN
 TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_3){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_3){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 PDCH(bts=0,trx=0,ts=7) Expiring FN=65 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 65)
 TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+UL_ASS_TBF(UL-TFI_2){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+UL_ASS_TBF(UL-TFI_2){WAIT_ACK}: state_chg to SEND_ASS
+UL_ASS_TBF(UL-TFI_3){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+UL_ASS_TBF(UL-TFI_3){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS)
 PDCH(bts=0,trx=0,ts=7) FN=69 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=69 ------------------------- RX : Uplink Control Block -------------------------
@@ -8329,6 +8546,7 @@ MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8348,18 +8566,23 @@ TBF(UL-TFI_4){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_4){NULL}: state_chg to ASSIGN
 TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_4){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_4){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 PDCH(bts=0,trx=0,ts=7) Expiring FN=69 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 69)
 TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+UL_ASS_TBF(UL-TFI_3){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+UL_ASS_TBF(UL-TFI_3){WAIT_ACK}: state_chg to SEND_ASS
+UL_ASS_TBF(UL-TFI_4){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+UL_ASS_TBF(UL-TFI_4){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS)
 PDCH(bts=0,trx=0,ts=7) FN=73 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=73 ------------------------- RX : Uplink Control Block -------------------------
@@ -8373,6 +8596,7 @@ MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8392,18 +8616,23 @@ TBF(UL-TFI_5){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_5){NULL}: state_chg to ASSIGN
 TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_5){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_5){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 PDCH(bts=0,trx=0,ts=7) Expiring FN=73 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 73)
 TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+UL_ASS_TBF(UL-TFI_4){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+UL_ASS_TBF(UL-TFI_4){WAIT_ACK}: state_chg to SEND_ASS
+UL_ASS_TBF(UL-TFI_5){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+UL_ASS_TBF(UL-TFI_5){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS)
 PDCH(bts=0,trx=0,ts=7) FN=78 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=78 ------------------------- RX : Uplink Control Block -------------------------
@@ -8417,6 +8646,7 @@ MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8436,18 +8666,23 @@ TBF(UL-TFI_6){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_6){NULL}: state_chg to ASSIGN
 TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
-TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS
+UL_ASS_TBF(UL-TFI_6){NONE}: Received Event SCHED_ASS
+UL_ASS_TBF(UL-TFI_6){NONE}: state_chg to SEND_ASS
 MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 PDCH(bts=0,trx=0,ts=7) Expiring FN=78 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 78)
 TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+UL_ASS_TBF(UL-TFI_5){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+UL_ASS_TBF(UL-TFI_5){WAIT_ACK}: state_chg to SEND_ASS
+UL_ASS_TBF(UL-TFI_6){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+UL_ASS_TBF(UL-TFI_6){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS)
 PDCH(bts=0,trx=0,ts=7) FN=82 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=82 ------------------------- RX : Uplink Control Block -------------------------
@@ -8461,6 +8696,7 @@ MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8473,42 +8709,53 @@ TBF{NULL}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): failed to allocate a TS, no USF available
 TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL EGPRS) Timeslot Allocation failed: trx = 0, single_slot = 0
 TBF{NULL}: Deallocated
+UL_ASS_TBF{NONE}: Deallocated
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) No PDCH resource
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL)
 TBF{NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF{NULL}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ
+UL_ASS_TBF{NONE}: Received Event SCHED_ASS_REJ
+UL_ASS_TBF{NONE}: state_chg to SEND_ASS_REJ
 PDCH(bts=0,trx=0,ts=7) Expiring FN=82 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231): TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 82)
 TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: |Assignment was on PACCH|No uplink data received yet|
 TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) N3105 0 => 1 (< MAX 8)
+UL_ASS_TBF(UL-TFI_6){WAIT_ACK}: Received Event ASS_POLL_TIMEOUT
+UL_ASS_TBF(UL-TFI_6){WAIT_ACK}: state_chg to SEND_ASS
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Uplink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Uplink Assignment -------------------------
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
+UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS)
 === end test_packet_access_rej_prr ===
 === start test_packet_access_rej_prr_no_other_tbfs ===
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddcc, not yet confirmed
 TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL)
 TBF{NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF{NULL}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) changes UL ASS state from GPRS_RLCMAC_UL_ASS_NONE to GPRS_RLCMAC_UL_ASS_SEND_ASS_REJ
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) starting timer T0 [reject (PACCH)] with 0 sec. 2000 microsec, cur_fn=2654167
+UL_ASS_TBF{NONE}: Received Event SCHED_ASS_REJ
+UL_ASS_TBF{NONE}: state_chg to SEND_ASS_REJ
+UL_ASS_TBF{SEND_ASS_REJ}: Received Event CREATE_RLCMAC_MSG
+UL_ASS_TBF{SEND_ASS_REJ}: state_chg to NONE
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) starting timer X2000 [reject (PACCH)] with 0 sec. 2000 microsec
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) timer 0 expired. cur_fn=2654167
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) releasing due to PACCH assignment timeout.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) stopping timer T0 [freeing TBF]
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Destroying MS object
 ********** UL-TBF ends here **********
 TBF{ASSIGN}: Deallocated
+UL_ASS_TBF{NONE}: Deallocated
 === end test_packet_access_rej_prr_no_other_tbfs ===

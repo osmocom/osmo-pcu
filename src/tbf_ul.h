@@ -50,8 +50,6 @@ enum tbf_egprs_ul_counters {
 /* Used in ul_tbf->m_usf[] to flag unassigned USF on a given TS: */
 #define USF_INVALID 0xFF
 
-#define LOGPTBFUL(tbf, level, fmt, args...) LOGP(DTBFUL, level, "%s " fmt, tbf_name(tbf), ## args)
-
 struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms);
 	~gprs_rlcmac_ul_tbf();
@@ -139,6 +137,8 @@ void update_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, int8_t ta_delta);
 void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta);
 struct gprs_rlcmac_ul_tbf *as_ul_tbf(struct gprs_rlcmac_tbf *tbf);
 void tbf_usf_timeout(struct gprs_rlcmac_ul_tbf *tbf);
+
+#define LOGPTBFUL(tbf, level, fmt, args...) LOGP(DTBFUL, level, "%s " fmt, tbf_name(tbf), ## args)
 #ifdef __cplusplus
 }
 #endif
