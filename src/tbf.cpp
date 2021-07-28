@@ -997,14 +997,18 @@ const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf)
 		OSMO_STRBUF_PRINTF(sb, "Assignment was on CCCH|");
 	if (tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))
 		OSMO_STRBUF_PRINTF(sb, "Assignment was on PACCH|");
-	if (tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_UL_DATA))
-		OSMO_STRBUF_PRINTF(sb, "Uplink data was received|");
-	else if (tbf->direction == GPRS_RLCMAC_UL_TBF)
-		OSMO_STRBUF_PRINTF(sb, "No uplink data received yet|");
-	if (tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))
-		OSMO_STRBUF_PRINTF(sb, "Downlink ACK was received|");
-	else if (tbf->direction == GPRS_RLCMAC_DL_TBF)
-		OSMO_STRBUF_PRINTF(sb, "No downlink ACK received yet|");
+	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
+		const struct gprs_rlcmac_ul_tbf *ul_tbf = static_cast<const gprs_rlcmac_ul_tbf *>(tbf);
+		if (ul_tbf->m_rx_counter)
+			OSMO_STRBUF_PRINTF(sb, "Uplink data was received|");
+		else
+			OSMO_STRBUF_PRINTF(sb, "No uplink data received yet|");
+	} else {
+		if (tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))
+			OSMO_STRBUF_PRINTF(sb, "Downlink ACK was received|");
+		else
+			OSMO_STRBUF_PRINTF(sb, "No downlink ACK received yet|");
+	}
 
 	return buf;
 }

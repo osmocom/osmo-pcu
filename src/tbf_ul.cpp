@@ -404,8 +404,6 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 
 	const uint16_t ws = m_window.ws();
 
-	this->state_fsm.state_flags |= (1 << GPRS_RLCMAC_FLAG_UL_DATA);
-
 	LOGPTBFUL(this, LOGL_DEBUG, "UL DATA TFI=%d received (V(Q)=%d .. "
 		"V(R)=%d)\n", rlc->tfi, this->m_window.v_q(),
 		this->m_window.v_r());
