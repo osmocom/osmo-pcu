@@ -526,6 +526,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) starting timer T3191 [final blo
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=216, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) msg block (BSN 21, CS-1): 0f 01 2a 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) stopping timer T3191 [ACK/NACK received]
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) ack:  (BSN=21)"R"(BSN=21)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) DL analysis, range=21:22, lost=0, recv=1, skipped=0, bsn=21, info='R...............................................................'
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) V(B): (V(A)=22)""(V(S)-1=21)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
@@ -535,7 +536,6 @@ TBF(DL-TFI_0){FINISHED}: state_chg to WAIT_RELEASE
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
 TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3191 [freeing TBF]
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE)
@@ -3204,10 +3204,10 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
 Detected FN jump! 2654288 -> 2654379
 PDCH(bts=0,trx=0,ts=7) FN=2654379 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654379 ------------------------- RX : Uplink Control Block -------------------------
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) stopping timer T3191 [ACK/NACK received]
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) RX: [PCU <- BTS] Packet Downlink Ack/Nack
 PDCH(bts=0,trx=0,ts=7) Got GPRS DL ACK bitmap: SSN: 0, BSN 0 to 28 - 1 (28 blocks), "RRRRRRRRRRRRRRRRRRRRRRRRRRRR"
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) downlink acknowledge
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) stopping timer T3191 [ACK/NACK received]
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) ack:  (BSN=0)"RRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=27)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) DL analysis, range=0:28, lost=0, recv=28, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRRRRRRRRRR....................................'
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) V(B): (V(A)=28)""(V(S)-1=27)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid

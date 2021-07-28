@@ -450,8 +450,6 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 	/* Reset N3101 counter: */
 	tbf->n_reset(N3101);
 
-	if (tbf->handle_ack_nack())
-		LOGPTBF(tbf, LOGL_NOTICE, "Recovered downlink ack\n");
 	pdch_ulc_release_fn(ulc, fn);
 
 	LOGPTBF(tbf, LOGL_DEBUG, "RX: [PCU <- BTS] Packet Downlink Ack/Nack\n");
@@ -519,9 +517,6 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 
 	/* Reset N3101 counter: */
 	tbf->n_reset(N3101);
-
-	if (tbf->handle_ack_nack())
-		LOGPTBF(tbf, LOGL_NOTICE, "Recovered EGPRS downlink ack\n");
 	pdch_ulc_release_fn(ulc, fn);
 
 	LOGPTBF(tbf, LOGL_DEBUG,

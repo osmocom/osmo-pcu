@@ -774,22 +774,6 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 	return bsn;
 }
 
-bool gprs_rlcmac_dl_tbf::handle_ack_nack()
-{
-	bool ack_recovered = false;
-
-	state_fsm.state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
-	if (check_n_clear(GPRS_RLCMAC_FLAG_TO_DL_ACK)) {
-		ack_recovered = true;
-	}
-
-	/* reset N3105 */
-	n_reset(N3105);
-	t_stop(T3191, "ACK/NACK received");
-
-	return ack_recovered;
-}
-
 struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 				const uint32_t fn, const uint8_t ts,
 				int index, int index2)
@@ -1199,6 +1183,13 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_ack(bool final_ack, unsigned first_bsn,
 {
 	int rc;
 	LOGPTBFDL(this, LOGL_DEBUG, "downlink acknowledge\n");
+
+	state_fsm.state_flags |= (1 << GPRS_RLCMAC_FLAG_DL_ACK);
+	state_fsm.state_flags &= ~(1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
+
+	/* reset N3105 */
+	n_reset(N3105);
+	t_stop(T3191, "ACK/NACK received");
 
 	rc = update_window(first_bsn, rbb);
 

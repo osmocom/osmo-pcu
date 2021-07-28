@@ -52,7 +52,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts, enum mcs_kind req_mcs_kind = EGPRS);
 	void trigger_ass(struct gprs_rlcmac_tbf *old_tbf);
 
-	bool handle_ack_nack();
 	void request_dl_ack();
 	bool need_control_ts() const;
 	bool have_data() const;
