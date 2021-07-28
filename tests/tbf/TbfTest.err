@@ -109,6 +109,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 1, CS-1): 07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) ack:  (BSN=0)"RR"(BSN=1)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=0:2, lost=0, recv=2, skipped=0, bsn=0, info='RR..............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -221,6 +224,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Copying data unit 0 (BSN 1)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 1, CS-1): 07 00 03 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) ack:  (BSN=0)"RR"(BSN=1)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=0:2, lost=0, recv=2, skipped=0, bsn=0, info='RR..............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -494,12 +500,13 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Scheduled DL Acknowledgement pollin
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Scheduled Ack/Nack polling on FN=104, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) msg block (BSN 20, CS-1): 0f 00 28 09 c6 c7 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) ack:  (BSN=85)"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=20)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) ack:  (BSN=0)"RRRRRRRRRRRRRRRRRRRRR"(BSN=20)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=0:21, lost=0, recv=21, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRRR...........................................'
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) V(B): (V(A)=21)""(V(S)-1=20)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink acknowledge
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) ack:  (BSN=85)"RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=20)  R=ACK I=NACK
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) ack range is out of V(A)..V(S) range - Free TBF!
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) ack:  (BSN=21)""(BSN=20)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) DL analysis, range=21:21, lost=0, recv=0, skipped=0, bsn=0, info='................................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) V(B): (V(A)=21)""(V(S)-1=20)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 PDCH(bts=0,trx=0,ts=4) FN=203 Scheduling data message at RTS for DL TFI=0 prio=4 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) downlink (V(A)==21 .. V(S)==21) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Sending new dummy block at BSN 21, CS=CS-1
@@ -519,6 +526,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) starting timer T3191 [final blo
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=216, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) msg block (BSN 21, CS-1): 0f 01 2a 4d 43 c0 01 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) ack:  (BSN=21)"R"(BSN=21)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) DL analysis, range=21:22, lost=0, recv=1, skipped=0, bsn=21, info='R...............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) V(B): (V(A)=22)""(V(S)-1=21)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) Final ACK received.
 TBF(DL-TFI_0){FINISHED}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FINISHED}: state_chg to WAIT_RELEASE
@@ -4278,6 +4288,9 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=104): TBF(TFI=0 TLLI=0xff
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=104, TS=4 (curr FN 112)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 2 => 3 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=24)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:25, lost=0, recv=25, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRRRRRRR.......................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=25)""(V(S)-1=24)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -4534,6 +4547,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRRRRRRRRRRRRR"(BSN=19)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:20, lost=0, recv=20, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRR............................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=20)""(V(S)-1=19)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -4750,6 +4766,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRRRRRRRR"(BSN=14)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:15, lost=0, recv=15, skipped=0, bsn=0, info='RRRRRRRRRRRRRRR.................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=15)""(V(S)-1=14)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -4950,6 +4969,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRRRRRR"(BSN=12)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:13, lost=0, recv=13, skipped=0, bsn=0, info='RRRRRRRRRRRRR...................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=13)""(V(S)-1=12)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -5134,6 +5156,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRRRR"(BSN=10)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:11, lost=0, recv=11, skipped=0, bsn=0, info='RRRRRRRRRRR.....................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=11)""(V(S)-1=10)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -5294,6 +5319,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRR"(BSN=7)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:8, lost=0, recv=8, skipped=0, bsn=0, info='RRRRRRRR........................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=8)""(V(S)-1=7)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -5463,6 +5491,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRRRR"(BSN=10)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:11, lost=0, recv=10, skipped=1, bsn=0, info='xRRRRRRRRRR.....................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=11)""(V(S)-1=10)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -5623,6 +5654,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRR"(BSN=8)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:9, lost=0, recv=9, skipped=0, bsn=0, info='RRRRRRRRR.......................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=9)""(V(S)-1=8)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -5772,6 +5806,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRR"(BSN=7)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:8, lost=0, recv=8, skipped=0, bsn=0, info='RRRRRRRR........................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=8)""(V(S)-1=7)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -5844,6 +5881,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 00 00 12 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 12 
 Detected FN jump! 2654167 -> 58
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"R"(BSN=0)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:1, lost=0, recv=1, skipped=0, bsn=0, info='R...............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -5913,6 +5953,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-1): 07 00 00 98 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"R"(BSN=0)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:1, lost=0, recv=1, skipped=0, bsn=0, info='R...............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -5982,6 +6025,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-2): 07 00 00 94 00 02 04 06 08 0a 0c 0e 10 12 14 16 18 1a 1c 1e 20 22 24 26 28 2a 2c 2e 30 32 34 36 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"R"(BSN=0)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:1, lost=0, recv=1, skipped=0, bsn=0, info='R...............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -6074,6 +6120,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=21, TS=4 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RR"(BSN=1)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:2, lost=0, recv=2, skipped=0, bsn=0, info='RR..............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -6165,6 +6214,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=21, TS=4 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RR"(BSN=1)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:2, lost=0, recv=2, skipped=0, bsn=0, info='RR..............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -6256,6 +6308,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RR"(BSN=1)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:2, lost=0, recv=2, skipped=0, bsn=0, info='RR..............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -6347,6 +6402,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RR"(BSN=1)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:2, lost=0, recv=2, skipped=0, bsn=0, info='RR..............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=2)""(V(S)-1=1)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -6425,6 +6483,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-3): 07 00 00 e6 4a 4c 4e 50 52 54 56 58 5a 5c 5e 60 62 64 66 68 6a 6c 6e 70 72 74 76 78 7a 7c 7e 80 82 84 86 88 8a 8c 8e 90 92 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"R"(BSN=0)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:1, lost=0, recv=1, skipped=0, bsn=0, info='R...............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -6501,6 +6562,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-2): 07 00 00 f2 38 3a 3c 3e 40 42 44 46 48 4a 4c 4e 50 52 54 56 58 5a 5c 5e 60 62 64 66 68 6a 6c 6e 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"R"(BSN=0)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:1, lost=0, recv=1, skipped=0, bsn=0, info='R...............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -6577,6 +6641,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-1): 07 00 00 f6 2c 2e 30 32 34 36 38 3a 3c 3e 40 42 44 46 48 4a 4c 4e 50 52 54 56 00 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"R"(BSN=0)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:1, lost=0, recv=1, skipped=0, bsn=0, info='R...............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
@@ -6660,6 +6727,9 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying 1 RLC blocks, 1 BSNs
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Copying data unit 0 (BSN 0)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 07 00 00 10 40 80 c0 00 41 81 c1 01 42 82 c2 02 43 83 c3 03 44 84 c4 04 45 85 c5 05 46 86 c6 06 47 87 c7 07 48 88 c8 08 49 89 c9 09 4a 8a ca 0a 4b 8b cb 0b 4c 8c cc 0c 4d 8d cd 0d 4e 8e ce 0e 4f 8f cf 0f 50 90 d0 10 51 91 d1 11 52 12 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"R"(BSN=0)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:1, lost=0, recv=1, skipped=0, bsn=0, info='R...............................................................'
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE

@@ -326,18 +326,6 @@ uint8_t get_egprs_ms_class_by_capability(MS_Radio_Access_capability_t *cap)
  * The index of the array is the bit position in the rbb
  * (show_rbb[63] relates to BSN ssn-1)
  */
-void Decoding::extract_rbb(const uint8_t *rbb, char *show_rbb)
-{
-	for (int i = 0; i < 64; i++) {
-		uint8_t bit;
-
-		bit = !!(rbb[i/8] & (1<<(7-i%8)));
-		show_rbb[i] = bit ? 'R' : 'I';
-	}
-
-	show_rbb[64] = '\0';
-}
-
 void Decoding::extract_rbb(const struct bitvec *rbb, char *show_rbb)
 {
 	unsigned int i;

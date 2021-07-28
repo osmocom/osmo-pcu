@@ -205,8 +205,12 @@ static void test_rlc_dl_ul_basic()
 		int count;
 		const char *rbb;
 		char win_rbb[65];
-		uint8_t bin_rbb[8];
+		uint8_t bin_rbb[RLC_GPRS_WS/8];
+		bitvec bits;
 		win_rbb[64] = '\0';
+		bits.data = bin_rbb;
+		bits.data_len = sizeof(bin_rbb);
+		bits.cur_bit = 0;
 
 		ul_win.m_v_n.reset();
 
@@ -220,9 +224,11 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.ssn() == 0);
 		ul_win.update_rbb(win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
-		Encoding::encode_rbb(win_rbb, bin_rbb);
+		bits.cur_bit = 0;
+		Encoding::encode_rbb(win_rbb, &bits);
 		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
-		Decoding::extract_rbb(bin_rbb, win_rbb);
+		Decoding::extract_rbb(&bits, win_rbb);
+		//printf("win_rbb: %s\n", win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		/* simulate to have received 0, 1 and 5 */
@@ -238,9 +244,10 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.ssn() == 1);
 		ul_win.update_rbb(win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
-		Encoding::encode_rbb(win_rbb, bin_rbb);
+		bits.cur_bit = 0;
+		Encoding::encode_rbb(win_rbb, &bits);
 		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
-		Decoding::extract_rbb(bin_rbb, win_rbb);
+		Decoding::extract_rbb(&bits, win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(1));
@@ -255,9 +262,10 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.ssn() == 2);
 		ul_win.update_rbb(win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
-		Encoding::encode_rbb(win_rbb, bin_rbb);
+		bits.cur_bit = 0;
+		Encoding::encode_rbb(win_rbb, &bits);
 		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
-		Decoding::extract_rbb(bin_rbb, win_rbb);
+		Decoding::extract_rbb(&bits, win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(5));
@@ -272,9 +280,10 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.ssn() == 6);
 		ul_win.update_rbb(win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
-		Encoding::encode_rbb(win_rbb, bin_rbb);
+		bits.cur_bit = 0;
+		Encoding::encode_rbb(win_rbb, &bits);
 		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
-		Decoding::extract_rbb(bin_rbb, win_rbb);
+		Decoding::extract_rbb(&bits, win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(65));
@@ -291,9 +300,10 @@ static void test_rlc_dl_ul_basic()
 		OSMO_ASSERT(ul_win.ssn() == 66);
 		ul_win.update_rbb(win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
-		Encoding::encode_rbb(win_rbb, bin_rbb);
+		bits.cur_bit = 0;
+		Encoding::encode_rbb(win_rbb, &bits);
 		printf("rbb: %s\n", osmo_hexdump(bin_rbb, sizeof(bin_rbb)));
-		Decoding::extract_rbb(bin_rbb, win_rbb);
+		Decoding::extract_rbb(&bits, win_rbb);
 		OSMO_ASSERT_STR_EQ(win_rbb, rbb);
 
 		OSMO_ASSERT(ul_win.is_in_window(2));

@@ -259,6 +259,32 @@ enum test_tbf_final_ack_mode {
 	TEST_MODE_REVERSE_FREE
 };
 
+/* Receive an ACK */
+static void _rcv_ack(bool fin, gprs_rlcmac_dl_tbf *tbf, uint8_t *rbb)
+{
+	gprs_rlc_dl_window *w = static_cast<gprs_rlc_dl_window *>(tbf->window());
+	uint8_t bits_data[RLC_GPRS_WS/8];
+	bitvec bits;
+	Ack_Nack_Description_t ack_nack;
+	int bsn_begin, bsn_end;
+	uint8_t ssn = w->v_s();
+
+	bits.data = bits_data;
+	bits.data_len = sizeof(bits_data);
+	bits.cur_bit = 0;
+	ack_nack.FINAL_ACK_INDICATION = fin;
+	ack_nack.STARTING_SEQUENCE_NUMBER = ssn;
+	memcpy(ack_nack.RECEIVED_BLOCK_BITMAP, rbb, RLC_GPRS_WS/8);
+
+	Decoding::decode_gprs_acknack_bits(
+		&ack_nack, &bits,
+		&bsn_begin, &bsn_end, w);
+
+	tbf->rcvd_dl_ack(fin, bsn_begin, &bits);
+	if (!fin)
+		OSMO_ASSERT(w->window_empty());
+}
+
 static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 {
 	the_pcu = prepare_pcu();
@@ -305,7 +331,7 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	/* Queue a final ACK */
 	memset(rbb, 0, sizeof(rbb));
 	/* Receive a final ACK */
-	dl_tbf->rcvd_dl_ack(true, 1, rbb);
+	_rcv_ack(true, dl_tbf, rbb);
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_WAIT_RELEASE));
@@ -334,14 +360,6 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 	TALLOC_FREE(the_pcu);
 	fprintf(stderr, "=== end %s ===\n", __func__);
 }
-
-/* Receive an ACK */
-#define RCV_ACK(fin, tbf, rbb) do { \
-		gprs_rlc_dl_window *w = static_cast<gprs_rlc_dl_window *>(tbf->window());	\
-		tbf->rcvd_dl_ack(fin, w->v_s(), rbb);	\
-		if (!fin)						\
-			OSMO_ASSERT(w->window_empty());	\
-	} while(0)
 
 static void test_tbf_delayed_release()
 {
@@ -388,12 +406,12 @@ static void test_tbf_delayed_release()
 	/* ACK all blocks */
 	memset(rbb, 0xff, sizeof(rbb));
 
-	RCV_ACK(false, dl_tbf, rbb); /* Receive an ACK */
+	_rcv_ack(false, dl_tbf, rbb); /* Receive an ACK */
 
 	/* Force sending of a single block containing an LLC dummy command */
 	request_dl_rlc_block(dl_tbf, &fn);
 
-	RCV_ACK(false, dl_tbf, rbb); /* Receive an ACK */
+	_rcv_ack(false, dl_tbf, rbb); /* Receive an ACK */
 
 	/* Timeout (make sure fn % 52 remains valid) */
 	dl_tbf_idle_msec = osmo_tdef_get(the_pcu->T_defs, -2031, OSMO_TDEF_MS, -1);
@@ -402,7 +420,7 @@ static void test_tbf_delayed_release()
 
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FINISHED));
 
-	RCV_ACK(true, dl_tbf, rbb); /* Receive a final ACK */
+	_rcv_ack(true, dl_tbf, rbb); /* Receive a final ACK */
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_WAIT_RELEASE));
@@ -2745,7 +2763,7 @@ static void establish_and_use_egprs_dl_tbf(struct gprs_rlcmac_bts *bts, int mcs)
 
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
-	RCV_ACK(true, dl_tbf, rbb); /* Receive a final ACK */
+	_rcv_ack(true, dl_tbf, rbb); /* Receive a final ACK */
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_WAIT_RELEASE));
@@ -2793,7 +2811,7 @@ static void tbf_cleanup(gprs_rlcmac_dl_tbf *dl_tbf)
 {
 	uint8_t rbb[64/8];
 
-	RCV_ACK(true, dl_tbf, rbb); /* Receive a final ACK */
+	_rcv_ack(true, dl_tbf, rbb); /* Receive a final ACK */
 
 	/* Clean up and ensure tbfs are in the correct state */
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_WAIT_RELEASE));

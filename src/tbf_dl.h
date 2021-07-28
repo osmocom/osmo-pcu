@@ -48,7 +48,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	int append_data(uint16_t pdu_delay_csec,
 			const uint8_t *data, uint16_t len);
 
-	int rcvd_dl_ack(bool final, uint8_t ssn, uint8_t *rbb);
 	int rcvd_dl_ack(bool final_ack, unsigned first_bsn, struct bitvec *rbb);
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts, enum mcs_kind req_mcs_kind = EGPRS);
 	void trigger_ass(struct gprs_rlcmac_tbf *old_tbf);
@@ -107,7 +106,6 @@ protected:
 	int create_new_bsn(const uint32_t fn, enum CodingScheme cs);
 	struct msgb *create_dl_acked_block(const uint32_t fn, const uint8_t ts,
 					int index, int index2 = -1);
-	int update_window(const uint8_t ssn, const uint8_t *rbb);
 	int update_window(unsigned first_bsn, const struct bitvec *rbb);
 	int rcvd_dl_final_ack();
 	bool dl_window_stalled() const;

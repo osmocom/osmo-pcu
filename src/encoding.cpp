@@ -841,20 +841,12 @@ int Encoding::write_paging_request(bitvec * dest, const struct osmo_mobile_ident
  * The index of the array show_rbb is the bit position inside the rbb
  * (show_rbb[63] relates to BSN ssn-1)
  */
-void Encoding::encode_rbb(const char *show_rbb, uint8_t *rbb)
+void Encoding::encode_rbb(const char *show_rbb, bitvec *bv)
 {
-	uint8_t rbb_byte = 0;
-
 	// RECEIVE_BLOCK_BITMAP
 	for (int i = 0; i < 64; i++) {
 		/* Set bit at the appropriate position (see 3GPP TS 44.060 9.1.8.1) */
-		if (show_rbb[i] == 'R')
-			rbb_byte |= 1<< (7-(i%8));
-
-		if ((i%8) == 7) {
-			rbb[i/8] = rbb_byte;
-			rbb_byte = 0;
-		}
+		bitvec_set_bit(bv, show_rbb[i] == 'R' ? ONE : ZERO);
 	}
 }
 

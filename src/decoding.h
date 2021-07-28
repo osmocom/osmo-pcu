@@ -50,7 +50,6 @@ public:
 		enum CodingScheme cs, const uint8_t *data, RlcData *chunks,
 		unsigned int chunks_size, uint32_t *tlli);
 
-	static void extract_rbb(const uint8_t *rbb, char *extracted_rbb);
 	static void extract_rbb(const struct bitvec *rbb, char *show_rbb);
 	static int rlc_parse_ul_data_header_egprs_type_3(
 		struct gprs_rlc_data_info *rlc,
