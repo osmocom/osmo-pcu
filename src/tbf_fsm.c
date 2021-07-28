@@ -113,6 +113,32 @@ static void st_null(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	}
 }
 
+static void st_assign_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
+{
+	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
+	unsigned long val;
+	unsigned int sec, micro;
+
+	/* If assignment for this TBF is happening on PACCH, that means the
+	 * actual Assignment procedure (tx/rx) is happening on another TBF (eg
+	 * Ul TBF vs DL TBF). Hence we add a security timer here to free it in
+	 * case the other TBF doesn't succeed in informing (assigning) the MS
+	 * about this TBF, or simply because the scheduler takes too long to
+	 * schedule it. This timer can probably be dropped once we make the
+	 * other TBF always signal us assignment failure (we already get
+	 * assignment success through TBF_EV_ASSIGN_ACK_PACCH) */
+	if (ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)) {
+		fi->T = -2001;
+		val = osmo_tdef_get(the_pcu->T_defs, fi->T, OSMO_TDEF_MS, -1);
+		sec = val / 1000;
+		micro = (val % 1000) * 1000;
+		LOGPTBF(ctx->tbf, LOGL_DEBUG,
+			"Starting timer X2001 [assignment (PACCH)] with %u sec. %u microsec\n",
+			sec, micro);
+		osmo_timer_schedule(&fi->timer, sec, micro);
+	}
+}
+
 static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
@@ -245,6 +271,9 @@ static int tbf_fsm_timer_cb(struct osmo_fsm_inst *fi)
 {
 	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
 	switch (fi->T) {
+	case -2001:
+		LOGPTBF(ctx->tbf, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
+		/* fall-through */
 	case 3169:
 	case 3195:
 		tbf_free(ctx->tbf);
@@ -279,6 +308,7 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 			X(TBF_ST_RELEASING),
 		.name = "ASSIGN",
 		.action = st_assign,
+		.onenter = st_assign_on_enter,
 	},
 	[TBF_ST_FLOW] = {
 		.in_event_mask =

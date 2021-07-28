@@ -3182,6 +3182,7 @@ static void test_packet_access_rej_prr_no_other_tbfs()
 	fprintf(stderr, "=== start %s ===\n", __func__);
 
 	setup_bts(bts, ts_no, 4);
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2000, 0, OSMO_TDEF_MS) == 0);
 
 	int rc = 0;
 
@@ -3198,8 +3199,7 @@ static void test_packet_access_rej_prr_no_other_tbfs()
 		trx_no, ts_no, fn, bn);
 
 	OSMO_ASSERT(rc == 0);
-
-	ul_tbf->handle_timeout();
+	osmo_select_main(0);
 
 	TALLOC_FREE(the_pcu);
 	fprintf(stderr, "=== end %s ===\n", __func__);

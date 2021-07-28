@@ -139,7 +139,7 @@ DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Event SCHED_ASS not permitted
 TBF(DL-TFI_1){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_1){NULL}: state_chg to ASSIGN
-TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654167
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) free
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE), 1 TBFs, USFs = 00, TFIs = 00000002.
@@ -149,7 +149,6 @@ TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Deallocated
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
-TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer T0 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
 ********** DL-TBF ends here **********
@@ -252,9 +251,8 @@ DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Event SCHED_ASS not permitted
 TBF(DL-TFI_1){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_1){NULL}: state_chg to ASSIGN
-TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654167
+TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) free
-TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) stopping timer T0 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN), 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN)
 ********** DL-TBF ends here **********
@@ -1826,6 +1824,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xf12233
 TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
@@ -1885,7 +1884,7 @@ DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654275
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 4 bytes
 === end test_tbf_two_phase ===
 === start test_tbf_ra_update_rach ===
@@ -1923,6 +1922,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xf12233
 TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
@@ -1981,7 +1981,7 @@ DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654275
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 10 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 1
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654275 block_nr=9 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654279
@@ -2002,7 +2002,6 @@ DL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 DL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(DL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer T0 [control acked (DL-TBF)]
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654288 but previous FN=2654279 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654279): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 0 => 1 (< MAX 10)
@@ -2086,6 +2085,7 @@ MS(TLLI=0xf5667788, IMSI=, TA=7, 1/0,) Attaching UL TBF: TBF(TFI=1 TLLI=0xf56677
 TBF(UL-TFI_1){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_1){NULL}: state_chg to ASSIGN
+TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_1){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_1){NONE}: state_chg to SEND_ASS
@@ -2181,6 +2181,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xf12233
 TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
@@ -2241,7 +2242,7 @@ DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654275
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
@@ -2282,6 +2283,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Attaching UL TBF: TBF(TFI=0 
 TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
@@ -2349,6 +2351,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xf12233
 TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
@@ -2409,7 +2412,7 @@ DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654275
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
@@ -2456,7 +2459,6 @@ TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) data_length=20, data=f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) Decoded premier TLLI=0xf1223344 of UL DATA TFI=0.
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) free
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) stopping timer T0 [freeing TBF]
 PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN), 0 TBFs, USFs = 01, TFIs = 00000000.
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
 ********** DL-TBF ends here **********
@@ -2516,6 +2518,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xf12233
 TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
@@ -2576,7 +2579,7 @@ DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654275
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
@@ -2636,7 +2639,6 @@ DL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 DL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(DL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer T0 [control acked (DL-TBF)]
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654288 but previous FN=2654279 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654279): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 0 => 1 (< MAX 10)
@@ -3229,7 +3231,7 @@ DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_1){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_1){NULL}: state_chg to ASSIGN
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654379
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654283 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654283): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 1 => 2 (< MAX 10)
@@ -3324,7 +3326,6 @@ UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 TBF(DL-TFI_1){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(DL-TFI_1){ASSIGN}: state_chg to FLOW
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FLOW) stopping timer T0 [control acked (DL-TBF)]
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654409 but previous FN=2654383 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654383): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 23 => 24 (< MAX 10)
@@ -3694,6 +3695,7 @@ ws(64)
 TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
@@ -3757,7 +3759,7 @@ DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654275
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 === end test_tbf_egprs_two_phase ===
 === start test_tbf_egprs_two_phase_spb ===
@@ -3799,6 +3801,7 @@ ws(64)
 TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
@@ -3980,7 +3983,7 @@ DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654275
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 === end test_tbf_egprs_two_phase_spb ===
 === start test_tbf_egprs_dl ===
@@ -6711,6 +6714,7 @@ ws(64)
 TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
@@ -6791,7 +6795,7 @@ DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654275
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 === end test_tbf_puan_urbb_len ===
 === start test_tbf_update_ws ===
@@ -6892,6 +6896,7 @@ ws(64)
 TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
@@ -6967,7 +6972,7 @@ DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654275
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 === end test_tbf_li_decoding ===
 === start test_tbf_epdan_out_of_rx_window ===
@@ -7276,6 +7281,7 @@ ws(192)
 TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
@@ -7828,7 +7834,7 @@ DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
 TBF(DL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) starting timer T0 [assignment (PACCH)] with 2 sec. 0 microsec, cur_fn=2654275
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
@@ -8586,6 +8592,7 @@ ws(64)
 TBF(UL-TFI_0){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
@@ -8630,6 +8637,7 @@ ws(64)
 TBF(UL-TFI_1){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_1){NULL}: state_chg to ASSIGN
+TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_1){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_1){NONE}: state_chg to SEND_ASS
@@ -8681,6 +8689,7 @@ ws(64)
 TBF(UL-TFI_2){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_2){NULL}: state_chg to ASSIGN
+TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_2){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_2){NONE}: state_chg to SEND_ASS
@@ -8732,6 +8741,7 @@ ws(64)
 TBF(UL-TFI_3){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_3){NULL}: state_chg to ASSIGN
+TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_3){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_3){NONE}: state_chg to SEND_ASS
@@ -8783,6 +8793,7 @@ ws(64)
 TBF(UL-TFI_4){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_4){NULL}: state_chg to ASSIGN
+TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_4){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_4){NONE}: state_chg to SEND_ASS
@@ -8834,6 +8845,7 @@ ws(64)
 TBF(UL-TFI_5){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_5){NULL}: state_chg to ASSIGN
+TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_5){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_5){NONE}: state_chg to SEND_ASS
@@ -8885,6 +8897,7 @@ ws(64)
 TBF(UL-TFI_6){NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=NULL EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_6){NULL}: state_chg to ASSIGN
+TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_6){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_6){NONE}: state_chg to SEND_ASS
@@ -8940,6 +8953,7 @@ MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffee
 TBF{NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF{NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 UL_ASS_TBF{NONE}: Received Event SCHED_ASS_REJ
 UL_ASS_TBF{NONE}: state_chg to SEND_ASS_REJ
 PDCH(bts=0,trx=0,ts=7) Expiring FN=82 but previous FN=2654231 is still reserved!
@@ -8968,14 +8982,14 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffee
 TBF{NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF{NULL}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 UL_ASS_TBF{NONE}: Received Event SCHED_ASS_REJ
 UL_ASS_TBF{NONE}: state_chg to SEND_ASS_REJ
 UL_ASS_TBF{SEND_ASS_REJ}: Received Event CREATE_RLCMAC_MSG
 UL_ASS_TBF{SEND_ASS_REJ}: state_chg to NONE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) starting timer X2000 [reject (PACCH)] with 0 sec. 2000 microsec
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) starting timer X2000 [reject (PACCH)] with 0 sec. 0 microsec
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) timer 0 expired. cur_fn=2654167
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) releasing due to PACCH assignment timeout.
+UL_ASS_TBF{NONE}: Timeout of X2000
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) free
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Destroying MS object

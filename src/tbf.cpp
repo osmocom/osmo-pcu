@@ -741,16 +741,6 @@ void gprs_rlcmac_tbf::handle_timeout()
 
 	LOGPTBF(this, LOGL_DEBUG, "timer 0 expired. cur_fn=%d\n", current_fn);
 
-	/* PACCH assignment timeout (see timer X2001) */
-	if ((state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))) {
-		if (state_is(TBF_ST_ASSIGN)) {
-			LOGPTBF(this, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
-			tbf_free(this);
-			return;
-		} else
-			LOGPTBF(this, LOGL_ERROR, "Error: TBF is not in assign state\n");
-	}
-
 	/* Finish waiting after IMM.ASS confirm timer for CCCH assignment (see timer X2002) */
 	if ((state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
 		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);

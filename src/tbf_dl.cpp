@@ -611,9 +611,6 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 
 		/* change state */
 		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
-
-		/* Start timer, expiry in gprs_rlcmac_tbf::handle_timeout tbf_free()s the TBF */
-		T_START(this, T0, -2001, "assignment (PACCH)", true);
 	} else {
 		LOGPTBFDL(this, LOGL_DEBUG, "Send dowlink assignment on PCH, no TBF exist (IMSI=%s)\n",
 			  imsi());
