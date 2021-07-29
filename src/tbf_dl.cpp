@@ -779,7 +779,6 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	uint8_t *msg_data;
 	struct msgb *dl_msg;
 	unsigned msg_len;
-	bool need_poll;
 	/* TODO: support MCS-7 - MCS-9, where data_block_idx can be 1 */
 	uint8_t data_block_idx = 0;
 	unsigned int rrbp;
@@ -940,23 +939,20 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 	if (m_last_dl_poll_fn < 0)
 		m_last_dl_poll_fn = fn;
 
-	need_poll = state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
-
-	/* poll after POLL_ACK_AFTER_FRAMES frames, or when final block is tx.
-	 */
-	if (m_tx_counter >= POLL_ACK_AFTER_FRAMES || m_dl_ack_requested ||
-			need_poll) {
+	/* poll after POLL_ACK_AFTER_FRAMES frames, or when final block is tx or
+	 * when last polled DL ACK/NACK was lost. */
+	if (need_poll_for_dl_ack_nack()) {
 		if (m_dl_ack_requested) {
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Scheduling Ack/Nack polling, because it was requested explicitly "
 				  "(e.g. first final block sent).\n");
-		} else if (need_poll) {
+		} else if (state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK)) {
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Scheduling Ack/Nack polling, because polling timed out.\n");
 		} else {
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Scheduling Ack/Nack polling, because %d blocks sent.\n",
-				POLL_ACK_AFTER_FRAMES);
+				  POLL_ACK_AFTER_FRAMES);
 		}
 
 		rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
@@ -1211,8 +1207,11 @@ void gprs_rlcmac_dl_tbf::request_dl_ack()
 	m_dl_ack_requested = true;
 }
 
-bool gprs_rlcmac_dl_tbf::need_control_ts() const
+/* Does this DL TBF require to poll the MS for DL ACK/NACK? */
+bool gprs_rlcmac_dl_tbf::need_poll_for_dl_ack_nack() const
 {
+	/* poll after POLL_ACK_AFTER_FRAMES frames, or when final block is tx or
+	 * when last polled DL ACK/NACK was lost. */
 	return state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK) ||
 		m_tx_counter >= POLL_ACK_AFTER_FRAMES ||
 		m_dl_ack_requested;

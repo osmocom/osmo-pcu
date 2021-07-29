@@ -53,7 +53,7 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	void trigger_ass(struct gprs_rlcmac_tbf *old_tbf);
 
 	void request_dl_ack();
-	bool need_control_ts() const;
+	bool need_poll_for_dl_ack_nack() const;
 	bool have_data() const;
 	int frames_since_last_poll(unsigned fn) const;
 	int frames_since_last_drain(unsigned fn) const;

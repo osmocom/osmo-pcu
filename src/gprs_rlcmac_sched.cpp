@@ -239,7 +239,7 @@ static inline enum tbf_dl_prio tbf_compute_priority(const struct gprs_rlcmac_bts
 	int age_thresh1 = msecs_to_frames(200);
 	int age_thresh2 = msecs_to_frames(OSMO_MIN(msecs_t3190/2, dl_tbf_idle_msec));
 
-	if (tbf->is_control_ts(ts) && tbf->need_control_ts())
+	if (tbf->is_control_ts(ts) && tbf->need_poll_for_dl_ack_nack())
 		return DL_PRIO_CONTROL;
 
 	if (tbf->is_control_ts(ts) && age > age_thresh2 && age_thresh2 > 0)
