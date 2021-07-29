@@ -54,7 +54,7 @@ static void get_ctrl_msg_tbf_candidates(const struct gprs_rlcmac_pdch *pdch,
 		/* this trx, this ts */
 		if (!ul_tbf->is_control_ts(pdch->ts_no))
 			continue;
-		if (ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_SEND_ACK))
+		if (tbf_ul_ack_rts(ul_tbf))
 			tbf_cand->ul_ack = ul_tbf;
 		if (tbf_dl_ass_rts(ul_tbf))
 			tbf_cand->dl_ass = ul_tbf;
@@ -173,7 +173,7 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 			else if (tbf == tbfs->dl_ass && tbf->direction == GPRS_RLCMAC_UL_TBF)
 				msg = tbf_dl_ass_create_rlcmac_msg(tbfs->dl_ass, fn, ts);
 			else if (tbf == tbfs->ul_ack)
-				msg = tbfs->ul_ack->create_ul_ack(fn, ts);
+				msg = tbf_ul_ack_create_rlcmac_msg(tbfs->ul_ack, fn, ts);
 			else if (tbf == tbfs->nacc) {
 				msg = ms_nacc_create_rlcmac_msg(tbf->ms(), tbf, fn, ts);
 			}

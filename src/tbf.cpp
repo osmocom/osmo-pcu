@@ -59,13 +59,6 @@ extern void *tall_pcu_ctx;
 
 unsigned int next_tbf_ctr_group_id = 0; /* Incrementing group id */
 
-const struct value_string gprs_rlcmac_tbf_ul_ack_state_names[] = {
-	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ACK_NONE),
-	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ACK_SEND_ACK), /* send acknowledge on next RTS */
-	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ACK_WAIT_ACK), /* wait for PACKET CONTROL ACK */
-	{ 0, NULL }
-};
-
 static const struct value_string tbf_counters_names[] = {
 	OSMO_VALUE_STRING(N3101),
 	OSMO_VALUE_STRING(N3103),
@@ -113,7 +106,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	m_created_ts(0),
 	m_ctrs(NULL),
 	m_ms(ms),
-	ul_ack_state(GPRS_RLCMAC_UL_ACK_NONE),
 	m_egprs_enabled(false)
 {
 	/* The classes of these members do not have proper constructors yet.
@@ -568,8 +560,6 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum pdch_ul
 			  chan, new_poll_fn, ts);
 		break;
 	case PDCH_ULC_POLL_UL_ACK:
-		ul_ack_state = GPRS_RLCMAC_UL_ACK_WAIT_ACK;
-
 		LOGPTBFUL(this, LOGL_DEBUG, "Scheduled UL Acknowledgement polling on %s (FN=%d, TS=%d)\n",
 			  chan, new_poll_fn, ts);
 		break;
@@ -591,12 +581,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 	LOGPTBF(this, LOGL_NOTICE, "poll timeout for FN=%d, TS=%d (curr FN %d)\n",
 		poll_fn, pdch->ts_no, bts_current_frame_number(bts));
 
-	if (ul_tbf && ul_tbf->handle_ctrl_ack(reason)) {
-		if (!ul_tbf->ctrl_ack_to_toggle()) {
-			LOGPTBF(this, LOGL_NOTICE,
-				"Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ACK: %s\n",
-				tbf_rlcmac_diag(this));
-		}
+	if (ul_tbf && reason == PDCH_ULC_POLL_UL_ACK && tbf_ul_ack_exp_ctrl_ack(ul_tbf, poll_fn, pdch->ts_no)) {
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ACK_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PUAN_POLL_TIMEDOUT);
 		if (state_is(TBF_ST_FINISHED)) {
@@ -605,10 +590,8 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 				osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3103, NULL);
 				return;
 			}
-			/* reschedule UL ack */
-			ul_tbf->ul_ack_state = GPRS_RLCMAC_UL_ACK_SEND_ACK;
 		}
-
+		osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_POLL_TIMEOUT, NULL);
 	} else if (ul_ass_state_is(TBF_UL_ASS_WAIT_ACK)) {
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_TIMEDOUT);
@@ -761,6 +744,12 @@ void tbf_update_state_fsm_name(struct gprs_rlcmac_tbf *tbf)
 	osmo_fsm_inst_update_id(tbf->state_fsm.fi, buf);
 	osmo_fsm_inst_update_id(tbf->ul_ass_fsm.fi, buf);
 	osmo_fsm_inst_update_id(tbf->dl_ass_fsm.fi, buf);
+
+	if (tbf_direction(tbf) == GPRS_RLCMAC_UL_TBF) {
+		struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
+		osmo_fsm_inst_update_id(ul_tbf->ul_ack_fsm.fi, buf);
+	}
+
 }
 
 void gprs_rlcmac_tbf::rotate_in_list()

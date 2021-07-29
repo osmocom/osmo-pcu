@@ -60,6 +60,7 @@ libgprs_la_SOURCES = \
 	tbf.cpp \
 	tbf_fsm.c \
 	tbf_ul.cpp \
+	tbf_ul_ack_fsm.c \
 	tbf_ul_ass_fsm.c \
 	tbf_dl.cpp \
 	tbf_dl_ass_fsm.c \
@@ -102,6 +103,7 @@ noinst_HEADERS = \
 	tbf.h \
 	tbf_fsm.h \
 	tbf_ul.h \
+	tbf_ul_ack_fsm.h \
 	tbf_ul_ass_fsm.h \
 	tbf_dl.h \
 	tbf_dl_ass_fsm.h \

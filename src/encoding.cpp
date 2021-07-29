@@ -1106,9 +1106,8 @@ static void write_packet_uplink_ack_egprs(
 	bitvec_write_field(dest, &wp, 0, 1); // 0: don't have REL 5
 };
 
-void Encoding::write_packet_uplink_ack(
-	bitvec * dest, struct gprs_rlcmac_ul_tbf *tbf, bool is_final,
-	uint8_t rrbp)
+void write_packet_uplink_ack(struct bitvec *dest, struct gprs_rlcmac_ul_tbf *tbf,
+			     bool is_final, uint8_t rrbp)
 {
 	unsigned wp = 0;
 

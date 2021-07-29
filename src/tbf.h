@@ -58,14 +58,6 @@ extern "C" {
  * TBF instance
  */
 
-enum gprs_rlcmac_tbf_ul_ack_state {
-	GPRS_RLCMAC_UL_ACK_NONE = 0,
-	GPRS_RLCMAC_UL_ACK_SEND_ACK, /* send acknowledge on next RTS */
-	GPRS_RLCMAC_UL_ACK_WAIT_ACK, /* wait for PACKET CONTROL ACK */
-};
-
-extern const struct value_string gprs_rlcmac_tbf_ul_ack_state_names[];
-
 enum gprs_rlcmac_tbf_direction {
 	GPRS_RLCMAC_DL_TBF,
 	GPRS_RLCMAC_UL_TBF
@@ -125,12 +117,10 @@ enum tbf_counters { /* TBF counters from 3GPP TS 44.060 §13.4 */
 #define GPRS_RLCMAC_FLAG_CCCH		0 /* assignment on CCCH */
 #define GPRS_RLCMAC_FLAG_PACCH		1 /* assignment on PACCH */
 #define GPRS_RLCMAC_FLAG_DL_ACK		2 /* DL TBF: At least one DL ACK/NACK was recieved since it was assigned */
-#define GPRS_RLCMAC_FLAG_TO_UL_ACK	3 /* UL TBF: Failed to receive last polled CTRL ACK confirming our UL ACK/NACK */
-#define GPRS_RLCMAC_FLAG_TO_DL_ACK	4 /* DL TBF: Failed to receive last polled DL ACK/NACK */
+#define GPRS_RLCMAC_FLAG_TO_DL_ACK	3 /* DL TBF: Failed to receive last polled DL ACK/NACK */
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
 #define T_START(tbf, t, T, r, f) tbf->t_start(t, T, r, f, __FILE__, __LINE__)
-#define TBF_SET_ACK_STATE(t, st) do { t->set_ack_state(st, __FILE__, __LINE__); } while(0)
 
 #ifdef __cplusplus
 extern "C" {
@@ -180,8 +170,6 @@ struct gprs_rlcmac_tbf {
 	bool state_is_not(enum tbf_fsm_states rhs) const;
 	bool dl_ass_state_is(enum tbf_dl_ass_fsm_states rhs) const;
 	bool ul_ass_state_is(enum tbf_ul_ass_fsm_states rhs) const;
-	bool ul_ack_state_is(enum gprs_rlcmac_tbf_ul_ack_state rhs) const;
-	void set_ack_state(enum gprs_rlcmac_tbf_ul_ack_state new_state, const char *file, int line);
 	void poll_sched_set(const char *file, int line);
 	void poll_sched_unset(const char *file, int line);
 	bool check_n_clear(uint8_t state_flag);
@@ -293,7 +281,6 @@ protected:
 	struct GprsMs *m_ms;
 private:
 	void enable_egprs();
-	enum gprs_rlcmac_tbf_ul_ack_state ul_ack_state;
 	bool m_egprs_enabled;
 	struct osmo_timer_list Tarr[T_MAX];
 	uint8_t Narr[N_MAX];
@@ -315,11 +302,6 @@ inline bool gprs_rlcmac_tbf::ul_ass_state_is(enum tbf_ul_ass_fsm_states rhs) con
 	return tbf_ul_ass_fi(this)->state == rhs;
 }
 
-inline bool gprs_rlcmac_tbf::ul_ack_state_is(enum gprs_rlcmac_tbf_ul_ack_state rhs) const
-{
-	return ul_ack_state == rhs;
-}
-
 inline bool gprs_rlcmac_tbf::state_is_not(enum tbf_fsm_states rhs) const
 {
 	return tbf_state(this) != rhs;
@@ -329,15 +311,6 @@ inline bool gprs_rlcmac_tbf::state_is_not(enum tbf_fsm_states rhs) const
 inline const char *gprs_rlcmac_tbf::state_name() const
 {
 	return osmo_fsm_inst_state_name(state_fsm.fi);
-}
-
-inline void gprs_rlcmac_tbf::set_ack_state(enum gprs_rlcmac_tbf_ul_ack_state new_state, const char *file, int line)
-{
-	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s changes UL ACK state from %s to %s\n",
-		tbf_name(this),
-		get_value_string(gprs_rlcmac_tbf_ul_ack_state_names, ul_ack_state),
-		get_value_string(gprs_rlcmac_tbf_ul_ack_state_names, new_state));
-	ul_ack_state = new_state;
 }
 
 inline bool gprs_rlcmac_tbf::check_n_clear(uint8_t state_flag)

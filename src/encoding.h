@@ -65,10 +65,6 @@ public:
 
 	static void encode_rbb(const char *show_rbb, bitvec *rbb);
 
-	static void write_packet_uplink_ack(
-			bitvec * dest, struct gprs_rlcmac_ul_tbf *tbf, bool is_final,
-			uint8_t rrbp);
-
 	static int write_paging_request(bitvec * dest, const struct osmo_mobile_identity *mi);
 
 	static unsigned write_repeated_page_info(bitvec * dest, unsigned& wp, uint8_t len,
@@ -118,6 +114,9 @@ void write_packet_downlink_assignment(RlcMacDownlink_t * block, bool old_tfi_is_
 				      uint8_t rrbp, uint8_t alpha, uint8_t gamma,
 				      int8_t ta_idx, uint8_t ta_ts, bool use_egprs,
 				      uint8_t control_ack);
+
+void write_packet_uplink_ack(struct bitvec *dest, struct gprs_rlcmac_ul_tbf *tbf,
+			     bool is_final, uint8_t rrbp);
 
 void write_packet_neighbour_cell_data(RlcMacDownlink_t *block,
 		bool tfi_is_dl, uint8_t tfi, uint8_t container_id,

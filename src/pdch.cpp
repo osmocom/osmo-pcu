@@ -344,11 +344,10 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 
 	/* check if this control ack belongs to packet uplink ack */
 	ul_tbf = as_ul_tbf(tbf);
-	if (ul_tbf && ul_tbf->handle_ctrl_ack(reason)) {
+	if (ul_tbf && reason == PDCH_ULC_POLL_UL_ACK && tbf_ul_ack_exp_ctrl_ack(ul_tbf, fn, ts_no)) {
+		osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_RX_CTRL_ACK, NULL);
+		/* We can free since we only set polling on final UL ACK/NACK */
 		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] END\n");
-		if (ul_tbf->ctrl_ack_to_toggle())
-			LOGPTBF(tbf, LOGL_NOTICE, "Recovered uplink ack for UL\n");
-
 		tbf_free(tbf);
 		return;
 	}

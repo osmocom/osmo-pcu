@@ -24,6 +24,15 @@
 #include <stdbool.h>
 
 #include "tbf.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <tbf_ul_ack_fsm.h>
+#ifdef __cplusplus
+}
+#endif
+
 /*
  * TBF instance
  */
@@ -54,9 +63,6 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms);
 	~gprs_rlcmac_ul_tbf();
 	gprs_rlc_window *window();
-	struct msgb *create_ul_ack(uint32_t fn, uint8_t ts);
-	bool ctrl_ack_to_toggle();
-	bool handle_ctrl_ack(enum pdch_ulc_tbf_poll_reason reason);
 	/* blocks were acked */
 	int rcv_data_block_acknowledged(
 		const struct gprs_rlc_data_info *rlc,
@@ -97,10 +103,11 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	int32_t m_rx_counter; /* count all received blocks */
 	uint8_t m_usf[8];	/* list USFs per PDCH (timeslot), initialized to USF_INVALID */
 	uint8_t m_contention_resolution_done; /* set after done */
-	uint8_t m_final_ack_sent; /* set if we sent final ack */
 
 	struct rate_ctr_group *m_ul_gprs_ctrs;
 	struct rate_ctr_group *m_ul_egprs_ctrs;
+
+	struct tbf_ul_ass_fsm_ctx ul_ack_fsm;
 
 protected:
 	void maybe_schedule_uplink_acknack(const gprs_rlc_data_info *rlc, bool countdown_finished);
@@ -138,6 +145,8 @@ void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta);
 struct gprs_rlcmac_ul_tbf *as_ul_tbf(struct gprs_rlcmac_tbf *tbf);
 void tbf_usf_timeout(struct gprs_rlcmac_ul_tbf *tbf);
 bool ul_tbf_contention_resolution_done(const struct gprs_rlcmac_ul_tbf *tbf);
+struct osmo_fsm_inst *tbf_ul_ack_fi(const struct gprs_rlcmac_ul_tbf *tbf);
+void ul_tbf_contention_resolution_success(struct gprs_rlcmac_ul_tbf *tbf);
 
 #define LOGPTBFUL(tbf, level, fmt, args...) LOGP(DTBFUL, level, "%s " fmt, tbf_name(tbf), ## args)
 #ifdef __cplusplus

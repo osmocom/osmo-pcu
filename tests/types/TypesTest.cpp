@@ -698,7 +698,7 @@ static void test_egprs_ul_ack_nack()
 	win->reset_state();
 	win->set_ws(256);
 
-	Encoding::write_packet_uplink_ack(dest, tbf, false, 0);
+	write_packet_uplink_ack(dest, tbf, false, 0);
 	extract_egprs_ul_ack_nack(tbf, dest, &ssn, &crbb_test, &rbb, false);
 	check_egprs_bitmap(tbf, ssn, &crbb_test, rbb, &rbb_size);
 	free_egprs_ul_ack_nack(&rbb, &crbb_test);
@@ -709,7 +709,7 @@ static void test_egprs_ul_ack_nack()
 	win->set_ws(256);
 	win->receive_bsn(1);
 
-	Encoding::write_packet_uplink_ack(dest, tbf, false, 0);
+	write_packet_uplink_ack(dest, tbf, false, 0);
 	extract_egprs_ul_ack_nack(tbf, dest, &ssn, &crbb_test, &rbb, false);
 	check_egprs_bitmap(tbf, ssn, &crbb_test, rbb, &rbb_size);
 	free_egprs_ul_ack_nack(&rbb, &crbb_test);
@@ -720,7 +720,7 @@ static void test_egprs_ul_ack_nack()
 	win->set_ws(128);
 	win->receive_bsn(127);
 
-	Encoding::write_packet_uplink_ack(dest, tbf, false, 0);
+	write_packet_uplink_ack(dest, tbf, false, 0);
 	extract_egprs_ul_ack_nack(tbf, dest, &ssn, &crbb_test, &rbb, false);
 	check_egprs_bitmap(tbf, ssn, &crbb_test, rbb, &rbb_size);
 	free_egprs_ul_ack_nack(&rbb, &crbb_test);
@@ -731,7 +731,7 @@ static void test_egprs_ul_ack_nack()
 	for (uint16_t i=1; i<384/2; i++)
 		win->receive_bsn(i*2);
 
-	Encoding::write_packet_uplink_ack(dest, tbf, false, 0);
+	write_packet_uplink_ack(dest, tbf, false, 0);
 	extract_egprs_ul_ack_nack(tbf, dest, &ssn, &crbb_test, &rbb, false);
 	check_egprs_bitmap(tbf, ssn, &crbb_test, rbb, &rbb_size);
 	free_egprs_ul_ack_nack(&rbb, &crbb_test);

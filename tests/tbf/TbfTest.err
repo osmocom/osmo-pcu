@@ -27,6 +27,7 @@ MS(TLLI=0x00002342, IMSI=, TA=4, 0/0, DL) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1730,6 +1731,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1769,7 +1771,8 @@ TBF(UL-TFI_0){FLOW}: Received Event LAST_UL_DATA_RECVD
 TBF(UL-TFI_0){FLOW}: state_chg to FINISHED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling Ack/Nack, because TLLI is included.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling final Ack/Nack, because all data was received and last block has CV==0.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: Received Event SCHED_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: state_chg to SCHED_UL_ACK
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -1820,6 +1823,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -1918,6 +1922,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2082,6 +2087,7 @@ MS(TLLI=0xf5667788, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2151,6 +2157,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) free
 PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 1 TBFs, USFs = 02, TFIs = 00000002.
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 ********** UL-TBF ends here **********
+UL_ACK_TBF(UL-TFI_0){NONE}: Deallocated
 TBF(UL-TFI_0){FLOW}: Deallocated
 UL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
 DL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
@@ -2179,6 +2186,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2264,6 +2272,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) free
 PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 ********** UL-TBF ends here **********
+UL_ACK_TBF(UL-TFI_0){NONE}: Deallocated
 TBF(UL-TFI_0){FLOW}: Deallocated
 UL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
 DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Deallocated
@@ -2281,6 +2290,7 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2349,6 +2359,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2434,6 +2445,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) free
 PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 ********** UL-TBF ends here **********
+UL_ACK_TBF(UL-TFI_0){NONE}: Deallocated
 TBF(UL-TFI_0){FLOW}: Deallocated
 UL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
 DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Deallocated
@@ -2445,6 +2457,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -2494,7 +2507,8 @@ TBF(UL-TFI_0){FLOW}: Received Event LAST_UL_DATA_RECVD
 TBF(UL-TFI_0){FLOW}: state_chg to FINISHED
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling Ack/Nack, because TLLI is included.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling final Ack/Nack, because all data was received and last block has CV==0.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: Received Event SCHED_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: state_chg to SCHED_UL_ACK
 New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 === end test_tbf_dl_flow_and_rach_single_phase ===
 === start test_tbf_dl_reuse ===
@@ -2516,6 +2530,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3691,6 +3706,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3797,6 +3813,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -3868,7 +3885,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Assembling frames: (len=74)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Frame 1 starts at offset 0, length=74, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) No gaps in received block, last block: BSN=1 CV=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because MS is stalled.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: Received Event SCHED_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: state_chg to SCHED_UL_ACK
 PDCH(bts=0,trx=0,ts=7) Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=2 .. V(R)=2)
@@ -3889,6 +3907,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Assembling frames: (len=74)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Frame 1 starts at offset 0, length=74, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) No gaps in received block, last block: BSN=2 CV=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because MS is stalled.
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 PDCH(bts=0,trx=0,ts=7) Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
@@ -3917,6 +3936,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Assembling frames: (len=74)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Frame 1 starts at offset 0, length=74, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) No gaps in received block, last block: BSN=3 CV=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because MS is stalled.
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 PDCH(bts=0,trx=0,ts=7) Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
@@ -3944,6 +3964,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Assembling frames: (len=74)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Frame 1 starts at offset 0, length=74, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) No gaps in received block, last block: BSN=4 CV=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because MS is stalled.
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 PDCH(bts=0,trx=0,ts=7) Got MCS-3 RLC block: R=1, SI=1, TFI=0, CPS=5, RSB=0, rc=329
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
@@ -3965,6 +3986,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Assembling frames: (len=74)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Frame 1 starts at offset 0, length=74, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) No gaps in received block, last block: BSN=5 CV=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because MS is stalled.
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
@@ -6784,6 +6806,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -6844,14 +6867,20 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=37, data=00 00 00
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Assembling frames: (len=37)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Frame 1 starts at offset 0, length=37, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) No gaps in received block, last block: BSN=1 CV=7
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_NONE
+UL_ACK_TBF(UL-TFI_0){NONE}: Received Event SCHED_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: state_chg to SCHED_UL_ACK
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event CREATE_RLCMAC_MSG
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: state_chg to NONE
 PDCH(bts=0,trx=0,ts=7) Got MCS-3 RLC block: R=1, SI=0, TFI=0, CPS=5, RSB=0, rc=329
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=2 .. V(R)=2)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-3 RLC data block: CV=7, BSN=4, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 4 storing in window (2..65)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=37, data=00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_NONE
+UL_ACK_TBF(UL-TFI_0){NONE}: Received Event SCHED_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: state_chg to SCHED_UL_ACK
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event CREATE_RLCMAC_MSG
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: state_chg to NONE
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
@@ -6966,6 +6995,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7123,6 +7153,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7149,6 +7180,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7175,6 +7207,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7201,6 +7234,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7227,6 +7261,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7253,6 +7288,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7279,6 +7315,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7305,6 +7342,7 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <single> (suggested TRX: -1): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7316,6 +7354,7 @@ DL_ASS_TBF{NONE}: Allocated
 - Skipping TS 7, because no USF available
 [UL] algo A <single> (suggested TRX: -1): failed to allocate a TS, no USF available
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL) Timeslot Allocation failed: trx = -1, single_slot = 1
+UL_ACK_TBF{NONE}: Deallocated
 TBF{NULL}: Deallocated
 UL_ASS_TBF{NONE}: Deallocated
 DL_ASS_TBF{NONE}: Deallocated
@@ -7351,6 +7390,7 @@ MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -7517,7 +7557,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 38 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: Received Event SCHED_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: state_chg to SCHED_UL_ACK
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=1 .. V(R)=39)
@@ -7639,6 +7680,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 78 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
@@ -7761,6 +7803,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 118 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
@@ -7883,8 +7926,12 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 158 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_SEND_ACK to GPRS_RLCMAC_UL_ACK_NONE
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event CREATE_RLCMAC_MSG
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: state_chg to NONE
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654275 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=1 .. V(R)=159)
@@ -8041,14 +8088,18 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 36 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: Received Event SCHED_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: state_chg to SCHED_UL_ACK
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654279 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=1 .. V(R)=37)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=10, BSN=38, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 38 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_SEND_ACK to GPRS_RLCMAC_UL_ACK_NONE
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event CREATE_RLCMAC_MSG
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: state_chg to NONE
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654279 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=1 .. V(R)=39)
@@ -8056,8 +8107,12 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 64 storing in window (1..192)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because some data is missing and last block has CV==0.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_SEND_ACK to GPRS_RLCMAC_UL_ACK_NONE
+UL_ACK_TBF(UL-TFI_0){NONE}: Received Event SCHED_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: state_chg to SCHED_UL_ACK
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event CREATE_RLCMAC_MSG
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: state_chg to NONE
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654279 block_nr=10 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS), expect answer on UL FN=2654283
 DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654279 + 13 = 2654292
@@ -8178,7 +8233,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 97 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_NONE to GPRS_RLCMAC_UL_ACK_SEND_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: Received Event SCHED_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: state_chg to SCHED_UL_ACK
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654283 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=0 .. V(R)=98)
@@ -8300,6 +8356,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 117 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654283 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
@@ -8422,6 +8479,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 137 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654283 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
@@ -8544,6 +8602,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 157 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduling Ack/Nack, because 20 frames received.
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654283 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
@@ -8557,7 +8616,10 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=10, BSN=159, SPB=0, PI=0, E=1, TI=0, bitoffs=33
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) BSN 159 storing in window (0..191)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=00 80 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 95 
-TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) changes UL ACK state from GPRS_RLCMAC_UL_ACK_SEND_ACK to GPRS_RLCMAC_UL_ACK_NONE
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event SCHED_ACK
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Sending Ack/Nack already scheduled, no need to re-schedule
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event CREATE_RLCMAC_MSG
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: state_chg to NONE
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 PDCH(bts=0,trx=0,ts=7) FN=2654283 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=0 .. V(R)=160)
@@ -8662,6 +8724,7 @@ MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8707,6 +8770,7 @@ MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8759,6 +8823,7 @@ MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8811,6 +8876,7 @@ MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8863,6 +8929,7 @@ MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8915,6 +8982,7 @@ MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -8967,6 +9035,7 @@ MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -9019,6 +9088,7 @@ MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 [UL] algo A <multi> (suggested TRX: 0): Alloc start
 - Skipping TS 0, because not enabled
 - Skipping TS 1, because not enabled
@@ -9030,6 +9100,7 @@ DL_ASS_TBF{NONE}: Allocated
 - Skipping TS 7, because no USF available
 [UL] algo A <multi> (suggested TRX: 0): failed to allocate a TS, no USF available
 TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL EGPRS) Timeslot Allocation failed: trx = 0, single_slot = 0
+UL_ACK_TBF{NONE}: Deallocated
 TBF{NULL}: Deallocated
 UL_ASS_TBF{NONE}: Deallocated
 DL_ASS_TBF{NONE}: Deallocated
@@ -9037,6 +9108,7 @@ MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) No PDCH resource
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL)
 TBF{NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
@@ -9066,6 +9138,7 @@ Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddcc, not yet confirmed
 TBF{NULL}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL)
 TBF{NULL}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
@@ -9082,6 +9155,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) free
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Destroying MS object
 ********** UL-TBF ends here **********
+UL_ACK_TBF{NONE}: Deallocated
 TBF{ASSIGN}: Deallocated
 UL_ASS_TBF{NONE}: Deallocated
 DL_ASS_TBF{NONE}: Deallocated

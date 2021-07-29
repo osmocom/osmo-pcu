@@ -93,6 +93,9 @@ static const struct rate_ctr_group_desc tbf_ul_egprs_ctrg_desc = {
 
 gprs_rlcmac_ul_tbf::~gprs_rlcmac_ul_tbf()
 {
+	osmo_fsm_inst_free(ul_ack_fsm.fi);
+	ul_ack_fsm.fi = NULL;
+
 	rate_ctr_group_free(m_ul_egprs_ctrs);
 	rate_ctr_group_free(m_ul_gprs_ctrs);
 	/* ~gprs_rlcmac_tbf() is called automatically upon return */
@@ -231,11 +234,15 @@ gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms)
 	gprs_rlcmac_tbf(bts_, ms, GPRS_RLCMAC_UL_TBF),
 	m_rx_counter(0),
 	m_contention_resolution_done(0),
-	m_final_ack_sent(0),
 	m_ul_gprs_ctrs(NULL),
 	m_ul_egprs_ctrs(NULL)
 {
 	memset(&m_usf, USF_INVALID, sizeof(m_usf));
+
+	memset(&ul_ack_fsm, 0, sizeof(ul_ack_fsm));
+	ul_ack_fsm.tbf = this;
+	ul_ack_fsm.fi = osmo_fsm_inst_alloc(&tbf_ul_ack_fsm, this, &ul_ack_fsm, LOGL_INFO, NULL);
+
 }
 
 /*
@@ -288,26 +295,6 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 	return 0;
 }
 
-bool gprs_rlcmac_ul_tbf::ctrl_ack_to_toggle()
-{
-	if (check_n_clear(GPRS_RLCMAC_FLAG_TO_UL_ACK))
-		return true; /* GPRS_RLCMAC_FLAG_TO_UL_ACK was set, now cleared */
-
-	state_fsm.state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_UL_ACK);
-	return false; /* GPRS_RLCMAC_FLAG_TO_UL_ACK was unset, now set */
-}
-
-bool gprs_rlcmac_ul_tbf::handle_ctrl_ack(enum pdch_ulc_tbf_poll_reason reason)
-{
-	/* check if this control ack belongs to packet uplink ack */
-	if (reason == PDCH_ULC_POLL_UL_ACK && ul_ack_state_is(GPRS_RLCMAC_UL_ACK_WAIT_ACK)) {
-		TBF_SET_ACK_STATE(this, GPRS_RLCMAC_UL_ACK_NONE);
-		return true;
-	}
-
-	return false;
-}
-
 void gprs_rlcmac_ul_tbf::contention_resolution_start()
 {
 	/* 3GPP TS 44.018 sec 11.1.2 Timers on the network side: "This timer is
@@ -337,59 +324,6 @@ void gprs_rlcmac_ul_tbf::contention_resolution_success()
 	/* now we must set this flag, so we are allowed to assign downlink
 	 * TBF on PACCH. it is only allowed when TLLI is acknowledged. */
 	m_contention_resolution_done = 1;
-}
-
-struct msgb *gprs_rlcmac_ul_tbf::create_ul_ack(uint32_t fn, uint8_t ts)
-{
-	int final = (state_is(TBF_ST_FINISHED));
-	struct msgb *msg;
-	int rc;
-	unsigned int rrbp = 0;
-	uint32_t new_poll_fn = 0;
-
-	if (final) {
-		if (ul_ack_state_is(GPRS_RLCMAC_UL_ACK_WAIT_ACK)) {
-			LOGPTBFUL(this, LOGL_DEBUG,
-				  "Polling is already scheduled, so we must wait for the final uplink ack...\n");
-			return NULL;
-		}
-
-		rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
-		if (rc < 0)
-			return NULL;
-	}
-
-	msg = msgb_alloc(23, "rlcmac_ul_ack");
-	if (!msg)
-		return NULL;
-	bitvec *ack_vec = bitvec_alloc(23, tall_pcu_ctx);
-	if (!ack_vec) {
-		msgb_free(msg);
-		return NULL;
-	}
-	bitvec_unhex(ack_vec, DUMMY_VEC);
-	Encoding::write_packet_uplink_ack(ack_vec, this, final, rrbp);
-	bitvec_pack(ack_vec, msgb_put(msg, 23));
-	bitvec_free(ack_vec);
-
-	/* TS 44.060 7a.2.1.1: "The contention resolution is completed on
-	 * the network side when the network receives an RLC data block that
-	 * comprises the TLLI value that identifies the mobile station and the
-	 * TFI value associated with the TBF."
-	 * However, it's handier for us to mark contention resolution success
-	 * here since according to spec upon rx UL ACK is the time at which MS
-	 * realizes contention resolution succeeds. */
-	if (is_tlli_valid())
-		contention_resolution_success();
-
-	if (final) {
-		set_polling(new_poll_fn, ts, PDCH_ULC_POLL_UL_ACK);
-		/* waiting for final acknowledge */
-		m_final_ack_sent = 1;
-	} else
-		TBF_SET_ACK_STATE(this, GPRS_RLCMAC_UL_ACK_NONE);
-
-	return msg;
 }
 
 /*! \brief receive data from PDCH/L1 */
@@ -590,14 +524,7 @@ void gprs_rlcmac_ul_tbf::maybe_schedule_uplink_acknack(
 	if (!require_ack)
 		return;
 
-	if (ul_ack_state_is(GPRS_RLCMAC_UL_ACK_NONE)) {
-		/* trigger sending at next RTS */
-		TBF_SET_ACK_STATE(this, GPRS_RLCMAC_UL_ACK_SEND_ACK);
-	} else {
-		/* already triggered */
-		LOGPTBFUL(this, LOGL_DEBUG,
-			  "Sending Ack/Nack already scheduled, no need to re-schedule\n");
-	}
+	osmo_fsm_inst_dispatch(this->ul_ack_fsm.fi, TBF_UL_ACK_EV_SCHED_ACK, NULL);
 }
 
 /* Send Uplink unit-data to SGSN. */
@@ -842,4 +769,14 @@ void tbf_usf_timeout(struct gprs_rlcmac_ul_tbf *tbf)
 bool ul_tbf_contention_resolution_done(const struct gprs_rlcmac_ul_tbf *tbf)
 {
 	return tbf->m_contention_resolution_done;
+}
+
+struct osmo_fsm_inst *tbf_ul_ack_fi(const struct gprs_rlcmac_ul_tbf *tbf)
+{
+	return tbf->ul_ack_fsm.fi;
+}
+
+void ul_tbf_contention_resolution_success(struct gprs_rlcmac_ul_tbf *tbf)
+{
+	return tbf->contention_resolution_success();
 }

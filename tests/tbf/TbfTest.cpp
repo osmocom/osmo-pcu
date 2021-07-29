@@ -831,7 +831,8 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(struct gprs_rlcmac_bts *bts,
 
 	pdch->rcv_block(data_msg, 42, *fn, &meas);
 
-	struct msgb *msg1 = ul_tbf->create_ul_ack(*fn, ts_no);
+	osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_SCHED_ACK, NULL);
+	struct msgb *msg1 = tbf_ul_ack_create_rlcmac_msg(ul_tbf, *fn, ts_no);
 
 	static uint8_t exp1[] = { 0x40, 0x24, 0x01, 0x0b, 0x3e, 0x24, 0x46, 0x68, 0x9c, 0x70, 0x87, 0xb0,
 				  0x06, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b
@@ -858,7 +859,8 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(struct gprs_rlcmac_bts *bts,
 
 	pdch->rcv_block(data_msg, 42, *fn, &meas);
 
-	msg1 = ul_tbf->create_ul_ack(*fn, ts_no);
+	osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_SCHED_ACK, NULL);
+	msg1 = tbf_ul_ack_create_rlcmac_msg(ul_tbf, *fn, ts_no);
 
 	static uint8_t exp2[] = { 0x40, 0x24, 0x01, 0x0b, 0x3e, 0x24, 0x46, 0x68, 0x9c, 0x70, 0x88, 0xb0,
 				  0x06, 0x8b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b
@@ -1412,7 +1414,8 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_no_length(struct
 		pdch = &bts->trx[trx_no].pdch[ts_no];
 		pdch->rcv_block(&data[0], sizeof(data), *fn, &meas);
 	}
-	ul_tbf->create_ul_ack(*fn, ts_no);
+	osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_SCHED_ACK, NULL);
+	tbf_ul_ack_create_rlcmac_msg(ul_tbf, *fn, ts_no);
 	memset(data, 0x2b, sizeof(data));
 	hdr3 = (struct gprs_rlc_ul_header_egprs_3 *)data;
 	hdr3->r = 0;
@@ -1440,7 +1443,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_no_length(struct
 	request_dl_rlc_block(ul_tbf, fn);
 
 	check_tbf(ul_tbf);
-	OSMO_ASSERT(ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_NONE));
+	OSMO_ASSERT(tbf_ul_ack_fi(ul_tbf)->state == TBF_UL_ACK_ST_NONE);
 
 	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
@@ -1494,7 +1497,8 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_with_length(stru
 		pdch = &bts->trx[trx_no].pdch[ts_no];
 		pdch->rcv_block(&data[0], sizeof(data), *fn, &meas);
 	}
-	ul_tbf->create_ul_ack(*fn, ts_no);
+	osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_SCHED_ACK, NULL);
+	tbf_ul_ack_create_rlcmac_msg(ul_tbf, *fn, ts_no);
 	memset(data, 0x2b, sizeof(data));
 	hdr3 = (struct gprs_rlc_ul_header_egprs_3 *)data;
 	hdr3->r = 0;
@@ -1518,12 +1522,13 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_with_length(stru
 
 	pdch = &bts->trx[trx_no].pdch[ts_no];
 	pdch->rcv_block(&data[0], sizeof(data), *fn, &meas);
-	ul_tbf->create_ul_ack(*fn, ts_no);
+	osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_SCHED_ACK, NULL);
+	tbf_ul_ack_create_rlcmac_msg(ul_tbf, *fn, ts_no);
 
 	request_dl_rlc_block(ul_tbf, fn);
 
 	check_tbf(ul_tbf);
-	OSMO_ASSERT(ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_NONE));
+	OSMO_ASSERT(tbf_ul_ack_fi(ul_tbf)->state == TBF_UL_ACK_ST_NONE);
 
 	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);
@@ -1580,7 +1585,8 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_CRBB(struct gprs_rlcm
 		pdch = &bts->trx[trx_no].pdch[ts_no];
 		pdch->rcv_block(&data[0], sizeof(data), *fn, &meas);
 	}
-	ul_tbf->create_ul_ack(*fn, ts_no);
+	osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_SCHED_ACK, NULL);
+	tbf_ul_ack_create_rlcmac_msg(ul_tbf, *fn, ts_no);
 	memset(data, 0x2b, sizeof(data));
 	hdr3 = (struct gprs_rlc_ul_header_egprs_3 *)data;
 	hdr3->r = 0;
@@ -1608,7 +1614,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_CRBB(struct gprs_rlcm
 	request_dl_rlc_block(ul_tbf, fn);
 
 	check_tbf(ul_tbf);
-	OSMO_ASSERT(ul_tbf->ul_ack_state_is(GPRS_RLCMAC_UL_ACK_NONE));
+	OSMO_ASSERT(tbf_ul_ack_fi(ul_tbf)->state == TBF_UL_ACK_ST_NONE);
 
 	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms != NULL);

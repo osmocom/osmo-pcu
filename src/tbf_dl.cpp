@@ -249,7 +249,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts, GprsMs *ms,
 	* or MULTIPLE TBF DOWNLINK ASSIGNMENT messages before contention resolution is
 	* completed on the mobile station side." */
 	if (ul_tbf && ul_tbf->m_contention_resolution_done
-	 && !ul_tbf->m_final_ack_sent) {
+	 && !tbf_ul_ack_waiting_cnf_final_ack(ul_tbf)) {
 		use_trx = ul_tbf->trx->trx_no;
 		ss = false;
 		old_ul_tbf = ul_tbf;
