@@ -421,7 +421,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_,
 	tbf_->first_ts = tbf_->first_common_ts = ts;
 	ms_set_reserved_slots(ms, trx, 1 << ts, 1 << ts);
 
-	tbf_->upgrade_to_multislot = 0;
+	tbf_->upgrade_to_multislot = false;
 	bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_ALGO_A);
 	return 0;
 }
@@ -945,7 +945,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_,
 		tbf_->upgrade_to_multislot = (avail_count > slotcount);
 		LOGPAL(tbf, "B", single, use_trx, LOGL_INFO, "using single slot at TS %d\n", first_ts);
 	} else {
-		tbf_->upgrade_to_multislot = 0;
+		tbf_->upgrade_to_multislot = false;
 		LOGPAL(tbf, "B", single, use_trx, LOGL_INFO, "using %d slots\n", slotcount);
 	}
 

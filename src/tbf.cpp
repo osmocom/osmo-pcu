@@ -110,7 +110,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	control_ts(0xff),
 	fT(0),
 	num_fT_exp(0),
-	upgrade_to_multislot(0),
+	upgrade_to_multislot(false),
 	bts(bts_),
 	m_tfi(0),
 	m_created_ts(0),

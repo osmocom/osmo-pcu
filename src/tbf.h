@@ -265,7 +265,7 @@ struct gprs_rlcmac_tbf {
 	} meas;
 
 	/* Can/should we upgrade this tbf to use multiple slots? */
-	uint8_t upgrade_to_multislot;
+	bool upgrade_to_multislot;
 
 	/* store the BTS this TBF belongs to */
 	struct gprs_rlcmac_bts *bts;
