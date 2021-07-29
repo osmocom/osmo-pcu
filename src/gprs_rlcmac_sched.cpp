@@ -308,10 +308,6 @@ static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts, struct gp
 		 && tbf->state_is_not(TBF_ST_FINISHED))
 			continue;
 
-		/* waiting for CCCH IMM.ASS confirm */
-		if (tbf->m_wait_confirm)
-			continue;
-
 		/* If a GPRS (CS1-4) Dl block is required, skip EGPRS(_GSMK) tbfs: */
 		if (req_mcs_kind == GPRS && tbf->is_egprs_enabled())
 			continue;

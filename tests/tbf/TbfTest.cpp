@@ -219,7 +219,6 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(struct gprs_rlcmac_bts *bts, uint8_t ms
 	osmo_fsm_inst_dispatch(dl_tbf->dl_ass_fsm.fi, TBF_DL_ASS_EV_SCHED_ASS, NULL);
 	osmo_fsm_inst_dispatch(dl_tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
 	osmo_fsm_inst_dispatch(dl_tbf->state_fsm.fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
-	dl_tbf->m_wait_confirm = 0;
 	check_tbf(dl_tbf);
 
 	*trx_no_ = trx_no;
@@ -591,9 +590,13 @@ static void test_tbf_dl_llc_loss()
 	OSMO_ASSERT(ms_dl_tbf(ms) != NULL);
 
 	/* Here PCU would answer with data_cnf and trigger
-	 * bts_rcv_imm_ass_cnf(), which would set up the timer X2002. In this
-	 * test we go directly to T0 timeout to move it to FLOW state: */
-	ms_dl_tbf(ms)->handle_timeout();
+	 * bts_rcv_imm_ass_cnf(), which would trigger TBF_EV_ASSIGN_PCUIF_CNF.
+	 * That in turn would set up timer X2002. Finally, X2002 timeout
+	 * moves it to FLOW state. We set X2002 timeout to 0 here to get
+	 * immediate trigger through osmo_select_main() */
+	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2002, 0, OSMO_TDEF_MS) == 0);
+	osmo_fsm_inst_dispatch(ms_dl_tbf(ms)->state_fsm.fi, TBF_EV_ASSIGN_PCUIF_CNF, NULL);
+	osmo_select_main(0);
 	OSMO_ASSERT(ms_dl_tbf(ms)->state_is(TBF_ST_FLOW));
 
 	/* Get first BSN */

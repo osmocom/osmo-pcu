@@ -191,7 +191,6 @@ gprs_rlcmac_dl_tbf::~gprs_rlcmac_dl_tbf()
 gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms) :
 	gprs_rlcmac_tbf(bts_, ms, GPRS_RLCMAC_DL_TBF),
 	m_tx_counter(0),
-	m_wait_confirm(0),
 	m_dl_ack_requested(false),
 	m_last_dl_poll_fn(-1),
 	m_last_dl_drained_fn(-1),
@@ -622,7 +621,6 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 		if ((pgroup = imsi2paging_group(imsi())) > 999)
 			LOGPTBFDL(this, LOGL_ERROR, "IMSI to paging group failed! (%s)\n", imsi());
 		bts_snd_dl_ass(bts, this, pgroup);
-		m_wait_confirm = 1;
 	}
 }
 
@@ -1170,7 +1168,6 @@ int gprs_rlcmac_dl_tbf::release()
 
 	/* reset rlc states */
 	m_tx_counter = 0;
-	m_wait_confirm = 0;
 	m_window.reset();
 
 	osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_ASSIGN_DEL_CCCH, NULL);
@@ -1463,4 +1460,9 @@ struct gprs_rlcmac_dl_tbf *as_dl_tbf(struct gprs_rlcmac_tbf *tbf)
 		return static_cast<gprs_rlcmac_dl_tbf *>(tbf);
 	else
 		return NULL;
+}
+
+void tbf_dl_trigger_ass(struct gprs_rlcmac_dl_tbf *tbf, struct gprs_rlcmac_tbf *old_tbf)
+{
+	return tbf->trigger_ass(old_tbf);
 }

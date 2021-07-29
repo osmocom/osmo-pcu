@@ -59,8 +59,6 @@ extern void *tall_pcu_ctx;
 
 unsigned int next_tbf_ctr_group_id = 0; /* Incrementing group id */
 
-static void tbf_timer_cb(void *_tbf);
-
 const struct value_string gprs_rlcmac_tbf_ul_ack_state_names[] = {
 	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ACK_NONE),
 	OSMO_VALUE_STRING(GPRS_RLCMAC_UL_ACK_SEND_ACK), /* send acknowledge on next RTS */
@@ -76,7 +74,6 @@ static const struct value_string tbf_counters_names[] = {
 };
 
 static const struct value_string tbf_timers_names[] = {
-	OSMO_VALUE_STRING(T0),
 	OSMO_VALUE_STRING(T3141),
 	OSMO_VALUE_STRING(T3191),
 	OSMO_VALUE_STRING(T3193),
@@ -422,7 +419,6 @@ bool gprs_rlcmac_tbf::timers_pending(enum tbf_timers t)
 	if (t != T_MAX)
 		return osmo_timer_pending(&Tarr[t]);
 
-	/* we don't start with T0 because it's internal timer which requires special handling */
 	for (i = T3141; i < T_MAX; i++)
 		if (osmo_timer_pending(&Tarr[i]))
 			return true;
@@ -433,8 +429,7 @@ bool gprs_rlcmac_tbf::timers_pending(enum tbf_timers t)
 void gprs_rlcmac_tbf::stop_timers(const char *reason)
 {
 	uint8_t i;
-	/* we start with T0 because timer reset does not require any special handling */
-	for (i = T0; i < T_MAX; i++)
+	for (i = T3141; i < T_MAX; i++)
 		t_stop((enum tbf_timers)i, reason);
 }
 
@@ -502,9 +497,6 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool
 	Tarr[t].data = this;
 
 	switch(t) {
-	case T0:
-		Tarr[t].cb = tbf_timer_cb;
-		break;
 	case T3141:
 		Tarr[t].cb = cb_T3141;
 		break;
@@ -594,7 +586,6 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum pdch_ul
 
 void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_fn, enum pdch_ulc_tbf_poll_reason reason)
 {
-	uint16_t pgroup;
 	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
 
 	LOGPTBF(this, LOGL_NOTICE, "poll timeout for FN=%d, TS=%d (curr FN %d)\n",
@@ -645,7 +636,8 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		/* Timeout waiting for CTRL ACK acking Pkt Cell Change Continue */
 		osmo_fsm_inst_dispatch(m_ms->nacc->fi, NACC_EV_TIMEOUT_CELL_CHG_CONTINUE, NULL);
 		return;
-	} else if (direction == GPRS_RLCMAC_DL_TBF) {
+	} else if (reason == PDCH_ULC_POLL_DL_ACK) {
+		/* POLL Timeout expecting DL ACK/NACK: implies direction == GPRS_RLCMAC_DL_TBF */
 		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
 
 		if (!(dl_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
@@ -669,16 +661,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 			return;
 		}
 		/* resend IMM.ASS on CCCH on timeout */
-		if ((dl_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
-		 && !(dl_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))) {
-			LOGPTBF(dl_tbf, LOGL_DEBUG, "Re-send dowlink assignment on PCH (IMSI=%s)\n",
-				imsi());
-			/* send immediate assignment */
-			if ((pgroup = imsi2paging_group(imsi())) > 999)
-				LOGPTBF(dl_tbf, LOGL_ERROR, "IMSI to paging group failed! (%s)\n", imsi());
-			bts_snd_dl_ass(dl_tbf->bts, dl_tbf, pgroup);
-			dl_tbf->m_wait_confirm = 1;
-		}
+		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_DL_ACKNACK_MISS, NULL);
 	} else
 		LOGPTBF(this, LOGL_ERROR, "Poll Timeout, but no event!\n");
 }
@@ -727,48 +710,6 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 	ms_attach_tbf(m_ms, this);
 
 	return 0;
-}
-
-static void tbf_timer_cb(void *_tbf)
-{
-	struct gprs_rlcmac_tbf *tbf = (struct gprs_rlcmac_tbf *)_tbf;
-	tbf->handle_timeout();
-}
-
-void gprs_rlcmac_tbf::handle_timeout()
-{
-	int current_fn = bts_current_frame_number(bts);
-
-	LOGPTBF(this, LOGL_DEBUG, "timer 0 expired. cur_fn=%d\n", current_fn);
-
-	/* Finish waiting after IMM.ASS confirm timer for CCCH assignment (see timer X2002) */
-	if ((state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
-		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
-		dl_tbf->m_wait_confirm = 0;
-		if (dl_tbf->state_is(TBF_ST_ASSIGN)) {
-			tbf_assign_control_ts(dl_tbf);
-
-			if (!dl_tbf->upgrade_to_multislot) {
-				/* change state to FLOW, so scheduler
-				 * will start transmission */
-				osmo_fsm_inst_dispatch(dl_tbf->state_fsm.fi, TBF_EV_ASSIGN_READY_CCCH, NULL);
-				return;
-			}
-
-			/* This tbf can be upgraded to use multiple DL
-			 * timeslots and now that there is already one
-			 * slot assigned send another DL assignment via
-			 * PDCH. */
-
-			/* keep to flags */
-			dl_tbf->state_fsm.state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
-
-			dl_tbf->update();
-
-			dl_tbf->trigger_ass(dl_tbf);
-		} else
-			LOGPTBF(dl_tbf, LOGL_NOTICE, "Continue flow after IMM.ASS confirm\n");
-	}
 }
 
 int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
@@ -975,6 +916,16 @@ void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_pdch *pdch
 bool tbf_is_control_ts(const struct gprs_rlcmac_tbf *tbf, uint8_t ts)
 {
 	return tbf->is_control_ts(ts);
+}
+
+bool tbf_can_upgrade_to_multislot(const struct gprs_rlcmac_tbf *tbf)
+{
+	return tbf->upgrade_to_multislot;
+}
+
+int tbf_update(struct gprs_rlcmac_tbf *tbf)
+{
+	return tbf->update();
 }
 
 const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf)

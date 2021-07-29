@@ -71,7 +71,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	 * variables are in both (dl and ul) structs and not outside union.
 	 */
 	int32_t m_tx_counter; /* count all transmitted blocks */
-	uint8_t m_wait_confirm; /* wait for CCCH IMM.ASS cnf */
 	bool m_dl_ack_requested;
 	int32_t m_last_dl_poll_fn;
 	int32_t m_last_dl_drained_fn;
@@ -153,6 +152,7 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 		  const uint8_t egprs_ms_class, const uint16_t delay_csec,
 		  const uint8_t *data, const uint16_t len);
 
+void tbf_dl_trigger_ass(struct gprs_rlcmac_dl_tbf *tbf, struct gprs_rlcmac_tbf *old_tbf);
 #ifdef __cplusplus
 }
 #endif

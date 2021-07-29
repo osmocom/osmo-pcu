@@ -655,11 +655,7 @@ int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32
 	}
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
-
-	if (dl_tbf->m_wait_confirm) {
-		/* Transition to FLOW in gprs_rlcmac_tbf::handle_timeout() when timer expires */
-		T_START(dl_tbf, T0, -2002, "assignment (AGCH)", true);
-	}
+	osmo_fsm_inst_dispatch(dl_tbf->state_fsm.fi, TBF_EV_ASSIGN_PCUIF_CNF, NULL);
 
 	return 0;
 }

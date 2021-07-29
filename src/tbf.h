@@ -100,9 +100,6 @@ extern unsigned int next_tbf_ctr_group_id;
 #define LOGPTBF(tbf, level, fmt, args...) LOGP(DTBF, level, "%s " fmt, tbf_name(tbf), ## args)
 
 enum tbf_timers {
-	/* internal assign/reject timer */
-	T0,
-
 	/* Wait contention resolution success on UL TBFs assigned over CCCH */
 	T3141,
 
@@ -164,6 +161,8 @@ void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_pdch *pdch
 void tbf_update_state_fsm_name(struct gprs_rlcmac_tbf *tbf);
 const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf);
 bool tbf_is_control_ts(const struct gprs_rlcmac_tbf *tbf, uint8_t ts);
+bool tbf_can_upgrade_to_multislot(const struct gprs_rlcmac_tbf *tbf);
+int tbf_update(struct gprs_rlcmac_tbf *tbf);
 #ifdef __cplusplus
 }
 #endif

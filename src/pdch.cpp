@@ -369,8 +369,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 			tbf_free(tbf);
 
 		osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
-		/* stop pending assignment timer */
-		new_tbf->t_stop(T0, "control acked (DL-TBF)");
 
 		tbf_assign_control_ts(new_tbf);
 		return;

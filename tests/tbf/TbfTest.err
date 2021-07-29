@@ -1681,7 +1681,9 @@ TBF(DL-TFI_0){NULL}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) appending 19 bytes
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) timer 0 expired. cur_fn=2654167
+TBF(DL-TFI_0){ASSIGN}: Received Event ASSIGN_PCUIF_CNF
+TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) Starting timer X2002 [assignment (AGCH)] with 0 sec. 0 microsec
+TBF(DL-TFI_0){ASSIGN}: Timeout of X2002
 TBF(DL-TFI_0){ASSIGN}: Received Event ASSIGN_READY_CCCH
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=FLOW) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
@@ -2047,6 +2049,7 @@ PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654292): TBF(TFI=0 TLLI=
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654292, TS=7 (curr FN 2654292)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3105 0 => 1 (< MAX 8)
+TBF(DL-TFI_0){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654296 block_nr=2 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654301
 PDCH(bts=0,trx=0,ts=7) FN=2654296 Scheduling data message at RTS for DL TFI=0 prio=5 mcs_mode_restrict=EGPRS_GMSK-only
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS_GMSK-only
@@ -2107,6 +2110,7 @@ PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654309): TBF(TFI=0 TLLI=
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654309, TS=7 (curr FN 2654348)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3105 1 => 2 (< MAX 8)
+TBF(DL-TFI_0){FINISHED}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654348 block_nr=2 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654353
 UL_ASS_TBF(UL-TFI_1){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654348 + 13 = 2654361
@@ -4283,10 +4287,12 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 112)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 PDCH(bts=0,trx=0,ts=4) Expiring FN=112 but previous FN=104 is still reserved!
 PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=104): TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=104, TS=4 (curr FN 112)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 2 => 3 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=24)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:25, lost=0, recv=25, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRRRRRRR.......................................'
@@ -4546,6 +4552,7 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 91)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRRRRRRRRRRRRR"(BSN=19)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:20, lost=0, recv=20, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRR............................................'
@@ -4765,6 +4772,7 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 69)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRRRRRRRR"(BSN=14)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:15, lost=0, recv=15, skipped=0, bsn=0, info='RRRRRRRRRRRRRRR.................................................'
@@ -4968,6 +4976,7 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 60)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRRRRRR"(BSN=12)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:13, lost=0, recv=13, skipped=0, bsn=0, info='RRRRRRRRRRRRR...................................................'
@@ -5155,6 +5164,7 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 52)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRRRR"(BSN=10)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:11, lost=0, recv=11, skipped=0, bsn=0, info='RRRRRRRRRRR.....................................................'
@@ -5318,6 +5328,7 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 39)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRR"(BSN=7)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:8, lost=0, recv=8, skipped=0, bsn=0, info='RRRRRRRR........................................................'
@@ -5490,6 +5501,7 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 34)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRRRR"(BSN=10)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:11, lost=0, recv=10, skipped=1, bsn=0, info='xRRRRRRRRRR.....................................................'
@@ -5653,6 +5665,7 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 30)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRRR"(BSN=8)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:9, lost=0, recv=9, skipped=0, bsn=0, info='RRRRRRRRR.......................................................'
@@ -5805,6 +5818,7 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 26)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 1 => 2 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RRRRRRRR"(BSN=7)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:8, lost=0, recv=8, skipped=0, bsn=0, info='RRRRRRRR........................................................'
@@ -6119,6 +6133,7 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=21): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=21, TS=4 (curr FN 63)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RR"(BSN=1)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:2, lost=0, recv=2, skipped=0, bsn=0, info='RR..............................................................'
@@ -6213,6 +6228,7 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=21): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=21, TS=4 (curr FN 63)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RR"(BSN=1)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:2, lost=0, recv=2, skipped=0, bsn=0, info='RR..............................................................'
@@ -6307,6 +6323,7 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 63)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RR"(BSN=1)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:2, lost=0, recv=2, skipped=0, bsn=0, info='RR..............................................................'
@@ -6401,6 +6418,7 @@ PDCH(bts=0,trx=0,ts=4) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0xffe
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) poll timeout for FN=17, TS=4 (curr FN 63)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) N3105 0 => 1 (< MAX 8)
+TBF(DL-TFI_0){FLOW}: Received Event DL_ACKNACK_MISS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink acknowledge
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) ack:  (BSN=0)"RR"(BSN=1)  R=ACK I=NACK
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) DL analysis, range=0:2, lost=0, recv=2, skipped=0, bsn=0, info='RR..............................................................'

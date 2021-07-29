@@ -46,6 +46,8 @@ const struct value_string tbf_fsm_event_names[] = {
 	{ TBF_EV_ASSIGN_DEL_CCCH, "ASSIGN_DEL_CCCH" },
 	{ TBF_EV_ASSIGN_ACK_PACCH, "ASSIGN_ACK_PACCH" },
 	{ TBF_EV_ASSIGN_READY_CCCH, "ASSIGN_READY_CCCH" },
+	{ TBF_EV_ASSIGN_PCUIF_CNF, "ASSIGN_PCUIF_CNF" },
+	{ TBF_EV_DL_ACKNACK_MISS, "DL_ACKNACK_MISS" },
 	{ TBF_EV_LAST_DL_DATA_SENT, "LAST_DL_DATA_SENT" },
 	{ TBF_EV_LAST_UL_DATA_RECVD, "LAST_UL_DATA_RECVD" },
 	{ TBF_EV_FINAL_ACK_RECVD, "FINAL_ACK_RECVD" },
@@ -136,12 +138,17 @@ static void st_assign_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 			"Starting timer X2001 [assignment (PACCH)] with %u sec. %u microsec\n",
 			sec, micro);
 		osmo_timer_schedule(&fi->timer, sec, micro);
+	} else if (tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF) {
+		 /* GPRS_RLCMAC_FLAG_CCCH is set, so here we submitted an DL Ass through PCUIF on CCCH */
 	}
 }
 
 static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
+	unsigned long val;
+	unsigned int sec, micro;
+
 	switch (event) {
 	case TBF_EV_ASSIGN_ADD_CCCH:
 		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, true);
@@ -160,6 +167,23 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		}
 		tbf_fsm_state_chg(fi, TBF_ST_FLOW);
 		break;
+	case TBF_EV_ASSIGN_PCUIF_CNF:
+		/* BTS informs us it sent Imm Ass for DL TBF over CCCH. We now
+		 * have to wait for X2002 to trigger (meaning MS is already
+		 * listening on PDCH) in order to move to FLOW state and start
+		 * transmitting data to it. When X2002 triggers (see cb timer
+		 * end of the file) it will send  TBF_EV_ASSIGN_READY_CCCH back
+		 * to us here. */
+		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);
+		fi->T = -2002;
+		val = osmo_tdef_get(the_pcu->T_defs, fi->T, OSMO_TDEF_MS, -1);
+		sec = val / 1000;
+		micro = (val % 1000) * 1000;
+		LOGPTBF(ctx->tbf, LOGL_DEBUG,
+			"Starting timer X2002 [assignment (AGCH)] with %u sec. %u microsec\n",
+			sec, micro);
+		osmo_timer_schedule(&fi->timer, sec, micro);
+		break;
 	case TBF_EV_ASSIGN_READY_CCCH:
 		/* change state to FLOW, so scheduler will start transmission */
 		tbf_fsm_state_chg(fi, TBF_ST_FLOW);
@@ -172,7 +196,28 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
+
 	switch (event) {
+	case TBF_EV_DL_ACKNACK_MISS:
+		/* DL TBF: we missed a DL ACK/NACK. If we started assignment
+		 * over CCCH and never received any DL ACK/NACK yet, it means we
+		 * don't even know if the MS successfuly received the Imm Ass on
+		 * CCCH and hence is listening on PDCH. Let's better refrain
+		 * from continuing and start assignment on CCCH again */
+		if ((ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
+		     && !(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))) {
+			struct GprsMs *ms = tbf_ms(ctx->tbf);
+			const char *imsi = ms_imsi(ms);
+			uint16_t pgroup;
+			LOGPTBF(ctx->tbf, LOGL_DEBUG, "Re-send dowlink assignment on PCH (IMSI=%s)\n",
+				imsi);
+			tbf_fsm_state_chg(fi, TBF_ST_ASSIGN);
+			/* send immediate assignment */
+			if ((pgroup = imsi2paging_group(imsi)) > 999)
+				LOGPTBF(ctx->tbf, LOGL_ERROR, "IMSI to paging group failed! (%s)\n", imsi);
+			bts_snd_dl_ass(ms->bts, ctx->tbf, pgroup);
+		}
+		break;
 	case TBF_EV_LAST_DL_DATA_SENT:
 	case TBF_EV_LAST_UL_DATA_RECVD:
 		/* All data has been sent or received, change state to FINISHED */
@@ -201,6 +246,8 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
 	switch (event) {
+	case TBF_EV_DL_ACKNACK_MISS:
+		break;
 	case TBF_EV_FINAL_ACK_RECVD:
 		/* We received Final Ack (DL ACK/NACK) from MS. move to
 		   WAIT_RELEASE, we wait there for release or re-use the TBF in
@@ -267,10 +314,42 @@ static void tbf_fsm_cleanup(struct osmo_fsm_inst *fi, enum osmo_fsm_term_cause c
 	 */
 }
 
+static void handle_timeout_X2002(struct tbf_fsm_ctx *ctx)
+{
+	struct gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(ctx->tbf);
+
+	if (ctx->fi->state == TBF_ST_ASSIGN) {
+		tbf_assign_control_ts(ctx->tbf);
+
+		if (!tbf_can_upgrade_to_multislot(ctx->tbf)) {
+			/* change state to FLOW, so scheduler
+			 * will start transmission */
+			osmo_fsm_inst_dispatch(ctx->fi, TBF_EV_ASSIGN_READY_CCCH, NULL);
+			return;
+		}
+
+		/* This tbf can be upgraded to use multiple DL
+		 * timeslots and now that there is already one
+		 * slot assigned send another DL assignment via
+		 * PDCH. */
+
+		/* keep to flags */
+		ctx->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
+
+		tbf_update(ctx->tbf);
+
+		tbf_dl_trigger_ass(dl_tbf, ctx->tbf);
+	} else
+		LOGPTBF(ctx->tbf, LOGL_NOTICE, "Continue flow after IMM.ASS confirm\n");
+}
+
 static int tbf_fsm_timer_cb(struct osmo_fsm_inst *fi)
 {
 	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
 	switch (fi->T) {
+	case -2002:
+		handle_timeout_X2002(ctx);
+		break;
 	case -2001:
 		LOGPTBF(ctx->tbf, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
 		/* fall-through */
@@ -301,6 +380,7 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 			X(TBF_EV_ASSIGN_ADD_CCCH) |
 			X(TBF_EV_ASSIGN_ADD_PACCH) |
 			X(TBF_EV_ASSIGN_ACK_PACCH) |
+			X(TBF_EV_ASSIGN_PCUIF_CNF) |
 			X(TBF_EV_ASSIGN_READY_CCCH),
 		.out_state_mask =
 			X(TBF_ST_FLOW) |
@@ -312,12 +392,14 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 	},
 	[TBF_ST_FLOW] = {
 		.in_event_mask =
+			X(TBF_EV_DL_ACKNACK_MISS) |
 			X(TBF_EV_LAST_DL_DATA_SENT) |
 			X(TBF_EV_LAST_UL_DATA_RECVD) |
 			X(TBF_EV_FINAL_ACK_RECVD) |
 			X(TBF_EV_MAX_N3101) |
 			X(TBF_EV_MAX_N3105),
 		.out_state_mask =
+			X(TBF_ST_ASSIGN) |
 			X(TBF_ST_FINISHED) |
 			X(TBF_ST_WAIT_RELEASE) |
 			X(TBF_ST_RELEASING),
@@ -326,6 +408,7 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 	},
 	[TBF_ST_FINISHED] = {
 		.in_event_mask =
+			X(TBF_EV_DL_ACKNACK_MISS) |
 			X(TBF_EV_FINAL_ACK_RECVD) |
 			X(TBF_EV_MAX_N3103) |
 			X(TBF_EV_MAX_N3105),
