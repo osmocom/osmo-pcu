@@ -57,7 +57,7 @@ struct tbf_fsm_ctx {
 };
 
 extern const struct osmo_tdef_state_timeout tbf_fsm_timeouts[32];
-/* Transition to a state, using the T timer defined in assignment_fsm_timeouts.
+/* Transition to a state, using the T timer defined in tbf_fsm_timeouts.
  * The actual timeout value is in turn obtained from conn->T_defs.
  * Assumes local variable fi exists. */
 #define tbf_fsm_state_chg(fi, NEXT_STATE) \

@@ -53,7 +53,7 @@ static const struct osmo_tdef_state_timeout nacc_fsm_timeouts[32] = {
 	[NACC_ST_DONE] = {},
 };
 
-/* Transition to a state, using the T timer defined in assignment_fsm_timeouts.
+/* Transition to a state, using the T timer defined in nacc_fsm_timeouts.
  * The actual timeout value is in turn obtained from conn->T_defs.
  * Assumes local variable fi exists. */
 
