@@ -31,7 +31,7 @@
 #include <encoding.h>
 #include <bts.h>
 #include <tbf.h>
-#include <tbf_ul.h>
+#include <tbf_dl.h>
 
 #define X(s) (1 << (s))
 
@@ -137,6 +137,8 @@ struct msgb *create_packet_dl_assign(const struct tbf_dl_ass_fsm_ctx *ctx,
 	bts_do_rate_ctr_inc(ms->bts, CTR_PKT_DL_ASSIGNMENT);
 
 	tbf_set_polling(ctx->tbf, new_poll_fn, d->ts, PDCH_ULC_POLL_DL_ASS);
+	LOGPTBFDL(ctx->tbf, LOGL_INFO, "Scheduled DL Assignment polling on PACCH (FN=%d, TS=%d)\n",
+		  new_poll_fn, d->ts);
 
 	talloc_free(mac_control_block);
 	return msg;

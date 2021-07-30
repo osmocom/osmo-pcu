@@ -529,49 +529,10 @@ int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 
 void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum pdch_ulc_tbf_poll_reason reason)
 {
-	const char *chan = "UNKNOWN";
-
-	if (state_fsm.state_flags & (1 << (GPRS_RLCMAC_FLAG_CCCH)))
-		chan = "CCCH";
-
-	if (state_fsm.state_flags & (1 << (GPRS_RLCMAC_FLAG_PACCH)))
-		chan = "PACCH";
-
-	if ((state_fsm.state_flags & (1 << (GPRS_RLCMAC_FLAG_PACCH))) &&
-	    (state_fsm.state_flags & (1 << (GPRS_RLCMAC_FLAG_CCCH))))
-		LOGPTBFDL(this, LOGL_ERROR,
-			  "Attempt to schedule polling on %s (FN=%d, TS=%d) with both CCCH and PACCH flags set - FIXME!\n",
-			  chan, new_poll_fn, ts);
-
 	/* schedule polling */
-	if (pdch_ulc_reserve_tbf_poll(trx->pdch[ts].ulc, new_poll_fn, this, reason) < 0) {
-		LOGPTBFDL(this, LOGL_ERROR, "Failed scheduling poll on %s (FN=%d, TS=%d)\n",
-			  chan, new_poll_fn, ts);
-		return;
-	}
-
-	switch (reason) {
-	case PDCH_ULC_POLL_UL_ASS:
-		LOGPTBFDL(this, LOGL_INFO, "Scheduled UL Assignment polling on %s (FN=%d, TS=%d)\n",
-			  chan, new_poll_fn, ts);
-		break;
-	case PDCH_ULC_POLL_DL_ASS:
-		LOGPTBFDL(this, LOGL_INFO, "Scheduled DL Assignment polling on %s (FN=%d, TS=%d)\n",
-			  chan, new_poll_fn, ts);
-		break;
-	case PDCH_ULC_POLL_UL_ACK:
-		LOGPTBFUL(this, LOGL_DEBUG, "Scheduled UL Acknowledgement polling on %s (FN=%d, TS=%d)\n",
-			  chan, new_poll_fn, ts);
-		break;
-	case PDCH_ULC_POLL_DL_ACK:
-		LOGPTBFDL(this, LOGL_DEBUG, "Scheduled DL Acknowledgement polling on %s (FN=%d, TS=%d)\n",
-			  chan, new_poll_fn, ts);
-		break;
-	case PDCH_ULC_POLL_CELL_CHG_CONTINUE:
-		LOGPTBFDL(this, LOGL_DEBUG, "Scheduled 'Packet Cell Change Continue' polling on %s (FN=%d, TS=%d)\n",
-			  chan, new_poll_fn, ts);
-		break;
-	}
+	if (pdch_ulc_reserve_tbf_poll(trx->pdch[ts].ulc, new_poll_fn, this, reason) < 0)
+		LOGPTBFDL(this, LOGL_ERROR, "Failed scheduling poll on PACCH (FN=%d, TS=%d)\n",
+			  new_poll_fn, ts);
 }
 
 void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_fn, enum pdch_ulc_tbf_poll_reason reason)

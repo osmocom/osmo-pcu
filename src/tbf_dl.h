@@ -38,8 +38,6 @@ enum tbf_dl_prio {
 	DL_PRIO_CONTROL,   /* a control block needs to be sent */
 };
 
-#define LOGPTBFDL(tbf, level, fmt, args...) LOGP(DTBFDL, level, "%s " fmt, tbf_name(tbf), ## args)
-
 struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms);
 	~gprs_rlcmac_dl_tbf();
@@ -153,6 +151,8 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 		  const uint8_t *data, const uint16_t len);
 
 void tbf_dl_trigger_ass(struct gprs_rlcmac_dl_tbf *tbf, struct gprs_rlcmac_tbf *old_tbf);
+
+#define LOGPTBFDL(tbf, level, fmt, args...) LOGP(DTBFDL, level, "%s " fmt, tbf_name(tbf), ## args)
 #ifdef __cplusplus
 }
 #endif

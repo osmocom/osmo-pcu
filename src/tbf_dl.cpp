@@ -958,6 +958,9 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(
 		rc = check_polling(fn, ts, &new_poll_fn, &rrbp);
 		if (rc >= 0) {
 			set_polling(new_poll_fn, ts, PDCH_ULC_POLL_DL_ACK);
+			LOGPTBFDL(this, LOGL_DEBUG,
+				  "Scheduled DL Acknowledgement polling on PACCH (FN=%d, TS=%d)\n",
+				  new_poll_fn, ts);
 
 			m_tx_counter = 0;
 			/* start timer whenever we send the final block */

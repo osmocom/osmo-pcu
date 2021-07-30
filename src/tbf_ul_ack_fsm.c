@@ -91,8 +91,12 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 	if (ms_tlli(ms) != GSM_RESERVED_TMSI)
 		ul_tbf_contention_resolution_success(ctx->tbf);
 
-	if (final)
+	if (final) {
 		tbf_set_polling(tbf, new_poll_fn, d->ts, PDCH_ULC_POLL_UL_ACK);
+		LOGPTBFUL(tbf, LOGL_DEBUG,
+			  "Scheduled UL Acknowledgement polling on PACCH (FN=%d, TS=%d)\n",
+			  new_poll_fn, d->ts);
+	}
 
 	return msg;
 }
