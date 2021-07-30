@@ -89,7 +89,7 @@ static void check_tbf(gprs_rlcmac_tbf *tbf)
 {
 	OSMO_ASSERT(tbf);
 	if (tbf->state_is(TBF_ST_WAIT_RELEASE))
-		OSMO_ASSERT(tbf->timers_pending(T3191) || tbf->timers_pending(T3193));
+		OSMO_ASSERT(tbf->timers_pending(T3191) || osmo_timer_pending(&tbf->state_fsm.fi->timer));
 	if (tbf->state_is(TBF_ST_RELEASING))
 		OSMO_ASSERT(tbf->timers_pending(T_MAX));
 }

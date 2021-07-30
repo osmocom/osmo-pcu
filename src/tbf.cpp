@@ -69,7 +69,6 @@ static const struct value_string tbf_counters_names[] = {
 static const struct value_string tbf_timers_names[] = {
 	OSMO_VALUE_STRING(T3141),
 	OSMO_VALUE_STRING(T3191),
-	OSMO_VALUE_STRING(T3193),
 	{ 0, NULL }
 };
 
@@ -446,7 +445,6 @@ static inline void tbf_timeout_free(struct gprs_rlcmac_tbf *tbf, enum tbf_timers
  * the packet access is forgotten.*/
 T_CBACK(T3141, true)
 T_CBACK(T3191, true)
-T_CBACK(T3193, false)
 
 void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool force,
 			      const char *file, unsigned line)
@@ -494,9 +492,6 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool
 		break;
 	case T3191:
 		Tarr[t].cb = cb_T3191;
-		break;
-	case T3193:
-		Tarr[t].cb = cb_T3193;
 		break;
 	default:
 		LOGPSRC(DTBF, LOGL_ERROR, file, line, "%s attempting to set callback for unknown timer %s [%s], cur_fn=%d\n",

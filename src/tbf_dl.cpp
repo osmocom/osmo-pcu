@@ -1141,35 +1141,21 @@ int gprs_rlcmac_dl_tbf::update_window(unsigned first_bsn,
 
 int gprs_rlcmac_dl_tbf::rcvd_dl_final_ack()
 {
+	uint16_t received;
+
 	osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_FINAL_ACK_RECVD, NULL);
-	release();
+
+	/* range V(A)..V(S)-1 */
+	received = m_window.count_unacked();
+	/* report all outstanding packets as received */
+	gprs_rlcmac_received_lost(this, received, 0);
+	m_tx_counter = 0;
+	m_window.reset();
 
 	/* check for LLC PDU in the LLC Queue */
 	if (llc_queue_size(llc_queue()) > 0)
 		/* we have more data so we will re-use this tbf */
 		establish_dl_tbf_on_pacch();
-
-	return 0;
-}
-
-int gprs_rlcmac_dl_tbf::release()
-{
-	uint16_t received;
-
-	/* range V(A)..V(S)-1 */
-	received = m_window.count_unacked();
-
-	/* report all outstanding packets as received */
-	gprs_rlcmac_received_lost(this, received, 0);
-
-	/* start T3193 */
-	T_START(this, T3193, 3193, "release (DL-TBF)", true);
-
-	/* reset rlc states */
-	m_tx_counter = 0;
-	m_window.reset();
-
-	osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_ASSIGN_DEL_CCCH, NULL);
 
 	return 0;
 }

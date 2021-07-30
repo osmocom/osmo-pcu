@@ -43,7 +43,6 @@ const struct osmo_tdef_state_timeout tbf_fsm_timeouts[32] = {
 const struct value_string tbf_fsm_event_names[] = {
 	{ TBF_EV_ASSIGN_ADD_CCCH, "ASSIGN_ADD_CCCH" },
 	{ TBF_EV_ASSIGN_ADD_PACCH, "ASSIGN_ADD_PACCH" },
-	{ TBF_EV_ASSIGN_DEL_CCCH, "ASSIGN_DEL_CCCH" },
 	{ TBF_EV_ASSIGN_ACK_PACCH, "ASSIGN_ACK_PACCH" },
 	{ TBF_EV_ASSIGN_READY_CCCH, "ASSIGN_READY_CCCH" },
 	{ TBF_EV_ASSIGN_PCUIF_CNF, "ASSIGN_PCUIF_CNF" },
@@ -267,6 +266,23 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	}
 }
 
+static void st_wait_release_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
+{
+	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
+	unsigned long val_s, val_ms, val_us;
+	OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);
+
+	fi->T = 3193;
+	val_ms = osmo_tdef_get(tbf_ms(ctx->tbf)->bts->T_defs_bts, fi->T, OSMO_TDEF_MS, -1);
+	val_s = val_ms / 1000;
+	val_us = (val_ms % 1000) * 1000;
+	LOGPTBF(ctx->tbf, LOGL_DEBUG, "starting timer T%u with %lu sec. %lu microsec\n",
+		fi->T, val_s, val_us);
+	osmo_timer_schedule(&fi->timer, val_s, val_us);
+
+	mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, false);
+}
+
 static void st_wait_release(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
@@ -305,13 +321,6 @@ static void st_releasing_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 	LOGPTBF(ctx->tbf, LOGL_DEBUG, "starting timer T%u with %lu sec. %u microsec\n",
 		ctx->T_release, val, 0);
 	osmo_timer_schedule(&fi->timer, val, 0);
-}
-
-static void tbf_fsm_cleanup(struct osmo_fsm_inst *fi, enum osmo_fsm_term_cause cause)
-{
-	/* TODO: needed ?
-	 * struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
-	 */
 }
 
 static void handle_timeout_X2002(struct tbf_fsm_ctx *ctx)
@@ -354,6 +363,7 @@ static int tbf_fsm_timer_cb(struct osmo_fsm_inst *fi)
 		LOGPTBF(ctx->tbf, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
 		/* fall-through */
 	case 3169:
+	case 3193:
 	case 3195:
 		tbf_free(ctx->tbf);
 		break;
@@ -427,6 +437,7 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 			X(TBF_ST_RELEASING),
 		.name = "WAIT_RELEASE",
 		.action = st_wait_release,
+		.onenter = st_wait_release_on_enter,
 	},
 	[TBF_ST_RELEASING] = {
 		.in_event_mask =
@@ -438,28 +449,13 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 	},
 };
 
-void tbf_fsm_allstate_action(struct osmo_fsm_inst *fi, uint32_t event, void *data)
-{
-	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
-	switch (event) {
-	case TBF_EV_ASSIGN_DEL_CCCH:
-		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, false);
-		break;
-	default:
-		OSMO_ASSERT(0);
-	}
-}
-
 struct osmo_fsm tbf_fsm = {
 	.name = "TBF",
 	.states = tbf_fsm_states,
 	.num_states = ARRAY_SIZE(tbf_fsm_states),
 	.timer_cb = tbf_fsm_timer_cb,
-	.cleanup = tbf_fsm_cleanup,
 	.log_subsys = DTBF,
 	.event_names = tbf_fsm_event_names,
-	.allstate_action = tbf_fsm_allstate_action,
-	.allstate_event_mask = X(TBF_EV_ASSIGN_DEL_CCCH),
 };
 
 static __attribute__((constructor)) void tbf_fsm_init(void)

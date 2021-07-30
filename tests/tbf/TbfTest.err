@@ -116,8 +116,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) V(B): (V(A)=2)""(V(S)-1=1)  A=Acked
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) starting timer T3193 with 0 sec. 100000 microsec
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) ********** DL-TBF starts here **********
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Allocating DL TBF
 TBF{NULL}: Allocated
@@ -145,7 +144,6 @@ TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, P
 TBF(DL-TFI_1){NULL}: state_chg to ASSIGN
 TBF(TFI=1 TLLI=0xffeeddcc DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE), 1 TBFs, USFs = 00, TFIs = 00000002.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE)
 ********** DL-TBF ends here **********
@@ -231,8 +229,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) V(B): (V(A)=2)""(V(S)-1=1)  A=Acked
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) starting timer T3193 with 0 sec. 100000 microsec
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) ********** DL-TBF starts here **********
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) Allocating DL TBF
 TBF{NULL}: Allocated
@@ -267,7 +264,6 @@ TBF(DL-TFI_1){ASSIGN}: Deallocated
 UL_ASS_TBF(DL-TFI_1){NONE}: Deallocated
 DL_ASS_TBF(DL-TFI_1){NONE}: Deallocated
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE)
 ********** DL-TBF ends here **********
@@ -534,10 +530,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) V(B): (V(A)=22)""(V(S)-1=21)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FINISHED) Final ACK received.
 TBF(DL-TFI_0){FINISHED}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FINISHED}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0,) Destroying MS object
@@ -3233,8 +3227,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) V(B): (V(A)=28)""(V(S)-1=27)  A
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Final ACK received.
 TBF(DL-TFI_0){FINISHED}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FINISHED}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654379
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) starting timer T3193 with 0 sec. 100000 microsec
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Allocating DL TBF
 TBF{NULL}: Allocated
@@ -3346,7 +3339,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) [UPLINK] DOWNLINK ASSIGNED
 DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) free
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE), 1 TBFs, USFs = 01, TFIs = 00000002.
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE)
 ********** DL-TBF ends here **********
@@ -4322,10 +4314,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=25)""(V(S)-1=24) 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=112
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -4582,10 +4572,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=20)""(V(S)-1=19) 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=91
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -4802,10 +4790,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=15)""(V(S)-1=14) 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=69
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -5006,10 +4992,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=13)""(V(S)-1=12) 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=60
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -5194,10 +5178,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=11)""(V(S)-1=10) 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=52
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -5358,10 +5340,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=8)""(V(S)-1=7)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=39
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -5531,10 +5511,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=11)""(V(S)-1=10) 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=34
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -5695,10 +5673,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=9)""(V(S)-1=8)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=30
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -5848,10 +5824,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=8)""(V(S)-1=7)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=26
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -5923,10 +5897,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -5995,10 +5967,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -6067,10 +6037,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=58
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -6163,10 +6131,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=2)""(V(S)-1=1)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -6258,10 +6224,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=2)""(V(S)-1=1)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -6353,10 +6317,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=2)""(V(S)-1=1)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -6448,10 +6410,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=2)""(V(S)-1=1)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=63
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -6529,10 +6489,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -6608,10 +6566,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -6687,10 +6643,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object
@@ -6773,10 +6727,8 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) V(B): (V(A)=1)""(V(S)-1=0)  A
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Final ACK received.
 TBF(DL-TFI_0){FLOW}: Received Event FINAL_ACK_RECVD
 TBF(DL-TFI_0){FLOW}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 [release (DL-TBF)] with 0 sec. 100000 microsec, cur_fn=2654167
-TBF(DL-TFI_0){WAIT_RELEASE}: Received Event ASSIGN_DEL_CCCH
+TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) starting timer T3193 with 0 sec. 100000 microsec
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) free
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS) stopping timer T3193 [freeing TBF]
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS), 0 TBFs, USFs = 00, TFIs = 00000000.
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=WAIT_RELEASE EGPRS)
 MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Destroying MS object

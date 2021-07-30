@@ -99,10 +99,6 @@ enum tbf_timers {
 	   Wait for reuse of TFI(s) after sending the PACKET TBF RELEASE for an MBMS radio bearer. */
 	T3191,
 
-	/* Wait for reuse of TFI(s) after reception of the final PACKET DOWNLINK ACK/NACK from the
-	   MS for this TBF. */
-	T3193,
-
 	T_MAX
 };
 
