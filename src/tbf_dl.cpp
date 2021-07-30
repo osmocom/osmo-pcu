@@ -605,13 +605,13 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 
 	/* check for downlink tbf:  */
 	if (old_tbf) {
-		LOGPTBFDL(this, LOGL_DEBUG, "Send dowlink assignment on PACCH, because %s exists\n", old_tbf->name());
+		LOGPTBFDL(this, LOGL_DEBUG, "Send downlink assignment on PACCH, because %s exists\n", old_tbf->name());
 		osmo_fsm_inst_dispatch(old_tbf->dl_ass_fsm.fi, TBF_DL_ASS_EV_SCHED_ASS, NULL);
 
 		/* change state */
 		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
 	} else {
-		LOGPTBFDL(this, LOGL_DEBUG, "Send dowlink assignment on PCH, no TBF exist (IMSI=%s)\n",
+		LOGPTBFDL(this, LOGL_DEBUG, "Send downlink assignment on PCH, no TBF exist (IMSI=%s)\n",
 			  imsi());
 
 		/* change state */

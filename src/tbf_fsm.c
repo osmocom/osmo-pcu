@@ -208,7 +208,7 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 			struct GprsMs *ms = tbf_ms(ctx->tbf);
 			const char *imsi = ms_imsi(ms);
 			uint16_t pgroup;
-			LOGPTBF(ctx->tbf, LOGL_DEBUG, "Re-send dowlink assignment on PCH (IMSI=%s)\n",
+			LOGPTBF(ctx->tbf, LOGL_DEBUG, "Re-send downlink assignment on PCH (IMSI=%s)\n",
 				imsi);
 			tbf_fsm_state_chg(fi, TBF_ST_ASSIGN);
 			/* send immediate assignment */

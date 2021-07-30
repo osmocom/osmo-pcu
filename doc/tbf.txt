@@ -52,7 +52,7 @@ When downlink LLC PDU is received:
       Attach PDU to LLC Frame of TBF.
       Put TBF back into FLOW state.
       Done.
-  If dowlink TBF does not exists for given TLLI, or in RELEASING state:
+  If downlink TBF does not exists for given TLLI, or in RELEASING state:
     Create new downlink TBF.
     Attach PDU to LLC Frame of TBF.
     If uplink TBF exists for given TLLI, but not in RELEASING state:
