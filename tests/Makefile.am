@@ -194,6 +194,45 @@ DISTCLEANFILES = atconfig
 
 TESTSUITE = $(srcdir)/testsuite
 
+update_exp:
+	rlcmac/RLCMACTest \
+		>$(srcdir)/rlcmac/RLCMACTest.ok \
+		2>$(srcdir)/rlcmac/RLCMACTest.err
+	alloc/MslotTest \
+		>$(srcdir)/alloc/MslotTest.ok
+	alloc/AllocTest \
+		>$(srcdir)/alloc/AllocTest.ok \
+		2>$(srcdir)/alloc/AllocTest.err
+	tbf/TbfTest \
+		2>$(srcdir)/tbf/TbfTest.err
+	bitcomp/BitcompTest \
+		>$(srcdir)/bitcomp/BitcompTest.ok \
+		2>$(srcdir)/bitcomp/BitcompTest.err
+	edge/EdgeTest \
+		>$(srcdir)/edge/EdgeTest.ok
+	types/TypesTest \
+		>$(srcdir)/types/TypesTest.ok \
+		2>$(srcdir)/types/TypesTest.err
+	ms/MsTest \
+		>$(srcdir)/ms/MsTest.ok \
+		2>$(srcdir)/ms/MsTest.err
+	llc/LlcTest \
+		>$(srcdir)/llc/LlcTest.ok \
+		2>$(srcdir)/llc/LlcTest.err
+	llist/LListTest \
+		>$(srcdir)/llist/LListTest.ok \
+		2>$(srcdir)/llist/LListTest.err
+	codel/codel_test \
+		>$(srcdir)/codel/codel_test.ok
+	fn/FnTest \
+		>$(srcdir)/fn/FnTest.ok
+	app_info/AppInfoTest \
+		>$(srcdir)/app_info/AppInfoTest.ok \
+		2>$(srcdir)/app_info/AppInfoTest.err
+	ulc/PdchUlcTest \
+		>$(srcdir)/ulc/PdchUlcTest.ok \
+		2>$(srcdir)/ulc/PdchUlcTest.err
+
 # Python testing
 if ENABLE_VTY_TESTS
 python-tests: $(BUILT_SOURCES)
