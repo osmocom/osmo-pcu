@@ -50,7 +50,8 @@ static void get_ctrl_msg_tbf_candidates(const struct gprs_rlcmac_pdch *pdch,
 
 	llist_for_each_entry(pos, &pdch->trx->ul_tbfs, list) {
 		ul_tbf = as_ul_tbf((struct gprs_rlcmac_tbf *)pos->entry);
-		OSMO_ASSERT(ul_tbf);
+		if (!ul_tbf)
+			continue;
 		/* this trx, this ts */
 		if (!ul_tbf->is_control_ts(pdch->ts_no))
 			continue;
@@ -69,7 +70,8 @@ states? */
 	}
 	llist_for_each_entry(pos, &pdch->trx->dl_tbfs, list) {
 		dl_tbf = as_dl_tbf((struct gprs_rlcmac_tbf *)pos->entry);
-		OSMO_ASSERT(dl_tbf);
+		if (!dl_tbf)
+			continue;
 		/* this trx, this ts */
 		if (!dl_tbf->is_control_ts(pdch->ts_no))
 			continue;
@@ -459,6 +461,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 			"single block allocation at FN=%d\n", fn, block_nr, sba->fn);
 	/* else, check uplink resource for polling */
 	} else if ((poll_tbf = pdch_ulc_get_tbf_poll(pdch->ulc, poll_fn))) {
+		struct gprs_rlcmac_ul_tbf *ul_tbf;
 		LOGPDCH(pdch, DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: FN=%d "
 			"block_nr=%d scheduling free USF for polling at FN=%d of %s\n",
 			fn, block_nr, poll_fn, tbf_name(poll_tbf));
@@ -466,8 +469,9 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 		 * let's set its USF in the DL msg. This is not really needed,
 		 * but it helps understand better the flow when looking at
 		 * pcaps. */
-		if (poll_tbf->direction == GPRS_RLCMAC_UL_TBF && as_ul_tbf(poll_tbf)->m_usf[ts] != USF_INVALID)
-			usf_tbf = as_ul_tbf(poll_tbf);
+		ul_tbf = as_ul_tbf(poll_tbf);
+		if (ul_tbf && poll_tbf->direction == GPRS_RLCMAC_UL_TBF && ul_tbf->m_usf[ts] != USF_INVALID)
+			usf_tbf = ul_tbf;
 	/* else, search for uplink tbf */
 	} else if ((usf_tbf = sched_select_uplink(pdch, require_gprs_only))) {
 		LOGPDCH(pdch, DRLCMACSCHED, LOGL_DEBUG, "Received RTS for PDCH: FN=%d "

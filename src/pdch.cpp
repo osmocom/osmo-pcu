@@ -452,7 +452,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 		return;
 	}
 	tbf = as_dl_tbf(poll->tbf_poll.poll_tbf);
-	if (tbf->tfi() != tfi) {
+	if (!tbf || tbf->tfi() != tfi) {
 		LOGPTBFDL(tbf, LOGL_NOTICE,
 			  "PACKET DOWNLINK ACK with wrong TFI=%d, ignoring!\n", tfi);
 		return;
@@ -522,7 +522,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 		return;
 	}
 	tbf = as_dl_tbf(poll->tbf_poll.poll_tbf);
-	if (tbf->tfi() != tfi) {
+	if (!tbf || tbf->tfi() != tfi) {
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "EGPRS PACKET DOWNLINK ACK with "
 			"wrong TFI=%d, ignoring!\n", tfi);
 		return;
@@ -1063,8 +1063,8 @@ void gprs_rlcmac_pdch::attach_tbf(gprs_rlcmac_tbf *tbf)
 			m_tbfs[tbf->direction][tbf->tfi()]->name());
 
 	m_num_tbfs[tbf->direction] += 1;
-	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		ul_tbf = as_ul_tbf(tbf);
+	ul_tbf = as_ul_tbf(tbf);
+	if (ul_tbf) {
 		m_assigned_usf |= 1 << ul_tbf->m_usf[ts_no];
 	}
 	m_assigned_tfi[tbf->direction] |= 1UL << tbf->tfi();
@@ -1083,8 +1083,8 @@ void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
 	OSMO_ASSERT(m_num_tbfs[tbf->direction] > 0);
 
 	m_num_tbfs[tbf->direction] -= 1;
-	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		ul_tbf = as_ul_tbf(tbf);
+	ul_tbf = as_ul_tbf(tbf);
+	if (ul_tbf) {
 		m_assigned_usf &= ~(1 << ul_tbf->m_usf[ts_no]);
 	}
 	m_assigned_tfi[tbf->direction] &= ~(1UL << tbf->tfi());

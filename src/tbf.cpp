@@ -270,15 +270,18 @@ static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 void tbf_free(struct gprs_rlcmac_tbf *tbf)
 {
 	/* update counters */
-	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
+	gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
+	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
+	/* cannot be both DL and UL */
+	OSMO_ASSERT(!(dl_tbf && ul_tbf));
+	if (ul_tbf) {
 		bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_UL_FREED);
 		if (tbf->state_is(TBF_ST_FLOW))
 			bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_UL_ABORTED);
 		rate_ctr_group_free(ul_tbf->m_ul_egprs_ctrs);
 		rate_ctr_group_free(ul_tbf->m_ul_gprs_ctrs);
-	} else {
-		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
+	}
+	if (dl_tbf) {
 		if (tbf->is_egprs_enabled()) {
 			rate_ctr_group_free(dl_tbf->m_dl_egprs_ctrs);
 		} else {
@@ -291,9 +294,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 
 	/* Give final measurement report */
 	gprs_rlcmac_rssi_rep(tbf);
-	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
-		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
-
+	if (dl_tbf) {
 		dl_tbf->abort();
 		dl_tbf->cleanup();
 	}
@@ -623,7 +624,10 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum pdch_ul
 void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_fn, enum pdch_ulc_tbf_poll_reason reason)
 {
 	uint16_t pgroup;
+	gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
 	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
+	/* cannot be both DL and UL */
+	OSMO_ASSERT(!(dl_tbf && ul_tbf));
 
 	LOGPTBF(this, LOGL_NOTICE, "poll timeout for FN=%d, TS=%d (curr FN %d)\n",
 		poll_fn, pdch->ts_no, bts_current_frame_number(bts));
@@ -690,9 +694,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		/* Timeout waiting for CTRL ACK acking Pkt Cell Change Continue */
 		osmo_fsm_inst_dispatch(m_ms->nacc->fi, NACC_EV_TIMEOUT_CELL_CHG_CONTINUE, NULL);
 		return;
-	} else if (direction == GPRS_RLCMAC_DL_TBF) {
-		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
-
+	} else if (dl_tbf) {
 		if (!(dl_tbf->state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
 			LOGPTBF(this, LOGL_NOTICE,
 				"Timeout for polling PACKET DOWNLINK ACK: %s\n",
@@ -784,6 +786,7 @@ static void tbf_timer_cb(void *_tbf)
 void gprs_rlcmac_tbf::handle_timeout()
 {
 	int current_fn = bts_current_frame_number(bts);
+	gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
 
 	LOGPTBF(this, LOGL_DEBUG, "timer 0 expired. cur_fn=%d\n", current_fn);
 
@@ -798,8 +801,7 @@ void gprs_rlcmac_tbf::handle_timeout()
 	}
 
 	/* Finish waiting after IMM.ASS confirm timer for CCCH assignment (see timer X2002) */
-	if ((state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
-		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
+	if (dl_tbf && (state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))) {
 		dl_tbf->m_wait_confirm = 0;
 		if (dl_tbf->state_is(TBF_ST_ASSIGN)) {
 			tbf_assign_control_ts(dl_tbf);

@@ -357,6 +357,8 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_,
 	struct GprsMs *ms = tbf_->ms();
 	const gprs_rlcmac_tbf *tbf = tbf_;
 	gprs_rlcmac_trx *trx = ms_current_trx(ms);
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	struct gprs_rlcmac_ul_tbf *ul_tbf;
 
 	LOGPAL(tbf, "A", single, use_trx, LOGL_DEBUG, "Alloc start\n");
 
@@ -406,12 +408,15 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_,
 
 	/* The allocation will be successful, so the system state and tbf_/ms_
 	 * may be modified from now on. */
-	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf_);
+	dl_tbf = as_dl_tbf(tbf_);
+	ul_tbf = as_ul_tbf(tbf_);
+	/* cannot be both DL and UL */
+	OSMO_ASSERT(!(dl_tbf && ul_tbf));
+	if (ul_tbf) {
 		LOGPSL(tbf, LOGL_DEBUG, "Assign uplink TS=%d TFI=%d USF=%d\n", ts, tfi, usf);
 		assign_uplink_tbf_usf(pdch, ul_tbf, tfi, usf);
-	} else {
-		struct gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf_);
+	}
+	if (dl_tbf) {
 		LOGPSL(tbf, LOGL_DEBUG, "Assign downlink TS=%d TFI=%d\n", ts, tfi);
 		assign_dlink_tbf(pdch, dl_tbf, tfi);
 	}
@@ -878,6 +883,8 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_,
 	struct GprsMs *ms = tbf_->ms();
 	const gprs_rlcmac_tbf *tbf = tbf_;
 	gprs_rlcmac_trx *trx;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	struct gprs_rlcmac_ul_tbf *ul_tbf;
 
 	LOGPAL(tbf, "B", single, use_trx, LOGL_DEBUG, "Alloc start\n");
 
@@ -960,10 +967,14 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_,
 	tbf_->first_common_ts = first_common_ts;
 	tbf_->first_ts = first_ts;
 
-	if (tbf->direction == GPRS_RLCMAC_DL_TBF)
-		assign_dl_tbf_slots(as_dl_tbf(tbf_), trx, dl_slots, tfi);
-	else
-		assign_ul_tbf_slots(as_ul_tbf(tbf_), trx, ul_slots, tfi, usf);
+	dl_tbf = as_dl_tbf(tbf_);
+	ul_tbf = as_ul_tbf(tbf_);
+	/* cannot be both DL and UL */
+	OSMO_ASSERT(!(dl_tbf && ul_tbf));
+	if (dl_tbf)
+		assign_dl_tbf_slots(dl_tbf, trx, dl_slots, tfi);
+	if (ul_tbf)
+		assign_ul_tbf_slots(ul_tbf, trx, ul_slots, tfi, usf);
 
 	bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_ALGO_B);
 
