@@ -164,6 +164,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 
 gprs_rlcmac_tbf::~gprs_rlcmac_tbf()
 {
+	tbf_unlink_pdch(this);
 	osmo_fsm_inst_free(state_fsm.fi);
 	state_fsm.fi = NULL;
 }
