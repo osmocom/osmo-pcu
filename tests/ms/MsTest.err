@@ -1,22 +1,22 @@
 Creating MS object, TLLI = 0xffeeddbb
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL)
 MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Destroying MS object
 Creating MS object, TLLI = 0xffeeddbb
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL)
 MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Destroying MS object
 Creating MS object, TLLI = 0xffeeddbb
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Attaching DL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Attaching DL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL)
 MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Destroying MS object
 Creating MS object, TLLI = 0xaa000000
 Modifying MS object, UL TLLI: 0xaa000000 -> 0xff001111, not yet confirmed
@@ -41,21 +41,21 @@ Modifying MS object, TLLI = 0xffeeddbb, IMSI '' -> '001001987654321'
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, UL TLLI: 0xffffffff -> 0xffeeddbc, not yet confirmed
 Modifying MS object, TLLI = 0xffeeddbc, IMSI '' -> '001001987654322'
-MS(TLLI=0xffeeddbb, IMSI=001001987654321, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=001001987654321, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
+MS(TLLI=0xffeeddbb, IMSI=001001987654321, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL)
+MS(TLLI=0xffeeddbb, IMSI=001001987654321, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL)
 MS(TLLI=0xffeeddbb, IMSI=001001987654321, TA=220, 0/0,) Destroying MS object
-MS(TLLI=0xffeeddbc, IMSI=001001987654322, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL)
-MS(TLLI=0xffeeddbc, IMSI=001001987654322, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NULL)
+MS(TLLI=0xffeeddbc, IMSI=001001987654322, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffffffff DIR=UL)
+MS(TLLI=0xffeeddbc, IMSI=001001987654322, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffffffff DIR=UL)
 MS(TLLI=0xffeeddbc, IMSI=001001987654322, TA=220, 0/0,) Destroying MS object
 Creating MS object, TLLI = 0xffeeddbb
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL STATE=NULL)
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=UL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL)
 MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Release timer expired
 MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Destroying MS object
 Creating MS object, TLLI = 0xffeeddbb
-MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL STATE=NULL)
+MS(TLLI=0xffeeddbb, IMSI=, TA=220, 0/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0xffeeddbb DIR=DL)
 Creating MS object, TLLI = 0xdeadbeef
 Creating MS object, TLLI = 0xdeadbef0
-MS(TLLI=0xdeadbef0, IMSI=, TA=220, 0/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0xdeadbef0 DIR=DL STATE=NULL)
+MS(TLLI=0xdeadbef0, IMSI=, TA=220, 0/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0xdeadbef0 DIR=DL)

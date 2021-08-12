@@ -112,7 +112,12 @@ enum tbf_egprs_counters {
 extern const struct rate_ctr_group_desc tbf_ctrg_desc;
 extern unsigned int next_tbf_ctr_group_id;
 
-#define LOGPTBF(tbf, level, fmt, args...) LOGP(DTBF, level, "%s " fmt, tbf_name(tbf), ## args)
+#define LOGPTBF(tbf, level, fmt, args...) do { \
+		if (tbf && tbf->state_fsm.fi) \
+			LOGPFSML(tbf->state_fsm.fi, level, "%s " fmt, tbf_name(tbf), ## args); \
+		else \
+			LOGP(DTBF, level, "%s " fmt, tbf_name(tbf), ## args); \
+	} while(0)
 
 enum tbf_timers {
 	/* internal assign/reject timer */

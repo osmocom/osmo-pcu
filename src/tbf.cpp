@@ -159,6 +159,8 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	m_llc.init();
 
 	m_name_buf[0] = '\0';
+	LOGPTBF(this, LOGL_DEBUG, "~~~~~~~~~~ %s-TBF starts here ~~~~~~~~~~\n",
+		(direction != GPRS_RLCMAC_UL_TBF) ? "DL" : "UL");
 }
 
 
@@ -310,8 +312,8 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 
 	rate_ctr_group_free(tbf->m_ctrs);
 
-	LOGP(DTBF, LOGL_DEBUG, "********** %s-TBF ends here **********\n",
-	     (tbf->direction != GPRS_RLCMAC_UL_TBF) ? "DL" : "UL");
+	LOGPTBF(tbf, LOGL_DEBUG, "********** %s-TBF ends here **********\n",
+		(tbf->direction != GPRS_RLCMAC_UL_TBF) ? "DL" : "UL");
 	talloc_free(tbf);
 }
 
@@ -330,7 +332,7 @@ int gprs_rlcmac_tbf::update()
 	if (direction != GPRS_RLCMAC_DL_TBF)
 		return -EINVAL;
 
-	LOGP(DTBF, LOGL_DEBUG, "********** DL-TBF update **********\n");
+	LOGPTBF(this, LOGL_DEBUG, "********** DL-TBF update **********\n");
 
 	tbf_unlink_pdch(this);
 	rc = the_pcu->alloc_algorithm(bts, this, false, -1);
@@ -493,7 +495,7 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool
 		tdef = osmo_tdef_get_entry(bts->pcu->T_defs, T);
 
 	if (t >= T_MAX || !tdef) {
-		LOGPSRC(DTBF, LOGL_ERROR, file, line, "%s attempting to start unknown timer %s [%s], cur_fn=%d\n",
+		LOGPFSMLSRC(state_fsm.fi, LOGL_ERROR, file, line, "%s attempting to start unknown timer %s [%s], cur_fn=%d\n",
 			tbf_name(this), get_value_string(tbf_timers_names, t), reason, current_fn);
 		return;
 	}
@@ -515,9 +517,10 @@ void gprs_rlcmac_tbf::t_start(enum tbf_timers t, int T, const char *reason, bool
 		OSMO_ASSERT(false);
 	}
 
-	LOGPSRC(DTBF, LOGL_DEBUG, file, line, "%s %sstarting timer %s [%s] with %u sec. %u microsec, cur_fn=%d\n",
-	     tbf_name(this), osmo_timer_pending(&Tarr[t]) ? "re" : "",
-	     get_value_string(tbf_timers_names, t), reason, sec, microsec, current_fn);
+	LOGPFSMLSRC(state_fsm.fi, LOGL_DEBUG, file, line,
+		    "%s %sstarting timer %s [%s] with %u sec. %u microsec, cur_fn=%d\n",
+		    tbf_name(this), osmo_timer_pending(&Tarr[t]) ? "re" : "",
+		    get_value_string(tbf_timers_names, t), reason, sec, microsec, current_fn);
 
 	Tarr[t].data = this;
 
@@ -1070,10 +1073,9 @@ const char *tbf_name(const gprs_rlcmac_tbf *tbf)
 const char *gprs_rlcmac_tbf::name() const
 {
 	snprintf(m_name_buf, sizeof(m_name_buf) - 1,
-		"TBF(TFI=%d TLLI=0x%08x DIR=%s STATE=%s%s)",
+		"TBF(TFI=%d TLLI=0x%08x DIR=%s%s)",
 		m_tfi, tlli(),
 		direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
-		state_name(),
 		is_egprs_enabled() ? " EGPRS" : ""
 		);
 	m_name_buf[sizeof(m_name_buf) - 1] = '\0';
@@ -1085,6 +1087,7 @@ void tbf_update_state_fsm_name(struct gprs_rlcmac_tbf *tbf)
 	osmo_fsm_inst_update_id_f_sanitize(tbf->state_fsm.fi, '_', "%s-TFI_%d",
 		tbf_direction(tbf) == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
 		tbf_tfi(tbf));
+	LOGPFSML(tbf->state_fsm.fi, LOGL_DEBUG, "(updated id)\n");
 }
 
 void gprs_rlcmac_tbf::rotate_in_list()
