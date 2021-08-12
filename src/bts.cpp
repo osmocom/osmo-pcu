@@ -76,12 +76,12 @@ void bts_trx_free_all_tbf(struct gprs_rlcmac_trx *trx)
 }
 
 static struct osmo_tdef T_defs_bts[] = {
-	{ .T=3142, .default_val=20,  .unit=OSMO_TDEF_S,  .desc="Wait Indication used in Imm Ass Reject during TBF Establishment (CCCH) (s)", .val=0, .min_val = 0, .max_val = 255 }, /* TS 44.018 10.5.2.43, TS 44.060 7.1.3.2.1 (T3172) */
-	{ .T=3169, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of USF and TFI(s) after the MS uplink TBF assignment is invalid (s)", .val=0 },
-	{ .T=3172, .default_val=5000,.unit=OSMO_TDEF_MS, .desc="Wait Indication used in Imm Ass Reject during TBF Establishment (PACCH) (s)", .val=0, .min_val = 0, .max_val = 255000 }, /* TS 44.060 7.1.3.2.1 */
-	{ .T=3191, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of TFI(s) after sending (1) last RLC Data Block on TBF(s), or (2) PACKET TBF RELEASE for an MBMS radio bearer (s)", .val=0 },
-	{ .T=3193, .default_val=100, .unit=OSMO_TDEF_MS, .desc="Reuse of TFI(s) after reception of final PACKET DOWNLINK ACK/NACK from MS for TBF (ms)", .val=0 },
-	{ .T=3195, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of TFI(s) upon no response from the MS (radio failure or cell change) for TBF/MBMS radio bearer (s)", .val=0 },
+	{ .T=3142, .default_val=20,  .unit=OSMO_TDEF_S,  .desc="Wait Indication used in Imm Ass Reject during TBF Establishment (CCCH)", .val=0, .min_val = 0, .max_val = 255 }, /* TS 44.018 10.5.2.43, TS 44.060 7.1.3.2.1 (T3172) */
+	{ .T=3169, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of USF and TFI(s) after the MS uplink TBF assignment is invalid", .val=0 },
+	{ .T=3172, .default_val=5000,.unit=OSMO_TDEF_MS, .desc="Wait Indication used in Imm Ass Reject during TBF Establishment (PACCH)", .val=0, .min_val = 0, .max_val = 255000 }, /* TS 44.060 7.1.3.2.1 */
+	{ .T=3191, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of TFI(s) after sending (1) last RLC Data Block on TBF(s), or (2) PACKET TBF RELEASE for an MBMS radio bearer", .val=0 },
+	{ .T=3193, .default_val=100, .unit=OSMO_TDEF_MS, .desc="Reuse of TFI(s) after reception of final PACKET DOWNLINK ACK/NACK from MS for TBF", .val=0 },
+	{ .T=3195, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of TFI(s) upon no response from the MS (radio failure or cell change) for TBF/MBMS radio bearer", .val=0 },
 	{ .T=0, .default_val=0, .unit=OSMO_TDEF_S, .desc=NULL, .val=0 } /* empty item at the end */
 };
 
