@@ -738,9 +738,9 @@ static int tbf_select_slot_set(const gprs_rlcmac_tbf *tbf, const gprs_rlcmac_trx
 		masked_override_with(slot_info, sl, 'D');
 	}
 
-	LOGPC(DRLCMAC, LOGL_DEBUG, "Selected %s slots: (TS=0)\"%s\"(TS=7), %s\n",
-	      is_ul ? "UL" : "DL",
-	      slot_info, single ? "single" : "multi");
+	LOGP(DRLCMAC, LOGL_DEBUG, "Selected %s slots: (TS=0)\"%s\"(TS=7), %s\n",
+	     is_ul ? "UL" : "DL",
+	     slot_info, single ? "single" : "multi");
 
 	return sl;
 }
