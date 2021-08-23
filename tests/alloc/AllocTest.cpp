@@ -24,6 +24,7 @@
 #include "tbf_dl.h"
 #include "bts.h"
 #include "gprs_ms.h"
+#include "bts_pch_timer.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -802,6 +803,23 @@ static void test_2_consecutive_dl_tbfs()
 	talloc_free(bts);
 }
 
+static void test_bts_pch_timer(void)
+{
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
+	const char *imsi1 = "1234";
+	const char *imsi2 = "5678";
+
+	fprintf(stderr, "Testing bts_pch_timer dealloc on bts dealloc\n");
+	log_set_category_filter(osmo_stderr_target, DPCU, 1, LOGL_DEBUG);
+
+	fprintf(stderr, "Starting PCH timer for 2 IMSI\n");
+	bts_pch_timer_start(bts, imsi1);
+	bts_pch_timer_start(bts, imsi2);
+
+	fprintf(stderr, "Deallocating BTS, expecting the PCH timer to be stopped and deallocated\n");
+	talloc_free(bts);
+}
+
 int main(int argc, char **argv)
 {
 	tall_pcu_ctx = talloc_named_const(NULL, 1, "moiji-mobile AllocTest context");
@@ -828,6 +846,7 @@ int main(int argc, char **argv)
 	test_many_connections(alloc_algorithm_b, 32, "B");
 	test_many_connections(alloc_algorithm_dynamic, 160, "dynamic");
 	test_2_consecutive_dl_tbfs();
+	test_bts_pch_timer();
 
 	talloc_free(the_pcu);
 	return EXIT_SUCCESS;

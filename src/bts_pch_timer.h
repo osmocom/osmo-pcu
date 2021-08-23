@@ -37,6 +37,7 @@ struct bts_pch_timer {
 
 void bts_pch_timer_start(struct gprs_rlcmac_bts *bts, const char *imsi);
 void bts_pch_timer_stop(struct gprs_rlcmac_bts *bts, const char *imsi);
+void bts_pch_timer_stop_all(struct gprs_rlcmac_bts *bts);
 
 #ifdef __cplusplus
 }

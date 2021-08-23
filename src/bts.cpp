@@ -32,6 +32,7 @@
 #include <pdch.h>
 #include <gprs_ms_storage.h>
 #include <sba.h>
+#include <bts_pch_timer.h>
 
 extern "C" {
 	#include <osmocom/core/talloc.h>
@@ -229,6 +230,8 @@ static int bts_talloc_destructor(struct gprs_rlcmac_bts* bts)
 		msgb_free(bts->app_info);
 		bts->app_info = NULL;
 	}
+
+	bts_pch_timer_stop_all(bts);
 
 	llist_del(&bts->list);
 	return 0;

@@ -83,3 +83,12 @@ void bts_pch_timer_stop(struct gprs_rlcmac_bts *bts, const char *imsi)
 	if (p)
 		bts_pch_timer_remove(p);
 }
+
+void bts_pch_timer_stop_all(struct gprs_rlcmac_bts *bts)
+{
+	struct bts_pch_timer *p, *n;
+
+	llist_for_each_entry_safe(p, n, &bts->pch_timer, entry) {
+		bts_pch_timer_remove(p);
+	}
+}
