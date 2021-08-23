@@ -1165,16 +1165,13 @@ void bts_update_tbf_ta(struct gprs_rlcmac_bts *bts, const char *p, uint32_t fn,
 {
 	struct gprs_rlcmac_pdch *pdch = &bts->trx[trx_no].pdch[ts];
 	struct pdch_ulc_node *poll = pdch_ulc_get_node(pdch->ulc, fn);
-	struct gprs_rlcmac_ul_tbf *ul_tbf;
+	struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(poll->tbf_poll.poll_tbf);
 	if (!poll || poll->type !=PDCH_ULC_NODE_TBF_POLL ||
-	    poll->tbf_poll.poll_tbf->direction != GPRS_RLCMAC_UL_TBF) {
+	    poll->tbf_poll.poll_tbf->direction != GPRS_RLCMAC_UL_TBF)
 		LOGP(DL1IF, LOGL_DEBUG, "[%s] update TA = %u ignored due to "
 		     "unknown UL TBF on TRX = %d, TS = %d, FN = %d\n",
 		     p, ta, trx_no, ts, fn);
-		return;
-	}
-	ul_tbf = as_ul_tbf(poll->tbf_poll.poll_tbf);
-	if (ul_tbf) {
+	else if (ul_tbf) {
 		/* we need to distinguish TA information provided by L1
 		 * from PH-DATA-IND and PHY-RA-IND so that we can properly
 		 * update TA for given TBF
