@@ -335,13 +335,9 @@ static void ms_attach_dl_tbf(struct GprsMs *ms, struct gprs_rlcmac_dl_tbf *tbf)
 
 void ms_attach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 {
-	struct gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
-	struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
-	/* cannot be both DL and UL */
-	OSMO_ASSERT(!(dl_tbf && ul_tbf));
-	if (dl_tbf)
+	if (tbf_direction(tbf) == GPRS_RLCMAC_DL_TBF)
 		ms_attach_dl_tbf(ms, as_dl_tbf(tbf));
-	if (ul_tbf)
+	else
 		ms_attach_ul_tbf(ms, as_ul_tbf(tbf));
 }
 
