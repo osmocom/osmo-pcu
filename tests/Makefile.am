@@ -194,7 +194,7 @@ DISTCLEANFILES = atconfig
 
 TESTSUITE = $(srcdir)/testsuite
 
-update_exp:
+update_exp: $(check_PROGRAMS)
 	rlcmac/RLCMACTest \
 		>$(srcdir)/rlcmac/RLCMACTest.ok \
 		2>$(srcdir)/rlcmac/RLCMACTest.err
