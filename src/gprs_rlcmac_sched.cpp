@@ -470,7 +470,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 		pdch_ulc_reserve_tbf_usf(pdch->ulc, poll_fn, usf_tbf);
 	}
 	/* If MS selected for USF is GPRS-only, then it will only be
-	 * able to read USF if dl block uses GMSK * (CS1-4, MCS1-4) */
+	 * able to read USF if dl block uses GMSK (CS1-4, MCS1-4) */
 	if (usf_tbf && req_mcs_kind == EGPRS && ms_mode(usf_tbf->ms()) != EGPRS)
 		req_mcs_kind = EGPRS_GMSK;
 
