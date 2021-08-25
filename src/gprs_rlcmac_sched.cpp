@@ -485,12 +485,28 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 		gsmtap_cat = tx_is_egprs ? PCU_GSMTAP_C_DL_DATA_EGPRS :
 					   PCU_GSMTAP_C_DL_DATA_GPRS;
 	}
-	/* Prio 3: send dummy contol message */
-	else if ((msg = sched_dummy())) {
-		/* increase counter */
-		gsmtap_cat = PCU_GSMTAP_C_DL_DUMMY;
-	} else {
-		return -ENOMEM;
+	/* Prio 3: send dummy control message if need to poll or USF */
+	else {
+		/* If there's no TBF attached to this PDCH, we can early skip
+		 * since there's nothing to transmit nor to poll/USF. This way
+		 * we help BTS energy saving (on TRX!=C0) by sending nothing
+		 * instead of a dummy block. The early return is done here and
+		 * not at the start of the function because the condition below
+		 * (num_tbfs==0) may not be enough, because temporary dummy TBFs
+		 * created to send Imm Ass Rej (see handle_tbf_reject()) don't
+		 * have a TFI assigned and hence are not attached to the PDCH
+		 * TS, so they don't show up in the count below.
+		 */
+		const unsigned num_tbfs = pdch->num_tbfs(GPRS_RLCMAC_DL_TBF)
+					+ pdch->num_tbfs(GPRS_RLCMAC_UL_TBF);
+		if (trx != 0 && num_tbfs == 0)
+			return 0;
+		if ((msg = sched_dummy())) {
+			/* increase counter */
+			gsmtap_cat = PCU_GSMTAP_C_DL_DUMMY;
+		} else {
+			return -ENOMEM;
+		}
 	}
 
 	if (tx_is_egprs && pdch->has_gprs_only_tbf_attached()) {
