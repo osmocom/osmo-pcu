@@ -281,6 +281,11 @@ int pcu_rx_data_ind_pdtch(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *
 {
 	int rc;
 
+	if (!pdch->is_enabled()) {
+		LOGPDCH(pdch, DL1IF, LOGL_INFO, "Received DATA.ind (PDTCH) on disabled TS\n");
+		return -EINVAL;
+	}
+
 	rc = pdch->rcv_block(data, len, fn, meas);
 	pdch_ulc_expire_fn(pdch->ulc, fn);
 	return rc;

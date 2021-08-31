@@ -1159,25 +1159,31 @@ void bts_update_tbf_ta(struct gprs_rlcmac_bts *bts, const char *p, uint32_t fn,
 		       uint8_t trx_no, uint8_t ts, int8_t ta, bool is_rach)
 {
 	struct gprs_rlcmac_pdch *pdch = &bts->trx[trx_no].pdch[ts];
-	struct pdch_ulc_node *poll = pdch_ulc_get_node(pdch->ulc, fn);
+	struct pdch_ulc_node *poll;
 	struct gprs_rlcmac_ul_tbf *tbf;
+	if (!pdch->is_enabled())
+		goto no_tbf;
+
+	poll = pdch_ulc_get_node(pdch->ulc, fn);
 	if (!poll || poll->type !=PDCH_ULC_NODE_TBF_POLL ||
 	    poll->tbf_poll.poll_tbf->direction != GPRS_RLCMAC_UL_TBF)
-		LOGP(DL1IF, LOGL_DEBUG, "[%s] update TA = %u ignored due to "
-		     "unknown UL TBF on TRX = %d, TS = %d, FN = %d\n",
-		     p, ta, trx_no, ts, fn);
-	else {
-		tbf = as_ul_tbf(poll->tbf_poll.poll_tbf);
-		/* we need to distinguish TA information provided by L1
-		 * from PH-DATA-IND and PHY-RA-IND so that we can properly
-		 * update TA for given TBF
-		 */
-		if (is_rach)
-			set_tbf_ta(tbf, (uint8_t)ta);
-		else
-			update_tbf_ta(tbf, ta);
+		goto no_tbf;
 
-	}
+	tbf = as_ul_tbf(poll->tbf_poll.poll_tbf);
+	/* we need to distinguish TA information provided by L1
+	 * from PH-DATA-IND and PHY-RA-IND so that we can properly
+	 * update TA for given TBF
+	 */
+	if (is_rach)
+		set_tbf_ta(tbf, (uint8_t)ta);
+	else
+		update_tbf_ta(tbf, ta);
+	return;
+
+no_tbf:
+	LOGP(DL1IF, LOGL_DEBUG, "[%s] update TA = %u ignored due to "
+	     "unknown UL TBF on TRX = %d, TS = %d, FN = %d\n",
+	     p, ta, trx_no, ts, fn);
 }
 
 void bts_trx_init(struct gprs_rlcmac_trx *trx, struct gprs_rlcmac_bts *bts, uint8_t trx_no)
