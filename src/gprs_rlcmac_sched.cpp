@@ -421,8 +421,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	pdch = &bts->trx[trx].pdch[ts];
 
 	if (!pdch->is_enabled()) {
-		LOGP(DRLCMACSCHED, LOGL_ERROR, "Received RTS on disabled PDCH: "
-			"TRX=%d TS=%d\n", trx, ts);
+		LOGPDCH(pdch, DRLCMACSCHED, LOGL_ERROR, "Received RTS on disabled TS\n");
 		return -EIO;
 	}
 
