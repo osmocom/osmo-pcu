@@ -227,7 +227,6 @@ static int handle_ph_data_ind(struct femtol1_hdl *fl1h,
 				data_ind->u8Tn, GSMTAP_CHANNEL_PACCH, 0,
 				data_ind->u32Fn, 0, 0, data_ind->msgUnitParam.u8Buffer+1,
 				data_ind->msgUnitParam.u8Size-1);
-		//send_gsmtap(PCU_GSMTAP_C_UL_UNKNOWN, true, 0, date_ind->u8Tn, GSMTAP_CHANNEL_PACCH, data_ind->u32Fn, data_ind->msgUnitParam.u8Buffer+1, data_ind->msgUnitParam.u8Size-1);
 	}
 
 	return rc;
