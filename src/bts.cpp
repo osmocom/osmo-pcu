@@ -989,7 +989,7 @@ int bts_rcv_ptcch_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params
 
 	/* Make sure PDCH time-slot is enabled */
 	pdch = &bts->trx[rip->trx_nr].pdch[rip->ts_nr];
-	if (!pdch->m_is_enabled) {
+	if (!pdch->is_enabled()) {
 		LOGP(DRLCMAC, LOGL_NOTICE, "(TRX=%u TS=%u RFN=%u) Rx RACH.ind (PTCCH/U) "
 		     "for inactive PDCH\n", rip->trx_nr, rip->ts_nr, rip->rfn);
 		return -EAGAIN;
