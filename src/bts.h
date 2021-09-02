@@ -182,6 +182,8 @@ enum {
 
 enum {
 	STAT_MS_PRESENT,
+	STAT_PDCH_AVAILABLE,
+	STAT_PDCH_OCCUPIED,
 };
 
 /* RACH.ind parameters (to be parsed) */
@@ -345,6 +347,10 @@ static inline void bts_stat_item_add(struct gprs_rlcmac_bts *bts, unsigned int s
 	int32_t val = osmo_stat_item_get_last(item);
 	osmo_stat_item_set(item, val + inc);
 }
+
+#define bts_stat_item_inc(bts, stat_id) bts_stat_item_add(bts, stat_id, 1)
+
+#define bts_stat_item_dec(bts, stat_id) bts_stat_item_add(bts, stat_id, -1)
 
 struct gprs_rlcmac_bts *bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr);
 

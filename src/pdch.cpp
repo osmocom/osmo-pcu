@@ -150,6 +150,7 @@ void gprs_rlcmac_pdch::enable()
 	this->ulc = pdch_ulc_alloc(this, trx->bts);
 
 	m_is_enabled = 1;
+	bts_stat_item_inc(trx->bts, STAT_PDCH_AVAILABLE);
 }
 
 void gprs_rlcmac_pdch::disable()
@@ -158,6 +159,7 @@ void gprs_rlcmac_pdch::disable()
 	this->free_resources();
 
 	m_is_enabled = 0;
+	bts_stat_item_dec(trx->bts, STAT_PDCH_AVAILABLE);
 }
 
 void gprs_rlcmac_pdch::free_resources()
@@ -1043,6 +1045,12 @@ void gprs_rlcmac_pdch::attach_tbf(gprs_rlcmac_tbf *tbf)
 			"%s has not been detached, overwriting it\n",
 			m_tbfs[tbf->direction][tbf->tfi()]->name());
 
+	/* Count PDCHs with at least one TBF as "occupied", as in
+	 * 3GPP TS 52.402 § B.2.1.42-44. So if transitioning from 0 TBFs in
+	 * this PDCH to 1, increase the counter by 1. */
+	if (m_num_tbfs[GPRS_RLCMAC_UL_TBF] + m_num_tbfs[GPRS_RLCMAC_DL_TBF] == 0)
+		bts_stat_item_inc(trx->bts, STAT_PDCH_OCCUPIED);
+
 	m_num_tbfs[tbf->direction] += 1;
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
 		ul_tbf = as_ul_tbf(tbf);
@@ -1062,6 +1070,12 @@ void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
 	gprs_rlcmac_ul_tbf *ul_tbf;
 
 	OSMO_ASSERT(m_num_tbfs[tbf->direction] > 0);
+
+	/* Count PDCHs with at least one TBF as "occupied", as in
+	 * 3GPP TS 52.402 § B.2.1.42-44. So if transitioning from 1 TBFs in
+	 * this PDCH to 0, decrease the counter by 1. */
+	if (m_num_tbfs[GPRS_RLCMAC_UL_TBF] + m_num_tbfs[GPRS_RLCMAC_DL_TBF] == 1)
+		bts_stat_item_dec(trx->bts, STAT_PDCH_OCCUPIED);
 
 	m_num_tbfs[tbf->direction] -= 1;
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {

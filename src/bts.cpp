@@ -199,6 +199,10 @@ static const struct rate_ctr_group_desc bts_ctrg_desc = {
 static const struct osmo_stat_item_desc bts_stat_item_description[] = {
 	{ "ms.present",		"MS Present           ",
 		OSMO_STAT_ITEM_NO_UNIT, 4, 0},
+	{ "pdch.available",	"PDCH available       ",
+		OSMO_STAT_ITEM_NO_UNIT, 50, 0},
+	{ "pdch.occupied",	"PDCH occupied        ",
+		OSMO_STAT_ITEM_NO_UNIT, 50, 0},
 };
 
 static const struct osmo_stat_item_group_desc bts_statg_desc = {
