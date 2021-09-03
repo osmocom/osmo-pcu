@@ -1145,6 +1145,9 @@ void gprs_rlcmac_pdch::update_ta(uint8_t tai, uint8_t ta)
 
 void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch)
 {
+	struct llist_item *pos;
+	struct llist_item *pos2;
+
 	for (uint8_t tfi = 0; tfi < 32; tfi++) {
 		struct gprs_rlcmac_tbf *tbf;
 
@@ -1154,6 +1157,15 @@ void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch)
 		tbf = pdch->dl_tbf_by_tfi(tfi);
 		if (tbf)
 			tbf_free(tbf);
+	}
+
+	/* Some temporary dummy TBFs to tx ImmAssRej may be left linked to the
+	 * PDCH, since they have no TFI assigned (see handle_tbf_reject()).
+	 * Get rid of them too: */
+	llist_for_each_entry_safe(pos, pos2, &pdch->trx->ul_tbfs, list) {
+		struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf((struct gprs_rlcmac_tbf *)pos->entry);
+		if (ul_tbf->control_ts == pdch->ts_no)
+			tbf_free(ul_tbf);
 	}
 }
 
