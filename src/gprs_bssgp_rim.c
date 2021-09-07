@@ -158,13 +158,8 @@ static int handle_ran_info_response_nacc(const struct bssgp_ran_inf_app_cont_nac
 
 	llist_for_each(tmp, bts_ms_list(bts)) {
 		struct GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
-		if (!ms->nacc)
-			continue;
-		if (ms->nacc->fi->state != NACC_ST_WAIT_REQUEST_SI)
-			continue;
-		if (osmo_cgi_ps_cmp(&nacc->reprt_cell, &ms->nacc->cgi_ps) != 0)
-			continue;
-		osmo_fsm_inst_dispatch(ms->nacc->fi, NACC_EV_RX_SI, entry);
+		if (ms->nacc && nacc_fsm_is_waiting_si_resolution(ms->nacc, &nacc->reprt_cell))
+			osmo_fsm_inst_dispatch(ms->nacc->fi, NACC_EV_RX_SI, entry);
 	}
 	return 0;
 }

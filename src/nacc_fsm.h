@@ -72,3 +72,6 @@ struct nacc_fsm_ctx *nacc_fsm_alloc(struct GprsMs* ms);
 
 bool nacc_fsm_is_waiting_addr_resolution(const struct nacc_fsm_ctx *ctx,
 					 const struct neigh_cache_entry_key *neigh_key);
+
+bool nacc_fsm_is_waiting_si_resolution(const struct nacc_fsm_ctx *ctx,
+				       const struct osmo_cell_global_id_ps *cgi_ps);

@@ -887,3 +887,11 @@ bool nacc_fsm_is_waiting_addr_resolution(const struct nacc_fsm_ctx *ctx,
 		return false;
 	return neigh_cache_entry_key_eq(&ctx->neigh_key, neigh_key);
 }
+
+bool nacc_fsm_is_waiting_si_resolution(const struct nacc_fsm_ctx *ctx,
+				       const struct osmo_cell_global_id_ps *cgi_ps)
+{
+	if (ctx->fi->state != NACC_ST_WAIT_REQUEST_SI)
+		return false;
+	return !osmo_cgi_ps_cmp(&ctx->cgi_ps, cgi_ps);
+}
