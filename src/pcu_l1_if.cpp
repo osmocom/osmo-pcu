@@ -44,6 +44,8 @@ extern "C" {
 #include <osmocom/gsm/protocol/gsm_04_08.h>
 #include <osmocom/gsm/gsm48_rest_octets.h>
 #include <osmocom/gsm/sysinfo.h>
+
+#include <nacc_fsm.h>
 }
 
 #include <gprs_rlcmac.h>
@@ -95,6 +97,7 @@ uint16_t imsi2paging_group(const char* imsi)
  * PCU messages
  */
 
+/* Can be used to allocate message with non-variable size */
 struct msgb *pcu_msgb_alloc(uint8_t msg_type, uint8_t bts_nr)
 {
 	struct msgb *msg;
@@ -108,6 +111,21 @@ struct msgb *pcu_msgb_alloc(uint8_t msg_type, uint8_t bts_nr)
 	pcu_prim->msg_type = msg_type;
 	pcu_prim->bts_nr = bts_nr;
 
+	return msg;
+}
+
+/* Allocate message with extra size, only reserve pcuif msg hdr */
+static struct msgb *pcu_msgb_alloc_ext_size(uint8_t msg_type, uint8_t bts_nr, size_t extra_size)
+{
+	struct msgb *msg;
+	struct gsm_pcu_if *pcu_prim;
+	msg = msgb_alloc(sizeof(struct gsm_pcu_if) + extra_size, "pcu_sock_tx");
+	/* Only header is filled, caller is responible for reserving + filling
+	 * message type specific contents: */
+	msgb_put(msg, PCUIF_HDR_SIZE);
+	pcu_prim = (struct gsm_pcu_if *) msgb_data(msg);
+	pcu_prim->msg_type = msg_type;
+	pcu_prim->bts_nr = bts_nr;
 	return msg;
 }
 
@@ -269,6 +287,33 @@ void pcu_l1if_tx_pch(struct gprs_rlcmac_bts *bts, bitvec * block, int plen, uint
 		gsmtap_send(the_pcu->gsmtap, 0, 0, GSMTAP_CHANNEL_PCH, 0, 0, 0, 0, data + 3, GSM_MACBLOCK_LEN);
 
 	pcu_tx_data_req(bts, 0, 0, PCU_IF_SAPI_PCH, 0, 0, 0, data, PAGING_GROUP_LEN + GSM_MACBLOCK_LEN);
+}
+
+int pcu_tx_neigh_addr_res_req(struct gprs_rlcmac_bts *bts, const struct neigh_cache_entry_key *neigh_key)
+{
+	struct msgb *msg;
+	struct gsm_pcu_if *pcu_prim;
+	struct gsm_pcu_if_neigh_addr_req *naddr_req;
+
+	LOGP(DL1IF, LOGL_DEBUG, "(bts=%u) Tx Neighbor Address Resolution Request: " NEIGH_CACHE_ENTRY_KEY_FMT "\n",
+	     bts->nr, NEIGH_CACHE_ENTRY_KEY_ARGS(neigh_key));
+
+	msg = pcu_msgb_alloc_ext_size(PCU_IF_MSG_CONTAINER, bts->nr, sizeof(struct gsm_pcu_if_neigh_addr_req));
+	if (!msg)
+		return -ENOMEM;
+	pcu_prim = (struct gsm_pcu_if *) msgb_data(msg);
+	naddr_req = (struct gsm_pcu_if_neigh_addr_req *)&pcu_prim->u.container.data[0];
+
+	msgb_put(msg, sizeof(pcu_prim->u.container) + sizeof(struct gsm_pcu_if_neigh_addr_req));
+	pcu_prim->u.container.msg_type = PCU_IF_MSG_NEIGH_ADDR_REQ;
+	osmo_store16be(sizeof(struct gsm_pcu_if_neigh_addr_req), &pcu_prim->u.container.length);
+
+	osmo_store16be(neigh_key->local_lac, &naddr_req->local_lac);
+	osmo_store16be(neigh_key->local_ci, &naddr_req->local_ci);
+	osmo_store16be(neigh_key->tgt_arfcn, &naddr_req->tgt_arfcn);
+	naddr_req->tgt_bsic = neigh_key->tgt_bsic;
+
+	return pcu_sock_send(msg);
 }
 
 void pcu_rx_block_time(struct gprs_rlcmac_bts *bts, uint16_t arfcn, uint32_t fn, uint8_t ts_no)
@@ -955,11 +1000,60 @@ static int pcu_rx_app_info_req(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_ap
 	return 0;
 }
 
+static int pcu_rx_neigh_addr_cnf(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_neigh_addr_cnf *naddr_cnf)
+{
+	struct llist_head *tmp;
+	struct osmo_cell_global_id_ps cgi_ps;
+	struct osmo_cell_global_id_ps *cgi_ps_ptr = &cgi_ps;
+
+	struct neigh_cache_entry_key neigh_key = {
+		.local_lac = osmo_load16be(&naddr_cnf->orig_req.local_lac),
+		.local_ci = osmo_load16be(&naddr_cnf->orig_req.local_ci),
+		.tgt_arfcn = osmo_load16be(&naddr_cnf->orig_req.tgt_arfcn),
+		.tgt_bsic = naddr_cnf->orig_req.tgt_bsic,
+	};
+
+	if (naddr_cnf->err_code == 0) {
+		cgi_ps.rai.lac.plmn.mcc = osmo_load16be(&naddr_cnf->cgi_ps.mcc);
+		cgi_ps.rai.lac.plmn.mnc = osmo_load16be(&naddr_cnf->cgi_ps.mnc);
+		cgi_ps.rai.lac.plmn.mnc_3_digits = naddr_cnf->cgi_ps.mnc_3_digits;
+		cgi_ps.rai.lac.lac = osmo_load16be(&naddr_cnf->cgi_ps.lac);
+		cgi_ps.rai.rac = naddr_cnf->cgi_ps.rac;
+		cgi_ps.cell_identity = osmo_load16be(&naddr_cnf->cgi_ps.cell_identity);
+
+		LOGP(DL1IF, LOGL_INFO, "Rx Neighbor Address Resolution Confirmation for " NEIGH_CACHE_ENTRY_KEY_FMT ": %s\n",
+		     NEIGH_CACHE_ENTRY_KEY_ARGS(&neigh_key), osmo_cgi_ps_name(&cgi_ps));
+
+		/* Cache the cgi_ps so we can avoid requesting again same resolution for a while */
+		neigh_cache_add(bts->pcu->neigh_cache, &neigh_key, &cgi_ps);
+	} else {
+		cgi_ps_ptr = NULL;
+		LOGP(DL1IF, LOGL_INFO, "Rx Neighbor Address Resolution Confirmation for " NEIGH_CACHE_ENTRY_KEY_FMT ": failed with err_code=%u\n",
+		     NEIGH_CACHE_ENTRY_KEY_ARGS(&neigh_key), naddr_cnf->err_code);
+	}
+
+	llist_for_each(tmp, bts_ms_store(bts)->ms_list()) {
+		GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
+		if (ms->nacc && nacc_fsm_is_waiting_addr_resolution(ms->nacc, &neigh_key))
+			osmo_fsm_inst_dispatch(ms->nacc->fi, NACC_EV_RX_RAC_CI, cgi_ps_ptr);
+	}
+	return 0;
+}
+
 static int pcu_rx_container(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_container *container)
 {
 	int rc;
+	uint16_t data_length = osmo_load16be(&container->length);
 
 	switch (container->msg_type) {
+	case PCU_IF_MSG_NEIGH_ADDR_CNF:
+		if (data_length < sizeof(struct gsm_pcu_if_neigh_addr_cnf)) {
+			LOGP(DL1IF, LOGL_ERROR, "Rx container(NEIGH_ADDR_CNF) message too short: %u vs exp %zu\n",
+			     data_length, sizeof(struct gsm_pcu_if_neigh_addr_cnf));
+			return -EINVAL;
+		}
+		rc = pcu_rx_neigh_addr_cnf(bts, (struct gsm_pcu_if_neigh_addr_cnf*)&container->data);
+		break;
 	default:
 		LOGP(DL1IF, LOGL_NOTICE, "(bts=%d) Rx unexpected msg type (%u) inside container!\n",
 		     bts->nr, container->msg_type);

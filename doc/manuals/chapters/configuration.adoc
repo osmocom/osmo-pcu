@@ -252,8 +252,40 @@ composed of <RAI + Cell Identity>. This key is also named conveniently as
 CGI-PS, since it actually equals to the Circuit Switch CGI + RAC.
 
 In order to apply this target cell identity translation, OsmoPCU uses the
-OsmoBSC Neighbor Resolution CTRL interface (see OsmoBSC User Manual), since the
-BSC is the node holding all the neighbor related information.
+OsmoBSC Neighbor Resolution Service. This service is nowadays provided by means
+of PCUIF container messages, which are transparently forwarded in both directions
+by the BTS using the IPA multiplex of the OML connection against the BSC. No
+specific configuration is required in any of the involved nodes, they should
+behave properly out of the box.
+
+These neighbor address resolutions (<ARFCN + BSIC> => <RAI + CI>) are by default
+cached for a while, in order to avoid querying the BSC frequently. As a result,
+the resolution time is also optimized.
+
+.Example: Configure Neighbor Resolution cache and timeouts
+----
+pcu
+ timer X1 500 <1>
+ timer X0 60 <2>
+----
+<1> Time out if the BSC doesn't answer our resolution request after 500 ms
+<2> Keep resolved neighbor addresses cached for 60 seconds
+
+===== OsmoBSC CTRL interface (deprecated)
+
+CAUTION: This interface is nowadays considered deprecated and should not be used
+anymore. Any related VTY options should be dropped from configuration files, to
+let OsmoPCU use the new interface instead. This section is kept here for a while
+as a reference for old deployments using old versions of the programs.
+
+This Neighbor Address Resolution Service was initially implemented by means of a
+separate CTRL interface (see OsmoBSC User Manual), where OsmoPCU would create a
+CTRL connection to the BSC each time an address resolution was required.
+
+Older versions of OsmoBSC may not support the current Neighbor Address
+Resolution Service over the IPA multiplex (see above). For those cases, OsmoPCU
+can be configured to use the old deprecated CTRL interface.
+
 By default, the use of this interface is not configured and hence disabled in
 OsmoPCU. As a result, until configured, the network won't be able to provide the
 System Information to the MS prior to allowing the change during NACC against
@@ -261,20 +293,12 @@ remote cells, which means the cell change will take longer to complete. In order
 to configure the interface, the OsmoBSC IP address and port to connect to must
 be configured in OsmoPCU VTY.
 
-These neighbor address resolutions (<ARFCN + BSIC> => <RAI + CI>) are by default
-cached for a while in order to avoid querying the BSC frequently and, as a
-result, optimizing the resolution time too.
-
 .Example: Configure Neighbor Resolution CTRL interface against OsmoBSC
 ----
 pcu
  neighbor resolution 172.18.13.10 4248 <1>
- timer X1 500 <2>
- timer X0 60 <3>
 ----
 <1> Port 4248 is the default and hence could be omitted in this case
-<2> Time out if the BSC doesn't answer our CTRL resolution request after 500 ms
-<3> Keep resolved neighbor addresses cached for 60 seconds
 
 ==== System Information Resolution
 

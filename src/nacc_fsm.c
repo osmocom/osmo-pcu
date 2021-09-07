@@ -361,14 +361,72 @@ static void st_initial(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	}
 }
 
+static int send_neigh_addr_req_ctrl_iface(struct nacc_fsm_ctx *ctx)
+{
+	struct gprs_rlcmac_bts *bts = ctx->ms->bts;
+	struct gprs_pcu *pcu = bts->pcu;
+	struct ctrl_cmd *cmd = NULL;
+	int rc;
+
+	/* We may have changed to this state previously (eg: we are handling
+	 * another Pkt cell Change Notify with different target). Avoid
+	 * re-creating the socket in that case. */
+	if (ctx->neigh_ctrl_conn->write_queue.bfd.fd == -1) {
+		rc = osmo_sock_init2_ofd(&ctx->neigh_ctrl_conn->write_queue.bfd,
+					 AF_UNSPEC, SOCK_STREAM, IPPROTO_TCP,
+					 NULL, 0, pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port,
+					 OSMO_SOCK_F_CONNECT);
+		if (rc < 0) {
+			LOGPFSML(ctx->fi, LOGL_ERROR,
+				"Failed to establish CTRL (neighbor resolution) connection to BSC r=%s:%u\n\n",
+				pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port);
+			goto err_term;
+		}
+	}
+
+	cmd = ctrl_cmd_create(ctx, CTRL_TYPE_GET);
+	if (!cmd) {
+		LOGPFSML(ctx->fi, LOGL_ERROR, "CTRL msg creation failed\n");
+		goto err_term;
+	}
+
+	cmd->id = talloc_asprintf(cmd, "%u", arfcn_bsic_2_ctrl_id(ctx->neigh_key.tgt_arfcn,
+								  ctx->neigh_key.tgt_bsic));
+	cmd->variable = talloc_asprintf(cmd, "neighbor_resolve_cgi_ps_from_lac_ci.%d.%d.%d.%d",
+					ctx->neigh_key.local_lac, ctx->neigh_key.local_ci,
+					ctx->neigh_key.tgt_arfcn, ctx->neigh_key.tgt_bsic);
+	rc = ctrl_cmd_send(&ctx->neigh_ctrl_conn->write_queue, cmd);
+	if (rc) {
+		LOGPFSML(ctx->fi, LOGL_ERROR, "CTRL msg sent failed: %d\n", rc);
+		goto err_term;
+	}
+
+	talloc_free(cmd);
+	return 0;
+
+err_term:
+	talloc_free(cmd);
+	return -1;
+}
+
+static int send_neigh_addr_req(struct nacc_fsm_ctx *ctx)
+{
+	struct gprs_rlcmac_bts *bts = ctx->ms->bts;
+
+	/* If PCU was configured to use the old CTRL interface, use it: */
+	if (ctx->neigh_ctrl_conn)
+		return send_neigh_addr_req_ctrl_iface(ctx);
+
+	/* Otherwise, by default the new PCUIF over IPA Abis multiplex proto should be used: */
+	return pcu_tx_neigh_addr_res_req(bts, &ctx->neigh_key);
+}
+
 static void st_wait_resolve_rac_ci_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 {
 	struct nacc_fsm_ctx *ctx = (struct nacc_fsm_ctx *)fi->priv;
 	struct gprs_rlcmac_bts *bts = ctx->ms->bts;
 	struct gprs_pcu *pcu = bts->pcu;
 	const struct osmo_cell_global_id_ps *cgi_ps;
-	struct ctrl_cmd *cmd = NULL;
-	int rc;
 
 	/* First try to find the value in the cache */
 	cgi_ps = neigh_cache_lookup_value(pcu->neigh_cache, &ctx->neigh_key);
@@ -383,45 +441,8 @@ static void st_wait_resolve_rac_ci_on_enter(struct osmo_fsm_inst *fi, uint32_t p
 	LOGPFSML(fi, LOGL_DEBUG, "No CGI-PS found in cache, resolving " NEIGH_CACHE_ENTRY_KEY_FMT "...\n",
 		 NEIGH_CACHE_ENTRY_KEY_ARGS(&ctx->neigh_key));
 
-	/* We may have changed to this state previously (eg: we are handling
-	 * another Pkt cell Change Notify with different target). Avoid
-	 * re-creating the socket in that case. */
-	if (ctx->neigh_ctrl_conn->write_queue.bfd.fd == -1) {
-		rc = osmo_sock_init2_ofd(&ctx->neigh_ctrl_conn->write_queue.bfd,
-					 AF_UNSPEC, SOCK_STREAM, IPPROTO_TCP,
-					 NULL, 0, pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port,
-					 OSMO_SOCK_F_CONNECT);
-		if (rc < 0) {
-			LOGPFSML(fi, LOGL_ERROR,
-				"Failed to establish CTRL (neighbor resolution) connection to BSC r=%s:%u\n\n",
-				pcu->vty.neigh_ctrl_addr, pcu->vty.neigh_ctrl_port);
-			goto err_term;
-		}
-	}
-
-	cmd = ctrl_cmd_create(ctx, CTRL_TYPE_GET);
-	if (!cmd) {
-		LOGPFSML(fi, LOGL_ERROR, "CTRL msg creation failed\n");
-		goto err_term;
-	}
-
-	cmd->id = talloc_asprintf(cmd, "%u", arfcn_bsic_2_ctrl_id(ctx->neigh_key.tgt_arfcn,
-								  ctx->neigh_key.tgt_bsic));
-	cmd->variable = talloc_asprintf(cmd, "neighbor_resolve_cgi_ps_from_lac_ci.%d.%d.%d.%d",
-					ctx->neigh_key.local_lac, ctx->neigh_key.local_ci,
-					ctx->neigh_key.tgt_arfcn, ctx->neigh_key.tgt_bsic);
-	rc = ctrl_cmd_send(&ctx->neigh_ctrl_conn->write_queue, cmd);
-	if (rc) {
-		LOGPFSML(fi, LOGL_ERROR, "CTRL msg sent failed: %d\n", rc);
-		goto err_term;
-	}
-
-	talloc_free(cmd);
-	return;
-
-err_term:
-	talloc_free(cmd);
-	nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
+	if (send_neigh_addr_req(ctx) < 0)
+		nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
 }
 
 static void st_wait_resolve_rac_ci(struct osmo_fsm_inst *fi, uint32_t event, void *data)
@@ -435,8 +456,13 @@ static void st_wait_resolve_rac_ci(struct osmo_fsm_inst *fi, uint32_t event, voi
 		handle_retrans_pkt_cell_chg_notif(ctx, notif);
 		break;
 	case NACC_EV_RX_RAC_CI:
-		/* Assumption: ctx->cgi_ps has been filled by caller of the event */
-		nacc_fsm_state_chg(fi, NACC_ST_WAIT_REQUEST_SI);
+		/* data is NULL upon failure */
+		if (data) {
+			ctx->cgi_ps = *(struct osmo_cell_global_id_ps *)data;
+			nacc_fsm_state_chg(fi, NACC_ST_WAIT_REQUEST_SI);
+		} else {
+			nacc_fsm_state_chg(fi, NACC_ST_TX_CELL_CHG_CONTINUE);
+		}
 		break;
 	default:
 		OSMO_ASSERT(0);
@@ -740,12 +766,13 @@ void nacc_fsm_ctrl_reply_cb(struct ctrl_handle *ctrl, struct ctrl_cmd *cmd, void
 	struct nacc_fsm_ctx *ctx = (struct nacc_fsm_ctx *)data;
 	char *tmp = NULL, *tok, *saveptr;
 	unsigned int exp_id;
+	struct osmo_cell_global_id_ps cgi_ps;
 
 	LOGPFSML(ctx->fi, LOGL_NOTICE, "Received CTRL message: type=%d %s %s: %s\n",
 		 cmd->type, cmd->variable, cmd->id, osmo_escape_str(cmd->reply, -1));
 
 	if (cmd->type != CTRL_TYPE_GET_REPLY || !cmd->reply) {
-		nacc_fsm_state_chg(ctx->fi, NACC_ST_TX_CELL_CHG_CONTINUE);
+		osmo_fsm_inst_dispatch(ctx->fi, NACC_EV_RX_RAC_CI, NULL);
 		return;
 	}
 
@@ -771,33 +798,33 @@ void nacc_fsm_ctrl_reply_cb(struct ctrl_handle *ctrl, struct ctrl_cmd *cmd, void
 
 	if (!(tok = strtok_r(tmp, "-", &saveptr)))
 		goto free_ret;
-	ctx->cgi_ps.rai.lac.plmn.mcc = atoi(tok);
+	cgi_ps.rai.lac.plmn.mcc = atoi(tok);
 
 	if (!(tok = strtok_r(NULL, "-", &saveptr)))
 		goto free_ret;
-	ctx->cgi_ps.rai.lac.plmn.mnc = atoi(tok);
+	cgi_ps.rai.lac.plmn.mnc = atoi(tok);
 
 	if (!(tok = strtok_r(NULL, "-", &saveptr)))
 		goto free_ret;
-	ctx->cgi_ps.rai.lac.lac = atoi(tok);
+	cgi_ps.rai.lac.lac = atoi(tok);
 
 	if (!(tok = strtok_r(NULL, "-", &saveptr)))
 		goto free_ret;
-	ctx->cgi_ps.rai.rac = atoi(tok);
+	cgi_ps.rai.rac = atoi(tok);
 
 	if (!(tok = strtok_r(NULL, "\0", &saveptr)))
 		goto free_ret;
-	ctx->cgi_ps.cell_identity = atoi(tok);
+	cgi_ps.cell_identity = atoi(tok);
 
 	/* Cache the cgi_ps so we can avoid requesting again same resolution for a while */
-	neigh_cache_add(ctx->ms->bts->pcu->neigh_cache, &ctx->neigh_key, &ctx->cgi_ps);
+	neigh_cache_add(ctx->ms->bts->pcu->neigh_cache, &ctx->neigh_key, &cgi_ps);
 
-	osmo_fsm_inst_dispatch(ctx->fi, NACC_EV_RX_RAC_CI, NULL);
+	osmo_fsm_inst_dispatch(ctx->fi, NACC_EV_RX_RAC_CI, &cgi_ps);
 	return;
 
 free_ret:
 	talloc_free(tmp);
-	nacc_fsm_state_chg(ctx->fi, NACC_ST_TX_CELL_CHG_CONTINUE);
+	osmo_fsm_inst_dispatch(ctx->fi, NACC_EV_RX_RAC_CI, NULL);
 	return;
 }
 
@@ -834,18 +861,29 @@ struct nacc_fsm_ctx *nacc_fsm_alloc(struct GprsMs* ms)
 	if (!ctx->fi)
 		goto free_ret;
 
-	ctx->neigh_ctrl = ctrl_handle_alloc(ctx, ctx, NULL);
-	ctx->neigh_ctrl->reply_cb = nacc_fsm_ctrl_reply_cb;
-	ctx->neigh_ctrl_conn = osmo_ctrl_conn_alloc(ctx, ctx->neigh_ctrl);
-	if (!ctx->neigh_ctrl_conn)
-		goto free_ret;
-	/* Older versions of osmo_ctrl_conn_alloc didn't properly initialize fd to -1,
-	 * so make sure to do it here otherwise fd may be valid fd 0 and cause trouble */
-	ctx->neigh_ctrl_conn->write_queue.bfd.fd = -1;
-	llist_add(&ctx->neigh_ctrl_conn->list_entry, &ctx->neigh_ctrl->ccon_list);
+	/* If CTRL ip present, use the old CTRL interface for neighbor resolution */
+	if (ms->bts->pcu->vty.neigh_ctrl_addr) {
+		ctx->neigh_ctrl = ctrl_handle_alloc(ctx, ctx, NULL);
+		ctx->neigh_ctrl->reply_cb = nacc_fsm_ctrl_reply_cb;
+		ctx->neigh_ctrl_conn = osmo_ctrl_conn_alloc(ctx, ctx->neigh_ctrl);
+		if (!ctx->neigh_ctrl_conn)
+			goto free_ret;
+		/* Older versions of osmo_ctrl_conn_alloc didn't properly initialize fd to -1,
+		 * so make sure to do it here otherwise fd may be valid fd 0 and cause trouble */
+		ctx->neigh_ctrl_conn->write_queue.bfd.fd = -1;
+		llist_add(&ctx->neigh_ctrl_conn->list_entry, &ctx->neigh_ctrl->ccon_list);
+	}
 
 	return ctx;
 free_ret:
 	talloc_free(ctx);
 	return NULL;
+}
+
+bool nacc_fsm_is_waiting_addr_resolution(const struct nacc_fsm_ctx *ctx,
+					 const struct neigh_cache_entry_key *neigh_key)
+{
+	if (ctx->fi->state != NACC_ST_WAIT_RESOLVE_RAC_CI)
+		return false;
+	return neigh_cache_entry_key_eq(&ctx->neigh_key, neigh_key);
 }

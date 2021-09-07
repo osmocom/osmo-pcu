@@ -1067,6 +1067,10 @@ DEFUN(cfg_neighbor_resolution, cfg_neighbor_resolution_cmd,
        "IPv4 address to connect to\n" "IPv6 address to connect to\n"
        "Port to connect to (default 4248)\n")
 {
+	vty_out(vty, "%% Warning: The CTRL interface for Neighbor Address Resolution is now deprecated."
+		"Upgrade osmo-bsc and drop the 'neighbor resolution " VTY_IPV46_CMD " [<0-65535>]' VTY "
+		"option in order to let osmo-pcu use the new resoluton method using the PCUIF over IPA "
+		"multiplex, which will work out of the box without required configuration.%s", VTY_NEWLINE);
 	osmo_talloc_replace_string(the_pcu, &the_pcu->vty.neigh_ctrl_addr, argv[0]);
 	if (argc > 1)
 		the_pcu->vty.neigh_ctrl_port = atoi(argv[1]);

@@ -29,7 +29,7 @@ struct gprs_rlcmac_tbf;
 
 enum nacc_fsm_event {
 	NACC_EV_RX_CELL_CHG_NOTIFICATION, /* data: Packet_Cell_Change_Notification_t* */
-	NACC_EV_RX_RAC_CI, /* no data passed, RAC_CI became available in neigh_cache */
+	NACC_EV_RX_RAC_CI, /* RAC_CI became available in neigh_cache. NULL on failure, pointer to ctx->cgi_ps on success */
 	NACC_EV_RX_SI, /* data: struct si_cache_entry* */
 	NACC_EV_CREATE_RLCMAC_MSG, /* data: struct nacc_ev_create_rlcmac_msg_ctx* */
 	NACC_EV_RX_CELL_CHG_CONTINUE_ACK,
@@ -69,3 +69,6 @@ struct nacc_ev_create_rlcmac_msg_ctx {
 };
 
 struct nacc_fsm_ctx *nacc_fsm_alloc(struct GprsMs* ms);
+
+bool nacc_fsm_is_waiting_addr_resolution(const struct nacc_fsm_ctx *ctx,
+					 const struct neigh_cache_entry_key *neigh_key);
