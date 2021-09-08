@@ -763,6 +763,24 @@ bool gprs_rlcmac_tbf::is_control_ts(uint8_t ts) const
 	return ts == control_ts;
 }
 
+void gprs_rlcmac_tbf::enable_egprs()
+{
+	/* Decrease GPRS TBF count of attached PDCHs */
+	for (size_t ts = 0; ts < ARRAY_SIZE(pdch); ts++) {
+		if (pdch[ts])
+			pdch[ts]->num_tbfs_update(this, false);
+	}
+
+	m_egprs_enabled = true;
+	window()->set_sns(RLC_EGPRS_SNS);
+
+	/* Increase EGPRS TBF count of attached PDCHs */
+	for (size_t ts = 0; ts < ARRAY_SIZE(pdch); ts++) {
+		if (pdch[ts])
+			pdch[ts]->num_tbfs_update(this, true);
+	}
+}
+
 /* C API */
 enum tbf_fsm_states tbf_state(const struct gprs_rlcmac_tbf *tbf)
 {

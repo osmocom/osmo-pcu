@@ -78,6 +78,7 @@ struct gprs_rlcmac_pdch {
 	void detach_tbf(gprs_rlcmac_tbf *tbf);
 
 	unsigned num_tbfs(enum gprs_rlcmac_tbf_direction dir) const;
+	void num_tbfs_update(gprs_rlcmac_tbf *tbf, bool is_attach);
 
 	void reserve(enum gprs_rlcmac_tbf_direction dir);
 	void unreserve(enum gprs_rlcmac_tbf_direction dir);
@@ -147,7 +148,8 @@ private:
 	void free_resources();
 #endif
 
-	uint8_t m_num_tbfs[2];
+	uint8_t m_num_tbfs_gprs[2];
+	uint8_t m_num_tbfs_egprs[2];
 	uint8_t m_num_reserved[2];
 	uint8_t m_assigned_usf; /* bit set */
 	uint32_t m_assigned_tfi[2]; /* bit set */
@@ -158,7 +160,7 @@ private:
 
 inline unsigned gprs_rlcmac_pdch::num_tbfs(enum gprs_rlcmac_tbf_direction dir) const
 {
-	return m_num_tbfs[dir];
+	return m_num_tbfs_gprs[dir] + m_num_tbfs_egprs[dir];
 }
 
 inline unsigned gprs_rlcmac_pdch::num_reserved(

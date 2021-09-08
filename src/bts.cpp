@@ -201,7 +201,11 @@ static const struct osmo_stat_item_desc bts_stat_item_description[] = {
 		OSMO_STAT_ITEM_NO_UNIT, 4, 0},
 	{ "pdch.available",	"PDCH available       ",
 		OSMO_STAT_ITEM_NO_UNIT, 50, 0},
-	{ "pdch.occupied",	"PDCH occupied        ",
+	{ "pdch.occupied",	"PDCH occupied (all)  ",
+		OSMO_STAT_ITEM_NO_UNIT, 50, 0},
+	{ "pdch.occupied.gprs",	"PDCH occupied (GPRS) ",
+		OSMO_STAT_ITEM_NO_UNIT, 50, 0},
+	{ "pdch.occupied.egprs","PDCH occupied (EGPRS)",
 		OSMO_STAT_ITEM_NO_UNIT, 50, 0},
 };
 

@@ -354,12 +354,6 @@ inline bool gprs_rlcmac_tbf::is_egprs_enabled() const
 	return m_egprs_enabled;
 }
 
-inline void gprs_rlcmac_tbf::enable_egprs()
-{
-	m_egprs_enabled = true;
-	window()->set_sns(RLC_EGPRS_SNS);
-}
-
 inline enum gprs_rlcmac_tbf_direction reverse(enum gprs_rlcmac_tbf_direction dir)
 {
 	return (enum gprs_rlcmac_tbf_direction)
