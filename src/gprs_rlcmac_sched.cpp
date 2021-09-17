@@ -498,7 +498,13 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 		 */
 		const unsigned num_tbfs = pdch->num_tbfs(GPRS_RLCMAC_DL_TBF)
 					+ pdch->num_tbfs(GPRS_RLCMAC_UL_TBF);
-		if (trx != 0 && num_tbfs == 0)
+		bool skip_idle = (num_tbfs == 0);
+#ifdef ENABLE_DIRECT_PHY
+		/* In DIRECT_PHY mode we want to always submit something to L1 in
+		 * TRX0, since BTS is not preparing dummy bursts on idle TS for us */
+		skip_idle = skip_idle && trx != 0;
+#endif
+		if (skip_idle)
 			return 0;
 		if ((msg = sched_dummy())) {
 			/* increase counter */
