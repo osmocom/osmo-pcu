@@ -531,6 +531,22 @@ int pcu_rx_rts_req_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
 	if (!pdch->m_is_enabled)
 		return -EAGAIN;
 
+	/* If there's no TBF attached to this PDCH, we can skip Tx of PTCCH
+	 * since there's nothing worthy of being transmitted. This way BTS can
+	 * identify idle blocks and send nothing or dumy blocks with reduced
+	 * energy for the sake of energy saving.
+	 */
+	const unsigned num_tbfs = pdch->num_tbfs(GPRS_RLCMAC_DL_TBF)
+				+ pdch->num_tbfs(GPRS_RLCMAC_UL_TBF);
+	bool skip_idle = (num_tbfs == 0);
+#ifdef ENABLE_DIRECT_PHY
+		/* In DIRECT_PHY mode we want to always submit something to L1 in
+		 * TRX0, since BTS is not preparing dummy bursts on idle TS for us: */
+		skip_idle = skip_idle && trx != 0;
+#endif
+	if (skip_idle)
+		return 0;
+
 	pcu_l1if_tx_ptcch(bts, trx, ts, bts->trx[trx].arfcn, fn, block_nr,
 			  pdch->ptcch_msg, GSM_MACBLOCK_LEN);
 	return 0;
