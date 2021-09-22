@@ -412,7 +412,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	uint8_t usf;
 	struct msgb *msg = NULL;
 	uint32_t poll_fn;
-	enum pcu_gsmtap_category gsmtap_cat;
+	enum pcu_gsmtap_category gsmtap_cat = PCU_GSMTAP_C_DL_DUMMY; /* init: make gcc happy */
 	bool tx_is_egprs = false;
 	bool require_gprs_only;
 	enum mcs_kind req_mcs_kind; /* Restrict CS/MCS if DL Data block is to be sent */
@@ -487,9 +487,9 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 	}
 	/* Prio 3: send dummy control message if need to poll or USF */
 	else {
-		/* If there's no TBF attached to this PDCH, we can early skip
-		 * since there's nothing to transmit nor to poll/USF. This way
-		 * we help BTS energy saving (on TRX!=C0) by sending nothing
+		/* If there's no TBF attached to this PDCH, we can submit an empty
+		 * data_req since there's nothing to transmit nor to poll/USF. This
+		 * way we help BTS energy saving (on TRX!=C0) by sending nothing
 		 * instead of a dummy block. The early return is done here and
 		 * not at the start of the function because the condition below
 		 * (num_tbfs==0) may not be enough, because temporary dummy TBFs
@@ -505,13 +505,11 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 		 * TRX0, since BTS is not preparing dummy bursts on idle TS for us */
 		skip_idle = skip_idle && trx != 0;
 #endif
-		if (skip_idle)
-			return 0;
-		if ((msg = sched_dummy())) {
+		if (!skip_idle && (msg = sched_dummy())) {
 			/* increase counter */
 			gsmtap_cat = PCU_GSMTAP_C_DL_DUMMY;
 		} else {
-			return -ENOMEM;
+			msg = NULL; /* submit empty frame */
 		}
 	}
 
@@ -521,21 +519,23 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 		pdch->fn_without_cs14 = 0;
 	}
 
-	/* msg is now available */
-	bts_do_rate_ctr_add(bts, CTR_RLC_DL_BYTES, msgb_length(msg));
-
-	/* set USF */
-	OSMO_ASSERT(msgb_length(msg) > 0);
-	usf = usf_tbf ? usf_tbf->m_usf[ts] : USF_UNUSED;
-	msg->data[0] = (msg->data[0] & 0xf8) | usf;
-
 	/* Used to measure the leak rate, count all blocks */
 	gprs_bssgp_update_frames_sent();
 
-	/* Send to GSMTAP */
-	tap_n_acc(msg, bts, trx, ts, fn, gsmtap_cat);
+	if (msg) {
+		/* msg is now available */
+		bts_do_rate_ctr_add(bts, CTR_RLC_DL_BYTES, msgb_length(msg));
 
-	/* send PDTCH/PACCH to L1 */
+		/* set USF */
+		OSMO_ASSERT(msgb_length(msg) > 0);
+		usf = usf_tbf ? usf_tbf->m_usf[ts] : USF_UNUSED;
+		msg->data[0] = (msg->data[0] & 0xf8) | usf;
+
+		/* Send to GSMTAP */
+		tap_n_acc(msg, bts, trx, ts, fn, gsmtap_cat);
+	}
+
+	/* send PDTCH/PACCH to L1. msg=NULL accepted too (idle block) */
 	pcu_l1if_tx_pdtch(msg, bts, trx, ts, bts->trx[trx].arfcn, fn, block_nr);
 
 	return 0;

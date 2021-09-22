@@ -212,7 +212,8 @@ static int pcu_tx_data_req(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
 	data_req->trx_nr = trx;
 	data_req->ts_nr = ts;
 	data_req->block_nr = block_nr;
-	memcpy(data_req->data, data, len);
+	if (len)
+		memcpy(data_req->data, data, len);
 	data_req->len = len;
 
 	return pcu_sock_send(msg);
@@ -223,12 +224,20 @@ void pcu_l1if_tx_pdtch(msgb *msg, struct gprs_rlcmac_bts *bts, uint8_t trx, uint
 {
 #ifdef ENABLE_DIRECT_PHY
 	if (bts->trx[trx].fl1h) {
+		if (!msg) /* Simply skip sending idle frames to L1 */
+			return;
 		l1if_pdch_req(bts->trx[trx].fl1h, ts, 0, fn, arfcn, block_nr,
 			msg->data, msg->len);
 		msgb_free(msg);
 		return;
 	}
 #endif
+	if (!msg) {
+		pcu_tx_data_req(bts, trx, ts, PCU_IF_SAPI_PDTCH, arfcn, fn, block_nr,
+				NULL, 0);
+		return;
+	}
+
 	pcu_tx_data_req(bts, trx, ts, PCU_IF_SAPI_PDTCH, arfcn, fn, block_nr,
 			msg->data, msg->len);
 	msgb_free(msg);
@@ -243,10 +252,17 @@ void pcu_l1if_tx_ptcch(struct gprs_rlcmac_bts *bts,
 		gsmtap_send(the_pcu->gsmtap, arfcn, ts, GSMTAP_CHANNEL_PTCCH, 0, fn, 0, 0, data, data_len);
 #ifdef ENABLE_DIRECT_PHY
 	if (bts->trx[trx].fl1h) {
+		if (!data_len) /* Simply skip sending idle frames to L1 */
+			return;
 		l1if_pdch_req(bts->trx[trx].fl1h, ts, 1, fn, arfcn, block_nr, data, data_len);
 		return;
 	}
 #endif
+	if (!data_len) {
+		pcu_tx_data_req(bts, trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr, NULL, 0);
+		return;
+	}
+
 	pcu_tx_data_req(bts, trx, ts, PCU_IF_SAPI_PTCCH, arfcn, fn, block_nr, data, data_len);
 }
 
@@ -544,8 +560,11 @@ int pcu_rx_rts_req_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
 		 * TRX0, since BTS is not preparing dummy bursts on idle TS for us: */
 		skip_idle = skip_idle && trx != 0;
 #endif
-	if (skip_idle)
+	if (skip_idle) {
+		pcu_l1if_tx_ptcch(bts, trx, ts, bts->trx[trx].arfcn, fn, block_nr,
+				  NULL, 0);
 		return 0;
+	}
 
 	pcu_l1if_tx_ptcch(bts, trx, ts, bts->trx[trx].arfcn, fn, block_nr,
 			  pdch->ptcch_msg, GSM_MACBLOCK_LEN);
