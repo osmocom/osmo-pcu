@@ -548,7 +548,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 			}
 		}
 		osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_POLL_TIMEOUT, NULL);
-	} else if (ul_ass_state_is(TBF_UL_ASS_WAIT_ACK)) {
+	} else if (reason == PDCH_ULC_POLL_UL_ASS && ul_ass_state_is(TBF_UL_ASS_WAIT_ACK)) {
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {
@@ -559,7 +559,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		}
 		/* Signal timeout to FSM to reschedule UL assignment */
 		osmo_fsm_inst_dispatch(this->ul_ass_fsm.fi, TBF_UL_ASS_EV_ASS_POLL_TIMEOUT, NULL);
-	} else if (dl_ass_state_is(TBF_DL_ASS_WAIT_ACK)) {
+	} else if (reason == PDCH_ULC_POLL_DL_ASS && dl_ass_state_is(TBF_DL_ASS_WAIT_ACK)) {
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PDA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {
@@ -570,7 +570,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		}
 		/* Signal timeout to FSM to reschedule DL assignment */
 		osmo_fsm_inst_dispatch(this->dl_ass_fsm.fi, TBF_DL_ASS_EV_ASS_POLL_TIMEOUT, NULL);
-	} else if (m_ms->nacc && m_ms->nacc->fi->state == NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK &&
+	} else if (reason == PDCH_ULC_POLL_CELL_CHG_CONTINUE && m_ms->nacc && m_ms->nacc->fi->state == NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK &&
 		   m_ms->nacc->continue_poll_fn == poll_fn && m_ms->nacc->continue_poll_ts == pdch->ts_no) {
 		/* Timeout waiting for CTRL ACK acking Pkt Cell Change Continue */
 		osmo_fsm_inst_dispatch(m_ms->nacc->fi, NACC_EV_TIMEOUT_CELL_CHG_CONTINUE, NULL);
