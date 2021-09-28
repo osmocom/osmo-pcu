@@ -344,37 +344,28 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		fn, get_value_string(pdch_ulc_tbf_poll_reason_names, reason));
 	pdch_ulc_release_fn(ulc, fn);
 
-	/* check if this control ack belongs to packet uplink ack */
-	ul_tbf = as_ul_tbf(tbf);
-	if (ul_tbf && reason == PDCH_ULC_POLL_UL_ACK && tbf_ul_ack_exp_ctrl_ack(ul_tbf, fn, ts_no)) {
+	switch (reason) {
+	case PDCH_ULC_POLL_UL_ACK:
+		ul_tbf = as_ul_tbf(tbf);
+		OSMO_ASSERT(ul_tbf);
+		if (!tbf_ul_ack_exp_ctrl_ack(ul_tbf, fn, ts_no)) {
+			LOGPTBF(tbf, LOGL_NOTICE, "FN=%d, TS=%d (curr FN %d): POLL_UL_ACK not expected!\n",
+				fn, ts_no, bts_current_frame_number(tbf->bts));
+			return;
+		}
 		osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_RX_CTRL_ACK, NULL);
 		/* We can free since we only set polling on final UL ACK/NACK */
 		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] END\n");
 		tbf_free(tbf);
 		return;
-	}
-	if (tbf->dl_ass_state_is(TBF_DL_ASS_WAIT_ACK)) {
-		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] DOWNLINK ASSIGNED\n");
-		/* reset N3105 */
-		tbf->n_reset(N3105);
-		osmo_fsm_inst_dispatch(tbf->dl_ass_fsm.fi, TBF_DL_ASS_EV_RX_ASS_CTRL_ACK, NULL);
 
-		new_tbf = ms_dl_tbf(ms);
-		if (!new_tbf) {
-			LOGPDCH(this, DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
-				"TBF is gone TLLI=0x%08x\n", tlli);
+	case PDCH_ULC_POLL_UL_ASS:
+		if (!tbf->ul_ass_state_is(TBF_UL_ASS_WAIT_ACK)) {
+			LOGPTBF(tbf, LOGL_NOTICE, "FN=%d, TS=%d (curr FN %d): POLL_UL_ASS not expected! state is %s\n",
+				fn, ts_no, bts_current_frame_number(tbf->bts),
+				osmo_fsm_inst_state_name(tbf_ul_ass_fi(tbf)));
 			return;
 		}
-		if (tbf->state_is(TBF_ST_WAIT_RELEASE) &&
-				tbf->direction == new_tbf->direction)
-			tbf_free(tbf);
-
-		osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
-
-		tbf_assign_control_ts(new_tbf);
-		return;
-	}
-	if (tbf->ul_ass_state_is(TBF_UL_ASS_WAIT_ACK)) {
 		LOGPTBF(tbf, LOGL_DEBUG, "[DOWNLINK] UPLINK ASSIGNED\n");
 		/* reset N3105 */
 		tbf->n_reset(N3105);
@@ -398,10 +389,41 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		 * established */
 		if (ms_need_dl_tbf(new_tbf->ms()))
 			new_tbf->establish_dl_tbf_on_pacch();
-
 		return;
-	}
-	if (ms->nacc && nacc_fsm_exp_ctrl_ack(ms->nacc, fn, ts_no)) {
+
+	case PDCH_ULC_POLL_DL_ASS:
+		if (!tbf->dl_ass_state_is(TBF_DL_ASS_WAIT_ACK)) {
+			LOGPTBF(tbf, LOGL_NOTICE, "FN=%d, TS=%d (curr FN %d): POLL_DL_ASS not expected! state is %s\n",
+				fn, ts_no, bts_current_frame_number(tbf->bts),
+				osmo_fsm_inst_state_name(tbf_dl_ass_fi(tbf)));
+			return;
+		}
+		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] DOWNLINK ASSIGNED\n");
+		/* reset N3105 */
+		tbf->n_reset(N3105);
+		osmo_fsm_inst_dispatch(tbf->dl_ass_fsm.fi, TBF_DL_ASS_EV_RX_ASS_CTRL_ACK, NULL);
+
+		new_tbf = ms_dl_tbf(ms);
+		if (!new_tbf) {
+			LOGPDCH(this, DRLCMAC, LOGL_ERROR, "Got ACK, but DL "
+				"TBF is gone TLLI=0x%08x\n", tlli);
+			return;
+		}
+		if (tbf->state_is(TBF_ST_WAIT_RELEASE) &&
+				tbf->direction == new_tbf->direction)
+			tbf_free(tbf);
+
+		osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
+
+		tbf_assign_control_ts(new_tbf);
+		return;
+
+	case PDCH_ULC_POLL_CELL_CHG_CONTINUE:
+		if (!ms->nacc || !nacc_fsm_exp_ctrl_ack(ms->nacc, fn, ts_no)) {
+			LOGPTBF(tbf, LOGL_NOTICE, "FN=%d, TS=%d (curr FN %d): POLL_CELL_CHG_CONTINUE not expected!\n",
+				fn, ts_no, bts_current_frame_number(tbf->bts));
+			return;
+		}
 		osmo_fsm_inst_dispatch(ms->nacc->fi, NACC_EV_RX_CELL_CHG_CONTINUE_ACK, NULL);
 		/* Don't assume MS is no longer reachable (hence don't free) after this: TS 44.060
 		 * "When the mobile station receives the PACKET CELL CHANGE ORDER
@@ -412,10 +434,15 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		 * switch to a new cell."
 		 */
 		return;
+
+	case PDCH_ULC_POLL_DL_ACK:
+		/* Handled in rcv_control_dl_ack_nack() upon receival of DL ACK/NACK as a response to our POLL. */
+		return;
+	default:
+		LOGPDCH(this, DRLCMAC, LOGL_ERROR, "FN=%" PRIu32 " "
+			"Error: received PACKET CONTROL ACK at no request (reason=%s)\n", fn,
+			get_value_string(pdch_ulc_tbf_poll_reason_names, reason));
 	}
-	LOGPDCH(this, DRLCMAC, LOGL_ERROR, "FN=%" PRIu32 " "
-		"Error: received PACKET CONTROL ACK at no request (reason=%s)\n", fn,
-		get_value_string(pdch_ulc_tbf_poll_reason_names, reason));
 }
 
 void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_nack, uint32_t fn, struct pcu_l1_meas *meas)
