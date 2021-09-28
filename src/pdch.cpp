@@ -314,7 +314,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	struct pdch_ulc_node *poll;
 
 	poll = pdch_ulc_get_node(ulc, fn);
-	if (!poll || poll->type != PDCH_ULC_NODE_TBF_POLL || !poll->tbf_poll.poll_tbf) {
+	if (!poll || poll->type != PDCH_ULC_NODE_TBF_POLL) {
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "PACKET CONTROL ACK with "
 			"unknown FN=%u TLLI=0x%08x (TRX %d TS %d)\n",
 			fn, tlli, trx_no(), ts_no);
@@ -330,6 +330,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				ms_dl_tbf(ms) ? ms_dl_tbf(ms)->state_name() : "None");
 		return;
 	}
+	OSMO_ASSERT(poll->tbf_poll.poll_tbf);
 	tbf = poll->tbf_poll.poll_tbf;
 	reason = poll->tbf_poll.reason;
 
@@ -465,6 +466,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 			fn, tfi, trx_no(), ts_no);
 		return;
 	}
+	OSMO_ASSERT(poll->tbf_poll.poll_tbf);
 	tbf = as_dl_tbf(poll->tbf_poll.poll_tbf);
 	if (tbf->tfi() != tfi) {
 		LOGPTBFDL(tbf, LOGL_NOTICE,
@@ -533,6 +535,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 			fn, tfi, trx_no(), ts_no);
 		return;
 	}
+	OSMO_ASSERT(poll->tbf_poll.poll_tbf);
 	tbf = as_dl_tbf(poll->tbf_poll.poll_tbf);
 	if (tbf->tfi() != tfi) {
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "EGPRS PACKET DOWNLINK ACK with "
