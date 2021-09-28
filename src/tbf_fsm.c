@@ -323,6 +323,18 @@ static void st_releasing_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 	osmo_timer_schedule(&fi->timer, val, 0);
 }
 
+static void st_releasing(struct osmo_fsm_inst *fi, uint32_t event, void *data)
+{
+	switch (event) {
+	case TBF_EV_DL_ACKNACK_MISS:
+		/* Ignore, we don't care about missed DL ACK/NACK poll timeouts
+		 * anymore, we are already releasing the TBF */
+		break;
+	default:
+		OSMO_ASSERT(0);
+	}
+}
+
 static void handle_timeout_X2002(struct tbf_fsm_ctx *ctx)
 {
 	struct gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(ctx->tbf);
@@ -441,10 +453,11 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 	},
 	[TBF_ST_RELEASING] = {
 		.in_event_mask =
-			0,
+			X(TBF_EV_DL_ACKNACK_MISS),
 		.out_state_mask =
 			0,
 		.name = "RELEASING",
+		.action = st_releasing,
 		.onenter = st_releasing_on_enter,
 	},
 };
