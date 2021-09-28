@@ -401,8 +401,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 
 		return;
 	}
-	if (ms->nacc && ms->nacc->fi->state == NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK &&
-	    ms->nacc->continue_poll_fn == fn && ms->nacc->continue_poll_ts == ts_no) {
+	if (ms->nacc && nacc_fsm_exp_ctrl_ack(ms->nacc, fn, ts_no)) {
 		osmo_fsm_inst_dispatch(ms->nacc->fi, NACC_EV_RX_CELL_CHG_CONTINUE_ACK, NULL);
 		/* Don't assume MS is no longer reachable (hence don't free) after this: TS 44.060
 		 * "When the mobile station receives the PACKET CELL CHANGE ORDER

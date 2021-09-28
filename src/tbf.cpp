@@ -570,8 +570,8 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		}
 		/* Signal timeout to FSM to reschedule DL assignment */
 		osmo_fsm_inst_dispatch(this->dl_ass_fsm.fi, TBF_DL_ASS_EV_ASS_POLL_TIMEOUT, NULL);
-	} else if (reason == PDCH_ULC_POLL_CELL_CHG_CONTINUE && m_ms->nacc && m_ms->nacc->fi->state == NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK &&
-		   m_ms->nacc->continue_poll_fn == poll_fn && m_ms->nacc->continue_poll_ts == pdch->ts_no) {
+	} else if (reason == PDCH_ULC_POLL_CELL_CHG_CONTINUE &&
+		   m_ms->nacc && nacc_fsm_exp_ctrl_ack(m_ms->nacc, poll_fn, pdch->ts_no)) {
 		/* Timeout waiting for CTRL ACK acking Pkt Cell Change Continue */
 		osmo_fsm_inst_dispatch(m_ms->nacc->fi, NACC_EV_TIMEOUT_CELL_CHG_CONTINUE, NULL);
 		return;

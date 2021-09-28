@@ -75,3 +75,5 @@ bool nacc_fsm_is_waiting_addr_resolution(const struct nacc_fsm_ctx *ctx,
 
 bool nacc_fsm_is_waiting_si_resolution(const struct nacc_fsm_ctx *ctx,
 				       const struct osmo_cell_global_id_ps *cgi_ps);
+
+bool nacc_fsm_exp_ctrl_ack(const struct nacc_fsm_ctx *ctx, uint32_t fn, uint8_t ts);

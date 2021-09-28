@@ -895,3 +895,10 @@ bool nacc_fsm_is_waiting_si_resolution(const struct nacc_fsm_ctx *ctx,
 		return false;
 	return !osmo_cgi_ps_cmp(&ctx->cgi_ps, cgi_ps);
 }
+
+bool nacc_fsm_exp_ctrl_ack(const struct nacc_fsm_ctx *ctx, uint32_t fn, uint8_t ts)
+{
+	return ctx->fi->state == NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK &&
+	       ctx->continue_poll_fn == fn &&
+	       ctx->continue_poll_ts == ts;
+}
