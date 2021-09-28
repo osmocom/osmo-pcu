@@ -1173,7 +1173,7 @@ void bts_update_tbf_ta(struct gprs_rlcmac_bts *bts, const char *p, uint32_t fn,
 		goto no_tbf;
 
 	poll = pdch_ulc_get_node(pdch->ulc, fn);
-	if (!poll || poll->type !=PDCH_ULC_NODE_TBF_POLL ||
+	if (!poll || poll->type != PDCH_ULC_NODE_TBF_POLL ||
 	    poll->tbf_poll.poll_tbf->direction != GPRS_RLCMAC_UL_TBF)
 		goto no_tbf;
 
