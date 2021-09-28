@@ -532,12 +532,21 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum pdch_ul
 
 void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_fn, enum pdch_ulc_tbf_poll_reason reason)
 {
-	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(this);
+	gprs_rlcmac_ul_tbf *ul_tbf;
+	gprs_rlcmac_dl_tbf *dl_tbf;
 
 	LOGPTBF(this, LOGL_NOTICE, "poll timeout for FN=%d, TS=%d (curr FN %d)\n",
 		poll_fn, pdch->ts_no, bts_current_frame_number(bts));
 
-	if (ul_tbf && reason == PDCH_ULC_POLL_UL_ACK && tbf_ul_ack_exp_ctrl_ack(ul_tbf, poll_fn, pdch->ts_no)) {
+	switch (reason) {
+	case PDCH_ULC_POLL_UL_ACK:
+		ul_tbf = as_ul_tbf(this);
+		OSMO_ASSERT(ul_tbf);
+		if (!tbf_ul_ack_exp_ctrl_ack(ul_tbf, poll_fn, pdch->ts_no)) {
+			LOGPTBF(this, LOGL_NOTICE, "FN=%d, TS=%d (curr FN %d): POLL_UL_ACK not expected!\n",
+				poll_fn, pdch->ts_no, bts_current_frame_number(bts));
+			return;
+		}
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ACK_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PUAN_POLL_TIMEDOUT);
 		if (state_is(TBF_ST_FINISHED)) {
@@ -548,7 +557,15 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 			}
 		}
 		osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_POLL_TIMEOUT, NULL);
-	} else if (reason == PDCH_ULC_POLL_UL_ASS && ul_ass_state_is(TBF_UL_ASS_WAIT_ACK)) {
+		break;
+
+	case PDCH_ULC_POLL_UL_ASS:
+		if (!ul_ass_state_is(TBF_UL_ASS_WAIT_ACK)) {
+			LOGPTBF(this, LOGL_NOTICE, "FN=%d, TS=%d (curr FN %d): POLL_UL_ASS not expected! state is %s\n",
+				poll_fn, pdch->ts_no, bts_current_frame_number(bts),
+				osmo_fsm_inst_state_name(tbf_ul_ass_fi(this)));
+			return;
+		}
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {
@@ -559,7 +576,15 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		}
 		/* Signal timeout to FSM to reschedule UL assignment */
 		osmo_fsm_inst_dispatch(this->ul_ass_fsm.fi, TBF_UL_ASS_EV_ASS_POLL_TIMEOUT, NULL);
-	} else if (reason == PDCH_ULC_POLL_DL_ASS && dl_ass_state_is(TBF_DL_ASS_WAIT_ACK)) {
+		break;
+
+	case PDCH_ULC_POLL_DL_ASS:
+		if (!dl_ass_state_is(TBF_DL_ASS_WAIT_ACK)) {
+			LOGPTBF(this, LOGL_NOTICE, "FN=%d, TS=%d (curr FN %d): POLL_DL_ASS not expected! state is %s\n",
+				poll_fn, pdch->ts_no, bts_current_frame_number(bts),
+				osmo_fsm_inst_state_name(tbf_dl_ass_fi(this)));
+			return;
+		}
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PDA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {
@@ -570,29 +595,34 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		}
 		/* Signal timeout to FSM to reschedule DL assignment */
 		osmo_fsm_inst_dispatch(this->dl_ass_fsm.fi, TBF_DL_ASS_EV_ASS_POLL_TIMEOUT, NULL);
-	} else if (reason == PDCH_ULC_POLL_CELL_CHG_CONTINUE &&
-		   m_ms->nacc && nacc_fsm_exp_ctrl_ack(m_ms->nacc, poll_fn, pdch->ts_no)) {
+		break;
+
+	case PDCH_ULC_POLL_CELL_CHG_CONTINUE:
+		if (!m_ms->nacc || !nacc_fsm_exp_ctrl_ack(m_ms->nacc, poll_fn, pdch->ts_no)) {
+			LOGPTBF(this, LOGL_NOTICE, "FN=%d, TS=%d (curr FN %d): POLL_CELL_CHG_CONTINUE not expected!\n",
+				poll_fn, pdch->ts_no, bts_current_frame_number(bts));
+			return;
+		}
 		/* Timeout waiting for CTRL ACK acking Pkt Cell Change Continue */
 		osmo_fsm_inst_dispatch(m_ms->nacc->fi, NACC_EV_TIMEOUT_CELL_CHG_CONTINUE, NULL);
-		return;
-	} else if (reason == PDCH_ULC_POLL_DL_ACK) {
-		/* POLL Timeout expecting DL ACK/NACK: implies direction == GPRS_RLCMAC_DL_TBF */
-		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
+		break;
 
+	case PDCH_ULC_POLL_DL_ACK:
+		dl_tbf = as_dl_tbf(this);
+		/* POLL Timeout expecting DL ACK/NACK: implies direction == GPRS_RLCMAC_DL_TBF */
+		OSMO_ASSERT(dl_tbf);
 		if (!(dl_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
 			LOGPTBF(this, LOGL_NOTICE,
 				"Timeout for polling PACKET DOWNLINK ACK: %s\n",
 				tbf_rlcmac_diag(dl_tbf));
 			dl_tbf->state_fsm.state_flags |= (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK);
 		}
-
 		if (dl_tbf->state_is(TBF_ST_RELEASING))
 			bts_do_rate_ctr_inc(bts, CTR_RLC_REL_TIMEDOUT);
 		else {
 			bts_do_rate_ctr_inc(bts, CTR_RLC_ACK_TIMEDOUT);
 			bts_do_rate_ctr_inc(bts, CTR_PDAN_POLL_TIMEDOUT);
 		}
-
 		if (dl_tbf->n_inc(N3105)) {
 			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3105, NULL);
 			bts_do_rate_ctr_inc(bts, CTR_PDAN_POLL_FAILED);
@@ -601,8 +631,12 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		}
 		/* resend IMM.ASS on CCCH on timeout */
 		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_DL_ACKNACK_MISS, NULL);
-	} else
-		LOGPTBF(this, LOGL_ERROR, "Poll Timeout, but no event!\n");
+		break;
+
+	default:
+		LOGPTBF(this, LOGL_ERROR, "Poll Timeout, reason %s unhandled!\n",
+			get_value_string(pdch_ulc_tbf_poll_reason_names, reason));
+	}
 }
 
 int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
