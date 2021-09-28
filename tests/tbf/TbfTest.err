@@ -3215,45 +3215,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
 Detected FN jump! 2654288 -> 2654379
-PDCH(bts=0,trx=0,ts=7) FN=2654379 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
-PDCH(bts=0,trx=0,ts=7) FN=2654379 ------------------------- RX : Uplink Control Block -------------------------
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) RX: [PCU <- BTS] Packet Downlink Ack/Nack
-PDCH(bts=0,trx=0,ts=7) Got GPRS DL ACK bitmap: SSN: 0, BSN 0 to 28 - 1 (28 blocks), "RRRRRRRRRRRRRRRRRRRRRRRRRRRR"
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) downlink acknowledge
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) stopping timer T3191 [ACK/NACK received]
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) ack:  (BSN=0)"RRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=27)  R=ACK I=NACK
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) DL analysis, range=0:28, lost=0, recv=28, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRRRRRRRRRR....................................'
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) V(B): (V(A)=28)""(V(S)-1=27)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Final ACK received.
-TBF(DL-TFI_0){FINISHED}: Received Event FINAL_ACK_RECVD
-TBF(DL-TFI_0){FINISHED}: state_chg to WAIT_RELEASE
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) starting timer T3193 with 0 sec. 100000 microsec
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) ********** DL-TBF starts here **********
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Allocating DL TBF
-TBF{NULL}: Allocated
-UL_ASS_TBF{NONE}: Allocated
-DL_ASS_TBF{NONE}: Allocated
-[DL] algo A <multi> (suggested TRX: 0): Alloc start
-- Skipping TS 0, because not enabled
-- Skipping TS 1, because not enabled
-- Skipping TS 2, because not enabled
-- Skipping TS 3, because not enabled
-- Skipping TS 4, because not enabled
-- Skipping TS 5, because not enabled
-- Skipping TS 6, because not enabled
-[DL] Assign downlink TS=7 TFI=1
-PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL), 2 TBFs, USFs = 01, TFIs = 00000003.
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Attaching DL TBF: TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL)
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) Trigger downlink assignment on PACCH
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) Send downlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) exists
-DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
-DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
-TBF(DL-TFI_1){NULL}: Received Event ASSIGN_ADD_PACCH
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
-TBF(DL-TFI_1){NULL}: state_chg to ASSIGN
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654283 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654283): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) N3101 1 => 2 (< MAX 10)
@@ -3323,30 +3284,51 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 21 => 22 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654374 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654374): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 22 => 23 (< MAX 10)
-DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
-PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654400 + 13 = 2654413
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
-+++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
-------------------------- TX : Packet Downlink Assignment -------------------------
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) Scheduled DL Assignment polling on PACCH (FN=2654413, TS=7)
-DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
-PDCH(bts=0,trx=0,ts=7) FN=2654400 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE)
+PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654379): TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) poll timeout for FN=2654379, TS=7 (curr FN 2654379)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Timeout for polling PACKET DOWNLINK ACK: |Assignment was on PACCH|No downlink ACK received yet|
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) N3105 0 => 1 (< MAX 8)
+TBF(DL-TFI_0){FINISHED}: Received Event DL_ACKNACK_MISS
 Detected FN jump! 2654379 -> 2654409
 PDCH(bts=0,trx=0,ts=7) FN=2654409 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654409 ------------------------- RX : Uplink Control Block -------------------------
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) FN=2654409 Rx Packet Control Ack (reason=DL_ACK)
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) [UPLINK] DOWNLINK ASSIGNED
-DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
-DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: state_chg to NONE
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) free
-PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE), 1 TBFs, USFs = 01, TFIs = 00000002.
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE)
-********** DL-TBF ends here **********
-TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
-UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
-DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
-TBF(DL-TFI_1){ASSIGN}: Received Event ASSIGN_ACK_PACCH
-TBF(DL-TFI_1){ASSIGN}: state_chg to FLOW
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) RX: [PCU <- BTS] Packet Downlink Ack/Nack
+PDCH(bts=0,trx=0,ts=7) Got GPRS DL ACK bitmap: SSN: 0, BSN 0 to 28 - 1 (28 blocks), "RRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) downlink acknowledge
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) stopping timer T3191 [ACK/NACK received]
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) ack:  (BSN=0)"RRRRRRRRRRRRRRRRRRRRRRRRRRRR"(BSN=27)  R=ACK I=NACK
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) DL analysis, range=0:28, lost=0, recv=28, skipped=0, bsn=0, info='RRRRRRRRRRRRRRRRRRRRRRRRRRRR....................................'
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) V(B): (V(A)=28)""(V(S)-1=27)  A=Acked N=Nacked U=Unacked X=Resend-Unacked I=Invalid
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Final ACK received.
+TBF(DL-TFI_0){FINISHED}: Received Event FINAL_ACK_RECVD
+TBF(DL-TFI_0){FINISHED}: state_chg to WAIT_RELEASE
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) starting timer T3193 with 0 sec. 100000 microsec
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Allocating DL TBF
+TBF{NULL}: Allocated
+UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 4, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+[DL] Assign downlink TS=7 TFI=1
+PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL), 2 TBFs, USFs = 01, TFIs = 00000003.
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) Setting Control TS 7
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Attaching DL TBF: TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) Trigger downlink assignment on PACCH
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) Send downlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) exists
+DL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS
+TBF(DL-TFI_1){NULL}: Received Event ASSIGN_ADD_PACCH
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=NULL) set ass. type PACCH [prev CCCH:0, PACCH:0]
+TBF(DL-TFI_1){NULL}: state_chg to ASSIGN
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654409 but previous FN=2654383 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654383): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 23 => 24 (< MAX 10)
@@ -3362,6 +3344,29 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 26 => 27 (< MAX 10)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654409 but previous FN=2654400 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654400): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 27 => 28 (< MAX 10)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654400 + 13 = 2654413
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
++++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
+------------------------- TX : Packet Downlink Assignment -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) Scheduled DL Assignment polling on PACCH (FN=2654413, TS=7)
+DL_ASS_TBF(DL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
+PDCH(bts=0,trx=0,ts=7) FN=2654400 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE)
+PDCH(bts=0,trx=0,ts=7) FN=2654413 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654413 ------------------------- RX : Uplink Control Block -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) FN=2654413 Rx Packet Control Ack (reason=DL_ASS)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) [UPLINK] DOWNLINK ASSIGNED
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
+DL_ASS_TBF(DL-TFI_0){WAIT_ACK}: state_chg to NONE
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) free
+PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE), 1 TBFs, USFs = 01, TFIs = 00000002.
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE)
+********** DL-TBF ends here **********
+TBF(DL-TFI_0){WAIT_RELEASE}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+TBF(DL-TFI_1){ASSIGN}: Received Event ASSIGN_ACK_PACCH
+TBF(DL-TFI_1){ASSIGN}: state_chg to FLOW
 PDCH(bts=0,trx=0,ts=0) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=1) Received RTS on disabled TS
 PDCH(bts=0,trx=0,ts=2) Received RTS on disabled TS
@@ -3551,7 +3556,7 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Copying data unit 0 (BSN 10)
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduling Ack/Nack polling, because it was requested explicitly (e.g. first final block sent).
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654448 + 13 = 2654461
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled DL Acknowledgement polling on PACCH (FN=2654461, TS=7)
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654409
+TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654413
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654461, TS=7
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 10, CS-1): 0f 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 
 === end test_tbf_dl_reuse ===

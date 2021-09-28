@@ -2199,6 +2199,9 @@ static void test_tbf_dl_reuse()
 		send_dl_data(bts, tlli1, imsi, (const uint8_t *)buf, rc);
 	}
 
+	/* Drop first DL_ACK poll queued */
+	send_empty_block(dl_tbf1, dl_tbf1->control_ts, get_poll_fn(dl_tbf1, dl_tbf1->control_ts));
+
 	/* Fake Final DL Ack/Nack */
 	ulreq.u.MESSAGE_TYPE = MT_PACKET_DOWNLINK_ACK_NACK;
 	Packet_Downlink_Ack_Nack_t *ack = &ulreq.u.Packet_Downlink_Ack_Nack;
