@@ -479,6 +479,203 @@ MS Radio Access Capability
 	bitvec_free(bv_dec);
 }
 
+/* RAcap larger than 23 bytes */
+void testRAcap3(void *test_ctx)
+{
+	printf("*** %s ***\n", __func__);
+	MS_Radio_Access_capability_t data;
+	memset(&data, 0, sizeof(data));
+	bitvec *bv_dec = bitvec_alloc(31, test_ctx);
+	int rc;
+/*
+MS Radio Access Capability
+    Element ID: 0x13
+    1... .... = ext: 1
+    Length: 31
+    ------------------------------------------- Hex bitstream starts here:
+    MS RA capability 1
+        0001 .... = Access Technology Type: GSM E --note that GSM E covers GSM P (1)
+        .... 1010  111. .... = Length in bits: 0x57 (87)
+        ...1 00.. RF Power Capability, GMSK Power Class: 2 W (33 dBm) (4)
+        A5 Bits: A5 bits follow (1)
+        A5/1: encryption algorithm available (1)
+        A5/2: encryption algorithm not available (0)
+        A5/3: encryption algorithm available (1)
+        A5/4: encryption algorithm not available (0)
+        A5/5: encryption algorithm not available (0)
+        A5/6: encryption algorithm not available (0)
+        A5/7: encryption algorithm not available (0)
+        .... ..1. = Controlled early Classmark Sending: Implemented
+        .... ...1 = Pseudo Synchronisation: Present
+        0... .... = Voice Group Call Service: no VGCS capability or no notifications wanted
+        .0.. .... = Voice Broadcast Service: no VBS capability or no notifications wanted
+        ..1. .... = Multislot capability struct: Present
+            HSCSD multislot class: Bits are not available (0)
+            SMS_VALUE (Switch-Measure-Switch): Bits are not available (0)
+            ECSD multislot class: Bits are not available (0)
+            DTM GPRS Multi Slot Class: Bits are not available (0)
+        .... .011  00.. .... = GPRS multislot class: Max Rx-Slot/TDMA:4 Max Tx-Slot/TDMA:4 Max-Sum-Slot/TDMA:5 Tta:2 Ttb:1 Tra:2 Trb:1 Type:1 (12)
+        ..1. .... = GPRS Extended Dynamic Allocation Capability: Implemented
+        .... ..01  100. .... = EGPRS multislot class: Max Rx-Slot/TDMA:4 Max Tx-Slot/TDMA:4 Max-Sum-Slot/TDMA:5 Tta:2 Ttb:1 Tra:2 Trb:1 Type:1 (12)
+        ...1 .... = EGPRS Extended Dynamic Allocation Capability: Implemented
+        .... .1.. = 8PSK Power Capability Bits: Present
+        8PSK Power Capability: Power class E2 (2)
+        0... .... = COMPACT Interference Measurement Capability: Not Implemented
+        .1.. .... = Revision Level Indicator: The ME is Release '99 onwards
+        ..0. .... = UMTS FDD Radio Access Technology Capability: Not supported
+        ...0 .... = UMTS 3.84 Mcps TDD Radio Access Technology Capability: Not supported
+        .... 0... = CDMA 2000 Radio Access Technology Capability: Not supported
+        .... .0.. = UMTS 1.28 Mcps TDD Radio Access Technology Capability: Not supported
+        .... ..1. = GERAN Feature Package 1: Supported
+        Extended DTM EGPRS Multi Slot Class: Bits are not available (0)
+        0... .... = Modulation based multislot class support: Not supported
+        High Multislot Capability: 0x00 (0) - This field effect all other multislot fields. To understand the value please read TS 24.008 5.6.0 Release 5 Chap 10.5.5.12 Page 406
+        .... 0... = GERAN Iu mode: Not supported
+        GMSK Multislot Power Profile: GMSK_MULTISLOT_POWER_PROFILE 0 (0)
+        8-PSK Multislot Power Profile: 8-PSK_MULTISLOT_POWER_PROFILE 0 (0)
+        .0.. .... = Multiple TBF Capability: Not supported
+        ..01 .... = Downlink Advanced Receiver Performance: Downlink Advanced Receiver Performance - phase I supported (1)
+        .... 0... = Extended RLC/MAC Control Message Segmentation Capability: Not supported
+        .... .0.. = DTM Enhancements Capability: The mobile station does not support enhanced DTM CS establishment and enhanced DTM CS release procedures
+        .... ...0 = PS Handover Capability: Not supported
+        0... .... = DTM Handover Capability: Not supported
+        ..0. .... = Flexible Timeslot Assignment: Not supported
+        ...0 .... = GAN PS Handover Capability: Not supported
+        .... 0... = RLC Non-persistent Mode: Not supported
+        .... .0.. = Reduced Latency Capability: Not supported
+        .... ..00 = Uplink EGPRS2: The mobile station does not support either EGPRS2-A or EGPRS2-B in the uplink (0)
+        00.. .... = Downlink EGPRS2: The mobile station does not support either EGPRS2-A or EGPRS2-B in the downlink (0)
+        ..0. .... = E-UTRA FDD support: Not supported
+        ...0 .... = E-UTRA TDD support: Not supported
+        .... 00.. = GERAN to E-UTRA support in GERAN packet transfer mode: None (0)
+        .... ..0. = Priority-based reselection support: Not supported
+        0... .... = Indication of Upper Layer PDU Start Capability for RLC UM: Not supported
+        .0.. .... = Enhanced Multiplexing for Single TBF Capability: Not supported
+        ..0. .... = Multiple TTI Capability: Not supported
+        ...0 .... = Reporting of UTRAN CSG cells in packet transfer mode: Not supported
+        .... 0... = Reporting of E-UTRAN CSG cells in packet transfer mode: Not supported
+        .... .0.. = Dynamic Timeslot Reduction Capability: Not supported
+        .... ..0. = Enhanced Multiplexing for Single RLC Entity Capability: Not supported
+        .... ...0 = Fast Downlink Frequency Switching Capability: Not supported
+        01.. .... = TIGHTER Capability: TIGHTER supported for speech and signalling channels only (1)
+    MS RA capability 2
+        ...0 111. = Access Technology Type: GSM 850 (7)
+        .... ...0  1111 10.. = Length in bits: 0x3e (62)
+        .... ..10  0... .... RF Power Capability, GMSK Power Class: 2 W (33 dBm) (4)
+        A5 Bits: Same values apply for parameters as in the immediately preceding Access capabilities field within this IE (0)
+        ..1. .... = Controlled early Classmark Sending: Implemented
+        ...1 .... = Pseudo Synchronisation: Present
+        .... 0... = Voice Group Call Service: no VGCS capability or no notifications wanted
+        .... .0.. = Voice Broadcast Service: no VBS capability or no notifications wanted
+        .... ..0. = Multislot capability struct: Not Present
+        .... ...1 = 8PSK Power Capability Bits: Present
+        8PSK Power Capability: Power class E2 (2)
+        ..0. .... = COMPACT Interference Measurement Capability: Not Implemented
+        ...1 .... = Revision Level Indicator: The ME is Release '99 onwards
+        .... 0... = UMTS FDD Radio Access Technology Capability: Not supported
+        .... .0.. = UMTS 3.84 Mcps TDD Radio Access Technology Capability: Not supported
+        .... ..0. = CDMA 2000 Radio Access Technology Capability: Not supported
+        .... ...0 = UMTS 1.28 Mcps TDD Radio Access Technology Capability: Not supported
+        1... .... = GERAN Feature Package 1: Supported
+        Extended DTM EGPRS Multi Slot Class: Bits are not available (0)
+        ..0. .... = Modulation based multislot class support: Not supported
+        High Multislot Capability: 0x00 (0) - This field effect all other multislot fields. To understand the value please read TS 24.008 5.6.0 Release 5 Chap 10.5.5.12 Page 406
+        .... ..0. = GERAN Iu mode: Not supported
+        GMSK Multislot Power Profile: GMSK_MULTISLOT_POWER_PROFILE 0 (0)
+        8-PSK Multislot Power Profile: 8-PSK_MULTISLOT_POWER_PROFILE 0 (0)
+        ...0 .... = Multiple TBF Capability: Not supported
+        .... 01.. = Downlink Advanced Receiver Performance: Downlink Advanced Receiver Performance - phase I supported (1)
+        .... ..0. = Extended RLC/MAC Control Message Segmentation Capability: Not supported
+        .... ...0 = DTM Enhancements Capability: The mobile station does not support enhanced DTM CS establishment and enhanced DTM CS release procedures
+        .0.. .... = PS Handover Capability: Not supported
+        ..0. .... = DTM Handover Capability: Not supported
+        .... 0... = Flexible Timeslot Assignment: Not supported
+        .... .0.. = GAN PS Handover Capability: Not supported
+        .... ..0. = RLC Non-persistent Mode: Not supported
+        .... ...0 = Reduced Latency Capability: Not supported
+        00.. .... = Uplink EGPRS2: The mobile station does not support either EGPRS2-A or EGPRS2-B in the uplink (0)
+        ..00 .... = Downlink EGPRS2: The mobile station does not support either EGPRS2-A or EGPRS2-B in the downlink (0)
+        .... 0... = E-UTRA FDD support: Not supported
+        .... .0.. = E-UTRA TDD support: Not supported
+        .... ..00 = GERAN to E-UTRA support in GERAN packet transfer mode: None (0)
+        0... .... = Priority-based reselection support: Not supported
+        ..0. .... = Indication of Upper Layer PDU Start Capability for RLC UM: Not supported
+        ...0 .... = Enhanced Multiplexing for Single TBF Capability: Not supported
+        .... 0... = Multiple TTI Capability: Not supported
+        .... .0.. = Reporting of UTRAN CSG cells in packet transfer mode: Not supported
+        .... ..0. = Reporting of E-UTRAN CSG cells in packet transfer mode: Not supported
+        .... ...0 = Dynamic Timeslot Reduction Capability: Not supported
+        0... .... = Enhanced Multiplexing for Single RLC Entity Capability: Not supported
+        .0.. .... = Fast Downlink Frequency Switching Capability: Not supported
+        ..01 .... = TIGHTER Capability: TIGHTER supported for speech and signalling channels only (1)
+    MS RA capability 3
+        .... .010  0... .... = Access Technology Type: GSM 1900 (4)
+        .011 1110 = Length in bits: 0x3e (62)
+        001. .... RF Power Capability, GMSK Power Class: 1 W (30 dBm) (1)
+        A5 Bits: Same values apply for parameters as in the immediately preceding Access capabilities field within this IE (0)
+        .... 1... = Controlled early Classmark Sending: Implemented
+        .... .1.. = Pseudo Synchronisation: Present
+        .... ..0. = Voice Group Call Service: no VGCS capability or no notifications wanted
+        .... ...0 = Voice Broadcast Service: no VBS capability or no notifications wanted
+        0... .... = Multislot capability struct: Not Present
+        .1.. .... = 8PSK Power Capability Bits: Present
+        8PSK Power Capability: Power class E2 (2)
+        .... 0... = COMPACT Interference Measurement Capability: Not Implemented
+        .... .1.. = Revision Level Indicator: The ME is Release '99 onwards
+        .... ..0. = UMTS FDD Radio Access Technology Capability: Not supported
+        .... ...0 = UMTS 3.84 Mcps TDD Radio Access Technology Capability: Not supported
+        0... .... = CDMA 2000 Radio Access Technology Capability: Not supported
+        .0.. .... = UMTS 1.28 Mcps TDD Radio Access Technology Capability: Not supported
+        ..1. .... = GERAN Feature Package 1: Supported
+        Extended DTM EGPRS Multi Slot Class: Bits are not available (0)
+        .... 0... = Modulation based multislot class support: Not supported
+        High Multislot Capability: 0x00 (0) - This field effect all other multislot fields. To understand the value please read TS 24.008 5.6.0 Release 5 Chap 10.5.5.12 Page 406
+        0... .... = GERAN Iu mode: Not supported
+        GMSK Multislot Power Profile: GMSK_MULTISLOT_POWER_PROFILE 0 (0)
+        8-PSK Multislot Power Profile: 8-PSK_MULTISLOT_POWER_PROFILE 0 (0)
+        .... .0.. = Multiple TBF Capability: Not supported
+        .... ..01 = Downlink Advanced Receiver Performance: Downlink Advanced Receiver Performance - phase I supported (1)
+        0... .... = Extended RLC/MAC Control Message Segmentation Capability: Not supported
+        .0.. .... = DTM Enhancements Capability: The mobile station does not support enhanced DTM CS establishment and enhanced DTM CS release procedures
+        ...0 .... = PS Handover Capability: Not supported
+        .... 0... = DTM Handover Capability: Not supported
+        .... ..0. = Flexible Timeslot Assignment: Not supported
+        .... ...0 = GAN PS Handover Capability: Not supported
+        0... .... = RLC Non-persistent Mode: Not supported
+        .0.. .... = Reduced Latency Capability: Not supported
+        ..00 .... = Uplink EGPRS2: The mobile station does not support either EGPRS2-A or EGPRS2-B in the uplink (0)
+        .... 00.. = Downlink EGPRS2: The mobile station does not support either EGPRS2-A or EGPRS2-B in the downlink (0)
+        .... ..0. = E-UTRA FDD support: Not supported
+        .... ...0 = E-UTRA TDD support: Not supported
+        00.. .... = GERAN to E-UTRA support in GERAN packet transfer mode: None (0)
+        ..0. .... = Priority-based reselection support: Not supported
+        .... 0... = Indication of Upper Layer PDU Start Capability for RLC UM: Not supported
+        .... .0.. = Enhanced Multiplexing for Single TBF Capability: Not supported
+        .... ..0. = Multiple TTI Capability: Not supported
+        .... ...0 = Reporting of UTRAN CSG cells in packet transfer mode: Not supported
+        0... .... = Reporting of E-UTRAN CSG cells in packet transfer mode: Not supported
+        .0.. .... = Dynamic Timeslot Reduction Capability: Not supported
+        ..0. .... = Enhanced Multiplexing for Single RLC Entity Capability: Not supported
+        ...0 .... = Fast Downlink Frequency Switching Capability: Not supported
+        .... 01.. = TIGHTER Capability: TIGHTER supported for speech and signalling channels only (1)
+*/
+	bitvec_unhex(bv_dec, "1af3432b25964240100000006efa319090040000001a3e2c64240100000004");
+
+	printf("=== Test decoding of MS RA Capability 3===\n");
+	rc = decode_gsm_ra_cap(bv_dec, &data);
+	printf("decode_gsm_ra_cap() returns %d\n", rc);
+	OSMO_ASSERT(rc == 0);
+
+	/* Make sure there's 3 values */
+	OSMO_ASSERT(data.Count_MS_RA_capability_value == 3);
+
+	/* Make sure GPRS / EGPRS multislot class is parsed correctly */
+	printf("GPRS multislot class = %u\n", get_ms_class_by_capability(&data));
+	printf("EGPRS multislot class = %u\n", get_egprs_ms_class_by_capability(&data));
+
+	bitvec_free(bv_dec);
+}
+
 void testEGPRSPktChReq(void *test_ctx)
 {
 	EGPRS_PacketChannelRequest_t req;
@@ -551,6 +748,7 @@ int main(int argc, char *argv[])
 	testRAcap(ctx);
 	testMalformedRAcap(ctx);
 	testRAcap2(ctx);
+	testRAcap3(ctx);
 
 	testEGPRSPktChReq(ctx);
 

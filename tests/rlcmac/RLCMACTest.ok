@@ -189,6 +189,11 @@ decode_gsm_ra_cap() returns 0
 decode_gsm_ra_cap() returns 0
 GPRS multislot class = 12
 EGPRS multislot class = 12
+*** testRAcap3 ***
+=== Test decoding of MS RA Capability 3===
+decode_gsm_ra_cap() returns 0
+GPRS multislot class = 12
+EGPRS multislot class = 12
 *** testEGPRSPktChReq ***
 decode_egprs_pkt_ch_req(0x2b5) returns 0
  ==> One Phase Access
