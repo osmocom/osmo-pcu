@@ -122,13 +122,16 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	memset(&state_fsm, 0, sizeof(state_fsm));
 	state_fsm.tbf = this;
 	state_fsm.fi = osmo_fsm_inst_alloc(&tbf_fsm, this, &state_fsm, LOGL_INFO, NULL);
+	OSMO_ASSERT(state_fsm.fi);
 
 	memset(&ul_ass_fsm, 0, sizeof(ul_ass_fsm));
 	ul_ass_fsm.tbf = this;
 	ul_ass_fsm.fi = osmo_fsm_inst_alloc(&tbf_ul_ass_fsm, this, &ul_ass_fsm, LOGL_INFO, NULL);
+	OSMO_ASSERT(ul_ass_fsm.fi);
 	memset(&dl_ass_fsm, 0, sizeof(dl_ass_fsm));
 	dl_ass_fsm.tbf = this;
 	dl_ass_fsm.fi = osmo_fsm_inst_alloc(&tbf_dl_ass_fsm, this, &dl_ass_fsm, LOGL_INFO, NULL);
+	OSMO_ASSERT(dl_ass_fsm.fi);
 
 	m_rlc.init();
 	m_llc.init();
