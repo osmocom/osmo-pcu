@@ -36,6 +36,7 @@ enum tbf_fsm_event {
 	TBF_EV_LAST_DL_DATA_SENT, /* DL TBF sends RLCMAC block containing last DL avilable data buffered */
 	TBF_EV_LAST_UL_DATA_RECVD, /* UL TBF sends RLCMAC block containing last UL data (cv=0) */
 	TBF_EV_FINAL_ACK_RECVD, /* DL ACK/NACK with FINAL_ACK=1 received from MS */
+	TBF_EV_FINAL_UL_ACK_CONFIRMED, /* UL TBF: MS ACKs (CtrlAck or PktResReq) our UL ACK/NACK w/ FinalAckInd=1 */
 	TBF_EV_MAX_N3101, /* MAX N3101 (max usf timeout) reached (UL TBF) */
 	TBF_EV_MAX_N3103, /* MAX N3103 (max Pkt Ctrl Ack for last UL ACK/NACK timeout) reached (UL TBF) */
 	TBF_EV_MAX_N3105, /* MAX N3105 (max poll timeout) reached (UL/DL TBF) */

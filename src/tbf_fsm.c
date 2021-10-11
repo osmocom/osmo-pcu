@@ -50,6 +50,7 @@ const struct value_string tbf_fsm_event_names[] = {
 	{ TBF_EV_LAST_DL_DATA_SENT, "LAST_DL_DATA_SENT" },
 	{ TBF_EV_LAST_UL_DATA_RECVD, "LAST_UL_DATA_RECVD" },
 	{ TBF_EV_FINAL_ACK_RECVD, "FINAL_ACK_RECVD" },
+	{ TBF_EV_FINAL_UL_ACK_CONFIRMED, "FINAL_UL_ACK_CONFIRMED" },
 	{ TBF_EV_MAX_N3101 , "MAX_N3101" },
 	{ TBF_EV_MAX_N3103 , "MAX_N3103" },
 	{ TBF_EV_MAX_N3105 , "MAX_N3105" },
@@ -253,6 +254,11 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		   case we receive more DL data to tx */
 		tbf_fsm_state_chg(fi, TBF_ST_WAIT_RELEASE);
 		break;
+	case TBF_EV_FINAL_UL_ACK_CONFIRMED:
+		/* UL TBF ACKed our transmitted UL ACK/NACK with final Ack
+		 * Indicator set to '1' t. We can free the TBF right away. */
+		tbf_free(ctx->tbf);
+		break;
 	case TBF_EV_MAX_N3103:
 		ctx->T_release = 3169;
 		tbf_fsm_state_chg(fi, TBF_ST_RELEASING);
@@ -432,6 +438,7 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 		.in_event_mask =
 			X(TBF_EV_DL_ACKNACK_MISS) |
 			X(TBF_EV_FINAL_ACK_RECVD) |
+			X(TBF_EV_FINAL_UL_ACK_CONFIRMED) |
 			X(TBF_EV_MAX_N3103) |
 			X(TBF_EV_MAX_N3105),
 		.out_state_mask =

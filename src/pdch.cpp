@@ -355,9 +355,9 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		}
 		pdch_ulc_release_fn(ulc, fn);
 		osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_RX_CTRL_ACK, NULL);
-		/* We can free since we only set polling on final UL ACK/NACK */
+		/* We only set polling on final UL ACK/NACK */
 		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] END\n");
-		tbf_free(tbf);
+		osmo_fsm_inst_dispatch(ul_tbf->state_fsm.fi, TBF_EV_FINAL_UL_ACK_CONFIRMED, NULL);
 		return;
 
 	case PDCH_ULC_POLL_UL_ASS:
@@ -616,6 +616,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, uint32_t fn, struct pcu_l1_meas *meas)
 {
 	struct gprs_rlcmac_sba *sba;
+	int rc;
 
 	if (request->ID.UnionType) {
 		struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
@@ -682,12 +683,23 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				"block of final UL ACK/NACK\n", fn);
 			ul_tbf->n_reset(N3103);
 			pdch_ulc_release_node(ulc, item);
+			rc = osmo_fsm_inst_dispatch(ul_tbf->state_fsm.fi, TBF_EV_FINAL_UL_ACK_CONFIRMED, NULL);
+			if (rc) {
+				/* FSM failed handling, get rid of previous finished UL TBF before providing a new one */
+				LOGPTBFUL(ul_tbf, LOGL_NOTICE,
+					  "Got PACKET RESOURCE REQ while TBF not finished, killing pending UL TBF\n");
+				tbf_free(ul_tbf);
+			} /* else: ul_tbf has been freed by state_fsm */
+			ul_tbf = NULL;
 			break;
 		default:
 			OSMO_ASSERT(0);
 		}
 
-		/* here ul_tbf may be NULL in SBA case (no previous TBF) */
+		/* Here ul_tbf is NULL:
+		 * - SBA case: no previous TBF) and in
+		 * - POLL case: PktResReq is a final ACk confirmation and ul_tbf was freed
+		 */
 
 		if (request->Exist_MS_Radio_Access_capability2) {
 			uint8_t ms_class, egprs_ms_class;
@@ -697,14 +709,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				ms_set_ms_class(ms, ms_class);
 			if (egprs_ms_class)
 				ms_set_egprs_ms_class(ms, egprs_ms_class);
-		}
-
-		/* Get rid of previous finished UL TBF before providing a new one */
-		if (ul_tbf) {
-			if (!ul_tbf->state_is(TBF_ST_FINISHED))
-				LOGPTBFUL(ul_tbf, LOGL_NOTICE,
-					  "Got PACKET RESOURCE REQ while TBF not finished, killing pending UL TBF\n");
-			tbf_free(ul_tbf);
 		}
 
 		ul_tbf = tbf_alloc_ul_pacch(bts(), ms, trx_no(), tlli);
