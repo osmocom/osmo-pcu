@@ -638,6 +638,14 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		}
 
 		switch (item->type) {
+		case PDCH_ULC_NODE_TBF_USF:
+			/* Is it actually valid for an MS to send a PKT Res Req during USF? */
+			ul_tbf = item->tbf_usf.ul_tbf;
+			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
+				"Unexpectedly received, waiting USF of %s\n",
+				fn, tbf_name(item->tbf_usf.ul_tbf));
+			 /* Ignore it, let common path expire related ULC entry */
+			goto return_unref;
 		case PDCH_ULC_NODE_SBA:
 			sba = item->sba.sba;
 			LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "FN=%u PKT RESOURCE REQ: "
@@ -673,14 +681,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				"MS requests reuse of finished UL TBF in RRBP "
 				"block of final UL ACK/NACK\n", fn);
 			ul_tbf->n_reset(N3103);
-			pdch_ulc_release_node(ulc, item);
-			break;
-		case PDCH_ULC_NODE_TBF_USF:
-			/* Is it actually valid for an MS to send a PKT Res Req during USF? */
-			ul_tbf = item->tbf_usf.ul_tbf;
-			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
-				"Unexpectedly received, waiting USF of %s\n",
-				fn, tbf_name(item->tbf_usf.ul_tbf));
 			pdch_ulc_release_node(ulc, item);
 			break;
 		default:
