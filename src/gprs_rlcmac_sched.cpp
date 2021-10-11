@@ -282,8 +282,9 @@ static bool can_produce_gmsk_data_block_next(struct gprs_rlcmac_dl_tbf *tbf, enu
 	}
 }
 
-static struct msgb *sched_select_downlink(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *pdch, uint32_t fn,
-		    uint8_t block_nr, enum mcs_kind req_mcs_kind, bool *is_egprs)
+static struct msgb *sched_select_dl_data_msg(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_pdch *pdch,
+					     uint32_t fn, uint8_t block_nr, enum mcs_kind req_mcs_kind,
+					     bool *is_egprs)
 {
 	struct msgb *msg = NULL;
 	struct gprs_rlcmac_dl_tbf *tbf, *prio_tbf = NULL;
@@ -480,7 +481,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 			gsmtap_cat = PCU_GSMTAP_C_DL_CTRL;
 	}
 	/* Prio 2: select data message for downlink */
-	else if((msg = sched_select_downlink(bts, pdch, fn, block_nr, req_mcs_kind, &tx_is_egprs))) {
+	else if((msg = sched_select_dl_data_msg(bts, pdch, fn, block_nr, req_mcs_kind, &tx_is_egprs))) {
 		gsmtap_cat = tx_is_egprs ? PCU_GSMTAP_C_DL_DATA_EGPRS :
 					   PCU_GSMTAP_C_DL_DATA_GPRS;
 	}
