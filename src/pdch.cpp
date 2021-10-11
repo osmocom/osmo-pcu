@@ -343,7 +343,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 
 	LOGPTBF(tbf, LOGL_DEBUG, "FN=%" PRIu32 " Rx Packet Control Ack (reason=%s)\n",
 		fn, get_value_string(pdch_ulc_tbf_poll_reason_names, reason));
-	pdch_ulc_release_fn(ulc, fn);
 
 	switch (reason) {
 	case PDCH_ULC_POLL_UL_ACK:
@@ -354,6 +353,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				fn, ts_no, bts_current_frame_number(tbf->bts));
 			return;
 		}
+		pdch_ulc_release_fn(ulc, fn);
 		osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_RX_CTRL_ACK, NULL);
 		/* We can free since we only set polling on final UL ACK/NACK */
 		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] END\n");
@@ -368,6 +368,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 			return;
 		}
 		LOGPTBF(tbf, LOGL_DEBUG, "[DOWNLINK] UPLINK ASSIGNED\n");
+		pdch_ulc_release_fn(ulc, fn);
 		/* reset N3105 */
 		tbf->n_reset(N3105);
 		osmo_fsm_inst_dispatch(tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_RX_ASS_CTRL_ACK, NULL);
@@ -400,6 +401,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 			return;
 		}
 		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] DOWNLINK ASSIGNED\n");
+		pdch_ulc_release_fn(ulc, fn);
 		/* reset N3105 */
 		tbf->n_reset(N3105);
 		osmo_fsm_inst_dispatch(tbf->dl_ass_fsm.fi, TBF_DL_ASS_EV_RX_ASS_CTRL_ACK, NULL);
@@ -425,6 +427,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				fn, ts_no, bts_current_frame_number(tbf->bts));
 			return;
 		}
+		pdch_ulc_release_fn(ulc, fn);
 		osmo_fsm_inst_dispatch(ms->nacc->fi, NACC_EV_RX_CELL_CHG_CONTINUE_ACK, NULL);
 		/* Don't assume MS is no longer reachable (hence don't free) after this: TS 44.060
 		 * "When the mobile station receives the PACKET CELL CHANGE ORDER
