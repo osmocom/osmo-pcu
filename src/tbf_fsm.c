@@ -188,6 +188,10 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		/* change state to FLOW, so scheduler will start transmission */
 		tbf_fsm_state_chg(fi, TBF_ST_FLOW);
 		break;
+	case TBF_EV_MAX_N3105:
+		ctx->T_release = 3195;
+		tbf_fsm_state_chg(fi, TBF_ST_RELEASING);
+		break;
 	default:
 		OSMO_ASSERT(0);
 	}
@@ -409,7 +413,8 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 			X(TBF_EV_ASSIGN_ADD_PACCH) |
 			X(TBF_EV_ASSIGN_ACK_PACCH) |
 			X(TBF_EV_ASSIGN_PCUIF_CNF) |
-			X(TBF_EV_ASSIGN_READY_CCCH),
+			X(TBF_EV_ASSIGN_READY_CCCH) |
+			X(TBF_EV_MAX_N3105),
 		.out_state_mask =
 			X(TBF_ST_FLOW) |
 			X(TBF_ST_FINISHED) |
