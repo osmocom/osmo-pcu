@@ -384,8 +384,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 			tbf_free(tbf);
 
 		osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
-
-		tbf_assign_control_ts(new_tbf);
 		/* there might be LLC packets waiting in the queue, but the DL
 		 * TBF might have been released while the UL TBF has been
 		 * established */
@@ -417,8 +415,6 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 			tbf_free(tbf);
 
 		osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
-
-		tbf_assign_control_ts(new_tbf);
 		return;
 
 	case PDCH_ULC_POLL_CELL_CHG_CONTINUE:
@@ -717,7 +713,13 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 			goto return_unref;
 		}
 
-		/* set control ts to current MS's TS, until assignment complete */
+		/* Set control TS to the TS where this PktResReq was received,
+		 * which in practice happens to be the control_ts from the
+		 * previous UL-TBF or SBA. When CTRL ACK is received as RRBP of the Pkt
+		 * UL Ass scheduled below, then TBF_EV_ASSIGN_ACK_PACCH will be
+		 * sent to tbf_fsm which will call tbf_assign_control_ts(),
+		 * effectively setting back control_ts to
+		 * tbf->initial_common_ts. */
 		LOGPTBF(ul_tbf, LOGL_DEBUG, "change control TS %d -> %d until assignment is complete.\n",
 			ul_tbf->control_ts, ts_no);
 

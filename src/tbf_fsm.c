@@ -157,6 +157,7 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_PACCH, true);
 		break;
 	case TBF_EV_ASSIGN_ACK_PACCH:
+		tbf_assign_control_ts(ctx->tbf);
 		if (ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)) {
 			/* We now know that the PACCH really existed */
 			LOGPTBF(ctx->tbf, LOGL_INFO,
