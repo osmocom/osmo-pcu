@@ -325,8 +325,9 @@ void pdch_ulc_expire_fn(struct pdch_ulc *ulc, uint32_t fn)
 			break;
 		case PDCH_ULC_NODE_TBF_POLL:
 			LOGPDCH(ulc->pdch, DRLCMAC, LOGL_NOTICE,
-				"Timeout for registered POLL (FN=%u): %s\n",
-				item->fn, tbf_name(item->tbf_poll.poll_tbf));
+				"Timeout for registered POLL (FN=%u, reason=%s): %s\n",
+				item->fn, get_value_string(pdch_ulc_tbf_poll_reason_names, item->tbf_poll.reason),
+				tbf_name(item->tbf_poll.poll_tbf));
 			tbf_poll_timeout(item->tbf_poll.poll_tbf, ulc->pdch, item->fn, item->tbf_poll.reason);
 			break;
 		case PDCH_ULC_NODE_SBA:
