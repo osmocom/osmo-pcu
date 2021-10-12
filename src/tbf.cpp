@@ -96,7 +96,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	trx(NULL),
 	first_ts(0),
 	first_common_ts(0),
-	control_ts(0xff),
+	control_ts(TBF_CONTROL_TS_UNSET),
 	fT(0),
 	num_fT_exp(0),
 	upgrade_to_multislot(false),
@@ -328,7 +328,7 @@ int gprs_rlcmac_tbf::update()
 
 int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 {
-	if (tbf->control_ts == 0xff)
+	if (tbf->control_ts == TBF_CONTROL_TS_UNSET)
 		LOGPTBF(tbf, LOGL_INFO, "Setting Control TS %d\n",
 			tbf->first_common_ts);
 	else if (tbf->control_ts != tbf->first_common_ts)
