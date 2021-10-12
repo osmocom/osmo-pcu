@@ -326,7 +326,7 @@ int gprs_rlcmac_tbf::update()
 	return 0;
 }
 
-int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
+void tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 {
 	if (tbf->control_ts == TBF_CONTROL_TS_UNSET)
 		LOGPTBF(tbf, LOGL_INFO, "Setting Control TS %d\n",
@@ -335,8 +335,6 @@ int tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 		LOGPTBF(tbf, LOGL_INFO, "Changing Control TS %d -> %d\n",
 			tbf->control_ts, tbf->first_common_ts);
 	tbf->control_ts = tbf->first_common_ts;
-
-	return 0;
 }
 
 void gprs_rlcmac_tbf::n_reset(enum tbf_counters n)
@@ -660,13 +658,8 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 		bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_FAIL);
 		return -1;
 	}
-	/* assign control ts */
-	rc = tbf_assign_control_ts(this);
-	/* if no resource */
-	if (rc < 0) {
-		LOGPTBF(this, LOGL_ERROR, "Failed to assign control TS\n");
-		return -1;
-	}
+	/* assign initial control ts */
+	tbf_assign_control_ts(this);
 
 	/* set timestamp */
 	osmo_clock_gettime(CLOCK_MONOTONIC, &meas.rssi_tv);
