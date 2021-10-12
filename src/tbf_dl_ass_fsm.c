@@ -65,30 +65,9 @@ struct msgb *create_packet_dl_assign(const struct tbf_dl_ass_fsm_ctx *ctx,
 	/* We only use this function in control TS (PACCH) so that MS can always answer the poll */
 	OSMO_ASSERT(tbf_is_control_ts(ctx->tbf, d->ts));
 
-	if (tbf_ul_ass_fi(ctx->tbf)->state == TBF_UL_ASS_WAIT_ACK)
-	{
-		LOGPTBF(ctx->tbf, LOGL_DEBUG,
-			  "Polling is already scheduled, so we must wait for the uplink assignment...\n");
-		// FIXME: call tbf_dl_ass_fsm_state_chg(ctx->fi, TBF_DL_ASS_NONE); ?
-		return NULL;
-	}
 	rc = tbf_check_polling(ctx->tbf, d->fn, d->ts, &new_poll_fn, &rrbp);
 	if (rc < 0)
 		return NULL;
-
-	/* on uplink TBF we get the downlink TBF to be assigned. */
-	if (tbf_direction(ctx->tbf) == GPRS_RLCMAC_UL_TBF) {
-		struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(ctx->tbf);
-
-		/* be sure to check first, if contention resolution is done,
-		 * otherwise we cannot send the assignment yet (3GPP TS 44.060 sec 7.1.3.1) */
-		if (!ul_tbf_contention_resolution_done(ul_tbf)) {
-			LOGPTBF(ctx->tbf, LOGL_DEBUG,
-				"Cannot assign DL TBF now, because contention resolution is not finished.\n");
-			// FIXME: call tbf_dl_ass_fsm_state_chg(ctx->fi, TBF_DL_ASS_NONE); ?
-			return NULL;
-		}
-	}
 
 	new_dl_tbf = ms_dl_tbf(ms);
 	if (!new_dl_tbf) {
@@ -273,8 +252,28 @@ struct msgb *tbf_dl_ass_create_rlcmac_msg(const struct gprs_rlcmac_tbf* tbf, uin
 	return data_ctx.msg;
 }
 
-bool tbf_dl_ass_rts(const struct gprs_rlcmac_tbf* tbf)
+bool tbf_dl_ass_rts(const struct gprs_rlcmac_tbf *tbf)
 {
 	struct osmo_fsm_inst *fi = tbf_dl_ass_fi(tbf);
-	return fi->state == TBF_DL_ASS_SEND_ASS;
+	if (fi->state != TBF_DL_ASS_SEND_ASS)
+		return false;
+
+	if (tbf_ul_ass_fi(tbf)->state == TBF_UL_ASS_WAIT_ACK) {
+		LOGPTBF(tbf, LOGL_DEBUG,
+			"Polling is already scheduled, so we must wait for the uplink assignment...\n");
+		return false;
+	}
+
+	/* on uplink TBF we get the downlink TBF to be assigned. */
+	if (tbf_direction(tbf) == GPRS_RLCMAC_UL_TBF) {
+		const struct gprs_rlcmac_ul_tbf *ul_tbf = (const struct gprs_rlcmac_ul_tbf *)tbf;
+		/* be sure to check first, if contention resolution is done,
+		 * otherwise we cannot send the assignment yet (3GPP TS 44.060 sec 7.1.3.1) */
+		if (!ul_tbf_contention_resolution_done(ul_tbf)) {
+			LOGPTBF(tbf, LOGL_DEBUG,
+				"Cannot assign DL TBF now, because contention resolution is not finished.\n");
+			return false;
+		}
+	}
+	return true;
 }
