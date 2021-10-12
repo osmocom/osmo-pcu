@@ -243,6 +243,16 @@ static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 {
 	int ts;
 
+	/* During assignment (state=ASSIGN), tbf may be temporarily using
+	 * tbf->control_ts from a previous TBF/SBA to transmit the UL/DL
+	 * Assignment, which may not be necessarly be a TS where the current TBF
+	 * is attached to. Hence, we may have ULC pollings ongoing and we need
+	 * to make sure we drop all reserved nodes there: */
+	if (tbf_state(tbf) == TBF_ST_ASSIGN &&
+	    tbf->control_ts != TBF_CONTROL_TS_UNSET && !tbf->pdch[tbf->control_ts])
+		pdch_ulc_release_tbf(tbf->trx->pdch[tbf->control_ts].ulc, tbf);
+
+	/* Now simply detach from all attached PDCHs */
 	for (ts = 0; ts < 8; ts++) {
 		if (!tbf->pdch[ts])
 			continue;
