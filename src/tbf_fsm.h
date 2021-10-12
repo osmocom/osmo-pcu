@@ -43,7 +43,7 @@ enum tbf_fsm_event {
 };
 
 enum tbf_fsm_states {
-	TBF_ST_NULL = 0,	/* new created TBF */
+	TBF_ST_NEW = 0,	/* new created TBF */
 	TBF_ST_ASSIGN,	/* wait for downlink assignment */
 	TBF_ST_FLOW,	/* RLC/MAC flow, resource needed */
 	TBF_ST_FINISHED,	/* flow finished, wait for release */

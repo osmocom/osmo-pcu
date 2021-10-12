@@ -5,42 +5,42 @@ PDCH(bts=0,trx=0,ts=0) Trying to reserve already reserved FN 78
 PDCH(bts=0,trx=0,ts=0) Trying to release unregistered SBA (FN=78, TA=0)
 PDCH(bts=0,trx=0,ts=0) Timeout for registered SBA (FN=72, TA=0)
 Creating MS object, TLLI = 0x12345678
-MS(TLLI=0x12345678, IMSI=, TA=220, 0/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+MS(TLLI=0x12345678, IMSI=, TA=220, 0/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=2715613 but previous FN=2715608 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715608): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715613): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715608): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715613): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=2715617 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715617): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715617): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=2715622 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715622): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715622): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=2715626 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715626): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715626): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=2715630 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715630): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715630): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=2715635 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715635): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715635): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=2715639 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715639): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715639): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=2715643 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715643): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=2715643): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=4 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=4): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=4): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=8 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=8): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=8): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=13 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=13): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=17 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=17): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=21 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=21): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=21): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=26 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=26): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=26): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=30 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=30): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=30): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=34 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=34): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=34): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) Expiring FN=43 but previous FN=39 is still reserved!
-PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=39): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NULL)
+PDCH(bts=0,trx=0,ts=0) Timeout for registered POLL (FN=39): TBF(TFI=0 TLLI=0x12345678 DIR=DL STATE=NEW)
 PDCH(bts=0,trx=0,ts=0) POLL scheduled at FN 26 + 13 = 39
 PDCH(bts=0,trx=0,ts=0) UL block already scheduled at FN 91 + 13 = 104
 PDCH(bts=0,trx=0,ts=0) POLL scheduled at FN 91 + 17 = 108

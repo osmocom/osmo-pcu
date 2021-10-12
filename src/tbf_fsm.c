@@ -32,7 +32,7 @@
 #define X(s) (1 << (s))
 
 const struct osmo_tdef_state_timeout tbf_fsm_timeouts[32] = {
-	[TBF_ST_NULL] = {},
+	[TBF_ST_NEW] = {},
 	[TBF_ST_ASSIGN] = { },
 	[TBF_ST_FLOW] = { },
 	[TBF_ST_FINISHED] = {},
@@ -97,7 +97,7 @@ static void mod_ass_type(struct tbf_fsm_ctx *ctx, uint8_t t, bool set)
 }
 
 
-static void st_null(struct osmo_fsm_inst *fi, uint32_t event, void *data)
+static void st_new(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
 	switch (event) {
@@ -392,7 +392,7 @@ static int tbf_fsm_timer_cb(struct osmo_fsm_inst *fi)
 }
 
 static struct osmo_fsm_state tbf_fsm_states[] = {
-	[TBF_ST_NULL] = {
+	[TBF_ST_NEW] = {
 		.in_event_mask =
 			X(TBF_EV_ASSIGN_ADD_CCCH) |
 			X(TBF_EV_ASSIGN_ADD_PACCH),
@@ -400,8 +400,8 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 			X(TBF_ST_ASSIGN) |
 			X(TBF_ST_FLOW) |
 			X(TBF_ST_RELEASING),
-		.name = "NULL",
-		.action = st_null,
+		.name = "NEW",
+		.action = st_new,
 	},
 	[TBF_ST_ASSIGN] = {
 		.in_event_mask =
