@@ -982,7 +982,9 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 	if (node) {
 		switch (node->type) {
 		case PDCH_ULC_NODE_TBF_USF:
-			if (tbf != node->tbf_usf.ul_tbf)
+			if (tbf == node->tbf_usf.ul_tbf)
+				pdch_ulc_release_node(ulc, node);
+			else
 				LOGPDCH(this, DRLCMACUL, LOGL_NOTICE, "FN=%" PRIu32 " "
 					"Rx UL DATA from unexpected %s vs expected %s\n",
 					fn, tbf_name(tbf), tbf_name(node->tbf_usf.ul_tbf));
@@ -998,7 +1000,6 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 				fn, tbf_name(tbf));
 			break;
 		}
-		pdch_ulc_release_node(ulc, node);
 	} else {
 		LOGPDCH(this, DRLCMACUL, LOGL_NOTICE, "FN=%" PRIu32 " "
 			"Rx UL DATA from unexpected %s\n", fn, tbf_name(tbf));
