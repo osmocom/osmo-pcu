@@ -222,8 +222,13 @@ static void st_wait_ack(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		LOGPTBF(ctx->tbf, LOGL_NOTICE,
 			"Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ASSIGNMENT: %s\n",
 			tbf_rlcmac_diag(ctx->tbf));
-		/* Reschedule Pkt Ul Ass */
-		tbf_ul_ass_fsm_state_chg(fi, TBF_UL_ASS_SEND_ASS);
+		if (tbf_state(ctx->tbf) == TBF_ST_ASSIGN) {
+			/* Reschedule Pkt Ul Ass */
+			tbf_ul_ass_fsm_state_chg(fi, TBF_UL_ASS_SEND_ASS);
+		} else {
+			/* We are most probably in RELEASING, so stop retrying. */
+			tbf_ul_ass_fsm_state_chg(fi, TBF_UL_ASS_NONE);
+		}
 		break;
 	default:
 		OSMO_ASSERT(0);
