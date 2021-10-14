@@ -190,6 +190,8 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		tbf_fsm_state_chg(fi, TBF_ST_FLOW);
 		break;
 	case TBF_EV_MAX_N3105:
+		/* We are going to release, so abort any Pkt Ul Ass pending to be scheduled: */
+		osmo_fsm_inst_dispatch(tbf_ul_ass_fi(ctx->tbf), TBF_UL_ASS_EV_ABORT, NULL);
 		ctx->T_release = 3195;
 		tbf_fsm_state_chg(fi, TBF_ST_RELEASING);
 		break;

@@ -48,6 +48,7 @@ const struct value_string tbf_ul_ass_fsm_event_names[] = {
 	{ TBF_UL_ASS_EV_CREATE_RLCMAC_MSG, "CREATE_RLCMAC_MSG" },
 	{ TBF_UL_ASS_EV_RX_ASS_CTRL_ACK, "RX_ASS_CTRL_ACK" },
 	{ TBF_UL_ASS_EV_ASS_POLL_TIMEOUT, "ASS_POLL_TIMEOUT" },
+	{ TBF_UL_ASS_EV_ABORT, "ABORT" },
 	{ 0, NULL }
 };
 
@@ -169,6 +170,9 @@ static void st_none(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	case TBF_UL_ASS_EV_SCHED_ASS_REJ:
 		tbf_ul_ass_fsm_state_chg(fi, TBF_UL_ASS_SEND_ASS_REJ);
 		break;
+	case TBF_UL_ASS_EV_ABORT:
+		/* Nothing to do, we are already in proper state */
+		break;
 	default:
 		OSMO_ASSERT(0);
 	}
@@ -187,6 +191,10 @@ static void st_send_ass(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 			return;
 		tbf_ul_ass_fsm_state_chg(fi, TBF_UL_ASS_WAIT_ACK);
 		break;
+	case TBF_UL_ASS_EV_ABORT:
+		/* Cancel pending schedule for Pkt Ul Ass: */
+		tbf_ul_ass_fsm_state_chg(fi, TBF_UL_ASS_NONE);
+		break;
 	default:
 		OSMO_ASSERT(0);
 	}
@@ -203,6 +211,10 @@ static void st_send_ass_rej(struct osmo_fsm_inst *fi, uint32_t event, void *data
 		data_ctx->msg = create_packet_access_reject(ctx);
 		if (!data_ctx->msg)
 			return;
+		tbf_ul_ass_fsm_state_chg(fi, TBF_UL_ASS_NONE);
+		break;
+	case TBF_UL_ASS_EV_ABORT:
+		/* Cancel pending schedule for Pkt Ul Ass Rej: */
 		tbf_ul_ass_fsm_state_chg(fi, TBF_UL_ASS_NONE);
 		break;
 	default:
@@ -230,6 +242,12 @@ static void st_wait_ack(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 			tbf_ul_ass_fsm_state_chg(fi, TBF_UL_ASS_NONE);
 		}
 		break;
+	case TBF_UL_ASS_EV_ABORT:
+		/* There's nothing we can do here, we already transmitted and
+		 * hence we must keep the POLL since the MS is already expected
+		 * to transmit there. Whenever we receive event CTRL_ACK or
+		 * TIMEOUT above, it will move back to ST_NONE autoamtically */
+		break;
 	default:
 		OSMO_ASSERT(0);
 	}
@@ -252,7 +270,8 @@ static struct osmo_fsm_state tbf_ul_ass_fsm_states[] = {
 	[TBF_UL_ASS_NONE] = {
 		.in_event_mask =
 			X(TBF_UL_ASS_EV_SCHED_ASS) |
-			X(TBF_UL_ASS_EV_SCHED_ASS_REJ),
+			X(TBF_UL_ASS_EV_SCHED_ASS_REJ) |
+			X(TBF_UL_ASS_EV_ABORT),
 		.out_state_mask =
 			X(TBF_UL_ASS_SEND_ASS) |
 			X(TBF_UL_ASS_SEND_ASS_REJ),
@@ -261,7 +280,9 @@ static struct osmo_fsm_state tbf_ul_ass_fsm_states[] = {
 		.onenter = st_none_on_enter,
 	},
 	[TBF_UL_ASS_SEND_ASS] = {
-		.in_event_mask = X(TBF_UL_ASS_EV_CREATE_RLCMAC_MSG),
+		.in_event_mask =
+			X(TBF_UL_ASS_EV_CREATE_RLCMAC_MSG) |
+			X(TBF_UL_ASS_EV_ABORT),
 		.out_state_mask =
 			X(TBF_UL_ASS_WAIT_ACK) |
 			X(TBF_UL_ASS_NONE),
@@ -269,7 +290,9 @@ static struct osmo_fsm_state tbf_ul_ass_fsm_states[] = {
 		.action = st_send_ass,
 	},
 	[TBF_UL_ASS_SEND_ASS_REJ] = {
-		.in_event_mask = X(TBF_UL_ASS_EV_CREATE_RLCMAC_MSG),
+		.in_event_mask =
+			X(TBF_UL_ASS_EV_CREATE_RLCMAC_MSG) |
+			X(TBF_UL_ASS_EV_ABORT),
 		.out_state_mask = X(TBF_UL_ASS_NONE),
 		.name = "SEND_ASS_REJ",
 		.action = st_send_ass_rej,
@@ -277,7 +300,8 @@ static struct osmo_fsm_state tbf_ul_ass_fsm_states[] = {
 	[TBF_UL_ASS_WAIT_ACK] = {
 		.in_event_mask =
 			X(TBF_UL_ASS_EV_RX_ASS_CTRL_ACK) |
-			X(TBF_UL_ASS_EV_ASS_POLL_TIMEOUT),
+			X(TBF_UL_ASS_EV_ASS_POLL_TIMEOUT) |
+			X(TBF_UL_ASS_EV_ABORT),
 		.out_state_mask =
 			X(TBF_UL_ASS_NONE) |
 			X(TBF_UL_ASS_SEND_ASS),
