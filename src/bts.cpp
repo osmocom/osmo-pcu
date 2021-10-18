@@ -867,12 +867,16 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 	struct chan_req_params chan_req = { 0 };
 	struct gprs_rlcmac_ul_tbf *tbf = NULL;
 	struct gprs_rlcmac_sba *sba;
-	struct gprs_rlcmac_pdch *pdch = NULL;
-	struct gprs_rlcmac_trx *trx = NULL;
+	struct gprs_rlcmac_pdch *pdch;
+	struct gprs_rlcmac_trx *trx;
 	uint32_t sb_fn = 0;
 	uint8_t usf = 7;
 	uint8_t tsc = 0;
 	int plen, rc;
+
+	/* Allocate a bit-vector for RR Immediate Assignment [Reject] */
+	struct bitvec *bv = bitvec_alloc(22, tall_pcu_ctx); /* without plen */
+	bitvec_unhex(bv, DUMMY_VEC); /* standard '2B'O padding */
 
 	bts_do_rate_ctr_inc(bts, CTR_RACH_REQUESTS);
 
@@ -938,36 +942,34 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 	}
 	trx = pdch->trx;
 
-send_imm_ass_rej:
-	/* Allocate a bit-vector for RR Immediate Assignment [Reject] */
-	struct bitvec *bv = bitvec_alloc(22, tall_pcu_ctx); /* without plen */
-	bitvec_unhex(bv, DUMMY_VEC); /* standard '2B'O padding */
-
-	if (rc != 0) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment Reject on AGCH\n");
-		plen = Encoding::write_immediate_assignment_reject(
-			bv, rip->ra, Fn, rip->burst_type,
-			(uint8_t)osmo_tdef_get(bts->T_defs_bts, 3142, OSMO_TDEF_S, -1));
-		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_REJ);
+	LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment on AGCH: "
+	     "TRX=%u (ARFCN %u) TS=%u TA=%u TSC=%u TFI=%d USF=%d\n",
+	     trx->trx_no, trx->arfcn & ~ARFCN_FLAG_MASK,
+	     pdch->ts_no, ta, tsc, tbf ? tbf->tfi() : -1, usf);
+	plen = Encoding::write_immediate_assignment(pdch, tbf, bv,
+		false, rip->ra, Fn, ta, usf, false, sb_fn,
+		bts_get_ms_pwr_alpha(bts), bts->pcu->vty.gamma, -1,
+		rip->burst_type);
+	bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF);
+	if (plen >= 0) {
+		pcu_l1if_tx_agch(bts, bv, plen);
+		rc = 0;
 	} else {
-		LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment on AGCH: "
-		     "TRX=%u (ARFCN %u) TS=%u TA=%u TSC=%u TFI=%d USF=%d\n",
-		     trx->trx_no, trx->arfcn & ~ARFCN_FLAG_MASK,
-		     pdch->ts_no, ta, tsc, tbf ? tbf->tfi() : -1, usf);
-		plen = Encoding::write_immediate_assignment(pdch, tbf, bv,
-			false, rip->ra, Fn, ta, usf, false, sb_fn,
-			bts_get_ms_pwr_alpha(bts), bts->pcu->vty.gamma, -1,
-			rip->burst_type);
-		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF);
+		rc = plen;
 	}
+	bitvec_free(bv);
+	return rc;
 
+send_imm_ass_rej:
+	LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment Reject on AGCH\n");
+	plen = Encoding::write_immediate_assignment_reject(
+		bv, rip->ra, Fn, rip->burst_type,
+		(uint8_t)osmo_tdef_get(bts->T_defs_bts, 3142, OSMO_TDEF_S, -1));
+	bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_REJ);
 	if (plen >= 0)
 		pcu_l1if_tx_agch(bts, bv, plen);
-	else
-		rc = plen;
-
 	bitvec_free(bv);
-
+	/* rc was already properly set before goto */
 	return rc;
 }
 
