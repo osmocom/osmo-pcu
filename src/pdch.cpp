@@ -991,8 +991,9 @@ int gprs_rlcmac_pdch::rcv_data_block(uint8_t *data, uint8_t data_len, uint32_t f
 			break;
 		case PDCH_ULC_NODE_TBF_POLL:
 			LOGPDCH(this, DRLCMACUL, LOGL_NOTICE, "FN=%" PRIu32 " "
-				"Rx UL DATA from unexpected %s vs expected POLL %s\n",
-				fn, tbf_name(tbf), tbf_name(node->tbf_poll.poll_tbf));
+				"Rx UL DATA from unexpected %s vs expected POLL %s reason=%s\n",
+				fn, tbf_name(tbf), tbf_name(node->tbf_poll.poll_tbf),
+				get_value_string(pdch_ulc_tbf_poll_reason_names, node->tbf_poll.reason));
 			break;
 		case PDCH_ULC_NODE_SBA:
 			LOGPDCH(this, DRLCMACUL, LOGL_NOTICE, "FN=%" PRIu32 " "
