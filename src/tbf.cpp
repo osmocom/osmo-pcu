@@ -323,7 +323,7 @@ int gprs_rlcmac_tbf::update()
 	if (rc < 0) {
 		LOGPTBF(this, LOGL_ERROR, "No resource after update???\n");
 		bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_FAIL);
-		return -rc;
+		return rc;
 	}
 
 	if (is_egprs_enabled()) {
