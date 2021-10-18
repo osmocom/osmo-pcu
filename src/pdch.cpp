@@ -119,7 +119,7 @@ static inline void sched_ul_ass_or_rej(struct gprs_rlcmac_bts *bts, struct gprs_
 	bts_do_rate_ctr_inc(bts, CTR_CHANNEL_REQUEST_DESCRIPTION);
 
 	/* This call will register the new TBF with the MS on success */
-	gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul_pacch(bts, tbf->ms(), tbf->trx->trx_no, tbf->tlli());
+	gprs_rlcmac_ul_tbf *ul_tbf = tbf_alloc_ul_pacch(bts, tbf->ms(), tbf->trx->trx_no);
 
 	/* schedule uplink assignment or reject */
 	if (ul_tbf) {
@@ -707,7 +707,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				ms_set_egprs_ms_class(ms, egprs_ms_class);
 		}
 
-		ul_tbf = tbf_alloc_ul_pacch(bts(), ms, trx_no(), tlli);
+		ul_tbf = tbf_alloc_ul_pacch(bts(), ms, trx_no());
 		if (!ul_tbf) {
 			handle_tbf_reject(bts(), ms, trx_no(), ts_no);
 			goto return_unref;

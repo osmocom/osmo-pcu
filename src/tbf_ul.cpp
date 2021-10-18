@@ -152,8 +152,7 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 }
 
 /* Alloc a UL TBF to be assigned over PACCH */
-gprs_rlcmac_ul_tbf *tbf_alloc_ul_pacch(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx,
-				 uint32_t tlli)
+gprs_rlcmac_ul_tbf *tbf_alloc_ul_pacch(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
 
@@ -165,8 +164,6 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul_pacch(struct gprs_rlcmac_bts *bts, GprsMs *ms, 
 	}
 	tbf->m_contention_resolution_done = 1;
 	osmo_fsm_inst_dispatch(tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
-	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
-	OSMO_ASSERT(tbf->ms());
 
 	return tbf;
 }
