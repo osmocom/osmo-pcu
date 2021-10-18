@@ -314,10 +314,8 @@ int gprs_rlcmac_tbf::update()
 {
 	int rc;
 
-	if (direction != GPRS_RLCMAC_DL_TBF)
-		return -EINVAL;
-
 	LOGP(DTBF, LOGL_DEBUG, "********** DL-TBF update **********\n");
+	OSMO_ASSERT(direction == GPRS_RLCMAC_DL_TBF);
 
 	tbf_unlink_pdch(this);
 	rc = the_pcu->alloc_algorithm(bts, this, false, -1);
