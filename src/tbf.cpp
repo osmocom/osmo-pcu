@@ -206,9 +206,8 @@ void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 	if (m_ms == ms)
 		return;
 
-	if (m_ms) {
+	if (m_ms)
 		ms_detach_tbf(m_ms, this);
-	}
 
 	m_ms = ms;
 
