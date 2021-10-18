@@ -180,8 +180,6 @@ struct gprs_rlcmac_tbf {
 	GprsMs *ms() const;
 	void set_ms(GprsMs *ms);
 
-	uint8_t tsc() const;
-
 	bool n_inc(enum tbf_counters n);
 	void n_reset(enum tbf_counters n);
 

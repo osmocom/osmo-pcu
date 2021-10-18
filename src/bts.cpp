@@ -871,7 +871,6 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 	struct gprs_rlcmac_trx *trx;
 	uint32_t sb_fn = 0;
 	uint8_t usf = 7;
-	uint8_t tsc = 0;
 	int plen, rc;
 
 	/* Allocate a bit-vector for RR Immediate Assignment [Reject] */
@@ -924,7 +923,6 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 
 		pdch = sba->pdch;
 		sb_fn = sba->fn;
-		tsc = pdch->tsc;
 		LOGP(DRLCMAC, LOGL_DEBUG, "Allocated a single block at "
 		     "SBFn=%u TRX=%u TS=%u\n", sb_fn, pdch->trx->trx_no, pdch->ts_no);
 	} else {
@@ -938,14 +936,13 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 		tbf->set_ta(ta);
 		pdch = &tbf->trx->pdch[tbf->first_ts];
 		usf = tbf->m_usf[pdch->ts_no];
-		tsc = tbf->tsc();
 	}
 	trx = pdch->trx;
 
 	LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment on AGCH: "
 	     "TRX=%u (ARFCN %u) TS=%u TA=%u TSC=%u TFI=%d USF=%d\n",
 	     trx->trx_no, trx->arfcn & ~ARFCN_FLAG_MASK,
-	     pdch->ts_no, ta, tsc, tbf ? tbf->tfi() : -1, usf);
+	     pdch->ts_no, ta, pdch->tsc, tbf ? tbf->tfi() : -1, usf);
 	plen = Encoding::write_immediate_assignment(pdch, tbf, bv,
 		false, rip->ra, Fn, ta, usf, false, sb_fn,
 		bts_get_ms_pwr_alpha(bts), bts->pcu->vty.gamma, -1,

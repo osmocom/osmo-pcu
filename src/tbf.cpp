@@ -758,11 +758,6 @@ void gprs_rlcmac_tbf::rotate_in_list()
 		llist_add(tbf_trx_list((struct gprs_rlcmac_tbf *)this), &trx->dl_tbfs);
 }
 
-uint8_t gprs_rlcmac_tbf::tsc() const
-{
-	return trx->pdch[first_ts].tsc;
-}
-
 uint8_t gprs_rlcmac_tbf::dl_slots() const
 {
 	uint8_t slots = 0;
