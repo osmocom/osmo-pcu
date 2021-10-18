@@ -338,12 +338,12 @@ static int tfi_find_free(const struct gprs_rlcmac_bts *bts, const gprs_rlcmac_tr
  * Assign single slot for uplink and downlink
  *
  *  \param[in,out] bts Pointer to BTS struct
- *  \param[in,out] tbf_ Pointer to TBF struct
+ *  \param[in,out] tbf Pointer to TBF struct
  *  \param[in] single flag indicating if we should force single-slot allocation
  *  \param[in] use_trx which TRX to use or -1 if it should be selected during allocation
  *  \returns negative error code or 0 on success
  */
-int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_, bool single,
+int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool single,
 		      int8_t use_trx)
 {
 	struct gprs_rlcmac_pdch *pdch;
@@ -354,8 +354,7 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_,
 	int usf = -1;
 	uint8_t mask = 0xff;
 	const char *mask_reason = NULL;
-	struct GprsMs *ms = tbf_->ms();
-	const gprs_rlcmac_tbf *tbf = tbf_;
+	struct GprsMs *ms = tbf->ms();
 	gprs_rlcmac_trx *trx = ms_current_trx(ms);
 
 	LOGPAL(tbf, "A", single, use_trx, LOGL_DEBUG, "Alloc start\n");
@@ -404,24 +403,24 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_,
 
 	pdch = &trx->pdch[ts];
 
-	/* The allocation will be successful, so the system state and tbf_/ms_
+	/* The allocation will be successful, so the system state and tbf/ms
 	 * may be modified from now on. */
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf_);
+		struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
 		LOGPSL(tbf, LOGL_DEBUG, "Assign uplink TS=%d TFI=%d USF=%d\n", ts, tfi, usf);
 		assign_uplink_tbf_usf(pdch, ul_tbf, tfi, usf);
 	} else {
-		struct gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf_);
+		struct gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
 		LOGPSL(tbf, LOGL_DEBUG, "Assign downlink TS=%d TFI=%d\n", ts, tfi);
 		assign_dlink_tbf(pdch, dl_tbf, tfi);
 	}
 
-	tbf_->trx = trx;
+	tbf->trx = trx;
 	/* the only one TS is the common TS */
-	tbf_->first_ts = tbf_->first_common_ts = ts;
+	tbf->first_ts = tbf->first_common_ts = ts;
 	ms_set_reserved_slots(ms, trx, 1 << ts, 1 << ts);
 
-	tbf_->upgrade_to_multislot = false;
+	tbf->upgrade_to_multislot = false;
 	bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_ALGO_A);
 	return 0;
 }
@@ -856,12 +855,12 @@ static void assign_dl_tbf_slots(struct gprs_rlcmac_dl_tbf *dl_tbf, gprs_rlcmac_t
  * Assign one uplink slot. (With free USF)
  *
  *  \param[in,out] bts Pointer to BTS struct
- *  \param[in,out] tbf_ Pointer to TBF struct
+ *  \param[in,out] tbf Pointer to TBF struct
  *  \param[in] single flag indicating if we should force single-slot allocation
  *  \param[in] use_trx which TRX to use or -1 if it should be selected during allocation
  *  \returns negative error code or 0 on success
  */
-int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_, bool single,
+int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool single,
 		      int8_t use_trx)
 {
 	uint8_t dl_slots;
@@ -875,8 +874,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_,
 	int usf[8] = {-1, -1, -1, -1, -1, -1, -1, -1};
 	int rc;
 	int tfi;
-	struct GprsMs *ms = tbf_->ms();
-	const gprs_rlcmac_tbf *tbf = tbf_;
+	struct GprsMs *ms = tbf->ms();
 	gprs_rlcmac_trx *trx;
 
 	LOGPAL(tbf, "B", single, use_trx, LOGL_DEBUG, "Alloc start\n");
@@ -942,28 +940,28 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_,
 	}
 
 	if (single && slotcount) {
-		tbf_->upgrade_to_multislot = (avail_count > slotcount);
+		tbf->upgrade_to_multislot = (avail_count > slotcount);
 		LOGPAL(tbf, "B", single, use_trx, LOGL_INFO, "using single slot at TS %d\n", first_ts);
 	} else {
-		tbf_->upgrade_to_multislot = false;
+		tbf->upgrade_to_multislot = false;
 		LOGPAL(tbf, "B", single, use_trx, LOGL_INFO, "using %d slots\n", slotcount);
 	}
 
-	/* The allocation will be successful, so the system state and tbf_/ms_
+	/* The allocation will be successful, so the system state and tbf/ms
 	 * may be modified from now on. */
 
 	/* Step 4: Update MS and TBF and really allocate the resources */
 
 	update_ms_reserved_slots(trx, ms, reserved_ul_slots, reserved_dl_slots, ul_slots, dl_slots);
 
-	tbf_->trx = trx;
-	tbf_->first_common_ts = first_common_ts;
-	tbf_->first_ts = first_ts;
+	tbf->trx = trx;
+	tbf->first_common_ts = first_common_ts;
+	tbf->first_ts = first_ts;
 
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF)
-		assign_dl_tbf_slots(as_dl_tbf(tbf_), trx, dl_slots, tfi);
+		assign_dl_tbf_slots(as_dl_tbf(tbf), trx, dl_slots, tfi);
 	else
-		assign_ul_tbf_slots(as_ul_tbf(tbf_), trx, ul_slots, tfi, usf);
+		assign_ul_tbf_slots(as_ul_tbf(tbf), trx, ul_slots, tfi, usf);
 
 	bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_ALGO_B);
 
@@ -979,12 +977,12 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_,
  * goal is to provide the highest possible bandwidth per MS.
  *
  *  \param[in,out] bts Pointer to BTS struct
- *  \param[in,out] tbf_ Pointer to TBF struct
+ *  \param[in,out] tbf Pointer to TBF struct
  *  \param[in] single flag indicating if we should force single-slot allocation
  *  \param[in] use_trx which TRX to use or -1 if it should be selected during allocation
  *  \returns negative error code or 0 on success
  */
-int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf_, bool single,
+int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, bool single,
 			    int8_t use_trx)
 {
 	int rc;
@@ -997,7 +995,7 @@ int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf 
 	}
 
 	if (!bts->multislot_disabled) {
-		rc = alloc_algorithm_b(bts, tbf_, single, use_trx);
+		rc = alloc_algorithm_b(bts, tbf, single, use_trx);
 		if (rc >= 0)
 			return rc;
 
@@ -1006,7 +1004,7 @@ int alloc_algorithm_dynamic(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf 
 		bts->multislot_disabled = 1;
 	}
 
-	return alloc_algorithm_a(bts, tbf_, single, use_trx);
+	return alloc_algorithm_a(bts, tbf, single, use_trx);
 }
 
 int gprs_alloc_max_dl_slots_per_ms(const struct gprs_rlcmac_bts *bts, uint8_t ms_class)
