@@ -334,6 +334,8 @@ int gprs_rlcmac_tbf::update()
 			dl_tbf->set_window_size();
 	}
 
+	tbf_update_state_fsm_name(this);
+
 	return 0;
 }
 
