@@ -867,7 +867,8 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 	struct chan_req_params chan_req = { 0 };
 	struct gprs_rlcmac_ul_tbf *tbf = NULL;
 	struct gprs_rlcmac_sba *sba;
-	uint8_t trx_no = 0, ts_no = 0; /* initialize to avoid uninitialized false warnings on some gcc versions (11.1.0) */
+	struct gprs_rlcmac_pdch *pdch = NULL;
+	struct gprs_rlcmac_trx *trx = NULL;
 	uint32_t sb_fn = 0;
 	uint8_t usf = 7;
 	uint8_t tsc = 0;
@@ -917,12 +918,11 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 			goto send_imm_ass_rej;
 		}
 
-		trx_no = sba->pdch->trx_no();
-		ts_no = sba->pdch->ts_no;
+		pdch = sba->pdch;
 		sb_fn = sba->fn;
-		tsc = bts->trx[trx_no].pdch[ts_no].tsc;
+		tsc = pdch->tsc;
 		LOGP(DRLCMAC, LOGL_DEBUG, "Allocated a single block at "
-		     "SBFn=%u TRX=%u TS=%u\n", sb_fn, trx_no, ts_no);
+		     "SBFn=%u TRX=%u TS=%u\n", sb_fn, pdch->trx->trx_no, pdch->ts_no);
 	} else {
 		GprsMs *ms = bts_alloc_ms(bts, 0, chan_req.egprs_mslot_class);
 		tbf = tbf_alloc_ul_ccch(bts, ms);
@@ -932,11 +932,11 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 			goto send_imm_ass_rej;
 		}
 		tbf->set_ta(ta);
-		trx_no = tbf->trx->trx_no;
-		ts_no = tbf->first_ts;
-		usf = tbf->m_usf[ts_no];
+		pdch = &tbf->trx->pdch[tbf->first_ts];
+		usf = tbf->m_usf[pdch->ts_no];
 		tsc = tbf->tsc();
 	}
+	trx = pdch->trx;
 
 send_imm_ass_rej:
 	/* Allocate a bit-vector for RR Immediate Assignment [Reject] */
@@ -952,10 +952,9 @@ send_imm_ass_rej:
 	} else {
 		LOGP(DRLCMAC, LOGL_DEBUG, "Tx Immediate Assignment on AGCH: "
 		     "TRX=%u (ARFCN %u) TS=%u TA=%u TSC=%u TFI=%d USF=%d\n",
-		     trx_no, bts->trx[trx_no].arfcn & ~ARFCN_FLAG_MASK,
-		     ts_no, ta, tsc, tbf ? tbf->tfi() : -1, usf);
-		plen = Encoding::write_immediate_assignment(
-			&bts->trx[trx_no].pdch[ts_no], tbf, bv,
+		     trx->trx_no, trx->arfcn & ~ARFCN_FLAG_MASK,
+		     pdch->ts_no, ta, tsc, tbf ? tbf->tfi() : -1, usf);
+		plen = Encoding::write_immediate_assignment(pdch, tbf, bv,
 			false, rip->ra, Fn, ta, usf, false, sb_fn,
 			bts_get_ms_pwr_alpha(bts), bts->pcu->vty.gamma, -1,
 			rip->burst_type);
