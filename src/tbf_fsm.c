@@ -352,6 +352,9 @@ static void handle_timeout_X2002(struct tbf_fsm_ctx *ctx)
 {
 	struct gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(ctx->tbf);
 
+	/* X2002 is used only for DL TBF */
+	OSMO_ASSERT(dl_tbf);
+
 	if (ctx->fi->state == TBF_ST_ASSIGN) {
 		tbf_assign_control_ts(ctx->tbf);
 
