@@ -214,6 +214,6 @@ decode_egprs_pkt_ch_req(0x6f9) returns 0
 decode_egprs_pkt_ch_req(0x7ea) returns -8
 *** testRAcap4 ***
 === Test decoding of MS RA Capability 4===
-decode_gsm_ra_cap() returns -5
-GPRS multislot class = 0
-EGPRS multislot class = 0
+decode_gsm_ra_cap() returns 0
+GPRS multislot class = 12
+EGPRS multislot class = 12

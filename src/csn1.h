@@ -462,6 +462,16 @@ gint16 csnStreamEncoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec 
         {CSN_TYPE, 0, {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), FALSE, #_MEMBER, 0, NULL}
 
 /******************************************************************************
+ * M_TYPE_OR_NULL(Par1, Par2, Par3)
+ * Similar to the M_TYPE except that not only the request set of bits but also the
+ * end of the message may be encountered when looking for the next element in
+ * the message.
+ * Covers the case {null | 0 | 1 < IE >}
+ *****************************************************************************/
+#define M_TYPE_OR_NULL(_STRUCT, _MEMBER, _MEMBER_TYPE)\
+        {CSN_TYPE, 0, {(const void*)CSNDESCR_##_MEMBER_TYPE}, offsetof(_STRUCT, _MEMBER), TRUE, #_MEMBER, 0, NULL}
+
+/******************************************************************************
  * M_UNION(Par1, Par2)
  * Informs the CSN.1 library that a union follows and how many possible choices
  * there are in the union. The actual value of the choice, which points out the

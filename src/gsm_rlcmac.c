@@ -928,7 +928,7 @@ CSN_DESCR_BEGIN       (Content_t)
   /* additions in release 7 */
   M_UINT_OR_NULL      (Content_t,  DTM_Handover_Capability,  1),
   M_NEXT_EXIST_OR_NULL(Content_t, Exist_DownlinkDualCarrierCapability_r7, 1),
-  M_TYPE              (Content_t, DownlinkDualCarrierCapability_r7, DownlinkDualCarrierCapability_r7_t),
+  M_TYPE_OR_NULL      (Content_t, DownlinkDualCarrierCapability_r7, DownlinkDualCarrierCapability_r7_t),
 
   M_UINT_OR_NULL      (Content_t,  FlexibleTimeslotAssignment,  1),
   M_UINT_OR_NULL      (Content_t,  GAN_PS_HandoverCapability,  1),

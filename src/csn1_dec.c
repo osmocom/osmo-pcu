@@ -388,22 +388,26 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
       {
         gint16      Status;
         csnStream_t arT = *ar;
-        LOGPC(DCSN1, LOGL_DEBUG, " : %s | ", pDescr->sz);
-        csnStreamInit(&arT, bit_offset, remaining_bits_len);
-	Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pvDATA(data, pDescr->offset));
-        LOGPC(DCSN1, LOGL_DEBUG, ": End %s | ", pDescr->sz);
-        if (Status >= 0)
+        if (pDescr->may_be_null && remaining_bits_len == 0)
         {
-          remaining_bits_len  = arT.remaining_bits_len;
-          bit_offset          = arT.bit_offset;
-          pDescr++;
+          LOGPC(DCSN1, LOGL_DEBUG, " : %s = NULL | ", pDescr->sz);
+        } else {
+          LOGPC(DCSN1, LOGL_DEBUG, " : %s | ", pDescr->sz);
+          csnStreamInit(&arT, bit_offset, remaining_bits_len);
+	  Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pvDATA(data, pDescr->offset));
+          LOGPC(DCSN1, LOGL_DEBUG, ": End %s | ", pDescr->sz);
+          if (Status >= 0)
+          {
+            remaining_bits_len  = arT.remaining_bits_len;
+            bit_offset          = arT.bit_offset;
+          }
+          else
+          {
+            /* Has already been processed: ProcessError("csnStreamDecoder", Status, pDescr);  */
+            return Status;
+          }
         }
-        else
-        {
-          /* Has already been processed: ProcessError("csnStreamDecoder", Status, pDescr);  */
-          return Status;
-        }
-
+        pDescr++;
         break;
       }
 
@@ -838,21 +842,25 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           {
             gint16      Status;
             csnStream_t arT = *ar;
-            LOGPC(DCSN1, LOGL_DEBUG, " : %s | ", pDescr->sz);
-            csnStreamInit(&arT, bit_offset, remaining_bits_len);
-	    Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pvDATA(data, pDescr->offset));
-            LOGPC(DCSN1, LOGL_DEBUG, " : End %s | ", pDescr->sz);
-            if (Status >= 0)
+            if (pDescr->may_be_null && remaining_bits_len == 0)
             {
-              remaining_bits_len = arT.remaining_bits_len;
-              bit_offset         = arT.bit_offset;
-              pDescr++;
+              LOGPC(DCSN1, LOGL_DEBUG, " : %s = NULL | ", pDescr->sz);
+            } else {
+              LOGPC(DCSN1, LOGL_DEBUG, " : %s | ", pDescr->sz);
+              csnStreamInit(&arT, bit_offset, remaining_bits_len);
+	      Status = csnStreamDecoder(&arT, (const CSN_DESCR*)pDescr->descr.ptr, vector, readIndex, pvDATA(data, pDescr->offset));
+              LOGPC(DCSN1, LOGL_DEBUG, " : End %s | ", pDescr->sz);
+              if (Status >= 0)
+              {
+                remaining_bits_len = arT.remaining_bits_len;
+                bit_offset         = arT.bit_offset;
+              }
+              else
+              { /* return error code Has already been processed:  */
+                return Status;
+              }
             }
-            else
-            { /* return error code Has already been processed:  */
-              return Status;
-            }
-
+            pDescr++;
             break;
           }
 
