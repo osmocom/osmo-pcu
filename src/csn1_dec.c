@@ -909,6 +909,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
       case CSN_NEXT_EXIST:
       {
         guint8 fExist;
+        guint8 isnull;
 
         pui8  = pui8DATA(data, pDescr->offset);
 
@@ -927,17 +928,30 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
         /* the "regular" M_NEXT_EXIST description element */
 
         fExist = 0x00;
+        isnull = 1;
 	if (bitvec_read_field(vector, readIndex, 1))
         {
           fExist = 0x01;
+          if (remaining_bits_len == 1) {
+             /* If { 1 < end > } and all next items may be null, store it as { 0 } */
+            const CSN_DESCR* pDescrNext = pDescr + 1;
+            guint8 i;
+            for (i = 0; i < pDescr->i; i++, pDescrNext++)
+            {
+              if (!pDescrNext->may_be_null)
+                isnull = 0;
+            }
+          } else {
+            isnull = 0;
+          }
         }
 
-        *pui8     = fExist;
+        *pui8     = !isnull;
         remaining_bits_len -= 1;
-        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)*pui8);
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u%s | ", pDescr->sz, (unsigned)fExist, fExist && isnull ? " (NULL)" : "");
         ++bit_offset;
 
-        if (fExist == 0)
+        if (isnull)
         { /* Skip 'i' entries */
           pDescr += pDescr->i;
         }
@@ -949,6 +963,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
       case CSN_NEXT_EXIST_LH:
       {
         guint8 fExist;
+        guint8 isnull;
         pui8  = pui8DATA(data, pDescr->offset);
 
         /* this if-statement represents the M_NEXT_EXIST_OR_NULL_LH description element */
@@ -964,14 +979,29 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
         }
 
         /* the "regular" M_NEXT_EXIST_LH description element */
-        fExist = get_masked_bits8(vector, readIndex, bit_offset, 1);
-        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u | ", pDescr->sz , (unsigned)fExist);
+        isnull = 1;
+        if ((fExist = get_masked_bits8(vector, readIndex, bit_offset, 1)))
+        {
+          if (remaining_bits_len == 1) {
+             /* If { 1 < end > } and all next items may be null, store it as { 0 } */
+            const CSN_DESCR* pDescrNext = pDescr + 1;
+            guint8 i;
+            for (i = 0; i < pDescr->i; i++, pDescrNext++)
+            {
+              if (!pDescrNext->may_be_null)
+                isnull = 0;
+            }
+          } else {
+            isnull = 0;
+          }
+        }
+        LOGPC(DCSN1, LOGL_DEBUG, "%s = %u%s | ", pDescr->sz , (unsigned)fExist, fExist && isnull ? " (NULL)" : "");
         *pui8++   = fExist;
         remaining_bits_len -= 1;
 
         bit_offset++;
 
-        if (fExist == 0)
+        if (isnull)
         { /* Skip 'i' entries */
           pDescr += pDescr->i;
         }
