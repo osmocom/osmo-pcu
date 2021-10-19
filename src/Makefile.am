@@ -41,6 +41,8 @@ noinst_LTLIBRARIES = libgprs.la
 libgprs_la_SOURCES = \
 	gprs_debug.cpp \
 	csn1.c \
+	csn1_dec.c \
+	csn1_enc.c \
 	gsm_rlcmac.c \
 	gprs_bssgp_pcu.c \
 	gprs_bssgp_rim.c \

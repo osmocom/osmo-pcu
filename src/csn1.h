@@ -592,4 +592,18 @@ typedef gint16 (*CsnCallBackFcn_t)(void* pv ,...);
 
 #define CSNDESCR(_FuncType) CSNDESCR_##_FuncType
 
+#define pvDATA(_pv, _offset) ((void*) ((unsigned char*)_pv + _offset))
+#define pui8DATA(_pv, _offset) ((guint8*) pvDATA(_pv, _offset))
+#define pui16DATA(_pv, _offset) ((guint16*) pvDATA(_pv, _offset))
+#define pui32DATA(_pv, _offset) ((guint32*) pvDATA(_pv, _offset))
+#define pui64DATA(_pv, _offset) ((guint64*) pvDATA(_pv, _offset))
+/* used to tag existence of next element in variable length lists */
+#define STANDARD_TAG 1
+#define REVERSED_TAG 0
+
+gint16 ProcessError_impl(const char *file, int line, unsigned *readIndex,
+                                const char* sz, gint16 err, const CSN_DESCR* pDescr);
+#define ProcessError(readIndex, sz, err, pDescr) \
+        ProcessError_impl(__FILE__, __LINE__, readIndex, sz, err, pDescr)
+
 #endif /*_PACKET_CSN1_H_*/

@@ -81,7 +81,9 @@ Copyright: 2012 Andreas Eversberg <jolly@eversberg.eu>
 License:   GPL-2.0+
 
 Files:     src/csn1.h
-           src/csn1.cpp
+           src/csn1.c
+           src/csn1_dec.c
+           src/csn1_enc.c
            src/gsm_rlcmac.cpp
            src/gsm_rlcmac.h
 Copyright: 2011 Vincent Helfre
