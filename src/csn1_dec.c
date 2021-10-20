@@ -996,7 +996,7 @@ csnStreamDecoder(csnStream_t* ar, const CSN_DESCR* pDescr, struct bitvec *vector
           }
         }
         LOGPC(DCSN1, LOGL_DEBUG, "%s = %u%s | ", pDescr->sz , (unsigned)fExist, fExist && isnull ? " (NULL)" : "");
-        *pui8++   = fExist;
+        *pui8++   = !isnull;
         remaining_bits_len -= 1;
 
         bit_offset++;
