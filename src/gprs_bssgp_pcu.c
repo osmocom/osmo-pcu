@@ -1118,7 +1118,8 @@ static int ns_configure_nse(struct gprs_rlcmac_bts *bts,
 		if (!(valid & (1 << i)))
 			continue;
 
-		if (!gprs_ns2_ip_bind_by_sockaddr(the_pcu->nsi, &local[i])) {
+		bind[i] = gprs_ns2_ip_bind_by_sockaddr(the_pcu->nsi, &local[i]);
+		if (!bind[i]) {
 			snprintf(name, sizeof(name), "pcu%u", i);
 			rc = gprs_ns2_ip_bind(the_pcu->nsi, name, &local[i], 0, &bind[i]);
 			if (rc < 0) {
