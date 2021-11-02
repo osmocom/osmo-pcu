@@ -145,6 +145,8 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "spb:downlink_first_segment", "First seg of DL SPB  "},
 	{ "spb:downlink_second_segment","Second seg of DL SPB "},
 	{ "immediate:assignment_UL",	"Immediate Assign UL  "},
+	{ "immediate:assignment_ul:one_phase",	"Immediate Assign UL (one phase packet access)"}, /* TS 52.402 B.2.1.50 */
+	{ "immediate:assignment_ul:two_phase",	"Immediate Assign UL (two phase packet access)"}, /* TS 52.402 B.2.1.50 */
 	{ "immediate:assignment_rej",   "Immediate Assign Rej "},
 	{ "immediate:assignment_DL",	"Immediate Assign DL  "},
 	{ "channel:request_description","Channel Request Desc "},
@@ -937,6 +939,7 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 		sb_fn = sba->fn;
 		LOGP(DRLCMAC, LOGL_DEBUG, "Allocated a single block at "
 		     "SBFn=%u TRX=%u TS=%u\n", sb_fn, pdch->trx->trx_no, pdch->ts_no);
+		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_TWO_PHASE);
 	} else {
 		GprsMs *ms = bts_alloc_ms(bts, 0, chan_req.egprs_mslot_class);
 		tbf = tbf_alloc_ul_ccch(bts, ms);
@@ -948,6 +951,7 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 		tbf->set_ta(ta);
 		pdch = &tbf->trx->pdch[tbf->first_ts];
 		usf = tbf->m_usf[pdch->ts_no];
+		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_ONE_PHASE);
 	}
 	trx = pdch->trx;
 
