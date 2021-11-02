@@ -136,7 +136,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "pch:requests",		"PCH requests sent    "},
 	{ "pch:requests:timeout",	"PCH requests timeout "},
 	{ "rach:requests",		"RACH requests received"},
-	{ "11bit_rach:requests",	"11BIT_RACH requests received"},
+	{ "rach:requests:11bit",	"11BIT_RACH requests received"},
 	{ "spb:uplink_first_segment",   "First seg of UL SPB  "},
 	{ "spb:uplink_second_segment",  "Second seg of UL SPB "},
 	{ "spb:downlink_first_segment", "First seg of DL SPB  "},
@@ -880,7 +880,7 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 	bts_do_rate_ctr_inc(bts, CTR_RACH_REQUESTS);
 
 	if (rip->is_11bit)
-		bts_do_rate_ctr_inc(bts, CTR_11BIT_RACH_REQUESTS);
+		bts_do_rate_ctr_inc(bts, CTR_RACH_REQUESTS_11BIT);
 
 	/* Determine full frame number */
 	uint32_t Fn = bts_rfn_to_fn(bts, rip->rfn);
