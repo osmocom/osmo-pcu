@@ -139,6 +139,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "rach:requests:11bit",	"11BIT_RACH requests received"},
 	{ "rach:requests:one_phase",	"One phase packet access with request for single TS UL"}, /* TS 52.402 B.2.1.49 */
 	{ "rach:requests:two_phase",	"Single block packet request for two phase packet access"}, /* TS 52.402 B.2.1.49 */
+	{ "rach:requests:unexpected",	"RACH Request with unexpected content received"},
 	{ "spb:uplink_first_segment",   "First seg of UL SPB  "},
 	{ "spb:uplink_second_segment",  "Second seg of UL SPB "},
 	{ "spb:downlink_first_segment", "First seg of DL SPB  "},
@@ -896,8 +897,11 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 
 	/* Parse [EGPRS Packet] Channel Request from RACH.ind */
 	rc = parse_rach_ind(rip, &chan_req);
-	if (rc) /* Send RR Immediate Assignment Reject */
+	if (rc) {
+		bts_do_rate_ctr_inc(bts, CTR_RACH_REQUESTS_UNEXPECTED);
+		/* Send RR Immediate Assignment Reject */
 		goto send_imm_ass_rej;
+	}
 
 	if (chan_req.single_block) {
 		bts_do_rate_ctr_inc(bts, CTR_RACH_REQUESTS_TWO_PHASE);
