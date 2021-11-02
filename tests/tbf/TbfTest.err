@@ -1719,6 +1719,7 @@ MSG = 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03
 === start test_tbf_single_phase ===
 Found first unallocated TRX=0 TFI=0
 MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654167 qta=31
+MS requests single TS uplink transmission (one phase packet access)
 Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
@@ -2445,6 +2446,7 @@ UL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
 DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Deallocated
 Found first unallocated TRX=0 TFI=0
 MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654275 qta=31
+MS requests single TS uplink transmission (one phase packet access)
 Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
@@ -7104,6 +7106,7 @@ DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 === end test_tbf_epdan_out_of_rx_window ===
 === start test_immediate_assign_rej_multi_block ===
 MS requests Uplink resource on CCCH/RACH: ra=0x78 (8 bit) Fn=2654167 qta=31
+MS requests single TS uplink transmission (one phase packet access)
 Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
@@ -7131,6 +7134,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention re
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
 MS requests Uplink resource on CCCH/RACH: ra=0x79 (8 bit) Fn=2654167 qta=31
+MS requests single TS uplink transmission (one phase packet access)
 Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
@@ -7158,6 +7162,7 @@ TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention re
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=1 USF=1
 MS requests Uplink resource on CCCH/RACH: ra=0x7a (8 bit) Fn=2654167 qta=31
+MS requests single TS uplink transmission (one phase packet access)
 Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
@@ -7185,6 +7190,7 @@ TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention re
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=2 USF=2
 MS requests Uplink resource on CCCH/RACH: ra=0x7b (8 bit) Fn=2654167 qta=31
+MS requests single TS uplink transmission (one phase packet access)
 Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
@@ -7212,6 +7218,7 @@ TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention re
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=3 USF=3
 MS requests Uplink resource on CCCH/RACH: ra=0x7c (8 bit) Fn=2654167 qta=31
+MS requests single TS uplink transmission (one phase packet access)
 Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
@@ -7239,6 +7246,7 @@ TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention re
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=4 USF=4
 MS requests Uplink resource on CCCH/RACH: ra=0x7d (8 bit) Fn=2654167 qta=31
+MS requests single TS uplink transmission (one phase packet access)
 Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
@@ -7266,6 +7274,7 @@ TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention re
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=5 USF=5
 MS requests Uplink resource on CCCH/RACH: ra=0x7e (8 bit) Fn=2654167 qta=31
+MS requests single TS uplink transmission (one phase packet access)
 Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
@@ -7293,6 +7302,7 @@ TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention re
 Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=6 USF=6
 MS requests Uplink resource on CCCH/RACH: ra=0x7f (8 bit) Fn=2654167 qta=31
+MS requests single TS uplink transmission (one phase packet access)
 Creating MS object, TLLI = 0xffffffff
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF

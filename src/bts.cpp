@@ -137,6 +137,8 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "pch:requests:timeout",	"PCH requests timeout "},
 	{ "rach:requests",		"RACH requests received"},
 	{ "rach:requests:11bit",	"11BIT_RACH requests received"},
+	{ "rach:requests:one_phase",	"One phase packet access with request for single TS UL"}, /* TS 52.402 B.2.1.49 */
+	{ "rach:requests:two_phase",	"Single block packet request for two phase packet access"}, /* TS 52.402 B.2.1.49 */
 	{ "spb:uplink_first_segment",   "First seg of UL SPB  "},
 	{ "spb:uplink_second_segment",  "Second seg of UL SPB "},
 	{ "spb:downlink_first_segment", "First seg of DL SPB  "},
@@ -897,12 +899,17 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 	if (rc) /* Send RR Immediate Assignment Reject */
 		goto send_imm_ass_rej;
 
-	if (chan_req.single_block)
+	if (chan_req.single_block) {
+		bts_do_rate_ctr_inc(bts, CTR_RACH_REQUESTS_TWO_PHASE);
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block allocation\n");
-	else if (bts->pcu->vty.force_two_phase) {
+	} else {
+		bts_do_rate_ctr_inc(bts, CTR_RACH_REQUESTS_ONE_PHASE);
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single TS uplink transmission "
-		     "(one phase packet access), but we force two phase access\n");
-		chan_req.single_block = true;
+		     "(one phase packet access)\n");
+		if (bts->pcu->vty.force_two_phase) {
+			LOGP(DRLCMAC, LOGL_DEBUG, "Forcing two phase access\n");
+			chan_req.single_block = true;
+		}
 	}
 
 	/* TODO: handle Radio Priority (see 3GPP TS 44.060, table 11.2.5a.5) */
