@@ -151,7 +151,12 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 	return tbf;
 }
 
-/* Alloc a UL TBF to be assigned over PACCH */
+/* Alloc a UL TBF to be assigned over PACCH. Called when an MS requests to
+ * create a new UL TBF during the end of life of a previous UL TBF (or an SBA).
+ * In summary, this TBF is allocated as a consequence of receiving a "Pkt
+ * Resource Req" or "Pkt Ctrl Ack" from the MS.
+ * See TS 44.060 9.3.2.4.2 "Non-extended uplink TBF mode".
+ */
 gprs_rlcmac_ul_tbf *tbf_alloc_ul_pacch(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
@@ -162,6 +167,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul_pacch(struct gprs_rlcmac_bts *bts, GprsMs *ms, 
 		/* Caller will most probably send a Imm Ass Reject after return */
 		return NULL;
 	}
+	/* Contention resolution is considered to be done since TLLI is known in MS: */
 	tbf->m_contention_resolution_done = 1;
 	osmo_fsm_inst_dispatch(tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
 
