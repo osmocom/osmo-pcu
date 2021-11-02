@@ -613,15 +613,16 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 {
 	struct gprs_rlcmac_sba *sba;
 	int rc;
+	struct gprs_rlcmac_bts *bts = trx->bts;
 
 	if (request->ID.UnionType) {
 		struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
 		struct pdch_ulc_node *item;
 		uint32_t tlli = request->ID.u.TLLI;
 
-		GprsMs *ms = bts_ms_by_tlli(bts(), tlli, GSM_RESERVED_TMSI);
+		GprsMs *ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 		if (!ms) {
-			ms = bts_alloc_ms(bts(), 0, 0); /* ms class updated later */
+			ms = bts_alloc_ms(bts, 0, 0); /* ms class updated later */
 			ms_set_tlli(ms, tlli);
 		}
 
@@ -707,9 +708,9 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				ms_set_egprs_ms_class(ms, egprs_ms_class);
 		}
 
-		ul_tbf = tbf_alloc_ul_pacch(bts(), ms, trx_no());
+		ul_tbf = tbf_alloc_ul_pacch(bts, ms, trx_no());
 		if (!ul_tbf) {
-			handle_tbf_reject(bts(), ms, trx_no(), ts_no);
+			handle_tbf_reject(bts, ms, trx_no(), ts_no);
 			goto return_unref;
 		}
 
@@ -738,7 +739,7 @@ return_unref:
 	if (request->ID.u.Global_TFI.UnionType) {
 		struct gprs_rlcmac_dl_tbf *dl_tbf;
 		int8_t tfi = request->ID.u.Global_TFI.u.DOWNLINK_TFI;
-		dl_tbf = bts_dl_tbf_by_tfi(bts(), tfi, trx_no(), ts_no);
+		dl_tbf = bts_dl_tbf_by_tfi(bts, tfi, trx_no(), ts_no);
 		if (!dl_tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESOURCE REQ unknown downlink TFI=%d\n", tfi);
 			return;
@@ -751,7 +752,7 @@ return_unref:
 	} else {
 		struct gprs_rlcmac_ul_tbf *ul_tbf;
 		int8_t tfi = request->ID.u.Global_TFI.u.UPLINK_TFI;
-		ul_tbf = bts_ul_tbf_by_tfi(bts(), tfi, trx_no(), ts_no);
+		ul_tbf = bts_ul_tbf_by_tfi(bts, tfi, trx_no(), ts_no);
 		if (!ul_tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESOURCE REQ unknown uplink TFI=%d\n", tfi);
 			return;
