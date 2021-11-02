@@ -1801,7 +1801,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 4 bytes
 === end test_tbf_single_phase ===
 === start test_tbf_two_phase ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -1900,7 +1900,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 4 bytes
 === end test_tbf_two_phase ===
 === start test_tbf_ra_update_rach ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -2065,7 +2065,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) restarting timer T3191 [final b
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654309, TS=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 0, CS-4): 0f 01 00 29 52 41 55 5f 41 43 43 45 50 54 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 00 
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654245 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654348 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=1
@@ -2164,7 +2164,7 @@ New MS: TLLI = 0xf5667788, TA = 7, IMSI = 0011223344, LLC = 1
 === end test_tbf_ra_update_rach ===
 === start test_tbf_dl_flow_and_rach_two_phase ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -2272,7 +2272,7 @@ TBF(UL-TFI_0){FLOW}: Deallocated
 UL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
 DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Deallocated
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654224 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654327 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -2337,7 +2337,7 @@ New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 === end test_tbf_dl_flow_and_rach_two_phase ===
 === start test_tbf_dl_flow_and_rach_single_phase ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -2509,7 +2509,7 @@ New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 === end test_tbf_dl_flow_and_rach_single_phase ===
 === start test_tbf_dl_reuse ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -3686,7 +3686,7 @@ DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 === end test_tbf_ws ===
 === start test_tbf_egprs_two_phase ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -3793,7 +3793,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 === end test_tbf_egprs_two_phase ===
 === start test_tbf_egprs_two_phase_spb ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -6746,7 +6746,7 @@ DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Deallocated
 === end test_tbf_egprs_spb_dl ===
 === start test_tbf_puan_urbb_len ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -6935,7 +6935,7 @@ DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 === end test_tbf_update_ws ===
 === start test_tbf_li_decoding ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -7331,14 +7331,14 @@ MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Destroying MS object
 === end test_immediate_assign_rej_multi_block ===
 === start test_immediate_assign_rej_single_block ===
 MS requests Uplink resource on CCCH/RACH: ra=0x70 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 No PDCH available.
 No PDCH resource for single block allocation
 Tx Immediate Assignment Reject on AGCH
 === end test_immediate_assign_rej_single_block ===
 === start test_tbf_egprs_two_phase_puan ===
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=2654270 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Found first unallocated TRX=0 TFI=0
@@ -8645,35 +8645,35 @@ packet reject: 40 84 7f f7 6e e6 7e ab 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b
 === end test_packet_access_rej_epdan ===
 === start test_packet_access_rej_prr ===
 MS requests Uplink resource on CCCH/RACH: ra=0x70 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=52 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x71 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=56 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x72 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=60 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=65 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x74 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=69 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x75 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=73 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x76 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=78 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 MS requests Uplink resource on CCCH/RACH: ra=0x77 (8 bit) Fn=2654167 qta=31
-MS requests single block allocation
+MS requests single block allocation (two phase packet access)
 Allocated a single block at SBFn=82 TRX=0 TS=7
 Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=-1 USF=7
 Detected FN jump! 2654167 -> 52
