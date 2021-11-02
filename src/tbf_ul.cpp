@@ -168,7 +168,8 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul_pacch(struct gprs_rlcmac_bts *bts, GprsMs *ms, 
 	return tbf;
 }
 
-/* Alloc a UL TBF to be assigned over CCCH */
+/* Alloc a UL TBF to be assigned over CCCH. Used by request of a "One phase
+ * packet access", where MS requested only 1 PDCH TS (TS 44.018 Table 9.1.8.1). */
 struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_ccch(struct gprs_rlcmac_bts *bts, struct GprsMs *ms)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
