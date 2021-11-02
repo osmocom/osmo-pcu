@@ -147,6 +147,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "immediate:assignment_UL",	"Immediate Assign UL  "},
 	{ "immediate:assignment_ul:one_phase",	"Immediate Assign UL (one phase packet access)"}, /* TS 52.402 B.2.1.50 */
 	{ "immediate:assignment_ul:two_phase",	"Immediate Assign UL (two phase packet access)"}, /* TS 52.402 B.2.1.50 */
+	{ "immediate:assignment_ul:contention_resolution_success", "First RLC Block (PDU) on the PDTCH from the MS received"}, /* TS 52.402 B.2.1.51 */
 	{ "immediate:assignment_rej",   "Immediate Assign Rej "},
 	{ "immediate:assignment_DL",	"Immediate Assign DL  "},
 	{ "channel:request_description","Channel Request Desc "},

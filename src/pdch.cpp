@@ -650,6 +650,8 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				"MS requests UL TBF throguh SBA\n", fn);
 			ms_set_ta(ms, sba->ta);
 			sba_free(sba);
+			/* MS seized the PDCH answering on the SBA: */
+			bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_CONTENTION_RESOLUTION_SUCCESS);
 			break;
 		case PDCH_ULC_NODE_TBF_POLL:
 			if (item->tbf_poll.poll_tbf->direction != GPRS_RLCMAC_UL_TBF) {

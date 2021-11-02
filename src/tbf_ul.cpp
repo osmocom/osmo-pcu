@@ -332,6 +332,8 @@ void gprs_rlcmac_ul_tbf::contention_resolution_success()
 	/* now we must set this flag, so we are allowed to assign downlink
 	 * TBF on PACCH. it is only allowed when TLLI is acknowledged. */
 	m_contention_resolution_done = 1;
+
+	bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_CONTENTION_RESOLUTION_SUCCESS);
 }
 
 /*! \brief receive data from PDCH/L1 */
