@@ -900,8 +900,8 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 	if (chan_req.single_block)
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block allocation\n");
 	else if (bts->pcu->vty.force_two_phase) {
-		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single block allocation, "
-		     "but we force two phase access\n");
+		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests single TS uplink transmission "
+		     "(one phase packet access), but we force two phase access\n");
 		chan_req.single_block = true;
 	}
 
