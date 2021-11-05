@@ -62,7 +62,7 @@ static void tbf_print_vty_info(struct vty *vty, struct gprs_rlcmac_tbf *tbf)
 		tbf->first_ts,
 		tbf->first_common_ts, tbf->control_ts,
 		tbf->ms_class(),
-		tbf->ms() ? ms_egprs_ms_class(tbf->ms()) : -1,
+		ms_egprs_ms_class(tbf->ms()),
 		VTY_NEWLINE);
 	vty_out(vty, " TS_alloc=");
 	for (int i = 0; i < 8; i++) {
