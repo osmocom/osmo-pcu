@@ -94,9 +94,9 @@ gprs_rlcmac_tbf::Meas::Meas() :
 gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_rlcmac_tbf_direction dir) :
 	direction(dir),
 	trx(NULL),
-	first_ts(0),
-	first_common_ts(0),
-	control_ts(TBF_CONTROL_TS_UNSET),
+	first_ts(TBF_TS_UNSET),
+	first_common_ts(TBF_TS_UNSET),
+	control_ts(TBF_TS_UNSET),
 	fT(0),
 	num_fT_exp(0),
 	upgrade_to_multislot(false),
@@ -251,7 +251,7 @@ static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 	 * confirmation from the MS and goes through the FLOW state. Hence, we
 	 * may have ULC pollings ongoing and we need to make sure we drop all
 	 * reserved nodes there: */
-	if (tbf->control_ts != TBF_CONTROL_TS_UNSET && !tbf->pdch[tbf->control_ts])
+	if (tbf->control_ts != TBF_TS_UNSET && !tbf->pdch[tbf->control_ts])
 		pdch_ulc_release_tbf(tbf->trx->pdch[tbf->control_ts].ulc, tbf);
 
 	/* Now simply detach from all attached PDCHs */
@@ -340,7 +340,7 @@ int gprs_rlcmac_tbf::update()
 
 void tbf_assign_control_ts(struct gprs_rlcmac_tbf *tbf)
 {
-	if (tbf->control_ts == TBF_CONTROL_TS_UNSET)
+	if (tbf->control_ts == TBF_TS_UNSET)
 		LOGPTBF(tbf, LOGL_INFO, "Setting Control TS %d\n",
 			tbf->first_common_ts);
 	else if (tbf->control_ts != tbf->first_common_ts)

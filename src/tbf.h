@@ -116,7 +116,7 @@ enum tbf_counters { /* TBF counters from 3GPP TS 44.060 §13.4 */
 #define GPRS_RLCMAC_FLAG_TO_DL_ACK	3 /* DL TBF: Failed to receive last polled DL ACK/NACK */
 #define GPRS_RLCMAC_FLAG_TO_MASK	0xf0 /* timeout bits */
 
-#define TBF_CONTROL_TS_UNSET 0xff
+#define TBF_TS_UNSET 0xff
 
 #define T_START(tbf, t, T, r, f) tbf->t_start(t, T, r, f, __FILE__, __LINE__)
 
