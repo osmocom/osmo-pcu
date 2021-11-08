@@ -807,9 +807,12 @@ static void test_bts_pch_timer(void)
 {
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
 	struct osmo_mobile_identity mi_imsi1, mi_imsi2;
+	struct osmo_mobile_identity  mi_tmsi1;
 	mi_imsi1.type = mi_imsi2.type = GSM_MI_TYPE_IMSI;
+	mi_tmsi1.type = GSM_MI_TYPE_TMSI;
 	OSMO_STRLCPY_ARRAY(mi_imsi1.imsi, "1234");
 	OSMO_STRLCPY_ARRAY(mi_imsi2.imsi, "5678");
+	mi_tmsi1.tmsi = 987654321;
 
 	fprintf(stderr, "Testing bts_pch_timer dealloc on bts dealloc\n");
 	log_set_category_filter(osmo_stderr_target, DPCU, 1, LOGL_DEBUG);
@@ -817,6 +820,8 @@ static void test_bts_pch_timer(void)
 	fprintf(stderr, "Starting PCH timer for 2 IMSI\n");
 	bts_pch_timer_start(bts, &mi_imsi1, mi_imsi1.imsi);
 	bts_pch_timer_start(bts, &mi_imsi2, mi_imsi2.imsi);
+	fprintf(stderr, "Starting PCH timer for 1 TMSI\n");
+	bts_pch_timer_start(bts, &mi_tmsi1, "6666");
 
 	fprintf(stderr, "Deallocating BTS, expecting the PCH timer to be stopped and deallocated\n");
 	talloc_free(bts);
