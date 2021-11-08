@@ -9076,6 +9076,7 @@ TBF{NEW}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
 UL_ACK_TBF{NONE}: Allocated
+TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NEW) Setting Control TS 7
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NEW)
 TBF{NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
@@ -9106,6 +9107,7 @@ TBF{NEW}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
 UL_ACK_TBF{NONE}: Allocated
+TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NEW) Setting Control TS 7
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NEW)
 TBF{NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
