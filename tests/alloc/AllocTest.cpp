@@ -806,15 +806,17 @@ static void test_2_consecutive_dl_tbfs()
 static void test_bts_pch_timer(void)
 {
 	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
-	const char *imsi1 = "1234";
-	const char *imsi2 = "5678";
+	struct osmo_mobile_identity mi_imsi1, mi_imsi2;
+	mi_imsi1.type = mi_imsi2.type = GSM_MI_TYPE_IMSI;
+	OSMO_STRLCPY_ARRAY(mi_imsi1.imsi, "1234");
+	OSMO_STRLCPY_ARRAY(mi_imsi2.imsi, "5678");
 
 	fprintf(stderr, "Testing bts_pch_timer dealloc on bts dealloc\n");
 	log_set_category_filter(osmo_stderr_target, DPCU, 1, LOGL_DEBUG);
 
 	fprintf(stderr, "Starting PCH timer for 2 IMSI\n");
-	bts_pch_timer_start(bts, imsi1);
-	bts_pch_timer_start(bts, imsi2);
+	bts_pch_timer_start(bts, &mi_imsi1, mi_imsi1.imsi);
+	bts_pch_timer_start(bts, &mi_imsi2, mi_imsi2.imsi);
 
 	fprintf(stderr, "Deallocating BTS, expecting the PCH timer to be stopped and deallocated\n");
 	talloc_free(bts);

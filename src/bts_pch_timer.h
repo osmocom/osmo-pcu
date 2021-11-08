@@ -32,11 +32,15 @@ struct bts_pch_timer {
 	struct llist_head entry;
 	struct gprs_rlcmac_bts *bts;
 	struct osmo_timer_list T3113;
+	uint32_t ptmsi; /* GSM_RESERVED_TMSI if not available */
 	char imsi[OSMO_IMSI_BUF_SIZE];
 };
 
-void bts_pch_timer_start(struct gprs_rlcmac_bts *bts, const char *imsi);
-void bts_pch_timer_stop(struct gprs_rlcmac_bts *bts, const char *imsi);
+struct GprsMs;
+
+void bts_pch_timer_start(struct gprs_rlcmac_bts *bts, const struct osmo_mobile_identity *mi_paging,
+			 const char *imsi);
+void bts_pch_timer_stop(struct gprs_rlcmac_bts *bts, const struct GprsMs *ms);
 void bts_pch_timer_stop_all(struct gprs_rlcmac_bts *bts);
 
 #ifdef __cplusplus

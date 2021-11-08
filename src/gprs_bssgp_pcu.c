@@ -39,6 +39,7 @@
 #include "tbf_dl.h"
 #include "llc.h"
 #include "gprs_rlcmac.h"
+#include "bts_pch_timer.h"
 
 /* Tuning parameters for BSSGP flow control */
 #define FC_DEFAULT_LIFE_TIME_SECS 10		/* experimental value, 10s */
@@ -319,7 +320,9 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, const struct tlv_parsed
 
 	/* FIXME: look if MS is attached a specific BTS and then only page on that one? */
 	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
-		gprs_rlcmac_paging_request(bts, &paging_mi, pgroup);
+		if (gprs_rlcmac_paging_request(bts, &paging_mi, pgroup) < 0)
+			continue;
+		bts_pch_timer_start(bts, &paging_mi, mi_imsi.imsi);
 	}
 	return 0;
 }

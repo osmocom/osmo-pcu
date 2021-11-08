@@ -26,8 +26,22 @@
 #include <gprs_debug.h>
 #include <gprs_pcu.h>
 #include <bts_pch_timer.h>
+#include <gprs_ms.h>
 
-static struct bts_pch_timer *bts_pch_timer_get(struct gprs_rlcmac_bts *bts, const char *imsi)
+static struct bts_pch_timer *bts_pch_timer_get_by_ptmsi(struct gprs_rlcmac_bts *bts, uint32_t ptmsi)
+{
+	struct bts_pch_timer *p;
+	OSMO_ASSERT(ptmsi != GSM_RESERVED_TMSI);
+
+	llist_for_each_entry(p, &bts->pch_timer, entry) {
+		if (p->ptmsi != GSM_RESERVED_TMSI && p->ptmsi == ptmsi)
+			return p;
+	}
+
+	return NULL;
+}
+
+static struct bts_pch_timer *bts_pch_timer_get_by_imsi(struct gprs_rlcmac_bts *bts, const char *imsi)
 {
 	struct bts_pch_timer *p;
 
@@ -57,29 +71,46 @@ static void T3113_callback(void *data)
 	bts_pch_timer_remove(p);
 }
 
-void bts_pch_timer_start(struct gprs_rlcmac_bts *bts, const char *imsi)
+void bts_pch_timer_start(struct gprs_rlcmac_bts *bts, const struct osmo_mobile_identity *mi_paging,
+			 const char *imsi)
 {
-	if (bts_pch_timer_get(bts, imsi))
+	struct bts_pch_timer *p;
+	struct osmo_tdef *tdef;
+
+	/* We already have a timer running for this IMSI */
+	if (bts_pch_timer_get_by_imsi(bts, imsi))
 		return;
 
-	struct bts_pch_timer *p;
 	p = talloc_zero(bts, struct bts_pch_timer);
 	llist_add_tail(&p->entry, &bts->pch_timer);
-	osmo_strlcpy(p->imsi, imsi, sizeof(p->imsi));
 	p->bts = bts;
+	OSMO_STRLCPY_ARRAY(p->imsi, imsi);
+	p->ptmsi = (mi_paging->type == GSM_MI_TYPE_TMSI) ? mi_paging->tmsi : GSM_RESERVED_TMSI;
 
-	struct osmo_tdef *tdef = osmo_tdef_get_entry(the_pcu->T_defs, 3113);
+	tdef = osmo_tdef_get_entry(the_pcu->T_defs, 3113);
 	OSMO_ASSERT(tdef);
 	osmo_timer_setup(&p->T3113, T3113_callback, p);
 	osmo_timer_schedule(&p->T3113, tdef->val, 0);
 
-	LOGP(DPCU, LOGL_DEBUG, "PCH paging timer started for IMSI=%s\n", p->imsi);
+	if (log_check_level(DPCU, LOGL_DEBUG)) {
+		char str[64];
+		osmo_mobile_identity_to_str_buf(str, sizeof(str), mi_paging);
+		LOGP(DPCU, LOGL_DEBUG, "PCH paging timer started for MI=%s IMSI=%s\n", str, p->imsi);
+	}
 }
 
-void bts_pch_timer_stop(struct gprs_rlcmac_bts *bts, const char *imsi)
+void bts_pch_timer_stop(struct gprs_rlcmac_bts *bts, const struct GprsMs *ms)
 {
-	struct bts_pch_timer *p = bts_pch_timer_get(bts, imsi);
+	struct bts_pch_timer *p = NULL;
+	uint32_t tlli = ms_tlli(ms);
+	const char *imsi = ms_imsi(ms);
 
+	/* First try matching by TMSI if available in MS */
+	if (tlli != GSM_RESERVED_TMSI)
+		p = bts_pch_timer_get_by_ptmsi(bts, tlli);
+	/* Otherwise try matching by IMSI if available in MS */
+	if (!p && imsi[0] != '\0')
+		p = bts_pch_timer_get_by_imsi(bts, imsi);
 	if (p)
 		bts_pch_timer_remove(p);
 }
