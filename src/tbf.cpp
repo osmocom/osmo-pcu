@@ -524,7 +524,7 @@ int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 	}
 
 	if ((rc = pdch_ulc_get_next_free_rrbp_fn(trx->pdch[ts].ulc, fn, poll_fn_, rrbp_)) < 0) {
-		LOGPTBF(this, LOGL_DEBUG,
+		LOGPTBF(this, LOGL_NOTICE,
 			"(bts=%u,trx=%u,ts=%u) FN=%u No suitable free RRBP offset found!\n",
 			trx->bts->nr, trx->trx_no, ts, fn);
 		return rc;
