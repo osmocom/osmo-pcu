@@ -126,7 +126,7 @@ static inline void sched_ul_ass_or_rej(struct gprs_rlcmac_bts *bts, struct gprs_
 		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack message, so we provide one:\n");
 		osmo_fsm_inst_dispatch(tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_SCHED_ASS, NULL);
 	} else {
-		LOGP(DRLCMAC, LOGL_DEBUG, "MS requests UL TBF in ack message, so we packet access reject:\n");
+		LOGP(DRLCMAC, LOGL_NOTICE, "MS requests UL TBF in ack message, but alloc failed: send PktAssRej\n");
 		osmo_fsm_inst_dispatch(tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_SCHED_ASS_REJ, NULL);
 	}
 }
