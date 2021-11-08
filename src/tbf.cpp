@@ -101,7 +101,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	num_fT_exp(0),
 	upgrade_to_multislot(false),
 	bts(bts_),
-	m_tfi(0),
+	m_tfi(TBF_TFI_UNSET),
 	m_created_ts(0),
 	m_ctrs(NULL),
 	m_ms(ms),
@@ -719,9 +719,10 @@ const char *tbf_name(const gprs_rlcmac_tbf *tbf)
 
 const char *gprs_rlcmac_tbf::name() const
 {
+	int8_t tfi = m_tfi == TBF_TS_UNSET ? -1 : m_tfi;
 	snprintf(m_name_buf, sizeof(m_name_buf) - 1,
 		"TBF(TFI=%d TLLI=0x%08x DIR=%s STATE=%s%s)",
-		m_tfi, tlli(),
+		tfi, tlli(),
 		direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
 		state_name(),
 		is_egprs_enabled() ? " EGPRS" : ""

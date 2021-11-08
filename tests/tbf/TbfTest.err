@@ -1601,7 +1601,7 @@ UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
 [DL] algo A <single> (suggested TRX: -1): Alloc start
 [DL] algo A <single> (suggested TRX: -1): failed to find a usable TRX (TFI exhausted)
-TBF(TFI=0 TLLI=0xc0000020 DIR=DL STATE=NEW) Timeslot Allocation failed: trx = -1, single_slot = 1
+TBF(TFI=-1 TLLI=0xc0000020 DIR=DL STATE=NEW) Timeslot Allocation failed: trx = -1, single_slot = 1
 TBF{NEW}: Deallocated
 UL_ASS_TBF{NONE}: Deallocated
 DL_ASS_TBF{NONE}: Deallocated
@@ -7320,7 +7320,7 @@ UL_ACK_TBF{NONE}: Allocated
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because no USF available
 [UL] algo A <single> (suggested TRX: -1): failed to allocate a TS, no USF available
-TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NEW) Timeslot Allocation failed: trx = -1, single_slot = 1
+TBF(TFI=-1 TLLI=0xffffffff DIR=UL STATE=NEW) Timeslot Allocation failed: trx = -1, single_slot = 1
 UL_ACK_TBF{NONE}: Deallocated
 TBF{NEW}: Deallocated
 UL_ASS_TBF{NONE}: Deallocated
@@ -9066,7 +9066,7 @@ UL_ACK_TBF{NONE}: Allocated
 - Skipping TS 6, because not enabled
 - Skipping TS 7, because no USF available
 [UL] algo A <multi> (suggested TRX: 0): failed to allocate a TS, no USF available
-TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NEW EGPRS) Timeslot Allocation failed: trx = 0, single_slot = 0
+TBF(TFI=-1 TLLI=0xffeeddd3 DIR=UL STATE=NEW EGPRS) Timeslot Allocation failed: trx = 0, single_slot = 0
 UL_ACK_TBF{NONE}: Deallocated
 TBF{NEW}: Deallocated
 UL_ASS_TBF{NONE}: Deallocated
@@ -9076,12 +9076,12 @@ TBF{NEW}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
 UL_ACK_TBF{NONE}: Allocated
-TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NEW) Setting Control TS 7
-MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NEW)
+TBF(TFI=-1 TLLI=0xffeeddd3 DIR=UL STATE=NEW) Setting Control TS 7
+MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=-1 TLLI=0xffeeddd3 DIR=UL STATE=NEW)
 TBF{NEW}: Received Event ASSIGN_ADD_PACCH
-TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
+TBF(TFI=-1 TLLI=0xffeeddd3 DIR=UL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF{NEW}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xffeeddd3 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(TFI=-1 TLLI=0xffeeddd3 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 UL_ASS_TBF{NONE}: Received Event SCHED_ASS_REJ
 UL_ASS_TBF{NONE}: state_chg to SEND_ASS_REJ
 PDCH(bts=0,trx=0,ts=7) Expiring FN=82 but previous FN=2654231 is still reserved!
@@ -9107,21 +9107,21 @@ TBF{NEW}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
 UL_ACK_TBF{NONE}: Allocated
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NEW) Setting Control TS 7
-MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NEW)
+TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=NEW) Setting Control TS 7
+MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=NEW)
 TBF{NEW}: Received Event ASSIGN_ADD_PACCH
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
+TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF{NEW}: state_chg to ASSIGN
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
+TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 UL_ASS_TBF{NONE}: Received Event SCHED_ASS_REJ
 UL_ASS_TBF{NONE}: state_chg to SEND_ASS_REJ
 UL_ASS_TBF{SEND_ASS_REJ}: Received Event CREATE_RLCMAC_MSG
 UL_ASS_TBF{SEND_ASS_REJ}: state_chg to NONE
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) starting timer X2000 [reject (PACCH)] with 0 sec. 0 microsec
-PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
+TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) starting timer X2000 [reject (PACCH)] with 0 sec. 0 microsec
+PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
 UL_ASS_TBF{NONE}: Timeout of X2000
-TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) free
-MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
+TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) free
+MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Destroying MS object
 ********** UL-TBF ends here **********
 UL_ACK_TBF{NONE}: Deallocated
