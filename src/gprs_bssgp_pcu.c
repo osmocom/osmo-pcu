@@ -320,6 +320,11 @@ static int gprs_bssgp_pcu_rx_paging_ps(struct msgb *msg, const struct tlv_parsed
 
 	/* FIXME: look if MS is attached a specific BTS and then only page on that one? */
 	llist_for_each_entry(bts, &the_pcu->bts_list, list) {
+		if (bts_pch_timer_get_by_imsi(bts, mi_imsi.imsi)) {
+			LOGP(DBSSGP, LOGL_INFO, "PS-Paging request already pending for IMSI=%s\n", mi_imsi.imsi);
+			bts_do_rate_ctr_inc(bts, CTR_PCH_REQUESTS_ALREADY);
+			continue;
+		}
 		if (gprs_rlcmac_paging_request(bts, &paging_mi, pgroup) < 0)
 			continue;
 		bts_pch_timer_start(bts, &paging_mi, mi_imsi.imsi);

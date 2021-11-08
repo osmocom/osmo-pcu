@@ -134,6 +134,7 @@ static const struct rate_ctr_desc bts_ctr_description[] = {
 	{ "llc:dl_bytes",               "RLC encapsulated PDUs"},
 	{ "llc:ul_bytes",               "full PDUs received   "},
 	{ "pch:requests",		"PCH requests sent    "},
+	{ "pch:requests:already",	"PCH requests on subscriber already being paged"},
 	{ "pch:requests:timeout",	"PCH requests timeout "},
 	{ "rach:requests",		"RACH requests received"},
 	{ "rach:requests:11bit",	"11BIT_RACH requests received"},

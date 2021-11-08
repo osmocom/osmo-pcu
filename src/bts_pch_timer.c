@@ -41,7 +41,7 @@ static struct bts_pch_timer *bts_pch_timer_get_by_ptmsi(struct gprs_rlcmac_bts *
 	return NULL;
 }
 
-static struct bts_pch_timer *bts_pch_timer_get_by_imsi(struct gprs_rlcmac_bts *bts, const char *imsi)
+struct bts_pch_timer *bts_pch_timer_get_by_imsi(struct gprs_rlcmac_bts *bts, const char *imsi)
 {
 	struct bts_pch_timer *p;
 
@@ -76,10 +76,6 @@ void bts_pch_timer_start(struct gprs_rlcmac_bts *bts, const struct osmo_mobile_i
 {
 	struct bts_pch_timer *p;
 	struct osmo_tdef *tdef;
-
-	/* We already have a timer running for this IMSI */
-	if (bts_pch_timer_get_by_imsi(bts, imsi))
-		return;
 
 	p = talloc_zero(bts, struct bts_pch_timer);
 	llist_add_tail(&p->entry, &bts->pch_timer);

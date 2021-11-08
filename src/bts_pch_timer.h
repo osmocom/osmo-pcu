@@ -42,6 +42,7 @@ void bts_pch_timer_start(struct gprs_rlcmac_bts *bts, const struct osmo_mobile_i
 			 const char *imsi);
 void bts_pch_timer_stop(struct gprs_rlcmac_bts *bts, const struct GprsMs *ms);
 void bts_pch_timer_stop_all(struct gprs_rlcmac_bts *bts);
+struct bts_pch_timer *bts_pch_timer_get_by_imsi(struct gprs_rlcmac_bts *bts, const char *imsi);
 
 #ifdef __cplusplus
 }
