@@ -734,9 +734,10 @@ const char *gprs_rlcmac_tbf::name() const
 void tbf_update_state_fsm_name(struct gprs_rlcmac_tbf *tbf)
 {
 	char buf[64];
+	int8_t tfi = (tbf_tfi(tbf) == TBF_TS_UNSET) ? -1 : tbf_tfi(tbf);
 	snprintf(buf, sizeof(buf), "%s-TFI_%d",
 		 tbf_direction(tbf) == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
-		 tbf_tfi(tbf));
+		 tfi);
 	osmo_identifier_sanitize_buf(buf, NULL, '_');
 
 	osmo_fsm_inst_update_id(tbf->state_fsm.fi, buf);

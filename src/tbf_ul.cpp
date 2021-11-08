@@ -221,6 +221,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 		talloc_free(ul_tbf);
 		return NULL;
 	}
+	tbf_update_state_fsm_name(ul_tbf);
 
 	ms_attach_tbf(ms, ul_tbf);
 	llist_add(tbf_trx_list((struct gprs_rlcmac_tbf *)ul_tbf), &trx->ul_tbfs);

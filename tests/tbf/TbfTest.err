@@ -9078,12 +9078,12 @@ DL_ASS_TBF{NONE}: Allocated
 UL_ACK_TBF{NONE}: Allocated
 TBF(TFI=-1 TLLI=0xffeeddd3 DIR=UL STATE=NEW) Setting Control TS 7
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Attaching UL TBF: TBF(TFI=-1 TLLI=0xffeeddd3 DIR=UL STATE=NEW)
-TBF{NEW}: Received Event ASSIGN_ADD_PACCH
+TBF(UL-TFI_-1){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=-1 TLLI=0xffeeddd3 DIR=UL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
-TBF{NEW}: state_chg to ASSIGN
+TBF(UL-TFI_-1){NEW}: state_chg to ASSIGN
 TBF(TFI=-1 TLLI=0xffeeddd3 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-UL_ASS_TBF{NONE}: Received Event SCHED_ASS_REJ
-UL_ASS_TBF{NONE}: state_chg to SEND_ASS_REJ
+UL_ASS_TBF(UL-TFI_-1){NONE}: Received Event SCHED_ASS_REJ
+UL_ASS_TBF(UL-TFI_-1){NONE}: state_chg to SEND_ASS_REJ
 PDCH(bts=0,trx=0,ts=7) Expiring FN=82 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 82)
@@ -9109,23 +9109,23 @@ DL_ASS_TBF{NONE}: Allocated
 UL_ACK_TBF{NONE}: Allocated
 TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=NEW) Setting Control TS 7
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=NEW)
-TBF{NEW}: Received Event ASSIGN_ADD_PACCH
+TBF(UL-TFI_-1){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
-TBF{NEW}: state_chg to ASSIGN
+TBF(UL-TFI_-1){NEW}: state_chg to ASSIGN
 TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-UL_ASS_TBF{NONE}: Received Event SCHED_ASS_REJ
-UL_ASS_TBF{NONE}: state_chg to SEND_ASS_REJ
-UL_ASS_TBF{SEND_ASS_REJ}: Received Event CREATE_RLCMAC_MSG
-UL_ASS_TBF{SEND_ASS_REJ}: state_chg to NONE
+UL_ASS_TBF(UL-TFI_-1){NONE}: Received Event SCHED_ASS_REJ
+UL_ASS_TBF(UL-TFI_-1){NONE}: state_chg to SEND_ASS_REJ
+UL_ASS_TBF(UL-TFI_-1){SEND_ASS_REJ}: Received Event CREATE_RLCMAC_MSG
+UL_ASS_TBF(UL-TFI_-1){SEND_ASS_REJ}: state_chg to NONE
 TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) starting timer X2000 [reject (PACCH)] with 0 sec. 0 microsec
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
-UL_ASS_TBF{NONE}: Timeout of X2000
+UL_ASS_TBF(UL-TFI_-1){NONE}: Timeout of X2000
 TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN) free
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Detaching TBF: TBF(TFI=-1 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN)
 MS(TLLI=0xffeeddcc, IMSI=, TA=220, 0/0,) Destroying MS object
 ********** UL-TBF ends here **********
-UL_ACK_TBF{NONE}: Deallocated
-TBF{ASSIGN}: Deallocated
-UL_ASS_TBF{NONE}: Deallocated
-DL_ASS_TBF{NONE}: Deallocated
+UL_ACK_TBF(UL-TFI_-1){NONE}: Deallocated
+TBF(UL-TFI_-1){ASSIGN}: Deallocated
+UL_ASS_TBF(UL-TFI_-1){NONE}: Deallocated
+DL_ASS_TBF(UL-TFI_-1){NONE}: Deallocated
 === end test_packet_access_rej_prr_no_other_tbfs ===
