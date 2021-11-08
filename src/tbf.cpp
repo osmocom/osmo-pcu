@@ -137,6 +137,8 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	m_llc.init();
 
 	m_name_buf[0] = '\0';
+
+	m_created_ts = time(NULL);
 }
 
 
@@ -657,7 +659,6 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 	if (ms_mode(m_ms) != GPRS)
 		enable_egprs();
 
-	m_created_ts = time(NULL);
 	/* select algorithm */
 	rc = the_pcu->alloc_algorithm(bts, this, single_slot, use_trx);
 	/* if no resource */
