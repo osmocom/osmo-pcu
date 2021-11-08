@@ -719,7 +719,7 @@ const char *tbf_name(const gprs_rlcmac_tbf *tbf)
 
 const char *gprs_rlcmac_tbf::name() const
 {
-	int8_t tfi = m_tfi == TBF_TS_UNSET ? -1 : m_tfi;
+	int8_t tfi = (m_tfi == TBF_TS_UNSET) ? -1 : m_tfi;
 	snprintf(m_name_buf, sizeof(m_name_buf) - 1,
 		"TBF(TFI=%d TLLI=0x%08x DIR=%s STATE=%s%s)",
 		tfi, tlli(),
