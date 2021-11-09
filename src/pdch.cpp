@@ -1135,6 +1135,11 @@ void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
 {
 	gprs_rlcmac_ul_tbf *ul_tbf;
 
+	LOGPDCH(this, DRLCMAC, LOGL_INFO, "Detaching %s, %d TBFs, "
+		"USFs = %02x, TFIs = %08x.\n",
+		tbf->name(), num_tbfs(tbf->direction),
+		m_assigned_usf, m_assigned_tfi[tbf->direction]);
+
 	if (tbf->is_egprs_enabled()) {
 		OSMO_ASSERT(m_num_tbfs_egprs[tbf->direction] > 0);
 	} else {
@@ -1150,11 +1155,6 @@ void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
 	m_tbfs[tbf->direction][tbf->tfi()] = NULL;
 
 	pdch_ulc_release_tbf(ulc, tbf);
-
-	LOGPDCH(this, DRLCMAC, LOGL_INFO, "Detaching %s, %d TBFs, "
-		"USFs = %02x, TFIs = %08x.\n",
-		tbf->name(), num_tbfs(tbf->direction),
-		m_assigned_usf, m_assigned_tfi[tbf->direction]);
 }
 
 bool gprs_rlcmac_pdch::has_gprs_only_tbf_attached() const
