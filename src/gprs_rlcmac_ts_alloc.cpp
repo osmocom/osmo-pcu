@@ -659,12 +659,12 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
  *  \param[in] slots Timeslots in use
  *  \param[in] reserved_slots Reserved timeslots
  *  \param[out] slotcount Number of TS in use
- *  \param[out] avail_count Number of reserved TS
+ *  \param[out] reserve_count Number of reserved TS
  */
-static void count_slots(uint8_t slots, uint8_t reserved_slots, uint8_t *slotcount, uint8_t *avail_count)
+static void count_slots(uint8_t slots, uint8_t reserved_slots, uint8_t *slotcount, uint8_t *reserve_count)
 {
 	(*slotcount) = pcu_bitcount(slots);
-	(*avail_count) = pcu_bitcount(reserved_slots);
+	(*reserve_count) = pcu_bitcount(reserved_slots);
 }
 
 /*! Return slot mask with single TS from a given UL/DL set according to TBF's direction, ts pointer is set to that TS
@@ -867,7 +867,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	uint8_t reserved_ul_slots;
 	int8_t first_common_ts;
 	uint8_t slotcount = 0;
-	uint8_t avail_count = 0, trx_no;
+	uint8_t reserve_count = 0, trx_no;
 	int first_ts = -1;
 	int usf[8] = {-1, -1, -1, -1, -1, -1, -1, -1};
 	int rc;
@@ -910,7 +910,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	/* Step 3b: Derive the slot set for a given direction */
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
 		dl_slots = rc;
-		count_slots(dl_slots, reserved_dl_slots, &slotcount, &avail_count);
+		count_slots(dl_slots, reserved_dl_slots, &slotcount, &reserve_count);
 	} else {
 		rc = allocate_usf(trx, rc, dl_slots, usf);
 		if (rc < 0)
@@ -919,7 +919,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 		ul_slots = rc;
 		reserved_ul_slots = ul_slots;
 
-		count_slots(ul_slots, reserved_ul_slots, &slotcount, &avail_count);
+		count_slots(ul_slots, reserved_ul_slots, &slotcount, &reserve_count);
 	}
 
 	first_ts = ffs(rc) - 1;
@@ -936,7 +936,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	}
 
 	if (single && slotcount) {
-		tbf->upgrade_to_multislot = (avail_count > slotcount);
+		tbf->upgrade_to_multislot = (reserve_count > slotcount);
 		LOGPAL(tbf, "B", single, use_trx, LOGL_INFO, "using single slot at TS %d\n", first_ts);
 	} else {
 		tbf->upgrade_to_multislot = false;
