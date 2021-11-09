@@ -143,6 +143,7 @@ void pdch_init(struct gprs_rlcmac_pdch *pdch, struct gprs_rlcmac_trx *trx, uint8
 
 void gprs_rlcmac_pdch::enable()
 {
+	LOGPDCH(this, DRLCMAC, LOGL_INFO, "PDCH state: %s => enabled\n", m_is_enabled ? "enabled" : "disabled");
 	OSMO_ASSERT(m_is_enabled == 0);
 	INIT_LLIST_HEAD(&paging_list);
 
@@ -155,6 +156,7 @@ void gprs_rlcmac_pdch::enable()
 
 void gprs_rlcmac_pdch::disable()
 {
+	LOGPDCH(this, DRLCMAC, LOGL_INFO, "PDCH state: %s => disabled\n", m_is_enabled ? "enabled" : "disabled");
 	OSMO_ASSERT(m_is_enabled == 1);
 	this->free_resources();
 

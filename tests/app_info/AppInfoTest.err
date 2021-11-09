@@ -10,6 +10,10 @@ Application Information Request received: type=0x00000000 len=0
 Packet Application Information will not be sent, no subscribers with active TBF
 
 --- prepare_bts_with_two_dl_tbf_subscr ---
+PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
+PDCH(bts=0,trx=0,ts=5) PDCH state: disabled => enabled
+PDCH(bts=0,trx=0,ts=6) PDCH state: disabled => enabled
+PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 10
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
