@@ -131,6 +131,32 @@ static inline void sched_ul_ass_or_rej(struct gprs_rlcmac_bts *bts, struct gprs_
 	}
 }
 
+/* Make sure the PDCH vanished from the mask of reserved PDCHs for all MS, to
+ * avoid alloc_algorithm using it. */
+static void pdch_unreserve_all_ms_reserved_slots(struct gprs_rlcmac_pdch *pdch)
+{
+	struct llist_head *tmp;
+	uint8_t ts_rm_mask = (~(1 << pdch->ts_no));
+	struct gprs_rlcmac_trx *trx = pdch->trx;
+
+	llist_for_each(tmp, bts_ms_list(trx->bts)) {
+		struct GprsMs *ms = llist_entry(tmp, typeof(*ms), list);
+		if (ms->current_trx != trx)
+			continue;
+		uint8_t old_dl_slots = ms_reserved_dl_slots(ms);
+		uint8_t old_ul_slots = ms_reserved_ul_slots(ms);
+		uint8_t new_dl_slots = old_dl_slots & ts_rm_mask;
+		uint8_t new_ul_slots = old_ul_slots & ts_rm_mask;
+		if (old_dl_slots == new_dl_slots && old_ul_slots == new_ul_slots)
+			continue;
+		ms_set_reserved_slots(ms, trx, new_ul_slots, new_dl_slots);
+	}
+	if (pdch->num_reserved(GPRS_RLCMAC_UL_TBF) > 0 || pdch->num_reserved(GPRS_RLCMAC_DL_TBF) > 0)
+		LOGPDCH(pdch, DRLCMAC, LOGL_ERROR,
+			"Reserved TS count not zero after unreserving from all current MS in list! UL=%u DL=%u\n",
+			pdch->num_reserved(GPRS_RLCMAC_UL_TBF), pdch->num_reserved(GPRS_RLCMAC_DL_TBF));
+}
+
 void pdch_init(struct gprs_rlcmac_pdch *pdch, struct gprs_rlcmac_trx *trx, uint8_t ts_nr)
 {
 	pdch->ts_no = ts_nr;
@@ -170,6 +196,8 @@ void gprs_rlcmac_pdch::free_resources()
 
 	/* kick all TBF on slot */
 	pdch_free_all_tbf(this);
+
+	pdch_unreserve_all_ms_reserved_slots(this);
 
 	/* flush all pending paging messages */
 	while ((pag = dequeue_paging()))
