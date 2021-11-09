@@ -298,20 +298,21 @@ static bool idle_pdch_avail(const struct gprs_rlcmac_bts *bts)
 /*! Return free TFI
  *
  *  \param[in] bts Pointer to BTS struct
- *  \param[in] trx Optional pointer to TRX struct
  *  \param[in] ms Pointer to MS object
  *  \param[in] dir DL or UL direction
  *  \param[in] use_trx which TRX to use or -1 if it should be selected based on what MS uses
  *  \param[out] trx_no_ TRX number on which TFI was found
  *  \returns negative error code or 0 on success
  */
-static int tfi_find_free(const struct gprs_rlcmac_bts *bts, const gprs_rlcmac_trx *trx, const GprsMs *ms,
+static int tfi_find_free(const struct gprs_rlcmac_bts *bts, const GprsMs *ms,
 			 enum gprs_rlcmac_tbf_direction dir, int8_t use_trx, uint8_t *trx_no_)
 {
+	const struct gprs_rlcmac_trx *trx;
 	int tfi;
 	uint8_t trx_no;
 
-	if (trx) {
+	/* If MS is already doing stuff on a TRX, set use_trx to it: */
+	if ((trx = ms_current_trx(ms))) {
 		if (use_trx >= 0 && use_trx != trx->trx_no) {
 			LOGP(DRLCMAC, LOGL_ERROR, "- Requested incompatible TRX %d (current is %d)\n",
 			     use_trx, trx->trx_no);
@@ -319,9 +320,6 @@ static int tfi_find_free(const struct gprs_rlcmac_bts *bts, const gprs_rlcmac_tr
 		}
 		use_trx = trx->trx_no;
 	}
-
-	if (use_trx == -1 && ms_current_trx(ms))
-		use_trx = ms_current_trx(ms)->trx_no;
 
 	tfi = bts_tfi_find_free(bts, dir, &trx_no, use_trx);
 	if (tfi < 0)
@@ -884,18 +882,16 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	reserved_dl_slots = ms_reserved_dl_slots(ms);
 	reserved_ul_slots = ms_reserved_ul_slots(ms);
 	first_common_ts = ms_first_common_ts(ms);
-	trx = ms_current_trx(ms);
 
 	/* Step 2a: Find usable TRX and TFI */
-	tfi = tfi_find_free(bts, trx, ms, tbf->direction, use_trx, &trx_no);
+	tfi = tfi_find_free(bts, ms, tbf->direction, use_trx, &trx_no);
 	if (tfi < 0) {
 		LOGPAL(tbf, "B", single, use_trx, LOGL_NOTICE, "failed to allocate a TFI\n");
 		return tfi;
 	}
 
 	/* Step 2b: Reserve slots on the TRX for the MS */
-	if (!trx)
-		trx = &bts->trx[trx_no];
+	trx = &bts->trx[trx_no];
 
 	if (!reserved_dl_slots || !reserved_ul_slots) {
 		rc = find_multi_slots(trx, ms_ms_class(ms), &reserved_ul_slots, &reserved_dl_slots);
