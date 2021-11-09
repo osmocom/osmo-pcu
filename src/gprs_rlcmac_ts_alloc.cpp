@@ -661,7 +661,7 @@ int find_multi_slots(struct gprs_rlcmac_trx *trx, uint8_t mslot_class, uint8_t *
  *  \param[out] slotcount Number of TS in use
  *  \param[out] avail_count Number of reserved TS
  */
-static void update_slot_counters(uint8_t slots, uint8_t reserved_slots, uint8_t *slotcount, uint8_t *avail_count)
+static void count_slots(uint8_t slots, uint8_t reserved_slots, uint8_t *slotcount, uint8_t *avail_count)
 {
 	(*slotcount) = pcu_bitcount(slots);
 	(*avail_count) = pcu_bitcount(reserved_slots);
@@ -910,7 +910,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	/* Step 3b: Derive the slot set for a given direction */
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF) {
 		dl_slots = rc;
-		update_slot_counters(dl_slots, reserved_dl_slots, &slotcount, &avail_count);
+		count_slots(dl_slots, reserved_dl_slots, &slotcount, &avail_count);
 	} else {
 		rc = allocate_usf(trx, rc, dl_slots, usf);
 		if (rc < 0)
@@ -919,7 +919,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 		ul_slots = rc;
 		reserved_ul_slots = ul_slots;
 
-		update_slot_counters(ul_slots, reserved_ul_slots, &slotcount, &avail_count);
+		count_slots(ul_slots, reserved_ul_slots, &slotcount, &avail_count);
 	}
 
 	first_ts = ffs(rc) - 1;
