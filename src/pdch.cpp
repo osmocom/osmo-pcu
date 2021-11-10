@@ -763,7 +763,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		 * sent to tbf_fsm which will call tbf_assign_control_ts(),
 		 * effectively setting back control_ts to
 		 * tbf->initial_common_ts. */
-		LOGPTBF(ul_tbf, LOGL_DEBUG, "change control TS %d -> %d until assignment is complete.\n",
+		LOGPTBF(ul_tbf, LOGL_INFO, "change control TS %d -> %d until assignment is complete.\n",
 			ul_tbf->control_ts, ts_no);
 
 		ul_tbf->control_ts = ts_no;
