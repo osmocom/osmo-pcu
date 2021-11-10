@@ -680,6 +680,16 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				"MS requests UL TBF throguh SBA\n", fn);
 			ms_set_ta(ms, sba->ta);
 			sba_free(sba);
+			/* If MS identified by TLLI sent us a PktResReq through SBA, it means it came
+			 * from CCCH, so it's for sure not using previous UL
+			 * TBF; drop it if it still exits on our end: */
+			if ((ul_tbf = ms_ul_tbf(ms))) {
+				/* Get rid of previous finished UL TBF before providing a new one */
+				LOGPTBFUL(ul_tbf, LOGL_NOTICE,
+					  "Got PACKET RESOURCE REQ while TBF not finished, killing pending UL TBF\n");
+				tbf_free(ul_tbf);
+				ul_tbf = NULL;
+			}
 			/* MS seized the PDCH answering on the SBA: */
 			bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_CONTENTION_RESOLUTION_SUCCESS);
 			break;
