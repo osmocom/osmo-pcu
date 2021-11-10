@@ -32,6 +32,7 @@ extern "C" {
 #include <osmocom/core/rate_ctr.h>
 #include <osmocom/core/stat_item.h>
 #include <osmocom/core/tdef.h>
+#include <osmocom/core/time_cc.h>
 #include <osmocom/gprs/gprs_ns2.h>
 #include <osmocom/gsm/l1sap.h>
 #include <osmocom/gsm/protocol/gsm_04_08.h>
@@ -84,6 +85,7 @@ void bts_update_tbf_ta(struct gprs_rlcmac_bts *bts, const char *p, uint32_t fn,
 
 
 enum {
+	CTR_PDCH_ALL_ALLOCATED,
 	CTR_TBF_DL_ALLOCATED,
 	CTR_TBF_DL_FREED,
 	CTR_TBF_DL_ABORTED,
@@ -278,6 +280,8 @@ struct gprs_rlcmac_bts {
 
 	/* List of struct bts_pch_timer for active PCH pagings */
 	struct llist_head pch_timer;
+
+	struct osmo_time_cc all_allocated_pdch;
 };
 
 #ifdef __cplusplus
@@ -381,6 +385,7 @@ void bts_set_max_mcs_ul(struct gprs_rlcmac_bts *bts, uint8_t mcs_ul);
 bool bts_cs_dl_is_supported(const struct gprs_rlcmac_bts *bts, enum CodingScheme cs);
 const struct llist_head* bts_ms_list(struct gprs_rlcmac_bts *bts);
 uint8_t bts_get_ms_pwr_alpha(const struct gprs_rlcmac_bts *bts);
+bool bts_all_pdch_allocated(const struct gprs_rlcmac_bts *bts);
 #ifdef __cplusplus
 }
 #endif

@@ -83,6 +83,20 @@ static struct osmo_tdef T_defs_bts[] = {
 	{ .T=3191, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of TFI(s) after sending (1) last RLC Data Block on TBF(s), or (2) PACKET TBF RELEASE for an MBMS radio bearer", .val=0 },
 	{ .T=3193, .default_val=100, .unit=OSMO_TDEF_MS, .desc="Reuse of TFI(s) after reception of final PACKET DOWNLINK ACK/NACK from MS for TBF", .val=0 },
 	{ .T=3195, .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Reuse of TFI(s) upon no response from the MS (radio failure or cell change) for TBF/MBMS radio bearer", .val=0 },
+	{ .T = -16, .default_val = 1000, .unit = OSMO_TDEF_MS,
+		.desc = "Granularity for *:all_allocated rate counters: amount of milliseconds that one counter increment"
+			" represents. See also X17, X18" },
+	{ .T = -17, .default_val = 0, .unit = OSMO_TDEF_MS,
+		.desc = "Rounding threshold for *:all_allocated rate counters: round up to the next counter increment"
+			" after this many milliseconds. If set to half of X16 (or 0), employ the usual round() behavior:"
+			" round up after half of a granularity period. If set to 1, behave like ceil(): already"
+			" increment the counter immediately when all channels are allocated. If set >= X16, behave like"
+			" floor(): only increment after a full X16 period of all channels being occupied."
+			" See also X16, X18" },
+	{ .T = -18, .default_val = 60000, .unit = OSMO_TDEF_MS,
+		.desc = "Forget-sum period for *:all_allocated rate counters:"
+			" after this amount of idle time, forget internally cumulated time remainders. Zero to always"
+			" keep remainders. See also X16, X17." },
 	{ .T=0, .default_val=0, .unit=OSMO_TDEF_S, .desc=NULL, .val=0 } /* empty item at the end */
 };
 
@@ -92,6 +106,7 @@ static struct osmo_tdef T_defs_bts[] = {
  * the code below.
  */
 static const struct rate_ctr_desc bts_ctr_description[] = {
+	{ "pdch:all_allocated",		"Cumulative counter of seconds where all enabled PDCH resources were allocated"},
 	{ "tbf:dl:alloc",		"TBF DL Allocated     "},
 	{ "tbf:dl:freed",		"TBF DL Freed         "},
 	{ "tbf:dl:aborted",		"TBF DL Aborted       "},
@@ -231,6 +246,8 @@ static int bts_talloc_destructor(struct gprs_rlcmac_bts* bts)
 	bts->ms_store->cleanup();
 	delete bts->ms_store;
 
+	osmo_time_cc_cleanup(&bts->all_allocated_pdch);
+
 	if (bts->ratectrs) {
 		rate_ctr_group_free(bts->ratectrs);
 		bts->ratectrs = NULL;
@@ -299,6 +316,17 @@ struct gprs_rlcmac_bts* bts_alloc(struct gprs_pcu *pcu, uint8_t bts_nr)
 
 	bts->statg = osmo_stat_item_group_alloc(tall_pcu_ctx, &bts_statg_desc, 0);
 	OSMO_ASSERT(bts->statg);
+
+	osmo_time_cc_init(&bts->all_allocated_pdch);
+	bts->all_allocated_pdch.cfg = (struct osmo_time_cc_cfg){
+		.gran_usec = 1*1000000,
+		.forget_sum_usec = 60*1000000,
+		.rate_ctr = rate_ctr_group_get_ctr(bts->ratectrs, CTR_PDCH_ALL_ALLOCATED),
+		.T_gran = -16,
+		.T_round_threshold = -17,
+		.T_forget_sum = -18,
+		.T_defs = T_defs_bts,
+	};
 
 	llist_add_tail(&bts->list, &pcu->bts_list);
 
@@ -1370,4 +1398,21 @@ uint8_t bts_get_ms_pwr_alpha(const struct gprs_rlcmac_bts *bts)
 	/* default if no SI13 is received yet: closed loop control, TS 44.060
 	 * B.2 Closed loop control */
 	return 0;
+}
+
+/* Used by counter availablePDCHAllocatedTime, TS 52.402 B.2.1.45 "All available PDCH allocated time" */
+bool bts_all_pdch_allocated(const struct gprs_rlcmac_bts *bts)
+{
+	unsigned trx_no, ts_no;
+	for (trx_no = 0; trx_no < ARRAY_SIZE(bts->trx); trx_no++) {
+		const struct gprs_rlcmac_trx *trx = &bts->trx[trx_no];
+		for (ts_no = 0; ts_no < ARRAY_SIZE(trx->pdch); ts_no++) {
+			const struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
+			if (!pdch_is_enabled(pdch))
+				continue;
+			if(!pdch_is_full(pdch))
+				return false;
+		}
+	}
+	return true;
 }

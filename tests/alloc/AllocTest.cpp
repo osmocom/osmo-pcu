@@ -152,6 +152,8 @@ static void test_alloc_a(gprs_rlcmac_tbf_direction dir,
 
 	OSMO_ASSERT(i == count);
 
+	OSMO_ASSERT(bts_all_pdch_allocated(bts));
+
 	for (i = 0; i < count; ++i)
 		if (tbfs[i])
 			tbf_free(tbfs[i]);
@@ -479,6 +481,7 @@ static GprsMs *alloc_tbfs(struct gprs_rlcmac_bts *bts, struct GprsMs *old_ms, en
 			tbf_free(ms_ul_tbf(old_ms));
 		tbf = tbf_alloc_ul_tbf(bts, old_ms, trx_no, false);
 		if (tbf == NULL) {
+			OSMO_ASSERT(trx_no != -1 || bts_all_pdch_allocated(bts));
 			ms_unref(old_ms);
 			return NULL;
 		}
@@ -490,6 +493,7 @@ static GprsMs *alloc_tbfs(struct gprs_rlcmac_bts *bts, struct GprsMs *old_ms, en
 			tbf_free(ms_dl_tbf(old_ms));
 		tbf = tbf_alloc_dl_tbf(bts, old_ms, trx_no, false);
 		if (tbf == NULL) {
+			OSMO_ASSERT(trx_no != -1 || bts_all_pdch_allocated(bts));
 			ms_unref(old_ms);
 			return NULL;
 		}

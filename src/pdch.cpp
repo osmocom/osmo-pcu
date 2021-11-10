@@ -1286,3 +1286,13 @@ bool pdch_is_enabled(const struct gprs_rlcmac_pdch *pdch)
 {
 	return pdch->is_enabled();
 }
+
+/* To be called only on enabled PDCHs. Used to gather information on whether the
+ * PDCH is currently unable to allocate more TBFs due to any resource being
+ * full. Used by bts_all_pdch_allocated() for counting purposes. */
+bool pdch_is_full(const struct gprs_rlcmac_pdch *pdch)
+{
+	return pdch->assigned_tfi(GPRS_RLCMAC_UL_TBF) == NO_FREE_TFI ||
+	       pdch->assigned_tfi(GPRS_RLCMAC_DL_TBF) == NO_FREE_TFI ||
+	       find_free_usf(pdch->assigned_usf()) < 0;
+}

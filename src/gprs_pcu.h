@@ -25,6 +25,7 @@
 #include <stdbool.h>
 
 #include <osmocom/core/gsmtap_util.h>
+#include <osmocom/core/timer.h>
 
 #include "gprs_bssgp_pcu.h"
 #include "coding_scheme.h"
@@ -131,6 +132,8 @@ struct gprs_pcu {
 
 	struct neigh_cache *neigh_cache; /* ARFC+BSIC -> CGI PS cache */
 	struct si_cache *si_cache; /* ARFC+BSIC -> CGI PS cache */
+
+	struct osmo_timer_list update_stats_timer; /* Used to update some time_cc stats periodically */
 };
 
 
