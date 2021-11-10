@@ -47,8 +47,21 @@ static struct osmo_tdef T_defs_pcu[] = {
 	{ .T=0, .default_val=0, .unit=OSMO_TDEF_S, .desc=NULL, .val=0 } /* empty item at the end */
 };
 
+static void _update_stats_timer_cb(void *data)
+{
+	struct gprs_pcu *pcu = (struct gprs_pcu *)data;
+	struct gprs_rlcmac_bts *bts;
+
+	llist_for_each_entry(bts, &pcu->bts_list, list)
+		osmo_time_cc_set_flag(&bts->all_allocated_pdch, bts_all_pdch_allocated(bts));
+
+	osmo_timer_schedule(&pcu->update_stats_timer, 1, 0);
+}
+
 static int gprs_pcu_talloc_destructor(struct gprs_pcu *pcu)
 {
+	if (osmo_timer_pending(&pcu->update_stats_timer))
+		osmo_timer_del(&pcu->update_stats_timer);
 	neigh_cache_free(pcu->neigh_cache);
 	si_cache_free(pcu->si_cache);
 	return 0;
@@ -124,6 +137,9 @@ struct gprs_pcu *gprs_pcu_alloc(void *ctx)
 
 	pcu->neigh_cache = neigh_cache_alloc(pcu, osmo_tdef_get(pcu->T_defs, PCU_TDEF_NEIGH_CACHE_ALIVE, OSMO_TDEF_S, -1));
 	pcu->si_cache = si_cache_alloc(pcu, osmo_tdef_get(pcu->T_defs, PCU_TDEF_SI_CACHE_ALIVE, OSMO_TDEF_S, -1));
+
+	osmo_timer_setup(&pcu->update_stats_timer, _update_stats_timer_cb, pcu);
+	osmo_timer_schedule(&pcu->update_stats_timer, 1, 0);
 
 	return pcu;
 }

@@ -194,6 +194,7 @@ void pdch_init(struct gprs_rlcmac_pdch *pdch, struct gprs_rlcmac_trx *trx, uint8
 void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch);
 void pdch_disable(struct gprs_rlcmac_pdch *pdch);
 bool pdch_is_enabled(const struct gprs_rlcmac_pdch *pdch);
+bool pdch_is_full(const struct gprs_rlcmac_pdch *pdch);
 #ifdef __cplusplus
 }
 #endif
