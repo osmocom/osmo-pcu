@@ -77,9 +77,6 @@ struct msgb *create_packet_dl_assign(const struct tbf_dl_ass_fsm_ctx *ctx,
 		return NULL;
 	}
 
-	if (new_dl_tbf == as_dl_tbf(ctx->tbf))
-		LOGPTBF(ctx->tbf, LOGL_DEBUG, "New and old TBF are the same.\n");
-
 	if (old_tfi_is_valid && ms_tlli(ms) == GSM_RESERVED_TMSI) {
 		LOGPTBF(ctx->tbf, LOGL_ERROR,
 			  "The old TFI is not assigned and there is no TLLI. New TBF %s\n",
@@ -99,7 +96,12 @@ struct msgb *create_packet_dl_assign(const struct tbf_dl_ass_fsm_ctx *ctx,
 	};
 	bitvec_unhex(&bv, DUMMY_VEC);
 
-	LOGPTBF((struct gprs_rlcmac_tbf *)new_dl_tbf, LOGL_INFO, "start Packet Downlink Assignment (PACCH)\n");
+	if (ctx->tbf != (struct gprs_rlcmac_tbf *)new_dl_tbf)
+		LOGPTBFDL(ctx->tbf, LOGL_INFO, "start Packet Downlink Assignment (PACCH) for %s\n",
+			  tbf_name((const struct gprs_rlcmac_tbf *)new_dl_tbf));
+	else
+		LOGPTBFDL(ctx->tbf, LOGL_INFO, "start Packet Downlink Assignment (PACCH)\n");
+
 	mac_control_block = (RlcMacDownlink_t *)talloc_zero(ctx->tbf, RlcMacDownlink_t);
 	write_packet_downlink_assignment(mac_control_block, old_tfi_is_valid,
 		tbf_tfi(ctx->tbf), (tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF),

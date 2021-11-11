@@ -87,7 +87,6 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -201,7 +200,6 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -315,7 +313,6 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -2010,7 +2007,7 @@ Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 1
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654275 block_nr=9 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654279
 DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654275 + 13 = 2654288
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) start Packet Downlink Assignment (PACCH) for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
@@ -2663,7 +2660,7 @@ Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 40
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654275 block_nr=9 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654279
 DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654275 + 13 = 2654288
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) start Packet Downlink Assignment (PACCH) for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Scheduled DL Assignment polling on PACCH (FN=2654288, TS=7)
@@ -3362,7 +3359,7 @@ PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654400): TBF(TFI=0 TLLI=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING) N3101 27 => 28 (< MAX 10)
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654400 + 13 = 2654413
-TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) start Packet Downlink Assignment (PACCH)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) start Packet Downlink Assignment (PACCH) for TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=WAIT_RELEASE) Scheduled DL Assignment polling on PACCH (FN=2654413, TS=7)
@@ -4085,7 +4082,6 @@ The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confir
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -4393,7 +4389,6 @@ The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confir
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -4651,7 +4646,6 @@ The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confir
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -4869,7 +4863,6 @@ The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confir
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -5071,7 +5064,6 @@ The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confir
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -5257,7 +5249,6 @@ The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confir
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -5419,7 +5410,6 @@ The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confir
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -5590,7 +5580,6 @@ The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confir
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -5752,7 +5741,6 @@ The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confir
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) New and old TBF are the same.
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
@@ -8118,7 +8106,7 @@ UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: state_chg to NONE
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654279 block_nr=10 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS), expect answer on UL FN=2654283
 DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654279 + 13 = 2654292
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) start Packet Downlink Assignment (PACCH)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH) for TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS)
 +++++++++++++++++++++++++ TX : Packet Downlink Assignment +++++++++++++++++++++++++
 ------------------------- TX : Packet Downlink Assignment -------------------------
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Scheduled DL Assignment polling on PACCH (FN=2654292, TS=7)
