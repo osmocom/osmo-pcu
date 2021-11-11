@@ -208,7 +208,9 @@ static struct osmo_fsm_state tbf_dl_ass_fsm_states[] = {
 	},
 	[TBF_DL_ASS_SEND_ASS] = {
 		.in_event_mask = X(TBF_DL_ASS_EV_CREATE_RLCMAC_MSG),
-		.out_state_mask = X(TBF_DL_ASS_WAIT_ACK),
+		.out_state_mask =
+			X(TBF_DL_ASS_WAIT_ACK) |
+			X(TBF_DL_ASS_NONE),
 		.name = "SEND_ASS",
 		.action = st_send_ass,
 	},
