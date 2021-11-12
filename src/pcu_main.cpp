@@ -74,7 +74,6 @@ static void print_help()
 		"  -m	--mcc MCC		Use given MCC instead of value provided by BTS\n"
 		"  -n	--mnc MNC		Use given MNC instead of value provided by BTS\n"
 		"  -V	--version		Print version\n"
-		"  -r	--realtime PRIO		Use SCHED_RR with the specified priority\n"
 		"  -D	--daemonize		Fork the process into a background daemon\n"
 		"  -i	--gsmtap-ip		The destination IP used for GSMTAP\n"
 		"\nVTY reference generation:\n"
@@ -165,6 +164,8 @@ static void handle_options(int argc, char **argv)
 			break;
 		case 'r':
 			rt_prio = atoi(optarg);
+			fprintf(stderr, "Command line argument '-r' is deprecated, use VTY "
+				"cpu-sched node setting 'policy rr %d' instead.\n", rt_prio);
 			break;
 		case 'D':
 			daemonize = true;

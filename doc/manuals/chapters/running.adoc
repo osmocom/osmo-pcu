@@ -21,12 +21,6 @@ options:
 	Specify the file and path name of the configuration file to be
 	used. If none is specified, use `osmo-pcu.cfg` in the current
 	working directory.
-*-r, --realtime 'PRIO'*::
-	Enable use of the Linux kernel realtime priority scheduler with
-	the specified priority.
-	It is recommended you use this option on low-performance
-	embedded systems or systems that encounter high non-GSM/GPRS
-	load.
 *-m, --mcc 'MCC'*::
 	Use the given MCC instead of that provided by BTS via PCU socket
 *-n, --mnc 'MNC'*::
