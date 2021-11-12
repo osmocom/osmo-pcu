@@ -296,7 +296,9 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 	/* check for existing TBF */
 	ms = bts_ms_store(bts)->get_ms(tlli, tlli_old, imsi);
 
-	if (ms && strlen(ms_imsi(ms)) == 0) {
+	/* If we got MS by TLLI above let's see if we already have another MS
+	 * object identified by IMSI and merge them */
+	if (ms && !ms_imsi_is_valid(ms) && imsi) {
 		ms_old = bts_ms_store(bts)->get_ms(0, 0, imsi);
 		if (ms_old && ms_old != ms) {
 			/* The TLLI has changed (RAU), so there are two MS
@@ -310,7 +312,7 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 			if (!ms_dl_tbf(ms) && ms_dl_tbf(ms_old)) {
 				LOGP(DTBF, LOGL_NOTICE,
 				     "IMSI %s, old TBF %s: moving DL TBF to new MS object\n",
-				     imsi, ms_dl_tbf(ms_old)->name());
+				     imsi ? : "unknown", ms_dl_tbf(ms_old)->name());
 				dl_tbf = ms_dl_tbf(ms_old);
 				/* Move the DL TBF to the new MS */
 				dl_tbf->set_ms(ms);
@@ -323,7 +325,8 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 
 	if (!ms)
 		ms = bts_alloc_ms(bts, ms_class, egprs_ms_class);
-	ms_set_imsi(ms, imsi);
+	if (imsi)
+		ms_set_imsi(ms, imsi);
 	ms_confirm_tlli(ms, tlli);
 	if (!ms_ms_class(ms) && ms_class) {
 		ms_set_ms_class(ms, ms_class);
@@ -599,7 +602,6 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts, 
 /* depending on the current TBF, we assign on PACCH or AGCH */
 void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 {
-	uint16_t pgroup;
 	/* stop pending timer */
 	stop_timers("assignment (DL-TBF)");
 
@@ -618,9 +620,7 @@ void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
 		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
 
 		/* send immediate assignment */
-		if ((pgroup = imsi2paging_group(imsi())) > 999)
-			LOGPTBFDL(this, LOGL_ERROR, "IMSI to paging group failed! (%s)\n", imsi());
-		bts_snd_dl_ass(bts, this, pgroup);
+		bts_snd_dl_ass(bts, this);
 	}
 }
 

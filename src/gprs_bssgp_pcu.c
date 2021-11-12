@@ -108,12 +108,8 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 	uint8_t egprs_ms_class = 0;
 	int rc;
 	MS_Radio_Access_capability_t rac;
-	/* TODO: is it really necessary to initialize this as a "000" IMSI? It seems, the function should just return an
-	 * error if no IMSI IE was found. */
-	struct osmo_mobile_identity mi_imsi = {
-		.type = GSM_MI_TYPE_TMSI,
-	};
-	OSMO_STRLCPY_ARRAY(mi_imsi.imsi, "000");
+	const char *imsi = NULL;
+	struct osmo_mobile_identity mi_imsi;
 
 	budh = (struct bssgp_ud_hdr *)msgb_bssgph(msg);
 	tlli = ntohl(budh->tlli);
@@ -144,6 +140,7 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 			LOGP(DBSSGP, LOGL_NOTICE, "Failed to parse IMSI IE (rc=%d)\n", rc);
 			return bssgp_tx_status(BSSGP_CAUSE_COND_IE_ERR, NULL, msg);
 		}
+		imsi = &mi_imsi.imsi[0];
 	}
 
 	/* parse ms radio access capability */
@@ -180,10 +177,11 @@ static int gprs_bssgp_pcu_rx_dl_ud(struct msgb *msg, struct tlv_parsed *tp)
 				"TLLI (old) IE\n");
 	}
 
-	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x IMSI: %s len: %d\n", tlli, mi_imsi.imsi, len);
+	LOGP(DBSSGP, LOGL_INFO, "LLC [SGSN -> PCU] = TLLI: 0x%08x IMSI: %s len: %d\n",
+	     tlli, imsi ? : "none", len);
 
-	return dl_tbf_handle(the_pcu->bssgp.bts, tlli, tlli_old, mi_imsi.imsi,
-			ms_class, egprs_ms_class, delay_csec, data, len);
+	return dl_tbf_handle(the_pcu->bssgp.bts, tlli, tlli_old, imsi, ms_class,
+			     egprs_ms_class, delay_csec, data, len);
 }
 
 /* 3GPP TS 48.018 Table 10.3.2. Returns 0 on success, suggested BSSGP cause otherwise */

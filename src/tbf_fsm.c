@@ -214,15 +214,11 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		if ((ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
 		     && !(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))) {
 			struct GprsMs *ms = tbf_ms(ctx->tbf);
-			const char *imsi = ms_imsi(ms);
-			uint16_t pgroup;
 			LOGPTBF(ctx->tbf, LOGL_DEBUG, "Re-send downlink assignment on PCH (IMSI=%s)\n",
-				imsi);
+				ms_imsi_is_valid(ms) ? ms_imsi(ms) : "");
 			tbf_fsm_state_chg(fi, TBF_ST_ASSIGN);
 			/* send immediate assignment */
-			if ((pgroup = imsi2paging_group(imsi)) > 999)
-				LOGPTBF(ctx->tbf, LOGL_ERROR, "IMSI to paging group failed! (%s)\n", imsi);
-			bts_snd_dl_ass(ms->bts, ctx->tbf, pgroup);
+			bts_snd_dl_ass(ms->bts, ctx->tbf);
 		}
 		break;
 	case TBF_EV_LAST_DL_DATA_SENT:

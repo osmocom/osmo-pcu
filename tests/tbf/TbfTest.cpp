@@ -1718,7 +1718,7 @@ static void send_dl_data(struct gprs_rlcmac_bts *bts, uint32_t tlli, const char 
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms_dl_tbf(ms) != NULL);
 
-	if (imsi[0] && strcmp(imsi, "000") != 0) {
+	if (imsi[0] != '\0') {
 		ms2 = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 		OSMO_ASSERT(ms == ms2);
 	}

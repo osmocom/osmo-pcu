@@ -1037,10 +1037,11 @@ int bts_rcv_ptcch_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params
 	return 0;
 }
 
-void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, uint16_t pgroup)
+void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf)
 {
 	uint8_t trx_no = tbf->trx->trx_no;
 	uint8_t ts_no = tbf->first_ts;
+	uint16_t pgroup = ms_paging_group(tbf_ms(tbf));
 	int plen;
 
 	LOGPTBF(tbf, LOGL_INFO, "TX: START Immediate Assignment Downlink (PCH)\n");

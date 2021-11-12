@@ -29,8 +29,6 @@ extern "C" {
 	#include <osmocom/gsm/gsm48.h>
 }
 
-#define GPRS_UNDEFINED_IMSI "000"
-
 static void ms_storage_ms_idle_cb(struct GprsMs *ms)
 {
 	llist_del(&ms->list);
@@ -89,10 +87,10 @@ GprsMs *GprsMsStorage::get_ms(uint32_t tlli, uint32_t old_tlli, const char *imsi
 
 	/* not found by TLLI */
 
-	if (imsi && imsi[0] && strcmp(imsi, GPRS_UNDEFINED_IMSI) != 0) {
+	if (imsi && imsi[0] != '\0') {
 		llist_for_each(tmp, &m_list) {
 			ms = llist_entry(tmp, typeof(*ms), list);
-			if (strcmp(imsi, ms_imsi(ms)) == 0)
+			if (ms_imsi_is_valid(ms) && strcmp(imsi, ms_imsi(ms)) == 0)
 				return ms;
 		}
 	}
