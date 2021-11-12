@@ -97,10 +97,10 @@ struct msgb *create_packet_dl_assign(const struct tbf_dl_ass_fsm_ctx *ctx,
 	bitvec_unhex(&bv, DUMMY_VEC);
 
 	if (ctx->tbf != (struct gprs_rlcmac_tbf *)new_dl_tbf)
-		LOGPTBFDL(ctx->tbf, LOGL_INFO, "start Packet Downlink Assignment (PACCH) for %s\n",
+		LOGPTBF(ctx->tbf, LOGL_INFO, "start Packet Downlink Assignment (PACCH) for %s\n",
 			  tbf_name((const struct gprs_rlcmac_tbf *)new_dl_tbf));
 	else
-		LOGPTBFDL(ctx->tbf, LOGL_INFO, "start Packet Downlink Assignment (PACCH)\n");
+		LOGPTBF(ctx->tbf, LOGL_INFO, "start Packet Downlink Assignment (PACCH)\n");
 
 	mac_control_block = (RlcMacDownlink_t *)talloc_zero(ctx->tbf, RlcMacDownlink_t);
 	write_packet_downlink_assignment(mac_control_block, old_tfi_is_valid,
