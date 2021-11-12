@@ -70,6 +70,49 @@ static const struct value_string pcu_gsmtap_categ_help[] = {
 	{ 0, NULL }
 };
 
+DEFUN(cfg_pcu_gsmtap_remote_host,
+      cfg_pcu_gsmtap_remote_host_cmd,
+      "gsmtap-remote-host [HOSTNAME]",
+      "Enable GSMTAP Um logging (see also 'gsmtap-category')\n"
+      "Remote IP address or hostname ('localhost' if omitted)\n")
+{
+	osmo_talloc_replace_string(the_pcu, &the_pcu->gsmtap_remote_host,
+				   argc > 0 ? argv[0] : "localhost");
+
+	if (vty->type != VTY_FILE)
+		vty_out(vty, "%% This command requires restart%s", VTY_NEWLINE);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_no_gsmtap_remote_host,
+      cfg_pcu_no_gsmtap_remote_host_cmd,
+      "no gsmtap-remote-host",
+      NO_STR "Disable GSMTAP Um logging\n")
+{
+	if (the_pcu->gsmtap_remote_host)
+		TALLOC_FREE(the_pcu->gsmtap_remote_host);
+
+	if (vty->type != VTY_FILE)
+		vty_out(vty, "%% This command requires restart%s", VTY_NEWLINE);
+
+	return CMD_SUCCESS;
+}
+
+DEFUN(cfg_pcu_gsmtap_sapi_all, pcucfg_pcu_gsmtap_categ_all_cmd,
+	"gsmtap-category (enable-all|disable-all)",
+	"Enable/disable sending of UL/DL messages over GSMTAP\n"
+	"Enable all kinds of messages (all categories)\n"
+	"Disable all kinds of messages (all categories)\n")
+{
+
+	if (strcmp(argv[0], "enable-all") == 0)
+		the_pcu->gsmtap_categ_mask = UINT32_MAX;
+	else
+		the_pcu->gsmtap_categ_mask = 0x00;
+
+	return CMD_SUCCESS;
+}
 
 DEFUN(cfg_pcu_gsmtap_categ, cfg_pcu_gsmtap_categ_cmd, "HIDDEN", "HIDDEN")
 {
@@ -238,11 +281,14 @@ static int config_write_pcu(struct vty *vty)
 	if (strcmp(the_pcu->pcu_sock_path, PCU_SOCK_DEFAULT))
 		vty_out(vty, " pcu-socket %s%s", the_pcu->pcu_sock_path, VTY_NEWLINE);
 
+	if (the_pcu->gsmtap_remote_host)
+		vty_out(vty, " gsmtap-remote-host %s%s", the_pcu->gsmtap_remote_host, VTY_NEWLINE);
 	for (i = 0; i < 32; i++) {
-		uint32_t cs = ((uint32_t)1 << i);
-		if (the_pcu->gsmtap_categ_mask & cs) {
-			vty_out(vty, " gsmtap-category %s%s",
-				get_value_string(pcu_gsmtap_categ_names, i), VTY_NEWLINE);
+		if (the_pcu->gsmtap_categ_mask & ((uint32_t)1 << i)) {
+			const char *category_buf;
+			if (!(category_buf = get_value_string_or_null(pcu_gsmtap_categ_names, i)))
+				continue;
+			vty_out(vty, " gsmtap-category %s%s", category_buf, VTY_NEWLINE);
 		}
 	}
 
@@ -1294,6 +1340,9 @@ int pcu_vty_init(void)
 	install_element(PCU_NODE, &cfg_pcu_no_dl_tbf_preemptive_retransmission_cmd);
 	install_element(PCU_NODE, &cfg_pcu_ms_idle_time_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_ms_idle_time_cmd);
+	install_element(PCU_NODE, &cfg_pcu_gsmtap_remote_host_cmd);
+	install_element(PCU_NODE, &cfg_pcu_no_gsmtap_remote_host_cmd);
+	install_element(PCU_NODE, &pcucfg_pcu_gsmtap_categ_all_cmd);
 	install_element(PCU_NODE, &cfg_pcu_gsmtap_categ_cmd);
 	install_element(PCU_NODE, &cfg_pcu_no_gsmtap_categ_cmd);
 	install_element(PCU_NODE, &cfg_pcu_sock_cmd);

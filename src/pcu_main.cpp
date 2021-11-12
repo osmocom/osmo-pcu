@@ -64,7 +64,7 @@ extern void *bv_tall_ctx;
 static int quit = 0;
 static int rt_prio = -1;
 static bool daemonize = false;
-static const char *gsmtap_addr = "localhost"; // FIXME: use gengetopt's default value instead
+static const char *gsmtap_addr;
 
 static void print_help()
 {
@@ -75,7 +75,6 @@ static void print_help()
 		"  -n	--mnc MNC		Use given MNC instead of value provided by BTS\n"
 		"  -V	--version		Print version\n"
 		"  -D	--daemonize		Fork the process into a background daemon\n"
-		"  -i	--gsmtap-ip		The destination IP used for GSMTAP\n"
 		"\nVTY reference generation:\n"
 		"    	--vty-ref-mode MODE	VTY reference generation mode (e.g. 'expert').\n"
 		"    	--vty-ref-xml		Generate the VTY reference XML output and exit.\n"
@@ -161,6 +160,8 @@ static void handle_options(int argc, char **argv)
 			break;
 		case 'i':
 			gsmtap_addr = optarg;
+			fprintf(stderr, "Command line argument '-i' is deprecated, use VTY "
+				"parameter 'gsmtap-remote-host %s' instead.\n", gsmtap_addr);
 			break;
 		case 'r':
 			rt_prio = atoi(optarg);
@@ -258,13 +259,6 @@ int main(int argc, char *argv[])
 		exit(0);
 	}
 
-	pcu->gsmtap = gsmtap_source_init(gsmtap_addr, GSMTAP_UDP_PORT, 1);
-
-	if (pcu->gsmtap)
-		gsmtap_source_add_sink(pcu->gsmtap);
-	else
-		fprintf(stderr, "Failed to initialize GSMTAP for %s\n", gsmtap_addr);
-
 	pcu->nsi = gprs_ns2_instantiate(tall_pcu_ctx, gprs_ns_prim_cb, NULL);
 	if (!pcu->nsi) {
 		LOGP(DBSSGP, LOGL_ERROR, "Failed to create NS instance\n");
@@ -282,6 +276,31 @@ int main(int argc, char *argv[])
 	if (rc < 0)
 		fprintf(stderr, "No config file: '%s' Using default config.\n",
 			config_file);
+
+	/* Accept a GSMTAP host from VTY config, but a commandline option overrides that. */
+	if (gsmtap_addr) {
+		if (pcu->gsmtap_remote_host != NULL) {
+			LOGP(DLGLOBAL, LOGL_NOTICE,
+			     "Command line argument '-i %s' overrides "
+			     "'gsmtap-remote-host %s' from the config file\n",
+			     gsmtap_addr, pcu->gsmtap_remote_host);
+			talloc_free(pcu->gsmtap_remote_host);
+		}
+		pcu->gsmtap_remote_host = talloc_strdup(pcu, gsmtap_addr);
+	}
+
+	if (pcu->gsmtap_remote_host) {
+		LOGP(DLGLOBAL, LOGL_NOTICE,
+		     "Setting up GSMTAP Um forwarding to '%s:%u'\n",
+		     pcu->gsmtap_remote_host, GSMTAP_UDP_PORT);
+		pcu->gsmtap = gsmtap_source_init(pcu->gsmtap_remote_host,
+							GSMTAP_UDP_PORT, 1);
+		if (pcu->gsmtap == NULL) {
+			fprintf(stderr, "Failed during gsmtap_source_init()\n");
+			exit(1);
+		}
+		gsmtap_source_add_sink(pcu->gsmtap);
+	}
 
 	rc = telnet_init_dynif(tall_pcu_ctx, NULL, vty_get_bind_addr(),
 			       OSMO_VTY_PORT_PCU);

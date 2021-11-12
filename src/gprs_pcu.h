@@ -117,6 +117,7 @@ struct gprs_pcu {
 
 	struct gsmtap_inst *gsmtap;
 	uint32_t gsmtap_categ_mask;
+	char *gsmtap_remote_host;
 
 	struct llist_head bts_list; /* list of gprs_rlcmac_bts */
 

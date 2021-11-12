@@ -25,5 +25,3 @@ options:
 	Use the given MCC instead of that provided by BTS via PCU socket
 *-n, --mnc 'MNC'*::
 	Use the given MNC instead of that provided by BTS via PCU socket
-*-i, --gsmtap-ip 'A.B.C.D'*::
-        Send Um interface trace via GSMTAP to specified IP address
