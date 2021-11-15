@@ -64,7 +64,7 @@ static struct msgb *create_packet_access_reject(const struct tbf_ul_ass_fsm_ctx 
 	bitvec_unhex(packet_access_rej, DUMMY_VEC);
 
 	write_packet_access_reject(packet_access_rej, ms_tlli(ms),
-				   osmo_tdef_get(ms->bts->T_defs_bts, 3172, OSMO_TDEF_MS, -1));
+				   osmo_tdef_get(ms->bts->pcu->T_defs, 3172, OSMO_TDEF_MS, -1));
 
 	bts_do_rate_ctr_inc(ms->bts, CTR_PKT_ACCESS_REJ);
 

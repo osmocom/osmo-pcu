@@ -33,6 +33,7 @@ static struct osmo_tdef T_defs_pcu[] = {
 	{ .T=3113,  .default_val=7, .unit=OSMO_TDEF_S, .desc="Timeout for paging", .val=0 },
 	{ .T=3190,  .default_val=5,   .unit=OSMO_TDEF_S,  .desc="Return to packet idle mode after Packet DL Assignment on CCCH (s)", .val=0},
 	{ .T=3141,  .default_val=10, .unit=OSMO_TDEF_S, .desc="Timeout for contention resolution procedure (s)", .val=0 },
+	{ .T=3172,  .default_val=5000, .unit=OSMO_TDEF_MS, .desc="Wait Indication used in Imm Ass Reject during TBF Establishment (PACCH)", .val=0, .min_val = 0, .max_val = 255000 }, /* TS 44.060 7.1.3.2.1 */
 	{ .T=PCU_TDEF_NEIGH_RESOLVE_TO,    .default_val=1000,  .unit=OSMO_TDEF_MS,   .desc="[ARFCN+BSIC]->[RAC+CI] resolution timeout (ms)", .val=0 },
 	{ .T=PCU_TDEF_SI_RESOLVE_TO,	   .default_val=1000,  .unit=OSMO_TDEF_MS,   .desc="RIM RAN-INFO response timeout (ms)",	    .val=0 },
 	{ .T=PCU_TDEF_NEIGH_CACHE_ALIVE,   .default_val=5,  .unit=OSMO_TDEF_S,   .desc="[ARFCN+BSIC]->[RAC+CI] resolution cache entry storage timeout (s)", .val=0 },
