@@ -185,11 +185,7 @@ static void st_wait_ack(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 
 static int tbf_dl_ass_fsm_timer_cb(struct osmo_fsm_inst *fi)
 {
-	struct tbf_dl_ass_fsm_ctx *ctx = (struct tbf_dl_ass_fsm_ctx *)fi->priv;
 	switch (fi->T) {
-	case -2000:
-		tbf_free(ctx->tbf);
-		break;
 	default:
 		OSMO_ASSERT(0);
 	}
