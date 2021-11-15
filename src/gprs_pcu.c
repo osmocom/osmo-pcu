@@ -39,7 +39,7 @@ static struct osmo_tdef T_defs_pcu[] = {
 	{ .T=PCU_TDEF_SI_CACHE_ALIVE,      .default_val=5,  .unit=OSMO_TDEF_S,   .desc="[RAC+CI]->[SI] resolution cache entry storage timeout (s)", .val=0 },
 	{ .T=-101,  .default_val=30,  .unit=OSMO_TDEF_S,  .desc="BSSGP (un)blocking procedures timer (s)",  .val=0 },
 	{ .T=-102,  .default_val=30,  .unit=OSMO_TDEF_S,  .desc="BSSGP reset procedure timer (s)",          .val=0 },
-	{ .T=-2000, .default_val=2,   .unit=OSMO_TDEF_MS, .desc="Delay release of UL TBF after tx Packet Access Reject (PACCH) (ms)", .val=0 },
+	{ .T=-2000, .default_val=0,   .unit=OSMO_TDEF_MS, .desc="Delay release of UL TBF after tx Packet Access Reject (PACCH) (ms)", .val=0 },
 	{ .T=-2001, .default_val=2,   .unit=OSMO_TDEF_S,  .desc="PACCH assignment timeout (s)",               .val=0 },
 	{ .T=-2002, .default_val=200, .unit=OSMO_TDEF_MS, .desc="Waiting after IMM.ASS confirm timer (ms)", .val=0 },
 	{ .T=-2030, .default_val=60,  .unit=OSMO_TDEF_S,  .desc="Time to keep an idle MS object alive (s)", .val=0 }, /* slightly above T3314 (default 44s, 24.008, 11.2.2) */
