@@ -1,3 +1,301 @@
+osmo-pcu (1.0.0) unstable; urgency=medium
+
+  [ Pau Espin Pedrol ]
+  * Support uplink multi-slot allocations
+  * tbf: Log timeslot allocation failure
+  * bts: Count TBF TS allocation failure
+  * pdch: Standarize and improve logging
+  * tbf: Improve logging when TBF being allocated or no TBF avail
+  * Remove uneeded ms param from alloc_algorithm_func_t func
+  * bts: Add new stats to detect TBF allocation failure reasons
+  * llc: use memset to fill llc dummy frame padding
+  * tbd_dl: Don't re-initialize class field twice
+  * tbf: log keep_open condition status
+  * tbf_dl: Fix m_last_dl_drained_fn not set under some conditions
+  * tbf_dl: fix FBI not set upon X2031 = 0
+  * ms: clarify delayed MS release process related code and logging
+  * gprs_ms: Use standarized logging on more messages
+  * sched: sched_select_ctrl_msg(): Clean up param list and improve logging
+  * sched: sched_select_downlink(): Clean up param list and improve logging
+  * TODO-RELEASE: document requirement of master libosmocore
+  * tbf: Log N310* counter increments
+  * pdch: Silently ignore DATA.ind with len=0
+  * direct_phy: Support submitting DATA.ind with len=0 to upper layers
+  * pcu_utils.h: Fix trailing whitespace
+  * Track TDMA clock with DATA.ind instead of TIME.ind
+  * Introduce init() APIs for PDCH and TRX objects
+  * tests: rlcmac: Fix C vs C++ linkage of extern symbol
+  * pdch.h: Drop uneeded include bts.h
+  * Improve DATA.ind logging
+  * Improve logging in DATA.req and ACT.req
+  * tbf: Fix wrong variable printed in log
+  * pdch: Log FN when decoding UL Ctrl block
+  * Add new PDCH UL Controller, drop SBAllocator class
+  * Replace PollController with newly added PDCH UL Controller
+  * sched: Use new PDCH UL Controller
+  * bts: Detect FN jumps
+  * cosmetic: tests/Makefile.am: Split content into several lines
+  * tests: Introduce unit tests for PDCH UL Controller
+  * tests: ulc: Show current bug with FN wrap around
+  * ulc: Fix FN store order upon wrap around
+  * sysmo: fix wrong FN jumps in rx RA.ind
+  * direct_phy: Fix condition dropping rx DATA.ind payload in in
+  * Fix: left shift cannot be repesented in type int
+  * sched: Fix scheduling UL TBF not matching conditions
+  * sched: Simplify usf selection code
+  * Set matching USF if available when polling a UL TBF
+  * pdch: Add mising pdch_ulc_release_node in Rx Cell Change Notif
+  * pdch_ulc: Create helper API pdch_ulc_release_node
+  * Track scheduled UL blocks through USF
+  * Properly implement N3101
+  * sba: Document AGCH_START_OFFSET after some experimental tests
+  * pdch_ulc: Optimize rbtree FN search
+  * Pick unreserved UL FN when allocating an SBA
+  * pdch_ulc: Support picking RRBP other than N+13
+  * Drop unused function tbf_check()
+  * pdch_ulc: Store TBF poll reason
+  * tbf: Get rid of unneeded poll_scheduled()
+  * tbf: Allow multiple concurrent polls
+  * Remove unneeded poll_state check
+  * tbf: get rid of poll_state completely
+  * Get rid of param 'poll' with constant value
+  * tbf: Get rid of attribute poll_fn
+  * tbf: Get rid of attribute poll_ts
+  * RIM: Improve logging
+  * sba: Drop unused function find_sba_rts
+  * pdch: rcv_resource_request: Improve robustness
+  * pdch: tbf_by_tfi(): Allow returning TBFs in state RELEASING
+  * Stop abusing T3169
+  * Make use of T3142 received from BTS
+  * Use negative numbers for non-spec osmo-specific timers
+  * ul_tbf: Clean up handle_tbf_reject()
+  * Make WaitIndication T3172 configurable
+  * sched: Simplify else-if condition
+  * Clarify, document Assignment related timers
+  * doc/tbf.txt: Update and improve some information
+  * bts: constify arg in func bts_ms_store()
+  * sched: Rename func to describe its used only for RLCMAC CTRL blocks
+  * rim: Constify param in func
+  * Simplify helper function tbf_select_slot_set()
+  * alloc_algorithm_b: Rearrange variable initialization
+  * Rename function s/tbf_alloc_ul/tbf_alloc_ul_pacch/
+  * Split ul_tbf alloc on CCCH into new function
+  * Implement T3141
+  * tbf_ul: Use is_tlli_valid() API
+  * Tx ul ack/nack: Avoid sending invalid/unknown TLLI
+  * encoding: Use gsm48_ta_is_valid() API
+  * encoding: Encode TA in UL ACK/NACK if available
+  * sched: Clean up helper function and improve logging
+  * Drop existing tbf->ms() check condition
+  * ul_tbf: Simplify function rcv_data_block_acknowledged
+  * ul_tbf: Fix accessing zeroed block when checking if transfer is complete
+  * sched: Clean up param passing and improve logging
+  * pdch: Use llist_first_entry() API
+  * RIM: Refactor Rx path to decode stack in proper order
+  * Clean false positive in newer GCC version checking guard of else clause
+  * Use LOGPDCH macro in bts_add_paging()
+  * Optimize PAGING-CS PDCH set selection when target MS is known
+  * bts: Use ms_store when calculating set of target PDCHs for Pkt Paging Request
+  * tbf: Log error path in setup() failing to assign control TS
+  * Move TBF list from BTS to the TRX structure
+  * MsTest: Set up tbf talloc destructor
+  * tbf: Move existing tbf_state implementation to osmo_fsm
+  * cosmetic: Fix typo s/TIMSI/TMSI/
+  * gsm_rlcmac.c: Fix arg list of 2 callbacks
+  * csn1: Implement CSN_CALLBACK type in encoder
+  * bts: Fix typo in field name
+  * Use new stat item/ctr getter APIs
+  * pdch: Log pdch_ulc reason upon rx of pkt ctrl ack
+  * pcuif: Support receiving System Information 2
+  * pdch: Fix null MS access gprs_rlcmac_pdch::rcv_control_ack
+  * pcuif_proto.h: Add new container message
+  * Support proto IPAC_PROTO_EXT_PCU BSC<->PCU
+  * pdch: Fix heap-use-after-free in pdch->ulc
+  * Make gcc 11.1.0 false positivies happy
+  * tbf: Drop impossible paths in create_dl_ass()
+  * tests/tbf: Fix null pointer access if slowly stepping with gdb
+  * Revert "coverity: fix null deref from recent UL TBF leak fix"
+  * Revert "fix: handle NULL return of as_dl_tbf() and as_ul_tbf()"
+  * Revert "Revert "Stop abusing T3169""
+  * Move NULL and ASSIGN tbf_state transition to tbf_fsm
+  * Move FLOW tbf_state transition to tbf_fsm.
+  * tests: tbf: Fix dl_tbf polled for data without being in FLOW state
+  * Move FINISHED tbf_state transition to tbf_fsm
+  * Move WAIT_RELEASE tbf_state transition to tbf_fsm
+  * Move RELEASING tbf_state transition to tbf_fsm
+  * Move T3169 and T3195 to tbf_fsm
+  * Drop duplicate log line
+  * Put dl_tbf::cleanup into destructor
+  * Drop logging last mas report before freeing TBF
+  * Remove duplicate call to gprs_rlcmac_lost_rep
+  * Move rate_ctr free to tbf subclass destructor
+  * Get rid of tbf_dl:abort()
+  * tbf_free: Get rid of uneeded tbf_state transition
+  * Replace ul_ass_state with osmocom FSM
+  * tbf: Reimplement rlcmac_diag() and make it available from C
+  * tbf: Drop unuseful flag GPRS_RLCMAC_FLAG_TO_UL_ASS
+  * replace dl_ass_state with osmocom FSM
+  * tbf: Drop unuseful flag GPRS_RLCMAC_FLAG_TO_DL_ASS
+  * tbf: Drop unuseful flag GPRS_RLCMAC_FLAG_UL_DATA
+  * Move timer X2001 to tbf_fsm
+  * Get rid of lots of code only used by tests
+  * tbf: Merge handle_ack_nack() into rcvd_dl_ack()
+  * Fix typos in comments documenting fsm st chg macro
+  * tbf: Use type bool for upgrade_to_multislot
+  * Move timer X2002 to tbf_fsm
+  * tbf_dl: Clarify requirements for DL ACK/NACK
+  * tbf.h: Improve documentation on several flags
+  * Move tbf ul_ack_state to osmocom FSM
+  * Simplify tbf::set_polling()
+  * tbf: Move T3193 to tbf_state FSM
+  * fix typo 's/dowlink/downlink/g'
+  * cosmetic: Fix typo in comment
+  * sched: energy saving: Avoid Tx dummy blocks on empty PDCH TS
+  * Fix crash with dyn TS when using direct pcu
+  * Use LOGPDCH macro to standarize log line
+  * cosmetic: sysmo: Drop unneded comment line
+  * bts: Use public getter instead of class member
+  * sched: Lower log level of RTS on disabled pdch
+  * pdch: Make sure pending ImmAssRej scheduled for disabled pdch are dropped
+  * Support Neighbor Address Resolution over PCUIF IPA multiplex
+  * nacc_fsm: Move logic checking if SI is being waited for to a func helper
+  * scheduler: Skip Tx DL idle blocks in TRX0 when not in DIRECT_PHY mode
+  * PTCCH: skip Tx DL idle blocks when possible
+  * tbf_ul_ass_fsm.c: Fix missing state transition in FSM description
+  * tbf: poll_timeout(): Validate expected poll reason
+  * nacc: Introduce helper function nacc_fsm_exp_ctrl_ack()
+  * tbf: refactor poll_timeout() with a switch statement
+  * tests: TbfTest: Fix wrong behavior in test_tbf_dl_reuse()
+  * pdch: refactor rcv_control_ack() with a switch statement
+  * cosmetic: Fix missing space
+  * assert if tbf pointer for POLL event is NULL
+  * tbf_fsm: Ignore event DL_ACKNACK_MISS in state RELEASING
+  * tests: RLCMACTest: Add one more sample RA capabilities to suite
+  * rlcmac: Fix CSN1 definition for DownlinkDualCarrierCapability_r7_t in MS RA cap
+  * tbf: Assert if FSM allocation fails
+  * sched: Rename function
+  * pdch: Only release ULC entry if rx ul block matches the expected one
+  * pdch: Validate poll reason matches in rcv_control_(egprs)_dl_ack_nack()
+  * pdch: PktResReq: Avoid releasing ULC entry if expecting something else on UL
+  * Handle Final UL ACK/NACK Confirmation in tbf_fsm
+  * tbf_fsm: rename state NULL -> NEW
+  * pdch_ulc: Log POLL reason upon timeout
+  * tbf_dl_ass_fsm: Move block msg generation conditions to rts() function
+  * tbf_ul_ass_fsm: Fix use of incorrect log macro
+  * tbf_fsm: Handle MAX_N3105 in state ASSIGN
+  * tbf: Use define to flag control_ts unset special value
+  * tbf: Document temporary change of control_ts and move code assigning it back to FSM
+  * Return void in tbf_assign_control_ts()
+  * pdch: rcv_data_block: Avoid releasing ULC entry if expecting something else on UL
+  * tbf: Avoid keeping poll nodes in pdch_ulc of temporary control_ts used during PACCH assignment
+  * tbf_ul_ass_fsm: Avoid retrying Pkt Ul Ass if tbf is not in state ASSIGN
+  * Abort scheduling of pending Pkt Ul Ass if tbf goes into RELEASE step
+  * tbf: Drop pending polls during free also on states != ASSIGN
+  * pdch: Simplify code path allocating UL TBF
+  * pdch: Log reason of expected POLL when receiving unexpected UL data
+  * bts_rcv_rach(): Gather pointers to data objects early and use them later
+  * bts_rcv_rach(): Split code paths for Ass and Ass Rej
+  * Get rid of tbf tsc field
+  * ts_alloc: Rename s/tbf_/tbf/
+  * tbf: Update FSM names when TFI change during tbf_update()
+  * tbf_fsm: Add assert verifying X2002 only triggers for DL TBF
+  * tbf: Assert if update() is called on UL TBF
+  * tbf: update(): return negative val on error
+  * tbf: Drop unneeded braces in one line condition
+  * cosmetic: Fix typo in comment
+  * pcuif: Submit data_req with len=0 as idle frames
+  * Split csn1.c into common, enc and dec files
+  * csn1: Add unit test showing RadioAccess Capability decoding failure
+  * csn1: Avoid failing if optional DownlinkDualCarrierCapability_r7 is missing
+  * csn1: Avoid storing existence bit as true if content was actually NULL
+  * csn1_dec.c: Fix stored bit in CSN_NEXT_EXIST_LH
+  * bts: Fix misleading log line in bts_rcv_rach()
+  * tbf_ul: Document context where tbf_alloc_ul_ccch() is used
+  * bts: Rename 11bit RACH request counter
+  * vty: Avoid crash in tbf_print_vty_info with null ptr ctrg
+  * vty: Log tbf_state when showing a TBF
+  * vty: show tbf: Drop unneeded check for non-null ms
+  * bts: Introduce new RACH req counters for one/two phase access
+  * bts: Improve logging to clarify RACH req is for 2 phase access
+  * bts: Count RACH Request with unexpected content
+  * tbf: Increase log level of line about unable to allocate poll for TBF
+  * pdch: Improve log line and increase log level
+  * tbf_ul: Set first_(common_)ts in handle_tbf_reject
+  * tbf: Set m_created_ts in constructor
+  * tbf: Mark initial first_(common_)ts with special value
+  * tbf: Set tfi to initial special value
+  * bts: Add counters for successful 1,2 phase pkt access
+  * tbf_ul: Update FSM names for dummy reject TBFs
+  * cosmetic: Add parenthesis around expression to clarify it
+  * pdch::rcv_resource_request(): Use local var to store bts pointer
+  * tbf_ul: Improve documentation of tbf_alloc_ul_pacch()
+  * Add counter for successful contention resolution procedures
+  * doc: Update counters_generated.adoc using osmo_vty_interact.py
+  * bts_pch_timer: Fix timer working only for MI type IMSI
+  * tests/alloc: Extend test_bts_pch_timer() to validate MI type TMSI
+  * bts_pch_timer: Avoid resend Paging Request over PCUIF if T3113 is armed
+  * pdch: Log line detaching TBF at start of the function
+  * pdch: Log TS enable/disable transitions
+  * pdch: Log DL TBF originating the new UL TBF
+  * ts_alloc: Simplify tfi_find_free logic
+  * ts_alloc: rename function to clraify what it does
+  * ts_alloc: rename variable to clarify meaning
+  * pdch: Update ms_reserved_slots in GprsMS when TS becomes disabled
+  * pdch: Drop previous UL TBF from MS who sent PktResReq through SBA
+  * pdch: Increase log level of line informing about TS control change
+  * tbf_ul_ass_fsm: Log both TBFs if old TBF is handling assignment for new one
+  * cosmetic: gprs_pcu.h: Fix typo in comment
+  * tbf_dl_ass_fsm: Log both TBFs if old TBF is handling assignment for new one
+  * tbf_dl_ass_fsm: Fix missing transition to NONE if DL TBF is nonexistent
+  * tbf_{dl,ul}_ass_fsm.c: use proper macro to log tbf
+  * pcu_main: Mark -r cmdline param as deprecated
+  * vty: Introduce command 'gsmtap-remote-host' and 'gsmtap-category enable-all'
+  * Fix MS ending up with assigned imsi 000
+  * bts: Add counter availablePDCHAllocatedTime
+  * tbf_dl_ass_fsm: Drop unsued X2000 timer callback
+  * T_defs_pcu: Set default val for X2000 to 0 ms
+  * Move T3172 T_defs_bts->T_defs_pcu to have it configurable in VTY
+
+  [ Alexander Couzens ]
+  * gprs_bssgp_pcu: rework BSSGP Reset messages to support SGSN originated BSSGP-RESET
+  * gprs_bssgp_pcu: ensure only known BVCI can be resetted by the SGSN
+  * gprs_bssgp_pcu: add comments to the pcu states
+
+  [ Harald Welte ]
+  * pdch_ul_controller: Fix compiler warning on gcc-10.2
+  * manual: remove revhistory, as we don't maintain it manually anyyway
+  * manual: Update copyright years
+  * vty: Add configuration for Gb DSCP and socket priority
+  * manual: Include QoS chapter and add osmo-pcu specific example
+
+  [ Vadim Yanitskiy ]
+  * gprs_rlcmac_sched: fix incorrect length for CTR_RLC_DL_BYTES
+  * PCUIF protocol: add message definition for interference report
+  * pcu_l1_if: ignore PDCH interference reports, do not log errors
+
+  [ Oliver Smith ]
+  * test: add 'make update_exp' target
+  * Add counters: pcu.sgsn.N.rx_paging_{cs,ps}
+  * Add counters: pcu.bts.N.pch.requests
+  * Add counters: pcu.bts.N.pch.requests.timeout
+  * bts: delete pch_timer list in destructor
+  * tests: make update_exp: build check_PROGRAMS first
+  * debian/control: remove dh-systemd build-depend
+  * Add stats: pcu.bts.N.pdch.available/occupied
+  * Add stats: pcu.bts.N.pdch.occupied.gprs/egprs
+  * pdch: has_gprs_only_tb_attached: use m_num_tbfs
+
+  [ Neels Hofmeyr ]
+  * T_defs_bts: remove unit from doc strings
+  * Revert "Stop abusing T3169"
+  * fix: handle NULL return of as_dl_tbf() and as_ul_tbf()
+  * coverity: fix null deref from recent UL TBF leak fix
+
+  [ Daniel Willmann ]
+  * gprs_bssgp_pcu: Fix crash when configuring an existing ns bind
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 16 Nov 2021 16:47:29 +0100
+
 osmo-pcu (0.9.0) unstable; urgency=medium
 
   [ Pau Espin Pedrol ]

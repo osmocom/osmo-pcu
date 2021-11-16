@@ -82,11 +82,11 @@ then
 fi
 
 dnl checks for libraries
-PKG_CHECK_MODULES(LIBOSMOCORE, libosmocore >= 1.5.0)
-PKG_CHECK_MODULES(LIBOSMOVTY, libosmovty >= 1.5.0)
-PKG_CHECK_MODULES(LIBOSMOCTRL, libosmoctrl >= 1.5.0)
-PKG_CHECK_MODULES(LIBOSMOGSM, libosmogsm >= 1.5.0)
-PKG_CHECK_MODULES(LIBOSMOGB, libosmogb >= 1.5.0)
+PKG_CHECK_MODULES(LIBOSMOCORE, libosmocore >= 1.6.0)
+PKG_CHECK_MODULES(LIBOSMOVTY, libosmovty >= 1.6.0)
+PKG_CHECK_MODULES(LIBOSMOCTRL, libosmoctrl >= 1.6.0)
+PKG_CHECK_MODULES(LIBOSMOGSM, libosmogsm >= 1.6.0)
+PKG_CHECK_MODULES(LIBOSMOGB, libosmogb >= 1.6.0)
 
 AC_MSG_CHECKING([whether to enable direct DSP access for PDCH of sysmocom-bts])
 AC_ARG_ENABLE(sysmocom-dsp,
