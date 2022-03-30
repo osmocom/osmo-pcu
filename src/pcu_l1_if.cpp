@@ -731,7 +731,8 @@ bssgp_failed:
 		for (trx_nr = 0; trx_nr < ARRAY_SIZE(bts->trx); trx_nr++) {
 			bts->trx[trx_nr].arfcn = info_ind->trx[trx_nr].arfcn;
 			for (ts_nr = 0; ts_nr < ARRAY_SIZE(bts->trx[0].pdch); ts_nr++)
-				bts->trx[trx_nr].pdch[ts_nr].disable();
+				if (bts->trx[trx_nr].pdch[ts_nr].is_enabled())
+					bts->trx[trx_nr].pdch[ts_nr].disable();
 		}
 		gprs_bssgp_destroy(bts);
 		exit(0);
