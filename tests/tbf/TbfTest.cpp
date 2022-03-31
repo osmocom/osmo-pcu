@@ -2528,7 +2528,7 @@ static gprs_rlcmac_ul_tbf *tbf_li_decoding(struct gprs_rlcmac_bts *bts,
 	data_msg[5] = 0x0;
 	pdch->rcv_block(data_msg, 49, *fn, &meas);
 
-	OSMO_ASSERT(ul_tbf->m_llc.m_index == 43);
+	OSMO_ASSERT(ul_tbf->m_llc.index == 43);
 
 	return ul_tbf;
 }

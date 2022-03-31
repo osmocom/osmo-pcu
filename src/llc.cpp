@@ -28,15 +28,15 @@ extern "C" {
 /* reset LLC frame */
 void gprs_llc::reset()
 {
-	m_index = 0;
-	m_length = 0;
+	index = 0;
+	length = 0;
 
 	memset(frame, 0x42, sizeof(frame));
 }
 
 void gprs_llc::reset_frame_space()
 {
-	m_index = 0;
+	index = 0;
 }
 
 /* Put an Unconfirmed Information (UI) Dummy command, see GSM 44.064, 6.4.2.2 */
@@ -55,24 +55,24 @@ void gprs_llc::put_dummy_frame(size_t req_len)
 
 	/* Add further stuffing, if the requested length exceeds the minimum
 	 * dummy command length */
-	if (m_length < req_len) {
-		memset(&frame[m_length], 0x2b, req_len - m_length);
-		m_length = req_len;
+	if (length < req_len) {
+		memset(&frame[length], 0x2b, req_len - length);
+		length = req_len;
 	}
 }
 
 void gprs_llc::put_frame(const uint8_t *data, size_t len)
 {
 	/* only put frames when we are empty */
-	OSMO_ASSERT(m_index == 0 && m_length == 0);
+	OSMO_ASSERT(index == 0 && length == 0);
 	append_frame(data, len);
 }
 
 void gprs_llc::append_frame(const uint8_t *data, size_t len)
 {
 	/* TODO: bounds check */
-	memcpy(frame + m_length, data, len);
-	m_length += len;
+	memcpy(frame + length, data, len);
+	length += len;
 }
 
 void gprs_llc::init()
@@ -97,10 +97,10 @@ bool gprs_llc::is_user_data_frame(uint8_t *data, size_t len)
 
 void llc_queue_init(struct gprs_llc_queue *q)
 {
-	INIT_LLIST_HEAD(&q->m_queue);
-	q->m_queue_size = 0;
-	q->m_queue_octets = 0;
-	q->m_avg_queue_delay = 0;
+	INIT_LLIST_HEAD(&q->queue);
+	q->queue_size = 0;
+	q->queue_octets = 0;
+	q->avg_queue_delay = 0;
 }
 
 
@@ -110,28 +110,28 @@ void gprs_llc_queue::enqueue(struct msgb *llc_msg, const struct timespec *expire
 
 	osmo_static_assert(sizeof(*meta_storage) <= sizeof(llc_msg->cb), info_does_not_fit);
 
-	m_queue_size += 1;
-	m_queue_octets += msgb_length(llc_msg);
+	queue_size += 1;
+	queue_octets += msgb_length(llc_msg);
 
 	meta_storage = (MetaInfo *)&llc_msg->cb[0];
 	osmo_clock_gettime(CLOCK_MONOTONIC, &meta_storage->recv_time);
 	meta_storage->expire_time = *expire_time;
 
-	msgb_enqueue(&m_queue, llc_msg);
+	msgb_enqueue(&queue, llc_msg);
 }
 
 void llc_queue_clear(struct gprs_llc_queue *q, struct gprs_rlcmac_bts *bts)
 {
 	struct msgb *msg;
 
-	while ((msg = msgb_dequeue(&q->m_queue))) {
+	while ((msg = msgb_dequeue(&q->queue))) {
 		if (bts)
 			bts_do_rate_ctr_inc(bts, CTR_LLC_FRAME_DROPPED);
 		msgb_free(msg);
 	}
 
-	q->m_queue_size = 0;
-	q->m_queue_octets = 0;
+	q->queue_size = 0;
+	q->queue_octets = 0;
 }
 
 void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o)
@@ -144,10 +144,10 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 
 	while (1) {
 		if (msg1 == NULL)
-			msg1 = msgb_dequeue(&q->m_queue);
+			msg1 = msgb_dequeue(&q->queue);
 
 		if (msg2 == NULL)
-			msg2 = msgb_dequeue(&o->m_queue);
+			msg2 = msgb_dequeue(&o->queue);
 
 		if (msg1 == NULL && msg2 == NULL)
 			break;
@@ -176,15 +176,15 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 		queue_octets += msgb_length(msg);
 	}
 
-	OSMO_ASSERT(llist_empty(&q->m_queue));
-	OSMO_ASSERT(llist_empty(&o->m_queue));
+	OSMO_ASSERT(llist_empty(&q->queue));
+	OSMO_ASSERT(llist_empty(&o->queue));
 
-	o->m_queue_size = 0;
-	o->m_queue_octets = 0;
+	o->queue_size = 0;
+	o->queue_octets = 0;
 
-	llist_splice_init(&new_queue, &q->m_queue);
-	q->m_queue_size = queue_size;
-	q->m_queue_octets = queue_octets;
+	llist_splice_init(&new_queue, &q->queue);
+	q->queue_size = queue_size;
+	q->queue_octets = queue_octets;
 }
 
 #define ALPHA 0.5f
@@ -196,7 +196,7 @@ struct msgb *gprs_llc_queue::dequeue(const MetaInfo **info)
 	uint32_t lifetime;
 	const MetaInfo *meta_storage;
 
-	msg = msgb_dequeue(&m_queue);
+	msg = msgb_dequeue(&queue);
 	if (!msg)
 		return NULL;
 
@@ -205,8 +205,8 @@ struct msgb *gprs_llc_queue::dequeue(const MetaInfo **info)
 	if (info)
 		*info = meta_storage;
 
-	m_queue_size -= 1;
-	m_queue_octets -= msgb_length(msg);
+	queue_size -= 1;
+	queue_octets -= msgb_length(msg);
 
 	/* take the second time */
 	osmo_clock_gettime(CLOCK_MONOTONIC, &tv_now);
@@ -214,7 +214,7 @@ struct msgb *gprs_llc_queue::dequeue(const MetaInfo **info)
 	timespecsub(&tv_now, &meta_storage->recv_time, &tv_result);
 
 	lifetime = tv_result.tv_sec*1000 + tv_result.tv_nsec/1000000;
-	m_avg_queue_delay = m_avg_queue_delay * ALPHA + lifetime * (1-ALPHA);
+	avg_queue_delay = avg_queue_delay * ALPHA + lifetime * (1-ALPHA);
 
 	return msg;
 }

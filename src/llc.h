@@ -48,8 +48,8 @@ struct gprs_llc {
 #endif
 
 	uint8_t frame[LLC_MAX_LEN]; /* current DL or UL frame */
-	uint16_t m_index; /* current write/read position of frame */
-	uint16_t m_length; /* len of current DL LLC_frame, 0 == no frame */
+	uint16_t index; /* current write/read position of frame */
+	uint16_t length; /* len of current DL LLC_frame, 0 == no frame */
 };
 
 struct MetaInfo {
@@ -70,10 +70,10 @@ struct gprs_llc_queue {
 	void enqueue(struct msgb *llc_msg, const struct timespec *expire_time);
 	struct msgb *dequeue(const MetaInfo **info = 0);
 #endif
-	uint32_t m_avg_queue_delay; /* Average delay of data going through the queue */
-	size_t m_queue_size;
-	size_t m_queue_octets;
-	struct llist_head m_queue; /* queued LLC DL data */
+	uint32_t avg_queue_delay; /* Average delay of data going through the queue */
+	size_t queue_size;
+	size_t queue_octets;
+	struct llist_head queue; /* queued LLC DL data */
 };
 
 #ifdef __cplusplus
@@ -85,44 +85,44 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 
 static inline uint16_t llc_chunk_size(const struct gprs_llc *llc)
 {
-	return llc->m_length - llc->m_index;
+	return llc->length - llc->index;
 }
 
 static inline uint16_t llc_remaining_space(const struct gprs_llc *llc)
 {
-	return LLC_MAX_LEN - llc->m_length;
+	return LLC_MAX_LEN - llc->length;
 }
 
 static inline uint16_t llc_frame_length(const struct gprs_llc *llc)
 {
-	return llc->m_length;
+	return llc->length;
 }
 
 static inline void llc_consume(struct gprs_llc *llc, size_t len)
 {
-	llc->m_index += len;
+	llc->index += len;
 }
 
 static inline void llc_consume_data(struct gprs_llc *llc, uint8_t *data, size_t len)
 {
 	/* copy and increment index */
-	memcpy(data, llc->frame + llc->m_index, len);
+	memcpy(data, llc->frame + llc->index, len);
 	llc_consume(llc, len);
 }
 
 static inline bool llc_fits_in_current_frame(const struct gprs_llc *llc, uint8_t chunk_size)
 {
-	return llc->m_length + chunk_size <= LLC_MAX_LEN;
+	return llc->length + chunk_size <= LLC_MAX_LEN;
 }
 
 static inline size_t llc_queue_size(const struct gprs_llc_queue *q)
 {
-	return q->m_queue_size;
+	return q->queue_size;
 }
 
 static inline size_t llc_queue_octets(const struct gprs_llc_queue *q)
 {
-	return q->m_queue_octets;
+	return q->queue_octets;
 }
 
 #ifdef __cplusplus
