@@ -42,7 +42,7 @@ Files:     src/tbf.cpp
            src/tbf_dl.cpp
            src/sba.cpp
            src/sba.h
-           src/llc.cpp
+           src/llc.c
            src/encoding.cpp
            src/encoding.h
            src/gprs_rlcmac.cpp
@@ -50,6 +50,7 @@ Files:     src/tbf.cpp
 Copyright: 2012 Ivan Klyuchnikov
            2012 Andreas Eversberg <jolly@eversberg.eu>
            2013 by Holger Hans Peter Freyther
+           2022 by by Sysmocom s.f.m.c. GmbH
 License:   GPL-2.0+
 
 Files:     src/gprs_rlcmac.h

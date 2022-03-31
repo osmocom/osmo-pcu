@@ -58,20 +58,20 @@ static void test_llc(void)
 		uint8_t data[LLC_MAX_LEN] = {1, 2, 3, 4, };
 		uint8_t out;
 		gprs_llc llc;
-		llc.init();
+		llc_init(&llc);
 
 		OSMO_ASSERT(llc_chunk_size(&llc) == 0);
 		OSMO_ASSERT(llc_remaining_space(&llc) == LLC_MAX_LEN);
 		OSMO_ASSERT(llc_frame_length(&llc) == 0);
 
-		llc.put_frame(data, 2);
+		llc_put_frame(&llc, data, 2);
 		OSMO_ASSERT(llc_remaining_space(&llc) == LLC_MAX_LEN - 2);
 		OSMO_ASSERT(llc_frame_length(&llc) == 2);
 		OSMO_ASSERT(llc_chunk_size(&llc) == 2);
 		OSMO_ASSERT(llc.frame[0] == 1);
 		OSMO_ASSERT(llc.frame[1] == 2);
 
-		llc.append_frame(&data[3], 1);
+		llc_append_frame(&llc, &data[3], 1);
 		OSMO_ASSERT(llc_remaining_space(&llc) == LLC_MAX_LEN - 3);
 		OSMO_ASSERT(llc_frame_length(&llc) == 3);
 		OSMO_ASSERT(llc_chunk_size(&llc) == 3);
@@ -88,7 +88,7 @@ static void test_llc(void)
 		OSMO_ASSERT(llc.frame[2] == 4);
 
 		/* now fill the frame */
-		llc.append_frame(data, llc_remaining_space(&llc) - 1);
+		llc_append_frame(&llc, data, llc_remaining_space(&llc) - 1);
 		OSMO_ASSERT(llc_fits_in_current_frame(&llc, 1));
 		OSMO_ASSERT(!llc_fits_in_current_frame(&llc, 2));
 	}

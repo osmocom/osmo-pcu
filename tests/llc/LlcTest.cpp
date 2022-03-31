@@ -56,7 +56,7 @@ static void enqueue_data(gprs_llc_queue *queue, const uint8_t *data, size_t len,
 
 	memcpy(msg_data, data, len);
 
-	queue->enqueue(llc_msg, expire_time);
+	llc_queue_enqueue(queue, llc_msg, expire_time);
 }
 
 static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
@@ -65,7 +65,7 @@ static void dequeue_and_check(gprs_llc_queue *queue, const uint8_t *exp_data,
 	struct msgb *llc_msg;
 	const MetaInfo *info_res;
 
-	llc_msg = queue->dequeue(&info_res);
+	llc_msg = llc_queue_dequeue(queue, &info_res);
 	OSMO_ASSERT(llc_msg != NULL);
 
 	fprintf(stderr, "dequeued msg, length %u (expected %zu), data %s\n",

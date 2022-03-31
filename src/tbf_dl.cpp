@@ -217,9 +217,9 @@ int gprs_rlcmac_dl_tbf::append_data(uint16_t pdu_delay_csec,
 	if (!llc_msg)
 		return -ENOMEM;
 
-	gprs_llc_queue::calc_pdu_lifetime(bts, pdu_delay_csec, &expire_time);
+	llc_queue_calc_pdu_lifetime(bts, pdu_delay_csec, &expire_time);
 	memcpy(msgb_put(llc_msg, len), data, len);
-	llc_queue()->enqueue(llc_msg, &expire_time);
+	llc_queue_enqueue(llc_queue(), llc_msg, &expire_time);
 	start_llc_timer();
 
 	if (state_is(TBF_ST_WAIT_RELEASE)) {
@@ -358,7 +358,7 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 	osmo_clock_gettime(CLOCK_MONOTONIC, &tv_now);
 	timespecadd(&tv_now, &hyst_delta, &tv_now2);
 
-	while ((msg = llc_queue()->dequeue(&info))) {
+	while ((msg = llc_queue_dequeue(llc_queue(), &info))) {
 		const struct timespec *tv_disc = &info->expire_time;
 		const struct timespec *tv_recv = &info->recv_time;
 
@@ -372,11 +372,11 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 		}
 
 		/* Is the age below the low water mark? */
-		if (!gprs_llc_queue::is_frame_expired(&tv_now2, tv_disc))
+		if (!llc_queue_is_frame_expired(&tv_now2, tv_disc))
 			break;
 
 		/* Is the age below the high water mark */
-		if (!gprs_llc_queue::is_frame_expired(&tv_now, tv_disc)) {
+		if (!llc_queue_is_frame_expired(&tv_now, tv_disc)) {
 			/* Has the previous message not been dropped? */
 			if (frames == 0)
 				break;
@@ -391,7 +391,7 @@ struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
 				break;
 
 			/* Is it a GMM message? */
-			if (!gprs_llc::is_user_data_frame(msg->data, msg->len))
+			if (!llc_is_user_data_frame(msg->data, msg->len))
 				break;
 		}
 
@@ -634,7 +634,7 @@ void gprs_rlcmac_dl_tbf::schedule_next_frame()
 
 	LOGPTBFDL(this, LOGL_DEBUG, "Dequeue next LLC (len=%d)\n", msg->len);
 
-	m_llc.put_frame(msg->data, msg->len);
+	llc_put_frame(&m_llc, msg->data, msg->len);
 	bts_do_rate_ctr_inc(bts, CTR_LLC_FRAME_SCHED);
 	msgb_free(msg);
 	m_last_dl_drained_fn = -1;
@@ -726,7 +726,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 			 * "Delayed release of downlink Temporary Block Flow" */
 			/* A header will need to by added, so we just need
 			 * space-1 octets */
-			m_llc.put_dummy_frame(space - 1);
+			llc_put_dummy_frame(&m_llc, space - 1);
 
 			LOGPTBFDL(this, LOGL_DEBUG,
 				  "Empty chunk, added LLC dummy command of size %d, drained_since=%d\n",
@@ -747,7 +747,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 		LOGPTBFDL(this, LOGL_DEBUG, "Complete DL frame, len=%d\n", llc_frame_length(&m_llc));
 		gprs_rlcmac_dl_bw(this, llc_frame_length(&m_llc));
 		bts_do_rate_ctr_add(bts, CTR_LLC_DL_BYTES, llc_frame_length(&m_llc));
-		m_llc.reset();
+		llc_reset(&m_llc);
 
 		if (is_final) {
 			request_dl_ack();

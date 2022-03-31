@@ -283,7 +283,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 				i + 1, frame->offset, frame->length,
 				frame->is_complete);
 
-			m_llc.append_frame(data + frame->offset, frame->length);
+			llc_append_frame(&m_llc, data + frame->offset, frame->length);
 			llc_consume(&m_llc, frame->length);
 		}
 
@@ -292,7 +292,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 			LOGPTBFUL(this, LOGL_DEBUG, "complete UL frame len=%d\n", llc_frame_length(&m_llc));
 			snd_ul_ud();
 			bts_do_rate_ctr_add(bts, CTR_LLC_UL_BYTES, llc_frame_length(&m_llc));
-			m_llc.reset();
+			llc_reset(&m_llc);
 		}
 	}
 
@@ -544,7 +544,7 @@ int gprs_rlcmac_ul_tbf::snd_ul_ud()
 	LOGP(DBSSGP, LOGL_INFO, "LLC [PCU -> SGSN] %s len=%d\n", tbf_name(this), llc_frame_length(&m_llc));
 	if (!bctx) {
 		LOGP(DBSSGP, LOGL_ERROR, "No bctx\n");
-		m_llc.reset_frame_space();
+		llc_reset_frame_space(&m_llc);
 		return -EIO;
 	}
 
@@ -556,7 +556,7 @@ int gprs_rlcmac_ul_tbf::snd_ul_ud()
 	qos_profile[2] = QOS_PROFILE;
 	bssgp_tx_ul_ud(bctx, tlli(), qos_profile, llc_pdu);
 
-	m_llc.reset_frame_space();
+	llc_reset_frame_space(&m_llc);
 	return 0;
 }
 

@@ -15,32 +15,36 @@
  * GNU General Public License for more details.
  */
 
-#include <bts.h>
 
 #include <stdio.h>
 
-extern "C" {
 #include <osmocom/core/msgb.h>
-}
 
+#include "bts.h"
 #include "pcu_utils.h"
+#include "llc.h"
+
+void llc_init(struct gprs_llc *llc)
+{
+	llc_reset(llc);
+}
 
 /* reset LLC frame */
-void gprs_llc::reset()
+void llc_reset(struct gprs_llc *llc)
 {
-	index = 0;
-	length = 0;
+	llc->index = 0;
+	llc->length = 0;
 
-	memset(frame, 0x42, sizeof(frame));
+	memset(llc->frame, 0x42, sizeof(llc->frame));
 }
 
-void gprs_llc::reset_frame_space()
+void llc_reset_frame_space(struct gprs_llc *llc)
 {
-	index = 0;
+	llc->index = 0;
 }
 
 /* Put an Unconfirmed Information (UI) Dummy command, see GSM 44.064, 6.4.2.2 */
-void gprs_llc::put_dummy_frame(size_t req_len)
+void llc_put_dummy_frame(struct gprs_llc *llc, size_t req_len)
 {
 	/* The shortest dummy command (the spec requests at least 6 octets) */
 	static const uint8_t llc_dummy_command[] = {
@@ -48,39 +52,34 @@ void gprs_llc::put_dummy_frame(size_t req_len)
 	};
 	static const size_t max_dummy_command_len = 79;
 
-	put_frame(llc_dummy_command, sizeof(llc_dummy_command));
+	llc_put_frame(llc, llc_dummy_command, sizeof(llc_dummy_command));
 
 	if (req_len > max_dummy_command_len)
 		req_len = max_dummy_command_len;
 
 	/* Add further stuffing, if the requested length exceeds the minimum
 	 * dummy command length */
-	if (length < req_len) {
-		memset(&frame[length], 0x2b, req_len - length);
-		length = req_len;
+	if (llc->length < req_len) {
+		memset(&llc->frame[llc->length], 0x2b, req_len - llc->length);
+		llc->length = req_len;
 	}
 }
 
-void gprs_llc::put_frame(const uint8_t *data, size_t len)
+void llc_put_frame(struct gprs_llc *llc, const uint8_t *data, size_t len)
 {
 	/* only put frames when we are empty */
-	OSMO_ASSERT(index == 0 && length == 0);
-	append_frame(data, len);
+	OSMO_ASSERT(llc->index == 0 && llc->length == 0);
+	llc_append_frame(llc, data, len);
 }
 
-void gprs_llc::append_frame(const uint8_t *data, size_t len)
+void llc_append_frame(struct gprs_llc *llc, const uint8_t *data, size_t len)
 {
 	/* TODO: bounds check */
-	memcpy(frame + length, data, len);
-	length += len;
+	memcpy(llc->frame + llc->length, data, len);
+	llc->length += len;
 }
 
-void gprs_llc::init()
-{
-	reset();
-}
-
-bool gprs_llc::is_user_data_frame(uint8_t *data, size_t len)
+bool llc_is_user_data_frame(const uint8_t *data, size_t len)
 {
 	if (len < 2)
 		return false;
@@ -104,20 +103,20 @@ void llc_queue_init(struct gprs_llc_queue *q)
 }
 
 
-void gprs_llc_queue::enqueue(struct msgb *llc_msg, const struct timespec *expire_time)
+void llc_queue_enqueue(struct gprs_llc_queue *q, struct msgb *llc_msg, const struct timespec *expire_time)
 {
-	MetaInfo *meta_storage;
+	struct MetaInfo *meta_storage;
 
 	osmo_static_assert(sizeof(*meta_storage) <= sizeof(llc_msg->cb), info_does_not_fit);
 
-	queue_size += 1;
-	queue_octets += msgb_length(llc_msg);
+	q->queue_size += 1;
+	q->queue_octets += msgb_length(llc_msg);
 
-	meta_storage = (MetaInfo *)&llc_msg->cb[0];
+	meta_storage = (struct MetaInfo *)&llc_msg->cb[0];
 	osmo_clock_gettime(CLOCK_MONOTONIC, &meta_storage->recv_time);
 	meta_storage->expire_time = *expire_time;
 
-	msgb_enqueue(&queue, llc_msg);
+	msgb_enqueue(&q->queue, llc_msg);
 }
 
 void llc_queue_clear(struct gprs_llc_queue *q, struct gprs_rlcmac_bts *bts)
@@ -159,8 +158,8 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 			msg = msg1;
 			msg1 = NULL;
 		} else {
-			const MetaInfo *mi1 = (MetaInfo *)&msg1->cb[0];
-			const MetaInfo *mi2 = (MetaInfo *)&msg2->cb[0];
+			const struct MetaInfo *mi1 = (struct MetaInfo *)&msg1->cb[0];
+			const struct MetaInfo *mi2 = (struct MetaInfo *)&msg2->cb[0];
 
 			if (timespeccmp(&mi2->recv_time, &mi1->recv_time, >)) {
 				msg = msg1;
@@ -189,24 +188,24 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 
 #define ALPHA 0.5f
 
-struct msgb *gprs_llc_queue::dequeue(const MetaInfo **info)
+struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q, const struct MetaInfo **info)
 {
 	struct msgb *msg;
 	struct timespec *tv, tv_now, tv_result;
 	uint32_t lifetime;
-	const MetaInfo *meta_storage;
+	const struct MetaInfo *meta_storage;
 
-	msg = msgb_dequeue(&queue);
+	msg = msgb_dequeue(&q->queue);
 	if (!msg)
 		return NULL;
 
-	meta_storage = (MetaInfo *)&msg->cb[0];
+	meta_storage = (struct MetaInfo *)&msg->cb[0];
 
 	if (info)
 		*info = meta_storage;
 
-	queue_size -= 1;
-	queue_octets -= msgb_length(msg);
+	q->queue_size -= 1;
+	q->queue_octets -= msgb_length(msg);
 
 	/* take the second time */
 	osmo_clock_gettime(CLOCK_MONOTONIC, &tv_now);
@@ -214,12 +213,12 @@ struct msgb *gprs_llc_queue::dequeue(const MetaInfo **info)
 	timespecsub(&tv_now, &meta_storage->recv_time, &tv_result);
 
 	lifetime = tv_result.tv_sec*1000 + tv_result.tv_nsec/1000000;
-	avg_queue_delay = avg_queue_delay * ALPHA + lifetime * (1-ALPHA);
+	q->avg_queue_delay = q->avg_queue_delay * ALPHA + lifetime * (1-ALPHA);
 
 	return msg;
 }
 
-void gprs_llc_queue::calc_pdu_lifetime(struct gprs_rlcmac_bts *bts, const uint16_t pdu_delay_csec, struct timespec *tv)
+void llc_queue_calc_pdu_lifetime(struct gprs_rlcmac_bts *bts, const uint16_t pdu_delay_csec, struct timespec *tv)
 {
 	uint16_t delay_csec;
 	if (bts->pcu->vty.force_llc_lifetime)
@@ -241,8 +240,7 @@ void gprs_llc_queue::calc_pdu_lifetime(struct gprs_rlcmac_bts *bts, const uint16
 	timespecadd(&now, &csec, tv);
 }
 
-bool gprs_llc_queue::is_frame_expired(const struct timespec *tv_now,
-	const struct timespec *tv)
+bool llc_queue_is_frame_expired(const struct timespec *tv_now, const struct timespec *tv)
 {
 	/* Timeout is infinite */
 	if (tv->tv_sec == 0 && tv->tv_nsec == 0)

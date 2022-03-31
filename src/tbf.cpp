@@ -130,7 +130,7 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	OSMO_ASSERT(dl_ass_fsm.fi);
 
 	m_rlc.init();
-	m_llc.init();
+	llc_init(&m_llc);
 
 	m_name_buf[0] = '\0';
 

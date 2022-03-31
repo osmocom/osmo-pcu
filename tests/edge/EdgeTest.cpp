@@ -535,7 +535,7 @@ static void test_rlc_unit_encoder()
 
 	printf("=== start %s ===\n", __func__);
 
-	llc.init();
+	llc_init(&llc);
 
 	/* TS 44.060, B.1 */
 	cs = CS4;
@@ -544,8 +544,8 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	llc.reset();
-	llc.put_frame(llc_data, 11);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 11);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -557,8 +557,8 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(count_payload == 11);
 	OSMO_ASSERT(num_chunks == 1);
 
-	llc.reset();
-	llc.put_frame(llc_data, 26);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 26);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -570,8 +570,8 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(count_payload == 26);
 	OSMO_ASSERT(num_chunks == 2);
 
-	llc.reset();
-	llc.put_frame(llc_data, 99);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 99);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -597,8 +597,8 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	llc.reset();
-	llc.put_frame(llc_data, 20);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 20);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -632,8 +632,8 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(count_payload == 1);
 	OSMO_ASSERT(num_chunks == 1);
 
-	llc.reset();
-	llc.put_frame(llc_data, 99);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 99);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -657,8 +657,8 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	llc.reset();
-	llc.put_frame(llc_data, 7);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 7);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -670,8 +670,8 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(count_payload == 7);
 	OSMO_ASSERT(num_chunks == 1);
 
-	llc.reset();
-	llc.put_frame(llc_data, 11);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 11);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -696,8 +696,8 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	llc.reset();
-	llc.put_frame(llc_data, 99);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 99);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -721,8 +721,8 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	llc.reset();
-	llc.put_frame(llc_data, 20);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 20);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -746,8 +746,8 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	llc.reset();
-	llc.put_frame(llc_data, 30);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 30);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -779,8 +779,8 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(count_payload == 10);
 	OSMO_ASSERT(num_chunks == 1);
 
-	llc.reset();
-	llc.put_frame(llc_data, 99);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 99);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -804,8 +804,8 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	llc.reset();
-	llc.put_frame(llc_data, 11);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 11);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -817,8 +817,8 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(count_payload == 11);
 	OSMO_ASSERT(num_chunks == 1);
 
-	llc.reset();
-	llc.put_frame(llc_data, 26);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 26);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -830,8 +830,8 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(count_payload == 26);
 	OSMO_ASSERT(num_chunks == 2);
 
-	llc.reset();
-	llc.put_frame(llc_data, 99);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 99);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -862,8 +862,8 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	llc.reset();
-	llc.put_frame(llc_data, 15);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 15);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -875,8 +875,8 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(count_payload == 15);
 	OSMO_ASSERT(num_chunks == 1);
 
-	llc.reset();
-	llc.put_frame(llc_data, 12);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 12);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -911,8 +911,8 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(count_payload == 0);
 	OSMO_ASSERT(num_chunks == 1);
 
-	llc.reset();
-	llc.put_frame(llc_data, 7);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 7);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -925,8 +925,8 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(count_payload == 7);
 	OSMO_ASSERT(num_chunks == 2);
 
-	llc.reset();
-	llc.put_frame(llc_data, 18);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 18);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -950,8 +950,8 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	llc.reset();
-	llc.put_frame(llc_data, 6);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 6);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -963,8 +963,8 @@ static void test_rlc_unit_encoder()
 	OSMO_ASSERT(count_payload == 6);
 	OSMO_ASSERT(num_chunks == 1);
 
-	llc.reset();
-	llc.put_frame(llc_data, 12);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, 12);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -994,8 +994,8 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	llc.reset();
-	llc.put_frame(llc_data, rdbi.data_len);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, rdbi.data_len);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -1020,8 +1020,8 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	llc.reset();
-	llc.put_frame(llc_data, rdbi.data_len - 1);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, rdbi.data_len - 1);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,
@@ -1048,8 +1048,8 @@ static void test_rlc_unit_encoder()
 	write_offset = 0;
 	memset(data, 0, sizeof(data));
 
-	llc.reset();
-	llc.put_frame(llc_data, rdbi.data_len - 2);
+	llc_reset(&llc);
+	llc_put_frame(&llc, llc_data, rdbi.data_len - 2);
 	count_payload = -1;
 
 	ar = Encoding::rlc_data_to_dl_append(&rdbi, cs,

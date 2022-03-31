@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2013 by Holger Hans Peter Freyther
+ * Copyright (C) 2022 by by Sysmocom s.f.m.c. GmbH
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,14 +18,13 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	#include <osmocom/core/linuxlist.h>
-#ifdef __cplusplus
-}
-#endif
 
 #include <stdint.h>
 #include <string.h>
 #include <time.h>
+
+#include <osmocom/core/linuxlist.h>
+#include <osmocom/core/msgb.h>
 
 #define LLC_MAX_LEN 1543
 
@@ -34,23 +34,19 @@ struct gprs_rlcmac_bts;
  * I represent the LLC data to a MS
  */
 struct gprs_llc {
-
-#ifdef __cplusplus
-	static bool is_user_data_frame(uint8_t *data, size_t len);
-
-	void init();
-	void reset();
-	void reset_frame_space();
-
-	void put_frame(const uint8_t *data, size_t len);
-	void put_dummy_frame(size_t req_len);
-	void append_frame(const uint8_t *data, size_t len);
-#endif
-
 	uint8_t frame[LLC_MAX_LEN]; /* current DL or UL frame */
 	uint16_t index; /* current write/read position of frame */
 	uint16_t length; /* len of current DL LLC_frame, 0 == no frame */
 };
+bool llc_is_user_data_frame(const uint8_t *data, size_t len);
+
+void llc_init(struct gprs_llc *llc);
+void llc_reset(struct gprs_llc *llc);
+void llc_reset_frame_space(struct gprs_llc *llc);
+
+void llc_put_frame(struct gprs_llc *llc, const uint8_t *data, size_t len);
+void llc_put_dummy_frame(struct gprs_llc *llc, size_t req_len);
+void llc_append_frame(struct gprs_llc *llc, const uint8_t *data, size_t len);
 
 struct MetaInfo {
 	struct timespec recv_time;
@@ -60,28 +56,21 @@ struct MetaInfo {
  * I store the LLC frames that come from the SGSN.
  */
 struct gprs_llc_queue {
-#ifdef __cplusplus
-	static void calc_pdu_lifetime(struct gprs_rlcmac_bts *bts, const uint16_t pdu_delay_csec,
-		struct timespec *tv);
-	static bool is_frame_expired(const struct timespec *now,
-		const struct timespec *tv);
-	static bool is_user_data_frame(uint8_t *data, size_t len);
-
-	void enqueue(struct msgb *llc_msg, const struct timespec *expire_time);
-	struct msgb *dequeue(const MetaInfo **info = 0);
-#endif
 	uint32_t avg_queue_delay; /* Average delay of data going through the queue */
 	size_t queue_size;
 	size_t queue_octets;
 	struct llist_head queue; /* queued LLC DL data */
 };
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+void llc_queue_calc_pdu_lifetime(struct gprs_rlcmac_bts *bts, const uint16_t pdu_delay_csec,
+		struct timespec *tv);
+bool llc_queue_is_frame_expired(const struct timespec *tv_now, const struct timespec *tv);
+
 void llc_queue_init(struct gprs_llc_queue *q);
 void llc_queue_clear(struct gprs_llc_queue *q, struct gprs_rlcmac_bts *bts);
 void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o);
+void llc_queue_enqueue(struct gprs_llc_queue *q, struct msgb *llc_msg, const struct timespec *expire_time);
+struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q, const struct MetaInfo **info);
 
 static inline uint16_t llc_chunk_size(const struct gprs_llc *llc)
 {
