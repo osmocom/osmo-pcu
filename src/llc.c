@@ -96,18 +96,39 @@ bool llc_is_user_data_frame(const uint8_t *data, size_t len)
 
 void llc_queue_init(struct gprs_llc_queue *q)
 {
-	INIT_LLIST_HEAD(&q->queue);
+	unsigned int i;
+
 	q->queue_size = 0;
 	q->queue_octets = 0;
 	q->avg_queue_delay = 0;
+	for (i = 0; i < ARRAY_SIZE(q->queue); i++)
+		INIT_LLIST_HEAD(&q->queue[i]);
 }
 
+
+static enum gprs_llc_queue_prio llc_sapi2prio(uint8_t sapi)
+{
+	switch (sapi) {
+	case 1:
+		return LLC_QUEUE_PRIO_GMM;
+	case 2:
+	case 7:
+	case 8:
+		return LLC_QUEUE_PRIO_TOM_SMS;
+	default:
+		return LLC_QUEUE_PRIO_OTHER;
+	}
+}
 
 void llc_queue_enqueue(struct gprs_llc_queue *q, struct msgb *llc_msg, const struct timespec *expire_time)
 {
 	struct MetaInfo *meta_storage;
+	struct gprs_llc_hdr *llc_hdr = (struct gprs_llc_hdr *)msgb_data(llc_msg);
+	enum gprs_llc_queue_prio prio;
 
 	osmo_static_assert(sizeof(*meta_storage) <= sizeof(llc_msg->cb), info_does_not_fit);
+
+	prio = llc_sapi2prio(llc_hdr->sapi);
 
 	q->queue_size += 1;
 	q->queue_octets += msgb_length(llc_msg);
@@ -116,17 +137,20 @@ void llc_queue_enqueue(struct gprs_llc_queue *q, struct msgb *llc_msg, const str
 	osmo_clock_gettime(CLOCK_MONOTONIC, &meta_storage->recv_time);
 	meta_storage->expire_time = *expire_time;
 
-	msgb_enqueue(&q->queue, llc_msg);
+	msgb_enqueue(&q->queue[prio], llc_msg);
 }
 
 void llc_queue_clear(struct gprs_llc_queue *q, struct gprs_rlcmac_bts *bts)
 {
 	struct msgb *msg;
+	unsigned int i;
 
-	while ((msg = msgb_dequeue(&q->queue))) {
-		if (bts)
-			bts_do_rate_ctr_inc(bts, CTR_LLC_FRAME_DROPPED);
-		msgb_free(msg);
+	for (i = 0; i < ARRAY_SIZE(q->queue); i++) {
+		while ((msg = msgb_dequeue(&q->queue[i]))) {
+			if (bts)
+				bts_do_rate_ctr_inc(bts, CTR_LLC_FRAME_DROPPED);
+			msgb_free(msg);
+		}
 	}
 
 	q->queue_size = 0;
@@ -137,51 +161,53 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 {
 	struct msgb *msg, *msg1 = NULL, *msg2 = NULL;
 	struct llist_head new_queue;
+	unsigned int i;
 	size_t queue_size = 0;
 	size_t queue_octets = 0;
 	INIT_LLIST_HEAD(&new_queue);
 
-	while (1) {
-		if (msg1 == NULL)
-			msg1 = msgb_dequeue(&q->queue);
+	for (i = 0; i < ARRAY_SIZE(q->queue); i++) {
+		while (1) {
+			if (msg1 == NULL)
+				msg1 = msgb_dequeue(&q->queue[i]);
 
-		if (msg2 == NULL)
-			msg2 = msgb_dequeue(&o->queue);
+			if (msg2 == NULL)
+				msg2 = msgb_dequeue(&o->queue[i]);
 
-		if (msg1 == NULL && msg2 == NULL)
-			break;
+			if (msg1 == NULL && msg2 == NULL)
+				break;
 
-		if (msg1 == NULL) {
-			msg = msg2;
-			msg2 = NULL;
-		} else if (msg2 == NULL) {
-			msg = msg1;
-			msg1 = NULL;
-		} else {
-			const struct MetaInfo *mi1 = (struct MetaInfo *)&msg1->cb[0];
-			const struct MetaInfo *mi2 = (struct MetaInfo *)&msg2->cb[0];
-
-			if (timespeccmp(&mi2->recv_time, &mi1->recv_time, >)) {
+			if (msg1 == NULL) {
+				msg = msg2;
+				msg2 = NULL;
+			} else if (msg2 == NULL) {
 				msg = msg1;
 				msg1 = NULL;
 			} else {
-				msg = msg2;
-				msg2 = NULL;
+				const struct MetaInfo *mi1 = (struct MetaInfo *)&msg1->cb[0];
+				const struct MetaInfo *mi2 = (struct MetaInfo *)&msg2->cb[0];
+
+				if (timespeccmp(&mi2->recv_time, &mi1->recv_time, >)) {
+					msg = msg1;
+					msg1 = NULL;
+				} else {
+					msg = msg2;
+					msg2 = NULL;
+				}
 			}
+
+			msgb_enqueue(&new_queue, msg);
+			queue_size += 1;
+			queue_octets += msgb_length(msg);
 		}
 
-		msgb_enqueue(&new_queue, msg);
-		queue_size += 1;
-		queue_octets += msgb_length(msg);
+		OSMO_ASSERT(llist_empty(&q->queue[i]));
+		OSMO_ASSERT(llist_empty(&o->queue[i]));
+		llist_splice_init(&new_queue, &q->queue[i]);
 	}
-
-	OSMO_ASSERT(llist_empty(&q->queue));
-	OSMO_ASSERT(llist_empty(&o->queue));
 
 	o->queue_size = 0;
 	o->queue_octets = 0;
-
-	llist_splice_init(&new_queue, &q->queue);
 	q->queue_size = queue_size;
 	q->queue_octets = queue_octets;
 }
@@ -193,9 +219,13 @@ struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q, const struct MetaInfo *
 	struct msgb *msg;
 	struct timespec *tv, tv_now, tv_result;
 	uint32_t lifetime;
+	unsigned int i;
 	const struct MetaInfo *meta_storage;
 
-	msg = msgb_dequeue(&q->queue);
+	for (i = 0; i < ARRAY_SIZE(q->queue); i++) {
+		if ((msg = msgb_dequeue(&q->queue[i])))
+			break;
+	}
 	if (!msg)
 		return NULL;
 

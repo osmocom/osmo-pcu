@@ -1,4 +1,4 @@
-/*
+/* 3GPP TS 44.064
  * Copyright (C) 2013 by Holger Hans Peter Freyther
  * Copyright (C) 2022 by by Sysmocom s.f.m.c. GmbH
  *
@@ -23,12 +23,29 @@ extern "C" {
 #include <string.h>
 #include <time.h>
 
+#include <osmocom/core/endian.h>
 #include <osmocom/core/linuxlist.h>
 #include <osmocom/core/msgb.h>
+#include <osmocom/core/endian.h>
 
 #define LLC_MAX_LEN 1543
 
 struct gprs_rlcmac_bts;
+
+struct gprs_llc_hdr {
+#if OSMO_IS_LITTLE_ENDIAN
+	union { /* 5.2, 6.2.0 */
+		uint8_t address;
+		uint8_t sapi:4, unused:2, c_r:1, pd:1;
+#elif OSMO_IS_BIG_ENDIAN
+/* auto-generated from the little endian part above (libosmocore/contrib/struct_endianess.py) */
+	union {
+		uint8_t address;
+		uint8_t pd:1, c_r:1, unused:2, sapi:4;
+#endif
+	};
+	uint8_t control[0];
+} __attribute__ ((packed));
 
 /**
  * I represent the LLC data to a MS
@@ -87,11 +104,17 @@ struct MetaInfo {
 /**
  * I store the LLC frames that come from the SGSN.
  */
+enum gprs_llc_queue_prio { /* lowest value has highest prio */
+	LLC_QUEUE_PRIO_GMM = 0, /* SAPI 1 */
+	LLC_QUEUE_PRIO_TOM_SMS, /* SAPI 2,7,8 */
+	LLC_QUEUE_PRIO_OTHER, /* Other SAPIs */
+	_LLC_QUEUE_PRIO_SIZE /* used to calculate size of enum */
+};
 struct gprs_llc_queue {
 	uint32_t avg_queue_delay; /* Average delay of data going through the queue */
 	size_t queue_size;
 	size_t queue_octets;
-	struct llist_head queue; /* queued LLC DL data */
+	struct llist_head queue[_LLC_QUEUE_PRIO_SIZE]; /* queued LLC DL data. See enum gprs_llc_queue_prio. */
 };
 
 void llc_queue_calc_pdu_lifetime(struct gprs_rlcmac_bts *bts, const uint16_t pdu_delay_csec,
