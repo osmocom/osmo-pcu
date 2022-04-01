@@ -540,7 +540,7 @@ int pcu_rx_rts_req_ptcch(struct gprs_rlcmac_bts *bts, uint8_t trx, uint8_t ts,
 
 	/* Make sure PDCH time-slot is enabled */
 	pdch = &bts->trx[trx].pdch[ts];
-	if (!pdch->m_is_enabled)
+	if (!pdch_is_enabled(pdch))
 		return -EAGAIN;
 
 	/* If there's no TBF attached to this PDCH, we can skip Tx of PTCCH

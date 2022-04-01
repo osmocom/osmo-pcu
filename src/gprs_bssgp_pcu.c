@@ -782,7 +782,7 @@ static unsigned count_pdch(const struct gprs_rlcmac_bts *bts)
 		for (ts_no = 0; ts_no < ARRAY_SIZE(trx->pdch); ++ts_no) {
 			const struct gprs_rlcmac_pdch *pdch = &trx->pdch[ts_no];
 
-			if (pdch->m_is_enabled)
+			if (pdch_is_enabled(pdch))
 				num_pdch += 1;
 		}
 	}
