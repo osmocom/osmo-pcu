@@ -119,7 +119,7 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli)
 	if (ms->bts)
 		codel_interval = the_pcu->vty.llc_codel_interval_msec;
 
-	if (codel_interval) {
+	if (codel_interval != LLC_CODEL_DISABLE) {
 		if (codel_interval == LLC_CODEL_USE_DEFAULT)
 			codel_interval = GPRS_CODEL_SLOW_INTERVAL_MS;
 		ms->codel_state = talloc(ms, struct gprs_codel);
