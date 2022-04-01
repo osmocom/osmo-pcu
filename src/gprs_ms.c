@@ -90,6 +90,7 @@ static int ms_talloc_destructor(struct GprsMs *ms);
 struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli)
 {
 	struct GprsMs *ms = talloc_zero(tall_pcu_ctx, struct GprsMs);
+	OSMO_ASSERT(bts);
 
 	talloc_set_destructor(ms, ms_talloc_destructor);
 
@@ -116,8 +117,7 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli)
 
 	ms_set_mode(ms, GPRS);
 
-	if (ms->bts)
-		codel_interval = the_pcu->vty.llc_codel_interval_msec;
+	codel_interval = the_pcu->vty.llc_codel_interval_msec;
 
 	if (codel_interval != LLC_CODEL_DISABLE) {
 		if (codel_interval == LLC_CODEL_USE_DEFAULT)
