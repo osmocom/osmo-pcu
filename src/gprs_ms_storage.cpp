@@ -28,8 +28,7 @@ extern "C" {
 static void ms_storage_ms_idle_cb(struct GprsMs *ms)
 {
 	llist_del(&ms->list);
-	if (ms->bts)
-		bts_stat_item_add(ms->bts, STAT_MS_PRESENT, -1);
+	bts_stat_item_add(ms->bts, STAT_MS_PRESENT, -1);
 	if (ms_is_idle(ms))
 		talloc_free(ms);
 }
