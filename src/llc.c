@@ -21,6 +21,7 @@
 #include <osmocom/core/msgb.h>
 
 #include "bts.h"
+#include "gprs_ms.h"
 #include "pcu_utils.h"
 #include "llc.h"
 
@@ -94,17 +95,32 @@ bool llc_is_user_data_frame(const uint8_t *data, size_t len)
 	return true;
 }
 
-void llc_queue_init(struct gprs_llc_queue *q)
+void llc_queue_init(struct gprs_llc_queue *q, struct GprsMs *ms)
 {
 	unsigned int i;
 
+	q->ms = ms;
 	q->queue_size = 0;
 	q->queue_octets = 0;
 	q->avg_queue_delay = 0;
-	for (i = 0; i < ARRAY_SIZE(q->queue); i++)
-		INIT_LLIST_HEAD(&q->queue[i]);
+	for (i = 0; i < ARRAY_SIZE(q->pq); i++) {
+		INIT_LLIST_HEAD(&q->pq[i].queue);
+		gprs_codel_init(&q->pq[i].codel_state);
+	}
 }
 
+/* interval=0 -> don't use codel in the LLC queue */
+void llc_queue_set_codel_interval(struct gprs_llc_queue *q, unsigned int interval)
+{
+	unsigned int i;
+	if (interval == LLC_CODEL_DISABLE) {
+		q->use_codel = false;
+		return;
+	}
+	q->use_codel = true;
+	for (i = 0; i < ARRAY_SIZE(q->pq); i++)
+		gprs_codel_set_interval(&q->pq[i].codel_state, interval);
+}
 
 static enum gprs_llc_queue_prio llc_sapi2prio(uint8_t sapi)
 {
@@ -137,7 +153,7 @@ void llc_queue_enqueue(struct gprs_llc_queue *q, struct msgb *llc_msg, const str
 	osmo_clock_gettime(CLOCK_MONOTONIC, &meta_storage->recv_time);
 	meta_storage->expire_time = *expire_time;
 
-	msgb_enqueue(&q->queue[prio], llc_msg);
+	msgb_enqueue(&q->pq[prio].queue, llc_msg);
 }
 
 void llc_queue_clear(struct gprs_llc_queue *q, struct gprs_rlcmac_bts *bts)
@@ -145,8 +161,8 @@ void llc_queue_clear(struct gprs_llc_queue *q, struct gprs_rlcmac_bts *bts)
 	struct msgb *msg;
 	unsigned int i;
 
-	for (i = 0; i < ARRAY_SIZE(q->queue); i++) {
-		while ((msg = msgb_dequeue(&q->queue[i]))) {
+	for (i = 0; i < ARRAY_SIZE(q->pq); i++) {
+		while ((msg = msgb_dequeue(&q->pq[i].queue))) {
 			if (bts)
 				bts_do_rate_ctr_inc(bts, CTR_LLC_FRAME_DROPPED);
 			msgb_free(msg);
@@ -166,13 +182,13 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 	size_t queue_octets = 0;
 	INIT_LLIST_HEAD(&new_queue);
 
-	for (i = 0; i < ARRAY_SIZE(q->queue); i++) {
+	for (i = 0; i < ARRAY_SIZE(q->pq); i++) {
 		while (1) {
 			if (msg1 == NULL)
-				msg1 = msgb_dequeue(&q->queue[i]);
+				msg1 = msgb_dequeue(&q->pq[i].queue);
 
 			if (msg2 == NULL)
-				msg2 = msgb_dequeue(&o->queue[i]);
+				msg2 = msgb_dequeue(&o->pq[i].queue);
 
 			if (msg1 == NULL && msg2 == NULL)
 				break;
@@ -201,9 +217,9 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 			queue_octets += msgb_length(msg);
 		}
 
-		OSMO_ASSERT(llist_empty(&q->queue[i]));
-		OSMO_ASSERT(llist_empty(&o->queue[i]));
-		llist_splice_init(&new_queue, &q->queue[i]);
+		OSMO_ASSERT(llist_empty(&q->pq[i].queue));
+		OSMO_ASSERT(llist_empty(&o->pq[i].queue));
+		llist_splice_init(&new_queue, &q->pq[i].queue);
 	}
 
 	o->queue_size = 0;
@@ -214,7 +230,7 @@ void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o
 
 #define ALPHA 0.5f
 
-struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q, const struct MetaInfo **info)
+static struct msgb *llc_queue_pick_msg(struct gprs_llc_queue *q, enum gprs_llc_queue_prio *prio)
 {
 	struct msgb *msg;
 	struct timespec *tv, tv_now, tv_result;
@@ -222,17 +238,16 @@ struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q, const struct MetaInfo *
 	unsigned int i;
 	const struct MetaInfo *meta_storage;
 
-	for (i = 0; i < ARRAY_SIZE(q->queue); i++) {
-		if ((msg = msgb_dequeue(&q->queue[i])))
+	for (i = 0; i < ARRAY_SIZE(q->pq); i++) {
+		if ((msg = msgb_dequeue(&q->pq[i].queue))) {
+			*prio = (enum gprs_llc_queue_prio)i;
 			break;
+		}
 	}
 	if (!msg)
 		return NULL;
 
 	meta_storage = (struct MetaInfo *)&msg->cb[0];
-
-	if (info)
-		*info = meta_storage;
 
 	q->queue_size -= 1;
 	q->queue_octets -= msgb_length(msg);
@@ -244,6 +259,85 @@ struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q, const struct MetaInfo *
 
 	lifetime = tv_result.tv_sec*1000 + tv_result.tv_nsec/1000000;
 	q->avg_queue_delay = q->avg_queue_delay * ALPHA + lifetime * (1-ALPHA);
+
+	return msg;
+}
+
+struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q)
+{
+	struct msgb *msg;
+	struct timespec tv_now, tv_now2;
+	uint32_t octets = 0, frames = 0;
+	struct gprs_rlcmac_bts *bts = q->ms->bts;
+	struct gprs_pcu *pcu = bts->pcu;
+	struct timespec hyst_delta = {0, 0};
+	const unsigned keep_small_thresh = 60;
+	enum gprs_llc_queue_prio prio;
+
+	if (pcu->vty.llc_discard_csec)
+		csecs_to_timespec(pcu->vty.llc_discard_csec, &hyst_delta);
+
+	osmo_clock_gettime(CLOCK_MONOTONIC, &tv_now);
+	timespecadd(&tv_now, &hyst_delta, &tv_now2);
+
+	while ((msg = llc_queue_pick_msg(q, &prio))) {
+		const struct MetaInfo *info = (const struct MetaInfo *)&msg->cb[0];
+		const struct timespec *tv_disc = &info->expire_time;
+		const struct timespec *tv_recv = &info->recv_time;
+
+		gprs_bssgp_update_queue_delay(tv_recv, &tv_now);
+
+		if (q->use_codel) {
+			int bytes = llc_queue_octets(q);
+			if (gprs_codel_control(&q->pq[prio].codel_state, tv_recv, &tv_now, bytes))
+				goto drop_frame;
+		}
+
+		/* Is the age below the low water mark? */
+		if (!llc_queue_is_frame_expired(&tv_now2, tv_disc))
+			break;
+
+		/* Is the age below the high water mark */
+		if (!llc_queue_is_frame_expired(&tv_now, tv_disc)) {
+			/* Has the previous message not been dropped? */
+			if (frames == 0)
+				break;
+
+			/* Hysteresis mode, try to discard LLC messages until
+			 * the low water mark has been reached */
+
+			/* Check whether to abort the hysteresis mode */
+
+			/* Is the frame small, perhaps only a TCP ACK? */
+			if (msg->len <= keep_small_thresh)
+				break;
+
+			/* Is it a GMM message? */
+			if (!llc_is_user_data_frame(msg->data, msg->len))
+				break;
+		}
+
+		bts_do_rate_ctr_inc(bts, CTR_LLC_FRAME_TIMEDOUT);
+drop_frame:
+		frames++;
+		octets += msg->len;
+		msgb_free(msg);
+		bts_do_rate_ctr_inc(bts, CTR_LLC_FRAME_DROPPED);
+		continue;
+	}
+
+	if (frames) {
+		LOGPMS(q->ms, DTBFDL, LOGL_NOTICE, "Discarding LLC PDU "
+			"because lifetime limit reached, "
+			"count=%u new_queue_size=%zu\n",
+			  frames, llc_queue_size(q));
+		if (frames > 0xff)
+			frames = 0xff;
+		if (octets > 0xffffff)
+			octets = 0xffffff;
+		if (pcu->bssgp.bctx)
+			bssgp_tx_llc_discarded(pcu->bssgp.bctx, ms_tlli(q->ms), frames, octets);
+	}
 
 	return msg;
 }

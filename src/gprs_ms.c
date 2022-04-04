@@ -113,19 +113,15 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli)
 	ms->imsi[0] = '\0';
 	memset(&ms->timer, 0, sizeof(ms->timer));
 	ms->timer.cb = ms_release_timer_cb;
-	llc_queue_init(&ms->llc_queue);
+	llc_queue_init(&ms->llc_queue, ms);
 
 	ms_set_mode(ms, GPRS);
 
 	codel_interval = the_pcu->vty.llc_codel_interval_msec;
+	if (codel_interval == LLC_CODEL_USE_DEFAULT)
+		codel_interval = GPRS_CODEL_SLOW_INTERVAL_MS;
+	llc_queue_set_codel_interval(&ms->llc_queue, codel_interval);
 
-	if (codel_interval != LLC_CODEL_DISABLE) {
-		if (codel_interval == LLC_CODEL_USE_DEFAULT)
-			codel_interval = GPRS_CODEL_SLOW_INTERVAL_MS;
-		ms->codel_state = talloc(ms, struct gprs_codel);
-		gprs_codel_init(ms->codel_state);
-		gprs_codel_set_interval(ms->codel_state, codel_interval);
-	}
 	ms->last_cs_not_low = now_msec();
 	ms->app_info_pending = false;
 

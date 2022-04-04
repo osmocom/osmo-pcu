@@ -57,8 +57,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	void set_window_size();
 	void update_coding_scheme_counter_dl(enum CodingScheme cs);
 
-	struct msgb *llc_dequeue(bssgp_bvc_ctx *bctx);
-
 	/* Please note that all variables here will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
 	 * All states that need reset must be in this struct, so this is why

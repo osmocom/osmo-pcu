@@ -343,83 +343,6 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 	return rc;
 }
 
-struct msgb *gprs_rlcmac_dl_tbf::llc_dequeue(bssgp_bvc_ctx *bctx)
-{
-	struct msgb *msg;
-	struct timespec tv_now, tv_now2;
-	uint32_t octets = 0, frames = 0;
-	struct timespec hyst_delta = {0, 0};
-	const unsigned keep_small_thresh = 60;
-	const MetaInfo *info;
-
-	if (the_pcu->vty.llc_discard_csec)
-		csecs_to_timespec(the_pcu->vty.llc_discard_csec, &hyst_delta);
-
-	osmo_clock_gettime(CLOCK_MONOTONIC, &tv_now);
-	timespecadd(&tv_now, &hyst_delta, &tv_now2);
-
-	while ((msg = llc_queue_dequeue(llc_queue(), &info))) {
-		const struct timespec *tv_disc = &info->expire_time;
-		const struct timespec *tv_recv = &info->recv_time;
-
-		gprs_bssgp_update_queue_delay(tv_recv, &tv_now);
-
-		if (ms() && ms_codel_state(ms())) {
-			int bytes = llc_queue_octets(llc_queue());
-			if (gprs_codel_control(ms_codel_state(ms()),
-					tv_recv, &tv_now, bytes))
-				goto drop_frame;
-		}
-
-		/* Is the age below the low water mark? */
-		if (!llc_queue_is_frame_expired(&tv_now2, tv_disc))
-			break;
-
-		/* Is the age below the high water mark */
-		if (!llc_queue_is_frame_expired(&tv_now, tv_disc)) {
-			/* Has the previous message not been dropped? */
-			if (frames == 0)
-				break;
-
-			/* Hysteresis mode, try to discard LLC messages until
-			 * the low water mark has been reached */
-
-			/* Check whether to abort the hysteresis mode */
-
-			/* Is the frame small, perhaps only a TCP ACK? */
-			if (msg->len <= keep_small_thresh)
-				break;
-
-			/* Is it a GMM message? */
-			if (!llc_is_user_data_frame(msg->data, msg->len))
-				break;
-		}
-
-		bts_do_rate_ctr_inc(bts, CTR_LLC_FRAME_TIMEDOUT);
-drop_frame:
-		frames++;
-		octets += msg->len;
-		msgb_free(msg);
-		bts_do_rate_ctr_inc(bts, CTR_LLC_FRAME_DROPPED);
-		continue;
-	}
-
-	if (frames) {
-		LOGPTBFDL(this, LOGL_NOTICE, "Discarding LLC PDU "
-			"because lifetime limit reached, "
-			"count=%u new_queue_size=%zu\n",
-			  frames, llc_queue_size(llc_queue()));
-		if (frames > 0xff)
-			frames = 0xff;
-		if (octets > 0xffffff)
-			octets = 0xffffff;
-		if (bctx)
-			bssgp_tx_llc_discarded(bctx, tlli(), frames, octets);
-	}
-
-	return msg;
-}
-
 bool gprs_rlcmac_dl_tbf::restart_bsn_cycle()
 {
 	/* If V(S) == V(A) and finished state, we would have received
@@ -628,7 +551,7 @@ void gprs_rlcmac_dl_tbf::schedule_next_frame()
 		return;
 
 	/* dequeue next LLC frame, if any */
-	msg = llc_dequeue(bts->pcu->bssgp.bctx);
+	msg = llc_queue_dequeue(llc_queue());
 	if (!msg)
 		return;
 

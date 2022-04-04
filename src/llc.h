@@ -28,9 +28,12 @@ extern "C" {
 #include <osmocom/core/msgb.h>
 #include <osmocom/core/endian.h>
 
+#include "gprs_codel.h"
+
 #define LLC_MAX_LEN 1543
 
 struct gprs_rlcmac_bts;
+struct GprsMs;
 
 struct gprs_llc_hdr {
 #if OSMO_IS_LITTLE_ENDIAN
@@ -110,22 +113,29 @@ enum gprs_llc_queue_prio { /* lowest value has highest prio */
 	LLC_QUEUE_PRIO_OTHER, /* Other SAPIs */
 	_LLC_QUEUE_PRIO_SIZE /* used to calculate size of enum */
 };
+struct gprs_llc_prio_queue {
+	struct gprs_codel codel_state;
+	struct llist_head queue; /* queued LLC DL data. See enum gprs_llc_queue_prio. */
+};
 struct gprs_llc_queue {
+	struct GprsMs *ms; /* backpointer */
 	uint32_t avg_queue_delay; /* Average delay of data going through the queue */
 	size_t queue_size;
 	size_t queue_octets;
-	struct llist_head queue[_LLC_QUEUE_PRIO_SIZE]; /* queued LLC DL data. See enum gprs_llc_queue_prio. */
+	bool use_codel;
+	struct gprs_llc_prio_queue pq[_LLC_QUEUE_PRIO_SIZE]; /* queued LLC DL data. See enum gprs_llc_queue_prio. */
 };
 
 void llc_queue_calc_pdu_lifetime(struct gprs_rlcmac_bts *bts, const uint16_t pdu_delay_csec,
 		struct timespec *tv);
 bool llc_queue_is_frame_expired(const struct timespec *tv_now, const struct timespec *tv);
 
-void llc_queue_init(struct gprs_llc_queue *q);
+void llc_queue_init(struct gprs_llc_queue *q, struct GprsMs *ms);
 void llc_queue_clear(struct gprs_llc_queue *q, struct gprs_rlcmac_bts *bts);
+void llc_queue_set_codel_interval(struct gprs_llc_queue *q, unsigned int interval);
 void llc_queue_move_and_merge(struct gprs_llc_queue *q, struct gprs_llc_queue *o);
 void llc_queue_enqueue(struct gprs_llc_queue *q, struct msgb *llc_msg, const struct timespec *expire_time);
-struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q, const struct MetaInfo **info);
+struct msgb *llc_queue_dequeue(struct gprs_llc_queue *q);
 
 static inline size_t llc_queue_size(const struct gprs_llc_queue *q)
 {

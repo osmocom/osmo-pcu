@@ -92,8 +92,6 @@ struct GprsMs {
 	uint8_t reserved_dl_slots;
 	uint8_t reserved_ul_slots;
 	struct gprs_rlcmac_trx *current_trx;
-
-	struct gprs_codel *codel_state;
 	enum mcs_kind mode;
 
 	struct rate_ctr_group *ctrs;
@@ -216,11 +214,6 @@ static inline enum mcs_kind ms_mode(const struct GprsMs *ms)
 static inline void ms_set_timeout(struct GprsMs *ms, unsigned secs)
 {
 	ms->delay = secs;
-}
-
-static inline struct gprs_codel *ms_codel_state(const struct GprsMs *ms)
-{
-	return ms->codel_state;
 }
 
 static inline unsigned ms_nack_rate_dl(const struct GprsMs *ms)
