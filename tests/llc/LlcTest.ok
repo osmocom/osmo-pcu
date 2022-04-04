@@ -2,5 +2,7 @@
 === end test_llc_queue ===
 === start test_llc_meta ===
 === end test_llc_meta ===
+=== start test_llc_meta_pdu_life_expire ===
+=== end test_llc_meta_pdu_life_expire ===
 === start test_llc_merge ===
 === end test_llc_merge ===

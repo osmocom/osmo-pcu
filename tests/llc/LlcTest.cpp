@@ -184,6 +184,46 @@ static void test_llc_meta()
 	TALLOC_FREE(the_pcu);
 }
 
+/* Test PDU lifetime is taken into account and packet is dropped if dequeued too
+ * late */
+static void test_llc_meta_pdu_life_expire()
+{
+	gprs_llc_queue *queue = prepare_queue();
+	MetaInfo info1 = {0};
+	MetaInfo info2 = {0};
+
+	printf("=== start %s ===\n", __func__);
+
+	OSMO_ASSERT(llc_queue_size(queue) == 0);
+	OSMO_ASSERT(llc_queue_octets(queue) == 0);
+
+	info1.recv_time.tv_sec = 123456777;
+	info1.recv_time.tv_nsec = 123456000;
+	info1.expire_time.tv_sec = 123456789;
+	info1.expire_time.tv_nsec = 987654000;
+	*clk_mono_override_time = info1.recv_time;
+	enqueue_data(queue, "LLC message 1", &info1.expire_time);
+
+	info2.recv_time.tv_sec = 123458000;
+	info2.recv_time.tv_nsec = 547352000;
+	info2.expire_time.tv_sec = 123458006;
+	info2.expire_time.tv_nsec = 867252000;
+	*clk_mono_override_time = info2.recv_time;
+	enqueue_data(queue, "LLC message 2", &info2.expire_time);
+
+	clk_mono_override_time->tv_sec = info1.expire_time.tv_sec + 1;
+	clk_mono_override_time->tv_nsec = info1.expire_time.tv_nsec;
+
+	dequeue_and_check(queue, "LLC message 2", &info2);
+
+	OSMO_ASSERT(llc_queue_size(queue) == 0);
+	OSMO_ASSERT(llc_queue_octets(queue) == 0);
+	llc_queue_clear(queue, NULL);
+
+	printf("=== end %s ===\n", __func__);
+	TALLOC_FREE(the_pcu);
+}
+
 static void test_llc_merge()
 {
 	gprs_llc_queue *queue1 = prepare_queue();
@@ -258,6 +298,7 @@ int main(int argc, char **argv)
 
 	test_llc_queue();
 	test_llc_meta();
+	test_llc_meta_pdu_life_expire();
 	test_llc_merge();
 
 	if (getenv("TALLOC_REPORT_FULL"))
