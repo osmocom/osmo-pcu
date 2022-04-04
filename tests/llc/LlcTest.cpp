@@ -224,6 +224,76 @@ static void test_llc_meta_pdu_life_expire()
 	TALLOC_FREE(the_pcu);
 }
 
+/* Test codel entering in action */
+static void test_llc_codel()
+{
+	clk_mono_override_time->tv_sec = 1000;
+	clk_mono_override_time->tv_nsec = 0;
+
+	the_pcu = gprs_pcu_alloc(tall_pcu_ctx);
+	the_pcu->vty.llc_codel_interval_msec = LLC_CODEL_USE_DEFAULT;
+	/* DEFAULT should be resolved to GPRS_CODEL_SLOW_INTERVAL_MS 4000 */
+	#define GPRS_CODEL_SLOW_INTERVAL_MS 4000
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
+	struct GprsMs *ms = bts_alloc_ms(bts, 0, 0);
+	gprs_llc_queue *queue = ms_llc_queue(ms);
+	unsigned int i;
+
+	for (i = 0; i < ARRAY_SIZE(queue->pq); i++) {
+		gprs_codel_set_maxpacket(&queue->pq[i].codel_state, 8);
+	}
+
+	MetaInfo info1 = {0};
+
+	printf("=== start %s ===\n", __func__);
+
+	for (i = 0; i < 10; i++) {
+		char buf[256];
+
+		snprintf(buf, sizeof(buf), "LLC message %u", i);
+		info1.recv_time.tv_sec = clk_mono_override_time->tv_sec;
+		info1.recv_time.tv_nsec = clk_mono_override_time->tv_nsec;
+		info1.expire_time.tv_sec = clk_mono_override_time->tv_sec + 500;
+		info1.expire_time.tv_nsec = clk_mono_override_time->tv_nsec;
+		clk_mono_override_time->tv_sec += 1;
+		enqueue_data(queue, buf, &info1.expire_time);
+	}
+
+	OSMO_ASSERT(llc_queue_size(queue) == 10);
+	OSMO_ASSERT(llc_queue_octets(queue) != 0);
+
+	dequeue_and_check(queue, "LLC message 0", NULL);
+	OSMO_ASSERT(queue->pq[LLC_QUEUE_PRIO_OTHER].codel_state.first_above_time.tv_sec ==
+				clk_mono_override_time->tv_sec + GPRS_CODEL_SLOW_INTERVAL_MS/1000);
+	dequeue_and_check(queue, "LLC message 1", NULL);
+	clk_mono_override_time->tv_sec += 7;
+	dequeue_and_check(queue, "LLC message 2", NULL); /*recently == 0*/
+	OSMO_ASSERT(queue->pq[LLC_QUEUE_PRIO_OTHER].codel_state.dropping == 0);
+	OSMO_ASSERT(queue->pq[LLC_QUEUE_PRIO_OTHER].codel_state.count == 0);
+	clk_mono_override_time->tv_sec += GPRS_CODEL_SLOW_INTERVAL_MS/1000 + 1;
+	dequeue_and_check(queue, "LLC message 4", NULL); /* recently = 1, message 3 is dropped here */
+	OSMO_ASSERT(queue->pq[LLC_QUEUE_PRIO_OTHER].codel_state.dropping == 1);
+	OSMO_ASSERT(queue->pq[LLC_QUEUE_PRIO_OTHER].codel_state.count == 1);
+	dequeue_and_check(queue, "LLC message 5", NULL);
+	OSMO_ASSERT(queue->pq[LLC_QUEUE_PRIO_OTHER].codel_state.dropping == 1);
+	OSMO_ASSERT(queue->pq[LLC_QUEUE_PRIO_OTHER].codel_state.count == 1);
+	dequeue_and_check(queue, "LLC message 6", NULL);
+	OSMO_ASSERT(queue->pq[LLC_QUEUE_PRIO_OTHER].codel_state.dropping == 1);
+	dequeue_and_check(queue, "LLC message 7", NULL);
+	OSMO_ASSERT(queue->pq[LLC_QUEUE_PRIO_OTHER].codel_state.dropping == 1);
+	dequeue_and_check(queue, "LLC message 8", NULL);
+	OSMO_ASSERT(queue->pq[LLC_QUEUE_PRIO_OTHER].codel_state.dropping == 1);
+	dequeue_and_check(queue, "LLC message 9", NULL);
+	OSMO_ASSERT(queue->pq[LLC_QUEUE_PRIO_OTHER].codel_state.dropping == 0);
+
+	OSMO_ASSERT(llc_queue_size(queue) == 0);
+	OSMO_ASSERT(llc_queue_octets(queue) == 0);
+	llc_queue_clear(queue, NULL);
+
+	printf("=== end %s ===\n", __func__);
+	TALLOC_FREE(the_pcu);
+}
+
 static void test_llc_merge()
 {
 	gprs_llc_queue *queue1 = prepare_queue();
@@ -299,6 +369,7 @@ int main(int argc, char **argv)
 	test_llc_queue();
 	test_llc_meta();
 	test_llc_meta_pdu_life_expire();
+	test_llc_codel();
 	test_llc_merge();
 
 	if (getenv("TALLOC_REPORT_FULL"))
