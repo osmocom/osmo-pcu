@@ -67,6 +67,8 @@ static gprs_pcu *prepare_pcu(void)
 {
 	struct gprs_pcu *pcu = gprs_pcu_alloc(tall_pcu_ctx);
 	bssgp_set_bssgp_callback(gprs_gp_send_test_cb, NULL);
+	osmo_tdef_set(pcu->T_defs, -2030, 0, OSMO_TDEF_S);
+	osmo_tdef_set(pcu->T_defs, -2031, 0, OSMO_TDEF_S);
 	return pcu;
 }
 
@@ -190,10 +192,7 @@ static void setup_bts(struct gprs_rlcmac_bts *bts, uint8_t ts_no, uint8_t cs = 1
 	the_pcu->alloc_algorithm = alloc_algorithm_a;
 	bts->initial_cs_dl = cs;
 	bts->initial_cs_ul = cs;
-	osmo_tdef_set(the_pcu->T_defs, -2030, 0, OSMO_TDEF_S);
-	osmo_tdef_set(the_pcu->T_defs, -2031, 0, OSMO_TDEF_S);
 	trx = &bts->trx[0];
-
 	trx->pdch[ts_no].enable();
 	bts_set_current_frame_number(bts, DUMMY_FN);
 }
