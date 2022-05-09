@@ -245,6 +245,8 @@ static int bts_talloc_destructor(struct gprs_rlcmac_bts* bts)
 	bts->ms_store->cleanup();
 	delete bts->ms_store;
 
+	gprs_bssgp_destroy(bts);
+
 	osmo_time_cc_cleanup(&bts->all_allocated_pdch);
 
 	if (bts->ratectrs) {

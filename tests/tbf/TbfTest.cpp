@@ -528,7 +528,6 @@ static void test_tbf_exhaustion()
 	OSMO_ASSERT(rc == -EBUSY);
 	fprintf(stderr, "=== end %s ===\n", __func__);
 
-	gprs_bssgp_destroy(bts);
 	TALLOC_FREE(the_pcu);
 }
 
@@ -623,7 +622,6 @@ static void test_tbf_dl_llc_loss()
 
 	fprintf(stderr, "=== end %s ===\n", __func__);
 
-	gprs_bssgp_destroy(bts);
 	TALLOC_FREE(the_pcu);
 }
 
@@ -2271,14 +2269,12 @@ static void test_tbf_gprs_egprs()
 	OSMO_ASSERT(rc == 0);
 	fprintf(stderr, "=== end %s ===\n", __func__);
 
-	gprs_bssgp_destroy(bts);
 	TALLOC_FREE(the_pcu);
 }
 
 static inline void ws_check(gprs_rlcmac_dl_tbf *dl_tbf, const char *test, uint8_t exp_slots, uint16_t exp_ws,
-			    bool free, bool end)
+			    bool free)
 {
-	gprs_rlcmac_bts *bts = dl_tbf->bts;
 	if (!dl_tbf) {
 		fprintf(stderr, "%s(): FAILED (NULL TBF)\n", test);
 		return;
@@ -2297,11 +2293,6 @@ static inline void ws_check(gprs_rlcmac_dl_tbf *dl_tbf, const char *test, uint8_
 
 	if (free)
 		tbf_free(dl_tbf);
-
-	if (end) {
-		fprintf(stderr, "=== end %s ===\n", test);
-		gprs_bssgp_destroy(bts);
-	}
 }
 
 static void test_tbf_ws()
@@ -2337,7 +2328,7 @@ static void test_tbf_ws()
 	ms = bts_alloc_ms(bts, ms_class, 0);
 	dl_tbf = tbf_alloc_dl_tbf(bts, ms, 0, false);
 
-	ws_check(dl_tbf, __func__, 4, 64, true, false);
+	ws_check(dl_tbf, __func__, 4, 64, true);
 
 	/* EGPRS-only */
 
@@ -2345,7 +2336,8 @@ static void test_tbf_ws()
 	ms = bts_alloc_ms(bts, ms_class, ms_class);
 	dl_tbf = tbf_alloc_dl_tbf(bts, ms, 0, false);
 
-	ws_check(dl_tbf, __func__, 4, 128 + 4 * 64, true, true);
+	ws_check(dl_tbf, __func__, 4, 128 + 4 * 64, true);
+	fprintf(stderr, "=== end %s ===\n", __func__);
 	TALLOC_FREE(the_pcu);
 }
 
@@ -2384,12 +2376,13 @@ static void test_tbf_update_ws(void)
 	ms = bts_alloc_ms(bts, ms_class, ms_class);
 	dl_tbf = tbf_alloc_dl_tbf(bts, ms, 0, true);
 
-	ws_check(dl_tbf, __func__, 1, 128 + 1 * 64, false, false);
+	ws_check(dl_tbf, __func__, 1, 128 + 1 * 64, false);
 
 	dl_tbf->update();
 
 	/* window size should be 384 */
-	ws_check(dl_tbf, __func__, 4, 128 + 4 * 64, true, true);
+	ws_check(dl_tbf, __func__, 4, 128 + 4 * 64, true);
+	fprintf(stderr, "=== end %s ===\n", __func__);
 	TALLOC_FREE(the_pcu);
 }
 
