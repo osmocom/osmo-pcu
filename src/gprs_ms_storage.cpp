@@ -61,7 +61,10 @@ void GprsMsStorage::cleanup()
 	llist_for_each_safe(pos, tmp, &m_list) {
 		struct GprsMs *ms = llist_entry(pos, typeof(*ms), list);
 		ms_set_callback(ms, NULL);
-		ms_storage_ms_idle_cb(ms);
+		ms_set_timeout(ms, 0);
+		llist_del(&ms->list);
+		bts_stat_item_dec(ms->bts, STAT_MS_PRESENT);
+		talloc_free(ms);
 	}
 }
 

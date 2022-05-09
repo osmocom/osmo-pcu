@@ -48,6 +48,9 @@ The MS object cannot fully confirm an unexpected TLLI: 0x00004232, partly confir
 Modifying MS object, TLLI: 0x00002342 -> 0x00004232, already confirmed partly
 Modifying MS object, TLLI = 0x00004232, TA 4 -> 6
 === end test_tbf_tlli_update ===
+MS(TLLI=0x00004232, IMSI=, TA=6, 0/0, UL DL) Destroying MS object
+MS(TLLI=0x00004232, IMSI=, TA=6, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0x00004232 DIR=UL STATE=NEW)
+MS(TLLI=0x00004232, IMSI=, TA=6, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0x00004232 DIR=DL STATE=NEW)
 === start test_tbf_final_ack ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
 Creating MS object, TLLI = 0xffffffff
@@ -1612,6 +1615,70 @@ DL_ASS_TBF{NONE}: Deallocated
 MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) No PDCH resource
 === end test_tbf_exhaustion ===
 MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) Destroying MS object
+MS(TLLI=0xc000001f, IMSI=001001000000031, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc000001f, IMSI=001001000000031, TA=220, 45/0,) Detaching TBF: TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc000001e, IMSI=001001000000030, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc000001e, IMSI=001001000000030, TA=220, 45/0,) Detaching TBF: TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc000001d, IMSI=001001000000029, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc000001d, IMSI=001001000000029, TA=220, 45/0,) Detaching TBF: TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc000001c, IMSI=001001000000028, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc000001c, IMSI=001001000000028, TA=220, 45/0,) Detaching TBF: TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc000001b, IMSI=001001000000027, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc000001b, IMSI=001001000000027, TA=220, 45/0,) Detaching TBF: TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc000001a, IMSI=001001000000026, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc000001a, IMSI=001001000000026, TA=220, 45/0,) Detaching TBF: TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000019, IMSI=001001000000025, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000019, IMSI=001001000000025, TA=220, 45/0,) Detaching TBF: TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000018, IMSI=001001000000024, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000018, IMSI=001001000000024, TA=220, 45/0,) Detaching TBF: TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000017, IMSI=001001000000023, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000017, IMSI=001001000000023, TA=220, 45/0,) Detaching TBF: TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000016, IMSI=001001000000022, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000016, IMSI=001001000000022, TA=220, 45/0,) Detaching TBF: TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000015, IMSI=001001000000021, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000015, IMSI=001001000000021, TA=220, 45/0,) Detaching TBF: TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000014, IMSI=001001000000020, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000014, IMSI=001001000000020, TA=220, 45/0,) Detaching TBF: TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000013, IMSI=001001000000019, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000013, IMSI=001001000000019, TA=220, 45/0,) Detaching TBF: TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000012, IMSI=001001000000018, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000012, IMSI=001001000000018, TA=220, 45/0,) Detaching TBF: TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000011, IMSI=001001000000017, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000011, IMSI=001001000000017, TA=220, 45/0,) Detaching TBF: TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000010, IMSI=001001000000016, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000010, IMSI=001001000000016, TA=220, 45/0,) Detaching TBF: TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc000000f, IMSI=001001000000015, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc000000f, IMSI=001001000000015, TA=220, 45/0,) Detaching TBF: TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc000000e, IMSI=001001000000014, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc000000e, IMSI=001001000000014, TA=220, 45/0,) Detaching TBF: TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc000000d, IMSI=001001000000013, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc000000d, IMSI=001001000000013, TA=220, 45/0,) Detaching TBF: TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc000000c, IMSI=001001000000012, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc000000c, IMSI=001001000000012, TA=220, 45/0,) Detaching TBF: TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc000000b, IMSI=001001000000011, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc000000b, IMSI=001001000000011, TA=220, 45/0,) Detaching TBF: TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc000000a, IMSI=001001000000010, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc000000a, IMSI=001001000000010, TA=220, 45/0,) Detaching TBF: TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000009, IMSI=001001000000009, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000009, IMSI=001001000000009, TA=220, 45/0,) Detaching TBF: TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000008, IMSI=001001000000008, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000008, IMSI=001001000000008, TA=220, 45/0,) Detaching TBF: TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000007, IMSI=001001000000007, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000007, IMSI=001001000000007, TA=220, 45/0,) Detaching TBF: TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000006, IMSI=001001000000006, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000006, IMSI=001001000000006, TA=220, 45/0,) Detaching TBF: TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000005, IMSI=001001000000005, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000005, IMSI=001001000000005, TA=220, 45/0,) Detaching TBF: TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000004, IMSI=001001000000004, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000004, IMSI=001001000000004, TA=220, 45/0,) Detaching TBF: TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000003, IMSI=001001000000003, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000003, IMSI=001001000000003, TA=220, 45/0,) Detaching TBF: TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000002, IMSI=001001000000002, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000002, IMSI=001001000000002, TA=220, 45/0,) Detaching TBF: TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000001, IMSI=001001000000001, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000001, IMSI=001001000000001, TA=220, 45/0,) Detaching TBF: TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xc0000000, IMSI=001001000000000, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0000000, IMSI=001001000000000, TA=220, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN)
 === start test_tbf_dl_llc_loss ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
 Creating MS object, TLLI = 0xffffffff
@@ -1721,6 +1788,8 @@ TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=FINISHED) Polling cannot be scheduled in 
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=FINISHED) msg block (BSN 2, CS-1): 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
 MSG = 07 01 04 4d 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 
 === end test_tbf_dl_llc_loss ===
+MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=FINISHED)
 === start test_tbf_single_phase ===
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 Found first unallocated TRX=0 TFI=0
@@ -1805,6 +1874,9 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
  - TRX=0 (0) TS=7 TA=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 4 bytes
 === end test_tbf_single_phase ===
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL DL) Destroying MS object
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
 === start test_tbf_two_phase ===
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 MS requests Uplink resource on CCCH/RACH: ra=0x73 (8 bit) Fn=2654167 qta=31
@@ -1904,6 +1976,9 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) set ass. type PACCH [prev CCCH:0, PA
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 4 bytes
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Destroying MS object
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
 === end test_tbf_two_phase ===
 === start test_tbf_ra_update_rach ===
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
@@ -2169,6 +2244,9 @@ MS(TLLI=0xffffffff, IMSI=, TA=7, 1/0,) Destroying MS object
 Modifying MS object, TLLI: 0xf5667788 confirmed
 TBF(TFI=0 TLLI=0xf5667788 DIR=DL STATE=FINISHED) appending 4 bytes
 New MS: TLLI = 0xf5667788, TA = 7, IMSI = 0011223344, LLC = 1
+MS(TLLI=0xf5667788, IMSI=0011223344, TA=7, 1/0, UL DL) Destroying MS object
+MS(TLLI=0xf5667788, IMSI=0011223344, TA=7, 1/0, DL) Detaching TBF: TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW)
+MS(TLLI=0xf5667788, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf5667788 DIR=DL STATE=FINISHED)
 === end test_tbf_ra_update_rach ===
 === start test_tbf_dl_flow_and_rach_two_phase ===
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
@@ -2343,6 +2421,9 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Assembling frames: (len=20)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Frame 1 starts at offset 0, length=20, is_complete=0
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last block: BSN=0 CV=15
 New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Destroying MS object
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
 === end test_tbf_dl_flow_and_rach_two_phase ===
 === start test_tbf_dl_flow_and_rach_single_phase ===
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
@@ -2516,6 +2597,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling final Ack/Nack, beca
 UL_ACK_TBF(UL-TFI_0){NONE}: Received Event SCHED_ACK
 UL_ACK_TBF(UL-TFI_0){NONE}: state_chg to SCHED_UL_ACK
 New MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Destroying MS object
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)
 === end test_tbf_dl_flow_and_rach_single_phase ===
 === start test_tbf_dl_reuse ===
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
@@ -3572,6 +3655,9 @@ TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled DL Acknowledgement po
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654413
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654461, TS=7
 TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 10, CS-1): 0f 03 14 4d 43 20 50 41 43 4b 45 54 20 30 39 20 28 54 42 46 20 32 29 
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Destroying MS object
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=RELEASING)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=1 TLLI=0xf1223344 DIR=DL STATE=FINISHED)
 === end test_tbf_dl_reuse ===
 === start test_tbf_gprs_egprs ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
@@ -3606,6 +3692,8 @@ TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Do
  - TRX=0 (0) TS=4 TA=220
 TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=ASSIGN) appending 256 bytes
 === end test_tbf_gprs_egprs ===
+MS(TLLI=0xc0006789, IMSI=001001123456789, TA=220, 45/0, DL) Destroying MS object
+MS(TLLI=0xc0006789, IMSI=001001123456789, TA=220, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=ASSIGN)
 === start test_tbf_ws ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
 PDCH(bts=0,trx=0,ts=2) PDCH state: disabled => enabled
@@ -3807,6 +3895,9 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW EGPRS) set ass. type PACCH [prev CCCH
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL DL) Destroying MS object
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS)
 === end test_tbf_egprs_two_phase ===
 === start test_tbf_egprs_two_phase_spb ===
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
@@ -4038,6 +4129,9 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW EGPRS) set ass. type PACCH [prev CCCH
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL DL) Destroying MS object
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS)
 === end test_tbf_egprs_two_phase_spb ===
 === start test_tbf_egprs_dl ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
@@ -6886,6 +6980,9 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW EGPRS) set ass. type PACCH [prev CCCH
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL DL) Destroying MS object
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS)
 === end test_tbf_puan_urbb_len ===
 === start test_tbf_update_ws ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
@@ -7069,6 +7166,9 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW EGPRS) set ass. type PACCH [prev CCCH
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL DL) Destroying MS object
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS)
 === end test_tbf_li_decoding ===
 === start test_tbf_epdan_out_of_rx_window ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
@@ -7348,6 +7448,20 @@ DL_ASS_TBF{NONE}: Deallocated
 No PDCH resource for Uplink TBF
 Tx Immediate Assignment Reject on AGCH
 MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Destroying MS object
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0, UL) Destroying MS object
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0,) Detaching TBF: TBF(TFI=6 TLLI=0xffffffff DIR=UL STATE=FLOW)
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0, UL) Destroying MS object
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0,) Detaching TBF: TBF(TFI=5 TLLI=0xffffffff DIR=UL STATE=FLOW)
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0, UL) Destroying MS object
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0,) Detaching TBF: TBF(TFI=4 TLLI=0xffffffff DIR=UL STATE=FLOW)
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0, UL) Destroying MS object
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0,) Detaching TBF: TBF(TFI=3 TLLI=0xffffffff DIR=UL STATE=FLOW)
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0, UL) Destroying MS object
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0,) Detaching TBF: TBF(TFI=2 TLLI=0xffffffff DIR=UL STATE=FLOW)
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0, UL) Destroying MS object
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0,) Detaching TBF: TBF(TFI=1 TLLI=0xffffffff DIR=UL STATE=FLOW)
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0, UL) Destroying MS object
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW)
 === end test_immediate_assign_rej_multi_block ===
 === start test_immediate_assign_rej_single_block ===
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
@@ -8620,6 +8734,9 @@ PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654283 block_nr=11 scheduling 
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL DL) Destroying MS object
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS)
 === end test_tbf_egprs_two_phase_puan ===
 === start test_packet_access_rej_epdan ===
 PDCH(bts=0,trx=0,ts=4) PDCH state: disabled => enabled
@@ -8666,6 +8783,8 @@ UL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS_REJ
 UL_ASS_TBF(DL-TFI_0){SEND_ASS_REJ}: Received Event CREATE_RLCMAC_MSG
 UL_ASS_TBF(DL-TFI_0){SEND_ASS_REJ}: state_chg to NONE
 packet reject: 40 84 7f f7 6e e6 7e ab 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 2b 
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) Destroying MS object
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 === end test_packet_access_rej_epdan ===
 === start test_packet_access_rej_prr ===
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
@@ -9124,6 +9243,22 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignm
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) Scheduled UL Assignment polling on PACCH (FN=2654231, TS=7)
 UL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654218 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS)
+MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11, UL) Destroying MS object
+MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Detaching TBF: TBF(TFI=-1 TLLI=0xffeeddd3 DIR=UL STATE=ASSIGN)
+MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11, UL) Destroying MS object
+MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) Detaching TBF: TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS)
+MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11, UL) Destroying MS object
+MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) Detaching TBF: TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS)
+MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11, UL) Destroying MS object
+MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) Detaching TBF: TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS)
+MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11, UL) Destroying MS object
+MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) Detaching TBF: TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS)
+MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11, UL) Destroying MS object
+MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) Detaching TBF: TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS)
+MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11, UL) Destroying MS object
+MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) Detaching TBF: TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS)
+MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11, UL) Destroying MS object
+MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) Detaching TBF: TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS)
 === end test_packet_access_rej_prr ===
 === start test_packet_access_rej_prr_no_other_tbfs ===
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
