@@ -111,8 +111,7 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli)
 	LOGP(DRLCMAC, LOGL_INFO, "Creating MS object, TLLI = 0x%08x\n", tlli);
 
 	ms->imsi[0] = '\0';
-	memset(&ms->timer, 0, sizeof(ms->timer));
-	ms->timer.cb = ms_release_timer_cb;
+	osmo_timer_setup(&ms->timer, ms_release_timer_cb, NULL);
 	llc_queue_init(&ms->llc_queue, ms);
 
 	ms_set_mode(ms, GPRS);
