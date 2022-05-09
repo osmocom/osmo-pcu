@@ -622,6 +622,8 @@ static void test_tbf_dl_llc_loss()
 
 	fprintf(stderr, "=== end %s ===\n", __func__);
 
+	/* Restore MS release timeout to 0 to make sure it is freed immediately: */
+	ms_set_timeout(ms, 0);
 	TALLOC_FREE(the_pcu);
 }
 
