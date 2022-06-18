@@ -10,8 +10,8 @@ Build-Depends: debhelper (>= 9),
                osmo-gsm-manuals-dev (>= 1.2.0)
 Standards-Version: 3.9.8
 Homepage: http://osmocom.org/projects/osmopcu
-Vcs-Git: git://git.osmocom.org/osmo-pcu
-Vcs-Browser: http://git.osmocom.org/osmo-pcu/
+Vcs-Git: https://gitea.osmocom.org/cellular-infrastructure/osmo-pcu
+Vcs-Browser: https://gitea.osmocom.org/cellular-infrastructure/osmo-pcu
 
 Package: osmo-pcu
 Architecture: any

@@ -28,9 +28,9 @@ GIT Repository
 
 You can clone from the official osmo-pcu.git repository using
 
-	git clone git://git.osmocom.org/osmo-pcu.git
+	git clone https://gitea.osmocom.org/cellular-infrastructure/osmo-pcu
 
-There is a cgit interface at http://git.osmocom.org/osmo-pcu/
+There is a web interface at <https://gitea.osmocom.org/cellular-infrastructure/osmo-pcu>
 
 Documentation
 -------------

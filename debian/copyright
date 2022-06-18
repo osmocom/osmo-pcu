@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: osmo-pcu
-Source: git://git.osmocom.org/osmo-pcu
+Source: https://gitea.osmocom.org/cellular-infrastructure/osmo-pcu
 Files-Excluded: debian
 
 Files:     *
