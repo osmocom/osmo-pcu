@@ -573,6 +573,8 @@ static void gen_freq_params(Frequency_Parameters_t *freq_params,
 	fh_params.MAIO = pdch->fh.maio;
 	fh_params.GPRS_Mobile_Allocation.HSN = pdch->fh.hsn;
 	fh_params.GPRS_Mobile_Allocation.ElementsOf_RFL_NUMBER = 0;
+	memset(&fh_params.GPRS_Mobile_Allocation.RFL_NUMBER[0], 0x00,
+	       sizeof(fh_params.GPRS_Mobile_Allocation.RFL_NUMBER));
 
 	/* Mobile Allocation bitmap */
 	fh_params.GPRS_Mobile_Allocation.UnionType = 0; /* MA bitmap */
