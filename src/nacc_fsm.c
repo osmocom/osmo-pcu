@@ -799,6 +799,7 @@ void nacc_fsm_ctrl_reply_cb(struct ctrl_handle *ctrl, struct ctrl_cmd *cmd, void
 	if (!(tok = strtok_r(NULL, "-", &saveptr)))
 		goto free_ret;
 	cgi_ps.rai.lac.plmn.mnc = atoi(tok);
+	cgi_ps.rai.lac.plmn.mnc_3_digits = strlen(tok) > 2;
 
 	if (!(tok = strtok_r(NULL, "-", &saveptr)))
 		goto free_ret;
