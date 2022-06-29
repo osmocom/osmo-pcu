@@ -1,3 +1,34 @@
+osmo-pcu (1.1.0) unstable; urgency=medium
+
+  [ Oliver Smith ]
+  * treewide: remove FSF address
+
+  [ Pau Espin Pedrol ]
+  * Fix assert hit if connecting to SGSN fails
+  * llc: Convert to C: s/m_//g
+  * llc: Convert to C
+  * llc: Move static functions below related object
+  * ms: validate codel enabled against proper define
+  * ms: Remove unneeded bts!=NULL check
+  * gprs_ms_storage: MS always has non NULL ms->bts
+  * llc: schedule frames to MS based on SAPI priority
+  * pdch is_enabled: Use API getter instead of accessing field directly
+  * llc_queue: Refactor to handle codel_state per prio queue internally
+  * tests/llc: Add test_llc_meta_pdu_life_expire
+  * tests/llc: Add test_llc_codel
+  * gprs_ms: Use osmo_timer_setup() API
+  * gprs_ms_storage: Use bts_stat_item_inc/dec APIs
+  * tests/tbf: Set up pcu timers in prepare_pcu()
+  * gprs_pcu: Explicitly free all bts objects in list before freeing pcu
+  * bts: Call gprs_bssgp_destroy() in destructor
+  * TbfTest: Reset MS timeout to 0 in test_tbf_dl_llc_loss()
+  * gprs_ms_stoage: Release all MS in ms_storage cleanup()
+
+  [ Harald Welte ]
+  * update git  URLs (git -> https; gitea)
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Wed, 29 Jun 2022 09:48:53 +0200
+
 osmo-pcu (1.0.0) unstable; urgency=medium
 
   [ Pau Espin Pedrol ]
