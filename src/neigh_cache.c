@@ -69,7 +69,7 @@ static void neigh_cache_schedule_cleanup(struct neigh_cache *cache)
 	} else {
 		timespecsub(&threshold, &now, &result);
 	}
-	osmo_timer_schedule(&cache->cleanup_timer, result.tv_sec, result.tv_nsec*1000);
+	osmo_timer_schedule(&cache->cleanup_timer, result.tv_sec, result.tv_nsec / 1000);
 }
 
 struct neigh_cache *neigh_cache_alloc(void *ctx, unsigned int keep_time_sec)
@@ -203,7 +203,7 @@ static void si_cache_schedule_cleanup(struct si_cache *cache)
 	} else {
 		timespecsub(&threshold, &now, &result);
 	}
-	osmo_timer_schedule(&cache->cleanup_timer, result.tv_sec, result.tv_nsec*1000);
+	osmo_timer_schedule(&cache->cleanup_timer, result.tv_sec, result.tv_nsec / 1000);
 }
 
 struct si_cache *si_cache_alloc(void *ctx, unsigned int keep_time_sec)
