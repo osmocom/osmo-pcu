@@ -65,8 +65,7 @@ static int gprs_pcu_talloc_destructor(struct gprs_pcu *pcu)
 	while ((bts = llist_first_entry_or_null(&pcu->bts_list, struct gprs_rlcmac_bts, list)))
 		talloc_free(bts);
 
-	if (osmo_timer_pending(&pcu->update_stats_timer))
-		osmo_timer_del(&pcu->update_stats_timer);
+	osmo_timer_del(&pcu->update_stats_timer);
 	neigh_cache_free(pcu->neigh_cache);
 	si_cache_free(pcu->si_cache);
 	return 0;

@@ -142,8 +142,7 @@ static int ms_talloc_destructor(struct GprsMs *ms)
 
 	ms_set_reserved_slots(ms, NULL, 0, 0);
 
-	if (osmo_timer_pending(&ms->timer))
-		osmo_timer_del(&ms->timer);
+	osmo_timer_del(&ms->timer);
 
 	if (ms->ul_tbf) {
 		tbf_set_ms((struct gprs_rlcmac_tbf *)ms->ul_tbf, NULL);
