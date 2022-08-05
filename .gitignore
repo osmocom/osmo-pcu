@@ -42,8 +42,11 @@ tests/emu/pcu_emu
 tests/testsuite
 tests/testsuite.log
 
-# ignore debian files
+# git-version-gen magic
 .tarball-version
+.version
+
+# ignore debian files
 debian/autoreconf.after
 debian/autoreconf.before
 debian/files
