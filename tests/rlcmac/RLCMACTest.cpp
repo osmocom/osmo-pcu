@@ -15,21 +15,14 @@
 
 
 
-//#include <BitVector.h>
 #include <iostream>
-#include <cstdlib>
 #include <cstring>
-#include <assert.h>
 #include "gprs_rlcmac.h"
 #include "decoding.h"
 
 extern "C" {
-#include "pcu_vty.h"
-#include <osmocom/vty/telnet_interface.h>
-#include <osmocom/vty/logging.h>
 #include <osmocom/core/utils.h>
 #include <osmocom/core/msgb.h>
-#include <osmocom/core/application.h>
 
 #include "csn1.h"
 #include "gsm_rlcmac.h"
