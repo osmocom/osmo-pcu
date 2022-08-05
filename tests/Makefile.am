@@ -244,7 +244,7 @@ python-tests: $(BUILT_SOURCES)
 	@echo "Not running python-based tests (determined at configure-time)"
 endif
 
-check-local: atconfig $(BUILT_SOURCES) $(TESTSUITE)
+check-local: atconfig $(TESTSUITE)
 	$(SHELL) '$(TESTSUITE)' $(TESTSUITEFLAGS)
 	$(MAKE) $(AM_MAKEFLAGS) python-tests
 
