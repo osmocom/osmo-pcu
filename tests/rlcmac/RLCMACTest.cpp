@@ -42,17 +42,17 @@ static void testRlcMacDownlink(void *test_ctx)
 	bitvec_unhex(resultVector, DUMMY_VEC);
 
 	std::string testData[] = {
-	"4e082500e3f1a81d080820800b2b2b2b2b2b2b2b2b2b2b", // Packet Downlink Assignment
-	"48282407a6a07422720100032b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Assignment
-	"47240c00400000000000000079eb2ac9402b2b2b2b2b2b", // Packet Uplink Ack Nack
-	"47283c367513ba333004242b2b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Assignment
-	"400820001a3904df0680efb3300b2b2b2b2b2b2b2b2b2b", // Packet Downlink Assignment (EGPRS)
-	"40284f0000001009810c826f4406809dcecb2b2b2b2b2b", // Packet Uplink Assignment (EGPRS)
-	"4024030f2f0000000087b0042b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Ack Nack (EGPRS)
-	"4913e00850884013a8048b2b2b2b2b2b2b2b2b2b2b2b2b", // Polling Request (malformed)
-	"412430007fffffffffffffffefd19c7ba12b2b2b2b2b2b", // Packet Uplink Ack Nack?
-	"41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // System Info 13?
-	"40883c1493120000000012002b2b2b2b2b2b2b2b2b2b2b", // Pkt Paging Request (OS#4838)
+		"4e082500e3f1a81d080820800b2b2b2b2b2b2b2b2b2b2b", // Packet Downlink Assignment
+		"48282407a6a07422720100032b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Assignment
+		"47240c00400000000000000079eb2ac9402b2b2b2b2b2b", // Packet Uplink Ack Nack
+		"47283c367513ba333004242b2b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Assignment
+		"400820001a3904df0680efb3300b2b2b2b2b2b2b2b2b2b", // Packet Downlink Assignment (EGPRS)
+		"40284f0000001009810c826f4406809dcecb2b2b2b2b2b", // Packet Uplink Assignment (EGPRS)
+		"4024030f2f0000000087b0042b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Ack Nack (EGPRS)
+		"4913e00850884013a8048b2b2b2b2b2b2b2b2b2b2b2b2b", // Polling Request (malformed)
+		"412430007fffffffffffffffefd19c7ba12b2b2b2b2b2b", // Packet Uplink Ack Nack?
+		"41942b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // System Info 13?
+		"40883c1493120000000012002b2b2b2b2b2b2b2b2b2b2b", // Pkt Paging Request (OS#4838)
 	};
 
 	int testDataSize = sizeof(testData)/sizeof(testData[0]);
@@ -95,18 +95,18 @@ static void testRlcMacUplink(void *test_ctx)
 	bitvec_unhex(resultVector, DUMMY_VEC);
 
 	std::string testData[] = {
-	"400e1e61d11d2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Dummy Control Block
-	"400b8020000000000000002480e0032b2b2b2b2b2b2b2b", // Packet Downlink Ack/Nack
-	"4016713dc094270ca2ae57ef909006aa0fc0001f80222b", // Packet Resource Request
-	"401673c87f24af2632b25964200600000091000b780080", // Packet Resource Request (from keith)
-	"40200ffc0021ec010b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // EPDAN
-	"400a9020000000000000003010012a0800132b2b2b2b2b", // Packet Downlink Ack/Nack ?
+		"400e1e61d11d2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // Packet Uplink Dummy Control Block
+		"400b8020000000000000002480e0032b2b2b2b2b2b2b2b", // Packet Downlink Ack/Nack
+		"4016713dc094270ca2ae57ef909006aa0fc0001f80222b", // Packet Resource Request
+		"401673c87f24af2632b25964200600000091000b780080", // Packet Resource Request (from keith)
+		"40200ffc0021ec010b2b2b2b2b2b2b2b2b2b2b2b2b2b2b", // EPDAN
+		"400a9020000000000000003010012a0800132b2b2b2b2b", // Packet Downlink Ack/Nack ?
 
-	/* Packet Resource Request (see OS#4955, mistakes in 3GPP TS 44.060) */
-	"4117ea1b903eaeb2686564b2330820078000102b2b2b2b",
-	"40167e49f7f8ef2632b2596620060000806d00541c0080",
-	"4017787174d92eba686564b2ccc30800a000040b2b2b2b",
-	"4017e5b2cd5a2eca68655e44aec84880139300412b2b2b",
+		/* Packet Resource Request (see OS#4955, mistakes in 3GPP TS 44.060) */
+		"4117ea1b903eaeb2686564b2330820078000102b2b2b2b",
+		"40167e49f7f8ef2632b2596620060000806d00541c0080",
+		"4017787174d92eba686564b2ccc30800a000040b2b2b2b",
+		"4017e5b2cd5a2eca68655e44aec84880139300412b2b2b",
 	};
 
 	int testDataSize = sizeof(testData)/sizeof(testData[0]);
