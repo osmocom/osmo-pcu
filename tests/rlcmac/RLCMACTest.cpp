@@ -33,7 +33,7 @@ using namespace std;
 
 void *tall_pcu_ctx;
 
-void testRlcMacDownlink(void *test_ctx)
+static void testRlcMacDownlink(void *test_ctx)
 {
 	printf("*** %s ***\n", __func__);
 
@@ -86,7 +86,7 @@ void testRlcMacDownlink(void *test_ctx)
 }
 
 
-void testRlcMacUplink(void *test_ctx)
+static void testRlcMacUplink(void *test_ctx)
 {
 	printf("*** %s ***\n", __func__);
 
@@ -140,7 +140,7 @@ void testRlcMacUplink(void *test_ctx)
 	bitvec_free(resultVector);
 }
 
-void testCsnLeftAlignedVarBmpBounds(void *test_ctx)
+static void testCsnLeftAlignedVarBmpBounds(void *test_ctx)
 {
 	printf("*** %s ***\n", __func__);
 
@@ -168,7 +168,7 @@ extern "C" {
 int encode_gsm_ra_cap(struct bitvec *vector, MS_Radio_Access_capability_t * data);
 }
 
-void testRAcap(void *test_ctx)
+static void testRAcap(void *test_ctx)
 {
         printf("*** %s ***\n", __func__);
         MS_Radio_Access_capability_t data;
@@ -237,7 +237,7 @@ MS RA capability 1
         printf("decode_gsm_ra_cap() returns %d\n", rc);
 }
 
-void testMalformedRAcap(void *test_ctx)
+static void testMalformedRAcap(void *test_ctx)
 {
 	printf("*** %s ***\n", __func__);
 	MS_Radio_Access_capability_t data;
@@ -280,7 +280,7 @@ void testMalformedRAcap(void *test_ctx)
 }
 
 /* Reproduce crash from ticket OS#4463 */
-void testRAcap2(void *test_ctx)
+static void testRAcap2(void *test_ctx)
 {
 	printf("*** %s ***\n", __func__);
 	MS_Radio_Access_capability_t data;
@@ -421,7 +421,7 @@ MS Radio Access Capability
 }
 
 /* RAcap larger than 23 bytes */
-void testRAcap3(void *test_ctx)
+static void testRAcap3(void *test_ctx)
 {
 	printf("*** %s ***\n", __func__);
 	MS_Radio_Access_capability_t data;
@@ -618,7 +618,7 @@ MS Radio Access Capability
 }
 
 /* RAcap larger than 23 bytes */
-void testRAcap4(void *test_ctx)
+static void testRAcap4(void *test_ctx)
 {
 	printf("*** %s ***\n", __func__);
 	MS_Radio_Access_capability_t data;
@@ -759,7 +759,7 @@ MS Radio Access Capability
 	bitvec_free(bv_dec);
 }
 
-void testEGPRSPktChReq(void *test_ctx)
+static void testEGPRSPktChReq(void *test_ctx)
 {
 	EGPRS_PacketChannelRequest_t req;
 	int rc;
