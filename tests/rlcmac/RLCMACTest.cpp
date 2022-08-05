@@ -55,10 +55,8 @@ static void testRlcMacDownlink(void *test_ctx)
 		"40883c1493120000000012002b2b2b2b2b2b2b2b2b2b2b", // Pkt Paging Request (OS#4838)
 	};
 
-	int testDataSize = sizeof(testData)/sizeof(testData[0]);
-
 	cout << " DOWNLINK " << endl;
-	for (int i = 0; i < testDataSize; i++)
+	for (unsigned int i = 0; i < ARRAY_SIZE(testData); i++)
 	{
 		cout << "vector1 = " << testData[i] << endl;
 		bitvec *vector = bitvec_alloc(23, test_ctx);
@@ -109,11 +107,8 @@ static void testRlcMacUplink(void *test_ctx)
 		"4017e5b2cd5a2eca68655e44aec84880139300412b2b2b",
 	};
 
-	int testDataSize = sizeof(testData)/sizeof(testData[0]);
-
-
 	cout << " UPLINK " << endl;
-	for (int i = 0; i < testDataSize; i++)
+	for (unsigned int i = 0; i < ARRAY_SIZE(testData); i++)
 	{
 		cout << "vector1 = " << testData[i] << endl;
 		bitvec *vector = bitvec_alloc(23, test_ctx);
