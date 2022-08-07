@@ -8,6 +8,7 @@ EXTRA_DIST = \
 	     README.md \
 	     contrib/osmo-pcu.spec.in \
 	     debian \
+	     git-version-gen \
 	     osmoappdesc.py \
 	     $(NULL)
 
