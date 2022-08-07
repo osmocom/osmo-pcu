@@ -161,7 +161,7 @@ osmo_pcu_remote_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
-	$(COMMON_LA)
+	$(NULL)
 endif
 
 if ENABLE_LC15BTS_PHY
@@ -210,6 +210,6 @@ osmo_pcu_LDADD = \
 	$(LIBOSMOCORE_LIBS) \
 	$(LIBOSMOCTRL_LIBS) \
 	$(LIBOSMOGSM_LIBS) \
-	$(COMMON_LA)
+	$(NULL)
 
 #MOSTLYCLEANFILES += testSource testDestination
