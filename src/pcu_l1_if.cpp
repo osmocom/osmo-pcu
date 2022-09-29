@@ -244,7 +244,7 @@ void pcu_l1if_tx_ptcch(struct gprs_rlcmac_bts *bts,
 		       uint32_t fn, uint8_t block_nr,
 		       uint8_t *data, size_t data_len)
 {
-	if (the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PTCCH))
+	if (data_len && the_pcu->gsmtap_categ_mask & (1 << PCU_GSMTAP_C_DL_PTCCH))
 		gsmtap_send(the_pcu->gsmtap, arfcn, ts, GSMTAP_CHANNEL_PTCCH, 0, fn, 0, 0, data, data_len);
 #ifdef ENABLE_DIRECT_PHY
 	if (bts->trx[trx].fl1h) {
