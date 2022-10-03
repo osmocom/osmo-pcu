@@ -474,7 +474,7 @@ int gprs_rlcmac_rcv_rts_block(struct gprs_rlcmac_bts *bts,
 
 	/* Prio 1: select control message */
 	if ((msg = sched_select_ctrl_msg(pdch, fn, block_nr, &tbf_cand))) {
-			gsmtap_cat = PCU_GSMTAP_C_DL_CTRL;
+		gsmtap_cat = PCU_GSMTAP_C_DL_CTRL;
 	}
 	/* Prio 2: select data message for downlink */
 	else if((msg = sched_select_dl_data_msg(bts, pdch, fn, block_nr, req_mcs_kind, &tx_is_egprs))) {

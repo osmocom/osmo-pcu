@@ -299,7 +299,7 @@ void pdch_ulc_expire_fn(struct pdch_ulc *ulc, uint32_t fn)
 	int res;
 
 	struct rb_node *first;
-	while((first = rb_first(&ulc->tree_root))) {
+	while ((first = rb_first(&ulc->tree_root))) {
 		item = container_of(first, struct pdch_ulc_node, node);
 		res = fn_cmp(item->fn, fn);
 		if (res > 0) /* item->fn AFTER fn */
