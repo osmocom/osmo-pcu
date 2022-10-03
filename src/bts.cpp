@@ -343,7 +343,8 @@ void bts_set_current_frame_number(struct gprs_rlcmac_bts *bts, uint32_t fn)
 	 * and start of another frame (every 3 blocks). */
 	if (fn != bts->cur_fn && bts->cur_fn != FN_UNSET && fn != fn_next_block(bts->cur_fn)) {
 		LOGP(DRLCMAC, LOGL_NOTICE,
-			"Detected FN jump! %u -> %u\n", bts->cur_fn, fn);
+		     "Detected FN jump! %u -> %u (expected %u)\n",
+		     bts->cur_fn, fn, fn_next_block(bts->cur_fn));
 	}
 	bts->cur_fn = fn;
 }
