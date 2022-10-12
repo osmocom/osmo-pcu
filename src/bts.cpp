@@ -666,7 +666,7 @@ int bts_tfi_find_free(const struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_di
 
 int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32_t fn)
 {
-	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	const struct gsm48_imm_ass *imm_ass = (struct gsm48_imm_ass *)data;
 	uint8_t plen;
 	uint32_t tlli;
@@ -681,9 +681,9 @@ int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32
 	data += 1 + plen;
 
 	if ((*data & 0xf0) != 0xd0) {
-		LOGP(DRLCMAC, LOGL_ERROR, "Got IMM.ASS confirm, but rest "
+		LOGP(DTBFDL, LOGL_ERROR, "FN=%u Got IMM.ASS confirm, but rest "
 			"octets do not start with bit sequence 'HH01' "
-			"(Packet Downlink Assignment)\n");
+			"(Packet Downlink Assignment)\n", fn);
 		return -EINVAL;
 	}
 
@@ -695,15 +695,17 @@ int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32
 	tlli |= (*data++) >> 4;
 
 	ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
-	if (ms)
-		dl_tbf = ms_dl_tbf(ms);
+	if (!ms) {
+		LOGP(DTBFDL, LOGL_ERROR, "FN=%u Got IMM.ASS confirm for unknown MS with TLLI=%08x\n", fn, tlli);
+		return -EINVAL;
+	}
+	dl_tbf = ms_dl_tbf(ms);
 	if (!dl_tbf) {
-		LOGP(DRLCMAC, LOGL_ERROR, "Got IMM.ASS confirm, but TLLI=%08x "
-			"does not exit\n", tlli);
+		LOGPMS(ms, DTBFDL, LOGL_ERROR, "FN=%u Got IMM.ASS confirm, but MS has no DL TBF!\n", fn);
 		return -EINVAL;
 	}
 
-	LOGP(DRLCMAC, LOGL_DEBUG, "Got IMM.ASS confirm for TLLI=%08x\n", tlli);
+	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "FN=%u Got IMM.ASS confirm\n", fn);
 	osmo_fsm_inst_dispatch(dl_tbf->state_fsm.fi, TBF_EV_ASSIGN_PCUIF_CNF, NULL);
 
 	return 0;
