@@ -445,17 +445,17 @@ int Encoding::write_immediate_assignment(
 	int plen;
 	int rc;
 
-	bitvec_write_field(dest, &wp,0x0,4);  // Skip Indicator
-	bitvec_write_field(dest, &wp,0x6,4);  // Protocol Discriminator
-	bitvec_write_field(dest, &wp,0x3F,8); // Immediate Assignment Message Type
+	bitvec_write_field(dest, &wp, 0x0, 4);  // Skip Indicator
+	bitvec_write_field(dest, &wp, 0x6, 4);  // Protocol Discriminator
+	bitvec_write_field(dest, &wp, 0x3F, 8); // Immediate Assignment Message Type
 
 	// 10.5.2.25b Dedicated mode or TBF
-	bitvec_write_field(dest, &wp,0x0,1);      // spare
-	bitvec_write_field(dest, &wp,0x0,1);      // TMA : Two-message assignment: No meaning
-	bitvec_write_field(dest, &wp,downlink,1); // Downlink : Downlink assignment to mobile in packet idle mode
-	bitvec_write_field(dest, &wp,0x1,1);      // T/D : TBF or dedicated mode: this message assigns a Temporary Block Flow (TBF).
+	bitvec_write_field(dest, &wp, 0x0, 1);      // spare
+	bitvec_write_field(dest, &wp, 0x0, 1);      // TMA : Two-message assignment: No meaning
+	bitvec_write_field(dest, &wp, downlink, 1); // Downlink : Downlink assignment to mobile in packet idle mode
+	bitvec_write_field(dest, &wp, 0x1, 1);      // T/D : TBF or dedicated mode: this message assigns a Temporary Block Flow (TBF).
 
-	bitvec_write_field(dest, &wp,0x0,4); // Page Mode
+	bitvec_write_field(dest, &wp, 0x0, 4); // Page Mode
 
 	// GSM 04.08 10.5.2.25a Packet Channel Description
 	bitvec_write_field(dest, &wp, 0x01, 5);			// Channel type
@@ -480,13 +480,13 @@ int Encoding::write_immediate_assignment(
 		bitvec_write_field(dest, &wp, ra, 8);	/* RACH value */
 	}
 
-	bitvec_write_field(dest, &wp,(ref_fn / (26 * 51)) % 32,5); // T1'
-	bitvec_write_field(dest, &wp,ref_fn % 51,6);               // T3
-	bitvec_write_field(dest, &wp,ref_fn % 26,5);               // T2
+	bitvec_write_field(dest, &wp, (ref_fn / (26 * 51)) % 32, 5); // T1'
+	bitvec_write_field(dest, &wp, ref_fn % 51, 6);               // T3
+	bitvec_write_field(dest, &wp, ref_fn % 26, 5);               // T2
 
 	// 10.5.2.40 Timing Advance
-	bitvec_write_field(dest, &wp,0x0,2); // spare
-	bitvec_write_field(dest, &wp,ta,6);  // Timing Advance value
+	bitvec_write_field(dest, &wp, 0x0, 2); // spare
+	bitvec_write_field(dest, &wp, ta, 6);  // Timing Advance value
 
 	/* 10.5.2.21 Mobile Allocation */
 	if (pdch->fh.enabled) {
