@@ -447,7 +447,7 @@ int Encoding::write_immediate_assignment(
 
 	bitvec_write_field(dest, &wp, 0x0, 4);  // Skip Indicator
 	bitvec_write_field(dest, &wp, 0x6, 4);  // Protocol Discriminator
-	bitvec_write_field(dest, &wp, 0x3F, 8); // Immediate Assignment Message Type
+	bitvec_write_field(dest, &wp, GSM48_MT_RR_IMM_ASS, 8); // Immediate Assignment Message Type
 
 	// 10.5.2.25b Dedicated mode or TBF
 	bitvec_write_field(dest, &wp, 0x0, 1);      // spare

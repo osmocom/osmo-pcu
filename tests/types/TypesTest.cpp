@@ -781,7 +781,7 @@ void test_immediate_assign_dl()
 
 	struct gprs_rlcmac_tbf *tbf = tbf_alloc_dl_tbf(bts, ms, 0, false);
 	static uint8_t res[] = { 0x06,
-				 0x3f, /* Immediate Assignment Message Type */
+				 0x3f, /* Immediate Assignment Message Type (GSM48_MT_RR_IMM_ASS) */
 				 0x30, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
 				 0x0d, 0x23, 0x6d, /* §10.5.2.25a Packet Channel Description */
 				 /* ETSI TS 44.018 §10.5.2.30 Request Reference */
@@ -806,7 +806,7 @@ void test_immediate_assign_ul0m()
 	GprsMs *ms = bts_alloc_ms(bts, 1, 0);
 	struct gprs_rlcmac_tbf *tbf = tbf_alloc_ul_tbf(bts, ms, 0, false);
 	static uint8_t res[] = { 0x06,
-				 0x3f, /* Immediate Assignment Message Type */
+				 0x3f, /* Immediate Assignment Message Type (GSM48_MT_RR_IMM_ASS) */
 				 0x10, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
 				 0x0d, 0x23, 0x6d, /* §10.5.2.25a Packet Channel Description */
 				 /* ETSI TS 44.018 §10.5.2.30 Request Reference */
@@ -824,7 +824,7 @@ void test_immediate_assign_ul0m()
 void test_immediate_assign_ul0s()
 {
 	static uint8_t res[] = { 0x06,
-				 0x3f, /* Immediate Assignment Message Type */
+				 0x3f, /* Immediate Assignment Message Type (GSM48_MT_RR_IMM_ASS) */
 				 0x10, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
 				 0x0d, 0x23, 0x6d, /* §10.5.2.25a Packet Channel Description */
 				 /* ETSI TS 44.018 §10.5.2.30 Request Reference */
@@ -848,7 +848,7 @@ void test_immediate_assign_ul1s()
 	GprsMs *ms = bts_alloc_ms(bts, 1, 1);
 	struct gprs_rlcmac_tbf *tbf = tbf_alloc_ul_tbf(bts, ms, 0, false);
 	static uint8_t res[] = { 0x06,
-				 0x3f, /* Immediate Assignment Message Type */
+				 0x3f, /* Immediate Assignment Message Type (GSM48_MT_RR_IMM_ASS) */
 				 0x10, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
 				 0x0d, 0x23, 0x6d, /* §10.5.2.25a Packet Channel Description */
 				 /* ETSI TS 44.018 §10.5.2.30 Request Reference */
@@ -866,7 +866,7 @@ void test_immediate_assign_ul1s()
 void test_immediate_assign_ul1m()
 {
 	static uint8_t res[] = { 0x06,
-				 0x3f, /* Immediate Assignment Message Type */
+				 0x3f, /* Immediate Assignment Message Type (GSM48_MT_RR_IMM_ASS) */
 				 0x10, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */
 				 0x0d, 0x23, 0x6d, /* §10.5.2.25a Packet Channel Description */
 				 /* ETSI TS 44.018 §10.5.2.30 Request Reference */

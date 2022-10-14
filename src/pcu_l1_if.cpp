@@ -510,7 +510,7 @@ static int pcu_rx_data_cnf(struct gprs_rlcmac_bts *bts, struct gsm_pcu_if_data *
 
 	switch (data_cnf->sapi) {
 	case PCU_IF_SAPI_PCH:
-		if (data_cnf->data[2] == 0x3f)
+		if (data_cnf->data[2] == GSM48_MT_RR_IMM_ASS)
 			bts_rcv_imm_ass_cnf(bts, data_cnf->data, data_cnf->fn);
 		break;
 	default:
