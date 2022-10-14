@@ -667,12 +667,17 @@ int bts_tfi_find_free(const struct gprs_rlcmac_bts *bts, enum gprs_rlcmac_tbf_di
 int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32_t fn)
 {
 	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
+	const struct gsm48_imm_ass *imm_ass = (struct gsm48_imm_ass *)data;
 	uint8_t plen;
 	uint32_t tlli;
 	GprsMs *ms;
 
-	/* move to IA Rest Octets */
-	plen = data[0] >> 2;
+	/* Move to IA Rest Octets: TS 44.018 9.1.18 "The L2 pseudo length of
+	 * this message is the sum of lengths of all information elements
+	 * present in the message except the IA Rest Octets and L2 Pseudo Length
+	 * information elements." */
+	/* TS 44.018 10.5.2.19 l2_plen byte lowest 2 bits are '01'B */
+	plen = imm_ass->l2_plen >> 2;
 	data += 1 + plen;
 
 	if ((*data & 0xf0) != 0xd0) {
