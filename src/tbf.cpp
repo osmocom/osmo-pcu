@@ -221,7 +221,7 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction di
 	/* TODO: When the TLLI does not match the ms, check if there is another
 	 * MS object that belongs to that TLLI and if yes make sure one of them
 	 * gets deleted. This is the same problem that can arise with
-	 * IMSI in gprs_rlcmac_dl_tbf::handle() so there should be a unified solution */
+	 * IMSI in dl_tbf_handle() so there should be a unified solution */
 	if (!ms_check_tlli(ms(), tlli)) {
 		GprsMs *old_ms;
 
