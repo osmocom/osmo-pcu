@@ -419,6 +419,7 @@ void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms)
 	ms_unref(old_ms);
 }
 
+/* Set/update the MS object TLLI based on knowledge gained from the MS side (Uplink direction) */
 void ms_set_tlli(struct GprsMs *ms, uint32_t tlli)
 {
 	if (tlli == ms->tlli || tlli == ms->new_ul_tlli)
@@ -443,6 +444,7 @@ void ms_set_tlli(struct GprsMs *ms, uint32_t tlli)
 	ms->new_ul_tlli = GSM_RESERVED_TMSI;
 }
 
+/* Set/update the MS object TLLI based on knowledge gained from the SGSN side (Downlink direction) */
 bool ms_confirm_tlli(struct GprsMs *ms, uint32_t tlli)
 {
 	if (tlli == ms->tlli || tlli == ms->new_dl_tlli)
