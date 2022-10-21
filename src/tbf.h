@@ -200,9 +200,6 @@ struct gprs_rlcmac_tbf {
 	uint32_t tlli() const;
 	bool is_tlli_valid() const;
 
-	/** MS updating */
-	void update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction);
-
 	uint8_t tfi() const;
 	bool is_tfi_assigned() const;
 

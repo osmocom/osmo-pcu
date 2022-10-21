@@ -397,7 +397,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 				LOGPTBFUL(this, LOGL_INFO,
 					  "Decoded premier TLLI=0x%08x of UL DATA TFI=%d.\n",
 					  new_tlli, rlc->tfi);
-				update_ms(new_tlli, GPRS_RLCMAC_UL_TBF);
+				ms_update_announced_tlli(ms(), new_tlli);
 				bts_pch_timer_stop(bts, ms());
 			} else if (new_tlli != GSM_RESERVED_TMSI && new_tlli != tlli()) {
 				LOGPTBFUL(this, LOGL_NOTICE,

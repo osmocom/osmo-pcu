@@ -119,6 +119,7 @@ void ms_set_current_cs_dl(struct GprsMs *ms, enum CodingScheme scheme);
 void ms_update_error_rate(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, int error_rate);
 uint8_t ms_current_pacch_slots(const struct GprsMs *ms);
 
+void ms_update_announced_tlli(struct GprsMs *ms, uint32_t tlli);
 void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms);
 
 void ms_attach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf);

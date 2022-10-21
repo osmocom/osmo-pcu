@@ -126,7 +126,7 @@ static void test_tbf_tlli_update()
 	gprs_rlcmac_tbf *dl_tbf = dl_tbf_alloc(bts,
 						ms, 0, false);
 	OSMO_ASSERT(dl_tbf != NULL);
-	dl_tbf->update_ms(0x2342, GPRS_RLCMAC_DL_TBF);
+	ms_confirm_tlli(ms, 0x2342);
 	dl_tbf->set_ta(4);
 	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf);
 	OSMO_ASSERT(dl_tbf->ms() == ms);
@@ -134,7 +134,7 @@ static void test_tbf_tlli_update()
 	gprs_rlcmac_tbf *ul_tbf = ul_tbf_alloc(bts,
 						   ms, 0, false);
 	OSMO_ASSERT(ul_tbf != NULL);
-	ul_tbf->update_ms(0x2342, GPRS_RLCMAC_UL_TBF);
+	ms_update_announced_tlli(ms, 0x2342);
 	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
 	OSMO_ASSERT(ul_tbf->ms() == ms);
 
@@ -144,7 +144,7 @@ static void test_tbf_tlli_update()
 	 * Now check.. that DL changes and that the timing advance
 	 * has changed.
 	 */
-	dl_tbf->update_ms(0x4232, GPRS_RLCMAC_DL_TBF);
+	ms_confirm_tlli(dl_tbf->ms(), 0x4232);
 
 	/* It is still there, since the new TLLI has not been used for UL yet */
 	ms_new = bts_ms_by_tlli(bts, 0x2342, GSM_RESERVED_TMSI);
@@ -156,7 +156,7 @@ static void test_tbf_tlli_update()
 	OSMO_ASSERT(ms_ul_tbf(ms) == ul_tbf);
 
 	/* Now use the new TLLI for UL */
-	ul_tbf->update_ms(0x4232, GPRS_RLCMAC_UL_TBF);
+	ms_update_announced_tlli(ms, 0x4232);
 	ms_new = bts_ms_by_tlli(bts, 0x2342, GSM_RESERVED_TMSI);
 	OSMO_ASSERT(ms_new == NULL);
 
@@ -305,7 +305,7 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 
 	setup_bts(bts, ts_no);
 	dl_tbf = create_dl_tbf(bts, ms_class, 0, &trx_no);
-	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
+	ms_confirm_tlli(dl_tbf->ms(), tlli);
 	ms = dl_tbf->ms();
 
 	for (i = 0; i < sizeof(llc_data); i++)
@@ -381,7 +381,7 @@ static void test_tbf_delayed_release()
 	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2031, 200, OSMO_TDEF_MS) == 0);
 
 	dl_tbf = create_dl_tbf(bts, ms_class, 0, &trx_no);
-	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
+	ms_confirm_tlli(dl_tbf->ms(), tlli);
 
 	for (i = 0; i < sizeof(llc_data); i++)
 		llc_data[i] = i%256;
@@ -446,8 +446,8 @@ static void test_tbf_imsi()
 	dl_tbf[0] = create_dl_tbf(bts, ms_class, 0, &trx_no);
 	dl_tbf[1] = create_dl_tbf(bts, ms_class, 0, &trx_no);
 
-	dl_tbf[0]->update_ms(0xf1000001, GPRS_RLCMAC_DL_TBF);
-	dl_tbf[1]->update_ms(0xf1000002, GPRS_RLCMAC_DL_TBF);
+	ms_confirm_tlli(dl_tbf[0]->ms(), 0xf1000001);
+	ms_confirm_tlli(dl_tbf[1]->ms(), 0xf1000002);
 
 	ms_set_imsi(dl_tbf[0]->ms(), "001001000000001");
 	ms1 = bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, "001001000000001");
@@ -2634,7 +2634,7 @@ static void test_tbf_epdan_out_of_rx_window(void)
 				0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 	dl_tbf = create_dl_tbf(bts, ms_class, egprs_ms_class, &trx_no);
-	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
+	ms_confirm_tlli(dl_tbf->ms(), tlli);
 	prlcdlwindow = static_cast<gprs_rlc_dl_window *>(dl_tbf->window());
 	prlcmvb = &prlcdlwindow->m_v_b;
 	prlcdlwindow->m_v_s = 1288;
@@ -2767,7 +2767,7 @@ static void establish_and_use_egprs_dl_tbf(struct gprs_rlcmac_bts *bts, int mcs)
 	bts->initial_mcs_dl = mcs;
 
 	dl_tbf = create_dl_tbf(bts, ms_class, egprs_ms_class, &trx_no);
-	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
+	ms_confirm_tlli(dl_tbf->ms(), tlli);
 
 	for (i = 0; i < sizeof(llc_data); i++)
 		llc_data[i] = i%256;
@@ -2824,7 +2824,7 @@ static gprs_rlcmac_dl_tbf *tbf_init(struct gprs_rlcmac_bts *bts,
 	bts->initial_mcs_dl = mcs;
 
 	dl_tbf = create_dl_tbf(bts, ms_class, egprs_ms_class, &trx_no);
-	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
+	ms_confirm_tlli(dl_tbf->ms(), tlli);
 
 	for (i = 0; i < sizeof(test_data); i++)
 		test_data[i] = i%256;
@@ -3344,7 +3344,7 @@ void test_packet_access_rej_epdan()
 	setup_bts(bts, 4);
 	static gprs_rlcmac_dl_tbf *dl_tbf = tbf_init(bts, 1);
 
-	dl_tbf->update_ms(tlli, GPRS_RLCMAC_DL_TBF);
+	ms_confirm_tlli(dl_tbf->ms(), tlli);
 
 	osmo_fsm_inst_dispatch(dl_tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_SCHED_ASS_REJ, NULL);
 	struct msgb *msg = tbf_ul_ass_create_rlcmac_msg((const struct gprs_rlcmac_tbf*)dl_tbf, 0, 0);

@@ -109,3 +109,8 @@ GprsMs *GprsMsStorage::create_ms()
 
 	return ms;
 }
+
+struct GprsMs *ms_store_get_ms(struct GprsMsStorage *ms_store, uint32_t tlli, uint32_t old_tlli, const char *imsi)
+{
+	return ms_store->get_ms(tlli, old_tlli, imsi);
+}

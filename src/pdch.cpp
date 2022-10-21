@@ -367,8 +367,8 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 	/* Reset N3101 counter: */
 	tbf->n_reset(N3101);
 
-	tbf->update_ms(tlli, GPRS_RLCMAC_UL_TBF);
-	/* Gather MS from TBF, since it may be NULL or may have been merged during update_ms */
+	ms_update_announced_tlli(tbf->ms(), tlli);
+	/* Gather MS from TBF again, since it may be NULL or may have been merged during ms_update_announced_tlli */
 	ms = tbf->ms();
 
 	LOGPTBF(tbf, LOGL_DEBUG, "FN=%" PRIu32 " Rx Packet Control Ack (reason=%s)\n",

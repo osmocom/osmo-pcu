@@ -213,30 +213,6 @@ void gprs_rlcmac_tbf::set_ms(GprsMs *ms)
 		ms_attach_tbf(m_ms, this);
 }
 
-void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction dir)
-{
-	GprsMs *old_ms = NULL;
-
-	if (tlli == GSM_RESERVED_TMSI)
-		return;
-
-	/* TODO: When the TLLI does not match the ms, check if there is another
-	 * MS object that belongs to that TLLI and if yes make sure one of them
-	 * gets deleted. This is the same problem that can arise with
-	 * IMSI in dl_tbf_handle() so there should be a unified solution */
-	if (!ms_check_tlli(ms(), tlli))
-		old_ms = bts_ms_store(bts)->get_ms(tlli, GSM_RESERVED_TMSI, NULL);
-
-	if (dir == GPRS_RLCMAC_UL_TBF)
-		ms_set_tlli(ms(), tlli);
-	else
-		ms_confirm_tlli(ms(), tlli);
-
-	if (old_ms)
-		ms_merge_and_clear_ms(ms(), old_ms);
-	/* old_ms may no longer be available here */
-}
-
 static void tbf_unlink_pdch(struct gprs_rlcmac_tbf *tbf)
 {
 	int ts;

@@ -269,7 +269,7 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	if (!dl_tbf)
 		return false;
 
-	dl_tbf->update_ms(0x23, GPRS_RLCMAC_DL_TBF);
+	ms_confirm_tlli(ms, 0x23);
 	OSMO_ASSERT(dl_tbf->ms() == ms);
 	OSMO_ASSERT(ms_current_trx(dl_tbf->ms()));
 
@@ -279,7 +279,7 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	if (!ul_tbf)
 		return false;
 
-	ul_tbf->update_ms(0x23, GPRS_RLCMAC_UL_TBF);
+	ms_update_announced_tlli(ms, 0x23);
 	ul_tbf->m_contention_resolution_done = true;
 
 	dump_assignment(ul_tbf, "UL", verbose);

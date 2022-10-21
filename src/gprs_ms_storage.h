@@ -23,6 +23,17 @@
 
 struct gprs_rlcmac_bts;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+struct GprsMsStorage;
+struct GprsMs *ms_store_get_ms(struct GprsMsStorage *ms_store, uint32_t tlli, uint32_t old_tlli, const char *imsi);
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+
 struct GprsMsStorage {
 public:
 	GprsMsStorage(struct gprs_rlcmac_bts *bts);
@@ -38,3 +49,5 @@ private:
 	struct gprs_rlcmac_bts *m_bts;
 	struct llist_head m_list; /* list of struct GprsMs */
 };
+
+#endif

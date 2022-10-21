@@ -24,6 +24,7 @@
 #include "pcu_utils.h"
 #include "nacc_fsm.h"
 #include "tbf_ul_ack_fsm.h"
+#include "gprs_ms_storage.h"
 
 #include <time.h>
 
@@ -400,6 +401,32 @@ void ms_reset(struct GprsMs *ms)
 	ms->new_dl_tlli = ms->tlli;
 	ms->new_ul_tlli = ms->tlli;
 	ms->imsi[0] = '\0';
+}
+
+/* This function should be called on the MS object of a TBF each time an RLCMAC
+ * block is received for it with TLLI information.
+ * Besides updating the TLLI field on the MS object, it also seeks for other MS
+ * objects in the store and merges them into the current MS object. The MS
+ * duplication happened because we don't learn the TLLI of the created TBF until
+ * a later point. */
+void ms_update_announced_tlli(struct GprsMs *ms, uint32_t tlli)
+{
+	struct GprsMs *old_ms = NULL;
+
+	if (tlli == GSM_RESERVED_TMSI)
+		return;
+
+	/* When the TLLI does not match the ms, check if there is another
+	 * MS object that belongs to that TLLI and if yes make sure one of them
+	 * gets deleted. */
+	if (!ms_check_tlli(ms, tlli))
+		old_ms = ms_store_get_ms(bts_ms_store(ms->bts), tlli, GSM_RESERVED_TMSI, NULL);
+
+	ms_set_tlli(ms, tlli);
+
+	if (old_ms)
+		ms_merge_and_clear_ms(ms, old_ms);
+	/* old_ms may no longer be available here */
 }
 
 /* Merge 'old_ms' object into 'ms' object.
