@@ -134,6 +134,8 @@ struct gprs_rlcmac_tbf *ms_tbf(const struct GprsMs *ms, enum gprs_rlcmac_tbf_dir
 static inline struct gprs_rlcmac_ul_tbf *ms_ul_tbf(const struct GprsMs *ms) {return ms->ul_tbf;}
 static inline struct gprs_rlcmac_dl_tbf *ms_dl_tbf(const struct GprsMs *ms) {return ms->dl_tbf;}
 
+const char *ms_name(const struct GprsMs *ms);
+char *ms_name_buf(const struct GprsMs *ms, char *buf, unsigned int buf_size);
 
 void ms_set_callback(struct GprsMs *ms, struct gpr_ms_callback *cb);
 
@@ -237,11 +239,7 @@ static inline struct gprs_rlcmac_trx *ms_current_trx(const struct GprsMs *ms)
 }
 
 #define LOGPMS(ms, category, level, fmt, args...) \
-	LOGP(category, level, "MS(TLLI=0x%08x, IMSI=%s, TA=%" PRIu8 ", %" PRIu8 "/%" PRIu8 ",%s%s) " fmt, \
-	     ms_tlli(ms), ms_imsi(ms), ms_ta(ms), ms_ms_class(ms), ms_egprs_ms_class(ms), \
-	     ms_ul_tbf(ms) ? " UL": "", \
-	     ms_dl_tbf(ms) ? " DL": "", \
-	     ## args)
+	LOGP(category, level, "%s " fmt, ms_name(ms), ## args)
 
 #ifdef __cplusplus
 }

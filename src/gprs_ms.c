@@ -942,6 +942,24 @@ struct gprs_rlcmac_tbf *ms_tbf(const struct GprsMs *ms, enum gprs_rlcmac_tbf_dir
 	return NULL;
 }
 
+const char *ms_name(const struct GprsMs *ms)
+{
+	static char _ms_name_buf[128];
+	return ms_name_buf(ms, _ms_name_buf, sizeof(_ms_name_buf));
+}
+
+char *ms_name_buf(const struct GprsMs *ms, char *buf, unsigned int buf_size)
+{
+	snprintf(buf, buf_size - 1,
+		"MS(TLLI=0x%08x, IMSI=%s, TA=%" PRIu8 ", %" PRIu8 "/%" PRIu8 ",%s%s)",
+		ms_tlli(ms), ms_imsi(ms), ms_ta(ms),
+		ms_ms_class(ms), ms_egprs_ms_class(ms),
+		ms_ul_tbf(ms) ? " UL" : "",
+		ms_dl_tbf(ms) ? " DL" : "");
+	buf[buf_size - 1] = '\0';
+	return buf;
+}
+
 int ms_nacc_start(struct GprsMs *ms, Packet_Cell_Change_Notification_t *notif)
 {
 	if (!ms->nacc)
