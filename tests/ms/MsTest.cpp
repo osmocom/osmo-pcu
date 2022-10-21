@@ -416,10 +416,10 @@ static void test_ms_storage()
 	OSMO_ASSERT(ms == ms_tmp);
 	OSMO_ASSERT(ms_tlli(ms) == tlli + 0);
 
-	ms_tmp = store.get_ms(0, 0, imsi1);
+	ms_tmp = store.get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi1);
 	OSMO_ASSERT(ms == ms_tmp);
 	OSMO_ASSERT(strcmp(ms_imsi(ms), imsi1) == 0);
-	ms_tmp = store.get_ms(0, 0, imsi2);
+	ms_tmp = store.get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi2);
 	OSMO_ASSERT(ms_tmp == NULL);
 
 	ms = prepare_ms(&store, tlli + 1, GPRS_RLCMAC_UL_TBF);
@@ -432,10 +432,10 @@ static void test_ms_storage()
 	OSMO_ASSERT(ms == ms_tmp);
 	OSMO_ASSERT(ms_tlli(ms) == tlli + 1);
 
-	ms_tmp = store.get_ms(0, 0, imsi1);
+	ms_tmp = store.get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi1);
 	OSMO_ASSERT(ms_tmp != NULL);
 	OSMO_ASSERT(ms_tmp != ms);
-	ms_tmp = store.get_ms(0, 0, imsi2);
+	ms_tmp = store.get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi2);
 	OSMO_ASSERT(ms == ms_tmp);
 	OSMO_ASSERT(strcmp(ms_imsi(ms), imsi2) == 0);
 

@@ -236,7 +236,7 @@ int pcu_vty_show_ms_by_tlli(struct vty *vty, struct gprs_rlcmac_bts *bts,
 int pcu_vty_show_ms_by_imsi(struct vty *vty, struct gprs_rlcmac_bts *bts,
 	const char *imsi)
 {
-	GprsMs *ms = bts_ms_store(bts)->get_ms(0, 0, imsi);
+	GprsMs *ms = bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi);
 	if (!ms) {
 		vty_out(vty, "Unknown IMSI '%s'.%s", imsi, VTY_NEWLINE);
 		return CMD_WARNING;

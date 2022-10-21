@@ -450,7 +450,7 @@ static void test_tbf_imsi()
 	dl_tbf[1]->update_ms(0xf1000002, GPRS_RLCMAC_DL_TBF);
 
 	ms_set_imsi(dl_tbf[0]->ms(), "001001000000001");
-	ms1 = bts_ms_store(bts)->get_ms(0, 0, "001001000000001");
+	ms1 = bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, "001001000000001");
 	OSMO_ASSERT(ms1 != NULL);
 	ms2 = bts_ms_store(bts)->get_ms(0xf1000001);
 	OSMO_ASSERT(ms2 != NULL);
@@ -459,9 +459,9 @@ static void test_tbf_imsi()
 
 	/* change the IMSI on TBF 0 */
 	ms_set_imsi(dl_tbf[0]->ms(), "001001000000002");
-	ms1 = bts_ms_store(bts)->get_ms(0, 0, "001001000000001");
+	ms1 = bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, "001001000000001");
 	OSMO_ASSERT(ms1 == NULL);
-	ms1 = bts_ms_store(bts)->get_ms(0, 0, "001001000000002");
+	ms1 = bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, "001001000000002");
 	OSMO_ASSERT(ms1 != NULL);
 	OSMO_ASSERT(strcmp(ms_imsi(ms2), "001001000000002") == 0);
 	OSMO_ASSERT(ms1 == ms2);
@@ -470,7 +470,7 @@ static void test_tbf_imsi()
 	{
 		ms_ref(ms2);
 		ms_set_imsi(dl_tbf[1]->ms(), "001001000000002");
-		ms1 = bts_ms_store(bts)->get_ms(0, 0, "001001000000002");
+		ms1 = bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, "001001000000002");
 		OSMO_ASSERT(ms1 != NULL);
 		OSMO_ASSERT(ms1 != ms2);
 		OSMO_ASSERT(strcmp(ms_imsi(ms1), "001001000000002") == 0);
@@ -482,7 +482,7 @@ static void test_tbf_imsi()
 	OSMO_ASSERT(ms2 == NULL);
 
 	tbf_free(dl_tbf[1]);
-	ms1 = bts_ms_store(bts)->get_ms(0, 0, "001001000000002");
+	ms1 = bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, "001001000000002");
 	OSMO_ASSERT(ms1 == NULL);
 
 	TALLOC_FREE(the_pcu);
@@ -565,7 +565,7 @@ static void test_tbf_dl_llc_loss()
 		delay_csec, buf, sizeof(buf));
 	OSMO_ASSERT(rc >= 0);
 
-	ms = bts_ms_store(bts)->get_ms(0, 0, imsi);
+	ms = bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi);
 	OSMO_ASSERT(ms != NULL);
 	OSMO_ASSERT(ms_dl_tbf(ms) != NULL);
 	ms_dl_tbf(ms)->set_ta(0);
@@ -1708,7 +1708,7 @@ static void send_dl_data(struct gprs_rlcmac_bts *bts, uint32_t tlli, const char 
 {
 	GprsMs *ms, *ms2;
 
-	ms = bts_ms_store(bts)->get_ms(tlli, 0, imsi);
+	ms = bts_ms_store(bts)->get_ms(tlli, GSM_RESERVED_TMSI, imsi);
 
 	dl_tbf_handle(bts, tlli, 0, imsi, 0, 0,
 		1000, data, data_size);

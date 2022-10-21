@@ -225,7 +225,7 @@ void gprs_rlcmac_tbf::update_ms(uint32_t tlli, enum gprs_rlcmac_tbf_direction di
 	if (!ms_check_tlli(ms(), tlli)) {
 		GprsMs *old_ms;
 
-		old_ms = bts_ms_store(bts)->get_ms(tlli, 0, NULL);
+		old_ms = bts_ms_store(bts)->get_ms(tlli, GSM_RESERVED_TMSI, NULL);
 		if (old_ms)
 			ms_merge_and_clear_ms(ms(), old_ms);
 	}

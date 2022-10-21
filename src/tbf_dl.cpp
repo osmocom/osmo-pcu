@@ -295,7 +295,7 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 	/* If we got MS by TLLI above let's see if we already have another MS
 	 * object identified by IMSI and merge them */
 	if (ms && !ms_imsi_is_valid(ms) && imsi) {
-		ms_old = bts_ms_store(bts)->get_ms(0, 0, imsi);
+		ms_old = bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi);
 		if (ms_old && ms_old != ms) {
 			/* The TLLI has changed (RAU), so there are two MS
 			 * objects for the same MS */

@@ -1389,7 +1389,7 @@ void bts_recalc_max_mcs(struct gprs_rlcmac_bts *bts)
 
 struct GprsMs *bts_ms_by_imsi(struct gprs_rlcmac_bts *bts, const char *imsi)
 {
-	return bts_ms_store(bts)->get_ms(0, 0, imsi);
+	return bts_ms_store(bts)->get_ms(GSM_RESERVED_TMSI, GSM_RESERVED_TMSI, imsi);
 }
 
 const struct llist_head* bts_ms_list(struct gprs_rlcmac_bts *bts)
