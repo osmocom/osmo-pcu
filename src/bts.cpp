@@ -1083,8 +1083,11 @@ void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf)
 	LOGPTBF(tbf, LOGL_INFO, "TX: START Immediate Assignment Downlink (PCH)\n");
 	bitvec *immediate_assignment = bitvec_alloc(22, tall_pcu_ctx); /* without plen */
 	bitvec_unhex(immediate_assignment, DUMMY_VEC); /* standard '2B'O padding */
-	/* use request reference that has maximum distance to current time,
-	 * so the assignment will not conflict with possible RACH requests. */
+	/* 3GPP TS 44.018, section 9.1.18.0d states that the network shall code the
+	 * Request Reference IE, e.g. by using a suitably offset frame number, such
+	 * that the resource reference cannot be confused with any CHANNEL REQUEST
+	 * message sent by a mobile station.  Use last_rts_fn + 21216 (16 TDMA
+	 * super-frame periods, or ~21.3 seconds) to achieve a decent distance. */
 	LOGP(DRLCMAC, LOGL_DEBUG, " - TRX=%d (%d) TS=%d TA=%d\n",
 		trx_no, tbf->trx->arfcn, ts_no, tbf->ta());
 	plen = Encoding::write_immediate_assignment(&bts->trx[trx_no].pdch[ts_no],
