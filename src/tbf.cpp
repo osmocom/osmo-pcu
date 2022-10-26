@@ -694,7 +694,7 @@ int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
 
 	bts_do_rate_ctr_inc(bts, CTR_TBF_REUSED);
 
-	new_tbf = tbf_alloc_dl_tbf(bts, ms(),
+	new_tbf = dl_tbf_alloc(bts, ms(),
 		this->trx->trx_no, false);
 
 	if (!new_tbf) {

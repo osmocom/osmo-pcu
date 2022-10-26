@@ -779,7 +779,7 @@ void test_immediate_assign_dl()
 	bts->trx[0].pdch[3].enable();
 	GprsMs *ms = bts_alloc_ms(bts, 1, 0);
 
-	struct gprs_rlcmac_tbf *tbf = tbf_alloc_dl_tbf(bts, ms, 0, false);
+	struct gprs_rlcmac_tbf *tbf = dl_tbf_alloc(bts, ms, 0, false);
 	static uint8_t res[] = { 0x06,
 				 0x3f, /* Immediate Assignment Message Type (GSM48_MT_RR_IMM_ASS) */
 				 0x30, /* §10.5.2.26 Page Mode and §10.5.2.25b Dedicated mode/TBF */

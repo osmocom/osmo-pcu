@@ -106,7 +106,7 @@ static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
 	return 0;
 }
 
-struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot)
+struct gprs_rlcmac_dl_tbf *dl_tbf_alloc(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot)
 {
 	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;
@@ -210,7 +210,7 @@ static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts, GprsMs *ms,
 	// Create new TBF (any TRX)
 /* FIXME: Copy and paste with alloc_ul_tbf */
 	/* set number of downlink slots according to multislot class */
-	dl_tbf = tbf_alloc_dl_tbf(bts, ms, use_trx, ss);
+	dl_tbf = dl_tbf_alloc(bts, ms, use_trx, ss);
 
 	if (!dl_tbf) {
 		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");

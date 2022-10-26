@@ -123,7 +123,7 @@ static void test_tbf_tlli_update()
 	 * Make a uplink and downlink allocation
 	 */
 	ms = bts_alloc_ms(bts, 0, 0);
-	gprs_rlcmac_tbf *dl_tbf = tbf_alloc_dl_tbf(bts,
+	gprs_rlcmac_tbf *dl_tbf = dl_tbf_alloc(bts,
 						ms, 0, false);
 	OSMO_ASSERT(dl_tbf != NULL);
 	dl_tbf->update_ms(0x2342, GPRS_RLCMAC_DL_TBF);
@@ -209,7 +209,7 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(struct gprs_rlcmac_bts *bts, uint8_t ms
 
 	tfi = bts_tfi_find_free(bts, GPRS_RLCMAC_DL_TBF, &trx_no, -1);
 	OSMO_ASSERT(tfi >= 0);
-	dl_tbf = tbf_alloc_dl_tbf(bts, ms, trx_no, true);
+	dl_tbf = dl_tbf_alloc(bts, ms, trx_no, true);
 	OSMO_ASSERT(dl_tbf);
 	dl_tbf->set_ta(0);
 	check_tbf(dl_tbf);
@@ -2328,7 +2328,7 @@ static void test_tbf_ws()
 
 	/* Does no support EGPRS */
 	ms = bts_alloc_ms(bts, ms_class, 0);
-	dl_tbf = tbf_alloc_dl_tbf(bts, ms, 0, false);
+	dl_tbf = dl_tbf_alloc(bts, ms, 0, false);
 
 	ws_check(dl_tbf, __func__, 4, 64, true);
 
@@ -2336,7 +2336,7 @@ static void test_tbf_ws()
 
 	/* Does support EGPRS */
 	ms = bts_alloc_ms(bts, ms_class, ms_class);
-	dl_tbf = tbf_alloc_dl_tbf(bts, ms, 0, false);
+	dl_tbf = dl_tbf_alloc(bts, ms, 0, false);
 
 	ws_check(dl_tbf, __func__, 4, 128 + 4 * 64, true);
 	fprintf(stderr, "=== end %s ===\n", __func__);
@@ -2376,7 +2376,7 @@ static void test_tbf_update_ws(void)
 
 	/* Does support EGPRS */
 	ms = bts_alloc_ms(bts, ms_class, ms_class);
-	dl_tbf = tbf_alloc_dl_tbf(bts, ms, 0, true);
+	dl_tbf = dl_tbf_alloc(bts, ms, 0, true);
 
 	ws_check(dl_tbf, __func__, 1, 128 + 1 * 64, false);
 

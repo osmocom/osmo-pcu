@@ -182,7 +182,7 @@ static void test_fn_wrap_around()
 
 	struct gprs_rlcmac_bts *bts = setup_new_bts();
 	struct GprsMs *ms = ms_alloc(bts, 0x12345678);
-	struct gprs_rlcmac_tbf *tbf1 = tbf_alloc_dl_tbf(bts, ms, 0, true);
+	struct gprs_rlcmac_tbf *tbf1 = dl_tbf_alloc(bts, ms, 0, true);
 	struct gprs_rlcmac_pdch *pdch = &tbf1->trx->pdch[0];
 	int rc;
 	uint32_t fn, last_fn;
