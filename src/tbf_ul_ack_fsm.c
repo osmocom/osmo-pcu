@@ -216,7 +216,7 @@ static __attribute__((constructor)) void tbf_ul_ack_fsm_init(void)
 }
 
 
-struct msgb *tbf_ul_ack_create_rlcmac_msg(const struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts)
+struct msgb *tbf_ul_ack_create_rlcmac_msg(const struct gprs_rlcmac_ul_tbf *ul_tbf, uint32_t fn, uint8_t ts)
 {
 	int rc;
 	struct tbf_ul_ack_ev_create_rlcmac_msg_ctx data_ctx = {
@@ -224,31 +224,29 @@ struct msgb *tbf_ul_ack_create_rlcmac_msg(const struct gprs_rlcmac_tbf *tbf, uin
 		.ts = ts,
 		.msg = NULL,
 	};
-	OSMO_ASSERT(tbf_direction(tbf) == GPRS_RLCMAC_UL_TBF);
 
-	rc = osmo_fsm_inst_dispatch(tbf_ul_ack_fi((const struct gprs_rlcmac_ul_tbf *)tbf), TBF_UL_ACK_EV_CREATE_RLCMAC_MSG, &data_ctx);
+	rc = osmo_fsm_inst_dispatch(tbf_ul_ack_fi(ul_tbf), TBF_UL_ACK_EV_CREATE_RLCMAC_MSG, &data_ctx);
 	if (rc != 0 || !data_ctx.msg)
 		return NULL;
 	return data_ctx.msg;
 }
 
-bool tbf_ul_ack_rts(const struct gprs_rlcmac_tbf *tbf)
+bool tbf_ul_ack_rts(const struct gprs_rlcmac_ul_tbf *ul_tbf)
 {
-	struct osmo_fsm_inst *fi = tbf_ul_ack_fi((const struct gprs_rlcmac_ul_tbf *)tbf);
+	struct osmo_fsm_inst *fi = tbf_ul_ack_fi(ul_tbf);
 	return fi->state == TBF_UL_ACK_ST_SCHED_UL_ACK;
 }
 
 /* Did we already send the Final ACK and we are waiting for its confirmation (CTRL ACK) ? */
-bool tbf_ul_ack_waiting_cnf_final_ack(const struct gprs_rlcmac_tbf* tbf)
+bool tbf_ul_ack_waiting_cnf_final_ack(const struct gprs_rlcmac_ul_tbf *ul_tbf)
 {
-	OSMO_ASSERT(tbf_direction(tbf) == GPRS_RLCMAC_UL_TBF);
-	struct osmo_fsm_inst *fi = tbf_ul_ack_fi((const struct gprs_rlcmac_ul_tbf *)tbf);
+	struct osmo_fsm_inst *fi = tbf_ul_ack_fi(ul_tbf);
 	return fi->state == TBF_UL_ACK_ST_WAIT_ACK;
 }
 
-bool tbf_ul_ack_exp_ctrl_ack(const struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts)
+bool tbf_ul_ack_exp_ctrl_ack(const struct gprs_rlcmac_ul_tbf *ul_tbf, uint32_t fn, uint8_t ts)
 {
-	struct osmo_fsm_inst *fi = tbf_ul_ack_fi((const struct gprs_rlcmac_ul_tbf *)tbf);
+	struct osmo_fsm_inst *fi = tbf_ul_ack_fi(ul_tbf);
 	return fi->state == TBF_UL_ACK_ST_WAIT_ACK;
 	/* FIXME: validate FN and TS match: && ctx->poll_fn = fn && ctx->poll_ts == ts */
 }

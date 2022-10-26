@@ -62,7 +62,7 @@ struct tbf_ul_ack_ev_create_rlcmac_msg_ctx {
 };
 
 
-struct msgb *tbf_ul_ack_create_rlcmac_msg(const struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts);
-bool tbf_ul_ack_rts(const struct gprs_rlcmac_tbf *tbf);
-bool tbf_ul_ack_waiting_cnf_final_ack(const struct gprs_rlcmac_tbf *tbf);
-bool tbf_ul_ack_exp_ctrl_ack(const struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts);
+struct msgb *tbf_ul_ack_create_rlcmac_msg(const struct gprs_rlcmac_ul_tbf *ul_tbf, uint32_t fn, uint8_t ts);
+bool tbf_ul_ack_rts(const struct gprs_rlcmac_ul_tbf *ul_tbf);
+bool tbf_ul_ack_waiting_cnf_final_ack(const struct gprs_rlcmac_ul_tbf *ul_tbf);
+bool tbf_ul_ack_exp_ctrl_ack(const struct gprs_rlcmac_ul_tbf *ul_tbf, uint32_t fn, uint8_t ts);
