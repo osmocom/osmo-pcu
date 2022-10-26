@@ -244,6 +244,9 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
+	struct GprsMs *ms;
+	bool new_ul_tbf_requested;
+
 	switch (event) {
 	case TBF_EV_DL_ACKNACK_MISS:
 		break;
@@ -254,9 +257,27 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		tbf_fsm_state_chg(fi, TBF_ST_WAIT_RELEASE);
 		break;
 	case TBF_EV_FINAL_UL_ACK_CONFIRMED:
+		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_UL_TBF);
+		new_ul_tbf_requested = (bool)data;
+		/* Ref the MS, otherwise it may be freed after ul_tbf is
+		 * detached when sending event below. */
+		ms = tbf_ms(ctx->tbf);
+		ms_ref(ms);
 		/* UL TBF ACKed our transmitted UL ACK/NACK with final Ack
-		 * Indicator set to '1' t. We can free the TBF right away. */
+		 * Indicator set to '1'. We can free the TBF right away, the MS
+		 * also just released its TBF on its side. */
+		LOGPTBFUL(tbf_as_ul_tbf(ctx->tbf), LOGL_DEBUG, "[UPLINK] END\n");
 		tbf_free(ctx->tbf);
+		/* Here fi, ctx and ctx->tbf are already freed! */
+		/* TS 44.060 9.3.3.3.2: There might be LLC packets waiting in
+		 * the queue but the DL TBF assignment might have been delayed
+		 * because there was no way to reach the MS (because ul_tbf was
+		 * in packet-active mode with FINISHED state). If MS is going
+		 * back to packet-idle mode then we can assign the DL TBF on PCH
+		 * now. */
+		if (!new_ul_tbf_requested && ms_need_dl_tbf(ms))
+			ms_new_dl_tbf_assignment(ms);
+		ms_unref(ms);
 		break;
 	case TBF_EV_MAX_N3103:
 		ctx->T_release = 3169;

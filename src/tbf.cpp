@@ -955,3 +955,8 @@ int tbf_establish_dl_tbf_on_pacch(struct gprs_rlcmac_tbf *tbf)
 {
 	return tbf->establish_dl_tbf_on_pacch();
 }
+
+struct gprs_rlcmac_trx *tbf_get_trx(struct gprs_rlcmac_tbf *tbf)
+{
+	return tbf->trx;
+}

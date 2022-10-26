@@ -1715,7 +1715,6 @@ static void send_dl_data(struct gprs_rlcmac_bts *bts, uint32_t tlli, const char 
 
 	ms = bts_ms_by_imsi(bts, imsi);
 	OSMO_ASSERT(ms != NULL);
-	OSMO_ASSERT(ms_dl_tbf(ms) != NULL);
 
 	if (imsi[0] != '\0') {
 		ms2 = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
@@ -1774,6 +1773,38 @@ static void test_tbf_single_phase()
 
 	print_ta_tlli(ul_tbf, true);
 	send_dl_data(bts, tlli, imsi, (const uint8_t *)"TEST", 4);
+
+	fprintf(stderr, "=== end %s ===\n", __func__);
+	TALLOC_FREE(the_pcu);
+}
+
+static void test_tbf_single_phase2()
+{
+	the_pcu = prepare_pcu();
+	struct gprs_rlcmac_bts *bts = bts_alloc(the_pcu, 0);
+	int ts_no = 7;
+	uint32_t fn = DUMMY_FN; /* 17,25,9 */
+	uint32_t tlli = 0xf1223344;
+	const char *imsi = "0011223344";
+	uint16_t qta = 31;
+	gprs_rlcmac_ul_tbf *ul_tbf;
+
+	fprintf(stderr, "=== start %s ===\n", __func__);
+
+	setup_bts(bts, ts_no);
+
+	ul_tbf = establish_ul_tbf_single_phase(bts, ts_no, tlli, &fn, qta);
+
+	print_ta_tlli(ul_tbf, true);
+	/* PCU sends CTRL ACK/NCK with FINAL_ACK=1, hence TBF is not in state FINISHED */
+	request_dl_rlc_block(bts, ul_tbf->trx->trx_no, ts_no, &fn);
+	OSMO_ASSERT(ul_tbf->state_is(TBF_ST_FINISHED));
+	/* Now data is sent but no DL TBF is created because MS is not reachable for DL Assignment */
+	send_dl_data(bts, tlli, imsi, (const uint8_t *)"TEST", 4);
+
+	/* After MS CTRL ACKs the FINAL_ACK=1 then it releases the TBF and goes
+	 * to packet-idle mode. Hence PCU will trigger ImmAss(PktDlAss) on PCH. */
+	send_control_ack(ul_tbf);
 
 	fprintf(stderr, "=== end %s ===\n", __func__);
 	TALLOC_FREE(the_pcu);
@@ -3363,6 +3394,7 @@ int main(int argc, char **argv)
 	test_tbf_exhaustion();
 	test_tbf_dl_llc_loss();
 	test_tbf_single_phase();
+	test_tbf_single_phase2();
 	test_tbf_two_phase();
 	test_tbf_ra_update_rach();
 	test_tbf_dl_flow_and_rach_two_phase();

@@ -149,6 +149,7 @@ bool tbf_is_control_ts(const struct gprs_rlcmac_tbf *tbf, uint8_t ts);
 bool tbf_can_upgrade_to_multislot(const struct gprs_rlcmac_tbf *tbf);
 int tbf_update(struct gprs_rlcmac_tbf *tbf);
 int tbf_establish_dl_tbf_on_pacch(struct gprs_rlcmac_tbf *tbf);
+struct gprs_rlcmac_trx *tbf_get_trx(struct gprs_rlcmac_tbf *tbf);
 #ifdef __cplusplus
 }
 #endif

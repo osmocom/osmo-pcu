@@ -385,9 +385,12 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		}
 		pdch_ulc_release_fn(ulc, fn);
 		osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_RX_CTRL_ACK, NULL);
-		/* We only set polling on final UL ACK/NACK */
-		LOGPTBF(tbf, LOGL_DEBUG, "[UPLINK] END\n");
-		osmo_fsm_inst_dispatch(ul_tbf->state_fsm.fi, TBF_EV_FINAL_UL_ACK_CONFIRMED, NULL);
+		/* We only set polling on final UL ACK/NACK, something is wrong... */
+		if (tbf_state(tbf) == TBF_ST_FINISHED)
+			osmo_fsm_inst_dispatch(ul_tbf->state_fsm.fi, TBF_EV_FINAL_UL_ACK_CONFIRMED, (void*)false);
+			/* ul_tbf is freed here! */
+		else
+			LOGPTBFUL(ul_tbf, LOGL_ERROR, "Received POLL_UL_ACK for UL TBF in unexpected state!\n");
 		return;
 
 	case PDCH_ULC_POLL_UL_ASS:
@@ -722,7 +725,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				"block of final UL ACK/NACK\n", fn);
 			ul_tbf->n_reset(N3103);
 			pdch_ulc_release_node(ulc, item);
-			rc = osmo_fsm_inst_dispatch(ul_tbf->state_fsm.fi, TBF_EV_FINAL_UL_ACK_CONFIRMED, NULL);
+			rc = osmo_fsm_inst_dispatch(ul_tbf->state_fsm.fi, TBF_EV_FINAL_UL_ACK_CONFIRMED, (void*)true);
 			if (rc) {
 				/* FSM failed handling, get rid of previous finished UL TBF before providing a new one */
 				LOGPTBFUL(ul_tbf, LOGL_NOTICE,

@@ -23,6 +23,7 @@
 #include "gprs_codel.h"
 #include "pcu_utils.h"
 #include "nacc_fsm.h"
+#include "tbf_ul_ack_fsm.h"
 
 #include <time.h>
 
@@ -1024,10 +1025,75 @@ static void ms_start_llc_timer(struct GprsMs *ms)
 	}
 }
 
+/* Can we get to send a DL TBF ass to the MS? */
+static bool ms_is_reachable_for_dl_ass(const struct GprsMs *ms)
+{
+	struct gprs_rlcmac_ul_tbf *ul_tbf = ms_ul_tbf(ms);
+
+	/* This function assumes it is called when no DL TBF is present */
+	OSMO_ASSERT(!ms_dl_tbf(ms));
+
+	/* 3GPP TS 44.060 sec 7.1.3.1 Initiation of the Packet resource request procedure:
+	* "Furthermore, the mobile station shall not respond to PACKET DOWNLINK ASSIGNMENT
+	* or MULTIPLE TBF DOWNLINK ASSIGNMENT messages before contention resolution is
+	* completed on the mobile station side." */
+	/* The possible uplink TBF is used to trigger downlink assignment:
+	* - If there is no uplink TBF the MS is potentially in packet idle mode
+	* and hence assignment will be done over CCCH (PCH)
+	* - If there's an uplink TBF but it is finished (waiting for last PKT
+	* CTRL ACK after sending last Pkt UL ACK/NACK with FINAL_ACK=1, then we
+	* have no ways to contact the MS right now. Assignment will be delayed
+	* until PKT CTRL ACK is received and the TBF is released at the MS side
+	* (then assignment goes through PCH).
+	*/
+	if (!ul_tbf)
+		return true;
+	if (ul_tbf_contention_resolution_done(ul_tbf) &&
+	    !tbf_ul_ack_waiting_cnf_final_ack(ul_tbf))
+		return true;
+
+	return false;
+
+}
+
+/* This should be called only when MS is reachable, see ms_is_reachable_for_dl_ass(). */
+int ms_new_dl_tbf_assignment(struct GprsMs *ms)
+{
+	bool ss;
+	int8_t use_trx;
+	struct gprs_rlcmac_ul_tbf *ul_tbf;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
+
+	ul_tbf = ms_ul_tbf(ms);
+
+	if (ul_tbf) {
+		use_trx = tbf_get_trx((struct gprs_rlcmac_tbf *)ul_tbf)->trx_no;
+		ss = false;
+	} else {
+		use_trx = -1;
+		ss = true; /* PCH assignment only allows one timeslot */
+	}
+
+	/* set number of downlink slots according to multislot class */
+	dl_tbf = dl_tbf_alloc(ms->bts, ms, use_trx, ss);
+
+	if (!dl_tbf) {
+		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");
+		return -EBUSY;
+	}
+
+	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "[DOWNLINK] START\n");
+
+	/* Trigger the assignment now. */
+	tbf_dl_trigger_ass(dl_tbf, ul_tbf_as_tbf(ul_tbf));
+	return 0;
+}
+
 int ms_append_llc_dl_data(struct GprsMs *ms, uint16_t pdu_delay_csec, const uint8_t *data, uint16_t len)
 {
 	struct timespec expire_time;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
+	int rc = 0;
 
 	LOGPMS(ms, DTBFDL, LOGL_DEBUG, "appending %u bytes to DL LLC queue\n", len);
 
@@ -1041,10 +1107,17 @@ int ms_append_llc_dl_data(struct GprsMs *ms, uint16_t pdu_delay_csec, const uint
 	ms_start_llc_timer(ms);
 
 	dl_tbf = ms_dl_tbf(ms);
-	if (dl_tbf && tbf_state(dl_tbf_as_tbf_const(dl_tbf)) == TBF_ST_WAIT_RELEASE) {
-		LOGPTBFDL(dl_tbf, LOGL_DEBUG, "in WAIT RELEASE state (T3193), so reuse TBF\n");
-		tbf_establish_dl_tbf_on_pacch(dl_tbf_as_tbf(dl_tbf));
+	if (dl_tbf) {
+		if (tbf_state(dl_tbf_as_tbf_const(dl_tbf)) == TBF_ST_WAIT_RELEASE) {
+			LOGPTBFDL(dl_tbf, LOGL_DEBUG, "in WAIT RELEASE state (T3193), so reuse TBF\n");
+			tbf_establish_dl_tbf_on_pacch(dl_tbf_as_tbf(dl_tbf));
+		}
+	} else {
+		/* Check if we can create a DL TBF to start sending the enqueued
+		 * data. Otherwise it will be triggered later when it is reachable
+		* again. */
+		if (ms_is_reachable_for_dl_ass(ms))
+			rc = ms_new_dl_tbf_assignment(ms);
 	}
-
-	return 0;
+	return rc;
 }

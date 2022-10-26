@@ -1849,8 +1849,91 @@ Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) appending 4 bytes to DL LLC queue
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) ********** DL-TBF starts here **********
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) Allocating DL TBF
+=== end test_tbf_single_phase ===
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) Destroying MS object
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)
+=== start test_tbf_single_phase2 ===
+PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
+Found first unallocated TRX=0 TFI=0
+MS requests Uplink resource on CCCH/RACH: ra=0x03 (8 bit) Fn=2654167 qta=31
+MS requests single TS uplink transmission (one phase packet access)
+Creating MS object, TLLI = 0xffffffff
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Allocating UL TBF
+TBF{NEW}: Allocated
+UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
+UL_ACK_TBF{NONE}: Allocated
+[UL] algo A <single> (suggested TRX: -1): Alloc start
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 4, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+[UL] Assign uplink TS=7 TFI=0 USF=0
+PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NEW), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NEW) Setting Control TS 7
+TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NEW) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
+MS(TLLI=0xffffffff, IMSI=, TA=220, 0/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NEW)
+TBF(UL-TFI_0){NEW}: Received Event ASSIGN_ADD_CCCH
+TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=NEW) set ass. type CCCH [prev CCCH:0, PACCH:0]
+TBF(UL-TFI_0){NEW}: state_chg to FLOW
+TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) starting timer T3141 [Contention resolution (UL-TBF, CCCH)] with 10 sec. 0 microsec, cur_fn=2654167
+Modifying MS object, TLLI = 0xffffffff, TA 220 -> 7
+Tx Immediate Assignment on AGCH: TRX=0 (ARFCN 0) TS=7 TA=7 TSC=0 TFI=0 USF=0
+PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
+PDCH(bts=0,trx=0,ts=7) FN=2654167 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW)
+TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
+MS(TLLI=0xffffffff, IMSI=, TA=7, 0/0, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: CS-1 -> CS-2
+TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) Got CS-1 RLC data block: CV=0, BSN=0, SPB=0, PI=0, E=1, TI=1, bitoffs=24
+TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) BSN 0 storing in window (0..63)
+TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) data_length=20, data=f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) Decoded premier TLLI=0xf1223344 of UL DATA TFI=0.
+Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Assembling frames: (len=20)
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Frame 1 starts at offset 4, length=16, is_complete=1
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) complete UL frame len=16
+LLC [PCU -> SGSN] TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) len=16
+No bctx
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last block: BSN=0 CV=0
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Finished with UL TBF
+TBF(UL-TFI_0){FLOW}: Received Event LAST_UL_DATA_RECVD
+TBF(UL-TFI_0){FLOW}: state_chg to FINISHED
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling Ack/Nack, because TLLI is included.
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduling final Ack/Nack, because all data was received and last block has CV==0.
+UL_ACK_TBF(UL-TFI_0){NONE}: Received Event SCHED_ACK
+UL_ACK_TBF(UL-TFI_0){NONE}: state_chg to SCHED_UL_ACK
+Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)', TA=7
+Got MS: TLLI = 0xf1223344, TA = 7
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: Received Event CREATE_RLCMAC_MSG
+PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654167 + 17 = 2654184
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) stopping timer T3141 [Contention resolution success (UL-TBF, CCCH)]
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) Scheduled UL Acknowledgement polling on PACCH (FN=2654184, TS=7)
+UL_ACK_TBF(UL-TFI_0){SCHED_UL_ACK}: state_chg to WAIT_ACK
+PDCH(bts=0,trx=0,ts=7) FN=2654167 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)
+Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
+Modifying MS object, TLLI: 0xf1223344 confirmed
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) appending 4 bytes to DL LLC queue
+Detected FN jump! 2654167 -> 2654184 (expected 2654171)
+PDCH(bts=0,trx=0,ts=7) FN=2654184 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
+PDCH(bts=0,trx=0,ts=7) FN=2654184 ------------------------- RX : Uplink Control Block -------------------------
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) FN=2654184 Rx Packet Control Ack (reason=UL_ACK)
+UL_ACK_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_CTRL_ACK
+UL_ACK_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
+TBF(UL-TFI_0){FINISHED}: Received Event FINAL_UL_ACK_CONFIRMED
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) [UPLINK] END
+TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED) free
+PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED), 1 TBFs, USFs = 01, TFIs = 00000001.
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)
+********** UL-TBF ends here **********
+UL_ACK_TBF(UL-TFI_0){NONE}: Deallocated
+TBF(UL-TFI_0){FINISHED}: Deallocated
+UL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0,) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0,) Allocating DL TBF
 TBF{NEW}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
@@ -1863,10 +1946,10 @@ DL_ASS_TBF{NONE}: Allocated
 - Skipping TS 5, because not enabled
 - Skipping TS 6, because not enabled
 [DL] Assign downlink TS=7 TFI=0
-PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW), 1 TBFs, USFs = 01, TFIs = 00000001.
+PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW), 1 TBFs, USFs = 00, TFIs = 00000001.
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0,) Attaching DL TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW)
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) [DOWNLINK] START
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) Send downlink assignment on PCH, no TBF exist (IMSI=0011223344)
 TBF(DL-TFI_0){NEW}: Received Event ASSIGN_ADD_CCCH
@@ -1874,9 +1957,8 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=7 TA=7
-=== end test_tbf_single_phase ===
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL DL) Destroying MS object
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)
+=== end test_tbf_single_phase2 ===
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, DL) Destroying MS object
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
 === start test_tbf_two_phase ===
 PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
