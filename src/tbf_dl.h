@@ -39,9 +39,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 	~gprs_rlcmac_dl_tbf();
 	gprs_rlc_window *window();
 
-	int append_data(uint16_t pdu_delay_csec,
-			const uint8_t *data, uint16_t len);
-
 	int rcvd_dl_ack(bool final_ack, unsigned first_bsn, struct bitvec *rbb);
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts, enum mcs_kind req_mcs_kind = EGPRS);
 	void trigger_ass(struct gprs_rlcmac_tbf *old_tbf);
@@ -100,7 +97,6 @@ protected:
 	int rcvd_dl_final_ack();
 	bool dl_window_stalled() const;
 	void reuse_tbf();
-	void start_llc_timer();
 	int analyse_errors(char *show_rbb, uint8_t ssn, ana_result *res);
 	void schedule_next_frame();
 
@@ -108,8 +104,6 @@ protected:
 		(int bsn, uint8_t **block_data);
 	unsigned int get_egprs_dl_spb_status(int bsn);
 	enum egprs_rlcmac_dl_spb get_egprs_dl_spb(int bsn);
-
-	struct osmo_timer_list m_llc_timer;
 
 	/* Please note that all variables below will be reset when changing
 	 * from WAIT RELEASE back to FLOW state (re-use of TBF).
@@ -145,6 +139,7 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 		  const uint8_t *data, const uint16_t len);
 
 void tbf_dl_trigger_ass(struct gprs_rlcmac_dl_tbf *tbf, struct gprs_rlcmac_tbf *old_tbf);
+void tbf_dl_request_dl_ack(struct gprs_rlcmac_dl_tbf *tbf);
 
 #define LOGPTBFDL(tbf, level, fmt, args...) LOGP(DTBFDL, level, "%s " fmt, tbf_name(tbf), ## args)
 #ifdef __cplusplus

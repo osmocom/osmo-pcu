@@ -90,18 +90,6 @@ static const struct rate_ctr_group_desc tbf_dl_egprs_ctrg_desc = {
 	tbf_dl_egprs_ctr_description,
 };
 
-static void llc_timer_cb(void *_tbf)
-{
-	struct gprs_rlcmac_dl_tbf *tbf = (struct gprs_rlcmac_dl_tbf *)_tbf;
-
-	if (tbf->state_is_not(TBF_ST_FLOW))
-		return;
-
-	LOGPTBFDL(tbf, LOGL_DEBUG, "LLC receive timeout, requesting DL ACK\n");
-
-	tbf->request_dl_ack();
-}
-
 gprs_rlcmac_dl_tbf::BandWidth::BandWidth() :
 	dl_bw_octets(0),
 	dl_throughput(0),
@@ -175,7 +163,6 @@ struct gprs_rlcmac_dl_tbf *tbf_alloc_dl_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 
 gprs_rlcmac_dl_tbf::~gprs_rlcmac_dl_tbf()
 {
-	osmo_timer_del(&m_llc_timer);
 	if (is_egprs_enabled()) {
 		rate_ctr_group_free(m_dl_egprs_ctrs);
 	} else {
@@ -193,41 +180,6 @@ gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms)
 	m_dl_gprs_ctrs(NULL),
 	m_dl_egprs_ctrs(NULL)
 {
-	memset(&m_llc_timer, 0, sizeof(m_llc_timer));
-	osmo_timer_setup(&m_llc_timer, llc_timer_cb, this);
-}
-
-void gprs_rlcmac_dl_tbf::start_llc_timer()
-{
-	if (the_pcu->vty.llc_idle_ack_csec > 0) {
-		struct timespec tv;
-		csecs_to_timespec(the_pcu->vty.llc_idle_ack_csec, &tv);
-		osmo_timer_schedule(&m_llc_timer, tv.tv_sec, tv.tv_nsec / 1000);
-	}
-}
-
-int gprs_rlcmac_dl_tbf::append_data(uint16_t pdu_delay_csec,
-				    const uint8_t *data, uint16_t len)
-{
-	struct timespec expire_time;
-
-	LOGPTBFDL(this, LOGL_DEBUG, "appending %u bytes\n", len);
-
-	struct msgb *llc_msg = msgb_alloc(len, "llc_pdu_queue");
-	if (!llc_msg)
-		return -ENOMEM;
-
-	llc_queue_calc_pdu_lifetime(bts, pdu_delay_csec, &expire_time);
-	memcpy(msgb_put(llc_msg, len), data, len);
-	llc_queue_enqueue(llc_queue(), llc_msg, &expire_time);
-	start_llc_timer();
-
-	if (state_is(TBF_ST_WAIT_RELEASE)) {
-		LOGPTBFDL(this, LOGL_DEBUG, "in WAIT RELEASE state (T3193), so reuse TBF\n");
-		establish_dl_tbf_on_pacch();
-	}
-
-	return 0;
 }
 
 static int tbf_new_dl_assignment(struct gprs_rlcmac_bts *bts, GprsMs *ms,
@@ -331,16 +283,17 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 		ms_set_egprs_ms_class(ms, egprs_ms_class);
 	}
 
+	rc = ms_append_llc_dl_data(ms, delay_csec, data, len);
+	if (rc < 0)
+		return rc;
+
 	dl_tbf = ms_dl_tbf(ms);
 	if (!dl_tbf) {
 		rc = tbf_new_dl_assignment(bts, ms, &dl_tbf);
 		if (rc < 0)
 			return rc;
 	}
-
-	rc = dl_tbf->append_data(delay_csec, data, len);
-
-	return rc;
+	return 0;
 }
 
 bool gprs_rlcmac_dl_tbf::restart_bsn_cycle()
@@ -1113,6 +1066,10 @@ bool gprs_rlcmac_dl_tbf::dl_window_stalled() const
 void gprs_rlcmac_dl_tbf::request_dl_ack()
 {
 	m_dl_ack_requested = true;
+}
+
+void tbf_dl_request_dl_ack(struct gprs_rlcmac_dl_tbf *dl_tbf) {
+	dl_tbf->request_dl_ack();
 }
 
 /* Does this DL TBF require to poll the MS for DL ACK/NACK? */

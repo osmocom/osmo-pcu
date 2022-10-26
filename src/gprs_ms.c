@@ -86,6 +86,21 @@ static void ms_release_timer_cb(void *data)
 	}
 }
 
+static void ms_llc_timer_cb(void *_ms)
+{
+	struct GprsMs *ms = _ms;
+	struct gprs_rlcmac_dl_tbf *dl_tbf = ms_dl_tbf(ms);
+
+	if (!dl_tbf)
+		return;
+	if (tbf_state((const struct gprs_rlcmac_tbf *)dl_tbf) != TBF_ST_FLOW)
+		return;
+
+	LOGPTBFDL((const struct gprs_rlcmac_tbf *)dl_tbf, LOGL_DEBUG, "LLC receive timeout, requesting DL ACK\n");
+
+	tbf_dl_request_dl_ack(dl_tbf);
+}
+
 static int ms_talloc_destructor(struct GprsMs *ms);
 struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli)
 {
@@ -113,6 +128,8 @@ struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli)
 	ms->imsi[0] = '\0';
 	osmo_timer_setup(&ms->timer, ms_release_timer_cb, NULL);
 	llc_queue_init(&ms->llc_queue, ms);
+	memset(&ms->llc_timer, 0, sizeof(ms->llc_timer));
+	osmo_timer_setup(&ms->llc_timer, ms_llc_timer_cb, ms);
 
 	ms_set_mode(ms, GPRS);
 
@@ -160,6 +177,7 @@ static int ms_talloc_destructor(struct GprsMs *ms)
 	}
 
 	llc_queue_clear(&ms->llc_queue, ms->bts);
+	osmo_timer_del(&ms->llc_timer);
 
 	if (ms->ctrs)
 		rate_ctr_group_free(ms->ctrs);
@@ -995,4 +1013,38 @@ struct msgb *ms_nacc_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf
 	if (rc != 0 || !data_ctx.msg)
 		return NULL;
 	return data_ctx.msg;
+}
+
+static void ms_start_llc_timer(struct GprsMs *ms)
+{
+	if (the_pcu->vty.llc_idle_ack_csec > 0) {
+		struct timespec tv;
+		csecs_to_timespec(the_pcu->vty.llc_idle_ack_csec, &tv);
+		osmo_timer_schedule(&ms->llc_timer, tv.tv_sec, tv.tv_nsec / 1000);
+	}
+}
+
+int ms_append_llc_dl_data(struct GprsMs *ms, uint16_t pdu_delay_csec, const uint8_t *data, uint16_t len)
+{
+	struct timespec expire_time;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
+
+	LOGPMS(ms, DTBFDL, LOGL_DEBUG, "appending %u bytes to DL LLC queue\n", len);
+
+	struct msgb *llc_msg = msgb_alloc(len, "llc_pdu_queue");
+	if (!llc_msg)
+		return -ENOMEM;
+
+	llc_queue_calc_pdu_lifetime(ms->bts, pdu_delay_csec, &expire_time);
+	memcpy(msgb_put(llc_msg, len), data, len);
+	llc_queue_enqueue(ms_llc_queue(ms), llc_msg, &expire_time);
+	ms_start_llc_timer(ms);
+
+	dl_tbf = ms_dl_tbf(ms);
+	if (dl_tbf && tbf_state((const struct gprs_rlcmac_tbf *)dl_tbf) == TBF_ST_WAIT_RELEASE) {
+		LOGPTBFDL((const struct gprs_rlcmac_tbf *)dl_tbf, LOGL_DEBUG, "in WAIT RELEASE state (T3193), so reuse TBF\n");
+		tbf_establish_dl_tbf_on_pacch((struct gprs_rlcmac_tbf *)dl_tbf);
+	}
+
+	return 0;
 }

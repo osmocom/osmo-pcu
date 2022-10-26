@@ -312,8 +312,8 @@ static void test_tbf_final_ack(enum test_tbf_final_ack_mode test_mode)
 		llc_data[i] = i%256;
 
 	/* Schedule two LLC frames */
-	dl_tbf->append_data(1000, llc_data, sizeof(llc_data));
-	dl_tbf->append_data(1000, llc_data, sizeof(llc_data));
+	ms_append_llc_dl_data(dl_tbf->ms(), 1000, llc_data, sizeof(llc_data));
+	ms_append_llc_dl_data(dl_tbf->ms(), 1000, llc_data, sizeof(llc_data));
 
 
 	/* Send only a few RLC/MAC blocks */
@@ -389,8 +389,8 @@ static void test_tbf_delayed_release()
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
 	/* Schedule two LLC frames */
-	dl_tbf->append_data(1000, llc_data, sizeof(llc_data));
-	dl_tbf->append_data(1000, llc_data, sizeof(llc_data));
+	ms_append_llc_dl_data(dl_tbf->ms(), 1000, llc_data, sizeof(llc_data));
+	ms_append_llc_dl_data(dl_tbf->ms(), 1000, llc_data, sizeof(llc_data));
 
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
@@ -2744,7 +2744,7 @@ static void establish_and_use_egprs_dl_tbf(struct gprs_rlcmac_bts *bts, int mcs)
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
 	/* Schedule a small LLC frame */
-	dl_tbf->append_data(1000, test_data, 10);
+	ms_append_llc_dl_data(dl_tbf->ms(), 1000, test_data, 10);
 
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
@@ -2756,7 +2756,7 @@ static void establish_and_use_egprs_dl_tbf(struct gprs_rlcmac_bts *bts, int mcs)
 	send_empty_block(dl_tbf, dl_tbf->control_ts, fn);
 
 	/* Schedule a large LLC frame */
-	dl_tbf->append_data(1000, test_data, sizeof(test_data));
+	ms_append_llc_dl_data(dl_tbf->ms(), 1000, test_data, sizeof(test_data));
 
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 
@@ -2805,7 +2805,7 @@ static gprs_rlcmac_dl_tbf *tbf_init(struct gprs_rlcmac_bts *bts,
 	 * 2 RLC data blocks. Which are enough to test Header Type 1
 	 * cases
 	 */
-	dl_tbf->append_data(1000, test_data, 100);
+	ms_append_llc_dl_data(dl_tbf->ms(), 1000, test_data, 100);
 
 	OSMO_ASSERT(dl_tbf->state_is(TBF_ST_FLOW));
 

@@ -86,8 +86,8 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN) unset ass. type CCCH [prev CCCH:1
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) appending 200 bytes to DL LLC queue
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) appending 200 bytes to DL LLC queue
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (PACCH)
@@ -199,8 +199,8 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN) unset ass. type CCCH [prev CCCH:1
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) appending 200 bytes to DL LLC queue
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) appending 200 bytes to DL LLC queue
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (PACCH)
@@ -312,8 +312,8 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN) unset ass. type CCCH [prev CCCH:1
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) appending 200 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) appending 200 bytes to DL LLC queue
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 45/0, DL) appending 200 bytes to DL LLC queue
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW) start Packet Downlink Assignment (PACCH)
@@ -641,6 +641,7 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000000'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000000, partly confirmed
+MS(TLLI=0xc0000000, IMSI=001001000000000, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000000, IMSI=001001000000000, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000000, IMSI=001001000000000, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -666,11 +667,11 @@ TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=0 TLLI=0xc0000000 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000001'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000001, partly confirmed
+MS(TLLI=0xc0000001, IMSI=001001000000001, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000001, IMSI=001001000000001, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000001, IMSI=001001000000001, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -696,11 +697,11 @@ TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_1){NEW}: state_chg to ASSIGN
 TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=1 TLLI=0xc0000001 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000002'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000002, partly confirmed
+MS(TLLI=0xc0000002, IMSI=001001000000002, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000002, IMSI=001001000000002, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000002, IMSI=001001000000002, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -726,11 +727,11 @@ TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_2){NEW}: state_chg to ASSIGN
 TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=2 TLLI=0xc0000002 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000003'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000003, partly confirmed
+MS(TLLI=0xc0000003, IMSI=001001000000003, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000003, IMSI=001001000000003, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000003, IMSI=001001000000003, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -756,11 +757,11 @@ TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_3){NEW}: state_chg to ASSIGN
 TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=3 TLLI=0xc0000003 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000004'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000004, partly confirmed
+MS(TLLI=0xc0000004, IMSI=001001000000004, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000004, IMSI=001001000000004, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000004, IMSI=001001000000004, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -786,11 +787,11 @@ TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_4){NEW}: state_chg to ASSIGN
 TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=4 TLLI=0xc0000004 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000005'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000005, partly confirmed
+MS(TLLI=0xc0000005, IMSI=001001000000005, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000005, IMSI=001001000000005, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000005, IMSI=001001000000005, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -816,11 +817,11 @@ TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_5){NEW}: state_chg to ASSIGN
 TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=5 TLLI=0xc0000005 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000006'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000006, partly confirmed
+MS(TLLI=0xc0000006, IMSI=001001000000006, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000006, IMSI=001001000000006, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000006, IMSI=001001000000006, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -846,11 +847,11 @@ TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_6){NEW}: state_chg to ASSIGN
 TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=6 TLLI=0xc0000006 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000007'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000007, partly confirmed
+MS(TLLI=0xc0000007, IMSI=001001000000007, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000007, IMSI=001001000000007, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000007, IMSI=001001000000007, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -876,11 +877,11 @@ TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_7){NEW}: state_chg to ASSIGN
 TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=7 TLLI=0xc0000007 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000008'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000008, partly confirmed
+MS(TLLI=0xc0000008, IMSI=001001000000008, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000008, IMSI=001001000000008, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000008, IMSI=001001000000008, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -906,11 +907,11 @@ TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_8){NEW}: state_chg to ASSIGN
 TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=8 TLLI=0xc0000008 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000009'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000009, partly confirmed
+MS(TLLI=0xc0000009, IMSI=001001000000009, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000009, IMSI=001001000000009, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000009, IMSI=001001000000009, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -936,11 +937,11 @@ TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_9){NEW}: state_chg to ASSIGN
 TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=9 TLLI=0xc0000009 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000010'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000a, partly confirmed
+MS(TLLI=0xc000000a, IMSI=001001000000010, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc000000a, IMSI=001001000000010, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000000a, IMSI=001001000000010, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -966,11 +967,11 @@ TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_10){NEW}: state_chg to ASSIGN
 TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=10 TLLI=0xc000000a DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000011'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000b, partly confirmed
+MS(TLLI=0xc000000b, IMSI=001001000000011, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc000000b, IMSI=001001000000011, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000000b, IMSI=001001000000011, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -996,11 +997,11 @@ TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_11){NEW}: state_chg to ASSIGN
 TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=11 TLLI=0xc000000b DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000012'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000c, partly confirmed
+MS(TLLI=0xc000000c, IMSI=001001000000012, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc000000c, IMSI=001001000000012, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000000c, IMSI=001001000000012, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1026,11 +1027,11 @@ TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_12){NEW}: state_chg to ASSIGN
 TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=12 TLLI=0xc000000c DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000013'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000d, partly confirmed
+MS(TLLI=0xc000000d, IMSI=001001000000013, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc000000d, IMSI=001001000000013, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000000d, IMSI=001001000000013, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1056,11 +1057,11 @@ TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_13){NEW}: state_chg to ASSIGN
 TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=13 TLLI=0xc000000d DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000014'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000e, partly confirmed
+MS(TLLI=0xc000000e, IMSI=001001000000014, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc000000e, IMSI=001001000000014, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000000e, IMSI=001001000000014, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1086,11 +1087,11 @@ TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_14){NEW}: state_chg to ASSIGN
 TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=14 TLLI=0xc000000e DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000015'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000000f, partly confirmed
+MS(TLLI=0xc000000f, IMSI=001001000000015, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc000000f, IMSI=001001000000015, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000000f, IMSI=001001000000015, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1116,11 +1117,11 @@ TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_15){NEW}: state_chg to ASSIGN
 TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=15 TLLI=0xc000000f DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000016'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000010, partly confirmed
+MS(TLLI=0xc0000010, IMSI=001001000000016, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000010, IMSI=001001000000016, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000010, IMSI=001001000000016, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1146,11 +1147,11 @@ TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_16){NEW}: state_chg to ASSIGN
 TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=16 TLLI=0xc0000010 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000017'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000011, partly confirmed
+MS(TLLI=0xc0000011, IMSI=001001000000017, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000011, IMSI=001001000000017, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000011, IMSI=001001000000017, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1176,11 +1177,11 @@ TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_17){NEW}: state_chg to ASSIGN
 TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=17 TLLI=0xc0000011 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000018'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000012, partly confirmed
+MS(TLLI=0xc0000012, IMSI=001001000000018, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000012, IMSI=001001000000018, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000012, IMSI=001001000000018, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1206,11 +1207,11 @@ TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_18){NEW}: state_chg to ASSIGN
 TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=18 TLLI=0xc0000012 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000019'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000013, partly confirmed
+MS(TLLI=0xc0000013, IMSI=001001000000019, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000013, IMSI=001001000000019, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000013, IMSI=001001000000019, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1236,11 +1237,11 @@ TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_19){NEW}: state_chg to ASSIGN
 TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=19 TLLI=0xc0000013 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000020'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000014, partly confirmed
+MS(TLLI=0xc0000014, IMSI=001001000000020, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000014, IMSI=001001000000020, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000014, IMSI=001001000000020, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1266,11 +1267,11 @@ TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_20){NEW}: state_chg to ASSIGN
 TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=20 TLLI=0xc0000014 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000021'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000015, partly confirmed
+MS(TLLI=0xc0000015, IMSI=001001000000021, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000015, IMSI=001001000000021, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000015, IMSI=001001000000021, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1296,11 +1297,11 @@ TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_21){NEW}: state_chg to ASSIGN
 TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=21 TLLI=0xc0000015 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000022'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000016, partly confirmed
+MS(TLLI=0xc0000016, IMSI=001001000000022, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000016, IMSI=001001000000022, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000016, IMSI=001001000000022, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1326,11 +1327,11 @@ TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_22){NEW}: state_chg to ASSIGN
 TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=22 TLLI=0xc0000016 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000023'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000017, partly confirmed
+MS(TLLI=0xc0000017, IMSI=001001000000023, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000017, IMSI=001001000000023, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000017, IMSI=001001000000023, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1356,11 +1357,11 @@ TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_23){NEW}: state_chg to ASSIGN
 TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=23 TLLI=0xc0000017 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000024'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000018, partly confirmed
+MS(TLLI=0xc0000018, IMSI=001001000000024, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000018, IMSI=001001000000024, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000018, IMSI=001001000000024, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1386,11 +1387,11 @@ TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_24){NEW}: state_chg to ASSIGN
 TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=24 TLLI=0xc0000018 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000025'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000019, partly confirmed
+MS(TLLI=0xc0000019, IMSI=001001000000025, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000019, IMSI=001001000000025, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000019, IMSI=001001000000025, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1416,11 +1417,11 @@ TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_25){NEW}: state_chg to ASSIGN
 TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=25 TLLI=0xc0000019 DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000026'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001a, partly confirmed
+MS(TLLI=0xc000001a, IMSI=001001000000026, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc000001a, IMSI=001001000000026, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000001a, IMSI=001001000000026, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1446,11 +1447,11 @@ TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_26){NEW}: state_chg to ASSIGN
 TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=26 TLLI=0xc000001a DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000027'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001b, partly confirmed
+MS(TLLI=0xc000001b, IMSI=001001000000027, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc000001b, IMSI=001001000000027, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000001b, IMSI=001001000000027, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1476,11 +1477,11 @@ TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_27){NEW}: state_chg to ASSIGN
 TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=27 TLLI=0xc000001b DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000028'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001c, partly confirmed
+MS(TLLI=0xc000001c, IMSI=001001000000028, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc000001c, IMSI=001001000000028, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000001c, IMSI=001001000000028, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1506,11 +1507,11 @@ TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_28){NEW}: state_chg to ASSIGN
 TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=28 TLLI=0xc000001c DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000029'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001d, partly confirmed
+MS(TLLI=0xc000001d, IMSI=001001000000029, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc000001d, IMSI=001001000000029, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000001d, IMSI=001001000000029, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1536,11 +1537,11 @@ TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_29){NEW}: state_chg to ASSIGN
 TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=29 TLLI=0xc000001d DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000030'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001e, partly confirmed
+MS(TLLI=0xc000001e, IMSI=001001000000030, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc000001e, IMSI=001001000000030, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000001e, IMSI=001001000000030, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1566,11 +1567,11 @@ TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_30){NEW}: state_chg to ASSIGN
 TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=30 TLLI=0xc000001e DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000031'
 The MS object cannot fully confirm an unexpected TLLI: 0xc000001f, partly confirmed
+MS(TLLI=0xc000001f, IMSI=001001000000031, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc000001f, IMSI=001001000000031, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc000001f, IMSI=001001000000031, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1596,11 +1597,11 @@ TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PA
 TBF(DL-TFI_31){NEW}: state_chg to ASSIGN
 TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=31 TLLI=0xc000001f DIR=DL STATE=ASSIGN) appending 256 bytes
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000000032'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0000020, partly confirmed
+MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0000020, IMSI=001001000000032, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1685,6 +1686,7 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001000123456'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0123456, partly confirmed
+MS(TLLI=0xc0123456, IMSI=001001000123456, TA=220, 45/0,) appending 19 bytes to DL LLC queue
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1710,9 +1712,8 @@ TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) appending 19 bytes
 Modifying MS object, TLLI = 0xc0123456, TA 220 -> 0
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) appending 19 bytes
+MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0, DL) appending 19 bytes to DL LLC queue
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) free
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN), 1 TBFs, USFs = 00, TFIs = 00000001.
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN)
@@ -1721,6 +1722,7 @@ MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Schedule MS release in 10
 TBF(DL-TFI_0){ASSIGN}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) appending 19 bytes to DL LLC queue
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0123456, IMSI=001001000123456, TA=0, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1747,7 +1749,6 @@ TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=0
-TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) appending 19 bytes
 TBF(DL-TFI_0){ASSIGN}: Received Event ASSIGN_PCUIF_CNF
 TBF(TFI=0 TLLI=0xc0123456 DIR=DL STATE=ASSIGN) Starting timer X2002 [assignment (AGCH)] with 0 sec. 0 microsec
 TBF(DL-TFI_0){ASSIGN}: Timeout of X2002
@@ -1847,6 +1848,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) appending 4 bytes to DL LLC queue
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1872,7 +1874,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=7 TA=7
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 4 bytes
 === end test_tbf_single_phase ===
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, UL DL) Destroying MS object
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 0/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FINISHED)
@@ -1949,6 +1950,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) appending 4 bytes to DL LLC queue
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -1975,7 +1977,6 @@ TBF(DL-TFI_0){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 4 bytes
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) Destroying MS object
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
@@ -2051,6 +2052,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) appending 10 bytes to DL LLC queue
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -2077,7 +2079,6 @@ TBF(DL-TFI_0){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 10 bytes
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 1
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654275 block_nr=9 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654279
 DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
@@ -2242,7 +2243,7 @@ DL_ASS_TBF(UL-TFI_0){NONE}: Deallocated
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Clearing MS object
 MS(TLLI=0xffffffff, IMSI=, TA=7, 1/0,) Destroying MS object
 Modifying MS object, TLLI: 0xf5667788 confirmed
-TBF(TFI=0 TLLI=0xf5667788 DIR=DL STATE=FINISHED) appending 4 bytes
+MS(TLLI=0xf5667788, IMSI=0011223344, TA=7, 1/0, UL DL) appending 4 bytes to DL LLC queue
 New MS: TLLI = 0xf5667788, TA = 7, IMSI = 0011223344, LLC = 1
 MS(TLLI=0xf5667788, IMSI=0011223344, TA=7, 1/0, UL DL) Destroying MS object
 MS(TLLI=0xf5667788, IMSI=0011223344, TA=7, 1/0, DL) Detaching TBF: TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW)
@@ -2321,6 +2322,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) appending 20 bytes to DL LLC queue
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -2347,8 +2349,7 @@ TBF(DL-TFI_0){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 20 bytes to DL LLC queue
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) free
 PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 1 TBFs, USFs = 01, TFIs = 00000001.
@@ -2498,6 +2499,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) appending 20 bytes to DL LLC queue
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -2524,8 +2526,7 @@ TBF(DL-TFI_0){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 20 bytes
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 20 bytes to DL LLC queue
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 2
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) free
 PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 1 TBFs, USFs = 01, TFIs = 00000001.
@@ -2673,6 +2674,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) No gaps in received block, last blo
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)', TA=7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) appending 13 bytes to DL LLC queue
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -2699,46 +2701,45 @@ TBF(DL-TFI_0){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) appending 13 bytes
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 13 bytes to DL LLC queue
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 40
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654275 block_nr=9 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), expect answer on UL FN=2654279
 DL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
@@ -3300,16 +3301,16 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled DL Acknowledgement po
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) starting timer T3191 [final block (DL-TBF)] with 5 sec. 0 microsec, cur_fn=2654288
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Scheduled Ack/Nack polling on FN=2654409, TS=7
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) msg block (BSN 27, CS-1): 0f 01 36 16 35 45 54 20 33 38 4c 4c 43 20 50 41 43 4b 45 54 20 33 39 
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) appending 21 bytes
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 21 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 21 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 21 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 21 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 21 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 21 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 21 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 21 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 21 bytes to DL LLC queue
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) appending 21 bytes to DL LLC queue
 Detected FN jump! 2654288 -> 2654379 (expected 2654292)
 PDCH(bts=0,trx=0,ts=7) Expiring FN=2654379 but previous FN=2654283 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered USF (FN=2654283): TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
@@ -3665,6 +3666,7 @@ Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 45
 Modifying MS object, TLLI = 0xffffffff, IMSI '' -> '001001123456789'
 The MS object cannot fully confirm an unexpected TLLI: 0xc0006789, partly confirmed
+MS(TLLI=0xc0006789, IMSI=001001123456789, TA=220, 45/0,) appending 256 bytes to DL LLC queue
 MS(TLLI=0xc0006789, IMSI=001001123456789, TA=220, 45/0,) ********** DL-TBF starts here **********
 MS(TLLI=0xc0006789, IMSI=001001123456789, TA=220, 45/0,) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -3690,7 +3692,6 @@ TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=NEW) set ass. type CCCH [prev CCCH:0, PAC
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=ASSIGN) TX: START Immediate Assignment Downlink (PCH)
  - TRX=0 (0) TS=4 TA=220
-TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=ASSIGN) appending 256 bytes
 === end test_tbf_gprs_egprs ===
 MS(TLLI=0xc0006789, IMSI=001001123456789, TA=220, 45/0, DL) Destroying MS object
 MS(TLLI=0xc0006789, IMSI=001001123456789, TA=220, 45/0,) Detaching TBF: TBF(TFI=0 TLLI=0xc0006789 DIR=DL STATE=ASSIGN)
@@ -3866,6 +3867,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) appending 256 bytes to DL LLC queue
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -3894,7 +3896,6 @@ TBF(DL-TFI_0){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL DL) Destroying MS object
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS)
@@ -4100,6 +4101,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) appending 256 bytes to DL LLC queue
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -4128,7 +4130,6 @@ TBF(DL-TFI_0){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL DL) Destroying MS object
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS)
@@ -4173,7 +4174,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 10 bytes to DL LLC queue
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
@@ -4199,7 +4200,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-1): 0f 00 00 16 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 00 
 Detected FN jump! 2654167 -> 8 (expected 2654171)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
@@ -4480,7 +4481,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 10 bytes to DL LLC queue
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
@@ -4506,7 +4507,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-2): 0f 00 00 12 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 Detected FN jump! 112 -> 8 (expected 117)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
@@ -4737,7 +4738,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 10 bytes to DL LLC queue
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
@@ -4763,7 +4764,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-3): 0f 00 00 06 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 Detected FN jump! 91 -> 8 (expected 95)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
@@ -4954,7 +4955,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 10 bytes to DL LLC queue
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
@@ -4980,7 +4981,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-4): 0f 00 00 00 28 fe 03 02 02 02 02 02 02 02 02 02 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 56 00 
 Detected FN jump! 69 -> 8 (expected 73)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
@@ -5155,7 +5156,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 10 bytes to DL LLC queue
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
@@ -5181,7 +5182,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-5): 0f 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 Detected FN jump! 60 -> 8 (expected 65)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
@@ -5340,7 +5341,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 10 bytes to DL LLC queue
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
@@ -5366,7 +5367,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 0f 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 Detected FN jump! 52 -> 8 (expected 56)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
@@ -5501,7 +5502,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 10 bytes to DL LLC queue
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
@@ -5528,7 +5529,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-5): 0f 00 00 08 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 Detected FN jump! 39 -> 8 (expected 43)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
@@ -5671,7 +5672,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 10 bytes to DL LLC queue
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
@@ -5699,7 +5700,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-8): 0f 00 00 00 60 50 fc 07 04 04 04 04 04 04 04 04 04 ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac ac 40 f1 1f 10 10 10 10 10 10 10 10 10 b0 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2 02 
 Detected FN jump! 34 -> 8 (expected 39)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
@@ -5832,7 +5833,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 10 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 10 bytes to DL LLC queue
 DL_ASS_TBF(DL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=4) POLL scheduled at FN 0 + 13 = 13
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) start Packet Downlink Assignment (PACCH)
@@ -5859,7 +5860,7 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled DL Acknowledgement 
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Scheduled Ack/Nack polling on FN=17, TS=4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) msg block (BSN 0, MCS-6): 0f 00 00 00 c5 7f 40 40 40 40 40 40 40 40 40 c0 ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca ca 0a 
 Detected FN jump! 30 -> 8 (expected 34)
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 512 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 512 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=4) Received RTS for PDCH: FN=8 block_nr=2 scheduling free USF for polling at FN=13 of TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS)
 PDCH(bts=0,trx=0,ts=4) FN=8 Scheduling data message at RTS for DL TFI=0 prio=3 mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==1) mcs_mode_restrict=EGPRS
@@ -5985,7 +5986,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 100 bytes to DL LLC queue
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-6
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=100)
@@ -6056,7 +6057,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 100 bytes to DL LLC queue
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-1
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=100)
@@ -6126,7 +6127,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 100 bytes to DL LLC queue
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-2
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=100)
@@ -6196,7 +6197,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 100 bytes to DL LLC queue
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-5
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=100)
@@ -6290,7 +6291,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 100 bytes to DL LLC queue
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-6
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=100)
@@ -6383,7 +6384,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 100 bytes to DL LLC queue
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-7
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=100)
@@ -6476,7 +6477,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 100 bytes to DL LLC queue
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-9
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=100)
@@ -6572,7 +6573,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 100 bytes to DL LLC queue
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-6
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=100)
@@ -6649,7 +6650,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 100 bytes to DL LLC queue
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-5
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=100)
@@ -6726,7 +6727,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 100 bytes to DL LLC queue
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-4
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=100)
@@ -6803,7 +6804,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 100 bytes to DL LLC queue
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) downlink (V(A)==0 .. V(S)==0) mcs_mode_restrict=EGPRS
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Sending new block at BSN 0, CS=MCS-6
 TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) Dequeue next LLC (len=100)
@@ -6951,6 +6952,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) appending 256 bytes to DL LLC queue
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -6979,7 +6981,6 @@ TBF(DL-TFI_0){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL DL) Destroying MS object
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS)
@@ -7137,6 +7138,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) appending 256 bytes to DL LLC queue
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -7165,7 +7167,6 @@ TBF(DL-TFI_0){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL DL) Destroying MS object
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS)
@@ -8046,6 +8047,7 @@ Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
 Modifying MS object, TLLI = 0xf1223344, IMSI '' -> '0011223344'
 Modifying MS object, TLLI: 0xf1223344 confirmed
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) appending 256 bytes to DL LLC queue
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) ********** DL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL) Allocating DL TBF
 TBF{NEW}: Allocated
@@ -8074,7 +8076,6 @@ TBF(DL-TFI_0){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=10, BSN=0, SPB=0, PI=0, E=1, TI=0, bitoffs=33
@@ -8228,7 +8229,7 @@ DL_ASS_TBF(UL-TFI_0){SEND_ASS}: state_chg to WAIT_ACK
 PDCH(bts=0,trx=0,ts=7) FN=2654279 Scheduling control message at RTS for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL DL) appending 256 bytes to DL LLC queue
 PDCH(bts=0,trx=0,ts=7) Got MCS-4 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=385
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) UL DATA TFI=0 received (V(Q)=0 .. V(R)=0)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) Got MCS-4 RLC data block: CV=10, BSN=80, SPB=0, PI=0, E=1, TI=0, bitoffs=33
@@ -8733,7 +8734,7 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS) data_length=44, data=80 95 95
 PDCH(bts=0,trx=0,ts=7) Received RTS for PDCH: FN=2654283 block_nr=11 scheduling USF=0 for TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS), expect answer on UL FN=2654288
 Got 'TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)', TA=7
 Got MS: TLLI = 0xf1223344, TA = 7
-TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS) appending 256 bytes
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL DL) appending 256 bytes to DL LLC queue
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, UL DL) Destroying MS object
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1, DL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW EGPRS)
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/1,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN EGPRS)
@@ -8777,7 +8778,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) unset ass. type CCCH [prev 
 TBF(TFI=0 TLLI=0xffffffff DIR=DL STATE=ASSIGN EGPRS) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(DL-TFI_0){ASSIGN}: state_chg to FLOW
 The MS object cannot fully confirm an unexpected TLLI: 0xffeeddcc, partly confirmed
-TBF(TFI=0 TLLI=0xffeeddcc DIR=DL STATE=FLOW EGPRS) appending 100 bytes
+MS(TLLI=0xffeeddcc, IMSI=, TA=0, 11/11, DL) appending 100 bytes to DL LLC queue
 UL_ASS_TBF(DL-TFI_0){NONE}: Received Event SCHED_ASS_REJ
 UL_ASS_TBF(DL-TFI_0){NONE}: state_chg to SEND_ASS_REJ
 UL_ASS_TBF(DL-TFI_0){SEND_ASS_REJ}: Received Event CREATE_RLCMAC_MSG

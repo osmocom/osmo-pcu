@@ -950,3 +950,8 @@ const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf)
 
 	return buf;
 }
+
+int tbf_establish_dl_tbf_on_pacch(struct gprs_rlcmac_tbf *tbf)
+{
+	return tbf->establish_dl_tbf_on_pacch();
+}
