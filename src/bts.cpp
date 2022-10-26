@@ -40,6 +40,7 @@ extern "C" {
 	#include <osmocom/core/stats.h>
 	#include <osmocom/gsm/protocol/gsm_04_08.h>
 	#include <osmocom/gsm/gsm_utils.h>
+	#include <osmocom/gsm/gsm0502.h>
 	#include <osmocom/gsm/gsm48.h>
 	#include <osmocom/core/gsmtap_util.h>
 	#include <osmocom/core/application.h>
@@ -1092,7 +1093,7 @@ void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf)
 		trx_no, tbf->trx->arfcn, ts_no, tbf->ta());
 	plen = Encoding::write_immediate_assignment(&bts->trx[trx_no].pdch[ts_no],
 						    tbf, immediate_assignment, true, 125,
-						    (tbf->pdch[ts_no]->last_rts_fn + 21216) % GSM_MAX_FN,
+						    GSM_TDMA_FN_SUM(tbf->pdch[ts_no]->last_rts_fn, 21216),
 						    tbf->ta(), 7, false, 0,
 						    bts_get_ms_pwr_alpha(bts), bts->pcu->vty.gamma, -1,
 						    GSM_L1_BURST_TYPE_ACCESS_0);
