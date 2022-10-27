@@ -880,7 +880,7 @@ bssgp_failed:
 				pdch->tsc = its->tsc;
 
 				/* (Optional) frequency hopping parameters */
-				if (its->h) {
+				if (its->hopping) {
 					pdch->fh.enabled = true;
 					pdch->fh.maio    = its->maio;
 					pdch->fh.hsn     = its->hsn;

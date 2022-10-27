@@ -128,7 +128,7 @@ struct gsm_pcu_if_rach_ind {
 
 struct gsm_pcu_if_info_ts {
 	uint8_t		tsc;
-	uint8_t		h;
+	uint8_t		hopping;
 	uint8_t		hsn;
 	uint8_t		maio;
 	uint8_t		ma_bit_len;
