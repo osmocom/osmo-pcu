@@ -106,7 +106,7 @@ static int dl_tbf_dtor(struct gprs_rlcmac_dl_tbf *tbf)
 	return 0;
 }
 
-struct gprs_rlcmac_dl_tbf *dl_tbf_alloc(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot)
+struct gprs_rlcmac_dl_tbf *dl_tbf_alloc(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, int8_t use_trx, bool single_slot)
 {
 	struct gprs_rlcmac_dl_tbf *tbf;
 	int rc;
