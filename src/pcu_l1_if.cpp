@@ -862,7 +862,7 @@ bssgp_failed:
 		}
 
 		for (ts_nr = 0; ts_nr < ARRAY_SIZE(bts->trx[0].pdch); ts_nr++) {
-			const struct gsm_pcu_if_info_ts *its = &info_ind->trx[trx_nr].ts[ts_nr];
+			const struct gsm_pcu_if_info_trx_ts *its = &info_ind->trx[trx_nr].ts[ts_nr];
 			struct gprs_rlcmac_pdch *pdch = &bts->trx[trx_nr].pdch[ts_nr];
 			if ((info_ind->trx[trx_nr].pdch_mask & (1 << ts_nr))) {
 				/* FIXME: activate dynamically at RLCMAC */

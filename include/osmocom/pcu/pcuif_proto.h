@@ -126,7 +126,7 @@ struct gsm_pcu_if_rach_ind {
 	uint8_t		ts_nr;
 } __attribute__ ((packed));
 
-struct gsm_pcu_if_info_ts {
+struct gsm_pcu_if_info_trx_ts {
 	uint8_t		tsc;
 	uint8_t		hopping;
 	uint8_t		hsn;
@@ -140,7 +140,7 @@ struct gsm_pcu_if_info_trx {
 	uint8_t		pdch_mask;		/* PDCH timeslot mask */
 	uint8_t		spare;
 	uint32_t	hlayer1;
-	struct gsm_pcu_if_info_ts ts[8];	/* timeslots per TRX */
+	struct gsm_pcu_if_info_trx_ts ts[8];
 } __attribute__ ((packed));
 
 struct gsm_pcu_if_info_ind {
