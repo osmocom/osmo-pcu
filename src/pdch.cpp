@@ -701,7 +701,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				/* let common path expire the poll */
 				goto return_unref;
 			}
-			ul_tbf = (struct gprs_rlcmac_ul_tbf *)item->tbf_poll.poll_tbf;
+			ul_tbf = tbf_as_ul_tbf(item->tbf_poll.poll_tbf);
 			if (item->tbf_poll.reason != PDCH_ULC_POLL_UL_ACK) {
 				LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
 					"Unexpectedly received, waiting for poll reason %d\n",
