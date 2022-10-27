@@ -376,7 +376,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 
 	switch (reason) {
 	case PDCH_ULC_POLL_UL_ACK:
-		ul_tbf = as_ul_tbf(tbf);
+		ul_tbf = tbf_as_ul_tbf(tbf);
 		OSMO_ASSERT(ul_tbf);
 		if (!tbf_ul_ack_exp_ctrl_ack(ul_tbf, fn, ts_no)) {
 			LOGPTBF(tbf, LOGL_NOTICE, "FN=%d, TS=%d (curr FN %d): POLL_UL_ACK not expected!\n",
@@ -497,7 +497,7 @@ void gprs_rlcmac_pdch::rcv_control_dl_ack_nack(Packet_Downlink_Ack_Nack_t *ack_n
 		return;
 	}
 	OSMO_ASSERT(poll->tbf_poll.poll_tbf);
-	tbf = as_dl_tbf(poll->tbf_poll.poll_tbf);
+	tbf = tbf_as_dl_tbf(poll->tbf_poll.poll_tbf);
 	if (tbf->tfi() != tfi) {
 		LOGPTBFDL(tbf, LOGL_NOTICE,
 			  "PACKET DOWNLINK ACK with wrong TFI=%d, ignoring!\n", tfi);
@@ -567,7 +567,7 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 		return;
 	}
 	OSMO_ASSERT(poll->tbf_poll.poll_tbf);
-	tbf = as_dl_tbf(poll->tbf_poll.poll_tbf);
+	tbf = tbf_as_dl_tbf(poll->tbf_poll.poll_tbf);
 	if (tbf->tfi() != tfi) {
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "EGPRS PACKET DOWNLINK ACK with "
 			"wrong TFI=%d, ignoring!\n", tfi);
@@ -1099,12 +1099,12 @@ gprs_rlcmac_tbf *gprs_rlcmac_pdch::tbf_from_list_by_tfi(
 
 gprs_rlcmac_ul_tbf *gprs_rlcmac_pdch::ul_tbf_by_tfi(uint8_t tfi)
 {
-	return as_ul_tbf(tbf_by_tfi(tfi, GPRS_RLCMAC_UL_TBF));
+	return tbf_as_ul_tbf(tbf_by_tfi(tfi, GPRS_RLCMAC_UL_TBF));
 }
 
 gprs_rlcmac_dl_tbf *gprs_rlcmac_pdch::dl_tbf_by_tfi(uint8_t tfi)
 {
-	return as_dl_tbf(tbf_by_tfi(tfi, GPRS_RLCMAC_DL_TBF));
+	return tbf_as_dl_tbf(tbf_by_tfi(tfi, GPRS_RLCMAC_DL_TBF));
 }
 
 /* lookup TBF Entity (by TFI) */
@@ -1159,7 +1159,7 @@ void gprs_rlcmac_pdch::attach_tbf(gprs_rlcmac_tbf *tbf)
 
 	num_tbfs_update(tbf, true);
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		ul_tbf = as_ul_tbf(tbf);
+		ul_tbf = tbf_as_ul_tbf(tbf);
 		m_assigned_usf |= 1 << ul_tbf->m_usf[ts_no];
 	}
 	m_assigned_tfi[tbf->direction] |= 1UL << tbf->tfi();
@@ -1188,7 +1188,7 @@ void gprs_rlcmac_pdch::detach_tbf(gprs_rlcmac_tbf *tbf)
 
 	num_tbfs_update(tbf, false);
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		ul_tbf = as_ul_tbf(tbf);
+		ul_tbf = tbf_as_ul_tbf(tbf);
 		m_assigned_usf &= ~(1 << ul_tbf->m_usf[ts_no]);
 	}
 	m_assigned_tfi[tbf->direction] &= ~(1UL << tbf->tfi());
@@ -1271,7 +1271,7 @@ void pdch_free_all_tbf(struct gprs_rlcmac_pdch *pdch)
 	 * PDCH, since they have no TFI assigned (see handle_tbf_reject()).
 	 * Get rid of them too: */
 	llist_for_each_entry_safe(pos, pos2, &pdch->trx->ul_tbfs, list) {
-		struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf((struct gprs_rlcmac_tbf *)pos->entry);
+		struct gprs_rlcmac_ul_tbf *ul_tbf = tbf_as_ul_tbf((struct gprs_rlcmac_tbf *)pos->entry);
 		if (ul_tbf->control_ts == pdch->ts_no)
 			tbf_free(ul_tbf);
 	}

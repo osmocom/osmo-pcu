@@ -758,7 +758,7 @@ void gprs_rlcmac_ul_tbf::usf_timeout()
 		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3101, NULL);
 }
 
-struct gprs_rlcmac_ul_tbf *as_ul_tbf(struct gprs_rlcmac_tbf *tbf)
+struct gprs_rlcmac_ul_tbf *tbf_as_ul_tbf(struct gprs_rlcmac_tbf *tbf)
 {
 	if (tbf && tbf->direction == GPRS_RLCMAC_UL_TBF)
 		return static_cast<gprs_rlcmac_ul_tbf *>(tbf);

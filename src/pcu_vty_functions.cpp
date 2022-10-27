@@ -42,8 +42,8 @@ extern "C" {
 
 static void tbf_print_vty_info(struct vty *vty, struct gprs_rlcmac_tbf *tbf)
 {
-	gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
-	gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
+	gprs_rlcmac_ul_tbf *ul_tbf = tbf_as_ul_tbf(tbf);
+	gprs_rlcmac_dl_tbf *dl_tbf = tbf_as_dl_tbf(tbf);
 
 	vty_out(vty, "TBF: TFI=%d TLLI=0x%08x (%s) TA=%u DIR=%s IMSI=%s%s", tbf->tfi(),
 		tbf->tlli(), tbf->is_tlli_valid() ? "valid" : "invalid",

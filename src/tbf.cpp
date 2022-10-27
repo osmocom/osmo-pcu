@@ -268,7 +268,7 @@ void tbf_free(struct gprs_rlcmac_tbf *tbf)
 		if (tbf->state_is(TBF_ST_FLOW))
 			bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_UL_ABORTED);
 	} else {
-		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
+		gprs_rlcmac_dl_tbf *dl_tbf = tbf_as_dl_tbf(tbf);
 		gprs_rlc_dl_window *win = static_cast<gprs_rlc_dl_window *>(dl_tbf->window());
 
 		bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_DL_FREED);
@@ -324,7 +324,7 @@ int gprs_rlcmac_tbf::update()
 	}
 
 	if (is_egprs_enabled()) {
-		gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(this);
+		gprs_rlcmac_dl_tbf *dl_tbf = tbf_as_dl_tbf(this);
 		if (dl_tbf)
 			dl_tbf->set_window_size();
 	}
@@ -549,7 +549,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 
 	switch (reason) {
 	case PDCH_ULC_POLL_UL_ACK:
-		ul_tbf = as_ul_tbf(this);
+		ul_tbf = tbf_as_ul_tbf(this);
 		OSMO_ASSERT(ul_tbf);
 		if (!tbf_ul_ack_exp_ctrl_ack(ul_tbf, poll_fn, pdch->ts_no)) {
 			LOGPTBF(this, LOGL_NOTICE, "FN=%d, TS=%d (curr FN %d): POLL_UL_ACK not expected!\n",
@@ -617,7 +617,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		break;
 
 	case PDCH_ULC_POLL_DL_ACK:
-		dl_tbf = as_dl_tbf(this);
+		dl_tbf = tbf_as_dl_tbf(this);
 		/* POLL Timeout expecting DL ACK/NACK: implies direction == GPRS_RLCMAC_DL_TBF */
 		OSMO_ASSERT(dl_tbf);
 		if (!(dl_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_TO_DL_ACK))) {
@@ -741,7 +741,7 @@ void tbf_update_state_fsm_name(struct gprs_rlcmac_tbf *tbf)
 	osmo_fsm_inst_update_id(tbf->dl_ass_fsm.fi, buf);
 
 	if (tbf_direction(tbf) == GPRS_RLCMAC_UL_TBF) {
-		struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
+		struct gprs_rlcmac_ul_tbf *ul_tbf = tbf_as_ul_tbf(tbf);
 		osmo_fsm_inst_update_id(ul_tbf->ul_ack_fsm.fi, buf);
 	}
 

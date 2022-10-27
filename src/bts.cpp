@@ -1234,7 +1234,7 @@ void bts_update_tbf_ta(struct gprs_rlcmac_bts *bts, const char *p, uint32_t fn,
 	    poll->tbf_poll.poll_tbf->direction != GPRS_RLCMAC_UL_TBF)
 		goto no_tbf;
 
-	tbf = as_ul_tbf(poll->tbf_poll.poll_tbf);
+	tbf = tbf_as_ul_tbf(poll->tbf_poll.poll_tbf);
 	/* we need to distinguish TA information provided by L1
 	 * from PH-DATA-IND and PHY-RA-IND so that we can properly
 	 * update TA for given TBF

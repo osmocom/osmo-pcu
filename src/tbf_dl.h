@@ -130,7 +130,7 @@ struct gprs_rlcmac_bts;
 struct gprs_rlcmac_dl_tbf *dl_tbf_alloc(struct gprs_rlcmac_bts *bts, struct GprsMs *ms,
 					int8_t use_trx, bool single_slot);
 
-struct gprs_rlcmac_dl_tbf *as_dl_tbf(struct gprs_rlcmac_tbf *tbf);
+struct gprs_rlcmac_dl_tbf *tbf_as_dl_tbf(struct gprs_rlcmac_tbf *tbf);
 /* dispatch Unitdata.DL messages */
 int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 		  const uint32_t tlli, const uint32_t old_tlli,

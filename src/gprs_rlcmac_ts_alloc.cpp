@@ -400,11 +400,11 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	/* The allocation will be successful, so the system state and tbf/ms
 	 * may be modified from now on. */
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		struct gprs_rlcmac_ul_tbf *ul_tbf = as_ul_tbf(tbf);
+		struct gprs_rlcmac_ul_tbf *ul_tbf = tbf_as_ul_tbf(tbf);
 		LOGPSL(tbf, LOGL_DEBUG, "Assign uplink TS=%d TFI=%d USF=%d\n", ts, tfi, usf);
 		assign_uplink_tbf_usf(pdch, ul_tbf, tfi, usf);
 	} else {
-		struct gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(tbf);
+		struct gprs_rlcmac_dl_tbf *dl_tbf = tbf_as_dl_tbf(tbf);
 		LOGPSL(tbf, LOGL_DEBUG, "Assign downlink TS=%d TFI=%d\n", ts, tfi);
 		assign_dlink_tbf(pdch, dl_tbf, tfi);
 	}
@@ -951,9 +951,9 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	tbf->first_ts = first_ts;
 
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF)
-		assign_dl_tbf_slots(as_dl_tbf(tbf), trx, dl_slots, tfi);
+		assign_dl_tbf_slots(tbf_as_dl_tbf(tbf), trx, dl_slots, tfi);
 	else
-		assign_ul_tbf_slots(as_ul_tbf(tbf), trx, ul_slots, tfi, usf);
+		assign_ul_tbf_slots(tbf_as_ul_tbf(tbf), trx, ul_slots, tfi, usf);
 
 	bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_ALGO_B);
 

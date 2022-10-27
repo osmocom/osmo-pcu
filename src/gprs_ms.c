@@ -344,9 +344,9 @@ static void ms_attach_dl_tbf(struct GprsMs *ms, struct gprs_rlcmac_dl_tbf *tbf)
 void ms_attach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 {
 	if (tbf_direction(tbf) == GPRS_RLCMAC_DL_TBF)
-		ms_attach_dl_tbf(ms, as_dl_tbf(tbf));
+		ms_attach_dl_tbf(ms, tbf_as_dl_tbf(tbf));
 	else
-		ms_attach_ul_tbf(ms, as_ul_tbf(tbf));
+		ms_attach_ul_tbf(ms, tbf_as_ul_tbf(tbf));
 }
 
 void ms_detach_tbf(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)

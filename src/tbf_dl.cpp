@@ -1318,7 +1318,7 @@ void gprs_rlcmac_dl_tbf::update_coding_scheme_counter_dl(enum CodingScheme cs)
 	}
 }
 
-struct gprs_rlcmac_dl_tbf *as_dl_tbf(struct gprs_rlcmac_tbf *tbf)
+struct gprs_rlcmac_dl_tbf *tbf_as_dl_tbf(struct gprs_rlcmac_tbf *tbf)
 {
 	if (tbf && tbf->direction == GPRS_RLCMAC_DL_TBF)
 		return static_cast<gprs_rlcmac_dl_tbf *>(tbf);

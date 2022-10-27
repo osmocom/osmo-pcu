@@ -342,7 +342,7 @@ static void st_releasing(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 
 static void handle_timeout_X2002(struct tbf_fsm_ctx *ctx)
 {
-	struct gprs_rlcmac_dl_tbf *dl_tbf = as_dl_tbf(ctx->tbf);
+	struct gprs_rlcmac_dl_tbf *dl_tbf = tbf_as_dl_tbf(ctx->tbf);
 
 	/* X2002 is used only for DL TBF */
 	OSMO_ASSERT(dl_tbf);
