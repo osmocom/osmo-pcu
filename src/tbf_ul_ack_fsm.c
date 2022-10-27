@@ -55,11 +55,11 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 	int rc;
 	unsigned int rrbp = 0;
 	uint32_t new_poll_fn = 0;
-	struct gprs_rlcmac_tbf *tbf = (struct gprs_rlcmac_tbf *)ctx->tbf;
-	struct GprsMs *ms = tbf_ms(tbf);
+	struct gprs_rlcmac_ul_tbf *tbf = ctx->tbf;
+	struct GprsMs *ms = tbf_ms(ul_tbf_as_tbf(tbf));
 
 	if (final) {
-		rc = tbf_check_polling(tbf, d->fn, d->ts, &new_poll_fn, &rrbp);
+		rc = tbf_check_polling(ul_tbf_as_tbf(tbf), d->fn, d->ts, &new_poll_fn, &rrbp);
 		if (rc < 0)
 			return NULL;
 	}
@@ -88,8 +88,8 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 		ul_tbf_contention_resolution_success(ctx->tbf);
 
 	if (final) {
-		tbf_set_polling(tbf, new_poll_fn, d->ts, PDCH_ULC_POLL_UL_ACK);
-		LOGPTBF(tbf, LOGL_DEBUG,
+		tbf_set_polling(ul_tbf_as_tbf(tbf), new_poll_fn, d->ts, PDCH_ULC_POLL_UL_ACK);
+		LOGPTBFUL(tbf, LOGL_DEBUG,
 			"Scheduled UL Acknowledgement polling on PACCH (FN=%d, TS=%d)\n",
 			new_poll_fn, d->ts);
 	}
@@ -139,7 +139,7 @@ static void st_sched_ul_ack(struct osmo_fsm_inst *fi, uint32_t event, void *data
 static void st_wait_ctrl_ack(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct tbf_ul_ack_fsm_ctx *ctx = (struct tbf_ul_ack_fsm_ctx *)fi->priv;
-	struct gprs_rlcmac_tbf *tbf = (struct gprs_rlcmac_tbf *)ctx->tbf;
+	struct gprs_rlcmac_ul_tbf *tbf = ctx->tbf;
 
 	switch (event) {
 	case TBF_UL_ACK_EV_SCHED_ACK:
@@ -149,9 +149,9 @@ static void st_wait_ctrl_ack(struct osmo_fsm_inst *fi, uint32_t event, void *dat
 		tbf_ul_ack_fsm_state_chg(fi, TBF_UL_ACK_ST_NONE);
 		break;
 	case TBF_UL_ACK_EV_POLL_TIMEOUT:
-		LOGPTBF(tbf, LOGL_NOTICE,
+		LOGPTBFUL(tbf, LOGL_NOTICE,
 			"Timeout for polling PACKET CONTROL ACK for PACKET UPLINK ACK: %s\n",
-			tbf_rlcmac_diag(tbf));
+			tbf_rlcmac_diag(ul_tbf_as_tbf(tbf)));
 		/* Reschedule Ul Ack/NAck */
 		tbf_ul_ack_fsm_state_chg(fi, TBF_UL_ACK_ST_SCHED_UL_ACK);
 		break;
