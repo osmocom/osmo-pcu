@@ -129,7 +129,7 @@ struct msgb *create_packet_ul_assign(const struct tbf_ul_ass_fsm_ctx *ctx,
 	bts_do_rate_ctr_inc(ms->bts, CTR_PKT_UL_ASSIGNMENT);
 
 	tbf_set_polling(ctx->tbf, new_poll_fn, d->ts, PDCH_ULC_POLL_UL_ASS);
-	LOGPTBFUL(ctx->tbf, LOGL_INFO, "Scheduled UL Assignment polling on PACCH (FN=%d, TS=%d)\n",
+	LOGPTBF(ctx->tbf, LOGL_INFO, "Scheduled UL Assignment polling on PACCH (FN=%d, TS=%d)\n",
 		  new_poll_fn, d->ts);
 
 	talloc_free(mac_control_block);

@@ -141,7 +141,17 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 void tbf_dl_trigger_ass(struct gprs_rlcmac_dl_tbf *tbf, struct gprs_rlcmac_tbf *old_tbf);
 void tbf_dl_request_dl_ack(struct gprs_rlcmac_dl_tbf *tbf);
 
-#define LOGPTBFDL(tbf, level, fmt, args...) LOGP(DTBFDL, level, "%s " fmt, tbf_name(tbf), ## args)
+static inline struct gprs_rlcmac_tbf *dl_tbf_as_tbf(struct gprs_rlcmac_dl_tbf *dl_tbf)
+{
+	return (struct gprs_rlcmac_tbf *)dl_tbf;
+}
+
+static inline const struct gprs_rlcmac_tbf *dl_tbf_as_tbf_const(const struct gprs_rlcmac_dl_tbf *dl_tbf)
+{
+	return (const struct gprs_rlcmac_tbf *)dl_tbf;
+}
+
+#define LOGPTBFDL(dl_tbf, level, fmt, args...) LOGP(DTBFDL, level, "%s " fmt, tbf_name(dl_tbf_as_tbf_const(dl_tbf)), ## args)
 #ifdef __cplusplus
 }
 #endif

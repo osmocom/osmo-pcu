@@ -143,7 +143,17 @@ bool ul_tbf_contention_resolution_done(const struct gprs_rlcmac_ul_tbf *tbf);
 struct osmo_fsm_inst *tbf_ul_ack_fi(const struct gprs_rlcmac_ul_tbf *tbf);
 void ul_tbf_contention_resolution_success(struct gprs_rlcmac_ul_tbf *tbf);
 
-#define LOGPTBFUL(tbf, level, fmt, args...) LOGP(DTBFUL, level, "%s " fmt, tbf_name(tbf), ## args)
+static inline struct gprs_rlcmac_tbf *ul_tbf_as_tbf(struct gprs_rlcmac_ul_tbf *ul_tbf)
+{
+	return (struct gprs_rlcmac_tbf *)ul_tbf;
+}
+
+static inline const struct gprs_rlcmac_tbf *ul_tbf_as_tbf_const(const struct gprs_rlcmac_ul_tbf *ul_tbf)
+{
+	return (const struct gprs_rlcmac_tbf *)ul_tbf;
+}
+
+#define LOGPTBFUL(ul_tbf, level, fmt, args...) LOGP(DTBFUL, level, "%s " fmt, tbf_name(ul_tbf_as_tbf_const(ul_tbf)), ## args)
 #ifdef __cplusplus
 }
 #endif

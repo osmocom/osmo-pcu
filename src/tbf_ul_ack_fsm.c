@@ -89,9 +89,9 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 
 	if (final) {
 		tbf_set_polling(tbf, new_poll_fn, d->ts, PDCH_ULC_POLL_UL_ACK);
-		LOGPTBFUL(tbf, LOGL_DEBUG,
-			  "Scheduled UL Acknowledgement polling on PACCH (FN=%d, TS=%d)\n",
-			  new_poll_fn, d->ts);
+		LOGPTBF(tbf, LOGL_DEBUG,
+			"Scheduled UL Acknowledgement polling on PACCH (FN=%d, TS=%d)\n",
+			new_poll_fn, d->ts);
 	}
 
 	return msg;
@@ -111,7 +111,7 @@ static void st_none(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 static void st_sched_ul_ack(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct tbf_ul_ack_fsm_ctx *ctx = (struct tbf_ul_ack_fsm_ctx *)fi->priv;
-	struct gprs_rlcmac_tbf *tbf = (struct gprs_rlcmac_tbf *)ctx->tbf;
+	struct gprs_rlcmac_ul_tbf *tbf = ctx->tbf;
 	struct tbf_ul_ack_ev_create_rlcmac_msg_ctx *data_ctx;
 	bool final;
 
@@ -122,7 +122,7 @@ static void st_sched_ul_ack(struct osmo_fsm_inst *fi, uint32_t event, void *data
 		break;
 	case TBF_UL_ACK_EV_CREATE_RLCMAC_MSG:
 		data_ctx = (struct tbf_ul_ack_ev_create_rlcmac_msg_ctx *)data;
-		final = tbf_state(tbf) == TBF_ST_FINISHED;
+		final = tbf_state(ul_tbf_as_tbf(tbf)) == TBF_ST_FINISHED;
 		data_ctx->msg = create_ul_ack_nack(ctx, data_ctx, final);
 		if (!data_ctx->msg)
 			return;

@@ -535,7 +535,7 @@ void gprs_rlcmac_tbf::set_polling(uint32_t new_poll_fn, uint8_t ts, enum pdch_ul
 {
 	/* schedule polling */
 	if (pdch_ulc_reserve_tbf_poll(trx->pdch[ts].ulc, new_poll_fn, this, reason) < 0)
-		LOGPTBFDL(this, LOGL_ERROR, "Failed scheduling poll on PACCH (FN=%d, TS=%d)\n",
+		LOGPTBF(this, LOGL_ERROR, "Failed scheduling poll on PACCH (FN=%d, TS=%d)\n",
 			  new_poll_fn, ts);
 }
 

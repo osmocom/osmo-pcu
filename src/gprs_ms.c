@@ -96,7 +96,7 @@ static void ms_llc_timer_cb(void *_ms)
 	if (tbf_state((const struct gprs_rlcmac_tbf *)dl_tbf) != TBF_ST_FLOW)
 		return;
 
-	LOGPTBFDL((const struct gprs_rlcmac_tbf *)dl_tbf, LOGL_DEBUG, "LLC receive timeout, requesting DL ACK\n");
+	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "LLC receive timeout, requesting DL ACK\n");
 
 	tbf_dl_request_dl_ack(dl_tbf);
 }
@@ -1042,7 +1042,7 @@ int ms_append_llc_dl_data(struct GprsMs *ms, uint16_t pdu_delay_csec, const uint
 
 	dl_tbf = ms_dl_tbf(ms);
 	if (dl_tbf && tbf_state((const struct gprs_rlcmac_tbf *)dl_tbf) == TBF_ST_WAIT_RELEASE) {
-		LOGPTBFDL((const struct gprs_rlcmac_tbf *)dl_tbf, LOGL_DEBUG, "in WAIT RELEASE state (T3193), so reuse TBF\n");
+		LOGPTBFDL(dl_tbf, LOGL_DEBUG, "in WAIT RELEASE state (T3193), so reuse TBF\n");
 		tbf_establish_dl_tbf_on_pacch((struct gprs_rlcmac_tbf *)dl_tbf);
 	}
 
