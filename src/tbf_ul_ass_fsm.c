@@ -106,9 +106,9 @@ struct msgb *create_packet_ul_assign(const struct tbf_ul_ass_fsm_ctx *ctx,
 	};
 	bitvec_unhex(&bv, DUMMY_VEC);
 
-	if (ctx->tbf != (struct gprs_rlcmac_tbf *)new_tbf)
+	if (ctx->tbf != ul_tbf_as_tbf_const(new_tbf))
 		LOGPTBF(ctx->tbf, LOGL_INFO, "start Packet Uplink Assignment (PACCH) for %s\n",
-			  tbf_name((const struct gprs_rlcmac_tbf *)new_tbf));
+			  tbf_name(ul_tbf_as_tbf_const(new_tbf)));
 	else
 		LOGPTBF(ctx->tbf, LOGL_INFO, "start Packet Uplink Assignment (PACCH)\n");
 

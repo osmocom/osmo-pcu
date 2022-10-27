@@ -93,7 +93,7 @@ static void ms_llc_timer_cb(void *_ms)
 
 	if (!dl_tbf)
 		return;
-	if (tbf_state((const struct gprs_rlcmac_tbf *)dl_tbf) != TBF_ST_FLOW)
+	if (tbf_state(dl_tbf_as_tbf_const(dl_tbf)) != TBF_ST_FLOW)
 		return;
 
 	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "LLC receive timeout, requesting DL ACK\n");
@@ -162,12 +162,12 @@ static int ms_talloc_destructor(struct GprsMs *ms)
 	osmo_timer_del(&ms->timer);
 
 	if (ms->ul_tbf) {
-		tbf_set_ms((struct gprs_rlcmac_tbf *)ms->ul_tbf, NULL);
+		tbf_set_ms(ul_tbf_as_tbf(ms->ul_tbf), NULL);
 		ms->ul_tbf = NULL;
 	}
 
 	if (ms->dl_tbf) {
-		tbf_set_ms((struct gprs_rlcmac_tbf *)ms->dl_tbf, NULL);
+		tbf_set_ms(dl_tbf_as_tbf(ms->dl_tbf), NULL);
 		ms->dl_tbf = NULL;
 	}
 
@@ -311,7 +311,7 @@ static void ms_attach_ul_tbf(struct GprsMs *ms, struct gprs_rlcmac_ul_tbf *tbf)
 	ms_ref(ms);
 
 	if (ms->ul_tbf)
-		llist_add_tail(tbf_ms_list((struct gprs_rlcmac_tbf *)ms->ul_tbf), &ms->old_tbfs);
+		llist_add_tail(tbf_ms_list(ul_tbf_as_tbf(ms->ul_tbf)), &ms->old_tbfs);
 
 	ms->ul_tbf = tbf;
 
@@ -331,7 +331,7 @@ static void ms_attach_dl_tbf(struct GprsMs *ms, struct gprs_rlcmac_dl_tbf *tbf)
 	ms_ref(ms);
 
 	if (ms->dl_tbf)
-		llist_add_tail(tbf_ms_list((struct gprs_rlcmac_tbf *)ms->dl_tbf), &ms->old_tbfs);
+		llist_add_tail(tbf_ms_list(dl_tbf_as_tbf(ms->dl_tbf)), &ms->old_tbfs);
 
 	ms->dl_tbf = tbf;
 
@@ -845,7 +845,7 @@ enum CodingScheme ms_current_cs_dl(const struct GprsMs *ms, enum mcs_kind req_mc
 
 	/* If the DL TBF is active, add number of unencoded chunk octets */
 	if (ms->dl_tbf)
-		unencoded_octets += llc_chunk_size(tbf_llc((struct gprs_rlcmac_tbf *)ms->dl_tbf));
+		unencoded_octets += llc_chunk_size(tbf_llc(dl_tbf_as_tbf(ms->dl_tbf)));
 
 	/* There are many unencoded octets, don't reduce */
 	if (unencoded_octets >= the_pcu->vty.cs_downgrade_threshold)
@@ -868,10 +868,10 @@ enum CodingScheme ms_current_cs_dl(const struct GprsMs *ms, enum mcs_kind req_mc
 int ms_first_common_ts(const struct GprsMs *ms)
 {
 	if (ms->dl_tbf)
-		return tbf_first_common_ts((struct gprs_rlcmac_tbf *)ms->dl_tbf);
+		return tbf_first_common_ts(dl_tbf_as_tbf(ms->dl_tbf));
 
 	if (ms->ul_tbf)
-		return tbf_first_common_ts((struct gprs_rlcmac_tbf *)ms->ul_tbf);
+		return tbf_first_common_ts(ul_tbf_as_tbf(ms->ul_tbf));
 
 	return -1;
 }
@@ -881,10 +881,10 @@ uint8_t ms_dl_slots(const struct GprsMs *ms)
 	uint8_t slots = 0;
 
 	if (ms->dl_tbf)
-		slots |= tbf_dl_slots((struct gprs_rlcmac_tbf *)ms->dl_tbf);
+		slots |= tbf_dl_slots(dl_tbf_as_tbf(ms->dl_tbf));
 
 	if (ms->ul_tbf)
-		slots |= tbf_dl_slots((struct gprs_rlcmac_tbf *)ms->ul_tbf);
+		slots |= tbf_dl_slots(ul_tbf_as_tbf(ms->ul_tbf));
 
 	return slots;
 }
@@ -894,10 +894,10 @@ uint8_t ms_ul_slots(const struct GprsMs *ms)
 	uint8_t slots = 0;
 
 	if (ms->dl_tbf)
-		slots |= tbf_ul_slots((struct gprs_rlcmac_tbf *)ms->dl_tbf);
+		slots |= tbf_ul_slots(dl_tbf_as_tbf(ms->dl_tbf));
 
 	if (ms->ul_tbf)
-		slots |= tbf_ul_slots((struct gprs_rlcmac_tbf *)ms->ul_tbf);
+		slots |= tbf_ul_slots(ul_tbf_as_tbf(ms->ul_tbf));
 
 	return slots;
 }
@@ -906,20 +906,20 @@ uint8_t ms_current_pacch_slots(const struct GprsMs *ms)
 {
 	uint8_t slots = 0;
 
-	bool is_dl_active = ms->dl_tbf && tbf_is_tfi_assigned((struct gprs_rlcmac_tbf *)ms->dl_tbf);
-	bool is_ul_active = ms->ul_tbf && tbf_is_tfi_assigned((struct gprs_rlcmac_tbf *)ms->ul_tbf);
+	bool is_dl_active = ms->dl_tbf && tbf_is_tfi_assigned(dl_tbf_as_tbf(ms->dl_tbf));
+	bool is_ul_active = ms->ul_tbf && tbf_is_tfi_assigned(ul_tbf_as_tbf(ms->ul_tbf));
 
 	if (!is_dl_active && !is_ul_active)
 		return 0;
 
 	/* see TS 44.060, 8.1.1.2.2 */
 	if (is_dl_active && !is_ul_active)
-		slots =  tbf_dl_slots((struct gprs_rlcmac_tbf *)ms->dl_tbf);
+		slots =  tbf_dl_slots(dl_tbf_as_tbf(ms->dl_tbf));
 	else if (!is_dl_active && is_ul_active)
-		slots =  tbf_ul_slots((struct gprs_rlcmac_tbf *)ms->ul_tbf);
+		slots =  tbf_ul_slots(ul_tbf_as_tbf(ms->ul_tbf));
 	else
-		slots =  tbf_ul_slots((struct gprs_rlcmac_tbf *)ms->ul_tbf) &
-			 tbf_dl_slots((struct gprs_rlcmac_tbf *)ms->dl_tbf);
+		slots =  tbf_ul_slots(ul_tbf_as_tbf(ms->ul_tbf)) &
+			 tbf_dl_slots(dl_tbf_as_tbf(ms->dl_tbf));
 
 	/* Assume a multislot class 1 device */
 	/* TODO: For class 2 devices, this could be removed */
@@ -953,8 +953,8 @@ void ms_set_reserved_slots(struct GprsMs *ms, struct gprs_rlcmac_trx *trx,
 struct gprs_rlcmac_tbf *ms_tbf(const struct GprsMs *ms, enum gprs_rlcmac_tbf_direction dir)
 {
 	switch (dir) {
-	case GPRS_RLCMAC_DL_TBF: return (struct gprs_rlcmac_tbf *)ms->dl_tbf;
-	case GPRS_RLCMAC_UL_TBF: return (struct gprs_rlcmac_tbf *)ms->ul_tbf;
+	case GPRS_RLCMAC_DL_TBF: return dl_tbf_as_tbf(ms->dl_tbf);
+	case GPRS_RLCMAC_UL_TBF: return ul_tbf_as_tbf(ms->ul_tbf);
 	}
 
 	return NULL;
@@ -1041,9 +1041,9 @@ int ms_append_llc_dl_data(struct GprsMs *ms, uint16_t pdu_delay_csec, const uint
 	ms_start_llc_timer(ms);
 
 	dl_tbf = ms_dl_tbf(ms);
-	if (dl_tbf && tbf_state((const struct gprs_rlcmac_tbf *)dl_tbf) == TBF_ST_WAIT_RELEASE) {
+	if (dl_tbf && tbf_state(dl_tbf_as_tbf_const(dl_tbf)) == TBF_ST_WAIT_RELEASE) {
 		LOGPTBFDL(dl_tbf, LOGL_DEBUG, "in WAIT RELEASE state (T3193), so reuse TBF\n");
-		tbf_establish_dl_tbf_on_pacch((struct gprs_rlcmac_tbf *)dl_tbf);
+		tbf_establish_dl_tbf_on_pacch(dl_tbf_as_tbf(dl_tbf));
 	}
 
 	return 0;

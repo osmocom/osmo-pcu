@@ -461,7 +461,7 @@ int bts_add_paging(struct gprs_rlcmac_bts *bts, const struct paging_req_cs *req,
 		ms = llist_entry(tmp, typeof(*ms), list);
 		struct gprs_rlcmac_tbf *tbfs[] = { ms->ul_tbf, ms->dl_tbf };
 		for (l = 0; l < ARRAY_SIZE(tbfs); l++) {
-			tbf = (struct gprs_rlcmac_tbf *)tbfs[l];
+			tbf = tbfs[l];
 			if (!tbf)
 				continue;
 			first_ts = -1;

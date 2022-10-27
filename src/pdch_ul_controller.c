@@ -275,7 +275,7 @@ void pdch_ulc_release_tbf(struct pdch_ulc *ulc, const struct gprs_rlcmac_tbf *tb
 				item_tbf = item->tbf_poll.poll_tbf;
 				break;
 			case PDCH_ULC_NODE_TBF_USF:
-				item_tbf = (struct gprs_rlcmac_tbf *)item->tbf_usf.ul_tbf;
+				item_tbf = ul_tbf_as_tbf_const(item->tbf_usf.ul_tbf);
 				break;
 			default:
 				OSMO_ASSERT(0);
@@ -316,7 +316,7 @@ void pdch_ulc_expire_fn(struct pdch_ulc *ulc, uint32_t fn)
 		case PDCH_ULC_NODE_TBF_USF:
 			LOGPDCH(ulc->pdch, DRLCMAC, LOGL_INFO,
 				"Timeout for registered USF (FN=%u): %s\n",
-				item->fn, tbf_name((struct gprs_rlcmac_tbf *)item->tbf_usf.ul_tbf));
+				item->fn, tbf_name(ul_tbf_as_tbf_const(item->tbf_usf.ul_tbf)));
 			tbf_usf_timeout(item->tbf_usf.ul_tbf);
 			break;
 		case PDCH_ULC_NODE_TBF_POLL:
