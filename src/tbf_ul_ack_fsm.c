@@ -89,8 +89,8 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 	 * on the mobile station side when the mobile station receives a
 	 * PACKET UPLINK ACK/NACK"
 	 */
-	if (ms_tlli(ms) != GSM_RESERVED_TMSI)
-		ul_tbf_contention_resolution_success(ctx->tbf);
+	if (ms_tlli(ms) != GSM_RESERVED_TMSI && !ul_tbf_contention_resolution_done(ctx->tbf))
+		osmo_fsm_inst_dispatch(tbf_state_fi(ul_tbf_as_tbf(ctx->tbf)), TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS, NULL);
 
 	if (final) {
 		tbf_set_polling(ul_tbf_as_tbf(tbf), new_poll_fn, d->ts, PDCH_ULC_POLL_UL_ACK);

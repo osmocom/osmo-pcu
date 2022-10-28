@@ -45,6 +45,7 @@ const struct value_string tbf_fsm_event_names[] = {
 	{ TBF_EV_ASSIGN_READY_CCCH, "ASSIGN_READY_CCCH" },
 	{ TBF_EV_ASSIGN_PCUIF_CNF, "ASSIGN_PCUIF_CNF" },
 	{ TBF_EV_FIRST_UL_DATA_RECVD, "FIRST_UL_DATA_RECVD" },
+	{ TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS, "CONTENTION_RESOLUTION_MS_SUCCESS" },
 	{ TBF_EV_DL_ACKNACK_MISS, "DL_ACKNACK_MISS" },
 	{ TBF_EV_LAST_DL_DATA_SENT, "LAST_DL_DATA_SENT" },
 	{ TBF_EV_LAST_UL_DATA_RECVD, "LAST_UL_DATA_RECVD" },
@@ -230,6 +231,10 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 			dl_tbf = NULL;
 		}
 		break;
+	case TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS:
+		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_UL_TBF);
+		ul_tbf_contention_resolution_success(tbf_as_ul_tbf(ctx->tbf));
+		break;
 	case TBF_EV_DL_ACKNACK_MISS:
 		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);
 		/* DL TBF: we missed a DL ACK/NACK. If we started assignment
@@ -279,6 +284,12 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	bool new_ul_tbf_requested;
 
 	switch (event) {
+	case TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS:
+		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_UL_TBF);
+		/* UL TBF: If MS only sends 1 RLCMAC UL block, it can be that we
+		 * end up in FINISHED state before sending the first UL ACK/NACK */
+		ul_tbf_contention_resolution_success(tbf_as_ul_tbf(ctx->tbf));
+		break;
 	case TBF_EV_DL_ACKNACK_MISS:
 		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);
 		break;
@@ -480,6 +491,7 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 	[TBF_ST_FLOW] = {
 		.in_event_mask =
 			X(TBF_EV_FIRST_UL_DATA_RECVD) |
+			X(TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS) |
 			X(TBF_EV_DL_ACKNACK_MISS) |
 			X(TBF_EV_LAST_DL_DATA_SENT) |
 			X(TBF_EV_LAST_UL_DATA_RECVD) |
@@ -496,6 +508,7 @@ static struct osmo_fsm_state tbf_fsm_states[] = {
 	},
 	[TBF_ST_FINISHED] = {
 		.in_event_mask =
+			X(TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS) |
 			X(TBF_EV_DL_ACKNACK_MISS) |
 			X(TBF_EV_FINAL_ACK_RECVD) |
 			X(TBF_EV_FINAL_UL_ACK_CONFIRMED) |

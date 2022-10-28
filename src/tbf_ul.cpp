@@ -257,6 +257,7 @@ int gprs_rlcmac_ul_tbf::assemble_forward_llc(const gprs_rlc_data *_data)
 	return 0;
 }
 
+/* 3GPP TS 44.060 sec 7a.2.1 Contention Resolution */
 void gprs_rlcmac_ul_tbf::contention_resolution_start()
 {
 	/* 3GPP TS 44.018 sec 11.1.2 Timers on the network side: "This timer is
@@ -274,19 +275,16 @@ void gprs_rlcmac_ul_tbf::contention_resolution_start()
 }
 void gprs_rlcmac_ul_tbf::contention_resolution_success()
 {
-	if (m_contention_resolution_done)
-		return;
+	/* now we must set this flag, so we are allowed to assign downlink
+	 * TBF on PACCH. it is only allowed when TLLI is acknowledged
+	 * (3GPP TS 44.060 sec 7.1.3.1). */
+	m_contention_resolution_done = true;
 
-	/* 3GPP TS 44.060 sec 7a.2.1 Contention Resolution */
 	/* 3GPP TS 44.018 3.5.2.1.4 Packet access completion: The one phase
 	   packet access procedure is completed at a successful contention
 	   resolution. The mobile station has entered the packet transfer mode.
 	   Timer T3141 is stopped on the network side */
 	t_stop(T3141, "Contention resolution success (UL-TBF, CCCH)");
-
-	/* now we must set this flag, so we are allowed to assign downlink
-	 * TBF on PACCH. it is only allowed when TLLI is acknowledged. */
-	m_contention_resolution_done = true;
 
 	bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_CONTENTION_RESOLUTION_SUCCESS);
 }
