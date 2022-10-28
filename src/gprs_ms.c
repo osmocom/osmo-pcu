@@ -99,7 +99,7 @@ static void ms_llc_timer_cb(void *_ms)
 
 	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "LLC receive timeout, requesting DL ACK\n");
 
-	tbf_dl_request_dl_ack(dl_tbf);
+	dl_tbf_request_dl_ack(dl_tbf);
 }
 
 static int ms_talloc_destructor(struct GprsMs *ms);

@@ -139,7 +139,7 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 
 void dl_tbf_trigger_ass_on_pacch(struct gprs_rlcmac_dl_tbf *tbf, struct gprs_rlcmac_tbf *old_tbf);
 void dl_tbf_trigger_ass_on_pch(struct gprs_rlcmac_dl_tbf *tbf);
-void tbf_dl_request_dl_ack(struct gprs_rlcmac_dl_tbf *tbf);
+void dl_tbf_request_dl_ack(struct gprs_rlcmac_dl_tbf *tbf);
 
 static inline struct gprs_rlcmac_tbf *dl_tbf_as_tbf(struct gprs_rlcmac_dl_tbf *dl_tbf)
 {

@@ -1027,7 +1027,7 @@ void gprs_rlcmac_dl_tbf::request_dl_ack()
 	m_dl_ack_requested = true;
 }
 
-void tbf_dl_request_dl_ack(struct gprs_rlcmac_dl_tbf *dl_tbf) {
+void dl_tbf_request_dl_ack(struct gprs_rlcmac_dl_tbf *dl_tbf) {
 	dl_tbf->request_dl_ack();
 }
 
