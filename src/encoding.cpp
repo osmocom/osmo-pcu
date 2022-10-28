@@ -605,7 +605,7 @@ void write_packet_uplink_assignment(RlcMacDownlink_t *block, uint8_t old_tfi,
 
 	/* See 3GPP TS 44.060, section 11.2.29 */
 	pua = &block->u.Packet_Uplink_Assignment;
-	pua->MESSAGE_TYPE = 0x0a;  // Packet Uplink Assignment
+	pua->MESSAGE_TYPE = MT_PACKET_UPLINK_ASSIGNMENT;  // Packet Uplink Assignment
 	pua->PAGE_MODE    = 0x00;  // Normal Paging
 
 	/* TLLI or Global (UL/DL) TFI */
