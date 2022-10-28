@@ -1085,7 +1085,10 @@ int ms_new_dl_tbf_assignment(struct GprsMs *ms)
 	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "[DOWNLINK] START\n");
 
 	/* Trigger the assignment now. */
-	tbf_dl_trigger_ass(dl_tbf, ul_tbf_as_tbf(ul_tbf));
+	if (ul_tbf)
+		dl_tbf_trigger_ass_on_pacch(dl_tbf, ul_tbf_as_tbf(ul_tbf));
+	else
+		dl_tbf_trigger_ass_on_pch(dl_tbf);
 	return 0;
 }
 

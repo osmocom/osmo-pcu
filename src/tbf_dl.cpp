@@ -418,29 +418,41 @@ struct msgb *gprs_rlcmac_dl_tbf::create_dl_acked_block(uint32_t fn, uint8_t ts, 
 	return create_dl_acked_block(fn, ts, bsn, bsn2);
 }
 
-/* depending on the current TBF, we assign on PACCH or AGCH */
-void gprs_rlcmac_dl_tbf::trigger_ass(struct gprs_rlcmac_tbf *old_tbf)
+/* old_tbf (UL TBF or DL TBF) will send a Pkt Dl Ass on PACCH to assign tbf.
+ * Note: It is possible that "tbf == old_tbf" if the TBF is being updated. This can
+ * happen when we first assign over PCH (only single slot is possible) and we want
+ * to upgrade the DL-TBF to be multislot. See code calling tbf_update() for more
+ * information.
+ */
+void dl_tbf_trigger_ass_on_pacch(struct gprs_rlcmac_dl_tbf *tbf, struct gprs_rlcmac_tbf *old_tbf)
+{
+	OSMO_ASSERT(tbf);
+	OSMO_ASSERT(old_tbf);
+	/* stop pending timer */
+	tbf_stop_timers(tbf, "DL assignment (PACCH)");
+
+	LOGPTBFDL(tbf, LOGL_DEBUG, "Send downlink assignment on PACCH, because %s exists\n", old_tbf->name());
+	osmo_fsm_inst_dispatch(old_tbf->dl_ass_fsm.fi, TBF_DL_ASS_EV_SCHED_ASS, NULL);
+
+	/* change state */
+	osmo_fsm_inst_dispatch(tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
+
+}
+
+void dl_tbf_trigger_ass_on_pch(struct gprs_rlcmac_dl_tbf *tbf)
 {
 	/* stop pending timer */
-	stop_timers("assignment (DL-TBF)");
+	struct GprsMs *ms = tbf_ms(tbf);
 
-	/* check for downlink tbf:  */
-	if (old_tbf) {
-		LOGPTBFDL(this, LOGL_DEBUG, "Send downlink assignment on PACCH, because %s exists\n", old_tbf->name());
-		osmo_fsm_inst_dispatch(old_tbf->dl_ass_fsm.fi, TBF_DL_ASS_EV_SCHED_ASS, NULL);
+	tbf_stop_timers(tbf, "DL assignment (PCH)");
 
-		/* change state */
-		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
-	} else {
-		LOGPTBFDL(this, LOGL_DEBUG, "Send downlink assignment on PCH, no TBF exist (IMSI=%s)\n",
-			  imsi());
+	LOGPTBFDL(tbf, LOGL_DEBUG, "Send downlink assignment on PCH, no TBF exist (IMSI=%s)\n", ms_imsi(ms));
 
-		/* change state */
-		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
+	/* change state */
+	osmo_fsm_inst_dispatch(tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
 
-		/* send immediate assignment */
-		bts_snd_dl_ass(bts, this);
-	}
+	/* send immediate assignment */
+	bts_snd_dl_ass(ms->bts, tbf);
 }
 
 void gprs_rlcmac_dl_tbf::schedule_next_frame()
@@ -1271,9 +1283,4 @@ struct gprs_rlcmac_dl_tbf *tbf_as_dl_tbf(struct gprs_rlcmac_tbf *tbf)
 		return static_cast<gprs_rlcmac_dl_tbf *>(tbf);
 	else
 		return NULL;
-}
-
-void tbf_dl_trigger_ass(struct gprs_rlcmac_dl_tbf *tbf, struct gprs_rlcmac_tbf *old_tbf)
-{
-	return tbf->trigger_ass(old_tbf);
 }

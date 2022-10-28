@@ -41,7 +41,6 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 
 	int rcvd_dl_ack(bool final_ack, unsigned first_bsn, struct bitvec *rbb);
 	struct msgb *create_dl_acked_block(uint32_t fn, uint8_t ts, enum mcs_kind req_mcs_kind = EGPRS);
-	void trigger_ass(struct gprs_rlcmac_tbf *old_tbf);
 
 	void request_dl_ack();
 	bool need_poll_for_dl_ack_nack() const;
@@ -138,7 +137,8 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 		  const uint8_t egprs_ms_class, const uint16_t delay_csec,
 		  const uint8_t *data, const uint16_t len);
 
-void tbf_dl_trigger_ass(struct gprs_rlcmac_dl_tbf *tbf, struct gprs_rlcmac_tbf *old_tbf);
+void dl_tbf_trigger_ass_on_pacch(struct gprs_rlcmac_dl_tbf *tbf, struct gprs_rlcmac_tbf *old_tbf);
+void dl_tbf_trigger_ass_on_pch(struct gprs_rlcmac_dl_tbf *tbf);
 void tbf_dl_request_dl_ack(struct gprs_rlcmac_dl_tbf *tbf);
 
 static inline struct gprs_rlcmac_tbf *dl_tbf_as_tbf(struct gprs_rlcmac_dl_tbf *dl_tbf)

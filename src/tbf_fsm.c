@@ -387,8 +387,7 @@ static void handle_timeout_X2002(struct tbf_fsm_ctx *ctx)
 		ctx->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
 
 		tbf_update(ctx->tbf);
-
-		tbf_dl_trigger_ass(dl_tbf, ctx->tbf);
+		dl_tbf_trigger_ass_on_pacch(dl_tbf, ctx->tbf);
 	} else
 		LOGPTBF(ctx->tbf, LOGL_NOTICE, "Continue flow after IMM.ASS confirm\n");
 }

@@ -703,7 +703,7 @@ int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
 	}
 
 	LOGPTBF(this, LOGL_DEBUG, "Trigger downlink assignment on PACCH\n");
-	new_tbf->trigger_ass(this);
+	dl_tbf_trigger_ass_on_pacch(new_tbf, this);
 
 	return 0;
 }
@@ -959,4 +959,9 @@ int tbf_establish_dl_tbf_on_pacch(struct gprs_rlcmac_tbf *tbf)
 struct gprs_rlcmac_trx *tbf_get_trx(struct gprs_rlcmac_tbf *tbf)
 {
 	return tbf->trx;
+}
+
+void tbf_stop_timers(struct gprs_rlcmac_tbf *tbf, const char *reason)
+{
+	tbf->stop_timers(reason);
 }
