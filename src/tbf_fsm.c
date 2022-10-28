@@ -202,6 +202,7 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 
 	switch (event) {
 	case TBF_EV_DL_ACKNACK_MISS:
+		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);
 		/* DL TBF: we missed a DL ACK/NACK. If we started assignment
 		 * over CCCH and never received any DL ACK/NACK yet, it means we
 		 * don't even know if the MS successfuly received the Imm Ass on
@@ -223,6 +224,7 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		tbf_fsm_state_chg(fi, TBF_ST_FINISHED);
 		break;
 	case TBF_EV_FINAL_ACK_RECVD:
+		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);
 		/* We received Final Ack (DL ACK/NACK) from MS. move to
 		   WAIT_RELEASE, we wait there for release or re-use the TBF in
 		   case we receive more DL data to tx */
@@ -249,8 +251,10 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 
 	switch (event) {
 	case TBF_EV_DL_ACKNACK_MISS:
+		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);
 		break;
 	case TBF_EV_FINAL_ACK_RECVD:
+		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);
 		/* We received Final Ack (DL ACK/NACK) from MS. move to
 		   WAIT_RELEASE, we wait there for release or re-use the TBF in
 		   case we receive more DL data to tx */
@@ -314,6 +318,7 @@ static void st_wait_release(struct osmo_fsm_inst *fi, uint32_t event, void *data
 	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
 	switch (event) {
 	case TBF_EV_FINAL_ACK_RECVD:
+		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);
 		/* ignore, duplicate ACK, we already know about since we are in WAIT_RELEASE */
 		break;
 	case TBF_EV_MAX_N3101:
@@ -351,8 +356,10 @@ static void st_releasing_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 
 static void st_releasing(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
+	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
 	switch (event) {
 	case TBF_EV_DL_ACKNACK_MISS:
+		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);
 		/* Ignore, we don't care about missed DL ACK/NACK poll timeouts
 		 * anymore, we are already releasing the TBF */
 		break;
