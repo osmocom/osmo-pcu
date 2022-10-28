@@ -148,7 +148,6 @@ const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf);
 bool tbf_is_control_ts(const struct gprs_rlcmac_tbf *tbf, uint8_t ts);
 bool tbf_can_upgrade_to_multislot(const struct gprs_rlcmac_tbf *tbf);
 int tbf_update(struct gprs_rlcmac_tbf *tbf);
-int tbf_establish_dl_tbf_on_pacch(struct gprs_rlcmac_tbf *tbf);
 struct gprs_rlcmac_trx *tbf_get_trx(struct gprs_rlcmac_tbf *tbf);
 void tbf_stop_timers(struct gprs_rlcmac_tbf *tbf, const char *reason);
 #ifdef __cplusplus
@@ -190,7 +189,6 @@ struct gprs_rlcmac_tbf {
 	void t_stop(enum tbf_timers t, const char *reason);
 	void t_start(enum tbf_timers t, int T, const char *reason, bool force,
 		     const char *file, unsigned line);
-	int establish_dl_tbf_on_pacch();
 
 	int check_polling(uint32_t fn, uint8_t ts,
 		uint32_t *poll_fn, unsigned int *rrbp) const;

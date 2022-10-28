@@ -421,7 +421,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		 * TBF might have been released while the UL TBF has been
 		 * established */
 		if (ms_need_dl_tbf(new_tbf->ms()))
-			new_tbf->establish_dl_tbf_on_pacch();
+			ms_new_dl_tbf_assigned_on_pacch(new_tbf->ms(), new_tbf);
 		return;
 
 	case PDCH_ULC_POLL_DL_ASS:

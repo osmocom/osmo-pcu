@@ -688,26 +688,6 @@ int gprs_rlcmac_tbf::setup(int8_t use_trx, bool single_slot)
 	return 0;
 }
 
-int gprs_rlcmac_tbf::establish_dl_tbf_on_pacch()
-{
-	struct gprs_rlcmac_dl_tbf *new_tbf = NULL;
-
-	bts_do_rate_ctr_inc(bts, CTR_TBF_REUSED);
-
-	new_tbf = dl_tbf_alloc(bts, ms(),
-		this->trx->trx_no, false);
-
-	if (!new_tbf) {
-		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource\n");
-		return -1;
-	}
-
-	LOGPTBF(this, LOGL_DEBUG, "Trigger downlink assignment on PACCH\n");
-	dl_tbf_trigger_ass_on_pacch(new_tbf, this);
-
-	return 0;
-}
-
 const char *tbf_name(const gprs_rlcmac_tbf *tbf)
 {
 	return tbf ? tbf->name() : "(no TBF)";
@@ -949,11 +929,6 @@ const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf)
 	}
 
 	return buf;
-}
-
-int tbf_establish_dl_tbf_on_pacch(struct gprs_rlcmac_tbf *tbf)
-{
-	return tbf->establish_dl_tbf_on_pacch();
 }
 
 struct gprs_rlcmac_trx *tbf_get_trx(struct gprs_rlcmac_tbf *tbf)

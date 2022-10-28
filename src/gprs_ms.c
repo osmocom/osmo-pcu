@@ -1056,39 +1056,46 @@ static bool ms_is_reachable_for_dl_ass(const struct GprsMs *ms)
 
 }
 
-/* This should be called only when MS is reachable, see ms_is_reachable_for_dl_ass(). */
-int ms_new_dl_tbf_assignment(struct GprsMs *ms)
+/* A new DL-TBF is allocated and assigned through PACCH using "tbf".
+ * "tbf" may be either a UL-TBF or a DL-TBF.
+ * Note: This should be called only when MS is reachable, see ms_is_reachable_for_dl_ass().
+ */
+int ms_new_dl_tbf_assigned_on_pacch(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf)
 {
-	bool ss;
-	int8_t use_trx;
-	struct gprs_rlcmac_ul_tbf *ul_tbf;
+	OSMO_ASSERT(tbf);
+	const int8_t trx_no = tbf_get_trx(tbf)->trx_no;
+	const bool single_slot = false;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
 
-	ul_tbf = ms_ul_tbf(ms);
-
-	if (ul_tbf) {
-		use_trx = tbf_get_trx((struct gprs_rlcmac_tbf *)ul_tbf)->trx_no;
-		ss = false;
-	} else {
-		use_trx = -1;
-		ss = true; /* PCH assignment only allows one timeslot */
+	dl_tbf = dl_tbf_alloc(ms->bts, ms, trx_no, single_slot);
+	if (!dl_tbf) {
+		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");
+		return -EBUSY;
 	}
 
-	/* set number of downlink slots according to multislot class */
-	dl_tbf = dl_tbf_alloc(ms->bts, ms, use_trx, ss);
+	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "[DOWNLINK] START (PACCH)\n");
+	dl_tbf_trigger_ass_on_pacch(dl_tbf, tbf);
+	return 0;
+}
+
+/* A new DL-TBF is allocated and assigned through PCH.
+ * Note: This should be called only when MS is reachable, see ms_is_reachable_for_dl_ass().
+ */
+int ms_new_dl_tbf_assigned_on_pch(struct GprsMs *ms)
+{
+	const int8_t trx_no = -1;
+	const bool single_slot = true;
+	struct gprs_rlcmac_dl_tbf *dl_tbf;
+
+	dl_tbf = dl_tbf_alloc(ms->bts, ms, trx_no, single_slot);
 
 	if (!dl_tbf) {
 		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");
 		return -EBUSY;
 	}
 
-	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "[DOWNLINK] START\n");
-
-	/* Trigger the assignment now. */
-	if (ul_tbf)
-		dl_tbf_trigger_ass_on_pacch(dl_tbf, ul_tbf_as_tbf(ul_tbf));
-	else
-		dl_tbf_trigger_ass_on_pch(dl_tbf);
+	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "[DOWNLINK] START (PCH)\n");
+	dl_tbf_trigger_ass_on_pch(dl_tbf);
 	return 0;
 }
 
@@ -1113,14 +1120,18 @@ int ms_append_llc_dl_data(struct GprsMs *ms, uint16_t pdu_delay_csec, const uint
 	if (dl_tbf) {
 		if (tbf_state(dl_tbf_as_tbf_const(dl_tbf)) == TBF_ST_WAIT_RELEASE) {
 			LOGPTBFDL(dl_tbf, LOGL_DEBUG, "in WAIT RELEASE state (T3193), so reuse TBF\n");
-			tbf_establish_dl_tbf_on_pacch(dl_tbf_as_tbf(dl_tbf));
+			rc = ms_new_dl_tbf_assigned_on_pacch(ms, dl_tbf_as_tbf(dl_tbf));
 		}
 	} else {
 		/* Check if we can create a DL TBF to start sending the enqueued
 		 * data. Otherwise it will be triggered later when it is reachable
 		* again. */
-		if (ms_is_reachable_for_dl_ass(ms))
-			rc = ms_new_dl_tbf_assignment(ms);
+		if (ms_is_reachable_for_dl_ass(ms)) {
+			if (ms_ul_tbf(ms))
+				rc = ms_new_dl_tbf_assigned_on_pacch(ms, ul_tbf_as_tbf(ms_ul_tbf(ms)));
+			else
+				rc = ms_new_dl_tbf_assigned_on_pch(ms);
+		}
 	}
 	return rc;
 }

@@ -276,7 +276,7 @@ static void st_finished(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		 * back to packet-idle mode then we can assign the DL TBF on PCH
 		 * now. */
 		if (!new_ul_tbf_requested && ms_need_dl_tbf(ms))
-			ms_new_dl_tbf_assignment(ms);
+			ms_new_dl_tbf_assigned_on_pch(ms);
 		ms_unref(ms);
 		break;
 	case TBF_EV_MAX_N3103:
