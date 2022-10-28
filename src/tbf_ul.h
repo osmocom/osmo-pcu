@@ -121,9 +121,6 @@ inline uint16_t gprs_rlcmac_ul_tbf::window_size() const
 	return m_window.ws();
 }
 
-struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot);
-struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_pacch(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx);
-struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_ccch(struct gprs_rlcmac_bts *bts, struct GprsMs *ms);
 struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 	GprsMs *ms, uint8_t trx_no, uint8_t ts_no);
 
@@ -135,13 +132,15 @@ struct gprs_rlcmac_ul_tbf;
 #ifdef __cplusplus
 extern "C" {
 #endif
+struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, int8_t use_trx, bool single_slot);
 void update_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, int8_t ta_delta);
 void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta);
 struct gprs_rlcmac_ul_tbf *tbf_as_ul_tbf(struct gprs_rlcmac_tbf *tbf);
 void tbf_usf_timeout(struct gprs_rlcmac_ul_tbf *tbf);
+void ul_tbf_contention_resolution_start(struct gprs_rlcmac_ul_tbf *tbf);
+void ul_tbf_contention_resolution_success(struct gprs_rlcmac_ul_tbf *tbf);
 bool ul_tbf_contention_resolution_done(const struct gprs_rlcmac_ul_tbf *tbf);
 struct osmo_fsm_inst *tbf_ul_ack_fi(const struct gprs_rlcmac_ul_tbf *tbf);
-void ul_tbf_contention_resolution_success(struct gprs_rlcmac_ul_tbf *tbf);
 
 static inline struct gprs_rlcmac_tbf *ul_tbf_as_tbf(struct gprs_rlcmac_ul_tbf *ul_tbf)
 {

@@ -981,7 +981,7 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_TWO_PHASE);
 	} else {
 		GprsMs *ms = bts_alloc_ms(bts, 0, chan_req.egprs_mslot_class);
-		tbf = tbf_alloc_ul_ccch(bts, ms);
+		tbf = ms_new_ul_tbf_assigned_agch(ms);
 		if (!tbf) {
 			/* Send RR Immediate Assignment Reject */
 			rc = -EBUSY;

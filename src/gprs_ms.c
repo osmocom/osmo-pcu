@@ -1056,6 +1056,46 @@ static bool ms_is_reachable_for_dl_ass(const struct GprsMs *ms)
 
 }
 
+/* Alloc a UL TBF to be assigned over PACCH. Called when an MS requests to
+ * create a new UL TBF during the end of life of a previous UL TBF (or an SBA).
+ * In summary, this TBF is allocated as a consequence of receiving a "Pkt
+ * Resource Req" or "Pkt Ctrl Ack" from the MS.
+ * See TS 44.060 9.3.2.4.2 "Non-extended uplink TBF mode".
+ */
+struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_assigned_pacch(struct GprsMs *ms, int8_t use_trx)
+{
+	const bool single_slot = false;
+	struct gprs_rlcmac_ul_tbf *ul_tbf;
+
+	ul_tbf = tbf_alloc_ul_tbf(ms->bts, ms, use_trx, single_slot);
+	if (!ul_tbf) {
+		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");
+		/* Caller will most probably send a Imm Ass Reject after return */
+		return NULL;
+	}
+	osmo_fsm_inst_dispatch(tbf_state_fi(ul_tbf_as_tbf(ul_tbf)), TBF_EV_ASSIGN_ADD_PACCH, NULL);
+	/* Contention resolution is considered to be done since TLLI is known in MS */
+	return ul_tbf;
+}
+
+/* Alloc a UL TBF to be assigned over AGCH. Used by request of a "One phase
+ * packet access", where MS requested only 1 PDCH TS (TS 44.018 Table 9.1.8.1). */
+struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_assigned_agch(struct GprsMs *ms)
+{
+	const int8_t trx_no = -1;
+	const bool single_slot = true;
+	struct gprs_rlcmac_ul_tbf *ul_tbf;
+
+	ul_tbf = tbf_alloc_ul_tbf(ms->bts, ms, trx_no, single_slot);
+	if (!ul_tbf) {
+		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource for Uplink TBF\n");
+		/* Caller will most probably send a Imm Ass Reject after return */
+		return NULL;
+	}
+	osmo_fsm_inst_dispatch(tbf_state_fi(ul_tbf_as_tbf(ul_tbf)), TBF_EV_ASSIGN_ADD_CCCH, NULL);
+	return ul_tbf;
+}
+
 /* A new DL-TBF is allocated and assigned through PACCH using "tbf".
  * "tbf" may be either a UL-TBF or a DL-TBF.
  * Note: This should be called only when MS is reachable, see ms_is_reachable_for_dl_ass().
@@ -1088,7 +1128,6 @@ int ms_new_dl_tbf_assigned_on_pch(struct GprsMs *ms)
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
 
 	dl_tbf = dl_tbf_alloc(ms->bts, ms, trx_no, single_slot);
-
 	if (!dl_tbf) {
 		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");
 		return -EBUSY;

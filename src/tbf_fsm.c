@@ -99,8 +99,13 @@ static void st_new(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	switch (event) {
 	case TBF_EV_ASSIGN_ADD_CCCH:
 		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, true);
-		tbf_fsm_state_chg(fi, tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF ?
-					TBF_ST_ASSIGN : TBF_ST_FLOW);
+		if (tbf_direction(ctx->tbf) == GPRS_RLCMAC_UL_TBF) {
+			struct gprs_rlcmac_ul_tbf *ul_tbf = tbf_as_ul_tbf(ctx->tbf);
+			tbf_fsm_state_chg(fi, TBF_ST_FLOW);
+			ul_tbf_contention_resolution_start(ul_tbf);
+		} else {
+			tbf_fsm_state_chg(fi, TBF_ST_ASSIGN);
+		}
 		break;
 	case TBF_EV_ASSIGN_ADD_PACCH:
 		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_PACCH, true);

@@ -801,6 +801,11 @@ enum tbf_fsm_states tbf_state(const struct gprs_rlcmac_tbf *tbf)
 	return (enum tbf_fsm_states)tbf->state_fsm.fi->state;
 }
 
+struct osmo_fsm_inst *tbf_state_fi(const struct gprs_rlcmac_tbf *tbf)
+{
+	return tbf->state_fsm.fi;
+}
+
 struct osmo_fsm_inst *tbf_ul_ass_fi(const struct gprs_rlcmac_tbf *tbf)
 {
 	return tbf->ul_ass_fsm.fi;

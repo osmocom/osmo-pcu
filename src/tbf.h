@@ -125,6 +125,7 @@ const char *tbf_name(const struct gprs_rlcmac_tbf *tbf);
 enum tbf_fsm_states tbf_state(const struct gprs_rlcmac_tbf *tbf);
 struct osmo_fsm_inst *tbf_ul_ass_fi(const struct gprs_rlcmac_tbf *tbf);
 struct osmo_fsm_inst *tbf_dl_ass_fi(const struct gprs_rlcmac_tbf *tbf);
+struct osmo_fsm_inst *tbf_state_fi(const struct gprs_rlcmac_tbf *tbf);
 enum gprs_rlcmac_tbf_direction tbf_direction(const struct gprs_rlcmac_tbf *tbf);
 void tbf_set_ms(struct gprs_rlcmac_tbf *tbf, struct GprsMs *ms);
 struct llist_head *tbf_ms_list(struct gprs_rlcmac_tbf *tbf);

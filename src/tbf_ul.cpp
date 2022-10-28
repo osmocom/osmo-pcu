@@ -104,7 +104,7 @@ static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
 }
 
 /* Generic function to alloc a UL TBF, later configured to be assigned either over CCCH or PACCH */
-struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx, bool single_slot)
+struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, int8_t use_trx, bool single_slot)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
 	int rc;
@@ -143,48 +143,6 @@ struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, GprsMs 
 
 	llist_add_tail(tbf_trx_list(tbf), &tbf->trx->ul_tbfs);
 	bts_do_rate_ctr_inc(tbf->bts, CTR_TBF_UL_ALLOCATED);
-
-	return tbf;
-}
-
-/* Alloc a UL TBF to be assigned over PACCH. Called when an MS requests to
- * create a new UL TBF during the end of life of a previous UL TBF (or an SBA).
- * In summary, this TBF is allocated as a consequence of receiving a "Pkt
- * Resource Req" or "Pkt Ctrl Ack" from the MS.
- * See TS 44.060 9.3.2.4.2 "Non-extended uplink TBF mode".
- */
-gprs_rlcmac_ul_tbf *tbf_alloc_ul_pacch(struct gprs_rlcmac_bts *bts, GprsMs *ms, int8_t use_trx)
-{
-	struct gprs_rlcmac_ul_tbf *tbf;
-
-	tbf = tbf_alloc_ul_tbf(bts, ms, use_trx, false);
-	if (!tbf) {
-		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");
-		/* Caller will most probably send a Imm Ass Reject after return */
-		return NULL;
-	}
-	/* Contention resolution is considered to be done since TLLI is known in MS: */
-	tbf->m_contention_resolution_done = true;
-	osmo_fsm_inst_dispatch(tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
-
-	return tbf;
-}
-
-/* Alloc a UL TBF to be assigned over CCCH. Used by request of a "One phase
- * packet access", where MS requested only 1 PDCH TS (TS 44.018 Table 9.1.8.1). */
-struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_ccch(struct gprs_rlcmac_bts *bts, struct GprsMs *ms)
-{
-	struct gprs_rlcmac_ul_tbf *tbf;
-
-	tbf = tbf_alloc_ul_tbf(bts, ms, -1, true);
-	if (!tbf) {
-		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource for Uplink TBF\n");
-		/* Caller will most probably send a Imm Ass Reject after return */
-		return NULL;
-	}
-	osmo_fsm_inst_dispatch(tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
-	tbf->contention_resolution_start();
-	OSMO_ASSERT(tbf->ms());
 
 	return tbf;
 }
@@ -237,7 +195,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms) :
 	gprs_rlcmac_tbf(bts_, ms, GPRS_RLCMAC_UL_TBF),
 	m_rx_counter(0),
-	m_contention_resolution_done(false),
+	m_contention_resolution_done(true),
 	m_ul_gprs_ctrs(NULL),
 	m_ul_egprs_ctrs(NULL)
 {
@@ -311,6 +269,7 @@ void gprs_rlcmac_ul_tbf::contention_resolution_start()
 	 * timeout only for one-phase packet access, since two-phase is handled
 	 * through SBA structs, which are freed by the PDCH UL Controller if the
 	 * single allocated block is lost. */
+	m_contention_resolution_done = false;
 	T_START(this, T3141, 3141, "Contention resolution (UL-TBF, CCCH)", true);
 }
 void gprs_rlcmac_ul_tbf::contention_resolution_success()
@@ -780,6 +739,11 @@ bool ul_tbf_contention_resolution_done(const struct gprs_rlcmac_ul_tbf *tbf)
 struct osmo_fsm_inst *tbf_ul_ack_fi(const struct gprs_rlcmac_ul_tbf *tbf)
 {
 	return tbf->ul_ack_fsm.fi;
+}
+
+void ul_tbf_contention_resolution_start(struct gprs_rlcmac_ul_tbf *tbf)
+{
+	tbf->contention_resolution_start();
 }
 
 void ul_tbf_contention_resolution_success(struct gprs_rlcmac_ul_tbf *tbf)

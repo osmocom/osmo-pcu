@@ -144,6 +144,8 @@ int ms_nacc_start(struct GprsMs *ms, Packet_Cell_Change_Notification_t *notif);
 bool ms_nacc_rts(const struct GprsMs *ms);
 struct msgb *ms_nacc_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts);
 
+struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_assigned_pacch(struct GprsMs *ms, int8_t use_trx);
+struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_assigned_agch(struct GprsMs *ms);
 int ms_new_dl_tbf_assigned_on_pacch(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf);
 int ms_new_dl_tbf_assigned_on_pch(struct GprsMs *ms);
 int ms_append_llc_dl_data(struct GprsMs *ms, uint16_t pdu_delay_csec, const uint8_t *data, uint16_t len);
