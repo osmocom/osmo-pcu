@@ -750,6 +750,10 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				ms_set_egprs_ms_class(ms, egprs_ms_class);
 		}
 
+		/* get measurements */
+		get_meas(meas, request);
+		ms_update_l1_meas(ms, meas);
+
 		ul_tbf = tbf_alloc_ul_pacch(bts, ms, trx_no());
 		if (!ul_tbf) {
 			handle_tbf_reject(bts, ms, trx_no(), ts_no);
@@ -769,10 +773,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		ul_tbf->control_ts = ts_no;
 		/* schedule uplink assignment */
 		osmo_fsm_inst_dispatch(ul_tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_SCHED_ASS, NULL);
-
-		/* get measurements */
-		get_meas(meas, request);
-		ms_update_l1_meas(ul_tbf->ms(), meas);
 return_unref:
 		ms_unref(ms);
 		return;

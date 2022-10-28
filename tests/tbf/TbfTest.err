@@ -2264,6 +2264,7 @@ Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: CS-1 -> CS-2
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -2290,7 +2291,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: CS-1 -> CS-2
 UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
@@ -2441,6 +2441,7 @@ Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: CS-1 -> CS-2
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -2467,7 +2468,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: CS-1 -> CS-2
 UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
@@ -2616,6 +2616,7 @@ Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 PDCH(bts=0,trx=0,ts=7) FN=2654270 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
 Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: CS-1 -> CS-2
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -2642,7 +2643,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) Starting timer X2001 [assignment 
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xf1223344, IMSI=, TA=7, 1/0, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: CS-1 -> CS-2
 UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN) start Packet Uplink Assignment (PACCH)
@@ -3806,6 +3806,7 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -3834,7 +3835,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assig
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
@@ -3917,6 +3917,7 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -3945,7 +3946,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assig
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
@@ -6868,6 +6868,7 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -6896,7 +6897,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assig
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
@@ -7065,6 +7065,7 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -7093,7 +7094,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assig
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
@@ -7490,6 +7490,7 @@ Modifying MS object, TLLI = 0xf1223344, TA 220 -> 7
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 Modifying MS object, TLLI = 0xf1223344, EGPRS MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) ********** UL-TBF starts here **********
 MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -7518,7 +7519,6 @@ TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assig
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xf1223344, IMSI=, TA=7, 1/1, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654270 + 13 = 2654283
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
@@ -8831,6 +8831,7 @@ Modifying MS object, TLLI = 0xffeeddcc, TA 220 -> 7
 Modifying MS object, TLLI = 0xffeeddcc, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffeeddcc, EGPRS MS class 0 -> 11
 MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -8859,7 +8860,6 @@ TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assig
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xffeeddcc, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 UL_ASS_TBF(UL-TFI_0){SEND_ASS}: Received Event CREATE_RLCMAC_MSG
 PDCH(bts=0,trx=0,ts=7) POLL scheduled at FN 2654218 + 13 = 2654231
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) start Packet Uplink Assignment (PACCH)
@@ -8877,6 +8877,7 @@ Modifying MS object, TLLI = 0xffeeddcd, TA 220 -> 7
 Modifying MS object, TLLI = 0xffeeddcd, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffeeddcd, EGPRS MS class 0 -> 11
 MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -8905,7 +8906,6 @@ TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assig
 TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_1){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_1){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xffeeddcd, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 PDCH(bts=0,trx=0,ts=7) Expiring FN=56 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=0 TLLI=0xffeeddcc DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 56)
@@ -8930,6 +8930,7 @@ Modifying MS object, TLLI = 0xffeeddce, TA 220 -> 7
 Modifying MS object, TLLI = 0xffeeddce, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffeeddce, EGPRS MS class 0 -> 11
 MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -8958,7 +8959,6 @@ TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assig
 TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_2){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_2){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xffeeddce, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 PDCH(bts=0,trx=0,ts=7) Expiring FN=60 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=1 TLLI=0xffeeddcd DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 60)
@@ -8983,6 +8983,7 @@ Modifying MS object, TLLI = 0xffeeddcf, TA 220 -> 7
 Modifying MS object, TLLI = 0xffeeddcf, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffeeddcf, EGPRS MS class 0 -> 11
 MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -9011,7 +9012,6 @@ TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assig
 TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_3){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_3){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xffeeddcf, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 PDCH(bts=0,trx=0,ts=7) Expiring FN=65 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=2 TLLI=0xffeeddce DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 65)
@@ -9036,6 +9036,7 @@ Modifying MS object, TLLI = 0xffeeddd0, TA 220 -> 7
 Modifying MS object, TLLI = 0xffeeddd0, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffeeddd0, EGPRS MS class 0 -> 11
 MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -9064,7 +9065,6 @@ TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assig
 TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_4){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_4){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xffeeddd0, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 PDCH(bts=0,trx=0,ts=7) Expiring FN=69 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=3 TLLI=0xffeeddcf DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 69)
@@ -9089,6 +9089,7 @@ Modifying MS object, TLLI = 0xffeeddd1, TA 220 -> 7
 Modifying MS object, TLLI = 0xffeeddd1, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffeeddd1, EGPRS MS class 0 -> 11
 MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -9117,7 +9118,6 @@ TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assig
 TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_5){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_5){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xffeeddd1, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 PDCH(bts=0,trx=0,ts=7) Expiring FN=73 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=4 TLLI=0xffeeddd0 DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 73)
@@ -9142,6 +9142,7 @@ Modifying MS object, TLLI = 0xffeeddd2, TA 220 -> 7
 Modifying MS object, TLLI = 0xffeeddd2, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffeeddd2, EGPRS MS class 0 -> 11
 MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NEW}: Allocated
@@ -9170,7 +9171,6 @@ TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) Starting timer X2001 [assig
 TBF(TFI=6 TLLI=0xffeeddd2 DIR=UL STATE=ASSIGN EGPRS) change control TS 7 -> 7 until assignment is complete.
 UL_ASS_TBF(UL-TFI_6){NONE}: Received Event SCHED_ASS
 UL_ASS_TBF(UL-TFI_6){NONE}: state_chg to SEND_ASS
-MS(TLLI=0xffeeddd2, IMSI=, TA=7, 11/11, UL) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 PDCH(bts=0,trx=0,ts=7) Expiring FN=78 but previous FN=2654231 is still reserved!
 PDCH(bts=0,trx=0,ts=7) Timeout for registered POLL (FN=2654231, reason=UL_ASS): TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS)
 TBF(TFI=5 TLLI=0xffeeddd1 DIR=UL STATE=ASSIGN EGPRS) poll timeout for FN=2654231, TS=7 (curr FN 78)
@@ -9195,6 +9195,7 @@ Modifying MS object, TLLI = 0xffeeddd3, TA 220 -> 7
 Modifying MS object, TLLI = 0xffeeddd3, MS class 0 -> 11
 Modifying MS object, TLLI = 0xffeeddd3, EGPRS MS class 0 -> 11
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Enabled EGPRS, mode EGPRS
+MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Link quality 12dB (old 12dB) left window [-256, 6], modifying uplink CS level: MCS-1 -> MCS-2
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) ********** UL-TBF starts here **********
 MS(TLLI=0xffeeddd3, IMSI=, TA=7, 11/11,) Allocating UL TBF
 TBF{NEW}: Allocated
