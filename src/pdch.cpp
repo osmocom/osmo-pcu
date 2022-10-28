@@ -644,10 +644,16 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 	struct gprs_rlcmac_sba *sba;
 	int rc;
 	struct gprs_rlcmac_bts *bts = trx->bts;
+	struct pdch_ulc_node *item;
+
+	if (!(item = pdch_ulc_get_node(ulc, fn))) {
+		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
+			"UL block not reserved\n", fn);
+		return;
+	}
 
 	if (request->ID.UnionType) {
 		struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
-		struct pdch_ulc_node *item;
 		uint32_t tlli = request->ID.u.TLLI;
 
 		GprsMs *ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
@@ -658,12 +664,6 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 
 		/* Keep the ms, even if it gets idle temporarily */
 		ms_ref(ms);
-
-		if (!(item = pdch_ulc_get_node(ulc, fn))) {
-			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
-				"UL block not reserved\n", fn);
-			goto return_unref;
-		}
 
 		switch (item->type) {
 		case PDCH_ULC_NODE_TBF_USF:
