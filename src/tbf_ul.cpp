@@ -398,7 +398,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 					  "Decoded premier TLLI=0x%08x of UL DATA TFI=%d.\n",
 					  new_tlli, rlc->tfi);
 				ms_update_announced_tlli(ms(), new_tlli);
-				bts_pch_timer_stop(bts, ms());
+				osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_FIRST_UL_DATA_RECVD, NULL);
 			} else if (new_tlli != GSM_RESERVED_TMSI && new_tlli != tlli()) {
 				LOGPTBFUL(this, LOGL_NOTICE,
 					  "Decoded TLLI=%08x mismatch on UL DATA TFI=%d. (Ignoring due to contention resolution)\n",

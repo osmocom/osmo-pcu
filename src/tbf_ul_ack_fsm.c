@@ -80,10 +80,15 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 	/* TS 44.060 7a.2.1.1: "The contention resolution is completed on
 	 * the network side when the network receives an RLC data block that
 	 * comprises the TLLI value that identifies the mobile station and the
-	 * TFI value associated with the TBF."
-	 * However, it's handier for us to mark contention resolution success
-	 * here since according to spec upon rx UL ACK is the time at which MS
-	 * realizes contention resolution succeeds. */
+	 * TFI value associated with the TBF." (see TBF_EV_FIRST_UL_DATA_RECVD).
+	 *
+	 * However, it's handier for us to mark contention resolution success here
+	 * since upon rx UL ACK is the time at which MS realizes contention resolution
+	 * succeeds:
+	 * TS 44.060 7.1.2.3: "The contention resolution is successfully completed
+	 * on the mobile station side when the mobile station receives a
+	 * PACKET UPLINK ACK/NACK"
+	 */
 	if (ms_tlli(ms) != GSM_RESERVED_TMSI)
 		ul_tbf_contention_resolution_success(ctx->tbf);
 
