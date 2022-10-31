@@ -280,7 +280,7 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 		return false;
 
 	ul_tbf->update_ms(0x23, GPRS_RLCMAC_UL_TBF);
-	ul_tbf->m_contention_resolution_done = 1;
+	ul_tbf->m_contention_resolution_done = true;
 
 	dump_assignment(ul_tbf, "UL", verbose);
 

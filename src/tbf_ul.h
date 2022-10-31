@@ -98,7 +98,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	 */
 	int32_t m_rx_counter; /* count all received blocks */
 	uint8_t m_usf[8];	/* list USFs per PDCH (timeslot), initialized to USF_INVALID */
-	uint8_t m_contention_resolution_done; /* set after done */
+	bool m_contention_resolution_done; /* set after done */
 
 	struct rate_ctr_group *m_ul_gprs_ctrs;
 	struct rate_ctr_group *m_ul_egprs_ctrs;

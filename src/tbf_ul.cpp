@@ -164,7 +164,7 @@ gprs_rlcmac_ul_tbf *tbf_alloc_ul_pacch(struct gprs_rlcmac_bts *bts, GprsMs *ms, 
 		return NULL;
 	}
 	/* Contention resolution is considered to be done since TLLI is known in MS: */
-	tbf->m_contention_resolution_done = 1;
+	tbf->m_contention_resolution_done = true;
 	osmo_fsm_inst_dispatch(tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
 
 	return tbf;
@@ -237,7 +237,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms) :
 	gprs_rlcmac_tbf(bts_, ms, GPRS_RLCMAC_UL_TBF),
 	m_rx_counter(0),
-	m_contention_resolution_done(0),
+	m_contention_resolution_done(false),
 	m_ul_gprs_ctrs(NULL),
 	m_ul_egprs_ctrs(NULL)
 {
@@ -327,7 +327,7 @@ void gprs_rlcmac_ul_tbf::contention_resolution_success()
 
 	/* now we must set this flag, so we are allowed to assign downlink
 	 * TBF on PACCH. it is only allowed when TLLI is acknowledged. */
-	m_contention_resolution_done = 1;
+	m_contention_resolution_done = true;
 
 	bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_CONTENTION_RESOLUTION_SUCCESS);
 }
