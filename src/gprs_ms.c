@@ -1068,7 +1068,7 @@ struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_assigned_pacch(struct GprsMs *ms, int8_
 	const bool single_slot = false;
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 
-	ul_tbf = tbf_alloc_ul_tbf(ms->bts, ms, use_trx, single_slot);
+	ul_tbf = ul_tbf_alloc(ms->bts, ms, use_trx, single_slot);
 	if (!ul_tbf) {
 		LOGPMS(ms, DTBF, LOGL_NOTICE, "No PDCH resource\n");
 		/* Caller will most probably send a Imm Ass Reject after return */
@@ -1087,7 +1087,7 @@ struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_assigned_agch(struct GprsMs *ms)
 	const bool single_slot = true;
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 
-	ul_tbf = tbf_alloc_ul_tbf(ms->bts, ms, trx_no, single_slot);
+	ul_tbf = ul_tbf_alloc(ms->bts, ms, trx_no, single_slot);
 	if (!ul_tbf) {
 		LOGP(DTBF, LOGL_NOTICE, "No PDCH resource for Uplink TBF\n");
 		/* Caller will most probably send a Imm Ass Reject after return */

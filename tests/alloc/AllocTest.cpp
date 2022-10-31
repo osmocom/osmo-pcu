@@ -46,7 +46,7 @@ static gprs_rlcmac_tbf *tbf_alloc(struct gprs_rlcmac_bts *bts,
 	OSMO_ASSERT(ms != NULL);
 
 	if (dir == GPRS_RLCMAC_UL_TBF)
-		return tbf_alloc_ul_tbf(bts, ms, use_trx, single_slot);
+		return ul_tbf_alloc(bts, ms, use_trx, single_slot);
 	else
 		return dl_tbf_alloc(bts, ms, use_trx, single_slot);
 }
@@ -221,7 +221,7 @@ static inline bool test_alloc_b_ul_dl(bool ts0, bool ts1, bool ts2, bool ts3, bo
 	ms = bts_alloc_ms(bts, ms_class, 0);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
 	ms_set_timeout(ms, 0);
-	ul_tbf = tbf_alloc_ul_tbf(bts, ms, -1, true);
+	ul_tbf = ul_tbf_alloc(bts, ms, -1, true);
 	if (!ul_tbf)
 		return false;
 
@@ -275,7 +275,7 @@ static inline bool test_alloc_b_dl_ul(bool ts0, bool ts1, bool ts2, bool ts3, bo
 
 	dump_assignment(dl_tbf, "DL", verbose);
 
-	ul_tbf = tbf_alloc_ul_tbf(bts, ms, ms_current_trx(ms)->trx_no, false);
+	ul_tbf = ul_tbf_alloc(bts, ms, ms_current_trx(ms)->trx_no, false);
 	if (!ul_tbf)
 		return false;
 
@@ -318,7 +318,7 @@ static inline bool test_alloc_b_jolly(uint8_t ms_class)
 	ms = bts_alloc_ms(bts, ms_class, 0);
 	/* Avoid delaying free to avoid tons of to-be-freed ms objects queuing */
 	ms_set_timeout(ms, 0);
-	ul_tbf = tbf_alloc_ul_tbf(bts, ms, -1, false);
+	ul_tbf = ul_tbf_alloc(bts, ms, -1, false);
 	if (!ul_tbf)
 		return false;
 
@@ -475,7 +475,7 @@ static GprsMs *alloc_tbfs(struct gprs_rlcmac_bts *bts, struct GprsMs *old_ms, en
 	case TEST_MODE_UL_AND_DL:
 		if (ms_ul_tbf(old_ms))
 			tbf_free(ms_ul_tbf(old_ms));
-		tbf = tbf_alloc_ul_tbf(bts, old_ms, trx_no, false);
+		tbf = ul_tbf_alloc(bts, old_ms, trx_no, false);
 		if (tbf == NULL) {
 			OSMO_ASSERT(trx_no != -1 || bts_all_pdch_allocated(bts));
 			ms_unref(old_ms);

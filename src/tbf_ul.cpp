@@ -104,7 +104,7 @@ static int ul_tbf_dtor(struct gprs_rlcmac_ul_tbf *tbf)
 }
 
 /* Generic function to alloc a UL TBF, later configured to be assigned either over CCCH or PACCH */
-struct gprs_rlcmac_ul_tbf *tbf_alloc_ul_tbf(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, int8_t use_trx, bool single_slot)
+struct gprs_rlcmac_ul_tbf *ul_tbf_alloc(struct gprs_rlcmac_bts *bts, struct GprsMs *ms, int8_t use_trx, bool single_slot)
 {
 	struct gprs_rlcmac_ul_tbf *tbf;
 	int rc;

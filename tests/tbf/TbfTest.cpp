@@ -131,7 +131,7 @@ static void test_tbf_tlli_update()
 	OSMO_ASSERT(ms_dl_tbf(ms) == dl_tbf);
 	OSMO_ASSERT(dl_tbf->ms() == ms);
 
-	gprs_rlcmac_tbf *ul_tbf = tbf_alloc_ul_tbf(bts,
+	gprs_rlcmac_tbf *ul_tbf = ul_tbf_alloc(bts,
 						   ms, 0, false);
 	OSMO_ASSERT(ul_tbf != NULL);
 	ul_tbf->update_ms(0x2342, GPRS_RLCMAC_UL_TBF);
