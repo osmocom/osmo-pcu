@@ -402,9 +402,17 @@ void ms_reset(struct GprsMs *ms)
 	ms->imsi[0] = '\0';
 }
 
-static void ms_merge_old_ms(struct GprsMs *ms, struct GprsMs *old_ms)
+/* Merge 'old_ms' object into 'ms' object.
+ * 'old_ms' may be freed during the call to this function, don't use the pointer to it afterwards */
+void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms)
 {
+	char old_ms_name[128];
 	OSMO_ASSERT(old_ms != ms);
+	ms_ref(old_ms);
+
+	ms_name_buf(old_ms, old_ms_name, sizeof(old_ms_name));
+
+	LOGPMS(ms, DRLCMAC, LOGL_INFO, "Merge MS: %s\n", old_ms_name);
 
 	if (strlen(ms_imsi(ms)) == 0 && strlen(ms_imsi(old_ms)) != 0)
 		osmo_strlcpy(ms->imsi, ms_imsi(old_ms), sizeof(ms->imsi));
@@ -417,14 +425,6 @@ static void ms_merge_old_ms(struct GprsMs *ms, struct GprsMs *old_ms)
 
 	llc_queue_move_and_merge(&ms->llc_queue, &old_ms->llc_queue);
 
-	ms_reset(old_ms);
-}
-
-void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms)
-{
-	OSMO_ASSERT(old_ms != ms);
-
-	ms_ref(old_ms);
 
 	/* Clean up the old MS object */
 	/* TODO: Use timer? */
@@ -433,7 +433,7 @@ void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms)
 	if (ms_dl_tbf(old_ms) && !tbf_timers_pending((struct gprs_rlcmac_tbf *)ms_dl_tbf(old_ms), T_MAX))
 			tbf_free((struct gprs_rlcmac_tbf *)ms_dl_tbf(old_ms));
 
-	ms_merge_old_ms(ms, old_ms);
+	ms_reset(old_ms);
 
 	ms_unref(old_ms);
 }
