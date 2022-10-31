@@ -287,6 +287,12 @@ void gprs_rlcmac_ul_tbf::contention_resolution_success()
 	t_stop(T3141, "Contention resolution success (UL-TBF, CCCH)");
 
 	bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_CONTENTION_RESOLUTION_SUCCESS);
+
+	/* Check if we can create a DL TBF to start sending the enqueued
+	* data. Otherwise it will be triggered later when it is reachable
+	* again. */
+	if (ms_need_dl_tbf(ms()) && !tbf_ul_ack_waiting_cnf_final_ack(this))
+		ms_new_dl_tbf_assigned_on_pacch(ms(), this);
 }
 
 /*! \brief receive data from PDCH/L1 */
