@@ -208,6 +208,7 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 {
 	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
 	struct GprsMs *ms = tbf_ms(ctx->tbf);
+	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 
 	switch (event) {
 	case TBF_EV_FIRST_UL_DATA_RECVD:
@@ -217,6 +218,17 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		 * comprises the TLLI value that identifies the mobile station and the
 		 * TFI value associated with the TBF." */
 		bts_pch_timer_stop(ms->bts, ms);
+		/* We may still have some DL-TBF waiting for assignment in PCH,
+		 * which clearly won't happen since the MS is on PDCH now. Get rid
+		 * of it, it will be re-assigned on PACCH when contention
+		 * resolution at the MS side is done (1st UL ACK/NACK sent) */
+		if ((dl_tbf = ms_dl_tbf(ms))) {
+			/* Get rid of previous finished UL TBF before providing a new one */
+			LOGPTBFDL(dl_tbf, LOGL_NOTICE,
+					"Got first UL data while DL-TBF pending, killing it\n");
+			tbf_free(dl_tbf_as_tbf(dl_tbf));
+			dl_tbf = NULL;
+		}
 		break;
 	case TBF_EV_DL_ACKNACK_MISS:
 		OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);

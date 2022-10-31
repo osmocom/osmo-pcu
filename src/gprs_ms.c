@@ -452,6 +452,14 @@ void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms)
 
 	llc_queue_move_and_merge(&ms->llc_queue, &old_ms->llc_queue);
 
+	if (!ms_dl_tbf(ms) && ms_dl_tbf(old_ms)) {
+		struct gprs_rlcmac_dl_tbf *dl_tbf = ms_dl_tbf(old_ms);
+		LOGPTBFDL(dl_tbf, LOGL_NOTICE,
+			  "Merge MS: Move DL TBF: %s => %s\n",
+			  old_ms_name, ms_name(ms));
+		/* Move the DL TBF to the new MS */
+		tbf_set_ms(dl_tbf_as_tbf(dl_tbf), ms);
+	}
 
 	/* Clean up the old MS object */
 	/* TODO: Use timer? */

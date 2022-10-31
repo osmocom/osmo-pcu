@@ -2314,10 +2314,10 @@ TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) Frame 1 starts at offset 0, length=
 TBF(TFI=1 TLLI=0xf5667788 DIR=UL STATE=FLOW) No gaps in received block, last block: BSN=0 CV=15
 Old MS: TLLI = 0xf1223344, TA = 7, IMSI = 0011223344, LLC = 0
 There is a new MS object for the same MS: (0xf1223344, '0011223344') -> (0xf5667788, '')
-IMSI 0011223344, old TBF TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED): moving DL TBF to new MS object
+MS(TLLI=0xf5667788, IMSI=, TA=7, 1/0, UL) Merge MS: MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED) Merge MS: Move DL TBF: MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL DL) => MS(TLLI=0xf5667788, IMSI=0011223344, TA=7, 1/0, UL)
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=FINISHED)
-MS(TLLI=0xf5667788, IMSI=, TA=7, 1/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xf5667788 DIR=DL STATE=FINISHED)
-MS(TLLI=0xf5667788, IMSI=, TA=7, 1/0, UL DL) Merge MS: MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL)
+MS(TLLI=0xf5667788, IMSI=0011223344, TA=7, 1/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xf5667788 DIR=DL STATE=FINISHED)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) free
 PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW), 2 TBFs, USFs = 03, TFIs = 00000003.
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
@@ -2454,8 +2454,16 @@ Detected FN jump! 2654275 -> 2654327 (expected 2654279)
 PDCH(bts=0,trx=0,ts=7) FN=2654327 +++++++++++++++++++++++++ RX : Uplink Control Block +++++++++++++++++++++++++
 PDCH(bts=0,trx=0,ts=7) FN=2654327 ------------------------- RX : Uplink Control Block -------------------------
 PDCH(bts=0,trx=0,ts=7) FN=2654327 PKT RESOURCE REQ: MS requests UL TBF throguh SBA
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) ********** UL-TBF starts here **********
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Allocating UL TBF
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Got PACKET RESOURCE REQ while DL-TBF pending, killing it
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) free
+PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN), 1 TBFs, USFs = 00, TFIs = 00000001.
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
+********** DL-TBF ends here **********
+TBF(DL-TFI_0){ASSIGN}: Deallocated
+UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) ********** UL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Allocating UL TBF
 TBF{NEW}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
@@ -2472,7 +2480,7 @@ UL_ACK_TBF{NONE}: Allocated
 PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NEW), 1 TBFs, USFs = 01, TFIs = 00000001.
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NEW) Setting Control TS 7
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NEW) Allocated: trx = 0, ul_slots = 80, dl_slots = 00
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) Attaching UL TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NEW)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Attaching UL TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NEW)
 TBF(UL-TFI_0){NEW}: Received Event ASSIGN_ADD_PACCH
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
 TBF(UL-TFI_0){NEW}: state_chg to ASSIGN
@@ -2497,6 +2505,32 @@ UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: Received Event RX_ASS_CTRL_ACK
 UL_ASS_TBF(UL-TFI_0){WAIT_ACK}: state_chg to NONE
 TBF(UL-TFI_0){ASSIGN}: Received Event ASSIGN_ACK_PACCH
 TBF(UL-TFI_0){ASSIGN}: state_chg to FLOW
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) ********** DL-TBF starts here **********
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Allocating DL TBF
+TBF{NEW}: Allocated
+UL_ASS_TBF{NONE}: Allocated
+DL_ASS_TBF{NONE}: Allocated
+[DL] algo A <multi> (suggested TRX: 0): Alloc start
+- Skipping TS 0, because not enabled
+- Skipping TS 1, because not enabled
+- Skipping TS 2, because not enabled
+- Skipping TS 3, because not enabled
+- Skipping TS 4, because not enabled
+- Skipping TS 5, because not enabled
+- Skipping TS 6, because not enabled
+[DL] Assign downlink TS=7 TFI=0
+PDCH(bts=0,trx=0,ts=7) Attaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW), 1 TBFs, USFs = 01, TFIs = 00000001.
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) Setting Control TS 7
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) Allocated: trx = 0, ul_slots = 80, dl_slots = 80
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) [DOWNLINK] START (PACCH)
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) Send downlink assignment on PACCH, because TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) exists
+DL_ASS_TBF(UL-TFI_0){NONE}: Received Event SCHED_ASS
+DL_ASS_TBF(UL-TFI_0){NONE}: state_chg to SEND_ASS
+TBF(DL-TFI_0){NEW}: Received Event ASSIGN_ADD_PACCH
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=NEW) set ass. type PACCH [prev CCCH:0, PACCH:0]
+TBF(DL-TFI_0){NEW}: state_chg to ASSIGN
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Starting timer X2001 [assignment (PACCH)] with 2 sec. 0 microsec
 Detected FN jump! 2654340 -> 2654331 (expected 2654344)
 PDCH(bts=0,trx=0,ts=7) Got CS-1 RLC block: R=0, SI=0, TFI=0, CPS=0, RSB=0, rc=184
 PDCH(bts=0,trx=0,ts=7) FN=2654331 Rx UL DATA from unexpected TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW)
@@ -2662,16 +2696,20 @@ TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) Decoded premier TLLI=0xf1223344 of 
 Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 MS(TLLI=0xf1223344, IMSI=, TA=7, 0/0, UL) Merge MS: MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL)
 Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Merge MS: Move DL TBF: MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, DL) => MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Attaching DL TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Clearing MS object
+MS(TLLI=0xffffffff, IMSI=, TA=7, 1/0,) Destroying MS object
+TBF(UL-TFI_0){FLOW}: Received Event FIRST_UL_DATA_RECVD
+TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) Got first UL data while DL-TBF pending, killing it
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) free
 PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN), 1 TBFs, USFs = 01, TFIs = 00000001.
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
+MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0, UL) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
 ********** DL-TBF ends here **********
 TBF(DL-TFI_0){ASSIGN}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
-MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Clearing MS object
-MS(TLLI=0xffffffff, IMSI=, TA=7, 1/0,) Destroying MS object
-TBF(UL-TFI_0){FLOW}: Received Event FIRST_UL_DATA_RECVD
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Assembling frames: (len=20)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Frame 1 starts at offset 4, length=16, is_complete=1
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) complete UL frame len=16

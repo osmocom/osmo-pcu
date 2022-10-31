@@ -191,7 +191,6 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 		  const uint16_t delay_csec,
 		  const uint8_t *data, const uint16_t len)
 {
-	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 	int rc;
 	GprsMs *ms, *ms_old;
 
@@ -208,20 +207,8 @@ int dl_tbf_handle(struct gprs_rlcmac_bts *bts,
 			LOGP(DTBF, LOGL_NOTICE,
 			     "There is a new MS object for the same MS: (0x%08x, '%s') -> (0x%08x, '%s')\n",
 			     ms_tlli(ms_old), ms_imsi(ms_old), ms_tlli(ms), ms_imsi(ms));
-
-			ms_ref(ms_old);
-
-			if (!ms_dl_tbf(ms) && ms_dl_tbf(ms_old)) {
-				LOGP(DTBF, LOGL_NOTICE,
-				     "IMSI %s, old TBF %s: moving DL TBF to new MS object\n",
-				     imsi ? : "unknown", ms_dl_tbf(ms_old)->name());
-				dl_tbf = ms_dl_tbf(ms_old);
-				/* Move the DL TBF to the new MS */
-				dl_tbf->set_ms(ms);
-			}
 			ms_merge_and_clear_ms(ms, ms_old);
-
-			ms_unref(ms_old);
+			/* old_ms may no longer be available here */
 		}
 	}
 

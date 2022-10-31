@@ -657,6 +657,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 
 	if (request->ID.UnionType) {
 		struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
+		struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
 		uint32_t tlli = request->ID.u.TLLI;
 
 		GprsMs *ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
@@ -693,8 +694,17 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				tbf_free(ul_tbf);
 				ul_tbf = NULL;
 			}
-			/* MS seized the PDCH answering on the SBA: */
-			bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_CONTENTION_RESOLUTION_SUCCESS);
+			/* Similarly, it is for sure not using any DL-TBF. We
+			* still may have some because we were trying to assign a
+			* DL-TBF over CCCH when the MS proactively requested for a
+			* UL-TBF. In that case we'll need to re-assigna new DL-TBF through PACCH when contention resolution is done: */
+			if ((dl_tbf = ms_dl_tbf(ms))) {
+				/* Get rid of previous finished UL TBF before providing a new one */
+				LOGPTBFDL(dl_tbf, LOGL_NOTICE,
+					  "Got PACKET RESOURCE REQ while DL-TBF pending, killing it\n");
+				tbf_free(dl_tbf);
+				dl_tbf = NULL;
+			}
 			break;
 		case PDCH_ULC_NODE_TBF_POLL:
 			if (item->tbf_poll.poll_tbf->direction != GPRS_RLCMAC_UL_TBF) {
