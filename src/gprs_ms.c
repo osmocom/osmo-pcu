@@ -527,6 +527,7 @@ void ms_set_imsi(struct GprsMs *ms, const char *imsi)
 		       imsi, ms_tlli(old_ms));
 
 		ms_merge_and_clear_ms(ms, old_ms);
+		/* old_ms may no longer be available here */
 	}
 
 
