@@ -2655,6 +2655,7 @@ TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) Got CS-1 RLC data block: CV=0, BSN=
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) BSN 0 storing in window (0..63)
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) data_length=20, data=f1 22 33 44 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
 TBF(TFI=0 TLLI=0xffffffff DIR=UL STATE=FLOW) Decoded premier TLLI=0xf1223344 of UL DATA TFI=0.
+Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN) free
 PDCH(bts=0,trx=0,ts=7) Detaching TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN), 1 TBFs, USFs = 01, TFIs = 00000001.
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0xf1223344 DIR=DL STATE=ASSIGN)
@@ -2662,10 +2663,9 @@ MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Detaching TBF: TBF(TFI=0 TLLI=0
 TBF(DL-TFI_0){ASSIGN}: Deallocated
 UL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
 DL_ASS_TBF(DL-TFI_0){NONE}: Deallocated
-Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 1
+Modifying MS object, TLLI = 0xf1223344, MS class 0 -> 1
 MS(TLLI=0xf1223344, IMSI=0011223344, TA=7, 1/0,) Clearing MS object
 MS(TLLI=0xffffffff, IMSI=, TA=7, 1/0,) Destroying MS object
-Modifying MS object, UL TLLI: 0xffffffff -> 0xf1223344, not yet confirmed
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Assembling frames: (len=20)
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) Frame 1 starts at offset 4, length=16, is_complete=1
 TBF(TFI=0 TLLI=0xf1223344 DIR=UL STATE=FLOW) complete UL frame len=16
