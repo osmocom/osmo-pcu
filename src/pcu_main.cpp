@@ -237,6 +237,7 @@ int main(int argc, char *argv[])
 
 	pcu->pcu_sock_path = talloc_strdup(tall_pcu_ctx, PCU_SOCK_DEFAULT);
 
+	osmo_fsm_log_addr(false);
 	msgb_talloc_ctx_init(tall_pcu_ctx, 0);
 
 	osmo_stats_init(tall_pcu_ctx);
