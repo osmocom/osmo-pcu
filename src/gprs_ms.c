@@ -1021,13 +1021,22 @@ const char *ms_name(const struct GprsMs *ms)
 
 char *ms_name_buf(const struct GprsMs *ms, char *buf, unsigned int buf_size)
 {
-	snprintf(buf, buf_size - 1,
-		"MS(TLLI=0x%08x, IMSI=%s, TA=%" PRIu8 ", %" PRIu8 "/%" PRIu8 ",%s%s)",
-		ms_tlli(ms), ms_imsi(ms), ms_ta(ms),
-		ms_ms_class(ms), ms_egprs_ms_class(ms),
-		ms_ul_tbf(ms) ? " UL" : "",
-		ms_dl_tbf(ms) ? " DL" : "");
-	buf[buf_size - 1] = '\0';
+	struct osmo_strbuf sb = { .buf = buf, .len = buf_size };
+	uint32_t tlli = ms_tlli(ms);
+
+	OSMO_STRBUF_PRINTF(sb, "MS(");
+	if (ms_imsi_is_valid(ms))
+		OSMO_STRBUF_PRINTF(sb, "IMSI-%s:", ms_imsi(ms));
+	if (tlli != GSM_RESERVED_TMSI)
+		OSMO_STRBUF_PRINTF(sb, "TLLI-0x%08x:", tlli);
+	OSMO_STRBUF_PRINTF(sb, "TA-%" PRIu8 ":MSCLS-%" PRIu8 "-%" PRIu8,
+			   ms_ta(ms), ms_ms_class(ms), ms_egprs_ms_class(ms));
+	if (ms->ul_tbf)
+		OSMO_STRBUF_PRINTF(sb, ":UL");
+	if (ms->dl_tbf)
+		OSMO_STRBUF_PRINTF(sb, ":DL");
+
+	OSMO_STRBUF_PRINTF(sb, ")");
 	return buf;
 }
 

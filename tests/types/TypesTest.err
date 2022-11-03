@@ -1,17 +1,17 @@
-MS(TLLI=0xffffffff, IMSI=, TA=220, 1/0,) Allocating DL TBF
+MS(TA-220:MSCLS-1-0) Allocating DL TBF
 TBF{NEW}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
 TBF(DL:TFI-0-0-0:STATE-NEW:GPRS) Setting Control TS 2
 TBF(DL:TFI-0-0-0:STATE-NEW:GPRS) Allocated: trx = 0, ul_slots = 04, dl_slots = 04
-MS(TLLI=0xffffffff, IMSI=, TA=220, 1/0,) Allocating UL TBF
+MS(TA-220:MSCLS-1-0) Allocating UL TBF
 TBF{NEW}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
 UL_ACK_TBF{NONE}: Allocated
 TBF(UL:TFI-0-0-0:STATE-NEW:GPRS) Setting Control TS 4
 TBF(UL:TFI-0-0-0:STATE-NEW:GPRS) Allocated: trx = 0, ul_slots = 10, dl_slots = 00
-MS(TLLI=0xffffffff, IMSI=, TA=220, 1/1,) Allocating UL TBF
+MS(TA-220:MSCLS-1-1) Allocating UL TBF
 TBF{NEW}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated
@@ -20,7 +20,7 @@ TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS) Setting Control TS 1
 TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS) Allocated: trx = 0, ul_slots = 02, dl_slots = 00
 TBF(UL:TFI-0-0-0:STATE-NEW:EGPRS) setting EGPRS UL window size to 64, base(64) slots(1) ws_pdch(0)
 ############## test_egprs_ul_ack_nack
-MS(TLLI=0xffffffff, IMSI=, TA=220, 1/1,) Allocating UL TBF
+MS(TA-220:MSCLS-1-1) Allocating UL TBF
 TBF{NEW}: Allocated
 UL_ASS_TBF{NONE}: Allocated
 DL_ASS_TBF{NONE}: Allocated

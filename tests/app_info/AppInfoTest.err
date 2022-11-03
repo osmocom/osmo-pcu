@@ -17,23 +17,23 @@ PDCH(bts=0,trx=0,ts=7) PDCH state: disabled => enabled
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 10
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 11
-MS(TLLI=0xffffffff, IMSI=, TA=220, 10/11,) Enabled EGPRS, mode EGPRS
+MS(TA-220:MSCLS-10-11) Enabled EGPRS, mode EGPRS
 [DL] algo B <multi> (suggested TRX: 0): using 4 slots
 PDCH(bts=0,trx=0,ts=4) Attaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 PDCH(bts=0,trx=0,ts=5) Attaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 PDCH(bts=0,trx=0,ts=6) Attaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
 PDCH(bts=0,trx=0,ts=7) Attaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
-MS(TLLI=0xffffffff, IMSI=, TA=220, 10/11,) Attaching DL TBF: TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS)
+MS(TA-220:MSCLS-10-11) Attaching DL TBF: TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS)
 ws(64)
 Creating MS object, TLLI = 0xffffffff
 Modifying MS object, TLLI = 0xffffffff, MS class 0 -> 12
 Modifying MS object, TLLI = 0xffffffff, EGPRS MS class 0 -> 13
-MS(TLLI=0xffffffff, IMSI=, TA=220, 12/13,) Enabled EGPRS, mode EGPRS
+MS(TA-220:MSCLS-12-13) Enabled EGPRS, mode EGPRS
 [DL] algo B <multi> (suggested TRX: 0): using 3 slots
 PDCH(bts=0,trx=0,ts=4) Attaching TBF(DL:TFI-0-0-1:STATE-NEW:EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
 PDCH(bts=0,trx=0,ts=5) Attaching TBF(DL:TFI-0-0-1:STATE-NEW:EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
 PDCH(bts=0,trx=0,ts=6) Attaching TBF(DL:TFI-0-0-1:STATE-NEW:EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
-MS(TLLI=0xffffffff, IMSI=, TA=220, 12/13,) Attaching DL TBF: TBF(DL:TFI-0-0-1:STATE-NEW:EGPRS)
+MS(TA-220:MSCLS-12-13) Attaching DL TBF: TBF(DL:TFI-0-0-1:STATE-NEW:EGPRS)
 ws(64)
 
 --- test_sched_app_info_ok ---
@@ -60,10 +60,10 @@ PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 2 TBFs, USFs
 PDCH(bts=0,trx=0,ts=5) Detaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
 PDCH(bts=0,trx=0,ts=6) Detaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 2 TBFs, USFs = 00, TFIs = 00000003.
 PDCH(bts=0,trx=0,ts=7) Detaching TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000001.
-MS(TLLI=0xffffffff, IMSI=, TA=220, 10/11,) Detaching TBF: TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS)
+MS(TA-220:MSCLS-10-11) Detaching TBF: TBF(DL:TFI-0-0-0:STATE-NEW:EGPRS)
 PDCH(bts=0,trx=0,ts=4) Detaching TBF(DL:TFI-0-0-1:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000002.
 PDCH(bts=0,trx=0,ts=5) Detaching TBF(DL:TFI-0-0-1:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000002.
 PDCH(bts=0,trx=0,ts=6) Detaching TBF(DL:TFI-0-0-1:STATE-NEW:EGPRS), 1 TBFs, USFs = 00, TFIs = 00000002.
-MS(TLLI=0xffffffff, IMSI=, TA=220, 12/13,) Detaching TBF: TBF(DL:TFI-0-0-1:STATE-NEW:EGPRS)
-MS(TLLI=0xffffffff, IMSI=, TA=220, 12/13,) Destroying MS object
-MS(TLLI=0xffffffff, IMSI=, TA=220, 10/11,) Destroying MS object
+MS(TA-220:MSCLS-12-13) Detaching TBF: TBF(DL:TFI-0-0-1:STATE-NEW:EGPRS)
+MS(TA-220:MSCLS-12-13) Destroying MS object
+MS(TA-220:MSCLS-10-11) Destroying MS object
