@@ -173,7 +173,7 @@ struct gprs_rlcmac_tbf {
 	bool check_n_clear(uint8_t state_flag);
 	const char *state_name() const;
 
-	const char *name() const;
+	const char *name(bool enclousure = true) const;
 
 	struct msgb *create_dl_ass(uint32_t fn, uint8_t ts);
 
@@ -276,7 +276,7 @@ private:
 	bool m_egprs_enabled;
 	struct osmo_timer_list Tarr[T_MAX];
 	uint8_t Narr[N_MAX];
-	mutable char m_name_buf[60];
+	mutable char m_name_buf[128];
 };
 
 inline bool gprs_rlcmac_tbf::state_is(enum tbf_fsm_states rhs) const

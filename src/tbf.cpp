@@ -670,28 +670,35 @@ const char *tbf_name(const gprs_rlcmac_tbf *tbf)
 	return tbf ? tbf->name() : "(no TBF)";
 }
 
-const char *gprs_rlcmac_tbf::name() const
+const char *gprs_rlcmac_tbf::name(bool enclousure) const
 {
-	int8_t tfi = (m_tfi == TBF_TS_UNSET) ? -1 : m_tfi;
-	snprintf(m_name_buf, sizeof(m_name_buf) - 1,
-		"TBF(TFI=%d TLLI=0x%08x DIR=%s STATE=%s%s)",
-		tfi, tlli(),
-		direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
-		state_name(),
-		is_egprs_enabled() ? " EGPRS" : ""
-		);
-	m_name_buf[sizeof(m_name_buf) - 1] = '\0';
+	struct osmo_strbuf sb = { .buf = m_name_buf, .len = sizeof(m_name_buf) };
+
+	if (enclousure)
+		OSMO_STRBUF_PRINTF(sb, "TBF(");
+	OSMO_STRBUF_PRINTF(sb, "%s", direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL");
+	if (this->trx) { /* This may not be available during TBF alloc func time */
+		int8_t tfi = (m_tfi == TBF_TS_UNSET) ? -1 : m_tfi;
+		OSMO_STRBUF_PRINTF(sb, ":TFI-%u-%u-%d",
+				   this->trx->bts->nr, this->trx->trx_no, tfi);
+	}
+	OSMO_STRBUF_PRINTF(sb, ":STATE-%s:%sGPRS",
+			   state_name(), is_egprs_enabled() ? "E" : "");
+	if (m_ms) {
+		uint32_t tlli = ms_tlli(m_ms);
+		if (ms_imsi_is_valid(m_ms))
+			OSMO_STRBUF_PRINTF(sb, ":IMSI-%s", ms_imsi(m_ms));
+		if (tlli != GSM_RESERVED_TMSI)
+			OSMO_STRBUF_PRINTF(sb, ":TLLI-0x%08x", tlli);
+	}
+	if (enclousure)
+		OSMO_STRBUF_PRINTF(sb, ")");
 	return m_name_buf;
 }
 
 void tbf_update_state_fsm_name(struct gprs_rlcmac_tbf *tbf)
 {
-	char buf[64];
-	int8_t tfi = (tbf_tfi(tbf) == TBF_TS_UNSET) ? -1 : tbf_tfi(tbf);
-	snprintf(buf, sizeof(buf), "%s-TFI_%d",
-		 tbf_direction(tbf) == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
-		 tfi);
-	osmo_identifier_sanitize_buf(buf, NULL, '_');
+	const char *buf = tbf->name(false);
 
 	osmo_fsm_inst_update_id(tbf->state_fsm.fi, buf);
 	osmo_fsm_inst_update_id(tbf->ul_ass_fsm.fi, buf);

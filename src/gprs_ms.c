@@ -473,6 +473,20 @@ void ms_merge_and_clear_ms(struct GprsMs *ms, struct GprsMs *old_ms)
 	ms_unref(old_ms);
 }
 
+/* Apply changes to the TLLI directly, used interally by functions below: */
+static void ms_apply_tlli_change(struct GprsMs *ms, uint32_t tlli)
+{
+	ms->tlli = tlli;
+	ms->new_dl_tlli = GSM_RESERVED_TMSI;
+	ms->new_ul_tlli = GSM_RESERVED_TMSI;
+
+	/* Update TBF FSM names: */
+	if (ms->ul_tbf)
+		tbf_update_state_fsm_name(ul_tbf_as_tbf(ms->ul_tbf));
+	if (ms->dl_tbf)
+		tbf_update_state_fsm_name(dl_tbf_as_tbf(ms->dl_tbf));
+}
+
 /* Set/update the MS object TLLI based on knowledge gained from the MS side (Uplink direction) */
 void ms_set_tlli(struct GprsMs *ms, uint32_t tlli)
 {
@@ -493,9 +507,7 @@ void ms_set_tlli(struct GprsMs *ms, uint32_t tlli)
 		"already confirmed partly\n",
 		ms->tlli, tlli);
 
-	ms->tlli = tlli;
-	ms->new_dl_tlli = GSM_RESERVED_TMSI;
-	ms->new_ul_tlli = GSM_RESERVED_TMSI;
+	ms_apply_tlli_change(ms, tlli);
 }
 
 /* Set/update the MS object TLLI based on knowledge gained from the SGSN side (Downlink direction) */
@@ -520,9 +532,7 @@ bool ms_confirm_tlli(struct GprsMs *ms, uint32_t tlli)
 	LOGP(DRLCMAC, LOGL_INFO,
 		"Modifying MS object, TLLI: 0x%08x confirmed\n", tlli);
 
-	ms->tlli = tlli;
-	ms->new_dl_tlli = GSM_RESERVED_TMSI;
-	ms->new_ul_tlli = GSM_RESERVED_TMSI;
+	ms_apply_tlli_change(ms, tlli);
 
 	return true;
 }
@@ -565,8 +575,14 @@ void ms_set_imsi(struct GprsMs *ms, const char *imsi)
 		/* old_ms may no longer be available here */
 	}
 
-
+	/* Store the new IMSI: */
 	osmo_strlcpy(ms->imsi, imsi, sizeof(ms->imsi));
+
+	/* Update TBF FSM names: */
+	if (ms->ul_tbf)
+		tbf_update_state_fsm_name(ul_tbf_as_tbf(ms->ul_tbf));
+	if (ms->dl_tbf)
+		tbf_update_state_fsm_name(dl_tbf_as_tbf(ms->dl_tbf));
 }
 
 uint16_t ms_paging_group(struct GprsMs *ms)
