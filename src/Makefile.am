@@ -33,7 +33,7 @@ if ENABLE_OC2GBTS_PHY
 AM_CPPFLAGS += -DENABLE_DIRECT_PHY
 endif
 
-AM_CXXFLAGS = -Wall -ldl -pthread
+AM_CXXFLAGS = -Wall
 AM_LDFLAGS = -lrt
 
 noinst_LTLIBRARIES = libgprs.la
