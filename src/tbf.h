@@ -170,7 +170,6 @@ struct gprs_rlcmac_tbf {
 	bool ul_ass_state_is(enum tbf_ul_ass_fsm_states rhs) const;
 	void poll_sched_set(const char *file, int line);
 	void poll_sched_unset(const char *file, int line);
-	bool check_n_clear(uint8_t state_flag);
 	const char *state_name() const;
 
 	const char *name(bool enclousure = true) const;
@@ -304,16 +303,6 @@ inline bool gprs_rlcmac_tbf::state_is_not(enum tbf_fsm_states rhs) const
 inline const char *gprs_rlcmac_tbf::state_name() const
 {
 	return osmo_fsm_inst_state_name(state_fi);
-}
-
-inline bool gprs_rlcmac_tbf::check_n_clear(uint8_t state_flag)
-{
-	if ((state_fsm.state_flags & (1 << state_flag))) {
-		state_fsm.state_flags &= ~(1 << state_flag);
-		return true;
-	}
-
-	return false;
 }
 
 inline GprsMs *gprs_rlcmac_tbf::ms() const
