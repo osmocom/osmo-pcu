@@ -21,6 +21,14 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <tbf_fsm.h>
+#ifdef __cplusplus
+}
+#endif
+
 /*
  * TBF instance
  */
@@ -77,6 +85,8 @@ struct gprs_rlcmac_dl_tbf : public gprs_rlcmac_tbf {
 
 	struct rate_ctr_group *m_dl_gprs_ctrs;
 	struct rate_ctr_group *m_dl_egprs_ctrs;
+
+	struct tbf_dl_fsm_ctx state_fsm;
 
 protected:
 	struct ana_result {

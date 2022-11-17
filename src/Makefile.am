@@ -62,9 +62,11 @@ libgprs_la_SOURCES = \
 	tbf.cpp \
 	tbf_fsm.c \
 	tbf_ul.cpp \
+	tbf_ul_fsm.c \
 	tbf_ul_ack_fsm.c \
 	tbf_ul_ass_fsm.c \
 	tbf_dl.cpp \
+	tbf_dl_fsm.c \
 	tbf_dl_ass_fsm.c \
 	bts.cpp \
 	bts_pch_timer.c \

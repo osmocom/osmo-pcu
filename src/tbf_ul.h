@@ -24,6 +24,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include <tbf_fsm.h>
 #include <tbf_ul_ack_fsm.h>
 #ifdef __cplusplus
 }
@@ -103,6 +104,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	struct rate_ctr_group *m_ul_gprs_ctrs;
 	struct rate_ctr_group *m_ul_egprs_ctrs;
 
+	struct tbf_ul_fsm_ctx state_fsm;
 	struct tbf_ul_ass_fsm_ctx ul_ack_fsm;
 
 protected:

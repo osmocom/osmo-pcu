@@ -180,6 +180,10 @@ gprs_rlcmac_dl_tbf::gprs_rlcmac_dl_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms)
 	m_dl_gprs_ctrs(NULL),
 	m_dl_egprs_ctrs(NULL)
 {
+	memset(&state_fsm, 0, sizeof(state_fsm));
+	state_fsm.tbf = (struct gprs_rlcmac_tbf *)this;
+	state_fi = osmo_fsm_inst_alloc(&tbf_dl_fsm, this, &state_fsm, LOGL_INFO, NULL);
+	OSMO_ASSERT(state_fi);
 }
 
 /**

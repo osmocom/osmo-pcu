@@ -201,10 +201,14 @@ gprs_rlcmac_ul_tbf::gprs_rlcmac_ul_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms)
 {
 	memset(&m_usf, USF_INVALID, sizeof(m_usf));
 
+	memset(&state_fsm, 0, sizeof(state_fsm));
+	state_fsm.tbf = (struct gprs_rlcmac_tbf *)this;
+	state_fi = osmo_fsm_inst_alloc(&tbf_ul_fsm, this, &state_fsm, LOGL_INFO, NULL);
+	OSMO_ASSERT(state_fi);
+
 	memset(&ul_ack_fsm, 0, sizeof(ul_ack_fsm));
 	ul_ack_fsm.tbf = this;
 	ul_ack_fsm.fi = osmo_fsm_inst_alloc(&tbf_ul_ack_fsm, this, &ul_ack_fsm, LOGL_INFO, NULL);
-
 }
 
 /*

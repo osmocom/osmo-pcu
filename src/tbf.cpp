@@ -115,11 +115,6 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 	memset(&m_trx_list, 0, sizeof(m_trx_list));
 	m_trx_list.entry = this;
 
-	memset(&state_fsm, 0, sizeof(state_fsm));
-	state_fsm.tbf = this;
-	state_fi = osmo_fsm_inst_alloc(&tbf_fsm, this, &state_fsm, LOGL_INFO, NULL);
-	OSMO_ASSERT(state_fi);
-
 	memset(&ul_ass_fsm, 0, sizeof(ul_ass_fsm));
 	ul_ass_fsm.tbf = this;
 	ul_ass_fsm.fi = osmo_fsm_inst_alloc(&tbf_ul_ass_fsm, this, &ul_ass_fsm, LOGL_INFO, NULL);
@@ -912,18 +907,23 @@ const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf)
 	struct osmo_strbuf sb = { .buf = buf, .len = sizeof(buf) };
 
 	OSMO_STRBUF_PRINTF(sb, "|");
-	if (tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
-		OSMO_STRBUF_PRINTF(sb, "Assignment was on CCCH|");
-	if (tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))
-		OSMO_STRBUF_PRINTF(sb, "Assignment was on PACCH|");
 	if (tbf->direction == GPRS_RLCMAC_UL_TBF) {
-		const struct gprs_rlcmac_ul_tbf *ul_tbf = static_cast<const gprs_rlcmac_ul_tbf *>(tbf);
+		const struct gprs_rlcmac_ul_tbf *ul_tbf = tbf_as_ul_tbf_const(tbf);
+		if (ul_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
+			OSMO_STRBUF_PRINTF(sb, "Assignment was on CCCH|");
+		if (ul_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))
+			OSMO_STRBUF_PRINTF(sb, "Assignment was on PACCH|");
 		if (ul_tbf->m_rx_counter)
 			OSMO_STRBUF_PRINTF(sb, "Uplink data was received|");
 		else
 			OSMO_STRBUF_PRINTF(sb, "No uplink data received yet|");
 	} else {
-		if (tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))
+		const struct gprs_rlcmac_dl_tbf *dl_tbf = tbf_as_dl_tbf_const(tbf);
+		if (dl_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
+			OSMO_STRBUF_PRINTF(sb, "Assignment was on CCCH|");
+		if (dl_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH))
+			OSMO_STRBUF_PRINTF(sb, "Assignment was on PACCH|");
+		if (dl_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))
 			OSMO_STRBUF_PRINTF(sb, "Downlink ACK was received|");
 		else
 			OSMO_STRBUF_PRINTF(sb, "No downlink ACK received yet|");

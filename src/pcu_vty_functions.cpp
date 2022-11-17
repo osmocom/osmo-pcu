@@ -40,10 +40,20 @@ extern "C" {
 	#include "coding_scheme.h"
 }
 
+static uint32_t tbf_state_flags(const struct gprs_rlcmac_tbf *tbf)
+{
+	const struct gprs_rlcmac_ul_tbf *ul_tbf = tbf_as_ul_tbf_const(tbf);
+	const struct gprs_rlcmac_dl_tbf *dl_tbf = tbf_as_dl_tbf_const(tbf);
+	if (ul_tbf)
+		return ul_tbf->state_fsm.state_flags;
+	return dl_tbf->state_fsm.state_flags;
+}
+
 static void tbf_print_vty_info(struct vty *vty, struct gprs_rlcmac_tbf *tbf)
 {
 	gprs_rlcmac_ul_tbf *ul_tbf = tbf_as_ul_tbf(tbf);
 	gprs_rlcmac_dl_tbf *dl_tbf = tbf_as_dl_tbf(tbf);
+	uint32_t state_flags = tbf_state_flags(tbf);
 
 	vty_out(vty, "TBF: TFI=%d TLLI=0x%08x (%s) TA=%u DIR=%s IMSI=%s%s", tbf->tfi(),
 		tbf->tlli(), tbf->is_tlli_valid() ? "valid" : "invalid",
@@ -52,9 +62,9 @@ static void tbf_print_vty_info(struct vty *vty, struct gprs_rlcmac_tbf *tbf)
 		tbf->imsi(), VTY_NEWLINE);
 	vty_out(vty, " created=%lu state=%s flags=%08x [CCCH:%u, PACCH:%u] 1st_TS=%d 1st_cTS=%d ctrl_TS=%d MS_CLASS=%d/%d%s",
 		tbf->created_ts(), tbf->state_name(),
-		tbf->state_fsm.state_flags,
-		tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH),
-		tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH),
+		state_flags,
+		state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH),
+		state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH),
 		tbf->first_ts,
 		tbf->first_common_ts, tbf->control_ts,
 		tbf->ms_class(),
@@ -101,6 +111,8 @@ int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts, uint32_t 
 	struct llist_item *iter;
 	const struct gprs_rlcmac_trx *trx;
 	struct gprs_rlcmac_tbf *tbf;
+	const struct gprs_rlcmac_ul_tbf *ul_tbf;
+	const struct gprs_rlcmac_dl_tbf *dl_tbf;
 	size_t trx_no;
 
 	vty_out(vty, "UL TBFs%s", VTY_NEWLINE);
@@ -108,7 +120,8 @@ int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts, uint32_t 
 		trx = &bts->trx[trx_no];
 		llist_for_each_entry(iter, &trx->ul_tbfs, list) {
 			tbf = (struct gprs_rlcmac_tbf *)iter->entry;
-			if (tbf->state_fsm.state_flags & flags)
+			ul_tbf = tbf_as_ul_tbf_const(tbf);
+			if (ul_tbf->state_fsm.state_flags & flags)
 				tbf_print_vty_info(vty, tbf);
 		}
 	}
@@ -118,7 +131,8 @@ int pcu_vty_show_tbf_all(struct vty *vty, struct gprs_rlcmac_bts *bts, uint32_t 
 		trx = &bts->trx[trx_no];
 		llist_for_each_entry(iter, &trx->dl_tbfs, list) {
 			tbf = (struct gprs_rlcmac_tbf *)iter->entry;
-			if (tbf->state_fsm.state_flags & flags)
+			dl_tbf = tbf_as_dl_tbf_const(tbf);
+			if (dl_tbf->state_fsm.state_flags & flags)
 				tbf_print_vty_info(vty, tbf);
 		}
 	}

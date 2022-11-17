@@ -256,7 +256,6 @@ struct gprs_rlcmac_tbf {
 
 	struct rate_ctr_group *m_ctrs;
 	struct osmo_fsm_inst *state_fi;
-	struct tbf_fsm_ctx state_fsm;
 	struct tbf_ul_ass_fsm_ctx ul_ass_fsm;
 	struct tbf_ul_ass_fsm_ctx dl_ass_fsm;
 
