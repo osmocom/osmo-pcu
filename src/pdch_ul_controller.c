@@ -157,7 +157,7 @@ int pdch_ulc_get_next_free_rrbp_fn(struct pdch_ulc *ulc, uint32_t fn, uint32_t *
 }
 
 /* Get next free (unreserved) FN which is not located in time before "start_fn" */
-uint32_t pdch_ulc_get_next_free_fn(struct pdch_ulc *ulc, uint32_t start_fn)
+uint32_t pdch_ulc_get_next_free_fn(const struct pdch_ulc *ulc, uint32_t start_fn)
 {
 	struct rb_node *node;
 	struct pdch_ulc_node *it;
