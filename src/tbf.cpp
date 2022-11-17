@@ -851,7 +851,19 @@ uint8_t tbf_ul_slots(const struct gprs_rlcmac_tbf *tbf)
 
 bool tbf_is_tfi_assigned(const struct gprs_rlcmac_tbf *tbf)
 {
-	return tbf->is_tfi_assigned();
+	const struct gprs_rlcmac_dl_tbf *dl_tbf;
+
+	/* The TBF is established: */
+	if (tbf->state_fi->state > TBF_ST_ASSIGN)
+		return true;
+
+	/* The DL TBF has been assigned by a IMM.ASS: */
+	dl_tbf = tbf_as_dl_tbf_const(tbf);
+	if (tbf->state_fi->state == TBF_ST_ASSIGN && dl_tbf &&
+	    (dl_tbf->state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)))
+		return true;
+
+	return false;
 }
 
 uint8_t tbf_tfi(const struct gprs_rlcmac_tbf *tbf)

@@ -57,7 +57,7 @@ static void get_ctrl_msg_tbf_candidates(const struct gprs_rlcmac_pdch *pdch,
 		if (tbf_ul_ass_rts(ul_tbf))
 			tbf_cand->ul_ass = ul_tbf;
 		/* NACC ready to send. TFI assigned is needed to send messages */
-		if (ul_tbf->is_tfi_assigned() && ms_nacc_rts(ul_tbf->ms()))
+		if (tbf_is_tfi_assigned(ul_tbf) && ms_nacc_rts(ul_tbf->ms()))
 			tbf_cand->nacc = ul_tbf;
 /* FIXME: Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all
 states? */
@@ -73,7 +73,7 @@ states? */
 		if (tbf_ul_ass_rts(dl_tbf))
 			tbf_cand->ul_ass = dl_tbf;
 		/* NACC ready to send. TFI assigned is needed to send messages */
-		if (dl_tbf->is_tfi_assigned() && ms_nacc_rts(dl_tbf->ms()))
+		if (tbf_is_tfi_assigned(dl_tbf) && ms_nacc_rts(dl_tbf->ms()))
 			tbf_cand->nacc = dl_tbf;
 	}
 }
