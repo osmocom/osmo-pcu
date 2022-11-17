@@ -1272,3 +1272,11 @@ struct gprs_rlcmac_dl_tbf *tbf_as_dl_tbf(struct gprs_rlcmac_tbf *tbf)
 	else
 		return NULL;
 }
+
+const struct gprs_rlcmac_dl_tbf *tbf_as_dl_tbf_const(const struct gprs_rlcmac_tbf *tbf)
+{
+	if (tbf && tbf->direction == GPRS_RLCMAC_DL_TBF)
+		return static_cast<const gprs_rlcmac_dl_tbf *>(tbf);
+	else
+		return NULL;
+}

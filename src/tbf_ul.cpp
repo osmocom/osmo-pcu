@@ -729,6 +729,14 @@ struct gprs_rlcmac_ul_tbf *tbf_as_ul_tbf(struct gprs_rlcmac_tbf *tbf)
 		return NULL;
 }
 
+const struct gprs_rlcmac_ul_tbf *tbf_as_ul_tbf_const(const struct gprs_rlcmac_tbf *tbf)
+{
+	if (tbf && tbf->direction == GPRS_RLCMAC_UL_TBF)
+		return static_cast<const gprs_rlcmac_ul_tbf *>(tbf);
+	else
+		return NULL;
+}
+
 void tbf_usf_timeout(struct gprs_rlcmac_ul_tbf *tbf)
 {
 	tbf->usf_timeout();

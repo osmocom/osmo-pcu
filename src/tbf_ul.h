@@ -136,6 +136,7 @@ struct gprs_rlcmac_ul_tbf *ul_tbf_alloc(struct gprs_rlcmac_bts *bts, struct Gprs
 void update_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, int8_t ta_delta);
 void set_tbf_ta(struct gprs_rlcmac_ul_tbf *tbf, uint8_t ta);
 struct gprs_rlcmac_ul_tbf *tbf_as_ul_tbf(struct gprs_rlcmac_tbf *tbf);
+const struct gprs_rlcmac_ul_tbf *tbf_as_ul_tbf_const(const struct gprs_rlcmac_tbf *tbf);
 void tbf_usf_timeout(struct gprs_rlcmac_ul_tbf *tbf);
 void ul_tbf_contention_resolution_start(struct gprs_rlcmac_ul_tbf *tbf);
 void ul_tbf_contention_resolution_success(struct gprs_rlcmac_ul_tbf *tbf);
