@@ -36,7 +36,6 @@ enum rrbp_field {
 
 struct pdch_ulc {
 	struct gprs_rlcmac_pdch *pdch; /* back pointer */
-	uint32_t last_fn; /* last FN rx from TDMA clock */
 	struct rb_root tree_root;
 	void *pool_ctx; /* talloc pool of struct pdch_ulc_node  */
 };
