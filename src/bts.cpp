@@ -707,7 +707,7 @@ int bts_rcv_imm_ass_cnf(struct gprs_rlcmac_bts *bts, const uint8_t *data, uint32
 	}
 
 	LOGPTBFDL(dl_tbf, LOGL_DEBUG, "FN=%u Got IMM.ASS confirm\n", fn);
-	osmo_fsm_inst_dispatch(dl_tbf->state_fsm.fi, TBF_EV_ASSIGN_PCUIF_CNF, NULL);
+	osmo_fsm_inst_dispatch(dl_tbf->state_fi, TBF_EV_ASSIGN_PCUIF_CNF, NULL);
 
 	return 0;
 }

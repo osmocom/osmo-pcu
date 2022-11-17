@@ -257,6 +257,7 @@ struct gprs_rlcmac_tbf {
 	time_t m_created_ts;
 
 	struct rate_ctr_group *m_ctrs;
+	struct osmo_fsm_inst *state_fi;
 	struct tbf_fsm_ctx state_fsm;
 	struct tbf_ul_ass_fsm_ctx ul_ass_fsm;
 	struct tbf_ul_ass_fsm_ctx dl_ass_fsm;
@@ -302,7 +303,7 @@ inline bool gprs_rlcmac_tbf::state_is_not(enum tbf_fsm_states rhs) const
 
 inline const char *gprs_rlcmac_tbf::state_name() const
 {
-	return osmo_fsm_inst_state_name(state_fsm.fi);
+	return osmo_fsm_inst_state_name(state_fi);
 }
 
 inline bool gprs_rlcmac_tbf::check_n_clear(uint8_t state_flag)
@@ -329,9 +330,9 @@ inline bool gprs_rlcmac_tbf::is_tfi_assigned() const
 {
 	/* The TBF is established or has been assigned by a IMM.ASS for
 	 * download */
-	return state_fsm.fi->state > TBF_ST_ASSIGN ||
+	return state_fi->state > TBF_ST_ASSIGN ||
 		(direction == GPRS_RLCMAC_DL_TBF &&
-		 state_fsm.fi->state == TBF_ST_ASSIGN &&
+		 state_fi->state == TBF_ST_ASSIGN &&
 		 (state_fsm.state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)));
 }
 

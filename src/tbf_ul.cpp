@@ -186,7 +186,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 	ms_attach_tbf(ms, ul_tbf);
 	llist_add(tbf_trx_list((struct gprs_rlcmac_tbf *)ul_tbf), &trx->ul_tbfs);
 	bts_do_rate_ctr_inc(ul_tbf->bts, CTR_TBF_UL_ALLOCATED);
-	osmo_fsm_inst_dispatch(ul_tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
+	osmo_fsm_inst_dispatch(ul_tbf->state_fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
 	osmo_fsm_inst_dispatch(ul_tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_SCHED_ASS_REJ, NULL);
 
 	return ul_tbf;
@@ -402,7 +402,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 					  "Decoded premier TLLI=0x%08x of UL DATA TFI=%d.\n",
 					  new_tlli, rlc->tfi);
 				ms_update_announced_tlli(ms(), new_tlli);
-				osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_FIRST_UL_DATA_RECVD, NULL);
+				osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_FIRST_UL_DATA_RECVD, NULL);
 			} else if (new_tlli != GSM_RESERVED_TMSI && new_tlli != tlli()) {
 				LOGPTBFUL(this, LOGL_NOTICE,
 					  "Decoded TLLI=%08x mismatch on UL DATA TFI=%d. (Ignoring due to contention resolution)\n",
@@ -444,7 +444,7 @@ int gprs_rlcmac_ul_tbf::rcv_data_block_acknowledged(
 			  rdbi->bsn, rdbi->cv);
 		if (rdbi->cv == 0) {
 			LOGPTBFUL(this, LOGL_DEBUG, "Finished with UL TBF\n");
-			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_LAST_UL_DATA_RECVD, NULL);
+			osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_LAST_UL_DATA_RECVD, NULL);
 			/* Reset N3103 counter. */
 			this->n_reset(N3103);
 		}
@@ -718,7 +718,7 @@ gprs_rlc_window *gprs_rlcmac_ul_tbf::window()
 void gprs_rlcmac_ul_tbf::usf_timeout()
 {
 	if (n_inc(N3101))
-		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3101, NULL);
+		osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_MAX_N3101, NULL);
 }
 
 struct gprs_rlcmac_ul_tbf *tbf_as_ul_tbf(struct gprs_rlcmac_tbf *tbf)

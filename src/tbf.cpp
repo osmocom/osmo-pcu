@@ -117,8 +117,8 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 
 	memset(&state_fsm, 0, sizeof(state_fsm));
 	state_fsm.tbf = this;
-	state_fsm.fi = osmo_fsm_inst_alloc(&tbf_fsm, this, &state_fsm, LOGL_INFO, NULL);
-	OSMO_ASSERT(state_fsm.fi);
+	state_fi = osmo_fsm_inst_alloc(&tbf_fsm, this, &state_fsm, LOGL_INFO, NULL);
+	OSMO_ASSERT(state_fi);
 
 	memset(&ul_ass_fsm, 0, sizeof(ul_ass_fsm));
 	ul_ass_fsm.tbf = this;
@@ -140,8 +140,8 @@ gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_
 
 gprs_rlcmac_tbf::~gprs_rlcmac_tbf()
 {
-	osmo_fsm_inst_free(state_fsm.fi);
-	state_fsm.fi = NULL;
+	osmo_fsm_inst_free(state_fi);
+	state_fi = NULL;
 
 	osmo_fsm_inst_free(ul_ass_fsm.fi);
 	ul_ass_fsm.fi = NULL;
@@ -538,7 +538,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		if (state_is(TBF_ST_FINISHED)) {
 			if (ul_tbf->n_inc(N3103)) {
 				bts_do_rate_ctr_inc(bts, CTR_PUAN_POLL_FAILED);
-				osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3103, NULL);
+				osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_MAX_N3103, NULL);
 				return;
 			}
 		}
@@ -555,7 +555,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {
-			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3105, NULL);
+			osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_MAX_N3105, NULL);
 			bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_FAILED);
 			bts_do_rate_ctr_inc(bts, CTR_PUA_POLL_FAILED);
 			return;
@@ -574,7 +574,7 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 		bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_TIMEDOUT);
 		bts_do_rate_ctr_inc(bts, CTR_PDA_POLL_TIMEDOUT);
 		if (n_inc(N3105)) {
-			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3105, NULL);
+			osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_MAX_N3105, NULL);
 			bts_do_rate_ctr_inc(bts, CTR_RLC_ASS_FAILED);
 			bts_do_rate_ctr_inc(bts, CTR_PDA_POLL_FAILED);
 			return;
@@ -610,13 +610,13 @@ void gprs_rlcmac_tbf::poll_timeout(struct gprs_rlcmac_pdch *pdch, uint32_t poll_
 			bts_do_rate_ctr_inc(bts, CTR_PDAN_POLL_TIMEDOUT);
 		}
 		if (dl_tbf->n_inc(N3105)) {
-			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_MAX_N3105, NULL);
+			osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_MAX_N3105, NULL);
 			bts_do_rate_ctr_inc(bts, CTR_PDAN_POLL_FAILED);
 			bts_do_rate_ctr_inc(bts, CTR_RLC_ACK_FAILED);
 			return;
 		}
 		/* resend IMM.ASS on CCCH on timeout */
-		osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_DL_ACKNACK_MISS, NULL);
+		osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_DL_ACKNACK_MISS, NULL);
 		break;
 
 	default:
@@ -700,7 +700,7 @@ void tbf_update_state_fsm_name(struct gprs_rlcmac_tbf *tbf)
 {
 	const char *buf = tbf->name(false);
 
-	osmo_fsm_inst_update_id(tbf->state_fsm.fi, buf);
+	osmo_fsm_inst_update_id(tbf->state_fi, buf);
 	osmo_fsm_inst_update_id(tbf->ul_ass_fsm.fi, buf);
 	osmo_fsm_inst_update_id(tbf->dl_ass_fsm.fi, buf);
 
@@ -782,12 +782,12 @@ void gprs_rlcmac_tbf::enable_egprs()
 /* C API */
 enum tbf_fsm_states tbf_state(const struct gprs_rlcmac_tbf *tbf)
 {
-	return (enum tbf_fsm_states)tbf->state_fsm.fi->state;
+	return (enum tbf_fsm_states)tbf->state_fi->state;
 }
 
 struct osmo_fsm_inst *tbf_state_fi(const struct gprs_rlcmac_tbf *tbf)
 {
-	return tbf->state_fsm.fi;
+	return tbf->state_fi;
 }
 
 struct osmo_fsm_inst *tbf_ul_ass_fi(const struct gprs_rlcmac_tbf *tbf)

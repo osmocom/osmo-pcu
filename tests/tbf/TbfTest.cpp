@@ -91,7 +91,7 @@ static void check_tbf(gprs_rlcmac_tbf *tbf)
 {
 	OSMO_ASSERT(tbf);
 	if (tbf->state_is(TBF_ST_WAIT_RELEASE))
-		OSMO_ASSERT(tbf->timers_pending(T3191) || osmo_timer_pending(&tbf->state_fsm.fi->timer));
+		OSMO_ASSERT(tbf->timers_pending(T3191) || osmo_timer_pending(&tbf->state_fi->timer));
 	if (tbf->state_is(TBF_ST_RELEASING))
 		OSMO_ASSERT(tbf->timers_pending(T_MAX));
 }
@@ -216,8 +216,8 @@ static gprs_rlcmac_dl_tbf *create_dl_tbf(struct gprs_rlcmac_bts *bts, uint8_t ms
 
 	/* "Establish" the DL TBF */
 	osmo_fsm_inst_dispatch(dl_tbf->dl_ass_fsm.fi, TBF_DL_ASS_EV_SCHED_ASS, NULL);
-	osmo_fsm_inst_dispatch(dl_tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
-	osmo_fsm_inst_dispatch(dl_tbf->state_fsm.fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
+	osmo_fsm_inst_dispatch(dl_tbf->state_fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
+	osmo_fsm_inst_dispatch(dl_tbf->state_fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
 	check_tbf(dl_tbf);
 
 	*trx_no_ = trx_no;
@@ -593,7 +593,7 @@ static void test_tbf_dl_llc_loss()
 	 * moves it to FLOW state. We set X2002 timeout to 0 here to get
 	 * immediate trigger through osmo_select_main() */
 	OSMO_ASSERT(osmo_tdef_set(the_pcu->T_defs, -2002, 0, OSMO_TDEF_MS) == 0);
-	osmo_fsm_inst_dispatch(ms_dl_tbf(ms)->state_fsm.fi, TBF_EV_ASSIGN_PCUIF_CNF, NULL);
+	osmo_fsm_inst_dispatch(ms_dl_tbf(ms)->state_fi, TBF_EV_ASSIGN_PCUIF_CNF, NULL);
 	osmo_select_main(0);
 	OSMO_ASSERT(ms_dl_tbf(ms)->state_is(TBF_ST_FLOW));
 

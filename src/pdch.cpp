@@ -387,7 +387,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 		osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_RX_CTRL_ACK, NULL);
 		/* We only set polling on final UL ACK/NACK, something is wrong... */
 		if (tbf_state(tbf) == TBF_ST_FINISHED)
-			osmo_fsm_inst_dispatch(ul_tbf->state_fsm.fi, TBF_EV_FINAL_UL_ACK_CONFIRMED, (void*)false);
+			osmo_fsm_inst_dispatch(ul_tbf->state_fi, TBF_EV_FINAL_UL_ACK_CONFIRMED, (void*)false);
 			/* ul_tbf is freed here! */
 		else
 			LOGPTBFUL(ul_tbf, LOGL_ERROR, "Received POLL_UL_ACK for UL TBF in unexpected state!\n");
@@ -416,7 +416,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				tbf->direction == new_tbf->direction)
 			tbf_free(tbf);
 
-		osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
+		osmo_fsm_inst_dispatch(new_tbf->state_fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
 		/* there might be LLC packets waiting in the queue, but the DL
 		 * TBF might have been released while the UL TBF has been
 		 * established */
@@ -447,7 +447,7 @@ void gprs_rlcmac_pdch::rcv_control_ack(Packet_Control_Acknowledgement_t *packet,
 				tbf->direction == new_tbf->direction)
 			tbf_free(tbf);
 
-		osmo_fsm_inst_dispatch(new_tbf->state_fsm.fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
+		osmo_fsm_inst_dispatch(new_tbf->state_fi, TBF_EV_ASSIGN_ACK_PACCH, NULL);
 		return;
 
 	case PDCH_ULC_POLL_CELL_CHG_CONTINUE:
@@ -735,7 +735,7 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 				"block of final UL ACK/NACK\n", fn);
 			ul_tbf->n_reset(N3103);
 			pdch_ulc_release_node(ulc, item);
-			rc = osmo_fsm_inst_dispatch(ul_tbf->state_fsm.fi, TBF_EV_FINAL_UL_ACK_CONFIRMED, (void*)true);
+			rc = osmo_fsm_inst_dispatch(ul_tbf->state_fi, TBF_EV_FINAL_UL_ACK_CONFIRMED, (void*)true);
 			if (rc) {
 				/* FSM failed handling, get rid of previous finished UL TBF before providing a new one */
 				LOGPTBFUL(ul_tbf, LOGL_NOTICE,

@@ -417,20 +417,21 @@ static void st_releasing(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	}
 }
 
-static void handle_timeout_X2002(struct tbf_fsm_ctx *ctx)
+static void handle_timeout_X2002(struct osmo_fsm_inst *fi)
 {
+	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
 	struct gprs_rlcmac_dl_tbf *dl_tbf = tbf_as_dl_tbf(ctx->tbf);
 
 	/* X2002 is used only for DL TBF */
 	OSMO_ASSERT(dl_tbf);
 
-	if (ctx->fi->state == TBF_ST_ASSIGN) {
+	if (fi->state == TBF_ST_ASSIGN) {
 		tbf_assign_control_ts(ctx->tbf);
 
 		if (!tbf_can_upgrade_to_multislot(ctx->tbf)) {
 			/* change state to FLOW, so scheduler
 			 * will start transmission */
-			osmo_fsm_inst_dispatch(ctx->fi, TBF_EV_ASSIGN_READY_CCCH, NULL);
+			osmo_fsm_inst_dispatch(fi, TBF_EV_ASSIGN_READY_CCCH, NULL);
 			return;
 		}
 
@@ -453,7 +454,7 @@ static int tbf_fsm_timer_cb(struct osmo_fsm_inst *fi)
 	struct tbf_fsm_ctx *ctx = (struct tbf_fsm_ctx *)fi->priv;
 	switch (fi->T) {
 	case -2002:
-		handle_timeout_X2002(ctx);
+		handle_timeout_X2002(fi);
 		break;
 	case -2001:
 		LOGPTBF(ctx->tbf, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");

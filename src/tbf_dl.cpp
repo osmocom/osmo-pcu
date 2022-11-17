@@ -422,7 +422,7 @@ void dl_tbf_trigger_ass_on_pacch(struct gprs_rlcmac_dl_tbf *tbf, struct gprs_rlc
 	osmo_fsm_inst_dispatch(old_tbf->dl_ass_fsm.fi, TBF_DL_ASS_EV_SCHED_ASS, NULL);
 
 	/* change state */
-	osmo_fsm_inst_dispatch(tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
+	osmo_fsm_inst_dispatch(tbf->state_fi, TBF_EV_ASSIGN_ADD_PACCH, NULL);
 
 }
 
@@ -436,7 +436,7 @@ void dl_tbf_trigger_ass_on_pch(struct gprs_rlcmac_dl_tbf *tbf)
 	LOGPTBFDL(tbf, LOGL_DEBUG, "Send downlink assignment on PCH, no TBF exist (IMSI=%s)\n", ms_imsi(ms));
 
 	/* change state */
-	osmo_fsm_inst_dispatch(tbf->state_fsm.fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
+	osmo_fsm_inst_dispatch(tbf->state_fi, TBF_EV_ASSIGN_ADD_CCCH, NULL);
 
 	/* send immediate assignment */
 	bts_snd_dl_ass(ms->bts, tbf);
@@ -528,7 +528,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 				is_final = llc_queue_size(llc_queue()) == 0 && !keep_open(fn);
 				if (is_final) {
 					rdbi->cv = 0;
-					osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_LAST_DL_DATA_SENT, NULL);
+					osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_LAST_DL_DATA_SENT, NULL);
 				}
 
 				if (mcs_is_edge(cs)) {
@@ -573,7 +573,7 @@ int gprs_rlcmac_dl_tbf::create_new_bsn(const uint32_t fn, enum CodingScheme cs)
 
 		if (is_final) {
 			request_dl_ack();
-			osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_LAST_DL_DATA_SENT, NULL);
+			osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_LAST_DL_DATA_SENT, NULL);
 		}
 
 		/* dequeue next LLC frame, if any */
@@ -962,7 +962,7 @@ int gprs_rlcmac_dl_tbf::rcvd_dl_final_ack()
 	uint16_t received;
 	int rc = 0;
 
-	osmo_fsm_inst_dispatch(this->state_fsm.fi, TBF_EV_FINAL_ACK_RECVD, NULL);
+	osmo_fsm_inst_dispatch(this->state_fi, TBF_EV_FINAL_ACK_RECVD, NULL);
 
 	/* range V(A)..V(S)-1 */
 	received = m_window.count_unacked();
