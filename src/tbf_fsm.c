@@ -38,6 +38,15 @@ const struct osmo_tdef_state_timeout tbf_fsm_timeouts[32] = {
 	[TBF_ST_RELEASING] = {},
 };
 
+/* Transition to a state, using the T timer defined in tbf_fsm_timeouts.
+ * The actual timeout value is in turn obtained from conn->T_defs.
+ * Assumes local variable fi exists. */
+#define tbf_fsm_state_chg(fi, NEXT_STATE) \
+	osmo_tdef_fsm_inst_state_chg(fi, NEXT_STATE, \
+				     tbf_fsm_timeouts, \
+				     the_pcu->T_defs, \
+				     -1)
+
 const struct value_string tbf_fsm_event_names[] = {
 	{ TBF_EV_ASSIGN_ADD_CCCH, "ASSIGN_ADD_CCCH" },
 	{ TBF_EV_ASSIGN_ADD_PACCH, "ASSIGN_ADD_PACCH" },
