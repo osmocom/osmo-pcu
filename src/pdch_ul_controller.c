@@ -171,7 +171,7 @@ uint32_t pdch_ulc_get_next_free_fn(struct pdch_ulc *ulc, uint32_t start_fn)
 			/* Next reserved FN is passed check_fn, hence it means check_fn is free */
 			return check_fn;
 		}
-		/* if it->fn < check_fn, simply continue iterating, we want to reach at least check_fn */
+
 		if (res == 0)/* it->fn == fn */
 			check_fn = fn_next_block(check_fn);
 		/* if it->fn < check_fn, simply continue iterating, we want to reach at least check_fn */
