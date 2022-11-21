@@ -1,7 +1,8 @@
-/* gprs_debug.cpp
+/* gprs_debug.c
  *
  * Copyright (C) 2012 Ivan Klyuchnikov
  * Copyright (C) 2019 Harald Welte <laforge@gnumonks.org>
+ * Copyright (C) 2022 by sysmocom - s.f.m.c. GmbH <info@sysmocom.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,10 +15,8 @@
  * GNU General Public License for more details.
  */
 
-extern "C" {
 #include <osmocom/core/utils.h>
 #include <osmocom/core/logging.h>
-}
 
 #include <gprs_debug.h>
 

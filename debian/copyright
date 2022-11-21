@@ -30,7 +30,7 @@ Files:     osmoappdesc.py
 Copyright: 2013 by Katerina Barone-Adesi <kat.obsc@gmail.com>
 License:   GPL-3.0+
 
-Files:     src/gprs_debug.cpp
+Files:     src/gprs_debug.c
            src/gprs_debug.h
            src/pcu_main.cpp
            src/pcu_l1_if.h

@@ -39,7 +39,7 @@ AM_LDFLAGS = -lrt
 noinst_LTLIBRARIES = libgprs.la
 
 libgprs_la_SOURCES = \
-	gprs_debug.cpp \
+	gprs_debug.c \
 	csn1.c \
 	csn1_dec.c \
 	csn1_enc.c \

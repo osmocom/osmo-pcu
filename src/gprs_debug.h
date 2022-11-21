@@ -19,9 +19,6 @@
 extern "C" {
 #endif
 #include <osmocom/core/logging.h>
-#ifdef __cplusplus
-};
-#endif
 
 /* we used to have DBSSGP definded in each application, and applications telling
  * libosmogb which sub-system to use.  That creates problems and has been deprecated */
@@ -48,3 +45,7 @@ enum {
 };
 
 extern const struct log_info gprs_log_info;
+
+#ifdef __cplusplus
+};
+#endif
