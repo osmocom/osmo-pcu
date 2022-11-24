@@ -644,10 +644,16 @@ void gprs_rlcmac_pdch::rcv_control_egprs_dl_ack_nack(EGPRS_PD_AckNack_t *ack_nac
 
 void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, uint32_t fn, struct pcu_l1_meas *meas)
 {
-	struct gprs_rlcmac_sba *sba;
 	int rc;
 	struct gprs_rlcmac_bts *bts = trx->bts;
 	struct pdch_ulc_node *item;
+	char buf[128];
+	struct GprsMs *ms = NULL;
+	struct gprs_rlcmac_sba *sba;
+	struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
+	struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
+	struct gprs_rlcmac_ul_tbf *new_ul_tbf = NULL;
+
 
 	if (!(item = pdch_ulc_get_node(ulc, fn))) {
 		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
@@ -655,169 +661,190 @@ void gprs_rlcmac_pdch::rcv_resource_request(Packet_Resource_Request_t *request, 
 		return;
 	}
 
-	if (request->ID.UnionType) {
-		struct gprs_rlcmac_ul_tbf *ul_tbf = NULL;
-		struct gprs_rlcmac_dl_tbf *dl_tbf = NULL;
+	/* First gather MS from TLLI/DL_TFI/UL_TFI:*/
+	if (request->ID.UnionType) { /* ID_TYPE = TLLI */
 		uint32_t tlli = request->ID.u.TLLI;
-
-		GprsMs *ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
+		ms = bts_ms_by_tlli(bts, tlli, GSM_RESERVED_TMSI);
 		if (!ms) {
 			ms = bts_alloc_ms(bts, 0, 0); /* ms class updated later */
 			ms_set_tlli(ms, tlli);
 		}
-
-		/* Keep the ms, even if it gets idle temporarily */
-		ms_ref(ms);
-
-		switch (item->type) {
-		case PDCH_ULC_NODE_TBF_USF:
-			/* Is it actually valid for an MS to send a PKT Res Req during USF? */
-			ul_tbf = item->tbf_usf.ul_tbf;
-			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
-				"Unexpectedly received, waiting USF of %s\n",
-				fn, tbf_name(item->tbf_usf.ul_tbf));
-			 /* Ignore it, let common path expire related ULC entry */
-			goto return_unref;
-		case PDCH_ULC_NODE_SBA:
-			sba = item->sba.sba;
-			LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "FN=%u PKT RESOURCE REQ: "
-				"MS requests UL TBF throguh SBA\n", fn);
-			ms_set_ta(ms, sba->ta);
-			sba_free(sba);
-			/* If MS identified by TLLI sent us a PktResReq through SBA, it means it came
-			 * from CCCH, so it's for sure not using previous UL
-			 * TBF; drop it if it still exits on our end: */
-			if ((ul_tbf = ms_ul_tbf(ms))) {
-				/* Get rid of previous finished UL TBF before providing a new one */
-				LOGPTBFUL(ul_tbf, LOGL_NOTICE,
-					  "Got PACKET RESOURCE REQ while TBF not finished, killing pending UL TBF\n");
-				tbf_free(ul_tbf);
-				ul_tbf = NULL;
-			}
-			/* Similarly, it is for sure not using any DL-TBF. We
-			* still may have some because we were trying to assign a
-			* DL-TBF over CCCH when the MS proactively requested for a
-			* UL-TBF. In that case we'll need to re-assigna new DL-TBF through PACCH when contention resolution is done: */
-			if ((dl_tbf = ms_dl_tbf(ms))) {
-				/* Get rid of previous finished UL TBF before providing a new one */
-				LOGPTBFDL(dl_tbf, LOGL_NOTICE,
-					  "Got PACKET RESOURCE REQ while DL-TBF pending, killing it\n");
-				tbf_free(dl_tbf);
-				dl_tbf = NULL;
-			}
-			break;
-		case PDCH_ULC_NODE_TBF_POLL:
-			if (item->tbf_poll.poll_tbf->direction != GPRS_RLCMAC_UL_TBF) {
-				LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
-					"Unexpectedly received for DL TBF %s\n", fn,
-					tbf_name(item->tbf_poll.poll_tbf));
-				/* let common path expire the poll */
-				goto return_unref;
-			}
-			ul_tbf = tbf_as_ul_tbf(item->tbf_poll.poll_tbf);
-			if (item->tbf_poll.reason != PDCH_ULC_POLL_UL_ACK) {
-				LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
-					"Unexpectedly received, waiting for poll reason %d\n",
-					fn, item->tbf_poll.reason);
-				/* let common path expire the poll */
-				goto return_unref;
-			}
-			if (ul_tbf != ms_ul_tbf(ms)) {
-				LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
-					"Unexpected TLLI 0x%08x received vs exp 0x%08x\n",
-					fn, tlli, ul_tbf->tlli());
-				/* let common path expire the poll */
-				goto return_unref;
-			}
-			/* 3GPP TS 44.060 $ 9.3.3.3 */
-			LOGPTBFUL(ul_tbf, LOGL_DEBUG, "FN=%u PKT RESOURCE REQ: "
-				"MS requests reuse of finished UL TBF in RRBP "
-				"block of final UL ACK/NACK\n", fn);
-			ul_tbf->n_reset(N3103);
-			pdch_ulc_release_node(ulc, item);
-			rc = osmo_fsm_inst_dispatch(ul_tbf->state_fi, TBF_EV_FINAL_UL_ACK_CONFIRMED, (void*)true);
-			if (rc) {
-				/* FSM failed handling, get rid of previous finished UL TBF before providing a new one */
-				LOGPTBFUL(ul_tbf, LOGL_NOTICE,
-					  "Got PACKET RESOURCE REQ while TBF not finished, killing pending UL TBF\n");
-				tbf_free(ul_tbf);
-			} /* else: ul_tbf has been freed by state_fsm */
-			ul_tbf = NULL;
-			break;
-		default:
-			OSMO_ASSERT(0);
-		}
-
-		/* Here ul_tbf is NULL:
-		 * - SBA case: no previous TBF) and in
-		 * - POLL case: PktResReq is a final ACk confirmation and ul_tbf was freed
-		 */
-
-		if (request->Exist_MS_Radio_Access_capability2) {
-			uint8_t ms_class, egprs_ms_class;
-			ms_class = get_ms_class_by_capability(&request->MS_Radio_Access_capability2);
-			egprs_ms_class = get_egprs_ms_class_by_capability(&request->MS_Radio_Access_capability2);
-			if (ms_class)
-				ms_set_ms_class(ms, ms_class);
-			if (egprs_ms_class)
-				ms_set_egprs_ms_class(ms, egprs_ms_class);
-		}
-
-		/* get measurements */
-		get_meas(meas, request);
-		ms_update_l1_meas(ms, meas);
-
-		ul_tbf = ms_new_ul_tbf_assigned_pacch(ms, trx_no());
-		if (!ul_tbf) {
-			handle_tbf_reject(bts, ms, trx_no(), ts_no);
-			goto return_unref;
-		}
-
-		/* Set control TS to the TS where this PktResReq was received,
-		 * which in practice happens to be the control_ts from the
-		 * previous UL-TBF or SBA. When CTRL ACK is received as RRBP of the Pkt
-		 * UL Ass scheduled below, then TBF_EV_ASSIGN_ACK_PACCH will be
-		 * sent to tbf_fsm which will call tbf_assign_control_ts(),
-		 * effectively setting back control_ts to
-		 * tbf->initial_common_ts. */
-		LOGPTBF(ul_tbf, LOGL_INFO, "change control TS %d -> %d until assignment is complete.\n",
-			ul_tbf->control_ts, ts_no);
-
-		ul_tbf->control_ts = ts_no;
-		/* schedule uplink assignment */
-		osmo_fsm_inst_dispatch(ul_tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_SCHED_ASS, NULL);
-return_unref:
-		ms_unref(ms);
-		return;
-	}
-
-	if (request->ID.u.Global_TFI.UnionType) {
-		struct gprs_rlcmac_dl_tbf *dl_tbf;
+	} else if (request->ID.u.Global_TFI.UnionType) { /* ID_TYPE = DL_TFI */
 		int8_t tfi = request->ID.u.Global_TFI.u.DOWNLINK_TFI;
 		dl_tbf = bts_dl_tbf_by_tfi(bts, tfi, trx_no(), ts_no);
 		if (!dl_tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESOURCE REQ unknown downlink TFI=%d\n", tfi);
 			return;
 		}
-		LOGPTBFDL(dl_tbf, LOGL_ERROR,
-			"RX: [PCU <- BTS] FIXME: Packet resource request\n");
-
 		/* Reset N3101 counter: */
 		dl_tbf->n_reset(N3101);
-	} else {
-		struct gprs_rlcmac_ul_tbf *ul_tbf;
+		ms = tbf_ms(dl_tbf_as_tbf(dl_tbf));
+		dl_tbf = NULL;
+	} else { /* ID_TYPE = UL_TFI */
 		int8_t tfi = request->ID.u.Global_TFI.u.UPLINK_TFI;
 		ul_tbf = bts_ul_tbf_by_tfi(bts, tfi, trx_no(), ts_no);
 		if (!ul_tbf) {
 			LOGP(DRLCMAC, LOGL_NOTICE, "PACKET RESOURCE REQ unknown uplink TFI=%d\n", tfi);
 			return;
 		}
-		LOGPTBFUL(ul_tbf, LOGL_ERROR,
-			"RX: [PCU <- BTS] FIXME: Packet resource request\n");
-
 		/* Reset N3101 counter: */
 		ul_tbf->n_reset(N3101);
+		ms = tbf_ms(ul_tbf_as_tbf(ul_tbf));
+		ul_tbf = NULL;
 	}
+
+
+	/* Here ms is available (non-null). Keep the ms, even if it gets idle
+	 * temporarily, in order to avoid it being freed if we free any of its
+	 * resources (TBF). */
+	OSMO_ASSERT(ms);
+	ms_ref(ms);
+
+
+	switch (item->type) {
+	case PDCH_ULC_NODE_TBF_USF:
+		/* TS 44.060 to 8.1.1.1.2: An MS can send a PKT Res Req during USF, for instance to change its Radio Priority. */
+		ul_tbf = item->tbf_usf.ul_tbf;
+		if (tbf_ms(ul_tbf_as_tbf(ul_tbf)) != ms) {
+			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
+				"Received from unexpected %s vs exp %s\n", fn,
+				ms_name_buf(ms, buf, sizeof(buf)), ms_name(tbf_ms(ul_tbf_as_tbf(ul_tbf))));
+			/* let common path expire the poll */
+			goto return_unref;
+		}
+		LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
+			"MS requests UL TBF upgrade through USF of %s\n",
+			fn, tbf_name(item->tbf_usf.ul_tbf));
+		pdch_ulc_release_node(ulc, item);
+		/* FIXME OS#4947: Currenty we free the UL TBF and create a new one below in order to trigger the Pkt UL Ass.
+		 * We should instead keep the same UL TBF working and upgrading it (modify ul_tbf->ul_ass_fsm.fi to
+		 * handle the PktUlAss + PktCtrlAck).
+		 * This is required by spec, and MS are know to continue using the TBF (due to delay in between DL and
+		 * UL scheduling).
+		 * TS 44.060 to 8.1.1.1.2:
+		 * "If the mobile station or the network does not support multiple TBF procedures, then after the
+		 * transmission of the PACKET RESOURCE REQUEST message with the reason for changing PFI, the radio
+		 * priority or peak throughput class of an assigned uplink TBF the mobile station continue to use the
+		 * currently assigned uplink TBF assuming that the requested radio priority or peak throughput class is
+		 * already assigned to that TBF."
+		 */
+		tbf_free(ul_tbf);
+		ul_tbf = NULL;
+		break;
+	case PDCH_ULC_NODE_SBA:
+		sba = item->sba.sba;
+		LOGPDCH(this, DRLCMAC, LOGL_DEBUG, "FN=%u PKT RESOURCE REQ: "
+			"MS requests UL TBF throguh SBA\n", fn);
+		ms_set_ta(ms, sba->ta);
+		sba_free(sba);
+		/* If MS identified by TLLI sent us a PktResReq through SBA, it means it came
+		 * from CCCH, so it's for sure not using previous UL BF; drop it if it still
+		 * exits on our end:
+		 */
+		if ((ul_tbf = ms_ul_tbf(ms))) {
+			/* Get rid of previous finished UL TBF before providing a new one */
+			LOGPTBFUL(ul_tbf, LOGL_NOTICE,
+				  "Got PACKET RESOURCE REQ while TBF not finished, killing pending UL TBF\n");
+			tbf_free(ul_tbf);
+			ul_tbf = NULL;
+		}
+		/* Similarly, it is for sure not using any DL-TBF. We still may have some because
+		 * we were trying to assign a DL-TBF over CCCH when the MS proactively requested
+		 * for a UL-TBF. In that case we'll need to re-assigna new DL-TBF through PACCH when
+		 * contention resolution is done:
+		 */
+		if ((dl_tbf = ms_dl_tbf(ms))) {
+			/* Get rid of previous finished UL TBF before providing a new one */
+			LOGPTBFDL(dl_tbf, LOGL_NOTICE,
+				  "Got PACKET RESOURCE REQ while DL-TBF pending, killing it\n");
+			tbf_free(dl_tbf);
+			dl_tbf = NULL;
+		}
+		break;
+	case PDCH_ULC_NODE_TBF_POLL:
+		if (item->tbf_poll.poll_tbf->direction != GPRS_RLCMAC_UL_TBF) {
+			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
+				"Unexpectedly received for DL TBF %s\n", fn,
+				tbf_name(item->tbf_poll.poll_tbf));
+			/* let common path expire the poll */
+			goto return_unref;
+		}
+		ul_tbf = tbf_as_ul_tbf(item->tbf_poll.poll_tbf);
+		if (item->tbf_poll.reason != PDCH_ULC_POLL_UL_ACK) {
+			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
+				"Unexpectedly received, waiting for poll reason %d\n",
+				fn, item->tbf_poll.reason);
+			/* let common path expire the poll */
+			goto return_unref;
+		}
+		if (tbf_ms(ul_tbf_as_tbf(ul_tbf)) != ms) {
+			LOGPDCH(this, DRLCMAC, LOGL_NOTICE, "FN=%u PKT RESOURCE REQ: "
+				"Received from unexpected %s vs exp %s\n", fn,
+				ms_name_buf(ms, buf, sizeof(buf)), ms_name(tbf_ms(ul_tbf_as_tbf(ul_tbf))));
+			/* let common path expire the poll */
+			goto return_unref;
+		}
+		/* 3GPP TS 44.060 $ 9.3.3.3 */
+		LOGPTBFUL(ul_tbf, LOGL_DEBUG, "FN=%u PKT RESOURCE REQ: "
+			"MS requests reuse of finished UL TBF in RRBP "
+			"block of final UL ACK/NACK\n", fn);
+		ul_tbf->n_reset(N3103);
+		pdch_ulc_release_node(ulc, item);
+		rc = osmo_fsm_inst_dispatch(ul_tbf->state_fi, TBF_EV_FINAL_UL_ACK_CONFIRMED, (void*)true);
+		if (rc) {
+			/* FSM failed handling, get rid of previous finished UL TBF before providing a new one */
+			LOGPTBFUL(ul_tbf, LOGL_NOTICE,
+					"Got PACKET RESOURCE REQ while TBF not finished, killing pending UL TBF\n");
+			tbf_free(ul_tbf);
+		} /* else: ul_tbf has been freed by state_fsm */
+		ul_tbf = NULL;
+		break;
+	default:
+		OSMO_ASSERT(0);
+	}
+
+	/* Here ul_tbf is NULL:
+	 * - USF case: Previous TBF is explicitly freed (FIXME: this is incorrect, old TBF should be kept in this case)
+	 * - SBA case: no previous TBF
+	 * - POLL case: PktResReq is a final ACk confirmation and ul_tbf was freed
+	 */
+
+	if (request->Exist_MS_Radio_Access_capability2) {
+		uint8_t ms_class, egprs_ms_class;
+		ms_class = get_ms_class_by_capability(&request->MS_Radio_Access_capability2);
+		egprs_ms_class = get_egprs_ms_class_by_capability(&request->MS_Radio_Access_capability2);
+		if (ms_class)
+			ms_set_ms_class(ms, ms_class);
+		if (egprs_ms_class)
+			ms_set_egprs_ms_class(ms, egprs_ms_class);
+	}
+
+	/* get measurements */
+	get_meas(meas, request);
+	ms_update_l1_meas(ms, meas);
+
+	new_ul_tbf = ms_new_ul_tbf_assigned_pacch(ms, trx_no());
+	if (!new_ul_tbf) {
+		handle_tbf_reject(bts, ms, trx_no(), ts_no);
+		goto return_unref;
+	}
+
+	/* Set control TS to the TS where this PktResReq was received,
+	 * which in practice happens to be the control_ts from the
+	 * previous UL-TBF or SBA. When CTRL ACK is received as RRBP of the Pkt
+	 * UL Ass scheduled below, then TBF_EV_ASSIGN_ACK_PACCH will be
+	 * sent to tbf_fsm which will call tbf_assign_control_ts(),
+	 * effectively setting back control_ts to tbf->initial_common_ts.
+	 */
+	LOGPTBF(new_ul_tbf, LOGL_INFO, "change control TS %d -> %d until assignment is complete.\n",
+		new_ul_tbf->control_ts, ts_no);
+
+	new_ul_tbf->control_ts = ts_no;
+	/* schedule uplink assignment */
+	osmo_fsm_inst_dispatch(new_ul_tbf->ul_ass_fsm.fi, TBF_UL_ASS_EV_SCHED_ASS, NULL);
+return_unref:
+	ms_unref(ms);
+	return;
 }
 
 void gprs_rlcmac_pdch::rcv_measurement_report(Packet_Measurement_Report_t *report, uint32_t fn)
