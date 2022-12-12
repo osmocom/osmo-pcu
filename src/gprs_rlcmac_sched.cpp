@@ -227,25 +227,25 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 }
 
 static inline enum tbf_dl_prio tbf_compute_priority(const struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_dl_tbf *tbf,
-						    uint8_t ts, uint32_t fn, int age)
+						    const struct gprs_rlcmac_pdch *pdch, uint32_t fn, int age)
 {
 	const gprs_rlc_dl_window *w = static_cast<gprs_rlc_dl_window *>(tbf->window());
 	unsigned long msecs_t3190 = osmo_tdef_get(the_pcu->T_defs, 3190, OSMO_TDEF_MS, -1);
 	unsigned long dl_tbf_idle_msec = osmo_tdef_get(the_pcu->T_defs, -2031, OSMO_TDEF_MS, -1);
 	int age_thresh1 = msecs_to_frames(200);
 	int age_thresh2 = msecs_to_frames(OSMO_MIN(msecs_t3190/2, dl_tbf_idle_msec));
-	const struct gprs_rlcmac_pdch *pdch = &tbf_get_trx(tbf)->pdch[ts];
+	const bool is_control_ts = tbf_is_control_ts(tbf, pdch);
 
-	if (tbf_is_control_ts(tbf, pdch) && tbf->need_poll_for_dl_ack_nack())
+	if (is_control_ts && tbf->need_poll_for_dl_ack_nack())
 		return DL_PRIO_CONTROL;
 
-	if (tbf_is_control_ts(tbf, pdch) && age > age_thresh2 && age_thresh2 > 0)
+	if (is_control_ts && age > age_thresh2 && age_thresh2 > 0)
 		return DL_PRIO_HIGH_AGE;
 
 	if ((tbf->state_is(TBF_ST_FLOW) && tbf->have_data()) || w->resend_needed() >= 0)
 		return DL_PRIO_NEW_DATA;
 
-	if (tbf_is_control_ts(tbf, pdch) && age > age_thresh1 && tbf->keep_open(fn))
+	if (is_control_ts && age > age_thresh1 && tbf->keep_open(fn))
 		return DL_PRIO_LOW_AGE;
 
 	if (!w->window_empty())
@@ -313,7 +313,7 @@ static struct msgb *sched_select_dl_data_msg(struct gprs_rlcmac_bts *bts, struct
 		age = tbf->frames_since_last_poll(fn);
 
 		/* compute priority */
-		prio = tbf_compute_priority(bts, tbf, ts, fn, age);
+		prio = tbf_compute_priority(bts, tbf, pdch, fn, age);
 		if (prio == DL_PRIO_NONE)
 			continue;
 
