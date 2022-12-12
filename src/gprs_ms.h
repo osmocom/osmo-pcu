@@ -64,6 +64,8 @@ struct GprsMs {
 	struct gprs_rlcmac_ul_tbf *ul_tbf;
 	struct gprs_rlcmac_dl_tbf *dl_tbf;
 	struct llist_head old_tbfs; /* list of gprs_rlcmac_tbf */
+	/* First common timeslot number used both in UL and DL, 0..7 or TBF_TS_UNSET (-1): */
+	int8_t first_common_ts;
 
 	uint32_t tlli;
 	uint32_t new_ul_tlli;
@@ -101,7 +103,8 @@ struct GprsMs {
 
 struct GprsMs *ms_alloc(struct gprs_rlcmac_bts *bts, uint32_t tlli);
 
-int ms_first_common_ts(const struct GprsMs *ms);
+int8_t ms_first_common_ts(const struct GprsMs *ms);
+void ms_set_first_common_ts(struct GprsMs *ms, uint8_t first_common_ts);
 void ms_set_reserved_slots(struct GprsMs *ms, struct gprs_rlcmac_trx *trx,
 			   uint8_t ul_slots, uint8_t dl_slots);
 struct GprsMs *ms_ref(struct GprsMs *ms);

@@ -167,7 +167,7 @@ struct gprs_rlcmac_ul_tbf *handle_tbf_reject(struct gprs_rlcmac_bts *bts,
 	ul_tbf->trx = trx;
 	/* The only one TS is the common, control TS */
 	ul_tbf->first_ts = ts;
-	ul_tbf->first_common_ts = ts;
+	ms_set_first_common_ts(ms, ts);
 	tbf_assign_control_ts(ul_tbf);
 	ul_tbf->m_ctrs = rate_ctr_group_alloc(ul_tbf, &tbf_ctrg_desc, next_tbf_ctr_group_id++);
 	ul_tbf->m_ul_egprs_ctrs = rate_ctr_group_alloc(ul_tbf,

@@ -134,7 +134,6 @@ struct GprsMs *tbf_ms(const struct gprs_rlcmac_tbf *tbf);
 bool tbf_timers_pending(struct gprs_rlcmac_tbf *tbf, enum tbf_timers t);
 void tbf_free(struct gprs_rlcmac_tbf *tbf);
 struct gprs_llc *tbf_llc(struct gprs_rlcmac_tbf *tbf);
-uint8_t tbf_first_common_ts(const struct gprs_rlcmac_tbf *tbf);
 uint8_t tbf_dl_slots(const struct gprs_rlcmac_tbf *tbf);
 uint8_t tbf_ul_slots(const struct gprs_rlcmac_tbf *tbf);
 bool tbf_is_tfi_assigned(const struct gprs_rlcmac_tbf *tbf);
@@ -220,8 +219,6 @@ struct gprs_rlcmac_tbf {
 	enum gprs_rlcmac_tbf_direction direction;
 	struct gprs_rlcmac_trx *trx;
 	uint8_t first_ts; /* first TS used by TBF */
-	uint8_t first_common_ts; /* first TS where the phone can send and
-		receive simultaniously */
 	uint8_t control_ts; /* timeslot control messages and polling */
 	struct gprs_rlcmac_pdch *pdch[8]; /* list of PDCHs allocated to TBF */
 

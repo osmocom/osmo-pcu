@@ -411,8 +411,9 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 
 	tbf->trx = trx;
 	/* the only one TS is the common TS */
-	tbf->first_ts = tbf->first_common_ts = ts;
+	tbf->first_ts = ts;
 	ms_set_reserved_slots(ms, trx, 1 << ts, 1 << ts);
+	ms_set_first_common_ts(ms, ts);
 
 	tbf->upgrade_to_multislot = false;
 	bts_do_rate_ctr_inc(bts, CTR_TBF_ALLOC_ALGO_A);
@@ -945,9 +946,8 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	/* Step 4: Update MS and TBF and really allocate the resources */
 
 	update_ms_reserved_slots(trx, ms, reserved_ul_slots, reserved_dl_slots, ul_slots, dl_slots);
-
+	ms_set_first_common_ts(ms, first_common_ts);
 	tbf->trx = trx;
-	tbf->first_common_ts = first_common_ts;
 	tbf->first_ts = first_ts;
 
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF)
