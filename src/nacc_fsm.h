@@ -22,6 +22,7 @@
 
 struct GprsMs;
 struct gprs_rlcmac_tbf;
+struct gprs_rlcmac_pdch;
 
 enum nacc_fsm_event {
 	NACC_EV_RX_CELL_CHG_NOTIFICATION, /* data: Packet_Cell_Change_Notification_t* */
@@ -73,3 +74,5 @@ bool nacc_fsm_is_waiting_si_resolution(const struct nacc_fsm_ctx *ctx,
 				       const struct osmo_cell_global_id_ps *cgi_ps);
 
 bool nacc_fsm_exp_ctrl_ack(const struct nacc_fsm_ctx *ctx, uint32_t fn, uint8_t ts);
+
+bool tbf_nacc_rts(const struct gprs_rlcmac_tbf *tbf, const struct gprs_rlcmac_pdch *pdch);

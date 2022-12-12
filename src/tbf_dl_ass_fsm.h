@@ -21,6 +21,7 @@
 #include <gprs_pcu.h>
 
 struct gprs_rlcmac_tbf;
+struct gprs_rlcmac_pdch;
 
 enum tbf_dl_ass_fsm_event {
 	TBF_DL_ASS_EV_SCHED_ASS, /* Tx Uplink Assignment is pending */
@@ -62,4 +63,4 @@ struct tbf_dl_ass_ev_create_rlcmac_msg_ctx {
 
 
 struct msgb *tbf_dl_ass_create_rlcmac_msg(const struct gprs_rlcmac_tbf* tbf, uint32_t fn, uint8_t ts);
-bool tbf_dl_ass_rts(const struct gprs_rlcmac_tbf* tbf);
+bool tbf_dl_ass_rts(const struct gprs_rlcmac_tbf *tbf, const struct gprs_rlcmac_pdch *pdch);

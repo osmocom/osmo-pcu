@@ -248,9 +248,14 @@ struct msgb *tbf_dl_ass_create_rlcmac_msg(const struct gprs_rlcmac_tbf* tbf, uin
 	return data_ctx.msg;
 }
 
-bool tbf_dl_ass_rts(const struct gprs_rlcmac_tbf *tbf)
+bool tbf_dl_ass_rts(const struct gprs_rlcmac_tbf *tbf, const struct gprs_rlcmac_pdch *pdch)
 {
-	struct osmo_fsm_inst *fi = tbf_dl_ass_fi(tbf);
+	struct osmo_fsm_inst *fi;
+
+	if (!tbf_is_control_ts(tbf, pdch))
+		return false;
+
+	fi = tbf_dl_ass_fi(tbf);
 	if (fi->state != TBF_DL_ASS_SEND_ASS)
 		return false;
 

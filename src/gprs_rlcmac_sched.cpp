@@ -28,6 +28,7 @@
 
 extern "C" {
 	#include <osmocom/core/gsmtap.h>
+	#include "nacc_fsm.h"
 }
 
 struct tbf_sched_candidates {
@@ -47,17 +48,13 @@ static void get_ctrl_msg_tbf_candidates(const struct gprs_rlcmac_pdch *pdch,
 	llist_for_each_entry(pos, &pdch->trx->ul_tbfs, list) {
 		ul_tbf = tbf_as_ul_tbf((struct gprs_rlcmac_tbf *)pos->entry);
 		OSMO_ASSERT(ul_tbf);
-		/* this trx, this ts */
-		if (!tbf_is_control_ts(ul_tbf, pdch))
-			continue;
-		if (tbf_ul_ack_rts(ul_tbf))
+		if (tbf_ul_ack_rts(ul_tbf, pdch))
 			tbf_cand->ul_ack = ul_tbf;
-		if (tbf_dl_ass_rts(ul_tbf))
+		if (tbf_dl_ass_rts(ul_tbf, pdch))
 			tbf_cand->dl_ass = ul_tbf;
-		if (tbf_ul_ass_rts(ul_tbf))
+		if (tbf_ul_ass_rts(ul_tbf, pdch))
 			tbf_cand->ul_ass = ul_tbf;
-		/* NACC ready to send. TFI assigned is needed to send messages */
-		if (tbf_is_tfi_assigned(ul_tbf) && ms_nacc_rts(ul_tbf->ms()))
+		if (tbf_nacc_rts(ul_tbf, pdch))
 			tbf_cand->nacc = ul_tbf;
 /* FIXME: Is this supposed to be fair? The last TBF for each wins? Maybe use llist_add_tail and skip once we have all
 states? */
@@ -65,15 +62,11 @@ states? */
 	llist_for_each_entry(pos, &pdch->trx->dl_tbfs, list) {
 		dl_tbf = tbf_as_dl_tbf((struct gprs_rlcmac_tbf *)pos->entry);
 		OSMO_ASSERT(dl_tbf);
-		/* this trx, this ts */
-		if (!tbf_is_control_ts(dl_tbf, pdch))
-			continue;
-		if (tbf_dl_ass_rts(dl_tbf))
+		if (tbf_dl_ass_rts(dl_tbf, pdch))
 			tbf_cand->dl_ass = dl_tbf;
-		if (tbf_ul_ass_rts(dl_tbf))
+		if (tbf_ul_ass_rts(dl_tbf, pdch))
 			tbf_cand->ul_ass = dl_tbf;
-		/* NACC ready to send. TFI assigned is needed to send messages */
-		if (tbf_is_tfi_assigned(dl_tbf) && ms_nacc_rts(dl_tbf->ms()))
+		if (tbf_nacc_rts(dl_tbf, pdch))
 			tbf_cand->nacc = dl_tbf;
 	}
 }

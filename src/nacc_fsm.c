@@ -900,3 +900,11 @@ bool nacc_fsm_exp_ctrl_ack(const struct nacc_fsm_ctx *ctx, uint32_t fn, uint8_t 
 	       ctx->continue_poll_fn == fn &&
 	       ctx->continue_poll_ts == ts;
 }
+
+bool tbf_nacc_rts(const struct gprs_rlcmac_tbf *tbf, const struct gprs_rlcmac_pdch *pdch)
+{
+	if (!tbf_is_control_ts(tbf, pdch))
+		return false;
+
+	return tbf_is_tfi_assigned(tbf) && ms_nacc_rts(tbf_ms(tbf));
+}

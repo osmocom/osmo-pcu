@@ -236,9 +236,14 @@ struct msgb *tbf_ul_ack_create_rlcmac_msg(const struct gprs_rlcmac_ul_tbf *ul_tb
 	return data_ctx.msg;
 }
 
-bool tbf_ul_ack_rts(const struct gprs_rlcmac_ul_tbf *ul_tbf)
+bool tbf_ul_ack_rts(const struct gprs_rlcmac_ul_tbf *ul_tbf, const struct gprs_rlcmac_pdch *pdch)
 {
-	struct osmo_fsm_inst *fi = tbf_ul_ack_fi(ul_tbf);
+	struct osmo_fsm_inst *fi;
+
+	if (!tbf_is_control_ts(ul_tbf_as_tbf_const(ul_tbf), pdch))
+		return false;
+
+	fi = tbf_ul_ack_fi(ul_tbf);
 	return fi->state == TBF_UL_ACK_ST_SCHED_UL_ACK;
 }
 
