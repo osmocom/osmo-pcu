@@ -1059,15 +1059,16 @@ bool ms_nacc_rts(const struct GprsMs *ms)
 	return false;
 }
 
-struct msgb *ms_nacc_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts)
+struct msgb *ms_nacc_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf,
+				       const struct gprs_rlcmac_pdch *pdch, uint32_t fn)
 {
 	int rc;
 	struct nacc_ev_create_rlcmac_msg_ctx data_ctx;
 
 	data_ctx = (struct nacc_ev_create_rlcmac_msg_ctx) {
 			.tbf = tbf,
+			.pdch = pdch,
 			.fn = fn,
-			.ts = ts,
 			.msg = NULL,
 	};
 

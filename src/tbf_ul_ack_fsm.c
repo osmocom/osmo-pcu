@@ -59,7 +59,7 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 	struct GprsMs *ms = tbf_ms(ul_tbf_as_tbf(tbf));
 
 	if (final) {
-		rc = tbf_check_polling(ul_tbf_as_tbf(tbf), d->fn, d->ts, &new_poll_fn, &rrbp);
+		rc = tbf_check_polling(ul_tbf_as_tbf(tbf), d->fn, d->pdch->ts_no, &new_poll_fn, &rrbp);
 		if (rc < 0)
 			return NULL;
 	}
@@ -93,10 +93,10 @@ static struct msgb *create_ul_ack_nack(const struct tbf_ul_ack_fsm_ctx *ctx,
 		osmo_fsm_inst_dispatch(tbf_state_fi(ul_tbf_as_tbf(ctx->tbf)), TBF_EV_CONTENTION_RESOLUTION_MS_SUCCESS, NULL);
 
 	if (final) {
-		tbf_set_polling(ul_tbf_as_tbf(tbf), new_poll_fn, d->ts, PDCH_ULC_POLL_UL_ACK);
+		tbf_set_polling(ul_tbf_as_tbf(tbf), new_poll_fn, d->pdch->ts_no, PDCH_ULC_POLL_UL_ACK);
 		LOGPTBFUL(tbf, LOGL_DEBUG,
 			"Scheduled UL Acknowledgement polling on PACCH (FN=%d, TS=%d)\n",
-			new_poll_fn, d->ts);
+			new_poll_fn, d->pdch->ts_no);
 	}
 
 	return msg;
@@ -221,12 +221,14 @@ static __attribute__((constructor)) void tbf_ul_ack_fsm_init(void)
 }
 
 
-struct msgb *tbf_ul_ack_create_rlcmac_msg(const struct gprs_rlcmac_ul_tbf *ul_tbf, uint32_t fn, uint8_t ts)
+struct msgb *tbf_ul_ack_create_rlcmac_msg(const struct gprs_rlcmac_ul_tbf *ul_tbf,
+					  const struct gprs_rlcmac_pdch *pdch,
+					  uint32_t fn)
 {
 	int rc;
 	struct tbf_ul_ack_ev_create_rlcmac_msg_ctx data_ctx = {
+		.pdch = pdch,
 		.fn = fn,
-		.ts = ts,
 		.msg = NULL,
 	};
 

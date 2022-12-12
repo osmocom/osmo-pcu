@@ -83,7 +83,7 @@ struct msgb *create_packet_ul_assign(const struct tbf_ul_ass_fsm_ctx *ctx,
 	unsigned int rrbp;
 	uint32_t new_poll_fn;
 
-	rc = tbf_check_polling(ctx->tbf, d->fn, d->ts, &new_poll_fn, &rrbp);
+	rc = tbf_check_polling(ctx->tbf, d->fn, d->pdch->ts_no, &new_poll_fn, &rrbp);
 	if (rc < 0)
 		return NULL;
 
@@ -128,9 +128,9 @@ struct msgb *create_packet_ul_assign(const struct tbf_ul_ass_fsm_ctx *ctx,
 	LOGP(DTBF, LOGL_DEBUG, "------------------------- TX : Packet Uplink Assignment -------------------------\n");
 	bts_do_rate_ctr_inc(ms->bts, CTR_PKT_UL_ASSIGNMENT);
 
-	tbf_set_polling(ctx->tbf, new_poll_fn, d->ts, PDCH_ULC_POLL_UL_ASS);
+	tbf_set_polling(ctx->tbf, new_poll_fn, d->pdch->ts_no, PDCH_ULC_POLL_UL_ASS);
 	LOGPTBF(ctx->tbf, LOGL_INFO, "Scheduled UL Assignment polling on PACCH (FN=%d, TS=%d)\n",
-		  new_poll_fn, d->ts);
+		  new_poll_fn, d->pdch->ts_no);
 
 	talloc_free(mac_control_block);
 	return msg;
@@ -326,12 +326,14 @@ static __attribute__((constructor)) void tbf_ul_ass_fsm_init(void)
 }
 
 
-struct msgb *tbf_ul_ass_create_rlcmac_msg(const struct gprs_rlcmac_tbf* tbf, uint32_t fn, uint8_t ts)
+struct msgb *tbf_ul_ass_create_rlcmac_msg(const struct gprs_rlcmac_tbf *tbf,
+					  const struct gprs_rlcmac_pdch *pdch,
+					  uint32_t fn)
 {
 	int rc;
 	struct tbf_ul_ass_ev_create_rlcmac_msg_ctx data_ctx = {
+		.pdch = pdch,
 		.fn = fn,
-		.ts = ts,
 		.msg = NULL,
 	};
 

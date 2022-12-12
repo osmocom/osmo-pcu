@@ -143,7 +143,8 @@ void ms_set_callback(struct GprsMs *ms, struct gpr_ms_callback *cb);
 
 int ms_nacc_start(struct GprsMs *ms, Packet_Cell_Change_Notification_t *notif);
 bool ms_nacc_rts(const struct GprsMs *ms);
-struct msgb *ms_nacc_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf, uint32_t fn, uint8_t ts);
+struct msgb *ms_nacc_create_rlcmac_msg(struct GprsMs *ms, struct gprs_rlcmac_tbf *tbf,
+				       const struct gprs_rlcmac_pdch *pdch, uint32_t fn);
 
 struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_assigned_pacch(struct GprsMs *ms, int8_t use_trx);
 struct gprs_rlcmac_ul_tbf *ms_new_ul_tbf_assigned_agch(struct GprsMs *ms);

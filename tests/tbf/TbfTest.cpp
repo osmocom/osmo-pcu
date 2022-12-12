@@ -831,7 +831,7 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(struct gprs_rlcmac_bts *bts,
 	pdch->rcv_block(data_msg, 42, *fn, &meas);
 
 	osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_SCHED_ACK, NULL);
-	struct msgb *msg1 = tbf_ul_ack_create_rlcmac_msg(ul_tbf, *fn, ts_no);
+	struct msgb *msg1 = tbf_ul_ack_create_rlcmac_msg(ul_tbf, pdch, *fn);
 
 	static uint8_t exp1[] = { 0x40, 0x24, 0x01, 0x0b, 0x3e, 0x24, 0x46, 0x68, 0x9c, 0x70, 0x87, 0xb0,
 				  0x06, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b
@@ -859,7 +859,7 @@ static gprs_rlcmac_ul_tbf *puan_urbb_len_issue(struct gprs_rlcmac_bts *bts,
 	pdch->rcv_block(data_msg, 42, *fn, &meas);
 
 	osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_SCHED_ACK, NULL);
-	msg1 = tbf_ul_ack_create_rlcmac_msg(ul_tbf, *fn, ts_no);
+	msg1 = tbf_ul_ack_create_rlcmac_msg(ul_tbf, pdch, *fn);
 
 	static uint8_t exp2[] = { 0x40, 0x24, 0x01, 0x0b, 0x3e, 0x24, 0x46, 0x68, 0x9c, 0x70, 0x88, 0xb0,
 				  0x06, 0x8b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b, 0x2b
@@ -1380,7 +1380,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_no_length(struct
 	GprsMs *ms;
 	uint8_t trx_no = 0;
 	int tfi = 0;
-	struct gprs_rlcmac_pdch *pdch;
+	struct gprs_rlcmac_pdch *pdch = &bts->trx[trx_no].pdch[ts_no];
 
 	/* send fake data with cv=0*/
 	struct gprs_rlc_ul_header_egprs_3 *hdr3 = NULL;
@@ -1410,11 +1410,10 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_no_length(struct
 		data[5] = 0x0;
 		data[6] = 0x2b;
 		data[7] = 0x2b;
-		pdch = &bts->trx[trx_no].pdch[ts_no];
 		pdch->rcv_block(&data[0], sizeof(data), *fn, &meas);
 	}
 	osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_SCHED_ACK, NULL);
-	tbf_ul_ack_create_rlcmac_msg(ul_tbf, *fn, ts_no);
+	tbf_ul_ack_create_rlcmac_msg(ul_tbf, pdch, *fn);
 	memset(data, 0x2b, sizeof(data));
 	hdr3 = (struct gprs_rlc_ul_header_egprs_3 *)data;
 	hdr3->r = 0;
@@ -1461,7 +1460,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_with_length(stru
 	GprsMs *ms;
 	uint8_t trx_no = 0;
 	int tfi = 0;
-	struct gprs_rlcmac_pdch *pdch;
+	struct gprs_rlcmac_pdch *pdch = &bts->trx[trx_no].pdch[ts_no];
 
 	check_tbf(ul_tbf);
 	/* send fake data with cv=0*/
@@ -1493,11 +1492,10 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_with_length(stru
 		data[5] = 0x0;
 		data[6] = 0x2b;
 		data[7] = 0x2b;
-		pdch = &bts->trx[trx_no].pdch[ts_no];
 		pdch->rcv_block(&data[0], sizeof(data), *fn, &meas);
 	}
 	osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_SCHED_ACK, NULL);
-	tbf_ul_ack_create_rlcmac_msg(ul_tbf, *fn, ts_no);
+	tbf_ul_ack_create_rlcmac_msg(ul_tbf, pdch, *fn);
 	memset(data, 0x2b, sizeof(data));
 	hdr3 = (struct gprs_rlc_ul_header_egprs_3 *)data;
 	hdr3->r = 0;
@@ -1522,7 +1520,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_URBB_with_length(stru
 	pdch = &bts->trx[trx_no].pdch[ts_no];
 	pdch->rcv_block(&data[0], sizeof(data), *fn, &meas);
 	osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_SCHED_ACK, NULL);
-	tbf_ul_ack_create_rlcmac_msg(ul_tbf, *fn, ts_no);
+	tbf_ul_ack_create_rlcmac_msg(ul_tbf, pdch, *fn);
 
 	request_dl_rlc_block(ul_tbf, fn);
 
@@ -1545,7 +1543,7 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_CRBB(struct gprs_rlcm
 	uint8_t trx_no = 0;
 	int tfi = 0;
 	gprs_rlcmac_ul_tbf *ul_tbf;
-	struct gprs_rlcmac_pdch *pdch;
+	struct gprs_rlcmac_pdch *pdch = &bts->trx[trx_no].pdch[ts_no];
 
 	/* check the TBF */
 	ul_tbf = bts_ul_tbf_by_tfi(bts, tfi, trx_no, ts_no);
@@ -1581,11 +1579,10 @@ static gprs_rlcmac_ul_tbf *establish_ul_tbf_two_phase_puan_CRBB(struct gprs_rlcm
 		data[5] = 0x0;
 		data[6] = 0x2b;
 		data[7] = 0x2b;
-		pdch = &bts->trx[trx_no].pdch[ts_no];
 		pdch->rcv_block(&data[0], sizeof(data), *fn, &meas);
 	}
 	osmo_fsm_inst_dispatch(ul_tbf->ul_ack_fsm.fi, TBF_UL_ACK_EV_SCHED_ACK, NULL);
-	tbf_ul_ack_create_rlcmac_msg(ul_tbf, *fn, ts_no);
+	tbf_ul_ack_create_rlcmac_msg(ul_tbf, pdch, *fn);
 	memset(data, 0x2b, sizeof(data));
 	hdr3 = (struct gprs_rlc_ul_header_egprs_3 *)data;
 	hdr3->r = 0;

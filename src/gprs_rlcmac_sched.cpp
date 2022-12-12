@@ -139,7 +139,6 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 						tbfs->dl_ass,
 						tbfs->ul_ack,
 						tbfs->nacc };
-	uint8_t ts = pdch->ts_no;
 
 	/* Send Packet Application Information first (ETWS primary notifications) */
 	msg = sched_app_info(tbfs->dl_ass);
@@ -156,15 +155,15 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 			 * received, thus preventing the others from being processed.
 			 */
 			if (tbf == tbfs->ul_ass && tbf->ul_ass_state_is(TBF_UL_ASS_SEND_ASS_REJ))
-				msg = tbf_ul_ass_create_rlcmac_msg(tbfs->ul_ass, fn, ts);
+				msg = tbf_ul_ass_create_rlcmac_msg(tbfs->ul_ass, pdch, fn);
 			else if (tbf == tbfs->ul_ass && tbf->direction == GPRS_RLCMAC_DL_TBF)
-				msg = tbf_ul_ass_create_rlcmac_msg(tbfs->ul_ass, fn, ts);
+				msg = tbf_ul_ass_create_rlcmac_msg(tbfs->ul_ass, pdch, fn);
 			else if (tbf == tbfs->dl_ass && tbf->direction == GPRS_RLCMAC_UL_TBF)
-				msg = tbf_dl_ass_create_rlcmac_msg(tbfs->dl_ass, fn, ts);
+				msg = tbf_dl_ass_create_rlcmac_msg(tbfs->dl_ass, pdch, fn);
 			else if (tbf == tbfs->ul_ack)
-				msg = tbf_ul_ack_create_rlcmac_msg(tbfs->ul_ack, fn, ts);
+				msg = tbf_ul_ack_create_rlcmac_msg(tbfs->ul_ack, pdch, fn);
 			else if (tbf == tbfs->nacc) {
-				msg = ms_nacc_create_rlcmac_msg(tbf->ms(), tbf, fn, ts);
+				msg = ms_nacc_create_rlcmac_msg(tbf->ms(), tbf, pdch, fn);
 			}
 
 			if (!msg) {
@@ -185,10 +184,10 @@ static struct msgb *sched_select_ctrl_msg(struct gprs_rlcmac_pdch *pdch, uint32_
 		 */
 		if (tbfs->dl_ass) {
 			tbf = tbfs->dl_ass;
-			msg = tbf_dl_ass_create_rlcmac_msg(tbfs->dl_ass, fn, ts);
+			msg = tbf_dl_ass_create_rlcmac_msg(tbfs->dl_ass, pdch, fn);
 		} else if (tbfs->ul_ass) {
 			tbf = tbfs->ul_ass;
-			msg = tbf_ul_ass_create_rlcmac_msg(tbfs->ul_ass, fn, ts);
+			msg = tbf_ul_ass_create_rlcmac_msg(tbfs->ul_ass, pdch, fn);
 		}
 	}
 

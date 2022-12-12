@@ -168,7 +168,7 @@ static struct msgb *create_packet_cell_chg_continue(const struct nacc_fsm_ctx *c
 	struct GprsMs *ms = tbf_ms(tbf);
 	unsigned int rrbp;
 
-	rc = tbf_check_polling(tbf, data->fn, data->ts, new_poll_fn, &rrbp);
+	rc = tbf_check_polling(tbf, data->fn, data->pdch->ts_no, new_poll_fn, &rrbp);
 	if (rc < 0) {
 		LOGP(DTBF, LOGL_ERROR, "Failed registering poll for Pkt Cell Chg Continue (%d)\n", rc);
 		return NULL;
@@ -202,10 +202,10 @@ static struct msgb *create_packet_cell_chg_continue(const struct nacc_fsm_ctx *c
 	LOGP(DNACC, LOGL_DEBUG, "------------------------- TX : Packet Cell Change Continue -------------------------\n");
 	rate_ctr_inc(rate_ctr_group_get_ctr(bts_rate_counters(ms->bts), CTR_PKT_CELL_CHG_CONTINUE));
 	talloc_free(mac_control_block);
-	tbf_set_polling(tbf, *new_poll_fn, data->ts, PDCH_ULC_POLL_CELL_CHG_CONTINUE);
+	tbf_set_polling(tbf, *new_poll_fn, data->pdch->ts_no, PDCH_ULC_POLL_CELL_CHG_CONTINUE);
 	LOGPTBF(tbf, LOGL_DEBUG,
 	     "Scheduled 'Packet Cell Change Continue' polling on PACCH (FN=%d, TS=%d)\n",
-	     *new_poll_fn, data->ts);
+	     *new_poll_fn, data->pdch->ts_no);
 	return msg;
 
 free_ret:
@@ -608,7 +608,7 @@ static void st_cell_chg_continue(struct osmo_fsm_inst *fi, uint32_t event, void 
 		data_ctx = (struct nacc_ev_create_rlcmac_msg_ctx *)data;
 		data_ctx->msg = create_packet_cell_chg_continue(ctx, data_ctx, &ctx->continue_poll_fn);
 		if (data_ctx->msg) {
-			ctx->continue_poll_ts = data_ctx->ts;
+			ctx->continue_poll_ts = data_ctx->pdch->ts_no;
 			nacc_fsm_state_chg(fi, NACC_ST_WAIT_CELL_CHG_CONTINUE_ACK);
 		}
 		break;

@@ -60,8 +60,8 @@ struct nacc_fsm_ctx {
 /* passed as data in NACC_EV_CREATE_RLCMAC_MSG */
 struct nacc_ev_create_rlcmac_msg_ctx {
 	struct gprs_rlcmac_tbf *tbf; /* target tbf to create messages for */
+	const struct gprs_rlcmac_pdch *pdch; /* TS where the created DL ctrl block is to be sent */
 	uint32_t fn; /* FN where the created DL ctrl block is to be sent */
-	uint8_t ts; /* TS where the created DL ctrl block is to be sent */
 	struct msgb *msg; /* to be filled by FSM during event processing */
 };
 

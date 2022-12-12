@@ -57,13 +57,15 @@ extern struct osmo_fsm tbf_ul_ack_fsm;
 
 /* passed as data in TBF_UL_ACK_EV_CREATE_RLCMAC_MSG */
 struct tbf_ul_ack_ev_create_rlcmac_msg_ctx {
+	const struct gprs_rlcmac_pdch *pdch; /* TS where the created DL ctrl block is to be sent */
 	uint32_t fn; /* FN where the created DL ctrl block is to be sent */
-	uint8_t ts; /* TS where the created DL ctrl block is to be sent */
 	struct msgb *msg; /* to be filled by FSM during event processing */
 };
 
 
-struct msgb *tbf_ul_ack_create_rlcmac_msg(const struct gprs_rlcmac_ul_tbf *ul_tbf, uint32_t fn, uint8_t ts);
+struct msgb *tbf_ul_ack_create_rlcmac_msg(const struct gprs_rlcmac_ul_tbf *ul_tbf,
+					  const struct gprs_rlcmac_pdch *pdch,
+					  uint32_t fn);
 bool tbf_ul_ack_rts(const struct gprs_rlcmac_ul_tbf *ul_tbf, const struct gprs_rlcmac_pdch *pdch);
 bool tbf_ul_ack_waiting_cnf_final_ack(const struct gprs_rlcmac_ul_tbf *ul_tbf);
 bool tbf_ul_ack_exp_ctrl_ack(const struct gprs_rlcmac_ul_tbf *ul_tbf, uint32_t fn, uint8_t ts);
