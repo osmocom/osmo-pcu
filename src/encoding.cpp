@@ -435,7 +435,7 @@ int Encoding::write_immediate_assignment_reject(bitvec *dest, uint16_t ra,
  */
 int Encoding::write_immediate_assignment(
 	const struct gprs_rlcmac_pdch *pdch,
-	struct gprs_rlcmac_tbf *tbf,
+	const struct gprs_rlcmac_tbf *tbf,
 	bitvec * dest, bool downlink, uint16_t ra,
 	uint32_t ref_fn, uint8_t ta,
 	uint8_t usf, bool polling, uint32_t fn, uint8_t alpha,
@@ -506,9 +506,9 @@ int Encoding::write_immediate_assignment(
 	/* 3GPP TS 44.018 §10.5.2.16 IA Rest Octets */
 	dest->cur_bit = wp;
 	if (downlink) {
-		OSMO_ASSERT(tbf_as_dl_tbf(tbf) != NULL);
+		OSMO_ASSERT(tbf_as_dl_tbf_const(tbf) != NULL);
 
-		rc = write_ia_rest_downlink(tbf_as_dl_tbf(tbf), dest, polling, gsm48_ta_is_valid(ta), fn, alpha, gamma,
+		rc = write_ia_rest_downlink(tbf_as_dl_tbf_const(tbf), dest, polling, gsm48_ta_is_valid(ta), fn, alpha, gamma,
 					    ta_idx);
 	} else if (((burst_type == GSM_L1_BURST_TYPE_ACCESS_1) || (burst_type == GSM_L1_BURST_TYPE_ACCESS_2))) {
 		SET_L(dest); SET_H(dest); // "LH"
@@ -518,8 +518,8 @@ int Encoding::write_immediate_assignment(
 
 		SET_0(dest); // No < Access Technologies Request struct >
 
-		if (tbf_as_ul_tbf(tbf) != NULL)
-			rc = write_ia_rest_egprs_uplink_sba(tbf_as_ul_tbf(tbf), dest, usf, alpha, gamma, ta_idx);
+		if (tbf_as_ul_tbf_const(tbf) != NULL)
+			rc = write_ia_rest_egprs_uplink_sba(tbf_as_ul_tbf_const(tbf), dest, usf, alpha, gamma, ta_idx);
 		else
 			rc = write_ia_rest_egprs_uplink_mba(dest, fn, alpha, gamma);
 	} else {
@@ -528,8 +528,8 @@ int Encoding::write_immediate_assignment(
 		SET_H(dest); SET_H(dest); // "HH"
 		SET_0(dest); SET_0(dest); // "00" < Packet Uplink Assignment >
 
-		if (tbf_as_ul_tbf(tbf) != NULL)
-			rc = write_ia_rest_uplink_mba(tbf_as_ul_tbf(tbf), dest, usf, alpha, gamma, ta_idx);
+		if (tbf_as_ul_tbf_const(tbf) != NULL)
+			rc = write_ia_rest_uplink_mba(tbf_as_ul_tbf_const(tbf), dest, usf, alpha, gamma, ta_idx);
 		else
 			rc = write_ia_rest_uplink_sba(dest, fn, alpha, gamma);
 	}

@@ -44,7 +44,7 @@ class Encoding {
 public:
 	static int write_immediate_assignment(
 			const struct gprs_rlcmac_pdch *pdch,
-			struct gprs_rlcmac_tbf *tbf,
+			const struct gprs_rlcmac_tbf *tbf,
 			bitvec * dest, bool downlink, uint16_t ra,
 			uint32_t ref_fn, uint8_t ta,
 			uint8_t usf, bool polling,
