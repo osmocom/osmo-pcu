@@ -72,7 +72,7 @@ static void tbf_print_vty_info(struct vty *vty, struct gprs_rlcmac_tbf *tbf)
 		VTY_NEWLINE);
 	vty_out(vty, " TS_alloc=");
 	for (int i = 0; i < 8; i++) {
-		bool is_ctrl = tbf->is_control_ts(i);
+		bool is_ctrl = tbf_is_control_ts(tbf, tbf->pdch[i]);
 		if (tbf->pdch[i])
 			vty_out(vty, "%d%s ", i, is_ctrl ? "!" : "");
 	}

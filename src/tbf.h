@@ -146,7 +146,7 @@ void tbf_set_polling(struct gprs_rlcmac_tbf *tbf, uint32_t new_poll_fn, uint8_t 
 void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_pdch *pdch, uint32_t poll_fn, enum pdch_ulc_tbf_poll_reason reason);
 void tbf_update_state_fsm_name(struct gprs_rlcmac_tbf *tbf);
 const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf);
-bool tbf_is_control_ts(const struct gprs_rlcmac_tbf *tbf, uint8_t ts);
+bool tbf_is_control_ts(const struct gprs_rlcmac_tbf *tbf, const struct gprs_rlcmac_pdch *pdch);
 bool tbf_can_upgrade_to_multislot(const struct gprs_rlcmac_tbf *tbf);
 int tbf_update(struct gprs_rlcmac_tbf *tbf);
 struct gprs_rlcmac_trx *tbf_get_trx(struct gprs_rlcmac_tbf *tbf);
@@ -210,8 +210,6 @@ struct gprs_rlcmac_tbf {
 	time_t created_ts() const;
 	uint8_t dl_slots() const;
 	uint8_t ul_slots() const;
-
-	bool is_control_ts(uint8_t ts) const;
 
 	/* EGPRS */
 	bool is_egprs_enabled() const;

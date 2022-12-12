@@ -59,7 +59,7 @@ struct msgb *create_packet_dl_assign(const struct tbf_dl_ass_fsm_ctx *ctx,
 	bool old_tfi_is_valid = tbf_is_tfi_assigned(ctx->tbf);
 
 	/* We only use this function in control TS (PACCH) so that MS can always answer the poll */
-	OSMO_ASSERT(tbf_is_control_ts(ctx->tbf, d->ts));
+	OSMO_ASSERT(tbf_is_control_ts(ctx->tbf, &tbf_get_trx(ctx->tbf)->pdch[d->ts]));
 
 	rc = tbf_check_polling(ctx->tbf, d->fn, d->ts, &new_poll_fn, &rrbp);
 	if (rc < 0)

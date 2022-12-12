@@ -48,7 +48,7 @@ static void get_ctrl_msg_tbf_candidates(const struct gprs_rlcmac_pdch *pdch,
 		ul_tbf = tbf_as_ul_tbf((struct gprs_rlcmac_tbf *)pos->entry);
 		OSMO_ASSERT(ul_tbf);
 		/* this trx, this ts */
-		if (!ul_tbf->is_control_ts(pdch->ts_no))
+		if (!tbf_is_control_ts(ul_tbf, pdch))
 			continue;
 		if (tbf_ul_ack_rts(ul_tbf))
 			tbf_cand->ul_ack = ul_tbf;
@@ -66,7 +66,7 @@ states? */
 		dl_tbf = tbf_as_dl_tbf((struct gprs_rlcmac_tbf *)pos->entry);
 		OSMO_ASSERT(dl_tbf);
 		/* this trx, this ts */
-		if (!dl_tbf->is_control_ts(pdch->ts_no))
+		if (!tbf_is_control_ts(dl_tbf, pdch))
 			continue;
 		if (tbf_dl_ass_rts(dl_tbf))
 			tbf_cand->dl_ass = dl_tbf;
@@ -234,17 +234,18 @@ static inline enum tbf_dl_prio tbf_compute_priority(const struct gprs_rlcmac_bts
 	unsigned long dl_tbf_idle_msec = osmo_tdef_get(the_pcu->T_defs, -2031, OSMO_TDEF_MS, -1);
 	int age_thresh1 = msecs_to_frames(200);
 	int age_thresh2 = msecs_to_frames(OSMO_MIN(msecs_t3190/2, dl_tbf_idle_msec));
+	const struct gprs_rlcmac_pdch *pdch = &tbf_get_trx(tbf)->pdch[ts];
 
-	if (tbf->is_control_ts(ts) && tbf->need_poll_for_dl_ack_nack())
+	if (tbf_is_control_ts(tbf, pdch) && tbf->need_poll_for_dl_ack_nack())
 		return DL_PRIO_CONTROL;
 
-	if (tbf->is_control_ts(ts) && age > age_thresh2 && age_thresh2 > 0)
+	if (tbf_is_control_ts(tbf, pdch) && age > age_thresh2 && age_thresh2 > 0)
 		return DL_PRIO_HIGH_AGE;
 
 	if ((tbf->state_is(TBF_ST_FLOW) && tbf->have_data()) || w->resend_needed() >= 0)
 		return DL_PRIO_NEW_DATA;
 
-	if (tbf->is_control_ts(ts) && age > age_thresh1 && tbf->keep_open(fn))
+	if (tbf_is_control_ts(tbf, pdch) && age > age_thresh1 && tbf->keep_open(fn))
 		return DL_PRIO_LOW_AGE;
 
 	if (!w->window_empty())

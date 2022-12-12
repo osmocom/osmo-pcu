@@ -486,7 +486,7 @@ int gprs_rlcmac_tbf::check_polling(uint32_t fn, uint8_t ts,
 	uint32_t *poll_fn_, unsigned int *rrbp_) const
 {
 	int rc;
-	if (!is_control_ts(ts)) {
+	if (!tbf_is_control_ts(this, &this->trx->pdch[ts])) {
 		LOGPTBF(this, LOGL_DEBUG, "Polling cannot be "
 			"scheduled in this TS %d (first control TS %d)\n",
 			ts, control_ts);
@@ -751,11 +751,6 @@ uint8_t gprs_rlcmac_tbf::ul_slots() const
 	return slots;
 }
 
-bool gprs_rlcmac_tbf::is_control_ts(uint8_t ts) const
-{
-	return ts == control_ts;
-}
-
 void gprs_rlcmac_tbf::enable_egprs()
 {
 	/* Decrease GPRS TBF count of attached PDCHs */
@@ -886,9 +881,9 @@ void tbf_poll_timeout(struct gprs_rlcmac_tbf *tbf, struct gprs_rlcmac_pdch *pdch
 	tbf->poll_timeout(pdch, poll_fn, reason);
 }
 
-bool tbf_is_control_ts(const struct gprs_rlcmac_tbf *tbf, uint8_t ts)
+bool tbf_is_control_ts(const struct gprs_rlcmac_tbf *tbf, const struct gprs_rlcmac_pdch *pdch)
 {
-	return tbf->is_control_ts(ts);
+	return tbf->control_ts == pdch->ts_no;
 }
 
 bool tbf_can_upgrade_to_multislot(const struct gprs_rlcmac_tbf *tbf)
