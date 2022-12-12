@@ -60,22 +60,22 @@ static void mod_ass_type(struct tbf_dl_fsm_ctx *ctx, uint8_t t, bool set)
 		ch = "PACCH";
 		break;
 	default:
-		LOGPTBF(ctx->tbf, LOGL_ERROR,
-			"attempted to %sset unexpected ass. type %d - FIXME!\n",
+		LOGPTBFDL(ctx->dl_tbf, LOGL_ERROR,
+			  "attempted to %sset unexpected ass. type %d - FIXME!\n",
 			set ? "" : "un", t);
 		return;
 	}
 
 	if (set && prev_set)
-		LOGPTBF(ctx->tbf, LOGL_ERROR,
-			"attempted to set ass. type %s which is already set.\n", ch);
+		LOGPTBFDL(ctx->dl_tbf, LOGL_ERROR,
+			  "attempted to set ass. type %s which is already set.\n", ch);
 	else if (!set && !prev_set)
 		return;
 
-	LOGPTBF(ctx->tbf, LOGL_INFO, "%sset ass. type %s [prev CCCH:%u, PACCH:%u]\n",
-		set ? "" : "un", ch,
-		!!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)),
-		!!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)));
+	LOGPTBFDL(ctx->dl_tbf, LOGL_INFO, "%sset ass. type %s [prev CCCH:%u, PACCH:%u]\n",
+		  set ? "" : "un", ch,
+		  !!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)),
+		  !!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)));
 
 	if (set) {
 		ctx->state_flags |= (1 << t);
@@ -122,9 +122,9 @@ static void st_assign_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 		val = osmo_tdef_get(the_pcu->T_defs, fi->T, OSMO_TDEF_MS, -1);
 		sec = val / 1000;
 		micro = (val % 1000) * 1000;
-		LOGPTBF(ctx->tbf, LOGL_DEBUG,
-			"Starting timer X2001 [assignment (PACCH)] with %u sec. %u microsec\n",
-			sec, micro);
+		LOGPTBFDL(ctx->dl_tbf, LOGL_DEBUG,
+			  "Starting timer X2001 [assignment (PACCH)] with %u sec. %u microsec\n",
+			  sec, micro);
 		osmo_timer_schedule(&fi->timer, sec, micro);
 	} else {
 		 /* GPRS_RLCMAC_FLAG_CCCH is set, so here we submitted an DL Ass
@@ -149,9 +149,9 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		tbf_assign_control_ts(ctx->tbf);
 		if (ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)) {
 			/* We now know that the PACCH really existed */
-			LOGPTBF(ctx->tbf, LOGL_INFO,
-				"The TBF has been confirmed on the PACCH, "
-				"changed type from CCCH to PACCH\n");
+			LOGPTBFDL(ctx->dl_tbf, LOGL_INFO,
+				  "The TBF has been confirmed on the PACCH, "
+				  "changed type from CCCH to PACCH\n");
 			mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, false);
 			mod_ass_type(ctx, GPRS_RLCMAC_FLAG_PACCH, true);
 		}
@@ -168,9 +168,9 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		val = osmo_tdef_get(the_pcu->T_defs, fi->T, OSMO_TDEF_MS, -1);
 		sec = val / 1000;
 		micro = (val % 1000) * 1000;
-		LOGPTBF(ctx->tbf, LOGL_DEBUG,
-			"Starting timer X2002 [assignment (AGCH)] with %u sec. %u microsec\n",
-			sec, micro);
+		LOGPTBFDL(ctx->dl_tbf, LOGL_DEBUG,
+			  "Starting timer X2002 [assignment (AGCH)] with %u sec. %u microsec\n",
+			  sec, micro);
 		osmo_timer_schedule(&fi->timer, sec, micro);
 		break;
 	case TBF_EV_ASSIGN_READY_CCCH:
@@ -202,11 +202,12 @@ static void st_flow(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		if ((ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH))
 		     && !(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_DL_ACK))) {
 			struct GprsMs *ms = tbf_ms(ctx->tbf);
-			LOGPTBF(ctx->tbf, LOGL_DEBUG, "Re-send downlink assignment on PCH (IMSI=%s)\n",
-				ms_imsi_is_valid(ms) ? ms_imsi(ms) : "");
+			LOGPTBFDL(ctx->dl_tbf, LOGL_DEBUG,
+				  "Re-send downlink assignment on PCH (IMSI=%s)\n",
+				  ms_imsi_is_valid(ms) ? ms_imsi(ms) : "");
 			tbf_dl_fsm_state_chg(fi, TBF_ST_ASSIGN);
 			/* send immediate assignment */
-			bts_snd_dl_ass(ms->bts, ctx->tbf);
+			bts_snd_dl_ass(ms->bts, ctx->dl_tbf);
 		}
 		break;
 	case TBF_EV_LAST_DL_DATA_SENT:
@@ -255,14 +256,13 @@ static void st_wait_release_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_sta
 {
 	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
 	unsigned long val_s, val_ms, val_us;
-	OSMO_ASSERT(tbf_direction(ctx->tbf) == GPRS_RLCMAC_DL_TBF);
 
 	fi->T = 3193;
 	val_ms = osmo_tdef_get(tbf_ms(ctx->tbf)->bts->T_defs_bts, fi->T, OSMO_TDEF_MS, -1);
 	val_s = val_ms / 1000;
 	val_us = (val_ms % 1000) * 1000;
-	LOGPTBF(ctx->tbf, LOGL_DEBUG, "starting timer T%u with %lu sec. %lu microsec\n",
-		fi->T, val_s, val_us);
+	LOGPTBFDL(ctx->dl_tbf, LOGL_DEBUG, "starting timer T%u with %lu sec. %lu microsec\n",
+		  fi->T, val_s, val_us);
 	osmo_timer_schedule(&fi->timer, val_s, val_us);
 
 	mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, false);
@@ -299,8 +299,8 @@ static void st_releasing_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 	*/
 	val = osmo_tdef_get(tbf_ms(ctx->tbf)->bts->T_defs_bts, ctx->T_release, OSMO_TDEF_S, -1);
 	fi->T = ctx->T_release;
-	LOGPTBF(ctx->tbf, LOGL_DEBUG, "starting timer T%u with %lu sec. %u microsec\n",
-		ctx->T_release, val, 0);
+	LOGPTBFDL(ctx->dl_tbf, LOGL_DEBUG, "starting timer T%u with %lu sec. %u microsec\n",
+		  ctx->T_release, val, 0);
 	osmo_timer_schedule(&fi->timer, val, 0);
 }
 
@@ -321,7 +321,6 @@ static void st_releasing(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 static void handle_timeout_X2002(struct osmo_fsm_inst *fi)
 {
 	struct tbf_dl_fsm_ctx *ctx = (struct tbf_dl_fsm_ctx *)fi->priv;
-	struct gprs_rlcmac_dl_tbf *dl_tbf = tbf_as_dl_tbf(ctx->tbf);
 
 	if (fi->state == TBF_ST_ASSIGN) {
 		tbf_assign_control_ts(ctx->tbf);
@@ -342,9 +341,9 @@ static void handle_timeout_X2002(struct osmo_fsm_inst *fi)
 		ctx->state_flags &= GPRS_RLCMAC_FLAG_TO_MASK;
 
 		tbf_update(ctx->tbf);
-		dl_tbf_trigger_ass_on_pacch(dl_tbf, ctx->tbf);
+		dl_tbf_trigger_ass_on_pacch(ctx->dl_tbf, ctx->tbf);
 	} else
-		LOGPTBF(ctx->tbf, LOGL_NOTICE, "Continue flow after IMM.ASS confirm\n");
+		LOGPTBFDL(ctx->dl_tbf, LOGL_NOTICE, "Continue flow after IMM.ASS confirm\n");
 }
 
 static int tbf_dl_fsm_timer_cb(struct osmo_fsm_inst *fi)
@@ -355,7 +354,7 @@ static int tbf_dl_fsm_timer_cb(struct osmo_fsm_inst *fi)
 		handle_timeout_X2002(fi);
 		break;
 	case -2001:
-		LOGPTBF(ctx->tbf, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
+		LOGPTBFDL(ctx->dl_tbf, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
 		/* fall-through */
 	case 3169:
 	case 3193:

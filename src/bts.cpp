@@ -1074,7 +1074,7 @@ int bts_rcv_ptcch_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params
 	return 0;
 }
 
-void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf)
+void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, const struct gprs_rlcmac_dl_tbf *tbf)
 {
 	uint8_t trx_no = tbf->trx->trx_no;
 	uint8_t ts_no = tbf->first_ts;
