@@ -63,7 +63,10 @@ struct tbf_dl_fsm_ctx {
 };
 
 struct tbf_ul_fsm_ctx {
-	struct gprs_rlcmac_tbf *tbf; /* back pointer */
+	union { /* back pointer. union used to easily access superclass from ctx */
+		struct gprs_rlcmac_tbf *tbf;
+		struct gprs_rlcmac_ul_tbf *ul_tbf;
+	};
 	uint32_t state_flags;
 	unsigned int T_release; /* Timer to be used to end release: T3169 or T3195 */
 };

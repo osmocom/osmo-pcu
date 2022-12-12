@@ -59,22 +59,22 @@ static void mod_ass_type(struct tbf_ul_fsm_ctx *ctx, uint8_t t, bool set)
 		ch = "PACCH";
 		break;
 	default:
-		LOGPTBF(ctx->tbf, LOGL_ERROR,
-			"attempted to %sset unexpected ass. type %d - FIXME!\n",
-			set ? "" : "un", t);
+		LOGPTBFUL(ctx->ul_tbf, LOGL_ERROR,
+			  "attempted to %sset unexpected ass. type %d - FIXME!\n",
+			  set ? "" : "un", t);
 		return;
 	}
 
 	if (set && prev_set)
-		LOGPTBF(ctx->tbf, LOGL_ERROR,
-			"attempted to set ass. type %s which is already set.\n", ch);
+		LOGPTBFUL(ctx->ul_tbf, LOGL_ERROR,
+			 "attempted to set ass. type %s which is already set.\n", ch);
 	else if (!set && !prev_set)
 		return;
 
-	LOGPTBF(ctx->tbf, LOGL_INFO, "%sset ass. type %s [prev CCCH:%u, PACCH:%u]\n",
-		set ? "" : "un", ch,
-		!!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)),
-		!!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)));
+	LOGPTBFUL(ctx->ul_tbf, LOGL_INFO, "%sset ass. type %s [prev CCCH:%u, PACCH:%u]\n",
+		  set ? "" : "un", ch,
+		  !!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)),
+		  !!(ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH)));
 
 	if (set) {
 		ctx->state_flags |= (1 << t);
@@ -92,7 +92,7 @@ static void st_new(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 	case TBF_EV_ASSIGN_ADD_CCCH:
 		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, true);
 		tbf_ul_fsm_state_chg(fi, TBF_ST_FLOW);
-		ul_tbf_contention_resolution_start(tbf_as_ul_tbf(ctx->tbf));
+		ul_tbf_contention_resolution_start(ctx->ul_tbf);
 		break;
 	case TBF_EV_ASSIGN_ADD_PACCH:
 		mod_ass_type(ctx, GPRS_RLCMAC_FLAG_PACCH, true);
@@ -122,9 +122,9 @@ static void st_assign_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 		val = osmo_tdef_get(the_pcu->T_defs, fi->T, OSMO_TDEF_MS, -1);
 		sec = val / 1000;
 		micro = (val % 1000) * 1000;
-		LOGPTBF(ctx->tbf, LOGL_DEBUG,
-			"Starting timer X2001 [assignment (PACCH)] with %u sec. %u microsec\n",
-			sec, micro);
+		LOGPTBFUL(ctx->ul_tbf, LOGL_DEBUG,
+			  "Starting timer X2001 [assignment (PACCH)] with %u sec. %u microsec\n",
+			  sec, micro);
 		osmo_timer_schedule(&fi->timer, sec, micro);
 	}
 }
@@ -144,9 +144,9 @@ static void st_assign(struct osmo_fsm_inst *fi, uint32_t event, void *data)
 		tbf_assign_control_ts(ctx->tbf);
 		if (ctx->state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH)) {
 			/* We now know that the PACCH really existed */
-			LOGPTBF(ctx->tbf, LOGL_INFO,
-				"The TBF has been confirmed on the PACCH, "
-				"changed type from CCCH to PACCH\n");
+			LOGPTBFUL(ctx->ul_tbf, LOGL_INFO,
+				  "The TBF has been confirmed on the PACCH, "
+				  "changed type from CCCH to PACCH\n");
 			mod_ass_type(ctx, GPRS_RLCMAC_FLAG_CCCH, false);
 			mod_ass_type(ctx, GPRS_RLCMAC_FLAG_PACCH, true);
 		}
@@ -272,8 +272,8 @@ static void st_releasing_on_enter(struct osmo_fsm_inst *fi, uint32_t prev_state)
 	*/
 	val = osmo_tdef_get(tbf_ms(ctx->tbf)->bts->T_defs_bts, ctx->T_release, OSMO_TDEF_S, -1);
 	fi->T = ctx->T_release;
-	LOGPTBF(ctx->tbf, LOGL_DEBUG, "starting timer T%u with %lu sec. %u microsec\n",
-		ctx->T_release, val, 0);
+	LOGPTBFUL(ctx->ul_tbf, LOGL_DEBUG, "starting timer T%u with %lu sec. %u microsec\n",
+		  ctx->T_release, val, 0);
 	osmo_timer_schedule(&fi->timer, val, 0);
 }
 
@@ -287,7 +287,7 @@ static int tbf_ul_fsm_timer_cb(struct osmo_fsm_inst *fi)
 	struct tbf_ul_fsm_ctx *ctx = (struct tbf_ul_fsm_ctx *)fi->priv;
 	switch (fi->T) {
 	case -2001:
-		LOGPTBF(ctx->tbf, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
+		LOGPTBFUL(ctx->ul_tbf, LOGL_NOTICE, "releasing due to PACCH assignment timeout.\n");
 		/* fall-through */
 	case 3169:
 	case 3195:
