@@ -71,6 +71,7 @@ struct pdch_ulc *pdch_ulc_alloc(struct gprs_rlcmac_pdch *pdch, void *ctx)
 
 struct pdch_ulc_node *pdch_ulc_get_node(struct pdch_ulc *ulc, uint32_t fn)
 {
+	OSMO_ASSERT(ulc);
 	struct rb_node *node = ulc->tree_root.rb_node;
 	struct pdch_ulc_node *it;
 	int res;
