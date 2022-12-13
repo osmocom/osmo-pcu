@@ -411,7 +411,6 @@ int alloc_algorithm_a(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 
 	tbf->trx = trx;
 	/* the only one TS is the common TS */
-	tbf->first_ts = ts;
 	ms_set_reserved_slots(ms, trx, 1 << ts, 1 << ts);
 	ms_set_first_common_ts(ms, ts);
 
@@ -865,7 +864,7 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	int8_t first_common_ts;
 	uint8_t slotcount = 0;
 	uint8_t reserve_count = 0, trx_no;
-	int first_ts = -1;
+	int first_ts;
 	int usf[8] = {-1, -1, -1, -1, -1, -1, -1, -1};
 	int rc;
 	int tfi;
@@ -920,15 +919,14 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	}
 
 	first_ts = ffs(rc) - 1;
-	first_common_ts = ffs(dl_slots & ul_slots) - 1;
-
-	if (first_common_ts < 0) {
-		LOGPAL(tbf, "B", single, use_trx, LOGL_NOTICE, "first common slot unavailable\n");
+	if (first_ts < 0) {
+		LOGPAL(tbf, "B", single, use_trx, LOGL_NOTICE, "first slot unavailable\n");
 		return -EINVAL;
 	}
 
-	if (first_ts < 0) {
-		LOGPAL(tbf, "B", single, use_trx, LOGL_NOTICE, "first slot unavailable\n");
+	first_common_ts = ffs(dl_slots & ul_slots) - 1;
+	if (first_common_ts < 0) {
+		LOGPAL(tbf, "B", single, use_trx, LOGL_NOTICE, "first common slot unavailable\n");
 		return -EINVAL;
 	}
 
@@ -948,7 +946,6 @@ int alloc_algorithm_b(struct gprs_rlcmac_bts *bts, struct gprs_rlcmac_tbf *tbf, 
 	update_ms_reserved_slots(trx, ms, reserved_ul_slots, reserved_dl_slots, ul_slots, dl_slots);
 	ms_set_first_common_ts(ms, first_common_ts);
 	tbf->trx = trx;
-	tbf->first_ts = first_ts;
 
 	if (tbf->direction == GPRS_RLCMAC_DL_TBF)
 		assign_dl_tbf_slots(tbf_as_dl_tbf(tbf), trx, dl_slots, tfi);

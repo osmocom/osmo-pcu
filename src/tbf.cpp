@@ -90,7 +90,6 @@ gprs_rlcmac_tbf::Meas::Meas() :
 gprs_rlcmac_tbf::gprs_rlcmac_tbf(struct gprs_rlcmac_bts *bts_, GprsMs *ms, gprs_rlcmac_tbf_direction dir) :
 	direction(dir),
 	trx(NULL),
-	first_ts(TBF_TS_UNSET),
 	control_ts(TBF_TS_UNSET),
 	fT(0),
 	num_fT_exp(0),
@@ -890,6 +889,32 @@ bool tbf_can_upgrade_to_multislot(const struct gprs_rlcmac_tbf *tbf)
 int tbf_update(struct gprs_rlcmac_tbf *tbf)
 {
 	return tbf->update();
+}
+
+/* first TS used by TBF */
+struct gprs_rlcmac_pdch *tbf_get_first_ts(struct gprs_rlcmac_tbf *tbf)
+{
+	unsigned int i;
+
+	for (i = 0; i < ARRAY_SIZE(tbf->pdch); i++) {
+		struct gprs_rlcmac_pdch *pdch;
+		pdch = tbf->pdch[i];
+		if (pdch)
+			return pdch;
+	}
+	return NULL;
+}
+const struct gprs_rlcmac_pdch *tbf_get_first_ts_const(const struct gprs_rlcmac_tbf *tbf)
+{
+	unsigned int i;
+
+	for (i = 0; i < ARRAY_SIZE(tbf->pdch); i++) {
+		const struct gprs_rlcmac_pdch *pdch;
+		pdch = tbf->pdch[i];
+		if (pdch)
+			return pdch;
+	}
+	return NULL;
 }
 
 const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf)

@@ -61,12 +61,11 @@ static void tbf_print_vty_info(struct vty *vty, struct gprs_rlcmac_tbf *tbf)
 		tbf->ta(),
 		tbf->direction == GPRS_RLCMAC_UL_TBF ? "UL" : "DL",
 		tbf->imsi(), VTY_NEWLINE);
-	vty_out(vty, " created=%lu state=%s flags=%08x [CCCH:%u, PACCH:%u] 1st_TS=%d 1st_cTS=%" PRId8 " ctrl_TS=%d MS_CLASS=%d/%d%s",
+	vty_out(vty, " created=%lu state=%s flags=%08x [CCCH:%u, PACCH:%u] 1st_cTS=%" PRId8 " ctrl_TS=%d MS_CLASS=%d/%d%s",
 		tbf->created_ts(), tbf->state_name(),
 		state_flags,
 		state_flags & (1 << GPRS_RLCMAC_FLAG_CCCH),
 		state_flags & (1 << GPRS_RLCMAC_FLAG_PACCH),
-		tbf->first_ts,
 		ms_first_common_ts(ms), tbf->control_ts,
 		tbf->ms_class(),
 		ms_egprs_ms_class(ms),

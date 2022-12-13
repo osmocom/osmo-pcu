@@ -553,7 +553,7 @@ static void gen_freq_params(Frequency_Parameters_t *freq_params,
 	Direct_encoding_1_t fh_params;
 
 	/* Check one PDCH, if it's hopping then all other should too */
-	pdch = tbf->pdch[tbf->first_ts];
+	pdch = tbf_get_first_ts_const(tbf);
 	OSMO_ASSERT(pdch != NULL);
 
 	/* Training Sequence Code */
@@ -562,7 +562,7 @@ static void gen_freq_params(Frequency_Parameters_t *freq_params,
 	/* If frequency hopping is not in use, encode a single ARFCN */
 	if (!pdch->fh.enabled) {
 		freq_params->UnionType = 0x00;
-		freq_params->u.ARFCN = tbf->trx->arfcn;
+		freq_params->u.ARFCN = pdch->trx->arfcn;
 		return;
 	}
 

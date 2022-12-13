@@ -148,6 +148,8 @@ const char* tbf_rlcmac_diag(const struct gprs_rlcmac_tbf *tbf);
 bool tbf_is_control_ts(const struct gprs_rlcmac_tbf *tbf, const struct gprs_rlcmac_pdch *pdch);
 bool tbf_can_upgrade_to_multislot(const struct gprs_rlcmac_tbf *tbf);
 int tbf_update(struct gprs_rlcmac_tbf *tbf);
+struct gprs_rlcmac_pdch *tbf_get_first_ts(struct gprs_rlcmac_tbf *tbf);
+const struct gprs_rlcmac_pdch *tbf_get_first_ts_const(const struct gprs_rlcmac_tbf *tbf);
 struct gprs_rlcmac_trx *tbf_get_trx(struct gprs_rlcmac_tbf *tbf);
 void tbf_stop_timers(struct gprs_rlcmac_tbf *tbf, const char *reason);
 #ifdef __cplusplus
@@ -218,7 +220,6 @@ struct gprs_rlcmac_tbf {
 
 	enum gprs_rlcmac_tbf_direction direction;
 	struct gprs_rlcmac_trx *trx;
-	uint8_t first_ts; /* first TS used by TBF */
 	uint8_t control_ts; /* timeslot control messages and polling */
 	struct gprs_rlcmac_pdch *pdch[8]; /* list of PDCHs allocated to TBF */
 

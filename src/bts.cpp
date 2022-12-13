@@ -988,7 +988,8 @@ int bts_rcv_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params *rip)
 			goto send_imm_ass_rej;
 		}
 		tbf->set_ta(ta);
-		pdch = &tbf->trx->pdch[tbf->first_ts];
+		/* Only single TS can be allocated through AGCH, hence first TS is the only one: */
+		pdch = tbf_get_first_ts(tbf);
 		usf = tbf->m_usf[pdch->ts_no];
 		bts_do_rate_ctr_inc(bts, CTR_IMMEDIATE_ASSIGN_UL_TBF_ONE_PHASE);
 	}
@@ -1076,12 +1077,15 @@ int bts_rcv_ptcch_rach(struct gprs_rlcmac_bts *bts, const struct rach_ind_params
 
 void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, const struct gprs_rlcmac_dl_tbf *tbf)
 {
-	uint8_t trx_no = tbf->trx->trx_no;
-	uint8_t ts_no = tbf->first_ts;
 	uint16_t pgroup = ms_paging_group(tbf_ms(tbf));
 	int plen;
+	const struct gprs_rlcmac_pdch *pdch;
 
 	LOGPTBF(tbf, LOGL_INFO, "TX: START Immediate Assignment Downlink (PCH)\n");
+
+	/* Only one TS can be assigned through PCH, hence the first one is the only one: */
+	pdch = tbf_get_first_ts_const(tbf);
+
 	bitvec *immediate_assignment = bitvec_alloc(22, tall_pcu_ctx); /* without plen */
 	bitvec_unhex(immediate_assignment, DUMMY_VEC); /* standard '2B'O padding */
 	/* 3GPP TS 44.018, section 9.1.18.0d states that the network shall code the
@@ -1090,10 +1094,10 @@ void bts_snd_dl_ass(struct gprs_rlcmac_bts *bts, const struct gprs_rlcmac_dl_tbf
 	 * message sent by a mobile station.  Use last_rts_fn + 21216 (16 TDMA
 	 * super-frame periods, or ~21.3 seconds) to achieve a decent distance. */
 	LOGP(DRLCMAC, LOGL_DEBUG, " - TRX=%d (%d) TS=%d TA=%d\n",
-		trx_no, tbf->trx->arfcn, ts_no, tbf->ta());
-	plen = Encoding::write_immediate_assignment(&bts->trx[trx_no].pdch[ts_no],
+	     tbf->trx->trx_no, tbf->trx->arfcn, pdch->ts_no, tbf->ta());
+	plen = Encoding::write_immediate_assignment(pdch,
 						    tbf, immediate_assignment, true, 125,
-						    GSM_TDMA_FN_SUM(tbf->pdch[ts_no]->last_rts_fn, 21216),
+						    GSM_TDMA_FN_SUM(pdch->last_rts_fn, 21216),
 						    tbf->ta(), 7, false, 0,
 						    bts_get_ms_pwr_alpha(bts), bts->pcu->vty.gamma, -1,
 						    GSM_L1_BURST_TYPE_ACCESS_0);
