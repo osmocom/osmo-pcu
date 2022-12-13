@@ -105,7 +105,7 @@ struct gprs_rlcmac_ul_tbf : public gprs_rlcmac_tbf {
 	struct rate_ctr_group *m_ul_egprs_ctrs;
 
 	struct tbf_ul_fsm_ctx state_fsm;
-	struct tbf_ul_ass_fsm_ctx ul_ack_fsm;
+	struct tbf_ul_ack_fsm_ctx ul_ack_fsm;
 
 protected:
 	void maybe_schedule_uplink_acknack(const gprs_rlc_data_info *rlc, bool countdown_finished);
